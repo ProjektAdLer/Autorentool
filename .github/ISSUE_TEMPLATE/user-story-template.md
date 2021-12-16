@@ -13,7 +13,7 @@ Als _Benutzerrolle_ möchte ich _Funktionalität_ sodass _Wert_ für den Nutzer
 
  
 
-**Aktzeptanzkriterien**
+**Akzeptanzkriterien**
 
 - [ ] Akzeptanzkriterium 1
 - [ ] Akzeptanzkriterium 2
