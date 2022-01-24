@@ -1,0 +1,45 @@
+﻿@page "/AuthoringToolWorkspaceView"
+@using AuthoringTool.PresentationLogic.LearningWorld
+@using AuthoringTool.PresentationLogic
+
+<h3>AuthoringTool Workspace</h3>
+
+<p role="status">Current count: @AuthoringToolWorkspaceVm.Count</p>
+<button class="btn btn-primary" @onclick="AddNewLearningWorld">Click me</button>
+
+@code {
+
+    /// <summary>
+    /// Default constructor
+    /// </summary>
+    public AuthoringToolWorkspaceView()
+    {
+        AuthoringToolWorkspaceVm = new AuthoringToolWorkspaceViewModel();
+        AuthoringToolWorkspaceP = new AuthoringToolWorkspacePresenter(AuthoringToolWorkspaceVm);
+        
+    }
+    
+    /// <summary>
+    /// Testable constructor: use only for test purpose!
+    /// </summary>
+    public AuthoringToolWorkspaceView(
+        AuthoringToolWorkspacePresenter authoringToolWorkspaceP,
+        AuthoringToolWorkspaceViewModel authoringToolWorkspaceVm)
+    {
+        AuthoringToolWorkspaceP = authoringToolWorkspaceP;
+        AuthoringToolWorkspaceVm = authoringToolWorkspaceVm;
+    }
+    
+    
+    private void AddNewLearningWorld()
+    {
+        AuthoringToolWorkspaceP.IncrementCount();
+    }
+    
+  
+
+
+    private AuthoringToolWorkspacePresenter AuthoringToolWorkspaceP { get; set; }
+    private AuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get; set; }
+
+}
