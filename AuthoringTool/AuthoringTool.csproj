@@ -7,8 +7,7 @@
     <RootNamespace>AuthoringTool</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="DataAccess\API" />
-    <Folder Include="DataAccess\Entities" />
+    <Folder Include="Entities" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="ElectronNET.API" Version="13.5.1" />
