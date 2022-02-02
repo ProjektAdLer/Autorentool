@@ -7,7 +7,6 @@
     <RootNamespace>AuthoringTool</RootNamespace>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="BusinessLogic\API" />
     <Folder Include="DataAccess\API" />
     <Folder Include="DataAccess\Entities" />
   </ItemGroup>
