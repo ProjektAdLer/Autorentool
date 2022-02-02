@@ -1,4 +1,5 @@
-﻿using AuthoringTool.DataAccess.API;
+﻿using System.Runtime.CompilerServices;
+using AuthoringTool.DataAccess.API;
 
 namespace AuthoringTool.BusinessLogic.API;
 
