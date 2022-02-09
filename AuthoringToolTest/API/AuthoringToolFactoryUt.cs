@@ -1,4 +1,6 @@
 ﻿using AuthoringTool.API;
+using AuthoringTool.API.Configuration;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.API;
@@ -13,8 +15,9 @@ public class AuthoringToolFactoryUt
     public void CreateAuthoringTool()
     {
         var systemUnderTest = CreateAuthoringToolFactory();
+        var stubAuthoringToolConfiguration = Substitute.For<IAuthoringToolConfiguration>();
 
-        IAuthoringTool result = systemUnderTest.CreateAuthoringTool();
+        IAuthoringTool result = systemUnderTest.CreateAuthoringTool(stubAuthoringToolConfiguration);
         
         AssertArchitectstructureIsCorrect(result);
     }

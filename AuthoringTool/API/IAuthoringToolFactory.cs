@@ -1,6 +1,8 @@
-﻿namespace AuthoringTool.API;
+﻿using AuthoringTool.API.Configuration;
+
+namespace AuthoringTool.API;
 
 public interface IAuthoringToolFactory  
 {
-    IAuthoringTool CreateAuthoringTool();
+    IAuthoringTool CreateAuthoringTool(IAuthoringToolConfiguration config);
 }
