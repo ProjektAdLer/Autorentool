@@ -1,7 +1,14 @@
-﻿namespace AuthoringTool.PresentationLogic.API
+﻿using AuthoringTool.BusinessLogic.API;
+
+namespace AuthoringTool.PresentationLogic.API
 {
-    public class PresentationLogic
+    internal class PresentationLogic : IPresentationLogic
     {
+        internal PresentationLogic(IBusinessLogic businessLogic)
+        {
+            BusinessLogic = businessLogic;
+        }
         
+        public IBusinessLogic BusinessLogic { get; }
     }
 }

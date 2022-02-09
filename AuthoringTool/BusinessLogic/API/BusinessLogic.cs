@@ -20,6 +20,6 @@ internal class BusinessLogic : IBusinessLogic
     }
     
     
-    internal IDataAccess DataAccess { get;  }
+    public IDataAccess DataAccess { get;  }
 
 }
