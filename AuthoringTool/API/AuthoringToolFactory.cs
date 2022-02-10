@@ -13,11 +13,11 @@ public class AuthoringToolFactory : IAuthoringToolFactory
         return new AuthoringToolConfiguration(logger);
     }
     
-    public IAuthoringTool CreateAuthoringTool(IAuthoringToolConfiguration config)
+    public IAuthoringTool CreateAuthoringTool(IAuthoringToolConfiguration configuration)
     {
-        IDataAccess dataAccess = new DataAccess.API.DataAccess();
-        IBusinessLogic businessLogic = new BusinessLogic.API.BusinessLogic(dataAccess);
-        IPresentationLogic presentationLogic = new PresentationLogic.API.PresentationLogic(businessLogic);
-        return new AuthoringTool(presentationLogic);
+        IDataAccess dataAccess = new DataAccess.API.DataAccess(configuration);
+        IBusinessLogic businessLogic = new BusinessLogic.API.BusinessLogic(configuration, dataAccess);
+        IPresentationLogic presentationLogic = new PresentationLogic.API.PresentationLogic(configuration, businessLogic);
+        return new AuthoringTool(configuration, presentationLogic);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace AuthoringTool.API.Configuration;
 
-public class IAuthoringToolConfiguration
+public interface IAuthoringToolConfiguration
 {
     ILog Logger { get; set; }
 }

@@ -7,7 +7,7 @@ namespace AuthoringTool.API.Configuration;
 /// <para>
 /// for example:
 /// DI Container; 
-/// Looger; 
+/// Logger; 
 /// System Configuration Data -> Use this or this API
 /// </para>
 /// </summary>

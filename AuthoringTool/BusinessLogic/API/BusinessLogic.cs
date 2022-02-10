@@ -1,4 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
+using AuthoringTool.API.Configuration;
 using AuthoringTool.DataAccess.API;
 
 namespace AuthoringTool.BusinessLogic.API;
@@ -6,20 +7,16 @@ namespace AuthoringTool.BusinessLogic.API;
 internal class BusinessLogic : IBusinessLogic
 {
 
-    internal BusinessLogic()
+    internal BusinessLogic(
+        IAuthoringToolConfiguration configuration,
+        IDataAccess dataAccess)
     {
-        DataAccess = new DataAccess.API.DataAccess();
-    }
-    
-    /// <summary>
-    /// Testable Constructor
-    /// </summary>
-    internal BusinessLogic(IDataAccess dataAccess)
-    {
+        Configuration = configuration;
         DataAccess = dataAccess;
     }
     
-    
     public IDataAccess DataAccess { get;  }
-
+    
+    public IAuthoringToolConfiguration Configuration { get; }
+  
 }

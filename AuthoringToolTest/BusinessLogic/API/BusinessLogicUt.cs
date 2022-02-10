@@ -1,5 +1,8 @@
-﻿using NUnit.Framework;
+﻿using AuthoringTool.API.Configuration;
+using NUnit.Framework;
 using AuthoringTool.BusinessLogic.API;
+using AuthoringTool.DataAccess.API;
+using NSubstitute;
 
 namespace AuthoringToolTest.BusinessLogic.API;
 
@@ -9,13 +12,20 @@ public class BusinessLogicUt
     [Test]
     public void BusinessLogic_StandardConstructor_AllPropertiesInitialized()
     {
-        var systemUnderTest = CreateStandardBusinessLogic();
+        IAuthoringToolConfiguration mockConfiguration = Substitute.For<IAuthoringToolConfiguration>();
+        IDataAccess mockDataAccess = Substitute.For<IDataAccess>();  
+        var systemUnderTest = CreateStandardBusinessLogic(mockConfiguration, mockDataAccess);
         
-        Assert.NotNull(systemUnderTest.DataAccess);
+        Assert.AreEqual(mockConfiguration, systemUnderTest.Configuration);
+        Assert.AreEqual(mockDataAccess, systemUnderTest.DataAccess);
     }
 
-    private AuthoringTool.BusinessLogic.API.BusinessLogic CreateStandardBusinessLogic()
+    private AuthoringTool.BusinessLogic.API.BusinessLogic CreateStandardBusinessLogic(
+        IAuthoringToolConfiguration fakeConfiguration = null,
+        IDataAccess fakeDataAccess = null)
     {
-        return new AuthoringTool.BusinessLogic.API.BusinessLogic();
+        fakeConfiguration ??= Substitute.For<IAuthoringToolConfiguration>();
+        fakeDataAccess ??= Substitute.For<IDataAccess>();
+        return new AuthoringTool.BusinessLogic.API.BusinessLogic(fakeConfiguration, fakeDataAccess);
     }
 }
