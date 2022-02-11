@@ -1,12 +1,26 @@
 ﻿@page "/AuthoringToolWorkspaceView"
-@using AuthoringTool.PresentationLogic.LearningWorld
 @using AuthoringTool.PresentationLogic
+@using AuthoringTool.Components
 
 <h3>AuthoringTool Workspace</h3>
 
-<p role="status">Current count: @AuthoringToolWorkspaceVm.Count</p>
-<button class="btn btn-primary" @onclick="AddNewLearningWorld">Click me</button>
-
+<p role="status">Current count of learning worlds: @AuthoringToolWorkspaceVm.LearningWorlds.Count</p>
+<ul>
+    @foreach (var world in AuthoringToolWorkspaceVm.LearningWorlds)
+    {
+        <li>
+            test
+        </li>
+    }
+</ul>
+<button class="btn btn-primary" @onclick="AddNewLearningWorld">Add Learning World</button>
+<button class="btn btn-primary" @onclick="DeleteLastLearningWorld">Delete Learning World</button>
+@if (AuthoringToolWorkspaceP.CreateLearningWorldDialogueOpen)
+{
+    <ModalDialog Title="Create new learning world" Text="Foo bar bla bla hier müssen Input Felder hin"
+                 OnClose="@OnDeleteDialogClose" DialogType=@ModalDialog.ModalDialogType.Ok>
+    </ModalDialog>
+}
 @code {
 
     /// <summary>
@@ -30,16 +44,24 @@
         AuthoringToolWorkspaceVm = authoringToolWorkspaceVm;
     }
     
+    private AuthoringToolWorkspacePresenter AuthoringToolWorkspaceP { get; set; }
+    private AuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get; set; }
     
     private void AddNewLearningWorld()
     {
-        AuthoringToolWorkspaceP.IncrementCount();
+        AuthoringToolWorkspaceP.CreateLearningWorldDialogueOpen = true;
+    //AuthoringToolWorkspaceP.CreateNewLearningWorld();
     }
     
-  
+    private void DeleteLastLearningWorld()
+    {
+        AuthoringToolWorkspaceP.DeleteLastLearningWorld();
+    }
 
-
-    private AuthoringToolWorkspacePresenter AuthoringToolWorkspaceP { get; set; }
-    private AuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get; set; }
-
+    private Task OnDeleteDialogClose(ModalDialog.ModalDialogReturnValue returnValue)
+    {
+        AuthoringToolWorkspaceP.CreateLearningWorldDialogueOpen = false;
+        return Task.CompletedTask;
+    }
+    
 }

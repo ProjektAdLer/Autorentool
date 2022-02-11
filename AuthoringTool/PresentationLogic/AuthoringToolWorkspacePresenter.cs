@@ -6,12 +6,25 @@
         {
             AuthoringToolWorkspaceVm = authoringToolWorkspaceVm;
         }
-
+        
+        private AuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get; set; }
+        
+        internal bool CreateLearningWorldDialogueOpen { get; set; }
+        
         internal void IncrementCount()
         {
             AuthoringToolWorkspaceVm.Count++;
         }
+
+        internal void CreateNewLearningWorld()
+        {
+            AuthoringToolWorkspaceVm.LearningWorlds.Add(new Entities.LearningWorld());
+        }
         
-        private AuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get; set; }
+
+        public void DeleteLastLearningWorld()
+        {
+            AuthoringToolWorkspaceVm.LearningWorlds.Remove(AuthoringToolWorkspaceVm.LearningWorlds.Last());
+        }
     }
 }
