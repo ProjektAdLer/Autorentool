@@ -1,13 +1,30 @@
-@page "/kojimbo"
 <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <h4 class="modal-title">@Title</h4>
-                <button type="button" class="close" @onclick="() => ModalClose(ModalDialogReturnValue.Cancel)">&times;</button>
+                @if (DialogType is ModalDialogType.DeleteCancel or ModalDialogType.OkCancel or ModalDialogType.YesNoCancel)
+                {
+                    <button type="button" class="close" @onclick="() => ModalClose(ModalDialogReturnValue.Cancel)">&times;</button>
+                }
             </div>
             <div class="modal-body">
                 <p>@Text</p>
+                @if (InputFields?.Count() > 0)
+                {
+                    <div class="modal-input">
+                        @foreach (var input in InputFields)
+                        {
+                            var fieldType = input.Type.ToString().ToLower();
+                            //we are binding the oninput event to the value in our dictionary
+                            <input id="@($"modal-input-field-{input.Name.ToLower()}")" 
+                                   type="@fieldType" 
+                                   placeholder="@input.Name" 
+                                   @oninput="@((e) => { _inputFieldValues[input.Name] = e.Value;})"
+                            />
+                        }
+                    </div>
+                }
             </div>
             <div class="modal-footer">
                 @switch (DialogType)
@@ -16,18 +33,20 @@
                         <button type="button" class="btn btn-primary" @onclick="() => ModalClose(ModalDialogReturnValue.Ok)">OK</button>
                         break;
                     case ModalDialogType.OkCancel:
-                        <button type="button" class="btn" @onclick="() => ModalClose(ModalDialogReturnValue.Cancel)">Cancel</button>
-                        <button type="button" class="btn btn-primary" @onclick="() => ModalClose(ModalDialogReturnValue.Ok)">OK</button>
+                        <button type="button" class="btn btn-warning" @onclick="() => ModalClose(ModalDialogReturnValue.Cancel)">Cancel</button>
+                        <button type="button" class="btn btn-success" @onclick="() => ModalClose(ModalDialogReturnValue.Ok)">OK</button>
                         break;
                     case ModalDialogType.DeleteCancel:
-                        <button type="button" class="btn" @onclick="() => ModalClose(ModalDialogReturnValue.Cancel)">Cancel</button>
+                        <button type="button" class="btn btn-warning" @onclick="() => ModalClose(ModalDialogReturnValue.Cancel)">Cancel</button>
                         <button type="button" class="btn btn-danger" @onclick="() => ModalClose(ModalDialogReturnValue.Delete)">Delete</button>
                         break;
                     case ModalDialogType.YesNoCancel:
-                        <button type="button" class="btn btn-danger" @onclick="() => ModalClose(ModalDialogReturnValue.Yes)">Yes</button>
+                        <button type="button" class="btn btn-success" @onclick="() => ModalClose(ModalDialogReturnValue.Yes)">Yes</button>
                         <button type="button" class="btn btn-danger" @onclick="() => ModalClose(ModalDialogReturnValue.No)">No</button>
-                        <button type="button" class="btn" @onclick="() => ModalClose(ModalDialogReturnValue.Cancel)">Cancel</button>
+                        <button type="button" class="btn btn-warning" @onclick="() => ModalClose(ModalDialogReturnValue.Cancel)">Cancel</button>
                         break;
+                    default:
+                        throw new ArgumentOutOfRangeException(nameof(DialogType));
                 }
             </div>
         </div>
@@ -36,6 +55,22 @@
 
 @code
 {
+    public class ModalDialogInputField
+    {
+        internal ModalDialogInputField(string name, ModalDialogInputType type)
+        {
+            Name = name;
+            Type = type;
+        }
+        internal enum ModalDialogInputType
+        {
+            Text, Number, Date, Password, Email, Image, File
+        }
+
+        internal string Name;
+        internal ModalDialogInputType Type;
+    }
+
     public enum ModalDialogType
     {
         Ok, OkCancel, DeleteCancel, YesNoCancel
@@ -45,14 +80,29 @@
     {
         Ok, Cancel, Delete, Yes, No
     }
+
+
+    public ModalDialog()
+    {
+        _inputFieldValues = new Dictionary<string, object>();
+    }
     
     [Parameter] public string Title { get; set; }
     [Parameter] public string Text { get; set; }
-    [Parameter] public EventCallback<ModalDialogReturnValue> OnClose { get; set; }
+    [Parameter] public EventCallback<Tuple<ModalDialogReturnValue, IDictionary<string, object>?>> OnClose { get; set; }
     [Parameter] public ModalDialogType DialogType { get; set; }
+    [Parameter] public IEnumerable<ModalDialogInputField>? InputFields { get; set; }
+    private IDictionary<string, object> _inputFieldValues;
 
     private Task ModalClose(ModalDialogReturnValue dialogReturnValue)
     {
-        return OnClose.InvokeAsync(dialogReturnValue);
+        IDictionary<string, object>? inputFieldValues = null;
+        //if this is a positive response, we will set the inputFieldValues to the dictionary we have been keeping this whole time
+        if (dialogReturnValue is ModalDialogReturnValue.Ok or ModalDialogReturnValue.Yes)
+        {
+            inputFieldValues = _inputFieldValues;
+        }
+        return OnClose.InvokeAsync(new Tuple<ModalDialogReturnValue, 
+            IDictionary<string, object>?>(dialogReturnValue, inputFieldValues));
     }
 }

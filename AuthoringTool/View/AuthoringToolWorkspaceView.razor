@@ -18,7 +18,12 @@
 @if (AuthoringToolWorkspaceP.CreateLearningWorldDialogueOpen)
 {
     <ModalDialog Title="Create new learning world" Text="Foo bar bla bla hier müssen Input Felder hin"
-                 OnClose="@OnDeleteDialogClose" DialogType=@ModalDialog.ModalDialogType.Ok>
+                 OnClose="@OnDeleteDialogClose" DialogType=@ModalDialog.ModalDialogType.YesNoCancel
+                 InputFields="@(new ModalDialog.ModalDialogInputField[]{
+                                  new("Name", ModalDialog.ModalDialogInputField.ModalDialogInputType.Text),
+                                  new("Description", ModalDialog.ModalDialogInputField.ModalDialogInputType.Text),
+                                  new("Password", ModalDialog.ModalDialogInputField.ModalDialogInputType.Password)
+                              })">
     </ModalDialog>
 }
 @code {
@@ -58,9 +63,16 @@
         AuthoringToolWorkspaceP.DeleteLastLearningWorld();
     }
 
-    private Task OnDeleteDialogClose(ModalDialog.ModalDialogReturnValue returnValue)
+    private Task OnDeleteDialogClose(Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, object>?> returnValueTuple)
     {
         AuthoringToolWorkspaceP.CreateLearningWorldDialogueOpen = false;
+        Console.WriteLine(returnValueTuple.Item1.ToString());
+        var dictionary = returnValueTuple.Item2;
+        if (dictionary == null) return Task.CompletedTask;
+        foreach (var (key, value) in dictionary)
+        {
+            Console.Write($"key {key} value {value}\n");
+        }
         return Task.CompletedTask;
     }
     
