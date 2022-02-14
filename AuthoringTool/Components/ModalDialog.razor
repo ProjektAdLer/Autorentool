@@ -55,6 +55,13 @@
 
 @code
 {
+    internal enum ModalDialogInputType
+    {
+        //if we need more types, feel free to expand these, but please stick to the upper case versions
+        //of the allowed value of the 'input' field on the html <input> tag 
+        //see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input
+        Text, Number, Date, Password, Email, Image, File
+    }
     public class ModalDialogInputField
     {
         internal ModalDialogInputField(string name, ModalDialogInputType type)
@@ -62,12 +69,9 @@
             Name = name;
             Type = type;
         }
-        internal enum ModalDialogInputType
-        {
-            Text, Number, Date, Password, Email, Image, File
-        }
-
+        //Name of the input field
         internal string Name;
+        //The type of input for the field
         internal ModalDialogInputType Type;
     }
 

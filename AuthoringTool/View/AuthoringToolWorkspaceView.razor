@@ -17,15 +17,16 @@
 <button class="btn btn-primary" @onclick="DeleteLastLearningWorld">Delete Learning World</button>
 @if (AuthoringToolWorkspaceP.CreateLearningWorldDialogueOpen)
 {
-    <ModalDialog Title="Create new learning world" Text="Foo bar bla bla hier müssen Input Felder hin"
+    <ModalDialog Title="Create new learning world" Text="Please enter the required data for the learning world below:"
                  OnClose="@OnDeleteDialogClose" DialogType=@ModalDialog.ModalDialogType.YesNoCancel
                  InputFields="@(new ModalDialog.ModalDialogInputField[]{
-                                  new("Name", ModalDialog.ModalDialogInputField.ModalDialogInputType.Text),
-                                  new("Description", ModalDialog.ModalDialogInputField.ModalDialogInputType.Text),
-                                  new("Password", ModalDialog.ModalDialogInputField.ModalDialogInputType.Password)
+                                  new("Name", ModalDialog.ModalDialogInputType.Text),
+                                  new("Description", ModalDialog.ModalDialogInputType.Text),
+                                  new("Author(s)", ModalDialog.ModalDialogInputType.Text),
                               })">
     </ModalDialog>
 }
+
 @code {
 
     /// <summary>
