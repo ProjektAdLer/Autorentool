@@ -16,9 +16,10 @@
             AuthoringToolWorkspaceVm.Count++;
         }
 
-        internal void CreateNewLearningWorld()
+        internal void CreateNewLearningWorld(string learningWorldName, string learningWorldDescription)
         {
-            AuthoringToolWorkspaceVm.LearningWorlds.Add(new Entities.LearningWorld());
+            AuthoringToolWorkspaceVm.LearningWorlds.Add(new Entities.LearningWorld(learningWorldName,
+                learningWorldDescription));
         }
         
 

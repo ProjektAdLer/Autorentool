@@ -5,20 +5,32 @@
 <h3>AuthoringTool Workspace</h3>
 
 <p role="status">Current count of learning worlds: @AuthoringToolWorkspaceVm.LearningWorlds.Count</p>
-<ul>
-    @foreach (var world in AuthoringToolWorkspaceVm.LearningWorlds)
-    {
-        <li>
-            test
-        </li>
-    }
-</ul>
+<label>
+    Select learning world: <!--TODO: refactor this into presenter call -->
+    <select @onchange="args => AuthoringToolWorkspaceVm.SelectedLearningWorld = 
+    AuthoringToolWorkspaceVm.LearningWorlds.First(world => world.Name == (string)args.Value!)">
+        @foreach (var learningWorld in AuthoringToolWorkspaceVm.LearningWorlds)
+        {
+            <option value="@learningWorld.Name">@learningWorld.Name</option>
+        }
+        @if (AuthoringToolWorkspaceVm.LearningWorlds.Count == 0 || 
+         AuthoringToolWorkspaceVm.LearningWorlds.Count == 1 && AuthoringToolWorkspaceVm.SelectedLearningWorld == null)
+        {
+            <option value=""></option>
+        }
+    </select>
+</label>
+@if (AuthoringToolWorkspaceVm.SelectedLearningWorld != null)
+{
+    <label>Selected world: @AuthoringToolWorkspaceVm.SelectedLearningWorld.Name, 
+        Description: @AuthoringToolWorkspaceVm.SelectedLearningWorld.Description</label>
+}
 <button class="btn btn-primary" @onclick="AddNewLearningWorld">Add Learning World</button>
 <button class="btn btn-primary" @onclick="DeleteLastLearningWorld">Delete Learning World</button>
 @if (AuthoringToolWorkspaceP.CreateLearningWorldDialogueOpen)
 {
     <ModalDialog Title="Create new learning world" Text="Please enter the required data for the learning world below:"
-                 OnClose="@OnDeleteDialogClose" DialogType=@ModalDialog.ModalDialogType.YesNoCancel
+                 OnClose="@OnDeleteDialogClose" DialogType=@ModalDialog.ModalDialogType.OkCancel
                  InputFields="@(new ModalDialog.ModalDialogInputField[]{
                                   new("Name", ModalDialog.ModalDialogInputType.Text, true),
                                   new("Description", ModalDialog.ModalDialogInputType.Text, true),
@@ -66,14 +78,16 @@
 
     private Task OnDeleteDialogClose(Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, object>?> returnValueTuple)
     {
+        var (response, data) = returnValueTuple;
         AuthoringToolWorkspaceP.CreateLearningWorldDialogueOpen = false;
-        Console.WriteLine(returnValueTuple.Item1.ToString());
-        var dictionary = returnValueTuple.Item2;
-        if (dictionary == null) return Task.CompletedTask;
-        foreach (var (key, value) in dictionary)
-        {
-            Console.Write($"key {key} value {value}\n");
-        }
+        
+        if (response == ModalDialog.ModalDialogReturnValue.Cancel) return Task.CompletedTask;
+        if (data == null) throw new ApplicationException("dialog data unexectedly null after Ok return value");
+        
+        AuthoringToolWorkspaceP.CreateNewLearningWorld(
+            data["Name"] as string ?? throw new InvalidOperationException("Name unexpectedly null"),
+            data["Description"] as string ?? throw new InvalidOperationException("Description unexpectedly null"));
+    //StateHasChanged();
         return Task.CompletedTask;
     }
     
