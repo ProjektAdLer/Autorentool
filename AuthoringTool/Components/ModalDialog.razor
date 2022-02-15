@@ -5,11 +5,22 @@
                 <h4 class="modal-title">@Title</h4>
                 @if (DialogType is ModalDialogType.DeleteCancel or ModalDialogType.OkCancel or ModalDialogType.YesNoCancel)
                 {
-                    <button type="button" class="close" @onclick="() => ModalClose(ModalDialogReturnValue.Cancel)">&times;</button>
+                    <button type="button" class="close" @onclick="() => ModalTryClose(ModalDialogReturnValue.Cancel)">&times;</button>
                 }
             </div>
             <div class="modal-body">
                 <p>@Text</p>
+                @if (RequiredFieldsWarning && InputFields.Any(FieldRequiredAndNotFilled))
+                {
+                    <div class="modal-input-warning">
+                        <p><i class="bi bi-exclamation-triangle"></i> Please fill out: 
+                            @foreach (var field in InputFields.Where(FieldRequiredAndNotFilled))
+                            {
+                                <span>@($"-{field.Name} ")</span>
+                            }
+                        </p>
+                    </div>
+                }
                 @if (InputFields?.Count() > 0)
                 {
                     <div class="modal-input">
@@ -30,20 +41,20 @@
                 @switch (DialogType)
                 {
                     case ModalDialogType.Ok:
-                        <button type="button" class="btn btn-primary" @onclick="() => ModalClose(ModalDialogReturnValue.Ok)">OK</button>
+                        <button type="button" class="btn btn-primary" @onclick="() => ModalTryClose(ModalDialogReturnValue.Ok)">OK</button>
                         break;
                     case ModalDialogType.OkCancel:
-                        <button type="button" class="btn btn-warning" @onclick="() => ModalClose(ModalDialogReturnValue.Cancel)">Cancel</button>
-                        <button type="button" class="btn btn-success" @onclick="() => ModalClose(ModalDialogReturnValue.Ok)">OK</button>
+                        <button type="button" class="btn btn-warning" @onclick="() => ModalTryClose(ModalDialogReturnValue.Cancel)">Cancel</button>
+                        <button type="button" class="btn btn-success" @onclick="() => ModalTryClose(ModalDialogReturnValue.Ok)">OK</button>
                         break;
                     case ModalDialogType.DeleteCancel:
-                        <button type="button" class="btn btn-warning" @onclick="() => ModalClose(ModalDialogReturnValue.Cancel)">Cancel</button>
-                        <button type="button" class="btn btn-danger" @onclick="() => ModalClose(ModalDialogReturnValue.Delete)">Delete</button>
+                        <button type="button" class="btn btn-warning" @onclick="() => ModalTryClose(ModalDialogReturnValue.Cancel)">Cancel</button>
+                        <button type="button" class="btn btn-danger" @onclick="() => ModalTryClose(ModalDialogReturnValue.Delete)">Delete</button>
                         break;
                     case ModalDialogType.YesNoCancel:
-                        <button type="button" class="btn btn-success" @onclick="() => ModalClose(ModalDialogReturnValue.Yes)">Yes</button>
-                        <button type="button" class="btn btn-danger" @onclick="() => ModalClose(ModalDialogReturnValue.No)">No</button>
-                        <button type="button" class="btn btn-warning" @onclick="() => ModalClose(ModalDialogReturnValue.Cancel)">Cancel</button>
+                        <button type="button" class="btn btn-success" @onclick="() => ModalTryClose(ModalDialogReturnValue.Yes)">Yes</button>
+                        <button type="button" class="btn btn-danger" @onclick="() => ModalTryClose(ModalDialogReturnValue.No)">No</button>
+                        <button type="button" class="btn btn-warning" @onclick="() => ModalTryClose(ModalDialogReturnValue.Cancel)">Cancel</button>
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(DialogType));
@@ -64,15 +75,18 @@
     }
     public class ModalDialogInputField
     {
-        internal ModalDialogInputField(string name, ModalDialogInputType type)
+        internal ModalDialogInputField(string name, ModalDialogInputType type, bool required = false)
         {
             Name = name;
             Type = type;
+            Required = required;
         }
         //Name of the input field
-        internal string Name;
+        internal readonly string Name;
         //The type of input for the field
-        internal ModalDialogInputType Type;
+        internal readonly ModalDialogInputType Type;
+        //Whether or not the field is required
+        internal readonly bool Required;
     }
 
     public enum ModalDialogType
@@ -96,17 +110,44 @@
     [Parameter] public EventCallback<Tuple<ModalDialogReturnValue, IDictionary<string, object>?>> OnClose { get; set; }
     [Parameter] public ModalDialogType DialogType { get; set; }
     [Parameter] public IEnumerable<ModalDialogInputField>? InputFields { get; set; }
+    private bool RequiredFieldsWarning { get; set; }
+    
     private IDictionary<string, object> _inputFieldValues;
 
-    private Task ModalClose(ModalDialogReturnValue dialogReturnValue)
+    private Task ModalTryClose(ModalDialogReturnValue dialogReturnValue)
     {
         IDictionary<string, object>? inputFieldValues = null;
         //if this is a positive response, we will set the inputFieldValues to the dictionary we have been keeping this whole time
-        if (dialogReturnValue is ModalDialogReturnValue.Ok or ModalDialogReturnValue.Yes)
+        if (dialogReturnValue is ModalDialogReturnValue.Ok or ModalDialogReturnValue.Yes && InputFields != null)
         {
+            //check that all required fields are set
+            if (InputFields.Any(FieldRequiredAndNotFilled))
+            {
+                RequiredFieldsWarning = true;
+                return Task.CompletedTask;
+            }
             inputFieldValues = _inputFieldValues;
         }
+        //we return result and optional dictionary as tuple
         return OnClose.InvokeAsync(new Tuple<ModalDialogReturnValue, 
             IDictionary<string, object>?>(dialogReturnValue, inputFieldValues));
     }
+
+    private bool FieldRequiredAndNotFilled(ModalDialogInputField field)
+    {
+        return field.Required && (!_inputFieldValues.ContainsKey(field.Name) || IsDefaultValue(_inputFieldValues[field.Name]));
+    }
+
+    private bool IsDefaultValue(object inputFieldValue)
+    {
+        return inputFieldValue switch
+        {
+            string stringValue => stringValue == "",
+            int intValue => intValue == 0,
+            float floatValue => floatValue == 0.0f,
+            _ => throw new NotImplementedException()
+        };
+    }
+
+
 }

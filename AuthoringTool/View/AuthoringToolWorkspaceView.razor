@@ -20,9 +20,9 @@
     <ModalDialog Title="Create new learning world" Text="Please enter the required data for the learning world below:"
                  OnClose="@OnDeleteDialogClose" DialogType=@ModalDialog.ModalDialogType.YesNoCancel
                  InputFields="@(new ModalDialog.ModalDialogInputField[]{
-                                  new("Name", ModalDialog.ModalDialogInputType.Text),
-                                  new("Description", ModalDialog.ModalDialogInputType.Text),
-                                  new("Author(s)", ModalDialog.ModalDialogInputType.Text),
+                                  new("Name", ModalDialog.ModalDialogInputType.Text, true),
+                                  new("Description", ModalDialog.ModalDialogInputType.Text, true),
+                                  new("Author(s), comma separated", ModalDialog.ModalDialogInputType.Text),
                               })">
     </ModalDialog>
 }
