@@ -32,6 +32,8 @@
                                    type="@fieldType" 
                                    placeholder="@input.Name" 
                                    @oninput="@((e) => { _inputFieldValues[input.Name] = e.Value;})"
+                                   @onkeydown="@((e) => 
+                                               {if (e.Code == "Enter") TryCloseWithPositiveResult();})"
                             />
                         }
                     </div>
@@ -132,6 +134,18 @@
         return OnClose.InvokeAsync(new Tuple<ModalDialogReturnValue, 
             IDictionary<string, object>?>(dialogReturnValue, inputFieldValues));
     }
+    
+    private Task TryCloseWithPositiveResult()
+    {
+        return DialogType switch
+        {
+            ModalDialogType.Ok => ModalTryClose(ModalDialogReturnValue.Ok),
+            ModalDialogType.OkCancel => ModalTryClose(ModalDialogReturnValue.Ok),
+            ModalDialogType.DeleteCancel => ModalTryClose(ModalDialogReturnValue.Delete),
+            ModalDialogType.YesNoCancel => ModalTryClose(ModalDialogReturnValue.Yes),
+            _ => throw new ArgumentOutOfRangeException()
+        };
+    }
 
     private bool FieldRequiredAndNotFilled(ModalDialogInputField field)
     {
@@ -148,6 +162,5 @@
             _ => throw new NotImplementedException()
         };
     }
-
 
 }
