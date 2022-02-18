@@ -1,3 +1,4 @@
+@using System.Collections
 <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -10,7 +11,7 @@
             </div>
             <div class="modal-body">
                 <p>@Text</p>
-                @if (RequiredFieldsWarning && InputFields.Any(FieldRequiredAndNotFilled))
+                @if (RequiredFieldsWarning && InputFields != null && InputFields.Any(FieldRequiredAndNotFilled))
                 {
                     <div class="modal-input-warning">
                         <p><i class="bi bi-exclamation-triangle"></i> Please fill out: 
@@ -23,18 +24,41 @@
                 }
                 @if (InputFields?.Count() > 0)
                 {
-                    <div class="modal-input">
+                    <div class="modal-input container">
                         @foreach (var input in InputFields)
                         {
-                            var fieldType = input.Type.ToString().ToLower();
-                            //we are binding the oninput event to the value in our dictionary
-                            <input id="@($"modal-input-field-{input.Name.ToLower()}")" 
-                                   type="@fieldType" 
-                                   placeholder="@input.Name" 
-                                   @oninput="@((e) => { _inputFieldValues[input.Name] = e.Value;})"
-                                   @onkeydown="@((e) => 
-                                               {if (e.Code == "Enter") TryCloseWithPositiveResult();})"
-                            />
+                            <div class="row pb-2 align-items-center">
+                                <div class="col">@input.Name</div>
+                                <div class="col">
+                                    @if (input is ModalDialogDropdownInputField dropdownInput)
+                                    {
+                                        <select @onchange="args => { if (args.Value != null) 
+                                                _inputFieldValues[input.Name] = (string)args.Value; }"
+                                                disabled="@(!IsUnlocked(dropdownInput.RequiredUnlockValues))">
+                                            @if (!_inputFieldValues.ContainsKey(input.Name))
+                                            {
+                                                <option value=""></option>
+                                            }
+                                            @foreach (var option in dropdownInput.PossibleValues)
+                                            {
+                                                <option value="@option">@option</option>
+                                            }
+                                        </select>
+                                    }
+                                    else
+                                    {
+                                        var fieldType = input.Type.ToString().ToLower();
+                                        //we are binding the oninput event to the value in our dictionary
+                                        <input id="@($"modal-input-field-{input.Name.ToLower()}")"
+                                               type="@fieldType"
+                                               placeholder="@input.Name"
+                                               @oninput="@(e => { if (e.Value != null) 
+                                                             _inputFieldValues[input.Name] = (string)e.Value;  })"
+                                               @onkeydown="@(e => {if (e.Code == "Enter") 
+                                                               TryCloseWithPositiveResult();})"/>
+                                    }
+                                </div>
+                            </div>
                         }
                     </div>
                 }
@@ -73,7 +97,9 @@
         //if we need more types, feel free to expand these, but please stick to the upper case versions
         //of the allowed value of the 'input' field on the html <input> tag 
         //see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input
-        Text, Number, Date, Password, Email, Image, File
+        //Image is useless, its just another submit button
+        //For file, we have to implement an exception to use Electron.NET for the file dialog
+        Text, Number, Date, Password, Email
     }
     public class ModalDialogInputField
     {
@@ -90,6 +116,18 @@
         //Whether or not the field is required
         internal readonly bool Required;
     }
+    public class ModalDialogDropdownInputField : ModalDialogInputField
+    {
+        internal ModalDialogDropdownInputField(string name, IEnumerable<string> possibleValues, IDictionary<string, string>? requiredUnlockValues = null, bool required = false) : base(name, ModalDialogInputType.Text, required)
+        {
+            PossibleValues = possibleValues;
+            RequiredUnlockValues = requiredUnlockValues;
+        }
+        //TODO: we need to refactor this into IDictionary<IDictionary<string,string>, IEnumerable<string>>
+        internal readonly IEnumerable<string> PossibleValues;
+        internal IDictionary<string, string>? RequiredUnlockValues;
+        
+    }
 
     public enum ModalDialogType
     {
@@ -104,21 +142,21 @@
 
     public ModalDialog()
     {
-        _inputFieldValues = new Dictionary<string, object>();
+        _inputFieldValues = new Dictionary<string, string>();
     }
     
     [Parameter] public string Title { get; set; }
     [Parameter] public string Text { get; set; }
-    [Parameter] public EventCallback<Tuple<ModalDialogReturnValue, IDictionary<string, object>?>> OnClose { get; set; }
+    [Parameter] public EventCallback<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> OnClose { get; set; }
     [Parameter] public ModalDialogType DialogType { get; set; }
     [Parameter] public IEnumerable<ModalDialogInputField>? InputFields { get; set; }
     private bool RequiredFieldsWarning { get; set; }
     
-    private IDictionary<string, object> _inputFieldValues;
+    private IDictionary<string, string> _inputFieldValues;
 
     private Task ModalTryClose(ModalDialogReturnValue dialogReturnValue)
     {
-        IDictionary<string, object>? inputFieldValues = null;
+        IDictionary<string, string>? inputFieldValues = null;
         //if this is a positive response, we will set the inputFieldValues to the dictionary we have been keeping this whole time
         if (dialogReturnValue is ModalDialogReturnValue.Ok or ModalDialogReturnValue.Yes && InputFields != null)
         {
@@ -132,7 +170,7 @@
         }
         //we return result and optional dictionary as tuple
         return OnClose.InvokeAsync(new Tuple<ModalDialogReturnValue, 
-            IDictionary<string, object>?>(dialogReturnValue, inputFieldValues));
+            IDictionary<string, string>?>(dialogReturnValue, inputFieldValues));
     }
     
     private Task TryCloseWithPositiveResult()
@@ -163,4 +201,9 @@
         };
     }
 
+    private bool IsUnlocked(IDictionary<string, string>? requiredValues)
+    {
+        return requiredValues?.All(pair => _inputFieldValues.ContainsKey(pair.Key) 
+                                          && _inputFieldValues[pair.Key] == pair.Value) ?? true;
+    }
 }

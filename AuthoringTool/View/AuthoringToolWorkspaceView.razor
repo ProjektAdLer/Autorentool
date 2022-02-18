@@ -30,11 +30,17 @@
 @if (AuthoringToolWorkspaceP.CreateLearningWorldDialogueOpen)
 {
     <ModalDialog Title="Create new learning world" Text="Please enter the required data for the learning world below:"
-                 OnClose="@OnDeleteDialogClose" DialogType=@ModalDialog.ModalDialogType.OkCancel
+                 OnClose="@OnCreateDialogClose" DialogType=@ModalDialog.ModalDialogType.OkCancel
                  InputFields="@(new ModalDialog.ModalDialogInputField[]{
                                   new("Name", ModalDialog.ModalDialogInputType.Text, true),
                                   new("Description", ModalDialog.ModalDialogInputType.Text, true),
                                   new("Author(s), comma separated", ModalDialog.ModalDialogInputType.Text),
+                                  new ModalDialog.ModalDialogDropdownInputField("Lernelement Typ",
+                                      new []{"Inhalt", "Aktivierung", "baz"}, required:true),
+                                  new ModalDialog.ModalDialogDropdownInputField("",
+                                      new[]{"Text", "Bild"}, 
+                                      new Dictionary<string, string>{{"Lernelement Typ", "Inhalt"}},
+                                      required:true)
                               })">
     </ModalDialog>
 }
@@ -76,14 +82,18 @@
         AuthoringToolWorkspaceP.DeleteLastLearningWorld();
     }
 
-    private Task OnDeleteDialogClose(Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, object>?> returnValueTuple)
+    private Task OnCreateDialogClose(Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
     {
         var (response, data) = returnValueTuple;
         AuthoringToolWorkspaceP.CreateLearningWorldDialogueOpen = false;
         
         if (response == ModalDialog.ModalDialogReturnValue.Cancel) return Task.CompletedTask;
         if (data == null) throw new ApplicationException("dialog data unexectedly null after Ok return value");
-        
+
+        foreach (var pair in data)
+        {
+            Console.Write($"{pair.Key}:{pair.Value}\n");
+        }
         AuthoringToolWorkspaceP.CreateNewLearningWorld(
             data["Name"] as string ?? throw new InvalidOperationException("Name unexpectedly null"),
             data["Description"] as string ?? throw new InvalidOperationException("Description unexpectedly null"));
