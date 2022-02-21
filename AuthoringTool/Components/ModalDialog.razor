@@ -1,4 +1,5 @@
 @using System.Collections
+@using System.Threading.Tasks
 <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -33,15 +34,18 @@
                                     @if (input is ModalDialogDropdownInputField dropdownInput)
                                     {
                                         <select @onchange="args => { if (args.Value != null) 
-                                                _inputFieldValues[input.Name] = (string)args.Value; }"
-                                                disabled="@(!IsUnlocked(dropdownInput.RequiredUnlockValues))">
+                                                _inputFieldValues[input.Name] = (string)args.Value; EnsureDropdownsUpdated(); }"
+                                                disabled="@(!IsUnlocked(dropdownInput))">
                                             @if (!_inputFieldValues.ContainsKey(input.Name))
                                             {
                                                 <option value=""></option>
                                             }
-                                            @foreach (var option in dropdownInput.PossibleValues)
+                                            @if (IsUnlocked(dropdownInput))
                                             {
-                                                <option value="@option">@option</option>
+                                                @foreach (var option in dropdownInput.ValuesToChoiceMapping.First(MappingSatisfied).AvailableChoices)
+                                                {
+                                                    <option value="@option">@option</option>
+                                                }
                                             }
                                         </select>
                                     }
@@ -118,17 +122,17 @@
     }
     public class ModalDialogDropdownInputField : ModalDialogInputField
     {
-        internal ModalDialogDropdownInputField(string name, IEnumerable<string> possibleValues, IDictionary<string, string>? requiredUnlockValues = null, bool required = false) : base(name, ModalDialogInputType.Text, required)
+        internal ModalDialogDropdownInputField(string name, IEnumerable<ModalDialogDropdownInputFieldChoiceMapping> valuesToChoiceMapping, bool required = false) : base(name, ModalDialogInputType.Text, required)
         {
-            PossibleValues = possibleValues;
-            RequiredUnlockValues = requiredUnlockValues;
+            ValuesToChoiceMapping = valuesToChoiceMapping;
         }
         //TODO: we need to refactor this into IDictionary<IDictionary<string,string>, IEnumerable<string>>
-        internal readonly IEnumerable<string> PossibleValues;
-        internal IDictionary<string, string>? RequiredUnlockValues;
-        
+        internal readonly IEnumerable<ModalDialogDropdownInputFieldChoiceMapping> ValuesToChoiceMapping;
     }
 
+    public record struct ModalDialogDropdownInputFieldChoiceMapping(IDictionary<string, string>? RequiredValues, IEnumerable<string> AvailableChoices);
+
+    
     public enum ModalDialogType
     {
         Ok, OkCancel, DeleteCancel, YesNoCancel
@@ -144,6 +148,15 @@
     {
         _inputFieldValues = new Dictionary<string, string>();
     }
+
+    protected override void OnParametersSet()
+    {
+        if (InputFields == null) return;
+        foreach (var dropdownInputField in InputFields.OfType<ModalDialogDropdownInputField>())
+        {
+            //_inputFieldValues[dropdownInputField.Name] = "";
+        }
+    }
     
     [Parameter] public string Title { get; set; }
     [Parameter] public string Text { get; set; }
@@ -154,6 +167,12 @@
     
     private IDictionary<string, string> _inputFieldValues;
 
+    /// <summary>Tries to close the dialog. If all required input fields are filled, will call <see cref="OnClose"/>
+    /// with the passed dialog return value and, if applicable, the input field values.</summary>
+    /// <param name="dialogReturnValue">The <see cref="ModalDialogReturnValue"/> that should be passed in the call to
+    /// <see cref="OnClose"/>.</param>
+    /// <returns>The Task returned by <see cref="OnClose"/> if all fields are required and filled;
+    /// <see cref="Task.CompletedTask"/> otherwise</returns>
     private Task ModalTryClose(ModalDialogReturnValue dialogReturnValue)
     {
         IDictionary<string, string>? inputFieldValues = null;
@@ -173,6 +192,8 @@
             IDictionary<string, string>?>(dialogReturnValue, inputFieldValues));
     }
     
+    /// <summary>Tries to close the dialog with a positive result, depending on the <see cref="ModalDialogType"/>.</summary>
+    /// <returns>The <see cref="Task"/> returned by <see cref="ModalTryClose"/>.</returns>
     private Task TryCloseWithPositiveResult()
     {
         return DialogType switch
@@ -184,26 +205,60 @@
             _ => throw new ArgumentOutOfRangeException()
         };
     }
+    
+    /// <summary>Determines whether an input field is required and not filled with a value other than the empty
+    /// string.</summary>
+    /// <returns>true if the input field is required and not filled with a string other than the empty string;
+    /// false otherwise.</returns>
+    /// <param name="field">The <see cref="ModalDialogInputField"/> to be checked.</param>
+    private bool FieldRequiredAndNotFilled(ModalDialogInputField field) => 
+        field.Required && (!_inputFieldValues.ContainsKey(field.Name) || _inputFieldValues[field.Name] == "");
 
-    private bool FieldRequiredAndNotFilled(ModalDialogInputField field)
+    /// <summary>Determines whether the dropdown input field is unlocked or not.</summary>
+    /// <returns>true if the input field is unlocked, false if it isn't.</returns>
+    /// <param name="requiredValues">The input field to check for.</param>
+    private bool IsUnlocked(ModalDialogDropdownInputField requiredValues)
     {
-        return field.Required && (!_inputFieldValues.ContainsKey(field.Name) || IsDefaultValue(_inputFieldValues[field.Name]));
+        return !requiredValues.ValuesToChoiceMapping.Any() || requiredValues.ValuesToChoiceMapping.Any(MappingSatisfied);
     }
 
-    private bool IsDefaultValue(object inputFieldValue)
+    /// <summary>Determines whether a specific choice mapping is currently satisfied, meaning that all values
+    /// required for the choices to be available in the dropdown are satisfied.</summary>
+    /// <returns>true if all required values are satisfied or <c>mapping.RequiredValues</c> is null; false otherwise.</returns>
+    /// <param name="mapping">The <see cref="ModalDialogDropdownInputFieldChoiceMapping"/> to be checked.</param>
+    private bool MappingSatisfied(ModalDialogDropdownInputFieldChoiceMapping mapping)
     {
-        return inputFieldValue switch
+        return mapping.RequiredValues == null || mapping.RequiredValues.All(KeyPresentAndValueEquals);
+    }
+    
+    /// <summary>Determines whether a key-value-pair is present in <see cref="_inputFieldValues"/> and the value
+    /// is equal to the desired value.</summary>
+    /// <returns>true if the key is present and the value is equal to the desired value; false otherwise.</returns>
+    /// <param name="keyValuePair">The <see cref="KeyValuePair"/></param>
+    private bool KeyPresentAndValueEquals(KeyValuePair<string, string> keyValuePair)
+    {
+        var (key, value) = keyValuePair;
+        return _inputFieldValues.ContainsKey(key) && _inputFieldValues[key] == value;
+    }
+
+    /// <summary>Ensures that, on change of a dropdown input field in the dialog, all other dropdowns in the dialog
+    /// will be updated. This means if the current value set in the backing dictionary <see cref="_inputFieldValues"/>
+    /// is not a valid choice for the dropdown anymore (because the required values in
+    /// <see cref="ModalDialogDropdownInputFieldChoiceMapping"/> are not satisfied anymore), the current value will be
+    /// set to the first now valid choice, which alignes with the behaviour of the html <c>select</c> element.</summary>
+    private void EnsureDropdownsUpdated()
+    {
+        if (InputFields == null) return;
+        foreach (var dropdownInputField in InputFields.OfType<ModalDialogDropdownInputField>())
         {
-            string stringValue => stringValue == "",
-            int intValue => intValue == 0,
-            float floatValue => floatValue == 0.0f,
-            _ => throw new NotImplementedException()
-        };
-    }
-
-    private bool IsUnlocked(IDictionary<string, string>? requiredValues)
-    {
-        return requiredValues?.All(pair => _inputFieldValues.ContainsKey(pair.Key) 
-                                          && _inputFieldValues[pair.Key] == pair.Value) ?? true;
+            var availableChoices = dropdownInputField.ValuesToChoiceMapping.First(MappingSatisfied)
+                .AvailableChoices.ToArray();
+            if (!_inputFieldValues.ContainsKey(dropdownInputField.Name)) return;
+            if (_inputFieldValues[dropdownInputField.Name] != "" && 
+                !availableChoices.Contains(_inputFieldValues[dropdownInputField.Name]))
+            {
+                _inputFieldValues[dropdownInputField.Name] = availableChoices.First();
+            }
+        }
     }
 }

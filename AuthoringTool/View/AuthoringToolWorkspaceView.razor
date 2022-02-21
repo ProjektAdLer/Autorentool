@@ -31,17 +31,7 @@
 {
     <ModalDialog Title="Create new learning world" Text="Please enter the required data for the learning world below:"
                  OnClose="@OnCreateDialogClose" DialogType=@ModalDialog.ModalDialogType.OkCancel
-                 InputFields="@(new ModalDialog.ModalDialogInputField[]{
-                                  new("Name", ModalDialog.ModalDialogInputType.Text, true),
-                                  new("Description", ModalDialog.ModalDialogInputType.Text, true),
-                                  new("Author(s), comma separated", ModalDialog.ModalDialogInputType.Text),
-                                  new ModalDialog.ModalDialogDropdownInputField("Lernelement Typ",
-                                      new []{"Inhalt", "Aktivierung", "baz"}, required:true),
-                                  new ModalDialog.ModalDialogDropdownInputField("",
-                                      new[]{"Text", "Bild"}, 
-                                      new Dictionary<string, string>{{"Lernelement Typ", "Inhalt"}},
-                                      required:true)
-                              })">
+                 InputFields="@_modalDialogInputFields">
     </ModalDialog>
 }
 
@@ -70,6 +60,39 @@
     
     private AuthoringToolWorkspacePresenter AuthoringToolWorkspaceP { get; set; }
     private AuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get; set; }
+
+    private readonly ModalDialog.ModalDialogInputField[] _modalDialogInputFields = {
+        new("Name", ModalDialog.ModalDialogInputType.Text, true),
+        new("Description", ModalDialog.ModalDialogInputType.Text, true),
+        new("Author(s), comma separated", ModalDialog.ModalDialogInputType.Text),
+        new ModalDialog.ModalDialogDropdownInputField("Lernelement Kategorie",
+            new[]
+            {
+                new ModalDialog.ModalDialogDropdownInputFieldChoiceMapping(
+                null,
+                new[] { "Inhaltsvermittlung", "Aktivierung", "Interaktion", "Lernkontrolle" })
+            }, true),
+        new ModalDialog.ModalDialogDropdownInputField("Lernelement Typ",
+            new[]
+            {
+                new ModalDialog.ModalDialogDropdownInputFieldChoiceMapping(
+                    new Dictionary<string, string>{{"Lernelement Kategorie", "Inhaltsvermittlung"}},
+                    new[] { "Text", "Bild", "Video", "Audio" }
+                ),
+                new ModalDialog.ModalDialogDropdownInputFieldChoiceMapping(
+                    new Dictionary<string, string>{{"Lernelement Kategorie", "Aktivierung"}},
+                    new[]{ "Foo", "Bar" }
+                ),
+                new ModalDialog.ModalDialogDropdownInputFieldChoiceMapping(
+                    new Dictionary<string,string>{{"Lernelement Kategorie", "Interaktion"}},
+                    new[]{ "Baz", "Xyz"}
+                ),
+                new ModalDialog.ModalDialogDropdownInputFieldChoiceMapping(
+                    new Dictionary<string, string>{{"Lernelement Kategorie", "Lernkontrolle"}},
+                    new[]{ "Quiz", "Lückentext"}
+                )
+            }, true)
+    };
     
     private void AddNewLearningWorld()
     {
