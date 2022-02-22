@@ -63,35 +63,11 @@
 
     private readonly ModalDialog.ModalDialogInputField[] _modalDialogInputFields = {
         new("Name", ModalDialog.ModalDialogInputType.Text, true),
+        new("Shortname", ModalDialog.ModalDialogInputType.Text, true),
+        new("Authors", ModalDialog.ModalDialogInputType.Text),
+        new("Language", ModalDialog.ModalDialogInputType.Text, true),
         new("Description", ModalDialog.ModalDialogInputType.Text, true),
-        new("Author(s), comma separated", ModalDialog.ModalDialogInputType.Text),
-        new ModalDialog.ModalDialogDropdownInputField("Lernelement Kategorie",
-            new[]
-            {
-                new ModalDialog.ModalDialogDropdownInputFieldChoiceMapping(
-                null,
-                new[] { "Inhaltsvermittlung", "Aktivierung", "Interaktion", "Lernkontrolle" })
-            }, true),
-        new ModalDialog.ModalDialogDropdownInputField("Lernelement Typ",
-            new[]
-            {
-                new ModalDialog.ModalDialogDropdownInputFieldChoiceMapping(
-                    new Dictionary<string, string>{{"Lernelement Kategorie", "Inhaltsvermittlung"}},
-                    new[] { "Text", "Bild", "Video", "Audio" }
-                ),
-                new ModalDialog.ModalDialogDropdownInputFieldChoiceMapping(
-                    new Dictionary<string, string>{{"Lernelement Kategorie", "Aktivierung"}},
-                    new[]{ "Foo", "Bar" }
-                ),
-                new ModalDialog.ModalDialogDropdownInputFieldChoiceMapping(
-                    new Dictionary<string,string>{{"Lernelement Kategorie", "Interaktion"}},
-                    new[]{ "Baz", "Xyz"}
-                ),
-                new ModalDialog.ModalDialogDropdownInputFieldChoiceMapping(
-                    new Dictionary<string, string>{{"Lernelement Kategorie", "Lernkontrolle"}},
-                    new[]{ "Quiz", "Lückentext"}
-                )
-            }, true)
+        new("Goals", ModalDialog.ModalDialogInputType.Text)
     };
     
     private void AddNewLearningWorld()
@@ -117,10 +93,15 @@
         {
             Console.Write($"{pair.Key}:{pair.Value}\n");
         }
-        AuthoringToolWorkspaceP.CreateNewLearningWorld(
-            data["Name"] as string ?? throw new InvalidOperationException("Name unexpectedly null"),
-            data["Description"] as string ?? throw new InvalidOperationException("Description unexpectedly null"));
-    //StateHasChanged();
+        //required arguments
+        var name = data["Name"];
+        var shortname = data["Shortname"];
+        var language = data["Language"];
+        var description = data["Description"];
+        //optional arguments
+        var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
+        var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
+        AuthoringToolWorkspaceP.CreateNewLearningWorld(name, shortname, authors, language, description, goals);
         return Task.CompletedTask;
     }
     

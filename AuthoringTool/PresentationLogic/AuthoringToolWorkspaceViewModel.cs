@@ -1,4 +1,5 @@
 ﻿using AuthoringTool.Entities;
+using AuthoringTool.PresentationLogic.LearningWorld;
 
 namespace AuthoringTool.PresentationLogic
 {
@@ -7,12 +8,12 @@ namespace AuthoringTool.PresentationLogic
         public AuthoringToolWorkspaceViewModel()
         {
             Count = 0;
-            LearningWorlds = new List<ILearningWorld>();
+            LearningWorlds = new List<LearningWorldViewModel>();
             SelectedLearningWorld = null;
         }
         
         public int Count { get; set; }
-        internal List<ILearningWorld> LearningWorlds { get; set; }
-        internal ILearningWorld? SelectedLearningWorld { get; set; }
+        internal List<LearningWorldViewModel> LearningWorlds { get; set; }
+        internal LearningWorldViewModel? SelectedLearningWorld { get; set; }
     }
 }

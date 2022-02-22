@@ -1,4 +1,6 @@
-﻿namespace AuthoringTool.PresentationLogic
+﻿using AuthoringTool.PresentationLogic.LearningWorld;
+
+namespace AuthoringTool.PresentationLogic
 {
     public class AuthoringToolWorkspacePresenter
     {
@@ -16,10 +18,11 @@
             AuthoringToolWorkspaceVm.Count++;
         }
 
-        internal void CreateNewLearningWorld(string learningWorldName, string learningWorldDescription)
+        internal void CreateNewLearningWorld(string name, string shortname, string authors, string language,
+            string description, string goals)
         {
-            AuthoringToolWorkspaceVm.LearningWorlds.Add(new Entities.LearningWorld(learningWorldName,
-                learningWorldDescription));
+            var learningWorld = new LearningWorldViewModel(name, shortname, authors, language, description, goals);
+            AuthoringToolWorkspaceVm.LearningWorlds.Add(learningWorld);
         }
         
 
