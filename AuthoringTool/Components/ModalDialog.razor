@@ -36,7 +36,7 @@
                                     {
                                         <select @onchange="args => { if (args.Value != null) 
                                                 _inputFieldValues[input.Name] = (string)args.Value; EnsureDropdownsUpdated(); }"
-                                                disabled="@(!IsUnlocked(dropdownInput))">
+                                                disabled="@(!IsUnlocked(dropdownInput))" id="modal-input-drop-@input.Name.ToLower()">
                                             @if (!_inputFieldValues.ContainsKey(input.Name))
                                             {
                                                 <option value=""></option>
@@ -45,7 +45,7 @@
                                             {
                                                 @foreach (var option in dropdownInput.ValuesToChoiceMapping.First(MappingSatisfied).AvailableChoices)
                                                 {
-                                                    <option value="@option">@option</option>
+                                                    <option value="@option" id="modal-input-drop-@input.Name.ToLower()-@option.ToLower()">@option</option>
                                                 }
                                             }
                                         </select>
@@ -72,20 +72,20 @@
                 @switch (DialogType)
                 {
                     case ModalDialogType.Ok:
-                        <button type="button" class="btn btn-primary" @onclick="() => ModalTryClose(ModalDialogReturnValue.Ok)">OK</button>
+                        <button type="button" class="btn btn-primary" id="btn-ok" @onclick="() => ModalTryClose(ModalDialogReturnValue.Ok)">OK</button>
                         break;
                     case ModalDialogType.OkCancel:
-                        <button type="button" class="btn btn-warning" @onclick="() => ModalTryClose(ModalDialogReturnValue.Cancel)">Cancel</button>
-                        <button type="button" class="btn btn-success" @onclick="() => ModalTryClose(ModalDialogReturnValue.Ok)">OK</button>
+                        <button type="button" class="btn btn-warning" id="btn-cancel" @onclick="() => ModalTryClose(ModalDialogReturnValue.Cancel)">Cancel</button>
+                        <button type="button" class="btn btn-success" id="btn-ok" @onclick="() => ModalTryClose(ModalDialogReturnValue.Ok)">OK</button>
                         break;
                     case ModalDialogType.DeleteCancel:
-                        <button type="button" class="btn btn-warning" @onclick="() => ModalTryClose(ModalDialogReturnValue.Cancel)">Cancel</button>
-                        <button type="button" class="btn btn-danger" @onclick="() => ModalTryClose(ModalDialogReturnValue.Delete)">Delete</button>
+                        <button type="button" class="btn btn-warning" id="btn-cancel" @onclick="() => ModalTryClose(ModalDialogReturnValue.Cancel)">Cancel</button>
+                        <button type="button" class="btn btn-danger" id="btn-delete" @onclick="() => ModalTryClose(ModalDialogReturnValue.Delete)">Delete</button>
                         break;
                     case ModalDialogType.YesNoCancel:
-                        <button type="button" class="btn btn-success" @onclick="() => ModalTryClose(ModalDialogReturnValue.Yes)">Yes</button>
-                        <button type="button" class="btn btn-danger" @onclick="() => ModalTryClose(ModalDialogReturnValue.No)">No</button>
-                        <button type="button" class="btn btn-warning" @onclick="() => ModalTryClose(ModalDialogReturnValue.Cancel)">Cancel</button>
+                        <button type="button" class="btn btn-success" id="btn-yes" @onclick="() => ModalTryClose(ModalDialogReturnValue.Yes)">Yes</button>
+                        <button type="button" class="btn btn-danger" id="btn-no" @onclick="() => ModalTryClose(ModalDialogReturnValue.No)">No</button>
+                        <button type="button" class="btn btn-warning" id="btn-cancel" @onclick="() => ModalTryClose(ModalDialogReturnValue.Cancel)">Cancel</button>
                         break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(DialogType));
