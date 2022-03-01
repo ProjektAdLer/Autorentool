@@ -8,7 +8,7 @@ namespace AuthoringTool.API;
 
 public class AuthoringToolFactory : IAuthoringToolFactory
 {
-    public IAuthoringToolConfiguration CreateAuthoringToolConfiguration(ILog logger)
+    public IAuthoringToolConfiguration CreateAuthoringToolConfiguration(ILogger logger)
     {
         return new AuthoringToolConfiguration(logger);
     }

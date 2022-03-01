@@ -13,10 +13,10 @@ namespace AuthoringTool.API.Configuration;
 /// </summary>
 public class AuthoringToolConfiguration : IAuthoringToolConfiguration
 {
-    internal AuthoringToolConfiguration(ILog logger)
+    public AuthoringToolConfiguration(ILogger logger)
     {
         Logger = logger;
     }
     
-    public ILog Logger { get; set; }
+    public ILogger Logger { get; set; }
 }

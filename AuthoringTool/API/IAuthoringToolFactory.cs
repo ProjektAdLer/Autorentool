@@ -6,5 +6,5 @@ namespace AuthoringTool.API;
 public interface IAuthoringToolFactory  
 {
     IAuthoringTool CreateAuthoringTool(IAuthoringToolConfiguration config);
-    IAuthoringToolConfiguration CreateAuthoringToolConfiguration(ILog logger);
+    IAuthoringToolConfiguration CreateAuthoringToolConfiguration(ILogger logger);
 }

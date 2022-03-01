@@ -1,0 +1,20 @@
+﻿@page "/ExportToMoodle"
+@using AuthoringTool.PresentationLogic.API
+@inject IPresentationLogic presentationLogic
+
+<h3>ExportToMoodle</h3>
+
+<h1>TestToDo</h1>
+
+<p role="status">ExportCount: @currentCount</p>
+
+<button class="btn btn-primary" @onclick="Export">Click me</button>
+
+@code {
+    private int currentCount = 0;
+
+    private void Export() //PresentationLogic.ExportWorld
+    {
+        presentationLogic.ExportWorld();
+    }
+}

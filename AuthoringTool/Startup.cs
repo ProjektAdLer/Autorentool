@@ -1,5 +1,11 @@
-﻿using ElectronNET.API;
+﻿using AuthoringTool.API.Configuration;
+using AuthoringTool.BusinessLogic.API;
+using AuthoringTool.DataAccess.API;
+using AuthoringTool.DataAccess.WorldExport;
+using AuthoringTool.PresentationLogic.API;
+using ElectronNET.API;
 using ElectronNET.API.Entities;
+
 
 public class Startup
 {
@@ -14,6 +20,10 @@ public class Startup
         services.AddRazorPages();
         services.AddElectron();
         services.AddServerSideBlazor();
+        services.AddSingleton<IDataAccess, DataAccess>();
+        services.AddSingleton<IAuthoringToolConfiguration, AuthoringToolConfiguration>();
+        services.AddSingleton<IBusinessLogic,BusinessLogic>();
+        services.AddSingleton<IPresentationLogic,PresentationLogic>();
         if (HybridSupport.IsElectronActive)
         {
         }
@@ -22,7 +32,7 @@ public class Startup
         }
     }
 
-    public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+    public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
     {
         if (env.IsDevelopment())
         {
@@ -56,6 +66,8 @@ public class Startup
             });
         //exit app on all windows closed
         Electron.App.WindowAllClosed += () => Electron.App.Exit();
+
+        loggerFactory.AddLog4Net();
     }
     
 }
