@@ -26,12 +26,21 @@
         Description: @AuthoringToolWorkspaceVm.SelectedLearningWorld.Description</label>
 }
 <button class="btn btn-primary" @onclick="AddNewLearningWorld">Add Learning World</button>
-<button class="btn btn-primary" @onclick="DeleteLastLearningWorld">Delete Learning World</button>
-@if (AuthoringToolWorkspaceP.CreateLearningWorldDialogueOpen)
+<button class="btn btn-primary" @onclick="EditLearningWorld">Edit Learning World</button>
+<button class="btn btn-primary" @onclick="DeleteSelectedLearningWorld">Delete Learning World</button>
+@if (AuthoringToolWorkspaceP.CreateLearningWorldDialogOpen)
 {
     <ModalDialog Title="Create new learning world" Text="Please enter the required data for the learning world below:"
                  OnClose="@OnCreateDialogClose" DialogType=@ModalDialog.ModalDialogType.OkCancel
                  InputFields="@_modalDialogInputFields">
+    </ModalDialog>
+}
+
+@if (AuthoringToolWorkspaceP.EditLearningWorldDialogOpen)
+{
+    <ModalDialog Title="Create new learning world" Text="Please enter the required data for the learning world below:"
+                 OnClose="@OnEditDialogClose" DialogType=@ModalDialog.ModalDialogType.OkCancel
+                 InputFields="@_modalDialogInputFields" InputFieldsInitialValue="@_editDialogInitialValues">
     </ModalDialog>
 }
 
@@ -44,7 +53,7 @@
     {
         AuthoringToolWorkspaceVm = new AuthoringToolWorkspaceViewModel();
         AuthoringToolWorkspaceP = new AuthoringToolWorkspacePresenter(AuthoringToolWorkspaceVm);
-        
+        _editDialogInitialValues = null;
     }
     
     /// <summary>
@@ -69,26 +78,49 @@
         new("Description", ModalDialog.ModalDialogInputType.Text, true),
         new("Goals", ModalDialog.ModalDialogInputType.Text)
     };
-    
+
+    private Dictionary<string, string>? _editDialogInitialValues;
+
     private void AddNewLearningWorld()
     {
-        AuthoringToolWorkspaceP.CreateLearningWorldDialogueOpen = true;
-    //AuthoringToolWorkspaceP.CreateNewLearningWorld();
+        AuthoringToolWorkspaceP.CreateLearningWorldDialogOpen = true;
     }
     
-    private void DeleteLastLearningWorld()
+    private void EditLearningWorld() 
     {
-        AuthoringToolWorkspaceP.DeleteLastLearningWorld();
+        if (AuthoringToolWorkspaceVm.SelectedLearningWorld == null)
+        {
+            //TODO: show error message?
+            return;
+        }
+        
+        //prepare dictionary property to pass to dialog
+        _editDialogInitialValues = new Dictionary<string, string>
+        {
+            { "Name", AuthoringToolWorkspaceVm.SelectedLearningWorld.Name },
+            { "Shortname", AuthoringToolWorkspaceVm.SelectedLearningWorld.Shortname },
+            { "Authors", AuthoringToolWorkspaceVm.SelectedLearningWorld.Authors },
+            { "Language", AuthoringToolWorkspaceVm.SelectedLearningWorld.Language },
+            { "Description", AuthoringToolWorkspaceVm.SelectedLearningWorld.Description },
+            { "Goals", AuthoringToolWorkspaceVm.SelectedLearningWorld.Goals },
+        };
+        AuthoringToolWorkspaceP.EditLearningWorldDialogOpen = true;
+    }
+    
+    private void DeleteSelectedLearningWorld()
+    {
+        AuthoringToolWorkspaceP.DeleteSelectedLearningWorld();
     }
 
     private Task OnCreateDialogClose(Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
     {
         var (response, data) = returnValueTuple;
-        AuthoringToolWorkspaceP.CreateLearningWorldDialogueOpen = false;
+        AuthoringToolWorkspaceP.CreateLearningWorldDialogOpen = false;
         
         if (response == ModalDialog.ModalDialogReturnValue.Cancel) return Task.CompletedTask;
         if (data == null) throw new ApplicationException("dialog data unexectedly null after Ok return value");
 
+        //TODO: change this into a trace ILogger call
         foreach (var pair in data)
         {
             Console.Write($"{pair.Key}:{pair.Value}\n");
@@ -102,6 +134,33 @@
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
         AuthoringToolWorkspaceP.CreateNewLearningWorld(name, shortname, authors, language, description, goals);
+        return Task.CompletedTask;
+    }
+
+    private Task OnEditDialogClose(Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    {
+        var (response, data) = returnValueTuple;
+        AuthoringToolWorkspaceP.EditLearningWorldDialogOpen = false;
+
+        if (response == ModalDialog.ModalDialogReturnValue.Cancel) return Task.CompletedTask;
+        if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
+        
+        //TODO: change this into a trace ILogger call
+        foreach (var pair in data)
+        {
+            Console.Write($"{pair.Key}:{pair.Value}\n");
+        }
+        
+        //required arguments
+        var name = data["Name"];
+        var shortname = data["Shortname"];
+        var language = data["Language"];
+        var description = data["Description"];
+        //optional arguments
+        var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
+        var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
+
+        AuthoringToolWorkspaceP.EditCurrentLearningWorld(name, shortname, authors, language, description, goals);
         return Task.CompletedTask;
     }
     

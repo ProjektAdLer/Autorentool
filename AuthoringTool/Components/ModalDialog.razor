@@ -37,8 +37,11 @@
                                 <div class="col">
                                     @if (input is ModalDialogDropdownInputField dropdownInput)
                                     {
-                                        <select @onchange="args => { if (args.Value != null) 
-                                                _inputFieldValues[input.Name] = (string)args.Value; EnsureDropdownsUpdated(); }"
+                                        <select @onchange="args => { 
+                                        if (args.Value != null) 
+                                            _inputFieldValues[input.Name] = (string)args.Value;
+                                        EnsureDropdownsUpdated(); }"
+                                                value="@_inputFieldValues[input.Name]"
                                                 disabled="@(!IsUnlocked(dropdownInput))" id="modal-input-drop-@input.Name.ToLower()">
                                             @if (!_inputFieldValues.ContainsKey(input.Name))
                                             {
@@ -60,6 +63,7 @@
                                         <input id="@($"modal-input-field-{input.Name.ToLower()}")"
                                                type="@fieldType"
                                                placeholder="@input.Name"
+                                               value="@_inputFieldValues[input.Name]"
                                                @oninput="@(e => { if (e.Value != null) 
                                                              _inputFieldValues[input.Name] = (string)e.Value;  })"
                                                @onkeydown="@(e => {if (e.Code == "Enter") 
@@ -160,6 +164,9 @@
         _inputFieldValues = new Dictionary<string, string>();
         RequiredFieldsWarning = false;
     }
+    
+    
+    
 
     ///<summary>The title of the dialog.</summary>
     [Parameter, EditorRequired]
@@ -180,12 +187,33 @@
     ///<seealso cref="ModalDialogInputField"/>
     [Parameter]
     public IEnumerable<ModalDialogInputField>? InputFields { get; set; }
+    ///<summary>Dictionary with initial values for input fields, optional. Should be null if <see cref="InputFields"/>
+    /// is also null.</summary>
+    [Parameter]
+    public IDictionary<string, string>? InputFieldsInitialValue { get; set; }
+    
     
     ///<summary>Whether or not the required fields warning should be displayed or not.</summary>
     private bool RequiredFieldsWarning { get; set; }
-    
     ///<summary>Internal dictionary for storing values of input fields on change.</summary>
     private IDictionary<string, string> _inputFieldValues;
+
+
+    protected override void OnParametersSet()
+    {
+        if (InputFields != null)
+        {
+            foreach (var field in InputFields.Where(field => !_inputFieldValues.ContainsKey(field.Name)))
+            {
+                _inputFieldValues[field.Name] = "";
+            }
+        }
+        if (InputFieldsInitialValue == null) return;
+        foreach (var (key, initialValue) in InputFieldsInitialValue)
+        {
+            _inputFieldValues[key] = initialValue;
+        }
+    }
 
     /// <summary>Tries to close the dialog. If all required input fields are filled, will call <see cref="OnClose"/>
     /// with the passed dialog return value and, if applicable, the input field values.</summary>

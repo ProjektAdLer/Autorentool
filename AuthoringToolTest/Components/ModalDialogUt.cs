@@ -263,6 +263,18 @@ public class ModalDialogUt
         Assert.DoesNotThrow(() => systemUnderTest.Find("#modal-input-drop-test3-foz"));
         Assert.DoesNotThrow(() => systemUnderTest.Find("#modal-input-drop-test3-baz"));
     }
+
+    [Test]
+    public void ModalDialog_InitialValuesArePopulated()
+    {
+        Assert.Fail("NYI");
+    }
+
+    [Test]
+    public void ModalDialog_DropdownSelectionRulesRespectsInitialValues()
+    {
+        Assert.Fail("NYI");
+    }
     
     private IRenderedComponent<ModalDialog> CreateRenderedModalDialogComponent(Bunit.TestContext ctx, string title, string text,
         Action<Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, string>?>> onClose,
