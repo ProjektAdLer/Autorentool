@@ -8,6 +8,7 @@
                 <h4 class="modal-title">@Title</h4>
                 @if (DialogType is ModalDialogType.DeleteCancel or ModalDialogType.OkCancel or ModalDialogType.YesNoCancel)
                 {
+                    //Only display X in the Dialog if ModalDialogType contains Cancel.
                     <button type="button" class="close" @onclick="() => ModalTryClose(ModalDialogReturnValue.Cancel)">&times;</button>
                 }
             </div>
@@ -15,6 +16,8 @@
                 <p>@Text</p>
                 @if (RequiredFieldsWarning && InputFields != null && InputFields.Any(FieldRequiredAndNotFilled))
                 {
+                    //Display the warning only if user tried to submit without required field and there are still fields
+                    //that are required and not yet filled (in turn, it disappears as soon as it is filled out).
                     <div class="modal-input-warning">
                         <p><i class="bi bi-exclamation-triangle"></i> Please fill out: 
                             @foreach (var field in InputFields.Where(FieldRequiredAndNotFilled))
@@ -97,6 +100,7 @@
 
 @code
 {
+    ///<summary>Specifies which type of data is required in a <see cref="ModalDialogInputField"/>.</summary>
     internal enum ModalDialogInputType
     {
         //if we need more types, feel free to expand these, but please stick to the upper case versions
@@ -106,6 +110,8 @@
         //For file, we have to implement an exception to use Electron.NET for the file dialog
         Text, Number, Date, Password, Email
     }
+    
+    ///<summary>Class that represents free form input field in a modal dialog with free values.</summary>
     public class ModalDialogInputField
     {
         internal ModalDialogInputField(string name, ModalDialogInputType type, bool required = false)
@@ -114,13 +120,15 @@
             Type = type;
             Required = required;
         }
-        //Name of the input field
+        ///<summary>The name of the input field or data that is to be submitted.</summary>
         internal readonly string Name;
-        //The type of input for the field
+        ///<summary>The type of input for the field.</summary>
         internal readonly ModalDialogInputType Type;
-        //Whether or not the field is required
+        ///<summary>Whether or not the field is required.</summary>
         internal readonly bool Required;
     }
+    
+    ///<summary>Class that represents drop down input field with predetermined value choices.</summary>
     public class ModalDialogDropdownInputField : ModalDialogInputField
     {
         internal ModalDialogDropdownInputField(string name, IEnumerable<ModalDialogDropdownInputFieldChoiceMapping> valuesToChoiceMapping, bool required = false) : base(name, ModalDialogInputType.Text, required)
@@ -129,40 +137,54 @@
         }
         internal readonly IEnumerable<ModalDialogDropdownInputFieldChoiceMapping> ValuesToChoiceMapping;
     }
-
+    
+    ///<summary>Represents a mapping from required values to available choices in a <see cref="ModalDialogDropdownInputField"/>.</summary>
+    ///<remarks>If no values are required for the Choices to be available, <see cref="RequiredValues"/> can be set to null.</remarks>
     public record struct ModalDialogDropdownInputFieldChoiceMapping(IDictionary<string, string>? RequiredValues, IEnumerable<string> AvailableChoices);
 
-    
+    ///<summary>Represents what type of ModalDialog we have and what buttons are available.</summary>
     public enum ModalDialogType
     {
         Ok, OkCancel, DeleteCancel, YesNoCancel
     }
-
+    
+    ///<summary>Represents a return value from the ModalDialog in accordance with <see cref="ModalDialogType"/>.</summary>
     public enum ModalDialogReturnValue
     {
         Ok, Cancel, Delete, Yes, No
     }
 
-
+    ///<summary>Default constructor.</summary>
     public ModalDialog()
     {
         _inputFieldValues = new Dictionary<string, string>();
+        RequiredFieldsWarning = false;
     }
 
-    
+    ///<summary>The title of the dialog.</summary>
     [Parameter, EditorRequired]
     public string Title { get; set; }
+    ///<summary>The text of the dialog.</summary>
     [Parameter, EditorRequired]
     public string Text { get; set; }
+    ///<summary>The callback function that should be called with the return value and optionally a dictionary of
+    ///input values.</summary>
+    ///<seealso cref="ModalDialogReturnValue"/>
     [Parameter, EditorRequired] 
     public EventCallback<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> OnClose { get; set; }
+    ///<summary>The type of dialog.</summary>
+    ///<seealso cref="ModalDialogType"/>
     [Parameter, EditorRequired] 
     public ModalDialogType DialogType { get; set; }
+    ///<summary>A list of input fields on the dialog, optional.</summary>
+    ///<seealso cref="ModalDialogInputField"/>
     [Parameter]
     public IEnumerable<ModalDialogInputField>? InputFields { get; set; }
     
+    ///<summary>Whether or not the required fields warning should be displayed or not.</summary>
     private bool RequiredFieldsWarning { get; set; }
     
+    ///<summary>Internal dictionary for storing values of input fields on change.</summary>
     private IDictionary<string, string> _inputFieldValues;
 
     /// <summary>Tries to close the dialog. If all required input fields are filled, will call <see cref="OnClose"/>
@@ -170,7 +192,7 @@
     /// <param name="dialogReturnValue">The <see cref="ModalDialogReturnValue"/> that should be passed in the call to
     /// <see cref="OnClose"/>.</param>
     /// <returns>The Task returned by <see cref="OnClose"/> if all fields are required and filled;
-    /// <see cref="Task.CompletedTask"/> otherwise</returns>
+    /// <see cref="Task.CompletedTask"/> otherwise.</returns>
     private Task ModalTryClose(ModalDialogReturnValue dialogReturnValue)
     {
         IDictionary<string, string>? inputFieldValues = null;
