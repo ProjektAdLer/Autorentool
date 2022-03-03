@@ -53,10 +53,12 @@ public class ModalDialogUt
         //Ok button
         var title = "Test Dialog";
         var text = "This is a dialog for automated testing purposes";
+        var onCloseCalled = false;
         Action<Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
         {
             Assert.AreEqual(ModalDialog.ModalDialogReturnValue.Ok, tuple.Item1);
             Assert.AreEqual(null, tuple.Item2);
+            onCloseCalled = true;
         };
         var dialogType = ModalDialog.ModalDialogType.Ok;
 
@@ -64,6 +66,8 @@ public class ModalDialogUt
             dialogType, null);
         var btn = systemUnderTest.Find("#btn-ok");
         btn.Click();
+        Assert.AreEqual(true, onCloseCalled);
+        onCloseCalled = false;
         
         //ModalDialogType.OkCancel
         //Ok button
@@ -72,17 +76,22 @@ public class ModalDialogUt
         systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose, dialogType, null);
         btn = systemUnderTest.Find("#btn-ok");
         btn.Click();
+        Assert.AreEqual(true, onCloseCalled);
+        onCloseCalled = false;
         
         //Cancel button
         onClose = tuple =>
                 {
                     Assert.AreEqual(ModalDialog.ModalDialogReturnValue.Cancel, tuple.Item1);
                     Assert.AreEqual(null, tuple.Item2);
+                    onCloseCalled = true;
                 };
         
         systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose, dialogType, null);
         btn = systemUnderTest.Find("#btn-cancel");
         btn.Click();
+        Assert.AreEqual(true, onCloseCalled);
+        onCloseCalled = false;
         
         //ModalDialogType.DeleteCancel
         //Cancel button
@@ -91,17 +100,22 @@ public class ModalDialogUt
         systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose, dialogType, null);
         btn = systemUnderTest.Find("#btn-cancel");
         btn.Click();
+        Assert.AreEqual(true, onCloseCalled);
+        onCloseCalled = false;
         
         //Delete button
         onClose = tuple =>
                 {
                     Assert.AreEqual(ModalDialog.ModalDialogReturnValue.Delete, tuple.Item1);
                     Assert.AreEqual(null, tuple.Item2);
+                    onCloseCalled = true;
                 };
         
         systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose, dialogType, null);
         btn = systemUnderTest.Find("#btn-delete");
         btn.Click();
+        Assert.AreEqual(true, onCloseCalled);
+        onCloseCalled = false;
         
         //ModalDialogType.YesNoCancel
         //Cancel button
@@ -110,11 +124,14 @@ public class ModalDialogUt
                 {
                     Assert.AreEqual(ModalDialog.ModalDialogReturnValue.Cancel, tuple.Item1);
                     Assert.AreEqual(null, tuple.Item2);
+                    onCloseCalled = true;
                 };
         
         systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose, dialogType, null);
         btn = systemUnderTest.Find("#btn-cancel");
         btn.Click();
+        Assert.AreEqual(true, onCloseCalled);
+        onCloseCalled = false;
         
         
         //No button
@@ -122,22 +139,35 @@ public class ModalDialogUt
                 {
                     Assert.AreEqual(ModalDialog.ModalDialogReturnValue.No, tuple.Item1);
                     Assert.AreEqual(null, tuple.Item2);
+                    onCloseCalled = true;
                 };
         
         systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose, dialogType, null);
         btn = systemUnderTest.Find("#btn-no");
         btn.Click();
+        Assert.AreEqual(true, onCloseCalled);
+        onCloseCalled = false;
         
         //Yes button
         onClose = tuple =>
                 {
                     Assert.AreEqual(ModalDialog.ModalDialogReturnValue.Yes, tuple.Item1);
                     Assert.AreEqual(null, tuple.Item2);
+                    onCloseCalled = true;
                 };
         
         systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose, dialogType, null);
         btn = systemUnderTest.Find("#btn-yes");
         btn.Click();
+        Assert.AreEqual(true, onCloseCalled);
+        onCloseCalled = false;
+    }
+    
+    [Test]
+    public void ModalDialog_EnterKeyOnInputFieldSubmitsDialog() 
+    {
+        
+        Assert.Fail("NYI");
     }
     
     [Test]
