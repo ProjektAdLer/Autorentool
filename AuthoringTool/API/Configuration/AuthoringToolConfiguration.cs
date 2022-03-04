@@ -1,5 +1,4 @@
-﻿using log4net;
-
+﻿
 namespace AuthoringTool.API.Configuration;
 
 /// <summary>
@@ -13,7 +12,7 @@ namespace AuthoringTool.API.Configuration;
 /// </summary>
 public class AuthoringToolConfiguration : IAuthoringToolConfiguration
 {
-    public AuthoringToolConfiguration(ILogger logger)
+    public AuthoringToolConfiguration(ILogger<AuthoringToolConfiguration> logger)
     {
         Logger = logger;
     }

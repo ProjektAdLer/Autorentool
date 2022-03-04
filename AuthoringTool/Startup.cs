@@ -1,7 +1,7 @@
-﻿using AuthoringTool.API.Configuration;
+﻿using AuthoringTool.API;
+using AuthoringTool.API.Configuration;
 using AuthoringTool.BusinessLogic.API;
 using AuthoringTool.DataAccess.API;
-using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.PresentationLogic.API;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
@@ -17,13 +17,28 @@ public class Startup
     }
     public void ConfigureServices(IServiceCollection services)
     {
+        //NLog for logging
+        //TODO: find out why nlog won't log our runtime errors to console, so its disabled for now :/
+        /*
+        services.AddLogging(builder =>
+        {
+            builder.ClearProviders();
+            builder.SetMinimumLevel(LogLevel.Trace);
+            builder.AddNLog();
+        });
+        */
+        
+        //AuthoringTool
+        services.AddSingleton<IAuthoringToolConfiguration, AuthoringToolConfiguration>();
+        services.AddSingleton<IDataAccess, DataAccess>();
+        services.AddSingleton<IBusinessLogic, BusinessLogic>();
+        services.AddSingleton<IPresentationLogic, PresentationLogic>();
+        services.AddSingleton<IAuthoringTool, AuthoringTool.API.AuthoringTool>();
+
+        //Blazor and Electron
         services.AddRazorPages();
         services.AddElectron();
         services.AddServerSideBlazor();
-        services.AddSingleton<IDataAccess, DataAccess>();
-        services.AddSingleton<IAuthoringToolConfiguration, AuthoringToolConfiguration>();
-        services.AddSingleton<IBusinessLogic,BusinessLogic>();
-        services.AddSingleton<IPresentationLogic,PresentationLogic>();
         if (HybridSupport.IsElectronActive)
         {
         }
@@ -66,8 +81,6 @@ public class Startup
             });
         //exit app on all windows closed
         Electron.App.WindowAllClosed += () => Electron.App.Exit();
-
-        loggerFactory.AddLog4Net();
     }
     
 }

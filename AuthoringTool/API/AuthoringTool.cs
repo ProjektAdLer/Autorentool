@@ -15,8 +15,7 @@ namespace AuthoringTool.API;
 /// </summary>
 internal class AuthoringTool : IAuthoringTool
 {
-
-    internal AuthoringTool(
+    public AuthoringTool(
         IAuthoringToolConfiguration configuration,
         IPresentationLogic presentationLogic)
     {
