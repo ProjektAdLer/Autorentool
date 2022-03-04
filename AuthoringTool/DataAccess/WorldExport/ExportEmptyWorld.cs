@@ -22,7 +22,7 @@ public class ExportEmptyWorld : IExportEmptyWorld
             
         //copy template from current workdir
         var tempDir = GetTempDir();
-        DirectoryCopy("template", tempDir);
+        DirectoryCopy("TemplateMoodleExport", tempDir);
 
         //get paths
         var coursePath = tempDir + "/course/course.xml";

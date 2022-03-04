@@ -23,6 +23,7 @@ public class PresentationLogicUt
         Assert.That(systemUnderTest.BusinessLogic, Is.EqualTo(mockBusinessLogic));
         
     }
+   
     
     
 
