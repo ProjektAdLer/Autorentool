@@ -67,7 +67,7 @@
                   @onmouseup=@(e => mouseService.FireUp(this, e))>
         @foreach (var learningSpace in AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces)
         {
-            <Draggable LearningObject="learningSpace"
+            <Draggable LearningObject="learningSpace" OnClicked="@OnLearningObjectClick"
                        @bind-X="@learningSpace.PositionX" @bind-Y="@learningSpace.PositionY">
                 <rect height="50" width="60" fill="lightgreen"></rect>
                 <text x="3" y="15">@learningSpace.Name</text>
@@ -244,6 +244,12 @@
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
         AuthoringToolWorkspaceP.CreateNewLearningSpace(AuthoringToolWorkspaceVm.SelectedLearningWorld, name, shortname, authors, description, goals);
+        return Task.CompletedTask;
+    }
+
+    private Task OnLearningObjectClick(ILearningObjectViewModel learningObject)
+    {
+        AuthoringToolWorkspaceP.SelectedLearningObject = learningObject;
         return Task.CompletedTask;
     }
 

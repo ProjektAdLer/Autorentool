@@ -16,7 +16,7 @@ namespace AuthoringTool.PresentationLogic
         internal bool EditLearningWorldDialogOpen { get; set; }
 
         internal bool CreateLearningSpaceDialogueOpen { get; set; }
-        internal LearningSpaceViewModel SelectedLearningObject { get; set; }
+        internal ILearningObjectViewModel SelectedLearningObject { get; set; }
 
         internal void IncrementCount()
         {
