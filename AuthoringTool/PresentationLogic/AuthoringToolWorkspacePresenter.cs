@@ -16,6 +16,7 @@ namespace AuthoringTool.PresentationLogic
         internal bool EditLearningWorldDialogOpen { get; set; }
 
         internal bool CreateLearningSpaceDialogueOpen { get; set; }
+        internal bool EditLearningSpaceDialogOpen { get; set; }
         internal ILearningObjectViewModel SelectedLearningObject { get; set; }
 
         internal void IncrementCount()
@@ -55,6 +56,18 @@ namespace AuthoringTool.PresentationLogic
         {
             var learningSpace = new LearningSpaceViewModel(name, shortname, authors, description, goals);
             selectedLearningWorld.LearningSpaces.Add(learningSpace);
+        }
+        
+        public void EditSelectedLearningObject(string name, string shortname, string authors, string description, string goals)
+        {
+            if (SelectedLearningObject == null)
+                throw new ApplicationException("SelectedLearningWorld is null");
+            
+            SelectedLearningObject.Name = name;
+            SelectedLearningObject.Shortname = shortname;
+            SelectedLearningObject.Authors = authors;
+            SelectedLearningObject.Description = description;
+            SelectedLearningObject.Goals = goals;
         }
 
         public void DeleteLastLearningSpace(LearningWorldViewModel selectedLearningWorld)

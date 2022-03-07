@@ -60,6 +60,10 @@
         ,
         Description:
         @if (AuthoringToolWorkspaceP.SelectedLearningObject != null) @AuthoringToolWorkspaceP.SelectedLearningObject.Description
+        @if (AuthoringToolWorkspaceP.SelectedLearningObject != null)
+        {
+            <button class="btn btn-primary" @onclick="EditLearningSpace">Edit selected Learning Space</button>
+        }
     </label>
     <svg style="width: 100%; height: 600px; border: 1px solid green"
          xmlns="http://www.w3.org/2000/svg"
@@ -82,6 +86,14 @@
     <ModalDialog Title="Create new learning world" Text="Please enter the required data for the learning world below:"
                  OnClose="@OnEditDialogClose" DialogType=@ModalDialog.ModalDialogType.OkCancel
                  InputFields="@_modalDialogInputFields" InputFieldsInitialValue="@_editDialogInitialValues">
+    </ModalDialog>
+}
+
+@if (AuthoringToolWorkspaceP.EditLearningSpaceDialogOpen)
+{
+    <ModalDialog Title="Edit existing learning space" Text="Please enter the required data for the learning space below:"
+                 OnClose="@OnEditSpaceDialogClose" DialogType=@ModalDialog.ModalDialogType.OkCancel
+                 InputFields="@_modalSpaceDialogInputFields" InputFieldsInitialValue="@_editDialogInitialValues">
     </ModalDialog>
 }
 
@@ -246,6 +258,45 @@
         AuthoringToolWorkspaceP.CreateNewLearningSpace(AuthoringToolWorkspaceVm.SelectedLearningWorld, name, shortname, authors, description, goals);
         return Task.CompletedTask;
     }
+
+    private void EditLearningSpace()
+    {
+        //prepare dictionary property to pass to dialog
+        _editDialogInitialValues = new Dictionary<string, string>
+        {
+            {"Name", AuthoringToolWorkspaceP.SelectedLearningObject.Name},
+            {"Shortname", AuthoringToolWorkspaceP.SelectedLearningObject.Shortname},
+            {"Authors", AuthoringToolWorkspaceP.SelectedLearningObject.Authors},
+            {"Description", AuthoringToolWorkspaceP.SelectedLearningObject.Description},
+            {"Goals", AuthoringToolWorkspaceP.SelectedLearningObject.Goals},
+        };
+        AuthoringToolWorkspaceP.EditLearningSpaceDialogOpen = true;
+    }
+    private Task OnEditSpaceDialogClose(Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+        {
+            var (response, data) = returnValueTuple;
+            AuthoringToolWorkspaceP.EditLearningSpaceDialogOpen = false;
+    
+            if (response == ModalDialog.ModalDialogReturnValue.Cancel) return Task.CompletedTask;
+            if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
+    
+        //TODO: change this into a trace ILogger call
+            foreach (var pair in data)
+            {
+                Console.Write($"{pair.Key}:{pair.Value}\n");
+            }
+    
+        //required arguments
+            var name = data["Name"];
+            var shortname = data["Shortname"];
+            var description = data["Description"];
+        //optional arguments
+            var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
+            var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
+    
+            AuthoringToolWorkspaceP.EditSelectedLearningObject(name, shortname, authors, description, goals);
+            return Task.CompletedTask;
+        }
 
     private Task OnLearningObjectClick(ILearningObjectViewModel learningObject)
     {
