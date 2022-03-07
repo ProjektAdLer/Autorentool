@@ -68,7 +68,7 @@
         @foreach (var learningSpace in AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces)
         {
             <Draggable LearningObject="learningSpace"
-                       X="@learningSpace.PositionX" Y="@learningSpace.PositionY">
+                       @bind-X="@learningSpace.PositionX" @bind-Y="@learningSpace.PositionY">
                 <rect height="50" width="60" fill="lightgreen"></rect>
                 <text x="3" y="15">@learningSpace.Name</text>
 

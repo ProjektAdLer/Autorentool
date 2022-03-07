@@ -4,6 +4,6 @@ public interface ILearningObjectViewModel
 {
     string Name { get; set; }
     string Description { get; set; }
-    int PositionX { get; set; }
-    int PositionY { get; set; }
+    double PositionX { get; set; }
+    double PositionY { get; set; }
 }
