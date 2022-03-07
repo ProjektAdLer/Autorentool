@@ -3,7 +3,7 @@ using AuthoringTool.PresentationLogic.LearningElement;
 
 namespace AuthoringTool.PresentationLogic.LearningSpace;
 
-public class LearningSpaceViewModel
+public class LearningSpaceViewModel : ILearningObjectViewModel
 {
     public LearningSpaceViewModel(string name, string shortname, string authors, string description,
         string goals, ICollection<LearningElementViewModel>? learningElements = null, int positionX = 0,

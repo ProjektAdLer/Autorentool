@@ -1,4 +1,5 @@
-﻿using ElectronNET.API;
+﻿using AuthoringTool.BusinessLogic;
+using ElectronNET.API;
 using ElectronNET.API.Entities;
 
 public class Startup
@@ -14,6 +15,8 @@ public class Startup
         services.AddRazorPages();
         services.AddElectron();
         services.AddServerSideBlazor();
+        services.AddSingleton<MouseService>();
+        services.AddSingleton<IMouseService>(provider => provider.GetRequiredService<MouseService>());
         if (HybridSupport.IsElectronActive)
         {
         }

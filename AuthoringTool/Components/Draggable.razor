@@ -1,0 +1,131 @@
+@using AuthoringTool.BusinessLogic
+@using AuthoringTool.PresentationLogic
+@inject IMouseService _mouseService
+@implements IDisposable
+<g transform="translate(@x, @y)" @onmousedown="OnDown" cursor=@cursor @onmousedown:stopPropagation="true">
+    @ChildContent
+</g>
+
+@code {
+    //@onclick="@(e => OnClick(this, e))"
+
+    ///Code from https://github.com/AlexeyBoiko/BlazorDraggableDemo
+#nullable enable
+    //get (optional) child html content as a RenderFragment
+        [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+#nullable disable
+
+    //fields bound to translate vector of <g> element
+    //make these nullable so we can have parent set them once via Parameter X and Y
+    private double? x;
+    private double? y;
+
+
+    [Parameter]
+    public ILearningObjectViewModel LearningObject { get; set; }
+
+    [Parameter]
+    public double X
+    {
+        get => x ?? 0;
+        set
+        {
+    //Only update the value via X if we don't have a value yet, or the component isn't being dragged but has a delegate
+            if (!x.HasValue || (!isDown & XChanged.HasDelegate)) x = value;
+        }
+    }
+
+    [Parameter]
+    public double Y
+    {
+        get => y ?? 0;
+        set
+        {
+            if (!y.HasValue || (!isDown & YChanged.HasDelegate)) y = value;
+        }
+    }
+
+    //not really sure what these are for, always seem to be null
+    [Parameter]
+    public EventCallback<double> XChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<double> YChanged { get; set; }
+
+    //cursorX and cursorY are used to remove the offset between cursor and element on move, so we only get a delta
+    private double cursorX;
+    private double cursorY;
+
+    private bool isDown;
+    private string cursor = "grab";
+    private bool hasMoved;
+
+
+    //This is called after component has received initial parameters in SetParametersAsync
+    protected override void OnInitialized()
+    {
+        _mouseService.OnMove += OnMove;
+        _mouseService.OnUp += OnUpOrOut;
+        _mouseService.OnOut += OnUpOrOut;
+        base.OnInitialized();
+    }
+
+    //This is called after parameters have been set
+    protected override void OnParametersSet()
+    {
+    //Assign default values to nullable values, because they haven't been set as Parameters
+        x ??= 0;
+        y ??= 0;
+    }
+
+    private void OnDown(MouseEventArgs e)
+    {
+        cursorX = e.ClientX;
+        cursorY = e.ClientY;
+        isDown = true;
+        cursor = "grabbing";
+        hasMoved = false;
+    }
+
+    private void OnUpOrOut(object sender, MouseEventArgs e)
+    {
+        if (isDown && !hasMoved)
+        {
+            OnClick(sender, e);
+        }
+        isDown = false;
+        cursor = "grab";
+    }
+
+    private void OnMove(object sender, MouseEventArgs e)
+    {
+        if (!isDown) return;
+        x -= cursorX - e.ClientX;
+        y -= cursorY - e.ClientY;
+
+        cursorX = e.ClientX;
+        cursorY = e.ClientY;
+
+        XChanged.InvokeAsync(x.Value);
+        YChanged.InvokeAsync(y.Value);
+
+        hasMoved = true;
+    }
+
+    private void OnClick(object sender, MouseEventArgs e)
+    {
+        Console.WriteLine("OnClick");
+        Console.WriteLine($"LearningObject.Name: {LearningObject.Name}");
+        Console.WriteLine($"e.OffsetX:{e.OffsetX} e.OffsetY:{e.OffsetY}");
+    }
+
+    public void Dispose()
+    {
+        Console.WriteLine($"Dispose: {LearningObject.Name}");
+        _mouseService.OnMove -= OnMove;
+        _mouseService.OnUp -= OnUpOrOut;
+        _mouseService.OnOut -= OnUpOrOut;
+    }
+
+}

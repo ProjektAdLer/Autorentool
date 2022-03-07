@@ -1,6 +1,8 @@
 ﻿@page "/AuthoringToolWorkspaceView"
 @using AuthoringTool.PresentationLogic
 @using AuthoringTool.Components
+@using AuthoringTool.BusinessLogic
+@inject MouseService mouseService
 
 <h3>AuthoringTool Workspace</h3>
 
@@ -51,6 +53,28 @@
                      InputFields="@_modalSpaceDialogInputFields">
         </ModalDialog>
     }
+
+    <label>
+        Selected element:
+        @if (AuthoringToolWorkspaceP.SelectedLearningObject != null) @AuthoringToolWorkspaceP.SelectedLearningObject.Name
+        ,
+        Description:
+        @if (AuthoringToolWorkspaceP.SelectedLearningObject != null) @AuthoringToolWorkspaceP.SelectedLearningObject.Description
+    </label>
+    <svg style="width: 100%; height: 600px; border: 1px solid green"
+         xmlns="http://www.w3.org/2000/svg"
+         @onmousemove=@(e => mouseService.FireMove(this, e))
+                  @onmouseup=@(e => mouseService.FireUp(this, e))>
+        @foreach (var learningSpace in AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces)
+        {
+            <Draggable LearningObject="learningSpace"
+                       X="@learningSpace.PositionX" Y="@learningSpace.PositionY">
+                <rect height="50" width="60" fill="lightgreen"></rect>
+                <text x="3" y="15">@learningSpace.Name</text>
+
+            </Draggable>
+        }
+    </svg>
 }
 
 @if (AuthoringToolWorkspaceP.EditLearningWorldDialogOpen)
