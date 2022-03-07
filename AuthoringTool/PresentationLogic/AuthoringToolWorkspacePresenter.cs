@@ -1,4 +1,5 @@
 ﻿using AuthoringTool.PresentationLogic.LearningWorld;
+using AuthoringTool.PresentationLogic.LearningSpace;
 
 namespace AuthoringTool.PresentationLogic
 {
@@ -13,6 +14,9 @@ namespace AuthoringTool.PresentationLogic
         
         internal bool CreateLearningWorldDialogOpen { get; set; }
         internal bool EditLearningWorldDialogOpen { get; set; }
+
+        internal bool CreateLearningSpaceDialogueOpen { get; set; }
+        internal LearningSpaceViewModel SelectedLearningObject { get; set; }
 
         internal void IncrementCount()
         {
@@ -44,6 +48,21 @@ namespace AuthoringTool.PresentationLogic
             AuthoringToolWorkspaceVm.SelectedLearningWorld.Language = language;
             AuthoringToolWorkspaceVm.SelectedLearningWorld.Description = description;
             AuthoringToolWorkspaceVm.SelectedLearningWorld.Goals = goals;
+        }
+
+        public void CreateNewLearningSpace(LearningWorldViewModel selectedLearningWorld, string name, string shortname,
+            string authors, string description, string goals)
+        {
+            var learningSpace = new LearningSpaceViewModel(name, shortname, authors, description, goals);
+            selectedLearningWorld.LearningSpaces.Add(learningSpace);
+        }
+
+        public void DeleteLastLearningSpace(LearningWorldViewModel selectedLearningWorld)
+        {
+            if (selectedLearningWorld.LearningSpaces.Count > 0)
+            {
+                selectedLearningWorld.LearningSpaces.Remove(selectedLearningWorld.LearningSpaces.Last());
+            }
         }
     }
 }

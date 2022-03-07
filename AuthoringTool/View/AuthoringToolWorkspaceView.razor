@@ -22,8 +22,12 @@
 </label>
 @if (AuthoringToolWorkspaceVm.SelectedLearningWorld != null)
 {
-    <label>Selected world: @AuthoringToolWorkspaceVm.SelectedLearningWorld.Name, 
-        Description: @AuthoringToolWorkspaceVm.SelectedLearningWorld.Description</label>
+    <label>
+        Selected world: @AuthoringToolWorkspaceVm.SelectedLearningWorld.Name,
+        Description: @AuthoringToolWorkspaceVm.SelectedLearningWorld.Description,
+        Elements: @AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningElements.Count,
+        Spaces: @AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces.Count
+    </label>
 }
 <button class="btn btn-primary" @onclick="AddNewLearningWorld">Add Learning World</button>
 <button class="btn btn-primary" @onclick="EditLearningWorld">Edit Learning World</button>
@@ -34,6 +38,19 @@
                  OnClose="@OnCreateDialogClose" DialogType=@ModalDialog.ModalDialogType.OkCancel
                  InputFields="@_modalDialogInputFields">
     </ModalDialog>
+}
+@if (AuthoringToolWorkspaceVm.SelectedLearningWorld != null)
+{
+    <br>
+    <button class="btn btn-primary" @onclick="AddNewLearningSpace">Add Learning Space</button>
+    <button class="btn btn-primary" @onclick="DeleteLastLearningSpace">Delete Learning Space</button>
+    @if (AuthoringToolWorkspaceP.CreateLearningSpaceDialogueOpen)
+    {
+        <ModalDialog Title="Create new learning space" Text="Please enter the required data for the learning space below:"
+                     OnClose="@OnCreateSpaceDialogClose" DialogType=@ModalDialog.ModalDialogType.OkCancel
+                     InputFields="@_modalSpaceDialogInputFields">
+        </ModalDialog>
+    }
 }
 
 @if (AuthoringToolWorkspaceP.EditLearningWorldDialogOpen)
@@ -163,5 +180,47 @@
         AuthoringToolWorkspaceP.EditCurrentLearningWorld(name, shortname, authors, language, description, goals);
         return Task.CompletedTask;
     }
-    
+
+    private void AddNewLearningSpace()
+    {
+        AuthoringToolWorkspaceP.CreateLearningSpaceDialogueOpen = true;
+    }
+
+    private void DeleteLastLearningSpace()
+    {
+        AuthoringToolWorkspaceP.DeleteLastLearningSpace(AuthoringToolWorkspaceVm.SelectedLearningWorld);
+    }
+
+    private readonly ModalDialog.ModalDialogInputField[] _modalSpaceDialogInputFields =
+    {
+        new("Name", ModalDialog.ModalDialogInputType.Text, true),
+        new("Shortname", ModalDialog.ModalDialogInputType.Text, true),
+        new("Authors", ModalDialog.ModalDialogInputType.Text),
+        new("Description", ModalDialog.ModalDialogInputType.Text, true),
+        new("Goals", ModalDialog.ModalDialogInputType.Text)
+    };
+
+    private Task OnCreateSpaceDialogClose(Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    {
+        var (response, data) = returnValueTuple;
+        AuthoringToolWorkspaceP.CreateLearningSpaceDialogueOpen = false;
+
+        if (response == ModalDialog.ModalDialogReturnValue.Cancel) return Task.CompletedTask;
+        if (data == null) throw new ApplicationException("dialog data unexectedly null after Ok return value");
+
+        foreach (var pair in data)
+        {
+            Console.Write($"{pair.Key}:{pair.Value}\n");
+        }
+    //required arguments
+        var name = data["Name"];
+        var shortname = data["Shortname"];
+        var description = data["Description"];
+    //optional arguments
+        var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
+        var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
+        AuthoringToolWorkspaceP.CreateNewLearningSpace(AuthoringToolWorkspaceVm.SelectedLearningWorld, name, shortname, authors, description, goals);
+        return Task.CompletedTask;
+    }
+
 }
