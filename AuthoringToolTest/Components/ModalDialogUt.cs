@@ -84,7 +84,7 @@ public class ModalDialogUt
     }
     
     [Test]
-    public void ModalDialog_EnterKeyOnInputFieldSubmitsDialog()
+    public void ModalDialog_EnterKeyPressedOnInputField_SubmitsDialog()
     {
         using var ctx = new Bunit.TestContext();
         
@@ -114,7 +114,7 @@ public class ModalDialogUt
     }
     
     [Test]
-    public void ModalDialog_CallsCallbackWithCorrectInputFieldValues()
+    public void ModalDialog_DialogSubmitted_CallsCallbackWithCorrectInputFieldValues()
     {
         using var ctx = new Bunit.TestContext();
         
@@ -161,7 +161,7 @@ public class ModalDialogUt
     }
 
     [Test]
-    public void ModalDialog_RefusesToCallCallbackWithMissingRequiredValues()
+    public void ModalDialog_MissingRequiredValues_RefusesToCallCallback()
     {
         using var ctx = new Bunit.TestContext();
         
@@ -201,7 +201,7 @@ public class ModalDialogUt
     }
 
     [Test]
-    public void ModalDialog_DropdownSelectionRulesChangeAvailableOptions()
+    public void ModalDialog_DropdownSelectionRules_ChangeAvailableOptions()
     {
         using var ctx = new Bunit.TestContext();
         
@@ -240,7 +240,7 @@ public class ModalDialogUt
     }
 
     [Test]
-    public void ModalDialog_InitialValuesArePopulatedAndReturned()
+    public void ModalDialog_InitialValues_PopulatedAndReturned()
     {
         using var ctx = new Bunit.TestContext();
         
@@ -284,7 +284,7 @@ public class ModalDialogUt
     }
 
     [Test]
-    public void ModalDialog_CorrectReturnValueAfterInitialValueChanged()
+    public void ModalDialog_InitialValue_ReturnsCorrectValueAfterChange()
     {
         using var ctx = new Bunit.TestContext();
         
@@ -328,7 +328,7 @@ public class ModalDialogUt
     }
 
     [Test]
-    public void ModalDialog_DropdownSelectionRulesCorrectWhenInitialValuesProvided()
+    public void ModalDialog_DropdownSelectionRules_CorrectWhenInitialValuesProvided()
     {
         using var ctx = new Bunit.TestContext();
         
