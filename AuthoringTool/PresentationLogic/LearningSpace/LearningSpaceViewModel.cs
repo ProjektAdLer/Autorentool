@@ -5,9 +5,8 @@ namespace AuthoringTool.PresentationLogic.LearningSpace;
 
 public class LearningSpaceViewModel : ILearningObjectViewModel
 {
-    public LearningSpaceViewModel(string name, string shortname, string authors, string description,
-        string goals, ICollection<LearningElementViewModel>? learningElements = null, int positionX = 0,
-        int positionY = 0)
+    public LearningSpaceViewModel(string name, string shortname, string authors, string description, string goals,
+        ICollection<LearningElementViewModel>? learningElements = null, double positionX = 0, double positionY = 0)
     {
         Name = name;
         Shortname = shortname;
