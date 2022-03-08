@@ -1,6 +1,7 @@
 @using AuthoringTool.BusinessLogic
 @using AuthoringTool.PresentationLogic
 @inject IMouseService _mouseService
+@inject ILogger<Draggable> _logger;
 @implements IDisposable
 <g transform="translate(@x, @y)" @onmousedown="OnDown" cursor=@cursor @onmousedown:stopPropagation="true">
     @ChildContent
@@ -118,15 +119,15 @@
 
     private Task OnClick(object sender, MouseEventArgs e)
     {
-        Console.WriteLine("OnClick");
-        Console.WriteLine($"LearningObject.Name: {LearningObject.Name}");
-        Console.WriteLine($"e.OffsetX:{e.OffsetX} e.OffsetY:{e.OffsetY}");
+        _logger.LogDebug("OnClick");
+        _logger.LogDebug($"LearningObject.Name: {LearningObject.Name}");
+        _logger.LogDebug($"e.OffsetX:{e.OffsetX} e.OffsetY:{e.OffsetY}");
         return OnClicked.InvokeAsync(LearningObject);
     }
 
     public void Dispose()
     {
-        Console.WriteLine($"Dispose: {LearningObject.Name}");
+        _logger.LogDebug($"Dispose: {LearningObject.Name}");
         _mouseService.OnMove -= OnMove;
         _mouseService.OnUp -= OnUpOrOut;
         _mouseService.OnOut -= OnUpOrOut;
