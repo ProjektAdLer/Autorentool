@@ -23,11 +23,29 @@ public class PresentationLogicUt
         Assert.That(systemUnderTest.BusinessLogic, Is.EqualTo(mockBusinessLogic));
         
     }
-   
     
-    
+    [Test]
+    public void PresentationLogic_ExportWorldOnly_ExportWorld()
+    {
+        //Arrange
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var systemUnderTest = CreateTestablePresentationLogic(null,mockBusinessLogic);
+        
+        //Act
+        systemUnderTest.ExportWorld();
+        
+        //Assert
+        mockBusinessLogic.Received().ExportWorld();
+    }
 
     private static AuthoringTool.PresentationLogic.API.PresentationLogic CreateStandardPresentationLogic(IAuthoringToolConfiguration fakeConfiguration=null, IBusinessLogic fakeBusinessLogic=null)
+    {
+        fakeConfiguration ??= Substitute.For<IAuthoringToolConfiguration>();
+        fakeBusinessLogic ??= Substitute.For<IBusinessLogic>();
+        return new AuthoringTool.PresentationLogic.API.PresentationLogic(fakeConfiguration, fakeBusinessLogic);
+    }
+    
+    private static AuthoringTool.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(IAuthoringToolConfiguration fakeConfiguration=null, IBusinessLogic fakeBusinessLogic=null)
     {
         fakeConfiguration ??= Substitute.For<IAuthoringToolConfiguration>();
         fakeBusinessLogic ??= Substitute.For<IBusinessLogic>();
