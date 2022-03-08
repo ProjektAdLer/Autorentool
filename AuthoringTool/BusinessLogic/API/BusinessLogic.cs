@@ -1,13 +1,15 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Data;
+using System.Runtime.CompilerServices;
 using AuthoringTool.API.Configuration;
 using AuthoringTool.DataAccess.API;
+using ElectronNET.API.Entities;
 
 namespace AuthoringTool.BusinessLogic.API;
 
 internal class BusinessLogic : IBusinessLogic
 {
 
-    internal BusinessLogic(
+    public BusinessLogic(
         IAuthoringToolConfiguration configuration,
         IDataAccess dataAccess)
     {
@@ -15,8 +17,14 @@ internal class BusinessLogic : IBusinessLogic
         DataAccess = dataAccess;
     }
     
-    public IDataAccess DataAccess { get;  }
     
+    
+    public IDataAccess DataAccess { get;  }
+    public void ExportWorld()
+    {
+        DataAccess.ExportWorld();
+    }
+
     public IAuthoringToolConfiguration Configuration { get; }
   
 }
