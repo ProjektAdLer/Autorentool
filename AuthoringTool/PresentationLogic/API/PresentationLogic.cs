@@ -5,12 +5,17 @@ namespace AuthoringTool.PresentationLogic.API
 {
     internal class PresentationLogic : IPresentationLogic
     {
-        internal PresentationLogic(
+        public PresentationLogic(
             IAuthoringToolConfiguration configuration,
             IBusinessLogic businessLogic)
         {
             Configuration = configuration;
             BusinessLogic = businessLogic;
+        }
+
+        public void ExportWorld()
+        {
+            BusinessLogic.ExportWorld();
         }
         
         public IAuthoringToolConfiguration Configuration { get; }

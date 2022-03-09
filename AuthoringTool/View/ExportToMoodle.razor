@@ -1,0 +1,27 @@
+﻿@page "/ExportToMoodle"
+@using AuthoringTool.PresentationLogic.API
+@using Microsoft.AspNetCore.Hosting
+@using Microsoft.Extensions.Hosting.Internal
+@using Microsoft.Extensions.Localization
+@using static System.IO.Directory;
+@inject IPresentationLogic presentationLogic
+
+<h1>ExportToMoodle</h1>
+
+<p>A moodle Export-file will be created at the Workdirectory</p>
+
+<p role="status">Filepame: @filePath</p>
+
+<button class="btn btn-primary" @onclick="Export">Create Export-File</button>
+
+@code {
+    private string filePath = "";
+
+    private void Export() //PresentationLogic.ExportWorld
+    {
+        presentationLogic.ExportWorld();
+        filePath = GetCurrentDirectory()+"\\EmptyWorld.mbz";
+        
+
+    }
+}

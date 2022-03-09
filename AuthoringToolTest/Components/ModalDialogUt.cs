@@ -44,8 +44,22 @@ public class ModalDialogUt
         Assert.AreEqual(inputFields, systemUnderTest.Instance.InputFields);
     }
 
+    //ModalDialogType, css selector string, ModalDialogReturnValue
+    static object[] ModalDialog_ButtonClicked_CallsCallbackWithCorrectDialogReturnValue_TestCaseSource =
+    {
+        new object[] { ModalDialog.ModalDialogType.Ok, "#btn-ok", ModalDialog.ModalDialogReturnValue.Ok },
+        new object[] { ModalDialog.ModalDialogType.OkCancel, "#btn-ok", ModalDialog.ModalDialogReturnValue.Ok },
+        new object[] { ModalDialog.ModalDialogType.OkCancel, "#btn-cancel", ModalDialog.ModalDialogReturnValue.Cancel },
+        new object[] { ModalDialog.ModalDialogType.DeleteCancel, "#btn-delete", ModalDialog.ModalDialogReturnValue.Delete },
+        new object[] { ModalDialog.ModalDialogType.DeleteCancel, "#btn-cancel", ModalDialog.ModalDialogReturnValue.Cancel },
+        new object[] { ModalDialog.ModalDialogType.YesNoCancel, "#btn-yes", ModalDialog.ModalDialogReturnValue.Yes },
+        new object[] { ModalDialog.ModalDialogType.YesNoCancel, "#btn-no", ModalDialog.ModalDialogReturnValue.No },
+        new object[] { ModalDialog.ModalDialogType.YesNoCancel, "#btn-cancel", ModalDialog.ModalDialogReturnValue.Cancel },
+    };
     [Test]
-    public void ModalDialog_CallsCallbackWithCorrectDialogReturnValue()
+    [TestCaseSource(nameof(ModalDialog_ButtonClicked_CallsCallbackWithCorrectDialogReturnValue_TestCaseSource))]
+    public void ModalDialog_ButtonClicked_CallsCallbackWithCorrectDialogReturnValue(ModalDialog.ModalDialogType type,
+        string cssSelector, ModalDialog.ModalDialogReturnValue returnValue)
     {
         using var ctx = new Bunit.TestContext();
         
@@ -53,95 +67,54 @@ public class ModalDialogUt
         //Ok button
         var title = "Test Dialog";
         var text = "This is a dialog for automated testing purposes";
+        var onCloseCalled = false;
         Action<Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
         {
-            Assert.AreEqual(ModalDialog.ModalDialogReturnValue.Ok, tuple.Item1);
+            Assert.AreEqual(returnValue, tuple.Item1);
             Assert.AreEqual(null, tuple.Item2);
+            onCloseCalled = true;
         };
-        var dialogType = ModalDialog.ModalDialogType.Ok;
+        var dialogType = type;
 
         var systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose,
-            dialogType, null);
-        var btn = systemUnderTest.Find("#btn-ok");
+            dialogType, null, null);
+        var btn = systemUnderTest.Find(cssSelector);
         btn.Click();
-        
-        //ModalDialogType.OkCancel
-        //Ok button
-        dialogType = ModalDialog.ModalDialogType.OkCancel;
-
-        systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose, dialogType, null);
-        btn = systemUnderTest.Find("#btn-ok");
-        btn.Click();
-        
-        //Cancel button
-        onClose = tuple =>
-                {
-                    Assert.AreEqual(ModalDialog.ModalDialogReturnValue.Cancel, tuple.Item1);
-                    Assert.AreEqual(null, tuple.Item2);
-                };
-        
-        systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose, dialogType, null);
-        btn = systemUnderTest.Find("#btn-cancel");
-        btn.Click();
-        
-        //ModalDialogType.DeleteCancel
-        //Cancel button
-        dialogType = ModalDialog.ModalDialogType.DeleteCancel;
-        
-        systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose, dialogType, null);
-        btn = systemUnderTest.Find("#btn-cancel");
-        btn.Click();
-        
-        //Delete button
-        onClose = tuple =>
-                {
-                    Assert.AreEqual(ModalDialog.ModalDialogReturnValue.Delete, tuple.Item1);
-                    Assert.AreEqual(null, tuple.Item2);
-                };
-        
-        systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose, dialogType, null);
-        btn = systemUnderTest.Find("#btn-delete");
-        btn.Click();
-        
-        //ModalDialogType.YesNoCancel
-        //Cancel button
-        dialogType = ModalDialog.ModalDialogType.YesNoCancel;
-        onClose = tuple =>
-                {
-                    Assert.AreEqual(ModalDialog.ModalDialogReturnValue.Cancel, tuple.Item1);
-                    Assert.AreEqual(null, tuple.Item2);
-                };
-        
-        systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose, dialogType, null);
-        btn = systemUnderTest.Find("#btn-cancel");
-        btn.Click();
-        
-        
-        //No button
-        onClose = tuple =>
-                {
-                    Assert.AreEqual(ModalDialog.ModalDialogReturnValue.No, tuple.Item1);
-                    Assert.AreEqual(null, tuple.Item2);
-                };
-        
-        systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose, dialogType, null);
-        btn = systemUnderTest.Find("#btn-no");
-        btn.Click();
-        
-        //Yes button
-        onClose = tuple =>
-                {
-                    Assert.AreEqual(ModalDialog.ModalDialogReturnValue.Yes, tuple.Item1);
-                    Assert.AreEqual(null, tuple.Item2);
-                };
-        
-        systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose, dialogType, null);
-        btn = systemUnderTest.Find("#btn-yes");
-        btn.Click();
+        Assert.AreEqual(true, onCloseCalled);
     }
     
     [Test]
-    public void ModalDialog_CallsCallbackWithCorrectInputFieldValues()
+    public void ModalDialog_EnterKeyPressedOnInputField_SubmitsDialog()
+    {
+        using var ctx = new Bunit.TestContext();
+        
+        var title = "Test Dialog";
+        var text = "This is a dialog for automated testing purposes";
+        var onCloseCalled = false;
+        Action<Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
+        {
+            Assert.AreEqual(ModalDialog.ModalDialogReturnValue.Ok, tuple.Item1);
+            Assert.AreEqual("foobar", tuple.Item2!["Test1"]);
+            onCloseCalled = true;
+        };
+        var dialogType = ModalDialog.ModalDialogType.Ok;
+        var inputFields = new List<ModalDialog.ModalDialogInputField>
+        {
+            new("Test1", ModalDialog.ModalDialogInputType.Text, true),
+        };
+
+        var systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose,
+            dialogType, inputFields, null);
+
+        var element = systemUnderTest.Find("#modal-input-field-test1");
+        element.Input("foobar");
+        element.KeyDown(Key.Enter);
+
+        Assert.AreEqual(true, onCloseCalled);
+    }
+    
+    [Test]
+    public void ModalDialog_DialogSubmitted_CallsCallbackWithCorrectInputFieldValues()
     {
         using var ctx = new Bunit.TestContext();
         
@@ -188,7 +161,7 @@ public class ModalDialogUt
     }
 
     [Test]
-    public void ModalDialog_RefusesToCallCallbackWithMissingRequiredValues()
+    public void ModalDialog_MissingRequiredValues_RefusesToCallCallback()
     {
         using var ctx = new Bunit.TestContext();
         
@@ -228,7 +201,7 @@ public class ModalDialogUt
     }
 
     [Test]
-    public void ModalDialog_DropdownSelectionRulesChangeAvailableOptions()
+    public void ModalDialog_DropdownSelectionRules_ChangeAvailableOptions()
     {
         using var ctx = new Bunit.TestContext();
         
@@ -267,7 +240,7 @@ public class ModalDialogUt
     }
 
     [Test]
-    public void ModalDialog_InitialValuesArePopulatedAndReturned()
+    public void ModalDialog_InitialValues_PopulatedAndReturned()
     {
         using var ctx = new Bunit.TestContext();
         
@@ -311,7 +284,7 @@ public class ModalDialogUt
     }
 
     [Test]
-    public void ModalDialog_CorrectReturnValueAfterInitialValueChanged()
+    public void ModalDialog_InitialValue_ReturnsCorrectValueAfterChange()
     {
         using var ctx = new Bunit.TestContext();
         
@@ -355,7 +328,7 @@ public class ModalDialogUt
     }
 
     [Test]
-    public void ModalDialog_DropdownSelectionRulesCorrectWhenInitialValuesProvided()
+    public void ModalDialog_DropdownSelectionRules_CorrectWhenInitialValuesProvided()
     {
         using var ctx = new Bunit.TestContext();
         

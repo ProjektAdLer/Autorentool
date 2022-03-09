@@ -5,4 +5,6 @@ namespace AuthoringTool.DataAccess.API;
 internal interface IDataAccess
 {
     IAuthoringToolConfiguration Configuration { get; }
+
+    void ExportWorld();
 }
