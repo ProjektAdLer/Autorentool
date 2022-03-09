@@ -2,7 +2,6 @@
 using AuthoringTool.BusinessLogic;
 using AuthoringTool.Components;
 using AuthoringTool.PresentationLogic;
-using AuthoringTool.PresentationLogic.LearningSpace;
 using Bunit;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -16,14 +15,17 @@ namespace AuthoringToolTest.Components;
 [TestFixture]
 public class DraggableUt
 {
-    private TestContext? _testContext;
+#pragma warning disable CS8618
+    private TestContext _testContext;
+    private IMouseService _mouseService;
+#pragma warning restore CS8618
 
     [SetUp]
     public void Setup()
     {
         _testContext = new TestContext();
-        var service = Substitute.For<IMouseService>();
-        _testContext.Services.AddSingleton<IMouseService>(service);
+        _mouseService = Substitute.For<IMouseService>();
+        _testContext.Services.AddSingleton<IMouseService>(_mouseService);
     }
 
     [TearDown]
@@ -33,8 +35,7 @@ public class DraggableUt
     public void Draggable_StandardConstructor_AllPropertiesInitialized()
     {
         RenderFragment childContent = new RenderFragment(builder => builder.AddContent(0, "<text/>"));
-        ILearningObjectViewModel learningObject =
-            new LearningSpaceViewModel("name", "shortname", "authors", "description", "goals");
+        var learningObject = Substitute.For<ILearningObjectViewModel>();
         double x = 10;
         double y = 20;
         Action<double> xChanged = _ => { };
@@ -65,9 +66,8 @@ public class DraggableUt
     [Test]
     public void Draggable_ClickAndRelease_OnClickedTriggered()
     {
-        ILearningObjectViewModel onClickedEventTriggered = null;
-        ILearningObjectViewModel learningObject =
-            new LearningSpaceViewModel("name", "shortname", "authors", "description", "goals");
+        ILearningObjectViewModel? onClickedEventTriggered = null;
+        var learningObject = Substitute.For<ILearningObjectViewModel>();
 
         Action<ILearningObjectViewModel> onClicked = e => { onClickedEventTriggered = e; };
 
@@ -75,7 +75,7 @@ public class DraggableUt
             CreateRenderedDraggableComponent(null, learningObject, 0, 0, _ => { }, _ => { }, onClicked);
 
         systemUnderTest.WaitForElement("g").MouseDown(new MouseEventArgs());
-        _testContext.Services.GetService<IMouseService>().OnUp += Raise.EventWith(new MouseEventArgs());
+        _mouseService.OnUp += Raise.EventWith(new MouseEventArgs());
 
         Assert.AreEqual(learningObject, onClickedEventTriggered);
     }
@@ -83,9 +83,8 @@ public class DraggableUt
     [Test]
     public void Draggable_ClickMoveAndRelease_OnClickedNotTriggered()
     {
-        ILearningObjectViewModel onClickedEventTriggered = null;
-        ILearningObjectViewModel learningObject =
-            new LearningSpaceViewModel("name", "shortname", "authors", "description", "goals");
+        ILearningObjectViewModel? onClickedEventTriggered = null;
+        var learningObject = Substitute.For<ILearningObjectViewModel>();
 
         Action<ILearningObjectViewModel> onClicked = e => { onClickedEventTriggered = e; };
 
@@ -93,8 +92,8 @@ public class DraggableUt
             CreateRenderedDraggableComponent(null, learningObject, 0, 0, _ => { }, _ => { }, onClicked);
 
         systemUnderTest.WaitForElement("g").MouseDown(new MouseEventArgs());
-        _testContext.Services.GetService<IMouseService>().OnMove += Raise.EventWith(new MouseEventArgs());
-        _testContext.Services.GetService<IMouseService>().OnUp += Raise.EventWith(new MouseEventArgs());
+        _mouseService.OnMove += Raise.EventWith(new MouseEventArgs());
+        _mouseService.OnUp += Raise.EventWith(new MouseEventArgs());
 
         Assert.AreEqual(null, onClickedEventTriggered);
     }
@@ -102,9 +101,8 @@ public class DraggableUt
     [Test]
     public void Draggable_ClickMoveAndRelease_PositionChanged()
     {
-        ILearningObjectViewModel onClickedEventTriggered = null;
-        ILearningObjectViewModel learningObject =
-            new LearningSpaceViewModel("name", "shortname", "authors", "description", "goals");
+        ILearningObjectViewModel? onClickedEventTriggered = null;
+        var learningObject = Substitute.For<ILearningObjectViewModel>();
 
         double x = 10;
         double y = 20;
@@ -114,9 +112,9 @@ public class DraggableUt
             CreateRenderedDraggableComponent(null, learningObject, x, y, _ => { }, _ => { }, onClicked);
 
         systemUnderTest.WaitForElement("g").MouseDown(new MouseEventArgs());
-        _testContext.Services.GetService<IMouseService>().OnMove +=
+        _mouseService.OnMove +=
             Raise.EventWith(new MouseEventArgs {ClientX = 13, ClientY = 24});
-        _testContext.Services.GetService<IMouseService>().OnUp += Raise.EventWith(new MouseEventArgs());
+        _mouseService.OnUp += Raise.EventWith(new MouseEventArgs());
 
 
         Assert.AreEqual(x + 13, systemUnderTest.Instance.X);
@@ -124,11 +122,10 @@ public class DraggableUt
     }
 
     [Test]
-    public void Draggable_MoveAndRelease_PositionNotChanged()
+    public void Draggable_MoveAndReleaseWithoutPreviousClick_PositionNotChanged()
     {
-        ILearningObjectViewModel onClickedEventTriggered = null;
-        ILearningObjectViewModel learningObject =
-            new LearningSpaceViewModel("name", "shortname", "authors", "description", "goals");
+        ILearningObjectViewModel? onClickedEventTriggered = null;
+        var learningObject = Substitute.For<ILearningObjectViewModel>();
 
         double x = 10;
         double y = 20;
@@ -137,9 +134,9 @@ public class DraggableUt
         var systemUnderTest =
             CreateRenderedDraggableComponent(null, learningObject, x, y, _ => { }, _ => { }, onClicked);
 
-        _testContext.Services.GetService<IMouseService>().OnMove +=
+        _mouseService.OnMove +=
             Raise.EventWith(new MouseEventArgs {ClientX = 13, ClientY = 24});
-        _testContext.Services.GetService<IMouseService>().OnUp += Raise.EventWith(new MouseEventArgs());
+        _mouseService.OnUp += Raise.EventWith(new MouseEventArgs());
 
 
         Assert.AreEqual(x, systemUnderTest.Instance.X);
@@ -151,6 +148,9 @@ public class DraggableUt
         ILearningObjectViewModel? learningObject = null, double x = 0, double y = 0, Action<double>? xChanged = null,
         Action<double>? yChanged = null, Action<ILearningObjectViewModel>? onClicked = null)
     {
+        xChanged ??= _ => { };
+        yChanged ??= _ => { };
+        onClicked ??= _ => { };
         return _testContext.RenderComponent<Draggable>(parameters => parameters
             .Add(p => p.ChildContent, childContent)
             .Add(p => p.LearningObject, learningObject)
