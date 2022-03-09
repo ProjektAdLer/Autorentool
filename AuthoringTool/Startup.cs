@@ -1,5 +1,6 @@
-﻿using AuthoringTool.API;
+using AuthoringTool.API;
 using AuthoringTool.API.Configuration;
+using AuthoringTool.BusinessLogic;
 using AuthoringTool.BusinessLogic.API;
 using AuthoringTool.DataAccess.API;
 using AuthoringTool.PresentationLogic.API;
@@ -39,6 +40,8 @@ public class Startup
         services.AddRazorPages();
         services.AddElectron();
         services.AddServerSideBlazor();
+        services.AddSingleton<MouseService>();
+        services.AddSingleton<IMouseService>(provider => provider.GetRequiredService<MouseService>());
         if (HybridSupport.IsElectronActive)
         {
         }
