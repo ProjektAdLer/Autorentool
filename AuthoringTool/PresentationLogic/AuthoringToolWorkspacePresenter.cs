@@ -17,7 +17,7 @@ namespace AuthoringTool.PresentationLogic
 
         internal bool CreateLearningSpaceDialogueOpen { get; set; }
         internal bool EditLearningSpaceDialogOpen { get; set; }
-        internal ILearningObjectViewModel SelectedLearningObject { get; set; }
+        internal ILearningObjectViewModel? SelectedLearningObject { get; set; }
 
         internal void IncrementCount()
         {
@@ -56,6 +56,7 @@ namespace AuthoringTool.PresentationLogic
         {
             var learningSpace = new LearningSpaceViewModel(name, shortname, authors, description, goals);
             selectedLearningWorld.LearningSpaces.Add(learningSpace);
+            SelectedLearningObject = learningSpace;
         }
         
         public void EditSelectedLearningObject(string name, string shortname, string authors, string description, string goals)
@@ -70,11 +71,16 @@ namespace AuthoringTool.PresentationLogic
             SelectedLearningObject.Goals = goals;
         }
 
-        public void DeleteLastLearningSpace(LearningWorldViewModel selectedLearningWorld)
+        public void DeleteSelectedLearningSpace(LearningWorldViewModel selectedLearningWorld)
         {
-            if (selectedLearningWorld.LearningSpaces.Count > 0)
+            if (SelectedLearningObject != null)
             {
-                selectedLearningWorld.LearningSpaces.Remove(selectedLearningWorld.LearningSpaces.Last());
+                selectedLearningWorld.LearningSpaces.Remove((LearningSpaceViewModel) SelectedLearningObject);
+                if (selectedLearningWorld.LearningSpaces.Count > 0)
+                {
+                    SelectedLearningObject = selectedLearningWorld.LearningSpaces.Last();
+                }
+                else SelectedLearningObject = null;
             }
         }
     }

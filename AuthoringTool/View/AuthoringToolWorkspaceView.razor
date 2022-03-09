@@ -1,7 +1,7 @@
 ﻿@page "/AuthoringToolWorkspaceView"
-@using AuthoringTool.PresentationLogic
-@using AuthoringTool.Components
 @using AuthoringTool.BusinessLogic
+@using AuthoringTool.Components
+@using AuthoringTool.PresentationLogic
 @inject MouseService mouseService
 
 <h3>AuthoringTool Workspace</h3>
@@ -45,7 +45,7 @@
 {
     <br>
     <button class="btn btn-primary" @onclick="AddNewLearningSpace">Add Learning Space</button>
-    <button class="btn btn-primary" @onclick="DeleteLastLearningSpace">Delete Learning Space</button>
+    <button class="btn btn-primary" @onclick="DeleteSelectedLearningSpace">Delete Learning Space</button>
     @if (AuthoringToolWorkspaceP.CreateLearningSpaceDialogueOpen)
     {
         <ModalDialog Title="Create new learning space" Text="Please enter the required data for the learning space below:"
@@ -56,12 +56,12 @@
 
     <label>
         Selected element:
-        @if (AuthoringToolWorkspaceP.SelectedLearningObject != null) @AuthoringToolWorkspaceP.SelectedLearningObject.Name
-        ,
-        Description:
-        @if (AuthoringToolWorkspaceP.SelectedLearningObject != null) @AuthoringToolWorkspaceP.SelectedLearningObject.Description
         @if (AuthoringToolWorkspaceP.SelectedLearningObject != null)
         {
+            <text>@AuthoringToolWorkspaceP.SelectedLearningObject.Name
+                , Description:
+                @AuthoringToolWorkspaceP.SelectedLearningObject.Description
+            </text>
             <button class="btn btn-primary" @onclick="EditLearningSpace">Edit selected Learning Space</button>
         }
     </label>
@@ -184,7 +184,7 @@
         var shortname = data["Shortname"];
         var language = data["Language"];
         var description = data["Description"];
-        //optional arguments
+    //optional arguments
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
         AuthoringToolWorkspaceP.CreateNewLearningWorld(name, shortname, authors, language, description, goals);
@@ -223,9 +223,9 @@
         AuthoringToolWorkspaceP.CreateLearningSpaceDialogueOpen = true;
     }
 
-    private void DeleteLastLearningSpace()
+    private void DeleteSelectedLearningSpace()
     {
-        AuthoringToolWorkspaceP.DeleteLastLearningSpace(AuthoringToolWorkspaceVm.SelectedLearningWorld);
+        AuthoringToolWorkspaceP.DeleteSelectedLearningSpace(AuthoringToolWorkspaceVm.SelectedLearningWorld);
     }
 
     private readonly ModalDialog.ModalDialogInputField[] _modalSpaceDialogInputFields =
