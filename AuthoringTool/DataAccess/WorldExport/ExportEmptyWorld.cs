@@ -76,7 +76,10 @@ public class ExportEmptyWorld : IExportEmptyWorld
         Directory.Delete(tempDir, true); 
     }
         
-    //
+    /// <summary>
+    /// Change the encoding from utf-8 to UTF-8
+    /// Otherwise moodle will throw an error when the backup is restored.
+    /// </summary>
     public class UpperCaseUTF8Encoding : UTF8Encoding
     { 
         public override string WebName
