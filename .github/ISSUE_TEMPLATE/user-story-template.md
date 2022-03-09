@@ -39,7 +39,6 @@ Als _Benutzerrolle_ möchte ich _Funktionalität_ sodass _Wert_ für den Nutzer
 - [ ] Die Codekonventionen sind eingehalten
 - [ ] Unittestabdeckung muss größer 90% sein
 - [ ] Alle Tests müssen bestanden sein
-- [ ] Benutzerdokumentation angelegt (Handbuch)
 - [ ] Technische Dokumentation angelegt (ZenHub)
 - [ ] UML Klassendiagramme und Komponentendiagramme erstellt und aktuell
 - [ ] Die Dokumentation in der Realisierung wurde erstellt (Quellcode)
