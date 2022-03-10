@@ -11,7 +11,8 @@
 <p role="status">Current count of learning worlds: @AuthoringToolWorkspaceVm.LearningWorlds.Count</p>
 <label>
     Select learning world: <!--TODO: refactor this into presenter call -->
-    <select @onchange="args => AuthoringToolWorkspaceP.ChangeSelectedLearningWorld((string)args.Value!)">
+    <select @onchange="args => AuthoringToolWorkspaceP.ChangeSelectedLearningWorld((string)args.Value!)"
+            value="@(AuthoringToolWorkspaceVm.SelectedLearningWorld?.Name)">
         @foreach (var learningWorld in AuthoringToolWorkspaceVm.LearningWorlds)
         {
             <option value="@learningWorld.Name">@learningWorld.Name</option>
@@ -38,7 +39,7 @@
 @if (AuthoringToolWorkspaceP.CreateLearningWorldDialogOpen)
 {
     <ModalDialog Title="Create new learning world" Text="Please enter the required data for the learning world below:"
-                 OnClose="@OnCreateDialogClose" DialogType=@ModalDialogType.OkCancel
+                 OnClose="@OnCreateWorldDialogClose" DialogType=@ModalDialogType.OkCancel
                  InputFields="@_modalDialogInputFields">
     </ModalDialog>
 }
@@ -57,11 +58,11 @@
 
     <label>
         Selected element:
-        @if (AuthoringToolWorkspaceP.SelectedLearningObject != null)
+        @if (AuthoringToolWorkspaceVm.SelectedLearningObject != null)
         {
-            <text>@AuthoringToolWorkspaceP.SelectedLearningObject.Name
+            <text>@AuthoringToolWorkspaceVm.SelectedLearningObject.Name
                 , Description:
-                @AuthoringToolWorkspaceP.SelectedLearningObject.Description
+                @AuthoringToolWorkspaceVm.SelectedLearningObject.Description
             </text>
             <button class="btn btn-primary" @onclick="EditLearningSpace">Edit selected Learning Space</button>
         }
@@ -86,7 +87,7 @@
 @if (AuthoringToolWorkspaceP.EditLearningWorldDialogOpen)
 {
     <ModalDialog Title="Create new learning world" Text="Please enter the required data for the learning world below:"
-                 OnClose="@OnEditDialogClose" DialogType=@ModalDialogType.OkCancel
+                 OnClose="@OnEditWorldDialogClose" DialogType=@ModalDialogType.OkCancel
                  InputFields="@_modalDialogInputFields" InputFieldsInitialValue="@_editDialogInitialValues">
     </ModalDialog>
 }
@@ -167,7 +168,7 @@
         AuthoringToolWorkspaceP.DeleteSelectedLearningWorld();
     }
 
-    private Task OnCreateDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    private Task OnCreateWorldDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
     {
         var (response, data) = returnValueTuple;
         AuthoringToolWorkspaceP.CreateLearningWorldDialogOpen = false;
@@ -190,7 +191,7 @@
         return Task.CompletedTask;
     }
 
-    private Task OnEditDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    private Task OnEditWorldDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
     {
         var (response, data) = returnValueTuple;
         AuthoringToolWorkspaceP.EditLearningWorldDialogOpen = false;
@@ -264,11 +265,11 @@
         //prepare dictionary property to pass to dialog
         _editDialogInitialValues = new Dictionary<string, string>
         {
-            {"Name", AuthoringToolWorkspaceP.SelectedLearningObject.Name},
-            {"Shortname", AuthoringToolWorkspaceP.SelectedLearningObject.Shortname},
-            {"Authors", AuthoringToolWorkspaceP.SelectedLearningObject.Authors},
-            {"Description", AuthoringToolWorkspaceP.SelectedLearningObject.Description},
-            {"Goals", AuthoringToolWorkspaceP.SelectedLearningObject.Goals},
+            {"Name", AuthoringToolWorkspaceVm.SelectedLearningObject.Name},
+            {"Shortname", AuthoringToolWorkspaceVm.SelectedLearningObject.Shortname},
+            {"Authors", AuthoringToolWorkspaceVm.SelectedLearningObject.Authors},
+            {"Description", AuthoringToolWorkspaceVm.SelectedLearningObject.Description},
+            {"Goals", AuthoringToolWorkspaceVm.SelectedLearningObject.Goals},
         };
         AuthoringToolWorkspaceP.EditLearningSpaceDialogOpen = true;
     }
@@ -300,7 +301,7 @@
 
     private Task OnLearningObjectClick(ILearningObjectViewModel learningObject)
     {
-        AuthoringToolWorkspaceP.SelectedLearningObject = learningObject;
+        AuthoringToolWorkspaceVm.SelectedLearningObject = learningObject;
         return Task.CompletedTask;
     }
 
