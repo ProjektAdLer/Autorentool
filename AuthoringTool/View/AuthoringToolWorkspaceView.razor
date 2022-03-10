@@ -1,6 +1,7 @@
 ﻿@page "/AuthoringToolWorkspaceView"
 @using AuthoringTool.BusinessLogic
 @using AuthoringTool.Components
+@using AuthoringTool.Components.ModalDialog
 @using AuthoringTool.PresentationLogic
 @inject MouseService _mouseService
 @inject ILogger<AuthoringToolWorkspaceView> _logger
@@ -37,7 +38,7 @@
 @if (AuthoringToolWorkspaceP.CreateLearningWorldDialogOpen)
 {
     <ModalDialog Title="Create new learning world" Text="Please enter the required data for the learning world below:"
-                 OnClose="@OnCreateDialogClose" DialogType=@ModalDialog.ModalDialogType.OkCancel
+                 OnClose="@OnCreateDialogClose" DialogType=@ModalDialogType.OkCancel
                  InputFields="@_modalDialogInputFields">
     </ModalDialog>
 }
@@ -49,7 +50,7 @@
     @if (AuthoringToolWorkspaceP.CreateLearningSpaceDialogueOpen)
     {
         <ModalDialog Title="Create new learning space" Text="Please enter the required data for the learning space below:"
-                     OnClose="@OnCreateSpaceDialogClose" DialogType=@ModalDialog.ModalDialogType.OkCancel
+                     OnClose="@OnCreateSpaceDialogClose" DialogType=@ModalDialogType.OkCancel
                      InputFields="@_modalSpaceDialogInputFields">
         </ModalDialog>
     }
@@ -85,7 +86,7 @@
 @if (AuthoringToolWorkspaceP.EditLearningWorldDialogOpen)
 {
     <ModalDialog Title="Create new learning world" Text="Please enter the required data for the learning world below:"
-                 OnClose="@OnEditDialogClose" DialogType=@ModalDialog.ModalDialogType.OkCancel
+                 OnClose="@OnEditDialogClose" DialogType=@ModalDialogType.OkCancel
                  InputFields="@_modalDialogInputFields" InputFieldsInitialValue="@_editDialogInitialValues">
     </ModalDialog>
 }
@@ -93,7 +94,7 @@
 @if (AuthoringToolWorkspaceP.EditLearningSpaceDialogOpen)
 {
     <ModalDialog Title="Edit existing learning space" Text="Please enter the required data for the learning space below:"
-                 OnClose="@OnEditSpaceDialogClose" DialogType=@ModalDialog.ModalDialogType.OkCancel
+                 OnClose="@OnEditSpaceDialogClose" DialogType=@ModalDialogType.OkCancel
                  InputFields="@_modalSpaceDialogInputFields" InputFieldsInitialValue="@_editDialogInitialValues">
     </ModalDialog>
 }
@@ -124,13 +125,13 @@
     private AuthoringToolWorkspacePresenter AuthoringToolWorkspaceP { get; set; }
     private AuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get; set; }
 
-    private readonly ModalDialog.ModalDialogInputField[] _modalDialogInputFields = {
-        new("Name", ModalDialog.ModalDialogInputType.Text, true),
-        new("Shortname", ModalDialog.ModalDialogInputType.Text, true),
-        new("Authors", ModalDialog.ModalDialogInputType.Text),
-        new("Language", ModalDialog.ModalDialogInputType.Text, true),
-        new("Description", ModalDialog.ModalDialogInputType.Text, true),
-        new("Goals", ModalDialog.ModalDialogInputType.Text)
+    private readonly ModalDialogInputField[] _modalDialogInputFields = {
+        new("Name", ModalDialogInputType.Text, true),
+        new("Shortname", ModalDialogInputType.Text, true),
+        new("Authors", ModalDialogInputType.Text),
+        new("Language", ModalDialogInputType.Text, true),
+        new("Description", ModalDialogInputType.Text, true),
+        new("Goals", ModalDialogInputType.Text)
     };
 
     private Dictionary<string, string>? _editDialogInitialValues;
@@ -166,12 +167,12 @@
         AuthoringToolWorkspaceP.DeleteSelectedLearningWorld();
     }
 
-    private Task OnCreateDialogClose(Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    private Task OnCreateDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
     {
         var (response, data) = returnValueTuple;
         AuthoringToolWorkspaceP.CreateLearningWorldDialogOpen = false;
         
-        if (response == ModalDialog.ModalDialogReturnValue.Cancel) return Task.CompletedTask;
+        if (response == ModalDialogReturnValue.Cancel) return Task.CompletedTask;
         if (data == null) throw new ApplicationException("dialog data unexectedly null after Ok return value");
 
         foreach (var pair in data)
@@ -189,12 +190,12 @@
         return Task.CompletedTask;
     }
 
-    private Task OnEditDialogClose(Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    private Task OnEditDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
     {
         var (response, data) = returnValueTuple;
         AuthoringToolWorkspaceP.EditLearningWorldDialogOpen = false;
 
-        if (response == ModalDialog.ModalDialogReturnValue.Cancel) return Task.CompletedTask;
+        if (response == ModalDialogReturnValue.Cancel) return Task.CompletedTask;
         if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
         
         //TODO: change this into a trace ILogger call
@@ -226,21 +227,21 @@
         AuthoringToolWorkspaceP.DeleteSelectedLearningSpace(AuthoringToolWorkspaceVm.SelectedLearningWorld);
     }
 
-    private readonly ModalDialog.ModalDialogInputField[] _modalSpaceDialogInputFields =
+    private readonly ModalDialogInputField[] _modalSpaceDialogInputFields =
     {
-        new("Name", ModalDialog.ModalDialogInputType.Text, true),
-        new("Shortname", ModalDialog.ModalDialogInputType.Text, true),
-        new("Authors", ModalDialog.ModalDialogInputType.Text),
-        new("Description", ModalDialog.ModalDialogInputType.Text, true),
-        new("Goals", ModalDialog.ModalDialogInputType.Text)
+        new("Name", ModalDialogInputType.Text, true),
+        new("Shortname", ModalDialogInputType.Text, true),
+        new("Authors", ModalDialogInputType.Text),
+        new("Description", ModalDialogInputType.Text, true),
+        new("Goals", ModalDialogInputType.Text)
     };
 
-    private Task OnCreateSpaceDialogClose(Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    private Task OnCreateSpaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
     {
         var (response, data) = returnValueTuple;
         AuthoringToolWorkspaceP.CreateLearningSpaceDialogueOpen = false;
 
-        if (response == ModalDialog.ModalDialogReturnValue.Cancel) return Task.CompletedTask;
+        if (response == ModalDialogReturnValue.Cancel) return Task.CompletedTask;
         if (data == null) throw new ApplicationException("dialog data unexectedly null after Ok return value");
 
         foreach (var pair in data)
@@ -271,12 +272,12 @@
         };
         AuthoringToolWorkspaceP.EditLearningSpaceDialogOpen = true;
     }
-    private Task OnEditSpaceDialogClose(Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    private Task OnEditSpaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
         {
             var (response, data) = returnValueTuple;
             AuthoringToolWorkspaceP.EditLearningSpaceDialogOpen = false;
     
-            if (response == ModalDialog.ModalDialogReturnValue.Cancel) return Task.CompletedTask;
+            if (response == ModalDialogReturnValue.Cancel) return Task.CompletedTask;
             if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
     
         //TODO: change this into a trace ILogger call

@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AngleSharp.Dom;
 using AngleSharp.Html.Dom;
+using AuthoringTool;
 using AuthoringTool.Components;
+using AuthoringTool.Components.ModalDialog;
 using NUnit.Framework;
 using Bunit;
 using Microsoft.AspNetCore.Components;
@@ -20,13 +22,13 @@ public class ModalDialogUt
         using var ctx = new Bunit.TestContext();
         var title = "Test Dialog";
         var text = "This is a dialog for automated testing purposes";
-        Action<Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, string>?>> onClose = _ => { };
-        var dialogType = ModalDialog.ModalDialogType.Ok;
-        var inputFields = new List<ModalDialog.ModalDialogInputField>
+        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = _ => { };
+        var dialogType = ModalDialogType.Ok;
+        var inputFields = new List<ModalDialogInputField>
         {
-            new("Test1", ModalDialog.ModalDialogInputType.Text, false),
-            new ModalDialog.ModalDialogDropdownInputField("Test2",
-                new[] { new ModalDialog.ModalDialogDropdownInputFieldChoiceMapping(null, new[] { "Test1", "Test2" }) },
+            new("Test1", ModalDialogInputType.Text, false),
+            new ModalDialogDropdownInputField("Test2",
+                new[] { new ModalDialogDropdownInputFieldChoiceMapping(null, new[] { "Test1", "Test2" }) },
                 true),
         };
 
@@ -47,19 +49,19 @@ public class ModalDialogUt
     //ModalDialogType, css selector string, ModalDialogReturnValue
     static object[] ModalDialog_ButtonClicked_CallsCallbackWithCorrectDialogReturnValue_TestCaseSource =
     {
-        new object[] { ModalDialog.ModalDialogType.Ok, "#btn-ok", ModalDialog.ModalDialogReturnValue.Ok },
-        new object[] { ModalDialog.ModalDialogType.OkCancel, "#btn-ok", ModalDialog.ModalDialogReturnValue.Ok },
-        new object[] { ModalDialog.ModalDialogType.OkCancel, "#btn-cancel", ModalDialog.ModalDialogReturnValue.Cancel },
-        new object[] { ModalDialog.ModalDialogType.DeleteCancel, "#btn-delete", ModalDialog.ModalDialogReturnValue.Delete },
-        new object[] { ModalDialog.ModalDialogType.DeleteCancel, "#btn-cancel", ModalDialog.ModalDialogReturnValue.Cancel },
-        new object[] { ModalDialog.ModalDialogType.YesNoCancel, "#btn-yes", ModalDialog.ModalDialogReturnValue.Yes },
-        new object[] { ModalDialog.ModalDialogType.YesNoCancel, "#btn-no", ModalDialog.ModalDialogReturnValue.No },
-        new object[] { ModalDialog.ModalDialogType.YesNoCancel, "#btn-cancel", ModalDialog.ModalDialogReturnValue.Cancel },
+        new object[] { ModalDialogType.Ok, "#btn-ok", ModalDialogReturnValue.Ok },
+        new object[] { ModalDialogType.OkCancel, "#btn-ok", ModalDialogReturnValue.Ok },
+        new object[] { ModalDialogType.OkCancel, "#btn-cancel", ModalDialogReturnValue.Cancel },
+        new object[] { ModalDialogType.DeleteCancel, "#btn-delete", ModalDialogReturnValue.Delete },
+        new object[] { ModalDialogType.DeleteCancel, "#btn-cancel", ModalDialogReturnValue.Cancel },
+        new object[] { ModalDialogType.YesNoCancel, "#btn-yes", ModalDialogReturnValue.Yes },
+        new object[] { ModalDialogType.YesNoCancel, "#btn-no", ModalDialogReturnValue.No },
+        new object[] { ModalDialogType.YesNoCancel, "#btn-cancel", ModalDialogReturnValue.Cancel },
     };
     [Test]
     [TestCaseSource(nameof(ModalDialog_ButtonClicked_CallsCallbackWithCorrectDialogReturnValue_TestCaseSource))]
-    public void ModalDialog_ButtonClicked_CallsCallbackWithCorrectDialogReturnValue(ModalDialog.ModalDialogType type,
-        string cssSelector, ModalDialog.ModalDialogReturnValue returnValue)
+    public void ModalDialog_ButtonClicked_CallsCallbackWithCorrectDialogReturnValue(ModalDialogType type,
+        string cssSelector, ModalDialogReturnValue returnValue)
     {
         using var ctx = new Bunit.TestContext();
         
@@ -68,7 +70,7 @@ public class ModalDialogUt
         var title = "Test Dialog";
         var text = "This is a dialog for automated testing purposes";
         var onCloseCalled = false;
-        Action<Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
+        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
         {
             Assert.AreEqual(returnValue, tuple.Item1);
             Assert.AreEqual(null, tuple.Item2);
@@ -91,16 +93,16 @@ public class ModalDialogUt
         var title = "Test Dialog";
         var text = "This is a dialog for automated testing purposes";
         var onCloseCalled = false;
-        Action<Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
+        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
         {
-            Assert.AreEqual(ModalDialog.ModalDialogReturnValue.Ok, tuple.Item1);
+            Assert.AreEqual(ModalDialogReturnValue.Ok, tuple.Item1);
             Assert.AreEqual("foobar", tuple.Item2!["Test1"]);
             onCloseCalled = true;
         };
-        var dialogType = ModalDialog.ModalDialogType.Ok;
-        var inputFields = new List<ModalDialog.ModalDialogInputField>
+        var dialogType = ModalDialogType.Ok;
+        var inputFields = new List<ModalDialogInputField>
         {
-            new("Test1", ModalDialog.ModalDialogInputType.Text, true),
+            new("Test1", ModalDialogInputType.Text, true),
         };
 
         var systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose,
@@ -121,10 +123,10 @@ public class ModalDialogUt
         var title = "Test Dialog";
         var text = "This is a dialog for automated testing purposes";
         var onCloseCalled = false;
-        Action<Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
+        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
         {
             var (returnValue, dictionary) = tuple;
-            Assert.AreEqual(ModalDialog.ModalDialogReturnValue.Ok, returnValue);
+            Assert.AreEqual(ModalDialogReturnValue.Ok, returnValue);
             Assert.NotNull(dictionary);
             
             Assert.AreEqual("foobar123", dictionary!["Test1"]);
@@ -133,20 +135,20 @@ public class ModalDialogUt
             Assert.AreEqual("", dictionary["Test4"]);
             onCloseCalled = true;
         };
-        var dialogType = ModalDialog.ModalDialogType.Ok;
-        var inputFields = new List<ModalDialog.ModalDialogInputField>
+        var dialogType = ModalDialogType.Ok;
+        var inputFields = new List<ModalDialogInputField>
         {
-            new("Test1", ModalDialog.ModalDialogInputType.Text, true),
-            new ModalDialog.ModalDialogDropdownInputField("Test2",
-                new[] { new ModalDialog.ModalDialogDropdownInputFieldChoiceMapping(null, new[] { "Foo", "Bar" }) },
+            new("Test1", ModalDialogInputType.Text, true),
+            new ModalDialogDropdownInputField("Test2",
+                new[] { new ModalDialogDropdownInputFieldChoiceMapping(null, new[] { "Foo", "Bar" }) },
                 true),
-            new ModalDialog.ModalDialogDropdownInputField("Test3",
-                new[] { new ModalDialog.ModalDialogDropdownInputFieldChoiceMapping(new Dictionary<string, string>
+            new ModalDialogDropdownInputField("Test3",
+                new[] { new ModalDialogDropdownInputFieldChoiceMapping(new Dictionary<string, string>
                 {
                     {"Test2", "Bar"}
                 }, new[] { "Foz", "Baz" }) },
                 true),
-            new("Test4", ModalDialog.ModalDialogInputType.Text)
+            new("Test4", ModalDialogInputType.Text)
         };
 
         var systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose,
@@ -167,24 +169,24 @@ public class ModalDialogUt
         
         var title = "Test Dialog";
         var text = "This is a dialog for automated testing purposes";
-        Action<Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
+        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
         {
             Assert.Fail("onClose was called, but should not have.");
         };
-        var dialogType = ModalDialog.ModalDialogType.Ok;
-        var inputFields = new List<ModalDialog.ModalDialogInputField>
+        var dialogType = ModalDialogType.Ok;
+        var inputFields = new List<ModalDialogInputField>
         {
-            new("Test1", ModalDialog.ModalDialogInputType.Text, true),
-            new ModalDialog.ModalDialogDropdownInputField("Test2",
-                new[] { new ModalDialog.ModalDialogDropdownInputFieldChoiceMapping(null, new[] { "Foo", "Bar" }) },
+            new("Test1", ModalDialogInputType.Text, true),
+            new ModalDialogDropdownInputField("Test2",
+                new[] { new ModalDialogDropdownInputFieldChoiceMapping(null, new[] { "Foo", "Bar" }) },
                 true),
-            new ModalDialog.ModalDialogDropdownInputField("Test3",
-                new[] { new ModalDialog.ModalDialogDropdownInputFieldChoiceMapping(new Dictionary<string, string>
+            new ModalDialogDropdownInputField("Test3",
+                new[] { new ModalDialogDropdownInputFieldChoiceMapping(new Dictionary<string, string>
                 {
                     {"Test2", "Bar"}
                 }, new[] { "Foz", "Baz" }) },
                 true),
-            new("Test4", ModalDialog.ModalDialogInputType.Text)
+            new("Test4", ModalDialogInputType.Text)
         };
 
         var systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose,
@@ -207,24 +209,24 @@ public class ModalDialogUt
         
         var title = "Test Dialog";
         var text = "This is a dialog for automated testing purposes";
-        Action<Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
+        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
         {
             Assert.Fail("onClose was called, but should not have.");
         };
-        var dialogType = ModalDialog.ModalDialogType.Ok;
-        var inputFields = new List<ModalDialog.ModalDialogInputField>
+        var dialogType = ModalDialogType.Ok;
+        var inputFields = new List<ModalDialogInputField>
         {
-            new("Test1", ModalDialog.ModalDialogInputType.Text, true),
-            new ModalDialog.ModalDialogDropdownInputField("Test2",
-                new[] { new ModalDialog.ModalDialogDropdownInputFieldChoiceMapping(null, new[] { "Foo", "Bar" }) },
+            new("Test1", ModalDialogInputType.Text, true),
+            new ModalDialogDropdownInputField("Test2",
+                new[] { new ModalDialogDropdownInputFieldChoiceMapping(null, new[] { "Foo", "Bar" }) },
                 true),
-            new ModalDialog.ModalDialogDropdownInputField("Test3",
-                new[] { new ModalDialog.ModalDialogDropdownInputFieldChoiceMapping(new Dictionary<string, string>
+            new ModalDialogDropdownInputField("Test3",
+                new[] { new ModalDialogDropdownInputFieldChoiceMapping(new Dictionary<string, string>
                 {
                     {"Test2", "Bar"}
                 }, new[] { "Foz", "Baz" }) },
                 true),
-            new("Test4", ModalDialog.ModalDialogInputType.Text)
+            new("Test4", ModalDialogInputType.Text)
         };
 
         var systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose,
@@ -247,10 +249,10 @@ public class ModalDialogUt
         var title = "Test Dialog";
         var text = "This is a dialog for automated testing purposes";
         var onCloseCalled = false;
-        Action<Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
+        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
         {
             var (returnValue, dictionary) = tuple;
-            Assert.AreEqual(ModalDialog.ModalDialogReturnValue.Ok, returnValue);
+            Assert.AreEqual(ModalDialogReturnValue.Ok, returnValue);
             Assert.NotNull(dictionary);
             
             Assert.AreEqual("foobar", dictionary["Test1"]);
@@ -258,14 +260,14 @@ public class ModalDialogUt
             Assert.AreEqual("", dictionary["Test3"]);
             onCloseCalled = true;
         };
-        var dialogType = ModalDialog.ModalDialogType.Ok;
-        var inputFields = new List<ModalDialog.ModalDialogInputField>
+        var dialogType = ModalDialogType.Ok;
+        var inputFields = new List<ModalDialogInputField>
         {
-            new("Test1", ModalDialog.ModalDialogInputType.Text, true),
-            new ModalDialog.ModalDialogDropdownInputField("Test2",
-                new[] { new ModalDialog.ModalDialogDropdownInputFieldChoiceMapping(null, new[] { "Foo", "Bar" }) },
+            new("Test1", ModalDialogInputType.Text, true),
+            new ModalDialogDropdownInputField("Test2",
+                new[] { new ModalDialogDropdownInputFieldChoiceMapping(null, new[] { "Foo", "Bar" }) },
                 true),
-            new("Test3", ModalDialog.ModalDialogInputType.Text)
+            new("Test3", ModalDialogInputType.Text)
         };
         var inputFieldsInitialValues = new Dictionary<string, string>
         {
@@ -291,10 +293,10 @@ public class ModalDialogUt
         var title = "Test Dialog";
         var text = "This is a dialog for automated testing purposes";
         var onCloseCalled = false;
-        Action<Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
+        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
         {
             var (returnValue, dictionary) = tuple;
-            Assert.AreEqual(ModalDialog.ModalDialogReturnValue.Ok, returnValue);
+            Assert.AreEqual(ModalDialogReturnValue.Ok, returnValue);
             Assert.NotNull(dictionary);
             
             Assert.AreEqual("boofar", dictionary["Test1"]);
@@ -302,14 +304,14 @@ public class ModalDialogUt
             Assert.AreEqual("foobar123", dictionary["Test3"]);
             onCloseCalled = true;
         };
-        var dialogType = ModalDialog.ModalDialogType.Ok;
-        var inputFields = new List<ModalDialog.ModalDialogInputField>
+        var dialogType = ModalDialogType.Ok;
+        var inputFields = new List<ModalDialogInputField>
         {
-            new("Test1", ModalDialog.ModalDialogInputType.Text, true),
-            new ModalDialog.ModalDialogDropdownInputField("Test2",
-                new[] { new ModalDialog.ModalDialogDropdownInputFieldChoiceMapping(null, new[] { "Foo", "Bar" }) },
+            new("Test1", ModalDialogInputType.Text, true),
+            new ModalDialogDropdownInputField("Test2",
+                new[] { new ModalDialogDropdownInputFieldChoiceMapping(null, new[] { "Foo", "Bar" }) },
                 true),
-            new("Test3", ModalDialog.ModalDialogInputType.Text)
+            new("Test3", ModalDialogInputType.Text)
         };
         var inputFieldsInitialValues = new Dictionary<string, string>
         {
@@ -334,18 +336,18 @@ public class ModalDialogUt
         
         var title = "Test Dialog";
         var text = "This is a dialog for automated testing purposes";
-        Action<Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
+        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
         {
             Assert.Fail("onclose unexpectedly called");
         };
-        var dialogType = ModalDialog.ModalDialogType.Ok;
-        var inputFields = new List<ModalDialog.ModalDialogInputField>
+        var dialogType = ModalDialogType.Ok;
+        var inputFields = new List<ModalDialogInputField>
         {
-            new ModalDialog.ModalDialogDropdownInputField("Test1",
-                new[] { new ModalDialog.ModalDialogDropdownInputFieldChoiceMapping(null, new[] { "Foo", "Bar" }) },
+            new ModalDialogDropdownInputField("Test1",
+                new[] { new ModalDialogDropdownInputFieldChoiceMapping(null, new[] { "Foo", "Bar" }) },
                 true),
-            new ModalDialog.ModalDialogDropdownInputField("Test2",
-                new[] { new ModalDialog.ModalDialogDropdownInputFieldChoiceMapping(new Dictionary<string, string>
+            new ModalDialogDropdownInputField("Test2",
+                new[] { new ModalDialogDropdownInputFieldChoiceMapping(new Dictionary<string, string>
                 {
                     {"Test1", "Bar"}
                 }, new[] { "Foz", "Baz" }) },
@@ -367,9 +369,9 @@ public class ModalDialogUt
     }
     
     private IRenderedComponent<ModalDialog> CreateRenderedModalDialogComponent(Bunit.TestContext ctx, string title, string text,
-        Action<Tuple<ModalDialog.ModalDialogReturnValue, IDictionary<string, string>?>> onClose,
-        ModalDialog.ModalDialogType dialogType,
-        IEnumerable<ModalDialog.ModalDialogInputField>? inputFields = null, IDictionary<string,string>? initialValues = null)
+        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose,
+        ModalDialogType dialogType,
+        IEnumerable<ModalDialogInputField>? inputFields = null, IDictionary<string,string>? initialValues = null)
     {
         return ctx.RenderComponent<ModalDialog>(parameters => parameters
             .Add(p => p.Title, title)

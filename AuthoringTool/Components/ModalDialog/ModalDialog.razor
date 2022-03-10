@@ -104,68 +104,12 @@
 
 @code
 {
-    ///<summary>Specifies which type of data is required in a <see cref="ModalDialogInputField"/>.</summary>
-    internal enum ModalDialogInputType
-    {
-        //if we need more types, feel free to expand these, but please stick to the upper case versions
-        //of the allowed value of the 'input' field on the html <input> tag 
-        //see https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input
-        //Image is useless, its just another submit button
-        //For file, we have to implement an exception to use Electron.NET for the file dialog
-        Text, Number, Date, Password, Email
-    }
-    
-    ///<summary>Class that represents free form input field in a modal dialog with free values.</summary>
-    public class ModalDialogInputField
-    {
-        internal ModalDialogInputField(string name, ModalDialogInputType type, bool required = false)
-        {
-            Name = name;
-            Type = type;
-            Required = required;
-        }
-        ///<summary>The name of the input field or data that is to be submitted.</summary>
-        internal readonly string Name;
-        ///<summary>The type of input for the field.</summary>
-        internal readonly ModalDialogInputType Type;
-        ///<summary>Whether or not the field is required.</summary>
-        internal readonly bool Required;
-    }
-    
-    ///<summary>Class that represents drop down input field with predetermined value choices.</summary>
-    public class ModalDialogDropdownInputField : ModalDialogInputField
-    {
-        internal ModalDialogDropdownInputField(string name, IEnumerable<ModalDialogDropdownInputFieldChoiceMapping> valuesToChoiceMapping, bool required = false) : base(name, ModalDialogInputType.Text, required)
-        {
-            ValuesToChoiceMapping = valuesToChoiceMapping;
-        }
-        internal readonly IEnumerable<ModalDialogDropdownInputFieldChoiceMapping> ValuesToChoiceMapping;
-    }
-    
-    ///<summary>Represents a mapping from required values to available choices in a <see cref="ModalDialogDropdownInputField"/>.</summary>
-    ///<remarks>If no values are required for the Choices to be available, <see cref="RequiredValues"/> can be set to null.</remarks>
-    public record struct ModalDialogDropdownInputFieldChoiceMapping(IDictionary<string, string>? RequiredValues, IEnumerable<string> AvailableChoices);
-
-    ///<summary>Represents what type of ModalDialog we have and what buttons are available.</summary>
-    public enum ModalDialogType
-    {
-        Ok, OkCancel, DeleteCancel, YesNoCancel
-    }
-    
-    ///<summary>Represents a return value from the ModalDialog in accordance with <see cref="ModalDialogType"/>.</summary>
-    public enum ModalDialogReturnValue
-    {
-        Ok, Cancel, Delete, Yes, No
-    }
-
     ///<summary>Default constructor.</summary>
     public ModalDialog()
     {
         _inputFieldValues = new Dictionary<string, string>();
         RequiredFieldsWarning = false;
     }
-    
-    
     
 
     ///<summary>The title of the dialog.</summary>
