@@ -2,7 +2,8 @@
 @using AuthoringTool.BusinessLogic
 @using AuthoringTool.Components
 @using AuthoringTool.PresentationLogic
-@inject MouseService mouseService
+@inject MouseService _mouseService
+@inject ILogger<AuthoringToolWorkspaceView> _logger
 
 <h3>AuthoringTool Workspace</h3>
 
@@ -66,9 +67,9 @@
     </label>
     <svg style="width: 100%; height: 600px; border: 1px solid green"
          xmlns="http://www.w3.org/2000/svg"
-         @onmousemove=@(e => mouseService.FireMove(this, e))
-         @onmouseup=@(e => mouseService.FireUp(this, e))
-         @onmouseleave=@(() => mouseService.FireOut(this, null))>
+         @onmousemove=@(e => _mouseService.FireMove(this, e))
+         @onmouseup=@(e => _mouseService.FireUp(this, e))
+         @onmouseleave=@(() => _mouseService.FireOut(this, null))>
         @foreach (var learningSpace in AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces)
         {
             <Draggable LearningObject="learningSpace" OnClicked="@OnLearningObjectClick"
@@ -173,10 +174,9 @@
         if (response == ModalDialog.ModalDialogReturnValue.Cancel) return Task.CompletedTask;
         if (data == null) throw new ApplicationException("dialog data unexectedly null after Ok return value");
 
-        //TODO: change this into a trace ILogger call
         foreach (var pair in data)
         {
-            Console.Write($"{pair.Key}:{pair.Value}\n");
+            _logger.LogTrace($"{pair.Key}:{pair.Value}\n");
         }
         //required arguments
         var name = data["Name"];
