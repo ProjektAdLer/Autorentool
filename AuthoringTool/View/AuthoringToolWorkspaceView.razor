@@ -9,8 +9,7 @@
 <p role="status">Current count of learning worlds: @AuthoringToolWorkspaceVm.LearningWorlds.Count</p>
 <label>
     Select learning world: <!--TODO: refactor this into presenter call -->
-    <select @onchange="args => AuthoringToolWorkspaceVm.SelectedLearningWorld = 
-    AuthoringToolWorkspaceVm.LearningWorlds.First(world => world.Name == (string)args.Value!)">
+    <select @onchange="args => AuthoringToolWorkspaceP.ChangeSelectedLearningWorld((string)args.Value!)">
         @foreach (var learningWorld in AuthoringToolWorkspaceVm.LearningWorlds)
         {
             <option value="@learningWorld.Name">@learningWorld.Name</option>
@@ -184,7 +183,6 @@
         var shortname = data["Shortname"];
         var language = data["Language"];
         var description = data["Description"];
-    //optional arguments
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
         AuthoringToolWorkspaceP.CreateNewLearningWorld(name, shortname, authors, language, description, goals);

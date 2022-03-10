@@ -31,6 +31,12 @@ namespace AuthoringTool.PresentationLogic
             var learningWorld = new LearningWorldViewModel(name, shortname, authors, language, description, goals);
             AuthoringToolWorkspaceVm.LearningWorlds.Add(learningWorld);
         }
+
+        internal void ChangeSelectedLearningWorld(string worldName)
+        {
+            AuthoringToolWorkspaceVm.SelectedLearningWorld =
+                AuthoringToolWorkspaceVm.LearningWorlds.First(world => world.Name == worldName);
+        }
         
 
         public void DeleteSelectedLearningWorld()
