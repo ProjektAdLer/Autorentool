@@ -5,12 +5,14 @@
 @using AuthoringTool.PresentationLogic
 @inject MouseService _mouseService
 @inject ILogger<AuthoringToolWorkspaceView> _logger
+@inject AuthoringToolWorkspacePresenter AuthoringToolWorkspaceP
+@inject AuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm
 
 <h3>AuthoringTool Workspace</h3>
 
 <p role="status">Current count of learning worlds: @AuthoringToolWorkspaceVm.LearningWorlds.Count</p>
 <label>
-    Select learning world: <!--TODO: refactor this into presenter call -->
+    Select learning world: 
     <select @onchange="args => AuthoringToolWorkspaceP.ChangeSelectedLearningWorld((string)args.Value!)"
             value="@(AuthoringToolWorkspaceVm.SelectedLearningWorld?.Name)">
         @foreach (var learningWorld in AuthoringToolWorkspaceVm.LearningWorlds)
@@ -107,8 +109,6 @@
     /// </summary>
     public AuthoringToolWorkspaceView()
     {
-        AuthoringToolWorkspaceVm = new AuthoringToolWorkspaceViewModel();
-        AuthoringToolWorkspaceP = new AuthoringToolWorkspacePresenter(AuthoringToolWorkspaceVm);
         _editDialogInitialValues = null;
     }
     
@@ -123,8 +123,6 @@
         AuthoringToolWorkspaceVm = authoringToolWorkspaceVm;
     }
     
-    private AuthoringToolWorkspacePresenter AuthoringToolWorkspaceP { get; set; }
-    private AuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get; set; }
 
     private readonly ModalDialogInputField[] _modalDialogInputFields = {
         new("Name", ModalDialogInputType.Text, true),
