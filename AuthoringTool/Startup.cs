@@ -3,13 +3,12 @@ using AuthoringTool.API.Configuration;
 using AuthoringTool.BusinessLogic;
 using AuthoringTool.BusinessLogic.API;
 using AuthoringTool.DataAccess.API;
-using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.API;
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
+using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
-
 
 public class Startup
 {
@@ -19,6 +18,7 @@ public class Startup
     {
         Configuration = configuration;
     }
+
     public void ConfigureServices(IServiceCollection services)
     {
         //NLog for logging
@@ -31,7 +31,7 @@ public class Startup
             builder.AddNLog();
         });
         */
-        
+
         //AuthoringTool
         services.AddSingleton<IAuthoringToolConfiguration, AuthoringToolConfiguration>();
         services.AddSingleton<IDataAccess, DataAccess>();
@@ -39,6 +39,7 @@ public class Startup
         services.AddSingleton<IPresentationLogic, PresentationLogic>();
         services.AddSingleton<IAuthoringTool, AuthoringTool.API.AuthoringTool>();
         services.AddSingleton<ILearningWorldPresenter, LearningWorldPresenter>();
+        services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
         services.AddSingleton<AuthoringToolWorkspacePresenter>();
 
@@ -91,5 +92,4 @@ public class Startup
         //exit app on all windows closed
         Electron.App.WindowAllClosed += () => Electron.App.Exit();
     }
-    
 }

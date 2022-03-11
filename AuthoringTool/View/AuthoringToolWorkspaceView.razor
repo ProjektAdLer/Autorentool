@@ -50,7 +50,7 @@
 {
     <br>
     <button class="btn btn-primary" @onclick="AddNewLearningSpace">Add Learning Space</button>
-    <button class="btn btn-primary" @onclick="DeleteSelectedLearningSpace">Delete Learning Space</button>
+    <button class="btn btn-primary" @onclick="DeleteSelectedLearningObject">Delete Learning Space</button>
     @if (AuthoringToolWorkspaceP.CreateLearningSpaceDialogueOpen)
     {
         <ModalDialog Title="Create new learning space" Text="Please enter the required data for the learning space below:"
@@ -77,7 +77,7 @@
          @onmouseleave=@(() => _mouseService.FireOut(this, null))>
         @foreach (var learningSpace in AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces)
         {
-            <Draggable LearningObject="learningSpace" OnClicked="@OnLearningObjectClick"
+            <Draggable LearningObject="learningSpace" OnClicked="@OnLearningObjectSelect"
                        @bind-X="@learningSpace.PositionX" @bind-Y="@learningSpace.PositionY">
                 <rect height="50" width="60" fill="lightgreen"></rect>
                 <text x="3" y="15">@learningSpace.Name</text>
@@ -222,9 +222,9 @@
         AuthoringToolWorkspaceP.CreateLearningSpaceDialogueOpen = true;
     }
 
-    private void DeleteSelectedLearningSpace()
+    private void DeleteSelectedLearningObject()
     {
-        AuthoringToolWorkspaceP.DeleteSelectedLearningSpace(AuthoringToolWorkspaceVm.SelectedLearningWorld);
+        AuthoringToolWorkspaceP.DeleteSelectedLearningObject();
     }
 
     private readonly ModalDialogInputField[] _modalSpaceDialogInputFields =
@@ -298,7 +298,7 @@
             return Task.CompletedTask;
         }
 
-    private Task OnLearningObjectClick(ILearningObjectViewModel learningObject)
+    private Task OnLearningObjectSelect(ILearningObjectViewModel learningObject)
     {
         AuthoringToolWorkspaceVm.SelectedLearningObject = learningObject;
         return Task.CompletedTask;
