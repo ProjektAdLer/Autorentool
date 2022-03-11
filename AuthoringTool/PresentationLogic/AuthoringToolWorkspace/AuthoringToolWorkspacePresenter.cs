@@ -1,16 +1,24 @@
-﻿using AuthoringTool.PresentationLogic.LearningWorld;
-using AuthoringTool.PresentationLogic.LearningSpace;
+﻿using AuthoringTool.PresentationLogic.LearningSpace;
+using AuthoringTool.PresentationLogic.LearningWorld;
 
-namespace AuthoringTool.PresentationLogic
+namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
 {
     public class AuthoringToolWorkspacePresenter
     {
-        public AuthoringToolWorkspacePresenter(AuthoringToolWorkspaceViewModel authoringToolWorkspaceVm)
+
+        public AuthoringToolWorkspacePresenter(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
+            ILearningWorldPresenter learningWorldPresenter)
         {
-            AuthoringToolWorkspaceVm = authoringToolWorkspaceVm;
+            _learningWorldPresenter = learningWorldPresenter;
+            _authoringToolWorkspaceVm = authoringToolWorkspaceVm;
+            CreateLearningWorldDialogOpen = false;
+            EditLearningWorldDialogOpen = false;
+            CreateLearningSpaceDialogueOpen = false;
+            EditLearningSpaceDialogOpen = false;
         }
-        
-        private AuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get; set; }
+
+        private readonly IAuthoringToolWorkspaceViewModel _authoringToolWorkspaceVm;
+        private readonly ILearningWorldPresenter _learningWorldPresenter;
         
         internal bool CreateLearningWorldDialogOpen { get; set; }
         internal bool EditLearningWorldDialogOpen { get; set; }
@@ -35,6 +43,12 @@ namespace AuthoringTool.PresentationLogic
         /// world is passed.
         /// </summary>
         internal event EventHandler<LearningWorldViewModel?>? OnLearningWorldDelete;
+        
+        /// <summary>
+        /// This event is fired when <see cref="EditCurrentLearningWorld"/> is called by the modal dialog as a callback.
+        /// The newly edited learning world is passed.
+        /// </summary>
+        internal event EventHandler<LearningWorldViewModel?>? OnLearningWorldEdit;
 
         /// <summary>
         /// Creates a new LearningWorld in our ViewModel.
@@ -49,8 +63,8 @@ namespace AuthoringTool.PresentationLogic
             string description, string goals)
         {
             //TODO: check if world with that name exists already? is name our unique identifier?
-            var learningWorld = new LearningWorldViewModel(name, shortname, authors, language, description, goals);
-            AuthoringToolWorkspaceVm.LearningWorlds.Add(learningWorld);
+            var learningWorld = _learningWorldPresenter.CreateNewLearningWorld(name, shortname, authors, language, description, goals);
+            _authoringToolWorkspaceVm.LearningWorlds.Add(learningWorld);
             OnLearningWorldCreate?.Invoke(this, learningWorld);
         }
         
@@ -61,16 +75,16 @@ namespace AuthoringTool.PresentationLogic
         /// <exception cref="ArgumentException">Thrown when no world with that name is registered in the view model.</exception>
         internal void ChangeSelectedLearningWorld(string worldName)
         {
-            var world = AuthoringToolWorkspaceVm.LearningWorlds.FirstOrDefault(world => world.Name == worldName);
+            var world = _authoringToolWorkspaceVm.LearningWorlds.FirstOrDefault(world => world.Name == worldName);
             if (world == null) throw new ArgumentException("no world with that name in viewmodel");
-            AuthoringToolWorkspaceVm.SelectedLearningWorld = world;
-            OnLearningWorldSelect?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
+            _authoringToolWorkspaceVm.SelectedLearningWorld = world;
+            OnLearningWorldSelect?.Invoke(this, _authoringToolWorkspaceVm.SelectedLearningWorld);
         }
 
         private void ChangeSelectedLearningWorld(LearningWorldViewModel? learningWorld)
         {
-            AuthoringToolWorkspaceVm.SelectedLearningWorld = learningWorld;
-            OnLearningWorldSelect?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
+            _authoringToolWorkspaceVm.SelectedLearningWorld = learningWorld;
+            OnLearningWorldSelect?.Invoke(this, _authoringToolWorkspaceVm.SelectedLearningWorld);
         }
         
         /// <summary>
@@ -79,10 +93,10 @@ namespace AuthoringTool.PresentationLogic
         /// </summary>
         public void DeleteSelectedLearningWorld()
         {
-            var learningWorld = AuthoringToolWorkspaceVm.SelectedLearningWorld;
+            var learningWorld = _authoringToolWorkspaceVm.SelectedLearningWorld;
             if (learningWorld == null) return;
-            AuthoringToolWorkspaceVm.LearningWorlds.Remove(learningWorld);
-            ChangeSelectedLearningWorld(AuthoringToolWorkspaceVm.LearningWorlds.LastOrDefault());
+            _authoringToolWorkspaceVm.LearningWorlds.Remove(learningWorld);
+            ChangeSelectedLearningWorld(_authoringToolWorkspaceVm.LearningWorlds.LastOrDefault());
             OnLearningWorldDelete?.Invoke(this, learningWorld);
         }
         
@@ -98,15 +112,12 @@ namespace AuthoringTool.PresentationLogic
         /// <exception cref="ApplicationException">Thrown if now learning world is currently selected.</exception>
         public void EditCurrentLearningWorld(string name, string shortname, string authors, string language, string description, string goals)
         {
-            if (AuthoringToolWorkspaceVm.SelectedLearningWorld == null)
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
                 throw new ApplicationException("SelectedLearningWorld is null");
-            
-            AuthoringToolWorkspaceVm.SelectedLearningWorld.Name = name;
-            AuthoringToolWorkspaceVm.SelectedLearningWorld.Shortname = shortname;
-            AuthoringToolWorkspaceVm.SelectedLearningWorld.Authors = authors;
-            AuthoringToolWorkspaceVm.SelectedLearningWorld.Language = language;
-            AuthoringToolWorkspaceVm.SelectedLearningWorld.Description = description;
-            AuthoringToolWorkspaceVm.SelectedLearningWorld.Goals = goals;
+            _authoringToolWorkspaceVm.SelectedLearningWorld =
+                _learningWorldPresenter.EditLearningWorld(_authoringToolWorkspaceVm.SelectedLearningWorld, name,
+                    shortname, authors, language, description, goals);
+            OnLearningWorldEdit?.Invoke(this, _authoringToolWorkspaceVm.SelectedLearningWorld);
         }
 
         public void CreateNewLearningSpace(LearningWorldViewModel selectedLearningWorld, string name, string shortname,
@@ -114,26 +125,26 @@ namespace AuthoringTool.PresentationLogic
         {
             var learningSpace = new LearningSpaceViewModel(name, shortname, authors, description, goals);
             selectedLearningWorld.LearningSpaces.Add(learningSpace);
-            AuthoringToolWorkspaceVm.SelectedLearningObject = learningSpace;
+            _authoringToolWorkspaceVm.SelectedLearningObject = learningSpace;
         }
         
         public void EditSelectedLearningObject(string name, string shortname, string authors, string description, string goals)
         {
-            if (AuthoringToolWorkspaceVm.SelectedLearningObject == null)
+            if (_authoringToolWorkspaceVm.SelectedLearningObject == null)
                 throw new ApplicationException("SelectedLearningWorld is null");
             
-            AuthoringToolWorkspaceVm.SelectedLearningObject.Name = name;
-            AuthoringToolWorkspaceVm.SelectedLearningObject.Shortname = shortname;
-            AuthoringToolWorkspaceVm.SelectedLearningObject.Authors = authors;
-            AuthoringToolWorkspaceVm.SelectedLearningObject.Description = description;
-            AuthoringToolWorkspaceVm.SelectedLearningObject.Goals = goals;
+            _authoringToolWorkspaceVm.SelectedLearningObject.Name = name;
+            _authoringToolWorkspaceVm.SelectedLearningObject.Shortname = shortname;
+            _authoringToolWorkspaceVm.SelectedLearningObject.Authors = authors;
+            _authoringToolWorkspaceVm.SelectedLearningObject.Description = description;
+            _authoringToolWorkspaceVm.SelectedLearningObject.Goals = goals;
         }
 
         public void DeleteSelectedLearningSpace(LearningWorldViewModel selectedLearningWorld)
         {
-            if (AuthoringToolWorkspaceVm.SelectedLearningObject == null) return;
-            selectedLearningWorld.LearningSpaces.Remove((LearningSpaceViewModel) AuthoringToolWorkspaceVm.SelectedLearningObject);
-            AuthoringToolWorkspaceVm.SelectedLearningObject = selectedLearningWorld.LearningSpaces.LastOrDefault();
+            if (_authoringToolWorkspaceVm.SelectedLearningObject == null) return;
+            selectedLearningWorld.LearningSpaces.Remove((LearningSpaceViewModel) _authoringToolWorkspaceVm.SelectedLearningObject);
+            _authoringToolWorkspaceVm.SelectedLearningObject = selectedLearningWorld.LearningSpaces.LastOrDefault();
         }
     }
 }

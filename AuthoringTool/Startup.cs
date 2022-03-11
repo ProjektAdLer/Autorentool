@@ -5,6 +5,8 @@ using AuthoringTool.BusinessLogic.API;
 using AuthoringTool.DataAccess.API;
 using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.API;
+using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
+using AuthoringTool.PresentationLogic.LearningWorld;
 using ElectronNET.API;
 using ElectronNET.API.Entities;
 
@@ -36,7 +38,8 @@ public class Startup
         services.AddSingleton<IBusinessLogic, BusinessLogic>();
         services.AddSingleton<IPresentationLogic, PresentationLogic>();
         services.AddSingleton<IAuthoringTool, AuthoringTool.API.AuthoringTool>();
-        services.AddSingleton<AuthoringToolWorkspaceViewModel>();
+        services.AddSingleton<ILearningWorldPresenter, LearningWorldPresenter>();
+        services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
         services.AddSingleton<AuthoringToolWorkspacePresenter>();
 
         //Blazor and Electron
