@@ -32,7 +32,7 @@ public class ModalDialogUt
                 true),
         };
 
-        var systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose,
+        var systemUnderTest = CreateRenderedModalDialogComponentForTesting(ctx, title, text, onClose,
             dialogType, inputFields);
         
         Assert.AreEqual(title, systemUnderTest.Instance.Title);
@@ -78,7 +78,7 @@ public class ModalDialogUt
         };
         var dialogType = type;
 
-        var systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose,
+        var systemUnderTest = CreateRenderedModalDialogComponentForTesting(ctx, title, text, onClose,
             dialogType, null, null);
         var btn = systemUnderTest.Find(cssSelector);
         btn.Click();
@@ -105,7 +105,7 @@ public class ModalDialogUt
             new("Test1", ModalDialogInputType.Text, true),
         };
 
-        var systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose,
+        var systemUnderTest = CreateRenderedModalDialogComponentForTesting(ctx, title, text, onClose,
             dialogType, inputFields, null);
 
         var element = systemUnderTest.Find("#modal-input-field-test1");
@@ -151,7 +151,7 @@ public class ModalDialogUt
             new("Test4", ModalDialogInputType.Text)
         };
 
-        var systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose,
+        var systemUnderTest = CreateRenderedModalDialogComponentForTesting(ctx, title, text, onClose,
             dialogType, inputFields);
         systemUnderTest.Find("#modal-input-field-test1").Input("foobar123");
         systemUnderTest.Find("#modal-input-drop-test2").Change("Bar");
@@ -189,7 +189,7 @@ public class ModalDialogUt
             new("Test4", ModalDialogInputType.Text)
         };
 
-        var systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose,
+        var systemUnderTest = CreateRenderedModalDialogComponentForTesting(ctx, title, text, onClose,
             dialogType, inputFields);
         
         systemUnderTest.Find("#btn-ok").Click();
@@ -229,7 +229,7 @@ public class ModalDialogUt
             new("Test4", ModalDialogInputType.Text)
         };
 
-        var systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose,
+        var systemUnderTest = CreateRenderedModalDialogComponentForTesting(ctx, title, text, onClose,
             dialogType, inputFields);
         
         Assert.Throws<ElementNotFoundException>(() => systemUnderTest.Find("#modal-input-drop-test3-foz"));
@@ -275,7 +275,7 @@ public class ModalDialogUt
             {"Test2", "Bar"}
         };
 
-        var systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose,
+        var systemUnderTest = CreateRenderedModalDialogComponentForTesting(ctx, title, text, onClose,
             dialogType, inputFields, inputFieldsInitialValues);
         Assert.AreEqual("foobar", systemUnderTest.Find("#modal-input-field-test1").Attributes["value"]?.Value);
         Assert.AreEqual("Bar", systemUnderTest.Find("#modal-input-drop-test2").Attributes["value"]?.Value);
@@ -319,7 +319,7 @@ public class ModalDialogUt
             {"Test2", "Bar"}
         };
 
-        var systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose,
+        var systemUnderTest = CreateRenderedModalDialogComponentForTesting(ctx, title, text, onClose,
             dialogType, inputFields, inputFieldsInitialValues);
         systemUnderTest.Find("#modal-input-field-test1").Input("boofar");
         systemUnderTest.Find("#modal-input-drop-test2").Change("Foo");
@@ -359,7 +359,7 @@ public class ModalDialogUt
             {"Test2", "Baz"}
         };
 
-        var systemUnderTest = CreateRenderedModalDialogComponent(ctx, title, text, onClose,
+        var systemUnderTest = CreateRenderedModalDialogComponentForTesting(ctx, title, text, onClose,
             dialogType, inputFields, inputFieldsInitialValues);
 
         Assert.AreEqual("Bar", systemUnderTest.Find("#modal-input-drop-test1").Attributes["value"]?.Value);
@@ -368,7 +368,7 @@ public class ModalDialogUt
         Assert.DoesNotThrow(() => systemUnderTest.Find("#modal-input-drop-test2-baz"));
     }
     
-    private IRenderedComponent<ModalDialog> CreateRenderedModalDialogComponent(Bunit.TestContext ctx, string title, string text,
+    private IRenderedComponent<ModalDialog> CreateRenderedModalDialogComponentForTesting(Bunit.TestContext ctx, string title, string text,
         Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose,
         ModalDialogType dialogType,
         IEnumerable<ModalDialogInputField>? inputFields = null, IDictionary<string,string>? initialValues = null)

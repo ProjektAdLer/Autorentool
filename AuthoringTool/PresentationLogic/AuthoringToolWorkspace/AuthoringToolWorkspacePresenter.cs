@@ -82,7 +82,11 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             _authoringToolWorkspaceVm.SelectedLearningWorld = world;
             OnLearningWorldSelect?.Invoke(this, _authoringToolWorkspaceVm.SelectedLearningWorld);
         }
-
+        
+        /// <summary>
+        /// Changes the selected <see cref="LearningWorldViewModel"/> in the view model.
+        /// </summary>
+        /// <param name="learningWorld">The learning world that should be set as selected</param>
         private void ChangeSelectedLearningWorld(LearningWorldViewModel? learningWorld)
         {
             _authoringToolWorkspaceVm.SelectedLearningWorld = learningWorld;
