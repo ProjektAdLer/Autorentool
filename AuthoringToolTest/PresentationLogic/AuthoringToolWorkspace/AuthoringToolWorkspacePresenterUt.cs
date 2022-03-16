@@ -26,6 +26,10 @@ public class AuthoringToolWorkspacePresenterUt
         Assert.AreEqual(false, systemUnderTest.EditLearningWorldDialogOpen);
     }
 
+    #region LearningWorld
+
+    
+
     [Test]
     public void AuthoringToolWorkspacePresenter_LearningWorldCreated_EventHandlerCalled()
     {
@@ -284,6 +288,12 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
+    public void AuthoringToolWorkspacePresenter_LearningWorldDeleted_DoesNotThrowWhenSelectedWorldNull()
+    {
+        Assert.Fail("NYI");
+    }
+
+    [Test]
     public void AuthoringToolWorkspacePresenter_LearningWorldEdited_EventHandlerCalled()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
@@ -308,6 +318,12 @@ public class AuthoringToolWorkspacePresenterUt
             "Description", "Goals");
         
         Assert.AreEqual(true, callbackCalled);
+    }
+
+    [Test]
+    public void AuthoringToolWorkspacePresenter_LearningWorldEdited_CallsLearningWorldPresenter()
+    {
+        Assert.Fail("NYI");
     }
     
     [Test]
@@ -351,6 +367,66 @@ public class AuthoringToolWorkspacePresenterUt
         Assert.AreEqual("SelectedLearningWorld is null", ex!.Message);
     }
 
+    #endregion
+
+    #region LearningObject
+
+    [Test]
+    public void AuthoringToolWorkspacePresenter_CreateNewLearningSpace_CallsLearningSpacePresenter()
+    {
+        Assert.Fail("NYI");
+    }
+
+    [Test]
+    public void AuthoringToolWorkspacePresenter_CreateNewLearningSpace_AddsLearningSpaceToViewModel()
+    {
+        Assert.Fail("NYI");
+    }
+
+    [Test]
+    public void AuthoringToolWorkspacePresenter_EditSelectedLearningObject_WithSpace_CallsLearningSpacePresenter()
+    {
+        Assert.Fail("NYI");
+    }
+
+    [Test]
+    public void AuthoringToolWorkspacePresenter_EditSelectedLearningObject_WithSpace_SelectedLearningSpaceChanged()
+    {
+        Assert.Fail("NYI");
+    }
+
+    [Test]
+    public void AuthoringToolWorkspacePresenter_EditSelectedLearningObject_WithElement_ThrowsNYIException()
+    {
+        Assert.Fail("NYI");
+    }
+
+    [Test]
+    public void AuthoringToolWorkspacePresenter_DeleteSelectedLearningObject_DoesNotThrowWhenSelectedObjectNull()
+    {
+        Assert.Fail("NYI");
+    }
+
+    [Test]
+    public void AuthoringToolWorkspacePresenter_DeleteSelectedLearningObject_WithSpace_DeletesSpaceFromViewModel()
+    {
+        Assert.Fail("NYI");
+    }
+    
+    [Test]
+    public void AuthoringToolWorkspacePresenter_DeleteSelectedLearningObject_MutatesSelectionInViewModel() 
+    {
+        Assert.Fail("NYI");
+    }
+    
+    [Test]
+    public void AuthoringToolWorkspacePresenter_DeleteSelectedLearningObject_WithElement_ThrowsNYIException()
+    {
+        Assert.Fail("NYI");
+    }
+
+    #endregion
+    
     private AuthoringToolWorkspacePresenter CreatePresenterForTesting(IAuthoringToolWorkspaceViewModel? authoringToolWorkspaceVm = null,
         ILearningWorldPresenter? learningWorldPresenter = null, ILearningSpacePresenter? learningSpacePresenter = null, ILearningElementPresenter? learningElementPresenter = null)
     {
