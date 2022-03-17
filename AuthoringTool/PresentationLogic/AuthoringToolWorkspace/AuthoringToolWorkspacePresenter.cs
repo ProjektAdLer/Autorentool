@@ -127,13 +127,18 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             OnLearningWorldEdit?.Invoke(this, _authoringToolWorkspaceVm.SelectedLearningWorld);
         }
 
-        public void CreateNewLearningSpace(LearningWorldViewModel selectedLearningWorld, string name, string shortname,
+        public void CreateNewLearningSpace(string name, string shortname,
             string authors, string description, string goals)
         {
             var learningSpace =
                 _learningSpacePresenter.CreateNewLearningSpace(name, shortname, authors, description, goals);
-            selectedLearningWorld.LearningSpaces.Add(learningSpace);
-            _authoringToolWorkspaceVm.SelectedLearningObject = learningSpace;
+            _authoringToolWorkspaceVm.SelectedLearningWorld?.LearningSpaces.Add(learningSpace);
+            SetSelectedLearningObject(learningSpace);
+        }
+
+        public void SetSelectedLearningObject(ILearningObjectViewModel learningObject)
+        {
+            _authoringToolWorkspaceVm.SelectedLearningObject = learningObject;
         }
 
         public void EditSelectedLearningObject(string name, string shortname, string authors, string description,
@@ -167,7 +172,9 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             }
 
             _authoringToolWorkspaceVm.SelectedLearningObject =
-                _authoringToolWorkspaceVm.SelectedLearningWorld?.LearningSpaces.LastOrDefault();
+                (ILearningObjectViewModel?) _authoringToolWorkspaceVm.SelectedLearningWorld?.LearningSpaces
+                    .LastOrDefault() ??
+                _authoringToolWorkspaceVm.SelectedLearningWorld?.LearningElements.LastOrDefault();
         }
     }
 }
