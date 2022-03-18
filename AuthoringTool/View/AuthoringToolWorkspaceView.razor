@@ -4,6 +4,8 @@
 @using AuthoringTool.Components.ModalDialog
 @using AuthoringTool.PresentationLogic
 @using AuthoringTool.PresentationLogic.AuthoringToolWorkspace
+@using AuthoringTool.PresentationLogic.LearningElement
+@using AuthoringTool.PresentationLogic.LearningSpace
 @inject MouseService _mouseService
 @inject ILogger<AuthoringToolWorkspaceView> _logger
 @inject AuthoringToolWorkspacePresenter AuthoringToolWorkspaceP
@@ -75,11 +77,19 @@
          @onmousemove=@(e => _mouseService.FireMove(this, e))
          @onmouseup=@(e => _mouseService.FireUp(this, e))
          @onmouseleave=@(() => _mouseService.FireOut(this, null))>
-        @foreach (var learningSpace in AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces)
+        @foreach (var learningSpace in AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningObjects)
         {
             <Draggable LearningObject="learningSpace" OnClicked="@OnLearningObjectSelect"
                        @bind-X="@learningSpace.PositionX" @bind-Y="@learningSpace.PositionY">
-                <rect height="50" width="60" fill="lightgreen"></rect>
+                @{
+                    var color = learningSpace switch
+                    {
+                        LearningSpaceViewModel => "lightgreen",
+                        LearningElementViewModel => "blue",
+                        _ => "grey"
+                        };
+                }
+                <rect height="50" width="60" fill=@color></rect>
                 <text x="3" y="15">@learningSpace.Name</text>
 
             </Draggable>
