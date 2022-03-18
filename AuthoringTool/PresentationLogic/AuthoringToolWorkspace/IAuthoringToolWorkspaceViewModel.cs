@@ -6,5 +6,4 @@ public interface IAuthoringToolWorkspaceViewModel
 {
     List<LearningWorldViewModel> LearningWorlds { get; set; }
     LearningWorldViewModel? SelectedLearningWorld { get; set; }
-    ILearningObjectViewModel? SelectedLearningObject { get; set; }
 }

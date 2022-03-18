@@ -138,18 +138,18 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
 
         public void SetSelectedLearningObject(ILearningObjectViewModel learningObject)
         {
-            _authoringToolWorkspaceVm.SelectedLearningObject = learningObject;
+            _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject = learningObject;
         }
 
         public void EditSelectedLearningObject(string name, string shortname, string authors, string description,
             string goals)
         {
-            switch (_authoringToolWorkspaceVm.SelectedLearningObject)
+            switch (_authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject)
             {
                 case null:
                     throw new ApplicationException("SelectedLearningWorld is null");
                 case LearningSpaceViewModel learningSpaceViewModel:
-                    _authoringToolWorkspaceVm.SelectedLearningObject = _learningSpacePresenter.EditLearningSpace(
+                    _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject = _learningSpacePresenter.EditLearningSpace(
                         learningSpaceViewModel, name, shortname, authors,
                         description, goals);
                     break;
@@ -160,7 +160,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
 
         public void DeleteSelectedLearningObject()
         {
-            switch (_authoringToolWorkspaceVm.SelectedLearningObject)
+            switch (_authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject)
             {
                 case null:
                     return;
@@ -171,7 +171,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
                     throw new ApplicationException("Type of LearningObject is not implemented");
             }
 
-            _authoringToolWorkspaceVm.SelectedLearningObject =
+            _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject =
                 (ILearningObjectViewModel?) _authoringToolWorkspaceVm.SelectedLearningWorld?.LearningSpaces
                     .LastOrDefault() ??
                 _authoringToolWorkspaceVm.SelectedLearningWorld?.LearningElements.LastOrDefault();

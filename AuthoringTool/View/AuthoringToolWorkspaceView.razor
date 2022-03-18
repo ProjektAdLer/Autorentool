@@ -61,11 +61,11 @@
 
     <label>
         Selected element:
-        @if (AuthoringToolWorkspaceVm.SelectedLearningObject != null)
+        @if (AuthoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject != null)
         {
-            <text>@AuthoringToolWorkspaceVm.SelectedLearningObject.Name
+            <text>@AuthoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Name
                 , Description:
-                @AuthoringToolWorkspaceVm.SelectedLearningObject.Description
+                @AuthoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Description
             </text>
             <button class="btn btn-primary" @onclick="EditLearningSpace">Edit selected Learning Space</button>
         }
@@ -264,11 +264,11 @@
         //prepare dictionary property to pass to dialog
         _editDialogInitialValues = new Dictionary<string, string>
         {
-            {"Name", AuthoringToolWorkspaceVm.SelectedLearningObject.Name},
-            {"Shortname", AuthoringToolWorkspaceVm.SelectedLearningObject.Shortname},
-            {"Authors", AuthoringToolWorkspaceVm.SelectedLearningObject.Authors},
-            {"Description", AuthoringToolWorkspaceVm.SelectedLearningObject.Description},
-            {"Goals", AuthoringToolWorkspaceVm.SelectedLearningObject.Goals},
+            {"Name", AuthoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Name},
+            {"Shortname", AuthoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Shortname},
+            {"Authors", AuthoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Authors},
+            {"Description", AuthoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Description},
+            {"Goals", AuthoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Goals},
         };
         AuthoringToolWorkspaceP.EditLearningSpaceDialogOpen = true;
     }
