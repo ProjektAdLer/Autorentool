@@ -82,7 +82,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             _authoringToolWorkspaceVm.SelectedLearningWorld = world;
             OnLearningWorldSelect?.Invoke(this, _authoringToolWorkspaceVm.SelectedLearningWorld);
         }
-        
+
         /// <summary>
         /// Changes the selected <see cref="LearningWorldViewModel"/> in the view model.
         /// </summary>
@@ -130,28 +130,34 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
         public void CreateNewLearningSpace(string name, string shortname,
             string authors, string description, string goals)
         {
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
+                throw new ApplicationException("SelectedLearningWorld is null");
             var learningSpace =
                 _learningSpacePresenter.CreateNewLearningSpace(name, shortname, authors, description, goals);
-            _authoringToolWorkspaceVm.SelectedLearningWorld?.LearningSpaces.Add(learningSpace);
+            _authoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces.Add(learningSpace);
             SetSelectedLearningObject(learningSpace);
         }
 
         public void SetSelectedLearningObject(ILearningObjectViewModel learningObject)
         {
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
+                throw new ApplicationException("SelectedLearningWorld is null");
             _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject = learningObject;
         }
 
         public void EditSelectedLearningObject(string name, string shortname, string authors, string description,
             string goals)
         {
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
+                throw new ApplicationException("SelectedLearningWorld is null");
             switch (_authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject)
             {
                 case null:
-                    throw new ApplicationException("SelectedLearningWorld is null");
+                    throw new ApplicationException("SelectedLearningObject is null");
                 case LearningSpaceViewModel learningSpaceViewModel:
-                    _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject = _learningSpacePresenter.EditLearningSpace(
-                        learningSpaceViewModel, name, shortname, authors,
-                        description, goals);
+                    _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject =
+                        _learningSpacePresenter.EditLearningSpace(learningSpaceViewModel, name, shortname, authors,
+                            description, goals);
                     break;
                 default:
                     throw new ApplicationException("Type of LearningObject is not implemented");
@@ -160,12 +166,14 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
 
         public void DeleteSelectedLearningObject()
         {
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
+                throw new ApplicationException("SelectedLearningWorld is null");
             switch (_authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject)
             {
                 case null:
                     return;
                 case LearningSpaceViewModel learningSpace:
-                    _authoringToolWorkspaceVm.SelectedLearningWorld?.LearningSpaces.Remove(learningSpace);
+                    _authoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces.Remove(learningSpace);
                     break;
                 default:
                     throw new ApplicationException("Type of LearningObject is not implemented");
