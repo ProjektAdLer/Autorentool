@@ -1,4 +1,5 @@
-﻿using AuthoringTool.PresentationLogic.LearningSpace;
+﻿using AuthoringTool.Components.ModalDialog;
+using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
 
 namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
@@ -144,26 +145,103 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
                 throw new ApplicationException("SelectedLearningWorld is null");
             _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject = learningObject;
         }
-
-        public void EditSelectedLearningObject(string name, string shortname, string authors, string description,
-            string goals)
+        
+        internal readonly ModalDialogInputField[] ModalSpaceDialogInputFields =
+        {
+            new("Name", ModalDialogInputType.Text, true),
+            new("Shortname", ModalDialogInputType.Text, true),
+            new("Authors", ModalDialogInputType.Text),
+            new("Description", ModalDialogInputType.Text, true),
+            new("Goals", ModalDialogInputType.Text)
+        };
+        
+        public Task OnCreateSpaceDialogClose(IDictionary<string, string> data)
+        {
+            foreach (var pair in data)
+            {
+                Console.Write($"{pair.Key}:{pair.Value}\n");
+            }
+            //required arguments
+            var name = data["Name"];
+            var shortname = data["Shortname"];
+            var description = data["Description"];
+            //optional arguments
+            var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
+            var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
+            CreateNewLearningSpace(name, shortname, authors, description, goals);
+            return Task.CompletedTask;
+        }
+        public void EditLearningObject()
         {
             if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
                 throw new ApplicationException("SelectedLearningWorld is null");
             switch (_authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject)
             {
                 case null:
-                    throw new ApplicationException("SelectedLearningObject is null");
-                case LearningSpaceViewModel learningSpaceViewModel:
-                    _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject =
-                        _learningSpacePresenter.EditLearningSpace(learningSpaceViewModel, name, shortname, authors,
-                            description, goals);
+                    return;
+                case LearningSpaceViewModel:
+                    EditLearningSpace();
                     break;
                 default:
                     throw new ApplicationException("Type of LearningObject is not implemented");
             }
         }
+        
+        internal Dictionary<string, string>? EditDialogInitialValues;
+        
+        private void EditLearningSpace()
+        {
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
+                throw new ApplicationException("SelectedLearningWorld is null");
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject == null)
+                throw new ApplicationException("SelectedLearningObject is null");
+            //prepare dictionary property to pass to dialog
+            EditDialogInitialValues = new Dictionary<string, string>
+            {
+                {"Name", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Name},
+                {"Shortname", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Shortname},
+                {"Authors", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Authors},
+                {"Description", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Description},
+                {"Goals", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Goals},
+            };
+            EditLearningSpaceDialogOpen = true;
+        }
 
+        public Task OnEditSpaceDialogClose(IDictionary<string, string> data)
+        {
+            //TODO: change this into a trace ILogger call
+            foreach (var pair in data)
+            {
+                Console.Write($"{pair.Key}:{pair.Value}\n");
+            }
+    
+            //required arguments
+            var name = data["Name"];
+            var shortname = data["Shortname"];
+            var description = data["Description"];
+            //optional arguments
+            var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
+            var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
+    
+            EditSelectedLearningSpace(name, shortname, authors, description, goals);
+            return Task.CompletedTask;
+        }
+        
+        private void EditSelectedLearningSpace(string name, string shortname, string authors, string description,
+            string goals)
+        {
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
+                throw new ApplicationException("SelectedLearningWorld is null");
+            _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject =
+                _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject switch
+                {
+                    LearningSpaceViewModel learningSpaceViewModel => _learningSpacePresenter.EditLearningSpace(
+                        learningSpaceViewModel, name, shortname, authors, description, goals),
+                    null => throw new ApplicationException("SelectedLearningObject is null"),
+                    _ => throw new ApplicationException("SelectedLearningObject is of a type it should not be")
+                };
+        }
+        
         public void DeleteSelectedLearningObject()
         {
             if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
