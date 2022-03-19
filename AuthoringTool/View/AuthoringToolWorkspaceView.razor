@@ -78,12 +78,12 @@
          @onmousemove=@(e => _mouseService.FireMove(this, e))
          @onmouseup=@(e => _mouseService.FireUp(this, e))
          @onmouseleave=@(() => _mouseService.FireOut(this, null))>
-        @foreach (var learningSpace in AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningObjects)
+        @foreach (var learningObject in AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningObjects)
         {
-            <Draggable LearningObject="learningSpace" OnClicked="@OnLearningObjectSelect"
-                       @bind-X="@learningSpace.PositionX" @bind-Y="@learningSpace.PositionY">
+            <Draggable LearningObject="learningObject" OnClicked="@OnLearningObjectSelect"
+                       @bind-X="@learningObject.PositionX" @bind-Y="@learningObject.PositionY">
                 @{
-                    var color = learningSpace switch
+                    var color = learningObject switch
                     {
                         LearningSpaceViewModel => "lightgreen",
                         LearningElementViewModel => "blue",
@@ -91,7 +91,7 @@
                         };
                 }
                 <rect height="50" width="60" fill=@color></rect>
-                <text x="3" y="15">@learningSpace.Name</text>
+                <text x="3" y="15">@learningObject.Name</text>
 
             </Draggable>
         }
