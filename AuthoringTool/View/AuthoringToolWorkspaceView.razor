@@ -17,7 +17,7 @@
 <h3>AuthoringTool Workspace</h3>
 
 <p role="status">Current count of learning worlds: @AuthoringToolWorkspaceVm.LearningWorlds.Count</p>
-<p role="status">Filepath: @filePath</p>
+<p role="status" id="filepath">Filepath: @filePath</p>
 <label>
     Select learning world: 
     <select @onchange="args => AuthoringToolWorkspaceP.ChangeSelectedLearningWorld((string)args.Value!)"
@@ -45,7 +45,9 @@
 <button class="btn btn-primary" @onclick="AddNewLearningWorld">Add Learning World</button>
 <button class="btn btn-primary" @onclick="EditLearningWorld">Edit Learning World</button>
 <button class="btn btn-primary" @onclick="DeleteSelectedLearningWorld">Delete Learning World</button>
-<button class="btn btn-primary" @onclick="Export">Create Export-File</button>
+<button class="btn btn-primary" id="btnExport" @onclick="Export">Create Export-File</button>
+
+
 @if (AuthoringToolWorkspaceP.CreateLearningWorldDialogOpen)
 {
     <ModalDialog Title="Create new learning world" Text="Please enter the required data for the learning world below:"
@@ -340,8 +342,9 @@
     /// Export Learningworld
     private string filePath = "";
 
-    private void Export() //PresentationLogic.ExportWorld
+    private void Export()
     {
+        //Create XMl-files, Overwrite Encoding to UTF-8 and Create Backup-File
         presentationLogic.ConstructBackup();
         filePath = GetCurrentDirectory()+"\\EmptyWorld.mbz";
     }

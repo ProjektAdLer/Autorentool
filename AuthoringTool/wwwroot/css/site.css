@@ -62,3 +62,14 @@ a, .btn-link {
     .blazor-error-boundary::after {
         content: "An error has occurred."
     }
+    
+    #btnExport{
+        position: fixed;
+        right: 0.75rem;
+        top: 5rem;
+    }
+   #filepath{
+       position: fixed;
+       right: 0.75rem;
+       top: 3.5rem;
+   }
