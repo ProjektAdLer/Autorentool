@@ -3,17 +3,21 @@
 @using AuthoringTool.Components
 @using AuthoringTool.Components.ModalDialog
 @using AuthoringTool.PresentationLogic
+@using AuthoringTool.PresentationLogic.API
 @using AuthoringTool.PresentationLogic.AuthoringToolWorkspace
 @using AuthoringTool.PresentationLogic.LearningElement
 @using AuthoringTool.PresentationLogic.LearningSpace
+@using static System.IO.Directory;
 @inject MouseService _mouseService
 @inject ILogger<AuthoringToolWorkspaceView> _logger
 @inject AuthoringToolWorkspacePresenter AuthoringToolWorkspaceP
 @inject IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm
+@inject IPresentationLogic presentationLogic
 
 <h3>AuthoringTool Workspace</h3>
 
 <p role="status">Current count of learning worlds: @AuthoringToolWorkspaceVm.LearningWorlds.Count</p>
+<p role="status">Filepath: @filePath</p>
 <label>
     Select learning world: 
     <select @onchange="args => AuthoringToolWorkspaceP.ChangeSelectedLearningWorld((string)args.Value!)"
@@ -41,6 +45,7 @@
 <button class="btn btn-primary" @onclick="AddNewLearningWorld">Add Learning World</button>
 <button class="btn btn-primary" @onclick="EditLearningWorld">Edit Learning World</button>
 <button class="btn btn-primary" @onclick="DeleteSelectedLearningWorld">Delete Learning World</button>
+<button class="btn btn-primary" @onclick="Export">Create Export-File</button>
 @if (AuthoringToolWorkspaceP.CreateLearningWorldDialogOpen)
 {
     <ModalDialog Title="Create new learning world" Text="Please enter the required data for the learning world below:"
@@ -331,5 +336,15 @@
         AuthoringToolWorkspaceP.SetSelectedLearningObject(learningObject);
         return Task.CompletedTask;
     }
+    
+    /// Export Learningworld
+    private string filePath = "";
+
+    private void Export() //PresentationLogic.ExportWorld
+    {
+        presentationLogic.ConstructBackup();
+        filePath = GetCurrentDirectory()+"\\EmptyWorld.mbz";
+    }
+    
 
 }
