@@ -36,10 +36,12 @@ public class LearningWorldViewModel
        
     public ICollection<LearningElementViewModel> LearningElements { get; set; }
     public ICollection<LearningSpaceViewModel> LearningSpaces { get; set; }
+    public IEnumerable<ILearningObjectViewModel> LearningObjects => LearningElements.Concat<ILearningObjectViewModel>(LearningSpaces);
     public string Name { get; set; }
     public string Shortname { get; set; }
     public string Authors { get; set; }
     public string Language { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
+    public ILearningObjectViewModel? SelectedLearningObject { get; set; }
 }
