@@ -6,5 +6,5 @@ internal interface IDataAccess
 {
     IAuthoringToolConfiguration Configuration { get; }
 
-    void ExportWorld();
+    void ConstructBackup();
 }

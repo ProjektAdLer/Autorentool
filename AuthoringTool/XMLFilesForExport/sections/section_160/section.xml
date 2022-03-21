@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<section id="160">
+<section
+  id="160">
   <number>1</number>
   <name>$@NULL@$</name>
-  <summary></summary>
+  <summary />
   <summaryformat>1</summaryformat>
-  <sequence></sequence>
+  <sequence />
   <visible>1</visible>
   <availabilityjson>$@NULL@$</availabilityjson>
-  <timemodified>1645447335</timemodified>
+  <timemodified>1647867714</timemodified>
 </section>

@@ -7,5 +7,5 @@ internal interface IBusinessLogic
 {
     IAuthoringToolConfiguration Configuration { get; }
     IDataAccess DataAccess { get;  }
-    void ExportWorld();
+    void ConstructBackup();
 }

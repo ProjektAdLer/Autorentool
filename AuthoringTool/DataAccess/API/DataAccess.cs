@@ -1,5 +1,6 @@
 ﻿using AuthoringTool.API.Configuration;
 using AuthoringTool.DataAccess.WorldExport;
+using AuthoringTool.DataAccess.XmlClasses;
 
 namespace AuthoringTool.DataAccess.API;
 
@@ -8,21 +9,24 @@ internal class DataAccess : IDataAccess
     public DataAccess(IAuthoringToolConfiguration configuration)
     {
         Configuration = configuration;
-        EmptyWorld = new ExportEmptyWorld();
+        BackupFile = new ConstructBackupFile();
     }
     
     //We dont want to Test this Constructor
-    internal DataAccess(IAuthoringToolConfiguration configuration, IExportEmptyWorld emptyWorld)
+    internal DataAccess(IAuthoringToolConfiguration configuration, IConstructBackupFile backupFile)
     {
         Configuration = configuration;
-        EmptyWorld = emptyWorld;
+        BackupFile = backupFile;
     }
     
-    public void ExportWorld()
+    public void ConstructBackup()
     {
-        EmptyWorld.ModifyExistingXMLStructure();
+        BackupFile.CreateXMLFiles();
+        BackupFile.OverwriteEncoding();
+        BackupFile.CreateBackupFile();
     }
     
     public IAuthoringToolConfiguration Configuration { get; }
-    public IExportEmptyWorld EmptyWorld { get; set; }
+    
+    public IConstructBackupFile BackupFile { get; set; }
 }
