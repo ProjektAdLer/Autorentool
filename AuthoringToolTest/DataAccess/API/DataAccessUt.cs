@@ -20,21 +20,23 @@ public class DataAccessUt
         
         //Assert
         Assert.That(systemUnderTest.Configuration, Is.EqualTo(mockConfiguration));
-        Assert.That(systemUnderTest.EmptyWorld, Is.Not.Null);
+        Assert.That(systemUnderTest.BackupFile, Is.Not.Null);
     }
 
     [Test]
-    public void ExportWorld_EmptyWorld_ExistingXmlStructureModified()
+    public void ConstructBackup_BackupFile_AllMethods()
     {
         //Arrange
-        var mockExportWorld = Substitute.For<IExportEmptyWorld>();
-        var systemUnderTest = CreateTestableDataAccess(null, mockExportWorld);
+        var mockBackupFile = Substitute.For<IConstructBackupFile>();
+        var systemUnderTest = CreateTestableDataAccess(null, mockBackupFile);
         
         //Act
-        systemUnderTest.ExportWorld();
+        systemUnderTest.ConstructBackup();
         
         //Assert
-        mockExportWorld.Received().ModifyExistingXMLStructure();
+        mockBackupFile.Received().CreateXMLFiles();
+        mockBackupFile.Received().OverwriteEncoding();
+        mockBackupFile.Received().CreateBackupFile();
     }
     
     private static AuthoringTool.DataAccess.API.DataAccess CreateStandardDataAccess(IAuthoringToolConfiguration fakeConfiguration=null)
@@ -42,11 +44,11 @@ public class DataAccessUt
         fakeConfiguration ??= Substitute.For<IAuthoringToolConfiguration>();
         return new AuthoringTool.DataAccess.API.DataAccess(fakeConfiguration);
     }
-    private static AuthoringTool.DataAccess.API.DataAccess CreateTestableDataAccess(IAuthoringToolConfiguration fakeConfiguration=null, IExportEmptyWorld fakeExportWorld=null)
+    private static AuthoringTool.DataAccess.API.DataAccess CreateTestableDataAccess(IAuthoringToolConfiguration fakeConfiguration=null, IConstructBackupFile fakeBackupFile=null)
     {
         fakeConfiguration ??= Substitute.For<IAuthoringToolConfiguration>();
-        fakeExportWorld ??= Substitute.For<IExportEmptyWorld>();
-        return new AuthoringTool.DataAccess.API.DataAccess(fakeConfiguration, fakeExportWorld);
+        fakeBackupFile ??= Substitute.For<IConstructBackupFile>();
+        return new AuthoringTool.DataAccess.API.DataAccess(fakeConfiguration, fakeBackupFile);
     }
     
 }

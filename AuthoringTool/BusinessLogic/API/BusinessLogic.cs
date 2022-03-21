@@ -20,9 +20,9 @@ internal class BusinessLogic : IBusinessLogic
     
     
     public IDataAccess DataAccess { get;  }
-    public void ExportWorld()
+    public void ConstructBackup()
     {
-        DataAccess.ExportWorld();
+        DataAccess.ConstructBackup();
     }
 
     public IAuthoringToolConfiguration Configuration { get; }

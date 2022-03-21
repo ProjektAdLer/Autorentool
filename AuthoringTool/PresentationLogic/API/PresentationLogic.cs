@@ -13,9 +13,9 @@ namespace AuthoringTool.PresentationLogic.API
             BusinessLogic = businessLogic;
         }
 
-        public void ExportWorld()
+        public void ConstructBackup()
         {
-            BusinessLogic.ExportWorld();
+            BusinessLogic.ConstructBackup();
         }
         
         public IAuthoringToolConfiguration Configuration { get; }

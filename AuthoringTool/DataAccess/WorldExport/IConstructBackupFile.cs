@@ -5,7 +5,9 @@ using ICSharpCode.SharpZipLib.Tar;
 
 namespace AuthoringTool.DataAccess.WorldExport;
 
-public interface IExportEmptyWorld
+public interface IConstructBackupFile
 {
-    void ModifyExistingXMLStructure();
+    void CreateXMLFiles();
+    void OverwriteEncoding();
+    void CreateBackupFile();
 }

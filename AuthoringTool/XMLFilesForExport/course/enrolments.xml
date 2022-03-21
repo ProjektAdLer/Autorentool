@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <enrolments>
   <enrols>
-    <enrol id="153">
+    <enrol
+      id="153">
       <enrol>manual</enrol>
       <status>0</status>
       <name>$@NULL@$</name>
@@ -32,12 +33,12 @@
       <customtext2>$@NULL@$</customtext2>
       <customtext3>$@NULL@$</customtext3>
       <customtext4>$@NULL@$</customtext4>
-      <timecreated>1645447335</timecreated>
-      <timemodified>1645447335</timemodified>
-      <user_enrolments>
-      </user_enrolments>
+      <timecreated>1647867714</timecreated>
+      <timemodified>1647867714</timemodified>
+      <user_enrolments />
     </enrol>
-    <enrol id="154">
+    <enrol
+      id="154">
       <enrol>guest</enrol>
       <status>1</status>
       <name>$@NULL@$</name>
@@ -45,9 +46,9 @@
       <enrolstartdate>0</enrolstartdate>
       <enrolenddate>0</enrolenddate>
       <expirynotify>0</expirynotify>
-      <expirythreshold>0</expirythreshold>
+      <expirythreshold>86400</expirythreshold>
       <notifyall>0</notifyall>
-      <password></password>
+      <password>$@NULL@$</password>
       <cost>$@NULL@$</cost>
       <currency>$@NULL@$</currency>
       <roleid>0</roleid>
@@ -68,12 +69,12 @@
       <customtext2>$@NULL@$</customtext2>
       <customtext3>$@NULL@$</customtext3>
       <customtext4>$@NULL@$</customtext4>
-      <timecreated>1645447335</timecreated>
-      <timemodified>1645447335</timemodified>
-      <user_enrolments>
-      </user_enrolments>
+      <timecreated>1647867714</timecreated>
+      <timemodified>1647867714</timemodified>
+      <user_enrolments />
     </enrol>
-    <enrol id="155">
+    <enrol
+      id="155">
       <enrol>self</enrol>
       <status>1</status>
       <name>$@NULL@$</name>
@@ -104,10 +105,9 @@
       <customtext2>$@NULL@$</customtext2>
       <customtext3>$@NULL@$</customtext3>
       <customtext4>$@NULL@$</customtext4>
-      <timecreated>1645447335</timecreated>
-      <timemodified>1645447335</timemodified>
-      <user_enrolments>
-      </user_enrolments>
+      <timecreated>1647867714</timecreated>
+      <timemodified>1647867714</timemodified>
+      <user_enrolments />
     </enrol>
   </enrols>
 </enrolments>

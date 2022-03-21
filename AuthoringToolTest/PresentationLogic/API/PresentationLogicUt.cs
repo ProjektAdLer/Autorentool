@@ -25,17 +25,17 @@ public class PresentationLogicUt
     }
     
     [Test]
-    public void PresentationLogic_ExportWorldOnly_ExportWorld()
+    public void PresentationLogic_ConstructBackup_BackupFile()
     {
         //Arrange
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var systemUnderTest = CreateTestablePresentationLogic(null,mockBusinessLogic);
         
         //Act
-        systemUnderTest.ExportWorld();
+        systemUnderTest.ConstructBackup();
         
         //Assert
-        mockBusinessLogic.Received().ExportWorld();
+        mockBusinessLogic.Received().ConstructBackup();
     }
 
     private static AuthoringTool.PresentationLogic.API.PresentationLogic CreateStandardPresentationLogic(IAuthoringToolConfiguration fakeConfiguration=null, IBusinessLogic fakeBusinessLogic=null)

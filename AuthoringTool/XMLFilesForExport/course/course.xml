@@ -1,15 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<course id="53" contextid="286">
-  <shortname>LK</shortname>
-  <fullname>Leerer Kurs</fullname>
-  <idnumber></idnumber>
-  <summary></summary>
+<course
+  id="53"
+  contextid="286">
+  <shortname>XML_LK</shortname>
+  <fullname>XML_Leerer Kurs</fullname>
+  <idnumber />
+  <summary />
   <summaryformat>1</summaryformat>
   <format>topics</format>
   <showgrades>1</showgrades>
   <newsitems>5</newsitems>
-  <startdate>1645484400</startdate>
-  <enddate>1677020400</enddate>
+  <startdate>1647867714</startdate>
+  <enddate />
   <marker>0</marker>
   <maxbytes>0</maxbytes>
   <legacyfiles>0</legacyfiles>
@@ -18,10 +20,10 @@
   <groupmode>0</groupmode>
   <groupmodeforce>0</groupmodeforce>
   <defaultgroupingid>0</defaultgroupingid>
-  <lang></lang>
-  <theme></theme>
-  <timecreated>1645447335</timecreated>
-  <timemodified>1645447335</timemodified>
+  <lang />
+  <theme />
+  <timecreated>1647867714</timecreated>
+  <timemodified>1647867714</timemodified>
   <requested>0</requested>
   <showactivitydates>1</showactivitydates>
   <showcompletionconditions>1</showcompletionconditions>
@@ -29,12 +31,10 @@
   <completionnotify>0</completionnotify>
   <hiddensections>0</hiddensections>
   <coursedisplay>0</coursedisplay>
-  <category id="1">
+  <category
+    id="1">
     <name>Miscellaneous</name>
     <description>$@NULL@$</description>
   </category>
-  <tags>
-  </tags>
-  <customfields>
-  </customfields>
+  <customfields />
 </course>
