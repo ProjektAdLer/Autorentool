@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
+using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
 using NSubstitute;
@@ -351,12 +352,13 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     private AuthoringToolWorkspacePresenter CreatePresenterForTesting(IAuthoringToolWorkspaceViewModel? authoringToolWorkspaceVm = null,
-        ILearningWorldPresenter? learningWorldPresenter = null, ILearningSpacePresenter? learningSpacePresenter = null)
+        ILearningWorldPresenter? learningWorldPresenter = null, ILearningSpacePresenter? learningSpacePresenter = null, ILearningElementPresenter? learningElementPresenter = null)
     {
         authoringToolWorkspaceVm ??= Substitute.For<IAuthoringToolWorkspaceViewModel>();
         learningWorldPresenter ??= Substitute.For<ILearningWorldPresenter>();
         learningSpacePresenter ??= Substitute.For<ILearningSpacePresenter>();
+        learningElementPresenter ??= Substitute.For<ILearningElementPresenter>();
         return new AuthoringToolWorkspacePresenter(authoringToolWorkspaceVm, learningWorldPresenter,
-            learningSpacePresenter);
+            learningSpacePresenter, learningElementPresenter);
     }
 }
