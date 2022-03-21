@@ -31,7 +31,7 @@ public class AuthoringToolWorkspacePresenterUt
     
 
     [Test]
-    public void AuthoringToolWorkspacePresenter_LearningWorldCreated_EventHandlerCalled()
+    public void AuthoringToolWorkspacePresenter_CreateNewLearningWorld_EventHandlerCalled()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var worldPresenter = new LearningWorldPresenter();
@@ -55,7 +55,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
-    public void AuthoringToolWorkspacePresenter_LearningWorldCreated_CallsLearningWorldPresenter()
+    public void AuthoringToolWorkspacePresenter_CreateNewLearningWorld_CallsLearningWorldPresenter()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var worldPresenter = Substitute.For<ILearningWorldPresenter>();
@@ -75,7 +75,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
     
     [Test]
-    public void AuthoringToolWorkspacePresenter_LearningWorldCreated_AddsWorldToWorkspaceViewModel()
+    public void AuthoringToolWorkspacePresenter_CreateNewLearningWorld_AddsWorldToWorkspaceViewModel()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var worldPresenter = new LearningWorldPresenter();
@@ -96,7 +96,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
     
     [Test]
-    public void AuthoringToolWorkspacePresenter_LearningWorldSelected_EventHandlerCalled()
+    public void AuthoringToolWorkspacePresenter_ChangeSelectedLearningWorld_EventHandlerCalled()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var worldPresenter = new LearningWorldPresenter();
@@ -146,7 +146,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
-    public void AuthoringToolWorkspacePresenter_LearningWorldSelected_MutatesSelectionInWorkspaceViewModel()
+    public void AuthoringToolWorkspacePresenter_ChangeSelectedLearningWorld_MutatesSelectionInWorkspaceViewModel()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var worldPresenter = new LearningWorldPresenter();
@@ -170,7 +170,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
     
     [Test]
-    public void AuthoringToolWorkspacePresenter_LearningWorldSelected_ThrowsIfNoLearningWorldWithName() 
+    public void AuthoringToolWorkspacePresenter_ChangeSelectedLearningWorld_ThrowsIfNoLearningWorldWithName() 
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var worldPresenter = new LearningWorldPresenter();
@@ -183,7 +183,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
     
     [Test]
-    public void AuthoringToolWorkspacePresenter_LearningWorldDeleted_EventHandlerCalled()
+    public void AuthoringToolWorkspacePresenter_DeleteSelectedLearningWorld_EventHandlerCalled()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var worldPresenter = new LearningWorldPresenter();
@@ -233,7 +233,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
-    public void AuthoringToolWorkspacePresenter_LearningWorldDeleted_DeletesWorldFromViewModel()
+    public void AuthoringToolWorkspacePresenter_DeleteSelectedLearningWorld_DeletesWorldFromViewModel()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var worldPresenter = new LearningWorldPresenter();
@@ -266,7 +266,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
     
     [Test]
-    public void AuthoringToolWorkspacePresenter_LearningWorldDeleted_MutatesSelectionInWorkspaceViewModel()
+    public void AuthoringToolWorkspacePresenter_DeleteSelectedLearningWorld_MutatesSelectionInWorkspaceViewModel()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var worldPresenter = new LearningWorldPresenter();
@@ -288,7 +288,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
-    public void AuthoringToolWorkspacePresenter_LearningWorldDeleted_DoesNotThrowWhenSelectedWorldNull()
+    public void AuthoringToolWorkspacePresenter_DeleteSelectedLearningWorld_DoesNotThrowWhenSelectedWorldNull()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var worldPresenter = new LearningWorldPresenter();
@@ -299,7 +299,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
-    public void AuthoringToolWorkspacePresenter_LearningWorldEdited_EventHandlerCalled()
+    public void AuthoringToolWorkspacePresenter_EditCurrentLearningWorld_EventHandlerCalled()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var worldPresenter = new LearningWorldPresenter();
@@ -326,7 +326,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
-    public void AuthoringToolWorkspacePresenter_LearningWorldEdited_CallsLearningWorldPresenter()
+    public void AuthoringToolWorkspacePresenter_EditCurrentLearningWorld_CallsLearningWorldPresenter()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var worldPresenter = Substitute.For<ILearningWorldPresenter>();
@@ -346,7 +346,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
     
     [Test]
-    public void AuthoringToolWorkspacePresenter_LearningWorldEdited_SelectedWorldChanged()
+    public void AuthoringToolWorkspacePresenter_EditCurrentLearningWorld_SelectedWorldChanged()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var worldPresenter = new LearningWorldPresenter();
@@ -373,7 +373,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
-    public void AuthoringToolWorkspacePresenter_LearningWorldEdited_ThrowsWhenSelectedWorldNull()
+    public void AuthoringToolWorkspacePresenter_EditCurrentLearningWorld_ThrowsWhenSelectedWorldNull()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var worldPresenter = new LearningWorldPresenter();
