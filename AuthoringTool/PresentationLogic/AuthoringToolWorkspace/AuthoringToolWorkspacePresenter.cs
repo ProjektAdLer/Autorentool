@@ -96,7 +96,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
         /// Changes the selected <see cref="LearningWorldViewModel"/> in the view model.
         /// </summary>
         /// <param name="learningWorld">The learning world that should be set as selected</param>
-        private void ChangeSelectedLearningWorld(LearningWorldViewModel? learningWorld)
+        internal void ChangeSelectedLearningWorld(LearningWorldViewModel? learningWorld)
         {
             _authoringToolWorkspaceVm.SelectedLearningWorld = learningWorld;
             OnLearningWorldSelect?.Invoke(this, _authoringToolWorkspaceVm.SelectedLearningWorld);
@@ -185,7 +185,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
                             description, goals);
                     break;
                 default:
-                    throw new ApplicationException("Type of LearningObject is not implemented");
+                    throw new NotImplementedException("Type of LearningObject is not implemented");
             }
         }
 
@@ -204,7 +204,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
                     _authoringToolWorkspaceVm.SelectedLearningWorld.LearningElements.Remove(learningElement);
                     break;
                 default:
-                    throw new ApplicationException("Type of LearningObject is not implemented");
+                    throw new NotImplementedException("Type of LearningObject is not implemented");
             }
 
             _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject =

@@ -12,6 +12,5 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
 
         public List<LearningWorldViewModel> LearningWorlds { get; set; }
         public LearningWorldViewModel? SelectedLearningWorld { get; set; }
-        public ILearningObjectViewModel? SelectedLearningObject { get; set; }
     }
 }
