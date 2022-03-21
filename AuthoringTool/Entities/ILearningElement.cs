@@ -1,5 +1,5 @@
 ﻿namespace AuthoringTool.Entities;
 
-internal class ILearningElement
+public interface ILearningElement
 {
 }

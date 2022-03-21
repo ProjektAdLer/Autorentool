@@ -1,5 +1,5 @@
 ﻿namespace AuthoringTool.Entities;
 
-internal interface ISpace
+public interface ISpace
 {
 }
