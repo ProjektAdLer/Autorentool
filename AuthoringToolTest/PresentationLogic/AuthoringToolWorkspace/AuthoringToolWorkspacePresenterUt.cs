@@ -491,24 +491,6 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
-    public void AuthoringToolWorkspacePresenter_EditSelectedLearningObject_WithElement_ThrowsNYIException()
-    {
-        var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
-            "foo");
-        workspaceVm.LearningWorlds.Add(world);
-        workspaceVm.SelectedLearningWorld = world;
-        var element = new LearningElementViewModel("a","b", "c", "d", "e");
-        world.LearningElements.Add(element);
-        world.SelectedLearningObject = element;
-        
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm);
-        
-        Assert.Throws<NotImplementedException>(() => 
-            systemUnderTest.EditSelectedLearningObject("f", "a", "i", "l", "pls"));
-    }
-
-    [Test]
     public void AuthoringToolWorkspacePresenter_DeleteSelectedLearningObject_DoesNotThrowWhenSelectedObjectNull()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
@@ -565,22 +547,6 @@ public class AuthoringToolWorkspacePresenterUt
         Assert.That(world.SelectedLearningObject, Is.Null);
     }
     
-    [Test]
-    public void AuthoringToolWorkspacePresenter_DeleteSelectedLearningObject_WithElement_ThrowsNYIException()
-    {
-        var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
-            "foo");
-        workspaceVm.LearningWorlds.Add(world);
-        workspaceVm.SelectedLearningWorld = world;
-        var element = new LearningElementViewModel("a","b", "c", "d", "e");
-        world.LearningElements.Add(element);
-        world.SelectedLearningObject = element;
-        
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm);
-
-        Assert.Throws<NotImplementedException>(() => systemUnderTest.DeleteSelectedLearningObject());
-    }
 
     #endregion
     
