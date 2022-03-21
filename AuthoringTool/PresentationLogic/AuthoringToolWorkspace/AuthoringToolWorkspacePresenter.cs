@@ -1,31 +1,40 @@
 ﻿using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
+using AuthoringTool.PresentationLogic.LearningElement;
 
 namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
 {
     public class AuthoringToolWorkspacePresenter
     {
         public AuthoringToolWorkspacePresenter(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
-            ILearningWorldPresenter learningWorldPresenter, ILearningSpacePresenter learningSpacePresenter)
+            ILearningWorldPresenter learningWorldPresenter, ILearningSpacePresenter learningSpacePresenter, ILearningElementPresenter learningElementPresenter)
         {
             _learningSpacePresenter = learningSpacePresenter;
+            _learningElementPresenter = learningElementPresenter;
             _learningWorldPresenter = learningWorldPresenter;
             _authoringToolWorkspaceVm = authoringToolWorkspaceVm;
             CreateLearningWorldDialogOpen = false;
             EditLearningWorldDialogOpen = false;
             CreateLearningSpaceDialogueOpen = false;
             EditLearningSpaceDialogOpen = false;
+            CreateLearningElementDialogOpen = false;
+            EditLearningElementDialogOpen = false;
         }
 
         private readonly IAuthoringToolWorkspaceViewModel _authoringToolWorkspaceVm;
         private readonly ILearningWorldPresenter _learningWorldPresenter;
         private readonly ILearningSpacePresenter _learningSpacePresenter;
+        private readonly ILearningElementPresenter _learningElementPresenter;
 
         internal bool CreateLearningWorldDialogOpen { get; set; }
         internal bool EditLearningWorldDialogOpen { get; set; }
 
         internal bool CreateLearningSpaceDialogueOpen { get; set; }
         internal bool EditLearningSpaceDialogOpen { get; set; }
+        
+        internal bool CreateLearningElementDialogOpen { get; set; }
+        internal bool EditLearningElementDialogOpen { get; set; }
+
 
         /// <summary>
         /// This event is fired when <see cref="CreateNewLearningWorld"/> is called successfully and the newly created
@@ -138,6 +147,17 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             SetSelectedLearningObject(learningSpace);
         }
 
+        public void CreateNewLearningElement(string name, string shortname,
+            string authors, string description, string goals)
+        {
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
+                throw new ApplicationException("SelectedLearningWorld is null");
+            var learningElement =
+                _learningElementPresenter.CreateNewLearningElement(name, shortname, authors, description, goals);
+            _authoringToolWorkspaceVm.SelectedLearningWorld.LearningElements.Add(learningElement);
+            SetSelectedLearningObject(learningElement);
+        }
+
         public void SetSelectedLearningObject(ILearningObjectViewModel learningObject)
         {
             if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
@@ -159,6 +179,11 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
                         _learningSpacePresenter.EditLearningSpace(learningSpaceViewModel, name, shortname, authors,
                             description, goals);
                     break;
+                case LearningElementViewModel learningElementViewModel:
+                    _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject =
+                        _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, authors,
+                            description, goals);
+                    break;
                 default:
                     throw new ApplicationException("Type of LearningObject is not implemented");
             }
@@ -174,6 +199,9 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
                     return;
                 case LearningSpaceViewModel learningSpace:
                     _authoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces.Remove(learningSpace);
+                    break;
+                case LearningElementViewModel learningElement:
+                    _authoringToolWorkspaceVm.SelectedLearningWorld.LearningElements.Remove(learningElement);
                     break;
                 default:
                     throw new ApplicationException("Type of LearningObject is not implemented");
