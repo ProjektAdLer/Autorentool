@@ -1,24 +1,9 @@
 ﻿using System.Xml.Serialization;
-using AuthoringTool.DataAccess.WorldExport;
 
-namespace AuthoringTool.DataAccess.XmlClasses.course
+namespace AuthoringTool.DataAccess.XmlClasses.course;
 
-{
-	[XmlRoot(ElementName="category")]
-	public class CourseCourseXmlCategory {
-		
-		[XmlElement(ElementName="name")]
-		public string Name = "";
-
-		[XmlElement(ElementName = "description")]
-		public string Description = "$@NULL@$"; 
-		
-		[XmlAttribute(AttributeName="id")]
-		public string Id = "";
-	}
-
-	[XmlRoot(ElementName="course")]
-	public class CourseCourseXmlCourse
+[XmlRoot(ElementName="course")]
+	public partial class CourseCourseXmlCourse
 	{
 
 		[XmlElement(ElementName = "shortname")]
@@ -124,36 +109,3 @@ namespace AuthoringTool.DataAccess.XmlClasses.course
 		public string Contextid = "";
 		
 	}
-
-	public class CourseCourseXmlInit
-	{
-		public CourseCourseXmlCourse Init()
-		{
-			var currTime = DateTimeOffset.Now.ToUnixTimeSeconds(); 
-			var courseCourse = new CourseCourseXmlCourse();
-			courseCourse.Id = "53";
-			courseCourse.Contextid = "286";
-			courseCourse.Shortname = "XML_LK";
-			courseCourse.Fullname = "XML_Leerer Kurs";
-			courseCourse.Summaryformat = "1";
-			courseCourse.Format = "topics";
-			courseCourse.Showgrades = "1";
-			courseCourse.Newsitems = "5";
-			courseCourse.Startdate = currTime.ToString();
-			courseCourse.Timecreated = currTime.ToString();
-			courseCourse.Timemodified = currTime.ToString();
-
-			var courseCourseCategory = new CourseCourseXmlCategory();
-			courseCourseCategory.Name = "Miscellaneous";
-			courseCourseCategory.Id = "1";
-
-			courseCourse.Category = courseCourseCategory;
-			
-			var xml = new XmlSer();
-			xml.serialize(courseCourse, "course/course.xml");
-			
-			return courseCourse;
-		}
-	}
-
-}

@@ -24,19 +24,19 @@ public class ConstructBackupFile : IConstructBackupFile
         Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/sections/section_160");
         
         //define Xml-files 
-        var initRolesXml = new RolesXmlInit().Init();
-        var initFilesXml = new FilesXmlInit().Init();
-        var initGradebookXml = new GradebookXmlInit().Init();
-        var initOutcomeXml = new OutcomesXmlInit().Init();
-        var initQuestionsXml = new QuestionsXmlInit().Init();
-        var initScalesXml = new ScalesXmlInit().Init();
-        var initGroupsXml = new GroupsXmlInit().Init();
-        var initCourseInforefXml = new CourseInforefXmlInit().Init();
-        var initCourseRolesXml = new CourseRolesXmlInit().Init();
-        var initCourseCourseXml = new CourseCourseXmlInit().Init();
-        var initCourseEnrolmentsXml = new CourseEnrolmentsXmlInit().Init();
-        var initSectionsSectionXml = new SectionsSectionXmlInit().Init();
-        var initMoodleBackupXml = new MoodleBackupXmlInit().Init();
+        new RolesXmlInit().XmlInit();
+        new FilesXmlInit().XmlInit();
+        new GradebookXmlInit().XmlInit();
+        new OutcomesXmlInit().XmlInit();
+        new QuestionsXmlInit().XmlInit();
+        new ScalesXmlInit().XmlInit();
+        new GroupsXmlInit().XmlInit();
+        new CourseInforefXmlInit().XmlInit();
+        new CourseRolesXmlInit().XmlInit();
+        new CourseCourseXmlInit().XmlInit();
+        new CourseEnrolmentsXmlInit().XmlInit();
+        new SectionsSectionXmlInit().XmlInit();
+        new MoodleBackupXmlInit().XmlInit();
         
     }
     

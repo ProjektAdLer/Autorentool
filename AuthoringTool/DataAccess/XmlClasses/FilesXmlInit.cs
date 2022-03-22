@@ -1,27 +1,17 @@
 ﻿using System.Xml.Serialization;
 using AuthoringTool.DataAccess.WorldExport;
 
-namespace AuthoringTool.DataAccess.XmlClasses
+namespace AuthoringTool.DataAccess.XmlClasses;
 
-{
-    [XmlRoot(ElementName="files")]
-    public class FilesXmlFiles
-    {
-        
-    }
-
-    public class FilesXmlInit
-    {
-        public FilesXmlFiles Init()
+public class FilesXmlInit : IXMLInit
+{ 
+    public void XmlInit()
         {
             var file = new FilesXmlFiles();
             
             var xml = new XmlSer();
             xml.serialize(file, "files.xml");
             
-            return file;
         }
         
-    }
-
 }
