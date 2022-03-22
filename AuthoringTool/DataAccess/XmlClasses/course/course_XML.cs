@@ -1,4 +1,5 @@
 ﻿using System.Xml.Serialization;
+using AuthoringTool.DataAccess.WorldExport;
 
 namespace AuthoringTool.DataAccess.XmlClasses.course
 
@@ -147,6 +148,10 @@ namespace AuthoringTool.DataAccess.XmlClasses.course
 			courseCourseCategory.Id = "1";
 
 			courseCourse.Category = courseCourseCategory;
+			
+			var xml = new XmlSer();
+			xml.serialize(courseCourse, "course/course.xml");
+			
 			return courseCourse;
 		}
 	}

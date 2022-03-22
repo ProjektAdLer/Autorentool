@@ -1,4 +1,5 @@
 ﻿using System.Xml.Serialization;
+using AuthoringTool.DataAccess.WorldExport;
 
 namespace AuthoringTool.DataAccess.XmlClasses
 
@@ -14,6 +15,10 @@ namespace AuthoringTool.DataAccess.XmlClasses
         public FilesXmlFiles Init()
         {
             var file = new FilesXmlFiles();
+            
+            var xml = new XmlSer();
+            xml.serialize(file, "files.xml");
+            
             return file;
         }
         

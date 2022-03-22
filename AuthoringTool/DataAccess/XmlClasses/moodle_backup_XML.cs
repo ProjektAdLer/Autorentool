@@ -1,4 +1,5 @@
 ﻿using System.Xml.Serialization;
+using AuthoringTool.DataAccess.WorldExport;
 
 namespace AuthoringTool.DataAccess.XmlClasses
 
@@ -340,6 +341,10 @@ namespace AuthoringTool.DataAccess.XmlClasses
             moodleBackupInformation.Settings = moodleBackupSettings;
             
             moodleBackup.Information = moodleBackupInformation;
+            
+            var xml = new XmlSer();
+            xml.serialize(moodleBackup, "moodle_backup.xml");
+            
             return moodleBackup;
 		}
 	}

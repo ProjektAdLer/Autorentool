@@ -1,4 +1,5 @@
 ﻿using System.Xml.Serialization;
+using AuthoringTool.DataAccess.WorldExport;
 
 namespace AuthoringTool.DataAccess.XmlClasses.course
 
@@ -165,6 +166,10 @@ namespace AuthoringTool.DataAccess.XmlClasses.course
 
 			var courseEnrolment = new CourseEnrolmentsXmlEnrolments();
 			courseEnrolment.Enrols = courseEnrols;
+			
+			var xml = new XmlSer();
+			xml.serialize(courseEnrolment, "course/enrolments.xml");
+			
 			return courseEnrolment;
 		}
 	}

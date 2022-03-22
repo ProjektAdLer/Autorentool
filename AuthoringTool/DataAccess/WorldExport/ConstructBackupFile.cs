@@ -15,46 +15,29 @@ public class ConstructBackupFile : IConstructBackupFile
 {
 
     public void CreateXMLFiles()
-    {
- 
-            //define Xml-files 
-            var initRolesXml = new RolesXmlInit().Init();
-            var initFilesXml = new FilesXmlInit().Init();
-            var initGradebookXml = new GradebookXmlInit().Init();
-            var initOutcomeXml = new OutcomesXmlInit().Init();
-            var initQuestionsXml = new QuestionsXmlInit().Init();
-            var initScalesXml = new ScalesXmlInit().Init();
-            var initGroupsXml = new GroupsXmlInit().Init();
-            var initCourseInforefXml = new CourseInforefXmlInit().Init();
-            var initCourseRolesXml = new CourseRolesXmlInit().Init();
-            var initCourseCourseXml = new CourseCourseXmlInit().Init();
-            var initCourseEnrolmentsXml = new CourseEnrolmentsXmlInit().Init();
-            var initSectionsSectionXml = new SectionsSectionXmlInit().Init();
-            var initMoodleBackupXml = new MoodleBackupXmlInit().Init();
-            
-
-            //create xml-files
-            var currWorkDir = Directory.GetCurrentDirectory();
-            Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport");
-            var xml = new XmlSer();
-            xml.serialize(initRolesXml, "roles.xml");
-            xml.serialize(initFilesXml, "files.xml");
-            xml.serialize(initGradebookXml, "gradebook.xml");
-            xml.serialize(initOutcomeXml, "outcomes.xml");
-            xml.serialize(initQuestionsXml, "questions.xml");
-            xml.serialize(initScalesXml, "scales.xml");
-            xml.serialize(initGroupsXml, "groups.xml");
-            xml.serialize(initMoodleBackupXml, "moodle_backup.xml");
+    {       
+        //create needed directories for xml files
+        var currWorkDir = Directory.GetCurrentDirectory();
+        Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport");
+        Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/course");
+        Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/sections");
+        Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/sections/section_160");
         
-            Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/course");
-            xml.serialize(initCourseInforefXml, "course/inforef.xml"); 
-            xml.serialize(initCourseRolesXml, "course/roles.xml");
-            xml.serialize(initCourseCourseXml, "course/course.xml");
-            xml.serialize(initCourseEnrolmentsXml, "course/enrolments.xml");
-            
-            Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/sections");
-            Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/sections/section_160");
-            xml.serialize(initSectionsSectionXml, "sections/section_160/section.xml");
+        //define Xml-files 
+        var initRolesXml = new RolesXmlInit().Init();
+        var initFilesXml = new FilesXmlInit().Init();
+        var initGradebookXml = new GradebookXmlInit().Init();
+        var initOutcomeXml = new OutcomesXmlInit().Init();
+        var initQuestionsXml = new QuestionsXmlInit().Init();
+        var initScalesXml = new ScalesXmlInit().Init();
+        var initGroupsXml = new GroupsXmlInit().Init();
+        var initCourseInforefXml = new CourseInforefXmlInit().Init();
+        var initCourseRolesXml = new CourseRolesXmlInit().Init();
+        var initCourseCourseXml = new CourseCourseXmlInit().Init();
+        var initCourseEnrolmentsXml = new CourseEnrolmentsXmlInit().Init();
+        var initSectionsSectionXml = new SectionsSectionXmlInit().Init();
+        var initMoodleBackupXml = new MoodleBackupXmlInit().Init();
+        
     }
     
     public void CreateBackupFile()

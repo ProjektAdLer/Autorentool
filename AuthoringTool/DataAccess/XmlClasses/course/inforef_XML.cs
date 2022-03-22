@@ -1,4 +1,5 @@
 ﻿using System.Xml.Serialization;
+using AuthoringTool.DataAccess.WorldExport;
 
 namespace AuthoringTool.DataAccess.XmlClasses.course
 
@@ -32,6 +33,10 @@ namespace AuthoringTool.DataAccess.XmlClasses.course
             courseInforefRole.Id = "5";
             courseRoleref.Role = courseInforefRole;
             courseInforef.Roleref = courseRoleref;
+            
+            var xml = new XmlSer();
+            xml.serialize(courseInforef, "course/inforef.xml"); 
+            
             return courseInforef;
         }
     }

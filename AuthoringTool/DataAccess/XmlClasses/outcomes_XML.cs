@@ -1,4 +1,5 @@
 ﻿using System.Xml.Serialization;
+using AuthoringTool.DataAccess.WorldExport;
 
 namespace AuthoringTool.DataAccess.XmlClasses
 
@@ -13,6 +14,10 @@ namespace AuthoringTool.DataAccess.XmlClasses
         public OutcomesXmlOutcomesDefinition Init()
         {
             var outcome = new OutcomesXmlOutcomesDefinition();
+            
+            var xml = new XmlSer();
+            xml.serialize(outcome, "outcomes.xml");
+            
             return outcome;
         }
     }

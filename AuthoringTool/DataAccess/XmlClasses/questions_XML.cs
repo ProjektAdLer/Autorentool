@@ -1,4 +1,5 @@
 ﻿using System.Xml.Serialization;
+using AuthoringTool.DataAccess.WorldExport;
 
 namespace AuthoringTool.DataAccess.XmlClasses
 
@@ -13,6 +14,10 @@ namespace AuthoringTool.DataAccess.XmlClasses
         public QuestionsXmlQuestionsCategories Init()
         {
             var question = new QuestionsXmlQuestionsCategories();
+            
+            var xml = new XmlSer();
+            xml.serialize(question, "questions.xml");
+            
             return question;
         }
     }

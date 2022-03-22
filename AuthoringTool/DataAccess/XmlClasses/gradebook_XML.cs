@@ -1,4 +1,5 @@
 ﻿using System.Xml.Serialization;
+using AuthoringTool.DataAccess.WorldExport;
 
 namespace AuthoringTool.DataAccess.XmlClasses
 {
@@ -52,6 +53,9 @@ namespace AuthoringTool.DataAccess.XmlClasses
 
             gradesettings.Grade_setting = gradesetting;
             gradebook.Grade_settings = gradesettings;
+            
+            var xml = new XmlSer();
+            xml.serialize(gradebook, "gradebook.xml");
             
             return gradebook;
         }

@@ -1,4 +1,5 @@
 ﻿using System.Xml.Serialization;
+using AuthoringTool.DataAccess.WorldExport;
 
 namespace AuthoringTool.DataAccess.XmlClasses
 
@@ -24,6 +25,10 @@ namespace AuthoringTool.DataAccess.XmlClasses
             var groupingsList = new GroupsXmlGroupingsList();
 
             group.GroupingsList = groupingsList;
+            
+            var xml = new XmlSer();
+            xml.serialize(group, "groups.xml");
+            
             return group;
         }
     }

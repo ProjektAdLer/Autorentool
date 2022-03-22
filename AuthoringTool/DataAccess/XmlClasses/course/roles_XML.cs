@@ -1,4 +1,5 @@
 ﻿using System.Xml.Serialization;
+using AuthoringTool.DataAccess.WorldExport;
 
 namespace AuthoringTool.DataAccess.XmlClasses.course
 
@@ -18,6 +19,10 @@ namespace AuthoringTool.DataAccess.XmlClasses.course
         public CourseRolesXmlRoles Init()
         {
             var courseRole = new CourseRolesXmlRoles();
+            
+            var xml = new XmlSer();
+            xml.serialize(courseRole, "course/roles.xml");
+            
             return courseRole;
         }
     }
