@@ -22,7 +22,7 @@ internal class DataAccess : IDataAccess
     public void ConstructBackup()
     {
         BackupFile.CreateXMLFiles();
-        BackupFile.OverwriteEncoding();
+        //BackupFile.OverwriteEncoding();
         BackupFile.CreateBackupFile();
     }
     

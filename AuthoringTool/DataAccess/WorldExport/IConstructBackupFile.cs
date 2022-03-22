@@ -8,6 +8,6 @@ namespace AuthoringTool.DataAccess.WorldExport;
 public interface IConstructBackupFile
 {
     void CreateXMLFiles();
-    void OverwriteEncoding();
+    //void OverwriteEncoding();
     void CreateBackupFile();
 }
