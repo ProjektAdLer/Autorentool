@@ -9,11 +9,11 @@ internal class DataAccess : IDataAccess
     public DataAccess(IAuthoringToolConfiguration configuration)
     {
         Configuration = configuration;
-        BackupFile = new ConstructBackupFile();
+        BackupFile = new BackupFileGenerator();
     }
     
     //We dont want to Test this Constructor
-    internal DataAccess(IAuthoringToolConfiguration configuration, IConstructBackupFile backupFile)
+    internal DataAccess(IAuthoringToolConfiguration configuration, IBackupFileGenerator backupFile)
     {
         Configuration = configuration;
         BackupFile = backupFile;
@@ -27,5 +27,5 @@ internal class DataAccess : IDataAccess
     
     public IAuthoringToolConfiguration Configuration { get; }
     
-    public IConstructBackupFile BackupFile { get; set; }
+    public IBackupFileGenerator BackupFile { get; set; }
 }

@@ -11,7 +11,7 @@ using AuthoringTool.DataAccess.XmlClasses.sections;
 
 namespace AuthoringTool.DataAccess.WorldExport;
 
-public class ConstructBackupFile : IConstructBackupFile
+public class BackupFileGenerator : IBackupFileGenerator
 {
 
     public void CreateXMLFiles()

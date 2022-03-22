@@ -27,7 +27,7 @@ public class DataAccessUt
     public void ConstructBackup_BackupFile_AllMethods()
     {
         //Arrange
-        var mockBackupFile = Substitute.For<IConstructBackupFile>();
+        var mockBackupFile = Substitute.For<IBackupFileGenerator>();
         var systemUnderTest = CreateTestableDataAccess(null, mockBackupFile);
         
         //Act
@@ -43,10 +43,10 @@ public class DataAccessUt
         fakeConfiguration ??= Substitute.For<IAuthoringToolConfiguration>();
         return new AuthoringTool.DataAccess.API.DataAccess(fakeConfiguration);
     }
-    private static AuthoringTool.DataAccess.API.DataAccess CreateTestableDataAccess(IAuthoringToolConfiguration fakeConfiguration=null, IConstructBackupFile fakeBackupFile=null)
+    private static AuthoringTool.DataAccess.API.DataAccess CreateTestableDataAccess(IAuthoringToolConfiguration fakeConfiguration=null, IBackupFileGenerator fakeBackupFile=null)
     {
         fakeConfiguration ??= Substitute.For<IAuthoringToolConfiguration>();
-        fakeBackupFile ??= Substitute.For<IConstructBackupFile>();
+        fakeBackupFile ??= Substitute.For<IBackupFileGenerator>();
         return new AuthoringTool.DataAccess.API.DataAccess(fakeConfiguration, fakeBackupFile);
     }
     
