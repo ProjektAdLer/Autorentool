@@ -4,6 +4,7 @@ using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -549,15 +550,19 @@ public class AuthoringToolWorkspacePresenterUt
     
 
     #endregion
-    
-    private AuthoringToolWorkspacePresenter CreatePresenterForTesting(IAuthoringToolWorkspaceViewModel? authoringToolWorkspaceVm = null,
-        ILearningWorldPresenter? learningWorldPresenter = null, ILearningSpacePresenter? learningSpacePresenter = null, ILearningElementPresenter? learningElementPresenter = null)
+
+    private AuthoringToolWorkspacePresenter CreatePresenterForTesting(
+        IAuthoringToolWorkspaceViewModel? authoringToolWorkspaceVm = null,
+        ILearningWorldPresenter? learningWorldPresenter = null, ILearningSpacePresenter? learningSpacePresenter = null,
+        ILearningElementPresenter? learningElementPresenter = null,
+        ILogger<AuthoringToolWorkspacePresenter>? logger = null)
     {
         authoringToolWorkspaceVm ??= Substitute.For<IAuthoringToolWorkspaceViewModel>();
         learningWorldPresenter ??= Substitute.For<ILearningWorldPresenter>();
         learningSpacePresenter ??= Substitute.For<ILearningSpacePresenter>();
         learningElementPresenter ??= Substitute.For<ILearningElementPresenter>();
+        logger ??= Substitute.For<ILogger<AuthoringToolWorkspacePresenter>>();
         return new AuthoringToolWorkspacePresenter(authoringToolWorkspaceVm, learningWorldPresenter,
-            learningSpacePresenter, learningElementPresenter);
+            learningSpacePresenter, learningElementPresenter, logger);
     }
 }

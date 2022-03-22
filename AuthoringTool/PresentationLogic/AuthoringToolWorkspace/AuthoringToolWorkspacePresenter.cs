@@ -1,4 +1,5 @@
-﻿using AuthoringTool.PresentationLogic.LearningSpace;
+﻿using AuthoringTool.Components.ModalDialog;
+using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
 using AuthoringTool.PresentationLogic.LearningElement;
 
@@ -7,12 +8,14 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
     public class AuthoringToolWorkspacePresenter
     {
         public AuthoringToolWorkspacePresenter(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
-            ILearningWorldPresenter learningWorldPresenter, ILearningSpacePresenter learningSpacePresenter, ILearningElementPresenter learningElementPresenter)
+            ILearningWorldPresenter learningWorldPresenter, ILearningSpacePresenter learningSpacePresenter,
+            ILearningElementPresenter learningElementPresenter, ILogger<AuthoringToolWorkspacePresenter> logger)
         {
             _learningSpacePresenter = learningSpacePresenter;
             _learningElementPresenter = learningElementPresenter;
             _learningWorldPresenter = learningWorldPresenter;
             _authoringToolWorkspaceVm = authoringToolWorkspaceVm;
+            _logger = logger;
             CreateLearningWorldDialogOpen = false;
             EditLearningWorldDialogOpen = false;
             CreateLearningSpaceDialogueOpen = false;
@@ -25,13 +28,14 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
         private readonly ILearningWorldPresenter _learningWorldPresenter;
         private readonly ILearningSpacePresenter _learningSpacePresenter;
         private readonly ILearningElementPresenter _learningElementPresenter;
+        private readonly ILogger<AuthoringToolWorkspacePresenter> _logger;
 
         internal bool CreateLearningWorldDialogOpen { get; set; }
         internal bool EditLearningWorldDialogOpen { get; set; }
 
         internal bool CreateLearningSpaceDialogueOpen { get; set; }
         internal bool EditLearningSpaceDialogOpen { get; set; }
-        
+
         internal bool CreateLearningElementDialogOpen { get; set; }
         internal bool EditLearningElementDialogOpen { get; set; }
 
@@ -158,7 +162,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             SetSelectedLearningObject(learningElement);
         }
 
-        public void SetSelectedLearningObject(ILearningObjectViewModel learningObject)
+        private void SetSelectedLearningObject(ILearningObjectViewModel learningObject)
         {
             if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
                 throw new ApplicationException("SelectedLearningWorld is null");
@@ -181,7 +185,8 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
                     break;
                 case LearningElementViewModel learningElementViewModel:
                     _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject =
-                        _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, authors,
+                        _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname,
+                            authors,
                             description, goals);
                     break;
                 default:
@@ -211,6 +216,235 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
                 (ILearningObjectViewModel?) _authoringToolWorkspaceVm.SelectedLearningWorld?.LearningSpaces
                     .LastOrDefault() ??
                 _authoringToolWorkspaceVm.SelectedLearningWorld?.LearningElements.LastOrDefault();
+        }
+
+        public void EditLearningWorld()
+        {
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
+            {
+                //TODO: show error message?
+                return;
+            }
+
+            //prepare dictionary property to pass to dialog
+            _authoringToolWorkspaceVm.EditDialogInitialValues = new Dictionary<string, string>
+            {
+                {"Name", _authoringToolWorkspaceVm.SelectedLearningWorld.Name},
+                {"Shortname", _authoringToolWorkspaceVm.SelectedLearningWorld.Shortname},
+                {"Authors", _authoringToolWorkspaceVm.SelectedLearningWorld.Authors},
+                {"Language", _authoringToolWorkspaceVm.SelectedLearningWorld.Language},
+                {"Description", _authoringToolWorkspaceVm.SelectedLearningWorld.Description},
+                {"Goals", _authoringToolWorkspaceVm.SelectedLearningWorld.Goals},
+            };
+            EditLearningWorldDialogOpen = true;
+        }
+
+        public Task OnCreateWorldDialogClose(
+            Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+        {
+            var (response, data) = returnValueTuple;
+            CreateLearningWorldDialogOpen = false;
+
+            if (response == ModalDialogReturnValue.Cancel) return Task.CompletedTask;
+            if (data == null) throw new ApplicationException("dialog data unexectedly null after Ok return value");
+
+            foreach (var pair in data)
+            {
+                _logger.LogTrace($"{pair.Key}:{pair.Value}\n");
+            }
+
+            //required arguments
+            var name = data["Name"];
+            var shortname = data["Shortname"];
+            var language = data["Language"];
+            var description = data["Description"];
+            var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
+            var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
+            CreateNewLearningWorld(name, shortname, authors, language, description, goals);
+            return Task.CompletedTask;
+        }
+
+        public Task OnEditWorldDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+        {
+            var (response, data) = returnValueTuple;
+            EditLearningWorldDialogOpen = false;
+
+            if (response == ModalDialogReturnValue.Cancel) return Task.CompletedTask;
+            if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
+
+            //TODO: change this into a trace ILogger call
+            foreach (var pair in data)
+            {
+                _logger.LogTrace($"{pair.Key}:{pair.Value}\n");
+            }
+
+            //required arguments
+            var name = data["Name"];
+            var shortname = data["Shortname"];
+            var language = data["Language"];
+            var description = data["Description"];
+            //optional arguments
+            var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
+            var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
+
+            EditCurrentLearningWorld(name, shortname, authors, language, description, goals);
+            return Task.CompletedTask;
+        }
+
+        public Task OnCreateSpaceDialogClose(
+            Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+        {
+            var (response, data) = returnValueTuple;
+            CreateLearningSpaceDialogueOpen = false;
+
+            if (response == ModalDialogReturnValue.Cancel) return Task.CompletedTask;
+            if (data == null) throw new ApplicationException("dialog data unexectedly null after Ok return value");
+
+            foreach (var pair in data)
+            {
+                Console.Write($"{pair.Key}:{pair.Value}\n");
+            }
+
+            //required arguments
+            var name = data["Name"];
+            var shortname = data["Shortname"];
+            var description = data["Description"];
+            //optional arguments
+            var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
+            var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
+            CreateNewLearningSpace(name, shortname, authors, description, goals);
+            return Task.CompletedTask;
+        }
+
+        public Task OnCreateElementDialogClose(
+            Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+        {
+            var (response, data) = returnValueTuple;
+            CreateLearningElementDialogOpen = false;
+
+            if (response == ModalDialogReturnValue.Cancel) return Task.CompletedTask;
+            if (data == null) throw new ApplicationException("dialog data unexectedly null after Ok return value");
+
+            foreach (var pair in data)
+            {
+                Console.Write($"{pair.Key}:{pair.Value}\n");
+            }
+
+            //required arguments
+            var name = data["Name"];
+            var shortname = data["Shortname"];
+            var description = data["Description"];
+            //optional arguments
+            var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
+            var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
+            CreateNewLearningElement(name, shortname, authors, description, goals);
+            return Task.CompletedTask;
+        }
+
+        public void EditLearningObject()
+        {
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
+                throw new ApplicationException("SelectedLearningWorld is null");
+            switch (_authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject)
+            {
+                case null:
+                    return;
+                case LearningSpaceViewModel:
+                    EditLearningSpace();
+                    break;
+                case LearningElementViewModel:
+                    EditLearningElement();
+                    break;
+                default:
+                    throw new ApplicationException("Type of LearningObject is not implemented");
+            }
+        }
+
+        private void EditLearningSpace()
+        {
+            //prepare dictionary property to pass to dialog
+            _authoringToolWorkspaceVm.EditDialogInitialValues = new Dictionary<string, string>
+            {
+                {"Name", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Name},
+                {"Shortname", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Shortname},
+                {"Authors", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Authors},
+                {"Description", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Description},
+                {"Goals", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Goals},
+            };
+            EditLearningSpaceDialogOpen = true;
+        }
+
+        private void EditLearningElement()
+        {
+            //prepare dictionary property to pass to dialog
+            _authoringToolWorkspaceVm.EditDialogInitialValues = new Dictionary<string, string>
+            {
+                {"Name", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Name},
+                {"Shortname", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Shortname},
+                {"Authors", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Authors},
+                {"Description", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Description},
+                {"Goals", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Goals},
+            };
+            EditLearningElementDialogOpen = true;
+        }
+
+        public Task OnEditSpaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+        {
+            var (response, data) = returnValueTuple;
+            EditLearningSpaceDialogOpen = false;
+
+            if (response == ModalDialogReturnValue.Cancel) return Task.CompletedTask;
+            if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
+
+            //TODO: change this into a trace ILogger call
+            foreach (var pair in data)
+            {
+                Console.Write($"{pair.Key}:{pair.Value}\n");
+            }
+
+            //required arguments
+            var name = data["Name"];
+            var shortname = data["Shortname"];
+            var description = data["Description"];
+            //optional arguments
+            var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
+            var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
+
+            EditSelectedLearningObject(name, shortname, authors, description, goals);
+            return Task.CompletedTask;
+        }
+
+        public Task OnEditElementDialogClose(
+            Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+        {
+            var (response, data) = returnValueTuple;
+            EditLearningElementDialogOpen = false;
+
+            if (response == ModalDialogReturnValue.Cancel) return Task.CompletedTask;
+            if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
+
+            //TODO: change this into a trace ILogger call
+            foreach (var pair in data)
+            {
+                Console.Write($"{pair.Key}:{pair.Value}\n");
+            }
+
+            //required arguments
+            var name = data["Name"];
+            var shortname = data["Shortname"];
+            var description = data["Description"];
+            //optional arguments
+            var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
+            var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
+
+            EditSelectedLearningObject(name, shortname, authors, description, goals);
+            return Task.CompletedTask;
+        }
+
+        public Task OnLearningObjectSelect(ILearningObjectViewModel learningObject)
+        {
+            SetSelectedLearningObject(learningObject);
+            return Task.CompletedTask;
         }
     }
 }

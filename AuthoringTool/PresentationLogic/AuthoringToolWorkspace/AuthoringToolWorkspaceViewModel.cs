@@ -1,4 +1,5 @@
-﻿using AuthoringTool.PresentationLogic.LearningWorld;
+﻿using AuthoringTool.Components.ModalDialog;
+using AuthoringTool.PresentationLogic.LearningWorld;
 
 namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
 {
@@ -8,9 +9,40 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
         {
             LearningWorlds = new List<LearningWorldViewModel>();
             SelectedLearningWorld = null;
+            EditDialogInitialValues = null;
         }
 
         public List<LearningWorldViewModel> LearningWorlds { get; set; }
         public LearningWorldViewModel? SelectedLearningWorld { get; set; }
+
+        public ModalDialogInputField[] ModalDialogWorldInputFields { get; } =
+        {
+            new("Name", ModalDialogInputType.Text, true),
+            new("Shortname", ModalDialogInputType.Text, true),
+            new("Authors", ModalDialogInputType.Text),
+            new("Language", ModalDialogInputType.Text, true),
+            new("Description", ModalDialogInputType.Text, true),
+            new("Goals", ModalDialogInputType.Text)
+        };
+
+        public ModalDialogInputField[] ModalDialogSpaceInputFields { get; } =
+        {
+            new("Name", ModalDialogInputType.Text, true),
+            new("Shortname", ModalDialogInputType.Text, true),
+            new("Authors", ModalDialogInputType.Text),
+            new("Description", ModalDialogInputType.Text, true),
+            new("Goals", ModalDialogInputType.Text)
+        };
+
+        public ModalDialogInputField[] ModalDialogElementInputFields { get; } =
+        {
+            new("Name", ModalDialogInputType.Text, true),
+            new("Shortname", ModalDialogInputType.Text, true),
+            new("Authors", ModalDialogInputType.Text),
+            new("Description", ModalDialogInputType.Text, true),
+            new("Goals", ModalDialogInputType.Text)
+        };
+
+        public IDictionary<string, string>? EditDialogInitialValues { get; set; }
     }
 }
