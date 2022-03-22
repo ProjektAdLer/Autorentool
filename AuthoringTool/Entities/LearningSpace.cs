@@ -2,7 +2,7 @@
 
 namespace AuthoringTool.Entities;
 
-internal class LearningSpace : ILearningSpace
+public class LearningSpace : ILearningSpace
 {
     public LearningSpace()
     {

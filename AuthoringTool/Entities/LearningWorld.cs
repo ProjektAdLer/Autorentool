@@ -2,7 +2,7 @@
 
 namespace AuthoringTool.Entities;
 
-internal class LearningWorld : ILearningWorld
+public class LearningWorld : ILearningWorld
 {
     internal LearningWorld(string name, string shortname, string authors, string language, string description,
         string goals, ICollection<ILearningElement>? learningElements = null,

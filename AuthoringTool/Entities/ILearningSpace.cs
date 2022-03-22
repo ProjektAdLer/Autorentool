@@ -1,6 +1,6 @@
 ﻿namespace AuthoringTool.Entities;
 
-internal interface ILearningSpace : ISpace
+public interface ILearningSpace : ISpace
 {
     ICollection<ILearningElement> LearningElements { get; set; }
     
