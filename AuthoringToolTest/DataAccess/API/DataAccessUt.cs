@@ -35,7 +35,6 @@ public class DataAccessUt
         
         //Assert
         mockBackupFile.Received().CreateXMLFiles();
-        //mockBackupFile.Received().OverwriteEncoding();
         mockBackupFile.Received().CreateBackupFile();
     }
     

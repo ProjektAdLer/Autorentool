@@ -19,12 +19,10 @@ public class XmlSer
         XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
         ns.Add("", "");
         XmlSerializer x = new XmlSerializer(xml.GetType());
-        //StreamWriter Writer = new StreamWriter("XMLFilesForExport/"+xmlname);
         using (var xmlWriter = XmlTextWriter.Create("XMLFilesForExport/"+xmlname, settings))
         {
             x.Serialize(xmlWriter, xml, ns);
         }
-        //Writer.Close();
     }
     
 }
