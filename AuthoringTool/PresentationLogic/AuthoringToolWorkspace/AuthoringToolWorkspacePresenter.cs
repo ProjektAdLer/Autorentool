@@ -151,13 +151,13 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             SetSelectedLearningObject(learningSpace);
         }
 
-        public void CreateNewLearningElement(string name, string shortname,
+        public void CreateNewLearningElement(string name, string shortname, string content,
             string authors, string description, string goals)
         {
             if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
                 throw new ApplicationException("SelectedLearningWorld is null");
             var learningElement =
-                _learningElementPresenter.CreateNewLearningElement(name, shortname, authors, description, goals);
+                _learningElementPresenter.CreateNewLearningElement(name, shortname, content, authors, description, goals);
             _authoringToolWorkspaceVm.SelectedLearningWorld.LearningElements.Add(learningElement);
             SetSelectedLearningObject(learningElement);
         }
@@ -169,8 +169,8 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject = learningObject;
         }
 
-        public void EditSelectedLearningObject(string name, string shortname, string authors, string description,
-            string goals)
+        public void EditSelectedLearningObject(string name, string shortname, string content, string authors,
+            string description, string goals)
         {
             if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
                 throw new ApplicationException("SelectedLearningWorld is null");
@@ -186,8 +186,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
                 case LearningElementViewModel learningElementViewModel:
                     _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject =
                         _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname,
-                            authors,
-                            description, goals);
+                            content, authors, description, goals);
                     break;
                 default:
                     throw new NotImplementedException("Type of LearningObject is not implemented");
@@ -333,11 +332,12 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             //required arguments
             var name = data["Name"];
             var shortname = data["Shortname"];
+            var content = data["Content"];
             var description = data["Description"];
             //optional arguments
             var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
             var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
-            CreateNewLearningElement(name, shortname, authors, description, goals);
+            CreateNewLearningElement(name, shortname,content, authors, description, goals);
             return Task.CompletedTask;
         }
 
@@ -381,6 +381,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             {
                 {"Name", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Name},
                 {"Shortname", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Shortname},
+                {"Content",_authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Content},
                 {"Authors", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Authors},
                 {"Description", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Description},
                 {"Goals", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Goals},
@@ -410,7 +411,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
             var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
 
-            EditSelectedLearningObject(name, shortname, authors, description, goals);
+            EditSelectedLearningObject(name, shortname, null, authors, description, goals);
             return Task.CompletedTask;
         }
 
@@ -432,12 +433,13 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             //required arguments
             var name = data["Name"];
             var shortname = data["Shortname"];
+            var content = data["Content"];
             var description = data["Description"];
             //optional arguments
             var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
             var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
 
-            EditSelectedLearningObject(name, shortname, authors, description, goals);
+            EditSelectedLearningObject(name, shortname, content,authors, description, goals);
             return Task.CompletedTask;
         }
 

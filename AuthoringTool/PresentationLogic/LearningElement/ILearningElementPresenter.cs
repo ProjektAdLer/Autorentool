@@ -2,9 +2,9 @@
 
 public interface ILearningElementPresenter
 {
-    LearningElementViewModel CreateNewLearningElement(string name, string shortname, string authors, string description,
-        string goals);
+    LearningElementViewModel CreateNewLearningElement(string name, string shortname, string content, string authors,
+        string description, string goals);
 
     LearningElementViewModel EditLearningElement(LearningElementViewModel element, string name, string shortname,
-        string authors, string description, string goals);
+        string content, string authors, string description, string goals);
 }
