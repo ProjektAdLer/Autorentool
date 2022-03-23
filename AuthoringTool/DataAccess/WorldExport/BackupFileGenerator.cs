@@ -26,15 +26,15 @@ public class BackupFileGenerator : IBackupFileGenerator
         
         
         //Get all Xml-Classes that Implement the IXmlInit Interface, create an Instance and
-        //use the XmlInit() Method to create XMl-Files.
+        //use the XmlInit() Method to create XMl-Files. (Factory Pattern)
         var xmlInterfaceList = System.Reflection.Assembly.GetExecutingAssembly()
             .GetTypes()
             .Where(type => typeof(IXMLInit).IsAssignableFrom(type) && !type.IsInterface);
         
         foreach (var xmlClass in xmlInterfaceList)
         {
-            var instance = (IXMLInit)Activator.CreateInstance(xmlClass);
-            instance.XmlInit();
+            var xmlClassInstance = (IXMLInit)Activator.CreateInstance(xmlClass);
+            xmlClassInstance.XmlInit();
         }
         
     }
