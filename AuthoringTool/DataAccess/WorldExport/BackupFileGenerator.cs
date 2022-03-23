@@ -14,29 +14,28 @@ namespace AuthoringTool.DataAccess.WorldExport;
 public class BackupFileGenerator : IBackupFileGenerator
 {
 
+    
     public void CreateXMLFiles()
     {       
-        //create needed directories for xml files
+        //create needed directories for xml files, it won´t create, if it already exists
         var currWorkDir = Directory.GetCurrentDirectory();
         Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport");
         Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/course");
         Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/sections");
         Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/sections/section_160");
         
-        //define Xml-files 
-        new RolesXmlInit().XmlInit();
-        new FilesXmlInit().XmlInit();
-        new GradebookXmlInit().XmlInit();
-        new OutcomesXmlInit().XmlInit();
-        new QuestionsXmlInit().XmlInit();
-        new ScalesXmlInit().XmlInit();
-        new GroupsXmlInit().XmlInit();
-        new CourseInforefXmlInit().XmlInit();
-        new CourseRolesXmlInit().XmlInit();
-        new CourseCourseXmlInit().XmlInit();
-        new CourseEnrolmentsXmlInit().XmlInit();
-        new SectionsSectionXmlInit().XmlInit();
-        new MoodleBackupXmlInit().XmlInit();
+        
+        //Get all Xml-Classes that Implement the IXmlInit Interface, create an Instance and
+        //use the XmlInit() Method to create XMl-Files.
+        var xmlInterfaceList = System.Reflection.Assembly.GetExecutingAssembly()
+            .GetTypes()
+            .Where(type => typeof(IXMLInit).IsAssignableFrom(type) && !type.IsInterface);
+        
+        foreach (var xmlClass in xmlInterfaceList)
+        {
+            var instance = (IXMLInit)Activator.CreateInstance(xmlClass);
+            instance.XmlInit();
+        }
         
     }
     

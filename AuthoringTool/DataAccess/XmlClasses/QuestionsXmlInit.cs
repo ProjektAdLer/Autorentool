@@ -3,7 +3,7 @@ using AuthoringTool.DataAccess.WorldExport;
 
 namespace AuthoringTool.DataAccess.XmlClasses;
 
-public class QuestionsXmlInit
+public class QuestionsXmlInit : IXMLInit
 { 
     public void XmlInit()
     {
