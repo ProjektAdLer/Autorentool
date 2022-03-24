@@ -5,7 +5,7 @@ namespace AuthoringTool.DataAccess.WorldExport;
 
 public class XmlSer
 {
-    public void serialize(object xml, string xmlname)
+    public void Serialize(object xml, string xmlname)
     {
         var settings = new XmlWriterSettings
         {

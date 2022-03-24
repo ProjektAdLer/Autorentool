@@ -21,8 +21,8 @@ internal class DataAccess : IDataAccess
     
     public void ConstructBackup()
     {
-        BackupFile.CreateXMLFiles();
-        BackupFile.CreateBackupFile();
+        BackupFile.WriteXMLFiles();
+        BackupFile.WriteBackupFile();
     }
     
     public IAuthoringToolConfiguration Configuration { get; }

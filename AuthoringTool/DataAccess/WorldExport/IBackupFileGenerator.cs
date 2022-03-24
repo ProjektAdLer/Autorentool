@@ -7,6 +7,6 @@ namespace AuthoringTool.DataAccess.WorldExport;
 
 public interface IBackupFileGenerator
 {
-    void CreateXMLFiles();
-    void CreateBackupFile();
+    void WriteXMLFiles();
+    void WriteBackupFile();
 }
