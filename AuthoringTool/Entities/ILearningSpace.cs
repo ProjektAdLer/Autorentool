@@ -2,6 +2,6 @@
 
 public interface ILearningSpace : ISpace
 {
-    ICollection<ILearningElement> LearningElements { get; set; }
+    List<LearningElement> LearningElements { get; set; }
     
 }

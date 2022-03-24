@@ -3,8 +3,8 @@
 public interface ILearningWorld
 {
     
-    ICollection<ILearningElement> LearningElements { get; set; }
-    ICollection<ILearningSpace> LearningSpaces { get; set; }
+    List<LearningElement> LearningElements { get; set; }
+    List<LearningSpace> LearningSpaces { get; set; }
     string Name { get; set; }
     string Description { get; set; }
     string Shortname { get; set; }

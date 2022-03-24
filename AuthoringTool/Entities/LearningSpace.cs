@@ -2,13 +2,14 @@
 
 namespace AuthoringTool.Entities;
 
+[Serializable]
 public class LearningSpace : ILearningSpace
 {
     public LearningSpace()
     {
-        LearningElements = new Collection<ILearningElement>();
+        LearningElements = new List<LearningElement>();
     }
     
     
-    public ICollection<ILearningElement> LearningElements { get; set; }
+    public List<LearningElement> LearningElements { get; set; }
 }
