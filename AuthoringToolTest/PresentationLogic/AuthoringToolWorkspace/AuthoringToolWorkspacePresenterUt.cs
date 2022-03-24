@@ -440,58 +440,6 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
-    public void AuthoringToolWorkspacePresenter_EditSelectedLearningObject_WithSpace_CallsLearningSpacePresenter()
-    {
-        var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
-        learningSpacePresenter.EditLearningSpace(Arg.Any<LearningSpaceViewModel>(), Arg.Any<string>(),
-                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())
-            .Returns(new LearningSpaceViewModel("ba", "ba", "ba", "ba", "ba"));
-        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
-            "foo");
-        workspaceVm.LearningWorlds.Add(world);
-        var space = new LearningSpaceViewModel("foo", "bar", "foo", "bar", "foo");
-        world.LearningSpaces.Add(space);
-
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm,
-            learningSpacePresenter: learningSpacePresenter);
-        workspaceVm.SelectedLearningWorld = world;
-        world.SelectedLearningObject = space;
-        
-        systemUnderTest.EditSelectedLearningObject("bu", "ba","be", "bi", "bo");
-        learningSpacePresenter.Received().EditLearningSpace(space, "bu", "ba", "be", "bi",
-            "bo");
-    }
-
-    [Test]
-    public void AuthoringToolWorkspacePresenter_EditSelectedLearningObject_WithSpace_SelectedLearningSpaceChanged()
-    {
-        var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
-        learningSpacePresenter.EditLearningSpace(Arg.Any<LearningSpaceViewModel>(), Arg.Any<string>(),
-                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())
-            .Returns(new LearningSpaceViewModel("ba", "ba", "ba", "ba", "ba"));
-        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
-            "foo");
-        workspaceVm.LearningWorlds.Add(world);
-        var space = new LearningSpaceViewModel("foo", "bar", "foo", "bar", "foo");
-        world.LearningSpaces.Add(space);
-
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm,
-            learningSpacePresenter: learningSpacePresenter);
-        workspaceVm.SelectedLearningWorld = world;
-        world.SelectedLearningObject = space;
-        
-        systemUnderTest.EditSelectedLearningObject("bu", "ba","be", "bi", "bo");
-        
-        Assert.AreEqual("ba", world.SelectedLearningObject.Name);
-        Assert.AreEqual("ba", world.SelectedLearningObject.Shortname);
-        Assert.AreEqual("ba", world.SelectedLearningObject.Authors);
-        Assert.AreEqual("ba", world.SelectedLearningObject.Description);
-        Assert.AreEqual("ba", world.SelectedLearningObject.Goals);
-    }
-
-    [Test]
     public void AuthoringToolWorkspacePresenter_DeleteSelectedLearningObject_DoesNotThrowWhenSelectedObjectNull()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
