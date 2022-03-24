@@ -34,8 +34,8 @@ public class DataAccessUt
         systemUnderTest.ConstructBackup();
         
         //Assert
-        mockBackupFile.Received().CreateXMLFiles();
-        mockBackupFile.Received().CreateBackupFile();
+        mockBackupFile.Received().WriteXMLFiles();
+        mockBackupFile.Received().WriteBackupFile();
     }
     
     private static AuthoringTool.DataAccess.API.DataAccess CreateStandardDataAccess(IAuthoringToolConfiguration fakeConfiguration=null)
