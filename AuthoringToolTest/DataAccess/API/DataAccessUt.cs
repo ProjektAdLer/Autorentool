@@ -1,6 +1,7 @@
-﻿using AuthoringTool.API;
-using AuthoringTool.API.Configuration;
+﻿using AuthoringTool.API.Configuration;
+using AuthoringTool.DataAccess.Persistence;
 using AuthoringTool.DataAccess.WorldExport;
+using AuthoringTool.Entities;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -14,17 +15,23 @@ public class DataAccessUt
     {
         //Arrange 
         var mockConfiguration = Substitute.For<IAuthoringToolConfiguration>();
+        var mockBackupFileConstructor = Substitute.For<IBackupFileGenerator>();
+        var mockFileSaveHandlerWorld = Substitute.For<IFileSaveHandler<LearningWorld>>();
 
         //Act 
-        var systemUnderTest = CreateStandardDataAccess(mockConfiguration);
+        var systemUnderTest = CreateTestableDataAccess(mockConfiguration, mockBackupFileConstructor,
+            mockFileSaveHandlerWorld);
         
         //Assert
-        Assert.That(systemUnderTest.Configuration, Is.EqualTo(mockConfiguration));
-        Assert.That(systemUnderTest.BackupFile, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.Configuration, Is.EqualTo(mockConfiguration));
+            Assert.That(systemUnderTest.BackupFile, Is.EqualTo(mockBackupFileConstructor));
+        });
     }
 
     [Test]
-    public void ConstructBackup_BackupFile_AllMethods()
+    public void ConstructBackup_ConstructBackup_CallsBackupFileGenerator()
     {
         //Arrange
         var mockBackupFile = Substitute.For<IBackupFileGenerator>();
@@ -38,16 +45,13 @@ public class DataAccessUt
         mockBackupFile.Received().WriteBackupFile();
     }
     
-    private static AuthoringTool.DataAccess.API.DataAccess CreateStandardDataAccess(IAuthoringToolConfiguration fakeConfiguration=null)
+    private static AuthoringTool.DataAccess.API.DataAccess CreateTestableDataAccess(IAuthoringToolConfiguration? configuration=null,
+        IBackupFileGenerator? backupFileConstructor=null, IFileSaveHandler<LearningWorld>? fileSaveHandlerWorld=null)
     {
-        fakeConfiguration ??= Substitute.For<IAuthoringToolConfiguration>();
-        return new AuthoringTool.DataAccess.API.DataAccess(fakeConfiguration);
-    }
-    private static AuthoringTool.DataAccess.API.DataAccess CreateTestableDataAccess(IAuthoringToolConfiguration fakeConfiguration=null, IBackupFileGenerator fakeBackupFile=null)
-    {
-        fakeConfiguration ??= Substitute.For<IAuthoringToolConfiguration>();
-        fakeBackupFile ??= Substitute.For<IBackupFileGenerator>();
-        return new AuthoringTool.DataAccess.API.DataAccess(fakeConfiguration, fakeBackupFile);
+        configuration ??= Substitute.For<IAuthoringToolConfiguration>();
+        backupFileConstructor ??= Substitute.For<IBackupFileGenerator>();
+        fileSaveHandlerWorld ??= Substitute.For<IFileSaveHandler<LearningWorld>>();
+        return new AuthoringTool.DataAccess.API.DataAccess(configuration, backupFileConstructor, fileSaveHandlerWorld);
     }
     
 }

@@ -1,23 +1,26 @@
 ﻿using AuthoringTool.API.Configuration;
+using AuthoringTool.DataAccess.Persistence;
 using AuthoringTool.DataAccess.WorldExport;
-using AuthoringTool.DataAccess.XmlClasses;
+using AuthoringTool.Entities;
 
 namespace AuthoringTool.DataAccess.API;
 
 internal class DataAccess : IDataAccess
 {
-    public DataAccess(IAuthoringToolConfiguration configuration)
+
+    
+    public DataAccess(IAuthoringToolConfiguration configuration, IBackupFileGenerator backupFileGenerator,
+        IFileSaveHandler<LearningWorld> saveHandlerWorld)
     {
+        SaveHandlerWorld = saveHandlerWorld;
         Configuration = configuration;
-        BackupFile = new BackupFileGenerator();
+        BackupFile = backupFileGenerator;
     }
     
-    //We dont want to Test this Constructor
-    internal DataAccess(IAuthoringToolConfiguration configuration, IBackupFileGenerator backupFile)
-    {
-        Configuration = configuration;
-        BackupFile = backupFile;
-    }
+    private readonly IFileSaveHandler<LearningWorld> SaveHandlerWorld;
+    public IAuthoringToolConfiguration Configuration { get; }
+    
+    public IBackupFileGenerator BackupFile { get; set; }
     
     public void ConstructBackup()
     {
@@ -25,7 +28,14 @@ internal class DataAccess : IDataAccess
         BackupFile.WriteBackupFile();
     }
     
-    public IAuthoringToolConfiguration Configuration { get; }
+    public void SaveLearningWorldToFile(LearningWorld world, string filepath)
+    {
+        SaveHandlerWorld.SaveToDisk(world, filepath);
+    }
+
+    public LearningWorld LoadLearningWorldFromFile(string filepath)
+    {
+        return SaveHandlerWorld.LoadFromDisk(filepath);
+    }
     
-    public IBackupFileGenerator BackupFile { get; set; }
 }
