@@ -16,12 +16,11 @@ public class LearningSpaceViewModel : ILearningObjectViewModel
     /// <param name="learningElements">Optional collection of learning elements contained in the learning space.</param>
     /// <param name="positionX">x-position of the learning space in the workspace</param>
     /// <param name="positionY">y-position of the learning space in the workspace</param>
-    public LearningSpaceViewModel(string name, string shortname,string authors, string description, string goals,
+    public LearningSpaceViewModel(string name, string shortname, string authors, string description, string goals,
         ICollection<LearningElementViewModel>? learningElements = null, double positionX = 0, double positionY = 0)
     {
         Name = name;
         Shortname = shortname;
-        Content = null;
         Authors = authors;
         Description = description;
         Goals = goals;
@@ -33,7 +32,6 @@ public class LearningSpaceViewModel : ILearningObjectViewModel
     public ICollection<LearningElementViewModel> LearningElements { get; set; }
     public string Name { get; set; }
     public string Shortname { get; set; }
-    public string Content { get; set; }
     public string Authors { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
