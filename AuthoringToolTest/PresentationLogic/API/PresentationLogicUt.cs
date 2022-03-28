@@ -1,5 +1,8 @@
-﻿using AuthoringTool.API.Configuration;
+﻿using System;
+using AuthoringTool.API.Configuration;
 using AuthoringTool.BusinessLogic.API;
+using AuthoringTool.PresentationLogic.EntityMapping;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -16,7 +19,7 @@ public class PresentationLogicUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         
         //Act
-        var systemUnderTest = CreateStandardPresentationLogic(mockConfiguration, mockBusinessLogic);
+        var systemUnderTest = CreateTestablePresentationLogic(mockConfiguration, mockBusinessLogic);
         
         //Assert
         Assert.That(systemUnderTest.Configuration, Is.EqualTo(mockConfiguration));
@@ -38,17 +41,18 @@ public class PresentationLogicUt
         mockBusinessLogic.Received().ConstructBackup();
     }
 
-    private static AuthoringTool.PresentationLogic.API.PresentationLogic CreateStandardPresentationLogic(IAuthoringToolConfiguration fakeConfiguration=null, IBusinessLogic fakeBusinessLogic=null)
+    private static AuthoringTool.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(
+        IAuthoringToolConfiguration? fakeConfiguration=null, IBusinessLogic? fakeBusinessLogic=null, 
+        ILearningWorldMapper? worldMapper=null, IServiceProvider? serviceProvider=null,
+        ILogger<AuthoringTool.PresentationLogic.API.PresentationLogic>? logger = null)
     {
         fakeConfiguration ??= Substitute.For<IAuthoringToolConfiguration>();
         fakeBusinessLogic ??= Substitute.For<IBusinessLogic>();
-        return new AuthoringTool.PresentationLogic.API.PresentationLogic(fakeConfiguration, fakeBusinessLogic);
+        worldMapper ??= Substitute.For<ILearningWorldMapper>();
+        serviceProvider ??= Substitute.For<IServiceProvider>();
+        logger ??= Substitute.For<ILogger<AuthoringTool.PresentationLogic.API.PresentationLogic>>();
+        return new AuthoringTool.PresentationLogic.API.PresentationLogic(fakeConfiguration, fakeBusinessLogic,
+            worldMapper, serviceProvider, logger);
     }
     
-    private static AuthoringTool.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(IAuthoringToolConfiguration fakeConfiguration=null, IBusinessLogic fakeBusinessLogic=null)
-    {
-        fakeConfiguration ??= Substitute.For<IAuthoringToolConfiguration>();
-        fakeBusinessLogic ??= Substitute.For<IBusinessLogic>();
-        return new AuthoringTool.PresentationLogic.API.PresentationLogic(fakeConfiguration, fakeBusinessLogic);
-    }
 }

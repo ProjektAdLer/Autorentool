@@ -8,7 +8,7 @@
 @using AuthoringTool.PresentationLogic.LearningElement
 @using AuthoringTool.PresentationLogic.LearningSpace
 @using static System.IO.Directory;
-@inject MouseService _mouseService
+@inject IMouseService _mouseService
 @inject ILogger<AuthoringToolWorkspaceView> _logger
 @inject AuthoringToolWorkspacePresenter AuthoringToolWorkspaceP
 @inject IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm
@@ -33,20 +33,25 @@
         }
     </select>
 </label>
-@if (AuthoringToolWorkspaceVm.SelectedLearningWorld != null)
-{
-    <label>
-        Selected world: @AuthoringToolWorkspaceVm.SelectedLearningWorld.Name,
-        Description: @AuthoringToolWorkspaceVm.SelectedLearningWorld.Description,
-        Elements: @AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningElements.Count,
-        Spaces: @AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces.Count
-    </label>
-}
-<button class="btn btn-primary" @onclick="AddNewLearningWorld">Add Learning World</button>
-<button class="btn btn-primary" @onclick="EditLearningWorld">Edit Learning World</button>
-<button class="btn btn-primary" @onclick="DeleteSelectedLearningWorld">Delete Learning World</button>
-<button class="btn btn-primary" id="btnExport" @onclick="Export">Create Export-File</button>
-
+<div>
+    @if (AuthoringToolWorkspaceVm.SelectedLearningWorld != null)
+    {
+        <label>
+            Selected world: @AuthoringToolWorkspaceVm.SelectedLearningWorld.Name,
+            Description: @AuthoringToolWorkspaceVm.SelectedLearningWorld.Description,
+            Elements: @AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningElements.Count,
+            Spaces: @AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces.Count
+        </label>
+    }
+</div>
+<div>
+    <button class="btn btn-primary" @onclick="AddNewLearningWorld">Add Learning World</button>
+    <button class="btn btn-primary" @onclick="LoadLearningWorld">Load Learning World</button>
+    <button class="btn btn-primary" @onclick="EditSelectedLearningWorld" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Edit Learning World</button>
+    <button class="btn btn-primary" @onclick="DeleteSelectedLearningWorld" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Delete selected Learning World</button>
+    <button class="btn btn-primary" @onclick="SaveSelectedLearningWorld" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Save selected Learning World</button>
+    <button class="btn btn-primary" id="btnExport" @onclick="Export">Create Export-File</button>
+</div>
 
 @if (AuthoringToolWorkspaceP.CreateLearningWorldDialogOpen)
 {
@@ -162,14 +167,26 @@
         AuthoringToolWorkspaceP.CreateLearningWorldDialogOpen = true;
     }
 
-    private void EditLearningWorld()
+    private void EditSelectedLearningWorld()
     {
-        AuthoringToolWorkspaceP.EditLearningWorld();
+        AuthoringToolWorkspaceP.EditSelectedLearningWorld();
     }
 
     private void DeleteSelectedLearningWorld()
     {
         AuthoringToolWorkspaceP.DeleteSelectedLearningWorld();
+    }
+
+    private async void LoadLearningWorld()
+    {
+        await AuthoringToolWorkspaceP.LoadLearningWorld();
+        //we need to tell blazor explicitly to re-render our component after we added the loaded learning world
+        StateHasChanged();
+    }
+
+    private void SaveSelectedLearningWorld()
+    {
+        AuthoringToolWorkspaceP.SaveSelectedLearningWorld();
     }
 
     private Task OnCreateWorldDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
