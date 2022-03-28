@@ -6,7 +6,8 @@ namespace AuthoringTool.DataAccess.XmlClasses.course;
 [XmlRoot(ElementName="course")]
 	public partial class CourseCourseXmlCourse : IXmlSerializable
 	{
-		public CourseCourseXmlCourse(CourseCourseXmlCategory xmlCategory)
+		
+		public void SetParameters(CourseCourseXmlCategory xmlCategory)
 		{
 			var currTime = DateTimeOffset.Now.ToUnixTimeSeconds(); 
 			Id = "53";
@@ -21,7 +22,7 @@ namespace AuthoringTool.DataAccess.XmlClasses.course;
 			Timecreated = currTime.ToString();
 			Timemodified = currTime.ToString();
 			Tags = "";
-			
+            			
 			Category = xmlCategory;
 		}
 

@@ -6,9 +6,10 @@ namespace AuthoringTool.DataAccess.XmlClasses.course;
 [XmlRoot(ElementName="inforef")]
 public partial class CourseInforefXmlInforef : IXmlSerializable {
 
-    public CourseInforefXmlInforef(CourseInforefXmlRoleref inforefRoleref)
+    
+    public void SetParameters(CourseInforefXmlRoleref inforefRoleref)
     {
-        Roleref = inforefRoleref;
+         Roleref = inforefRoleref;
     }
 
     public void Serialize()

@@ -6,6 +6,7 @@ public class XmlBackupFactory
     {
         //create files.xml file
         var filesFiles = new FilesXmlFiles();
+        filesFiles.SetParameters();
         filesFiles.Serialize();
         
         //create gradebook.xml file
@@ -19,6 +20,7 @@ public class XmlBackupFactory
         
         //create groups.xml file
         var groupingsList = new GroupsXmlGroupingsList();
+        groupingsList.SetParameters();
         var groups = new GroupsXmlGroups();
         groups.SetParameters(groupingsList);
         groups.Serialize();
@@ -30,7 +32,7 @@ public class XmlBackupFactory
         moodlebackupDetails.SetParameters(moodlebackupDetail);
 
         var moodlebackupSection = new MoodleBackupXmlSection();
-        moodlebackupSection.SetParameters("160", "sections/section_160", "1");
+        moodlebackupSection.SetParameters("160", "1", "sections/section_160");
         var moodlebackupSections = new MoodleBackupXmlSections();
         moodlebackupSections.SetParameters(moodlebackupSection);
 

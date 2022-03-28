@@ -19,6 +19,12 @@ public class BackupFileGenerator : IBackupFileGenerator
     /// </summary>
     public void WriteXMLFiles()
     {
+        var currWorkDir = Directory.GetCurrentDirectory();
+        Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport");
+        Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/course");
+        Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/sections");
+        Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/sections/section_160");
+        
         var xmlEntityManager = new XmlEntityManager();
         xmlEntityManager.GetFactories();
 

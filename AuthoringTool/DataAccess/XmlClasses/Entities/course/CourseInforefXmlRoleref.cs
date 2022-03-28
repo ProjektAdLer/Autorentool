@@ -4,8 +4,9 @@ namespace AuthoringTool.DataAccess.XmlClasses.course;
 
 [XmlRoot(ElementName="roleref")]
 public partial class CourseInforefXmlRoleref {
-
-    public CourseInforefXmlRoleref(CourseInforefXmlRole inforefRole)
+    
+    
+    public void SetParameters(CourseInforefXmlRole inforefRole)
     {
         Role = inforefRole;
     }

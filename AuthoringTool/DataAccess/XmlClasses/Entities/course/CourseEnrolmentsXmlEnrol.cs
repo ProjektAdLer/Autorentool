@@ -5,7 +5,8 @@ namespace AuthoringTool.DataAccess.XmlClasses.course;
 [XmlRoot(ElementName="enrol")]
 	public partial class CourseEnrolmentsXmlEnrol {
 
-		public CourseEnrolmentsXmlEnrol(string roleid, string id, string enrolchild, string status)
+		
+		public void SetParametersShort(string roleid, string id, string enrolchild, string status)
 		{
 			var currTime = DateTimeOffset.Now.ToUnixTimeSeconds(); 
 			Roleid = roleid;
@@ -15,9 +16,10 @@ namespace AuthoringTool.DataAccess.XmlClasses.course;
 			Enrolchild = enrolchild;
 			Status = status;
 		}
-		public CourseEnrolmentsXmlEnrol(string roleid, string id, string enrolchild, string status,
-			string customint1, string customint2, string customint3, string customint4, string customint5,
-			string customint6)
+		
+		public void SetParametersFull(string roleid, string id, string enrolchild, string status,
+                                      			string customint1, string customint2, string customint3, string customint4, string customint5,
+                                      			string customint6)
 		{
 			var currTime = DateTimeOffset.Now.ToUnixTimeSeconds(); 
 			Roleid = roleid;
@@ -33,6 +35,7 @@ namespace AuthoringTool.DataAccess.XmlClasses.course;
 			Customint5 = customint5;
 			Customint6 = customint6;
 		}
+
 		
 		[XmlElement(ElementName="enrol")]
 		public string Enrolchild = "";

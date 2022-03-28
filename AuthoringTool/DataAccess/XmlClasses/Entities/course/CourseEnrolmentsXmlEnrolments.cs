@@ -6,7 +6,8 @@ namespace AuthoringTool.DataAccess.XmlClasses.course;
 [XmlRoot(ElementName="enrolments")]
 public partial class CourseEnrolmentsXmlEnrolments : IXmlSerializable
 {
-    public CourseEnrolmentsXmlEnrolments(CourseEnrolmentsXmlEnrols enrolsList)
+    
+    public void SetParameters(CourseEnrolmentsXmlEnrols enrolsList)
     {
         Enrols = enrolsList;
     }

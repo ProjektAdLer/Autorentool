@@ -6,7 +6,8 @@ namespace AuthoringTool.DataAccess.XmlClasses.sections;
 [XmlRoot(ElementName="section")]
 public partial class SectionsSectionXmlSection : IXmlSerializable{
 
-    public SectionsSectionXmlSection(string id, string number)
+
+    public void SetParameters(string id, string number)
     {
         var currTime = DateTimeOffset.Now.ToUnixTimeSeconds(); 
         Id = id;

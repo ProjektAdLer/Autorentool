@@ -5,7 +5,7 @@ namespace AuthoringTool.DataAccess.XmlClasses.course;
 [XmlRoot(ElementName="category")]
 public partial class CourseCourseXmlCategory {
 
-	public CourseCourseXmlCategory()
+	public void SetParameters()
 	{
 		Name = "Miscellaneous";
 		Id = "1";

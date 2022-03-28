@@ -5,7 +5,8 @@ namespace AuthoringTool.DataAccess.XmlClasses.course;
 [XmlRoot(ElementName="role")]
 public partial class CourseInforefXmlRole {
 
-    public CourseInforefXmlRole(string id)
+    
+    public void SetParameters(string id)
     {
         Id = id;
     }
