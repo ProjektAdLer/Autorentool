@@ -2,7 +2,7 @@
 using AuthoringTool.DataAccess.XmlClasses;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses;
+namespace AuthoringToolTest.DataAccess.XmlClasses.Entities;
 
 [TestFixture]
 public class MoodleBackupXmlUt

@@ -6,9 +6,10 @@ namespace AuthoringTool.DataAccess.XmlClasses.course;
 [XmlRoot(ElementName="roles")]
 public partial class CourseRolesXmlRoles : IXmlSerializable
 {
-    public void SetParameters()
+    public void SetParameters(string roleOverrides, string roleAssignments)
     {
-        
+        Role_overrides = roleOverrides;
+        Role_assignments = Role_assignments;
     }
 
     public void Serialize()

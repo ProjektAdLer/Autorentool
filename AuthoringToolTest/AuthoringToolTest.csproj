@@ -18,11 +18,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Folder Include="DataAccess\XmlClasses" />
-      <Folder Include="Entities" />
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\AuthoringTool\AuthoringTool.csproj" />
     </ItemGroup>
 

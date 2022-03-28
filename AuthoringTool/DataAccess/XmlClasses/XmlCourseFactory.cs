@@ -8,7 +8,7 @@ public class XmlCourseFactory
     {
         //Write course/course.xml file
         var courseCategory = new CourseCourseXmlCategory();
-        courseCategory.SetParameters();
+        courseCategory.SetParameters("Miscellaneous", "$@NULL@$", "1"); 
         var courseCourse = new CourseCourseXmlCourse();
         courseCourse.SetParameters(courseCategory);
         
@@ -40,7 +40,7 @@ public class XmlCourseFactory
         
         //Write course/roles.xml file
         var rolesRoles = new CourseRolesXmlRoles();
-        rolesRoles.SetParameters();
+        rolesRoles.SetParameters("", "");
         
         rolesRoles.Serialize();
 
