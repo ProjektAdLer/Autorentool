@@ -5,18 +5,19 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 [XmlRoot(ElementName="setting")]
 public partial class MoodleBackupXmlSetting {
 
-	public MoodleBackupXmlSetting(string name, string value)
+
+	public void SetParametersShort(string name, string value)
 	{
-		Name = name;
+        Name = name;
 		Value = value;
 	}
-
-	public MoodleBackupXmlSetting(string name, string value, string level, string section)
+	
+	public void SetParametersFull(string name, string value, string level, string section)
 	{
-		Name = name;
-		Value = value;
-		Level = level;
-		Section = section;
+      Name = name;
+      Value = value; 
+      Level = level;
+      Section = section;  
 	}
 	
     [XmlElement(ElementName="level")]

@@ -6,7 +6,7 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 [XmlRoot(ElementName="groups")]
 public partial class GroupsXmlGroups : IXmlSerializable{
 
-    public GroupsXmlGroups(GroupsXmlGroupingsList groupingsList)
+    public void SetParameters(GroupsXmlGroupingsList groupingsList)
     {
         GroupingsList = groupingsList;
     }

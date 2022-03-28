@@ -6,7 +6,8 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 [XmlRoot(ElementName="outcomes_definition")]
 public partial class OutcomesXmlOutcomesDefinition : IXmlSerializable {
 
-    public OutcomesXmlOutcomesDefinition()
+
+    public void SetParameters()
     {
         
     }

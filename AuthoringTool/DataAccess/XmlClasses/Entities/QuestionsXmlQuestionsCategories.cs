@@ -6,7 +6,7 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 [XmlRoot(ElementName="question_categories")]
 public partial class QuestionsXmlQuestionsCategories : IXmlSerializable{
 
-    public QuestionsXmlQuestionsCategories()
+    public void SetParameters()
     {
         
     }

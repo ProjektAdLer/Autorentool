@@ -4,27 +4,27 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 
 [XmlRoot(ElementName="information")]
 	public partial class MoodleBackupXmlInformation {
-
-		public MoodleBackupXmlInformation(string name, string originalCourseId,
-			string originalCourseFormat, string originalCourseFullname, string originalCourseShortname,
-			string originalCourseContextid, string originalSystemContextid, string originalCourseStartdate, 
-			string originalCourseEnddate, MoodleBackupXmlDetails backupDetails, MoodleBackupXmlContents backupContents, 
-			MoodleBackupXmlSettings backupSettings)
+		
+		public void SetParameters(string name, string originalCourseId,
+                                  			string originalCourseFormat, string originalCourseFullname, string originalCourseShortname,
+                                  			string originalCourseContextid, string originalSystemContextid, string originalCourseStartdate, 
+                                  			string originalCourseEnddate, MoodleBackupXmlDetails backupDetails, MoodleBackupXmlContents backupContents, 
+                                  			MoodleBackupXmlSettings backupSettings)
 		{
-			Name = name;
-			Original_course_id = originalCourseId;
-			Original_course_format = originalCourseFormat;
-			Original_course_fullname = originalCourseFullname;
-			Original_course_shortname = originalCourseShortname;
-			Original_course_startdate = originalCourseStartdate;
-			Original_course_enddate = originalCourseEnddate;
-			Original_course_contextid = originalCourseContextid;
-			Original_system_contextid = originalSystemContextid;
-			Original_course_startdate = originalCourseStartdate;
-			Original_course_enddate = originalCourseEnddate;
-			Details = backupDetails;
-			Contents = backupContents;
-			Settings = backupSettings;
+        Name = name;
+        Original_course_id = originalCourseId;
+        Original_course_format = originalCourseFormat;
+        Original_course_fullname = originalCourseFullname;
+        Original_course_shortname = originalCourseShortname;
+        Original_course_startdate = originalCourseStartdate;
+        Original_course_enddate = originalCourseEnddate;
+        Original_course_contextid = originalCourseContextid;
+        Original_system_contextid = originalSystemContextid;
+        Original_course_startdate = originalCourseStartdate;
+        Original_course_enddate = originalCourseEnddate;
+        Details = backupDetails;
+        Contents = backupContents;
+        Settings = backupSettings;
 		}
 		
 		[XmlElement(ElementName="name")]

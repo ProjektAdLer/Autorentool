@@ -6,7 +6,7 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 [XmlRoot(ElementName="GroupingsList")]
 public partial class GroupsXmlGroupingsList
 {
-    public GroupsXmlGroupingsList()
+    public void SetParameters()
     {
         
     }

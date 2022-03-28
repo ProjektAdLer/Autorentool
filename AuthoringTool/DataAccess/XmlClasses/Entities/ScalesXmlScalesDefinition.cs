@@ -6,7 +6,8 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 [XmlRoot(ElementName="scales_definition")]
 public partial class ScalesXmlScalesDefinition : IXmlSerializable {
 
-    public ScalesXmlScalesDefinition()
+    
+    public void SetParameters()
     {
         
     }

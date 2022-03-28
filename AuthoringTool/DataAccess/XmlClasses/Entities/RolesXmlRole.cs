@@ -5,8 +5,9 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 [XmlRoot(ElementName="role")]
 public partial class RolesXmlRole
 {
-    public RolesXmlRole(string name, string description, string id,
-        string shortname, string nameincourse, string sortorder, string archetype)
+    
+    public void SetParameters(string name, string description, string id,
+                                      string shortname, string nameincourse, string sortorder, string archetype)
     {
         Name = name;
         Description = description;

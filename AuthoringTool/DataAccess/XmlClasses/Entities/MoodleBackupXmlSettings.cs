@@ -5,7 +5,8 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 [XmlRoot(ElementName="settings")]
 public partial class MoodleBackupXmlSettings {
 
-    public MoodleBackupXmlSettings()
+    
+    public void SetParameters()
     {
         Setting = new List<MoodleBackupXmlSetting>();
     }

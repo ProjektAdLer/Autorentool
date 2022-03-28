@@ -6,7 +6,8 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 [XmlRoot(ElementName="roles_definition")]
 public partial class RolesXmlRolesDefinition : IXmlSerializable {
 
-    public RolesXmlRolesDefinition(RolesXmlRole rolesRole)
+    
+    public void SetParameters(RolesXmlRole rolesRole)
     {
         Role = rolesRole;
     }

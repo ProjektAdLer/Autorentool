@@ -5,9 +5,10 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 [XmlRoot(ElementName="course")]
 public partial class MoodleBackupXmlCourse {
 
-	public MoodleBackupXmlCourse(string courseid, string title, string directory)
+	
+	public void SetParameters(string courseid, string title, string directory)
 	{
-		Courseid = courseid;
+        Courseid = courseid;
 		Title = title;
 		Directory = directory;
 	}

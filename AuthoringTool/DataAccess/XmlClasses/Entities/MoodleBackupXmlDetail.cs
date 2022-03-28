@@ -5,9 +5,10 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 [XmlRoot(ElementName="detail")]
 public partial class MoodleBackupXmlDetail {
 
-	public MoodleBackupXmlDetail(string backupId)
+
+	public void SetParameters(string backupId)
 	{
-		Backup_id = backupId;
+        Backup_id = backupId;
 	}
 		
     [XmlElement(ElementName="type")]

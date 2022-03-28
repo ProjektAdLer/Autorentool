@@ -6,7 +6,8 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 [XmlRoot(ElementName="moodle_backup")]
 public partial class MoodleBackupXmlMoodleBackup : IXmlSerializable {
 
-    public MoodleBackupXmlMoodleBackup(MoodleBackupXmlInformation moodleBackupInformation)
+ 
+    public void SetParameters(MoodleBackupXmlInformation moodleBackupInformation)
     {
         Information = moodleBackupInformation;
     }

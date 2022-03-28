@@ -6,6 +6,6 @@ public class XmlEntityManager
     {
         new XmlCourseFactory();
         new XmlSectionFactory();
-        new XmlBackupFactory();
+        var backupFactory = new XmlBackupFactory();
     }
 }
