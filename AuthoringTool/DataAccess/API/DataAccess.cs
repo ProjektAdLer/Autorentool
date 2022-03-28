@@ -17,7 +17,7 @@ internal class DataAccess : IDataAccess
         BackupFile = backupFileGenerator;
     }
     
-    private readonly IFileSaveHandler<LearningWorld> SaveHandlerWorld;
+    public readonly IFileSaveHandler<LearningWorld> SaveHandlerWorld;
     public IAuthoringToolConfiguration Configuration { get; }
     
     public IBackupFileGenerator BackupFile { get; set; }

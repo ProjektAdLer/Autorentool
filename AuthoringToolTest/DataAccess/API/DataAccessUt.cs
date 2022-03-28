@@ -27,11 +27,12 @@ public class DataAccessUt
         {
             Assert.That(systemUnderTest.Configuration, Is.EqualTo(mockConfiguration));
             Assert.That(systemUnderTest.BackupFile, Is.EqualTo(mockBackupFileConstructor));
+            Assert.That(systemUnderTest.SaveHandlerWorld, Is.EqualTo(mockFileSaveHandlerWorld));
         });
     }
 
     [Test]
-    public void ConstructBackup_ConstructBackup_CallsBackupFileGenerator()
+    public void DataAccess_ConstructBackup_CallsBackupFileGenerator()
     {
         //Arrange
         var mockBackupFile = Substitute.For<IBackupFileGenerator>();
@@ -43,6 +44,32 @@ public class DataAccessUt
         //Assert
         mockBackupFile.Received().WriteXMLFiles();
         mockBackupFile.Received().WriteBackupFile();
+    }
+    
+    [Test]
+    public void DataAccess_SaveLearningWorldToFile_CallsFileSaveHandlerWorld()
+    {
+        var mockFileSaveHandlerWorld = Substitute.For<IFileSaveHandler<LearningWorld>>();
+        var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerWorld: mockFileSaveHandlerWorld);
+
+        var learningWorld = new LearningWorld("f", "f", "f", "f", "f", "f");
+        systemUnderTest.SaveLearningWorldToFile(
+            learningWorld,
+            "C:/nonsense");
+        
+        mockFileSaveHandlerWorld.Received().SaveToDisk(learningWorld, "C:/nonsense");
+    }
+
+    [Test]
+    public void DataAccess_LoadLearningWorldFromFile_CallsFileSaveHandlerWorld()
+    {
+        var mockFileSaveHandlerWorld = Substitute.For<IFileSaveHandler<LearningWorld>>();
+        var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerWorld: mockFileSaveHandlerWorld);
+
+        systemUnderTest.LoadLearningWorldFromFile("C:/nonsense");
+
+        mockFileSaveHandlerWorld.Received().LoadFromDisk("C:/nonsense");
+
     }
     
     private static AuthoringTool.DataAccess.API.DataAccess CreateTestableDataAccess(IAuthoringToolConfiguration? configuration=null,
