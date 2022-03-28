@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using AuthoringTool.PresentationLogic.API;
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
@@ -19,7 +20,7 @@ public class AuthoringToolWorkspacePresenterUt
         var workspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         var worldPresenter = Substitute.For<ILearningWorldPresenter>();
         
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, worldPresenter);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter:worldPresenter);
         
         Assert.AreEqual(false, systemUnderTest.CreateLearningSpaceDialogueOpen);
         Assert.AreEqual(false, systemUnderTest.CreateLearningWorldDialogOpen);
@@ -38,7 +39,7 @@ public class AuthoringToolWorkspacePresenterUt
         var worldPresenter = new LearningWorldPresenter();
         var callbackCalled = false;
         
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, worldPresenter);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter:worldPresenter);
 
         systemUnderTest.OnLearningWorldCreate += (_, world) =>
         {
@@ -65,7 +66,7 @@ public class AuthoringToolWorkspacePresenterUt
             .Returns(new LearningWorldViewModel("Foo", "Foo", "Foo", "Foo",
                 "Foo", "Foo"));
 
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, worldPresenter);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter:worldPresenter);
         
         systemUnderTest.CreateNewLearningWorld("Foo", "Foo", "Foo", "Foo", "Foo",
             "Foo");
@@ -81,7 +82,7 @@ public class AuthoringToolWorkspacePresenterUt
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var worldPresenter = new LearningWorldPresenter();
 
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, worldPresenter);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter:worldPresenter);
         
         Assert.AreEqual(0, workspaceVm.LearningWorlds.Count);
         systemUnderTest.CreateNewLearningWorld("Foo", "Foo", "Foo", "Foo", "Foo",
@@ -103,7 +104,7 @@ public class AuthoringToolWorkspacePresenterUt
         var worldPresenter = new LearningWorldPresenter();
         var firstCallbackCalled = false;
         
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, worldPresenter);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter:worldPresenter);
 
         EventHandler<LearningWorldViewModel?> firstCallback = (_, world) =>
         {
@@ -159,7 +160,7 @@ public class AuthoringToolWorkspacePresenterUt
         workspaceVm.LearningWorlds.Add(world2);
         
 
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, worldPresenter);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter:worldPresenter);
         
         Assert.AreEqual(null, workspaceVm.SelectedLearningWorld);
         
@@ -177,7 +178,7 @@ public class AuthoringToolWorkspacePresenterUt
         var worldPresenter = new LearningWorldPresenter();
         Assert.IsEmpty(workspaceVm.LearningWorlds);
         
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, worldPresenter);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter:worldPresenter);
         
         var ex = Assert.Throws<ArgumentException>(() => systemUnderTest.ChangeSelectedLearningWorld("foo"));
         Assert.AreEqual("no world with that name in viewmodel", ex.Message);
@@ -211,7 +212,7 @@ public class AuthoringToolWorkspacePresenterUt
             Assert.AreEqual(world2, world);
         };
         
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, worldPresenter);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter:worldPresenter);
         
         systemUnderTest.OnLearningWorldDelete += firstCallback;
          
@@ -249,7 +250,7 @@ public class AuthoringToolWorkspacePresenterUt
         Assert.Contains(world1, workspaceVm.LearningWorlds);
         Assert.Contains(world2, workspaceVm.LearningWorlds);
 
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, worldPresenter);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter:worldPresenter);
         
         systemUnderTest.DeleteSelectedLearningWorld();
         Assert.AreEqual(2, workspaceVm.LearningWorlds.Count);
@@ -278,7 +279,7 @@ public class AuthoringToolWorkspacePresenterUt
         workspaceVm.LearningWorlds.Add(world1);
         workspaceVm.LearningWorlds.Add(world2);
         
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, worldPresenter);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter:worldPresenter);
         
         systemUnderTest.ChangeSelectedLearningWorld(world2.Name);
         Assert.AreEqual(world2, workspaceVm.SelectedLearningWorld);
@@ -294,7 +295,7 @@ public class AuthoringToolWorkspacePresenterUt
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var worldPresenter = new LearningWorldPresenter();
 
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, worldPresenter);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter:worldPresenter);
         
         Assert.DoesNotThrow(systemUnderTest.DeleteSelectedLearningWorld);
     }
@@ -315,12 +316,12 @@ public class AuthoringToolWorkspacePresenterUt
             Assert.AreEqual(world1, world);
         };
         
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, worldPresenter);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter:worldPresenter);
         systemUnderTest.OnLearningWorldEdit += callback;
         
         systemUnderTest.ChangeSelectedLearningWorld(world1.Name);
         
-        systemUnderTest.EditCurrentLearningWorld("Name", "Shortname", "Authors", "Language",
+        systemUnderTest.EditSelectedLearningWorld("Name", "Shortname", "Authors", "Language",
             "Description", "Goals");
         
         Assert.AreEqual(true, callbackCalled);
@@ -338,9 +339,9 @@ public class AuthoringToolWorkspacePresenterUt
         workspaceVm.LearningWorlds.Add(world1);
         workspaceVm.SelectedLearningWorld = world1;
         
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, worldPresenter);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter:worldPresenter);
 
-        systemUnderTest.EditCurrentLearningWorld("a", "a", "a", "a", "a", "a");
+        systemUnderTest.EditSelectedLearningWorld("a", "a", "a", "a", "a", "a");
 
         worldPresenter.Received().EditLearningWorld(world1, Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
@@ -358,11 +359,11 @@ public class AuthoringToolWorkspacePresenterUt
         workspaceVm.LearningWorlds.Add(world1);
         workspaceVm.LearningWorlds.Add(world2);
         
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, worldPresenter);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter:worldPresenter);
         
         systemUnderTest.ChangeSelectedLearningWorld(world1.Name);
         
-        systemUnderTest.EditCurrentLearningWorld("Name", "Shortname", "Authors", "Language",
+        systemUnderTest.EditSelectedLearningWorld("Name", "Shortname", "Authors", "Language",
             "Description", "Goals");
         
         Assert.AreEqual("Name", world1.Name);
@@ -379,10 +380,10 @@ public class AuthoringToolWorkspacePresenterUt
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var worldPresenter = new LearningWorldPresenter();
         
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, worldPresenter);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter:worldPresenter);
         Assert.IsNull(workspaceVm.SelectedLearningWorld);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditCurrentLearningWorld("foo",
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditSelectedLearningWorld("foo",
             "bar", "this", "does", "not", "matter"));
         Assert.AreEqual("SelectedLearningWorld is null", ex!.Message);
     }
@@ -552,17 +553,18 @@ public class AuthoringToolWorkspacePresenterUt
     #endregion
 
     private AuthoringToolWorkspacePresenter CreatePresenterForTesting(
-        IAuthoringToolWorkspaceViewModel? authoringToolWorkspaceVm = null,
+        IAuthoringToolWorkspaceViewModel? authoringToolWorkspaceVm = null, IPresentationLogic? presentationLogic = null,
         ILearningWorldPresenter? learningWorldPresenter = null, ILearningSpacePresenter? learningSpacePresenter = null,
         ILearningElementPresenter? learningElementPresenter = null,
         ILogger<AuthoringToolWorkspacePresenter>? logger = null)
     {
         authoringToolWorkspaceVm ??= Substitute.For<IAuthoringToolWorkspaceViewModel>();
+        presentationLogic ??= Substitute.For<IPresentationLogic>();
         learningWorldPresenter ??= Substitute.For<ILearningWorldPresenter>();
         learningSpacePresenter ??= Substitute.For<ILearningSpacePresenter>();
         learningElementPresenter ??= Substitute.For<ILearningElementPresenter>();
         logger ??= Substitute.For<ILogger<AuthoringToolWorkspacePresenter>>();
-        return new AuthoringToolWorkspacePresenter(authoringToolWorkspaceVm, learningWorldPresenter,
+        return new AuthoringToolWorkspacePresenter(authoringToolWorkspaceVm, presentationLogic, learningWorldPresenter,
             learningSpacePresenter, learningElementPresenter, logger);
     }
 }
