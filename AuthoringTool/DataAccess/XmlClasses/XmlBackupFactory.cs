@@ -20,7 +20,7 @@ public class XmlBackupFactory
         
         //create groups.xml file
         var groupingsList = new GroupsXmlGroupingsList();
-        groupingsList.SetParameters();
+        groupingsList.SetParameters("");
         var groups = new GroupsXmlGroups();
         groups.SetParameters(groupingsList);
         groups.Serialize();
@@ -128,10 +128,12 @@ public class XmlBackupFactory
         
         //write outcomes.xml file
         var outcomesOutcomesDefinition = new OutcomesXmlOutcomesDefinition();
+        outcomesOutcomesDefinition.SetParameters();
         outcomesOutcomesDefinition.Serialize();
         
         //write questions.xml file
         var questionsQuestionsCategories = new QuestionsXmlQuestionsCategories();
+        questionsQuestionsCategories.SetParameters();
         questionsQuestionsCategories.Serialize();
         
         //write roles.xml file
@@ -143,6 +145,7 @@ public class XmlBackupFactory
         
         //write scales.xml file
         var scalesScalesDefinition = new ScalesXmlScalesDefinition();
+        scalesScalesDefinition.SetParameters();
         scalesScalesDefinition.Serialize();
 
 
