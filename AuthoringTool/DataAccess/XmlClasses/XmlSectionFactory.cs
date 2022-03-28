@@ -4,7 +4,7 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 
 public class XmlSectionFactory
 {
-    public void writeSectionXml()
+    public void WriteSectionXml()
     {
         //write section.xml file
         var sectionSection = new SectionsSectionXmlSection("160","1");

@@ -6,7 +6,8 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 [XmlRoot(ElementName="gradebook")]
 public partial class GradebookXmlGradebook : IXmlSerializable
 {
-    public GradebookXmlGradebook(GradebookXmlGradeSettings gradeSettings)
+    
+    public void SetParameters(GradebookXmlGradeSettings gradeSettings)
     {
         Grade_settings = gradeSettings;
     }

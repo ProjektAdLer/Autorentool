@@ -18,6 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <Folder Include="DataAccess\XmlClasses" />
       <Folder Include="Entities" />
     </ItemGroup>
 

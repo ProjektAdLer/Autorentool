@@ -4,7 +4,7 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 
 public class XmlCourseFactory
 {
-    public void writeCourseXml()
+    public void WriteCourseXml()
     {
         //Write course/course.xml file
         var courseCategory = new CourseCourseXmlCategory();

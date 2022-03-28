@@ -2,16 +2,19 @@
 
 public class XmlBackupFactory
 {
-    public void writeMainBackupXml()
+    public XmlBackupFactory()
     {
         //create files.xml file
         var filesFiles = new FilesXmlFiles();
         filesFiles.Serialize();
         
         //create gradebook.xml file
-        var gradebookSetting = new GradebookXmlGradeSetting("minmaxtouse", "1");
-        var gradebookSettings = new GradebookXmlGradeSettings(gradebookSetting);
-        var gradebook = new GradebookXmlGradebook(gradebookSettings);
+        var gradebookSetting = new GradebookXmlGradeSetting();
+        gradebookSetting.SetParameters("minmaxtouse", "1");
+        var gradebookSettings = new GradebookXmlGradeSettings();
+        gradebookSettings.SetParameters(gradebookSetting);
+        var gradebook = new GradebookXmlGradebook();
+        gradebook.SetParameters(gradebookSettings);
         gradebook.Serialize();
         
         //create groups.xml file
