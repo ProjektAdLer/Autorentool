@@ -20,7 +20,7 @@ public class PersistenceCt
     {
         var world = new LearningWorld("Name", "Shortname", "Authors", "Language",
             "Description", "Goals");
-        var space = new LearningSpace();
+        var space = new LearningSpace("Name", "Shortname", "Authors", "Description", "Goals");
         var element = new LearningElement();
         world.LearningSpaces.Add(space);
         world.LearningElements.Add(element);
@@ -38,7 +38,7 @@ public class PersistenceCt
     [Test]
     public void Persistence_SaveAndLoadSpace_ObjectsAreEqual()
     {
-        var space = new LearningSpace();
+        var space = new LearningSpace("Name", "Shortname", "Authors", "Description", "Goals");
         var element = new LearningElement();
         space.LearningElements.Add(element);
         

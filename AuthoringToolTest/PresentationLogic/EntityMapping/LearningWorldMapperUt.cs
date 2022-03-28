@@ -20,7 +20,7 @@ public class LearningWorldMapperUt
         var space = new LearningSpaceViewModel("b", "b", "b", "b", "b");
         viewModel.LearningSpaces.Add(space);
 
-        spaceMapper.ToEntity(space).Returns(new LearningSpace());
+        spaceMapper.ToEntity(space).Returns(new LearningSpace("b", "b", "b", "b", "b"));
 
         var systemUnderTest = CreateMapperForTesting(spaceMapper);
 
@@ -47,7 +47,8 @@ public class LearningWorldMapperUt
     [Test]
     public void LearningWorldMapper_ToEntity_MapsPropertiesCorrectly()
     {
-        var spaceMapper = new LearningSpaceMapper();
+        var subElementMapper = Substitute.For<ILearningElementMapper>();
+        var spaceMapper = new LearningSpaceMapper(subElementMapper);
         var elementMapper = new LearningElementMapper();
         var viewModel = new LearningWorldViewModel("name", "shortname", "authors", "language",
             "description", "goals");
@@ -69,7 +70,7 @@ public class LearningWorldMapperUt
     {
         var spaceMapper = Substitute.For<ILearningSpaceMapper>();
         var entity = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space = new LearningSpace();
+        var space = new LearningSpace("b", "b", "b", "b", "b");
         entity.LearningSpaces.Add(space);
 
         spaceMapper.ToViewModel(space).Returns(
@@ -101,7 +102,8 @@ public class LearningWorldMapperUt
     [Test]
     public void LearningWorldMapper_ToViewModel_MapsPropertiesCorrectly() 
     {
-        var spaceMapper = new LearningSpaceMapper();
+        var subElementMapper = Substitute.For<ILearningElementMapper>();
+        var spaceMapper = new LearningSpaceMapper(subElementMapper);
         var elementMapper = new LearningElementMapper();
         var entity = new LearningWorld("name", "shortname", "authors", "language",
             "description", "goals");
