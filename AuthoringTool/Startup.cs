@@ -59,8 +59,7 @@ public class Startup
         services.AddRazorPages();
         services.AddElectron();
         services.AddServerSideBlazor();
-        services.AddSingleton<MouseService>();
-        services.AddSingleton<IMouseService>(provider => provider.GetRequiredService<MouseService>());
+        services.AddSingleton<IMouseService, MouseService>();
         if (HybridSupport.IsElectronActive)
         {
             services.AddSingleton<ElectronDialogManager>();
