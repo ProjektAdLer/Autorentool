@@ -151,14 +151,14 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             SetSelectedLearningObject(learningSpace);
         }
 
-        public void CreateNewLearningElement(string name, string shortname, string content,
+        public void CreateNewLearningElement(string name, string shortname, string type, string content,
             string authors, string description, string goals)
         {
             if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
                 throw new ApplicationException("SelectedLearningWorld is null");
             var learningElement =
-                _learningElementPresenter.CreateNewLearningElement(name, shortname, content, authors, description,
-                    goals);
+                _learningElementPresenter.CreateNewLearningElement(name, shortname, type,
+                    content, authors, description, goals);
             _authoringToolWorkspaceVm.SelectedLearningWorld.LearningElements.Add(learningElement);
             SetSelectedLearningObject(learningElement);
         }
@@ -309,12 +309,13 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             //required arguments
             var name = data["Name"];
             var shortname = data["Shortname"];
+            var type = data["Type"];
             var content = data["Content"];
             var description = data["Description"];
             //optional arguments
             var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
             var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
-            CreateNewLearningElement(name, shortname, content, authors, description, goals);
+            CreateNewLearningElement(name, shortname, type, content, authors, description, goals);
             return Task.CompletedTask;
         }
 
@@ -362,6 +363,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             {
                 {"Name", element.Name},
                 {"Shortname", element.Shortname},
+                {"Type", element.Type},
                 {"Content", element.Content},
                 {"Authors", element.Authors},
                 {"Description", element.Description},
@@ -419,6 +421,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             //required arguments
             var name = data["Name"];
             var shortname = data["Shortname"];
+            var type = data["Type"];
             var content = data["Content"];
             var description = data["Description"];
             //optional arguments
@@ -429,8 +432,8 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
                 throw new ApplicationException("LearningWorld is null");
             if (_authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject is not LearningElementViewModel
                 learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
-            _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, content, authors,
-                description, goals);
+            _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, type,
+                content, authors, description, goals);
             return Task.CompletedTask;
         }
 
