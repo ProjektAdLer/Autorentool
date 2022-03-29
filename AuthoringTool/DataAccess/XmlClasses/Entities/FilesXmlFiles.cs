@@ -14,8 +14,8 @@ public partial class FilesXmlFiles : IXmlSerializable
 
     public void Serialize()
     {
-        var xml = new XmlSer();
+        var xml = new XmlSerialize();
         xml.Serialize(this, "files.xml");
     }
-
+    
 }

@@ -17,7 +17,7 @@ public partial class SectionsSectionXmlSection : IXmlSerializable{
     
     public void Serialize()
     {
-        var xml = new XmlSer();
+        var xml = new XmlSerialize();
         xml.Serialize(this, "sections/section_160/section.xml");
 
     }

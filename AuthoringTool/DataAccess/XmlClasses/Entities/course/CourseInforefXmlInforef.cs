@@ -14,7 +14,7 @@ public partial class CourseInforefXmlInforef : IXmlSerializable {
 
     public void Serialize()
     {
-        var xml = new XmlSer();
+        var xml = new XmlSerialize();
         xml.Serialize(this, "course/inforef.xml"); 
     }
     

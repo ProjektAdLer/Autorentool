@@ -13,7 +13,7 @@ public partial class QuestionsXmlQuestionsCategories : IXmlSerializable{
 
     public void Serialize()
     {
-        var xml = new XmlSer();
+        var xml = new XmlSerialize();
         xml.Serialize(this, "questions.xml");
     }
     

@@ -1,4 +1,6 @@
-﻿using AuthoringTool.DataAccess.XmlClasses;
+﻿using System.IO;
+using System.Xml.Serialization;
+using AuthoringTool.DataAccess.XmlClasses;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.XmlClasses.Entities;

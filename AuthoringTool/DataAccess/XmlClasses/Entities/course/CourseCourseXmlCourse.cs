@@ -28,7 +28,7 @@ namespace AuthoringTool.DataAccess.XmlClasses.course;
 
 		public void Serialize()
 		{
-			var xml = new XmlSer();
+			var xml = new XmlSerialize();
 			xml.Serialize(this, "course/course.xml");
 		}
 

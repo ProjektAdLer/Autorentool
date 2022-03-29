@@ -3,7 +3,7 @@ using System.Xml.Serialization;
 
 namespace AuthoringTool.DataAccess.WorldExport;
 
-public class XmlSer
+public class XmlSerialize
 {
     public void Serialize(object xml, string xmlname)
     {
