@@ -6,11 +6,13 @@ public class LearningElementMapper : ILearningElementMapper
 {
     public Entities.LearningElement ToEntity(LearningElementViewModel viewModel)
     {
-        throw new NotImplementedException();
+        return new Entities.LearningElement(viewModel.Name, viewModel.Shortname, viewModel.Type, viewModel.Content,
+            viewModel.Authors, viewModel.Description, viewModel.Goals);
     }
 
     public LearningElementViewModel ToViewModel(Entities.ILearningElement entity)
     {
-        throw new NotImplementedException();
+        return new LearningElementViewModel(entity.Name, entity.Shortname, entity.Type, entity.Content, entity.Authors,
+            entity.Description, entity.Goals);
     }
 }
