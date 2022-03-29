@@ -6,7 +6,7 @@ namespace AuthoringTool.Entities;
 public class LearningSpace : ILearningSpace
 {
     internal LearningSpace(string name, string shortname, string authors, string description,
-        string goals, List<LearningElement>? learningElements = null)
+        string goals, List<LearningElement>? learningElements = null, double positionX = 0, double positionY = 0)
     {
         Name = name;
         Shortname = shortname;
@@ -14,6 +14,8 @@ public class LearningSpace : ILearningSpace
         Description = description;
         Goals = goals;
         LearningElements = learningElements ?? new List<LearningElement>();
+        PositionX = positionX;
+        PositionY = positionY;
     }
 
     /// <summary>
@@ -27,6 +29,8 @@ public class LearningSpace : ILearningSpace
         Description = "";
         Goals = "";
         LearningElements = new List<LearningElement>();
+        PositionX = 0;
+        PositionY = 0;
     }
 
 
@@ -36,4 +40,6 @@ public class LearningSpace : ILearningSpace
     public string Authors { get; set; }
     public string Goals { get; set; }
     public List<LearningElement> LearningElements { get; set; }
+    public double PositionX { get; set; }
+    public double PositionY { get; set; }
 }

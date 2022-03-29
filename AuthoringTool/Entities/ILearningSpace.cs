@@ -8,4 +8,6 @@ public interface ILearningSpace : ISpace
     string Authors { get; set; }
     string Goals { get; set; }
     List<LearningElement> LearningElements { get; set; }
+    double PositionX { get; set; }
+    double PositionY { get; set; }
 }
