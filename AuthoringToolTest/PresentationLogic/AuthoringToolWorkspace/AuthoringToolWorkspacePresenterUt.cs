@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using AuthoringTool.Components.ModalDialog;
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
@@ -437,6 +439,40 @@ public class AuthoringToolWorkspacePresenterUt
         Assert.AreEqual("foo", space.Authors);
         Assert.AreEqual("bar", space.Description);
         Assert.AreEqual("foo", space.Goals);
+    }
+
+    [Test]
+    public void AuthoringToolWorkspacePresenter_OnEditSpaceDialogClose_CallsLearningSpacePresenter()
+    {
+        var workspaceVm = new AuthoringToolWorkspaceViewModel();
+        var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
+        learningSpacePresenter.EditLearningSpace(Arg.Any<LearningSpaceViewModel>(), Arg.Any<string>(),
+                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())
+            .Returns(new LearningSpaceViewModel("ba", "ba", "ba", "ba", "ba"));
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        workspaceVm.LearningWorlds.Add(world);
+        var space = new LearningSpaceViewModel("foo", "bar", "foo", "bar", "foo");
+        world.LearningSpaces.Add(space);
+
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm,
+            learningSpacePresenter: learningSpacePresenter);
+        workspaceVm.SelectedLearningWorld = world;
+        world.SelectedLearningObject = space;
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "n";
+        dictionary["Shortname"] = "sn";
+        dictionary["Description"] = "d";
+        dictionary["Authors"] = "a";
+        dictionary["Goals"] = "g";
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+
+        systemUnderTest.OnEditSpaceDialogClose(returnValueTuple);
+
+        learningSpacePresenter.Received().EditLearningSpace(space, "n", "sn", "a", "d", "g");
     }
 
     [Test]
