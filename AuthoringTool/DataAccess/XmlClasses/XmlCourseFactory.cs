@@ -6,6 +6,14 @@ public class XmlCourseFactory
 {
     public XmlCourseFactory()
     {
+        CreateCourseCourseXml();
+        CreateCourseEnrolmentsXml();
+        CreateCourseInforefXml();
+        CreateCourseRolesXml();
+    }
+    
+    public void CreateCourseCourseXml()
+    {
         //Write course/course.xml file
         var courseCategory = new CourseCourseXmlCategory();
         courseCategory.SetParameters("Miscellaneous", "$@NULL@$", "1"); 
@@ -13,7 +21,10 @@ public class XmlCourseFactory
         courseCourse.SetParameters(courseCategory);
         
         courseCourse.Serialize();
+    }
 
+    public void CreateCourseEnrolmentsXml()
+    {
         //Write course/enrolments.xml file
         var enrolmentsEnrol1 = new CourseEnrolmentsXmlEnrol();
         enrolmentsEnrol1.SetParametersShort("5", "153", "manual", "0");
@@ -27,7 +38,10 @@ public class XmlCourseFactory
         enrolmentsEnrolments.SetParameters(enrolmentsEnrols);
         
         enrolmentsEnrolments.Serialize();
-        
+    }
+
+    public void CreateCourseInforefXml()
+    {
         //Write course/inforef.xml file
         var inforefRole = new CourseInforefXmlRole();
         inforefRole.SetParameters("5");
@@ -37,13 +51,15 @@ public class XmlCourseFactory
         inforefInforef.SetParameters(inforefRoleref);
         
         inforefInforef.Serialize();
-        
+    }
+
+    public void CreateCourseRolesXml()
+    {
         //Write course/roles.xml file
         var rolesRoles = new CourseRolesXmlRoles();
         rolesRoles.SetParameters("", "");
         
         rolesRoles.Serialize();
-
-
     }
+
 }

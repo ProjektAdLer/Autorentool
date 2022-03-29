@@ -2,13 +2,30 @@
 
 public class XmlBackupFactory
 {
+
     public XmlBackupFactory()
+    {
+        CreateFilesXml();
+        CreateGradebookXml();
+        CreateGroupsXml();
+        CreateOutcomesXml();
+        CreateQuestionsXml();
+        CreateRolesXml();
+        CreateScalesXml();
+        CreateMoodleBackupXml();
+    }
+
+    public void CreateFilesXml()
     {
         //create files.xml file
         var filesFiles = new FilesXmlFiles();
         filesFiles.SetParameters();
-        filesFiles.Serialize();
         
+        filesFiles.Serialize();
+    }
+
+    public void CreateGradebookXml()
+    {
         //create gradebook.xml file
         var gradebookSetting = new GradebookXmlGradeSetting();
         gradebookSetting.SetParameters("minmaxtouse", "1");
@@ -16,15 +33,23 @@ public class XmlBackupFactory
         gradebookSettings.SetParameters(gradebookSetting);
         var gradebook = new GradebookXmlGradebook();
         gradebook.SetParameters(gradebookSettings);
-        gradebook.Serialize();
         
+        gradebook.Serialize();
+    }
+
+    public void CreateGroupsXml()
+    {
         //create groups.xml file
         var groupingsList = new GroupsXmlGroupingsList();
         groupingsList.SetParameters("");
         var groups = new GroupsXmlGroups();
         groups.SetParameters(groupingsList);
-        groups.Serialize();
         
+        groups.Serialize();
+    }
+
+    public void CreateMoodleBackupXml()
+    {
         //create moodle_backup.xml file
         var moodlebackupDetail = new MoodleBackupXmlDetail();
         moodlebackupDetail.SetParameters("6a4e8e833791eb72e5f3ee2227ee1b74");
@@ -125,29 +150,44 @@ public class XmlBackupFactory
         moodlebackup.SetParameters(moodlebackupInformation);
         
         moodlebackup.Serialize();
-        
+    }
+
+    public void CreateOutcomesXml()
+    {
         //write outcomes.xml file
         var outcomesOutcomesDefinition = new OutcomesXmlOutcomesDefinition();
         outcomesOutcomesDefinition.SetParameters();
-        outcomesOutcomesDefinition.Serialize();
         
+        outcomesOutcomesDefinition.Serialize();
+    }
+
+    public void CreateQuestionsXml()
+    {
         //write questions.xml file
         var questionsQuestionsCategories = new QuestionsXmlQuestionsCategories();
         questionsQuestionsCategories.SetParameters();
-        questionsQuestionsCategories.Serialize();
         
+        questionsQuestionsCategories.Serialize();
+    }
+
+    public void CreateRolesXml()
+    {
         //write roles.xml file
         var rolesRole = new RolesXmlRole();
         rolesRole.SetParameters("", "", "5", "student", "$@NULL@$", "5", "student");
         var rolesRolesDefinition = new RolesXmlRolesDefinition();
         rolesRolesDefinition.SetParameters(rolesRole);
-        rolesRolesDefinition.Serialize();
         
+        rolesRolesDefinition.Serialize();
+    }
+
+    public void CreateScalesXml()
+    {
         //write scales.xml file
         var scalesScalesDefinition = new ScalesXmlScalesDefinition();
         scalesScalesDefinition.SetParameters();
+        
         scalesScalesDefinition.Serialize();
-
-
     }
+    
 }

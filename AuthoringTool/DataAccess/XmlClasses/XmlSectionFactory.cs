@@ -6,6 +6,11 @@ public class XmlSectionFactory
 {
     public XmlSectionFactory()
     {
+        CreateSectionSectionXml();
+    }
+
+    public void CreateSectionSectionXml()
+    {
         //write section.xml file
         var sectionSection = new SectionsSectionXmlSection();
         sectionSection.SetParameters("160","1");
