@@ -1,7 +1,7 @@
 ﻿using System;
-using AuthoringTool.BusinessLogic;
 using AuthoringTool.Components;
 using AuthoringTool.PresentationLogic;
+using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
 using Bunit;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;

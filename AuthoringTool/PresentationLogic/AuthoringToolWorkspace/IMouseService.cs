@@ -1,7 +1,6 @@
-using System;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace AuthoringTool.BusinessLogic;
+namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
 
 public interface IMouseService
 {

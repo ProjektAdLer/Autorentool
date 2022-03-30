@@ -5,6 +5,7 @@ using AuthoringTool.BusinessLogic.API;
 using AuthoringTool.DataAccess.API;
 using AuthoringTool.DataAccess.Persistence;
 using AuthoringTool.DataAccess.WorldExport;
+using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.API;
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
 using AuthoringTool.PresentationLogic.ElectronNET;

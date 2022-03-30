@@ -1,8 +1,6 @@
-using System;
-using AuthoringTool.PresentationLogic;
 using Microsoft.AspNetCore.Components.Web;
 
-namespace AuthoringTool.BusinessLogic;
+namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
 
 public class MouseService : IMouseService
 {
