@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.API;
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
 using AuthoringTool.PresentationLogic.LearningElement;
@@ -393,6 +394,23 @@ public class AuthoringToolWorkspacePresenterUt
     #region LearningObject
 
     [Test]
+    public void AuthoringToolWorkspacePresenter_CreateNewLearningSpace_ThrowsWhenSelectedWorldNull()
+    {
+        var workspaceVm = new AuthoringToolWorkspaceViewModel();
+        var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
+        learningSpacePresenter.CreateNewLearningSpace(Arg.Any<string>(), Arg.Any<string>(), 
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(
+            new LearningSpaceViewModel("foo", "bar", "foo", "bar", "baz"));
+
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm,
+            learningSpacePresenter:learningSpacePresenter);
+        
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.CreateNewLearningSpace("foo",
+             "this", "does", "not", "matter"));
+        Assert.AreEqual("SelectedLearningWorld is null", ex!.Message);
+    }
+    
+    [Test]
     public void AuthoringToolWorkspacePresenter_CreateNewLearningSpace_CallsLearningSpacePresenter()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
@@ -490,6 +508,18 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
+    public void AuthoringToolWorkspacePresenter_DeleteSelectedLearningObject_ThrowsWhenSelectedWorldNull()
+    {
+        var workspaceVm = new AuthoringToolWorkspaceViewModel();
+        workspaceVm.SelectedLearningWorld = null;
+        
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm);
+        
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteSelectedLearningObject());
+        Assert.AreEqual("SelectedLearningWorld is null", ex!.Message);
+    }
+    
+    [Test]
     public void AuthoringToolWorkspacePresenter_DeleteSelectedLearningObject_DoesNotThrowWhenSelectedObjectNull()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
@@ -524,6 +554,44 @@ public class AuthoringToolWorkspacePresenterUt
         systemUnderTest.DeleteSelectedLearningObject();
         
         Assert.That(world.LearningSpaces, Is.Empty);
+    }
+    
+    [Test]
+    public void AuthoringToolWorkspacePresenter_DeleteSelectedLearningObject_WithElement_DeletesElementFromViewModel()
+    {
+        var workspaceVm = new AuthoringToolWorkspaceViewModel();
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        workspaceVm.LearningWorlds.Add(world);
+        workspaceVm.SelectedLearningWorld = world;
+        var element = new LearningElementViewModel("f", "f", "f", "f", "f");
+        world.LearningElements.Add(element);
+        world.SelectedLearningObject = element;
+        
+        Assert.That(world.LearningElements, Contains.Item(element));
+        Assert.That(world.LearningElements, Has.Count.EqualTo(1));
+        
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm);
+        systemUnderTest.DeleteSelectedLearningObject();
+        
+        Assert.That(world.LearningElements, Is.Empty);
+    }
+    
+    [Test]
+    public void AuthoringToolWorkspacePresenter_DeleteSelectedLearningObject_WithUnknownObject_ThrowsNotImplemented()
+    {
+        var workspaceVm = new AuthoringToolWorkspaceViewModel();
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        workspaceVm.LearningWorlds.Add(world);
+        workspaceVm.SelectedLearningWorld = world;
+        var learningObject = Substitute.For<ILearningObjectViewModel>();
+        world.SelectedLearningObject = learningObject;
+
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm);
+        
+        var ex = Assert.Throws<NotImplementedException>(() => systemUnderTest.DeleteSelectedLearningObject());
+        Assert.AreEqual("Type of LearningObject is not implemented", ex!.Message);
     }
     
     [Test]
