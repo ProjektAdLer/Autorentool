@@ -19,8 +19,17 @@ jobs:
         with:
           dotnet-version: '6.x'
           
+      - name: Cache Nuget Packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          # Look to see if there is a cache hit for the corresponding requirements file
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget
+          
       - name: Run automated unit and integration tests
-        run: dotnet test AuthoringToolTest/AuthoringToolTest.csproj --configuration ${{ env.dotNetConfiguration }} /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
+        run: dotnet test AuthoringToolTest/AuthoringToolTest.csproj --configuration ${{ env.dotNetConfiguration }} --settings:CodeCoverage.runsettings /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
       - name: Publish coverage report to coveralls.io
         uses: coverallsapp/github-action@master
         with:
