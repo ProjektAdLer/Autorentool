@@ -179,13 +179,14 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             SetSelectedLearningObject(learningSpace);
         }
 
-        public void CreateNewLearningElement(string name, string shortname,
+        public void CreateNewLearningElement(string name, string shortname, string type, string content,
             string authors, string description, string goals)
         {
             if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
                 throw new ApplicationException("SelectedLearningWorld is null");
             var learningElement =
-                _learningElementPresenter.CreateNewLearningElement(name, shortname, authors, description, goals);
+                _learningElementPresenter.CreateNewLearningElement(name, shortname, type,
+                    content, authors, description, goals);
             _authoringToolWorkspaceVm.SelectedLearningWorld.LearningElements.Add(learningElement);
             SetSelectedLearningObject(learningElement);
         }
@@ -201,41 +202,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
                 throw new ApplicationException("SelectedLearningWorld is null");
             _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject = learningObject;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="shortname"></param>
-        /// <param name="authors"></param>
-        /// <param name="description"></param>
-        /// <param name="goals"></param>
-        /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
-        /// <exception cref="NotImplementedException">Thrown if the selected learning object is of an other type as space or element.</exception>
-        public void EditSelectedLearningObject(string name, string shortname, string authors, string description,
-            string goals)
-        {
-            if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
-                throw new ApplicationException("SelectedLearningWorld is null");
-            switch (_authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject)
-            {
-                case null:
-                    throw new ApplicationException("SelectedLearningObject is null");
-                case LearningSpaceViewModel learningSpaceViewModel:
-                    _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject =
-                        _learningSpacePresenter.EditLearningSpace(learningSpaceViewModel, name, shortname, authors,
-                            description, goals);
-                    break;
-                case LearningElementViewModel learningElementViewModel:
-                    _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject =
-                        _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname,
-                            authors,
-                            description, goals);
-                    break;
-                default:
-                    throw new NotImplementedException("Type of LearningObject is not implemented");
-            }
-        }
+      
 
         /// <summary>
         /// Deletes the selected learning object in the currently selected learning world and sets an other space or element as selected learning object.
@@ -381,11 +348,13 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             //required arguments
             var name = data["Name"];
             var shortname = data["Shortname"];
+            var type = data["Type"];
+            var content = data["Content"];
             var description = data["Description"];
             //optional arguments
             var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
             var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
-            CreateNewLearningElement(name, shortname, authors, description, goals);
+            CreateNewLearningElement(name, shortname, type, content, authors, description, goals);
             return Task.CompletedTask;
         }
 
@@ -410,28 +379,34 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
 
         private void EditLearningSpace()
         {
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld?.SelectedLearningObject is not LearningSpaceViewModel
+                space) throw new ApplicationException("Type of LearningObject is not implemented");
             //prepare dictionary property to pass to dialog
             _authoringToolWorkspaceVm.EditDialogInitialValues = new Dictionary<string, string>
             {
-                {"Name", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Name},
-                {"Shortname", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Shortname},
-                {"Authors", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Authors},
-                {"Description", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Description},
-                {"Goals", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Goals},
+                {"Name", space.Name},
+                {"Shortname", space.Shortname},
+                {"Authors", space.Authors},
+                {"Description", space.Description},
+                {"Goals", space.Goals},
             };
             EditLearningSpaceDialogOpen = true;
         }
 
         private void EditLearningElement()
         {
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld?.SelectedLearningObject is not LearningElementViewModel
+                element) throw new ApplicationException("Type of LearningObject is not implemented");
             //prepare dictionary property to pass to dialog
             _authoringToolWorkspaceVm.EditDialogInitialValues = new Dictionary<string, string>
             {
-                {"Name", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Name},
-                {"Shortname", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Shortname},
-                {"Authors", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Authors},
-                {"Description", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Description},
-                {"Goals", _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Goals},
+                {"Name", element.Name},
+                {"Shortname", element.Shortname},
+                {"Type", element.Type},
+                {"Content", element.Content},
+                {"Authors", element.Authors},
+                {"Description", element.Description},
+                {"Goals", element.Goals},
             };
             EditLearningElementDialogOpen = true;
         }
@@ -458,7 +433,12 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
             var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
 
-            EditSelectedLearningObject(name, shortname, authors, description, goals);
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
+                throw new ApplicationException("LearningWorld is null");
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject is not LearningSpaceViewModel
+                learningSpaceViewModel) throw new ApplicationException("LearningObject is not a LearningSpace");
+            _learningSpacePresenter.EditLearningSpace(learningSpaceViewModel, name, shortname, authors,
+                description, goals);
             return Task.CompletedTask;
         }
 
@@ -480,12 +460,19 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             //required arguments
             var name = data["Name"];
             var shortname = data["Shortname"];
+            var type = data["Type"];
+            var content = data["Content"];
             var description = data["Description"];
             //optional arguments
             var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
             var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
 
-            EditSelectedLearningObject(name, shortname, authors, description, goals);
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
+                throw new ApplicationException("LearningWorld is null");
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject is not LearningElementViewModel
+                learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
+            _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, type,
+                content, authors, description, goals);
             return Task.CompletedTask;
         }
 

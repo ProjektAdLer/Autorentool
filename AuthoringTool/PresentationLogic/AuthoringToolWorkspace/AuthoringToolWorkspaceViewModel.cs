@@ -38,6 +38,12 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
         {
             new("Name", ModalDialogInputType.Text, true),
             new("Shortname", ModalDialogInputType.Text, true),
+            new ModalDialogDropdownInputField("Type",
+                new[] { new ModalDialogDropdownInputFieldChoiceMapping(null,
+                    new[] {"Transfer", "Activation", "Interaction","Test"})}, true),
+            new ModalDialogDropdownInputField("Content", 
+                new[] { new ModalDialogDropdownInputFieldChoiceMapping(null,
+                    new[] { "Text", "Picture", "Video" }) }, true),
             new("Authors", ModalDialogInputType.Text),
             new("Description", ModalDialogInputType.Text, true),
             new("Goals", ModalDialogInputType.Text)

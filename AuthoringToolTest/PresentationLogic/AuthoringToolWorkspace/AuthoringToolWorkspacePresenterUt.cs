@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
+using AuthoringTool.Components.ModalDialog;
 using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.API;
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
@@ -459,7 +461,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
-    public void AuthoringToolWorkspacePresenter_EditSelectedLearningObject_WithSpace_CallsLearningSpacePresenter()
+    public void AuthoringToolWorkspacePresenter_OnEditSpaceDialogClose_CallsLearningSpacePresenter()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
@@ -471,40 +473,26 @@ public class AuthoringToolWorkspacePresenterUt
         workspaceVm.LearningWorlds.Add(world);
         var space = new LearningSpaceViewModel("foo", "bar", "foo", "bar", "foo");
         world.LearningSpaces.Add(space);
+      
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "n";
+        dictionary["Shortname"] = "sn";
+        dictionary["Description"] = "d";
+        dictionary["Authors"] = "a";
+        dictionary["Goals"] = "g";
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(workspaceVm,
             learningSpacePresenter: learningSpacePresenter);
         workspaceVm.SelectedLearningWorld = world;
         world.SelectedLearningObject = space;
-        
-        systemUnderTest.EditSelectedLearningObject("bu", "ba","be", "bi", "bo");
-        learningSpacePresenter.Received().EditLearningSpace(space, "bu", "ba", "be", "bi",
-            "bo");
-    }
+   
 
-    [Test]
-    public void AuthoringToolWorkspacePresenter_EditSelectedLearningObject_WithSpace_SelectedLearningSpaceChanged()
-    {
-        var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        var learningSpacePresenter = new LearningSpacePresenter();
-        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
-            "foo");
-        workspaceVm.LearningWorlds.Add(world);
-        var space = new LearningSpaceViewModel("foo", "bar", "foo", "bar", "foo");
-        world.LearningSpaces.Add(space);
+        systemUnderTest.OnEditSpaceDialogClose(returnValueTuple);
 
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm,
-            learningSpacePresenter: learningSpacePresenter);
-        workspaceVm.SelectedLearningWorld = world;
-        world.SelectedLearningObject = space;
-        
-        systemUnderTest.EditSelectedLearningObject("n", "sn","a", "d", "g");
-        
-        Assert.AreEqual("n", world.SelectedLearningObject.Name);
-        Assert.AreEqual("sn", world.SelectedLearningObject.Shortname);
-        Assert.AreEqual("a", world.SelectedLearningObject.Authors);
-        Assert.AreEqual("d", world.SelectedLearningObject.Description);
-        Assert.AreEqual("g", world.SelectedLearningObject.Goals);
+        learningSpacePresenter.Received().EditLearningSpace(space, "n", "sn", "a", "d", "g");
     }
 
     [Test]
@@ -564,7 +552,7 @@ public class AuthoringToolWorkspacePresenterUt
             "foo");
         workspaceVm.LearningWorlds.Add(world);
         workspaceVm.SelectedLearningWorld = world;
-        var element = new LearningElementViewModel("f", "f", "f", "f", "f");
+        var element = new LearningElementViewModel("f", "f", "f", "f", "f", "f", "f");
         world.LearningElements.Add(element);
         world.SelectedLearningObject = element;
         

@@ -33,12 +33,12 @@ public class LearningWorldMapperUt
     {
         var elementMapper = Substitute.For<ILearningElementMapper>();
         var viewModel = new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
-        var element = new LearningElementViewModel("a", "a", "a", "a", "a");
+        var element = new LearningElementViewModel("a", "a", "a", "a" ,"a", "a", "a");
         viewModel.LearningElements.Add(element);
 
-        elementMapper.ToEntity(element).Returns(new LearningElement());
+        elementMapper.ToEntity(element).Returns(new LearningElement("a","b","c","d","e","f","g"));
 
-        var systemUnderTest = CreateMapperForTesting(elementMapper:elementMapper);
+        var systemUnderTest = CreateMapperForTesting(elementMapper: elementMapper);
 
         systemUnderTest.ToEntity(viewModel);
         elementMapper.Received().ToEntity(element);
@@ -87,20 +87,21 @@ public class LearningWorldMapperUt
     {
         var elementMapper = Substitute.For<ILearningElementMapper>();
         var entity = new AuthoringTool.Entities.LearningWorld("a", "b", "c", "d", "e", "f");
-        var element = new LearningElement();
+        var element = new LearningElement("a","b","c","d","e","f","g");
+      
         entity.LearningElements.Add(element);
 
         elementMapper.ToViewModel(element).Returns(new LearningElementViewModel("a", "a", "a",
-            "a", "a"));
+            "a", "a","a", "a"));
 
-        var systemUnderTest = CreateMapperForTesting(elementMapper:elementMapper);
+        var systemUnderTest = CreateMapperForTesting(elementMapper: elementMapper);
 
         systemUnderTest.ToViewModel(entity);
         elementMapper.Received().ToViewModel(element);
     }
-    
+
     [Test]
-    public void LearningWorldMapper_ToViewModel_MapsPropertiesCorrectly() 
+    public void LearningWorldMapper_ToViewModel_MapsPropertiesCorrectly()
     {
         var subElementMapper = Substitute.For<ILearningElementMapper>();
         var spaceMapper = new LearningSpaceMapper(subElementMapper);
