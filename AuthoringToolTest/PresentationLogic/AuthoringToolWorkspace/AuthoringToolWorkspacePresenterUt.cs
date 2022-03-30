@@ -468,10 +468,7 @@ public class AuthoringToolWorkspacePresenterUt
     public void AuthoringToolWorkspacePresenter_EditSelectedLearningObject_WithSpace_SelectedLearningSpaceChanged()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
-        learningSpacePresenter.EditLearningSpace(Arg.Any<LearningSpaceViewModel>(), Arg.Any<string>(),
-                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())
-            .Returns(new LearningSpaceViewModel("ba", "ba", "ba", "ba", "ba"));
+        var learningSpacePresenter = new LearningSpacePresenter();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         workspaceVm.LearningWorlds.Add(world);
@@ -483,13 +480,13 @@ public class AuthoringToolWorkspacePresenterUt
         workspaceVm.SelectedLearningWorld = world;
         world.SelectedLearningObject = space;
         
-        systemUnderTest.EditSelectedLearningObject("bu", "ba","be", "bi", "bo");
+        systemUnderTest.EditSelectedLearningObject("n", "sn","a", "d", "g");
         
-        Assert.AreEqual("ba", world.SelectedLearningObject.Name);
-        Assert.AreEqual("ba", world.SelectedLearningObject.Shortname);
-        Assert.AreEqual("ba", world.SelectedLearningObject.Authors);
-        Assert.AreEqual("ba", world.SelectedLearningObject.Description);
-        Assert.AreEqual("ba", world.SelectedLearningObject.Goals);
+        Assert.AreEqual("n", world.SelectedLearningObject.Name);
+        Assert.AreEqual("sn", world.SelectedLearningObject.Shortname);
+        Assert.AreEqual("a", world.SelectedLearningObject.Authors);
+        Assert.AreEqual("d", world.SelectedLearningObject.Description);
+        Assert.AreEqual("g", world.SelectedLearningObject.Goals);
     }
 
     [Test]
