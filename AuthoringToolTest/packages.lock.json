@@ -64,6 +64,21 @@
         "resolved": "4.0.0",
         "contentHash": "5gCkytgQWL93M5s9Rnl4CfSUhn95VsuMVLYjmZe8K7dNRF7kzrBMPsBTyLNCga5qLW7RM/o591J+HVrV1QMaVQ=="
       },
+      "System.IO.Abstractions": {
+        "type": "Direct",
+        "requested": "[16.1.25, )",
+        "resolved": "16.1.25",
+        "contentHash": "PZ3y8SgASqtIlJyhss47FGLwBMXMWvxL9MKk9dEqIZT/vrfQr5yhKwdJ/vNm2H8FqsWJoxu0P12nYGXFj0irkA=="
+      },
+      "System.IO.Abstractions.TestingHelpers": {
+        "type": "Direct",
+        "requested": "[16.1.25, )",
+        "resolved": "16.1.25",
+        "contentHash": "brRQOCtC9i2vGD31uS/tcdRMKd/6Hd0cj89BgBu+xCu42B+JjNvKROnrFsPjSCchyq0nZPMUG96yP1pXysniWQ==",
+        "dependencies": {
+          "System.IO.Abstractions": "16.1.25"
+        }
+      },
       "AngleSharp": {
         "type": "Transitive",
         "resolved": "0.16.1",
@@ -1536,7 +1551,8 @@
           "NLog": "4.7.14",
           "NLog.Extensions.Logging": "1.7.4",
           "NLog.Web.AspNetCore": "4.14.0",
-          "SharpZipLib": "1.3.3"
+          "SharpZipLib": "1.3.3",
+          "System.IO.Abstractions": "16.1.25"
         }
       }
     }

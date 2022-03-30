@@ -1,18 +1,22 @@
+using System.IO.Abstractions;
 using System.Reflection;
 using System.Runtime.Serialization;
 using System.Xml.Serialization;
-using AuthoringTool.Entities;
 
 namespace AuthoringTool.DataAccess.Persistence;
 
 internal class FileSaveHandler<T> : IFileSaveHandler<T> where T : class //new() constraint for default ctor
 {
     private readonly ILogger<FileSaveHandler<T>> _logger;
+    private readonly IFileSystem _fileSystem;
     private readonly XmlSerializer _serializer;
 
-    public FileSaveHandler(ILogger<FileSaveHandler<T>> logger)
+    public FileSaveHandler(ILogger<FileSaveHandler<T>> logger) : this(logger, new FileSystem()) { }
+
+    internal FileSaveHandler(ILogger<FileSaveHandler<T>> logger, IFileSystem fileSystem)
     {
         _logger = logger;
+        _fileSystem = fileSystem;
         //Check if type T is serializable in the first place
         var typeT = typeof(T);
         if (!typeT.IsSerializable && !typeof(ISerializable).IsAssignableFrom(typeT))
@@ -30,10 +34,12 @@ internal class FileSaveHandler<T> : IFileSaveHandler<T> where T : class //new() 
         _serializer = new XmlSerializer(typeof(T));
     }
 
+
     public void SaveToDisk(T obj, string filepath)
     {
-        using var fileStream = File.Open(filepath, FileMode.Create);
+        using var fileStream = _fileSystem.File.Open(filepath, FileMode.Create);
         SaveToStream(obj, fileStream);
+        fileStream.Close();
     }
 
     public void SaveToStream(T obj, Stream stream)
@@ -44,15 +50,20 @@ internal class FileSaveHandler<T> : IFileSaveHandler<T> where T : class //new() 
 
     public T LoadFromDisk(string filepath)
     {
+        Stream? fileStream = null;
         try
         {
-            using var fileStream = File.OpenRead(filepath);
+            fileStream = _fileSystem.File.OpenRead(filepath);
             return LoadFromStream(fileStream);
         }
         catch (Exception e)
         {
             _logger.LogError($"Couldn't deserialize file at {filepath} into {typeof(T).Name} object.");
             throw new SerializationException($"Couldn't deserialize file at {filepath} into {typeof(T).Name} object.", e);
+        }
+        finally
+        {
+            fileStream?.Close();
         }
     }
 

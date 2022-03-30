@@ -1,5 +1,7 @@
 using System.Collections;
 using System.IO;
+using System.IO.Abstractions;
+using System.IO.Abstractions.TestingHelpers;
 using System.Reflection;
 using AuthoringTool.DataAccess.Persistence;
 using AuthoringTool.Entities;
@@ -13,10 +15,12 @@ namespace AuthoringToolTest.DataAccess.Persistence;
 /// Component tests to test whether Persistence roundtrip produces equal objects
 /// </summary>
 [TestFixture]
-public class PersistenceCt
+public class PersistenceUt
 {
+    private const string FilePath = "awesomefile.txt";
+
     [Test]
-    public void Persistence_SaveAndLoadWorld_ObjectsAreEqual()
+    public void Persistence_SaveAndLoadWorld_Stream_ObjectsAreEqual()
     {
         var world = new LearningWorld("Name", "Shortname", "Authors", "Language",
             "Description", "Goals");
@@ -36,7 +40,7 @@ public class PersistenceCt
     }
     
     [Test]
-    public void Persistence_SaveAndLoadSpace_ObjectsAreEqual()
+    public void Persistence_SaveAndLoadSpace_Stream_ObjectsAreEqual()
     {
         var space = new LearningSpace("Name", "Shortname", "Authors", "Description", "Goals");
         var element = new LearningElement("le", "la", "li", "le", "lu", "ll", "lll");
@@ -53,7 +57,7 @@ public class PersistenceCt
     }
     
     [Test]
-    public void Persistence_SaveAndLoadElement_ObjectsAreEqual()
+    public void Persistence_SaveAndLoadElement_Stream_ObjectsAreEqual()
     {
         var element = new LearningElement("le", "la", "li", "le", "lu", "ll", "lll");
         
@@ -67,10 +71,59 @@ public class PersistenceCt
         PropertyValuesAreEqual(restoredElement, element);
     }
 
-    private FileSaveHandler<T> CreateTestableFileSaveHandler<T>(ILogger<FileSaveHandler<T>>? logger = null) where T : class
+    [Test]
+    public void Persistence_SaveAndLoadWorld_File_ObjectsAreEqual()
+    {
+        var world = new LearningWorld("Name", "Shortname", "Authors", "Language",
+            "Description", "Goals");
+        var space = new LearningSpace("Name", "Shortname", "Authors", "Description", "Goals");
+        var element = new LearningElement("le", "la", "li", "le", "lu", "ll", "lll");
+        world.LearningSpaces.Add(space);
+        world.LearningElements.Add(element);
+        var mockFileSystem = new MockFileSystem();
+
+        var saveHandler = CreateTestableFileSaveHandler<LearningWorld>(fileSystem:mockFileSystem);
+        
+        saveHandler.SaveToDisk(world, FilePath);
+        var restoredWorld = saveHandler.LoadFromDisk(FilePath);
+        
+        PropertyValuesAreEqual(restoredWorld, world);
+    }
+    
+    [Test]
+    public void Persistence_SaveAndLoadSpace_File_ObjectsAreEqual()
+    {
+        var space = new LearningSpace("Name", "Shortname", "Authors", "Description", "Goals");
+        var element = new LearningElement("le", "la", "li", "le", "lu", "ll", "lll");
+        space.LearningElements.Add(element);
+        var mockFileSystem = new MockFileSystem();
+        
+        var saveHandler = CreateTestableFileSaveHandler<LearningSpace>(fileSystem:mockFileSystem);
+        
+        saveHandler.SaveToDisk(space, FilePath);
+        var restoredSpace = saveHandler.LoadFromDisk(FilePath);
+        
+        PropertyValuesAreEqual(restoredSpace, space);
+    }
+    
+    [Test]
+    public void Persistence_SaveAndLoadElement_File_ObjectsAreEqual()
+    {
+        var element = new LearningElement("le", "la", "li", "le", "lu", "ll", "lll");
+        var mockFileSystem = new MockFileSystem();
+
+        var saveHandler = CreateTestableFileSaveHandler<LearningElement>(fileSystem:mockFileSystem);
+        
+        saveHandler.SaveToDisk(element, FilePath);
+        var restoredElement = saveHandler.LoadFromDisk(FilePath);
+
+        PropertyValuesAreEqual(restoredElement, element);
+    }
+    
+    private FileSaveHandler<T> CreateTestableFileSaveHandler<T>(ILogger<FileSaveHandler<T>>? logger = null, IFileSystem? fileSystem = null) where T : class
     {
         logger ??= Substitute.For<ILogger<FileSaveHandler<T>>>();
-        return new FileSaveHandler<T>(logger);
+        return fileSystem == null ? new FileSaveHandler<T>(logger) : new FileSaveHandler<T>(logger, fileSystem);
     }
 
     private void PropertyValuesAreEqual<T>(T actual, T expected) where T : class
