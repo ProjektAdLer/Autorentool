@@ -14,42 +14,25 @@ namespace AuthoringTool.DataAccess.WorldExport;
 public class BackupFileGenerator : IBackupFileGenerator
 {
     
-    //Get all Classes that Implement a given Interface
-    public IEnumerable<Type> GetInterfaceInstances<interfaceName>()
-    {
-        return System.Reflection.Assembly.GetExecutingAssembly()
-               .GetTypes()
-               .Where(type => typeof(interfaceName).IsAssignableFrom(type) && !type.IsInterface);
-    }
-    
     /// <summary>
     /// Creates all directories and XMl-Files needed for the Moodle backup
     /// </summary>
-    public void CreateXMLFiles()
-    {       
-        //create needed directories for xml files, directories won´t be created, if they already exist
+    public void WriteXMLFiles()
+    {
         var currWorkDir = Directory.GetCurrentDirectory();
         Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport");
         Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/course");
         Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/sections");
         Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/sections/section_160");
         
-        
-        //Get all Xml-Classes that Implement the IXmlInit Interface, create an Instance and
-        var xmlInterfaceList = GetInterfaceInstances<IXMLInit>();
-        
-        //Create an Instance and use the XmlInit() Method to create XMl-Files. (Factory Pattern)
-        foreach (var xmlClass in xmlInterfaceList)
-        {
-            var xmlClassInstance = (IXMLInit)Activator.CreateInstance(xmlClass);
-            xmlClassInstance.XmlInit();
-        }
-        
+        var xmlEntityManager = new XmlEntityManager();
+        xmlEntityManager.GetFactories();
+
     }
     
     //Get all files from source Folder "XMLFilesForExport" and pack all files and folders into a tar-file 
     //Afterwards pack the tar-file into a gzip file and rename the file to match the Moodle Backup format .mbz
-    public void CreateBackupFile()
+    public void WriteBackupFile()
     {
         //copy template from current workdir
         var tempDir = GetTempDir();

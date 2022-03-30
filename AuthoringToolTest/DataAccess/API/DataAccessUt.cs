@@ -1,6 +1,7 @@
-﻿using AuthoringTool.API;
-using AuthoringTool.API.Configuration;
+﻿using AuthoringTool.API.Configuration;
+using AuthoringTool.DataAccess.Persistence;
 using AuthoringTool.DataAccess.WorldExport;
+using AuthoringTool.Entities;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -14,17 +15,24 @@ public class DataAccessUt
     {
         //Arrange 
         var mockConfiguration = Substitute.For<IAuthoringToolConfiguration>();
+        var mockBackupFileConstructor = Substitute.For<IBackupFileGenerator>();
+        var mockFileSaveHandlerWorld = Substitute.For<IFileSaveHandler<LearningWorld>>();
 
         //Act 
-        var systemUnderTest = CreateStandardDataAccess(mockConfiguration);
+        var systemUnderTest = CreateTestableDataAccess(mockConfiguration, mockBackupFileConstructor,
+            mockFileSaveHandlerWorld);
         
         //Assert
-        Assert.That(systemUnderTest.Configuration, Is.EqualTo(mockConfiguration));
-        Assert.That(systemUnderTest.BackupFile, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.Configuration, Is.EqualTo(mockConfiguration));
+            Assert.That(systemUnderTest.BackupFile, Is.EqualTo(mockBackupFileConstructor));
+            Assert.That(systemUnderTest.SaveHandlerWorld, Is.EqualTo(mockFileSaveHandlerWorld));
+        });
     }
 
     [Test]
-    public void ConstructBackup_BackupFile_AllMethods()
+    public void DataAccess_ConstructBackup_CallsBackupFileGenerator()
     {
         //Arrange
         var mockBackupFile = Substitute.For<IBackupFileGenerator>();
@@ -34,20 +42,43 @@ public class DataAccessUt
         systemUnderTest.ConstructBackup();
         
         //Assert
-        mockBackupFile.Received().CreateXMLFiles();
-        mockBackupFile.Received().CreateBackupFile();
+        mockBackupFile.Received().WriteXMLFiles();
+        mockBackupFile.Received().WriteBackupFile();
     }
     
-    private static AuthoringTool.DataAccess.API.DataAccess CreateStandardDataAccess(IAuthoringToolConfiguration fakeConfiguration=null)
+    [Test]
+    public void DataAccess_SaveLearningWorldToFile_CallsFileSaveHandlerWorld()
     {
-        fakeConfiguration ??= Substitute.For<IAuthoringToolConfiguration>();
-        return new AuthoringTool.DataAccess.API.DataAccess(fakeConfiguration);
+        var mockFileSaveHandlerWorld = Substitute.For<IFileSaveHandler<LearningWorld>>();
+        var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerWorld: mockFileSaveHandlerWorld);
+
+        var learningWorld = new LearningWorld("f", "f", "f", "f", "f", "f");
+        systemUnderTest.SaveLearningWorldToFile(
+            learningWorld,
+            "C:/nonsense");
+        
+        mockFileSaveHandlerWorld.Received().SaveToDisk(learningWorld, "C:/nonsense");
     }
-    private static AuthoringTool.DataAccess.API.DataAccess CreateTestableDataAccess(IAuthoringToolConfiguration fakeConfiguration=null, IBackupFileGenerator fakeBackupFile=null)
+
+    [Test]
+    public void DataAccess_LoadLearningWorldFromFile_CallsFileSaveHandlerWorld()
     {
-        fakeConfiguration ??= Substitute.For<IAuthoringToolConfiguration>();
-        fakeBackupFile ??= Substitute.For<IBackupFileGenerator>();
-        return new AuthoringTool.DataAccess.API.DataAccess(fakeConfiguration, fakeBackupFile);
+        var mockFileSaveHandlerWorld = Substitute.For<IFileSaveHandler<LearningWorld>>();
+        var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerWorld: mockFileSaveHandlerWorld);
+
+        systemUnderTest.LoadLearningWorldFromFile("C:/nonsense");
+
+        mockFileSaveHandlerWorld.Received().LoadFromDisk("C:/nonsense");
+
+    }
+    
+    private static AuthoringTool.DataAccess.API.DataAccess CreateTestableDataAccess(IAuthoringToolConfiguration? configuration=null,
+        IBackupFileGenerator? backupFileConstructor=null, IFileSaveHandler<LearningWorld>? fileSaveHandlerWorld=null)
+    {
+        configuration ??= Substitute.For<IAuthoringToolConfiguration>();
+        backupFileConstructor ??= Substitute.For<IBackupFileGenerator>();
+        fileSaveHandlerWorld ??= Substitute.For<IFileSaveHandler<LearningWorld>>();
+        return new AuthoringTool.DataAccess.API.DataAccess(configuration, backupFileConstructor, fileSaveHandlerWorld);
     }
     
 }

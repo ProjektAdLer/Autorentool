@@ -1,4 +1,5 @@
 ﻿using AuthoringTool.Components.ModalDialog;
+using AuthoringTool.PresentationLogic.API;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
 using AuthoringTool.PresentationLogic.LearningElement;
@@ -8,6 +9,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
     public class AuthoringToolWorkspacePresenter
     {
         public AuthoringToolWorkspacePresenter(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
+            IPresentationLogic presentationLogic,
             ILearningWorldPresenter learningWorldPresenter, ILearningSpacePresenter learningSpacePresenter,
             ILearningElementPresenter learningElementPresenter, ILogger<AuthoringToolWorkspacePresenter> logger)
         {
@@ -15,6 +17,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             _learningElementPresenter = learningElementPresenter;
             _learningWorldPresenter = learningWorldPresenter;
             _authoringToolWorkspaceVm = authoringToolWorkspaceVm;
+            _presentationLogic = presentationLogic;
             _logger = logger;
             CreateLearningWorldDialogOpen = false;
             EditLearningWorldDialogOpen = false;
@@ -25,6 +28,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
         }
 
         private readonly IAuthoringToolWorkspaceViewModel _authoringToolWorkspaceVm;
+        private readonly IPresentationLogic _presentationLogic;
         private readonly ILearningWorldPresenter _learningWorldPresenter;
         private readonly ILearningSpacePresenter _learningSpacePresenter;
         private readonly ILearningElementPresenter _learningElementPresenter;
@@ -38,6 +42,8 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
 
         internal bool CreateLearningElementDialogOpen { get; set; }
         internal bool EditLearningElementDialogOpen { get; set; }
+
+        internal bool LearningWorldSelected => _authoringToolWorkspaceVm.SelectedLearningWorld != null;
 
 
         /// <summary>
@@ -59,7 +65,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
         internal event EventHandler<LearningWorldViewModel?>? OnLearningWorldDelete;
 
         /// <summary>
-        /// This event is fired when <see cref="EditCurrentLearningWorld"/> is called by the modal dialog as a callback.
+        /// This event is fired when <see cref="EditSelectedLearningWorld(string,string,string,string,string,string)"/> is called by the modal dialog as a callback.
         /// The newly edited learning world is passed.
         /// </summary>
         internal event EventHandler<LearningWorldViewModel?>? OnLearningWorldEdit;
@@ -129,7 +135,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
         /// <param name="description">A description of the world.</param>
         /// <param name="goals">The goals of the world.</param>
         /// <exception cref="ApplicationException">Thrown if now learning world is currently selected.</exception>
-        public void EditCurrentLearningWorld(string name, string shortname, string authors, string language,
+        public void EditSelectedLearningWorld(string name, string shortname, string authors, string language,
             string description, string goals)
         {
             if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
@@ -140,6 +146,28 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             OnLearningWorldEdit?.Invoke(this, _authoringToolWorkspaceVm.SelectedLearningWorld);
         }
 
+        public async Task LoadLearningWorld()
+        {
+            var learningWorld = await _presentationLogic.LoadLearningWorld();
+            _authoringToolWorkspaceVm.LearningWorlds.Add(learningWorld);
+        }
+
+        public void SaveSelectedLearningWorld()
+        {
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
+                throw new ApplicationException("SelectedLearningWorld is null");
+            _presentationLogic.SaveLearningWorld(_authoringToolWorkspaceVm.SelectedLearningWorld);
+        }
+
+        /// <summary>
+        /// Creates a new learning space in the currently selected learning world.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="shortname"></param>
+        /// <param name="authors"></param>
+        /// <param name="description"></param>
+        /// <param name="goals"></param>
+        /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
         public void CreateNewLearningSpace(string name, string shortname,
             string authors, string description, string goals)
         {
@@ -163,14 +191,59 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             SetSelectedLearningObject(learningElement);
         }
 
+        /// <summary>
+        /// Changes the selected <see cref="ILearningObjectViewModel"/> in the currently selected learning world.
+        /// </summary>
+        /// <param name="learningObject">The learning object that should be set as selected</param>
+        /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
         private void SetSelectedLearningObject(ILearningObjectViewModel learningObject)
         {
             if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
                 throw new ApplicationException("SelectedLearningWorld is null");
             _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject = learningObject;
         }
+      
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="shortname"></param>
+        /// <param name="authors"></param>
+        /// <param name="description"></param>
+        /// <param name="goals"></param>
+        /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
+        /// <exception cref="NotImplementedException">Thrown if the selected learning object is of an other type as space or element.</exception>
+        public void EditSelectedLearningObject(string name, string shortname, string authors, string description,
+            string goals)
+        {
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
+                throw new ApplicationException("SelectedLearningWorld is null");
+            switch (_authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject)
+            {
+                case null:
+                    throw new ApplicationException("SelectedLearningObject is null");
+                case LearningSpaceViewModel learningSpaceViewModel:
+                    _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject =
+                        _learningSpacePresenter.EditLearningSpace(learningSpaceViewModel, name, shortname, authors,
+                            description, goals);
+                    break;
+                case LearningElementViewModel learningElementViewModel:
+                    _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject =
+                        _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname,
+                            authors,
+                            description, goals);
+                    break;
+                default:
+                    throw new NotImplementedException("Type of LearningObject is not implemented");
+            }
+        }
 
-        public void DeleteSelectedLearningObject()
+        /// <summary>
+        /// Deletes the selected learning object in the currently selected learning world and sets an other space or element as selected learning object.
+        /// </summary>
+        /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
+        /// <exception cref="NotImplementedException">Thrown if the selected learning object is of an other type as space or element.</exception>
+       public void DeleteSelectedLearningObject()
         {
             if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
                 throw new ApplicationException("SelectedLearningWorld is null");
@@ -194,7 +267,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
                 _authoringToolWorkspaceVm.SelectedLearningWorld?.LearningElements.LastOrDefault();
         }
 
-        public void EditLearningWorld()
+        public void EditSelectedLearningWorld()
         {
             if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
             {
@@ -263,7 +336,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
             var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
 
-            EditCurrentLearningWorld(name, shortname, authors, language, description, goals);
+            EditSelectedLearningWorld(name, shortname, authors, language, description, goals);
             return Task.CompletedTask;
         }
 

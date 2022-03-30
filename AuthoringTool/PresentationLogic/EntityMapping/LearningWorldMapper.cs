@@ -20,8 +20,8 @@ public class LearningWorldMapper : ILearningWorldMapper
     {
         return new Entities.LearningWorld(viewModel.Name, viewModel.Shortname, viewModel.Authors, viewModel.Language,
             viewModel.Description, viewModel.Goals,
-            viewModel.LearningElements.Select(element => (ILearningElement)_elementMapper.ToEntity(element)).ToList(),
-            viewModel.LearningSpaces.Select(space => (ILearningSpace)_spaceMapper.ToEntity(space)).ToList());
+            viewModel.LearningElements.Select(element => _elementMapper.ToEntity(element)).ToList(),
+            viewModel.LearningSpaces.Select(space => _spaceMapper.ToEntity(space)).ToList());
     }
 
     public LearningWorldViewModel ToViewModel(ILearningWorld entity)

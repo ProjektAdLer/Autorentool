@@ -2,11 +2,12 @@
 
 namespace AuthoringTool.Entities;
 
+[Serializable]
 public class LearningWorld : ILearningWorld
 {
     internal LearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals, ICollection<ILearningElement>? learningElements = null,
-        ICollection<ILearningSpace>? learningSpaces = null)
+        string goals, List<LearningElement>? learningElements = null,
+        List<LearningSpace>? learningSpaces = null)
     {
         Name = name;
         Shortname = shortname;
@@ -14,12 +15,27 @@ public class LearningWorld : ILearningWorld
         Language = language;
         Description = description;
         Goals = goals;
-        LearningElements = learningElements ?? new Collection<ILearningElement>();
-        LearningSpaces = learningSpaces ?? new Collection<ILearningSpace>();
+        LearningElements = learningElements ?? new List<LearningElement>();
+        LearningSpaces = learningSpaces ?? new List<LearningSpace>();
     }
 
-    public ICollection<ILearningElement> LearningElements { get; set; }
-    public ICollection<ILearningSpace> LearningSpaces { get; set; }
+    /// <summary>
+    /// Constructor for serialization. DO NOT USE FOR NORMAL INITIALIZATION.
+    /// </summary>
+    private LearningWorld()
+    {
+        Name = "";
+        Shortname = "";
+        Authors = "";
+        Language = "";
+        Description = "";
+        Goals = "";
+        LearningElements = new List<LearningElement>();
+        LearningSpaces = new List<LearningSpace>();
+    }
+
+    public List<LearningElement> LearningElements { get; set; }
+    public List<LearningSpace> LearningSpaces { get; set; }
     public string Name { get; set; }
     public string Shortname { get; set; }
     public string Authors { get; set; }

@@ -3,8 +3,13 @@ using AuthoringTool.API.Configuration;
 using AuthoringTool.BusinessLogic;
 using AuthoringTool.BusinessLogic.API;
 using AuthoringTool.DataAccess.API;
+using AuthoringTool.DataAccess.Persistence;
+using AuthoringTool.DataAccess.WorldExport;
+using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.API;
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
+using AuthoringTool.PresentationLogic.ElectronNET;
+using AuthoringTool.PresentationLogic.EntityMapping;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
@@ -35,6 +40,8 @@ public class Startup
 
         //AuthoringTool
         services.AddSingleton<IAuthoringToolConfiguration, AuthoringToolConfiguration>();
+        services.AddTransient(typeof(IFileSaveHandler<>), typeof(FileSaveHandler<>));
+        services.AddSingleton<IBackupFileGenerator, BackupFileGenerator>();
         services.AddSingleton<IDataAccess, DataAccess>();
         services.AddSingleton<IBusinessLogic, BusinessLogic>();
         services.AddSingleton<IPresentationLogic, PresentationLogic>();
@@ -44,15 +51,19 @@ public class Startup
         services.AddSingleton<ILearningElementPresenter, LearningElementPresenter>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
         services.AddSingleton<AuthoringToolWorkspacePresenter>();
+        //ViewModel <-> Entity Mappers
+        services.AddSingleton<ILearningElementMapper, LearningElementMapper>();
+        services.AddSingleton<ILearningSpaceMapper, LearningSpaceMapper>();
+        services.AddSingleton<ILearningWorldMapper, LearningWorldMapper>();
 
         //Blazor and Electron
         services.AddRazorPages();
         services.AddElectron();
         services.AddServerSideBlazor();
-        services.AddSingleton<MouseService>();
-        services.AddSingleton<IMouseService>(provider => provider.GetRequiredService<MouseService>());
+        services.AddSingleton<IMouseService, MouseService>();
         if (HybridSupport.IsElectronActive)
         {
+            services.AddSingleton<ElectronDialogManager>();
         }
         else
         {
