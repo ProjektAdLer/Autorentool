@@ -1,0 +1,28 @@
+name: Coverlet Code Coverage
+on: [ "workflow_dispatch" ,"pull_request" ]
+
+
+jobs:
+  build:
+    runs-on: windows-latest
+    env:
+      dotNetVersion: net6.0
+      dotNetConfiguration: Release
+      runtimeTarget: win-x86
+    steps:
+      # checkout the repo
+      - uses: actions/checkout@v2
+      
+      # install dependencies, build, and test
+      #- name: Setup Dotnet for use with actions
+      #  uses: actions/setup-dotnet@v1
+      #  with:
+      #    dotnet-version: '6.x'
+          
+      - name: Run automated unit and integration tests
+        run: dotnet test AuthoringToolTest/AuthoringToolTest.csproj --configuration ${{ env.dotNetConfiguration }} --settings:CodeCoverage.runsettings /p:CollectCoverage=true /p:CoverletOutput=TestResults/ /p:CoverletOutputFormat=lcov
+      - name: Publish coverage report to coveralls.io
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path-to-lcov: AuthoringToolTest/TestResults/coverage.info 
