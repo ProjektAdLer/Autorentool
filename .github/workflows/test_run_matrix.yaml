@@ -1,0 +1,39 @@
+name: Run tests
+on: 
+  push:
+    branches:
+      - main
+  pull_request:
+
+
+jobs:
+  build:
+    runs-on: windows-latest
+    strategy:
+      matrix: 
+        os: [ubuntu-18.04, ubuntu-20.04, windows-latest, macos-latest]
+    env:
+      dotNetVersion: net6.0
+      dotNetConfiguration: Release
+      runtimeTarget: win-x86
+    steps:
+      # checkout the repo
+      - uses: actions/checkout@v2
+      
+      # install dependencies, build, and test
+      - name: Setup Dotnet for use with actions
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.x'
+
+      - name: Cache Nuget Packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          # Look to see if there is a cache hit for the corresponding requirements file
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget
+
+      - name: Run automated unit and integration tests
+        run: dotnet test AuthoringToolTest/AuthoringToolTest.csproj 
