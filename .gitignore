@@ -1,4 +1,7 @@
-﻿**/.idea/
+﻿**/TestResults/
+
+
+**/.idea/
 **/bin/
 **/obj/
 **/.vscode/
