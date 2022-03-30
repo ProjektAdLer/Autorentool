@@ -552,7 +552,7 @@ public class AuthoringToolWorkspacePresenterUt
             "foo");
         workspaceVm.LearningWorlds.Add(world);
         workspaceVm.SelectedLearningWorld = world;
-        var element = new LearningElementViewModel("f", "f", "f", "f", "f");
+        var element = new LearningElementViewModel("f", "f", "f", "f", "f", "f", "f");
         world.LearningElements.Add(element);
         world.SelectedLearningObject = element;
         

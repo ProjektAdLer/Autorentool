@@ -203,40 +203,6 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject = learningObject;
         }
       
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="name"></param>
-        /// <param name="shortname"></param>
-        /// <param name="authors"></param>
-        /// <param name="description"></param>
-        /// <param name="goals"></param>
-        /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
-        /// <exception cref="NotImplementedException">Thrown if the selected learning object is of an other type as space or element.</exception>
-        public void EditSelectedLearningObject(string name, string shortname, string authors, string description,
-            string goals)
-        {
-            if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
-                throw new ApplicationException("SelectedLearningWorld is null");
-            switch (_authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject)
-            {
-                case null:
-                    throw new ApplicationException("SelectedLearningObject is null");
-                case LearningSpaceViewModel learningSpaceViewModel:
-                    _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject =
-                        _learningSpacePresenter.EditLearningSpace(learningSpaceViewModel, name, shortname, authors,
-                            description, goals);
-                    break;
-                case LearningElementViewModel learningElementViewModel:
-                    _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject =
-                        _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname,
-                            authors,
-                            description, goals);
-                    break;
-                default:
-                    throw new NotImplementedException("Type of LearningObject is not implemented");
-            }
-        }
 
         /// <summary>
         /// Deletes the selected learning object in the currently selected learning world and sets an other space or element as selected learning object.

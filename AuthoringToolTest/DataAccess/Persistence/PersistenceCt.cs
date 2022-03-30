@@ -21,7 +21,7 @@ public class PersistenceCt
         var world = new LearningWorld("Name", "Shortname", "Authors", "Language",
             "Description", "Goals");
         var space = new LearningSpace("Name", "Shortname", "Authors", "Description", "Goals");
-        var element = new LearningElement();
+        var element = new LearningElement("le", "la", "li", "le", "lu", "ll", "lll");
         world.LearningSpaces.Add(space);
         world.LearningElements.Add(element);
         
@@ -39,7 +39,7 @@ public class PersistenceCt
     public void Persistence_SaveAndLoadSpace_ObjectsAreEqual()
     {
         var space = new LearningSpace("Name", "Shortname", "Authors", "Description", "Goals");
-        var element = new LearningElement();
+        var element = new LearningElement("le", "la", "li", "le", "lu", "ll", "lll");
         space.LearningElements.Add(element);
         
         using var stream = new MemoryStream();
@@ -55,7 +55,7 @@ public class PersistenceCt
     [Test]
     public void Persistence_SaveAndLoadElement_ObjectsAreEqual()
     {
-        var element = new LearningElement();
+        var element = new LearningElement("le", "la", "li", "le", "lu", "ll", "lll");
         
         using var stream = new MemoryStream();
         var saveHandler = CreateTestableFileSaveHandler<LearningElement>();

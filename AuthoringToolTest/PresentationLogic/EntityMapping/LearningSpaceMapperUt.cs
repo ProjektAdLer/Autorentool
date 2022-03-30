@@ -17,10 +17,10 @@ public class LearningSpaceMapperUt
     {
         var elementMapper = Substitute.For<ILearningElementMapper>();
         var viewModel = new LearningSpaceViewModel("a", "b", "c", "d", "e");
-        var element = new LearningElementViewModel("a", "a", "a", "a", "a");
+        var element = new LearningElementViewModel("a", "a", "a", "a", "a", "a", "a");
         viewModel.LearningElements.Add(element);
 
-        elementMapper.ToEntity(element).Returns(new LearningElement());
+        elementMapper.ToEntity(element).Returns(new LearningElement( "a", "a","a", "a","a", "a", "a"));
 
         var systemUnderTest = CreateMapperForTesting(elementMapper: elementMapper);
 
@@ -52,11 +52,11 @@ public class LearningSpaceMapperUt
     {
         var elementMapper = Substitute.For<ILearningElementMapper>();
         var entity = new LearningSpace("a", "b", "c", "d", "e");
-        var element = new LearningElement();
+        var element = new LearningElement("a", "a", "a", "a", "a", "a", "a");
         entity.LearningElements.Add(element);
 
         elementMapper.ToViewModel(element).Returns(new LearningElementViewModel("a", "a", "a",
-            "a", "a"));
+            "a", "a", "a", "a"));
 
         var systemUnderTest = CreateMapperForTesting(elementMapper: elementMapper);
 
