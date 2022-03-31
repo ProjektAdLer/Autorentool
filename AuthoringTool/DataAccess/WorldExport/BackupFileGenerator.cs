@@ -1,33 +1,39 @@
 ﻿using System.Xml;
 using System.Xml.Linq;
 using AuthoringTool.DataAccess.WorldExport;
+using System.IO.Abstractions;
 using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Tar;
 using AuthoringTool.DataAccess.XmlClasses;
 using AuthoringTool.DataAccess.XmlClasses.course;
 using AuthoringTool.DataAccess.XmlClasses.sections;
-
+using Microsoft.VisualBasic;
+using FileSystem = System.IO.Abstractions.FileSystem;
 
 
 namespace AuthoringTool.DataAccess.WorldExport;
 
 public class BackupFileGenerator : IBackupFileGenerator
 {
-    
+
+    public void CreateBackupFolders()
+    {
+        var fileSystem = new FileSystem();
+        
+        var currWorkDir = fileSystem.Directory.GetCurrentDirectory();
+        fileSystem.Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport");
+        fileSystem.Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/course");
+        fileSystem.Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/sections");
+        fileSystem.Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/sections/section_160");
+    }
+
     /// <summary>
     /// Creates all directories and XMl-Files needed for the Moodle backup
     /// </summary>
     public void WriteXMLFiles()
     {
-        var currWorkDir = Directory.GetCurrentDirectory();
-        Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport");
-        Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/course");
-        Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/sections");
-        Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/sections/section_160");
-        
         var xmlEntityManager = new XmlEntityManager();
         xmlEntityManager.GetFactories();
-
     }
     
     //Get all files from source Folder "XMLFilesForExport" and pack all files and folders into a tar-file 
