@@ -16,15 +16,26 @@ namespace AuthoringTool.DataAccess.WorldExport;
 public class BackupFileGenerator : IBackupFileGenerator
 {
 
+    private IFileSystem _fileSystem;
+
+    public BackupFileGenerator(): this(new FileSystem())
+    {
+        
+    }
+    
+    public BackupFileGenerator(IFileSystem fileSystem)
+    {
+        _fileSystem = fileSystem;
+    }
+
     public void CreateBackupFolders()
     {
-        var fileSystem = new FileSystem();
         
-        var currWorkDir = fileSystem.Directory.GetCurrentDirectory();
-        fileSystem.Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport");
-        fileSystem.Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/course");
-        fileSystem.Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/sections");
-        fileSystem.Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/sections/section_160");
+        var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
+        _fileSystem.Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport");
+        _fileSystem.Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/course");
+        _fileSystem.Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/sections");
+        _fileSystem.Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/sections/section_160");
     }
 
     /// <summary>
