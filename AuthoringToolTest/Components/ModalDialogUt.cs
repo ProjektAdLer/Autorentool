@@ -46,6 +46,31 @@ public class ModalDialogUt
         Assert.AreEqual(inputFields, systemUnderTest.Instance.InputFields);
     }
 
+    [Test]
+    public void ModalDialog_XButtonClicked_CancelsDialog()
+    {
+        using var ctx = new Bunit.TestContext();
+        var title = "Test Dialog";
+        var text = "This is a dialog for automated testing purposes";
+        var onCloseCalled = false;
+        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple => {
+            onCloseCalled = true;
+            Assert.Multiple(() =>
+            {
+                Assert.That(tuple.Item1, Is.EqualTo(ModalDialogReturnValue.Cancel));
+                Assert.That(tuple.Item2, Is.Null);
+            });
+        };
+        var dialogType = ModalDialogType.OkCancel;
+
+        var systemUnderTest = CreateRenderedModalDialogComponentForTesting(ctx, title, text, onClose, dialogType);
+
+        var button = systemUnderTest.Find(".close");
+        button.Click();
+        
+        Assert.That(onCloseCalled);
+    }
+
     //ModalDialogType, css selector string, ModalDialogReturnValue
     static object[] ModalDialog_ButtonClicked_CallsCallbackWithCorrectDialogReturnValue_TestCaseSource =
     {
