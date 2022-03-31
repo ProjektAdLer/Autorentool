@@ -54,7 +54,9 @@ public class FileSaveHandlerUt
     public void FileSaveHandler_Constructor_FailsIfTypeNotSerializable()
     {
         var ex = Assert.Throws<InvalidOperationException>(() =>
-            new FileSaveHandler<TestNotSerializable>(null!));
+        {
+            var fileSaveHandler = new FileSaveHandler<TestNotSerializable>(null!);
+        });
         Assert.That(ex!.Message, Is.EqualTo($"Type {nameof(TestNotSerializable)} is not serializable."));
     }
     
@@ -62,7 +64,9 @@ public class FileSaveHandlerUt
     public void FileSaveHandler_Constructor_FailsIfTypeDoesNotHaveParameterlessConstructor()
     {
         var ex = Assert.Throws<InvalidOperationException>(() =>
-            new FileSaveHandler<TestNoParameterlessConstructor>(null!));
+        {
+            var fileSaveHandler = new FileSaveHandler<TestNoParameterlessConstructor>(null!);
+        });
         Assert.That(ex!.Message, Is.EqualTo($"Type {nameof(TestNoParameterlessConstructor)} has no required parameterless constructor."));
     }
     
@@ -99,6 +103,29 @@ public class FileSaveHandlerUt
     }
 
     [Test]
+    public void FileSaveHandler_SaveToDisk_ThrowsWrappedException()
+    {
+        var mockFileSystem = new MockFileSystem();
+        const string filepath = "foobar.txt";
+        var mockFileData = new MockFileData("pop");
+        //create read only file
+        mockFileData.Attributes = FileAttributes.ReadOnly;
+        mockFileSystem.AddFile(filepath, mockFileData);
+        var obj = new TestSerializable("foo", 123);
+
+        var systemUnderTest = CreateTestableFileSaveHandler<TestSerializable>(fileSystem: mockFileSystem);
+
+        var ex = Assert.Throws<SerializationException>(() => systemUnderTest.SaveToDisk(obj, filepath));
+        var innerEx = ex!.InnerException;
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex.Message, Is.EqualTo($"Couldn't serialize TestSerializable object into file at {filepath}."));
+            Assert.That(innerEx, Is.Not.Null);
+        });
+        Assert.That(innerEx!.GetType(), Is.EqualTo(typeof(UnauthorizedAccessException)));
+    }
+
+    [Test]
     public void FileSaveHandler_LoadFromDisk_ThrowsWrappedException()
     {
         var mockFileSystem = new MockFileSystem();
@@ -107,8 +134,11 @@ public class FileSaveHandlerUt
 
         var ex = Assert.Throws<SerializationException>(() => systemUnderTest.LoadFromDisk("foo"));
         var innerEx = ex!.InnerException;
-        Assert.That(ex.Message, Is.EqualTo("Couldn't deserialize file at foo into TestSerializable object."));
-        Assert.That(innerEx, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex.Message, Is.EqualTo("Couldn't deserialize file at foo into TestSerializable object."));
+            Assert.That(innerEx, Is.Not.Null);
+        });
         Assert.That(innerEx!.GetType(), Is.EqualTo(typeof(FileNotFoundException)));
     }
 
