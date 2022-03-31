@@ -1,7 +1,6 @@
 ﻿@page "/AuthoringToolWorkspaceView"
 @using AuthoringTool.Components
 @using AuthoringTool.Components.ModalDialog
-@using AuthoringTool.PresentationLogic
 @using AuthoringTool.PresentationLogic.API
 @using AuthoringTool.PresentationLogic.AuthoringToolWorkspace
 @using AuthoringTool.PresentationLogic.LearningElement
@@ -19,7 +18,7 @@
 <p role="status" id="filepath">Filepath: @filePath</p>
 <label>
     Select learning world:
-    <select @onchange="args => AuthoringToolWorkspaceP.ChangeSelectedLearningWorld((string) args.Value!)"
+    <select @onchange="args => AuthoringToolWorkspaceP.SetSelectedLearningWorld((string) args.Value!)"
             value="@(AuthoringToolWorkspaceVm.SelectedLearningWorld?.Name)">
         @foreach (var learningWorld in AuthoringToolWorkspaceVm.LearningWorlds)
         {
@@ -46,7 +45,7 @@
 <div>
     <button class="btn btn-primary" @onclick="AddNewLearningWorld">Add Learning World</button>
     <button class="btn btn-primary" @onclick="LoadLearningWorld">Load Learning World</button>
-    <button class="btn btn-primary" @onclick="EditSelectedLearningWorld" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Edit Learning World</button>
+    <button class="btn btn-primary" @onclick="OpenEditSelectedLearningWorldDialog" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Edit Learning World</button>
     <button class="btn btn-primary" @onclick="DeleteSelectedLearningWorld" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Delete selected Learning World</button>
     <button class="btn btn-primary" @onclick="SaveSelectedLearningWorld" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Save selected Learning World</button>
     <button class="btn btn-primary" id="btnExport" @onclick="Export">Create Export-File</button>
@@ -102,7 +101,7 @@
          @onmouseleave=@(() => _mouseService.FireOut(this, null))>
         @foreach (var learningObject in AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningObjects)
         {
-            <Draggable LearningObject="learningObject" OnClicked="@OnLearningObjectSelect"
+            <Draggable LearningObject="learningObject" OnClicked="@AuthoringToolWorkspaceP.SetSelectedLearningObject"
                        @bind-X="@learningObject.PositionX" @bind-Y="@learningObject.PositionY">
                 @{
                     var color = learningObject switch
@@ -169,9 +168,9 @@
         AuthoringToolWorkspaceP.CreateLearningWorldDialogOpen = true;
     }
 
-    private void EditSelectedLearningWorld()
+    private void OpenEditSelectedLearningWorldDialog()
     {
-        AuthoringToolWorkspaceP.EditSelectedLearningWorld();
+        AuthoringToolWorkspaceP.OpenEditSelectedLearningWorldDialog();
     }
 
     private void DeleteSelectedLearningWorld()
@@ -247,7 +246,7 @@
 
     private void EditLearningObject()
     {
-        AuthoringToolWorkspaceP.EditLearningObject();
+        AuthoringToolWorkspaceP.OpenEditSelectedLearningObjectDialog();
     }
 
     private Task OnEditSpaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
@@ -260,10 +259,6 @@
         return AuthoringToolWorkspaceP.OnEditElementDialogClose(returnValueTuple);
     }
 
-    private Task OnLearningObjectSelect(ILearningObjectViewModel learningObject)
-    {
-        return AuthoringToolWorkspaceP.OnLearningObjectSelect(learningObject);
-    }
 
     /// Export Learningworld
     private string filePath = "";
