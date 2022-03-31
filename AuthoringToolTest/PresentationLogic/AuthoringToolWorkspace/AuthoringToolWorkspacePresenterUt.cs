@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using AuthoringTool.Components.ModalDialog;
+using AuthoringTool.Entities;
 using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.API;
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
@@ -411,6 +412,27 @@ public class AuthoringToolWorkspacePresenterUt
              "this", "does", "not", "matter"));
         Assert.AreEqual("SelectedLearningWorld is null", ex!.Message);
     }
+
+
+
+    [Test]
+    public void AuthoringToolWorkspacePresenter_CreateNewLearningElement_ThrowsWhenSelectedWorldNull()
+    {
+        var workspaceVm = new AuthoringToolWorkspaceViewModel();
+        var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
+        learningElementPresenter.CreateNewLearningElement(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>()).Returns(new LearningElementViewModel("foo", "bar",
+            "Transfer", "Video", "foo", "bar", "foo"));
+
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm,
+            learningElementPresenter: learningElementPresenter);
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.CreateNewLearningElement("foo",
+            "bar", "foo", "bar", "foo", "bar", "foo"));
+        Assert.AreEqual("SelectedLearningWorld is null", ex!.Message);
+    }
+    
     
     [Test]
     public void AuthoringToolWorkspacePresenter_CreateNewLearningSpace_CallsLearningSpacePresenter()
@@ -432,6 +454,31 @@ public class AuthoringToolWorkspacePresenterUt
 
         learningSpacePresenter.Received().CreateNewLearningSpace(Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+    }
+    
+    [Test]
+    public void AuthoringToolWorkspacePresenter_CreateNewLearningElement_CallsLearningElementPresenter()
+    {
+        var workspaceVm = new AuthoringToolWorkspaceViewModel();
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        workspaceVm.LearningWorlds.Add(world);
+        workspaceVm.SelectedLearningWorld = world;
+        var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
+        learningElementPresenter.CreateNewLearningElement(Arg.Any<string>(), Arg.Any<string>(), 
+            Arg.Any<string>(),Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>()).Returns(new LearningElementViewModel("foo", "bar","foo",
+            "foo", "bar", "foo", "bar"));
+
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm,
+            learningElementPresenter:learningElementPresenter);
+        
+        systemUnderTest.CreateNewLearningElement("foo", "bar", "foo", "bar", "foo",
+            "bar","foo");
+
+        learningElementPresenter.Received().CreateNewLearningElement(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),Arg.Any<string>(),
+            Arg.Any<string>());
     }
 
     [Test]
@@ -458,6 +505,35 @@ public class AuthoringToolWorkspacePresenterUt
         Assert.AreEqual("foo", space.Authors);
         Assert.AreEqual("bar", space.Description);
         Assert.AreEqual("foo", space.Goals);
+    }
+    
+    [Test]
+    public void AuthoringToolWorkspacePresenter_CreateNewLearningElement_AddsLearningElementToViewModel()
+    {
+        var workspaceVm = new AuthoringToolWorkspaceViewModel();
+        var learningElementPresenter = new LearningElementPresenter();
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        workspaceVm.LearningWorlds.Add(world);
+
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm,
+            learningElementPresenter: learningElementPresenter);
+        
+        Assert.IsEmpty(world.LearningElements);
+
+        workspaceVm.SelectedLearningWorld = world;
+        systemUnderTest.CreateNewLearningElement("foo", "bar", "foo", "bar",
+            "foo","bar","foo");
+        
+        Assert.AreEqual(1, world.LearningElements.Count);
+        var element = world.LearningElements.First();
+        Assert.AreEqual("foo", element.Name);
+        Assert.AreEqual("bar", element.Shortname);
+        Assert.AreEqual("foo", element.Type);
+        Assert.AreEqual("bar", element.Content);
+        Assert.AreEqual("foo", element.Authors);
+        Assert.AreEqual("bar", element.Description);
+        Assert.AreEqual("foo", element.Goals);
     }
 
     [Test]
