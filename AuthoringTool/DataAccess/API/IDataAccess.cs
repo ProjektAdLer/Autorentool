@@ -10,4 +10,8 @@ public interface IDataAccess
     void ConstructBackup();
     void SaveLearningWorldToFile(LearningWorld world, string filepath);
     LearningWorld LoadLearningWorldFromFile(string filepath);
+    void SaveLearningSpaceToFile(LearningSpace space, string filepath);
+    LearningSpace LoadLearningSpaceFromFile(string filepath);
+    void SaveLearningElementToFile(LearningElement element, string filepath);
+    LearningElement LoadLearningElementFromFile(string filepath);
 }

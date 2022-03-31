@@ -12,4 +12,8 @@ public interface IBusinessLogic
     void ConstructBackup();
     void SaveLearningWorld(LearningWorld learningWorld, string filepath);
     LearningWorld LoadLearningWorld(string filepath);
+    void SaveLearningSpace(LearningSpace learningSpace, string filepath);
+    LearningSpace LoadLearningSpace(string filepath);
+    void SaveLearningElement(LearningElement learningElement, string filepath);
+    LearningElement LoadLearningElement(string filepath);
 }

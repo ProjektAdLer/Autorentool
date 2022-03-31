@@ -36,6 +36,26 @@ internal class BusinessLogic : IBusinessLogic
     {
         return DataAccess.LoadLearningWorldFromFile(filepath);
     }
+    
+    public void SaveLearningSpace(LearningSpace learningSpace, string filepath)
+    {
+        DataAccess.SaveLearningSpaceToFile(learningSpace, filepath);
+    }
+
+    public LearningSpace LoadLearningSpace(string filepath)
+    {
+        return DataAccess.LoadLearningSpaceFromFile(filepath);
+    }
+    
+    public void SaveLearningElement(LearningElement learningElement, string filepath)
+    {
+        DataAccess.SaveLearningElementToFile(learningElement, filepath);
+    }
+
+    public LearningElement LoadLearningElement(string filepath)
+    {
+        return DataAccess.LoadLearningElementFromFile(filepath);
+    }
 
     public IAuthoringToolConfiguration Configuration { get; }
   

@@ -265,6 +265,41 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             };
             EditLearningWorldDialogOpen = true;
         }
+        
+        public async Task LoadLearningSpace()
+        {
+            var learningSpace = await _presentationLogic.LoadLearningSpace();
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
+                throw new ApplicationException("SelectedLearningWorld is null");
+            _authoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces.Add(learningSpace);
+        }
+        
+        public async Task LoadLearningElement()
+        {
+            var learningElement = await _presentationLogic.LoadLearningElement();
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
+                throw new ApplicationException("SelectedLearningWorld is null");
+            _authoringToolWorkspaceVm.SelectedLearningWorld.LearningElements.Add(learningElement);
+        }
+        
+        public void SaveSelectedLearningObject()
+        {
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
+                throw new ApplicationException("SelectedLearningWorld is null");
+            switch (_authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject)
+            {
+                case null:
+                    throw new ApplicationException("SelectedLearningObject is null");
+                case LearningSpaceViewModel learningSpace:
+                    _presentationLogic.SaveLearningSpace(learningSpace);
+                    break;
+                case LearningElementViewModel learningElement:
+                    _presentationLogic.SaveLearningElement(learningElement);
+                    break;
+                default:
+                    throw new NotImplementedException("Type of LearningObject is not implemented");
+            }
+        }
 
         public Task OnCreateWorldDialogClose(
             Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
