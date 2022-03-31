@@ -9,5 +9,7 @@ public interface ILearningElement
     string Authors { get; set; }
     string Description { get; set; }
     string Goals { get; set; }
+    double PositionX { get; set; }
+    double PositionY { get; set; }
     
 }

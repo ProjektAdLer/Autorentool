@@ -570,6 +570,47 @@ public class AuthoringToolWorkspacePresenterUt
 
         learningSpacePresenter.Received().EditLearningSpace(space, "n", "sn", "a", "d", "g");
     }
+    
+    [Test]
+    public void AuthoringToolWorkspacePresenter_OnEditElementDialogClose_CallsLearningElementPresenter()
+    {
+        var workspaceVm = new AuthoringToolWorkspaceViewModel();
+        var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
+        learningElementPresenter.EditLearningElement(Arg.Any<LearningElementViewModel>(), Arg.Any<string>(),
+                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+                Arg.Any<string>(), Arg.Any<string>())
+            .Returns(new LearningElementViewModel("ba", "ba", "ba", "ba",
+                "ba","ba","ba"));
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        workspaceVm.LearningWorlds.Add(world);
+        var element = new LearningElementViewModel("foo", "bar", "foo", "bar", "foo",
+            "bar", "foo");
+        world.LearningElements.Add(element);
+      
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "a";
+        dictionary["Shortname"] = "b";
+        dictionary["Type"] = "c";
+        dictionary["Content"] = "d";
+        dictionary["Authors"] = "e";
+        dictionary["Description"] = "f";
+        dictionary["Goals"] = "g";
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm,
+            learningElementPresenter: learningElementPresenter);
+        workspaceVm.SelectedLearningWorld = world;
+        world.SelectedLearningObject = element;
+   
+
+        systemUnderTest.OnEditElementDialogClose(returnValueTuple);
+
+        learningElementPresenter.Received().EditLearningElement(element, "a", "b", "c", "d",
+            "e","f","g");
+    }
 
     [Test]
     public void AuthoringToolWorkspacePresenter_DeleteSelectedLearningObject_ThrowsWhenSelectedWorldNull()
@@ -659,7 +700,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
     
     [Test]
-    public void AuthoringToolWorkspacePresenter_DeleteSelectedLearningObject_MutatesSelectionInViewModel() 
+    public void AuthoringToolWorkspacePresenter_DeleteSelectedLearningObject_WithSpace_MutatesSelectionInViewModel() 
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
@@ -671,6 +712,27 @@ public class AuthoringToolWorkspacePresenterUt
         world.SelectedLearningObject = space;
         
         Assert.That(world.SelectedLearningObject, Is.EqualTo(space));
+        
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm);
+        systemUnderTest.DeleteSelectedLearningObject();
+        
+        Assert.That(world.SelectedLearningObject, Is.Null);
+    }
+    
+    [Test]
+    public void AuthoringToolWorkspacePresenter_DeleteSelectedLearningObject_WithElement_MutatesSelectionInViewModel() 
+    {
+        var workspaceVm = new AuthoringToolWorkspaceViewModel();
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        workspaceVm.LearningWorlds.Add(world);
+        workspaceVm.SelectedLearningWorld = world;
+        var element = new LearningElementViewModel("f", "f","f","f", "f",
+            "f", "f");
+        world.LearningElements.Add(element);
+        world.SelectedLearningObject = element;
+        
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(element));
         
         var systemUnderTest = CreatePresenterForTesting(workspaceVm);
         systemUnderTest.DeleteSelectedLearningObject();

@@ -179,6 +179,18 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             SetSelectedLearningObject(learningSpace);
         }
 
+        
+        /// <summary>
+        /// Creates a new learning element in the currently selected learning world.
+        /// </summary>
+        /// <param name="name">Name of the element.</param>
+        /// <param name="shortname">Shortname of the element.</param>
+        /// <param name="type">The represented type of the element in the space/world.</param>
+        /// <param name="content">Describes, which content the element contains.</param>
+        /// <param name="authors">A list of authors of the element.</param>
+        /// <param name="description">A description of the element.</param>
+        /// <param name="goals">The goals of the element.</param>
+        /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
         public void CreateNewLearningElement(string name, string shortname, string type, string content,
             string authors, string description, string goals)
         {
