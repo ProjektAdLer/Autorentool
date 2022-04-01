@@ -30,12 +30,9 @@ public class BackupFileGenerator : IBackupFileGenerator
         _fileSystem = fileSystem;
     }
 
-    /// <summary>
-    /// Creates all needed Directories for the Moodle Backup File
-    /// </summary>
+    ///<inheritdoc cref="IBackupFileGenerator.CreateBackupFolders"/>
     public void CreateBackupFolders()
     {
-        
         var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
         _fileSystem.Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport");
         _fileSystem.Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/course");

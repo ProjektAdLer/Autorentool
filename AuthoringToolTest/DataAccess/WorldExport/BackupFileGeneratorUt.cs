@@ -57,9 +57,10 @@ public class BackupFileGeneratorUt
         var mockFileSystem = new MockFileSystem();
         var backupFileGen = new BackupFileGenerator(mockFileSystem);
         backupFileGen.CreateBackupFolders();
+        var fullPathFile = mockFileSystem.Path.Join(mockFileSystem.Path.GetFullPath("XMLFilesForExport"), "course.xml");
+        mockFileSystem.AddFile(fullPathFile, "encoding=UTF-8");
         var tempDir = backupFileGen.GetTempDir();
-        
-        
+
         //Act
         backupFileGen.DirectoryCopy("XMLFilesForExport", tempDir);
         var fullDirPath = mockFileSystem.Path.GetFullPath("XMLFilesForExport");
@@ -67,8 +68,10 @@ public class BackupFileGeneratorUt
         //Assert
         var currentDir = mockFileSystem.Directory.GetDirectories(tempDir);
         var copiedDirectory = mockFileSystem.Directory.GetDirectories(mockFileSystem.Directory.GetCurrentDirectory());
+        var copiedFile = mockFileSystem.AllFiles;
         Assert.That(copiedDirectory, Contains.Item(fullDirPath));
-        
+        Assert.That(copiedFile, Contains.Item(fullPathFile));
     }
+
     
 }
