@@ -186,25 +186,6 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             _presentationLogic.SaveLearningWorld(_authoringToolWorkspaceVm.SelectedLearningWorld);
         }
 
-        public void SaveSelectedLearningObject()
-        {
-            if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
-                throw new ApplicationException("SelectedLearningWorld is null");
-            switch (_authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject)
-            {
-                case null:
-                    throw new ApplicationException("SelectedLearningObject is null");
-                case LearningSpaceViewModel learningSpace:
-                    _presentationLogic.SaveLearningSpace(learningSpace);
-                    break;
-                case LearningElementViewModel learningElement:
-                    _presentationLogic.SaveLearningElement(learningElement);
-                    break;
-                default:
-                    throw new NotImplementedException("Type of LearningObject is not implemented");
-            }
-        }
-
         public Task OnCreateWorldDialogClose(
             Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
         {
@@ -536,7 +517,26 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
                     OpenEditSelectedLearningElementDialog();
                     break;
                 default:
-                    throw new ApplicationException("Type of LearningObject is not implemented");
+                    throw new NotImplementedException("Type of LearningObject is not implemented");
+            }
+        }
+        
+        public void SaveSelectedLearningObject()
+        {
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
+                throw new ApplicationException("SelectedLearningWorld is null");
+            switch (_authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject)
+            {
+                case null:
+                    throw new ApplicationException("SelectedLearningObject is null");
+                case LearningSpaceViewModel learningSpace:
+                    _presentationLogic.SaveLearningSpace(learningSpace);
+                    break;
+                case LearningElementViewModel learningElement:
+                    _presentationLogic.SaveLearningElement(learningElement);
+                    break;
+                default:
+                    throw new NotImplementedException("Type of LearningObject is not implemented");
             }
         }
 
