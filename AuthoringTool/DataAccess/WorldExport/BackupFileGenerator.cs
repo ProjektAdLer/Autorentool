@@ -1,7 +1,9 @@
-﻿using System.Xml;
+﻿using System.IO;
+using System.Xml;
 using System.Xml.Linq;
 using AuthoringTool.DataAccess.WorldExport;
 using System.IO.Abstractions;
+using System.Linq;
 using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Tar;
 using AuthoringTool.DataAccess.XmlClasses;
@@ -28,6 +30,9 @@ public class BackupFileGenerator : IBackupFileGenerator
         _fileSystem = fileSystem;
     }
 
+    /// <summary>
+    /// Creates all needed Directories for the Moodle Backup File
+    /// </summary>
     public void CreateBackupFolders()
     {
         
@@ -39,7 +44,7 @@ public class BackupFileGenerator : IBackupFileGenerator
     }
 
     /// <summary>
-    /// Creates all directories and XMl-Files needed for the Moodle backup
+    /// Creates all XMl-Files needed for the Moodle backup
     /// </summary>
     public void WriteXMLFiles()
     {
@@ -57,9 +62,9 @@ public class BackupFileGenerator : IBackupFileGenerator
 
         //construct tarball 
         const string tarName = "EmptyWorld.mbz";
-        var tarPath = Path.Combine(tempDir, tarName);
+        var tarPath = _fileSystem.Path.Combine(tempDir, tarName);
 
-        using (var outStream = File.Create(tarPath))
+        using (var outStream = _fileSystem.File.Create(tarPath))
         using (var gzoStream = new GZipOutputStream(outStream))
         using (var tarArchive = TarArchive.CreateOutputTarArchive(gzoStream))
         {
@@ -68,13 +73,13 @@ public class BackupFileGenerator : IBackupFileGenerator
         }
 
         //move file and delete dir
-        if (File.Exists(tarName))
+        if (_fileSystem.File.Exists(tarName))
         {
-            File.Delete(tarName);
+            _fileSystem.File.Delete(tarName);
         }
 
-        File.Move(tarPath, tarName);
-        Directory.Delete(tempDir, true);
+        _fileSystem.File.Move(tarPath, tarName);
+        _fileSystem.Directory.Delete(tempDir, true);
     }
 
     /// <summary>
@@ -83,8 +88,8 @@ public class BackupFileGenerator : IBackupFileGenerator
     /// <returns>Path to the temporary directory.</returns>
     public string GetTempDir()
     {
-        var tempDir = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-        Directory.CreateDirectory(tempDir);
+        var tempDir = _fileSystem.Path.Combine(_fileSystem.Path.GetTempPath(), _fileSystem.Path.GetRandomFileName());
+        _fileSystem.Directory.CreateDirectory(tempDir);
         return tempDir;
     }
 
@@ -95,17 +100,17 @@ public class BackupFileGenerator : IBackupFileGenerator
     /// <param name="targetPrefix">The path of the target folder to which the contents should be copied.</param>
     public void DirectoryCopy(string source, string targetPrefix)
     {
-        var directories = Directory.EnumerateDirectories(source, "*", SearchOption.AllDirectories);
+        var directories = _fileSystem.Directory.EnumerateDirectories(source, "*", SearchOption.AllDirectories);
         foreach (var directory in directories)
         {
             var directoryName = directory.Remove(0, (source + "\\").Length);
-            Directory.CreateDirectory(Path.Combine(targetPrefix, directoryName));
+            _fileSystem.Directory.CreateDirectory(_fileSystem.Path.Combine(targetPrefix, directoryName));
         }
-        var files = Directory.EnumerateFiles(source, "*", SearchOption.AllDirectories);
+        var files = _fileSystem.Directory.EnumerateFiles(source, "*", SearchOption.AllDirectories);
         foreach (var file in files) 
         {
             var filename = file.Remove(0, (source + "\\").Length);
-            File.Copy(file, Path.Combine(targetPrefix, filename));
+            _fileSystem.File.Copy(file, _fileSystem.Path.Combine(targetPrefix, filename));
         }
     }
     
@@ -119,7 +124,7 @@ public class BackupFileGenerator : IBackupFileGenerator
     {
         TarEntry tarEntry = TarEntry.CreateEntryFromFile(source);
         tar.WriteEntry(tarEntry, false);
-        var filenames = Directory.GetFiles(source).Where(s => !s.EndsWith(".mbz"));
+        var filenames = _fileSystem.Directory.GetFiles(source).Where(s => !s.EndsWith(".mbz"));
         foreach (string filename in filenames)
         {
             tarEntry = TarEntry.CreateEntryFromFile(filename);
@@ -127,7 +132,7 @@ public class BackupFileGenerator : IBackupFileGenerator
         }
         if (recursive)
         {
-            string[] directories = Directory.GetDirectories(source);
+            string[] directories = _fileSystem.Directory.GetDirectories(source);
             foreach (string directory in directories)
                 SaveDirectoryToTar(tar, directory, recursive);
         }

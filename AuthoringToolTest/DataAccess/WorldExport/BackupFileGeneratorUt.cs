@@ -33,5 +33,42 @@ public class BackupFileGeneratorUt
         Assert.That(directoryNamesOneLevelDeeper, Contains.Item(fullDirPathCourse));
         Assert.That(directoryNamesOneLevelDeeper, Contains.Item(fullDirPathSections));
     }
+
+    [Test]
+    public void BackupFileGenerator_GetTempDir_TemporaryDirectoryCreatedAndReturned()
+    {
+        //Arrange
+        var mockFileSystem = new MockFileSystem();
+        var backupFileGen = new BackupFileGenerator(mockFileSystem);
+        
+        
+        //Act
+        var tempDir = backupFileGen.GetTempDir();
+        
+        //Assert
+        var createdTempDir = mockFileSystem.Directory.GetDirectories(tempDir);
+        Assert.That(tempDir, Contains.Substring("temp"));
+    }
+
+    [Test]
+    public void BackupFileGenerator_DirectoryCopy_TargetDirectoryCopied()
+    {
+        //Arrange
+        var mockFileSystem = new MockFileSystem();
+        var backupFileGen = new BackupFileGenerator(mockFileSystem);
+        backupFileGen.CreateBackupFolders();
+        var tempDir = backupFileGen.GetTempDir();
+        
+        
+        //Act
+        backupFileGen.DirectoryCopy("XMLFilesForExport", tempDir);
+        var fullDirPath = mockFileSystem.Path.GetFullPath("XMLFilesForExport");
+        
+        //Assert
+        var currentDir = mockFileSystem.Directory.GetDirectories(tempDir);
+        var copiedDirectory = mockFileSystem.Directory.GetDirectories(mockFileSystem.Directory.GetCurrentDirectory());
+        Assert.That(copiedDirectory, Contains.Item(fullDirPath));
+        
+    }
     
 }

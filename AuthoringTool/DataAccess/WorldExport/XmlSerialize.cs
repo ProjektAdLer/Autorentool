@@ -10,7 +10,6 @@ public class XmlSerialize
         var settings = new XmlWriterSettings
         {
             Encoding = new UpperCaseUTF8Encoding(), // Moodle needs Encoding in Uppercase!
-
             NewLineHandling = System.Xml.NewLineHandling.Replace,
             NewLineOnAttributes = true,
             Indent = true // Generate new lines for each element
@@ -19,7 +18,7 @@ public class XmlSerialize
         XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
         ns.Add("", "");
         XmlSerializer x = new XmlSerializer(xml.GetType());
-        using (var xmlWriter = XmlTextWriter.Create("XMLFilesForExport/"+xmlname, settings))
+        using (var xmlWriter = XmlWriter.Create("XMLFilesForExport/"+xmlname, settings))
         {
             x.Serialize(xmlWriter, xml, ns);
         }
