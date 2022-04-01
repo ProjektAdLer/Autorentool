@@ -34,7 +34,7 @@ public class LearningElementMapperUt
     public void LearningWorldMapper_ToViewModel_MapsPropertiesCorrectly()
     {
         var elementMapper = new LearningElementMapper();
-        var entity = new LearningElement("name", "shortname", "type","content",
+        var entity = new AuthoringTool.Entities.LearningElement("name", "shortname", "type","content",
             "authors", "description", "goals", 1, 2);
 
         var viewModel = elementMapper.ToViewModel(entity);
