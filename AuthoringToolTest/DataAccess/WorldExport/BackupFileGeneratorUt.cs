@@ -1,10 +1,9 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.WorldExport;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.ExportWorld;
+namespace AuthoringToolTest.DataAccess.WorldExport;
 
 [TestFixture]
 public class BackupFileGeneratorUt

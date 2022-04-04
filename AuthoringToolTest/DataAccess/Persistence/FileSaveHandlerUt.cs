@@ -19,6 +19,8 @@ public class FileSaveHandlerUt
         {
             Name = "hello";
         }
+        //Disable warning for test
+        // ReSharper disable once UnusedAutoPropertyAccessor.Local
         public string Name { get; set; }
     }
 
@@ -53,20 +55,18 @@ public class FileSaveHandlerUt
     [Test]
     public void FileSaveHandler_Constructor_FailsIfTypeNotSerializable()
     {
-        var ex = Assert.Throws<InvalidOperationException>(() =>
-        {
-            var fileSaveHandler = new FileSaveHandler<TestNotSerializable>(null!);
-        });
+        //Disable warning for test
+        // ReSharper disable once ObjectCreationAsStatement
+        var ex = Assert.Throws<InvalidOperationException>(() => { new FileSaveHandler<TestNotSerializable>(null!); });
         Assert.That(ex!.Message, Is.EqualTo($"Type {nameof(TestNotSerializable)} is not serializable."));
     }
     
     [Test]
     public void FileSaveHandler_Constructor_FailsIfTypeDoesNotHaveParameterlessConstructor()
     {
-        var ex = Assert.Throws<InvalidOperationException>(() =>
-        {
-            var fileSaveHandler = new FileSaveHandler<TestNoParameterlessConstructor>(null!);
-        });
+        //Disable warning for test
+        // ReSharper disable once ObjectCreationAsStatement
+        var ex = Assert.Throws<InvalidOperationException>(() => { new FileSaveHandler<TestNoParameterlessConstructor>(null!); });
         Assert.That(ex!.Message, Is.EqualTo($"Type {nameof(TestNoParameterlessConstructor)} has no required parameterless constructor."));
     }
     

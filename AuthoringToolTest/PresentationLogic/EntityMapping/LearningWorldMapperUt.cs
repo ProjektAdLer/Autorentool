@@ -1,5 +1,3 @@
-using System.Linq;
-using AuthoringTool.Entities;
 using AuthoringTool.PresentationLogic.EntityMapping;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
@@ -56,13 +54,16 @@ public class LearningWorldMapperUt
         var systemUnderTest = CreateMapperForTesting(spaceMapper, elementMapper);
 
         var entity = systemUnderTest.ToEntity(viewModel);
-        Assert.IsNotNull(entity);
-        Assert.AreEqual(viewModel.Name, entity.Name);
-        Assert.AreEqual(viewModel.Shortname, entity.Shortname);
-        Assert.AreEqual(viewModel.Authors, entity.Authors);
-        Assert.AreEqual(viewModel.Language, entity.Language);
-        Assert.AreEqual(viewModel.Description, entity.Description);
-        Assert.AreEqual(viewModel.Goals, entity.Goals);
+        Assert.That(entity, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(entity.Name, Is.EqualTo(viewModel.Name));
+            Assert.That(entity.Shortname, Is.EqualTo(viewModel.Shortname));
+            Assert.That(entity.Authors, Is.EqualTo(viewModel.Authors));
+            Assert.That(entity.Language, Is.EqualTo(viewModel.Language));
+            Assert.That(entity.Description, Is.EqualTo(viewModel.Description));
+            Assert.That(entity.Goals, Is.EqualTo(viewModel.Goals));
+        });
     }
 
     [Test]
@@ -112,13 +113,16 @@ public class LearningWorldMapperUt
         var systemUnderTest = CreateMapperForTesting(spaceMapper, elementMapper);
 
         var viewModel = systemUnderTest.ToViewModel(entity);
-        Assert.IsNotNull(entity);
-        Assert.AreEqual(entity.Name, viewModel.Name);
-        Assert.AreEqual(entity.Shortname, viewModel.Shortname);
-        Assert.AreEqual(entity.Authors, viewModel.Authors);
-        Assert.AreEqual(entity.Language, viewModel.Language);
-        Assert.AreEqual(entity.Description, viewModel.Description);
-        Assert.AreEqual(entity.Goals, viewModel.Goals);
+        Assert.That(viewModel, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel.Name, Is.EqualTo(entity.Name));
+            Assert.That(viewModel.Shortname, Is.EqualTo(entity.Shortname));
+            Assert.That(viewModel.Authors, Is.EqualTo(entity.Authors));
+            Assert.That(viewModel.Language, Is.EqualTo(entity.Language));
+            Assert.That(viewModel.Description, Is.EqualTo(entity.Description));
+            Assert.That(viewModel.Goals, Is.EqualTo(entity.Goals));
+        });
     }
 
     private LearningWorldMapper CreateMapperForTesting(ILearningSpaceMapper? spaceMapper = null,

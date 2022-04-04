@@ -126,18 +126,24 @@ public class PersistenceUt
         return fileSystem == null ? new FileSaveHandler<T>(logger) : new FileSaveHandler<T>(logger, fileSystem);
     }
 
-    private void PropertyValuesAreEqual<T>(T actual, T expected) where T : class
+    private void PropertyValuesAreEqual<T>(T actual, T expected) where T : class?
     {
-        var properties = expected.GetType().GetProperties();
+        if (expected == actual && actual == null)
+        {
+            return;
+        }
+        if (expected == null || actual == null && expected != actual)
+            Assert.Fail($"expected {expected} != actual {actual}");
+        var properties = expected!.GetType().GetProperties();
         foreach (var property in properties)
         {
             var expectedValue = property.GetValue(expected, null);
             var actualValue = property.GetValue(actual, null);
 
-            if (actualValue is IList list)
-                AssertListsAreEqual(property, list, (IList)expectedValue);
+            if (actualValue is IList actualList && expectedValue is IList expectedList)
+                AssertListsAreEqual(property, actualList, expectedList);
             else if (!Equals(expectedValue, actualValue)) 
-                Assert.Fail($"Property {property.DeclaringType.Name}.{property.Name} does not match. Expected: {expectedValue} but was: {actualValue}");
+                Assert.Fail($"Property {property.DeclaringType?.Name}.{property.Name} does not match. Expected: {expectedValue} but was: {actualValue}");
         }
     }
     private void AssertListsAreEqual(PropertyInfo property, IList actualList, IList expectedList)
@@ -146,7 +152,7 @@ public class PersistenceUt
             Assert.Fail($"Property {property.PropertyType.Name}.{property.Name} does not match. Expected IList containing {expectedList.Count} elements but was IList containing {actualList.Count} elements");
  
         for (var i = 0; i < actualList.Count; i++)
-            if (!actualList[i].GetType().IsValueType)
+            if (!actualList[i]!.GetType().IsValueType)
             {
                 PropertyValuesAreEqual(actualList[i], expectedList[i]);
             }

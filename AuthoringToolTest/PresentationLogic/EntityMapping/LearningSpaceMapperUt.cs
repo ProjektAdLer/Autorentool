@@ -1,9 +1,6 @@
-using System.Linq;
-using AuthoringTool.Entities;
 using AuthoringTool.PresentationLogic.EntityMapping;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
-using AuthoringTool.PresentationLogic.LearningWorld;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -37,14 +34,17 @@ public class LearningSpaceMapperUt
         var systemUnderTest = CreateMapperForTesting(elementMapper);
 
         var entity = systemUnderTest.ToEntity(viewModel);
-        Assert.IsNotNull(entity);
-        Assert.AreEqual(viewModel.Name, entity.Name);
-        Assert.AreEqual(viewModel.Shortname, entity.Shortname);
-        Assert.AreEqual(viewModel.Authors, entity.Authors);
-        Assert.AreEqual(viewModel.Description, entity.Description);
-        Assert.AreEqual(viewModel.Goals, entity.Goals);
-        Assert.AreEqual(viewModel.PositionX, entity.PositionX);
-        Assert.AreEqual(viewModel.PositionY, entity.PositionY);
+        Assert.That(entity, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(entity.Name, Is.EqualTo(viewModel.Name));
+            Assert.That(entity.Shortname, Is.EqualTo(viewModel.Shortname));
+            Assert.That(entity.Authors, Is.EqualTo(viewModel.Authors));
+            Assert.That(entity.Description, Is.EqualTo(viewModel.Description));
+            Assert.That(entity.Goals, Is.EqualTo(viewModel.Goals));
+            Assert.That(entity.PositionX, Is.EqualTo(viewModel.PositionX));
+            Assert.That(entity.PositionY, Is.EqualTo(viewModel.PositionY));
+        });
     }
 
     [Test]
@@ -73,14 +73,17 @@ public class LearningSpaceMapperUt
         var systemUnderTest = CreateMapperForTesting(elementMapper);
 
         var viewModel = systemUnderTest.ToViewModel(entity);
-        Assert.IsNotNull(entity);
-        Assert.AreEqual(entity.Name, viewModel.Name);
-        Assert.AreEqual(entity.Shortname, viewModel.Shortname);
-        Assert.AreEqual(entity.Authors, viewModel.Authors);
-        Assert.AreEqual(entity.Description, viewModel.Description);
-        Assert.AreEqual(entity.Goals, viewModel.Goals);
-        Assert.AreEqual(entity.PositionX, viewModel.PositionX);
-        Assert.AreEqual(entity.PositionY, viewModel.PositionY);
+        Assert.That(viewModel, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel.Name, Is.EqualTo(entity.Name));
+            Assert.That(viewModel.Shortname, Is.EqualTo(entity.Shortname));
+            Assert.That(viewModel.Authors, Is.EqualTo(entity.Authors));
+            Assert.That(viewModel.Description, Is.EqualTo(entity.Description));
+            Assert.That(viewModel.Goals, Is.EqualTo(entity.Goals));
+            Assert.That(viewModel.PositionX, Is.EqualTo(entity.PositionX));
+            Assert.That(viewModel.PositionY, Is.EqualTo(entity.PositionY));
+        });
     }
 
     private LearningSpaceMapper CreateMapperForTesting(ILearningElementMapper? elementMapper = null)

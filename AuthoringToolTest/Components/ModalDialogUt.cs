@@ -1,11 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Threading.Tasks;
-using AngleSharp.Dom;
-using AngleSharp.Html.Dom;
-using AuthoringTool;
-using AuthoringTool.Components;
 using AuthoringTool.Components.ModalDialog;
 using NUnit.Framework;
 using Bunit;
@@ -26,7 +20,7 @@ public class ModalDialogUt
         var dialogType = ModalDialogType.Ok;
         var inputFields = new List<ModalDialogInputField>
         {
-            new("Test1", ModalDialogInputType.Text, false),
+            new("Test1", ModalDialogInputType.Text),
             new ModalDialogDropdownInputField("Test2",
                 new[] { new ModalDialogDropdownInputFieldChoiceMapping(null, new[] { "Test1", "Test2" }) },
                 true),
@@ -35,15 +29,17 @@ public class ModalDialogUt
         var systemUnderTest = CreateRenderedModalDialogComponentForTesting(ctx, title, text, onClose,
             dialogType, inputFields);
         
-        Assert.AreEqual(title, systemUnderTest.Instance.Title);
-        Assert.AreEqual(text, systemUnderTest.Instance.Text);
-        //we need to construct an EventCallback from our action
-        Assert.AreEqual(EventCallback.Factory.Create(onClose.Target ??
-                                                     throw new InvalidOperationException("onClose.Target is null"),
-                onClose),
-            systemUnderTest.Instance.OnClose);
-        Assert.AreEqual(dialogType, systemUnderTest.Instance.DialogType);
-        Assert.AreEqual(inputFields, systemUnderTest.Instance.InputFields);
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.Instance.Title, Is.EqualTo(title));
+            Assert.That(systemUnderTest.Instance.Text, Is.EqualTo(text));
+            //we need to construct an EventCallback from our action
+            Assert.That(systemUnderTest.Instance.OnClose, Is.EqualTo(EventCallback.Factory.Create(onClose.Target ??
+                                                         throw new InvalidOperationException("onClose.Target is null"),
+                    onClose)));
+            Assert.That(systemUnderTest.Instance.DialogType, Is.EqualTo(dialogType));
+            Assert.That(systemUnderTest.Instance.InputFields, Is.EqualTo(inputFields));
+        });
     }
 
     [Test]
@@ -95,19 +91,21 @@ public class ModalDialogUt
         var title = "Test Dialog";
         var text = "This is a dialog for automated testing purposes";
         var onCloseCalled = false;
-        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
-        {
-            Assert.AreEqual(returnValue, tuple.Item1);
-            Assert.AreEqual(null, tuple.Item2);
+        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple => {
+            Assert.Multiple(() =>
+            {
+                var (modalDialogReturnValue, dictionary) = tuple;
+                Assert.That(modalDialogReturnValue, Is.EqualTo(returnValue));
+                Assert.That(dictionary, Is.EqualTo(null));
+            });
             onCloseCalled = true;
         };
-        var dialogType = type;
 
         var systemUnderTest = CreateRenderedModalDialogComponentForTesting(ctx, title, text, onClose,
-            dialogType, null, null);
+            type);
         var btn = systemUnderTest.Find(cssSelector);
         btn.Click();
-        Assert.AreEqual(true, onCloseCalled);
+        Assert.That(onCloseCalled, Is.EqualTo(true));
     }
     
     [Test]
@@ -118,10 +116,13 @@ public class ModalDialogUt
         var title = "Test Dialog";
         var text = "This is a dialog for automated testing purposes";
         var onCloseCalled = false;
-        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
-        {
-            Assert.AreEqual(ModalDialogReturnValue.Ok, tuple.Item1);
-            Assert.AreEqual("foobar", tuple.Item2!["Test1"]);
+        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple => {
+            Assert.Multiple(() =>
+            {
+                var (modalDialogReturnValue, dictionary) = tuple;
+                Assert.That(modalDialogReturnValue, Is.EqualTo(ModalDialogReturnValue.Ok));
+                Assert.That(dictionary!["Test1"], Is.EqualTo("foobar"));
+            });
             onCloseCalled = true;
         };
         var dialogType = ModalDialogType.Ok;
@@ -131,13 +132,13 @@ public class ModalDialogUt
         };
 
         var systemUnderTest = CreateRenderedModalDialogComponentForTesting(ctx, title, text, onClose,
-            dialogType, inputFields, null);
+            dialogType, inputFields);
 
         var element = systemUnderTest.Find("#modal-input-field-test1");
         element.Input("foobar");
         element.KeyDown(Key.Enter);
 
-        Assert.AreEqual(true, onCloseCalled);
+        Assert.That(onCloseCalled, Is.EqualTo(true));
     }
     
     [Test]
@@ -151,13 +152,19 @@ public class ModalDialogUt
         Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
         {
             var (returnValue, dictionary) = tuple;
-            Assert.AreEqual(ModalDialogReturnValue.Ok, returnValue);
-            Assert.NotNull(dictionary);
+            Assert.Multiple(() =>
+            {
+                Assert.That(returnValue, Is.EqualTo(ModalDialogReturnValue.Ok));
+                Assert.That(dictionary, Is.Not.Null);
+            });
             
-            Assert.AreEqual("foobar123", dictionary!["Test1"]);
-            Assert.AreEqual("Bar", dictionary["Test2"]);
-            Assert.AreEqual("Baz", dictionary["Test3"]);
-            Assert.AreEqual("", dictionary["Test4"]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(dictionary!["Test1"], Is.EqualTo("foobar123"));
+                Assert.That(dictionary["Test2"], Is.EqualTo("Bar"));
+                Assert.That(dictionary["Test3"], Is.EqualTo("Baz"));
+                Assert.That(dictionary["Test4"], Is.EqualTo(""));
+            });
             onCloseCalled = true;
         };
         var dialogType = ModalDialogType.Ok;
@@ -184,7 +191,7 @@ public class ModalDialogUt
         
         systemUnderTest.Find("#btn-ok").Click();
         
-        Assert.AreEqual(true, onCloseCalled);
+        Assert.That(onCloseCalled, Is.EqualTo(true));
     }
 
     [Test]
@@ -194,7 +201,7 @@ public class ModalDialogUt
         
         var title = "Test Dialog";
         var text = "This is a dialog for automated testing purposes";
-        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
+        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = _ =>
         {
             Assert.Fail("onClose was called, but should not have.");
         };
@@ -234,7 +241,7 @@ public class ModalDialogUt
         
         var title = "Test Dialog";
         var text = "This is a dialog for automated testing purposes";
-        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
+        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = _ =>
         {
             Assert.Fail("onClose was called, but should not have.");
         };
@@ -277,12 +284,17 @@ public class ModalDialogUt
         Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
         {
             var (returnValue, dictionary) = tuple;
-            Assert.AreEqual(ModalDialogReturnValue.Ok, returnValue);
-            Assert.NotNull(dictionary);
-            
-            Assert.AreEqual("foobar", dictionary["Test1"]);
-            Assert.AreEqual("Bar", dictionary["Test2"]);
-            Assert.AreEqual("", dictionary["Test3"]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(returnValue, Is.EqualTo(ModalDialogReturnValue.Ok));
+                Assert.That(dictionary, Is.Not.Null);
+            });
+            Assert.Multiple(() =>
+            {
+                Assert.That(dictionary!["Test1"], Is.EqualTo("foobar"));
+                Assert.That(dictionary["Test2"], Is.EqualTo("Bar"));
+                Assert.That(dictionary["Test3"], Is.EqualTo(""));
+            });
             onCloseCalled = true;
         };
         var dialogType = ModalDialogType.Ok;
@@ -302,12 +314,14 @@ public class ModalDialogUt
 
         var systemUnderTest = CreateRenderedModalDialogComponentForTesting(ctx, title, text, onClose,
             dialogType, inputFields, inputFieldsInitialValues);
-        Assert.AreEqual("foobar", systemUnderTest.Find("#modal-input-field-test1").Attributes["value"]?.Value);
-        Assert.AreEqual("Bar", systemUnderTest.Find("#modal-input-drop-test2").Attributes["value"]?.Value);
-        Assert.AreEqual("", systemUnderTest.Find("#modal-input-field-test3").Attributes["value"]?.Value);
-
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.Find("#modal-input-field-test1").Attributes["value"]?.Value, Is.EqualTo("foobar"));
+            Assert.That(systemUnderTest.Find("#modal-input-drop-test2").Attributes["value"]?.Value, Is.EqualTo("Bar"));
+            Assert.That(systemUnderTest.Find("#modal-input-field-test3").Attributes["value"]?.Value, Is.EqualTo(""));
+        });
         systemUnderTest.Find("#btn-ok").Click();
-        Assert.AreEqual(true, onCloseCalled);
+        Assert.That(onCloseCalled, Is.EqualTo(true));
     }
 
     [Test]
@@ -321,12 +335,17 @@ public class ModalDialogUt
         Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
         {
             var (returnValue, dictionary) = tuple;
-            Assert.AreEqual(ModalDialogReturnValue.Ok, returnValue);
-            Assert.NotNull(dictionary);
-            
-            Assert.AreEqual("boofar", dictionary["Test1"]);
-            Assert.AreEqual("Foo", dictionary["Test2"]);
-            Assert.AreEqual("foobar123", dictionary["Test3"]);
+            Assert.Multiple(() =>
+            {
+                Assert.That(returnValue, Is.EqualTo(ModalDialogReturnValue.Ok));
+                Assert.That(dictionary, Is.Not.Null);
+            });
+            Assert.Multiple(() =>
+            {
+                Assert.That(dictionary!["Test1"], Is.EqualTo("boofar"));
+                Assert.That(dictionary["Test2"], Is.EqualTo("Foo"));
+                Assert.That(dictionary["Test3"], Is.EqualTo("foobar123"));
+            });
             onCloseCalled = true;
         };
         var dialogType = ModalDialogType.Ok;
@@ -351,7 +370,7 @@ public class ModalDialogUt
         systemUnderTest.Find("#modal-input-field-test3").Input("foobar123");
 
         systemUnderTest.Find("#btn-ok").Click();
-        Assert.AreEqual(true, onCloseCalled);
+        Assert.That(onCloseCalled, Is.EqualTo(true));
     }
 
     [Test]
@@ -361,7 +380,7 @@ public class ModalDialogUt
         
         var title = "Test Dialog";
         var text = "This is a dialog for automated testing purposes";
-        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
+        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = _ =>
         {
             Assert.Fail("onclose unexpectedly called");
         };
@@ -386,13 +405,15 @@ public class ModalDialogUt
 
         var systemUnderTest = CreateRenderedModalDialogComponentForTesting(ctx, title, text, onClose,
             dialogType, inputFields, inputFieldsInitialValues);
-
-        Assert.AreEqual("Bar", systemUnderTest.Find("#modal-input-drop-test1").Attributes["value"]?.Value);
-        Assert.AreEqual("Baz", systemUnderTest.Find("#modal-input-drop-test2").Attributes["value"]?.Value);
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.Find("#modal-input-drop-test1").Attributes["value"]?.Value, Is.EqualTo("Bar"));
+            Assert.That(systemUnderTest.Find("#modal-input-drop-test2").Attributes["value"]?.Value, Is.EqualTo("Baz"));
+        });
         Assert.DoesNotThrow(() => systemUnderTest.Find("#modal-input-drop-test2-foz"));
         Assert.DoesNotThrow(() => systemUnderTest.Find("#modal-input-drop-test2-baz"));
     }
-    
+
     private IRenderedComponent<ModalDialog> CreateRenderedModalDialogComponentForTesting(Bunit.TestContext ctx, string title, string text,
         Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose,
         ModalDialogType dialogType,

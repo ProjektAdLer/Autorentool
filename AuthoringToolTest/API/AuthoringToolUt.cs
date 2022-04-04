@@ -1,5 +1,4 @@
-﻿using AuthoringTool.API;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 
 namespace AuthoringToolTest.API;
 

@@ -25,16 +25,16 @@ public class DraggableUt
     {
         _testContext = new TestContext();
         _mouseService = Substitute.For<IMouseService>();
-        _testContext.Services.AddSingleton<IMouseService>(_mouseService);
+        _testContext.Services.AddSingleton(_mouseService);
     }
 
     [TearDown]
-    public void TearDown() => _testContext?.Dispose();
+    public void TearDown() => _testContext.Dispose();
 
     [Test]
     public void Draggable_StandardConstructor_AllPropertiesInitialized()
     {
-        RenderFragment childContent = new RenderFragment(builder => builder.AddContent(0, "<text/>"));
+        RenderFragment childContent = builder => builder.AddContent(0, "<text/>");
         var learningObject = Substitute.For<ILearningObjectViewModel>();
         double x = 10;
         double y = 20;
@@ -44,23 +44,23 @@ public class DraggableUt
 
         var systemUnderTest =
             CreateRenderedDraggableComponent(childContent, learningObject, x, y, xChanged, yChanged, onClicked);
-
-        Assert.AreEqual(childContent, systemUnderTest.Instance.ChildContent);
-        Assert.AreEqual(learningObject, systemUnderTest.Instance.LearningObject);
-        Assert.AreEqual(x, systemUnderTest.Instance.X);
-        Assert.AreEqual(y, systemUnderTest.Instance.Y);
-        Assert.AreEqual(
-            EventCallback.Factory.Create(
-                xChanged.Target ?? throw new InvalidOperationException("xChanged.Target is null"), xChanged),
-            systemUnderTest.Instance.XChanged);
-        Assert.AreEqual(
-            EventCallback.Factory.Create(
-                yChanged.Target ?? throw new InvalidOperationException("yChanged.Target is null"), yChanged),
-            systemUnderTest.Instance.YChanged);
-        Assert.AreEqual(
-            EventCallback.Factory.Create(
-                onClicked.Target ?? throw new InvalidOperationException("onClicked.Target is null"), onClicked),
-            systemUnderTest.Instance.OnClicked);
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.Instance.ChildContent, Is.EqualTo(childContent));
+            Assert.That(systemUnderTest.Instance.LearningObject, Is.EqualTo(learningObject));
+            Assert.That(systemUnderTest.Instance.X, Is.EqualTo(x));
+            Assert.That(systemUnderTest.Instance.Y, Is.EqualTo(y));
+            Assert.That(
+                systemUnderTest.Instance.XChanged, Is.EqualTo(EventCallback.Factory.Create(
+                    xChanged.Target ?? throw new InvalidOperationException("xChanged.Target is null"), xChanged)));
+            Assert.That(
+                systemUnderTest.Instance.YChanged, Is.EqualTo(EventCallback.Factory.Create(
+                    yChanged.Target ?? throw new InvalidOperationException("yChanged.Target is null"), yChanged)));
+            Assert.That(
+                systemUnderTest.Instance.OnClicked, Is.EqualTo(EventCallback.Factory.Create(
+                    onClicked.Target ?? throw new InvalidOperationException("onClicked.Target is null"), onClicked)));
+        });
     }
 
     [Test]
@@ -77,7 +77,7 @@ public class DraggableUt
         systemUnderTest.WaitForElement("g").MouseDown(new MouseEventArgs());
         _mouseService.OnUp += Raise.EventWith(new MouseEventArgs());
 
-        Assert.AreEqual(learningObject, onClickedEventTriggered);
+        Assert.That(onClickedEventTriggered, Is.EqualTo(learningObject));
     }
 
     [Test]
@@ -95,18 +95,17 @@ public class DraggableUt
         _mouseService.OnMove += Raise.EventWith(new MouseEventArgs());
         _mouseService.OnUp += Raise.EventWith(new MouseEventArgs());
 
-        Assert.AreEqual(null, onClickedEventTriggered);
+        Assert.That(onClickedEventTriggered, Is.EqualTo(null));
     }
 
     [Test]
     public void Draggable_ClickMoveAndRelease_PositionChanged()
     {
-        ILearningObjectViewModel? onClickedEventTriggered = null;
         var learningObject = Substitute.For<ILearningObjectViewModel>();
 
         double x = 10;
         double y = 20;
-        Action<ILearningObjectViewModel> onClicked = e => { onClickedEventTriggered = e; };
+        Action<ILearningObjectViewModel> onClicked = _ => { };
 
         var systemUnderTest =
             CreateRenderedDraggableComponent(null, learningObject, x, y, _ => { }, _ => { }, onClicked);
@@ -115,21 +114,22 @@ public class DraggableUt
         _mouseService.OnMove +=
             Raise.EventWith(new MouseEventArgs {ClientX = 13, ClientY = 24});
         _mouseService.OnUp += Raise.EventWith(new MouseEventArgs());
-
-
-        Assert.AreEqual(x + 13, systemUnderTest.Instance.X);
-        Assert.AreEqual(y + 24, systemUnderTest.Instance.Y);
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.Instance.X, Is.EqualTo(x + 13));
+            Assert.That(systemUnderTest.Instance.Y, Is.EqualTo(y + 24));
+        });
     }
 
     [Test]
     public void Draggable_MoveAndReleaseWithoutPreviousClick_PositionNotChanged()
     {
-        ILearningObjectViewModel? onClickedEventTriggered = null;
         var learningObject = Substitute.For<ILearningObjectViewModel>();
 
         double x = 10;
         double y = 20;
-        Action<ILearningObjectViewModel> onClicked = e => { onClickedEventTriggered = e; };
+        Action<ILearningObjectViewModel> onClicked = _ => { };
 
         var systemUnderTest =
             CreateRenderedDraggableComponent(null, learningObject, x, y, _ => { }, _ => { }, onClicked);
@@ -137,12 +137,13 @@ public class DraggableUt
         _mouseService.OnMove +=
             Raise.EventWith(new MouseEventArgs {ClientX = 13, ClientY = 24});
         _mouseService.OnUp += Raise.EventWith(new MouseEventArgs());
-
-
-        Assert.AreEqual(x, systemUnderTest.Instance.X);
-        Assert.AreEqual(y, systemUnderTest.Instance.Y);
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.Instance.X, Is.EqualTo(x));
+            Assert.That(systemUnderTest.Instance.Y, Is.EqualTo(y));
+        });
     }
-
 
     private IRenderedComponent<Draggable> CreateRenderedDraggableComponent(RenderFragment? childContent = null,
         ILearningObjectViewModel? learningObject = null, double x = 0, double y = 0, Action<double>? xChanged = null,
