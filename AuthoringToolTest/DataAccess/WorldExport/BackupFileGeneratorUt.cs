@@ -16,8 +16,8 @@ public class BackupFileGeneratorUt
         var mockFileSystem = new MockFileSystem();
         var backupFileGen = new BackupFileGenerator(mockFileSystem);
         var fullDirPath = mockFileSystem.Path.GetFullPath("XMLFilesForExport");
-        var fullDirPathCourse = fullDirPath + "\\course";
-        var fullDirPathSections = fullDirPath + "\\sections";
+        var fullDirPathCourse = Path.Join(fullDirPath, "course");
+        var fullDirPathSections = Path.Join(fullDirPath, "sections");
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
         //Act

@@ -34,10 +34,10 @@ public class BackupFileGenerator : IBackupFileGenerator
     public void CreateBackupFolders()
     {
         var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
-        _fileSystem.Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport");
-        _fileSystem.Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/course");
-        _fileSystem.Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/sections");
-        _fileSystem.Directory.CreateDirectory( currWorkDir+"/XMLFilesForExport/sections/section_160");
+        _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport"));
+        _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "course"));
+        _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections"));
+        _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections", "section_160"));
     }
 
     /// <summary>
