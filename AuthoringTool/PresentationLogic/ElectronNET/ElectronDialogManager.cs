@@ -3,23 +3,11 @@ using ElectronNET.API.Entities;
 
 namespace AuthoringTool.PresentationLogic.ElectronNET;
 
-public class FileFilterProxy
-{
-    internal readonly string Name;
-    internal readonly string[] Extensions;
-
-    public FileFilterProxy(string name, string[] extensions)
-    {
-        Name = name;
-        Extensions = extensions;
-    }
-}
-
-public class ElectronDialogManager
+public class ElectronDialogManager : IElectronDialogManager
 {
     private BrowserWindow BrowserWindow => Electron.WindowManager.BrowserWindows.First();
 
-
+    /// <inheritdoc cref="IElectronDialogManager.ShowSaveAsDialog"/>
     public async Task<string> ShowSaveAsDialog(string title, string? defaultPath = null, IEnumerable<FileFilterProxy>? fileFilters = null)
     {
         var mainWindow = BrowserWindow;
@@ -41,16 +29,7 @@ public class ElectronDialogManager
         return pathResult;
     }
 
-    /// <summary>
-    /// Shows an Electron Open Dialog to the user.
-    /// </summary>
-    /// <param name="title">Title of the dialog.</param>
-    /// <param name="directory">Whether or not a directory should be selected.</param>
-    /// <param name="multiSelect">Whether or not multiple selections should be allowed.</param>
-    /// <param name="defaultPath">A default path that should be preselected for the user, optional. Defaults to Documents folder.</param>
-    /// <param name="fileFilters">Optional FileFilters.</param>
-    /// <returns>Returns </returns>
-    /// <exception cref="OperationCanceledException"></exception>
+    /// <inheritdoc cref="IElectronDialogManager.ShowOpenDialog"/>
     public async Task<IEnumerable<string>> ShowOpenDialog(string title, bool directory = false, bool multiSelect = false,
         string? defaultPath = null, IEnumerable<FileFilterProxy>? fileFilters = null)
     {
@@ -78,27 +57,14 @@ public class ElectronDialogManager
         return pathResult.Where(res => !string.IsNullOrEmpty(res));
     }
     
-    /// <summary>
-    /// Shorthand method for opening a single file open dialog.
-    /// </summary>
-    /// <param name="title">Title of the dialog.</param>
-    /// <param name="defaultPath">A default path that should be preselected for the user, optional. Defaults to Documents folder.</param>
-    /// <param name="fileFilters">Optional FileFilters.</param>
-    /// <returns>Filepath to be opened.</returns>
-    /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
+    /// <inheritdoc cref="IElectronDialogManager.ShowOpenFileDialog"/>
     public async Task<string> ShowOpenFileDialog(string title, string? defaultPath = null,
         IEnumerable<FileFilterProxy>? fileFilters = null)
     {
         return (await ShowOpenDialog(title, false, false, defaultPath, fileFilters)).First();
     }
 
-    /// <summary>
-    /// Shorthand method for opening a single directory open dialog.
-    /// </summary>
-    /// <param name="title">Title of the dialog.</param>
-    /// <param name="defaultPath">A default path that should be preselected for the user, optional. Defaults to Documents folder.</param>
-    /// <returns>Directory to be opened.</returns>
-    /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
+    /// <inheritdoc cref="IElectronDialogManager.ShowOpenDirectoryDialog"/>
     public async Task<string> ShowOpenDirectoryDialog(string title, string? defaultPath = null)
     {
         return (await ShowOpenDialog(title, true, false, defaultPath, null)).First();

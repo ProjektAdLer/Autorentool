@@ -25,11 +25,11 @@ namespace AuthoringTool.PresentationLogic.API
             WorldMapper = worldMapper;
             SpaceMapper = spaceMapper;
             ElementMapper = elementMapper;
-            _dialogManager = serviceProvider.GetService(typeof(ElectronDialogManager)) as ElectronDialogManager;
+            _dialogManager = serviceProvider.GetService(typeof(IElectronDialogManager)) as IElectronDialogManager;
         }
 
         private readonly ILogger<PresentationLogic> _logger;
-        private ElectronDialogManager? _dialogManager;
+        private IElectronDialogManager? _dialogManager;
 
         public IAuthoringToolConfiguration Configuration { get; }
         public IBusinessLogic BusinessLogic { get; }
@@ -42,7 +42,7 @@ namespace AuthoringTool.PresentationLogic.API
             BusinessLogic.ConstructBackup();
         }
 
-        public async void SaveLearningWorld(LearningWorldViewModel learningWorldViewModel)
+        public async Task SaveLearningWorldAsync(LearningWorldViewModel learningWorldViewModel)
         {
             if (BusinessLogic.RunningElectron)
             {

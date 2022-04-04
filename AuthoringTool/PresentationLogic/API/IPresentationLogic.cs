@@ -11,7 +11,7 @@ public interface IPresentationLogic
     IAuthoringToolConfiguration Configuration { get; }
     IBusinessLogic BusinessLogic { get;  }
     void ConstructBackup();
-    void SaveLearningWorld(LearningWorldViewModel learningWorldViewModel);
+    Task SaveLearningWorldAsync(LearningWorldViewModel learningWorldViewModel);
     Task<LearningWorldViewModel> LoadLearningWorld();
     void SaveLearningSpace(LearningSpaceViewModel learningSpaceViewModel);
     Task<LearningSpaceViewModel> LoadLearningSpace();

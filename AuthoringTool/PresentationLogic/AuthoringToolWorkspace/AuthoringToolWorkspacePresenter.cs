@@ -183,7 +183,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
         {
             if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
                 throw new ApplicationException("SelectedLearningWorld is null");
-            _presentationLogic.SaveLearningWorld(_authoringToolWorkspaceVm.SelectedLearningWorld);
+            _presentationLogic.SaveLearningWorldAsync(_authoringToolWorkspaceVm.SelectedLearningWorld);
         }
 
         public Task OnCreateWorldDialogClose(
