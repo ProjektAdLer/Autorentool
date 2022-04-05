@@ -4,17 +4,17 @@
     "imageFile": ""
   },
   "name": "AuthoringTool",
-  "author": "",
+  "author": "Team AdLer",
   "singleInstance": false,
   "environment": "Production",
   "build": {
     "appId": "com.AuthoringTool.app",
     "productName": "AuthoringTool",
-    "copyright": "Copyright © 2020",
-    "buildVersion": "1.0.0",
+    "copyright": "Copyright © 2022 Team AdLer",
+    "buildVersion": "0.1.0",
     "compression": "maximum",
     "directories": {
-      "output": "../../../bin/Desktop"
+      "output": "../../../bin/Desktop_Publish"
     },
     "extraResources": [
       {
