@@ -237,6 +237,17 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             EditSelectedLearningWorld(name, shortname, authors, language, description, goals);
             return Task.CompletedTask;
         }
+        
+        public ModalDialogInputField[] ModalDialogWorldInputFields { get; } =
+        {
+            new("Name", ModalDialogInputType.Text, true),
+            new("Shortname", ModalDialogInputType.Text, true),
+            new("Authors", ModalDialogInputType.Text),
+            new("Language", ModalDialogInputType.Text, true),
+            new("Description", ModalDialogInputType.Text, true),
+            new("Goals", ModalDialogInputType.Text)
+        };
+        
         #endregion
 
         #region LearningSpace
@@ -341,6 +352,15 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
                 description, goals);
             return Task.CompletedTask;
         }
+        
+        public ModalDialogInputField[] ModalDialogSpaceInputFields { get; } =
+        {
+            new("Name", ModalDialogInputType.Text, true),
+            new("Shortname", ModalDialogInputType.Text, true),
+            new("Authors", ModalDialogInputType.Text),
+            new("Description", ModalDialogInputType.Text, true),
+            new("Goals", ModalDialogInputType.Text)
+        };
         
         #endregion
 
@@ -455,6 +475,39 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, type,
                 content, authors, description, goals);
             return Task.CompletedTask;
+        }
+        
+        public IEnumerable<ModalDialogInputField> ModalDialogElementInputFields
+        {
+            get
+            {
+                return new ModalDialogInputField[]
+                {
+                    new("Name", ModalDialogInputType.Text, true),
+                    new("Shortname", ModalDialogInputType.Text, true),
+                    new ModalDialogDropdownInputField("Assign to",
+                        new[]
+                        {
+                            new ModalDialogDropdownInputFieldChoiceMapping(null,
+                                _authoringToolWorkspaceVm.LearningWorlds.Select(world => world.Name).Concat(_authoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces.Select(space => space.Name)))
+                        }, true),
+                    new ModalDialogDropdownInputField("Type",
+                        new[]
+                        {
+                            new ModalDialogDropdownInputFieldChoiceMapping(null,
+                                new[] {"Transfer", "Activation", "Interaction", "Test"})
+                        }, true),
+                    new ModalDialogDropdownInputField("Content",
+                        new[]
+                        {
+                            new ModalDialogDropdownInputFieldChoiceMapping(null,
+                                new[] {"Text", "Picture", "Video"})
+                        }, true),
+                    new("Authors", ModalDialogInputType.Text),
+                    new("Description", ModalDialogInputType.Text, true),
+                    new("Goals", ModalDialogInputType.Text)
+                };
+            } 
         }
         
         #endregion

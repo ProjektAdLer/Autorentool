@@ -55,7 +55,7 @@
 {
     <ModalDialog Title="Create new learning world" Text="Please enter the required data for the learning world below:"
                  OnClose="@OnCreateWorldDialogClose" DialogType=@ModalDialogType.OkCancel
-                 InputFields="@AuthoringToolWorkspaceVm.ModalDialogWorldInputFields">
+                 InputFields="@AuthoringToolWorkspaceP.ModalDialogWorldInputFields">
     </ModalDialog>
 }
 @if (AuthoringToolWorkspaceVm.SelectedLearningWorld != null)
@@ -67,7 +67,7 @@
     {
         <ModalDialog Title="Create new learning space" Text="Please enter the required data for the learning space below:"
                      OnClose="@OnCreateSpaceDialogClose" DialogType=@ModalDialogType.OkCancel
-                     InputFields="@AuthoringToolWorkspaceVm.ModalDialogSpaceInputFields">
+                     InputFields="@AuthoringToolWorkspaceP.ModalDialogSpaceInputFields">
         </ModalDialog>
     }
     <button class="btn btn-primary" @onclick="AddNewLearningElement">Add Learning Element</button>
@@ -76,7 +76,7 @@
     {
         <ModalDialog Title="Create new learning element" Text="Please enter the required data for the learning element below:"
                      OnClose="@OnCreateElementDialogClose" DialogType=@ModalDialogType.OkCancel
-                     InputFields="@AuthoringToolWorkspaceVm.ModalDialogElementInputFields">
+                     InputFields="@AuthoringToolWorkspaceP.ModalDialogElementInputFields">
         </ModalDialog>
     }
     <br>
@@ -123,7 +123,7 @@
 {
     <ModalDialog Title="Create new learning world" Text="Please enter the required data for the learning world below:"
                  OnClose="@OnEditWorldDialogClose" DialogType=@ModalDialogType.OkCancel
-                 InputFields="@AuthoringToolWorkspaceVm.ModalDialogWorldInputFields" InputFieldsInitialValue="@AuthoringToolWorkspaceVm.EditDialogInitialValues">
+                 InputFields="@AuthoringToolWorkspaceP.ModalDialogWorldInputFields" InputFieldsInitialValue="@AuthoringToolWorkspaceVm.EditDialogInitialValues">
     </ModalDialog>
 }
 
@@ -131,7 +131,7 @@
 {
     <ModalDialog Title="Edit existing learning space" Text="Please enter the required data for the learning space below:"
                  OnClose="@OnEditSpaceDialogClose" DialogType=@ModalDialogType.OkCancel
-                 InputFields="@AuthoringToolWorkspaceVm.ModalDialogSpaceInputFields" InputFieldsInitialValue="@AuthoringToolWorkspaceVm.EditDialogInitialValues">
+                 InputFields="@AuthoringToolWorkspaceP.ModalDialogSpaceInputFields" InputFieldsInitialValue="@AuthoringToolWorkspaceVm.EditDialogInitialValues">
     </ModalDialog>
 }
 
@@ -139,7 +139,7 @@
 {
     <ModalDialog Title="Edit existing learning element" Text="Please enter the required data for the learning element below:"
                  OnClose="@OnEditElementDialogClose" DialogType=@ModalDialogType.OkCancel
-                 InputFields="@AuthoringToolWorkspaceVm.ModalDialogElementInputFields" InputFieldsInitialValue="@AuthoringToolWorkspaceVm.EditDialogInitialValues">
+                 InputFields="@AuthoringToolWorkspaceP.ModalDialogElementInputFields" InputFieldsInitialValue="@AuthoringToolWorkspaceVm.EditDialogInitialValues">
     </ModalDialog>
 }
 
