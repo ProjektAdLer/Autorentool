@@ -179,11 +179,11 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             _authoringToolWorkspaceVm.LearningWorlds.Add(learningWorld);
         }
 
-        public void SaveSelectedLearningWorld()
+        public async Task SaveSelectedLearningWorldAsync()
         {
             if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
                 throw new ApplicationException("SelectedLearningWorld is null");
-            _presentationLogic.SaveLearningWorldAsync(_authoringToolWorkspaceVm.SelectedLearningWorld);
+            await _presentationLogic.SaveLearningWorldAsync(_authoringToolWorkspaceVm.SelectedLearningWorld);
         }
 
         public Task OnCreateWorldDialogClose(

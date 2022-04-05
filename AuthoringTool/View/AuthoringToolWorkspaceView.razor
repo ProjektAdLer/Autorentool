@@ -47,7 +47,7 @@
     <button class="btn btn-primary" @onclick="LoadLearningWorld">Load Learning World</button>
     <button class="btn btn-primary" @onclick="OpenEditSelectedLearningWorldDialog" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Edit Learning World</button>
     <button class="btn btn-primary" @onclick="DeleteSelectedLearningWorld" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Delete selected Learning World</button>
-    <button class="btn btn-primary" @onclick="SaveSelectedLearningWorld" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Save selected Learning World</button>
+    <button class="btn btn-primary" @onclick="SaveSelectedLearningWorldAsync" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Save selected Learning World</button>
     <button class="btn btn-primary" id="btnExport" @onclick="Export">Create Export-File</button>
 </div>
 
@@ -185,9 +185,9 @@
         StateHasChanged();
     }
 
-    private void SaveSelectedLearningWorld()
+    private async Task SaveSelectedLearningWorldAsync()
     {
-        AuthoringToolWorkspaceP.SaveSelectedLearningWorld();
+        await AuthoringToolWorkspaceP.SaveSelectedLearningWorldAsync();
     }
 
     private Task OnCreateWorldDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)

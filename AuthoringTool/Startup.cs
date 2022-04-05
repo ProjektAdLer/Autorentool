@@ -63,7 +63,7 @@ public class Startup
         services.AddSingleton<IMouseService, MouseService>();
         if (HybridSupport.IsElectronActive)
         {
-            services.AddSingleton<ElectronDialogManager>();
+            services.AddSingleton<IElectronDialogManager, ElectronDialogManager>();
         }
         else
         {
