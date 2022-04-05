@@ -116,7 +116,7 @@ public class BusinessLogicUt
     public void BusinessLogic_SaveLearningElement_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
-        var learningElement = new LearningElement("fa", "a", "f", "f", "f", "f", "f");
+        var learningElement = new LearningElement("fa", "f","a", "a", "f", "f", "f", "f", "f");
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
@@ -141,7 +141,7 @@ public class BusinessLogicUt
     public void BusinessLogic_LoadLearningElement_ReturnsLearningElement()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
-        var learningElement = new LearningElement("fa", "a", "f", "f", "f", "f", "f");
+        var learningElement = new LearningElement("fa","a","f" ,"a", "f", "f", "f", "f", "f");
         mockDataAccess.LoadLearningElementFromFile("foobar").Returns(learningElement);
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);

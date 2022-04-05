@@ -11,6 +11,8 @@ public class LearningElementUt
     {
         var Name = "asdf";
         var Shortname = "jkl;";
+        var Parent = "Learning World";
+        var Assignment = "Cool World";
         var Type = "h5p";
         var Content = "foo = bar";
         var Authors = "ben and jerry";
@@ -19,7 +21,7 @@ public class LearningElementUt
         var PositionX = 5f;
         var PositionY = 21f;
 
-        var systemUnderTest = new LearningElement(Name, Shortname, Type, Content, Authors, Description, Goals,
+        var systemUnderTest = new LearningElement(Name, Shortname, Parent, Assignment, Type, Content, Authors, Description, Goals,
             PositionX, PositionY);
         
         Assert.Multiple(() =>

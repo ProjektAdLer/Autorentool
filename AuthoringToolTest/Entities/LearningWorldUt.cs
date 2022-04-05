@@ -16,8 +16,8 @@ public class LearningWorldUt
         var Language = "german";
         var Description = "very cool element";
         var Goals = "learn very many things";
-        var ele1 = new LearningElement("a", "b", "c", "d", "e", "f", "g", 17, 23);
-        var ele2 = new LearningElement("z", "zz", "z", "z", "zzz", "z", "z", 444, double.MaxValue);
+        var ele1 = new LearningElement("a", "b", "c", "d", "e", "f", "g","h","i", 17, 23);
+        var ele2 = new LearningElement("z", "zz", "z", "z", "zzz", "z", "z","zz","zzz", 444, double.MaxValue);
         var LearningElements = new List<LearningElement> { ele1, ele2 };
         var space1 = new LearningSpace("ff", "ff", "ff", "ff", "ff");
         var LearningSpaces = new List<LearningSpace> { space1 };

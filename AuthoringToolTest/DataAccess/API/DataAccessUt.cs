@@ -102,7 +102,7 @@ public class DataAccessUt
         var mockFileSaveHandlerElement = Substitute.For<IFileSaveHandler<LearningElement>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerElement: mockFileSaveHandlerElement);
 
-        var learningElement = new LearningElement("f", "f", "f", "f", "f", "f", "f");
+        var learningElement = new LearningElement("f","f","f", "f", "f", "f", "f", "f", "f");
         systemUnderTest.SaveLearningElementToFile(
             learningElement,
             "C:/nonsense");

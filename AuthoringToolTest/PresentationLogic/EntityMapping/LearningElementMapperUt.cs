@@ -12,8 +12,9 @@ public class LearningElementMapperUt
     public void LearningSpaceMapper_ToEntity_MapsPropertiesCorrectly()
     {
         var elementMapper = new LearningElementMapper();
-        var viewModel = new LearningElementViewModel("name", "shortname", "type", "content",
-            "authors", "description", "goals", 1, 2);
+        var viewModel = new LearningElementViewModel("name", "shortname","parent",
+            "assignment", "type", "content", "authors", "description",
+            "goals", 1, 2);
         
         var entity = elementMapper.ToEntity(viewModel);
         Assert.That(entity, Is.Not.Null);
@@ -21,6 +22,8 @@ public class LearningElementMapperUt
         {
             Assert.That(entity.Name, Is.EqualTo(viewModel.Name));
             Assert.That(entity.Shortname, Is.EqualTo(viewModel.Shortname));
+            Assert.That(entity.Parent, Is.EqualTo(viewModel.Parent));
+            Assert.That(entity.Assignment, Is.EqualTo(viewModel.Assignment));
             Assert.That(entity.Type, Is.EqualTo(viewModel.Type));
             Assert.That(entity.Content, Is.EqualTo(viewModel.Content));
             Assert.That(entity.Authors, Is.EqualTo(viewModel.Authors));
@@ -35,8 +38,9 @@ public class LearningElementMapperUt
     public void LearningWorldMapper_ToViewModel_MapsPropertiesCorrectly()
     {
         var elementMapper = new LearningElementMapper();
-        var entity = new AuthoringTool.Entities.LearningElement("name", "shortname", "type","content",
-            "authors", "description", "goals", 1, 2);
+        var entity = new AuthoringTool.Entities.LearningElement("name", "shortname","parent",
+            "assignment", "type","content", "authors", "description",
+            "goals", 1, 2);
 
         var viewModel = elementMapper.ToViewModel(entity);
         Assert.That(viewModel, Is.Not.Null);
@@ -44,6 +48,8 @@ public class LearningElementMapperUt
         {
             Assert.That(viewModel.Name, Is.EqualTo(entity.Name));
             Assert.That(viewModel.Shortname, Is.EqualTo(entity.Shortname));
+            Assert.That(viewModel.Parent, Is.EqualTo(entity.Parent));
+            Assert.That(viewModel.Assignment, Is.EqualTo(entity.Assignment));
             Assert.That(viewModel.Type, Is.EqualTo(entity.Type));
             Assert.That(viewModel.Content, Is.EqualTo(entity.Content));
             Assert.That(viewModel.Authors, Is.EqualTo(entity.Authors));

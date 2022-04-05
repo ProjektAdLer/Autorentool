@@ -31,10 +31,10 @@ public class LearningWorldMapperUt
     {
         var elementMapper = Substitute.For<ILearningElementMapper>();
         var viewModel = new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
-        var element = new LearningElementViewModel("a", "a", "a", "a" ,"a", "a", "a");
+        var element = new LearningElementViewModel("a", "a", "a", "a" ,"a", "a", "a", "a", "a");
         viewModel.LearningElements.Add(element);
 
-        elementMapper.ToEntity(element).Returns(new AuthoringTool.Entities.LearningElement("a","b","c","d","e","f","g"));
+        elementMapper.ToEntity(element).Returns(new AuthoringTool.Entities.LearningElement("a","b","c","d","e","f","g","h","i"));
 
         var systemUnderTest = CreateMapperForTesting(elementMapper: elementMapper);
 
@@ -88,12 +88,12 @@ public class LearningWorldMapperUt
     {
         var elementMapper = Substitute.For<ILearningElementMapper>();
         var entity = new AuthoringTool.Entities.LearningWorld("a", "b", "c", "d", "e", "f");
-        var element = new AuthoringTool.Entities.LearningElement("a","b","c","d","e","f","g");
+        var element = new AuthoringTool.Entities.LearningElement("a","b","c","d","e","f","g","h","i");
       
         entity.LearningElements.Add(element);
 
         elementMapper.ToViewModel(element).Returns(new LearningElementViewModel("a", "a", "a",
-            "a", "a","a", "a"));
+            "a", "a","a", "a","a", "a"));
 
         var systemUnderTest = CreateMapperForTesting(elementMapper: elementMapper);
 

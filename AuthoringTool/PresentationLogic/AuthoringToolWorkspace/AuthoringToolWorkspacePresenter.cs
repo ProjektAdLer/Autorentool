@@ -237,17 +237,23 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             EditSelectedLearningWorld(name, shortname, authors, language, description, goals);
             return Task.CompletedTask;
         }
-        
-        public ModalDialogInputField[] ModalDialogWorldInputFields { get; } =
+
+        public IEnumerable<ModalDialogInputField> ModalDialogWorldInputFields
         {
-            new("Name", ModalDialogInputType.Text, true),
-            new("Shortname", ModalDialogInputType.Text, true),
-            new("Authors", ModalDialogInputType.Text),
-            new("Language", ModalDialogInputType.Text, true),
-            new("Description", ModalDialogInputType.Text, true),
-            new("Goals", ModalDialogInputType.Text)
-        };
-        
+            get
+            {
+                return new ModalDialogInputField[]
+                {
+                    new("Name", ModalDialogInputType.Text, true),
+                    new("Shortname", ModalDialogInputType.Text, true),
+                    new("Authors", ModalDialogInputType.Text),
+                    new("Language", ModalDialogInputType.Text, true),
+                    new("Description", ModalDialogInputType.Text, true),
+                    new("Goals", ModalDialogInputType.Text)
+                };
+            }
+        }
+
         #endregion
 
         #region LearningSpace
@@ -352,16 +358,21 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
                 description, goals);
             return Task.CompletedTask;
         }
-        
-        public ModalDialogInputField[] ModalDialogSpaceInputFields { get; } =
+
+        public IEnumerable<ModalDialogInputField> ModalDialogSpaceInputFields
         {
-            new("Name", ModalDialogInputType.Text, true),
-            new("Shortname", ModalDialogInputType.Text, true),
-            new("Authors", ModalDialogInputType.Text),
-            new("Description", ModalDialogInputType.Text, true),
-            new("Goals", ModalDialogInputType.Text)
-        };
-        
+            get
+            {
+                return new ModalDialogInputField[] {
+                    new("Name", ModalDialogInputType.Text, true),
+                    new("Shortname", ModalDialogInputType.Text, true),
+                    new("Authors", ModalDialogInputType.Text),
+                    new("Description", ModalDialogInputType.Text, true),
+                    new("Goals", ModalDialogInputType.Text)
+                };
+            }
+        }
+
         #endregion
 
         #region LearningElement
@@ -371,19 +382,21 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
         /// </summary>
         /// <param name="name">Name of the element.</param>
         /// <param name="shortname">Shortname of the element.</param>
+        /// <param name="parent">Decides whether the learning element belongs to a learning world or a learning space</param>
+        /// <param name="assignment">Name of the Parent Learning Space or Learning World</param>
         /// <param name="type">The represented type of the element in the space/world.</param>
         /// <param name="content">Describes, which content the element contains.</param>
         /// <param name="authors">A list of authors of the element.</param>
         /// <param name="description">A description of the element.</param>
         /// <param name="goals">The goals of the element.</param>
         /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
-        public void CreateNewLearningElement(string name, string shortname, string type, string content,
-            string authors, string description, string goals)
+        public void CreateNewLearningElement(string name, string shortname, string parent, string assignment,
+            string type, string content, string authors, string description, string goals)
         {
             if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
                 throw new ApplicationException("SelectedLearningWorld is null");
             var learningElement =
-                _learningElementPresenter.CreateNewLearningElement(name, shortname, type,
+                _learningElementPresenter.CreateNewLearningElement(name, shortname, parent, assignment, type,
                     content, authors, description, goals);
             _authoringToolWorkspaceVm.SelectedLearningWorld.LearningElements.Add(learningElement);
             SetSelectedLearningObject(learningElement);
@@ -398,6 +411,8 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             {
                 {"Name", element.Name},
                 {"Shortname", element.Shortname},
+                {"Parent", element.Parent},
+                {"Assignment", element.Assignment},
                 {"Type", element.Type},
                 {"Content", element.Content},
                 {"Authors", element.Authors},
@@ -433,13 +448,15 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             //required arguments
             var name = data["Name"];
             var shortname = data["Shortname"];
+            var parent = data["Parent"];
+            var assignment = data["Assignment"];
             var type = data["Type"];
             var content = data["Content"];
             var description = data["Description"];
             //optional arguments
             var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
             var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
-            CreateNewLearningElement(name, shortname, type, content, authors, description, goals);
+            CreateNewLearningElement(name, shortname, parent, assignment, type, content, authors, description, goals);
             return Task.CompletedTask;
         }
         
@@ -461,6 +478,8 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             //required arguments
             var name = data["Name"];
             var shortname = data["Shortname"];
+            var parent = data["Parent"];
+            var assignment = data["Assignment"];
             var type = data["Type"];
             var content = data["Content"];
             var description = data["Description"];
@@ -472,8 +491,8 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
                 throw new ApplicationException("LearningWorld is null");
             if (_authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject is not LearningElementViewModel
                 learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
-            _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, type,
-                content, authors, description, goals);
+            _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, parent,
+                assignment, type, content, authors, description, goals);
             return Task.CompletedTask;
         }
         
@@ -485,11 +504,19 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
                 {
                     new("Name", ModalDialogInputType.Text, true),
                     new("Shortname", ModalDialogInputType.Text, true),
-                    new ModalDialogDropdownInputField("Assign to",
+                    new ModalDialogDropdownInputField("Parent",
                         new[]
                         {
                             new ModalDialogDropdownInputFieldChoiceMapping(null,
-                                _authoringToolWorkspaceVm.LearningWorlds.Select(world => world.Name).Concat(_authoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces.Select(space => space.Name)))
+                                new[] {"Learning World", "Learning Space"})
+                        }, true),
+                    new ModalDialogDropdownInputField("Assignment",
+                        new[]
+                        {
+                            new ModalDialogDropdownInputFieldChoiceMapping(new Dictionary<string, string> {{"Parent", "Learning Space"}},
+                                _authoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces.Select(space => space.Name)),
+                            new ModalDialogDropdownInputFieldChoiceMapping(new Dictionary<string, string> {{"Parent", "Learning World"}},
+                                _authoringToolWorkspaceVm.LearningWorlds.Select(world => world.Name))
                         }, true),
                     new ModalDialogDropdownInputField("Type",
                         new[]

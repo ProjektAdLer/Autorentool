@@ -17,8 +17,8 @@ public class LearningSpaceUt
         var Goals = "learn very many things";
         var PositionX = 5f;
         var PositionY = 21f;
-        var ele1 = new LearningElement("a", "b", "c", "d", "e", "f", "g", 17, 23);
-        var ele2 = new LearningElement("z", "zz", "z", "z", "zzz", "z", "z", 444, double.MaxValue);
+        var ele1 = new LearningElement("a", "b", "c", "d", "e", "f", "g", "h", "i", 12,15);
+        var ele2 = new LearningElement("z", "zz", "z", "z", "zzz", "z", "z", "a", "b",111, double.MaxValue);
         var LearningElements = new List<LearningElement> { ele1, ele2 };
         
         var systemUnderTest = new LearningSpace(Name, Shortname, Authors, Description, Goals, LearningElements,

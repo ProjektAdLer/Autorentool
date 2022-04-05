@@ -4,6 +4,8 @@ public interface ILearningElement
 {
     string Name { get; set; }
     string Shortname { get; set; }
+    string Parent { get; set; }
+    string Assignment { get; set; }
     string Type { get; set; }
     string Content { get; set; }
     string Authors { get; set; }

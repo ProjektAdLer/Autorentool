@@ -435,15 +435,17 @@ public class AuthoringToolWorkspacePresenterUt
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
         learningElementPresenter.CreateNewLearningElement(Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(),Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), 
             Arg.Any<string>()).Returns(new LearningElementViewModel("foo", "bar",
-            "Transfer", "Video", "foo", "bar", "foo"));
+            "Transfer", "Video","bar","foo", "foo", "bar", "foo"));
 
         var systemUnderTest = CreatePresenterForTesting(workspaceVm,
             learningElementPresenter: learningElementPresenter);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.CreateNewLearningElement("foo",
-            "bar", "foo", "bar", "foo", "bar", "foo"));
+            "bar", "foo","bar","foo", "bar", "foo", "bar",
+            "foo"));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
     
@@ -479,20 +481,21 @@ public class AuthoringToolWorkspacePresenterUt
         workspaceVm.LearningWorlds.Add(world);
         workspaceVm.SelectedLearningWorld = world;
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
-        learningElementPresenter.CreateNewLearningElement(Arg.Any<string>(), Arg.Any<string>(), 
-            Arg.Any<string>(),Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+        learningElementPresenter.CreateNewLearningElement(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(),Arg.Any<string>(),Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<string>()).Returns(new LearningElementViewModel("foo", "bar","foo",
-            "foo", "bar", "foo", "bar"));
+            "foo", "bar", "foo", "bar", "foo", "bar"));
 
         var systemUnderTest = CreatePresenterForTesting(workspaceVm,
             learningElementPresenter:learningElementPresenter);
         
         systemUnderTest.CreateNewLearningElement("foo", "bar", "foo", "bar", "foo",
-            "bar","foo");
+            "bar","foo", "foo", "bar");
 
         learningElementPresenter.Received().CreateNewLearningElement(Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),Arg.Any<string>(),
-            Arg.Any<string>());
+            Arg.Any<string>(), Arg.Any<string>(),Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(),Arg.Any<string>(), Arg.Any<string>());
     }
 
     [Test]
@@ -540,7 +543,7 @@ public class AuthoringToolWorkspacePresenterUt
 
         workspaceVm.SelectedLearningWorld = world;
         systemUnderTest.CreateNewLearningElement("foo", "bar", "foo", "bar",
-            "foo", "bar", "foo");
+            "foo", "bar", "foo", "bar", "foo");
 
         Assert.That(world.LearningElements, Has.Count.EqualTo(1));
         var element = world.LearningElements.First();
@@ -601,21 +604,23 @@ public class AuthoringToolWorkspacePresenterUt
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
         learningElementPresenter.EditLearningElement(Arg.Any<LearningElementViewModel>(), Arg.Any<string>(),
-                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<string>(), Arg.Any<string>())
-            .Returns(new LearningElementViewModel("ba", "ba", "ba", "ba",
-                "ba", "ba", "ba"));
+                Arg.Any<string>(), Arg.Any<string>(),Arg.Any<string>(), Arg.Any<string>(),
+                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+                Arg.Any<string>()).Returns(new LearningElementViewModel("ba", "ba",
+            "ba", "ba", "ba", "ba", "ba", "ba", "ba"));
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         workspaceVm.LearningWorlds.Add(world);
         var element = new LearningElementViewModel("foo", "bar", "foo", "bar", "foo",
-            "bar", "foo");
+            "bar", "foo","bar", "foo");
         world.LearningElements.Add(element);
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "a";
         dictionary["Shortname"] = "b";
+        dictionary["Parent"] = "bb";
+        dictionary["Assignment"] = "bbb";
         dictionary["Type"] = "c";
         dictionary["Content"] = "d";
         dictionary["Authors"] = "e";
@@ -632,8 +637,8 @@ public class AuthoringToolWorkspacePresenterUt
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
-        learningElementPresenter.Received().EditLearningElement(element, "a", "b", "c", "d",
-            "e", "f", "g");
+        learningElementPresenter.Received().EditLearningElement(element, "a", "b","bb",
+            "bbb", "c", "d", "e", "f", "g");
     }
 
     #endregion
@@ -699,7 +704,7 @@ public class AuthoringToolWorkspacePresenterUt
             "foo");
         workspaceVm.LearningWorlds.Add(world);
         workspaceVm.SelectedLearningWorld = world;
-        var element = new LearningElementViewModel("f", "f", "f", "f", "f", "f", "f");
+        var element = new LearningElementViewModel("f", "f", "f", "f", "f", "f", "f", "f", "f");
         world.LearningElements.Add(element);
         world.SelectedLearningObject = element;
 
@@ -758,7 +763,7 @@ public class AuthoringToolWorkspacePresenterUt
         workspaceVm.LearningWorlds.Add(world);
         workspaceVm.SelectedLearningWorld = world;
         var element = new LearningElementViewModel("f", "f", "f", "f", "f",
-            "f", "f");
+            "f", "f","f","f");
         world.LearningElements.Add(element);
         world.SelectedLearningObject = element;
 
@@ -895,7 +900,8 @@ public class AuthoringToolWorkspacePresenterUt
             "foo");
         workspaceVm.LearningWorlds.Add(world);
         workspaceVm.SelectedLearningWorld = world;
-        var element = new LearningElementViewModel("f", "f", "f", "f", "f", "f", "f");
+        var element = new LearningElementViewModel("f", "f","f", "f", "f", "f",
+            "f", "f", "f");
         world.LearningElements.Add(element);
         world.SelectedLearningObject = element;
 
