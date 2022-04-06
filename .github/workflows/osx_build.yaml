@@ -29,7 +29,7 @@ jobs:
             ${{ runner.os }}-nuget
             
       - name: Set up npm
-        uses: setup-node
+        uses: actions/setup-node
         with: 
           node-version: '16'
       
