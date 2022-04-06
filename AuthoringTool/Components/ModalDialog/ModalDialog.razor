@@ -37,19 +37,15 @@
                                 <div class="col">
                                     @if (input is ModalDialogDropdownInputField dropdownInput)
                                     {
-                                        <select @onchange="args => { 
-                                        if (args.Value != null) 
-                                            _inputFieldValues[input.Name] = (string)args.Value;
-                                        EnsureDropdownsUpdated(); }"
+                                        <select @onchange="args => { if (args.Value != null) _inputFieldValues[input.Name] = (string)args.Value; EnsureDropdownsUpdated(); }"
                                                 value="@_inputFieldValues[input.Name]"
                                                 disabled="@(!IsUnlocked(dropdownInput))" id="modal-input-drop-@input.Name.ToLower()">
-                                            @if (!_inputFieldValues.ContainsKey(input.Name))
+                                            @if (_inputFieldValues[input.Name] == "")
                                             {
                                                 <option value=""></option>
                                             }
                                             @if (IsUnlocked(dropdownInput))
                                             {
-                                                <option value=""></option>
                                                 @foreach (var option in dropdownInput.ValuesToChoiceMapping.First(MappingSatisfied).AvailableChoices)
                                                 {
                                                     <option value="@option" id="modal-input-drop-@input.Name.ToLower()-@option.ToLower()">@option</option>
