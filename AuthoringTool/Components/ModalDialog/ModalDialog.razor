@@ -49,6 +49,7 @@
                                             }
                                             @if (IsUnlocked(dropdownInput))
                                             {
+                                                <option value=""></option>
                                                 @foreach (var option in dropdownInput.ValuesToChoiceMapping.First(MappingSatisfied).AvailableChoices)
                                                 {
                                                     <option value="@option" id="modal-input-drop-@input.Name.ToLower()-@option.ToLower()">@option</option>

@@ -193,7 +193,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             CreateLearningWorldDialogOpen = false;
 
             if (response == ModalDialogReturnValue.Cancel) return Task.CompletedTask;
-            if (data == null) throw new ApplicationException("dialog data unexectedly null after Ok return value");
+            if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
 
             foreach (var pair in data)
             {
@@ -378,12 +378,12 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
         #region LearningElement
 
         /// <summary>
-        /// Creates a new learning element in the currently selected learning world.
+        /// Creates a new learning element and assigns it to a learning world or a learning space.
         /// </summary>
         /// <param name="name">Name of the element.</param>
         /// <param name="shortname">Shortname of the element.</param>
         /// <param name="parent">Decides whether the learning element belongs to a learning world or a learning space</param>
-        /// <param name="assignment">Name of the Parent Learning Space or Learning World</param>
+        /// <param name="assignment">Name of the parent learning space or learning World</param>
         /// <param name="type">The represented type of the element in the space/world.</param>
         /// <param name="content">Describes, which content the element contains.</param>
         /// <param name="authors">A list of authors of the element.</param>
@@ -398,7 +398,26 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             var learningElement =
                 _learningElementPresenter.CreateNewLearningElement(name, shortname, parent, assignment, type,
                     content, authors, description, goals);
-            _authoringToolWorkspaceVm.SelectedLearningWorld.LearningElements.Add(learningElement);
+
+            switch (learningElement.Parent)
+            {
+                case null:
+                    throw new ApplicationException("Parent of LearningElement is null");
+                case "Learning World":
+                    _authoringToolWorkspaceVm.SelectedLearningWorld.LearningElements.Add(learningElement);
+                    break;
+                case "Learning Space":
+                    if (learningElement.Assignment == null)
+                        throw new ApplicationException("Dialog data unexpectedly null after Ok return value");
+                    var learningSpaceViewModel = (from space in _authoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces
+                        where space.Name == learningElement.Assignment select space).FirstOrDefault();
+                    if (learningSpaceViewModel == null)
+                        throw new ApplicationException("Selected Parent LearningSpace is null");
+                    learningSpaceViewModel.LearningElements.Add(learningElement);
+                    break;
+                default:
+                    throw new NotImplementedException("Type of Assignment is not implemented");
+            }
             SetSelectedLearningObject(learningElement);
         }
         
@@ -438,7 +457,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             CreateLearningElementDialogOpen = false;
 
             if (response == ModalDialogReturnValue.Cancel) return Task.CompletedTask;
-            if (data == null) throw new ApplicationException("dialog data unexectedly null after Ok return value");
+            if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
 
             foreach (var pair in data)
             {
@@ -515,8 +534,8 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
                         {
                             new ModalDialogDropdownInputFieldChoiceMapping(new Dictionary<string, string> {{"Parent", "Learning Space"}},
                                 _authoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces.Select(space => space.Name)),
-                            new ModalDialogDropdownInputFieldChoiceMapping(new Dictionary<string, string> {{"Parent", "Learning World"}},
-                                _authoringToolWorkspaceVm.LearningWorlds.Select(world => world.Name))
+                            new ModalDialogDropdownInputFieldChoiceMapping(new Dictionary<string, string>{{"Parent", "Learning World"}},
+                                new []{_authoringToolWorkspaceVm.SelectedLearningWorld.Name})
                         }, true),
                     new ModalDialogDropdownInputField("Type",
                         new[]
