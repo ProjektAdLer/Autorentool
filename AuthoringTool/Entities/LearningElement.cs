@@ -3,13 +3,11 @@
 [Serializable]
 public class LearningElement : ILearningElement
 {
-    internal LearningElement(string name, string shortname, string parent, string assignment, string type,
+    internal LearningElement(string name, string shortname, string type, string? parentName,
         string content, string authors, string description, string goals, double positionX = 0, double positionY = 0)
     {
         Name = name;
         Shortname = shortname;
-        Parent = parent;
-        Assignment = assignment;
         Type = type;
         Content = content;
         Authors = authors;
@@ -17,6 +15,7 @@ public class LearningElement : ILearningElement
         Goals = goals;
         PositionX = positionX;
         PositionY = positionY;
+        ParentName = parentName;
     }
     /// <summary>
     /// Constructor for serialization. DO NOT USE FOR NORMAL INITIALIZATION.
@@ -25,8 +24,6 @@ public class LearningElement : ILearningElement
     {
         Name = "";
         Shortname = "";
-        Parent = "";
-        Assignment = "";
         Type = "";
         Content = "";
         Authors = "";
@@ -34,13 +31,12 @@ public class LearningElement : ILearningElement
         Goals = "";
         PositionX = 0;
         PositionY = 0;
+        ParentName = null;
     }
 
 
     public string Name { get; set; }
     public string Shortname { get; set; }
-    public string Parent { get; set; }
-    public string Assignment { get; set; }
     public string Type { get; set; }
     public string Content { get; set; }
     public string Authors { get; set; }
@@ -48,5 +44,6 @@ public class LearningElement : ILearningElement
     public string Goals { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
+    public string? ParentName { get; set; }
 }
 

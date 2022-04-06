@@ -1,3 +1,4 @@
+using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.EntityMapping;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
@@ -31,10 +32,10 @@ public class LearningWorldMapperUt
     {
         var elementMapper = Substitute.For<ILearningElementMapper>();
         var viewModel = new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
-        var element = new LearningElementViewModel("a", "a", "a", "a" ,"a", "a", "a", "a", "a");
+        var element = new LearningElementViewModel("a", "a", null, "a", "a" ,"a", "a", "a");
         viewModel.LearningElements.Add(element);
 
-        elementMapper.ToEntity(element).Returns(new AuthoringTool.Entities.LearningElement("a","b","c","d","e","f","g","h","i"));
+        elementMapper.ToEntity(element).Returns(new AuthoringTool.Entities.LearningElement("a","b","e",null, "f","g","h","i"));
 
         var systemUnderTest = CreateMapperForTesting(elementMapper: elementMapper);
 
@@ -47,11 +48,10 @@ public class LearningWorldMapperUt
     {
         var subElementMapper = Substitute.For<ILearningElementMapper>();
         var spaceMapper = new LearningSpaceMapper(subElementMapper);
-        var elementMapper = new LearningElementMapper();
         var viewModel = new LearningWorldViewModel("name", "shortname", "authors", "language",
             "description", "goals");
 
-        var systemUnderTest = CreateMapperForTesting(spaceMapper, elementMapper);
+        var systemUnderTest = CreateMapperForTesting(spaceMapper);
 
         var entity = systemUnderTest.ToEntity(viewModel);
         Assert.That(entity, Is.Not.Null);
@@ -88,17 +88,17 @@ public class LearningWorldMapperUt
     {
         var elementMapper = Substitute.For<ILearningElementMapper>();
         var entity = new AuthoringTool.Entities.LearningWorld("a", "b", "c", "d", "e", "f");
-        var element = new AuthoringTool.Entities.LearningElement("a","b","c","d","e","f","g","h","i");
+        var element = new AuthoringTool.Entities.LearningElement("a","b","e","poo", "f","g","h","i");
       
         entity.LearningElements.Add(element);
 
-        elementMapper.ToViewModel(element).Returns(new LearningElementViewModel("a", "a", "a",
-            "a", "a","a", "a","a", "a"));
+        elementMapper.ToViewModel(element).Returns(new LearningElementViewModel("a", "a", null, "a",
+            "a", "a","a", "a"));
 
         var systemUnderTest = CreateMapperForTesting(elementMapper: elementMapper);
 
         systemUnderTest.ToViewModel(entity);
-        elementMapper.Received().ToViewModel(element);
+        elementMapper.Received().ToViewModel(element, Arg.Any<ILearningElementViewModelParent?>());
     }
 
     [Test]
@@ -106,11 +106,10 @@ public class LearningWorldMapperUt
     {
         var subElementMapper = Substitute.For<ILearningElementMapper>();
         var spaceMapper = new LearningSpaceMapper(subElementMapper);
-        var elementMapper = new LearningElementMapper();
         var entity = new AuthoringTool.Entities.LearningWorld("name", "shortname", "authors", "language",
             "description", "goals");
 
-        var systemUnderTest = CreateMapperForTesting(spaceMapper, elementMapper);
+        var systemUnderTest = CreateMapperForTesting(spaceMapper);
 
         var viewModel = systemUnderTest.ToViewModel(entity);
         Assert.That(viewModel, Is.Not.Null);

@@ -3,7 +3,7 @@ using AuthoringTool.PresentationLogic.LearningElement;
 
 namespace AuthoringTool.PresentationLogic.LearningSpace;
 
-public class LearningSpaceViewModel : ILearningObjectViewModel
+public class LearningSpaceViewModel : ILearningObjectViewModel, ILearningElementViewModelParent
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="LearningSpaceViewModel"/> class.

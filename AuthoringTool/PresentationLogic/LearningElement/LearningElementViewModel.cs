@@ -17,13 +17,12 @@ public class LearningElementViewModel : ILearningObjectViewModel
     /// <param name="positionX">x-position of the learning element in the workspace</param>
     /// <param name="positionY">y-position of the learning element in the workspace</param>
 
-    public LearningElementViewModel(string name, string shortname, string parent, string assignment, string type,
+    public LearningElementViewModel(string name, string shortname, ILearningElementViewModelParent? parent, string type,
         string content, string authors, string description, string goals, double positionX = 0, double positionY = 0)
     {
         Name = name;
         Shortname = shortname;
         Parent = parent;
-        Assignment = assignment;
         Type = type;
         Content = content;
         Authors = authors;
@@ -36,8 +35,7 @@ public class LearningElementViewModel : ILearningObjectViewModel
     
     public string Name { get; set; }
     public string Shortname { get; set; }
-    public string Parent { get; set; }
-    public string Assignment { get; set; }
+    public ILearningElementViewModelParent? Parent { get; set; }
     public string Type { get; set; }
     public string Content { get; set; }
     public string Authors { get; set; }

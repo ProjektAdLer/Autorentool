@@ -20,8 +20,10 @@ public class LearningSpaceMapper : ILearningSpaceMapper
 
     public LearningSpaceViewModel ToViewModel(Entities.ILearningSpace entity)
     {
-        return new LearningSpaceViewModel(entity.Name, entity.Shortname, entity.Authors, entity.Description,
-            entity.Goals, entity.LearningElements.Select(element => _elementMapper.ToViewModel(element)).ToList(),
-            entity.PositionX, entity.PositionY);
+        var retval = new LearningSpaceViewModel(entity.Name, entity.Shortname, entity.Authors, entity.Description,
+            entity.Goals, null, entity.PositionX, entity.PositionY);
+        retval.LearningElements =
+            entity.LearningElements.Select(element => _elementMapper.ToViewModel(element, retval)).ToList();
+        return retval;
     }
 }

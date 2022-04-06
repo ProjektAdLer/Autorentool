@@ -1,4 +1,6 @@
+using System;
 using AuthoringTool.PresentationLogic.LearningElement;
+using AuthoringTool.PresentationLogic.LearningWorld;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.PresentationLogic.LearningElement;
@@ -11,8 +13,7 @@ public class LearningElementViewModelUt
     {
         var Name = "asdf";
         var Shortname = "jkl;";
-        var Parent = "Learning World";
-        var Assignment = "Cool World";
+        var Parent = new LearningWorldViewModel("foo", "bar", "baz", "", "", "");
         var Type = "h5p";
         var Content = "foo = bar";
         var Authors = "ben and jerry";
@@ -21,7 +22,7 @@ public class LearningElementViewModelUt
         var PositionX = 5f;
         var PositionY = 21f;
 
-        var systemUnderTest = new LearningElementViewModel(Name, Shortname, Parent, Assignment, Type, Content, Authors,
+        var systemUnderTest = new LearningElementViewModel(Name, Shortname, Parent,  Type, Content, Authors,
             Description, Goals, PositionX, PositionY);
         
         Assert.Multiple(() =>
@@ -29,7 +30,6 @@ public class LearningElementViewModelUt
             Assert.That(systemUnderTest.Name, Is.EqualTo(Name));
             Assert.That(systemUnderTest.Shortname, Is.EqualTo(Shortname));
             Assert.That(systemUnderTest.Parent, Is.EqualTo(Parent));
-            Assert.That(systemUnderTest.Assignment, Is.EqualTo(Assignment));
             Assert.That(systemUnderTest.Type, Is.EqualTo(Type));
             Assert.That(systemUnderTest.Content, Is.EqualTo(Content));
             Assert.That(systemUnderTest.Authors, Is.EqualTo(Authors));

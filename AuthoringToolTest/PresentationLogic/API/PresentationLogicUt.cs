@@ -23,7 +23,7 @@ public class PresentationLogicUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockWorldMapper = Substitute.For<ILearningWorldMapper>();
         var mockSpaceMapper = Substitute.For<ILearningSpaceMapper>();
-        var mockElementMapper = Substitute.For<LearningElementMapper>();
+        var mockElementMapper = Substitute.For<ILearningElementMapper>();
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         var mockLogger = Substitute.For<ILogger<AuthoringTool.PresentationLogic.API.PresentationLogic>>();
 

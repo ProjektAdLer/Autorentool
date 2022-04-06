@@ -26,9 +26,12 @@ public class LearningWorldMapper : ILearningWorldMapper
 
     public LearningWorldViewModel ToViewModel(ILearningWorld entity)
     {
-        return new LearningWorldViewModel(entity.Name, entity.Shortname, entity.Authors, entity.Language,
+        var retval = new LearningWorldViewModel(entity.Name, entity.Shortname, entity.Authors, entity.Language,
             entity.Description, entity.Goals,
-            entity.LearningElements.Select(element => _elementMapper.ToViewModel(element)).ToList(),
+            null,
             entity.LearningSpaces.Select(space => _spaceMapper.ToViewModel(space)).ToList());
+        retval.LearningElements = entity.LearningElements.Select(element => _elementMapper.ToViewModel(element, retval))
+            .ToList();
+        return retval;
     }
 }

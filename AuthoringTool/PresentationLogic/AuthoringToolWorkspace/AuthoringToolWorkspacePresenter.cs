@@ -383,37 +383,28 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
         /// <param name="name">Name of the element.</param>
         /// <param name="shortname">Shortname of the element.</param>
         /// <param name="parent">Decides whether the learning element belongs to a learning world or a learning space</param>
-        /// <param name="assignment">Name of the parent learning space or learning World</param>
         /// <param name="type">The represented type of the element in the space/world.</param>
         /// <param name="content">Describes, which content the element contains.</param>
         /// <param name="authors">A list of authors of the element.</param>
         /// <param name="description">A description of the element.</param>
         /// <param name="goals">The goals of the element.</param>
         /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
-        public void CreateNewLearningElement(string name, string shortname, string parent, string assignment,
+        public void CreateNewLearningElement(string name, string shortname, ILearningElementViewModelParent parent,
             string type, string content, string authors, string description, string goals)
         {
             if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
                 throw new ApplicationException("SelectedLearningWorld is null");
             var learningElement =
-                _learningElementPresenter.CreateNewLearningElement(name, shortname, parent, assignment, type,
+                _learningElementPresenter.CreateNewLearningElement(name, shortname, parent, type,
                     content, authors, description, goals);
 
-            switch (learningElement.Parent)
+            switch (parent)
             {
-                case null:
-                    throw new ApplicationException("Parent of LearningElement is null");
-                case "Learning World":
+                case LearningWorldViewModel:
                     _authoringToolWorkspaceVm.SelectedLearningWorld.LearningElements.Add(learningElement);
                     break;
-                case "Learning Space":
-                    if (learningElement.Assignment == null)
-                        throw new ApplicationException("Dialog data unexpectedly null after Ok return value");
-                    var learningSpaceViewModel = (from space in _authoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces
-                        where space.Name == learningElement.Assignment select space).FirstOrDefault();
-                    if (learningSpaceViewModel == null)
-                        throw new ApplicationException("Selected Parent LearningSpace is null");
-                    learningSpaceViewModel.LearningElements.Add(learningElement);
+                case LearningSpaceViewModel space:
+                    space.LearningElements.Add(learningElement);
                     break;
                 default:
                     throw new NotImplementedException("Type of Assignment is not implemented");
@@ -430,8 +421,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             {
                 {"Name", element.Name},
                 {"Shortname", element.Shortname},
-                {"Parent", element.Parent},
-                {"Assignment", element.Assignment},
+                {"Parent", element.Parent.Name},
                 {"Type", element.Type},
                 {"Content", element.Content},
                 {"Authors", element.Authors},
@@ -448,7 +438,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
                 throw new ApplicationException("SelectedLearningWorld is null");
             _authoringToolWorkspaceVm.SelectedLearningWorld.LearningElements.Add(learningElement);
         }
-        
+
 
         public Task OnCreateElementDialogClose(
             Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
@@ -469,16 +459,40 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             var shortname = data["Shortname"];
             var parent = data["Parent"];
             var assignment = data["Assignment"];
+            var parentElement = GetLearningElementParent(parent, assignment);
+
             var type = data["Type"];
             var content = data["Content"];
             var description = data["Description"];
             //optional arguments
             var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
             var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
-            CreateNewLearningElement(name, shortname, parent, assignment, type, content, authors, description, goals);
+            CreateNewLearningElement(name, shortname, parentElement, type, content, authors, description, goals);
             return Task.CompletedTask;
         }
-        
+
+        private ILearningElementViewModelParent GetLearningElementParent(string parent, string assignment)
+        {
+            ILearningElementViewModelParent? parentElement;
+            if (parent == "Learning space")
+            {
+                parentElement =
+                    _authoringToolWorkspaceVm.SelectedLearningWorld?.LearningSpaces.FirstOrDefault(space =>
+                        space.Name == assignment);
+            }
+            else
+            {
+                parentElement = _authoringToolWorkspaceVm.SelectedLearningWorld;
+            }
+
+            if (parentElement == null)
+            {
+                throw new Exception("no parent for element");
+            }
+
+            return parentElement;
+        }
+
         public Task OnEditElementDialogClose(
             Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
         {
@@ -499,6 +513,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             var shortname = data["Shortname"];
             var parent = data["Parent"];
             var assignment = data["Assignment"];
+            var parentElement = GetLearningElementParent(parent, assignment);
             var type = data["Type"];
             var content = data["Content"];
             var description = data["Description"];
@@ -510,8 +525,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
                 throw new ApplicationException("LearningWorld is null");
             if (_authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject is not LearningElementViewModel
                 learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
-            _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, parent,
-                assignment, type, content, authors, description, goals);
+            _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, parentElement, type, content, authors, description, goals);
             return Task.CompletedTask;
         }
         
