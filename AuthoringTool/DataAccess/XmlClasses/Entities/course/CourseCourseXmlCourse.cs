@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System;
+using System.Xml.Serialization;
 using AuthoringTool.DataAccess.WorldExport;
 
 namespace AuthoringTool.DataAccess.XmlClasses.course;

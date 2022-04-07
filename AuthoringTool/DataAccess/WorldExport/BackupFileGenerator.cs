@@ -45,6 +45,7 @@ public class BackupFileGenerator : IBackupFileGenerator
     /// </summary>
     public void WriteXMLFiles()
     {
+        var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
         var xmlEntityManager = new XmlEntityManager();
         xmlEntityManager.GetFactories();
     }

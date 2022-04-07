@@ -1,6 +1,7 @@
 ﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.WorldExport;
+using Microsoft.VisualBasic.FileIO;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.WorldExport;
@@ -45,7 +46,6 @@ public class BackupFileGeneratorUt
         var tempDir = backupFileGen.GetTempDir();
         
         //Assert
-        var createdTempDir = mockFileSystem.Directory.GetDirectories(tempDir);
         Assert.That(tempDir, Contains.Substring("temp"));
     }
 
@@ -72,5 +72,22 @@ public class BackupFileGeneratorUt
         Assert.That(copiedFile, Contains.Item(fullPathFile));
     }
 
+    /*
+    [Test]
+    public void BackupFileGenerator_WriteBackupFile_BackupFileCreated()
+    {
+        //Arrange 
+        var mockFileSystem = new MockFileSystem();
+        var backupFileGen = new BackupFileGenerator(mockFileSystem);
+        backupFileGen.CreateBackupFolders();
+        var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        backupFileGen.WriteXMLFiles();
+        
+        //Act
+        backupFileGen.WriteBackupFile();
+        
+        //Assert
+
+    }*/
     
 }
