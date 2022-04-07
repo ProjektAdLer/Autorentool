@@ -31,16 +31,19 @@ public class FilesXmlUt
         //Arrange 
         var mockFileSystem = new MockFileSystem();
         var backupFileGen = new BackupFileGenerator(mockFileSystem);
+        var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        
         backupFileGen.CreateBackupFolders();
         var filesFiles = new FilesXmlFiles();
         filesFiles.SetParameters();
-
+        
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
         filesFiles.Serialize();
         
         //Assert
-        Assert.That(mockFileSystem.FileExists("C:\\XMLFilesForExport\\files.xml"), Is.True);
+        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport\\files.xml");
+        Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
     
     

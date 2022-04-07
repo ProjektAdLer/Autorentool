@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions.TestingHelpers;
+﻿using System.IO;
+using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.DataAccess.XmlClasses;
 using NUnit.Framework;
@@ -28,6 +29,7 @@ public class QuestionsXmlUt
         var mockFileSystem = new MockFileSystem();
         var backupFileGen = new BackupFileGenerator(mockFileSystem);
         backupFileGen.CreateBackupFolders();
+        var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
         var questionsQuestionsCategories = new QuestionsXmlQuestionsCategories();
         questionsQuestionsCategories.SetParameters();
@@ -37,7 +39,8 @@ public class QuestionsXmlUt
         questionsQuestionsCategories.Serialize();
         
         //Assert
-        Assert.That(mockFileSystem.FileExists("C:\\XMLFilesForExport\\questions.xml"), Is.True);
+        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport\\questions.xml");
+        Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
     
 }

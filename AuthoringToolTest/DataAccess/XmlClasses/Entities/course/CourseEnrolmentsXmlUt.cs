@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.DataAccess.XmlClasses.course;
@@ -81,6 +82,7 @@ public class CourseEnrolmentsXmlUt
         var mockFileSystem = new MockFileSystem();
         var backupFileGen = new BackupFileGenerator(mockFileSystem);
         backupFileGen.CreateBackupFolders();
+        var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
         var enrolmentsEnrol1 = new CourseEnrolmentsXmlEnrol();
         enrolmentsEnrol1.SetParametersShort("5", "153", "manual", "0");
@@ -98,6 +100,7 @@ public class CourseEnrolmentsXmlUt
         enrolmentsEnrolments.Serialize();
         
         //Assert
-        Assert.That(mockFileSystem.FileExists("C:\\XMLFilesForExport\\course\\enrolments.xml"), Is.True);
+        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport\\course\\enrolments.xml");
+        Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions.TestingHelpers;
+﻿using System.IO;
+using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.DataAccess.XmlClasses.course;
 using NUnit.Framework;
@@ -34,6 +35,7 @@ public class CourseRolesXmlUt
         var mockFileSystem = new MockFileSystem();
         var backupFileGen = new BackupFileGenerator(mockFileSystem);
         backupFileGen.CreateBackupFolders();
+        var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
         var rolesRoles = new CourseRolesXmlRoles();
         rolesRoles.SetParameters("", "");
@@ -43,6 +45,7 @@ public class CourseRolesXmlUt
         rolesRoles.Serialize();
         
         //Assert
-        Assert.That(mockFileSystem.FileExists("C:\\XMLFilesForExport\\course\\roles.xml"), Is.True);
+        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport\\course\\roles.xml");
+        Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
 }

@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions.TestingHelpers;
+﻿using System.IO;
+using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.DataAccess.XmlClasses;
 using NUnit.Framework;
@@ -46,6 +47,7 @@ public class GroupsXmlUt
         var mockFileSystem = new MockFileSystem();
         var backupFileGen = new BackupFileGenerator(mockFileSystem);
         backupFileGen.CreateBackupFolders();
+        var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
         var groupingsList = new GroupsXmlGroupingsList();
         groupingsList.SetParameters("");
@@ -57,7 +59,8 @@ public class GroupsXmlUt
         groups.Serialize();
         
         //Assert
-        Assert.That(mockFileSystem.FileExists("C:\\XMLFilesForExport\\groups.xml"), Is.True);
+        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport\\groups.xml");
+        Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
 }
     

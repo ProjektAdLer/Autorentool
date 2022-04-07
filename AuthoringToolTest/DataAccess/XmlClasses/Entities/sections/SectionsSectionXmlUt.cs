@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions.TestingHelpers;
+﻿using System.IO;
+using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.DataAccess.XmlClasses;
 using AuthoringTool.DataAccess.XmlClasses.sections;
@@ -35,6 +36,7 @@ public class SectionsSectionXmlUt
         var mockFileSystem = new MockFileSystem();
         var backupFileGen = new BackupFileGenerator(mockFileSystem);
         backupFileGen.CreateBackupFolders();
+        var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
         var sectionSection = new SectionsSectionXmlSection();
         sectionSection.SetParameters("160","1");
@@ -44,6 +46,7 @@ public class SectionsSectionXmlUt
         sectionSection.Serialize();
         
         //Assert
-        Assert.That(mockFileSystem.FileExists("C:\\XMLFilesForExport\\sections\\section_160\\section.xml"), Is.True);
+        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport\\sections\\section_160\\section.xml");
+        Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
 }

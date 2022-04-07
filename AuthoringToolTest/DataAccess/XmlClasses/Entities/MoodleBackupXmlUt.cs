@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.DataAccess.XmlClasses;
@@ -272,6 +273,7 @@ public class MoodleBackupXmlUt
         var mockFileSystem = new MockFileSystem();
         var backupFileGen = new BackupFileGenerator(mockFileSystem);
         backupFileGen.CreateBackupFolders();
+        var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
         var moodlebackupDetail = new MoodleBackupXmlDetail();
         moodlebackupDetail.SetParameters("6a4e8e833791eb72e5f3ee2227ee1b74");
@@ -376,7 +378,8 @@ public class MoodleBackupXmlUt
         moodlebackup.Serialize();
         
         //Assert
-        Assert.That(mockFileSystem.FileExists("C:\\XMLFilesForExport\\moodle_backup.xml"), Is.True);
+        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport\\moodle_backup.xml");
+        Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
 
 }
