@@ -1,10 +1,8 @@
 ﻿@page "/AuthoringToolWorkspaceView"
-@using AuthoringTool.Components
 @using AuthoringTool.Components.ModalDialog
 @using AuthoringTool.PresentationLogic.API
 @using AuthoringTool.PresentationLogic.AuthoringToolWorkspace
-@using AuthoringTool.PresentationLogic.LearningElement
-@using AuthoringTool.PresentationLogic.LearningSpace
+@using AuthoringTool.View.LearningWorld
 @using static System.IO.Directory;
 @inject IMouseService _mouseService
 @inject ILogger<AuthoringToolWorkspaceView> _logger
@@ -60,63 +58,8 @@
 }
 @if (AuthoringToolWorkspaceVm.SelectedLearningWorld != null)
 {
-    <br>
-    <button class="btn btn-primary" @onclick="AddNewLearningSpace">Add Learning Space</button>
-    <button class="btn btn-primary" @onclick="LoadLearningSpace">Load Learning Space</button>
-    @if (AuthoringToolWorkspaceP.CreateLearningSpaceDialogueOpen)
-    {
-        <ModalDialog Title="Create new learning space" Text="Please enter the required data for the learning space below:"
-                     OnClose="@OnCreateSpaceDialogClose" DialogType=@ModalDialogType.OkCancel
-                     InputFields="@AuthoringToolWorkspaceP.ModalDialogSpaceInputFields">
-        </ModalDialog>
-    }
-    <button class="btn btn-primary" @onclick="AddNewLearningElement">Add Learning Element</button>
-    <button class="btn btn-primary" @onclick="LoadLearningElement">Load Learning Element</button>
-    @if (AuthoringToolWorkspaceP.CreateLearningElementDialogOpen)
-    {
-        <ModalDialog Title="Create new learning element" Text="Please enter the required data for the learning element below:"
-                     OnClose="@OnCreateElementDialogClose" DialogType=@ModalDialogType.OkCancel
-                     InputFields="@AuthoringToolWorkspaceP.ModalDialogElementInputFields">
-        </ModalDialog>
-    }
-    <br>
-    <label>
-        Selected element:
-        @if (AuthoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject != null)
-        {
-            <text>@AuthoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Name
-                , Description:
-                @AuthoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject.Description
-            </text>
-            <br>
-            <button class="btn btn-primary" @onclick="EditLearningObject">Edit selected Learning Object</button>
-            <button class="btn btn-primary" @onclick="DeleteSelectedLearningObject">Delete Learning Object</button>
-            <button class="btn btn-primary" @onclick="SaveSelectedLearningObject">Save selected Learning Object</button>
-        }
-    </label>
-    <svg style="width: 100%; height: 600px; border: 1px solid green"
-         xmlns="http://www.w3.org/2000/svg"
-         @onmousemove=@(e => _mouseService.FireMove(this, e))
-         @onmouseup=@(e => _mouseService.FireUp(this, e))
-         @onmouseleave=@(() => _mouseService.FireOut(this, null))>
-        @foreach (var learningObject in AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningObjects)
-        {
-            <Draggable LearningObject="learningObject" OnClicked="@AuthoringToolWorkspaceP.SetSelectedLearningObject"
-                       @bind-X="@learningObject.PositionX" @bind-Y="@learningObject.PositionY">
-                @{
-                    var color = learningObject switch
-                    {
-                        LearningSpaceViewModel => "lightgreen",
-                        LearningElementViewModel => "blue",
-                        _ => "grey"
-                        };
-                }
-                <rect height="50" width="60" fill=@color></rect>
-                <text x="3" y="15">@learningObject.Name</text>
-
-            </Draggable>
-        }
-    </svg>
+    <LearningWorldView>
+    </LearningWorldView>
 }
 
 @if (AuthoringToolWorkspaceP.EditLearningWorldDialogOpen)
@@ -127,21 +70,6 @@
     </ModalDialog>
 }
 
-@if (AuthoringToolWorkspaceP.EditLearningSpaceDialogOpen)
-{
-    <ModalDialog Title="Edit existing learning space" Text="Please enter the required data for the learning space below:"
-                 OnClose="@OnEditSpaceDialogClose" DialogType=@ModalDialogType.OkCancel
-                 InputFields="@AuthoringToolWorkspaceP.ModalDialogSpaceInputFields" InputFieldsInitialValue="@AuthoringToolWorkspaceVm.EditDialogInitialValues">
-    </ModalDialog>
-}
-
-@if (AuthoringToolWorkspaceP.EditLearningElementDialogOpen)
-{
-    <ModalDialog Title="Edit existing learning element" Text="Please enter the required data for the learning element below:"
-                 OnClose="@OnEditElementDialogClose" DialogType=@ModalDialogType.OkCancel
-                 InputFields="@AuthoringToolWorkspaceP.ModalDialogElementInputFields" InputFieldsInitialValue="@AuthoringToolWorkspaceVm.EditDialogInitialValues">
-    </ModalDialog>
-}
 
 @code {
 
@@ -199,66 +127,7 @@
     {
         return AuthoringToolWorkspaceP.OnEditWorldDialogClose(returnValueTuple);
     }
-
-    private void AddNewLearningSpace()
-    {
-        AuthoringToolWorkspaceP.CreateLearningSpaceDialogueOpen = true;
-    }
-
-    private void AddNewLearningElement()
-    {
-        AuthoringToolWorkspaceP.CreateLearningElementDialogOpen = true;
-    }
-
-    private void DeleteSelectedLearningObject()
-    {
-        AuthoringToolWorkspaceP.DeleteSelectedLearningObject();
-    }
-
-    private async void LoadLearningSpace()
-    {
-        await AuthoringToolWorkspaceP.LoadLearningSpace();
-    //we need to tell blazor explicitly to re-render our component after we added the loaded learning object
-        StateHasChanged();
-    }
     
-    private async void LoadLearningElement()
-    {
-        await AuthoringToolWorkspaceP.LoadLearningElement();
-    //we need to tell blazor explicitly to re-render our component after we added the loaded learning object
-        StateHasChanged();
-    }
-
-    private void SaveSelectedLearningObject()
-    {
-        AuthoringToolWorkspaceP.SaveSelectedLearningObject();
-    }
-
-    private Task OnCreateSpaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
-    {
-        return AuthoringToolWorkspaceP.OnCreateSpaceDialogClose(returnValueTuple);
-    }
-
-    private Task OnCreateElementDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
-    {
-        return AuthoringToolWorkspaceP.OnCreateElementDialogClose(returnValueTuple);
-    }
-
-    private void EditLearningObject()
-    {
-        AuthoringToolWorkspaceP.OpenEditSelectedLearningObjectDialog();
-    }
-
-    private Task OnEditSpaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
-    {
-        return AuthoringToolWorkspaceP.OnEditSpaceDialogClose(returnValueTuple);
-    }
-
-    private Task OnEditElementDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
-    {
-        return AuthoringToolWorkspaceP.OnEditElementDialogClose(returnValueTuple);
-    }
-
 
     /// Export Learningworld
     private string filePath = "";
