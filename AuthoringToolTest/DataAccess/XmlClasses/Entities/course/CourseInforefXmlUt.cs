@@ -1,4 +1,6 @@
-﻿using AuthoringTool.DataAccess.XmlClasses.course;
+﻿using System.IO.Abstractions.TestingHelpers;
+using AuthoringTool.DataAccess.WorldExport;
+using AuthoringTool.DataAccess.XmlClasses.course;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.course;
@@ -49,6 +51,30 @@ public class CourseInforefXmlUt
         
         //Assert
         Assert.That(inforefInforef.Roleref, Is.EqualTo(inforefRoleref));
+    }
+    
+    [Test]
+
+    public void CourseInforefXmlInforef_Serialize_XmlFileWritten()
+    {
+        //Arrange 
+        var mockFileSystem = new MockFileSystem();
+        var backupFileGen = new BackupFileGenerator(mockFileSystem);
+        backupFileGen.CreateBackupFolders();
+        
+        var inforefRole = new CourseInforefXmlRole();
+        inforefRole.SetParameters("5");
+        var inforefRoleref = new CourseInforefXmlRoleref();
+        inforefRoleref.SetParameters(inforefRole);
+        var inforefInforef = new CourseInforefXmlInforef();
+        inforefInforef.SetParameters(inforefRoleref);
+
+        //Act
+        XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
+        inforefInforef.Serialize();
+        
+        //Assert
+        Assert.That(mockFileSystem.FileExists("C:\\XMLFilesForExport\\course\\inforef.xml"), Is.True);
     }
     
 }

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.IO.Abstractions.TestingHelpers;
+using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.DataAccess.XmlClasses.course;
 using NUnit.Framework;
 
@@ -69,5 +71,33 @@ public class CourseEnrolmentsXmlUt
         
         //Assert
         Assert.That(enrolmentsEnrolments.Enrols, Is.EqualTo(enrolmentsEnrols));
+    }
+    
+    [Test]
+
+    public void CourseEnrolmentsXmlEnrolments_Serialize_XmlFileWritten()
+    {
+        //Arrange 
+        var mockFileSystem = new MockFileSystem();
+        var backupFileGen = new BackupFileGenerator(mockFileSystem);
+        backupFileGen.CreateBackupFolders();
+        
+        var enrolmentsEnrol1 = new CourseEnrolmentsXmlEnrol();
+        enrolmentsEnrol1.SetParametersShort("5", "153", "manual", "0");
+        var enrolmentsEnrol2 = new CourseEnrolmentsXmlEnrol();
+        enrolmentsEnrol2.SetParametersShort("0", "154", "guest", "1");
+        var enrolmentsEnrol3 = new CourseEnrolmentsXmlEnrol();
+        enrolmentsEnrol3.SetParametersFull("5", "155", "self", "1", "0", "0", "0", "1", "0", "1");
+        var enrolmentsEnrols = new CourseEnrolmentsXmlEnrols();
+        enrolmentsEnrols.SetParameters(enrolmentsEnrol1, enrolmentsEnrol2, enrolmentsEnrol3);
+        var enrolmentsEnrolments = new CourseEnrolmentsXmlEnrolments();
+        enrolmentsEnrolments.SetParameters(enrolmentsEnrols);
+
+        //Act
+        XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
+        enrolmentsEnrolments.Serialize();
+        
+        //Assert
+        Assert.That(mockFileSystem.FileExists("C:\\XMLFilesForExport\\course\\enrolments.xml"), Is.True);
     }
 }

@@ -1,4 +1,6 @@
-﻿using AuthoringTool.DataAccess.XmlClasses;
+﻿using System.IO.Abstractions.TestingHelpers;
+using AuthoringTool.DataAccess.WorldExport;
+using AuthoringTool.DataAccess.XmlClasses;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.XmlClasses.Entities;
@@ -35,6 +37,27 @@ public class GroupsXmlUt
         //Assert
         Assert.That(groupingsList.Groupings, Is.EqualTo(""));
 
+    }
+    
+    [Test]
+    public void GroupsXmlGroupingsList_Serialize_XmlFileWritten()
+    {
+        //Arrange 
+        var mockFileSystem = new MockFileSystem();
+        var backupFileGen = new BackupFileGenerator(mockFileSystem);
+        backupFileGen.CreateBackupFolders();
+        
+        var groupingsList = new GroupsXmlGroupingsList();
+        groupingsList.SetParameters("");
+        var groups = new GroupsXmlGroups();
+        groups.SetParameters(groupingsList);
+
+        //Act
+        XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
+        groups.Serialize();
+        
+        //Assert
+        Assert.That(mockFileSystem.FileExists("C:\\XMLFilesForExport\\groups.xml"), Is.True);
     }
 }
     

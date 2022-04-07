@@ -1,4 +1,6 @@
-﻿using AuthoringTool.DataAccess.XmlClasses.course;
+﻿using System.IO.Abstractions.TestingHelpers;
+using AuthoringTool.DataAccess.WorldExport;
+using AuthoringTool.DataAccess.XmlClasses.course;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.course;
@@ -22,5 +24,25 @@ public class CourseRolesXmlUt
             Assert.That(rolesRoles.Role_assignments, Is.EqualTo(""));
             
         });
+    }
+    
+    [Test]
+
+    public void CourseInforefXmlInforef_Serialize_XmlFileWritten()
+    {
+        //Arrange 
+        var mockFileSystem = new MockFileSystem();
+        var backupFileGen = new BackupFileGenerator(mockFileSystem);
+        backupFileGen.CreateBackupFolders();
+        
+        var rolesRoles = new CourseRolesXmlRoles();
+        rolesRoles.SetParameters("", "");
+
+        //Act
+        XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
+        rolesRoles.Serialize();
+        
+        //Assert
+        Assert.That(mockFileSystem.FileExists("C:\\XMLFilesForExport\\course\\roles.xml"), Is.True);
     }
 }

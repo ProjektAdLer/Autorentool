@@ -1,4 +1,6 @@
-﻿using AuthoringTool.DataAccess.XmlClasses;
+﻿using System.IO.Abstractions.TestingHelpers;
+using AuthoringTool.DataAccess.WorldExport;
+using AuthoringTool.DataAccess.XmlClasses;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.XmlClasses.Entities;
@@ -58,5 +60,28 @@ public class GradebookXmlUt
             Assert.That(gradeSetting.Name, Is.EqualTo("minmaxtouse"));
             Assert.That(gradeSetting.Value, Is.EqualTo("1"));
         });
+    }
+    
+    [Test]
+    public void GradebookXmlSetting_Serialize_XmlFileWritten()
+    {
+        //Arrange 
+        var mockFileSystem = new MockFileSystem();
+        var backupFileGen = new BackupFileGenerator(mockFileSystem);
+        backupFileGen.CreateBackupFolders();
+        
+        var gradebookSetting = new GradebookXmlGradeSetting();
+        gradebookSetting.SetParameters("minmaxtouse", "1");
+        var gradebookSettings = new GradebookXmlGradeSettings();
+        gradebookSettings.SetParameters(gradebookSetting);
+        var gradebook = new GradebookXmlGradebook();
+        gradebook.SetParameters(gradebookSettings);
+
+        //Act
+        XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
+        gradebook.Serialize();
+        
+        //Assert
+        Assert.That(mockFileSystem.FileExists("C:\\XMLFilesForExport\\gradebook.xml"), Is.True);
     }
 }

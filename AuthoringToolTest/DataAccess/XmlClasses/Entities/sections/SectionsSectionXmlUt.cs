@@ -1,4 +1,7 @@
-﻿using AuthoringTool.DataAccess.XmlClasses.sections;
+﻿using System.IO.Abstractions.TestingHelpers;
+using AuthoringTool.DataAccess.WorldExport;
+using AuthoringTool.DataAccess.XmlClasses;
+using AuthoringTool.DataAccess.XmlClasses.sections;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.sections;
@@ -7,20 +10,40 @@ namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.sections;
 public class SectionsSectionXmlUt
 {
     [Test]
-    public void SectionsSectioneXmlSection_SetParameters_ObjectsAreEqual()
+    public void SectionsSectionXmlSection_SetParameters_ObjectsAreEqual()
     {
         //Arrange
         var sectionSection = new SectionsSectionXmlSection();
-        
+
         //Act
-        sectionSection.SetParameters("160","1");
-        
+        sectionSection.SetParameters("160", "1");
+
         //Assert
         Assert.Multiple(() =>
         {
             Assert.That(sectionSection.Id, Is.EqualTo("160"));
             Assert.That(sectionSection.Number, Is.EqualTo("1"));
-            
+
         });
+    }
+
+    [Test]
+
+    public void SectionsSectionXmlSection_Serialize_XmlFileWritten()
+    {
+        //Arrange 
+        var mockFileSystem = new MockFileSystem();
+        var backupFileGen = new BackupFileGenerator(mockFileSystem);
+        backupFileGen.CreateBackupFolders();
+        
+        var sectionSection = new SectionsSectionXmlSection();
+        sectionSection.SetParameters("160","1");
+
+        //Act
+        XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
+        sectionSection.Serialize();
+        
+        //Assert
+        Assert.That(mockFileSystem.FileExists("C:\\XMLFilesForExport\\sections\\section_160\\section.xml"), Is.True);
     }
 }

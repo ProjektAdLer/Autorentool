@@ -1,4 +1,7 @@
-﻿using AuthoringTool.DataAccess.XmlClasses.course;
+﻿using System.IO.Abstractions.TestingHelpers;
+using AuthoringTool.DataAccess.WorldExport;
+using AuthoringTool.DataAccess.XmlClasses.course;
+using AuthoringTool.DataAccess.XmlClasses.sections;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.course;
@@ -37,5 +40,27 @@ public class CourseCourseXmlUt
         
         //Assert
         Assert.That(courseCourse.Category, Is.EqualTo(courseCategory));
+    }
+    
+    [Test]
+
+    public void CourseCourseXmlCourse_Serialize_XmlFileWritten()
+    {
+        //Arrange 
+        var mockFileSystem = new MockFileSystem();
+        var backupFileGen = new BackupFileGenerator(mockFileSystem);
+        backupFileGen.CreateBackupFolders();
+        
+        var courseCategory = new CourseCourseXmlCategory();
+        courseCategory.SetParameters("Miscellaneous", "$@NULL@$", "1"); 
+        var courseCourse = new CourseCourseXmlCourse();
+        courseCourse.SetParameters(courseCategory);
+
+        //Act
+        XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
+        courseCourse.Serialize();
+        
+        //Assert
+        Assert.That(mockFileSystem.FileExists("C:\\XMLFilesForExport\\course\\course.xml"), Is.True);
     }
 }

@@ -30,7 +30,7 @@ public class XmlSerialize
         XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
         ns.Add("", "");
         XmlSerializer x = new XmlSerializer(xml.GetType());
-        using var stream = File.OpenWrite(path_2);
+        using var stream = _fileSystem.File.OpenWrite(path_2);
         using (var xmlWriter = XmlWriter.Create(stream, settings))
         {
             x.Serialize(xmlWriter, xml, ns);
