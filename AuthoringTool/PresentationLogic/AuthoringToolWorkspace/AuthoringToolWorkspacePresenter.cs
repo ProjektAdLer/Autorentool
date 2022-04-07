@@ -541,14 +541,14 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
                         new[]
                         {
                             new ModalDialogDropdownInputFieldChoiceMapping(null,
-                                new[] {"Learning World", "Learning Space"})
+                                new[] {"Learning world", "Learning space"})
                         }, true),
                     new ModalDialogDropdownInputField("Assignment",
                         new[]
                         {
-                            new ModalDialogDropdownInputFieldChoiceMapping(new Dictionary<string, string> {{"Parent", "Learning Space"}},
-                                _authoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces.Select(space => space.Name)),
-                            new ModalDialogDropdownInputFieldChoiceMapping(new Dictionary<string, string>{{"Parent", "Learning World"}},
+                            new ModalDialogDropdownInputFieldChoiceMapping(new Dictionary<string, string> {{"Parent", "Learning space"}},
+                                _authoringToolWorkspaceVm.SelectedLearningWorld!.LearningSpaces.Select(space => space.Name)),
+                            new ModalDialogDropdownInputFieldChoiceMapping(new Dictionary<string, string>{{"Parent", "Learning world"}},
                                 new []{_authoringToolWorkspaceVm.SelectedLearningWorld.Name})
                         }, true),
                     new ModalDialogDropdownInputField("Type",
