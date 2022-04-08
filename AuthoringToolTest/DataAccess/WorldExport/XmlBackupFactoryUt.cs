@@ -8,7 +8,6 @@ namespace AuthoringToolTest.DataAccess.WorldExport;
 [TestFixture]
 public class XmlBackupFactoryUt
 {
-
     /*
     [Test]
     public void XmlBackupFactory_Constructor_AllPropertiesSet()

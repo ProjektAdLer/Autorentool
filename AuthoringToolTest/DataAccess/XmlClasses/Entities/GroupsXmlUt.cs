@@ -59,7 +59,8 @@ public class GroupsXmlUt
         groups.Serialize();
         
         //Assert
-        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport\\groups.xml");
+        var pathXml = Path.Join(curWorkDir, "XMLFilesForExport");
+        var pathXmlFile = Path.Join(pathXml, "groups.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
 }

@@ -46,7 +46,10 @@ public class SectionsSectionXmlUt
         sectionSection.Serialize();
         
         //Assert
-        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport\\sections\\section_160\\section.xml");
+        var pathXml = Path.Join(curWorkDir, "XMLFilesForExport");
+        var pathXmlPartOne = Path.Join(pathXml, "sections");
+        var pathXmlPartTwo = Path.Join(pathXmlPartOne, "section_160");
+        var pathXmlFile = Path.Join(pathXmlPartTwo, "section.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
 }

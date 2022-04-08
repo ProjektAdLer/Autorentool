@@ -42,7 +42,8 @@ public class FilesXmlUt
         filesFiles.Serialize();
         
         //Assert
-        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport\\files.xml");
+        var pathXml = Path.Join(curWorkDir, "XMLFilesForExport");
+        var pathXmlFile = Path.Join(pathXml, "files.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
     

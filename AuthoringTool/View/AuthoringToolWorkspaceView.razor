@@ -136,7 +136,7 @@
     {
         //Create XMl-files, Overwrite Encoding to UTF-8 and Create Backup-File
         presentationLogic.ConstructBackup();
-        filePath = GetCurrentDirectory()+"\\EmptyWorld.mbz";
+        filePath = Path.Join(GetCurrentDirectory(),"EmptyWorld.mbz");
     }
 
 }

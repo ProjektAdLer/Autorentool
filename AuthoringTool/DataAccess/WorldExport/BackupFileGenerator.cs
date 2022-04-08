@@ -100,13 +100,13 @@ public class BackupFileGenerator : IBackupFileGenerator
         var directories = _fileSystem.Directory.EnumerateDirectories(source, "*", SearchOption.AllDirectories);
         foreach (var directory in directories)
         {
-            var directoryName = directory.Remove(0, (source + "\\").Length);
+            var directoryName = directory.Remove(0, _fileSystem.Path.Join(source, "\\").Length);
             _fileSystem.Directory.CreateDirectory(_fileSystem.Path.Combine(targetPrefix, directoryName));
         }
         var files = _fileSystem.Directory.EnumerateFiles(source, "*", SearchOption.AllDirectories);
         foreach (var file in files) 
         {
-            var filename = file.Remove(0, (source + "\\").Length);
+            var filename = file.Remove(0, _fileSystem.Path.Join(source, "\\").Length);
             _fileSystem.File.Copy(file, _fileSystem.Path.Combine(targetPrefix, filename));
         }
     }
