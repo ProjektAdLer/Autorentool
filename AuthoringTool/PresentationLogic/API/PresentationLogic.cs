@@ -63,7 +63,7 @@ namespace AuthoringTool.PresentationLogic.API
         }
 
         /// <inheritdoc cref="IPresentationLogic.SaveLearningSpaceAsync"/>
-        public async void SaveLearningSpaceAsync(LearningSpaceViewModel learningSpaceViewModel)
+        public async Task SaveLearningSpaceAsync(LearningSpaceViewModel learningSpaceViewModel)
         {
             await SaveGenericAsync(learningSpaceViewModel);
         }
@@ -75,7 +75,7 @@ namespace AuthoringTool.PresentationLogic.API
         }
 
         /// <inheritdoc cref="IPresentationLogic.SaveLearningElementAsync"/>
-        public async void SaveLearningElementAsync(LearningElementViewModel learningElementViewModel)
+        public async Task SaveLearningElementAsync(LearningElementViewModel learningElementViewModel)
         {
             await SaveGenericAsync(learningElementViewModel);
         }
@@ -209,7 +209,7 @@ namespace AuthoringTool.PresentationLogic.API
             }
             catch (OperationCanceledException)
             {
-                _logger.LogInformation("SaveAs operation in SaveLearningWorld cancelled by user");
+                _logger.LogInformation("Save as dialog cancelled by user");
                 throw;
             }
             catch (ArgumentException)
@@ -230,9 +230,7 @@ namespace AuthoringTool.PresentationLogic.API
         {
             try
             {
-                var title = "";
-                var fileEnding = "";
-                var fileFormatDescriptor = "";
+                string title, fileEnding, fileFormatDescriptor;
                 if (typeof(T) == typeof(LearningWorldViewModel))
                 {
                     title = "Load Learning World";
@@ -265,7 +263,7 @@ namespace AuthoringTool.PresentationLogic.API
             }
             catch (OperationCanceledException)
             {
-                _logger.LogInformation("SaveAs operation in SaveLearningWorld cancelled by user");
+                _logger.LogInformation("Load dialog cancelled by user");
                 throw;
             }
         }
