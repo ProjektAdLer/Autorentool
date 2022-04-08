@@ -218,7 +218,8 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
             {
                 {"Name", element.Name},
                 {"Shortname", element.Shortname},
-                {"Parent", element.Parent.Name},
+                {"Parent", element.Parent switch{LearningWorldViewModel => "Learning world", LearningSpaceViewModel => "Learning space", _ => ""}},
+                {"Assignment", element.Parent.Name},
                 {"Type", element.Type},
                 {"Content", element.Content},
                 {"Authors", element.Authors},
@@ -322,9 +323,26 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
                 throw new ApplicationException("LearningWorld is null");
             if (LearningWorldVm.SelectedLearningObject is not LearningElementViewModel
                 learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
+            if (assignment != learningElementViewModel.Parent?.Name)
+            {
+                RemoveLearningElementParentAssignment(learningElementViewModel);
+            }
             _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, parentElement,
                 type, content, authors, description, goals);
             return Task.CompletedTask;
+        }
+
+        private void RemoveLearningElementParentAssignment(LearningElementViewModel learningElementViewModel)
+        {
+            switch (learningElementViewModel.Parent)
+            {
+                case LearningWorldViewModel:
+                    LearningWorldVm?.LearningElements.Remove(learningElementViewModel);
+                    break;
+                case LearningSpaceViewModel space:
+                    space.LearningElements.Remove(learningElementViewModel);
+                    break;
+            }
         }
 
         public IEnumerable<ModalDialogInputField> ModalDialogElementInputFields
@@ -339,16 +357,16 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
                         new[]
                         {
                             new ModalDialogDropdownInputFieldChoiceMapping(null,
-                                new[] {"Learning World", "Learning Space"})
+                                new[] {"Learning world", "Learning space"})
                         }, true),
                     new ModalDialogDropdownInputField("Assignment",
                         new[]
                         {
                             new ModalDialogDropdownInputFieldChoiceMapping(
-                                new Dictionary<string, string> {{"Parent", "Learning Space"}},
-                                LearningWorldVm.LearningSpaces.Select(space => space.Name)),
+                                new Dictionary<string, string> {{"Parent", "Learning space"}},
+                                LearningWorldVm!.LearningSpaces.Select(space => space.Name)),
                             new ModalDialogDropdownInputFieldChoiceMapping(
-                                new Dictionary<string, string> {{"Parent", "Learning World"}},
+                                new Dictionary<string, string> {{"Parent", "Learning world"}},
                                 new[] {LearningWorldVm.Name})
                         }, true),
                     new ModalDialogDropdownInputField("Type",
@@ -403,7 +421,7 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
                     LearningWorldVm.LearningSpaces.Remove(learningSpace);
                     break;
                 case LearningElementViewModel learningElement:
-                    LearningWorldVm.LearningElements.Remove(learningElement);
+                    RemoveLearningElementParentAssignment(learningElement);
                     break;
                 default:
                     throw new NotImplementedException("Type of LearningObject is not implemented");

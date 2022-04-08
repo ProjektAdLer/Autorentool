@@ -477,7 +477,8 @@ public class LearningWorldPresenterUt
             Assert.That(systemUnderTest.EditLearningElementDialogOpen, Is.True);
             Assert.That(world.EditDialogInitialValues["Name"], Is.EqualTo(element.Name));
             Assert.That(world.EditDialogInitialValues["Shortname"], Is.EqualTo(element.Shortname));
-            Assert.That(world.EditDialogInitialValues["Parent"], Is.EqualTo(element.Parent?.Name));
+            Assert.That(world.EditDialogInitialValues["Parent"], Is.EqualTo("Learning world"));
+            Assert.That(world.EditDialogInitialValues["Assignment"], Is.EqualTo(element.Parent?.Name));
             Assert.That(world.EditDialogInitialValues["Type"], Is.EqualTo(element.Type));
             Assert.That(world.EditDialogInitialValues["Content"], Is.EqualTo(element.Content));
             Assert.That(world.EditDialogInitialValues["Authors"], Is.EqualTo(element.Authors));
