@@ -38,12 +38,11 @@ public class GradebookXmlUt
         
         var gradeSettings = new GradebookXmlGradeSettings();
         
-        
         //Act (What to test)
         gradeSettings.SetParameters(gradeSetting);
         
         //Assert
-        Assert.That(gradeSettings.gradeSetting, Is.EqualTo(gradeSetting));
+        Assert.That(gradeSettings.grade_Setting, Is.EqualTo(gradeSetting));
     }
 
     [Test]

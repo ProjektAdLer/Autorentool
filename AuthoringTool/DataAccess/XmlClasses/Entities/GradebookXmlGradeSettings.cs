@@ -8,9 +8,9 @@ public partial class GradebookXmlGradeSettings : IGradebookXmlGradeSettings
 
     public void SetParameters(GradebookXmlGradeSetting gradeSetting)
     {
-        gradeSetting = gradeSetting;
+        grade_Setting = gradeSetting;
     }
     
     [XmlElement(ElementName = "grade_setting")]
-    public GradebookXmlGradeSetting gradeSetting;
+    public GradebookXmlGradeSetting grade_Setting;
 }
