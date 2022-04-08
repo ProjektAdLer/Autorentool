@@ -213,6 +213,7 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
         {
             if (LearningWorldVm?.SelectedLearningObject is not LearningElementViewModel
                 element) throw new ApplicationException("Type of LearningObject is not implemented");
+            if (element.Parent == null) throw new Exception("Element Parent is null");
             //prepare dictionary property to pass to dialog
             LearningWorldVm.EditDialogInitialValues = new Dictionary<string, string>
             {
