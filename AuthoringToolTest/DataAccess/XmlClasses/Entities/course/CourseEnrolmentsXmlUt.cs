@@ -100,7 +100,7 @@ public class CourseEnrolmentsXmlUt
         enrolmentsEnrolments.Serialize();
         
         //Assert
-        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport\\course\\enrolments.xml");
+        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "course", "enrolments.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
 }

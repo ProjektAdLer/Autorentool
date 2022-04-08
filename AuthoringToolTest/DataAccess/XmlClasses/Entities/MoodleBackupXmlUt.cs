@@ -378,7 +378,7 @@ public class MoodleBackupXmlUt
         moodlebackup.Serialize();
         
         //Assert
-        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport\\moodle_backup.xml");
+        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "moodle_backup.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
 

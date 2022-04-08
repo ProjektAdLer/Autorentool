@@ -39,7 +39,7 @@ public class QuestionsXmlUt
         questionsQuestionsCategories.Serialize();
         
         //Assert
-        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport\\questions.xml");
+        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "questions.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
     
