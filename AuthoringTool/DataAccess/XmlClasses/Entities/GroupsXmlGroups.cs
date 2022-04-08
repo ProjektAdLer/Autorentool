@@ -4,7 +4,7 @@ using AuthoringTool.DataAccess.WorldExport;
 namespace AuthoringTool.DataAccess.XmlClasses;
 
 [XmlRoot(ElementName="groups")]
-public partial class GroupsXmlGroups : IXmlSerializable{
+public partial class GroupsXmlGroups : IGroupsXmlGroups{
 
     public void SetParameters(GroupsXmlGroupingsList groupingsList)
     {

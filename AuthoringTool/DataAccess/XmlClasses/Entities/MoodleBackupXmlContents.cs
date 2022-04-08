@@ -3,13 +3,13 @@
 namespace AuthoringTool.DataAccess.XmlClasses;
 
 [XmlRoot(ElementName="contents")]
-public partial class MoodleBackupXmlContents {
+public partial class MoodleBackupXmlContents : IMoodleBackupXmlContents {
 
    
     public void SetParameters(MoodleBackupXmlSections moodleBackupSections,MoodleBackupXmlCourse moodleBackupCourse)
     {
-        Sections = moodleBackupSections;
-                Course = moodleBackupCourse;
+        Sections = moodleBackupSections; 
+        Course = moodleBackupCourse;
     }
     
     [XmlElement(ElementName="sections")]

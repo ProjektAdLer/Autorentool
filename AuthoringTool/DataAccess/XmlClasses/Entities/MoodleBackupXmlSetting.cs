@@ -3,7 +3,7 @@
 namespace AuthoringTool.DataAccess.XmlClasses;
 
 [XmlRoot(ElementName="setting")]
-public partial class MoodleBackupXmlSetting {
+public partial class MoodleBackupXmlSetting : IMoodleBackupXmlSetting{
 
 
 	public void SetParametersShort(string name, string value)

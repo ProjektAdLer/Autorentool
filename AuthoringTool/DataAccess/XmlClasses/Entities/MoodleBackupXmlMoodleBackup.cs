@@ -4,7 +4,7 @@ using AuthoringTool.DataAccess.WorldExport;
 namespace AuthoringTool.DataAccess.XmlClasses;
 
 [XmlRoot(ElementName="moodle_backup")]
-public partial class MoodleBackupXmlMoodleBackup : IXmlSerializable {
+public partial class MoodleBackupXmlMoodleBackup : IMoodleBackupXmlMoodleBackup {
 
  
     public void SetParameters(MoodleBackupXmlInformation moodleBackupInformation)

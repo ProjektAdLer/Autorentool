@@ -43,7 +43,7 @@ public class GradebookXmlUt
         gradeSettings.SetParameters(gradeSetting);
         
         //Assert
-        Assert.That(gradeSettings.Grade_setting, Is.EqualTo(gradeSetting));
+        Assert.That(gradeSettings.gradeSetting, Is.EqualTo(gradeSetting));
     }
 
     [Test]

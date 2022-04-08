@@ -3,14 +3,14 @@
 namespace AuthoringTool.DataAccess.XmlClasses;
 
 [XmlRoot(ElementName="grade_settings")]
-public partial class GradebookXmlGradeSettings
+public partial class GradebookXmlGradeSettings : IGradebookXmlGradeSettings
 {
 
     public void SetParameters(GradebookXmlGradeSetting gradeSetting)
     {
-        Grade_setting = gradeSetting;
+        gradeSetting = gradeSetting;
     }
     
     [XmlElement(ElementName = "grade_setting")]
-    public GradebookXmlGradeSetting Grade_setting;
+    public GradebookXmlGradeSetting gradeSetting;
 }

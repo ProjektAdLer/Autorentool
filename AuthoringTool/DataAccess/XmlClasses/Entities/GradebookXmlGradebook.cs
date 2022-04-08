@@ -6,7 +6,7 @@ using Microsoft.VisualBasic;
 namespace AuthoringTool.DataAccess.XmlClasses;
 
 [XmlRoot(ElementName="gradebook")]
-public partial class GradebookXmlGradebook : IXmlSerializable
+public partial class GradebookXmlGradebook : IGradebookXmlGradebook
 {
     
     public void SetParameters(GradebookXmlGradeSettings gradeSettings)

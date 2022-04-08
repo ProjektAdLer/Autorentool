@@ -5,7 +5,7 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 
 
 [XmlRoot(ElementName = "files")]
-public partial class FilesXmlFiles : IXmlSerializable
+public partial class FilesXmlFiles : IFilesXmlFiles
 {
     public void SetParameters()
     {
