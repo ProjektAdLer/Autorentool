@@ -39,8 +39,7 @@ public class OutcomesXmlUt
         outcomesOutcomesDefinition.Serialize();
         
         //Assert
-        var pathXml = Path.Join(curWorkDir, "XMLFilesForExport");
-        var pathXmlFile = Path.Join(pathXml, "outcomes.xml");
+        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "outcomes.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
 }

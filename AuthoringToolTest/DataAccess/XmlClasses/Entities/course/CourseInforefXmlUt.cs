@@ -76,9 +76,7 @@ public class CourseInforefXmlUt
         inforefInforef.Serialize();
         
         //Assert
-        var pathXml = Path.Join(curWorkDir, "XMLFilesForExport");
-        var pathXmlPartOne = Path.Join(pathXml, "course");
-        var pathXmlFile = Path.Join(pathXmlPartOne, "inforef.xml");
+        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "course", "inforef.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
     

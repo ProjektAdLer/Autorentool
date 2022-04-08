@@ -176,7 +176,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
 
         public async Task LoadLearningWorld()
         {
-            var learningWorld = await _presentationLogic.LoadLearningWorld();
+            var learningWorld = await _presentationLogic.LoadLearningWorldAsync();
             _authoringToolWorkspaceVm.LearningWorlds.Add(learningWorld);
         }
 

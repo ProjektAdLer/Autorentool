@@ -83,8 +83,7 @@ public class GradebookXmlUt
         gradebook.Serialize();
         
         //Assert
-        var pathXml = Path.Join(curWorkDir, "XMLFilesForExport");
-        var pathXmlFile = Path.Join(pathXml, "gradebook.xml");
+        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "gradebook.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
 }

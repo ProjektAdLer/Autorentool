@@ -1,6 +1,6 @@
 namespace AuthoringTool.PresentationLogic.LearningElement;
 
-public class LearningElementViewModel : ILearningObjectViewModel
+public class LearningElementViewModel : ILearningObjectViewModel, ISerializableViewModel
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="LearningElementViewModel"/> class.

@@ -39,8 +39,7 @@ public class ScalesXmlUt
         scalesScalesDefinition.Serialize();
         
         //Assert
-        var pathXml = Path.Join(curWorkDir, "XMLFilesForExport");
-        var pathXmlFile = Path.Join(pathXml, "scales.xml");
+        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "scales.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
 }

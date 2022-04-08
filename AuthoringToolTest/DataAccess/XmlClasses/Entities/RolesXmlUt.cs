@@ -67,8 +67,7 @@ public class RolesXmlUt
         rolesRolesDefinition.Serialize();
         
         //Assert
-        var pathXml = Path.Join(curWorkDir, "XMLFilesForExport");
-        var pathXmlFile = Path.Join(pathXml, "roles.xml");
+        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "roles.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
 }

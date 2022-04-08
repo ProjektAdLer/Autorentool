@@ -91,7 +91,7 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
 
         public async Task LoadLearningSpace()
         {
-            var learningSpace = await _presentationLogic.LoadLearningSpace();
+            var learningSpace = await _presentationLogic.LoadLearningSpaceAsync();
             if (LearningWorldVm == null)
                 throw new ApplicationException("SelectedLearningWorld is null");
             LearningWorldVm.LearningSpaces.Add(learningSpace);
@@ -232,7 +232,7 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
 
         public async Task LoadLearningElement()
         {
-            var learningElement = await _presentationLogic.LoadLearningElement();
+            var learningElement = await _presentationLogic.LoadLearningElementAsync();
             if (LearningWorldVm == null)
                 throw new ApplicationException("SelectedLearningWorld is null");
             LearningWorldVm.LearningElements.Add(learningElement);
@@ -462,10 +462,10 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
                 case null:
                     throw new ApplicationException("SelectedLearningObject is null");
                 case LearningSpaceViewModel learningSpace:
-                    _presentationLogic.SaveLearningSpace(learningSpace);
+                    _presentationLogic.SaveLearningSpaceAsync(learningSpace);
                     break;
                 case LearningElementViewModel learningElement:
-                    _presentationLogic.SaveLearningElement(learningElement);
+                    _presentationLogic.SaveLearningElementAsync(learningElement);
                     break;
                 default:
                     throw new NotImplementedException("Type of LearningObject is not implemented");
