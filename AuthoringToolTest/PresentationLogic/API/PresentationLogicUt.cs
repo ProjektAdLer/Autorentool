@@ -66,11 +66,11 @@ public class PresentationLogicUt
 
         var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
             await systemUnderTest.SaveLearningWorldAsync(learningWorld));
-        Assert.That(ex!.Message, Is.EqualTo("Browser saving not yet implemented"));
+        Assert.That(ex!.Message, Is.EqualTo("Browser upload/download not yet implemented"));
     }
 
     [Test]
-    public void PresentationLogic_SaveLearningWorldAsync_ThrowsExceptionWhenNoDialogManager()
+    public void PresentationLogic_SaveLearningWorldAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
