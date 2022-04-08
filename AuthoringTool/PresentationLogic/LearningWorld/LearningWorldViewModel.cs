@@ -1,7 +1,6 @@
 ﻿using System.Collections.ObjectModel;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
-using AuthoringTool.View.LearningWorld;
 
 namespace AuthoringTool.PresentationLogic.LearningWorld;
 
@@ -44,4 +43,5 @@ public class LearningWorldViewModel : ILearningElementViewModelParent
     public string Description { get; set; }
     public string Goals { get; set; }
     public ILearningObjectViewModel? SelectedLearningObject { get; set; }
+    public Dictionary<string, string> EditDialogInitialValues { get; set; }
 }
