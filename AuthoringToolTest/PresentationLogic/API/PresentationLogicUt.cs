@@ -8,6 +8,7 @@ using AuthoringTool.PresentationLogic.EntityMapping;
 using AuthoringTool.PresentationLogic.LearningWorld;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.PresentationLogic.API;
@@ -78,7 +79,7 @@ public class PresentationLogicUt
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
-        var ex = Assert.ThrowsAsync<Exception>(async () =>
+        var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
             await systemUnderTest.SaveLearningWorldAsync(learningWorld));
         Assert.That(ex!.Message, Is.EqualTo("dialogManager received from DI unexpectedly null"));
     }
@@ -110,6 +111,32 @@ public class PresentationLogicUt
         mockWorldMapper.Received().ToEntity(learningWorld);
         mockBusinessLogic.Received().SaveLearningWorld(entity, filepath+".awf");
     }
+
+    [Test]
+    public void PresentationLogic_SaveLearningWorldAsync_LogsAndRethrowsDialogCancelledException()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockLogger = Substitute.For<ILogger<AuthoringTool.PresentationLogic.API.PresentationLogic>>();
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        var mockElectronDialogManager = Substitute.For<IElectronDialogManager>();
+        mockElectronDialogManager
+            .ShowSaveAsDialog(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<IEnumerable<FileFilterProxy>?>())
+            .Throws(new OperationCanceledException("bububaba"));
+        mockServiceProvider.GetService(typeof(IElectronDialogManager))
+            .Returns(mockElectronDialogManager);
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
+            serviceProvider: mockServiceProvider);
+
+        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.SaveLearningWorldAsync(learningWorld));
+        Assert.That(ex!.Message, Is.EqualTo("bububaba"));
+    }
+    /*
+    [Test]
+    public void PresentationLogic_
+    */
 
     private static AuthoringTool.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(
         IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null,

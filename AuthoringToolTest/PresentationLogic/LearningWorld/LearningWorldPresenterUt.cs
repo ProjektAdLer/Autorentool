@@ -544,7 +544,7 @@ public class LearningWorldPresenterUt
         systemUnderTest.SetLearningWorld(null, world);
         systemUnderTest.SaveSelectedLearningObject();
 
-        presentationLogic.Received().SaveLearningSpace(space);
+        presentationLogic.Received().SaveLearningSpaceAsync(space);
     }
 
     [Test]
@@ -562,7 +562,7 @@ public class LearningWorldPresenterUt
         systemUnderTest.SetLearningWorld(null, world);
         systemUnderTest.SaveSelectedLearningObject();
 
-        presentationLogic.Received().SaveLearningElement(element);
+        presentationLogic.Received().SaveLearningElementAsync(element);
     }
 
     [Test]

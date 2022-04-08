@@ -56,32 +56,32 @@ namespace AuthoringTool.PresentationLogic.API
             await SaveGenericAsync(learningWorldViewModel);
         }
 
-        /// <inheritdoc cref="IPresentationLogic.LoadLearningWorld"/>
-        public async Task<LearningWorldViewModel> LoadLearningWorld()
+        /// <inheritdoc cref="IPresentationLogic.LoadLearningWorldAsync"/>
+        public async Task<LearningWorldViewModel> LoadLearningWorldAsync()
         {
             return await LoadGenericAsync<LearningWorldViewModel>();
         }
 
-        /// <inheritdoc cref="IPresentationLogic.SaveLearningSpace"/>
-        public async void SaveLearningSpace(LearningSpaceViewModel learningSpaceViewModel)
+        /// <inheritdoc cref="IPresentationLogic.SaveLearningSpaceAsync"/>
+        public async void SaveLearningSpaceAsync(LearningSpaceViewModel learningSpaceViewModel)
         {
             await SaveGenericAsync(learningSpaceViewModel);
         }
 
-        /// <inheritdoc cref="IPresentationLogic.LoadLearningSpace"/>
-        public async Task<LearningSpaceViewModel> LoadLearningSpace()
+        /// <inheritdoc cref="IPresentationLogic.LoadLearningSpaceAsync"/>
+        public async Task<LearningSpaceViewModel> LoadLearningSpaceAsync()
         {
             return await LoadGenericAsync<LearningSpaceViewModel>();
         }
 
-        /// <inheritdoc cref="IPresentationLogic.SaveLearningElement"/>
-        public async void SaveLearningElement(LearningElementViewModel learningElementViewModel)
+        /// <inheritdoc cref="IPresentationLogic.SaveLearningElementAsync"/>
+        public async void SaveLearningElementAsync(LearningElementViewModel learningElementViewModel)
         {
             await SaveGenericAsync(learningElementViewModel);
         }
 
-        /// <inheritdoc cref="IPresentationLogic.LoadLearningElement"/>
-        public async Task<LearningElementViewModel> LoadLearningElement()
+        /// <inheritdoc cref="IPresentationLogic.LoadLearningElementAsync"/>
+        public async Task<LearningElementViewModel> LoadLearningElementAsync()
         {
             return await LoadGenericAsync<LearningElementViewModel>();
         }
