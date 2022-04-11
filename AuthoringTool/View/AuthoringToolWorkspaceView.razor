@@ -16,7 +16,7 @@
 <p role="status" id="filepath">Filepath: @filePath</p>
 <label>
     Select learning world:
-    <select @onchange="args => AuthoringToolWorkspaceP.SetSelectedLearningWorld((string) args.Value!)"
+    <select @onchange="args => SetSelectedLearningWorld((string) args.Value!)"
             value="@(AuthoringToolWorkspaceVm.SelectedLearningWorld?.Name)">
         @foreach (var learningWorld in AuthoringToolWorkspaceVm.LearningWorlds)
         {
@@ -58,7 +58,7 @@
 }
 @if (AuthoringToolWorkspaceVm.SelectedLearningWorld != null)
 {
-    <LearningWorldView>
+    <LearningWorldView @ref="_activeView">
     </LearningWorldView>
 }
 
@@ -91,6 +91,8 @@
         AuthoringToolWorkspaceVm = authoringToolWorkspaceVm;
     }
 
+    private LearningWorldView? _activeView;
+    
     private void AddNewLearningWorld()
     {
         AuthoringToolWorkspaceP.CreateLearningWorldDialogOpen = true;
@@ -126,6 +128,12 @@
     private Task OnEditWorldDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
     {
         return AuthoringToolWorkspaceP.OnEditWorldDialogClose(returnValueTuple);
+    }
+
+    private void SetSelectedLearningWorld(string argsValue)
+    {
+        AuthoringToolWorkspaceP.SetSelectedLearningWorld(argsValue);
+        _activeView?.TriggerStateHasChanged();
     }
     
 

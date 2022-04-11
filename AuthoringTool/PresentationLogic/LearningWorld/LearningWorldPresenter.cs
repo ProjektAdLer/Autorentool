@@ -194,18 +194,6 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
                 _learningElementPresenter.CreateNewLearningElement(name, shortname, parent, type,
                     content, authors, description, goals);
 
-            switch (parent)
-            {
-                case LearningWorldViewModel:
-                    LearningWorldVm.LearningElements.Add(learningElement);
-                    break;
-                case LearningSpaceViewModel space:
-                    space.LearningElements.Add(learningElement);
-                    break;
-                default:
-                    throw new NotImplementedException("Type of Assignment is not implemented");
-            }
-
             SetSelectedLearningObject(learningElement);
         }
 
@@ -324,26 +312,9 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
                 throw new ApplicationException("LearningWorld is null");
             if (LearningWorldVm.SelectedLearningObject is not LearningElementViewModel
                 learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
-            if (assignment != learningElementViewModel.Parent?.Name)
-            {
-                RemoveLearningElementParentAssignment(learningElementViewModel);
-            }
             _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, parentElement,
                 type, content, authors, description, goals);
             return Task.CompletedTask;
-        }
-
-        private void RemoveLearningElementParentAssignment(LearningElementViewModel learningElementViewModel)
-        {
-            switch (learningElementViewModel.Parent)
-            {
-                case LearningWorldViewModel:
-                    LearningWorldVm?.LearningElements.Remove(learningElementViewModel);
-                    break;
-                case LearningSpaceViewModel space:
-                    space.LearningElements.Remove(learningElementViewModel);
-                    break;
-            }
         }
 
         public IEnumerable<ModalDialogInputField> ModalDialogElementInputFields
@@ -422,7 +393,7 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
                     LearningWorldVm.LearningSpaces.Remove(learningSpace);
                     break;
                 case LearningElementViewModel learningElement:
-                    RemoveLearningElementParentAssignment(learningElement);
+                    _learningElementPresenter.RemoveLearningElementFromParentAssignment(learningElement);
                     break;
                 default:
                     throw new NotImplementedException("Type of LearningObject is not implemented");
