@@ -401,7 +401,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_DeleteSelectedLearningObject_WithElement_DeletesElementFromViewModel()
+    public void LearningWorldPresenter_DeleteSelectedLearningObject_WithElement_CallsElementPresenter()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -409,15 +409,14 @@ public class LearningWorldPresenterUt
         world.LearningElements.Add(element);
         world.SelectedLearningObject = element;
 
-        Assert.That(world.LearningElements, Contains.Item(element));
-        Assert.That(world.LearningElements, Has.Count.EqualTo(1));
+        var mockElementPresenter = Substitute.For<ILearningElementPresenter>();
 
-        var systemUnderTest = CreatePresenterForTesting();
+        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter:mockElementPresenter);
         systemUnderTest.SetLearningWorld(null, world);
 
         systemUnderTest.DeleteSelectedLearningObject();
 
-        Assert.That(world.LearningElements, Is.Empty);
+        mockElementPresenter.Received().RemoveLearningElementFromParentAssignment(element);
     }
 
     [Test]
@@ -457,20 +456,34 @@ public class LearningWorldPresenterUt
     [Test]
     public void LearningWorldPresenter_DeleteSelectedLearningObject_WithElement_MutatesSelectionInViewModel()
     {
+        var mockElementPresenter = Substitute.For<ILearningElementPresenter>();
+        mockElementPresenter.When(x => x.RemoveLearningElementFromParentAssignment(Arg.Any<LearningElementViewModel>())).Do(x =>
+        {
+            x.Arg<LearningElementViewModel>();
+            var ele = x.Arg<LearningElementViewModel>();
+            (((LearningWorldViewModel) ele.Parent!)).LearningElements.Remove(ele);
+        });
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var element = new LearningElementViewModel("f", "f", world, "f", "f", "f", "f", "f");
-        world.LearningElements.Add(element);
-        world.SelectedLearningObject = element;
+        var element1 = new LearningElementViewModel("f", "f", world, "f", "f", "f", "f", "f");
+        var element2 = new LearningElementViewModel("e", "e", world, "f", "f", "f", "f", "f");
+        world.LearningElements.Add(element1);
+        world.LearningElements.Add(element2);
+        world.SelectedLearningObject = element1;
 
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(element));
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(element1));
 
-        var systemUnderTest = CreatePresenterForTesting();
+        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter:mockElementPresenter);
         systemUnderTest.SetLearningWorld(null, world);
 
         systemUnderTest.DeleteSelectedLearningObject();
 
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(element2));
+        
+        systemUnderTest.DeleteSelectedLearningObject();
+        
         Assert.That(world.SelectedLearningObject, Is.Null);
+        
     }
 
     #endregion

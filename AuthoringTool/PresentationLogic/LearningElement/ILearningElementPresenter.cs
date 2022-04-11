@@ -10,4 +10,6 @@ public interface ILearningElementPresenter
     LearningElementViewModel EditLearningElement(LearningElementViewModel element, string name, string shortname,
         ILearningElementViewModelParent parent, string type, string content, string authors, string description,
         string goals, double? posx = null, double? posy = null);
+
+    void RemoveLearningElementFromParentAssignment(LearningElementViewModel element);
 }
