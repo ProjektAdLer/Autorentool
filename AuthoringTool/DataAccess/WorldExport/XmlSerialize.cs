@@ -16,8 +16,7 @@ public class XmlSerialize
     public void Serialize(object xml,string xmlname)
     {
         var curWorkDir = _fileSystem.Directory.GetCurrentDirectory();
-        var path_1 = Path.Join(curWorkDir, "XMLFilesForExport");
-        var path_2 = Path.Join(path_1, xmlname);
+        var path = Path.Join(curWorkDir, "XMLFilesForExport", xmlname);
         
         var settings = new XmlWriterSettings
         {
@@ -30,7 +29,7 @@ public class XmlSerialize
         XmlSerializerNamespaces ns = new XmlSerializerNamespaces();
         ns.Add("", "");
         XmlSerializer x = new XmlSerializer(xml.GetType());
-        using var stream = _fileSystem.File.OpenWrite(path_2);
+        using var stream = _fileSystem.File.OpenWrite(path);
         using (var xmlWriter = XmlWriter.Create(stream, settings))
         {
             x.Serialize(xmlWriter, xml, ns);

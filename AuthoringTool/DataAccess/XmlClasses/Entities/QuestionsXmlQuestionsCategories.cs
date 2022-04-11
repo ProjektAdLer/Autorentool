@@ -4,7 +4,7 @@ using AuthoringTool.DataAccess.WorldExport;
 namespace AuthoringTool.DataAccess.XmlClasses;
 
 [XmlRoot(ElementName="question_categories")]
-public partial class QuestionsXmlQuestionsCategories : IXmlSerializable{
+public partial class QuestionsXmlQuestionsCategories : IQuestionsXmlQuestionsCategories{
 
     public void SetParameters()
     {

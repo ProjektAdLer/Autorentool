@@ -3,7 +3,7 @@
 namespace AuthoringTool.DataAccess.XmlClasses;
 
 [XmlRoot(ElementName="role")]
-public partial class RolesXmlRole
+public partial class RolesXmlRole : IRolesXmlRole
 {
     
     public void SetParameters(string name, string description, string id,

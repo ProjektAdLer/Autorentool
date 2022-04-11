@@ -4,7 +4,7 @@ using AuthoringTool.DataAccess.WorldExport;
 namespace AuthoringTool.DataAccess.XmlClasses;
 
 [XmlRoot(ElementName="roles_definition")]
-public partial class RolesXmlRolesDefinition : IXmlSerializable {
+public partial class RolesXmlRolesDefinition : IRolesXmlRolesDefinition {
 
     
     public void SetParameters(RolesXmlRole rolesRole)

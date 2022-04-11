@@ -9,6 +9,8 @@ public class XmlEntityManager
     {
         new XmlCourseFactory();
         new XmlSectionFactory();
-        new XmlBackupFactory();
+        var xmlBackupFactory = new XmlBackupFactory();
+        xmlBackupFactory.CreateXmlBackupFactory();
+        
     }
 }

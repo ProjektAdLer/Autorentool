@@ -8,18 +8,60 @@ namespace AuthoringToolTest.DataAccess.WorldExport;
 [TestFixture]
 public class XmlBackupFactoryUt
 {
-    /*
+    
     [Test]
     public void XmlBackupFactory_Constructor_AllPropertiesSet()
     {
         //Arrange
+        
         //Act
         var xmlBackupFactory = CreateStandardXmlBackupFactory();
 
         //Assert
-        Assert.That(xmlBackupFactory, Is.Not.Null);
-    }*/
-    
+        Assert.That(xmlBackupFactory.FilesXmlFiles, Is.Not.Null);
+        Assert.That(xmlBackupFactory.GradebookXmlGradebookSetting, Is.Not.Null);
+        Assert.That(xmlBackupFactory.GradebookXmlGradebookSettings, Is.Not.Null);
+        Assert.That(xmlBackupFactory.GradebookXmlGradebook, Is.Not.Null);
+        Assert.That(xmlBackupFactory.GroupsXmlGroupingsList, Is.Not.Null);
+        Assert.That(xmlBackupFactory.GroupsXmlGroups, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlDetail, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlDetails, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSection, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSections, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlCourse, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlContents, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingFilename, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingImscc11, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingUsers, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingAnonymize, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingRoleAssignments, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingActivities, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingBlocks, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingFiles, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingFilters, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingComments, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingBadges, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingCalendarevents, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingUserscompletion, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingLogs, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingGradeHistories, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingQuestionbank, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingGroups, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingCompetencies, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingCustomfield, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingContentbankcontent, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingLegacyfiles, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingSection_160_Included, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingSection_160_userinfo, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlSettings, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlInformation, Is.Not.Null);
+        Assert.That(xmlBackupFactory.MoodleBackupXmlMoodleBackup, Is.Not.Null);
+        Assert.That(xmlBackupFactory.OutcomesXmlOutcomesDefinition, Is.Not.Null);
+        Assert.That(xmlBackupFactory.QuestionsXmlQuestionsCategories, Is.Not.Null);
+        Assert.That(xmlBackupFactory.ScalesXmlScalesDefinition, Is.Not.Null);
+        Assert.That(xmlBackupFactory.RolesXmlRole, Is.Not.Null);
+        Assert.That(xmlBackupFactory.RolesXmlRolesDefinition, Is.Not.Null);
+    }
     
     [Test]
     public void CreateFilesXml_Default_ParametersSetAndSerialized()
@@ -97,7 +139,7 @@ public class XmlBackupFactoryUt
         
         //Act
         xmlBackupFactory.CreateMoodleBackupXml();
-        
+
         //Assert
         mockMoodleBackupXmlDetail.Received().SetParameters(Arg.Any<string>());
         mockMoodleBackupXmlDetails.Received().SetParameters(Arg.Any<MoodleBackupXmlDetail>());
@@ -107,12 +149,94 @@ public class XmlBackupFactoryUt
         mockMoodleBackupXmlContents.Received().SetParameters(Arg.Any<MoodleBackupXmlSections>(), Arg.Any<MoodleBackupXmlCourse>());
         mockMoodleBackupXmlSetting.Received().SetParametersShort(Arg.Any<string>(), Arg.Any<string>());
         mockMoodleBackupXmlSetting.Received().SetParametersFull(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+        mockMoodleBackupXmlSettings.Received().SetParameters();
+        mockMoodleBackupXmlSettings.Received().FillSettings(Arg.Any<MoodleBackupXmlSetting>());
         mockMoodleBackupXmlInformation.Received().SetParameters(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), 
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), 
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<MoodleBackupXmlDetails>(), 
             Arg.Any<MoodleBackupXmlContents>(), Arg.Any<MoodleBackupXmlSettings>());
         mockMoodleBackupXmlMoodleBackup.Received().SetParameters(Arg.Any<MoodleBackupXmlInformation>());
         mockMoodleBackupXmlMoodleBackup.Received().Serialize();
+    }
+    
+    [Test]
+    public void CreateOutcomesXml_Default_ParametersSetAndSerialized()
+    {
+        //Arrange
+        var mockOutcomesOutcomesDefinition = Substitute.For<IOutcomesXmlOutcomesDefinition>();
+        
+        var xmlBackupFactory = CreateTestableXmlBackupFactory(null,null, null,null,
+            null, null, null, null, null, 
+            null, null, null, null, 
+            null, null, null, mockOutcomesOutcomesDefinition);
+        
+        //Act
+        xmlBackupFactory.CreateOutcomesXml();
+
+        //Assert
+        mockOutcomesOutcomesDefinition.Received().SetParameters();
+        mockOutcomesOutcomesDefinition.Received().Serialize();
+    }
+    
+    [Test]
+    public void CreateQuestionsXml_Default_ParametersSetAndSerialized()
+    {
+        //Arrange
+        var mockQuestionsQuestionsCategories = Substitute.For<IQuestionsXmlQuestionsCategories>();
+        
+        var xmlBackupFactory = CreateTestableXmlBackupFactory(null,null, null,null,
+            null, null, null, null, null, 
+            null, null, null, null, 
+            null, null, null, null, mockQuestionsQuestionsCategories);
+        
+        //Act
+        xmlBackupFactory.CreateQuestionsXml();
+
+        //Assert
+        mockQuestionsQuestionsCategories.Received().SetParameters();
+        mockQuestionsQuestionsCategories.Received().Serialize();
+    }
+    
+    [Test]
+    public void CreateRolesXml_Default_ParametersSetAndSerialized()
+    {
+        //Arrange
+        var mockrolesXmlRole = Substitute.For<IRolesXmlRole>();
+        var mockrolesXmlRolesDefinition = Substitute.For<IRolesXmlRolesDefinition>();
+        
+        var xmlBackupFactory = CreateTestableXmlBackupFactory(null,null, null,null,
+            null, null, null, null, null, 
+            null, null, null, null, 
+            null, null, null, null, null,
+            mockrolesXmlRole, mockrolesXmlRolesDefinition);
+        
+        //Act
+        xmlBackupFactory.CreateRolesXml();
+
+        //Assert
+        mockrolesXmlRole.Received().SetParameters(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+        mockrolesXmlRolesDefinition.Received().SetParameters(Arg.Any<RolesXmlRole>());
+        mockrolesXmlRolesDefinition.Received().Serialize();
+    }
+    
+    [Test]
+    public void CreateScalesXml_Default_ParametersSetAndSerialized()
+    {
+        //Arrange
+        var mockScalesXmlScalesDefinition = Substitute.For<IScalesXmlScalesDefinition>();
+        
+        var xmlBackupFactory = CreateTestableXmlBackupFactory(null,null, null,null,
+            null, null, null, null, null, 
+            null, null, null, null, 
+            null, null, null, null, null,
+            null, null, mockScalesXmlScalesDefinition);
+        
+        //Act
+        xmlBackupFactory.CreateScalesXml();
+
+        //Assert
+        mockScalesXmlScalesDefinition.Received().SetParameters();
+        mockScalesXmlScalesDefinition.Received().Serialize();
     }
     
     public XmlBackupFactory CreateStandardXmlBackupFactory()
@@ -126,7 +250,9 @@ public class XmlBackupFactoryUt
         IMoodleBackupXmlDetail moodleBackupXmlDetail = null, IMoodleBackupXmlDetails moodleBackupXmlDetails = null, IMoodleBackupXmlSection moodleBackupXmlSection = null,
         IMoodleBackupXmlSections moodleBackupXmlSections = null, IMoodleBackupXmlCourse moodleBackupXmlCourse = null, IMoodleBackupXmlContents moodleBackupXmlContents = null,
         IMoodleBackupXmlSetting moodleBackupXmlSetting = null, IMoodleBackupXmlSettings moodleBackupXmlSettings = null, IMoodleBackupXmlInformation moodleBackupXmlInformation = null,
-        IMoodleBackupXmlMoodleBackup moodleBackupXmlMoodleBackup = null)
+        IMoodleBackupXmlMoodleBackup moodleBackupXmlMoodleBackup = null, IOutcomesXmlOutcomesDefinition outcomesXmlOutcomesDefinition = null,
+        IQuestionsXmlQuestionsCategories questionsXmlQuestionsCategories = null, IRolesXmlRole rolesXmlRole = null, 
+        IRolesXmlRolesDefinition rolesXmlRolesDefinition = null, IScalesXmlScalesDefinition scalesXmlScalesDefinition = null)
     {
         filesXmlFiles ??= Substitute.For<IFilesXmlFiles>();
         
@@ -148,10 +274,20 @@ public class XmlBackupFactoryUt
         moodleBackupXmlInformation ??= Substitute.For<IMoodleBackupXmlInformation>();
         moodleBackupXmlMoodleBackup ??= Substitute.For<IMoodleBackupXmlMoodleBackup>();
 
+        outcomesXmlOutcomesDefinition ??= Substitute.For<IOutcomesXmlOutcomesDefinition>();
+
+        questionsXmlQuestionsCategories ??= Substitute.For<IQuestionsXmlQuestionsCategories>();
+
+        rolesXmlRole ??= Substitute.For<IRolesXmlRole>();
+        rolesXmlRolesDefinition ??= Substitute.For<IRolesXmlRolesDefinition>();
+
+        scalesXmlScalesDefinition ??= Substitute.For<IScalesXmlScalesDefinition>();
+
         return new XmlBackupFactory(filesXmlFiles, gradebookXmlGradeSetting, gradebookXmlGradeSettings, gradebookXmlGradebook, 
             groupsXmlGroupingsList, groupsXmlGroups, moodleBackupXmlDetail, moodleBackupXmlDetails, moodleBackupXmlSection,
             moodleBackupXmlSections, moodleBackupXmlCourse, moodleBackupXmlContents, moodleBackupXmlSetting, moodleBackupXmlSettings,
-            moodleBackupXmlInformation, moodleBackupXmlMoodleBackup);
+            moodleBackupXmlInformation, moodleBackupXmlMoodleBackup, outcomesXmlOutcomesDefinition, questionsXmlQuestionsCategories,
+            rolesXmlRole, rolesXmlRolesDefinition,scalesXmlScalesDefinition);
     }
     
 }

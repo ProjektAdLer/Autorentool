@@ -4,7 +4,7 @@ using AuthoringTool.DataAccess.WorldExport;
 namespace AuthoringTool.DataAccess.XmlClasses;
 
 [XmlRoot(ElementName="scales_definition")]
-public partial class ScalesXmlScalesDefinition : IXmlSerializable {
+public partial class ScalesXmlScalesDefinition : IScalesXmlScalesDefinition {
 
     
     public void SetParameters()

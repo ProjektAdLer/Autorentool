@@ -40,6 +40,12 @@ public class XmlBackupFactory
     internal IMoodleBackupXmlSettings MoodleBackupXmlSettings { get; }
     internal IMoodleBackupXmlInformation MoodleBackupXmlInformation { get; }
     internal IMoodleBackupXmlMoodleBackup MoodleBackupXmlMoodleBackup { get; }
+    internal IOutcomesXmlOutcomesDefinition OutcomesXmlOutcomesDefinition { get; }
+    internal IQuestionsXmlQuestionsCategories QuestionsXmlQuestionsCategories { get; }
+    internal IScalesXmlScalesDefinition ScalesXmlScalesDefinition { get; }
+    internal IRolesXmlRole RolesXmlRole { get; }
+    internal IRolesXmlRolesDefinition RolesXmlRolesDefinition{ get;}
+    
 
     public XmlBackupFactory()
     {
@@ -86,14 +92,16 @@ public class XmlBackupFactory
         MoodleBackupXmlInformation = new MoodleBackupXmlInformation();
         MoodleBackupXmlMoodleBackup = new MoodleBackupXmlMoodleBackup();
 
-        CreateFilesXml();
-        CreateGradebookXml();
-        CreateGroupsXml();
-        CreateOutcomesXml();
-        CreateQuestionsXml();
-        CreateRolesXml();
-        CreateScalesXml();
-        CreateMoodleBackupXml();
+        OutcomesXmlOutcomesDefinition = new OutcomesXmlOutcomesDefinition();
+
+        QuestionsXmlQuestionsCategories = new QuestionsXmlQuestionsCategories();
+        
+        RolesXmlRole = new RolesXmlRole();
+        RolesXmlRolesDefinition = new RolesXmlRolesDefinition();
+        
+        ScalesXmlScalesDefinition = new ScalesXmlScalesDefinition();
+
+        
     }
 
     //Just for Testing
@@ -102,7 +110,9 @@ public class XmlBackupFactory
         IGroupsXmlGroupingsList groupsXmlGroupingsList, IGroupsXmlGroups groupsXmlGroups,
         IMoodleBackupXmlDetail moodleBackupXmlDetail, IMoodleBackupXmlDetails moodleBackupXmlDetails, IMoodleBackupXmlSection moodleBackupXmlSection,
         IMoodleBackupXmlSections moodleBackupXmlSections, IMoodleBackupXmlCourse moodleBackupXmlCourse, IMoodleBackupXmlContents moodleBackupXmlContents,
-        IMoodleBackupXmlSetting moodleBackupXmlSetting, IMoodleBackupXmlSettings moodleBackupXmlSettings, IMoodleBackupXmlInformation moodleBackupXmlInformation, IMoodleBackupXmlMoodleBackup moodleBackupXmlMoodleBackup)
+        IMoodleBackupXmlSetting moodleBackupXmlSetting, IMoodleBackupXmlSettings moodleBackupXmlSettings, IMoodleBackupXmlInformation moodleBackupXmlInformation, IMoodleBackupXmlMoodleBackup moodleBackupXmlMoodleBackup,
+        IOutcomesXmlOutcomesDefinition outcomesXmlOutcomesDefinition, IQuestionsXmlQuestionsCategories questionsXmlQuestionsCategories,
+        IRolesXmlRole rolesXmlRole, IRolesXmlRolesDefinition rolesXmlRolesDefinition, IScalesXmlScalesDefinition scalesXmlScalesDefinition)
     {
         FilesXmlFiles = filesXmlFiles;
         
@@ -147,8 +157,29 @@ public class XmlBackupFactory
 
         MoodleBackupXmlInformation = moodleBackupXmlInformation;
         MoodleBackupXmlMoodleBackup = moodleBackupXmlMoodleBackup;
+
+        OutcomesXmlOutcomesDefinition = outcomesXmlOutcomesDefinition;
+
+        QuestionsXmlQuestionsCategories = questionsXmlQuestionsCategories;
+
+        RolesXmlRole = rolesXmlRole;
+        RolesXmlRolesDefinition = rolesXmlRolesDefinition;
+
+        ScalesXmlScalesDefinition = scalesXmlScalesDefinition;
     }
 
+    public void CreateXmlBackupFactory()
+    {
+        CreateFilesXml();
+        CreateGradebookXml();
+        CreateGroupsXml();
+        CreateOutcomesXml();
+        CreateQuestionsXml();
+        CreateRolesXml();
+        CreateScalesXml();
+        CreateMoodleBackupXml();
+    }
+    
     public void CreateFilesXml()
     {
         //create files.xml file
@@ -252,39 +283,34 @@ public class XmlBackupFactory
     public void CreateOutcomesXml()
     {
         //write outcomes.xml file
-        var outcomesOutcomesDefinition = new OutcomesXmlOutcomesDefinition();
-        outcomesOutcomesDefinition.SetParameters();
+        OutcomesXmlOutcomesDefinition.SetParameters();
         
-        outcomesOutcomesDefinition.Serialize();
+        OutcomesXmlOutcomesDefinition.Serialize();
     }
 
     public void CreateQuestionsXml()
     {
         //write questions.xml file
-        var questionsQuestionsCategories = new QuestionsXmlQuestionsCategories();
-        questionsQuestionsCategories.SetParameters();
+        QuestionsXmlQuestionsCategories.SetParameters();
         
-        questionsQuestionsCategories.Serialize();
+        QuestionsXmlQuestionsCategories.Serialize();
     }
 
     public void CreateRolesXml()
     {
         //write roles.xml file
-        var rolesRole = new RolesXmlRole();
-        rolesRole.SetParameters("", "", "5", "student", "$@NULL@$", "5", "student");
-        var rolesRolesDefinition = new RolesXmlRolesDefinition();
-        rolesRolesDefinition.SetParameters(rolesRole);
+        RolesXmlRole.SetParameters("", "", "5", "student", "$@NULL@$", "5", "student");
+        RolesXmlRolesDefinition.SetParameters(RolesXmlRole as RolesXmlRole);
         
-        rolesRolesDefinition.Serialize();
+        RolesXmlRolesDefinition.Serialize();
     }
 
     public void CreateScalesXml()
     {
         //write scales.xml file
-        var scalesScalesDefinition = new ScalesXmlScalesDefinition();
-        scalesScalesDefinition.SetParameters();
+        ScalesXmlScalesDefinition.SetParameters();
         
-        scalesScalesDefinition.Serialize();
+        ScalesXmlScalesDefinition.Serialize();
     }
     
 }
