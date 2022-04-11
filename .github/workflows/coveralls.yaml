@@ -16,6 +16,8 @@ jobs:
     steps:
       # checkout the repo
       - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
       
       # install dependencies, build, and test
       - name: Setup Dotnet for use with actions
