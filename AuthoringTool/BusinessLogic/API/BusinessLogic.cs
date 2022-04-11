@@ -1,7 +1,7 @@
 ﻿using AuthoringTool.API.Configuration;
 using AuthoringTool.DataAccess.API;
 using AuthoringTool.Entities;
-using ElectronNET.API;
+using ElectronWrapper;
 
 namespace AuthoringTool.BusinessLogic.API;
 
@@ -10,15 +10,18 @@ internal class BusinessLogic : IBusinessLogic
 
     public BusinessLogic(
         IAuthoringToolConfiguration configuration,
-        IDataAccess dataAccess)
+        IDataAccess dataAccess,
+        IHybridSupportWrapper hybridSupport)
     {
         Configuration = configuration;
         DataAccess = dataAccess;
+        HybridSupport = hybridSupport;
     }
     
     
     
     public IDataAccess DataAccess { get;  }
+    public IHybridSupportWrapper HybridSupport { get; }
 
     public bool RunningElectron => HybridSupport.IsElectronActive;
 

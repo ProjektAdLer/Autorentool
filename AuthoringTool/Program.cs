@@ -1,8 +1,8 @@
-using ElectronNET.API;
+using ElectronWrapper;
 
 Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(builder =>
 {
-    builder.UseElectron(args);
+    builder.UseElectronWrapper(args);
     builder.UseStartup<Startup>();
 
 }).Build().Run();

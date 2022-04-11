@@ -2,6 +2,7 @@
 using NUnit.Framework;
 using AuthoringTool.DataAccess.API;
 using AuthoringTool.Entities;
+using ElectronWrapper;
 using NSubstitute;
 
 namespace AuthoringToolTest.BusinessLogic.API;
@@ -153,10 +154,13 @@ public class BusinessLogicUt
 
     private AuthoringTool.BusinessLogic.API.BusinessLogic CreateStandardBusinessLogic(
         IAuthoringToolConfiguration? fakeConfiguration = null,
-        IDataAccess? fakeDataAccess = null)
+        IDataAccess? fakeDataAccess = null,
+        IHybridSupportWrapper? fakeHybridSupportWrapper = null)
     {
         fakeConfiguration ??= Substitute.For<IAuthoringToolConfiguration>();
         fakeDataAccess ??= Substitute.For<IDataAccess>();
-        return new AuthoringTool.BusinessLogic.API.BusinessLogic(fakeConfiguration, fakeDataAccess);
+        fakeHybridSupportWrapper ??= Substitute.For<IHybridSupportWrapper>();
+        return new AuthoringTool.BusinessLogic.API.BusinessLogic(fakeConfiguration, fakeDataAccess,
+            fakeHybridSupportWrapper);
     }
 }

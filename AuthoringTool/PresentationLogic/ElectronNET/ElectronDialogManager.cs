@@ -1,12 +1,19 @@
-using ElectronNET.API;
-using ElectronNET.API.Entities;
+using ElectronWrapper;
 
 namespace AuthoringTool.PresentationLogic.ElectronNET;
 
 public class ElectronDialogManager : IElectronDialogManager
 {
-    private BrowserWindow BrowserWindow => Electron.WindowManager.BrowserWindows.First();
-
+    public ElectronDialogManager(IWindowManagerWrapper windowManager, IDialogWrapper dialog)
+    {
+        WindowManager = windowManager;
+        Dialog = dialog;
+    }
+    
+    private BrowserWindow BrowserWindow => WindowManager.BrowserWindows.First();
+    internal IWindowManagerWrapper WindowManager { get; }
+    internal IDialogWrapper Dialog { get; }
+    
     /// <inheritdoc cref="IElectronDialogManager.ShowSaveAsDialog"/>
     public async Task<string> ShowSaveAsDialog(string title, string? defaultPath = null, IEnumerable<FileFilterProxy>? fileFilters = null)
     {
@@ -20,7 +27,7 @@ public class ElectronDialogManager : IElectronDialogManager
             Filters = ToFileFilterArray(fileFilters)
         };
 
-        var pathResult = await Electron.Dialog.ShowSaveDialogAsync(mainWindow, options);
+        var pathResult = await Dialog.ShowSaveDialogAsync(mainWindow, options);
         if (string.IsNullOrEmpty(pathResult))
         {
             throw new OperationCanceledException("Cancelled by user");
@@ -48,7 +55,7 @@ public class ElectronDialogManager : IElectronDialogManager
             Filters = ToFileFilterArray(fileFilters),
             Properties = openDialogProperties.ToArray()
         };
-        var pathResult = await Electron.Dialog.ShowOpenDialogAsync(mainWindow, options);
+        var pathResult = await Dialog.ShowOpenDialogAsync(mainWindow, options);
         if (pathResult.All(string.IsNullOrEmpty))
         {
             throw new OperationCanceledException("Cancelled by user");

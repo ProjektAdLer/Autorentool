@@ -2,16 +2,6 @@
   "version": 1,
   "dependencies": {
     "net6.0": {
-      "ElectronNET.API": {
-        "type": "Direct",
-        "requested": "[13.5.1, )",
-        "resolved": "13.5.1",
-        "contentHash": "IC6RwemMu1lEh7apuLxASdksMmMB1Ssv70GIYCLnkXACwgSkj4+pD7rXZlxh9mbC+KN+a7nsCJ/Naa9HXgDIyg==",
-        "dependencies": {
-          "SocketIoClientDotNet": "1.0.5",
-          "System.Drawing.Common": "5.0.0"
-        }
-      },
       "NLog": {
         "type": "Direct",
         "requested": "[4.7.14, )",
@@ -49,6 +39,15 @@
         "requested": "[16.1.25, )",
         "resolved": "16.1.25",
         "contentHash": "PZ3y8SgASqtIlJyhss47FGLwBMXMWvxL9MKk9dEqIZT/vrfQr5yhKwdJ/vNm2H8FqsWJoxu0P12nYGXFj0irkA=="
+      },
+      "ElectronNET.API": {
+        "type": "Transitive",
+        "resolved": "13.5.1",
+        "contentHash": "IC6RwemMu1lEh7apuLxASdksMmMB1Ssv70GIYCLnkXACwgSkj4+pD7rXZlxh9mbC+KN+a7nsCJ/Naa9HXgDIyg==",
+        "dependencies": {
+          "SocketIoClientDotNet": "1.0.5",
+          "System.Drawing.Common": "5.0.0"
+        }
       },
       "EngineIoClientDotNet": {
         "type": "Transitive",
@@ -1184,6 +1183,12 @@
           "System.Text.RegularExpressions": "4.3.0",
           "System.Threading": "4.3.0",
           "System.Threading.Timer": "4.3.0"
+        }
+      },
+      "electronwrapper": {
+        "type": "Project",
+        "dependencies": {
+          "ElectronNET.API": "13.5.1"
         }
       }
     },

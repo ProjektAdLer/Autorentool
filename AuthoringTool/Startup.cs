@@ -1,11 +1,9 @@
 using AuthoringTool.API;
 using AuthoringTool.API.Configuration;
-using AuthoringTool.BusinessLogic;
 using AuthoringTool.BusinessLogic.API;
 using AuthoringTool.DataAccess.API;
 using AuthoringTool.DataAccess.Persistence;
 using AuthoringTool.DataAccess.WorldExport;
-using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.API;
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
 using AuthoringTool.PresentationLogic.ElectronNET;
@@ -13,8 +11,7 @@ using AuthoringTool.PresentationLogic.EntityMapping;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
-using ElectronNET.API;
-using ElectronNET.API.Entities;
+using ElectronWrapper;
 
 public class Startup
 {
@@ -58,15 +55,19 @@ public class Startup
 
         //Blazor and Electron
         services.AddRazorPages();
-        services.AddElectron();
         services.AddServerSideBlazor();
         services.AddSingleton<IMouseService, MouseService>();
-        if (HybridSupport.IsElectronActive)
+        //Electron Wrapper layer
+        services.AddElectronInternals();
+        services.AddElectronWrappers();
+        //Wrapper around HybridSupport
+        var hybridSupportWrapper = new HybridSupportWrapper();
+        services.AddSingleton<IHybridSupportWrapper, HybridSupportWrapper>(_ => hybridSupportWrapper);
+        
+        //Insert electron dependant services as required
+        if (hybridSupportWrapper.IsElectronActive)
         {
             services.AddSingleton<IElectronDialogManager, ElectronDialogManager>();
-        }
-        else
-        {
         }
     }
 
@@ -93,16 +94,6 @@ public class Startup
             endpoints.MapBlazorHub();
             endpoints.MapFallbackToPage("/_Host");
         });
-        if (HybridSupport.IsElectronActive)
-            Task.Run(async () =>
-            {
-                var options = new BrowserWindowOptions
-                {
-                    Fullscreenable = true,
-                };
-                return await Electron.WindowManager.CreateWindowAsync(options);
-            });
-        //exit app on all windows closed
-        Electron.App.WindowAllClosed += () => Electron.App.Exit();
+        app.ConfigureElectronWindow();
     }
 }
