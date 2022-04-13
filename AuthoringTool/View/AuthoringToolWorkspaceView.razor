@@ -46,7 +46,7 @@
     <button class="btn btn-primary" @onclick="OpenEditSelectedLearningWorldDialog" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Edit Learning World</button>
     <button class="btn btn-primary" @onclick="DeleteSelectedLearningWorld" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Delete selected Learning World</button>
     <button class="btn btn-primary" @onclick="SaveSelectedLearningWorldAsync" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Save selected Learning World</button>
-    <button class="btn btn-primary" id="btnExport" @onclick="Export">Create Export-File</button>
+    <button class="btn btn-primary" id="btnExport" @onclick="ExportLearningWorld">Create Export-File</button>
 </div>
 
 @if (AuthoringToolWorkspaceP.CreateLearningWorldDialogOpen)
@@ -68,6 +68,12 @@
                  OnClose="@OnEditWorldDialogClose" DialogType=@ModalDialogType.OkCancel
                  InputFields="@AuthoringToolWorkspaceP.ModalDialogWorldInputFields" InputFieldsInitialValue="@AuthoringToolWorkspaceVm.EditDialogInitialValues">
     </ModalDialog>
+}
+
+@if (ErrorState != null)
+{
+    <ModalDialog Title="Exception encountered" Text=@ErrorState.ToString()
+                 OnClose="@(() => { ErrorState = null;})" DialogType=@ModalDialogType.Ok />
 }
 
 
@@ -92,6 +98,9 @@
     }
 
     private LearningWorldView? _activeView;
+    private string filePath = "";
+    
+    private ExceptionWrapper? ErrorState { get; set; }
     
     private void AddNewLearningWorld()
     {
@@ -110,14 +119,43 @@
 
     private async void LoadLearningWorld()
     {
-        await AuthoringToolWorkspaceP.LoadLearningWorld();
-    //we need to tell blazor explicitly to re-render our component after we added the loaded learning world
-        StateHasChanged();
+        try
+        {
+            await AuthoringToolWorkspaceP.LoadLearningWorld();
+        }
+        catch (OperationCanceledException) 
+        {
+            //nothing to do, perhaps we want to show a notification?
+        }
+        catch (Exception exception)
+        {
+            ErrorState = new ExceptionWrapper("Loading learning world", exception);
+        }
+        finally
+        {
+            //we need to tell blazor explicitly to re-render our component after we added the loaded learning world
+            StateHasChanged();
+        }
     }
 
     private async Task SaveSelectedLearningWorldAsync()
     {
-        await AuthoringToolWorkspaceP.SaveSelectedLearningWorldAsync();
+        try
+        {
+            await AuthoringToolWorkspaceP.SaveSelectedLearningWorldAsync();
+        }
+        catch (OperationCanceledException)
+        {
+            //nothing to do, perhaps we want to show a notification?
+        }
+        catch (Exception exception)
+        {
+            ErrorState = new ExceptionWrapper("Saving learning world", exception);
+        }
+        finally
+        {
+            StateHasChanged();
+        }
     }
 
     private Task OnCreateWorldDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
@@ -136,11 +174,7 @@
         _activeView?.TriggerStateHasChanged();
     }
     
-
-    /// Export Learningworld
-    private string filePath = "";
-
-    private void Export()
+    private void ExportLearningWorld()
     {
         //Create XMl-files, Overwrite Encoding to UTF-8 and Create Backup-File
         presentationLogic.ConstructBackup();

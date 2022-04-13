@@ -13,7 +13,9 @@
                 }
             </div>
             <div class="modal-body">
-                <p>@Text</p>
+                <span style="white-space: pre-line">
+                    @Text
+                </span>
                 @if (RequiredFieldsWarning && InputFields != null && InputFields.Any(FieldRequiredAndNotFilled))
                 {
                     //Display the warning only if user tried to submit without required field and there are still fields
