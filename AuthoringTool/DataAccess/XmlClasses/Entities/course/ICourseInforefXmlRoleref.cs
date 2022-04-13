@@ -2,5 +2,5 @@
 
 public interface ICourseInforefXmlRoleref
 {
-    void SetParameters(CourseInforefXmlRole inforefRole);
+    void SetParameters(CourseInforefXmlRole? inforefRole);
 }

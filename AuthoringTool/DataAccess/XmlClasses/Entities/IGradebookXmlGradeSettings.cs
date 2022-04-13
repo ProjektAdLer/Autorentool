@@ -2,5 +2,5 @@
 
 public interface IGradebookXmlGradeSettings
 {
-    void SetParameters(GradebookXmlGradeSetting gradeSetting);
+    void SetParameters(GradebookXmlGradeSetting? gradeSetting);
 }

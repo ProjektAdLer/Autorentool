@@ -1,15 +1,7 @@
-﻿using System.IO;
-using System.Xml;
-using System.Xml.Linq;
-using AuthoringTool.DataAccess.WorldExport;
-using System.IO.Abstractions;
-using System.Linq;
+﻿using System.IO.Abstractions;
 using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Tar;
 using AuthoringTool.DataAccess.XmlClasses;
-using AuthoringTool.DataAccess.XmlClasses.course;
-using AuthoringTool.DataAccess.XmlClasses.sections;
-using Microsoft.VisualBasic;
 using FileSystem = System.IO.Abstractions.FileSystem;
 
 
@@ -43,7 +35,7 @@ public class BackupFileGenerator : IBackupFileGenerator
     /// <summary>
     /// Creates all XMl-Files needed for the Moodle backup
     /// </summary>
-    public void WriteXMLFiles()
+    public void WriteXmlFiles()
     {
         var xmlEntityManager = new XmlEntityManager();
         xmlEntityManager.GetFactories();

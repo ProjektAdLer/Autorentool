@@ -2,5 +2,5 @@
 
 public interface ICourseCourseXmlCourse : IXmlSerializable
 {
-    void SetParameters(CourseCourseXmlCategory xmlCategory);
+    void SetParameters(CourseCourseXmlCategory? xmlCategory);
 }

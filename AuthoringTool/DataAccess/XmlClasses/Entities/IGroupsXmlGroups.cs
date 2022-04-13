@@ -2,5 +2,5 @@
 
 public interface IGroupsXmlGroups : IXmlSerializable
 {
-    void SetParameters(GroupsXmlGroupingsList groupingsList);
+    void SetParameters(GroupsXmlGroupingsList? groupingsList);
 }

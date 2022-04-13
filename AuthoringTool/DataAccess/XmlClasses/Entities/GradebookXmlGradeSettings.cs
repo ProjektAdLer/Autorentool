@@ -6,11 +6,11 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 public partial class GradebookXmlGradeSettings : IGradebookXmlGradeSettings
 {
 
-    public void SetParameters(GradebookXmlGradeSetting gradeSetting)
+    public void SetParameters(GradebookXmlGradeSetting? gradeSetting)
     {
         grade_Setting = gradeSetting;
     }
     
     [XmlElement(ElementName = "grade_setting")]
-    public GradebookXmlGradeSetting grade_Setting;
+    public GradebookXmlGradeSetting? grade_Setting;
 }

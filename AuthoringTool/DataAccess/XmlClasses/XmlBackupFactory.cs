@@ -100,8 +100,6 @@ public class XmlBackupFactory
         RolesXmlRolesDefinition = new RolesXmlRolesDefinition();
         
         ScalesXmlScalesDefinition = new ScalesXmlScalesDefinition();
-
-        
     }
 
     //Just for Testing
@@ -192,7 +190,7 @@ public class XmlBackupFactory
     {
         //create gradebook.xml file
         GradebookXmlGradebookSetting.SetParameters("minmaxtouse", "1");
-        GradebookXmlGradebookSettings.SetParameters(GradebookXmlGradebookSetting as GradebookXmlGradeSetting);
+        GradebookXmlGradebookSettings.SetParameters(GradebookXmlGradebookSetting as GradebookXmlGradeSetting) ; 
         GradebookXmlGradebook.SetParameters(GradebookXmlGradebookSettings as GradebookXmlGradeSettings);
         
         GradebookXmlGradebook.Serialize();

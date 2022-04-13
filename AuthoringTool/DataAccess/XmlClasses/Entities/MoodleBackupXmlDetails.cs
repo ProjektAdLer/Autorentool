@@ -6,11 +6,11 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 public partial class MoodleBackupXmlDetails : IMoodleBackupXmlDetails {
 
    
-    public void SetParameters(MoodleBackupXmlDetail moodlebackupDetail)
+    public void SetParameters(MoodleBackupXmlDetail? moodlebackupDetail)
     {
         Detail = moodlebackupDetail;
     }
     
     [XmlElement(ElementName="detail")]
-    public MoodleBackupXmlDetail Detail;
+    public MoodleBackupXmlDetail? Detail;
 }

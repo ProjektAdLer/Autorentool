@@ -6,7 +6,7 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 [XmlRoot(ElementName="groups")]
 public partial class GroupsXmlGroups : IGroupsXmlGroups{
 
-    public void SetParameters(GroupsXmlGroupingsList groupingsList)
+    public void SetParameters(GroupsXmlGroupingsList? groupingsList)
     {
         GroupingsList = groupingsList;
     }
@@ -18,5 +18,5 @@ public partial class GroupsXmlGroups : IGroupsXmlGroups{
     }
     
     [XmlElement(ElementName="GroupingsList")]
-    public GroupsXmlGroupingsList GroupingsList { get; set; }
+    public GroupsXmlGroupingsList? GroupingsList { get; set; }
 }

@@ -2,5 +2,5 @@
 
 public interface ICourseInforefXmlInforef : IXmlSerializable
 {
-    void SetParameters(CourseInforefXmlRoleref inforefRoleref);
+    void SetParameters(CourseInforefXmlRoleref? inforefRoleref);
 }

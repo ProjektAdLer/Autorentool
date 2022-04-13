@@ -9,7 +9,7 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 public partial class GradebookXmlGradebook : IGradebookXmlGradebook
 {
     
-    public void SetParameters(GradebookXmlGradeSettings gradeSettings)
+    public void SetParameters(GradebookXmlGradeSettings? gradeSettings)
     {
         Grade_settings = gradeSettings;
     }
@@ -33,5 +33,5 @@ public partial class GradebookXmlGradebook : IGradebookXmlGradebook
     public string Grade_letters = "";
 
     [XmlElement(ElementName = "grade_settings")]
-    public GradebookXmlGradeSettings Grade_settings;
+    public GradebookXmlGradeSettings? Grade_settings;
 }

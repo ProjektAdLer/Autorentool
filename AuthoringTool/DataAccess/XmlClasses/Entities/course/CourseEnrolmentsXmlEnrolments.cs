@@ -7,7 +7,7 @@ namespace AuthoringTool.DataAccess.XmlClasses.course;
 public partial class CourseEnrolmentsXmlEnrolments : ICourseEnrolmentsXmlEnrolments
 {
     
-    public void SetParameters(CourseEnrolmentsXmlEnrols enrolsList)
+    public void SetParameters(CourseEnrolmentsXmlEnrols? enrolsList)
     {
         Enrols = enrolsList;
     }
@@ -19,5 +19,5 @@ public partial class CourseEnrolmentsXmlEnrolments : ICourseEnrolmentsXmlEnrolme
     }
     
     [XmlElement(ElementName = "enrols")] 
-    public CourseEnrolmentsXmlEnrols Enrols;
+    public CourseEnrolmentsXmlEnrols? Enrols;
 }

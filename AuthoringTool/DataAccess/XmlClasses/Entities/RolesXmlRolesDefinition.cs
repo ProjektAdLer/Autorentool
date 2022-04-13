@@ -7,7 +7,7 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 public partial class RolesXmlRolesDefinition : IRolesXmlRolesDefinition {
 
     
-    public void SetParameters(RolesXmlRole rolesRole)
+    public void SetParameters(RolesXmlRole? rolesRole)
     {
         Role = rolesRole;
     }
@@ -19,5 +19,5 @@ public partial class RolesXmlRolesDefinition : IRolesXmlRolesDefinition {
     }
     
     [XmlElement(ElementName="role")]
-    public RolesXmlRole Role { get; set; }
+    public RolesXmlRole? Role { get; set; }
 }

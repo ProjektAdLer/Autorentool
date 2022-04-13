@@ -28,7 +28,7 @@ internal class DataAccess : IDataAccess
     public void ConstructBackup()
     {
         BackupFile.CreateBackupFolders();
-        BackupFile.WriteXMLFiles();
+        BackupFile.WriteXmlFiles();
         BackupFile.WriteBackupFile();
     }
 

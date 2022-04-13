@@ -2,5 +2,5 @@
 
 public interface IMoodleBackupXmlDetails
 {
-    void SetParameters(MoodleBackupXmlDetail moodlebackupDetail);
+    void SetParameters(MoodleBackupXmlDetail? moodlebackupDetail);
 }

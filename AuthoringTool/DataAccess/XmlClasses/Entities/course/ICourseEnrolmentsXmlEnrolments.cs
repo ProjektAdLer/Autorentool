@@ -2,5 +2,5 @@
 
 public interface ICourseEnrolmentsXmlEnrolments : IXmlSerializable
 {
-    void SetParameters(CourseEnrolmentsXmlEnrols enrolsList);
+    void SetParameters(CourseEnrolmentsXmlEnrols? enrolsList);
 }

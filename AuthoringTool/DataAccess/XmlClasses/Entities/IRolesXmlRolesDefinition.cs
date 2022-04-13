@@ -2,5 +2,5 @@
 
 public interface IRolesXmlRolesDefinition : IXmlSerializable
 {
-    void SetParameters(RolesXmlRole rolesRole);
+    void SetParameters(RolesXmlRole? rolesRole);
 }

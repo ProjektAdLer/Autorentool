@@ -8,8 +8,8 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 		public void SetParameters(string name, string originalCourseId,
                                   			string originalCourseFormat, string originalCourseFullname, string originalCourseShortname,
                                   			string originalCourseContextid, string originalSystemContextid, string originalCourseStartdate, 
-                                  			string originalCourseEnddate, MoodleBackupXmlDetails backupDetails, MoodleBackupXmlContents backupContents, 
-                                  			MoodleBackupXmlSettings backupSettings)
+                                  			string originalCourseEnddate, MoodleBackupXmlDetails? backupDetails, MoodleBackupXmlContents? backupContents, 
+                                  			MoodleBackupXmlSettings? backupSettings)
 		{
         Name = name;
         Original_course_id = originalCourseId;
@@ -85,12 +85,12 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 		public string Original_system_contextid = "";
 		
 		[XmlElement(ElementName="details")]
-		public MoodleBackupXmlDetails Details { get; set; }
+		public MoodleBackupXmlDetails? Details { get; set; }
 		
 		[XmlElement(ElementName="contents")]
-		public MoodleBackupXmlContents Contents { get; set; }
+		public MoodleBackupXmlContents? Contents { get; set; }
 		
 		[XmlElement(ElementName="settings")]
-		public MoodleBackupXmlSettings Settings { get; set; }
+		public MoodleBackupXmlSettings? Settings { get; set; }
 		
 	}

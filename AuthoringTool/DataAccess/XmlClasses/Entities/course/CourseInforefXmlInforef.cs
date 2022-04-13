@@ -7,7 +7,7 @@ namespace AuthoringTool.DataAccess.XmlClasses.course;
 public partial class CourseInforefXmlInforef : ICourseInforefXmlInforef {
 
     
-    public void SetParameters(CourseInforefXmlRoleref inforefRoleref)
+    public void SetParameters(CourseInforefXmlRoleref? inforefRoleref)
     {
          Roleref = inforefRoleref;
     }
@@ -19,5 +19,5 @@ public partial class CourseInforefXmlInforef : ICourseInforefXmlInforef {
     }
     
     [XmlElement(ElementName="roleref")]
-    public CourseInforefXmlRoleref Roleref;
+    public CourseInforefXmlRoleref? Roleref;
 }

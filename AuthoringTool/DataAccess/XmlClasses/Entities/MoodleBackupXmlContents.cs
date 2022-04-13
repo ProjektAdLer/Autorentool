@@ -6,14 +6,14 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 public partial class MoodleBackupXmlContents : IMoodleBackupXmlContents {
 
    
-    public void SetParameters(MoodleBackupXmlSections moodleBackupSections,MoodleBackupXmlCourse moodleBackupCourse)
+    public void SetParameters(MoodleBackupXmlSections? moodleBackupSections,MoodleBackupXmlCourse? moodleBackupCourse)
     {
         Sections = moodleBackupSections; 
         Course = moodleBackupCourse;
     }
     
     [XmlElement(ElementName="sections")]
-    public MoodleBackupXmlSections Sections;
+    public MoodleBackupXmlSections? Sections;
     [XmlElement(ElementName="course")]
-    public MoodleBackupXmlCourse Course;
+    public MoodleBackupXmlCourse? Course;
 }

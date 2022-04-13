@@ -8,14 +8,14 @@ public partial class MoodleBackupXmlSettings : IMoodleBackupXmlSettings{
     
     public void SetParameters()
     {
-        Setting = new List<MoodleBackupXmlSetting>();
+        Setting = new List<MoodleBackupXmlSetting?>();
     }
 
-    public void FillSettings(MoodleBackupXmlSetting moodleBackupXmlSetting)
+    public void FillSettings(MoodleBackupXmlSetting? moodleBackupXmlSetting)
     {
         Setting.Add(moodleBackupXmlSetting);
     }
     
     [XmlElement(ElementName="setting")]
-    public List<MoodleBackupXmlSetting> Setting;
+    public List<MoodleBackupXmlSetting?> Setting;
 }

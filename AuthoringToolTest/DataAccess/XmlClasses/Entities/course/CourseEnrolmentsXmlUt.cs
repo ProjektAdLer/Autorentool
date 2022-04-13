@@ -44,7 +44,7 @@ public class CourseEnrolmentsXmlUt
         //Act
         enrolmentsEnrols.SetParameters(enrolmentsEnrol1, enrolmentsEnrol2, enrolmentsEnrol3);
 
-        var expected_result = new List<CourseEnrolmentsXmlEnrol>();
+        var expected_result = new List<CourseEnrolmentsXmlEnrol?>();
         expected_result.Add(enrolmentsEnrol1);
         expected_result.Add(enrolmentsEnrol2);
         expected_result.Add(enrolmentsEnrol3);

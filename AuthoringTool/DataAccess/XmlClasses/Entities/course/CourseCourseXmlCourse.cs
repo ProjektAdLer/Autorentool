@@ -8,7 +8,7 @@ namespace AuthoringTool.DataAccess.XmlClasses.course;
 	public partial class CourseCourseXmlCourse : ICourseCourseXmlCourse
 	{
 		
-		public void SetParameters(CourseCourseXmlCategory xmlCategory)
+		public void SetParameters(CourseCourseXmlCategory? xmlCategory)
 		{
 			var currTime = DateTimeOffset.Now.ToUnixTimeSeconds(); 
 			Id = "53";
@@ -121,7 +121,7 @@ namespace AuthoringTool.DataAccess.XmlClasses.course;
 		public string Coursedisplay = "0";
 		
 		[XmlElement(ElementName="category")]
-		public CourseCourseXmlCategory Category;
+		public CourseCourseXmlCategory? Category;
 		
 		[XmlElement(ElementName="tags")]
 		public string Tags;

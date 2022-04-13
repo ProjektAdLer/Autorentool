@@ -2,5 +2,5 @@
 
 public interface IMoodleBackupXmlContents
 {
-    void SetParameters(MoodleBackupXmlSections moodleBackupSections, MoodleBackupXmlCourse moodleBackupCourse);
+    void SetParameters(MoodleBackupXmlSections? moodleBackupSections, MoodleBackupXmlCourse? moodleBackupCourse);
 }

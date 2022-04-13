@@ -91,7 +91,7 @@ public class XmlCourseFactory
         //Write course/inforef.xml file
         CourseInforefXmlRole.SetParameters("5");
         CourseInforefXmlRoleref.SetParameters(CourseInforefXmlRole as CourseInforefXmlRole);
-        CourseInforefXmlInforef.SetParameters(CourseInforefXmlInforef as CourseInforefXmlRoleref);
+        CourseInforefXmlInforef.SetParameters(CourseInforefXmlRoleref as CourseInforefXmlRoleref);
         
         CourseInforefXmlInforef.Serialize();
     }

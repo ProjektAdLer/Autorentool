@@ -2,5 +2,5 @@
 
 public interface IGradebookXmlGradebook : IXmlSerializable
 {
-    void SetParameters(GradebookXmlGradeSettings gradeSettings);
+    void SetParameters(GradebookXmlGradeSettings? gradeSettings);
 }

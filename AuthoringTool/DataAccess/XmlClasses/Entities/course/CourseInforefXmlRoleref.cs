@@ -6,11 +6,11 @@ namespace AuthoringTool.DataAccess.XmlClasses.course;
 public partial class CourseInforefXmlRoleref : ICourseInforefXmlRoleref{
     
     
-    public void SetParameters(CourseInforefXmlRole inforefRole)
+    public void SetParameters(CourseInforefXmlRole? inforefRole)
     {
         Role = inforefRole;
     }
     
     [XmlElement(ElementName="role")]
-    public CourseInforefXmlRole Role;
+    public CourseInforefXmlRole? Role;
 }

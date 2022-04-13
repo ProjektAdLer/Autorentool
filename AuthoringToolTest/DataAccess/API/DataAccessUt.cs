@@ -42,7 +42,7 @@ public class DataAccessUt
         systemUnderTest.ConstructBackup();
 
         //Assert
-        mockBackupFile.Received().WriteXMLFiles();
+        mockBackupFile.Received().WriteXmlFiles();
         mockBackupFile.Received().WriteBackupFile();
     }
 
