@@ -42,7 +42,7 @@
 </div>
 <div>
     <button class="btn btn-primary" @onclick="AddNewLearningWorld">Add Learning World</button>
-    <button class="btn btn-primary" @onclick="LoadLearningWorld">Load Learning World</button>
+    <button class="btn btn-primary" @onclick="LoadLearningWorldAsync">Load Learning World</button>
     <button class="btn btn-primary" @onclick="OpenEditSelectedLearningWorldDialog" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Edit Learning World</button>
     <button class="btn btn-primary" @onclick="DeleteSelectedLearningWorld" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Delete selected Learning World</button>
     <button class="btn btn-primary" @onclick="SaveSelectedLearningWorldAsync" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Save selected Learning World</button>
@@ -117,7 +117,7 @@
         AuthoringToolWorkspaceP.DeleteSelectedLearningWorld();
     }
 
-    private async void LoadLearningWorld()
+    private async void LoadLearningWorldAsync()
     {
         try
         {

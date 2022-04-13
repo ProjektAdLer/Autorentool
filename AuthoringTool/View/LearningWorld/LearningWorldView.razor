@@ -10,7 +10,7 @@
 <h2>LearningWorld @_learningWorldP.LearningWorldVm?.Name</h2>
 @ChildContent
 <button class="btn btn-primary" @onclick="AddNewLearningSpace">Add Learning Space</button>
-<button class="btn btn-primary" @onclick="LoadLearningSpace">Load Learning Space</button>
+<button class="btn btn-primary" @onclick="LoadLearningSpaceAsync">Load Learning Space</button>
 @if (_learningWorldP.CreateLearningSpaceDialogueOpen)
 {
     <ModalDialog Title="Create new learning space" Text="Please enter the required data for the learning space below:"
@@ -19,7 +19,7 @@
     </ModalDialog>
 }
 <button class="btn btn-primary" @onclick="AddNewLearningElement">Add Learning Element</button>
-<button class="btn btn-primary" @onclick="LoadLearningElement">Load Learning Element</button>
+<button class="btn btn-primary" @onclick="LoadLearningElementAsync">Load Learning Element</button>
 @if (_learningWorldP.CreateLearningElementDialogOpen)
 {
     <ModalDialog Title="Create new learning element" Text="Please enter the required data for the learning element below:"
@@ -42,7 +42,7 @@
     <br>
     <button class="btn btn-primary" @onclick="EditLearningObject">Edit selected Learning Object</button>
     <button class="btn btn-primary" @onclick="DeleteSelectedLearningObject">Delete Learning Object</button>
-    <button class="btn btn-primary" @onclick="SaveSelectedLearningObject">Save selected Learning Object</button>
+    <button class="btn btn-primary" @onclick="SaveSelectedLearningObjectAsync">Save selected Learning Object</button>
 }
 <svg style="width: 100%; height: 600px; border: 1px solid green"
      xmlns="http://www.w3.org/2000/svg"
@@ -86,11 +86,18 @@
     </ModalDialog>
 }
 
+@if (ErrorState != null)
+{
+    <ModalDialog Title="Exception encountered" Text=@ErrorState.ToString()
+                 OnClose="@(() => { ErrorState = null;})" DialogType=@ModalDialogType.Ok />
+}
 
 @code {
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
+    
+    private ExceptionWrapper? ErrorState { get; set; }
     
     
     private void AddNewLearningSpace()
@@ -108,23 +115,67 @@
         _learningWorldP.DeleteSelectedLearningObject();
     }
 
-    private async void LoadLearningSpace()
+    private async Task LoadLearningSpaceAsync()
     {
-        await _learningWorldP.LoadLearningSpace();
-    //we need to tell blazor explicitly to re-render our component after we added the loaded learning object
-        StateHasChanged();
+        try
+        {
+            await _learningWorldP.LoadLearningSpace();
+        }
+        catch (OperationCanceledException)
+        {
+            //nothing to do, show notification?
+        }
+        catch (Exception exception)
+        {
+            ErrorState = new ExceptionWrapper("Load learning space", exception);
+        }
+        finally
+        {
+            //we need to tell blazor explicitly to re-render our component after we added the loaded learning object
+            StateHasChanged();
+        }
     }
 
-    private async void LoadLearningElement()
+    private async Task LoadLearningElementAsync()
     {
-        await _learningWorldP.LoadLearningElement();
-    //we need to tell blazor explicitly to re-render our component after we added the loaded learning object
-        StateHasChanged();
+        try
+        {
+            await _learningWorldP.LoadLearningElement();
+        }
+        catch (OperationCanceledException)
+        {
+            //nothing to do, show notification?
+        }
+        catch (Exception exception)
+        {
+            ErrorState = new ExceptionWrapper("Load learning element", exception);
+        }
+        finally
+        {
+            //we need to tell blazor explicitly to re-render our component after we added the loaded learning object
+            StateHasChanged();
+        }
     }
 
-    private void SaveSelectedLearningObject()
+    private async Task SaveSelectedLearningObjectAsync()
     {
-        _learningWorldP.SaveSelectedLearningObject();
+        try 
+        {
+            await _learningWorldP.SaveSelectedLearningObjectAsync();
+        } 
+        catch (OperationCanceledException)
+        {
+            //nothing to do, show notification?
+        }
+        catch (Exception exception)
+        {
+            ErrorState = new ExceptionWrapper("Save learning object", exception);
+        }
+        finally
+        {
+            //we need to tell blazor explicitly to re-render our component after we added the loaded learning object
+            StateHasChanged();
+        }
     }
 
     private Task OnCreateSpaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)

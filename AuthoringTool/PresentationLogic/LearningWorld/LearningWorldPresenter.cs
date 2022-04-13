@@ -424,7 +424,7 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
             }
         }
 
-        public void SaveSelectedLearningObject()
+        public async Task SaveSelectedLearningObjectAsync()
         {
             if (LearningWorldVm == null)
                 throw new ApplicationException("SelectedLearningWorld is null");
@@ -433,10 +433,10 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
                 case null:
                     throw new ApplicationException("SelectedLearningObject is null");
                 case LearningSpaceViewModel learningSpace:
-                    _presentationLogic.SaveLearningSpaceAsync(learningSpace);
+                    await _presentationLogic.SaveLearningSpaceAsync(learningSpace);
                     break;
                 case LearningElementViewModel learningElement:
-                    _presentationLogic.SaveLearningElementAsync(learningElement);
+                    await _presentationLogic.SaveLearningElementAsync(learningElement);
                     break;
                 default:
                     throw new NotImplementedException("Type of LearningObject is not implemented");

@@ -639,17 +639,17 @@ public class LearningWorldPresenterUt
     #region SaveSelectedLearningObject
 
     [Test]
-    public void LearningWorldPresenter_SaveSelectedLearningObject_ThrowsWhenSelectedWorldNull()
+    public void LearningWorldPresenter_SaveSelectedLearningObjectAsync_ThrowsWhenSelectedWorldNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningWorld(null, null);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SaveSelectedLearningObject());
+        var ex = Assert.ThrowsAsync<ApplicationException>(async () => await systemUnderTest.SaveSelectedLearningObjectAsync());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
 
     [Test]
-    public void LearningWorldPresenter_SaveSelectedLearningObject_DoesNotThrowWhenSelectedObjectNull()
+    public void LearningWorldPresenter_SaveSelectedLearningObjectAsync_DoesNotThrowWhenSelectedObjectNull()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -657,7 +657,7 @@ public class LearningWorldPresenterUt
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningWorld(null, world);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SaveSelectedLearningObject());
+        var ex = Assert.ThrowsAsync<ApplicationException>(async () => await systemUnderTest.SaveSelectedLearningObjectAsync());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningObject is null"));
     }
 
@@ -673,7 +673,7 @@ public class LearningWorldPresenterUt
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
         systemUnderTest.SetLearningWorld(null, world);
-        systemUnderTest.SaveSelectedLearningObject();
+        systemUnderTest.SaveSelectedLearningObjectAsync();
 
         presentationLogic.Received().SaveLearningSpaceAsync(space);
     }
@@ -691,13 +691,13 @@ public class LearningWorldPresenterUt
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
         systemUnderTest.SetLearningWorld(null, world);
-        systemUnderTest.SaveSelectedLearningObject();
+        systemUnderTest.SaveSelectedLearningObjectAsync();
 
         presentationLogic.Received().SaveLearningElementAsync(element);
     }
 
     [Test]
-    public void LearningWorldPresenter_SaveSelectedLearningObject_WithUnknownObject_ThrowsNotImplemented()
+    public void LearningWorldPresenter_SaveSelectedLearningObject_WithUnknownObjectAsync_ThrowsNotImplemented()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -707,7 +707,7 @@ public class LearningWorldPresenterUt
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningWorld(null, world);
 
-        var ex = Assert.Throws<NotImplementedException>(() => systemUnderTest.SaveSelectedLearningObject());
+        var ex = Assert.ThrowsAsync<NotImplementedException>(async () => await systemUnderTest.SaveSelectedLearningObjectAsync());
         Assert.That(ex!.Message, Is.EqualTo("Type of LearningObject is not implemented"));
     }
 
