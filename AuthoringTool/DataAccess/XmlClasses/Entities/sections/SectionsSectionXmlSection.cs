@@ -5,7 +5,7 @@ using AuthoringTool.DataAccess.WorldExport;
 namespace AuthoringTool.DataAccess.XmlClasses.sections;
 
 [XmlRoot(ElementName="section")]
-public partial class SectionsSectionXmlSection : IXmlSerializable{
+public partial class SectionsSectionXmlSection : ISectionsSectionXmlSection{
 
 
     public void SetParameters(string id, string number)

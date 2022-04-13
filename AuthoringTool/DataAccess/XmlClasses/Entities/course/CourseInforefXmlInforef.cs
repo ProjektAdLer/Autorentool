@@ -4,7 +4,7 @@ using AuthoringTool.DataAccess.WorldExport;
 namespace AuthoringTool.DataAccess.XmlClasses.course;
 
 [XmlRoot(ElementName="inforef")]
-public partial class CourseInforefXmlInforef : IXmlSerializable {
+public partial class CourseInforefXmlInforef : ICourseInforefXmlInforef {
 
     
     public void SetParameters(CourseInforefXmlRoleref inforefRoleref)

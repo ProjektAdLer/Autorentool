@@ -5,7 +5,7 @@ using AuthoringTool.DataAccess.WorldExport;
 namespace AuthoringTool.DataAccess.XmlClasses.course;
 
 [XmlRoot(ElementName="course")]
-	public partial class CourseCourseXmlCourse : IXmlSerializable
+	public partial class CourseCourseXmlCourse : ICourseCourseXmlCourse
 	{
 		
 		public void SetParameters(CourseCourseXmlCategory xmlCategory)

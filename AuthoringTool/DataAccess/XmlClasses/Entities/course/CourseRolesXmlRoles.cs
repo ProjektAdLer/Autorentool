@@ -4,7 +4,7 @@ using AuthoringTool.DataAccess.WorldExport;
 namespace AuthoringTool.DataAccess.XmlClasses.course;
 
 [XmlRoot(ElementName="roles")]
-public partial class CourseRolesXmlRoles : IXmlSerializable
+public partial class CourseRolesXmlRoles : ICourseRolesXmlRoles
 {
     public void SetParameters(string roleOverrides, string roleAssignments)
     {

@@ -4,7 +4,7 @@ using AuthoringTool.DataAccess.WorldExport;
 namespace AuthoringTool.DataAccess.XmlClasses.course;
 
 [XmlRoot(ElementName="enrolments")]
-public partial class CourseEnrolmentsXmlEnrolments : IXmlSerializable
+public partial class CourseEnrolmentsXmlEnrolments : ICourseEnrolmentsXmlEnrolments
 {
     
     public void SetParameters(CourseEnrolmentsXmlEnrols enrolsList)

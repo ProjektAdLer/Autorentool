@@ -4,7 +4,19 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 
 public class XmlSectionFactory
 {
+
+    internal ISectionsSectionXmlSection SectionsSectionXmlSection;
     public XmlSectionFactory()
+    {
+        SectionsSectionXmlSection = new SectionsSectionXmlSection();
+    }
+
+    public XmlSectionFactory(ISectionsSectionXmlSection sectionsSectionXmlSection)
+    {
+        SectionsSectionXmlSection = sectionsSectionXmlSection;
+    }
+
+    public void CreateXmlSectionFactory()
     {
         CreateSectionSectionXml();
     }
@@ -12,9 +24,8 @@ public class XmlSectionFactory
     public void CreateSectionSectionXml()
     {
         //write section.xml file
-        var sectionSection = new SectionsSectionXmlSection();
-        sectionSection.SetParameters("160","1");
+        SectionsSectionXmlSection.SetParameters("160","1");
         
-        sectionSection.Serialize();
+        SectionsSectionXmlSection.Serialize();
     }
 }

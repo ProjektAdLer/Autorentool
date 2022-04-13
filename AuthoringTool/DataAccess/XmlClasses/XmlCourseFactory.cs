@@ -4,7 +4,59 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 
 public class XmlCourseFactory
 {
+    internal ICourseCourseXmlCategory CourseCourseXmlCategory { get; }
+    internal ICourseCourseXmlCourse CourseCourseXmlCourse { get; }
+    internal ICourseEnrolmentsXmlEnrol CourseEnrolmentsXmlEnrolManual { get; }
+    internal ICourseEnrolmentsXmlEnrol CourseEnrolmentsXmlEnrolGuest { get; }
+    internal ICourseEnrolmentsXmlEnrol CourseEnrolmentsXmlEnrolSelf { get; }
+    internal ICourseEnrolmentsXmlEnrolments CourseEnrolmentsXmlEnrolments { get; }
+    internal ICourseEnrolmentsXmlEnrols CourseEnrolmentsXmlEnrols { get; }
+    internal ICourseInforefXmlInforef CourseInforefXmlInforef { get; }
+    internal ICourseInforefXmlRole CourseInforefXmlRole { get; }
+    internal ICourseInforefXmlRoleref CourseInforefXmlRoleref { get; }
+    internal ICourseRolesXmlRoles CourseRolesXmlRoles { get; }
+    
     public XmlCourseFactory()
+    {
+        CourseCourseXmlCategory = new CourseCourseXmlCategory();
+        CourseCourseXmlCourse = new CourseCourseXmlCourse();
+
+        CourseEnrolmentsXmlEnrolManual = new CourseEnrolmentsXmlEnrol();
+        CourseEnrolmentsXmlEnrolGuest = new CourseEnrolmentsXmlEnrol();
+        CourseEnrolmentsXmlEnrolSelf = new CourseEnrolmentsXmlEnrol();
+        CourseEnrolmentsXmlEnrolments = new CourseEnrolmentsXmlEnrolments();
+        CourseEnrolmentsXmlEnrols = new CourseEnrolmentsXmlEnrols();
+
+        CourseInforefXmlInforef = new CourseInforefXmlInforef();
+        CourseInforefXmlRole = new CourseInforefXmlRole();
+        CourseInforefXmlRoleref = new CourseInforefXmlRoleref();
+
+        CourseRolesXmlRoles = new CourseRolesXmlRoles();
+    }
+
+    //Just for testing
+    public XmlCourseFactory(ICourseCourseXmlCategory courseCourseXmlCategory, ICourseCourseXmlCourse courseCourseXmlCourse,
+        ICourseEnrolmentsXmlEnrol courseEnrolmentsXmlEnrol, ICourseEnrolmentsXmlEnrols courseEnrolmentsXmlEnrols, 
+        ICourseEnrolmentsXmlEnrolments courseEnrolmentsXmlEnrolments, ICourseInforefXmlRole courseInforefXmlRole, 
+        ICourseInforefXmlRoleref courseInforefXmlRoleref, ICourseInforefXmlInforef courseInforefXmlInforef, ICourseRolesXmlRoles courseRolesXmlRoles)
+    {
+        CourseCourseXmlCategory = courseCourseXmlCategory;
+        CourseCourseXmlCourse = courseCourseXmlCourse;
+
+        CourseEnrolmentsXmlEnrolManual = courseEnrolmentsXmlEnrol;
+        CourseEnrolmentsXmlEnrolGuest = courseEnrolmentsXmlEnrol;
+        CourseEnrolmentsXmlEnrolSelf = courseEnrolmentsXmlEnrol;
+        CourseEnrolmentsXmlEnrols = courseEnrolmentsXmlEnrols;
+        CourseEnrolmentsXmlEnrolments = courseEnrolmentsXmlEnrolments;
+
+        CourseInforefXmlRole = courseInforefXmlRole;
+        CourseInforefXmlRoleref = courseInforefXmlRoleref;
+        CourseInforefXmlInforef = courseInforefXmlInforef;
+
+        CourseRolesXmlRoles = courseRolesXmlRoles;
+    }
+    
+    public void CreateXmlCourseFactory()
     {
         CreateCourseCourseXml();
         CreateCourseEnrolmentsXml();
@@ -15,51 +67,41 @@ public class XmlCourseFactory
     public void CreateCourseCourseXml()
     {
         //Write course/course.xml file
-        var courseCategory = new CourseCourseXmlCategory();
-        courseCategory.SetParameters("Miscellaneous", "$@NULL@$", "1"); 
-        var courseCourse = new CourseCourseXmlCourse();
-        courseCourse.SetParameters(courseCategory);
+        CourseCourseXmlCategory.SetParameters("Miscellaneous", "$@NULL@$", "1"); 
+        CourseCourseXmlCourse.SetParameters(CourseCourseXmlCategory as CourseCourseXmlCategory);
         
-        courseCourse.Serialize();
+        CourseCourseXmlCourse.Serialize();
     }
 
     public void CreateCourseEnrolmentsXml()
     {
         //Write course/enrolments.xml file
-        var enrolmentsEnrol1 = new CourseEnrolmentsXmlEnrol();
-        enrolmentsEnrol1.SetParametersShort("5", "153", "manual", "0");
-        var enrolmentsEnrol2 = new CourseEnrolmentsXmlEnrol();
-        enrolmentsEnrol2.SetParametersShort("0", "154", "guest", "1");
-        var enrolmentsEnrol3 = new CourseEnrolmentsXmlEnrol();
-        enrolmentsEnrol3.SetParametersFull("5", "155", "self", "1", "0", "0", "0", "1", "0", "1");
-        var enrolmentsEnrols = new CourseEnrolmentsXmlEnrols();
-        enrolmentsEnrols.SetParameters(enrolmentsEnrol1, enrolmentsEnrol2, enrolmentsEnrol3);
-        var enrolmentsEnrolments = new CourseEnrolmentsXmlEnrolments();
-        enrolmentsEnrolments.SetParameters(enrolmentsEnrols);
+        CourseEnrolmentsXmlEnrolManual.SetParametersShort("5", "153", "manual", "0");
+        CourseEnrolmentsXmlEnrolGuest.SetParametersShort("0", "154", "guest", "1");
+        CourseEnrolmentsXmlEnrolSelf.SetParametersFull("5", "155", "self", "1", "0", "0", "0", "1", "0", "1");
+        CourseEnrolmentsXmlEnrols.SetParameters(CourseEnrolmentsXmlEnrolManual as CourseEnrolmentsXmlEnrol, 
+            CourseEnrolmentsXmlEnrolGuest as CourseEnrolmentsXmlEnrol, CourseEnrolmentsXmlEnrolSelf as CourseEnrolmentsXmlEnrol);
+        CourseEnrolmentsXmlEnrolments.SetParameters(CourseEnrolmentsXmlEnrols as CourseEnrolmentsXmlEnrols);
         
-        enrolmentsEnrolments.Serialize();
+        CourseEnrolmentsXmlEnrolments.Serialize();
     }
 
     public void CreateCourseInforefXml()
     {
         //Write course/inforef.xml file
-        var inforefRole = new CourseInforefXmlRole();
-        inforefRole.SetParameters("5");
-        var inforefRoleref = new CourseInforefXmlRoleref();
-        inforefRoleref.SetParameters(inforefRole);
-        var inforefInforef = new CourseInforefXmlInforef();
-        inforefInforef.SetParameters(inforefRoleref);
+        CourseInforefXmlRole.SetParameters("5");
+        CourseInforefXmlRoleref.SetParameters(CourseInforefXmlRole as CourseInforefXmlRole);
+        CourseInforefXmlInforef.SetParameters(CourseInforefXmlInforef as CourseInforefXmlRoleref);
         
-        inforefInforef.Serialize();
+        CourseInforefXmlInforef.Serialize();
     }
 
     public void CreateCourseRolesXml()
     {
         //Write course/roles.xml file
-        var rolesRoles = new CourseRolesXmlRoles();
-        rolesRoles.SetParameters("", "");
+        CourseRolesXmlRoles.SetParameters("", "");
         
-        rolesRoles.Serialize();
+        CourseRolesXmlRoles.Serialize();
     }
 
 }

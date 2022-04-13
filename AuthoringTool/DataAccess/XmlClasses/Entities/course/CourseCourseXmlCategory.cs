@@ -3,7 +3,7 @@
 namespace AuthoringTool.DataAccess.XmlClasses.course;
 
 [XmlRoot(ElementName="category")]
-public partial class CourseCourseXmlCategory {
+public partial class CourseCourseXmlCategory : ICourseCourseXmlCategory{
 
 	public void SetParameters(string name, string description, string id)
 	{

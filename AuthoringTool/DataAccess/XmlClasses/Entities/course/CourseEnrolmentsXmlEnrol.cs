@@ -3,7 +3,7 @@
 namespace AuthoringTool.DataAccess.XmlClasses.course;
 
 [XmlRoot(ElementName="enrol")]
-	public partial class CourseEnrolmentsXmlEnrol {
+	public partial class CourseEnrolmentsXmlEnrol : ICourseEnrolmentsXmlEnrol{
 
 		
 		public void SetParametersShort(string roleid, string id, string enrolchild, string status)

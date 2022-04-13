@@ -32,6 +32,6 @@
   </AssemblyAttribute>
 </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\ElectronNETCompatibility\ElectronWrapper\ElectronWrapper.csproj"/>
+    <ProjectReference Include="..\ElectronNETCompatibility\ElectronWrapper\ElectronWrapper.csproj" />
   </ItemGroup>
 </Project>
