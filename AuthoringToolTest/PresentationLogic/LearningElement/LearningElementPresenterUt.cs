@@ -1,4 +1,5 @@
 using AuthoringTool.PresentationLogic.LearningElement;
+using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
 using NUnit.Framework;
 
@@ -68,5 +69,37 @@ public class LearningElementPresenterUt
             Assert.That(element.PositionX, Is.EqualTo(posx));
             Assert.That(element.PositionY, Is.EqualTo(29f));
         });
+    }
+
+    [Test]
+    public void LearningElementPresenter_RemoveLearningElementFromParentAssignment_RemovesElementFromWorld()
+    {
+        var systemUnderTest = new LearningElementPresenter();
+        var parent = new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
+        var element = new LearningElementViewModel("a", "b", parent, "c", "d", "e",
+            "f","g", 17f,29f);
+        parent.LearningElements.Add(element);
+        
+        Assert.That(parent.LearningElements, Contains.Item(element));
+        
+        systemUnderTest.RemoveLearningElementFromParentAssignment(element);
+        
+        Assert.That(parent.LearningElements, Is.Empty);
+    }
+    
+    [Test]
+    public void LearningElementPresenter_RemoveLearningElementFromParentAssignment_RemovesElementFromSpace()
+    {
+        var systemUnderTest = new LearningElementPresenter();
+        var parent = new LearningSpaceViewModel("a", "b", "c", "d", "e");
+        var element = new LearningElementViewModel("a", "b", parent, "c", "d", "e",
+            "f","g", 17f,29f);
+        parent.LearningElements.Add(element);
+        
+        Assert.That(parent.LearningElements, Contains.Item(element));
+        
+        systemUnderTest.RemoveLearningElementFromParentAssignment(element);
+        
+        Assert.That(parent.LearningElements, Is.Empty);
     }
 }

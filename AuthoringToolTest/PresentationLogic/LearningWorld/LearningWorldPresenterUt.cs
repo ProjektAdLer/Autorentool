@@ -310,6 +310,53 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
+    public void LearningWorldPresenter_OnEditElementDialogClose_MovesElementFromWorldToSpace()
+    {
+        var mockElementPresenter = Substitute.For<ILearningElementPresenter>();
+        mockElementPresenter.When(x => x.EditLearningElement(Arg.Any<LearningElementViewModel>(),
+            Arg.Any<string>(),Arg.Any<string>(),Arg.Any<LearningSpaceViewModel>(),Arg.Any<string>(),
+            Arg.Any<string>(),Arg.Any<string>(),Arg.Any<string>(),Arg.Any<string>())).
+            Do(x =>
+        {
+            var ele = x.Arg<LearningElementViewModel>();
+            var space = x.Arg<LearningSpaceViewModel>();
+            (((LearningWorldViewModel) ele.Parent!)).LearningElements.Remove(ele);
+            space.LearningElements.Add(ele);
+        });
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo");
+        var space = new LearningSpaceViewModel("a", "b", "c", "d", "e");
+        var element = new LearningElementViewModel("z", "y", world, "x", "w", "v", "u", "t");
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "z";
+        dictionary["Shortname"] = "y";
+        dictionary["Parent"] = "Learning space";
+        dictionary["Assignment"] = "a";
+        dictionary["Type"] = "x";
+        dictionary["Content"] = "w";
+        dictionary["Authors"] = "v";
+        dictionary["Description"] = "u";
+        dictionary["Goals"] = "t";
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: mockElementPresenter);
+        systemUnderTest.SetLearningWorld(null,world);
+        world.LearningSpaces.Add(space);
+        world.LearningElements.Add(element);
+        world.SelectedLearningObject = element;
+        
+        Assert.That(world.LearningElements, Contains.Item(element));
+        Assert.That(space.LearningElements, Is.Empty);
+
+        systemUnderTest.OnEditElementDialogClose(returnValueTuple);
+        
+        Assert.That(world.LearningElements, Is.Empty);
+        Assert.That(space.LearningElements, Contains.Item(element));
+    }
+    
+
+    [Test]
     public void LearningWorldPresenter_OnEditElementDialogClose_WithLearningSpace_CallsLearningElementPresenter()
     {
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
@@ -459,7 +506,6 @@ public class LearningWorldPresenterUt
         var mockElementPresenter = Substitute.For<ILearningElementPresenter>();
         mockElementPresenter.When(x => x.RemoveLearningElementFromParentAssignment(Arg.Any<LearningElementViewModel>())).Do(x =>
         {
-            x.Arg<LearningElementViewModel>();
             var ele = x.Arg<LearningElementViewModel>();
             (((LearningWorldViewModel) ele.Parent!)).LearningElements.Remove(ele);
         });
