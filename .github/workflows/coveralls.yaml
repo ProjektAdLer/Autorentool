@@ -35,9 +35,9 @@ jobs:
             ${{ runner.os }}-nuget
           
       - name: Run automated unit and integration tests
-        run: dotnet test AuthoringToolTest/AuthoringToolTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=TestResults/coverlet.info /p:CoverletOutputFormat=lcov /p:Include=\"[AuthoringTool]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*\"
+        run: dotnet test AuthoringToolTest/AuthoringToolTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=TestResults/coverlet.info /p:CoverletOutputFormat=lcov --% /p:Include=\"[AuthoringTool]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*\"
       - name: Publish coverage report to coveralls.io
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: AuthoringToolTest/TestResults/coverage.info 
+          path-to-lcov: AuthoringToolTest/TestResults/coverlet.info 
