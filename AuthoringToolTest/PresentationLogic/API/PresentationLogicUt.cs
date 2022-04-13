@@ -113,7 +113,7 @@ public class PresentationLogicUt
 
         await systemUnderTest.SaveLearningWorldAsync(learningWorld);
 
-        await mockDialogManger.Received().ShowSaveAsDialog("Save learning world", null, Arg.Any<IEnumerable<FileFilterProxy>>());
+        await mockDialogManger.Received().ShowSaveAsDialog("Save Learning World", null, Arg.Any<IEnumerable<FileFilterProxy>>());
         mockWorldMapper.Received().ToEntity(learningWorld);
         mockBusinessLogic.Received().SaveLearningWorld(entity, filepath+".awf");
     }
@@ -192,7 +192,7 @@ public class PresentationLogicUt
 
         await systemUnderTest.SaveLearningSpaceAsync(learningSpace);
 
-        await mockDialogManger.Received().ShowSaveAsDialog("Save learning space", null, Arg.Any<IEnumerable<FileFilterProxy>>());
+        await mockDialogManger.Received().ShowSaveAsDialog("Save Learning Space", null, Arg.Any<IEnumerable<FileFilterProxy>>());
         mockSpaceMapper.Received().ToEntity(learningSpace);
         mockBusinessLogic.Received().SaveLearningSpace(entity, filepath+".asf");
     }
@@ -271,7 +271,7 @@ public class PresentationLogicUt
 
         await systemUnderTest.SaveLearningElementAsync(learningElement);
 
-        await mockDialogManger.Received().ShowSaveAsDialog("Save learning element", null, Arg.Any<IEnumerable<FileFilterProxy>>());
+        await mockDialogManger.Received().ShowSaveAsDialog("Save Learning Element", null, Arg.Any<IEnumerable<FileFilterProxy>>());
         mockElementMapper.Received().ToEntity(learningElement);
         mockBusinessLogic.Received().SaveLearningElement(entity, filepath+".aef");
     }

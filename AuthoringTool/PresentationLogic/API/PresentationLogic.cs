@@ -53,153 +53,69 @@ namespace AuthoringTool.PresentationLogic.API
         /// <inheritdoc cref="IPresentationLogic.SaveLearningWorldAsync"/>
         public async Task SaveLearningWorldAsync(LearningWorldViewModel learningWorldViewModel)
         {
-            await SaveGenericAsync(learningWorldViewModel);
+            SaveOrLoadElectronCheck();
+            var filepath = await GetSaveFilepathAsync("Save Learning World", WorldFileEnding, WorldFileFormatDescriptor);
+            var worldEntity = WorldMapper.ToEntity(learningWorldViewModel);
+            BusinessLogic.SaveLearningWorld(worldEntity, filepath);
         }
 
         /// <inheritdoc cref="IPresentationLogic.LoadLearningWorldAsync"/>
         public async Task<LearningWorldViewModel> LoadLearningWorldAsync()
         {
-            return await LoadGenericAsync<LearningWorldViewModel>();
+            SaveOrLoadElectronCheck();
+            var filepath = await GetLoadFilepathAsync("Load Learning World", WorldFileEnding, WorldFileFormatDescriptor);
+            var entity = BusinessLogic.LoadLearningWorld(filepath);
+            return WorldMapper.ToViewModel(entity);
         }
 
         /// <inheritdoc cref="IPresentationLogic.SaveLearningSpaceAsync"/>
         public async Task SaveLearningSpaceAsync(LearningSpaceViewModel learningSpaceViewModel)
         {
-            await SaveGenericAsync(learningSpaceViewModel);
+            SaveOrLoadElectronCheck();
+            var filepath = await GetSaveFilepathAsync("Save Learning Space", SpaceFileEnding, SpaceFileFormatDescriptor);
+            var spaceEntity = SpaceMapper.ToEntity(learningSpaceViewModel);
+            BusinessLogic.SaveLearningSpace(spaceEntity, filepath);
         }
 
         /// <inheritdoc cref="IPresentationLogic.LoadLearningSpaceAsync"/>
         public async Task<LearningSpaceViewModel> LoadLearningSpaceAsync()
         {
-            return await LoadGenericAsync<LearningSpaceViewModel>();
+            SaveOrLoadElectronCheck();
+            var filepath = await GetLoadFilepathAsync("Load Learning Space", SpaceFileEnding, SpaceFileFormatDescriptor);
+            var entity = BusinessLogic.LoadLearningSpace(filepath);
+            return SpaceMapper.ToViewModel(entity);
         }
 
         /// <inheritdoc cref="IPresentationLogic.SaveLearningElementAsync"/>
         public async Task SaveLearningElementAsync(LearningElementViewModel learningElementViewModel)
         {
-            await SaveGenericAsync(learningElementViewModel);
+            SaveOrLoadElectronCheck();
+            var filepath = await GetSaveFilepathAsync("Save Learning Element", ElementFileEnding, ElementFileFormatDescriptor);
+            var elementEntity = ElementMapper.ToEntity(learningElementViewModel);
+            BusinessLogic.SaveLearningElement(elementEntity, filepath);
         }
 
         /// <inheritdoc cref="IPresentationLogic.LoadLearningElementAsync"/>
         public async Task<LearningElementViewModel> LoadLearningElementAsync()
         {
-            return await LoadGenericAsync<LearningElementViewModel>();
-        }
-        
-        /// <summary>
-        /// Generically asks user for path and saves object <see cref="obj"/> of type T
-        /// </summary>
-        /// <param name="obj">The object which should be saved.</param>
-        /// <typeparam name="T">Type of the object <see cref="obj"/></typeparam>
-        /// <exception cref="ArgumentException">The given type T is not supported.</exception>
-        /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
-        /// <exception cref="NotImplementedException">Thrown when we are not running in Electron.</exception>
-        /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
-        /// implementation is present in dependency injection container.</exception>
-        private async Task SaveGenericAsync<T>(T obj) where T : ISerializableViewModel
-        {
             SaveOrLoadElectronCheck();
-            var filepath = await GetSaveFilepathAsync(obj);
-
-            switch (obj)
-            {
-                case LearningWorldViewModel world:
-                {
-                    var worldEntity = WorldMapper.ToEntity(world);
-                    BusinessLogic.SaveLearningWorld(worldEntity, filepath);
-                    break;
-                }
-                case LearningSpaceViewModel space:
-                {
-                    var spaceEntity = SpaceMapper.ToEntity(space);
-                    BusinessLogic.SaveLearningSpace(spaceEntity, filepath);
-                    break;
-                }
-                case LearningElementViewModel element:
-                {
-                    var elementEntity = ElementMapper.ToEntity(element);
-                    BusinessLogic.SaveLearningElement(elementEntity, filepath);
-                    break;
-                }
-            }
-        }
-        /// <summary>
-        /// Generically asks user for path and loads object of type T
-        /// </summary>
-        /// <typeparam name="T">The type of the object which should be loaded.</typeparam>
-        /// <returns>A deserialized object of type T.</returns>
-        /// <exception cref="ArgumentException">The given type T is not supported.</exception>
-        /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
-        /// <exception cref="NotImplementedException">Thrown when we are not running in Electron.</exception>
-        /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
-        /// implementation is present in dependency injection container.</exception>
-        private async Task<T> LoadGenericAsync<T>() where T : class, ISerializableViewModel
-        {
-            SaveOrLoadElectronCheck();
-            var filepath = await GetLoadFilepathAsync<T>();
-
-            if (typeof(T) == typeof(LearningWorldViewModel))
-            {
-                var entity = BusinessLogic.LoadLearningWorld(filepath);
-                var viewModel = WorldMapper.ToViewModel(entity);
-                return (viewModel as T)!;
-            }
-
-            if (typeof(T) == typeof(LearningSpaceViewModel))
-            {
-                var entity = BusinessLogic.LoadLearningSpace(filepath);
-                var viewModel = SpaceMapper.ToViewModel(entity);
-                return (viewModel as T)!;
-            }
-
-            if (typeof(T) == typeof(LearningElementViewModel))
-            {
-                var entity = BusinessLogic.LoadLearningElement(filepath);
-                var viewModel = ElementMapper.ToViewModel(entity);
-                return (viewModel as T)!;
-            }
-
-            throw new ArgumentException($"{typeof(T)} not allowed for LoadGenericAsync");
+            var filepath = await GetLoadFilepathAsync("Load Learning Element", ElementFileEnding, ElementFileFormatDescriptor);
+            var entity = BusinessLogic.LoadLearningElement(filepath);
+            return ElementMapper.ToViewModel(entity);
         }
 
         /// <summary>
-        /// Generically gets Save Filepath for new File corresponding to type T and object <see cref="obj"/>.
+        /// Gets Save Filepath for saving.
         /// </summary>
-        /// <param name="obj">The object for which a filepath should be gotten.</param>
-        /// <typeparam name="T">The type of the object <see cref="obj"/>.</typeparam>
+        /// <param name="title">Title of the dialog.</param>
+        /// <param name="fileEnding">File ending for the file.</param>
+        /// <param name="fileFormatDescriptor"></param>
         /// <returns>Path to the file in which the object should be saved.</returns>
-        /// <exception cref="ArgumentException">The given type T is not supported.</exception>
         /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
-        private async Task<string> GetSaveFilepathAsync<T>(T obj) where T : ISerializableViewModel
+        private async Task<string> GetSaveFilepathAsync(string title, string fileEnding, string fileFormatDescriptor) 
         {
             try
             {
-                string UnallowedTypeException()
-                {
-                    throw new ArgumentException($"Type {typeof(T).Name} not allowed for GetLoadFilepathAsync.");
-                }
-
-                var title = obj switch
-                {
-                    LearningWorldViewModel => "Save learning world",
-                    LearningSpaceViewModel => "Save learning space",
-                    LearningElementViewModel => "Save learning element",
-                    _ => UnallowedTypeException()
-                };
-                var fileEnding = obj switch
-                {
-                    LearningWorldViewModel => WorldFileEnding,
-                    LearningSpaceViewModel => SpaceFileEnding,
-                    LearningElementViewModel => ElementFileEnding,
-                    _ => UnallowedTypeException()
-                };
-                var fileFormatDescriptor = obj switch
-                {
-                    LearningWorldViewModel => WorldFileFormatDescriptor,
-                    LearningSpaceViewModel => SpaceFileFormatDescriptor,
-                    LearningElementViewModel => ElementFileFormatDescriptor,
-                    _ => UnallowedTypeException()
-                };
                 var filepath = await _dialogManager!.ShowSaveAsDialog(title, null, new FileFilterProxy[]
                 {
                     new(fileFormatDescriptor, new[] { fileEnding })
@@ -212,48 +128,20 @@ namespace AuthoringTool.PresentationLogic.API
                 _logger.LogInformation("Save as dialog cancelled by user");
                 throw;
             }
-            catch (ArgumentException)
-            {
-                _logger.LogCritical("Unknown parameter type {TypeName} in GetSaveFilepathAsync", typeof(T).Name);
-                throw;
-            }
         }
 
         /// <summary>
-        /// Generically gets Load Filepath for File corresponding to type T.
+        /// Gets Load Filepath for loading.
         /// </summary>
-        /// <typeparam name="T">The type for which a Load File dialog should be opened.</typeparam>
+        /// <param name="title">Title of the dialog.</param>
+        /// <param name="fileEnding">File ending for the file.</param>
+        /// <param name="fileFormatDescriptor"></param>
         /// <returns>Path to the file which should be loaded.</returns>
-        /// <exception cref="ArgumentException">The given type T is not supported.</exception>
         /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
-        private async Task<string> GetLoadFilepathAsync<T>() where T : ISerializableViewModel
+        private async Task<string> GetLoadFilepathAsync(string title, string fileEnding, string fileFormatDescriptor) 
         {
             try
             {
-                string title, fileEnding, fileFormatDescriptor;
-                if (typeof(T) == typeof(LearningWorldViewModel))
-                {
-                    title = "Load Learning World";
-                    fileEnding = WorldFileEnding;
-                    fileFormatDescriptor = WorldFileFormatDescriptor;
-                }
-                else if (typeof(T) == typeof(LearningSpaceViewModel))
-                {
-                    title = "Load Learning Space";
-                    fileEnding = SpaceFileEnding;
-                    fileFormatDescriptor = SpaceFileFormatDescriptor;
-                }
-                else if (typeof(T) == typeof(LearningElementViewModel))
-                {
-                    title = "Load Learning Element";
-                    fileEnding = ElementFileEnding;
-                    fileFormatDescriptor = ElementFileFormatDescriptor;
-                }
-                else
-                {
-                    _logger.LogCritical("Unknown parameter type {TypeName} in GetLoadFilepathAsync", typeof(T).Name);
-                    throw new ArgumentException($"Type {typeof(T).Name} not allowed for GetLoadFilepathAsync.");
-                }
                 var filepath = await _dialogManager!.ShowOpenFileDialog(title, null, new FileFilterProxy[]
                 {
                     new(fileFormatDescriptor, new[] { fileEnding })
