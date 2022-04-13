@@ -8,11 +8,21 @@ namespace AuthoringTool.DataAccess.WorldExport;
 public class XmlSerialize
 {
     private IFileSystem _fileSystem;
+    
+    //The Constructor is needed for testing. It is initialized as a new Filesystem() doing nothing ordinary.
+    //But it can be changed with the static property FileSystem to make it possible to test the Serialize Method.
     public XmlSerialize()
     {
         _fileSystem = XmlSerializeFileSystemProvider.FileSystem;
     }
     
+    /// <summary>
+    /// It takes an Xml-objekt and writes it to the desired location. The Startlocation is defined, it is possible to
+    /// navigate to folders located deeper in the structure. The Method uses the UpperCase Class and deletes the Xml-Namespace
+    /// as it is accepted by the moodle restore process. 
+    /// </summary>
+    /// <param name="xml"></param>
+    /// <param name="xmlname"></param>
     public void Serialize(object xml,string xmlname)
     {
         var curWorkDir = _fileSystem.Directory.GetCurrentDirectory();

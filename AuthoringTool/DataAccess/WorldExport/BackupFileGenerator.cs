@@ -9,7 +9,7 @@ namespace AuthoringTool.DataAccess.WorldExport;
 
 public class BackupFileGenerator : IBackupFileGenerator
 {
-
+    
     private IFileSystem _fileSystem;
 
     public BackupFileGenerator(): this(new FileSystem())
@@ -17,6 +17,7 @@ public class BackupFileGenerator : IBackupFileGenerator
         
     }
     
+    // Constructor for tests. fileSystem makes it possible to test various System methods that write files on disk.
     public BackupFileGenerator(IFileSystem fileSystem)
     {
         _fileSystem = fileSystem;
@@ -32,9 +33,7 @@ public class BackupFileGenerator : IBackupFileGenerator
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections", "section_160"));
     }
 
-    /// <summary>
-    /// Creates all XMl-Files needed for the Moodle backup
-    /// </summary>
+    /// <inheritdoc cref="IBackupFileGenerator.WriteXmlFiles"/>
     public void WriteXmlFiles()
     {
         var xmlEntityManager = new XmlEntityManager();
@@ -43,6 +42,7 @@ public class BackupFileGenerator : IBackupFileGenerator
     
     //Get all files from source Folder "XMLFilesForExport" and pack all files and folders into a tar-file 
     //Afterwards pack the tar-file into a gzip file and rename the file to match the Moodle Backup format .mbz
+    /// <inheritdoc cref="IBackupFileGenerator.WriteBackupFile"/>
     public void WriteBackupFile()
     {
         //copy template from current workdir

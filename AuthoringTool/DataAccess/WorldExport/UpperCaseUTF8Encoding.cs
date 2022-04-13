@@ -2,7 +2,8 @@
 
 namespace AuthoringTool.DataAccess.WorldExport;
 
-
+//The sole purpose of this class is to change the Encoding from "utf-8" to "UTF-8"
+//Moodle needs the Encoding in Uppercase Format, else the Backup Restore process will throw an error.
 public class UpperCaseUTF8Encoding : UTF8Encoding
 { 
     public override string WebName
