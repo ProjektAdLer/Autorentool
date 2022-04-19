@@ -44,4 +44,5 @@ public class LearningWorldViewModel : ILearningElementViewModelParent, ISerializ
     public string Goals { get; set; }
     public ILearningObjectViewModel? SelectedLearningObject { get; set; }
     public Dictionary<string, string> EditDialogInitialValues { get; set; }
+    public bool ShowingLearningSpaceView { get; set; }
 }

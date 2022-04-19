@@ -23,6 +23,11 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
         private readonly ILogger<LearningWorldPresenter> _logger;
 
         public LearningWorldViewModel? LearningWorldVm { get; private set; }
+
+        public bool SelectedLearningObjectIsSpace =>
+            LearningWorldVm?.SelectedLearningObject?.GetType() == typeof(LearningSpaceViewModel);
+
+        public bool ShowingLearningSpaceView => LearningWorldVm != null && LearningWorldVm.ShowingLearningSpaceView;
         public bool EditLearningSpaceDialogOpen { get; set; }
         public bool CreateLearningSpaceDialogueOpen { get; set; }
         public bool EditLearningElementDialogOpen { get; set; }
@@ -31,6 +36,17 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
         public void SetLearningWorld(object? caller, LearningWorldViewModel? world)
         {
             LearningWorldVm = world;
+            if (LearningWorldVm != null) LearningWorldVm.ShowingLearningSpaceView = false;
+        }
+
+        public void ShowSelectedLearningSpaceView()
+        {
+            if (LearningWorldVm != null) LearningWorldVm.ShowingLearningSpaceView = true;
+        }
+
+        public void CloseLearningSpaceView()
+        {
+            if (LearningWorldVm != null) LearningWorldVm.ShowingLearningSpaceView = false;
         }
 
         public LearningWorldViewModel CreateNewLearningWorld(string name, string shortname, string authors,
@@ -105,7 +121,7 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
             CreateLearningSpaceDialogueOpen = false;
 
             if (response == ModalDialogReturnValue.Cancel) return Task.CompletedTask;
-            if (data == null) throw new ApplicationException("dialog data unexectedly null after Ok return value");
+            if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
 
             foreach (var pair in data)
             {
@@ -131,10 +147,9 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
             if (response == ModalDialogReturnValue.Cancel) return Task.CompletedTask;
             if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
 
-            //TODO: change this into a trace ILogger call
-            foreach (var pair in data)
+            foreach (var (key, value) in data)
             {
-                Console.Write($"{pair.Key}:{pair.Value}\n");
+                _logger.LogTrace($"{key}:{value}\n");
             }
 
             //required arguments
@@ -207,7 +222,14 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
             {
                 {"Name", element.Name},
                 {"Shortname", element.Shortname},
-                {"Parent", element.Parent switch{LearningWorldViewModel => "Learning world", LearningSpaceViewModel => "Learning space", _ => ""}},
+                {
+                    "Parent",
+                    element.Parent switch
+                    {
+                        LearningWorldViewModel => "Learning world", LearningSpaceViewModel => "Learning space",
+                        _ => ""
+                    }
+                },
                 {"Assignment", element.Parent.Name},
                 {"Type", element.ElementType},
                 {"Content", element.ContentType},
@@ -223,6 +245,7 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
             var learningElement = await _presentationLogic.LoadLearningElementAsync();
             if (LearningWorldVm == null)
                 throw new ApplicationException("SelectedLearningWorld is null");
+            learningElement.Parent = LearningWorldVm;
             LearningWorldVm.LearningElements.Add(learningElement);
         }
 
@@ -248,13 +271,14 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
             var assignment = data["Assignment"];
             var parentElement = GetLearningElementParent(parent, assignment);
 
-            var elementType = data["Type"];
-            var contentType = data["Content"];
+            var elementType = data["ElementType"];
+            var contentType = data["ContentType"];
             var description = data["Description"];
             //optional arguments
             var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
             var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
-            CreateNewLearningElement(name, shortname, parentElement, elementType, contentType, authors, description, goals);
+            CreateNewLearningElement(name, shortname, parentElement, elementType, contentType, authors, description,
+                goals);
             return Task.CompletedTask;
         }
 
@@ -289,10 +313,9 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
             if (response == ModalDialogReturnValue.Cancel) return Task.CompletedTask;
             if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
 
-            //TODO: change this into a trace ILogger call
-            foreach (var pair in data)
+            foreach (var (key, value) in data)
             {
-                Console.Write($"{pair.Key}:{pair.Value}\n");
+                _logger.LogTrace($"{key}:{value}\n");
             }
 
             //required arguments
@@ -374,6 +397,9 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
             if (LearningWorldVm == null)
                 throw new ApplicationException("SelectedLearningWorld is null");
             LearningWorldVm.SelectedLearningObject = learningObject;
+            if (SelectedLearningObjectIsSpace)
+                _learningSpacePresenter.SetLearningSpace(
+                    (LearningSpaceViewModel) LearningWorldVm.SelectedLearningObject);
         }
 
         /// <summary>

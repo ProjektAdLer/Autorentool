@@ -37,4 +37,6 @@ public class LearningSpaceViewModel : ILearningObjectViewModel, ILearningElement
     public string Goals { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
+    public ILearningObjectViewModel? SelectedLearningObject { get; set; }
+    public Dictionary<string, string> EditDialogInitialValues { get; set; }
 }
