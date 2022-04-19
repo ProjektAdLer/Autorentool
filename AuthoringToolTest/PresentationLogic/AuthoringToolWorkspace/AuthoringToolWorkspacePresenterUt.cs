@@ -442,6 +442,51 @@ public class AuthoringToolWorkspacePresenterUt
         
     }
 
+    [Test]
+    public void AuthoringToolWorkspacePresenter_OnBeforeShutdown_CancelsShutdownCreatesQueueAndInvokesViewUpdate()
+    {
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        viewModel.LearningWorlds.Add(learningWorld);
+        var args = new BeforeShutdownEventArgs();
+        var callbackCalled = false;
+        var callback = () => { callbackCalled = true; };
+
+        var systemUnderTest = CreatePresenterForTesting(viewModel);
+        systemUnderTest.OnForceViewUpdate += callback;
+        
+        systemUnderTest.OnBeforeShutdown(null, args);
+        Assert.That(systemUnderTest.UnsavedWorldsQueue, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(args.CancelShutdownState, Is.True);
+            Assert.That(systemUnderTest.UnsavedWorldsQueue, Contains.Item(learningWorld));
+            Assert.That(systemUnderTest.SaveUnsavedChangesDialogOpen, Is.True);
+            Assert.That(callbackCalled, Is.True);
+        });
+    }
+
+    [Test]
+    [TestCase(true)]
+    [TestCase(false)]
+    public void AuthoringToolWorkspacePresenter_CompletedSaveQueue_DeletesQueueAndRecallsShutdownManager(bool cancelled)
+    {
+        var shutdownManager = Substitute.For<IShutdownManager>();
+
+        var systemUnderTest = CreatePresenterForTesting(shutdownManager: shutdownManager);
+        systemUnderTest.SaveUnsavedChangesDialogOpen = true;
+        systemUnderTest.UnsavedWorldsQueue = new Queue<LearningWorldViewModel>();
+        
+        systemUnderTest.CompletedSaveQueue(cancelled);
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.SaveUnsavedChangesDialogOpen, Is.False);
+            Assert.That(systemUnderTest.UnsavedWorldsQueue, Is.Null);
+        });
+        if (!cancelled)
+            shutdownManager.Received().BeginShutdown();
+    }
+
     private AuthoringToolWorkspacePresenter CreatePresenterForTesting(
         IAuthoringToolWorkspaceViewModel? authoringToolWorkspaceVm = null, IPresentationLogic? presentationLogic = null,
         ILearningWorldPresenter? learningWorldPresenter = null, ILearningSpacePresenter? learningSpacePresenter = null,

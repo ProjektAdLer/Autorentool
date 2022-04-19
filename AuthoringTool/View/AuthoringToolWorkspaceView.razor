@@ -171,7 +171,7 @@
         switch (returnValue)
         {
             case ModalDialogReturnValue.Cancel: //we want to cancel closing the application entirely
-                AuthoringToolWorkspaceP.CancelSaveQueue();
+                AuthoringToolWorkspaceP.CompletedSaveQueue(true);
                 return;
             case ModalDialogReturnValue.Yes: //we want to save the world and iterate the queue
             {

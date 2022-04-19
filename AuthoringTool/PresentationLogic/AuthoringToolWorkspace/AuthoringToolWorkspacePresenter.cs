@@ -271,7 +271,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             }
         }
 
-        private void OnBeforeShutdown(object? _, BeforeShutdownEventArgs args)
+        internal void OnBeforeShutdown(object? _, BeforeShutdownEventArgs args)
         {
             if (SaveUnsavedChangesDialogOpen)
             {
@@ -288,18 +288,14 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             OnForceViewUpdate?.Invoke();
         }
 
-        internal void CompletedSaveQueue()
+        internal void CompletedSaveQueue(bool cancelled = false)
         {
             UnsavedWorldsQueue = null;
             SaveUnsavedChangesDialogOpen = false;
-            _shutdownManager.BeginShutdown();
+            if (!cancelled)
+                _shutdownManager.BeginShutdown();
         }
 
-        internal void CancelSaveQueue()
-        {
-            UnsavedWorldsQueue = null;
-            SaveUnsavedChangesDialogOpen = false;
-        }
         #endregion
     }
 }
