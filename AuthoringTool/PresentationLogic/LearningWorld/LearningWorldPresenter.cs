@@ -179,20 +179,20 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
         /// <param name="name">Name of the element.</param>
         /// <param name="shortname">Shortname of the element.</param>
         /// <param name="parent">Decides whether the learning element belongs to a learning world or a learning space</param>
-        /// <param name="type">The represented type of the element in the space/world.</param>
-        /// <param name="content">Describes, which content the element contains.</param>
+        /// <param name="elementType">The represented type of the element in the space/world.</param>
+        /// <param name="contentType">Describes, which content the element contains.</param>
         /// <param name="authors">A list of authors of the element.</param>
         /// <param name="description">A description of the element.</param>
         /// <param name="goals">The goals of the element.</param>
         /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
         public void CreateNewLearningElement(string name, string shortname, ILearningElementViewModelParent parent,
-            string type, string content, string authors, string description, string goals)
+            string elementType, string contentType, string authors, string description, string goals)
         {
             if (LearningWorldVm == null)
                 throw new ApplicationException("SelectedLearningWorld is null");
             var learningElement =
-                _learningElementPresenter.CreateNewLearningElement(name, shortname, parent, type,
-                    content, authors, description, goals);
+                _learningElementPresenter.CreateNewLearningElement(name, shortname, parent, elementType,
+                    contentType, authors, description, goals);
 
             SetSelectedLearningObject(learningElement);
         }
@@ -209,8 +209,8 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
                 {"Shortname", element.Shortname},
                 {"Parent", element.Parent switch{LearningWorldViewModel => "Learning world", LearningSpaceViewModel => "Learning space", _ => ""}},
                 {"Assignment", element.Parent.Name},
-                {"Type", element.Type},
-                {"Content", element.Content},
+                {"Type", element.ElementType},
+                {"Content", element.ContentType},
                 {"Authors", element.Authors},
                 {"Description", element.Description},
                 {"Goals", element.Goals},
@@ -248,13 +248,13 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
             var assignment = data["Assignment"];
             var parentElement = GetLearningElementParent(parent, assignment);
 
-            var type = data["Type"];
-            var content = data["Content"];
+            var elementType = data["Type"];
+            var contentType = data["Content"];
             var description = data["Description"];
             //optional arguments
             var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
             var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
-            CreateNewLearningElement(name, shortname, parentElement, type, content, authors, description, goals);
+            CreateNewLearningElement(name, shortname, parentElement, elementType, contentType, authors, description, goals);
             return Task.CompletedTask;
         }
 
@@ -301,8 +301,8 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
             var parent = data["Parent"];
             var assignment = data["Assignment"];
             var parentElement = GetLearningElementParent(parent, assignment);
-            var type = data["Type"];
-            var content = data["Content"];
+            var elementType = data["Type"];
+            var contentType = data["Content"];
             var description = data["Description"];
             //optional arguments
             var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
@@ -313,7 +313,7 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
             if (LearningWorldVm.SelectedLearningObject is not LearningElementViewModel
                 learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
             _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, parentElement,
-                type, content, authors, description, goals);
+                elementType, contentType, authors, description, goals);
             return Task.CompletedTask;
         }
 

@@ -195,8 +195,8 @@ public class LearningWorldPresenterUt
             Assert.That(element.Name, Is.EqualTo("foo"));
             Assert.That(element.Shortname, Is.EqualTo("bar"));
             Assert.That(element.Parent, Is.EqualTo(world));
-            Assert.That(element.Type, Is.EqualTo("foo"));
-            Assert.That(element.Content, Is.EqualTo("bar"));
+            Assert.That(element.ElementType, Is.EqualTo("foo"));
+            Assert.That(element.ContentType, Is.EqualTo("bar"));
             Assert.That(element.Authors, Is.EqualTo("foo"));
             Assert.That(element.Description, Is.EqualTo("bar"));
             Assert.That(element.Goals, Is.EqualTo("foo"));
@@ -227,8 +227,8 @@ public class LearningWorldPresenterUt
             Assert.That(element.Name, Is.EqualTo("foo"));
             Assert.That(element.Shortname, Is.EqualTo("bar"));
             Assert.That(element.Parent, Is.EqualTo(space));
-            Assert.That(element.Type, Is.EqualTo("foo"));
-            Assert.That(element.Content, Is.EqualTo("bar"));
+            Assert.That(element.ElementType, Is.EqualTo("foo"));
+            Assert.That(element.ContentType, Is.EqualTo("bar"));
             Assert.That(element.Authors, Is.EqualTo("foo"));
             Assert.That(element.Description, Is.EqualTo("bar"));
             Assert.That(element.Goals, Is.EqualTo("foo"));
@@ -610,8 +610,8 @@ public class LearningWorldPresenterUt
             Assert.That(world.EditDialogInitialValues["Shortname"], Is.EqualTo(element.Shortname));
             Assert.That(world.EditDialogInitialValues["Parent"], Is.EqualTo("Learning world"));
             Assert.That(world.EditDialogInitialValues["Assignment"], Is.EqualTo(element.Parent?.Name));
-            Assert.That(world.EditDialogInitialValues["Type"], Is.EqualTo(element.Type));
-            Assert.That(world.EditDialogInitialValues["Content"], Is.EqualTo(element.Content));
+            Assert.That(world.EditDialogInitialValues["Type"], Is.EqualTo(element.ElementType));
+            Assert.That(world.EditDialogInitialValues["Content"], Is.EqualTo(element.ContentType));
             Assert.That(world.EditDialogInitialValues["Authors"], Is.EqualTo(element.Authors));
             Assert.That(world.EditDialogInitialValues["Description"], Is.EqualTo(element.Description));
             Assert.That(world.EditDialogInitialValues["Goals"], Is.EqualTo(element.Goals));

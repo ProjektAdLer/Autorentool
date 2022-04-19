@@ -7,10 +7,10 @@ namespace AuthoringTool.PresentationLogic.LearningElement;
 internal class LearningElementPresenter : ILearningElementPresenter
 {
     public LearningElementViewModel CreateNewLearningElement(string name, string shortname,
-        ILearningElementViewModelParent parent, string type, string content,
+        ILearningElementViewModelParent parent, string elementType, string contentType,
         string authors, string description, string goals, double posx = 0f, double posy = 0f, LearningContentViewModel? learningContent = null)
     {
-        var element = new LearningElementViewModel(name, shortname, parent, type, content, learningContent, authors,
+        var element = new LearningElementViewModel(name, shortname, parent, elementType, contentType, learningContent, authors,
             description, goals, posx, posy);
 
         AddLearningElementParentAssignment(parent, element);
@@ -35,7 +35,7 @@ internal class LearningElementPresenter : ILearningElementPresenter
     }
 
     public LearningElementViewModel EditLearningElement(LearningElementViewModel element, string name, string shortname,
-        ILearningElementViewModelParent parent, string type, string content, string authors, string description, string goals, double? posx = null,
+        ILearningElementViewModelParent parent, string elementType, string contentType, string authors, string description, string goals, double? posx = null,
         double? posy = null)
     {
         if (parent.Name != element.Parent?.Name)
@@ -47,8 +47,8 @@ internal class LearningElementPresenter : ILearningElementPresenter
         element.Name = name;
         element.Shortname = shortname;
         element.Parent = parent;
-        element.Type = type;
-        element.Content = content;
+        element.ElementType = elementType;
+        element.ContentType = contentType;
         element.Authors = authors;
         element.Description = description;
         element.Goals = goals;

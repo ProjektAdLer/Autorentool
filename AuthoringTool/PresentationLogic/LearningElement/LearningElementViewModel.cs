@@ -10,9 +10,8 @@ public class LearningElementViewModel : ILearningObjectViewModel, ISerializableV
     /// <param name="name">The name of the learning element</param>
     /// <param name="shortname">The short name (abbreviation) of the learning element.(Maybe not relevant)</param>
     /// <param name="parent">Decides whether the learning element belongs to a learning world or a learning space</param>
-    /// <param name="assignment">Name of the Parent Learning Space or Learning World</param>
-    /// <param name="type">Describes the role of the learning element in the space/world </param>
-    /// <param name="content">Contains the type of content the learning elements contains.</param>
+    /// <param name="elementType">Describes the role of the learning element in the space/world </param>
+    /// <param name="contentType">Contains the type of content the learning elements contains.</param>
     /// <param name="learningContent">Represents the loaded content of the learning element.</param>
     /// <param name="authors">The string containing the names of all the authors working on the learning element.</param>
     /// <param name="description">A description of the learning element and its contents.</param>
@@ -20,15 +19,15 @@ public class LearningElementViewModel : ILearningObjectViewModel, ISerializableV
     /// <param name="positionX">x-position of the learning element in the workspace</param>
     /// <param name="positionY">y-position of the learning element in the workspace</param>
 
-    public LearningElementViewModel(string name, string shortname, ILearningElementViewModelParent? parent, string type,
-        string content, LearningContentViewModel? learningContent, string authors, string description, string goals,
-        double positionX = 0, double positionY = 0)
+    public LearningElementViewModel(string name, string shortname, ILearningElementViewModelParent? parent,
+        string elementType, string contentType, LearningContentViewModel? learningContent, string authors,
+        string description, string goals, double positionX = 0, double positionY = 0)
     {
         Name = name;
         Shortname = shortname;
         Parent = parent;
-        Type = type;
-        Content = content;
+        ElementType = elementType;
+        ContentType = contentType;
         LearningContent = learningContent;
         Authors = authors;
         Description = description;
@@ -41,8 +40,8 @@ public class LearningElementViewModel : ILearningObjectViewModel, ISerializableV
     public string Name { get; set; }
     public string Shortname { get; set; }
     public ILearningElementViewModelParent? Parent { get; set; }
-    public string Type { get; set; }
-    public string Content { get; set; }
+    public string ElementType { get; set; }
+    public string ContentType { get; set; }
     public LearningContentViewModel? LearningContent { get; set; }
     public string Authors { get; set; }
     public string Description { get; set; }

@@ -29,8 +29,8 @@ public class LearningElementPresenterUt
             Assert.That(element.Name, Is.EqualTo(name));
             Assert.That(element.Shortname, Is.EqualTo(shortname));
             Assert.That(element.Parent, Is.EqualTo(parent));
-            Assert.That(element.Type, Is.EqualTo(type));
-            Assert.That(element.Content, Is.EqualTo(content));
+            Assert.That(element.ElementType, Is.EqualTo(type));
+            Assert.That(element.ContentType, Is.EqualTo(content));
             Assert.That(element.Authors, Is.EqualTo(authors));
             Assert.That(element.Description, Is.EqualTo(description));
             Assert.That(element.Goals, Is.EqualTo(goals));
@@ -61,8 +61,8 @@ public class LearningElementPresenterUt
             Assert.That(element.Name, Is.EqualTo(name));
             Assert.That(element.Shortname, Is.EqualTo(shortname));
             Assert.That(element.Parent, Is.EqualTo(parent));
-            Assert.That(element.Type, Is.EqualTo(type));
-            Assert.That(element.Content, Is.EqualTo(content));
+            Assert.That(element.ElementType, Is.EqualTo(type));
+            Assert.That(element.ContentType, Is.EqualTo(content));
             Assert.That(element.Authors, Is.EqualTo(authors));
             Assert.That(element.Description, Is.EqualTo(description));
             Assert.That(element.Goals, Is.EqualTo(goals));
