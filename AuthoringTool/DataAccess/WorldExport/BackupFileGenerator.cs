@@ -109,7 +109,7 @@ public class BackupFileGenerator : IBackupFileGenerator
     /// <param name="tar">The tar archive to which the directory and its contents should be saved.</param>
     /// <param name="source">The path of the source folder which should be saved to the archive.</param>
     /// <param name="recursive">Whether or not directories in the source should be saved recursively too.</param>
-    private void SaveDirectoryToTar(TarArchive tar, string source, bool recursive)
+    public void SaveDirectoryToTar(TarArchive tar, string source, bool recursive)
     {
         TarEntry tarEntry = TarEntry.CreateEntryFromFile(source);
         tar.WriteEntry(tarEntry, false);

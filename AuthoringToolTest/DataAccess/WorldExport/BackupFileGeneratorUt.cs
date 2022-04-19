@@ -82,17 +82,12 @@ public class BackupFileGeneratorUt
         var mockFileSystem = new MockFileSystem();
         var backupFileGen = new BackupFileGenerator(mockFileSystem);
         backupFileGen.CreateBackupFolders();
-        var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
-        XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
-        backupFileGen.WriteXMLFiles();
         
         //Act
         backupFileGen.WriteBackupFile();
-        var existingFiles = mockFileSystem.Directory;
-        var deletedFiles = mockFileSystem.Directory;
-
+        
         //Assert
-
+        Assert.That(Directory.GetFiles(backupFileGen.GetTempDir()), Is.Not.Null);
     }*/
     
 }
