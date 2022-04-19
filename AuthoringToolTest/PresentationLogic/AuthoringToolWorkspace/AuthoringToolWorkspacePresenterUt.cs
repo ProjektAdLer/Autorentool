@@ -443,6 +443,58 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
+    public async Task AuthoringToolWorkspacePresenter_LoadLearningWorldAsync_CallsPresentationLogicAndAddsToViewModel()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        presentationLogic.LoadLearningWorldAsync().Returns(learningWorld);
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+
+        var systemUnderTest = CreatePresenterForTesting(viewModel, presentationLogic: presentationLogic);
+
+        await systemUnderTest.LoadLearningWorldAsync();
+        await presentationLogic.Received().LoadLearningWorldAsync();
+        Assert.That(viewModel.LearningWorlds, Contains.Item(learningWorld));
+    }
+
+    [Test]
+    public async Task
+        AuthoringToolWorkspacePresenter_LoadLearningWorldAsync_SetsWorldToReplaceWithWhenWorldWithNameExists()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        var learningWorld2 = new LearningWorldViewModel("f", "fu", "fu", "fu", "fu", "fu");
+        presentationLogic.LoadLearningWorldAsync().Returns(learningWorld2);
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+        viewModel.LearningWorlds.Add(learningWorld);
+        
+        var systemUnderTest = CreatePresenterForTesting(viewModel, presentationLogic: presentationLogic);
+
+        await systemUnderTest.LoadLearningWorldAsync();
+        Assert.That(systemUnderTest.WorldToReplaceWith, Is.EqualTo(learningWorld2));
+    }
+    
+    [Test]
+    public void AuthoringToolWorkspacePresenter_ReplaceLearningWorld_ReplacesWorld() 
+    {
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        var learningWorld2 = new LearningWorldViewModel("f", "fu", "fu", "fu", "fu", "fu");
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+        viewModel.LearningWorlds.Add(learningWorld);
+        viewModel.SelectedLearningWorld = learningWorld;
+
+        var systemUnderTest = CreatePresenterForTesting(viewModel);
+        
+        systemUnderTest.ReplaceLearningWorld(learningWorld2);
+        Assert.Multiple(() =>
+        {
+            Assert.That(viewModel.LearningWorlds, Contains.Item(learningWorld2));
+            Assert.That(viewModel.LearningWorlds, Does.Not.Contain(learningWorld));
+            Assert.That(viewModel.SelectedLearningWorld, Is.EqualTo(learningWorld2));
+        });
+    }
+
+    [Test]
     public void AuthoringToolWorkspacePresenter_OnBeforeShutdown_CancelsShutdownCreatesQueueAndInvokesViewUpdate()
     {
         var viewModel = new AuthoringToolWorkspaceViewModel();

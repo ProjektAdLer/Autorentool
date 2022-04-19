@@ -4,6 +4,9 @@
 @using AuthoringTool.PresentationLogic.AuthoringToolWorkspace
 @using AuthoringTool.View.LearningWorld
 @using static System.IO.Directory;
+
+@code {
+}
 @inject IMouseService _mouseService
 @inject ILogger<AuthoringToolWorkspaceView> _logger
 @inject AuthoringToolWorkspacePresenter AuthoringToolWorkspaceP
@@ -55,6 +58,14 @@
     <ModalDialog Title="Save unsaved worlds" 
                  Text=@($"Do you want to save the learning world named {AuthoringToolWorkspaceP.UnsavedWorldsQueue.Peek().Name}?") 
                  OnClose=OnSaveWorldDialogCloseAsync DialogType=@ModalDialogType.YesNoCancel />
+}
+
+@if (AuthoringToolWorkspaceP.WorldToReplaceWith != null)
+{
+    <ModalDialog Title="Replace world?"
+                 Text=@($"You already have a world with the name {AuthoringToolWorkspaceP.WorldToReplaceWith.Name} loaded." 
+                        +"Do you want to replace it?")
+                 OnClose=OnReplaceDialogClose DialogType=ModalDialogType.OkCancel />
 }
 
 @if (AuthoringToolWorkspaceP.CreateLearningWorldDialogOpen)
@@ -116,7 +127,7 @@
     {
         try
         {
-            await AuthoringToolWorkspaceP.LoadLearningWorld();
+            await AuthoringToolWorkspaceP.LoadLearningWorldAsync();
         }
         catch (OperationCanceledException) 
         {
@@ -205,6 +216,34 @@
         {
             AuthoringToolWorkspaceP.CompletedSaveQueue();
         }
+    }
+    
+    internal void OnReplaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> obj)
+    {
+        var (result, _) = obj;
+        if (AuthoringToolWorkspaceP.WorldToReplaceWith == null) 
+            throw new ApplicationException("WorldToReplaceWith was null but OnReplaceDialogClose was called");
+        switch (result)
+        {
+            case ModalDialogReturnValue.Ok:
+            {
+                AuthoringToolWorkspaceP.ReplaceLearningWorld(AuthoringToolWorkspaceP.WorldToReplaceWith);
+                AuthoringToolWorkspaceP.WorldToReplaceWith = null;
+                break;
+            }
+            case ModalDialogReturnValue.Cancel:
+            {
+                AuthoringToolWorkspaceP.WorldToReplaceWith = null;
+                break;
+            }
+            case ModalDialogReturnValue.Delete:
+            case ModalDialogReturnValue.Yes:
+            case ModalDialogReturnValue.No:
+            default:
+                throw new ArgumentOutOfRangeException(nameof(obj.Item1));
+        }
+        StateHasChanged();
+        _activeView?.TriggerStateHasChanged();
     }
 
     private void SetSelectedLearningWorld(string argsValue)

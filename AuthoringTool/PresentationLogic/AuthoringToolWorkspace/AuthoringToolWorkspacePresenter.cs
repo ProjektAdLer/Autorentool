@@ -30,6 +30,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             EditLearningSpaceDialogOpen = false;
             CreateLearningElementDialogOpen = false;
             EditLearningElementDialogOpen = false;
+            WorldToReplaceWith = null;
             OnLearningWorldSelect += _learningWorldPresenter.SetLearningWorld;
             if (!presentationLogic.RunningElectron) return;
             //register callback so we can check for unsaved data on quit
@@ -58,6 +59,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
         internal bool LearningWorldSelected => _authoringToolWorkspaceVm.SelectedLearningWorld != null;
 
         internal Queue<LearningWorldViewModel>? UnsavedWorldsQueue;
+        public LearningWorldViewModel? WorldToReplaceWith { get; set; }
 
         /// <summary>
         /// This event is fired when <see cref="CreateNewLearningWorld"/> is called successfully and the newly created
@@ -185,12 +187,28 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             OnLearningWorldEdit?.Invoke(this, _authoringToolWorkspaceVm.SelectedLearningWorld);
         }
 
-        public async Task LoadLearningWorld()
+        public async Task LoadLearningWorldAsync()
         {
             var learningWorld = await _presentationLogic.LoadLearningWorldAsync();
+            if (_authoringToolWorkspaceVm.LearningWorlds.Any(world => world.Name == learningWorld.Name))
+            {
+                WorldToReplaceWith = learningWorld;
+                return;
+            }
             _authoringToolWorkspaceVm.LearningWorlds.Add(learningWorld);
         }
-        
+
+        public void ReplaceLearningWorld(LearningWorldViewModel toReplace)
+        {
+            var toBeReplaced = _authoringToolWorkspaceVm.LearningWorlds.First(world => world.Name == toReplace.Name);
+            _authoringToolWorkspaceVm.LearningWorlds.Remove(toBeReplaced);
+            _authoringToolWorkspaceVm.LearningWorlds.Add(toReplace);
+            if (_authoringToolWorkspaceVm.SelectedLearningWorld == toBeReplaced)
+            {
+                _authoringToolWorkspaceVm.SelectedLearningWorld = toReplace;
+            }
+        }
+
         public async Task SaveLearningWorldAsync(LearningWorldViewModel world)
         {
             await _presentationLogic.SaveLearningWorldAsync(world);
