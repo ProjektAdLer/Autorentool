@@ -1,4 +1,6 @@
-﻿namespace AuthoringTool.DataAccess.WorldExport;
+﻿using ICSharpCode.SharpZipLib.Tar;
+
+namespace AuthoringTool.DataAccess.WorldExport;
 
 public interface IBackupFileGenerator
 {
@@ -16,4 +18,10 @@ public interface IBackupFileGenerator
     /// Locates all Folders and Xml Files, packs it into a tar.gzip file and renames it to .mbz (moodle backup zip) 
     /// </summary>
     void WriteBackupFile();
+
+    string GetTempDir();
+
+    void DirectoryCopy(string source, string targetPrefix);
+
+    void SaveDirectoryToTar(TarArchive tar, string source, bool recursive);
 }

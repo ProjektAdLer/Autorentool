@@ -18,11 +18,11 @@ public class LearningSpaceViewModelUt
         var Goals = "learn very many things";
         var PositionX = 5f;
         var PositionY = 21f;
-        var ele1 = new LearningElementViewModel("a", "b", null,  "e", "f", "g", "h","i", 17, 23);
-        var ele2 = new LearningElementViewModel("z", "zz", null,  "zzz", "z", "z","zz","zzz", 444, double.MaxValue);
-        var LearningElements = new List<LearningElementViewModel> { ele1, ele2 };
+        var ele1 = new LearningElementViewModel("a", "b", null,  "e", "f",null, "g", "h","i", 17, 23);
+        var ele2 = new LearningElementViewModel("z", "zz", null,  "zzz", "z",null, "z","zz","zzz", 444, double.MaxValue);
+        var learningElements = new List<LearningElementViewModel> { ele1, ele2 };
         
-        var systemUnderTest = new LearningSpaceViewModel(Name, Shortname, Authors, Description, Goals, LearningElements,
+        var systemUnderTest = new LearningSpaceViewModel(Name, Shortname, Authors, Description, Goals, learningElements,
             PositionX, PositionY);
         
         Assert.Multiple(() =>
@@ -32,7 +32,7 @@ public class LearningSpaceViewModelUt
             Assert.That(systemUnderTest.Authors, Is.EqualTo(Authors));
             Assert.That(systemUnderTest.Description, Is.EqualTo(Description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(Goals));
-            Assert.That(systemUnderTest.LearningElements, Is.EqualTo(LearningElements));
+            Assert.That(systemUnderTest.LearningElements, Is.EqualTo(learningElements));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(PositionX));
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(PositionY));
         });

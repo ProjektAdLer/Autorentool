@@ -17,6 +17,8 @@ public interface ILearningWorldPresenter
     IEnumerable<ModalDialogInputField> ModalDialogElementInputFields { get; }
     bool CreateLearningElementDialogOpen { get; set; }
     LearningWorldViewModel? LearningWorldVm { get; }
+    bool SelectedLearningObjectIsSpace { get; }
+    bool ShowingLearningSpaceView { get; }
     void SetSelectedLearningObject(ILearningObjectViewModel learningObject);
     void DeleteSelectedLearningObject();
     Task LoadLearningSpace();
@@ -28,4 +30,6 @@ public interface ILearningWorldPresenter
     Task OnEditSpaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple);
     Task OnEditElementDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple);
     void SetLearningWorld(object? caller, LearningWorldViewModel? world);
+    void ShowSelectedLearningSpaceView();
+    void CloseLearningSpaceView();
 }

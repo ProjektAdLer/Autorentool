@@ -11,25 +11,25 @@ public class LearningElementUt
     {
         var Name = "asdf";
         var Shortname = "jkl;";
-        var Type = "h5p";
+        var ElementType = "h5p";
         var ParentName = "foobar";
-        var Content = "foo = bar";
+        var ContentType = "foo = bar";
         var Authors = "ben and jerry";
         var Description = "very cool element";
         var Goals = "learn very many things";
         var PositionX = 5f;
         var PositionY = 21f;
 
-        var systemUnderTest = new LearningElement(Name, Shortname, Type, ParentName, Content, Authors, Description, Goals,
+        var systemUnderTest = new LearningElement(Name, Shortname, ElementType, ParentName, ContentType, Authors, Description, Goals,
             PositionX, PositionY);
         
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(Name));
             Assert.That(systemUnderTest.Shortname, Is.EqualTo(Shortname));
-            Assert.That(systemUnderTest.Type, Is.EqualTo(Type));
+            Assert.That(systemUnderTest.ElementType, Is.EqualTo(ElementType));
             Assert.That(systemUnderTest.ParentName, Is.EqualTo(ParentName));
-            Assert.That(systemUnderTest.Content, Is.EqualTo(Content));
+            Assert.That(systemUnderTest.ContentType, Is.EqualTo(ContentType));
             Assert.That(systemUnderTest.Authors, Is.EqualTo(Authors));
             Assert.That(systemUnderTest.Description, Is.EqualTo(Description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(Goals));
