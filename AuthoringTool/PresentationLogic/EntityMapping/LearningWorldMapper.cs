@@ -27,9 +27,9 @@ public class LearningWorldMapper : ILearningWorldMapper
     public LearningWorldViewModel ToViewModel(ILearningWorld entity)
     {
         var retval = new LearningWorldViewModel(entity.Name, entity.Shortname, entity.Authors, entity.Language,
-            entity.Description, entity.Goals,
-            null,
-            entity.LearningSpaces.Select(space => _spaceMapper.ToViewModel(space)).ToList());
+            entity.Description, entity.Goals, unsavedChanges:false, learningElements:null,
+            learningSpaces:entity.LearningSpaces.Select(space => _spaceMapper.ToViewModel(space)).ToList());
+        //we must get the learning elements mapped after creating the learning world so we can pass it as a parameter
         retval.LearningElements = entity.LearningElements.Select(element => _elementMapper.ToViewModel(element, retval))
             .ToList();
         return retval;

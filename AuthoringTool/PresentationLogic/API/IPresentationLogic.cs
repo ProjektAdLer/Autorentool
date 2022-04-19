@@ -16,7 +16,9 @@ public interface IPresentationLogic
     /// <summary>
     /// BusinessLogic dependency
     /// </summary>
-    IBusinessLogic BusinessLogic { get;  }
+    IBusinessLogic BusinessLogic { get; }
+    
+    bool RunningElectron { get; }
     
     void ConstructBackup();
     

@@ -14,7 +14,8 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
         public AuthoringToolWorkspacePresenter(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
             IPresentationLogic presentationLogic,
             ILearningWorldPresenter learningWorldPresenter, ILearningSpacePresenter learningSpacePresenter,
-            ILearningElementPresenter learningElementPresenter, ILogger<AuthoringToolWorkspacePresenter> logger)
+            ILearningElementPresenter learningElementPresenter, ILogger<AuthoringToolWorkspacePresenter> logger,
+            IShutdownManager shutdownManager)
         {
             _learningSpacePresenter = learningSpacePresenter;
             _learningElementPresenter = learningElementPresenter;
@@ -22,6 +23,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             _authoringToolWorkspaceVm = authoringToolWorkspaceVm;
             _presentationLogic = presentationLogic;
             _logger = logger;
+            _shutdownManager = shutdownManager;
             CreateLearningWorldDialogOpen = false;
             EditLearningWorldDialogOpen = false;
             CreateLearningSpaceDialogueOpen = false;
@@ -29,6 +31,10 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             CreateLearningElementDialogOpen = false;
             EditLearningElementDialogOpen = false;
             OnLearningWorldSelect += _learningWorldPresenter.SetLearningWorld;
+            if (!presentationLogic.RunningElectron) return;
+            //register callback so we can check for unsaved data on quit
+            //TODO: register to our own quit button
+            shutdownManager.BeforeShutdown += OnBeforeShutdown;
         }
 
         private readonly IAuthoringToolWorkspaceViewModel _authoringToolWorkspaceVm;
@@ -37,6 +43,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
         private readonly ILearningSpacePresenter _learningSpacePresenter;
         private readonly ILearningElementPresenter _learningElementPresenter;
         private readonly ILogger<AuthoringToolWorkspacePresenter> _logger;
+        private readonly IShutdownManager _shutdownManager;
 
         internal bool CreateLearningWorldDialogOpen { get; set; }
         internal bool EditLearningWorldDialogOpen { get; set; }
@@ -46,9 +53,11 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
 
         internal bool CreateLearningElementDialogOpen { get; set; }
         internal bool EditLearningElementDialogOpen { get; set; }
+        internal bool SaveUnsavedChangesDialogOpen { get; set; }
 
         internal bool LearningWorldSelected => _authoringToolWorkspaceVm.SelectedLearningWorld != null;
 
+        internal Queue<LearningWorldViewModel>? UnsavedWorldsQueue;
 
         /// <summary>
         /// This event is fired when <see cref="CreateNewLearningWorld"/> is called successfully and the newly created
@@ -73,6 +82,8 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
         /// The newly edited learning world is passed.
         /// </summary>
         internal event EventHandler<LearningWorldViewModel?>? OnLearningWorldEdit;
+
+        internal event Action? OnForceViewUpdate;
 
 
         #region LearningWorld
@@ -179,12 +190,17 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             var learningWorld = await _presentationLogic.LoadLearningWorldAsync();
             _authoringToolWorkspaceVm.LearningWorlds.Add(learningWorld);
         }
+        
+        public async Task SaveLearningWorldAsync(LearningWorldViewModel world)
+        {
+            await _presentationLogic.SaveLearningWorldAsync(world);
+        }
 
         public async Task SaveSelectedLearningWorldAsync()
         {
             if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
                 throw new ApplicationException("SelectedLearningWorld is null");
-            await _presentationLogic.SaveLearningWorldAsync(_authoringToolWorkspaceVm.SelectedLearningWorld);
+            await SaveLearningWorldAsync(_authoringToolWorkspaceVm.SelectedLearningWorld);
         }
 
         public Task OnCreateWorldDialogClose(
@@ -253,6 +269,31 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
                     new("Goals", ModalDialogInputType.Text)
                 };
             }
+        }
+
+        internal void OnBeforeShutdown(object? _, BeforeShutdownEventArgs args)
+        {
+            if (SaveUnsavedChangesDialogOpen)
+            {
+                args.CancelShutdown();
+                return;
+            }
+            if (!_authoringToolWorkspaceVm.LearningWorlds.Any(lw => lw.UnsavedChanges)) return;
+            args.CancelShutdown();
+            UnsavedWorldsQueue =
+                new Queue<LearningWorldViewModel>(
+                    _authoringToolWorkspaceVm.LearningWorlds.Where(lw => lw.UnsavedChanges));
+            SaveUnsavedChangesDialogOpen = true;
+            
+            OnForceViewUpdate?.Invoke();
+        }
+
+        internal void CompletedSaveQueue(bool cancelled = false)
+        {
+            UnsavedWorldsQueue = null;
+            SaveUnsavedChangesDialogOpen = false;
+            if (!cancelled)
+                _shutdownManager.BeginShutdown();
         }
 
         #endregion

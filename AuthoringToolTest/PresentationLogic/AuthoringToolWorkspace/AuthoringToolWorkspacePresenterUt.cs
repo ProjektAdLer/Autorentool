@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AuthoringTool.Components.ModalDialog;
 using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.API;
@@ -32,10 +33,6 @@ public class AuthoringToolWorkspacePresenterUt
             Assert.That(systemUnderTest.EditLearningWorldDialogOpen, Is.EqualTo(false));
         });
     }
-
-    #region LearningWorld
-
-    
 
     [Test]
     public void AuthoringToolWorkspacePresenter_CreateNewLearningWorld_EventHandlerCalled()
@@ -404,14 +401,98 @@ public class AuthoringToolWorkspacePresenterUt
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
 
-    #endregion
+    [Test]
+    public async Task AuthoringToolWorkspacePresenter_SaveLearningWorldAsync_CallsPresentationLogic()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var learningWorld = new LearningWorldViewModel("fo", "f", "", "f", "", "");
 
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+
+        await systemUnderTest.SaveLearningWorldAsync(learningWorld);
+        await presentationLogic.Received().SaveLearningWorldAsync(learningWorld);
+    }
+
+    [Test]
+    public async Task AuthoringToolWorkspacePresenter_SaveSelectedLearningWorldAsync_CallsPresentationLogic()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var learningWorld = new LearningWorldViewModel("fo", "f", "", "f", "", "");
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+        viewModel.LearningWorlds.Add(learningWorld);
+        viewModel.SelectedLearningWorld = learningWorld;
+
+        var systemUnderTest =
+            CreatePresenterForTesting(presentationLogic: presentationLogic, authoringToolWorkspaceVm: viewModel);
+
+        await systemUnderTest.SaveSelectedLearningWorldAsync();
+        await presentationLogic.Received().SaveLearningWorldAsync(learningWorld);
+    }
+
+    [Test]
+    public void AuthoringToolWorkspacePresenter_SaveSelectedLearningWorldAsync_ThrowsIfSelectedWorldNull()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+
+        var systemUnderTest =
+            CreatePresenterForTesting(presentationLogic: presentationLogic, authoringToolWorkspaceVm: viewModel);
+
+        Assert.ThrowsAsync<ApplicationException>(async () => await systemUnderTest.SaveSelectedLearningWorldAsync());
+        
+    }
+
+    [Test]
+    public void AuthoringToolWorkspacePresenter_OnBeforeShutdown_CancelsShutdownCreatesQueueAndInvokesViewUpdate()
+    {
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        viewModel.LearningWorlds.Add(learningWorld);
+        var args = new BeforeShutdownEventArgs();
+        var callbackCalled = false;
+        var callback = () => { callbackCalled = true; };
+
+        var systemUnderTest = CreatePresenterForTesting(viewModel);
+        systemUnderTest.OnForceViewUpdate += callback;
+        
+        systemUnderTest.OnBeforeShutdown(null, args);
+        Assert.That(systemUnderTest.UnsavedWorldsQueue, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(args.CancelShutdownState, Is.True);
+            Assert.That(systemUnderTest.UnsavedWorldsQueue, Contains.Item(learningWorld));
+            Assert.That(systemUnderTest.SaveUnsavedChangesDialogOpen, Is.True);
+            Assert.That(callbackCalled, Is.True);
+        });
+    }
+
+    [Test]
+    [TestCase(true)]
+    [TestCase(false)]
+    public void AuthoringToolWorkspacePresenter_CompletedSaveQueue_DeletesQueueAndRecallsShutdownManager(bool cancelled)
+    {
+        var shutdownManager = Substitute.For<IShutdownManager>();
+
+        var systemUnderTest = CreatePresenterForTesting(shutdownManager: shutdownManager);
+        systemUnderTest.SaveUnsavedChangesDialogOpen = true;
+        systemUnderTest.UnsavedWorldsQueue = new Queue<LearningWorldViewModel>();
+        
+        systemUnderTest.CompletedSaveQueue(cancelled);
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.SaveUnsavedChangesDialogOpen, Is.False);
+            Assert.That(systemUnderTest.UnsavedWorldsQueue, Is.Null);
+        });
+        if (!cancelled)
+            shutdownManager.Received().BeginShutdown();
+    }
 
     private AuthoringToolWorkspacePresenter CreatePresenterForTesting(
         IAuthoringToolWorkspaceViewModel? authoringToolWorkspaceVm = null, IPresentationLogic? presentationLogic = null,
         ILearningWorldPresenter? learningWorldPresenter = null, ILearningSpacePresenter? learningSpacePresenter = null,
         ILearningElementPresenter? learningElementPresenter = null,
-        ILogger<AuthoringToolWorkspacePresenter>? logger = null)
+        ILogger<AuthoringToolWorkspacePresenter>? logger = null,
+        IShutdownManager? shutdownManager = null)
     {
         authoringToolWorkspaceVm ??= Substitute.For<IAuthoringToolWorkspaceViewModel>();
         presentationLogic ??= Substitute.For<IPresentationLogic>();
@@ -419,8 +500,9 @@ public class AuthoringToolWorkspacePresenterUt
         learningSpacePresenter ??= Substitute.For<ILearningSpacePresenter>();
         learningElementPresenter ??= Substitute.For<ILearningElementPresenter>();
         logger ??= Substitute.For<ILogger<AuthoringToolWorkspacePresenter>>();
+        shutdownManager ??= Substitute.For<IShutdownManager>();
         return new AuthoringToolWorkspacePresenter(authoringToolWorkspaceVm, presentationLogic, learningWorldPresenter,
-            learningSpacePresenter, learningElementPresenter, logger);
+            learningSpacePresenter, learningElementPresenter, logger, shutdownManager);
     }
 
     private LearningWorldPresenter CreateLearningWorldPresenter(IPresentationLogic? presentationLogic = null,

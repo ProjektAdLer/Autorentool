@@ -25,8 +25,8 @@ public class LearningWorldViewModelUt
         var space1 = new LearningSpaceViewModel("ff", "ff", "ff", "ff", "ff");
         var LearningSpaces = new List<LearningSpaceViewModel> { space1 };
 
-        var systemUnderTest = new LearningWorldViewModel(Name, Shortname, Authors, Language, Description, Goals,
-            LearningElements, LearningSpaces);
+        var systemUnderTest = new LearningWorldViewModel(Name, Shortname, Authors, Language, Description, Goals, 
+            unsavedChanges:false, LearningElements, LearningSpaces);
         
         Assert.Multiple(() =>
         {
@@ -36,6 +36,7 @@ public class LearningWorldViewModelUt
             Assert.That(systemUnderTest.Language, Is.EqualTo(Language)); 
             Assert.That(systemUnderTest.Description, Is.EqualTo(Description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(Goals));
+            Assert.That(systemUnderTest.UnsavedChanges, Is.False);
             Assert.That(systemUnderTest.LearningElements, Is.EqualTo(LearningElements));
             Assert.That(systemUnderTest.LearningSpaces, Is.EqualTo(LearningSpaces));
         });

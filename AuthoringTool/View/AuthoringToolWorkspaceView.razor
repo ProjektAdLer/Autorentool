@@ -49,6 +49,14 @@
     <button class="btn btn-primary" id="btnExport" @onclick="ExportLearningWorld">Create Export-File</button>
 </div>
 
+@if (AuthoringToolWorkspaceP.SaveUnsavedChangesDialogOpen && AuthoringToolWorkspaceP.UnsavedWorldsQueue != null 
+     && AuthoringToolWorkspaceP.UnsavedWorldsQueue.Any()) 
+{
+    <ModalDialog Title="Save unsaved worlds" 
+                 Text=@($"Do you want to save the learning world named {AuthoringToolWorkspaceP.UnsavedWorldsQueue.Peek().Name}?") 
+                 OnClose=OnSaveWorldDialogCloseAsync DialogType=@ModalDialogType.YesNoCancel />
+}
+
 @if (AuthoringToolWorkspaceP.CreateLearningWorldDialogOpen)
 {
     <ModalDialog Title="Create new learning world" Text="Please enter the required data for the learning world below:"
@@ -78,23 +86,10 @@
 
 
 @code {
-
-    /// <summary>
-    /// Default constructor
-    /// </summary>
-    public AuthoringToolWorkspaceView()
+    protected override void OnParametersSet()
     {
-    }
-
-    /// <summary>
-    /// Testable constructor: use only for test purpose!
-    /// </summary>
-    public AuthoringToolWorkspaceView(
-        AuthoringToolWorkspacePresenter authoringToolWorkspaceP,
-        AuthoringToolWorkspaceViewModel authoringToolWorkspaceVm)
-    {
-        AuthoringToolWorkspaceP = authoringToolWorkspaceP;
-        AuthoringToolWorkspaceVm = authoringToolWorkspaceVm;
+        base.OnParametersSet();
+        AuthoringToolWorkspaceP.OnForceViewUpdate += StateHasChanged;
     }
 
     private LearningWorldView? _activeView;
@@ -166,6 +161,50 @@
     private Task OnEditWorldDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
     {
         return AuthoringToolWorkspaceP.OnEditWorldDialogClose(returnValueTuple);
+    }
+
+    private async Task OnSaveWorldDialogCloseAsync(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    {
+        if (AuthoringToolWorkspaceP.UnsavedWorldsQueue == null) 
+            throw new ApplicationException("SaveUnsavedChanges modal returned value despite UnsavedWorldsQueue being null");
+        var (returnValue, _) = returnValueTuple;
+        switch (returnValue)
+        {
+            case ModalDialogReturnValue.Cancel: //we want to cancel closing the application entirely
+                AuthoringToolWorkspaceP.CompletedSaveQueue(true);
+                return;
+            case ModalDialogReturnValue.Yes: //we want to save the world and iterate the queue
+            {
+                var world = AuthoringToolWorkspaceP.UnsavedWorldsQueue.Dequeue();
+                try
+                {
+                    await AuthoringToolWorkspaceP.SaveLearningWorldAsync(world);
+                }
+                catch (OperationCanceledException)
+                {
+                    //do nothing
+                }
+                catch (Exception ex)
+                {
+                    ErrorState = new ExceptionWrapper("Save world queue", ex);
+                }
+                break;
+            }
+            case ModalDialogReturnValue.No: //we do not want to save the world but iterate the queue anyway
+            {
+                var world = AuthoringToolWorkspaceP.UnsavedWorldsQueue.Dequeue();
+                world.UnsavedChanges = false;
+                break;
+            }
+            case ModalDialogReturnValue.Ok:
+            case ModalDialogReturnValue.Delete:
+            default:
+                throw new ArgumentOutOfRangeException(nameof(returnValueTuple), $"Unexpected return value of {returnValue}");
+        }
+        if (!AuthoringToolWorkspaceP.UnsavedWorldsQueue.Any())
+        {
+            AuthoringToolWorkspaceP.CompletedSaveQueue();
+        }
     }
 
     private void SetSelectedLearningWorld(string argsValue)

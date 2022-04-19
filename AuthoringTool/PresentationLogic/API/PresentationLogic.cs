@@ -41,6 +41,7 @@ namespace AuthoringTool.PresentationLogic.API
 
         public IAuthoringToolConfiguration Configuration { get; }
         public IBusinessLogic BusinessLogic { get; }
+        public bool RunningElectron => BusinessLogic.RunningElectron;
         public ILearningWorldMapper WorldMapper { get; }
         public ILearningSpaceMapper SpaceMapper { get; }
         public ILearningElementMapper ElementMapper { get; }
@@ -57,6 +58,7 @@ namespace AuthoringTool.PresentationLogic.API
             var filepath = await GetSaveFilepathAsync("Save Learning World", WorldFileEnding, WorldFileFormatDescriptor);
             var worldEntity = WorldMapper.ToEntity(learningWorldViewModel);
             BusinessLogic.SaveLearningWorld(worldEntity, filepath);
+            learningWorldViewModel.UnsavedChanges = false;
         }
 
         /// <inheritdoc cref="IPresentationLogic.LoadLearningWorldAsync"/>

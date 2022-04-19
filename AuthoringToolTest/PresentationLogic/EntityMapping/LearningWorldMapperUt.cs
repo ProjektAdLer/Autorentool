@@ -120,6 +120,7 @@ public class LearningWorldMapperUt
             Assert.That(viewModel.Authors, Is.EqualTo(entity.Authors));
             Assert.That(viewModel.Language, Is.EqualTo(entity.Language));
             Assert.That(viewModel.Description, Is.EqualTo(entity.Description));
+            Assert.That(viewModel.UnsavedChanges, Is.False);
             Assert.That(viewModel.Goals, Is.EqualTo(entity.Goals));
         });
     }
