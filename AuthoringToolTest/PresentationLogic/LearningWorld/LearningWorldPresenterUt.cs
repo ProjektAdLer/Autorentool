@@ -94,7 +94,7 @@ public class LearningWorldPresenterUt
             Arg.Any<ILearningElementViewModelParent>(), Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<string>()).Returns(new LearningElementViewModel("foo", "bar",
-            null, "Video", "bar", "foo", "foo", "bar"));
+            null, "Video", "bar",null, "foo", "foo", "bar"));
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
 
@@ -133,7 +133,7 @@ public class LearningWorldPresenterUt
             Arg.Any<ILearningElementViewModelParent>(), Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<string>()).Returns(new LearningElementViewModel("foo", "bar", null,
-            "foo", "bar", "foo", "bar", "foo"));
+            "foo", "bar", null,"foo", "bar", "foo"));
         var parent = new LearningWorldViewModel("foo", "boo", "bla", "blub", "bibi", "bubu");
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
@@ -279,11 +279,11 @@ public class LearningWorldPresenterUt
             Arg.Any<string>(), Arg.Any<ILearningElementViewModelParent>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<string>()).Returns(new LearningElementViewModel("ba", "ba",
-            null, "ba", "ba", "ba", "ba", "ba"));
+            null, "ba", "ba",null, "ba", "ba", "ba"));
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var element = new LearningElementViewModel("foo", "bar", null, "bar", "foo",
-            "bar", "foo", "bar");
+            null,"bar", "foo", "bar");
         world.LearningElements.Add(element);
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
@@ -325,7 +325,7 @@ public class LearningWorldPresenterUt
         });
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo");
         var space = new LearningSpaceViewModel("a", "b", "c", "d", "e");
-        var element = new LearningElementViewModel("z", "y", world, "x", "w", "v", "u", "t");
+        var element = new LearningElementViewModel("z", "y", world, "x", "w",null, "v", "u", "t");
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "z";
@@ -364,11 +364,11 @@ public class LearningWorldPresenterUt
             Arg.Any<string>(), Arg.Any<ILearningElementViewModelParent>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<string>()).Returns(new LearningElementViewModel("ba", "ba",
-            null, "ba", "ba", "ba", "ba", "ba"));
+            null, "ba", "ba",null, "ba", "ba", "ba"));
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var element = new LearningElementViewModel("foo", "bar", null, "bar", "foo",
-            "bar", "foo", "bar");
+            null,"bar", "foo", "bar");
         var space = new LearningSpaceViewModel("foobar", "fb", "foo", "bar", "foo");
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
@@ -452,7 +452,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var element = new LearningElementViewModel("f", "f", world, "f", "f", "f", "f", "f");
+        var element = new LearningElementViewModel("f", "f", world, "f", "f",null, "f", "f", "f");
         world.LearningElements.Add(element);
         world.SelectedLearningObject = element;
 
@@ -511,8 +511,8 @@ public class LearningWorldPresenterUt
         });
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var element1 = new LearningElementViewModel("f", "f", world, "f", "f", "f", "f", "f");
-        var element2 = new LearningElementViewModel("e", "e", world, "f", "f", "f", "f", "f");
+        var element1 = new LearningElementViewModel("f", "f", world, "f", "f", null,"f", "f", "f");
+        var element2 = new LearningElementViewModel("e", "e", world, "f", "f", null,"f", "f", "f");
         world.LearningElements.Add(element1);
         world.LearningElements.Add(element2);
         world.SelectedLearningObject = element1;
@@ -594,7 +594,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var element = new LearningElementViewModel("n", "sn", world, "t","c","a", "d", "g");
+        var element = new LearningElementViewModel("n", "sn", world, "t","c",null,"a", "d", "g");
         world.LearningElements.Add(element);
         world.SelectedLearningObject = element;
         world.EditDialogInitialValues = new Dictionary<string, string>();
@@ -684,7 +684,7 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var element = new LearningElementViewModel("f", "f", world, "f", "f", "f",
+        var element = new LearningElementViewModel("f", "f", world, "f", "f", null,"f",
             "f", "f");
         world.LearningElements.Add(element);
         world.SelectedLearningObject = element;

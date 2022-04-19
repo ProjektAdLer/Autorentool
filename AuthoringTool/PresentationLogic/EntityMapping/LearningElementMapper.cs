@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningElement;
 
 namespace AuthoringTool.PresentationLogic.EntityMapping;
@@ -18,7 +19,8 @@ public class LearningElementMapper : ILearningElementMapper
             viewModel.PositionX, viewModel.PositionY);
     }
 
-    public LearningElementViewModel ToViewModel(Entities.ILearningElement entity, ILearningElementViewModelParent? caller = null)
+    public LearningElementViewModel ToViewModel(Entities.ILearningElement entity,
+        ILearningElementViewModelParent? caller = null, LearningContentViewModel? learningContent = null)
     {
         //sanity check
         if (caller != null && entity.ParentName != caller.Name)
@@ -27,7 +29,7 @@ public class LearningElementMapper : ILearningElementMapper
                 $"caller was not null but caller.Name != entity.ParentName: {caller.Name}!={entity.ParentName}");
         }
         return new LearningElementViewModel(entity.Name, entity.Shortname, caller,
-            entity.Type, entity.Content, entity.Authors, entity.Description, entity.Goals,
+            entity.Type, entity.Content, learningContent, entity.Authors, entity.Description, entity.Goals,
             entity.PositionX, entity.PositionY);
     }
 }

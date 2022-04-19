@@ -41,8 +41,8 @@ public class LearningElementPresenterUt
     public void LearningElementPresenter_EditLearningElement_EditsViewModelCorrectly()
     {
         var systemUnderTest = new LearningElementPresenter();
-        var element = new LearningElementViewModel("a", "b", null, "c", "d", "e",
-            "f","g", 17f,29f);
+        var element = new LearningElementViewModel("a", "b", null, "c", "d", null,
+            "e", "f","g", 17f,29f);
         
         var name = "new element";
         var shortname = "ne";
@@ -76,8 +76,8 @@ public class LearningElementPresenterUt
     {
         var systemUnderTest = new LearningElementPresenter();
         var parent = new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
-        var element = new LearningElementViewModel("a", "b", parent, "c", "d", "e",
-            "f","g", 17f,29f);
+        var element = new LearningElementViewModel("a", "b", parent, "c", "d",null,
+            "e", "f","g", 17f,29f);
         parent.LearningElements.Add(element);
         
         Assert.That(parent.LearningElements, Contains.Item(element));
@@ -92,8 +92,8 @@ public class LearningElementPresenterUt
     {
         var systemUnderTest = new LearningElementPresenter();
         var parent = new LearningSpaceViewModel("a", "b", "c", "d", "e");
-        var element = new LearningElementViewModel("a", "b", parent, "c", "d", "e",
-            "f","g", 17f,29f);
+        var element = new LearningElementViewModel("a", "b", parent, "c", "d",null,
+            "e", "f","g", 17f,29f);
         parent.LearningElements.Add(element);
         
         Assert.That(parent.LearningElements, Contains.Item(element));

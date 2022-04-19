@@ -22,7 +22,7 @@ public class LearningElementViewModelUt
         var PositionX = 5f;
         var PositionY = 21f;
 
-        var systemUnderTest = new LearningElementViewModel(Name, Shortname, Parent,  Type, Content, Authors,
+        var systemUnderTest = new LearningElementViewModel(Name, Shortname, Parent,  Type, Content, null, Authors,
             Description, Goals, PositionX, PositionY);
         
         Assert.Multiple(() =>

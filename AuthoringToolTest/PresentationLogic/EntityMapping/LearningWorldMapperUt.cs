@@ -32,7 +32,7 @@ public class LearningWorldMapperUt
     {
         var elementMapper = Substitute.For<ILearningElementMapper>();
         var viewModel = new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
-        var element = new LearningElementViewModel("a", "a", null, "a", "a" ,"a", "a", "a");
+        var element = new LearningElementViewModel("a", "a", null, "a", "a" ,null,"a", "a", "a");
         viewModel.LearningElements.Add(element);
 
         elementMapper.ToEntity(element).Returns(new AuthoringTool.Entities.LearningElement("a","b","e",null, "f","g","h","i"));
@@ -93,7 +93,7 @@ public class LearningWorldMapperUt
         entity.LearningElements.Add(element);
 
         elementMapper.ToViewModel(element).Returns(new LearningElementViewModel("a", "a", null, "a",
-            "a", "a","a", "a"));
+            "a",null, "a","a", "a"));
 
         var systemUnderTest = CreateMapperForTesting(elementMapper: elementMapper);
 

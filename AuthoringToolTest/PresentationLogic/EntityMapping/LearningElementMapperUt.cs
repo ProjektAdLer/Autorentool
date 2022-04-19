@@ -15,7 +15,7 @@ public class LearningElementMapperUt
     public void LearningElementMapper_ToEntity_MapsPropertiesCorrectly()
     {
         var world = new LearningWorldViewModel("baba", "bubu", "", "", "", "");
-        var viewModel = new LearningElementViewModel("name", "shortname", world, "type", "content", "authors",
+        var viewModel = new LearningElementViewModel("name", "shortname", world, "type", "content", null,"authors",
             "description", "goals", 1, 2);
         
         var systemUnderTest = CreateTestableLearningElementMapper();

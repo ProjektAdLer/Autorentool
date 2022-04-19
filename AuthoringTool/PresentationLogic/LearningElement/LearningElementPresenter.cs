@@ -1,3 +1,4 @@
+using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
 
@@ -6,11 +7,10 @@ namespace AuthoringTool.PresentationLogic.LearningElement;
 internal class LearningElementPresenter : ILearningElementPresenter
 {
     public LearningElementViewModel CreateNewLearningElement(string name, string shortname,
-        ILearningElementViewModelParent parent,
-        string type, string content, string authors, string description, string goals, double posx = 0f,
-        double posy = 0f)
+        ILearningElementViewModelParent parent, string type, string content,
+        string authors, string description, string goals, double posx = 0f, double posy = 0f, LearningContentViewModel? learningContent = null)
     {
-        var element = new LearningElementViewModel(name, shortname, parent, type, content, authors,
+        var element = new LearningElementViewModel(name, shortname, parent, type, content, learningContent, authors,
             description, goals, posx, posy);
 
         AddLearningElementParentAssignment(parent, element);

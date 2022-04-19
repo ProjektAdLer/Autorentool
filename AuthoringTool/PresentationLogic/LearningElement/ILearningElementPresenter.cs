@@ -1,11 +1,12 @@
-﻿namespace AuthoringTool.PresentationLogic.LearningElement;
+﻿using AuthoringTool.PresentationLogic.LearningContent;
+
+namespace AuthoringTool.PresentationLogic.LearningElement;
 
 public interface ILearningElementPresenter
 {
     LearningElementViewModel CreateNewLearningElement(string name, string shortname,
-        ILearningElementViewModelParent parent,
-        string type, string content, string authors, string description, string goals, double posx = 0f,
-        double posy = 0f);
+        ILearningElementViewModelParent parent, string type, string content, string authors, string description,
+        string goals, double posx = 0f, double posy = 0f,LearningContentViewModel? learningContent = null);
 
     LearningElementViewModel EditLearningElement(LearningElementViewModel element, string name, string shortname,
         ILearningElementViewModelParent parent, string type, string content, string authors, string description,
