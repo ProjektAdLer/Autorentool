@@ -4,6 +4,7 @@ using AuthoringTool.BusinessLogic.API;
 using AuthoringTool.DataAccess.API;
 using AuthoringTool.DataAccess.Persistence;
 using AuthoringTool.DataAccess.WorldExport;
+using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.API;
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
 using AuthoringTool.PresentationLogic.ElectronNET;
@@ -67,6 +68,7 @@ public class Startup
         //Insert electron dependant services as required
         if (hybridSupportWrapper.IsElectronActive)
         {
+            services.AddSingleton<IShutdownManager, ElectronShutdownManager>();
             services.AddSingleton<IElectronDialogManager, ElectronDialogManager>();
         }
     }
