@@ -24,7 +24,7 @@ public class ElectronShutdownManager : IShutdownManager
         BeforeShutdown?.Invoke(this, eventArgs);
         if (eventArgs.CancelShutdownState) return true;
         OnShutdown?.Invoke(this);
-        _appWrapper.Quit();
+        _appWrapper.Exit();
         return true;
     }
 }
