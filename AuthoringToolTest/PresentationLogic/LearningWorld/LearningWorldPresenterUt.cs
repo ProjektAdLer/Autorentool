@@ -260,7 +260,7 @@ public class LearningWorldPresenterUt
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnCreateSpaceDialogClose(returnValueTuple));
         Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
     }
-    
+
     [Test]
     public void LearningWorldPresenter_OnCreateElementDialogClose_ThrowsWhenDialogDataAreNull()
     {
@@ -274,7 +274,8 @@ public class LearningWorldPresenterUt
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningWorld(null, world);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnCreateElementDialogClose(returnValueTuple));
+        var ex = Assert.Throws<ApplicationException>(() =>
+            systemUnderTest.OnCreateElementDialogClose(returnValueTuple));
         Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
     }
 
@@ -380,6 +381,40 @@ public class LearningWorldPresenterUt
     #endregion
 
     #region OnEditSpace/ElementDialogClose
+
+    [Test]
+    public void LearningWorldPresenter_OnEditSpaceDialogClose_ThrowsWhenDialogDataAreNull()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.SetLearningWorld(null, world);
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditSpaceDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
+    }
+
+    [Test]
+    public void LearningWorldPresenter_OnEditElementDialogClose_ThrowsWhenDialogDataAreNull()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.SetLearningWorld(null, world);
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditElementDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
+    }
 
     [Test]
     public void LearningWorldPresenter_OnEditSpaceDialogClose_CallsLearningSpacePresenter()
@@ -853,6 +888,116 @@ public class LearningWorldPresenterUt
         var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
             await systemUnderTest.SaveSelectedLearningObjectAsync());
         Assert.That(ex!.Message, Is.EqualTo("Type of LearningObject is not implemented"));
+    }
+
+    #endregion
+
+    #region LoadLearningSpace/Element
+
+    [Test]
+    public void LearningWorldPresenter_LoadLearningSpace_ThrowsWhenSelectedWorldNull()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.SetLearningWorld(null, null);
+
+        var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
+            await systemUnderTest.LoadLearningSpace());
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+    }
+
+    [Test]
+    public void LearningWorldPresenter_LoadLearningElement_ThrowsWhenSelectedWorldNull()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.SetLearningWorld(null, null);
+
+        var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
+            await systemUnderTest.LoadLearningElement());
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+    }
+
+    [Test]
+    public void LearningWorldPresenter_LoadLearningSpace_CallsPresentationLogic()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
+        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LoadLearningSpace();
+
+        presentationLogic.Received().LoadLearningSpaceAsync();
+    }
+
+    [Test]
+    public void LearningWorldPresenter_LoadLearningElement_CallsPresentationLogic()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
+        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LoadLearningElement();
+
+        presentationLogic.Received().LoadLearningElementAsync();
+    }
+
+    [Test]
+    public void LearningWorldPresenter_LoadLearningSpace_AddsLearningSpaceToLearningWorld()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        presentationLogic.LoadLearningSpaceAsync().Returns(new LearningSpaceViewModel("n", "sn", "a", "d", "g"));
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
+        systemUnderTest.SetLearningWorld(null, world);
+        Assert.That(systemUnderTest.LearningWorldVm, Is.Not.Null);
+        Assert.That(systemUnderTest.LearningWorldVm?.LearningSpaces, Is.Empty);
+
+        systemUnderTest.LoadLearningSpace();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.LearningWorldVm?.LearningSpaces.Count, Is.EqualTo(1));
+            Assert.That(systemUnderTest.LearningWorldVm?.LearningSpaces.First().Name, Is.EqualTo("n"));
+            Assert.That(systemUnderTest.LearningWorldVm?.LearningSpaces.First().Shortname, Is.EqualTo("sn"));
+            Assert.That(systemUnderTest.LearningWorldVm?.LearningSpaces.First().Authors, Is.EqualTo("a"));
+            Assert.That(systemUnderTest.LearningWorldVm?.LearningSpaces.First().Description, Is.EqualTo("d"));
+            Assert.That(systemUnderTest.LearningWorldVm?.LearningSpaces.First().Goals, Is.EqualTo("g"));
+        });
+    }
+
+    [Test]
+    public void LearningWorldPresenter_LoadLearningElement_AddsLearningElementToLearningWorld()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        presentationLogic.LoadLearningElementAsync()
+            .Returns(new LearningElementViewModel("n", "sn", null, "et", "ct", null, "a", "d", "g"));
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
+        systemUnderTest.SetLearningWorld(null, world);
+        Assert.That(systemUnderTest.LearningWorldVm, Is.Not.Null);
+        Assert.That(systemUnderTest.LearningWorldVm?.LearningElements, Is.Empty);
+
+        systemUnderTest.LoadLearningElement();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.LearningWorldVm?.LearningElements.Count, Is.EqualTo(1));
+            Assert.That(systemUnderTest.LearningWorldVm?.LearningElements.First().Name, Is.EqualTo("n"));
+            Assert.That(systemUnderTest.LearningWorldVm?.LearningElements.First().Shortname, Is.EqualTo("sn"));
+            Assert.That(systemUnderTest.LearningWorldVm?.LearningElements.First().Parent, Is.EqualTo(world));
+            Assert.That(systemUnderTest.LearningWorldVm?.LearningElements.First().ElementType, Is.EqualTo("et"));
+            Assert.That(systemUnderTest.LearningWorldVm?.LearningElements.First().ContentType, Is.EqualTo("ct"));
+            Assert.That(systemUnderTest.LearningWorldVm?.LearningElements.First().Authors, Is.EqualTo("a"));
+            Assert.That(systemUnderTest.LearningWorldVm?.LearningElements.First().Description, Is.EqualTo("d"));
+            Assert.That(systemUnderTest.LearningWorldVm?.LearningElements.First().Goals, Is.EqualTo("g"));
+        });
     }
 
     #endregion

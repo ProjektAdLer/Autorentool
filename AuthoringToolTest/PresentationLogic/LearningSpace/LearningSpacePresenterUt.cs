@@ -138,7 +138,7 @@ public class LearningSpacePresenterUt
     #region OnCreateElementDialogClose
 
     [Test]
-    public void LearningWorldPresenter_OnCreateElementDialogClose_ThrowsWhenDialogDataAreNull()
+    public void LearningSpacePresenter_OnCreateElementDialogClose_ThrowsWhenDialogDataAreNull()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
 
@@ -154,7 +154,7 @@ public class LearningSpacePresenterUt
     }
     
     [Test]
-    public void LearningWorldPresenter_OnCreateElementDialogClose_WithLearningWorld_CallsLearningElementPresenter()
+    public void LearningSpacePresenter_OnCreateElementDialogClose_WithLearningWorld_CallsLearningElementPresenter()
     {
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
         learningElementPresenter.CreateNewLearningElement(Arg.Any<string>(), Arg.Any<string>(),
@@ -189,7 +189,23 @@ public class LearningSpacePresenterUt
     #endregion
 
     #region OnEditElementDialogClose
+    
+    [Test]
+    public void LearningSpacePresenter_OnEditElementDialogClose_ThrowsWhenDialogDataAreNull()
+    {
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
 
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.SetLearningSpace(space);
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditElementDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
+    }
+    
     [Test]
     public void LearningSpacePresenter_OnEditElementDialogClose_CallsLearningElementPresenter()
     {
@@ -373,7 +389,7 @@ public class LearningSpacePresenterUt
 
     [Test]
     public void
-        LearningWorldPresenter_OpenEditSelectedLearningObjectDialog_WithUnknownObject_ThrowsNotImplemented()
+        LearningSpacePresenter_OpenEditSelectedLearningObjectDialog_WithUnknownObject_ThrowsNotImplemented()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
         var learningObject = Substitute.For<ILearningObjectViewModel>();
@@ -444,7 +460,64 @@ public class LearningSpacePresenterUt
     }
 
     #endregion
+    
+    #region LoadLearningElement
 
+    [Test]
+    public void LearningSpacePresenter_LoadLearningElement_ThrowsWhenSelectedWorldNull()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.SetLearningSpace(null);
+
+        var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
+            await systemUnderTest.LoadLearningElement());
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
+    }
+
+    [Test]
+    public void LearningSpacePresenter_LoadLearningElement_CallsPresentationLogic()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
+        systemUnderTest.SetLearningSpace(space);
+        systemUnderTest.LoadLearningElement();
+
+        presentationLogic.Received().LoadLearningElementAsync();
+    }
+
+    [Test]
+    public void LearningSpacePresenter_LoadLearningElement_AddsLearningElementToLearningWorld()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        presentationLogic.LoadLearningElementAsync()
+            .Returns(new LearningElementViewModel("n", "sn", null, "et", "ct", null, "a", "d", "g"));
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
+        systemUnderTest.SetLearningSpace(space);
+        Assert.That(systemUnderTest.LearningSpaceVm, Is.Not.Null);
+        Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements, Is.Empty);
+
+        systemUnderTest.LoadLearningElement();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.Count, Is.EqualTo(1));
+            Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.First().Name, Is.EqualTo("n"));
+            Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.First().Shortname, Is.EqualTo("sn"));
+            Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.First().Parent, Is.EqualTo(space));
+            Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.First().ElementType, Is.EqualTo("et"));
+            Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.First().ContentType, Is.EqualTo("ct"));
+            Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.First().Authors, Is.EqualTo("a"));
+            Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.First().Description, Is.EqualTo("d"));
+            Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.First().Goals, Is.EqualTo("g"));
+        });
+    }
+
+    #endregion
+    
     #endregion
 
 

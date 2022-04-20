@@ -206,6 +206,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             if (_authoringToolWorkspaceVm.SelectedLearningWorld == toBeReplaced)
             {
                 _authoringToolWorkspaceVm.SelectedLearningWorld = toReplace;
+                OnLearningWorldSelect?.Invoke(this, _authoringToolWorkspaceVm.SelectedLearningWorld);
             }
         }
 
