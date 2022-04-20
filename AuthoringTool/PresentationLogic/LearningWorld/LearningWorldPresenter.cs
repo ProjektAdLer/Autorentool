@@ -271,8 +271,8 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
             var assignment = data["Assignment"];
             var parentElement = GetLearningElementParent(parent, assignment);
 
-            var elementType = data["ElementType"];
-            var contentType = data["ContentType"];
+            var elementType = data["Type"];
+            var contentType = data["Content"];
             var description = data["Description"];
             //optional arguments
             var authors = data.ContainsKey("Authors") ? data["Authors"] : "";

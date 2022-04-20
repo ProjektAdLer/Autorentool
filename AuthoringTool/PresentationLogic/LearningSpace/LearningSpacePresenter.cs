@@ -155,8 +155,8 @@ namespace AuthoringTool.PresentationLogic.LearningSpace
                     }
                 },
                 {"Assignment", element.Parent.Name},
-                {"ElementType", element.ElementType},
-                {"ContentType", element.ContentType},
+                {"Type", element.ElementType},
+                {"Content", element.ContentType},
                 {"Authors", element.Authors},
                 {"Description", element.Description},
                 {"Goals", element.Goals},
@@ -195,8 +195,8 @@ namespace AuthoringTool.PresentationLogic.LearningSpace
             var assignment = data["Assignment"];
             var parentElement = GetLearningElementParent(parent, assignment);
 
-            var elementType = data["ElementType"];
-            var contentType = data["ContentType"];
+            var elementType = data["Type"];
+            var contentType = data["Content"];
             var description = data["Description"];
             //optional arguments
             var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
@@ -237,8 +237,8 @@ namespace AuthoringTool.PresentationLogic.LearningSpace
             var parent = data["Parent"];
             var assignment = data["Assignment"];
             var parentElement = GetLearningElementParent(parent, assignment);
-            var elementType = data["ElementType"];
-            var contentType = data["ContentType"];
+            var elementType = data["Type"];
+            var contentType = data["Content"];
             var description = data["Description"];
             //optional arguments
             var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
@@ -274,13 +274,13 @@ namespace AuthoringTool.PresentationLogic.LearningSpace
                                 new Dictionary<string, string> {{"Parent", "Learning space"}},
                                 new[] {LearningSpaceVm!.Name})
                         }, true),
-                    new ModalDialogDropdownInputField("ElementType",
+                    new ModalDialogDropdownInputField("Type",
                         new[]
                         {
                             new ModalDialogDropdownInputFieldChoiceMapping(null,
                                 new[] {"Transfer", "Activation", "Interaction", "Test"})
                         }, true),
-                    new ModalDialogDropdownInputField("ContentType",
+                    new ModalDialogDropdownInputField("Content",
                         new[]
                         {
                             new ModalDialogDropdownInputFieldChoiceMapping(null,

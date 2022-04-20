@@ -245,6 +245,40 @@ public class LearningWorldPresenterUt
     #region OnCreateSpace/ElementDialogClose
 
     [Test]
+    public void LearningWorldPresenter_OnCreateSpaceDialogClose_ThrowsWhenDialogDataAreNull()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.SetLearningWorld(null, world);
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnCreateSpaceDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
+    }
+    
+    [Test]
+    public void LearningWorldPresenter_OnCreateElementDialogClose_ThrowsWhenDialogDataAreNull()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.SetLearningWorld(null, world);
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnCreateElementDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
+    }
+
+    [Test]
     public void LearningWorldPresenter_OnCreateSpaceDialogClose_CallsLearningSpacePresenter()
     {
         var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();

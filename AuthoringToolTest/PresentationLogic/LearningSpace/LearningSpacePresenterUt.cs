@@ -138,6 +138,22 @@ public class LearningSpacePresenterUt
     #region OnCreateElementDialogClose
 
     [Test]
+    public void LearningWorldPresenter_OnCreateElementDialogClose_ThrowsWhenDialogDataAreNull()
+    {
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.SetLearningSpace(space);
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnCreateElementDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
+    }
+    
+    [Test]
     public void LearningWorldPresenter_OnCreateElementDialogClose_WithLearningWorld_CallsLearningElementPresenter()
     {
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
