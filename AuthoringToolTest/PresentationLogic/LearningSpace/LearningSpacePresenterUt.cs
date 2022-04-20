@@ -170,8 +170,8 @@ public class LearningSpacePresenterUt
         dictionary["Shortname"] = "b";
         dictionary["Parent"] = "Learning space";
         dictionary["Assignment"] = "foo";
-        dictionary["ElementType"] = "c";
-        dictionary["ContentType"] = "d";
+        dictionary["Type"] = "c";
+        dictionary["Content"] = "d";
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
         dictionary["Goals"] = "g";
@@ -210,8 +210,8 @@ public class LearningSpacePresenterUt
         dictionary["Shortname"] = "b";
         dictionary["Parent"] = "Learning world";
         dictionary["Assignment"] = "foo";
-        dictionary["ElementType"] = "c";
-        dictionary["ContentType"] = "d";
+        dictionary["Type"] = "c";
+        dictionary["Content"] = "d";
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
         dictionary["Goals"] = "g";
@@ -363,8 +363,8 @@ public class LearningSpacePresenterUt
             Assert.That(space.EditDialogInitialValues["Shortname"], Is.EqualTo(element.Shortname));
             Assert.That(space.EditDialogInitialValues["Parent"], Is.EqualTo("Learning space"));
             Assert.That(space.EditDialogInitialValues["Assignment"], Is.EqualTo(element.Parent?.Name));
-            Assert.That(space.EditDialogInitialValues["ElementType"], Is.EqualTo(element.ElementType));
-            Assert.That(space.EditDialogInitialValues["ContentType"], Is.EqualTo(element.ContentType));
+            Assert.That(space.EditDialogInitialValues["Type"], Is.EqualTo(element.ElementType));
+            Assert.That(space.EditDialogInitialValues["Content"], Is.EqualTo(element.ContentType));
             Assert.That(space.EditDialogInitialValues["Authors"], Is.EqualTo(element.Authors));
             Assert.That(space.EditDialogInitialValues["Description"], Is.EqualTo(element.Description));
             Assert.That(space.EditDialogInitialValues["Goals"], Is.EqualTo(element.Goals));

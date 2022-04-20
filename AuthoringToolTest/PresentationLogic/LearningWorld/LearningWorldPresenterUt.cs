@@ -325,8 +325,8 @@ public class LearningWorldPresenterUt
         dictionary["Shortname"] = "b";
         dictionary["Parent"] = "Learning world";
         dictionary["Assignment"] = "foo";
-        dictionary["ElementType"] = "c";
-        dictionary["ContentType"] = "d";
+        dictionary["Type"] = "c";
+        dictionary["Content"] = "d";
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
         dictionary["Goals"] = "g";
@@ -360,8 +360,8 @@ public class LearningWorldPresenterUt
         dictionary["Shortname"] = "b";
         dictionary["Parent"] = "Learning space";
         dictionary["Assignment"] = "foobar";
-        dictionary["ElementType"] = "c";
-        dictionary["ContentType"] = "d";
+        dictionary["Type"] = "c";
+        dictionary["Content"] = "d";
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
         dictionary["Goals"] = "g";
