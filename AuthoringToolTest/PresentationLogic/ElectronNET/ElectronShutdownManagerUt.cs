@@ -70,7 +70,7 @@ public class ElectronShutdownManagerUt
         var systemUnderTest = CreateElectronShutdownManagerForTest(appWrapper);
 
         systemUnderTest.BeginShutdown();
-        appWrapper.Received().Quit();
+        appWrapper.Received().Exit();
     }
 
     private IShutdownManager CreateElectronShutdownManagerForTest(IAppWrapper? appWrapper = null)
