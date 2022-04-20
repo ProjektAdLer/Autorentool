@@ -57,7 +57,7 @@ public class FileSaveHandlerUt
     {
         //Disable warning for test
         // ReSharper disable once ObjectCreationAsStatement
-        var ex = Assert.Throws<InvalidOperationException>(() => { new FileSaveHandler<TestNotSerializable>(null!); });
+        var ex = Assert.Throws<InvalidOperationException>(() => { new XmlFileHandler<TestNotSerializable>(null!); });
         Assert.That(ex!.Message, Is.EqualTo($"Type {nameof(TestNotSerializable)} is not serializable."));
     }
     
@@ -66,7 +66,7 @@ public class FileSaveHandlerUt
     {
         //Disable warning for test
         // ReSharper disable once ObjectCreationAsStatement
-        var ex = Assert.Throws<InvalidOperationException>(() => { new FileSaveHandler<TestNoParameterlessConstructor>(null!); });
+        var ex = Assert.Throws<InvalidOperationException>(() => { new XmlFileHandler<TestNoParameterlessConstructor>(null!); });
         Assert.That(ex!.Message, Is.EqualTo($"Type {nameof(TestNoParameterlessConstructor)} has no required parameterless constructor."));
     }
     
@@ -142,9 +142,9 @@ public class FileSaveHandlerUt
         Assert.That(innerEx!.GetType(), Is.EqualTo(typeof(FileNotFoundException)));
     }
 
-    private FileSaveHandler<T> CreateTestableFileSaveHandler<T>(ILogger<FileSaveHandler<T>>? logger = null, IFileSystem? fileSystem = null) where T : class
+    private XmlFileHandler<T> CreateTestableFileSaveHandler<T>(ILogger<XmlFileHandler<T>>? logger = null, IFileSystem? fileSystem = null) where T : class
     {
-        logger ??= Substitute.For<ILogger<FileSaveHandler<T>>>();
-        return fileSystem == null ? new FileSaveHandler<T>(logger) : new FileSaveHandler<T>(logger, fileSystem);
+        logger ??= Substitute.For<ILogger<XmlFileHandler<T>>>();
+        return fileSystem == null ? new XmlFileHandler<T>(logger) : new XmlFileHandler<T>(logger, fileSystem);
     }
 }

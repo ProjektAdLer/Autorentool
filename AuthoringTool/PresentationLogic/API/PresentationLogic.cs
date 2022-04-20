@@ -114,14 +114,19 @@ namespace AuthoringTool.PresentationLogic.API
         /// <param name="fileFormatDescriptor"></param>
         /// <returns>Path to the file in which the object should be saved.</returns>
         /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
-        private async Task<string> GetSaveFilepathAsync(string title, string fileEnding, string fileFormatDescriptor) 
+        private async Task<string> GetSaveFilepathAsync(string title, string fileEnding, string fileFormatDescriptor)
+        {
+            return await GetSaveFilepathAsync(title, fileEnding, new FileFilterProxy[]
+            {
+                new(fileFormatDescriptor, new[] {fileEnding})
+            });
+        }
+        
+        private async Task<string> GetSaveFilepathAsync(string title, string fileEnding, FileFilterProxy[] fileFilterProxies) 
         {
             try
             {
-                var filepath = await _dialogManager!.ShowSaveAsDialog(title, null, new FileFilterProxy[]
-                {
-                    new(fileFormatDescriptor, new[] { fileEnding })
-                });
+                var filepath = await _dialogManager!.ShowSaveAsDialog(title, null, fileFilterProxies);
                 if (!filepath.EndsWith($".{fileEnding}")) filepath += $".{fileEnding}";
                 return filepath;
             }

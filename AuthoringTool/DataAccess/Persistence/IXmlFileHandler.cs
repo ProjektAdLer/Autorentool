@@ -7,7 +7,7 @@ namespace AuthoringTool.DataAccess.Persistence;
 /// Wrapper around XmlSerializer for typesafe (de-)serialization.
 /// </summary>
 /// <typeparam name="T">The type which should be (de-)serialized.</typeparam>
-internal interface IFileSaveHandler<T> where T : class
+internal interface IXmlFileHandler<T> where T : class
 {
     /// <summary>
     /// Serializes passed object of type T to disk. Existing files will be overwritten.

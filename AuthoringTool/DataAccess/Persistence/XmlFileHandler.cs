@@ -5,10 +5,10 @@ using System.Xml.Serialization;
 
 namespace AuthoringTool.DataAccess.Persistence;
 
-/// <inheritdoc cref="IFileSaveHandler{T}"/>
-internal class FileSaveHandler<T> : IFileSaveHandler<T> where T : class //new() constraint for default ctor
+/// <inheritdoc cref="IXmlFileHandler{T}"/>
+internal class XmlFileHandler<T> : IXmlFileHandler<T> where T : class //new() constraint for default ctor
 {
-    private readonly ILogger<FileSaveHandler<T>> _logger;
+    private readonly ILogger<XmlFileHandler<T>> _logger;
     private readonly IFileSystem _fileSystem;
     private readonly XmlSerializer _serializer;
 
@@ -18,7 +18,7 @@ internal class FileSaveHandler<T> : IFileSaveHandler<T> where T : class //new() 
     /// <param name="logger">Logger for log output.</param>
     /// <exception cref="InvalidOperationException">Thrown when class T is either not serializable or doesn't have a
     /// parameterless constructor (necessary for XmlSerializer deserialization).</exception>
-    public FileSaveHandler(ILogger<FileSaveHandler<T>> logger) : this(logger, new FileSystem()) { }
+    public XmlFileHandler(ILogger<XmlFileHandler<T>> logger) : this(logger, new FileSystem()) { }
 
     /// <summary>
     /// Testable constructor with insertable IFileSystem for mocking.
@@ -27,7 +27,7 @@ internal class FileSaveHandler<T> : IFileSaveHandler<T> where T : class //new() 
     /// <param name="fileSystem">File system to be used.</param>
     /// <exception cref="InvalidOperationException">Thrown when class T is either not serializable or doesn't have a
     /// parameterless constructor (necessary for XmlSerializer deserialization).</exception>
-    internal FileSaveHandler(ILogger<FileSaveHandler<T>> logger, IFileSystem fileSystem)
+    internal XmlFileHandler(ILogger<XmlFileHandler<T>> logger, IFileSystem fileSystem)
     {
         _logger = logger;
         _fileSystem = fileSystem;
@@ -48,7 +48,7 @@ internal class FileSaveHandler<T> : IFileSaveHandler<T> where T : class //new() 
         _serializer = new XmlSerializer(typeof(T));
     }
 
-    /// <inheritdoc cref="IFileSaveHandler{T}.SaveToDisk"/>
+    /// <inheritdoc cref="IXmlFileHandler{T}.SaveToDisk"/>
     public void SaveToDisk(T obj, string filepath)
     {
         try
@@ -64,14 +64,14 @@ internal class FileSaveHandler<T> : IFileSaveHandler<T> where T : class //new() 
         }
     }
 
-    /// <inheritdoc cref="IFileSaveHandler{T}.SaveToStream"/>
+    /// <inheritdoc cref="IXmlFileHandler{T}.SaveToStream"/>
     public void SaveToStream(T obj, Stream stream)
     {
         _serializer.Serialize(stream, obj);
         stream.Flush();
     }
 
-    /// <inheritdoc cref="IFileSaveHandler{T}.LoadFromDisk"/>
+    /// <inheritdoc cref="IXmlFileHandler{T}.LoadFromDisk"/>
     public T LoadFromDisk(string filepath)
     {
         Stream? fileStream = null;
@@ -91,7 +91,7 @@ internal class FileSaveHandler<T> : IFileSaveHandler<T> where T : class //new() 
         }
     }
 
-    /// <inheritdoc cref="IFileSaveHandler{T}.LoadFromStream"/>
+    /// <inheritdoc cref="IXmlFileHandler{T}.LoadFromStream"/>
     public T LoadFromStream(Stream stream)
     {
         return _serializer.Deserialize(stream) as T ?? throw new SerializationException($"Cast result to type {typeof(T).Name} null.");

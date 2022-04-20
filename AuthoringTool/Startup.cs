@@ -38,7 +38,7 @@ public class Startup
 
         //AuthoringTool
         services.AddSingleton<IAuthoringToolConfiguration, AuthoringToolConfiguration>();
-        services.AddTransient(typeof(IFileSaveHandler<>), typeof(FileSaveHandler<>));
+        services.AddTransient(typeof(IXmlFileHandler<>), typeof(XmlFileHandler<>));
         services.AddSingleton<IBackupFileGenerator, BackupFileGenerator>();
         services.AddSingleton<IDataAccess, DataAccess>();
         services.AddSingleton<IBusinessLogic, BusinessLogic>();

@@ -8,19 +8,19 @@ namespace AuthoringTool.DataAccess.API;
 internal class DataAccess : IDataAccess
 {
     public DataAccess(IAuthoringToolConfiguration configuration, IBackupFileGenerator backupFileGenerator,
-        IFileSaveHandler<LearningWorld> saveHandlerWorld, IFileSaveHandler<LearningSpace> saveHandlerSpace,
-        IFileSaveHandler<LearningElement> saveHandlerElement)
+        IXmlFileHandler<LearningWorld> xmlHandlerWorld, IXmlFileHandler<LearningSpace> xmlHandlerSpace,
+        IXmlFileHandler<LearningElement> xmlHandlerElement)
     {
-        SaveHandlerWorld = saveHandlerWorld;
-        SaveHandlerSpace = saveHandlerSpace;
-        SaveHandlerElement = saveHandlerElement;
+        XmlHandlerWorld = xmlHandlerWorld;
+        XmlHandlerSpace = xmlHandlerSpace;
+        XmlHandlerElement = xmlHandlerElement;
         Configuration = configuration;
         BackupFile = backupFileGenerator;
     }
 
-    public readonly IFileSaveHandler<LearningWorld> SaveHandlerWorld;
-    public readonly IFileSaveHandler<LearningSpace> SaveHandlerSpace;
-    public readonly IFileSaveHandler<LearningElement> SaveHandlerElement;
+    public readonly IXmlFileHandler<LearningWorld> XmlHandlerWorld;
+    public readonly IXmlFileHandler<LearningSpace> XmlHandlerSpace;
+    public readonly IXmlFileHandler<LearningElement> XmlHandlerElement;
     public IAuthoringToolConfiguration Configuration { get; }
 
     public IBackupFileGenerator BackupFile { get; set; }
@@ -34,31 +34,31 @@ internal class DataAccess : IDataAccess
 
     public void SaveLearningWorldToFile(LearningWorld world, string filepath)
     {
-        SaveHandlerWorld.SaveToDisk(world, filepath);
+        XmlHandlerWorld.SaveToDisk(world, filepath);
     }
 
     public LearningWorld LoadLearningWorldFromFile(string filepath)
     {
-        return SaveHandlerWorld.LoadFromDisk(filepath);
+        return XmlHandlerWorld.LoadFromDisk(filepath);
     }
 
     public void SaveLearningSpaceToFile(LearningSpace space, string filepath)
     {
-        SaveHandlerSpace.SaveToDisk(space, filepath);
+        XmlHandlerSpace.SaveToDisk(space, filepath);
     }
 
     public LearningSpace LoadLearningSpaceFromFile(string filepath)
     {
-        return SaveHandlerSpace.LoadFromDisk(filepath);
+        return XmlHandlerSpace.LoadFromDisk(filepath);
     }
 
     public void SaveLearningElementToFile(LearningElement element, string filepath)
     {
-        SaveHandlerElement.SaveToDisk(element, filepath);
+        XmlHandlerElement.SaveToDisk(element, filepath);
     }
 
     public LearningElement LoadLearningElementFromFile(string filepath)
     {
-        return SaveHandlerElement.LoadFromDisk(filepath);
+        return XmlHandlerElement.LoadFromDisk(filepath);
     }
 }

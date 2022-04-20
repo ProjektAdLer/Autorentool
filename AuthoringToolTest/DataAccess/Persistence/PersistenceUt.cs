@@ -120,10 +120,10 @@ public class PersistenceUt
         PropertyValuesAreEqual(restoredElement, element);
     }
     
-    private FileSaveHandler<T> CreateTestableFileSaveHandler<T>(ILogger<FileSaveHandler<T>>? logger = null, IFileSystem? fileSystem = null) where T : class
+    private XmlFileHandler<T> CreateTestableFileSaveHandler<T>(ILogger<XmlFileHandler<T>>? logger = null, IFileSystem? fileSystem = null) where T : class
     {
-        logger ??= Substitute.For<ILogger<FileSaveHandler<T>>>();
-        return fileSystem == null ? new FileSaveHandler<T>(logger) : new FileSaveHandler<T>(logger, fileSystem);
+        logger ??= Substitute.For<ILogger<XmlFileHandler<T>>>();
+        return fileSystem == null ? new XmlFileHandler<T>(logger) : new XmlFileHandler<T>(logger, fileSystem);
     }
 
     private void PropertyValuesAreEqual<T>(T actual, T expected) where T : class?
