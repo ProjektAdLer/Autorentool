@@ -78,6 +78,8 @@ public class ModalDialogUt
         new object[] { ModalDialogType.YesNoCancel, "#btn-yes", ModalDialogReturnValue.Yes },
         new object[] { ModalDialogType.YesNoCancel, "#btn-no", ModalDialogReturnValue.No },
         new object[] { ModalDialogType.YesNoCancel, "#btn-cancel", ModalDialogReturnValue.Cancel },
+        new object[] { ModalDialogType.YesNo, "#btn-yes", ModalDialogReturnValue.Yes},
+        new object[] { ModalDialogType.YesNo, "#btn-no", ModalDialogReturnValue.No}
     };
     [Test]
     [TestCaseSource(nameof(ModalDialog_ButtonClicked_CallsCallbackWithCorrectDialogReturnValue_TestCaseSource))]

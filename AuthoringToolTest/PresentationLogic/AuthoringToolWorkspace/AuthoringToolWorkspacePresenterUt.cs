@@ -246,12 +246,15 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
-    public void AuthoringToolWorkspacePresenter_DeleteSelectedLearningWorld_DeletesWorldFromViewModel()
+    public void AuthoringToolWorkspacePresenter_DeleteSelectedLearningWorld_DeletesWorldFromViewModelAndSetsUnsaved()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var worldPresenter = CreateLearningWorldPresenter();
         var world1 = new LearningWorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo",
-            "Foo");
+            "Foo")
+        {
+            UnsavedChanges = true
+        };
         var world2 = new LearningWorldViewModel("tetete", "f", "bar", "de", "A test",
             "testing");
         workspaceVm.LearningWorlds.Add(world1);
@@ -272,6 +275,7 @@ public class AuthoringToolWorkspacePresenterUt
         systemUnderTest.DeleteSelectedLearningWorld();
         Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
         Assert.That(workspaceVm.LearningWorlds, Does.Contain(world2));
+        Assert.That(systemUnderTest.DeletedUnsavedWorld, Is.EqualTo(world1));
         
         systemUnderTest.SetSelectedLearningWorld(world2.Name);
         systemUnderTest.DeleteSelectedLearningWorld();
@@ -475,9 +479,12 @@ public class AuthoringToolWorkspacePresenterUt
     }
     
     [Test]
-    public void AuthoringToolWorkspacePresenter_ReplaceLearningWorld_ReplacesWorld() 
+    public void AuthoringToolWorkspacePresenter_ReplaceLearningWorld_ReplacesWorldAnpdSetsReplacedUnsavedWorld() 
     {
-        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f")
+        {
+            UnsavedChanges = true
+        };
         var learningWorld2 = new LearningWorldViewModel("f", "fu", "fu", "fu", "fu", "fu");
         var viewModel = new AuthoringToolWorkspaceViewModel();
         viewModel.LearningWorlds.Add(learningWorld);
@@ -491,6 +498,7 @@ public class AuthoringToolWorkspacePresenterUt
             Assert.That(viewModel.LearningWorlds, Contains.Item(learningWorld2));
             Assert.That(viewModel.LearningWorlds, Does.Not.Contain(learningWorld));
             Assert.That(viewModel.SelectedLearningWorld, Is.EqualTo(learningWorld2));
+            Assert.That(systemUnderTest.ReplacedUnsavedWorld, Is.EqualTo(learningWorld));
         });
     }
 

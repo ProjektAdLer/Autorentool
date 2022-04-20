@@ -93,6 +93,10 @@
                         <button type="button" class="btn btn-danger" id="btn-no" @onclick="() => ModalTryClose(ModalDialogReturnValue.No)">No</button>
                         <button type="button" class="btn btn-warning" id="btn-cancel" @onclick="() => ModalTryClose(ModalDialogReturnValue.Cancel)">Cancel</button>
                         break;
+                    case ModalDialogType.YesNo:
+                        <button type="button" class="btn btn-success" id="btn-yes" @onclick="() => ModalTryClose(ModalDialogReturnValue.Yes)">Yes</button>
+                        <button type="button" class="btn btn-danger" id="btn-no" @onclick="() => ModalTryClose(ModalDialogReturnValue.No)">No</button>
+                        break;
                     default:
                         throw new ArgumentOutOfRangeException(nameof(DialogType));
                 }
@@ -193,6 +197,7 @@
             ModalDialogType.OkCancel => ModalTryClose(ModalDialogReturnValue.Ok),
             ModalDialogType.DeleteCancel => ModalTryClose(ModalDialogReturnValue.Delete),
             ModalDialogType.YesNoCancel => ModalTryClose(ModalDialogReturnValue.Yes),
+            ModalDialogType.YesNo => ModalTryClose(ModalDialogReturnValue.Yes),
             _ => throw new ArgumentOutOfRangeException()
         };
     }

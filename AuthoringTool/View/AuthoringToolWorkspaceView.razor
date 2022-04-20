@@ -5,8 +5,7 @@
 @using AuthoringTool.View.LearningWorld
 @using static System.IO.Directory;
 
-@code {
-}
+
 @inject IMouseService _mouseService
 @inject ILogger<AuthoringToolWorkspaceView> _logger
 @inject AuthoringToolWorkspacePresenter AuthoringToolWorkspaceP
@@ -52,11 +51,12 @@
     <button class="btn btn-primary" id="btnExport" @onclick="ExportLearningWorld">Create Export-File</button>
 </div>
 
+<!-- Save dialog for shutting down -->
 @if (AuthoringToolWorkspaceP.SaveUnsavedChangesDialogOpen && AuthoringToolWorkspaceP.UnsavedWorldsQueue != null 
      && AuthoringToolWorkspaceP.UnsavedWorldsQueue.Any()) 
 {
-    <ModalDialog Title="Save unsaved worlds" 
-                 Text=@($"Do you want to save the learning world named {AuthoringToolWorkspaceP.UnsavedWorldsQueue.Peek().Name}?") 
+    <ModalDialog Title="Save unsaved worlds?" 
+                 Text=@($"World {AuthoringToolWorkspaceP.UnsavedWorldsQueue.Peek().Name} has unsaved changes. Do you want to save it?") 
                  OnClose=OnSaveWorldDialogCloseAsync DialogType=@ModalDialogType.YesNoCancel />
 }
 
@@ -66,6 +66,22 @@
                  Text=@($"You already have a world with the name {AuthoringToolWorkspaceP.WorldToReplaceWith.Name} loaded." 
                         +"Do you want to replace it?")
                  OnClose=OnReplaceDialogClose DialogType=ModalDialogType.OkCancel />
+}
+
+<!-- Save dialog for saving when replacing -->
+@if (AuthoringToolWorkspaceP.ReplacedUnsavedWorld != null) 
+{
+    <ModalDialog Title="Save replaced world?"
+                 Text=@($"Replaced world {AuthoringToolWorkspaceP.ReplacedUnsavedWorld.Name} has unsaved changes. Do you want to save it?")
+                 OnClose=OnSaveReplacedWorldDialogCloseAsync DialogType=ModalDialogType.YesNo />
+}
+
+<!-- Save dialog for saving when deleting -->
+@if (AuthoringToolWorkspaceP.DeletedUnsavedWorld != null)
+{
+    <ModalDialog Title="Save deleted world?"
+                 Text=@($"Deleted world {AuthoringToolWorkspaceP.DeletedUnsavedWorld.Name} has unsaved changes. Do you want to save it?")
+                 OnClose=OnSaveDeletedWorldDialogCloseAsync DialogType=ModalDialogType.YesNo />
 }
 
 @if (AuthoringToolWorkspaceP.CreateLearningWorldDialogOpen)
@@ -218,12 +234,37 @@
         }
     }
     
-    internal void OnReplaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> obj)
+    private async Task OnSaveReplacedWorldDialogCloseAsync(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
     {
-        var (result, _) = obj;
+        if (AuthoringToolWorkspaceP.ReplacedUnsavedWorld == null)
+            throw new ApplicationException("SaveReplacedWorld modal returned value despite ReplacedUnsavedWorld being null");
+        var (returnValue, _) = returnValueTuple;
+        switch (returnValue)
+        {
+            case ModalDialogReturnValue.Yes:
+            {
+                await AuthoringToolWorkspaceP.SaveLearningWorldAsync(AuthoringToolWorkspaceP.ReplacedUnsavedWorld);
+                break;
+            }
+            case ModalDialogReturnValue.No:
+            {
+                break;
+            }
+            case ModalDialogReturnValue.Ok:
+            case ModalDialogReturnValue.Cancel:
+            case ModalDialogReturnValue.Delete:
+            default:
+                throw new ArgumentOutOfRangeException(nameof(returnValueTuple.Item1));
+        }
+        AuthoringToolWorkspaceP.ReplacedUnsavedWorld = null;
+    }
+    
+    internal void OnReplaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    {
+        var (returnValue, _) = returnValueTuple;
         if (AuthoringToolWorkspaceP.WorldToReplaceWith == null) 
             throw new ApplicationException("WorldToReplaceWith was null but OnReplaceDialogClose was called");
-        switch (result)
+        switch (returnValue)
         {
             case ModalDialogReturnValue.Ok:
             {
@@ -240,10 +281,35 @@
             case ModalDialogReturnValue.Yes:
             case ModalDialogReturnValue.No:
             default:
-                throw new ArgumentOutOfRangeException(nameof(obj.Item1));
+                throw new ArgumentOutOfRangeException(nameof(returnValueTuple.Item1));
         }
         StateHasChanged();
         _activeView?.TriggerStateHasChanged();
+    }
+    
+    private async Task OnSaveDeletedWorldDialogCloseAsync(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    {
+        var (returnValue, _) = returnValueTuple;
+        if (AuthoringToolWorkspaceP.DeletedUnsavedWorld == null)
+            throw new ApplicationException("SaveDeletedWorld modal returned value despite DeleteUnsavedWorld being null");
+        switch (returnValue)
+        {
+            case ModalDialogReturnValue.Yes:
+            {
+                await AuthoringToolWorkspaceP.SaveLearningWorldAsync(AuthoringToolWorkspaceP.DeletedUnsavedWorld);
+                break;
+            }
+            case ModalDialogReturnValue.No:
+            {
+                break;
+            }
+            case ModalDialogReturnValue.Ok:
+            case ModalDialogReturnValue.Cancel:
+            case ModalDialogReturnValue.Delete:
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+        AuthoringToolWorkspaceP.DeletedUnsavedWorld = null;
     }
 
     private void SetSelectedLearningWorld(string argsValue)

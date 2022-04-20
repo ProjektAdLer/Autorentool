@@ -31,6 +31,8 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             CreateLearningElementDialogOpen = false;
             EditLearningElementDialogOpen = false;
             WorldToReplaceWith = null;
+            ReplacedUnsavedWorld = null;
+            DeletedUnsavedWorld = null;
             OnLearningWorldSelect += _learningWorldPresenter.SetLearningWorld;
             if (!presentationLogic.RunningElectron) return;
             //register callback so we can check for unsaved data on quit
@@ -59,7 +61,9 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
         internal bool LearningWorldSelected => _authoringToolWorkspaceVm.SelectedLearningWorld != null;
 
         internal Queue<LearningWorldViewModel>? UnsavedWorldsQueue;
-        public LearningWorldViewModel? WorldToReplaceWith { get; set; }
+        internal LearningWorldViewModel? WorldToReplaceWith { get; set; }
+        internal LearningWorldViewModel? ReplacedUnsavedWorld { get; set; }
+        internal LearningWorldViewModel? DeletedUnsavedWorld { get; set; }
 
         /// <summary>
         /// This event is fired when <see cref="CreateNewLearningWorld"/> is called successfully and the newly created
@@ -141,6 +145,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
             var learningWorld = _authoringToolWorkspaceVm.SelectedLearningWorld;
             if (learningWorld == null) return;
             _authoringToolWorkspaceVm.LearningWorlds.Remove(learningWorld);
+            if (learningWorld.UnsavedChanges) DeletedUnsavedWorld = learningWorld;
             SetSelectedLearningWorld(_authoringToolWorkspaceVm.LearningWorlds.LastOrDefault());
             OnLearningWorldDelete?.Invoke(this, learningWorld);
         }
@@ -202,6 +207,12 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
         {
             var toBeReplaced = _authoringToolWorkspaceVm.LearningWorlds.First(world => world.Name == toReplace.Name);
             _authoringToolWorkspaceVm.LearningWorlds.Remove(toBeReplaced);
+            if (toBeReplaced.UnsavedChanges)
+            {
+                if (ReplacedUnsavedWorld != null)
+                    throw new ApplicationException("multiple unsaved replaced worlds, this should not happen");
+                ReplacedUnsavedWorld = toBeReplaced;
+            }
             _authoringToolWorkspaceVm.LearningWorlds.Add(toReplace);
             if (_authoringToolWorkspaceVm.SelectedLearningWorld == toBeReplaced)
             {
@@ -289,6 +300,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace
                 };
             }
         }
+
 
         internal void OnBeforeShutdown(object? _, BeforeShutdownEventArgs args)
         {
