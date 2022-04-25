@@ -71,6 +71,10 @@ public class Startup
             services.AddSingleton<IShutdownManager, ElectronShutdownManager>();
             services.AddSingleton<IElectronDialogManager, ElectronDialogManager>();
         }
+        else
+        {
+            services.AddSingleton<IShutdownManager, BrowserShutdownManager>();
+        }
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)

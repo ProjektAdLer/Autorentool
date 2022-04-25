@@ -2,11 +2,11 @@ using ElectronWrapper;
 
 namespace AuthoringTool.PresentationLogic.ElectronNET;
 
-public class ElectronShutdownManager : IShutdownManager
+public class BrowserShutdownManager : IShutdownManager
 {
     private readonly IAppWrapper _appWrapper;
 
-    public ElectronShutdownManager(IAppWrapper appWrapper)
+    public BrowserShutdownManager(IAppWrapper appWrapper)
     {
         _appWrapper = appWrapper;
     }
@@ -20,11 +20,6 @@ public class ElectronShutdownManager : IShutdownManager
     /// <inheritdoc cref="IShutdownManager.BeginShutdown"/>
     bool IShutdownManager.BeginShutdown()
     {
-        var eventArgs = new BeforeShutdownEventArgs();
-        BeforeShutdown?.Invoke(this, eventArgs);
-        if (eventArgs.CancelShutdownState) return true;
-        OnShutdown?.Invoke(this);
-        _appWrapper.Exit();
-        return false;
+        return true;
     }
 }
