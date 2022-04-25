@@ -34,14 +34,17 @@ public class ExceptionWrapper
             return stringBuilder.ToString();
         }
 
-        stringBuilder.Append(":\n");
-        stringBuilder.Append("Exception: \n");
+        stringBuilder.AppendLine(":");
+        stringBuilder.AppendLine("Exception:");
         var exception = Exception;
         while (exception != null)
         {
             stringBuilder.Append(exception.Message);
             if (exception.InnerException != null)
-                stringBuilder.Append("\nInner Exception:\n");
+            {
+                stringBuilder.AppendLine();
+                stringBuilder.AppendLine("Inner Exception:");
+            }
             exception = exception.InnerException;
         }
 

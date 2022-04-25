@@ -45,12 +45,12 @@ internal class ExceptionWrapperToStringCases : IEnumerable
         yield return new object[] { new ExceptionWrapper("the callsite"), "Exception encountered at the callsite." };
         yield return new object[] { new ExceptionWrapper("the callsite", new Exception("Exception message")),
 @"Exception encountered at the callsite:
-Exception: 
+Exception:
 Exception message" };
         yield return new object[] { new ExceptionWrapper("the callsite",
                 new Exception("Exception message", new Exception("the inner exception message"))), 
 @"Exception encountered at the callsite:
-Exception: 
+Exception:
 Exception message
 Inner Exception:
 the inner exception message" };
