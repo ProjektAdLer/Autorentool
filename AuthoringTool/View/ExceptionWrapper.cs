@@ -10,6 +10,7 @@ public class ExceptionWrapper
     public ExceptionWrapper(string callSite)
     {
         CallSite = callSite;
+        Exception = null;
     }
 
     public ExceptionWrapper(string callSite, Exception exception)
