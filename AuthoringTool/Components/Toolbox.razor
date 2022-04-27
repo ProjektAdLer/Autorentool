@@ -1,0 +1,135 @@
+@using AuthoringTool.Extensions
+<div class="toolbox-root">
+    <div class="header">
+        <h4>Toolbox</h4>
+    </div>
+    <div class="content container">
+        @{
+            foreach (var row in debug.Split(3))
+            {
+                <div class="row justify-content-center">
+                    @foreach (var element in row)
+                    {
+                        <div class="col-3 element text-center text-wrap">
+                            @element.a
+                        </div>
+                    }
+                </div>
+            }
+        }
+    </div>
+</div>
+
+
+     @code {
+
+    class DebugThing
+    {
+        public DebugThing(string a, int b)
+        {
+            this.a = a;
+            this.b = b;
+        }
+        public string a;
+        public int b;
+    }
+
+    IEnumerable<DebugThing> debug = new[]
+    {
+        new DebugThing("foo", 123),
+        new DebugThing("foo", 123),
+        new DebugThing("foooooooooooooooooooooooooo", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("faooooo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("faooooo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("faooooo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("faooooo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("faooooo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("faooooo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("faooooo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("faooooo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("faooooo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("faooooo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("faooooo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("faooooo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("faooooo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("faooooo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("faooooo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("faooooo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("faooooo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fao", 123),
+        new DebugThing("faooooo", 123),
+        new DebugThing("fuo", 123),
+        new DebugThing("fuo", 123),
+        
+    };
+         
+}

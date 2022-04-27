@@ -1,0 +1,41 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.toolbox-root {
+    background: white;
+    border: 5px solid grey;
+    margin: 20px;
+    height: 800px;
+    display: flex;
+    flex-flow: column;
+}
+
+.header {
+    flex: 0 1 auto;
+}
+
+h4 {
+    padding-left: 10px;
+    text-shadow: 2px 2px 3px lightgrey;
+}
+
+.container {
+    height: available;
+    overflow-y: auto;
+}
+
+.element {
+    border: 1px solid black;
+    margin: 5px 3px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    background: lightgrey;
+    width: 30%;
+    max-width: 33.33%;
+}
+
+.text-wrap {
+    overflow-wrap: anywhere;
+}
