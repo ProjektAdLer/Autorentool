@@ -7,7 +7,7 @@ html, body {
     background: white;
     border: 5px solid grey;
     margin: 20px;
-    height: 800px;
+    height: 400px;
     display: flex;
     flex-flow: column;
 }
