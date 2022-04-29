@@ -3,7 +3,6 @@
     margin: 5px 3px;
     padding-top: 4px;
     padding-bottom: 4px;
-    background: lightgrey;
     width: 30%;
     max-width: 33.33%;
     border-radius: 10px;
@@ -11,4 +10,16 @@
 
 .text-wrap {
     overflow-wrap: anywhere;
+}
+
+.learning-world {
+    background-color: pink;
+}
+
+.learning-space {
+    background-color: lightgreen;
+}
+
+.learning-element {
+    background-color: blue;
 }

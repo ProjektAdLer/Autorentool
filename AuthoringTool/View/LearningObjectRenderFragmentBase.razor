@@ -1,0 +1,17 @@
+@using AuthoringTool.PresentationLogic
+<div class="col-3 element text-center text-wrap @CssClassSelector">
+    @obj.Name
+    @if (ChildContent != null)
+    {
+        <br/>
+        @ChildContent
+    }
+</div>
+@code {
+    [Parameter, EditorRequired]
+    public IDisplayableLearningObject obj { get; set; }
+    [Parameter, EditorRequired]
+    public string CssClassSelector { get; set; }
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+}

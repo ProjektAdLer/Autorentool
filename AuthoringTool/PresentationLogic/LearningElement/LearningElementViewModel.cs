@@ -2,7 +2,7 @@ using AuthoringTool.PresentationLogic.LearningContent;
 
 namespace AuthoringTool.PresentationLogic.LearningElement;
 
-public class LearningElementViewModel : ILearningObjectViewModel, ISerializableViewModel
+public class LearningElementViewModel : ILearningObjectViewModel, ISerializableViewModel, IDisplayableLearningObject
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="LearningElementViewModel"/> class.

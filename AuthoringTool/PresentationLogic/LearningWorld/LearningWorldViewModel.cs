@@ -4,7 +4,7 @@ using AuthoringTool.PresentationLogic.LearningSpace;
 
 namespace AuthoringTool.PresentationLogic.LearningWorld;
 
-public class LearningWorldViewModel : ILearningElementViewModelParent, ISerializableViewModel
+public class LearningWorldViewModel : ILearningElementViewModelParent, ISerializableViewModel, IDisplayableLearningObject
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="LearningWorldViewModel"/> class.

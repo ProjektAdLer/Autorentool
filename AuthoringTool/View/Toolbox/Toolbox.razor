@@ -1,0 +1,26 @@
+@using AuthoringTool.Components
+@using AuthoringTool.PresentationLogic
+@using AuthoringTool.PresentationLogic.LearningElement
+@using AuthoringTool.PresentationLogic.LearningSpace
+@using AuthoringTool.PresentationLogic.LearningWorld
+@inject IAbstractToolboxRenderFragmentFactory RenderFragmentFactory
+@* Disabled because editor does not recognize ItemRenderTemplate being provided as inner tag -n.stich*@
+@* ReSharper disable once Blazor.EditorRequired *@
+<GridLayoutDisplay HeaderTitle="Toolbox" Items="@debug">
+    <ItemRenderTemplate>
+        @RenderFragmentFactory.GetRenderFragment(context)
+    </ItemRenderTemplate>
+</GridLayoutDisplay>
+
+
+@code {
+    IEnumerable<IDisplayableLearningObject> debug { get; set; } 
+        = new IDisplayableLearningObject[]
+        {
+            new LearningWorldViewModel("foo", "bar", "bub", "", "", ""),
+            new LearningElementViewModel("ba", "su", null, "ge", "asdf",
+                null, "au", "desc", "goal"),
+            new LearningWorldViewModel("foo", "bar", "bub", "", "", ""),
+            new LearningSpaceViewModel("la", "la", "la", "description", "bubu")
+        };
+}

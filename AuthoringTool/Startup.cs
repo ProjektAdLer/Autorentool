@@ -12,6 +12,7 @@ using AuthoringTool.PresentationLogic.EntityMapping;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
+using AuthoringTool.View.Toolbox;
 using ElectronWrapper;
 
 public class Startup
@@ -49,6 +50,7 @@ public class Startup
         services.AddSingleton<ILearningElementPresenter, LearningElementPresenter>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
         services.AddSingleton<AuthoringToolWorkspacePresenter>();
+        services.AddSingleton<IAbstractToolboxRenderFragmentFactory, ToolboxRenderFragmentFactory>();
         //ViewModel <-> Entity Mappers
         services.AddSingleton<ILearningElementMapper, LearningElementMapper>();
         services.AddSingleton<ILearningSpaceMapper, LearningSpaceMapper>();
