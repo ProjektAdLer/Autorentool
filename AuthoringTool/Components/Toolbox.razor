@@ -1,24 +1,13 @@
 @using AuthoringTool.Extensions
-<div class="toolbox-root">
-    <div class="header">
-        <h4>Toolbox</h4>
-    </div>
-    <div class="content container">
-        @{
-            foreach (var row in debug.Split(3))
-            {
-                <div class="row justify-content-center">
-                    @foreach (var element in row)
-                    {
-                        <div class="col-3 element text-center text-wrap">
-                            @element.a
-                        </div>
-                    }
-                </div>
-            }
-        }
-    </div>
-</div>
+@* Disabled because editor does not recognize ItemRenderTemplate being provided as inner tag -n.stich*@
+@* ReSharper disable once Blazor.EditorRequired *@
+<GridLayoutDisplay HeaderTitle="Toolbox" Items="@debug">
+    <ItemRenderTemplate>
+        <div class="col-3 element text-center text-wrap">
+            @context.a
+        </div>
+    </ItemRenderTemplate>
+</GridLayoutDisplay>
 
 
      @code {
