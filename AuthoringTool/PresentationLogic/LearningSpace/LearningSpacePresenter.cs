@@ -113,17 +113,17 @@ namespace AuthoringTool.PresentationLogic.LearningSpace
         #region LearningElement
 
         /// <summary>
-        /// Creates a new learning element and assigns it to a learning world or a learning space.
+        /// Creates a new learning element and assigns it to the selected learning space.
         /// </summary>
         /// <param name="name">Name of the element.</param>
         /// <param name="shortname">Shortname of the element.</param>
-        /// <param name="parent">Decides whether the learning element belongs to a learning world or a learning space</param>
-        /// <param name="elementType">The represented type of the element in the space/world.</param>
+        /// <param name="parent">Parent of the learning element (selected learning space)</param>
+        /// <param name="elementType">The represented type of the element in the space.</param>
         /// <param name="contentType">Describes, which content the element contains.</param>
         /// <param name="authors">A list of authors of the element.</param>
         /// <param name="description">A description of the element.</param>
         /// <param name="goals">The goals of the element.</param>
-        /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
+        /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
         public void CreateNewLearningElement(string name, string shortname, ILearningElementViewModelParent parent,
             string elementType, string contentType, string authors, string description, string goals)
         {
@@ -217,6 +217,13 @@ namespace AuthoringTool.PresentationLogic.LearningSpace
             return parentElement;
         }
 
+        /// <summary>
+        /// Changes property values of learning element viewmodel with return values of dialog
+        /// </summary>
+        /// <param name="returnValueTuple">Return values of dialog</param>
+        /// <returns></returns>
+        /// <exception cref="ApplicationException">Thrown if return values of dialog are null
+        /// or selected learning object is not a learning element</exception>
         public Task OnEditElementDialogClose(
             Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
         {

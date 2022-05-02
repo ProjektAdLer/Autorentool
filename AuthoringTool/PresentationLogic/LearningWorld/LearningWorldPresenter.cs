@@ -189,7 +189,8 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
         #region LearningElement
 
         /// <summary>
-        /// Creates a new learning element and assigns it to a learning world or a learning space.
+        /// Creates a new learning element and assigns it to the selected learning world or to a learning space in the
+        /// selected learning world.
         /// </summary>
         /// <param name="name">Name of the element.</param>
         /// <param name="shortname">Shortname of the element.</param>
@@ -304,6 +305,13 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
             return parentElement;
         }
 
+        /// <summary>
+        /// Changes property values of learning element viewmodel with return values of dialog
+        /// </summary>
+        /// <param name="returnValueTuple">Return values of dialog</param>
+        /// <returns></returns>
+        /// <exception cref="ApplicationException">Thrown if return values of dialog null
+        /// or selected learning object not a learning element</exception>
         public Task OnEditElementDialogClose(
             Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
         {

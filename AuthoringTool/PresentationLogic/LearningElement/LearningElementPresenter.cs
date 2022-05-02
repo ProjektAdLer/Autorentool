@@ -18,6 +18,12 @@ internal class LearningElementPresenter : ILearningElementPresenter
         return element;
     }
 
+    /// <summary>
+    /// Adds the assignment of a learning element to a parent 
+    /// </summary>
+    /// <param name="parent">Parent of the learning element. Can either be a learning world or a learning space</param>
+    /// <param name="element">Element that gets assigned to its parent</param>
+    /// <exception cref="NotImplementedException">Thrown, when parent is neither a world or a space</exception>
     private static void AddLearningElementParentAssignment(ILearningElementViewModelParent parent,
         LearningElementViewModel element)
     {
@@ -57,6 +63,10 @@ internal class LearningElementPresenter : ILearningElementPresenter
         return element;
     }
 
+    /// <summary>
+    /// Removes assignment of a learning element to its parent
+    /// </summary>
+    /// <param name="element">Element, that gets removed from its parent</param>
     public void RemoveLearningElementFromParentAssignment(LearningElementViewModel element)
     {
         switch (element.Parent)
@@ -70,6 +80,5 @@ internal class LearningElementPresenter : ILearningElementPresenter
                 space.LearningElements.Remove(element);
                 break;
         }
-        
     }
 }
