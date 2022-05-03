@@ -39,6 +39,7 @@ public class Startup
         //AuthoringTool
         services.AddSingleton<IAuthoringToolConfiguration, AuthoringToolConfiguration>();
         services.AddTransient(typeof(IXmlFileHandler<>), typeof(XmlFileHandler<>));
+        services.AddSingleton<IContentFileHandler, ContentFileHandler>();
         services.AddSingleton<IBackupFileGenerator, BackupFileGenerator>();
         services.AddSingleton<IDataAccess, DataAccess>();
         services.AddSingleton<IBusinessLogic, BusinessLogic>();
@@ -53,6 +54,7 @@ public class Startup
         services.AddSingleton<ILearningElementMapper, LearningElementMapper>();
         services.AddSingleton<ILearningSpaceMapper, LearningSpaceMapper>();
         services.AddSingleton<ILearningWorldMapper, LearningWorldMapper>();
+        services.AddSingleton<ILearningContentMapper, LearningContentMapper>();
 
         //Blazor and Electron
         services.AddRazorPages();

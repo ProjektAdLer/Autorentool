@@ -249,6 +249,25 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
             learningElement.Parent = LearningWorldVm;
             LearningWorldVm.LearningElements.Add(learningElement);
         }
+        
+        public async Task LoadLearningContent()
+        {
+            var learningContent = await _presentationLogic.LoadLearningContentAsync();
+            if (LearningWorldVm == null)
+            {
+                throw new ApplicationException("SelectedLearningWorld is null");
+            }
+            switch (LearningWorldVm.SelectedLearningObject)
+            {
+                case null:
+                    throw new ApplicationException("SelectedLearningObject is null");
+                case LearningSpaceViewModel:
+                    throw new ApplicationException("LearningSpace instead of LearningElement selected");
+                case LearningElementViewModel learningElement: 
+                    learningElement.LearningContent = learningContent;
+                    break;
+            }
+        }
 
 
         public Task OnCreateElementDialogClose(
@@ -382,7 +401,7 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
                         new[]
                         {
                             new ModalDialogDropdownInputFieldChoiceMapping(null,
-                                new[] {"Text", "Picture", "Video"})
+                                new[] {"Picture", "Video", "H5P", "PDF"})
                         }, true),
                     new("Authors", ModalDialogInputType.Text),
                     new("Description", ModalDialogInputType.Text, true),

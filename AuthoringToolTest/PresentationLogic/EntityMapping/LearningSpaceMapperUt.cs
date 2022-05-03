@@ -18,7 +18,7 @@ public class LearningSpaceMapperUt
         var elementViewModel = new LearningElementViewModel("a", "a", spaceViewModel, "a", "a", null,"a", "a", "a");
         spaceViewModel.LearningElements.Add(elementViewModel);
 
-        elementMapper.ToEntity(elementViewModel).Returns(new AuthoringTool.Entities.LearningElement( "a", "a","a", "a", "a", "a", "a", "a"));
+        elementMapper.ToEntity(elementViewModel).Returns(new AuthoringTool.Entities.LearningElement( "a", "a","a", "a", "a", null, "a", "a", "a"));
 
         var systemUnderTest = CreateMapperForTesting(elementMapper: elementMapper);
 
@@ -52,7 +52,7 @@ public class LearningSpaceMapperUt
     {
         var elementMapper = Substitute.For<ILearningElementMapper>();
         var entity = new AuthoringTool.Entities.LearningSpace("a", "b", "c", "d", "e");
-        var element = new AuthoringTool.Entities.LearningElement("a", "a", "a", null, "a", "a", "a", "a");
+        var element = new AuthoringTool.Entities.LearningElement("a", "a", "a", null, "a", null, "a", "a", "a");
         entity.LearningElements.Add(element);
 
         elementMapper.ToViewModel(element).Returns(new LearningElementViewModel("a", "a", null,"a",

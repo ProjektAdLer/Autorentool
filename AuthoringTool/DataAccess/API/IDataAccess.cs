@@ -14,4 +14,5 @@ public interface IDataAccess
     LearningSpace LoadLearningSpaceFromFile(string filepath);
     void SaveLearningElementToFile(LearningElement element, string filepath);
     LearningElement LoadLearningElementFromFile(string filepath);
+    LearningContent LoadLearningContentFromFile(string filepath);
 }

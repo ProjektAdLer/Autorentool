@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using AuthoringTool.Entities;
 using NUnit.Framework;
@@ -16,8 +17,9 @@ public class LearningWorldUt
         var Language = "german";
         var Description = "very cool element";
         var Goals = "learn very many things";
-        var ele1 = new LearningElement("a", "b", "e", "pupup","f", "g","h","i", 17, 23);
-        var ele2 = new LearningElement("z", "zz", "zzz", "baba","z", "z","zz","zzz", 444, double.MaxValue);
+        var content1 = new LearningContent("a", "b", Array.Empty<byte>());
+        var ele1 = new LearningElement("a", "b", "e", "pupup","f",content1,  "g","h","i", 17, 23);
+        var ele2 = new LearningElement("z", "zz", "zzz", "baba","z",null, "z","zz","zzz", 444, double.MaxValue);
         var LearningElements = new List<LearningElement> { ele1, ele2 };
         var space1 = new LearningSpace("ff", "ff", "ff", "ff", "ff");
         var LearningSpaces = new List<LearningSpace> { space1 };

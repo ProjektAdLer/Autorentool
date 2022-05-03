@@ -4,12 +4,13 @@
 public class LearningElement : ILearningElement
 {
     internal LearningElement(string name, string shortname, string elementType, string? parentName,
-        string contentType, string authors, string description, string goals, double positionX = 0, double positionY = 0)
+        string contentType, LearningContent? content, string authors, string description, string goals, double positionX = 0, double positionY = 0)
     {
         Name = name;
         Shortname = shortname;
         ElementType = elementType;
         ContentType = contentType;
+        Content = content ?? new LearningContent();
         Authors = authors;
         Description = description;
         Goals = goals;
@@ -26,6 +27,7 @@ public class LearningElement : ILearningElement
         Shortname = "";
         ElementType = "";
         ContentType = "";
+        Content = new LearningContent();
         Authors = "";
         Description = "";
         Goals = "";
@@ -39,6 +41,7 @@ public class LearningElement : ILearningElement
     public string Shortname { get; set; }
     public string ElementType { get; set; }
     public string ContentType { get; set; }
+    public LearningContent Content { get; set; }
     public string Authors { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }

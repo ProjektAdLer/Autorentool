@@ -29,12 +29,13 @@ public class PresentationLogicUt
         var mockWorldMapper = Substitute.For<ILearningWorldMapper>();
         var mockSpaceMapper = Substitute.For<ILearningSpaceMapper>();
         var mockElementMapper = Substitute.For<ILearningElementMapper>();
+        var mockContentMapper = Substitute.For<ILearningContentMapper>();
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         var mockLogger = Substitute.For<ILogger<AuthoringTool.PresentationLogic.API.PresentationLogic>>();
 
         //Act
         var systemUnderTest = CreateTestablePresentationLogic(mockConfiguration, mockBusinessLogic, mockWorldMapper,
-            mockSpaceMapper, mockElementMapper, mockServiceProvider, mockLogger);
+            mockSpaceMapper, mockElementMapper,mockContentMapper, mockServiceProvider, mockLogger);
         Assert.Multiple(() =>
         {
             //Assert
@@ -43,6 +44,7 @@ public class PresentationLogicUt
             Assert.That(systemUnderTest.WorldMapper, Is.EqualTo(mockWorldMapper));
             Assert.That(systemUnderTest.SpaceMapper, Is.EqualTo(mockSpaceMapper));
             Assert.That(systemUnderTest.ElementMapper, Is.EqualTo(mockElementMapper));
+            Assert.That(systemUnderTest.ContentMapper, Is.EqualTo(mockContentMapper));
         });
     }
 
@@ -255,7 +257,7 @@ public class PresentationLogicUt
         mockBusinessLogic.RunningElectron.Returns(true);
         var mockElementMapper = Substitute.For<ILearningElementMapper>();
         var learningElement = new LearningElementViewModel("f", "f", null, "f", "f", null,"f", "f", "f");
-        var entity = new AuthoringTool.Entities.LearningElement("f", "f", "f", "f", "f", "f", "f", "f");
+        var entity = new AuthoringTool.Entities.LearningElement("f", "f", "f", "f", "f", null,"f", "f", "f");
         mockElementMapper.ToEntity(Arg.Any<LearningElementViewModel>())
             .Returns(entity);
         const string filepath = "foobar";
@@ -499,7 +501,7 @@ public class PresentationLogicUt
         mockBusinessLogic.RunningElectron.Returns(true);
         var mockElementMapper = Substitute.For<ILearningElementMapper>();
         var learningElement = new LearningElementViewModel("f", "f", null, "f", "f",null, "f", "f", "f" );
-        var entity = new AuthoringTool.Entities.LearningElement("f", "f", "f", "f", "f", "f", "f", "f");
+        var entity = new AuthoringTool.Entities.LearningElement("f", "f", "f", "f", "f", null, "f", "f", "f");
         mockElementMapper.ToViewModel(entity).Returns(learningElement);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
@@ -549,17 +551,18 @@ public class PresentationLogicUt
     private static AuthoringTool.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(
         IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null,
         ILearningWorldMapper? worldMapper = null, ILearningSpaceMapper? spaceMapper = null,
-        ILearningElementMapper? elementMapper = null, IServiceProvider? serviceProvider = null,
-        ILogger<AuthoringTool.PresentationLogic.API.PresentationLogic>? logger = null)
+        ILearningElementMapper? elementMapper = null, ILearningContentMapper? contentMapper = null,
+        IServiceProvider? serviceProvider = null, ILogger<AuthoringTool.PresentationLogic.API.PresentationLogic>? logger = null)
     {
         configuration ??= Substitute.For<IAuthoringToolConfiguration>();
         businessLogic ??= Substitute.For<IBusinessLogic>();
         worldMapper ??= Substitute.For<ILearningWorldMapper>();
         spaceMapper ??= Substitute.For<ILearningSpaceMapper>();
         elementMapper ??= Substitute.For<ILearningElementMapper>();
+        contentMapper ??= Substitute.For<ILearningContentMapper>();
         serviceProvider ??= Substitute.For<IServiceProvider>();
         logger ??= Substitute.For<ILogger<AuthoringTool.PresentationLogic.API.PresentationLogic>>();
         return new AuthoringTool.PresentationLogic.API.PresentationLogic(configuration, businessLogic,
-            worldMapper, spaceMapper, elementMapper, serviceProvider, logger);
+            worldMapper, spaceMapper, elementMapper, contentMapper, serviceProvider, logger);
     }
 }

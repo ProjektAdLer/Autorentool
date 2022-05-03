@@ -172,6 +172,23 @@ namespace AuthoringTool.PresentationLogic.LearningSpace
             learningElement.Parent = LearningSpaceVm;
             LearningSpaceVm.LearningElements.Add(learningElement);
         }
+        
+        public async Task LoadLearningContent()
+        {
+            var learningContent = await _presentationLogic.LoadLearningContentAsync();
+            if (LearningSpaceVm == null)
+            { 
+                throw new ApplicationException("SelectedLearningSpace is null");
+            }
+            switch (LearningSpaceVm.SelectedLearningObject)
+            {
+                case null:
+                    throw new ApplicationException("SelectedLearningObject is null");
+                case LearningElementViewModel learningElement: 
+                    learningElement.LearningContent = learningContent;
+                    break;
+            }
+        }
 
 
         public Task OnCreateElementDialogClose(
@@ -191,9 +208,7 @@ namespace AuthoringTool.PresentationLogic.LearningSpace
             //required arguments
             var name = data["Name"];
             var shortname = data["Shortname"];
-            var parent = data["Parent"];
-            var assignment = data["Assignment"];
-            var parentElement = GetLearningElementParent(parent, assignment);
+            var parentElement = GetLearningElementParent();
 
             var elementType = data["Type"];
             var contentType = data["Content"];
@@ -205,7 +220,7 @@ namespace AuthoringTool.PresentationLogic.LearningSpace
             return Task.CompletedTask;
         }
 
-        private ILearningElementViewModelParent GetLearningElementParent(string parent, string assignment)
+        private ILearningElementViewModelParent GetLearningElementParent()
         {
             ILearningElementViewModelParent? parentElement = LearningSpaceVm;
 
@@ -241,9 +256,7 @@ namespace AuthoringTool.PresentationLogic.LearningSpace
             //required arguments
             var name = data["Name"];
             var shortname = data["Shortname"];
-            var parent = data["Parent"];
-            var assignment = data["Assignment"];
-            var parentElement = GetLearningElementParent(parent, assignment);
+            var parentElement = GetLearningElementParent();
             var elementType = data["Type"];
             var contentType = data["Content"];
             var description = data["Description"];
@@ -268,19 +281,6 @@ namespace AuthoringTool.PresentationLogic.LearningSpace
                 {
                     new("Name", ModalDialogInputType.Text, true),
                     new("Shortname", ModalDialogInputType.Text, true),
-                    new ModalDialogDropdownInputField("Parent",
-                        new[]
-                        {
-                            new ModalDialogDropdownInputFieldChoiceMapping(null,
-                                new[] {"Learning space"})
-                        }, true),
-                    new ModalDialogDropdownInputField("Assignment",
-                        new[]
-                        {
-                            new ModalDialogDropdownInputFieldChoiceMapping(
-                                new Dictionary<string, string> {{"Parent", "Learning space"}},
-                                new[] {LearningSpaceVm!.Name})
-                        }, true),
                     new ModalDialogDropdownInputField("Type",
                         new[]
                         {
@@ -291,7 +291,7 @@ namespace AuthoringTool.PresentationLogic.LearningSpace
                         new[]
                         {
                             new ModalDialogDropdownInputFieldChoiceMapping(null,
-                                new[] {"Text", "Picture", "Video"})
+                                new[] {"Picture", "Video", "H5P", "PDF"})
                         }, true),
                     new("Authors", ModalDialogInputType.Text),
                     new("Description", ModalDialogInputType.Text, true),

@@ -2,7 +2,7 @@ namespace AuthoringTool.Entities;
 
 public class LearningContent : ILearningContent
 {
-    internal LearningContent(string name, string type, string content)
+    internal LearningContent(string name, string type, byte[] content)
     {
         Name = name;
         Type = type;
@@ -11,14 +11,14 @@ public class LearningContent : ILearningContent
     /// <summary>
     /// Constructor for serialization. DO NOT USE FOR NORMAL INITIALIZATION.
     /// </summary>
-    private LearningContent()
+    internal LearningContent()
     {
         Name = "";
         Type = "";
-        Content = "";
+        Content = Array.Empty<byte>();
     }
     
     public string Name { get; set; }
     public string Type { get; set; }
-    public string Content { get; set; }
+    public byte[] Content { get; set; }
 }

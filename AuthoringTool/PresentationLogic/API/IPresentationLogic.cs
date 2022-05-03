@@ -1,5 +1,7 @@
 ﻿using AuthoringTool.API.Configuration;
 using AuthoringTool.BusinessLogic.API;
+using AuthoringTool.PresentationLogic.ElectronNET;
+using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
@@ -84,4 +86,10 @@ public interface IPresentationLogic
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
     Task<LearningElementViewModel> LoadLearningElementAsync();
+    
+    /// <summary>
+    /// Asks user for path and loads <see cref="LearningContentViewModel"/> from disk. 
+    /// </summary>
+    /// <returns></returns>
+    Task<LearningContentViewModel> LoadLearningContentAsync();
 }

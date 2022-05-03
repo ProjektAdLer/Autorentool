@@ -8,7 +8,7 @@ public class LearningContentViewModel
     /// <param name="name">The name of the learning content</param>
     /// <param name="type">Describes the type of the loaded file</param>
     /// <param name="content">Contains the content of the loaded file</param>
-    public LearningContentViewModel(string name, string type, string content)
+    public LearningContentViewModel(string name, string type, byte[] content)
     {
         Name = name;
         Type = type;
@@ -17,6 +17,6 @@ public class LearningContentViewModel
 
     public string Name { get; set; }
     public string Type { get; set; }
-    public string Content { get; set; }
+    public byte[] Content { get; set; }
     
 }

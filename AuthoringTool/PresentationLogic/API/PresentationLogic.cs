@@ -2,6 +2,7 @@
 using AuthoringTool.BusinessLogic.API;
 using AuthoringTool.PresentationLogic.ElectronNET;
 using AuthoringTool.PresentationLogic.EntityMapping;
+using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
@@ -17,6 +18,7 @@ namespace AuthoringTool.PresentationLogic.API
             ILearningWorldMapper worldMapper,
             ILearningSpaceMapper spaceMapper,
             ILearningElementMapper elementMapper,
+            ILearningContentMapper contentMapper,
             IServiceProvider serviceProvider,
             ILogger<PresentationLogic> logger)
         {
@@ -26,6 +28,7 @@ namespace AuthoringTool.PresentationLogic.API
             WorldMapper = worldMapper;
             SpaceMapper = spaceMapper;
             ElementMapper = elementMapper;
+            ContentMapper = contentMapper;
             _dialogManager = serviceProvider.GetService(typeof(IElectronDialogManager)) as IElectronDialogManager;
         }
 
@@ -35,6 +38,7 @@ namespace AuthoringTool.PresentationLogic.API
         private const string WorldFileEnding = "awf";
         private const string SpaceFileEnding = "asf";
         private const string ElementFileEnding = "aef";
+        private string[] ContentFileEnding = {"jpg", "png", "webp", "bmp"};
         private const string WorldFileFormatDescriptor = "AdLer World File";
         private const string SpaceFileFormatDescriptor = "AdLer Space File";
         private const string ElementFileFormatDescriptor = "AdLer Element File";
@@ -45,6 +49,7 @@ namespace AuthoringTool.PresentationLogic.API
         public ILearningWorldMapper WorldMapper { get; }
         public ILearningSpaceMapper SpaceMapper { get; }
         public ILearningElementMapper ElementMapper { get; }
+        public ILearningContentMapper ContentMapper { get; }
 
         public void ConstructBackup()
         {
@@ -105,6 +110,15 @@ namespace AuthoringTool.PresentationLogic.API
             var entity = BusinessLogic.LoadLearningElement(filepath);
             return ElementMapper.ToViewModel(entity);
         }
+        
+        public async Task<LearningContentViewModel> LoadLearningContentAsync()
+        {
+            SaveOrLoadElectronCheck();
+            var fileFilter = new FileFilterProxy[] {new(" ", ContentFileEnding)};
+            var filepath = await GetLoadFilepathAsync("Load Learning Content", fileFilter);
+            var entity = BusinessLogic.LoadLearningContent(filepath);
+            return ContentMapper.ToViewModel(entity);
+        }
 
         /// <summary>
         /// Gets Save Filepath for saving.
@@ -116,18 +130,19 @@ namespace AuthoringTool.PresentationLogic.API
         /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
         private async Task<string> GetSaveFilepathAsync(string title, string fileEnding, string fileFormatDescriptor)
         {
-            return await GetSaveFilepathAsync(title, fileEnding, new FileFilterProxy[]
+            var filepath = await GetSaveFilepathAsync(title, new FileFilterProxy[]
             {
                 new(fileFormatDescriptor, new[] {fileEnding})
             });
+            if (!filepath.EndsWith($".{fileEnding}")) filepath += $".{fileEnding}";
+            return filepath;
         }
         
-        private async Task<string> GetSaveFilepathAsync(string title, string fileEnding, FileFilterProxy[] fileFilterProxies) 
+        private async Task<string> GetSaveFilepathAsync(string title, FileFilterProxy[] fileFilterProxies) 
         {
             try
             {
                 var filepath = await _dialogManager!.ShowSaveAsDialog(title, null, fileFilterProxies);
-                if (!filepath.EndsWith($".{fileEnding}")) filepath += $".{fileEnding}";
                 return filepath;
             }
             catch (OperationCanceledException)
@@ -145,15 +160,21 @@ namespace AuthoringTool.PresentationLogic.API
         /// <param name="fileFormatDescriptor"></param>
         /// <returns>Path to the file which should be loaded.</returns>
         /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
-        private async Task<string> GetLoadFilepathAsync(string title, string fileEnding, string fileFormatDescriptor) 
+        private async Task<string> GetLoadFilepathAsync(string title, string fileEnding, string fileFormatDescriptor)
+        {
+            var filepath = await GetLoadFilepathAsync(title, new FileFilterProxy[]
+            {
+                new(fileFormatDescriptor, new[] {fileEnding})
+            });
+            if (!filepath.EndsWith($".{fileEnding}")) filepath += $".{fileEnding}";
+            return filepath;
+        }
+        
+        private async Task<string> GetLoadFilepathAsync(string title,FileFilterProxy[] fileFilterProxies)  
         {
             try
             {
-                var filepath = await _dialogManager!.ShowOpenFileDialog(title, null, new FileFilterProxy[]
-                {
-                    new(fileFormatDescriptor, new[] { fileEnding })
-                });
-                if (!filepath.EndsWith($".{fileEnding}")) filepath += $".{fileEnding}";
+                var filepath = await _dialogManager!.ShowOpenFileDialog(title, null, fileFilterProxies);
                 return filepath;
             }
             catch (OperationCanceledException)

@@ -1,3 +1,4 @@
+using System;
 using AuthoringTool.Entities;
 using NUnit.Framework;
 
@@ -14,13 +15,14 @@ public class LearningElementUt
         var ElementType = "h5p";
         var ParentName = "foobar";
         var ContentType = "foo = bar";
+        var content = new LearningContent("a", "b", Array.Empty<byte>());
         var Authors = "ben and jerry";
         var Description = "very cool element";
         var Goals = "learn very many things";
         var PositionX = 5f;
         var PositionY = 21f;
 
-        var systemUnderTest = new LearningElement(Name, Shortname, ElementType, ParentName, ContentType, Authors, Description, Goals,
+        var systemUnderTest = new LearningElement(Name, Shortname, ElementType, ParentName, ContentType, content, Authors, Description, Goals,
             PositionX, PositionY);
         
         Assert.Multiple(() =>
@@ -30,6 +32,7 @@ public class LearningElementUt
             Assert.That(systemUnderTest.ElementType, Is.EqualTo(ElementType));
             Assert.That(systemUnderTest.ParentName, Is.EqualTo(ParentName));
             Assert.That(systemUnderTest.ContentType, Is.EqualTo(ContentType));
+            Assert.That(systemUnderTest.Content, Is.EqualTo(content));
             Assert.That(systemUnderTest.Authors, Is.EqualTo(Authors));
             Assert.That(systemUnderTest.Description, Is.EqualTo(Description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(Goals));
