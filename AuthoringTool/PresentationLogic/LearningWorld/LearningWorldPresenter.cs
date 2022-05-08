@@ -89,10 +89,14 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
             SetSelectedLearningObject(learningSpace);
         }
 
+        /// <summary>
+        /// Sets the initial values for the <see cref="ModalDialog"/> with the current values from the selected LearningSpace.
+        /// </summary>
+        /// <exception cref="ApplicationException">Thrown if SelectedLearningObject is not a LearningSpace. Shouldn't occur, because this is checked in <see cref="OpenEditSelectedLearningObjectDialog"/></exception>
         private void OpenEditSelectedLearningSpaceDialog()
         {
             if (LearningWorldVm?.SelectedLearningObject is not LearningSpaceViewModel
-                space) throw new ApplicationException("Type of LearningObject is not implemented");
+                space) throw new ApplicationException("Type of LearningObject is not LearningSpace");
             //prepare dictionary property to pass to dialog
             LearningWorldVm.EditDialogInitialValues = new Dictionary<string, string>
             {
@@ -105,6 +109,10 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
             EditLearningSpaceDialogOpen = true;
         }
 
+        /// <summary>
+        /// Calls the LoadLearningSpaceAsync methode in <see cref="_presentationLogic"/> and adds the returned learning space to the current learning world.
+        /// </summary>
+        /// <exception cref="ApplicationException">Thrown if <see cref="LearningWorldVm"/> is null</exception>
         public async Task LoadLearningSpace()
         {
             var learningSpace = await _presentationLogic.LoadLearningSpaceAsync();
@@ -113,7 +121,12 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
             LearningWorldVm.LearningSpaces.Add(learningSpace);
         }
 
-
+        /// <summary>
+        /// Creates a learning space viewmodel with return values from the dialog.
+        /// </summary>
+        /// <param name="returnValueTuple">Return values from the dialog</param>
+        /// <returns></returns>
+        /// <exception cref="ApplicationException">Thrown if the dictionary in return values of dialog null while return value is ok</exception>
         public Task OnCreateSpaceDialogClose(
             Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
         {
@@ -139,6 +152,13 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Changes property values of learning space viewmodel with return values from the dialog.
+        /// </summary>
+        /// <param name="returnValueTuple">Return values from the dialog</param>
+        /// <returns></returns>
+        /// <exception cref="ApplicationException">Thrown if the dictionary in return values of dialog null while return value is ok
+        /// or if the selected learning object not a learning space</exception>
         public Task OnEditSpaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
         {
             var (response, data) = returnValueTuple;
@@ -433,7 +453,7 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
         /// Deletes the selected learning object in the currently selected learning world and sets an other space or element as selected learning object.
         /// </summary>
         /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
-        /// <exception cref="NotImplementedException">Thrown if the selected learning object is of an other type as space or element.</exception>
+        /// <exception cref="NotImplementedException">Thrown if the selected learning object is of an other type than space or element.</exception>
         public void DeleteSelectedLearningObject()
         {
             if (LearningWorldVm == null)
@@ -458,6 +478,11 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
                 LearningWorldVm?.LearningElements.LastOrDefault();
         }
 
+        /// <summary>
+        /// Opens the respective OpenEditDialog for Learning Space or Learning Element depending on which learning object is selected.
+        /// </summary>
+        /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
+        /// <exception cref="NotImplementedException">Thrown if the selected learning object is of an other type than space or element.</exception>
         public void OpenEditSelectedLearningObjectDialog()
         {
             if (LearningWorldVm == null)
@@ -477,6 +502,11 @@ namespace AuthoringTool.PresentationLogic.LearningWorld
             }
         }
 
+        /// <summary>
+        /// Calls the respective Save methode for Learning Space or Learning Element depending on which learning object is selected
+        /// </summary>
+        /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
+        /// <exception cref="NotImplementedException">Thrown if the selected learning object is of an other type than space or element.</exception>
         public async Task SaveSelectedLearningObjectAsync()
         {
             if (LearningWorldVm == null)
