@@ -88,8 +88,26 @@ public interface IPresentationLogic
     Task<LearningElementViewModel> LoadLearningElementAsync();
     
     /// <summary>
-    /// Asks user for path and loads <see cref="LearningContentViewModel"/> from disk. 
+    /// Asks user for path, loads an image file from disk and returns a <see cref="LearningContentViewModel"/>. 
     /// </summary>
     /// <returns></returns>
-    Task<LearningContentViewModel> LoadLearningContentAsync();
+    Task<LearningContentViewModel> LoadImageAsync();
+    
+    /// <summary>
+    /// Asks user for path, loads a video file from disk and returns a <see cref="LearningContentViewModel"/>. 
+    /// </summary>
+    /// <returns></returns>
+    Task<LearningContentViewModel> LoadVideoAsync();
+    
+    /// <summary>
+    /// Asks user for path, loads a h5p file from disk and returns a <see cref="LearningContentViewModel"/>. 
+    /// </summary>
+    /// <returns></returns>
+    Task<LearningContentViewModel> LoadH5pAsync();
+    
+    /// <summary>
+    /// Asks user for path, loads a pdf file from disk and returns a <see cref="LearningContentViewModel"/>. 
+    /// </summary>
+    /// <returns></returns>
+    Task<LearningContentViewModel> LoadPdfAsync();
 }

@@ -38,7 +38,10 @@ internal class PresentationLogic : IPresentationLogic
     private const string WorldFileEnding = "awf";
     private const string SpaceFileEnding = "asf";
     private const string ElementFileEnding = "aef";
-    private string[] ContentFileEnding = {"jpg", "png", "webp", "bmp"};
+    private string[] ImageFileEnding = {"jpg", "png", "webp", "bmp"};
+    private const string VideoFileEnding = "mp4";
+    private const string H5pFileEnding = "h5p";
+    private const string PdfFileEnding = "pdf";
     private const string WorldFileFormatDescriptor = "AdLer World File";
     private const string SpaceFileFormatDescriptor = "AdLer Space File";
     private const string ElementFileFormatDescriptor = "AdLer Element File";
@@ -113,11 +116,39 @@ internal class PresentationLogic : IPresentationLogic
         return ElementMapper.ToViewModel(entity);
     }
 
-    public async Task<LearningContentViewModel> LoadLearningContentAsync()
+    /// <inheritdoc cref="IPresentationLogic.LoadImageAsync"/>
+    public async Task<LearningContentViewModel> LoadImageAsync()
     {
         SaveOrLoadElectronCheck();
-        var fileFilter = new FileFilterProxy[] {new(" ", ContentFileEnding)};
-        var filepath = await GetLoadFilepathAsync("Load Learning Content", fileFilter);
+        var fileFilter = new FileFilterProxy[] {new(" ", ImageFileEnding)};
+        var filepath = await GetLoadFilepathAsync("Load image", fileFilter);
+        var entity = BusinessLogic.LoadLearningContent(filepath);
+        return ContentMapper.ToViewModel(entity);
+    }
+        
+    /// <inheritdoc cref="IPresentationLogic.LoadVideoAsync"/>
+    public async Task<LearningContentViewModel> LoadVideoAsync()
+    {
+        SaveOrLoadElectronCheck();
+        var filepath = await GetLoadFilepathAsync("Load video", VideoFileEnding, " ");
+        var entity = BusinessLogic.LoadLearningContent(filepath);
+        return ContentMapper.ToViewModel(entity);
+    }
+        
+    /// <inheritdoc cref="IPresentationLogic.LoadH5pAsync"/>
+    public async Task<LearningContentViewModel> LoadH5pAsync()
+    {
+        SaveOrLoadElectronCheck();
+        var filepath = await GetLoadFilepathAsync("Load video",H5pFileEnding, " ");
+        var entity = BusinessLogic.LoadLearningContent(filepath);
+        return ContentMapper.ToViewModel(entity);
+    }
+        
+    /// <inheritdoc cref="IPresentationLogic.LoadH5pAsync"/>
+    public async Task<LearningContentViewModel> LoadPdfAsync()
+    {
+        SaveOrLoadElectronCheck();
+        var filepath = await GetLoadFilepathAsync("Load pdf",PdfFileEnding, " ");
         var entity = BusinessLogic.LoadLearningContent(filepath);
         return ContentMapper.ToViewModel(entity);
     }

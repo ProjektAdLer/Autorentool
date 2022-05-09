@@ -186,20 +186,28 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
 
     public async Task LoadLearningContent()
     {
-        var learningContent = await _presentationLogic.LoadLearningContentAsync();
         if (LearningSpaceVm == null)
         {
             throw new ApplicationException("SelectedLearningSpace is null");
         }
-
-        switch (LearningSpaceVm.SelectedLearningObject)
+        if (LearningSpaceVm.SelectedLearningObject == null)
         {
-            case null:
-                throw new ApplicationException("SelectedLearningObject is null");
-            case LearningElementViewModel learningElement:
-                learningElement.LearningContent = learningContent;
-                break;
+            throw new ApplicationException("SelectedLearningObject is null");
         }
+        if (LearningSpaceVm.SelectedLearningObject is not LearningElementViewModel elementViewModel)
+        {
+            throw new ApplicationException("SelectedLearningObject is not a Learning Element");
+        }
+
+        elementViewModel.LearningContent = elementViewModel.ContentType switch
+            {
+                null => throw new ApplicationException("ContentType is null"),
+                "Picture" => await _presentationLogic.LoadImageAsync(),
+                "Video" => await _presentationLogic.LoadVideoAsync(),
+                "H5P" => await _presentationLogic.LoadH5pAsync(),
+                "PDF" => await _presentationLogic.LoadPdfAsync(),
+                _ => throw new ApplicationException("No ContentType assigned"),
+            };
     }
 
 
