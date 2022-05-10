@@ -40,7 +40,7 @@ internal class PresentationLogic : IPresentationLogic
     private const string ElementFileEnding = "aef";
     private string[] ImageFileEnding = {"jpg", "png", "webp", "bmp"};
     private const string VideoFileEnding = "mp4";
-    private const string H5pFileEnding = "h5p";
+    private const string H5PFileEnding = "h5p";
     private const string PdfFileEnding = "pdf";
     private const string WorldFileFormatDescriptor = "AdLer World File";
     private const string SpaceFileFormatDescriptor = "AdLer Space File";
@@ -139,12 +139,12 @@ internal class PresentationLogic : IPresentationLogic
     public async Task<LearningContentViewModel> LoadH5pAsync()
     {
         SaveOrLoadElectronCheck();
-        var filepath = await GetLoadFilepathAsync("Load video",H5pFileEnding, " ");
+        var filepath = await GetLoadFilepathAsync("Load h5p",H5PFileEnding, " ");
         var entity = BusinessLogic.LoadLearningContent(filepath);
         return ContentMapper.ToViewModel(entity);
     }
         
-    /// <inheritdoc cref="IPresentationLogic.LoadH5pAsync"/>
+    /// <inheritdoc cref="IPresentationLogic.LoadPdfAsync"/>
     public async Task<LearningContentViewModel> LoadPdfAsync()
     {
         SaveOrLoadElectronCheck();
