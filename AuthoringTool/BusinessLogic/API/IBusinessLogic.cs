@@ -16,4 +16,5 @@ public interface IBusinessLogic
     LearningSpace LoadLearningSpace(string filepath);
     void SaveLearningElement(LearningElement learningElement, string filepath);
     LearningElement LoadLearningElement(string filepath);
+    LearningContent LoadLearningContent(string filepath);
 }

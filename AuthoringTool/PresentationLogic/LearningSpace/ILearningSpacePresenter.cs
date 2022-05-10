@@ -20,6 +20,7 @@ public interface ILearningSpacePresenter
     void SetSelectedLearningObject(ILearningObjectViewModel learningObject);
     void DeleteSelectedLearningObject();
     Task LoadLearningElement();
+    Task LoadLearningContent();
     Task SaveSelectedLearningObjectAsync();
     Task OnCreateElementDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple);
     void OpenEditSelectedLearningObjectDialog();

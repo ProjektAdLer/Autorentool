@@ -34,6 +34,10 @@
     <button class="btn btn-primary" @onclick="EditLearningObject">Edit selected Learning Object</button>
     <button class="btn btn-primary" @onclick="DeleteSelectedLearningObject">Delete Learning Object</button>
     <button class="btn btn-primary" @onclick="SaveSelectedLearningObjectAsync">Save selected Learning Object</button>
+    <button class="btn btn-primary" @onclick="LoadLearningContentAsync"
+            hidden="@(_learningSpaceP.LearningSpaceVm?.SelectedLearningObject is not LearningElementViewModel learningElementViewModel)">
+            Load Content of Learning Element
+    </button>
 }
 <svg style="width: 100%; height: 600px; border: 1px solid green"
      xmlns="http://www.w3.org/2000/svg"
@@ -107,6 +111,27 @@
         catch (Exception exception)
         {
             ErrorState = new ExceptionWrapper("Load learning element", exception);
+        }
+        finally
+        {
+    //we need to tell blazor explicitly to re-render our component after we added the loaded learning object
+            StateHasChanged();
+        }
+    }
+    
+    private async Task LoadLearningContentAsync()
+    {
+        try
+        {
+            await _learningSpaceP.LoadLearningContent();
+        }
+        catch (OperationCanceledException)
+        {
+    //nothing to do, show notification?
+        }
+        catch (Exception exception)
+        {
+            ErrorState = new ExceptionWrapper("Load learning content", exception);
         }
         finally
         {

@@ -9,11 +9,12 @@ internal class DataAccess : IDataAccess
 {
     public DataAccess(IAuthoringToolConfiguration configuration, IBackupFileGenerator backupFileGenerator,
         IXmlFileHandler<LearningWorld> xmlHandlerWorld, IXmlFileHandler<LearningSpace> xmlHandlerSpace,
-        IXmlFileHandler<LearningElement> xmlHandlerElement)
+        IXmlFileHandler<LearningElement> xmlHandlerElement, IContentFileHandler contentHandler)
     {
         XmlHandlerWorld = xmlHandlerWorld;
         XmlHandlerSpace = xmlHandlerSpace;
         XmlHandlerElement = xmlHandlerElement;
+        ContentHandler = contentHandler;
         Configuration = configuration;
         BackupFile = backupFileGenerator;
     }
@@ -21,6 +22,7 @@ internal class DataAccess : IDataAccess
     public readonly IXmlFileHandler<LearningWorld> XmlHandlerWorld;
     public readonly IXmlFileHandler<LearningSpace> XmlHandlerSpace;
     public readonly IXmlFileHandler<LearningElement> XmlHandlerElement;
+    public readonly IContentFileHandler ContentHandler;
     public IAuthoringToolConfiguration Configuration { get; }
 
     public IBackupFileGenerator BackupFile { get; set; }
@@ -60,5 +62,10 @@ internal class DataAccess : IDataAccess
     public LearningElement LoadLearningElementFromFile(string filepath)
     {
         return XmlHandlerElement.LoadFromDisk(filepath);
+    }
+    
+    public LearningContent LoadLearningContentFromFile(string filepath)
+    {
+        return ContentHandler.LoadFromDisk(filepath);
     }
 }

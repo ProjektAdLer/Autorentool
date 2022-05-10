@@ -7,5 +7,5 @@ public interface ILearningElementMapper
 {
     public Entities.LearningElement ToEntity(LearningElementViewModel viewModel);
     public LearningElementViewModel ToViewModel(Entities.ILearningElement entity,
-        ILearningElementViewModelParent? caller = null, LearningContentViewModel? learningContent = null);
+        ILearningElementViewModelParent? caller = null);
 }

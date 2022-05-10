@@ -1,4 +1,5 @@
-﻿using AuthoringTool.API.Configuration;
+﻿using System;
+using AuthoringTool.API.Configuration;
 using AuthoringTool.DataAccess.Persistence;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.Entities;
@@ -102,7 +103,8 @@ public class DataAccessUt
         var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElement>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerElement: mockFileSaveHandlerElement);
 
-        var learningElement = new LearningElement("f","f", "f", "f", "f", "f", "f", "f");
+        var learningContent = new LearningContent("a", "b", Array.Empty<byte>());
+        var learningElement = new LearningElement("f","f", "f", "f", "f", learningContent,"f", "f", "f");
         systemUnderTest.SaveLearningElementToFile(
             learningElement,
             "C:/nonsense");
@@ -126,14 +128,16 @@ public class DataAccessUt
         IBackupFileGenerator? backupFileConstructor = null,
         IXmlFileHandler<LearningWorld>? fileSaveHandlerWorld = null,
         IXmlFileHandler<LearningSpace>? fileSaveHandlerSpace = null,
-        IXmlFileHandler<LearningElement>? fileSaveHandlerElement = null)
+        IXmlFileHandler<LearningElement>? fileSaveHandlerElement = null,
+        IContentFileHandler? contentHandler = null)
     {
         configuration ??= Substitute.For<IAuthoringToolConfiguration>();
         backupFileConstructor ??= Substitute.For<IBackupFileGenerator>();
         fileSaveHandlerWorld ??= Substitute.For<IXmlFileHandler<LearningWorld>>();
         fileSaveHandlerSpace ??= Substitute.For<IXmlFileHandler<LearningSpace>>();
         fileSaveHandlerElement ??= Substitute.For<IXmlFileHandler<LearningElement>>();
+        contentHandler ??= Substitute.For<IContentFileHandler>();
         return new AuthoringTool.DataAccess.API.DataAccess(configuration, backupFileConstructor, fileSaveHandlerWorld,
-            fileSaveHandlerSpace, fileSaveHandlerElement);
+            fileSaveHandlerSpace, fileSaveHandlerElement, contentHandler);
     }
 }

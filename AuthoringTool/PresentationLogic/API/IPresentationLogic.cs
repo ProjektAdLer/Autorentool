@@ -1,5 +1,7 @@
 ﻿using AuthoringTool.API.Configuration;
 using AuthoringTool.BusinessLogic.API;
+using AuthoringTool.PresentationLogic.ElectronNET;
+using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
@@ -84,4 +86,28 @@ public interface IPresentationLogic
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
     Task<LearningElementViewModel> LoadLearningElementAsync();
+    
+    /// <summary>
+    /// Asks user for path, loads an image file from disk and returns a <see cref="LearningContentViewModel"/>. 
+    /// </summary>
+    /// <returns></returns>
+    Task<LearningContentViewModel> LoadImageAsync();
+    
+    /// <summary>
+    /// Asks user for path, loads a video file from disk and returns a <see cref="LearningContentViewModel"/>. 
+    /// </summary>
+    /// <returns></returns>
+    Task<LearningContentViewModel> LoadVideoAsync();
+    
+    /// <summary>
+    /// Asks user for path, loads a h5p file from disk and returns a <see cref="LearningContentViewModel"/>. 
+    /// </summary>
+    /// <returns></returns>
+    Task<LearningContentViewModel> LoadH5pAsync();
+    
+    /// <summary>
+    /// Asks user for path, loads a pdf file from disk and returns a <see cref="LearningContentViewModel"/>. 
+    /// </summary>
+    /// <returns></returns>
+    Task<LearningContentViewModel> LoadPdfAsync();
 }

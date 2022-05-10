@@ -1,3 +1,4 @@
+using System;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
@@ -10,7 +11,7 @@ namespace AuthoringToolTest.PresentationLogic.LearningElement;
 public class LearningElementPresenterUt
 {
     [Test]
-    public void LearningElementPresenter_CreateNewLearningElement_CreatesCorrectViewModel()
+    public void LearningElementPresenter_CreateNewLearningElement_WorldParent_CreatesCorrectViewModel()
     {
         var systemUnderTest = new LearningElementPresenter();
         var name = "a";
@@ -36,9 +37,47 @@ public class LearningElementPresenterUt
             Assert.That(element.Goals, Is.EqualTo(goals));
         });
     }
+
+    [Test]
+    public void LearningElementPresenter_CreateNewLearningElement_SpaceParent_CreatesCorrectViewModel()
+    {
+        var systemUnderTest = new LearningElementPresenter();
+        var name = "a";
+        var shortname = "b";
+        var parent = new LearningSpaceViewModel("","boo", "bla", "", "");
+        var type = "c";
+        var content = "d";
+        var authors = "d";
+        var description = "e";
+        var goals = "f";
+
+        var element = systemUnderTest.CreateNewLearningElement(name, shortname, parent, type, content,
+            authors, description, goals);
+        Assert.Multiple(() =>
+        {
+            Assert.That(element.Name, Is.EqualTo(name));
+            Assert.That(element.Shortname, Is.EqualTo(shortname));
+            Assert.That(element.Parent, Is.EqualTo(parent));
+            Assert.That(element.ElementType, Is.EqualTo(type));
+            Assert.That(element.ContentType, Is.EqualTo(content));
+            Assert.That(element.Authors, Is.EqualTo(authors));
+            Assert.That(element.Description, Is.EqualTo(description));
+            Assert.That(element.Goals, Is.EqualTo(goals));
+        });
+    }
     
     [Test]
-    public void LearningElementPresenter_EditLearningElement_EditsViewModelCorrectly()
+    public void LearningElementPresenter_AddLearningElementParentAssignment_ThrowsNotImplemented()
+    {
+        var systemUnderTest = new LearningElementPresenter();
+
+        var ex = Assert.Throws<NotImplementedException>(() =>
+            systemUnderTest.CreateNewLearningElement("a", "b", null, "c", "d", "e", "f", "g"));
+        Assert.That(ex!.Message, Is.EqualTo("Type of Assignment is not implemented"));
+    }
+    
+    [Test]
+    public void LearningElementPresenter_EditLearningElement_WorldParent_EditsViewModelCorrectly()
     {
         var systemUnderTest = new LearningElementPresenter();
         var element = new LearningElementViewModel("a", "b", null, "c", "d", null,
@@ -47,6 +86,40 @@ public class LearningElementPresenterUt
         var name = "new element";
         var shortname = "ne";
         var parent = new LearningWorldViewModel("","boo", "bla", "", "", "");
+        var type = "transfer";
+        var content = "video";
+        var authors = "marvin";
+        var description = "video of learning stuff";
+        var goals = "learn";
+        var posx = 22f;
+
+        element = systemUnderTest.EditLearningElement(element, name, shortname, parent,  type, content, authors, description,
+            goals, posx);
+        Assert.Multiple(() =>
+        {
+            Assert.That(element.Name, Is.EqualTo(name));
+            Assert.That(element.Shortname, Is.EqualTo(shortname));
+            Assert.That(element.Parent, Is.EqualTo(parent));
+            Assert.That(element.ElementType, Is.EqualTo(type));
+            Assert.That(element.ContentType, Is.EqualTo(content));
+            Assert.That(element.Authors, Is.EqualTo(authors));
+            Assert.That(element.Description, Is.EqualTo(description));
+            Assert.That(element.Goals, Is.EqualTo(goals));
+            Assert.That(element.PositionX, Is.EqualTo(posx));
+            Assert.That(element.PositionY, Is.EqualTo(29f));
+        });
+    }
+    
+    [Test]
+    public void LearningElementPresenter_EditLearningElement_SpaceParent_EditsViewModelCorrectly()
+    {
+        var systemUnderTest = new LearningElementPresenter();
+        var element = new LearningElementViewModel("a", "b", null, "c", "d", null,
+            "e", "f","g", 17f,29f);
+        
+        var name = "new element";
+        var shortname = "ne";
+        var parent = new LearningSpaceViewModel("","boo", "bla", "", "");
         var type = "transfer";
         var content = "video";
         var authors = "marvin";

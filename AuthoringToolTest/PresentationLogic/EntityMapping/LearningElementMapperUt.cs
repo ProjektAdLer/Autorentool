@@ -1,4 +1,7 @@
+using System;
+using AuthoringTool.Entities;
 using AuthoringTool.PresentationLogic.EntityMapping;
+using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningWorld;
 using Microsoft.Extensions.Logging;
@@ -14,14 +17,19 @@ public class LearningElementMapperUt
     [Test]
     public void LearningElementMapper_ToEntity_MapsPropertiesCorrectly()
     {
+        var contentMapper = Substitute.For<ILearningContentMapper>();
+        var contentViewModel = new LearningContentViewModel("a", "b", Array.Empty<byte>());
         var world = new LearningWorldViewModel("baba", "bubu", "", "", "", "");
-        var viewModel = new LearningElementViewModel("name", "shortname", world, "type", "content", null,"authors",
+        var viewModel = new LearningElementViewModel("name", "shortname", world, "type", "content", contentViewModel,"authors",
             "description", "goals", 1, 2);
+
+        contentMapper.ToEntity(contentViewModel).Returns(new LearningContent("a", "b", Array.Empty<byte>()));
         
-        var systemUnderTest = CreateTestableLearningElementMapper();
+        var systemUnderTest = CreateTestableLearningElementMapper(null, contentMapper);
         
         var entity = systemUnderTest.ToEntity(viewModel);
         Assert.That(entity, Is.Not.Null);
+        contentMapper.Received().ToEntity(contentViewModel);
         Assert.Multiple(() =>
         {
             Assert.That(entity.Name, Is.EqualTo(viewModel.Name));
@@ -40,14 +48,19 @@ public class LearningElementMapperUt
     [Test]
     public void LearningElementMapper_ToViewModel_MapsPropertiesCorrectly()
     {
+        var contentMapper = Substitute.For<ILearningContentMapper>();
         var world = new LearningWorldViewModel("bubu", "", "", "", "", "");
-        var entity = new AuthoringTool.Entities.LearningElement("name", "shortname", "type",world.Name, "content", "authors", "description",
+        var content = new LearningContent("content", "pdf", Array.Empty<byte>());
+        var entity = new AuthoringTool.Entities.LearningElement("name", "shortname", "type",world.Name, "content",content, "authors", "description",
             "goals", 1, 2);
         
-        var systemUnderTest = CreateTestableLearningElementMapper();
+        var systemUnderTest = CreateTestableLearningElementMapper(null,contentMapper);
+
+        contentMapper.ToViewModel(content).Returns(new LearningContentViewModel("content", "pdf", Array.Empty<byte>()));
 
         var viewModel = systemUnderTest.ToViewModel(entity, world);
         Assert.That(viewModel, Is.Not.Null);
+        contentMapper.Received().ToViewModel(content);
         Assert.Multiple(() =>
         {
             Assert.That(viewModel.Name, Is.EqualTo(entity.Name));
@@ -55,6 +68,10 @@ public class LearningElementMapperUt
             Assert.That(viewModel.Parent, Is.EqualTo(world));
             Assert.That(viewModel.ElementType, Is.EqualTo(entity.ElementType));
             Assert.That(viewModel.ContentType, Is.EqualTo(entity.ContentType));
+            Assert.That(viewModel.LearningContent, Is.Not.Null);
+            Assert.That(viewModel.LearningContent?.Name, Is.EqualTo(entity.Content.Name));
+            Assert.That(viewModel.LearningContent?.Type, Is.EqualTo(entity.Content.Type));
+            Assert.That(viewModel.LearningContent?.Content, Is.EqualTo(entity.Content.Content));
             Assert.That(viewModel.Authors, Is.EqualTo(entity.Authors));
             Assert.That(viewModel.Description, Is.EqualTo(entity.Description));
             Assert.That(viewModel.Goals, Is.EqualTo(entity.Goals));
@@ -67,7 +84,7 @@ public class LearningElementMapperUt
     public void LearningElementMapper_ToViewModel_LogsSanityCheck()
     {
         var world = new LearningWorldViewModel("bubu", "", "", "", "", "");
-        var entity = new AuthoringTool.Entities.LearningElement("name", "shortname", "type","blabla", "content", "authors", "description",
+        var entity = new AuthoringTool.Entities.LearningElement("name", "shortname", "type","blabla", "content", null, "authors", "description",
             "goals", 1, 2);
         var logger = Substitute.For<ILogger<LearningElementMapper>>();
         
@@ -92,9 +109,10 @@ public class LearningElementMapperUt
         logger.Received().LogError("caller was not null but caller.Name != entity.ParentName: bubu!=blabla");
     }
 
-    private LearningElementMapper CreateTestableLearningElementMapper(ILogger<LearningElementMapper>? logger = null)
+    private LearningElementMapper CreateTestableLearningElementMapper(ILogger<LearningElementMapper>? logger = null, ILearningContentMapper? contentMapper = null)
     {
         logger ??= Substitute.For<ILogger<LearningElementMapper>>();
-        return new LearningElementMapper(logger);
+        contentMapper ??= Substitute.For<ILearningContentMapper>();
+        return new LearningElementMapper(logger, contentMapper);
     }
 }

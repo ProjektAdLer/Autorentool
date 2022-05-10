@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using AuthoringTool.Entities;
 using NUnit.Framework;
@@ -17,8 +18,9 @@ public class LearningSpaceUt
         var Goals = "learn very many things";
         var PositionX = 5f;
         var PositionY = 21f;
-        var ele1 = new LearningElement("a", "b", "e", null, "f", "g", "h", "i", 12,15);
-        var ele2 = new LearningElement("z", "zz", "zzz", null, "z", "z", "a", "b",111, double.MaxValue);
+        var content1 = new LearningContent("a", "b", Array.Empty<byte>());
+        var ele1 = new LearningElement("a", "b", "e", null, "f",content1, "g", "h", "i", 12,15);
+        var ele2 = new LearningElement("z", "zz", "zzz", null, "z",null, "z", "a", "b",111, double.MaxValue);
         var LearningElements = new List<LearningElement> { ele1, ele2 };
         
         var systemUnderTest = new LearningSpace(Name, Shortname, Authors, Description, Goals, LearningElements,

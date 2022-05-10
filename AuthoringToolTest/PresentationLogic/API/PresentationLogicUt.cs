@@ -5,6 +5,7 @@ using AuthoringTool.API.Configuration;
 using AuthoringTool.BusinessLogic.API;
 using AuthoringTool.PresentationLogic.ElectronNET;
 using AuthoringTool.PresentationLogic.EntityMapping;
+using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
@@ -29,12 +30,13 @@ public class PresentationLogicUt
         var mockWorldMapper = Substitute.For<ILearningWorldMapper>();
         var mockSpaceMapper = Substitute.For<ILearningSpaceMapper>();
         var mockElementMapper = Substitute.For<ILearningElementMapper>();
+        var mockContentMapper = Substitute.For<ILearningContentMapper>();
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         var mockLogger = Substitute.For<ILogger<AuthoringTool.PresentationLogic.API.PresentationLogic>>();
 
         //Act
         var systemUnderTest = CreateTestablePresentationLogic(mockConfiguration, mockBusinessLogic, mockWorldMapper,
-            mockSpaceMapper, mockElementMapper, mockServiceProvider, mockLogger);
+            mockSpaceMapper, mockElementMapper,mockContentMapper, mockServiceProvider, mockLogger);
         Assert.Multiple(() =>
         {
             //Assert
@@ -43,6 +45,7 @@ public class PresentationLogicUt
             Assert.That(systemUnderTest.WorldMapper, Is.EqualTo(mockWorldMapper));
             Assert.That(systemUnderTest.SpaceMapper, Is.EqualTo(mockSpaceMapper));
             Assert.That(systemUnderTest.ElementMapper, Is.EqualTo(mockElementMapper));
+            Assert.That(systemUnderTest.ContentMapper, Is.EqualTo(mockContentMapper));
         });
     }
 
@@ -255,7 +258,7 @@ public class PresentationLogicUt
         mockBusinessLogic.RunningElectron.Returns(true);
         var mockElementMapper = Substitute.For<ILearningElementMapper>();
         var learningElement = new LearningElementViewModel("f", "f", null, "f", "f", null,"f", "f", "f");
-        var entity = new AuthoringTool.Entities.LearningElement("f", "f", "f", "f", "f", "f", "f", "f");
+        var entity = new AuthoringTool.Entities.LearningElement("f", "f", "f", "f", "f", null,"f", "f", "f");
         mockElementMapper.ToEntity(Arg.Any<LearningElementViewModel>())
             .Returns(entity);
         const string filepath = "foobar";
@@ -499,7 +502,7 @@ public class PresentationLogicUt
         mockBusinessLogic.RunningElectron.Returns(true);
         var mockElementMapper = Substitute.For<ILearningElementMapper>();
         var learningElement = new LearningElementViewModel("f", "f", null, "f", "f",null, "f", "f", "f" );
-        var entity = new AuthoringTool.Entities.LearningElement("f", "f", "f", "f", "f", "f", "f", "f");
+        var entity = new AuthoringTool.Entities.LearningElement("f", "f", "f", "f", "f", null, "f", "f", "f");
         mockElementMapper.ToViewModel(entity).Returns(learningElement);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
@@ -544,22 +547,351 @@ public class PresentationLogicUt
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
         mockLogger.Received().LogInformation("Load dialog cancelled by user");
     }
+    
+    
+    [Test]
+    public void PresentationLogic_LoadImageAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.RunningElectron.Returns(false);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+
+        var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
+            await systemUnderTest.LoadImageAsync());
+        Assert.That(ex!.Message, Is.EqualTo("Browser upload/download not yet implemented"));
+    }
+    
+    [Test]
+    public void PresentationLogic_LoadImageAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(null);
+
+        var systemUnderTest =
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider);
+
+        var ex = Assert.ThrowsAsync<InvalidOperationException>(async () => await systemUnderTest.LoadImageAsync());
+        Assert.That(ex!.Message, Is.EqualTo("dialogManager received from DI unexpectedly null"));
+    }
+    
+    [Test]
+    public async Task PresentationLogic_LoadImageAsync_CallsDialogManagerAndContentMapperAndBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockContentMapper = Substitute.For<ILearningContentMapper>();
+        var learningContent = new LearningContentViewModel("f", ".png", new byte[] { 0x00, 0x00, 0x00, 0x01 });
+        var entity = new AuthoringTool.Entities.LearningContent("f", ".png", new byte[] { 0x00, 0x00, 0x00, 0x01 });
+        mockContentMapper.ToViewModel(entity).Returns(learningContent);
+        const string filepath = "foobar";
+        var mockDialogManger = Substitute.For<IElectronDialogManager>();
+        mockDialogManger
+            .ShowOpenFileDialog(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<IEnumerable<FileFilterProxy>?>())
+            .Returns(filepath);
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManger);
+        mockBusinessLogic.LoadLearningContent(filepath).Returns(entity);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
+            contentMapper: mockContentMapper, serviceProvider: mockServiceProvider);
+
+        var loadedContent = await systemUnderTest.LoadImageAsync();
+
+        await mockDialogManger.Received()
+            .ShowOpenFileDialog("Load image", null, Arg.Any<IEnumerable<FileFilterProxy>?>());
+        mockBusinessLogic.Received().LoadLearningContent(filepath);
+        mockContentMapper.Received().ToViewModel(entity);
+        
+        Assert.That(loadedContent, Is.EqualTo(learningContent));
+    }
+    
+    [Test]
+    public void PresentationLogic_LoadImageAsync_LogsAndRethrowsDialogCancelledException()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockLogger = Substitute.For<ILogger<AuthoringTool.PresentationLogic.API.PresentationLogic>>();
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        var mockElectronDialogManager = Substitute.For<IElectronDialogManager>();
+        mockElectronDialogManager
+            .ShowOpenFileDialog(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<IEnumerable<FileFilterProxy>?>())
+            .Throws(new OperationCanceledException("bububaba"));
+        mockServiceProvider.GetService(typeof(IElectronDialogManager))
+            .Returns(mockElectronDialogManager);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
+            serviceProvider: mockServiceProvider);
+
+        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.LoadImageAsync());
+        Assert.That(ex!.Message, Is.EqualTo("bububaba"));
+        mockLogger.Received().LogInformation("Load dialog cancelled by user");
+    }
+
+
+    [Test]
+    public void PresentationLogic_LoadVideoAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.RunningElectron.Returns(false);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+
+        var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
+            await systemUnderTest.LoadVideoAsync());
+        Assert.That(ex!.Message, Is.EqualTo("Browser upload/download not yet implemented"));
+    }
+    
+    [Test]
+    public void PresentationLogic_LoadVideoAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(null);
+
+        var systemUnderTest =
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider);
+
+        var ex = Assert.ThrowsAsync<InvalidOperationException>(async () => await systemUnderTest.LoadVideoAsync());
+        Assert.That(ex!.Message, Is.EqualTo("dialogManager received from DI unexpectedly null"));
+    }
+    
+    [Test]
+    public async Task PresentationLogic_LoadVideoAsync_CallsDialogManagerAndContentMapperAndBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockContentMapper = Substitute.For<ILearningContentMapper>();
+        var learningContent = new LearningContentViewModel("f", ".mp4", new byte[] { 0x01, 0x00, 0x00, 0x01 });
+        var entity = new AuthoringTool.Entities.LearningContent("f", ".mp4", new byte[] { 0x01, 0x00, 0x00, 0x01 });
+        mockContentMapper.ToViewModel(entity).Returns(learningContent);
+        const string filepath = "foobar";
+        var mockDialogManger = Substitute.For<IElectronDialogManager>();
+        mockDialogManger
+            .ShowOpenFileDialog(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<IEnumerable<FileFilterProxy>?>())
+            .Returns(filepath);
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManger);
+        mockBusinessLogic.LoadLearningContent(filepath + ".mp4").Returns(entity);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
+            contentMapper: mockContentMapper, serviceProvider: mockServiceProvider);
+
+        var loadedContent = await systemUnderTest.LoadVideoAsync();
+
+        await mockDialogManger.Received()
+            .ShowOpenFileDialog("Load video", null, Arg.Any<IEnumerable<FileFilterProxy>?>());
+        mockBusinessLogic.Received().LoadLearningContent(filepath + ".mp4");
+        mockContentMapper.Received().ToViewModel(entity);
+        
+        Assert.That(loadedContent, Is.EqualTo(learningContent));
+    }
+    
+    [Test]
+    public void PresentationLogic_LoadVideoAsync_LogsAndRethrowsDialogCancelledException()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockLogger = Substitute.For<ILogger<AuthoringTool.PresentationLogic.API.PresentationLogic>>();
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        var mockElectronDialogManager = Substitute.For<IElectronDialogManager>();
+        mockElectronDialogManager
+            .ShowOpenFileDialog(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<IEnumerable<FileFilterProxy>?>())
+            .Throws(new OperationCanceledException("bububaba"));
+        mockServiceProvider.GetService(typeof(IElectronDialogManager))
+            .Returns(mockElectronDialogManager);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
+            serviceProvider: mockServiceProvider);
+
+        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.LoadVideoAsync());
+        Assert.That(ex!.Message, Is.EqualTo("bububaba"));
+        mockLogger.Received().LogInformation("Load dialog cancelled by user");
+    }
+    
+    
+    [Test]
+    public void PresentationLogic_LoadH5pAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.RunningElectron.Returns(false);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+
+        var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
+            await systemUnderTest.LoadH5pAsync());
+        Assert.That(ex!.Message, Is.EqualTo("Browser upload/download not yet implemented"));
+    }
+    
+    [Test]
+    public void PresentationLogic_LoadH5pAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(null);
+
+        var systemUnderTest =
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider);
+
+        var ex = Assert.ThrowsAsync<InvalidOperationException>(async () => await systemUnderTest.LoadH5pAsync());
+        Assert.That(ex!.Message, Is.EqualTo("dialogManager received from DI unexpectedly null"));
+    }
+    
+    [Test]
+    public async Task PresentationLogic_LoadH5pAsync_CallsDialogManagerAndContentMapperAndBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockContentMapper = Substitute.For<ILearningContentMapper>();
+        var learningContent = new LearningContentViewModel("f", ".h5p", new byte[] { 0x01, 0x01, 0x00, 0x01 });
+        var entity = new AuthoringTool.Entities.LearningContent("f", ".h5p", new byte[] { 0x01, 0x01, 0x00, 0x01 });
+        mockContentMapper.ToViewModel(entity).Returns(learningContent);
+        const string filepath = "foobar";
+        var mockDialogManger = Substitute.For<IElectronDialogManager>();
+        mockDialogManger
+            .ShowOpenFileDialog(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<IEnumerable<FileFilterProxy>?>())
+            .Returns(filepath);
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManger);
+        mockBusinessLogic.LoadLearningContent(filepath + ".h5p").Returns(entity);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
+            contentMapper: mockContentMapper, serviceProvider: mockServiceProvider);
+
+        var loadedContent = await systemUnderTest.LoadH5pAsync();
+
+        await mockDialogManger.Received()
+            .ShowOpenFileDialog("Load h5p", null, Arg.Any<IEnumerable<FileFilterProxy>?>());
+        mockBusinessLogic.Received().LoadLearningContent(filepath + ".h5p");
+        mockContentMapper.Received().ToViewModel(entity);
+        
+        Assert.That(loadedContent, Is.EqualTo(learningContent));
+    }
+    
+    [Test]
+    public void PresentationLogic_LoadH5pAsync_LogsAndRethrowsDialogCancelledException()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockLogger = Substitute.For<ILogger<AuthoringTool.PresentationLogic.API.PresentationLogic>>();
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        var mockElectronDialogManager = Substitute.For<IElectronDialogManager>();
+        mockElectronDialogManager
+            .ShowOpenFileDialog(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<IEnumerable<FileFilterProxy>?>())
+            .Throws(new OperationCanceledException("bububaba"));
+        mockServiceProvider.GetService(typeof(IElectronDialogManager))
+            .Returns(mockElectronDialogManager);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
+            serviceProvider: mockServiceProvider);
+
+        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.LoadH5pAsync());
+        Assert.That(ex!.Message, Is.EqualTo("bububaba"));
+        mockLogger.Received().LogInformation("Load dialog cancelled by user");
+    }
+    
+    
+    [Test]
+    public void PresentationLogic_LoadPdfAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.RunningElectron.Returns(false);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+
+        var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
+            await systemUnderTest.LoadPdfAsync());
+        Assert.That(ex!.Message, Is.EqualTo("Browser upload/download not yet implemented"));
+    }
+    
+    [Test]
+    public void PresentationLogic_LoadPdfAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(null);
+
+        var systemUnderTest =
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider);
+
+        var ex = Assert.ThrowsAsync<InvalidOperationException>(async () => await systemUnderTest.LoadPdfAsync());
+        Assert.That(ex!.Message, Is.EqualTo("dialogManager received from DI unexpectedly null"));
+    }
+    
+    [Test]
+    public async Task PresentationLogic_LoadPdfAsync_CallsDialogManagerAndContentMapperAndBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockContentMapper = Substitute.For<ILearningContentMapper>();
+        var learningContent = new LearningContentViewModel("f", ".pdf", new byte[] { 0x01, 0x01, 0x01, 0x01 });
+        var entity = new AuthoringTool.Entities.LearningContent("f", ".pdf", new byte[] { 0x01, 0x01, 0x01, 0x01 });
+        mockContentMapper.ToViewModel(entity).Returns(learningContent);
+        const string filepath = "foobar";
+        var mockDialogManger = Substitute.For<IElectronDialogManager>();
+        mockDialogManger
+            .ShowOpenFileDialog(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<IEnumerable<FileFilterProxy>?>())
+            .Returns(filepath);
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManger);
+        mockBusinessLogic.LoadLearningContent(filepath + ".pdf").Returns(entity);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
+            contentMapper: mockContentMapper, serviceProvider: mockServiceProvider);
+
+        var loadedContent = await systemUnderTest.LoadPdfAsync();
+
+        await mockDialogManger.Received()
+            .ShowOpenFileDialog("Load pdf", null, Arg.Any<IEnumerable<FileFilterProxy>?>());
+        mockBusinessLogic.Received().LoadLearningContent(filepath + ".pdf");
+        mockContentMapper.Received().ToViewModel(entity);
+        
+        Assert.That(loadedContent, Is.EqualTo(learningContent));
+    }
+    
+    [Test]
+    public void PresentationLogic_LoadPdfAsync_LogsAndRethrowsDialogCancelledException()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockLogger = Substitute.For<ILogger<AuthoringTool.PresentationLogic.API.PresentationLogic>>();
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        var mockElectronDialogManager = Substitute.For<IElectronDialogManager>();
+        mockElectronDialogManager
+            .ShowOpenFileDialog(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<IEnumerable<FileFilterProxy>?>())
+            .Throws(new OperationCanceledException("bububaba"));
+        mockServiceProvider.GetService(typeof(IElectronDialogManager))
+            .Returns(mockElectronDialogManager);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
+            serviceProvider: mockServiceProvider);
+
+        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.LoadPdfAsync());
+        Assert.That(ex!.Message, Is.EqualTo("bububaba"));
+        mockLogger.Received().LogInformation("Load dialog cancelled by user");
+    }
     #endregion
 
     private static AuthoringTool.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(
         IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null,
         ILearningWorldMapper? worldMapper = null, ILearningSpaceMapper? spaceMapper = null,
-        ILearningElementMapper? elementMapper = null, IServiceProvider? serviceProvider = null,
-        ILogger<AuthoringTool.PresentationLogic.API.PresentationLogic>? logger = null)
+        ILearningElementMapper? elementMapper = null, ILearningContentMapper? contentMapper = null,
+        IServiceProvider? serviceProvider = null, ILogger<AuthoringTool.PresentationLogic.API.PresentationLogic>? logger = null)
     {
         configuration ??= Substitute.For<IAuthoringToolConfiguration>();
         businessLogic ??= Substitute.For<IBusinessLogic>();
         worldMapper ??= Substitute.For<ILearningWorldMapper>();
         spaceMapper ??= Substitute.For<ILearningSpaceMapper>();
         elementMapper ??= Substitute.For<ILearningElementMapper>();
+        contentMapper ??= Substitute.For<ILearningContentMapper>();
         serviceProvider ??= Substitute.For<IServiceProvider>();
         logger ??= Substitute.For<ILogger<AuthoringTool.PresentationLogic.API.PresentationLogic>>();
         return new AuthoringTool.PresentationLogic.API.PresentationLogic(configuration, businessLogic,
-            worldMapper, spaceMapper, elementMapper, serviceProvider, logger);
+            worldMapper, spaceMapper, elementMapper, contentMapper, serviceProvider, logger);
     }
 }

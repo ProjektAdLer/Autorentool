@@ -60,6 +60,11 @@ internal class BusinessLogic : IBusinessLogic
         return DataAccess.LoadLearningElementFromFile(filepath);
     }
 
+    public LearningContent LoadLearningContent(string filepath)
+    {
+        return DataAccess.LoadLearningContentFromFile(filepath);
+    }
+    
     public IAuthoringToolConfiguration Configuration { get; }
   
 }
