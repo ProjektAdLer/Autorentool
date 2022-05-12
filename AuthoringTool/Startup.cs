@@ -12,6 +12,7 @@ using AuthoringTool.PresentationLogic.EntityMapping;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
+using AuthoringTool.PresentationLogic.Toolbox;
 using AuthoringTool.View.Toolbox;
 using ElectronWrapper;
 
@@ -52,11 +53,14 @@ public class Startup
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
         services.AddSingleton<AuthoringToolWorkspacePresenter>();
         services.AddSingleton<IAbstractToolboxRenderFragmentFactory, ToolboxRenderFragmentFactory>();
+        services.AddSingleton<IToolboxEntriesProviderModifiable, ToolboxEntriesProvider>();
+        services.AddSingleton(p => (IToolboxEntriesProvider)p.GetService(typeof(IToolboxEntriesProviderModifiable))!);
         //ViewModel <-> Entity Mappers
         services.AddSingleton<ILearningElementMapper, LearningElementMapper>();
         services.AddSingleton<ILearningSpaceMapper, LearningSpaceMapper>();
         services.AddSingleton<ILearningWorldMapper, LearningWorldMapper>();
         services.AddSingleton<ILearningContentMapper, LearningContentMapper>();
+        services.AddSingleton<IEntityMapping, EntityMapping>();
 
         //Blazor and Electron
         services.AddRazorPages();
