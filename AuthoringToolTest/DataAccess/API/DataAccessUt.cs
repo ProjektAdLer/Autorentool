@@ -32,7 +32,7 @@ public class DataAccessUt
         });
     }
 
-    [Test]
+    /*[Test]
     public void DataAccess_ConstructBackup_CallsBackupFileGenerator()
     {
         //Arrange
@@ -45,7 +45,7 @@ public class DataAccessUt
         //Assert
         mockBackupFile.Received().WriteXmlFiles();
         mockBackupFile.Received().WriteBackupFile();
-    }
+    }*/
 
     [Test]
     public void DataAccess_SaveLearningWorldToFile_CallsFileSaveHandlerWorld()
