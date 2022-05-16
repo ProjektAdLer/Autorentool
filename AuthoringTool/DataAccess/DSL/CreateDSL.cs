@@ -2,15 +2,7 @@
 
 namespace AuthoringTool.DataAccess.DSL;
 
-public class CreateDSL
+public class CreateDSL : ICreateDSL
 {
     
-    
-    public LearningWorldViewModel? SelectedLearningWorld { get; set; }
-    
-    public LearningWorldViewModel GetLearningworldProperties(LearningWorldViewModel selectedLearningWorld)
-    {
-        SelectedLearningWorld = selectedLearningWorld;
-        return SelectedLearningWorld;
-    }
 }

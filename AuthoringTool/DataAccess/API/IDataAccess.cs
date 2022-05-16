@@ -7,7 +7,7 @@ public interface IDataAccess
 {
     IAuthoringToolConfiguration Configuration { get; }
 
-    void ConstructBackup();
+    void ConstructBackup(LearningWorld learningWorld, string filepath);
     void SaveLearningWorldToFile(LearningWorld world, string filepath);
     LearningWorld LoadLearningWorldFromFile(string filepath);
     void SaveLearningSpaceToFile(LearningSpace space, string filepath);

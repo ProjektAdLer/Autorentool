@@ -9,7 +9,7 @@ public interface IBusinessLogic
     IAuthoringToolConfiguration Configuration { get; }
     IDataAccess DataAccess { get; }
     bool RunningElectron { get; }
-    void ConstructBackup();
+    void ConstructBackup(LearningWorld learningWorld, string filepath);
     void SaveLearningWorld(LearningWorld learningWorld, string filepath);
     LearningWorld LoadLearningWorld(string filepath);
     void SaveLearningSpace(LearningSpace learningSpace, string filepath);

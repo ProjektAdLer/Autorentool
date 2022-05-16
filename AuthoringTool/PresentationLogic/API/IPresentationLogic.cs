@@ -22,7 +22,13 @@ public interface IPresentationLogic
     
     bool RunningElectron { get; }
     
-    void ConstructBackup();
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="learningWorldViewModel"></param>
+    /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
+    /// <returns>Filepath to the new backup file</returns>
+    Task<string> ConstructBackupAsync(LearningWorldViewModel learningWorldViewModel);
     
     /// <summary>
     /// Asks user for path and saves <see cref="LearningWorldViewModel"/> to disk.

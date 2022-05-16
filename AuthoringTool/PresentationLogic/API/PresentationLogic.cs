@@ -54,9 +54,12 @@ internal class PresentationLogic : IPresentationLogic
     public ILearningElementMapper ElementMapper { get; }
     public ILearningContentMapper ContentMapper { get; }
 
-    public void ConstructBackup()
+    public async Task<string> ConstructBackupAsync(LearningWorldViewModel learningWorldViewModel)
     {
-        BusinessLogic.ConstructBackup();
+        var entity = WorldMapper.ToEntity(learningWorldViewModel);
+        var filepath = await GetSaveFilepathAsync("Export learning world", "mbz", "Moodle Backup Zip");
+        BusinessLogic.ConstructBackup(entity, filepath);
+        return filepath;
     }
 
     /// <inheritdoc cref="IPresentationLogic.SaveLearningWorldAsync"/>

@@ -318,11 +318,19 @@
         _activeView?.TriggerStateHasChanged();
     }
     
-    private void ExportLearningWorld()
+    private async void ExportLearningWorld()
     {
         //Create XMl-files, Overwrite Encoding to UTF-8 and Create Backup-File
-        presentationLogic.ConstructBackup();
-        filePath = Path.Join(GetCurrentDirectory(),"EmptyWorld.mbz");
+        if (AuthoringToolWorkspaceVm.SelectedLearningWorld == null) return;
+        try
+        {
+            filePath = await presentationLogic.ConstructBackupAsync(AuthoringToolWorkspaceVm.SelectedLearningWorld);
+        }
+        catch (OperationCanceledException)
+        {
+            //do nothing
+        }
+        StateHasChanged();
     }
 
 }

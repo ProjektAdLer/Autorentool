@@ -25,9 +25,9 @@ internal class BusinessLogic : IBusinessLogic
 
     public bool RunningElectron => HybridSupport.IsElectronActive;
 
-    public void ConstructBackup()
+    public void ConstructBackup(LearningWorld learningWorld, string filepath)
     {
-        DataAccess.ConstructBackup();
+        DataAccess.ConstructBackup(learningWorld, filepath);
     }
 
     public void SaveLearningWorld(LearningWorld learningWorld, string filepath)

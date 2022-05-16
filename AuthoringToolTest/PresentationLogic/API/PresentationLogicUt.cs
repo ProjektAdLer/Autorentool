@@ -50,17 +50,26 @@ public class PresentationLogicUt
     }
 
     [Test]
-    public void PresentationLogic_ConstructBackup_BackupFile()
+    public async Task PresentationLogic_ConstructBackup_CallsDialogManagerAndBusinessLogic()
     {
         //Arrange
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockDialogManager = Substitute.For<IElectronDialogManager>();
+        mockDialogManager
+            .ShowSaveAsDialog(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<IEnumerable<FileFilterProxy>?>())
+            .Returns("supersecretfilepath");
+        var viewModel = new LearningWorldViewModel("fo", "fo", "fo", "fo", "fo", "fo");
+        var mockWorldMapper = Substitute.For<ILearningWorldMapper>();
+        var entity = new AuthoringTool.Entities.LearningWorld("baba", "baba", "baba", "baba", "baba", "baba");
+        mockWorldMapper.ToEntity(viewModel)
+            .Returns(entity);
+        
         var systemUnderTest = CreateTestablePresentationLogic(null, mockBusinessLogic);
-
         //Act
-        systemUnderTest.ConstructBackup();
+        await systemUnderTest.ConstructBackupAsync(viewModel);
 
         //Assert
-        mockBusinessLogic.Received().ConstructBackup();
+        mockBusinessLogic.Received().ConstructBackup(entity, "supersecretfilepath");
     }
 
     #region Save/Load

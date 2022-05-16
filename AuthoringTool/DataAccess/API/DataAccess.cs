@@ -27,7 +27,7 @@ internal class DataAccess : IDataAccess
 
     public IBackupFileGenerator BackupFile { get; set; }
 
-    public void ConstructBackup()
+    public void ConstructBackup(LearningWorld learningWorld, string filepath)
     {
         BackupFile.CreateBackupFolders();
         BackupFile.WriteXmlFiles();

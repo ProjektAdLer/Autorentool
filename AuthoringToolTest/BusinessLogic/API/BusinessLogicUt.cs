@@ -30,9 +30,9 @@ public class BusinessLogicUt
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.ConstructBackup();
+        systemUnderTest.ConstructBackup(null!, "foobar");
 
-        mockDataAccess.Received().ConstructBackup();
+        mockDataAccess.Received().ConstructBackup(null!, "foobar");
     }
 
     [Test]
