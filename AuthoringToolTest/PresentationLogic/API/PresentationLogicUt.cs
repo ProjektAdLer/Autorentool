@@ -9,6 +9,7 @@ using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.Core;
@@ -63,13 +64,16 @@ public class PresentationLogicUt
         var entity = new AuthoringTool.Entities.LearningWorld("baba", "baba", "baba", "baba", "baba", "baba");
         mockWorldMapper.ToEntity(viewModel)
             .Returns(entity);
+        var serviceProvider = new ServiceCollection();
+        serviceProvider.Insert(0, new ServiceDescriptor(typeof(IElectronDialogManager), mockDialogManager));
         
-        var systemUnderTest = CreateTestablePresentationLogic(null, mockBusinessLogic);
+        var systemUnderTest = CreateTestablePresentationLogic(null, mockBusinessLogic, mockWorldMapper,
+            serviceProvider: serviceProvider.BuildServiceProvider());
         //Act
         await systemUnderTest.ConstructBackupAsync(viewModel);
 
         //Assert
-        mockBusinessLogic.Received().ConstructBackup(entity, "supersecretfilepath");
+        mockBusinessLogic.Received().ConstructBackup(entity, "supersecretfilepath.mbz");
     }
 
     #region Save/Load
