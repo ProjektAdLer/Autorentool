@@ -33,7 +33,7 @@ public class ToolboxRenderFragmentFactory : IAbstractToolboxRenderFragmentFactor
                 b.AddAttribute(1, "ViewModel", learningElementViewModel);
                 b.CloseComponent();
             },
-            _ => throw new NotImplementedException()
+            _ => throw new ArgumentOutOfRangeException(nameof(obj), "Unsupported type passed to GetRenderFragment")
         };
     }
 }

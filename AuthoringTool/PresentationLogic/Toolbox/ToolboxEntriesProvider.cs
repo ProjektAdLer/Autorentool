@@ -9,14 +9,15 @@ namespace AuthoringTool.PresentationLogic.Toolbox;
 
 public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
 {
-
+    public ToolboxEntriesProvider(ILogger<ToolboxEntriesProvider> logger, IBusinessLogic businessLogic,
+        IEntityMapping entityMapping) : this(logger, businessLogic, entityMapping, new FileSystem()) { }
     public ToolboxEntriesProvider(ILogger<ToolboxEntriesProvider> logger, IBusinessLogic businessLogic,
         IEntityMapping entityMapping, IFileSystem fileSystem)
     {
         Logger = logger;
         BusinessLogic = businessLogic;
         EntityMapping = entityMapping;
-        FileSystem = fileSystem;
+        FileSystem = fileSystem ?? new FileSystem();
 
         _toolboxSavePath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "AdLerAuthoring", "Toolbox");
