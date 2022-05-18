@@ -17,7 +17,7 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
         Logger = logger;
         BusinessLogic = businessLogic;
         EntityMapping = entityMapping;
-        FileSystem = fileSystem ?? new FileSystem();
+        FileSystem = fileSystem;
 
         _toolboxSavePath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
             "AdLerAuthoring", "Toolbox");

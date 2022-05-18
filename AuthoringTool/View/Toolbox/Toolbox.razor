@@ -14,15 +14,3 @@
     </ItemRenderTemplate>
 </GridLayoutDisplay>
 
-
-@code {
-    IEnumerable<IDisplayableLearningObject> debug { get; set; } 
-        = new IDisplayableLearningObject[]
-        {
-            new LearningWorldViewModel("foo", "bar", "bub", "", "", ""),
-            new LearningElementViewModel("ba", "su", null, "ge", "asdf",
-                null, "au", "desc", "goal"),
-            new LearningWorldViewModel("foo", "bar", "bub", "", "", ""),
-            new LearningSpaceViewModel("la", "la", "la", "description", "bubu")
-        };
-}
