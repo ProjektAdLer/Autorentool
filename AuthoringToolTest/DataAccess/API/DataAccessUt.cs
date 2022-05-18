@@ -1,4 +1,9 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.IO.Abstractions;
+using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.API.Configuration;
 using AuthoringTool.DataAccess.Persistence;
 using AuthoringTool.DataAccess.WorldExport;
@@ -123,13 +128,91 @@ public class DataAccessUt
         mockFileSaveHandlerElement.Received().LoadFromDisk("C:/nonsense");
     }
 
+    [Test]
+    [TestCaseSource(typeof(FindSuitableNewSavePathTestCases))]
+    public void DataAccess_FindSuitableNewSavePath_FindsSuitablePath(IFileSystem mockFileSystem, string targetFolder,
+        string fileName, string fileEnding, string expectedSavePath)
+    {
+        var systemUnderTest = CreateTestableDataAccess(fileSystem: mockFileSystem);
+
+        var actualSavePath = systemUnderTest.FindSuitableNewSavePath(targetFolder, fileName, fileEnding);
+        
+        Assert.That(actualSavePath, Is.EqualTo(expectedSavePath));
+    }
+
+    [Test]
+    public void DataAccess_FindSuitableNewSavePath_ThrowsWhenEmptyParameters()
+    {
+        var systemUnderTest = CreateTestableDataAccess();
+
+        var ex = Assert.Throws<ArgumentException>(() => systemUnderTest.FindSuitableNewSavePath("", "foo", "bar"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex!.Message, Is.EqualTo("targetFolder cannot be empty (Parameter 'targetFolder')"));
+            Assert.That(ex.ParamName, Is.EqualTo("targetFolder"));
+        });
+        
+        ex = Assert.Throws<ArgumentException>(() => systemUnderTest.FindSuitableNewSavePath("foo", "", "bar"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex!.Message, Is.EqualTo("fileName cannot be empty (Parameter 'fileName')"));
+            Assert.That(ex.ParamName, Is.EqualTo("fileName"));
+        });
+        
+        ex = Assert.Throws<ArgumentException>(() => systemUnderTest.FindSuitableNewSavePath("foo", "bar", ""));
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex!.Message, Is.EqualTo("fileEnding cannot be empty (Parameter 'fileEnding')"));
+            Assert.That(ex.ParamName, Is.EqualTo("fileEnding"));
+        });
+    }
+
+    private class FindSuitableNewSavePathTestCases : IEnumerable
+    {
+        public IEnumerator GetEnumerator()
+        {
+            yield return new object[] //no file present
+            {
+                new MockFileSystem(new Dictionary<string, MockFileData>()),
+                "directory", "foo", "bar", Path.Join("directory", "foo.bar")
+            };
+            yield return new object[] //file is present
+            {
+                new MockFileSystem(new Dictionary<string, MockFileData>
+                {
+                    {Path.Combine("directory", "foo.bar"), MockFileData.NullObject}
+                }),
+                "directory", "foo", "bar", Path.Join("directory", "foo_1.bar")
+            };
+            yield return new object[] //multiple files present
+            {
+                new MockFileSystem(new Dictionary<string, MockFileData>
+                {
+                    {Path.Combine("directory", "foo.bar"), MockFileData.NullObject},
+                    {Path.Combine("directory", "foo_1.bar"), MockFileData.NullObject},
+                    {Path.Combine("directory", "foo_2.bar"), MockFileData.NullObject}
+                }),
+                "directory", "foo", "bar", Path.Join("directory", "foo_3.bar")
+            };
+            yield return new object[] //irrelevant files present
+            {
+                new MockFileSystem(new Dictionary<string, MockFileData>
+                {
+                    {Path.Combine("directory", "poo.bar"), MockFileData.NullObject}
+                }),
+                "directory", "foo", "bar", Path.Join("directory", "foo.bar")
+            };
+        }
+    }
+
     private static AuthoringTool.DataAccess.API.DataAccess CreateTestableDataAccess(
         IAuthoringToolConfiguration? configuration = null,
         IBackupFileGenerator? backupFileConstructor = null,
         IXmlFileHandler<LearningWorld>? fileSaveHandlerWorld = null,
         IXmlFileHandler<LearningSpace>? fileSaveHandlerSpace = null,
         IXmlFileHandler<LearningElement>? fileSaveHandlerElement = null,
-        IContentFileHandler? contentHandler = null)
+        IContentFileHandler? contentHandler = null,
+        IFileSystem? fileSystem = null)
     {
         configuration ??= Substitute.For<IAuthoringToolConfiguration>();
         backupFileConstructor ??= Substitute.For<IBackupFileGenerator>();
@@ -137,7 +220,8 @@ public class DataAccessUt
         fileSaveHandlerSpace ??= Substitute.For<IXmlFileHandler<LearningSpace>>();
         fileSaveHandlerElement ??= Substitute.For<IXmlFileHandler<LearningElement>>();
         contentHandler ??= Substitute.For<IContentFileHandler>();
+        fileSystem ??= new MockFileSystem();
         return new AuthoringTool.DataAccess.API.DataAccess(configuration, backupFileConstructor, fileSaveHandlerWorld,
-            fileSaveHandlerSpace, fileSaveHandlerElement, contentHandler);
+            fileSaveHandlerSpace, fileSaveHandlerElement, contentHandler, fileSystem);
     }
 }

@@ -64,7 +64,12 @@ internal class BusinessLogic : IBusinessLogic
     {
         return DataAccess.LoadLearningContentFromFile(filepath);
     }
-    
+
+    public string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding)
+    {
+        return DataAccess.FindSuitableNewSavePath(targetFolder, fileName, fileEnding);
+    }
+
     public IAuthoringToolConfiguration Configuration { get; }
   
 }

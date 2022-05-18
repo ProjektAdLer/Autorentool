@@ -23,9 +23,10 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
             "AdLerAuthoring", "Toolbox");
         Logger.LogDebug("_toolboxSavePath is {}", _toolboxSavePath);
 
-        _worlds = null;
-        _spaces = null;
-        _elements = null;
+        _worlds = new List<LearningWorldViewModel>();
+        _spaces = new List<LearningSpaceViewModel>();
+        _elements = new List<LearningElementViewModel>();
+        _initialized = false;
         
         //ensure path is created
         if (FileSystem.Directory.Exists(_toolboxSavePath)) return;
@@ -38,9 +39,11 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
     internal IEntityMapping EntityMapping { get; }
     internal IFileSystem FileSystem { get; }
 
-    private List<LearningWorldViewModel>? _worlds;
-    private List<LearningSpaceViewModel>? _spaces;
-    private List<LearningElementViewModel>? _elements;
+    private List<LearningWorldViewModel> _worlds;
+    private List<LearningSpaceViewModel> _spaces;
+    private List<LearningElementViewModel> _elements;
+
+    private bool _initialized;
     //TODO: remove this and instead get path from configuration 
     private string _toolboxSavePath;
 
@@ -58,11 +61,46 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
     public bool AddEntry(IDisplayableLearningObject obj)
     {
         EnsureEntriesPopulated();
-        if (IsElementDuplicate(obj)) return false;
-        //TODO: implement
-        throw new NotImplementedException();
+        try
+        {
+            if (IsElementDuplicate(obj)) return false;
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            Logger.LogError("Caught ArgumentOutOfRangeException in AddEntry for object of type {}", obj.GetType().Name);
+            return false;
+        }
+        
+        //construct a file path (automatically without user input)
+        //check if file at file path exists already
+        //if yes, append _n where n is tries and try again
+        //if no, save file
+        //if file successfully saved, add object to correct collection
+        //return true
+        var savePath = FindSuitableSavePath(obj);
+        switch (obj)
+        {
+                case LearningWorldViewModel learningWorldViewModel:
+                    BusinessLogic.SaveLearningWorld(EntityMapping.WorldMapper.ToEntity(learningWorldViewModel), savePath);
+                    _worlds.Add(learningWorldViewModel);
+                    break;
+                case LearningSpaceViewModel learningSpaceViewModel:
+                    BusinessLogic.SaveLearningSpace(EntityMapping.SpaceMapper.ToEntity(learningSpaceViewModel), savePath);
+                    _spaces.Add(learningSpaceViewModel);
+                    break;
+                case LearningElementViewModel learningElementViewModel:
+                    BusinessLogic.SaveLearningElement(EntityMapping.ElementMapper.ToEntity(learningElementViewModel), savePath);
+                    _elements.Add(learningElementViewModel);
+                    break;
+        }
+        return true;
     }
     
+    private string FindSuitableSavePath(IDisplayableLearningObject obj)
+    {
+        return BusinessLogic.FindSuitableNewSavePath(_toolboxSavePath, obj.Name, obj.FileEnding);
+    }
+
 
     /// <summary>
     /// Checks whether the passed element already exists in our lists, meaning there is an element of same type with the same
@@ -77,10 +115,10 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
         EnsureEntriesPopulated();
         return obj switch
         {
-            LearningWorldViewModel world => _worlds!.Any(w => w.Name == world.Name),
-            LearningSpaceViewModel space => _spaces!.Any(s => s.Name == space.Name),
-            LearningElementViewModel element => _elements!.Any(e => e.Name == element.Name),
-            _ => false,
+            LearningWorldViewModel world => _worlds.Any(w => w.Name == world.Name),
+            LearningSpaceViewModel space => _spaces.Any(s => s.Name == space.Name),
+            LearningElementViewModel element => _elements.Any(e => e.Name == element.Name),
+            _ => throw new ArgumentOutOfRangeException(nameof(obj), "object isn't valid for toolbox"),
         };
     }
     
@@ -89,7 +127,7 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
     /// </summary>
     private void EnsureEntriesPopulated()
     {
-        if (_worlds != null && _spaces != null && _elements != null) return;
+        if (_initialized) return;
         Logger.LogTrace("Entries aren't populated, rebuilding");
         PopulateEntries();
     }
@@ -103,9 +141,9 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
         Logger.LogInformation("(Re-)Building Toolbox entries from path {}", _toolboxSavePath);
         var files = FileSystem.Directory.EnumerateFiles(_toolboxSavePath).ToArray();
         
-        var worldFiles = files.Where(filepath => filepath.EndsWith(".awf"));
-        var spaceFiles = files.Where(filepath => filepath.EndsWith(".asf"));
-        var elementFiles = files.Where(filepath => filepath.EndsWith(".aef"));
+        var worldFiles = files.Where(filepath => filepath.EndsWith(LearningWorldViewModel.fileEnding));
+        var spaceFiles = files.Where(filepath => filepath.EndsWith(LearningSpaceViewModel.fileEnding));
+        var elementFiles = files.Where(filepath => filepath.EndsWith(LearningElementViewModel.fileEnding));
         
         _worlds = worldFiles.Select(filepath => BusinessLogic.LoadLearningWorld(filepath))
             .Select(entity => EntityMapping.WorldMapper.ToViewModel(entity)).ToList();

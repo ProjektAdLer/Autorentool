@@ -34,7 +34,8 @@ public class LearningWorldViewModel : ILearningElementViewModelParent, ISerializ
         LearningElements = learningElements ?? new Collection<LearningElementViewModel>();
         LearningSpaces = learningSpaces ?? new Collection<LearningSpaceViewModel>();
     }
-       
+    public const string fileEnding = "awf";
+    public string FileEnding => fileEnding;
     public ICollection<LearningElementViewModel> LearningElements { get; set; }
     public ICollection<LearningSpaceViewModel> LearningSpaces { get; set; }
     public IEnumerable<ILearningObjectViewModel> LearningObjects => LearningElements.Concat<ILearningObjectViewModel>(LearningSpaces);

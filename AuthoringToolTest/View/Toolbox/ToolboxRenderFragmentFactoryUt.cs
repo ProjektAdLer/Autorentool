@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using AuthoringTool.Entities;
 using AuthoringTool.PresentationLogic;
@@ -6,6 +7,7 @@ using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
 using AuthoringTool.View.Toolbox;
 using Bunit;
+using NSubstitute;
 using NUnit.Framework;
 using TestContext = Bunit.TestContext;
 
@@ -35,6 +37,15 @@ public class ToolboxRenderFragmentFactoryUt
         
         //see https://bunit.dev/docs/verification/verify-markup.html
         rendered.MarkupMatches(expectedMarkup);
+    }
+
+    [Test]
+    public void ToolboxRenderFragmentFactory_GetRenderFragment_ThrowsExceptionOnInvalidObject()
+    {
+        var systemUnderTest = GetTestableToolboxRenderFragmentFactory();
+
+        Assert.Throws<ArgumentOutOfRangeException>(() =>
+            systemUnderTest.GetRenderFragment(Substitute.For<IDisplayableLearningObject>()));
     }
 
     private IAbstractToolboxRenderFragmentFactory GetTestableToolboxRenderFragmentFactory()

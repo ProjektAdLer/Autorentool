@@ -17,4 +17,7 @@ public interface IBusinessLogic
     void SaveLearningElement(LearningElement learningElement, string filepath);
     LearningElement LoadLearningElement(string filepath);
     LearningContent LoadLearningContent(string filepath);
+    
+    /// <inheritdoc cref="IDataAccess.FindSuitableNewSavePath"/>
+    string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding);
 }

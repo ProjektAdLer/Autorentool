@@ -36,7 +36,8 @@ public class LearningElementViewModel : ILearningObjectViewModel, ISerializableV
         PositionY = positionY;
     }
     
-    
+    public const string fileEnding = "aef";
+    public string FileEnding => fileEnding;
     public string Name { get; set; }
     public string Shortname { get; set; }
     public ILearningElementViewModelParent? Parent { get; set; }

@@ -38,4 +38,12 @@ public class LearningSpaceViewModelUt
         });
         
     }
+
+    [Test]
+    public void LearningSpace_FileEnding_ReturnsCorrectEnding()
+    {
+        const string expectedFileEnding = "asf";
+        var systemUnderTest = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+        Assert.That(systemUnderTest.FileEnding, Is.EqualTo(expectedFileEnding));
+    }
 }

@@ -29,6 +29,8 @@ public class LearningSpaceViewModel : ILearningObjectViewModel, ILearningElement
         PositionY = positionY;
     }
 
+    public const string fileEnding = "asf";
+    public string FileEnding => fileEnding;
     public ICollection<LearningElementViewModel> LearningElements { get; set; }
     public string Name { get; set; }
     public string Shortname { get; set; }
