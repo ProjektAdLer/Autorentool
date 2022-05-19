@@ -130,7 +130,8 @@ public class DataAccessUt
         IXmlFileHandler<LearningWorld>? fileSaveHandlerWorld = null,
         IXmlFileHandler<LearningSpace>? fileSaveHandlerSpace = null,
         IXmlFileHandler<LearningElement>? fileSaveHandlerElement = null,
-        IContentFileHandler? contentHandler = null)
+        IContentFileHandler? contentHandler = null,
+        ICreateDSL? createDsl = null)
     {
         configuration ??= Substitute.For<IAuthoringToolConfiguration>();
         backupFileConstructor ??= Substitute.For<IBackupFileGenerator>();
@@ -138,7 +139,8 @@ public class DataAccessUt
         fileSaveHandlerSpace ??= Substitute.For<IXmlFileHandler<LearningSpace>>();
         fileSaveHandlerElement ??= Substitute.For<IXmlFileHandler<LearningElement>>();
         contentHandler ??= Substitute.For<IContentFileHandler>();
+        createDsl ??= Substitute.For<ICreateDSL>();
         return new AuthoringTool.DataAccess.API.DataAccess(configuration, backupFileConstructor, fileSaveHandlerWorld,
-            fileSaveHandlerSpace, fileSaveHandlerElement, contentHandler);
+            fileSaveHandlerSpace, fileSaveHandlerElement, contentHandler, createDsl);
     }
 }
