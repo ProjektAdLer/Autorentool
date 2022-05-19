@@ -2,6 +2,7 @@ using AuthoringTool.API;
 using AuthoringTool.API.Configuration;
 using AuthoringTool.BusinessLogic.API;
 using AuthoringTool.DataAccess.API;
+using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.Persistence;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.PresentationLogic;
@@ -42,6 +43,7 @@ public class Startup
         services.AddSingleton<IContentFileHandler, ContentFileHandler>();
         services.AddSingleton<IBackupFileGenerator, BackupFileGenerator>();
         services.AddSingleton<IDataAccess, DataAccess>();
+        services.AddSingleton<ICreateDSL, CreateDSL>();
         services.AddSingleton<IBusinessLogic, BusinessLogic>();
         services.AddSingleton<IPresentationLogic, PresentationLogic>();
         services.AddSingleton<IAuthoringTool, AuthoringTool.API.AuthoringTool>();

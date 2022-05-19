@@ -10,7 +10,7 @@ internal class DataAccess : IDataAccess
 {
     public DataAccess(IAuthoringToolConfiguration configuration, IBackupFileGenerator backupFileGenerator,
         IXmlFileHandler<LearningWorld> xmlHandlerWorld, IXmlFileHandler<LearningSpace> xmlHandlerSpace,
-        IXmlFileHandler<LearningElement> xmlHandlerElement, IContentFileHandler contentHandler)
+        IXmlFileHandler<LearningElement> xmlHandlerElement, IContentFileHandler contentHandler, ICreateDSL createDsl)
     {
         XmlHandlerWorld = xmlHandlerWorld;
         XmlHandlerSpace = xmlHandlerSpace;
@@ -18,6 +18,7 @@ internal class DataAccess : IDataAccess
         ContentHandler = contentHandler;
         Configuration = configuration;
         BackupFile = backupFileGenerator;
+        CreateDsl = createDsl;
     }
 
     public readonly IXmlFileHandler<LearningWorld> XmlHandlerWorld;
@@ -27,11 +28,11 @@ internal class DataAccess : IDataAccess
     public IAuthoringToolConfiguration Configuration { get; }
 
     public IBackupFileGenerator BackupFile { get; set; }
-    public ICreateDSL CreateDsl { get; set; }
+    public ICreateDSL CreateDsl;
 
     public void ConstructBackup(LearningWorld learningWorld, string filepath)
     {
-        //CreateDsl.WriteLearningWorld(learningWorld);
+        CreateDsl.WriteLearningWorld(learningWorld);
         BackupFile.CreateBackupFolders();
         BackupFile.WriteXmlFiles();
         BackupFile.WriteBackupFile(filepath);
