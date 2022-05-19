@@ -17,7 +17,7 @@ public interface IBackupFileGenerator
     /// <summary>
     /// Locates all Folders and Xml Files, packs it into a tar.gzip file and renames it to .mbz (moodle backup zip) 
     /// </summary>
-    void WriteBackupFile();
+    void WriteBackupFile(string filepath);
 
     string GetTempDir();
 

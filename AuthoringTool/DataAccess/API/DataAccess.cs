@@ -1,4 +1,5 @@
 ﻿using AuthoringTool.API.Configuration;
+using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.Persistence;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.Entities;
@@ -26,12 +27,14 @@ internal class DataAccess : IDataAccess
     public IAuthoringToolConfiguration Configuration { get; }
 
     public IBackupFileGenerator BackupFile { get; set; }
+    public ICreateDSL CreateDsl { get; set; }
 
     public void ConstructBackup(LearningWorld learningWorld, string filepath)
     {
+        //CreateDsl.WriteLearningWorld(learningWorld);
         BackupFile.CreateBackupFolders();
         BackupFile.WriteXmlFiles();
-        BackupFile.WriteBackupFile();
+        BackupFile.WriteBackupFile(filepath);
     }
 
     public void SaveLearningWorldToFile(LearningWorld world, string filepath)

@@ -1,5 +1,6 @@
 ﻿using System;
 using AuthoringTool.API.Configuration;
+using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.Persistence;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.Entities;
