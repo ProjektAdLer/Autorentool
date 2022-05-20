@@ -151,5 +151,7 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
             .Select(entity => EntityMapping.SpaceMapper.ToViewModel(entity)).ToList();
         _elements = elementFiles.Select(filepath => BusinessLogic.LoadLearningElement(filepath))
             .Select(entity => EntityMapping.ElementMapper.ToViewModel(entity)).ToList();
+
+        _initialized = true;
     }
 }
