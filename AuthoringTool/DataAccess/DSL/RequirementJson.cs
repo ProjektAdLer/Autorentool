@@ -1,6 +1,6 @@
-﻿namespace AuthoringTool.DataAccess.ReadEntities;
+﻿namespace AuthoringTool.DataAccess.DSL;
 
-public class Requirement
+public class RequirementJson
 {
     public string type { get; set; }
     public List<int> value { get; set; }

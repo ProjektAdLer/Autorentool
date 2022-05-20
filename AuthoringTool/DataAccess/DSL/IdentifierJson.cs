@@ -1,6 +1,6 @@
-﻿namespace AuthoringTool.DataAccess.ReadEntities;
+﻿namespace AuthoringTool.DataAccess.DSL;
 
-public class Identifier
+public class IdentifierJson
 {
     public string type { get; set; }
     public string value { get; set; }
