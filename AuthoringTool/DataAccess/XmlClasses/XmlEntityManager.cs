@@ -7,6 +7,9 @@ public class XmlEntityManager
 
     public void GetFactories()
     {
+        var xmlFileFactory = new XmlFileFactory();
+        xmlFileFactory.CreateXmlFileFactory();
+        
         var xmlCourseFactory = new XmlCourseFactory();
         xmlCourseFactory.CreateXmlCourseFactory();
         
