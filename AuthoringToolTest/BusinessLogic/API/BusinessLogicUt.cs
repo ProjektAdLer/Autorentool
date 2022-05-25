@@ -1,4 +1,5 @@
-﻿using AuthoringTool.API.Configuration;
+﻿using System;
+using AuthoringTool.API.Configuration;
 using NUnit.Framework;
 using AuthoringTool.DataAccess.API;
 using AuthoringTool.Entities;
@@ -117,7 +118,8 @@ public class BusinessLogicUt
     public void BusinessLogic_SaveLearningElement_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
-        var learningElement = new LearningElement("fa", "f", "f", "f", "f", null,"f", "f", "f");
+        var content = new LearningContent("a", "b", Array.Empty<byte>());
+        var learningElement = new LearningElement("fa", "f", "f", content, "f", "f", "f");
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
@@ -142,7 +144,8 @@ public class BusinessLogicUt
     public void BusinessLogic_LoadLearningElement_ReturnsLearningElement()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
-        var learningElement = new LearningElement("fa","a", "f", "f", "f", null,"f", "f", "f");
+        var content = new LearningContent("a", "b", Array.Empty<byte>());
+        var learningElement = new LearningElement("fa","a", "f", content, "f", "f", "f");
         mockDataAccess.LoadLearningElementFromFile("foobar").Returns(learningElement);
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);

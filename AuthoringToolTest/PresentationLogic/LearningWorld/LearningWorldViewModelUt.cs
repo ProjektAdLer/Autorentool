@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
@@ -19,8 +21,10 @@ public class LearningWorldViewModelUt
         var Language = "german";
         var Description = "very cool element";
         var Goals = "learn very many things";
-        var ele1 = new LearningElementViewModel("a", "b", null, "e", "f",null, "g","h" ,"i",17, 23);
-        var ele2 = new LearningElementViewModel("z", "zz", null,  "zzz", "z",null, "z","zz","zzz", 444, double.MaxValue);
+        var content1 = new LearningContentViewModel("a", "b", new byte[]{0x01,0x02});
+        var content2 = new LearningContentViewModel("z", "e", new byte[]{0x05,0x01});
+        var ele1 = new LearningElementViewModel("a", "b", null, content1, "e", "f", "g",17, 23);
+        var ele2 = new LearningElementViewModel("z", "zz", null,  content2, "z","zzz", "z", 444, double.MaxValue);
         var LearningElements = new List<LearningElementViewModel> { ele1, ele2 };
         var space1 = new LearningSpaceViewModel("ff", "ff", "ff", "ff", "ff");
         var LearningSpaces = new List<LearningSpaceViewModel> { space1 };

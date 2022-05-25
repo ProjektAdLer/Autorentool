@@ -1,5 +1,6 @@
 using AuthoringTool.Components.ModalDialog;
 using AuthoringTool.PresentationLogic.API;
+using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningWorld;
 
@@ -129,20 +130,19 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
     /// <param name="name">Name of the element.</param>
     /// <param name="shortname">Shortname of the element.</param>
     /// <param name="parent">Parent of the learning element (selected learning space)</param>
-    /// <param name="elementType">The represented type of the element in the space.</param>
-    /// <param name="contentType">Describes, which content the element contains.</param>
+    /// <param name="learningContent">The content of the element.</param>
     /// <param name="authors">A list of authors of the element.</param>
     /// <param name="description">A description of the element.</param>
     /// <param name="goals">The goals of the element.</param>
     /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
     public void CreateNewLearningElement(string name, string shortname, ILearningElementViewModelParent parent,
-        string elementType, string contentType, string authors, string description, string goals)
+        LearningContentViewModel learningContent,string authors, string description, string goals)
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
         var learningElement =
-            _learningElementPresenter.CreateNewLearningElement(name, shortname, parent, elementType,
-                contentType, authors, description, goals);
+            _learningElementPresenter.CreateNewLearningElement(name, shortname, parent, learningContent, authors,
+                description, goals);
 
         SetSelectedLearningObject(learningElement);
     }
@@ -161,13 +161,12 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
                 "Parent",
                 element.Parent switch
                 {
-                    LearningWorldViewModel => "Learning world", LearningSpaceViewModel => "Learning space",
+                    LearningWorldViewModel => ElementParentEnum.World.ToString(),
+                    LearningSpaceViewModel => ElementParentEnum.Space.ToString(),
                     _ => ""
                 }
             },
             {"Assignment", element.Parent.Name},
-            {"Type", element.ElementType},
-            {"Content", element.ContentType},
             {"Authors", element.Authors},
             {"Description", element.Description},
             {"Goals", element.Goals},
@@ -183,31 +182,22 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
         learningElement.Parent = LearningSpaceVm;
         LearningSpaceVm.LearningElements.Add(learningElement);
     }
-
-    public async Task LoadLearningContent()
+    
+    private async Task<LearningContentViewModel> LoadLearningContent(ContentTypeEnum contentType)
     {
         if (LearningSpaceVm == null)
         {
             throw new ApplicationException("SelectedLearningSpace is null");
         }
-        if (LearningSpaceVm.SelectedLearningObject == null)
-        {
-            throw new ApplicationException("SelectedLearningObject is null");
-        }
-        if (LearningSpaceVm.SelectedLearningObject is not LearningElementViewModel elementViewModel)
-        {
-            throw new ApplicationException("SelectedLearningObject is not a Learning Element");
-        }
 
-        elementViewModel.LearningContent = elementViewModel.ContentType switch
-            {
-                null => throw new ApplicationException("ContentType is null"),
-                "Picture" => await _presentationLogic.LoadImageAsync(),
-                "Video" => await _presentationLogic.LoadVideoAsync(),
-                "H5P" => await _presentationLogic.LoadH5pAsync(),
-                "PDF" => await _presentationLogic.LoadPdfAsync(),
-                _ => throw new ApplicationException("No ContentType assigned"),
-            };
+        return contentType switch
+        {
+            ContentTypeEnum.Image => await _presentationLogic.LoadImageAsync(),
+            ContentTypeEnum.Video => await _presentationLogic.LoadVideoAsync(),
+            ContentTypeEnum.Pdf => await _presentationLogic.LoadPdfAsync(),
+            ContentTypeEnum.H5P => await _presentationLogic.LoadH5pAsync(),
+            _ => throw new ApplicationException("No valid ContentType assigned")
+        };
     }
 
 
@@ -229,14 +219,24 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
         var name = data["Name"];
         var shortname = data["Shortname"];
         var parentElement = GetLearningElementParent();
-
-        var elementType = data["Type"];
-        var contentType = data["Content"];
+        if(Enum.TryParse(data["Type"], out ElementTypeEnum elementType) == false)
+            throw new ApplicationException("Couldn't parse returned element type");
+        if (Enum.TryParse(data["Content"], out ContentTypeEnum contentType) == false)
+            throw new ApplicationException("Couldn't parse returned content type");
         var description = data["Description"];
         //optional arguments
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
-        CreateNewLearningElement(name, shortname, parentElement, elementType, contentType, authors, description, goals);
+        
+        try
+        {
+            var learningContent = Task.Run(async () => await LoadLearningContent(contentType)).Result;
+            CreateNewLearningElement(name, shortname, parentElement, learningContent, authors, description, goals);
+        }
+        catch (AggregateException)
+        {
+                
+        }
         return Task.CompletedTask;
     }
 
@@ -277,8 +277,6 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
         var name = data["Name"];
         var shortname = data["Shortname"];
         var parentElement = GetLearningElementParent();
-        var elementType = data["Type"];
-        var contentType = data["Content"];
         var description = data["Description"];
         //optional arguments
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
@@ -289,36 +287,62 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
         if (LearningSpaceVm.SelectedLearningObject is not LearningElementViewModel
             learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
         _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, parentElement,
-            elementType, contentType, authors, description, goals);
+            authors, description, goals);
         return Task.CompletedTask;
     }
 
-    public IEnumerable<ModalDialogInputField> ModalDialogElementInputFields
-    {
-        get
+    public IEnumerable<ModalDialogInputField> ModalDialogCreateElementInputFields
         {
-            return new ModalDialogInputField[]
+            get
             {
-                new("Name", ModalDialogInputType.Text, true),
-                new("Shortname", ModalDialogInputType.Text, true),
-                new ModalDialogDropdownInputField("Type",
-                    new[]
-                    {
-                        new ModalDialogDropdownInputFieldChoiceMapping(null,
-                            new[] {"Transfer", "Activation", "Interaction", "Test"})
-                    }, true),
-                new ModalDialogDropdownInputField("Content",
-                    new[]
-                    {
-                        new ModalDialogDropdownInputFieldChoiceMapping(null,
-                            new[] {"Picture", "Video", "H5P", "PDF"})
-                    }, true),
-                new("Authors", ModalDialogInputType.Text),
-                new("Description", ModalDialogInputType.Text, true),
-                new("Goals", ModalDialogInputType.Text)
-            };
+                return new ModalDialogInputField[]
+                {
+                    new("Name", ModalDialogInputType.Text, true),
+                    new("Shortname", ModalDialogInputType.Text, true),
+                    new ModalDialogDropdownInputField("Type",
+                        new[]
+                        {
+                            new ModalDialogDropdownInputFieldChoiceMapping(null, 
+                                new[] {ElementTypeEnum.Transfer.ToString(), ElementTypeEnum.Activation.ToString(),
+                                    ElementTypeEnum.Interaction.ToString(), ElementTypeEnum.Test.ToString()})
+                        }, true),
+                    new ModalDialogDropdownInputField("Content",
+                        new[]
+                        {
+                            new ModalDialogDropdownInputFieldChoiceMapping(
+                                new Dictionary<string, string> {{"Type", ElementTypeEnum.Transfer.ToString()}},
+                                new[] {ContentTypeEnum.Image.ToString(), ContentTypeEnum.Video.ToString(), ContentTypeEnum.Pdf.ToString()}),
+                            new ModalDialogDropdownInputFieldChoiceMapping(
+                                new Dictionary<string, string> {{"Type", ElementTypeEnum.Activation.ToString()}},
+                                new[] {ContentTypeEnum.H5P.ToString(),ContentTypeEnum.Video.ToString()}),
+                            new ModalDialogDropdownInputFieldChoiceMapping(
+                                new Dictionary<string, string> {{"Type", ElementTypeEnum.Interaction.ToString()}},
+                                new[] {ContentTypeEnum.H5P.ToString()}),
+                            new ModalDialogDropdownInputFieldChoiceMapping(
+                                new Dictionary<string, string> {{"Type", ElementTypeEnum.Test.ToString()}},
+                                new[] {ContentTypeEnum.H5P.ToString()})
+                        }, true),
+                    new("Authors", ModalDialogInputType.Text),
+                    new("Description", ModalDialogInputType.Text, true),
+                    new("Goals", ModalDialogInputType.Text)
+                };
+            }
         }
-    }
+        
+        public IEnumerable<ModalDialogInputField> ModalDialogEditElementInputFields
+        {
+            get
+            {
+                return new ModalDialogInputField[]
+                {
+                    new("Name", ModalDialogInputType.Text, true),
+                    new("Shortname", ModalDialogInputType.Text, true),
+                    new("Authors", ModalDialogInputType.Text),
+                    new("Description", ModalDialogInputType.Text, true),
+                    new("Goals", ModalDialogInputType.Text)
+                };
+            }
+        }
 
     #endregion
 

@@ -94,7 +94,7 @@ public class CreateDSL : ICreateDSL
             {
                 id = learningElementId,
                 identifier = learningElementIdentifier,
-                elementType = learningElement.ContentType,
+                //elementType = learningElement.ContentType,
             };
             
             learningElementId++;

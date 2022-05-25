@@ -17,8 +17,7 @@ public class LearningElementMapper : ILearningElementMapper
     public Entities.LearningElement ToEntity(LearningElementViewModel viewModel)
     {
         return new Entities.LearningElement(viewModel.Name, viewModel.Shortname,
-            viewModel.ElementType, viewModel.Parent?.Name, viewModel.ContentType,
-            viewModel.LearningContent == null ? null : _contentMapper.ToEntity(viewModel.LearningContent),
+            viewModel.Parent?.Name, _contentMapper.ToEntity(viewModel.LearningContent),
             viewModel.Authors, viewModel.Description, viewModel.Goals, viewModel.PositionX, viewModel.PositionY);
     }
 
@@ -32,7 +31,7 @@ public class LearningElementMapper : ILearningElementMapper
                 $"caller was not null but caller.Name != entity.ParentName: {caller.Name}!={entity.ParentName}");
         }
         return new LearningElementViewModel(entity.Name, entity.Shortname, caller,
-            entity.ElementType, entity.ContentType, _contentMapper.ToViewModel(entity.Content), entity.Authors,
-            entity.Description, entity.Goals, entity.PositionX, entity.PositionY);
+            _contentMapper.ToViewModel(entity.Content), entity.Authors, entity.Description, entity.Goals,
+            entity.PositionX, entity.PositionY);
     }
 }

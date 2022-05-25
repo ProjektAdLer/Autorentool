@@ -20,7 +20,7 @@ public class LearningElementMapperUt
         var contentMapper = Substitute.For<ILearningContentMapper>();
         var contentViewModel = new LearningContentViewModel("a", "b", Array.Empty<byte>());
         var world = new LearningWorldViewModel("baba", "bubu", "", "", "", "");
-        var viewModel = new LearningElementViewModel("name", "shortname", world, "type", "content", contentViewModel,"authors",
+        var viewModel = new LearningElementViewModel("name", "shortname", world, contentViewModel,"authors",
             "description", "goals", 1, 2);
 
         contentMapper.ToEntity(contentViewModel).Returns(new LearningContent("a", "b", Array.Empty<byte>()));
@@ -35,8 +35,6 @@ public class LearningElementMapperUt
             Assert.That(entity.Name, Is.EqualTo(viewModel.Name));
             Assert.That(entity.Shortname, Is.EqualTo(viewModel.Shortname));
             Assert.That(entity.ParentName, Is.EqualTo(viewModel.Parent!.Name));
-            Assert.That(entity.ElementType, Is.EqualTo(viewModel.ElementType));
-            Assert.That(entity.ContentType, Is.EqualTo(viewModel.ContentType));
             Assert.That(entity.Authors, Is.EqualTo(viewModel.Authors));
             Assert.That(entity.Description, Is.EqualTo(viewModel.Description));
             Assert.That(entity.Goals, Is.EqualTo(viewModel.Goals));
@@ -51,7 +49,7 @@ public class LearningElementMapperUt
         var contentMapper = Substitute.For<ILearningContentMapper>();
         var world = new LearningWorldViewModel("bubu", "", "", "", "", "");
         var content = new LearningContent("content", "pdf", Array.Empty<byte>());
-        var entity = new AuthoringTool.Entities.LearningElement("name", "shortname", "type",world.Name, "content",content, "authors", "description",
+        var entity = new AuthoringTool.Entities.LearningElement("name", "shortname",world.Name, content,"authors", "description",
             "goals", 1, 2);
         
         var systemUnderTest = CreateTestableLearningElementMapper(null,contentMapper);
@@ -66,8 +64,6 @@ public class LearningElementMapperUt
             Assert.That(viewModel.Name, Is.EqualTo(entity.Name));
             Assert.That(viewModel.Shortname, Is.EqualTo(entity.Shortname));
             Assert.That(viewModel.Parent, Is.EqualTo(world));
-            Assert.That(viewModel.ElementType, Is.EqualTo(entity.ElementType));
-            Assert.That(viewModel.ContentType, Is.EqualTo(entity.ContentType));
             Assert.That(viewModel.LearningContent, Is.Not.Null);
             Assert.That(viewModel.LearningContent?.Name, Is.EqualTo(entity.Content.Name));
             Assert.That(viewModel.LearningContent?.Type, Is.EqualTo(entity.Content.Type));
@@ -84,7 +80,7 @@ public class LearningElementMapperUt
     public void LearningElementMapper_ToViewModel_LogsSanityCheck()
     {
         var world = new LearningWorldViewModel("bubu", "", "", "", "", "");
-        var entity = new AuthoringTool.Entities.LearningElement("name", "shortname", "type","blabla", "content", null, "authors", "description",
+        var entity = new AuthoringTool.Entities.LearningElement("name", "shortname", "blabla",null, "authors", "description",
             "goals", 1, 2);
         var logger = Substitute.For<ILogger<LearningElementMapper>>();
         
@@ -97,8 +93,6 @@ public class LearningElementMapperUt
             Assert.That(viewModel.Name, Is.EqualTo(entity.Name));
             Assert.That(viewModel.Shortname, Is.EqualTo(entity.Shortname));
             Assert.That(viewModel.Parent, Is.EqualTo(world));
-            Assert.That(viewModel.ElementType, Is.EqualTo(entity.ElementType));
-            Assert.That(viewModel.ContentType, Is.EqualTo(entity.ContentType));
             Assert.That(viewModel.Authors, Is.EqualTo(entity.Authors));
             Assert.That(viewModel.Description, Is.EqualTo(entity.Description));
             Assert.That(viewModel.Goals, Is.EqualTo(entity.Goals));
