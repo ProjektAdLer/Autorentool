@@ -71,12 +71,8 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
             return false;
         }
         
-        //construct a file path (automatically without user input)
-        //check if file at file path exists already
-        //if yes, append _n where n is tries and try again
-        //if no, save file
-        //if file successfully saved, add object to correct collection
-        //return true
+        //In the future, we might have to load only partial object here instead of the real deal
+        //because e.g. worlds with many, many elements might become very large and we don't want to load those before we need them
         var savePath = FindSuitableSavePath(obj);
         switch (obj)
         {

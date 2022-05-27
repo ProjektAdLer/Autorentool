@@ -48,12 +48,19 @@ public class Startup
         services.AddSingleton<IPresentationLogic, PresentationLogic>();
         services.AddSingleton<IAuthoringTool, AuthoringTool.API.AuthoringTool>();
         services.AddSingleton<ILearningWorldPresenter, LearningWorldPresenter>();
+        services.AddSingleton(p =>
+            (ILearningWorldPresenterToolboxInterface)p.GetService(typeof(ILearningWorldPresenter))!);
         services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
         services.AddSingleton<ILearningElementPresenter, LearningElementPresenter>();
+        services.AddSingleton(p =>
+            (ILearningSpacePresenterToolboxInterface)p.GetService(typeof(ILearningSpacePresenter))!);
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
         services.AddSingleton<AuthoringToolWorkspacePresenter>();
+        services.AddSingleton(p =>
+            (IAuthoringToolWorkspacePresenterToolboxInterface)p.GetService(typeof(AuthoringToolWorkspacePresenter))!);
         services.AddSingleton<IAbstractToolboxRenderFragmentFactory, ToolboxRenderFragmentFactory>();
         services.AddSingleton<IToolboxEntriesProviderModifiable, ToolboxEntriesProvider>();
+        services.AddSingleton<IToolboxController, ToolboxController>();
         services.AddSingleton(p => (IToolboxEntriesProvider)p.GetService(typeof(IToolboxEntriesProviderModifiable))!);
         //ViewModel <-> Entity Mappers
         services.AddSingleton<ILearningElementMapper, LearningElementMapper>();

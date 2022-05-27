@@ -1,5 +1,7 @@
 @using AuthoringTool.PresentationLogic
-<div class="col-3 element text-center text-wrap @CssClassSelector">
+@using AuthoringTool.PresentationLogic.Toolbox
+@inject IToolboxController toolboxController
+<div class="col-3 element text-center text-wrap @CssClassSelector" @ondblclick="() => toolboxController.LoadObjectIntoWorkspace(obj)">
     @obj.Name
     @if (ChildContent != null)
     {

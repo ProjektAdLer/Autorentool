@@ -9,7 +9,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
 /// <summary>
 /// The AuthoringToolWorkspacePresenter is the central component that controls changes to the <see cref="AuthoringToolWorkspaceViewModel"/>.
 /// </summary>
-public class AuthoringToolWorkspacePresenter
+public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenterToolboxInterface
 {
     public AuthoringToolWorkspacePresenter(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
         IPresentationLogic presentationLogic,
@@ -191,10 +191,9 @@ public class AuthoringToolWorkspacePresenter
                 shortname, authors, language, description, goals);
         OnLearningWorldEdit?.Invoke(this, _authoringToolWorkspaceVm.SelectedLearningWorld);
     }
-
-    public async Task LoadLearningWorldAsync()
+    
+    public void AddLearningWorld(LearningWorldViewModel learningWorld)
     {
-        var learningWorld = await _presentationLogic.LoadLearningWorldAsync();
         if (_authoringToolWorkspaceVm.LearningWorlds.Any(world => world.Name == learningWorld.Name))
         {
             WorldToReplaceWith = learningWorld;
@@ -202,6 +201,12 @@ public class AuthoringToolWorkspacePresenter
         }
 
         _authoringToolWorkspaceVm.LearningWorlds.Add(learningWorld);
+    }
+
+    public async Task LoadLearningWorldAsync()
+    {
+        var learningWorld = await _presentationLogic.LoadLearningWorldAsync();
+        AddLearningWorld(learningWorld);
     }
 
     public void ReplaceLearningWorld(LearningWorldViewModel toReplace)

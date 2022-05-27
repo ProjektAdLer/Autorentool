@@ -5,8 +5,10 @@ using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
+using AuthoringTool.PresentationLogic.Toolbox;
 using AuthoringTool.View.Toolbox;
 using Bunit;
+using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NUnit.Framework;
 using TestContext = Bunit.TestContext;
@@ -18,12 +20,15 @@ public class ToolboxRenderFragmentFactoryUt
 {
 #pragma warning disable CS8618
     private TestContext _testContext;
+    private IToolboxController _toolboxController;
 #pragma warning restore CS8618
     
     [SetUp]
     public void Setup()
     {
         _testContext = new TestContext();
+        _toolboxController = Substitute.For<IToolboxController>();
+        _testContext.Services.Add(new ServiceDescriptor(typeof(IToolboxController), _toolboxController));
     }
     
     [Test]

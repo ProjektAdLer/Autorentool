@@ -5,7 +5,7 @@ using AuthoringTool.PresentationLogic.LearningSpace;
 
 namespace AuthoringTool.PresentationLogic.LearningWorld;
 
-internal class LearningWorldPresenter : ILearningWorldPresenter
+internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPresenterToolboxInterface
 {
     public LearningWorldPresenter(
         IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter,
@@ -22,6 +22,9 @@ internal class LearningWorldPresenter : ILearningWorldPresenter
     private readonly ILearningElementPresenter _learningElementPresenter;
     private readonly ILogger<LearningWorldPresenter> _logger;
 
+    /// <summary>
+    /// The currently selected LearningWorldViewModel.
+    /// </summary>
     public LearningWorldViewModel? LearningWorldVm { get; private set; }
 
     public bool SelectedLearningObjectIsSpace =>
@@ -85,7 +88,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter
             throw new ApplicationException("SelectedLearningWorld is null");
         var learningSpace =
             _learningSpacePresenter.CreateNewLearningSpace(name, shortname, authors, description, goals);
-        LearningWorldVm.LearningSpaces.Add(learningSpace);
+        AddLearningSpace(learningSpace);
         SetSelectedLearningObject(learningSpace);
     }
 
@@ -108,6 +111,16 @@ internal class LearningWorldPresenter : ILearningWorldPresenter
         };
         EditLearningSpaceDialogOpen = true;
     }
+    
+    /// <inheritdoc cref="ILearningWorldPresenter.AddLearningSpace"/>
+    public void AddLearningSpace(LearningSpaceViewModel learningSpace)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        if (LearningWorldVm.LearningSpaces.Any(space => space.Name == learningSpace.Name))
+            throw new ApplicationException("World already contains a space with same name");
+        LearningWorldVm.LearningSpaces.Add(learningSpace);
+    }
 
     /// <summary>
     /// Calls the LoadLearningSpaceAsync methode in <see cref="_presentationLogic"/> and adds the returned learning space to the current learning world.
@@ -116,9 +129,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter
     public async Task LoadLearningSpace()
     {
         var learningSpace = await _presentationLogic.LoadLearningSpaceAsync();
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        LearningWorldVm.LearningSpaces.Add(learningSpace);
+        AddLearningSpace(learningSpace);
     }
 
     /// <summary>
@@ -260,14 +271,21 @@ internal class LearningWorldPresenter : ILearningWorldPresenter
         };
         EditLearningElementDialogOpen = true;
     }
+    
+    public void AddLearningElement(LearningElementViewModel learningElement)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        if (LearningWorldVm.LearningElements.Any(elements => elements.Name == learningElement.Name))
+            throw new ApplicationException("World already contains an element with same name");
+        learningElement.Parent = LearningWorldVm;
+        LearningWorldVm.LearningElements.Add(learningElement);
+    }
 
     public async Task LoadLearningElement()
     {
         var learningElement = await _presentationLogic.LoadLearningElementAsync();
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        learningElement.Parent = LearningWorldVm;
-        LearningWorldVm.LearningElements.Add(learningElement);
+        AddLearningElement(learningElement);
     }
 
     public async Task LoadLearningContent()
