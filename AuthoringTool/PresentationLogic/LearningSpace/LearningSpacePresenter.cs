@@ -147,6 +147,11 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
         SetSelectedLearningObject(learningElement);
     }
 
+    /// <summary>
+    /// Sets the initial values for the <see cref="ModalDialog"/> with the current values from the selected LearningElement.
+    /// </summary>
+    /// <exception cref="ApplicationException">Thrown if SelectedLearningObject is not a LearningElementViewModel.
+    /// Shouldn't occur, because this is checked in <see cref="OpenEditSelectedLearningObjectDialog"/></exception>
     private void OpenEditSelectedLearningElementDialog()
     {
         if (LearningSpaceVm?.SelectedLearningObject is not LearningElementViewModel
@@ -174,6 +179,11 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
         EditLearningElementDialogOpen = true;
     }
 
+    /// <summary>
+    /// Calls the LoadLearningElementAsync method in <see cref="_presentationLogic"/> and adds the returned
+    /// learning element to its parent.
+    /// </summary>
+    /// <exception cref="ApplicationException">Thrown if <see cref="LearningSpaceVm"/> is null</exception>
     public async Task LoadLearningElement()
     {
         var learningElement = await _presentationLogic.LoadLearningElementAsync();
@@ -183,6 +193,12 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
         LearningSpaceVm.LearningElements.Add(learningElement);
     }
     
+    /// <summary>
+    /// Calls a load method in <see cref="_presentationLogic"/> depending on the content type and returns a
+    /// LearningContentViewModel.
+    /// </summary>
+    /// <param name="contentType">The type of the content that can either be an image, a video, a pdf or a h5p.</param>
+    /// <exception cref="ApplicationException">Thrown if there is no valid ContentType assigned.</exception>
     private async Task<LearningContentViewModel> LoadLearningContent(ContentTypeEnum contentType)
     {
         if (LearningSpaceVm == null)
@@ -200,7 +216,12 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
         };
     }
 
-
+    /// <summary>
+    /// Creates a learning element with dialog return values after a content has been loaded.
+    /// </summary>
+    /// <param name="returnValueTuple">Modal dialog return values.</param>
+    /// <exception cref="ApplicationException">Thrown if dialog data null or dropdown value or one of the dropdown
+    /// values couldn't get parsed into enum.</exception>
     public Task OnCreateElementDialogClose(
         Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
     {
@@ -240,6 +261,10 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Returns the parent of the learning element which is the selected learning space.
+    /// </summary>
+    /// <exception cref="Exception">Thrown if parent element is null.</exception>
     private ILearningElementViewModelParent GetLearningElementParent()
     {
         ILearningElementViewModelParent? parentElement = LearningSpaceVm;
@@ -255,10 +280,9 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
     /// <summary>
     /// Changes property values of learning element viewmodel with return values of dialog
     /// </summary>
-    /// <param name="returnValueTuple">Return values of dialog</param>
-    /// <returns></returns>
+    /// <param name="returnValueTuple">Return values of dialog.</param>
     /// <exception cref="ApplicationException">Thrown if return values of dialog are null
-    /// or selected learning object is not a learning element</exception>
+    /// or selected learning object is not a learning element.</exception>
     public Task OnEditElementDialogClose(
         Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
     {

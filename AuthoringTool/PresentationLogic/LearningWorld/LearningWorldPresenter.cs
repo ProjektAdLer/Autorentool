@@ -233,6 +233,11 @@ internal class LearningWorldPresenter : ILearningWorldPresenter
         SetSelectedLearningObject(learningElement);
     }
 
+    /// <summary>
+    /// Sets the initial values for the <see cref="ModalDialog"/> with the current values from the selected LearningElement.
+    /// </summary>
+    /// <exception cref="ApplicationException">Thrown if SelectedLearningObject is not a LearningElementViewModel.
+    /// Shouldn't occur, because this is checked in <see cref="OpenEditSelectedLearningObjectDialog"/></exception>
     private void OpenEditSelectedLearningElementDialog()
     {
         if (LearningWorldVm?.SelectedLearningObject is not LearningElementViewModel
@@ -260,6 +265,11 @@ internal class LearningWorldPresenter : ILearningWorldPresenter
         EditLearningElementDialogOpen = true;
     }
 
+    /// <summary>
+    /// Calls the LoadLearningElementAsync method in <see cref="_presentationLogic"/> and adds the returned
+    /// learning element to its parent.
+    /// </summary>
+    /// <exception cref="ApplicationException">Thrown if <see cref="LearningWorldVm"/> is null</exception>
     public async Task LoadLearningElement()
     {
         var learningElement = await _presentationLogic.LoadLearningElementAsync();
@@ -269,6 +279,12 @@ internal class LearningWorldPresenter : ILearningWorldPresenter
         LearningWorldVm.LearningElements.Add(learningElement);
     }
 
+    /// <summary>
+    /// Calls a load method in <see cref="_presentationLogic"/> depending on the content type and returns a
+    /// LearningContentViewModel.
+    /// </summary>
+    /// <param name="contentType">The type of the content that can either be an image, a video, a pdf or a h5p.</param>
+    /// <exception cref="ApplicationException">Thrown if there is no valid ContentType assigned.</exception>
     private async Task<LearningContentViewModel> LoadLearningContent(ContentTypeEnum contentType)
     {
         if (LearningWorldVm == null)
@@ -286,7 +302,12 @@ internal class LearningWorldPresenter : ILearningWorldPresenter
         };
     }
 
-
+    /// <summary>
+    /// Creates a learning element with dialog return values after a content has been loaded.
+    /// </summary>
+    /// <param name="returnValueTuple">Modal dialog return values.</param>
+    /// <exception cref="ApplicationException">Thrown if dialog data null or dropdown value or one of the dropdown
+    /// values couldn't get parsed into enum.</exception>
     public Task OnCreateElementDialogClose(
         Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
     {
@@ -329,6 +350,13 @@ internal class LearningWorldPresenter : ILearningWorldPresenter
         return Task.CompletedTask;
     }
 
+    /// <summary>
+    /// Returns the parent viewmodel of the learning element. 
+    /// </summary>
+    /// <param name="parent">Type of parent that can be either a space or a world.</param>
+    /// <param name="assignment">Name of the parent.</param>
+    /// <exception cref="ApplicationException">Thrown if parent is neither a space or a world.</exception>
+    /// <exception cref="Exception">Thrown if parent element is null</exception>
     private ILearningElementViewModelParent GetLearningElementParent(ElementParentEnum parent, string assignment)
     {
         ILearningElementViewModelParent? parentElement = parent switch
