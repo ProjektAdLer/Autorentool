@@ -17,4 +17,7 @@ public interface IBusinessLogic
     void SaveLearningElement(LearningElement learningElement, string filepath);
     LearningElement LoadLearningElement(string filepath);
     LearningContent LoadLearningContent(string filepath);
+    LearningWorld LoadLearningWorldFromStream(Stream stream);
+    LearningSpace LoadLearningSpaceFromStream(Stream stream);
+    LearningElement LoadLearningElementFromStream(Stream stream);
 }

@@ -64,7 +64,22 @@ internal class BusinessLogic : IBusinessLogic
     {
         return DataAccess.LoadLearningContentFromFile(filepath);
     }
-    
+
+    public LearningWorld LoadLearningWorldFromStream(Stream stream)
+    {
+        return DataAccess.LoadLearningWorldFromStream(stream);
+    }
+
+    public LearningSpace LoadLearningSpaceFromStream(Stream stream)
+    {
+        return DataAccess.LoadLearningSpaceFromStream(stream);
+    }
+
+    public LearningElement LoadLearningElementFromStream(Stream stream)
+    {
+        return DataAccess.LoadLearningElementFromStream(stream);
+    }
+
     public IAuthoringToolConfiguration Configuration { get; }
   
 }

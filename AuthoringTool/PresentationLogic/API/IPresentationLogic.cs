@@ -116,4 +116,7 @@ public interface IPresentationLogic
     /// </summary>
     /// <returns></returns>
     Task<LearningContentViewModel> LoadPdfAsync();
+    LearningWorldViewModel LoadLearningWorldViewModelFromStream(Stream stream);
+    LearningSpaceViewModel LoadLearningSpaceViewModelFromStream(Stream stream);
+    LearningElementViewModel LoadLearningElementViewModelFromStream(Stream stream);
 }

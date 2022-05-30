@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using AuthoringTool.API.Configuration;
 using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.Persistence;
@@ -72,6 +73,18 @@ public class DataAccessUt
 
         mockFileSaveHandlerWorld.Received().LoadFromDisk("C:/nonsense");
     }
+    
+    [Test]
+    public void DataAccess_LoadLearningWorldFromStream_CallsFileSaveHandlerWorld()
+    {
+        var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<LearningWorld>>();
+        var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerWorld: mockFileSaveHandlerWorld);
+        var stream = Substitute.For<Stream>();
+
+        systemUnderTest.LoadLearningWorldFromStream(stream);
+
+        mockFileSaveHandlerWorld.Received().LoadFromStream(stream);
+    }
 
     [Test]
     public void DataAccess_SaveLearningSpaceToFile_CallsFileSaveHandlerSpace()
@@ -96,6 +109,18 @@ public class DataAccessUt
         systemUnderTest.LoadLearningSpaceFromFile("C:/nonsense");
 
         mockFileSaveHandlerSpace.Received().LoadFromDisk("C:/nonsense");
+    }
+    
+    [Test]
+    public void DataAccess_LoadLearningSpaceFromStream_CallsFileSaveHandlerWorld()
+    {
+        var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<LearningSpace>>();
+        var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerSpace: mockFileSaveHandlerSpace);
+        var stream = Substitute.For<Stream>();
+
+        systemUnderTest.LoadLearningSpaceFromStream(stream);
+
+        mockFileSaveHandlerSpace.Received().LoadFromStream(stream);
     }
 
     [Test]
@@ -122,6 +147,18 @@ public class DataAccessUt
         systemUnderTest.LoadLearningElementFromFile("C:/nonsense");
 
         mockFileSaveHandlerElement.Received().LoadFromDisk("C:/nonsense");
+    }
+    
+    [Test]
+    public void DataAccess_LoadLearningElementFromStream_CallsFileSaveHandlerElement()
+    {
+        var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElement>>();
+        var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerElement: mockFileSaveHandlerElement);
+        var stream = Substitute.For<Stream>();
+
+        systemUnderTest.LoadLearningElementFromStream(stream);
+
+        mockFileSaveHandlerElement.Received().LoadFromStream(stream);
     }
 
     private static AuthoringTool.DataAccess.API.DataAccess CreateTestableDataAccess(

@@ -1,5 +1,6 @@
 ﻿using AuthoringTool.Components.ModalDialog;
 using AuthoringTool.PresentationLogic.API;
+using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
 using AuthoringTool.PresentationLogic.LearningElement;
@@ -330,5 +331,75 @@ public class AuthoringToolWorkspacePresenter
             _shutdownManager.BeginShutdown();
     }
 
+    #endregion
+
+    #region DragAndDrop
+
+    public Task ProcessDragAndDropResult(Tuple<string, Stream> result)
+    {
+        var (name, stream) = result;
+        var ending = name.Split(".").Last().ToLower();
+        switch (ending)
+        {
+            case "awf":
+                LoadLearningWorldFromFileStream(stream);
+                break;
+            case "asf":
+                LoadLearningSpaceFromFileStream(stream);
+                break;
+            case "aef":
+                LoadLearningElementFromFileStream(stream);
+                break;
+            default:
+                _logger.LogInformation($"Couldn't load file '{name}', because the file extension '{ending}' is not supported.");
+                break;
+        }
+
+        return Task.CompletedTask;
+    }
+
+    internal void LoadLearningWorldFromFileStream(Stream stream)
+    {
+        var learningWorld =
+            _presentationLogic.LoadLearningWorldViewModelFromStream(stream);
+        if (_authoringToolWorkspaceVm.LearningWorlds.Any(w => w.Name == learningWorld.Name))
+        {
+            WorldToReplaceWith = learningWorld;
+        }
+
+        _authoringToolWorkspaceVm.LearningWorlds.Add(learningWorld);
+        _authoringToolWorkspaceVm.SelectedLearningWorld ??= learningWorld;
+        OnLearningWorldSelect?.Invoke(this, _authoringToolWorkspaceVm.SelectedLearningWorld);
+    }
+
+    internal void LoadLearningSpaceFromFileStream(Stream stream)
+    {
+        var learningSpace =
+            _presentationLogic.LoadLearningSpaceViewModelFromStream(stream);
+        if (_authoringToolWorkspaceVm.SelectedLearningWorld == null) return;
+        _authoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces.Add(learningSpace);
+        _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject = learningSpace;
+    }
+
+    internal void LoadLearningElementFromFileStream(Stream stream)
+    {
+        var learningElement =
+            _presentationLogic.LoadLearningElementViewModelFromStream(stream);
+        if (_authoringToolWorkspaceVm.SelectedLearningWorld is not { } world) return;
+        if (world.ShowingLearningSpaceView)
+        {
+            if (_learningSpacePresenter.LearningSpaceVm is not { } space) return;
+            learningElement.Parent = space;
+            space.LearningElements.Add(learningElement);
+            space.SelectedLearningObject = learningElement;
+        }
+        else
+        {
+            learningElement.Parent = world;
+            world.LearningElements.Add(learningElement);
+            world.SelectedLearningObject = learningElement;
+        }
+    }
+    
     #endregion
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using AuthoringTool.API.Configuration;
 using AuthoringTool.BusinessLogic.API;
@@ -888,6 +889,119 @@ public class PresentationLogicUt
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
         mockLogger.Received().LogInformation("Load dialog cancelled by user");
     }
+    #endregion
+    
+    #region LoadFromStream
+
+    [Test]
+    public void PresentationLogic_LoadLearningWorldViewModelFromStream_ReturnsLearningWorld()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockLearningWorld = new AuthoringTool.Entities.LearningWorld("n", "sn", "a", "l", "d", "g");
+        mockBusinessLogic.LoadLearningWorldFromStream(Arg.Any<Stream>()).Returns(mockLearningWorld);
+        var mockLearningWorldViewModel = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
+        var mockWorldMapper = Substitute.For<ILearningWorldMapper>();
+        mockWorldMapper.ToViewModel(Arg.Any<AuthoringTool.Entities.LearningWorld>())
+            .Returns(mockLearningWorldViewModel);
+        var stream = Substitute.For<Stream>();
+
+        var systemUnderTest =
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, worldMapper: mockWorldMapper);
+
+        var result = systemUnderTest.LoadLearningWorldViewModelFromStream(stream);
+
+        mockBusinessLogic.Received().LoadLearningWorldFromStream(stream);
+        mockWorldMapper.Received().ToViewModel(mockLearningWorld);
+        Assert.That(result, Is.EqualTo(mockLearningWorldViewModel));
+    }
+
+    [Test]
+    public void PresentationLogic_LoadLearningWorldViewModelFromStream_CatchesException()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.LoadLearningWorldFromStream(Arg.Any<Stream>()).Throws(new Exception("Exception"));
+        var stream = Substitute.For<Stream>();
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+
+        var ex = Assert.Throws<Exception>(() => systemUnderTest.LoadLearningWorldViewModelFromStream(stream));
+        Assert.That(ex, Is.Not.Null);
+        Assert.That(ex?.Message, Is.EqualTo("Exception"));
+    }
+    
+    [Test]
+    public void PresentationLogic_LoadLearningSpaceViewModelFromStream_ReturnsLearningWorld()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockLearningSpace = new AuthoringTool.Entities.LearningSpace("n", "sn", "a", "d", "g");
+        mockBusinessLogic.LoadLearningSpaceFromStream(Arg.Any<Stream>()).Returns(mockLearningSpace);
+        var mockLearningSpaceViewModel = new LearningSpaceViewModel("n", "sn", "a", "d", "g");
+        var mockSpaceMapper = Substitute.For<ILearningSpaceMapper>();
+        mockSpaceMapper.ToViewModel(Arg.Any<AuthoringTool.Entities.LearningSpace>())
+            .Returns(mockLearningSpaceViewModel);
+        var stream = Substitute.For<Stream>();
+
+        var systemUnderTest =
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, spaceMapper: mockSpaceMapper);
+
+        var result = systemUnderTest.LoadLearningSpaceViewModelFromStream(stream);
+
+        mockBusinessLogic.Received().LoadLearningSpaceFromStream(stream);
+        mockSpaceMapper.Received().ToViewModel(mockLearningSpace);
+        Assert.That(result, Is.EqualTo(mockLearningSpaceViewModel));
+    }
+
+    [Test]
+    public void PresentationLogic_LoadLearningSpaceViewModelFromStream_CatchesException()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.LoadLearningSpaceFromStream(Arg.Any<Stream>()).Throws(new Exception("Exception"));
+        var stream = Substitute.For<Stream>();
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+
+        var ex = Assert.Throws<Exception>(() => systemUnderTest.LoadLearningSpaceViewModelFromStream(stream));
+        Assert.That(ex, Is.Not.Null);
+        Assert.That(ex?.Message, Is.EqualTo("Exception"));
+    }
+    
+    [Test]
+    public void PresentationLogic_LoadLearningElementViewModelFromStream_ReturnsLearningWorld()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockLearningElement = new AuthoringTool.Entities.LearningElement("n", "sn", "pn",null, "a", "d", "g");
+        mockBusinessLogic.LoadLearningElementFromStream(Arg.Any<Stream>()).Returns(mockLearningElement);
+        var mockLearningContent = new LearningContentViewModel("n", "t", Array.Empty<byte>());
+        var mockLearningElementViewModel = new LearningElementViewModel("n", "sn", null, mockLearningContent, "a", "d", "g");
+        var mockElementMapper = Substitute.For<ILearningElementMapper>();
+        mockElementMapper.ToViewModel(Arg.Any<AuthoringTool.Entities.LearningElement>())
+            .Returns(mockLearningElementViewModel);
+        var stream = Substitute.For<Stream>();
+
+        var systemUnderTest =
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, elementMapper: mockElementMapper);
+
+        var result = systemUnderTest.LoadLearningElementViewModelFromStream(stream);
+
+        mockBusinessLogic.Received().LoadLearningElementFromStream(stream);
+        mockElementMapper.Received().ToViewModel(mockLearningElement);
+        Assert.That(result, Is.EqualTo(mockLearningElementViewModel));
+    }
+
+    [Test]
+    public void PresentationLogic_LoadLearningElementViewModelFromStream_CatchesException()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.LoadLearningElementFromStream(Arg.Any<Stream>()).Throws(new Exception("Exception"));
+        var stream = Substitute.For<Stream>();
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+
+        var ex = Assert.Throws<Exception>(() => systemUnderTest.LoadLearningElementViewModelFromStream(stream));
+        Assert.That(ex, Is.Not.Null);
+        Assert.That(ex?.Message, Is.EqualTo("Exception"));
+    }
+
     #endregion
 
     private static AuthoringTool.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(

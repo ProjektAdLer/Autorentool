@@ -1,0 +1,38 @@
+@inject ILogger<Draggable> _logger;
+
+<h3>DropZone</h3>
+
+<div @ref="dropZoneElement" class="drop-zone">
+    <label for="inputFileElement">Drop a file or paste an image from the clipboard or select a file using the input</label>
+    <InputFile id="inputFileElement" OnChange="@OnChange" @ref="inputFile" accept=".awf"/>
+</div>
+
+@code {
+
+    [Parameter, EditorRequired]
+    public EventCallback<Tuple<String, Stream>> OnNewStream { get; set; }
+
+
+    ElementReference dropZoneElement;
+    InputFile inputFile;
+
+
+    async Task OnChange(InputFileChangeEventArgs eventArgs)
+    {
+        Stream myS = new MemoryStream();
+        try
+        {
+            await eventArgs.File.OpenReadStream(1073741824L).CopyToAsync(myS);
+            myS.Position = 0;
+            await OnNewStream.InvokeAsync(new Tuple<string, Stream>(eventArgs.File.Name, myS));
+        }
+        catch (Exception e)
+        {
+            _logger.LogDebug($"{e.Message} {e.InnerException?.Message}");
+        }
+        finally
+        {
+            myS.Close();
+        }
+    }
+}

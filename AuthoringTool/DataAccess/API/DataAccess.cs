@@ -48,6 +48,11 @@ internal class DataAccess : IDataAccess
         return XmlHandlerWorld.LoadFromDisk(filepath);
     }
 
+    public LearningWorld LoadLearningWorldFromStream(Stream stream)
+    {
+        return XmlHandlerWorld.LoadFromStream(stream);
+    }
+
     public void SaveLearningSpaceToFile(LearningSpace space, string filepath)
     {
         XmlHandlerSpace.SaveToDisk(space, filepath);
@@ -56,6 +61,11 @@ internal class DataAccess : IDataAccess
     public LearningSpace LoadLearningSpaceFromFile(string filepath)
     {
         return XmlHandlerSpace.LoadFromDisk(filepath);
+    }
+
+    public LearningSpace LoadLearningSpaceFromStream(Stream stream)
+    {
+        return XmlHandlerSpace.LoadFromStream(stream);
     }
 
     public void SaveLearningElementToFile(LearningElement element, string filepath)
@@ -67,7 +77,12 @@ internal class DataAccess : IDataAccess
     {
         return XmlHandlerElement.LoadFromDisk(filepath);
     }
-    
+
+    public LearningElement LoadLearningElementFromStream(Stream stream)
+    {
+        return XmlHandlerElement.LoadFromStream(stream);
+    }
+
     public LearningContent LoadLearningContentFromFile(string filepath)
     {
         return ContentHandler.LoadFromDisk(filepath);
