@@ -11,7 +11,7 @@ using NUnit.Framework;
 namespace AuthoringToolTest.DataAccess.Persistence;
 
 [TestFixture]
-public class FileSaveHandlerUt
+public class XmlFileHandlerUt
 {
     private class TestNotSerializable
     {
@@ -53,7 +53,7 @@ public class FileSaveHandlerUt
     }
     
     [Test]
-    public void FileSaveHandler_Constructor_FailsIfTypeNotSerializable()
+    public void XmlFileHandler_Constructor_FailsIfTypeNotSerializable()
     {
         //Disable warning for test
         // ReSharper disable once ObjectCreationAsStatement
@@ -62,7 +62,7 @@ public class FileSaveHandlerUt
     }
     
     [Test]
-    public void FileSaveHandler_Constructor_FailsIfTypeDoesNotHaveParameterlessConstructor()
+    public void XmlFileHandler_Constructor_FailsIfTypeDoesNotHaveParameterlessConstructor()
     {
         //Disable warning for test
         // ReSharper disable once ObjectCreationAsStatement
@@ -71,13 +71,13 @@ public class FileSaveHandlerUt
     }
     
     [Test]
-    public void FileSaveHandler_SaveToDisk_CreatesCorrectFile()
+    public void XmlFileHandler_SaveToDisk_CreatesCorrectFile()
     {
         var obj = new TestSerializable("foo", 123);
         var mockFileSystem = new MockFileSystem();
         const string filepath = "foobar.txt";
         
-        var systemUnderTest = CreateTestableFileSaveHandler<TestSerializable>(fileSystem: mockFileSystem);
+        var systemUnderTest = CreateTestableXmlFileHandler<TestSerializable>(fileSystem: mockFileSystem);
         
         systemUnderTest.SaveToDisk(obj, filepath);
         
@@ -86,13 +86,13 @@ public class FileSaveHandlerUt
     }
 
     [Test]
-    public void FileSaveHandler_LoadFromDisk_CreatesCorrectObject()
+    public void XmlFileHandler_LoadFromDisk_CreatesCorrectObject()
     {
         var mockFileSystem = new MockFileSystem();
         const string filepath = "foobar.txt";
         mockFileSystem.AddFile(filepath, "<?xml version=\"1.0\" encoding=\"utf-8\"?><TestSerializable xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><Name>foo</Name><Number>123</Number></TestSerializable>");
         
-        var systemUnderTest = CreateTestableFileSaveHandler<TestSerializable>(fileSystem: mockFileSystem);
+        var systemUnderTest = CreateTestableXmlFileHandler<TestSerializable>(fileSystem: mockFileSystem);
 
         var objActual = systemUnderTest.LoadFromDisk(filepath);
         Assert.Multiple(() =>
@@ -103,7 +103,7 @@ public class FileSaveHandlerUt
     }
 
     [Test]
-    public void FileSaveHandler_SaveToDisk_ThrowsWrappedException()
+    public void XmlFileHandler_SaveToDisk_ThrowsWrappedException()
     {
         var mockFileSystem = new MockFileSystem();
         const string filepath = "foobar.txt";
@@ -113,7 +113,7 @@ public class FileSaveHandlerUt
         mockFileSystem.AddFile(filepath, mockFileData);
         var obj = new TestSerializable("foo", 123);
 
-        var systemUnderTest = CreateTestableFileSaveHandler<TestSerializable>(fileSystem: mockFileSystem);
+        var systemUnderTest = CreateTestableXmlFileHandler<TestSerializable>(fileSystem: mockFileSystem);
 
         var ex = Assert.Throws<SerializationException>(() => systemUnderTest.SaveToDisk(obj, filepath));
         var innerEx = ex!.InnerException;
@@ -126,11 +126,11 @@ public class FileSaveHandlerUt
     }
 
     [Test]
-    public void FileSaveHandler_LoadFromDisk_ThrowsWrappedException()
+    public void XmlFileHandler_LoadFromDisk_ThrowsWrappedException()
     {
         var mockFileSystem = new MockFileSystem();
 
-        var systemUnderTest = CreateTestableFileSaveHandler<TestSerializable>(fileSystem: mockFileSystem);
+        var systemUnderTest = CreateTestableXmlFileHandler<TestSerializable>(fileSystem: mockFileSystem);
 
         var ex = Assert.Throws<SerializationException>(() => systemUnderTest.LoadFromDisk("foo"));
         var innerEx = ex!.InnerException;
@@ -142,7 +142,7 @@ public class FileSaveHandlerUt
         Assert.That(innerEx!.GetType(), Is.EqualTo(typeof(FileNotFoundException)));
     }
 
-    private XmlFileHandler<T> CreateTestableFileSaveHandler<T>(ILogger<XmlFileHandler<T>>? logger = null, IFileSystem? fileSystem = null) where T : class
+    private XmlFileHandler<T> CreateTestableXmlFileHandler<T>(ILogger<XmlFileHandler<T>>? logger = null, IFileSystem? fileSystem = null) where T : class
     {
         logger ??= Substitute.For<ILogger<XmlFileHandler<T>>>();
         return fileSystem == null ? new XmlFileHandler<T>(logger) : new XmlFileHandler<T>(logger, fileSystem);
