@@ -154,6 +154,32 @@ public class BusinessLogicUt
 
         Assert.That(learningElementActual, Is.EqualTo(learningElement));
     }
+    
+    [Test]
+    public void BusinessLogic_LoadLearningContent_CallsDataAccess()
+    {
+        var mockDataAccess = Substitute.For<IDataAccess>();
+
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
+
+        systemUnderTest.LoadLearningContent("foobar");
+
+        mockDataAccess.Received().LoadLearningContentFromFile("foobar");
+    }
+
+    [Test]
+    public void BusinessLogic_LoadLearningContent_ReturnsLearningElement()
+    {
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        var learningContent = new LearningContent("fa","a", new byte[]{0x01,0x02,0x03});
+        mockDataAccess.LoadLearningContentFromFile("foobar").Returns(learningContent);
+
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
+
+        var learningElementActual = systemUnderTest.LoadLearningContent("foobar");
+
+        Assert.That(learningElementActual, Is.EqualTo(learningContent));
+    }
 
     private AuthoringTool.BusinessLogic.API.BusinessLogic CreateStandardBusinessLogic(
         IAuthoringToolConfiguration? fakeConfiguration = null,
