@@ -37,7 +37,12 @@ public class CourseCourseXmlUt
         var courseCourse = new CourseCourseXmlCourse();
         
         //Act
-        courseCourse.SetParameters(courseCategory);
+        courseCourse.SetParameters("learningWorld.identifier.value","learningWorld.identifier.value",
+            "","","1","topics","1","5","1645484400",
+            "2221567452","0","0","0","0","1",
+            "0","0","0","","","currentTime","currentTime",
+            "0","1","1","1","0",
+            "0","0",courseCategory, "", "", "1", "1");
         
         //Assert
         Assert.That(courseCourse.Category, Is.EqualTo(courseCategory));
@@ -56,7 +61,13 @@ public class CourseCourseXmlUt
         var courseCategory = new CourseCourseXmlCategory();
         courseCategory.SetParameters("Miscellaneous", "$@NULL@$", "1"); 
         var courseCourse = new CourseCourseXmlCourse();
-        courseCourse.SetParameters(courseCategory);
+        courseCourse.SetParameters("learningWorld.identifier.value","learningWorld.identifier.value",
+            "","","1","topics","1","5","1645484400",
+            "2221567452","0","0","0","0","1",
+            "0","0","0","","","currentTime","currentTime",
+            "0","1","1","1","0",
+            "0","0",courseCategory, "", ""
+            , "1", "1");
 
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;

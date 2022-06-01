@@ -1,10 +1,14 @@
-﻿namespace AuthoringTool.DataAccess.XmlClasses;
+﻿using AuthoringTool.DataAccess.XmlClasses.Entities;
+
+namespace AuthoringTool.DataAccess.XmlClasses;
 
 public interface IMoodleBackupXmlInformation
 {
-    void SetParameters(string name, string originalCourseId,
-        string originalCourseFormat, string originalCourseFullname, string originalCourseShortname,
-        string originalCourseContextid, string originalSystemContextid, string originalCourseStartdate, 
-        string originalCourseEnddate, MoodleBackupXmlDetails? backupDetails, MoodleBackupXmlContents? backupContents, 
-        MoodleBackupXmlSettings? backupSettings);
+    void SetParameters(string? name, string? moodleVersion, string? moodleRelease, string? backupVersion,
+        string? backupRelease, string? backupDate, string? mnetRemoteusers, string? includeFiles,
+        string? includeFileReferencesToExternalContent, string? originalWwwroot, string? originalSiteIdentifierHash,
+        string? originalCourseId, string? originalCourseFormat, string? originalCourseFullname,
+        string? originalCourseShortname, string? originalCourseStartdate, string? originalCourseEnddate,
+        string? originalCourseContextid, string? originalSystemContextid, MoodleBackupXmlDetails? details,
+        MoodleBackupXmlContents? contents, MoodleBackupXmlSettings? settings);
 }

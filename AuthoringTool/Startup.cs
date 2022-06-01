@@ -44,6 +44,7 @@ public class Startup
         services.AddSingleton<IBackupFileGenerator, BackupFileGenerator>();
         services.AddSingleton<IDataAccess, DataAccess>();
         services.AddSingleton<ICreateDSL, CreateDSL>();
+        services.AddSingleton<IReadDSL, ReadDSL>();
         services.AddSingleton<IBusinessLogic, BusinessLogic>();
         services.AddSingleton<IPresentationLogic, PresentationLogic>();
         services.AddSingleton<IAuthoringTool, AuthoringTool.API.AuthoringTool>();

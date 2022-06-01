@@ -1,4 +1,5 @@
 ﻿using System.IO.Abstractions;
+using AuthoringTool.DataAccess.DSL;
 using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Tar;
 using AuthoringTool.DataAccess.XmlClasses;
@@ -7,6 +8,10 @@ using FileSystem = System.IO.Abstractions.FileSystem;
 
 namespace AuthoringTool.DataAccess.WorldExport;
 
+/// <summary>
+/// The BackupFileGenerator creates all the folders, xml files and packs it to a .mbz file.
+/// The file will be imported to moodle.
+/// </summary>
 public class BackupFileGenerator : IBackupFileGenerator
 {
     
@@ -28,21 +33,21 @@ public class BackupFileGenerator : IBackupFileGenerator
     {
         var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport"));
+        _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities"));
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "files"));
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "course"));
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections"));
-        _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections", "section_160"));
     }
 
     /// <inheritdoc cref="IBackupFileGenerator.WriteXmlFiles"/>
-    public void WriteXmlFiles()
+    public void WriteXmlFiles(ReadDSL? readDsl)
     {
         var xmlEntityManager = new XmlEntityManager();
-        xmlEntityManager.GetFactories();
+        xmlEntityManager.GetFactories(readDsl);
     }
     
-    //Get all files from source Folder "XMLFilesForExport" and pack all files and folders into a tar-file 
-    //Afterwards pack the tar-file into a gzip file and rename the file to match the Moodle Backup format .mbz
+    // Get all files from source Folder "XMLFilesForExport" and pack all files and folders into a tar-file 
+    // Afterwards pack the tar-file into a gzip file and rename the file to match the Moodle Backup format .mbz
     /// <inheritdoc cref="IBackupFileGenerator.WriteBackupFile"/>
     public void WriteBackupFile(string filepath)
     {
@@ -70,6 +75,7 @@ public class BackupFileGenerator : IBackupFileGenerator
 
         _fileSystem.File.Move(tarPath, filepath);
         _fileSystem.Directory.Delete(tempDir, true);
+        _fileSystem.Directory.Delete("XMLFilesForExport", true);
     }
 
     /// <summary>

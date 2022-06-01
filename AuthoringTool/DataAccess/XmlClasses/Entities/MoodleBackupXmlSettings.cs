@@ -6,16 +6,12 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 public partial class MoodleBackupXmlSettings : IMoodleBackupXmlSettings{
 
     
-    public void SetParameters()
+    public void SetParameters(List<MoodleBackupXmlSetting?>? moodleBackupXmlSetting)
     {
-        Setting = new List<MoodleBackupXmlSetting?>();
-    }
-
-    public void FillSettings(MoodleBackupXmlSetting? moodleBackupXmlSetting)
-    {
-        Setting.Add(moodleBackupXmlSetting);
+        Setting = moodleBackupXmlSetting;
     }
     
+    
     [XmlElement(ElementName="setting")]
-    public List<MoodleBackupXmlSetting?> Setting;
+    public List<MoodleBackupXmlSetting?>? Setting;
 }

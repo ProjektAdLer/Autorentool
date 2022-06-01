@@ -2,7 +2,9 @@
 
 public interface IMoodleBackupXmlSetting
 {
-    void SetParametersShort(string name, string value);
+	public void SetParametersSetting(string? level, string? name, string? value);
 
-    void SetParametersFull(string name, string value, string level, string section);
+	public void SetParametersSection(string? level, string? section, string? name, string? value);
+
+	public void SetParametersActivity(string? level, string? activity, string? name, string? value);
 }

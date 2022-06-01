@@ -5,6 +5,9 @@ using System.Xml.Serialization;
 
 namespace AuthoringTool.DataAccess.WorldExport;
 
+/// <summary>
+/// Serialize XML classes to xml.files
+/// </summary>
 public class XmlSerialize
 {
     private IFileSystem _fileSystem;

@@ -1,7 +1,11 @@
 ﻿namespace AuthoringTool.DataAccess.DSL;
 
-public class RequirementJson
+/// <summary>
+/// Requirements describe all the needed Spaces, Topics or elements that need to be completed, before another space,
+/// topic or element can be viewed or started
+/// </summary>
+public class RequirementJson : IRequirementJson
 {
-    public string type { get; set; }
-    public List<int> value { get; set; }
+    public string? type { get; set; }
+    public List<int>? value { get; set; }
 }

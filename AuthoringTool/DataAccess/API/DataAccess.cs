@@ -10,7 +10,7 @@ internal class DataAccess : IDataAccess
 {
     public DataAccess(IAuthoringToolConfiguration configuration, IBackupFileGenerator backupFileGenerator,
         IXmlFileHandler<LearningWorld> xmlHandlerWorld, IXmlFileHandler<LearningSpace> xmlHandlerSpace,
-        IXmlFileHandler<LearningElement> xmlHandlerElement, IContentFileHandler contentHandler, ICreateDSL createDsl)
+        IXmlFileHandler<LearningElement> xmlHandlerElement, IContentFileHandler contentHandler, ICreateDSL createDsl, IReadDSL readDsl)
     {
         XmlHandlerWorld = xmlHandlerWorld;
         XmlHandlerSpace = xmlHandlerSpace;
@@ -19,6 +19,7 @@ internal class DataAccess : IDataAccess
         Configuration = configuration;
         BackupFile = backupFileGenerator;
         CreateDsl = createDsl;
+        ReadDsl = readDsl;
     }
 
     public readonly IXmlFileHandler<LearningWorld> XmlHandlerWorld;
@@ -29,12 +30,20 @@ internal class DataAccess : IDataAccess
 
     public IBackupFileGenerator BackupFile { get; set; }
     public ICreateDSL CreateDsl;
+    public IReadDSL ReadDsl;
 
+    /// <summary>
+    /// Creates the DSL document, reads it, creates the needed folder structure for the backup, fills the folders with
+    /// the needed xml documents and saves it to the desired location as .mbz file. 
+    /// </summary>
+    /// <param name="learningWorld"></param> Information about the learningWorld, topics, spaces and elements
+    /// <param name="filepath"></param> Desired filepath for the .mbz file. Given by user, when Export Button is pressed.
     public void ConstructBackup(LearningWorld learningWorld, string filepath)
     {
         CreateDsl.WriteLearningWorld(learningWorld);
+        ReadDsl.ReadLearningWorld();
         BackupFile.CreateBackupFolders();
-        BackupFile.WriteXmlFiles();
+        BackupFile.WriteXmlFiles(ReadDsl as ReadDSL);
         BackupFile.WriteBackupFile(filepath);
     }
 

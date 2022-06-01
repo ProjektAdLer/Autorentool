@@ -3,4 +3,5 @@
 public interface IXmlSerializable
 {
     void Serialize();
+    
 }

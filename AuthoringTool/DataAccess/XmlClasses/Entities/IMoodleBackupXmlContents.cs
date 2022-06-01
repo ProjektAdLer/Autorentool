@@ -1,6 +1,7 @@
-﻿namespace AuthoringTool.DataAccess.XmlClasses;
+﻿namespace AuthoringTool.DataAccess.XmlClasses.Entities;
 
 public interface IMoodleBackupXmlContents
 {
-    void SetParameters(MoodleBackupXmlSections? moodleBackupSections, MoodleBackupXmlCourse? moodleBackupCourse);
+    void SetParameters(MoodleBackupXmlActivities? moodleBackupXmlActivities,
+        MoodleBackupXmlSections? moodleBackupSections, MoodleBackupXmlCourse? moodleBackupCourse);
 }

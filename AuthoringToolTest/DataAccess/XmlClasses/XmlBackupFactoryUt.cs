@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.XmlClasses;
+using AuthoringTool.DataAccess.XmlClasses.Entities;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -15,10 +18,10 @@ public class XmlBackupFactoryUt
         //Arrange
         
         //Act
-        var xmlBackupFactory = CreateStandardXmlBackupFactory();
+        var mockReadDsl = Substitute.For<IReadDSL>();
+        var xmlBackupFactory = new XmlBackupFactory(mockReadDsl);
 
         //Assert
-        Assert.That(xmlBackupFactory.FilesXmlFiles, Is.Not.Null);
         Assert.That(xmlBackupFactory.GradebookXmlGradebookSetting, Is.Not.Null);
         Assert.That(xmlBackupFactory.GradebookXmlGradebookSettings, Is.Not.Null);
         Assert.That(xmlBackupFactory.GradebookXmlGradebook, Is.Not.Null);
@@ -51,8 +54,6 @@ public class XmlBackupFactoryUt
         Assert.That(xmlBackupFactory.MoodleBackupXmlSettingCustomfield, Is.Not.Null);
         Assert.That(xmlBackupFactory.MoodleBackupXmlSettingContentbankcontent, Is.Not.Null);
         Assert.That(xmlBackupFactory.MoodleBackupXmlSettingLegacyfiles, Is.Not.Null);
-        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingSection_160_Included, Is.Not.Null);
-        Assert.That(xmlBackupFactory.MoodleBackupXmlSettingSection_160_userinfo, Is.Not.Null);
         Assert.That(xmlBackupFactory.MoodleBackupXmlSettings, Is.Not.Null);
         Assert.That(xmlBackupFactory.MoodleBackupXmlInformation, Is.Not.Null);
         Assert.That(xmlBackupFactory.MoodleBackupXmlMoodleBackup, Is.Not.Null);
@@ -62,39 +63,32 @@ public class XmlBackupFactoryUt
         Assert.That(xmlBackupFactory.RolesXmlRole, Is.Not.Null);
         Assert.That(xmlBackupFactory.RolesXmlRolesDefinition, Is.Not.Null);
     }
-    
-    [Test]
-    public void CreateFilesXml_Default_ParametersSetAndSerialized()
-    {
-        //Arrange
-        var mockFilesXmlFiles = Substitute.For<IFilesXmlFiles>();
-        var xmlBackupFactory = CreateTestableXmlBackupFactory(mockFilesXmlFiles);
-        
-        //Act
-        xmlBackupFactory.CreateFilesXml();
-        
-        //Assert
-        mockFilesXmlFiles.Received().SetParameters();
-        mockFilesXmlFiles.Received().Serialize();
-    }
-    
+
     [Test]
     public void CreateGradebookXml_Default_ParametersSetAndSerialized()
     {
         //Arrange
+        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockGradebookXmlGradebookItem = Substitute.For<IGradebookXmlGradeItem>();
+        var mockGradebookXmlGradebookItems = Substitute.For<IGradebookXmlGradeItems>();
+        var mockGradebookXmlGradebookCategory = Substitute.For<IGradebookXmlGradeCategory>();
+        var mockGradebookXmlGradebookCategories = Substitute.For<IGradebookXmlGradeCategories>();
         var mockGradebookXmlGradebookSetting = Substitute.For<IGradebookXmlGradeSetting>();
         var mockGradebookXmlGradebookSettings = Substitute.For<IGradebookXmlGradeSettings>();
         var mockGradebookXmlGradebook = Substitute.For<IGradebookXmlGradebook>();
         
-        var xmlBackupFactory = CreateTestableXmlBackupFactory(null,mockGradebookXmlGradebookSetting, mockGradebookXmlGradebookSettings,mockGradebookXmlGradebook);
+        var xmlBackupFactory = new XmlBackupFactory(mockReadDsl, mockGradebookXmlGradebookItem,
+            mockGradebookXmlGradebookItems, mockGradebookXmlGradebookCategory, mockGradebookXmlGradebookCategories,
+            mockGradebookXmlGradebookSetting, mockGradebookXmlGradebookSettings,mockGradebookXmlGradebook);
         
         //Act
         xmlBackupFactory.CreateGradebookXml();
 
         //Assert
-        mockGradebookXmlGradebookSetting.Received().SetParameters(Arg.Any<string>(), Arg.Any<string>());
+        mockGradebookXmlGradebookSetting.Received().SetParameters(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
         mockGradebookXmlGradebookSettings.Received().SetParameters(Arg.Any<GradebookXmlGradeSetting>());
-        mockGradebookXmlGradebook.Received().SetParameters(Arg.Any<GradebookXmlGradeSettings>());
+        mockGradebookXmlGradebook.Received().SetParameters(Arg.Any<string>(), Arg.Any<GradebookXmlGradeCategories?>(), 
+            Arg.Any<GradebookXmlGradeItems?>(), Arg.Any<string>(), Arg.Any<GradebookXmlGradeSettings?>());
         mockGradebookXmlGradebook.Received().Serialize();
     }
     
@@ -102,11 +96,18 @@ public class XmlBackupFactoryUt
     public void CreateGroupsXml_Default_ParametersSetAndSerialized()
     {
         //Arrange
+        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockIdentifier = Substitute.For<IdentifierJson>();
+        var mockLearningWorld = new LearningWorldJson();
+        mockLearningWorld.identifier = mockIdentifier;
+
+        mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
         var mockGroupsXmlGroupingsList = Substitute.For<IGroupsXmlGroupingsList>();
         var mockGroupsXmlGroups = Substitute.For<IGroupsXmlGroups>();
         
-        var xmlBackupFactory = CreateTestableXmlBackupFactory(null,null, null,null,
-            mockGroupsXmlGroupingsList, mockGroupsXmlGroups);
+        var xmlBackupFactory = new XmlBackupFactory(mockReadDsl, null, null, 
+            null, null, null, 
+            null,null, mockGroupsXmlGroupingsList, mockGroupsXmlGroups);
         
         //Act
         xmlBackupFactory.CreateGroupsXml();
@@ -121,8 +122,28 @@ public class XmlBackupFactoryUt
     public void CreateMoodleBackupXml_Default_ParametersSetAndSerialized()
     {
         //Arrange
+        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockIdentifier = Substitute.For<IdentifierJson>();
+        var mockLearningWorld = new LearningWorldJson();
+        mockLearningWorld.identifier = mockIdentifier;
+
+        var mockLearningElement = new LearningElementJson();
+        mockIdentifier.type = "name";
+        mockIdentifier.value = "Element_1";
+
+        mockLearningElement.id = 1;
+        mockLearningElement.identifier = mockIdentifier;
+        mockLearningElement.elementType = "H5P";
+        List<LearningElementJson> learningElementJsons = new List<LearningElementJson>();
+        learningElementJsons.Add(mockLearningElement);
+
+        mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
+        mockReadDsl.GetH5PElementsList().Returns(learningElementJsons);
+        
         var mockMoodleBackupXmlDetail = Substitute.For<IMoodleBackupXmlDetail>();
         var mockMoodleBackupXmlDetails = Substitute.For<IMoodleBackupXmlDetails>();
+        var mockMoodleBackupXmlActivities = Substitute.For<IMoodleBackupXmlActivities>();
+        var mockMoodleBackupXmlActivity = Substitute.For<IMoodleBackupXmlActivity>();
         var mockMoodleBackupXmlSection = Substitute.For<IMoodleBackupXmlSection>();
         var mockMoodleBackupXmlSections = Substitute.For<IMoodleBackupXmlSections>();
         var mockMoodleBackupXmlCourse = Substitute.For<IMoodleBackupXmlCourse>();
@@ -132,28 +153,34 @@ public class XmlBackupFactoryUt
         var mockMoodleBackupXmlInformation = Substitute.For<IMoodleBackupXmlInformation>();
         var mockMoodleBackupXmlMoodleBackup = Substitute.For<IMoodleBackupXmlMoodleBackup>();
         
-        var xmlBackupFactory = CreateTestableXmlBackupFactory(null,null, null,null,
-            null, null, mockMoodleBackupXmlDetail, mockMoodleBackupXmlDetails, mockMoodleBackupXmlSection, 
-            mockMoodleBackupXmlSections, mockMoodleBackupXmlCourse, mockMoodleBackupXmlContents, mockMoodleBackupXmlSetting, 
-            mockMoodleBackupXmlSettings, mockMoodleBackupXmlInformation, mockMoodleBackupXmlMoodleBackup);
+        var xmlBackupFactory = new XmlBackupFactory(mockReadDsl, null, null, 
+            null, null, null,null,
+            null, null, null, mockMoodleBackupXmlDetail, 
+            mockMoodleBackupXmlDetails, mockMoodleBackupXmlActivities, mockMoodleBackupXmlActivity, 
+            mockMoodleBackupXmlSection, mockMoodleBackupXmlSections, mockMoodleBackupXmlCourse, 
+            mockMoodleBackupXmlContents, mockMoodleBackupXmlSetting, mockMoodleBackupXmlSettings, mockMoodleBackupXmlInformation, mockMoodleBackupXmlMoodleBackup);
         
         //Act
         xmlBackupFactory.CreateMoodleBackupXml();
 
         //Assert
-        mockMoodleBackupXmlDetail.Received().SetParameters(Arg.Any<string>());
+        mockMoodleBackupXmlDetail.Received().SetParameters(Arg.Any<string>(), Arg.Any<string>(), 
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
         mockMoodleBackupXmlDetails.Received().SetParameters(Arg.Any<MoodleBackupXmlDetail>());
-        mockMoodleBackupXmlSection.Received().SetParameters(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
-        mockMoodleBackupXmlSections.Received().SetParameters(Arg.Any<MoodleBackupXmlSection>());
+        mockMoodleBackupXmlSections.Received().SetParameters(Arg.Any<List<MoodleBackupXmlSection>>());
         mockMoodleBackupXmlCourse.Received().SetParameters(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
-        mockMoodleBackupXmlContents.Received().SetParameters(Arg.Any<MoodleBackupXmlSections>(), Arg.Any<MoodleBackupXmlCourse>());
-        mockMoodleBackupXmlSetting.Received().SetParametersShort(Arg.Any<string>(), Arg.Any<string>());
-        mockMoodleBackupXmlSetting.Received().SetParametersFull(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
-        mockMoodleBackupXmlSettings.Received().SetParameters();
-        mockMoodleBackupXmlSettings.Received().FillSettings(Arg.Any<MoodleBackupXmlSetting>());
-        mockMoodleBackupXmlInformation.Received().SetParameters(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), 
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), 
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<MoodleBackupXmlDetails>(), 
+        mockMoodleBackupXmlContents.Received().SetParameters(Arg.Any<MoodleBackupXmlActivities?>(), 
+            Arg.Any<MoodleBackupXmlSections?>(), Arg.Any<MoodleBackupXmlCourse?>());
+        mockMoodleBackupXmlSetting.Received().SetParametersSetting(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+        mockMoodleBackupXmlSettings.Received().SetParameters(Arg.Any<List<MoodleBackupXmlSetting>>());
+        mockMoodleBackupXmlSettings.Received().SetParameters(Arg.Any<List<MoodleBackupXmlSetting>>());
+        mockMoodleBackupXmlInformation.Received().SetParameters(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), 
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), 
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), 
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), 
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<MoodleBackupXmlDetails>(),
             Arg.Any<MoodleBackupXmlContents>(), Arg.Any<MoodleBackupXmlSettings>());
         mockMoodleBackupXmlMoodleBackup.Received().SetParameters(Arg.Any<MoodleBackupXmlInformation>());
         mockMoodleBackupXmlMoodleBackup.Received().Serialize();
@@ -163,12 +190,15 @@ public class XmlBackupFactoryUt
     public void CreateOutcomesXml_Default_ParametersSetAndSerialized()
     {
         //Arrange
+        var mockReadDsl = Substitute.For<IReadDSL>();
         var mockOutcomesOutcomesDefinition = Substitute.For<IOutcomesXmlOutcomesDefinition>();
         
-        var xmlBackupFactory = CreateTestableXmlBackupFactory(null,null, null,null,
+        var xmlBackupFactory = new XmlBackupFactory(mockReadDsl, null, null, null,
+            null, null, null,null,
             null, null, null, null, null, 
             null, null, null, null, 
-            null, null, null, mockOutcomesOutcomesDefinition);
+            null, null, null, null, null,
+            mockOutcomesOutcomesDefinition);
         
         //Act
         xmlBackupFactory.CreateOutcomesXml();
@@ -182,12 +212,16 @@ public class XmlBackupFactoryUt
     public void CreateQuestionsXml_Default_ParametersSetAndSerialized()
     {
         //Arrange
+        var mockReadDsl = Substitute.For<IReadDSL>();
         var mockQuestionsQuestionsCategories = Substitute.For<IQuestionsXmlQuestionsCategories>();
         
-        var xmlBackupFactory = CreateTestableXmlBackupFactory(null,null, null,null,
-            null, null, null, null, null, 
+        var xmlBackupFactory = new XmlBackupFactory(mockReadDsl, null, null, 
+            null, null, null, null,
             null, null, null, null, 
-            null, null, null, null, mockQuestionsQuestionsCategories);
+            null, null, null, null, 
+            null, null, null, null, 
+            null, null, null, null,
+            mockQuestionsQuestionsCategories);
         
         //Act
         xmlBackupFactory.CreateQuestionsXml();
@@ -201,14 +235,17 @@ public class XmlBackupFactoryUt
     public void CreateRolesXml_Default_ParametersSetAndSerialized()
     {
         //Arrange
+        var mockReadDsl = Substitute.For<IReadDSL>();
         var mockrolesXmlRole = Substitute.For<IRolesXmlRole>();
         var mockrolesXmlRolesDefinition = Substitute.For<IRolesXmlRolesDefinition>();
         
-        var xmlBackupFactory = CreateTestableXmlBackupFactory(null,null, null,null,
-            null, null, null, null, null, 
+        var xmlBackupFactory = new XmlBackupFactory(mockReadDsl, null, null, 
+            null, null, null, 
+            null,null, null, null, 
             null, null, null, null, 
-            null, null, null, null, null,
-            mockrolesXmlRole, mockrolesXmlRolesDefinition);
+            null, null, null, null, 
+            null, null, null, null, 
+            null, null, mockrolesXmlRole, mockrolesXmlRolesDefinition);
         
         //Act
         xmlBackupFactory.CreateRolesXml();
@@ -223,13 +260,15 @@ public class XmlBackupFactoryUt
     public void CreateScalesXml_Default_ParametersSetAndSerialized()
     {
         //Arrange
+        var mockReadDsl = Substitute.For<IReadDSL>();
         var mockScalesXmlScalesDefinition = Substitute.For<IScalesXmlScalesDefinition>();
         
-        var xmlBackupFactory = CreateTestableXmlBackupFactory(null,null, null,null,
+        var xmlBackupFactory = new XmlBackupFactory(mockReadDsl, null, null, 
+            null, null, null, null,null,
             null, null, null, null, null, 
             null, null, null, null, 
             null, null, null, null, null,
-            null, null, mockScalesXmlScalesDefinition);
+            null, null, null, null, mockScalesXmlScalesDefinition);
         
         //Act
         xmlBackupFactory.CreateScalesXml();
@@ -241,11 +280,11 @@ public class XmlBackupFactoryUt
     
     public XmlBackupFactory CreateStandardXmlBackupFactory()
     {
-        return new XmlBackupFactory();
+        return new XmlBackupFactory(Arg.Any<ReadDSL>());
     }
 
-    public XmlBackupFactory CreateTestableXmlBackupFactory(IFilesXmlFiles filesXmlFiles = null, 
-        IGradebookXmlGradeSetting gradebookXmlGradeSetting = null, IGradebookXmlGradeSettings gradebookXmlGradeSettings = null,IGradebookXmlGradebook gradebookXmlGradebook = null,
+    /*
+    public XmlBackupFactory CreateTestableXmlBackupFactory(IReadDSL readDsl ,IGradebookXmlGradeSetting gradebookXmlGradeSetting = null, IGradebookXmlGradeSettings gradebookXmlGradeSettings = null,IGradebookXmlGradebook gradebookXmlGradebook = null,
         IGroupsXmlGroupingsList groupsXmlGroupingsList = null, IGroupsXmlGroups groupsXmlGroups = null, 
         IMoodleBackupXmlDetail moodleBackupXmlDetail = null, IMoodleBackupXmlDetails moodleBackupXmlDetails = null, IMoodleBackupXmlSection moodleBackupXmlSection = null,
         IMoodleBackupXmlSections moodleBackupXmlSections = null, IMoodleBackupXmlCourse moodleBackupXmlCourse = null, IMoodleBackupXmlContents moodleBackupXmlContents = null,
@@ -254,8 +293,7 @@ public class XmlBackupFactoryUt
         IQuestionsXmlQuestionsCategories questionsXmlQuestionsCategories = null, IRolesXmlRole rolesXmlRole = null, 
         IRolesXmlRolesDefinition rolesXmlRolesDefinition = null, IScalesXmlScalesDefinition scalesXmlScalesDefinition = null)
     {
-        filesXmlFiles ??= Substitute.For<IFilesXmlFiles>();
-        
+       
         gradebookXmlGradeSetting ??= Substitute.For<IGradebookXmlGradeSetting>();
         gradebookXmlGradeSettings ??= Substitute.For<IGradebookXmlGradeSettings>();
         gradebookXmlGradebook ??= Substitute.For<IGradebookXmlGradebook>();
@@ -282,12 +320,14 @@ public class XmlBackupFactoryUt
         rolesXmlRolesDefinition ??= Substitute.For<IRolesXmlRolesDefinition>();
 
         scalesXmlScalesDefinition ??= Substitute.For<IScalesXmlScalesDefinition>();
+        
+        
 
-        return new XmlBackupFactory(filesXmlFiles, gradebookXmlGradeSetting, gradebookXmlGradeSettings, gradebookXmlGradebook, 
+        return new XmlBackupFactory(readDsl, gradebookXmlGradeSetting, gradebookXmlGradeSettings, gradebookXmlGradebook, 
             groupsXmlGroupingsList, groupsXmlGroups, moodleBackupXmlDetail, moodleBackupXmlDetails, moodleBackupXmlSection,
             moodleBackupXmlSections, moodleBackupXmlCourse, moodleBackupXmlContents, moodleBackupXmlSetting, moodleBackupXmlSettings,
             moodleBackupXmlInformation, moodleBackupXmlMoodleBackup, outcomesXmlOutcomesDefinition, questionsXmlQuestionsCategories,
             rolesXmlRole, rolesXmlRolesDefinition,scalesXmlScalesDefinition);
-    }
+    }*/
     
 }

@@ -6,7 +6,7 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 public partial class MoodleBackupXmlSection : IMoodleBackupXmlSection
 {
     
-    public void SetParameters(string sectionid, string title, string directory)
+    public void SetParameters(string? sectionid, string? title, string directory)
     {
          Sectionid = sectionid;
          Title = title;
@@ -14,10 +14,10 @@ public partial class MoodleBackupXmlSection : IMoodleBackupXmlSection
     }
     
     [XmlElement(ElementName = "sectionid")]
-    public string Sectionid = "";
+    public string? Sectionid = "";
 		
     [XmlElement(ElementName="title")]
-    public string Title = "";
+    public string? Title = "";
 
     [XmlElement(ElementName = "directory")]
     public string Directory = "";

@@ -16,5 +16,5 @@ public partial class CourseEnrolmentsXmlEnrols : ICourseEnrolmentsXmlEnrols{
     }
     
     [XmlElement(ElementName="enrol")] 
-    public List<CourseEnrolmentsXmlEnrol?> Enrol;
+    public List<CourseEnrolmentsXmlEnrol?>? Enrol;
 }

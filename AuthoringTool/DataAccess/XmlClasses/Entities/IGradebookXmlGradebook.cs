@@ -1,6 +1,9 @@
-﻿namespace AuthoringTool.DataAccess.XmlClasses;
+﻿using AuthoringTool.DataAccess.XmlClasses.Entities;
+
+namespace AuthoringTool.DataAccess.XmlClasses;
 
 public interface IGradebookXmlGradebook : IXmlSerializable
 {
-    void SetParameters(GradebookXmlGradeSettings? gradeSettings);
+    void SetParameters(string? attributes, GradebookXmlGradeCategories? gradeCategories,
+        GradebookXmlGradeItems? gradeItems, string? gradeLetters, GradebookXmlGradeSettings? gradeSettings);
 }

@@ -1,4 +1,4 @@
-﻿using AuthoringTool.DataAccess.XmlClasses.sections;
+﻿/*using AuthoringTool.DataAccess.XmlClasses.sections;
 
 namespace AuthoringTool.DataAccess.XmlClasses;
 
@@ -28,4 +28,4 @@ public class XmlSectionFactory
         
         SectionsSectionXmlSection.Serialize();
     }
-}
+}*/

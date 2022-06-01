@@ -6,7 +6,7 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 public partial class MoodleBackupXmlCourse : IMoodleBackupXmlCourse{
 
 	
-	public void SetParameters(string courseid, string title, string directory)
+	public void SetParameters(string courseid, string? title, string directory)
 	{
         Courseid = courseid;
 		Title = title;
@@ -16,7 +16,7 @@ public partial class MoodleBackupXmlCourse : IMoodleBackupXmlCourse{
     [XmlElement(ElementName="courseid")]
     public string Courseid = "";
     [XmlElement(ElementName="title")]
-    public string Title = "";
+    public string? Title = "";
     [XmlElement(ElementName = "directory")]
     public string Directory = "course";
 }

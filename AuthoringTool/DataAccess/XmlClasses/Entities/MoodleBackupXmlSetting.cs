@@ -6,13 +6,14 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 public partial class MoodleBackupXmlSetting : IMoodleBackupXmlSetting{
 
 
-	public void SetParametersShort(string name, string value)
+	public void SetParametersSetting(string? level, string? name, string? value)
 	{
+		Level = level;
         Name = name;
 		Value = value;
 	}
 	
-	public void SetParametersFull(string name, string value, string level, string section)
+	public void SetParametersSection(string? level, string? section, string? name, string? value)
 	{
       Name = name;
       Value = value; 
@@ -20,15 +21,26 @@ public partial class MoodleBackupXmlSetting : IMoodleBackupXmlSetting{
       Section = section;  
 	}
 	
-    [XmlElement(ElementName="level")]
-    public string Level = "root";
-		
-    [XmlElement(ElementName="name")]
-    public string Name = "";
-		
-    [XmlElement(ElementName="value")]
-    public string Value = "";
-		
-    [XmlElement(ElementName="section")]
-    public string Section = "";
+	public void SetParametersActivity(string? level, string? activity, string? name, string? value)
+	{
+		Name = name;
+		Value = value; 
+		Level = level;
+		Activity = activity;  
+	}
+	
+	[XmlElement(ElementName="level")]
+	public string? Level { get; set; }
+	
+	[XmlElement(ElementName="name")]
+	public string? Name { get; set; }
+	
+	[XmlElement(ElementName="value")]
+	public string? Value { get; set; }
+	
+	[XmlElement(ElementName="section")]
+	public string? Section { get; set; }
+	
+	[XmlElement(ElementName="activity")]
+	public string? Activity { get; set; }
 }

@@ -4,7 +4,7 @@ public interface ILearningWorld
 {
     
     List<LearningElement> LearningElements { get; set; }
-    List<LearningSpace> LearningSpaces { get; set; }
+    List<LearningSpace>? LearningSpaces { get; set; }
     string Name { get; set; }
     string Description { get; set; }
     string Shortname { get; set; }

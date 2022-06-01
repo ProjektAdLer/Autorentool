@@ -2,5 +2,5 @@
 
 public interface IMoodleBackupXmlCourse
 {
-    void SetParameters(string courseid, string title, string directory);
+    void SetParameters(string courseid, string? title, string directory);
 }

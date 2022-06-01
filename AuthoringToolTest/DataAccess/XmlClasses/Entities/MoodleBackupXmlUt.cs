@@ -3,6 +3,7 @@ using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.DataAccess.XmlClasses;
+using AuthoringTool.DataAccess.XmlClasses.Entities;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.XmlClasses.Entities;
@@ -15,7 +16,8 @@ public class MoodleBackupXmlUt
     {
         //Arrange
         var moodlebackupDetail = new MoodleBackupXmlDetail();
-        moodlebackupDetail.SetParameters("6a4e8e833791eb72e5f3ee2227ee1b74");
+        moodlebackupDetail.SetParameters("course", "moodle2", "1",
+            "10", "1", "0", "36d63c7b4624cf6a79e0405be770974d");
         var moodlebackupDetails = new MoodleBackupXmlDetails();
         
         //Act
@@ -32,10 +34,17 @@ public class MoodleBackupXmlUt
         var moodlebackupDetail = new MoodleBackupXmlDetail();
         
         //Act
-        moodlebackupDetail.SetParameters("6a4e8e833791eb72e5f3ee2227ee1b74");
+        moodlebackupDetail.SetParameters("course", "moodle2", "1",
+            "10", "1", "0", "36d63c7b4624cf6a79e0405be770974d");
         
         //Assert
-        Assert.That(moodlebackupDetail.Backup_id, Is.EqualTo("6a4e8e833791eb72e5f3ee2227ee1b74"));
+        Assert.That(moodlebackupDetail.Type, Is.EqualTo("course"));
+        Assert.That(moodlebackupDetail.Format, Is.EqualTo("moodle2"));
+        Assert.That(moodlebackupDetail.Interactive, Is.EqualTo("1"));
+        Assert.That(moodlebackupDetail.Mode, Is.EqualTo("10"));
+        Assert.That(moodlebackupDetail.Execution, Is.EqualTo("1"));
+        Assert.That(moodlebackupDetail.Executiontime, Is.EqualTo("0"));
+        Assert.That(moodlebackupDetail.Backup_id, Is.EqualTo("36d63c7b4624cf6a79e0405be770974d"));
     }
     
     [Test]
@@ -45,12 +54,14 @@ public class MoodleBackupXmlUt
         var moodlebackupSection = new MoodleBackupXmlSection();
         moodlebackupSection.SetParameters("160", "1", "sections/section_160");
         var moodlebackupSections = new MoodleBackupXmlSections();
-        
+        List<MoodleBackupXmlSection>? list = new List<MoodleBackupXmlSection>();
+
         //Act
-        moodlebackupSections.SetParameters(moodlebackupSection);
+        list.Add(moodlebackupSection);
+        moodlebackupSections.SetParameters(list);
         
         //Assert
-        Assert.That(moodlebackupSections.Section, Is.EqualTo(moodlebackupSection));
+        Assert.That(moodlebackupSections.Section, Is.EqualTo(list));
     }
     
     [Test]
@@ -100,19 +111,29 @@ public class MoodleBackupXmlUt
         var moodlebackupSection = new MoodleBackupXmlSection();
         moodlebackupSection.SetParameters("160", "1", "sections/section_160");
         var moodlebackupSections = new MoodleBackupXmlSections();
-        moodlebackupSections.SetParameters(moodlebackupSection);
+        List<MoodleBackupXmlSection>? list = new List<MoodleBackupXmlSection>();
+        list.Add(moodlebackupSection);
+        moodlebackupSections.SetParameters(list);
+        List<MoodleBackupXmlActivity>? moodleBackupXmlActivityList = new List<MoodleBackupXmlActivity>();
+        moodleBackupXmlActivityList.Add(new MoodleBackupXmlActivity());
+        moodleBackupXmlActivityList[moodleBackupXmlActivityList.Count-1].SetParameters("learningElementId", 
+            "learningElementId", "learningElementType",
+            "learningElementName", "activities/"+"learningElementType"+"_"+"learningElementId");
+        MoodleBackupXmlActivities activities = new MoodleBackupXmlActivities();
+        activities.SetParameters(moodleBackupXmlActivityList);
         
         var moodlebackupCourse = new MoodleBackupXmlCourse();
         moodlebackupCourse.SetParameters("53", "XML_LK", "course");
 
         //Act
-        moodlebackupContents.SetParameters(moodlebackupSections, moodlebackupCourse);
+        moodlebackupContents.SetParameters(activities,moodlebackupSections, moodlebackupCourse);
         
         //Assert
         Assert.Multiple(() =>
         {
             Assert.That(moodlebackupContents.Sections, Is.EqualTo(moodlebackupSections));
             Assert.That(moodlebackupContents.Course, Is.EqualTo(moodlebackupCourse));
+            Assert.That(moodlebackupContents.Activities, Is.EqualTo(activities));
         });
         
     }
@@ -124,13 +145,14 @@ public class MoodleBackupXmlUt
         var moodlebackupSetting = new MoodleBackupXmlSetting();
         
         //Act
-        moodlebackupSetting.SetParametersShort("filename", "C#_XML_Created_Backup.mbz");
+        moodlebackupSetting.SetParametersSetting("filename", "C#_XML_Created_Backup.mbz", "1");
         
         //Assert
         Assert.Multiple(() =>
         {
-            Assert.That(moodlebackupSetting.Name, Is.EqualTo("filename"));
-            Assert.That(moodlebackupSetting.Value, Is.EqualTo("C#_XML_Created_Backup.mbz"));
+            Assert.That(moodlebackupSetting.Level, Is.EqualTo("filename"));
+            Assert.That(moodlebackupSetting.Name, Is.EqualTo("C#_XML_Created_Backup.mbz"));
+            Assert.That(moodlebackupSetting.Value, Is.EqualTo("1"));
         });
         
     }
@@ -142,15 +164,15 @@ public class MoodleBackupXmlUt
         var moodlebackupSetting = new MoodleBackupXmlSetting();
         
         //Act
-        moodlebackupSetting.SetParametersFull("section_160_userinfo", "0", "section", "section_160");
+        moodlebackupSetting.SetParametersActivity("section_160_userinfo", "0", "section", "section_160");
         
         //Assert
         Assert.Multiple(() =>
         {
-            Assert.That(moodlebackupSetting.Name, Is.EqualTo("section_160_userinfo"));
-            Assert.That(moodlebackupSetting.Value, Is.EqualTo("0"));
-            Assert.That(moodlebackupSetting.Level, Is.EqualTo("section"));
-            Assert.That(moodlebackupSetting.Section, Is.EqualTo("section_160"));
+            Assert.That(moodlebackupSetting.Level, Is.EqualTo("section_160_userinfo"));
+            Assert.That(moodlebackupSetting.Activity, Is.EqualTo("0"));
+            Assert.That(moodlebackupSetting.Name, Is.EqualTo("section"));
+            Assert.That(moodlebackupSetting.Value, Is.EqualTo("section_160"));
         });
         
     }
@@ -162,7 +184,8 @@ public class MoodleBackupXmlUt
         var moodlebackupSettings = new MoodleBackupXmlSettings();
         
         //Act
-        moodlebackupSettings.SetParameters();
+        List<MoodleBackupXmlSetting?>? list = new List<MoodleBackupXmlSetting?>();
+        moodlebackupSettings.SetParameters(list);
         
         //Assert
         Assert.That(moodlebackupSettings.Setting, Is.EqualTo(new List<MoodleBackupXmlSetting>()));
@@ -175,45 +198,71 @@ public class MoodleBackupXmlUt
         var moodlebackupInformation = new MoodleBackupXmlInformation();
         
         var moodlebackupDetail = new MoodleBackupXmlDetail();
-        moodlebackupDetail.SetParameters("6a4e8e833791eb72e5f3ee2227ee1b74");
+        moodlebackupDetail.SetParameters("course", "moodle2", "1",
+            "10", "1", "0", "36d63c7b4624cf6a79e0405be770974d");
         var moodlebackupDetails = new MoodleBackupXmlDetails();
         moodlebackupDetails.SetParameters(moodlebackupDetail);
         
         var moodlebackupSection = new MoodleBackupXmlSection();
         moodlebackupSection.SetParameters("160", "1", "sections/section_160");
         var moodlebackupSections = new MoodleBackupXmlSections();
-        moodlebackupSections.SetParameters(moodlebackupSection);
+        List<MoodleBackupXmlSection>? listSection = new List<MoodleBackupXmlSection>();
+        listSection.Add(moodlebackupSection);
+        moodlebackupSections.SetParameters(listSection);
         var moodlebackupCourse = new MoodleBackupXmlCourse();
         moodlebackupCourse.SetParameters("53", "XML_LK", "course");
         var moodlebackupContents = new MoodleBackupXmlContents();
-        moodlebackupContents.SetParameters(moodlebackupSections, moodlebackupCourse);
+        List<MoodleBackupXmlActivity>? moodleBackupXmlActivityList = new List<MoodleBackupXmlActivity>();
+        moodleBackupXmlActivityList.Add(new MoodleBackupXmlActivity());
+        moodleBackupXmlActivityList[moodleBackupXmlActivityList.Count-1].SetParameters("learningElementId", 
+            "learningElementId", "learningElementType",
+            "learningElementName", "activities/"+"learningElementType"+"_"+"learningElementId");
+        MoodleBackupXmlActivities activities = new MoodleBackupXmlActivities();
+        activities.SetParameters(moodleBackupXmlActivityList);
+        
+        moodlebackupCourse.SetParameters("53", "XML_LK", "course");
         
         
         var moodlebackupSetting1 = new MoodleBackupXmlSetting();
-        moodlebackupSetting1.SetParametersShort("filename", "C#_XML_Created_Backup.mbz");
+        moodlebackupSetting1.SetParametersSetting("filename", "C#_XML_Created_Backup.mbz", "1");
         var moodlebackupSettings = new MoodleBackupXmlSettings();
-        moodlebackupSettings.SetParameters();
-        moodlebackupSettings.Setting.Add(moodlebackupSetting1);
+        List<MoodleBackupXmlSetting?>? listSetting = new List<MoodleBackupXmlSetting?>();
+        listSetting.Add(moodlebackupSetting1);
+        moodlebackupSettings.SetParameters(listSetting);
         
         //Act
-        moodlebackupInformation.SetParameters("C#_XML_Created_Backup.mbz", 
-            "53", "topics", "XML_Leerer Kurs", 
-            "XML_LK", "286", "1", "1645484400", 
-            "1677020400", moodlebackupDetails, moodlebackupContents, moodlebackupSettings);
+        moodlebackupInformation.SetParameters("C#_AuthoringTool_Created_Backup.mbz", "2021051703",
+            "3.11.3 (Build: 20210913)", "2021051700", "3.11","currentTime", "0",
+            "1","0","https://moodle.cluuub.xyz",
+            "c9629ccd3c092478330b78bdf4dcdb18","1","topics", 
+            "learningWorld.identifier.value.ToString()", "learningWorld.identifier.value.ToString()", 
+            "currentTime", "2221567452", "1", "1", 
+            moodlebackupDetails as MoodleBackupXmlDetails, moodlebackupContents as MoodleBackupXmlContents, 
+            moodlebackupSettings as MoodleBackupXmlSettings);
 
         
         //Assert
         Assert.Multiple(() =>
         {
-            Assert.That(moodlebackupInformation.Name, Is.EqualTo("C#_XML_Created_Backup.mbz"));
-            Assert.That(moodlebackupInformation.Original_course_id, Is.EqualTo("53"));
+            Assert.That(moodlebackupInformation.Name, Is.EqualTo("C#_AuthoringTool_Created_Backup.mbz"));
+            Assert.That(moodlebackupInformation.Moodle_version, Is.EqualTo("2021051703"));
+            Assert.That(moodlebackupInformation.Moodle_release, Is.EqualTo("3.11.3 (Build: 20210913)"));
+            Assert.That(moodlebackupInformation.Backup_version, Is.EqualTo("2021051700"));
+            Assert.That(moodlebackupInformation.Backup_release, Is.EqualTo("3.11"));
+            Assert.That(moodlebackupInformation.Backup_date, Is.EqualTo("currentTime"));
+            Assert.That(moodlebackupInformation.Mnet_remoteusers, Is.EqualTo("0"));
+            Assert.That(moodlebackupInformation.Include_files, Is.EqualTo("1"));
+            Assert.That(moodlebackupInformation.Include_file_references_to_external_content, Is.EqualTo("0"));
+            Assert.That(moodlebackupInformation.Original_wwwroot, Is.EqualTo("https://moodle.cluuub.xyz"));
+            Assert.That(moodlebackupInformation.Original_site_identifier_hash, Is.EqualTo("c9629ccd3c092478330b78bdf4dcdb18"));
+            Assert.That(moodlebackupInformation.Original_course_id, Is.EqualTo("1"));
             Assert.That(moodlebackupInformation.Original_course_format, Is.EqualTo("topics"));
-            Assert.That(moodlebackupInformation.Original_course_fullname, Is.EqualTo("XML_Leerer Kurs"));
-            Assert.That(moodlebackupInformation.Original_course_shortname, Is.EqualTo("XML_LK"));
-            Assert.That(moodlebackupInformation.Original_course_contextid, Is.EqualTo("286"));
+            Assert.That(moodlebackupInformation.Original_course_fullname, Is.EqualTo("learningWorld.identifier.value.ToString()"));
+            Assert.That(moodlebackupInformation.Original_course_shortname, Is.EqualTo("learningWorld.identifier.value.ToString()"));
+            Assert.That(moodlebackupInformation.Original_course_startdate, Is.EqualTo("currentTime"));
+            Assert.That(moodlebackupInformation.Original_course_shortname, Is.EqualTo("learningWorld.identifier.value.ToString()"));
+            Assert.That(moodlebackupInformation.Original_course_contextid, Is.EqualTo("1"));
             Assert.That(moodlebackupInformation.Original_system_contextid, Is.EqualTo("1"));
-            Assert.That(moodlebackupInformation.Original_course_startdate, Is.EqualTo("1645484400"));
-            Assert.That(moodlebackupInformation.Original_course_enddate, Is.EqualTo("1677020400"));
             Assert.That(moodlebackupInformation.Details, Is.EqualTo(moodlebackupDetails));
             Assert.That(moodlebackupInformation.Contents, Is.EqualTo(moodlebackupContents));
             Assert.That(moodlebackupInformation.Settings, Is.EqualTo(moodlebackupSettings));
@@ -229,31 +278,47 @@ public class MoodleBackupXmlUt
         var moodlebackupInformation = new MoodleBackupXmlInformation();
         
         var moodlebackupDetail = new MoodleBackupXmlDetail();
-        moodlebackupDetail.SetParameters("6a4e8e833791eb72e5f3ee2227ee1b74");
+        moodlebackupDetail.SetParameters("course", "moodle2", "1",
+            "10", "1", "0", "36d63c7b4624cf6a79e0405be770974d");
         var moodlebackupDetails = new MoodleBackupXmlDetails();
         moodlebackupDetails.SetParameters(moodlebackupDetail);
         
         var moodlebackupSection = new MoodleBackupXmlSection();
         moodlebackupSection.SetParameters("160", "1", "sections/section_160");
         var moodlebackupSections = new MoodleBackupXmlSections();
-        moodlebackupSections.SetParameters(moodlebackupSection);
+        List<MoodleBackupXmlSection>? listSection = new List<MoodleBackupXmlSection>();
+        listSection.Add(moodlebackupSection);
+        moodlebackupSections.SetParameters(listSection);
         var moodlebackupCourse = new MoodleBackupXmlCourse();
         moodlebackupCourse.SetParameters("53", "XML_LK", "course");
         var moodlebackupContents = new MoodleBackupXmlContents();
-        moodlebackupContents.SetParameters(moodlebackupSections, moodlebackupCourse);
+        List<MoodleBackupXmlActivity>? moodleBackupXmlActivityList = new List<MoodleBackupXmlActivity>();
+        moodleBackupXmlActivityList.Add(new MoodleBackupXmlActivity());
+        moodleBackupXmlActivityList[moodleBackupXmlActivityList.Count-1].SetParameters("learningElementId", 
+            "learningElementId", "learningElementType",
+            "learningElementName", "activities/"+"learningElementType"+"_"+"learningElementId");
+        MoodleBackupXmlActivities activities = new MoodleBackupXmlActivities();
+        activities.SetParameters(moodleBackupXmlActivityList);
+        
+        moodlebackupCourse.SetParameters("53", "XML_LK", "course");
         
         
         var moodlebackupSetting1 = new MoodleBackupXmlSetting();
-        moodlebackupSetting1.SetParametersShort("filename", "C#_XML_Created_Backup.mbz");
+        moodlebackupSetting1.SetParametersSetting("filename", "C#_XML_Created_Backup.mbz", "1");
         var moodlebackupSettings = new MoodleBackupXmlSettings();
-        moodlebackupSettings.SetParameters();
-        moodlebackupSettings.Setting.Add(moodlebackupSetting1);
+        List<MoodleBackupXmlSetting?>? listSetting = new List<MoodleBackupXmlSetting?>();
+        listSetting.Add(moodlebackupSetting1);
+        moodlebackupSettings.SetParameters(listSetting);
         
-        
-        moodlebackupInformation.SetParameters("C#_XML_Created_Backup.mbz", 
-            "53", "topics", "XML_Leerer Kurs", 
-            "XML_LK", "286", "1", "1645484400", 
-            "1677020400", moodlebackupDetails, moodlebackupContents, moodlebackupSettings);
+        //Act
+        moodlebackupInformation.SetParameters("C#_AuthoringTool_Created_Backup.mbz", "2021051703",
+            "3.11.3 (Build: 20210913)", "2021051700", "3.11","currentTime", "0",
+            "1","0","https://moodle.cluuub.xyz",
+            "c9629ccd3c092478330b78bdf4dcdb18","1","topics", 
+            "learningWorld.identifier.value.ToString()", "learningWorld.identifier.value.ToString()", 
+            "currentTime", "2221567452", "1", "1", 
+            moodlebackupDetails as MoodleBackupXmlDetails, moodlebackupContents as MoodleBackupXmlContents, 
+            moodlebackupSettings as MoodleBackupXmlSettings);
         
         var moodlebackup = new MoodleBackupXmlMoodleBackup();
         
@@ -275,100 +340,50 @@ public class MoodleBackupXmlUt
         backupFileGen.CreateBackupFolders();
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
+               var moodlebackupInformation = new MoodleBackupXmlInformation();
+        
         var moodlebackupDetail = new MoodleBackupXmlDetail();
-        moodlebackupDetail.SetParameters("6a4e8e833791eb72e5f3ee2227ee1b74");
+        moodlebackupDetail.SetParameters("course", "moodle2", "1",
+            "10", "1", "0", "36d63c7b4624cf6a79e0405be770974d");
         var moodlebackupDetails = new MoodleBackupXmlDetails();
         moodlebackupDetails.SetParameters(moodlebackupDetail);
-
+        
         var moodlebackupSection = new MoodleBackupXmlSection();
         moodlebackupSection.SetParameters("160", "1", "sections/section_160");
         var moodlebackupSections = new MoodleBackupXmlSections();
-        moodlebackupSections.SetParameters(moodlebackupSection);
-
+        List<MoodleBackupXmlSection>? listSection = new List<MoodleBackupXmlSection>();
+        listSection.Add(moodlebackupSection);
+        moodlebackupSections.SetParameters(listSection);
         var moodlebackupCourse = new MoodleBackupXmlCourse();
         moodlebackupCourse.SetParameters("53", "XML_LK", "course");
-
         var moodlebackupContents = new MoodleBackupXmlContents();
-        moodlebackupContents.SetParameters(moodlebackupSections, moodlebackupCourse);
-
-        var moodlebackupSetting1 = new MoodleBackupXmlSetting();
-        moodlebackupSetting1.SetParametersShort("filename", "C#_XML_Created_Backup.mbz");
-        var moodlebackupSetting2 = new MoodleBackupXmlSetting();
-        moodlebackupSetting2.SetParametersShort("imscc11", "0");
-        var moodlebackupSetting3 = new MoodleBackupXmlSetting();
-        moodlebackupSetting3.SetParametersShort("users", "0");
-        var moodlebackupSetting4 = new MoodleBackupXmlSetting();
-        moodlebackupSetting4.SetParametersShort("anonymize", "0");
-        var moodlebackupSetting5 = new MoodleBackupXmlSetting();
-        moodlebackupSetting5.SetParametersShort("role_assignments", "0");
-        var moodlebackupSetting6 = new MoodleBackupXmlSetting();
-        moodlebackupSetting6.SetParametersShort("activities", "0");
-        var moodlebackupSetting7 = new MoodleBackupXmlSetting();
-        moodlebackupSetting7.SetParametersShort("blocks", "0");
-        var moodlebackupSetting8 = new MoodleBackupXmlSetting();
-        moodlebackupSetting8.SetParametersShort("files", "0");
-        var moodlebackupSetting9 = new MoodleBackupXmlSetting();
-        moodlebackupSetting9.SetParametersShort("filters", "0");
-        var moodlebackupSetting10 = new MoodleBackupXmlSetting();
-        moodlebackupSetting10.SetParametersShort("comments", "0");
-        var moodlebackupSetting11 = new MoodleBackupXmlSetting();
-        moodlebackupSetting11.SetParametersShort("badges", "0");
-        var moodlebackupSetting12 = new MoodleBackupXmlSetting();
-        moodlebackupSetting12.SetParametersShort("calendarevents", "0");
-        var moodlebackupSetting13 = new MoodleBackupXmlSetting();
-        moodlebackupSetting13.SetParametersShort("userscompletion", "0");
-        var moodlebackupSetting14 = new MoodleBackupXmlSetting();
-        moodlebackupSetting14.SetParametersShort("logs", "0");
-        var moodlebackupSetting15 = new MoodleBackupXmlSetting();
-        moodlebackupSetting15.SetParametersShort("grade_histories", "0");
-        var moodlebackupSetting16 = new MoodleBackupXmlSetting();
-        moodlebackupSetting16.SetParametersShort("questionbank", "0");
-        var moodlebackupSetting17 = new MoodleBackupXmlSetting();
-        moodlebackupSetting17.SetParametersShort("groups", "0");
-        var moodlebackupSetting18 = new MoodleBackupXmlSetting();
-        moodlebackupSetting18.SetParametersShort("competencies", "0");
-        var moodlebackupSetting19 = new MoodleBackupXmlSetting();
-        moodlebackupSetting19.SetParametersShort("customfield", "0");
-        var moodlebackupSetting20 = new MoodleBackupXmlSetting();
-        moodlebackupSetting20.SetParametersShort("contentbankcontent", "0");
-        var moodlebackupSetting21 = new MoodleBackupXmlSetting();
-        moodlebackupSetting21.SetParametersShort("legacyfiles", "0");
-        var moodlebackupSetting22 = new MoodleBackupXmlSetting();
-        moodlebackupSetting22.SetParametersFull("section_160_included", "1", "section", "section_160");
-        var moodlebackupSetting23 = new MoodleBackupXmlSetting();
-        moodlebackupSetting23.SetParametersFull("section_160_userinfo", "0", "section", "section_160");
-
-        var moodlebackupSettings = new MoodleBackupXmlSettings();
-        moodlebackupSettings.SetParameters();
-        moodlebackupSettings.Setting.Add(moodlebackupSetting1);
-        moodlebackupSettings.Setting.Add(moodlebackupSetting2);
-        moodlebackupSettings.Setting.Add(moodlebackupSetting3);
-        moodlebackupSettings.Setting.Add(moodlebackupSetting4);
-        moodlebackupSettings.Setting.Add(moodlebackupSetting5);
-        moodlebackupSettings.Setting.Add(moodlebackupSetting6);
-        moodlebackupSettings.Setting.Add(moodlebackupSetting7);
-        moodlebackupSettings.Setting.Add(moodlebackupSetting8);
-        moodlebackupSettings.Setting.Add(moodlebackupSetting9);
-        moodlebackupSettings.Setting.Add(moodlebackupSetting10);
-        moodlebackupSettings.Setting.Add(moodlebackupSetting11);
-        moodlebackupSettings.Setting.Add(moodlebackupSetting12);
-        moodlebackupSettings.Setting.Add(moodlebackupSetting13);
-        moodlebackupSettings.Setting.Add(moodlebackupSetting14);
-        moodlebackupSettings.Setting.Add(moodlebackupSetting15);
-        moodlebackupSettings.Setting.Add(moodlebackupSetting16);
-        moodlebackupSettings.Setting.Add(moodlebackupSetting17);
-        moodlebackupSettings.Setting.Add(moodlebackupSetting18);
-        moodlebackupSettings.Setting.Add(moodlebackupSetting19);
-        moodlebackupSettings.Setting.Add(moodlebackupSetting20);
-        moodlebackupSettings.Setting.Add(moodlebackupSetting21);
-        moodlebackupSettings.Setting.Add(moodlebackupSetting22);
-        moodlebackupSettings.Setting.Add(moodlebackupSetting23);
+        List<MoodleBackupXmlActivity>? moodleBackupXmlActivityList = new List<MoodleBackupXmlActivity>();
+        moodleBackupXmlActivityList.Add(new MoodleBackupXmlActivity());
+        moodleBackupXmlActivityList[moodleBackupXmlActivityList.Count-1].SetParameters("learningElementId", 
+            "learningElementId", "learningElementType",
+            "learningElementName", "activities/"+"learningElementType"+"_"+"learningElementId");
+        MoodleBackupXmlActivities activities = new MoodleBackupXmlActivities();
+        activities.SetParameters(moodleBackupXmlActivityList);
         
-        var moodlebackupInformation = new MoodleBackupXmlInformation();
-        moodlebackupInformation.SetParameters("C#_XML_Created_Backup.mbz", 
-            "53", "topics", "XML_Leerer Kurs", 
-            "XML_LK", "286", "1", "1645484400", 
-            "1677020400", moodlebackupDetails, moodlebackupContents, moodlebackupSettings);
+        moodlebackupCourse.SetParameters("53", "XML_LK", "course");
+        
+        
+        var moodlebackupSetting1 = new MoodleBackupXmlSetting();
+        moodlebackupSetting1.SetParametersSetting("filename", "C#_XML_Created_Backup.mbz", "1");
+        var moodlebackupSettings = new MoodleBackupXmlSettings();
+        List<MoodleBackupXmlSetting?>? listSetting = new List<MoodleBackupXmlSetting?>();
+        listSetting.Add(moodlebackupSetting1);
+        moodlebackupSettings.SetParameters(listSetting);
+        
+        //Act
+        moodlebackupInformation.SetParameters("C#_AuthoringTool_Created_Backup.mbz", "2021051703",
+            "3.11.3 (Build: 20210913)", "2021051700", "3.11","currentTime", "0",
+            "1","0","https://moodle.cluuub.xyz",
+            "c9629ccd3c092478330b78bdf4dcdb18","1","topics", 
+            "learningWorld.identifier.value.ToString()", "learningWorld.identifier.value.ToString()", 
+            "currentTime", "2221567452", "1", "1", 
+            moodlebackupDetails as MoodleBackupXmlDetails, moodlebackupContents as MoodleBackupXmlContents, 
+            moodlebackupSettings as MoodleBackupXmlSettings);
 
         var moodlebackup = new MoodleBackupXmlMoodleBackup();
         moodlebackup.SetParameters(moodlebackupInformation);

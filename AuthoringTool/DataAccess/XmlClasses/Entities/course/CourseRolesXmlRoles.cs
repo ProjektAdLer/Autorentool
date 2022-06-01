@@ -9,7 +9,7 @@ public partial class CourseRolesXmlRoles : ICourseRolesXmlRoles
     public void SetParameters(string roleOverrides, string roleAssignments)
     {
         Role_overrides = roleOverrides;
-        Role_assignments = Role_assignments;
+        Role_assignments = roleAssignments;
     }
 
     public void Serialize()

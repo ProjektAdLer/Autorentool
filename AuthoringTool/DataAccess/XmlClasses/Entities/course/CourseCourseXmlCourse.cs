@@ -7,24 +7,48 @@ namespace AuthoringTool.DataAccess.XmlClasses.course;
 [XmlRoot(ElementName="course")]
 	public partial class CourseCourseXmlCourse : ICourseCourseXmlCourse
 	{
-		
-		public void SetParameters(CourseCourseXmlCategory? xmlCategory)
+		public void SetParameters(string? shortname, string? fullname, string idnumber, string summary, 
+			string summaryformat, string format, string showgrades, string newsitems, string startdate, string enddate, 
+			string marker, string maxbytes, string legacyfiles, string showreports, string visible, string groupmode, 
+			string groupmodeforce, string defaultgroupingid, string lang, string theme, string timecreated, 
+			string timemodified, string requested, string showactivitydates, string showcompletionconditions, 
+			string enablecompletion, string completionnotify, string hiddensections, string coursedisplay, 
+			CourseCourseXmlCategory? category, string? tags, string customfields, string id, string contextid)
 		{
-			var currTime = DateTimeOffset.Now.ToUnixTimeSeconds(); 
-			Id = "53";
-			Contextid = "286";
-			Shortname = "XML_LK";
-			Fullname = "XML_Leerer Kurs";
-			Summaryformat = "1";
-			Format = "topics";
-			Showgrades = "1";
-			Newsitems = "5";
-			Startdate = currTime.ToString();
-			Timecreated = currTime.ToString();
-			Timemodified = currTime.ToString();
-			Tags = "";
-            			
-			Category = xmlCategory;
+			Shortname = shortname;
+			Fullname = fullname;
+			Idnumber = idnumber;
+			Summary = summary;
+			Summaryformat = summaryformat;
+			Format = format;
+			Showgrades = showgrades;
+			Newsitems = newsitems;
+			Startdate = startdate;
+			Enddate = enddate;
+			Marker = marker;
+			Maxbytes = maxbytes;
+			Legacyfiles = legacyfiles;
+			Showreports = showreports;
+			Visible = visible;
+			Groupmode = groupmode;
+			Groupmodeforce = groupmodeforce;
+			Defaultgroupingid = defaultgroupingid;
+			Lang = lang;
+			Theme = theme;
+			Timecreated = timecreated;
+			Timemodified = timemodified;
+			Requested = requested;
+			Showactivitydates = showactivitydates;
+			Showcompletionconditions = showcompletionconditions;
+			Enablecompletion = enablecompletion;
+			Completionnotify = completionnotify;
+			Hiddensections = hiddensections;
+			Coursedisplay = coursedisplay;
+			Category = category;
+			Tags = tags;
+			Customfields = customfields;
+			Id = id;
+			Contextid = contextid;
 		}
 
 		public void Serialize()
@@ -34,10 +58,10 @@ namespace AuthoringTool.DataAccess.XmlClasses.course;
 		}
 
 		[XmlElement(ElementName = "shortname")]
-		public string Shortname = "";
+		public string? Shortname = "";
 		
 		[XmlElement(ElementName="fullname")]
-		public string Fullname = "";
+		public string? Fullname = "";
 		
 		[XmlElement(ElementName="idnumber")]
 		public string Idnumber = "";
@@ -124,7 +148,7 @@ namespace AuthoringTool.DataAccess.XmlClasses.course;
 		public CourseCourseXmlCategory? Category;
 		
 		[XmlElement(ElementName="tags")]
-		public string Tags;
+		public string? Tags;
 		
 		[XmlElement(ElementName="customfields")]
 		public string Customfields = "";

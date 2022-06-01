@@ -4,36 +4,43 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 
 public class XmlFileFactory
 {
+    public string? fileSize { get; set; }
+    public string? fileCheckSum { get; set; }
     
-
-    public void CreateXmlFileFactory()
-    {
-        string hashCheckSum = CreateFoldersForFiles();
-        CreateFilesInFolder(hashCheckSum);
-    }
-    
-    private string filepath = Path.Join("C:", "Users", "biglerdd", "Desktop", "HS", "Hagel-Lernelemente", "Wortsuche Metriken.h5p");
-
     /// <summary>
-    /// Creates the needed Folder for the File in the BackupFolder Structure
+    /// Calculates the SHA1 Hash value for the file
     /// </summary>
-    public string CreateFoldersForFiles()
+    public void CalculateHashCheckSumAndFileSize(string filepath)
     {
         byte[] byteFile = File.ReadAllBytes(filepath);
-
-        var hash = new SHA1Managed().ComputeHash(byteFile);
-        string hashCheckSum = string.Concat(hash.Select(b => b.ToString("x2")));
-        string hashFolderName = hashCheckSum.Substring(0, 2);
         
-        var currWorkDir = Directory.GetCurrentDirectory();
-        Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "files", hashFolderName));
-        return hashCheckSum;
-    }
+        SHA1 sha1hash =  SHA1.Create();
+        var comp = sha1hash.ComputeHash(byteFile);
+        string hashCheckSum = string.Concat(comp.Select(b => b.ToString("x2")));
 
-    public void CreateFilesInFolder(string hashFolderName)
+        fileCheckSum = hashCheckSum;
+        fileSize = byteFile.Length.ToString();
+    }
+    
+    /// <summary>
+    /// Create needed folder for any file (only the first 2 letters of the hash value as foldername)
+    /// and copy file to the created folder
+    /// </summary>
+    /// <param name="hashCheckSum"></param>
+    public void CreateFolderAndFiles(string filepath, string? hashCheckSum)
     {
-        string destination = Path.Join("XMLFilesForExport", "files", hashFolderName.Substring(0,2), hashFolderName);
-        File.Copy(filepath, destination);
-        //File.Move(destination, hashFolderName);
+        var currWorkDir = Directory.GetCurrentDirectory();
+        string? hashFolderName = hashCheckSum?.Substring(0, 2);
+        Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "files", hashFolderName));
+
+        if (hashFolderName != null)
+        {
+            string fileDestination = Path.Join("XMLFilesForExport", "files", hashFolderName.Substring(0,2), 
+                hashCheckSum);
+            if (!File.Exists(fileDestination))
+            {
+                File.Copy(filepath, fileDestination);
+            }
+        }
     }
 }

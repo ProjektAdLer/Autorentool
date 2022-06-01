@@ -2,7 +2,9 @@
 
 namespace AuthoringTool.DataAccess.WorldExport;
 
-//This class makes it possible to test the Method "Serialize" in the class "XmlSerialize.cs"
+/// <summary>
+/// This class makes it possible to test the Method "Serialize" in the class "XmlSerialize.cs"
+/// </summary>
 public static class XmlSerializeFileSystemProvider {
     //static constructor
     

@@ -1,8 +1,12 @@
 ﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
+using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.DataAccess.XmlClasses;
 using AuthoringTool.DataAccess.XmlClasses.sections;
+using AuthoringTool.DataAccess.XmlClasses.XmlFileFactories;
+using Castle.Components.DictionaryAdapter;
+using NSubstitute.Core.Arguments;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.sections;
@@ -17,13 +21,15 @@ public class SectionsSectionXmlUt
         var sectionSection = new SectionsSectionXmlSection();
 
         //Act
-        sectionSection.SetParameters("160", "1");
+        sectionSection.SetParameters("h5pElementId", "$@NULL@$",
+            "$@NULL@$", "0", "$@NULL@$", "1", 
+            "$@NULL@$", "currentTime", "h5pElementId");
 
         //Assert
         Assert.Multiple(() =>
         {
-            Assert.That(sectionSection.Id, Is.EqualTo("160"));
-            Assert.That(sectionSection.Number, Is.EqualTo("1"));
+            Assert.That(sectionSection.Id, Is.EqualTo("h5pElementId"));
+            Assert.That(sectionSection.Number, Is.EqualTo("h5pElementId"));
 
         });
     }
@@ -35,18 +41,28 @@ public class SectionsSectionXmlUt
         //Arrange 
         var mockFileSystem = new MockFileSystem();
         var backupFileGen = new BackupFileGenerator(mockFileSystem);
+        ReadDSL? dsl = new ReadDSL();
+        var h5pfactory = new XmlH5PFactory(mockFileSystem,dsl, null, null, null,null,
+            null,null,null,null,null,null,null,
+            null,null,null,null,
+            null,null);
+
         backupFileGen.CreateBackupFolders();
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
         var sectionSection = new SectionsSectionXmlSection();
-        sectionSection.SetParameters("160","1");
+        sectionSection.SetParameters("h5pElementId", "$@NULL@$",
+            "$@NULL@$", "0", "$@NULL@$", "1", 
+            "$@NULL@$", "currentTime", "h5pElementId");
 
         //Act
+        h5pfactory.CreateSectionsFolder("1");
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
-        sectionSection.Serialize();
+        sectionSection.Serialize("1");
         
         //Assert
-        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "sections", "section_160", "section.xml");
+        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "sections", "section_1", "section.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
+    
 }

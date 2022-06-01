@@ -2,5 +2,5 @@
 
 public interface IMoodleBackupXmlSection
 {
-    void SetParameters(string sectionid, string title, string directory);
+    void SetParameters(string? sectionid, string? title, string directory);
 }

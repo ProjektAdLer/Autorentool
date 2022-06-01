@@ -6,25 +6,31 @@ namespace AuthoringTool.DataAccess.XmlClasses.sections;
 
 [XmlRoot(ElementName="section")]
 public partial class SectionsSectionXmlSection : ISectionsSectionXmlSection{
-
-
-    public void SetParameters(string id, string number)
+    
+    public void SetParameters(string? number, string name, string summary, string summaryformat, string sequence, 
+        string visible, string availabilityjson, string? timemodified, string? id)
     {
-        var currTime = DateTimeOffset.Now.ToUnixTimeSeconds(); 
-        Id = id;
         Number = number;
-        Timemodified = currTime.ToString();
+        Name = name;
+        Summary = summary;
+        Summaryformat = summaryformat;
+        Sequence = sequence;
+        Visible = visible;
+        Availabilityjson = availabilityjson;
+        Timemodified = timemodified;
+        Id = id;
     }
     
-    public void Serialize()
+    
+    public void Serialize(string? sectionId)
     {
         var xml = new XmlSerialize();
-        xml.Serialize(this, "sections/section_160/section.xml");
+        xml.Serialize(this, Path.Join("sections", "section_"+sectionId, "section.xml"));
 
     }
         
     [XmlElement(ElementName="number")]
-    public string Number = "";
+    public string? Number = "";
         
     [XmlElement(ElementName="name")]
     public string Name = "$@NULL@$";
@@ -44,8 +50,8 @@ public partial class SectionsSectionXmlSection : ISectionsSectionXmlSection{
     public string Availabilityjson = "$@NULL@$";
 
     [XmlElement(ElementName = "timemodified")]
-    public string Timemodified = "";
+    public string? Timemodified = "";
         
     [XmlAttribute(AttributeName="id")]
-    public string Id = "";
+    public string? Id = "";
 }

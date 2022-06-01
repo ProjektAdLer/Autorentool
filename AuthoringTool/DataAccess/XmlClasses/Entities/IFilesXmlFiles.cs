@@ -1,7 +1,9 @@
-﻿namespace AuthoringTool.DataAccess.XmlClasses;
+﻿
+namespace AuthoringTool.DataAccess.XmlClasses.Entities;
 
 public interface IFilesXmlFiles : IXmlSerializable
 {
-    void SetParameters();
-    
+    void SetParameters(List<FilesXmlFile>? filelist);
+
+
 }

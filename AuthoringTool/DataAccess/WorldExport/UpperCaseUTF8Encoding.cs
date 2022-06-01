@@ -2,8 +2,10 @@
 
 namespace AuthoringTool.DataAccess.WorldExport;
 
-//The sole purpose of this class is to change the Encoding from "utf-8" to "UTF-8"
-//Moodle needs the Encoding in Uppercase Format, else the Backup Restore process will throw an error.
+/// <summary>
+/// The purpose of this class is to change the Encoding from "utf-8" to "UTF-8"
+/// Moodle needs the Encoding in Uppercase Format, else the Backup Restore process will throw an error.
+/// </summary>
 public class UpperCaseUTF8Encoding : UTF8Encoding
 { 
     public override string WebName
@@ -11,7 +13,7 @@ public class UpperCaseUTF8Encoding : UTF8Encoding
         get { return base.WebName.ToUpper(); }
     }
     //Check if encoding already exists
-    public static UpperCaseUTF8Encoding UpperCaseUTF8
+    public static UpperCaseUTF8Encoding? UpperCaseUTF8
     {
         get
         {
@@ -22,5 +24,5 @@ public class UpperCaseUTF8Encoding : UTF8Encoding
             return upperCaseUtf8Encoding;
         }
     }
-    private static UpperCaseUTF8Encoding upperCaseUtf8Encoding = null;
+    private static UpperCaseUTF8Encoding? upperCaseUtf8Encoding;
 }

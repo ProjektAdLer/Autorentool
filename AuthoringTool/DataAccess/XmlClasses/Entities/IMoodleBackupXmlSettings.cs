@@ -2,7 +2,6 @@
 
 public interface IMoodleBackupXmlSettings
 {
-    void SetParameters();
+    void SetParameters(List<MoodleBackupXmlSetting?>? moodleBackupXmlSetting);
 
-    void FillSettings(MoodleBackupXmlSetting? moodleBackupXmlSetting);
 }

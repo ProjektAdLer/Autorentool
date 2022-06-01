@@ -35,7 +35,7 @@ public class LearningWorld : ILearningWorld
     }
 
     public List<LearningElement> LearningElements { get; set; }
-    public List<LearningSpace> LearningSpaces { get; set; }
+    public List<LearningSpace>? LearningSpaces { get; set; }
     public string Name { get; set; }
     public string Shortname { get; set; }
     public string Authors { get; set; }
