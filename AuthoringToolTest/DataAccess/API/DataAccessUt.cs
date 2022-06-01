@@ -34,20 +34,31 @@ public class DataAccessUt
         });
     }
 
-    /*[Test]
+    [Test]
     public void DataAccess_ConstructBackup_CallsBackupFileGenerator()
     {
         //Arrange
+        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockCreateDsl = Substitute.For<ICreateDSL>();
+        
         var mockBackupFile = Substitute.For<IBackupFileGenerator>();
-        var systemUnderTest = CreateTestableDataAccess(null, mockBackupFile);
+        var systemUnderTest = new AuthoringTool.DataAccess.API.DataAccess(null, mockBackupFile, 
+            null, null, null, null, mockCreateDsl, mockReadDsl);
+        var filepath = "this/path";
+        var mockLearningWorld = Substitute.For<ILearningWorld>();
+
 
         //Act
-        systemUnderTest.ConstructBackup();
+        systemUnderTest.ConstructBackup(mockLearningWorld as LearningWorld, filepath);
 
         //Assert
-        mockBackupFile.Received().WriteXmlFiles();
-        mockBackupFile.Received().WriteBackupFile();
-    }*/
+        mockCreateDsl.Received().WriteLearningWorld(mockLearningWorld as LearningWorld);
+        mockReadDsl.Received().ReadLearningWorld();
+        mockBackupFile.Received().CreateBackupFolders();
+        mockBackupFile.Received().WriteXmlFiles(mockReadDsl as ReadDSL);
+        mockBackupFile.Received().WriteBackupFile(filepath);
+
+    }
 
     [Test]
     public void DataAccess_SaveLearningWorldToFile_CallsFileSaveHandlerWorld()
