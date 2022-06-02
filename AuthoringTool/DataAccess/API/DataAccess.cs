@@ -40,8 +40,8 @@ internal class DataAccess : IDataAccess
     /// <param name="filepath"></param> Desired filepath for the .mbz file. Given by user, when Export Button is pressed.
     public void ConstructBackup(LearningWorld learningWorld, string filepath)
     {
-        CreateDsl.WriteLearningWorld(learningWorld);
-        ReadDsl.ReadLearningWorld();
+        string dslpath = CreateDsl.WriteLearningWorld(learningWorld);
+        ReadDsl.ReadLearningWorld(dslpath);
         BackupFile.CreateBackupFolders();
         BackupFile.WriteXmlFiles(ReadDsl as ReadDSL);
         BackupFile.WriteBackupFile(filepath);

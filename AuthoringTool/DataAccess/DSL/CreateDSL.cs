@@ -21,7 +21,7 @@ public class CreateDSL : ICreateDSL
     /// Reads the LearningWord Entity and creates an DSL Document with the given information.
     /// </summary>
     /// <param name="learningWorld"></param> Information about the learningWorld, topics, spaces and elements
-    public void WriteLearningWorld(LearningWorld learningWorld, IFileSystem? fileSystem=null)
+    public string WriteLearningWorld(LearningWorld learningWorld, IFileSystem? fileSystem=null)
     {
         _fileSystem = fileSystem?? new FileSystem();
         
@@ -130,8 +130,10 @@ public class CreateDSL : ICreateDSL
         //Create Backup Folder structure and the DSL Document in it
         BackupFileGenerator createFolders = new BackupFileGenerator(_fileSystem);
         createFolders.CreateBackupFolders();
-        _fileSystem.File.WriteAllText(Path.Join("XMLFilesForExport", "DSL_Document.json"), jsonFile);
+        var dslPath = _fileSystem.Path.Join("XMLFilesForExport", "DSL_Document.json");
+        _fileSystem.File.WriteAllText(dslPath, jsonFile);
         Console.WriteLine(jsonFile);
+        return dslPath;
 
     }
 }

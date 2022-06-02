@@ -12,7 +12,7 @@ public class CreateDSLUt
 {
 
     [Test]
-    public void CreateDSL_WriteLearningWorld_ObjectsAreEqual()
+    public void CreateDSL_WriteLearningWorld_DSLDocumentWritten()
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();

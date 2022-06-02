@@ -1,8 +1,10 @@
-﻿namespace AuthoringTool.DataAccess.DSL;
+﻿using System.IO.Abstractions;
+
+namespace AuthoringTool.DataAccess.DSL;
 
 public interface IReadDSL
 {
-    void ReadLearningWorld();
+    void ReadLearningWorld(string dslPath, IFileSystem? fileSystem = null);
     List<LearningElementJson>? GetH5PElementsList();
     LearningWorldJson? GetLearningWorld();
 }

@@ -1,17 +1,23 @@
-﻿using System.Text.Json;
+﻿using System.IO.Abstractions;
+using System.Text.Json;
+using FileSystem = System.IO.Abstractions.FileSystem;
 
 namespace AuthoringTool.DataAccess.DSL;
 
 public class ReadDSL : IReadDSL
 {
-    private List<LearningElementJson>? _listH5PElements;
-    private LearningWorldJson? _learningWorldJson;
-    private string filepathDSL = "XMLFilesForExport/DSL_Document.json";
+    public List<LearningElementJson>? ListH5PElements;
+    public LearningWorldJson? LearningWorldJson;
+    private string filepathDSL;
+    private IFileSystem _fileSystem;
 
-    public void ReadLearningWorld()
+    public void ReadLearningWorld(string dslPath, IFileSystem? fileSystem=null)
     {
-        _listH5PElements = new List<LearningElementJson>();
-        string jsonString = File.ReadAllText(filepathDSL);
+        _fileSystem = fileSystem?? new FileSystem();
+        filepathDSL = dslPath;
+        
+        ListH5PElements = new List<LearningElementJson>();
+        string jsonString = _fileSystem.File.ReadAllText(filepathDSL);
         DocumentRootJson? rootJson = JsonSerializer.Deserialize<DocumentRootJson>(jsonString);
         GetH5PElements(rootJson);
         SetLearningWorld(rootJson);
@@ -19,12 +25,12 @@ public class ReadDSL : IReadDSL
 
     private void SetLearningWorld(DocumentRootJson? documentRootJson)
     {
-        if (documentRootJson != null) _learningWorldJson = documentRootJson.learningWorld;
+        if (documentRootJson != null) LearningWorldJson = documentRootJson.learningWorld;
     }
 
     public LearningWorldJson? GetLearningWorld()
     {
-        return _learningWorldJson;
+        return LearningWorldJson;
     }
     
     private void GetH5PElements(DocumentRootJson? documentRootJson)
@@ -35,14 +41,14 @@ public class ReadDSL : IReadDSL
                 {
                     if (element.elementType == "H5P")
                     {
-                        if (_listH5PElements != null) _listH5PElements.Add(element);
+                        if (ListH5PElements != null) ListH5PElements.Add(element);
                     }
                 }
     }
 
     public List<LearningElementJson>? GetH5PElementsList()
     {
-        return _listH5PElements;
+        return ListH5PElements;
     }
     
     
