@@ -1,28 +1,33 @@
-﻿using System.Text.Json;
+﻿using System.IO.Abstractions;
+using System.Text.Json;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.Entities;
 using Microsoft.VisualBasic;
+using FileSystem = System.IO.Abstractions.FileSystem;
 
 namespace AuthoringTool.DataAccess.DSL;
 
 public class CreateDSL : ICreateDSL
 {
     
-    private List<LearningElement>? listLearningElements;
-    private List<LearningSpace>? listLearningSpaces;
-    private List<int>? listLearningSpaceContent;
+    public List<LearningElement>? listLearningElements;
+    public List<LearningSpace>? listLearningSpaces;
+    public List<int>? listLearningSpaceContent;
+    public LearningWorldJson learningWorldJson;
+    private IFileSystem _fileSystem;
 
 
     /// <summary>
     /// Reads the LearningWord Entity and creates an DSL Document with the given information.
     /// </summary>
     /// <param name="learningWorld"></param> Information about the learningWorld, topics, spaces and elements
-    public void WriteLearningWorld(LearningWorld learningWorld)
+    public void WriteLearningWorld(LearningWorld learningWorld, IFileSystem? fileSystem=null)
     {
-
+        _fileSystem = fileSystem?? new FileSystem();
+        
         //Create Empty Learning World, 
         //learningWorldJson will be filled with information later
-        LearningWorldJson learningWorldJson = new LearningWorldJson()
+        learningWorldJson = new LearningWorldJson()
         {
             identifier = new IdentifierJson()
             {
@@ -123,12 +128,10 @@ public class CreateDSL : ICreateDSL
         var jsonFile = JsonSerializer.Serialize(rootJson,options);
         
         //Create Backup Folder structure and the DSL Document in it
-        BackupFileGenerator createFolders = new BackupFileGenerator();
+        BackupFileGenerator createFolders = new BackupFileGenerator(_fileSystem);
         createFolders.CreateBackupFolders();
-        File.WriteAllText("XMLFilesForExport/DSL_Document.json", jsonFile);
+        _fileSystem.File.WriteAllText(Path.Join("XMLFilesForExport", "DSL_Document.json"), jsonFile);
         Console.WriteLine(jsonFile);
-
-
 
     }
 }
