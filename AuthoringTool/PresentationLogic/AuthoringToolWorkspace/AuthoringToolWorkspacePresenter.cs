@@ -109,7 +109,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenterT
         //TODO: check if world with that name exists already? is name our unique identifier?
         var learningWorld =
             _learningWorldPresenter.CreateNewLearningWorld(name, shortname, authors, language, description, goals);
-        _authoringToolWorkspaceVm.LearningWorlds.Add(learningWorld);
+        _authoringToolWorkspaceVm.AddLearningWorld(learningWorld);
         OnLearningWorldCreate?.Invoke(this, learningWorld);
     }
 
@@ -144,7 +144,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenterT
     {
         var learningWorld = _authoringToolWorkspaceVm.SelectedLearningWorld;
         if (learningWorld == null) return;
-        _authoringToolWorkspaceVm.LearningWorlds.Remove(learningWorld);
+        _authoringToolWorkspaceVm.RemoveLearningWorld(learningWorld);
         if (learningWorld.UnsavedChanges) DeletedUnsavedWorld = learningWorld;
         SetSelectedLearningWorld(_authoringToolWorkspaceVm.LearningWorlds.LastOrDefault());
         OnLearningWorldDelete?.Invoke(this, learningWorld);
@@ -200,7 +200,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenterT
             return;
         }
 
-        _authoringToolWorkspaceVm.LearningWorlds.Add(learningWorld);
+        _authoringToolWorkspaceVm.AddLearningWorld(learningWorld);
     }
 
     public async Task LoadLearningWorldAsync()
@@ -212,7 +212,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenterT
     public void ReplaceLearningWorld(LearningWorldViewModel toReplace)
     {
         var toBeReplaced = _authoringToolWorkspaceVm.LearningWorlds.First(world => world.Name == toReplace.Name);
-        _authoringToolWorkspaceVm.LearningWorlds.Remove(toBeReplaced);
+        _authoringToolWorkspaceVm.RemoveLearningWorld(toBeReplaced);
         if (toBeReplaced.UnsavedChanges)
         {
             if (ReplacedUnsavedWorld != null)
@@ -220,7 +220,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenterT
             ReplacedUnsavedWorld = toBeReplaced;
         }
 
-        _authoringToolWorkspaceVm.LearningWorlds.Add(toReplace);
+        _authoringToolWorkspaceVm.AddLearningWorld(toReplace);
         if (_authoringToolWorkspaceVm.SelectedLearningWorld == toBeReplaced)
         {
             _authoringToolWorkspaceVm.SelectedLearningWorld = toReplace;

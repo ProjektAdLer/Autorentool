@@ -14,7 +14,7 @@
 
 <h3>AuthoringTool Workspace</h3>
 
-<p role="status">Current count of learning worlds: @AuthoringToolWorkspaceVm.LearningWorlds.Count</p>
+<p role="status">Current count of learning worlds: @AuthoringToolWorkspaceVm.LearningWorlds.Count()</p>
 <p role="status" id="filepath">Filepath: @filePath</p>
 <label>
     Select learning world:
@@ -24,8 +24,8 @@
         {
             <option value="@learningWorld.Name">@learningWorld.Name</option>
         }
-        @if (AuthoringToolWorkspaceVm.LearningWorlds.Count == 0 ||
-             AuthoringToolWorkspaceVm.LearningWorlds.Count == 1 && AuthoringToolWorkspaceVm.SelectedLearningWorld == null)
+        @if (!AuthoringToolWorkspaceVm.LearningWorlds.Any() ||
+             AuthoringToolWorkspaceVm.LearningWorlds.Count() == 1 && AuthoringToolWorkspaceVm.SelectedLearningWorld == null)
         {
             <option value=""></option>
         }
@@ -117,6 +117,7 @@
     {
         base.OnParametersSet();
         AuthoringToolWorkspaceP.OnForceViewUpdate += StateHasChanged;
+        AuthoringToolWorkspaceVm.PropertyChanged += (_, _) => StateHasChanged();
     }
 
     private LearningWorldView? _activeView;
