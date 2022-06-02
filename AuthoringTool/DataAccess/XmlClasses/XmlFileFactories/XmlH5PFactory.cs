@@ -43,7 +43,7 @@ public class XmlH5PFactory
 
     private IFileSystem _fileSystem;
 
-    
+/*    
     public XmlH5PFactory(ReadDSL? readDsl)
     {
         FilesXmlFileBlock1 = new FilesXmlFile();
@@ -77,48 +77,49 @@ public class XmlH5PFactory
         ReadDsl = readDsl;
         currentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
         _fileSystem = new FileSystem();
-    }
+    }*/
 
-    public XmlH5PFactory(IFileSystem fileSystem, IReadDSL? readDsl , IFilesXmlFiles filesXmlFiles, IFilesXmlFile filesXmlFile,
-        IActivitiesGradesXmlGradeItem gradesGradeItem, IActivitiesGradesXmlGradeItems gradesGradeItems, 
-        ActivitiesGradesXmlActivityGradebook gradebook, IActivitiesH5PActivityXmlActivity h5PActivityXmlActivity, 
-        IActivitiesH5PActivityXmlH5PActivity h5PActivityXmlH5PActivity, IActivitiesRolesXmlRoles roles, IActivitiesModuleXmlModule module,
-        IActivitiesGradeHistoryXmlGradeHistory gradeHistory, IActivitiesInforefXmlFile inforefXmlFile, 
-        IActivitiesInforefXmlFileref inforefXmlFileref, IActivitiesInforefXmlGradeItem inforefXmlGradeItem, 
-        IActivitiesInforefXmlGradeItemref inforefXmlGradeItemref, IActivitiesInforefXmlInforef inforefXmlInforef,
-        ISectionsInforefXmlInforef sectionsInforefXmlInforef, ISectionsSectionXmlSection sectionsSectionXmlSection)
+    public XmlH5PFactory(IReadDSL readDsl , IFileSystem? fileSystem=null,  IFilesXmlFiles?  filesXmlFiles=null, 
+        IFilesXmlFile? filesXmlFile=null, IActivitiesGradesXmlGradeItem? gradesGradeItem=null, 
+        IActivitiesGradesXmlGradeItems? gradesGradeItems=null, ActivitiesGradesXmlActivityGradebook? gradebook=null, 
+        IActivitiesH5PActivityXmlActivity? h5PActivityXmlActivity=null, IActivitiesH5PActivityXmlH5PActivity? h5PActivityXmlH5PActivity=null,
+        IActivitiesRolesXmlRoles? roles=null, IActivitiesModuleXmlModule? module=null,
+        IActivitiesGradeHistoryXmlGradeHistory? gradeHistory=null, IActivitiesInforefXmlFile? inforefXmlFile=null, 
+        IActivitiesInforefXmlFileref? inforefXmlFileref=null, IActivitiesInforefXmlGradeItem? inforefXmlGradeItem=null, 
+        IActivitiesInforefXmlGradeItemref? inforefXmlGradeItemref=null, IActivitiesInforefXmlInforef? inforefXmlInforef=null,
+        ISectionsInforefXmlInforef? sectionsInforefXmlInforef=null, ISectionsSectionXmlSection? sectionsSectionXmlSection=null)
     {
-        _fileSystem = fileSystem; 
+        _fileSystem = fileSystem?? new FileSystem(); 
         
-        FilesXmlFiles = filesXmlFiles;
-        FilesXmlFileBlock1 = filesXmlFile;
-        FilesXmlFileBlock2 = filesXmlFile;
+        FilesXmlFileBlock1 = filesXmlFile?? new FilesXmlFile();
+        FilesXmlFileBlock2 = filesXmlFile?? new FilesXmlFile();
+        
+        FilesXmlFiles = filesXmlFiles?? new FilesXmlFiles();
 
-        ActivitiesGradesXmlGradeItem = gradesGradeItem;
-        ActivitiesGradesXmlGradeItems = gradesGradeItems;
-        ActivitiesGradesXmlActivityGradebook = gradebook;
+        ActivitiesGradesXmlGradeItem = gradesGradeItem?? new ActivitiesGradesXmlGradeItem();
+        ActivitiesGradesXmlGradeItems = gradesGradeItems?? new ActivitiesGradesXmlGradeItems();
+        ActivitiesGradesXmlActivityGradebook = gradebook?? new ActivitiesGradesXmlActivityGradebook();
 
-        ActivitiesH5PActivityXmlActivity = h5PActivityXmlActivity;
-        ActivitiesH5PActivityXmlH5PActivity = h5PActivityXmlH5PActivity;
+        ActivitiesH5PActivityXmlActivity =h5PActivityXmlActivity?? new ActivitiesH5PActivityXmlActivity();
+        ActivitiesH5PActivityXmlH5PActivity = h5PActivityXmlH5PActivity?? new ActivitiesH5PActivityXmlH5PActivity();
 
-        ActivitiesRolesXmlRoles = roles;
+        ActivitiesRolesXmlRoles = roles?? new ActivitiesRolesXmlRoles();
 
-        ActivitiesModuleXmlModule = module;
+        ActivitiesModuleXmlModule = module?? new ActivitiesModuleXmlModule();
 
-        ActivitiesGradeHistoryXmlGradeHistory = gradeHistory;
+        ActivitiesGradeHistoryXmlGradeHistory = gradeHistory?? new ActivitiesGradeHistoryXmlGradeHistory();
 
-        ActivitiesInforefXmlFileBlock1 = inforefXmlFile;
-        ActivitiesInforefXmlFileBlock2 = inforefXmlFile;
-        ActivitiesInforefXmlFileref = inforefXmlFileref;
-        ActivitiesInforefXmlGradeItem = inforefXmlGradeItem;
-        ActivitiesInforefXmlGradeItemref = inforefXmlGradeItemref;
-        ActivitiesInforefXmlInforef = inforefXmlInforef;
+        ActivitiesInforefXmlFileBlock1 = inforefXmlFile?? new ActivitiesInforefXmlFile();
+        ActivitiesInforefXmlFileBlock2 = inforefXmlFile?? new ActivitiesInforefXmlFile();
+        ActivitiesInforefXmlFileref = inforefXmlFileref?? new ActivitiesInforefXmlFileref();
+        ActivitiesInforefXmlGradeItem = inforefXmlGradeItem?? new ActivitiesInforefXmlGradeItem();
+        ActivitiesInforefXmlGradeItemref = inforefXmlGradeItemref?? new ActivitiesInforefXmlGradeItemref();
+        ActivitiesInforefXmlInforef = inforefXmlInforef?? new ActivitiesInforefXmlInforef();
 
-        SectionsInforefXmlInforef = sectionsInforefXmlInforef;
-        SectionsSectionXmlSection = sectionsSectionXmlSection;
+        SectionsInforefXmlInforef = sectionsInforefXmlInforef?? new SectionsInforefXmlInforef();
+        SectionsSectionXmlSection = sectionsSectionXmlSection?? new SectionsSectionXmlSection();
 
         ReadDsl = readDsl;
-
         currentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
     }
     
@@ -237,7 +238,7 @@ public class XmlH5PFactory
             ActivitiesInforefXmlFileList[ActivitiesInforefXmlFileList.Count - 1]
                 .SetParameterts(XmlEntityManager.GetFileIdBlock2().ToString());
 
-            ActivitiesInforefXmlFileref.SetParameterts(ActivitiesInforefXmlFileList);
+            ActivitiesInforefXmlFileref.SetParameters(ActivitiesInforefXmlFileList);
         }
 
         ActivitiesInforefXmlGradeItem.SetParameters("1");

@@ -2,5 +2,5 @@
 
 public interface IActivitiesInforefXmlFileref
 {
-    void SetParameterts(List<ActivitiesInforefXmlFile>? file);
+    void SetParameters(List<ActivitiesInforefXmlFile>? file);
 }

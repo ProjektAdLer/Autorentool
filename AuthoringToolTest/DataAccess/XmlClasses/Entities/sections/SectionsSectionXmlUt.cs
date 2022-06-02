@@ -42,7 +42,7 @@ public class SectionsSectionXmlUt
         var mockFileSystem = new MockFileSystem();
         var backupFileGen = new BackupFileGenerator(mockFileSystem);
         ReadDSL? dsl = new ReadDSL();
-        var h5pfactory = new XmlH5PFactory(mockFileSystem,dsl, null, null, null,null,
+        var h5pfactory = new XmlH5PFactory(dsl, mockFileSystem, null, null, null,null,
             null,null,null,null,null,null,null,
             null,null,null,null,
             null,null);

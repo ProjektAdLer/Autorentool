@@ -6,7 +6,7 @@ namespace AuthoringTool.DataAccess.XmlClasses.Entities.activities;
 [XmlRoot(ElementName="fileref")]
 public class ActivitiesInforefXmlFileref : IActivitiesInforefXmlFileref{
     
-    public void SetParameterts(List<ActivitiesInforefXmlFile>? file)
+    public void SetParameters(List<ActivitiesInforefXmlFile>? file)
     {
         File = file;
     }
