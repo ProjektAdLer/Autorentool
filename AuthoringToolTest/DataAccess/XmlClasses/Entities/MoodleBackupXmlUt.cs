@@ -101,6 +101,45 @@ public class MoodleBackupXmlUt
         });
         
     }
+
+    [Test]
+    public void MoodleBackupXmlActivity_SetParameters_ObjectsAreEqual()
+    {
+        //Arrange
+        var activity = new MoodleBackupXmlActivity();
+        
+        //Act
+        activity.SetParameters("1", "1", "name",
+            "title", "dir");
+        
+        //Assert
+        Assert.That(activity.Moduleid, Is.EqualTo("1"));
+        Assert.That(activity.Sectionid, Is.EqualTo("1"));
+        Assert.That(activity.Modulename, Is.EqualTo("name"));
+        Assert.That(activity.Title, Is.EqualTo("title"));
+        Assert.That(activity.Directory, Is.EqualTo("dir"));
+    }
+    
+    [Test]
+    public void MoodleBackupXmlActivities_SetParameters_ObjectsAreEqual()
+    {
+        //Arrange
+        var activity = new MoodleBackupXmlActivity();
+        activity.SetParameters("1", "1", "name",
+            "title", "dir");
+        var activities = new MoodleBackupXmlActivities();
+        List<MoodleBackupXmlActivity> list = new List<MoodleBackupXmlActivity>();
+        list.Add(activity);
+        
+        //Act
+        activities.SetParameters(list);
+        
+        //Assert
+        Assert.That(activities.Activity, Is.EqualTo(list));
+
+
+    }
+    
     
     [Test]
     public void MoodleBackupXmlContents_SetParameters_ObjectsAreEqual()
