@@ -6,13 +6,67 @@ namespace AuthoringTool.PresentationLogic.LearningElement;
 
 internal class LearningElementPresenter : ILearningElementPresenter
 {
-    public LearningElementViewModel CreateNewLearningElement(string name, string shortname,
-        ILearningElementViewModelParent parent,LearningContentViewModel learningContent,
+    public LearningElementViewModel CreateNewTransferElement(string name, string shortname,
+        ILearningElementViewModelParent parent, ContentTypeEnum contentType, LearningContentViewModel learningContent,
         string authors, string description, string goals, double posx = 0f, double posy = 0f)
     {
-        var element = new LearningElementViewModel(name, shortname, parent, learningContent, authors,
-            description, goals, posx, posy);
+        LearningElementViewModel element = contentType switch
+        {
+            ContentTypeEnum.Image => new ImageTransferElementViewModel(name, shortname, parent, learningContent,
+                authors, description, goals, posx, posy),
+            ContentTypeEnum.Video => new VideoTransferElementViewModel(name, shortname, parent, learningContent,
+                authors, description, goals, posx, posy),
+            ContentTypeEnum.Pdf => new PdfTransferElementViewModel(name, shortname, parent, learningContent, authors,
+                description, goals, posx, posy),
+            _ => throw new ApplicationException("No Valid ContentType assigned")
+        };
+        AddLearningElementParentAssignment(parent, element);
 
+        return element;
+    }
+
+    public LearningElementViewModel CreateNewActivationElement(string name, string shortname,
+        ILearningElementViewModelParent parent, ContentTypeEnum contentType, LearningContentViewModel learningContent,
+        string authors, string description, string goals, double posx = 0f, double posy = 0f)
+    {
+        LearningElementViewModel element = contentType switch
+        {
+            ContentTypeEnum.Video => new VideoActivationElementViewModel(name, shortname, parent, learningContent, authors,
+                description, goals, posx, posy),
+            ContentTypeEnum.H5P => new H5PActivationElementViewModel(name, shortname, parent, learningContent, authors,
+                description, goals, posx, posy),
+            _ => throw new ApplicationException("No Valid ContentType assigned")
+        };
+        AddLearningElementParentAssignment(parent, element);
+
+        return element;
+    }
+
+    public LearningElementViewModel CreateNewInteractionElement(string name, string shortname,
+        ILearningElementViewModelParent parent, ContentTypeEnum contentType, LearningContentViewModel learningContent,
+        string authors, string description, string goals, double posx = 0f, double posy = 0f)
+    {
+        LearningElementViewModel element = contentType switch
+        {
+            ContentTypeEnum.H5P => new H5PInteractionElementViewModel(name, shortname, parent, learningContent, authors,
+                description, goals, posx, posy),
+            _ => throw new ApplicationException("No Valid ContentType assigned")
+        };
+        AddLearningElementParentAssignment(parent, element);
+
+        return element;
+    }
+    
+    public LearningElementViewModel CreateNewTestElement(string name, string shortname,
+        ILearningElementViewModelParent parent, ContentTypeEnum contentType, LearningContentViewModel learningContent,
+        string authors, string description, string goals, double posx = 0f, double posy = 0f)
+    {
+        LearningElementViewModel element = contentType switch
+        {
+            ContentTypeEnum.H5P => new H5PTestElementViewModel(name, shortname, parent, learningContent, authors, description,
+                goals, posx, posy),
+            _ => throw new ApplicationException("No Valid ContentType assigned")
+        };
         AddLearningElementParentAssignment(parent, element);
 
         return element;

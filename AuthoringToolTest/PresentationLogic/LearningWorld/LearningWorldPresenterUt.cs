@@ -91,8 +91,8 @@ public class LearningWorldPresenterUt
     public void LearningWorldPresenter_CreateNewLearningElement_ThrowsWhenSelectedWorldNull()
     {
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
-        learningElementPresenter.CreateNewLearningElement(Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<LearningContentViewModel>(), Arg.Any<string>(),
+        learningElementPresenter.CreateNewTransferElement(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>()
             ).Returns(new LearningElementViewModel("foo", "bar",
             null, null, "bar", "foo", "bar"));
@@ -100,7 +100,7 @@ public class LearningWorldPresenterUt
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.CreateNewLearningElement("foo",
-            "bar", null, null, "bar", "foo", "bar"));
+            "bar", null, ElementTypeEnum.Transfer, ContentTypeEnum.Image, null, "bar", "foo", "bar"));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
 
@@ -129,8 +129,8 @@ public class LearningWorldPresenterUt
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
-        learningElementPresenter.CreateNewLearningElement(Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<LearningContentViewModel>(), Arg.Any<string>(),
+        learningElementPresenter.CreateNewTransferElement(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>()
             ).Returns(new LearningElementViewModel("foo", "bar", null,
             null, "foo", "bar", "foo"));
@@ -140,11 +140,11 @@ public class LearningWorldPresenterUt
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
         systemUnderTest.SetLearningWorld(null, world);
 
-        systemUnderTest.CreateNewLearningElement("name", "sn", parent, content,
+        systemUnderTest.CreateNewLearningElement("name", "sn", parent, ElementTypeEnum.Transfer, ContentTypeEnum.Image, content,
             "cont", "aut", "desc");
 
         learningElementPresenter.Received()
-            .CreateNewLearningElement("name", "sn", parent, content, "cont", "aut", "desc");
+            .CreateNewTransferElement("name", "sn", parent, ContentTypeEnum.Image, content, "cont", "aut", "desc");
     }
 
     [Test]
@@ -192,7 +192,7 @@ public class LearningWorldPresenterUt
         Assert.That(world.LearningElements, Is.Empty);
 
         systemUnderTest.SetLearningWorld(null, world);
-        systemUnderTest.CreateNewLearningElement("foo", "bar", world,
+        systemUnderTest.CreateNewLearningElement("foo", "bar", world, ElementTypeEnum.Transfer, ContentTypeEnum.Image,
             content, "bar", "foo", "bar");
 
         Assert.That(world.LearningElements, Has.Count.EqualTo(1));
@@ -224,7 +224,7 @@ public class LearningWorldPresenterUt
         Assert.That(space.LearningElements, Is.Empty);
 
         systemUnderTest.SetLearningWorld(null, world);
-        systemUnderTest.CreateNewLearningElement("foo", "bar", space,
+        systemUnderTest.CreateNewLearningElement("foo", "bar", space, ElementTypeEnum.Transfer, ContentTypeEnum.Image,
             content, "bar", "foo", "bar");
 
         Assert.That(space.LearningElements, Has.Count.EqualTo(1));
@@ -313,8 +313,8 @@ public class LearningWorldPresenterUt
     public void LearningWorldPresenter_OnCreateElementDialogClose_WithLearningWorld_CallsLearningElementPresenter()
     {
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
-        learningElementPresenter.CreateNewLearningElement(Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<LearningContentViewModel>(),
+        learningElementPresenter.CreateNewTransferElement(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(),
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()
             ).Returns(new LearningElementViewModel("ba", "ba",
             null, null, "ba",  "ba", "ba"));
@@ -340,7 +340,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
-        learningElementPresenter.Received().CreateNewLearningElement("a", "b", world, null, "d", "e", "f");
+        learningElementPresenter.Received().CreateNewTransferElement("a", "b", world, ContentTypeEnum.Image, null, "d", "e", "f");
     }
 
     [Test]
@@ -376,7 +376,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
-        learningElementPresenter.Received().CreateNewLearningElement("a", "b", space, null, "e", "f", "g");
+        learningElementPresenter.Received().CreateNewTransferElement("a", "b", space, ContentTypeEnum.Image, null, "e", "f", "g");
     }
 
     #endregion

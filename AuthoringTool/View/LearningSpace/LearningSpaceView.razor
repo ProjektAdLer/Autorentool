@@ -47,13 +47,16 @@
             <Draggable LearningObject="learningObject" OnClicked="@_learningSpaceP.SetSelectedLearningObject"
                        @bind-X="@learningObject.PositionX" @bind-Y="@learningObject.PositionY">
                 @{
-                    var color = learningObject switch
+                    var style = learningObject switch
                     {
-                        LearningElementViewModel => "blue",
+                        TransferElementViewModel => "fill:royalblue",
+                        ActivationElementViewModel => "fill:blueviolet",
+                        InteractionElementViewModel => "fill:steelblue",
+                        TestElementViewModel => "fill:deepskyblue",
                         _ => "grey"
                         };
                 }
-                <rect height="50" width="60" fill=@color></rect>
+                <rect height="50" width="60" style=@style></rect>
                 <text x="3" y="15">@learningObject.Name</text>
 
             </Draggable>

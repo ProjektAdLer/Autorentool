@@ -129,20 +129,32 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
     /// </summary>
     /// <param name="name">Name of the element.</param>
     /// <param name="shortname">Shortname of the element.</param>
-    /// <param name="parent">Parent of the learning element (selected learning space)</param>
+    /// <param name="parent">Parent of the learning element (selected learning space).</param>
+    /// <param name="elementType">Type of the element.</param>
+    /// <param name="contentType">Type of the content that the element contains.</param>
     /// <param name="learningContent">The content of the element.</param>
     /// <param name="authors">A list of authors of the element.</param>
     /// <param name="description">A description of the element.</param>
     /// <param name="goals">The goals of the element.</param>
     /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
     public void CreateNewLearningElement(string name, string shortname, ILearningElementViewModelParent parent,
-        LearningContentViewModel learningContent,string authors, string description, string goals)
+        ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContent,
+        string authors, string description, string goals)
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
-        var learningElement =
-            _learningElementPresenter.CreateNewLearningElement(name, shortname, parent, learningContent, authors,
-                description, goals);
+        var learningElement = elementType switch
+        {
+            ElementTypeEnum.Transfer => _learningElementPresenter.CreateNewTransferElement(name, shortname,
+                parent, contentType, learningContent, authors, description, goals),
+            ElementTypeEnum.Activation => _learningElementPresenter.CreateNewActivationElement(name, shortname,
+                parent, contentType, learningContent, authors, description, goals),
+            ElementTypeEnum.Interaction => _learningElementPresenter.CreateNewInteractionElement(name, shortname,
+                parent, contentType, learningContent, authors, description, goals),
+            ElementTypeEnum.Test => _learningElementPresenter.CreateNewTestElement(name, shortname,
+                parent, contentType, learningContent, authors, description, goals),
+            _ => throw new ApplicationException("no valid ElementType assigned")
+        };
 
         SetSelectedLearningObject(learningElement);
     }
@@ -252,7 +264,8 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
         try
         {
             var learningContent = Task.Run(async () => await LoadLearningContent(contentType)).Result;
-            CreateNewLearningElement(name, shortname, parentElement, learningContent, authors, description, goals);
+            CreateNewLearningElement(name, shortname, parentElement, elementType, contentType, learningContent, authors, 
+                description, goals);
         }
         catch (AggregateException)
         {

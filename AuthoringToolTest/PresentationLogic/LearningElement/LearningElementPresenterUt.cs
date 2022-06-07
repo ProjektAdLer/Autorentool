@@ -1,4 +1,5 @@
 using System;
+using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
@@ -12,18 +13,19 @@ namespace AuthoringToolTest.PresentationLogic.LearningElement;
 public class LearningElementPresenterUt
 {
     [Test]
-    public void LearningElementPresenter_CreateNewLearningElement_WorldParent_CreatesCorrectViewModel()
+    public void LearningElementPresenter_CreateNewTransferElement_WorldParent_CreatesCorrectViewModel()
     {
         var systemUnderTest = new LearningElementPresenter();
         var name = "a";
         var shortname = "b";
         var parent = new LearningWorldViewModel("","boo", "bla", "", "", "");
+        var contentType = ContentTypeEnum.Image;
         var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
         var authors = "d";
         var description = "e";
         var goals = "f";
 
-        var element = systemUnderTest.CreateNewLearningElement(name, shortname, parent, content,
+        var element = systemUnderTest.CreateNewTransferElement(name, shortname, parent, contentType, content,
             authors, description, goals);
         Assert.Multiple(() =>
         {
@@ -38,18 +40,140 @@ public class LearningElementPresenterUt
     }
 
     [Test]
-    public void LearningElementPresenter_CreateNewLearningElement_SpaceParent_CreatesCorrectViewModel()
+    public void LearningElementPresenter_CreateNewTransferElement_ThrowsApplicationException()
+    {
+        var systemUnderTest = new LearningElementPresenter();
+
+        var ex = Assert.Throws<ApplicationException>(() =>
+            systemUnderTest.CreateNewTransferElement("a", "b", null, ContentTypeEnum.H5P, null, "d", "e", "f"));
+        Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
+    }
+    
+    [Test]
+    public void LearningElementPresenter_CreateNewActivationElement_WorldParent_CreatesCorrectViewModel()
     {
         var systemUnderTest = new LearningElementPresenter();
         var name = "a";
         var shortname = "b";
-        var parent = new LearningSpaceViewModel("","boo", "bla", "", "");
+        var parent = new LearningWorldViewModel("","boo", "bla", "", "", "");
+        var contentType = ContentTypeEnum.Video;
         var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
         var authors = "d";
         var description = "e";
         var goals = "f";
 
-        var element = systemUnderTest.CreateNewLearningElement(name, shortname, parent, content,
+        var element = systemUnderTest.CreateNewActivationElement(name, shortname, parent, contentType, content,
+            authors, description, goals);
+        Assert.Multiple(() =>
+        {
+            Assert.That(element.Name, Is.EqualTo(name));
+            Assert.That(element.Shortname, Is.EqualTo(shortname));
+            Assert.That(element.Parent, Is.EqualTo(parent));
+            Assert.That(element.LearningContent, Is.EqualTo(content));
+            Assert.That(element.Authors, Is.EqualTo(authors));
+            Assert.That(element.Description, Is.EqualTo(description));
+            Assert.That(element.Goals, Is.EqualTo(goals));
+        });
+    }
+    
+    [Test]
+    public void LearningElementPresenter_CreateNewActivationElement_ThrowsApplicationException()
+    {
+        var systemUnderTest = new LearningElementPresenter();
+
+        var ex = Assert.Throws<ApplicationException>(() =>
+            systemUnderTest.CreateNewActivationElement("a", "b", null, ContentTypeEnum.Image, null, "d", "e", "f"));
+        Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
+    }
+    
+    [Test]
+    public void LearningElementPresenter_CreateNewInteractionElement_WorldParent_CreatesCorrectViewModel()
+    {
+        var systemUnderTest = new LearningElementPresenter();
+        var name = "a";
+        var shortname = "b";
+        var parent = new LearningWorldViewModel("","boo", "bla", "", "", "");
+        var contentType = ContentTypeEnum.H5P;
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var authors = "d";
+        var description = "e";
+        var goals = "f";
+
+        var element = systemUnderTest.CreateNewInteractionElement(name, shortname, parent, contentType, content,
+            authors, description, goals);
+        Assert.Multiple(() =>
+        {
+            Assert.That(element.Name, Is.EqualTo(name));
+            Assert.That(element.Shortname, Is.EqualTo(shortname));
+            Assert.That(element.Parent, Is.EqualTo(parent));
+            Assert.That(element.LearningContent, Is.EqualTo(content));
+            Assert.That(element.Authors, Is.EqualTo(authors));
+            Assert.That(element.Description, Is.EqualTo(description));
+            Assert.That(element.Goals, Is.EqualTo(goals));
+        });
+    }
+    
+    [Test]
+    public void LearningElementPresenter_CreateNewInteractionElement_ThrowsApplicationException()
+    {
+        var systemUnderTest = new LearningElementPresenter();
+
+        var ex = Assert.Throws<ApplicationException>(() =>
+            systemUnderTest.CreateNewInteractionElement("a", "b", null, ContentTypeEnum.Image, null, "d", "e", "f"));
+        Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
+    }
+    
+    [Test]
+    public void LearningElementPresenter_CreateNewTestElement_WorldParent_CreatesCorrectViewModel()
+    {
+        var systemUnderTest = new LearningElementPresenter();
+        var name = "a";
+        var shortname = "b";
+        var parent = new LearningWorldViewModel("","boo", "bla", "", "", "");
+        var contentType = ContentTypeEnum.H5P;
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var authors = "d";
+        var description = "e";
+        var goals = "f";
+
+        var element = systemUnderTest.CreateNewTestElement(name, shortname, parent, contentType, content,
+            authors, description, goals);
+        Assert.Multiple(() =>
+        {
+            Assert.That(element.Name, Is.EqualTo(name));
+            Assert.That(element.Shortname, Is.EqualTo(shortname));
+            Assert.That(element.Parent, Is.EqualTo(parent));
+            Assert.That(element.LearningContent, Is.EqualTo(content));
+            Assert.That(element.Authors, Is.EqualTo(authors));
+            Assert.That(element.Description, Is.EqualTo(description));
+            Assert.That(element.Goals, Is.EqualTo(goals));
+        });
+    }
+    
+    [Test]
+    public void LearningElementPresenter_CreateNewTestElement_ThrowsApplicationException()
+    {
+        var systemUnderTest = new LearningElementPresenter();
+
+        var ex = Assert.Throws<ApplicationException>(() =>
+            systemUnderTest.CreateNewTestElement("a", "b", null, ContentTypeEnum.Image, null, "d", "e", "f"));
+        Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
+    }
+
+    [Test]
+    public void LearningElementPresenter_CreateNewTransferElement_SpaceParent_CreatesCorrectViewModel()
+    {
+        var systemUnderTest = new LearningElementPresenter();
+        var name = "a";
+        var shortname = "b";
+        var parent = new LearningSpaceViewModel("","boo", "bla", "", "");
+        var contentType = ContentTypeEnum.Image;
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var authors = "d";
+        var description = "e";
+        var goals = "f";
+
+        var element = systemUnderTest.CreateNewTransferElement(name, shortname, parent, contentType, content,
             authors, description, goals);
         Assert.Multiple(() =>
         {
@@ -69,7 +193,7 @@ public class LearningElementPresenterUt
         var systemUnderTest = new LearningElementPresenter();
 
         var ex = Assert.Throws<NotImplementedException>(() =>
-            systemUnderTest.CreateNewLearningElement("a", "b", null, null, "d", "e", "f"));
+            systemUnderTest.CreateNewTransferElement("a", "b", null, ContentTypeEnum.Image, null, "d", "e", "f"));
         Assert.That(ex!.Message, Is.EqualTo("Type of Assignment is not implemented"));
     }
     
