@@ -8,6 +8,7 @@
                <h4>@HeaderTitle</h4>
           </div>
      }
+     @ChildContent
      <div class="content container">
           @{
                foreach (var row in Items.Split(ItemsPerRow!.Value))
@@ -40,6 +41,9 @@
      ///<summary>Template component of how items should be rendered.</summary>
      [Parameter, EditorRequired]
      public RenderFragment<TItem> ItemRenderTemplate { get; set; } = null!;
+     
+     [Parameter]
+     public RenderFragment? ChildContent { get; set; }
 
      ///<summary>(Optional) Title displayed in the header above the items.</summary>
      [Parameter]

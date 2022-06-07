@@ -6,11 +6,31 @@
 @using AuthoringTool.PresentationLogic.Toolbox
 @inject IAbstractToolboxRenderFragmentFactory RenderFragmentFactory
 @inject IToolboxEntriesProvider EntriesProvider
+@inject ILogger<Toolbox> Logger
 @* Disabled because editor does not recognize ItemRenderTemplate being provided as inner tag -n.stich*@
 @* ReSharper disable once Blazor.EditorRequired *@
-<GridLayoutDisplay HeaderTitle="Toolbox" Items="@EntriesProvider.Entries">
+<GridLayoutDisplay HeaderTitle="Toolbox" Items="@FilteredEntries">
+    <ChildContent>
+        <input type="text" name="search-term" @bind="@SearchTerm" @bind:event="oninput" placeholder="Search..."/>
+    </ChildContent>
     <ItemRenderTemplate>
         @RenderFragmentFactory.GetRenderFragment(context)
     </ItemRenderTemplate>
 </GridLayoutDisplay>
 
+@code
+{
+    private string? SearchTerm { get; set; }
+    
+    //TODO: filter special terms (world, space, element) and filter according to that
+    internal IEnumerable<IDisplayableLearningObject> FilteredEntries
+    {
+        get
+        {
+            return string.IsNullOrWhiteSpace(SearchTerm) ?
+                EntriesProvider.Entries :
+                EntriesProvider.Entries.Where(entry => entry.Name.ToLower().Contains(SearchTerm.ToLower()));
+        }
+    }
+
+}
