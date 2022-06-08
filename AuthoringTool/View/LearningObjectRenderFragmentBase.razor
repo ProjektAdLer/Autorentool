@@ -1,8 +1,8 @@
 @using AuthoringTool.PresentationLogic
 @using AuthoringTool.PresentationLogic.Toolbox
-@inject IToolboxController toolboxController
-<div class="col-3 element text-center text-wrap @CssClassSelector" @ondblclick="() => toolboxController.LoadObjectIntoWorkspace(obj)">
-    @obj.Name
+@inject IToolboxController ToolboxController
+<div class="col-3 element text-center text-wrap @CssClassSelector" @ondblclick="OnDoubleClick">
+    @Obj?.Name
     @if (ChildContent != null)
     {
         <br/>
@@ -11,9 +11,15 @@
 </div>
 @code {
     [Parameter, EditorRequired]
-    public IDisplayableLearningObject obj { get; set; }
+    public IDisplayableLearningObject? Obj { get; set; }
     [Parameter, EditorRequired]
-    public string CssClassSelector { get; set; }
+    public string? CssClassSelector { get; set; }
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
+
+    private void OnDoubleClick()
+    {
+        if (Obj != null)
+            ToolboxController.LoadObjectIntoWorkspace(Obj);
+    }
 }

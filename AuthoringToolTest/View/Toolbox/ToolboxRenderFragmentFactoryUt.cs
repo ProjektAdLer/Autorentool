@@ -9,6 +9,7 @@ using AuthoringTool.PresentationLogic.Toolbox;
 using AuthoringTool.View.Toolbox;
 using Bunit;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using TestContext = Bunit.TestContext;
@@ -43,6 +44,23 @@ public class ToolboxRenderFragmentFactoryUt
         //see https://bunit.dev/docs/verification/verify-markup.html
         rendered.MarkupMatches(expectedMarkup);
     }
+    
+    [Test]
+    [TestCaseSource(typeof(ToolboxRenderFragmentFactoryTestCases))]
+    public void ToolboxRenderFragmentFactory_GetRenderFragment_CallingTwiceReturnsSameFragment(IDisplayableLearningObject obj, string expectedMarkup)
+    {
+        var systemUnderTest = GetTestableToolboxRenderFragmentFactory();
+
+        var firstPass = systemUnderTest.GetRenderFragment(obj);
+        var firstPassRendered = _testContext.Render(firstPass);
+        firstPassRendered.MarkupMatches(expectedMarkup);
+
+        var secondPass = systemUnderTest.GetRenderFragment(obj);
+        var secondPassRendered = _testContext.Render(secondPass);
+        secondPassRendered.MarkupMatches(expectedMarkup);
+        
+        Assert.That(secondPass, Is.SameAs(firstPass));
+    }
 
     [Test]
     public void ToolboxRenderFragmentFactory_GetRenderFragment_ThrowsExceptionOnInvalidObject()
@@ -53,9 +71,11 @@ public class ToolboxRenderFragmentFactoryUt
             systemUnderTest.GetRenderFragment(Substitute.For<IDisplayableLearningObject>()));
     }
 
-    private IAbstractToolboxRenderFragmentFactory GetTestableToolboxRenderFragmentFactory()
+
+    private IAbstractToolboxRenderFragmentFactory GetTestableToolboxRenderFragmentFactory(ILogger<ToolboxRenderFragmentFactory>? logger = null)
     {
-        return new ToolboxRenderFragmentFactory();
+        logger ??= Substitute.For<ILogger<ToolboxRenderFragmentFactory>>();
+        return new ToolboxRenderFragmentFactory(logger);
     }
 
     private class ToolboxRenderFragmentFactoryTestCases : IEnumerable
