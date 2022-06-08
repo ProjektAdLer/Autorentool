@@ -62,6 +62,7 @@ public class Startup
         services.AddSingleton<IToolboxEntriesProviderModifiable, ToolboxEntriesProvider>();
         services.AddSingleton<IToolboxController, ToolboxController>();
         services.AddSingleton(p => (IToolboxEntriesProvider)p.GetService(typeof(IToolboxEntriesProviderModifiable))!);
+        services.AddSingleton<IToolboxResultFilter, ToolboxResultFilter>();
         //ViewModel <-> Entity Mappers
         services.AddSingleton<ILearningElementMapper, LearningElementMapper>();
         services.AddSingleton<ILearningSpaceMapper, LearningSpaceMapper>();

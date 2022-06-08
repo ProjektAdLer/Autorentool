@@ -58,20 +58,24 @@ public interface IToolboxResultFilter
     /// <summary>
     /// The Regex string used for <see cref="MatchesQuoteRule"/>.
     /// </summary>
+    /// <remarks>See https://regex101.com/r/Ge3MQs/1 for an explanation of the Regex.</remarks>
     static string QuoteRegexString => @"^(?:\s*)(?:\"")+(.*?)(?:\"")+(?:\s*)$";
     
     /// <summary>
     /// The Regex string used for <see cref="MatchesWorldRule"/>.
     /// </summary>
+    /// <remarks>See https://regex101.com/r/poPQoK/1 for an explanation of the Regex.</remarks>
     static string WorldRegexString => @"^(?:\s*)(?:world:)(?:\s*)(.*)$|^(?:\s*)(?:world)(?:.*)$";
     
     /// <summary>
     /// The Regex string used for <see cref="MatchesSpaceRule"/>.
     /// </summary>
+    /// <remarks>See https://regex101.com/r/8dQqAN/1 for an explanation of the Regex.</remarks>
     static string SpaceRegexString => @"^(?:\s*)(?:space:)(?:\s*)(.*)$|^(?:\s*)(?:space)(?:.*)$";
     
     /// <summary>
     /// The Regex string used for <see cref="MatchesElementRule"/>.
     /// </summary>
+    /// <remarks>See https://regex101.com/r/0QEoXQ/1 for an explanation of the Regex.</remarks>
     static string ElementRegexString => @"^(?:\s*)(?:element:)(?:\s*)(.*)$|^(?:\s*)(?:element)(?:.*)$";
 }

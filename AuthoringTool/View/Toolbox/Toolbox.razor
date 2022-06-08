@@ -7,6 +7,7 @@
 @inject IAbstractToolboxRenderFragmentFactory RenderFragmentFactory
 @inject IToolboxEntriesProvider EntriesProvider
 @inject ILogger<Toolbox> Logger
+@inject IToolboxResultFilter ResultFilter
 @* Disabled because editor does not recognize ItemRenderTemplate being provided as inner tag -n.stich*@
 @* ReSharper disable once Blazor.EditorRequired *@
 <GridLayoutDisplay HeaderTitle="Toolbox" Items="@FilteredEntries">
@@ -21,16 +22,8 @@
 @code
 {
     private string? SearchTerm { get; set; }
-    
-    //TODO: filter special terms (world, space, element) and filter according to that
-    internal IEnumerable<IDisplayableLearningObject> FilteredEntries
-    {
-        get
-        {
-            return string.IsNullOrWhiteSpace(SearchTerm) ?
-                EntriesProvider.Entries :
-                EntriesProvider.Entries.Where(entry => entry.Name.ToLower().Contains(SearchTerm.ToLower()));
-        }
-    }
-
+    private IEnumerable<IDisplayableLearningObject> FilteredEntries =>
+        string.IsNullOrWhiteSpace(SearchTerm) ?
+            EntriesProvider.Entries :
+            ResultFilter.FilterCollection(EntriesProvider.Entries, SearchTerm);
 }
