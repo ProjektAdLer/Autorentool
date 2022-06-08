@@ -79,8 +79,8 @@ public class ToolboxEntriesProviderUt
         var lwEntity = new AuthoringTool.Entities.LearningWorld("foo", "foo", "foo", "foo", "foo", "foo");
         var lsEntity = new AuthoringTool.Entities.LearningSpace("foo", "foo", "foo", "foo", "foo");
         var leEntity =
-            new AuthoringTool.Entities.LearningElement("foo", "foo", "foo", "foo",
-                "foo", null, "foo", "foo", "foo");
+            new AuthoringTool.Entities.LearningElement("foo", "foo", "foo", null, "foo",
+                "foo", "foo");
         businessLogic.LoadLearningWorld(Arg.Any<string>()).Returns(lwEntity);
         businessLogic.LoadLearningSpace(Arg.Any<string>()).Returns(lsEntity);
         businessLogic.LoadLearningElement(Arg.Any<string>()).Returns(leEntity);
@@ -92,8 +92,8 @@ public class ToolboxEntriesProviderUt
         var spaceVm = new LearningSpaceViewModel("ba", "ba", "ba", "ba", "ba");
         spaceMapper.ToViewModel(Arg.Any<ILearningSpace>()).Returns(spaceVm);
         var elementMapper = Substitute.For<ILearningElementMapper>();
-        var elementVm = new LearningElementViewModel("ba", "ba", null, "ba", "ba",
-            null, "ba", "ba", "ba");
+        var elementVm = new LearningElementViewModel("ba", "ba", null, null, "ba",
+            "ba", "ba");
         elementMapper.ToViewModel(Arg.Any<ILearningElement>()).Returns(elementVm);
         var entityMapping =
             new AuthoringTool.PresentationLogic.EntityMapping.EntityMapping(worldMapper, spaceMapper, elementMapper);
@@ -138,13 +138,13 @@ public class ToolboxEntriesProviderUt
 
         var lwViewModel = new LearningWorldViewModel("world", "foo", "foo", "foo", "foo", "foo");
         var lsViewModel = new LearningSpaceViewModel("space", "foo", "foo", "foo", "foo");
-        var leViewModel = new LearningElementViewModel("element", "foo", null, "foo", "foo", null, "foo", "foo", "foo");
+        var leViewModel = new LearningElementViewModel("element", "foo", null, null, "foo", "foo", "foo");
         
         var lwEntity = new AuthoringTool.Entities.LearningWorld("world", "foo", "foo", "foo", "foo", "foo");
         var lsEntity = new AuthoringTool.Entities.LearningSpace("space", "foo", "foo", "foo", "foo");
         var leEntity =
-            new AuthoringTool.Entities.LearningElement("element", "foo", "foo", "foo",
-                "foo", null, "foo", "foo", "foo");
+            new AuthoringTool.Entities.LearningElement("element", "foo", "foo", null, "foo",
+                "foo", "foo");
         worldMapper.ToEntity(lwViewModel).Returns(lwEntity);
         spaceMapper.ToEntity(lsViewModel).Returns(lsEntity);
         elementMapper.ToEntity(leViewModel).Returns(leEntity);
@@ -199,8 +199,8 @@ public class ToolboxEntriesProviderUt
         var lwEntity = new AuthoringTool.Entities.LearningWorld("world", "foo", "foo", "foo", "foo", "foo");
         var lsEntity = new AuthoringTool.Entities.LearningSpace("space", "foo", "foo", "foo", "foo");
         var leEntity =
-            new AuthoringTool.Entities.LearningElement("element", "foo", "foo", "foo",
-                "foo", null, "foo", "foo", "foo");
+            new AuthoringTool.Entities.LearningElement("element", "foo", "foo", null,"foo",
+                "foo", null);
         businessLogic.LoadLearningWorld(Arg.Any<string>()).Returns(lwEntity);
         businessLogic.LoadLearningSpace(Arg.Any<string>()).Returns(lsEntity);
         businessLogic.LoadLearningElement(Arg.Any<string>()).Returns(leEntity);
@@ -212,8 +212,8 @@ public class ToolboxEntriesProviderUt
         var spaceVm = new LearningSpaceViewModel("space", "ba", "ba", "ba", "ba");
         spaceMapper.ToViewModel(Arg.Any<ILearningSpace>()).Returns(spaceVm);
         var elementMapper = Substitute.For<ILearningElementMapper>();
-        var elementVm = new LearningElementViewModel("element", "ba", null, "ba", "ba",
-            null, "ba", "ba", "ba");
+        var elementVm = new LearningElementViewModel("element", "ba", null, null, "ba", "ba",
+            "foo");
         elementMapper.ToViewModel(Arg.Any<ILearningElement>()).Returns(elementVm);
         var entityMapping =
             new AuthoringTool.PresentationLogic.EntityMapping.EntityMapping(worldMapper, spaceMapper, elementMapper);

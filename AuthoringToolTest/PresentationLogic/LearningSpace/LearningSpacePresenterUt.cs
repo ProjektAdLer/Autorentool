@@ -4,6 +4,7 @@ using System.Linq;
 using AuthoringTool.Components.ModalDialog;
 using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.API;
+using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
@@ -69,16 +70,15 @@ public class LearningSpacePresenterUt
     {
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
         learningElementPresenter.CreateNewLearningElement(Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>()).Returns(new LearningElementViewModel("foo", "bar",
-            null, "Video", "bar",null, "foo", "foo", "bar"));
+            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<LearningContentViewModel>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>()
+            ).Returns(new LearningElementViewModel("foo", "bar",
+            null, null, "foo", "foo", "bar"));
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.CreateNewLearningElement("foo",
-            "bar", null, "foo", "bar", "foo", "bar",
-            "foo"));
+            "bar", null, null, "bar", "foo", "bar"));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
     }
 
@@ -88,20 +88,21 @@ public class LearningSpacePresenterUt
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
         learningElementPresenter.CreateNewLearningElement(Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>()).Returns(new LearningElementViewModel("foo", "bar", null,
-            "foo", "bar", null,"foo", "bar", "foo"));
+            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<LearningContentViewModel>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>()
+            ).Returns(new LearningElementViewModel("foo", "bar", null,
+            null,"foo", "bar", "foo"));
         var parent = new LearningWorldViewModel("foo", "boo", "bla", "blub", "bibi", "bubu");
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
         systemUnderTest.SetLearningSpace(space);
 
-        systemUnderTest.CreateNewLearningElement("name", "sn", parent, "type",
-            "cont", "aut", "desc", "goal");
+        systemUnderTest.CreateNewLearningElement("name", "sn", parent, content,
+            "cont", "aut", "desc");
 
         learningElementPresenter.Received()
-            .CreateNewLearningElement("name", "sn", parent, "type", "cont", "aut", "desc", "goal");
+            .CreateNewLearningElement("name", "sn", parent, content, "cont", "aut", "desc");
     }
 
     [Test]
@@ -109,6 +110,8 @@ public class LearningSpacePresenterUt
     {
         var learningElementPresenter = new LearningElementPresenter();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
 
@@ -116,7 +119,7 @@ public class LearningSpacePresenterUt
 
         systemUnderTest.SetLearningSpace(space);
         systemUnderTest.CreateNewLearningElement("foo", "bar", space,
-            "foo", "bar", "foo", "bar", "foo");
+            content, "bar", "foo", "bar");
 
         Assert.That(space.LearningElements, Has.Count.EqualTo(1));
         var element = space.LearningElements.First();
@@ -125,11 +128,10 @@ public class LearningSpacePresenterUt
             Assert.That(element.Name, Is.EqualTo("foo"));
             Assert.That(element.Shortname, Is.EqualTo("bar"));
             Assert.That(element.Parent, Is.EqualTo(space));
-            Assert.That(element.ElementType, Is.EqualTo("foo"));
-            Assert.That(element.ContentType, Is.EqualTo("bar"));
-            Assert.That(element.Authors, Is.EqualTo("foo"));
-            Assert.That(element.Description, Is.EqualTo("bar"));
-            Assert.That(element.Goals, Is.EqualTo("foo"));
+            Assert.That(element.LearningContent, Is.EqualTo(content));
+            Assert.That(element.Authors, Is.EqualTo("bar"));
+            Assert.That(element.Description, Is.EqualTo("foo"));
+            Assert.That(element.Goals, Is.EqualTo("bar"));
         });
     }
 
@@ -156,22 +158,21 @@ public class LearningSpacePresenterUt
     [Test]
     public void LearningSpacePresenter_OnCreateElementDialogClose_WithLearningWorld_CallsLearningElementPresenter()
     {
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
         learningElementPresenter.CreateNewLearningElement(Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>()).Returns(new LearningElementViewModel("ba", "ba",
-            null, "ba", "ba", null, "ba", "ba", "ba"));
+            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<LearningContentViewModel>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()
+            ).Returns(new LearningElementViewModel("ba", "ba",
+            null, content, "ba", "ba", "ba"));
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "a";
         dictionary["Shortname"] = "b";
-        dictionary["Parent"] = "Learning space";
-        dictionary["Assignment"] = "foo";
-        dictionary["Type"] = "c";
-        dictionary["Content"] = "d";
+        dictionary["Type"] = "Transfer";
+        dictionary["Content"] = "Pdf";
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
         dictionary["Goals"] = "g";
@@ -183,7 +184,7 @@ public class LearningSpacePresenterUt
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
-        learningElementPresenter.Received().CreateNewLearningElement("a", "b", space, "c", "d", "e", "f", "g");
+        learningElementPresenter.Received().CreateNewLearningElement("a", "b", space, null, "e", "f", "g");
     }
 
     #endregion
@@ -212,12 +213,12 @@ public class LearningSpacePresenterUt
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
         learningElementPresenter.EditLearningElement(Arg.Any<LearningElementViewModel>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<ILearningElementViewModelParent>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<string>(),
             Arg.Any<string>()).Returns(new LearningElementViewModel("ba", "ba",
-            null, "ba", "ba",null, "ba", "ba", "ba"));
+            null, null, "ba", "ba", "ba"));
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var element = new LearningElementViewModel("foo", "bar", null, "bar", "foo",
-            null,"bar", "foo", "bar");
+        var element = new LearningElementViewModel("foo", "bar", null, null,"bar",
+            "foo", "bar");
         space.LearningElements.Add(element);
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
@@ -240,7 +241,7 @@ public class LearningSpacePresenterUt
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
-        learningElementPresenter.Received().EditLearningElement(element, "a", "b", space, "c", "d", "e", "f", "g");
+        learningElementPresenter.Received().EditLearningElement(element, "a", "b", space, "e", "f", "g");
     }
 
     #endregion
@@ -268,7 +269,8 @@ public class LearningSpacePresenterUt
     public void LearningSpacePresenter_DeleteSelectedLearningObject_WithElement_CallsElementPresenter()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var element = new LearningElementViewModel("f", "f", space, "f", "f",null, "f", "f", "f");
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var element = new LearningElementViewModel("f", "f", space, content, "f", "f", "f");
         space.LearningElements.Add(element);
         space.SelectedLearningObject = element;
 
@@ -306,8 +308,10 @@ public class LearningSpacePresenterUt
             (((LearningSpaceViewModel) ele.Parent!)).LearningElements.Remove(ele);
         });
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var element1 = new LearningElementViewModel("f", "f", space, "f", "f", null,"f", "f", "f");
-        var element2 = new LearningElementViewModel("e", "e", space, "f", "f", null,"f", "f", "f");
+        var content1 = new LearningContentViewModel("bare", "foof", new byte[] {0x01, 0x02});
+        var content2 = new LearningContentViewModel("bars", "foos", new byte[] {0x04, 0x03});
+        var element1 = new LearningElementViewModel("f", "f", space, content1, "f", "f", "f");
+        var element2 = new LearningElementViewModel("e", "e", space, content2, "f", "f", "f");
         space.LearningElements.Add(element1);
         space.LearningElements.Add(element2);
         space.SelectedLearningObject = element1;
@@ -363,7 +367,8 @@ public class LearningSpacePresenterUt
     public void LearningSpacePresenter_OpenEditSelectedLearningObjectDialog_WithElement_CallsMethod()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var element = new LearningElementViewModel("n", "sn", space, "t","c",null,"a", "d", "g");
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var element = new LearningElementViewModel("n", "sn", space, content,"a", "d", "g");
         space.LearningElements.Add(element);
         space.SelectedLearningObject = element;
         space.EditDialogInitialValues = new Dictionary<string, string>();
@@ -377,10 +382,8 @@ public class LearningSpacePresenterUt
             Assert.That(systemUnderTest.EditLearningElementDialogOpen, Is.True);
             Assert.That(space.EditDialogInitialValues["Name"], Is.EqualTo(element.Name));
             Assert.That(space.EditDialogInitialValues["Shortname"], Is.EqualTo(element.Shortname));
-            Assert.That(space.EditDialogInitialValues["Parent"], Is.EqualTo("Learning space"));
+            Assert.That(space.EditDialogInitialValues["Parent"], Is.EqualTo(ElementParentEnum.Space.ToString()));
             Assert.That(space.EditDialogInitialValues["Assignment"], Is.EqualTo(element.Parent?.Name));
-            Assert.That(space.EditDialogInitialValues["Type"], Is.EqualTo(element.ElementType));
-            Assert.That(space.EditDialogInitialValues["Content"], Is.EqualTo(element.ContentType));
             Assert.That(space.EditDialogInitialValues["Authors"], Is.EqualTo(element.Authors));
             Assert.That(space.EditDialogInitialValues["Description"], Is.EqualTo(element.Description));
             Assert.That(space.EditDialogInitialValues["Goals"], Is.EqualTo(element.Goals));
@@ -433,7 +436,8 @@ public class LearningSpacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var element = new LearningElementViewModel("f", "f", space, "f", "f", null,"f",
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var element = new LearningElementViewModel("f", "f", space, content,"f",
             "f", "f");
         space.LearningElements.Add(element);
         space.SelectedLearningObject = element;
@@ -492,7 +496,7 @@ public class LearningSpacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         presentationLogic.LoadLearningElementAsync()
-            .Returns(new LearningElementViewModel("n", "sn", null, "et", "ct", null, "a", "d", "g"));
+            .Returns(new LearningElementViewModel("n", "sn", null, null, "a", "d", "g"));
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
@@ -508,8 +512,6 @@ public class LearningSpacePresenterUt
             Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.First().Name, Is.EqualTo("n"));
             Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.First().Shortname, Is.EqualTo("sn"));
             Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.First().Parent, Is.EqualTo(space));
-            Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.First().ElementType, Is.EqualTo("et"));
-            Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.First().ContentType, Is.EqualTo("ct"));
             Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.First().Authors, Is.EqualTo("a"));
             Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.First().Description, Is.EqualTo("d"));
             Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.First().Goals, Is.EqualTo("g"));

@@ -33,7 +33,7 @@ else
     {
         <ModalDialog Title="Create new learning element" Text="Please enter the required data for the learning element below:"
                      OnClose="@OnCreateElementDialogClose" DialogType=@ModalDialogType.OkCancel
-                     InputFields="@_learningWorldP.ModalDialogElementInputFields">
+                     InputFields="@_learningWorldP.ModalDialogCreateElementInputFields">
         </ModalDialog>
     }
     <br>
@@ -54,10 +54,6 @@ else
         <button class="btn btn-primary" @onclick="SaveSelectedLearningObjectAsync">Save selected Learning Object</button>
         <button class="btn btn-primary" @onclick="ShowSelectedLearningSpaceView"
                 hidden="@(!_learningWorldP.SelectedLearningObjectIsSpace)">Open selected Learning Space</button>
-        <button class="btn btn-primary" @onclick="LoadLearningContentAsync"
-                hidden="@(_learningWorldP.LearningWorldVm?.SelectedLearningObject is not LearningElementViewModel learningElementViewModel)">
-            Load Content of Learning Element
-        </button>
     }
     <svg style="width: 100%; height: 600px; border: 1px solid green"
          xmlns="http://www.w3.org/2000/svg"
@@ -97,7 +93,7 @@ else
     {
         <ModalDialog Title="Edit existing learning element" Text="Please enter the required data for the learning element below:"
                      OnClose="@OnEditElementDialogClose" DialogType=@ModalDialogType.OkCancel
-                     InputFields="@_learningWorldP.ModalDialogElementInputFields" InputFieldsInitialValue="@_learningWorldP.LearningWorldVm.EditDialogInitialValues">
+                     InputFields="@_learningWorldP.ModalDialogEditElementInputFields" InputFieldsInitialValue="@_learningWorldP.LearningWorldVm.EditDialogInitialValues">
         </ModalDialog>
     }
 
@@ -165,27 +161,6 @@ else
         catch (Exception exception)
         {
             ErrorState = new ExceptionWrapper("Load learning element", exception);
-        }
-        finally
-        {
-    //we need to tell blazor explicitly to re-render our component after we added the loaded learning object
-            StateHasChanged();
-        }
-    }
-    
-    private async Task LoadLearningContentAsync()
-    {
-        try
-        {
-            await _learningWorldP.LoadLearningContent();
-        }
-        catch (OperationCanceledException)
-        {
-    //nothing to do, show notification?
-        }
-        catch (Exception exception)
-        {
-            ErrorState = new ExceptionWrapper("Load learning content", exception);
         }
         finally
         {

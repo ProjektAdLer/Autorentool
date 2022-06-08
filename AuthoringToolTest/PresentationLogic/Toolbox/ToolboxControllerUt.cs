@@ -60,8 +60,8 @@ public class ToolboxControllerUt
         var worldPresenter = Substitute.For<ILearningWorldPresenterToolboxInterface>();
         worldPresenter.ShowingLearningSpaceView.Returns(false);
         var spacePresenter = Substitute.For<ILearningSpacePresenterToolboxInterface>();
-        var learningElement = new LearningElementViewModel("foo", "bar", null, "foo", "bar",
-            null, "bar", "baz", "foo");
+        var learningElement = new LearningElementViewModel("foo", "bar", null, null,"foo", "bar",
+            "bar");
 
         var systemUnderTest =
             GetTestableToolboxController(worldPresenter: worldPresenter, spacePresenter: spacePresenter);
@@ -78,8 +78,8 @@ public class ToolboxControllerUt
         worldPresenter.ShowingLearningSpaceView.Returns(false);
         var spacePresenter = Substitute.For<ILearningSpacePresenterToolboxInterface>();
         var logger = Substitute.For<ILogger<ToolboxController>>();
-        var learningElement = new LearningElementViewModel("foo", "bar", null, "foo", "bar",
-            null, "bar", "baz", "foo");
+        var learningElement = new LearningElementViewModel("foo", "bar", null, null, "foo", "bar", 
+            "bar");
         worldPresenter
             .When(x => x.AddLearningElement(learningElement))
             .Do(_ => throw new ApplicationException());
@@ -103,8 +103,8 @@ public class ToolboxControllerUt
         var worldPresenter = Substitute.For<ILearningWorldPresenterToolboxInterface>();
         worldPresenter.ShowingLearningSpaceView.Returns(true);
         var spacePresenter = Substitute.For<ILearningSpacePresenterToolboxInterface>();
-        var learningElement = new LearningElementViewModel("foo", "bar", null, "foo", "bar",
-            null, "bar", "baz", "foo");
+        var learningElement = new LearningElementViewModel("foo", "bar", null, null,
+            "foo", "bar", "bar");
 
         var systemUnderTest =
             GetTestableToolboxController(worldPresenter: worldPresenter, spacePresenter: spacePresenter);

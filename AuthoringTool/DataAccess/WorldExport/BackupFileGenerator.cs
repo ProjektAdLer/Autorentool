@@ -28,6 +28,7 @@ public class BackupFileGenerator : IBackupFileGenerator
     {
         var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport"));
+        _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "files"));
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "course"));
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections"));
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections", "section_160"));
@@ -43,7 +44,7 @@ public class BackupFileGenerator : IBackupFileGenerator
     //Get all files from source Folder "XMLFilesForExport" and pack all files and folders into a tar-file 
     //Afterwards pack the tar-file into a gzip file and rename the file to match the Moodle Backup format .mbz
     /// <inheritdoc cref="IBackupFileGenerator.WriteBackupFile"/>
-    public void WriteBackupFile()
+    public void WriteBackupFile(string filepath)
     {
         //copy template from current workdir
         var tempDir = GetTempDir();
@@ -67,7 +68,7 @@ public class BackupFileGenerator : IBackupFileGenerator
             _fileSystem.File.Delete(tarName);
         }
 
-        _fileSystem.File.Move(tarPath, tarName);
+        _fileSystem.File.Move(tarPath, filepath);
         _fileSystem.Directory.Delete(tempDir, true);
     }
 

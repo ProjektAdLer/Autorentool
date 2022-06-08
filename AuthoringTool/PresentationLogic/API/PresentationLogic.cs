@@ -54,9 +54,12 @@ internal class PresentationLogic : IPresentationLogic
     public ILearningElementMapper ElementMapper { get; }
     public ILearningContentMapper ContentMapper { get; }
 
-    public void ConstructBackup()
+    public async Task<string> ConstructBackupAsync(LearningWorldViewModel learningWorldViewModel)
     {
-        BusinessLogic.ConstructBackup();
+        var entity = WorldMapper.ToEntity(learningWorldViewModel);
+        var filepath = await GetSaveFilepathAsync("Export learning world", "mbz", "Moodle Backup Zip");
+        BusinessLogic.ConstructBackup(entity, filepath);
+        return filepath;
     }
 
     /// <inheritdoc cref="IPresentationLogic.SaveLearningWorldAsync"/>
@@ -151,6 +154,24 @@ internal class PresentationLogic : IPresentationLogic
         var filepath = await GetLoadFilepathAsync("Load pdf",PdfFileEnding, " ");
         var entity = BusinessLogic.LoadLearningContent(filepath);
         return ContentMapper.ToViewModel(entity);
+    }
+
+    public LearningWorldViewModel LoadLearningWorldViewModelFromStream(Stream stream)
+    {
+        var world = BusinessLogic.LoadLearningWorldFromStream(stream);
+        return WorldMapper.ToViewModel(world);
+    }
+
+    public LearningSpaceViewModel LoadLearningSpaceViewModelFromStream(Stream stream)
+    {
+        var space = BusinessLogic.LoadLearningSpaceFromStream(stream);
+        return SpaceMapper.ToViewModel(space);
+    }
+
+    public LearningElementViewModel LoadLearningElementViewModelFromStream(Stream stream)
+    {
+        var element = BusinessLogic.LoadLearningElementFromStream(stream);
+        return ElementMapper.ToViewModel(element);
     }
 
     /// <summary>

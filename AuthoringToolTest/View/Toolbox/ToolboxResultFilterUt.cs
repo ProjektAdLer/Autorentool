@@ -27,12 +27,12 @@ public class ToolboxResultFilterUt
         Space2 = new LearningSpaceViewModel("unit testing", "f", "ba", "ba", "fa");
         Space3 = new LearningSpaceViewModel("measures of code quality", "fa", "fa", "ba", "ba");
         Space4 = new LearningSpaceViewModel("elements of code quality", "fa", "fa", "ba", "ba");
-        Element1 = new LearningElementViewModel("principles of unit testing", "s", null, "s", 
-            "s", null, "s", "s", "s");
+        Element1 = new LearningElementViewModel("principles of unit testing", "s", null, null, "s", 
+            "s", "s");
         Element2 = new LearningElementViewModel("example calculation of lines of code metric", "s",
-            null, "s", "s", null, "s", "s", "s");
-        Element3 = new LearningElementViewModel("real world example of measurable code quality", "s", null, "s", "s",
-            null, "s", "s", "s");
+            null, null, "s", "s", "s");
+        Element3 = new LearningElementViewModel("real world example of measurable code quality", "s", null, null, "s",
+            "s", "s");
         
         Collection = new List<IDisplayableLearningObject>
         {

@@ -104,8 +104,7 @@ a name
 
             yield return new object[]
             {
-                new LearningElementViewModel("another name", "an", null, "bubu", "baba", null, "author", "description",
-                    "goal"),
+                new LearningElementViewModel("another name", "an", null, null, "authors", "description", "goals"),
                 @"<div class=""col-3 element text-center text-wrap learning-element"">
 another name
 <br/>

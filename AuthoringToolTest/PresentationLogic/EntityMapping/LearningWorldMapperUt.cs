@@ -1,5 +1,6 @@
 using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.EntityMapping;
+using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
@@ -32,10 +33,11 @@ public class LearningWorldMapperUt
     {
         var elementMapper = Substitute.For<ILearningElementMapper>();
         var viewModel = new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
-        var element = new LearningElementViewModel("a", "a", null, "a", "a" ,null,"a", "a", "a");
+        var content = new LearningContentViewModel("z", "e", new byte[]{0x05,0x01});
+        var element = new LearningElementViewModel("a", "a", null, content, "a" , "a", "a");
         viewModel.LearningElements.Add(element);
 
-        elementMapper.ToEntity(element).Returns(new AuthoringTool.Entities.LearningElement("a","b","e",null, "f", null,"g","h","i"));
+        elementMapper.ToEntity(element).Returns(new AuthoringTool.Entities.LearningElement("a","b",null, null,"g","h","i"));
 
         var systemUnderTest = CreateMapperForTesting(elementMapper: elementMapper);
 
@@ -88,12 +90,12 @@ public class LearningWorldMapperUt
     {
         var elementMapper = Substitute.For<ILearningElementMapper>();
         var entity = new AuthoringTool.Entities.LearningWorld("a", "b", "c", "d", "e", "f");
-        var element = new AuthoringTool.Entities.LearningElement("a","b","e","poo", "f",null,"g","h","i");
+        var element = new AuthoringTool.Entities.LearningElement("a","b","e",null, "f","nll","g");
       
         entity.LearningElements.Add(element);
 
-        elementMapper.ToViewModel(element).Returns(new LearningElementViewModel("a", "a", null, "a",
-            "a",null, "a","a", "a"));
+        elementMapper.ToViewModel(element).Returns(new LearningElementViewModel("a", "a", null, null,
+            "a", "a", "a"));
 
         var systemUnderTest = CreateMapperForTesting(elementMapper: elementMapper);
 

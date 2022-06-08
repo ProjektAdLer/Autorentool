@@ -17,9 +17,10 @@ public class LearningWorldUt
         var Language = "german";
         var Description = "very cool element";
         var Goals = "learn very many things";
-        var content1 = new LearningContent("a", "b", Array.Empty<byte>());
-        var ele1 = new LearningElement("a", "b", "e", "pupup","f",content1,  "g","h","i", 17, 23);
-        var ele2 = new LearningElement("z", "zz", "zzz", "baba","z",null, "z","zz","zzz", 444, double.MaxValue);
+        var content1 = new LearningContent("a", "b", new byte[]{0x01,0x02});
+        var content2 = new LearningContent("w", "e", new byte[]{0x02,0x01});
+        var ele1 = new LearningElement("a", "b", "e",content1, "pupup", "g","h", 17, 23);
+        var ele2 = new LearningElement("z", "zz", "zzz", content2,"baba", "z","zz", 444, double.MaxValue);
         var LearningElements = new List<LearningElement> { ele1, ele2 };
         var space1 = new LearningSpace("ff", "ff", "ff", "ff", "ff");
         var LearningSpaces = new List<LearningSpace> { space1 };

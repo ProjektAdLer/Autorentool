@@ -4,7 +4,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
+using System.IO;
 using AuthoringTool.API.Configuration;
+using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.Persistence;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.Entities;
@@ -37,7 +39,7 @@ public class DataAccessUt
         });
     }
 
-    [Test]
+    /*[Test]
     public void DataAccess_ConstructBackup_CallsBackupFileGenerator()
     {
         //Arrange
@@ -50,7 +52,7 @@ public class DataAccessUt
         //Assert
         mockBackupFile.Received().WriteXmlFiles();
         mockBackupFile.Received().WriteBackupFile();
-    }
+    }*/
 
     [Test]
     public void DataAccess_SaveLearningWorldToFile_CallsFileSaveHandlerWorld()
@@ -75,6 +77,18 @@ public class DataAccessUt
         systemUnderTest.LoadLearningWorldFromFile("C:/nonsense");
 
         mockFileSaveHandlerWorld.Received().LoadFromDisk("C:/nonsense");
+    }
+    
+    [Test]
+    public void DataAccess_LoadLearningWorldFromStream_CallsFileSaveHandlerWorld()
+    {
+        var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<LearningWorld>>();
+        var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerWorld: mockFileSaveHandlerWorld);
+        var stream = Substitute.For<Stream>();
+
+        systemUnderTest.LoadLearningWorldFromStream(stream);
+
+        mockFileSaveHandlerWorld.Received().LoadFromStream(stream);
     }
 
     [Test]
@@ -101,6 +115,18 @@ public class DataAccessUt
 
         mockFileSaveHandlerSpace.Received().LoadFromDisk("C:/nonsense");
     }
+    
+    [Test]
+    public void DataAccess_LoadLearningSpaceFromStream_CallsFileSaveHandlerWorld()
+    {
+        var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<LearningSpace>>();
+        var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerSpace: mockFileSaveHandlerSpace);
+        var stream = Substitute.For<Stream>();
+
+        systemUnderTest.LoadLearningSpaceFromStream(stream);
+
+        mockFileSaveHandlerSpace.Received().LoadFromStream(stream);
+    }
 
     [Test]
     public void DataAccess_SaveLearningElementToFile_CallsFileSaveHandlerElement()
@@ -109,7 +135,7 @@ public class DataAccessUt
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerElement: mockFileSaveHandlerElement);
 
         var learningContent = new LearningContent("a", "b", Array.Empty<byte>());
-        var learningElement = new LearningElement("f","f", "f", "f", "f", learningContent,"f", "f", "f");
+        var learningElement = new LearningElement("f","f", "f", learningContent, "f", "f", "f");
         systemUnderTest.SaveLearningElementToFile(
             learningElement,
             "C:/nonsense");
@@ -126,6 +152,18 @@ public class DataAccessUt
         systemUnderTest.LoadLearningElementFromFile("C:/nonsense");
 
         mockFileSaveHandlerElement.Received().LoadFromDisk("C:/nonsense");
+    }
+    
+    [Test]
+    public void DataAccess_LoadLearningElementFromStream_CallsFileSaveHandlerElement()
+    {
+        var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElement>>();
+        var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerElement: mockFileSaveHandlerElement);
+        var stream = Substitute.For<Stream>();
+
+        systemUnderTest.LoadLearningElementFromStream(stream);
+
+        mockFileSaveHandlerElement.Received().LoadFromStream(stream);
     }
 
     [Test]
@@ -212,7 +250,8 @@ public class DataAccessUt
         IXmlFileHandler<LearningSpace>? fileSaveHandlerSpace = null,
         IXmlFileHandler<LearningElement>? fileSaveHandlerElement = null,
         IContentFileHandler? contentHandler = null,
-        IFileSystem? fileSystem = null)
+        IFileSystem? fileSystem = null,
+        ICreateDSL? createDsl = null)
     {
         configuration ??= Substitute.For<IAuthoringToolConfiguration>();
         backupFileConstructor ??= Substitute.For<IBackupFileGenerator>();
@@ -221,7 +260,8 @@ public class DataAccessUt
         fileSaveHandlerElement ??= Substitute.For<IXmlFileHandler<LearningElement>>();
         contentHandler ??= Substitute.For<IContentFileHandler>();
         fileSystem ??= new MockFileSystem();
+        createDsl ??= Substitute.For<ICreateDSL>();
         return new AuthoringTool.DataAccess.API.DataAccess(configuration, backupFileConstructor, fileSaveHandlerWorld,
-            fileSaveHandlerSpace, fileSaveHandlerElement, contentHandler, fileSystem);
+            fileSaveHandlerSpace, fileSaveHandlerElement, contentHandler, createDsl, fileSystem);
     }
 }

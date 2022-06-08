@@ -1,4 +1,5 @@
 using System;
+using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
@@ -17,21 +18,19 @@ public class LearningElementPresenterUt
         var name = "a";
         var shortname = "b";
         var parent = new LearningWorldViewModel("","boo", "bla", "", "", "");
-        var type = "c";
-        var content = "d";
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
         var authors = "d";
         var description = "e";
         var goals = "f";
 
-        var element = systemUnderTest.CreateNewLearningElement(name, shortname, parent, type, content,
+        var element = systemUnderTest.CreateNewLearningElement(name, shortname, parent, content,
             authors, description, goals);
         Assert.Multiple(() =>
         {
             Assert.That(element.Name, Is.EqualTo(name));
             Assert.That(element.Shortname, Is.EqualTo(shortname));
             Assert.That(element.Parent, Is.EqualTo(parent));
-            Assert.That(element.ElementType, Is.EqualTo(type));
-            Assert.That(element.ContentType, Is.EqualTo(content));
+            Assert.That(element.LearningContent, Is.EqualTo(content));
             Assert.That(element.Authors, Is.EqualTo(authors));
             Assert.That(element.Description, Is.EqualTo(description));
             Assert.That(element.Goals, Is.EqualTo(goals));
@@ -45,21 +44,19 @@ public class LearningElementPresenterUt
         var name = "a";
         var shortname = "b";
         var parent = new LearningSpaceViewModel("","boo", "bla", "", "");
-        var type = "c";
-        var content = "d";
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
         var authors = "d";
         var description = "e";
         var goals = "f";
 
-        var element = systemUnderTest.CreateNewLearningElement(name, shortname, parent, type, content,
+        var element = systemUnderTest.CreateNewLearningElement(name, shortname, parent, content,
             authors, description, goals);
         Assert.Multiple(() =>
         {
             Assert.That(element.Name, Is.EqualTo(name));
             Assert.That(element.Shortname, Is.EqualTo(shortname));
             Assert.That(element.Parent, Is.EqualTo(parent));
-            Assert.That(element.ElementType, Is.EqualTo(type));
-            Assert.That(element.ContentType, Is.EqualTo(content));
+            Assert.That(element.LearningContent, Is.EqualTo(content));
             Assert.That(element.Authors, Is.EqualTo(authors));
             Assert.That(element.Description, Is.EqualTo(description));
             Assert.That(element.Goals, Is.EqualTo(goals));
@@ -72,7 +69,7 @@ public class LearningElementPresenterUt
         var systemUnderTest = new LearningElementPresenter();
 
         var ex = Assert.Throws<NotImplementedException>(() =>
-            systemUnderTest.CreateNewLearningElement("a", "b", null, "c", "d", "e", "f", "g"));
+            systemUnderTest.CreateNewLearningElement("a", "b", null, null, "d", "e", "f"));
         Assert.That(ex!.Message, Is.EqualTo("Type of Assignment is not implemented"));
     }
     
@@ -80,28 +77,26 @@ public class LearningElementPresenterUt
     public void LearningElementPresenter_EditLearningElement_WorldParent_EditsViewModelCorrectly()
     {
         var systemUnderTest = new LearningElementPresenter();
-        var element = new LearningElementViewModel("a", "b", null, "c", "d", null,
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var element = new LearningElementViewModel("a", "b", null, content,
             "e", "f","g", 17f,29f);
         
         var name = "new element";
         var shortname = "ne";
         var parent = new LearningWorldViewModel("","boo", "bla", "", "", "");
-        var type = "transfer";
-        var content = "video";
         var authors = "marvin";
         var description = "video of learning stuff";
         var goals = "learn";
         var posx = 22f;
 
-        element = systemUnderTest.EditLearningElement(element, name, shortname, parent,  type, content, authors, description,
+        element = systemUnderTest.EditLearningElement(element, name, shortname, parent, authors, description,
             goals, posx);
         Assert.Multiple(() =>
         {
             Assert.That(element.Name, Is.EqualTo(name));
             Assert.That(element.Shortname, Is.EqualTo(shortname));
             Assert.That(element.Parent, Is.EqualTo(parent));
-            Assert.That(element.ElementType, Is.EqualTo(type));
-            Assert.That(element.ContentType, Is.EqualTo(content));
+            Assert.That(element.LearningContent, Is.EqualTo(content));
             Assert.That(element.Authors, Is.EqualTo(authors));
             Assert.That(element.Description, Is.EqualTo(description));
             Assert.That(element.Goals, Is.EqualTo(goals));
@@ -114,28 +109,26 @@ public class LearningElementPresenterUt
     public void LearningElementPresenter_EditLearningElement_SpaceParent_EditsViewModelCorrectly()
     {
         var systemUnderTest = new LearningElementPresenter();
-        var element = new LearningElementViewModel("a", "b", null, "c", "d", null,
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var element = new LearningElementViewModel("a", "b", null, content,
             "e", "f","g", 17f,29f);
         
         var name = "new element";
         var shortname = "ne";
         var parent = new LearningSpaceViewModel("","boo", "bla", "", "");
-        var type = "transfer";
-        var content = "video";
         var authors = "marvin";
         var description = "video of learning stuff";
         var goals = "learn";
         var posx = 22f;
 
-        element = systemUnderTest.EditLearningElement(element, name, shortname, parent,  type, content, authors, description,
+        element = systemUnderTest.EditLearningElement(element, name, shortname, parent, authors, description,
             goals, posx);
         Assert.Multiple(() =>
         {
             Assert.That(element.Name, Is.EqualTo(name));
             Assert.That(element.Shortname, Is.EqualTo(shortname));
             Assert.That(element.Parent, Is.EqualTo(parent));
-            Assert.That(element.ElementType, Is.EqualTo(type));
-            Assert.That(element.ContentType, Is.EqualTo(content));
+            Assert.That(element.LearningContent, Is.EqualTo(content));
             Assert.That(element.Authors, Is.EqualTo(authors));
             Assert.That(element.Description, Is.EqualTo(description));
             Assert.That(element.Goals, Is.EqualTo(goals));
@@ -149,7 +142,8 @@ public class LearningElementPresenterUt
     {
         var systemUnderTest = new LearningElementPresenter();
         var parent = new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
-        var element = new LearningElementViewModel("a", "b", parent, "c", "d",null,
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var element = new LearningElementViewModel("a", "b", parent, content,
             "e", "f","g", 17f,29f);
         parent.LearningElements.Add(element);
         
@@ -165,7 +159,8 @@ public class LearningElementPresenterUt
     {
         var systemUnderTest = new LearningElementPresenter();
         var parent = new LearningSpaceViewModel("a", "b", "c", "d", "e");
-        var element = new LearningElementViewModel("a", "b", parent, "c", "d",null,
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var element = new LearningElementViewModel("a", "b", parent, content ,
             "e", "f","g", 17f,29f);
         parent.LearningElements.Add(element);
         

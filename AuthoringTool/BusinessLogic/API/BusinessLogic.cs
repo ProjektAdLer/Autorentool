@@ -25,9 +25,9 @@ internal class BusinessLogic : IBusinessLogic
 
     public bool RunningElectron => HybridSupport.IsElectronActive;
 
-    public void ConstructBackup()
+    public void ConstructBackup(LearningWorld learningWorld, string filepath)
     {
-        DataAccess.ConstructBackup();
+        DataAccess.ConstructBackup(learningWorld, filepath);
     }
 
     public void SaveLearningWorld(LearningWorld learningWorld, string filepath)
@@ -64,12 +64,26 @@ internal class BusinessLogic : IBusinessLogic
     {
         return DataAccess.LoadLearningContentFromFile(filepath);
     }
+    
+    public LearningWorld LoadLearningWorldFromStream(Stream stream)
+    {
+        return DataAccess.LoadLearningWorldFromStream(stream);
+    }
+
+    public LearningSpace LoadLearningSpaceFromStream(Stream stream)
+    {
+        return DataAccess.LoadLearningSpaceFromStream(stream);
+    }
+
+    public LearningElement LoadLearningElementFromStream(Stream stream)
+    {
+        return DataAccess.LoadLearningElementFromStream(stream);
+    }
 
     public string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding)
     {
         return DataAccess.FindSuitableNewSavePath(targetFolder, fileName, fileEnding);
     }
-
     public IAuthoringToolConfiguration Configuration { get; }
   
 }

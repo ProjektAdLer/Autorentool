@@ -247,6 +247,7 @@
         if (InputFields == null) return;
         foreach (var dropdownInputField in InputFields.OfType<ModalDialogDropdownInputField>())
         {
+            if (!IsUnlocked(dropdownInputField)) return;
             var availableChoices = dropdownInputField.ValuesToChoiceMapping.First(MappingSatisfied)
                 .AvailableChoices.ToArray();
             if (!_inputFieldValues.ContainsKey(dropdownInputField.Name)) return;

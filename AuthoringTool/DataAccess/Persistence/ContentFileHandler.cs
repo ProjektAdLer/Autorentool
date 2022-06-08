@@ -8,7 +8,7 @@ public class ContentFileHandler : IContentFileHandler
     private readonly ILogger<ContentFileHandler> _logger;
     private readonly IFileSystem _fileSystem;
 
-    private ContentFileHandler(ILogger<ContentFileHandler> logger,IFileSystem fileSystem)
+    internal ContentFileHandler(ILogger<ContentFileHandler> logger,IFileSystem fileSystem)
     {
         _fileSystem = fileSystem;
         _logger = logger;
