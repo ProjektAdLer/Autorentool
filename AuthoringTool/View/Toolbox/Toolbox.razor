@@ -1,0 +1,29 @@
+@using AuthoringTool.Components
+@using AuthoringTool.PresentationLogic
+@using AuthoringTool.PresentationLogic.LearningElement
+@using AuthoringTool.PresentationLogic.LearningSpace
+@using AuthoringTool.PresentationLogic.LearningWorld
+@using AuthoringTool.PresentationLogic.Toolbox
+@inject IAbstractToolboxRenderFragmentFactory RenderFragmentFactory
+@inject IToolboxEntriesProvider EntriesProvider
+@inject ILogger<Toolbox> Logger
+@inject IToolboxResultFilter ResultFilter
+@* Disabled because editor does not recognize ItemRenderTemplate being provided as inner tag -n.stich*@
+@* ReSharper disable once Blazor.EditorRequired *@
+<GridLayoutDisplay HeaderTitle="Toolbox" Items="@FilteredEntries">
+    <ChildContent>
+        <input type="text" name="search-term" @bind="@SearchTerm" @bind:event="oninput" placeholder="Search..."/>
+    </ChildContent>
+    <ItemRenderTemplate>
+        @RenderFragmentFactory.GetRenderFragment(context)
+    </ItemRenderTemplate>
+</GridLayoutDisplay>
+
+@code
+{
+    private string? SearchTerm { get; set; }
+    private IEnumerable<IDisplayableLearningObject> FilteredEntries =>
+        string.IsNullOrWhiteSpace(SearchTerm) ?
+            EntriesProvider.Entries :
+            ResultFilter.FilterCollection(EntriesProvider.Entries, SearchTerm);
+}

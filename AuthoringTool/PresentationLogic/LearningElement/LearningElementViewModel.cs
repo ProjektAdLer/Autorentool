@@ -2,7 +2,7 @@ using AuthoringTool.PresentationLogic.LearningContent;
 
 namespace AuthoringTool.PresentationLogic.LearningElement;
 
-public class LearningElementViewModel : ILearningObjectViewModel, ISerializableViewModel
+public class LearningElementViewModel : ILearningObjectViewModel, ISerializableViewModel, IDisplayableLearningObject
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="LearningElementViewModel"/> class.
@@ -34,7 +34,8 @@ public class LearningElementViewModel : ILearningObjectViewModel, ISerializableV
         PositionY = positionY;
     }
     
-    
+    public const string fileEnding = "aef";
+    public string FileEnding => fileEnding;
     public string Name { get; set; }
     public string Shortname { get; set; }
     public ILearningElementViewModelParent? Parent { get; set; }

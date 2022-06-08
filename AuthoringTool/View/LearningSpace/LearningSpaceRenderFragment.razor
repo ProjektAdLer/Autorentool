@@ -1,0 +1,10 @@
+@using AuthoringTool.PresentationLogic.LearningSpace
+@inherits LearningObjectRenderFragmentBase
+<LearningObjectRenderFragmentBase Obj="ViewModel" CssClassSelector="learning-space">
+    <p>@ViewModel.Description</p>
+</LearningObjectRenderFragmentBase>
+    
+@code {
+    [Parameter, EditorRequired] 
+    public LearningSpaceViewModel ViewModel { get; set; }
+}

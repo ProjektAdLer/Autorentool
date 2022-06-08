@@ -20,4 +20,7 @@ public interface IBusinessLogic
     LearningWorld LoadLearningWorldFromStream(Stream stream);
     LearningSpace LoadLearningSpaceFromStream(Stream stream);
     LearningElement LoadLearningElementFromStream(Stream stream);
+    
+    /// <inheritdoc cref="IDataAccess.FindSuitableNewSavePath"/>
+    string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding);
 }

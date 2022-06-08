@@ -41,4 +41,13 @@ public class LearningElementViewModelUt
         });
         
     }
+
+    [Test]
+    public void LearningElement_FileEnding_ReturnsCorrectEnding()
+    {
+        const string expectedFileEnding = "aef";
+        var systemUnderTest = new LearningElementViewModel("foo", "foo", null, null,
+            "foo",  "foo", "foo");
+        Assert.That(systemUnderTest.FileEnding, Is.EqualTo(expectedFileEnding));
+    }
 }

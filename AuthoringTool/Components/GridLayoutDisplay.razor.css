@@ -1,0 +1,27 @@
+html, body {
+    height: 100%;
+    margin: 0;
+}
+
+.grid-layout-display-root {
+    background: white;
+    border: 5px solid grey;
+    margin: 20px;
+    height: 400px;
+    display: flex;
+    flex-flow: column;
+}
+
+.header {
+    flex: 0 1 auto;
+}
+
+h4 {
+    padding-left: 10px;
+    text-shadow: 2px 2px 3px lightgrey;
+}
+
+.container {
+    height: available;
+    overflow-y: auto;
+}

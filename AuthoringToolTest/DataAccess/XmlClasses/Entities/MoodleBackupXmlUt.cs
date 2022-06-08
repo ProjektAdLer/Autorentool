@@ -54,14 +54,14 @@ public class MoodleBackupXmlUt
         var moodlebackupSection = new MoodleBackupXmlSection();
         moodlebackupSection.SetParameters("160", "1", "sections/section_160");
         var moodlebackupSections = new MoodleBackupXmlSections();
-        List<MoodleBackupXmlSection>? list = new List<MoodleBackupXmlSection>();
+        List<MoodleBackupXmlSection> list = new List<MoodleBackupXmlSection>();
 
         //Act
         list.Add(moodlebackupSection);
         moodlebackupSections.SetParameters(list);
         
         //Assert
-        Assert.That(moodlebackupSections.Section, Is.EqualTo(list));
+        Assert.That(moodlebackupSections.Section, Is.EquivalentTo(list));
     }
     
     [Test]

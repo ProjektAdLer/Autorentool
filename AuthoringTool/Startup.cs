@@ -13,6 +13,8 @@ using AuthoringTool.PresentationLogic.EntityMapping;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
+using AuthoringTool.PresentationLogic.Toolbox;
+using AuthoringTool.View.Toolbox;
 using ElectronWrapper;
 
 public class Startup
@@ -49,15 +51,27 @@ public class Startup
         services.AddSingleton<IPresentationLogic, PresentationLogic>();
         services.AddSingleton<IAuthoringTool, AuthoringTool.API.AuthoringTool>();
         services.AddSingleton<ILearningWorldPresenter, LearningWorldPresenter>();
+        services.AddSingleton(p =>
+            (ILearningWorldPresenterToolboxInterface)p.GetService(typeof(ILearningWorldPresenter))!);
         services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
         services.AddSingleton<ILearningElementPresenter, LearningElementPresenter>();
+        services.AddSingleton(p =>
+            (ILearningSpacePresenterToolboxInterface)p.GetService(typeof(ILearningSpacePresenter))!);
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
         services.AddSingleton<AuthoringToolWorkspacePresenter>();
+        services.AddSingleton(p =>
+            (IAuthoringToolWorkspacePresenterToolboxInterface)p.GetService(typeof(AuthoringToolWorkspacePresenter))!);
+        services.AddSingleton<IAbstractToolboxRenderFragmentFactory, ToolboxRenderFragmentFactory>();
+        services.AddSingleton<IToolboxEntriesProviderModifiable, ToolboxEntriesProvider>();
+        services.AddSingleton<IToolboxController, ToolboxController>();
+        services.AddSingleton(p => (IToolboxEntriesProvider)p.GetService(typeof(IToolboxEntriesProviderModifiable))!);
+        services.AddSingleton<IToolboxResultFilter, ToolboxResultFilter>();
         //ViewModel <-> Entity Mappers
         services.AddSingleton<ILearningElementMapper, LearningElementMapper>();
         services.AddSingleton<ILearningSpaceMapper, LearningSpaceMapper>();
         services.AddSingleton<ILearningWorldMapper, LearningWorldMapper>();
         services.AddSingleton<ILearningContentMapper, LearningContentMapper>();
+        services.AddSingleton<IEntityMapping, EntityMapping>();
 
         //Blazor and Electron
         services.AddRazorPages();

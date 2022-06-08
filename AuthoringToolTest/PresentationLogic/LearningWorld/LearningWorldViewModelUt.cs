@@ -45,4 +45,12 @@ public class LearningWorldViewModelUt
             Assert.That(systemUnderTest.LearningSpaces, Is.EqualTo(LearningSpaces));
         });
     }
+
+    [Test]
+    public void LearningWorldViewModel_FileEnding_ReturnsCorrectEnding()
+    {
+        const string expectedFileEnding = "awf";
+        var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo");
+        Assert.That(systemUnderTest.FileEnding, Is.EqualTo(expectedFileEnding));
+    }
 }

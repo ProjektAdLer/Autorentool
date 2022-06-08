@@ -1,5 +1,6 @@
 using AuthoringTool.Components.ModalDialog;
-using AuthoringTool.PresentationLogic.LearningContent;
+using AuthoringTool.PresentationLogic.LearningElement;
+using AuthoringTool.PresentationLogic.LearningSpace;
 
 namespace AuthoringTool.PresentationLogic.LearningWorld;
 
@@ -35,4 +36,18 @@ public interface ILearningWorldPresenter
     void ShowSelectedLearningSpaceView();
     void CloseLearningSpaceView();
     void UpdateWorldWorkload();
+
+    /// <summary>
+    /// Adds the provided learning space to the selected world view model.
+    /// </summary>
+    /// <param name="learningSpace">The space to be added.</param>
+    /// <exception cref="ApplicationException"><see cref="LearningWorldVm"/> is null or space exists in world with same name.</exception>
+    public void AddLearningSpace(LearningSpaceViewModel learningSpace);
+    
+    /// <summary>
+    /// Adds the provided learning element to the selected world view model.
+    /// </summary>
+    /// <param name="learningElement">The space to be added.</param>
+    /// <exception cref="ApplicationException"><see cref="LearningWorldVm"/> is null or element exists in world with same name.</exception>
+    public void AddLearningElement(LearningElementViewModel learningElement);
 }

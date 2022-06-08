@@ -1,0 +1,10 @@
+@using AuthoringTool.PresentationLogic.LearningWorld
+@inherits LearningObjectRenderFragmentBase
+<LearningObjectRenderFragmentBase Obj="ViewModel" CssClassSelector="learning-world">
+    <i class="bi bi-globe"></i>
+</LearningObjectRenderFragmentBase>
+
+@code {
+    [Parameter, EditorRequired] 
+    public LearningWorldViewModel ViewModel { get; set; }
+}

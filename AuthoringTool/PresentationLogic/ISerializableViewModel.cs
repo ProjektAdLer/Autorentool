@@ -5,4 +5,5 @@ namespace AuthoringTool.PresentationLogic;
 /// </summary>
 internal interface ISerializableViewModel
 {
+    public string FileEnding { get; }
 }

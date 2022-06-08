@@ -6,7 +6,7 @@ using AuthoringTool.PresentationLogic.LearningWorld;
 
 namespace AuthoringTool.PresentationLogic.LearningSpace;
 
-internal class LearningSpacePresenter : ILearningSpacePresenter
+internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePresenterToolboxInterface
 {
     public LearningSpacePresenter(
         IPresentationLogic presentationLogic, ILearningElementPresenter learningElementPresenter,
@@ -212,8 +212,15 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
         learningElement.Parent = LearningSpaceVm;
+        AddLearningElement(learningElement);
         UpdateSpaceWorkload();
-        LearningSpaceVm.LearningElements.Add(learningElement);
+    }
+
+    public void AddLearningElement(LearningElementViewModel element)
+    {
+        if (LearningSpaceVm == null)
+            throw new ApplicationException("SelectedLearningSpace is null");
+        LearningSpaceVm.LearningElements.Add(element);
     }
     
     /// <summary>

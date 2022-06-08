@@ -64,7 +64,7 @@ internal class BusinessLogic : IBusinessLogic
     {
         return DataAccess.LoadLearningContentFromFile(filepath);
     }
-
+    
     public LearningWorld LoadLearningWorldFromStream(Stream stream)
     {
         return DataAccess.LoadLearningWorldFromStream(stream);
@@ -80,6 +80,10 @@ internal class BusinessLogic : IBusinessLogic
         return DataAccess.LoadLearningElementFromStream(stream);
     }
 
+    public string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding)
+    {
+        return DataAccess.FindSuitableNewSavePath(targetFolder, fileName, fileEnding);
+    }
     public IAuthoringToolConfiguration Configuration { get; }
   
 }

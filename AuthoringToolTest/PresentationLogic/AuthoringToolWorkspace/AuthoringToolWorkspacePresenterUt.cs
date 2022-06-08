@@ -93,7 +93,7 @@ public class AuthoringToolWorkspacePresenterUt
         Assert.That(workspaceVm.LearningWorlds, Is.Empty);
         systemUnderTest.CreateNewLearningWorld("Foo", "Foo", "Foo", "Foo", "Foo",
             "Foo");
-        Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
+        Assert.That(workspaceVm.LearningWorlds.Count(), Is.EqualTo(1));
         var learningWorldViewModel = workspaceVm.LearningWorlds.First();
         Assert.Multiple(() =>
         {
@@ -169,8 +169,8 @@ public class AuthoringToolWorkspacePresenterUt
             "Foo");
         var world2 = new LearningWorldViewModel("tetete", "f", "bar", "de", "A test",
             "testing");
-        workspaceVm.LearningWorlds.Add(world1);
-        workspaceVm.LearningWorlds.Add(world2);
+        workspaceVm.AddLearningWorld(world1);
+        workspaceVm.AddLearningWorld(world2);
         
 
         var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter:worldPresenter);
@@ -206,8 +206,8 @@ public class AuthoringToolWorkspacePresenterUt
             "Foo");
         var world2 = new LearningWorldViewModel("tetete", "f", "bar", "de", "A test",
             "testing");
-        workspaceVm.LearningWorlds.Add(world1);
-        workspaceVm.LearningWorlds.Add(world2);
+        workspaceVm.AddLearningWorld(world1);
+        workspaceVm.AddLearningWorld(world2);
         EventHandler<LearningWorldViewModel?> firstCallback = (_, _) =>
         {
             Assert.Fail("first callback with null as selected world should not have been called");
@@ -259,23 +259,23 @@ public class AuthoringToolWorkspacePresenterUt
         };
         var world2 = new LearningWorldViewModel("tetete", "f", "bar", "de", "A test",
             "testing");
-        workspaceVm.LearningWorlds.Add(world1);
-        workspaceVm.LearningWorlds.Add(world2);
+        workspaceVm.AddLearningWorld(world1);
+        workspaceVm.AddLearningWorld(world2);
         
-        Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(2));
+        Assert.That(workspaceVm.LearningWorlds.Count(), Is.EqualTo(2));
         Assert.That(workspaceVm.LearningWorlds, Does.Contain(world1));
         Assert.That(workspaceVm.LearningWorlds, Does.Contain(world2));
 
         var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter:worldPresenter);
         
         systemUnderTest.DeleteSelectedLearningWorld();
-        Assert.That(workspaceVm.LearningWorlds.Count, Is.EqualTo(2));
+        Assert.That(workspaceVm.LearningWorlds.Count(), Is.EqualTo(2));
         Assert.That(workspaceVm.LearningWorlds, Does.Contain(world1));
         Assert.That(workspaceVm.LearningWorlds, Does.Contain(world2));
         
         systemUnderTest.SetSelectedLearningWorld(world1.Name);
         systemUnderTest.DeleteSelectedLearningWorld();
-        Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
+        Assert.That(workspaceVm.LearningWorlds.Count(), Is.EqualTo(1));
         Assert.That(workspaceVm.LearningWorlds, Does.Contain(world2));
         Assert.That(systemUnderTest.DeletedUnsavedWorld, Is.EqualTo(world1));
         
@@ -293,8 +293,8 @@ public class AuthoringToolWorkspacePresenterUt
             "Foo");
         var world2 = new LearningWorldViewModel("tetete", "f", "bar", "de", "A test",
             "testing");
-        workspaceVm.LearningWorlds.Add(world1);
-        workspaceVm.LearningWorlds.Add(world2);
+        workspaceVm.AddLearningWorld(world1);
+        workspaceVm.AddLearningWorld(world2);
         
         var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter:worldPresenter);
         
@@ -324,7 +324,7 @@ public class AuthoringToolWorkspacePresenterUt
         var worldPresenter = CreateLearningWorldPresenter();
         var world1 = new LearningWorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo",
             "Foo");
-        workspaceVm.LearningWorlds.Add(world1);
+        workspaceVm.AddLearningWorld(world1);
         var callbackCalled = false;
         EventHandler<LearningWorldViewModel?> callback = (_, world) =>
         {
@@ -353,7 +353,7 @@ public class AuthoringToolWorkspacePresenterUt
             "Foo");
         worldPresenter.EditLearningWorld(world1, Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(world1);
-        workspaceVm.LearningWorlds.Add(world1);
+        workspaceVm.AddLearningWorld(world1);
         workspaceVm.SelectedLearningWorld = world1;
         
         var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter:worldPresenter);
@@ -373,8 +373,8 @@ public class AuthoringToolWorkspacePresenterUt
             "Foo");
         var world2 = new LearningWorldViewModel("tetete", "f", "bar", "de", "A test",
             "testing");
-        workspaceVm.LearningWorlds.Add(world1);
-        workspaceVm.LearningWorlds.Add(world2);
+        workspaceVm.AddLearningWorld(world1);
+        workspaceVm.AddLearningWorld(world2);
         
         var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter:worldPresenter);
         
@@ -425,7 +425,7 @@ public class AuthoringToolWorkspacePresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var learningWorld = new LearningWorldViewModel("fo", "f", "", "f", "", "");
         var viewModel = new AuthoringToolWorkspaceViewModel();
-        viewModel.LearningWorlds.Add(learningWorld);
+        viewModel.AddLearningWorld(learningWorld);
         viewModel.SelectedLearningWorld = learningWorld;
 
         var systemUnderTest =
@@ -472,7 +472,7 @@ public class AuthoringToolWorkspacePresenterUt
         var learningWorld2 = new LearningWorldViewModel("f", "fu", "fu", "fu", "fu", "fu");
         presentationLogic.LoadLearningWorldAsync().Returns(learningWorld2);
         var viewModel = new AuthoringToolWorkspaceViewModel();
-        viewModel.LearningWorlds.Add(learningWorld);
+        viewModel.AddLearningWorld(learningWorld);
         
         var systemUnderTest = CreatePresenterForTesting(viewModel, presentationLogic: presentationLogic);
 
@@ -489,7 +489,7 @@ public class AuthoringToolWorkspacePresenterUt
         };
         var learningWorld2 = new LearningWorldViewModel("f", "fu", "fu", "fu", "fu", "fu");
         var viewModel = new AuthoringToolWorkspaceViewModel();
-        viewModel.LearningWorlds.Add(learningWorld);
+        viewModel.AddLearningWorld(learningWorld);
         viewModel.SelectedLearningWorld = learningWorld;
 
         var systemUnderTest = CreatePresenterForTesting(viewModel);
@@ -509,7 +509,7 @@ public class AuthoringToolWorkspacePresenterUt
     {
         var viewModel = new AuthoringToolWorkspaceViewModel();
         var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
-        viewModel.LearningWorlds.Add(learningWorld);
+        viewModel.AddLearningWorld(learningWorld);
         var args = new BeforeShutdownEventArgs();
         var callbackCalled = false;
         var callback = () => { callbackCalled = true; };
@@ -603,7 +603,7 @@ public class AuthoringToolWorkspacePresenterUt
         AuthoringToolWorkspacePresenter_LoadLearningWorldFromFileStream_SetsWorldToReplaceWithIfWorldWithSameNameAlreadyExists()
     {
         var authoringToolWorkspace = new AuthoringToolWorkspaceViewModel();
-        authoringToolWorkspace.LearningWorlds.Add(new LearningWorldViewModel("n", "x", "x", "x", "x", "x"));
+        authoringToolWorkspace.AddLearningWorld(new LearningWorldViewModel("n", "x", "x", "x", "x", "x"));
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var newLearningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
         presentationLogic.LoadLearningWorldViewModelFromStream(Arg.Any<Stream>())
@@ -629,7 +629,7 @@ public class AuthoringToolWorkspacePresenterUt
     {
         var authoringToolWorkspace = new AuthoringToolWorkspaceViewModel();
         var existingLearningWorld = new LearningWorldViewModel("existing", "x", "x", "x", "x", "x");
-        authoringToolWorkspace.LearningWorlds.Add(existingLearningWorld);
+        authoringToolWorkspace.AddLearningWorld(existingLearningWorld);
         if (otherLearningWorldWasSelected)
         {
             authoringToolWorkspace.SelectedLearningWorld = existingLearningWorld;
@@ -697,7 +697,7 @@ public class AuthoringToolWorkspacePresenterUt
     {
         var authoringToolWorkspace = new AuthoringToolWorkspaceViewModel();
         var existingLearningWorld = new LearningWorldViewModel("existing", "x", "x", "x", "x", "x");
-        authoringToolWorkspace.LearningWorlds.Add(existingLearningWorld);
+        authoringToolWorkspace.AddLearningWorld(existingLearningWorld);
         if (isLearningWorldSelected)
         {
             authoringToolWorkspace.SelectedLearningWorld = existingLearningWorld;
@@ -754,7 +754,7 @@ public class AuthoringToolWorkspacePresenterUt
         var existingLearningSpace = new LearningSpaceViewModel("existingS", "sn", "a", "d", "g");
         existingLearningWorld.LearningSpaces.Add(existingLearningSpace);
         existingLearningWorld.SelectedLearningObject = existingLearningSpace;
-        authoringToolWorkspace.LearningWorlds.Add(existingLearningWorld);
+        authoringToolWorkspace.AddLearningWorld(existingLearningWorld);
         authoringToolWorkspace.SelectedLearningWorld = existingLearningWorld;
 
         existingLearningWorld.ShowingLearningSpaceView = showingLearningSpaceView;

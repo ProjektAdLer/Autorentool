@@ -10,7 +10,7 @@ namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
 /// <summary>
 /// The AuthoringToolWorkspacePresenter is the central component that controls changes to the <see cref="AuthoringToolWorkspaceViewModel"/>.
 /// </summary>
-public class AuthoringToolWorkspacePresenter
+public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenterToolboxInterface
 {
     public AuthoringToolWorkspacePresenter(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
         IPresentationLogic presentationLogic,
@@ -110,7 +110,7 @@ public class AuthoringToolWorkspacePresenter
         //TODO: check if world with that name exists already? is name our unique identifier?
         var learningWorld =
             _learningWorldPresenter.CreateNewLearningWorld(name, shortname, authors, language, description, goals);
-        _authoringToolWorkspaceVm.LearningWorlds.Add(learningWorld);
+        _authoringToolWorkspaceVm.AddLearningWorld(learningWorld);
         OnLearningWorldCreate?.Invoke(this, learningWorld);
     }
 
@@ -145,7 +145,7 @@ public class AuthoringToolWorkspacePresenter
     {
         var learningWorld = _authoringToolWorkspaceVm.SelectedLearningWorld;
         if (learningWorld == null) return;
-        _authoringToolWorkspaceVm.LearningWorlds.Remove(learningWorld);
+        _authoringToolWorkspaceVm.RemoveLearningWorld(learningWorld);
         if (learningWorld.UnsavedChanges) DeletedUnsavedWorld = learningWorld;
         SetSelectedLearningWorld(_authoringToolWorkspaceVm.LearningWorlds.LastOrDefault());
         OnLearningWorldDelete?.Invoke(this, learningWorld);
@@ -192,23 +192,28 @@ public class AuthoringToolWorkspacePresenter
                 shortname, authors, language, description, goals);
         OnLearningWorldEdit?.Invoke(this, _authoringToolWorkspaceVm.SelectedLearningWorld);
     }
-
-    public async Task LoadLearningWorldAsync()
+    
+    public void AddLearningWorld(LearningWorldViewModel learningWorld)
     {
-        var learningWorld = await _presentationLogic.LoadLearningWorldAsync();
         if (_authoringToolWorkspaceVm.LearningWorlds.Any(world => world.Name == learningWorld.Name))
         {
             WorldToReplaceWith = learningWorld;
             return;
         }
 
-        _authoringToolWorkspaceVm.LearningWorlds.Add(learningWorld);
+        _authoringToolWorkspaceVm.AddLearningWorld(learningWorld);
+    }
+
+    public async Task LoadLearningWorldAsync()
+    {
+        var learningWorld = await _presentationLogic.LoadLearningWorldAsync();
+        AddLearningWorld(learningWorld);
     }
 
     public void ReplaceLearningWorld(LearningWorldViewModel toReplace)
     {
         var toBeReplaced = _authoringToolWorkspaceVm.LearningWorlds.First(world => world.Name == toReplace.Name);
-        _authoringToolWorkspaceVm.LearningWorlds.Remove(toBeReplaced);
+        _authoringToolWorkspaceVm.RemoveLearningWorld(toBeReplaced);
         if (toBeReplaced.UnsavedChanges)
         {
             if (ReplacedUnsavedWorld != null)
@@ -216,7 +221,7 @@ public class AuthoringToolWorkspacePresenter
             ReplacedUnsavedWorld = toBeReplaced;
         }
 
-        _authoringToolWorkspaceVm.LearningWorlds.Add(toReplace);
+        _authoringToolWorkspaceVm.AddLearningWorld(toReplace);
         if (_authoringToolWorkspaceVm.SelectedLearningWorld == toBeReplaced)
         {
             _authoringToolWorkspaceVm.SelectedLearningWorld = toReplace;
@@ -367,7 +372,7 @@ public class AuthoringToolWorkspacePresenter
             WorldToReplaceWith = learningWorld;
         }
 
-        _authoringToolWorkspaceVm.LearningWorlds.Add(learningWorld);
+        _authoringToolWorkspaceVm.AddLearningWorld(learningWorld);
         _authoringToolWorkspaceVm.SelectedLearningWorld ??= learningWorld;
         OnLearningWorldSelect?.Invoke(this, _authoringToolWorkspaceVm.SelectedLearningWorld);
     }

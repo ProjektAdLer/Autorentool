@@ -4,7 +4,7 @@ using AuthoringTool.PresentationLogic.LearningSpace;
 
 namespace AuthoringTool.PresentationLogic.LearningWorld;
 
-public class LearningWorldViewModel : ILearningElementViewModelParent, ISerializableViewModel
+public class LearningWorldViewModel : ILearningElementViewModelParent, ISerializableViewModel, IDisplayableLearningObject
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="LearningWorldViewModel"/> class.
@@ -34,7 +34,8 @@ public class LearningWorldViewModel : ILearningElementViewModelParent, ISerializ
         LearningElements = learningElements ?? new Collection<LearningElementViewModel>();
         LearningSpaces = learningSpaces ?? new Collection<LearningSpaceViewModel>();
     }
-       
+    public const string fileEnding = "awf";
+    public string FileEnding => fileEnding;
     public ICollection<LearningElementViewModel> LearningElements { get; set; }
     public int Workload { get; set; }
     public ICollection<LearningSpaceViewModel> LearningSpaces { get; set; }

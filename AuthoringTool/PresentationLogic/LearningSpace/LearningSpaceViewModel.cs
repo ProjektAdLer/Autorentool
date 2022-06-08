@@ -3,7 +3,7 @@ using AuthoringTool.PresentationLogic.LearningElement;
 
 namespace AuthoringTool.PresentationLogic.LearningSpace;
 
-public class LearningSpaceViewModel : ILearningObjectViewModel, ILearningElementViewModelParent, ISerializableViewModel
+public class LearningSpaceViewModel : ILearningObjectViewModel, ILearningElementViewModelParent, ISerializableViewModel, IDisplayableLearningObject
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="LearningSpaceViewModel"/> class.
@@ -29,6 +29,8 @@ public class LearningSpaceViewModel : ILearningObjectViewModel, ILearningElement
         PositionY = positionY;
     }
 
+    public const string fileEnding = "asf";
+    public string FileEnding => fileEnding;
     public ICollection<LearningElementViewModel> LearningElements { get; set; }
     public int Workload { get; set; }
     public string Name { get; set; }

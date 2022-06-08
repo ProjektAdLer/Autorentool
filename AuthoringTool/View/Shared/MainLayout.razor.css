@@ -10,6 +10,13 @@ main {
 
 .sidebar {
     background-image: linear-gradient(180deg, rgb(5, 39, 103) 0%, #3a0647 70%);
+    width: 350px!important;
+    display: flex;
+    flex-flow: column;
+}
+
+.flex-remaining {
+    flex-grow: 1;
 }
 
 .top-row {
