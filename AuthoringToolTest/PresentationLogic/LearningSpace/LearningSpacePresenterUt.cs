@@ -71,14 +71,14 @@ public class LearningSpacePresenterUt
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
         learningElementPresenter.CreateNewTransferElement(Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>()
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int>()
             ).Returns(new LearningElementViewModel("foo", "bar",
-            null, null, "foo", "foo", "bar"));
+            null, null, "foo", "foo", "bar", 6));
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.CreateNewLearningElement("foo",
-            "bar", null, ElementTypeEnum.Transfer, ContentTypeEnum.Image, null, "bar", "foo", "bar"));
+            "bar", null, ElementTypeEnum.Transfer, ContentTypeEnum.Image, null, "bar", "foo", "bar", 6));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
     }
 
@@ -89,9 +89,9 @@ public class LearningSpacePresenterUt
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
         learningElementPresenter.CreateNewTransferElement(Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>()
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int>()
             ).Returns(new LearningElementViewModel("foo", "bar", null,
-            null,"foo", "bar", "foo"));
+            null,"foo", "bar", "foo",8));
         var parent = new LearningWorldViewModel("foo", "boo", "bla", "blub", "bibi", "bubu");
         var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
 
@@ -99,10 +99,10 @@ public class LearningSpacePresenterUt
         systemUnderTest.SetLearningSpace(space);
 
         systemUnderTest.CreateNewLearningElement("name", "sn", parent, ElementTypeEnum.Transfer, ContentTypeEnum.Image, content, 
-            "cont", "aut", "desc");
+            "cont", "aut", "desc",8);
 
         learningElementPresenter.Received()
-            .CreateNewTransferElement("name", "sn", parent, ContentTypeEnum.Image, content, "cont", "aut", "desc");
+            .CreateNewTransferElement("name", "sn", parent, ContentTypeEnum.Image, content, "cont", "aut", "desc",8);
     }
 
     [Test]
@@ -119,7 +119,7 @@ public class LearningSpacePresenterUt
 
         systemUnderTest.SetLearningSpace(space);
         systemUnderTest.CreateNewLearningElement("foo", "bar", space,
-            ElementTypeEnum.Transfer, ContentTypeEnum.Image, content, "bar", "foo", "bar");
+            ElementTypeEnum.Transfer, ContentTypeEnum.Image, content, "bar", "foo", "bar",3);
 
         Assert.That(space.LearningElements, Has.Count.EqualTo(1));
         var element = space.LearningElements.First();
@@ -132,6 +132,7 @@ public class LearningSpacePresenterUt
             Assert.That(element.Authors, Is.EqualTo("bar"));
             Assert.That(element.Description, Is.EqualTo("foo"));
             Assert.That(element.Goals, Is.EqualTo("bar"));
+            Assert.That(element.Workload, Is.EqualTo(3));
         });
     }
 
@@ -162,9 +163,9 @@ public class LearningSpacePresenterUt
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
         learningElementPresenter.CreateNewTransferElement(Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int>()
             ).Returns(new LearningElementViewModel("ba", "ba",
-            null, content, "ba", "ba", "ba"));
+            null, content, "ba", "ba", "ba", 6));
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
@@ -176,6 +177,7 @@ public class LearningSpacePresenterUt
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
         dictionary["Goals"] = "g";
+        dictionary["Workload (min)"] = "3";
         var returnValueTuple =
             new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
 
@@ -184,7 +186,7 @@ public class LearningSpacePresenterUt
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
-        learningElementPresenter.Received().CreateNewTransferElement("a", "b", space, ContentTypeEnum.Image, null, "e", "f", "g");
+        learningElementPresenter.Received().CreateNewTransferElement("a", "b", space, ContentTypeEnum.Image, null, "e", "f", "g",3);
     }
 
     #endregion
@@ -214,8 +216,8 @@ public class LearningSpacePresenterUt
         learningElementPresenter.EditLearningElement(Arg.Any<LearningElementViewModel>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<ILearningElementViewModelParent>(), Arg.Any<string>(),
             Arg.Any<string>(),
-            Arg.Any<string>()).Returns(new LearningElementViewModel("ba", "ba",
-            null, null, "ba", "ba", "ba"));
+            Arg.Any<string>(), Arg.Any<int>()).Returns(new LearningElementViewModel("ba", "ba",
+            null, null, "ba", "ba", "ba",8));
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
         var element = new LearningElementViewModel("foo", "bar", null, null,"bar",
             "foo", "bar");
@@ -232,6 +234,7 @@ public class LearningSpacePresenterUt
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
         dictionary["Goals"] = "g";
+        dictionary["Workload (min)"] = "5";
         var returnValueTuple =
             new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
 
@@ -241,7 +244,7 @@ public class LearningSpacePresenterUt
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
-        learningElementPresenter.Received().EditLearningElement(element, "a", "b", space, "e", "f", "g");
+        learningElementPresenter.Received().EditLearningElement(element, "a", "b", space, "e", "f", "g",5);
     }
 
     #endregion
@@ -342,7 +345,7 @@ public class LearningSpacePresenterUt
         systemUnderTest.SetLearningSpace(null);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OpenEditSelectedLearningObjectDialog());
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
     }
 
     [Test]

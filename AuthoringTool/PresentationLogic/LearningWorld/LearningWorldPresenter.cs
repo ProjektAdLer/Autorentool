@@ -50,6 +50,17 @@ internal class LearningWorldPresenter : ILearningWorldPresenter
         if (LearningWorldVm != null) LearningWorldVm.ShowingLearningSpaceView = false;
     }
 
+    public void UpdateWorldWorkload()
+    {
+        if (LearningWorldVm != null)
+        {
+            LearningWorldVm.Workload =
+                LearningWorldVm.LearningSpaces.SelectMany(space => space.LearningElements)
+                    .Sum(element => element.Workload) +
+                LearningWorldVm.LearningElements.Sum(element => element.Workload);
+        }
+    }
+
     public LearningWorldViewModel CreateNewLearningWorld(string name, string shortname, string authors,
         string language, string description, string goals)
     {
@@ -222,26 +233,27 @@ internal class LearningWorldPresenter : ILearningWorldPresenter
     /// <param name="authors">A list of authors of the element.</param>
     /// <param name="description">A description of the element.</param>
     /// <param name="goals">The goals of the element.</param>
+    /// <param name="workload">The time required to complete the learning element.</param>
     /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
     public void CreateNewLearningElement(string name, string shortname, ILearningElementViewModelParent parent,
         ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContent,
-        string authors, string description, string goals)
+        string authors, string description, string goals, int workload)
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         var learningElement = elementType switch
         {
             ElementTypeEnum.Transfer => _learningElementPresenter.CreateNewTransferElement(name, shortname,
-                parent, contentType, learningContent, authors, description, goals),
+                parent, contentType, learningContent, authors, description, goals, workload),
             ElementTypeEnum.Activation => _learningElementPresenter.CreateNewActivationElement(name, shortname,
-                parent, contentType, learningContent, authors, description, goals),
+                parent, contentType, learningContent, authors, description, goals, workload),
             ElementTypeEnum.Interaction => _learningElementPresenter.CreateNewInteractionElement(name, shortname,
-                parent, contentType, learningContent, authors, description, goals),
+                parent, contentType, learningContent, authors, description, goals, workload),
             ElementTypeEnum.Test => _learningElementPresenter.CreateNewTestElement(name, shortname,
-                parent, contentType, learningContent, authors, description, goals),
+                parent, contentType, learningContent, authors, description, goals, workload),
             _ => throw new ApplicationException("no valid ElementType assigned")
         };
-
+        UpdateWorldWorkload();
 
         SetSelectedLearningObject(learningElement);
     }
@@ -274,6 +286,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter
             {"Authors", element.Authors},
             {"Description", element.Description},
             {"Goals", element.Goals},
+            {"Workload (min)", element.Workload.ToString()}
         };
         EditLearningElementDialogOpen = true;
     }
@@ -290,6 +303,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter
             throw new ApplicationException("SelectedLearningWorld is null");
         learningElement.Parent = LearningWorldVm;
         LearningWorldVm.LearningElements.Add(learningElement);
+        UpdateWorldWorkload();
     }
 
     /// <summary>
@@ -338,11 +352,11 @@ internal class LearningWorldPresenter : ILearningWorldPresenter
         //required arguments
         var name = data["Name"];
         var shortname = data["Shortname"];
-        if(Enum.TryParse(data["Parent"], out ElementParentEnum parent) == false)
+        if (Enum.TryParse(data["Parent"], out ElementParentEnum parent) == false)
             throw new ApplicationException("Couldn't parse returned parent type");
         var assignment = data["Assignment"];
         var parentElement = GetLearningElementParent(parent, assignment);
-        if(Enum.TryParse(data["Type"], out ElementTypeEnum elementType) == false)
+        if (Enum.TryParse(data["Type"], out ElementTypeEnum elementType) == false)
             throw new ApplicationException("Couldn't parse returned element type");
         if (Enum.TryParse(data["Content"], out ContentTypeEnum contentType) == false)
             throw new ApplicationException("Couldn't parse returned content type");
@@ -350,12 +364,14 @@ internal class LearningWorldPresenter : ILearningWorldPresenter
         //optional arguments
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
+        if (Int32.TryParse(data["Workload (min)"], out int workload) == false || workload < 0)
+            workload = 0;
 
         try
         {
             var learningContent = Task.Run(async () => await LoadLearningContent(contentType)).Result;
             CreateNewLearningElement(name, shortname, parentElement, elementType, contentType, learningContent, authors,
-                description, goals);
+                description, goals, workload);
         }
         catch (AggregateException)
         {
@@ -421,13 +437,16 @@ internal class LearningWorldPresenter : ILearningWorldPresenter
         //optional arguments
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
+        if (Int32.TryParse(data["Workload (min)"], out int workload) == false || workload < 0)
+            workload = 0;
 
         if (LearningWorldVm == null)
             throw new ApplicationException("LearningWorld is null");
         if (LearningWorldVm.SelectedLearningObject is not LearningElementViewModel
             learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
         _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, parentElement,
-            authors, description, goals);
+            authors, description, goals,workload);
+        UpdateWorldWorkload();
         return Task.CompletedTask;
     }
 
@@ -480,7 +499,8 @@ internal class LearningWorldPresenter : ILearningWorldPresenter
                         }, true),
                     new("Authors", ModalDialogInputType.Text),
                     new("Description", ModalDialogInputType.Text, true),
-                    new("Goals", ModalDialogInputType.Text)
+                    new("Goals", ModalDialogInputType.Text),
+                    new("Workload (min)", ModalDialogInputType.Number)
                 };
             }
         }
@@ -511,7 +531,8 @@ internal class LearningWorldPresenter : ILearningWorldPresenter
                     }, true),
                 new("Authors", ModalDialogInputType.Text),
                 new("Description", ModalDialogInputType.Text, true),
-                new("Goals", ModalDialogInputType.Text)
+                new("Goals", ModalDialogInputType.Text),
+                new("Workload (min)", ModalDialogInputType.Number)
             };
         }
     }

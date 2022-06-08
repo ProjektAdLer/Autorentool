@@ -34,4 +34,5 @@ public interface ILearningWorldPresenter
     void SetLearningWorld(object? caller, LearningWorldViewModel? world);
     void ShowSelectedLearningSpaceView();
     void CloseLearningSpaceView();
+    void UpdateWorldWorkload();
 }

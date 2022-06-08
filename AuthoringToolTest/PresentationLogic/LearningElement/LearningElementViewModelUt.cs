@@ -19,11 +19,12 @@ public class LearningElementViewModelUt
         var Authors = "ben and jerry";
         var Description = "very cool element";
         var Goals = "learn very many things";
+        var Workload = 5;
         var PositionX = 5f;
         var PositionY = 21f;
 
         var systemUnderTest = new LearningElementViewModel(Name, Shortname, Parent, Content, Authors,
-            Description, Goals, PositionX, PositionY);
+            Description, Goals, Workload, PositionX, PositionY);
         
         Assert.Multiple(() =>
         {
@@ -34,6 +35,7 @@ public class LearningElementViewModelUt
             Assert.That(systemUnderTest.Authors, Is.EqualTo(Authors));
             Assert.That(systemUnderTest.Description, Is.EqualTo(Description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(Goals));
+            Assert.That(systemUnderTest.Workload, Is.EqualTo(Workload));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(PositionX));
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(PositionY));
         });

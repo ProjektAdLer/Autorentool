@@ -10,5 +10,6 @@ public interface ILearningElement
     string Goals { get; set; }
     double PositionX { get; set; }
     double PositionY { get; set; }
+    int Workload { get; set; }
     string? ParentName { get; set; }
 }

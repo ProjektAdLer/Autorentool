@@ -22,6 +22,14 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
     private readonly ILogger<LearningWorldPresenter> _logger;
 
     public LearningSpaceViewModel? LearningSpaceVm { get; private set; }
+    
+    private void UpdateSpaceWorkload()
+    {
+        if (LearningSpaceVm != null)
+        {
+            LearningSpaceVm.Workload = LearningSpaceVm.LearningElements.Sum(element => element.Workload);
+        }
+    }
 
     public LearningSpaceViewModel CreateNewLearningSpace(string name, string shortname, string authors,
         string description, string goals)
@@ -136,26 +144,27 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
     /// <param name="authors">A list of authors of the element.</param>
     /// <param name="description">A description of the element.</param>
     /// <param name="goals">The goals of the element.</param>
+    /// <param name="workload">The time required to complete the learning element.</param>
     /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
     public void CreateNewLearningElement(string name, string shortname, ILearningElementViewModelParent parent,
         ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContent,
-        string authors, string description, string goals)
+        string authors, string description, string goals, int workload)
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
         var learningElement = elementType switch
         {
             ElementTypeEnum.Transfer => _learningElementPresenter.CreateNewTransferElement(name, shortname,
-                parent, contentType, learningContent, authors, description, goals),
+                parent, contentType, learningContent, authors, description, goals, workload),
             ElementTypeEnum.Activation => _learningElementPresenter.CreateNewActivationElement(name, shortname,
-                parent, contentType, learningContent, authors, description, goals),
+                parent, contentType, learningContent, authors, description, goals, workload),
             ElementTypeEnum.Interaction => _learningElementPresenter.CreateNewInteractionElement(name, shortname,
-                parent, contentType, learningContent, authors, description, goals),
+                parent, contentType, learningContent, authors, description, goals, workload),
             ElementTypeEnum.Test => _learningElementPresenter.CreateNewTestElement(name, shortname,
-                parent, contentType, learningContent, authors, description, goals),
+                parent, contentType, learningContent, authors, description, goals, workload),
             _ => throw new ApplicationException("no valid ElementType assigned")
         };
-
+        UpdateSpaceWorkload();
         SetSelectedLearningObject(learningElement);
     }
 
@@ -187,6 +196,7 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
             {"Authors", element.Authors},
             {"Description", element.Description},
             {"Goals", element.Goals},
+            {"Workload (min)", element.Workload.ToString()}
         };
         EditLearningElementDialogOpen = true;
     }
@@ -202,6 +212,7 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
         learningElement.Parent = LearningSpaceVm;
+        UpdateSpaceWorkload();
         LearningSpaceVm.LearningElements.Add(learningElement);
     }
     
@@ -260,12 +271,14 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
         //optional arguments
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
-        
+        if (Int32.TryParse(data["Workload (min)"], out int workload) == false || workload < 0)
+            workload = 0;
+
         try
         {
             var learningContent = Task.Run(async () => await LoadLearningContent(contentType)).Result;
             CreateNewLearningElement(name, shortname, parentElement, elementType, contentType, learningContent, authors, 
-                description, goals);
+                description, goals, workload);
         }
         catch (AggregateException)
         {
@@ -318,13 +331,16 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
         //optional arguments
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
+        if (Int32.TryParse(data["Workload (min)"], out int workload) == false || workload < 0)
+            workload = 0;
 
         if (LearningSpaceVm == null)
             throw new ApplicationException("LearningSpaceVm is null");
         if (LearningSpaceVm.SelectedLearningObject is not LearningElementViewModel
             learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
         _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, parentElement,
-            authors, description, goals);
+            authors, description, goals, workload);
+        UpdateSpaceWorkload();
         return Task.CompletedTask;
     }
 
@@ -361,7 +377,8 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
                         }, true),
                     new("Authors", ModalDialogInputType.Text),
                     new("Description", ModalDialogInputType.Text, true),
-                    new("Goals", ModalDialogInputType.Text)
+                    new("Goals", ModalDialogInputType.Text),
+                    new("Workload (min)", ModalDialogInputType.Number)
                 };
             }
         }
@@ -376,7 +393,8 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
                     new("Shortname", ModalDialogInputType.Text, true),
                     new("Authors", ModalDialogInputType.Text),
                     new("Description", ModalDialogInputType.Text, true),
-                    new("Goals", ModalDialogInputType.Text)
+                    new("Goals", ModalDialogInputType.Text),
+                    new("Workload (min)", ModalDialogInputType.Number)
                 };
             }
         }
@@ -386,26 +404,26 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
     #region LearningObject
 
     /// <summary>
-    /// Changes the selected <see cref="ILearningObjectViewModel"/> in the currently selected learning world.
+    /// Changes the selected <see cref="ILearningObjectViewModel"/> in the currently selected learning space.
     /// </summary>
     /// <param name="learningObject">The learning object that should be set as selected</param>
-    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
+    /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
     public void SetSelectedLearningObject(ILearningObjectViewModel learningObject)
     {
         if (LearningSpaceVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
+            throw new ApplicationException("SelectedLearningSpace is null");
         LearningSpaceVm.SelectedLearningObject = learningObject;
     }
 
     /// <summary>
-    /// Deletes the selected learning object in the currently selected learning world and sets an other element as selected learning object.
+    /// Deletes the selected learning object in the currently selected learning space and sets an other element as selected learning object.
     /// </summary>
-    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
+    /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
     /// <exception cref="NotImplementedException">Thrown if the selected learning object is of an other type than element.</exception>
     public void DeleteSelectedLearningObject()
     {
         if (LearningSpaceVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
+            throw new ApplicationException("SelectedLearningSpace is null");
         switch (LearningSpaceVm.SelectedLearningObject)
         {
             case null:
@@ -423,12 +441,12 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
     /// <summary>
     /// Opens the OpenEditDialog for Learning Element if the selected learning object is an learning element.
     /// </summary>
-    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
+    /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
     /// <exception cref="NotImplementedException">Thrown if the selected learning object is of an other type than element.</exception>
     public void OpenEditSelectedLearningObjectDialog()
     {
         if (LearningSpaceVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
+            throw new ApplicationException("SelectedLearningSpace is null");
         switch (LearningSpaceVm.SelectedLearningObject)
         {
             case null:
@@ -444,7 +462,7 @@ internal class LearningSpacePresenter : ILearningSpacePresenter
     /// <summary>
     /// Calls the the Save methode for Learning Element if the selected learning object is an learning element.
     /// </summary>
-    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
+    /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
     /// <exception cref="NotImplementedException">Thrown if the selected learning object is of an other type than element.</exception>
     public async Task SaveSelectedLearningObjectAsync()
     {

@@ -30,6 +30,7 @@ public class LearningSpaceViewModel : ILearningObjectViewModel, ILearningElement
     }
 
     public ICollection<LearningElementViewModel> LearningElements { get; set; }
+    public int Workload { get; set; }
     public string Name { get; set; }
     public string Shortname { get; set; }
     public string Authors { get; set; }

@@ -36,6 +36,7 @@ public class LearningWorldViewModel : ILearningElementViewModelParent, ISerializ
     }
        
     public ICollection<LearningElementViewModel> LearningElements { get; set; }
+    public int Workload { get; set; }
     public ICollection<LearningSpaceViewModel> LearningSpaces { get; set; }
     public IEnumerable<ILearningObjectViewModel> LearningObjects => LearningElements.Concat<ILearningObjectViewModel>(LearningSpaces);
     public string Name { get; set; }

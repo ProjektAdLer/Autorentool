@@ -8,6 +8,7 @@
 @inject ILearningSpacePresenter _learningSpaceP
 
 <h2>LearningSpace @_learningSpaceP.LearningSpaceVm?.Name</h2>
+<h5>Workload: @_learningSpaceP.LearningSpaceVm?.Workload minutes</h5>
 <button class="btn btn-primary" @onclick="AddNewLearningElement">Add Learning Element</button>
 <button class="btn btn-primary" @onclick="LoadLearningElementAsync">Load Learning Element</button>
 @ChildContent

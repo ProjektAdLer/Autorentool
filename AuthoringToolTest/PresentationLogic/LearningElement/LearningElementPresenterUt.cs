@@ -24,9 +24,10 @@ public class LearningElementPresenterUt
         var authors = "d";
         var description = "e";
         var goals = "f";
+        var workload = 6;
 
         var element = systemUnderTest.CreateNewTransferElement(name, shortname, parent, contentType, content,
-            authors, description, goals);
+            authors, description, goals, workload);
         Assert.Multiple(() =>
         {
             Assert.That(element.Name, Is.EqualTo(name));
@@ -36,6 +37,7 @@ public class LearningElementPresenterUt
             Assert.That(element.Authors, Is.EqualTo(authors));
             Assert.That(element.Description, Is.EqualTo(description));
             Assert.That(element.Goals, Is.EqualTo(goals));
+            Assert.That(element.Workload, Is.EqualTo(workload));
         });
     }
 
@@ -45,7 +47,7 @@ public class LearningElementPresenterUt
         var systemUnderTest = new LearningElementPresenter();
 
         var ex = Assert.Throws<ApplicationException>(() =>
-            systemUnderTest.CreateNewTransferElement("a", "b", null, ContentTypeEnum.H5P, null, "d", "e", "f"));
+            systemUnderTest.CreateNewTransferElement("a", "b", null, ContentTypeEnum.H5P, null, "d", "e", "f", 6));
         Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
     }
     
@@ -61,9 +63,10 @@ public class LearningElementPresenterUt
         var authors = "d";
         var description = "e";
         var goals = "f";
+        var workload = 7;
 
         var element = systemUnderTest.CreateNewActivationElement(name, shortname, parent, contentType, content,
-            authors, description, goals);
+            authors, description, goals, workload);
         Assert.Multiple(() =>
         {
             Assert.That(element.Name, Is.EqualTo(name));
@@ -73,6 +76,7 @@ public class LearningElementPresenterUt
             Assert.That(element.Authors, Is.EqualTo(authors));
             Assert.That(element.Description, Is.EqualTo(description));
             Assert.That(element.Goals, Is.EqualTo(goals));
+            Assert.That(element.Workload, Is.EqualTo(workload));
         });
     }
     
@@ -82,7 +86,7 @@ public class LearningElementPresenterUt
         var systemUnderTest = new LearningElementPresenter();
 
         var ex = Assert.Throws<ApplicationException>(() =>
-            systemUnderTest.CreateNewActivationElement("a", "b", null, ContentTypeEnum.Image, null, "d", "e", "f"));
+            systemUnderTest.CreateNewActivationElement("a", "b", null, ContentTypeEnum.Image, null, "d", "e", "f", 8));
         Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
     }
     
@@ -98,9 +102,10 @@ public class LearningElementPresenterUt
         var authors = "d";
         var description = "e";
         var goals = "f";
+        var workload = 9;
 
         var element = systemUnderTest.CreateNewInteractionElement(name, shortname, parent, contentType, content,
-            authors, description, goals);
+            authors, description, goals, workload);
         Assert.Multiple(() =>
         {
             Assert.That(element.Name, Is.EqualTo(name));
@@ -110,6 +115,7 @@ public class LearningElementPresenterUt
             Assert.That(element.Authors, Is.EqualTo(authors));
             Assert.That(element.Description, Is.EqualTo(description));
             Assert.That(element.Goals, Is.EqualTo(goals));
+            Assert.That(element.Workload, Is.EqualTo(workload));
         });
     }
     
@@ -119,7 +125,7 @@ public class LearningElementPresenterUt
         var systemUnderTest = new LearningElementPresenter();
 
         var ex = Assert.Throws<ApplicationException>(() =>
-            systemUnderTest.CreateNewInteractionElement("a", "b", null, ContentTypeEnum.Image, null, "d", "e", "f"));
+            systemUnderTest.CreateNewInteractionElement("a", "b", null, ContentTypeEnum.Image, null, "d", "e", "f", 2));
         Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
     }
     
@@ -135,9 +141,10 @@ public class LearningElementPresenterUt
         var authors = "d";
         var description = "e";
         var goals = "f";
+        var workload = 2;
 
         var element = systemUnderTest.CreateNewTestElement(name, shortname, parent, contentType, content,
-            authors, description, goals);
+            authors, description, goals, workload);
         Assert.Multiple(() =>
         {
             Assert.That(element.Name, Is.EqualTo(name));
@@ -147,6 +154,7 @@ public class LearningElementPresenterUt
             Assert.That(element.Authors, Is.EqualTo(authors));
             Assert.That(element.Description, Is.EqualTo(description));
             Assert.That(element.Goals, Is.EqualTo(goals));
+            Assert.That(element.Workload, Is.EqualTo(workload));
         });
     }
     
@@ -156,7 +164,7 @@ public class LearningElementPresenterUt
         var systemUnderTest = new LearningElementPresenter();
 
         var ex = Assert.Throws<ApplicationException>(() =>
-            systemUnderTest.CreateNewTestElement("a", "b", null, ContentTypeEnum.Image, null, "d", "e", "f"));
+            systemUnderTest.CreateNewTestElement("a", "b", null, ContentTypeEnum.Image, null, "d", "e", "f", 4));
         Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
     }
 
@@ -172,9 +180,10 @@ public class LearningElementPresenterUt
         var authors = "d";
         var description = "e";
         var goals = "f";
+        var workload = 6;
 
         var element = systemUnderTest.CreateNewTransferElement(name, shortname, parent, contentType, content,
-            authors, description, goals);
+            authors, description, goals, workload);
         Assert.Multiple(() =>
         {
             Assert.That(element.Name, Is.EqualTo(name));
@@ -184,6 +193,7 @@ public class LearningElementPresenterUt
             Assert.That(element.Authors, Is.EqualTo(authors));
             Assert.That(element.Description, Is.EqualTo(description));
             Assert.That(element.Goals, Is.EqualTo(goals));
+            Assert.That(element.Workload, Is.EqualTo(workload));
         });
     }
     
@@ -193,7 +203,7 @@ public class LearningElementPresenterUt
         var systemUnderTest = new LearningElementPresenter();
 
         var ex = Assert.Throws<NotImplementedException>(() =>
-            systemUnderTest.CreateNewTransferElement("a", "b", null, ContentTypeEnum.Image, null, "d", "e", "f"));
+            systemUnderTest.CreateNewTransferElement("a", "b", null, ContentTypeEnum.Image, null, "d", "e", "f", 3));
         Assert.That(ex!.Message, Is.EqualTo("Type of Assignment is not implemented"));
     }
     
@@ -203,7 +213,7 @@ public class LearningElementPresenterUt
         var systemUnderTest = new LearningElementPresenter();
         var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
         var element = new LearningElementViewModel("a", "b", null, content,
-            "e", "f","g", 17f,29f);
+            "e", "f","g", 8, 17f,29f);
         
         var name = "new element";
         var shortname = "ne";
@@ -211,10 +221,11 @@ public class LearningElementPresenterUt
         var authors = "marvin";
         var description = "video of learning stuff";
         var goals = "learn";
+        var workload = 7;
         var posx = 22f;
 
         element = systemUnderTest.EditLearningElement(element, name, shortname, parent, authors, description,
-            goals, posx);
+            goals, workload, posx);
         Assert.Multiple(() =>
         {
             Assert.That(element.Name, Is.EqualTo(name));
@@ -225,6 +236,7 @@ public class LearningElementPresenterUt
             Assert.That(element.Description, Is.EqualTo(description));
             Assert.That(element.Goals, Is.EqualTo(goals));
             Assert.That(element.PositionX, Is.EqualTo(posx));
+            Assert.That(element.Workload, Is.EqualTo(workload));
             Assert.That(element.PositionY, Is.EqualTo(29f));
         });
     }
@@ -235,7 +247,7 @@ public class LearningElementPresenterUt
         var systemUnderTest = new LearningElementPresenter();
         var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
         var element = new LearningElementViewModel("a", "b", null, content,
-            "e", "f","g", 17f,29f);
+            "e", "f","g", 9, 17f,29f);
         
         var name = "new element";
         var shortname = "ne";
@@ -243,10 +255,11 @@ public class LearningElementPresenterUt
         var authors = "marvin";
         var description = "video of learning stuff";
         var goals = "learn";
+        var workload = 8;
         var posx = 22f;
 
         element = systemUnderTest.EditLearningElement(element, name, shortname, parent, authors, description,
-            goals, posx);
+            goals, workload, posx);
         Assert.Multiple(() =>
         {
             Assert.That(element.Name, Is.EqualTo(name));
@@ -257,6 +270,7 @@ public class LearningElementPresenterUt
             Assert.That(element.Description, Is.EqualTo(description));
             Assert.That(element.Goals, Is.EqualTo(goals));
             Assert.That(element.PositionX, Is.EqualTo(posx));
+            Assert.That(element.Workload, Is.EqualTo(workload));
             Assert.That(element.PositionY, Is.EqualTo(29f));
         });
     }
@@ -268,7 +282,7 @@ public class LearningElementPresenterUt
         var parent = new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
         var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
         var element = new LearningElementViewModel("a", "b", parent, content,
-            "e", "f","g", 17f,29f);
+            "e", "f","g", 4, 17f,29f);
         parent.LearningElements.Add(element);
         
         Assert.That(parent.LearningElements, Contains.Item(element));
@@ -285,7 +299,7 @@ public class LearningElementPresenterUt
         var parent = new LearningSpaceViewModel("a", "b", "c", "d", "e");
         var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
         var element = new LearningElementViewModel("a", "b", parent, content ,
-            "e", "f","g", 17f,29f);
+            "e", "f","g", 9, 17f,29f);
         parent.LearningElements.Add(element);
         
         Assert.That(parent.LearningElements, Contains.Item(element));

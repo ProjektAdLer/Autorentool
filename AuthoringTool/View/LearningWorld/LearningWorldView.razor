@@ -18,6 +18,7 @@
 }
 else
 {
+    <h5>Workload: @_learningWorldP.LearningWorldVm?.Workload minutes</h5>
     <button class="btn btn-primary" @onclick="AddNewLearningSpace">Add Learning Space</button>
     <button class="btn btn-primary" @onclick="LoadLearningSpaceAsync">Load Learning Space</button>
     @if (_learningWorldP.CreateLearningSpaceDialogueOpen)
@@ -227,11 +228,13 @@ else
     private void ShowSelectedLearningSpaceView()
     {
         _learningWorldP.ShowSelectedLearningSpaceView();
+        _learningWorldP.UpdateWorldWorkload();
     }
 
     private void CloseLearningSpaceView()
     {
         _learningWorldP.CloseLearningSpaceView();
+        _learningWorldP.UpdateWorldWorkload();
     }
 
 }
