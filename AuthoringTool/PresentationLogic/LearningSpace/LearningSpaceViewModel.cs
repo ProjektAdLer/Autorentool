@@ -32,7 +32,7 @@ public class LearningSpaceViewModel : ILearningObjectViewModel, ILearningElement
     public const string fileEnding = "asf";
     public string FileEnding => fileEnding;
     public ICollection<LearningElementViewModel> LearningElements { get; set; }
-    public int Workload { get; set; }
+    public int Workload => LearningElements.Sum(element => element.Workload);
     public string Name { get; set; }
     public string Shortname { get; set; }
     public string Authors { get; set; }

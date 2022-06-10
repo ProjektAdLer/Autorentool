@@ -22,14 +22,6 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
     private readonly ILogger<LearningWorldPresenter> _logger;
 
     public LearningSpaceViewModel? LearningSpaceVm { get; private set; }
-    
-    private void UpdateSpaceWorkload()
-    {
-        if (LearningSpaceVm != null)
-        {
-            LearningSpaceVm.Workload = LearningSpaceVm.LearningElements.Sum(element => element.Workload);
-        }
-    }
 
     public LearningSpaceViewModel CreateNewLearningSpace(string name, string shortname, string authors,
         string description, string goals)
@@ -165,7 +157,6 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
                 parent, contentType, learningContent, authors, description, goals, difficulty, workload),
             _ => throw new ApplicationException("no valid ElementType assigned")
         };
-        UpdateSpaceWorkload();
         SetSelectedLearningObject(learningElement);
     }
 
@@ -205,7 +196,6 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
             throw new ApplicationException("SelectedLearningSpace is null");
         learningElement.Parent = LearningSpaceVm;
         AddLearningElement(learningElement);
-        UpdateSpaceWorkload();
     }
 
     public void AddLearningElement(LearningElementViewModel element)
@@ -343,7 +333,6 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
             learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
         _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, parentElement,
             authors, description, goals, difficulty, workload);
-        UpdateSpaceWorkload();
         return Task.CompletedTask;
     }
 

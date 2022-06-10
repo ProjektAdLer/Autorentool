@@ -53,17 +53,6 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
         if (LearningWorldVm != null) LearningWorldVm.ShowingLearningSpaceView = false;
     }
 
-    public void UpdateWorldWorkload()
-    {
-        if (LearningWorldVm != null)
-        {
-            LearningWorldVm.Workload =
-                LearningWorldVm.LearningSpaces.SelectMany(space => space.LearningElements)
-                    .Sum(element => element.Workload) +
-                LearningWorldVm.LearningElements.Sum(element => element.Workload);
-        }
-    }
-
     public LearningWorldViewModel CreateNewLearningWorld(string name, string shortname, string authors,
         string language, string description, string goals)
     {
@@ -265,7 +254,6 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
                 parent, contentType, learningContent, authors, description, goals, difficulty, workload),
             _ => throw new ApplicationException("no valid ElementType assigned")
         };
-        UpdateWorldWorkload();
 
         SetSelectedLearningObject(learningElement);
     }
@@ -326,7 +314,6 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
             throw new ApplicationException("SelectedLearningWorld is null");
         learningElement.Parent = LearningWorldVm;
         AddLearningElement(learningElement);
-        UpdateWorldWorkload();
     }
 
     /// <summary>
@@ -473,7 +460,6 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
             learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
         _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, parentElement,
             authors, description, goals, difficulty, workload);
-        UpdateWorldWorkload();
         return Task.CompletedTask;
     }
 

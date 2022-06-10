@@ -37,7 +37,8 @@ public class LearningWorldViewModel : ILearningElementViewModelParent, ISerializ
     public const string fileEnding = "awf";
     public string FileEnding => fileEnding;
     public ICollection<LearningElementViewModel> LearningElements { get; set; }
-    public int Workload { get; set; }
+    public int Workload =>
+        LearningSpaces.Sum(space => space.Workload) + LearningElements.Sum(element => element.Workload);
     public ICollection<LearningSpaceViewModel> LearningSpaces { get; set; }
     public IEnumerable<ILearningObjectViewModel> LearningObjects => LearningElements.Concat<ILearningObjectViewModel>(LearningSpaces);
     public string Name { get; set; }
