@@ -18,8 +18,8 @@ public class LearningSpaceViewModelUt
         var Goals = "learn very many things";
         var PositionX = 5f;
         var PositionY = 21f;
-        var ele1 = new LearningElementViewModel("a", "b", null,  null, "g", "h","i", 17, 23);
-        var ele2 = new LearningElementViewModel("z", "zz", null,  null, "z","zz","zzz", 444, double.MaxValue);
+        var ele1 = new LearningElementViewModel("a", "b", null,  null, "g", "h","i", LearningElementDifficultyEnum.Easy, 17, 23);
+        var ele2 = new LearningElementViewModel("z", "zz", null,  null, "z","zz","zzz", LearningElementDifficultyEnum.Hard, 444, double.MaxValue);
         var learningElements = new List<LearningElementViewModel> { ele1, ele2 };
         
         var systemUnderTest = new LearningSpaceViewModel(Name, Shortname, Authors, Description, Goals, learningElements,

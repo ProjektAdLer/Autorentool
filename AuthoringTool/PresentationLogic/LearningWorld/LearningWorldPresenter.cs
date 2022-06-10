@@ -244,24 +244,25 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     /// <param name="authors">A list of authors of the element.</param>
     /// <param name="description">A description of the element.</param>
     /// <param name="goals">The goals of the element.</param>
+    /// <param name="difficulty">The difficulty of the element.</param>
     /// <param name="workload">The time required to complete the learning element.</param>
     /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
     public void CreateNewLearningElement(string name, string shortname, ILearningElementViewModelParent parent,
         ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContent,
-        string authors, string description, string goals, int workload)
+        string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload)
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         var learningElement = elementType switch
         {
             ElementTypeEnum.Transfer => _learningElementPresenter.CreateNewTransferElement(name, shortname,
-                parent, contentType, learningContent, authors, description, goals, workload),
+                parent, contentType, learningContent, authors, description, goals, difficulty, workload),
             ElementTypeEnum.Activation => _learningElementPresenter.CreateNewActivationElement(name, shortname,
-                parent, contentType, learningContent, authors, description, goals, workload),
+                parent, contentType, learningContent, authors, description, goals, difficulty, workload),
             ElementTypeEnum.Interaction => _learningElementPresenter.CreateNewInteractionElement(name, shortname,
-                parent, contentType, learningContent, authors, description, goals, workload),
+                parent, contentType, learningContent, authors, description, goals, difficulty, workload),
             ElementTypeEnum.Test => _learningElementPresenter.CreateNewTestElement(name, shortname,
-                parent, contentType, learningContent, authors, description, goals, workload),
+                parent, contentType, learningContent, authors, description, goals, difficulty, workload),
             _ => throw new ApplicationException("no valid ElementType assigned")
         };
         UpdateWorldWorkload();
@@ -297,6 +298,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
             {"Authors", element.Authors},
             {"Description", element.Description},
             {"Goals", element.Goals},
+            {"Difficulty", element.Difficulty.ToString()},
             {"Workload (min)", element.Workload.ToString()}
         };
         EditLearningElementDialogOpen = true;
@@ -382,6 +384,8 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
         if (Enum.TryParse(data["Content"], out ContentTypeEnum contentType) == false)
             throw new ApplicationException("Couldn't parse returned content type");
         var description = data["Description"];
+        if (Enum.TryParse(data["Difficulty"], out LearningElementDifficultyEnum difficulty) == false)
+            throw new ApplicationException("Couldn't parse returned difficulty");
         //optional arguments
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
@@ -392,7 +396,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
         {
             var learningContent = Task.Run(async () => await LoadLearningContent(contentType)).Result;
             CreateNewLearningElement(name, shortname, parentElement, elementType, contentType, learningContent, authors,
-                description, goals, workload);
+                description, goals, difficulty, workload);
         }
         catch (AggregateException)
         {
@@ -455,6 +459,8 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
         var assignment = data["Assignment"];
         var parentElement = GetLearningElementParent(parent, assignment);
         var description = data["Description"];
+        if (Enum.TryParse(data["Difficulty"], out LearningElementDifficultyEnum difficulty) == false)
+            throw new ApplicationException("Couldn't parse returned difficulty");
         //optional arguments
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
@@ -466,7 +472,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
         if (LearningWorldVm.SelectedLearningObject is not LearningElementViewModel
             learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
         _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, parentElement,
-            authors, description, goals,workload);
+            authors, description, goals, difficulty, workload);
         UpdateWorldWorkload();
         return Task.CompletedTask;
     }
@@ -521,6 +527,14 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
                     new("Authors", ModalDialogInputType.Text),
                     new("Description", ModalDialogInputType.Text, true),
                     new("Goals", ModalDialogInputType.Text),
+                    new ModalDialogDropdownInputField("Difficulty",
+                        new[]
+                        {
+                            new ModalDialogDropdownInputFieldChoiceMapping(null,
+                                new[] {LearningElementDifficultyEnum.Easy.ToString(),
+                                    LearningElementDifficultyEnum.Medium.ToString(),
+                                    LearningElementDifficultyEnum.Hard.ToString() })
+                        }, true),
                     new("Workload (min)", ModalDialogInputType.Number)
                 };
             }
@@ -553,6 +567,14 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
                 new("Authors", ModalDialogInputType.Text),
                 new("Description", ModalDialogInputType.Text, true),
                 new("Goals", ModalDialogInputType.Text),
+                new ModalDialogDropdownInputField("Difficulty",
+                    new[]
+                    {
+                        new ModalDialogDropdownInputFieldChoiceMapping(null,
+                            new[] {LearningElementDifficultyEnum.Easy.ToString(),
+                                LearningElementDifficultyEnum.Medium.ToString(),
+                                LearningElementDifficultyEnum.Hard.ToString() })
+                    }, true),
                 new("Workload (min)", ModalDialogInputType.Number)
             };
         }

@@ -20,11 +20,12 @@ public class LearningElementViewModelUt
         var Description = "very cool element";
         var Goals = "learn very many things";
         var Workload = 5;
+        var Difficulty = LearningElementDifficultyEnum.Easy;
         var PositionX = 5f;
         var PositionY = 21f;
 
         var systemUnderTest = new LearningElementViewModel(Name, Shortname, Parent, Content, Authors,
-            Description, Goals, Workload, PositionX, PositionY);
+            Description, Goals, Difficulty, Workload, PositionX, PositionY);
         
         Assert.Multiple(() =>
         {
@@ -36,6 +37,7 @@ public class LearningElementViewModelUt
             Assert.That(systemUnderTest.Description, Is.EqualTo(Description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(Goals));
             Assert.That(systemUnderTest.Workload, Is.EqualTo(Workload));
+            Assert.That(systemUnderTest.Difficulty, Is.EqualTo(Difficulty));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(PositionX));
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(PositionY));
         });
@@ -47,7 +49,7 @@ public class LearningElementViewModelUt
     {
         const string expectedFileEnding = "aef";
         var systemUnderTest = new LearningElementViewModel("foo", "foo", null, null,
-            "foo",  "foo", "foo");
+            "foo",  "foo", "foo", LearningElementDifficultyEnum.Medium);
         Assert.That(systemUnderTest.FileEnding, Is.EqualTo(expectedFileEnding));
     }
 }

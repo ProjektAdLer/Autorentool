@@ -1,10 +1,13 @@
-﻿namespace AuthoringTool.Entities;
+﻿using AuthoringTool.PresentationLogic.LearningElement;
+
+namespace AuthoringTool.Entities;
 
 [Serializable]
 public class LearningElement : ILearningElement
 {
     internal LearningElement(string name, string shortname,  string? parentName, LearningContent? content,
-        string authors, string description, string goals, int workload = 0, double positionX = 0, double positionY = 0)
+        string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload = 0,
+        double positionX = 0, double positionY = 0)
     {
         Name = name;
         Shortname = shortname;
@@ -12,6 +15,7 @@ public class LearningElement : ILearningElement
         Authors = authors;
         Description = description;
         Goals = goals;
+        Difficulty = difficulty;
         Workload = workload;
         PositionX = positionX;
         PositionY = positionY;
@@ -28,6 +32,7 @@ public class LearningElement : ILearningElement
         Authors = "";
         Description = "";
         Goals = "";
+        Difficulty = LearningElementDifficultyEnum.Medium;
         Workload = 0;
         PositionX = 0;
         PositionY = 0;
@@ -42,6 +47,7 @@ public class LearningElement : ILearningElement
     public string Description { get; set; }
     public string Goals { get; set; }
     public int Workload { get; set; }
+    public LearningElementDifficultyEnum Difficulty { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
     public string? ParentName { get; set; }

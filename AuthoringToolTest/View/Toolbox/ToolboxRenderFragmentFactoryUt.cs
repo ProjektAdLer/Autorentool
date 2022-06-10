@@ -104,7 +104,7 @@ a name
 
             yield return new object[]
             {
-                new LearningElementViewModel("another name", "an", null, null, "authors", "description", "goals"),
+                new LearningElementViewModel("another name", "an", null, null, "authors", "description", "goals",LearningElementDifficultyEnum.Easy),
                 @"<div class=""col-3 element text-center text-wrap learning-element"">
 another name
 <br/>

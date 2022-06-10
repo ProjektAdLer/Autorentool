@@ -242,7 +242,7 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(false);
-        var learningElement = new LearningElementViewModel("f", "f", null, null, "f", "f", "f");
+        var learningElement = new LearningElementViewModel("f", "f", null, null, "f", "f", "f",LearningElementDifficultyEnum.Easy);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
@@ -256,7 +256,7 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
-        var learningElement = new LearningElementViewModel("f", "f", null, null,"f", "f", "f");
+        var learningElement = new LearningElementViewModel("f", "f", null, null,"f", "f", "f",LearningElementDifficultyEnum.Easy);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
@@ -271,8 +271,8 @@ public class PresentationLogicUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
         var mockElementMapper = Substitute.For<ILearningElementMapper>();
-        var learningElement = new LearningElementViewModel("f", "f", null,  null,"f", "f", "f");
-        var entity = new AuthoringTool.Entities.LearningElement("f", "f", "f", null,"f", "f", "f");
+        var learningElement = new LearningElementViewModel("f", "f", null,  null,"f", "f", "f",LearningElementDifficultyEnum.Easy);
+        var entity = new AuthoringTool.Entities.LearningElement("f", "f", "f", null,"f", "f", "f",LearningElementDifficultyEnum.Easy);
         mockElementMapper.ToEntity(Arg.Any<LearningElementViewModel>())
             .Returns(entity);
         const string filepath = "foobar";
@@ -306,7 +306,7 @@ public class PresentationLogicUt
             .Throws(new OperationCanceledException("bububaba"));
         mockServiceProvider.GetService(typeof(IElectronDialogManager))
             .Returns(mockElectronDialogManager);
-        var learningElement = new LearningElementViewModel("f", "f", null, null, "f", "f", "f");
+        var learningElement = new LearningElementViewModel("f", "f", null, null, "f", "f", "f",LearningElementDifficultyEnum.Easy);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
             serviceProvider: mockServiceProvider);
@@ -515,8 +515,8 @@ public class PresentationLogicUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
         var mockElementMapper = Substitute.For<ILearningElementMapper>();
-        var learningElement = new LearningElementViewModel("f", "f", null, null, "f", "f", "f" );
-        var entity = new AuthoringTool.Entities.LearningElement("f", "f", "f", null, "f", "f", "f");
+        var learningElement = new LearningElementViewModel("f", "f", null, null, "f", "f", "f",LearningElementDifficultyEnum.Easy );
+        var entity = new AuthoringTool.Entities.LearningElement("f", "f", "f", null, "f", "f", "f",LearningElementDifficultyEnum.Easy);
         mockElementMapper.ToViewModel(entity).Returns(learningElement);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
@@ -969,10 +969,10 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadLearningElementViewModelFromStream_ReturnsLearningWorld()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var mockLearningElement = new AuthoringTool.Entities.LearningElement("n", "sn", "pn",null, "a", "d", "g");
+        var mockLearningElement = new AuthoringTool.Entities.LearningElement("n", "sn", "pn",null, "a", "d", "g",LearningElementDifficultyEnum.Easy);
         mockBusinessLogic.LoadLearningElementFromStream(Arg.Any<Stream>()).Returns(mockLearningElement);
         var mockLearningContent = new LearningContentViewModel("n", "t", Array.Empty<byte>());
-        var mockLearningElementViewModel = new LearningElementViewModel("n", "sn", null, mockLearningContent, "a", "d", "g");
+        var mockLearningElementViewModel = new LearningElementViewModel("n", "sn", null, mockLearningContent, "a", "d", "g",LearningElementDifficultyEnum.Easy);
         var mockElementMapper = Substitute.For<ILearningElementMapper>();
         mockElementMapper.ToViewModel(Arg.Any<AuthoringTool.Entities.LearningElement>())
             .Returns(mockLearningElementViewModel);

@@ -1,4 +1,6 @@
-﻿namespace AuthoringTool.Entities;
+﻿using AuthoringTool.PresentationLogic.LearningElement;
+
+namespace AuthoringTool.Entities;
 
 public interface ILearningElement
 {
@@ -8,8 +10,9 @@ public interface ILearningElement
     string Authors { get; set; }
     string Description { get; set; }
     string Goals { get; set; }
+    int Workload { get; set; }
+    LearningElementDifficultyEnum Difficulty { get; set; }
     double PositionX { get; set; }
     double PositionY { get; set; }
-    int Workload { get; set; }
     string? ParentName { get; set; }
 }

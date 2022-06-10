@@ -2,6 +2,7 @@
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.Entities;
+using AuthoringTool.PresentationLogic.LearningElement;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.DSL;
@@ -24,9 +25,9 @@ public class ReadDSLUt
         var Goals = "learn very many things";
         var content1 = new LearningContent("a", ".h5p", new byte[] {0x01, 0x02});
         var content2 = new LearningContent("w", "e", new byte[] {0x02, 0x01});
-        var ele1 = new LearningElement("a", "b", "e", content1, "pupup", "g", "h", 17, 23);
-        var ele2 = new LearningElement("z", "zz", "zzz", content2, "baba", "z", "zz", 444, double.MaxValue);
-        var ele3 = new LearningElement("a", "b", "e", content1, "pupup", "g", "h", 17, 23);
+        var ele1 = new LearningElement("a", "b", "e", content1, "pupup", "g", "h", LearningElementDifficultyEnum.Easy, 17, 23);
+        var ele2 = new LearningElement("z", "zz", "zzz", content2, "baba", "z", "zz", LearningElementDifficultyEnum.Easy, 444, double.MaxValue);
+        var ele3 = new LearningElement("a", "b", "e", content1, "pupup", "g", "h", LearningElementDifficultyEnum.Easy, 17, 23);
         var learningElements = new List<LearningElement> {ele1, ele2};
         var space1 = new LearningSpace("ff", "ff", "ff", "ff", "ff");
         space1.LearningElements.Add(ele3);

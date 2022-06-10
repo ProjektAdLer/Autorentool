@@ -4,6 +4,7 @@ using AuthoringTool.API.Configuration;
 using NUnit.Framework;
 using AuthoringTool.DataAccess.API;
 using AuthoringTool.Entities;
+using AuthoringTool.PresentationLogic.LearningElement;
 using ElectronWrapper;
 using NSubstitute;
 
@@ -120,7 +121,8 @@ public class BusinessLogicUt
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var content = new LearningContent("a", "b", Array.Empty<byte>());
-        var learningElement = new LearningElement("fa", "f", "f", content, "f", "f", "f");
+        var learningElement = new LearningElement("fa", "f", "f", content, "f",
+            "f", "f", LearningElementDifficultyEnum.Easy);
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
@@ -146,7 +148,8 @@ public class BusinessLogicUt
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var content = new LearningContent("a", "b", Array.Empty<byte>());
-        var learningElement = new LearningElement("fa","a", "f", content, "f", "f", "f");
+        var learningElement = new LearningElement("fa","a", "f", content, "f", "f",
+            "f", LearningElementDifficultyEnum.Easy);
         mockDataAccess.LoadLearningElementFromFile("foobar").Returns(learningElement);
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
@@ -256,7 +259,8 @@ public class BusinessLogicUt
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var content = new LearningContent("a", "b", Array.Empty<byte>());
-        var learningElement = new LearningElement("fa","a", "f", content, "f", "f", "f");
+        var learningElement = new LearningElement("fa","a", "f", content, "f", "f",
+            "f", LearningElementDifficultyEnum.Easy);
         var stream = Substitute.For<Stream>();
         mockDataAccess.LoadLearningElementFromStream(stream).Returns(learningElement);
 

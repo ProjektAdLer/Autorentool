@@ -1,6 +1,6 @@
-using System;
 using System.Collections.Generic;
 using AuthoringTool.Entities;
+using AuthoringTool.PresentationLogic.LearningElement;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.Entities;
@@ -19,8 +19,8 @@ public class LearningWorldUt
         var Goals = "learn very many things";
         var content1 = new LearningContent("a", "b", new byte[]{0x01,0x02});
         var content2 = new LearningContent("w", "e", new byte[]{0x02,0x01});
-        var ele1 = new LearningElement("a", "b", "e",content1, "pupup", "g","h", 17, 23);
-        var ele2 = new LearningElement("z", "zz", "zzz", content2,"baba", "z","zz", 444, double.MaxValue);
+        var ele1 = new LearningElement("a", "b", "e",content1, "pupup", "g","h",LearningElementDifficultyEnum.Easy, 17, 23);
+        var ele2 = new LearningElement("z", "zz", "zzz", content2,"baba", "z","zz",LearningElementDifficultyEnum.Medium, 444, double.MaxValue);
         var LearningElements = new List<LearningElement> { ele1, ele2 };
         var space1 = new LearningSpace("ff", "ff", "ff", "ff", "ff");
         var LearningSpaces = new List<LearningSpace> { space1 };
