@@ -13,7 +13,7 @@ namespace AuthoringToolTest.PresentationLogic.LearningElement;
 public class LearningElementPresenterUt
 {
     [Test]
-    public void LearningElementPresenter_CreateNewTransferElement_WorldParent_CreatesCorrectViewModel()
+    public void LearningElementPresenter_CreateNewTransferElement_WorldParent_CreatesCorrectViewModel_Image()
     {
         var systemUnderTest = new LearningElementPresenter();
         var name = "a";
@@ -28,7 +28,7 @@ public class LearningElementPresenterUt
         var workload = 6;
 
         var element = systemUnderTest.CreateNewTransferElement(name, shortname, parent, contentType, content,
-            authors, description, goals, difficulty, workload);
+            authors, description, goals, difficulty, workload,0f, 0f);
         Assert.Multiple(() =>
         {
             Assert.That(element.Name, Is.EqualTo(name));
@@ -40,6 +40,167 @@ public class LearningElementPresenterUt
             Assert.That(element.Goals, Is.EqualTo(goals));
             Assert.That(element.Workload, Is.EqualTo(workload));
             Assert.That(element.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(element, Is.InstanceOf(typeof(ImageTransferElementViewModel)));
+        });
+    }
+    
+    [Test]
+    public void LearningElementPresenter_CreateNewTransferElement_WorldParent_CreatesCorrectViewModel_Video()
+    {
+        var systemUnderTest = new LearningElementPresenter();
+        var name = "a";
+        var shortname = "b";
+        var parent = new LearningWorldViewModel("","boo", "bla", "", "", "");
+        var contentType = ContentTypeEnum.Video;
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var authors = "d";
+        var description = "e";
+        var goals = "f";
+        var difficulty = LearningElementDifficultyEnum.Easy;
+        var workload = 6;
+
+        var element = systemUnderTest.CreateNewTransferElement(name, shortname, parent, contentType, content,
+            authors, description, goals, difficulty, workload,0f, 0f);
+        Assert.Multiple(() =>
+        {
+            Assert.That(element.Name, Is.EqualTo(name));
+            Assert.That(element.Shortname, Is.EqualTo(shortname));
+            Assert.That(element.Parent, Is.EqualTo(parent));
+            Assert.That(element.LearningContent, Is.EqualTo(content));
+            Assert.That(element.Authors, Is.EqualTo(authors));
+            Assert.That(element.Description, Is.EqualTo(description));
+            Assert.That(element.Goals, Is.EqualTo(goals));
+            Assert.That(element.Workload, Is.EqualTo(workload));
+            Assert.That(element.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(element, Is.InstanceOf(typeof(VideoTransferElementViewModel)));
+        });
+    }
+    
+    [Test]
+    public void LearningElementPresenter_CreateNewTransferElement_WorldParent_CreatesCorrectViewModel_Pdf()
+    {
+        var systemUnderTest = new LearningElementPresenter();
+        var name = "a";
+        var shortname = "b";
+        var parent = new LearningWorldViewModel("","boo", "bla", "", "", "");
+        var contentType = ContentTypeEnum.Pdf;
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var authors = "d";
+        var description = "e";
+        var goals = "f";
+        var difficulty = LearningElementDifficultyEnum.Easy;
+        var workload = 6;
+
+        var element = systemUnderTest.CreateNewTransferElement(name, shortname, parent, contentType, content,
+            authors, description, goals, difficulty, workload,0f, 0f);
+        Assert.Multiple(() =>
+        {
+            Assert.That(element.Name, Is.EqualTo(name));
+            Assert.That(element.Shortname, Is.EqualTo(shortname));
+            Assert.That(element.Parent, Is.EqualTo(parent));
+            Assert.That(element.LearningContent, Is.EqualTo(content));
+            Assert.That(element.Authors, Is.EqualTo(authors));
+            Assert.That(element.Description, Is.EqualTo(description));
+            Assert.That(element.Goals, Is.EqualTo(goals));
+            Assert.That(element.Workload, Is.EqualTo(workload));
+            Assert.That(element.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(element, Is.InstanceOf(typeof(PdfTransferElementViewModel)));
+        });
+    }
+    
+    [Test]
+    public void LearningElementPresenter_CreateNewTransferElement_SpaceParent_CreatesCorrectViewModel_Image()
+    {
+        var systemUnderTest = new LearningElementPresenter();
+        var name = "a";
+        var shortname = "b";
+        var parent = new LearningSpaceViewModel("","boo", "bla", "", "");
+        var contentType = ContentTypeEnum.Image;
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var authors = "d";
+        var description = "e";
+        var goals = "f";
+        var difficulty = LearningElementDifficultyEnum.Easy;
+        var workload = 6;
+
+        var element = systemUnderTest.CreateNewTransferElement(name, shortname, parent, contentType, content,
+            authors, description, goals, difficulty, workload,0f, 0f);
+        Assert.Multiple(() =>
+        {
+            Assert.That(element.Name, Is.EqualTo(name));
+            Assert.That(element.Shortname, Is.EqualTo(shortname));
+            Assert.That(element.Parent, Is.EqualTo(parent));
+            Assert.That(element.LearningContent, Is.EqualTo(content));
+            Assert.That(element.Authors, Is.EqualTo(authors));
+            Assert.That(element.Description, Is.EqualTo(description));
+            Assert.That(element.Goals, Is.EqualTo(goals));
+            Assert.That(element.Workload, Is.EqualTo(workload));
+            Assert.That(element.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(element, Is.InstanceOf(typeof(ImageTransferElementViewModel)));
+        });
+    }
+    
+    [Test]
+    public void LearningElementPresenter_CreateNewTransferElement_SpaceParent_CreatesCorrectViewModel_Video()
+    {
+        var systemUnderTest = new LearningElementPresenter();
+        var name = "a";
+        var shortname = "b";
+        var parent = new LearningSpaceViewModel("","boo", "bla", "", "");
+        var contentType = ContentTypeEnum.Video;
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var authors = "d";
+        var description = "e";
+        var goals = "f";
+        var difficulty = LearningElementDifficultyEnum.Easy;
+        var workload = 6;
+
+        var element = systemUnderTest.CreateNewTransferElement(name, shortname, parent, contentType, content,
+            authors, description, goals, difficulty, workload,0f, 0f);
+        Assert.Multiple(() =>
+        {
+            Assert.That(element.Name, Is.EqualTo(name));
+            Assert.That(element.Shortname, Is.EqualTo(shortname));
+            Assert.That(element.Parent, Is.EqualTo(parent));
+            Assert.That(element.LearningContent, Is.EqualTo(content));
+            Assert.That(element.Authors, Is.EqualTo(authors));
+            Assert.That(element.Description, Is.EqualTo(description));
+            Assert.That(element.Goals, Is.EqualTo(goals));
+            Assert.That(element.Workload, Is.EqualTo(workload));
+            Assert.That(element.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(element, Is.InstanceOf(typeof(VideoTransferElementViewModel)));
+        });
+    }
+    
+    [Test]
+    public void LearningElementPresenter_CreateNewTransferElement_SpaceParent_CreatesCorrectViewModel_Pdf()
+    {
+        var systemUnderTest = new LearningElementPresenter();
+        var name = "a";
+        var shortname = "b";
+        var parent = new LearningSpaceViewModel("","boo", "bla", "", "");
+        var contentType = ContentTypeEnum.Pdf;
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var authors = "d";
+        var description = "e";
+        var goals = "f";
+        var difficulty = LearningElementDifficultyEnum.Easy;
+        var workload = 6;
+
+        var element = systemUnderTest.CreateNewTransferElement(name, shortname, parent, contentType, content,
+            authors, description, goals, difficulty, workload,0f, 0f);
+        Assert.Multiple(() =>
+        {
+            Assert.That(element.Name, Is.EqualTo(name));
+            Assert.That(element.Shortname, Is.EqualTo(shortname));
+            Assert.That(element.Parent, Is.EqualTo(parent));
+            Assert.That(element.LearningContent, Is.EqualTo(content));
+            Assert.That(element.Authors, Is.EqualTo(authors));
+            Assert.That(element.Description, Is.EqualTo(description));
+            Assert.That(element.Goals, Is.EqualTo(goals));
+            Assert.That(element.Workload, Is.EqualTo(workload));
+            Assert.That(element.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(element, Is.InstanceOf(typeof(PdfTransferElementViewModel)));
         });
     }
 
@@ -54,7 +215,7 @@ public class LearningElementPresenterUt
     }
     
     [Test]
-    public void LearningElementPresenter_CreateNewActivationElement_WorldParent_CreatesCorrectViewModel()
+    public void LearningElementPresenter_CreateNewActivationElement_WorldParent_CreatesCorrectViewModel_Video()
     {
         var systemUnderTest = new LearningElementPresenter();
         var name = "a";
@@ -81,6 +242,103 @@ public class LearningElementPresenterUt
             Assert.That(element.Goals, Is.EqualTo(goals));
             Assert.That(element.Workload, Is.EqualTo(workload));
             Assert.That(element.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(element, Is.InstanceOf(typeof(VideoActivationElementViewModel)));
+        });
+    }
+    
+    [Test]
+    public void LearningElementPresenter_CreateNewActivationElement_SpaceParent_CreatesCorrectViewModel_H5P()
+    {
+        var systemUnderTest = new LearningElementPresenter();
+        var name = "a";
+        var shortname = "b";
+        var parent = new LearningSpaceViewModel("","boo", "bla", "", "");
+        var contentType = ContentTypeEnum.H5P;
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var authors = "d";
+        var description = "e";
+        var goals = "f";
+        var difficulty = LearningElementDifficultyEnum.Easy;
+        var workload = 7;
+
+        var element = systemUnderTest.CreateNewActivationElement(name, shortname, parent, contentType, content,
+            authors, description, goals, difficulty, workload);
+        Assert.Multiple(() =>
+        {
+            Assert.That(element.Name, Is.EqualTo(name));
+            Assert.That(element.Shortname, Is.EqualTo(shortname));
+            Assert.That(element.Parent, Is.EqualTo(parent));
+            Assert.That(element.LearningContent, Is.EqualTo(content));
+            Assert.That(element.Authors, Is.EqualTo(authors));
+            Assert.That(element.Description, Is.EqualTo(description));
+            Assert.That(element.Goals, Is.EqualTo(goals));
+            Assert.That(element.Workload, Is.EqualTo(workload));
+            Assert.That(element.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(element, Is.InstanceOf(typeof(H5PActivationElementViewModel)));
+        });
+    }
+    
+    [Test]
+    public void LearningElementPresenter_CreateNewActivationElement_SpaceParent_CreatesCorrectViewModel_Video()
+    {
+        var systemUnderTest = new LearningElementPresenter();
+        var name = "a";
+        var shortname = "b";
+        var parent = new LearningSpaceViewModel("","boo", "bla", "", "");
+        var contentType = ContentTypeEnum.Video;
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var authors = "d";
+        var description = "e";
+        var goals = "f";
+        var difficulty = LearningElementDifficultyEnum.Easy;
+        var workload = 7;
+
+        var element = systemUnderTest.CreateNewActivationElement(name, shortname, parent, contentType, content,
+            authors, description, goals, difficulty, workload);
+        Assert.Multiple(() =>
+        {
+            Assert.That(element.Name, Is.EqualTo(name));
+            Assert.That(element.Shortname, Is.EqualTo(shortname));
+            Assert.That(element.Parent, Is.EqualTo(parent));
+            Assert.That(element.LearningContent, Is.EqualTo(content));
+            Assert.That(element.Authors, Is.EqualTo(authors));
+            Assert.That(element.Description, Is.EqualTo(description));
+            Assert.That(element.Goals, Is.EqualTo(goals));
+            Assert.That(element.Workload, Is.EqualTo(workload));
+            Assert.That(element.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(element, Is.InstanceOf(typeof(VideoActivationElementViewModel)));
+        });
+    }
+    
+    [Test]
+    public void LearningElementPresenter_CreateNewActivationElement_WorldParent_CreatesCorrectViewModel_H5P()
+    {
+        var systemUnderTest = new LearningElementPresenter();
+        var name = "a";
+        var shortname = "b";
+        var parent = new LearningWorldViewModel("","boo", "bla", "", "", "");
+        var contentType = ContentTypeEnum.H5P;
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var authors = "d";
+        var description = "e";
+        var goals = "f";
+        var difficulty = LearningElementDifficultyEnum.Easy;
+        var workload = 7;
+
+        var element = systemUnderTest.CreateNewActivationElement(name, shortname, parent, contentType, content,
+            authors, description, goals, difficulty, workload);
+        Assert.Multiple(() =>
+        {
+            Assert.That(element.Name, Is.EqualTo(name));
+            Assert.That(element.Shortname, Is.EqualTo(shortname));
+            Assert.That(element.Parent, Is.EqualTo(parent));
+            Assert.That(element.LearningContent, Is.EqualTo(content));
+            Assert.That(element.Authors, Is.EqualTo(authors));
+            Assert.That(element.Description, Is.EqualTo(description));
+            Assert.That(element.Goals, Is.EqualTo(goals));
+            Assert.That(element.Workload, Is.EqualTo(workload));
+            Assert.That(element.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(element, Is.InstanceOf(typeof(H5PActivationElementViewModel)));
         });
     }
     
@@ -122,6 +380,39 @@ public class LearningElementPresenterUt
             Assert.That(element.Goals, Is.EqualTo(goals));
             Assert.That(element.Workload, Is.EqualTo(workload));
             Assert.That(element.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(element, Is.InstanceOf(typeof(H5PInteractionElementViewModel)));
+        });
+    }
+    
+    [Test]
+    public void LearningElementPresenter_CreateNewInteractionElement_SpaceParent_CreatesCorrectViewModel()
+    {
+        var systemUnderTest = new LearningElementPresenter();
+        var name = "a";
+        var shortname = "b";
+        var parent = new LearningSpaceViewModel("","boo", "bla", "", "");
+        var contentType = ContentTypeEnum.H5P;
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var authors = "d";
+        var description = "e";
+        var goals = "f";
+        var difficulty = LearningElementDifficultyEnum.Easy;
+        var workload = 9;
+
+        var element = systemUnderTest.CreateNewInteractionElement(name, shortname, parent, contentType, content,
+            authors, description, goals, difficulty, workload);
+        Assert.Multiple(() =>
+        {
+            Assert.That(element.Name, Is.EqualTo(name));
+            Assert.That(element.Shortname, Is.EqualTo(shortname));
+            Assert.That(element.Parent, Is.EqualTo(parent));
+            Assert.That(element.LearningContent, Is.EqualTo(content));
+            Assert.That(element.Authors, Is.EqualTo(authors));
+            Assert.That(element.Description, Is.EqualTo(description));
+            Assert.That(element.Goals, Is.EqualTo(goals));
+            Assert.That(element.Workload, Is.EqualTo(workload));
+            Assert.That(element.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(element, Is.InstanceOf(typeof(H5PInteractionElementViewModel)));
         });
     }
     
@@ -163,6 +454,39 @@ public class LearningElementPresenterUt
             Assert.That(element.Goals, Is.EqualTo(goals));
             Assert.That(element.Workload, Is.EqualTo(workload));
             Assert.That(element.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(element, Is.InstanceOf(typeof(H5PTestElementViewModel)));
+        });
+    }
+    
+    [Test]
+    public void LearningElementPresenter_CreateNewTestElement_SpaceParent_CreatesCorrectViewModel()
+    {
+        var systemUnderTest = new LearningElementPresenter();
+        var name = "a";
+        var shortname = "b";
+        var parent = new LearningSpaceViewModel("","boo", "bla", "", "");
+        var contentType = ContentTypeEnum.H5P;
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var authors = "d";
+        var description = "e";
+        var goals = "f";
+        var difficulty = LearningElementDifficultyEnum.Easy;
+        var workload = 2;
+
+        var element = systemUnderTest.CreateNewTestElement(name, shortname, parent, contentType, content,
+            authors, description, goals, difficulty, workload);
+        Assert.Multiple(() =>
+        {
+            Assert.That(element.Name, Is.EqualTo(name));
+            Assert.That(element.Shortname, Is.EqualTo(shortname));
+            Assert.That(element.Parent, Is.EqualTo(parent));
+            Assert.That(element.LearningContent, Is.EqualTo(content));
+            Assert.That(element.Authors, Is.EqualTo(authors));
+            Assert.That(element.Description, Is.EqualTo(description));
+            Assert.That(element.Goals, Is.EqualTo(goals));
+            Assert.That(element.Workload, Is.EqualTo(workload));
+            Assert.That(element.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(element, Is.InstanceOf(typeof(H5PTestElementViewModel)));
         });
     }
     
@@ -176,37 +500,6 @@ public class LearningElementPresenterUt
         Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
     }
 
-    [Test]
-    public void LearningElementPresenter_CreateNewTransferElement_SpaceParent_CreatesCorrectViewModel()
-    {
-        var systemUnderTest = new LearningElementPresenter();
-        var name = "a";
-        var shortname = "b";
-        var parent = new LearningSpaceViewModel("","boo", "bla", "", "");
-        var contentType = ContentTypeEnum.Image;
-        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
-        var authors = "d";
-        var description = "e";
-        var goals = "f";
-        var workload = 6;
-        var difficulty = LearningElementDifficultyEnum.Easy;
-
-        var element = systemUnderTest.CreateNewTransferElement(name, shortname, parent, contentType, content,
-            authors, description, goals, difficulty, workload);
-        Assert.Multiple(() =>
-        {
-            Assert.That(element.Name, Is.EqualTo(name));
-            Assert.That(element.Shortname, Is.EqualTo(shortname));
-            Assert.That(element.Parent, Is.EqualTo(parent));
-            Assert.That(element.LearningContent, Is.EqualTo(content));
-            Assert.That(element.Authors, Is.EqualTo(authors));
-            Assert.That(element.Description, Is.EqualTo(description));
-            Assert.That(element.Goals, Is.EqualTo(goals));
-            Assert.That(element.Workload, Is.EqualTo(workload));
-            Assert.That(element.Difficulty, Is.EqualTo(difficulty));
-        });
-    }
-    
     [Test]
     public void LearningElementPresenter_AddLearningElementParentAssignment_ThrowsNotImplemented()
     {

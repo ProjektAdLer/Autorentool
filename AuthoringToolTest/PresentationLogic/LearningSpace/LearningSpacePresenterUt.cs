@@ -83,7 +83,7 @@ public class LearningSpacePresenterUt
     }
 
     [Test]
-    public void LearningSpacePresenter_CreateNewLearningElement_CallsLearningElementPresenter()
+    public void LearningSpacePresenter_CreateNewLearningElement_CallsLearningElementPresenter_TransferElement()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
@@ -103,6 +103,75 @@ public class LearningSpacePresenterUt
 
         learningElementPresenter.Received()
             .CreateNewTransferElement("name", "sn", parent, ContentTypeEnum.Image, content, "cont", "aut", "desc",  LearningElementDifficultyEnum.Easy,8);
+    }
+    
+    [Test]
+    public void LearningSpacePresenter_CreateNewLearningElement_CallsLearningElementPresenter_TestElement()
+    {
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+        var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
+        learningElementPresenter.CreateNewTestElement(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<int>()
+        ).Returns(new LearningElementViewModel("foo", "bar", null,
+            null,"foo", "bar", "foo",  LearningElementDifficultyEnum.Easy,8));
+        var parent = new LearningWorldViewModel("foo", "boo", "bla", "blub", "bibi", "bubu");
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+
+        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
+        systemUnderTest.SetLearningSpace(space);
+
+        systemUnderTest.CreateNewLearningElement("name", "sn", parent, ElementTypeEnum.Test, ContentTypeEnum.Image, content, 
+            "cont", "aut", "desc",  LearningElementDifficultyEnum.Easy,8);
+
+        learningElementPresenter.Received()
+            .CreateNewTestElement("name", "sn", parent, ContentTypeEnum.Image, content, "cont", "aut", "desc",  LearningElementDifficultyEnum.Easy,8);
+    }
+    
+    [Test]
+    public void LearningSpacePresenter_CreateNewLearningElement_CallsLearningElementPresenter_InteractionElement()
+    {
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+        var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
+        learningElementPresenter.CreateNewInteractionElement(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<int>()
+        ).Returns(new LearningElementViewModel("foo", "bar", null,
+            null,"foo", "bar", "foo",  LearningElementDifficultyEnum.Easy,8));
+        var parent = new LearningWorldViewModel("foo", "boo", "bla", "blub", "bibi", "bubu");
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+
+        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
+        systemUnderTest.SetLearningSpace(space);
+
+        systemUnderTest.CreateNewLearningElement("name", "sn", parent, ElementTypeEnum.Interaction, ContentTypeEnum.Image, content, 
+            "cont", "aut", "desc",  LearningElementDifficultyEnum.Easy,8);
+
+        learningElementPresenter.Received()
+            .CreateNewInteractionElement("name", "sn", parent, ContentTypeEnum.Image, content, "cont", "aut", "desc",  LearningElementDifficultyEnum.Easy,8);
+    }
+    
+    [Test]
+    public void LearningSpacePresenter_CreateNewLearningElement_CallsLearningElementPresenter_ActivationElement()
+    {
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+        var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
+        learningElementPresenter.CreateNewActivationElement(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<int>()
+        ).Returns(new LearningElementViewModel("foo", "bar", null,
+            null,"foo", "bar", "foo",  LearningElementDifficultyEnum.Easy,8));
+        var parent = new LearningWorldViewModel("foo", "boo", "bla", "blub", "bibi", "bubu");
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+
+        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
+        systemUnderTest.SetLearningSpace(space);
+
+        systemUnderTest.CreateNewLearningElement("name", "sn", parent, ElementTypeEnum.Activation, ContentTypeEnum.Image, content, 
+            "cont", "aut", "desc",  LearningElementDifficultyEnum.Easy,8);
+
+        learningElementPresenter.Received()
+            .CreateNewActivationElement("name", "sn", parent, ContentTypeEnum.Image, content, "cont", "aut", "desc",  LearningElementDifficultyEnum.Easy,8);
     }
 
     [Test]
@@ -158,7 +227,7 @@ public class LearningSpacePresenterUt
     }
     
     [Test]
-    public void LearningSpacePresenter_OnCreateElementDialogClose_WithLearningWorld_CallsLearningElementPresenter()
+    public void LearningSpacePresenter_OnCreateElementDialogClose_WithLearningWorld_CallsLearningElementPresenter_TransferElement()
     {
         var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
@@ -173,12 +242,12 @@ public class LearningSpacePresenterUt
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "a";
         dictionary["Shortname"] = "b";
-        dictionary["Type"] = "Transfer";
-        dictionary["Content"] = "Image";
+        dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
+        dictionary["Content"] = ContentTypeEnum.Image.ToString();
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
         dictionary["Goals"] = "g";
-        dictionary["Difficulty"] = "Easy";
+        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "3";
         var returnValueTuple =
             new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
@@ -189,6 +258,259 @@ public class LearningSpacePresenterUt
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
         learningElementPresenter.Received().CreateNewTransferElement("a", "b", space, ContentTypeEnum.Image, null, "e", "f", "g", LearningElementDifficultyEnum.Easy,3);
+    }
+    
+    [Test]
+    public void LearningSpacePresenter_OnCreateElementDialogClose_WithLearningWorld_CallsLearningElementPresenter_TestElement()
+    {
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
+        learningElementPresenter.CreateNewTestElement(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningElementDifficultyEnum>(),Arg.Any<int>()
+            ).Returns(new LearningElementViewModel("ba", "ba",
+            null, content, "ba", "ba", "ba",  LearningElementDifficultyEnum.Easy, 6));
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "a";
+        dictionary["Shortname"] = "b";
+        dictionary["Type"] = ElementTypeEnum.Test.ToString();
+        dictionary["Content"] = ContentTypeEnum.H5P.ToString();
+        dictionary["Authors"] = "e";
+        dictionary["Description"] = "f";
+        dictionary["Goals"] = "g";
+        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
+        dictionary["Workload (min)"] = "3";
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
+        systemUnderTest.SetLearningSpace(space);
+
+        systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
+
+        learningElementPresenter.Received().CreateNewTestElement("a", "b", space, ContentTypeEnum.H5P, null, "e", "f", "g", LearningElementDifficultyEnum.Easy,3);
+    }
+    
+    [Test]
+    public void LearningSpacePresenter_OnCreateElementDialogClose_WithLearningWorld_CallsLearningElementPresenter_InteractionElement()
+    {
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
+        learningElementPresenter.CreateNewInteractionElement(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningElementDifficultyEnum>(),Arg.Any<int>()
+            ).Returns(new LearningElementViewModel("ba", "ba",
+            null, content, "ba", "ba", "ba",  LearningElementDifficultyEnum.Easy, 6));
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "a";
+        dictionary["Shortname"] = "b";
+        dictionary["Type"] = ElementTypeEnum.Interaction.ToString();
+        dictionary["Content"] = ContentTypeEnum.H5P.ToString();
+        dictionary["Authors"] = "e";
+        dictionary["Description"] = "f";
+        dictionary["Goals"] = "g";
+        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
+        dictionary["Workload (min)"] = "3";
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
+        systemUnderTest.SetLearningSpace(space);
+
+        systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
+
+        learningElementPresenter.Received().CreateNewInteractionElement("a", "b", space, ContentTypeEnum.H5P, null, "e", "f", "g", LearningElementDifficultyEnum.Easy,3);
+    }
+    
+    [Test]
+    public void LearningSpacePresenter_OnCreateElementDialogClose_WithLearningWorld_CallsLearningElementPresenter_ActivationElement()
+    {
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
+        learningElementPresenter.CreateNewActivationElement(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningElementDifficultyEnum>(),Arg.Any<int>()
+            ).Returns(new LearningElementViewModel("ba", "ba",
+            null, content, "ba", "ba", "ba",  LearningElementDifficultyEnum.Easy, 6));
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "a";
+        dictionary["Shortname"] = "b";
+        dictionary["Type"] = ElementTypeEnum.Activation.ToString();
+        dictionary["Content"] = ContentTypeEnum.H5P.ToString();
+        dictionary["Authors"] = "e";
+        dictionary["Description"] = "f";
+        dictionary["Goals"] = "g";
+        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
+        dictionary["Workload (min)"] = "3";
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
+        systemUnderTest.SetLearningSpace(space);
+
+        systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
+
+        learningElementPresenter.Received().CreateNewActivationElement("a", "b", space, ContentTypeEnum.H5P, null, "e", "f", "g", LearningElementDifficultyEnum.Easy,3);
+    }
+
+    [Test]
+    public void LearningWorldPresenter_OnCreateElementDialogClose_ThrowsCouldntParseElementType()
+    {
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+        
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "a";
+        dictionary["Shortname"] = "b";
+        dictionary["Type"] = "Transfers";
+        dictionary["Content"] = ContentTypeEnum.Image.ToString();
+        dictionary["Authors"] = "e";
+        dictionary["Description"] = "f";
+        dictionary["Goals"] = "g";
+        dictionary["Difficulty"] = LearningElementDifficultyEnum.Medium.ToString();
+        dictionary["Workload (min)"] = "7";
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.SetLearningSpace(space);
+        
+        var ex = Assert.Throws<ApplicationException>(() =>
+            systemUnderTest.OnCreateElementDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("Couldn't parse returned element type"));
+    }
+    
+    [Test]
+    public void LearningWorldPresenter_OnCreateElementDialogClose_ThrowsCouldntParseContentType()
+    {
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+        
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "a";
+        dictionary["Shortname"] = "b";
+        dictionary["Type"] = ElementTypeEnum.Transfer.ToString();;
+        dictionary["Content"] = "Images";
+        dictionary["Authors"] = "e";
+        dictionary["Description"] = "f";
+        dictionary["Goals"] = "g";
+        dictionary["Difficulty"] = LearningElementDifficultyEnum.Medium.ToString();
+        dictionary["Workload (min)"] = "7";
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.SetLearningSpace(space);
+        
+        var ex = Assert.Throws<ApplicationException>(() =>
+            systemUnderTest.OnCreateElementDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("Couldn't parse returned content type"));
+    }
+    
+    [Test]
+    public void LearningWorldPresenter_OnCreateElementDialogClose_ThrowsCouldntParseDifficulty()
+    {
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+        
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "a";
+        dictionary["Shortname"] = "b";
+        dictionary["Parent"] = ElementParentEnum.World.ToString();;
+        dictionary["Assignment"] = "foo";
+        dictionary["Type"] = ElementTypeEnum.Transfer.ToString();;
+        dictionary["Content"] = ContentTypeEnum.Image.ToString();
+        dictionary["Authors"] = "e";
+        dictionary["Description"] = "f";
+        dictionary["Goals"] = "g";
+        dictionary["Difficulty"] = "Easys";
+        dictionary["Workload (min)"] = "7";
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.SetLearningSpace(space);
+        
+        var ex = Assert.Throws<ApplicationException>(() =>
+            systemUnderTest.OnCreateElementDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("Couldn't parse returned difficulty"));
+    }
+    
+    [Test]
+    public void LearningWorldPresenter_OnCreateElementDialogClose_CouldntParseWorkloadToInt()
+    {
+        var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
+        learningElementPresenter.CreateNewTestElement(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<int>()
+        ).Returns(new LearningElementViewModel("ba", "ba",
+            null, null, "ba",  "ba", "ba",LearningElementDifficultyEnum.Easy,3));
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "a";
+        dictionary["Shortname"] = "b";
+        dictionary["Type"] = ElementTypeEnum.Test.ToString();
+        dictionary["Content"] = ContentTypeEnum.H5P.ToString();
+        dictionary["Authors"] = "d";
+        dictionary["Description"] = "e";
+        dictionary["Goals"] = "f";
+        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
+        dictionary["Workload (min)"] = "seven";
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
+        systemUnderTest.SetLearningSpace(space);
+
+        systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
+
+        learningElementPresenter.Received().CreateNewTestElement("a", "b", space, ContentTypeEnum.H5P, null, "d", "e", "f",LearningElementDifficultyEnum.Easy,0);
+    }
+    
+    [Test]
+    public void LearningWorldPresenter_OnCreateElementDialogClose_NegativeWorkloadToZero()
+    {
+        var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
+        learningElementPresenter.CreateNewTestElement(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<int>()
+        ).Returns(new LearningElementViewModel("ba", "ba",
+            null, null, "ba",  "ba", "ba",LearningElementDifficultyEnum.Easy,3));
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "a";
+        dictionary["Shortname"] = "b";
+        dictionary["Parent"] = ElementParentEnum.World.ToString();
+        dictionary["Assignment"] = "foobar";
+        dictionary["Type"] = ElementTypeEnum.Test.ToString();
+        dictionary["Content"] = ContentTypeEnum.H5P.ToString();
+        dictionary["Authors"] = "d";
+        dictionary["Description"] = "e";
+        dictionary["Goals"] = "f";
+        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
+        dictionary["Workload (min)"] = "-4";
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
+        systemUnderTest.SetLearningSpace(space);
+
+        systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
+
+        learningElementPresenter.Received().CreateNewTestElement("a", "b", space, ContentTypeEnum.H5P, null, "d", "e", "f",LearningElementDifficultyEnum.Easy,0);
     }
 
     #endregion
@@ -248,6 +570,113 @@ public class LearningSpacePresenterUt
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
         learningElementPresenter.Received().EditLearningElement(element, "a", "b", space, "e", "f", "g", LearningElementDifficultyEnum.Medium, 5);
+    }
+
+    [Test]
+    public void LearningWorldPresenter_OnEditElementDialogClose_ThrowsCouldntParseDifficulty()
+    {
+        var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
+        learningElementPresenter.EditLearningElement(Arg.Any<LearningElementViewModel>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<ILearningElementViewModelParent>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>() , Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<int>()
+        ).Returns(new LearningElementViewModel("ba", "ba",
+            null, null, "ba", null, "ba", LearningElementDifficultyEnum.Medium,5));
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+        var element = new LearningElementViewModel("foo", "bar", null, null, "foo",
+            "wa", "bar", LearningElementDifficultyEnum.Hard);
+        space.LearningElements.Add(element);
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "a";
+        dictionary["Shortname"] = "b";
+        dictionary["Authors"] = "e";
+        dictionary["Description"] = "f";
+        dictionary["Goals"] = "g";
+        dictionary["Difficulty"] = "mediums";
+        dictionary["Workload (min)"] = "4";
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
+        systemUnderTest.SetLearningSpace(space);
+        space.SelectedLearningObject = element;
+
+        var ex = Assert.Throws<ApplicationException>(() =>
+            systemUnderTest.OnEditElementDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("Couldn't parse returned difficulty"));
+    }
+    
+    [Test]
+    public void LearningWorldPresenter_OnEditElementDialogClose_CouldntParseWorkloadToInt()
+    {
+        var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
+        learningElementPresenter.EditLearningElement(Arg.Any<LearningElementViewModel>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<ILearningElementViewModelParent>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>() , Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<int>()
+        ).Returns(new LearningElementViewModel("ba", "ba",
+            null, null, "ba", null, "ba", LearningElementDifficultyEnum.Medium,5));
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+        var element = new LearningElementViewModel("foo", "bar", null, null, "foo",
+            "wa", "bar", LearningElementDifficultyEnum.Hard);
+        space.LearningElements.Add(element);
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "a";
+        dictionary["Shortname"] = "b";
+        dictionary["Authors"] = "e";
+        dictionary["Description"] = "f";
+        dictionary["Goals"] = "g";
+        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
+        dictionary["Workload (min)"] = "five";
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
+        systemUnderTest.SetLearningSpace(space);
+        space.SelectedLearningObject = element;
+
+        systemUnderTest.OnEditElementDialogClose(returnValueTuple);
+
+        learningElementPresenter.Received().EditLearningElement(element,"a", "b", space, "e", "f", "g",LearningElementDifficultyEnum.Easy,0);
+    }
+    
+    [Test]
+    public void LearningWorldPresenter_OnEditElementDialogClose_NegativeWorkloadToZero()
+    {
+        var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
+        learningElementPresenter.EditLearningElement(Arg.Any<LearningElementViewModel>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<ILearningElementViewModelParent>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>() , Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<int>()
+        ).Returns(new LearningElementViewModel("ba", "ba",
+            null, null, "ba", null, "ba", LearningElementDifficultyEnum.Medium,5));
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+        var element = new LearningElementViewModel("foo", "bar", null, null, "foo",
+            "wa", "bar", LearningElementDifficultyEnum.Hard);
+        space.LearningElements.Add(element);
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "a";
+        dictionary["Shortname"] = "b";
+        dictionary["Parent"] = ElementParentEnum.World.ToString();
+        dictionary["Assignment"] = "foo";
+        dictionary["Authors"] = "e";
+        dictionary["Description"] = "f";
+        dictionary["Goals"] = "g";
+        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
+        dictionary["Workload (min)"] = "-5";
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
+        systemUnderTest.SetLearningSpace(space);
+        space.SelectedLearningObject = element;
+
+        systemUnderTest.OnEditElementDialogClose(returnValueTuple);
+
+        learningElementPresenter.Received().EditLearningElement(element,"a", "b", space, "e", "f", "g",LearningElementDifficultyEnum.Easy,0);
     }
 
     #endregion

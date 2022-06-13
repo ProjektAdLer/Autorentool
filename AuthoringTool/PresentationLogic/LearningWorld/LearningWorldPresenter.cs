@@ -273,15 +273,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
         {
             {"Name", element.Name},
             {"Shortname", element.Shortname},
-            {
-                "Parent",
-                element.Parent switch
-                {
-                    LearningWorldViewModel => ElementParentEnum.World.ToString(),
-                    LearningSpaceViewModel => ElementParentEnum.Space.ToString(),
-                    _ => ""
-                }
-            },
+            {"Parent", ElementParentEnum.World.ToString()},
             {"Assignment", element.Parent.Name},
             {"Authors", element.Authors},
             {"Description", element.Description},
@@ -442,7 +434,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
         var name = data["Name"];
         var shortname = data["Shortname"];
         if(Enum.TryParse(data["Parent"], out ElementParentEnum parent) == false)
-            throw new ApplicationException("Couldn't parse returned element type");
+            throw new ApplicationException("Couldn't parse returned parent type");
         var assignment = data["Assignment"];
         var parentElement = GetLearningElementParent(parent, assignment);
         var description = data["Description"];
