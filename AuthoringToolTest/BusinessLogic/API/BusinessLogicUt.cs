@@ -193,7 +193,7 @@ public class BusinessLogicUt
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.LoadLearningWorldFromStream(stream);
+        systemUnderTest.LoadLearningWorld(stream);
 
         mockDataAccess.Received().LoadLearningWorldFromStream(stream);
     }
@@ -208,7 +208,7 @@ public class BusinessLogicUt
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        var learningWorldActual = systemUnderTest.LoadLearningWorldFromStream(stream);
+        var learningWorldActual = systemUnderTest.LoadLearningWorld(stream);
 
         Assert.That(learningWorldActual, Is.EqualTo(learningWorld));
     }
@@ -221,7 +221,7 @@ public class BusinessLogicUt
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.LoadLearningSpaceFromStream(stream);
+        systemUnderTest.LoadLearningSpace(stream);
 
         mockDataAccess.Received().LoadLearningSpaceFromStream(stream);
     }
@@ -236,7 +236,7 @@ public class BusinessLogicUt
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        var learningSpaceActual = systemUnderTest.LoadLearningSpaceFromStream(stream);
+        var learningSpaceActual = systemUnderTest.LoadLearningSpace(stream);
 
         Assert.That(learningSpaceActual, Is.EqualTo(learningSpace));
     }
@@ -249,7 +249,7 @@ public class BusinessLogicUt
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.LoadLearningElementFromStream(stream);
+        systemUnderTest.LoadLearningElement(stream);
 
         mockDataAccess.Received().LoadLearningElementFromStream(stream);
     }
@@ -266,7 +266,7 @@ public class BusinessLogicUt
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        var learningElementActual = systemUnderTest.LoadLearningElementFromStream(stream);
+        var learningElementActual = systemUnderTest.LoadLearningElement(stream);
 
         Assert.That(learningElementActual, Is.EqualTo(learningElement));
     }
