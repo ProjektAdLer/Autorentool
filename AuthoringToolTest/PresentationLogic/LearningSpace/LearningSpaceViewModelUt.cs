@@ -46,4 +46,26 @@ public class LearningSpaceViewModelUt
         var systemUnderTest = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
         Assert.That(systemUnderTest.FileEnding, Is.EqualTo(expectedFileEnding));
     }
+    
+    [Test]
+    public void LearningSpaceViewModel_Workload_ReturnsCorrectWorkload()
+    {
+
+        var systemUnderTest = new LearningSpaceViewModel("a", "b", "c", "d", "e");
+        var element1 = new LearningElementViewModel("a", "b", systemUnderTest, null, "c", "d", "e",
+            LearningElementDifficultyEnum.Easy, 6);
+        var element2 = new LearningElementViewModel("abc", "b", systemUnderTest, null, "c", "d", "e",
+            LearningElementDifficultyEnum.Easy, 14);
+        
+        Assert.That(systemUnderTest.Workload, Is.EqualTo(0));
+        
+        systemUnderTest.LearningElements.Add(element1);
+        Assert.That(systemUnderTest.Workload, Is.EqualTo(6));
+
+        systemUnderTest.LearningElements.Add(element2);
+        Assert.That(systemUnderTest.Workload, Is.EqualTo(20));
+
+        systemUnderTest.LearningElements.Remove(element1);
+        Assert.That(systemUnderTest.Workload, Is.EqualTo(14));
+    }
 }

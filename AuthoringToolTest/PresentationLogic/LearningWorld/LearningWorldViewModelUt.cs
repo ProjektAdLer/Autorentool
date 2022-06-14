@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningElement;
@@ -52,5 +51,26 @@ public class LearningWorldViewModelUt
         const string expectedFileEnding = "awf";
         var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo");
         Assert.That(systemUnderTest.FileEnding, Is.EqualTo(expectedFileEnding));
+    }
+
+    [Test]
+    public void LearningWorldViewModel_Workload_ReturnsCorrectWorkload()
+    {
+        var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo");
+        var worldElement = new LearningElementViewModel("a", "b", systemUnderTest, null, "c", "d", "e",
+            LearningElementDifficultyEnum.Easy, 4);
+        var space = new LearningSpaceViewModel("a", "b", "c", "d", "e");
+        var spaceElement = new LearningElementViewModel("a", "b", space, null, "c", "d", "e",
+            LearningElementDifficultyEnum.Easy, 6);
+        
+        space.LearningElements.Add(spaceElement);
+        systemUnderTest.LearningSpaces.Add(space);
+        systemUnderTest.LearningElements.Add(worldElement);
+        
+        Assert.That(systemUnderTest.Workload, Is.EqualTo(10));
+
+        systemUnderTest.LearningSpaces.Remove(space);
+        
+        Assert.That(systemUnderTest.Workload, Is.EqualTo(4));
     }
 }
