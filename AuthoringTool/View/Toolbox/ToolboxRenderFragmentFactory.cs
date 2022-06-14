@@ -12,9 +12,10 @@ namespace AuthoringTool.View.Toolbox;
 
 public class ToolboxRenderFragmentFactory : IAbstractToolboxRenderFragmentFactory
 {
-    public ToolboxRenderFragmentFactory(ILogger<ToolboxRenderFragmentFactory> logger)
+    public ToolboxRenderFragmentFactory(ILogger<ToolboxRenderFragmentFactory> logger, IMemoryCache memoryCache)
     {
-        Cache = new MemoryCache(new MemoryCacheOptions());
+        Cache = memoryCache;
+            //new MemoryCache(new MemoryCacheOptions());
         Logger = logger;
     }
 

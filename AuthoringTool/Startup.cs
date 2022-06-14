@@ -16,6 +16,7 @@ using AuthoringTool.PresentationLogic.LearningWorld;
 using AuthoringTool.PresentationLogic.Toolbox;
 using AuthoringTool.View.Toolbox;
 using ElectronWrapper;
+using Microsoft.Extensions.Caching.Memory;
 
 public class Startup
 {
@@ -72,6 +73,9 @@ public class Startup
         services.AddSingleton<ILearningWorldMapper, LearningWorldMapper>();
         services.AddSingleton<ILearningContentMapper, LearningContentMapper>();
         services.AddSingleton<IEntityMapping, EntityMapping>();
+        
+        //Utilities
+        services.AddTransient<IMemoryCache>(_ => new MemoryCache(new MemoryCacheOptions()));
 
         //Blazor and Electron
         services.AddRazorPages();

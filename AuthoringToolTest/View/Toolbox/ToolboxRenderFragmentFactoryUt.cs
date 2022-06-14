@@ -1,5 +1,7 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 using AuthoringTool.Entities;
 using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.LearningElement;
@@ -8,8 +10,11 @@ using AuthoringTool.PresentationLogic.LearningWorld;
 using AuthoringTool.PresentationLogic.Toolbox;
 using AuthoringTool.View.Toolbox;
 using Bunit;
+using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Primitives;
 using NSubstitute;
 using NUnit.Framework;
 using TestContext = Bunit.TestContext;
@@ -49,17 +54,24 @@ public class ToolboxRenderFragmentFactoryUt
     [TestCaseSource(typeof(ToolboxRenderFragmentFactoryTestCases))]
     public void ToolboxRenderFragmentFactory_GetRenderFragment_CallingTwiceReturnsSameFragment(IDisplayableLearningObject obj, string expectedMarkup)
     {
-        var systemUnderTest = GetTestableToolboxRenderFragmentFactory();
+        var cache = new ToolboxMemoryCacheMock();
+        
+        var systemUnderTest = GetTestableToolboxRenderFragmentFactory(cache:cache);
 
         var firstPass = systemUnderTest.GetRenderFragment(obj);
         var firstPassRendered = _testContext.Render(firstPass);
         firstPassRendered.MarkupMatches(expectedMarkup);
+        
+        //assert that entry was saved (in other words, Set was called)
+        Assert.That(cache.Entries.Any(entry => entry.Key == obj && (RenderFragment)entry.Value == firstPass));
 
         var secondPass = systemUnderTest.GetRenderFragment(obj);
         var secondPassRendered = _testContext.Render(secondPass);
         secondPassRendered.MarkupMatches(expectedMarkup);
         
+        //assert that entry was retrieved
         Assert.That(secondPass, Is.SameAs(firstPass));
+        Assert.That(secondPass, Is.SameAs(cache.Entries.First(entry => entry.Key == obj).Value));
     }
 
     [Test]
@@ -72,10 +84,12 @@ public class ToolboxRenderFragmentFactoryUt
     }
 
 
-    private IAbstractToolboxRenderFragmentFactory GetTestableToolboxRenderFragmentFactory(ILogger<ToolboxRenderFragmentFactory>? logger = null)
+    private IAbstractToolboxRenderFragmentFactory GetTestableToolboxRenderFragmentFactory(
+        ILogger<ToolboxRenderFragmentFactory>? logger = null, IMemoryCache? cache = null)
     {
         logger ??= Substitute.For<ILogger<ToolboxRenderFragmentFactory>>();
-        return new ToolboxRenderFragmentFactory(logger);
+        cache ??= new MemoryCache(new MemoryCacheOptions());
+        return new ToolboxRenderFragmentFactory(logger, cache);
     }
 
     private class ToolboxRenderFragmentFactoryTestCases : IEnumerable
@@ -112,5 +126,61 @@ another name
 </div>"
             };
         }
+    }
+
+    private class ToolboxMemoryCacheMock : IMemoryCache
+    {
+        internal ToolboxMemoryCacheMock()
+        {
+            Entries = new List<ToolboxCacheEntryMock>();
+        }
+        
+        internal IList<ToolboxCacheEntryMock> Entries { get; }
+        public void Dispose()
+        {
+        }
+
+        public ICacheEntry CreateEntry(object key)
+        {
+            var entry = new ToolboxCacheEntryMock { Key = key };
+            Entries.Add(entry);
+            return entry;
+        }
+
+        public void Remove(object key)
+        {
+        }
+
+        public bool TryGetValue(object key, out object value)
+        {
+            var entry = Entries.FirstOrDefault(entry => entry.Key == key);
+            if (entry?.Value is null)
+            {
+                value = null!;
+                return false;
+            }
+
+            value = entry.Value;
+            return true;
+        }
+    }
+    
+    private class ToolboxCacheEntryMock : ICacheEntry
+    {
+        public void Dispose()
+        {
+        }
+
+        public DateTimeOffset? AbsoluteExpiration { get; set; }
+        public TimeSpan? AbsoluteExpirationRelativeToNow { get; set; }
+        // ReSharper disable once UnassignedGetOnlyAutoProperty
+        public IList<IChangeToken>? ExpirationTokens { get; }
+        public object? Key { get; set; }
+        // ReSharper disable once UnassignedGetOnlyAutoProperty
+        public IList<PostEvictionCallbackRegistration>? PostEvictionCallbacks { get; }
+        public CacheItemPriority Priority { get; set; }
+        public long? Size { get; set; }
+        public TimeSpan? SlidingExpiration { get; set; }
+        public object? Value { get; set; }
     }
 }
