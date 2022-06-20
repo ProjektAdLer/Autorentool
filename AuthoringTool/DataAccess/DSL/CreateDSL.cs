@@ -2,7 +2,6 @@
 using System.Text.Json;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.Entities;
-using Microsoft.VisualBasic;
 using FileSystem = System.IO.Abstractions.FileSystem;
 
 namespace AuthoringTool.DataAccess.DSL;

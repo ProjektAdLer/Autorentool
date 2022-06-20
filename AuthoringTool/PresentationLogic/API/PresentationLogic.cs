@@ -6,7 +6,6 @@ using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
-using AuthoringTool.View.LearningWorld;
 
 namespace AuthoringTool.PresentationLogic.API;
 

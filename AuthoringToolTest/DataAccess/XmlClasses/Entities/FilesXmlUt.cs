@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions.TestingHelpers;
-using System.Xml.Serialization;
 using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.WorldExport;
-using AuthoringTool.DataAccess.XmlClasses;
 using AuthoringTool.DataAccess.XmlClasses.Entities;
 using AuthoringTool.DataAccess.XmlClasses.XmlFileFactories;
 using NUnit.Framework;

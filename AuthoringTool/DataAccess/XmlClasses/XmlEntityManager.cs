@@ -1,5 +1,4 @@
-﻿using System.IO.Abstractions;
-using AuthoringTool.DataAccess.DSL;
+﻿using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.XmlClasses.XmlFileFactories;
 
 namespace AuthoringTool.DataAccess.XmlClasses;

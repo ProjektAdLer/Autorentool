@@ -14,9 +14,7 @@ using AuthoringTool.PresentationLogic.LearningWorld;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using NSubstitute.Core;
 using NSubstitute.ExceptionExtensions;
-using NSubstitute.Extensions;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.PresentationLogic.API;
@@ -599,7 +597,7 @@ public class PresentationLogicUt
         mockBusinessLogic.RunningElectron.Returns(true);
         var mockContentMapper = Substitute.For<ILearningContentMapper>();
         var learningContent = new LearningContentViewModel("f", ".png", new byte[] { 0x00, 0x00, 0x00, 0x01 });
-        var entity = new AuthoringTool.Entities.LearningContent("f", ".png", new byte[] { 0x00, 0x00, 0x00, 0x01 });
+        var entity = new LearningContent("f", ".png", new byte[] { 0x00, 0x00, 0x00, 0x01 });
         mockContentMapper.ToViewModel(entity).Returns(learningContent);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
@@ -681,7 +679,7 @@ public class PresentationLogicUt
         mockBusinessLogic.RunningElectron.Returns(true);
         var mockContentMapper = Substitute.For<ILearningContentMapper>();
         var learningContent = new LearningContentViewModel("f", ".mp4", new byte[] { 0x01, 0x00, 0x00, 0x01 });
-        var entity = new AuthoringTool.Entities.LearningContent("f", ".mp4", new byte[] { 0x01, 0x00, 0x00, 0x01 });
+        var entity = new LearningContent("f", ".mp4", new byte[] { 0x01, 0x00, 0x00, 0x01 });
         mockContentMapper.ToViewModel(entity).Returns(learningContent);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
@@ -763,7 +761,7 @@ public class PresentationLogicUt
         mockBusinessLogic.RunningElectron.Returns(true);
         var mockContentMapper = Substitute.For<ILearningContentMapper>();
         var learningContent = new LearningContentViewModel("f", ".h5p", new byte[] { 0x01, 0x01, 0x00, 0x01 });
-        var entity = new AuthoringTool.Entities.LearningContent("f", ".h5p", new byte[] { 0x01, 0x01, 0x00, 0x01 });
+        var entity = new LearningContent("f", ".h5p", new byte[] { 0x01, 0x01, 0x00, 0x01 });
         mockContentMapper.ToViewModel(entity).Returns(learningContent);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
@@ -845,7 +843,7 @@ public class PresentationLogicUt
         mockBusinessLogic.RunningElectron.Returns(true);
         var mockContentMapper = Substitute.For<ILearningContentMapper>();
         var learningContent = new LearningContentViewModel("f", ".pdf", new byte[] { 0x01, 0x01, 0x01, 0x01 });
-        var entity = new AuthoringTool.Entities.LearningContent("f", ".pdf", new byte[] { 0x01, 0x01, 0x01, 0x01 });
+        var entity = new LearningContent("f", ".pdf", new byte[] { 0x01, 0x01, 0x01, 0x01 });
         mockContentMapper.ToViewModel(entity).Returns(learningContent);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();

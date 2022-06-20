@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
 using System.Xml;
 using System.Xml.Serialization;
 
@@ -34,7 +33,7 @@ public class XmlSerialize
         var settings = new XmlWriterSettings
         {
             Encoding = new UpperCaseUTF8Encoding(), // Moodle needs Encoding in Uppercase!
-            NewLineHandling = System.Xml.NewLineHandling.Replace,
+            NewLineHandling = NewLineHandling.Replace,
             NewLineOnAttributes = true,
             Indent = true // Generate new lines for each element
         };

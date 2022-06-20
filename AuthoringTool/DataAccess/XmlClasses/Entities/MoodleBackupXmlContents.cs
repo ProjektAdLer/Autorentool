@@ -1,5 +1,4 @@
 ﻿using System.Xml.Serialization;
-using AuthoringTool.DataAccess.XmlClasses.Entities;
 
 namespace AuthoringTool.DataAccess.XmlClasses.Entities;
 

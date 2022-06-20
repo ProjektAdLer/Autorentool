@@ -1,6 +1,4 @@
-﻿using System.Diagnostics;
-using System.IO.Abstractions;
-using System.Security.Cryptography;
+﻿using System.IO.Abstractions;
 using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.XmlClasses.Entities;
 using AuthoringTool.DataAccess.XmlClasses.Entities.activities;
