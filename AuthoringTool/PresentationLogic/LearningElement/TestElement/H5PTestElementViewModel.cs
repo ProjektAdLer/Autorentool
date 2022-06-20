@@ -1,6 +1,6 @@
 using AuthoringTool.PresentationLogic.LearningContent;
 
-namespace AuthoringTool.PresentationLogic.LearningElement;
+namespace AuthoringTool.PresentationLogic.LearningElement.TestElement;
 
 public class H5PTestElementViewModel : TestElementViewModel
 {

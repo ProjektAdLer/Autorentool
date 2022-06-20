@@ -4,7 +4,7 @@ using System.Security.Cryptography;
 using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.XmlClasses.Entities;
 using AuthoringTool.DataAccess.XmlClasses.Entities.activities;
-using AuthoringTool.DataAccess.XmlClasses.sections;
+using AuthoringTool.DataAccess.XmlClasses.Entities.sections;
 
 namespace AuthoringTool.DataAccess.XmlClasses.XmlFileFactories;
 

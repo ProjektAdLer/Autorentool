@@ -3,7 +3,7 @@ using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.DataAccess.XmlClasses;
-using AuthoringTool.DataAccess.XmlClasses.sections;
+using AuthoringTool.DataAccess.XmlClasses.Entities.sections;
 using AuthoringTool.DataAccess.XmlClasses.XmlFileFactories;
 using Castle.Components.DictionaryAdapter;
 using NSubstitute.Core.Arguments;

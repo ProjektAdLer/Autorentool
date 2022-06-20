@@ -1,8 +1,7 @@
-﻿using System;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using AuthoringTool.DataAccess.WorldExport;
 
-namespace AuthoringTool.DataAccess.XmlClasses.sections;
+namespace AuthoringTool.DataAccess.XmlClasses.Entities.sections;
 
 [XmlRoot(ElementName="section")]
 public partial class SectionsSectionXmlSection : ISectionsSectionXmlSection{

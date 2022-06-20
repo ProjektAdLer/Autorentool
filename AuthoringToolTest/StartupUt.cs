@@ -1,4 +1,5 @@
 using System;
+using AuthoringTool;
 using AuthoringTool.API;
 using AuthoringTool.API.Configuration;
 using AuthoringTool.BusinessLogic.API;

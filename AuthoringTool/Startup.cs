@@ -18,6 +18,8 @@ using AuthoringTool.View.Toolbox;
 using ElectronWrapper;
 using Microsoft.Extensions.Caching.Memory;
 
+namespace AuthoringTool;
+
 public class Startup
 {
     public IConfiguration Configuration { get; }
@@ -72,7 +74,7 @@ public class Startup
 
     private void ConfigurePresentationLogic(IServiceCollection services)
     {
-        services.AddSingleton<IPresentationLogic, PresentationLogic>();
+        services.AddSingleton<IPresentationLogic, PresentationLogic.API.PresentationLogic>();
         services.AddSingleton<AuthoringToolWorkspacePresenter>();
         services.AddSingleton<ILearningWorldPresenter, LearningWorldPresenter>();
         services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
@@ -82,13 +84,13 @@ public class Startup
 
     private void ConfigureBusinessLogic(IServiceCollection services)
     {
-        services.AddSingleton<IBusinessLogic, BusinessLogic>();
+        services.AddSingleton<IBusinessLogic, BusinessLogic.API.BusinessLogic>();
     }
 
     private void ConfigureDataAccess(IServiceCollection services)
     {
         services.AddTransient(typeof(IXmlFileHandler<>), typeof(XmlFileHandler<>));
-        services.AddSingleton<IDataAccess, DataAccess>();
+        services.AddSingleton<IDataAccess, DataAccess.API.DataAccess>();
         services.AddSingleton<ICreateDSL, CreateDSL>();
         services.AddSingleton<IReadDSL, ReadDSL>();
         services.AddSingleton<IContentFileHandler, ContentFileHandler>();
