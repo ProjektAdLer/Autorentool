@@ -104,6 +104,11 @@ internal class DataAccess : IDataAccess
     {
         return ContentHandler.LoadFromDisk(filepath);
     }
+    
+    public LearningContent LoadLearningContentFromStream(string name, Stream stream)
+    {
+        return ContentHandler.LoadFromStream(name, stream);
+    }
 
     /// <inheritdoc cref="IDataAccess.FindSuitableNewSavePath"/>
     public string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding)
@@ -122,7 +127,7 @@ internal class DataAccess : IDataAccess
         {
             throw new ArgumentException("fileEnding cannot be empty", nameof(fileEnding));
         }
-        
+
         var baseSavePath = _fileSystem.Path.Combine(targetFolder, fileName);
         var savePath = baseSavePath;
         var iteration = 0;

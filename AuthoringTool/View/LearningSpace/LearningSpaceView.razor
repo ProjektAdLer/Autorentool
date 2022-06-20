@@ -14,10 +14,20 @@
 @ChildContent
 @if (_learningSpaceP.CreateLearningElementDialogOpen)
 {
-    <ModalDialog Title="Create new learning element" Text="Please enter the required data for the learning element below:"
-                 OnClose="@OnCreateElementDialogClose" DialogType=@ModalDialogType.OkCancel
-                 InputFields="@_learningSpaceP.ModalDialogCreateElementInputFields">
-    </ModalDialog>
+    @if (_learningSpaceP.DraggedLearningContentIsPresent)
+    {
+        <ModalDialog Title="Create new learning element" Text="Please enter the required data for the learning element below:"
+                     OnClose="@OnCreateElementDialogClose" DialogType=@ModalDialogType.OkCancel
+                     InputFields="@_learningSpaceP.ModalDialogCreateElementCustomInputFields">
+        </ModalDialog>
+    }
+    else
+    {
+        <ModalDialog Title="Create new learning element" Text="Please enter the required data for the learning element below:"
+                         OnClose="@OnCreateElementDialogClose" DialogType=@ModalDialogType.OkCancel
+                         InputFields="@_learningSpaceP.ModalDialogCreateElementInputFields">
+            </ModalDialog>
+    }
 }
 <br>
 

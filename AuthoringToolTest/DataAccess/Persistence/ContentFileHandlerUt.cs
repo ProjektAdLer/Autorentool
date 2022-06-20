@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.Persistence;
@@ -27,7 +28,25 @@ public class ContentFileHandlerUt
         Assert.Multiple(() =>
         {
             Assert.That(objActual.Name, Is.EqualTo("foobar.png"));
-            Assert.That(objActual.Type, Is.EqualTo(".png"));
+            Assert.That(objActual.Type, Is.EqualTo("png"));
+            Assert.That(objActual.Content, Is.EqualTo(new byte[] {0x42, 0x24, 0x53, 0x54}));
+        });
+    }
+    
+    [Test]
+    public void ContentFileHandler_LoadFromStream_CreatesCorrectObject()
+    {
+        const string filepath = "foobar.png";
+        var stream = new MemoryStream(new byte[] {0x42, 0x24, 0x53, 0x54});
+        
+
+        var systemUnderTest = CreateTestableContentFileHandler();
+
+        var objActual = systemUnderTest.LoadFromStream(filepath, stream);
+        Assert.Multiple(() =>
+        {
+            Assert.That(objActual.Name, Is.EqualTo("foobar.png"));
+            Assert.That(objActual.Type, Is.EqualTo("png"));
             Assert.That(objActual.Content, Is.EqualTo(new byte[] {0x42, 0x24, 0x53, 0x54}));
         });
     }

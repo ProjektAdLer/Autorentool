@@ -355,12 +355,36 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenterT
             case "aef":
                 LoadLearningElementFromFileStream(stream);
                 break;
+            case "jpg":
+            case "png":
+            case "webp":
+            case "bmp":
+            case "mp4":
+            case "h5p":
+            case "pdf":
+                var learningContent = _presentationLogic.LoadLearningContentViewModelFromStream(name, stream);
+                CallCreateLearningElementWithPreloadedContentFromActiveView(learningContent);
+                break;
             default:
                 _logger.LogInformation($"Couldn't load file '{name}', because the file extension '{ending}' is not supported.");
                 break;
         }
 
         return Task.CompletedTask;
+    }
+
+    private void CallCreateLearningElementWithPreloadedContentFromActiveView(LearningContentViewModel learningContent)
+    {
+        if (_authoringToolWorkspaceVm.SelectedLearningWorld is not { } world) return;
+        if (world.ShowingLearningSpaceView)
+        {
+            if (_learningSpacePresenter.LearningSpaceVm is not { } space) return;
+            _learningSpacePresenter.CreateLearningElementWithPreloadedContent(learningContent);
+        }
+        else
+        {
+            _learningWorldPresenter.CreateLearningElementWithPreloadedContent(learningContent);
+        }
     }
 
     internal void LoadLearningWorldFromFileStream(Stream stream)

@@ -158,20 +158,26 @@ internal class PresentationLogic : IPresentationLogic
 
     public LearningWorldViewModel LoadLearningWorldViewModelFromStream(Stream stream)
     {
-        var world = BusinessLogic.LoadLearningWorld(stream);
+        var world = BusinessLogic.LoadLearningWorldFromStream(stream);
         return WorldMapper.ToViewModel(world);
     }
 
     public LearningSpaceViewModel LoadLearningSpaceViewModelFromStream(Stream stream)
     {
-        var space = BusinessLogic.LoadLearningSpace(stream);
+        var space = BusinessLogic.LoadLearningSpaceFromStream(stream);
         return SpaceMapper.ToViewModel(space);
     }
 
     public LearningElementViewModel LoadLearningElementViewModelFromStream(Stream stream)
     {
-        var element = BusinessLogic.LoadLearningElement(stream);
+        var element = BusinessLogic.LoadLearningElementFromStream(stream);
         return ElementMapper.ToViewModel(element);
+    }
+    
+    public LearningContentViewModel LoadLearningContentViewModelFromStream(string name, Stream stream)
+    {
+        var entity = BusinessLogic.LoadLearningContentFromStream(name, stream);
+        return ContentMapper.ToViewModel(entity);
     }
 
     /// <summary>

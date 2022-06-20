@@ -31,4 +31,5 @@ public interface IDataAccess
     /// <returns>A save path of form <code>[targetFolder]/[fileName]_n.[fileEnding]</code> that does not yet exist,
     /// where n is an integer which is incremented until the path does not yet exist.</returns>
     string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding);
+    LearningContent LoadLearningContentFromStream(string name, Stream stream);
 }

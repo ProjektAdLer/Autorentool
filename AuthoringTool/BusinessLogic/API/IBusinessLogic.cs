@@ -12,14 +12,15 @@ public interface IBusinessLogic
     void ConstructBackup(LearningWorld learningWorld, string filepath);
     void SaveLearningWorld(LearningWorld learningWorld, string filepath);
     LearningWorld LoadLearningWorld(string filepath);
-    LearningWorld LoadLearningWorld(Stream stream);
+    LearningWorld LoadLearningWorldFromStream(Stream stream);
     void SaveLearningSpace(LearningSpace learningSpace, string filepath);
     LearningSpace LoadLearningSpace(string filepath);
-    LearningSpace LoadLearningSpace(Stream stream);
+    LearningSpace LoadLearningSpaceFromStream(Stream stream);
     void SaveLearningElement(LearningElement learningElement, string filepath);
     LearningElement LoadLearningElement(string filepath);
-    LearningElement LoadLearningElement(Stream stream);
+    LearningElement LoadLearningElementFromStream(Stream stream);
     LearningContent LoadLearningContent(string filepath);
+    LearningContent LoadLearningContentFromStream(string name, Stream stream);
     
     /// <inheritdoc cref="IDataAccess.FindSuitableNewSavePath"/>
     string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding);

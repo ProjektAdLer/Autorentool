@@ -178,6 +178,29 @@ public class DataAccessUt
 
         mockFileSaveHandlerElement.Received().LoadFromStream(stream);
     }
+    
+    [Test]
+    public void DataAccess_LoadLearningContentFromFile_CallsFileSaveHandlerElement()
+    {
+        var mockContentFileHandler = Substitute.For<IContentFileHandler>();
+        var systemUnderTest = CreateTestableDataAccess(contentHandler: mockContentFileHandler);
+
+        systemUnderTest.LoadLearningContentFromFile("C:/nonsense");
+
+        mockContentFileHandler.Received().LoadFromDisk("C:/nonsense");
+    }
+    
+    [Test]
+    public void DataAccess_LoadLearningContentFromStream_CallsFileSaveHandlerElement()
+    {
+        var mockContentFileHandler = Substitute.For<IContentFileHandler>();
+        var systemUnderTest = CreateTestableDataAccess(contentHandler: mockContentFileHandler);
+        var stream = Substitute.For<Stream>();
+
+        systemUnderTest.LoadLearningContentFromStream("filename.extension", stream);
+
+        mockContentFileHandler.Received().LoadFromStream("filename.extension", stream);
+    }
 
     [Test]
     [TestCaseSource(typeof(FindSuitableNewSavePathTestCases))]

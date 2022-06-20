@@ -27,6 +27,10 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     /// The currently selected LearningWorldViewModel.
     /// </summary>
     public LearningWorldViewModel? LearningWorldVm { get; private set; }
+    
+    private LearningContentViewModel? _dragAndDropLearningContent = null;
+    public bool DraggedLearningContentIsPresent => _dragAndDropLearningContent is not null;
+
 
     public bool SelectedLearningObjectIsSpace =>
         LearningWorldVm?.SelectedLearningObject?.GetType() == typeof(LearningSpaceViewModel);
@@ -343,7 +347,11 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
         var (response, data) = returnValueTuple;
         CreateLearningElementDialogOpen = false;
 
-        if (response == ModalDialogReturnValue.Cancel) return Task.CompletedTask;
+        if (response == ModalDialogReturnValue.Cancel)
+        {
+            _dragAndDropLearningContent = null;
+            return Task.CompletedTask;
+        }
         if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
 
         foreach (var pair in data)
@@ -373,7 +381,17 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
 
         try
         {
-            var learningContent = Task.Run(async () => await LoadLearningContent(contentType)).Result;
+            LearningContentViewModel learningContent;
+            if (_dragAndDropLearningContent is not null)
+            {
+                learningContent = _dragAndDropLearningContent;
+                _dragAndDropLearningContent = null;
+            }
+            else
+            {
+                learningContent = Task.Run(async () => await LoadLearningContent(contentType)).Result;
+            }
+            
             CreateNewLearningElement(name, shortname, parentElement, elementType, contentType, learningContent, authors,
                 description, goals, difficulty, workload);
         }
@@ -382,6 +400,12 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
                 
         }
         return Task.CompletedTask;
+    }
+    
+    public void CreateLearningElementWithPreloadedContent(LearningContentViewModel learningContent)
+    {
+        _dragAndDropLearningContent = learningContent;
+        CreateLearningElementDialogOpen = true;
     }
 
     /// <summary>
@@ -502,6 +526,168 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
                                 new Dictionary<string, string> {{"Type", ElementTypeEnum.Test.ToString()}},
                                 new[] {ContentTypeEnum.H5P.ToString()})
                         }, true),
+                    new("Authors", ModalDialogInputType.Text),
+                    new("Description", ModalDialogInputType.Text, true),
+                    new("Goals", ModalDialogInputType.Text),
+                    new ModalDialogDropdownInputField("Difficulty",
+                        new[]
+                        {
+                            new ModalDialogDropdownInputFieldChoiceMapping(null,
+                                new[] {LearningElementDifficultyEnum.Easy.ToString(),
+                                    LearningElementDifficultyEnum.Medium.ToString(),
+                                    LearningElementDifficultyEnum.Hard.ToString() })
+                        }, true),
+                    new("Workload (min)", ModalDialogInputType.Number)
+                };
+            }
+        }
+    
+    public IEnumerable<ModalDialogInputField> ModalDialogCreateElementCustomInputFields
+        {
+            get
+            {
+                if (_dragAndDropLearningContent is null)
+                {
+                    throw new Exception(
+                        "ModalDialogCreateElementCustomInputFields where called, but _dragAndDropLearningContent is null");
+                }
+
+
+                ModalDialogDropdownInputField typeField;
+                ModalDialogDropdownInputField contentField;
+
+                ContentTypeEnum contentType;
+                switch (_dragAndDropLearningContent.Type)
+                {
+                    case "jpg":
+                    case "png":
+                    case "webp":
+                    case "bmp":
+                        contentType = ContentTypeEnum.Image;
+                        break;
+                    case "mp4":
+                        contentType = ContentTypeEnum.Video;
+                        break;
+                    case "h5p":
+                        contentType = ContentTypeEnum.H5P;
+                        break;
+                    case "pdf":
+                        contentType = ContentTypeEnum.Pdf;
+                        break;
+                        default: throw new Exception($"Can not map the file extension '{_dragAndDropLearningContent.Type}' to an ContentType ");
+                    
+                }
+
+                switch (contentType)
+                {
+                    case ContentTypeEnum.Image:
+                        typeField = new ModalDialogDropdownInputField("Type",
+                            new[]
+                            {
+                                new ModalDialogDropdownInputFieldChoiceMapping(null,
+                                    new[]
+                                    {
+                                        ElementTypeEnum.Transfer.ToString()
+                                    })
+                            }, true);
+                        contentField = new ModalDialogDropdownInputField("Content",
+                            new[]
+                            {
+                                new ModalDialogDropdownInputFieldChoiceMapping(
+                                    new Dictionary<string, string> {{"Type", ElementTypeEnum.Transfer.ToString()}},
+                                    new[]
+                                    {
+                                        ContentTypeEnum.Image.ToString()
+                                    })
+                            }, true);
+                        break;
+                    case ContentTypeEnum.Video:
+                        typeField = new ModalDialogDropdownInputField("Type",
+                            new[]
+                            {
+                                new ModalDialogDropdownInputFieldChoiceMapping(null,
+                                    new[]
+                                    {
+                                        ElementTypeEnum.Transfer.ToString(), ElementTypeEnum.Activation.ToString()
+                                    })
+                            }, true);
+                        contentField = new ModalDialogDropdownInputField("Content",
+                            new[]
+                            {
+                                new ModalDialogDropdownInputFieldChoiceMapping(
+                                    new Dictionary<string, string> {{"Type", ElementTypeEnum.Transfer.ToString()}},
+                                    new[] {ContentTypeEnum.Video.ToString()}),
+                                new ModalDialogDropdownInputFieldChoiceMapping(
+                                    new Dictionary<string, string> {{"Type", ElementTypeEnum.Activation.ToString()}},
+                                    new[] {ContentTypeEnum.Video.ToString()})
+                            }, true);
+                        break;
+                    case ContentTypeEnum.Pdf:
+                        typeField = new ModalDialogDropdownInputField("Type",
+                            new[]
+                            {
+                                new ModalDialogDropdownInputFieldChoiceMapping(null,
+                                    new[] {ElementTypeEnum.Transfer.ToString()})
+                            }, true);
+                        contentField = new ModalDialogDropdownInputField("Content",
+                            new[]
+                            {
+                                new ModalDialogDropdownInputFieldChoiceMapping(
+                                    new Dictionary<string, string> {{"Type", ElementTypeEnum.Transfer.ToString()}},
+                                    new[] {ContentTypeEnum.Pdf.ToString()})
+                            }, true);
+                        break;
+                    case ContentTypeEnum.H5P:
+                        typeField = new ModalDialogDropdownInputField("Type",
+                            new[]
+                            {
+                                new ModalDialogDropdownInputFieldChoiceMapping(null,
+                                    new[]
+                                    {
+                                        ElementTypeEnum.Activation.ToString(),
+                                        ElementTypeEnum.Interaction.ToString(), ElementTypeEnum.Test.ToString()
+                                    })
+                            }, true);
+                        contentField = new ModalDialogDropdownInputField("Content",
+                            new[]
+                            {
+                                new ModalDialogDropdownInputFieldChoiceMapping(
+                                    new Dictionary<string, string> {{"Type", ElementTypeEnum.Activation.ToString()}},
+                                    new[] {ContentTypeEnum.H5P.ToString()}),
+                                new ModalDialogDropdownInputFieldChoiceMapping(
+                                    new Dictionary<string, string> {{"Type", ElementTypeEnum.Interaction.ToString()}},
+                                    new[] {ContentTypeEnum.H5P.ToString()}),
+                                new ModalDialogDropdownInputFieldChoiceMapping(
+                                    new Dictionary<string, string> {{"Type", ElementTypeEnum.Test.ToString()}},
+                                    new[] {ContentTypeEnum.H5P.ToString()})
+                            }, true);
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                
+                return new ModalDialogInputField[]
+                {
+                    new("Name", ModalDialogInputType.Text, true),
+                    new("Shortname", ModalDialogInputType.Text, true),
+                    new ModalDialogDropdownInputField("Parent",
+                        new[]
+                        {
+                            new ModalDialogDropdownInputFieldChoiceMapping(null,
+                                new[] {ElementParentEnum.World.ToString(), ElementParentEnum.Space.ToString()})
+                        }, true),
+                    new ModalDialogDropdownInputField("Assignment",
+                        new[]
+                        {
+                            new ModalDialogDropdownInputFieldChoiceMapping(
+                                new Dictionary<string, string> {{"Parent", ElementParentEnum.Space.ToString()}},
+                                LearningWorldVm!.LearningSpaces.Select(space => space.Name)),
+                            new ModalDialogDropdownInputFieldChoiceMapping(
+                                new Dictionary<string, string> {{"Parent", ElementParentEnum.World.ToString()}},
+                                new[] {LearningWorldVm.Name})
+                        }, true),
+                    typeField,
+                    contentField,
                     new("Authors", ModalDialogInputType.Text),
                     new("Description", ModalDialogInputType.Text, true),
                     new("Goals", ModalDialogInputType.Text),
