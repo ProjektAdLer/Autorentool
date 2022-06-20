@@ -34,7 +34,7 @@ public class ToolboxRenderFragmentFactoryUt
     {
         _testContext = new TestContext();
         _toolboxController = Substitute.For<IToolboxController>();
-        _testContext.Services.Add(new ServiceDescriptor(typeof(IToolboxController), _toolboxController));
+        _testContext.Services.AddSingleton(_toolboxController);
     }
     
     [Test]
