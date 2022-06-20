@@ -13,8 +13,8 @@ public class CreateDSL : ICreateDSL
     public List<LearningElement>? listLearningElements;
     public List<LearningSpace>? listLearningSpaces;
     public List<int>? listLearningSpaceContent;
-    public LearningWorldJson learningWorldJson;
-    private IFileSystem _fileSystem;
+    public LearningWorldJson? learningWorldJson;
+    private IFileSystem? _fileSystem;
 
 
     /// <summary>
@@ -115,7 +115,23 @@ public class CreateDSL : ICreateDSL
             learningWorldJson.learningElements.Add(learningElementJson);
         }
         
+        //Add another Element to the LearningElementList, representation for the DSL Document
+        IdentifierJson dslDocumentIdentifier = new IdentifierJson()
+        {
+            type = "FileName",
+            value = "DSL Dokument"
+        };
+
+        LearningElementJson dslDocumentJson = new LearningElementJson()
+        {
+            id = learningElementId,
+            identifier = dslDocumentIdentifier,
+            elementType = "json",
+        };
         
+        learningWorldJson.learningElements.Add(dslDocumentJson);
+
+
         // Create DocumentRoot & JSON Document
         // And add the learningWorldJson to the DocumentRoot
         // The structure of the DSL needs DocumentRoot, because the learningWorld has its own tag

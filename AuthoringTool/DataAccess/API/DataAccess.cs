@@ -51,7 +51,7 @@ internal class DataAccess : IDataAccess
         string dslpath = CreateDsl.WriteLearningWorld(learningWorld);
         ReadDsl.ReadLearningWorld(dslpath);
         BackupFile.CreateBackupFolders();
-        BackupFile.WriteXmlFiles(ReadDsl as ReadDSL);
+        BackupFile.WriteXmlFiles(ReadDsl as ReadDSL, dslpath);
         BackupFile.WriteBackupFile(filepath);
     }
 

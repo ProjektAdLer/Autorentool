@@ -42,7 +42,7 @@ public class SectionsSectionXmlUt
         var mockFileSystem = new MockFileSystem();
         var backupFileGen = new BackupFileGenerator(mockFileSystem);
         ReadDSL? dsl = new ReadDSL();
-        var h5pfactory = new XmlH5PFactory(dsl, mockFileSystem, null, null, null,null,
+        var h5pfactory = new XmlH5PFactory(dsl, null,mockFileSystem, null, null, null,null,
             null,null,null,null,null,null,null,
             null,null,null,null,
             null,null);
@@ -58,7 +58,7 @@ public class SectionsSectionXmlUt
         //Act
         h5pfactory.CreateSectionsFolder("1");
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
-        sectionSection.Serialize("1");
+        sectionSection.Serialize("", "1");
         
         //Assert
         var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "sections", "section_1", "section.xml");

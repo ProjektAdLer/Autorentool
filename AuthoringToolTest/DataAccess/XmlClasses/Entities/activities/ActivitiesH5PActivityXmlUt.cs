@@ -63,7 +63,7 @@ public class ActivitiesH5PActivityXmlUt
         //Arrange
         var mockFileSystem = new MockFileSystem();
         var readDsl = new ReadDSL();
-        var h5pfactory = new XmlH5PFactory(readDsl, mockFileSystem, null, null, null, null,
+        var h5pfactory = new XmlH5PFactory(readDsl, null,mockFileSystem, null, null, null, null,
             null, null, null, null, null, null, null, null, null,
             null, null, null, null);
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
@@ -78,7 +78,7 @@ public class ActivitiesH5PActivityXmlUt
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
         h5pfactory.CreateActivityFolder("1000");
-        activity.Serialize("1000");
+        activity.Serialize("h5pactivity", "1000");
         
         //Assert
         var path = Path.Join(currWorkDir, "XMLFilesForExport","activities", "h5pactivity_1000", "h5pactivity.xml");

@@ -22,7 +22,7 @@ public partial class SectionsSectionXmlSection : ISectionsSectionXmlSection{
     }
     
     
-    public void Serialize(string? sectionId)
+    public void Serialize(string? name, string? sectionId)
     {
         var xml = new XmlSerialize();
         xml.Serialize(this, Path.Join("sections", "section_"+sectionId, "section.xml"));

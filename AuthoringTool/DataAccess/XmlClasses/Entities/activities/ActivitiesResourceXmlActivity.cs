@@ -5,12 +5,12 @@ namespace AuthoringTool.DataAccess.XmlClasses.Entities.activities;
 
 
 [XmlRoot(ElementName="activity")]
-public class ActivitiesH5PActivityXmlActivity : IActivitiesH5PActivityXmlActivity{
+public class ActivitiesResourceXmlActivity : IActivitiesResourceXmlActivity{
     
-    
-    public void SetParameterts(ActivitiesH5PActivityXmlH5PActivity? h5Pactivity, string? id, string? moduleid, string? modulename, string? contextid)
+    public void SetParameters(ActivitiesResourceXmlResource? resource, string? id, string? moduleid, string? modulename, 
+        string? contextid)
     {
-        H5pactivity = h5Pactivity;
+        Resource = resource;
         Id = id;
         Moduleid = moduleid;
         Modulename = modulename;
@@ -20,21 +20,21 @@ public class ActivitiesH5PActivityXmlActivity : IActivitiesH5PActivityXmlActivit
     public void Serialize(string? activityName, string? moduleId)
     {
         var xml = new XmlSerialize();
-        xml.Serialize(this, Path.Join("activities", activityName + "_" + moduleId, "h5pactivity.xml"));
+        xml.Serialize(this, Path.Join("activities", activityName + "_" + moduleId, "resource.xml"));
     }
-    
-    [XmlElement(ElementName="h5pactivity")]
-    public ActivitiesH5PActivityXmlH5PActivity? H5pactivity { get; set; }
-    
+
+    [XmlElement(ElementName="resource")]
+    public ActivitiesResourceXmlResource? Resource { get; set; }
+        
     [XmlAttribute(AttributeName="id")]
     public string? Id { get; set; }
-    
+        
     [XmlAttribute(AttributeName="moduleid")]
     public string? Moduleid { get; set; }
-    
+        
     [XmlAttribute(AttributeName="modulename")]
     public string? Modulename { get; set; }
-    
+        
     [XmlAttribute(AttributeName="contextid")]
     public string? Contextid { get; set; }
     

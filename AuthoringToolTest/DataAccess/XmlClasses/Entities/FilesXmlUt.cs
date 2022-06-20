@@ -84,7 +84,7 @@ public class FilesXmlUt
         var backupGenerator = new BackupFileGenerator(mockFileSystem);
         backupGenerator.CreateBackupFolders();
         var readDsl = new ReadDSL();
-        var h5pfactory = new XmlH5PFactory(readDsl, mockFileSystem, null, null, null, null,
+        var h5pfactory = new XmlH5PFactory(readDsl, null, mockFileSystem, null, null, null, null,
             null, null, null, null, null, null, null, null, null,
             null, null, null, null);
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();

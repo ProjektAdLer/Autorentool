@@ -13,10 +13,10 @@ public class ActivitiesGradesXmlActivityGradebook : IActivitiesGradesXmlActivity
         Grade_letters = gradeLetters;
     }
     
-    public void Serialize(string? moduleId)
+    public void Serialize(string? activityName, string? moduleId)
     {
         var xml = new XmlSerialize();
-        xml.Serialize(this,Path.Join("activities", "h5pactivity_"+moduleId, "grades.xml"));
+        xml.Serialize(this,Path.Join("activities", activityName + "_" + moduleId, "grades.xml"));
     }
 
     [XmlElement(ElementName="grade_items")]

@@ -13,13 +13,14 @@ namespace AuthoringTool.DataAccess.XmlClasses.XmlFileFactories;
 /// </summary>
 public class XmlH5PFactory
 {
-    private string hardcordedPath = Path.Join("C:", "Users", "biglerdd", "Desktop", "HS", "Hagel-Lernelemente", "Wortsuche Metriken.h5p");
+    private string hardcodedPath = Path.Join("C:", "Users", "biglerdd", "Desktop", "HS", "Hagel-Lernelemente", "Wortsuche Metriken.h5p");
     private string? h5pElementId;
     private string? h5pElementName;
     private string? currentTime;
     private List<FilesXmlFile>? filesXmlFilesList;
     private List<ActivitiesInforefXmlFile>? ActivitiesInforefXmlFileList;
 
+    internal XmlFileManager _fileManager;
     internal IFilesXmlFiles FilesXmlFiles { get; }
     internal IFilesXmlFile FilesXmlFileBlock1 { get; }
     internal IFilesXmlFile FilesXmlFileBlock2 { get; }
@@ -42,54 +43,25 @@ public class XmlH5PFactory
     internal IReadDSL? ReadDsl { get; }
 
     private IFileSystem _fileSystem;
+    
 
-/*    
-    public XmlH5PFactory(ReadDSL? readDsl)
+    public XmlH5PFactory(IReadDSL readDsl, XmlFileManager xmlFileManager, IFileSystem? fileSystem = null,
+        IFilesXmlFiles? filesXmlFiles = null,
+        IFilesXmlFile? filesXmlFile = null, IActivitiesGradesXmlGradeItem? gradesGradeItem = null,
+        IActivitiesGradesXmlGradeItems? gradesGradeItems = null, ActivitiesGradesXmlActivityGradebook? gradebook = null,
+        IActivitiesH5PActivityXmlActivity? h5PActivityXmlActivity = null,
+        IActivitiesH5PActivityXmlH5PActivity? h5PActivityXmlH5PActivity = null,
+        IActivitiesRolesXmlRoles? roles = null, IActivitiesModuleXmlModule? module = null,
+        IActivitiesGradeHistoryXmlGradeHistory? gradeHistory = null, IActivitiesInforefXmlFile? inforefXmlFile = null,
+        IActivitiesInforefXmlFileref? inforefXmlFileref = null,
+        IActivitiesInforefXmlGradeItem? inforefXmlGradeItem = null,
+        IActivitiesInforefXmlGradeItemref? inforefXmlGradeItemref = null,
+        IActivitiesInforefXmlInforef? inforefXmlInforef = null,
+        ISectionsInforefXmlInforef? sectionsInforefXmlInforef = null,
+        ISectionsSectionXmlSection? sectionsSectionXmlSection = null)
     {
-        FilesXmlFileBlock1 = new FilesXmlFile();
-        FilesXmlFileBlock2 = new FilesXmlFile();
-
-        ActivitiesGradesXmlGradeItem = new ActivitiesGradesXmlGradeItem();
-        ActivitiesGradesXmlGradeItems = new ActivitiesGradesXmlGradeItems();
-        ActivitiesGradesXmlActivityGradebook = new ActivitiesGradesXmlActivityGradebook();
-
-        ActivitiesH5PActivityXmlActivity = new ActivitiesH5PActivityXmlActivity();
-        ActivitiesH5PActivityXmlH5PActivity = new ActivitiesH5PActivityXmlH5PActivity();
-
-        ActivitiesRolesXmlRoles = new ActivitiesRolesXmlRoles();
-        
-        FilesXmlFiles = new FilesXmlFiles();
-
-        ActivitiesModuleXmlModule = new ActivitiesModuleXmlModule();
-
-        ActivitiesGradeHistoryXmlGradeHistory = new ActivitiesGradeHistoryXmlGradeHistory();
-
-        ActivitiesInforefXmlFileBlock1 = new ActivitiesInforefXmlFile();
-        ActivitiesInforefXmlFileBlock2 = new ActivitiesInforefXmlFile();
-        ActivitiesInforefXmlFileref = new ActivitiesInforefXmlFileref();
-        ActivitiesInforefXmlGradeItem = new ActivitiesInforefXmlGradeItem();
-        ActivitiesInforefXmlGradeItemref = new ActivitiesInforefXmlGradeItemref();
-        ActivitiesInforefXmlInforef = new ActivitiesInforefXmlInforef();
-
-        SectionsInforefXmlInforef = new SectionsInforefXmlInforef();
-        SectionsSectionXmlSection = new SectionsSectionXmlSection();
-
-        ReadDsl = readDsl;
-        currentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
-        _fileSystem = new FileSystem();
-    }*/
-
-    public XmlH5PFactory(IReadDSL readDsl , IFileSystem? fileSystem=null,  IFilesXmlFiles?  filesXmlFiles=null, 
-        IFilesXmlFile? filesXmlFile=null, IActivitiesGradesXmlGradeItem? gradesGradeItem=null, 
-        IActivitiesGradesXmlGradeItems? gradesGradeItems=null, ActivitiesGradesXmlActivityGradebook? gradebook=null, 
-        IActivitiesH5PActivityXmlActivity? h5PActivityXmlActivity=null, IActivitiesH5PActivityXmlH5PActivity? h5PActivityXmlH5PActivity=null,
-        IActivitiesRolesXmlRoles? roles=null, IActivitiesModuleXmlModule? module=null,
-        IActivitiesGradeHistoryXmlGradeHistory? gradeHistory=null, IActivitiesInforefXmlFile? inforefXmlFile=null, 
-        IActivitiesInforefXmlFileref? inforefXmlFileref=null, IActivitiesInforefXmlGradeItem? inforefXmlGradeItem=null, 
-        IActivitiesInforefXmlGradeItemref? inforefXmlGradeItemref=null, IActivitiesInforefXmlInforef? inforefXmlInforef=null,
-        ISectionsInforefXmlInforef? sectionsInforefXmlInforef=null, ISectionsSectionXmlSection? sectionsSectionXmlSection=null)
-    {
-        _fileSystem = fileSystem?? new FileSystem(); 
+        _fileSystem = fileSystem?? new FileSystem();
+        _fileManager = xmlFileManager;
         
         FilesXmlFileBlock1 = filesXmlFile?? new FilesXmlFile();
         FilesXmlFileBlock2 = filesXmlFile?? new FilesXmlFile();
@@ -129,13 +101,13 @@ public class XmlH5PFactory
     /// </summary>
     public void CreateH5PFileFactory()
     {
-        XmlFileFactory filefactory = new XmlFileFactory();
 
         if (ReadDsl != null)
         {   // Get all the H5P elements that are in the DSL Document
             List<LearningElementJson>? h5pElementsList = ReadDsl.GetH5PElementsList();
             filesXmlFilesList = new List<FilesXmlFile>();
-
+            filesXmlFilesList = _fileManager.GetXmlFilesList();
+            
             // For Each H5P element in the list 
             // (for files.xml) set the H5Pelement id, name, hashvalue, copy the File to the needed location in the backup structure
             // and all the other paramters in (H5PSetParametersFilesXml)
@@ -145,9 +117,9 @@ public class XmlH5PFactory
                 {
                     h5pElementId = h5pElement.id.ToString();
                     if (h5pElement.identifier != null) h5pElementName = h5pElement.identifier.value;
-                    filefactory.CalculateHashCheckSumAndFileSize(hardcordedPath);
-                    filefactory.CreateFolderAndFiles(hardcordedPath, filefactory.fileCheckSum);
-                    H5PSetParametersFilesXml(filefactory.fileCheckSum, filefactory.fileSize);
+                    _fileManager.CalculateHashCheckSumAndFileSize(hardcodedPath);
+                    _fileManager.CreateFolderAndFiles(hardcodedPath, _fileManager.fileCheckSum);
+                    H5PSetParametersFilesXml(_fileManager.fileCheckSum, _fileManager.fileSize);
                     H5PSetParametersActivity();
                     H5PSetParametersSections();
                     
@@ -155,7 +127,7 @@ public class XmlH5PFactory
                     XmlEntityManager.IncreaseFileId();
                 }
         }
-
+        
         FilesXmlFiles.SetParameters(filesXmlFilesList);
         FilesXmlFiles.Serialize();
     }
@@ -200,7 +172,7 @@ public class XmlH5PFactory
         ActivitiesGradesXmlGradeItems.SetParameters(ActivitiesGradesXmlGradeItem as ActivitiesGradesXmlGradeItem);
         ActivitiesGradesXmlActivityGradebook.SetParameterts(ActivitiesGradesXmlGradeItems as ActivitiesGradesXmlGradeItems,
             "");
-        ActivitiesGradesXmlActivityGradebook.Serialize(h5pElementId);
+        ActivitiesGradesXmlActivityGradebook.Serialize("h5pactivity", h5pElementId);
         
         //file activities/h5p.../h5pactivity.xml
         ActivitiesH5PActivityXmlH5PActivity.SetParameterts(h5pElementName,
@@ -208,11 +180,11 @@ public class XmlH5PFactory
             "15", "1", "1", "1", "", h5pElementId);
         ActivitiesH5PActivityXmlActivity.SetParameterts(ActivitiesH5PActivityXmlH5PActivity as ActivitiesH5PActivityXmlH5PActivity, 
             h5pElementId, h5pElementId, "h5pactivity", h5pElementId);
-        ActivitiesH5PActivityXmlActivity.Serialize(h5pElementId);
+        ActivitiesH5PActivityXmlActivity.Serialize("h5pactivity", h5pElementId);
         
         //file activities/h5p.../roles.xml
         ActivitiesRolesXmlRoles.SetParameterts("", "");
-        ActivitiesRolesXmlRoles.Serialize(h5pElementId);
+        ActivitiesRolesXmlRoles.Serialize("h5pactivity", h5pElementId);
         
         //file activities/h5p.../module.xml
         ActivitiesModuleXmlModule.SetParameterts("h5pactivity", h5pElementId, h5pElementId,
@@ -221,11 +193,11 @@ public class XmlH5PFactory
             "1", "$@NULL@$", "0",
             "0", "$@NULL@$", "0", "", 
             h5pElementId, "2021051700");
-        ActivitiesModuleXmlModule.Serialize(h5pElementId);
+        ActivitiesModuleXmlModule.Serialize("h5pactivity", h5pElementId);
         
         //file activities/h5p.../grade_history.xml
         ActivitiesGradeHistoryXmlGradeHistory.SetParameterts("");
-        ActivitiesGradeHistoryXmlGradeHistory.Serialize(h5pElementId);
+        ActivitiesGradeHistoryXmlGradeHistory.Serialize("h5pactivity", h5pElementId);
         
         //file activities/h5p.../inforef.xml
         ActivitiesInforefXmlFileList = new List<ActivitiesInforefXmlFile>();
@@ -246,7 +218,7 @@ public class XmlH5PFactory
         
         ActivitiesInforefXmlInforef.SetParameters(ActivitiesInforefXmlFileref as ActivitiesInforefXmlFileref, 
             ActivitiesInforefXmlGradeItemref as ActivitiesInforefXmlGradeItemref);
-        ActivitiesInforefXmlInforef.Serialize(h5pElementId);
+        ActivitiesInforefXmlInforef.Serialize("h5pactivity", h5pElementId);
     }
 
     /// <summary>
@@ -258,13 +230,13 @@ public class XmlH5PFactory
         
         //file sections/section.../inforef.xml
         SectionsInforefXmlInforef.SetParameters();
-        SectionsInforefXmlInforef.Serialize(h5pElementId);
+        SectionsInforefXmlInforef.Serialize("", h5pElementId);
         
         //file sections/section.../section.xml
         SectionsSectionXmlSection.SetParameters(h5pElementId, "$@NULL@$",
             "$@NULL@$", "0", "$@NULL@$", "1", 
             "$@NULL@$", currentTime, h5pElementId);
-        SectionsSectionXmlSection.Serialize(h5pElementId);
+        SectionsSectionXmlSection.Serialize("", h5pElementId);
     }
 
     /// <summary>

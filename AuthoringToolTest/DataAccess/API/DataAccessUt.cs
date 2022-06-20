@@ -61,7 +61,7 @@ public class DataAccessUt
         mockCreateDsl.Received().WriteLearningWorld(mockLearningWorld as LearningWorld);
         mockReadDsl.Received().ReadLearningWorld(mockCreateDsl.WriteLearningWorld(mockLearningWorld as LearningWorld));
         mockBackupFile.Received().CreateBackupFolders();
-        mockBackupFile.Received().WriteXmlFiles(mockReadDsl as ReadDSL);
+        mockBackupFile.Received().WriteXmlFiles(mockReadDsl as ReadDSL, mockCreateDsl.WriteLearningWorld(mockLearningWorld as LearningWorld));
         mockBackupFile.Received().WriteBackupFile(filepath);
 
     }

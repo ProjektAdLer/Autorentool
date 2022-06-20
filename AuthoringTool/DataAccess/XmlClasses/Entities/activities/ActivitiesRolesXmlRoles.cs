@@ -12,10 +12,10 @@ public class ActivitiesRolesXmlRoles : IActivitiesRolesXmlRoles{
         Role_assignments = roleAssignments;
     }
     
-    public void Serialize(string? moduleId)
+    public void Serialize(string? activityName, string? moduleId)
     {
         var xml = new XmlSerialize();
-        xml.Serialize(this, Path.Join("activities", "h5pactivity_"+moduleId, "roles.xml"));
+        xml.Serialize(this, Path.Join("activities", activityName + "_" + moduleId, "roles.xml"));
     }
     
     [XmlElement(ElementName="role_overrides")]

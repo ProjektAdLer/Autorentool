@@ -1,11 +1,29 @@
 ﻿using System.Security.Cryptography;
+using AuthoringTool.DataAccess.XmlClasses.Entities;
 
 namespace AuthoringTool.DataAccess.XmlClasses;
 
-public class XmlFileFactory
+public class XmlFileManager
 {
     public string? fileSize { get; set; }
     public string? fileCheckSum { get; set; }
+    
+    public List<FilesXmlFile>? filesXmlFilesList ;
+
+    public XmlFileManager()
+    {
+        List<FilesXmlFile> filesXmlFilesList = new List<FilesXmlFile>();
+    }
+    
+    public List<FilesXmlFile>? GetXmlFilesList()
+    {
+        return filesXmlFilesList;
+    }
+
+    public void SetXmlFilesList(List<FilesXmlFile>? list)
+    {
+        filesXmlFilesList = list;
+    }
     
     /// <summary>
     /// Calculates the SHA1 Hash value for the file

@@ -2,5 +2,5 @@
 
 public interface IXmlSerializablePath
 {
-    void Serialize(string? module_sectionId);
+    void Serialize(string? activityName, string? module_sectionId);
 }
