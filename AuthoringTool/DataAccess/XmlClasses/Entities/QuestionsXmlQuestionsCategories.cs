@@ -1,7 +1,7 @@
 ﻿using System.Xml.Serialization;
 using AuthoringTool.DataAccess.WorldExport;
 
-namespace AuthoringTool.DataAccess.XmlClasses;
+namespace AuthoringTool.DataAccess.XmlClasses.Entities;
 
 [XmlRoot(ElementName="question_categories")]
 public partial class QuestionsXmlQuestionsCategories : IQuestionsXmlQuestionsCategories{

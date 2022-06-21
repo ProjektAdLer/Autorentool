@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace AuthoringTool.DataAccess.XmlClasses.course;
+namespace AuthoringTool.DataAccess.XmlClasses.Entities.course;
 
 [XmlRoot(ElementName="enrol")]
 	public partial class CourseEnrolmentsXmlEnrol : ICourseEnrolmentsXmlEnrol{

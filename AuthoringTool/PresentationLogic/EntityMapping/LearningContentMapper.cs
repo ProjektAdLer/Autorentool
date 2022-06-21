@@ -1,4 +1,3 @@
-using System.Security.Cryptography;
 using AuthoringTool.PresentationLogic.LearningContent;
 
 namespace AuthoringTool.PresentationLogic.EntityMapping;

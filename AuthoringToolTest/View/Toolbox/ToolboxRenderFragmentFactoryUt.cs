@@ -2,7 +2,6 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using AuthoringTool.Entities;
 using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
@@ -34,7 +33,7 @@ public class ToolboxRenderFragmentFactoryUt
     {
         _testContext = new TestContext();
         _toolboxController = Substitute.For<IToolboxController>();
-        _testContext.Services.Add(new ServiceDescriptor(typeof(IToolboxController), _toolboxController));
+        _testContext.Services.AddSingleton(_toolboxController);
     }
     
     [Test]

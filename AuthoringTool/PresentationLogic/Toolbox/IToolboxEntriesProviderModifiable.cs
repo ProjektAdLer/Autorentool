@@ -1,5 +1,3 @@
-using AuthoringTool.View.Toolbox;
-
 namespace AuthoringTool.PresentationLogic.Toolbox;
 
 /// <summary>

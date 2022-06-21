@@ -1,6 +1,5 @@
 ﻿using AuthoringTool.Components.ModalDialog;
 using AuthoringTool.PresentationLogic.LearningContent;
-using AuthoringTool.PresentationLogic.LearningWorld;
 
 namespace AuthoringTool.PresentationLogic.LearningSpace;
 

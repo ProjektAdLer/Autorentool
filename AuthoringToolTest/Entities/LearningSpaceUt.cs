@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using AuthoringTool.Entities;
 using AuthoringTool.PresentationLogic.LearningElement;

@@ -1,10 +1,8 @@
-﻿using System.Diagnostics;
-using System.IO.Abstractions;
-using System.Security.Cryptography;
+﻿using System.IO.Abstractions;
 using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.XmlClasses.Entities;
 using AuthoringTool.DataAccess.XmlClasses.Entities.activities;
-using AuthoringTool.DataAccess.XmlClasses.sections;
+using AuthoringTool.DataAccess.XmlClasses.Entities.sections;
 
 namespace AuthoringTool.DataAccess.XmlClasses.XmlFileFactories;
 

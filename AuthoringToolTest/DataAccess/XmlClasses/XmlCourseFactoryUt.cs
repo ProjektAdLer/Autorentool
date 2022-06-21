@@ -1,12 +1,10 @@
 ﻿using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.XmlClasses;
-using AuthoringTool.DataAccess.XmlClasses.course;
-using AuthoringTool.Entities;
+using AuthoringTool.DataAccess.XmlClasses.Entities.course;
 using NSubstitute;
-using NSubstitute.Extensions;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.WorldExport;
+namespace AuthoringToolTest.DataAccess.XmlClasses;
 
 [TestFixture]
 public class XmlCourseFactoryUt

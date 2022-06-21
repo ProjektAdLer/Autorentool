@@ -1,7 +1,5 @@
 ﻿using System.Xml.Serialization;
 
-using NLog.Targets;
-
 namespace AuthoringTool.DataAccess.XmlClasses.Entities;
 
 [XmlRoot(ElementName = "file")]

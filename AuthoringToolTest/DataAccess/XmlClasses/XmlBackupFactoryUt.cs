@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.XmlClasses;
 using AuthoringTool.DataAccess.XmlClasses.Entities;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.WorldExport;
+namespace AuthoringToolTest.DataAccess.XmlClasses;
 
 [TestFixture]
 public class XmlBackupFactoryUt

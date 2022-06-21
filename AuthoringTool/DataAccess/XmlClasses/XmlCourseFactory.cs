@@ -1,5 +1,5 @@
 ﻿using AuthoringTool.DataAccess.DSL;
-using AuthoringTool.DataAccess.XmlClasses.course;
+using AuthoringTool.DataAccess.XmlClasses.Entities.course;
 
 namespace AuthoringTool.DataAccess.XmlClasses;
 

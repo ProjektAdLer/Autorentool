@@ -22,6 +22,7 @@ SOFTWARE. */
 
 #nullable disable
 
+// ReSharper disable once RedundantUsingDirective
 using System;
 // ReSharper disable UnusedType.Global
 
@@ -33,6 +34,7 @@ using System;
 // ReSharper disable MemberCanBeProtected.Global
 // ReSharper disable InconsistentNaming
 
+// ReSharper disable once CheckNamespace
 namespace AuthoringTool.Annotations
 {
   /// <summary>

@@ -44,9 +44,9 @@ public class ElectronDialogManager : IElectronDialogManager
         
         var openDialogProperties = new List<OpenDialogProperty>
         {
-            directory ? OpenDialogProperty.openDirectory : OpenDialogProperty.openFile,
+            directory ? OpenDialogProperty.OpenDirectory : OpenDialogProperty.OpenFile,
         };
-        if (multiSelect) openDialogProperties.Add(OpenDialogProperty.multiSelections);
+        if (multiSelect) openDialogProperties.Add(OpenDialogProperty.MultiSelections);
         
         var options = new OpenDialogOptions
         {

@@ -21,6 +21,9 @@
     <Content Update="electron.manifest.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Update="View\Toolbox\LearningObjectRenderFragmentBase.razor.css">
+      <DependentUpon>LearningObjectRenderFragmentBase.razor</DependentUpon>
+    </Content>
   </ItemGroup>
   <ItemGroup>
 	<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
