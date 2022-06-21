@@ -47,8 +47,8 @@ public class DataAccessUt
         var mockCreateDsl = Substitute.For<ICreateDSL>();
         
         var mockBackupFile = Substitute.For<IBackupFileGenerator>();
-        var systemUnderTest = new AuthoringTool.DataAccess.API.DataAccess(null, mockBackupFile, 
-            null, null, null, null, mockCreateDsl, mockReadDsl);
+        var systemUnderTest = CreateTestableDataAccess(backupFileConstructor: mockBackupFile, createDsl: mockCreateDsl,
+            readDsl: mockReadDsl);
         var filepath = "this/path";
         var mockLearningWorld = Substitute.For<ILearningWorld>();
 

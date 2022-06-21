@@ -177,10 +177,10 @@ public class XmlFileFactory
         {
             ActivitiesInforefXmlFileList.Add(new ActivitiesInforefXmlFile());
             ActivitiesInforefXmlFileList[ActivitiesInforefXmlFileList.Count - 1]
-                .SetParameterts(XmlEntityManager.GetFileIdBlock1().ToString());
+                .SetParameters(XmlEntityManager.GetFileIdBlock1().ToString());
             ActivitiesInforefXmlFileList.Add(new ActivitiesInforefXmlFile());
             ActivitiesInforefXmlFileList[ActivitiesInforefXmlFileList.Count - 1]
-                .SetParameterts(XmlEntityManager.GetFileIdBlock2().ToString());
+                .SetParameters(XmlEntityManager.GetFileIdBlock2().ToString());
 
             ActivitiesInforefXmlFileref.SetParameters(ActivitiesInforefXmlFileList);
         }

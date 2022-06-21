@@ -8,21 +8,24 @@ namespace AuthoringTool.DataAccess.DSL;
 
 public class CreateDSL : ICreateDSL
 {
-    
     public List<LearningElement>? listLearningElements;
     public List<LearningSpace>? listLearningSpaces;
     public List<int>? listLearningSpaceContent;
     public LearningWorldJson? learningWorldJson;
-    private IFileSystem? _fileSystem;
+    private readonly IFileSystem _fileSystem;
+
+    public CreateDSL(IFileSystem fileSystem)
+    {
+        _fileSystem = fileSystem;
+    }
 
 
     /// <summary>
     /// Reads the LearningWord Entity and creates an DSL Document with the given information.
     /// </summary>
     /// <param name="learningWorld"></param> Information about the learningWorld, topics, spaces and elements
-    public string WriteLearningWorld(LearningWorld learningWorld, IFileSystem? fileSystem=null)
+    public string WriteLearningWorld(LearningWorld learningWorld)
     {
-        _fileSystem = fileSystem?? new FileSystem();
         
         //Create Empty Learning World, 
         //learningWorldJson will be filled with information later

@@ -11,10 +11,6 @@ internal class DataAccess : IDataAccess
 {
     public DataAccess(IAuthoringToolConfiguration configuration, IBackupFileGenerator backupFileGenerator,
         IXmlFileHandler<LearningWorld> xmlHandlerWorld, IXmlFileHandler<LearningSpace> xmlHandlerSpace,
-        IXmlFileHandler<LearningElement> xmlHandlerElement, IContentFileHandler contentHandler, ICreateDSL createDsl, IReadDSL readDsl): this(configuration,
-        backupFileGenerator, xmlHandlerWorld, xmlHandlerSpace, xmlHandlerElement, contentHandler, createDsl, readDsl, new FileSystem()) { }
-    public DataAccess(IAuthoringToolConfiguration configuration, IBackupFileGenerator backupFileGenerator,
-        IXmlFileHandler<LearningWorld> xmlHandlerWorld, IXmlFileHandler<LearningSpace> xmlHandlerSpace,
         IXmlFileHandler<LearningElement> xmlHandlerElement, IContentFileHandler contentHandler,
         ICreateDSL createDsl, IReadDSL readDsl, IFileSystem fileSystem)
     {
