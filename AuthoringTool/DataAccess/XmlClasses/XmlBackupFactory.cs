@@ -385,7 +385,7 @@ public class XmlBackupFactory
                         string? learningElementId = element.id.ToString();
                         string? learningElementType = element.elementType;
                         string? learningElementName = element.identifier!.value;
-                        if (learningElementType == "H5P")
+                        if (learningElementType == "h5p")
                         {
                             learningElementType = "h5pactivity";
                         }

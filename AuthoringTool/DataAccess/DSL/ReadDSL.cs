@@ -42,7 +42,7 @@ public class ReadDSL : IReadDSL
             if (documentRootJson.learningWorld.learningElements != null)
                 foreach (var element in documentRootJson.learningWorld.learningElements)
                 {
-                    if (element.elementType == "H5P")
+                    if (element.elementType == "h5p")
                     {
                         if (ListH5PElements != null) ListH5PElements.Add(element);
                     }

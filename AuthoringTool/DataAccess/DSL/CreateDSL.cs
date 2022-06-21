@@ -23,6 +23,7 @@ public class CreateDSL : ICreateDSL
     /// <param name="learningWorld"></param> Information about the learningWorld, topics, spaces and elements
     public string WriteLearningWorld(LearningWorld learningWorld, IFileSystem? fileSystem=null)
     {
+       
         _fileSystem = fileSystem?? new FileSystem();
         
         //Create Empty Learning World, 
@@ -108,6 +109,8 @@ public class CreateDSL : ICreateDSL
                 identifier = learningElementIdentifier,
                 elementType = learningElement.Content.Type,
             };
+
+
             
             learningElementId++;
             
@@ -146,6 +149,10 @@ public class CreateDSL : ICreateDSL
         //Create Backup Folder structure and the DSL Document in it
         BackupFileGenerator createFolders = new BackupFileGenerator(_fileSystem);
         createFolders.CreateBackupFolders();
+        foreach (var learningElement in listLearningElements)
+        {
+            _fileSystem.File.WriteAllBytes(_fileSystem.Path.Join("XMLFilesForExport", learningElement.Name), learningElement.Content.Content);
+        }
         var dslPath = _fileSystem.Path.Join("XMLFilesForExport", "DSL_Document.json");
         _fileSystem.File.WriteAllText(dslPath, jsonFile);
         Console.WriteLine(jsonFile);

@@ -13,7 +13,8 @@ namespace AuthoringTool.DataAccess.XmlClasses.XmlFileFactories;
 /// </summary>
 public class XmlH5PFactory
 {
-    private string hardcodedPath = Path.Join("C:", "Users", "biglerdd", "Desktop", "HS", "Hagel-Lernelemente", "Wortsuche Metriken.h5p");
+    private string? currWorkDir;
+    private string hardcodedPath = "XMLFilesForExport";
     private string? h5pElementId;
     private string? h5pElementName;
     private string? currentTime;
@@ -93,6 +94,7 @@ public class XmlH5PFactory
 
         ReadDsl = readDsl;
         currentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
+        currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
     }
     
     
@@ -117,8 +119,8 @@ public class XmlH5PFactory
                 {
                     h5pElementId = h5pElement.id.ToString();
                     if (h5pElement.identifier != null) h5pElementName = h5pElement.identifier.value;
-                    _fileManager.CalculateHashCheckSumAndFileSize(hardcodedPath);
-                    _fileManager.CreateFolderAndFiles(hardcodedPath, _fileManager.fileCheckSum);
+                    _fileManager.CalculateHashCheckSumAndFileSize(Path.Join(currWorkDir, hardcodedPath, h5pElement.identifier.value));
+                    _fileManager.CreateFolderAndFiles(Path.Join(currWorkDir, hardcodedPath, h5pElement.identifier.value), _fileManager.fileCheckSum);
                     H5PSetParametersFilesXml(_fileManager.fileCheckSum, _fileManager.fileSize);
                     H5PSetParametersActivity();
                     H5PSetParametersSections();
