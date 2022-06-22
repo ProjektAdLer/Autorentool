@@ -4,20 +4,24 @@ namespace AuthoringTool.PresentationLogic.ElectronNET;
 
 public class ElectronDialogManager : IElectronDialogManager
 {
-    public ElectronDialogManager(IWindowManagerWrapper windowManager, IDialogWrapper dialog)
+    public ElectronDialogManager(IWindowManagerWrapper windowManager, IDialogWrapper dialogWrapper)
     {
         WindowManager = windowManager;
-        Dialog = dialog;
+        DialogWrapper = dialogWrapper;
     }
     
     private BrowserWindow? BrowserWindow => WindowManager.BrowserWindows.FirstOrDefault();
     internal IWindowManagerWrapper WindowManager { get; }
-    internal IDialogWrapper Dialog { get; }
+    internal IDialogWrapper DialogWrapper { get; }
     
     /// <inheritdoc cref="IElectronDialogManager.ShowSaveAsDialog"/>
-    public async Task<string> ShowSaveAsDialog(string title, string? defaultPath = null, IEnumerable<FileFilterProxy>? fileFilters = null)
+    public async Task<string> ShowSaveAsDialog(string title, string? defaultPath = null,
+        IEnumerable<FileFilterProxy>? fileFilters = null)
     {
-        var mainWindow = BrowserWindow;
+        if (BrowserWindow == null)
+        {
+            throw new Exception("BrowserWindow was unexpectedly null");
+        }
         var options = new SaveDialogOptions
         {
             Title = title,
@@ -27,7 +31,7 @@ public class ElectronDialogManager : IElectronDialogManager
             Filters = ToFileFilterArray(fileFilters)
         };
 
-        var pathResult = await Dialog.ShowSaveDialogAsync(mainWindow, options);
+        var pathResult = await DialogWrapper.ShowSaveDialogAsync(BrowserWindow, options);
         if (string.IsNullOrEmpty(pathResult))
         {
             throw new OperationCanceledException("Cancelled by user");
@@ -40,8 +44,10 @@ public class ElectronDialogManager : IElectronDialogManager
     public async Task<IEnumerable<string>> ShowOpenDialog(string title, bool directory = false, bool multiSelect = false,
         string? defaultPath = null, IEnumerable<FileFilterProxy>? fileFilters = null)
     {
-        var mainWindow = BrowserWindow;
-        
+        if (BrowserWindow == null)
+        {
+            throw new Exception("BrowserWindow was unexpectedly null");
+        }
         var openDialogProperties = new List<OpenDialogProperty>
         {
             directory ? OpenDialogProperty.OpenDirectory : OpenDialogProperty.OpenFile,
@@ -55,7 +61,7 @@ public class ElectronDialogManager : IElectronDialogManager
             Filters = ToFileFilterArray(fileFilters),
             Properties = openDialogProperties.ToArray()
         };
-        var pathResult = await Dialog.ShowOpenDialogAsync(mainWindow, options);
+        var pathResult = await DialogWrapper.ShowOpenDialogAsync(BrowserWindow, options);
         if (pathResult.All(string.IsNullOrEmpty))
         {
             throw new OperationCanceledException("Cancelled by user");

@@ -70,7 +70,6 @@ public class Startup
     private void ConfigureAuthoringTool(IServiceCollection services)
     {
         services.AddSingleton<IAuthoringToolConfiguration, AuthoringToolConfiguration>();
-        services.AddSingleton<IAuthoringTool, AuthoringTool.API.AuthoringTool>();
     }
 
     private void ConfigurePresentationLogic(IServiceCollection services)

@@ -300,6 +300,17 @@ public class BusinessLogicUt
         Assert.That(learningElementActual, Is.EqualTo(learningContent));
     }
 
+    [Test]
+    public void BusinessLogic_FindSuitableNewSavePath_CallsDataAccess()
+    {
+        var dataAccess = Substitute.For<IDataAccess>();
+        var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess:dataAccess);
+
+        systemUnderTest.FindSuitableNewSavePath("foo", "bar", "baz");
+
+        dataAccess.Received().FindSuitableNewSavePath("foo", "bar", "baz");
+    }
+
     private AuthoringTool.BusinessLogic.API.BusinessLogic CreateStandardBusinessLogic(
         IAuthoringToolConfiguration? fakeConfiguration = null,
         IDataAccess? fakeDataAccess = null,

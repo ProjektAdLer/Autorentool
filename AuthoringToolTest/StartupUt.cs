@@ -43,7 +43,7 @@ public class StartupUt
     
     private static readonly Type[] ConfigureAuthoringToolRequiredTypes =
     {
-        typeof(IAuthoringTool), typeof(IAuthoringToolConfiguration)
+        typeof(IAuthoringToolConfiguration)
     };
     [Test]
     [TestCaseSource(nameof(ConfigureAuthoringToolRequiredTypes))]

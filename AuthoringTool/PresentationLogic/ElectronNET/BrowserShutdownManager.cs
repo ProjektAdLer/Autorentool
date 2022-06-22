@@ -1,16 +1,7 @@
-using ElectronWrapper;
-
 namespace AuthoringTool.PresentationLogic.ElectronNET;
 
 public class BrowserShutdownManager : IShutdownManager
 {
-    private readonly IAppWrapper _appWrapper;
-
-    public BrowserShutdownManager(IAppWrapper appWrapper)
-    {
-        _appWrapper = appWrapper;
-    }
-    
     /// <inheritdoc cref="IShutdownManager.BeforeShutdown"/>
     public event IShutdownManager.BeforeShutdownEventHandler? BeforeShutdown;
     
@@ -18,8 +9,5 @@ public class BrowserShutdownManager : IShutdownManager
     public event IShutdownManager.OnShutdownEventHandler? OnShutdown;
     
     /// <inheritdoc cref="IShutdownManager.BeginShutdown"/>
-    bool IShutdownManager.BeginShutdown()
-    {
-        return true;
-    }
+    bool IShutdownManager.BeginShutdown() => true; //we just always pretend to be shutting down
 }
