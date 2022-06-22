@@ -15,13 +15,13 @@ public class ActivitiesGradeHistoryXmlUt
     public void ActivitiesGradeHistoryXmlGradeHistory_SetParameters_ObjectsAreEqual()
     {
         //Arrange
-        var gradehistory = new ActivitiesGradeHistoryXmlGradeHistory();
+        var systemUnderTest = new ActivitiesGradeHistoryXmlGradeHistory();
         
         //Act
-        gradehistory.SetParameterts("");
+        systemUnderTest.SetParameterts("foo");
         
         //Assert
-        Assert.That(gradehistory.Grade_grades, Is.EqualTo(""));
+        Assert.That(systemUnderTest.Grade_grades, Is.EqualTo("foo"));
         
     }
 
@@ -30,19 +30,16 @@ public class ActivitiesGradeHistoryXmlUt
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
-        var readDsl = new ReadDSL();
-        var h5pfactory = new XmlH5PFactory(readDsl, null, mockFileSystem, null, null, null, null,
-            null, null, null, null, null, null, null, null, null,
-            null, null, null, null);
         
-        var gradehistory = new ActivitiesGradeHistoryXmlGradeHistory();
-        gradehistory.SetParameterts("");
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        mockFileSystem.AddDirectory(Path.Combine(currWorkDir, "XMLFilesForExport","activities", "h5pactivity_1"));
+        var systemUnderTest = new ActivitiesGradeHistoryXmlGradeHistory();
+        
+        XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
+        systemUnderTest.SetParameterts("");
         
         //Act 
-        XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
-        h5pfactory.CreateActivityFolder("1");
-        gradehistory.Serialize("h5pactivity", "1");
+        systemUnderTest.Serialize("h5pactivity", "1");
         
         //Assert
         var path = Path.Join(currWorkDir, "XMLFilesForExport","activities", "h5pactivity_1", "grade_history.xml");

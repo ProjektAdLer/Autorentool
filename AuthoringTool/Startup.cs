@@ -1,3 +1,4 @@
+using System.IO.Abstractions;
 using AuthoringTool.API;
 using AuthoringTool.API.Configuration;
 using AuthoringTool.BusinessLogic.API;
@@ -125,6 +126,7 @@ public class Startup
     {
         services.AddTransient<IMemoryCache>(_ => new MemoryCache(new MemoryCacheOptions()));
         services.AddSingleton<IMouseService, MouseService>();
+        services.AddTransient<IFileSystem, FileSystem>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)

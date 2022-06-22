@@ -6,7 +6,7 @@ namespace AuthoringTool.DataAccess.XmlClasses.Entities.activities;
 [XmlRoot(ElementName="file")]
 public class ActivitiesInforefXmlFile : IActivitiesInforefXmlFile{
     
-    public void SetParameterts(string? id)
+    public void SetParameters(string? id)
     {
         Id = id;
     }

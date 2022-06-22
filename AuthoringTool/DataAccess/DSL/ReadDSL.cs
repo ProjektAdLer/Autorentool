@@ -10,11 +10,15 @@ public class ReadDSL : IReadDSL
     public List<LearningElementJson>? ListDslDocument;
     public LearningWorldJson? LearningWorldJson;
     private string? filepathDSL;
-    private IFileSystem? _fileSystem;
+    private readonly IFileSystem _fileSystem;
 
-    public void ReadLearningWorld(string dslPath, IFileSystem? fileSystem=null)
+    public ReadDSL(IFileSystem fileSystem)
     {
-        _fileSystem = fileSystem?? new FileSystem();
+        _fileSystem = fileSystem;
+    }
+
+    public void ReadLearningWorld(string dslPath)
+    {
         filepathDSL = dslPath;
         
         ListH5PElements = new List<LearningElementJson>();

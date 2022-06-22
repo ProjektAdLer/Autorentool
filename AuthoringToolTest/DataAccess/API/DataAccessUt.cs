@@ -47,8 +47,8 @@ public class DataAccessUt
         var mockCreateDsl = Substitute.For<ICreateDSL>();
         
         var mockBackupFile = Substitute.For<IBackupFileGenerator>();
-        var systemUnderTest = new AuthoringTool.DataAccess.API.DataAccess(null, mockBackupFile, 
-            null, null, null, null, mockCreateDsl, mockReadDsl);
+        var systemUnderTest = CreateTestableDataAccess(backupFileConstructor: mockBackupFile, createDsl: mockCreateDsl,
+            readDsl: mockReadDsl);
         var filepath = "this/path";
         var mockLearningWorld = Substitute.For<ILearningWorld>();
 
@@ -249,11 +249,12 @@ public class DataAccessUt
                 new MockFileSystem(new Dictionary<string, MockFileData>()),
                 "directory", "foo", "bar", Path.Join("directory", "foo.bar")
             };
+            var emptyFile = new MockFileData("");
             yield return new object[] //file is present
             {
                 new MockFileSystem(new Dictionary<string, MockFileData>
                 {
-                    {Path.Combine("directory", "foo.bar"), MockFileData.NullObject}
+                    {Path.Combine("directory", "foo.bar"), emptyFile}
                 }),
                 "directory", "foo", "bar", Path.Join("directory", "foo_1.bar")
             };
@@ -261,9 +262,9 @@ public class DataAccessUt
             {
                 new MockFileSystem(new Dictionary<string, MockFileData>
                 {
-                    {Path.Combine("directory", "foo.bar"), MockFileData.NullObject},
-                    {Path.Combine("directory", "foo_1.bar"), MockFileData.NullObject},
-                    {Path.Combine("directory", "foo_2.bar"), MockFileData.NullObject}
+                    {Path.Combine("directory", "foo.bar"), emptyFile},
+                    {Path.Combine("directory", "foo_1.bar"), emptyFile},
+                    {Path.Combine("directory", "foo_2.bar"), emptyFile}
                 }),
                 "directory", "foo", "bar", Path.Join("directory", "foo_3.bar")
             };
@@ -271,7 +272,7 @@ public class DataAccessUt
             {
                 new MockFileSystem(new Dictionary<string, MockFileData>
                 {
-                    {Path.Combine("directory", "poo.bar"), MockFileData.NullObject}
+                    {Path.Combine("directory", "poo.bar"), emptyFile}
                 }),
                 "directory", "foo", "bar", Path.Join("directory", "foo.bar")
             };

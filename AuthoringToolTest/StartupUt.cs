@@ -1,4 +1,5 @@
 using System;
+using System.IO.Abstractions;
 using AuthoringTool;
 using AuthoringTool.API;
 using AuthoringTool.API.Configuration;
@@ -82,7 +83,7 @@ public class StartupUt
 
     private static readonly Type[] ConfigureUtilitiesRequiredTypes =
     {
-        typeof(IMemoryCache), typeof(IMouseService)
+        typeof(IMemoryCache), typeof(IMouseService), typeof(IFileSystem)
     };
     [Test]
     [TestCaseSource(nameof(ConfigureUtilitiesRequiredTypes))]

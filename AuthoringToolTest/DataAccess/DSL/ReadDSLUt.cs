@@ -8,21 +8,21 @@ using NUnit.Framework;
 namespace AuthoringToolTest.DataAccess.DSL;
 
 [TestFixture]
-public class ReadDSLUt
+public class ReadDslUt
 {
-
+    //TODO: not a proper unit test, needs to be rewritten with fixed input - n.stich
     [Test]
     public void ReadDSL_ReadLearningWorld_DSLDocumentRead()
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
 
-        var Name = "asdf";
-        var Shortname = "jkl;";
-        var Authors = "ben and jerry";
-        var Language = "german";
-        var Description = "very cool element";
-        var Goals = "learn very many things";
+        const string name = "asdf";
+        const string shortname = "jkl;";
+        const string authors = "ben and jerry";
+        const string language = "german";
+        const string description = "very cool element";
+        const string goals = "learn very many things";
         var content1 = new LearningContent("a", ".h5p", new byte[] {0x01, 0x02});
         var content2 = new LearningContent("w", "e", new byte[] {0x02, 0x01});
         var ele1 = new LearningElement("a", "b", "e", content1, "pupup", "g", "h", LearningElementDifficultyEnum.Easy, 17, 23);
@@ -34,43 +34,66 @@ public class ReadDSLUt
         var space2 = new LearningSpace("ff", "ff", "ff", "ff", "ff");
         var learningSpaces = new List<LearningSpace> {space1, space2};
 
-        var learningWorld = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
+        var learningWorld = new LearningWorld(name, shortname, authors, language, description, goals,
             learningElements, learningSpaces);
+        
+        //TODO: this needs to go and be replaced with fixed input
+        var createDsl = new CreateDSL(mockFileSystem);
+        var dslPath = createDsl.WriteLearningWorld(learningWorld);
 
-        var createDsl = new CreateDSL();
-
-        string dslPath = createDsl.WriteLearningWorld(learningWorld, mockFileSystem);
-
-        var readDSL = new ReadDSL();
+        var readDsl = new ReadDSL(mockFileSystem);
 
         //Act
-        readDSL.ReadLearningWorld(dslPath, mockFileSystem);
-        var learningElementIdent = new IdentifierJson();
-        learningElementIdent.type = "FileName";
-        learningElementIdent.value = ele1.Name;
+        readDsl.ReadLearningWorld(dslPath);
+        var learningElementIdent = new IdentifierJson
+        {
+            type = "FileName",
+            value = ele1.Name
+        };
 
-        var learningElementIdent2 = new IdentifierJson();
-        learningElementIdent2.type = "FileName";
-        learningElementIdent2.value = ele3.Name;
+        var learningElementIdent2 = new IdentifierJson
+        {
+            type = "FileName",
+            value = ele3.Name
+        };
 
-        var learningElementJson = new LearningElementJson();
-        learningElementJson.id = 1;
-        learningElementJson.identifier = learningElementIdent;
-        learningElementJson.elementType = "H5P";
+        var learningElementJson = new LearningElementJson
+        {
+            id = 1,
+            identifier = learningElementIdent,
+            elementType = "H5P"
+        };
 
-        var learningElementJson2 = new LearningElementJson();
-        learningElementJson2.id = 2;
-        learningElementJson2.identifier = learningElementIdent2;
-        learningElementJson2.elementType = "H5P";
+        var learningElementJson2 = new LearningElementJson
+        {
+            id = 2,
+            identifier = learningElementIdent2,
+            elementType = "H5P"
+        };
 
-        List<LearningElementJson> list = new List<LearningElementJson>();
-        list.Add(learningElementJson);
-        list.Add(learningElementJson2);
+        var list = new List<LearningElementJson>
+        {
+            learningElementJson,
+            learningElementJson2
+        };
 
         //Assert
-        Assert.That(readDSL.ListH5PElements.Count, Is.EqualTo(list.Count));
-        Assert.That(readDSL.GetLearningWorld().learningElements.Count, Is.EqualTo(createDsl.learningWorldJson.learningElements.Count));
-        Assert.That(readDSL.GetLearningWorld().learningSpaces.Count, Is.EqualTo(createDsl.learningWorldJson.learningSpaces.Count));
-        Assert.That(readDSL.GetH5PElementsList().Count, Is.EqualTo(list.Count));
+        var learningWorldJson = readDsl.GetLearningWorld();
+        var h5PElementsList = readDsl.GetH5PElementsList();
+        Assert.Multiple(() =>
+        {
+            Assert.That(readDsl.ListH5PElements, Is.Not.Null);
+            Assert.That(h5PElementsList, Is.Not.Null);
+            Assert.That(learningWorldJson, Is.Not.Null);
+        });
+        Assert.Multiple(() =>
+        {
+            Assert.That(readDsl.ListH5PElements!, Has.Count.EqualTo(list.Count));
+            Assert.That(learningWorldJson!.learningElements, Is.Not.Null);
+            Assert.That(learningWorldJson.learningSpaces, Is.Not.Null);
+            Assert.That(learningWorldJson.learningElements!, Has.Count.EqualTo(createDsl.learningWorldJson!.learningElements!.Count));
+            Assert.That(learningWorldJson.learningSpaces!, Has.Count.EqualTo(createDsl.learningWorldJson!.learningSpaces!.Count));
+            Assert.That(h5PElementsList!, Has.Count.EqualTo(list.Count));
+        });
     }
 }
