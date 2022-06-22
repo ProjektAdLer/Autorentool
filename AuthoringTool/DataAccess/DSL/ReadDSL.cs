@@ -7,6 +7,7 @@ namespace AuthoringTool.DataAccess.DSL;
 public class ReadDSL : IReadDSL
 {
     public List<LearningElementJson>? ListH5PElements;
+    public List<LearningSpaceJson>? ListLearningSpaces;
     public List<LearningElementJson>? ListDslDocument;
     public LearningWorldJson? LearningWorldJson;
     private string? filepathDSL;
@@ -22,10 +23,12 @@ public class ReadDSL : IReadDSL
         filepathDSL = dslPath;
         
         ListH5PElements = new List<LearningElementJson>();
+        ListLearningSpaces = new List<LearningSpaceJson>();
         ListDslDocument = new List<LearningElementJson>();
         string jsonString = _fileSystem.File.ReadAllText(filepathDSL);
         DocumentRootJson? rootJson = JsonSerializer.Deserialize<DocumentRootJson>(jsonString);
         GetH5PElements(rootJson);
+        GetLearningSpaces(rootJson);
         GetDslDocument(rootJson);
         SetLearningWorld(rootJson);
     }
@@ -53,6 +56,16 @@ public class ReadDSL : IReadDSL
                 }
     }
 
+    private void GetLearningSpaces(DocumentRootJson? documentRootJson)
+    {
+        if (documentRootJson != null && documentRootJson.learningWorld != null)
+            if (documentRootJson.learningWorld.learningSpaces != null)
+                foreach (var space in documentRootJson.learningWorld.learningSpaces)
+                {
+                    ListLearningSpaces.Add(space);
+                }
+    }
+
     private void GetDslDocument(DocumentRootJson? documentRootJson)
     {
         if (documentRootJson != null && documentRootJson.learningWorld != null)
@@ -69,6 +82,11 @@ public class ReadDSL : IReadDSL
     public List<LearningElementJson>? GetH5PElementsList()
     {
         return ListH5PElements;
+    }
+
+    public List<LearningSpaceJson>? GetLearningSpaceList()
+    {
+        return ListLearningSpaces;
     }
 
     public List<LearningElementJson>? GetDslDocumentList()

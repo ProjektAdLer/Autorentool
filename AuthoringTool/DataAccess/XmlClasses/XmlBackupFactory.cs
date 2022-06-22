@@ -433,6 +433,63 @@ public class XmlBackupFactory
                                 learningElementType + "_" + learningElementId + "_userinfo", "0");
                         }
                     }
+                
+                /*
+                if (learningElement != null)
+                    foreach (var element in learningElement)
+                    {
+                        string? learningElementId = element.id.ToString();
+                        string? learningElementType = element.elementType;
+                        string? learningElementName = element.identifier!.value;
+                        if (learningElementType == "h5p")
+                        {
+                            learningElementType = "lesson";
+                        }
+
+                        if (moodleBackupXmlActivityList != null)
+                        {
+                            moodleBackupXmlActivityList.Add(new MoodleBackupXmlActivity());
+                            moodleBackupXmlActivityList[^1].SetParameters(
+                                learningElementId,
+                                learningElementId, learningElementType,
+                                learningElementName, "activities/" + learningElementType + "_" + learningElementId);
+                            MoodleBackupXmlActivities.SetParameters(moodleBackupXmlActivityList);
+                        }
+
+                        if (moodleBackupXmlSectionList != null)
+                        {
+                            moodleBackupXmlSectionList.Add(new MoodleBackupXmlSection());
+                            moodleBackupXmlSectionList[^1].SetParameters(
+                                learningElementId,
+                                learningElementId, "sections/section_" + learningElementId);
+                            MoodleBackupXmlSections.SetParameters(moodleBackupXmlSectionList);
+                        }
+
+                        if (moodleBackupXmlSettingList != null)
+                        {
+                            moodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting());
+                            moodleBackupXmlSettingList[^1]!.SetParametersSection(
+                                "section",
+                                "section_" + learningElementId,
+                                "section_" + learningElementId + "_included", "1");
+                            moodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting());
+                            moodleBackupXmlSettingList[^1]!.SetParametersSection(
+                                "section",
+                                "section_" + learningElementId,
+                                "section_" + learningElementId + "_userinfo", "0");
+                            moodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting());
+                            moodleBackupXmlSettingList[^1]!.SetParametersActivity(
+                                "activity",
+                                learningElementType + "_" + learningElementId,
+                                learningElementType + "_" + learningElementId + "_included", "1");
+                            moodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting());
+                            moodleBackupXmlSettingList[^1]!.SetParametersActivity(
+                                "activity",
+                                learningElementType + "_" + learningElementId,
+                                learningElementType + "_" + learningElementId + "_userinfo", "0");
+                        }
+                    }
+                */
 
                 MoodleBackupXmlContents.SetParameters(MoodleBackupXmlActivities as MoodleBackupXmlActivities,
                     MoodleBackupXmlSections as MoodleBackupXmlSections, MoodleBackupXmlCourse as MoodleBackupXmlCourse);

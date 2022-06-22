@@ -9,4 +9,6 @@ public interface IReadDSL
     LearningWorldJson? GetLearningWorld();
     
     List<LearningElementJson>? GetDslDocumentList();
+
+    List<LearningSpaceJson>? GetLearningSpaceList();
 }

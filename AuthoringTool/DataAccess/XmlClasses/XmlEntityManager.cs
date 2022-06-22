@@ -16,6 +16,9 @@ public class XmlEntityManager
 
         var xmlFileFactory = new XmlFileFactory(readDsl, dslpath, filemanager);
         xmlFileFactory.CreateFileFactory();
+
+        //var xmlLessonFactory = new XmlLessonFactory(readDsl, filemanager);
+        //xmlLessonFactory.CreateLessonFactory();
         
         var xmlH5PFileFactory = new XmlH5PFactory(readDsl, filemanager);
         xmlH5PFileFactory.CreateH5PFileFactory();
