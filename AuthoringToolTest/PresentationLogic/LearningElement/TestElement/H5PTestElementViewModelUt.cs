@@ -1,5 +1,6 @@
 using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningElement;
+using AuthoringTool.PresentationLogic.LearningElement.TestElement;
 using AuthoringTool.PresentationLogic.LearningWorld;
 using NUnit.Framework;
 

@@ -1,7 +1,15 @@
-﻿using AuthoringTool.PresentationLogic.LearningElement;
+﻿using System.Xml.Serialization;
+using AuthoringTool.PresentationLogic.LearningElement;
 
 namespace AuthoringTool.Entities;
 
+[XmlInclude(typeof(ImageTransferElement))]
+[XmlInclude(typeof(VideoTransferElement))]
+[XmlInclude(typeof(PdfTransferElement))]
+[XmlInclude(typeof(VideoActivationElement))]
+[XmlInclude(typeof(H5PActivationElement))]
+[XmlInclude(typeof(H5PInteractionElement))]
+[XmlInclude(typeof(H5PTestElement))]
 [Serializable]
 public class LearningElement : ILearningElement
 {
@@ -24,7 +32,7 @@ public class LearningElement : ILearningElement
     /// <summary>
     /// Constructor for serialization. DO NOT USE FOR NORMAL INITIALIZATION.
     /// </summary>
-    private LearningElement()
+    internal LearningElement()
     {
         Name = "";
         Shortname = "";

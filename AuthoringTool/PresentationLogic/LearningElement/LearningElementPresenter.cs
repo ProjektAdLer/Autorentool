@@ -1,4 +1,8 @@
 using AuthoringTool.PresentationLogic.LearningContent;
+using AuthoringTool.PresentationLogic.LearningElement.ActivationElement;
+using AuthoringTool.PresentationLogic.LearningElement.InteractionElement;
+using AuthoringTool.PresentationLogic.LearningElement.TestElement;
+using AuthoringTool.PresentationLogic.LearningElement.TransferElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
 

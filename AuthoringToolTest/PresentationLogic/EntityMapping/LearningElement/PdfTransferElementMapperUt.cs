@@ -1,26 +1,27 @@
 using System;
 using AuthoringTool.Entities;
-using AuthoringTool.PresentationLogic.EntityMapping;
+using AuthoringTool.PresentationLogic.EntityMapping.LearningElementMapper;
 using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningElement;
+using AuthoringTool.PresentationLogic.LearningElement.TransferElement;
 using AuthoringTool.PresentationLogic.LearningWorld;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.PresentationLogic.EntityMapping;
+namespace AuthoringToolTest.PresentationLogic.EntityMapping.LearningElement;
 
 [TestFixture]
 
-public class LearningElementMapperUt
+public class PdfTransferElementMapperUt
 {
     [Test]
-    public void LearningElementMapper_ToEntity_MapsPropertiesCorrectly()
+    public void PdfTransferElementMapper_ToEntity_MapsPropertiesCorrectly()
     {
         var contentMapper = Substitute.For<ILearningContentMapper>();
         var contentViewModel = new LearningContentViewModel("a", "b", Array.Empty<byte>());
         var world = new LearningWorldViewModel("baba", "bubu", "", "", "", "");
-        var viewModel = new LearningElementViewModel("name", "shortname", world, contentViewModel,"authors",
+        var viewModel = new PdfTransferElementViewModel("name", "shortname", world, contentViewModel,"authors",
             "description", "goals",LearningElementDifficultyEnum.Easy, 1, 2,3);
 
         contentMapper.ToEntity(contentViewModel).Returns(new LearningContent("a", "b", Array.Empty<byte>()));
@@ -46,12 +47,12 @@ public class LearningElementMapperUt
     }
 
     [Test]
-    public void LearningElementMapper_ToViewModel_MapsPropertiesCorrectly()
+    public void PdfTransferElementMapper_ToViewModel_MapsPropertiesCorrectly()
     {
         var contentMapper = Substitute.For<ILearningContentMapper>();
         var world = new LearningWorldViewModel("bubu", "", "", "", "", "");
         var content = new LearningContent("content", "pdf", Array.Empty<byte>());
-        var entity = new AuthoringTool.Entities.LearningElement("name", "shortname",world.Name, content,"authors", "description",
+        var entity = new PdfTransferElement("name", "shortname",world.Name, content,"authors", "description",
             "goals",LearningElementDifficultyEnum.Easy, 1, 3, 2);
         
         var systemUnderTest = CreateTestableLearningElementMapper(null,contentMapper);
@@ -79,40 +80,11 @@ public class LearningElementMapperUt
             Assert.That(viewModel.PositionY, Is.EqualTo(entity.PositionY));
         });
     }
-
-    [Test]
-    public void LearningElementMapper_ToViewModel_LogsSanityCheck()
+    
+    private PdfTransferElementMapper CreateTestableLearningElementMapper(ILogger<PdfTransferElementMapper>? logger = null, ILearningContentMapper? contentMapper = null)
     {
-        var world = new LearningWorldViewModel("bubu", "", "", "", "", "");
-        var entity = new AuthoringTool.Entities.LearningElement("name", "shortname", "blabla",null, "authors", "description",
-            "goals",LearningElementDifficultyEnum.Easy, 1, 3, 2); 
-        var logger = Substitute.For<ILogger<LearningElementMapper>>();
-        
-        var systemUnderTest = CreateTestableLearningElementMapper(logger);
-
-        var viewModel = systemUnderTest.ToViewModel(entity, world);
-        Assert.That(viewModel, Is.Not.Null);
-        Assert.Multiple(() =>
-        {
-            Assert.That(viewModel.Name, Is.EqualTo(entity.Name));
-            Assert.That(viewModel.Shortname, Is.EqualTo(entity.Shortname));
-            Assert.That(viewModel.Parent, Is.EqualTo(world));
-            Assert.That(viewModel.Authors, Is.EqualTo(entity.Authors));
-            Assert.That(viewModel.Description, Is.EqualTo(entity.Description));
-            Assert.That(viewModel.Goals, Is.EqualTo(entity.Goals));
-            Assert.That(viewModel.Difficulty, Is.EqualTo(entity.Difficulty));
-            Assert.That(viewModel.Workload, Is.EqualTo(entity.Workload));
-            Assert.That(viewModel.PositionX, Is.EqualTo(entity.PositionX));
-            Assert.That(viewModel.PositionY, Is.EqualTo(entity.PositionY));
-        });
-
-        logger.Received().LogError("caller was not null but caller.Name != entity.ParentName: bubu!=blabla");
-    }
-
-    private LearningElementMapper CreateTestableLearningElementMapper(ILogger<LearningElementMapper>? logger = null, ILearningContentMapper? contentMapper = null)
-    {
-        logger ??= Substitute.For<ILogger<LearningElementMapper>>();
+        logger ??= Substitute.For<ILogger<PdfTransferElementMapper>>();
         contentMapper ??= Substitute.For<ILearningContentMapper>();
-        return new LearningElementMapper(logger, contentMapper);
+        return new PdfTransferElementMapper(logger, contentMapper);
     }
 }

@@ -1,7 +1,6 @@
-using System.Security.Cryptography;
 using AuthoringTool.PresentationLogic.LearningContent;
 
-namespace AuthoringTool.PresentationLogic.EntityMapping;
+namespace AuthoringTool.PresentationLogic.EntityMapping.LearningElementMapper;
 
 public class LearningContentMapper : ILearningContentMapper
 {

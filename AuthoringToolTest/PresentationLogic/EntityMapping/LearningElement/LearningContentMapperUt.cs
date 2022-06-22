@@ -1,8 +1,8 @@
-using AuthoringTool.PresentationLogic.EntityMapping;
+using AuthoringTool.PresentationLogic.EntityMapping.LearningElementMapper;
 using AuthoringTool.PresentationLogic.LearningContent;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.PresentationLogic.EntityMapping;
+namespace AuthoringToolTest.PresentationLogic.EntityMapping.LearningElement;
 
 [TestFixture]
 

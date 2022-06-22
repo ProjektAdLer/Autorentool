@@ -8,6 +8,7 @@ using AuthoringTool.BusinessLogic.API;
 using AuthoringTool.Entities;
 using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.EntityMapping;
+using AuthoringTool.PresentationLogic.EntityMapping.LearningElementMapper;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
@@ -94,7 +95,7 @@ public class ToolboxEntriesProviderUt
         var elementMapper = Substitute.For<ILearningElementMapper>();
         var elementVm = new LearningElementViewModel("ba", "ba", null, null, "ba",
             "ba", "ba",LearningElementDifficultyEnum.Easy);
-        elementMapper.ToViewModel(Arg.Any<ILearningElement>()).Returns(elementVm);
+        elementMapper.ToViewModel(Arg.Any<AuthoringTool.Entities.LearningElement>()).Returns(elementVm);
         var entityMapping =
             new AuthoringTool.PresentationLogic.EntityMapping.EntityMapping(worldMapper, spaceMapper, elementMapper);
 
@@ -214,7 +215,7 @@ public class ToolboxEntriesProviderUt
         var elementMapper = Substitute.For<ILearningElementMapper>();
         var elementVm = new LearningElementViewModel("element", "ba", null, null, "ba", "ba",
             "foo",LearningElementDifficultyEnum.Easy);
-        elementMapper.ToViewModel(Arg.Any<ILearningElement>()).Returns(elementVm);
+        elementMapper.ToViewModel(Arg.Any<AuthoringTool.Entities.LearningElement>()).Returns(elementVm);
         var entityMapping =
             new AuthoringTool.PresentationLogic.EntityMapping.EntityMapping(worldMapper, spaceMapper, elementMapper);
 
