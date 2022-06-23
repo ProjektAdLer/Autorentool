@@ -11,7 +11,7 @@ public interface IElectronDialogManager
     /// <returns>Filepath to be saved.</returns>
     /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
     /// <exception cref="Exception">No browser window exists.</exception>
-    Task<string> ShowSaveAsDialog(string title, string? defaultPath = null, IEnumerable<FileFilterProxy>? fileFilters = null);
+    Task<string> ShowSaveAsDialogAsync(string title, string? defaultPath = null, IEnumerable<FileFilterProxy>? fileFilters = null);
 
     /// <summary>
     /// Shows an Electron Open Dialog to the user.
@@ -24,7 +24,7 @@ public interface IElectronDialogManager
     /// <returns>Path(s) to be opened.</returns>
     /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
     /// <exception cref="Exception">No browser window exists.</exception>
-    Task<IEnumerable<string>> ShowOpenDialog(string title, bool directory = false, bool multiSelect = false,
+    Task<IEnumerable<string>> ShowOpenDialogAsync(string title, bool directory = false, bool multiSelect = false,
         string? defaultPath = null, IEnumerable<FileFilterProxy>? fileFilters = null);
 
     /// <summary>
@@ -36,7 +36,7 @@ public interface IElectronDialogManager
     /// <returns>Filepath to be opened.</returns>
     /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
     /// <exception cref="Exception">No browser window exists.</exception>
-    Task<string> ShowOpenFileDialog(string title, string? defaultPath = null,
+    Task<string> ShowOpenFileDialogAsync(string title, string? defaultPath = null,
         IEnumerable<FileFilterProxy>? fileFilters = null);
 
     /// <summary>
@@ -47,5 +47,5 @@ public interface IElectronDialogManager
     /// <returns>Directory to be opened.</returns>
     /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
     /// <exception cref="Exception">No browser window exists.</exception>
-    Task<string> ShowOpenDirectoryDialog(string title, string? defaultPath = null);
+    Task<string> ShowOpenDirectoryDialogAsync(string title, string? defaultPath = null);
 }

@@ -14,8 +14,8 @@ public class ElectronDialogManager : IElectronDialogManager
     internal IWindowManagerWrapper WindowManager { get; }
     internal IDialogWrapper DialogWrapper { get; }
     
-    /// <inheritdoc cref="IElectronDialogManager.ShowSaveAsDialog"/>
-    public async Task<string> ShowSaveAsDialog(string title, string? defaultPath = null,
+    /// <inheritdoc cref="IElectronDialogManager.ShowSaveAsDialogAsync"/>
+    public async Task<string> ShowSaveAsDialogAsync(string title, string? defaultPath = null,
         IEnumerable<FileFilterProxy>? fileFilters = null)
     {
         if (BrowserWindow == null)
@@ -40,8 +40,8 @@ public class ElectronDialogManager : IElectronDialogManager
         return pathResult;
     }
 
-    /// <inheritdoc cref="IElectronDialogManager.ShowOpenDialog"/>
-    public async Task<IEnumerable<string>> ShowOpenDialog(string title, bool directory = false, bool multiSelect = false,
+    /// <inheritdoc cref="IElectronDialogManager.ShowOpenDialogAsync"/>
+    public async Task<IEnumerable<string>> ShowOpenDialogAsync(string title, bool directory = false, bool multiSelect = false,
         string? defaultPath = null, IEnumerable<FileFilterProxy>? fileFilters = null)
     {
         if (BrowserWindow == null)
@@ -70,17 +70,17 @@ public class ElectronDialogManager : IElectronDialogManager
         return pathResult.Where(res => !string.IsNullOrEmpty(res));
     }
     
-    /// <inheritdoc cref="IElectronDialogManager.ShowOpenFileDialog"/>
-    public async Task<string> ShowOpenFileDialog(string title, string? defaultPath = null,
+    /// <inheritdoc cref="IElectronDialogManager.ShowOpenFileDialogAsync"/>
+    public async Task<string> ShowOpenFileDialogAsync(string title, string? defaultPath = null,
         IEnumerable<FileFilterProxy>? fileFilters = null)
     {
-        return (await ShowOpenDialog(title, false, false, defaultPath, fileFilters)).First();
+        return (await ShowOpenDialogAsync(title, false, false, defaultPath, fileFilters)).First();
     }
 
-    /// <inheritdoc cref="IElectronDialogManager.ShowOpenDirectoryDialog"/>
-    public async Task<string> ShowOpenDirectoryDialog(string title, string? defaultPath = null)
+    /// <inheritdoc cref="IElectronDialogManager.ShowOpenDirectoryDialogAsync"/>
+    public async Task<string> ShowOpenDirectoryDialogAsync(string title, string? defaultPath = null)
     {
-        return (await ShowOpenDialog(title, true, false, defaultPath, null)).First();
+        return (await ShowOpenDialogAsync(title, true, false, defaultPath, null)).First();
     }
 
     private static FileFilter[] ToFileFilterArray(IEnumerable<FileFilterProxy>? fileFilters)

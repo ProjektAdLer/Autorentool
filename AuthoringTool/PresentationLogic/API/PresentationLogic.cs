@@ -201,7 +201,7 @@ internal class PresentationLogic : IPresentationLogic
     {
         try
         {
-            var filepath = await _dialogManager!.ShowSaveAsDialog(title, null, fileFilterProxies);
+            var filepath = await _dialogManager!.ShowSaveAsDialogAsync(title, null, fileFilterProxies);
             return filepath;
         }
         catch (OperationCanceledException)
@@ -233,7 +233,7 @@ internal class PresentationLogic : IPresentationLogic
     {
         try
         {
-            var filepath = await _dialogManager!.ShowOpenFileDialog(title, null, fileFilterProxies);
+            var filepath = await _dialogManager!.ShowOpenFileDialogAsync(title, null, fileFilterProxies);
             return filepath;
         }
         catch (OperationCanceledException)
