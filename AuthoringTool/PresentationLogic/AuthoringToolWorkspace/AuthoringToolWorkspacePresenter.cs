@@ -34,6 +34,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenterT
         WorldToReplaceWith = null;
         ReplacedUnsavedWorld = null;
         DeletedUnsavedWorld = null;
+        InformationMessageToShow = null;
         OnLearningWorldSelect += _learningWorldPresenter.SetLearningWorld;
         if (!presentationLogic.RunningElectron) return;
         //register callback so we can check for unsaved data on quit
@@ -65,6 +66,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenterT
     internal LearningWorldViewModel? WorldToReplaceWith { get; set; }
     internal LearningWorldViewModel? ReplacedUnsavedWorld { get; set; }
     internal LearningWorldViewModel? DeletedUnsavedWorld { get; set; }
+    internal string? InformationMessageToShow { get; set; }
 
     /// <summary>
     /// This event is fired when <see cref="CreateNewLearningWorld"/> is called successfully and the newly created
@@ -367,13 +369,15 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenterT
                 break;
             default:
                 _logger.LogInformation($"Couldn't load file '{name}', because the file extension '{ending}' is not supported.");
+                InformationMessageToShow =
+                    $"Couldn't load file '{name}', because the file extension '{ending}' is not supported.";
                 break;
         }
 
         return Task.CompletedTask;
     }
 
-    private void CallCreateLearningElementWithPreloadedContentFromActiveView(LearningContentViewModel learningContent)
+    internal void CallCreateLearningElementWithPreloadedContentFromActiveView(LearningContentViewModel learningContent)
     {
         if (_authoringToolWorkspaceVm.SelectedLearningWorld is not { } world) return;
         if (world.ShowingLearningSpaceView)
@@ -405,7 +409,11 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenterT
     {
         var learningSpace =
             _presentationLogic.LoadLearningSpaceViewModelFromStream(stream);
-        if (_authoringToolWorkspaceVm.SelectedLearningWorld == null) return;
+        if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
+        {
+            InformationMessageToShow = "A learning world must be selected to import a learning space.";
+            return;
+        }
         _authoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces.Add(learningSpace);
         _authoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject = learningSpace;
     }
@@ -414,7 +422,11 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenterT
     {
         var learningElement =
             _presentationLogic.LoadLearningElementViewModelFromStream(stream);
-        if (_authoringToolWorkspaceVm.SelectedLearningWorld is not { } world) return;
+        if (_authoringToolWorkspaceVm.SelectedLearningWorld is not { } world)
+        {
+            InformationMessageToShow = "A learning world must be selected to import a learning element.";
+            return;
+        }
         if (world.ShowingLearningSpaceView)
         {
             if (_learningSpacePresenter.LearningSpaceVm is not { } space) return;

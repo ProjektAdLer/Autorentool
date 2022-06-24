@@ -205,6 +205,20 @@ public class LearningSpacePresenterUt
             Assert.That(element.Difficulty, Is.EqualTo(LearningElementDifficultyEnum.Easy));
         });
     }
+    
+    [Test]
+    public void LearningWorldPresenter_CreateLearningElementWithPreloadedContent_SetsFieldToTrue()
+    {
+        var learningContent = new LearningContentViewModel("n", "t", Array.Empty<byte>());
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        Assert.That(systemUnderTest.CreateLearningElementDialogOpen, Is.False);
+        
+        systemUnderTest.CreateLearningElementWithPreloadedContent(learningContent);
+        
+        Assert.That(systemUnderTest.CreateLearningElementDialogOpen, Is.True);
+        
+    }
 
     #endregion
 
