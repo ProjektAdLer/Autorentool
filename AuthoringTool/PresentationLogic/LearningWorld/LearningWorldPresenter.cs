@@ -535,7 +535,8 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
                             new ModalDialogDropdownInputFieldChoiceMapping(null,
                                 new[] {LearningElementDifficultyEnum.Easy.ToString(),
                                     LearningElementDifficultyEnum.Medium.ToString(),
-                                    LearningElementDifficultyEnum.Hard.ToString() })
+                                    LearningElementDifficultyEnum.Hard.ToString(),
+                                    LearningElementDifficultyEnum.None.ToString() })
                         }, true),
                     new("Workload (min)", ModalDialogInputType.Number)
                 };
@@ -737,7 +738,8 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
                         new ModalDialogDropdownInputFieldChoiceMapping(null,
                             new[] {LearningElementDifficultyEnum.Easy.ToString(),
                                 LearningElementDifficultyEnum.Medium.ToString(),
-                                LearningElementDifficultyEnum.Hard.ToString() })
+                                LearningElementDifficultyEnum.Hard.ToString(),
+                                LearningElementDifficultyEnum.None.ToString() })
                     }, true),
                 new("Workload (min)", ModalDialogInputType.Number)
             };
