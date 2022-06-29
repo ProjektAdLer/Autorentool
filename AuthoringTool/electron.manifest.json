@@ -11,7 +11,7 @@
     "appId": "com.AuthoringTool.app",
     "productName": "AuthoringTool",
     "copyright": "Copyright © 2022 Team AdLer",
-    "buildVersion": "0.1.0",
+    "buildVersion": "v0.2.0",
     "compression": "maximum",
     "directories": {
       "output": "../../../bin/Desktop_Publish"
