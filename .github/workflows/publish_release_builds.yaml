@@ -81,8 +81,8 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: AuthoringTool/bin/Desktop_Publish/AuthoringTool-${{ github.ref }}.dmg
-          asset_name: AuthoringTool-${{ github.ref }}.dmg
+          file: AuthoringTool/bin/Desktop_Publish/AuthoringTool-${{ github.ref_name }}.dmg
+          asset_name: AuthoringTool-${{ github.ref_name }}.dmg
           tag: ${{ github.ref }}
           
   publish-windows:
@@ -132,22 +132,22 @@ jobs:
         uses: vimtor/action-zip@v1
         with:
           files: ./AuthoringTool/bin/Desktop_Publish/win-unpacked
-          dest: ./AuthoringTool/bin/Desktop_Publish/${{ github.ref }}-win-unpacked.zip
+          dest: ./AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-win-unpacked.zip
 
       - name: Upload Windows installer to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: 'AuthoringTool\\bin\\Desktop_Publish\\AuthoringTool Setup ${{ github.ref }}.exe'
-          asset_name: AuthoringTool-${{ github.ref }}-Windows-Setup.exe
+          file: 'AuthoringTool\\bin\\Desktop_Publish\\AuthoringTool Setup ${{ github.ref_name }}.exe'
+          asset_name: AuthoringTool-${{ github.ref_name }}-Windows-Setup.exe
           tag: ${{ github.ref }}
           
       - name: Upload win-unpacked zip to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: AuthoringTool/bin/Desktop_Publish/${{ github.ref }}-win-unpacked.zip
-          asset_name: AuthoringTool-${{ github.ref }}-win-unpacked.zip
+          file: AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-win-unpacked.zip
+          asset_name: AuthoringTool-${{ github.ref_name }}-win-unpacked.zip
           tag: ${{ github.ref }}
   
   publish-linux:
@@ -193,28 +193,28 @@ jobs:
       
       - name: Pack linux-unpacked into tarball
         working-directory: ./AuthoringTool/bin/Desktop_Publish
-        run: tar -cvf ${{ github.ref }}-linux-unpacked.tar ./linux-unpacked
+        run: tar -cvf ${{ github.ref_name }}-linux-unpacked.tar ./linux-unpacked
       
       - name: Upload linux snap to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: AuthoringTool/bin/Desktop_Publish/authoring-tool_${{ github.ref }}_amd64.snap
-          asset_name: AuthoringTool-${{ github.ref }}_amd64.snap
+          file: AuthoringTool/bin/Desktop_Publish/authoring-tool_${{ github.ref_name }}_amd64.snap
+          asset_name: AuthoringTool-${{ github.ref_name }}_amd64.snap
           tag: ${{ github.ref }}
           
       - name: Upload linux appimage to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: AuthoringTool/bin/Desktop_Publish/AuthoringTool-${{ github.ref }}.AppImage
-          asset_name: AuthoringTool-${{ github.ref }}.AppImage
+          file: AuthoringTool/bin/Desktop_Publish/AuthoringTool-${{ github.ref_name }}.AppImage
+          asset_name: AuthoringTool-${{ github.ref_name }}.AppImage
           tag: ${{ github.ref }}
           
       - name: Upload linux-unpacked tar to release
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: AuthoringTool/bin/Desktop_Publish/${{ github.ref }}-linux-unpacked.tar
-          asset_name: AuthoringTool-${{ github.ref }}-linux-unpacked.tar
+          file: AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-linux-unpacked.tar
+          asset_name: AuthoringTool-${{ github.ref_name }}-linux-unpacked.tar
           tag: ${{ github.ref }}
