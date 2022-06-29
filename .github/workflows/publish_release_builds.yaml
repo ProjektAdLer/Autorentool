@@ -1,0 +1,221 @@
+name: Run Tests & Publish
+
+on:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    env:
+      dotNetVersion: net6.0
+      dotNetConfiguration: Release
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+      
+      - name: Setup Dotnet for use with actions
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.x'
+
+      - name: Cache Nuget Packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          # Look to see if there is a cache hit for the corresponding requirements file
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget
+
+      - name: Run automated unit and integration tests
+        run: dotnet test AuthoringToolTest/AuthoringToolTest.csproj
+  
+  publish-osx:
+    #needs: test
+    name: Publish for MacOS
+    runs-on: macos-latest 
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+      - name: Setup Dotnet for use with actions
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: |
+            5.x
+            6.x
+
+      - name: Cache Nuget Packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          key: macOS-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            macOS-nuget
+
+      - name: Set up npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install electronize
+        run: dotnet tool restore
+
+      - name: Build AuthoringTool binary
+        working-directory: ./AuthoringTool
+        run: dotnet electronize build /target osx
+
+      - name: Save Build folder
+        uses: actions/upload-artifact@v3
+        with:
+          name: authoringtool-osx
+          path: ./AuthoringTool/bin/Desktop_Publish/
+
+      - name: Upload binaries to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: AuthoringTool/bin/Desktop_Publish/AuthoringTool-${{ github.ref }}.dmg
+          asset_name: AuthoringTool-${{ github.ref }}.dmg
+          tag: ${{ github.ref }}
+          
+  publish-windows:
+    #needs: test
+    name: Publish for Windows
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+      # install dependencies, build, and test
+      - name: Setup Dotnet for use with actions
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: |
+            5.x
+            6.x
+
+      - name: Cache Nuget Packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          # Look to see if there is a cache hit for the corresponding requirements file
+          key: Windows-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            Windows-nuget
+
+      - name: Set up npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install electronize
+        run: dotnet tool restore
+
+      - name: Build AuthoringTool binary
+        working-directory: ./AuthoringTool
+        run: dotnet electronize build /target win
+
+      - name: Save Build folder
+        uses: actions/upload-artifact@v3
+        with:
+          name: authoringtool-win
+          path: ./AuthoringTool/bin/Desktop_Publish/
+          
+      - name: Pack windows-unpacked into zip
+        working-directory: ./AuthoringTool/bin/Desktop_Publish
+        run: vimtor/action-zip@v1
+        with:
+          files: win-unpacked
+          dest: ${{ github.ref }}-win-unpacked.zip
+
+      - name: Upload Windows installer to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: 'AuthoringTool\\bin\\Desktop_Publish\\AuthoringTool Setup ${{ github.ref }}.exe'
+          asset_name: AuthoringTool-${{ github.ref }}-Windows-Setup.exe
+          tag: ${{ github.ref }}
+          
+      - name: Upload win-unpacked zip to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: AuthoringTool/bin/Desktop_Publish/${{ github.ref }}-win-unpacked.zip
+          asset_name: AuthoringTool-${{ github.ref }}-win-unpacked.zip
+          tag: ${{ github.ref }}
+  
+  publish-linux:
+    #needs: test
+    name: Publish for Linux
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+      - name: Setup Dotnet for use with actions
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: |
+            5.x
+            6.x
+
+      - name: Cache Nuget Packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          key: Linux-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            Linux-nuget
+
+      - name: Set up npm
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Install electronize
+        run: dotnet tool restore
+        
+      - name: Build AuthoringTool binary
+        working-directory: ./AuthoringTool
+        run: dotnet electronize build /target linux
+        
+      - name: Save Build folder
+        uses: actions/upload-artifact@v3
+        with:
+          name: authoringtool-linux
+          path: ./AuthoringTool/bin/Desktop_Publish/
+      
+      - name: Pack linux-unpacked into tarball
+        working-directory: ./AuthoringTool/bin/Desktop_Publish
+        run: tar -cvf ${{ github.ref }}-linux-unpacked.tar ./linux-unpacked
+      
+      - name: Upload linux snap to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: AuthoringTool/bin/Desktop_Publish/authoring-tool_${{ github.ref }}_amd64.snap
+          asset_name: AuthoringTool-${{ github.ref }}_amd64.snap
+          tag: ${{ github.ref }}
+          
+      - name: Upload linux appimage to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: AuthoringTool/bin/Desktop_Publish/AuthoringTool-${{ github.ref }}.AppImage
+          asset_name: AuthoringTool-${{ github.ref }}.AppImage
+          tag: ${{ github.ref }}
+          
+      - name: Upload linux-unpacked tar to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          file: AuthoringTool/bin/Desktop_Publish/${{ github.ref }}-linux-unpacked.tar
+          asset_name: AuthoringTool-${{ github.ref }}-linux-unpacked.tar
+          tag: ${{ github.ref }}
