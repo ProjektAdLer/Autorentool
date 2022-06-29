@@ -37,7 +37,7 @@ jobs:
         run: dotnet test AuthoringToolTest/AuthoringToolTest.csproj
   
   publish-osx:
-    #needs: test
+    needs: test
     name: Publish for MacOS
     runs-on: macos-latest 
     steps:
@@ -86,7 +86,7 @@ jobs:
           tag: ${{ github.ref }}
           
   publish-windows:
-    #needs: test
+    needs: test
     name: Publish for Windows
     runs-on: windows-latest
     steps:
@@ -151,7 +151,7 @@ jobs:
           tag: ${{ github.ref }}
   
   publish-linux:
-    #needs: test
+    needs: test
     name: Publish for Linux
     runs-on: ubuntu-22.04
     steps:
