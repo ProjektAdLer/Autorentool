@@ -129,11 +129,10 @@ jobs:
           path: ./AuthoringTool/bin/Desktop_Publish/
           
       - name: Pack windows-unpacked into zip
-        working-directory: ./AuthoringTool/bin/Desktop_Publish
-        run: vimtor/action-zip@v1
+        uses: vimtor/action-zip@v1
         with:
-          files: win-unpacked
-          dest: ${{ github.ref }}-win-unpacked.zip
+          files: ./AuthoringTool/bin/Desktop_Publish/win-unpacked
+          dest: ./AuthoringTool/bin/Desktop_Publish/${{ github.ref }}-win-unpacked.zip
 
       - name: Upload Windows installer to release
         uses: svenstaro/upload-release-action@v2
