@@ -8,7 +8,10 @@
 @* ReSharper disable once Blazor.EditorRequired *@
 <GridLayoutDisplay HeaderTitle="Toolbox" Items="@FilteredEntries">
     <ChildContent>
-        <input type="text" name="search-term" @bind="@SearchTerm" @bind:event="oninput" placeholder="Search..."/>
+        <div>
+            <input type="text" name="search-term" style="width: 90%" @bind="@SearchTerm" @bind:event="oninput" placeholder="Search..."/>
+            <Tooltip Text="@ResultFilter.UserExplanationText"><i class="bi bi-info-circle"></i></Tooltip>
+        </div>
     </ChildContent>
     <ItemRenderTemplate>
         @RenderFragmentFactory.GetRenderFragment(context)

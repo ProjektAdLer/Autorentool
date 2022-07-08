@@ -1,3 +1,4 @@
+using AngleSharp.Dom;
 using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.Toolbox;
 using AuthoringTool.View.Toolbox;
@@ -79,6 +80,19 @@ public class ToolboxUt
         Assert.That(systemUnderTest.Instance.FilteredEntries, Is.EqualTo(filteredEntries));
     }
     
+    [Test]
+    public void Toolbox_Tooltip_DisplaysResultFilterUserExplanationText()
+    {
+        resultFilter.UserExplanationText.Returns("foobar");
+        var systemUnderTest = GetToolboxForTest();
+
+        IElement? toolboxP = null;
+        Assert.That(() => toolboxP = systemUnderTest.Find("div.tooltip-wrapper span p"), Throws.Nothing);
+        if (toolboxP == null)
+            Assert.Fail("Could not find tooltip p element");
+        Assert.That(toolboxP!.InnerHtml, Is.EqualTo("foobar"));
+    }
+
     private IRenderedComponent<AuthoringTool.View.Toolbox.Toolbox> GetToolboxForTest()
     {
         return ctx.RenderComponent<AuthoringTool.View.Toolbox.Toolbox>();

@@ -43,6 +43,21 @@ public class ToolboxResultFilterUt
         
     }
 
+    [Test]
+    public void ToolboxResultFilter_UserExplanationText_ReturnsCorrectText()
+    {
+        var expected = 
+@"Enter a search term to filter objects containing it in their name. Case is ignored.
+A search term beginning with ""world"", ""space"", or ""element"" will only match those types of objects.
+Example: ""world:basics"" will match all worlds containing ""basics"" in their name.
+Search terms can be quoted to search them literally, ignoring the above rules.
+";
+        
+        var systemUnderTest = new ToolboxResultFilter();
+        
+        Assert.That(systemUnderTest.UserExplanationText, Is.EqualTo(expected));
+    }
+
     private class FilterCollectionFiltersCorrectlyTestCases : IEnumerable
     {
         public IEnumerator GetEnumerator()
