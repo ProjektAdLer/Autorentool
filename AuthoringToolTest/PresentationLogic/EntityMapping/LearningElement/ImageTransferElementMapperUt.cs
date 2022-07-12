@@ -26,7 +26,7 @@ public class ImageTransferElementMapperUt
 
         contentMapper.ToEntity(contentViewModel).Returns(new LearningContent("a", "b", Array.Empty<byte>()));
         
-        var systemUnderTest = CreateTestableLearningElementMapper(null, contentMapper);
+        var systemUnderTest = CreateTestableLearningElementMapper(contentMapper);
         
         var entity = systemUnderTest.ToEntity(viewModel);
         Assert.That(entity, Is.Not.Null);
@@ -55,7 +55,7 @@ public class ImageTransferElementMapperUt
         var entity = new ImageTransferElement("name", "shortname",world.Name, content,"authors", "description",
             "goals",LearningElementDifficultyEnum.Easy, 1, 3, 2);
         
-        var systemUnderTest = CreateTestableLearningElementMapper(null,contentMapper);
+        var systemUnderTest = CreateTestableLearningElementMapper(contentMapper);
 
         contentMapper.ToViewModel(content).Returns(new LearningContentViewModel("content", "pdf", Array.Empty<byte>()));
 
@@ -81,10 +81,9 @@ public class ImageTransferElementMapperUt
         });
     }
     
-    private ImageTransferElementMapper CreateTestableLearningElementMapper(ILogger<ImageTransferElementMapper>? logger = null, ILearningContentMapper? contentMapper = null)
+    private ImageTransferElementMapper CreateTestableLearningElementMapper(ILearningContentMapper? contentMapper = null)
     {
-        logger ??= Substitute.For<ILogger<ImageTransferElementMapper>>();
         contentMapper ??= Substitute.For<ILearningContentMapper>();
-        return new ImageTransferElementMapper(logger, contentMapper);
+        return new ImageTransferElementMapper(contentMapper);
     }
 }

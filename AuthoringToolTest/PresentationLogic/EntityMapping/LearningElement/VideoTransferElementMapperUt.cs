@@ -26,7 +26,7 @@ public class VideoTransferElementMapperUt
 
         contentMapper.ToEntity(contentViewModel).Returns(new LearningContent("a", "b", Array.Empty<byte>()));
         
-        var systemUnderTest = CreateTestableLearningElementMapper(null, contentMapper);
+        var systemUnderTest = CreateTestableLearningElementMapper(contentMapper);
         
         var entity = systemUnderTest.ToEntity(viewModel);
         Assert.That(entity, Is.Not.Null);
@@ -55,7 +55,7 @@ public class VideoTransferElementMapperUt
         var entity = new  VideoTransferElement("name", "shortname",world.Name, content,"authors", "description",
             "goals",LearningElementDifficultyEnum.Easy, 1, 3, 2);
         
-        var systemUnderTest = CreateTestableLearningElementMapper(null,contentMapper);
+        var systemUnderTest = CreateTestableLearningElementMapper(contentMapper);
 
         contentMapper.ToViewModel(content).Returns(new LearningContentViewModel("content", "pdf", Array.Empty<byte>()));
 
@@ -81,10 +81,9 @@ public class VideoTransferElementMapperUt
         });
     }
     
-    private VideoTransferElementMapper CreateTestableLearningElementMapper(ILogger<VideoTransferElementMapper>? logger = null, ILearningContentMapper? contentMapper = null)
+    private VideoTransferElementMapper CreateTestableLearningElementMapper(ILearningContentMapper? contentMapper = null)
     {
-        logger ??= Substitute.For<ILogger<VideoTransferElementMapper>>();
         contentMapper ??= Substitute.For<ILearningContentMapper>();
-        return new VideoTransferElementMapper(logger, contentMapper);
+        return new VideoTransferElementMapper(contentMapper);
     }
 }

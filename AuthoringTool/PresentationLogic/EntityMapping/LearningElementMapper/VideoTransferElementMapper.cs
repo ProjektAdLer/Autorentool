@@ -6,11 +6,9 @@ namespace AuthoringTool.PresentationLogic.EntityMapping.LearningElementMapper;
 public class VideoTransferElementMapper : IVideoTransferElementMapper
 {
     private readonly ILearningContentMapper _contentMapper;
-    private ILogger<VideoTransferElementMapper> Logger { get; }
 
-    public VideoTransferElementMapper(ILogger<VideoTransferElementMapper> logger, ILearningContentMapper contentMapper)
+    public VideoTransferElementMapper(ILearningContentMapper contentMapper)
     {
-        Logger = logger;
         _contentMapper = contentMapper;
     }
     public Entities.LearningElement ToEntity(LearningElementViewModel viewModel)

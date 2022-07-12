@@ -25,7 +25,7 @@ public class H5PTestElementMapperUt
 
         contentMapper.ToEntity(contentViewModel).Returns(new LearningContent("a", "b", Array.Empty<byte>()));
         
-        var systemUnderTest = CreateTestableLearningElementMapper(null, contentMapper);
+        var systemUnderTest = CreateTestableLearningElementMapper(contentMapper);
         
         var entity = systemUnderTest.ToEntity(viewModel);
         Assert.That(entity, Is.Not.Null);
@@ -54,7 +54,7 @@ public class H5PTestElementMapperUt
         var entity = new H5PTestElement("name", "shortname",world.Name, content,"authors", "description",
             "goals",LearningElementDifficultyEnum.Easy, 1, 3, 2);
         
-        var systemUnderTest = CreateTestableLearningElementMapper(null,contentMapper);
+        var systemUnderTest = CreateTestableLearningElementMapper(contentMapper);
 
         contentMapper.ToViewModel(content).Returns(new LearningContentViewModel("content", "pdf", Array.Empty<byte>()));
 
@@ -80,10 +80,9 @@ public class H5PTestElementMapperUt
         });
     }
     
-    private H5PTestElementMapper CreateTestableLearningElementMapper(ILogger<H5PTestElementMapper>? logger = null, ILearningContentMapper? contentMapper = null)
+    private H5PTestElementMapper CreateTestableLearningElementMapper(ILearningContentMapper? contentMapper = null)
     {
-        logger ??= Substitute.For<ILogger<H5PTestElementMapper>>();
         contentMapper ??= Substitute.For<ILearningContentMapper>();
-        return new H5PTestElementMapper(logger, contentMapper);
+        return new H5PTestElementMapper(contentMapper);
     }
 }

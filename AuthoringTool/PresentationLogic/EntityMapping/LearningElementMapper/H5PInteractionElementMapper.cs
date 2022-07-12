@@ -6,11 +6,9 @@ namespace AuthoringTool.PresentationLogic.EntityMapping.LearningElementMapper;
 public class H5PInteractionElementMapper : IH5PInteractionElementMapper
 {
     private readonly ILearningContentMapper _contentMapper;
-    private ILogger<H5PInteractionElementMapper> Logger { get; }
 
-    public H5PInteractionElementMapper(ILogger<H5PInteractionElementMapper> logger, ILearningContentMapper contentMapper)
+    public H5PInteractionElementMapper(ILearningContentMapper contentMapper)
     {
-        Logger = logger;
         _contentMapper = contentMapper;
     }
     public Entities.LearningElement ToEntity(LearningElementViewModel viewModel)
