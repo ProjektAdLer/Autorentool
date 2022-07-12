@@ -1,4 +1,5 @@
 using AuthoringTool.Entities;
+using AuthoringTool.PresentationLogic.EntityMapping.LearningElementMapper;
 using AuthoringTool.PresentationLogic.LearningWorld;
 
 namespace AuthoringTool.PresentationLogic.EntityMapping;

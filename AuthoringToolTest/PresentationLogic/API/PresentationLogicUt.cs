@@ -7,6 +7,7 @@ using AuthoringTool.BusinessLogic.API;
 using AuthoringTool.Entities;
 using AuthoringTool.PresentationLogic.ElectronNET;
 using AuthoringTool.PresentationLogic.EntityMapping;
+using AuthoringTool.PresentationLogic.EntityMapping.LearningElementMapper;
 using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;

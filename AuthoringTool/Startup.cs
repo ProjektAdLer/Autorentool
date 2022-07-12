@@ -11,6 +11,7 @@ using AuthoringTool.PresentationLogic.API;
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
 using AuthoringTool.PresentationLogic.ElectronNET;
 using AuthoringTool.PresentationLogic.EntityMapping;
+using AuthoringTool.PresentationLogic.EntityMapping.LearningElementMapper;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
@@ -115,6 +116,13 @@ public class Startup
     private static void ConfigureMappers(IServiceCollection services)
     {
         services.AddSingleton<ILearningElementMapper, LearningElementMapper>();
+        services.AddSingleton<IImageTransferElementMapper, ImageTransferElementMapper>();
+        services.AddSingleton<IVideoTransferElementMapper, VideoTransferElementMapper>();
+        services.AddSingleton<IPdfTransferElementMapper, PdfTransferElementMapper>();
+        services.AddSingleton<IVideoActivationElementMapper, VideoActivationElementMapper>();
+        services.AddSingleton<IH5PActivationElementMapper, H5PActivationElementMapper>();
+        services.AddSingleton<IH5PInteractionElementMapper, H5PInteractionElementMapper>();
+        services.AddSingleton<IH5PTestElementMapper, H5PTestElementMapper>();
         services.AddSingleton<ILearningSpaceMapper, LearningSpaceMapper>();
         services.AddSingleton<ILearningWorldMapper, LearningWorldMapper>();
         services.AddSingleton<ILearningContentMapper, LearningContentMapper>();

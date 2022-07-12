@@ -12,6 +12,7 @@ using AuthoringTool.Entities;
 using AuthoringTool.PresentationLogic.API;
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
 using AuthoringTool.PresentationLogic.EntityMapping;
+using AuthoringTool.PresentationLogic.EntityMapping.LearningElementMapper;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
@@ -72,6 +73,13 @@ public class StartupUt
     {
         typeof(ILearningElementMapper), typeof(ILearningSpaceMapper), typeof(ILearningWorldMapper),
         typeof(ILearningContentMapper), typeof(IEntityMapping),
+        typeof(IImageTransferElementMapper),
+        typeof(IVideoTransferElementMapper),
+        typeof(IPdfTransferElementMapper),
+        typeof(IVideoActivationElementMapper),
+        typeof(IH5PActivationElementMapper),
+        typeof(IH5PInteractionElementMapper),
+        typeof(IH5PTestElementMapper)
     };
     [Test]
     [TestCaseSource(nameof(ConfigureMappersRequiredTypes))]
