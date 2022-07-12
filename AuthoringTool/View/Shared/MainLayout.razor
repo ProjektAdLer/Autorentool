@@ -2,7 +2,6 @@
 @using AuthoringTool.View.Toolbox
 @using AuthoringTool.PresentationLogic.API
 @inherits LayoutComponentBase
-@inject IPresentationLogic _presentationLogic
 
 <PageTitle>AuthoringTool</PageTitle>
 
@@ -18,7 +17,7 @@
 
     <main>
         <div class="top-row px-4">
-            @if (_presentationLogic.RunningElectron)
+            @if (PresentationLogic?.RunningElectron == true)
             {
                 <CloseAppButton/>
             }
@@ -29,3 +28,10 @@
         </article>
     </main>
 </div>
+
+
+@code {
+    [Inject]
+    public IPresentationLogic? PresentationLogic { get; set; }
+
+}
