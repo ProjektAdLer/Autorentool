@@ -22,6 +22,13 @@ public class ToolboxResultFilter : IToolboxResultFilter
         elementRegex = new Regex(IToolboxResultFilter.ElementRegexString);
     }
 
+    public string UserExplanationText => 
+@"Enter a search term to filter objects containing it in their name. Case is ignored.
+A search term beginning with ""world"", ""space"", or ""element"" will only match those types of objects.
+Example: ""world:basics"" will match all worlds containing ""basics"" in their name.
+Search terms can be quoted to search them literally, ignoring the above rules.
+";
+
     /// <inheritdoc cref="IToolboxResultFilter.FilterCollection"/>
     public IEnumerable<IDisplayableLearningObject> FilterCollection(IEnumerable<IDisplayableLearningObject> items, string searchTerm)
     {

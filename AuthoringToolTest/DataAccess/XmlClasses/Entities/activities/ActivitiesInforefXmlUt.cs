@@ -18,44 +18,43 @@ public class ActivitiesInforefXmlUt
     public void ActivitiesInforefXmlFile_SetParameters_ObjectAreEqual()
     {
         //Arrange
-        List<ActivitiesInforefXmlFile> list = new List<ActivitiesInforefXmlFile>();
-        
-        //Act
-        if (list != null)
+        var list = new List<ActivitiesInforefXmlFile>
         {
-            list.Add(new ActivitiesInforefXmlFile());
-            list[list.Count - 1]
-                .SetParameterts(XmlEntityManager.GetFileIdBlock1().ToString());
-            list.Add(new ActivitiesInforefXmlFile());
-            list[list.Count - 1]
-                .SetParameterts(XmlEntityManager.GetFileIdBlock2().ToString());
-        }
-        
+            new(),
+            new()
+        };
+
+        //Act
+        list[0].SetParameters(XmlEntityManager.GetFileIdBlock1().ToString());
+        list[1].SetParameters(XmlEntityManager.GetFileIdBlock2().ToString());
+
         //Assert
-        Assert.That(list.Count, Is.EqualTo(2));
-        Assert.That(list[0].Id, Is.EqualTo("1"));
-        Assert.That(list[1].Id, Is.EqualTo("2"));
+        Assert.That(list, Has.Count.EqualTo(2));
+        Assert.Multiple(() =>
+        {
+            Assert.That(list[0].Id, Is.EqualTo("1"));
+            Assert.That(list[1].Id, Is.EqualTo("2"));
+        });
     }
 
     [Test]
     public void ActivitiesInforefXmlFileref_SetParameters_ObjectAreEqual()
     {
         //Arrange
-        List<ActivitiesInforefXmlFile> list = new List<ActivitiesInforefXmlFile>();
-        var fileref = new ActivitiesInforefXmlFileref();
-        if (list != null)
+        var list = new List<ActivitiesInforefXmlFile>
         {
-            list.Add(new ActivitiesInforefXmlFile());
-            list[list.Count - 1]
-                .SetParameterts(XmlEntityManager.GetFileIdBlock1().ToString());
-            list.Add(new ActivitiesInforefXmlFile());
-            list[list.Count - 1]
-                .SetParameterts(XmlEntityManager.GetFileIdBlock2().ToString());
+            new(),
+            new()
+        };
+        list[0]
+            .SetParameters(XmlEntityManager.GetFileIdBlock1().ToString());
+        list[1]
+            .SetParameters(XmlEntityManager.GetFileIdBlock2().ToString());
+        var fileref = new ActivitiesInforefXmlFileref();
             
-            //Act
-            fileref.SetParameters(list);
-        }
-        
+        //Act
+        fileref.SetParameters(list);
+
         //Assert
         Assert.That(fileref.File, Is.EqualTo(list));
     }
@@ -93,19 +92,19 @@ public class ActivitiesInforefXmlUt
     public void ActivitiesInforefXmlInforef_SetParameters_ObjectAreEqual()
     {
         //Arrange
-        List<ActivitiesInforefXmlFile> list = new List<ActivitiesInforefXmlFile>();
-        var fileref = new ActivitiesInforefXmlFileref();
-        if (list != null)
+        var list = new List<ActivitiesInforefXmlFile>
         {
-            list.Add(new ActivitiesInforefXmlFile());
-            list[list.Count - 1]
-                .SetParameterts(XmlEntityManager.GetFileIdBlock1().ToString());
-            list.Add(new ActivitiesInforefXmlFile());
-            list[list.Count - 1]
-                .SetParameterts(XmlEntityManager.GetFileIdBlock2().ToString());
-            fileref.SetParameters(list);
-        }
+            new(),
+            new()
+        };
+        list[0]
+            .SetParameters(XmlEntityManager.GetFileIdBlock1().ToString());
+        list[1]
+            .SetParameters(XmlEntityManager.GetFileIdBlock2().ToString());
         
+        var fileref = new ActivitiesInforefXmlFileref();
+        fileref.SetParameters(list);
+
         var gradeitem = new ActivitiesInforefXmlGradeItem();
         gradeitem.SetParameters("1");
         var gradeItemref = new ActivitiesInforefXmlGradeItemref();
@@ -114,36 +113,35 @@ public class ActivitiesInforefXmlUt
         var inforef = new ActivitiesInforefXmlInforef();
         //Act
         inforef.SetParameters(fileref, gradeItemref);
+        Assert.Multiple(() =>
+        {
 
-        //Assert
-        Assert.That(inforef.Fileref, Is.EqualTo(fileref));
-        Assert.That(inforef.Grade_itemref, Is.EqualTo(gradeItemref));
+            //Assert
+            Assert.That(inforef.Fileref, Is.EqualTo(fileref));
+            Assert.That(inforef.Grade_itemref, Is.EqualTo(gradeItemref));
+        });
     }
-    
+
     [Test]
     public void ActivitiesInforefXmlInforef_Serialize_XmlFileWritten()
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
-        var readDsl = new ReadDSL();
-        var h5pfactory = new XmlH5PFactory(readDsl, mockFileSystem, null, null, null, null,
-            null, null, null, null, null, null, null, null, null,
-            null, null, null, null);
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport","activities", "h5pactivity_1000"));
         
-        List<ActivitiesInforefXmlFile> list = new List<ActivitiesInforefXmlFile>();
-        var fileref = new ActivitiesInforefXmlFileref();
-        if (list != null)
+        var list = new List<ActivitiesInforefXmlFile>
         {
-            list.Add(new ActivitiesInforefXmlFile());
-            list[list.Count - 1]
-                .SetParameterts(XmlEntityManager.GetFileIdBlock1().ToString());
-            list.Add(new ActivitiesInforefXmlFile());
-            list[list.Count - 1]
-                .SetParameterts(XmlEntityManager.GetFileIdBlock2().ToString());
-            fileref.SetParameters(list);
-        }
-        
+            new ActivitiesInforefXmlFile(),
+            new ActivitiesInforefXmlFile()
+        };
+        list[0]
+            .SetParameters(XmlEntityManager.GetFileIdBlock1().ToString());
+        list[1]
+            .SetParameters(XmlEntityManager.GetFileIdBlock2().ToString());
+        var fileref = new ActivitiesInforefXmlFileref();
+        fileref.SetParameters(list);
+
         var gradeitem = new ActivitiesInforefXmlGradeItem();
         gradeitem.SetParameters("1");
         var gradeItemref = new ActivitiesInforefXmlGradeItemref();
@@ -154,8 +152,7 @@ public class ActivitiesInforefXmlUt
         
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
-        h5pfactory.CreateActivityFolder("1000");
-        inforef.Serialize("1000");
+        inforef.Serialize("h5pactivity", "1000");
         
         //Assert
         var path = Path.Join(currWorkDir, "XMLFilesForExport","activities", "h5pactivity_1000", "inforef.xml");

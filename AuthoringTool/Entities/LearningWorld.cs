@@ -1,6 +1,4 @@
-﻿using System.Collections.ObjectModel;
-
-namespace AuthoringTool.Entities;
+﻿namespace AuthoringTool.Entities;
 
 [Serializable]
 public class LearningWorld : ILearningWorld

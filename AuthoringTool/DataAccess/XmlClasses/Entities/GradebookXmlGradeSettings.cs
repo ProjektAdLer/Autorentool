@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace AuthoringTool.DataAccess.XmlClasses;
+namespace AuthoringTool.DataAccess.XmlClasses.Entities;
 
 [XmlRoot(ElementName="grade_settings")]
 public partial class GradebookXmlGradeSettings : IGradebookXmlGradeSettings

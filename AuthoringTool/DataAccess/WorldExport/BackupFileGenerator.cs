@@ -40,10 +40,10 @@ public class BackupFileGenerator : IBackupFileGenerator
     }
 
     /// <inheritdoc cref="IBackupFileGenerator.WriteXmlFiles"/>
-    public void WriteXmlFiles(ReadDSL? readDsl)
+    public void WriteXmlFiles(ReadDSL? readDsl, string dslpath)
     {
         var xmlEntityManager = new XmlEntityManager();
-        xmlEntityManager.GetFactories(readDsl);
+        if (readDsl != null) xmlEntityManager.GetFactories(readDsl, dslpath);
     }
     
     // Get all files from source Folder "XMLFilesForExport" and pack all files and folders into a tar-file 

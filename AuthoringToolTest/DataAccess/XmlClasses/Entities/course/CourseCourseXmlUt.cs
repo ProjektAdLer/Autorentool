@@ -1,8 +1,7 @@
 ﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.WorldExport;
-using AuthoringTool.DataAccess.XmlClasses.course;
-using AuthoringTool.DataAccess.XmlClasses.sections;
+using AuthoringTool.DataAccess.XmlClasses.Entities.course;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.course;

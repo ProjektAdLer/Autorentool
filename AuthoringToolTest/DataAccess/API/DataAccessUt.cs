@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
-using System.IO;
 using AuthoringTool.API.Configuration;
 using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.Persistence;
@@ -48,8 +47,8 @@ public class DataAccessUt
         var mockCreateDsl = Substitute.For<ICreateDSL>();
         
         var mockBackupFile = Substitute.For<IBackupFileGenerator>();
-        var systemUnderTest = new AuthoringTool.DataAccess.API.DataAccess(null, mockBackupFile, 
-            null, null, null, null, mockCreateDsl, mockReadDsl);
+        var systemUnderTest = CreateTestableDataAccess(backupFileConstructor: mockBackupFile, createDsl: mockCreateDsl,
+            readDsl: mockReadDsl);
         var filepath = "this/path";
         var mockLearningWorld = Substitute.For<ILearningWorld>();
 
@@ -61,7 +60,7 @@ public class DataAccessUt
         mockCreateDsl.Received().WriteLearningWorld(mockLearningWorld as LearningWorld);
         mockReadDsl.Received().ReadLearningWorld(mockCreateDsl.WriteLearningWorld(mockLearningWorld as LearningWorld));
         mockBackupFile.Received().CreateBackupFolders();
-        mockBackupFile.Received().WriteXmlFiles(mockReadDsl as ReadDSL);
+        mockBackupFile.Received().WriteXmlFiles(mockReadDsl as ReadDSL, mockCreateDsl.WriteLearningWorld(mockLearningWorld as LearningWorld));
         mockBackupFile.Received().WriteBackupFile(filepath);
 
     }
@@ -178,6 +177,29 @@ public class DataAccessUt
 
         mockFileSaveHandlerElement.Received().LoadFromStream(stream);
     }
+    
+    [Test]
+    public void DataAccess_LoadLearningContentFromFile_CallsFileSaveHandlerElement()
+    {
+        var mockContentFileHandler = Substitute.For<IContentFileHandler>();
+        var systemUnderTest = CreateTestableDataAccess(contentHandler: mockContentFileHandler);
+
+        systemUnderTest.LoadLearningContentFromFile("C:/nonsense");
+
+        mockContentFileHandler.Received().LoadFromDisk("C:/nonsense");
+    }
+    
+    [Test]
+    public void DataAccess_LoadLearningContentFromStream_CallsFileSaveHandlerElement()
+    {
+        var mockContentFileHandler = Substitute.For<IContentFileHandler>();
+        var systemUnderTest = CreateTestableDataAccess(contentHandler: mockContentFileHandler);
+        var stream = Substitute.For<Stream>();
+
+        systemUnderTest.LoadLearningContentFromStream("filename.extension", stream);
+
+        mockContentFileHandler.Received().LoadFromStream("filename.extension", stream);
+    }
 
     [Test]
     [TestCaseSource(typeof(FindSuitableNewSavePathTestCases))]
@@ -227,11 +249,12 @@ public class DataAccessUt
                 new MockFileSystem(new Dictionary<string, MockFileData>()),
                 "directory", "foo", "bar", Path.Join("directory", "foo.bar")
             };
+            var emptyFile = new MockFileData("");
             yield return new object[] //file is present
             {
                 new MockFileSystem(new Dictionary<string, MockFileData>
                 {
-                    {Path.Combine("directory", "foo.bar"), MockFileData.NullObject}
+                    {Path.Combine("directory", "foo.bar"), emptyFile}
                 }),
                 "directory", "foo", "bar", Path.Join("directory", "foo_1.bar")
             };
@@ -239,9 +262,9 @@ public class DataAccessUt
             {
                 new MockFileSystem(new Dictionary<string, MockFileData>
                 {
-                    {Path.Combine("directory", "foo.bar"), MockFileData.NullObject},
-                    {Path.Combine("directory", "foo_1.bar"), MockFileData.NullObject},
-                    {Path.Combine("directory", "foo_2.bar"), MockFileData.NullObject}
+                    {Path.Combine("directory", "foo.bar"), emptyFile},
+                    {Path.Combine("directory", "foo_1.bar"), emptyFile},
+                    {Path.Combine("directory", "foo_2.bar"), emptyFile}
                 }),
                 "directory", "foo", "bar", Path.Join("directory", "foo_3.bar")
             };
@@ -249,7 +272,7 @@ public class DataAccessUt
             {
                 new MockFileSystem(new Dictionary<string, MockFileData>
                 {
-                    {Path.Combine("directory", "poo.bar"), MockFileData.NullObject}
+                    {Path.Combine("directory", "poo.bar"), emptyFile}
                 }),
                 "directory", "foo", "bar", Path.Join("directory", "foo.bar")
             };

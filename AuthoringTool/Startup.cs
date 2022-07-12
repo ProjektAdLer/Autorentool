@@ -1,3 +1,4 @@
+using System.IO.Abstractions;
 using AuthoringTool.API;
 using AuthoringTool.API.Configuration;
 using AuthoringTool.BusinessLogic.API;
@@ -17,6 +18,9 @@ using AuthoringTool.PresentationLogic.LearningWorld;
 using AuthoringTool.PresentationLogic.Toolbox;
 using AuthoringTool.View.Toolbox;
 using ElectronWrapper;
+using Microsoft.Extensions.Caching.Memory;
+
+namespace AuthoringTool;
 
 public class Startup
 {
@@ -29,62 +33,22 @@ public class Startup
 
     public void ConfigureServices(IServiceCollection services)
     {
-        //NLog for logging
-        //TODO: find out why nlog won't log our runtime errors to console, so its disabled for now :/
-        /*
-        services.AddLogging(builder =>
-        {
-            builder.ClearProviders();
-            builder.SetMinimumLevel(LogLevel.Trace);
-            builder.AddNLog();
-        });
-        */
-
-        //AuthoringTool
-        services.AddSingleton<IAuthoringToolConfiguration, AuthoringToolConfiguration>();
-        services.AddTransient(typeof(IXmlFileHandler<>), typeof(XmlFileHandler<>));
-        services.AddSingleton<IContentFileHandler, ContentFileHandler>();
-        services.AddSingleton<IBackupFileGenerator, BackupFileGenerator>();
-        services.AddSingleton<IDataAccess, DataAccess>();
-        services.AddSingleton<ICreateDSL, CreateDSL>();
-        services.AddSingleton<IReadDSL, ReadDSL>();
-        services.AddSingleton<IBusinessLogic, BusinessLogic>();
-        services.AddSingleton<IPresentationLogic, PresentationLogic>();
-        services.AddSingleton<IAuthoringTool, AuthoringTool.API.AuthoringTool>();
-        services.AddSingleton<ILearningWorldPresenter, LearningWorldPresenter>();
-        services.AddSingleton(p =>
-            (ILearningWorldPresenterToolboxInterface)p.GetService(typeof(ILearningWorldPresenter))!);
-        services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
-        services.AddSingleton<ILearningElementPresenter, LearningElementPresenter>();
-        services.AddSingleton(p =>
-            (ILearningSpacePresenterToolboxInterface)p.GetService(typeof(ILearningSpacePresenter))!);
-        services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
-        services.AddSingleton<AuthoringToolWorkspacePresenter>();
-        services.AddSingleton(p =>
-            (IAuthoringToolWorkspacePresenterToolboxInterface)p.GetService(typeof(AuthoringToolWorkspacePresenter))!);
-        services.AddSingleton<IAbstractToolboxRenderFragmentFactory, ToolboxRenderFragmentFactory>();
-        services.AddSingleton<IToolboxEntriesProviderModifiable, ToolboxEntriesProvider>();
-        services.AddSingleton<IToolboxController, ToolboxController>();
-        services.AddSingleton(p => (IToolboxEntriesProvider)p.GetService(typeof(IToolboxEntriesProviderModifiable))!);
-        services.AddSingleton<IToolboxResultFilter, ToolboxResultFilter>();
-        //ViewModel <-> Entity Mappers
-        services.AddSingleton<ILearningElementMapper, LearningElementMapper>();
-        services.AddSingleton<IImageTransferElementMapper, ImageTransferElementMapper>();
-        services.AddSingleton<IVideoTransferElementMapper, VideoTransferElementMapper>();
-        services.AddSingleton<IPdfTransferElementMapper, PdfTransferElementMapper>();
-        services.AddSingleton<IVideoActivationElementMapper, VideoActivationElementMapper>();
-        services.AddSingleton<IH5PActivationElementMapper, H5PActivationElementMapper>();
-        services.AddSingleton<IH5PInteractionElementMapper, H5PInteractionElementMapper>();
-        services.AddSingleton<IH5PTestElementMapper, H5PTestElementMapper>();
-        services.AddSingleton<ILearningSpaceMapper, LearningSpaceMapper>();
-        services.AddSingleton<ILearningWorldMapper, LearningWorldMapper>();
-        services.AddSingleton<ILearningContentMapper, LearningContentMapper>();
-        services.AddSingleton<IEntityMapping, EntityMapping>();
-
-        //Blazor and Electron
+        //Blazor and Electron (framework)
         services.AddRazorPages();
         services.AddServerSideBlazor();
-        services.AddSingleton<IMouseService, MouseService>();
+        
+        
+        //AuthoringTool
+        //PLEASE add any services you add dependencies to to the unit tests in StartupUt!!!
+        ConfigureAuthoringTool(services);
+        ConfigurePresentationLogic(services);
+        ConfigureBusinessLogic(services);
+        ConfigureDataAccess(services);
+        ConfigureToolbox(services);
+        ConfigureMappers(services);
+        ConfigureUtilities(services);
+
+        
         //Electron Wrapper layer
         services.AddElectronInternals();
         services.AddElectronWrappers();
@@ -102,6 +66,74 @@ public class Startup
         {
             services.AddSingleton<IShutdownManager, BrowserShutdownManager>();
         }
+    }
+
+    private void ConfigureAuthoringTool(IServiceCollection services)
+    {
+        services.AddSingleton<IAuthoringToolConfiguration, AuthoringToolConfiguration>();
+    }
+
+    private void ConfigurePresentationLogic(IServiceCollection services)
+    {
+        services.AddSingleton<IPresentationLogic, PresentationLogic.API.PresentationLogic>();
+        services.AddSingleton<AuthoringToolWorkspacePresenter>();
+        services.AddSingleton<ILearningWorldPresenter, LearningWorldPresenter>();
+        services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
+        services.AddSingleton<ILearningElementPresenter, LearningElementPresenter>();
+        services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
+    }
+
+    private void ConfigureBusinessLogic(IServiceCollection services)
+    {
+        services.AddSingleton<IBusinessLogic, BusinessLogic.API.BusinessLogic>();
+    }
+
+    private void ConfigureDataAccess(IServiceCollection services)
+    {
+        services.AddTransient(typeof(IXmlFileHandler<>), typeof(XmlFileHandler<>));
+        services.AddSingleton<IDataAccess, DataAccess.API.DataAccess>();
+        services.AddSingleton<ICreateDSL, CreateDSL>();
+        services.AddSingleton<IReadDSL, ReadDSL>();
+        services.AddSingleton<IContentFileHandler, ContentFileHandler>();
+        services.AddSingleton<IBackupFileGenerator, BackupFileGenerator>();
+    }
+
+    private static void ConfigureToolbox(IServiceCollection services)
+    {
+        services.AddSingleton<IAbstractToolboxRenderFragmentFactory, ToolboxRenderFragmentFactory>();
+        services.AddSingleton<IToolboxEntriesProviderModifiable, ToolboxEntriesProvider>();
+        services.AddSingleton(p => (IToolboxEntriesProvider)p.GetService(typeof(IToolboxEntriesProviderModifiable))!);
+        services.AddSingleton<IToolboxController, ToolboxController>();
+        services.AddSingleton<IToolboxResultFilter, ToolboxResultFilter>();
+        services.AddSingleton(p =>
+            (IAuthoringToolWorkspacePresenterToolboxInterface)p.GetService(typeof(AuthoringToolWorkspacePresenter))!);
+        services.AddSingleton(p =>
+            (ILearningWorldPresenterToolboxInterface)p.GetService(typeof(ILearningWorldPresenter))!);
+        services.AddSingleton(p =>
+            (ILearningSpacePresenterToolboxInterface)p.GetService(typeof(ILearningSpacePresenter))!);
+    }
+
+    private static void ConfigureMappers(IServiceCollection services)
+    {
+        services.AddSingleton<ILearningElementMapper, LearningElementMapper>();
+        services.AddSingleton<IImageTransferElementMapper, ImageTransferElementMapper>();
+        services.AddSingleton<IVideoTransferElementMapper, VideoTransferElementMapper>();
+        services.AddSingleton<IPdfTransferElementMapper, PdfTransferElementMapper>();
+        services.AddSingleton<IVideoActivationElementMapper, VideoActivationElementMapper>();
+        services.AddSingleton<IH5PActivationElementMapper, H5PActivationElementMapper>();
+        services.AddSingleton<IH5PInteractionElementMapper, H5PInteractionElementMapper>();
+        services.AddSingleton<IH5PTestElementMapper, H5PTestElementMapper>();
+        services.AddSingleton<ILearningSpaceMapper, LearningSpaceMapper>();
+        services.AddSingleton<ILearningWorldMapper, LearningWorldMapper>();
+        services.AddSingleton<ILearningContentMapper, LearningContentMapper>();
+        services.AddSingleton<IEntityMapping, EntityMapping>();
+    }
+
+    private static void ConfigureUtilities(IServiceCollection services)
+    {
+        services.AddTransient<IMemoryCache>(_ => new MemoryCache(new MemoryCacheOptions()));
+        services.AddSingleton<IMouseService, MouseService>();
+        services.AddTransient<IFileSystem, FileSystem>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)

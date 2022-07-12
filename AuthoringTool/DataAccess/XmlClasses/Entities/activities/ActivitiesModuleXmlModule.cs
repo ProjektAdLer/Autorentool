@@ -35,10 +35,10 @@ public class ActivitiesModuleXmlModule : IActivitiesModuleXmlModule{
         Version = version;
     }
     
-    public void Serialize(string? moduleId)
+    public void Serialize(string? activityName, string? moduleId)
     {
         var xml = new XmlSerialize();
-        xml.Serialize(this, Path.Join("activities", "h5pactivity_"+moduleId, "module.xml"));
+        xml.Serialize(this, Path.Join("activities", activityName + "_" + moduleId, "module.xml"));
     }
 
     

@@ -30,19 +30,15 @@ public class ActivitiesRolesXmlUt
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
-        var readDsl = new ReadDSL();
-        var h5pfactory = new XmlH5PFactory(readDsl, mockFileSystem, null, null, null, null,
-            null, null, null, null, null, null, null, null, null,
-            null, null, null, null);
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport","activities", "h5pactivity_2"));
         
         var roles = new ActivitiesRolesXmlRoles();
         roles.SetParameterts("","");
+        XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
         
         //Act 
-        XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
-        h5pfactory.CreateActivityFolder("2");
-        roles.Serialize("2");
+        roles.Serialize("h5pactivity", "2");
         
         //Assert
         var path = Path.Join(currWorkDir, "XMLFilesForExport","activities", "h5pactivity_2", "roles.xml");

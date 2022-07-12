@@ -1,5 +1,5 @@
 ﻿using AuthoringTool.DataAccess.DSL;
-using AuthoringTool.DataAccess.XmlClasses.course;
+using AuthoringTool.DataAccess.XmlClasses.Entities.course;
 
 namespace AuthoringTool.DataAccess.XmlClasses;
 
@@ -98,8 +98,8 @@ public class XmlCourseFactory
     {
         //set parameters of the course/enrolments.xml file
         //the enrolments.xml file is identical in every moodle backup file
-        CourseEnrolmentsXmlEnrolManual.SetParametersShort("5", "1", "manual", "0");
-        CourseEnrolmentsXmlEnrolGuest.SetParametersShort("0", "2", "guest", "1");
+        CourseEnrolmentsXmlEnrolManual.SetParametersShort("5", "1", "manual", "1");
+        CourseEnrolmentsXmlEnrolGuest.SetParametersShort("0", "2", "guest", "0");
         CourseEnrolmentsXmlEnrolSelf.SetParametersFull("5", "3", "self", "1", "0", "0", "0", "1", "0", "1");
         CourseEnrolmentsXmlEnrols.SetParameters(CourseEnrolmentsXmlEnrolManual as CourseEnrolmentsXmlEnrol, 
             CourseEnrolmentsXmlEnrolGuest as CourseEnrolmentsXmlEnrol, CourseEnrolmentsXmlEnrolSelf as CourseEnrolmentsXmlEnrol);

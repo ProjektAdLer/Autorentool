@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using AuthoringTool.Components.ModalDialog;
 using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.API;
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
@@ -552,16 +551,30 @@ public class AuthoringToolWorkspacePresenterUt
     #region DragAndDrop
 
     [Test]
-    [TestCase("awf"), TestCase("asf"), TestCase("aef"), TestCase("unsupportedEnding")]
+    [TestCase("awf"), TestCase("asf"), TestCase("aef"), 
+     TestCase("jpg"), TestCase("png"), TestCase("webp"), TestCase("bmp"), 
+     TestCase("mp4"), TestCase("h5p"), TestCase("pdf"), TestCase("unsupportedEnding")]
     public void AuthoringToolWorkspacePresenter_ProcessDragAndDropResult_CallsPresentationLogic(string ending)
     {
         var fileName = "testFile." + ending;
         var stream = Substitute.For<Stream>();
         var resultTuple = new Tuple<string, Stream>(fileName, stream);
         var authoringToolWorkspace = new AuthoringToolWorkspaceViewModel();
+        string[] saveFileEndings = {"awf", "asf", "aef"};
+        if (!saveFileEndings.Contains(ending))
+        {
+            var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
+                    authoringToolWorkspace.AddLearningWorld(learningWorld);
+                    authoringToolWorkspace.SelectedLearningWorld = learningWorld;
+        }
         var presentationLogic = Substitute.For<IPresentationLogic>();
+        var learningContent = new LearningContentViewModel(fileName, ending, Array.Empty<byte>());
+        presentationLogic.LoadLearningContentViewModelFromStream(Arg.Any<string>(), Arg.Any<Stream>())
+            .Returns(learningContent);
+        var learningWorldPresenter = Substitute.For<ILearningWorldPresenter>();
         var logger = Substitute.For<ILogger<AuthoringToolWorkspacePresenter>>();
-        var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspace, presentationLogic, logger: logger);
+        var systemUnderTest = 
+            CreatePresenterForTesting(authoringToolWorkspace, presentationLogic, learningWorldPresenter, logger: logger);
 
         systemUnderTest.ProcessDragAndDropResult(resultTuple);
 
@@ -576,11 +589,101 @@ public class AuthoringToolWorkspacePresenterUt
             case "aef":
                 presentationLogic.Received().LoadLearningElementViewModelFromStream(stream);
                 break;
+            case "jpg":
+            case "png":
+            case "webp":
+            case "bmp":
+            case "mp4":
+            case "h5p":
+            case "pdf":
+                presentationLogic.Received().LoadLearningContentViewModelFromStream(fileName, stream);
+                learningWorldPresenter.Received().CreateLearningElementWithPreloadedContent(learningContent);
+                break;
             default:
                 //logger.Received().Log(LogLevel.Information,$"Couldn't load file 'testFile.{ending}', because the file extension '{ending}' is not supported.");
                 Assert.Pass();
                 break;
         }
+    }
+
+    [Test]
+    public void
+        AuthoringToolWorkspacePresenter_CallCreateLearningElementWithPreloadedContentFromActiveView_NoLearningWorldSelected_DoNothing()
+    {
+        var learningContent = new LearningContentViewModel("n", "t", Array.Empty<byte>());
+
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        systemUnderTest.CallCreateLearningElementWithPreloadedContentFromActiveView(learningContent);
+        
+        Assert.Pass();
+    }
+    
+    [Test]
+    public void
+        AuthoringToolWorkspacePresenter_CallCreateLearningElementWithPreloadedContentFromActiveView_LearningWorldSelected_CallsWorldPresenter()
+    {
+        var learningContent = new LearningContentViewModel("n", "t", Array.Empty<byte>());
+        var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
+        var authoringToolWorkspaceVm = new AuthoringToolWorkspaceViewModel();
+        authoringToolWorkspaceVm.AddLearningWorld(learningWorld);
+        authoringToolWorkspaceVm.SelectedLearningWorld = learningWorld;
+        var learningWorldPresenter = Substitute.For<ILearningWorldPresenter>();
+
+        var systemUnderTest =
+            CreatePresenterForTesting(authoringToolWorkspaceVm, learningWorldPresenter: learningWorldPresenter);
+        
+        systemUnderTest.CallCreateLearningElementWithPreloadedContentFromActiveView(learningContent);
+        
+        learningWorldPresenter.Received().CreateLearningElementWithPreloadedContent(learningContent);
+    }
+    
+    [Test]
+    public void
+        AuthoringToolWorkspacePresenter_CallCreateLearningElementWithPreloadedContentFromActiveView_LearningSpaceSelected_CallsSpacePresenter()
+    {
+        var learningContent = new LearningContentViewModel("n", "t", Array.Empty<byte>());
+        var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
+        var learningSpace = new LearningSpaceViewModel("n", "sn", "a", "d", "g");
+        learningWorld.LearningSpaces.Add(learningSpace);
+        learningWorld.SelectedLearningObject = learningSpace;
+        learningWorld.ShowingLearningSpaceView = true;
+        var authoringToolWorkspaceVm = new AuthoringToolWorkspaceViewModel();
+        authoringToolWorkspaceVm.AddLearningWorld(learningWorld);
+        authoringToolWorkspaceVm.SelectedLearningWorld = learningWorld;
+        var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
+        learningSpacePresenter.LearningSpaceVm.Returns(learningSpace);
+
+        var systemUnderTest =
+            CreatePresenterForTesting(authoringToolWorkspaceVm, learningSpacePresenter: learningSpacePresenter);
+        
+        systemUnderTest.CallCreateLearningElementWithPreloadedContentFromActiveView(learningContent);
+        
+        learningSpacePresenter.Received().CreateLearningElementWithPreloadedContent(learningContent);
+    }
+    
+    [Test]
+    public void
+        AuthoringToolWorkspacePresenter_CallCreateLearningElementWithPreloadedContentFromActiveView_LearningSpaceSelectedButSpaceVmIsNull_DoNothing()
+    {
+        var learningContent = new LearningContentViewModel("n", "t", Array.Empty<byte>());
+        var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
+        var learningSpace = new LearningSpaceViewModel("n", "sn", "a", "d", "g");
+        learningWorld.LearningSpaces.Add(learningSpace);
+        learningWorld.SelectedLearningObject = learningSpace;
+        learningWorld.ShowingLearningSpaceView = true;
+        var authoringToolWorkspaceVm = new AuthoringToolWorkspaceViewModel();
+        authoringToolWorkspaceVm.AddLearningWorld(learningWorld);
+        authoringToolWorkspaceVm.SelectedLearningWorld = learningWorld;
+        var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
+        //learningSpacePresenter.LearningSpaceVm.Returns(learningSpace);
+
+        var systemUnderTest =
+            CreatePresenterForTesting(authoringToolWorkspaceVm, learningSpacePresenter: learningSpacePresenter);
+        
+        systemUnderTest.CallCreateLearningElementWithPreloadedContentFromActiveView(learningContent);
+        
+        Assert.Pass();
     }
 
     [Test]

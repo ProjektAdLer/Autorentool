@@ -1,7 +1,6 @@
 ﻿using System.Xml.Serialization;
-using AuthoringTool.DataAccess.WorldExport;
 
-namespace AuthoringTool.DataAccess.XmlClasses;
+namespace AuthoringTool.DataAccess.XmlClasses.Entities;
 
 [XmlRoot(ElementName="GroupingsList")]
 public partial class GroupsXmlGroupingsList : IGroupsXmlGroupingsList

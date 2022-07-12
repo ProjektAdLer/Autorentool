@@ -39,7 +39,7 @@
                                 <div class="col">
                                     @if (input is ModalDialogDropdownInputField dropdownInput)
                                     {
-                                        <select @onchange="args => { if (args.Value != null) _inputFieldValues[input.Name] = (string)args.Value; EnsureDropdownsUpdated(); }"
+                                        <select @onchange="args => { if (args.Value != null) _inputFieldValues[input.Name] = (string)args.Value; }"
                                                 value="@_inputFieldValues[input.Name]"
                                                 disabled="@(!IsUnlocked(dropdownInput))" id="modal-input-drop-@input.Name.ToLower()">
                                             @if (_inputFieldValues[input.Name] == "")
@@ -237,25 +237,4 @@
         return _inputFieldValues.ContainsKey(key) && _inputFieldValues[key] == value;
     }
 
-    /// <summary>Ensures that, on change of a dropdown input field in the dialog, all other dropdowns in the dialog
-    /// will be updated. This means if the current value set in the backing dictionary <see cref="_inputFieldValues"/>
-    /// is not a valid choice for the dropdown anymore (because the required values in
-    /// <see cref="ModalDialogDropdownInputFieldChoiceMapping"/> are not satisfied anymore), the current value will be
-    /// set to the first now valid choice, which alignes with the behaviour of the html <c>select</c> element.</summary>
-    private void EnsureDropdownsUpdated()
-    {
-        if (InputFields == null) return;
-        foreach (var dropdownInputField in InputFields.OfType<ModalDialogDropdownInputField>())
-        {
-            if (!IsUnlocked(dropdownInputField)) return;
-            var availableChoices = dropdownInputField.ValuesToChoiceMapping.First(MappingSatisfied)
-                .AvailableChoices.ToArray();
-            if (!_inputFieldValues.ContainsKey(dropdownInputField.Name)) return;
-            if (_inputFieldValues[dropdownInputField.Name] != "" && 
-                !availableChoices.Contains(_inputFieldValues[dropdownInputField.Name]))
-            {
-                _inputFieldValues[dropdownInputField.Name] = availableChoices.First();
-            }
-        }
-    }
 }

@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.XmlClasses.course;
+﻿namespace AuthoringTool.DataAccess.XmlClasses.Entities.course;
 
 public interface ICourseInforefXmlInforef : IXmlSerializable
 {

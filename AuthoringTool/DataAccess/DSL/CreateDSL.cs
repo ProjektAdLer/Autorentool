@@ -2,7 +2,6 @@
 using System.Text.Json;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.Entities;
-using Microsoft.VisualBasic;
 using FileSystem = System.IO.Abstractions.FileSystem;
 
 namespace AuthoringTool.DataAccess.DSL;
@@ -13,17 +12,21 @@ public class CreateDSL : ICreateDSL
     public List<LearningElement>? listLearningElements;
     public List<LearningSpace>? listLearningSpaces;
     public List<int>? listLearningSpaceContent;
-    public LearningWorldJson learningWorldJson;
-    private IFileSystem _fileSystem;
+    public LearningWorldJson? learningWorldJson;
+    private readonly IFileSystem _fileSystem;
+
+    public CreateDSL(IFileSystem fileSystem)
+    {
+        _fileSystem = fileSystem;
+    }
 
 
     /// <summary>
     /// Reads the LearningWord Entity and creates an DSL Document with the given information.
     /// </summary>
     /// <param name="learningWorld"></param> Information about the learningWorld, topics, spaces and elements
-    public string WriteLearningWorld(LearningWorld learningWorld, IFileSystem? fileSystem=null)
+    public string WriteLearningWorld(LearningWorld learningWorld)
     {
-        _fileSystem = fileSystem?? new FileSystem();
         
         //Create Empty Learning World, 
         //learningWorldJson will be filled with information later
@@ -115,7 +118,23 @@ public class CreateDSL : ICreateDSL
             learningWorldJson.learningElements.Add(learningElementJson);
         }
         
+        //Add another Element to the LearningElementList, representation for the DSL Document
+        IdentifierJson dslDocumentIdentifier = new IdentifierJson()
+        {
+            type = "FileName",
+            value = "DSL Dokument"
+        };
+
+        LearningElementJson dslDocumentJson = new LearningElementJson()
+        {
+            id = learningElementId,
+            identifier = dslDocumentIdentifier,
+            elementType = "json",
+        };
         
+        learningWorldJson.learningElements.Add(dslDocumentJson);
+
+
         // Create DocumentRoot & JSON Document
         // And add the learningWorldJson to the DocumentRoot
         // The structure of the DSL needs DocumentRoot, because the learningWorld has its own tag
@@ -130,6 +149,10 @@ public class CreateDSL : ICreateDSL
         //Create Backup Folder structure and the DSL Document in it
         BackupFileGenerator createFolders = new BackupFileGenerator(_fileSystem);
         createFolders.CreateBackupFolders();
+        foreach (var learningElement in listLearningElements)
+        {
+            _fileSystem.File.WriteAllBytes(_fileSystem.Path.Join("XMLFilesForExport", learningElement.Name), learningElement.Content.Content);
+        }
         var dslPath = _fileSystem.Path.Join("XMLFilesForExport", "DSL_Document.json");
         _fileSystem.File.WriteAllText(dslPath, jsonFile);
         Console.WriteLine(jsonFile);

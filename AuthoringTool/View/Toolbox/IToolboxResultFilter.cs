@@ -11,6 +11,11 @@ namespace AuthoringTool.View.Toolbox;
 public interface IToolboxResultFilter
 {
     /// <summary>
+    /// User explanation regarding how the filter and search terms work.
+    /// </summary>
+    string UserExplanationText { get; }
+    
+    /// <summary>
     /// Filters the passed collection according to the provided search term.
     /// </summary>
     /// <remarks>

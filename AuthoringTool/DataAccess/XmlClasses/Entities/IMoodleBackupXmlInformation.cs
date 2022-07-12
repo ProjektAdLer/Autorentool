@@ -1,6 +1,4 @@
-﻿using AuthoringTool.DataAccess.XmlClasses.Entities;
-
-namespace AuthoringTool.DataAccess.XmlClasses;
+﻿namespace AuthoringTool.DataAccess.XmlClasses.Entities;
 
 public interface IMoodleBackupXmlInformation
 {

@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace AuthoringTool.DataAccess.XmlClasses;
+namespace AuthoringTool.DataAccess.XmlClasses.Entities;
 
 [XmlRoot(ElementName="settings")]
 public partial class MoodleBackupXmlSettings : IMoodleBackupXmlSettings{

@@ -1,12 +1,10 @@
 ﻿using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.XmlClasses;
-using AuthoringTool.DataAccess.XmlClasses.course;
-using AuthoringTool.Entities;
+using AuthoringTool.DataAccess.XmlClasses.Entities.course;
 using NSubstitute;
-using NSubstitute.Extensions;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.WorldExport;
+namespace AuthoringToolTest.DataAccess.XmlClasses;
 
 [TestFixture]
 public class XmlCourseFactoryUt
@@ -14,23 +12,24 @@ public class XmlCourseFactoryUt
     [Test]
     public void XmlCourseFactory_Constructor_AllPropertiesSet()
     {
-        //Arrange
-        
         //Act
         var xmlCourseFactory = CreateStandardXmlCourseFactory();
 
         //Assert
-        Assert.That(xmlCourseFactory.CourseCourseXmlCategory, Is.Not.Null);
-        Assert.That(xmlCourseFactory.CourseCourseXmlCourse, Is.Not.Null);
-        Assert.That(xmlCourseFactory.CourseEnrolmentsXmlEnrolManual, Is.Not.Null);
-        Assert.That(xmlCourseFactory.CourseEnrolmentsXmlEnrolGuest, Is.Not.Null);
-        Assert.That(xmlCourseFactory.CourseEnrolmentsXmlEnrolSelf, Is.Not.Null);
-        Assert.That(xmlCourseFactory.CourseEnrolmentsXmlEnrols, Is.Not.Null);
-        Assert.That(xmlCourseFactory.CourseEnrolmentsXmlEnrolments, Is.Not.Null);
-        Assert.That(xmlCourseFactory.CourseInforefXmlRole, Is.Not.Null);
-        Assert.That(xmlCourseFactory.CourseInforefXmlRoleref, Is.Not.Null);
-        Assert.That(xmlCourseFactory.CourseInforefXmlInforef, Is.Not.Null);
-        Assert.That(xmlCourseFactory.CourseRolesXmlRoles, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(xmlCourseFactory.CourseCourseXmlCategory, Is.Not.Null);
+            Assert.That(xmlCourseFactory.CourseCourseXmlCourse, Is.Not.Null);
+            Assert.That(xmlCourseFactory.CourseEnrolmentsXmlEnrolManual, Is.Not.Null);
+            Assert.That(xmlCourseFactory.CourseEnrolmentsXmlEnrolGuest, Is.Not.Null);
+            Assert.That(xmlCourseFactory.CourseEnrolmentsXmlEnrolSelf, Is.Not.Null);
+            Assert.That(xmlCourseFactory.CourseEnrolmentsXmlEnrols, Is.Not.Null);
+            Assert.That(xmlCourseFactory.CourseEnrolmentsXmlEnrolments, Is.Not.Null);
+            Assert.That(xmlCourseFactory.CourseInforefXmlRole, Is.Not.Null);
+            Assert.That(xmlCourseFactory.CourseInforefXmlRoleref, Is.Not.Null);
+            Assert.That(xmlCourseFactory.CourseInforefXmlInforef, Is.Not.Null);
+            Assert.That(xmlCourseFactory.CourseRolesXmlRoles, Is.Not.Null);
+        });
     }
 
     [Test]
@@ -47,9 +46,7 @@ public class XmlCourseFactoryUt
 
         mockreadDsl.GetLearningWorld().Returns(mockLearningWorld);
 
-        var xmlCourseFactory = new XmlCourseFactory(mockreadDsl, mockCourseCategory, mockCourseCourse, null,
-            null, null, null, null,
-            null, null, null);
+        var xmlCourseFactory = new XmlCourseFactory(mockreadDsl, mockCourseCategory, mockCourseCourse);
 
         //Act
         xmlCourseFactory.CreateCourseCourseXml();
@@ -93,9 +90,9 @@ public class XmlCourseFactoryUt
         var mockInforefRole = Substitute.For<ICourseInforefXmlRole>();
         var mockInforefRoleref = Substitute.For<ICourseInforefXmlRoleref>();
         var mockInforefInforef = Substitute.For<ICourseInforefXmlInforef>();
-        
-        var xmlCourseFactory = CreateTestableXmlCourseFactory(null, null, null,
-            null, null, mockInforefRole, mockInforefRoleref, mockInforefInforef);
+
+        var xmlCourseFactory = CreateTestableXmlCourseFactory(inforefXmlRole: mockInforefRole,
+            inforefXmlRoleref: mockInforefRoleref, inforefXmlInforef: mockInforefInforef);
 
         //Act
         xmlCourseFactory.CreateCourseInforefXml();
@@ -113,8 +110,7 @@ public class XmlCourseFactoryUt
         //Arrange 
         var mockCourseRoles = Substitute.For<ICourseRolesXmlRoles>();
 
-        var xmlCourseFactory = CreateTestableXmlCourseFactory(null, null, null,
-            null, null, null, null, null, mockCourseRoles);
+        var xmlCourseFactory = CreateTestableXmlCourseFactory(rolesXmlRoles:mockCourseRoles);
 
         //Act
         xmlCourseFactory.CreateCourseRolesXml();
@@ -123,20 +119,19 @@ public class XmlCourseFactoryUt
         mockCourseRoles.Received().SetParameters(Arg.Any<string>(), Arg.Any<string>());
         mockCourseRoles.Received().Serialize();
     }
-    
-    
-    public XmlCourseFactory CreateStandardXmlCourseFactory()
+
+
+    private XmlCourseFactory CreateStandardXmlCourseFactory(IReadDSL? readDsl = null)
     {
-        ReadDSL? readDsl = new ReadDSL();
+        readDsl ??= Substitute.For<IReadDSL>();
         return new XmlCourseFactory(readDsl);
     }
 
-    public XmlCourseFactory CreateTestableXmlCourseFactory(ICourseCourseXmlCategory? courseXmlCategory = null, ICourseCourseXmlCourse? courseXmlCourse = null,
+    private XmlCourseFactory CreateTestableXmlCourseFactory(ICourseCourseXmlCategory? courseXmlCategory = null, ICourseCourseXmlCourse? courseXmlCourse = null,
         ICourseEnrolmentsXmlEnrol? enrolmentsXmlEnrol = null, ICourseEnrolmentsXmlEnrols? enrolmentsXmlEnrols = null, 
         ICourseEnrolmentsXmlEnrolments? enrolmentsXmlEnrolments = null, ICourseInforefXmlRole? inforefXmlRole = null, 
         ICourseInforefXmlRoleref? inforefXmlRoleref = null, ICourseInforefXmlInforef? inforefXmlInforef = null, ICourseRolesXmlRoles? rolesXmlRoles = null,
-        ICourseCompletiondefaultXmlCourseCompletionDefaults? courseCourseXmlCompletiondefault = null, IReadDSL? readDsl = null, 
-        LearningWorldJson? learningWorldJson = null)
+        ICourseCompletiondefaultXmlCourseCompletionDefaults? courseCourseXmlCompletiondefault = null, IReadDSL? readDsl = null)
     {
         courseXmlCategory ??= Substitute.For<ICourseCourseXmlCategory>();
         courseXmlCourse ??= Substitute.For<ICourseCourseXmlCourse>();
@@ -153,8 +148,7 @@ public class XmlCourseFactoryUt
 
         courseCourseXmlCompletiondefault ??= Substitute.For<ICourseCompletiondefaultXmlCourseCompletionDefaults>();
         
-        readDsl ??= Substitute.For<IReadDSL?>();
-        learningWorldJson ??= Substitute.For<LearningWorldJson>();
+        readDsl ??= Substitute.For<IReadDSL>();
 
         return new XmlCourseFactory(readDsl, courseXmlCategory, courseXmlCourse, enrolmentsXmlEnrol, enrolmentsXmlEnrols,
             enrolmentsXmlEnrolments, inforefXmlRole, inforefXmlRoleref, inforefXmlInforef, rolesXmlRoles, 

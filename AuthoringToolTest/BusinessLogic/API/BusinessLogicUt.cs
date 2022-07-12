@@ -193,7 +193,7 @@ public class BusinessLogicUt
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.LoadLearningWorld(stream);
+        systemUnderTest.LoadLearningWorldFromStream(stream);
 
         mockDataAccess.Received().LoadLearningWorldFromStream(stream);
     }
@@ -208,7 +208,7 @@ public class BusinessLogicUt
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        var learningWorldActual = systemUnderTest.LoadLearningWorld(stream);
+        var learningWorldActual = systemUnderTest.LoadLearningWorldFromStream(stream);
 
         Assert.That(learningWorldActual, Is.EqualTo(learningWorld));
     }
@@ -221,7 +221,7 @@ public class BusinessLogicUt
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.LoadLearningSpace(stream);
+        systemUnderTest.LoadLearningSpaceFromStream(stream);
 
         mockDataAccess.Received().LoadLearningSpaceFromStream(stream);
     }
@@ -236,7 +236,7 @@ public class BusinessLogicUt
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        var learningSpaceActual = systemUnderTest.LoadLearningSpace(stream);
+        var learningSpaceActual = systemUnderTest.LoadLearningSpaceFromStream(stream);
 
         Assert.That(learningSpaceActual, Is.EqualTo(learningSpace));
     }
@@ -249,7 +249,7 @@ public class BusinessLogicUt
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.LoadLearningElement(stream);
+        systemUnderTest.LoadLearningElementFromStream(stream);
 
         mockDataAccess.Received().LoadLearningElementFromStream(stream);
     }
@@ -266,9 +266,49 @@ public class BusinessLogicUt
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        var learningElementActual = systemUnderTest.LoadLearningElement(stream);
+        var learningElementActual = systemUnderTest.LoadLearningElementFromStream(stream);
 
         Assert.That(learningElementActual, Is.EqualTo(learningElement));
+    }
+    
+    [Test]
+    public void BusinessLogic_LoadLearningContentFromStream_CallsDataAccess()
+    {
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        var stream = Substitute.For<Stream>();
+
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
+
+        systemUnderTest.LoadLearningContentFromStream("filename.extension", stream);
+
+        mockDataAccess.Received().LoadLearningContentFromStream("filename.extension", stream);
+    }
+
+    [Test]
+    public void BusinessLogic_LoadLearningContentFromStream_ReturnsLearningElement()
+    {
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        var content = new LearningContent("a", "b", Array.Empty<byte>());
+        var learningContent = new LearningContent("filename","extension", Array.Empty<byte>());
+        var stream = Substitute.For<Stream>();
+        mockDataAccess.LoadLearningContentFromStream("filename.extension", stream).Returns(learningContent);
+
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
+
+        var learningElementActual = systemUnderTest.LoadLearningContentFromStream("filename.extension", stream);
+
+        Assert.That(learningElementActual, Is.EqualTo(learningContent));
+    }
+
+    [Test]
+    public void BusinessLogic_FindSuitableNewSavePath_CallsDataAccess()
+    {
+        var dataAccess = Substitute.For<IDataAccess>();
+        var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess:dataAccess);
+
+        systemUnderTest.FindSuitableNewSavePath("foo", "bar", "baz");
+
+        dataAccess.Received().FindSuitableNewSavePath("foo", "bar", "baz");
     }
 
     private AuthoringTool.BusinessLogic.API.BusinessLogic CreateStandardBusinessLogic(

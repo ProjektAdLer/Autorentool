@@ -1,7 +1,7 @@
 ﻿using System.Xml.Serialization;
 using AuthoringTool.DataAccess.WorldExport;
 
-namespace AuthoringTool.DataAccess.XmlClasses.course;
+namespace AuthoringTool.DataAccess.XmlClasses.Entities.course;
 
 [XmlRoot(ElementName="enrolments")]
 public partial class CourseEnrolmentsXmlEnrolments : ICourseEnrolmentsXmlEnrolments

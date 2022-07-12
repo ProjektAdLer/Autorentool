@@ -4,15 +4,14 @@
 @using AuthoringTool.PresentationLogic.LearningSpace
 @using AuthoringTool.PresentationLogic.LearningWorld
 @using AuthoringTool.PresentationLogic.Toolbox
-@inject IAbstractToolboxRenderFragmentFactory RenderFragmentFactory
-@inject IToolboxEntriesProvider EntriesProvider
-@inject ILogger<Toolbox> Logger
-@inject IToolboxResultFilter ResultFilter
 @* Disabled because editor does not recognize ItemRenderTemplate being provided as inner tag -n.stich*@
 @* ReSharper disable once Blazor.EditorRequired *@
 <GridLayoutDisplay HeaderTitle="Toolbox" Items="@FilteredEntries">
     <ChildContent>
-        <input type="text" name="search-term" @bind="@SearchTerm" @bind:event="oninput" placeholder="Search..."/>
+        <div>
+            <input type="text" name="search-term" style="width: 90%" @bind="@SearchTerm" @bind:event="oninput" placeholder="Search..."/>
+            <Tooltip Text="@ResultFilter.UserExplanationText"><i class="bi bi-info-circle"></i></Tooltip>
+        </div>
     </ChildContent>
     <ItemRenderTemplate>
         @RenderFragmentFactory.GetRenderFragment(context)
@@ -21,8 +20,14 @@
 
 @code
 {
-    private string? SearchTerm { get; set; }
-    private IEnumerable<IDisplayableLearningObject> FilteredEntries =>
+#pragma warning disable CS8618
+    [Inject] internal ILogger<Toolbox> Logger { get; private init; }
+    [Inject] internal IAbstractToolboxRenderFragmentFactory RenderFragmentFactory { get; private init; }
+    [Inject] internal IToolboxEntriesProvider EntriesProvider { get; private init; }
+    [Inject] internal IToolboxResultFilter ResultFilter { get; private init; }
+#pragma warning restore CS8618
+    internal string? SearchTerm { get; private set; }
+    internal IEnumerable<IDisplayableLearningObject> FilteredEntries =>
         string.IsNullOrWhiteSpace(SearchTerm) ?
             EntriesProvider.Entries :
             ResultFilter.FilterCollection(EntriesProvider.Entries, SearchTerm);

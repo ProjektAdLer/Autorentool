@@ -2,11 +2,8 @@
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.WorldExport;
-using AuthoringTool.DataAccess.XmlClasses;
-using AuthoringTool.DataAccess.XmlClasses.sections;
+using AuthoringTool.DataAccess.XmlClasses.Entities.sections;
 using AuthoringTool.DataAccess.XmlClasses.XmlFileFactories;
-using Castle.Components.DictionaryAdapter;
-using NSubstitute.Core.Arguments;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.sections;
@@ -40,25 +37,18 @@ public class SectionsSectionXmlUt
     {
         //Arrange 
         var mockFileSystem = new MockFileSystem();
-        var backupFileGen = new BackupFileGenerator(mockFileSystem);
-        ReadDSL? dsl = new ReadDSL();
-        var h5pfactory = new XmlH5PFactory(dsl, mockFileSystem, null, null, null,null,
-            null,null,null,null,null,null,null,
-            null,null,null,null,
-            null,null);
 
-        backupFileGen.CreateBackupFolders();
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        mockFileSystem.AddDirectory(Path.Join(curWorkDir, "XMLFilesForExport", "sections", "section_1"));
         
-        var sectionSection = new SectionsSectionXmlSection();
-        sectionSection.SetParameters("h5pElementId", "$@NULL@$",
+        var systemUnderTest = new SectionsSectionXmlSection();
+        systemUnderTest.SetParameters("h5pElementId", "$@NULL@$",
             "$@NULL@$", "0", "$@NULL@$", "1", 
             "$@NULL@$", "currentTime", "h5pElementId");
+        XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
 
         //Act
-        h5pfactory.CreateSectionsFolder("1");
-        XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
-        sectionSection.Serialize("1");
+        systemUnderTest.Serialize("", "1");
         
         //Assert
         var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "sections", "section_1", "section.xml");

@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using AuthoringTool.Annotations;
-using AuthoringTool.Components.ModalDialog;
 using AuthoringTool.PresentationLogic.LearningWorld;
 
 namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace;

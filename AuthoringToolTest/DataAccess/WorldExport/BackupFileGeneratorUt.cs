@@ -1,7 +1,6 @@
 ﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.WorldExport;
-using Microsoft.VisualBasic.FileIO;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.WorldExport;

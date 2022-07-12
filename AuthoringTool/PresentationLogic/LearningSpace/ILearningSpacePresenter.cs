@@ -1,6 +1,5 @@
 ﻿using AuthoringTool.Components.ModalDialog;
 using AuthoringTool.PresentationLogic.LearningContent;
-using AuthoringTool.PresentationLogic.LearningWorld;
 
 namespace AuthoringTool.PresentationLogic.LearningSpace;
 
@@ -16,6 +15,7 @@ public interface ILearningSpacePresenter
     IEnumerable<ModalDialogInputField> ModalDialogSpaceInputFields { get; }
     bool EditLearningElementDialogOpen { get; set; }
     IEnumerable<ModalDialogInputField> ModalDialogCreateElementInputFields { get; }
+    IEnumerable<ModalDialogInputField> ModalDialogCreateElementCustomInputFields { get; }
     IEnumerable<ModalDialogInputField> ModalDialogEditElementInputFields { get; }
     bool CreateLearningElementDialogOpen { get; set; }
     LearningSpaceViewModel? LearningSpaceVm { get; }
@@ -28,4 +28,6 @@ public interface ILearningSpacePresenter
     Task OnEditSpaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple);
     Task OnEditElementDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple);
     void SetLearningSpace(LearningSpaceViewModel space);
+    void CreateLearningElementWithPreloadedContent(LearningContentViewModel learningContent);
+    bool DraggedLearningContentIsPresent { get; }
 }

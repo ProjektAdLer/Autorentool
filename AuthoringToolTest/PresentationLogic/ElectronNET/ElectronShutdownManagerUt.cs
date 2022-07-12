@@ -2,7 +2,6 @@ using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.ElectronNET;
 using ElectronWrapper;
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.PresentationLogic.ElectronNET;

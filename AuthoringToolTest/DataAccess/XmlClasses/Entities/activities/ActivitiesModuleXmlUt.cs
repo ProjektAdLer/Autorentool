@@ -26,27 +26,30 @@ public class ActivitiesModuleXmlUt
             "h5pElementId", "2021051700");
         
         //Assert
-        Assert.That(module.Modulename, Is.EqualTo("h5pactivity"));
-        Assert.That(module.Sectionid, Is.EqualTo("h5pElementId"));
-        Assert.That(module.Sectionnumber, Is.EqualTo("h5pElementId"));
-        Assert.That(module.Idnumber, Is.EqualTo(""));
-        Assert.That(module.Added, Is.EqualTo("currentTime"));
-        Assert.That(module.Score, Is.EqualTo("0"));
-        Assert.That(module.Indent, Is.EqualTo("0"));
-        Assert.That(module.Visible, Is.EqualTo("1"));
-        Assert.That(module.Visibleoncoursepage, Is.EqualTo("1"));
-        Assert.That(module.Visibleold, Is.EqualTo("1"));
-        Assert.That(module.Groupmode, Is.EqualTo("0"));
-        Assert.That(module.Groupingid, Is.EqualTo("1"));
-        Assert.That(module.Completion, Is.EqualTo("1"));
-        Assert.That(module.Completiongradeitemnumber, Is.EqualTo("$@NULL@$"));
-        Assert.That(module.Completionview, Is.EqualTo("0"));
-        Assert.That(module.Completionexpected, Is.EqualTo("0"));
-        Assert.That(module.Availability, Is.EqualTo("$@NULL@$"));
-        Assert.That(module.Showdescription, Is.EqualTo("0"));
-        Assert.That(module.Tags, Is.EqualTo(""));
-        Assert.That(module.Id, Is.EqualTo("h5pElementId"));
-        Assert.That(module.Version, Is.EqualTo("2021051700"));
+        Assert.Multiple(() =>
+        {
+            Assert.That(module.Modulename, Is.EqualTo("h5pactivity"));
+            Assert.That(module.Sectionid, Is.EqualTo("h5pElementId"));
+            Assert.That(module.Sectionnumber, Is.EqualTo("h5pElementId"));
+            Assert.That(module.Idnumber, Is.EqualTo(""));
+            Assert.That(module.Added, Is.EqualTo("currentTime"));
+            Assert.That(module.Score, Is.EqualTo("0"));
+            Assert.That(module.Indent, Is.EqualTo("0"));
+            Assert.That(module.Visible, Is.EqualTo("1"));
+            Assert.That(module.Visibleoncoursepage, Is.EqualTo("1"));
+            Assert.That(module.Visibleold, Is.EqualTo("1"));
+            Assert.That(module.Groupmode, Is.EqualTo("0"));
+            Assert.That(module.Groupingid, Is.EqualTo("1"));
+            Assert.That(module.Completion, Is.EqualTo("1"));
+            Assert.That(module.Completiongradeitemnumber, Is.EqualTo("$@NULL@$"));
+            Assert.That(module.Completionview, Is.EqualTo("0"));
+            Assert.That(module.Completionexpected, Is.EqualTo("0"));
+            Assert.That(module.Availability, Is.EqualTo("$@NULL@$"));
+            Assert.That(module.Showdescription, Is.EqualTo("0"));
+            Assert.That(module.Tags, Is.EqualTo(""));
+            Assert.That(module.Id, Is.EqualTo("h5pElementId"));
+            Assert.That(module.Version, Is.EqualTo("2021051700"));
+        });
     }
 
     [Test]
@@ -54,11 +57,8 @@ public class ActivitiesModuleXmlUt
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
-        var readDsl = new ReadDSL();
-        var h5pfactory = new XmlH5PFactory(readDsl, mockFileSystem, null, null, null, null,
-            null, null, null, null, null, null, null, null, null,
-            null, null, null, null);
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities", "h5pactivity_2"));
         
         var module = new ActivitiesModuleXmlModule();
         module.SetParameterts("h5pactivity", "h5pElementId", "h5pElementId",
@@ -67,11 +67,10 @@ public class ActivitiesModuleXmlUt
             "1", "$@NULL@$", "0",
             "0", "$@NULL@$", "0", "", 
             "h5pElementId", "2021051700");
+        XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
         
         //Act
-        XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
-        h5pfactory.CreateActivityFolder("2");
-        module.Serialize("2");
+        module.Serialize("h5pactivity", "2");
         
         //Assert
         var path = Path.Join(currWorkDir, "XMLFilesForExport","activities", "h5pactivity_2", "module.xml");

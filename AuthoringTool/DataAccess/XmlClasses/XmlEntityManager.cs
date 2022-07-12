@@ -1,5 +1,4 @@
-﻿using System.IO.Abstractions;
-using AuthoringTool.DataAccess.DSL;
+﻿using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.XmlClasses.XmlFileFactories;
 
 namespace AuthoringTool.DataAccess.XmlClasses;
@@ -11,16 +10,21 @@ public class XmlEntityManager
     public static int FileIdBlock2 = 2;
     
     //run all factorys that are available, to set the parameters and create the xml files
-    public void GetFactories(ReadDSL? readDsl)
+    public void GetFactories(ReadDSL readDsl, string dslpath)
     {
-        var xmlH5PFileFactory = new XmlH5PFactory(readDsl);
-        xmlH5PFileFactory.CreateH5PFileFactory();
+        XmlFileManager filemanager = new XmlFileManager();
 
-        if (readDsl != null)
-        {
-            var xmlCourseFactory = new XmlCourseFactory(readDsl);
-            xmlCourseFactory.CreateXmlCourseFactory();
-        }
+        var xmlFileFactory = new XmlFileFactory(readDsl, dslpath, filemanager);
+        xmlFileFactory.CreateFileFactory();
+
+        //var xmlLessonFactory = new XmlLessonFactory(readDsl, filemanager);
+        //xmlLessonFactory.CreateLessonFactory();
+        
+        var xmlH5PFileFactory = new XmlH5PFactory(readDsl, filemanager);
+        xmlH5PFileFactory.CreateH5PFileFactory();
+        
+        var xmlCourseFactory = new XmlCourseFactory(readDsl);
+        xmlCourseFactory.CreateXmlCourseFactory();
 
         /*var xmlSectionFactory = new XmlSectionFactory();
         xmlSectionFactory.CreateXmlSectionFactory();*/

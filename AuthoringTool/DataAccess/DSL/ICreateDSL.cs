@@ -5,5 +5,5 @@ namespace AuthoringTool.DataAccess.DSL;
 
 public interface ICreateDSL
 {
-   string WriteLearningWorld(LearningWorld learningWorld,  IFileSystem? fileSystem=null);
+   string WriteLearningWorld(LearningWorld learningWorld);
 }

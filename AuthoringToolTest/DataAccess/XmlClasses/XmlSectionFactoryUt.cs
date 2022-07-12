@@ -1,7 +1,4 @@
-﻿using AuthoringTool.DataAccess.XmlClasses;
-using AuthoringTool.DataAccess.XmlClasses.sections;
-using NSubstitute;
-using NUnit.Framework;
+﻿
 /*
 namespace AuthoringToolTest.DataAccess.WorldExport.XmlClasses;
 

@@ -4,20 +4,24 @@ namespace AuthoringTool.PresentationLogic.ElectronNET;
 
 public class ElectronDialogManager : IElectronDialogManager
 {
-    public ElectronDialogManager(IWindowManagerWrapper windowManager, IDialogWrapper dialog)
+    public ElectronDialogManager(IWindowManagerWrapper windowManager, IDialogWrapper dialogWrapper)
     {
         WindowManager = windowManager;
-        Dialog = dialog;
+        DialogWrapper = dialogWrapper;
     }
     
     private BrowserWindow? BrowserWindow => WindowManager.BrowserWindows.FirstOrDefault();
     internal IWindowManagerWrapper WindowManager { get; }
-    internal IDialogWrapper Dialog { get; }
+    internal IDialogWrapper DialogWrapper { get; }
     
-    /// <inheritdoc cref="IElectronDialogManager.ShowSaveAsDialog"/>
-    public async Task<string> ShowSaveAsDialog(string title, string? defaultPath = null, IEnumerable<FileFilterProxy>? fileFilters = null)
+    /// <inheritdoc cref="IElectronDialogManager.ShowSaveAsDialogAsync"/>
+    public async Task<string> ShowSaveAsDialogAsync(string title, string? defaultPath = null,
+        IEnumerable<FileFilterProxy>? fileFilters = null)
     {
-        var mainWindow = BrowserWindow;
+        if (BrowserWindow == null)
+        {
+            throw new Exception("BrowserWindow was unexpectedly null");
+        }
         var options = new SaveDialogOptions
         {
             Title = title,
@@ -27,7 +31,7 @@ public class ElectronDialogManager : IElectronDialogManager
             Filters = ToFileFilterArray(fileFilters)
         };
 
-        var pathResult = await Dialog.ShowSaveDialogAsync(mainWindow, options);
+        var pathResult = await DialogWrapper.ShowSaveDialogAsync(BrowserWindow, options);
         if (string.IsNullOrEmpty(pathResult))
         {
             throw new OperationCanceledException("Cancelled by user");
@@ -36,17 +40,19 @@ public class ElectronDialogManager : IElectronDialogManager
         return pathResult;
     }
 
-    /// <inheritdoc cref="IElectronDialogManager.ShowOpenDialog"/>
-    public async Task<IEnumerable<string>> ShowOpenDialog(string title, bool directory = false, bool multiSelect = false,
+    /// <inheritdoc cref="IElectronDialogManager.ShowOpenDialogAsync"/>
+    public async Task<IEnumerable<string>> ShowOpenDialogAsync(string title, bool directory = false, bool multiSelect = false,
         string? defaultPath = null, IEnumerable<FileFilterProxy>? fileFilters = null)
     {
-        var mainWindow = BrowserWindow;
-        
+        if (BrowserWindow == null)
+        {
+            throw new Exception("BrowserWindow was unexpectedly null");
+        }
         var openDialogProperties = new List<OpenDialogProperty>
         {
-            directory ? OpenDialogProperty.openDirectory : OpenDialogProperty.openFile,
+            directory ? OpenDialogProperty.OpenDirectory : OpenDialogProperty.OpenFile,
         };
-        if (multiSelect) openDialogProperties.Add(OpenDialogProperty.multiSelections);
+        if (multiSelect) openDialogProperties.Add(OpenDialogProperty.MultiSelections);
         
         var options = new OpenDialogOptions
         {
@@ -55,7 +61,7 @@ public class ElectronDialogManager : IElectronDialogManager
             Filters = ToFileFilterArray(fileFilters),
             Properties = openDialogProperties.ToArray()
         };
-        var pathResult = await Dialog.ShowOpenDialogAsync(mainWindow, options);
+        var pathResult = await DialogWrapper.ShowOpenDialogAsync(BrowserWindow, options);
         if (pathResult.All(string.IsNullOrEmpty))
         {
             throw new OperationCanceledException("Cancelled by user");
@@ -64,17 +70,17 @@ public class ElectronDialogManager : IElectronDialogManager
         return pathResult.Where(res => !string.IsNullOrEmpty(res));
     }
     
-    /// <inheritdoc cref="IElectronDialogManager.ShowOpenFileDialog"/>
-    public async Task<string> ShowOpenFileDialog(string title, string? defaultPath = null,
+    /// <inheritdoc cref="IElectronDialogManager.ShowOpenFileDialogAsync"/>
+    public async Task<string> ShowOpenFileDialogAsync(string title, string? defaultPath = null,
         IEnumerable<FileFilterProxy>? fileFilters = null)
     {
-        return (await ShowOpenDialog(title, false, false, defaultPath, fileFilters)).First();
+        return (await ShowOpenDialogAsync(title, false, false, defaultPath, fileFilters)).First();
     }
 
-    /// <inheritdoc cref="IElectronDialogManager.ShowOpenDirectoryDialog"/>
-    public async Task<string> ShowOpenDirectoryDialog(string title, string? defaultPath = null)
+    /// <inheritdoc cref="IElectronDialogManager.ShowOpenDirectoryDialogAsync"/>
+    public async Task<string> ShowOpenDirectoryDialogAsync(string title, string? defaultPath = null)
     {
-        return (await ShowOpenDialog(title, true, false, defaultPath, null)).First();
+        return (await ShowOpenDialogAsync(title, true, false, defaultPath, null)).First();
     }
 
     private static FileFilter[] ToFileFilterArray(IEnumerable<FileFilterProxy>? fileFilters)

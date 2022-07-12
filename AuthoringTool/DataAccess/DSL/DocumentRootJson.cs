@@ -1,6 +1,4 @@
-﻿using AuthoringTool.PresentationLogic.LearningWorld;
-
-namespace AuthoringTool.DataAccess.DSL;
+﻿namespace AuthoringTool.DataAccess.DSL;
 
 /// <summary>
 /// The DocumentRoot only need the learningWorld

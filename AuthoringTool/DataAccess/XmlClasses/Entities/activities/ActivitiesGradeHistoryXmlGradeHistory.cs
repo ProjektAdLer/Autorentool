@@ -14,10 +14,10 @@ public class ActivitiesGradeHistoryXmlGradeHistory : IActivitiesGradeHistoryXmlG
     }
     
     
-    public void Serialize(string? moduleId)
+    public void Serialize(string? activityName, string? moduleId)
     {
         var xml = new XmlSerialize();
-        xml.Serialize(this, Path.Join("activities", "h5pactivity_"+moduleId, "grade_history.xml"));
+        xml.Serialize(this, Path.Join("activities", activityName + "_" + moduleId, "grade_history.xml"));
     }
         
     [XmlElement(ElementName="grade_grades")]

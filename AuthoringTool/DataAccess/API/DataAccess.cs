@@ -11,10 +11,6 @@ internal class DataAccess : IDataAccess
 {
     public DataAccess(IAuthoringToolConfiguration configuration, IBackupFileGenerator backupFileGenerator,
         IXmlFileHandler<LearningWorld> xmlHandlerWorld, IXmlFileHandler<LearningSpace> xmlHandlerSpace,
-        IXmlFileHandler<LearningElement> xmlHandlerElement, IContentFileHandler contentHandler, ICreateDSL createDsl, IReadDSL readDsl): this(configuration,
-        backupFileGenerator, xmlHandlerWorld, xmlHandlerSpace, xmlHandlerElement, contentHandler, createDsl, readDsl, new FileSystem()) { }
-    public DataAccess(IAuthoringToolConfiguration configuration, IBackupFileGenerator backupFileGenerator,
-        IXmlFileHandler<LearningWorld> xmlHandlerWorld, IXmlFileHandler<LearningSpace> xmlHandlerSpace,
         IXmlFileHandler<LearningElement> xmlHandlerElement, IContentFileHandler contentHandler,
         ICreateDSL createDsl, IReadDSL readDsl, IFileSystem fileSystem)
     {
@@ -51,7 +47,7 @@ internal class DataAccess : IDataAccess
         string dslpath = CreateDsl.WriteLearningWorld(learningWorld);
         ReadDsl.ReadLearningWorld(dslpath);
         BackupFile.CreateBackupFolders();
-        BackupFile.WriteXmlFiles(ReadDsl as ReadDSL);
+        BackupFile.WriteXmlFiles(ReadDsl as ReadDSL, dslpath);
         BackupFile.WriteBackupFile(filepath);
     }
 
@@ -104,6 +100,11 @@ internal class DataAccess : IDataAccess
     {
         return ContentHandler.LoadFromDisk(filepath);
     }
+    
+    public LearningContent LoadLearningContentFromStream(string name, Stream stream)
+    {
+        return ContentHandler.LoadFromStream(name, stream);
+    }
 
     /// <inheritdoc cref="IDataAccess.FindSuitableNewSavePath"/>
     public string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding)
@@ -122,7 +123,7 @@ internal class DataAccess : IDataAccess
         {
             throw new ArgumentException("fileEnding cannot be empty", nameof(fileEnding));
         }
-        
+
         var baseSavePath = _fileSystem.Path.Combine(targetFolder, fileName);
         var savePath = baseSavePath;
         var iteration = 0;

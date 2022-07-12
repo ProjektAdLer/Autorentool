@@ -4,7 +4,6 @@
 @using AuthoringTool.PresentationLogic.API
 @using AuthoringTool.PresentationLogic.AuthoringToolWorkspace
 @using AuthoringTool.View.LearningWorld
-@using static System.IO.Directory;
 
 
 @inject IMouseService _mouseService
@@ -53,6 +52,12 @@
 </div>
 <DropZone OnNewStream=OnDragAndDropResult></DropZone>
 
+@if (AuthoringToolWorkspaceP.InformationMessageToShow != null)
+{
+    <ModalDialog Title="Information"
+                 Text=@(AuthoringToolWorkspaceP.InformationMessageToShow)
+                 OnClose=OnShowInformationDialogClose DialogType=ModalDialogType.Ok/>
+}
 <!-- Save dialog for shutting down -->
 @if (AuthoringToolWorkspaceP.SaveUnsavedChangesDialogOpen && AuthoringToolWorkspaceP.UnsavedWorldsQueue != null
      && AuthoringToolWorkspaceP.UnsavedWorldsQueue.Any())
@@ -341,6 +346,11 @@
         await AuthoringToolWorkspaceP.ProcessDragAndDropResult(result);
         StateHasChanged();
         _activeView?.TriggerStateHasChanged();
+    }
+
+    private void OnShowInformationDialogClose()
+    {
+        AuthoringToolWorkspaceP.InformationMessageToShow = null;
     }
 
 }

@@ -17,10 +17,10 @@ public class ActivitiesH5PActivityXmlActivity : IActivitiesH5PActivityXmlActivit
         Contextid = contextid;
     }
     
-    public void Serialize(string? moduleId)
+    public void Serialize(string? activityName, string? moduleId)
     {
         var xml = new XmlSerialize();
-        xml.Serialize(this, Path.Join("activities", "h5pactivity_"+moduleId, "h5pactivity.xml"));
+        xml.Serialize(this, Path.Join("activities", activityName + "_" + moduleId, "h5pactivity.xml"));
     }
     
     [XmlElement(ElementName="h5pactivity")]

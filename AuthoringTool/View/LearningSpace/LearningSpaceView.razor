@@ -18,10 +18,20 @@
 @ChildContent
 @if (_learningSpaceP.CreateLearningElementDialogOpen)
 {
-    <ModalDialog Title="Create new learning element" Text="Please enter the required data for the learning element below:"
-                 OnClose="@OnCreateElementDialogClose" DialogType=@ModalDialogType.OkCancel
-                 InputFields="@_learningSpaceP.ModalDialogCreateElementInputFields">
-    </ModalDialog>
+    @if (_learningSpaceP.DraggedLearningContentIsPresent)
+    {
+        <ModalDialog Title="Create new learning element" Text="Please enter the required data for the learning element below:"
+                     OnClose="@OnCreateElementDialogClose" DialogType=@ModalDialogType.OkCancel
+                     InputFields="@_learningSpaceP.ModalDialogCreateElementCustomInputFields">
+        </ModalDialog>
+    }
+    else
+    {
+        <ModalDialog Title="Create new learning element" Text="Please enter the required data for the learning element below:"
+                         OnClose="@OnCreateElementDialogClose" DialogType=@ModalDialogType.OkCancel
+                         InputFields="@_learningSpaceP.ModalDialogCreateElementInputFields">
+            </ModalDialog>
+    }
 }
 <br>
 
@@ -54,25 +64,37 @@
                 @{
                     var rectStyle = learningObject switch
                     {
-                        TransferElementViewModel => "fill:royalblue",
-                        ActivationElementViewModel => "fill:blueviolet",
-                        InteractionElementViewModel => "fill:steelblue",
-                        TestElementViewModel => "fill:deepskyblue",
-                        LearningElementViewModel => "fill:blue",
+                        LearningElementViewModel => "fill:lightblue",
                         _ => "grey"
                         };
+                    
+                    string polygonPoints, polygonColor;
 
-                    var polygonColor = learningObject.Difficulty switch
+                    switch (learningObject.Difficulty)
                     {
-                        LearningElementDifficultyEnum.Easy => "green",
-                        LearningElementDifficultyEnum.Medium => "yellow",
-                        LearningElementDifficultyEnum.Hard => "red",
-                        _ => "grey"
-                        };
+                        case LearningElementDifficultyEnum.Easy:
+                            polygonPoints = "13 1 10 10 2 13 10 16 13 25 16 16 24 13 16 10";
+                            polygonColor = "green";
+                            break;
+                        case LearningElementDifficultyEnum.Medium:
+                            polygonPoints = "13 1 5 25 24 10 2 10 21 25";
+                            polygonColor = "yellow";
+                            break;
+                        case LearningElementDifficultyEnum.Hard:
+                            polygonPoints = "13 1 10 8 2 7 8 13 2 19 10 18 13 25 16 18 24 19 19 13 24 7 16 8 13 1";
+                            polygonColor = "red";
+                            break;
+                        case LearningElementDifficultyEnum.None:
+                            polygonPoints = "0";
+                            polygonColor = "lightblue";
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException();
+                    }
                 }
                 <rect height="50" width="100" style=@rectStyle></rect>
                 <polygon transform="translate(75,1)" fill=@polygonColor
-                         points="12.5,1.25 5,24.75 23.75,9.75 1.25,9.75 20,24.75"></polygon>
+                         points=@polygonPoints></polygon>
                 <text x="3" y="15">@learningObject.Name</text>
 
             </Draggable>

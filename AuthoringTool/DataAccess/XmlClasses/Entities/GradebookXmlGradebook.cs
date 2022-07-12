@@ -1,10 +1,7 @@
-﻿using System.IO.Abstractions;
-using System.Xml.Serialization;
+﻿using System.Xml.Serialization;
 using AuthoringTool.DataAccess.WorldExport;
-using AuthoringTool.DataAccess.XmlClasses.Entities;
-using Microsoft.VisualBasic;
 
-namespace AuthoringTool.DataAccess.XmlClasses;
+namespace AuthoringTool.DataAccess.XmlClasses.Entities;
 
 [XmlRoot(ElementName="gradebook")]
 public partial class GradebookXmlGradebook : IGradebookXmlGradebook

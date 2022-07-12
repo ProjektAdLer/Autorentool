@@ -14,10 +14,10 @@ public class ModalDialogUt
     public void ModalDialog_StandardConstructor_AllPropertiesInitialized()
     {
         using var ctx = new Bunit.TestContext();
-        var title = "Test Dialog";
-        var text = "This is a dialog for automated testing purposes";
+        const string title = "Test Dialog";
+        const string text = "This is a dialog for automated testing purposes";
         Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = _ => { };
-        var dialogType = ModalDialogType.Ok;
+        const ModalDialogType dialogType = ModalDialogType.Ok;
         var inputFields = new List<ModalDialogInputField>
         {
             new("Test1", ModalDialogInputType.Text),
@@ -42,12 +42,75 @@ public class ModalDialogUt
         });
     }
 
+    // ReSharper disable once InconsistentNaming
+    private static object[] ModalDialog_StandardConstructor_DisplaysCorrectButtonsForDialogType_TestCases =
+    {
+        new object[]
+        {
+            ModalDialogType.Ok, 
+            new[] { "button.btn.btn-primary#btn-ok" }
+        },
+        new object[]
+        {
+            ModalDialogType.OkCancel,
+            new[] { "button.btn.btn-success#btn-ok", "button.btn.btn-warning#btn-cancel" }
+        },
+        new object[]
+        {
+            ModalDialogType.DeleteCancel,
+            new[] { "button.btn.btn-danger#btn-delete", "button.btn.btn-warning#btn-cancel" }
+        },
+        new object[]
+        {
+            ModalDialogType.YesNoCancel,
+            new[]
+            {
+                "button.btn.btn-success#btn-yes", "button.btn.btn-danger#btn-no", "button.btn.btn-warning#btn-cancel"
+            }
+        },
+        new object[]
+        {
+            ModalDialogType.YesNo,
+            new[] { "button.btn.btn-success#btn-yes", "button.btn.btn-danger#btn-no" }
+        },
+    };
+
+    [Test]
+    [TestCaseSource(nameof(ModalDialog_StandardConstructor_DisplaysCorrectButtonsForDialogType_TestCases))]
+    public void ModalDialog_StandardConstructor_DisplaysCorrectButtonsForDialogType(ModalDialogType type,
+        IEnumerable<string> expectedMarkups)
+    {
+        var ctx = new Bunit.TestContext();
+        
+        var systemUnderTest = 
+            CreateRenderedModalDialogComponentForTesting(ctx, "foo", "bar", _ => { }, type);
+        Assert.Multiple(() =>
+        {
+            foreach (var expectedMarkup in expectedMarkups)
+            {
+                Assert.That(() => systemUnderTest.Find($"div .modal-footer > {expectedMarkup}"), Throws.Nothing);
+            }
+        });
+    }
+
+    [Test]
+    public void ModalDialog_StandardConstructor_ThrowsForInvalidDialogType()
+    {
+        var ctx = new Bunit.TestContext();
+
+        Assert.That(
+            () => CreateRenderedModalDialogComponentForTesting(ctx, "foo", "bar", _ => { }, (ModalDialogType)123),
+            Throws.Exception.TypeOf<ArgumentOutOfRangeException>()
+                .And.With.Message.EqualTo("Specified argument was out of the range of valid values. (Parameter 'DialogType')")
+        );
+    }
+
     [Test]
     public void ModalDialog_XButtonClicked_CancelsDialog()
     {
         using var ctx = new Bunit.TestContext();
-        var title = "Test Dialog";
-        var text = "This is a dialog for automated testing purposes";
+        const string title = "Test Dialog";
+        const string text = "This is a dialog for automated testing purposes";
         var onCloseCalled = false;
         Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple => {
             onCloseCalled = true;
@@ -57,7 +120,7 @@ public class ModalDialogUt
                 Assert.That(tuple.Item2, Is.Null);
             });
         };
-        var dialogType = ModalDialogType.OkCancel;
+        const ModalDialogType dialogType = ModalDialogType.OkCancel;
 
         var systemUnderTest = CreateRenderedModalDialogComponentForTesting(ctx, title, text, onClose, dialogType);
 
@@ -68,7 +131,8 @@ public class ModalDialogUt
     }
 
     //ModalDialogType, css selector string, ModalDialogReturnValue
-    static object[] ModalDialog_ButtonClicked_CallsCallbackWithCorrectDialogReturnValue_TestCaseSource =
+    // ReSharper disable once InconsistentNaming
+    private static object[] ModalDialog_ButtonClicked_CallsCallbackWithCorrectDialogReturnValue_TestCaseSource =
     {
         new object[] { ModalDialogType.Ok, "#btn-ok", ModalDialogReturnValue.Ok },
         new object[] { ModalDialogType.OkCancel, "#btn-ok", ModalDialogReturnValue.Ok },
@@ -90,8 +154,8 @@ public class ModalDialogUt
         
         //ModalDialogType.Ok
         //Ok button
-        var title = "Test Dialog";
-        var text = "This is a dialog for automated testing purposes";
+        const string title = "Test Dialog";
+        const string text = "This is a dialog for automated testing purposes";
         var onCloseCalled = false;
         Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple => {
             Assert.Multiple(() =>
@@ -110,31 +174,40 @@ public class ModalDialogUt
         Assert.That(onCloseCalled, Is.EqualTo(true));
     }
     
+    // ReSharper disable once InconsistentNaming
+    private static object[] ModalDialog_EnterKeyPressedOnInputField_SubmitsDialogWithPositiveResult_TestCases =
+    {
+        new object[] { ModalDialogType.Ok, ModalDialogReturnValue.Ok, true },
+        new object[] { ModalDialogType.OkCancel, ModalDialogReturnValue.Ok, true },
+        new object[] { ModalDialogType.DeleteCancel, ModalDialogReturnValue.Delete, false },
+        new object[] { ModalDialogType.YesNoCancel, ModalDialogReturnValue.Yes, true },
+        new object[] { ModalDialogType.YesNo, ModalDialogReturnValue.Yes, true },
+    };
+    
     [Test]
-    public void ModalDialog_EnterKeyPressedOnInputField_SubmitsDialog()
+    [TestCaseSource(nameof(ModalDialog_EnterKeyPressedOnInputField_SubmitsDialogWithPositiveResult_TestCases))]
+    public void ModalDialog_EnterKeyPressedOnInputField_SubmitsDialogWithPositiveResult(ModalDialogType type, ModalDialogReturnValue expectedRetval, bool expectingDictionary)
     {
         using var ctx = new Bunit.TestContext();
-        
-        var title = "Test Dialog";
-        var text = "This is a dialog for automated testing purposes";
+
         var onCloseCalled = false;
         Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple => {
             Assert.Multiple(() =>
             {
                 var (modalDialogReturnValue, dictionary) = tuple;
-                Assert.That(modalDialogReturnValue, Is.EqualTo(ModalDialogReturnValue.Ok));
-                Assert.That(dictionary!["Test1"], Is.EqualTo("foobar"));
+                Assert.That(modalDialogReturnValue, Is.EqualTo(expectedRetval));
+                if (expectingDictionary)
+                    Assert.That(dictionary!["Test1"], Is.EqualTo("foobar"));
             });
             onCloseCalled = true;
         };
-        var dialogType = ModalDialogType.Ok;
         var inputFields = new List<ModalDialogInputField>
         {
             new("Test1", ModalDialogInputType.Text, true),
         };
 
-        var systemUnderTest = CreateRenderedModalDialogComponentForTesting(ctx, title, text, onClose,
-            dialogType, inputFields);
+        var systemUnderTest = CreateRenderedModalDialogComponentForTesting(ctx, "Test Dialog", "This is a dialog for automated testing purposes", onClose,
+            type, inputFields);
 
         var element = systemUnderTest.Find("#modal-input-field-test1");
         element.Input("foobar");
@@ -148,8 +221,8 @@ public class ModalDialogUt
     {
         using var ctx = new Bunit.TestContext();
         
-        var title = "Test Dialog";
-        var text = "This is a dialog for automated testing purposes";
+        const string title = "Test Dialog";
+        const string text = "This is a dialog for automated testing purposes";
         var onCloseCalled = false;
         Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
         {
@@ -169,7 +242,7 @@ public class ModalDialogUt
             });
             onCloseCalled = true;
         };
-        var dialogType = ModalDialogType.Ok;
+        const ModalDialogType dialogType = ModalDialogType.Ok;
         var inputFields = new List<ModalDialogInputField>
         {
             new("Test1", ModalDialogInputType.Text, true),
@@ -201,8 +274,8 @@ public class ModalDialogUt
     {
         using var ctx = new Bunit.TestContext();
         
-        var title = "Test Dialog";
-        var text = "This is a dialog for automated testing purposes";
+        const string title = "Test Dialog";
+        const string text = "This is a dialog for automated testing purposes";
         Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = _ =>
         {
             Assert.Fail("onClose was called, but should not have.");
@@ -241,8 +314,8 @@ public class ModalDialogUt
     {
         using var ctx = new Bunit.TestContext();
         
-        var title = "Test Dialog";
-        var text = "This is a dialog for automated testing purposes";
+        const string title = "Test Dialog";
+        const string text = "This is a dialog for automated testing purposes";
         Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = _ =>
         {
             Assert.Fail("onClose was called, but should not have.");
@@ -280,8 +353,8 @@ public class ModalDialogUt
     {
         using var ctx = new Bunit.TestContext();
         
-        var title = "Test Dialog";
-        var text = "This is a dialog for automated testing purposes";
+        const string title = "Test Dialog";
+        const string text = "This is a dialog for automated testing purposes";
         var onCloseCalled = false;
         Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
         {
@@ -299,7 +372,7 @@ public class ModalDialogUt
             });
             onCloseCalled = true;
         };
-        var dialogType = ModalDialogType.Ok;
+        const ModalDialogType dialogType = ModalDialogType.Ok;
         var inputFields = new List<ModalDialogInputField>
         {
             new("Test1", ModalDialogInputType.Text, true),
@@ -331,8 +404,8 @@ public class ModalDialogUt
     {
         using var ctx = new Bunit.TestContext();
         
-        var title = "Test Dialog";
-        var text = "This is a dialog for automated testing purposes";
+        const string title = "Test Dialog";
+        const string text = "This is a dialog for automated testing purposes";
         var onCloseCalled = false;
         Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
         {
@@ -350,7 +423,7 @@ public class ModalDialogUt
             });
             onCloseCalled = true;
         };
-        var dialogType = ModalDialogType.Ok;
+        const ModalDialogType dialogType = ModalDialogType.Ok;
         var inputFields = new List<ModalDialogInputField>
         {
             new("Test1", ModalDialogInputType.Text, true),
@@ -380,8 +453,8 @@ public class ModalDialogUt
     {
         using var ctx = new Bunit.TestContext();
         
-        var title = "Test Dialog";
-        var text = "This is a dialog for automated testing purposes";
+        const string title = "Test Dialog";
+        const string text = "This is a dialog for automated testing purposes";
         Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = _ =>
         {
             Assert.Fail("onclose unexpectedly called");
