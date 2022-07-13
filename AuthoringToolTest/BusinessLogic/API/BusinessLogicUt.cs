@@ -14,7 +14,7 @@ namespace AuthoringToolTest.BusinessLogic.API;
 public class BusinessLogicUt
 {
     [Test]
-    public void BusinessLogic_StandardConstructor_AllPropertiesInitialized()
+    public void StandardConstructor_AllPropertiesInitialized()
     {
         IAuthoringToolConfiguration mockConfiguration = Substitute.For<IAuthoringToolConfiguration>();
         IDataAccess mockDataAccess = Substitute.For<IDataAccess>();
@@ -27,7 +27,7 @@ public class BusinessLogicUt
     }
 
     [Test]
-    public void BusinessLogic_ConstructBackup_CallsDataAccess()
+    public void ConstructBackup_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
 
@@ -39,7 +39,7 @@ public class BusinessLogicUt
     }
 
     [Test]
-    public void BusinessLogic_SaveLearningWorld_CallsDataAccess()
+    public void SaveLearningWorld_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f");
@@ -52,7 +52,7 @@ public class BusinessLogicUt
     }
 
     [Test]
-    public void BusinessLogic_LoadLearningWorld_CallsDataAccess()
+    public void LoadLearningWorld_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
 
@@ -64,7 +64,7 @@ public class BusinessLogicUt
     }
 
     [Test]
-    public void BusinessLogic_LoadLearningWorld_ReturnsLearningWorld()
+    public void LoadLearningWorld_ReturnsLearningWorld()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f");
@@ -78,7 +78,7 @@ public class BusinessLogicUt
     }
 
     [Test]
-    public void BusinessLogic_SaveLearningSpace_CallsDataAccess()
+    public void SaveLearningSpace_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var learningSpace = new LearningSpace("fa", "a", "f", "f", "f");
@@ -91,7 +91,7 @@ public class BusinessLogicUt
     }
 
     [Test]
-    public void BusinessLogic_LoadLearningSpace_CallsDataAccess()
+    public void LoadLearningSpace_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
 
@@ -103,7 +103,7 @@ public class BusinessLogicUt
     }
 
     [Test]
-    public void BusinessLogic_LoadLearningSpace_ReturnsLearningSpace()
+    public void LoadLearningSpace_ReturnsLearningSpace()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var learningSpace = new LearningSpace("fa", "a", "f", "f", "f");
@@ -117,7 +117,7 @@ public class BusinessLogicUt
     }
 
     [Test]
-    public void BusinessLogic_SaveLearningElement_CallsDataAccess()
+    public void SaveLearningElement_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var content = new LearningContent("a", "b", Array.Empty<byte>());
@@ -132,7 +132,7 @@ public class BusinessLogicUt
     }
 
     [Test]
-    public void BusinessLogic_LoadLearningElement_CallsDataAccess()
+    public void LoadLearningElement_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
 
@@ -144,11 +144,11 @@ public class BusinessLogicUt
     }
 
     [Test]
-    public void BusinessLogic_LoadLearningElement_ReturnsLearningElement()
+    public void LoadLearningElement_ReturnsLearningElement()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var content = new LearningContent("a", "b", Array.Empty<byte>());
-        var learningElement = new LearningElement("fa","a", "f", content, "f", "f",
+        var learningElement = new LearningElement("fa", "a", "f", content, "f", "f",
             "f", LearningElementDifficultyEnum.Easy);
         mockDataAccess.LoadLearningElementFromFile("foobar").Returns(learningElement);
 
@@ -158,9 +158,9 @@ public class BusinessLogicUt
 
         Assert.That(learningElementActual, Is.EqualTo(learningElement));
     }
-    
+
     [Test]
-    public void BusinessLogic_LoadLearningContent_CallsDataAccess()
+    public void LoadLearningContent_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
 
@@ -172,10 +172,10 @@ public class BusinessLogicUt
     }
 
     [Test]
-    public void BusinessLogic_LoadLearningContent_ReturnsLearningElement()
+    public void LoadLearningContent_ReturnsLearningElement()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
-        var learningContent = new LearningContent("fa","a", new byte[]{0x01,0x02,0x03});
+        var learningContent = new LearningContent("fa", "a", new byte[] {0x01, 0x02, 0x03});
         mockDataAccess.LoadLearningContentFromFile("foobar").Returns(learningContent);
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
@@ -184,9 +184,9 @@ public class BusinessLogicUt
 
         Assert.That(learningElementActual, Is.EqualTo(learningContent));
     }
-    
+
     [Test]
-    public void BusinessLogic_LoadLearningWorldFromStream_CallsDataAccess()
+    public void LoadLearningWorldFromStream_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var stream = Substitute.For<Stream>();
@@ -199,7 +199,7 @@ public class BusinessLogicUt
     }
 
     [Test]
-    public void BusinessLogic_LoadLearningWorldFromStream_ReturnsLearningWorld()
+    public void LoadLearningWorldFromStream_ReturnsLearningWorld()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f");
@@ -214,7 +214,7 @@ public class BusinessLogicUt
     }
 
     [Test]
-    public void BusinessLogic_LoadLearningSpaceFromStream_CallsDataAccess()
+    public void LoadLearningSpaceFromStream_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var stream = Substitute.For<Stream>();
@@ -227,7 +227,7 @@ public class BusinessLogicUt
     }
 
     [Test]
-    public void BusinessLogic_LoadLearningSpaceFromStream_ReturnsLearningSpace()
+    public void LoadLearningSpaceFromStream_ReturnsLearningSpace()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var learningSpace = new LearningSpace("fa", "a", "f", "f", "f");
@@ -242,7 +242,7 @@ public class BusinessLogicUt
     }
 
     [Test]
-    public void BusinessLogic_LoadLearningElementFromStream_CallsDataAccess()
+    public void LoadLearningElementFromStream_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var stream = Substitute.For<Stream>();
@@ -255,11 +255,11 @@ public class BusinessLogicUt
     }
 
     [Test]
-    public void BusinessLogic_LoadLearningElementFromStream_ReturnsLearningElement()
+    public void LoadLearningElementFromStream_ReturnsLearningElement()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var content = new LearningContent("a", "b", Array.Empty<byte>());
-        var learningElement = new LearningElement("fa","a", "f", content, "f", "f",
+        var learningElement = new LearningElement("fa", "a", "f", content, "f", "f",
             "f", LearningElementDifficultyEnum.Easy);
         var stream = Substitute.For<Stream>();
         mockDataAccess.LoadLearningElementFromStream(stream).Returns(learningElement);
@@ -270,9 +270,9 @@ public class BusinessLogicUt
 
         Assert.That(learningElementActual, Is.EqualTo(learningElement));
     }
-    
+
     [Test]
-    public void BusinessLogic_LoadLearningContentFromStream_CallsDataAccess()
+    public void LoadLearningContentFromStream_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var stream = Substitute.For<Stream>();
@@ -285,11 +285,11 @@ public class BusinessLogicUt
     }
 
     [Test]
-    public void BusinessLogic_LoadLearningContentFromStream_ReturnsLearningElement()
+    public void LoadLearningContentFromStream_ReturnsLearningElement()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var content = new LearningContent("a", "b", Array.Empty<byte>());
-        var learningContent = new LearningContent("filename","extension", Array.Empty<byte>());
+        var learningContent = new LearningContent("filename", "extension", Array.Empty<byte>());
         var stream = Substitute.For<Stream>();
         mockDataAccess.LoadLearningContentFromStream("filename.extension", stream).Returns(learningContent);
 
@@ -301,10 +301,10 @@ public class BusinessLogicUt
     }
 
     [Test]
-    public void BusinessLogic_FindSuitableNewSavePath_CallsDataAccess()
+    public void FindSuitableNewSavePath_CallsDataAccess()
     {
         var dataAccess = Substitute.For<IDataAccess>();
-        var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess:dataAccess);
+        var systemUnderTest = CreateStandardBusinessLogic(fakeDataAccess: dataAccess);
 
         systemUnderTest.FindSuitableNewSavePath("foo", "bar", "baz");
 

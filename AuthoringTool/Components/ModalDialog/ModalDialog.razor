@@ -160,6 +160,10 @@
         {
             _inputFieldValues[key] = initialValue;
         }
+        if (!Enum.IsDefined(DialogType))
+        {
+            throw new ArgumentOutOfRangeException();
+        }
     }
 
     /// <summary>Tries to close the dialog. If all required input fields are filled, will call <see cref="OnClose"/>
@@ -191,14 +195,16 @@
     /// <returns>The <see cref="Task"/> returned by <see cref="ModalTryClose"/>.</returns>
     private Task TryCloseWithPositiveResult()
     {
+#pragma warning disable CS8524
+        // Check in OnParametersSet() AW
         return DialogType switch
+#pragma warning restore CS8524
         {
             ModalDialogType.Ok => ModalTryClose(ModalDialogReturnValue.Ok),
             ModalDialogType.OkCancel => ModalTryClose(ModalDialogReturnValue.Ok),
             ModalDialogType.DeleteCancel => ModalTryClose(ModalDialogReturnValue.Delete),
             ModalDialogType.YesNoCancel => ModalTryClose(ModalDialogReturnValue.Yes),
-            ModalDialogType.YesNo => ModalTryClose(ModalDialogReturnValue.Yes),
-            _ => throw new ArgumentOutOfRangeException()
+            ModalDialogType.YesNo => ModalTryClose(ModalDialogReturnValue.Yes)
         };
     }
     

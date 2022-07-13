@@ -34,7 +34,7 @@ public class TooltipUt
     public void TearDown() => _testContext.Dispose();
     
     [Test]
-    public void Tooltip_Constructor_PropertiesSet()
+    public void Constructor_PropertiesSet()
     {
         var systemUnderTest = CreateRenderedTooltipComponent(TooltipText, _childContent);
         
@@ -46,7 +46,7 @@ public class TooltipUt
     }
 
     [Test]
-    public void Tooltip_ContainsExpectedElements()
+    public void ContainsExpectedElements()
     {
         var systemUnderTest = CreateRenderedTooltipComponent(TooltipText, _childContent);
         
@@ -79,7 +79,7 @@ public class TooltipUt
     }
 
     [Test]
-    public void Tooltip_TooltipTextHiddenByDefault()
+    public void TooltipTextHiddenByDefault()
     {
         var systemUnderTest = CreateRenderedTooltipComponent(TooltipText, _childContent);
         
@@ -89,7 +89,7 @@ public class TooltipUt
     }
 
     [Test]
-    public void Tooltip_TooltipTextAppearsOnMouseOver()
+    public void TooltipTextAppearsOnMouseOver()
     {
         var systemUnderTest = CreateRenderedTooltipComponent(TooltipText, _childContent);
         
@@ -101,7 +101,7 @@ public class TooltipUt
     }
 
     [Test]
-    public void Tooltip_TooltipTextDisappearsOnMouseOut()
+    public void TooltipTextDisappearsOnMouseOut()
     {
         var systemUnderTest = CreateRenderedTooltipComponent(TooltipText, _childContent);
         
@@ -117,7 +117,7 @@ public class TooltipUt
     }
 
     [Test]
-    public void Tooltip_ChildContentCanBeNull()
+    public void ChildContentCanBeNull()
     {
         Assert.That(() => CreateRenderedTooltipComponent(TooltipText, null), Throws.Nothing);
     }

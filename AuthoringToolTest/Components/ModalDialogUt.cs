@@ -11,7 +11,7 @@ namespace AuthoringToolTest.Components;
 public class ModalDialogUt
 {
     [Test]
-    public void ModalDialog_StandardConstructor_AllPropertiesInitialized()
+    public void StandardConstructor_AllPropertiesInitialized()
     {
         using var ctx = new Bunit.TestContext();
         const string title = "Test Dialog";
@@ -35,15 +35,14 @@ public class ModalDialogUt
             Assert.That(systemUnderTest.Instance.Text, Is.EqualTo(text));
             //we need to construct an EventCallback from our action
             Assert.That(systemUnderTest.Instance.OnClose, Is.EqualTo(EventCallback.Factory.Create(onClose.Target ??
-                                                         throw new InvalidOperationException("onClose.Target is null"),
-                    onClose)));
+                throw new InvalidOperationException("onClose.Target is null"), onClose)));
             Assert.That(systemUnderTest.Instance.DialogType, Is.EqualTo(dialogType));
             Assert.That(systemUnderTest.Instance.InputFields, Is.EqualTo(inputFields));
         });
     }
 
     // ReSharper disable once InconsistentNaming
-    private static object[] ModalDialog_StandardConstructor_DisplaysCorrectButtonsForDialogType_TestCases =
+    private static object[] StandardConstructor_DisplaysCorrectButtonsForDialogType_TestCases =
     {
         new object[]
         {
@@ -76,8 +75,8 @@ public class ModalDialogUt
     };
 
     [Test]
-    [TestCaseSource(nameof(ModalDialog_StandardConstructor_DisplaysCorrectButtonsForDialogType_TestCases))]
-    public void ModalDialog_StandardConstructor_DisplaysCorrectButtonsForDialogType(ModalDialogType type,
+    [TestCaseSource(nameof(StandardConstructor_DisplaysCorrectButtonsForDialogType_TestCases))]
+    public void StandardConstructor_DisplaysCorrectButtonsForDialogType(ModalDialogType type,
         IEnumerable<string> expectedMarkups)
     {
         var ctx = new Bunit.TestContext();
@@ -94,7 +93,7 @@ public class ModalDialogUt
     }
 
     [Test]
-    public void ModalDialog_StandardConstructor_ThrowsForInvalidDialogType()
+    public void StandardConstructor_ThrowsForInvalidDialogType()
     {
         var ctx = new Bunit.TestContext();
 
@@ -106,7 +105,7 @@ public class ModalDialogUt
     }
 
     [Test]
-    public void ModalDialog_XButtonClicked_CancelsDialog()
+    public void XButtonClicked_CancelsDialog()
     {
         using var ctx = new Bunit.TestContext();
         const string title = "Test Dialog";
@@ -132,7 +131,7 @@ public class ModalDialogUt
 
     //ModalDialogType, css selector string, ModalDialogReturnValue
     // ReSharper disable once InconsistentNaming
-    private static object[] ModalDialog_ButtonClicked_CallsCallbackWithCorrectDialogReturnValue_TestCaseSource =
+    private static object[] ButtonClicked_CallsCallbackWithCorrectDialogReturnValue_TestCaseSource =
     {
         new object[] { ModalDialogType.Ok, "#btn-ok", ModalDialogReturnValue.Ok },
         new object[] { ModalDialogType.OkCancel, "#btn-ok", ModalDialogReturnValue.Ok },
@@ -145,9 +144,10 @@ public class ModalDialogUt
         new object[] { ModalDialogType.YesNo, "#btn-yes", ModalDialogReturnValue.Yes},
         new object[] { ModalDialogType.YesNo, "#btn-no", ModalDialogReturnValue.No}
     };
+    
     [Test]
-    [TestCaseSource(nameof(ModalDialog_ButtonClicked_CallsCallbackWithCorrectDialogReturnValue_TestCaseSource))]
-    public void ModalDialog_ButtonClicked_CallsCallbackWithCorrectDialogReturnValue(ModalDialogType type,
+    [TestCaseSource(nameof(ButtonClicked_CallsCallbackWithCorrectDialogReturnValue_TestCaseSource))]
+    public void ButtonClicked_CallsCallbackWithCorrectDialogReturnValue(ModalDialogType type,
         string cssSelector, ModalDialogReturnValue returnValue)
     {
         using var ctx = new Bunit.TestContext();
@@ -175,7 +175,7 @@ public class ModalDialogUt
     }
     
     // ReSharper disable once InconsistentNaming
-    private static object[] ModalDialog_EnterKeyPressedOnInputField_SubmitsDialogWithPositiveResult_TestCases =
+    private static object[] EnterKeyPressedOnInputField_SubmitsDialogWithPositiveResult_TestCases =
     {
         new object[] { ModalDialogType.Ok, ModalDialogReturnValue.Ok, true },
         new object[] { ModalDialogType.OkCancel, ModalDialogReturnValue.Ok, true },
@@ -183,10 +183,11 @@ public class ModalDialogUt
         new object[] { ModalDialogType.YesNoCancel, ModalDialogReturnValue.Yes, true },
         new object[] { ModalDialogType.YesNo, ModalDialogReturnValue.Yes, true },
     };
-    
+
     [Test]
-    [TestCaseSource(nameof(ModalDialog_EnterKeyPressedOnInputField_SubmitsDialogWithPositiveResult_TestCases))]
-    public void ModalDialog_EnterKeyPressedOnInputField_SubmitsDialogWithPositiveResult(ModalDialogType type, ModalDialogReturnValue expectedRetval, bool expectingDictionary)
+    [TestCaseSource(nameof(EnterKeyPressedOnInputField_SubmitsDialogWithPositiveResult_TestCases))]
+    public void EnterKeyPressedOnInputField_SubmitsDialogWithPositiveResult(ModalDialogType type,
+        ModalDialogReturnValue expectedRetval, bool expectingDictionary)
     {
         using var ctx = new Bunit.TestContext();
 
@@ -217,7 +218,7 @@ public class ModalDialogUt
     }
     
     [Test]
-    public void ModalDialog_DialogSubmitted_CallsCallbackWithCorrectInputFieldValues()
+    public void DialogSubmitted_CallsCallbackWithCorrectInputFieldValues()
     {
         using var ctx = new Bunit.TestContext();
         
@@ -270,7 +271,7 @@ public class ModalDialogUt
     }
 
     [Test]
-    public void ModalDialog_MissingRequiredValues_RefusesToCallCallback()
+    public void MissingRequiredValues_RefusesToCallCallback()
     {
         using var ctx = new Bunit.TestContext();
         
@@ -310,7 +311,7 @@ public class ModalDialogUt
     }
 
     [Test]
-    public void ModalDialog_DropdownSelectionRules_ChangeAvailableOptions()
+    public void DropdownSelectionRules_ChangeAvailableOptions()
     {
         using var ctx = new Bunit.TestContext();
         
@@ -349,7 +350,7 @@ public class ModalDialogUt
     }
 
     [Test]
-    public void ModalDialog_InitialValues_PopulatedAndReturned()
+    public void InitialValues_PopulatedAndReturned()
     {
         using var ctx = new Bunit.TestContext();
         
@@ -400,7 +401,7 @@ public class ModalDialogUt
     }
 
     [Test]
-    public void ModalDialog_InitialValue_ReturnsCorrectValueAfterChange()
+    public void InitialValue_ReturnsCorrectValueAfterChange()
     {
         using var ctx = new Bunit.TestContext();
         
@@ -449,7 +450,7 @@ public class ModalDialogUt
     }
 
     [Test]
-    public void ModalDialog_DropdownSelectionRules_CorrectWhenInitialValuesProvided()
+    public void DropdownSelectionRules_CorrectWhenInitialValuesProvided()
     {
         using var ctx = new Bunit.TestContext();
         
@@ -489,10 +490,36 @@ public class ModalDialogUt
         Assert.DoesNotThrow(() => systemUnderTest.Find("#modal-input-drop-test2-baz"));
     }
 
-    private IRenderedComponent<ModalDialog> CreateRenderedModalDialogComponentForTesting(Bunit.TestContext ctx, string title, string text,
+    [Test]
+    public void CreateComponentWithInvalidModalDialogType_ThrowsException()
+    {
+        using var ctx = new Bunit.TestContext();
+
+        const string title = "Test Dialog";
+        const string text = "This is a dialog for automated testing purposes";
+        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = _ =>
+        {
+            Assert.Fail("onclose unexpectedly called");
+        };
+        var dialogType = (ModalDialogType) 5;
+        var inputFields = new List<ModalDialogInputField>
+        {
+            new("Test1", ModalDialogInputType.Text, true)
+        };
+        var inputFieldsInitialValues = new Dictionary<string, string>
+        {
+            {"Test1", "Foo"}
+        };
+
+        Assert.Throws<ArgumentOutOfRangeException>(() => CreateRenderedModalDialogComponentForTesting(ctx, title, text,
+            onClose, dialogType, inputFields, inputFieldsInitialValues));
+    }
+
+    private IRenderedComponent<ModalDialog> CreateRenderedModalDialogComponentForTesting(Bunit.TestContext ctx,
+        string title, string text,
         Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose,
         ModalDialogType dialogType,
-        IEnumerable<ModalDialogInputField>? inputFields = null, IDictionary<string,string>? initialValues = null)
+        IEnumerable<ModalDialogInputField>? inputFields = null, IDictionary<string, string>? initialValues = null)
     {
         return ctx.RenderComponent<ModalDialog>(parameters => parameters
             .Add(p => p.Title, title)

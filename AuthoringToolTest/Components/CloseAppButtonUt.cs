@@ -21,9 +21,9 @@ public class CloseAppButtonUt
         shutdownManager = Substitute.For<IShutdownManager>();
         context.Services.AddSingleton(shutdownManager);
     }
-    
+
     [Test]
-    public void CloseAppButton_OnClick_CallsShutdownManager()
+    public void OnClick_CallsShutdownManager()
     {
         using (context)
         {

@@ -26,18 +26,18 @@ public class GridLayoutDisplayUt
     public void TearDown() => _testContext.Dispose();
 
     [Test]
-    public void GridLayoutDisplay_StandardConstructor_AllPropertiesInitialized()
+    public void StandardConstructor_AllPropertiesInitialized()
     {
         var items = new List<int> { 1, 2, 3, 4, 5 };
         const string headerTitle = "This is a header";
         const uint itemsPerRow = 3u;
 
         var systemUnderTest = CreateRenderedGridLayoutComponent(items, Template, headerTitle, itemsPerRow);
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Instance.Items, Is.EqualTo(items));
-            Assert.That(systemUnderTest.Instance.ItemRenderTemplate, Is.EqualTo((RenderFragment<int>)Template));
+            Assert.That(systemUnderTest.Instance.ItemRenderTemplate, Is.EqualTo((RenderFragment<int>) Template));
             Assert.That(systemUnderTest.Instance.HeaderTitle, Is.EqualTo(headerTitle));
             Assert.That(systemUnderTest.Instance.ItemsPerRow, Is.EqualTo(itemsPerRow));
         });
@@ -45,14 +45,14 @@ public class GridLayoutDisplayUt
 
     [Test]
     [TestCaseSource(typeof(GridLayoutDisplayTestCases))]
-    public void GridLayoutDisplay_StandardConstructor_CreatesLayoutCorrectly(IEnumerable<int> items, uint itemsPerRow,
+    public void StandardConstructor_CreatesLayoutCorrectly(IEnumerable<int> items, uint itemsPerRow,
         IEnumerable<int> expectedRowLengths)
     {
         var systemUnderTest = CreateRenderedGridLayoutComponent(items, Template, "foo", itemsPerRow);
 
         var rows = systemUnderTest.FindAll(".row").ToArray();
         var rowLengths = expectedRowLengths as int[] ?? expectedRowLengths.ToArray();
-        
+
         Assert.That(rows, Has.Length.EqualTo(rowLengths.Length));
 
         foreach (var (rowLength, index) in rowLengths.Select((item, index) => (item, index)))
