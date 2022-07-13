@@ -320,11 +320,6 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     /// <exception cref="ApplicationException">Thrown if there is no valid ContentType assigned.</exception>
     private async Task<LearningContentViewModel> LoadLearningContent(ContentTypeEnum contentType)
     {
-        if (LearningWorldVm == null)
-        { 
-            throw new ApplicationException("SelectedLearningSpace is null");
-        }
-
         return contentType switch
         {
             ContentTypeEnum.Image => await _presentationLogic.LoadImageAsync(),
@@ -470,9 +465,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
         if (Int32.TryParse(data["Workload (min)"], out int workload) == false || workload < 0)
             workload = 0;
 
-        if (LearningWorldVm == null)
-            throw new ApplicationException("LearningWorld is null");
-        if (LearningWorldVm.SelectedLearningObject is not LearningElementViewModel
+        if (LearningWorldVm?.SelectedLearningObject is not LearningElementViewModel
             learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
         _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, parentElement,
             authors, description, goals, difficulty, workload);
