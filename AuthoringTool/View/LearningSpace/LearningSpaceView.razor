@@ -101,13 +101,6 @@
         }
     }
 </svg>
-@if (_learningSpaceP.EditLearningSpaceDialogOpen && _learningSpaceP.LearningSpaceVm != null)
-{
-    <ModalDialog Title="Edit existing learning space" Text="Please enter the required data for the learning space below:"
-                 OnClose="@OnEditSpaceDialogClose" DialogType=@ModalDialogType.OkCancel
-                 InputFields="@_learningSpaceP.ModalDialogSpaceInputFields" InputFieldsInitialValue="@_learningSpaceP.LearningSpaceVm.EditDialogInitialValues">
-    </ModalDialog>
-}
 
 @if (_learningSpaceP.EditLearningElementDialogOpen && _learningSpaceP.LearningSpaceVm != null)
 {
@@ -185,11 +178,6 @@
     private void EditLearningObject()
     {
         _learningSpaceP.OpenEditSelectedLearningObjectDialog();
-    }
-
-    private Task OnEditSpaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
-    {
-        return _learningSpaceP.OnEditSpaceDialogClose(returnValueTuple);
     }
 
     private Task OnEditElementDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)

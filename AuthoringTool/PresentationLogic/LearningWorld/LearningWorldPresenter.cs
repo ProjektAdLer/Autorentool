@@ -103,10 +103,9 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     /// <exception cref="ApplicationException">Thrown if SelectedLearningObject is not a LearningSpace. Shouldn't occur, because this is checked in <see cref="OpenEditSelectedLearningObjectDialog"/></exception>
     private void OpenEditSelectedLearningSpaceDialog()
     {
-        if (LearningWorldVm?.SelectedLearningObject is not LearningSpaceViewModel
-            space) throw new ApplicationException("Type of LearningObject is not LearningSpace");
+        var space = (LearningSpaceViewModel) LearningWorldVm?.SelectedLearningObject!;
         //prepare dictionary property to pass to dialog
-        LearningWorldVm.EditDialogInitialValues = new Dictionary<string, string>
+        LearningWorldVm!.EditDialogInitialValues = new Dictionary<string, string>
         {
             {"Name", space.Name},
             {"Shortname", space.Shortname},
@@ -269,11 +268,10 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     /// Shouldn't occur, because this is checked in <see cref="OpenEditSelectedLearningObjectDialog"/></exception>
     private void OpenEditSelectedLearningElementDialog()
     {
-        if (LearningWorldVm?.SelectedLearningObject is not LearningElementViewModel
-            element) throw new ApplicationException("Type of LearningObject is not implemented");
+        var element = (LearningElementViewModel) LearningWorldVm?.SelectedLearningObject!;
         if (element.Parent == null) throw new Exception("Element Parent is null");
         //prepare dictionary property to pass to dialog
-        LearningWorldVm.EditDialogInitialValues = new Dictionary<string, string>
+        LearningWorldVm!.EditDialogInitialValues = new Dictionary<string, string>
         {
             {"Name", element.Name},
             {"Shortname", element.Shortname},
@@ -465,7 +463,9 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
         if (Int32.TryParse(data["Workload (min)"], out int workload) == false || workload < 0)
             workload = 0;
 
-        if (LearningWorldVm?.SelectedLearningObject is not LearningElementViewModel
+        if (LearningWorldVm == null)
+            throw new ApplicationException("LearningWorldVm is null");
+        if (LearningWorldVm.SelectedLearningObject is not LearningElementViewModel
             learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
         _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, parentElement,
             authors, description, goals, difficulty, workload);

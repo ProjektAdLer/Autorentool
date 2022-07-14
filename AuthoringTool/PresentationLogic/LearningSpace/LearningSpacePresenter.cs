@@ -54,75 +54,6 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
 
     #region LearningSpace
 
-    /// <summary>
-    /// Opens the edit dialog for the currently opened learning space. (This methode is not yet in use)
-    /// </summary>
-    /// <exception cref="ApplicationException">Thrown if <see cref="LearningSpaceVm"/> is null</exception>
-    private void OpenEditThisLearningSpaceDialog()
-    {
-        if (LearningSpaceVm is null) throw new ApplicationException("LearningSpaceVm is null");
-        //prepare dictionary property to pass to dialog
-        LearningSpaceVm.EditDialogInitialValues = new Dictionary<string, string>
-        {
-            {"Name", LearningSpaceVm.Name},
-            {"Shortname", LearningSpaceVm.Shortname},
-            {"Authors", LearningSpaceVm.Authors},
-            {"Description", LearningSpaceVm.Description},
-            {"Goals", LearningSpaceVm.Goals},
-        };
-        EditLearningSpaceDialogOpen = true;
-    }
-
-    /// <summary>
-    /// Changes property values of the learning space viewmodel with return values from the dialog.
-    /// </summary>
-    /// <param name="returnValueTuple">Return values from the dialog</param>
-    /// <returns></returns>
-    /// <exception cref="ApplicationException">Thrown if the dictionary in return values of dialog null while return value is ok
-    /// or if <see cref="LearningSpaceVm"/> is null.</exception>
-    public Task OnEditSpaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
-    {
-        var (response, data) = returnValueTuple;
-        EditLearningSpaceDialogOpen = false;
-
-        if (response == ModalDialogReturnValue.Cancel) return Task.CompletedTask;
-        if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
-
-        foreach (var (key, value) in data)
-        {
-            _logger.LogTrace($"{key}:{value}\n");
-        }
-
-        //required arguments
-        var name = data["Name"];
-        var shortname = data["Shortname"];
-        var description = data["Description"];
-        //optional arguments
-        var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
-        var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
-
-        if (LearningSpaceVm == null)
-            throw new ApplicationException("LearningSpaceVm is null");
-        EditLearningSpace(LearningSpaceVm, name, shortname, authors,
-            description, goals);
-        return Task.CompletedTask;
-    }
-
-    public IEnumerable<ModalDialogInputField> ModalDialogSpaceInputFields
-    {
-        get
-        {
-            return new ModalDialogInputField[]
-            {
-                new("Name", ModalDialogInputType.Text, true),
-                new("Shortname", ModalDialogInputType.Text, true),
-                new("Authors", ModalDialogInputType.Text),
-                new("Description", ModalDialogInputType.Text, true),
-                new("Goals", ModalDialogInputType.Text)
-            };
-        }
-    }
-
     #endregion
 
     #region LearningElement
@@ -170,11 +101,10 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
     /// Shouldn't occur, because this is checked in <see cref="OpenEditSelectedLearningObjectDialog"/></exception>
     private void OpenEditSelectedLearningElementDialog()
     {
-        if (LearningSpaceVm?.SelectedLearningObject is not LearningElementViewModel
-            element) throw new ApplicationException("Type of LearningObject is not implemented");
+        var element = (LearningElementViewModel) LearningSpaceVm?.SelectedLearningObject!;
         if (element.Parent == null) throw new Exception("Element Parent is null");
         //prepare dictionary property to pass to dialog
-        LearningSpaceVm.EditDialogInitialValues = new Dictionary<string, string>
+        LearningSpaceVm!.EditDialogInitialValues = new Dictionary<string, string>
         {
             {"Name", element.Name},
             {"Shortname", element.Shortname},
@@ -313,7 +243,7 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
 
         if (parentElement == null)
         {
-            throw new Exception("no parent for element");
+            throw new Exception("Parent element is null");
         }
 
         return parentElement;
@@ -351,10 +281,8 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
         if (Int32.TryParse(data["Workload (min)"], out int workload) == false || workload < 0)
             workload = 0;
-
-        if (LearningSpaceVm == null)
-            throw new ApplicationException("LearningSpaceVm is null");
-        if (LearningSpaceVm.SelectedLearningObject is not LearningElementViewModel
+        
+        if (LearningSpaceVm?.SelectedLearningObject is not LearningElementViewModel
             learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
         _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, parentElement,
             authors, description, goals, difficulty, workload);
