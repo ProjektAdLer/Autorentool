@@ -9,7 +9,7 @@ namespace AuthoringToolTest.PresentationLogic.LearningSpace;
 public class LearningSpaceViewModelUt
 {
     [Test]
-    public void LearningSpace_Constructor_InitializesAllProperties()
+    public void Constructor_InitializesAllProperties()
     {
         var Name = "asdf";
         var Shortname = "jkl;";
@@ -40,7 +40,7 @@ public class LearningSpaceViewModelUt
     }
 
     [Test]
-    public void LearningSpace_FileEnding_ReturnsCorrectEnding()
+    public void FileEnding_ReturnsCorrectEnding()
     {
         const string expectedFileEnding = "asf";
         var systemUnderTest = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
@@ -48,7 +48,7 @@ public class LearningSpaceViewModelUt
     }
     
     [Test]
-    public void LearningSpaceViewModel_Workload_ReturnsCorrectWorkload()
+    public void Workload_ReturnsCorrectWorkload()
     {
 
         var systemUnderTest = new LearningSpaceViewModel("a", "b", "c", "d", "e");

@@ -9,7 +9,7 @@ namespace AuthoringToolTest.PresentationLogic.LearningElement;
 public class LearningElementViewModelUt
 {
     [Test]
-    public void LearningElement_Constructor_InitializesAllProperties()
+    public void Constructor_InitializesAllProperties()
     {
         var Name = "asdf";
         var Shortname = "jkl;";
@@ -44,7 +44,7 @@ public class LearningElementViewModelUt
     }
 
     [Test]
-    public void LearningElement_FileEnding_ReturnsCorrectEnding()
+    public void FileEnding_ReturnsCorrectEnding()
     {
         const string expectedFileEnding = "aef";
         var systemUnderTest = new LearningElementViewModel("foo", "foo", null, null,

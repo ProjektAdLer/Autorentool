@@ -12,7 +12,7 @@ public class LearningWorldViewModelUt
 {
     
     [Test]
-    public void LearningWorldViewModel_Constructor_InitializesAllProperties()
+    public void Constructor_InitializesAllProperties()
     {
         var Name = "asdf";
         var Shortname = "jkl;";
@@ -46,7 +46,7 @@ public class LearningWorldViewModelUt
     }
 
     [Test]
-    public void LearningWorldViewModel_FileEnding_ReturnsCorrectEnding()
+    public void FileEnding_ReturnsCorrectEnding()
     {
         const string expectedFileEnding = "awf";
         var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo");
@@ -54,7 +54,7 @@ public class LearningWorldViewModelUt
     }
 
     [Test]
-    public void LearningWorldViewModel_Workload_ReturnsCorrectWorkload()
+    public void Workload_ReturnsCorrectWorkload()
     {
         var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo");
         var worldElement = new LearningElementViewModel("a", "b", systemUnderTest, null, "c", "d", "e",

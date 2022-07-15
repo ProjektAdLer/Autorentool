@@ -17,7 +17,7 @@ namespace AuthoringToolTest.PresentationLogic.LearningElement;
 public class LearningElementPresenterUt
 {
     [Test]
-    public void LearningElementPresenter_CreateNewTransferElement_WorldParent_CreatesCorrectViewModel_Image()
+    public void CreateNewTransferElement_CreatesCorrectViewModel_WorldParent_Image()
     {
         var systemUnderTest = new LearningElementPresenter();
         var name = "a";
@@ -49,7 +49,7 @@ public class LearningElementPresenterUt
     }
     
     [Test]
-    public void LearningElementPresenter_CreateNewTransferElement_WorldParent_CreatesCorrectViewModel_Video()
+    public void CreateNewTransferElement_CreatesCorrectViewModel_WorldParent_Video()
     {
         var systemUnderTest = new LearningElementPresenter();
         var name = "a";
@@ -81,7 +81,7 @@ public class LearningElementPresenterUt
     }
     
     [Test]
-    public void LearningElementPresenter_CreateNewTransferElement_WorldParent_CreatesCorrectViewModel_Pdf()
+    public void CreateNewTransferElement_CreatesCorrectViewModel_WorldParent_Pdf()
     {
         var systemUnderTest = new LearningElementPresenter();
         var name = "a";
@@ -113,7 +113,7 @@ public class LearningElementPresenterUt
     }
     
     [Test]
-    public void LearningElementPresenter_CreateNewTransferElement_SpaceParent_CreatesCorrectViewModel_Image()
+    public void CreateNewTransferElement_CreatesCorrectViewModel_SpaceParent_Image()
     {
         var systemUnderTest = new LearningElementPresenter();
         var name = "a";
@@ -145,7 +145,7 @@ public class LearningElementPresenterUt
     }
     
     [Test]
-    public void LearningElementPresenter_CreateNewTransferElement_SpaceParent_CreatesCorrectViewModel_Video()
+    public void CreateNewTransferElement_CreatesCorrectViewModel_SpaceParent_Video()
     {
         var systemUnderTest = new LearningElementPresenter();
         var name = "a";
@@ -177,7 +177,7 @@ public class LearningElementPresenterUt
     }
     
     [Test]
-    public void LearningElementPresenter_CreateNewTransferElement_SpaceParent_CreatesCorrectViewModel_Pdf()
+    public void CreateNewTransferElement_CreatesCorrectViewModel_SpaceParent_Pdf()
     {
         var systemUnderTest = new LearningElementPresenter();
         var name = "a";
@@ -209,7 +209,7 @@ public class LearningElementPresenterUt
     }
 
     [Test]
-    public void LearningElementPresenter_CreateNewTransferElement_ThrowsApplicationException()
+    public void CreateNewTransferElement_ThrowsApplicationException()
     {
         var systemUnderTest = new LearningElementPresenter();
 
@@ -219,7 +219,7 @@ public class LearningElementPresenterUt
     }
     
     [Test]
-    public void LearningElementPresenter_CreateNewActivationElement_WorldParent_CreatesCorrectViewModel_Video()
+    public void CreateNewActivationElement_CreatesCorrectViewModel_WorldParent_Video()
     {
         var systemUnderTest = new LearningElementPresenter();
         var name = "a";
@@ -251,7 +251,7 @@ public class LearningElementPresenterUt
     }
     
     [Test]
-    public void LearningElementPresenter_CreateNewActivationElement_SpaceParent_CreatesCorrectViewModel_H5P()
+    public void CreateNewActivationElement_CreatesCorrectViewModel_SpaceParent_H5P()
     {
         var systemUnderTest = new LearningElementPresenter();
         var name = "a";
@@ -283,7 +283,7 @@ public class LearningElementPresenterUt
     }
     
     [Test]
-    public void LearningElementPresenter_CreateNewActivationElement_SpaceParent_CreatesCorrectViewModel_Video()
+    public void CreateNewActivationElement_CreatesCorrectViewModel_SpaceParent_Video()
     {
         var systemUnderTest = new LearningElementPresenter();
         var name = "a";
@@ -315,7 +315,7 @@ public class LearningElementPresenterUt
     }
     
     [Test]
-    public void LearningElementPresenter_CreateNewActivationElement_WorldParent_CreatesCorrectViewModel_H5P()
+    public void CreateNewActivationElement_CreatesCorrectViewModel_WorldParent_H5P()
     {
         var systemUnderTest = new LearningElementPresenter();
         var name = "a";
@@ -347,7 +347,7 @@ public class LearningElementPresenterUt
     }
     
     [Test]
-    public void LearningElementPresenter_CreateNewActivationElement_ThrowsApplicationException()
+    public void CreateNewActivationElement_ThrowsApplicationException()
     {
         var systemUnderTest = new LearningElementPresenter();
 
@@ -357,7 +357,7 @@ public class LearningElementPresenterUt
     }
     
     [Test]
-    public void LearningElementPresenter_CreateNewInteractionElement_WorldParent_CreatesCorrectViewModel()
+    public void CreateNewInteractionElement_CreatesCorrectViewModel_WorldParent()
     {
         var systemUnderTest = new LearningElementPresenter();
         var name = "a";
@@ -389,7 +389,7 @@ public class LearningElementPresenterUt
     }
     
     [Test]
-    public void LearningElementPresenter_CreateNewInteractionElement_SpaceParent_CreatesCorrectViewModel()
+    public void CreateNewInteractionElement_CreatesCorrectViewModel_SpaceParent()
     {
         var systemUnderTest = new LearningElementPresenter();
         var name = "a";
@@ -421,7 +421,7 @@ public class LearningElementPresenterUt
     }
     
     [Test]
-    public void LearningElementPresenter_CreateNewInteractionElement_ThrowsApplicationException()
+    public void CreateNewInteractionElement_ThrowsApplicationException()
     {
         var systemUnderTest = new LearningElementPresenter();
 
@@ -431,7 +431,7 @@ public class LearningElementPresenterUt
     }
     
     [Test]
-    public void LearningElementPresenter_CreateNewTestElement_WorldParent_CreatesCorrectViewModel()
+    public void CreateNewTestElement_CreatesCorrectViewModel_WorldParent()
     {
         var systemUnderTest = new LearningElementPresenter();
         var name = "a";
@@ -463,7 +463,7 @@ public class LearningElementPresenterUt
     }
     
     [Test]
-    public void LearningElementPresenter_CreateNewTestElement_SpaceParent_CreatesCorrectViewModel()
+    public void CreateNewTestElement_CreatesCorrectViewModel_SpaceParent()
     {
         var systemUnderTest = new LearningElementPresenter();
         var name = "a";
@@ -495,7 +495,7 @@ public class LearningElementPresenterUt
     }
     
     [Test]
-    public void LearningElementPresenter_CreateNewTestElement_ThrowsApplicationException()
+    public void CreateNewTestElement_ThrowsApplicationException()
     {
         var systemUnderTest = new LearningElementPresenter();
 
@@ -505,7 +505,7 @@ public class LearningElementPresenterUt
     }
 
     [Test]
-    public void LearningElementPresenter_AddLearningElementParentAssignment_ThrowsNotImplemented()
+    public void AddLearningElementParentAssignment_ThrowsNotImplemented()
     {
         var systemUnderTest = new LearningElementPresenter();
 
@@ -515,7 +515,7 @@ public class LearningElementPresenterUt
     }
     
     [Test]
-    public void LearningElementPresenter_EditLearningElement_WorldParent_EditsViewModelCorrectly()
+    public void EditLearningElement_EditsViewModelCorrectly_WorldParent()
     {
         var systemUnderTest = new LearningElementPresenter();
         var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
@@ -551,7 +551,7 @@ public class LearningElementPresenterUt
     }
     
     [Test]
-    public void LearningElementPresenter_EditLearningElement_SpaceParent_EditsViewModelCorrectly()
+    public void EditLearningElement_EditsViewModelCorrectly_SpaceParent()
     {
         var systemUnderTest = new LearningElementPresenter();
         var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
@@ -587,7 +587,7 @@ public class LearningElementPresenterUt
     }
 
     [Test]
-    public void LearningElementPresenter_RemoveLearningElementFromParentAssignment_RemovesElementFromWorld()
+    public void RemoveLearningElementFromParentAssignment_RemovesElementFromWorld()
     {
         var systemUnderTest = new LearningElementPresenter();
         var parent = new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
@@ -604,7 +604,7 @@ public class LearningElementPresenterUt
     }
     
     [Test]
-    public void LearningElementPresenter_RemoveLearningElementFromParentAssignment_RemovesElementFromSpace()
+    public void RemoveLearningElementFromParentAssignment_RemovesElementFromSpace()
     {
         var systemUnderTest = new LearningElementPresenter();
         var parent = new LearningSpaceViewModel("a", "b", "c", "d", "e");

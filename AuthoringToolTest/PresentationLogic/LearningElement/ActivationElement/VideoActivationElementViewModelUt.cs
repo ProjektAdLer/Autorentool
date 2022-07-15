@@ -11,7 +11,7 @@ namespace AuthoringToolTest.PresentationLogic.LearningElement.ActivationElement;
 public class VideoActivationElementViewModelUt
 {
     [Test]
-    public void VideoActivationElement_Constructor_InitializesAllProperties()
+    public void Constructor_InitializesAllProperties()
     {
         var Name = "abc";
         var Shortname = "def";

@@ -11,7 +11,7 @@ namespace AuthoringToolTest.PresentationLogic.LearningElement.ActivationElement;
 public class H5PActivationElementViewModelUt
 {
     [Test]
-    public void H5PActivationElement_Constructor_InitializesAllProperties()
+    public void Constructor_InitializesAllProperties()
     {
         var Name = "qwert";
         var Shortname = "asdf";
