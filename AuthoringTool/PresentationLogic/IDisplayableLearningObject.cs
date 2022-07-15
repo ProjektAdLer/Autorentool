@@ -8,9 +8,9 @@ public interface IDisplayableLearningObject
     /// <summary>
     /// The name of the learning object.
     /// </summary>
-    string Name { get; }
+    public string Name { get; }
     /// <summary>
     /// The file ending that is associated with the type of learning object.
     /// </summary>
-    string FileEnding { get; }
+    public string FileEnding { get; }
 }

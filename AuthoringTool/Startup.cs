@@ -15,6 +15,7 @@ using AuthoringTool.PresentationLogic.EntityMapping.LearningElementMapper;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
+using AuthoringTool.PresentationLogic.ModalDialog;
 using AuthoringTool.PresentationLogic.Toolbox;
 using AuthoringTool.View.Toolbox;
 using ElectronWrapper;
@@ -81,6 +82,8 @@ public class Startup
         services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
         services.AddSingleton<ILearningElementPresenter, LearningElementPresenter>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
+        services.AddSingleton<ILearningSpaceViewModalDialogFactory, ModalDialogFactory>();
+        services.AddSingleton<ILearningSpaceViewModalDialogInputFieldsFactory, ModalDialogInputFieldsFactory>();
     }
 
     private void ConfigureBusinessLogic(IServiceCollection services)

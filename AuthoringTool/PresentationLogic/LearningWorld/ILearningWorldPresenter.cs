@@ -29,11 +29,11 @@ public interface ILearningWorldPresenter
     Task LoadLearningSpace();
     Task LoadLearningElement();
     Task SaveSelectedLearningObjectAsync();
-    Task OnCreateSpaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple);
-    Task OnCreateElementDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple);
+    void OnCreateSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple);
+    void OnCreateElementDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void OpenEditSelectedLearningObjectDialog();
-    Task OnEditSpaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple);
-    Task OnEditElementDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple);
+    void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple);
+    void OnEditElementDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void SetLearningWorld(object? caller, LearningWorldViewModel? world);
     void ShowSelectedLearningSpaceView();
     void CloseLearningSpaceView();
@@ -43,7 +43,7 @@ public interface ILearningWorldPresenter
     /// </summary>
     /// <param name="learningSpace">The space to be added.</param>
     /// <exception cref="ApplicationException"><see cref="LearningWorldVm"/> is null or space exists in world with same name.</exception>
-    public void AddLearningSpace(LearningSpaceViewModel learningSpace);
+    public void AddLearningSpace(ILearningSpaceViewModel learningSpace);
     
     /// <summary>
     /// Adds the provided learning element to the selected world view model.

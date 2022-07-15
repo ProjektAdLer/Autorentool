@@ -3,7 +3,7 @@ using AuthoringTool.PresentationLogic.LearningElement;
 
 namespace AuthoringTool.PresentationLogic.LearningSpace;
 
-public class LearningSpaceViewModel : ILearningObjectViewModel, ILearningElementViewModelParent, ISerializableViewModel, IDisplayableLearningObject
+public class LearningSpaceViewModel : ILearningObjectViewModel, ILearningElementViewModelParent, ISerializableViewModel, ILearningSpaceViewModel
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="LearningSpaceViewModel"/> class.
@@ -41,5 +41,4 @@ public class LearningSpaceViewModel : ILearningObjectViewModel, ILearningElement
     public double PositionX { get; set; }
     public double PositionY { get; set; }
     public ILearningObjectViewModel? SelectedLearningObject { get; set; }
-    public Dictionary<string, string> EditDialogInitialValues { get; set; }
 }

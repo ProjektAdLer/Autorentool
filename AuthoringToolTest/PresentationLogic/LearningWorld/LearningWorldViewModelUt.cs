@@ -26,7 +26,7 @@ public class LearningWorldViewModelUt
         var ele2 = new LearningElementViewModel("z", "zz", null,  content2, "z","zzz", "z",LearningElementDifficultyEnum.Medium, 444, double.MaxValue);
         var LearningElements = new List<LearningElementViewModel> { ele1, ele2 };
         var space1 = new LearningSpaceViewModel("ff", "ff", "ff", "ff", "ff");
-        var LearningSpaces = new List<LearningSpaceViewModel> { space1 };
+        var LearningSpaces = new List<ILearningSpaceViewModel> { space1 };
 
         var systemUnderTest = new LearningWorldViewModel(Name, Shortname, Authors, Language, Description, Goals, 
             unsavedChanges:false, LearningElements, LearningSpaces);

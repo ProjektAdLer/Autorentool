@@ -24,7 +24,7 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
         Logger.LogDebug("_toolboxSavePath is {}", _toolboxSavePath);
 
         _worlds = new List<LearningWorldViewModel>();
-        _spaces = new List<LearningSpaceViewModel>();
+        _spaces = new List<ILearningSpaceViewModel>();
         _elements = new List<LearningElementViewModel>();
         _initialized = false;
         
@@ -40,7 +40,7 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
     internal IFileSystem FileSystem { get; }
 
     private List<LearningWorldViewModel> _worlds;
-    private List<LearningSpaceViewModel> _spaces;
+    private List<ILearningSpaceViewModel> _spaces;
     private List<LearningElementViewModel> _elements;
 
     private bool _initialized;

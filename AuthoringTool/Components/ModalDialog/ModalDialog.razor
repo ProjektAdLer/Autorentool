@@ -125,7 +125,7 @@
     ///input values.</summary>
     ///<seealso cref="ModalDialogReturnValue"/>
     [Parameter, EditorRequired] 
-    public EventCallback<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> OnClose { get; set; }
+    public ModalDialogOnClose OnClose { get; set; }
     ///<summary>The type of dialog.</summary>
     ///<seealso cref="ModalDialogType"/>
     [Parameter, EditorRequired] 
@@ -183,8 +183,8 @@
             inputFieldValues = _inputFieldValues;
         }
         //we return result and optional dictionary as tuple
-        return OnClose.InvokeAsync(new Tuple<ModalDialogReturnValue, 
-            IDictionary<string, string>?>(dialogReturnValue, inputFieldValues));
+        OnClose.Invoke(inputFieldValues == null ? new ModalDialogOnCloseResult(dialogReturnValue) : new ModalDialogOnCloseResult(dialogReturnValue, inputFieldValues));
+        return Task.CompletedTask;
     }
     
     /// <summary>Tries to close the dialog with a positive result, depending on the <see cref="ModalDialogType"/>.</summary>
