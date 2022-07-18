@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using AuthoringTool.Components.ModalDialog;
 using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.API;
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
@@ -37,6 +38,46 @@ public class AuthoringToolWorkspacePresenterUt
     
     #region CreateNewLearningWorld
 
+    [Test]
+    public void OnCreateWorldDialogClose_DialogDataAreNull_ThrowsException()
+    {
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting();
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnCreateWorldDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
+    }
+
+    [Test]
+    public void OnCreateWorldDialogClose_CallsLearningWorldPresenter()
+    {
+        var learningWorldPresenter = Substitute.For<ILearningWorldPresenter>();
+        learningWorldPresenter.CreateNewLearningWorld(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())
+            .Returns(new LearningWorldViewModel("a", "b", "c", "d", "e", "f"));
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "n";
+        dictionary["Shortname"] = "sn";
+        dictionary["Authors"] = "a";
+        dictionary["Language"] = "a";
+        dictionary["Description"] = "d";
+        dictionary["Goals"] = "g";
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(learningWorldPresenter: learningWorldPresenter);
+
+        systemUnderTest.OnCreateWorldDialogClose(returnValueTuple);
+
+        learningWorldPresenter.Received().CreateNewLearningWorld("n", "sn", "a", "a", "d", "g");
+    }
+    
+    
     [Test]
     public void CreateNewLearningWorld_EventHandlerCalled()
     {
@@ -158,6 +199,7 @@ public class AuthoringToolWorkspacePresenterUt
                 Assert.That(world.Language, Is.EqualTo("Foo"));
                 Assert.That(world.Description, Is.EqualTo("Foo"));
                 Assert.That(world.Goals, Is.EqualTo("Foo"));
+                Assert.That(systemUnderTest.LearningWorldSelected, Is.True);
             });
         };
         
@@ -330,6 +372,92 @@ public class AuthoringToolWorkspacePresenterUt
     
     #region EditCurrentLearningWorld
 
+    [Test]
+    public void OpenEditSelectedLearningWorldDialog_CallsMethod()
+    {
+        var workspaceVm = new AuthoringToolWorkspaceViewModel();
+        var world = new LearningWorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo",
+            "Foo");
+        workspaceVm.AddLearningWorld(world);
+        workspaceVm.EditDialogInitialValues = new Dictionary<string, string>();
+
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm);
+        systemUnderTest.SetSelectedLearningWorld(world);
+
+        systemUnderTest.OpenEditSelectedLearningWorldDialog();
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.EditLearningWorldDialogOpen, Is.True);
+            Assert.That(workspaceVm.EditDialogInitialValues["Name"], Is.EqualTo(world.Name));
+            Assert.That(workspaceVm.EditDialogInitialValues["Shortname"], Is.EqualTo(world.Shortname));
+            Assert.That(workspaceVm.EditDialogInitialValues["Authors"], Is.EqualTo(world.Authors));
+            Assert.That(workspaceVm.EditDialogInitialValues["Language"], Is.EqualTo(world.Language));
+            Assert.That(workspaceVm.EditDialogInitialValues["Description"], Is.EqualTo(world.Description));
+            Assert.That(workspaceVm.EditDialogInitialValues["Goals"], Is.EqualTo(world.Goals));
+        });
+    }
+
+    [Test]
+    public void OpenEditSelectedLearningWorldDialog_SelectedLearningWorldIsNull_ThrowsException()
+    {
+        var workspaceVm = new AuthoringToolWorkspaceViewModel();
+        var world = new LearningWorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo",
+            "Foo");
+        workspaceVm.AddLearningWorld(world);
+        workspaceVm.EditDialogInitialValues = new Dictionary<string, string>();
+
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm);
+        
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OpenEditSelectedLearningWorldDialog());
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+    }
+
+    [Test]
+    public void OnEditWorldDialogClose_DialogDataAreNull_ThrowsException()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.SetSelectedLearningWorld(world);
+        
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditWorldDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
+    }
+
+    [Test]
+    public void OnEditWorldDialogClose_CallsLearningWorldPresenter()
+    {
+        var learningWorldPresenter = Substitute.For<ILearningWorldPresenter>();
+        learningWorldPresenter.EditLearningWorld(Arg.Any<LearningWorldViewModel>(), Arg.Any<string>(), Arg.Any<string>(),
+                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),Arg.Any<string>())
+            .Returns(new LearningWorldViewModel("a", "b", "c", "d", "e", "f"));
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "n";
+        dictionary["Shortname"] = "sn";
+        dictionary["Authors"] = "a";
+        dictionary["Language"] = "a";
+        dictionary["Description"] = "d";
+        dictionary["Goals"] = "g";
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(learningWorldPresenter: learningWorldPresenter);
+        systemUnderTest.SetSelectedLearningWorld(world);
+
+        systemUnderTest.OnEditWorldDialogClose(returnValueTuple);
+
+        learningWorldPresenter.Received().EditLearningWorld(world, "n", "sn", "a", "a", "d", "g");
+    }
+    
     [Test]
     public void EditCurrentLearningWorld_EventHandlerCalled()
     {
@@ -527,6 +655,27 @@ public class AuthoringToolWorkspacePresenterUt
             Assert.That(viewModel.SelectedLearningWorld, Is.EqualTo(learningWorld2));
             Assert.That(systemUnderTest.ReplacedUnsavedWorld, Is.EqualTo(learningWorld));
         });
+    }
+
+    [Test]
+    public void ReplaceLearningWorld_MultipleUnSavedReplacedWorlds_ThrowException()
+    {
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f")
+        {
+            UnsavedChanges = true
+        };
+        var learningWorld2 = new LearningWorldViewModel("f", "fu", "fu", "fu", "fu", "fu");
+        var learningWorld3 = new LearningWorldViewModel("fi", "fi", "fi", "fi", "fi", "fi");
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+        viewModel.AddLearningWorld(learningWorld);
+        viewModel.SelectedLearningWorld = learningWorld;
+
+        var systemUnderTest = CreatePresenterForTesting(viewModel);
+
+        systemUnderTest.ReplacedUnsavedWorld = learningWorld3;
+        
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.ReplaceLearningWorld(learningWorld2));
+        Assert.That(ex!.Message, Is.EqualTo("multiple unsaved replaced worlds, this should not happen"));
     }
     
     #endregion
@@ -822,6 +971,20 @@ public class AuthoringToolWorkspacePresenterUt
         systemUnderTest.LoadLearningSpaceFromFileStream(stream);
 
         presentationLogic.Received().LoadLearningSpaceViewModelFromStream(stream);
+    }
+
+    [Test]
+    public void LoadLearningSpaceFromFileStream_SelectedLearningWorldIsNull_CorrectInformationMessageToShow()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        var stream = Substitute.For<Stream>();
+        
+        Assert.That(systemUnderTest.InformationMessageToShow, Is.Not.EqualTo("A learning world must be selected to import a learning space."));
+
+        systemUnderTest.LoadLearningSpaceFromFileStream(stream);
+        
+        Assert.That(systemUnderTest.InformationMessageToShow, Is.EqualTo("A learning world must be selected to import a learning space."));
     }
 
     [Test]

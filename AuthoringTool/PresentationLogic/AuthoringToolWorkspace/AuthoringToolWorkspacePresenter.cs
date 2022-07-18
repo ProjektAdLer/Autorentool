@@ -153,8 +153,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenterT
     {
         if (_authoringToolWorkspaceVm.SelectedLearningWorld == null)
         {
-            //TODO: show error message?
-            return;
+            throw new ApplicationException("SelectedLearningWorld is null");
         }
 
         //prepare dictionary property to pass to dialog
