@@ -29,8 +29,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenterT
         EditLearningWorldDialogOpen = false;
         CreateLearningSpaceDialogueOpen = false;
         EditLearningSpaceDialogOpen = false;
-        CreateLearningElementDialogOpen = false;
-        EditLearningElementDialogOpen = false;
         WorldToReplaceWith = null;
         ReplacedUnsavedWorld = null;
         DeletedUnsavedWorld = null;
@@ -56,8 +54,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenterT
     internal bool CreateLearningSpaceDialogueOpen { get; set; }
     internal bool EditLearningSpaceDialogOpen { get; set; }
 
-    internal bool CreateLearningElementDialogOpen { get; set; }
-    internal bool EditLearningElementDialogOpen { get; set; }
     internal bool SaveUnsavedChangesDialogOpen { get; set; }
 
     internal bool LearningWorldSelected => _authoringToolWorkspaceVm.SelectedLearningWorld != null;
