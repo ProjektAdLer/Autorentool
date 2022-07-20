@@ -514,6 +514,34 @@ public class ModalDialogUt
         Assert.Throws<ArgumentOutOfRangeException>(() => CreateRenderedModalDialogComponentForTesting(ctx, title, text,
             onClose, dialogType, inputFields, inputFieldsInitialValues));
     }
+    
+    [Test]
+    public void ModalDialogDropdownInputFieldChoiceMapping_SetRequiredValues()
+    {
+        var testDictionary = new Dictionary<string, string> {{"Test2", "Bar"}};
+        var systemUnderTest = new ModalDialogDropdownInputFieldChoiceMapping(new Dictionary<string, string>
+        {
+            {"Test1", "Foo"}
+        }, new[] {"Foz", "Baz"});
+        
+        systemUnderTest.RequiredValues = testDictionary;
+        
+        Assert.That(systemUnderTest.RequiredValues, Is.EqualTo(testDictionary));
+    }
+    
+    [Test]
+    public void ModalDialogDropdownInputFieldChoiceMapping_SetAvailableChoices()
+    {
+        var testEnumerable = new []{"Foy", "Bay"};
+        var systemUnderTest = new ModalDialogDropdownInputFieldChoiceMapping(new Dictionary<string, string>
+        {
+            {"Test1", "Foo"}
+        }, new[] {"Foz", "Baz"});
+        
+        systemUnderTest.AvailableChoices = testEnumerable;
+        
+        Assert.That(systemUnderTest.AvailableChoices, Is.EqualTo(testEnumerable));
+    }
 
     private IRenderedComponent<ModalDialog> CreateRenderedModalDialogComponentForTesting(Bunit.TestContext ctx,
         string title, string text,
