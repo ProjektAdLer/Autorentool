@@ -496,7 +496,7 @@ public class ModalDialogUt
 
         const string title = "Test Dialog";
         const string text = "This is a dialog for automated testing purposes";
-        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = _ =>
+        ModalDialogOnClose onClose = _ =>
         {
             Assert.Fail("onclose unexpectedly called");
         };

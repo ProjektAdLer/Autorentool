@@ -318,8 +318,7 @@ public class LearningSpacePresenterUt
         dictionary["Goals"] = "g";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "3";
-        var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+        var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
         systemUnderTest.SetLearningSpace(space);
@@ -352,8 +351,7 @@ public class LearningSpacePresenterUt
         dictionary["Goals"] = "g";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "3";
-        var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+        var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
         systemUnderTest.SetLearningSpace(space);
@@ -490,8 +488,7 @@ public class LearningSpacePresenterUt
         dictionary["Goals"] = "f";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "2";
-        var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+        var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
         systemUnderTest.SetLearningSpace(space);
@@ -833,8 +830,7 @@ public class LearningSpacePresenterUt
         dictionary["Goals"] = "g";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "-5";
-        var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+        var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting();
         

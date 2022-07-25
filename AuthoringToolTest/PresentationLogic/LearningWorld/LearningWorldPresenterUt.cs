@@ -518,8 +518,7 @@ public class LearningWorldPresenterUt
         dictionary["Goals"] = "f";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "2";
-        var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+        var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
         systemUnderTest.SetLearningWorld(null, world);
@@ -554,8 +553,7 @@ public class LearningWorldPresenterUt
         dictionary["Goals"] = "f";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "2";
-        var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+        var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
         systemUnderTest.SetLearningWorld(null, world);
@@ -737,8 +735,7 @@ public class LearningWorldPresenterUt
         dictionary["Goals"] = "f";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "2";
-        var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+        var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
         systemUnderTest.SetLearningWorld(null, world);
@@ -1169,8 +1166,7 @@ public class LearningWorldPresenterUt
         dictionary["Description"] = "d";
         dictionary["Authors"] = "a";
         dictionary["Goals"] = "g";
-        var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+        var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting();
         
@@ -1200,8 +1196,7 @@ public class LearningWorldPresenterUt
         dictionary["Description"] = "d";
         dictionary["Authors"] = "a";
         dictionary["Goals"] = "g";
-        var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+        var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
         systemUnderTest.SetLearningWorld(null, world);
@@ -1351,8 +1346,7 @@ public class LearningWorldPresenterUt
         dictionary["Goals"] = "g";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "2";
-        var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+        var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting();
         
