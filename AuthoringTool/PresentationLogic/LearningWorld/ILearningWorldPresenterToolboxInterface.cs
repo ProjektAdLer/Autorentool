@@ -9,7 +9,7 @@ public interface ILearningWorldPresenterToolboxInterface
     void AddLearningSpace(ILearningSpaceViewModel learningSpace);
     
     /// <inheritdoc cref="ILearningWorldPresenter.AddLearningElement"/>
-    void AddLearningElement(LearningElementViewModel learningElement);
+    void AddLearningElement(ILearningElementViewModel learningElement);
     
     /// <summary>
     /// Returns whether or not a learning space is currently being displayed (aka. "is open").

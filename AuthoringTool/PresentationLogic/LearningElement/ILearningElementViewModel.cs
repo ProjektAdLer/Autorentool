@@ -2,7 +2,7 @@ using AuthoringTool.PresentationLogic.LearningContent;
 
 namespace AuthoringTool.PresentationLogic.LearningElement;
 
-public interface ILearningElementViewModel : ILearningObjectViewModel
+public interface ILearningElementViewModel : ILearningObjectViewModel, IDisplayableLearningObject
 {
     string FileEnding { get; }
     string Name { get; set; }

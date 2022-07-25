@@ -5,7 +5,7 @@ namespace AuthoringTool.PresentationLogic.LearningSpace;
 public interface ILearningSpaceViewModel : IDisplayableLearningObject, ILearningElementViewModelParent, ILearningObjectViewModel
 {
     string FileEnding { get; }
-    ICollection<LearningElementViewModel> LearningElements { get; set; }
+    ICollection<ILearningElementViewModel> LearningElements { get; set; }
     int Workload { get; }
     string Name { get; set; }
     string Shortname { get; set; }

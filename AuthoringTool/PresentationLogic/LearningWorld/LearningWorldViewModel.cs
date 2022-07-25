@@ -21,7 +21,7 @@ public class LearningWorldViewModel : ILearningElementViewModelParent, ISerializ
     /// <param name="learningSpaces">Optional collection of learning spaces contained in the learning world.
     /// Should be used when loading a saved learnign world into the application.</param>
     public LearningWorldViewModel(string name, string shortname, string authors, string language, string description,
-        string goals, bool unsavedChanges = true, ICollection<LearningElementViewModel>? learningElements = null,
+        string goals, bool unsavedChanges = true, ICollection<ILearningElementViewModel>? learningElements = null,
         ICollection<ILearningSpaceViewModel>? learningSpaces = null)
     {
         Name = name;
@@ -31,12 +31,12 @@ public class LearningWorldViewModel : ILearningElementViewModelParent, ISerializ
         Description = description;
         Goals = goals;
         UnsavedChanges = unsavedChanges;
-        LearningElements = learningElements ?? new Collection<LearningElementViewModel>();
+        LearningElements = learningElements ?? new Collection<ILearningElementViewModel>();
         LearningSpaces = learningSpaces ?? new Collection<ILearningSpaceViewModel>();
     }
     public const string fileEnding = "awf";
     public string FileEnding => fileEnding;
-    public ICollection<LearningElementViewModel> LearningElements { get; set; }
+    public ICollection<ILearningElementViewModel> LearningElements { get; set; }
     public int Workload =>
         LearningSpaces.Sum(space => space.Workload) + LearningElements.Sum(element => element.Workload);
     public ICollection<ILearningSpaceViewModel> LearningSpaces { get; set; }

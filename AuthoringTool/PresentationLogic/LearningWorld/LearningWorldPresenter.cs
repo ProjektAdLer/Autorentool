@@ -283,7 +283,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
         EditLearningElementDialogOpen = true;
     }
     
-    public void AddLearningElement(LearningElementViewModel learningElement)
+    public void AddLearningElement(ILearningElementViewModel learningElement)
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");

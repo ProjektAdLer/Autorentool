@@ -186,7 +186,7 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
         AddLearningElement(learningElement);
     }
 
-    public void AddLearningElement(LearningElementViewModel element)
+    public void AddLearningElement(ILearningElementViewModel element)
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");

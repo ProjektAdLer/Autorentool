@@ -25,7 +25,7 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
 
         _worlds = new List<LearningWorldViewModel>();
         _spaces = new List<ILearningSpaceViewModel>();
-        _elements = new List<LearningElementViewModel>();
+        _elements = new List<ILearningElementViewModel>();
         _initialized = false;
         
         //ensure path is created
@@ -41,7 +41,7 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
 
     private List<LearningWorldViewModel> _worlds;
     private List<ILearningSpaceViewModel> _spaces;
-    private List<LearningElementViewModel> _elements;
+    private List<ILearningElementViewModel> _elements;
 
     private bool _initialized;
     //TODO: remove this and instead get path from configuration 

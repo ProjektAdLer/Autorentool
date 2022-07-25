@@ -50,7 +50,7 @@ public interface ILearningWorldPresenter
     /// </summary>
     /// <param name="learningElement">The space to be added.</param>
     /// <exception cref="ApplicationException"><see cref="LearningWorldVm"/> is null or element exists in world with same name.</exception>
-    public void AddLearningElement(LearningElementViewModel learningElement);
+    public void AddLearningElement(ILearningElementViewModel learningElement);
     void CreateLearningElementWithPreloadedContent(LearningContentViewModel learningContent);
     bool DraggedLearningContentIsPresent { get; }
 }
