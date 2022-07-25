@@ -11,7 +11,7 @@ namespace AuthoringToolTest.PresentationLogic.LearningElement.TestElement;
 public class H5PTestElementViewModelUt
 {
     [Test]
-    public void H5PTestElement_Constructor_InitializesAllProperties()
+    public void Constructor_InitializesAllProperties()
     {
         var Name = "rrs";
         var Shortname = "stt";

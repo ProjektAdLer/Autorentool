@@ -103,10 +103,9 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     /// <exception cref="ApplicationException">Thrown if SelectedLearningObject is not a LearningSpace. Shouldn't occur, because this is checked in <see cref="OpenEditSelectedLearningObjectDialog"/></exception>
     private void OpenEditSelectedLearningSpaceDialog()
     {
-        if (LearningWorldVm?.SelectedLearningObject is not LearningSpaceViewModel
-            space) throw new ApplicationException("Type of LearningObject is not LearningSpace");
+        var space = (LearningSpaceViewModel) LearningWorldVm?.SelectedLearningObject!;
         //prepare dictionary property to pass to dialog
-        LearningWorldVm.EditDialogInitialValues = new Dictionary<string, string>
+        LearningWorldVm!.EditDialogInitialValues = new Dictionary<string, string>
         {
             {"Name", space.Name},
             {"Shortname", space.Shortname},
@@ -266,11 +265,10 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     /// Shouldn't occur, because this is checked in <see cref="OpenEditSelectedLearningObjectDialog"/></exception>
     private void OpenEditSelectedLearningElementDialog()
     {
-        if (LearningWorldVm?.SelectedLearningObject is not LearningElementViewModel
-            element) throw new ApplicationException("Type of LearningObject is not implemented");
+        var element = (LearningElementViewModel) LearningWorldVm?.SelectedLearningObject!;
         if (element.Parent == null) throw new Exception("Element Parent is null");
         //prepare dictionary property to pass to dialog
-        LearningWorldVm.EditDialogInitialValues = new Dictionary<string, string>
+        LearningWorldVm!.EditDialogInitialValues = new Dictionary<string, string>
         {
             {"Name", element.Name},
             {"Shortname", element.Shortname},
@@ -317,11 +315,6 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     /// <exception cref="ApplicationException">Thrown if there is no valid ContentType assigned.</exception>
     private async Task<LearningContentViewModel> LoadLearningContent(ContentTypeEnum contentType)
     {
-        if (LearningWorldVm == null)
-        { 
-            throw new ApplicationException("SelectedLearningSpace is null");
-        }
-
         return contentType switch
         {
             ContentTypeEnum.Image => await _presentationLogic.LoadImageAsync(),
@@ -465,7 +458,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
             workload = 0;
 
         if (LearningWorldVm == null)
-            throw new ApplicationException("LearningWorld is null");
+            throw new ApplicationException("LearningWorldVm is null");
         if (LearningWorldVm.SelectedLearningObject is not LearningElementViewModel
             learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
         _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, parentElement,

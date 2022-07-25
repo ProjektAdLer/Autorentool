@@ -32,7 +32,7 @@ public class DraggableUt
     public void TearDown() => _testContext.Dispose();
 
     [Test]
-    public void Draggable_StandardConstructor_AllPropertiesInitialized()
+    public void StandardConstructor_AllPropertiesInitialized()
     {
         RenderFragment childContent = builder => builder.AddContent(0, "<text/>");
         var learningObject = Substitute.For<ILearningObjectViewModel>();
@@ -44,7 +44,7 @@ public class DraggableUt
 
         var systemUnderTest =
             CreateRenderedDraggableComponent(childContent, learningObject, x, y, xChanged, yChanged, onClicked);
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Instance.ChildContent, Is.EqualTo(childContent));
@@ -64,7 +64,7 @@ public class DraggableUt
     }
 
     [Test]
-    public void Draggable_ClickAndRelease_OnClickedTriggered()
+    public void ClickAndRelease_OnClickedTriggered()
     {
         ILearningObjectViewModel? onClickedEventTriggered = null;
         var learningObject = Substitute.For<ILearningObjectViewModel>();
@@ -81,7 +81,7 @@ public class DraggableUt
     }
 
     [Test]
-    public void Draggable_ClickMoveAndRelease_OnClickedNotTriggered()
+    public void ClickMoveAndRelease_OnClickedNotTriggered()
     {
         ILearningObjectViewModel? onClickedEventTriggered = null;
         var learningObject = Substitute.For<ILearningObjectViewModel>();
@@ -99,7 +99,7 @@ public class DraggableUt
     }
 
     [Test]
-    public void Draggable_ClickMoveAndRelease_PositionChanged()
+    public void ClickMoveAndRelease_PositionChanged()
     {
         var learningObject = Substitute.For<ILearningObjectViewModel>();
 
@@ -114,7 +114,7 @@ public class DraggableUt
         _mouseService.OnMove +=
             Raise.EventWith(new MouseEventArgs {ClientX = 13, ClientY = 24});
         _mouseService.OnUp += Raise.EventWith(new MouseEventArgs());
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Instance.X, Is.EqualTo(x + 13));
@@ -123,7 +123,7 @@ public class DraggableUt
     }
 
     [Test]
-    public void Draggable_MoveAndReleaseWithoutPreviousClick_PositionNotChanged()
+    public void MoveAndReleaseWithoutPreviousClick_PositionNotChanged()
     {
         var learningObject = Substitute.For<ILearningObjectViewModel>();
 
@@ -137,7 +137,7 @@ public class DraggableUt
         _mouseService.OnMove +=
             Raise.EventWith(new MouseEventArgs {ClientX = 13, ClientY = 24});
         _mouseService.OnUp += Raise.EventWith(new MouseEventArgs());
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Instance.X, Is.EqualTo(x));

@@ -18,7 +18,7 @@ namespace AuthoringToolTest.PresentationLogic.LearningWorld;
 public class LearningWorldPresenterUt
 {
     [Test]
-    public void LearningWorldPresenter_CreateNewLearningWorld_CreatesCorrectViewModel()
+    public void CreateNewLearningWorld_CreatesCorrectViewModel()
     {
         var name = "cool world";
         var shortname = "cw";
@@ -43,7 +43,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_EditLearningWorld_EditsViewModelCorrectly()
+    public void EditLearningWorld_EditsViewModelCorrectly()
     {
         var world = new LearningWorldViewModel("f", "fa", "a", "u", "e", "o");
         var name = "cool world";
@@ -70,10 +70,38 @@ public class LearningWorldPresenterUt
 
     #region LearningObject
 
+    [Test]
+    public void SetSelectedLearningObject_SelectedLearningWorldIsNull_ThrowsException()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        var element = new LearningElementViewModel("foo", "bar",
+            null, null, "bar", "foo", "bar", LearningElementDifficultyEnum.Easy, 6);
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetSelectedLearningObject(element));
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+    }
+        
+        
     #region CreateNewLearningSpace/Element
 
     [Test]
-    public void LearningWorldPresenter_CreateNewLearningSpace_ThrowsWhenSelectedWorldNull()
+    public void AddLearningSpace_CreateSecondSpaceWithSameName_ThrowsException()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var space1 = new LearningSpaceViewModel("foo", "bar", "foo", "bar", "baz");
+        var space2 = new LearningSpaceViewModel("foo", "bar", "foo", "bar", "baz");
+        world.LearningSpaces.Add(space1);
+        
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.SetLearningWorld(null, world);
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.AddLearningSpace(space2));
+        Assert.That(ex!.Message, Is.EqualTo("World already contains a space with same name"));
+    }
+    
+    [Test]
+    public void CreateNewLearningSpace_ThrowsWhenSelectedWorldNull()
     {
         var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
         learningSpacePresenter.CreateNewLearningSpace(Arg.Any<string>(), Arg.Any<string>(),
@@ -86,9 +114,39 @@ public class LearningWorldPresenterUt
             "this", "does", "not", "matter"));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
+    
+    [Test]
+    public void AddLearningElement_CreateSecondElementWithSameName_ThrowsException()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var element1 = new LearningElementViewModel("foo", "bar", null, null, "foo",
+            "wa", "bar", LearningElementDifficultyEnum.Hard);
+        var element2 = new LearningElementViewModel("foo", "bar", null, null, "foo",
+            "wa", "bar", LearningElementDifficultyEnum.Hard);
+        world.LearningElements.Add(element1);
+        
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.SetLearningWorld(null, world);
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.AddLearningElement(element2));
+        Assert.That(ex!.Message, Is.EqualTo("World already contains an element with same name"));
+    }
+    
+    [Test]
+    public void AddLearningElement_SelectedLearningWorldIsNull_ThrowsException()
+    {
+        var element = new LearningElementViewModel("foo", "bar", null, null, "foo",
+            "wa", "bar", LearningElementDifficultyEnum.Hard);
+
+        var systemUnderTest = CreatePresenterForTesting();
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.AddLearningElement(element));
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+    }
 
     [Test]
-    public void LearningWorldPresenter_CreateNewLearningElement_ThrowsWhenSelectedWorldNull()
+    public void CreateNewLearningElement_ThrowsWhenSelectedWorldNull()
     {
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
         learningElementPresenter.CreateNewTransferElement(Arg.Any<string>(), Arg.Any<string>(),
@@ -105,7 +163,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_CreateNewLearningSpace_CallsLearningSpacePresenter()
+    public void CreateNewLearningSpace_CallsLearningSpacePresenter()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -124,7 +182,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_CreateNewLearningElement_CallsLearningElementPresenter_TransferElement()
+    public void CreateNewLearningElement_CallsLearningElementPresenter_TransferElement()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -148,7 +206,7 @@ public class LearningWorldPresenterUt
     }
     
     [Test]
-    public void LearningWorldPresenter_CreateNewLearningElement_CallsLearningElementPresenter_TestElement()
+    public void CreateNewLearningElement_CallsLearningElementPresenter_TestElement()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -172,7 +230,7 @@ public class LearningWorldPresenterUt
     }
     
     [Test]
-    public void LearningWorldPresenter_CreateNewLearningElement_CallsLearningElementPresenter_InteractionElement()
+    public void CreateNewLearningElement_CallsLearningElementPresenter_InteractionElement()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -196,7 +254,7 @@ public class LearningWorldPresenterUt
     }
     
     [Test]
-    public void LearningWorldPresenter_CreateNewLearningElement_CallsLearningElementPresenter_ActivationElement()
+    public void CreateNewLearningElement_CallsLearningElementPresenter_ActivationElement()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -220,7 +278,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_CreateNewLearningSpace_AddsLearningSpaceToViewModel()
+    public void CreateNewLearningSpace_AddsLearningSpaceToViewModel()
     {
         var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>(); //new LearningSpacePresenter();
         learningSpacePresenter
@@ -252,7 +310,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_CreateNewLearningElement_AddsLearningElementToWorldViewModel()
+    public void CreateNewLearningElement_AddsLearningElementToWorldViewModel()
     {
         var learningElementPresenter = new LearningElementPresenter();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
@@ -285,7 +343,7 @@ public class LearningWorldPresenterUt
 
 
     [Test]
-    public void LearningWorldPresenter_CreateNewLearningElement_AddsLearningElementToSpaceViewModel()
+    public void CreateNewLearningElement_AddsLearningElementToSpaceViewModel()
     {
         var learningElementPresenter = new LearningElementPresenter();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
@@ -318,7 +376,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_CreateLearningElementWithPreloadedContent_SetsFieldToTrue()
+    public void CreateLearningElementWithPreloadedContent_SetsFieldToTrue()
     {
         var learningContent = new LearningContentViewModel("n", "t", Array.Empty<byte>());
         var systemUnderTest = CreatePresenterForTesting();
@@ -336,7 +394,7 @@ public class LearningWorldPresenterUt
     #region OnCreateSpace/ElementDialogClose
 
     [Test]
-    public void LearningWorldPresenter_OnCreateSpaceDialogClose_ThrowsWhenDialogDataAreNull()
+    public void OnCreateSpaceDialogClose_ThrowsWhenDialogDataAreNull()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -353,7 +411,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_OnCreateElementDialogClose_ThrowsWhenDialogDataAreNull()
+    public void OnCreateElementDialogClose_ThrowsWhenDialogDataAreNull()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -371,7 +429,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_OnCreateSpaceDialogClose_CallsLearningSpacePresenter()
+    public void OnCreateSpaceDialogClose_CallsLearningSpacePresenter()
     {
         var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
         learningSpacePresenter.CreateNewLearningSpace(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
@@ -400,7 +458,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_OnCreateElementDialogClose_WithLearningWorld_CallsLearningElementPresenter_TransferElement()
+    public void OnCreateElementDialogClose_CallsLearningElementPresenter_WorldParent_TransferElement_Image()
     {
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
         learningElementPresenter.CreateNewTransferElement(Arg.Any<string>(), Arg.Any<string>(),
@@ -436,7 +494,79 @@ public class LearningWorldPresenterUt
     }
     
     [Test]
-    public void LearningWorldPresenter_OnCreateElementDialogClose_WithLearningWorld_CallsLearningElementPresenter_TestElement()
+    public void OnCreateElementDialogClose_CallsLearningElementPresenter_WorldParent_TransferElement_Video()
+    {
+        var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
+        learningElementPresenter.CreateNewTransferElement(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<int>()
+            ).Returns(new LearningElementViewModel("ba", "ba",
+            null, null, "ba",  "ba", "ba",LearningElementDifficultyEnum.Easy,3));
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "a";
+        dictionary["Shortname"] = "b";
+        dictionary["Parent"] = ElementParentEnum.World.ToString();
+        dictionary["Assignment"] = "foobar";
+        dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
+        dictionary["Content"] = ContentTypeEnum.Video.ToString();
+        dictionary["Authors"] = "d";
+        dictionary["Description"] = "e";
+        dictionary["Goals"] = "f";
+        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
+        dictionary["Workload (min)"] = "2";
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
+        systemUnderTest.SetLearningWorld(null, world);
+
+        systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
+
+        learningElementPresenter.Received().CreateNewTransferElement("a", "b", world, ContentTypeEnum.Video, null, "d", "e", "f",LearningElementDifficultyEnum.Easy,2);
+    }
+    
+    [Test]
+    public void OnCreateElementDialogClose_CallsLearningElementPresenter_WorldParent_TransferElement_Pdf()
+    {
+        var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
+        learningElementPresenter.CreateNewTransferElement(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<int>()
+            ).Returns(new LearningElementViewModel("ba", "ba",
+            null, null, "ba",  "ba", "ba",LearningElementDifficultyEnum.Easy,3));
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "a";
+        dictionary["Shortname"] = "b";
+        dictionary["Parent"] = ElementParentEnum.World.ToString();
+        dictionary["Assignment"] = "foobar";
+        dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
+        dictionary["Content"] = ContentTypeEnum.Pdf.ToString();
+        dictionary["Authors"] = "d";
+        dictionary["Description"] = "e";
+        dictionary["Goals"] = "f";
+        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
+        dictionary["Workload (min)"] = "2";
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
+        systemUnderTest.SetLearningWorld(null, world);
+
+        systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
+
+        learningElementPresenter.Received().CreateNewTransferElement("a", "b", world, ContentTypeEnum.Pdf, null, "d", "e", "f",LearningElementDifficultyEnum.Easy,2);
+    }
+    
+    [Test]
+    public void OnCreateElementDialogClose_allsLearningElementPresenter_WorldParent_TestElement()
     {
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
         learningElementPresenter.CreateNewTestElement(Arg.Any<string>(), Arg.Any<string>(),
@@ -472,7 +602,7 @@ public class LearningWorldPresenterUt
     }
     
     [Test]
-    public void LearningWorldPresenter_OnCreateElementDialogClose_WithLearningWorld_CallsLearningElementPresenter_InteractionElement()
+    public void OnCreateElementDialogClose_CallsLearningElementPresenter_WorldParent_InteractionElement()
     {
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
         learningElementPresenter.CreateNewInteractionElement(Arg.Any<string>(), Arg.Any<string>(),
@@ -508,7 +638,7 @@ public class LearningWorldPresenterUt
     }
     
     [Test]
-    public void LearningWorldPresenter_OnCreateElementDialogClose_WithLearningWorld_CallsLearningElementPresenter_ActivationElement()
+    public void OnCreateElementDialogClose_CallsLearningElementPresenter_WorldParent_ActivationElement()
     {
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
         learningElementPresenter.CreateNewActivationElement(Arg.Any<string>(), Arg.Any<string>(),
@@ -544,11 +674,11 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_OnCreateElementDialogClose_WithLearningSpace_CallsLearningElementPresenter()
+    public void OnCreateElementDialogClose_CallsLearningElementPresenter_SpaceParent()
     {
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
-        learningElementPresenter.EditLearningElement(Arg.Any<LearningElementViewModel>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<ILearningElementViewModelParent>(), Arg.Any<string>(),
+        learningElementPresenter.CreateNewTransferElement(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningElementDifficultyEnum>(),Arg.Any<int>()
             ).Returns(new LearningElementViewModel("ba", "ba",
             null, null, "ba", "ba", "ba",LearningElementDifficultyEnum.Easy,9));
@@ -580,9 +710,47 @@ public class LearningWorldPresenterUt
 
         learningElementPresenter.Received().CreateNewTransferElement("a", "b", space, ContentTypeEnum.Image, null, "e", "f", "g",LearningElementDifficultyEnum.Medium,7);
     }
+    
+    [Test]
+    public void OnCreateElementDialogClose_CallsLearningElementPresenter_DragAndDropContent()
+    {
+        var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
+        learningElementPresenter.CreateNewTransferElement(Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<int>()
+            ).Returns(new LearningElementViewModel("ba", "ba",
+            null, null, "ba",  "ba", "ba",LearningElementDifficultyEnum.Easy,3));
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var content = new LearningContentViewModel("a", "b", new byte[] {0, 1, 2});
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "a";
+        dictionary["Shortname"] = "b";
+        dictionary["Parent"] = ElementParentEnum.World.ToString();
+        dictionary["Assignment"] = "foobar";
+        dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
+        dictionary["Content"] = ContentTypeEnum.Pdf.ToString();
+        dictionary["Authors"] = "d";
+        dictionary["Description"] = "e";
+        dictionary["Goals"] = "f";
+        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
+        dictionary["Workload (min)"] = "2";
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
+        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.CreateLearningElementWithPreloadedContent(content);
+
+        systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
+
+        learningElementPresenter.Received().CreateNewTransferElement("a", "b", world, ContentTypeEnum.Pdf, content, "d", "e", "f",LearningElementDifficultyEnum.Easy,2);
+    }
 
     [Test]
-    public void LearningWorldPresenter_OnCreateElementDialogClose_ThrowsCouldntParseParentType()
+    public void OnCreateElementDialogClose_ThrowsCouldntParseParentType()
     {
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
@@ -608,7 +776,7 @@ public class LearningWorldPresenterUt
     }
     
     [Test]
-    public void LearningWorldPresenter_OnCreateElementDialogClose_ThrowsCouldntParseElementType()
+    public void OnCreateElementDialogClose_ThrowsCouldntParseElementType()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -638,7 +806,7 @@ public class LearningWorldPresenterUt
     }
     
     [Test]
-    public void LearningWorldPresenter_OnCreateElementDialogClose_ThrowsCouldntParseContentType()
+    public void OnCreateElementDialogClose_ThrowsCouldntParseContentType()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -668,7 +836,7 @@ public class LearningWorldPresenterUt
     }
     
     [Test]
-    public void LearningWorldPresenter_OnCreateElementDialogClose_ThrowsCouldntParseDifficulty()
+    public void OnCreateElementDialogClose_ThrowsCouldntParseDifficulty()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -698,7 +866,7 @@ public class LearningWorldPresenterUt
     }
     
     [Test]
-    public void LearningWorldPresenter_OnCreateElementDialogClose_CouldntParseWorkloadToInt()
+    public void OnCreateElementDialogClose_CouldntParseWorkloadToInt()
     {
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
         learningElementPresenter.CreateNewTestElement(Arg.Any<string>(), Arg.Any<string>(),
@@ -734,7 +902,7 @@ public class LearningWorldPresenterUt
     }
     
     [Test]
-    public void LearningWorldPresenter_OnCreateElementDialogClose_NegativeWorkloadToZero()
+    public void OnCreateElementDialogClose_NegativeWorkloadToZero()
     {
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
         learningElementPresenter.CreateNewTestElement(Arg.Any<string>(), Arg.Any<string>(),
@@ -774,7 +942,7 @@ public class LearningWorldPresenterUt
     #region OnEditSpace/ElementDialogClose
 
     [Test]
-    public void LearningWorldPresenter_OnEditSpaceDialogClose_ThrowsWhenDialogDataAreNull()
+    public void OnEditSpaceDialogClose_ThrowsWhenDialogDataAreNull()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -791,7 +959,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_OnEditElementDialogClose_ThrowsWhenDialogDataAreNull()
+    public void OnEditElementDialogClose_ThrowsWhenDialogDataAreNull()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -808,7 +976,7 @@ public class LearningWorldPresenterUt
     }
     
     [Test]
-    public void LearningWorldPresenter_OnEditElementDialogClose_ThrowsCouldntParseParentType()
+    public void OnEditElementDialogClose_ThrowsCouldntParseParentType()
     {
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
         learningElementPresenter.EditLearningElement(Arg.Any<LearningElementViewModel>(), Arg.Any<string>(),
@@ -846,7 +1014,7 @@ public class LearningWorldPresenterUt
     }
     
     [Test]
-    public void LearningWorldPresenter_OnEditElementDialogClose_ThrowsCouldntParseDifficulty()
+    public void OnEditElementDialogClose_ThrowsCouldntParseDifficulty()
     {
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
         learningElementPresenter.EditLearningElement(Arg.Any<LearningElementViewModel>(), Arg.Any<string>(),
@@ -884,7 +1052,7 @@ public class LearningWorldPresenterUt
     }
     
     [Test]
-    public void LearningWorldPresenter_OnEditElementDialogClose_CouldntParseWorkloadToInt()
+    public void OnEditElementDialogClose_CouldntParseWorkloadToInt()
     {
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
         learningElementPresenter.EditLearningElement(Arg.Any<LearningElementViewModel>(), Arg.Any<string>(),
@@ -922,7 +1090,7 @@ public class LearningWorldPresenterUt
     }
     
     [Test]
-    public void LearningWorldPresenter_OnEditElementDialogClose_NegativeWorkloadToZero()
+    public void OnEditElementDialogClose_NegativeWorkloadToZero()
     {
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
         learningElementPresenter.EditLearningElement(Arg.Any<LearningElementViewModel>(), Arg.Any<string>(),
@@ -960,7 +1128,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_OnEditSpaceDialogClose_CallsLearningSpacePresenter()
+    public void OnEditSpaceDialogClose_CallsLearningSpacePresenter()
     {
         var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
         learningSpacePresenter.EditLearningSpace(Arg.Any<LearningSpaceViewModel>(), Arg.Any<string>(),
@@ -990,9 +1158,61 @@ public class LearningWorldPresenterUt
 
         learningSpacePresenter.Received().EditLearningSpace(space, "n", "sn", "a", "d", "g");
     }
+    
+    [Test]
+    public void OnEditSpaceDialogClose_LearningWorldIsNull_ThrowsException()
+    {
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "n";
+        dictionary["Shortname"] = "sn";
+        dictionary["Description"] = "d";
+        dictionary["Authors"] = "a";
+        dictionary["Goals"] = "g";
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditSpaceDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("LearningWorld is null"));
+    }
+    
+    [Test]
+    public void OnEditSpaceDialogClose_LearningObjectIsNotALEarningSpace_ThrowsException()
+    {
+        var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
+        learningElementPresenter.EditLearningElement(Arg.Any<LearningElementViewModel>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<ILearningElementViewModelParent>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>() , Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<int>()
+        ).Returns(new LearningElementViewModel("ba", "ba",
+            null, null, "ba", null, "ba", LearningElementDifficultyEnum.Medium,5));
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var element = new LearningElementViewModel("foo", "bar", null, null, "foo",
+            "wa", "bar", LearningElementDifficultyEnum.Hard);
+        world.LearningElements.Add(element);
+        
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "n";
+        dictionary["Shortname"] = "sn";
+        dictionary["Description"] = "d";
+        dictionary["Authors"] = "a";
+        dictionary["Goals"] = "g";
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
+        systemUnderTest.SetLearningWorld(null, world);
+        world.SelectedLearningObject = element;
+        
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditSpaceDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("LearningObject is not a LearningSpace"));
+    }
 
     [Test]
-    public void LearningWorldPresenter_OnEditElementDialogClose_WithLearningWorld_CallsLearningElementPresenter()
+    public void OnEditElementDialogClose_CallsLearningElementPresenter_WorldParent()
     {
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
         learningElementPresenter.EditLearningElement(Arg.Any<LearningElementViewModel>(), Arg.Any<string>(),
@@ -1030,7 +1250,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_OnEditElementDialogClose_MovesElementFromWorldToSpace()
+    public void OnEditElementDialogClose_MovesElementFromWorldToSpace()
     {
         var mockElementPresenter = Substitute.For<ILearningElementPresenter>();
         mockElementPresenter.When(x => x.EditLearningElement(Arg.Any<LearningElementViewModel>(),
@@ -1077,7 +1297,7 @@ public class LearningWorldPresenterUt
 
 
     [Test]
-    public void LearningWorldPresenter_OnEditElementDialogClose_WithLearningSpace_CallsLearningElementPresenter()
+    public void OnEditElementDialogClose_CallsLearningElementPresenter_SpaceParent()
     {
         var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
         learningElementPresenter.EditLearningElement(Arg.Any<LearningElementViewModel>(), Arg.Any<string>(),
@@ -1116,13 +1336,36 @@ public class LearningWorldPresenterUt
 
         learningElementPresenter.Received().EditLearningElement(element, "a", "b", space, "e", "f", "g", LearningElementDifficultyEnum.Easy,2);
     }
+    
+    [Test]
+    public void OnEditElementDialogClose_ElementParentIsNull_ThrowsException()
+    {
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "a";
+        dictionary["Shortname"] = "b";
+        dictionary["Parent"] = ElementParentEnum.Space.ToString();
+        dictionary["Assignment"] = "foobar";
+        dictionary["Authors"] = "e";
+        dictionary["Description"] = "f";
+        dictionary["Goals"] = "g";
+        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
+        dictionary["Workload (min)"] = "2";
+        var returnValueTuple =
+            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        var ex = Assert.Throws<Exception>(() => systemUnderTest.OnEditElementDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("Parent element is null"));
+    }
 
     #endregion
 
     #region DeleteSelectedLearningObject
 
     [Test]
-    public void LearningWorldPresenter_DeleteSelectedLearningObject_ThrowsWhenSelectedWorldNull()
+    public void DeleteSelectedLearningObject_ThrowsWhenSelectedWorldNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningWorld(null, null);
@@ -1132,7 +1375,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_DeleteSelectedLearningObject_DoesNotThrowWhenSelectedObjectNull()
+    public void DeleteSelectedLearningObject_DoesNotThrowWhenSelectedObjectNull()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -1149,7 +1392,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_DeleteSelectedLearningObject_WithSpace_DeletesSpaceFromViewModel()
+    public void DeleteSelectedLearningObject_DeletesSpaceFromViewModel_WithSpace()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -1169,7 +1412,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_DeleteSelectedLearningObject_WithElement_CallsElementPresenter()
+    public void DeleteSelectedLearningObject_CallsElementPresenter_WithElement()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -1189,7 +1432,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_DeleteSelectedLearningObject_WithUnknownObject_ThrowsNotImplemented()
+    public void DeleteSelectedLearningObject_UnknownObjectThrowsNotImplemented()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -1204,7 +1447,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_DeleteSelectedLearningObject_WithSpace_MutatesSelectionInViewModel()
+    public void DeleteSelectedLearningObject_MutatesSelectionInViewModel_WithSpace()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -1223,7 +1466,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_DeleteSelectedLearningObject_WithElement_MutatesSelectionInViewModel()
+    public void DeleteSelectedLearningObject_MutatesSelectionInViewModel_WithElement()
     {
         var mockElementPresenter = Substitute.For<ILearningElementPresenter>();
         mockElementPresenter.When(x => x.RemoveLearningElementFromParentAssignment(Arg.Any<LearningElementViewModel>()))
@@ -1261,7 +1504,7 @@ public class LearningWorldPresenterUt
     #region OpenEditSelectedLearningObjectDialog
 
     [Test]
-    public void LearningWorldPresenter_OpenEditSelectedLearningObjectDialog_ThrowsWhenSelectedWorldNull()
+    public void OpenEditSelectedLearningObjectDialog_ThrowsWhenSelectedWorldNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningWorld(null, null);
@@ -1271,7 +1514,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_OpenEditSelectedLearningObjectDialog_DoesNotThrowWhenSelectedObjectNull()
+    public void OpenEditSelectedLearningObjectDialog_DoesNotThrowWhenSelectedObjectNull()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -1289,7 +1532,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_OpenEditSelectedLearningObjectDialog_WithSpace_CallsMethod()
+    public void OpenEditSelectedLearningObjectDialog_CallsMethod_WithSpace()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -1314,7 +1557,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_OpenEditSelectedLearningObjectDialog_WithElement_CallsMethod()
+    public void OpenEditSelectedLearningObjectDialog_CallsMethod_WithElement()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -1341,10 +1584,27 @@ public class LearningWorldPresenterUt
             Assert.That(world.EditDialogInitialValues["Workload (min)"], Is.EqualTo(element.Workload.ToString()));
         });
     }
+    
+    [Test]
+    public void OpenEditSelectedLearningObjectDialog_ElementParentIsNull_ThrowsException()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var element = new LearningElementViewModel("n", "sn", null, null, "a", "d", "g", LearningElementDifficultyEnum.Easy);
+        world.LearningElements.Add(element);
+        world.SelectedLearningObject = element;
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.SetLearningWorld(null, world);
+        
+        var ex = Assert.Throws<Exception>(() => systemUnderTest.OpenEditSelectedLearningObjectDialog());
+        Assert.That(ex!.Message, Is.EqualTo("Element Parent is null"));
+        
+    }
 
     [Test]
     public void
-        LearningWorldPresenter_OpenEditSelectedLearningObjectDialog_WithUnknownObject_ThrowsNotImplemented()
+        OpenEditSelectedLearningObjectDialog_ThrowsNotImplemented_WithUnknownObject()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -1363,7 +1623,7 @@ public class LearningWorldPresenterUt
     #region SaveSelectedLearningObject
 
     [Test]
-    public void LearningWorldPresenter_SaveSelectedLearningObjectAsync_ThrowsWhenSelectedWorldNull()
+    public void SaveSelectedLearningObjectAsync_ThrowsWhenSelectedWorldNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningWorld(null, null);
@@ -1374,7 +1634,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_SaveSelectedLearningObjectAsync_DoesNotThrowWhenSelectedObjectNull()
+    public void SaveSelectedLearningObjectAsync_DoesNotThrowWhenSelectedObjectNull()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -1388,7 +1648,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_SaveSelectedLearningObject_WithSpace_CallsPresentationLogic()
+    public void SaveSelectedLearningObject_CallsPresentationLogic_WithSpace()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
@@ -1405,7 +1665,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_SaveSelectedLearningObject_WithElement_CallsPresentationLogic()
+    public void SaveSelectedLearningObject_CallsPresentationLogic_WithElement()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
@@ -1423,7 +1683,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_SaveSelectedLearningObject_WithUnknownObjectAsync_ThrowsNotImplemented()
+    public void SaveSelectedLearningObjectAsync_UnknownObjectThrowsNotImplemented()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -1443,7 +1703,7 @@ public class LearningWorldPresenterUt
     #region LoadLearningSpace/Element
 
     [Test]
-    public void LearningWorldPresenter_LoadLearningSpace_ThrowsWhenSelectedWorldNull()
+    public void LoadLearningSpace_ThrowsWhenSelectedWorldNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningWorld(null, null);
@@ -1454,7 +1714,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_LoadLearningElement_ThrowsWhenSelectedWorldNull()
+    public void LoadLearningElement_ThrowsWhenSelectedWorldNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningWorld(null, null);
@@ -1465,7 +1725,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_LoadLearningSpace_CallsPresentationLogic()
+    public void LoadLearningSpace_CallsPresentationLogic()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
@@ -1479,7 +1739,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_LoadLearningElement_CallsPresentationLogic()
+    public void LoadLearningElement_CallsPresentationLogic()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
@@ -1493,7 +1753,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_LoadLearningSpace_AddsLearningSpaceToLearningWorld()
+    public void LoadLearningSpace_AddsLearningSpaceToLearningWorld()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         presentationLogic.LoadLearningSpaceAsync().Returns(new LearningSpaceViewModel("n", "sn", "a", "d", "g"));
@@ -1519,7 +1779,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LearningWorldPresenter_LoadLearningElement_AddsLearningElementToLearningWorld()
+    public void LoadLearningElement_AddsLearningElementToLearningWorld()
     {
         var content = new LearningContentViewModel("a", "b", new byte[] {0x02, 0x01});
         var presentationLogic = Substitute.For<IPresentationLogic>();
@@ -1548,6 +1808,32 @@ public class LearningWorldPresenterUt
         });
     }
 
+    #endregion
+    
+    #region Open/CloseLearningSpaceView
+
+    [Test]
+    public void ShowAndCloseLearningSpaceView_OpensAndClosesLearningSpaceView_SetsShowingLearningSpaceViewBool()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var learningSpace = new LearningSpaceViewModel("a", "b", "c", "d", "e", null);
+        world.SelectedLearningObject = learningSpace;
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.SetLearningWorld(null, world);
+
+        Assert.That(systemUnderTest.ShowingLearningSpaceView, Is.False);
+        
+        systemUnderTest.ShowSelectedLearningSpaceView();
+
+        Assert.That(systemUnderTest.ShowingLearningSpaceView, Is.True);
+        
+        systemUnderTest.CloseLearningSpaceView();
+        
+        Assert.That(systemUnderTest.ShowingLearningSpaceView, Is.False);
+    }
+    
     #endregion
 
     #endregion

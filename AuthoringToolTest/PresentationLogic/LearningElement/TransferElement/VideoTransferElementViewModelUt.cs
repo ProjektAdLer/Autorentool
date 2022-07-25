@@ -11,7 +11,7 @@ namespace AuthoringToolTest.PresentationLogic.LearningElement.TransferElement;
 public class VideoTransferElementViewModelUt
 {
     [Test]
-    public void VideoTransferElement_Constructor_InitializesAllProperties()
+    public void Constructor_InitializesAllProperties()
     {
         var Name = "ppp";
         var Shortname = "qqq";

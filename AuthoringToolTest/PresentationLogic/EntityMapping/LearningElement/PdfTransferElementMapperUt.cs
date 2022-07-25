@@ -26,7 +26,7 @@ public class PdfTransferElementMapperUt
 
         contentMapper.ToEntity(contentViewModel).Returns(new LearningContent("a", "b", Array.Empty<byte>()));
         
-        var systemUnderTest = CreateTestableLearningElementMapper(null, contentMapper);
+        var systemUnderTest = CreateTestableLearningElementMapper(contentMapper);
         
         var entity = systemUnderTest.ToEntity(viewModel);
         Assert.That(entity, Is.Not.Null);
@@ -55,7 +55,7 @@ public class PdfTransferElementMapperUt
         var entity = new PdfTransferElement("name", "shortname",world.Name, content,"authors", "description",
             "goals",LearningElementDifficultyEnum.Easy, 1, 3, 2);
         
-        var systemUnderTest = CreateTestableLearningElementMapper(null,contentMapper);
+        var systemUnderTest = CreateTestableLearningElementMapper(contentMapper);
 
         contentMapper.ToViewModel(content).Returns(new LearningContentViewModel("content", "pdf", Array.Empty<byte>()));
 
@@ -81,10 +81,9 @@ public class PdfTransferElementMapperUt
         });
     }
     
-    private PdfTransferElementMapper CreateTestableLearningElementMapper(ILogger<PdfTransferElementMapper>? logger = null, ILearningContentMapper? contentMapper = null)
+    private PdfTransferElementMapper CreateTestableLearningElementMapper(ILearningContentMapper? contentMapper = null)
     {
-        logger ??= Substitute.For<ILogger<PdfTransferElementMapper>>();
         contentMapper ??= Substitute.For<ILearningContentMapper>();
-        return new PdfTransferElementMapper(logger, contentMapper);
+        return new PdfTransferElementMapper(contentMapper);
     }
 }

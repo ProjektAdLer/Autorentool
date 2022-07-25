@@ -6,11 +6,9 @@ namespace AuthoringTool.PresentationLogic.EntityMapping.LearningElementMapper;
 public class PdfTransferElementMapper : IPdfTransferElementMapper
 {
     private readonly ILearningContentMapper _contentMapper;
-    private ILogger<PdfTransferElementMapper> Logger { get; }
 
-    public PdfTransferElementMapper(ILogger<PdfTransferElementMapper> logger, ILearningContentMapper contentMapper)
+    public PdfTransferElementMapper(ILearningContentMapper contentMapper)
     {
-        Logger = logger;
         _contentMapper = contentMapper;
     }
     public Entities.LearningElement ToEntity(LearningElementViewModel viewModel)

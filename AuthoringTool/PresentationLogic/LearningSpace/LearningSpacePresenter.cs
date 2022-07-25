@@ -156,8 +156,7 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
     /// Shouldn't occur, because this is checked in <see cref="OpenEditSelectedLearningObjectDialog"/></exception>
     private void OpenEditSelectedLearningElementDialog()
     {
-        if (LearningSpaceVm?.SelectedLearningObject is not LearningElementViewModel
-            element) throw new ApplicationException("Type of LearningObject is not implemented");
+        var element = (LearningElementViewModel) LearningSpaceVm?.SelectedLearningObject!;
         if (element.Parent == null) throw new Exception("Element Parent is null");
         //prepare dictionary property to pass to dialog
         EditLearningElementDialogInitialValues = new Dictionary<string, string>
@@ -297,7 +296,7 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
 
         if (parentElement == null)
         {
-            throw new Exception("no parent for element");
+            throw new Exception("Parent element is null");
         }
 
         return parentElement;
@@ -334,10 +333,8 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
         if (Int32.TryParse(data["Workload (min)"], out int workload) == false || workload < 0)
             workload = 0;
-
-        if (LearningSpaceVm == null)
-            throw new ApplicationException("LearningSpaceVm is null");
-        if (LearningSpaceVm.SelectedLearningObject is not LearningElementViewModel
+        
+        if (LearningSpaceVm?.SelectedLearningObject is not LearningElementViewModel
             learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
         _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, parentElement,
             authors, description, goals, difficulty, workload);

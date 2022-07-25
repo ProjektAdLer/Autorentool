@@ -1,4 +1,4 @@
-﻿using AuthoringTool.Components.ModalDialog;
+using AuthoringTool.Components.ModalDialog;
 using AuthoringTool.PresentationLogic.LearningContent;
 
 namespace AuthoringTool.PresentationLogic.LearningSpace;
@@ -11,6 +11,7 @@ public interface ILearningSpacePresenter
     ILearningSpaceViewModel EditLearningSpace(ILearningSpaceViewModel space, string name, string shortname,
         string authors, string description, string goals);
     
+
     bool EditLearningSpaceDialogOpen { get; set; }
     IDictionary<string, string> EditLearningSpaceDialogInitialValues { get; }
     bool EditLearningElementDialogOpen { get; set; }

@@ -11,7 +11,7 @@ namespace AuthoringToolTest.PresentationLogic.LearningElement.TransferElement;
 public class ImageTransferElementViewModelUt
 {
     [Test]
-    public void ImageTransferElement_Constructor_InitializesAllProperties()
+    public void Constructor_InitializesAllProperties()
     {
         var Name = "eee";
         var Shortname = "fff";

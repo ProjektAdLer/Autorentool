@@ -11,7 +11,7 @@ namespace AuthoringToolTest.PresentationLogic.LearningElement.InteractionElement
 public class H5PInteractionElementViewModelUt
 {
     [Test]
-    public void H5PInteractionElement_Constructor_InitializesAllProperties()
+    public void Constructor_InitializesAllProperties()
     {
         var Name = "ccd";
         var Shortname = "dee";

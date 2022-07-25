@@ -11,7 +11,7 @@ namespace AuthoringToolTest.PresentationLogic.LearningElement.TransferElement;
 public class PdfTransferElementViewModelUt
 {
     [Test]
-    public void PdfTransferElement_Constructor_InitializesAllProperties()
+    public void Constructor_InitializesAllProperties()
     {
         var Name = "zzz";
         var Shortname = "aaa";
