@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using AngleSharp.Dom;
 using AuthoringTool.Components.ModalDialog;
 using AuthoringTool.PresentationLogic;
@@ -7,9 +8,11 @@ using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.ModalDialog;
+using AuthoringTool.View.LearningElement;
 using AuthoringTool.View.LearningSpace;
 using AuthoringTool.View.Shared;
 using Bunit;
+using Bunit.TestDoubles;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
@@ -33,6 +36,7 @@ public class LearningSpaceViewUt
     public void Setup()
     {
         _ctx = new TestContext();
+        _ctx.ComponentFactories.AddStub<DraggableLearningElement>();
         _learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
         _mouseService = Substitute.For<IMouseService>();
         _modalDialogFactory = Substitute.For<ILearningSpaceViewModalDialogFactory>();
@@ -112,10 +116,31 @@ public class LearningSpaceViewUt
     }
 
     [Test]
-    public void Render_LearningElementsInSpace_RendersDraggableWithInnerComponent()
+    public void Render_LearningElementsInSpace_DraggableLearningElementForEachElementWithCorrectParameters()
     {
-        //TODO: implement with ComponentFactories replaced https://bunit.dev/docs/providing-input/controlling-component-instantiation
+        var element1 = Substitute.For<ILearningElementViewModel>();
+        var element2 = Substitute.For<ILearningElementViewModel>();
+        var element3 = Substitute.For<ILearningElementViewModel>();
+        var learningElements = new List<ILearningElementViewModel>
+        {
+            element1, element2, element3
+        };
+        var learningSpace = Substitute.For<ILearningSpaceViewModel>();
+        learningSpace.LearningElements = learningElements;
+        _learningSpacePresenter.LearningSpaceVm.Returns(learningSpace);
         
+        var systemUnderTest = GetFragmentForTesting();
+
+        IReadOnlyList<IRenderedComponent<Stub<DraggableLearningElement>>>? draggableLearningElements = null;
+        Assert.Multiple(() =>
+        {
+            Assert.That(() => draggableLearningElements = systemUnderTest.FindComponents<Stub<DraggableLearningElement>>(), Throws.Nothing);
+            //nullability overridden because above assert would fail otherwise - n.stich
+            Assert.That(draggableLearningElements, Has.Count.EqualTo(3));
+            Assert.That(learningElements.All(le =>
+                draggableLearningElements!.Any(dle =>
+                    dle.Instance.Parameters[nameof(DraggableLearningElement.LearningElement)] == le)));
+        });
     }
 
     [Test]
