@@ -9,6 +9,7 @@
 @using AuthoringTool.PresentationLogic.LearningElement.TestElement
 @using AuthoringTool.PresentationLogic.LearningElement.TransferElement
 @using AuthoringTool.PresentationLogic.ModalDialog
+@using AuthoringTool.View.LearningElement
 
 <h2>LearningSpace @LearningSpaceP.LearningSpaceVm?.Name</h2>
 <h5>Workload: @LearningSpaceP.LearningSpaceVm?.Workload minutes</h5>
@@ -38,45 +39,7 @@
     {
         @foreach (var learningObject in LearningSpaceP.LearningSpaceVm.LearningElements)
         {
-            <Draggable LearningObject="learningObject" OnClicked="@LearningSpaceP.SetSelectedLearningObject"
-                       @bind-X="@learningObject.PositionX" @bind-Y="@learningObject.PositionY">
-                @{
-                    var rectStyle = learningObject switch
-                    {
-                        LearningElementViewModel => "fill:lightblue",
-                        _ => "grey"
-                        };
-                    
-                    string polygonPoints, polygonColor;
-
-                    switch (learningObject.Difficulty)
-                    {
-                        case LearningElementDifficultyEnum.Easy:
-                            polygonPoints = "13 1 10 10 2 13 10 16 13 25 16 16 24 13 16 10";
-                            polygonColor = "green";
-                            break;
-                        case LearningElementDifficultyEnum.Medium:
-                            polygonPoints = "13 1 5 25 24 10 2 10 21 25";
-                            polygonColor = "yellow";
-                            break;
-                        case LearningElementDifficultyEnum.Hard:
-                            polygonPoints = "13 1 10 8 2 7 8 13 2 19 10 18 13 25 16 18 24 19 19 13 24 7 16 8 13 1";
-                            polygonColor = "red";
-                            break;
-                        case LearningElementDifficultyEnum.None:
-                            polygonPoints = "0";
-                            polygonColor = "lightblue";
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException();
-                    }
-                }
-                <rect height="50" width="100" style=@rectStyle></rect>
-                <polygon transform="translate(75,1)" fill=@polygonColor
-                         points=@polygonPoints></polygon>
-                <text x="3" y="15">@learningObject.Name</text>
-
-            </Draggable>
+            <DraggableLearningElement LearningElement="@learningObject" OnClicked="@LearningSpaceP.SetSelectedLearningObject"/>
         }
     }
 </svg>
