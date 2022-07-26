@@ -24,9 +24,9 @@ public class LearningWorldViewModelUt
         var content2 = new LearningContentViewModel("z", "e", new byte[]{0x05,0x01});
         var ele1 = new LearningElementViewModel("a", "b", null, content1, "e", "f", "g",LearningElementDifficultyEnum.Easy,17, 23);
         var ele2 = new LearningElementViewModel("z", "zz", null,  content2, "z","zzz", "z",LearningElementDifficultyEnum.Medium, 444, double.MaxValue);
-        var LearningElements = new List<LearningElementViewModel> { ele1, ele2 };
+        var LearningElements = new List<ILearningElementViewModel> { ele1, ele2 };
         var space1 = new LearningSpaceViewModel("ff", "ff", "ff", "ff", "ff");
-        var LearningSpaces = new List<LearningSpaceViewModel> { space1 };
+        var LearningSpaces = new List<ILearningSpaceViewModel> { space1 };
 
         var systemUnderTest = new LearningWorldViewModel(Name, Shortname, Authors, Language, Description, Goals, 
             unsavedChanges:false, LearningElements, LearningSpaces);

@@ -147,7 +147,7 @@ else
     @if (ErrorState != null)
     {
         <ModalDialog Title="Exception encountered" Text=@ErrorState.ToString()
-                     OnClose="@(() => { ErrorState = null; })" DialogType=@ModalDialogType.Ok/>
+                     OnClose="@(_ => { ErrorState = null; })" DialogType=@ModalDialogType.Ok/>
     }
 }
 
@@ -237,14 +237,16 @@ else
         }
     }
 
-    private Task OnCreateSpaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    private void OnCreateSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
-        return _learningWorldP.OnCreateSpaceDialogClose(returnValueTuple);
+        _learningWorldP.OnCreateSpaceDialogClose(returnValueTuple);
+        StateHasChanged();
     }
 
-    private Task OnCreateElementDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    private void OnCreateElementDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
-        return _learningWorldP.OnCreateElementDialogClose(returnValueTuple);
+        _learningWorldP.OnCreateElementDialogClose(returnValueTuple);
+        StateHasChanged();
     }
 
     private void EditLearningObject()
@@ -252,14 +254,16 @@ else
         _learningWorldP.OpenEditSelectedLearningObjectDialog();
     }
 
-    private Task OnEditSpaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    private void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
-        return _learningWorldP.OnEditSpaceDialogClose(returnValueTuple);
+        _learningWorldP.OnEditSpaceDialogClose(returnValueTuple);
+        StateHasChanged();
     }
 
-    private Task OnEditElementDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    private void OnEditElementDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
-        return _learningWorldP.OnEditElementDialogClose(returnValueTuple);
+        _learningWorldP.OnEditElementDialogClose(returnValueTuple);
+        StateHasChanged();
     }
 
     public void TriggerStateHasChanged()

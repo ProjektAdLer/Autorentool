@@ -238,13 +238,12 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenterT
         await SaveLearningWorldAsync(_authoringToolWorkspaceVm.SelectedLearningWorld);
     }
 
-    public Task OnCreateWorldDialogClose(
-        Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    public void OnCreateWorldDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
         var (response, data) = returnValueTuple;
         CreateLearningWorldDialogOpen = false;
 
-        if (response == ModalDialogReturnValue.Cancel) return Task.CompletedTask;
+        if (response == ModalDialogReturnValue.Cancel) return;
         if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
 
         foreach (var pair in data)
@@ -260,15 +259,14 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenterT
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
         CreateNewLearningWorld(name, shortname, authors, language, description, goals);
-        return Task.CompletedTask;
     }
 
-    public Task OnEditWorldDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    public void OnEditWorldDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
         var (response, data) = returnValueTuple;
         EditLearningWorldDialogOpen = false;
 
-        if (response == ModalDialogReturnValue.Cancel) return Task.CompletedTask;
+        if (response == ModalDialogReturnValue.Cancel) return;
         if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
 
         //TODO: change this into a trace ILogger call
@@ -287,7 +285,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenterT
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
 
         EditSelectedLearningWorld(name, shortname, authors, language, description, goals);
-        return Task.CompletedTask;
     }
 
     public IEnumerable<ModalDialogInputField> ModalDialogWorldInputFields
@@ -438,4 +435,120 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenterT
     }
     
     #endregion
+
+    public void OnSaveWorldDialogClose(ModalDialogOnCloseResult returnValueTuple)
+    {
+        if (UnsavedWorldsQueue == null)
+            throw new ApplicationException("SaveUnsavedChanges modal returned value despite UnsavedWorldsQueue being null");
+        var returnValue = returnValueTuple.ReturnValue;
+        switch (returnValue)
+        {
+            case ModalDialogReturnValue.Cancel: //we want to cancel closing the application entirely
+                CompletedSaveQueue(true);
+                return;
+            case ModalDialogReturnValue.Yes: //we want to save the world and iterate the queue
+            {
+                var world = UnsavedWorldsQueue.Dequeue();
+                try
+                {
+                    SaveLearningWorldAsync(world).Wait();
+                }
+                catch (OperationCanceledException)
+                {
+                    CompletedSaveQueue(true);
+                }
+                break;
+            }
+            case ModalDialogReturnValue.No: //we do not want to save the world but iterate the queue anyway
+            {
+                var world = UnsavedWorldsQueue.Dequeue();
+                world.UnsavedChanges = false;
+                break;
+            }
+            case ModalDialogReturnValue.Ok:
+            case ModalDialogReturnValue.Delete:
+            default:
+                throw new ArgumentOutOfRangeException(nameof(returnValueTuple), $"Unexpected return value of {returnValue}");
+        }
+        if (!UnsavedWorldsQueue.Any())
+        {
+            CompletedSaveQueue();
+        }
+    }
+
+    public void OnSaveReplacedWorldDialogClose(ModalDialogOnCloseResult returnValueTuple)
+    {
+        if (ReplacedUnsavedWorld == null)
+            throw new ApplicationException("SaveReplacedWorld modal returned value despite ReplacedUnsavedWorld being null");
+        var returnValue = returnValueTuple.ReturnValue;
+        switch (returnValue)
+        {
+            case ModalDialogReturnValue.Yes:
+            {
+                SaveLearningWorldAsync(ReplacedUnsavedWorld).Wait();
+                break;
+            }
+            case ModalDialogReturnValue.No:
+            {
+                break;
+            }
+            case ModalDialogReturnValue.Ok:
+            case ModalDialogReturnValue.Cancel:
+            case ModalDialogReturnValue.Delete:
+            default:
+                throw new ArgumentOutOfRangeException(nameof(returnValueTuple), $"Unexpected return value of {returnValue}");
+        }
+        ReplacedUnsavedWorld = null;
+    }
+
+    public void OnReplaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
+    {
+        var returnValue = returnValueTuple.ReturnValue;
+        if (WorldToReplaceWith == null)
+            throw new ApplicationException("WorldToReplaceWith was null but OnReplaceDialogClose was called");
+        switch (returnValue)
+        {
+            case ModalDialogReturnValue.Ok:
+            {
+                ReplaceLearningWorld(WorldToReplaceWith);
+                WorldToReplaceWith = null;
+                break;
+            }
+            case ModalDialogReturnValue.Cancel:
+            {
+                WorldToReplaceWith = null;
+                break;
+            }
+            case ModalDialogReturnValue.Delete:
+            case ModalDialogReturnValue.Yes:
+            case ModalDialogReturnValue.No:
+            default:
+                throw new ArgumentOutOfRangeException(nameof(returnValueTuple), $"Unexpected return value of {returnValue}");
+        }
+    }
+
+    public void OnSaveDeletedWorldDialogClose(ModalDialogOnCloseResult returnValueTuple)
+    {
+        var returnValue = returnValueTuple.ReturnValue;
+        if (DeletedUnsavedWorld == null)
+            throw new ApplicationException("SaveDeletedWorld modal returned value despite DeleteUnsavedWorld being null");
+        switch (returnValue)
+        {
+            case ModalDialogReturnValue.Yes:
+            {
+                SaveLearningWorldAsync(DeletedUnsavedWorld).Wait();
+                break;
+            }
+            case ModalDialogReturnValue.No:
+            {
+                break;
+            }
+            case ModalDialogReturnValue.Ok:
+            case ModalDialogReturnValue.Cancel:
+            case ModalDialogReturnValue.Delete:
+            default:
+                throw new ArgumentOutOfRangeException();
+        }
+        DeletedUnsavedWorld = null;
+    }
 }

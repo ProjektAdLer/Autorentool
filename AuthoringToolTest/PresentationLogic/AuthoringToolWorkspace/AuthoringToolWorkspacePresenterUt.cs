@@ -43,7 +43,7 @@ public class AuthoringToolWorkspacePresenterUt
     {
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, null);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
 
         var systemUnderTest = CreatePresenterForTesting();
 
@@ -67,8 +67,7 @@ public class AuthoringToolWorkspacePresenterUt
         dictionary["Language"] = "a";
         dictionary["Description"] = "d";
         dictionary["Goals"] = "g";
-        var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+        var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(learningWorldPresenter: learningWorldPresenter);
 
@@ -419,8 +418,7 @@ public class AuthoringToolWorkspacePresenterUt
             "foo");
         
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, null);
+        var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, null);
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetSelectedLearningWorld(world);
@@ -447,8 +445,7 @@ public class AuthoringToolWorkspacePresenterUt
         dictionary["Language"] = "a";
         dictionary["Description"] = "d";
         dictionary["Goals"] = "g";
-        var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+        var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(learningWorldPresenter: learningWorldPresenter);
         systemUnderTest.SetSelectedLearningWorld(world);

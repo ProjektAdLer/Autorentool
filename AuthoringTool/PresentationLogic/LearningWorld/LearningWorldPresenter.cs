@@ -117,7 +117,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     }
     
     /// <inheritdoc cref="ILearningWorldPresenter.AddLearningSpace"/>
-    public void AddLearningSpace(LearningSpaceViewModel learningSpace)
+    public void AddLearningSpace(ILearningSpaceViewModel learningSpace)
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
@@ -142,13 +142,12 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     /// <param name="returnValueTuple">Return values from the dialog</param>
     /// <returns></returns>
     /// <exception cref="ApplicationException">Thrown if the dictionary in return values of dialog null while return value is ok</exception>
-    public Task OnCreateSpaceDialogClose(
-        Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    public void OnCreateSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
-        var (response, data) = returnValueTuple;
+        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
         CreateLearningSpaceDialogueOpen = false;
 
-        if (response == ModalDialogReturnValue.Cancel) return Task.CompletedTask;
+        if (response == ModalDialogReturnValue.Cancel) return;
         if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
 
         foreach (var pair in data)
@@ -164,7 +163,6 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
         CreateNewLearningSpace(name, shortname, authors, description, goals);
-        return Task.CompletedTask;
     }
 
     /// <summary>
@@ -174,12 +172,12 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     /// <returns></returns>
     /// <exception cref="ApplicationException">Thrown if the dictionary in return values of dialog null while return value is ok
     /// or if the selected learning object not a learning space</exception>
-    public Task OnEditSpaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    public void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
-        var (response, data) = returnValueTuple;
+        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
         EditLearningSpaceDialogOpen = false;
 
-        if (response == ModalDialogReturnValue.Cancel) return Task.CompletedTask;
+        if (response == ModalDialogReturnValue.Cancel) return;
         if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
 
         foreach (var (key, value) in data)
@@ -201,7 +199,6 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
             learningSpaceViewModel) throw new ApplicationException("LearningObject is not a LearningSpace");
         _learningSpacePresenter.EditLearningSpace(learningSpaceViewModel, name, shortname, authors,
             description, goals);
-        return Task.CompletedTask;
     }
 
     public IEnumerable<ModalDialogInputField> ModalDialogSpaceInputFields
@@ -286,7 +283,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
         EditLearningElementDialogOpen = true;
     }
     
-    public void AddLearningElement(LearningElementViewModel learningElement)
+    public void AddLearningElement(ILearningElementViewModel learningElement)
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
@@ -334,16 +331,15 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     /// <param name="returnValueTuple">Modal dialog return values.</param>
     /// <exception cref="ApplicationException">Thrown if dialog data null or dropdown value or one of the dropdown
     /// values couldn't get parsed into enum.</exception>
-    public Task OnCreateElementDialogClose(
-        Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    public void OnCreateElementDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
-        var (response, data) = returnValueTuple;
+        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
         CreateLearningElementDialogOpen = false;
 
         if (response == ModalDialogReturnValue.Cancel)
         {
             _dragAndDropLearningContent = null;
-            return Task.CompletedTask;
+            return;
         }
         if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
 
@@ -392,7 +388,6 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
         {
                 
         }
-        return Task.CompletedTask;
     }
     
     public void CreateLearningElementWithPreloadedContent(LearningContentViewModel learningContent)
@@ -433,13 +428,12 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     /// <returns></returns>
     /// <exception cref="ApplicationException">Thrown if return values of dialog null
     /// or selected learning object not a learning element</exception>
-    public Task OnEditElementDialogClose(
-        Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    public void OnEditElementDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
-        var (response, data) = returnValueTuple;
+        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
         EditLearningElementDialogOpen = false;
 
-        if (response == ModalDialogReturnValue.Cancel) return Task.CompletedTask;
+        if (response == ModalDialogReturnValue.Cancel) return;
         if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
 
         foreach (var (key, value) in data)
@@ -469,7 +463,6 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
             learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
         _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, parentElement,
             authors, description, goals, difficulty, workload);
-        return Task.CompletedTask;
     }
 
     public IEnumerable<ModalDialogInputField> ModalDialogCreateElementInputFields

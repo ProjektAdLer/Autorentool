@@ -4,7 +4,7 @@ namespace AuthoringTool.PresentationLogic.EntityMapping.LearningElementMapper;
 
 public interface IH5PActivationElementMapper
 {
-    public Entities.LearningElement ToEntity(LearningElementViewModel viewModel);
-    public LearningElementViewModel ToViewModel(Entities.LearningElement entity,
+    public Entities.LearningElement ToEntity(ILearningElementViewModel viewModel);
+    public ILearningElementViewModel ToViewModel(Entities.LearningElement entity,
         ILearningElementViewModelParent? caller = null);
 }

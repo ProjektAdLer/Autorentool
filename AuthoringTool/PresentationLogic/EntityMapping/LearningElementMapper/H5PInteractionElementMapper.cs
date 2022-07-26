@@ -11,7 +11,7 @@ public class H5PInteractionElementMapper : IH5PInteractionElementMapper
     {
         _contentMapper = contentMapper;
     }
-    public Entities.LearningElement ToEntity(LearningElementViewModel viewModel)
+    public Entities.LearningElement ToEntity(ILearningElementViewModel viewModel)
     {
         return new Entities.H5PInteractionElement(viewModel.Name, viewModel.Shortname,
             viewModel.Parent?.Name, _contentMapper.ToEntity(viewModel.LearningContent),
@@ -19,7 +19,7 @@ public class H5PInteractionElementMapper : IH5PInteractionElementMapper
             viewModel.Workload, viewModel.PositionX, viewModel.PositionY);
     }
 
-    public LearningElementViewModel ToViewModel(Entities.LearningElement entity,
+    public ILearningElementViewModel ToViewModel(Entities.LearningElement entity,
         ILearningElementViewModelParent? caller = null)
     {
         return new H5PInteractionElementViewModel(entity.Name, entity.Shortname, caller,
