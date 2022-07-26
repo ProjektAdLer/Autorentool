@@ -153,7 +153,7 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
     /// Sets the initial values for the <see cref="ModalDialog"/> with the current values from the selected LearningElement.
     /// </summary>
     /// <exception cref="ApplicationException">Thrown if SelectedLearningObject is not a LearningElementViewModel.
-    /// Shouldn't occur, because this is checked in <see cref="OpenEditSelectedLearningObjectDialog"/></exception>
+    /// Shouldn't occur, because this is checked in <see cref="EditSelectedLearningObject"/></exception>
     private void OpenEditSelectedLearningElementDialog()
     {
         var element = (LearningElementViewModel) LearningSpaceVm?.SelectedLearningObject!;
@@ -172,12 +172,17 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
         EditLearningElementDialogOpen = true;
     }
 
+    public void AddNewLearningElement()
+    {
+        CreateLearningElementDialogOpen = true;
+    }
+
     /// <summary>
     /// Calls the LoadLearningElementAsync method in <see cref="_presentationLogic"/> and adds the returned
     /// learning element to its parent.
     /// </summary>
     /// <exception cref="ApplicationException">Thrown if <see cref="LearningSpaceVm"/> is null</exception>
-    public async Task LoadLearningElement()
+    public async Task LoadLearningElementAsync()
     {
         var learningElement = await _presentationLogic.LoadLearningElementAsync();
         if (LearningSpaceVm == null)
@@ -386,7 +391,7 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
     /// </summary>
     /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
     /// <exception cref="NotImplementedException">Thrown if the selected learning object is of an other type than element.</exception>
-    public void OpenEditSelectedLearningObjectDialog()
+    public void EditSelectedLearningObject()
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");

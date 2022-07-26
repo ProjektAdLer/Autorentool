@@ -13,20 +13,20 @@
 
 <h2>LearningSpace @LearningSpaceP.LearningSpaceVm?.Name</h2>
 <h5>Workload: @LearningSpaceP.LearningSpaceVm?.Workload minutes</h5>
-<button class="btn btn-primary" @onclick="AddNewLearningElement">Add Learning Element</button>
-<button class="btn btn-primary" @onclick="LoadLearningElementAsync">Load Learning Element</button>
+<button class="btn btn-primary add-learning-element" @onclick="AddNewLearningElement">Add Learning Element</button>
+<button class="btn btn-primary load-learning-element" @onclick="LoadLearningElementAsync">Load Learning Element</button>
 @ChildContent
 <br>
 
 @if (LearningSpaceP.LearningSpaceVm?.SelectedLearningObject != null)
 {
-    <label>
+    <label id="learning-object-info">
         Selected element: 
         @LearningSpaceP.LearningSpaceVm.SelectedLearningObject.Name, 
         Description: @LearningSpaceP.LearningSpaceVm.SelectedLearningObject.Description
     </label>
     <br>
-    <button class="btn btn-primary edit-learning-object" @onclick="EditLearningObject">Edit selected Learning Object</button>
+    <button class="btn btn-primary edit-learning-object" @onclick="EditSelectedLearningObject">Edit selected Learning Object</button>
     <button class="btn btn-primary delete-learning-object" @onclick="DeleteSelectedLearningObject">Delete Learning Object</button>
     <button class="btn btn-primary save-learning-object" @onclick="SaveSelectedLearningObjectAsync">Save selected Learning Object</button>
 }
@@ -72,11 +72,13 @@
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
     
-    private ExceptionWrapper? ErrorState { get; set; }
+    //TODO: Instead of setting a value here we need some sort of central service that we can notify about the error to
+    //then display it in the UI - n.stich
+    internal ExceptionWrapper? ErrorState { get; private set; }
 
     private void AddNewLearningElement()
     {
-        LearningSpaceP.CreateLearningElementDialogOpen = true;
+        LearningSpaceP.AddNewLearningElement();
     }
 
     private void DeleteSelectedLearningObject()
@@ -88,7 +90,7 @@
     {
         try
         {
-            await LearningSpaceP.LoadLearningElement();
+            await LearningSpaceP.LoadLearningElementAsync();
         }
         catch (OperationCanceledException)
         {
@@ -101,7 +103,7 @@
         finally
         {
     //we need to tell blazor explicitly to re-render our component after we added the loaded learning object
-            InvokeAsync(StateHasChanged);
+            await InvokeAsync(StateHasChanged);
         }
     }
 
@@ -122,7 +124,7 @@
         finally
         {
     //we need to tell blazor explicitly to re-render our component after we added the loaded learning object
-            InvokeAsync(StateHasChanged);
+            await InvokeAsync(StateHasChanged);
         }
     }
 
@@ -132,9 +134,9 @@
         InvokeAsync(StateHasChanged);
     }
 
-    private void EditLearningObject()
+    private void EditSelectedLearningObject()
     {
-        LearningSpaceP.OpenEditSelectedLearningObjectDialog();
+        LearningSpaceP.EditSelectedLearningObject();
     }
 
     private void OnEditSpaceDialogClose(ModalDialogOnCloseResult closeResult)

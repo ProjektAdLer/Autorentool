@@ -20,10 +20,11 @@ public interface ILearningSpacePresenter
     ILearningSpaceViewModel? LearningSpaceVm { get; }
     void SetSelectedLearningObject(ILearningObjectViewModel learningObject);
     void DeleteSelectedLearningObject();
-    Task LoadLearningElement();
+    void AddNewLearningElement();
+    Task LoadLearningElementAsync();
     Task SaveSelectedLearningObjectAsync();
     void OnCreateElementDialogClose(ModalDialogOnCloseResult returnValueTuple);
-    void OpenEditSelectedLearningObjectDialog();
+    void EditSelectedLearningObject();
     void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void OnEditElementDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void SetLearningSpace(ILearningSpaceViewModel space);

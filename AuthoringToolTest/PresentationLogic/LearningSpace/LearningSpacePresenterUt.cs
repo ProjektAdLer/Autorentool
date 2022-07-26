@@ -945,7 +945,7 @@ public class LearningSpacePresenterUt
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(null);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OpenEditSelectedLearningObjectDialog());
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditSelectedLearningObject());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
     }
 
@@ -957,7 +957,7 @@ public class LearningSpacePresenterUt
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(space);
 
-        systemUnderTest.OpenEditSelectedLearningObjectDialog();
+        systemUnderTest.EditSelectedLearningObject();
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.LearningSpaceVm,Is.Not.Null);
@@ -979,7 +979,7 @@ public class LearningSpacePresenterUt
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(space);
         
-        systemUnderTest.OpenEditSelectedLearningObjectDialog();
+        systemUnderTest.EditSelectedLearningObject();
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.EditLearningElementDialogOpen, Is.True);
@@ -1004,7 +1004,7 @@ public class LearningSpacePresenterUt
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(space);
         
-        var ex = Assert.Throws<Exception>(() => systemUnderTest.OpenEditSelectedLearningObjectDialog());
+        var ex = Assert.Throws<Exception>(() => systemUnderTest.EditSelectedLearningObject());
         Assert.That(ex!.Message, Is.EqualTo("Element Parent is null"));
         
     }
@@ -1020,7 +1020,7 @@ public class LearningSpacePresenterUt
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(space);
 
-        var ex = Assert.Throws<NotImplementedException>(() => systemUnderTest.OpenEditSelectedLearningObjectDialog());
+        var ex = Assert.Throws<NotImplementedException>(() => systemUnderTest.EditSelectedLearningObject());
         Assert.That(ex!.Message, Is.EqualTo("Type of LearningObject is not implemented"));
     }
 
@@ -1093,7 +1093,7 @@ public class LearningSpacePresenterUt
         systemUnderTest.SetLearningSpace(null);
 
         var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
-            await systemUnderTest.LoadLearningElement());
+            await systemUnderTest.LoadLearningElementAsync());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
     }
 
@@ -1105,7 +1105,7 @@ public class LearningSpacePresenterUt
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
         systemUnderTest.SetLearningSpace(space);
-        systemUnderTest.LoadLearningElement();
+        systemUnderTest.LoadLearningElementAsync();
 
         presentationLogic.Received().LoadLearningElementAsync();
     }
@@ -1123,7 +1123,7 @@ public class LearningSpacePresenterUt
         Assert.That(systemUnderTest.LearningSpaceVm, Is.Not.Null);
         Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements, Is.Empty);
 
-        systemUnderTest.LoadLearningElement();
+        systemUnderTest.LoadLearningElementAsync();
 
         Assert.Multiple(() =>
         {
