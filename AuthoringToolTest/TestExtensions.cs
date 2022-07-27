@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using AngleSharp.Dom;
 using Bunit;
 using Microsoft.AspNetCore.Components;
@@ -29,6 +30,34 @@ public static class TestExtensions
             Assert.Fail("Couldn't find element with selector: {0}", selector);
         }
         return element!;
+    }
+
+    /// <summary>
+    /// Will either find the first component of type <typeparamref name="T"/> on the fragment, or throw an assert failure.
+    /// </summary>
+    /// <param name="fragment">The fragment on which the component shall be searched for.</param>
+    /// <typeparam name="T">The type of component being searched for.</typeparam>
+    /// <returns>The first component of type <typeparamref name="T"/> in <paramref name="fragment"/>.</returns>
+    public static IRenderedComponent<T> FindComponentOrFail<T>(this IRenderedFragment fragment) where T : IComponent
+    {
+        IRenderedComponent<T>? component = null;
+        Assert.That(() => component = fragment.FindComponent<T>(), Throws.Nothing);
+        return component!;
+    }
+
+    /// <summary>
+    /// Will either find all components of type <typeparam name="T"> on the fragment, or throw an assert failure.</typeparam>
+    /// </summary>
+    /// <param name="fragment">The fragment on which the component shall be searched for.</param>
+    /// <typeparam name="T">The type of component being searched for.</typeparam>
+    /// <returns>All components of type <typeparamref name="T"/> in <paramref name="fragment"/></returns>
+    public static IEnumerable<IRenderedComponent<T>> FindComponentsOrFail<T>(this IRenderedFragment fragment)
+        where T : IComponent
+    {
+        IEnumerable<IRenderedComponent<T>>? components = null;
+        Assert.That(() => components = fragment.FindComponents<T>(), Throws.Nothing);
+        return components!;
+
     }
 
     /// <summary>
