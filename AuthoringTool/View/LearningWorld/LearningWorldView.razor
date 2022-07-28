@@ -9,12 +9,10 @@
 @using AuthoringTool.PresentationLogic.LearningElement.TestElement
 @using AuthoringTool.PresentationLogic.LearningElement.TransferElement
 @using AuthoringTool.View.LearningSpace
-@inject IMouseService _mouseService
-@inject ILearningWorldPresenter _learningWorldP
 
-<h2>LearningWorld @_learningWorldP.LearningWorldVm?.Name</h2>
+<h2>World: @LearningWorldP.LearningWorldVm?.Name</h2>
 @ChildContent
-@if (_learningWorldP.ShowingLearningSpaceView)
+@if (LearningWorldP.ShowingLearningSpaceView)
 {
     <LearningSpaceView>
         <button class="btn btn-primary" @onclick="CloseLearningSpaceView">Close Learning Space View</button>
@@ -22,45 +20,45 @@
 }
 else
 {
-    <h5>Workload: @_learningWorldP.LearningWorldVm?.Workload minutes</h5>
+    <h5>Workload: @LearningWorldP.LearningWorldVm?.Workload minutes</h5>
     <button class="btn btn-primary" @onclick="AddNewLearningSpace">Add Learning Space</button>
     <button class="btn btn-primary" @onclick="LoadLearningSpaceAsync">Load Learning Space</button>
-    @if (_learningWorldP.CreateLearningSpaceDialogueOpen)
+    @if (LearningWorldP.CreateLearningSpaceDialogueOpen)
     {
         <ModalDialog Title="Create new learning space" Text="Please enter the required data for the learning space below:"
                      OnClose="@OnCreateSpaceDialogClose" DialogType=@ModalDialogType.OkCancel
-                     InputFields="@_learningWorldP.ModalDialogSpaceInputFields">
+                     InputFields="@LearningWorldP.ModalDialogSpaceInputFields">
         </ModalDialog>
     }
     <button class="btn btn-primary" @onclick="AddNewLearningElement">Add Learning Element</button>
     <button class="btn btn-primary" @onclick="LoadLearningElementAsync">Load Learning Element</button>
-    @if (_learningWorldP.CreateLearningElementDialogOpen)
+    @if (LearningWorldP.CreateLearningElementDialogOpen)
     {
-        @if (_learningWorldP.DraggedLearningContentIsPresent)
+        @if (LearningWorldP.DraggedLearningContentIsPresent)
         {
             <ModalDialog Title="Create new learning element" Text="Please enter the required data for the learning element below:"
                          OnClose="@OnCreateElementDialogClose" DialogType=@ModalDialogType.OkCancel
-                         InputFields="@_learningWorldP.ModalDialogCreateElementCustomInputFields">
+                         InputFields="@LearningWorldP.ModalDialogCreateElementCustomInputFields">
             </ModalDialog>
         }
         else
         {
             <ModalDialog Title="Create new learning element" Text="Please enter the required data for the learning element below:"
                          OnClose="@OnCreateElementDialogClose" DialogType=@ModalDialogType.OkCancel
-                         InputFields="@_learningWorldP.ModalDialogCreateElementInputFields">
+                         InputFields="@LearningWorldP.ModalDialogCreateElementInputFields">
             </ModalDialog>
         }
     }
     <br>
 
-    @if (_learningWorldP.LearningWorldVm?.SelectedLearningObject != null)
+    @if (LearningWorldP.LearningWorldVm?.SelectedLearningObject != null)
     {
         <label>
             Selected element:
             <text>
-                @_learningWorldP.LearningWorldVm.SelectedLearningObject.Name
+                @LearningWorldP.LearningWorldVm.SelectedLearningObject.Name
                 , Description:
-                @_learningWorldP.LearningWorldVm.SelectedLearningObject.Description
+                @LearningWorldP.LearningWorldVm.SelectedLearningObject.Description
             </text>
         </label>
         <br>
@@ -68,18 +66,18 @@ else
         <button class="btn btn-primary" @onclick="DeleteSelectedLearningObject">Delete Learning Object</button>
         <button class="btn btn-primary" @onclick="SaveSelectedLearningObjectAsync">Save selected Learning Object</button>
         <button class="btn btn-primary" @onclick="ShowSelectedLearningSpaceView"
-                hidden="@(!_learningWorldP.SelectedLearningObjectIsSpace)">Open selected Learning Space</button>
+                hidden="@(!LearningWorldP.SelectedLearningObjectIsSpace)">Open selected Learning Space</button>
     }
     <svg style="width: 100%; height: 600px; border: 1px solid green"
          xmlns="http://www.w3.org/2000/svg"
-         @onmousemove=@(e => _mouseService.FireMove(this, e))
-             @onmouseup=@(e => _mouseService.FireUp(this, e))
-             @onmouseleave=@(() => _mouseService.FireOut(this, null))>
-        @if (_learningWorldP.LearningWorldVm != null)
+         @onmousemove=@(e => MouseService.FireMove(this, e))
+             @onmouseup=@(e => MouseService.FireUp(this, e))
+             @onmouseleave=@(() => MouseService.FireOut(this, null))>
+        @if (LearningWorldP.LearningWorldVm != null)
         {
-            @foreach (var learningObject in _learningWorldP.LearningWorldVm.LearningObjects)
+            @foreach (var learningObject in LearningWorldP.LearningWorldVm.LearningObjects)
             {
-                <Draggable LearningObject="learningObject" OnClicked="@_learningWorldP.SetSelectedLearningObject"
+                <Draggable LearningObject="learningObject" OnClicked="@LearningWorldP.SetSelectedLearningObject"
                            @bind-X="@learningObject.PositionX" @bind-Y="@learningObject.PositionY">
                     @{
                         string polygonColor, polygonPoints, rectStyle;
@@ -128,19 +126,19 @@ else
             }
         }
     </svg>
-    @if (_learningWorldP.EditLearningSpaceDialogOpen && _learningWorldP.LearningWorldVm != null)
+    @if (LearningWorldP.EditLearningSpaceDialogOpen && LearningWorldP.LearningWorldVm != null)
     {
         <ModalDialog Title="Edit existing learning space" Text="Please enter the required data for the learning space below:"
                      OnClose="@OnEditSpaceDialogClose" DialogType=@ModalDialogType.OkCancel
-                     InputFields="@_learningWorldP.ModalDialogSpaceInputFields" InputFieldsInitialValue="@_learningWorldP.LearningWorldVm.EditDialogInitialValues">
+                     InputFields="@LearningWorldP.ModalDialogSpaceInputFields" InputFieldsInitialValue="@LearningWorldP.LearningWorldVm.EditDialogInitialValues">
         </ModalDialog>
     }
 
-    @if (_learningWorldP.EditLearningElementDialogOpen && _learningWorldP.LearningWorldVm != null)
+    @if (LearningWorldP.EditLearningElementDialogOpen && LearningWorldP.LearningWorldVm != null)
     {
         <ModalDialog Title="Edit existing learning element" Text="Please enter the required data for the learning element below:"
                      OnClose="@OnEditElementDialogClose" DialogType=@ModalDialogType.OkCancel
-                     InputFields="@_learningWorldP.ModalDialogEditElementInputFields" InputFieldsInitialValue="@_learningWorldP.LearningWorldVm.EditDialogInitialValues">
+                     InputFields="@LearningWorldP.ModalDialogEditElementInputFields" InputFieldsInitialValue="@LearningWorldP.LearningWorldVm.EditDialogInitialValues">
         </ModalDialog>
     }
 
@@ -156,29 +154,37 @@ else
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+#pragma warning disable CS8618 injected by framework - n.stich
+    [Inject]
+    public IMouseService MouseService { get; set; }
+    
+    [Inject]
+    public ILearningWorldPresenter LearningWorldP { get; set; }
+#pragma warning restore CS8618
+    
     private ExceptionWrapper? ErrorState { get; set; }
 
 
     private void AddNewLearningSpace()
     {
-        _learningWorldP.CreateLearningSpaceDialogueOpen = true;
+        LearningWorldP.CreateLearningSpaceDialogueOpen = true;
     }
 
     private void AddNewLearningElement()
     {
-        _learningWorldP.CreateLearningElementDialogOpen = true;
+        LearningWorldP.CreateLearningElementDialogOpen = true;
     }
 
     private void DeleteSelectedLearningObject()
     {
-        _learningWorldP.DeleteSelectedLearningObject();
+        LearningWorldP.DeleteSelectedLearningObject();
     }
 
     private async Task LoadLearningSpaceAsync()
     {
         try
         {
-            await _learningWorldP.LoadLearningSpace();
+            await LearningWorldP.LoadLearningSpace();
         }
         catch (OperationCanceledException)
         {
@@ -199,7 +205,7 @@ else
     {
         try
         {
-            await _learningWorldP.LoadLearningElement();
+            await LearningWorldP.LoadLearningElement();
         }
         catch (OperationCanceledException)
         {
@@ -220,7 +226,7 @@ else
     {
         try
         {
-            await _learningWorldP.SaveSelectedLearningObjectAsync();
+            await LearningWorldP.SaveSelectedLearningObjectAsync();
         }
         catch (OperationCanceledException)
         {
@@ -239,30 +245,30 @@ else
 
     private void OnCreateSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
-        _learningWorldP.OnCreateSpaceDialogClose(returnValueTuple);
+        LearningWorldP.OnCreateSpaceDialogClose(returnValueTuple);
         StateHasChanged();
     }
 
     private void OnCreateElementDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
-        _learningWorldP.OnCreateElementDialogClose(returnValueTuple);
+        LearningWorldP.OnCreateElementDialogClose(returnValueTuple);
         StateHasChanged();
     }
 
     private void EditLearningObject()
     {
-        _learningWorldP.OpenEditSelectedLearningObjectDialog();
+        LearningWorldP.OpenEditSelectedLearningObjectDialog();
     }
 
     private void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
-        _learningWorldP.OnEditSpaceDialogClose(returnValueTuple);
+        LearningWorldP.OnEditSpaceDialogClose(returnValueTuple);
         StateHasChanged();
     }
 
     private void OnEditElementDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
-        _learningWorldP.OnEditElementDialogClose(returnValueTuple);
+        LearningWorldP.OnEditElementDialogClose(returnValueTuple);
         StateHasChanged();
     }
 
@@ -273,12 +279,12 @@ else
 
     private void ShowSelectedLearningSpaceView()
     {
-        _learningWorldP.ShowSelectedLearningSpaceView();
+        LearningWorldP.ShowSelectedLearningSpaceView();
     }
 
     private void CloseLearningSpaceView()
     {
-        _learningWorldP.CloseLearningSpaceView();
+        LearningWorldP.CloseLearningSpaceView();
     }
 
 }
