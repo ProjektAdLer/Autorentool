@@ -49,6 +49,5 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     public string Goals { get; set; }
     public bool UnsavedChanges { get; set; }
     public ILearningObjectViewModel? SelectedLearningObject { get; set; }
-    public Dictionary<string, string>? EditDialogInitialValues { get; set; }
     public bool ShowingLearningSpaceView { get; set; }
 }

@@ -1,5 +1,6 @@
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
 using AuthoringTool.PresentationLogic.LearningWorld;
+using AuthoringTool.PresentationLogic.ModalDialog;
 using AuthoringTool.View.LearningSpace;
 using AuthoringTool.View.LearningWorld;
 using Bunit;
@@ -20,6 +21,7 @@ public class LearningWorldViewUt
     private TestContext _ctx;
     private IMouseService _mouseService;
     private ILearningWorldPresenter _worldPresenter;
+    private ILearningWorldViewModalDialogFactory _modalDialogFactory;
 #pragma warning restore CS8618
     
     [SetUp]
@@ -28,9 +30,11 @@ public class LearningWorldViewUt
         _ctx = new TestContext();
         _mouseService = Substitute.For<IMouseService>();
         _worldPresenter = Substitute.For<ILearningWorldPresenter>();
+        _modalDialogFactory = Substitute.For<ILearningWorldViewModalDialogFactory>();
         _ctx.ComponentFactories.AddStub<LearningSpaceView>();
         _ctx.Services.AddSingleton(_mouseService);
         _ctx.Services.AddSingleton(_worldPresenter);
+        _ctx.Services.AddSingleton(_modalDialogFactory);
     }
 
     [Test]
@@ -42,6 +46,7 @@ public class LearningWorldViewUt
         {
             Assert.That(systemUnderTest.Instance.MouseService, Is.EqualTo(_mouseService));
             Assert.That(systemUnderTest.Instance.LearningWorldP, Is.EqualTo(_worldPresenter));
+            Assert.That(systemUnderTest.Instance.ModalDialogFactory, Is.EqualTo(_modalDialogFactory));
         });
     }
 

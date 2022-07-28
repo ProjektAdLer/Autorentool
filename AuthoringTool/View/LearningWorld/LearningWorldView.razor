@@ -8,6 +8,7 @@
 @using AuthoringTool.PresentationLogic.LearningElement.InteractionElement
 @using AuthoringTool.PresentationLogic.LearningElement.TestElement
 @using AuthoringTool.PresentationLogic.LearningElement.TransferElement
+@using AuthoringTool.PresentationLogic.ModalDialog
 @using AuthoringTool.View.LearningSpace
 
 <h2>World: @LearningWorldP.LearningWorldVm?.Name</h2>
@@ -25,29 +26,15 @@ else
     <button class="btn btn-primary" @onclick="LoadLearningSpaceAsync">Load Learning Space</button>
     @if (LearningWorldP.CreateLearningSpaceDialogueOpen)
     {
-        <ModalDialog Title="Create new learning space" Text="Please enter the required data for the learning space below:"
-                     OnClose="@OnCreateSpaceDialogClose" DialogType=@ModalDialogType.OkCancel
-                     InputFields="@LearningWorldP.ModalDialogSpaceInputFields">
-        </ModalDialog>
+        @ModalDialogFactory.GetCreateLearningSpaceFragment(OnCreateSpaceDialogClose);
     }
     <button class="btn btn-primary" @onclick="AddNewLearningElement">Add Learning Element</button>
     <button class="btn btn-primary" @onclick="LoadLearningElementAsync">Load Learning Element</button>
     @if (LearningWorldP.CreateLearningElementDialogOpen)
     {
-        @if (LearningWorldP.DraggedLearningContentIsPresent)
-        {
-            <ModalDialog Title="Create new learning element" Text="Please enter the required data for the learning element below:"
-                         OnClose="@OnCreateElementDialogClose" DialogType=@ModalDialogType.OkCancel
-                         InputFields="@LearningWorldP.ModalDialogCreateElementCustomInputFields">
-            </ModalDialog>
-        }
-        else
-        {
-            <ModalDialog Title="Create new learning element" Text="Please enter the required data for the learning element below:"
-                         OnClose="@OnCreateElementDialogClose" DialogType=@ModalDialogType.OkCancel
-                         InputFields="@LearningWorldP.ModalDialogCreateElementInputFields">
-            </ModalDialog>
-        }
+        <!-- LearningWorld can't be null at this point - n.stich -->
+        @ModalDialogFactory.GetCreateLearningElementFragment(LearningWorldP.DragAndDropLearningContent,
+            LearningWorldP.LearningWorldVm!.LearningSpaces, LearningWorldP.LearningWorldVm.Name, OnCreateElementDialogClose);
     }
     <br>
 
@@ -128,18 +115,14 @@ else
     </svg>
     @if (LearningWorldP.EditLearningSpaceDialogOpen && LearningWorldP.LearningWorldVm != null)
     {
-        <ModalDialog Title="Edit existing learning space" Text="Please enter the required data for the learning space below:"
-                     OnClose="@OnEditSpaceDialogClose" DialogType=@ModalDialogType.OkCancel
-                     InputFields="@LearningWorldP.ModalDialogSpaceInputFields" InputFieldsInitialValue="@LearningWorldP.LearningWorldVm.EditDialogInitialValues">
-        </ModalDialog>
+        <!-- EditSpaceDialogInitialValues is set by presenter before setting EditLearningSpaceDialogOpen to true -->
+        @ModalDialogFactory.GetEditLearningSpaceFragment(LearningWorldP.EditSpaceDialogInitialValues!, OnEditSpaceDialogClose)
     }
 
     @if (LearningWorldP.EditLearningElementDialogOpen && LearningWorldP.LearningWorldVm != null)
     {
-        <ModalDialog Title="Edit existing learning element" Text="Please enter the required data for the learning element below:"
-                     OnClose="@OnEditElementDialogClose" DialogType=@ModalDialogType.OkCancel
-                     InputFields="@LearningWorldP.ModalDialogEditElementInputFields" InputFieldsInitialValue="@LearningWorldP.LearningWorldVm.EditDialogInitialValues">
-        </ModalDialog>
+        <!-- EditElementDialogInitialValues is set by presenter before setting EditLearningElementDialogOpen to true -->
+        @ModalDialogFactory.GetEditLearningElementFragment(LearningWorldP.EditElementDialogInitialValues!, OnEditElementDialogClose)
     }
 
     @if (ErrorState != null)
@@ -160,6 +143,9 @@ else
     
     [Inject]
     public ILearningWorldPresenter LearningWorldP { get; set; }
+    
+    [Inject]
+    public ILearningWorldViewModalDialogFactory ModalDialogFactory { get; set; }
 #pragma warning restore CS8618
     
     private ExceptionWrapper? ErrorState { get; set; }

@@ -28,8 +28,8 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     /// </summary>
     public ILearningWorldViewModel? LearningWorldVm { get; private set; }
     
-    private LearningContentViewModel? _dragAndDropLearningContent = null;
-    public bool DraggedLearningContentIsPresent => _dragAndDropLearningContent is not null;
+    public LearningContentViewModel? DragAndDropLearningContent { get; private set; }
+    public bool DraggedLearningContentIsPresent => DragAndDropLearningContent is not null;
 
 
     public bool SelectedLearningObjectIsSpace =>
@@ -37,6 +37,8 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
 
     public bool ShowingLearningSpaceView => LearningWorldVm != null && LearningWorldVm.ShowingLearningSpaceView;
     public bool EditLearningSpaceDialogOpen { get; set; }
+    public Dictionary<string, string>? EditSpaceDialogInitialValues { get; private set; }
+    public Dictionary<string, string>? EditElementDialogInitialValues { get; private set; }
     public bool CreateLearningSpaceDialogueOpen { get; set; }
     public bool EditLearningElementDialogOpen { get; set; }
     public bool CreateLearningElementDialogOpen { get; set; }
@@ -105,7 +107,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     {
         var space = (LearningSpaceViewModel) LearningWorldVm?.SelectedLearningObject!;
         //prepare dictionary property to pass to dialog
-        LearningWorldVm!.EditDialogInitialValues = new Dictionary<string, string>
+        EditSpaceDialogInitialValues = new Dictionary<string, string>
         {
             {"Name", space.Name},
             {"Shortname", space.Shortname},
@@ -268,7 +270,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
         var element = (LearningElementViewModel) LearningWorldVm?.SelectedLearningObject!;
         if (element.Parent == null) throw new Exception("Element Parent is null");
         //prepare dictionary property to pass to dialog
-        LearningWorldVm!.EditDialogInitialValues = new Dictionary<string, string>
+        EditElementDialogInitialValues = new Dictionary<string, string>
         {
             {"Name", element.Name},
             {"Shortname", element.Shortname},
@@ -338,7 +340,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
 
         if (response == ModalDialogReturnValue.Cancel)
         {
-            _dragAndDropLearningContent = null;
+            DragAndDropLearningContent = null;
             return;
         }
         if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
@@ -371,10 +373,10 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
         try
         {
             LearningContentViewModel learningContent;
-            if (_dragAndDropLearningContent is not null)
+            if (DragAndDropLearningContent is not null)
             {
-                learningContent = _dragAndDropLearningContent;
-                _dragAndDropLearningContent = null;
+                learningContent = DragAndDropLearningContent;
+                DragAndDropLearningContent = null;
             }
             else
             {
@@ -392,7 +394,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     
     public void CreateLearningElementWithPreloadedContent(LearningContentViewModel learningContent)
     {
-        _dragAndDropLearningContent = learningContent;
+        DragAndDropLearningContent = learningContent;
         CreateLearningElementDialogOpen = true;
     }
 
@@ -533,7 +535,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
         {
             get
             {
-                if (_dragAndDropLearningContent is null)
+                if (DragAndDropLearningContent is null)
                 {
                     throw new Exception(
                         "ModalDialogCreateElementCustomInputFields where called, but _dragAndDropLearningContent is null");
@@ -544,7 +546,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
                 ModalDialogDropdownInputField contentField;
 
                 ContentTypeEnum contentType;
-                switch (_dragAndDropLearningContent.Type)
+                switch (DragAndDropLearningContent.Type)
                 {
                     case "jpg":
                     case "png":
@@ -561,7 +563,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
                     case "pdf":
                         contentType = ContentTypeEnum.Pdf;
                         break;
-                        default: throw new Exception($"Can not map the file extension '{_dragAndDropLearningContent.Type}' to an ContentType ");
+                        default: throw new Exception($"Can not map the file extension '{DragAndDropLearningContent.Type}' to an ContentType ");
                     
                 }
 

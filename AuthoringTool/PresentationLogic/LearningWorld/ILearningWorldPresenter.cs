@@ -15,6 +15,8 @@ public interface ILearningWorldPresenter
 
     bool CreateLearningSpaceDialogueOpen { get; set; }
     bool EditLearningSpaceDialogOpen { get; set; }
+    Dictionary<string, string>? EditSpaceDialogInitialValues { get; }
+    Dictionary<string, string>? EditElementDialogInitialValues { get; }
     IEnumerable<ModalDialogInputField> ModalDialogSpaceInputFields { get; }
     bool EditLearningElementDialogOpen { get; set; }
     IEnumerable<ModalDialogInputField> ModalDialogCreateElementInputFields { get; }
@@ -53,4 +55,5 @@ public interface ILearningWorldPresenter
     public void AddLearningElement(ILearningElementViewModel learningElement);
     void CreateLearningElementWithPreloadedContent(LearningContentViewModel learningContent);
     bool DraggedLearningContentIsPresent { get; }
+    LearningContentViewModel? DragAndDropLearningContent { get; }
 }

@@ -18,6 +18,5 @@ public interface ILearningWorldViewModel : ILearningElementViewModelParent, ISer
     string Goals { get; set; }
     bool UnsavedChanges { get; set; }
     ILearningObjectViewModel? SelectedLearningObject { get; set; }
-    Dictionary<string, string>? EditDialogInitialValues { get; set; }
     bool ShowingLearningSpaceView { get; set; }
 }
