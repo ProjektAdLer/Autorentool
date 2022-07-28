@@ -21,7 +21,7 @@ public interface ILearningWorldPresenter
     IEnumerable<ModalDialogInputField> ModalDialogCreateElementCustomInputFields { get; }
     IEnumerable<ModalDialogInputField> ModalDialogEditElementInputFields { get; }
     bool CreateLearningElementDialogOpen { get; set; }
-    LearningWorldViewModel? LearningWorldVm { get; }
+    ILearningWorldViewModel? LearningWorldVm { get; }
     bool SelectedLearningObjectIsSpace { get; }
     bool ShowingLearningSpaceView { get; }
     void SetSelectedLearningObject(ILearningObjectViewModel learningObject);

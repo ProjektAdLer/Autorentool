@@ -26,7 +26,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     /// <summary>
     /// The currently selected LearningWorldViewModel.
     /// </summary>
-    public LearningWorldViewModel? LearningWorldVm { get; private set; }
+    public ILearningWorldViewModel? LearningWorldVm { get; private set; }
     
     private LearningContentViewModel? _dragAndDropLearningContent = null;
     public bool DraggedLearningContentIsPresent => _dragAndDropLearningContent is not null;
