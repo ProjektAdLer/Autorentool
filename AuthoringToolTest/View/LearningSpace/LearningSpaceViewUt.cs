@@ -63,7 +63,7 @@ public class LearningSpaceViewUt
     }
 
     [Test]
-    public void Constructor_RendersChildContent()
+    public void Render_ChildContentSet_RendersChildContent()
     {
         RenderFragment childContent = builder =>
         {
