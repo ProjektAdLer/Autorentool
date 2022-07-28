@@ -50,7 +50,8 @@
 
 @if (LearningSpaceP.CreateLearningElementDialogOpen)
 {
-    @ModalDialogFactory.GetCreateLearningElementFragment(LearningSpaceP.DragAndDropLearningContent, OnCreateElementDialogClose);
+    //Override nullability because LearningSpaceVm can't be null at this point. - m.ho, n.stich
+    @ModalDialogFactory.GetCreateLearningElementFragment(LearningSpaceP.DragAndDropLearningContent, OnCreateElementDialogClose, LearningSpaceP.LearningSpaceVm!.Name);
 }
 
 @if (LearningSpaceP.EditLearningElementDialogOpen && LearningSpaceP.LearningSpaceVm != null)

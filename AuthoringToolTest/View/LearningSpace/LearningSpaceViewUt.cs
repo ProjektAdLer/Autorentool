@@ -263,7 +263,10 @@ public class LearningSpaceViewUt
         _learningSpacePresenter.CreateLearningElementDialogOpen.Returns(true);
         var contentMock = new LearningContentViewModel("foo", "bla", Array.Empty<byte>());
         _learningSpacePresenter.DragAndDropLearningContent.Returns(contentMock);
-        
+        var space = Substitute.For<ILearningSpaceViewModel>();
+        space.Name = "spacename";
+        _learningSpacePresenter.LearningSpaceVm.Returns(space);
+
         RenderFragment fragment = builder =>
         {
             builder.OpenElement(0, "p");
@@ -273,7 +276,7 @@ public class LearningSpaceViewUt
 
         ModalDialogOnClose? callback = null;
         _modalDialogFactory
-            .GetCreateLearningElementFragment(contentMock, Arg.Any<ModalDialogOnClose>())
+            .GetCreateLearningElementFragment(contentMock, Arg.Any<ModalDialogOnClose>(), space.Name)
             .Returns(fragment)
             .AndDoes(ci =>
             {
@@ -282,7 +285,7 @@ public class LearningSpaceViewUt
 
         var systemUnderTest = GetLearningSpaceViewForTesting();
         
-        _modalDialogFactory.Received().GetCreateLearningElementFragment(contentMock, Arg.Any<ModalDialogOnClose>());
+        _modalDialogFactory.Received().GetCreateLearningElementFragment(contentMock, Arg.Any<ModalDialogOnClose>(), space.Name);
         var p = systemUnderTest.FindOrFail("p");
         p.MarkupMatches("<p>foobar</p>");
         

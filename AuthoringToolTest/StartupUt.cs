@@ -120,7 +120,8 @@ public class StartupUt
     {
         typeof(IPresentationLogic), typeof(AuthoringToolWorkspacePresenter), typeof(ILearningWorldPresenter),
         typeof(ILearningSpacePresenter), typeof(ILearningElementPresenter), typeof(IAuthoringToolWorkspaceViewModel),
-        typeof(ILearningSpaceViewModalDialogFactory), typeof(ILearningSpaceViewModalDialogInputFieldsFactory)
+        typeof(ILearningSpaceViewModalDialogFactory), typeof(ILearningSpaceViewModalDialogInputFieldsFactory),
+        typeof(ILearningWorldViewModalDialogInputFieldsFactory)
     };
     [Test]
     [TestCaseSource(nameof(ConfigurePresentationLogicRequiredTypes))]

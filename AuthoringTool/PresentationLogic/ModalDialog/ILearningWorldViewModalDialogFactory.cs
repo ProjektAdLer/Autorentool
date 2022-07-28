@@ -1,20 +1,29 @@
-﻿using AuthoringTool.Components.ModalDialog;
+using AuthoringTool.Components.ModalDialog;
 using AuthoringTool.PresentationLogic.LearningContent;
+using AuthoringTool.PresentationLogic.LearningSpace;
 using Microsoft.AspNetCore.Components;
 
 namespace AuthoringTool.PresentationLogic.ModalDialog;
 
-public interface ILearningSpaceViewModalDialogFactory
+public interface ILearningWorldViewModalDialogFactory
 {
     /// <summary>
     /// Dynamically generates a ModalDialog Render Fragment for a "Create learning element" dialog.
     /// </summary>
     /// <param name="dragAndDropLearningContent">Possibly drag-and-dropped learning content.</param>
+    /// <param name="learningSpaces">LearningSpaces that already exist in the learning world.</param>
+    /// <param name="worldName">Name of the learning world.</param>
     /// <param name="onCloseCallback">The callback that should be called upon closing the dialog.</param>
-    /// <param name="spaceName">Name of the learning space.</param>
     /// <returns>A RenderFragment containing the dialog.</returns>
     RenderFragment GetCreateLearningElementFragment(LearningContentViewModel? dragAndDropLearningContent,
-        ModalDialogOnClose onCloseCallback, string spaceName);
+        IEnumerable<ILearningSpaceViewModel> learningSpaces, string worldName ,ModalDialogOnClose onCloseCallback);
+    
+    /// <summary>
+    /// Dynamically generates a ModalDialog Render Fragment for a "Create learning space" dialog.
+    /// </summary>
+    /// <param name="onCloseCallback">The callback that should be called upon closing the dialog.</param>
+    /// <returns>A RenderFragment containing the dialog.</returns>
+    RenderFragment GetCreateLearningSpaceFragment(ModalDialogOnClose onCloseCallback);
 
     /// <summary>
     /// Dynamically generates a ModalDialog Render Fragment for a "Edit learning space" dialog with initial values.
