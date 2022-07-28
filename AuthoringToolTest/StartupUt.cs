@@ -121,6 +121,7 @@ public class StartupUt
         typeof(IPresentationLogic), typeof(AuthoringToolWorkspacePresenter), typeof(ILearningWorldPresenter),
         typeof(ILearningSpacePresenter), typeof(ILearningElementPresenter), typeof(IAuthoringToolWorkspaceViewModel),
         typeof(ILearningSpaceViewModalDialogFactory), typeof(ILearningSpaceViewModalDialogInputFieldsFactory),
+        typeof(ILearningWorldViewModalDialogFactory), typeof(ILearningWorldViewModalDialogInputFieldsFactory),
         typeof(ILearningWorldViewModalDialogInputFieldsFactory)
     };
     [Test]

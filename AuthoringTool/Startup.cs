@@ -84,6 +84,7 @@ public class Startup
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
         services.AddSingleton<ILearningSpaceViewModalDialogFactory, ModalDialogFactory>();
         services.AddSingleton<ILearningSpaceViewModalDialogInputFieldsFactory, ModalDialogInputFieldsFactory>();
+        services.AddSingleton<ILearningWorldViewModalDialogFactory, ModalDialogFactory>();
         services.AddSingleton<ILearningWorldViewModalDialogInputFieldsFactory, ModalDialogInputFieldsFactory>();
     }
 
