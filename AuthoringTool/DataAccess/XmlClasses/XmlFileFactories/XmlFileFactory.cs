@@ -120,15 +120,26 @@ public class XmlFileFactory
         if (filesXmlFilesList != null)
         {
             filesXmlFilesList.Add(new FilesXmlFile());
-            filesXmlFilesList[filesXmlFilesList.Count - 1].SetParameters(hashCheckSum, fileElementId, "mod_resource",
-                "content",
-                "0", fileElementName, filesize, "application/json", "/", currentTime,
-                currentTime, "$@NULL@$", "0", XmlEntityManager.GetFileIdBlock1().ToString());
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Id = XmlEntityManager.GetFileIdBlock1().ToString();
+            filesXmlFilesList[filesXmlFilesList.Count - 1].ContentHash = hashCheckSum;
+            filesXmlFilesList[filesXmlFilesList.Count - 1].ContextId = fileElementId;
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Filename = fileElementName;
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Source = fileElementName;
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Filesize = filesize;
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Timecreated = currentTime;
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Timemodified = currentTime;
+
+            
             filesXmlFilesList.Add(new FilesXmlFile());
-            filesXmlFilesList[filesXmlFilesList.Count - 1].SetParameters(hashCheckSum, fileElementId, "mod_resource",
-                "content",
-                "0", fileElementName, filesize, "application/json", "/", currentTime,
-                currentTime, "$@NULL@$", "0", XmlEntityManager.GetFileIdBlock2().ToString());
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Id = XmlEntityManager.GetFileIdBlock2().ToString();
+            filesXmlFilesList[filesXmlFilesList.Count - 1].ContentHash = hashCheckSum;
+            filesXmlFilesList[filesXmlFilesList.Count - 1].ContextId = fileElementId;
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Filename = fileElementName;
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Source = fileElementName;
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Filesize = filesize;
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Timecreated = currentTime;
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Timemodified = currentTime;
+            
         }
     }
     
@@ -137,38 +148,37 @@ public class XmlFileFactory
         CreateActivityFolder(fileElementId);
         
         //file activities/resource.../grades.xml
-        ActivitiesGradesXmlGradeItem.SetParameters("", "", "", "", "", 
-            "", "", "", "", "", "", "", "", 
-            "", "", "", "", "", "", "", "",
-            "", "", "", "", "", "", "", "", "", 
-            "");
-        ActivitiesGradesXmlGradeItems.SetParameters(ActivitiesGradesXmlGradeItem as ActivitiesGradesXmlGradeItem);
-        ActivitiesGradesXmlActivityGradebook.SetParameterts(ActivitiesGradesXmlGradeItems as ActivitiesGradesXmlGradeItems,
-            "");
+        ActivitiesGradesXmlGradeItems.GradeItem = (ActivitiesGradesXmlGradeItem) ActivitiesGradesXmlGradeItem;
+        ActivitiesGradesXmlActivityGradebook.GradeItems = (ActivitiesGradesXmlGradeItems) ActivitiesGradesXmlGradeItems;
+
         ActivitiesGradesXmlActivityGradebook.Serialize("resource", fileElementId);
         
         //file activities/resource.../resource.xml
-        ActivitiesFileResourceXmlResource.SetParameters(fileElementName, "", "1", "0", "0",
-            "$@NULL@$", "0", "", "0", "0", currentTime, fileElementId);
-        ActivitiesFileResourceXmlActivity.SetParameters(ActivitiesFileResourceXmlResource as ActivitiesResourceXmlResource, 
-            fileElementId, fileElementId, "resource", fileElementId);
+        ActivitiesFileResourceXmlResource.Name = fileElementName;
+        ActivitiesFileResourceXmlResource.Timemodified = currentTime; 
+        ActivitiesFileResourceXmlResource.Id = fileElementId;
+
+        ActivitiesFileResourceXmlActivity.Resource = (ActivitiesResourceXmlResource) ActivitiesFileResourceXmlResource;
+        ActivitiesFileResourceXmlActivity.Id = fileElementId;
+        ActivitiesFileResourceXmlActivity.ModuleId = fileElementId;
+        ActivitiesFileResourceXmlActivity.ModuleName = "resource";
+        ActivitiesFileResourceXmlActivity.ContextId = fileElementId;
+
         ActivitiesFileResourceXmlActivity.Serialize("resource", fileElementId);
         
         //file activities/resource.../roles.xml
-        ActivitiesRolesXmlRoles.SetParameterts("", "");
         ActivitiesRolesXmlRoles.Serialize("resource", fileElementId);
         
         //file activities/resource.../module.xml
-        ActivitiesModuleXmlModule.SetParameterts("resource", fileElementId, fileElementId,
-            "", currentTime, "0", "0", "1",
-            "1", "1", "0", "1",
-            "1", "$@NULL@$", "0",
-            "0", "$@NULL@$", "0", "", 
-            fileElementId, "2021051700");
+        ActivitiesModuleXmlModule.ModuleName = "resource";
+        ActivitiesModuleXmlModule.SectionId = fileElementId;
+        ActivitiesModuleXmlModule.SectionNumber = fileElementId;
+        ActivitiesModuleXmlModule.Added = currentTime;
+        ActivitiesModuleXmlModule.Id = fileElementId;
+        
         ActivitiesModuleXmlModule.Serialize("resource", fileElementId);
         
         //file activities/resource.../grade_history.xml
-        ActivitiesGradeHistoryXmlGradeHistory.SetParameterts("");
         ActivitiesGradeHistoryXmlGradeHistory.Serialize("resource", fileElementId);
         
         //file activities/resource.../inforef.xml
@@ -176,20 +186,18 @@ public class XmlFileFactory
         if (ActivitiesInforefXmlFileList != null)
         {
             ActivitiesInforefXmlFileList.Add(new ActivitiesInforefXmlFile());
-            ActivitiesInforefXmlFileList[ActivitiesInforefXmlFileList.Count - 1]
-                .SetParameters(XmlEntityManager.GetFileIdBlock1().ToString());
+            ActivitiesInforefXmlFileList[ActivitiesInforefXmlFileList.Count - 1].Id = XmlEntityManager.GetFileIdBlock1().ToString();
             ActivitiesInforefXmlFileList.Add(new ActivitiesInforefXmlFile());
-            ActivitiesInforefXmlFileList[ActivitiesInforefXmlFileList.Count - 1]
-                .SetParameters(XmlEntityManager.GetFileIdBlock2().ToString());
+            ActivitiesInforefXmlFileList[ActivitiesInforefXmlFileList.Count - 1].Id = XmlEntityManager.GetFileIdBlock2().ToString();
 
-            ActivitiesInforefXmlFileref.SetParameters(ActivitiesInforefXmlFileList);
+            ActivitiesInforefXmlFileref.File = ActivitiesInforefXmlFileList;
         }
 
-        ActivitiesInforefXmlGradeItem.SetParameters("1");
-        ActivitiesInforefXmlGradeItemref.SetParameters(ActivitiesInforefXmlGradeItem as ActivitiesInforefXmlGradeItem ?? throw new InvalidOperationException());
+        ActivitiesInforefXmlGradeItemref.GradeItem = (ActivitiesInforefXmlGradeItem) ActivitiesInforefXmlGradeItem;
         
-        ActivitiesInforefXmlInforef.SetParameters(ActivitiesInforefXmlFileref as ActivitiesInforefXmlFileref, 
-            ActivitiesInforefXmlGradeItemref as ActivitiesInforefXmlGradeItemref);
+        ActivitiesInforefXmlInforef.Fileref = (ActivitiesInforefXmlFileref) ActivitiesInforefXmlFileref; 
+        ActivitiesInforefXmlInforef.GradeItemref = (ActivitiesInforefXmlGradeItemref) ActivitiesInforefXmlGradeItemref;
+        
         ActivitiesInforefXmlInforef.Serialize("resource", fileElementId);
     }
      
@@ -201,13 +209,15 @@ public class XmlFileFactory
          CreateSectionsFolder(fileElementId);
         
          //file sections/section.../inforef.xml
-         SectionsInforefXmlInforef.SetParameters();
          SectionsInforefXmlInforef.Serialize("",fileElementId);
         
          //file sections/section.../section.xml
-         SectionsSectionXmlSection.SetParameters(fileElementId, "$@NULL@$",
-             "$@NULL@$", "0", "$@NULL@$", "1", 
-             "$@NULL@$", currentTime, fileElementId);
+         SectionsSectionXmlSection.Number = fileElementId;
+         SectionsSectionXmlSection.Name = "$@NULL@$";
+         SectionsSectionXmlSection.Summary = "$@NULL@$";
+         SectionsSectionXmlSection.Timemodified = currentTime;
+         SectionsSectionXmlSection.Id = fileElementId;
+
          SectionsSectionXmlSection.Serialize("",fileElementId);
      }
      
