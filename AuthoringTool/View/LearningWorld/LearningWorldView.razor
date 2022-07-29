@@ -10,6 +10,7 @@
 @using AuthoringTool.PresentationLogic.LearningElement.TransferElement
 @using AuthoringTool.PresentationLogic.ModalDialog
 @using AuthoringTool.View.LearningSpace
+@using AuthoringTool.View.LearningElement
 
 <h2>World: @LearningWorldP.LearningWorldVm?.Name</h2>
 @ChildContent
@@ -64,52 +65,17 @@ else
         {
             @foreach (var learningObject in LearningWorldP.LearningWorldVm.LearningObjects)
             {
-                <Draggable LearningObject="learningObject" OnClicked="@LearningWorldP.SetSelectedLearningObject"
-                           @bind-X="@learningObject.PositionX" @bind-Y="@learningObject.PositionY">
-                    @{
-                        string polygonColor, polygonPoints, rectStyle;
-
-                        switch (learningObject)
-                        {
-                            case LearningElementViewModel learningElementViewModel:
-                                rectStyle = "fill:lightblue";
-                                switch (learningElementViewModel.Difficulty)
-                                {
-                                    case LearningElementDifficultyEnum.Easy:
-                                        polygonPoints = "13 1 10 10 2 13 10 16 13 25 16 16 24 13 16 10";
-                                        polygonColor = "green";
-                                        break;
-                                    case LearningElementDifficultyEnum.Medium:
-                                        polygonPoints = "13 1 5 25 24 10 2 10 21 25";
-                                        polygonColor = "yellow";
-                                        break;
-                                    case LearningElementDifficultyEnum.Hard:
-                                        polygonPoints = "13 1 10 8 2 7 8 13 2 19 10 18 13 25 16 18 24 19 19 13 24 7 16 8 13 1";
-                                        polygonColor = "red";
-                                        break;
-                                    case LearningElementDifficultyEnum.None:
-                                        polygonPoints = "0";
-                                        polygonColor = "lightblue";
-                                        break;
-                                    default:
-                                        throw new ArgumentOutOfRangeException();
-                                }
-                                break;
-                            case LearningSpaceViewModel:
-                                rectStyle = "fill:lightgreen;stroke:black";
-                                polygonPoints = "0";
-                                polygonColor = "lightgreen";
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException(nameof(learningObject));
-                        }
-                    }
-                    <rect height="50" width="100" style=@rectStyle></rect>
-                    <polygon transform="translate(75,1)" fill=@polygonColor
-                             points=@polygonPoints></polygon>
-                    <text x="3" y="15">@learningObject.Name</text>
-
-                </Draggable>
+                @switch (learningObject)
+                {
+                    case LearningElementViewModel learningElementViewModel:
+                        <DraggableLearningElement LearningElement="learningElementViewModel"
+                                                  OnClicked="@LearningWorldP.SetSelectedLearningObject"/>
+                        break;
+                    case LearningSpaceViewModel learningSpaceViewModel:
+                        <DraggableLearningSpace LearningSpace="learningSpaceViewModel"
+                                                OnClicked="@LearningWorldP.SetSelectedLearningObject"/>
+                        break;
+                }
             }
         }
     </svg>

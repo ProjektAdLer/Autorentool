@@ -3,7 +3,7 @@
 @using AuthoringTool.Components
 @using AuthoringTool.PresentationLogic
 <Draggable LearningObject="LearningElement" OnClicked="@OnClicked"
-           @bind-X="@LearningElement!.PositionX" @bind-Y="@LearningElement.PositionY">
+           @bind-X="@LearningElement.PositionX" @bind-Y="@LearningElement.PositionY">
     <rect height="50" width="100" style="fill:lightblue"></rect>
     <polygon transform="translate(75,1)" fill="@PolygonColor"
              points="@PolygonPoints"></polygon>
