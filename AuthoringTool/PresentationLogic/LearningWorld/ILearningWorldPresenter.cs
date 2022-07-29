@@ -17,11 +17,7 @@ public interface ILearningWorldPresenter
     bool EditLearningSpaceDialogOpen { get; set; }
     Dictionary<string, string>? EditSpaceDialogInitialValues { get; }
     Dictionary<string, string>? EditElementDialogInitialValues { get; }
-    IEnumerable<ModalDialogInputField> ModalDialogSpaceInputFields { get; }
     bool EditLearningElementDialogOpen { get; set; }
-    IEnumerable<ModalDialogInputField> ModalDialogCreateElementInputFields { get; }
-    IEnumerable<ModalDialogInputField> ModalDialogCreateElementCustomInputFields { get; }
-    IEnumerable<ModalDialogInputField> ModalDialogEditElementInputFields { get; }
     bool CreateLearningElementDialogOpen { get; set; }
     ILearningWorldViewModel? LearningWorldVm { get; }
     bool SelectedLearningObjectIsSpace { get; }
@@ -53,7 +49,7 @@ public interface ILearningWorldPresenter
     /// <param name="learningElement">The space to be added.</param>
     /// <exception cref="ApplicationException"><see cref="LearningWorldVm"/> is null or element exists in world with same name.</exception>
     public void AddLearningElement(ILearningElementViewModel learningElement);
+    
     void CreateLearningElementWithPreloadedContent(LearningContentViewModel learningContent);
-    bool DraggedLearningContentIsPresent { get; }
     LearningContentViewModel? DragAndDropLearningContent { get; }
 }
