@@ -25,18 +25,8 @@ else
     <h5>Workload: @LearningWorldP.LearningWorldVm?.Workload minutes</h5>
     <button class="btn btn-primary" @onclick="AddNewLearningSpace">Add Learning Space</button>
     <button class="btn btn-primary" @onclick="LoadLearningSpaceAsync">Load Learning Space</button>
-    @if (LearningWorldP.CreateLearningSpaceDialogueOpen)
-    {
-        @ModalDialogFactory.GetCreateLearningSpaceFragment(OnCreateSpaceDialogClose);
-    }
     <button class="btn btn-primary" @onclick="AddNewLearningElement">Add Learning Element</button>
     <button class="btn btn-primary" @onclick="LoadLearningElementAsync">Load Learning Element</button>
-    @if (LearningWorldP.CreateLearningElementDialogOpen)
-    {
-        <!-- LearningWorld can't be null at this point - n.stich -->
-        @ModalDialogFactory.GetCreateLearningElementFragment(LearningWorldP.DragAndDropLearningContent,
-            LearningWorldP.LearningWorldVm!.LearningSpaces, LearningWorldP.LearningWorldVm.Name, OnCreateElementDialogClose);
-    }
     <br>
 
     @if (LearningWorldP.LearningWorldVm?.SelectedLearningObject != null)
@@ -67,11 +57,11 @@ else
             {
                 @switch (learningObject)
                 {
-                    case LearningElementViewModel learningElementViewModel:
+                    case ILearningElementViewModel learningElementViewModel:
                         <DraggableLearningElement LearningElement="learningElementViewModel"
                                                   OnClicked="@LearningWorldP.SetSelectedLearningObject"/>
                         break;
-                    case LearningSpaceViewModel learningSpaceViewModel:
+                    case ILearningSpaceViewModel learningSpaceViewModel:
                         <DraggableLearningSpace LearningSpace="learningSpaceViewModel"
                                                 OnClicked="@LearningWorldP.SetSelectedLearningObject"/>
                         break;
@@ -79,12 +69,28 @@ else
             }
         }
     </svg>
+    //create space modal
+    @if (LearningWorldP.CreateLearningSpaceDialogOpen)
+    {
+        @ModalDialogFactory.GetCreateLearningSpaceFragment(OnCreateSpaceDialogClose);
+    }
+    
+    //create element modal
+    @if (LearningWorldP.CreateLearningElementDialogOpen)
+    {
+        <!-- LearningWorld can't be null at this point - n.stich -->
+        @ModalDialogFactory.GetCreateLearningElementFragment(LearningWorldP.DragAndDropLearningContent,
+            LearningWorldP.LearningWorldVm!.LearningSpaces, LearningWorldP.LearningWorldVm.Name, OnCreateElementDialogClose);
+    }
+    
+    //edit space modal
     @if (LearningWorldP.EditLearningSpaceDialogOpen && LearningWorldP.LearningWorldVm != null)
     {
         <!-- EditSpaceDialogInitialValues is set by presenter before setting EditLearningSpaceDialogOpen to true -->
         @ModalDialogFactory.GetEditLearningSpaceFragment(LearningWorldP.EditSpaceDialogInitialValues!, OnEditSpaceDialogClose)
     }
 
+    //edit element modal
     @if (LearningWorldP.EditLearningElementDialogOpen && LearningWorldP.LearningWorldVm != null)
     {
         <!-- EditElementDialogInitialValues is set by presenter before setting EditLearningElementDialogOpen to true -->
@@ -119,7 +125,7 @@ else
 
     private void AddNewLearningSpace()
     {
-        LearningWorldP.CreateLearningSpaceDialogueOpen = true;
+        LearningWorldP.CreateLearningSpaceDialogOpen = true;
     }
 
     private void AddNewLearningElement()
@@ -198,13 +204,13 @@ else
     private void OnCreateSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
         LearningWorldP.OnCreateSpaceDialogClose(returnValueTuple);
-        StateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 
     private void OnCreateElementDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
         LearningWorldP.OnCreateElementDialogClose(returnValueTuple);
-        StateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 
     private void EditLearningObject()
@@ -215,18 +221,18 @@ else
     private void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
         LearningWorldP.OnEditSpaceDialogClose(returnValueTuple);
-        StateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 
     private void OnEditElementDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
         LearningWorldP.OnEditElementDialogClose(returnValueTuple);
-        StateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 
     public void TriggerStateHasChanged()
     {
-        StateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 
     private void ShowSelectedLearningSpaceView()

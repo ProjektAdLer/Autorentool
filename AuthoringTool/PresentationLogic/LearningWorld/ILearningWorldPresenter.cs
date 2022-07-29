@@ -13,7 +13,7 @@ public interface ILearningWorldPresenter
     LearningWorldViewModel EditLearningWorld(LearningWorldViewModel world, string name, string shortname,
         string authors, string language, string description, string goals);
 
-    bool CreateLearningSpaceDialogueOpen { get; set; }
+    bool CreateLearningSpaceDialogOpen { get; set; }
     bool EditLearningSpaceDialogOpen { get; set; }
     Dictionary<string, string>? EditSpaceDialogInitialValues { get; }
     Dictionary<string, string>? EditElementDialogInitialValues { get; }

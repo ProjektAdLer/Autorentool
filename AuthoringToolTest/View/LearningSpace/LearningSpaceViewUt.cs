@@ -153,14 +153,13 @@ public class LearningSpaceViewUt
         
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
-        IReadOnlyList<IRenderedComponent<Stub<DraggableLearningElement>>>? draggableLearningElements = null;
+        var draggableLearningElements = systemUnderTest.FindComponentsOrFail<Stub<DraggableLearningElement>>();
         Assert.Multiple(() =>
         {
-            Assert.That(() => draggableLearningElements = systemUnderTest.FindComponents<Stub<DraggableLearningElement>>(), Throws.Nothing);
-            //nullability overridden because above assert would fail otherwise - n.stich
-            Assert.That(draggableLearningElements, Has.Count.EqualTo(3));
+            var renderedComponents = draggableLearningElements.ToList();
+            Assert.That(renderedComponents, Has.Count.EqualTo(learningElements.Count));
             Assert.That(learningElements.All(le =>
-                draggableLearningElements!.Any(dle =>
+                renderedComponents.Any(dle =>
                     dle.Instance.Parameters[nameof(DraggableLearningElement.LearningElement)] == le)));
         });
     }

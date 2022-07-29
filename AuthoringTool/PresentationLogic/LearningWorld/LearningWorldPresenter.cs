@@ -37,7 +37,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     public bool EditLearningSpaceDialogOpen { get; set; }
     public Dictionary<string, string>? EditSpaceDialogInitialValues { get; private set; }
     public Dictionary<string, string>? EditElementDialogInitialValues { get; private set; }
-    public bool CreateLearningSpaceDialogueOpen { get; set; }
+    public bool CreateLearningSpaceDialogOpen { get; set; }
     public bool EditLearningElementDialogOpen { get; set; }
     public bool CreateLearningElementDialogOpen { get; set; }
 
@@ -145,7 +145,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     public void OnCreateSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
         var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
-        CreateLearningSpaceDialogueOpen = false;
+        CreateLearningSpaceDialogOpen = false;
 
         if (response == ModalDialogReturnValue.Cancel) return;
         if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
