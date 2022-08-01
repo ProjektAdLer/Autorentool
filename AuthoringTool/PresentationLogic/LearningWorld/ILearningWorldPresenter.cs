@@ -13,15 +13,13 @@ public interface ILearningWorldPresenter
     LearningWorldViewModel EditLearningWorld(LearningWorldViewModel world, string name, string shortname,
         string authors, string language, string description, string goals);
 
-    bool CreateLearningSpaceDialogueOpen { get; set; }
+    bool CreateLearningSpaceDialogOpen { get; set; }
     bool EditLearningSpaceDialogOpen { get; set; }
-    IEnumerable<ModalDialogInputField> ModalDialogSpaceInputFields { get; }
+    Dictionary<string, string>? EditSpaceDialogInitialValues { get; }
+    Dictionary<string, string>? EditElementDialogInitialValues { get; }
     bool EditLearningElementDialogOpen { get; set; }
-    IEnumerable<ModalDialogInputField> ModalDialogCreateElementInputFields { get; }
-    IEnumerable<ModalDialogInputField> ModalDialogCreateElementCustomInputFields { get; }
-    IEnumerable<ModalDialogInputField> ModalDialogEditElementInputFields { get; }
     bool CreateLearningElementDialogOpen { get; set; }
-    LearningWorldViewModel? LearningWorldVm { get; }
+    ILearningWorldViewModel? LearningWorldVm { get; }
     bool SelectedLearningObjectIsSpace { get; }
     bool ShowingLearningSpaceView { get; }
     void SetSelectedLearningObject(ILearningObjectViewModel learningObject);
@@ -29,11 +27,11 @@ public interface ILearningWorldPresenter
     Task LoadLearningSpace();
     Task LoadLearningElement();
     Task SaveSelectedLearningObjectAsync();
-    Task OnCreateSpaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple);
-    Task OnCreateElementDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple);
+    void OnCreateSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple);
+    void OnCreateElementDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void OpenEditSelectedLearningObjectDialog();
-    Task OnEditSpaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple);
-    Task OnEditElementDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple);
+    void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple);
+    void OnEditElementDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void SetLearningWorld(object? caller, LearningWorldViewModel? world);
     void ShowSelectedLearningSpaceView();
     void CloseLearningSpaceView();
@@ -43,14 +41,15 @@ public interface ILearningWorldPresenter
     /// </summary>
     /// <param name="learningSpace">The space to be added.</param>
     /// <exception cref="ApplicationException"><see cref="LearningWorldVm"/> is null or space exists in world with same name.</exception>
-    public void AddLearningSpace(LearningSpaceViewModel learningSpace);
+    public void AddLearningSpace(ILearningSpaceViewModel learningSpace);
     
     /// <summary>
     /// Adds the provided learning element to the selected world view model.
     /// </summary>
     /// <param name="learningElement">The space to be added.</param>
     /// <exception cref="ApplicationException"><see cref="LearningWorldVm"/> is null or element exists in world with same name.</exception>
-    public void AddLearningElement(LearningElementViewModel learningElement);
+    public void AddLearningElement(ILearningElementViewModel learningElement);
+    
     void CreateLearningElementWithPreloadedContent(LearningContentViewModel learningContent);
-    bool DraggedLearningContentIsPresent { get; }
+    LearningContentViewModel? DragAndDropLearningContent { get; }
 }

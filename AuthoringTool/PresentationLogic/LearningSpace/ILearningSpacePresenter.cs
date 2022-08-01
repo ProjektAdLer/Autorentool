@@ -1,30 +1,34 @@
-﻿using AuthoringTool.Components.ModalDialog;
+using AuthoringTool.Components.ModalDialog;
 using AuthoringTool.PresentationLogic.LearningContent;
 
 namespace AuthoringTool.PresentationLogic.LearningSpace;
 
 public interface ILearningSpacePresenter
 {
-    LearningSpaceViewModel CreateNewLearningSpace(string name, string shortname, string authors, string description,
+    ILearningSpaceViewModel CreateNewLearningSpace(string name, string shortname, string authors, string description,
         string goals);
 
-    LearningSpaceViewModel EditLearningSpace(LearningSpaceViewModel space, string name, string shortname,
+    ILearningSpaceViewModel EditLearningSpace(ILearningSpaceViewModel space, string name, string shortname,
         string authors, string description, string goals);
     
+
+    bool EditLearningSpaceDialogOpen { get; set; }
+    IDictionary<string, string> EditLearningSpaceDialogInitialValues { get; }
     bool EditLearningElementDialogOpen { get; set; }
-    IEnumerable<ModalDialogInputField> ModalDialogCreateElementInputFields { get; }
-    IEnumerable<ModalDialogInputField> ModalDialogCreateElementCustomInputFields { get; }
-    IEnumerable<ModalDialogInputField> ModalDialogEditElementInputFields { get; }
+    IDictionary<string, string> EditLearningElementDialogInitialValues { get; }
     bool CreateLearningElementDialogOpen { get; set; }
-    LearningSpaceViewModel? LearningSpaceVm { get; }
+    ILearningSpaceViewModel? LearningSpaceVm { get; }
     void SetSelectedLearningObject(ILearningObjectViewModel learningObject);
     void DeleteSelectedLearningObject();
-    Task LoadLearningElement();
+    void AddNewLearningElement();
+    Task LoadLearningElementAsync();
     Task SaveSelectedLearningObjectAsync();
-    Task OnCreateElementDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple);
-    void OpenEditSelectedLearningObjectDialog();
-    Task OnEditElementDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple);
-    void SetLearningSpace(LearningSpaceViewModel space);
+    void OnCreateElementDialogClose(ModalDialogOnCloseResult returnValueTuple);
+    void EditSelectedLearningObject();
+    void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple);
+    void OnEditElementDialogClose(ModalDialogOnCloseResult returnValueTuple);
+    void SetLearningSpace(ILearningSpaceViewModel space);
     void CreateLearningElementWithPreloadedContent(LearningContentViewModel learningContent);
     bool DraggedLearningContentIsPresent { get; }
+    LearningContentViewModel? DragAndDropLearningContent { get; }
 }

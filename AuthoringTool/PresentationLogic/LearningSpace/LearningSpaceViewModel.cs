@@ -3,7 +3,7 @@ using AuthoringTool.PresentationLogic.LearningElement;
 
 namespace AuthoringTool.PresentationLogic.LearningSpace;
 
-public class LearningSpaceViewModel : ILearningObjectViewModel, ILearningElementViewModelParent, ISerializableViewModel, IDisplayableLearningObject
+public class LearningSpaceViewModel : ILearningObjectViewModel, ILearningElementViewModelParent, ISerializableViewModel, ILearningSpaceViewModel
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="LearningSpaceViewModel"/> class.
@@ -17,21 +17,21 @@ public class LearningSpaceViewModel : ILearningObjectViewModel, ILearningElement
     /// <param name="positionX">x-position of the learning space in the workspace</param>
     /// <param name="positionY">y-position of the learning space in the workspace</param>
     public LearningSpaceViewModel(string name, string shortname, string authors, string description, string goals,
-        ICollection<LearningElementViewModel>? learningElements = null, double positionX = 0, double positionY = 0)
+        ICollection<ILearningElementViewModel>? learningElements = null, double positionX = 0, double positionY = 0)
     {
         Name = name;
         Shortname = shortname;
         Authors = authors;
         Description = description;
         Goals = goals;
-        LearningElements = learningElements ?? new Collection<LearningElementViewModel>();
+        LearningElements = learningElements ?? new Collection<ILearningElementViewModel>();
         PositionX = positionX;
         PositionY = positionY;
     }
 
     public const string fileEnding = "asf";
     public string FileEnding => fileEnding;
-    public ICollection<LearningElementViewModel> LearningElements { get; set; }
+    public ICollection<ILearningElementViewModel> LearningElements { get; set; }
     public int Workload => LearningElements.Sum(element => element.Workload);
     public string Name { get; set; }
     public string Shortname { get; set; }
@@ -41,5 +41,4 @@ public class LearningSpaceViewModel : ILearningObjectViewModel, ILearningElement
     public double PositionX { get; set; }
     public double PositionY { get; set; }
     public ILearningObjectViewModel? SelectedLearningObject { get; set; }
-    public Dictionary<string, string> EditDialogInitialValues { get; set; }
 }

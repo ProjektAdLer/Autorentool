@@ -4,7 +4,7 @@ using AuthoringTool.PresentationLogic.LearningSpace;
 
 namespace AuthoringTool.PresentationLogic.LearningWorld;
 
-public class LearningWorldViewModel : ILearningElementViewModelParent, ISerializableViewModel, IDisplayableLearningObject
+public class LearningWorldViewModel : ILearningWorldViewModel
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="LearningWorldViewModel"/> class.
@@ -21,8 +21,8 @@ public class LearningWorldViewModel : ILearningElementViewModelParent, ISerializ
     /// <param name="learningSpaces">Optional collection of learning spaces contained in the learning world.
     /// Should be used when loading a saved learnign world into the application.</param>
     public LearningWorldViewModel(string name, string shortname, string authors, string language, string description,
-        string goals, bool unsavedChanges = true, ICollection<LearningElementViewModel>? learningElements = null,
-        ICollection<LearningSpaceViewModel>? learningSpaces = null)
+        string goals, bool unsavedChanges = true, ICollection<ILearningElementViewModel>? learningElements = null,
+        ICollection<ILearningSpaceViewModel>? learningSpaces = null)
     {
         Name = name;
         Shortname = shortname;
@@ -31,15 +31,15 @@ public class LearningWorldViewModel : ILearningElementViewModelParent, ISerializ
         Description = description;
         Goals = goals;
         UnsavedChanges = unsavedChanges;
-        LearningElements = learningElements ?? new Collection<LearningElementViewModel>();
-        LearningSpaces = learningSpaces ?? new Collection<LearningSpaceViewModel>();
+        LearningElements = learningElements ?? new Collection<ILearningElementViewModel>();
+        LearningSpaces = learningSpaces ?? new Collection<ILearningSpaceViewModel>();
     }
     public const string fileEnding = "awf";
     public string FileEnding => fileEnding;
-    public ICollection<LearningElementViewModel> LearningElements { get; set; }
+    public ICollection<ILearningElementViewModel> LearningElements { get; set; }
     public int Workload =>
         LearningSpaces.Sum(space => space.Workload) + LearningElements.Sum(element => element.Workload);
-    public ICollection<LearningSpaceViewModel> LearningSpaces { get; set; }
+    public ICollection<ILearningSpaceViewModel> LearningSpaces { get; set; }
     public IEnumerable<ILearningObjectViewModel> LearningObjects => LearningElements.Concat<ILearningObjectViewModel>(LearningSpaces);
     public string Name { get; set; }
     public string Shortname { get; set; }
@@ -49,6 +49,5 @@ public class LearningWorldViewModel : ILearningElementViewModelParent, ISerializ
     public string Goals { get; set; }
     public bool UnsavedChanges { get; set; }
     public ILearningObjectViewModel? SelectedLearningObject { get; set; }
-    public Dictionary<string, string>? EditDialogInitialValues { get; set; }
     public bool ShowingLearningSpaceView { get; set; }
 }

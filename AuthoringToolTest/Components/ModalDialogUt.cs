@@ -16,7 +16,7 @@ public class ModalDialogUt
         using var ctx = new Bunit.TestContext();
         const string title = "Test Dialog";
         const string text = "This is a dialog for automated testing purposes";
-        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = _ => { };
+        ModalDialogOnClose onClose = _ => { };
         const ModalDialogType dialogType = ModalDialogType.Ok;
         var inputFields = new List<ModalDialogInputField>
         {
@@ -34,8 +34,7 @@ public class ModalDialogUt
             Assert.That(systemUnderTest.Instance.Title, Is.EqualTo(title));
             Assert.That(systemUnderTest.Instance.Text, Is.EqualTo(text));
             //we need to construct an EventCallback from our action
-            Assert.That(systemUnderTest.Instance.OnClose, Is.EqualTo(EventCallback.Factory.Create(onClose.Target ??
-                throw new InvalidOperationException("onClose.Target is null"), onClose)));
+            Assert.That(systemUnderTest.Instance.OnClose, Is.EqualTo(onClose));
             Assert.That(systemUnderTest.Instance.DialogType, Is.EqualTo(dialogType));
             Assert.That(systemUnderTest.Instance.InputFields, Is.EqualTo(inputFields));
         });
@@ -111,12 +110,12 @@ public class ModalDialogUt
         const string title = "Test Dialog";
         const string text = "This is a dialog for automated testing purposes";
         var onCloseCalled = false;
-        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple => {
+        ModalDialogOnClose onClose = tuple => {
             onCloseCalled = true;
             Assert.Multiple(() =>
             {
-                Assert.That(tuple.Item1, Is.EqualTo(ModalDialogReturnValue.Cancel));
-                Assert.That(tuple.Item2, Is.Null);
+                Assert.That(tuple.ReturnValue, Is.EqualTo(ModalDialogReturnValue.Cancel));
+                Assert.That(tuple.InputFieldValues, Is.Null);
             });
         };
         const ModalDialogType dialogType = ModalDialogType.OkCancel;
@@ -157,10 +156,10 @@ public class ModalDialogUt
         const string title = "Test Dialog";
         const string text = "This is a dialog for automated testing purposes";
         var onCloseCalled = false;
-        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple => {
+        ModalDialogOnClose onClose = tuple => {
             Assert.Multiple(() =>
             {
-                var (modalDialogReturnValue, dictionary) = tuple;
+                var (modalDialogReturnValue, dictionary) = (tuple.ReturnValue, tuple.InputFieldValues);
                 Assert.That(modalDialogReturnValue, Is.EqualTo(returnValue));
                 Assert.That(dictionary, Is.EqualTo(null));
             });
@@ -192,10 +191,10 @@ public class ModalDialogUt
         using var ctx = new Bunit.TestContext();
 
         var onCloseCalled = false;
-        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple => {
+        ModalDialogOnClose onClose = tuple => {
             Assert.Multiple(() =>
             {
-                var (modalDialogReturnValue, dictionary) = tuple;
+                var (modalDialogReturnValue, dictionary) = (tuple.ReturnValue, tuple.InputFieldValues);
                 Assert.That(modalDialogReturnValue, Is.EqualTo(expectedRetval));
                 if (expectingDictionary)
                     Assert.That(dictionary!["Test1"], Is.EqualTo("foobar"));
@@ -225,9 +224,9 @@ public class ModalDialogUt
         const string title = "Test Dialog";
         const string text = "This is a dialog for automated testing purposes";
         var onCloseCalled = false;
-        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
+        ModalDialogOnClose onClose = tuple =>
         {
-            var (returnValue, dictionary) = tuple;
+            var (returnValue, dictionary) = (tuple.ReturnValue, tuple.InputFieldValues);
             Assert.Multiple(() =>
             {
                 Assert.That(returnValue, Is.EqualTo(ModalDialogReturnValue.Ok));
@@ -277,7 +276,7 @@ public class ModalDialogUt
         
         const string title = "Test Dialog";
         const string text = "This is a dialog for automated testing purposes";
-        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = _ =>
+        ModalDialogOnClose onClose = _ =>
         {
             Assert.Fail("onClose was called, but should not have.");
         };
@@ -317,7 +316,7 @@ public class ModalDialogUt
         
         const string title = "Test Dialog";
         const string text = "This is a dialog for automated testing purposes";
-        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = _ =>
+        ModalDialogOnClose onClose = _ =>
         {
             Assert.Fail("onClose was called, but should not have.");
         };
@@ -357,9 +356,9 @@ public class ModalDialogUt
         const string title = "Test Dialog";
         const string text = "This is a dialog for automated testing purposes";
         var onCloseCalled = false;
-        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
+        ModalDialogOnClose onClose = tuple =>
         {
-            var (returnValue, dictionary) = tuple;
+            var (returnValue, dictionary) = (tuple.ReturnValue, tuple.InputFieldValues);
             Assert.Multiple(() =>
             {
                 Assert.That(returnValue, Is.EqualTo(ModalDialogReturnValue.Ok));
@@ -408,9 +407,9 @@ public class ModalDialogUt
         const string title = "Test Dialog";
         const string text = "This is a dialog for automated testing purposes";
         var onCloseCalled = false;
-        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = tuple =>
+        ModalDialogOnClose onClose = tuple =>
         {
-            var (returnValue, dictionary) = tuple;
+            var (returnValue, dictionary) = (tuple.ReturnValue, tuple.InputFieldValues);
             Assert.Multiple(() =>
             {
                 Assert.That(returnValue, Is.EqualTo(ModalDialogReturnValue.Ok));
@@ -456,7 +455,7 @@ public class ModalDialogUt
         
         const string title = "Test Dialog";
         const string text = "This is a dialog for automated testing purposes";
-        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = _ =>
+        ModalDialogOnClose onClose = _ =>
         {
             Assert.Fail("onclose unexpectedly called");
         };
@@ -497,7 +496,7 @@ public class ModalDialogUt
 
         const string title = "Test Dialog";
         const string text = "This is a dialog for automated testing purposes";
-        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose = _ =>
+        ModalDialogOnClose onClose = _ =>
         {
             Assert.Fail("onclose unexpectedly called");
         };
@@ -543,9 +542,8 @@ public class ModalDialogUt
         Assert.That(systemUnderTest.AvailableChoices, Is.EqualTo(testEnumerable));
     }
 
-    private IRenderedComponent<ModalDialog> CreateRenderedModalDialogComponentForTesting(Bunit.TestContext ctx,
-        string title, string text,
-        Action<Tuple<ModalDialogReturnValue, IDictionary<string, string>?>> onClose,
+    private IRenderedComponent<ModalDialog> CreateRenderedModalDialogComponentForTesting(Bunit.TestContext ctx, string title, string text,
+        ModalDialogOnClose onClose,
         ModalDialogType dialogType,
         IEnumerable<ModalDialogInputField>? inputFields = null, IDictionary<string, string>? initialValues = null)
     {

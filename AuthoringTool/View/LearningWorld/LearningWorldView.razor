@@ -8,13 +8,13 @@
 @using AuthoringTool.PresentationLogic.LearningElement.InteractionElement
 @using AuthoringTool.PresentationLogic.LearningElement.TestElement
 @using AuthoringTool.PresentationLogic.LearningElement.TransferElement
+@using AuthoringTool.PresentationLogic.ModalDialog
 @using AuthoringTool.View.LearningSpace
-@inject IMouseService _mouseService
-@inject ILearningWorldPresenter _learningWorldP
+@using AuthoringTool.View.LearningElement
 
-<h2>LearningWorld @_learningWorldP.LearningWorldVm?.Name</h2>
+<h2>World: @LearningWorldP.LearningWorldVm?.Name</h2>
 @ChildContent
-@if (_learningWorldP.ShowingLearningSpaceView)
+@if (LearningWorldP.ShowingLearningSpaceView)
 {
     <LearningSpaceView>
         <button class="btn btn-primary" @onclick="CloseLearningSpaceView">Close Learning Space View</button>
@@ -22,45 +22,21 @@
 }
 else
 {
-    <h5>Workload: @_learningWorldP.LearningWorldVm?.Workload minutes</h5>
+    <h5>Workload: @LearningWorldP.LearningWorldVm?.Workload minutes</h5>
     <button class="btn btn-primary" @onclick="AddNewLearningSpace">Add Learning Space</button>
     <button class="btn btn-primary" @onclick="LoadLearningSpaceAsync">Load Learning Space</button>
-    @if (_learningWorldP.CreateLearningSpaceDialogueOpen)
-    {
-        <ModalDialog Title="Create new learning space" Text="Please enter the required data for the learning space below:"
-                     OnClose="@OnCreateSpaceDialogClose" DialogType=@ModalDialogType.OkCancel
-                     InputFields="@_learningWorldP.ModalDialogSpaceInputFields">
-        </ModalDialog>
-    }
     <button class="btn btn-primary" @onclick="AddNewLearningElement">Add Learning Element</button>
     <button class="btn btn-primary" @onclick="LoadLearningElementAsync">Load Learning Element</button>
-    @if (_learningWorldP.CreateLearningElementDialogOpen)
-    {
-        @if (_learningWorldP.DraggedLearningContentIsPresent)
-        {
-            <ModalDialog Title="Create new learning element" Text="Please enter the required data for the learning element below:"
-                         OnClose="@OnCreateElementDialogClose" DialogType=@ModalDialogType.OkCancel
-                         InputFields="@_learningWorldP.ModalDialogCreateElementCustomInputFields">
-            </ModalDialog>
-        }
-        else
-        {
-            <ModalDialog Title="Create new learning element" Text="Please enter the required data for the learning element below:"
-                         OnClose="@OnCreateElementDialogClose" DialogType=@ModalDialogType.OkCancel
-                         InputFields="@_learningWorldP.ModalDialogCreateElementInputFields">
-            </ModalDialog>
-        }
-    }
     <br>
 
-    @if (_learningWorldP.LearningWorldVm?.SelectedLearningObject != null)
+    @if (LearningWorldP.LearningWorldVm?.SelectedLearningObject != null)
     {
         <label>
             Selected element:
             <text>
-                @_learningWorldP.LearningWorldVm.SelectedLearningObject.Name
+                @LearningWorldP.LearningWorldVm.SelectedLearningObject.Name
                 , Description:
-                @_learningWorldP.LearningWorldVm.SelectedLearningObject.Description
+                @LearningWorldP.LearningWorldVm.SelectedLearningObject.Description
             </text>
         </label>
         <br>
@@ -68,86 +44,63 @@ else
         <button class="btn btn-primary" @onclick="DeleteSelectedLearningObject">Delete Learning Object</button>
         <button class="btn btn-primary" @onclick="SaveSelectedLearningObjectAsync">Save selected Learning Object</button>
         <button class="btn btn-primary" @onclick="ShowSelectedLearningSpaceView"
-                hidden="@(!_learningWorldP.SelectedLearningObjectIsSpace)">Open selected Learning Space</button>
+                hidden="@(!LearningWorldP.SelectedLearningObjectIsSpace)">Open selected Learning Space</button>
     }
     <svg style="width: 100%; height: 600px; border: 1px solid green"
          xmlns="http://www.w3.org/2000/svg"
-         @onmousemove=@(e => _mouseService.FireMove(this, e))
-             @onmouseup=@(e => _mouseService.FireUp(this, e))
-             @onmouseleave=@(() => _mouseService.FireOut(this, null))>
-        @if (_learningWorldP.LearningWorldVm != null)
+         @onmousemove=@(e => MouseService.FireMove(this, e))
+             @onmouseup=@(e => MouseService.FireUp(this, e))
+             @onmouseleave=@(() => MouseService.FireOut(this, null))>
+        @if (LearningWorldP.LearningWorldVm != null)
         {
-            @foreach (var learningObject in _learningWorldP.LearningWorldVm.LearningObjects)
+            @foreach (var learningObject in LearningWorldP.LearningWorldVm.LearningObjects)
             {
-                <Draggable LearningObject="learningObject" OnClicked="@_learningWorldP.SetSelectedLearningObject"
-                           @bind-X="@learningObject.PositionX" @bind-Y="@learningObject.PositionY">
-                    @{
-                        string polygonColor, polygonPoints, rectStyle;
-
-                        switch (learningObject)
-                        {
-                            case LearningElementViewModel learningElementViewModel:
-                                rectStyle = "fill:lightblue";
-                                switch (learningElementViewModel.Difficulty)
-                                {
-                                    case LearningElementDifficultyEnum.Easy:
-                                        polygonPoints = "13 1 10 10 2 13 10 16 13 25 16 16 24 13 16 10";
-                                        polygonColor = "green";
-                                        break;
-                                    case LearningElementDifficultyEnum.Medium:
-                                        polygonPoints = "13 1 5 25 24 10 2 10 21 25";
-                                        polygonColor = "yellow";
-                                        break;
-                                    case LearningElementDifficultyEnum.Hard:
-                                        polygonPoints = "13 1 10 8 2 7 8 13 2 19 10 18 13 25 16 18 24 19 19 13 24 7 16 8 13 1";
-                                        polygonColor = "red";
-                                        break;
-                                    case LearningElementDifficultyEnum.None:
-                                        polygonPoints = "0";
-                                        polygonColor = "lightblue";
-                                        break;
-                                    default:
-                                        throw new ArgumentOutOfRangeException();
-                                }
-                                break;
-                            case LearningSpaceViewModel:
-                                rectStyle = "fill:lightgreen;stroke:black";
-                                polygonPoints = "0";
-                                polygonColor = "lightgreen";
-                                break;
-                            default:
-                                throw new ArgumentOutOfRangeException(nameof(learningObject));
-                        }
-                    }
-                    <rect height="50" width="100" style=@rectStyle></rect>
-                    <polygon transform="translate(75,1)" fill=@polygonColor
-                             points=@polygonPoints></polygon>
-                    <text x="3" y="15">@learningObject.Name</text>
-
-                </Draggable>
+                @switch (learningObject)
+                {
+                    case ILearningElementViewModel learningElementViewModel:
+                        <DraggableLearningElement LearningElement="learningElementViewModel"
+                                                  OnClicked="@LearningWorldP.SetSelectedLearningObject"/>
+                        break;
+                    case ILearningSpaceViewModel learningSpaceViewModel:
+                        <DraggableLearningSpace LearningSpace="learningSpaceViewModel"
+                                                OnClicked="@LearningWorldP.SetSelectedLearningObject"/>
+                        break;
+                }
             }
         }
     </svg>
-    @if (_learningWorldP.EditLearningSpaceDialogOpen && _learningWorldP.LearningWorldVm != null)
+    //create space modal
+    @if (LearningWorldP.CreateLearningSpaceDialogOpen)
     {
-        <ModalDialog Title="Edit existing learning space" Text="Please enter the required data for the learning space below:"
-                     OnClose="@OnEditSpaceDialogClose" DialogType=@ModalDialogType.OkCancel
-                     InputFields="@_learningWorldP.ModalDialogSpaceInputFields" InputFieldsInitialValue="@_learningWorldP.LearningWorldVm.EditDialogInitialValues">
-        </ModalDialog>
+        @ModalDialogFactory.GetCreateLearningSpaceFragment(OnCreateSpaceDialogClose);
+    }
+    
+    //create element modal
+    @if (LearningWorldP.CreateLearningElementDialogOpen)
+    {
+        <!-- LearningWorld can't be null at this point - n.stich -->
+        @ModalDialogFactory.GetCreateLearningElementFragment(LearningWorldP.DragAndDropLearningContent,
+            LearningWorldP.LearningWorldVm!.LearningSpaces, LearningWorldP.LearningWorldVm.Name, OnCreateElementDialogClose);
+    }
+    
+    //edit space modal
+    @if (LearningWorldP.EditLearningSpaceDialogOpen && LearningWorldP.LearningWorldVm != null)
+    {
+        <!-- EditSpaceDialogInitialValues is set by presenter before setting EditLearningSpaceDialogOpen to true -->
+        @ModalDialogFactory.GetEditLearningSpaceFragment(LearningWorldP.EditSpaceDialogInitialValues!, OnEditSpaceDialogClose)
     }
 
-    @if (_learningWorldP.EditLearningElementDialogOpen && _learningWorldP.LearningWorldVm != null)
+    //edit element modal
+    @if (LearningWorldP.EditLearningElementDialogOpen && LearningWorldP.LearningWorldVm != null)
     {
-        <ModalDialog Title="Edit existing learning element" Text="Please enter the required data for the learning element below:"
-                     OnClose="@OnEditElementDialogClose" DialogType=@ModalDialogType.OkCancel
-                     InputFields="@_learningWorldP.ModalDialogEditElementInputFields" InputFieldsInitialValue="@_learningWorldP.LearningWorldVm.EditDialogInitialValues">
-        </ModalDialog>
+        <!-- EditElementDialogInitialValues is set by presenter before setting EditLearningElementDialogOpen to true -->
+        @ModalDialogFactory.GetEditLearningElementFragment(LearningWorldP.EditElementDialogInitialValues!, OnEditElementDialogClose)
     }
 
     @if (ErrorState != null)
     {
         <ModalDialog Title="Exception encountered" Text=@ErrorState.ToString()
-                     OnClose="@(() => { ErrorState = null; })" DialogType=@ModalDialogType.Ok/>
+                     OnClose="@(_ => { ErrorState = null; })" DialogType=@ModalDialogType.Ok/>
     }
 }
 
@@ -156,29 +109,40 @@ else
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
+#pragma warning disable CS8618 injected by framework - n.stich
+    [Inject]
+    public IMouseService MouseService { get; set; }
+    
+    [Inject]
+    public ILearningWorldPresenter LearningWorldP { get; set; }
+    
+    [Inject]
+    public ILearningWorldViewModalDialogFactory ModalDialogFactory { get; set; }
+#pragma warning restore CS8618
+    
     private ExceptionWrapper? ErrorState { get; set; }
 
 
     private void AddNewLearningSpace()
     {
-        _learningWorldP.CreateLearningSpaceDialogueOpen = true;
+        LearningWorldP.CreateLearningSpaceDialogOpen = true;
     }
 
     private void AddNewLearningElement()
     {
-        _learningWorldP.CreateLearningElementDialogOpen = true;
+        LearningWorldP.CreateLearningElementDialogOpen = true;
     }
 
     private void DeleteSelectedLearningObject()
     {
-        _learningWorldP.DeleteSelectedLearningObject();
+        LearningWorldP.DeleteSelectedLearningObject();
     }
 
     private async Task LoadLearningSpaceAsync()
     {
         try
         {
-            await _learningWorldP.LoadLearningSpace();
+            await LearningWorldP.LoadLearningSpace();
         }
         catch (OperationCanceledException)
         {
@@ -199,7 +163,7 @@ else
     {
         try
         {
-            await _learningWorldP.LoadLearningElement();
+            await LearningWorldP.LoadLearningElement();
         }
         catch (OperationCanceledException)
         {
@@ -220,7 +184,7 @@ else
     {
         try
         {
-            await _learningWorldP.SaveSelectedLearningObjectAsync();
+            await LearningWorldP.SaveSelectedLearningObjectAsync();
         }
         catch (OperationCanceledException)
         {
@@ -237,44 +201,48 @@ else
         }
     }
 
-    private Task OnCreateSpaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    private void OnCreateSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
-        return _learningWorldP.OnCreateSpaceDialogClose(returnValueTuple);
+        LearningWorldP.OnCreateSpaceDialogClose(returnValueTuple);
+        InvokeAsync(StateHasChanged);
     }
 
-    private Task OnCreateElementDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    private void OnCreateElementDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
-        return _learningWorldP.OnCreateElementDialogClose(returnValueTuple);
+        LearningWorldP.OnCreateElementDialogClose(returnValueTuple);
+        InvokeAsync(StateHasChanged);
     }
 
     private void EditLearningObject()
     {
-        _learningWorldP.OpenEditSelectedLearningObjectDialog();
+        LearningWorldP.OpenEditSelectedLearningObjectDialog();
     }
 
-    private Task OnEditSpaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    private void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
-        return _learningWorldP.OnEditSpaceDialogClose(returnValueTuple);
+        LearningWorldP.OnEditSpaceDialogClose(returnValueTuple);
+        InvokeAsync(StateHasChanged);
     }
 
-    private Task OnEditElementDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    private void OnEditElementDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
-        return _learningWorldP.OnEditElementDialogClose(returnValueTuple);
+        LearningWorldP.OnEditElementDialogClose(returnValueTuple);
+        InvokeAsync(StateHasChanged);
     }
 
     public void TriggerStateHasChanged()
     {
-        StateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 
     private void ShowSelectedLearningSpaceView()
     {
-        _learningWorldP.ShowSelectedLearningSpaceView();
+        LearningWorldP.ShowSelectedLearningSpaceView();
     }
 
     private void CloseLearningSpaceView()
     {
-        _learningWorldP.CloseLearningSpaceView();
+        LearningWorldP.CloseLearningSpaceView();
     }
 
 }

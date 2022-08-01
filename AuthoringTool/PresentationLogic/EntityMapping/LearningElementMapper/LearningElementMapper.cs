@@ -35,7 +35,7 @@ public class LearningElementMapper : ILearningElementMapper
         _h5PInteractionElementMapper = h5PInteractionElementMapper;
         _h5PTestElementMapper = h5PTestElementMapper;
     }
-    public Entities.LearningElement ToEntity(LearningElementViewModel viewModel)
+    public Entities.LearningElement ToEntity(ILearningElementViewModel viewModel)
     {
         return viewModel switch
         {
@@ -50,7 +50,7 @@ public class LearningElementMapper : ILearningElementMapper
         };
     }
 
-    public LearningElementViewModel ToViewModel(Entities.LearningElement entity,
+    public ILearningElementViewModel ToViewModel(Entities.LearningElement entity,
         ILearningElementViewModelParent? caller = null)
     {
         //sanity check

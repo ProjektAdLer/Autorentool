@@ -42,7 +42,7 @@ public class LearningSpacePresenterUt
     public void EditLearningSpace_EditsViewModelCorrectly()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        var space = new LearningSpaceViewModel("a", "b", "c", "d", "e");
+        ILearningSpaceViewModel space = new LearningSpaceViewModel("a", "b", "c", "d", "e");
 
         var name = "space1";
         var shortname = "sp";
@@ -252,7 +252,7 @@ public class LearningSpacePresenterUt
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, null);
+            new ModalDialogOnCloseResult(modalDialogReturnValue);
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(space);
@@ -285,7 +285,7 @@ public class LearningSpacePresenterUt
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "3";
         var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
         systemUnderTest.SetLearningSpace(space);
@@ -318,8 +318,7 @@ public class LearningSpacePresenterUt
         dictionary["Goals"] = "g";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "3";
-        var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+        var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
         systemUnderTest.SetLearningSpace(space);
@@ -352,8 +351,7 @@ public class LearningSpacePresenterUt
         dictionary["Goals"] = "g";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "3";
-        var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+        var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
         systemUnderTest.SetLearningSpace(space);
@@ -387,7 +385,7 @@ public class LearningSpacePresenterUt
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "3";
         var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
         systemUnderTest.SetLearningSpace(space);
@@ -421,7 +419,7 @@ public class LearningSpacePresenterUt
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "3";
         var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
         systemUnderTest.SetLearningSpace(space);
@@ -455,7 +453,7 @@ public class LearningSpacePresenterUt
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "3";
         var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
         systemUnderTest.SetLearningSpace(space);
@@ -490,8 +488,7 @@ public class LearningSpacePresenterUt
         dictionary["Goals"] = "f";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "2";
-        var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+        var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
         systemUnderTest.SetLearningSpace(space);
@@ -519,7 +516,7 @@ public class LearningSpacePresenterUt
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Medium.ToString();
         dictionary["Workload (min)"] = "7";
         var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(space);
@@ -546,7 +543,7 @@ public class LearningSpacePresenterUt
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Medium.ToString();
         dictionary["Workload (min)"] = "7";
         var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(space);
@@ -575,7 +572,7 @@ public class LearningSpacePresenterUt
         dictionary["Difficulty"] = "Easys";
         dictionary["Workload (min)"] = "7";
         var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(space);
@@ -608,7 +605,7 @@ public class LearningSpacePresenterUt
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "seven";
         var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
         systemUnderTest.SetLearningSpace(space);
@@ -643,7 +640,7 @@ public class LearningSpacePresenterUt
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "-4";
         var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
         systemUnderTest.SetLearningSpace(space);
@@ -664,7 +661,7 @@ public class LearningSpacePresenterUt
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, null);
+            new ModalDialogOnCloseResult(modalDialogReturnValue);
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(space);
@@ -701,7 +698,7 @@ public class LearningSpacePresenterUt
         dictionary["Difficulty"] = "Medium";
         dictionary["Workload (min)"] = "5";
         var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
         systemUnderTest.SetLearningSpace(space);
@@ -736,7 +733,7 @@ public class LearningSpacePresenterUt
         dictionary["Difficulty"] = "mediums";
         dictionary["Workload (min)"] = "4";
         var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
         systemUnderTest.SetLearningSpace(space);
@@ -771,7 +768,7 @@ public class LearningSpacePresenterUt
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "five";
         var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
         systemUnderTest.SetLearningSpace(space);
@@ -808,7 +805,7 @@ public class LearningSpacePresenterUt
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "-5";
         var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
         systemUnderTest.SetLearningSpace(space);
@@ -833,8 +830,7 @@ public class LearningSpacePresenterUt
         dictionary["Goals"] = "g";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "-5";
-        var returnValueTuple =
-            new Tuple<ModalDialogReturnValue, IDictionary<string, string>?>(modalDialogReturnValue, dictionary);
+        var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting();
         
@@ -949,7 +945,7 @@ public class LearningSpacePresenterUt
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(null);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OpenEditSelectedLearningObjectDialog());
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditSelectedLearningObject());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
     }
 
@@ -961,7 +957,7 @@ public class LearningSpacePresenterUt
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(space);
 
-        systemUnderTest.OpenEditSelectedLearningObjectDialog();
+        systemUnderTest.EditSelectedLearningObject();
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.LearningSpaceVm,Is.Not.Null);
@@ -979,22 +975,21 @@ public class LearningSpacePresenterUt
         var element = new LearningElementViewModel("n", "sn", space, content,"a", "d", "g", LearningElementDifficultyEnum.Easy,3);
         space.LearningElements.Add(element);
         space.SelectedLearningObject = element;
-        space.EditDialogInitialValues = new Dictionary<string, string>();
         
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(space);
         
-        systemUnderTest.OpenEditSelectedLearningObjectDialog();
+        systemUnderTest.EditSelectedLearningObject();
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.EditLearningElementDialogOpen, Is.True);
-            Assert.That(space.EditDialogInitialValues["Name"], Is.EqualTo(element.Name));
-            Assert.That(space.EditDialogInitialValues["Shortname"], Is.EqualTo(element.Shortname));
-            Assert.That(space.EditDialogInitialValues["Authors"], Is.EqualTo(element.Authors));
-            Assert.That(space.EditDialogInitialValues["Description"], Is.EqualTo(element.Description));
-            Assert.That(space.EditDialogInitialValues["Goals"], Is.EqualTo(element.Goals));
-            Assert.That(space.EditDialogInitialValues["Difficulty"], Is.EqualTo(element.Difficulty.ToString()));
-            Assert.That(space.EditDialogInitialValues["Workload (min)"], Is.EqualTo(element.Workload.ToString()));
+            Assert.That(systemUnderTest.EditLearningElementDialogInitialValues["Name"], Is.EqualTo(element.Name));
+            Assert.That(systemUnderTest.EditLearningElementDialogInitialValues["Shortname"], Is.EqualTo(element.Shortname));
+            Assert.That(systemUnderTest.EditLearningElementDialogInitialValues["Authors"], Is.EqualTo(element.Authors));
+            Assert.That(systemUnderTest.EditLearningElementDialogInitialValues["Description"], Is.EqualTo(element.Description));
+            Assert.That(systemUnderTest.EditLearningElementDialogInitialValues["Goals"], Is.EqualTo(element.Goals));
+            Assert.That(systemUnderTest.EditLearningElementDialogInitialValues["Difficulty"], Is.EqualTo(element.Difficulty.ToString()));
+            Assert.That(systemUnderTest.EditLearningElementDialogInitialValues["Workload (min)"], Is.EqualTo(element.Workload.ToString()));
         });
     }
     
@@ -1009,7 +1004,7 @@ public class LearningSpacePresenterUt
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(space);
         
-        var ex = Assert.Throws<Exception>(() => systemUnderTest.OpenEditSelectedLearningObjectDialog());
+        var ex = Assert.Throws<Exception>(() => systemUnderTest.EditSelectedLearningObject());
         Assert.That(ex!.Message, Is.EqualTo("Element Parent is null"));
         
     }
@@ -1025,7 +1020,7 @@ public class LearningSpacePresenterUt
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(space);
 
-        var ex = Assert.Throws<NotImplementedException>(() => systemUnderTest.OpenEditSelectedLearningObjectDialog());
+        var ex = Assert.Throws<NotImplementedException>(() => systemUnderTest.EditSelectedLearningObject());
         Assert.That(ex!.Message, Is.EqualTo("Type of LearningObject is not implemented"));
     }
 
@@ -1098,7 +1093,7 @@ public class LearningSpacePresenterUt
         systemUnderTest.SetLearningSpace(null);
 
         var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
-            await systemUnderTest.LoadLearningElement());
+            await systemUnderTest.LoadLearningElementAsync());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
     }
 
@@ -1110,7 +1105,7 @@ public class LearningSpacePresenterUt
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
         systemUnderTest.SetLearningSpace(space);
-        systemUnderTest.LoadLearningElement();
+        systemUnderTest.LoadLearningElementAsync();
 
         presentationLogic.Received().LoadLearningElementAsync();
     }
@@ -1128,7 +1123,7 @@ public class LearningSpacePresenterUt
         Assert.That(systemUnderTest.LearningSpaceVm, Is.Not.Null);
         Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements, Is.Empty);
 
-        systemUnderTest.LoadLearningElement();
+        systemUnderTest.LoadLearningElementAsync();
 
         Assert.Multiple(() =>
         {

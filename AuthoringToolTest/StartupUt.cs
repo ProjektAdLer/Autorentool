@@ -16,6 +16,7 @@ using AuthoringTool.PresentationLogic.EntityMapping.LearningElementMapper;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
+using AuthoringTool.PresentationLogic.ModalDialog;
 using AuthoringTool.PresentationLogic.Toolbox;
 using AuthoringTool.View.Toolbox;
 using Microsoft.Extensions.Caching.Memory;
@@ -118,7 +119,10 @@ public class StartupUt
     private static readonly Type[] ConfigurePresentationLogicRequiredTypes =
     {
         typeof(IPresentationLogic), typeof(AuthoringToolWorkspacePresenter), typeof(ILearningWorldPresenter),
-        typeof(ILearningSpacePresenter), typeof(ILearningElementPresenter), typeof(IAuthoringToolWorkspaceViewModel)
+        typeof(ILearningSpacePresenter), typeof(ILearningElementPresenter), typeof(IAuthoringToolWorkspaceViewModel),
+        typeof(ILearningSpaceViewModalDialogFactory), typeof(ILearningSpaceViewModalDialogInputFieldsFactory),
+        typeof(ILearningWorldViewModalDialogFactory), typeof(ILearningWorldViewModalDialogInputFieldsFactory),
+        typeof(ILearningWorldViewModalDialogInputFieldsFactory)
     };
     [Test]
     [TestCaseSource(nameof(ConfigurePresentationLogicRequiredTypes))]

@@ -4,5 +4,5 @@ namespace AuthoringTool.PresentationLogic.LearningSpace;
 
 public interface ILearningSpacePresenterToolboxInterface
 {
-    void AddLearningElement(LearningElementViewModel element);
+    void AddLearningElement(ILearningElementViewModel element);
 }

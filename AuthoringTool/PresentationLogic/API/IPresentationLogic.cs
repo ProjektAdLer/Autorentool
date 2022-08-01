@@ -70,7 +70,7 @@ public interface IPresentationLogic
     /// <exception cref="NotImplementedException">Thrown when we are not running in Electron.</exception>
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
-    Task<LearningSpaceViewModel> LoadLearningSpaceAsync();
+    Task<ILearningSpaceViewModel> LoadLearningSpaceAsync();
     
     /// <summary>
     /// Asks user for path and saves <see cref="LearningElementViewModel"/> to disk.
@@ -91,7 +91,7 @@ public interface IPresentationLogic
     /// <exception cref="NotImplementedException">Thrown when we are not running in Electron.</exception>
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
-    Task<LearningElementViewModel> LoadLearningElementAsync();
+    Task<ILearningElementViewModel> LoadLearningElementAsync();
     
     /// <summary>
     /// Asks user for path, loads an image file from disk and returns a <see cref="LearningContentViewModel"/>. 
@@ -119,6 +119,6 @@ public interface IPresentationLogic
 
     LearningContentViewModel LoadLearningContentViewModelFromStream(string name, Stream stream);
     LearningWorldViewModel LoadLearningWorldViewModelFromStream(Stream stream);
-    LearningSpaceViewModel LoadLearningSpaceViewModelFromStream(Stream stream);
-    LearningElementViewModel LoadLearningElementViewModelFromStream(Stream stream);
+    ILearningSpaceViewModel LoadLearningSpaceViewModelFromStream(Stream stream);
+    ILearningElementViewModel LoadLearningElementViewModelFromStream(Stream stream);
 }

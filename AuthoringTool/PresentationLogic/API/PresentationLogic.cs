@@ -91,7 +91,7 @@ internal class PresentationLogic : IPresentationLogic
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadLearningSpaceAsync"/>
-    public async Task<LearningSpaceViewModel> LoadLearningSpaceAsync()
+    public async Task<ILearningSpaceViewModel> LoadLearningSpaceAsync()
     {
         SaveOrLoadElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load Learning Space", SpaceFileEnding, SpaceFileFormatDescriptor);
@@ -110,7 +110,7 @@ internal class PresentationLogic : IPresentationLogic
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadLearningElementAsync"/>
-    public async Task<LearningElementViewModel> LoadLearningElementAsync()
+    public async Task<ILearningElementViewModel> LoadLearningElementAsync()
     {
         SaveOrLoadElectronCheck();
         var filepath =
@@ -162,13 +162,13 @@ internal class PresentationLogic : IPresentationLogic
         return WorldMapper.ToViewModel(world);
     }
 
-    public LearningSpaceViewModel LoadLearningSpaceViewModelFromStream(Stream stream)
+    public ILearningSpaceViewModel LoadLearningSpaceViewModelFromStream(Stream stream)
     {
         var space = BusinessLogic.LoadLearningSpaceFromStream(stream);
         return SpaceMapper.ToViewModel(space);
     }
 
-    public LearningElementViewModel LoadLearningElementViewModelFromStream(Stream stream)
+    public ILearningElementViewModel LoadLearningElementViewModelFromStream(Stream stream)
     {
         var element = BusinessLogic.LoadLearningElementFromStream(stream);
         return ElementMapper.ToViewModel(element);

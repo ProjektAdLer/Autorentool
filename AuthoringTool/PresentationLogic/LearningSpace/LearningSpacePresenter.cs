@@ -21,18 +21,18 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
     private readonly ILearningElementPresenter _learningElementPresenter;
     private readonly ILogger<LearningWorldPresenter> _logger;
 
-    public LearningSpaceViewModel? LearningSpaceVm { get; private set; }
+    public ILearningSpaceViewModel? LearningSpaceVm { get; private set; }
 
-    private LearningContentViewModel? _dragAndDropLearningContent = null;
-    public bool DraggedLearningContentIsPresent => _dragAndDropLearningContent is not null;
+    public LearningContentViewModel? DragAndDropLearningContent { get; private set; }
+    public bool DraggedLearningContentIsPresent => DragAndDropLearningContent is not null;
 
-    public LearningSpaceViewModel CreateNewLearningSpace(string name, string shortname, string authors,
+    public ILearningSpaceViewModel CreateNewLearningSpace(string name, string shortname, string authors,
         string description, string goals)
     {
         return new LearningSpaceViewModel(name, shortname, authors, description, goals);
     }
 
-    public LearningSpaceViewModel EditLearningSpace(LearningSpaceViewModel space, string name, string shortname,
+    public ILearningSpaceViewModel EditLearningSpace(ILearningSpaceViewModel space, string name, string shortname,
         string authors, string description, string goals)
     {
         space.Name = name;
@@ -44,15 +44,70 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
     }
 
     public bool EditLearningSpaceDialogOpen { get; set; }
+    public IDictionary<string, string> EditLearningSpaceDialogInitialValues { get; private set; }
     public bool EditLearningElementDialogOpen { get; set; }
+    public IDictionary<string, string> EditLearningElementDialogInitialValues { get; private set; }
     public bool CreateLearningElementDialogOpen { get; set; }
 
-    public void SetLearningSpace(LearningSpaceViewModel space)
+    public void SetLearningSpace(ILearningSpaceViewModel space)
     {
         LearningSpaceVm = space;
     }
 
     #region LearningSpace
+
+    /// <summary>
+    /// Opens the edit dialog for the currently opened learning space. (This methode is not yet in use)
+    /// </summary>
+    /// <exception cref="ApplicationException">Thrown if <see cref="LearningSpaceVm"/> is null</exception>
+    private void OpenEditThisLearningSpaceDialog()
+    {
+        if (LearningSpaceVm is null) throw new ApplicationException("LearningSpaceVm is null");
+        //prepare dictionary property to pass to dialog
+        EditLearningSpaceDialogInitialValues = new Dictionary<string, string>
+        {
+            {"Name", LearningSpaceVm.Name},
+            {"Shortname", LearningSpaceVm.Shortname},
+            {"Authors", LearningSpaceVm.Authors},
+            {"Description", LearningSpaceVm.Description},
+            {"Goals", LearningSpaceVm.Goals},
+        };
+        EditLearningSpaceDialogOpen = true;
+    }
+
+    /// <summary>
+    /// Changes property values of the learning space viewmodel with return values from the dialog.
+    /// </summary>
+    /// <param name="returnValueTuple">Return values from the dialog</param>
+    /// <returns></returns>
+    /// <exception cref="ApplicationException">Thrown if the dictionary in return values of dialog null while return value is ok
+    /// or if <see cref="LearningSpaceVm"/> is null.</exception>
+    public void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
+    {
+        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
+        EditLearningSpaceDialogOpen = false;
+
+        if (response == ModalDialogReturnValue.Cancel) return;
+        if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
+
+        foreach (var (key, value) in data)
+        {
+            _logger.LogTrace($"{key}:{value}\n");
+        }
+
+        //required arguments
+        var name = data["Name"];
+        var shortname = data["Shortname"];
+        var description = data["Description"];
+        //optional arguments
+        var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
+        var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
+
+        if (LearningSpaceVm == null)
+            throw new ApplicationException("LearningSpaceVm is null");
+        EditLearningSpace(LearningSpaceVm, name, shortname, authors,
+            description, goals);
+    }
 
     #endregion
 
@@ -98,13 +153,13 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
     /// Sets the initial values for the <see cref="ModalDialog"/> with the current values from the selected LearningElement.
     /// </summary>
     /// <exception cref="ApplicationException">Thrown if SelectedLearningObject is not a LearningElementViewModel.
-    /// Shouldn't occur, because this is checked in <see cref="OpenEditSelectedLearningObjectDialog"/></exception>
+    /// Shouldn't occur, because this is checked in <see cref="EditSelectedLearningObject"/></exception>
     private void OpenEditSelectedLearningElementDialog()
     {
         var element = (LearningElementViewModel) LearningSpaceVm?.SelectedLearningObject!;
         if (element.Parent == null) throw new Exception("Element Parent is null");
         //prepare dictionary property to pass to dialog
-        LearningSpaceVm!.EditDialogInitialValues = new Dictionary<string, string>
+        EditLearningElementDialogInitialValues = new Dictionary<string, string>
         {
             {"Name", element.Name},
             {"Shortname", element.Shortname},
@@ -117,12 +172,17 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
         EditLearningElementDialogOpen = true;
     }
 
+    public void AddNewLearningElement()
+    {
+        CreateLearningElementDialogOpen = true;
+    }
+
     /// <summary>
     /// Calls the LoadLearningElementAsync method in <see cref="_presentationLogic"/> and adds the returned
     /// learning element to its parent.
     /// </summary>
     /// <exception cref="ApplicationException">Thrown if <see cref="LearningSpaceVm"/> is null</exception>
-    public async Task LoadLearningElement()
+    public async Task LoadLearningElementAsync()
     {
         var learningElement = await _presentationLogic.LoadLearningElementAsync();
         if (LearningSpaceVm == null)
@@ -131,7 +191,7 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
         AddLearningElement(learningElement);
     }
 
-    public void AddLearningElement(LearningElementViewModel element)
+    public void AddLearningElement(ILearningElementViewModel element)
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
@@ -167,16 +227,15 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
     /// <param name="returnValueTuple">Modal dialog return values.</param>
     /// <exception cref="ApplicationException">Thrown if dialog data null or dropdown value or one of the dropdown
     /// values couldn't get parsed into enum.</exception>
-    public Task OnCreateElementDialogClose(
-        Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    public void OnCreateElementDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
-        var (response, data) = returnValueTuple;
+        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
         CreateLearningElementDialogOpen = false;
 
         if (response == ModalDialogReturnValue.Cancel)
         {
-            _dragAndDropLearningContent = null;
-            return Task.CompletedTask;
+            DragAndDropLearningContent = null;
+            return;
         }
 
         if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
@@ -206,10 +265,10 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
         try
         { 
             LearningContentViewModel learningContent;
-            if (_dragAndDropLearningContent is not null)
+            if (DragAndDropLearningContent is not null)
             {
-                learningContent = _dragAndDropLearningContent;
-                _dragAndDropLearningContent = null;
+                learningContent = DragAndDropLearningContent;
+                DragAndDropLearningContent = null;
             }
             else
             {
@@ -224,12 +283,11 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
         {
                 
         }
-        return Task.CompletedTask;
     }
     
     public void CreateLearningElementWithPreloadedContent(LearningContentViewModel learningContent)
     {
-        _dragAndDropLearningContent = learningContent;
+        DragAndDropLearningContent = learningContent;
         CreateLearningElementDialogOpen = true;
     }
 
@@ -255,13 +313,12 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
     /// <param name="returnValueTuple">Return values of dialog.</param>
     /// <exception cref="ApplicationException">Thrown if return values of dialog are null
     /// or selected learning object is not a learning element.</exception>
-    public Task OnEditElementDialogClose(
-        Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    public void OnEditElementDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
-        var (response, data) = returnValueTuple;
+        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
         EditLearningElementDialogOpen = false;
 
-        if (response == ModalDialogReturnValue.Cancel) return Task.CompletedTask;
+        if (response == ModalDialogReturnValue.Cancel) return;
         if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
 
         foreach (var (key, value) in data)
@@ -286,234 +343,9 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
             learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
         _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, parentElement,
             authors, description, goals, difficulty, workload);
-        return Task.CompletedTask;
     }
 
-    public IEnumerable<ModalDialogInputField> ModalDialogCreateElementInputFields
-    {
-        get
-        {
-            return new ModalDialogInputField[]
-            {
-                new("Name", ModalDialogInputType.Text, true),
-                new("Shortname", ModalDialogInputType.Text, true),
-                new ModalDialogDropdownInputField("Type",
-                    new[]
-                    {
-                        new ModalDialogDropdownInputFieldChoiceMapping(null,
-                            new[]
-                            {
-                                ElementTypeEnum.Transfer.ToString(), ElementTypeEnum.Activation.ToString(),
-                                ElementTypeEnum.Interaction.ToString(), ElementTypeEnum.Test.ToString()
-                            })
-                    }, true),
-                new ModalDialogDropdownInputField("Content",
-                    new[]
-                    {
-                        new ModalDialogDropdownInputFieldChoiceMapping(
-                            new Dictionary<string, string> {{"Type", ElementTypeEnum.Transfer.ToString()}},
-                            new[]
-                            {
-                                ContentTypeEnum.Image.ToString(), ContentTypeEnum.Video.ToString(),
-                                ContentTypeEnum.Pdf.ToString()
-                            }),
-                        new ModalDialogDropdownInputFieldChoiceMapping(
-                            new Dictionary<string, string> {{"Type", ElementTypeEnum.Activation.ToString()}},
-                            new[] {ContentTypeEnum.H5P.ToString(), ContentTypeEnum.Video.ToString()}),
-                        new ModalDialogDropdownInputFieldChoiceMapping(
-                            new Dictionary<string, string> {{"Type", ElementTypeEnum.Interaction.ToString()}},
-                            new[] {ContentTypeEnum.H5P.ToString()}),
-                        new ModalDialogDropdownInputFieldChoiceMapping(
-                            new Dictionary<string, string> {{"Type", ElementTypeEnum.Test.ToString()}},
-                            new[] {ContentTypeEnum.H5P.ToString()})
-                    }, true),
-                new("Authors", ModalDialogInputType.Text),
-                new("Description", ModalDialogInputType.Text, true),
-                new("Goals", ModalDialogInputType.Text),
-                new ModalDialogDropdownInputField("Difficulty",
-                    new[]
-                    {
-                        new ModalDialogDropdownInputFieldChoiceMapping(null,
-                            new[] {LearningElementDifficultyEnum.Easy.ToString(),
-                                LearningElementDifficultyEnum.Medium.ToString(),
-                                LearningElementDifficultyEnum.Hard.ToString(),
-                                LearningElementDifficultyEnum.None.ToString() })
-                    }, true),
-                new("Workload (min)", ModalDialogInputType.Number)
-            };
-        }
-    }
 
-    public IEnumerable<ModalDialogInputField> ModalDialogCreateElementCustomInputFields
-    {
-        get
-        {
-            if (_dragAndDropLearningContent is null)
-            {
-                throw new Exception(
-                    "ModalDialogCreateElementCustomInputFields where called, but _dragAndDropLearningContent is null");
-            }
-
-
-            ModalDialogDropdownInputField typeField;
-            ModalDialogDropdownInputField contentField;
-
-            ContentTypeEnum contentType;
-            switch (_dragAndDropLearningContent.Type)
-            {
-                case "jpg":
-                case "png":
-                case "webp":
-                case "bmp":
-                    contentType = ContentTypeEnum.Image;
-                    break;
-                case "mp4":
-                    contentType = ContentTypeEnum.Video;
-                    break;
-                case "h5p":
-                    contentType = ContentTypeEnum.H5P;
-                    break;
-                case "pdf":
-                    contentType = ContentTypeEnum.Pdf;
-                    break;
-                    default: throw new Exception($"Can not map the file extension '{_dragAndDropLearningContent.Type}' to an ContentType ");
-                
-            }
-
-            switch (contentType)
-            {
-                case ContentTypeEnum.Image:
-                    typeField = new ModalDialogDropdownInputField("Type",
-                        new[]
-                        {
-                            new ModalDialogDropdownInputFieldChoiceMapping(null,
-                                new[]
-                                {
-                                    ElementTypeEnum.Transfer.ToString()
-                                })
-                        }, true);
-                    contentField = new ModalDialogDropdownInputField("Content",
-                        new[]
-                        {
-                            new ModalDialogDropdownInputFieldChoiceMapping(
-                                new Dictionary<string, string> {{"Type", ElementTypeEnum.Transfer.ToString()}},
-                                new[]
-                                {
-                                    ContentTypeEnum.Image.ToString()
-                                })
-                        }, true);
-                    break;
-                case ContentTypeEnum.Video:
-                    typeField = new ModalDialogDropdownInputField("Type",
-                        new[]
-                        {
-                            new ModalDialogDropdownInputFieldChoiceMapping(null,
-                                new[]
-                                {
-                                    ElementTypeEnum.Transfer.ToString(), ElementTypeEnum.Activation.ToString()
-                                })
-                        }, true);
-                    contentField = new ModalDialogDropdownInputField("Content",
-                        new[]
-                        {
-                            new ModalDialogDropdownInputFieldChoiceMapping(
-                                new Dictionary<string, string> {{"Type", ElementTypeEnum.Transfer.ToString()}},
-                                new[] {ContentTypeEnum.Video.ToString()}),
-                            new ModalDialogDropdownInputFieldChoiceMapping(
-                                new Dictionary<string, string> {{"Type", ElementTypeEnum.Activation.ToString()}},
-                                new[] {ContentTypeEnum.Video.ToString()})
-                        }, true);
-                    break;
-                case ContentTypeEnum.Pdf:
-                    typeField = new ModalDialogDropdownInputField("Type",
-                        new[]
-                        {
-                            new ModalDialogDropdownInputFieldChoiceMapping(null,
-                                new[] {ElementTypeEnum.Transfer.ToString()})
-                        }, true);
-                    contentField = new ModalDialogDropdownInputField("Content",
-                        new[]
-                        {
-                            new ModalDialogDropdownInputFieldChoiceMapping(
-                                new Dictionary<string, string> {{"Type", ElementTypeEnum.Transfer.ToString()}},
-                                new[] {ContentTypeEnum.Pdf.ToString()})
-                        }, true);
-                    break;
-                case ContentTypeEnum.H5P:
-                    typeField = new ModalDialogDropdownInputField("Type",
-                        new[]
-                        {
-                            new ModalDialogDropdownInputFieldChoiceMapping(null,
-                                new[]
-                                {
-                                    ElementTypeEnum.Activation.ToString(),
-                                    ElementTypeEnum.Interaction.ToString(), ElementTypeEnum.Test.ToString()
-                                })
-                        }, true);
-                    contentField = new ModalDialogDropdownInputField("Content",
-                        new[]
-                        {
-                            new ModalDialogDropdownInputFieldChoiceMapping(
-                                new Dictionary<string, string> {{"Type", ElementTypeEnum.Activation.ToString()}},
-                                new[] {ContentTypeEnum.H5P.ToString()}),
-                            new ModalDialogDropdownInputFieldChoiceMapping(
-                                new Dictionary<string, string> {{"Type", ElementTypeEnum.Interaction.ToString()}},
-                                new[] {ContentTypeEnum.H5P.ToString()}),
-                            new ModalDialogDropdownInputFieldChoiceMapping(
-                                new Dictionary<string, string> {{"Type", ElementTypeEnum.Test.ToString()}},
-                                new[] {ContentTypeEnum.H5P.ToString()})
-                        }, true);
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            return new ModalDialogInputField[]
-            {
-                new("Name", ModalDialogInputType.Text, true),
-                new("Shortname", ModalDialogInputType.Text, true),
-                typeField,
-                contentField,
-                new("Authors", ModalDialogInputType.Text),
-                new("Description", ModalDialogInputType.Text, true),
-                new("Goals", ModalDialogInputType.Text),
-                new ModalDialogDropdownInputField("Difficulty",
-                    new[]
-                    {
-                        new ModalDialogDropdownInputFieldChoiceMapping(null,
-                            new[] {LearningElementDifficultyEnum.Easy.ToString(),
-                                LearningElementDifficultyEnum.Medium.ToString(),
-                                LearningElementDifficultyEnum.Hard.ToString() })
-                    }, true),
-                new("Workload (min)", ModalDialogInputType.Number)
-            };
-        }
-    }
-
-    public IEnumerable<ModalDialogInputField> ModalDialogEditElementInputFields
-    {
-        get
-        {
-                return new ModalDialogInputField[]
-                {
-                    new("Name", ModalDialogInputType.Text, true),
-                    new("Shortname", ModalDialogInputType.Text, true),
-                    new("Authors", ModalDialogInputType.Text),
-                    new("Description", ModalDialogInputType.Text, true),
-                    new("Goals", ModalDialogInputType.Text),
-                    new ModalDialogDropdownInputField("Difficulty",
-                        new[]
-                        {
-                            new ModalDialogDropdownInputFieldChoiceMapping(null,
-                                new[] {LearningElementDifficultyEnum.Easy.ToString(),
-                                    LearningElementDifficultyEnum.Medium.ToString(),
-                                    LearningElementDifficultyEnum.Hard.ToString(),
-                                    LearningElementDifficultyEnum.None.ToString() })
-                        }, true),
-                    new("Workload (min)", ModalDialogInputType.Number)
-                };
-        }
-    }
 
     #endregion
 
@@ -559,7 +391,7 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
     /// </summary>
     /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
     /// <exception cref="NotImplementedException">Thrown if the selected learning object is of an other type than element.</exception>
-    public void OpenEditSelectedLearningObjectDialog()
+    public void EditSelectedLearningObject()
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");

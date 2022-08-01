@@ -6,10 +6,10 @@ namespace AuthoringTool.PresentationLogic.LearningWorld;
 public interface ILearningWorldPresenterToolboxInterface
 {
     /// <inheritdoc cref="ILearningWorldPresenter.AddLearningSpace"/>
-    void AddLearningSpace(LearningSpaceViewModel learningSpace);
+    void AddLearningSpace(ILearningSpaceViewModel learningSpace);
     
     /// <inheritdoc cref="ILearningWorldPresenter.AddLearningElement"/>
-    void AddLearningElement(LearningElementViewModel learningElement);
+    void AddLearningElement(ILearningElementViewModel learningElement);
     
     /// <summary>
     /// Returns whether or not a learning space is currently being displayed (aka. "is open").

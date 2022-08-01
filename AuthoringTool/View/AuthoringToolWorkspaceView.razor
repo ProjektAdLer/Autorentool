@@ -114,7 +114,7 @@
 @if (ErrorState != null)
 {
     <ModalDialog Title="Exception encountered" Text=@ErrorState.ToString()
-                 OnClose="@(() => { ErrorState = null; })" DialogType=@ModalDialogType.Ok/>
+                 OnClose="@(_ => { ErrorState = null; })" DialogType=@ModalDialogType.Ok/>
 }
 
 
@@ -124,7 +124,7 @@
     {
         base.OnParametersSet();
         AuthoringToolWorkspaceP.OnForceViewUpdate += StateHasChanged;
-        AuthoringToolWorkspaceVm.PropertyChanged += (_, _) => StateHasChanged();
+        AuthoringToolWorkspaceVm.PropertyChanged += async (_, _) => await InvokeAsync(StateHasChanged);
     }
 
     private LearningWorldView? _activeView;
@@ -188,136 +188,51 @@
         }
     }
 
-    private Task OnCreateWorldDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    private void OnCreateWorldDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
-        return AuthoringToolWorkspaceP.OnCreateWorldDialogClose(returnValueTuple);
+        AuthoringToolWorkspaceP.OnCreateWorldDialogClose(returnValueTuple);
+        StateHasChanged();
     }
 
-    private Task OnEditWorldDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    private void OnEditWorldDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
-        return AuthoringToolWorkspaceP.OnEditWorldDialogClose(returnValueTuple);
+        AuthoringToolWorkspaceP.OnEditWorldDialogClose(returnValueTuple);
+        StateHasChanged();
     }
 
-    private async Task OnSaveWorldDialogCloseAsync(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    private void OnSaveWorldDialogCloseAsync(ModalDialogOnCloseResult returnValueTuple)
     {
-        if (AuthoringToolWorkspaceP.UnsavedWorldsQueue == null)
-            throw new ApplicationException("SaveUnsavedChanges modal returned value despite UnsavedWorldsQueue being null");
-        var (returnValue, _) = returnValueTuple;
-        switch (returnValue)
+        try
         {
-            case ModalDialogReturnValue.Cancel: //we want to cancel closing the application entirely
-                AuthoringToolWorkspaceP.CompletedSaveQueue(true);
-                return;
-            case ModalDialogReturnValue.Yes: //we want to save the world and iterate the queue
-            {
-                var world = AuthoringToolWorkspaceP.UnsavedWorldsQueue.Dequeue();
-                try
-                {
-                    await AuthoringToolWorkspaceP.SaveLearningWorldAsync(world);
-                }
-                catch (OperationCanceledException)
-                {
-    //do nothing
-                }
-                catch (Exception ex)
-                {
-                    ErrorState = new ExceptionWrapper("Save world queue", ex);
-                }
-                break;
-            }
-            case ModalDialogReturnValue.No: //we do not want to save the world but iterate the queue anyway
-            {
-                var world = AuthoringToolWorkspaceP.UnsavedWorldsQueue.Dequeue();
-                world.UnsavedChanges = false;
-                break;
-            }
-            case ModalDialogReturnValue.Ok:
-            case ModalDialogReturnValue.Delete:
-            default:
-                throw new ArgumentOutOfRangeException(nameof(returnValueTuple), $"Unexpected return value of {returnValue}");
+            AuthoringToolWorkspaceP.OnSaveWorldDialogClose(returnValueTuple);
         }
-        if (!AuthoringToolWorkspaceP.UnsavedWorldsQueue.Any())
+        catch (Exception ex)
         {
-            AuthoringToolWorkspaceP.CompletedSaveQueue();
+            ErrorState = new ExceptionWrapper(nameof(OnSaveWorldDialogCloseAsync), ex);
+        }
+        finally
+        {
+            StateHasChanged();
         }
     }
 
-    private async Task OnSaveReplacedWorldDialogCloseAsync(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    private void OnSaveReplacedWorldDialogCloseAsync(ModalDialogOnCloseResult returnValueTuple)
     {
-        if (AuthoringToolWorkspaceP.ReplacedUnsavedWorld == null)
-            throw new ApplicationException("SaveReplacedWorld modal returned value despite ReplacedUnsavedWorld being null");
-        var (returnValue, _) = returnValueTuple;
-        switch (returnValue)
-        {
-            case ModalDialogReturnValue.Yes:
-            {
-                await AuthoringToolWorkspaceP.SaveLearningWorldAsync(AuthoringToolWorkspaceP.ReplacedUnsavedWorld);
-                break;
-            }
-            case ModalDialogReturnValue.No:
-            {
-                break;
-            }
-            case ModalDialogReturnValue.Ok:
-            case ModalDialogReturnValue.Cancel:
-            case ModalDialogReturnValue.Delete:
-            default:
-                throw new ArgumentOutOfRangeException(nameof(returnValueTuple.Item1));
-        }
-        AuthoringToolWorkspaceP.ReplacedUnsavedWorld = null;
+        AuthoringToolWorkspaceP.OnSaveReplacedWorldDialogClose(returnValueTuple);
+        StateHasChanged();
     }
 
-    internal void OnReplaceDialogClose(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    private void OnReplaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
-        var (returnValue, _) = returnValueTuple;
-        if (AuthoringToolWorkspaceP.WorldToReplaceWith == null)
-            throw new ApplicationException("WorldToReplaceWith was null but OnReplaceDialogClose was called");
-        switch (returnValue)
-        {
-            case ModalDialogReturnValue.Ok:
-            {
-                AuthoringToolWorkspaceP.ReplaceLearningWorld(AuthoringToolWorkspaceP.WorldToReplaceWith);
-                AuthoringToolWorkspaceP.WorldToReplaceWith = null;
-                break;
-            }
-            case ModalDialogReturnValue.Cancel:
-            {
-                AuthoringToolWorkspaceP.WorldToReplaceWith = null;
-                break;
-            }
-            case ModalDialogReturnValue.Delete:
-            case ModalDialogReturnValue.Yes:
-            case ModalDialogReturnValue.No:
-            default:
-                throw new ArgumentOutOfRangeException(nameof(returnValueTuple.Item1));
-        }
+        AuthoringToolWorkspaceP.OnReplaceDialogClose(returnValueTuple);
         StateHasChanged();
         _activeView?.TriggerStateHasChanged();
     }
 
-    private async Task OnSaveDeletedWorldDialogCloseAsync(Tuple<ModalDialogReturnValue, IDictionary<string, string>?> returnValueTuple)
+    private void OnSaveDeletedWorldDialogCloseAsync(ModalDialogOnCloseResult returnValueTuple)
     {
-        var (returnValue, _) = returnValueTuple;
-        if (AuthoringToolWorkspaceP.DeletedUnsavedWorld == null)
-            throw new ApplicationException("SaveDeletedWorld modal returned value despite DeleteUnsavedWorld being null");
-        switch (returnValue)
-        {
-            case ModalDialogReturnValue.Yes:
-            {
-                await AuthoringToolWorkspaceP.SaveLearningWorldAsync(AuthoringToolWorkspaceP.DeletedUnsavedWorld);
-                break;
-            }
-            case ModalDialogReturnValue.No:
-            {
-                break;
-            }
-            case ModalDialogReturnValue.Ok:
-            case ModalDialogReturnValue.Cancel:
-            case ModalDialogReturnValue.Delete:
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
-        AuthoringToolWorkspaceP.DeletedUnsavedWorld = null;
+        AuthoringToolWorkspaceP.OnSaveDeletedWorldDialogClose(returnValueTuple);
+        StateHasChanged();
     }
 
     private void SetSelectedLearningWorld(string argsValue)
@@ -341,14 +256,14 @@
         StateHasChanged();
     }
 
-    private async Task OnDragAndDropResult(Tuple<String, Stream> result)
+    private async Task OnDragAndDropResult(Tuple<string, Stream> result)
     {
         await AuthoringToolWorkspaceP.ProcessDragAndDropResult(result);
         StateHasChanged();
         _activeView?.TriggerStateHasChanged();
     }
 
-    private void OnShowInformationDialogClose()
+    private void OnShowInformationDialogClose(ModalDialogOnCloseResult result)
     {
         AuthoringToolWorkspaceP.InformationMessageToShow = null;
     }
