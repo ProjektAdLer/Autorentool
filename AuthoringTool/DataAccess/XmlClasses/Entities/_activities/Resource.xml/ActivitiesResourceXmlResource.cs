@@ -10,7 +10,7 @@ public class ActivitiesResourceXmlResource : IActivitiesResourceXmlResource{
     {
         Name = "";
         Intro = "";
-        Introformat = "1";
+        IntroFormat = "1";
         TobeMigrated = "0";
         Legacyfiles = "0";
         Legacyfileslast = "$@NULL@$";
@@ -30,7 +30,7 @@ public class ActivitiesResourceXmlResource : IActivitiesResourceXmlResource{
     public string Intro { get; set; }
     
     [XmlElement(ElementName="introformat")]
-    public string Introformat { get; set; }
+    public string IntroFormat { get; set; }
     
     [XmlElement(ElementName="tobemigrated")]
     public string TobeMigrated { get; set; }

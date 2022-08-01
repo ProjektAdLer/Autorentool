@@ -14,7 +14,7 @@ public interface IActivitiesLessonXmlAnswer
     
     string Timemodified { get; set; }
         
-    string Answer_text { get; set; }
+    string AnswerText { get; set; }
         
     string Response { get; set; }
         

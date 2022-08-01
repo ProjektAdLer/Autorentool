@@ -14,7 +14,7 @@ public class ActivitiesLessonXmlAnswer : IActivitiesLessonXmlAnswer {
         Flags = "0";
         Timecreated = "";
         Timemodified = "";
-        Answer_text = "";
+        AnswerText = "";
         Response = "$@NULL@$";
         Answerformat = "0";
         Responseformat = "0";
@@ -42,7 +42,7 @@ public class ActivitiesLessonXmlAnswer : IActivitiesLessonXmlAnswer {
     public string Timemodified { get; set; }
         
     [XmlElement(ElementName="answer_text")]
-    public string Answer_text { get; set; }
+    public string AnswerText { get; set; }
         
     [XmlElement(ElementName="response")]
     public string Response { get; set; }

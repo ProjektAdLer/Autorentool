@@ -1,4 +1,4 @@
-﻿/*using System.IO;
+﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.DataAccess.XmlClasses.Entities;
@@ -9,18 +9,6 @@ namespace AuthoringToolTest.DataAccess.XmlClasses.Entities;
 [TestFixture]
 public class ScalesXmlUt
 {
-    [Test]
-    public void ScalesXmlScalesDefinition_SetParameters_ObjectsAreEqual()
-    {
-        //Arrange
-        var scalesScalesDefinition = new ScalesXmlScalesDefinition();
-        
-        //Act
-        scalesScalesDefinition.SetParameters();
-        
-        //Assert
-        Assert.That(scalesScalesDefinition, Is.EqualTo(scalesScalesDefinition));
-    }
     
     [Test]
     public void ScalesXmlScalesDefinition_Serialize_XmlFileWritten()
@@ -31,15 +19,14 @@ public class ScalesXmlUt
         backupFileGen.CreateBackupFolders();
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
-        var scalesScalesDefinition = new ScalesXmlScalesDefinition();
-        scalesScalesDefinition.SetParameters();
+        var systemUnderTest = new ScalesXmlScalesDefinition();
 
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
-        scalesScalesDefinition.Serialize();
+        systemUnderTest.Serialize();
         
         //Assert
         var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "scales.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
-}*/
+}

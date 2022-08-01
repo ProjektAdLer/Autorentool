@@ -1,4 +1,4 @@
-﻿/*using System.IO;
+﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.DataAccess.XmlClasses.Entities.course;
@@ -10,48 +10,45 @@ namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.course;
 public class CourseInforefXmlUt
 {
     [Test]
-    public void CourseInforefXmlRole_SetParameters_ObjectsAreEqual()
+    public void CourseInforefXmlRole_StandardConstructor_AllParametersSet()
     {
         //Arrange
-        var inforefRole = new CourseInforefXmlRole();
 
         //Act
-        inforefRole.SetParameters("5");
+        var systemUnderTest = new CourseInforefXmlRole();
         
         //Assert
-        Assert.That(inforefRole.Id, Is.EqualTo("5"));
+        Assert.That(systemUnderTest.Id, Is.EqualTo("5"));
     }
     
     [Test]
-    public void CourseInforefXmlRoleref_SetParameters_ObjectsAreEqual()
+    public void CourseInforefXmlRoleref_StandardConstructor_AllParametersSet()
     {
         //Arrange
         var inforefRole = new CourseInforefXmlRole();
-        inforefRole.SetParameters("5");
-        var inforefRoleref = new CourseInforefXmlRoleref();
+        var systemUnderTest = new CourseInforefXmlRoleref();
 
         //Act
-        inforefRoleref.SetParameters(inforefRole);
+        systemUnderTest.Role = inforefRole;
         
         //Assert
-        Assert.That(inforefRoleref.Role, Is.EqualTo(inforefRole));
+        Assert.That(systemUnderTest.Role, Is.EqualTo(inforefRole));
     }
     
     [Test]
-    public void CourseInforefXmlInforef_SetParameters_ObjectsAreEqual()
+    public void CourseInforefXmlInforef_StandardConstructor_AllParametersSet()
     {
         //Arrange
         var inforefRole = new CourseInforefXmlRole();
-        inforefRole.SetParameters("5");
         var inforefRoleref = new CourseInforefXmlRoleref();
-        inforefRoleref.SetParameters(inforefRole);
-        var inforefInforef = new CourseInforefXmlInforef();
+        inforefRoleref.Role = inforefRole;
+        var systemUnderTest = new CourseInforefXmlInforef();
 
         //Act
-        inforefInforef.SetParameters(inforefRoleref);
+        systemUnderTest.Roleref = inforefRoleref;
         
         //Assert
-        Assert.That(inforefInforef.Roleref, Is.EqualTo(inforefRoleref));
+        Assert.That(systemUnderTest.Roleref, Is.EqualTo(inforefRoleref));
     }
     
     [Test]
@@ -65,19 +62,19 @@ public class CourseInforefXmlUt
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
         var inforefRole = new CourseInforefXmlRole();
-        inforefRole.SetParameters("5");
         var inforefRoleref = new CourseInforefXmlRoleref();
-        inforefRoleref.SetParameters(inforefRole);
-        var inforefInforef = new CourseInforefXmlInforef();
-        inforefInforef.SetParameters(inforefRoleref);
+        inforefRoleref.Role = inforefRole;
+        
+        var systemUnderTest = new CourseInforefXmlInforef();
+        systemUnderTest.Roleref = inforefRoleref;
 
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
-        inforefInforef.Serialize();
+        systemUnderTest.Serialize();
         
         //Assert
         var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "course", "inforef.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
     
-}*/
+}

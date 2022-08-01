@@ -8,7 +8,7 @@ public interface IActivitiesLessonXmlLesson
 		
 	string Intro { get; set; }
 		
-	string Introformat { get; set; }
+	string IntroFormat { get; set; }
 		
 	string Practice { get; set; }
 		
@@ -78,9 +78,9 @@ public interface IActivitiesLessonXmlLesson
 		
 	string Timemodified { get; set; }
 		
-	string Completionendreached { get; set; }
+	string CompletionEndReached { get; set; }
 		
-	public string Completiontimespent { get; set; }
+	public string CompletionTimeSpent { get; set; }
 		
 	string AllowOfflineAttempts { get; set; }
 		

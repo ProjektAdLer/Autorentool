@@ -1,4 +1,4 @@
-﻿/*using System.IO;
+﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.DataAccess.XmlClasses.Entities;
@@ -9,18 +9,7 @@ namespace AuthoringToolTest.DataAccess.XmlClasses.Entities;
 [TestFixture]
 public class OutcomesXmlUt
 {
-    [Test]
-    public void OutcomesXmlOutcomesDefinition_SetParameters_ObjectsAreEqual()
-    {
-        //Arrange
-        var outcomesOutcomesDefinition = new OutcomesXmlOutcomesDefinition();
-        
-        //Act
-        outcomesOutcomesDefinition.SetParameters();
-        
-        //Assert
-        Assert.That(outcomesOutcomesDefinition, Is.EqualTo(outcomesOutcomesDefinition));
-    }
+
     
     [Test]
     public void OutcomesXmlOutcomesDefinition_Serialize_XmlFileWritten()
@@ -31,15 +20,14 @@ public class OutcomesXmlUt
         backupFileGen.CreateBackupFolders();
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
-        var outcomesOutcomesDefinition = new OutcomesXmlOutcomesDefinition();
-        outcomesOutcomesDefinition.SetParameters();
+        var systemUnderTest = new OutcomesXmlOutcomesDefinition();
 
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
-        outcomesOutcomesDefinition.Serialize();
+        systemUnderTest.Serialize();
         
         //Assert
         var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "outcomes.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
-}*/
+}

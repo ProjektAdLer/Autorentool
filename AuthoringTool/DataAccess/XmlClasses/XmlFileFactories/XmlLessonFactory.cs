@@ -200,7 +200,7 @@ public class XmlLessonFactory {
         ActivitiesLessonXmlAnswer.JumpTo = "0";
         ActivitiesLessonXmlAnswer.Timecreated = currentTime;
         ActivitiesLessonXmlAnswer.Timemodified = currentTime;
-        ActivitiesLessonXmlAnswer.Answer_text = "This_Page";
+        ActivitiesLessonXmlAnswer.AnswerText = "This_Page";
         ActivitiesLessonXmlAnswer.Id = "1";
 
         ActivitiesLessonXmlAnswers.Answer = (ActivitiesLessonXmlAnswer) ActivitiesLessonXmlAnswer;

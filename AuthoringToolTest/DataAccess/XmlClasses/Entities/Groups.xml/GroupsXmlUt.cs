@@ -1,4 +1,4 @@
-﻿/*using System.IO;
+﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.DataAccess.XmlClasses.Entities;
@@ -9,36 +9,35 @@ namespace AuthoringToolTest.DataAccess.XmlClasses.Entities;
 [TestFixture]
 public class GroupsXmlUt
 {
-
-    [Test]
-    public void GroupsXmlGroups_SetParameters_ObjectsAreEqual()
-    {
-        //Arrange
-        var groupingsList = new GroupsXmlGroupingsList();
-        groupingsList.SetParameters("");
-
-        var groups = new GroupsXmlGroups();
-        
-        //Act
-        groups.SetParameters(groupingsList);
-        
-        //Assert
-        Assert.That(groups.GroupingsList, Is.EqualTo(groupingsList));
-    }
     
     [Test]
-    public void GroupsXmlGroupingsList_SetParameters_ObjectsAreEqual()
+    public void GroupsXmlGroupingsList_StandardConstructor_AllParametersSet()
     {
         //Arrange
-        var groupingsList = new GroupsXmlGroupingsList();
-        
+       
         //Act
-        groupingsList.SetParameters("");
+        var systemUnderTest = new GroupsXmlGroupingsList();
         
         //Assert
-        Assert.That(groupingsList.Groupings, Is.EqualTo(""));
+        Assert.That(systemUnderTest.Groupings, Is.EqualTo(""));
 
     }
+
+    [Test]
+    public void GroupsXmlGroups_StandardConstructor_AllParametersSet()
+    {
+        //Arrange
+        var groupings = new GroupsXmlGroupingsList();
+        
+        //Act
+        var systemUnderTest = new GroupsXmlGroups();
+        systemUnderTest.GroupingsList = groupings;
+        
+        //Assert
+        Assert.That(systemUnderTest.GroupingsList, Is.EqualTo(groupings));
+    }
+    
+
     
     [Test]
     public void GroupsXmlGroupingsList_Serialize_XmlFileWritten()
@@ -50,13 +49,12 @@ public class GroupsXmlUt
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
         var groupingsList = new GroupsXmlGroupingsList();
-        groupingsList.SetParameters("");
-        var groups = new GroupsXmlGroups();
-        groups.SetParameters(groupingsList);
+        var systemUnderTest = new GroupsXmlGroups();
+        systemUnderTest.GroupingsList = (groupingsList);
 
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
-        groups.Serialize();
+        systemUnderTest.Serialize();
         
         //Assert
         var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "groups.xml");
@@ -64,6 +62,3 @@ public class GroupsXmlUt
     }
 }
     
-
-
-*/

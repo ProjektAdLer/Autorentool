@@ -1,4 +1,4 @@
-﻿/*using System.IO;
+﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.DataAccess.XmlClasses.Entities.course;
@@ -10,19 +10,18 @@ namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.course;
 public class CourseRolesXmlUt
 {
     [Test]
-    public void CourseRoleXmlRoles_SetParameters_ObjectsAreEqual()
+    public void CourseRoleXmlRoles_StandardConstructor_AllParametersSet()
     {
         //Arrange
-        var rolesRoles = new CourseRolesXmlRoles();
         
         //Act
-        rolesRoles.SetParameters("", "");
+        var systemUnderTest = new CourseRolesXmlRoles();
         
         //Assert
         Assert.Multiple(() =>
         {
-            Assert.That(rolesRoles.RoleOverrides, Is.EqualTo(""));
-            Assert.That(rolesRoles.RoleAssignments, Is.EqualTo(""));
+            Assert.That(systemUnderTest.RoleOverrides, Is.EqualTo(""));
+            Assert.That(systemUnderTest.RoleAssignments, Is.EqualTo(""));
             
         });
     }
@@ -37,15 +36,14 @@ public class CourseRolesXmlUt
         backupFileGen.CreateBackupFolders();
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
-        var rolesRoles = new CourseRolesXmlRoles();
-        rolesRoles.SetParameters("", "");
+        var systemUnderTest = new CourseRolesXmlRoles();
 
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
-        rolesRoles.Serialize();
+        systemUnderTest.Serialize();
         
         //Assert
         var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "course", "roles.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
-}*/
+}

@@ -11,7 +11,7 @@ public class ActivitiesLessonXmlLesson : IActivitiesLessonXmlLesson{
 		Course = "1";
 		Name = "";
 		Intro = "";
-		Introformat = "1";
+		IntroFormat = "1";
 		Practice = "0";
 		Modattempts = "0";
 		Usepassword = "0";
@@ -46,8 +46,8 @@ public class ActivitiesLessonXmlLesson : IActivitiesLessonXmlLesson{
 		Available = "0";
 		Deadline = "0";
 		Timemodified = "";
-		Completionendreached = "0";
-		Completiontimespent = "0";
+		CompletionEndReached = "0";
+		CompletionTimeSpent = "0";
 		AllowOfflineAttempts = "0";
 		Pages = new ActivitiesLessonXmlPages();
 		Grades = "";
@@ -66,7 +66,7 @@ public class ActivitiesLessonXmlLesson : IActivitiesLessonXmlLesson{
 	public string Intro { get; set; }
 		
 	[XmlElement(ElementName="introformat")]
-	public string Introformat { get; set; }
+	public string IntroFormat { get; set; }
 		
 	[XmlElement(ElementName="practice")]
 	public string Practice { get; set; }
@@ -171,10 +171,10 @@ public class ActivitiesLessonXmlLesson : IActivitiesLessonXmlLesson{
 	public string Timemodified { get; set; }
 		
 	[XmlElement(ElementName="completionendreached")]
-	public string Completionendreached { get; set; }
+	public string CompletionEndReached { get; set; }
 		
 	[XmlElement(ElementName="completiontimespent")]
-	public string Completiontimespent { get; set; }
+	public string CompletionTimeSpent { get; set; }
 		
 	[XmlElement(ElementName="allowofflineattempts")]
 	public string AllowOfflineAttempts { get; set; }

@@ -6,7 +6,7 @@ public interface IActivitiesResourceXmlResource
     
     string Intro { get; set; }
     
-    string Introformat { get; set; }
+    string IntroFormat { get; set; }
     
     string TobeMigrated { get; set; }
     

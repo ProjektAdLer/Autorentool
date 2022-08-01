@@ -1,4 +1,4 @@
-﻿/*using System.IO;
+﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.DataAccess.XmlClasses.Entities;
@@ -9,43 +9,41 @@ namespace AuthoringToolTest.DataAccess.XmlClasses.Entities;
 [TestFixture]
 public class RolesXmlUt
 {
+    
+    [Test]
+    public void RolesXmlRole_StandardConstructor_AllParametersSet()
+    {
+        //Arrange
+
+        //Act
+        var systemUnderTest = new RolesXmlRole();
+        
+        //Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.Name, Is.EqualTo(""));
+            Assert.That(systemUnderTest.Description, Is.EqualTo(""));
+            Assert.That(systemUnderTest.Id, Is.EqualTo("5"));
+            Assert.That(systemUnderTest.Shortname, Is.EqualTo("student"));
+            Assert.That(systemUnderTest.NameInCourse, Is.EqualTo("$@NULL@$"));
+            Assert.That(systemUnderTest.Sortorder, Is.EqualTo("5"));
+            Assert.That(systemUnderTest.Archetype, Is.EqualTo("student"));
+        });
+    }
+    
     [Test]
     public void RolesXmlRolesDefinition_SetParameters_ObjectsAreEqual()
     {
         //Arrange
         var rolesRole = new RolesXmlRole();
-        rolesRole.SetParameters("", "", "5", "student", "$@NULL@$", "5", "student");
-        var rolesRolesDefinition = new RolesXmlRolesDefinition();
-        rolesRolesDefinition.SetParameters(rolesRole);
+        var systemUnderTest = new RolesXmlRolesDefinition();
         
         //Act
-        rolesRolesDefinition.SetParameters(rolesRole);
+        systemUnderTest.Role = rolesRole;
         
         //Assert
-        Assert.That(rolesRolesDefinition.Role, Is.EqualTo(rolesRole));
+        Assert.That(systemUnderTest.Role, Is.EqualTo(rolesRole));
         
-    }
-    
-    [Test]
-    public void RolesXmlRole_SetParameters_ObjectsAreEqual()
-    {
-        //Arrange
-        var rolesRole = new RolesXmlRole();
-
-        //Act
-        rolesRole.SetParameters("", "", "5", "student", "$@NULL@$", "5", "student");
-        
-        //Assert
-        Assert.Multiple(() =>
-        {
-            Assert.That(rolesRole.Name, Is.EqualTo(""));
-            Assert.That(rolesRole.Description, Is.EqualTo(""));
-            Assert.That(rolesRole.Id, Is.EqualTo("5"));
-            Assert.That(rolesRole.Shortname, Is.EqualTo("student"));
-            Assert.That(rolesRole.NameInCourse, Is.EqualTo("$@NULL@$"));
-            Assert.That(rolesRole.Sortorder, Is.EqualTo("5"));
-            Assert.That(rolesRole.Archetype, Is.EqualTo("student"));
-        });
     }
     
     [Test]
@@ -58,16 +56,15 @@ public class RolesXmlUt
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
         var rolesRole = new RolesXmlRole();
-        rolesRole.SetParameters("", "", "5", "student", "$@NULL@$", "5", "student");
-        var rolesRolesDefinition = new RolesXmlRolesDefinition();
-        rolesRolesDefinition.SetParameters(rolesRole);
+        var systemUnderTest = new RolesXmlRolesDefinition();
+        systemUnderTest.Role = rolesRole;
 
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
-        rolesRolesDefinition.Serialize();
+        systemUnderTest.Serialize();
         
         //Assert
         var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "roles.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
-}*/
+}

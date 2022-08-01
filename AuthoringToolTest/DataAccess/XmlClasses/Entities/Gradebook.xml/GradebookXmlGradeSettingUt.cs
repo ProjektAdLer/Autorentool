@@ -8,7 +8,7 @@ public class GradebookXmlGradeSettingUt
 {
     
     [Test]
-    public void GradebookXmlGradeSetting_DefaultConstructor_AllParametersSet()
+    public void GradebookXmlGradeSetting_StandardConstructor_AllParametersSet()
     {
         var systemUnderTest = new GradebookXmlGradeSetting();
         

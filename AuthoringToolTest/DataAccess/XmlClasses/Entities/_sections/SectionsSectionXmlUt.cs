@@ -1,9 +1,7 @@
-﻿/*using System.IO;
+﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
-using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.DataAccess.XmlClasses.Entities.sections;
-using AuthoringTool.DataAccess.XmlClasses.XmlFileFactories;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.sections;
@@ -15,24 +13,26 @@ public class SectionsSectionXmlUt
     public void SectionsSectionXmlSection_SetParameters_ObjectsAreEqual()
     {
         //Arrange
-        var sectionSection = new SectionsSectionXmlSection();
 
         //Act
-        sectionSection.SetParameters("h5pElementId", "$@NULL@$",
-            "$@NULL@$", "0", "$@NULL@$", "1", 
-            "$@NULL@$", "currentTime", "h5pElementId");
+        var systemUnderTest = new SectionsSectionXmlSection();
 
         //Assert
         Assert.Multiple(() =>
         {
-            Assert.That(sectionSection.Id, Is.EqualTo("h5pElementId"));
-            Assert.That(sectionSection.Number, Is.EqualTo("h5pElementId"));
-
+            Assert.That(systemUnderTest.Number, Is.EqualTo(""));
+            Assert.That(systemUnderTest.Name, Is.EqualTo(""));
+            Assert.That(systemUnderTest.Summary, Is.EqualTo(""));
+            Assert.That(systemUnderTest.SummaryFormat, Is.EqualTo("0"));
+            Assert.That(systemUnderTest.Sequence, Is.EqualTo("$@NULL@$"));
+            Assert.That(systemUnderTest.Visible, Is.EqualTo("1"));
+            Assert.That(systemUnderTest.AvailabilityJson, Is.EqualTo("$@NULL@$"));
+            Assert.That(systemUnderTest.Timemodified, Is.EqualTo(""));
+            Assert.That(systemUnderTest.Id, Is.EqualTo(""));
         });
     }
 
     [Test]
-
     public void SectionsSectionXmlSection_Serialize_XmlFileWritten()
     {
         //Arrange 
@@ -42,9 +42,7 @@ public class SectionsSectionXmlUt
         mockFileSystem.AddDirectory(Path.Join(curWorkDir, "XMLFilesForExport", "sections", "section_1"));
         
         var systemUnderTest = new SectionsSectionXmlSection();
-        systemUnderTest.SetParameters("h5pElementId", "$@NULL@$",
-            "$@NULL@$", "0", "$@NULL@$", "1", 
-            "$@NULL@$", "currentTime", "h5pElementId");
+
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
 
         //Act
@@ -55,4 +53,4 @@ public class SectionsSectionXmlUt
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
     
-}*/
+}

@@ -1,4 +1,4 @@
-﻿/*using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.DSL;
@@ -12,65 +12,58 @@ namespace AuthoringToolTest.DataAccess.XmlClasses.Entities;
 [TestFixture]
 public class FilesXmlUt
 {
-    //There aren´t any Parameters to set yet.
-    //Will be needed later, then the Test gets changed. 
     [Test]
     public void FilesXmlFile_SetParameters_ObjectsAreEqual()
     {
         //Arrange
-        var filesFile = new FilesXmlFile();
 
         //Act
-        filesFile.SetParameters("hashCheckSum", "h5pElementId", "mod_h5pactivity",
-            "package",
-            "0", "h5pElementName", "filesize", "application/zip.h5p", "/", "currentTime",
-            "currentTime", "$@NULL@$", "0", "1000");
+        var filesFile = new FilesXmlFile();
         
         //Assert
         Assert.Multiple(() =>
         {
-            Assert.That(filesFile.ContentHash, Is.EqualTo("hashCheckSum"));
-            Assert.That(filesFile.ContextId, Is.EqualTo("h5pElementId"));
-            Assert.That(filesFile.Component, Is.EqualTo("mod_h5pactivity"));
-            Assert.That(filesFile.FileArea, Is.EqualTo("package"));
+            Assert.That(filesFile.Id, Is.EqualTo(""));
+            Assert.That(filesFile.ContentHash, Is.EqualTo(""));
+            Assert.That(filesFile.ContextId, Is.EqualTo(""));
+            Assert.That(filesFile.Component, Is.EqualTo("mod_resource"));
+            Assert.That(filesFile.FileArea, Is.EqualTo("content"));
             Assert.That(filesFile.ItemId, Is.EqualTo("0"));
-            Assert.That(filesFile.Filename, Is.EqualTo("h5pElementName"));
-            Assert.That(filesFile.Filesize, Is.EqualTo("filesize"));
-            Assert.That(filesFile.Mimetype, Is.EqualTo("application/zip.h5p"));
+            Assert.That(filesFile.Filename, Is.EqualTo(""));
             Assert.That(filesFile.Filepath, Is.EqualTo("/"));
-            Assert.That(filesFile.Timecreated, Is.EqualTo("currentTime"));
-            Assert.That(filesFile.Timemodified, Is.EqualTo("currentTime"));
+            Assert.That(filesFile.Filesize, Is.EqualTo(""));
+            Assert.That(filesFile.Mimetype, Is.EqualTo("application/json"));
+            Assert.That(filesFile.Timecreated, Is.EqualTo(""));
+            Assert.That(filesFile.Timemodified, Is.EqualTo(""));
+            Assert.That(filesFile.Source, Is.EqualTo(""));
             Assert.That(filesFile.Author, Is.EqualTo("$@NULL@$"));
             Assert.That(filesFile.Sortorder, Is.EqualTo("0"));
-            Assert.That(filesFile.Id, Is.EqualTo("1000"));
+            Assert.That(filesFile.Userid, Is.EqualTo("$@NULL@$"));
+            Assert.That(filesFile.Status, Is.EqualTo("0"));
+            Assert.That(filesFile.License, Is.EqualTo("unknown"));
+            Assert.That(filesFile.RepositoryType, Is.EqualTo("$@NULL@$"));
+            Assert.That(filesFile.RepositoryId, Is.EqualTo("$@NULL@$"));
+            Assert.That(filesFile.Reference, Is.EqualTo("$@NULL@$"));
         });
     }
 
     [Test]
-    public void FilesXmlFiles_Serialize_ObjectsAreEqual()
+    public void FilesXmlFiles_SetParameters_ObjectsAreEqual()
     {
         //Arrange
         var filesFiles = new FilesXmlFiles();
         
         var file1 = new FilesXmlFile();
         var file2 = new FilesXmlFile();
-        file1.SetParameters("hashCheckSum", "h5pElementId", "mod_h5pactivity",
-            "package",
-            "0", "h5pElementName", "filesize", "application/zip.h5p", "/", "currentTime",
-            "currentTime", "$@NULL@$", "0", "1000");
-        file2.SetParameters("hashCheckSum", "h5pElementId", "mod_h5pactivity",
-            "package",
-            "0", "h5pElementName", "filesize", "application/zip.h5p", "/", "currentTime",
-            "currentTime", "$@NULL@$", "0", "1001");
+
         var list = new List<FilesXmlFile>
         {
             file1,
             file2 
         };
 
-
         //Act
-        filesFiles.SetParameters(list);
+        filesFiles.File = (list);
 
         //Assert
         Assert.That(filesFiles.File, Is.EqualTo(list));
@@ -90,20 +83,13 @@ public class FilesXmlUt
     
         var file1 = new FilesXmlFile();
         var file2 = new FilesXmlFile();
-        file1.SetParameters("hashCheckSum", "h5pElementId", "mod_h5pactivity",
-            "package",
-            "0", "h5pElementName", "filesize", "application/zip.h5p", "/", "currentTime",
-            "currentTime", "$@NULL@$", "0", "1000");
-        file2.SetParameters("hashCheckSum", "h5pElementId", "mod_h5pactivity",
-            "package",
-            "0", "h5pElementName", "filesize", "application/zip.h5p", "/", "currentTime",
-            "currentTime", "$@NULL@$", "0", "1001");
+
         var list = new List<FilesXmlFile>
         {
             file1,
             file2 
         };
-        filesFiles.SetParameters(list);
+        filesFiles.File = (list);
         
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
@@ -115,4 +101,4 @@ public class FilesXmlUt
     }
     
     
-}*/
+}
