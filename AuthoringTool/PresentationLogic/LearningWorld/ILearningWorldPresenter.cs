@@ -13,19 +13,19 @@ public interface ILearningWorldPresenter
     LearningWorldViewModel EditLearningWorld(LearningWorldViewModel world, string name, string shortname,
         string authors, string language, string description, string goals);
 
-    bool CreateLearningSpaceDialogOpen { get; set; }
-    bool EditLearningSpaceDialogOpen { get; set; }
+    bool CreateLearningSpaceDialogOpen { get; }
+    bool EditLearningSpaceDialogOpen { get; }
     Dictionary<string, string>? EditSpaceDialogInitialValues { get; }
     Dictionary<string, string>? EditElementDialogInitialValues { get; }
-    bool EditLearningElementDialogOpen { get; set; }
-    bool CreateLearningElementDialogOpen { get; set; }
+    bool EditLearningElementDialogOpen { get; }
+    bool CreateLearningElementDialogOpen { get; }
     ILearningWorldViewModel? LearningWorldVm { get; }
     bool SelectedLearningObjectIsSpace { get; }
     bool ShowingLearningSpaceView { get; }
     void SetSelectedLearningObject(ILearningObjectViewModel learningObject);
     void DeleteSelectedLearningObject();
-    Task LoadLearningSpace();
-    Task LoadLearningElement();
+    Task LoadLearningSpaceAsync();
+    Task LoadLearningElementAsync();
     Task SaveSelectedLearningObjectAsync();
     void OnCreateSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void OnCreateElementDialogClose(ModalDialogOnCloseResult returnValueTuple);
@@ -52,4 +52,6 @@ public interface ILearningWorldPresenter
     
     void CreateLearningElementWithPreloadedContent(LearningContentViewModel learningContent);
     LearningContentViewModel? DragAndDropLearningContent { get; }
+    void AddNewLearningSpace();
+    void AddNewLearningElement();
 }

@@ -1705,7 +1705,7 @@ public class LearningWorldPresenterUt
         systemUnderTest.SetLearningWorld(null, null);
 
         var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
-            await systemUnderTest.LoadLearningSpace());
+            await systemUnderTest.LoadLearningSpaceAsync());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
 
@@ -1716,7 +1716,7 @@ public class LearningWorldPresenterUt
         systemUnderTest.SetLearningWorld(null, null);
 
         var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
-            await systemUnderTest.LoadLearningElement());
+            await systemUnderTest.LoadLearningElementAsync());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
 
@@ -1729,7 +1729,7 @@ public class LearningWorldPresenterUt
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
         systemUnderTest.SetLearningWorld(null, world);
-        systemUnderTest.LoadLearningSpace();
+        systemUnderTest.LoadLearningSpaceAsync();
 
         presentationLogic.Received().LoadLearningSpaceAsync();
     }
@@ -1743,7 +1743,7 @@ public class LearningWorldPresenterUt
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
         systemUnderTest.SetLearningWorld(null, world);
-        systemUnderTest.LoadLearningElement();
+        systemUnderTest.LoadLearningElementAsync();
 
         presentationLogic.Received().LoadLearningElementAsync();
     }
@@ -1761,7 +1761,7 @@ public class LearningWorldPresenterUt
         Assert.That(systemUnderTest.LearningWorldVm, Is.Not.Null);
         Assert.That(systemUnderTest.LearningWorldVm?.LearningSpaces, Is.Empty);
 
-        systemUnderTest.LoadLearningSpace();
+        systemUnderTest.LoadLearningSpaceAsync();
 
         Assert.Multiple(() =>
         {
@@ -1789,7 +1789,7 @@ public class LearningWorldPresenterUt
         Assert.That(systemUnderTest.LearningWorldVm, Is.Not.Null);
         Assert.That(systemUnderTest.LearningWorldVm?.LearningElements, Is.Empty);
 
-        systemUnderTest.LoadLearningElement();
+        systemUnderTest.LoadLearningElementAsync();
 
         Assert.Multiple(() =>
         {
