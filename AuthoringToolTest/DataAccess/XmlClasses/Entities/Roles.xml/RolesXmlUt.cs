@@ -1,4 +1,4 @@
-﻿using System.IO;
+﻿/*using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.DataAccess.XmlClasses.Entities;
@@ -42,7 +42,7 @@ public class RolesXmlUt
             Assert.That(rolesRole.Description, Is.EqualTo(""));
             Assert.That(rolesRole.Id, Is.EqualTo("5"));
             Assert.That(rolesRole.Shortname, Is.EqualTo("student"));
-            Assert.That(rolesRole.Nameincourse, Is.EqualTo("$@NULL@$"));
+            Assert.That(rolesRole.NameInCourse, Is.EqualTo("$@NULL@$"));
             Assert.That(rolesRole.Sortorder, Is.EqualTo("5"));
             Assert.That(rolesRole.Archetype, Is.EqualTo("student"));
         });
@@ -70,4 +70,4 @@ public class RolesXmlUt
         var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "roles.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
-}
+}*/

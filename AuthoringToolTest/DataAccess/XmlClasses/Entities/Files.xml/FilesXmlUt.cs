@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿/*using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.DSL;
@@ -29,11 +29,11 @@ public class FilesXmlUt
         //Assert
         Assert.Multiple(() =>
         {
-            Assert.That(filesFile.Contenthash, Is.EqualTo("hashCheckSum"));
-            Assert.That(filesFile.Contextid, Is.EqualTo("h5pElementId"));
+            Assert.That(filesFile.ContentHash, Is.EqualTo("hashCheckSum"));
+            Assert.That(filesFile.ContextId, Is.EqualTo("h5pElementId"));
             Assert.That(filesFile.Component, Is.EqualTo("mod_h5pactivity"));
-            Assert.That(filesFile.Filearea, Is.EqualTo("package"));
-            Assert.That(filesFile.Itemid, Is.EqualTo("0"));
+            Assert.That(filesFile.FileArea, Is.EqualTo("package"));
+            Assert.That(filesFile.ItemId, Is.EqualTo("0"));
             Assert.That(filesFile.Filename, Is.EqualTo("h5pElementName"));
             Assert.That(filesFile.Filesize, Is.EqualTo("filesize"));
             Assert.That(filesFile.Mimetype, Is.EqualTo("application/zip.h5p"));
@@ -115,4 +115,4 @@ public class FilesXmlUt
     }
     
     
-}
+}*/

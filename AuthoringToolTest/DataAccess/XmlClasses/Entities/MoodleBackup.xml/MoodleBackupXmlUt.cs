@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿/*using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.WorldExport;
@@ -42,8 +42,8 @@ public class MoodleBackupXmlUt
         Assert.That(moodlebackupDetail.Interactive, Is.EqualTo("1"));
         Assert.That(moodlebackupDetail.Mode, Is.EqualTo("10"));
         Assert.That(moodlebackupDetail.Execution, Is.EqualTo("1"));
-        Assert.That(moodlebackupDetail.Executiontime, Is.EqualTo("0"));
-        Assert.That(moodlebackupDetail.Backup_id, Is.EqualTo("36d63c7b4624cf6a79e0405be770974d"));
+        Assert.That(moodlebackupDetail.ExecutionTime, Is.EqualTo("0"));
+        Assert.That(moodlebackupDetail.BackupId, Is.EqualTo("36d63c7b4624cf6a79e0405be770974d"));
     }
     
     [Test]
@@ -75,7 +75,7 @@ public class MoodleBackupXmlUt
         //Assert
         Assert.Multiple(() =>
         {
-            Assert.That(moodlebackupSection.Sectionid, Is.EqualTo("160"));
+            Assert.That(moodlebackupSection.SectionId, Is.EqualTo("160"));
             Assert.That(moodlebackupSection.Title, Is.EqualTo("1"));
             Assert.That(moodlebackupSection.Directory, Is.EqualTo("sections/section_160"));
         });
@@ -94,7 +94,7 @@ public class MoodleBackupXmlUt
         //Assert
         Assert.Multiple(() =>
         {
-            Assert.That(moodlebackupCourse.Courseid, Is.EqualTo("53"));
+            Assert.That(moodlebackupCourse.CourseId, Is.EqualTo("53"));
             Assert.That(moodlebackupCourse.Title, Is.EqualTo("XML_LK"));
             Assert.That(moodlebackupCourse.Directory, Is.EqualTo("course"));
         });
@@ -112,9 +112,9 @@ public class MoodleBackupXmlUt
             "title", "dir");
         
         //Assert
-        Assert.That(activity.Moduleid, Is.EqualTo("1"));
-        Assert.That(activity.Sectionid, Is.EqualTo("1"));
-        Assert.That(activity.Modulename, Is.EqualTo("name"));
+        Assert.That(activity.ModuleId, Is.EqualTo("1"));
+        Assert.That(activity.SectionId, Is.EqualTo("1"));
+        Assert.That(activity.ModuleName, Is.EqualTo("name"));
         Assert.That(activity.Title, Is.EqualTo("title"));
         Assert.That(activity.Directory, Is.EqualTo("dir"));
     }
@@ -283,24 +283,24 @@ public class MoodleBackupXmlUt
         Assert.Multiple(() =>
         {
             Assert.That(moodlebackupInformation.Name, Is.EqualTo("C#_AuthoringTool_Created_Backup.mbz"));
-            Assert.That(moodlebackupInformation.Moodle_version, Is.EqualTo("2021051703"));
-            Assert.That(moodlebackupInformation.Moodle_release, Is.EqualTo("3.11.3 (Build: 20210913)"));
-            Assert.That(moodlebackupInformation.Backup_version, Is.EqualTo("2021051700"));
-            Assert.That(moodlebackupInformation.Backup_release, Is.EqualTo("3.11"));
-            Assert.That(moodlebackupInformation.Backup_date, Is.EqualTo("currentTime"));
-            Assert.That(moodlebackupInformation.Mnet_remoteusers, Is.EqualTo("0"));
-            Assert.That(moodlebackupInformation.Include_files, Is.EqualTo("1"));
-            Assert.That(moodlebackupInformation.Include_file_references_to_external_content, Is.EqualTo("0"));
-            Assert.That(moodlebackupInformation.Original_wwwroot, Is.EqualTo("https://moodle.cluuub.xyz"));
-            Assert.That(moodlebackupInformation.Original_site_identifier_hash, Is.EqualTo("c9629ccd3c092478330b78bdf4dcdb18"));
-            Assert.That(moodlebackupInformation.Original_course_id, Is.EqualTo("1"));
-            Assert.That(moodlebackupInformation.Original_course_format, Is.EqualTo("topics"));
-            Assert.That(moodlebackupInformation.Original_course_fullname, Is.EqualTo("learningWorld.identifier.value.ToString()"));
-            Assert.That(moodlebackupInformation.Original_course_shortname, Is.EqualTo("learningWorld.identifier.value.ToString()"));
-            Assert.That(moodlebackupInformation.Original_course_startdate, Is.EqualTo("currentTime"));
-            Assert.That(moodlebackupInformation.Original_course_shortname, Is.EqualTo("learningWorld.identifier.value.ToString()"));
-            Assert.That(moodlebackupInformation.Original_course_contextid, Is.EqualTo("1"));
-            Assert.That(moodlebackupInformation.Original_system_contextid, Is.EqualTo("1"));
+            Assert.That(moodlebackupInformation.MoodleVersion, Is.EqualTo("2021051703"));
+            Assert.That(moodlebackupInformation.MoodleRelease, Is.EqualTo("3.11.3 (Build: 20210913)"));
+            Assert.That(moodlebackupInformation.BackupVersion, Is.EqualTo("2021051700"));
+            Assert.That(moodlebackupInformation.BackupRelease, Is.EqualTo("3.11"));
+            Assert.That(moodlebackupInformation.BackupDate, Is.EqualTo("currentTime"));
+            Assert.That(moodlebackupInformation.MnetRemoteUsers, Is.EqualTo("0"));
+            Assert.That(moodlebackupInformation.IncludeFiles, Is.EqualTo("1"));
+            Assert.That(moodlebackupInformation.IncludeFileReferencesToExternalContent, Is.EqualTo("0"));
+            Assert.That(moodlebackupInformation.OriginalWwwRoot, Is.EqualTo("https://moodle.cluuub.xyz"));
+            Assert.That(moodlebackupInformation.OriginalSiteIdentifierHash, Is.EqualTo("c9629ccd3c092478330b78bdf4dcdb18"));
+            Assert.That(moodlebackupInformation.OriginalCourseId, Is.EqualTo("1"));
+            Assert.That(moodlebackupInformation.OriginalCourseFormat, Is.EqualTo("topics"));
+            Assert.That(moodlebackupInformation.OriginalCourseFullname, Is.EqualTo("learningWorld.identifier.value.ToString()"));
+            Assert.That(moodlebackupInformation.OriginalCourseShortname, Is.EqualTo("learningWorld.identifier.value.ToString()"));
+            Assert.That(moodlebackupInformation.OriginalCourseStartDate, Is.EqualTo("currentTime"));
+            Assert.That(moodlebackupInformation.OriginalCourseShortname, Is.EqualTo("learningWorld.identifier.value.ToString()"));
+            Assert.That(moodlebackupInformation.OriginalCourseContextId, Is.EqualTo("1"));
+            Assert.That(moodlebackupInformation.OriginalSystemContextId, Is.EqualTo("1"));
             Assert.That(moodlebackupInformation.Details, Is.EqualTo(moodlebackupDetails));
             Assert.That(moodlebackupInformation.Contents, Is.EqualTo(moodlebackupContents));
             Assert.That(moodlebackupInformation.Settings, Is.EqualTo(moodlebackupSettings));
@@ -435,4 +435,4 @@ public class MoodleBackupXmlUt
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
 
-}
+}*/

@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿/*using System.Collections.Generic;
 using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.XmlClasses;
 using AuthoringTool.DataAccess.XmlClasses.Entities;
@@ -282,7 +282,6 @@ public class XmlBackupFactoryUt
         return new XmlBackupFactory(Arg.Any<ReadDSL>());
     }
 
-    /*
     public XmlBackupFactory CreateTestableXmlBackupFactory(IReadDSL readDsl ,IGradebookXmlGradeSetting gradebookXmlGradeSetting = null, IGradebookXmlGradeSettings gradebookXmlGradeSettings = null,IGradebookXmlGradebook gradebookXmlGradebook = null,
         IGroupsXmlGroupingsList groupsXmlGroupingsList = null, IGroupsXmlGroups groupsXmlGroups = null, 
         IMoodleBackupXmlDetail moodleBackupXmlDetail = null, IMoodleBackupXmlDetails moodleBackupXmlDetails = null, IMoodleBackupXmlSection moodleBackupXmlSection = null,
@@ -327,6 +326,6 @@ public class XmlBackupFactoryUt
             moodleBackupXmlSections, moodleBackupXmlCourse, moodleBackupXmlContents, moodleBackupXmlSetting, moodleBackupXmlSettings,
             moodleBackupXmlInformation, moodleBackupXmlMoodleBackup, outcomesXmlOutcomesDefinition, questionsXmlQuestionsCategories,
             rolesXmlRole, rolesXmlRolesDefinition,scalesXmlScalesDefinition);
-    }*/
+    }
     
-}
+}*/

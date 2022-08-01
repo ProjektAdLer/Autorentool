@@ -1,4 +1,4 @@
-﻿using System.IO;
+﻿/*using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.DataAccess.XmlClasses.Entities;
@@ -42,4 +42,4 @@ public class ScalesXmlUt
         var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "scales.xml");
         Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
     }
-}
+}*/
