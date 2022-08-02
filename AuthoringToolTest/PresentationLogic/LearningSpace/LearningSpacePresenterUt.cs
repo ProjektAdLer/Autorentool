@@ -17,6 +17,8 @@ namespace AuthoringToolTest.PresentationLogic.LearningSpace;
 [TestFixture]
 public class LearningSpacePresenterUt
 {
+    #region LearningSpace
+    
     [Test]
     public void CreateNewLearningSpace_CreatesCorrectViewModel()
     {
@@ -62,9 +64,79 @@ public class LearningSpacePresenterUt
         });
 
     }
+    
+    #region OnEditSpaceDialogClose
+    
+    [Test]
+    public void OnEditSpaceDialogClose_ThrowsWhenDialogDataAreNull()
+    {
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.SetLearningSpace(space);
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditSpaceDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
+    }
+    
+    [Test]
+    public void OnEditSpaceDialogClose_ThrowsWhenSpaceIsNull()
+    {
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "a";
+        dictionary["Shortname"] = "b";
+        dictionary["Authors"] = "e";
+        dictionary["Description"] = "f";
+        dictionary["Goals"] = "g";
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting();
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditSpaceDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("LearningSpaceVm is null"));
+    }
+    
+    [Test]
+    public void OnEditSpaceDialogClose_EditsLearningSpace()
+    {
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "a";
+        dictionary["Shortname"] = "b";
+        dictionary["Authors"] = "e";
+        dictionary["Description"] = "f";
+        dictionary["Goals"] = "g";
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.SetLearningSpace(space);
+
+        systemUnderTest.OnEditSpaceDialogClose(returnValueTuple);
+        Assert.Multiple(() =>
+        {
+            Assert.That(space.Name, Is.EqualTo("a"));
+            Assert.That(space.Shortname, Is.EqualTo("b"));
+            Assert.That(space.Authors, Is.EqualTo("e"));
+            Assert.That(space.Description, Is.EqualTo("f"));
+            Assert.That(space.Goals, Is.EqualTo("g"));
+        });
+    }
+
+    #endregion
+
+    #endregion
 
     #region LearningElement
-    
+
     [Test]
     public void AddLearningElement_SelectedLearningSpaceIsNull_ThrowsException()
     {
@@ -78,6 +150,18 @@ public class LearningSpacePresenterUt
     }
 
     #region CreateNewLearningElement
+
+    [Test]
+    public void AddNewLearningElement_SetsFieldToTrue()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        Assert.That(!systemUnderTest.CreateLearningElementDialogOpen);
+        
+        systemUnderTest.AddNewLearningElement();
+        
+        Assert.That(systemUnderTest.CreateLearningElementDialogOpen);
+    }
     
     [Test]
     public void SetSelectedLearningObject_SelectedLearningSpaceIsNull_ThrowsException()

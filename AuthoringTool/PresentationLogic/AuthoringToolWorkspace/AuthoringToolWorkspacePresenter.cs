@@ -27,7 +27,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         _shutdownManager = shutdownManager;
         CreateLearningWorldDialogOpen = false;
         EditLearningWorldDialogOpen = false;
-        CreateLearningSpaceDialogueOpen = false;
+        CreateLearningSpaceDialogOpen = false;
         EditLearningSpaceDialogOpen = false;
         WorldToReplaceWith = null;
         ReplacedUnsavedWorld = null;
@@ -52,7 +52,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     public bool CreateLearningWorldDialogOpen { get; set; }
     public bool EditLearningWorldDialogOpen { get; set; }
 
-    internal bool CreateLearningSpaceDialogueOpen { get; set; }
+    internal bool CreateLearningSpaceDialogOpen { get; set; }
     internal bool EditLearningSpaceDialogOpen { get; set; }
 
     public bool SaveUnsavedChangesDialogOpen { get; set; }

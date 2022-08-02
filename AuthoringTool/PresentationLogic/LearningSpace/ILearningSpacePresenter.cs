@@ -29,6 +29,5 @@ public interface ILearningSpacePresenter
     void OnEditElementDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void SetLearningSpace(ILearningSpaceViewModel space);
     void CreateLearningElementWithPreloadedContent(LearningContentViewModel learningContent);
-    bool DraggedLearningContentIsPresent { get; }
     LearningContentViewModel? DragAndDropLearningContent { get; }
 }

@@ -86,6 +86,30 @@ public class LearningWorldPresenterUt
     #region CreateNewLearningSpace/Element
 
     [Test]
+    public void AddNewLearningSpace_SetsFieldToTrue()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        Assert.That(!systemUnderTest.CreateLearningSpaceDialogOpen);
+        
+        systemUnderTest.AddNewLearningSpace();
+        
+        Assert.That(systemUnderTest.CreateLearningSpaceDialogOpen);
+    }
+
+    [Test]
+    public void AddNewLearningElement_SetsFieldToTrue()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        Assert.That(!systemUnderTest.CreateLearningElementDialogOpen);
+        
+        systemUnderTest.AddNewLearningElement();
+        
+        Assert.That(systemUnderTest.CreateLearningElementDialogOpen);
+    }
+    
+    [Test]
     public void AddLearningSpace_CreateSecondSpaceWithSameName_ThrowsException()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
