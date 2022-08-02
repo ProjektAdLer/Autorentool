@@ -5,13 +5,6 @@
 @using AuthoringTool.PresentationLogic.AuthoringToolWorkspace
 @using AuthoringTool.View.LearningWorld
 
-
-@inject IMouseService _mouseService
-@inject ILogger<AuthoringToolWorkspaceView> _logger
-@inject AuthoringToolWorkspacePresenter AuthoringToolWorkspaceP
-@inject IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm
-@inject IPresentationLogic presentationLogic
-
 <h3>AuthoringTool Workspace</h3>
 
 <p role="status">Current count of learning worlds: @AuthoringToolWorkspaceVm.LearningWorlds.Count()</p>
@@ -43,12 +36,12 @@
     }
 </div>
 <div>
-    <button class="btn btn-primary" @onclick="AddNewLearningWorld">Add Learning World</button>
-    <button class="btn btn-primary" @onclick="LoadLearningWorldAsync">Load Learning World</button>
-    <button class="btn btn-primary" @onclick="OpenEditSelectedLearningWorldDialog" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Edit Learning World</button>
-    <button class="btn btn-primary" @onclick="DeleteSelectedLearningWorld" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Delete selected Learning World</button>
-    <button class="btn btn-primary" @onclick="SaveSelectedLearningWorldAsync" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Save selected Learning World</button>
-    <button class="btn btn-primary" id="btnExport" @onclick="ExportLearningWorld">Create Export-File</button>
+    <button class="btn btn-primary add-learning-world" @onclick="AddNewLearningWorld">Add Learning World</button>
+    <button class="btn btn-primary load-learning-world" @onclick="LoadLearningWorldAsync">Load Learning World</button>
+    <button class="btn btn-primary edit-learning-world" @onclick="OpenEditSelectedLearningWorldDialog" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Edit Learning World</button>
+    <button class="btn btn-primary delete-learning-world" @onclick="DeleteSelectedLearningWorld" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Delete selected Learning World</button>
+    <button class="btn btn-primary save-learning-world" @onclick="SaveSelectedLearningWorldAsync" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Save selected Learning World</button>
+    <button class="btn btn-primary export-learning-world" id="btnExport" @onclick="ExportLearningWorld">Create Export-File</button>
 </div>
 <DropZone OnNewStream=OnDragAndDropResult></DropZone>
 
@@ -120,6 +113,17 @@
 
 @code {
 
+#pragma warning disable CS8618 injected by framework - m.ho
+    [Inject]
+    public IMouseService MouseService { get; set; }
+    [Inject]
+    public IAuthoringToolWorkspacePresenter AuthoringToolWorkspaceP { get; set; }
+    [Inject]
+    public IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get; set; }
+    [Inject]
+    public IPresentationLogic PresentationLogic { get; set; }
+#pragma warning restore CS8618
+
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
@@ -134,7 +138,7 @@
 
     private void AddNewLearningWorld()
     {
-        AuthoringToolWorkspaceP.CreateLearningWorldDialogOpen = true;
+        AuthoringToolWorkspaceP.AddNewLearningWorld();
     }
 
     private void OpenEditSelectedLearningWorldDialog()
@@ -247,7 +251,7 @@
         if (AuthoringToolWorkspaceVm.SelectedLearningWorld == null) return;
         try
         {
-            filePath = await presentationLogic.ConstructBackupAsync(AuthoringToolWorkspaceVm.SelectedLearningWorld);
+            filePath = await PresentationLogic.ConstructBackupAsync(AuthoringToolWorkspaceVm.SelectedLearningWorld);
         }
         catch (OperationCanceledException)
         {

@@ -76,8 +76,8 @@ public class Startup
 
     private void ConfigurePresentationLogic(IServiceCollection services)
     {
+        services.AddSingleton<IAuthoringToolWorkspacePresenter, AuthoringToolWorkspacePresenter>();
         services.AddSingleton<IPresentationLogic, PresentationLogic.API.PresentationLogic>();
-        services.AddSingleton<AuthoringToolWorkspacePresenter>();
         services.AddSingleton<ILearningWorldPresenter, LearningWorldPresenter>();
         services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
         services.AddSingleton<ILearningElementPresenter, LearningElementPresenter>();
@@ -111,7 +111,7 @@ public class Startup
         services.AddSingleton<IToolboxController, ToolboxController>();
         services.AddSingleton<IToolboxResultFilter, ToolboxResultFilter>();
         services.AddSingleton(p =>
-            (IAuthoringToolWorkspacePresenterToolboxInterface)p.GetService(typeof(AuthoringToolWorkspacePresenter))!);
+            (IAuthoringToolWorkspacePresenterToolboxInterface)p.GetService(typeof(IAuthoringToolWorkspacePresenter))!);
         services.AddSingleton(p =>
             (ILearningWorldPresenterToolboxInterface)p.GetService(typeof(ILearningWorldPresenter))!);
         services.AddSingleton(p =>
