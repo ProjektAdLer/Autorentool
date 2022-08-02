@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.XmlClasses.Entities;
+﻿namespace AuthoringTool.DataAccess.XmlClasses.Entities.Gradebook.xml;
 
 public interface IGradebookXmlGradeItems
 {

@@ -1,5 +1,4 @@
 using System.IO.Abstractions;
-using AuthoringTool.API;
 using AuthoringTool.API.Configuration;
 using AuthoringTool.BusinessLogic.API;
 using AuthoringTool.DataAccess.API;

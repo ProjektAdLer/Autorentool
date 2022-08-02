@@ -1,10 +1,10 @@
 ﻿using System.Xml.Serialization;
 using AuthoringTool.DataAccess.WorldExport;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities;
+namespace AuthoringTool.DataAccess.XmlClasses.Entities.Roles.xml;
 
 [XmlRoot(ElementName="roles_definition")]
-public partial class RolesXmlRolesDefinition : IRolesXmlRolesDefinition {
+public class RolesXmlRolesDefinition : IRolesXmlRolesDefinition {
 
     public RolesXmlRolesDefinition()
     {

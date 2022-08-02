@@ -1,10 +1,10 @@
 ﻿using System.Xml.Serialization;
 using AuthoringTool.DataAccess.WorldExport;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities;
+namespace AuthoringTool.DataAccess.XmlClasses.Entities.MoodleBackup.xml;
 
 [XmlRoot(ElementName="moodle_backup")]
-public partial class MoodleBackupXmlMoodleBackup : IMoodleBackupXmlMoodleBackup {
+public class MoodleBackupXmlMoodleBackup : IMoodleBackupXmlMoodleBackup {
 
     public MoodleBackupXmlMoodleBackup()
     {

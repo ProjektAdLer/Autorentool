@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using AuthoringTool.Components.ModalDialog;
 using NUnit.Framework;
 using Bunit;
-using Microsoft.AspNetCore.Components;
 
 namespace AuthoringToolTest.Components;
 

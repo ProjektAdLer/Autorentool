@@ -1,14 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.DSL;
-using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.DataAccess.XmlClasses;
-using AuthoringTool.DataAccess.XmlClasses.Entities;
-using AuthoringTool.DataAccess.XmlClasses.Entities.course;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Gradebook.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Groups.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.MoodleBackup.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Outcomes.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Questions.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Roles.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Scales.xml;
 using NSubstitute;
-using NSubstitute.ReceivedExtensions;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.XmlClasses;

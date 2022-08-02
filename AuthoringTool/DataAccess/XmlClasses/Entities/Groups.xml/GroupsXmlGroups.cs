@@ -1,10 +1,10 @@
 ﻿using System.Xml.Serialization;
 using AuthoringTool.DataAccess.WorldExport;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities;
+namespace AuthoringTool.DataAccess.XmlClasses.Entities.Groups.xml;
 
 [XmlRoot(ElementName="groups")]
-public partial class GroupsXmlGroups : IGroupsXmlGroups{
+public class GroupsXmlGroups : IGroupsXmlGroups{
 
 
     public GroupsXmlGroups()

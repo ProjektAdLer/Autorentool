@@ -288,7 +288,6 @@ public class BusinessLogicUt
     public void LoadLearningContentFromStream_ReturnsLearningElement()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
-        var content = new LearningContent("a", "b", Array.Empty<byte>());
         var learningContent = new LearningContent("filename", "extension", Array.Empty<byte>());
         var stream = Substitute.For<Stream>();
         mockDataAccess.LoadLearningContentFromStream("filename.extension", stream).Returns(learningContent);

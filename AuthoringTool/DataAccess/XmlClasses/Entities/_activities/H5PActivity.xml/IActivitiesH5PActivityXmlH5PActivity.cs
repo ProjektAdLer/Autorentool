@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.XmlClasses.Entities.activities;
+﻿namespace AuthoringTool.DataAccess.XmlClasses.Entities._activities.H5PActivity.xml;
 
 public interface IActivitiesH5PActivityXmlH5PActivity
 {

@@ -1,10 +1,10 @@
 ﻿using System.Xml.Serialization;
 using AuthoringTool.DataAccess.WorldExport;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities;
+namespace AuthoringTool.DataAccess.XmlClasses.Entities.Gradebook.xml;
 
 [XmlRoot(ElementName="gradebook")]
-public partial class GradebookXmlGradebook : IGradebookXmlGradebook
+public class GradebookXmlGradebook : IGradebookXmlGradebook
 {
 
     public GradebookXmlGradebook()

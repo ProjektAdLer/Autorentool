@@ -1,5 +1,5 @@
 ﻿
-namespace AuthoringTool.DataAccess.XmlClasses.Entities;
+namespace AuthoringTool.DataAccess.XmlClasses.Entities.Files.xml;
 
 public interface IFilesXmlFiles : IXmlSerializable
 {

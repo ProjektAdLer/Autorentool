@@ -5,7 +5,6 @@ using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningElement.InteractionElement;
 using AuthoringTool.PresentationLogic.LearningWorld;
-using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 

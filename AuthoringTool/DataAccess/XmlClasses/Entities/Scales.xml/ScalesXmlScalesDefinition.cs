@@ -1,16 +1,10 @@
 ﻿using System.Xml.Serialization;
 using AuthoringTool.DataAccess.WorldExport;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities;
+namespace AuthoringTool.DataAccess.XmlClasses.Entities.Scales.xml;
 
 [XmlRoot(ElementName="scales_definition")]
-public partial class ScalesXmlScalesDefinition : IScalesXmlScalesDefinition {
-
-    public ScalesXmlScalesDefinition()
-    {
-        
-    }
-
+public class ScalesXmlScalesDefinition : IScalesXmlScalesDefinition {
     public void Serialize()
     {
         var xml = new XmlSerialize();

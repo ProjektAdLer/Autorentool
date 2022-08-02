@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.XmlClasses.Entities.activities;
+﻿namespace AuthoringTool.DataAccess.XmlClasses.Entities._activities.Resource.xml;
 
 public interface IActivitiesResourceXmlActivity : IXmlSerializablePath
 {

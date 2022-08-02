@@ -1,5 +1,9 @@
 ﻿using AuthoringTool.DataAccess.DSL;
-using AuthoringTool.DataAccess.XmlClasses.Entities.course;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Course.Completiondefault.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Course.Course.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Course.Enrolments.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Course.Inforef.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Course.Roles.xml;
 
 namespace AuthoringTool.DataAccess.XmlClasses;
 

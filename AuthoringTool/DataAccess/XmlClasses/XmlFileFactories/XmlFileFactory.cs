@@ -1,8 +1,14 @@
 ﻿using System.IO.Abstractions;
 using AuthoringTool.DataAccess.DSL;
-using AuthoringTool.DataAccess.XmlClasses.Entities;
-using AuthoringTool.DataAccess.XmlClasses.Entities.activities;
-using AuthoringTool.DataAccess.XmlClasses.Entities.sections;
+using AuthoringTool.DataAccess.XmlClasses.Entities._activities.GradeHistory.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Grades.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Inforef.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Module.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Resource.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Roles.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Files.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Sections.Inforef.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Sections.Section.xml;
 
 namespace AuthoringTool.DataAccess.XmlClasses.XmlFileFactories;
 

@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities.activities;
+namespace AuthoringTool.DataAccess.XmlClasses.Entities._activities.Lesson.xml;
 
 
 [XmlRoot(ElementName="lesson")]

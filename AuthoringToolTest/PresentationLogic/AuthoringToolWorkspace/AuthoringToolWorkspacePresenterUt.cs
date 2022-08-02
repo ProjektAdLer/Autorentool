@@ -924,7 +924,7 @@ public class AuthoringToolWorkspacePresenterUt
         var callbackCalled = false;
         LearningWorldViewModel? callbackSelectedWorld = null;
         var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspace, presentationLogic);
-        EventHandler<LearningWorldViewModel?> callback = delegate(object? sender, LearningWorldViewModel? model)
+        EventHandler<LearningWorldViewModel?> callback = delegate(object? _, LearningWorldViewModel? model)
         {
             callbackCalled = true;
             callbackSelectedWorld = model;

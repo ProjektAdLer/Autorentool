@@ -1,4 +1,3 @@
-using System;
 using AngleSharp.Dom;
 using AuthoringTool.Components;
 using Bunit;

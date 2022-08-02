@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities;
+namespace AuthoringTool.DataAccess.XmlClasses.Entities.Files.xml;
 
 [XmlRoot(ElementName = "file")]
 public class FilesXmlFile : IFilesXmlFile

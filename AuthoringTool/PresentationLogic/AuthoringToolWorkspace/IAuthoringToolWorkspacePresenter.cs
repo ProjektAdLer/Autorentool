@@ -1,7 +1,5 @@
 using AuthoringTool.Components.ModalDialog;
-using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningWorld;
-using Microsoft.AspNetCore.Components;
 
 namespace AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
 

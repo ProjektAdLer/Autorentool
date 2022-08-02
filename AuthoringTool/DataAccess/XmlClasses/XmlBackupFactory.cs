@@ -1,5 +1,11 @@
 ﻿using AuthoringTool.DataAccess.DSL;
-using AuthoringTool.DataAccess.XmlClasses.Entities;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Gradebook.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Groups.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.MoodleBackup.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Outcomes.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Questions.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Roles.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Scales.xml;
 
 namespace AuthoringTool.DataAccess.XmlClasses;
 

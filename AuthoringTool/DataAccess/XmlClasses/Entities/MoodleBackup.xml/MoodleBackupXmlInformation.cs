@@ -1,9 +1,9 @@
 ﻿using System.Xml.Serialization;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities;
+namespace AuthoringTool.DataAccess.XmlClasses.Entities.MoodleBackup.xml;
 
 [XmlRoot(ElementName="information")]
-	public partial class MoodleBackupXmlInformation : IMoodleBackupXmlInformation{
+	public class MoodleBackupXmlInformation : IMoodleBackupXmlInformation{
 
 		public MoodleBackupXmlInformation()
 		{

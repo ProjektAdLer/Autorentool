@@ -1,5 +1,5 @@
 ﻿using System.Security.Cryptography;
-using AuthoringTool.DataAccess.XmlClasses.Entities;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Files.xml;
 
 namespace AuthoringTool.DataAccess.XmlClasses;
 

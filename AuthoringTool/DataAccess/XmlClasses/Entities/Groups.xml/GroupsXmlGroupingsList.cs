@@ -1,9 +1,9 @@
 ﻿using System.Xml.Serialization;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities;
+namespace AuthoringTool.DataAccess.XmlClasses.Entities.Groups.xml;
 
 [XmlRoot(ElementName="GroupingsList")]
-public partial class GroupsXmlGroupingsList : IGroupsXmlGroupingsList
+public class GroupsXmlGroupingsList : IGroupsXmlGroupingsList
 {
 
     public GroupsXmlGroupingsList()

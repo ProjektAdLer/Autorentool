@@ -1,9 +1,9 @@
 ﻿using System.Xml.Serialization;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities;
+namespace AuthoringTool.DataAccess.XmlClasses.Entities.Roles.xml;
 
 [XmlRoot(ElementName="role")]
-public partial class RolesXmlRole : IRolesXmlRole
+public class RolesXmlRole : IRolesXmlRole
 {
 
     public RolesXmlRole()

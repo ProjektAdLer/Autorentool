@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.WorldExport;
-using AuthoringTool.DataAccess.XmlClasses.Entities;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Gradebook.xml;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses.Entities;
+namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Gradebook.xml;
 
 [TestFixture]
 public class GradebookXmlUt

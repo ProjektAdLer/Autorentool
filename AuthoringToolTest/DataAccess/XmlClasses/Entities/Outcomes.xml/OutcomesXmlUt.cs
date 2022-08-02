@@ -1,10 +1,10 @@
 ﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.WorldExport;
-using AuthoringTool.DataAccess.XmlClasses.Entities;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Outcomes.xml;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses.Entities;
+namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Outcomes.xml;
 
 [TestFixture]
 public class OutcomesXmlUt

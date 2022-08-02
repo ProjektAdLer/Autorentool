@@ -1,7 +1,7 @@
-﻿using AuthoringTool.DataAccess.XmlClasses.Entities;
+﻿using AuthoringTool.DataAccess.XmlClasses.Entities.Gradebook.xml;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses.Entities;
+namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Gradebook.xml;
 
 [TestFixture]
 public class GradebookXmlGradeSettingUt
