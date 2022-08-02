@@ -9,7 +9,7 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 /// </summary>
 public class XmlBackupFactory
 {
-    private string currentTime;
+    internal string currentTime;
     private LearningWorldJson? learningWorld;
     private List<LearningElementJson> learningElement;
     private List<LearningElementJson> dslDocument;
@@ -100,27 +100,27 @@ public class XmlBackupFactory
         MoodleBackupXmlCourse = moodleBackupXmlCourse?? new MoodleBackupXmlCourse();
         MoodleBackupXmlContents = moodleBackupXmlContents?? new MoodleBackupXmlContents();
         
-        MoodleBackupXmlSettingFilename = new MoodleBackupXmlSetting();
-        MoodleBackupXmlSettingImscc11 =  new MoodleBackupXmlSetting();
-        MoodleBackupXmlSettingUsers =  new MoodleBackupXmlSetting();
-        MoodleBackupXmlSettingAnonymize = new MoodleBackupXmlSetting();
-        MoodleBackupXmlSettingRoleAssignments = new MoodleBackupXmlSetting();
-        MoodleBackupXmlSettingActivities = new MoodleBackupXmlSetting();
-        MoodleBackupXmlSettingBlocks =  new MoodleBackupXmlSetting();
-        MoodleBackupXmlSettingFiles =  new MoodleBackupXmlSetting();
-        MoodleBackupXmlSettingFilters =  new MoodleBackupXmlSetting();
-        MoodleBackupXmlSettingComments =  new MoodleBackupXmlSetting();
-        MoodleBackupXmlSettingBadges =  new MoodleBackupXmlSetting();
-        MoodleBackupXmlSettingCalendarevents =  new MoodleBackupXmlSetting();
-        MoodleBackupXmlSettingUserscompletion =  new MoodleBackupXmlSetting();
-        MoodleBackupXmlSettingLogs =  new MoodleBackupXmlSetting();
-        MoodleBackupXmlSettingGradeHistories =  new MoodleBackupXmlSetting();
-        MoodleBackupXmlSettingQuestionbank =  new MoodleBackupXmlSetting();
-        MoodleBackupXmlSettingGroups =  new MoodleBackupXmlSetting();
-        MoodleBackupXmlSettingCompetencies =  new MoodleBackupXmlSetting();
-        MoodleBackupXmlSettingCustomfield =  new MoodleBackupXmlSetting();
-        MoodleBackupXmlSettingContentbankcontent =  new MoodleBackupXmlSetting();
-        MoodleBackupXmlSettingLegacyfiles =  new MoodleBackupXmlSetting();
+        MoodleBackupXmlSettingFilename = moodleBackupXmlSetting?? new MoodleBackupXmlSetting();
+        MoodleBackupXmlSettingImscc11 = moodleBackupXmlSetting?? new MoodleBackupXmlSetting();
+        MoodleBackupXmlSettingUsers = moodleBackupXmlSetting?? new MoodleBackupXmlSetting();
+        MoodleBackupXmlSettingAnonymize =  moodleBackupXmlSetting?? new MoodleBackupXmlSetting();
+        MoodleBackupXmlSettingRoleAssignments =  moodleBackupXmlSetting?? new MoodleBackupXmlSetting();
+        MoodleBackupXmlSettingActivities =  moodleBackupXmlSetting?? new MoodleBackupXmlSetting();
+        MoodleBackupXmlSettingBlocks = moodleBackupXmlSetting?? new MoodleBackupXmlSetting();
+        MoodleBackupXmlSettingFiles = moodleBackupXmlSetting?? new MoodleBackupXmlSetting();
+        MoodleBackupXmlSettingFilters = moodleBackupXmlSetting?? new MoodleBackupXmlSetting();
+        MoodleBackupXmlSettingComments = moodleBackupXmlSetting?? new MoodleBackupXmlSetting();
+        MoodleBackupXmlSettingBadges = moodleBackupXmlSetting?? new MoodleBackupXmlSetting();
+        MoodleBackupXmlSettingCalendarevents = moodleBackupXmlSetting?? new MoodleBackupXmlSetting();
+        MoodleBackupXmlSettingUserscompletion = moodleBackupXmlSetting?? new MoodleBackupXmlSetting();
+        MoodleBackupXmlSettingLogs = moodleBackupXmlSetting?? new MoodleBackupXmlSetting();
+        MoodleBackupXmlSettingGradeHistories = moodleBackupXmlSetting?? new MoodleBackupXmlSetting();
+        MoodleBackupXmlSettingQuestionbank = moodleBackupXmlSetting?? new MoodleBackupXmlSetting();
+        MoodleBackupXmlSettingGroups = moodleBackupXmlSetting?? new MoodleBackupXmlSetting();
+        MoodleBackupXmlSettingCompetencies = moodleBackupXmlSetting?? new MoodleBackupXmlSetting();
+        MoodleBackupXmlSettingCustomfield = moodleBackupXmlSetting?? new MoodleBackupXmlSetting();
+        MoodleBackupXmlSettingContentbankcontent = moodleBackupXmlSetting?? new MoodleBackupXmlSetting();
+        MoodleBackupXmlSettingLegacyfiles = moodleBackupXmlSetting?? new MoodleBackupXmlSetting();
 
         MoodleBackupXmlSettings =  new MoodleBackupXmlSettings();
 
