@@ -169,7 +169,7 @@ public class XmlBackupFactoryUt
     }
 
     [Test]
-    public void CreateGradebookXml_Default_ParametersSetAndSerialized()
+    public void CreateGradebookXml_GradeItemsGradeCategoriesGradeSettingGradeSettingsGradebook_AndSerialized()
     {
         //Arrange
         var mockReadDsl = Substitute.For<IReadDSL>();
@@ -217,7 +217,7 @@ public class XmlBackupFactoryUt
     }
     
     [Test]
-    public void CreateGroupsXml_Default_ParametersSetAndSerialized()
+    public void CreateGroupsXml_SetsGroupsGroupingsList_AndSerialized()
     {
         //Arrange
         var mockReadDsl = Substitute.For<IReadDSL>();
@@ -238,7 +238,7 @@ public class XmlBackupFactoryUt
     
 
     [Test]
-    public void CreateMoodleBackupXml_Default_ParametersSetAndSerialized()
+    public void CreateMoodleBackupXml_SetsDetailDetailsSettingSettingsContentsInformationMoodleBackupAktivitiesSectionsCourse_AndSerialized()
     {
         //Arrange
         var mockReadDsl = Substitute.For<IReadDSL>();

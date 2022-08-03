@@ -27,11 +27,11 @@ public class XmlCourseFactory
     internal ICourseInforefXmlRoleref CourseInforefXmlRoleref { get; }
     internal ICourseRolesXmlRoles CourseRolesXmlRoles { get; }
     internal ICourseCompletiondefaultXmlCourseCompletionDefaults CourseCompletiondefaultXmlCourseCompletionDefaults { get; }
-    internal IReadDSL? ReadDsl { get; }
-
-   
+    
+    
     public XmlCourseFactory(IReadDSL readDsl, ICourseCourseXmlCategory? courseCourseXmlCategory=null, ICourseCourseXmlCourse? courseCourseXmlCourse=null,
-        ICourseEnrolmentsXmlEnrol? courseEnrolmentsXmlEnrol=null, ICourseEnrolmentsXmlEnrols? courseEnrolmentsXmlEnrols=null, 
+        ICourseEnrolmentsXmlEnrol? courseEnrolmentsXmlEnrolManual=null, ICourseEnrolmentsXmlEnrol? courseEnrolmentsXmlEnrolGuest=null,
+        ICourseEnrolmentsXmlEnrol? courseEnrolmentsXmlEnrolSelf=null, ICourseEnrolmentsXmlEnrols? courseEnrolmentsXmlEnrols=null, 
         ICourseEnrolmentsXmlEnrolments? courseEnrolmentsXmlEnrolments=null, ICourseInforefXmlRole? courseInforefXmlRole=null, 
         ICourseInforefXmlRoleref? courseInforefXmlRoleref=null, ICourseInforefXmlInforef? courseInforefXmlInforef=null, 
         ICourseRolesXmlRoles? courseRolesXmlRoles=null, ICourseCompletiondefaultXmlCourseCompletionDefaults? courseCourseXmlCompletiondefault=null)
@@ -39,9 +39,9 @@ public class XmlCourseFactory
         CourseCourseXmlCategory = courseCourseXmlCategory?? new CourseCourseXmlCategory();
         CourseCourseXmlCourse = courseCourseXmlCourse?? new CourseCourseXmlCourse();
 
-        CourseEnrolmentsXmlEnrolManual = courseEnrolmentsXmlEnrol?? new CourseEnrolmentsXmlEnrol();
-        CourseEnrolmentsXmlEnrolGuest = courseEnrolmentsXmlEnrol?? new CourseEnrolmentsXmlEnrol();
-        CourseEnrolmentsXmlEnrolSelf = courseEnrolmentsXmlEnrol?? new CourseEnrolmentsXmlEnrol();
+        CourseEnrolmentsXmlEnrolManual = courseEnrolmentsXmlEnrolManual?? new CourseEnrolmentsXmlEnrol();
+        CourseEnrolmentsXmlEnrolGuest = courseEnrolmentsXmlEnrolGuest?? new CourseEnrolmentsXmlEnrol();
+        CourseEnrolmentsXmlEnrolSelf = courseEnrolmentsXmlEnrolSelf?? new CourseEnrolmentsXmlEnrol();
         CourseEnrolmentsXmlEnrols = courseEnrolmentsXmlEnrols?? new CourseEnrolmentsXmlEnrols();
         CourseEnrolmentsXmlEnrolments = courseEnrolmentsXmlEnrolments?? new CourseEnrolmentsXmlEnrolments();
 
@@ -53,7 +53,6 @@ public class XmlCourseFactory
         
         CourseCompletiondefaultXmlCourseCompletionDefaults = courseCourseXmlCompletiondefault?? new CourseCompletiondefaultXmlCourseCompletionDefaults();
         
-        ReadDsl = readDsl;
         learningWorld = readDsl.GetLearningWorld();
         currentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
     }
@@ -97,7 +96,7 @@ public class XmlCourseFactory
                 CourseCourseXmlCourse.Theme = "boost";
                 CourseCourseXmlCourse.ShowCompletionConditions = "1";
                 CourseCourseXmlCourse.EnableCompletion = "1";
-                CourseCourseXmlCourse.Category = (CourseCourseXmlCategory) CourseCourseXmlCategory;
+                CourseCourseXmlCourse.Category = CourseCourseXmlCategory as CourseCourseXmlCategory;
 
                 //create course/course.xml file
                 CourseCourseXmlCourse.Serialize();
@@ -134,7 +133,7 @@ public class XmlCourseFactory
         CourseEnrolmentsXmlEnrols.Enrol.Add(CourseEnrolmentsXmlEnrolGuest as CourseEnrolmentsXmlEnrol);
         CourseEnrolmentsXmlEnrols.Enrol.Add(CourseEnrolmentsXmlEnrolSelf as CourseEnrolmentsXmlEnrol);
 
-        CourseEnrolmentsXmlEnrolments.Enrols = (CourseEnrolmentsXmlEnrols) CourseEnrolmentsXmlEnrols;
+        CourseEnrolmentsXmlEnrolments.Enrols = CourseEnrolmentsXmlEnrols as CourseEnrolmentsXmlEnrols;
         
         //create course/enrolments.xml file
         CourseEnrolmentsXmlEnrolments.Serialize();
@@ -143,8 +142,8 @@ public class XmlCourseFactory
     public void CreateCourseInforefXml()
     {
         //set parameters of the course/inforef.xml file
-        CourseInforefXmlRoleref.Role = (CourseInforefXmlRole) CourseInforefXmlRole;
-        CourseInforefXmlInforef.Roleref = (CourseInforefXmlRoleref) CourseInforefXmlRoleref;
+        CourseInforefXmlRoleref.Role = CourseInforefXmlRole as CourseInforefXmlRole;
+        CourseInforefXmlInforef.Roleref = CourseInforefXmlRoleref as CourseInforefXmlRoleref;
         
         //create course/inforef.xml file
         CourseInforefXmlInforef.Serialize();
