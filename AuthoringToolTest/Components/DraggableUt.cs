@@ -52,6 +52,12 @@ public class DraggableUt
             Assert.That(systemUnderTest.Instance.X, Is.EqualTo(x));
             Assert.That(systemUnderTest.Instance.Y, Is.EqualTo(y));
             Assert.That(
+                systemUnderTest.Instance.XChanged, Is.EqualTo(EventCallback.Factory.Create(
+                    xChanged.Target ?? throw new InvalidOperationException("xChanged.Target is null"), xChanged)));
+            Assert.That(
+                systemUnderTest.Instance.YChanged, Is.EqualTo(EventCallback.Factory.Create(
+                    yChanged.Target ?? throw new InvalidOperationException("yChanged.Target is null"), yChanged)));
+            Assert.That(
                 systemUnderTest.Instance.OnClicked, Is.EqualTo(EventCallback.Factory.Create(
                     onClicked.Target ?? throw new InvalidOperationException("onClicked.Target is null"), onClicked)));
         });
@@ -151,6 +157,8 @@ public class DraggableUt
             .Add(p => p.LearningObject, learningObject)
             .Add(p => p.X, x)
             .Add(p => p.Y, y)
+            .Add(p => p.XChanged, xChanged)
+            .Add(p => p.YChanged, yChanged)
             .Add(p => p.OnClicked, onClicked)
         );
     }
