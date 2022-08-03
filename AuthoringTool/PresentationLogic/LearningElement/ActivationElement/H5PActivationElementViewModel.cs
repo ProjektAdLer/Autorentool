@@ -13,4 +13,4 @@ public class H5PActivationElementViewModel : ActivationElementViewModel
         shortname, parent, learningContent, authors, description, goals, difficulty, workload, positionX, positionY)
     {
     }
-}
+} 
