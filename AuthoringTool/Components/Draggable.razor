@@ -27,6 +27,14 @@
 
     [Parameter]
     public double Y { get; set; }
+    
+    //we need these lines for @bind-X and @bind-Y to work, even if they look like we don't use them anywhere
+    [Parameter]
+    public EventCallback<double> XChanged { get; set; }
+
+    [Parameter]
+    public EventCallback<double> YChanged { get; set; }
+    
 
     [Parameter]
     public EventCallback<ILearningObjectViewModel> OnClicked { get; set; }
@@ -84,6 +92,9 @@
 
         _cursorX = e.ClientX;
         _cursorY = e.ClientY;
+        
+        XChanged.InvokeAsync(X);
+        YChanged.InvokeAsync(Y);
 
         _hasMoved = true;
     }
