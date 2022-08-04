@@ -8,6 +8,9 @@
   "singleInstance": false,
   "environment": "Production",
   "build": {
+    "win": {
+      "icon": "../../../wwwroot/favicon.ico"
+    },
     "appId": "com.AuthoringTool.app",
     "productName": "AuthoringTool",
     "copyright": "Copyright © 2022 Team AdLer",
