@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using AuthoringTool.PresentationLogic.API;
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
 using AuthoringTool.PresentationLogic.LearningWorld;
+using AuthoringTool.PresentationLogic.ModalDialog;
 using AuthoringTool.View;
 using Bunit;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,6 +22,7 @@ public class AuthoringToolWorkspaceViewUt
     private TestContext _ctx;
     private IAuthoringToolWorkspacePresenter _authoringToolWorkspacePresenter;
     private IAuthoringToolWorkspaceViewModel _authoringToolWorkspaceViewModel;
+    private IAuthoringToolWorkspaceViewModalDialogFactory _modalDialogFactory;
     private IPresentationLogic _presentationLogic;
     private IMouseService _mouseService;
 #pragma warning restore CS8618
@@ -31,10 +33,12 @@ public class AuthoringToolWorkspaceViewUt
         _ctx = new TestContext();
         _authoringToolWorkspacePresenter = Substitute.For<IAuthoringToolWorkspacePresenter>();
         _authoringToolWorkspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
+        _modalDialogFactory = Substitute.For<IAuthoringToolWorkspaceViewModalDialogFactory>();
         _presentationLogic = Substitute.For<IPresentationLogic>();
         _mouseService = Substitute.For<IMouseService>();
         _ctx.Services.AddSingleton(_authoringToolWorkspacePresenter);
         _ctx.Services.AddSingleton(_authoringToolWorkspaceViewModel);
+        _ctx.Services.AddSingleton(_modalDialogFactory);
         _ctx.Services.AddSingleton(_presentationLogic);
         _ctx.Services.AddSingleton(_mouseService);
         _ctx.Services.AddLogging();
@@ -50,6 +54,7 @@ public class AuthoringToolWorkspaceViewUt
             Assert.That(systemUnderTest.Instance.MouseService, Is.EqualTo(_mouseService));
             Assert.That(systemUnderTest.Instance.AuthoringToolWorkspaceP, Is.EqualTo(_authoringToolWorkspacePresenter));
             Assert.That(systemUnderTest.Instance.AuthoringToolWorkspaceVm, Is.EqualTo(_authoringToolWorkspaceViewModel));
+            Assert.That(systemUnderTest.Instance.ModalDialogFactory, Is.EqualTo(_modalDialogFactory));
             Assert.That(systemUnderTest.Instance.PresentationLogic, Is.EqualTo(_presentationLogic));
         });
     }

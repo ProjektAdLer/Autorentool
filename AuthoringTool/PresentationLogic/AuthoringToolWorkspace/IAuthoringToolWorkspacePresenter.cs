@@ -15,7 +15,6 @@ public interface IAuthoringToolWorkspacePresenter
     LearningWorldViewModel? DeletedUnsavedWorld { get; set; }
     string? InformationMessageToShow { get; set; }
     Queue<LearningWorldViewModel>? UnsavedWorldsQueue { get; set; }
-    IEnumerable<ModalDialogInputField> ModalDialogWorldInputFields { get; }
 
     event Action? OnForceViewUpdate;
 
