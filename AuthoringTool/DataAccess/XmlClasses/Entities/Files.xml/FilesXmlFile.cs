@@ -3,7 +3,7 @@
 namespace AuthoringTool.DataAccess.XmlClasses.Entities.Files.xml;
 
 [XmlRoot(ElementName = "file")]
-public class FilesXmlFile : IFilesXmlFile
+public class FilesXmlFile : IFilesXmlFile, ICloneable
 {
 
     public FilesXmlFile()
@@ -94,5 +94,9 @@ public class FilesXmlFile : IFilesXmlFile
     
     [XmlAttribute(AttributeName="id")]
     public string Id { get; set; }
-    
+
+    public object Clone()
+    {
+        return MemberwiseClone();
+    }
 }
