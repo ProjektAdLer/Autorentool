@@ -12,7 +12,7 @@
       "icon": "../../../wwwroot/favicon.ico"
     },
     "linux": {
-      "icon": "../../../wwwroot/favicon.ico"
+      "icon": "../../../wwwroot/favicon_highres.ico"
     },
     "mac": {
       "icon": "../../../wwwroot/favicon.ico"
