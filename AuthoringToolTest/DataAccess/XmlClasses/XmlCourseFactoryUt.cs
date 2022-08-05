@@ -62,9 +62,9 @@ public class XmlCourseFactoryUt
         var mockEnrolments = Substitute.For<ICourseEnrolmentsXmlEnrolments>();
         
         var enrolsList = new List<CourseEnrolmentsXmlEnrol>();
-        enrolsList.Add(mockEnrolManual as CourseEnrolmentsXmlEnrol);;
-        enrolsList.Add(mockEnrolGuest as CourseEnrolmentsXmlEnrol);;
-        enrolsList.Add(mockEnrolSelf as CourseEnrolmentsXmlEnrol);;
+        enrolsList.Add(mockEnrolManual as CourseEnrolmentsXmlEnrol);
+        enrolsList.Add(mockEnrolGuest as CourseEnrolmentsXmlEnrol);
+        enrolsList.Add(mockEnrolSelf as CourseEnrolmentsXmlEnrol);
         
         var mockInforefRole = new CourseInforefXmlRole();
         var mockInforefRoleref = new CourseInforefXmlRoleref();

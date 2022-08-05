@@ -1,4 +1,6 @@
-﻿/*using AuthoringTool.DataAccess.XmlClasses.sections;
+﻿//First Attempts to add a Section into the Moodle Backup Structure
+
+/*using AuthoringTool.DataAccess.XmlClasses.sections;
 
 namespace AuthoringTool.DataAccess.XmlClasses;
 

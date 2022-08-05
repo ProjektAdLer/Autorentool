@@ -1,17 +1,21 @@
-﻿using System.Security.Cryptography;
+﻿using System.IO.Abstractions;
+using System.Security.Cryptography;
 using AuthoringTool.DataAccess.XmlClasses.Entities.Files.xml;
 
 namespace AuthoringTool.DataAccess.XmlClasses;
 
-public class XmlFileManager
+public class XmlFileManager : IXmlFileManager
 {
     public string? fileSize { get; set; }
     public string? fileCheckSum { get; set; }
     
     public List<FilesXmlFile>? filesXmlFilesList ;
+    
+    private IFileSystem _fileSystem;
 
-    public XmlFileManager()
+    public XmlFileManager(IFileSystem? fileSystem = null)
     {
+        _fileSystem = fileSystem?? new FileSystem();
         List<FilesXmlFile> filesXmlFilesList = new List<FilesXmlFile>();
     }
     
@@ -30,7 +34,7 @@ public class XmlFileManager
     /// </summary>
     public void CalculateHashCheckSumAndFileSize(string filepath)
     {
-        byte[] byteFile = File.ReadAllBytes(filepath);
+        byte[] byteFile = _fileSystem.File.ReadAllBytes(filepath);
         
         SHA1 sha1hash =  SHA1.Create();
         var comp = sha1hash.ComputeHash(byteFile);
@@ -38,6 +42,16 @@ public class XmlFileManager
 
         fileCheckSum = hashCheckSum;
         fileSize = byteFile.Length.ToString();
+    }
+
+    public string GetHashCheckSum()
+    {
+        return fileCheckSum;
+    }
+    
+    public string GetFileSize()
+    {
+        return fileSize;
     }
     
     /// <summary>
@@ -47,17 +61,17 @@ public class XmlFileManager
     /// <param name="hashCheckSum"></param>
     public void CreateFolderAndFiles(string filepath, string? hashCheckSum)
     {
-        var currWorkDir = Directory.GetCurrentDirectory();
+        var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
         string? hashFolderName = hashCheckSum?.Substring(0, 2);
-        Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "files", hashFolderName));
+        _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "files", hashFolderName));
 
         if (hashFolderName != null)
         {
             string fileDestination = Path.Join("XMLFilesForExport", "files", hashFolderName.Substring(0,2), 
                 hashCheckSum);
-            if (!File.Exists(fileDestination))
+            if (!_fileSystem.File.Exists(fileDestination))
             {
-                File.Copy(filepath, fileDestination);
+                _fileSystem.File.Copy(filepath, fileDestination);
             }
         }
     }

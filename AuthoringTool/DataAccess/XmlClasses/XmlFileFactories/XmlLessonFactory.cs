@@ -1,4 +1,6 @@
-﻿using System.IO.Abstractions;
+﻿//First attempts to add a lesson to the BackupStructure 
+
+/*using System.IO.Abstractions;
 using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.XmlClasses.Entities._activities.GradeHistory.xml;
 using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Grades.xml;
@@ -314,4 +316,4 @@ public class XmlLessonFactory {
         var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections", "section_"+sectionId));
     }
-}
+}*/
