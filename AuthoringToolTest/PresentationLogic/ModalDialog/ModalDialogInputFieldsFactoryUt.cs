@@ -326,7 +326,7 @@ public class ModalDialogInputFieldsFactoryUt
             }
 
 
-            //type field: work in progress
+            //type field: solved
             
             Assert.That(modalDialogInputFields.ElementAt(4).Name, Is.EqualTo("Type"));
             Assert.That(modalDialogInputFields.ElementAt(4).Type, Is.EqualTo(ModalDialogInputType.Text));
@@ -350,7 +350,7 @@ public class ModalDialogInputFieldsFactoryUt
             }
             
 
-            //content field: work in progress
+            //content field: solved
             
             Assert.That(modalDialogInputFields.ElementAt(5).Name, Is.EqualTo("Content"));
             Assert.That(modalDialogInputFields.ElementAt(5).Type, Is.EqualTo(ModalDialogInputType.Text));
