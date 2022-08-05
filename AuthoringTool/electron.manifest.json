@@ -12,10 +12,10 @@
       "icon": "../../../wwwroot/favicon.ico"
     },
     "linux": {
-      "icon": "../../../wwwroot/favicon_highres.ico"
+      "icon": "../../../wwwroot/favicon.ico"
     },
     "mac": {
-      "icon": "../../../wwwroot/favicon.ico"
+      "icon": "../../../wwwroot/favicon_highres.ico"
     },
     "appId": "com.AuthoringTool.app",
     "productName": "AuthoringTool",
