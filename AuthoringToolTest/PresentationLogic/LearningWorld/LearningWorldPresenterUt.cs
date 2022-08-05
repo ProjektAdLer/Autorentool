@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using AuthoringTool.Components.ModalDialog;
 using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.API;
@@ -75,7 +76,7 @@ public class LearningWorldPresenterUt
     {
         var systemUnderTest = CreatePresenterForTesting();
         var element = new LearningElementViewModel("foo", "bar",
-            null, null, "bar", "foo", "bar", LearningElementDifficultyEnum.Easy, 6);
+            null, null!, "bar", "foo", "bar", LearningElementDifficultyEnum.Easy, 6);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetSelectedLearningObject(element));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
@@ -84,6 +85,30 @@ public class LearningWorldPresenterUt
         
     #region CreateNewLearningSpace/Element
 
+    [Test]
+    public void AddNewLearningSpace_SetsFieldToTrue()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        Assert.That(!systemUnderTest.CreateLearningSpaceDialogOpen);
+        
+        systemUnderTest.AddNewLearningSpace();
+        
+        Assert.That(systemUnderTest.CreateLearningSpaceDialogOpen);
+    }
+
+    [Test]
+    public void AddNewLearningElement_SetsFieldToTrue()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        Assert.That(!systemUnderTest.CreateLearningElementDialogOpen);
+        
+        systemUnderTest.AddNewLearningElement();
+        
+        Assert.That(systemUnderTest.CreateLearningElementDialogOpen);
+    }
+    
     [Test]
     public void AddLearningSpace_CreateSecondSpaceWithSameName_ThrowsException()
     {
@@ -120,9 +145,9 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var element1 = new LearningElementViewModel("foo", "bar", null, null, "foo",
+        var element1 = new LearningElementViewModel("foo", "bar", null, null!, "foo",
             "wa", "bar", LearningElementDifficultyEnum.Hard);
-        var element2 = new LearningElementViewModel("foo", "bar", null, null, "foo",
+        var element2 = new LearningElementViewModel("foo", "bar", null, null!, "foo",
             "wa", "bar", LearningElementDifficultyEnum.Hard);
         world.LearningElements.Add(element1);
         
@@ -136,7 +161,7 @@ public class LearningWorldPresenterUt
     [Test]
     public void AddLearningElement_SelectedLearningWorldIsNull_ThrowsException()
     {
-        var element = new LearningElementViewModel("foo", "bar", null, null, "foo",
+        var element = new LearningElementViewModel("foo", "bar", null, null!, "foo",
             "wa", "bar", LearningElementDifficultyEnum.Hard);
 
         var systemUnderTest = CreatePresenterForTesting();
@@ -153,12 +178,12 @@ public class LearningWorldPresenterUt
             Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<int>()
             ).Returns(new LearningElementViewModel("foo", "bar",
-            null, null, "bar", "foo", "bar", LearningElementDifficultyEnum.Easy, 6));
+            null, null!, "bar", "foo", "bar", LearningElementDifficultyEnum.Easy, 6));
 
         var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.CreateNewLearningElement("foo",
-            "bar", null, ElementTypeEnum.Transfer, ContentTypeEnum.Image, null, "bar", "foo", "bar",LearningElementDifficultyEnum.Easy,6));
+            "bar", null!, ElementTypeEnum.Transfer, ContentTypeEnum.Image, null!, "bar", "foo", "bar",LearningElementDifficultyEnum.Easy,6));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
 
@@ -191,7 +216,7 @@ public class LearningWorldPresenterUt
             Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<int>()
             ).Returns(new LearningElementViewModel("foo", "bar", null,
-            null, "foo", "bar", "foo",LearningElementDifficultyEnum.Easy,2));
+            null!, "foo", "bar", "foo",LearningElementDifficultyEnum.Easy,2));
         var parent = new LearningWorldViewModel("foo", "boo", "bla", "blub", "bibi", "bubu");
         var content = new LearningContentViewModel("a", "b", new byte[] {0, 1, 2});
 
@@ -215,7 +240,7 @@ public class LearningWorldPresenterUt
             Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<int>()
         ).Returns(new LearningElementViewModel("foo", "bar", null,
-            null, "foo", "bar", "foo",LearningElementDifficultyEnum.Easy,2));
+            null!, "foo", "bar", "foo",LearningElementDifficultyEnum.Easy,2));
         var parent = new LearningWorldViewModel("foo", "boo", "bla", "blub", "bibi", "bubu");
         var content = new LearningContentViewModel("a", "b", new byte[] {0, 1, 2});
 
@@ -239,7 +264,7 @@ public class LearningWorldPresenterUt
             Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<int>()
         ).Returns(new LearningElementViewModel("foo", "bar", null,
-            null, "foo", "bar", "foo",LearningElementDifficultyEnum.Easy,2));
+            null!, "foo", "bar", "foo",LearningElementDifficultyEnum.Easy,2));
         var parent = new LearningWorldViewModel("foo", "boo", "bla", "blub", "bibi", "bubu");
         var content = new LearningContentViewModel("a", "b", new byte[] {0, 1, 2});
 
@@ -263,7 +288,7 @@ public class LearningWorldPresenterUt
             Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<int>()
         ).Returns(new LearningElementViewModel("foo", "bar", null,
-            null, "foo", "bar", "foo",LearningElementDifficultyEnum.Easy,2));
+            null!, "foo", "bar", "foo",LearningElementDifficultyEnum.Easy,2));
         var parent = new LearningWorldViewModel("foo", "boo", "bla", "blub", "bibi", "bubu");
         var content = new LearningContentViewModel("a", "b", new byte[] {0, 1, 2});
 
@@ -399,9 +424,10 @@ public class LearningWorldPresenterUt
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
 
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        const ModalDialogReturnValue modalDialogReturnValue = ModalDialogReturnValue.Ok;
         var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+            //nullability overridden because required for test - n.stich
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningWorld(null, world);
@@ -416,9 +442,10 @@ public class LearningWorldPresenterUt
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
 
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        const ModalDialogReturnValue modalDialogReturnValue = ModalDialogReturnValue.Ok;
         var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+            //nullability overridden because required for test - n.stich
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningWorld(null, world);
@@ -465,11 +492,11 @@ public class LearningWorldPresenterUt
             Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(),
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<int>()
             ).Returns(new LearningElementViewModel("ba", "ba",
-            null, null, "ba",  "ba", "ba",LearningElementDifficultyEnum.Easy,3));
+            null, null!, "ba",  "ba", "ba",LearningElementDifficultyEnum.Easy,3));
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
 
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        const ModalDialogReturnValue modalDialogReturnValue = ModalDialogReturnValue.Ok;
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "a";
         dictionary["Shortname"] = "b";
@@ -501,7 +528,7 @@ public class LearningWorldPresenterUt
             Arg.Any<ILearningElementViewModelParent>(), Arg.Any<ContentTypeEnum>(), Arg.Any<LearningContentViewModel>(),
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<int>()
             ).Returns(new LearningElementViewModel("ba", "ba",
-            null, null, "ba",  "ba", "ba",LearningElementDifficultyEnum.Easy,3));
+            null, null!, "ba",  "ba", "ba",LearningElementDifficultyEnum.Easy,3));
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
 
@@ -782,7 +809,7 @@ public class LearningWorldPresenterUt
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "a";
         dictionary["Shortname"] = "b";
-        dictionary["Parent"] = ElementParentEnum.World.ToString();;
+        dictionary["Parent"] = ElementParentEnum.World.ToString();
         dictionary["Assignment"] = "foo";
         dictionary["Type"] = "Transfers";
         dictionary["Content"] = ContentTypeEnum.Image.ToString();
@@ -812,9 +839,9 @@ public class LearningWorldPresenterUt
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "a";
         dictionary["Shortname"] = "b";
-        dictionary["Parent"] = ElementParentEnum.World.ToString();;
+        dictionary["Parent"] = ElementParentEnum.World.ToString();
         dictionary["Assignment"] = "foo";
-        dictionary["Type"] = ElementTypeEnum.Transfer.ToString();;
+        dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
         dictionary["Content"] = "Images";
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
@@ -842,9 +869,9 @@ public class LearningWorldPresenterUt
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "a";
         dictionary["Shortname"] = "b";
-        dictionary["Parent"] = ElementParentEnum.World.ToString();;
+        dictionary["Parent"] = ElementParentEnum.World.ToString();
         dictionary["Assignment"] = "foo";
-        dictionary["Type"] = ElementTypeEnum.Transfer.ToString();;
+        dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
         dictionary["Content"] = ContentTypeEnum.Image.ToString();
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
@@ -1094,7 +1121,7 @@ public class LearningWorldPresenterUt
             Arg.Any<string>(), Arg.Any<ILearningElementViewModelParent>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>() , Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<int>()
         ).Returns(new LearningElementViewModel("ba", "ba",
-            null, null, "ba", null, "ba", LearningElementDifficultyEnum.Medium,5));
+            null, null!, "ba", "ba", "ba", LearningElementDifficultyEnum.Medium,5));
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var element = new LearningElementViewModel("foo", "bar", null, null, "foo",
@@ -1379,7 +1406,9 @@ public class LearningWorldPresenterUt
 
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.LearningWorldVm.SelectedLearningObject, Is.Null);
+            Assert.That(systemUnderTest.LearningWorldVm, Is.Not.Null);
+            //nullability overridden because of assert - n.stich
+            Assert.That(systemUnderTest.LearningWorldVm!.SelectedLearningObject, Is.Null);
             Assert.That(systemUnderTest.LearningWorldVm.LearningObjects, Is.Empty);
             Assert.DoesNotThrow(() => systemUnderTest.DeleteSelectedLearningObject());
         });
@@ -1519,7 +1548,9 @@ public class LearningWorldPresenterUt
         systemUnderTest.OpenEditSelectedLearningObjectDialog();
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.LearningWorldVm.SelectedLearningObject, Is.EqualTo(null));
+            Assert.That(systemUnderTest.LearningWorldVm, Is.Not.Null);
+            //nullability overridden because of assert - n.stich
+            Assert.That(systemUnderTest.LearningWorldVm!.SelectedLearningObject, Is.EqualTo(null));
             Assert.That(systemUnderTest.LearningWorldVm.LearningObjects, Is.Empty);
             Assert.DoesNotThrow(() => systemUnderTest.DeleteSelectedLearningObject());
         });
@@ -1556,7 +1587,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var element = new LearningElementViewModel("n", "sn", world, null, "a", "d", "g", LearningElementDifficultyEnum.Easy);
+        var element = new LearningElementViewModel("n", "sn", world, null!, "a", "d", "g", LearningElementDifficultyEnum.Easy);
         world.LearningElements.Add(element);
         world.SelectedLearningObject = element;
 
@@ -1586,7 +1617,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var element = new LearningElementViewModel("n", "sn", null, null, "a", "d", "g", LearningElementDifficultyEnum.Easy);
+        var element = new LearningElementViewModel("n", "sn", null, null!, "a", "d", "g", LearningElementDifficultyEnum.Easy);
         world.LearningElements.Add(element);
         world.SelectedLearningObject = element;
 
@@ -1644,7 +1675,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void SaveSelectedLearningObject_CallsPresentationLogic_WithSpace()
+    public async Task SaveSelectedLearningObject_CallsPresentationLogic_WithSpace()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
@@ -1655,13 +1686,13 @@ public class LearningWorldPresenterUt
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
         systemUnderTest.SetLearningWorld(null, world);
-        systemUnderTest.SaveSelectedLearningObjectAsync();
+        await systemUnderTest.SaveSelectedLearningObjectAsync();
 
-        presentationLogic.Received().SaveLearningSpaceAsync(space);
+        await presentationLogic.Received().SaveLearningSpaceAsync(space);
     }
 
     [Test]
-    public void SaveSelectedLearningObject_CallsPresentationLogic_WithElement()
+    public async Task SaveSelectedLearningObject_CallsPresentationLogic_WithElement()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
@@ -1673,9 +1704,9 @@ public class LearningWorldPresenterUt
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
         systemUnderTest.SetLearningWorld(null, world);
-        systemUnderTest.SaveSelectedLearningObjectAsync();
+        await systemUnderTest.SaveSelectedLearningObjectAsync();
 
-        presentationLogic.Received().SaveLearningElementAsync(element);
+        await presentationLogic.Received().SaveLearningElementAsync(element);
     }
 
     [Test]
@@ -1705,7 +1736,7 @@ public class LearningWorldPresenterUt
         systemUnderTest.SetLearningWorld(null, null);
 
         var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
-            await systemUnderTest.LoadLearningSpace());
+            await systemUnderTest.LoadLearningSpaceAsync());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
 
@@ -1716,12 +1747,12 @@ public class LearningWorldPresenterUt
         systemUnderTest.SetLearningWorld(null, null);
 
         var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
-            await systemUnderTest.LoadLearningElement());
+            await systemUnderTest.LoadLearningElementAsync());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
 
     [Test]
-    public void LoadLearningSpace_CallsPresentationLogic()
+    public async Task LoadLearningSpace_CallsPresentationLogic()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
@@ -1729,13 +1760,13 @@ public class LearningWorldPresenterUt
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
         systemUnderTest.SetLearningWorld(null, world);
-        systemUnderTest.LoadLearningSpace();
+        await systemUnderTest.LoadLearningSpaceAsync();
 
-        presentationLogic.Received().LoadLearningSpaceAsync();
+        await presentationLogic.Received().LoadLearningSpaceAsync();
     }
 
     [Test]
-    public void LoadLearningElement_CallsPresentationLogic()
+    public async Task LoadLearningElement_CallsPresentationLogic()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
@@ -1743,13 +1774,13 @@ public class LearningWorldPresenterUt
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
         systemUnderTest.SetLearningWorld(null, world);
-        systemUnderTest.LoadLearningElement();
+        await systemUnderTest.LoadLearningElementAsync();
 
-        presentationLogic.Received().LoadLearningElementAsync();
+        await presentationLogic.Received().LoadLearningElementAsync();
     }
 
     [Test]
-    public void LoadLearningSpace_AddsLearningSpaceToLearningWorld()
+    public async Task LoadLearningSpace_AddsLearningSpaceToLearningWorld()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         presentationLogic.LoadLearningSpaceAsync().Returns(new LearningSpaceViewModel("n", "sn", "a", "d", "g"));
@@ -1761,7 +1792,7 @@ public class LearningWorldPresenterUt
         Assert.That(systemUnderTest.LearningWorldVm, Is.Not.Null);
         Assert.That(systemUnderTest.LearningWorldVm?.LearningSpaces, Is.Empty);
 
-        systemUnderTest.LoadLearningSpace();
+        await systemUnderTest.LoadLearningSpaceAsync();
 
         Assert.Multiple(() =>
         {
@@ -1775,7 +1806,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void LoadLearningElement_AddsLearningElementToLearningWorld()
+    public async Task LoadLearningElement_AddsLearningElementToLearningWorld()
     {
         var content = new LearningContentViewModel("a", "b", new byte[] {0x02, 0x01});
         var presentationLogic = Substitute.For<IPresentationLogic>();
@@ -1789,7 +1820,7 @@ public class LearningWorldPresenterUt
         Assert.That(systemUnderTest.LearningWorldVm, Is.Not.Null);
         Assert.That(systemUnderTest.LearningWorldVm?.LearningElements, Is.Empty);
 
-        systemUnderTest.LoadLearningElement();
+        await systemUnderTest.LoadLearningElementAsync();
 
         Assert.Multiple(() =>
         {
@@ -1813,7 +1844,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var learningSpace = new LearningSpaceViewModel("a", "b", "c", "d", "e", null);
+        var learningSpace = new LearningSpaceViewModel("a", "b", "c", "d", "e");
         world.SelectedLearningObject = learningSpace;
 
         var systemUnderTest = CreatePresenterForTesting();

@@ -5,7 +5,7 @@ using AuthoringTool.PresentationLogic.LearningSpace;
 
 namespace AuthoringTool.PresentationLogic.ModalDialog;
 
-class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputFieldsFactory, ILearningWorldViewModalDialogInputFieldsFactory
+class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputFieldsFactory, ILearningWorldViewModalDialogInputFieldsFactory, IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory
 {
     /// <inheritdoc cref="ILearningSpaceViewModalDialogInputFieldsFactory.GetCreateLearningElementInputFields"/>
     public IEnumerable<ModalDialogInputField> GetCreateLearningElementInputFields(LearningContentViewModel? dragAndDropLearningContent, string spaceName)
@@ -319,4 +319,19 @@ class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputFieldsFa
                     new Dictionary<string, string> { { "Type", ElementTypeEnum.Test.ToString() } },
                     new[] { ContentTypeEnum.H5P.ToString() })
             }, true);
+
+    /// <inheritdoc cref="IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory.GetCreateLearningWorldInputFields"/>
+    public IEnumerable<ModalDialogInputField> GetCreateLearningWorldInputFields() =>
+        new ModalDialogInputField[]
+        {
+                new("Name", ModalDialogInputType.Text, true),
+                new("Shortname", ModalDialogInputType.Text, true),
+                new("Authors", ModalDialogInputType.Text),
+                new("Language", ModalDialogInputType.Text, true),
+                new("Description", ModalDialogInputType.Text, true),
+                new("Goals", ModalDialogInputType.Text)
+        };
+
+    /// <inheritdoc cref="IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory.GetEditLearningWorldInputFields"/>
+    public IEnumerable<ModalDialogInputField> GetEditLearningWorldInputFields() => GetCreateLearningWorldInputFields();
 }

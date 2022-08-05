@@ -29,6 +29,15 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     public ILearningWorldViewModel? LearningWorldVm { get; private set; }
     
     public LearningContentViewModel? DragAndDropLearningContent { get; private set; }
+    public void AddNewLearningSpace()
+    {
+        CreateLearningSpaceDialogOpen = true;
+    }
+
+    public void AddNewLearningElement()
+    {
+        CreateLearningElementDialogOpen = true;
+    }
 
     public bool SelectedLearningObjectIsSpace =>
         LearningWorldVm?.SelectedLearningObject?.GetType() == typeof(LearningSpaceViewModel);
@@ -130,7 +139,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     /// Calls the LoadLearningSpaceAsync methode in <see cref="_presentationLogic"/> and adds the returned learning space to the current learning world.
     /// </summary>
     /// <exception cref="ApplicationException">Thrown if <see cref="LearningWorldVm"/> is null</exception>
-    public async Task LoadLearningSpace()
+    public async Task LoadLearningSpaceAsync()
     {
         var learningSpace = await _presentationLogic.LoadLearningSpaceAsync();
         AddLearningSpace(learningSpace);
@@ -283,7 +292,7 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     /// learning element to its parent.
     /// </summary>
     /// <exception cref="ApplicationException">Thrown if <see cref="LearningWorldVm"/> is null</exception>
-    public async Task LoadLearningElement()
+    public async Task LoadLearningElementAsync()
     {
         var learningElement = await _presentationLogic.LoadLearningElementAsync();
         if (LearningWorldVm == null)

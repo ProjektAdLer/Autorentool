@@ -23,10 +23,10 @@
 else
 {
     <h5>Workload: @LearningWorldP.LearningWorldVm?.Workload minutes</h5>
-    <button class="btn btn-primary" @onclick="AddNewLearningSpace">Add Learning Space</button>
-    <button class="btn btn-primary" @onclick="LoadLearningSpaceAsync">Load Learning Space</button>
-    <button class="btn btn-primary" @onclick="AddNewLearningElement">Add Learning Element</button>
-    <button class="btn btn-primary" @onclick="LoadLearningElementAsync">Load Learning Element</button>
+    <button class="btn btn-primary add-learning-space" @onclick="AddNewLearningSpace">Add Learning Space</button>
+    <button class="btn btn-primary load-learning-space" @onclick="LoadLearningSpaceAsync">Load Learning Space</button>
+    <button class="btn btn-primary add-learning-element" @onclick="AddNewLearningElement">Add Learning Element</button>
+    <button class="btn btn-primary load-learning-element" @onclick="LoadLearningElementAsync">Load Learning Element</button>
     <br>
 
     @if (LearningWorldP.LearningWorldVm?.SelectedLearningObject != null)
@@ -40,10 +40,10 @@ else
             </text>
         </label>
         <br>
-        <button class="btn btn-primary" @onclick="EditLearningObject">Edit selected Learning Object</button>
-        <button class="btn btn-primary" @onclick="DeleteSelectedLearningObject">Delete Learning Object</button>
-        <button class="btn btn-primary" @onclick="SaveSelectedLearningObjectAsync">Save selected Learning Object</button>
-        <button class="btn btn-primary" @onclick="ShowSelectedLearningSpaceView"
+        <button class="btn btn-primary edit-learning-object" @onclick="EditLearningObject">Edit selected Learning Object</button>
+        <button class="btn btn-primary delete-learning-object" @onclick="DeleteSelectedLearningObject">Delete Learning Object</button>
+        <button class="btn btn-primary save-learning-object" @onclick="SaveSelectedLearningObjectAsync">Save selected Learning Object</button>
+        <button class="btn btn-primary show-learning-space" @onclick="ShowSelectedLearningSpaceView"
                 hidden="@(!LearningWorldP.SelectedLearningObjectIsSpace)">Open selected Learning Space</button>
     }
     <svg style="width: 100%; height: 600px; border: 1px solid green"
@@ -125,12 +125,12 @@ else
 
     private void AddNewLearningSpace()
     {
-        LearningWorldP.CreateLearningSpaceDialogOpen = true;
+        LearningWorldP.AddNewLearningSpace();
     }
 
     private void AddNewLearningElement()
     {
-        LearningWorldP.CreateLearningElementDialogOpen = true;
+        LearningWorldP.AddNewLearningElement();
     }
 
     private void DeleteSelectedLearningObject()
@@ -142,7 +142,7 @@ else
     {
         try
         {
-            await LearningWorldP.LoadLearningSpace();
+            await LearningWorldP.LoadLearningSpaceAsync();
         }
         catch (OperationCanceledException)
         {
@@ -163,7 +163,7 @@ else
     {
         try
         {
-            await LearningWorldP.LoadLearningElement();
+            await LearningWorldP.LoadLearningElementAsync();
         }
         catch (OperationCanceledException)
         {

@@ -1,6 +1,4 @@
-﻿using System.IO.Abstractions;
-
-namespace AuthoringTool.DataAccess.DSL;
+﻿namespace AuthoringTool.DataAccess.DSL;
 
 public interface IReadDSL
 {

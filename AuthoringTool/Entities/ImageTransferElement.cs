@@ -1,4 +1,3 @@
-using System.Xml.Serialization;
 using AuthoringTool.PresentationLogic.LearningElement;
 
 namespace AuthoringTool.Entities;

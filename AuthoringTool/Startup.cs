@@ -1,5 +1,4 @@
 using System.IO.Abstractions;
-using AuthoringTool.API;
 using AuthoringTool.API.Configuration;
 using AuthoringTool.BusinessLogic.API;
 using AuthoringTool.DataAccess.API;
@@ -76,8 +75,8 @@ public class Startup
 
     private void ConfigurePresentationLogic(IServiceCollection services)
     {
+        services.AddSingleton<IAuthoringToolWorkspacePresenter, AuthoringToolWorkspacePresenter>();
         services.AddSingleton<IPresentationLogic, PresentationLogic.API.PresentationLogic>();
-        services.AddSingleton<AuthoringToolWorkspacePresenter>();
         services.AddSingleton<ILearningWorldPresenter, LearningWorldPresenter>();
         services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
         services.AddSingleton<ILearningElementPresenter, LearningElementPresenter>();
@@ -86,6 +85,8 @@ public class Startup
         services.AddSingleton<ILearningSpaceViewModalDialogInputFieldsFactory, ModalDialogInputFieldsFactory>();
         services.AddSingleton<ILearningWorldViewModalDialogFactory, ModalDialogFactory>();
         services.AddSingleton<ILearningWorldViewModalDialogInputFieldsFactory, ModalDialogInputFieldsFactory>();
+        services.AddSingleton<IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory, ModalDialogInputFieldsFactory>();
+        services.AddSingleton<IAuthoringToolWorkspaceViewModalDialogFactory, ModalDialogFactory>();
     }
 
     private void ConfigureBusinessLogic(IServiceCollection services)
@@ -111,7 +112,7 @@ public class Startup
         services.AddSingleton<IToolboxController, ToolboxController>();
         services.AddSingleton<IToolboxResultFilter, ToolboxResultFilter>();
         services.AddSingleton(p =>
-            (IAuthoringToolWorkspacePresenterToolboxInterface)p.GetService(typeof(AuthoringToolWorkspacePresenter))!);
+            (IAuthoringToolWorkspacePresenterToolboxInterface)p.GetService(typeof(IAuthoringToolWorkspacePresenter))!);
         services.AddSingleton(p =>
             (ILearningWorldPresenterToolboxInterface)p.GetService(typeof(ILearningWorldPresenter))!);
         services.AddSingleton(p =>

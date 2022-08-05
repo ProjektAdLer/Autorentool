@@ -1,6 +1,11 @@
-﻿using AuthoringTool.DataAccess.DSL;
+﻿using System.Collections.Generic;
+using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.XmlClasses;
-using AuthoringTool.DataAccess.XmlClasses.Entities.course;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Course.Completiondefault.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Course.Course.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Course.Enrolments.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Course.Inforef.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Course.Roles.xml;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -12,146 +17,231 @@ public class XmlCourseFactoryUt
     [Test]
     public void XmlCourseFactory_Constructor_AllPropertiesSet()
     {
+        // Arrange
+        var mockReadDsl = Substitute.For<IReadDSL>();
+
         //Act
-        var xmlCourseFactory = CreateStandardXmlCourseFactory();
+        var systemUnderTest = new XmlCourseFactory(mockReadDsl);
 
         //Assert
         Assert.Multiple(() =>
         {
-            Assert.That(xmlCourseFactory.CourseCourseXmlCategory, Is.Not.Null);
-            Assert.That(xmlCourseFactory.CourseCourseXmlCourse, Is.Not.Null);
-            Assert.That(xmlCourseFactory.CourseEnrolmentsXmlEnrolManual, Is.Not.Null);
-            Assert.That(xmlCourseFactory.CourseEnrolmentsXmlEnrolGuest, Is.Not.Null);
-            Assert.That(xmlCourseFactory.CourseEnrolmentsXmlEnrolSelf, Is.Not.Null);
-            Assert.That(xmlCourseFactory.CourseEnrolmentsXmlEnrols, Is.Not.Null);
-            Assert.That(xmlCourseFactory.CourseEnrolmentsXmlEnrolments, Is.Not.Null);
-            Assert.That(xmlCourseFactory.CourseInforefXmlRole, Is.Not.Null);
-            Assert.That(xmlCourseFactory.CourseInforefXmlRoleref, Is.Not.Null);
-            Assert.That(xmlCourseFactory.CourseInforefXmlInforef, Is.Not.Null);
-            Assert.That(xmlCourseFactory.CourseRolesXmlRoles, Is.Not.Null);
+            Assert.That(systemUnderTest.CourseCourseXmlCategory, Is.Not.Null);
+            Assert.That(systemUnderTest.CourseCourseXmlCourse, Is.Not.Null);
+            Assert.That(systemUnderTest.CourseEnrolmentsXmlEnrolManual, Is.Not.Null);
+            Assert.That(systemUnderTest.CourseEnrolmentsXmlEnrolGuest, Is.Not.Null);
+            Assert.That(systemUnderTest.CourseEnrolmentsXmlEnrolSelf, Is.Not.Null);
+            Assert.That(systemUnderTest.CourseEnrolmentsXmlEnrols, Is.Not.Null);
+            Assert.That(systemUnderTest.CourseEnrolmentsXmlEnrolments, Is.Not.Null);
+            Assert.That(systemUnderTest.CourseInforefXmlRole, Is.Not.Null);
+            Assert.That(systemUnderTest.CourseInforefXmlRoleref, Is.Not.Null);
+            Assert.That(systemUnderTest.CourseInforefXmlInforef, Is.Not.Null);
+            Assert.That(systemUnderTest.CourseRolesXmlRoles, Is.Not.Null);
         });
     }
 
     [Test]
-    public void CreateCourseCourseXml_Default_ParametersSetAndSerialized()
-    {
-        //Arrange 
-        var mockCourseCategory = Substitute.For<ICourseCourseXmlCategory>();
-        var mockCourseCourse = Substitute.For<ICourseCourseXmlCourse>();
-        var mockreadDsl = Substitute.For<IReadDSL>();
+    public void XmlCourseFactory_CreateXmlCourseFactory_AllMethodsCalled()
+    {   
+        //Arrange
+        var mockReadDsl = Substitute.For<IReadDSL>();
         
+        var mockCourseCategory = new CourseCourseXmlCategory();
+        var mockCourseCourse = Substitute.For<ICourseCourseXmlCourse>();
         var mockIdentifier = Substitute.For<IdentifierJson>();
         var mockLearningWorld = new LearningWorldJson();
         mockLearningWorld.identifier = mockIdentifier;
+        mockLearningWorld.identifier.value = "CourseName";
 
-        mockreadDsl.GetLearningWorld().Returns(mockLearningWorld);
-
-        var xmlCourseFactory = new XmlCourseFactory(mockreadDsl, mockCourseCategory, mockCourseCourse);
-
-        //Act
-        xmlCourseFactory.CreateCourseCourseXml();
+        mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
         
-        //Assert
-        mockCourseCategory.Received().SetParameters(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
-        mockCourseCourse.Received().SetParameters(Arg.Any<string?>(), Arg.Any<string?>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<CourseCourseXmlCategory?>(), Arg.Any<string?>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
-        mockCourseCourse.Received().Serialize();
-
-    }
-    
-    [Test]
-    public void CreateCourseEnrolmentsXml_Default_ParametersSetAndSerialized()
-    {
-        //Arrange 
-        var mockEnrol = Substitute.For<ICourseEnrolmentsXmlEnrol>();
-        var mockEnrols = Substitute.For<ICourseEnrolmentsXmlEnrols>();
+        var mockEnrolManual = Substitute.For<ICourseEnrolmentsXmlEnrol>();
+        var mockEnrolGuest = Substitute.For<ICourseEnrolmentsXmlEnrol>();
+        var mockEnrolSelf = Substitute.For<ICourseEnrolmentsXmlEnrol>();
+        var mockEnrols = new CourseEnrolmentsXmlEnrols();
         var mockEnrolments = Substitute.For<ICourseEnrolmentsXmlEnrolments>();
         
-        var xmlCourseFactory = CreateTestableXmlCourseFactory(null, null, mockEnrol,
-            mockEnrols, mockEnrolments);
+        var enrolsList = new List<CourseEnrolmentsXmlEnrol>();
+        enrolsList.Add(mockEnrolManual as CourseEnrolmentsXmlEnrol);
+        enrolsList.Add(mockEnrolGuest as CourseEnrolmentsXmlEnrol);
+        enrolsList.Add(mockEnrolSelf as CourseEnrolmentsXmlEnrol);
+        
+        var mockInforefRole = new CourseInforefXmlRole();
+        var mockInforefRoleref = new CourseInforefXmlRoleref();
+        var mockInforefInforef = Substitute.For<ICourseInforefXmlInforef>();
+        
+        var mockCourseRoles = Substitute.For<ICourseRolesXmlRoles>();
+        
+        var mockCourseCompletiondefault= Substitute.For<ICourseCompletiondefaultXmlCourseCompletionDefaults>();
 
+        
         //Act
-        xmlCourseFactory.CreateCourseEnrolmentsXml();
+        var systemUnderTest = new XmlCourseFactory(mockReadDsl, mockCourseCategory, mockCourseCourse,
+            mockEnrolManual, mockEnrolGuest, mockEnrolSelf, mockEnrols, mockEnrolments,
+            mockInforefRole, mockInforefRoleref, mockInforefInforef, mockCourseRoles, mockCourseCompletiondefault);
+        
+        systemUnderTest.CreateXmlCourseFactory();
         
         //Assert
-        mockEnrol.Received().SetParametersShort(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
-        mockEnrol.Received().SetParametersFull(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>());
-        mockEnrols.Received().SetParameters(Arg.Any<CourseEnrolmentsXmlEnrol>(), Arg.Any<CourseEnrolmentsXmlEnrol>(),
-            Arg.Any<CourseEnrolmentsXmlEnrol>());
-        mockEnrolments.Received().SetParameters(Arg.Any<CourseEnrolmentsXmlEnrols>());
-        mockEnrolments.Received().Serialize();
+        Assert.Multiple(() =>
+        {
+            mockCourseCourse.Received().Serialize();
+            mockEnrolments.Received().Serialize();
+            mockInforefInforef.Received().Serialize();
+            mockCourseRoles.Received().Serialize();
+            mockCourseCompletiondefault.Received().Serialize();
+        });
+    }
+
+    [Test]
+    public void CreateCourseCourseXml_CourseCategoryCourseCourse_AndSerializes()
+    {
+        //Arrange 
+
+        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockCourseCategory = new CourseCourseXmlCategory();
+        var mockCourseCourse = Substitute.For<ICourseCourseXmlCourse>();
+        var mockIdentifier = Substitute.For<IdentifierJson>();
+        var mockLearningWorld = new LearningWorldJson();
+        mockLearningWorld.identifier = mockIdentifier;
+        mockLearningWorld.identifier.value = "CourseName";
+
+        mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
+
+        var systemUnderTest = new XmlCourseFactory(mockReadDsl, mockCourseCategory, mockCourseCourse);
+
+        //Act
+        systemUnderTest.CreateCourseCourseXml();
+
+        //Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(mockCourseCategory.Description, Is.EqualTo("$@NULL@$"));
+            Assert.That(mockCourseCategory.Id, Is.EqualTo("1"));
+            Assert.That(mockCourseCategory.Name, Is.EqualTo("Miscellaneous"));
+            Assert.That(mockCourseCourse.Shortname, Is.EqualTo(mockLearningWorld.identifier.value));
+            Assert.That(mockCourseCourse.Shortname, Is.EqualTo(mockLearningWorld.identifier.value));
+            Assert.That(mockCourseCourse.Format, Is.EqualTo("tiles"));
+            Assert.That(mockCourseCourse.BaseColour, Is.EqualTo("#009681"));
+            Assert.That(mockCourseCourse.CourseUseSubtiles, Is.EqualTo("1"));
+            Assert.That(mockCourseCourse.CourseShowTileProgress, Is.EqualTo("2"));
+            Assert.That(mockCourseCourse.ShowGrades, Is.EqualTo("1"));
+            Assert.That(mockCourseCourse.Visible, Is.EqualTo("1"));
+            Assert.That(mockCourseCourse.Theme, Is.EqualTo("boost"));
+            Assert.That(mockCourseCourse.ShowCompletionConditions, Is.EqualTo("1"));
+            Assert.That(mockCourseCourse.EnableCompletion, Is.EqualTo("1"));
+            Assert.That(mockCourseCourse.Category, Is.EqualTo(mockCourseCategory));
+            mockCourseCourse.Received().Serialize();
+        });
     }
     
     [Test]
-    public void CreateCourseInforefXml_Default_ParametersSetAndSerialized()
+    public void CreateCourseEnrolmentsXml_SetsEnrolManualGuestSelfEnrolsEnrolments_AndSerializes()
     {
         //Arrange 
-        var mockInforefRole = Substitute.For<ICourseInforefXmlRole>();
-        var mockInforefRoleref = Substitute.For<ICourseInforefXmlRoleref>();
+        var mockReadDsl = Substitute.For<IReadDSL>();
+        
+        var mockEnrolManual = Substitute.For<ICourseEnrolmentsXmlEnrol>();
+        var mockEnrolGuest = Substitute.For<ICourseEnrolmentsXmlEnrol>();
+        var mockEnrolSelf = Substitute.For<ICourseEnrolmentsXmlEnrol>();
+        var mockEnrols = new CourseEnrolmentsXmlEnrols();
+        var mockEnrolments = Substitute.For<ICourseEnrolmentsXmlEnrolments>();
+        
+        var enrolsList = new List<CourseEnrolmentsXmlEnrol>();
+        enrolsList.Add(mockEnrolManual as CourseEnrolmentsXmlEnrol);;
+        enrolsList.Add(mockEnrolGuest as CourseEnrolmentsXmlEnrol);;
+        enrolsList.Add(mockEnrolSelf as CourseEnrolmentsXmlEnrol);;
+        
+        var systemUnderTest = new XmlCourseFactory(mockReadDsl, courseEnrolmentsXmlEnrolManual: mockEnrolManual,
+            courseEnrolmentsXmlEnrolGuest: mockEnrolGuest, courseEnrolmentsXmlEnrolSelf: mockEnrolSelf,
+            courseEnrolmentsXmlEnrols: mockEnrols, courseEnrolmentsXmlEnrolments: mockEnrolments); 
+        
+        //Act
+        systemUnderTest.CreateCourseEnrolmentsXml();
+        
+        //Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(mockEnrolSelf.Id, Is.EqualTo("3"));
+            Assert.That(mockEnrolSelf.RoleId, Is.EqualTo("5"));
+            Assert.That(mockEnrolSelf.EnrolMethod, Is.EqualTo("self"));
+            Assert.That(mockEnrolSelf.Status, Is.EqualTo("1"));
+            Assert.That(mockEnrolSelf.CustomInt1, Is.EqualTo("0"));
+            Assert.That(mockEnrolSelf.CustomInt2, Is.EqualTo("0"));
+            Assert.That(mockEnrolSelf.CustomInt3, Is.EqualTo("0"));
+            Assert.That(mockEnrolSelf.CustomInt4, Is.EqualTo("1"));
+            Assert.That(mockEnrolSelf.CustomInt5, Is.EqualTo("0"));
+            Assert.That(mockEnrolSelf.CustomInt6, Is.EqualTo("1"));
+            
+            Assert.That(mockEnrols.Enrol, Is.EqualTo(enrolsList));
+            
+            Assert.That(mockEnrolments.Enrols, Is.EqualTo(mockEnrols));
+            mockEnrolments.Received().Serialize();
+        });
+    }
+    
+    [Test]
+    public void CreateCourseInforefXml_SetsInforefRoleRolerefInforef_AndSerializes()
+    {
+        //Arrange 
+        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockInforefRole = new CourseInforefXmlRole();
+        var mockInforefRoleref = new CourseInforefXmlRoleref();
         var mockInforefInforef = Substitute.For<ICourseInforefXmlInforef>();
 
-        var xmlCourseFactory = CreateTestableXmlCourseFactory(inforefXmlRole: mockInforefRole,
-            inforefXmlRoleref: mockInforefRoleref, inforefXmlInforef: mockInforefInforef);
-
+        var systemUnderTest = new XmlCourseFactory(mockReadDsl, courseInforefXmlInforef: mockInforefInforef,
+            courseInforefXmlRoleref: mockInforefRoleref, courseInforefXmlRole: mockInforefRole);
+        
         //Act
-        xmlCourseFactory.CreateCourseInforefXml();
+        systemUnderTest.CreateCourseInforefXml();
         
         //Assert
-        mockInforefRole.Received().SetParameters(Arg.Any<string>());
-        mockInforefRoleref.Received().SetParameters(Arg.Any<CourseInforefXmlRole>());
-        mockInforefInforef.Received().SetParameters(Arg.Any<CourseInforefXmlRoleref>());
-        mockInforefInforef.Received().Serialize();
+        Assert.Multiple(()=>
+        {
+            Assert.That(mockInforefRoleref.Role, Is.EqualTo(mockInforefRole));
+            Assert.That(mockInforefInforef.Roleref, Is.EqualTo(mockInforefRoleref));
+            mockInforefInforef.Received().Serialize();
+        });
     }
     
     [Test]
-    public void CreateCourseRolesXml_Default_ParametersSetAndSerialized()
+    public void CreateCourseRolesXml_SetsCourseRoles_AndSerializes()
     {
         //Arrange 
+        var mockReadDsl = Substitute.For<IReadDSL>();
         var mockCourseRoles = Substitute.For<ICourseRolesXmlRoles>();
 
-        var xmlCourseFactory = CreateTestableXmlCourseFactory(rolesXmlRoles:mockCourseRoles);
+        
+        var systemUnderTest = new XmlCourseFactory(mockReadDsl, courseRolesXmlRoles:mockCourseRoles);
 
         //Act
-        xmlCourseFactory.CreateCourseRolesXml();
+        systemUnderTest.CreateCourseRolesXml();
         
         //Assert
-        mockCourseRoles.Received().SetParameters(Arg.Any<string>(), Arg.Any<string>());
-        mockCourseRoles.Received().Serialize();
+        Assert.Multiple(()=>
+        {
+            mockCourseRoles.Received().Serialize();
+        });
     }
-
-
-    private XmlCourseFactory CreateStandardXmlCourseFactory(IReadDSL? readDsl = null)
+    
+    [Test]
+    public void CreateCourseCompletiondefault_SetsCourseCompletiondefault_AndSerializes()
     {
-        readDsl ??= Substitute.For<IReadDSL>();
-        return new XmlCourseFactory(readDsl);
-    }
-
-    private XmlCourseFactory CreateTestableXmlCourseFactory(ICourseCourseXmlCategory? courseXmlCategory = null, ICourseCourseXmlCourse? courseXmlCourse = null,
-        ICourseEnrolmentsXmlEnrol? enrolmentsXmlEnrol = null, ICourseEnrolmentsXmlEnrols? enrolmentsXmlEnrols = null, 
-        ICourseEnrolmentsXmlEnrolments? enrolmentsXmlEnrolments = null, ICourseInforefXmlRole? inforefXmlRole = null, 
-        ICourseInforefXmlRoleref? inforefXmlRoleref = null, ICourseInforefXmlInforef? inforefXmlInforef = null, ICourseRolesXmlRoles? rolesXmlRoles = null,
-        ICourseCompletiondefaultXmlCourseCompletionDefaults? courseCourseXmlCompletiondefault = null, IReadDSL? readDsl = null)
-    {
-        courseXmlCategory ??= Substitute.For<ICourseCourseXmlCategory>();
-        courseXmlCourse ??= Substitute.For<ICourseCourseXmlCourse>();
-
-        enrolmentsXmlEnrol ??= Substitute.For<ICourseEnrolmentsXmlEnrol>();
-        enrolmentsXmlEnrols ??= Substitute.For<ICourseEnrolmentsXmlEnrols>();
-        enrolmentsXmlEnrolments ??= Substitute.For<ICourseEnrolmentsXmlEnrolments>();
-
-        inforefXmlRole ??= Substitute.For<ICourseInforefXmlRole>();
-        inforefXmlRoleref ??= Substitute.For<ICourseInforefXmlRoleref>();
-        inforefXmlInforef ??= Substitute.For<ICourseInforefXmlInforef>();
-
-        rolesXmlRoles ??= Substitute.For<ICourseRolesXmlRoles>();
-
-        courseCourseXmlCompletiondefault ??= Substitute.For<ICourseCompletiondefaultXmlCourseCompletionDefaults>();
+        //Arrange 
+        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockCourseCompletiondefault= Substitute.For<ICourseCompletiondefaultXmlCourseCompletionDefaults>();
         
-        readDsl ??= Substitute.For<IReadDSL>();
+        var systemUnderTest = new XmlCourseFactory(mockReadDsl, courseCourseXmlCompletiondefault:mockCourseCompletiondefault);
 
-        return new XmlCourseFactory(readDsl, courseXmlCategory, courseXmlCourse, enrolmentsXmlEnrol, enrolmentsXmlEnrols,
-            enrolmentsXmlEnrolments, inforefXmlRole, inforefXmlRoleref, inforefXmlInforef, rolesXmlRoles, 
-            courseCourseXmlCompletiondefault);
+        //Act
+        systemUnderTest.CreateCourseCompletiondefault();
+        
+        //Assert
+        Assert.Multiple(()=>
+        {
+            mockCourseCompletiondefault.Received().Serialize();
+        });
     }
+
+
 }

@@ -24,6 +24,9 @@
     <Content Update="View\Toolbox\LearningObjectRenderFragmentBase.razor.css">
       <DependentUpon>LearningObjectRenderFragmentBase.razor</DependentUpon>
     </Content>
+    <Content Update="wwwroot\favicon.ico">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
 	<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">

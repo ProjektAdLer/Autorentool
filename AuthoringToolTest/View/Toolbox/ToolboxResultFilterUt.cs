@@ -27,11 +27,12 @@ public class ToolboxResultFilterUt
         Space2 = new LearningSpaceViewModel("unit testing", "f", "ba", "ba", "fa");
         Space3 = new LearningSpaceViewModel("measures of code quality", "fa", "fa", "ba", "ba");
         Space4 = new LearningSpaceViewModel("elements of code quality", "fa", "fa", "ba", "ba");
-        Element1 = new LearningElementViewModel("principles of unit testing", "s", null, null, "s", 
+        //nullability overrides because we don't care about learningContent here
+        Element1 = new LearningElementViewModel("principles of unit testing", "s", null, null!, "s", 
             "s", "s",LearningElementDifficultyEnum.Easy);
         Element2 = new LearningElementViewModel("example calculation of lines of code metric", "s",
-            null, null, "s", "s", "s",LearningElementDifficultyEnum.Easy);
-        Element3 = new LearningElementViewModel("real world example of measurable code quality", "s", null, null, "s",
+            null, null!, "s", "s", "s",LearningElementDifficultyEnum.Easy);
+        Element3 = new LearningElementViewModel("real world example of measurable code quality", "s", null, null!, "s",
             "s", "s",LearningElementDifficultyEnum.Easy);
         
         Collection = new List<IDisplayableLearningObject>
@@ -66,7 +67,6 @@ Search terms can be quoted to search them literally, ignoring the above rules.
             var worlds = new IDisplayableLearningObject[] { World1, World2, World3, World4 };
             var spaces = new IDisplayableLearningObject[] { Space1, Space2, Space3, Space4 };
             var elements = new IDisplayableLearningObject[] { Element1, Element2, Element3 };
-            var allObjects = Collection;
             
             //test cases
             //basic cases

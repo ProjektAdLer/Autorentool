@@ -13,7 +13,9 @@ namespace AuthoringToolTest.View.LearningWorld;
 [TestFixture]
 public class LearningWorldRenderFragmentUt
 {
+#pragma warning disable CS8618 - n.stich
     private TestContext _ctx;
+#pragma warning restore CS8618
     
     [SetUp]
     public void Setup()

@@ -32,9 +32,9 @@
 }
 <svg style="width: 100%; height: 600px; border: 1px solid green"
      xmlns="http://www.w3.org/2000/svg"
-     @onmousemove=@(e => MouseService.FireMove(this, e))
-         @onmouseup=@(e => MouseService.FireUp(this, e))
-         @onmouseleave=@(() => MouseService.FireOut(this, null))>
+     @onmousemove="@(e => MouseService.FireMove(this, e))"
+     @onmouseup="@(e => MouseService.FireUp(this, e))"
+     @onmouseleave="@(e => MouseService.FireOut(this, e))">
     @if (LearningSpaceP.LearningSpaceVm != null)
     {
         @foreach (var learningObject in LearningSpaceP.LearningSpaceVm.LearningElements)
@@ -45,18 +45,18 @@
 </svg>
 @if (LearningSpaceP.EditLearningSpaceDialogOpen && LearningSpaceP.LearningSpaceVm != null)
 {
-    @ModalDialogFactory.GetEditLearningSpaceFragment(LearningSpaceP.EditLearningSpaceDialogInitialValues, OnEditSpaceDialogClose);
+    @ModalDialogFactory.GetEditLearningSpaceFragment(LearningSpaceP.EditLearningSpaceDialogInitialValues, OnEditSpaceDialogClose)
 }
 
 @if (LearningSpaceP.CreateLearningElementDialogOpen)
 {
     //Override nullability because LearningSpaceVm can't be null at this point. - m.ho, n.stich
-    @ModalDialogFactory.GetCreateLearningElementFragment(LearningSpaceP.DragAndDropLearningContent, OnCreateElementDialogClose, LearningSpaceP.LearningSpaceVm!.Name);
+    @ModalDialogFactory.GetCreateLearningElementFragment(LearningSpaceP.DragAndDropLearningContent, OnCreateElementDialogClose, LearningSpaceP.LearningSpaceVm!.Name)
 }
 
 @if (LearningSpaceP.EditLearningElementDialogOpen && LearningSpaceP.LearningSpaceVm != null)
 {
-    @ModalDialogFactory.GetEditLearningElementFragment(LearningSpaceP.EditLearningElementDialogInitialValues, OnEditElementDialogClose);
+    @ModalDialogFactory.GetEditLearningElementFragment(LearningSpaceP.EditLearningElementDialogInitialValues, OnEditElementDialogClose)
 }
 
 

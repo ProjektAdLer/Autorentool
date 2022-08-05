@@ -1,4 +1,3 @@
-using System.IO.Abstractions;
 using AuthoringTool.Entities;
 
 namespace AuthoringTool.DataAccess.DSL;

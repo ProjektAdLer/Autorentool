@@ -24,7 +24,6 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
     public ILearningSpaceViewModel? LearningSpaceVm { get; private set; }
 
     public LearningContentViewModel? DragAndDropLearningContent { get; private set; }
-    public bool DraggedLearningContentIsPresent => DragAndDropLearningContent is not null;
 
     public ILearningSpaceViewModel CreateNewLearningSpace(string name, string shortname, string authors,
         string description, string goals)
@@ -55,25 +54,6 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
     }
 
     #region LearningSpace
-
-    /// <summary>
-    /// Opens the edit dialog for the currently opened learning space. (This methode is not yet in use)
-    /// </summary>
-    /// <exception cref="ApplicationException">Thrown if <see cref="LearningSpaceVm"/> is null</exception>
-    private void OpenEditThisLearningSpaceDialog()
-    {
-        if (LearningSpaceVm is null) throw new ApplicationException("LearningSpaceVm is null");
-        //prepare dictionary property to pass to dialog
-        EditLearningSpaceDialogInitialValues = new Dictionary<string, string>
-        {
-            {"Name", LearningSpaceVm.Name},
-            {"Shortname", LearningSpaceVm.Shortname},
-            {"Authors", LearningSpaceVm.Authors},
-            {"Description", LearningSpaceVm.Description},
-            {"Goals", LearningSpaceVm.Goals},
-        };
-        EditLearningSpaceDialogOpen = true;
-    }
 
     /// <summary>
     /// Changes property values of the learning space viewmodel with return values from the dialog.

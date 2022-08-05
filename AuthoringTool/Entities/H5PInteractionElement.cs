@@ -15,7 +15,7 @@ public class H5PInteractionElement : LearningElement
     /// <summary>
     /// Constructor for serialization. DO NOT USE FOR NORMAL INITIALIZATION.
     /// </summary>
-    private H5PInteractionElement() : base()
+    private H5PInteractionElement()
     {
     }
 }

@@ -1,7 +1,6 @@
 using System;
 using System.IO.Abstractions;
 using AuthoringTool;
-using AuthoringTool.API;
 using AuthoringTool.API.Configuration;
 using AuthoringTool.BusinessLogic.API;
 using AuthoringTool.DataAccess.API;
@@ -118,10 +117,11 @@ public class StartupUt
 
     private static readonly Type[] ConfigurePresentationLogicRequiredTypes =
     {
-        typeof(IPresentationLogic), typeof(AuthoringToolWorkspacePresenter), typeof(ILearningWorldPresenter),
+        typeof(IPresentationLogic), typeof(IAuthoringToolWorkspacePresenter), typeof(ILearningWorldPresenter),
         typeof(ILearningSpacePresenter), typeof(ILearningElementPresenter), typeof(IAuthoringToolWorkspaceViewModel),
         typeof(ILearningSpaceViewModalDialogFactory), typeof(ILearningSpaceViewModalDialogInputFieldsFactory),
         typeof(ILearningWorldViewModalDialogFactory), typeof(ILearningWorldViewModalDialogInputFieldsFactory),
+        typeof(IAuthoringToolWorkspaceViewModalDialogFactory), typeof(IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory),
         typeof(ILearningWorldViewModalDialogInputFieldsFactory)
     };
     [Test]
