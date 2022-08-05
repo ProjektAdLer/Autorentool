@@ -15,7 +15,7 @@ namespace AuthoringTool.DataAccess.XmlClasses.XmlFileFactories;
 /// <summary>
 /// Creates all H5P files in the needed XML File.
 /// </summary>
-public class XmlH5PFactory
+public class XmlH5PFactory : IXmlH5PFactory
 {
     private string currWorkDir;
     public string hardcodedPath = "XMLFilesForExport";
@@ -26,26 +26,26 @@ public class XmlH5PFactory
     private List<ActivitiesInforefXmlFile>? ActivitiesInforefXmlFileList;
 
     internal IXmlFileManager _fileManager;
-    internal IFilesXmlFiles FilesXmlFiles { get; }
-    internal IFilesXmlFile FilesXmlFileBlock1 { get; }
-    internal IFilesXmlFile FilesXmlFileBlock2 { get; }
-    internal IActivitiesGradesXmlGradeItem ActivitiesGradesXmlGradeItem { get; }
-    internal IActivitiesGradesXmlGradeItems ActivitiesGradesXmlGradeItems { get; }
-    internal IActivitiesGradesXmlActivityGradebook ActivitiesGradesXmlActivityGradebook { get; }
-    internal IActivitiesH5PActivityXmlActivity ActivitiesH5PActivityXmlActivity { get; }
-    internal IActivitiesH5PActivityXmlH5PActivity ActivitiesH5PActivityXmlH5PActivity { get; }
-    internal IActivitiesRolesXmlRoles ActivitiesRolesXmlRoles { get; }
-    internal IActivitiesModuleXmlModule ActivitiesModuleXmlModule { get; }
-    internal IActivitiesGradeHistoryXmlGradeHistory ActivitiesGradeHistoryXmlGradeHistory { get; }
-    internal IActivitiesInforefXmlFile ActivitiesInforefXmlFileBlock1 { get; }
-    internal IActivitiesInforefXmlFile ActivitiesInforefXmlFileBlock2 { get; }
-    internal IActivitiesInforefXmlFileref ActivitiesInforefXmlFileref { get; }
-    internal IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
-    internal IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
-    internal IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
-    internal ISectionsInforefXmlInforef SectionsInforefXmlInforef { get; }
-    internal ISectionsSectionXmlSection SectionsSectionXmlSection { get; }
-    internal IReadDSL? ReadDsl { get; }
+    public IFilesXmlFiles FilesXmlFiles { get; }
+    public IFilesXmlFile FilesXmlFileBlock1 { get; }
+    public IFilesXmlFile FilesXmlFileBlock2 { get; }
+    public IActivitiesGradesXmlGradeItem ActivitiesGradesXmlGradeItem { get; }
+    public IActivitiesGradesXmlGradeItems ActivitiesGradesXmlGradeItems { get; }
+    public IActivitiesGradesXmlActivityGradebook ActivitiesGradesXmlActivityGradebook { get; }
+    public IActivitiesH5PActivityXmlActivity ActivitiesH5PActivityXmlActivity { get; }
+    public IActivitiesH5PActivityXmlH5PActivity ActivitiesH5PActivityXmlH5PActivity { get; }
+    public IActivitiesRolesXmlRoles ActivitiesRolesXmlRoles { get; }
+    public IActivitiesModuleXmlModule ActivitiesModuleXmlModule { get; }
+    public IActivitiesGradeHistoryXmlGradeHistory ActivitiesGradeHistoryXmlGradeHistory { get; }
+    public IActivitiesInforefXmlFile ActivitiesInforefXmlFileBlock1 { get; }
+    public IActivitiesInforefXmlFile ActivitiesInforefXmlFileBlock2 { get; }
+    public IActivitiesInforefXmlFileref ActivitiesInforefXmlFileref { get; }
+    public IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
+    public IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
+    public IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
+    public ISectionsInforefXmlInforef SectionsInforefXmlInforef { get; }
+    public ISectionsSectionXmlSection SectionsSectionXmlSection { get; }
+    public IReadDSL? ReadDsl { get; }
 
     private IFileSystem _fileSystem;
     
@@ -132,7 +132,7 @@ public class XmlH5PFactory
             foreach (var h5pElement in h5pElementsList)
             {
                 h5pElementId = h5pElement.id.ToString();
-                if (h5pElement.identifier != null) h5pElementName = h5pElement.identifier.value;
+                if (h5pElement.identifier.value != null) h5pElementName = h5pElement.identifier.value;
                 // 2 Methoden daraus machen
                 _fileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(currWorkDir, hardcodedPath, h5pElement.identifier.value));
                 _fileManager.CreateFolderAndFiles(_fileSystem.Path.Join(currWorkDir, hardcodedPath, h5pElement.identifier.value), _fileManager.GetHashCheckSum());

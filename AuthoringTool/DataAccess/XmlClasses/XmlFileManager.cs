@@ -6,8 +6,8 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 
 public class XmlFileManager : IXmlFileManager
 {
-    public string? fileSize { get; set; }
-    public string? fileCheckSum { get; set; }
+    public string FileSize;
+    public string FileCheckSum; 
     
     public List<FilesXmlFile>? filesXmlFilesList ;
     
@@ -16,7 +16,7 @@ public class XmlFileManager : IXmlFileManager
     public XmlFileManager(IFileSystem? fileSystem = null)
     {
         _fileSystem = fileSystem?? new FileSystem();
-        List<FilesXmlFile> filesXmlFilesList = new List<FilesXmlFile>();
+        filesXmlFilesList = new List<FilesXmlFile>();
     }
     
     public List<FilesXmlFile>? GetXmlFilesList()
@@ -40,18 +40,18 @@ public class XmlFileManager : IXmlFileManager
         var comp = sha1hash.ComputeHash(byteFile);
         string hashCheckSum = string.Concat(comp.Select(b => b.ToString("x2")));
 
-        fileCheckSum = hashCheckSum;
-        fileSize = byteFile.Length.ToString();
+        FileCheckSum = hashCheckSum;
+        FileSize = byteFile.Length.ToString();
     }
 
     public string GetHashCheckSum()
     {
-        return fileCheckSum;
+        return FileCheckSum;
     }
     
     public string GetFileSize()
     {
-        return fileSize;
+        return FileSize;
     }
     
     /// <summary>

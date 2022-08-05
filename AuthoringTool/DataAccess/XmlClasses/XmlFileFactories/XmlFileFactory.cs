@@ -109,8 +109,8 @@ public class XmlFileFactory
                 fileElementName = "DSL_Document";
 
                 _fileManager.CalculateHashCheckSumAndFileSize(dslPath);
-                _fileManager.CreateFolderAndFiles(dslPath, _fileManager.fileCheckSum);
-                FileSetParametersFilesXml(_fileManager.fileCheckSum, _fileManager.fileSize);
+                _fileManager.CreateFolderAndFiles(dslPath, _fileManager.FileCheckSum);
+                FileSetParametersFilesXml(_fileManager.FileCheckSum, _fileManager.FileSize);
                 FileSetParametersActivity();
                 FileSetParametersSections();
                 
