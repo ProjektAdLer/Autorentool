@@ -11,6 +11,12 @@
     "win": {
       "icon": "../../../wwwroot/favicon.ico"
     },
+    "linux": {
+      "icon": "../../../wwwroot/favicon.ico"
+    },
+    "osx": {
+      "icon": "../../../wwwroot/favicon.ico"
+    },
     "appId": "com.AuthoringTool.app",
     "productName": "AuthoringTool",
     "copyright": "Copyright © 2022 Team AdLer",
