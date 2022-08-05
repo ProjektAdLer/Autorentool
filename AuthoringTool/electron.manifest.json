@@ -14,7 +14,7 @@
     "linux": {
       "icon": "../../../wwwroot/favicon.ico"
     },
-    "osx": {
+    "mac": {
       "icon": "../../../wwwroot/favicon.ico"
     },
     "appId": "com.AuthoringTool.app",
