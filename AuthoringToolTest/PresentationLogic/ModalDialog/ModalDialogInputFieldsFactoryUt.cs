@@ -1,21 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using AngleSharp.Common;
-using AngleSharp.Dom;
 using AuthoringTool.Components.ModalDialog;
 using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.LearningContent;
-using AuthoringTool.PresentationLogic.LearningSpace;
+using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.ModalDialog;
-using AuthoringTool.View;
-using Bunit;
-using Microsoft.AspNetCore.Components;
-using NSubstitute;
 using NUnit.Framework;
-using NUnit.Framework.Constraints;
-using TestContext = NUnit.Framework.TestContext;
 
 namespace AuthoringToolTest.PresentationLogic.ModalDialog;
 
@@ -23,15 +14,15 @@ namespace AuthoringToolTest.PresentationLogic.ModalDialog;
 
 public class ModalDialogInputFieldsFactoryUt
 {
-    [TestCase("jpg")]
-    [TestCase("png")]
-    [TestCase("webp")]
-    [TestCase("bmp")]
-    [TestCase("mp4")]
-    [TestCase("h5p")]
-    [TestCase("pdf")]
-    public void GetCreateLearningElementInputFields_ValidDragAndDrop_ReturnsCorrectInputFields_ForCorrectFileExtension(string 
-        correctFileExtensionForTest)
+    [TestCase("jpg", ContentTypeEnum.Image)]
+    [TestCase("png", ContentTypeEnum.Image)]
+    [TestCase("webp", ContentTypeEnum.Image)]
+    [TestCase("bmp", ContentTypeEnum.Image)]
+    [TestCase("mp4", ContentTypeEnum.Video)]
+    [TestCase("h5p", ContentTypeEnum.H5P)]
+    [TestCase("pdf", ContentTypeEnum.Pdf)]
+    public void GetCreateLearningElementInputFields_ValidDragAndDrop_ReturnsCorrectInputFields_ForCorrectFileExtensionAndCorrectFileType(string 
+        correctFileExtensionForTest, ContentTypeEnum correctFileTypeForTest)
     {
         var name = "foo";
         var dragAndDropLearningContent =
@@ -75,11 +66,11 @@ public class ModalDialogInputFieldsFactoryUt
             }
             
             
-            //assignment Field: hier habe ich mich schwergetan weil ich dachte das man den Objekt typ welcher
-            //  im autorentool gebaut wird nachstellen müsste, stimmt das so?
+            //assignment Field: solved
             Assert.That(modalDialogInputFields.ElementAt(3).Name, Is.EqualTo("Assignment"));
             Assert.That(modalDialogInputFields.ElementAt(3).Type, Is.EqualTo(ModalDialogInputType.Text));
             Assert.That(modalDialogInputFields.ElementAt(3).Required, Is.EqualTo(true));
+            Assert.That(modalDialogInputFields.ElementAt(3), Is.TypeOf<ModalDialogDropdownInputField>());
             if (modalDialogInputFields.ElementAt(3) is ModalDialogDropdownInputField assignmentDropDownInput)
             {
                 Assert.That(assignmentDropDownInput.ValuesToChoiceMapping.ToList().Count, Is.EqualTo(1));
@@ -108,15 +99,118 @@ public class ModalDialogInputFieldsFactoryUt
             }
 
 
-            //type field: work in progress
+            //type field: solved
             Assert.That(modalDialogInputFields.ElementAt(4).Name, Is.EqualTo("Type"));
             Assert.That(modalDialogInputFields.ElementAt(4).Type, Is.EqualTo(ModalDialogInputType.Text));
             Assert.That(modalDialogInputFields.ElementAt(4).Required, Is.EqualTo(true));
+            Assert.That(modalDialogInputFields.ElementAt(4), Is.TypeOf<ModalDialogDropdownInputField>());
+            if (modalDialogInputFields.ElementAt(4) is ModalDialogDropdownInputField typeDropDownInput)
+            {
+                Assert.That(typeDropDownInput.ValuesToChoiceMapping.ToList().Count, Is.EqualTo(1));
+                Assert.That(
+                    typeDropDownInput.ValuesToChoiceMapping.ToList().ElementAt(0),
+                    Is.TypeOf<ModalDialogDropdownInputFieldChoiceMapping>()
+                );
+                
+                Assert.That(typeDropDownInput.ValuesToChoiceMapping.ToList().ElementAt(0).RequiredValues, Is.EqualTo(null));
+                if (correctFileTypeForTest is ContentTypeEnum.Image or ContentTypeEnum.Pdf)
+                {
+                    Assert.That(typeDropDownInput.ValuesToChoiceMapping.ToList().ElementAt(0).AvailableChoices.Count(), Is.EqualTo(1));
+                    Assert.That(typeDropDownInput.ValuesToChoiceMapping.ToList().ElementAt(0).AvailableChoices.ElementAt(0), Is.EqualTo(ElementTypeEnum.Transfer.ToString()));
+                }
+                else if (correctFileTypeForTest is ContentTypeEnum.Video)
+                {
+                    Assert.That(typeDropDownInput.ValuesToChoiceMapping.ToList().ElementAt(0).AvailableChoices.Count(), Is.EqualTo(2));
+                    Assert.That(typeDropDownInput.ValuesToChoiceMapping.ToList().ElementAt(0).AvailableChoices.ElementAt(0), Is.EqualTo(ElementTypeEnum.Transfer.ToString()));
+                    Assert.That(typeDropDownInput.ValuesToChoiceMapping.ToList().ElementAt(0).AvailableChoices.ElementAt(1), Is.EqualTo(ElementTypeEnum.Activation.ToString()));
+                }
+                else if (correctFileTypeForTest is ContentTypeEnum.H5P)
+                {
+                    Assert.That(typeDropDownInput.ValuesToChoiceMapping.ToList().ElementAt(0).AvailableChoices.Count(), Is.EqualTo(3));
+                    Assert.That(typeDropDownInput.ValuesToChoiceMapping.ToList().ElementAt(0).AvailableChoices.ElementAt(0), Is.EqualTo(ElementTypeEnum.Activation.ToString()));
+                    Assert.That(typeDropDownInput.ValuesToChoiceMapping.ToList().ElementAt(0).AvailableChoices
+                    .ElementAt(1), Is.EqualTo(ElementTypeEnum.Interaction.ToString()));
+                    Assert.That(typeDropDownInput.ValuesToChoiceMapping.ToList().ElementAt(0).AvailableChoices
+                    .ElementAt(2), Is.EqualTo(ElementTypeEnum.Test.ToString()));
+                }
+            }
 
-            //content field: work in progress
+            //content field: solved
             Assert.That(modalDialogInputFields.ElementAt(5).Name, Is.EqualTo("Content"));
             Assert.That(modalDialogInputFields.ElementAt(5).Type, Is.EqualTo(ModalDialogInputType.Text));
             Assert.That(modalDialogInputFields.ElementAt(5).Required, Is.EqualTo(true));
+            Assert.That(modalDialogInputFields.ElementAt(5), Is.TypeOf<ModalDialogDropdownInputField>());
+            if (modalDialogInputFields.ElementAt(5) is ModalDialogDropdownInputField contentDropDownInput)
+            {
+                var valuesToChoiceList = contentDropDownInput.ValuesToChoiceMapping.ToList();
+                if (correctFileTypeForTest is ContentTypeEnum.Image)
+                {
+                    Assert.That(valuesToChoiceList.Count(), Is.EqualTo(1));
+                    
+                    Assert.That(valuesToChoiceList.ElementAt(0).RequiredValues, Is.TypeOf<Dictionary<string,string>>());
+                    Assert.That(valuesToChoiceList.ElementAt(0).RequiredValues, Contains.Key("Type"));
+                    Assert.That(valuesToChoiceList.ElementAt(0).RequiredValues["Type"], Is.EqualTo(ElementTypeEnum.Transfer.ToString()));
+                    
+                    Assert.That(valuesToChoiceList.ElementAt(0).AvailableChoices.Count(), Is.EqualTo(1));
+                    Assert.That(valuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(0), Is.EqualTo(ContentTypeEnum.Image.ToString()));
+                }
+                else if (correctFileTypeForTest is ContentTypeEnum.Video)
+                {
+                    Assert.That(valuesToChoiceList.Count(), Is.EqualTo(2));
+                    
+                    Assert.That(valuesToChoiceList.ElementAt(0).RequiredValues, Is.TypeOf<Dictionary<string,string>>());
+                    Assert.That(valuesToChoiceList.ElementAt(0).RequiredValues, Contains.Key("Type"));
+                    Assert.That(valuesToChoiceList.ElementAt(0).RequiredValues["Type"], Is.EqualTo(ElementTypeEnum.Transfer.ToString()));
+                    
+                    Assert.That(valuesToChoiceList.ElementAt(0).AvailableChoices.Count(), Is.EqualTo(1));
+                    Assert.That(valuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(0), Is.EqualTo(ContentTypeEnum.Video.ToString()));
+                    
+                    Assert.That(valuesToChoiceList.ElementAt(1).RequiredValues, Is.TypeOf<Dictionary<string,string>>());
+                    Assert.That(valuesToChoiceList.ElementAt(1).RequiredValues, Contains.Key("Type"));
+                    Assert.That(valuesToChoiceList.ElementAt(1).RequiredValues["Type"], Is.EqualTo(ElementTypeEnum.Activation.ToString()));
+                    
+                    Assert.That(valuesToChoiceList.ElementAt(1).AvailableChoices.Count(), Is.EqualTo(1));
+                    Assert.That(valuesToChoiceList.ElementAt(1).AvailableChoices.ElementAt(0), Is.EqualTo(ContentTypeEnum.Video.ToString()));
+                }
+                else if (correctFileTypeForTest is ContentTypeEnum.Pdf)
+                {
+                    Assert.That(valuesToChoiceList.Count(), Is.EqualTo(1));
+                    
+                    Assert.That(valuesToChoiceList.ElementAt(0).RequiredValues, Is.TypeOf<Dictionary<string,string>>());
+                    Assert.That(valuesToChoiceList.ElementAt(0).RequiredValues, Contains.Key("Type"));
+                    Assert.That(valuesToChoiceList.ElementAt(0).RequiredValues["Type"], Is.EqualTo(ElementTypeEnum.Transfer.ToString()));
+                    
+                    Assert.That(valuesToChoiceList.ElementAt(0).AvailableChoices.Count(), Is.EqualTo(1));
+                    Assert.That(valuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(0), Is.EqualTo(ContentTypeEnum.Pdf.ToString()));
+                }
+                else if (correctFileTypeForTest is ContentTypeEnum.H5P)
+                {
+                    Assert.That(valuesToChoiceList.Count(), Is.EqualTo(3));
+                    
+                    Assert.That(valuesToChoiceList.ElementAt(0).RequiredValues, Is.TypeOf<Dictionary<string,string>>());
+                    Assert.That(valuesToChoiceList.ElementAt(0).RequiredValues, Contains.Key("Type"));
+                    Assert.That(valuesToChoiceList.ElementAt(0).RequiredValues["Type"], Is.EqualTo(ElementTypeEnum.Activation.ToString()));
+                    
+                    Assert.That(valuesToChoiceList.ElementAt(0).AvailableChoices.Count(), Is.EqualTo(1));
+                    Assert.That(valuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(0), Is.EqualTo(ContentTypeEnum.H5P.ToString()));
+                    
+                    
+                    Assert.That(valuesToChoiceList.ElementAt(1).RequiredValues, Is.TypeOf<Dictionary<string,string>>());
+                    Assert.That(valuesToChoiceList.ElementAt(1).RequiredValues, Contains.Key("Type"));
+                    Assert.That(valuesToChoiceList.ElementAt(1).RequiredValues["Type"], Is.EqualTo(ElementTypeEnum.Interaction.ToString()));
+                    
+                    Assert.That(valuesToChoiceList.ElementAt(1).AvailableChoices.Count(), Is.EqualTo(1));
+                    Assert.That(valuesToChoiceList.ElementAt(1).AvailableChoices.ElementAt(0), Is.EqualTo(ContentTypeEnum.H5P.ToString()));
+                    
+                    
+                    Assert.That(valuesToChoiceList.ElementAt(2).RequiredValues, Is.TypeOf<Dictionary<string,string>>());
+                    Assert.That(valuesToChoiceList.ElementAt(2).RequiredValues, Contains.Key("Type"));
+                    Assert.That(valuesToChoiceList.ElementAt(2).RequiredValues["Type"], Is.EqualTo(ElementTypeEnum.Test.ToString()));
+                    
+                    Assert.That(valuesToChoiceList.ElementAt(2).AvailableChoices.Count(), Is.EqualTo(1));
+                    Assert.That(valuesToChoiceList.ElementAt(2).AvailableChoices.ElementAt(0), Is.EqualTo(ContentTypeEnum.H5P.ToString()));
+                }
+            }
 
             Assert.That(modalDialogInputFields.ElementAt(6).Name, Is.EqualTo("Authors"));
             Assert.That(modalDialogInputFields.ElementAt(6).Type, Is.EqualTo(ModalDialogInputType.Text));
@@ -130,10 +224,22 @@ public class ModalDialogInputFieldsFactoryUt
             Assert.That(modalDialogInputFields.ElementAt(8).Type, Is.EqualTo(ModalDialogInputType.Text));
             Assert.That(modalDialogInputFields.ElementAt(8).Required, Is.EqualTo(false));
 
-            //wieso funktioniert das?
+            //difficulty: solved
             Assert.That(modalDialogInputFields.ElementAt(9).Name, Is.EqualTo("Difficulty"));
             Assert.That(modalDialogInputFields.ElementAt(9).Type, Is.EqualTo(ModalDialogInputType.Text));
             Assert.That(modalDialogInputFields.ElementAt(9).Required, Is.EqualTo(true));
+            Assert.That(modalDialogInputFields.ElementAt(9), Is.TypeOf<ModalDialogDropdownInputField>());
+            if (modalDialogInputFields.ElementAt(9) is ModalDialogDropdownInputField difficultyDropDownInput)
+            {
+                var valuesToChoiceList = difficultyDropDownInput.ValuesToChoiceMapping.ToList();
+                Assert.That(valuesToChoiceList.Count(), Is.EqualTo(1));
+                Assert.That(valuesToChoiceList.ElementAt(0).RequiredValues, Is.EqualTo(null));
+                
+                Assert.That(valuesToChoiceList.ElementAt(0).AvailableChoices.Count(), Is.EqualTo(3));
+                Assert.That(valuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(0), Is.EqualTo(LearningElementDifficultyEnum.Easy.ToString()));
+                Assert.That(valuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(1), Is.EqualTo(LearningElementDifficultyEnum.Medium.ToString()));
+                Assert.That(valuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(2), Is.EqualTo(LearningElementDifficultyEnum.Hard.ToString()));
+            }
 
             Assert.That(modalDialogInputFields.ElementAt(10).Name, Is.EqualTo("Workload (min)"));
             Assert.That(modalDialogInputFields.ElementAt(10).Type, Is.EqualTo(ModalDialogInputType.Number));
@@ -141,7 +247,11 @@ public class ModalDialogInputFieldsFactoryUt
         });
         
     }
-    
+
+    public void GetCreateLearningElementInputFields_ValidDragAndDrop_ReturnsCorrectInputFields_ForDefault()
+    {
+        
+    }
 
     [TestCase("abc")]
     [TestCase("xyz")]
@@ -162,123 +272,21 @@ public class ModalDialogInputFieldsFactoryUt
             spaceName), $"Can not map the file extension '{wrongFileExtensionForTest}' to a ContentType ");
     }
 
-    private ModalDialogInputFieldsFactory GetModalInputFieldsFactoryForTesting()
+    public void GetCreateLearningElementInputFields_ThrowsException_ForWrongFileType()
     {
-        return new ModalDialogInputFieldsFactory();
+        
     }
 
-    /*
+    
+
+    
     [Test]
     public void GetCreateLearningElementInputFields_AlternateTest()
     {
-        for (int contentFileTypeTest = 0; contentFileTypeTest < 8; contentFileTypeTest++)
-        {
-            try
-            {
-                var dragAndDropLearningContentName = "foo";
-                //var dragAndDropLearningContentType =
-                //    helper_GetCreateLearningElementInputFields_ReturnsExpectedFileExtension(contentFileTypeTest);
-                var dragAndDropLearningContentContent = new byte[] { };
-                LearningContentViewModel dragAndDropLearningContent =
-                    new LearningContentViewModel(dragAndDropLearningContentName, dragAndDropLearningContentType,
-                        dragAndDropLearningContentContent);
-
-
-                var Name = "foo";
-                var ShortName = "fshort";
-                var Authors = "bazzle";
-                var Description = "skazzle";
-                var Goals = "zoo";
-                ICollection<ILearningElementViewModel>? learningElements = null;
-                var PositionX = 0D;
-                var PositionY = 0D;
-
-                LearningSpaceViewModel learningSpace = new LearningSpaceViewModel(Name,
-                    ShortName,
-                    Authors,
-                    Description,
-                    Goals,
-                    learningElements,
-                    PositionX,
-                    PositionY);
-
-                IEnumerable<LearningSpaceViewModel> learningSpaces = new[] { learningSpace };
-
-                var worldName = "baskazzle";
-
-                var systemUnderTest = new ModalDialogInputFieldsFactory();
-                var modalDialogInputFields = systemUnderTest.GetCreateLearningElementInputFields
-                    (dragAndDropLearningContent, learningSpaces, worldName).ToList();
-
-
-                Assert.Multiple(() =>
-                    {
-                        Assert.That(modalDialogInputFields.ElementAt(0).Name, Is.EqualTo("Name"));
-                        Assert.That(modalDialogInputFields.ElementAt(0).Type, Is.EqualTo(ModalDialogInputType.Text));
-                        Assert.That(modalDialogInputFields.ElementAt(0).Required, Is.EqualTo(true));
-
-                        Assert.That(modalDialogInputFields.ElementAt(1).Name, Is.EqualTo("Shortname"));
-                        Assert.That(modalDialogInputFields.ElementAt(1).Type, Is.EqualTo(ModalDialogInputType.Text));
-                        Assert.That(modalDialogInputFields.ElementAt(1).Required, Is.EqualTo(true));
-
-                        //parent Field: hier habe ich mich schwergetan weil ich dachte das man den Objekt typ welcher
-                        //   im autorentool gebaut wird nachstellen müsste, stimmt das so?
-                        Assert.That(modalDialogInputFields.ElementAt(2).Name, Is.EqualTo("Parent"));
-                        Assert.That(modalDialogInputFields.ElementAt(2).Type, Is.EqualTo(ModalDialogInputType.Text));
-                        Assert.That(modalDialogInputFields.ElementAt(2).Required, Is.EqualTo(true));
-
-                        //assignment Field: hier habe ich mich schwergetan weil ich dachte das man den Objekt typ welcher
-                        //   im autorentool gebaut wird nachstellen müsste, stimmt das so?
-                        Assert.That(modalDialogInputFields.ElementAt(3).Name, Is.EqualTo("Assignment"));
-                        Assert.That(modalDialogInputFields.ElementAt(3).Type, Is.EqualTo(ModalDialogInputType.Text));
-                        Assert.That(modalDialogInputFields.ElementAt(3).Required, Is.EqualTo(true));
-
-
-                        // type field: hier habe ich mich schwergetan weil ich dachte das man den Objekt typ welcher
-                        //   im autorentool gebaut wird nachstellen müsste, stimmt das so?
-                        Assert.That(modalDialogInputFields.ElementAt(4).Name, Is.EqualTo("Type"));
-                        Assert.That(modalDialogInputFields.ElementAt(4).Type, Is.EqualTo(ModalDialogInputType.Text));
-                        Assert.That(modalDialogInputFields.ElementAt(4).Required, Is.EqualTo(true));
-
-                        // content field: hier habe ich mich schwergetan weil ich dachte das man den Objekt typ welcher
-                        //   im autorentool gebaut wird nachstellen müsste, stimmt das so?
-                        Assert.That(modalDialogInputFields.ElementAt(5).Name, Is.EqualTo("Content"));
-                        Assert.That(modalDialogInputFields.ElementAt(5).Type, Is.EqualTo(ModalDialogInputType.Text));
-                        Assert.That(modalDialogInputFields.ElementAt(5).Required, Is.EqualTo(true));
-
-                        Assert.That(modalDialogInputFields.ElementAt(6).Name, Is.EqualTo("Authors"));
-                        Assert.That(modalDialogInputFields.ElementAt(6).Type, Is.EqualTo(ModalDialogInputType.Text));
-                        Assert.That(modalDialogInputFields.ElementAt(6).Required, Is.EqualTo(false));
-
-                        Assert.That(modalDialogInputFields.ElementAt(7).Name, Is.EqualTo("Description"));
-                        Assert.That(modalDialogInputFields.ElementAt(7).Type, Is.EqualTo(ModalDialogInputType.Text));
-                        Assert.That(modalDialogInputFields.ElementAt(7).Required, Is.EqualTo(true));
-
-                        Assert.That(modalDialogInputFields.ElementAt(8).Name, Is.EqualTo("Goals"));
-                        Assert.That(modalDialogInputFields.ElementAt(8).Type, Is.EqualTo(ModalDialogInputType.Text));
-                        Assert.That(modalDialogInputFields.ElementAt(8).Required, Is.EqualTo(false));
-
-                        //wieso funktioniert das?
-                        Assert.That(modalDialogInputFields.ElementAt(9).Name, Is.EqualTo("Difficulty"));
-                        Assert.That(modalDialogInputFields.ElementAt(9).Type, Is.EqualTo(ModalDialogInputType.Text));
-                        Assert.That(modalDialogInputFields.ElementAt(9).Required, Is.EqualTo(true));
-
-                        Assert.That(modalDialogInputFields.ElementAt(10).Name, Is.EqualTo("Workload (min)"));
-                        Assert.That(modalDialogInputFields.ElementAt(10).Type, Is.EqualTo(ModalDialogInputType.Number));
-                        Assert.That(modalDialogInputFields.ElementAt(10).Required, Is.EqualTo(false));
-                    }
-                );
-            }
-            catch (Exception err)
-            {
-                if (!(contentFileTypeTest is <= 6 and >= 0))
-                {
-                    Assert.That(err.Message, Is.EqualTo("Can not map the file extension 'abc' to a ContentType "));
-                }
-            }
-        }
+        
+        
     }
-*/
+
     [Test]
     public void GetCreateLearningSpaceInputFields()
     {
@@ -328,5 +336,9 @@ public class ModalDialogInputFieldsFactoryUt
     {
         
     }
-
+    
+    private ModalDialogInputFieldsFactory GetModalInputFieldsFactoryForTesting()
+    {
+        return new ModalDialogInputFieldsFactory();
+    }
 }
