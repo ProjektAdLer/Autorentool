@@ -15,7 +15,7 @@ public class VideoTransferElement : LearningElement
     /// <summary>
     /// Constructor for serialization. DO NOT USE FOR NORMAL INITIALIZATION.
     /// </summary>
-    private VideoTransferElement() : base()
+    private VideoTransferElement()
     {
     }
 }

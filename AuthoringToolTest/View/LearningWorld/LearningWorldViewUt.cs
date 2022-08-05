@@ -19,6 +19,7 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using TestContext = Bunit.TestContext;
 
@@ -398,6 +399,176 @@ public class LearningWorldViewUt
         svg.MouseLeave(mouseEventArgs);
         
         _mouseService.Received().FireOut(systemUnderTest.Instance, null);
+    }
+
+    [Test]
+    public void AddSpaceButton_Clicked_CallsAddNewLearningSpace()
+    {
+        var systemUnderTest = GetLearningWorldViewForTesting();
+
+        var addSpaceButton = systemUnderTest.FindOrFail("button.btn.btn-primary.add-learning-space");
+        addSpaceButton.Click();
+        _worldPresenter.Received().AddNewLearningSpace();
+    }
+
+    [Test]
+    public void AddElementButton_Clicked_CallsAddNewLearningElement()
+    {
+        var systemUnderTest = GetLearningWorldViewForTesting();
+
+        var addElementButton = systemUnderTest.FindOrFail("button.btn.btn-primary.add-learning-element");
+        addElementButton.Click();
+        _worldPresenter.Received().AddNewLearningElement();
+    }
+
+    [Test]
+    public void LoadSpaceButton_Clicked_CallsLoadLearningSpaceAsync()
+    {
+        var systemUnderTest = GetLearningWorldViewForTesting();
+        
+        var loadSpaceButton = systemUnderTest.FindOrFail("button.btn.btn-primary.load-learning-space");
+        loadSpaceButton.Click();
+        _worldPresenter.Received().LoadLearningSpaceAsync();
+    }
+
+    [Test]
+    public void LoadSpaceButton_Clicked_OperationCancelledExceptionCaught()
+    {
+        _worldPresenter.LoadLearningSpaceAsync().Throws<OperationCanceledException>();
+        
+        var systemUnderTest = GetLearningWorldViewForTesting();
+        
+        var loadSpaceButton = systemUnderTest.FindOrFail("button.btn.btn-primary.load-learning-space");
+        Assert.That(() => loadSpaceButton.Click(), Throws.Nothing);
+        _worldPresenter.Received().LoadLearningSpaceAsync();
+    }
+
+    [Test]
+    public void LoadSpaceButton_Clicked_OtherExceptionsWrappedInErrorState()
+    {
+        _worldPresenter.LoadLearningSpaceAsync().Throws(new Exception("saatana"));
+        
+        var systemUnderTest = GetLearningWorldViewForTesting();
+        
+        var loadSpaceButton = systemUnderTest.FindOrFail("button.btn.btn-primary.load-learning-space");
+        Assert.That(() => loadSpaceButton.Click(), Throws.Nothing);
+        _worldPresenter.Received().LoadLearningSpaceAsync();
+    }
+    
+    [Test]
+    public void LoadElementButton_Clicked_CallsLoadLearningElementAsync()
+    {
+        var systemUnderTest = GetLearningWorldViewForTesting();
+        
+        var loadElementButton = systemUnderTest.FindOrFail("button.btn.btn-primary.load-learning-element");
+        loadElementButton.Click();
+        _worldPresenter.Received().LoadLearningElementAsync();
+    }
+    
+    [Test]
+    public void LoadElementButton_Clicked_OperationCancelledExceptionCaught()
+    {
+        _worldPresenter.LoadLearningElementAsync().Throws<OperationCanceledException>();
+        
+        var systemUnderTest = GetLearningWorldViewForTesting();
+        
+        var loadElementButton = systemUnderTest.FindOrFail("button.btn.btn-primary.load-learning-element");
+        Assert.That(() => loadElementButton.Click(), Throws.Nothing);
+        _worldPresenter.Received().LoadLearningElementAsync();
+    }
+    
+    [Test]
+    public void LoadElementButton_Clicked_OtherExceptionsWrappedInErrorState()
+    {
+        _worldPresenter.LoadLearningSpaceAsync().Throws(new Exception("saatana"));
+        
+        var systemUnderTest = GetLearningWorldViewForTesting();
+        
+        var loadElementButton = systemUnderTest.FindOrFail("button.btn.btn-primary.load-learning-element");
+        Assert.That(() => loadElementButton.Click(), Throws.Nothing);
+        _worldPresenter.Received().LoadLearningElementAsync();
+    }
+    
+    [Test]
+    public void EditObjectButton_Clicked_CallsOpenEditSelectedLearningObjectDialog()
+    {
+        var element = Substitute.For<ILearningElementViewModel>();
+        var worldVm = Substitute.For<ILearningWorldViewModel>();
+        worldVm.LearningElements.Returns(new List<ILearningElementViewModel> { element });
+        worldVm.SelectedLearningObject.Returns(element);
+        _worldPresenter.LearningWorldVm.Returns(worldVm);
+
+        var systemUnderTest = GetLearningWorldViewForTesting();
+        
+        var editObjectButton = systemUnderTest.FindOrFail("button.btn.btn-primary.edit-learning-object");
+        editObjectButton.Click();
+        _worldPresenter.Received().OpenEditSelectedLearningObjectDialog();
+    }
+
+    [Test]
+    public void DeleteObjectButton_Clicked_CallsDeleteSelectedLearningObject()
+    {
+        var element = Substitute.For<ILearningElementViewModel>();
+        var worldVm = Substitute.For<ILearningWorldViewModel>();
+        worldVm.LearningElements.Returns(new List<ILearningElementViewModel> { element });
+        worldVm.SelectedLearningObject.Returns(element);
+        _worldPresenter.LearningWorldVm.Returns(worldVm);
+
+        var systemUnderTest = GetLearningWorldViewForTesting();
+        
+        var editObjectButton = systemUnderTest.FindOrFail("button.btn.btn-primary.delete-learning-object");
+        editObjectButton.Click();
+        _worldPresenter.Received().DeleteSelectedLearningObject();
+    }
+    
+    [Test]
+    public void SaveObjectButton_Clicked_CallsSaveSelectedLearningObjectAsync()
+    {
+        var systemUnderTest = GetLearningWorldViewForTesting();
+        
+        var loadElementButton = systemUnderTest.FindOrFail("button.btn.btn-primary.save-learning-object");
+        loadElementButton.Click();
+        _worldPresenter.Received().SaveSelectedLearningObjectAsync();
+    }
+    
+    [Test]
+    public void SaveObjectButton_Clicked_OperationCancelledExceptionCaught()
+    {
+        _worldPresenter.SaveSelectedLearningObjectAsync().Throws<OperationCanceledException>();
+        
+        var systemUnderTest = GetLearningWorldViewForTesting();
+        
+        var loadElementButton = systemUnderTest.FindOrFail("button.btn.btn-primary.save-learning-object");
+        Assert.That(() => loadElementButton.Click(), Throws.Nothing);
+        _worldPresenter.Received().SaveSelectedLearningObjectAsync();
+    }
+    
+    [Test]
+    public void SaveObjectButton_Clicked_OtherExceptionsWrappedInErrorState()
+    {
+        _worldPresenter.SaveSelectedLearningObjectAsync().Throws(new Exception("saatana"));
+        
+        var systemUnderTest = GetLearningWorldViewForTesting();
+        
+        var loadElementButton = systemUnderTest.FindOrFail("button.btn.btn-primary.save-learning-object");
+        Assert.That(() => loadElementButton.Click(), Throws.Nothing);
+        _worldPresenter.Received().SaveSelectedLearningObjectAsync();
+    }
+    
+    [Test]
+    public void ShowSelectedSpace_Called_CallsShowSelectedLearningSpaceView()
+    {
+        var element = Substitute.For<ILearningElementViewModel>();
+        var worldVm = Substitute.For<ILearningWorldViewModel>();
+        worldVm.LearningElements.Returns(new List<ILearningElementViewModel> { element });
+        worldVm.SelectedLearningObject.Returns(element);
+        _worldPresenter.LearningWorldVm.Returns(worldVm);
+
+        var systemUnderTest = GetLearningWorldViewForTesting();
+        
+        var editObjectButton = systemUnderTest.FindOrFail("button.btn.btn-primary.show-learning-space");
+        editObjectButton.Click();
+        _worldPresenter.Received().ShowSelectedLearningSpaceView();
     }
     
     private IRenderedComponent<LearningWorldView> GetLearningWorldViewForTesting(RenderFragment? childContent = null)

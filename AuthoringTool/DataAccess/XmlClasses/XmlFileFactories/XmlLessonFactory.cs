@@ -1,9 +1,16 @@
-﻿
-using System.IO.Abstractions;
+﻿//First attempts to add a lesson to the BackupStructure 
+
+/*using System.IO.Abstractions;
 using AuthoringTool.DataAccess.DSL;
-using AuthoringTool.DataAccess.XmlClasses.Entities;
-using AuthoringTool.DataAccess.XmlClasses.Entities.activities;
-using AuthoringTool.DataAccess.XmlClasses.Entities.sections;
+using AuthoringTool.DataAccess.XmlClasses.Entities._activities.GradeHistory.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Grades.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Inforef.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Lesson.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Module.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Roles.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Files.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Sections.Inforef.xml;
+using AuthoringTool.DataAccess.XmlClasses.Entities.Sections.Section.xml;
 
 namespace AuthoringTool.DataAccess.XmlClasses.XmlFileFactories;
 
@@ -132,7 +139,7 @@ public class XmlLessonFactory {
             XmlEntityManager.IncreaseFileId();
         }
         
-        FilesXmlFiles.SetParameters(filesXmlFilesList);
+        FilesXmlFiles.File = filesXmlFilesList;
         FilesXmlFiles.Serialize();
     }
 
@@ -147,15 +154,28 @@ public class XmlLessonFactory {
         if (filesXmlFilesList != null)
         {
             filesXmlFilesList.Add(new FilesXmlFile());
-            filesXmlFilesList[filesXmlFilesList.Count - 1].SetParameters(hashCheckSum, learningElementJson.id.ToString(), "mod_lesson",
-                "page_contents",
-                "0", learningElementJson.identifier.value, filesize, "application/zip.h5p", "/", currentTime,
-                currentTime, "$@NULL@$", "0", XmlEntityManager.GetFileIdBlock1().ToString());
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Id = XmlEntityManager.GetFileIdBlock1().ToString();
+            filesXmlFilesList[filesXmlFilesList.Count - 1].ContentHash = hashCheckSum;
+            filesXmlFilesList[filesXmlFilesList.Count - 1].ContextId = learningElementJson.id.ToString();
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Component = "mod_lesson";
+            filesXmlFilesList[filesXmlFilesList.Count - 1].FileArea = "page_contents";
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Filename = learningElementJson.identifier.value;
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Filesize = filesize;
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Mimetype = "application/zip.h5p";
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Timecreated = currentTime;
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Timemodified = currentTime;
+            
             filesXmlFilesList.Add(new FilesXmlFile());
-            filesXmlFilesList[filesXmlFilesList.Count - 1].SetParameters(hashCheckSum, learningElementJson.id.ToString(), "mod_lesson",
-                "page_contents",
-                "0", h5pElementName, filesize, "application/zip.h5p", "/", currentTime,
-                currentTime, "$@NULL@$", "0", XmlEntityManager.GetFileIdBlock2().ToString());
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Id = XmlEntityManager.GetFileIdBlock2().ToString();
+            filesXmlFilesList[filesXmlFilesList.Count - 1].ContentHash = hashCheckSum;
+            filesXmlFilesList[filesXmlFilesList.Count - 1].ContextId = learningElementJson.id.ToString();
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Component = "mod_lesson";
+            filesXmlFilesList[filesXmlFilesList.Count - 1].FileArea = "page_contents";
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Filename = learningElementJson.identifier.value;
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Filesize = filesize;
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Mimetype = "application/zip.h5p";
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Timecreated = currentTime;
+            filesXmlFilesList[filesXmlFilesList.Count - 1].Timemodified = currentTime;
         }
     }
 
@@ -168,53 +188,72 @@ public class XmlLessonFactory {
         CreateActivityFolder(learningSpaceId);
         
         //file activities/lesson.../grades.xml
-        ActivitiesGradesXmlGradeItem.SetParameters(learningSpaceId, learningSpaceName,
-            "mod", "lesson", "1", "0", "$@NULL@$", "",
-            "$@NULL@$", "1", "100.00000", "0.00000", "$@NULL@$", "$@NULL@$",
-            "0.00000", "1.00000", "0.00000", "0.00000", "0.25000",
-            "0", "5", "0", "$@NULL@$", "0", "0", "0", "0",
-            currentTime, currentTime, "", learningSpaceId);
-        ActivitiesGradesXmlGradeItems.SetParameters(ActivitiesGradesXmlGradeItem as ActivitiesGradesXmlGradeItem);
-        ActivitiesGradesXmlActivityGradebook.SetParameterts(ActivitiesGradesXmlGradeItems as ActivitiesGradesXmlGradeItems,
-            "");
+        ActivitiesGradesXmlGradeItem.CategoryId = learningSpaceId;
+        ActivitiesGradesXmlGradeItem.ItemName = learningSpaceName;
+        ActivitiesGradesXmlGradeItem.ItemType = "mod";
+        ActivitiesGradesXmlGradeItem.ItemModule = "lesson";
+        ActivitiesGradesXmlGradeItem.IdNumber = "";
+        ActivitiesGradesXmlGradeItem.Aggregationcoef2 = "0.25000";
+        ActivitiesGradesXmlGradeItem.Sortorder = "5";
+        ActivitiesGradesXmlGradeItem.Timecreated = currentTime;
+        ActivitiesGradesXmlGradeItem.Timemodified = currentTime;
+        ActivitiesGradesXmlGradeItem.Id = learningSpaceId;
+
+        ActivitiesGradesXmlGradeItems.GradeItem = (ActivitiesGradesXmlGradeItem) ActivitiesGradesXmlGradeItem;
+        ActivitiesGradesXmlActivityGradebook.GradeItems = (ActivitiesGradesXmlGradeItems) ActivitiesGradesXmlGradeItems;
+
         ActivitiesGradesXmlActivityGradebook.Serialize("lesson", learningSpaceId);
         
         //file activities/lesson.../lesson.xml
-        ActivitiesLessonXmlAnswer.SetParameters("0", "0", "0", "0", currentTime,
-            currentTime, "This_Page", "$@NULL@$", "0", "0", "", "1");
-        ActivitiesLessonXmlAnswers.SetParameters(ActivitiesLessonXmlAnswer as ActivitiesLessonXmlAnswer);
-        ActivitiesLessonXmlPage.SetParameters("0", "0", "20", "0", "1", "1",
-            currentTime, currentTime, "Content_Page_1", 
-            "@@PLUGINFILE@@/"+learningElementJson.identifier.value, "1", 
-            ActivitiesLessonXmlAnswers as ActivitiesLessonXmlAnswers, "", "1");
-        ActivitiesLessonXmlPages.SetParameters(ActivitiesLessonXmlPage as ActivitiesLessonXmlPage);
-        ActivitiesLessonXmlLesson.SetParameters("1", learningSpaceName, "", "1",
-            "0", "0", "0", "", "0", "", "100", "1",
-            "0", "0", "5", "1", "0", "0", "0",
-            "0", "1", "0", "0", "0", "", "480",
-            "640", "0", "0", "480", "640", "#FFFFF", "0",
-            "0", "0", "0", "0", currentTime, "0",
-            "0", "0", ActivitiesLessonXmlPages as ActivitiesLessonXmlPages, 
-            "", "", "", learningSpaceId);
-        ActivitiesLessonXmlActivity.SetParameters(ActivitiesLessonXmlLesson as ActivitiesLessonXmlLesson,
-            learningSpaceId, learningSpaceId, "lesson", "1");
+        ActivitiesLessonXmlAnswer.JumpTo = "0";
+        ActivitiesLessonXmlAnswer.Timecreated = currentTime;
+        ActivitiesLessonXmlAnswer.Timemodified = currentTime;
+        ActivitiesLessonXmlAnswer.AnswerText = "This_Page";
+        ActivitiesLessonXmlAnswer.Id = "1";
+
+        ActivitiesLessonXmlAnswers.Answer = (ActivitiesLessonXmlAnswer) ActivitiesLessonXmlAnswer;
+
+        ActivitiesLessonXmlPage.PrevPageId = "0";
+        ActivitiesLessonXmlPage.NextPageId = "0";
+        ActivitiesLessonXmlPage.Timecreated = currentTime;
+        ActivitiesLessonXmlPage.Timemodified = currentTime;
+        ActivitiesLessonXmlPage.Title = "Content_Page_1";
+        ActivitiesLessonXmlPage.Contents = "@@PLUGINFILE@@/" + learningElementJson.identifier.value;
+        ActivitiesLessonXmlPage.Answers = (ActivitiesLessonXmlAnswers) ActivitiesLessonXmlAnswers;
+        ActivitiesLessonXmlPage.Id = "1";
+        
+        ActivitiesLessonXmlPages.Page = (ActivitiesLessonXmlPage) ActivitiesLessonXmlPage;
+
+        ActivitiesLessonXmlLesson.Name = learningSpaceName;
+        ActivitiesLessonXmlLesson.Bgcolor = "#FFFFF";
+        ActivitiesLessonXmlLesson.Progressbar = "1";
+        ActivitiesLessonXmlLesson.Pages = (ActivitiesLessonXmlPages) ActivitiesLessonXmlPages;
+        ActivitiesLessonXmlLesson.Id = learningSpaceId;
+ 
+        ActivitiesLessonXmlActivity.Lesson = (ActivitiesLessonXmlLesson) ActivitiesLessonXmlLesson;
+        ActivitiesLessonXmlActivity.Id = learningSpaceId;
+        ActivitiesLessonXmlActivity.ModuleId = learningSpaceId;
+        ActivitiesLessonXmlActivity.ModuleName = "lesson";
+        
         ActivitiesLessonXmlActivity.Serialize("lesson", learningSpaceId);
         
         //file activities/lesson.../roles.xml
-        ActivitiesRolesXmlRoles.SetParameterts("", "");
+        ActivitiesRolesXmlRoles.RoleOverrides = "";
+        ActivitiesRolesXmlRoles.RoleAssignments = "";
+        
         ActivitiesRolesXmlRoles.Serialize("lesson", learningSpaceId);
         
         //file activities/lesson.../module.xml
-        ActivitiesModuleXmlModule.SetParameterts("lesson", learningSpaceId, learningSpaceId,
-            "", currentTime, "0", "0", "1",
-            "1", "1", "0", "0",
-            "1", "$@NULL@$", "0",
-            "0", "$@NULL@$", "0", "", 
-            learningSpaceId, "2021051700");
+        ActivitiesModuleXmlModule.ModuleName = "lesson";
+        ActivitiesModuleXmlModule.SectionId = learningSpaceId;
+        ActivitiesModuleXmlModule.SectionNumber = learningSpaceId;
+        ActivitiesModuleXmlModule.Added = currentTime;
+        ActivitiesModuleXmlModule.GroupingId = "0";
+        ActivitiesModuleXmlModule.Id = learningSpaceId;
+
         ActivitiesModuleXmlModule.Serialize("lesson", learningSpaceId);
         
         //file activities/lesson.../grade_history.xml
-        ActivitiesGradeHistoryXmlGradeHistory.SetParameterts("");
         ActivitiesGradeHistoryXmlGradeHistory.Serialize("lesson", learningSpaceId);
         
         //file activities/lesson.../inforef.xml
@@ -222,20 +261,18 @@ public class XmlLessonFactory {
         if (ActivitiesInforefXmlFileList != null)
         {
             ActivitiesInforefXmlFileList.Add(new ActivitiesInforefXmlFile());
-            ActivitiesInforefXmlFileList[ActivitiesInforefXmlFileList.Count - 1]
-                .SetParameters(XmlEntityManager.GetFileIdBlock1().ToString());
+            ActivitiesInforefXmlFileList[ActivitiesInforefXmlFileList.Count - 1].Id = XmlEntityManager.GetFileIdBlock1().ToString();
             ActivitiesInforefXmlFileList.Add(new ActivitiesInforefXmlFile());
-            ActivitiesInforefXmlFileList[ActivitiesInforefXmlFileList.Count - 1]
-                .SetParameters(XmlEntityManager.GetFileIdBlock2().ToString());
-
-            ActivitiesInforefXmlFileref.SetParameters(ActivitiesInforefXmlFileList);
+            ActivitiesInforefXmlFileList[ActivitiesInforefXmlFileList.Count - 1].Id = XmlEntityManager.GetFileIdBlock2().ToString();
+            
+            ActivitiesInforefXmlFileref.File = ActivitiesInforefXmlFileList;
         }
         
-        ActivitiesInforefXmlGradeItem.SetParameters("1");
-        ActivitiesInforefXmlGradeItemref.SetParameters(ActivitiesInforefXmlGradeItem as ActivitiesInforefXmlGradeItem ?? throw new InvalidOperationException());
+        ActivitiesInforefXmlGradeItemref.GradeItem = (ActivitiesInforefXmlGradeItem) ActivitiesInforefXmlGradeItem;
         
-        ActivitiesInforefXmlInforef.SetParameters(ActivitiesInforefXmlFileref as ActivitiesInforefXmlFileref, 
-            ActivitiesInforefXmlGradeItemref as ActivitiesInforefXmlGradeItemref);
+        ActivitiesInforefXmlInforef.Fileref = (ActivitiesInforefXmlFileref) ActivitiesInforefXmlFileref; 
+        ActivitiesInforefXmlInforef.GradeItemref = (ActivitiesInforefXmlGradeItemref) ActivitiesInforefXmlGradeItemref;
+        
         ActivitiesInforefXmlInforef.Serialize("lesson", learningSpaceId);
     }
     
@@ -247,13 +284,15 @@ public class XmlLessonFactory {
         CreateSectionsFolder(learningSpaceId);
         
         //file sections/section.../inforef.xml
-        SectionsInforefXmlInforef.SetParameters();
         SectionsInforefXmlInforef.Serialize("", learningSpaceId);
         
         //file sections/section.../section.xml
-        SectionsSectionXmlSection.SetParameters(learningSpaceId, "$@NULL@$",
-            "$@NULL@$", "0", "$@NULL@$", "1", 
-            "$@NULL@$", currentTime, learningSpaceId);
+        SectionsSectionXmlSection.Number = learningSpaceId;
+        SectionsSectionXmlSection.Name = "$@NULL@$";
+        SectionsSectionXmlSection.Summary = "$@NULL@$";
+        SectionsSectionXmlSection.Timemodified = currentTime;
+        SectionsSectionXmlSection.Id = learningSpaceId;
+
         SectionsSectionXmlSection.Serialize("", learningSpaceId);
     }
     
@@ -277,4 +316,4 @@ public class XmlLessonFactory {
         var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections", "section_"+sectionId));
     }
-}
+}*/

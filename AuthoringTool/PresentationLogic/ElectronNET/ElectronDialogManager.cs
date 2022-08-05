@@ -80,7 +80,7 @@ public class ElectronDialogManager : IElectronDialogManager
     /// <inheritdoc cref="IElectronDialogManager.ShowOpenDirectoryDialogAsync"/>
     public async Task<string> ShowOpenDirectoryDialogAsync(string title, string? defaultPath = null)
     {
-        return (await ShowOpenDialogAsync(title, true, false, defaultPath, null)).First();
+        return (await ShowOpenDialogAsync(title, true, false, defaultPath)).First();
     }
 
     private static FileFilter[] ToFileFilterArray(IEnumerable<FileFilterProxy>? fileFilters)

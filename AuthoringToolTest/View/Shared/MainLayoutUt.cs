@@ -1,4 +1,3 @@
-using System;
 using AngleSharp.Dom;
 using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.API;
@@ -7,7 +6,6 @@ using AuthoringTool.View.Shared;
 using AuthoringTool.View.Toolbox;
 using Bunit;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NUnit.Framework;

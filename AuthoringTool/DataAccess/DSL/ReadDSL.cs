@@ -1,6 +1,5 @@
 ﻿using System.IO.Abstractions;
 using System.Text.Json;
-using FileSystem = System.IO.Abstractions.FileSystem;
 
 namespace AuthoringTool.DataAccess.DSL;
 

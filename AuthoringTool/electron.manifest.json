@@ -8,6 +8,15 @@
   "singleInstance": false,
   "environment": "Production",
   "build": {
+    "win": {
+      "icon": "../../../wwwroot/favicon.ico"
+    },
+    "linux": {
+      "icon": "../../../wwwroot/favicon.ico"
+    },
+    "mac": {
+      "icon": "../../../wwwroot/favicon_highres.ico"
+    },
     "appId": "com.AuthoringTool.app",
     "productName": "AuthoringTool",
     "copyright": "Copyright © 2022 Team AdLer",

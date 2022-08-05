@@ -15,7 +15,7 @@ public class H5PTestElement : LearningElement
     /// <summary>
     /// Constructor for serialization. DO NOT USE FOR NORMAL INITIALIZATION.
     /// </summary>
-    private H5PTestElement() : base()
+    private H5PTestElement()
     {
     }
 }

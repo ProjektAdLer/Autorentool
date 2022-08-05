@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using AngleSharp.Dom;
 using AuthoringTool.Components.ModalDialog;
 using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
@@ -12,7 +10,6 @@ using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.ModalDialog;
 using AuthoringTool.View.LearningElement;
 using AuthoringTool.View.LearningSpace;
-using AuthoringTool.View.Shared;
 using Bunit;
 using Bunit.TestDoubles;
 using Microsoft.AspNetCore.Components;
@@ -197,7 +194,7 @@ public class LearningSpaceViewUt
         var svg = systemUnderTest.FindOrFail("svg");
         svg.MouseLeave(mouseEventArgs);
         
-        _mouseService.Received().FireOut(systemUnderTest.Instance, null);
+        _mouseService.Received().FireOut(systemUnderTest.Instance, mouseEventArgs);
     }
 
     [Test]

@@ -29,7 +29,7 @@ public class AuthoringToolWorkspacePresenterUt
         var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter:worldPresenter);
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.CreateLearningSpaceDialogueOpen, Is.EqualTo(false));
+            Assert.That(systemUnderTest.CreateLearningSpaceDialogOpen, Is.EqualTo(false));
             Assert.That(systemUnderTest.CreateLearningWorldDialogOpen, Is.EqualTo(false));
             Assert.That(systemUnderTest.EditLearningSpaceDialogOpen, Is.EqualTo(false));
             Assert.That(systemUnderTest.EditLearningWorldDialogOpen, Is.EqualTo(false));
@@ -37,6 +37,18 @@ public class AuthoringToolWorkspacePresenterUt
     }
     
     #region CreateNewLearningWorld
+
+    [Test]
+    public void AddNewLearningWorld_SetsFieldToTrue()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        Assert.That(!systemUnderTest.CreateLearningWorldDialogOpen);
+        
+        systemUnderTest.AddNewLearningWorld();
+        
+        Assert.That(systemUnderTest.CreateLearningWorldDialogOpen);
+    }
 
     [Test]
     public void OnCreateWorldDialogClose_DialogDataAreNull_ThrowsException()
@@ -924,7 +936,7 @@ public class AuthoringToolWorkspacePresenterUt
         var callbackCalled = false;
         LearningWorldViewModel? callbackSelectedWorld = null;
         var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspace, presentationLogic);
-        EventHandler<LearningWorldViewModel?> callback = delegate(object? sender, LearningWorldViewModel? model)
+        EventHandler<LearningWorldViewModel?> callback = delegate(object? _, LearningWorldViewModel? model)
         {
             callbackCalled = true;
             callbackSelectedWorld = model;

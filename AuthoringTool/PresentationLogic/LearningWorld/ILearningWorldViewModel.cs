@@ -5,12 +5,12 @@ namespace AuthoringTool.PresentationLogic.LearningWorld;
 
 public interface ILearningWorldViewModel : ILearningElementViewModelParent, ISerializableViewModel, IDisplayableLearningObject
 {
-    string FileEnding { get; }
+    new string FileEnding { get; }
     ICollection<ILearningElementViewModel> LearningElements { get; set; }
     int Workload { get; }
     ICollection<ILearningSpaceViewModel> LearningSpaces { get; set; }
     IEnumerable<ILearningObjectViewModel> LearningObjects { get; }
-    string Name { get; set; }
+    new string Name { get; set; }
     string Shortname { get; set; }
     string Authors { get; set; }
     string Language { get; set; }

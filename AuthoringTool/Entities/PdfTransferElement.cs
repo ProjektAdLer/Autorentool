@@ -15,7 +15,7 @@ public class PdfTransferElement : LearningElement
     /// <summary>
     /// Constructor for serialization. DO NOT USE FOR NORMAL INITIALIZATION.
     /// </summary>
-    private PdfTransferElement() : base()
+    private PdfTransferElement()
     {
     }
 }
