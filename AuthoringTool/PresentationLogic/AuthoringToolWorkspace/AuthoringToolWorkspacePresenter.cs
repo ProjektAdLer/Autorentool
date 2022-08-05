@@ -293,23 +293,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         EditSelectedLearningWorld(name, shortname, authors, language, description, goals);
     }
 
-    public IEnumerable<ModalDialogInputField> ModalDialogWorldInputFields
-    {
-        get
-        {
-            return new ModalDialogInputField[]
-            {
-                new("Name", ModalDialogInputType.Text, true),
-                new("Shortname", ModalDialogInputType.Text, true),
-                new("Authors", ModalDialogInputType.Text),
-                new("Language", ModalDialogInputType.Text, true),
-                new("Description", ModalDialogInputType.Text, true),
-                new("Goals", ModalDialogInputType.Text)
-            };
-        }
-    }
-
-
     internal void OnBeforeShutdown(object? _, BeforeShutdownEventArgs args)
     {
         if (SaveUnsavedChangesDialogOpen)
