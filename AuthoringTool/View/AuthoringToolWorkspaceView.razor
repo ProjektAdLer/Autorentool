@@ -182,7 +182,7 @@
     private void OnCreateWorldDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
         AuthoringToolWorkspaceP.OnCreateWorldDialogClose(returnValueTuple);
-        StateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 
     private void OnEditWorldDialogClose(ModalDialogOnCloseResult returnValueTuple)
@@ -203,27 +203,27 @@
         }
         finally
         {
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
     }
 
     private void OnSaveReplacedWorldDialogCloseAsync(ModalDialogOnCloseResult returnValueTuple)
     {
         AuthoringToolWorkspaceP.OnSaveReplacedWorldDialogClose(returnValueTuple);
-        StateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 
     private void OnReplaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
         AuthoringToolWorkspaceP.OnReplaceDialogClose(returnValueTuple);
-        StateHasChanged();
+        InvokeAsync(StateHasChanged);
         _activeView?.TriggerStateHasChanged();
     }
 
     private void OnSaveDeletedWorldDialogCloseAsync(ModalDialogOnCloseResult returnValueTuple)
     {
         AuthoringToolWorkspaceP.OnSaveDeletedWorldDialogClose(returnValueTuple);
-        StateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 
     private void SetSelectedLearningWorld(string argsValue)
@@ -250,19 +250,19 @@
     private async Task OnDragAndDropResult(Tuple<string, Stream> result)
     {
         await AuthoringToolWorkspaceP.ProcessDragAndDropResult(result);
-        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
         _activeView?.TriggerStateHasChanged();
     }
 
     private void OnShowInformationDialogClose(ModalDialogOnCloseResult result)
     {
         AuthoringToolWorkspaceP.InformationMessageToShow = null;
-        StateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 
     private void OnExceptionEncounteredDialogClose(ModalDialogOnCloseResult result)
     {
         ErrorState = null;
-        StateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 }
