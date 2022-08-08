@@ -45,6 +45,7 @@ public class LearningWorldViewUt
         _ctx.ComponentFactories.AddStub<LearningSpaceView>();
         _ctx.ComponentFactories.AddStub<DraggableLearningSpace>();
         _ctx.ComponentFactories.AddStub<DraggableLearningElement>();
+        _ctx.ComponentFactories.AddStub<ModalDialog>();
         _ctx.Services.AddSingleton(_mouseService);
         _ctx.Services.AddSingleton(_worldPresenter);
         _ctx.Services.AddSingleton(_modalDialogFactory);
@@ -103,6 +104,21 @@ public class LearningWorldViewUt
         var childContentRendered = _ctx.Render(childContent);
         childContentRendered.MarkupMatches(
             @"<button class=""btn btn-primary"">Close Learning Space View</button>");
+    }
+
+    [Test]
+    public void Render_ShowLearningSpaceTrue_ChildContentOnClickCallsCloseLearningSpaceView()
+    {
+        _worldPresenter.ShowingLearningSpaceView.Returns(true);
+        
+        var systemUnderTest = GetLearningWorldViewForTesting();
+
+        var spaceView = systemUnderTest.FindComponentOrFail<Stub<LearningSpaceView>>();
+        var childContent = (RenderFragment)spaceView.Instance.Parameters[nameof(LearningSpaceView.ChildContent)];
+        Assert.That(childContent, Is.Not.Null);
+        var childContentRendered = _ctx.Render(childContent);
+        childContentRendered.FindOrFail("button.btn.btn-primary").Click();
+        _worldPresenter.Received(1).CloseLearningSpaceView();
     }
 
     [Test]
@@ -453,6 +469,23 @@ public class LearningWorldViewUt
         var loadSpaceButton = systemUnderTest.FindOrFail("button.btn.btn-primary.load-learning-space");
         Assert.That(() => loadSpaceButton.Click(), Throws.Nothing);
         _worldPresenter.Received().LoadLearningSpaceAsync();
+        
+        var errorDialog = systemUnderTest.FindComponentOrFail<Stub<ModalDialog>>();
+        Assert.Multiple(() =>
+        {
+            Assert.That(errorDialog.Instance.Parameters[nameof(ModalDialog.Title)], Is.EqualTo("Exception encountered"));
+            Assert.That(errorDialog.Instance.Parameters[nameof(ModalDialog.Text)], Is.EqualTo(
+                @"Exception encountered at Load learning space:
+Exception:
+saatana"));
+            Assert.That(errorDialog.Instance.Parameters[nameof(ModalDialog.DialogType)], Is.EqualTo(ModalDialogType.Ok));
+        });
+        
+        var onclose = errorDialog.Instance.Parameters[nameof(ModalDialog.OnClose)] as ModalDialogOnClose;
+        Assert.That(onclose, Is.Not.Null);
+        //nullability overridden because of above assert - n.stich
+        onclose!.Invoke(new ModalDialogOnCloseResult(ModalDialogReturnValue.Ok));   
+        Assert.That(() => systemUnderTest.FindComponent<Stub<ModalDialog>>(), Throws.Exception);
     }
     
     [Test]
@@ -480,7 +513,7 @@ public class LearningWorldViewUt
     [Test]
     public void LoadElementButton_Clicked_OtherExceptionsWrappedInErrorState()
     {
-        _worldPresenter.LoadLearningSpaceAsync().Throws(new Exception("saatana"));
+        _worldPresenter.LoadLearningElementAsync().Throws(new Exception("saatana"));
         
         var systemUnderTest = GetLearningWorldViewForTesting();
         
