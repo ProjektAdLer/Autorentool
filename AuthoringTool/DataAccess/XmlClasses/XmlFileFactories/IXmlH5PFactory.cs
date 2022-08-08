@@ -36,7 +36,7 @@ public interface IXmlH5PFactory
     IReadDSL? ReadDsl { get; }
 
     void CreateH5PFileFactory();
-    void CreateReadH5PListAndCreate(List<LearningElementJson> h5pElementsList);
+    void ReadH5PListAndSetParameters(List<LearningElementJson> h5pElementsList);
     void H5PSetParametersFilesXml(string? hashCheckSum, string? filesize);
 
     void H5PSetParametersActivity();
