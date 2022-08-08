@@ -4,6 +4,8 @@ using System.Linq;
 using AuthoringTool.Components.ModalDialog;
 using AuthoringTool.PresentationLogic.API;
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
+using AuthoringTool.PresentationLogic.LearningElement;
+using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
 using AuthoringTool.PresentationLogic.ModalDialog;
 using AuthoringTool.View;
@@ -84,19 +86,35 @@ public class AuthoringToolWorkspaceViewUt
     }
     
     [Test]
-    public void Render_RendersSelectedWorldData()
+    public void Render_RendersWorldSelection()
     {
-        var world = new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
+        var world1 = new LearningWorldViewModel("ab", "eb", "ic", "od", "ue", "af");
+        var world2 = new LearningWorldViewModel("aa", "bb", "cc", "dd", "ee", "ff");
+        var world3 = new LearningWorldViewModel("gg", "hh", "ii", "jj", "kk", "ll");
+        var element1 = Substitute.For<ILearningElementViewModel>();
+        var element2 = Substitute.For<ILearningElementViewModel>();
+        var space = Substitute.For<ILearningSpaceViewModel>();
 
-        _authoringToolWorkspaceViewModel.SelectedLearningWorld = world;
+        _authoringToolWorkspaceViewModel.LearningWorlds.Returns(new List<LearningWorldViewModel>()
+        {
+            world1, world2, world3
+        });
+
+        _authoringToolWorkspaceViewModel.SelectedLearningWorld = world1;
+        
+        world1.LearningElements.Add(element1);
+        world1.LearningElements.Add(element2);
+        world1.LearningSpaces.Add(space);
         
         Assert.That(_authoringToolWorkspaceViewModel.SelectedLearningWorld, Is.Not.EqualTo(null));
         
         var systemUnderTest = GetWorkspaceViewForTesting();
         
         var worldData = systemUnderTest.FindOrFail("label.world-data");
-        
-        worldData.MarkupMatches("<label>Selected world: a,Description: b,Elements: 0,Spaces: 0</label>");
+        var worldSelection = systemUnderTest.FindOrFail("select");
+
+        worldSelection.MarkupMatches("<select  value=\"ab\"><option value=\"ab\" selected=\"\">ab</option><option value=\"aa\">aa</option><option value=\"gg\">gg</option></select>");
+        worldData.MarkupMatches("<label class=\"world-data\"> Selected world: ab, Description: ue, Elements: 2, Spaces: 1</label>");
     }
 
     [Test]
@@ -301,7 +319,7 @@ public class AuthoringToolWorkspaceViewUt
     }
     
     [Test]
-    public void ErrorState_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
+    public void ShowCreateLearningWorldDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
     {
         _authoringToolWorkspacePresenter.CreateLearningWorldDialogOpen.Returns(true);
         
@@ -448,6 +466,23 @@ public class AuthoringToolWorkspaceViewUt
         var saveWorldButton = systemUnderTest.FindOrFail("button.btn.btn-primary.save-learning-world");
         Assert.That(() => saveWorldButton.Click(), Throws.Nothing);
         _authoringToolWorkspacePresenter.Received().SaveSelectedLearningWorldAsync();
+    }
+    
+    [Test]
+    public void ExportWorldButton_Clicked_CallsExportLearningWorld()
+    {
+        var world = new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
+        var workSpaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
+        workSpaceVm.SelectedLearningWorld.Returns(world);
+        _authoringToolWorkspaceViewModel.SelectedLearningWorld.Returns(world);
+
+        var systemUnderTest = GetWorkspaceViewForTesting();
+        
+        Assert.That(_authoringToolWorkspaceViewModel.SelectedLearningWorld, Is.Not.EqualTo(null));
+
+        var saveWorldButton = systemUnderTest.FindOrFail("button.btn.btn-primary.export-learning-world");
+        saveWorldButton.Click();
+        _presentationLogic.Received().ConstructBackupAsync(world);
     }
 
 

@@ -10,7 +10,7 @@
 
 <p role="status">Current count of learning worlds: @AuthoringToolWorkspaceVm.LearningWorlds.Count()</p>
 <p role="status" id="filepath">Filepath: @filePath</p>
-<label>
+<label class="world-select">
     Select learning world:
     <select @onchange="args => SetSelectedLearningWorld((string) args.Value!)"
             value="@(AuthoringToolWorkspaceVm.SelectedLearningWorld?.Name)">
