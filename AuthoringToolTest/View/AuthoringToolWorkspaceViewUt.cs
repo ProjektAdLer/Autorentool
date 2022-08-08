@@ -283,7 +283,7 @@ public class AuthoringToolWorkspaceViewUt
     }
     
     [Test]
-    public void ErrorState_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
+    public void ShowCreateLearningWorldDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
     {
         _authoringToolWorkspacePresenter.CreateLearningWorldDialogOpen.Returns(true);
         
@@ -323,6 +323,57 @@ public class AuthoringToolWorkspaceViewUt
         callback!.Invoke(returnValue);
         
         _authoringToolWorkspacePresenter.Received().OnCreateWorldDialogClose(returnValue);
+    }
+    
+    [Test]
+    public void ShowEditLearningWorldDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
+    {
+        _authoringToolWorkspacePresenter.AuthoringToolWorkspaceVm.Returns(_authoringToolWorkspaceViewModel);
+        _authoringToolWorkspacePresenter.EditLearningWorldDialogOpen.Returns(true);
+        var initialValues = new Dictionary<string, string>
+        {
+            {"baba", "bubu"}
+        };
+        
+        _authoringToolWorkspaceViewModel.EditDialogInitialValues.Returns(initialValues);
+        
+        RenderFragment fragment = builder =>
+        {
+            builder.OpenElement(0, "p");
+            builder.AddContent(1, "bar");
+            builder.CloseElement();
+        };
+        ModalDialogOnClose? callback = null;
+
+        _modalDialogFactory.
+            GetEditLearningWorldFragment(initialValues,Arg.Any<ModalDialogOnClose>())
+            .Returns(fragment)
+            .AndDoes(ci =>
+            {
+                callback = ci.Arg<ModalDialogOnClose>();
+            });
+
+        var systemUnderTest = GetWorkspaceViewForTesting();
+
+        _modalDialogFactory.Received().GetEditLearningWorldFragment(initialValues, Arg.Any<ModalDialogOnClose>());
+        var p = systemUnderTest.FindAllOrFail("p").ElementAt(2);
+        p.MarkupMatches("<p>bar</p>");
+
+        if (callback == null)
+        {
+            Assert.Fail("Didn't get a callback from call to modal dialog factory");
+        }
+        
+        var returnDictionary = new Dictionary<string, string>
+        {
+            { "foo", "baz" },
+            { "bar", "baz" }
+        };
+        var returnValue = new ModalDialogOnCloseResult(ModalDialogReturnValue.Ok, returnDictionary);
+
+        callback!.Invoke(returnValue);
+        
+        _authoringToolWorkspacePresenter.Received().OnEditWorldDialogClose(returnValue);
     }
 
     [Test]

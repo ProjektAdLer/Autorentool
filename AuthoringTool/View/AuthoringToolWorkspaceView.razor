@@ -188,7 +188,7 @@
     private void OnEditWorldDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
         AuthoringToolWorkspaceP.OnEditWorldDialogClose(returnValueTuple);
-        StateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 
     private void OnSaveWorldDialogCloseAsync(ModalDialogOnCloseResult returnValueTuple)
