@@ -100,7 +100,7 @@ else
     @if (ErrorState != null)
     {
         <ModalDialog Title="Exception encountered" Text=@ErrorState.ToString()
-                     OnClose="@(_ => { ErrorState = null; })" DialogType=@ModalDialogType.Ok/>
+                     OnClose="@ErrorDialogOnClose" DialogType=@ModalDialogType.Ok/>
     }
 }
 
@@ -233,6 +233,12 @@ else
     public void TriggerStateHasChanged()
     {
         InvokeAsync(StateHasChanged);
+    }
+
+    private void ErrorDialogOnClose(ModalDialogOnCloseResult _)
+    {
+        ErrorState = null;
+        TriggerStateHasChanged();
     }
 
     private void ShowSelectedLearningSpaceView()
