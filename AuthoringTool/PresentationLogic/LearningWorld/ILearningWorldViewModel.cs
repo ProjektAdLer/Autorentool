@@ -1,9 +1,10 @@
+using System.ComponentModel;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 
 namespace AuthoringTool.PresentationLogic.LearningWorld;
 
-public interface ILearningWorldViewModel : ILearningElementViewModelParent, ISerializableViewModel, IDisplayableLearningObject
+public interface ILearningWorldViewModel : ILearningElementViewModelParent, ISerializableViewModel, IDisplayableLearningObject, INotifyPropertyChanged
 {
     new string FileEnding { get; }
     ICollection<ILearningElementViewModel> LearningElements { get; set; }

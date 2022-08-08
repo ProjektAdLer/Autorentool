@@ -6,7 +6,7 @@ using AuthoringTool.PresentationLogic.LearningSpace;
 
 namespace AuthoringTool.PresentationLogic.LearningWorld;
 
-public interface ILearningWorldPresenter : INotifyPropertyChanged
+public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyPropertyChanging
 {
     LearningWorldViewModel CreateNewLearningWorld(string name, string shortname, string authors,
         string language, string description, string goals);

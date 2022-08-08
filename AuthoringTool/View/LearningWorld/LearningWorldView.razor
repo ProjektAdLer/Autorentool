@@ -11,6 +11,7 @@
 @using AuthoringTool.PresentationLogic.ModalDialog
 @using AuthoringTool.View.LearningSpace
 @using AuthoringTool.View.LearningElement
+@using System.ComponentModel
 
 <h2>World: @LearningWorldP.LearningWorldVm?.Name</h2>
 @ChildContent
@@ -121,6 +122,13 @@ else
 #pragma warning restore CS8618
     
     private ExceptionWrapper? ErrorState { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        LearningWorldP.PropertyChanging += OnLearningWorldPresenterPropertyChanging;
+        LearningWorldP.PropertyChanged += OnLearningWorldPresenterPropertyChanged;
+    }
 
 
     private void AddNewLearningSpace()
@@ -251,4 +259,25 @@ else
         LearningWorldP.CloseLearningSpaceView();
     }
 
+    private void OnLearningWorldViewModelPropertyChanged(object? sender, PropertyChangedEventArgs args)
+    {
+        TriggerStateHasChanged();
+    }
+
+    private void OnLearningWorldPresenterPropertyChanged(object? sender, PropertyChangedEventArgs args)
+    {
+        if (args.PropertyName == nameof(LearningWorldP.LearningWorldVm) && LearningWorldP.LearningWorldVm != null)
+        {
+            LearningWorldP.LearningWorldVm.PropertyChanged += OnLearningWorldViewModelPropertyChanged;
+        }
+        TriggerStateHasChanged();
+    }
+
+    private void OnLearningWorldPresenterPropertyChanging(object? sender, PropertyChangingEventArgs args)
+    {
+        if (args.PropertyName == nameof(LearningWorldP.LearningWorldVm) && LearningWorldP.LearningWorldVm != null)
+        {
+            LearningWorldP.LearningWorldVm.PropertyChanged -= OnLearningWorldViewModelPropertyChanged;
+        }
+    }
 }

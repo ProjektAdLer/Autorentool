@@ -24,18 +24,84 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     private readonly ILearningSpacePresenter _learningSpacePresenter;
     private readonly ILearningElementPresenter _learningElementPresenter;
     private readonly ILogger<LearningWorldPresenter> _logger;
+    
+    
     private ILearningWorldViewModel? _learningWorldVm;
+    private LearningContentViewModel? _dragAndDropLearningContent;
+    private bool _editLearningSpaceDialogOpen;
+    private Dictionary<string, string>? _editSpaceDialogInitialValues;
+    private Dictionary<string, string>? _editElementDialogInitialValues;
+    private bool _createLearningSpaceDialogOpen;
+    private bool _editLearningElementDialogOpen;
+    private bool _createLearningElementDialogOpen;
+
+    public bool SelectedLearningObjectIsSpace =>
+        LearningWorldVm?.SelectedLearningObject?.GetType() == typeof(LearningSpaceViewModel);
+
+    public bool ShowingLearningSpaceView => LearningWorldVm is { ShowingLearningSpaceView: true };
     
     /// <summary>
     /// The currently selected LearningWorldViewModel.
     /// </summary>
-    public ILearningWorldViewModel? LearningWorldVm 
+    public ILearningWorldViewModel? LearningWorldVm
     {
         get => _learningWorldVm;
-        private set => SetField(ref _learningWorldVm, value); 
+        private set
+        {
+            var selectedLearningObjectIsSpaceBefore = SelectedLearningObjectIsSpace;
+            var showingLearningSpaceViewBefore = ShowingLearningSpaceView;
+            if (!BeforeSetField(_learningWorldVm, value))
+                return;
+            SetField(ref _learningWorldVm, value);
+            if (SelectedLearningObjectIsSpace != selectedLearningObjectIsSpaceBefore)
+                OnPropertyChanged(nameof(SelectedLearningObjectIsSpace));
+            if (ShowingLearningSpaceView != showingLearningSpaceViewBefore)
+                OnPropertyChanged(nameof(ShowingLearningSpaceView));
+        }
     }
 
-    public LearningContentViewModel? DragAndDropLearningContent { get; private set; }
+    public LearningContentViewModel? DragAndDropLearningContent
+    {
+        get => _dragAndDropLearningContent;
+        private set => SetField(ref _dragAndDropLearningContent, value);
+    }
+
+    public bool EditLearningSpaceDialogOpen
+    {
+        get => _editLearningSpaceDialogOpen;
+        private set => SetField(ref _editLearningSpaceDialogOpen, value);
+    }
+
+    public Dictionary<string, string>? EditSpaceDialogInitialValues
+    {
+        get => _editSpaceDialogInitialValues;
+        private set => SetField(ref _editSpaceDialogInitialValues, value);
+    }
+
+    public Dictionary<string, string>? EditElementDialogInitialValues
+    {
+        get => _editElementDialogInitialValues;
+        private set => SetField(ref _editElementDialogInitialValues, value);
+    }
+
+    public bool CreateLearningSpaceDialogOpen
+    {
+        get => _createLearningSpaceDialogOpen;
+        private set => SetField(ref _createLearningSpaceDialogOpen, value);
+    }
+
+    public bool EditLearningElementDialogOpen
+    {
+        get => _editLearningElementDialogOpen;
+        private set => SetField(ref _editLearningElementDialogOpen, value);
+    }
+
+    public bool CreateLearningElementDialogOpen
+    {
+        get => _createLearningElementDialogOpen;
+        private set => SetField(ref _createLearningElementDialogOpen, value);
+    }
+    
     public void AddNewLearningSpace()
     {
         CreateLearningSpaceDialogOpen = true;
@@ -46,16 +112,6 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
         CreateLearningElementDialogOpen = true;
     }
 
-    public bool SelectedLearningObjectIsSpace =>
-        LearningWorldVm?.SelectedLearningObject?.GetType() == typeof(LearningSpaceViewModel);
-
-    public bool ShowingLearningSpaceView => LearningWorldVm != null && LearningWorldVm.ShowingLearningSpaceView;
-    public bool EditLearningSpaceDialogOpen { get; set; }
-    public Dictionary<string, string>? EditSpaceDialogInitialValues { get; private set; }
-    public Dictionary<string, string>? EditElementDialogInitialValues { get; private set; }
-    public bool CreateLearningSpaceDialogOpen { get; set; }
-    public bool EditLearningElementDialogOpen { get; set; }
-    public bool CreateLearningElementDialogOpen { get; set; }
 
     public void SetLearningWorld(object? caller, LearningWorldViewModel? world)
     {
@@ -571,11 +627,35 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
 
-    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    private void SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return;
+        field = value;
+        OnPropertyChanged(propertyName);
+    }
+
+    private bool SetField<T>(ref T field, T value, params string[] propertyNames)
     {
         if (EqualityComparer<T>.Default.Equals(field, value)) return false;
         field = value;
-        OnPropertyChanged(propertyName);
+        foreach (var propertyName in propertyNames)
+        {
+            OnPropertyChanged(propertyName);
+        }
+        return true;
+    }
+
+    public event PropertyChangingEventHandler? PropertyChanging;
+    
+    protected virtual void OnPropertyChanging([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
+    }
+    
+    private bool BeforeSetField<T>(T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        OnPropertyChanging(propertyName);
         return true;
     }
 }

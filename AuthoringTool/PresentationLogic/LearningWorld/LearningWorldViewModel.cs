@@ -1,4 +1,6 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 
@@ -35,19 +37,114 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         LearningSpaces = learningSpaces ?? new Collection<ILearningSpaceViewModel>();
     }
     public const string fileEnding = "awf";
+    
+    private ICollection<ILearningElementViewModel> _learningElements;
+    private ICollection<ILearningSpaceViewModel> _learningSpaces;
+    private string _name;
+    private string _shortname;
+    private string _authors;
+    private string _language;
+    private string _description;
+    private string _goals;
+    private bool _unsavedChanges;
+    private ILearningObjectViewModel? _selectedLearningObject;
+    private bool _showingLearningSpaceView;
+
     public string FileEnding => fileEnding;
-    public ICollection<ILearningElementViewModel> LearningElements { get; set; }
+
+    public ICollection<ILearningElementViewModel> LearningElements
+    {
+        get => _learningElements;
+        set
+        {
+            if (!SetField(ref _learningElements, value)) return;
+            OnPropertyChanged(nameof(LearningObjects));
+            OnPropertyChanged(nameof(Workload));
+        }
+    }
+
+    public ICollection<ILearningSpaceViewModel> LearningSpaces
+    {
+        get => _learningSpaces;
+        set
+        {
+            if (!SetField(ref _learningSpaces, value)) return;
+            OnPropertyChanged(nameof(LearningObjects));
+            OnPropertyChanged(nameof(Workload));
+        }
+    }
+
+    public IEnumerable<ILearningObjectViewModel> LearningObjects => LearningElements.Concat<ILearningObjectViewModel>(LearningSpaces);
     public int Workload =>
         LearningSpaces.Sum(space => space.Workload) + LearningElements.Sum(element => element.Workload);
-    public ICollection<ILearningSpaceViewModel> LearningSpaces { get; set; }
-    public IEnumerable<ILearningObjectViewModel> LearningObjects => LearningElements.Concat<ILearningObjectViewModel>(LearningSpaces);
-    public string Name { get; set; }
-    public string Shortname { get; set; }
-    public string Authors { get; set; }
-    public string Language { get; set; }
-    public string Description { get; set; }
-    public string Goals { get; set; }
-    public bool UnsavedChanges { get; set; }
-    public ILearningObjectViewModel? SelectedLearningObject { get; set; }
-    public bool ShowingLearningSpaceView { get; set; }
+
+    public string Name
+    {
+        get => _name;
+        set => SetField(ref _name, value);
+    }
+
+    public string Shortname
+    {
+        get => _shortname;
+        set => SetField(ref _shortname, value);
+    }
+
+    public string Authors
+    {
+        get => _authors;
+        set => SetField(ref _authors, value);
+    }
+
+    public string Language
+    {
+        get => _language;
+        set => SetField(ref _language, value);
+    }
+
+    public string Description
+    {
+        get => _description;
+        set => SetField(ref _description, value);
+    }
+
+    public string Goals
+    {
+        get => _goals;
+        set => SetField(ref _goals, value);
+    }
+
+    public bool UnsavedChanges
+    {
+        get => _unsavedChanges;
+        set => SetField(ref _unsavedChanges, value);
+    }
+
+    public ILearningObjectViewModel? SelectedLearningObject
+    {
+        get => _selectedLearningObject;
+        set => SetField(ref _selectedLearningObject, value);
+    }
+
+    public bool ShowingLearningSpaceView
+    {
+        get => _showingLearningSpaceView;
+        set => SetField(ref _showingLearningSpaceView, value);
+    }
+    
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        field = value;
+        OnPropertyChanged(propertyName);
+        return true;
+    }
 }
