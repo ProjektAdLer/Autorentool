@@ -120,7 +120,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: authoringtool-win
-          path: ./AuthoringTool/bin/Desktop_Publish/win-unpacked/AuthoringTool.exe
+          path: ./AuthoringTool/bin/Desktop_Publish/AuthoringTool*.exe
           if-no-files-found: error
   
   publish-linux:
