@@ -3,14 +3,14 @@ using AuthoringTool.DataAccess.XmlClasses.XmlFileFactories;
 
 namespace AuthoringTool.DataAccess.XmlClasses;
 
-public class XmlEntityManager
+public class XmlEntityManager : IXmlEntityManager
 {
     //both ints are required for the xml files, they need the ids of the previous 2 elements.
     public static int FileIdBlock1 = 1;
     public static int FileIdBlock2 = 2;
     
     //run all factorys that are available, to set the parameters and create the xml files
-    public void GetFactories(ReadDSL readDsl, string dslpath)
+    public void GetFactories(IReadDSL readDsl, string dslpath)
     {
         XmlFileManager filemanager = new XmlFileManager();
 

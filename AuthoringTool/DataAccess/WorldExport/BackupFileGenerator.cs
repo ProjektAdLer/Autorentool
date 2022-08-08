@@ -16,16 +16,14 @@ public class BackupFileGenerator : IBackupFileGenerator
 {
     
     private IFileSystem _fileSystem;
+    public IXmlEntityManager xmlEntityManager;
 
-    public BackupFileGenerator(): this(new FileSystem())
-    {
-        
-    }
     
     // Constructor for tests. fileSystem makes it possible to test various System methods that write files on disk.
-    public BackupFileGenerator(IFileSystem fileSystem)
+    public BackupFileGenerator(IFileSystem? fileSystem = null, IXmlEntityManager entityManager = null)
     {
-        _fileSystem = fileSystem;
+        _fileSystem = fileSystem ?? new FileSystem();
+        xmlEntityManager = entityManager ?? new XmlEntityManager();
     }
 
     ///<inheritdoc cref="IBackupFileGenerator.CreateBackupFolders"/>
@@ -40,9 +38,8 @@ public class BackupFileGenerator : IBackupFileGenerator
     }
 
     /// <inheritdoc cref="IBackupFileGenerator.WriteXmlFiles"/>
-    public void WriteXmlFiles(ReadDSL? readDsl, string dslpath)
+    public void WriteXmlFiles(IReadDSL? readDsl, string dslpath)
     {
-        var xmlEntityManager = new XmlEntityManager();
         if (readDsl != null) xmlEntityManager.GetFactories(readDsl, dslpath);
     }
     

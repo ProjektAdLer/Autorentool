@@ -1,6 +1,9 @@
 ﻿using System.IO;
 using System.IO.Abstractions.TestingHelpers;
+using AuthoringTool.DataAccess;
+using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.WorldExport;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.WorldExport;
@@ -8,6 +11,7 @@ namespace AuthoringToolTest.DataAccess.WorldExport;
 [TestFixture]
 public class BackupFileGeneratorUt
 {
+    
     [Test]
     public void BackupFileGenerator_CreateBackupFolders_EveryFolderCreated()
     {
@@ -73,20 +77,51 @@ public class BackupFileGeneratorUt
         Assert.That(copiedFile, Contains.Item(fullPathFile));
     }
 
-    /*
     [Test]
     public void BackupFileGenerator_WriteBackupFile_BackupFileCreated()
     {
         //Arrange 
+        var mockReadDsl = Substitute.For<IReadDSL>();
         var mockFileSystem = new MockFileSystem();
-        var backupFileGen = new BackupFileGenerator(mockFileSystem);
-        backupFileGen.CreateBackupFolders();
+        var mockEntityManager = Substitute.For<IXmlEntityManager>();
+        var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport"), new MockFileData("Hello World"));
         
         //Act
-        backupFileGen.WriteBackupFile();
+        var systemUnderTest = new BackupFileGenerator(mockFileSystem, mockEntityManager);
+        systemUnderTest.CreateBackupFolders();
+        systemUnderTest.WriteXmlFiles(mockReadDsl, Path.Join(currWorkDir, "XMLFilesForExport", "Hello World"));
         
         //Assert
-        Assert.That(Directory.GetFiles(backupFileGen.GetTempDir()), Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.xmlEntityManager, Is.Not.Null);
+            systemUnderTest.xmlEntityManager.Received().GetFactories(mockReadDsl, Path.Join(currWorkDir, "XMLFilesForExport", "Hello World"));
+            
+        });
+
+    }
+    /*
+    [Test]
+    public void BackupFileGenerator_WriteBackupFile_FilesCreated_AndTempDirectoryDeleted()
+    {
+        //Arrange
+        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockFileSystem = new MockFileSystem();
+        var mockTarSystem = new mock
+        var mockEntityManager = Substitute.For<IXmlEntityManager>();
+        var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport"), new MockFileData("Hello World"));
+
+        var systemUnderTest = new BackupFileGenerator(mockFileSystem, mockEntityManager);
+        systemUnderTest.CreateBackupFolders();
+        systemUnderTest.WriteXmlFiles(mockReadDsl, Path.Join(currWorkDir, "XMLFilesForExport", "Hello World"));
+
+        //Act
+        systemUnderTest.WriteBackupFile(Path.Join(currWorkDir, "XMLFilesForExport", "Hello World"));
+        
+        //Assert
+           
     }*/
     
 }
