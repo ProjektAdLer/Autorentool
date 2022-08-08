@@ -12,5 +12,5 @@ public class H5PActivationElementViewModel : ActivationElementViewModel
         LearningElementDifficultyEnum difficulty, int workload, double positionX, double positionY) : base(name,
         shortname, parent, learningContent, authors, description, goals, difficulty, workload, positionX, positionY)
     {
-    }
-}
+    } 
+} 

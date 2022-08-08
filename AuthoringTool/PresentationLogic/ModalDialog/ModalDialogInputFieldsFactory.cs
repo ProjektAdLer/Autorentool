@@ -222,7 +222,7 @@ class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputFieldsFa
                             ElementTypeEnum.Activation.ToString(), ElementTypeEnum.Interaction.ToString(),
                             ElementTypeEnum.Test.ToString()
                         })
-                }, true),
+                },  true),
             _ => throw new ArgumentOutOfRangeException(nameof(contentType), contentType, "Unknown content type")
         };
     }

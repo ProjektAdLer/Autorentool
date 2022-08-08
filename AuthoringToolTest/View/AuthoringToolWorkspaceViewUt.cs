@@ -1,11 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using AuthoringTool.Components.ModalDialog;
 using AuthoringTool.PresentationLogic.API;
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
 using AuthoringTool.PresentationLogic.LearningWorld;
 using AuthoringTool.PresentationLogic.ModalDialog;
 using AuthoringTool.View;
 using Bunit;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -76,6 +79,250 @@ public class AuthoringToolWorkspaceViewUt
 
         titleHeader.MarkupMatches("<h3>AuthoringTool Workspace</h3>");
         worldCountFilePath.MarkupMatches("<p role=\"status\">Current count of learning worlds: 2</p> <p role=\"status\" id=\"filepath\">Filepath:</p>");
+    }
+
+    [Test]
+    public void ShowInformationMessageDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsOnDialogClose()
+    {
+        _authoringToolWorkspacePresenter.InformationMessageToShow = "info";
+
+        RenderFragment fragment = builder =>
+        {
+            builder.OpenElement(0, "p");
+            builder.AddContent(1, "bar");
+            builder.CloseElement();
+        };
+        ModalDialogOnClose? callback = null;
+
+        _modalDialogFactory.GetInformationMessageFragment(Arg.Any<ModalDialogOnClose>(), _authoringToolWorkspacePresenter.InformationMessageToShow)
+            .Returns(fragment)
+            .AndDoes(ci =>
+            {
+                callback = ci.Arg<ModalDialogOnClose>();
+            });
+
+        var systemUnderTest = GetWorkspaceViewForTesting();
+
+        _modalDialogFactory.Received().GetInformationMessageFragment(Arg.Any<ModalDialogOnClose>(), _authoringToolWorkspacePresenter.InformationMessageToShow);
+        var p = systemUnderTest.FindAllOrFail("p").ElementAt(2);
+        p.MarkupMatches("<p>bar</p>");
+
+        if (callback == null)
+        {
+            Assert.Fail("Didn't get a callback from call to modal dialog factory");
+        }
+
+        var returnValue = new ModalDialogOnCloseResult(ModalDialogReturnValue.Ok);
+        
+        callback!.Invoke(returnValue);
+        
+        Assert.That(_authoringToolWorkspacePresenter.InformationMessageToShow, Is.EqualTo(null));
+    }
+    
+    [Test]
+    public void ShowSaveUnsavedWorldsDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
+    {
+        var world = new LearningWorldViewModel("a","b","c","d","e","f");
+        var learningWorlds = new List<LearningWorldViewModel> {world};
+        var unsavedWorldQueues = new Queue<LearningWorldViewModel>(learningWorlds);
+
+        _authoringToolWorkspacePresenter.UnsavedWorldsQueue = unsavedWorldQueues;
+        _authoringToolWorkspacePresenter.SaveUnsavedChangesDialogOpen = true;
+
+        RenderFragment fragment = builder =>
+        {
+            builder.OpenElement(0, "p");
+            builder.AddContent(1, "bar");
+            builder.CloseElement();
+        };
+        ModalDialogOnClose? callback = null;
+
+        _modalDialogFactory.GetSaveUnsavedWorldsFragment(Arg.Any<ModalDialogOnClose>(), _authoringToolWorkspacePresenter.UnsavedWorldsQueue.Peek().Name)
+            .Returns(fragment)
+            .AndDoes(ci =>
+            {
+                callback = ci.Arg<ModalDialogOnClose>();
+            });
+
+        var systemUnderTest = GetWorkspaceViewForTesting();
+
+        _modalDialogFactory.Received().GetSaveUnsavedWorldsFragment(Arg.Any<ModalDialogOnClose>(), world.Name);
+        var p = systemUnderTest.FindAllOrFail("p").ElementAt(2);
+        p.MarkupMatches("<p>bar</p>");
+
+        if (callback == null)
+        {
+            Assert.Fail("Didn't get a callback from call to modal dialog factory");
+        }
+
+        var returnValue = new ModalDialogOnCloseResult(ModalDialogReturnValue.Yes);
+        
+        callback!.Invoke(returnValue);
+        
+        _authoringToolWorkspacePresenter.Received().OnSaveWorldDialogClose(returnValue);
+    }
+    
+    [Test]
+    public void ShowReplaceWorldDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
+    {
+        var world = new LearningWorldViewModel("a","b","c","d","e","f");
+
+        _authoringToolWorkspacePresenter.WorldToReplaceWith = world;
+
+        RenderFragment fragment = builder =>
+        {
+            builder.OpenElement(0, "p");
+            builder.AddContent(1, "bar");
+            builder.CloseElement();
+        };
+        ModalDialogOnClose? callback = null;
+
+        _modalDialogFactory.GetReplaceWorldFragment(Arg.Any<ModalDialogOnClose>(), _authoringToolWorkspacePresenter.WorldToReplaceWith.Name)
+            .Returns(fragment)
+            .AndDoes(ci =>
+            {
+                callback = ci.Arg<ModalDialogOnClose>();
+            });
+
+        var systemUnderTest = GetWorkspaceViewForTesting();
+
+        _modalDialogFactory.Received().GetReplaceWorldFragment(Arg.Any<ModalDialogOnClose>(), world.Name);
+        var p = systemUnderTest.FindAllOrFail("p").ElementAt(2);
+        p.MarkupMatches("<p>bar</p>");
+
+        if (callback == null)
+        {
+            Assert.Fail("Didn't get a callback from call to modal dialog factory");
+        }
+
+        var returnValue = new ModalDialogOnCloseResult(ModalDialogReturnValue.Ok);
+        
+        callback!.Invoke(returnValue);
+        
+        _authoringToolWorkspacePresenter.Received().OnReplaceDialogClose(returnValue);
+    }
+    
+    [Test]
+    public void ShowReplaceUnsavedWorldDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
+    {
+        var world = new LearningWorldViewModel("a","b","c","d","e","f");
+
+        _authoringToolWorkspacePresenter.ReplacedUnsavedWorld = world;
+
+        RenderFragment fragment = builder =>
+        {
+            builder.OpenElement(0, "p");
+            builder.AddContent(1, "bar");
+            builder.CloseElement();
+        };
+        ModalDialogOnClose? callback = null;
+
+        _modalDialogFactory.GetReplaceUnsavedWorldFragment(Arg.Any<ModalDialogOnClose>(), _authoringToolWorkspacePresenter.ReplacedUnsavedWorld.Name)
+            .Returns(fragment)
+            .AndDoes(ci =>
+            {
+                callback = ci.Arg<ModalDialogOnClose>();
+            });
+
+        var systemUnderTest = GetWorkspaceViewForTesting();
+
+        _modalDialogFactory.Received().GetReplaceUnsavedWorldFragment(Arg.Any<ModalDialogOnClose>(), world.Name);
+        var p = systemUnderTest.FindAllOrFail("p").ElementAt(2);
+        p.MarkupMatches("<p>bar</p>");
+
+        if (callback == null)
+        {
+            Assert.Fail("Didn't get a callback from call to modal dialog factory");
+        }
+
+        var returnValue = new ModalDialogOnCloseResult(ModalDialogReturnValue.Yes);
+        
+        callback!.Invoke(returnValue);
+        
+        _authoringToolWorkspacePresenter.Received().OnSaveReplacedWorldDialogClose(returnValue);
+    }
+    
+    [Test]
+    public void ShowDeleteUnsavedWorldDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
+    {
+        var world = new LearningWorldViewModel("a","b","c","d","e","f");
+
+        _authoringToolWorkspacePresenter.DeletedUnsavedWorld = world;
+
+        RenderFragment fragment = builder =>
+        {
+            builder.OpenElement(0, "p");
+            builder.AddContent(1, "bar");
+            builder.CloseElement();
+        };
+        ModalDialogOnClose? callback = null;
+
+        _modalDialogFactory.GetDeleteUnsavedWorldFragment(Arg.Any<ModalDialogOnClose>(), _authoringToolWorkspacePresenter.DeletedUnsavedWorld.Name)
+            .Returns(fragment)
+            .AndDoes(ci =>
+            {
+                callback = ci.Arg<ModalDialogOnClose>();
+            });
+
+        var systemUnderTest = GetWorkspaceViewForTesting();
+
+        _modalDialogFactory.Received().GetDeleteUnsavedWorldFragment(Arg.Any<ModalDialogOnClose>(), world.Name);
+        var p = systemUnderTest.FindAllOrFail("p").ElementAt(2);
+        p.MarkupMatches("<p>bar</p>");
+
+        if (callback == null)
+        {
+            Assert.Fail("Didn't get a callback from call to modal dialog factory");
+        }
+
+        var returnValue = new ModalDialogOnCloseResult(ModalDialogReturnValue.Yes);
+        
+        callback!.Invoke(returnValue);
+        
+        _authoringToolWorkspacePresenter.Received().OnSaveDeletedWorldDialogClose(returnValue);
+    }
+    
+    [Test]
+    public void ErrorState_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
+    {
+        _authoringToolWorkspacePresenter.CreateLearningWorldDialogOpen.Returns(true);
+        
+        RenderFragment fragment = builder =>
+        {
+            builder.OpenElement(0, "p");
+            builder.AddContent(1, "bar");
+            builder.CloseElement();
+        };
+        ModalDialogOnClose? callback = null;
+
+        _modalDialogFactory.GetCreateLearningWorldFragment(Arg.Any<ModalDialogOnClose>())
+            .Returns(fragment)
+            .AndDoes(ci =>
+            {
+                callback = ci.Arg<ModalDialogOnClose>();
+            });
+
+        var systemUnderTest = GetWorkspaceViewForTesting();
+
+        _modalDialogFactory.Received().GetCreateLearningWorldFragment(Arg.Any<ModalDialogOnClose>());
+        var p = systemUnderTest.FindAllOrFail("p").ElementAt(2);
+        p.MarkupMatches("<p>bar</p>");
+
+        if (callback == null)
+        {
+            Assert.Fail("Didn't get a callback from call to modal dialog factory");
+        }
+        
+        var returnDictionary = new Dictionary<string, string>
+        {
+            { "foo", "baz" },
+            { "bar", "baz" }
+        };
+        var returnValue = new ModalDialogOnCloseResult(ModalDialogReturnValue.Ok, returnDictionary);
+
+        callback!.Invoke(returnValue);
+        
+        _authoringToolWorkspacePresenter.Received().OnCreateWorldDialogClose(returnValue);
     }
 
     [Test]
