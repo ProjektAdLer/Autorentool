@@ -560,6 +560,62 @@ public class AuthoringToolWorkspacePresenterUt
     #endregion
     
     #region Save(Selected)LearningWorldAsync
+    
+    [Test]
+    public void OnSaveWorldDialogClose_UnsavedWorldsQueueIsNull_ThrowsException()
+    {
+        var modalDialogReturnValue = ModalDialogReturnValue.Yes;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.UnsavedWorldsQueue = null;
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnSaveWorldDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("SaveUnsavedChanges modal returned value despite UnsavedWorldsQueue being null"));
+    }
+    
+    [Test]
+    public void OnSaveWorldDialogClose_ModalDialogCancelled_CallsCompletedSaveQueue()
+    {
+        var modalDialogReturnValue = ModalDialogReturnValue.Cancel;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.SaveUnsavedChangesDialogOpen = true;
+        systemUnderTest.UnsavedWorldsQueue = new Queue<LearningWorldViewModel>();
+        
+        systemUnderTest.OnSaveWorldDialogClose(returnValueTuple);
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.SaveUnsavedChangesDialogOpen, Is.False);
+            Assert.That(systemUnderTest.UnsavedWorldsQueue, Is.Null);
+        });
+    }
+    
+    [Test]
+    public void OnSaveWorldDialogClose_ModalDialogYes_DequeuesAndSavesWorld()
+    {
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        viewModel.AddLearningWorld(learningWorld);
+        
+        var modalDialogReturnValue = ModalDialogReturnValue.Yes;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting(viewModel);
+
+        systemUnderTest.UnsavedWorldsQueue = new Queue<LearningWorldViewModel>(viewModel.LearningWorlds);
+
+        Assert.That(systemUnderTest.UnsavedWorldsQueue, Contains.Item(learningWorld));
+        
+        systemUnderTest.OnSaveWorldDialogClose(returnValueTuple);
+
+        Assert.That(systemUnderTest.UnsavedWorldsQueue, Is.Null);
+
+    }
 
     [Test]
     public async Task SaveLearningWorldAsync_CallsPresentationLogic()
