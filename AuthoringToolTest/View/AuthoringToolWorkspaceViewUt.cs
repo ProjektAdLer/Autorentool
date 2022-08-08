@@ -7,6 +7,7 @@ using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
 using AuthoringTool.PresentationLogic.LearningWorld;
 using AuthoringTool.PresentationLogic.ModalDialog;
 using AuthoringTool.View;
+using AuthoringTool.View.LearningWorld;
 using Bunit;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
@@ -45,6 +46,7 @@ public class AuthoringToolWorkspaceViewUt
         _ctx.Services.AddSingleton(_presentationLogic);
         _ctx.Services.AddSingleton(_mouseService);
         _ctx.Services.AddLogging();
+        _ctx.ComponentFactories.AddStub<LearningWorldView>();
     }
     
     [Test]
@@ -79,6 +81,22 @@ public class AuthoringToolWorkspaceViewUt
 
         titleHeader.MarkupMatches("<h3>AuthoringTool Workspace</h3>");
         worldCountFilePath.MarkupMatches("<p role=\"status\">Current count of learning worlds: 2</p> <p role=\"status\" id=\"filepath\">Filepath:</p>");
+    }
+    
+    [Test]
+    public void Render_RendersSelectedWorldData()
+    {
+        var world = new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
+
+        _authoringToolWorkspaceViewModel.SelectedLearningWorld = world;
+        
+        Assert.That(_authoringToolWorkspaceViewModel.SelectedLearningWorld, Is.Not.EqualTo(null));
+        
+        var systemUnderTest = GetWorkspaceViewForTesting();
+        
+        var worldData = systemUnderTest.FindOrFail("label.world-data");
+        
+        worldData.MarkupMatches("<label>Selected world: a,Description: b,Elements: 0,Spaces: 0</label>");
     }
 
     [Test]

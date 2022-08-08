@@ -1,4 +1,6 @@
-﻿using AuthoringTool.Components.ModalDialog;
+﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
+using AuthoringTool.Components.ModalDialog;
 using AuthoringTool.PresentationLogic.API;
 using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningElement;
@@ -22,12 +24,17 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     private readonly ILearningSpacePresenter _learningSpacePresenter;
     private readonly ILearningElementPresenter _learningElementPresenter;
     private readonly ILogger<LearningWorldPresenter> _logger;
-
+    private ILearningWorldViewModel? _learningWorldVm;
+    
     /// <summary>
     /// The currently selected LearningWorldViewModel.
     /// </summary>
-    public ILearningWorldViewModel? LearningWorldVm { get; private set; }
-    
+    public ILearningWorldViewModel? LearningWorldVm 
+    {
+        get => _learningWorldVm;
+        private set => SetField(ref _learningWorldVm, value); 
+    }
+
     public LearningContentViewModel? DragAndDropLearningContent { get; private set; }
     public void AddNewLearningSpace()
     {
@@ -556,4 +563,19 @@ internal class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldP
     }
 
     #endregion
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        field = value;
+        OnPropertyChanged(propertyName);
+        return true;
+    }
 }
