@@ -1,15 +1,15 @@
 ﻿using System.IO.Abstractions;
 using System.Text.Json;
 using AuthoringTool.DataAccess.WorldExport;
-using AuthoringTool.Entities;
+using AuthoringTool.DataAccess.PersistEntities;
 
 namespace AuthoringTool.DataAccess.DSL;
 
 public class CreateDSL : ICreateDSL
 {
     
-    public List<LearningElement>? listLearningElements;
-    public List<LearningSpace>? listLearningSpaces;
+    public List<LearningElementPe>? listLearningElements;
+    public List<LearningSpacePe>? listLearningSpaces;
     public List<int>? listLearningSpaceContent;
     public LearningWorldJson? learningWorldJson;
     private readonly IFileSystem _fileSystem;
@@ -24,7 +24,7 @@ public class CreateDSL : ICreateDSL
     /// Reads the LearningWord Entity and creates an DSL Document with the given information.
     /// </summary>
     /// <param name="learningWorld"></param> Information about the learningWorld, topics, spaces and elements
-    public string WriteLearningWorld(LearningWorld learningWorld)
+    public string WriteLearningWorld(LearningWorldPe learningWorld)
     {
         
         //Create Empty Learning World, 
@@ -45,8 +45,8 @@ public class CreateDSL : ICreateDSL
         
         // Create Learning Spaces & fill into Learning World
         // Search for Learning Elements in Spaces and add to listLearningElements
-        listLearningElements = new List<LearningElement>();
-        listLearningSpaces = new List<LearningSpace>();
+        listLearningElements = new List<LearningElementPe>();
+        listLearningSpaces = new List<LearningSpacePe>();
         listLearningSpaces = learningWorld.LearningSpaces;
         listLearningSpaceContent = new List<int>();
         int learningSpaceId = 1;

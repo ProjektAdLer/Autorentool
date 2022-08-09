@@ -1,5 +1,5 @@
 using System.IO.Abstractions;
-using AuthoringTool.Entities;
+using AuthoringTool.DataAccess.PersistEntities;
 
 namespace AuthoringTool.DataAccess.Persistence;
 
@@ -16,21 +16,21 @@ public class ContentFileHandler : IContentFileHandler
    
     public ContentFileHandler(ILogger<ContentFileHandler> logger):this(logger, new FileSystem()){ }
 
-    public LearningContent LoadFromDisk(string filepath)
+    public LearningContentPe LoadFromDisk(string filepath)
     {
         var fileBytes = _fileSystem.File.ReadAllBytes(filepath);
         var fileType = Path.GetExtension(filepath).Trim('.').ToLower();
         var fileName = Path.GetFileName(filepath);
         _logger.LogInformation($"File {fileName} of type {fileType} loaded");
-        return new LearningContent(fileName, fileType, fileBytes);
+        return new LearningContentPe(fileName, fileType, fileBytes);
     }
 
-    public LearningContent LoadFromStream(string name, Stream stream)
+    public LearningContentPe LoadFromStream(string name, Stream stream)
     {
         var fileBytes = ((MemoryStream)stream).ToArray();
         var fileType = Path.GetExtension(name).Split(".").Last().ToLower();
         var fileName = Path.GetFileName(name);
         _logger.LogInformation($"File {fileName} of type {fileType} loaded");
-        return new LearningContent(fileName, fileType, fileBytes);
+        return new LearningContentPe(fileName, fileType, fileBytes);
     }
 }

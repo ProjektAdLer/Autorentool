@@ -1,8 +1,8 @@
-using AuthoringTool.Entities;
+using AuthoringTool.DataAccess.PersistEntities;
 
 namespace AuthoringTool.DataAccess.DSL;
 
 public interface ICreateDSL
 {
-   string WriteLearningWorld(LearningWorld learningWorld);
+   string WriteLearningWorld(LearningWorldPe learningWorld);
 }
