@@ -1,7 +1,7 @@
 ﻿namespace AuthoringTool.DataAccess.PersistEntities;
 
 [Serializable]
-public class LearningSpacePe : ILearningSpace
+public class LearningSpacePe : ILearningSpacePe
 {
     internal LearningSpacePe(string name, string shortname, string authors, string description,
         string goals, List<LearningElementPe>? learningElements = null, double positionX = 0, double positionY = 0)

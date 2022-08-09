@@ -1,7 +1,7 @@
 ﻿namespace AuthoringTool.DataAccess.PersistEntities;
 
 [Serializable]
-public class LearningWorldPe : ILearningWorld
+public class LearningWorldPe : ILearningWorldPe
 {
     internal LearningWorldPe(string name, string shortname, string authors, string language, string description,
         string goals, List<LearningElementPe>? learningElements = null,

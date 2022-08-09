@@ -3,7 +3,7 @@ using AuthoringTool.PresentationLogic.LearningElement;
 
 namespace AuthoringTool.DataAccess.PersistEntities;
 
-[XmlInclude(typeof(ImageTransferElement))]
+[XmlInclude(typeof(ImageTransferElementPe))]
 [XmlInclude(typeof(VideoTransferElementPe))]
 [XmlInclude(typeof(PdfTransferElementPe))]
 [XmlInclude(typeof(VideoActivationElementPe))]
@@ -11,7 +11,7 @@ namespace AuthoringTool.DataAccess.PersistEntities;
 [XmlInclude(typeof(H5PInteractionElementPe))]
 [XmlInclude(typeof(H5PTestElementPe))]
 [Serializable]
-public class LearningElementPe : ILearningElement
+public class LearningElementPe : ILearningElementPe
 {
     internal LearningElementPe(string name, string shortname,  string? parentName, LearningContentPe? content,
         string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload = 0,

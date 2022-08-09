@@ -1,6 +1,6 @@
 ﻿namespace AuthoringTool.DataAccess.PersistEntities;
 
-public interface ILearningWorld
+public interface ILearningWorldPe
 {
     
     List<LearningElementPe> LearningElements { get; set; }

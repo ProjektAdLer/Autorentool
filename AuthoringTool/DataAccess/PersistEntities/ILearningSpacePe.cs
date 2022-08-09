@@ -1,6 +1,6 @@
 ﻿namespace AuthoringTool.DataAccess.PersistEntities;
 
-public interface ILearningSpace : ISpace
+public interface ILearningSpacePe : ISpacePe
 {
     string Name { get; set; }
     string Description { get; set; }

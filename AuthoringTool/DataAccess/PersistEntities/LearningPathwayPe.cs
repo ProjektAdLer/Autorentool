@@ -1,6 +1,6 @@
 ﻿namespace AuthoringTool.DataAccess.PersistEntities;
 
-internal class LearningPathwayPe: ILearningPathWay
+internal class LearningPathwayPe: ILearningPathWayPe
 {
     
 }

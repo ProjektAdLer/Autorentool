@@ -2,7 +2,7 @@
 
 namespace AuthoringTool.DataAccess.PersistEntities;
 
-public interface ILearningElement
+public interface ILearningElementPe
 {
     string Name { get; set; }
     string Shortname { get; set; }
