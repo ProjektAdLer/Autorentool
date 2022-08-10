@@ -1,6 +1,5 @@
 ﻿namespace AuthoringTool.Entities;
 
-[Serializable]
 public class LearningSpace : ILearningSpace
 {
     internal LearningSpace(string name, string shortname, string authors, string description,
@@ -15,22 +14,6 @@ public class LearningSpace : ILearningSpace
         PositionX = positionX;
         PositionY = positionY;
     }
-
-    /// <summary>
-    /// Constructor for serialization. DO NOT USE FOR NORMAL INITIALIZATION.
-    /// </summary>
-    private LearningSpace()
-    {
-        Name = "";
-        Shortname = "";
-        Authors = "";
-        Description = "";
-        Goals = "";
-        LearningElements = new List<LearningElement>();
-        PositionX = 0;
-        PositionY = 0;
-    }
-
 
     public string Name { get; set; }
     public string Description { get; set; }
