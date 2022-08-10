@@ -538,23 +538,23 @@ public class ModalDialogInputFieldsFactoryUt
         Assert.That(assignmentDropDownInput.ValuesToChoiceMapping.Count(), Is.EqualTo(2));
         
         //Assignment drop down choice mappings
-        var assignmentChoiceMapping_FirstElement = assignmentDropDownInput.ValuesToChoiceMapping.ToList().ElementAt(0);
-        Assert.That(assignmentChoiceMapping_FirstElement.RequiredValues, Is.Not.Null);
-        Assert.That(assignmentChoiceMapping_FirstElement.RequiredValues, Is.TypeOf<Dictionary<string,string>>());
-        Assert.That(assignmentChoiceMapping_FirstElement.RequiredValues, Contains.Key("Parent"));
-        Assert.That(assignmentChoiceMapping_FirstElement.RequiredValues!["Parent"], 
+        var assignmentChoiceMappingFirstElement = assignmentDropDownInput.ValuesToChoiceMapping.ToList().ElementAt(0);
+        Assert.That(assignmentChoiceMappingFirstElement.RequiredValues, Is.Not.Null);
+        Assert.That(assignmentChoiceMappingFirstElement.RequiredValues, Is.TypeOf<Dictionary<string,string>>());
+        Assert.That(assignmentChoiceMappingFirstElement.RequiredValues, Contains.Key("Parent"));
+        Assert.That(assignmentChoiceMappingFirstElement.RequiredValues!["Parent"], 
             Is.EqualTo(ElementParentEnum.Space.ToString()));
-        Assert.That(assignmentChoiceMapping_FirstElement.AvailableChoices.Count(), Is.EqualTo(1));
-        Assert.That(assignmentChoiceMapping_FirstElement.AvailableChoices.ElementAt(0), Is.EqualTo(nameLearningSpace));
+        Assert.That(assignmentChoiceMappingFirstElement.AvailableChoices.Count(), Is.EqualTo(1));
+        Assert.That(assignmentChoiceMappingFirstElement.AvailableChoices.ElementAt(0), Is.EqualTo(nameLearningSpace));
         
-        var assignmentChoiceMapping_SecondElement = assignmentDropDownInput.ValuesToChoiceMapping.ToList().ElementAt(1);
-        Assert.That(assignmentChoiceMapping_SecondElement.RequiredValues, Is.Not.Null);
-        Assert.That(assignmentChoiceMapping_SecondElement.RequiredValues, Is.TypeOf<Dictionary<string,string>>());
-        Assert.That(assignmentChoiceMapping_SecondElement.RequiredValues, Contains.Key("Parent"));
-        Assert.That(assignmentChoiceMapping_SecondElement.RequiredValues!["Parent"], 
+        var assignmentChoiceMappingSecondElement = assignmentDropDownInput.ValuesToChoiceMapping.ToList().ElementAt(1);
+        Assert.That(assignmentChoiceMappingSecondElement.RequiredValues, Is.Not.Null);
+        Assert.That(assignmentChoiceMappingSecondElement.RequiredValues, Is.TypeOf<Dictionary<string,string>>());
+        Assert.That(assignmentChoiceMappingSecondElement.RequiredValues, Contains.Key("Parent"));
+        Assert.That(assignmentChoiceMappingSecondElement.RequiredValues!["Parent"], 
             Is.EqualTo(ElementParentEnum.World.ToString()));
-        Assert.That(assignmentChoiceMapping_SecondElement.AvailableChoices.Count(), Is.EqualTo(1));
-        Assert.That(assignmentChoiceMapping_SecondElement.AvailableChoices.ElementAt(0), Is.EqualTo(worldName));
+        Assert.That(assignmentChoiceMappingSecondElement.AvailableChoices.Count(), Is.EqualTo(1));
+        Assert.That(assignmentChoiceMappingSecondElement.AvailableChoices.ElementAt(0), Is.EqualTo(worldName));
 
 
         //Type drop down
