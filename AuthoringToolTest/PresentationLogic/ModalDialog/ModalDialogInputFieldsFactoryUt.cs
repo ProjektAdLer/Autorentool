@@ -495,7 +495,7 @@ public class ModalDialogInputFieldsFactoryUt
         
         var systemUnderTest = GetModalDialogInputFieldsFactoryForTesting();
         var modalDialogInputFields = systemUnderTest.GetCreateLearningElementInputFields(dragAndDropLearningContent,
-            learningSpaces, worldName);
+            learningSpaces, worldName).ToList();
         
         //Name
         var nameInputField = modalDialogInputFields.ElementAt(0);
@@ -740,8 +740,7 @@ public class ModalDialogInputFieldsFactoryUt
     public void GetCreateLearningElementInputFields_OverloadedFunction_NoDragAndDrop_ReturnsCorrectInputFields(string correctFileExtensionForTest, 
         ContentTypeEnum correctFileTypeForTest)
     {
-        string nameLearningContentViewModel = "skazzle";
-        LearningContentViewModel dragAndDropLearningContent = null;
+        LearningContentViewModel? dragAndDropLearningContent = null;
             
         string nameLearningSpace = "foo";
         string shortnameLearningSpace = "baz";
@@ -770,7 +769,7 @@ public class ModalDialogInputFieldsFactoryUt
         
         var systemUnderTest = GetModalDialogInputFieldsFactoryForTesting();
         var modalDialogInputFields = systemUnderTest.GetCreateLearningElementInputFields(dragAndDropLearningContent,
-            learningSpaces, worldName);
+            learningSpaces, worldName).ToList();
         
         Assert.That(modalDialogInputFields.ElementAt(0).Name, Is.EqualTo("Name"));
         Assert.That(modalDialogInputFields.ElementAt(0).Type, Is.EqualTo(ModalDialogInputType.Text));
