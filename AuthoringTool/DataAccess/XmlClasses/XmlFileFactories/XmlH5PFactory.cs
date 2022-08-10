@@ -170,7 +170,7 @@ public class XmlH5PFactory : IXmlH5PFactory
             };
             
             FilesXmlFile file2 = (FilesXmlFile)file1.Clone();
-            file2.Id = XmlEntityManager.GetFileIdBlock1().ToString();
+            file2.Id = XmlEntityManager.GetFileIdBlock2().ToString();
             
             filesXmlFilesList.Add(file1);
             filesXmlFilesList.Add(file2);
