@@ -1,6 +1,4 @@
-﻿using AuthoringTool.PresentationLogic.LearningElement;
-
-namespace AuthoringTool.DataAccess.PersistEntities;
+﻿namespace AuthoringTool.DataAccess.PersistEntities;
 
 public interface ILearningElementPe
 {
@@ -11,7 +9,7 @@ public interface ILearningElementPe
     string Description { get; set; }
     string Goals { get; set; }
     int Workload { get; set; }
-    LearningElementDifficultyEnum Difficulty { get; set; }
+    LearningElementDifficultyEnumPe Difficulty { get; set; }
     double PositionX { get; set; }
     double PositionY { get; set; }
     string? ParentName { get; set; }

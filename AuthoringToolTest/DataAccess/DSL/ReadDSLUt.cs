@@ -2,7 +2,6 @@
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.PersistEntities;
-using AuthoringTool.PresentationLogic.LearningElement;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.DSL;
@@ -25,9 +24,9 @@ public class ReadDslUt
         const string goals = "learn very many things";
         var content1 = new LearningContentPe("a", "h5p", new byte[] {0x01, 0x02});
         var content2 = new LearningContentPe("w", ".h5p", new byte[] {0x02, 0x01});
-        var ele1 = new LearningElementPe("a", "b", "e", content1, "pupup", "g", "h", LearningElementDifficultyEnum.Easy, 17, 23);
-        var ele2 = new LearningElementPe("z", "zz", "zzz", content2, "baba", "z", "zz", LearningElementDifficultyEnum.Easy, 444, double.MaxValue);
-        var ele3 = new LearningElementPe("a", "b", "e", content1, "pupup", "g", "h", LearningElementDifficultyEnum.Easy, 17, 23);
+        var ele1 = new LearningElementPe("a", "b", "e", content1, "pupup", "g", "h", LearningElementDifficultyEnumPe.Easy, 17, 23);
+        var ele2 = new LearningElementPe("z", "zz", "zzz", content2, "baba", "z", "zz", LearningElementDifficultyEnumPe.Easy, 444, double.MaxValue);
+        var ele3 = new LearningElementPe("a", "b", "e", content1, "pupup", "g", "h", LearningElementDifficultyEnumPe.Easy, 17, 23);
         var learningElements = new List<LearningElementPe> {ele1, ele2};
         var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff");
         space1.LearningElements.Add(ele3);

@@ -9,7 +9,6 @@ using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.Persistence;
 using AuthoringTool.DataAccess.PersistEntities;
 using AuthoringTool.DataAccess.WorldExport;
-using AuthoringTool.PresentationLogic.LearningElement;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -147,7 +146,7 @@ public class DataAccessUt
 
         var learningContent = new LearningContentPe("a", "b", Array.Empty<byte>());
         var learningElement = new LearningElementPe("f","f", "f", learningContent, "f",
-            "f", "f", LearningElementDifficultyEnum.Easy);
+            "f", "f", LearningElementDifficultyEnumPe.Easy);
         systemUnderTest.SaveLearningElementToFile(
             learningElement,
             "C:/nonsense");

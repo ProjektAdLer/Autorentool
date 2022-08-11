@@ -1,5 +1,3 @@
-using AuthoringTool.PresentationLogic.LearningElement;
-
 namespace AuthoringTool.DataAccess.PersistEntities;
 
 [Serializable]
@@ -7,7 +5,7 @@ namespace AuthoringTool.DataAccess.PersistEntities;
 public class ImageTransferElementPe : LearningElementPe
 {
     internal ImageTransferElementPe(string name, string shortname,  string? parentName, LearningContentPe? content,
-        string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload,
+        string authors, string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload,
         double positionX, double positionY) : base(name, shortname,parentName,content, authors, description, 
         goals,difficulty,workload, positionX,positionY)
     {
@@ -17,16 +15,5 @@ public class ImageTransferElementPe : LearningElementPe
     /// </summary>
     private ImageTransferElementPe()
     {
-        Name = "";
-        Shortname = "";
-        Content = new LearningContentPe();
-        Authors = "";
-        Description = "";
-        Goals = "";
-        Difficulty = LearningElementDifficultyEnum.Medium;
-        Workload = 0;
-        PositionX = 0;
-        PositionY = 0;
-        ParentName = null;
     }
 }

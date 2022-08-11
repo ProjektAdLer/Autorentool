@@ -138,7 +138,7 @@ public class BusinessLogicUt
             "f", "f", LearningElementDifficultyEnum.Easy);
         var contentPe = new LearningContentPe("a", "b", Array.Empty<byte>());
         var learningElementPe = new LearningElementPe("fa", "f", "f", contentPe, "f",
-            "f", "f", LearningElementDifficultyEnum.Easy);
+            "f", "f", LearningElementDifficultyEnumPe.Easy);
         var mockMapper = Substitute.For<IMapper>();
         mockMapper.Map<LearningElementPe>(learningElement).Returns(learningElementPe);
         var mockDataAccess = Substitute.For<IDataAccess>();
@@ -170,7 +170,7 @@ public class BusinessLogicUt
             "f", LearningElementDifficultyEnum.Easy);
         var contentPe = new LearningContentPe("a", "b", Array.Empty<byte>());
         var learningElementPe = new LearningElementPe("fa", "a", "f", contentPe, "f", "f", "f",
-            LearningElementDifficultyEnum.Easy);
+            LearningElementDifficultyEnumPe.Easy);
         var mockMapper = Substitute.For<IMapper>();
         mockMapper.Map<LearningElement>(learningElementPe).Returns(learningElement);
         var mockDataAccess = Substitute.For<IDataAccess>();
@@ -295,7 +295,7 @@ public class BusinessLogicUt
             "f", LearningElementDifficultyEnum.Easy);
         var contentPe = new LearningContentPe("a", "b", Array.Empty<byte>());
         var learningElementPe = new LearningElementPe("fa", "a", "f", contentPe, "f", "f", "f",
-            LearningElementDifficultyEnum.Easy);
+            LearningElementDifficultyEnumPe.Easy);
         var mockMapper = Substitute.For<IMapper>();
         mockMapper.Map<LearningElement>(learningElementPe).Returns(learningElement);
         var stream = Substitute.For<Stream>();

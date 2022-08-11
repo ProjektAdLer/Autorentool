@@ -1,5 +1,4 @@
 ﻿using System.Xml.Serialization;
-using AuthoringTool.PresentationLogic.LearningElement;
 
 namespace AuthoringTool.DataAccess.PersistEntities;
 
@@ -14,7 +13,7 @@ namespace AuthoringTool.DataAccess.PersistEntities;
 public class LearningElementPe : ILearningElementPe
 {
     internal LearningElementPe(string name, string shortname,  string? parentName, LearningContentPe? content,
-        string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload = 0,
+        string authors, string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload = 0,
         double positionX = 0, double positionY = 0)
     {
         Name = name;
@@ -40,7 +39,7 @@ public class LearningElementPe : ILearningElementPe
         Authors = "";
         Description = "";
         Goals = "";
-        Difficulty = LearningElementDifficultyEnum.Medium;
+        Difficulty = LearningElementDifficultyEnumPe.Medium;
         Workload = 0;
         PositionX = 0;
         PositionY = 0;
@@ -55,7 +54,7 @@ public class LearningElementPe : ILearningElementPe
     public string Description { get; set; }
     public string Goals { get; set; }
     public int Workload { get; set; }
-    public LearningElementDifficultyEnum Difficulty { get; set; }
+    public LearningElementDifficultyEnumPe Difficulty { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
     public string? ParentName { get; set; }
