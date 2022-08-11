@@ -8,18 +8,18 @@ public interface IDataAccess
 {
     IAuthoringToolConfiguration Configuration { get; }
 
-    void ConstructBackup(LearningWorld learningWorld, string filepath);
-    void SaveLearningWorldToFile(LearningWorld world, string filepath);
-    LearningWorld LoadLearningWorldFromFile(string filepath);
-    LearningWorld LoadLearningWorldFromStream(Stream stream);
-    void SaveLearningSpaceToFile(LearningSpace space, string filepath);
-    LearningSpace LoadLearningSpaceFromFile(string filepath);
-    LearningSpace LoadLearningSpaceFromStream(Stream stream);
-    void SaveLearningElementToFile(LearningElement element, string filepath);
-    LearningElement LoadLearningElementFromFile(string filepath);
-    LearningElement LoadLearningElementFromStream(Stream stream);
-    LearningContent LoadLearningContentFromFile(string filepath);
-    LearningContent LoadLearningContentFromStream(string name, Stream stream);
+    void ConstructBackup(LearningWorldPe learningWorld, string filepath);
+    void SaveLearningWorldToFile(LearningWorldPe world, string filepath);
+    LearningWorldPe LoadLearningWorldFromFile(string filepath);
+    LearningWorldPe LoadLearningWorldFromStream(Stream stream);
+    void SaveLearningSpaceToFile(LearningSpacePe space, string filepath);
+    LearningSpacePe LoadLearningSpaceFromFile(string filepath);
+    LearningSpacePe LoadLearningSpaceFromStream(Stream stream);
+    void SaveLearningElementToFile(LearningElementPe element, string filepath);
+    LearningElementPe LoadLearningElementFromFile(string filepath);
+    LearningElementPe LoadLearningElementFromStream(Stream stream);
+    LearningContentPe LoadLearningContentFromFile(string filepath);
+    LearningContentPe LoadLearningContentFromStream(string name, Stream stream);
     
     /// <summary>
     /// Finds a save path in <paramref name="targetFolder"/> containing <paramref name="fileName"/> and ending with <paramref name="fileEnding"/>,

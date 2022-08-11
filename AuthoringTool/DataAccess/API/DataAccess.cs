@@ -4,8 +4,6 @@ using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.Persistence;
 using AuthoringTool.DataAccess.PersistEntities;
 using AuthoringTool.DataAccess.WorldExport;
-using AuthoringTool.Entities;
-using AutoMapper;
 
 namespace AuthoringTool.DataAccess.API;
 
@@ -14,7 +12,7 @@ internal class DataAccess : IDataAccess
     public DataAccess(IAuthoringToolConfiguration configuration, IBackupFileGenerator backupFileGenerator,
         IXmlFileHandler<LearningWorldPe> xmlHandlerWorld, IXmlFileHandler<LearningSpacePe> xmlHandlerSpace,
         IXmlFileHandler<LearningElementPe> xmlHandlerElement, IContentFileHandler contentHandler,
-        ICreateDSL createDsl, IReadDSL readDsl, IFileSystem fileSystem, IMapper autoMapper)
+        ICreateDSL createDsl, IReadDSL readDsl, IFileSystem fileSystem)
     {
         XmlHandlerWorld = xmlHandlerWorld;
         XmlHandlerSpace = xmlHandlerSpace;
@@ -25,7 +23,6 @@ internal class DataAccess : IDataAccess
         BackupFile = backupFileGenerator;
         CreateDsl = createDsl;
         ReadDsl = readDsl;
-        _autoMapper = autoMapper;
     }
 
     public readonly IXmlFileHandler<LearningWorldPe> XmlHandlerWorld;
@@ -38,7 +35,6 @@ internal class DataAccess : IDataAccess
     public IBackupFileGenerator BackupFile { get; set; }
     public ICreateDSL CreateDsl;
     public IReadDSL ReadDsl;
-    private IMapper _autoMapper;
 
     /// <summary>
     /// Creates the DSL document, reads it, creates the needed folder structure for the backup, fills the folders with
@@ -46,68 +42,68 @@ internal class DataAccess : IDataAccess
     /// </summary>
     /// <param name="learningWorld"></param> Information about the learningWorld, topics, spaces and elements
     /// <param name="filepath"></param> Desired filepath for the .mbz file. Given by user, when Export Button is pressed.
-    public void ConstructBackup(LearningWorld learningWorld, string filepath)
+    public void ConstructBackup(LearningWorldPe learningWorld, string filepath)
     {
-        string dslpath = CreateDsl.WriteLearningWorld(_autoMapper.Map<LearningWorldPe>(learningWorld));
+        string dslpath = CreateDsl.WriteLearningWorld(learningWorld);
         ReadDsl.ReadLearningWorld(dslpath);
         BackupFile.CreateBackupFolders();
         BackupFile.WriteXmlFiles(ReadDsl as ReadDSL, dslpath);
         BackupFile.WriteBackupFile(filepath);
     }
 
-    public void SaveLearningWorldToFile(LearningWorld world, string filepath)
+    public void SaveLearningWorldToFile(LearningWorldPe world, string filepath)
     {
-        XmlHandlerWorld.SaveToDisk(_autoMapper.Map<LearningWorldPe>(world), filepath);
+        XmlHandlerWorld.SaveToDisk(world, filepath);
     }
 
-    public LearningWorld LoadLearningWorldFromFile(string filepath)
+    public LearningWorldPe LoadLearningWorldFromFile(string filepath)
     {
-        return _autoMapper.Map<LearningWorld>(XmlHandlerWorld.LoadFromDisk(filepath));
+        return XmlHandlerWorld.LoadFromDisk(filepath);
     }
 
-    public LearningWorld LoadLearningWorldFromStream(Stream stream)
+    public LearningWorldPe LoadLearningWorldFromStream(Stream stream)
     {
-        return _autoMapper.Map<LearningWorld>(XmlHandlerWorld.LoadFromStream(stream));
+        return XmlHandlerWorld.LoadFromStream(stream);
     }
 
-    public void SaveLearningSpaceToFile(LearningSpace space, string filepath)
+    public void SaveLearningSpaceToFile(LearningSpacePe space, string filepath)
     {
-        XmlHandlerSpace.SaveToDisk(_autoMapper.Map<LearningSpacePe>(space), filepath);
+        XmlHandlerSpace.SaveToDisk(space, filepath);
     }
 
-    public LearningSpace LoadLearningSpaceFromFile(string filepath)
+    public LearningSpacePe LoadLearningSpaceFromFile(string filepath)
     {
-        return _autoMapper.Map<LearningSpace>(XmlHandlerSpace.LoadFromDisk(filepath));
+        return XmlHandlerSpace.LoadFromDisk(filepath);
     }
 
-    public LearningSpace LoadLearningSpaceFromStream(Stream stream)
+    public LearningSpacePe LoadLearningSpaceFromStream(Stream stream)
     {
-        return _autoMapper.Map<LearningSpace>(XmlHandlerSpace.LoadFromStream(stream));
+        return XmlHandlerSpace.LoadFromStream(stream);
     }
 
-    public void SaveLearningElementToFile(LearningElement element, string filepath)
+    public void SaveLearningElementToFile(LearningElementPe element, string filepath)
     {
-        XmlHandlerElement.SaveToDisk(_autoMapper.Map<LearningElementPe>(element), filepath);
+        XmlHandlerElement.SaveToDisk(element, filepath);
     }
 
-    public LearningElement LoadLearningElementFromFile(string filepath)
+    public LearningElementPe LoadLearningElementFromFile(string filepath)
     {
-        return _autoMapper.Map<LearningElement>(XmlHandlerElement.LoadFromDisk(filepath));
+        return XmlHandlerElement.LoadFromDisk(filepath);
     }
 
-    public LearningElement LoadLearningElementFromStream(Stream stream)
+    public LearningElementPe LoadLearningElementFromStream(Stream stream)
     {
-        return _autoMapper.Map<LearningElement>(XmlHandlerElement.LoadFromStream(stream));
+        return XmlHandlerElement.LoadFromStream(stream);
     }
 
-    public LearningContent LoadLearningContentFromFile(string filepath)
+    public LearningContentPe LoadLearningContentFromFile(string filepath)
     {
-        return _autoMapper.Map<LearningContent>(ContentHandler.LoadFromDisk(filepath));
+        return ContentHandler.LoadFromDisk(filepath);
     }
     
-    public LearningContent LoadLearningContentFromStream(string name, Stream stream)
+    public LearningContentPe LoadLearningContentFromStream(string name, Stream stream)
     {
-        return _autoMapper.Map<LearningContent>(ContentHandler.LoadFromStream(name, stream));
+        return ContentHandler.LoadFromStream(name, stream);
     }
 
     /// <inheritdoc cref="IDataAccess.FindSuitableNewSavePath"/>

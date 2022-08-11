@@ -143,26 +143,11 @@ public class Startup
     {
         var config = new MapperConfiguration(cfg =>
         {
-            /*
-            cfg.CreateMap<ILearningWorld, ILearningWorldPe>();
-            cfg.CreateMap<ILearningWorldPe, ILearningWorld>();
-            cfg.CreateMap<ILearningElement, ILearningElementPe>();
-            cfg.CreateMap<ILearningElementPe, ILearningElement>();
-            cfg.CreateMap<ILearningSpace, ILearningSpacePe>();
-            cfg.CreateMap<ILearningSpacePe, ILearningSpace>();
-            cfg.CreateMap<ILearningContent, ILearningContentPe>();
-            cfg.CreateMap<ILearningContentPe, ILearningContent>();
-            */
             cfg.AddProfile(new MappingProfile());
         });
         
         var mapper = config.CreateMapper();
-        services.AddAutoMapper(typeof(MappingProfile));
         services.AddSingleton<IMapper>(mapper);
-        services.AddMvc();
-        //var profiles
-        //services.AddAutoMapper(typeof(Startup));
-        //services.AddControllersWithViews();
     }
 
     private static void ConfigureUtilities(IServiceCollection services)
