@@ -10,7 +10,7 @@
 
 <p role="status">Current count of learning worlds: @AuthoringToolWorkspaceVm.LearningWorlds.Count()</p>
 <p role="status" id="filepath">Filepath: @filePath</p>
-<label>
+<label class="world-select">
     Select learning world:
     <select @onchange="args => SetSelectedLearningWorld((string) args.Value!)"
             value="@(AuthoringToolWorkspaceVm.SelectedLearningWorld?.Name)">
@@ -28,7 +28,7 @@
 <div>
     @if (AuthoringToolWorkspaceVm.SelectedLearningWorld != null)
     {
-        <label>
+        <label class="world-data">
             Selected world: @AuthoringToolWorkspaceVm.SelectedLearningWorld.Name,
             Description: @AuthoringToolWorkspaceVm.SelectedLearningWorld.Description,
             Elements: @AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningElements.Count,
@@ -80,8 +80,8 @@
 }
 @if (AuthoringToolWorkspaceVm.SelectedLearningWorld != null)
 {
-    <LearningWorldView @ref="_activeView">
-    </LearningWorldView>
+    <LearningWorldView>
+        </LearningWorldView>
 }
 
 @if (AuthoringToolWorkspaceP.EditLearningWorldDialogOpen)
@@ -117,8 +117,7 @@
         AuthoringToolWorkspaceP.OnForceViewUpdate += StateHasChanged;
         AuthoringToolWorkspaceVm.PropertyChanged += async (_, _) => await InvokeAsync(StateHasChanged);
     }
-
-    private LearningWorldView? _activeView;
+    
     private string filePath = "";
 
     private ExceptionWrapper? ErrorState { get; set; }
@@ -182,13 +181,13 @@
     private void OnCreateWorldDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
         AuthoringToolWorkspaceP.OnCreateWorldDialogClose(returnValueTuple);
-        StateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 
     private void OnEditWorldDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
         AuthoringToolWorkspaceP.OnEditWorldDialogClose(returnValueTuple);
-        StateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 
     private void OnSaveWorldDialogCloseAsync(ModalDialogOnCloseResult returnValueTuple)
@@ -203,33 +202,32 @@
         }
         finally
         {
-            StateHasChanged();
+            InvokeAsync(StateHasChanged);
         }
     }
 
     private void OnSaveReplacedWorldDialogCloseAsync(ModalDialogOnCloseResult returnValueTuple)
     {
         AuthoringToolWorkspaceP.OnSaveReplacedWorldDialogClose(returnValueTuple);
-        StateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 
     private void OnReplaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
         AuthoringToolWorkspaceP.OnReplaceDialogClose(returnValueTuple);
-        StateHasChanged();
-        _activeView?.TriggerStateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 
     private void OnSaveDeletedWorldDialogCloseAsync(ModalDialogOnCloseResult returnValueTuple)
     {
         AuthoringToolWorkspaceP.OnSaveDeletedWorldDialogClose(returnValueTuple);
-        StateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 
     private void SetSelectedLearningWorld(string argsValue)
     {
         AuthoringToolWorkspaceP.SetSelectedLearningWorld(argsValue);
-        _activeView?.TriggerStateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 
     private async void ExportLearningWorld()
@@ -250,19 +248,18 @@
     private async Task OnDragAndDropResult(Tuple<string, Stream> result)
     {
         await AuthoringToolWorkspaceP.ProcessDragAndDropResult(result);
-        StateHasChanged();
-        _activeView?.TriggerStateHasChanged();
+        await InvokeAsync(StateHasChanged);
     }
 
     private void OnShowInformationDialogClose(ModalDialogOnCloseResult result)
     {
         AuthoringToolWorkspaceP.InformationMessageToShow = null;
-        StateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 
     private void OnExceptionEncounteredDialogClose(ModalDialogOnCloseResult result)
     {
         ErrorState = null;
-        StateHasChanged();
+        InvokeAsync(StateHasChanged);
     }
 }

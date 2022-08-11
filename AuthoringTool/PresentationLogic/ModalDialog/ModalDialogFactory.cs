@@ -118,7 +118,7 @@ class ModalDialogFactory : ILearningSpaceViewModalDialogFactory, ILearningWorldV
     {
         const string title = "Replace world?";
         var text = $"You already have a world with the name {worldToReplaceWithName} loaded." +
-                   "Do you want to replace it?";
+                   " Do you want to replace it?";
         const ModalDialogType dialogType = ModalDialogType.OkCancel;
         return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType);
     }

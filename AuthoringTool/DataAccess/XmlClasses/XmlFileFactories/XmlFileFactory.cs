@@ -15,17 +15,14 @@ namespace AuthoringTool.DataAccess.XmlClasses.XmlFileFactories;
 public class XmlFileFactory
 {
     private string dslPath;
-    private List<FilesXmlFile>? filesXmlFilesList;
+    public List<FilesXmlFile>? filesXmlFilesList;
     private List<ActivitiesInforefXmlFile>? ActivitiesInforefXmlFileList;
-    private readonly string _currentTime;
-    private IFileSystem _fileSystem;
-    private string? fileElementId;
-    private string? fileElementName;
+    public readonly string _currentTime;
+    public IFileSystem _fileSystem;
+    public string fileElementId;
+    public string fileElementName;
 
-    internal XmlFileManager _fileManager;
-    internal IFilesXmlFiles FilesXmlFiles { get; }
-    internal IFilesXmlFile FilesXmlFileBlock1 { get; }
-    internal IFilesXmlFile FilesXmlFileBlock2 { get; }
+    internal IXmlFileManager _fileManager;
     internal IActivitiesGradesXmlGradeItem ActivitiesGradesXmlGradeItem { get; }
     internal IActivitiesGradesXmlGradeItems ActivitiesGradesXmlGradeItems { get; }
     internal IActivitiesGradesXmlActivityGradebook ActivitiesGradesXmlActivityGradebook { get; }
@@ -44,10 +41,9 @@ public class XmlFileFactory
     internal ISectionsSectionXmlSection SectionsSectionXmlSection { get; }
     internal IReadDSL? ReadDsl { get; }
 
-    public XmlFileFactory(IReadDSL readDsl, string dslpath, XmlFileManager xmlFileManager,
-        IFileSystem? fileSystem = null, IFilesXmlFiles? filesXmlFiles = null,
-        IFilesXmlFile? filesXmlFile = null, IActivitiesGradesXmlGradeItem? gradesGradeItem = null,
-        IActivitiesGradesXmlGradeItems? gradesGradeItems = null, ActivitiesGradesXmlActivityGradebook? gradebook = null,
+    public XmlFileFactory(IReadDSL readDsl, string dslpath, IXmlFileManager? xmlFileManager = null,
+        IFileSystem? fileSystem = null, IActivitiesGradesXmlGradeItem? gradesGradeItem = null,
+        IActivitiesGradesXmlGradeItems? gradesGradeItems = null, IActivitiesGradesXmlActivityGradebook? gradebook = null,
         IActivitiesResourceXmlResource? fileResourceXmlResource = null,
         IActivitiesResourceXmlActivity? fileResourceXmlActivity = null,
         IActivitiesRolesXmlRoles? roles = null, IActivitiesModuleXmlModule? module = null,
@@ -63,14 +59,9 @@ public class XmlFileFactory
         _currentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
         _fileSystem = fileSystem?? new FileSystem(); 
         ReadDsl = readDsl;
-        _fileManager = xmlFileManager;
+        _fileManager = xmlFileManager?? new XmlFileManager();
 
         _fileSystem = fileSystem?? new FileSystem(); 
-        
-        FilesXmlFileBlock1 = filesXmlFile?? new FilesXmlFile();
-        FilesXmlFileBlock2 = filesXmlFile?? new FilesXmlFile();
-        
-        FilesXmlFiles = filesXmlFiles?? new FilesXmlFiles();
 
         ActivitiesGradesXmlGradeItem = gradesGradeItem?? new ActivitiesGradesXmlGradeItem();
         ActivitiesGradesXmlGradeItems = gradesGradeItems?? new ActivitiesGradesXmlGradeItems();
@@ -101,6 +92,13 @@ public class XmlFileFactory
         var listDslDocument = ReadDsl?.GetDslDocumentList();
         filesXmlFilesList = new List<FilesXmlFile>();
         
+        ReadFileListAndSetParameters(listDslDocument);
+        
+        _fileManager.SetXmlFilesList(filesXmlFilesList);
+    }
+
+    public void ReadFileListAndSetParameters(List<LearningElementJson> listDslDocument)
+    {
         if (listDslDocument != null)
         {
             foreach (var dsldocument in listDslDocument)
@@ -109,8 +107,8 @@ public class XmlFileFactory
                 fileElementName = "DSL_Document";
 
                 _fileManager.CalculateHashCheckSumAndFileSize(dslPath);
-                _fileManager.CreateFolderAndFiles(dslPath, _fileManager.FileCheckSum);
-                FileSetParametersFilesXml(_fileManager.FileCheckSum, _fileManager.FileSize);
+                _fileManager.CreateFolderAndFiles(dslPath, _fileManager.GetHashCheckSum());
+                FileSetParametersFilesXml(_fileManager.GetHashCheckSum(), _fileManager.GetFileSize());
                 FileSetParametersActivity();
                 FileSetParametersSections();
                 
@@ -118,9 +116,7 @@ public class XmlFileFactory
                 XmlEntityManager.IncreaseFileId();
             }
         }
-        _fileManager.SetXmlFilesList(filesXmlFilesList);
     }
-
     public void FileSetParametersFilesXml(string? hashCheckSum, string? filesize)
     {
         if (filesXmlFilesList == null) return;
@@ -147,8 +143,8 @@ public class XmlFileFactory
         CreateActivityFolder(fileElementId);
         
         //file activities/resource.../grades.xml
-        ActivitiesGradesXmlGradeItems.GradeItem = (ActivitiesGradesXmlGradeItem) ActivitiesGradesXmlGradeItem;
-        ActivitiesGradesXmlActivityGradebook.GradeItems = (ActivitiesGradesXmlGradeItems) ActivitiesGradesXmlGradeItems;
+        ActivitiesGradesXmlGradeItems.GradeItem = ActivitiesGradesXmlGradeItem as ActivitiesGradesXmlGradeItem;
+        ActivitiesGradesXmlActivityGradebook.GradeItems = ActivitiesGradesXmlGradeItems as ActivitiesGradesXmlGradeItems;
 
         ActivitiesGradesXmlActivityGradebook.Serialize("resource", fileElementId);
         
@@ -157,7 +153,7 @@ public class XmlFileFactory
         ActivitiesFileResourceXmlResource.Timemodified = _currentTime; 
         ActivitiesFileResourceXmlResource.Id = fileElementId;
 
-        ActivitiesFileResourceXmlActivity.Resource = (ActivitiesResourceXmlResource) ActivitiesFileResourceXmlResource;
+        ActivitiesFileResourceXmlActivity.Resource = ActivitiesFileResourceXmlResource as ActivitiesResourceXmlResource;
         ActivitiesFileResourceXmlActivity.Id = fileElementId;
         ActivitiesFileResourceXmlActivity.ModuleId = fileElementId;
         ActivitiesFileResourceXmlActivity.ModuleName = "resource";
@@ -196,10 +192,10 @@ public class XmlFileFactory
 
         ActivitiesInforefXmlFileref.File = ActivitiesInforefXmlFileList;
 
-        ActivitiesInforefXmlGradeItemref.GradeItem = (ActivitiesInforefXmlGradeItem) ActivitiesInforefXmlGradeItem;
+        ActivitiesInforefXmlGradeItemref.GradeItem = ActivitiesInforefXmlGradeItem as ActivitiesInforefXmlGradeItem;
         
-        ActivitiesInforefXmlInforef.Fileref = (ActivitiesInforefXmlFileref) ActivitiesInforefXmlFileref; 
-        ActivitiesInforefXmlInforef.GradeItemref = (ActivitiesInforefXmlGradeItemref) ActivitiesInforefXmlGradeItemref;
+        ActivitiesInforefXmlInforef.Fileref = ActivitiesInforefXmlFileref as ActivitiesInforefXmlFileref; 
+        ActivitiesInforefXmlInforef.GradeItemref = ActivitiesInforefXmlGradeItemref as ActivitiesInforefXmlGradeItemref;
         
         ActivitiesInforefXmlInforef.Serialize("resource", fileElementId);
     }
@@ -226,7 +222,7 @@ public class XmlFileFactory
      
      
      /// <summary>
-     /// Creates a h5p folder in the activity folder. Each activity needs an folder.
+     /// Creates a Resource folder in the activity folder. Each activity needs an folder.
      /// </summary>
      /// <param name="moduleId"></param>
      public void CreateActivityFolder(string? moduleId)

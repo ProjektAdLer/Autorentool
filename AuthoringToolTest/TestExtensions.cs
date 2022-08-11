@@ -31,6 +31,17 @@ public static class TestExtensions
         }
         return element!;
     }
+
+    public static IElement FindOrFail(this IRenderedFragment fragment, string selector)
+    {
+        IElement? element = null;
+        Assert.That(() => element = fragment.Find(selector), Throws.Nothing);
+        if (element == null)
+        {
+            Assert.Fail("Couldn't find element with selector: {0}", selector);
+        }
+        return element!;
+    }
     
     /// <summary>
     /// Will either find all elements matching the selector on the component, or throw an assert failure

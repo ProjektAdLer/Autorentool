@@ -40,11 +40,12 @@ public class ReadDslUt
         //TODO: this needs to go and be replaced with fixed input
         var createDsl = new CreateDSL(mockFileSystem);
         var dslPath = createDsl.WriteLearningWorld(learningWorld);
+        var systemUnderTest = new ReadDSL(mockFileSystem);
 
-        var readDsl = new ReadDSL(mockFileSystem);
 
         //Act
-        readDsl.ReadLearningWorld(dslPath);
+        systemUnderTest.ReadLearningWorld(dslPath);
+        
         var learningElementIdent = new IdentifierJson
         {
             type = "FileName",
@@ -76,24 +77,31 @@ public class ReadDslUt
             learningElementJson,
             learningElementJson2
         };
+        
+        var listSpace = systemUnderTest.GetLearningSpaceList();
+        var listDslDocument = systemUnderTest.GetDslDocumentList();
 
         //Assert
-        var learningWorldJson = readDsl.GetLearningWorld();
-        var h5PElementsList = readDsl.GetH5PElementsList();
+        var learningWorldJson = systemUnderTest.GetLearningWorld();
+        var h5PElementsList = systemUnderTest.GetH5PElementsList();
         Assert.Multiple(() =>
         {
-            Assert.That(readDsl.ListH5PElements, Is.Not.Null);
+            Assert.That(systemUnderTest.ListH5PElements, Is.Not.Null);
             Assert.That(h5PElementsList, Is.Not.Null);
             Assert.That(learningWorldJson, Is.Not.Null);
         });
         Assert.Multiple(() =>
         {
-            Assert.That(readDsl.ListH5PElements!, Has.Count.EqualTo(list.Count));
+            Assert.That(systemUnderTest.ListH5PElements!, Has.Count.EqualTo(list.Count));
             Assert.That(learningWorldJson!.learningElements, Is.Not.Null);
             Assert.That(learningWorldJson.learningSpaces, Is.Not.Null);
             Assert.That(learningWorldJson.learningElements!, Has.Count.EqualTo(createDsl.learningWorldJson!.learningElements!.Count));
             Assert.That(learningWorldJson.learningSpaces!, Has.Count.EqualTo(createDsl.learningWorldJson!.learningSpaces!.Count));
             Assert.That(h5PElementsList!, Has.Count.EqualTo(list.Count));
+            Assert.That(listSpace.Count, Is.EqualTo(2));
+            Assert.That(listDslDocument.Count, Is.EqualTo(1));
         });
     }
+
+    
 }

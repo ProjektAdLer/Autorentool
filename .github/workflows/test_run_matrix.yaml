@@ -78,7 +78,8 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: authoringtool-osx
-          path: ./AuthoringTool/bin/Desktop_Publish/
+          path: ./AuthoringTool/bin/Desktop_Publish/AuthoringTool-*.dmg
+          if-no-files-found: error
   
   publish-windows:
     needs: test
@@ -119,7 +120,8 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: authoringtool-win
-          path: ./AuthoringTool/bin/Desktop_Publish/
+          path: ./AuthoringTool/bin/Desktop_Publish/AuthoringTool*.exe
+          if-no-files-found: error
   
   publish-linux:
     needs: test
@@ -161,3 +163,4 @@ jobs:
         with:
           name: authoringtool-linux
           path: ./AuthoringTool/bin/Desktop_Publish/
+          if-no-files-found: error

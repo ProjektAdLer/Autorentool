@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using AuthoringTool.Components.ModalDialog;
 using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningElement;
@@ -5,7 +6,7 @@ using AuthoringTool.PresentationLogic.LearningSpace;
 
 namespace AuthoringTool.PresentationLogic.LearningWorld;
 
-public interface ILearningWorldPresenter
+public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyPropertyChanging
 {
     LearningWorldViewModel CreateNewLearningWorld(string name, string shortname, string authors,
         string language, string description, string goals);

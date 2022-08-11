@@ -115,14 +115,14 @@ public class XmlH5PFactory : IXmlH5PFactory
             filesXmlFilesList = new List<FilesXmlFile>();
             filesXmlFilesList = _fileManager.GetXmlFilesList();
             
-            CreateReadH5PListAndCreate(h5pElementsList);
+            ReadH5PListAndSetParameters(h5pElementsList);
         }
         
         FilesXmlFiles.File = filesXmlFilesList;
         FilesXmlFiles.Serialize();
     }
     
-    public void CreateReadH5PListAndCreate( List<LearningElementJson> h5pElementsList)
+    public void ReadH5PListAndSetParameters( List<LearningElementJson> h5pElementsList)
     {
         // For Each H5P element in the list 
         // (for files.xml) set the H5Pelement id, name, hashvalue, copy the File to the needed location in the backup structure
@@ -170,7 +170,7 @@ public class XmlH5PFactory : IXmlH5PFactory
             };
             
             FilesXmlFile file2 = (FilesXmlFile)file1.Clone();
-            file2.Id = XmlEntityManager.GetFileIdBlock1().ToString();
+            file2.Id = XmlEntityManager.GetFileIdBlock2().ToString();
             
             filesXmlFilesList.Add(file1);
             filesXmlFilesList.Add(file2);

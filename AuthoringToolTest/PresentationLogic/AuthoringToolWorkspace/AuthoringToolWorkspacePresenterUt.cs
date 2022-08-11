@@ -560,6 +560,243 @@ public class AuthoringToolWorkspacePresenterUt
     #endregion
     
     #region Save(Selected)LearningWorldAsync
+    
+    [Test]
+    public void OnSaveWorldDialogClose_UnsavedWorldsQueueIsNull_ThrowsException()
+    {
+        var modalDialogReturnValue = ModalDialogReturnValue.Yes;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.UnsavedWorldsQueue = null;
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnSaveWorldDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("SaveUnsavedChanges modal returned value despite UnsavedWorldsQueue being null"));
+    }
+    
+    [Test]
+    public void OnSaveWorldDialogClose_ModalDialogCancelled_CallsCompletedSaveQueue()
+    {
+        var modalDialogReturnValue = ModalDialogReturnValue.Cancel;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.SaveUnsavedChangesDialogOpen = true;
+        systemUnderTest.UnsavedWorldsQueue = new Queue<LearningWorldViewModel>();
+        
+        systemUnderTest.OnSaveWorldDialogClose(returnValueTuple);
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.SaveUnsavedChangesDialogOpen, Is.False);
+            Assert.That(systemUnderTest.UnsavedWorldsQueue, Is.Null);
+        });
+    }
+    
+    [Test]
+    public void OnSaveWorldDialogClose_ModalDialogYes_DequeuesAndSavesWorld()
+    {
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        viewModel.AddLearningWorld(learningWorld);
+        
+        var modalDialogReturnValue = ModalDialogReturnValue.Yes;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting(viewModel);
+
+        systemUnderTest.UnsavedWorldsQueue = new Queue<LearningWorldViewModel>(viewModel.LearningWorlds);
+
+        Assert.That(systemUnderTest.UnsavedWorldsQueue, Contains.Item(learningWorld));
+        
+        systemUnderTest.OnSaveWorldDialogClose(returnValueTuple);
+
+        Assert.That(systemUnderTest.UnsavedWorldsQueue, Is.Null);
+    }
+    
+    [Test]
+    public void OnSaveWorldDialogClose_ModalDialogNo_DequeueWorldAndDeletesUnsavedChanges()
+    {
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        viewModel.AddLearningWorld(learningWorld);
+        
+        var modalDialogReturnValue = ModalDialogReturnValue.No;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting(viewModel);
+
+        systemUnderTest.UnsavedWorldsQueue = new Queue<LearningWorldViewModel>(viewModel.LearningWorlds);
+
+        Assert.That(systemUnderTest.UnsavedWorldsQueue, Contains.Item(learningWorld));
+        Assert.That(learningWorld.UnsavedChanges);
+        
+        systemUnderTest.OnSaveWorldDialogClose(returnValueTuple);
+
+        Assert.That(systemUnderTest.UnsavedWorldsQueue, Is.Null);
+        Assert.That(!learningWorld.UnsavedChanges);
+    }
+    
+    [Test]
+    public void OnSaveWorldDialogClose_SwitchDefaultValue_ThrowsException()
+    {
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+
+        var modalDialogReturnValue = (ModalDialogReturnValue)10;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting(viewModel);
+
+        systemUnderTest.UnsavedWorldsQueue = new Queue<LearningWorldViewModel>(viewModel.LearningWorlds);
+
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => systemUnderTest.OnSaveWorldDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("Unexpected return value of 10 (Parameter 'returnValueTuple')"));
+    }
+    
+    [Test]
+    public void OnSaveReplacedWorldDialogClose_ReplacedUnsavedWorldIsNull_ThrowsException()
+    {
+        var modalDialogReturnValue = ModalDialogReturnValue.Yes;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.ReplacedUnsavedWorld = null;
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnSaveReplacedWorldDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("SaveReplacedWorld modal returned value despite ReplacedUnsavedWorld being null"));
+    }
+    
+    [Test]
+    public void OnSaveReplacedWorldDialogClose_ModalDialogYes_CallsPresentationLogic()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        viewModel.AddLearningWorld(learningWorld);
+        
+        var modalDialogReturnValue = ModalDialogReturnValue.Yes;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting(viewModel, presentationLogic : presentationLogic);
+        systemUnderTest.ReplacedUnsavedWorld = learningWorld;
+        
+        systemUnderTest.OnSaveReplacedWorldDialogClose(returnValueTuple);
+
+        presentationLogic.Received().SaveLearningWorldAsync(learningWorld);
+    }
+    
+    [Test]
+    public void OnSaveReplacedWorldDialogClose_ModalDialogNo()
+    {
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        viewModel.AddLearningWorld(learningWorld);
+        
+        var modalDialogReturnValue = ModalDialogReturnValue.No;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting(viewModel);
+        systemUnderTest.ReplacedUnsavedWorld = learningWorld;
+        
+        systemUnderTest.OnSaveReplacedWorldDialogClose(returnValueTuple);
+
+        Assert.That(systemUnderTest.ReplacedUnsavedWorld, Is.EqualTo(null));
+    }
+    
+    [Test]
+    public void OnSaveReplacedWorldDialogClose_SwitchDefaultValue_ThrowsException()
+    {
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        viewModel.AddLearningWorld(learningWorld);
+        
+        var modalDialogReturnValue = (ModalDialogReturnValue)10;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting(viewModel);
+        systemUnderTest.ReplacedUnsavedWorld = learningWorld;
+
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => systemUnderTest.OnSaveReplacedWorldDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("Unexpected return value of 10 (Parameter 'returnValueTuple')"));
+    }
+    
+    [Test]
+    public void OnSaveDeletedWorldDialogClose_DeletedUnsavedWorldIsNull_ThrowsException()
+    {
+        var modalDialogReturnValue = ModalDialogReturnValue.Yes;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.DeletedUnsavedWorld = null;
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnSaveDeletedWorldDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("SaveDeletedWorld modal returned value despite DeleteUnsavedWorld being null"));
+    }
+    
+    [Test]
+    public void OnSaveDeletedWorldDialogClose_ModalDialogYes_CallsPresentationLogic()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        viewModel.AddLearningWorld(learningWorld);
+    
+        var modalDialogReturnValue = ModalDialogReturnValue.Yes;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting(viewModel, presentationLogic : presentationLogic);
+        systemUnderTest.DeletedUnsavedWorld = learningWorld;
+    
+        systemUnderTest.OnSaveDeletedWorldDialogClose(returnValueTuple);
+
+        presentationLogic.Received().SaveLearningWorldAsync(learningWorld);
+    }
+    
+    [Test]
+    public void OnSaveDeletedWorldDialogClose_ModalDialogNo()
+    {
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        viewModel.AddLearningWorld(learningWorld);
+        
+        var modalDialogReturnValue = ModalDialogReturnValue.No;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting(viewModel);
+        systemUnderTest.DeletedUnsavedWorld = learningWorld;
+        
+        systemUnderTest.OnSaveDeletedWorldDialogClose(returnValueTuple);
+
+        Assert.That(systemUnderTest.DeletedUnsavedWorld, Is.EqualTo(null));
+    }
+    
+    [Test]
+    public void  OnSaveDeletedWorldDialogClose_SwitchDefaultValue_ThrowsException()
+    {
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        viewModel.AddLearningWorld(learningWorld);
+        
+        var modalDialogReturnValue = (ModalDialogReturnValue)10;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting(viewModel);
+        systemUnderTest.DeletedUnsavedWorld = learningWorld;
+
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => systemUnderTest.OnSaveDeletedWorldDialogClose(returnValueTuple));
+    }
 
     [Test]
     public async Task SaveLearningWorldAsync_CallsPresentationLogic()
@@ -641,6 +878,101 @@ public class AuthoringToolWorkspacePresenterUt
     #endregion
     
     #region ReplaceLearningWorld
+    
+    [Test]
+    public void OnReplacedDialogClose_WorldToReplaceWithIsNull_ThrowsException()
+    {
+        var modalDialogReturnValue = ModalDialogReturnValue.Yes;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.WorldToReplaceWith = null;
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnReplaceDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("WorldToReplaceWith was null but OnReplaceDialogClose was called"));
+    }
+    
+    [Test]
+    public void OnReplacedDialogClose_ModalDialogOk_ReplacesLearningWorld()
+    {
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+        var learningWorld1 = new LearningWorldViewModel("f", "f", "f", "f", "f", "f")
+        {
+            UnsavedChanges = true
+        };
+        var learningWorld2 = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        viewModel.AddLearningWorld(learningWorld1);
+        viewModel.SelectedLearningWorld = learningWorld1;
+        
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting(viewModel);
+
+        systemUnderTest.WorldToReplaceWith = learningWorld2;
+
+        systemUnderTest.OnReplaceDialogClose(returnValueTuple);
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.WorldToReplaceWith, Is.Null);
+            Assert.That(viewModel.LearningWorlds, Contains.Item(learningWorld2));
+            Assert.That(viewModel.LearningWorlds, Does.Not.Contain(learningWorld1));
+            Assert.That(viewModel.SelectedLearningWorld, Is.EqualTo(learningWorld2));
+            Assert.That(systemUnderTest.ReplacedUnsavedWorld, Is.EqualTo(learningWorld1));
+        });
+    }
+    
+    [Test]
+    public void OnReplacedDialogClose_ModalDialogCancel_NotReplacesLearningWorld()
+    {
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+        var learningWorld1 = new LearningWorldViewModel("f", "f", "f", "f", "f", "f")
+        {
+            UnsavedChanges = true
+        };
+        var learningWorld2 = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        viewModel.AddLearningWorld(learningWorld1);
+        viewModel.SelectedLearningWorld = learningWorld1;
+        
+        var modalDialogReturnValue = ModalDialogReturnValue.Cancel;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting(viewModel);
+
+        systemUnderTest.WorldToReplaceWith = learningWorld2;
+
+        systemUnderTest.OnReplaceDialogClose(returnValueTuple);
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.WorldToReplaceWith, Is.Null);
+            Assert.That(viewModel.LearningWorlds, Contains.Item(learningWorld1));
+            Assert.That(viewModel.LearningWorlds, Does.Not.Contain(learningWorld2));
+            Assert.That(viewModel.SelectedLearningWorld, Is.EqualTo(learningWorld1));
+        });
+    }
+    
+    [Test]
+    public void  OnReplacedDialogClose_SwitchDefaultValue_ThrowsException()
+    {
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        viewModel.AddLearningWorld(learningWorld);
+        
+        var modalDialogReturnValue = (ModalDialogReturnValue)10;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+
+        var systemUnderTest = CreatePresenterForTesting(viewModel);
+        systemUnderTest.WorldToReplaceWith = learningWorld;
+
+        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => systemUnderTest.OnReplaceDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("Unexpected return value of 10 (Parameter 'returnValueTuple')"));
+    }
     
     [Test]
     public void ReplaceLearningWorld_ReplacesWorldAndSetsReplacedUnsavedWorld() 
