@@ -2,7 +2,7 @@
 
 public interface IReadDSL
 {
-    void ReadLearningWorld(string dslPath);
+    void ReadLearningWorld(string dslPath, DocumentRootJson? rootJsonForTest = null);
     List<LearningElementJson>? GetH5PElementsList();
     LearningWorldJson? GetLearningWorld();
     
