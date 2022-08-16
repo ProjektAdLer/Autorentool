@@ -29,17 +29,17 @@ public class MoodleBackupXmlSetting : IMoodleBackupXmlSetting{
 	}
 
 	[XmlElement(ElementName="level")]
-	public string? Level { get; set; }
+	public string Level { get; set; }
 	
 	[XmlElement(ElementName="name")]
-	public string? Name { get; set; }
+	public string Name { get; set; }
 	
 	[XmlElement(ElementName="value")]
-	public string? Value { get; set; }
+	public string Value { get; set; }
 	
 	[XmlElement(ElementName="section")]
-	public string? Section { get; set; }
+	public string Section { get; set; }
 	
 	[XmlElement(ElementName="activity")]
-	public string? Activity { get; set; }
+	public string Activity { get; set; }
 }

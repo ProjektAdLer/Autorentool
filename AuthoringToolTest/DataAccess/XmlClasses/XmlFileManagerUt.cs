@@ -37,7 +37,7 @@ public class XmlFileManagerUt
         systemUnderTest.SetXmlFilesList(fileList);
 
         // Assert
-        Assert.That(systemUnderTest.filesXmlFilesList, Is.EqualTo(fileList));
+        Assert.That(systemUnderTest.FilesXmlFilesList, Is.EqualTo(fileList));
     }
 
     [Test]

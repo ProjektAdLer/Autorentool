@@ -37,7 +37,7 @@ public interface IXmlH5PFactory
 
     void CreateH5PFileFactory();
     void ReadH5PListAndSetParameters(List<LearningElementJson> h5pElementsList);
-    void H5PSetParametersFilesXml(string? hashCheckSum, string? filesize);
+    void H5PSetParametersFilesXml(string hashCheckSum, string filesize);
 
     void H5PSetParametersActivity();
 

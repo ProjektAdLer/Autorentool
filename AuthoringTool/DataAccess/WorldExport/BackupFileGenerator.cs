@@ -15,15 +15,15 @@ namespace AuthoringTool.DataAccess.WorldExport;
 public class BackupFileGenerator : IBackupFileGenerator
 {
     
-    private IFileSystem _fileSystem;
-    public IXmlEntityManager xmlEntityManager;
+    private readonly IFileSystem _fileSystem;
+    public readonly IXmlEntityManager XmlEntityManager;
 
     
     // Constructor for tests. fileSystem makes it possible to test various System methods that write files on disk.
-    public BackupFileGenerator(IFileSystem? fileSystem = null, IXmlEntityManager entityManager = null)
+    public BackupFileGenerator(IFileSystem? fileSystem = null, IXmlEntityManager? entityManager = null)
     {
         _fileSystem = fileSystem ?? new FileSystem();
-        xmlEntityManager = entityManager ?? new XmlEntityManager();
+        XmlEntityManager = entityManager ?? new XmlEntityManager();
     }
 
     ///<inheritdoc cref="IBackupFileGenerator.CreateBackupFolders"/>
@@ -40,7 +40,7 @@ public class BackupFileGenerator : IBackupFileGenerator
     /// <inheritdoc cref="IBackupFileGenerator.WriteXmlFiles"/>
     public void WriteXmlFiles(IReadDsl? readDsl, string dslpath)
     {
-        if (readDsl != null) xmlEntityManager.GetFactories(readDsl, dslpath);
+        if (readDsl != null) XmlEntityManager.GetFactories(readDsl, dslpath);
     }
     
     // Get all files from source Folder "XMLFilesForExport" and pack all files and folders into a tar-file 

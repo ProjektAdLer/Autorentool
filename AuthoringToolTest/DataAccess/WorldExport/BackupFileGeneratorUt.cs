@@ -100,8 +100,8 @@ public class BackupFileGeneratorUt
         //Assert
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.xmlEntityManager, Is.Not.Null);
-            systemUnderTest.xmlEntityManager.Received().GetFactories(mockReadDsl, Path.Join(currWorkDir, "XMLFilesForExport", "Hello World"));
+            Assert.That(systemUnderTest.XmlEntityManager, Is.Not.Null);
+            systemUnderTest.XmlEntityManager.Received().GetFactories(mockReadDsl, Path.Join(currWorkDir, "XMLFilesForExport", "Hello World"));
             
         });
 

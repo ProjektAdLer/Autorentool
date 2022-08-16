@@ -4,7 +4,7 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 
 public interface IXmlFileManager
 {
-    List<FilesXmlFile>? GetXmlFilesList();
+    List<FilesXmlFile> GetXmlFilesList();
     
     void SetXmlFilesList(List<FilesXmlFile>? list);
     

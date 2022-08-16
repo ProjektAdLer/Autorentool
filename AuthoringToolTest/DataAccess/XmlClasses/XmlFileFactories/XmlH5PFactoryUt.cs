@@ -91,6 +91,7 @@ public class XmlH5PFactoryUt
         
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
+        mockFileManager.GetXmlFilesList().Returns(new List<FilesXmlFile>());
         systemUnderTest.CreateH5PFileFactory();
 
         //Assert
@@ -98,11 +99,11 @@ public class XmlH5PFactoryUt
         { 
             
             Assert.That(systemUnderTest.FilesXmlFiles, Is.EqualTo(mockFiles));
-            systemUnderTest._fileManager.Received().GetXmlFilesList();
-            systemUnderTest._fileManager.Received().CalculateHashCheckSumAndFileSize(Path.Join(currWorkDir, "XMLFilesForExport", identifier.Value));
-            systemUnderTest._fileManager.Received().GetHashCheckSum();
-            systemUnderTest._fileManager.Received().GetFileSize();
-            systemUnderTest._fileManager.Received().CreateFolderAndFiles(Arg.Any<string>(), Arg.Any<string>());
+            systemUnderTest.FileManager.Received().GetXmlFilesList();
+            systemUnderTest.FileManager.Received().CalculateHashCheckSumAndFileSize(Path.Join(currWorkDir, "XMLFilesForExport", identifier.Value));
+            systemUnderTest.FileManager.Received().GetHashCheckSum();
+            systemUnderTest.FileManager.Received().GetFileSize();
+            systemUnderTest.FileManager.Received().CreateFolderAndFiles(Arg.Any<string>(), Arg.Any<string>());
             systemUnderTest.FilesXmlFiles.Received().Serialize();
         });
     }
@@ -140,7 +141,7 @@ public class XmlH5PFactoryUt
         
         
         //Act
-        systemUnderTest._fileManager.GetXmlFilesList().Returns(new List<FilesXmlFile>());
+        systemUnderTest.FileManager.GetXmlFilesList().Returns(new List<FilesXmlFile>());
         systemUnderTest.CreateH5PFileFactory();
         
         //Assert
@@ -189,56 +190,56 @@ public class XmlH5PFactoryUt
             inforefXmlFile: mockInforefFile, inforefXmlFileref: mockInforefFileref, inforefXmlGradeItem: mockInforefGradeItem,
             inforefXmlGradeItemref: mockInforefGradeItemref, inforefXmlInforef: mockInforefInforef);
             
-        systemUnderTest.h5pElementId = "100";
-        systemUnderTest.h5pElementName = "h5pName";
-        systemUnderTest.currentTime = "1284511";
+        systemUnderTest.H5PElementId = "100";
+        systemUnderTest.H5PElementName = "h5pName";
+        systemUnderTest.CurrentTime = "1284511";
         
         systemUnderTest.H5PSetParametersActivity();
 
         //Assert
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItem.CategoryId, Is.EqualTo(systemUnderTest.h5pElementId));
-            Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItem.ItemName, Is.EqualTo(systemUnderTest.h5pElementName));
+            Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItem.CategoryId, Is.EqualTo(systemUnderTest.H5PElementId));
+            Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItem.ItemName, Is.EqualTo(systemUnderTest.H5PElementName));
             Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItem.ItemType, Is.EqualTo("mod"));
             Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItem.ItemModule, Is.EqualTo("h5pactivity"));
-            Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItem.Timecreated, Is.EqualTo(systemUnderTest.currentTime));
-            Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItem.Timemodified, Is.EqualTo(systemUnderTest.currentTime));
-            Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItem.Id, Is.EqualTo(systemUnderTest.h5pElementId));
+            Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItem.Timecreated, Is.EqualTo(systemUnderTest.CurrentTime));
+            Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItem.Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
+            Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItem.Id, Is.EqualTo(systemUnderTest.H5PElementId));
             
             Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItem, Is.EqualTo(mockGradeItem));
             Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItems, Is.EqualTo(mockGradeItems));
-            systemUnderTest.ActivitiesGradesXmlActivityGradebook.Received().Serialize("h5pactivity", systemUnderTest.h5pElementId);
+            systemUnderTest.ActivitiesGradesXmlActivityGradebook.Received().Serialize("h5pactivity", systemUnderTest.H5PElementId);
             
-            Assert.That(systemUnderTest.ActivitiesH5PActivityXmlH5PActivity.Name, Is.EqualTo(systemUnderTest.h5pElementName));
-            Assert.That(systemUnderTest.ActivitiesH5PActivityXmlH5PActivity.Timecreated, Is.EqualTo(systemUnderTest.currentTime));
-            Assert.That(systemUnderTest.ActivitiesH5PActivityXmlH5PActivity.Timemodified, Is.EqualTo(systemUnderTest.currentTime));
-            Assert.That(systemUnderTest.ActivitiesH5PActivityXmlH5PActivity.Id, Is.EqualTo(systemUnderTest.h5pElementId));
+            Assert.That(systemUnderTest.ActivitiesH5PActivityXmlH5PActivity.Name, Is.EqualTo(systemUnderTest.H5PElementName));
+            Assert.That(systemUnderTest.ActivitiesH5PActivityXmlH5PActivity.Timecreated, Is.EqualTo(systemUnderTest.CurrentTime));
+            Assert.That(systemUnderTest.ActivitiesH5PActivityXmlH5PActivity.Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
+            Assert.That(systemUnderTest.ActivitiesH5PActivityXmlH5PActivity.Id, Is.EqualTo(systemUnderTest.H5PElementId));
             
-            Assert.That(systemUnderTest.ActivitiesH5PActivityXmlActivity.Id, Is.EqualTo(systemUnderTest.h5pElementId));
-            Assert.That(systemUnderTest.ActivitiesH5PActivityXmlActivity.ModuleId, Is.EqualTo(systemUnderTest.h5pElementId));
+            Assert.That(systemUnderTest.ActivitiesH5PActivityXmlActivity.Id, Is.EqualTo(systemUnderTest.H5PElementId));
+            Assert.That(systemUnderTest.ActivitiesH5PActivityXmlActivity.ModuleId, Is.EqualTo(systemUnderTest.H5PElementId));
             Assert.That(systemUnderTest.ActivitiesH5PActivityXmlActivity.ModuleName, Is.EqualTo("h5pactivity"));
-            Assert.That(systemUnderTest.ActivitiesH5PActivityXmlActivity.ContextId, Is.EqualTo(systemUnderTest.h5pElementId));
-            systemUnderTest.ActivitiesH5PActivityXmlActivity.Received().Serialize("h5pactivity", systemUnderTest.h5pElementId);
+            Assert.That(systemUnderTest.ActivitiesH5PActivityXmlActivity.ContextId, Is.EqualTo(systemUnderTest.H5PElementId));
+            systemUnderTest.ActivitiesH5PActivityXmlActivity.Received().Serialize("h5pactivity", systemUnderTest.H5PElementId);
             
-            systemUnderTest.ActivitiesRolesXmlRoles.Received().Serialize("h5pactivity", systemUnderTest.h5pElementId);
+            systemUnderTest.ActivitiesRolesXmlRoles.Received().Serialize("h5pactivity", systemUnderTest.H5PElementId);
             
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.ModuleName, Is.EqualTo("h5pactivity"));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionId, Is.EqualTo(systemUnderTest.h5pElementId));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionNumber, Is.EqualTo(systemUnderTest.h5pElementId));
+            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionId, Is.EqualTo(systemUnderTest.H5PElementId));
+            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionNumber, Is.EqualTo(systemUnderTest.H5PElementId));
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.IdNumber, Is.EqualTo(""));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Added, Is.EqualTo(systemUnderTest.currentTime));
+            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Added, Is.EqualTo(systemUnderTest.CurrentTime));
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.ShowDescription, Is.EqualTo("0"));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Id, Is.EqualTo(systemUnderTest.h5pElementId));
-            systemUnderTest.ActivitiesModuleXmlModule.Received().Serialize("h5pactivity", systemUnderTest.h5pElementId);
+            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Id, Is.EqualTo(systemUnderTest.H5PElementId));
+            systemUnderTest.ActivitiesModuleXmlModule.Received().Serialize("h5pactivity", systemUnderTest.H5PElementId);
             
-            systemUnderTest.ActivitiesGradeHistoryXmlGradeHistory.Received().Serialize("h5pactivity", systemUnderTest.h5pElementId);
+            systemUnderTest.ActivitiesGradeHistoryXmlGradeHistory.Received().Serialize("h5pactivity", systemUnderTest.H5PElementId);
             
             Assert.That(systemUnderTest.ActivitiesInforefXmlGradeItem, Is.EqualTo(mockInforefGradeItem));
             Assert.That(systemUnderTest.ActivitiesInforefXmlGradeItemref, Is.EqualTo(mockInforefGradeItemref));
             Assert.That(systemUnderTest.ActivitiesInforefXmlFileref, Is.EqualTo(mockInforefFileref));
             Assert.That(systemUnderTest.ActivitiesInforefXmlInforef, Is.EqualTo(mockInforefInforef));
-            systemUnderTest.ActivitiesInforefXmlInforef.Received().Serialize("h5pactivity", systemUnderTest.h5pElementId);
+            systemUnderTest.ActivitiesInforefXmlInforef.Received().Serialize("h5pactivity", systemUnderTest.H5PElementId);
             
         });
     }
@@ -258,9 +259,9 @@ public class XmlH5PFactoryUt
             sectionsInforefXmlInforef: mockSectionInforef,
             sectionsSectionXmlSection: mockSection);
         
-        systemUnderTest.h5pElementId = "100";
-        systemUnderTest.h5pElementName = "h5pName";
-        systemUnderTest.currentTime = "1284511";
+        systemUnderTest.H5PElementId = "100";
+        systemUnderTest.H5PElementName = "h5pName";
+        systemUnderTest.CurrentTime = "1284511";
         
         systemUnderTest.H5PSetParametersSections();
         
@@ -269,14 +270,14 @@ public class XmlH5PFactoryUt
         {
             Assert.That(systemUnderTest.SectionsInforefXmlInforef, Is.EqualTo(mockSectionInforef));
             Assert.That(systemUnderTest.SectionsSectionXmlSection, Is.EqualTo(mockSection));
-            Assert.That(systemUnderTest.SectionsSectionXmlSection.Number, Is.EqualTo(systemUnderTest.h5pElementId));
+            Assert.That(systemUnderTest.SectionsSectionXmlSection.Number, Is.EqualTo(systemUnderTest.H5PElementId));
             Assert.That(systemUnderTest.SectionsSectionXmlSection.Name, Is.EqualTo("$@NULL@$"));
             Assert.That(systemUnderTest.SectionsSectionXmlSection.Summary, Is.EqualTo("$@NULL@$"));
-            Assert.That(systemUnderTest.SectionsSectionXmlSection.Timemodified, Is.EqualTo(systemUnderTest.currentTime));
-            Assert.That(systemUnderTest.SectionsSectionXmlSection.Id, Is.EqualTo(systemUnderTest.h5pElementId));
+            Assert.That(systemUnderTest.SectionsSectionXmlSection.Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
+            Assert.That(systemUnderTest.SectionsSectionXmlSection.Id, Is.EqualTo(systemUnderTest.H5PElementId));
             
-            systemUnderTest.SectionsInforefXmlInforef.Received().Serialize("", systemUnderTest.h5pElementId);
-            systemUnderTest.SectionsSectionXmlSection.Received().Serialize("", systemUnderTest.h5pElementId);
+            systemUnderTest.SectionsInforefXmlInforef.Received().Serialize("", systemUnderTest.H5PElementId);
+            systemUnderTest.SectionsSectionXmlSection.Received().Serialize("", systemUnderTest.H5PElementId);
         });
 
     }

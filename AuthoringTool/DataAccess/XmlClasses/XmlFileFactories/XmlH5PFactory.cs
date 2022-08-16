@@ -17,15 +17,15 @@ namespace AuthoringTool.DataAccess.XmlClasses.XmlFileFactories;
 /// </summary>
 public class XmlH5PFactory : IXmlH5PFactory
 {
-    private string currWorkDir;
-    public string hardcodedPath = "XMLFilesForExport";
-    public string h5pElementId;
-    public string h5pElementName;
-    public string currentTime;
-    private List<FilesXmlFile>? filesXmlFilesList;
-    private List<ActivitiesInforefXmlFile>? ActivitiesInforefXmlFileList;
+    private string _currWorkDir;
+    private readonly string _hardcodedPath = "XMLFilesForExport";
+    public string H5PElementId;
+    public string H5PElementName;
+    public string CurrentTime;
+    private List<FilesXmlFile> _filesXmlFilesList;
+    private List<ActivitiesInforefXmlFile> _activitiesInforefXmlFileList;
 
-    internal IXmlFileManager _fileManager;
+    public IXmlFileManager FileManager;
     public IFilesXmlFiles FilesXmlFiles { get; }
     public IFilesXmlFile FilesXmlFileBlock1 { get; }
     public IFilesXmlFile FilesXmlFileBlock2 { get; }
@@ -47,7 +47,7 @@ public class XmlH5PFactory : IXmlH5PFactory
     public ISectionsSectionXmlSection SectionsSectionXmlSection { get; }
     public IReadDsl? ReadDsl { get; }
 
-    private IFileSystem _fileSystem;
+    private readonly IFileSystem _fileSystem;
     
 
     public XmlH5PFactory(IReadDsl readDsl, IXmlFileManager? xmlFileManager = null, IFileSystem? fileSystem = null,
@@ -65,9 +65,13 @@ public class XmlH5PFactory : IXmlH5PFactory
         ISectionsInforefXmlInforef? sectionsInforefXmlInforef = null,
         ISectionsSectionXmlSection? sectionsSectionXmlSection = null)
     {
+        H5PElementId = "";
+        H5PElementName = "";
+        _filesXmlFilesList = new List<FilesXmlFile>();
+        _activitiesInforefXmlFileList = new List<ActivitiesInforefXmlFile>();
         _fileSystem = fileSystem?? new FileSystem();
         
-        _fileManager = xmlFileManager?? new XmlFileManager();
+        FileManager = xmlFileManager?? new XmlFileManager();
         
         FilesXmlFileBlock1 = filesXmlFile?? new FilesXmlFile();
         FilesXmlFileBlock2 = filesXmlFile?? new FilesXmlFile();
@@ -98,8 +102,8 @@ public class XmlH5PFactory : IXmlH5PFactory
         SectionsSectionXmlSection = sectionsSectionXmlSection?? new SectionsSectionXmlSection();
 
         ReadDsl = readDsl;
-        currentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
-        currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
+        CurrentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
+        _currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
     }
     
     
@@ -111,38 +115,39 @@ public class XmlH5PFactory : IXmlH5PFactory
 
         if (ReadDsl != null)
         {   // Get all the H5P elements that are in the DSL Document
-            List<LearningElementJson>? h5pElementsList = ReadDsl.GetH5PElementsList();
-            filesXmlFilesList = new List<FilesXmlFile>();
-            filesXmlFilesList = _fileManager.GetXmlFilesList();
+            List<LearningElementJson> h5PElementsList = ReadDsl.GetH5PElementsList();
+            _filesXmlFilesList = new List<FilesXmlFile>();
+            _filesXmlFilesList = FileManager.GetXmlFilesList();
             
-            ReadH5PListAndSetParameters(h5pElementsList);
+            ReadH5PListAndSetParameters(h5PElementsList);
         }
         
-        FilesXmlFiles.File = filesXmlFilesList;
+        FilesXmlFiles.File = _filesXmlFilesList;
         FilesXmlFiles.Serialize();
     }
     
-    public void ReadH5PListAndSetParameters( List<LearningElementJson> h5pElementsList)
+    public void ReadH5PListAndSetParameters(List<LearningElementJson> h5PElementsList)
     {
         // For Each H5P element in the list 
-        // (for files.xml) set the H5Pelement id, name, hashvalue, copy the File to the needed location in the backup structure
-        // and all the other paramters in (H5PSetParametersFilesXml)
+        // (for files.xml) set the H5P element id, name, hash value, copy the File to the needed location in the backup structure
+        // and all the other parameters in (H5PSetParametersFilesXml)
         // Create folder activities and folder Sections/section... 
-        if (h5pElementsList != null)
-            foreach (var h5pElement in h5pElementsList)
-            {
-                h5pElementId = h5pElement.Id.ToString();
-                if (h5pElement.Identifier.Value != null) h5pElementName = h5pElement.Identifier.Value;
-                // 2 Methoden daraus machen
-                _fileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(currWorkDir, hardcodedPath, h5pElement.Identifier.Value));
-                _fileManager.CreateFolderAndFiles(_fileSystem.Path.Join(currWorkDir, hardcodedPath, h5pElement.Identifier.Value), _fileManager.GetHashCheckSum());
-                H5PSetParametersFilesXml(_fileManager.GetHashCheckSum(), _fileManager.GetFileSize());
-                H5PSetParametersActivity();
-                H5PSetParametersSections();
-                    
-                // These ints are needed for the activities/inforef.xml file. 
-                XmlEntityManager.IncreaseFileId();
-            }
+        foreach (var h5PElement in h5PElementsList)
+        {
+            H5PElementId = h5PElement.Id.ToString();
+            H5PElementName = h5PElement.Identifier.Value;
+            FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
+                h5PElement.Identifier.Value));
+            FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath, 
+                    h5PElement.Identifier.Value), 
+            FileManager.GetHashCheckSum());
+            H5PSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize());
+            H5PSetParametersActivity();
+            H5PSetParametersSections();
+
+            // These ints are needed for the activities/inforef.xml file. 
+            XmlEntityManager.IncreaseFileId();
+        }
     }
 
     /// <summary>
@@ -150,31 +155,29 @@ public class XmlH5PFactory : IXmlH5PFactory
     /// </summary>
     /// <param name="hashCheckSum"></param> SHA1 Hash value for the file
     /// <param name="filesize"></param> Byte Filesize for the file
-    public void H5PSetParametersFilesXml(string? hashCheckSum, string? filesize)
+    public void H5PSetParametersFilesXml(string hashCheckSum, string filesize)
     {
-        if (filesXmlFilesList != null)
+        FilesXmlFile file1 = new FilesXmlFile()
         {
-            FilesXmlFile file1 = new FilesXmlFile()
-            {
-                Id = XmlEntityManager.GetFileIdBlock1().ToString(),
-                ContentHash = hashCheckSum,
-                ContextId = h5pElementId,
-                Filename = h5pElementName,
-                Source = h5pElementName,
-                Filesize = filesize,
-                Component = "mod_h5pactivity",
-                FileArea = "package",
-                Mimetype = "application/zip.h5p",
-                Timecreated = currentTime,
-                Timemodified = currentTime,
-            };
-            
-            FilesXmlFile file2 = (FilesXmlFile)file1.Clone();
-            file2.Id = XmlEntityManager.GetFileIdBlock2().ToString();
-            
-            filesXmlFilesList.Add(file1);
-            filesXmlFilesList.Add(file2);
-        }
+            Id = XmlEntityManager.GetFileIdBlock1().ToString(),
+            ContentHash = hashCheckSum,
+            ContextId = H5PElementId,
+            Filename = H5PElementName,
+            Source = H5PElementName,
+            Filesize = filesize,
+            Component = "mod_h5pactivity",
+            FileArea = "package",
+            Mimetype = "application/zip.h5p",
+            Timecreated = CurrentTime,
+            Timemodified = CurrentTime,
+        };
+
+        FilesXmlFile file2 = (FilesXmlFile) file1.Clone();
+        file2.Id = XmlEntityManager.GetFileIdBlock2().ToString();
+
+        _filesXmlFilesList.Add(file1);
+        _filesXmlFilesList.Add(file2);
+        
         
     }
 
@@ -183,55 +186,55 @@ public class XmlH5PFactory : IXmlH5PFactory
     /// </summary>
     public void H5PSetParametersActivity()
     {
-        CreateActivityFolder(h5pElementId);
+        CreateActivityFolder(H5PElementId);
         
         //file activities/h5p.../grades.xml
-        ActivitiesGradesXmlGradeItem.CategoryId = h5pElementId;
-        ActivitiesGradesXmlGradeItem.ItemName = h5pElementName;
+        ActivitiesGradesXmlGradeItem.CategoryId = H5PElementId;
+        ActivitiesGradesXmlGradeItem.ItemName = H5PElementName;
         ActivitiesGradesXmlGradeItem.ItemType = "mod";
         ActivitiesGradesXmlGradeItem.ItemModule = "h5pactivity";
-        ActivitiesGradesXmlGradeItem.Timecreated = currentTime;
-        ActivitiesGradesXmlGradeItem.Timemodified = currentTime;
-        ActivitiesGradesXmlGradeItem.Id = h5pElementId;
+        ActivitiesGradesXmlGradeItem.Timecreated = CurrentTime;
+        ActivitiesGradesXmlGradeItem.Timemodified = CurrentTime;
+        ActivitiesGradesXmlGradeItem.Id = H5PElementId;
         
         ActivitiesGradesXmlGradeItems.GradeItem = ActivitiesGradesXmlGradeItem as ActivitiesGradesXmlGradeItem;
         ActivitiesGradesXmlActivityGradebook.GradeItems = ActivitiesGradesXmlGradeItems as ActivitiesGradesXmlGradeItems;
 
-        ActivitiesGradesXmlActivityGradebook.Serialize("h5pactivity", h5pElementId);
+        ActivitiesGradesXmlActivityGradebook.Serialize("h5pactivity", H5PElementId);
         
         //file activities/h5p.../h5pactivity.xml
-        ActivitiesH5PActivityXmlH5PActivity.Name = h5pElementName;
-        ActivitiesH5PActivityXmlH5PActivity.Timecreated = currentTime;
-        ActivitiesH5PActivityXmlH5PActivity.Timemodified = currentTime;
-        ActivitiesH5PActivityXmlH5PActivity.Id = h5pElementId;
+        ActivitiesH5PActivityXmlH5PActivity.Name = H5PElementName;
+        ActivitiesH5PActivityXmlH5PActivity.Timecreated = CurrentTime;
+        ActivitiesH5PActivityXmlH5PActivity.Timemodified = CurrentTime;
+        ActivitiesH5PActivityXmlH5PActivity.Id = H5PElementId;
 
         ActivitiesH5PActivityXmlActivity.H5pactivity = ActivitiesH5PActivityXmlH5PActivity as ActivitiesH5PActivityXmlH5PActivity;
-        ActivitiesH5PActivityXmlActivity.Id = h5pElementId;
-        ActivitiesH5PActivityXmlActivity.ModuleId = h5pElementId;
+        ActivitiesH5PActivityXmlActivity.Id = H5PElementId;
+        ActivitiesH5PActivityXmlActivity.ModuleId = H5PElementId;
         ActivitiesH5PActivityXmlActivity.ModuleName = "h5pactivity";
-        ActivitiesH5PActivityXmlActivity.ContextId = h5pElementId;
+        ActivitiesH5PActivityXmlActivity.ContextId = H5PElementId;
 
-        ActivitiesH5PActivityXmlActivity.Serialize("h5pactivity", h5pElementId);
+        ActivitiesH5PActivityXmlActivity.Serialize("h5pactivity", H5PElementId);
         
         //file activities/h5p.../roles.xml
-        ActivitiesRolesXmlRoles.Serialize("h5pactivity", h5pElementId);
+        ActivitiesRolesXmlRoles.Serialize("h5pactivity", H5PElementId);
         
         //file activities/h5p.../module.xml
         ActivitiesModuleXmlModule.ModuleName = "h5pactivity";
-        ActivitiesModuleXmlModule.SectionId = h5pElementId;
-        ActivitiesModuleXmlModule.SectionNumber = h5pElementId;
+        ActivitiesModuleXmlModule.SectionId = H5PElementId;
+        ActivitiesModuleXmlModule.SectionNumber = H5PElementId;
         ActivitiesModuleXmlModule.IdNumber = "";
-        ActivitiesModuleXmlModule.Added = currentTime;
+        ActivitiesModuleXmlModule.Added = CurrentTime;
         ActivitiesModuleXmlModule.ShowDescription = "0";
-        ActivitiesModuleXmlModule.Id = h5pElementId;
+        ActivitiesModuleXmlModule.Id = H5PElementId;
         
-        ActivitiesModuleXmlModule.Serialize("h5pactivity", h5pElementId);
+        ActivitiesModuleXmlModule.Serialize("h5pactivity", H5PElementId);
         
         //file activities/h5p.../grade_history.xml
-        ActivitiesGradeHistoryXmlGradeHistory.Serialize("h5pactivity", h5pElementId);
+        ActivitiesGradeHistoryXmlGradeHistory.Serialize("h5pactivity", H5PElementId);
         
         //file activities/h5p.../inforef.xml
-        ActivitiesInforefXmlFileList = new List<ActivitiesInforefXmlFile>();
+        _activitiesInforefXmlFileList = new List<ActivitiesInforefXmlFile>();
   
         var InforefFile1 = new ActivitiesInforefXmlFile()
         {
@@ -242,17 +245,17 @@ public class XmlH5PFactory : IXmlH5PFactory
             Id = XmlEntityManager.GetFileIdBlock2().ToString()
         };
             
-        ActivitiesInforefXmlFileList.Add(InforefFile1);
-        ActivitiesInforefXmlFileList.Add(InforefFile2);
+        _activitiesInforefXmlFileList.Add(InforefFile1);
+        _activitiesInforefXmlFileList.Add(InforefFile2);
 
-        ActivitiesInforefXmlFileref.File = ActivitiesInforefXmlFileList;
+        ActivitiesInforefXmlFileref.File = _activitiesInforefXmlFileList;
         
         ActivitiesInforefXmlGradeItemref.GradeItem = ActivitiesInforefXmlGradeItem as ActivitiesInforefXmlGradeItem;
         
         ActivitiesInforefXmlInforef.Fileref = ActivitiesInforefXmlFileref as ActivitiesInforefXmlFileref;
         ActivitiesInforefXmlInforef.GradeItemref = ActivitiesInforefXmlGradeItemref as ActivitiesInforefXmlGradeItemref;
         
-        ActivitiesInforefXmlInforef.Serialize("h5pactivity", h5pElementId);
+        ActivitiesInforefXmlInforef.Serialize("h5pactivity", H5PElementId);
     }
 
     /// <summary>
@@ -260,19 +263,19 @@ public class XmlH5PFactory : IXmlH5PFactory
     /// </summary>
     public void H5PSetParametersSections()
     {
-        CreateSectionsFolder(h5pElementId);
+        CreateSectionsFolder(H5PElementId);
         
         //file sections/section.../inforef.xml
-        SectionsInforefXmlInforef.Serialize("", h5pElementId);
+        SectionsInforefXmlInforef.Serialize("", H5PElementId);
         
         //file sections/section.../section.xml
-        SectionsSectionXmlSection.Number = h5pElementId;
+        SectionsSectionXmlSection.Number = H5PElementId;
         SectionsSectionXmlSection.Name = "$@NULL@$";
         SectionsSectionXmlSection.Summary = "$@NULL@$";
-        SectionsSectionXmlSection.Timemodified = currentTime;
-        SectionsSectionXmlSection.Id = h5pElementId;
+        SectionsSectionXmlSection.Timemodified = CurrentTime;
+        SectionsSectionXmlSection.Id = H5PElementId;
         
-        SectionsSectionXmlSection.Serialize("", h5pElementId);
+        SectionsSectionXmlSection.Serialize("", H5PElementId);
     }
 
     /// <summary>
