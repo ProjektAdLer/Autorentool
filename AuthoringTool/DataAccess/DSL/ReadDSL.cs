@@ -11,21 +11,30 @@ public class ReadDSL : IReadDSL
     public LearningWorldJson? LearningWorldJson;
     private string? filepathDSL;
     private readonly IFileSystem _fileSystem;
+    public DocumentRootJson rootJson;
+    public string jsonString;
 
     public ReadDSL(IFileSystem fileSystem)
     {
         _fileSystem = fileSystem;
     }
 
-    public void ReadLearningWorld(string dslPath)
+    public void ReadLearningWorld(string dslPath, DocumentRootJson? rootJsonForTest = null)
     {
         filepathDSL = dslPath;
         
         ListH5PElements = new List<LearningElementJson>();
         ListLearningSpaces = new List<LearningSpaceJson>();
         ListDslDocument = new List<LearningElementJson>();
-        string jsonString = _fileSystem.File.ReadAllText(filepathDSL);
-        DocumentRootJson? rootJson = JsonSerializer.Deserialize<DocumentRootJson>(jsonString);
+        if (rootJsonForTest != null)
+        {
+            rootJson = rootJsonForTest;
+        }
+        else if (rootJsonForTest == null)
+        {
+            jsonString = _fileSystem.File.ReadAllText(filepathDSL);
+            rootJson = JsonSerializer.Deserialize<DocumentRootJson>(jsonString);
+        }
         GetH5PElements(rootJson);
         GetLearningSpaces(rootJson);
         GetDslDocument(rootJson);
