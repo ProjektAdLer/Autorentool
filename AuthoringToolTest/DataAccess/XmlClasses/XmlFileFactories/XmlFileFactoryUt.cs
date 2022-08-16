@@ -27,7 +27,7 @@ public class XmlFileFactoryUt
     public void XmFileFactory_Constructor_AllParametersSet()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockReadDsl = Substitute.For<IReadDsl>();
         var fileString = "fileString";
         var mockFileManager = new XmlFileManager();
         var mockFileSystem = new MockFileSystem();
@@ -65,19 +65,14 @@ public class XmlFileFactoryUt
     public void XmlFileFactory_CreateFileFactory_FileListCreated()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockReadDsl = Substitute.For<IReadDsl>();
         var mockFileSystem = new MockFileSystem();
         var mockFileManager = Substitute.For<IXmlFileManager>();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
-        var identifier = new IdentifierJson();
-        identifier.type = "FileName";    
-        identifier.value = "DSL_Document";
+        var identifier = new IdentifierJson("FileName", "DSL_Document");
 
-        var dslDocument = new LearningElementJson();
-        dslDocument.id = 1;
-        dslDocument.identifier = identifier;
-        dslDocument.elementType = "json";
+        var dslDocument = new LearningElementJson(1, identifier, "json");
 
         var dslDocumentList = new List<LearningElementJson>()
         {
@@ -85,8 +80,8 @@ public class XmlFileFactoryUt
         };
         
         mockReadDsl.GetDslDocumentList().Returns(dslDocumentList);
-        var fileString = Path.Join(currWorkDir, "XMLFilesForExport", identifier.value, "Hello World");
-        mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport", identifier.value), new MockFileData("Hello World"));
+        var fileString = Path.Join(currWorkDir, "XMLFilesForExport", identifier.Value, "Hello World");
+        mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport", identifier.Value), new MockFileData("Hello World"));
 
         
         // Act
@@ -111,7 +106,7 @@ public class XmlFileFactoryUt
     public void FileSetParametersFilesXml_SetFileXmlEntity_AndAddToFilesList()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockReadDsl = Substitute.For<IReadDsl>();
         var mockFileSystem = new MockFileSystem();
         var mockFileManager = Substitute.For<IXmlFileManager>();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
@@ -149,7 +144,7 @@ public class XmlFileFactoryUt
     public void FileSetParametersFilesXml_ListIsNull()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockReadDsl = Substitute.For<IReadDsl>();
         var mockFileSystem = new MockFileSystem();
         var mockFileManager = Substitute.For<IXmlFileManager>();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
@@ -169,7 +164,7 @@ public class XmlFileFactoryUt
     public void FileSetParametersActivity_CreateActivityFolder_SetsGradesResourceRolesModuleGradeHistoryInforef_AndSerializes()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockReadDsl = Substitute.For<IReadDsl>();
         var mockFileSystem = new MockFileSystem();
         var mockFileManager = Substitute.For<IXmlFileManager>();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
@@ -231,7 +226,7 @@ public class XmlFileFactoryUt
     public void FileSetParametersSections_CreateSectionFolder_SetsInforefSection_AndSerializes()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockReadDsl = Substitute.For<IReadDsl>();
         var mockFileSystem = new MockFileSystem();
         var mockFileManager = Substitute.For<IXmlFileManager>();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
@@ -266,7 +261,7 @@ public class XmlFileFactoryUt
     public void CreateActivityFolder_ActivityFolderCreated()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockReadDsl = Substitute.For<IReadDsl>();
         var fileString = "";
         var mockFileSystem = new MockFileSystem();
 
@@ -283,7 +278,7 @@ public class XmlFileFactoryUt
     public void CreateSectionFolder_ActivityFolderCreated()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockReadDsl = Substitute.For<IReadDsl>();
         var fileString = "";
         var mockFileSystem = new MockFileSystem();
 

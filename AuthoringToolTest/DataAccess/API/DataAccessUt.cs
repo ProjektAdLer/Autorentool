@@ -43,8 +43,8 @@ public class DataAccessUt
     public void DataAccess_ConstructBackup_CallsBackupFileGenerator()
     {
         //Arrange
-        var mockReadDsl = Substitute.For<IReadDSL>();
-        var mockCreateDsl = Substitute.For<ICreateDSL>();
+        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockCreateDsl = Substitute.For<ICreateDsl>();
         
         var mockBackupFile = Substitute.For<IBackupFileGenerator>();
         var systemUnderTest = CreateTestableDataAccess(backupFileConstructor: mockBackupFile, createDsl: mockCreateDsl,
@@ -60,7 +60,7 @@ public class DataAccessUt
         mockCreateDsl.Received().WriteLearningWorld(mockLearningWorld as LearningWorld);
         mockReadDsl.Received().ReadLearningWorld(mockCreateDsl.WriteLearningWorld(mockLearningWorld as LearningWorld));
         mockBackupFile.Received().CreateBackupFolders();
-        mockBackupFile.Received().WriteXmlFiles(mockReadDsl as ReadDSL, mockCreateDsl.WriteLearningWorld(mockLearningWorld as LearningWorld));
+        mockBackupFile.Received().WriteXmlFiles(mockReadDsl as ReadDsl, mockCreateDsl.WriteLearningWorld(mockLearningWorld as LearningWorld));
         mockBackupFile.Received().WriteBackupFile(filepath);
 
     }
@@ -286,8 +286,8 @@ public class DataAccessUt
         IXmlFileHandler<LearningSpace>? fileSaveHandlerSpace = null,
         IXmlFileHandler<LearningElement>? fileSaveHandlerElement = null,
         IContentFileHandler? contentHandler = null,
-        ICreateDSL? createDsl = null,
-        IReadDSL? readDsl = null,
+        ICreateDsl? createDsl = null,
+        IReadDsl? readDsl = null,
         IFileSystem? fileSystem = null)
     {
         configuration ??= Substitute.For<IAuthoringToolConfiguration>();
@@ -297,8 +297,8 @@ public class DataAccessUt
         fileSaveHandlerElement ??= Substitute.For<IXmlFileHandler<LearningElement>>();
         contentHandler ??= Substitute.For<IContentFileHandler>();
         fileSystem ??= new MockFileSystem();
-        createDsl ??= Substitute.For<ICreateDSL>();
-        readDsl ??= Substitute.For<IReadDSL>();
+        createDsl ??= Substitute.For<ICreateDsl>();
+        readDsl ??= Substitute.For<IReadDsl>();
         return new AuthoringTool.DataAccess.API.DataAccess(configuration, backupFileConstructor, fileSaveHandlerWorld,
             fileSaveHandlerSpace, fileSaveHandlerElement, contentHandler, createDsl, readDsl, fileSystem);
     }

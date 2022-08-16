@@ -6,18 +6,25 @@
 public class LearningElementJson : ILearningElementJson
 {
     // incremented ID for every element, it will also be used as moduleid, sectionid ...
-    public int id { get; set; }
+    public LearningElementJson(int id, IdentifierJson identifier, string elementType)
+    {
+        Id = id;
+        Identifier = identifier;
+        ElementType = elementType;
+    }
+
+    public int Id { get; set; }
     
     // the identifier has the name of the element
-    public IdentifierJson? identifier { get; set; }
+    public IdentifierJson Identifier { get; set; }
     
     // the elementType describes the Filetype of the element. (H5P, Picture, Video, PDF)
-    public string? elementType { get; set; }
+    public string ElementType { get; set; }
     
     // learningElementValue describes the Points or Badge the element gives
-    public List<LearningElementValueJson>? learningElementValue { get; set; }
+    public List<LearningElementValueJson>? LearningElementValue { get; set; }
     
     // requirements are needed to describe the Path of the Topic, Space and element. 
     // it is a list of topics, spaces or elements that need to be completed, before a particular element can be startet
-    public List<RequirementJson>? requirements { get; set; }
+    public List<RequirementJson>? Requirements { get; set; }
 }

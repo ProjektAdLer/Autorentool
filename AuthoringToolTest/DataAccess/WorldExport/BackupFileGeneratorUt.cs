@@ -86,7 +86,7 @@ public class BackupFileGeneratorUt
     public void BackupFileGenerator_WriteBackupFile_BackupFileCreated()
     {
         //Arrange 
-        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockReadDsl = Substitute.For<IReadDsl>();
         var mockFileSystem = new MockFileSystem();
         var mockEntityManager = Substitute.For<IXmlEntityManager>();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();

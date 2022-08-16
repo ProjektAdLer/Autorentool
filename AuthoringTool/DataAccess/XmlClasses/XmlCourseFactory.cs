@@ -29,7 +29,7 @@ public class XmlCourseFactory
     internal ICourseCompletiondefaultXmlCourseCompletionDefaults CourseCompletiondefaultXmlCourseCompletionDefaults { get; }
     
     
-    public XmlCourseFactory(IReadDSL readDsl, ICourseCourseXmlCategory? courseCourseXmlCategory=null, ICourseCourseXmlCourse? courseCourseXmlCourse=null,
+    public XmlCourseFactory(IReadDsl readDsl, ICourseCourseXmlCategory? courseCourseXmlCategory=null, ICourseCourseXmlCourse? courseCourseXmlCourse=null,
         ICourseEnrolmentsXmlEnrol? courseEnrolmentsXmlEnrolManual=null, ICourseEnrolmentsXmlEnrol? courseEnrolmentsXmlEnrolGuest=null,
         ICourseEnrolmentsXmlEnrol? courseEnrolmentsXmlEnrolSelf=null, ICourseEnrolmentsXmlEnrols? courseEnrolmentsXmlEnrols=null, 
         ICourseEnrolmentsXmlEnrolments? courseEnrolmentsXmlEnrolments=null, ICourseInforefXmlRole? courseInforefXmlRole=null, 
@@ -83,10 +83,10 @@ public class XmlCourseFactory
     {
         //set parameters of the course/course.xml file
         if (learningWorld != null)
-            if (learningWorld.identifier != null)
+            if (learningWorld.Identifier != null)
             {
-                CourseCourseXmlCourse.Shortname = learningWorld.identifier.value;
-                CourseCourseXmlCourse.Fullname = learningWorld.identifier.value;
+                CourseCourseXmlCourse.Shortname = learningWorld.Identifier.Value;
+                CourseCourseXmlCourse.Fullname = learningWorld.Identifier.Value;
                 CourseCourseXmlCourse.Format = "tiles";
                 CourseCourseXmlCourse.BaseColour = "#009681";
                 CourseCourseXmlCourse.CourseUseSubtiles = "1";

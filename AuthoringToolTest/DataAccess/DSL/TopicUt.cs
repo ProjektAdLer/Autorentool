@@ -13,8 +13,7 @@ public class TopicUt
     {
         //Arrange
         var topic = new TopicJson();
-        var ident = new IdentifierJson();
-        var requirements = new RequirementJson();
+        var ident = new IdentifierJson( "type", "value");
         List<int> contentList = new List<int>();
         List<int> reqlist = new List<int>();
         List<RequirementJson> requirementJsons = new List<RequirementJson>();
@@ -24,27 +23,23 @@ public class TopicUt
         
         reqlist.Add(0);
         reqlist.Add(1);
-
-        ident.type = "type";
-        ident.value = "value";
-
-        requirements.type = "type";
-        requirements.value = reqlist;
         
+        var requirements = new RequirementJson("type", reqlist);
+
         requirementJsons.Add(requirements);
         
         //Act
-        topic.identifier = ident;
-        topic.name = "topicname";
-        topic.requirements = requirementJsons;
-        topic.topicContent = contentList;
-        topic.topicId = 1;
+        topic.Identifier = ident;
+        topic.Name = "topicname";
+        topic.Requirements = requirementJsons;
+        topic.TopicContent = contentList;
+        topic.TopicId = 1;
 
         //Assert
-        Assert.That(topic.identifier, Is.EqualTo(ident));
-        Assert.That(topic.name, Is.EqualTo("topicname"));
-        Assert.That(topic.requirements, Is.EqualTo(requirementJsons));
-        Assert.That(topic.topicContent, Is.EqualTo(contentList));
-        Assert.That(topic.topicId, Is.EqualTo(1));
+        Assert.That(topic.Identifier, Is.EqualTo(ident));
+        Assert.That(topic.Name, Is.EqualTo("topicname"));
+        Assert.That(topic.Requirements, Is.EqualTo(requirementJsons));
+        Assert.That(topic.TopicContent, Is.EqualTo(contentList));
+        Assert.That(topic.TopicId, Is.EqualTo(1));
     }
 }

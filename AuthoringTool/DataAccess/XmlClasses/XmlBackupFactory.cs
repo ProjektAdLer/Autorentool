@@ -70,7 +70,7 @@ public class XmlBackupFactory
     internal List<MoodleBackupXmlSetting> moodleBackupXmlSettingList;
     internal List<MoodleBackupXmlSection> moodleBackupXmlSectionList;
     
-    public XmlBackupFactory(IReadDSL readDsl, IGradebookXmlGradeItem? gradebookXmlGradeItem=null,
+    public XmlBackupFactory(IReadDsl readDsl, IGradebookXmlGradeItem? gradebookXmlGradeItem=null,
         IGradebookXmlGradeItems? gradebookXmlGradeItems=null,IGradebookXmlGradeCategory? gradebookXmlGradeCategory=null,
         IGradebookXmlGradeCategories? gradebookXmlGradeCategories=null, IGradebookXmlGradeSetting? gradebookXmlGradebookSetting=null, 
         IGradebookXmlGradeSettings? gradebookXmlGradebookSettings=null,IGradebookXmlGradebook? gradebookXmlGradebook=null,
@@ -220,9 +220,9 @@ public class XmlBackupFactory
         
         if (learningWorld != null)
         {
-            if (learningWorld.identifier != null)
+            if (learningWorld.Identifier != null)
             {
-                MoodleBackupXmlCourse.Title = learningWorld.identifier.value;
+                MoodleBackupXmlCourse.Title = learningWorld.Identifier.Value;
 
                 //MoodleBackupXmlSettingSetting are Tags that describe the Moodle Backup Settings.
                 //They are the same Options that are displayed, when a backup is created in moodle. 
@@ -277,9 +277,9 @@ public class XmlBackupFactory
                 if (dslDocument != null)
                     foreach (var document in dslDocument)
                     {
-                        string dslDocumentId = document.id.ToString();
+                        string dslDocumentId = document.Id.ToString();
                         string dslDocumentType = "resource";
-                        string dslDocumentName = document.identifier.value;
+                        string dslDocumentName = document.Identifier.Value;
 
                         if (moodleBackupXmlActivityList != null)
                         {
@@ -325,9 +325,9 @@ public class XmlBackupFactory
                 if (learningElement != null)
                     foreach (var element in learningElement)
                     {
-                        string learningElementId = element.id.ToString();
-                        string learningElementType = element.elementType;
-                        string learningElementName = element.identifier!.value;
+                        string learningElementId = element.Id.ToString();
+                        string learningElementType = element.ElementType;
+                        string learningElementName = element.Identifier!.Value;
                         if (learningElementType == "h5p")
                         {
                             learningElementType = "h5pactivity";
@@ -471,8 +471,8 @@ public class XmlBackupFactory
                 //Its important that the parameter "includeFiles" is set to "1".
                 //With the OriginalCourseFormat the future learningWorld can be individualised
                 MoodleBackupXmlInformation.BackupDate = currentTime;
-                MoodleBackupXmlInformation.OriginalCourseFullname = learningWorld.identifier.value;
-                MoodleBackupXmlInformation.OriginalCourseShortname = learningWorld.identifier.value;
+                MoodleBackupXmlInformation.OriginalCourseFullname = learningWorld.Identifier.Value;
+                MoodleBackupXmlInformation.OriginalCourseShortname = learningWorld.Identifier.Value;
                 MoodleBackupXmlInformation.OriginalCourseStartDate = currentTime;
                 MoodleBackupXmlInformation.Details = MoodleBackupXmlDetails as MoodleBackupXmlDetails;
                 MoodleBackupXmlInformation.Contents = MoodleBackupXmlContents as MoodleBackupXmlContents;

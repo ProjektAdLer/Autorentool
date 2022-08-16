@@ -39,9 +39,9 @@ public class XmlFileFactory
     internal IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
     internal ISectionsInforefXmlInforef SectionsInforefXmlInforef { get; }
     internal ISectionsSectionXmlSection SectionsSectionXmlSection { get; }
-    internal IReadDSL? ReadDsl { get; }
+    internal IReadDsl? ReadDsl { get; }
 
-    public XmlFileFactory(IReadDSL readDsl, string dslpath, IXmlFileManager? xmlFileManager = null,
+    public XmlFileFactory(IReadDsl readDsl, string dslpath, IXmlFileManager? xmlFileManager = null,
         IFileSystem? fileSystem = null, IActivitiesGradesXmlGradeItem? gradesGradeItem = null,
         IActivitiesGradesXmlGradeItems? gradesGradeItems = null, IActivitiesGradesXmlActivityGradebook? gradebook = null,
         IActivitiesResourceXmlResource? fileResourceXmlResource = null,
@@ -103,7 +103,7 @@ public class XmlFileFactory
         {
             foreach (var dsldocument in listDslDocument)
             {
-                fileElementId = dsldocument.id.ToString();
+                fileElementId = dsldocument.Id.ToString();
                 fileElementName = "DSL_Document";
 
                 _fileManager.CalculateHashCheckSumAndFileSize(dslPath);

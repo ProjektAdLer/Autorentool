@@ -13,7 +13,7 @@ public interface IBackupFileGenerator
     /// <summary>
     /// Creates all Xml Files at the right location.
     /// </summary>
-    void WriteXmlFiles(IReadDSL? readDsl, string dslpath);
+    void WriteXmlFiles(IReadDsl? readDsl, string dslpath);
     
     /// <summary>
     /// Locates all Folders and Xml Files, packs it into a tar.gzip file and renames it to .mbz (moodle backup zip) 

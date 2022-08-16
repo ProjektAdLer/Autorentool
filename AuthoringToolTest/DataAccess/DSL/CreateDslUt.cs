@@ -49,22 +49,18 @@ public class CreateDslUt
         
         //Assert
         var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "DSL_Document.json");
-        Assert.That(createDsl.learningWorldJson, Is.Not.Null);
         Assert.Multiple(() =>
         {
-            Assert.That(createDsl.learningWorldJson!.identifier, Is.Not.Null);
-            Assert.That(createDsl.learningWorldJson.identifier!.value, Is.EqualTo(learningWorld.Name));
-            Assert.That(createDsl.learningWorldJson.identifier.type, Is.EqualTo("name"));
-            Assert.That(createDsl.listLearningElements, Is.EqualTo(allLearningElements));
-            Assert.That(createDsl.listLearningSpaces, Is.EqualTo(learningSpaces));
+            Assert.That(createDsl.ListLearningElements, Is.EqualTo(allLearningElements));
+            Assert.That(createDsl.ListLearningSpaces, Is.EqualTo(learningSpaces));
             Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
         });
     }
 
-    private CreateDSL GetCreateDslForTest(IFileSystem? fileSystem = null)
+    private CreateDsl GetCreateDslForTest(IFileSystem? fileSystem = null)
     {
         fileSystem ??= new MockFileSystem();
 
-        return new CreateDSL(fileSystem);
+        return new CreateDsl(fileSystem);
     }
 }

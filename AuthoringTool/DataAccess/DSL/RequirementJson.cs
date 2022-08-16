@@ -6,6 +6,12 @@
 /// </summary>
 public class RequirementJson : IRequirementJson
 {
-    public string? type { get; set; }
-    public List<int>? value { get; set; }
+    public RequirementJson(string type, List<int> value)
+    {
+        Type = type;
+        Value = value;
+    }
+
+    public string Type { get; set; }
+    public List<int> Value { get; set; }
 }

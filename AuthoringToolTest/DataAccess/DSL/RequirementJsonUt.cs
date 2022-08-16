@@ -11,17 +11,17 @@ public class RequirementJsonUt
     public void RequirementJson_SetParameters_ObjectsAreEqual()
     {
         //Arrange
-        var requirement = new RequirementJson();
+        
         List<int> list = new List<int>();
         list.Add(1);
         list.Add(2);
 
             //Act
-        requirement.type = "type";
-        requirement.value = list;
+        var requirement = new RequirementJson("type", list);
+
 
         //Assert
-        Assert.That(requirement.type, Is.EqualTo("type"));
-        Assert.That(requirement.value, Is.EqualTo(list));
+        Assert.That(requirement.Type, Is.EqualTo("type"));
+        Assert.That(requirement.Value, Is.EqualTo(list));
     }
 }

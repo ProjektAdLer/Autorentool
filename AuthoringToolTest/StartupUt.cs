@@ -104,7 +104,7 @@ public class StartupUt
     private static readonly Type[] ConfigureDataAccessRequiredTypes =
     {
         typeof(IXmlFileHandler<LearningWorld>), typeof(IXmlFileHandler<LearningElement>), typeof(IXmlFileHandler<LearningSpace>),
-        typeof(IDataAccess), typeof(ICreateDSL), typeof(IReadDSL), typeof(IContentFileHandler), typeof(IBackupFileGenerator),
+        typeof(IDataAccess), typeof(ICreateDsl), typeof(IReadDsl), typeof(IContentFileHandler), typeof(IBackupFileGenerator),
         
     };
     [Test]

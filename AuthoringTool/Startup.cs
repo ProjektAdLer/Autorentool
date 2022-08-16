@@ -98,8 +98,8 @@ public class Startup
     {
         services.AddTransient(typeof(IXmlFileHandler<>), typeof(XmlFileHandler<>));
         services.AddSingleton<IDataAccess, DataAccess.API.DataAccess>();
-        services.AddSingleton<ICreateDSL, CreateDSL>();
-        services.AddSingleton<IReadDSL, ReadDSL>();
+        services.AddSingleton<ICreateDsl, CreateDsl>();
+        services.AddSingleton<IReadDsl, ReadDsl>();
         services.AddSingleton<IContentFileHandler, ContentFileHandler>();
         services.AddSingleton<IBackupFileGenerator, BackupFileGenerator>();
     }

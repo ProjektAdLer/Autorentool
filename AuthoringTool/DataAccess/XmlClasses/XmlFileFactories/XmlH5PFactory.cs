@@ -45,12 +45,12 @@ public class XmlH5PFactory : IXmlH5PFactory
     public IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
     public ISectionsInforefXmlInforef SectionsInforefXmlInforef { get; }
     public ISectionsSectionXmlSection SectionsSectionXmlSection { get; }
-    public IReadDSL? ReadDsl { get; }
+    public IReadDsl? ReadDsl { get; }
 
     private IFileSystem _fileSystem;
     
 
-    public XmlH5PFactory(IReadDSL readDsl, IXmlFileManager? xmlFileManager = null, IFileSystem? fileSystem = null,
+    public XmlH5PFactory(IReadDsl readDsl, IXmlFileManager? xmlFileManager = null, IFileSystem? fileSystem = null,
         IFilesXmlFiles? filesXmlFiles = null,
         IFilesXmlFile? filesXmlFile = null, IActivitiesGradesXmlGradeItem? gradesGradeItem = null,
         IActivitiesGradesXmlGradeItems? gradesGradeItems = null, IActivitiesGradesXmlActivityGradebook? gradebook = null,
@@ -131,11 +131,11 @@ public class XmlH5PFactory : IXmlH5PFactory
         if (h5pElementsList != null)
             foreach (var h5pElement in h5pElementsList)
             {
-                h5pElementId = h5pElement.id.ToString();
-                if (h5pElement.identifier.value != null) h5pElementName = h5pElement.identifier.value;
+                h5pElementId = h5pElement.Id.ToString();
+                if (h5pElement.Identifier.Value != null) h5pElementName = h5pElement.Identifier.Value;
                 // 2 Methoden daraus machen
-                _fileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(currWorkDir, hardcodedPath, h5pElement.identifier.value));
-                _fileManager.CreateFolderAndFiles(_fileSystem.Path.Join(currWorkDir, hardcodedPath, h5pElement.identifier.value), _fileManager.GetHashCheckSum());
+                _fileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(currWorkDir, hardcodedPath, h5pElement.Identifier.Value));
+                _fileManager.CreateFolderAndFiles(_fileSystem.Path.Join(currWorkDir, hardcodedPath, h5pElement.Identifier.Value), _fileManager.GetHashCheckSum());
                 H5PSetParametersFilesXml(_fileManager.GetHashCheckSum(), _fileManager.GetFileSize());
                 H5PSetParametersActivity();
                 H5PSetParametersSections();
