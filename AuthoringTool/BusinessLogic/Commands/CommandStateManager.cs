@@ -35,7 +35,7 @@ public sealed class CommandStateManager : ICommandStateManager
     /// <inheritdoc cref="ICommandStateManager.Undo"/>
     public void Undo()
     {
-        if (!CanUndo) return;
+        if (!CanUndo) throw new InvalidOperationException("no command to undo");
         var command = PopUndo();
         command.Undo();
         PushRedo(command);
@@ -44,7 +44,7 @@ public sealed class CommandStateManager : ICommandStateManager
     /// <inheritdoc cref="ICommandStateManager.Redo"/>
     public void Redo()
     {
-        if (!CanRedo) return;
+        if (!CanRedo) throw new InvalidOperationException("no command to redo");
         var command = PopRedo();
         command.Redo();
         PushUndo(command);
