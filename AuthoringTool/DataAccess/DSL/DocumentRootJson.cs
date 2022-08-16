@@ -1,11 +1,16 @@
 ﻿namespace AuthoringTool.DataAccess.DSL;
 
 /// <summary>
-/// The DocumentRoot only need the learningWorld
-/// This class is needed, because the definition of the structure wants the LearningWorld as its own tag in the Json file. 
+/// The DocumentRoot only needs the learningWorld
+/// This class is needed, because the definition of the Dsl-Structure has the LearningWorld as its own tag. 
 /// </summary>
 public class DocumentRootJson : IDocumentRootJson
 {
-    public LearningWorldJson? learningWorld { get; set; }
+    public DocumentRootJson(LearningWorldJson learningWorld)
+    {
+        LearningWorld = learningWorld;
+    }
+
+    public LearningWorldJson LearningWorld { get; set; }
     
 }

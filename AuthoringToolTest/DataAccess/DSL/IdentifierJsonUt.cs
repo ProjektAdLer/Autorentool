@@ -10,14 +10,13 @@ public class IdentifierJsonUt
     public void IdentifierJson_SetParameters_ObjectsAreEqual()
     {
         //Arrange
-        var ident = new IdentifierJson();
+        
         
         //Act
-        ident.type = "type";
-        ident.value = "value";
+        var ident = new IdentifierJson("type", "value");
 
         //Assert
-        Assert.That(ident.type, Is.EqualTo("type"));
-        Assert.That(ident.value, Is.EqualTo("value"));
+        Assert.That(ident.Type, Is.EqualTo("type"));
+        Assert.That(ident.Value, Is.EqualTo("value"));
     }
 }

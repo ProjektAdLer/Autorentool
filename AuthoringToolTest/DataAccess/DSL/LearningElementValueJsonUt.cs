@@ -11,15 +11,13 @@ public class LearningElementValueJsonUt
     public void LearningElementValueJson_SetParameters_ObjectsAreEqual()
     {
         //Arrange
-        var learningElementValue = new LearningElementValueJson();
-        
+      
         //Act
-        learningElementValue.type = "type";
-        learningElementValue.value = "value";
+        var learningElementValue = new LearningElementValueJson("type", "value");
 
         //Assert
-        Assert.That(learningElementValue.type, Is.EqualTo("type"));
-        Assert.That(learningElementValue.value, Is.EqualTo("value"));
+        Assert.That(learningElementValue.Type, Is.EqualTo("type"));
+        Assert.That(learningElementValue.Value, Is.EqualTo("value"));
 
     }
 }

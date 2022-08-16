@@ -15,7 +15,6 @@ public class ReadDslUt
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
-        var learningWorldJson = new LearningWorldJson();
 
         const string name = "asdf";
         const string shortname = "jkl;";
@@ -36,41 +35,20 @@ public class ReadDslUt
 
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals,
             learningElements, learningSpaces);
-        var identifierLearningWorldJson = new IdentifierJson()
-        {
-            type = "name",
-            value = "World",
-        };
-        var identifierLearningSpaceJson_1 = new IdentifierJson()
-        {
-            type = "name",
-            value = "Space_1",
-        };
-        var identifierLearningSpaceJson_2 = new IdentifierJson()
-        {
-            type = "name",
-            value = "Space_2",
-        };
-        var identifierLearningElementJson_1 = new IdentifierJson()
-        {
-            type = "name",
-            value = "Element_1",
-        };
-        var identifierLearningElementJson_2 = new IdentifierJson()
-        {
-            type = "name",
-            value = "DSL Dokument",
-        };
-        var learningElementValueJson_1 = new LearningElementValueJson()
-        {
-            type = "text",
-            value = "Hello World",
-        };
-        var learningElementValueJson_2 = new LearningElementValueJson()
-        {
-            type = "text",
-            value = "Hello Space",
-        };
+        var identifierLearningWorldJson = new IdentifierJson("name", "World");
+
+        var identifierLearningSpaceJson_1 = new IdentifierJson("name", "Space_1");
+  
+        var identifierLearningSpaceJson_2 = new IdentifierJson("name", "Space_2");
+    
+        var identifierLearningElementJson_1 = new IdentifierJson("name", "Element_1");
+   
+        var identifierLearningElementJson_2 = new IdentifierJson("name", "DSL Dokument");
+
+        var learningElementValueJson_1 = new LearningElementValueJson("text", "Hello World");
+
+        var learningElementValueJson_2 = new LearningElementValueJson("text", "Hello Space");
+
         var learningElementValueList_1 = new List<LearningElementValueJson>(){learningElementValueJson_1};
         var learningElementValueList_2 = new List<LearningElementValueJson>(){learningElementValueJson_2};
         
@@ -79,50 +57,31 @@ public class ReadDslUt
         var topicsJson = new TopicJson();
         var topicsList = new List<TopicJson>(){topicsJson};
 
-        var learningSpacesJson_1 = new LearningSpaceJson()
-        {
-            spaceId = 1,
-            learningSpaceName = "Space_1",
-            identifier = identifierLearningSpaceJson_1,
-            learningSpaceContent = new List<int>() {1, 2},
-        };
-        var learningSpacesJson_2 = new LearningSpaceJson()
-        {
-            spaceId = 1,
-            learningSpaceName = "Space_1",
-            identifier = identifierLearningSpaceJson_2,
-            learningSpaceContent = new List<int>() {3, 4},
-        };
+        var learningSpacesJson_1 = new LearningSpaceJson(1, "Space_1",
+            identifierLearningSpaceJson_1, new List<int>() {1, 2});
+ 
+        var learningSpacesJson_2 = new LearningSpaceJson(1, "Space_1", 
+            identifierLearningSpaceJson_2, new List<int>() {3, 4});
+
         var learningSpacesList = new List<LearningSpaceJson>(){learningSpacesJson_1, learningSpacesJson_2};
-        
-        var learningElementJson_1 = new LearningElementJson()
-        {
-            id = 1,
-            identifier = identifierLearningElementJson_1,
-            elementType = "h5p",
-            learningElementValue = learningElementValueList_1,
-        };
-        var learningElementJson_2 = new LearningElementJson()
-        {
-            id = 2,
-            identifier = identifierLearningElementJson_2,
-            elementType = "json",
-            learningElementValue = learningElementValueList_2,
-        };
+
+        var learningElementJson_1 = new LearningElementJson(1,
+            identifierLearningElementJson_1, "h5p");
+        learningElementJson_1.LearningElementValue = learningElementValueList_1;
+
+        var learningElementJson_2 = new LearningElementJson(2,
+            identifierLearningElementJson_2, "json");
+        learningElementJson_2.LearningElementValue = learningElementValueList_2;
+
         var learningElementList = new List<LearningElementJson>(){learningElementJson_1, learningElementJson_2};
         
-        learningWorldJson.identifier = identifierLearningWorldJson;
-        learningWorldJson.learningWorldContent = learningWorldContentJson;
-        learningWorldJson.topics = topicsList;
-        learningWorldJson.learningSpaces = learningSpacesList;
-        learningWorldJson.learningElements = learningElementList;
+        var learningWorldJson = new LearningWorldJson(identifierLearningWorldJson, learningWorldContentJson, topicsList, learningSpacesList, learningElementList);
 
-        var rootJson = new DocumentRootJson();
-        rootJson.learningWorld = learningWorldJson;
+        var rootJson = new DocumentRootJson(learningWorldJson);
         
 
         //Act
-        var systemUnderTest = new ReadDSL(mockFileSystem);
+        var systemUnderTest = new ReadDsl(mockFileSystem);
         systemUnderTest.ReadLearningWorld("dslPath", rootJson);
 
         var listSpace = systemUnderTest.GetLearningSpaceList();
@@ -140,10 +99,10 @@ public class ReadDslUt
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.ListH5PElements!, Has.Count.EqualTo(1));
-            Assert.That(getLearningWorldJson!.learningElements, Is.Not.Null);
-            Assert.That(getLearningWorldJson.learningSpaces, Is.Not.Null);
-            Assert.That(getLearningWorldJson.learningElements!, Has.Count.EqualTo(learningElementList.Count));
-            Assert.That(getLearningWorldJson.learningSpaces!, Has.Count.EqualTo(learningSpacesList.Count));
+            Assert.That(getLearningWorldJson!.LearningElements, Is.Not.Null);
+            Assert.That(getLearningWorldJson.LearningSpaces, Is.Not.Null);
+            Assert.That(getLearningWorldJson.LearningElements!, Has.Count.EqualTo(learningElementList.Count));
+            Assert.That(getLearningWorldJson.LearningSpaces!, Has.Count.EqualTo(learningSpacesList.Count));
             Assert.That(getH5PElementsList!, Has.Count.EqualTo(1));
             Assert.That(listSpace.Count, Is.EqualTo(2));
             Assert.That(listDslDocument.Count, Is.EqualTo(1));

@@ -12,7 +12,7 @@ internal class DataAccess : IDataAccess
     public DataAccess(IAuthoringToolConfiguration configuration, IBackupFileGenerator backupFileGenerator,
         IXmlFileHandler<LearningWorldPe> xmlHandlerWorld, IXmlFileHandler<LearningSpacePe> xmlHandlerSpace,
         IXmlFileHandler<LearningElementPe> xmlHandlerElement, IContentFileHandler contentHandler,
-        ICreateDSL createDsl, IReadDSL readDsl, IFileSystem fileSystem)
+        ICreateDsl createDsl, IReadDsl readDsl, IFileSystem fileSystem)
     {
         XmlHandlerWorld = xmlHandlerWorld;
         XmlHandlerSpace = xmlHandlerSpace;
@@ -33,8 +33,8 @@ internal class DataAccess : IDataAccess
     public IAuthoringToolConfiguration Configuration { get; }
 
     public IBackupFileGenerator BackupFile { get; set; }
-    public ICreateDSL CreateDsl;
-    public IReadDSL ReadDsl;
+    public ICreateDsl CreateDsl;
+    public IReadDsl ReadDsl;
 
     /// <summary>
     /// Creates the DSL document, reads it, creates the needed folder structure for the backup, fills the folders with
@@ -47,7 +47,7 @@ internal class DataAccess : IDataAccess
         string dslpath = CreateDsl.WriteLearningWorld(learningWorld);
         ReadDsl.ReadLearningWorld(dslpath);
         BackupFile.CreateBackupFolders();
-        BackupFile.WriteXmlFiles(ReadDsl as ReadDSL, dslpath);
+        BackupFile.WriteXmlFiles(ReadDsl as ReadDsl, dslpath);
         BackupFile.WriteBackupFile(filepath);
     }
 

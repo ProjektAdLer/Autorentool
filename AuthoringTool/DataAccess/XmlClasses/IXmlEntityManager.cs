@@ -4,6 +4,6 @@ namespace AuthoringTool.DataAccess;
 
 public interface IXmlEntityManager
 {
-    void GetFactories(IReadDSL readDsl, string dslpath);
+    void GetFactories(IReadDsl readDsl, string dslpath);
     
 }

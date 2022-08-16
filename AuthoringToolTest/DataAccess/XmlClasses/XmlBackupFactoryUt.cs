@@ -22,7 +22,7 @@ public class XmlBackupFactoryUt
     public void XmlBackupFactory_CreateXmlBackupFactory_AllMethodsCalled()
     {
         // Arrange
-        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockReadDsl = Substitute.For<IReadDsl>();
 
         var mockGradeItems = Substitute.For<IGradebookXmlGradeItems>();
         var mockGradeCategories = Substitute.For<IGradebookXmlGradeCategories>();
@@ -57,24 +57,18 @@ public class XmlBackupFactoryUt
         var mockAktivities = Substitute.For<IMoodleBackupXmlActivities>();
         var mockSections = Substitute.For<IMoodleBackupXmlSections>();
         var mockCourse = Substitute.For<IMoodleBackupXmlCourse>();
-        var mockIdentifier = new IdentifierJson();
-        var mockLearningWorld = new LearningWorldJson();
+        var mockIdentifier = new IdentifierJson("name", "Element_1");
+        var mockLearningWorld = new LearningWorldJson(mockIdentifier, new List<int>(),
+            new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>());
         var mockDslDocument = new List<LearningElementJson>();
         
-        mockLearningWorld.identifier = mockIdentifier;
-        mockIdentifier.type = "name";
-        mockIdentifier.value = "Element_1";
+        mockLearningWorld.Identifier = mockIdentifier;
 
-        var mockLearningElement = new LearningElementJson();
-        mockLearningElement.id = 1;
-        mockLearningElement.identifier = mockIdentifier;
-        mockLearningElement.elementType = "h5p";
+        var mockLearningElement = new LearningElementJson(1, mockIdentifier, "h5p");
         List<LearningElementJson> learningElementJsons = new List<LearningElementJson>();
         learningElementJsons.Add(mockLearningElement);
 
-        var mockDslDocumentJson = new LearningElementJson();
-        mockDslDocumentJson.id = 2;
-        mockDslDocumentJson.identifier = mockIdentifier;
+        var mockDslDocumentJson = new LearningElementJson(2, mockIdentifier, "json");
         mockDslDocument.Add(mockDslDocumentJson);
 
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
@@ -122,7 +116,7 @@ public class XmlBackupFactoryUt
         //Arrange
         
         //Act
-        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockReadDsl = Substitute.For<IReadDsl>();
         var xmlBackupFactory = new XmlBackupFactory(mockReadDsl);
 
         //Assert
@@ -172,7 +166,7 @@ public class XmlBackupFactoryUt
     public void CreateGradebookXml_GradeItemsGradeCategoriesGradeSettingGradeSettingsGradebook_AndSerialized()
     {
         //Arrange
-        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockReadDsl = Substitute.For<IReadDsl>();
         
         var mockGradeItems = Substitute.For<IGradebookXmlGradeItems>();
         var mockGradeCategories = Substitute.For<IGradebookXmlGradeCategories>();
@@ -220,7 +214,7 @@ public class XmlBackupFactoryUt
     public void CreateGroupsXml_SetsGroupsGroupingsList_AndSerialized()
     {
         //Arrange
-        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockReadDsl = Substitute.For<IReadDsl>();
         var mockGroups = Substitute.For<IGroupsXmlGroups>();
         var mockGroupingsList = new GroupsXmlGroupingsList();
         var systemUnderTest = new XmlBackupFactory(mockReadDsl, groupsXmlGroups: mockGroups, groupsXmlGroupingsList: mockGroupingsList);
@@ -241,7 +235,7 @@ public class XmlBackupFactoryUt
     public void CreateMoodleBackupXml_SetsDetailDetailsSettingSettingsContentsInformationMoodleBackupAktivitiesSectionsCourse_AndSerialized()
     {
         //Arrange
-        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockReadDsl = Substitute.For<IReadDsl>();
         var mockDetail = new MoodleBackupXmlDetail();
         var mockDetails = Substitute.For<IMoodleBackupXmlDetails>();
         var mockSetting = Substitute.For<IMoodleBackupXmlSetting>();
@@ -252,24 +246,18 @@ public class XmlBackupFactoryUt
         var mockAktivities = Substitute.For<IMoodleBackupXmlActivities>();
         var mockSections = Substitute.For<IMoodleBackupXmlSections>();
         var mockCourse = Substitute.For<IMoodleBackupXmlCourse>();
-        var mockIdentifier = new IdentifierJson();
-        var mockLearningWorld = new LearningWorldJson();
+        var mockIdentifier = new IdentifierJson( "name", "Element_1");
+       
         var mockDslDocument = new List<LearningElementJson>();
         
-        mockLearningWorld.identifier = mockIdentifier;
-        mockIdentifier.type = "name";
-        mockIdentifier.value = "Element_1";
+        var mockLearningWorld = new LearningWorldJson(mockIdentifier, new List<int>(),
+            new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>() );
 
-        var mockLearningElement = new LearningElementJson();
-        mockLearningElement.id = 1;
-        mockLearningElement.identifier = mockIdentifier;
-        mockLearningElement.elementType = "h5p";
+        var mockLearningElement = new LearningElementJson(1, mockIdentifier, "h5p");
         List<LearningElementJson> learningElementJsons = new List<LearningElementJson>();
         learningElementJsons.Add(mockLearningElement);
 
-        var mockDslDocumentJson = new LearningElementJson();
-        mockDslDocumentJson.id = 2;
-        mockDslDocumentJson.identifier = mockIdentifier;
+        var mockDslDocumentJson = new LearningElementJson(2, mockIdentifier, "json");
         mockDslDocument.Add(mockDslDocumentJson);
 
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
@@ -288,17 +276,17 @@ public class XmlBackupFactoryUt
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.MoodleBackupXmlDetails.Detail, Is.EqualTo(mockDetail));
-            Assert.That(systemUnderTest.MoodleBackupXmlCourse.Title, Is.EqualTo(mockIdentifier.value));
+            Assert.That(systemUnderTest.MoodleBackupXmlCourse.Title, Is.EqualTo(mockIdentifier.Value));
             Assert.That(systemUnderTest.MoodleBackupXmlSettingLegacyfiles.Name, Is.EqualTo("legacyfiles"));
             Assert.That(systemUnderTest.MoodleBackupXmlSettingFiles.Value, Is.EqualTo("1"));
-            Assert.That(systemUnderTest.moodleBackupXmlActivityList[0].ModuleId, Is.EqualTo(mockDslDocumentJson.id.ToString()));
+            Assert.That(systemUnderTest.moodleBackupXmlActivityList[0].ModuleId, Is.EqualTo(mockDslDocumentJson.Id.ToString()));
             Assert.That(systemUnderTest.moodleBackupXmlActivityList[0].ModuleName, Is.EqualTo("resource"));
-            Assert.That(systemUnderTest.moodleBackupXmlActivityList[0].Title, Is.EqualTo(mockIdentifier.value));
-            Assert.That(systemUnderTest.moodleBackupXmlActivityList[0].Directory, Is.EqualTo("activities/resource_" + mockDslDocumentJson.id.ToString()));
+            Assert.That(systemUnderTest.moodleBackupXmlActivityList[0].Title, Is.EqualTo(mockIdentifier.Value));
+            Assert.That(systemUnderTest.moodleBackupXmlActivityList[0].Directory, Is.EqualTo("activities/resource_" + mockDslDocumentJson.Id.ToString()));
             Assert.That(systemUnderTest.moodleBackupXmlSettingList[0].Level, Is.EqualTo("section"));
-            Assert.That(systemUnderTest.moodleBackupXmlSettingList[0].Name, Is.EqualTo("section_" + mockDslDocumentJson.id.ToString() + "_included"));
+            Assert.That(systemUnderTest.moodleBackupXmlSettingList[0].Name, Is.EqualTo("section_" + mockDslDocumentJson.Id.ToString() + "_included"));
             Assert.That(systemUnderTest.moodleBackupXmlSettingList[0].Value, Is.EqualTo("1"));
-            Assert.That(systemUnderTest.moodleBackupXmlSettingList[1].Section, Is.EqualTo("section_" + mockDslDocumentJson.id.ToString()));
+            Assert.That(systemUnderTest.moodleBackupXmlSettingList[1].Section, Is.EqualTo("section_" + mockDslDocumentJson.Id.ToString()));
             Assert.That(systemUnderTest.moodleBackupXmlActivityList[1].ModuleName, Is.EqualTo("h5pactivity"));
             Assert.That(systemUnderTest.MoodleBackupXmlInformation, Is.EqualTo(mockInformation));
             systemUnderTest.MoodleBackupXmlMoodleBackup.Received().Serialize();
@@ -311,7 +299,7 @@ public class XmlBackupFactoryUt
     public void CreateOutcomesXml_Serializes()
     {
         //Arrange
-        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockReadDsl = Substitute.For<IReadDsl>();
         var mockOutcomes = Substitute.For<IOutcomesXmlOutcomesDefinition>();
         var systemUnderTest = new XmlBackupFactory(mockReadDsl, outcomesXmlOutcomesDefinition: mockOutcomes);
         
@@ -326,7 +314,7 @@ public class XmlBackupFactoryUt
     public void CreateQuestionsXml_Serializes()
     {
         //Arrange
-        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockReadDsl = Substitute.For<IReadDsl>();
         var mockQuestion = Substitute.For<IQuestionsXmlQuestionsCategories>();
         var systemUnderTest = new XmlBackupFactory(mockReadDsl, questionsXmlQuestionsCategories: mockQuestion);
         
@@ -341,7 +329,7 @@ public class XmlBackupFactoryUt
     public void CreateRolesXml_SetsRoleInRoleDefinition_AndSerializes()
     {
         //Arrange
-        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockReadDsl = Substitute.For<IReadDsl>();
         var mockRolesDefinition = Substitute.For<IRolesXmlRolesDefinition>();
         var mockRole = new RolesXmlRole();
         var systemUnderTest = new XmlBackupFactory(mockReadDsl, rolesXmlRole: mockRole, rolesXmlRolesDefinition:mockRolesDefinition);
@@ -361,7 +349,7 @@ public class XmlBackupFactoryUt
     public void CreateScalesXml_Serializes()
     {
         //Arrange
-        var mockReadDsl = Substitute.For<IReadDSL>();
+        var mockReadDsl = Substitute.For<IReadDsl>();
         var mockScales = Substitute.For<IScalesXmlScalesDefinition>();
         var systemUnderTest = new XmlBackupFactory(mockReadDsl, scalesXmlScalesDefinition: mockScales);
         

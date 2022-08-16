@@ -10,7 +10,7 @@ public class XmlEntityManager : IXmlEntityManager
     public static int FileIdBlock2 = 2;
     
     //run all factorys that are available, to set the parameters and create the xml files
-    public void GetFactories(IReadDSL readDsl, string dslpath)
+    public void GetFactories(IReadDsl readDsl, string dslpath)
     {
         XmlFileManager filemanager = new XmlFileManager();
 

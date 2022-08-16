@@ -2,7 +2,7 @@ using AuthoringTool.DataAccess.PersistEntities;
 
 namespace AuthoringTool.DataAccess.DSL;
 
-public interface ICreateDSL
+public interface ICreateDsl
 {
    string WriteLearningWorld(LearningWorldPe learningWorld);
 }
