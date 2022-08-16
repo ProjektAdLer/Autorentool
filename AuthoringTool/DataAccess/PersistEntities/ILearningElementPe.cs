@@ -1,17 +1,15 @@
-﻿using AuthoringTool.PresentationLogic.LearningElement;
+﻿namespace AuthoringTool.DataAccess.PersistEntities;
 
-namespace AuthoringTool.Entities;
-
-public interface ILearningElement
+public interface ILearningElementPe
 {
     string Name { get; set; }
     string Shortname { get; set; }
-    LearningContent? Content { get; set; }
+    LearningContentPe Content { get; set; }
     string Authors { get; set; }
     string Description { get; set; }
     string Goals { get; set; }
     int Workload { get; set; }
-    LearningElementDifficultyEnum Difficulty { get; set; }
+    LearningElementDifficultyEnumPe Difficulty { get; set; }
     double PositionX { get; set; }
     double PositionY { get; set; }
     string? ParentName { get; set; }

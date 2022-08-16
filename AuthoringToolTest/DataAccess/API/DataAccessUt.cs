@@ -7,9 +7,8 @@ using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.API.Configuration;
 using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.Persistence;
+using AuthoringTool.DataAccess.PersistEntities;
 using AuthoringTool.DataAccess.WorldExport;
-using AuthoringTool.Entities;
-using AuthoringTool.PresentationLogic.LearningElement;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -24,7 +23,7 @@ public class DataAccessUt
         //Arrange 
         var mockConfiguration = Substitute.For<IAuthoringToolConfiguration>();
         var mockBackupFileConstructor = Substitute.For<IBackupFileGenerator>();
-        var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<LearningWorld>>();
+        var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
 
         //Act 
         var systemUnderTest = CreateTestableDataAccess(mockConfiguration, mockBackupFileConstructor,
@@ -50,17 +49,17 @@ public class DataAccessUt
         var systemUnderTest = CreateTestableDataAccess(backupFileConstructor: mockBackupFile, createDsl: mockCreateDsl,
             readDsl: mockReadDsl);
         var filepath = "this/path";
-        var mockLearningWorld = Substitute.For<ILearningWorld>();
+        var mockLearningWorld = Substitute.For<ILearningWorldPe>();
 
 
         //Act
-        systemUnderTest.ConstructBackup(mockLearningWorld as LearningWorld, filepath);
+        systemUnderTest.ConstructBackup(mockLearningWorld as LearningWorldPe, filepath);
 
         //Assert
-        mockCreateDsl.Received().WriteLearningWorld(mockLearningWorld as LearningWorld);
-        mockReadDsl.Received().ReadLearningWorld(mockCreateDsl.WriteLearningWorld(mockLearningWorld as LearningWorld));
+        mockCreateDsl.Received().WriteLearningWorld(mockLearningWorld as LearningWorldPe);
+        mockReadDsl.Received().ReadLearningWorld(mockCreateDsl.WriteLearningWorld(mockLearningWorld as LearningWorldPe));
         mockBackupFile.Received().CreateBackupFolders();
-        mockBackupFile.Received().WriteXmlFiles(mockReadDsl as ReadDsl, mockCreateDsl.WriteLearningWorld(mockLearningWorld as LearningWorld));
+        mockBackupFile.Received().WriteXmlFiles(mockReadDsl as ReadDsl, mockCreateDsl.WriteLearningWorld(mockLearningWorld as LearningWorldPe));
         mockBackupFile.Received().WriteBackupFile(filepath);
 
     }
@@ -68,10 +67,10 @@ public class DataAccessUt
     [Test]
     public void DataAccess_SaveLearningWorldToFile_CallsFileSaveHandlerWorld()
     {
-        var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<LearningWorld>>();
+        var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerWorld: mockFileSaveHandlerWorld);
 
-        var learningWorld = new LearningWorld("f", "f", "f", "f", "f", "f");
+        var learningWorld = new LearningWorldPe("f", "f", "f", "f", "f", "f");
         systemUnderTest.SaveLearningWorldToFile(
             learningWorld,
             "C:/nonsense");
@@ -82,7 +81,7 @@ public class DataAccessUt
     [Test]
     public void DataAccess_LoadLearningWorldFromFile_CallsFileSaveHandlerWorld()
     {
-        var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<LearningWorld>>();
+        var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerWorld: mockFileSaveHandlerWorld);
 
         systemUnderTest.LoadLearningWorldFromFile("C:/nonsense");
@@ -93,7 +92,7 @@ public class DataAccessUt
     [Test]
     public void DataAccess_LoadLearningWorldFromStream_CallsFileSaveHandlerWorld()
     {
-        var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<LearningWorld>>();
+        var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerWorld: mockFileSaveHandlerWorld);
         var stream = Substitute.For<Stream>();
 
@@ -105,10 +104,10 @@ public class DataAccessUt
     [Test]
     public void DataAccess_SaveLearningSpaceToFile_CallsFileSaveHandlerSpace()
     {
-        var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<LearningSpace>>();
+        var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<LearningSpacePe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerSpace: mockFileSaveHandlerSpace);
 
-        var learningSpace = new LearningSpace("f", "f", "f", "f", "f");
+        var learningSpace = new LearningSpacePe("f", "f", "f", "f", "f");
         systemUnderTest.SaveLearningSpaceToFile(
             learningSpace,
             "C:/nonsense");
@@ -119,7 +118,7 @@ public class DataAccessUt
     [Test]
     public void DataAccess_LoadLearningSpaceFromFile_CallsFileSaveHandlerSpace()
     {
-        var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<LearningSpace>>();
+        var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<LearningSpacePe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerSpace: mockFileSaveHandlerSpace);
 
         systemUnderTest.LoadLearningSpaceFromFile("C:/nonsense");
@@ -130,7 +129,7 @@ public class DataAccessUt
     [Test]
     public void DataAccess_LoadLearningSpaceFromStream_CallsFileSaveHandlerWorld()
     {
-        var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<LearningSpace>>();
+        var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<LearningSpacePe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerSpace: mockFileSaveHandlerSpace);
         var stream = Substitute.For<Stream>();
 
@@ -142,12 +141,12 @@ public class DataAccessUt
     [Test]
     public void DataAccess_SaveLearningElementToFile_CallsFileSaveHandlerElement()
     {
-        var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElement>>();
+        var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElementPe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerElement: mockFileSaveHandlerElement);
 
-        var learningContent = new LearningContent("a", "b", Array.Empty<byte>());
-        var learningElement = new LearningElement("f","f", "f", learningContent, "f",
-            "f", "f", LearningElementDifficultyEnum.Easy);
+        var learningContent = new LearningContentPe("a", "b", Array.Empty<byte>());
+        var learningElement = new LearningElementPe("f","f", "f", learningContent, "f",
+            "f", "f", LearningElementDifficultyEnumPe.Easy);
         systemUnderTest.SaveLearningElementToFile(
             learningElement,
             "C:/nonsense");
@@ -158,7 +157,7 @@ public class DataAccessUt
     [Test]
     public void DataAccess_LoadLearningElementFromFile_CallsFileSaveHandlerElement()
     {
-        var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElement>>();
+        var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElementPe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerElement: mockFileSaveHandlerElement);
 
         systemUnderTest.LoadLearningElementFromFile("C:/nonsense");
@@ -169,7 +168,7 @@ public class DataAccessUt
     [Test]
     public void DataAccess_LoadLearningElementFromStream_CallsFileSaveHandlerElement()
     {
-        var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElement>>();
+        var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElementPe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerElement: mockFileSaveHandlerElement);
         var stream = Substitute.For<Stream>();
 
@@ -282,9 +281,9 @@ public class DataAccessUt
     private static AuthoringTool.DataAccess.API.DataAccess CreateTestableDataAccess(
         IAuthoringToolConfiguration? configuration = null,
         IBackupFileGenerator? backupFileConstructor = null,
-        IXmlFileHandler<LearningWorld>? fileSaveHandlerWorld = null,
-        IXmlFileHandler<LearningSpace>? fileSaveHandlerSpace = null,
-        IXmlFileHandler<LearningElement>? fileSaveHandlerElement = null,
+        IXmlFileHandler<LearningWorldPe>? fileSaveHandlerWorld = null,
+        IXmlFileHandler<LearningSpacePe>? fileSaveHandlerSpace = null,
+        IXmlFileHandler<LearningElementPe>? fileSaveHandlerElement = null,
         IContentFileHandler? contentHandler = null,
         ICreateDsl? createDsl = null,
         IReadDsl? readDsl = null,
@@ -292,9 +291,9 @@ public class DataAccessUt
     {
         configuration ??= Substitute.For<IAuthoringToolConfiguration>();
         backupFileConstructor ??= Substitute.For<IBackupFileGenerator>();
-        fileSaveHandlerWorld ??= Substitute.For<IXmlFileHandler<LearningWorld>>();
-        fileSaveHandlerSpace ??= Substitute.For<IXmlFileHandler<LearningSpace>>();
-        fileSaveHandlerElement ??= Substitute.For<IXmlFileHandler<LearningElement>>();
+        fileSaveHandlerWorld ??= Substitute.For<IXmlFileHandler<LearningWorldPe>>();
+        fileSaveHandlerSpace ??= Substitute.For<IXmlFileHandler<LearningSpacePe>>();
+        fileSaveHandlerElement ??= Substitute.For<IXmlFileHandler<LearningElementPe>>();
         contentHandler ??= Substitute.For<IContentFileHandler>();
         fileSystem ??= new MockFileSystem();
         createDsl ??= Substitute.For<ICreateDsl>();

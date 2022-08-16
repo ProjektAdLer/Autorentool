@@ -1,6 +1,8 @@
 ﻿using AuthoringTool.API.Configuration;
 using AuthoringTool.DataAccess.API;
+using AuthoringTool.DataAccess.PersistEntities;
 using AuthoringTool.Entities;
+using AutoMapper;
 using ElectronWrapper;
 
 namespace AuthoringTool.BusinessLogic.API;
@@ -11,78 +13,81 @@ internal class BusinessLogic : IBusinessLogic
     public BusinessLogic(
         IAuthoringToolConfiguration configuration,
         IDataAccess dataAccess,
-        IHybridSupportWrapper hybridSupport)
+        IHybridSupportWrapper hybridSupport,
+        IMapper mapper)
     {
         Configuration = configuration;
         DataAccess = dataAccess;
         HybridSupport = hybridSupport;
+        Mapper = mapper;
     }
     
     
     
-    public IDataAccess DataAccess { get;  }
-    public IHybridSupportWrapper HybridSupport { get; }
+    internal IDataAccess DataAccess { get;  }
+    internal IHybridSupportWrapper HybridSupport { get; }
+    internal  IMapper Mapper { get; }
 
     public bool RunningElectron => HybridSupport.IsElectronActive;
 
     public void ConstructBackup(LearningWorld learningWorld, string filepath)
     {
-        DataAccess.ConstructBackup(learningWorld, filepath);
+        DataAccess.ConstructBackup(Mapper.Map<LearningWorldPe>(learningWorld), filepath);
     }
 
     public void SaveLearningWorld(LearningWorld learningWorld, string filepath)
     {
-        DataAccess.SaveLearningWorldToFile(learningWorld, filepath);
+        DataAccess.SaveLearningWorldToFile(Mapper.Map<LearningWorldPe>(learningWorld), filepath);
     }
 
     public LearningWorld LoadLearningWorld(string filepath)
     {
-        return DataAccess.LoadLearningWorldFromFile(filepath);
+        return Mapper.Map<LearningWorld>(DataAccess.LoadLearningWorldFromFile(filepath));
     }
     
     public void SaveLearningSpace(LearningSpace learningSpace, string filepath)
     {
-        DataAccess.SaveLearningSpaceToFile(learningSpace, filepath);
+        DataAccess.SaveLearningSpaceToFile(Mapper.Map<LearningSpacePe>(learningSpace), filepath);
     }
 
     public LearningSpace LoadLearningSpace(string filepath)
     {
-        return DataAccess.LoadLearningSpaceFromFile(filepath);
+        return Mapper.Map<LearningSpace>(DataAccess.LoadLearningSpaceFromFile(filepath));
     }
     
     public void SaveLearningElement(LearningElement learningElement, string filepath)
     {
-        DataAccess.SaveLearningElementToFile(learningElement, filepath);
+        DataAccess.SaveLearningElementToFile(Mapper.Map<LearningElementPe>(learningElement), filepath);
     }
 
     public LearningElement LoadLearningElement(string filepath)
     {
-        return DataAccess.LoadLearningElementFromFile(filepath);
+        return Mapper.Map<LearningElement>(DataAccess.LoadLearningElementFromFile(filepath));
     }
 
     public LearningContent LoadLearningContent(string filepath)
     {
-        return DataAccess.LoadLearningContentFromFile(filepath);
+        return Mapper.Map<LearningContent>(DataAccess.LoadLearningContentFromFile(filepath));
     }
 
     public LearningContent LoadLearningContentFromStream(string name, Stream stream)
     {
-        return DataAccess.LoadLearningContentFromStream(name, stream);
+        return Mapper.Map<LearningContent>(DataAccess.LoadLearningContentFromStream(name, stream));
     }
 
     public LearningWorld LoadLearningWorldFromStream(Stream stream)
     {
-        return DataAccess.LoadLearningWorldFromStream(stream);
+        return Mapper.Map<LearningWorld>(DataAccess.LoadLearningWorldFromStream(stream));
     }
 
     public LearningSpace LoadLearningSpaceFromStream(Stream stream)
     {
-        return DataAccess.LoadLearningSpaceFromStream(stream);
+        return Mapper.Map<LearningSpace>(DataAccess.LoadLearningSpaceFromStream(stream));
     }
 
     public LearningElement LoadLearningElementFromStream(Stream stream)
     {
-        return DataAccess.LoadLearningElementFromStream(stream);
+        return Mapper.Map<LearningElement>(DataAccess.LoadLearningElementFromStream(stream));
     }
 
     public string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding)

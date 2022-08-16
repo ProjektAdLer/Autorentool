@@ -3,8 +3,7 @@ using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.DSL;
-using AuthoringTool.Entities;
-using AuthoringTool.PresentationLogic.LearningElement;
+using AuthoringTool.DataAccess.PersistEntities;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.DSL;
@@ -26,23 +25,23 @@ public class CreateDslUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
-        var content1 = new LearningContent("a", ".h5p", new byte[]{0x01,0x02});
-        var content2 = new LearningContent("w", "e", new byte[]{0x02,0x01});
-        var ele1 = new LearningElement("a", "b", "e",content1, "pupup", "g","h", LearningElementDifficultyEnum.Easy, 17, 23);
-        var ele2 = new LearningElement("z", "zz", "zzz", content2,"baba", "z","zz", LearningElementDifficultyEnum.Easy, 444, double.MaxValue);
-        var ele3 = new LearningElement("a", "b", "e",content1, "pupup", "g","h", LearningElementDifficultyEnum.Easy, 17, 23);
-        var learningElements = new List<LearningElement> { ele1, ele2 };
-        var space1 = new LearningSpace("ff", "ff", "ff", "ff", "ff");
+        var content1 = new LearningContentPe("a", ".h5p", new byte[]{0x01,0x02});
+        var content2 = new LearningContentPe("w", "e", new byte[]{0x02,0x01});
+        var ele1 = new LearningElementPe("a", "b", "e",content1, "pupup", "g","h", LearningElementDifficultyEnumPe.Easy, 17, 23);
+        var ele2 = new LearningElementPe("z", "zz", "zzz", content2,"baba", "z","zz", LearningElementDifficultyEnumPe.Easy, 444, double.MaxValue);
+        var ele3 = new LearningElementPe("a", "b", "e",content1, "pupup", "g","h", LearningElementDifficultyEnumPe.Easy, 17, 23);
+        var learningElements = new List<LearningElementPe> { ele1, ele2 };
+        var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff");
         space1.LearningElements.Add(ele3);
-        var space2 = new LearningSpace("ff", "ff", "ff", "ff", "ff");
-        var learningSpaces = new List<LearningSpace> { space1, space2 };
+        var space2 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff");
+        var learningSpaces = new List<LearningSpacePe> { space1, space2 };
 
-        var learningWorld = new LearningWorld(name, shortname, authors, language, description, goals,
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals,
             learningElements, learningSpaces);
 
         var createDsl = GetCreateDslForTest(mockFileSystem);
         
-        var allLearningElements = new List<LearningElement> { ele3, ele1, ele2 };
+        var allLearningElements = new List<LearningElementPe> { ele3, ele1, ele2 };
        
         //Act
         createDsl.WriteLearningWorld(learningWorld);

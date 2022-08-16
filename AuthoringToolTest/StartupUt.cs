@@ -6,8 +6,8 @@ using AuthoringTool.BusinessLogic.API;
 using AuthoringTool.DataAccess.API;
 using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.Persistence;
+using AuthoringTool.DataAccess.PersistEntities;
 using AuthoringTool.DataAccess.WorldExport;
-using AuthoringTool.Entities;
 using AuthoringTool.PresentationLogic.API;
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
 using AuthoringTool.PresentationLogic.EntityMapping;
@@ -18,6 +18,7 @@ using AuthoringTool.PresentationLogic.LearningWorld;
 using AuthoringTool.PresentationLogic.ModalDialog;
 using AuthoringTool.PresentationLogic.Toolbox;
 using AuthoringTool.View.Toolbox;
+using AutoMapper;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -103,7 +104,7 @@ public class StartupUt
 
     private static readonly Type[] ConfigureDataAccessRequiredTypes =
     {
-        typeof(IXmlFileHandler<LearningWorld>), typeof(IXmlFileHandler<LearningElement>), typeof(IXmlFileHandler<LearningSpace>),
+        typeof(IXmlFileHandler<LearningWorldPe>), typeof(IXmlFileHandler<LearningElementPe>), typeof(IXmlFileHandler<LearningSpacePe>),
         typeof(IDataAccess), typeof(ICreateDsl), typeof(IReadDsl), typeof(IContentFileHandler), typeof(IBackupFileGenerator),
         
     };
@@ -139,6 +140,17 @@ public class StartupUt
     [Test]
     [TestCaseSource(nameof(ConfigureBusinessLogicRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllBusinessLogicServices(Type requiredType)
+    {
+        ConfigureServicesCoreTest(requiredType);
+    }
+    
+    private static readonly Type[] ConfigureAutoMapperRequiredTypes =
+    {
+        typeof(IMapper)
+    };
+    [Test]
+    [TestCaseSource(nameof(ConfigureAutoMapperRequiredTypes))]
+    public void Startup_ConfigureServices_CanResolveAllAutoMapperServices(Type requiredType)
     {
         ConfigureServicesCoreTest(requiredType);
     }

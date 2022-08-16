@@ -4,7 +4,9 @@ using AuthoringTool.BusinessLogic.API;
 using AuthoringTool.DataAccess.API;
 using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.Persistence;
+using AuthoringTool.DataAccess.PersistEntities;
 using AuthoringTool.DataAccess.WorldExport;
+using AuthoringTool.Entities;
 using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.API;
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
@@ -17,6 +19,7 @@ using AuthoringTool.PresentationLogic.LearningWorld;
 using AuthoringTool.PresentationLogic.ModalDialog;
 using AuthoringTool.PresentationLogic.Toolbox;
 using AuthoringTool.View.Toolbox;
+using AutoMapper;
 using ElectronWrapper;
 using Microsoft.Extensions.Caching.Memory;
 
@@ -47,6 +50,7 @@ public class Startup
         ConfigureToolbox(services);
         ConfigureMappers(services);
         ConfigureUtilities(services);
+        ConfigureAutoMapper(services);
 
         
         //Electron Wrapper layer
@@ -133,6 +137,17 @@ public class Startup
         services.AddSingleton<ILearningWorldMapper, LearningWorldMapper>();
         services.AddSingleton<ILearningContentMapper, LearningContentMapper>();
         services.AddSingleton<IEntityMapping, EntityMapping>();
+    }
+    
+    private static void ConfigureAutoMapper(IServiceCollection services)
+    {
+        var config = new MapperConfiguration(cfg =>
+        {
+            cfg.AddProfile(new MappingProfile());
+        });
+        
+        var mapper = config.CreateMapper();
+        services.AddSingleton<IMapper>(mapper);
     }
 
     private static void ConfigureUtilities(IServiceCollection services)

@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.IO.Abstractions.TestingHelpers;
 using AuthoringTool.DataAccess.DSL;
-using AuthoringTool.Entities;
-using AuthoringTool.PresentationLogic.LearningElement;
+using AuthoringTool.DataAccess.PersistEntities;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.DSL;
@@ -17,6 +16,25 @@ public class ReadDslUt
         //Arrange
         var mockFileSystem = new MockFileSystem();
 
+        const string name = "asdf";
+        const string shortname = "jkl;";
+        const string authors = "ben and jerry";
+        const string language = "german";
+        const string description = "very cool element";
+        const string goals = "learn very many things";
+        var content1 = new LearningContentPe("a", "h5p", new byte[] {0x01, 0x02});
+        var content2 = new LearningContentPe("w", ".h5p", new byte[] {0x02, 0x01});
+        var ele1 = new LearningElementPe("a", "b", "e", content1, "pupup", "g", "h", LearningElementDifficultyEnumPe.Easy, 17, 23);
+        var ele2 = new LearningElementPe("z", "zz", "zzz", content2, "baba", "z", "zz", LearningElementDifficultyEnumPe.Easy, 444, double.MaxValue);
+        var ele3 = new LearningElementPe("a", "b", "e", content1, "pupup", "g", "h", LearningElementDifficultyEnumPe.Easy, 17, 23);
+        var learningElements = new List<LearningElementPe> {ele1, ele2};
+        var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff");
+        space1.LearningElements.Add(ele3);
+        var space2 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff");
+        var learningSpaces = new List<LearningSpacePe> {space1, space2};
+
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals,
+            learningElements, learningSpaces);
         var identifierLearningWorldJson = new IdentifierJson("name", "World");
 
         var identifierLearningSpaceJson_1 = new IdentifierJson("name", "Space_1");
