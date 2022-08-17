@@ -1,0 +1,3 @@
+[submodule "ElectronNETCompatibility"]
+	path = ElectronNETCompatibility
+	url = https://github.com/ProjektAdLer/ElectronNETCompatibility.git
