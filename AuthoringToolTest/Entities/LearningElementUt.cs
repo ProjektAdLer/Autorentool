@@ -9,36 +9,138 @@ namespace AuthoringToolTest.Entities;
 public class LearningElementUt
 {
     [Test]
-    public void LearningElement_Constructor_InitializesAllProperties()
+    public void Constructor_InitializesAllProperties()
     {
-        var Name = "asdf";
-        var Shortname = "jkl;";
-        var ParentName = "foobar";
+        var name = "asdf";
+        var shortname = "jkl;";
+        var parentName = "foobar";
         var content = new LearningContent("a", "b", Array.Empty<byte>());
-        var Authors = "ben and jerry";
-        var Description = "very cool element";
-        var Goals = "learn very many things";
-        var Difficulty = LearningElementDifficultyEnum.Medium;
-        var Workload = 5;
-        var PositionX = 5f;
-        var PositionY = 21f;
+        var authors = "ben and jerry";
+        var description = "very cool element";
+        var goals = "learn very many things";
+        var difficulty = LearningElementDifficultyEnum.Medium;
+        var workload = 5;
+        var positionX = 5f;
+        var positionY = 21f;
 
-        var systemUnderTest = new LearningElement(Name, Shortname, ParentName, content, Authors, Description, Goals,
-             Difficulty, Workload, PositionX, PositionY);
+        var systemUnderTest = new LearningElement(name, shortname, parentName, content, authors, description, goals,
+             difficulty, workload, positionX, positionY);
         
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.Name, Is.EqualTo(Name));
-            Assert.That(systemUnderTest.Shortname, Is.EqualTo(Shortname));
-            Assert.That(systemUnderTest.ParentName, Is.EqualTo(ParentName));
+            Assert.That(systemUnderTest.Name, Is.EqualTo(name));
+            Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortname));
+            Assert.That(systemUnderTest.ParentName, Is.EqualTo(parentName));
             Assert.That(systemUnderTest.Content, Is.EqualTo(content));
-            Assert.That(systemUnderTest.Authors, Is.EqualTo(Authors));
-            Assert.That(systemUnderTest.Description, Is.EqualTo(Description));
-            Assert.That(systemUnderTest.Goals, Is.EqualTo(Goals));
-            Assert.That(systemUnderTest.Difficulty, Is.EqualTo(Difficulty));
-            Assert.That(systemUnderTest.Workload, Is.EqualTo(Workload));
-            Assert.That(systemUnderTest.PositionX, Is.EqualTo(PositionX));
-            Assert.That(systemUnderTest.PositionY, Is.EqualTo(PositionY));
+            Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
+            Assert.That(systemUnderTest.Description, Is.EqualTo(description));
+            Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
+            Assert.That(systemUnderTest.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(systemUnderTest.Workload, Is.EqualTo(workload));
+            Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
+            Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
         });
+    }
+    
+    [Test]
+    public void GetRestoreMemento_RestoresCorrectMemento()
+    {
+        var name = "asdf";
+        var shortname = "jkl;";
+        var parentName = "foobar";
+        var content = new LearningContent("a", "b", new byte[]{0x05,0x06});
+        var authors = "ben and jerry";
+        var description = "very cool element";
+        var goals = "learn very many things";
+        var difficulty = LearningElementDifficultyEnum.Medium;
+        var workload = 5;
+        var positionX = 5f;
+        var positionY = 21f;
+
+        var systemUnderTest = new LearningElement(name, shortname, parentName, content, authors, description, goals,
+            difficulty, workload, positionX, positionY);
+
+        var learningElementMemento = systemUnderTest.GetMemento();
+        
+        var nameChanged = "qwertz";
+        var shortnameChanged = "uiop";
+        var contentChanged = new LearningContent("b", "c", new byte[] {0x03, 0x04});
+        var authorsChanged = "sdfg";
+        var descriptionChanged = "changed description";
+        var goalsChanged = "new goals";
+        var difficultyChanged = LearningElementDifficultyEnum.Easy;
+        var workloadChanged = 10;
+        var positionXChanged = 10f;
+        var positionYChanged = 14f;
+
+        systemUnderTest.Name = nameChanged;
+        systemUnderTest.Shortname = shortnameChanged;
+        systemUnderTest.Content = contentChanged;
+        systemUnderTest.Authors = authorsChanged;
+        systemUnderTest.Description = descriptionChanged;
+        systemUnderTest.Goals = goalsChanged;
+        systemUnderTest.Difficulty = difficultyChanged;
+        systemUnderTest.Workload = workloadChanged;
+        systemUnderTest.PositionX = positionXChanged;
+        systemUnderTest.PositionY = positionYChanged;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.Name, Is.EqualTo(nameChanged));
+            Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortnameChanged));
+            Assert.That(systemUnderTest.Content, Is.EqualTo(contentChanged));
+            Assert.That(systemUnderTest.Authors, Is.EqualTo(authorsChanged));
+            Assert.That(systemUnderTest.Description, Is.EqualTo(descriptionChanged));
+            Assert.That(systemUnderTest.Goals, Is.EqualTo(goalsChanged));
+            Assert.That(systemUnderTest.Difficulty, Is.EqualTo(difficultyChanged));
+            Assert.That(systemUnderTest.Workload, Is.EqualTo(workloadChanged));
+            Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionXChanged));
+            Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionYChanged));
+        });
+        
+        systemUnderTest.RestoreMemento(learningElementMemento);
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.Name, Is.EqualTo(name));
+            Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortname));
+            Assert.That(systemUnderTest.Content, Is.EqualTo(content));
+            Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
+            Assert.That(systemUnderTest.Description, Is.EqualTo(description));
+            Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
+            Assert.That(systemUnderTest.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(systemUnderTest.Workload, Is.EqualTo(workload));
+            Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
+            Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
+        });
+    }
+
+    [Test]
+    public void RestoreMemento_MementoIsNotLearningElementMemento_ThrowsException()
+    {
+        var name = "asdf";
+        var shortname = "jkl;";
+        var parentName = "foobar";
+        var content = new LearningContent("a", "b", new byte[]{0x05,0x06});
+        var authors = "ben and jerry";
+        var description = "very cool element";
+        var goals = "learn very many things";
+        var difficulty = LearningElementDifficultyEnum.Medium;
+        var workload = 5;
+        var positionX = 5f;
+        var positionY = 21f;
+
+        var systemUnderTest = new LearningElement(name, shortname, parentName, content, authors, description, goals,
+            difficulty, workload, positionX, positionY);
+
+        var mementoMock = new MementoMock();
+        
+        var ex = Assert.Throws<ArgumentException>(() => systemUnderTest.RestoreMemento(mementoMock));
+        Assert.That(ex!.Message, Is.EqualTo("Incorrect IMemento implementation (Parameter 'memento')"));
+    }
+
+    private class MementoMock : IMemento
+    {
+        
     }
 }

@@ -138,7 +138,7 @@ public class LearningSpaceUt
         Assert.That(ex!.Message, Is.EqualTo("Incorrect IMemento implementation (Parameter 'memento')"));
     }
 
-    public class MementoMock : IMemento
+    private class MementoMock : IMemento
     {
         
     }
