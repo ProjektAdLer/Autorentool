@@ -67,17 +67,20 @@ public class XmlFileManagerUt
     {
         // Arrange
         var mockFileSystem = new MockFileSystem();
-        mockFileSystem.AddFile(@"C:/test.txt", new MockFileData("Hello World"));
+        var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        var txtPath = mockFileSystem.Path.Join(currWorkDir, "test.txt");
+        var dirPath = mockFileSystem.Path.Join(currWorkDir, "XMLFilesForExport", "files", "08");
+        mockFileSystem.AddFile(txtPath, new MockFileData("Hello World"));
         
         // Act
         var systemUnderTest = new XmlFileManager(mockFileSystem);
-        systemUnderTest.CreateFolderAndFiles(@"C:/test.txt", "08");
+        systemUnderTest.CreateFolderAndFiles(txtPath, "08");
 
         // Assert
         Assert.Multiple(()=>
         {
-            Assert.That(mockFileSystem.Directory.Exists(@"C:\XMLFilesForExport\files\08"), Is.True);
-            Assert.That(mockFileSystem.File.Exists(@"C:/test.txt"), Is.False);
+            Assert.That(mockFileSystem.Directory.Exists(dirPath), Is.True);
+            Assert.That(mockFileSystem.File.Exists(txtPath), Is.False);
         });
 
     }
