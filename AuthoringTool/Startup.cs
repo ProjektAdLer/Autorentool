@@ -96,6 +96,7 @@ public class Startup
     private void ConfigureBusinessLogic(IServiceCollection services)
     {
         services.AddSingleton<IBusinessLogic, BusinessLogic.API.BusinessLogic>();
+        services.AddSingleton<IWorldGenerator>();
     }
 
     private void ConfigureDataAccess(IServiceCollection services)

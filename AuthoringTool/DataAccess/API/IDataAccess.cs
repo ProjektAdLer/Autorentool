@@ -7,8 +7,7 @@ namespace AuthoringTool.DataAccess.API;
 public interface IDataAccess
 {
     IAuthoringToolConfiguration Configuration { get; }
-
-    void ConstructBackup(LearningWorldPe learningWorld, string filepath);
+    
     void SaveLearningWorldToFile(LearningWorldPe world, string filepath);
     LearningWorldPe LoadLearningWorldFromFile(string filepath);
     LearningWorldPe LoadLearningWorldFromStream(Stream stream);

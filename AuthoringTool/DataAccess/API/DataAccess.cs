@@ -9,10 +9,9 @@ namespace AuthoringTool.DataAccess.API;
 
 internal class DataAccess : IDataAccess
 {
-    public DataAccess(IAuthoringToolConfiguration configuration, IBackupFileGenerator backupFileGenerator,
-        IXmlFileHandler<LearningWorldPe> xmlHandlerWorld, IXmlFileHandler<LearningSpacePe> xmlHandlerSpace,
-        IXmlFileHandler<LearningElementPe> xmlHandlerElement, IContentFileHandler contentHandler,
-        ICreateDsl createDsl, IReadDsl readDsl, IFileSystem fileSystem)
+    public DataAccess(IAuthoringToolConfiguration configuration, IXmlFileHandler<LearningWorldPe> xmlHandlerWorld, 
+        IXmlFileHandler<LearningSpacePe> xmlHandlerSpace, IXmlFileHandler<LearningElementPe> xmlHandlerElement, 
+        IContentFileHandler contentHandler, IFileSystem fileSystem)
     {
         XmlHandlerWorld = xmlHandlerWorld;
         XmlHandlerSpace = xmlHandlerSpace;
@@ -20,9 +19,6 @@ internal class DataAccess : IDataAccess
         ContentHandler = contentHandler;
         _fileSystem = fileSystem;
         Configuration = configuration;
-        BackupFile = backupFileGenerator;
-        CreateDsl = createDsl;
-        ReadDsl = readDsl;
     }
 
     public readonly IXmlFileHandler<LearningWorldPe> XmlHandlerWorld;
@@ -31,25 +27,8 @@ internal class DataAccess : IDataAccess
     public readonly IContentFileHandler ContentHandler;
     private readonly IFileSystem _fileSystem;
     public IAuthoringToolConfiguration Configuration { get; }
+    
 
-    public IBackupFileGenerator BackupFile { get; set; }
-    public ICreateDsl CreateDsl;
-    public IReadDsl ReadDsl;
-
-    /// <summary>
-    /// Creates the DSL document, reads it, creates the needed folder structure for the backup, fills the folders with
-    /// the needed xml documents and saves it to the desired location as .mbz file. 
-    /// </summary>
-    /// <param name="learningWorld"></param> Information about the learningWorld, topics, spaces and elements
-    /// <param name="filepath"></param> Desired filepath for the .mbz file. Given by user, when Export Button is pressed.
-    public void ConstructBackup(LearningWorldPe learningWorld, string filepath)
-    {
-        string dslpath = CreateDsl.WriteLearningWorld(learningWorld);
-        ReadDsl.ReadLearningWorld(dslpath);
-        BackupFile.CreateBackupFolders();
-        BackupFile.WriteXmlFiles(ReadDsl as ReadDsl, dslpath);
-        BackupFile.WriteBackupFile(filepath);
-    }
 
     public void SaveLearningWorldToFile(LearningWorldPe world, string filepath)
     {

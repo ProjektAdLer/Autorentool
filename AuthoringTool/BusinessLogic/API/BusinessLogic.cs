@@ -14,16 +14,19 @@ internal class BusinessLogic : IBusinessLogic
         IAuthoringToolConfiguration configuration,
         IDataAccess dataAccess,
         IHybridSupportWrapper hybridSupport,
-        IMapper mapper)
+        IMapper mapper,
+        IWorldGenerator worldGenerator)
     {
         Configuration = configuration;
         DataAccess = dataAccess;
         HybridSupport = hybridSupport;
         Mapper = mapper;
+        WorldGenerator = worldGenerator;
+        
     }
     
     
-    
+    internal IWorldGenerator WorldGenerator { get; }
     internal IDataAccess DataAccess { get;  }
     internal IHybridSupportWrapper HybridSupport { get; }
     internal  IMapper Mapper { get; }
@@ -32,7 +35,7 @@ internal class BusinessLogic : IBusinessLogic
 
     public void ConstructBackup(LearningWorld learningWorld, string filepath)
     {
-        DataAccess.ConstructBackup(Mapper.Map<LearningWorldPe>(learningWorld), filepath);
+        WorldGenerator.ConstructBackup(learningWorld, filepath);
     }
 
     public void SaveLearningWorld(LearningWorld learningWorld, string filepath)

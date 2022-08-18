@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthoringToolTest", "Author
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectronWrapper", "ElectronWrapper\ElectronWrapper.csproj", "{112586E3-8811-4701-9249-4FC3CC26EB65}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generator", "Generator\Generator.csproj", "{BC36CCA5-A887-4662-B19B-6CC10EC79B25}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneratorTest", "GeneratorTest\GeneratorTest.csproj", "{ED8E1A40-C18F-4411-8478-CA0475B9339E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,5 +31,13 @@ Global
 		{112586E3-8811-4701-9249-4FC3CC26EB65}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{112586E3-8811-4701-9249-4FC3CC26EB65}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{112586E3-8811-4701-9249-4FC3CC26EB65}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BC36CCA5-A887-4662-B19B-6CC10EC79B25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BC36CCA5-A887-4662-B19B-6CC10EC79B25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BC36CCA5-A887-4662-B19B-6CC10EC79B25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BC36CCA5-A887-4662-B19B-6CC10EC79B25}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ED8E1A40-C18F-4411-8478-CA0475B9339E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ED8E1A40-C18F-4411-8478-CA0475B9339E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ED8E1A40-C18F-4411-8478-CA0475B9339E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ED8E1A40-C18F-4411-8478-CA0475B9339E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
