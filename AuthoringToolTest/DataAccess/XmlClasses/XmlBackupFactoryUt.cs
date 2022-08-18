@@ -87,8 +87,7 @@ public class XmlBackupFactoryUt
         var systemUnderTest = new XmlBackupFactory(mockReadDsl, mockGradeItem, mockGradeItems, mockGradeCategory,
             mockGradeCategories,
             mockGradeSetting, mockGradeSettings, mockGradebook, mockGroupingsList, mockGroups, mockDetail, mockDetails,
-            mockAktivities,
-            null, null, mockSections, mockCourse, mockContents, mockSetting, mockSettings,
+            mockAktivities, null, mockSections, mockCourse, mockContents, mockSetting,
             mockInformation, mockMoodleBackup, mockOutcomes, mockQuestion, mockRole, mockRolesDefinition, mockScales);
         
         // Act
@@ -265,7 +264,7 @@ public class XmlBackupFactoryUt
         mockReadDsl.GetDslDocumentList().Returns(mockDslDocument);
         
         var systemUnderTest = new XmlBackupFactory(mockReadDsl, moodleBackupXmlDetail: mockDetail, moodleBackupXmlDetails: mockDetails,
-            moodleBackupXmlSetting: mockSetting, moodleBackupXmlSettings: mockSettings, moodleBackupXmlContents: mockContents,
+            moodleBackupXmlSetting: mockSetting, moodleBackupXmlContents: mockContents,
             moodleBackupXmlInformation: mockInformation, moodleBackupXmlMoodleBackup: mockMoodleBackup, moodleBackupXmlActivities: mockAktivities,
             moodleBackupXmlSections: mockSections, moodleBackupXmlCourse: mockCourse);
         
@@ -279,15 +278,15 @@ public class XmlBackupFactoryUt
             Assert.That(systemUnderTest.MoodleBackupXmlCourse.Title, Is.EqualTo(mockIdentifier.Value));
             Assert.That(systemUnderTest.MoodleBackupXmlSettingLegacyfiles.Name, Is.EqualTo("legacyfiles"));
             Assert.That(systemUnderTest.MoodleBackupXmlSettingFiles.Value, Is.EqualTo("1"));
-            Assert.That(systemUnderTest.moodleBackupXmlActivityList[0].ModuleId, Is.EqualTo(mockDslDocumentJson.Id.ToString()));
-            Assert.That(systemUnderTest.moodleBackupXmlActivityList[0].ModuleName, Is.EqualTo("resource"));
-            Assert.That(systemUnderTest.moodleBackupXmlActivityList[0].Title, Is.EqualTo(mockIdentifier.Value));
-            Assert.That(systemUnderTest.moodleBackupXmlActivityList[0].Directory, Is.EqualTo("activities/resource_" + mockDslDocumentJson.Id.ToString()));
-            Assert.That(systemUnderTest.moodleBackupXmlSettingList[0].Level, Is.EqualTo("section"));
-            Assert.That(systemUnderTest.moodleBackupXmlSettingList[0].Name, Is.EqualTo("section_" + mockDslDocumentJson.Id.ToString() + "_included"));
-            Assert.That(systemUnderTest.moodleBackupXmlSettingList[0].Value, Is.EqualTo("1"));
-            Assert.That(systemUnderTest.moodleBackupXmlSettingList[1].Section, Is.EqualTo("section_" + mockDslDocumentJson.Id.ToString()));
-            Assert.That(systemUnderTest.moodleBackupXmlActivityList[1].ModuleName, Is.EqualTo("h5pactivity"));
+            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[0].ModuleId, Is.EqualTo(mockDslDocumentJson.Id.ToString()));
+            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[0].ModuleName, Is.EqualTo("resource"));
+            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[0].Title, Is.EqualTo(mockIdentifier.Value));
+            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[0].Directory, Is.EqualTo("activities/resource_" + mockDslDocumentJson.Id.ToString()));
+            Assert.That(systemUnderTest.MoodleBackupXmlSettingList[0].Level, Is.EqualTo("section"));
+            Assert.That(systemUnderTest.MoodleBackupXmlSettingList[0].Name, Is.EqualTo("section_" + mockDslDocumentJson.Id.ToString() + "_included"));
+            Assert.That(systemUnderTest.MoodleBackupXmlSettingList[0].Value, Is.EqualTo("1"));
+            Assert.That(systemUnderTest.MoodleBackupXmlSettingList[1].Section, Is.EqualTo("section_" + mockDslDocumentJson.Id.ToString()));
+            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[1].ModuleName, Is.EqualTo("h5pactivity"));
             Assert.That(systemUnderTest.MoodleBackupXmlInformation, Is.EqualTo(mockInformation));
             systemUnderTest.MoodleBackupXmlMoodleBackup.Received().Serialize();
         });

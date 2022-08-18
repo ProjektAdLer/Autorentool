@@ -13,8 +13,7 @@ namespace AuthoringTool.DataAccess.XmlClasses;
 /// </summary>
 public class XmlCourseFactory
 {
-    private string currentTime;
-    private LearningWorldJson? learningWorld;
+    private LearningWorldJson _learningWorld;
     internal ICourseCourseXmlCategory CourseCourseXmlCategory { get; }
     internal ICourseCourseXmlCourse CourseCourseXmlCourse { get; }
     internal ICourseEnrolmentsXmlEnrol CourseEnrolmentsXmlEnrolManual { get; }
@@ -53,8 +52,7 @@ public class XmlCourseFactory
         
         CourseCompletiondefaultXmlCourseCompletionDefaults = courseCourseXmlCompletiondefault?? new CourseCompletiondefaultXmlCourseCompletionDefaults();
         
-        learningWorld = readDsl.GetLearningWorld();
-        currentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
+        _learningWorld = readDsl.GetLearningWorld();
     }
     
     /// <summary>
@@ -82,25 +80,22 @@ public class XmlCourseFactory
     public void CreateCourseCourseXml()
     {
         //set parameters of the course/course.xml file
-        if (learningWorld != null)
-            if (learningWorld.Identifier != null)
-            {
-                CourseCourseXmlCourse.Shortname = learningWorld.Identifier.Value;
-                CourseCourseXmlCourse.Fullname = learningWorld.Identifier.Value;
-                CourseCourseXmlCourse.Format = "tiles";
-                CourseCourseXmlCourse.BaseColour = "#009681";
-                CourseCourseXmlCourse.CourseUseSubtiles = "1";
-                CourseCourseXmlCourse.CourseShowTileProgress = "2";
-                CourseCourseXmlCourse.ShowGrades = "1";
-                CourseCourseXmlCourse.Visible = "1";
-                CourseCourseXmlCourse.Theme = "boost";
-                CourseCourseXmlCourse.ShowCompletionConditions = "1";
-                CourseCourseXmlCourse.EnableCompletion = "1";
-                CourseCourseXmlCourse.Category = CourseCourseXmlCategory as CourseCourseXmlCategory;
 
-                //create course/course.xml file
-                CourseCourseXmlCourse.Serialize();
-            }
+        CourseCourseXmlCourse.Shortname = _learningWorld.Identifier.Value;
+        CourseCourseXmlCourse.Fullname = _learningWorld.Identifier.Value;
+        CourseCourseXmlCourse.Format = "tiles";
+        CourseCourseXmlCourse.BaseColour = "#009681";
+        CourseCourseXmlCourse.CourseUseSubtiles = "1";
+        CourseCourseXmlCourse.CourseShowTileProgress = "2";
+        CourseCourseXmlCourse.ShowGrades = "1";
+        CourseCourseXmlCourse.Visible = "1";
+        CourseCourseXmlCourse.Theme = "boost";
+        CourseCourseXmlCourse.ShowCompletionConditions = "1";
+        CourseCourseXmlCourse.EnableCompletion = "1";
+        CourseCourseXmlCourse.Category = CourseCourseXmlCategory as CourseCourseXmlCategory;
+
+        //create course/course.xml file
+        CourseCourseXmlCourse.Serialize(); 
     }
 
     public void CreateCourseEnrolmentsXml()

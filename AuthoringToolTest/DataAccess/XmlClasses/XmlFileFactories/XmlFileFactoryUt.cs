@@ -38,9 +38,8 @@ public class XmlFileFactoryUt
         // Assert
         Assert.Multiple(()=>
         {
-            Assert.That(systemUnderTest._currentTime, Is.Not.Empty);
-            Assert.That(systemUnderTest._fileManager, Is.EqualTo(mockFileManager));
-            Assert.That(systemUnderTest._fileSystem, Is.EqualTo(mockFileSystem));
+            Assert.That(systemUnderTest.CurrentTime, Is.Not.Empty);
+            Assert.That(systemUnderTest.FileManager, Is.EqualTo(mockFileManager));
             Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItem, Is.Not.Null);
             Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItems, Is.Not.Null);
             Assert.That(systemUnderTest.ActivitiesGradesXmlActivityGradebook, Is.Not.Null);
@@ -93,11 +92,11 @@ public class XmlFileFactoryUt
         // Assert
         Assert.Multiple(() =>
         {
-            systemUnderTest._fileManager.Received().SetXmlFilesList(systemUnderTest.filesXmlFilesList);
-            systemUnderTest._fileManager.Received().CalculateHashCheckSumAndFileSize(fileString);
-            systemUnderTest._fileManager.Received().CreateFolderAndFiles(fileString, systemUnderTest._fileManager.GetHashCheckSum());
-            systemUnderTest._fileManager.Received().GetFileSize();
-            systemUnderTest._fileManager.Received().GetHashCheckSum();
+            systemUnderTest.FileManager.Received().SetXmlFilesList(systemUnderTest.FilesXmlFilesList);
+            systemUnderTest.FileManager.Received().CalculateHashCheckSumAndFileSize(fileString);
+            systemUnderTest.FileManager.Received().CreateFolderAndFiles(fileString, systemUnderTest.FileManager.GetHashCheckSum());
+            systemUnderTest.FileManager.Received().GetFileSize();
+            systemUnderTest.FileManager.Received().GetHashCheckSum();
             
         });
     }
@@ -114,50 +113,30 @@ public class XmlFileFactoryUt
         // Act
 
         var systemUnderTest = new XmlFileFactory(mockReadDsl, "", mockFileManager, mockFileSystem);
-        systemUnderTest.filesXmlFilesList = new List<FilesXmlFile>();
-        systemUnderTest.fileElementId = "1";
-        systemUnderTest.fileElementName = "FileName";
+        systemUnderTest.FilesXmlFilesList = new List<FilesXmlFile>();
+        systemUnderTest.FileElementId = "1";
+        systemUnderTest.FileElementName = "FileName";
         systemUnderTest.FileSetParametersFilesXml("1234", "456789");
         
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.filesXmlFilesList[0].ContentHash, Is.EqualTo("1234"));
-            Assert.That(systemUnderTest.filesXmlFilesList[0].ContextId, Is.EqualTo(systemUnderTest.fileElementId));
-            Assert.That(systemUnderTest.filesXmlFilesList[0].Filename, Is.EqualTo(systemUnderTest.fileElementName));
-            Assert.That(systemUnderTest.filesXmlFilesList[0].Filesize, Is.EqualTo("456789"));
-            Assert.That(systemUnderTest.filesXmlFilesList[0].Source, Is.EqualTo(systemUnderTest.fileElementName));
-            Assert.That(systemUnderTest.filesXmlFilesList[0].Timecreated, Is.EqualTo(systemUnderTest._currentTime));
-            Assert.That(systemUnderTest.filesXmlFilesList[0].Timemodified, Is.EqualTo(systemUnderTest._currentTime));
-            Assert.That(systemUnderTest.filesXmlFilesList[1].ContentHash, Is.EqualTo("1234"));
-            Assert.That(systemUnderTest.filesXmlFilesList[1].ContextId, Is.EqualTo(systemUnderTest.fileElementId));
-            Assert.That(systemUnderTest.filesXmlFilesList[1].Filename, Is.EqualTo(systemUnderTest.fileElementName));
-            Assert.That(systemUnderTest.filesXmlFilesList[1].Filesize, Is.EqualTo("456789"));
-            Assert.That(systemUnderTest.filesXmlFilesList[1].Source, Is.EqualTo(systemUnderTest.fileElementName));
-            Assert.That(systemUnderTest.filesXmlFilesList[1].Timecreated, Is.EqualTo(systemUnderTest._currentTime));
-            Assert.That(systemUnderTest.filesXmlFilesList[1].Timemodified, Is.EqualTo(systemUnderTest._currentTime));
-            Assert.That(systemUnderTest.filesXmlFilesList, Has.Count.EqualTo(2));
+            Assert.That(systemUnderTest.FilesXmlFilesList[0].ContentHash, Is.EqualTo("1234"));
+            Assert.That(systemUnderTest.FilesXmlFilesList[0].ContextId, Is.EqualTo(systemUnderTest.FileElementId));
+            Assert.That(systemUnderTest.FilesXmlFilesList[0].Filename, Is.EqualTo(systemUnderTest.FileElementName));
+            Assert.That(systemUnderTest.FilesXmlFilesList[0].Filesize, Is.EqualTo("456789"));
+            Assert.That(systemUnderTest.FilesXmlFilesList[0].Source, Is.EqualTo(systemUnderTest.FileElementName));
+            Assert.That(systemUnderTest.FilesXmlFilesList[0].Timecreated, Is.EqualTo(systemUnderTest.CurrentTime));
+            Assert.That(systemUnderTest.FilesXmlFilesList[0].Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
+            Assert.That(systemUnderTest.FilesXmlFilesList[1].ContentHash, Is.EqualTo("1234"));
+            Assert.That(systemUnderTest.FilesXmlFilesList[1].ContextId, Is.EqualTo(systemUnderTest.FileElementId));
+            Assert.That(systemUnderTest.FilesXmlFilesList[1].Filename, Is.EqualTo(systemUnderTest.FileElementName));
+            Assert.That(systemUnderTest.FilesXmlFilesList[1].Filesize, Is.EqualTo("456789"));
+            Assert.That(systemUnderTest.FilesXmlFilesList[1].Source, Is.EqualTo(systemUnderTest.FileElementName));
+            Assert.That(systemUnderTest.FilesXmlFilesList[1].Timecreated, Is.EqualTo(systemUnderTest.CurrentTime));
+            Assert.That(systemUnderTest.FilesXmlFilesList[1].Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
+            Assert.That(systemUnderTest.FilesXmlFilesList, Has.Count.EqualTo(2));
         });
-    }
-    
-    [Test]
-    public void FileSetParametersFilesXml_ListIsNull()
-    {
-        // Arrange
-        var mockReadDsl = Substitute.For<IReadDsl>();
-        var mockFileSystem = new MockFileSystem();
-        var mockFileManager = Substitute.For<IXmlFileManager>();
-        var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
-        
-        // Act
-
-        var systemUnderTest = new XmlFileFactory(mockReadDsl, "", mockFileManager, mockFileSystem);
-        systemUnderTest.fileElementId = "1";
-        systemUnderTest.fileElementName = "FileName";
-        systemUnderTest.FileSetParametersFilesXml("1234", "456789");
-        
-        // Assert
-        Assert.That(systemUnderTest.filesXmlFilesList, Is.Null);
     }
 
     [Test]
@@ -187,38 +166,38 @@ public class XmlFileFactoryUt
         var systemUnderTest = new XmlFileFactory(mockReadDsl, "", mockFileManager, mockFileSystem, mockGradesGradeItem, 
             mockGradesGradeItems, mockGradesGradebook, mockFileResource, mockFileResourceActivity, mockRoles, mockModule,
             mockGradehistory, mockInforefFile, mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref, mockInforefInforef);
-        systemUnderTest.fileElementId = "1";
+        systemUnderTest.FileElementId = "1";
         systemUnderTest.FileSetParametersActivity();
         // Assert
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItem, Is.EqualTo(mockGradesGradeItem));
             Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItems, Is.EqualTo(mockGradesGradeItems));
-            systemUnderTest.ActivitiesGradesXmlActivityGradebook.Received().Serialize("resource", systemUnderTest.fileElementId);
+            systemUnderTest.ActivitiesGradesXmlActivityGradebook.Received().Serialize("resource", systemUnderTest.FileElementId);
             
             Assert.That(systemUnderTest.ActivitiesFileResourceXmlResource, Is.EqualTo(mockFileResource));
-            Assert.That(systemUnderTest.ActivitiesFileResourceXmlActivity.Id, Is.EqualTo(systemUnderTest.fileElementId));
-            Assert.That(systemUnderTest.ActivitiesFileResourceXmlActivity.ModuleId, Is.EqualTo(systemUnderTest.fileElementId));
+            Assert.That(systemUnderTest.ActivitiesFileResourceXmlActivity.Id, Is.EqualTo(systemUnderTest.FileElementId));
+            Assert.That(systemUnderTest.ActivitiesFileResourceXmlActivity.ModuleId, Is.EqualTo(systemUnderTest.FileElementId));
             Assert.That(systemUnderTest.ActivitiesFileResourceXmlActivity.ModuleName, Is.EqualTo( "resource"));
-            Assert.That(systemUnderTest.ActivitiesFileResourceXmlActivity.ContextId, Is.EqualTo(systemUnderTest.fileElementId));
-            systemUnderTest.ActivitiesFileResourceXmlActivity.Received().Serialize("resource", systemUnderTest.fileElementId);
+            Assert.That(systemUnderTest.ActivitiesFileResourceXmlActivity.ContextId, Is.EqualTo(systemUnderTest.FileElementId));
+            systemUnderTest.ActivitiesFileResourceXmlActivity.Received().Serialize("resource", systemUnderTest.FileElementId);
             
-            systemUnderTest.ActivitiesRolesXmlRoles.Received().Serialize("resource", systemUnderTest.fileElementId);
+            systemUnderTest.ActivitiesRolesXmlRoles.Received().Serialize("resource", systemUnderTest.FileElementId);
             
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.ModuleName, Is.EqualTo("resource"));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionId, Is.EqualTo(systemUnderTest.fileElementId));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionNumber, Is.EqualTo(systemUnderTest.fileElementId));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Added, Is.EqualTo(systemUnderTest._currentTime));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Id, Is.EqualTo(systemUnderTest.fileElementId));
-            systemUnderTest.ActivitiesModuleXmlModule.Received().Serialize("resource", systemUnderTest.fileElementId);
+            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionId, Is.EqualTo(systemUnderTest.FileElementId));
+            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionNumber, Is.EqualTo(systemUnderTest.FileElementId));
+            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Added, Is.EqualTo(systemUnderTest.CurrentTime));
+            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Id, Is.EqualTo(systemUnderTest.FileElementId));
+            systemUnderTest.ActivitiesModuleXmlModule.Received().Serialize("resource", systemUnderTest.FileElementId);
             
-            systemUnderTest.ActivitiesGradeHistoryXmlGradeHistory.Received().Serialize("resource", systemUnderTest.fileElementId);
+            systemUnderTest.ActivitiesGradeHistoryXmlGradeHistory.Received().Serialize("resource", systemUnderTest.FileElementId);
             
             Assert.That(systemUnderTest.ActivitiesInforefXmlFileref.File, Has.Count.EqualTo(2));
             Assert.That(systemUnderTest.ActivitiesInforefXmlGradeItemref.GradeItem, Is.EqualTo(mockInforefGradeItem));
             Assert.That(systemUnderTest.ActivitiesInforefXmlInforef.Fileref, Is.EqualTo(mockInforefFileref));
             Assert.That(systemUnderTest.ActivitiesInforefXmlInforef.GradeItemref, Is.EqualTo(mockInforefGradeItemref));
-            systemUnderTest.ActivitiesInforefXmlInforef.Received().Serialize("resource", systemUnderTest.fileElementId);
+            systemUnderTest.ActivitiesInforefXmlInforef.Received().Serialize("resource", systemUnderTest.FileElementId);
         });
     }
 
@@ -237,20 +216,20 @@ public class XmlFileFactoryUt
         // Act
         var systemUnderTest = new XmlFileFactory(mockReadDsl, "", mockFileManager, mockFileSystem, sectionsInforefXmlInforef: mockInforefSection,
             sectionsSectionXmlSection: mockSection);
-        systemUnderTest.fileElementId = "1";
+        systemUnderTest.FileElementId = "1";
         systemUnderTest.FileSetParametersSections();
         
         // Assert
         Assert.Multiple(() =>
         {
-            systemUnderTest.SectionsInforefXmlInforef.Received().Serialize("",  systemUnderTest.fileElementId);
+            systemUnderTest.SectionsInforefXmlInforef.Received().Serialize("",  systemUnderTest.FileElementId);
             
-            Assert.That(systemUnderTest.SectionsSectionXmlSection.Number, Is.EqualTo(systemUnderTest.fileElementId));
-            Assert.That(systemUnderTest.SectionsSectionXmlSection.Id, Is.EqualTo(systemUnderTest.fileElementId));
+            Assert.That(systemUnderTest.SectionsSectionXmlSection.Number, Is.EqualTo(systemUnderTest.FileElementId));
+            Assert.That(systemUnderTest.SectionsSectionXmlSection.Id, Is.EqualTo(systemUnderTest.FileElementId));
             Assert.That(systemUnderTest.SectionsSectionXmlSection.Name, Is.EqualTo("$@NULL@$"));
             Assert.That(systemUnderTest.SectionsSectionXmlSection.Summary, Is.EqualTo("$@NULL@$"));
-            Assert.That(systemUnderTest.SectionsSectionXmlSection.Timemodified, Is.EqualTo(systemUnderTest._currentTime));
-            systemUnderTest.SectionsSectionXmlSection.Received().Serialize("",  systemUnderTest.fileElementId);
+            Assert.That(systemUnderTest.SectionsSectionXmlSection.Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
+            systemUnderTest.SectionsSectionXmlSection.Received().Serialize("",  systemUnderTest.FileElementId);
             
         });
         

@@ -32,7 +32,7 @@ public class XmlSerialize
         
         var settings = new XmlWriterSettings
         {
-            Encoding = new UpperCaseUTF8Encoding(), // Moodle needs Encoding in Uppercase!
+            Encoding = new UpperCaseUtf8Encoding(), // Moodle needs Encoding in Uppercase!
             NewLineHandling = NewLineHandling.Replace,
             NewLineOnAttributes = true,
             Indent = true // Generate new lines for each element

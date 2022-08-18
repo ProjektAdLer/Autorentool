@@ -236,17 +236,17 @@ public class XmlH5PFactory : IXmlH5PFactory
         //file activities/h5p.../inforef.xml
         _activitiesInforefXmlFileList = new List<ActivitiesInforefXmlFile>();
   
-        var InforefFile1 = new ActivitiesInforefXmlFile()
+        var inforefFile1 = new ActivitiesInforefXmlFile()
         {
             Id = XmlEntityManager.GetFileIdBlock1().ToString()
         };
-        var InforefFile2 = new ActivitiesInforefXmlFile()
+        var inforefFile2 = new ActivitiesInforefXmlFile()
         {
             Id = XmlEntityManager.GetFileIdBlock2().ToString()
         };
             
-        _activitiesInforefXmlFileList.Add(InforefFile1);
-        _activitiesInforefXmlFileList.Add(InforefFile2);
+        _activitiesInforefXmlFileList.Add(inforefFile1);
+        _activitiesInforefXmlFileList.Add(inforefFile2);
 
         ActivitiesInforefXmlFileref.File = _activitiesInforefXmlFileList;
         

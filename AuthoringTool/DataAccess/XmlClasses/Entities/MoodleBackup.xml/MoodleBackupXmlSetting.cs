@@ -38,8 +38,8 @@ public class MoodleBackupXmlSetting : IMoodleBackupXmlSetting{
 	public string Value { get; set; }
 	
 	[XmlElement(ElementName="section")]
-	public string Section { get; set; }
+	public string? Section { get; set; }
 	
 	[XmlElement(ElementName="activity")]
-	public string Activity { get; set; }
+	public string? Activity { get; set; }
 }

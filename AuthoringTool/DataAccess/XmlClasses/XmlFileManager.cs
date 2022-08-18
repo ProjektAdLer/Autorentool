@@ -24,7 +24,7 @@ public class XmlFileManager : IXmlFileManager
         return FilesXmlFilesList;
     }
 
-    public void SetXmlFilesList(List<FilesXmlFile>? list)
+    public void SetXmlFilesList(List<FilesXmlFile> list)
     {
         FilesXmlFilesList = list;
     }
@@ -36,8 +36,8 @@ public class XmlFileManager : IXmlFileManager
     {
         byte[] byteFile = _fileSystem.File.ReadAllBytes(filepath);
         
-        SHA1 sha1hash =  SHA1.Create();
-        var comp = sha1hash.ComputeHash(byteFile);
+        SHA1 sha1Hash =  SHA1.Create();
+        var comp = sha1Hash.ComputeHash(byteFile);
         string hashCheckSum = string.Concat(comp.Select(b => b.ToString("x2")));
 
         _fileCheckSum = hashCheckSum;
@@ -53,26 +53,24 @@ public class XmlFileManager : IXmlFileManager
     {
         return _fileSize;
     }
-    
+
     /// <summary>
     /// Create needed folder for any file (only the first 2 letters of the hash value as foldername)
     /// and copy file to the created folder
     /// </summary>
+    /// <param name="filepath"></param>
     /// <param name="hashCheckSum"></param>
-    public void CreateFolderAndFiles(string filepath, string? hashCheckSum)
+    public void CreateFolderAndFiles(string filepath, string hashCheckSum)
     {
         var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
-        string? hashFolderName = hashCheckSum?.Substring(0, 2);
+        string hashFolderName = hashCheckSum.Substring(0, 2);
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "files", hashFolderName));
-
-        if (hashFolderName != null)
+        
+        string fileDestination = Path.Join("XMLFilesForExport", "files", hashFolderName.Substring(0, 2),
+            hashCheckSum);
+        if (!_fileSystem.File.Exists(fileDestination))
         {
-            string fileDestination = Path.Join("XMLFilesForExport", "files", hashFolderName.Substring(0,2), 
-                hashCheckSum);
-            if (!_fileSystem.File.Exists(fileDestination))
-            {
-                _fileSystem.File.Copy(filepath, fileDestination);
-            }
+            _fileSystem.File.Copy(filepath, fileDestination);
         }
     }
 }
