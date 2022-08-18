@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
+using AutoMapper.Configuration.Annotations;
 
 namespace AuthoringTool.PresentationLogic.LearningWorld;
 
@@ -74,6 +75,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         }
     }
 
+    [Ignore]
     public IEnumerable<ILearningObjectViewModel> LearningObjects => LearningElements.Concat<ILearningObjectViewModel>(LearningSpaces);
     public int Workload =>
         LearningSpaces.Sum(space => space.Workload) + LearningElements.Sum(element => element.Workload);

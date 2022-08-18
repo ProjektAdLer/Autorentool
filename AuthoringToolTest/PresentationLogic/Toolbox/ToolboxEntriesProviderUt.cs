@@ -37,7 +37,7 @@ public class ToolboxEntriesProviderUt
         {
             Assert.That(systemUnderTest.Logger, Is.EqualTo(logger));
             Assert.That(systemUnderTest.BusinessLogic, Is.EqualTo(businessLogic));
-            Assert.That(systemUnderTest.EntityMapping, Is.EqualTo(entityMapping));
+            Assert.That(systemUnderTest.Mapper, Is.EqualTo(entityMapping));
             Assert.That(systemUnderTest.FileSystem, Is.EqualTo(fileSystem));
         });
     }
@@ -55,7 +55,7 @@ public class ToolboxEntriesProviderUt
         {
             Assert.That(systemUnderTest.Logger, Is.EqualTo(logger));
             Assert.That(systemUnderTest.BusinessLogic, Is.EqualTo(businessLogic));
-            Assert.That(systemUnderTest.EntityMapping, Is.EqualTo(entityMapping));
+            Assert.That(systemUnderTest.Mapper, Is.EqualTo(entityMapping));
             Assert.That(systemUnderTest.FileSystem, Is.Not.Null);
         });
         Assert.That(systemUnderTest.FileSystem, Is.TypeOf<FileSystem>());

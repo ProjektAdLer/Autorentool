@@ -1,6 +1,6 @@
 ﻿namespace AuthoringTool.Entities;
 
-public interface ILearningWorld
+public interface ILearningWorld : ILearningElementParent
 {
     
     List<LearningElement> LearningElements { get; set; }

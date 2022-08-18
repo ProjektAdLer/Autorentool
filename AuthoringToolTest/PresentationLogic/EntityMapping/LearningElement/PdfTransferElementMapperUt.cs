@@ -67,9 +67,9 @@ public class PdfTransferElementMapperUt
             Assert.That(viewModel.Shortname, Is.EqualTo(entity.Shortname));
             Assert.That(viewModel.Parent, Is.EqualTo(world));
             Assert.That(viewModel.LearningContent, Is.Not.Null);
-            Assert.That(viewModel.LearningContent?.Name, Is.EqualTo(entity.Content.Name));
-            Assert.That(viewModel.LearningContent?.Type, Is.EqualTo(entity.Content.Type));
-            Assert.That(viewModel.LearningContent?.Content, Is.EqualTo(entity.Content.Content));
+            Assert.That(viewModel.LearningContent?.Name, Is.EqualTo(entity.LearningContent.Name));
+            Assert.That(viewModel.LearningContent?.Type, Is.EqualTo(entity.LearningContent.Type));
+            Assert.That(viewModel.LearningContent?.Content, Is.EqualTo(entity.LearningContent.Content));
             Assert.That(viewModel.Authors, Is.EqualTo(entity.Authors));
             Assert.That(viewModel.Description, Is.EqualTo(entity.Description));
             Assert.That(viewModel.Goals, Is.EqualTo(entity.Goals));

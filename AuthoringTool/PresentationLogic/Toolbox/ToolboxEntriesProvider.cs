@@ -4,19 +4,20 @@ using AuthoringTool.PresentationLogic.EntityMapping;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
+using AutoMapper;
 
 namespace AuthoringTool.PresentationLogic.Toolbox;
 
 public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
 {
     public ToolboxEntriesProvider(ILogger<ToolboxEntriesProvider> logger, IBusinessLogic businessLogic,
-        IEntityMapping entityMapping) : this(logger, businessLogic, entityMapping, new FileSystem()) { }
+        IMapper mapper) : this(logger, businessLogic, mapper, new FileSystem()) { }
     public ToolboxEntriesProvider(ILogger<ToolboxEntriesProvider> logger, IBusinessLogic businessLogic,
-        IEntityMapping entityMapping, IFileSystem fileSystem)
+        IMapper mapper, IFileSystem fileSystem)
     {
         Logger = logger;
         BusinessLogic = businessLogic;
-        EntityMapping = entityMapping;
+        Mapper = mapper;
         FileSystem = fileSystem;
 
         _toolboxSavePath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -36,7 +37,7 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
 
     internal ILogger<ToolboxEntriesProvider> Logger { get; }
     internal IBusinessLogic BusinessLogic { get; }
-    internal IEntityMapping EntityMapping { get; }
+    internal IMapper Mapper { get; }
     internal IFileSystem FileSystem { get; }
 
     private List<LearningWorldViewModel> _worlds;
@@ -77,15 +78,15 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
         switch (obj)
         {
                 case LearningWorldViewModel learningWorldViewModel:
-                    BusinessLogic.SaveLearningWorld(EntityMapping.WorldMapper.ToEntity(learningWorldViewModel), savePath);
+                    BusinessLogic.SaveLearningWorld(Mapper.Map<Entities.LearningWorld>(learningWorldViewModel), savePath);
                     _worlds.Add(learningWorldViewModel);
                     break;
                 case LearningSpaceViewModel learningSpaceViewModel:
-                    BusinessLogic.SaveLearningSpace(EntityMapping.SpaceMapper.ToEntity(learningSpaceViewModel), savePath);
+                    BusinessLogic.SaveLearningSpace(Mapper.Map<Entities.LearningSpace>(learningSpaceViewModel), savePath);
                     _spaces.Add(learningSpaceViewModel);
                     break;
                 case LearningElementViewModel learningElementViewModel:
-                    BusinessLogic.SaveLearningElement(EntityMapping.ElementMapper.ToEntity(learningElementViewModel), savePath);
+                    BusinessLogic.SaveLearningElement(Mapper.Map<Entities.LearningElement>(learningElementViewModel), savePath);
                     _elements.Add(learningElementViewModel);
                     break;
         }
@@ -142,11 +143,11 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
         var elementFiles = files.Where(filepath => filepath.EndsWith(LearningElementViewModel.fileEnding));
         
         _worlds = worldFiles.Select(filepath => BusinessLogic.LoadLearningWorld(filepath))
-            .Select(entity => EntityMapping.WorldMapper.ToViewModel(entity)).ToList();
+            .Select(entity => Mapper.Map<LearningWorldViewModel>(entity)).ToList();
         _spaces = spaceFiles.Select(filepath => BusinessLogic.LoadLearningSpace(filepath))
-            .Select(entity => EntityMapping.SpaceMapper.ToViewModel(entity)).ToList();
+            .Select(entity => Mapper.Map<LearningSpaceViewModel>(entity)).ToList();
         _elements = elementFiles.Select(filepath => BusinessLogic.LoadLearningElement(filepath))
-            .Select(entity => EntityMapping.ElementMapper.ToViewModel(entity)).ToList();
+            .Select(entity => Mapper.Map<LearningElementViewModel>(entity)).ToList();
 
         _initialized = true;
     }

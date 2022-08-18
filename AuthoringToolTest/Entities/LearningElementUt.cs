@@ -13,7 +13,7 @@ public class LearningElementUt
     {
         var name = "asdf";
         var shortname = "jkl;";
-        var parentName = "foobar";
+        var parent = new LearningWorld("foo", "bar", "", "", "", "");
         var content = new LearningContent("a", "b", Array.Empty<byte>());
         var authors = "ben and jerry";
         var description = "very cool element";
@@ -23,15 +23,15 @@ public class LearningElementUt
         var positionX = 5f;
         var positionY = 21f;
 
-        var systemUnderTest = new LearningElement(name, shortname, parentName, content, authors, description, goals,
+        var systemUnderTest = new LearningElement(name, shortname, parent, content, authors, description, goals,
              difficulty, workload, positionX, positionY);
         
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
             Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortname));
-            Assert.That(systemUnderTest.ParentName, Is.EqualTo(parentName));
-            Assert.That(systemUnderTest.Content, Is.EqualTo(content));
+            Assert.That(systemUnderTest.Parent, Is.EqualTo(parent));
+            Assert.That(systemUnderTest.LearningContent, Is.EqualTo(content));
             Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
@@ -47,7 +47,7 @@ public class LearningElementUt
     {
         var name = "asdf";
         var shortname = "jkl;";
-        var parentName = "foobar";
+        var parent = new LearningWorld("foo", "bar", "", "", "", "");
         var content = new LearningContent("a", "b", new byte[]{0x05,0x06});
         var authors = "ben and jerry";
         var description = "very cool element";
@@ -57,7 +57,7 @@ public class LearningElementUt
         var positionX = 5f;
         var positionY = 21f;
 
-        var systemUnderTest = new LearningElement(name, shortname, parentName, content, authors, description, goals,
+        var systemUnderTest = new LearningElement(name, shortname, parent, content, authors, description, goals,
             difficulty, workload, positionX, positionY);
 
         var learningElementMemento = systemUnderTest.GetMemento();
@@ -75,7 +75,7 @@ public class LearningElementUt
 
         systemUnderTest.Name = nameChanged;
         systemUnderTest.Shortname = shortnameChanged;
-        systemUnderTest.Content = contentChanged;
+        systemUnderTest.LearningContent = contentChanged;
         systemUnderTest.Authors = authorsChanged;
         systemUnderTest.Description = descriptionChanged;
         systemUnderTest.Goals = goalsChanged;
@@ -88,7 +88,7 @@ public class LearningElementUt
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(nameChanged));
             Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortnameChanged));
-            Assert.That(systemUnderTest.Content, Is.EqualTo(contentChanged));
+            Assert.That(systemUnderTest.LearningContent, Is.EqualTo(contentChanged));
             Assert.That(systemUnderTest.Authors, Is.EqualTo(authorsChanged));
             Assert.That(systemUnderTest.Description, Is.EqualTo(descriptionChanged));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goalsChanged));
@@ -104,7 +104,7 @@ public class LearningElementUt
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
             Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortname));
-            Assert.That(systemUnderTest.Content, Is.EqualTo(content));
+            Assert.That(systemUnderTest.LearningContent, Is.EqualTo(content));
             Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
@@ -120,7 +120,7 @@ public class LearningElementUt
     {
         var name = "asdf";
         var shortname = "jkl;";
-        var parentName = "foobar";
+        var parent = new LearningWorld("foo", "bar", "", "", "", "");
         var content = new LearningContent("a", "b", new byte[]{0x05,0x06});
         var authors = "ben and jerry";
         var description = "very cool element";
@@ -130,7 +130,7 @@ public class LearningElementUt
         var positionX = 5f;
         var positionY = 21f;
 
-        var systemUnderTest = new LearningElement(name, shortname, parentName, content, authors, description, goals,
+        var systemUnderTest = new LearningElement(name, shortname, parent, content, authors, description, goals,
             difficulty, workload, positionX, positionY);
 
         var mementoMock = new MementoMock();
