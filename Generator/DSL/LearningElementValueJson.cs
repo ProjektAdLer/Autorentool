@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.DSL;
+﻿namespace Generator.DSL;
 
 /// <summary>
 /// Includes the points or badge an element has

@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.XmlClasses.Entities.Course.Completiondefault.xml;
+﻿namespace Generator.XmlClasses.Entities._course.Completiondefault.xml;
 
 public interface ICourseCompletiondefaultXmlCourseCompletionDefaults : IXmlSerializable
 {

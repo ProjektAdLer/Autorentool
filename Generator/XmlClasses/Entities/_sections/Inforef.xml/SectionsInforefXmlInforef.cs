@@ -1,7 +1,7 @@
 ﻿using System.Xml.Serialization;
-using AuthoringTool.DataAccess.WorldExport;
+using Generator.WorldExport;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities.Sections.Inforef.xml;
+namespace Generator.XmlClasses.Entities._sections.Inforef.xml;
 
 
 [XmlRoot(ElementName="inforef")]

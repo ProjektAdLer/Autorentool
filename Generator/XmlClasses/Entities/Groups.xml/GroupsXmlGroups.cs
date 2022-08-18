@@ -1,7 +1,7 @@
 ﻿using System.Xml.Serialization;
-using AuthoringTool.DataAccess.WorldExport;
+using Generator.WorldExport;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities.Groups.xml;
+namespace Generator.XmlClasses.Entities.Groups.xml;
 
 [XmlRoot(ElementName="groups")]
 public class GroupsXmlGroups : IGroupsXmlGroups{

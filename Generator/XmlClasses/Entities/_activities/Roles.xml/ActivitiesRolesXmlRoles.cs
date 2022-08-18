@@ -1,7 +1,7 @@
 ﻿using System.Xml.Serialization;
-using AuthoringTool.DataAccess.WorldExport;
+using Generator.WorldExport;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities._activities.Roles.xml;
+namespace Generator.XmlClasses.Entities._activities.Roles.xml;
 
 [XmlRoot(ElementName="roles")] 
 public class ActivitiesRolesXmlRoles : IActivitiesRolesXmlRoles{

@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.XmlClasses.Entities._activities.Inforef.xml;
+﻿namespace Generator.XmlClasses.Entities._activities.Inforef.xml;
 
 public interface IActivitiesInforefXmlFile
 {

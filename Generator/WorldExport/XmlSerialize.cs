@@ -2,7 +2,7 @@
 using System.Xml;
 using System.Xml.Serialization;
 
-namespace AuthoringTool.DataAccess.WorldExport;
+namespace Generator.WorldExport;
 
 /// <summary>
 /// Serialize XML classes to xml.files

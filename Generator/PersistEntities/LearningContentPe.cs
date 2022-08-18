@@ -1,6 +1,6 @@
-namespace AuthoringTool.DataAccess.PersistEntities;
+namespace Generator.PersistEntities;
 
-public class LearningContentPe : ILearningContentPe
+public class LearningContentPe : Generator.PersistEntities.ILearningContentPe
 {
     internal LearningContentPe(string name, string type, byte[] content)
     {

@@ -1,10 +1,10 @@
 ﻿using System.IO.Abstractions;
 using AuthoringTool.BusinessLogic.API;
-using AuthoringTool.DataAccess.DSL;
-using AuthoringTool.DataAccess.PersistEntities;
-using AuthoringTool.DataAccess.WorldExport;
 using AuthoringTool.Entities;
 using AutoMapper;
+using Generator.DSL;
+using Generator.PersistEntities;
+using Generator.WorldExport;
 
 namespace Generator.API;
 

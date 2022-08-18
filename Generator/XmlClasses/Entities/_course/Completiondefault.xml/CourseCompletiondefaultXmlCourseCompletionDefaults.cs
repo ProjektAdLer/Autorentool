@@ -1,7 +1,7 @@
 ﻿using System.Xml.Serialization;
-using AuthoringTool.DataAccess.WorldExport;
+using Generator.WorldExport;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities.Course.Completiondefault.xml;
+namespace Generator.XmlClasses.Entities._course.Completiondefault.xml;
 
 [XmlRoot(ElementName="course_completion_defaults")]
 public class CourseCompletiondefaultXmlCourseCompletionDefaults : ICourseCompletiondefaultXmlCourseCompletionDefaults{

@@ -1,7 +1,7 @@
 ﻿using System.Xml.Serialization;
-using AuthoringTool.DataAccess.WorldExport;
+using Generator.WorldExport;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities._activities.Resource.xml;
+namespace Generator.XmlClasses.Entities._activities.Resource.xml;
 
 
 [XmlRoot(ElementName="activity")]

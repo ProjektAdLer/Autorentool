@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.PersistEntities;
+﻿namespace Generator.PersistEntities;
 
 internal class LearningPathwayPe: ILearningPathWayPe
 {

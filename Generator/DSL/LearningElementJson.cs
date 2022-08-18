@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.DSL;
+﻿namespace Generator.DSL;
 
 /// <summary>
 /// Every Learning Element, either in the world, in a topic or in a space.

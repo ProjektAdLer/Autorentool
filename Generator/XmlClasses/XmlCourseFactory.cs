@@ -1,11 +1,11 @@
-﻿using AuthoringTool.DataAccess.DSL;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Course.Completiondefault.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Course.Course.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Course.Enrolments.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Course.Inforef.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Course.Roles.xml;
+﻿using Generator.DSL;
+using Generator.XmlClasses.Entities._course.Completiondefault.xml;
+using Generator.XmlClasses.Entities._course.Course.xml;
+using Generator.XmlClasses.Entities._course.Enrolments.xml;
+using Generator.XmlClasses.Entities._course.Inforef.xml;
+using Generator.XmlClasses.Entities._course.Roles.xml;
 
-namespace AuthoringTool.DataAccess.XmlClasses;
+namespace Generator.XmlClasses;
 
 /// <summary>
 /// Sets the paramters of course/course.xml, course/enrolments.xml, course/inforef.xml, course/roles.xml,

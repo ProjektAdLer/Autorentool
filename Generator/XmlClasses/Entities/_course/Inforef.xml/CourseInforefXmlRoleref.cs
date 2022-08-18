@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities.Course.Inforef.xml;
+namespace Generator.XmlClasses.Entities._course.Inforef.xml;
 
 [XmlRoot(ElementName="roleref")]
 public class CourseInforefXmlRoleref : ICourseInforefXmlRoleref{

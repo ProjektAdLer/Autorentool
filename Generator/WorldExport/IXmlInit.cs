@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.WorldExport;
+﻿namespace Generator.WorldExport;
 
 public interface IXMLInit
 {

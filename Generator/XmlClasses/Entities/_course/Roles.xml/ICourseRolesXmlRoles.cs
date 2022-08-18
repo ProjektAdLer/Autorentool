@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.XmlClasses.Entities.Course.Roles.xml;
+﻿namespace Generator.XmlClasses.Entities._course.Roles.xml;
 
 public interface ICourseRolesXmlRoles : IXmlSerializable
 {

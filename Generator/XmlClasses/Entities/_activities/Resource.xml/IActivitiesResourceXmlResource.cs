@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.XmlClasses.Entities._activities.Resource.xml;
+﻿namespace Generator.XmlClasses.Entities._activities.Resource.xml;
 
 public interface IActivitiesResourceXmlResource
 {

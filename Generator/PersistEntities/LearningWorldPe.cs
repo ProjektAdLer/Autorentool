@@ -1,11 +1,11 @@
-﻿namespace AuthoringTool.DataAccess.PersistEntities;
+﻿namespace Generator.PersistEntities;
 
 [Serializable]
-public class LearningWorldPe : ILearningWorldPe
+public class LearningWorldPe : Generator.PersistEntities.ILearningWorldPe
 {
     internal LearningWorldPe(string name, string shortname, string authors, string language, string description,
-        string goals, List<LearningElementPe>? learningElements = null,
-        List<LearningSpacePe>? learningSpaces = null)
+        string goals, List<Generator.PersistEntities.LearningElementPe>? learningElements = null,
+        List<Generator.PersistEntities.LearningSpacePe>? learningSpaces = null)
     {
         Name = name;
         Shortname = shortname;
@@ -13,8 +13,8 @@ public class LearningWorldPe : ILearningWorldPe
         Language = language;
         Description = description;
         Goals = goals;
-        LearningElements = learningElements ?? new List<LearningElementPe>();
-        LearningSpaces = learningSpaces ?? new List<LearningSpacePe>();
+        LearningElements = learningElements ?? new List<Generator.PersistEntities.LearningElementPe>();
+        LearningSpaces = learningSpaces ?? new List<Generator.PersistEntities.LearningSpacePe>();
     }
 
     /// <summary>
@@ -28,12 +28,12 @@ public class LearningWorldPe : ILearningWorldPe
         Language = "";
         Description = "";
         Goals = "";
-        LearningElements = new List<LearningElementPe>();
-        LearningSpaces = new List<LearningSpacePe>();
+        LearningElements = new List<Generator.PersistEntities.LearningElementPe>();
+        LearningSpaces = new List<Generator.PersistEntities.LearningSpacePe>();
     }
 
-    public List<LearningElementPe> LearningElements { get; set; }
-    public List<LearningSpacePe>? LearningSpaces { get; set; }
+    public List<Generator.PersistEntities.LearningElementPe> LearningElements { get; set; }
+    public List<Generator.PersistEntities.LearningSpacePe>? LearningSpaces { get; set; }
     public string Name { get; set; }
     public string Shortname { get; set; }
     public string Authors { get; set; }

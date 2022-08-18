@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.XmlClasses.Entities.Sections.Section.xml;
+﻿namespace Generator.XmlClasses.Entities._sections.Section.xml;
 
 public interface ISectionsSectionXmlSection : IXmlSerializablePath
 {

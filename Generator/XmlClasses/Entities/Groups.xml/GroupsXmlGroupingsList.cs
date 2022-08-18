@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities.Groups.xml;
+namespace Generator.XmlClasses.Entities.Groups.xml;
 
 [XmlRoot(ElementName="GroupingsList")]
 public class GroupsXmlGroupingsList : IGroupsXmlGroupingsList

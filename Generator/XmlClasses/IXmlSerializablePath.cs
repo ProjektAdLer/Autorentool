@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.XmlClasses;
+﻿namespace Generator.XmlClasses;
 
 public interface IXmlSerializablePath
 {

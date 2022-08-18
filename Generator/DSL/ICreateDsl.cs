@@ -1,6 +1,7 @@
-using AuthoringTool.DataAccess.PersistEntities;
 
-namespace AuthoringTool.DataAccess.DSL;
+using Generator.PersistEntities;
+
+namespace Generator.DSL;
 
 public interface ICreateDsl
 {

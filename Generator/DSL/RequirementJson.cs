@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.DSL;
+﻿namespace Generator.DSL;
 
 /// <summary>
 /// Requirements describe all the needed Spaces, Topics or elements that need to be completed, before another space,

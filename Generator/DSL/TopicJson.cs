@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.DSL;
+﻿namespace Generator.DSL;
 
 /// <summary>
 /// Topics are Sections in moodle. They include spaces and/or elements.

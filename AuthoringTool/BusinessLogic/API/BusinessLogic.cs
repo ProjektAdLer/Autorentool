@@ -9,7 +9,6 @@ namespace AuthoringTool.BusinessLogic.API;
 
 internal class BusinessLogic : IBusinessLogic
 {
-
     public BusinessLogic(
         IAuthoringToolConfiguration configuration,
         IDataAccess dataAccess,
@@ -22,7 +21,6 @@ internal class BusinessLogic : IBusinessLogic
         HybridSupport = hybridSupport;
         Mapper = mapper;
         WorldGenerator = worldGenerator;
-        
     }
     
     

@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.XmlClasses.Entities._activities.Lesson.xml;
+﻿namespace Generator.XmlClasses.Entities._activities.Lesson.xml;
 
 public interface IActivitiesLessonXmlActivity : IXmlSerializablePath
 {

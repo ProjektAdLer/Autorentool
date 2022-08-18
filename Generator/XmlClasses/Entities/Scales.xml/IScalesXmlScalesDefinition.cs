@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.XmlClasses.Entities.Scales.xml;
+﻿namespace Generator.XmlClasses.Entities.Scales.xml;
 
 public interface IScalesXmlScalesDefinition : IXmlSerializable
 {

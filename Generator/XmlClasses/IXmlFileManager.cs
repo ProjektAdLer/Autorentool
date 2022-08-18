@@ -1,6 +1,6 @@
-﻿using AuthoringTool.DataAccess.XmlClasses.Entities.Files.xml;
+﻿using Generator.XmlClasses.Entities.Files.xml;
 
-namespace AuthoringTool.DataAccess.XmlClasses;
+namespace Generator.XmlClasses;
 
 public interface IXmlFileManager
 {

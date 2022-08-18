@@ -1,7 +1,7 @@
 ﻿using System.Xml.Serialization;
-using AuthoringTool.DataAccess.WorldExport;
+using Generator.WorldExport;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities.Outcomes.xml;
+namespace Generator.XmlClasses.Entities.Outcomes.xml;
 
 [XmlRoot(ElementName="outcomes_definition")]
 public class OutcomesXmlOutcomesDefinition : IOutcomesXmlOutcomesDefinition

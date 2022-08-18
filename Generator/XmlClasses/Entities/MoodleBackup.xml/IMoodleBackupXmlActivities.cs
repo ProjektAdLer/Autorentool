@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.XmlClasses.Entities.MoodleBackup.xml;
+﻿namespace Generator.XmlClasses.Entities.MoodleBackup.xml;
 
 public interface IMoodleBackupXmlActivities
 {

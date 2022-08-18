@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities._activities.Grades.xml;
+namespace Generator.XmlClasses.Entities._activities.Grades.xml;
 
 
 [XmlRoot(ElementName="grade_items")]

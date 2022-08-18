@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.XmlClasses.Entities.Files.xml;
+﻿namespace Generator.XmlClasses.Entities.Files.xml;
 
 public interface IFilesXmlFile
 {

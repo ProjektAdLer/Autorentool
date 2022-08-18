@@ -1,4 +1,6 @@
-﻿namespace AuthoringTool.DataAccess.PersistEntities;
+﻿using AuthoringTool.DataAccess.PersistEntities;
+
+namespace Generator.PersistEntities;
 
 public interface ILearningWorldPe
 {

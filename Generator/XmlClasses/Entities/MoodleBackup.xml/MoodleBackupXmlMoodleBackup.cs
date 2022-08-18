@@ -1,7 +1,7 @@
 ﻿using System.Xml.Serialization;
-using AuthoringTool.DataAccess.WorldExport;
+using Generator.WorldExport;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities.MoodleBackup.xml;
+namespace Generator.XmlClasses.Entities.MoodleBackup.xml;
 
 [XmlRoot(ElementName="moodle_backup")]
 public class MoodleBackupXmlMoodleBackup : IMoodleBackupXmlMoodleBackup {

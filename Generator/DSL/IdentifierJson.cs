@@ -1,4 +1,5 @@
-﻿namespace AuthoringTool.DataAccess.DSL;
+﻿
+namespace Generator.DSL;
 
 /// <summary>
 ///  The Identifier tag has the name and type (needed for the Moodle API, so that the 2D3D Team knows what kind of Type they need to search)

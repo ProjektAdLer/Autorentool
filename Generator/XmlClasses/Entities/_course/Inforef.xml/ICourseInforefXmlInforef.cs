@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.XmlClasses.Entities.Course.Inforef.xml;
+﻿namespace Generator.XmlClasses.Entities._course.Inforef.xml;
 
 public interface ICourseInforefXmlInforef : IXmlSerializable
 {

@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.XmlClasses.Entities.Questions.xml;
+﻿namespace Generator.XmlClasses.Entities.Questions.xml;
 
 public interface IQuestionsXmlQuestionsCategories : IXmlSerializable
 {

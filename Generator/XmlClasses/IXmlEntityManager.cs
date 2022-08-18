@@ -1,6 +1,6 @@
-﻿using AuthoringTool.DataAccess.DSL;
+﻿using Generator.DSL;
 
-namespace AuthoringTool.DataAccess;
+namespace Generator.XmlClasses;
 
 public interface IXmlEntityManager
 {

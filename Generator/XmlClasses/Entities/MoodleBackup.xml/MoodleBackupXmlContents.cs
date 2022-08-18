@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities.MoodleBackup.xml;
+namespace Generator.XmlClasses.Entities.MoodleBackup.xml;
 
 [XmlRoot(ElementName="contents")]
 public class MoodleBackupXmlContents : IMoodleBackupXmlContents {

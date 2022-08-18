@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities._activities.Lesson.xml;
+namespace Generator.XmlClasses.Entities._activities.Lesson.xml;
 
 [XmlRoot(ElementName="page")]
 public class ActivitiesLessonXmlPage : IActivitiesLessonXmlPage{

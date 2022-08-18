@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.XmlClasses.Entities.Course.Enrolments.xml;
+﻿namespace Generator.XmlClasses.Entities._course.Enrolments.xml;
 
 public interface ICourseEnrolmentsXmlEnrol
 {

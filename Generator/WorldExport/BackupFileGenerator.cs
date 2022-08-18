@@ -1,12 +1,11 @@
 ﻿using System.IO.Abstractions;
-using AuthoringTool.DataAccess.DSL;
+using Generator.XmlClasses;
+using Generator.DSL;
 using ICSharpCode.SharpZipLib.GZip;
 using ICSharpCode.SharpZipLib.Tar;
-using AuthoringTool.DataAccess.XmlClasses;
-using FileSystem = System.IO.Abstractions.FileSystem;
 
 
-namespace AuthoringTool.DataAccess.WorldExport;
+namespace Generator.WorldExport;
 
 /// <summary>
 /// The BackupFileGenerator creates all the folders, xml files and packs it to a .mbz file.

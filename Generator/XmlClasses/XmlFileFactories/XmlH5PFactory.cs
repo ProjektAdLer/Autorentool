@@ -1,16 +1,16 @@
 ﻿using System.IO.Abstractions;
-using AuthoringTool.DataAccess.DSL;
-using AuthoringTool.DataAccess.XmlClasses.Entities._activities.GradeHistory.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Grades.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities._activities.H5PActivity.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Inforef.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Module.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Roles.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Files.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Sections.Inforef.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Sections.Section.xml;
+using Generator.DSL;
+using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
+using Generator.XmlClasses.Entities._activities.Grades.xml;
+using Generator.XmlClasses.Entities._activities.H5PActivity.xml;
+using Generator.XmlClasses.Entities._activities.Inforef.xml;
+using Generator.XmlClasses.Entities._activities.Module.xml;
+using Generator.XmlClasses.Entities._activities.Roles.xml;
+using Generator.XmlClasses.Entities._sections.Inforef.xml;
+using Generator.XmlClasses.Entities._sections.Section.xml;
+using Generator.XmlClasses.Entities.Files.xml;
 
-namespace AuthoringTool.DataAccess.XmlClasses.XmlFileFactories;
+namespace Generator.XmlClasses.XmlFileFactories;
 
 /// <summary>
 /// Creates all H5P files in the needed XML File.

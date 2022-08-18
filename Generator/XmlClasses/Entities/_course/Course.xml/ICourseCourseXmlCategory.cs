@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.XmlClasses.Entities.Course.Course.xml;
+﻿namespace Generator.XmlClasses.Entities._course.Course.xml;
 
 public interface ICourseCourseXmlCategory
 {

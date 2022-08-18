@@ -2,11 +2,7 @@ using System.IO.Abstractions;
 using AuthoringTool.API.Configuration;
 using AuthoringTool.BusinessLogic.API;
 using AuthoringTool.DataAccess.API;
-using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.Persistence;
-using AuthoringTool.DataAccess.PersistEntities;
-using AuthoringTool.DataAccess.WorldExport;
-using AuthoringTool.Entities;
 using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.API;
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
@@ -22,6 +18,7 @@ using AuthoringTool.View.Toolbox;
 using AutoMapper;
 using ElectronWrapper;
 using Microsoft.Extensions.Caching.Memory;
+
 
 namespace AuthoringTool;
 
@@ -103,10 +100,7 @@ public class Startup
     {
         services.AddTransient(typeof(IXmlFileHandler<>), typeof(XmlFileHandler<>));
         services.AddSingleton<IDataAccess, DataAccess.API.DataAccess>();
-        services.AddSingleton<ICreateDsl, CreateDsl>();
-        services.AddSingleton<IReadDsl, ReadDsl>();
         services.AddSingleton<IContentFileHandler, ContentFileHandler>();
-        services.AddSingleton<IBackupFileGenerator, BackupFileGenerator>();
     }
 
     private static void ConfigureToolbox(IServiceCollection services)

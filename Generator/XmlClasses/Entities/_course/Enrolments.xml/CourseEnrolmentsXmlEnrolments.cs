@@ -1,7 +1,7 @@
 ﻿using System.Xml.Serialization;
-using AuthoringTool.DataAccess.WorldExport;
+using Generator.WorldExport;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities.Course.Enrolments.xml;
+namespace Generator.XmlClasses.Entities._course.Enrolments.xml;
 
 [XmlRoot(ElementName="enrolments")]
 public class CourseEnrolmentsXmlEnrolments : ICourseEnrolmentsXmlEnrolments

@@ -1,4 +1,5 @@
-﻿namespace AuthoringTool.DataAccess.DSL;
+﻿
+namespace Generator.DSL;
 
 public class LearningWorldJson : ILearningWorldJson
 {

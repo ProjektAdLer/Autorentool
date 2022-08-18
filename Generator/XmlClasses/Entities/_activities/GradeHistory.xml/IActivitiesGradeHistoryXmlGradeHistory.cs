@@ -1,4 +1,4 @@
-﻿namespace AuthoringTool.DataAccess.XmlClasses.Entities._activities.GradeHistory.xml;
+﻿namespace Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 
 public interface IActivitiesGradeHistoryXmlGradeHistory : IXmlSerializablePath
 {

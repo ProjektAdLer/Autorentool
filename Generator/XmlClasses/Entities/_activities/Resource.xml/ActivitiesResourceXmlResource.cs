@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities._activities.Resource.xml;
+namespace Generator.XmlClasses.Entities._activities.Resource.xml;
 
 
 [XmlRoot(ElementName="resource")]

@@ -1,6 +1,6 @@
 ﻿using System.Xml.Serialization;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities.Gradebook.xml;
+namespace Generator.XmlClasses.Entities.Gradebook.xml;
 
 [XmlRoot(ElementName="grade_items")]
 public class GradebookXmlGradeItems : IGradebookXmlGradeItems {

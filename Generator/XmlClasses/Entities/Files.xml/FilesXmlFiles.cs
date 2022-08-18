@@ -1,7 +1,7 @@
 ﻿using System.Xml.Serialization;
-using AuthoringTool.DataAccess.WorldExport;
+using Generator.WorldExport;
 
-namespace AuthoringTool.DataAccess.XmlClasses.Entities.Files.xml;
+namespace Generator.XmlClasses.Entities.Files.xml;
 
 
 [XmlRoot(ElementName = "files")]

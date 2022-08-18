@@ -1,7 +1,7 @@
-﻿using AuthoringTool.DataAccess.DSL;
+﻿using Generator.DSL;
 using ICSharpCode.SharpZipLib.Tar;
 
-namespace AuthoringTool.DataAccess.WorldExport;
+namespace Generator.WorldExport;
 
 public interface IBackupFileGenerator
 {

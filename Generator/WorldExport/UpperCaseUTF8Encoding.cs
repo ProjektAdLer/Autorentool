@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace AuthoringTool.DataAccess.WorldExport;
+namespace Generator.WorldExport;
 
 /// <summary>
 /// The purpose of this class is to change the Encoding from "utf-8" to "UTF-8"

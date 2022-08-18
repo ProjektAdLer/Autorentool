@@ -1,7 +1,7 @@
-﻿using AuthoringTool.DataAccess.DSL;
-using AuthoringTool.DataAccess.XmlClasses.XmlFileFactories;
+﻿using Generator.DSL;
+using Generator.XmlClasses.XmlFileFactories;
 
-namespace AuthoringTool.DataAccess.XmlClasses;
+namespace Generator.XmlClasses;
 
 public class XmlEntityManager : IXmlEntityManager
 {

@@ -1,9 +1,9 @@
 ﻿using System.IO.Abstractions;
 using System.Text.Json;
-using AuthoringTool.DataAccess.PersistEntities;
-using AuthoringTool.DataAccess.WorldExport;
+using Generator.PersistEntities;
+using Generator.WorldExport;
 
-namespace AuthoringTool.DataAccess.DSL;
+namespace Generator.DSL;
 
 public class CreateDsl : ICreateDsl
 {

@@ -1,4 +1,5 @@
-namespace AuthoringTool.DataAccess.PersistEntities;
+
+namespace Generator.PersistEntities;
 
 [Serializable]
 

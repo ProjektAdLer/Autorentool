@@ -1,9 +1,7 @@
 ﻿using System.IO.Abstractions;
 using AuthoringTool.API.Configuration;
-using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.Persistence;
 using AuthoringTool.DataAccess.PersistEntities;
-using AuthoringTool.DataAccess.WorldExport;
 
 namespace AuthoringTool.DataAccess.API;
 

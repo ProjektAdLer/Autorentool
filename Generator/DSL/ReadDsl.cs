@@ -1,7 +1,8 @@
 ﻿using System.IO.Abstractions;
 using System.Text.Json;
 
-namespace AuthoringTool.DataAccess.DSL;
+
+namespace Generator.DSL;
 
 public class ReadDsl : IReadDsl
 {
