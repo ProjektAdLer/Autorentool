@@ -76,7 +76,8 @@ public class XmlFileManagerUt
         // Assert
         Assert.Multiple(()=>
         {
-            Assert.That(mockFileSystem.File.Exists(@"C:/test.txt"), Is.True);
+            Assert.That(mockFileSystem.Directory.Exists(@"C:\XMLFilesForExport\files\08"), Is.True);
+            Assert.That(mockFileSystem.File.Exists(@"C:/test.txt"), Is.False);
         });
 
     }

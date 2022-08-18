@@ -71,6 +71,7 @@ public class XmlFileManager : IXmlFileManager
         if (!_fileSystem.File.Exists(fileDestination))
         {
             _fileSystem.File.Copy(filepath, fileDestination);
+            _fileSystem.File.Delete(filepath);
         }
     }
 }

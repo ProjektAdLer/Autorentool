@@ -3,15 +3,18 @@
 public class LearningWorldJson : ILearningWorldJson
 {
     // the identifier has the name of the element, this information is needed for the API calls from the 2D3D Team.
-    public LearningWorldJson(IdentifierJson identifier, List<int> learningWorldContent, List<TopicJson> topics, 
+    public LearningWorldJson(string idNumber, IdentifierJson identifier, List<int> learningWorldContent, List<TopicJson> topics, 
         List<LearningSpaceJson> learningSpaces, List<LearningElementJson> learningElements)
     {
+        IdNumber = idNumber;
         Identifier = identifier;
         LearningWorldContent = learningWorldContent;
         Topics = topics;
         LearningSpaces = learningSpaces;
         LearningElements = learningElements;
     }
+    
+    public string IdNumber { get; set; }
 
     public IdentifierJson Identifier { get; set; }
     

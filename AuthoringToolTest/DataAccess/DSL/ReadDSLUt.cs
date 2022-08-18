@@ -75,7 +75,7 @@ public class ReadDslUt
 
         var learningElementList = new List<LearningElementJson>(){learningElementJson_1, learningElementJson_2};
         
-        var learningWorldJson = new LearningWorldJson(identifierLearningWorldJson, learningWorldContentJson, topicsList, learningSpacesList, learningElementList);
+        var learningWorldJson = new LearningWorldJson("uuid", identifierLearningWorldJson, learningWorldContentJson, topicsList, learningSpacesList, learningElementList);
 
         var rootJson = new DocumentRootJson(learningWorldJson);
         

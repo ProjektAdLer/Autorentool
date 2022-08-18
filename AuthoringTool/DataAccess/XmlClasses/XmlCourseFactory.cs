@@ -92,6 +92,7 @@ public class XmlCourseFactory
         CourseCourseXmlCourse.Theme = "boost";
         CourseCourseXmlCourse.ShowCompletionConditions = "1";
         CourseCourseXmlCourse.EnableCompletion = "1";
+        CourseCourseXmlCourse.IdNumber = _learningWorld.IdNumber;
         CourseCourseXmlCourse.Category = CourseCourseXmlCategory as CourseCourseXmlCategory;
 
         //create course/course.xml file
