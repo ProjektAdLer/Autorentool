@@ -48,7 +48,7 @@ public class XmlCourseFactoryUt
         var mockCourseCategory = new CourseCourseXmlCategory();
         var mockCourseCourse = Substitute.For<ICourseCourseXmlCourse>();
         var mockIdentifier = new IdentifierJson("id", "CourseName");
-        var mockLearningWorld = new LearningWorldJson(mockIdentifier, new List<int>(),
+        var mockLearningWorld = new LearningWorldJson("Uuid", mockIdentifier, new List<int>(),
             new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>());
         mockLearningWorld.Identifier = mockIdentifier;
         mockLearningWorld.Identifier.Value = "CourseName";
@@ -102,7 +102,7 @@ public class XmlCourseFactoryUt
         var mockCourseCategory = new CourseCourseXmlCategory();
         var mockCourseCourse = Substitute.For<ICourseCourseXmlCourse>();
         var mockIdentifier = new IdentifierJson("CourseName", "CourseName");
-        var mockLearningWorld = new LearningWorldJson(mockIdentifier, new List<int>(),
+        var mockLearningWorld = new LearningWorldJson("Uuid", mockIdentifier, new List<int>(),
             new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>());
         mockLearningWorld.Identifier = mockIdentifier;
         mockLearningWorld.Identifier.Value = "CourseName";

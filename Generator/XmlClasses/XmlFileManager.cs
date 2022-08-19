@@ -66,11 +66,12 @@ public class XmlFileManager : IXmlFileManager
         string hashFolderName = hashCheckSum.Substring(0, 2);
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "files", hashFolderName));
         
-        string fileDestination = Path.Join("XMLFilesForExport", "files", hashFolderName.Substring(0, 2),
+        string fileDestination = Path.Join(currWorkDir,"XMLFilesForExport", "files", hashFolderName.Substring(0, 2),
             hashCheckSum);
         if (!_fileSystem.File.Exists(fileDestination))
         {
             _fileSystem.File.Copy(filepath, fileDestination);
+            _fileSystem.File.Delete(filepath);
         }
     }
 }

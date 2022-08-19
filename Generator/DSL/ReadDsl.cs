@@ -15,7 +15,7 @@ public class ReadDsl : IReadDsl
 
     public ReadDsl(IFileSystem fileSystem)
     {
-        _learningWorldJson = new LearningWorldJson(new IdentifierJson("LearningWorld", "Value"), 
+        _learningWorldJson = new LearningWorldJson("Uuid",new IdentifierJson("LearningWorld", "Value"), 
             new List<int>(), new List<TopicJson>(), 
             new List<LearningSpaceJson>(), new List<LearningElementJson>());
         _rootJson = new DocumentRootJson(_learningWorldJson);
@@ -36,7 +36,7 @@ public class ReadDsl : IReadDsl
         else if (rootJsonForTest == null)
         {
              var jsonString = _fileSystem.File.ReadAllText(filepathDsl);
-            _rootJson = JsonSerializer.Deserialize<DocumentRootJson>(jsonString) ?? throw new InvalidOperationException("Could not deserialize DSL_Document");
+             _rootJson = JsonSerializer.Deserialize<DocumentRootJson>(jsonString) ?? throw new InvalidOperationException("Could not deserialize DSL_Document");
         }
         GetH5PElements(_rootJson);
         GetLearningSpaces(_rootJson);

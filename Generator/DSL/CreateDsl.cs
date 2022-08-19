@@ -11,6 +11,7 @@ public class CreateDsl : ICreateDsl
     public List<LearningSpacePe> ListLearningSpaces;
     private readonly List<int> _listLearningSpaceContent;
     private readonly IFileSystem _fileSystem;
+    private readonly string Uuid;
 
     /// <summary>
     /// Read the AuthoringToolLib Entities and create a Dsl Document with a specified syntax.
@@ -22,7 +23,8 @@ public class CreateDsl : ICreateDsl
         ListLearningElements = new List<LearningElementPe>();
         ListLearningSpaces = new List<LearningSpacePe>();
         _listLearningSpaceContent = new List<int>();
-        
+        Guid guid = Guid.NewGuid();
+        Uuid = guid.ToString();
     }
     
     /// <summary>
@@ -33,7 +35,7 @@ public class CreateDsl : ICreateDsl
     {
         
         //Initialise learningWorldJson with empty values, they will be filled with information later in the method.
-        var learningWorldJson = new LearningWorldJson(new IdentifierJson("name", learningWorld.Name), new List<int>(),
+        var learningWorldJson = new LearningWorldJson(Uuid, new IdentifierJson("name", learningWorld.Name), new List<int>(),
             new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>());
 
 

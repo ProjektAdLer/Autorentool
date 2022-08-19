@@ -56,7 +56,7 @@ public class XmlBackupFactoryUt
         var mockSections = Substitute.For<IMoodleBackupXmlSections>();
         var mockCourse = Substitute.For<IMoodleBackupXmlCourse>();
         var mockIdentifier = new IdentifierJson("name", "Element_1");
-        var mockLearningWorld = new LearningWorldJson(mockIdentifier, new List<int>(),
+        var mockLearningWorld = new LearningWorldJson("Uuid", mockIdentifier, new List<int>(),
             new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>());
         var mockDslDocument = new List<LearningElementJson>();
         
@@ -247,7 +247,7 @@ public class XmlBackupFactoryUt
        
         var mockDslDocument = new List<LearningElementJson>();
         
-        var mockLearningWorld = new LearningWorldJson(mockIdentifier, new List<int>(),
+        var mockLearningWorld = new LearningWorldJson("Uuid", mockIdentifier, new List<int>(),
             new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>() );
 
         var mockLearningElement = new LearningElementJson(1, mockIdentifier, "h5p");
