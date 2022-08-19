@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
-using AuthoringTool.DataAccess.DSL;
 using AuthoringTool.DataAccess.PersistEntities;
+using Generator.DSL;
+using Generator.PersistEntities;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.DSL;

@@ -1,6 +1,6 @@
 ﻿using System.IO.Abstractions;
-using AuthoringTool.BusinessLogic.API;
-using AuthoringTool.Entities;
+using AuthoringToolLib.BusinessLogic.API;
+using AuthoringToolLib.Entities;
 using AutoMapper;
 using Generator.DSL;
 using Generator.PersistEntities;
@@ -8,7 +8,7 @@ using Generator.WorldExport;
 
 namespace Generator.API;
 
-internal class WorldGenerator : IWorldGenerator
+public class WorldGenerator : IWorldGenerator
 {
     public WorldGenerator(IBackupFileGenerator backupFileGenerator, ICreateDsl createDsl, IReadDsl readDsl, 
         IFileSystem fileSystem, IMapper mapper)

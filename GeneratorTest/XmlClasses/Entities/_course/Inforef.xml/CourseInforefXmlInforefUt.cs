@@ -1,7 +1,6 @@
-﻿using System.IO;
-using System.IO.Abstractions.TestingHelpers;
-using AuthoringTool.DataAccess.WorldExport;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Course.Inforef.xml;
+﻿using System.IO.Abstractions.TestingHelpers;
+using Generator.WorldExport;
+using Generator.XmlClasses.Entities._course.Inforef.xml;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Course.Inforef.xml;

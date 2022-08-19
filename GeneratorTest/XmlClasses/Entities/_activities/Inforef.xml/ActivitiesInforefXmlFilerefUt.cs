@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Inforef.xml;
+﻿using Generator.XmlClasses.Entities._activities.Inforef.xml;
 using NSubstitute;
 using NUnit.Framework;
 

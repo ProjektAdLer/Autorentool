@@ -1,30 +1,30 @@
 using System;
 using System.IO.Abstractions;
-using AuthoringTool;
-using AuthoringTool.API.Configuration;
-using AuthoringTool.BusinessLogic.API;
-using AuthoringTool.DataAccess.API;
-using AuthoringTool.DataAccess.DSL;
-using AuthoringTool.DataAccess.Persistence;
-using AuthoringTool.DataAccess.PersistEntities;
-using AuthoringTool.DataAccess.WorldExport;
-using AuthoringTool.PresentationLogic.API;
-using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
-using AuthoringTool.PresentationLogic.EntityMapping;
-using AuthoringTool.PresentationLogic.EntityMapping.LearningElementMapper;
-using AuthoringTool.PresentationLogic.LearningElement;
-using AuthoringTool.PresentationLogic.LearningSpace;
-using AuthoringTool.PresentationLogic.LearningWorld;
-using AuthoringTool.PresentationLogic.ModalDialog;
-using AuthoringTool.PresentationLogic.Toolbox;
-using AuthoringTool.View.Toolbox;
+using AuthoringToolLib;
+using AuthoringToolLib.API.Configuration;
+using AuthoringToolLib.BusinessLogic.API;
+using AuthoringToolLib.DataAccess.API;
+using AuthoringToolLib.DataAccess.Persistence;
+using AuthoringToolLib.PresentationLogic.API;
+using AuthoringToolLib.PresentationLogic.AuthoringToolWorkspace;
+using AuthoringToolLib.PresentationLogic.EntityMapping;
+using AuthoringToolLib.PresentationLogic.EntityMapping.LearningElementMapper;
+using AuthoringToolLib.PresentationLogic.LearningElement;
+using AuthoringToolLib.PresentationLogic.LearningSpace;
+using AuthoringToolLib.PresentationLogic.LearningWorld;
+using AuthoringToolLib.PresentationLogic.ModalDialog;
+using AuthoringToolLib.PresentationLogic.Toolbox;
+using AuthoringToolLib.View.Toolbox;
 using AutoMapper;
+using Generator.DSL;
+using Generator.PersistEntities;
+using Generator.WorldExport;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 
-namespace AuthoringToolTest;
+namespace AuthoringToolLibTest;
 
 [TestFixture]
 public class StartupUt
@@ -105,7 +105,7 @@ public class StartupUt
     private static readonly Type[] ConfigureDataAccessRequiredTypes =
     {
         typeof(IXmlFileHandler<LearningWorldPe>), typeof(IXmlFileHandler<LearningElementPe>), typeof(IXmlFileHandler<LearningSpacePe>),
-        typeof(IDataAccess), typeof(ICreateDsl), typeof(IReadDsl), typeof(IContentFileHandler), typeof(IBackupFileGenerator),
+        typeof(IDataAccess), typeof(IContentFileHandler)
         
     };
     [Test]
@@ -143,6 +143,18 @@ public class StartupUt
     {
         ConfigureServicesCoreTest(requiredType);
     }
+    
+    private static readonly Type[] ConfigureGeneratorRequiredTypes =
+    {
+        typeof(IWorldGenerator), typeof(IBackupFileGenerator), typeof(ICreateDsl), typeof(IReadDsl)
+    };
+    [Test]
+    [TestCaseSource(nameof(ConfigureGeneratorRequiredTypes))]
+    public void Startup_ConfigureServices_CanResolveAllGeneratorServices(Type requiredType)
+    {
+        ConfigureServicesCoreTest(requiredType);
+    }
+    
     
     private static readonly Type[] ConfigureAutoMapperRequiredTypes =
     {

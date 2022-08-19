@@ -13,7 +13,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AuthoringTool\AuthoringTool.csproj" />
+      <ProjectReference Include="..\AuthoringToolLib\AuthoringToolLib.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+            <_Parameter1>GeneratorTest</_Parameter1>
+        </AssemblyAttribute>
     </ItemGroup>
 
 </Project>

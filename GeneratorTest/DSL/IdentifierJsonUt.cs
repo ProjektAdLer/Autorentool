@@ -1,4 +1,4 @@
-﻿using AuthoringTool.DataAccess.DSL;
+﻿using Generator.DSL;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.DSL;

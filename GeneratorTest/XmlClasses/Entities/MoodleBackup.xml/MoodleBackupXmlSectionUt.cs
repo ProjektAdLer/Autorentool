@@ -1,4 +1,4 @@
-﻿using AuthoringTool.DataAccess.XmlClasses.Entities.MoodleBackup.xml;
+﻿using Generator.XmlClasses.Entities.MoodleBackup.xml;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.MoodleBackup.xml;

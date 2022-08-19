@@ -13,7 +13,7 @@ public class CreateDsl : ICreateDsl
     private readonly IFileSystem _fileSystem;
 
     /// <summary>
-    /// Read the AuthoringTool Entities and create a Dsl Document with a specified syntax.
+    /// Read the AuthoringToolLib Entities and create a Dsl Document with a specified syntax.
     /// </summary>
     /// <param name="fileSystem"></param>
     public CreateDsl(IFileSystem fileSystem)

@@ -1,11 +1,8 @@
-﻿using System;
-using System.IO;
-using System.IO.Abstractions.TestingHelpers;
+﻿using System.IO.Abstractions.TestingHelpers;
 using System.Text;
-using AuthoringTool.DataAccess;
-using AuthoringTool.DataAccess.DSL;
-using AuthoringTool.DataAccess.WorldExport;
-using ICSharpCode.SharpZipLib.Tar;
+using Generator.DSL;
+using Generator.WorldExport;
+using Generator.XmlClasses;
 using NSubstitute;
 using NUnit.Framework;
 

@@ -1,23 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.IO.Abstractions.TestingHelpers;
-using AngleSharp.Text;
-using AuthoringTool.DataAccess.DSL;
-using AuthoringTool.DataAccess.WorldExport;
-using AuthoringTool.DataAccess.XmlClasses;
-using AuthoringTool.DataAccess.XmlClasses.Entities._activities.GradeHistory.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Grades.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities._activities.H5PActivity.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Inforef.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Module.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Roles.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Files.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Sections.Inforef.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Sections.Section.xml;
-using AuthoringTool.DataAccess.XmlClasses.XmlFileFactories;
+﻿using System.IO.Abstractions.TestingHelpers;
+using Generator.DSL;
+using Generator.WorldExport;
+using Generator.XmlClasses;
+using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
+using Generator.XmlClasses.Entities._activities.Grades.xml;
+using Generator.XmlClasses.Entities._activities.H5PActivity.xml;
+using Generator.XmlClasses.Entities._activities.Inforef.xml;
+using Generator.XmlClasses.Entities._activities.Module.xml;
+using Generator.XmlClasses.Entities._activities.Roles.xml;
+using Generator.XmlClasses.Entities._sections.Inforef.xml;
+using Generator.XmlClasses.Entities._sections.Section.xml;
+using Generator.XmlClasses.Entities.Files.xml;
+using Generator.XmlClasses.XmlFileFactories;
 using NSubstitute;
-using NSubstitute.ReceivedExtensions;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.XmlClasses;
@@ -155,7 +150,7 @@ public class XmlH5PFactoryUt
             Assert.That(systemUnderTest.FilesXmlFiles.File[2].ContextId , Is.EqualTo(h5pElement_2.Id.ToString()));
             Assert.That(systemUnderTest.FilesXmlFiles.File[2].Filename , Is.EqualTo(identifier_2.Value.ToString()));
             Assert.That(systemUnderTest.FilesXmlFiles.File[2].Source , Is.EqualTo(identifier_2.Value.ToString()));
-            Assert.That(systemUnderTest.FilesXmlFiles.File[0].Id , Is.EqualTo(systemUnderTest.FilesXmlFiles.File[0].Id.ToInteger(+2).ToString()));
+            Assert.That(systemUnderTest.FilesXmlFiles.File[2].Id , Is.EqualTo((int.Parse(systemUnderTest.FilesXmlFiles.File[0].Id)+2).ToString()));
         });
     }
 

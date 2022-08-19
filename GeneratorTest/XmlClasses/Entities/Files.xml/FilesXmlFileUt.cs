@@ -1,4 +1,4 @@
-﻿using AuthoringTool.DataAccess.XmlClasses.Entities.Files.xml;
+﻿using Generator.XmlClasses.Entities.Files.xml;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Files.xml;

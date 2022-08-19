@@ -1,8 +1,8 @@
 ﻿//First Attempts to add a Section into the Moodle Backup Structure
 
-/*using AuthoringTool.DataAccess.XmlClasses.sections;
+/*using AuthoringToolLib.DataAccess.XmlClasses.sections;
 
-namespace AuthoringTool.DataAccess.XmlClasses;
+namespace AuthoringToolLib.DataAccess.XmlClasses;
 
 public class XmlSectionFactory
 {

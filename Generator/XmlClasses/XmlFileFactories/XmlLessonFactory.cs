@@ -1,18 +1,18 @@
 ﻿//First attempts to add a lesson to the BackupStructure 
 
 /*using System.IO.Abstractions;
-using AuthoringTool.DataAccess.DSL;
-using AuthoringTool.DataAccess.XmlClasses.Entities._activities.GradeHistory.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Grades.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Inforef.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Lesson.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Module.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Roles.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Files.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Sections.Inforef.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Sections.Section.xml;
+using AuthoringToolLib.DataAccess.DSL;
+using AuthoringToolLib.DataAccess.XmlClasses.Entities._activities.GradeHistory.xml;
+using AuthoringToolLib.DataAccess.XmlClasses.Entities._activities.Grades.xml;
+using AuthoringToolLib.DataAccess.XmlClasses.Entities._activities.Inforef.xml;
+using AuthoringToolLib.DataAccess.XmlClasses.Entities._activities.Lesson.xml;
+using AuthoringToolLib.DataAccess.XmlClasses.Entities._activities.Module.xml;
+using AuthoringToolLib.DataAccess.XmlClasses.Entities._activities.Roles.xml;
+using AuthoringToolLib.DataAccess.XmlClasses.Entities.Files.xml;
+using AuthoringToolLib.DataAccess.XmlClasses.Entities.Sections.Inforef.xml;
+using AuthoringToolLib.DataAccess.XmlClasses.Entities.Sections.Section.xml;
 
-namespace AuthoringTool.DataAccess.XmlClasses.XmlFileFactories;
+namespace AuthoringToolLib.DataAccess.XmlClasses.XmlFileFactories;
 
 
 public class XmlLessonFactory {

@@ -1,4 +1,4 @@
-﻿using AuthoringTool.DataAccess.XmlClasses.Entities.Course.Inforef.xml;
+﻿using Generator.XmlClasses.Entities._course.Inforef.xml;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Course.Inforef.xml;

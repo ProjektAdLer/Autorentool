@@ -1,7 +1,6 @@
-﻿using System.IO;
-using System.IO.Abstractions.TestingHelpers;
-using AuthoringTool.DataAccess.WorldExport;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Gradebook.xml;
+﻿using System.IO.Abstractions.TestingHelpers;
+using Generator.WorldExport;
+using Generator.XmlClasses.Entities.Gradebook.xml;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Gradebook.xml;

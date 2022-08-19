@@ -1,0 +1,265 @@
+﻿@page "/AuthoringToolWorkspaceView"
+@using AuthoringToolLib.View.LearningWorld
+@using AuthoringToolLib.Components
+@using AuthoringToolLib.Components.ModalDialog
+@using AuthoringToolLib.PresentationLogic.API
+@using AuthoringToolLib.PresentationLogic.AuthoringToolWorkspace
+@using AuthoringToolLib.PresentationLogic.ModalDialog
+
+<h3>AuthoringTool Workspace</h3>
+
+<p role="status">Current count of learning worlds: @AuthoringToolWorkspaceVm.LearningWorlds.Count()</p>
+<p role="status" id="filepath">Filepath: @filePath</p>
+<label class="world-select">
+    Select learning world:
+    <select @onchange="args => SetSelectedLearningWorld((string) args.Value!)"
+            value="@(AuthoringToolWorkspaceVm.SelectedLearningWorld?.Name)">
+        @foreach (var learningWorld in AuthoringToolWorkspaceVm.LearningWorlds)
+        {
+            <option value="@learningWorld.Name">@learningWorld.Name</option>
+        }
+        @if (!AuthoringToolWorkspaceVm.LearningWorlds.Any() ||
+             AuthoringToolWorkspaceVm.LearningWorlds.Count() == 1 && AuthoringToolWorkspaceVm.SelectedLearningWorld == null)
+        {
+            <option value=""></option>
+        }
+    </select>
+</label>
+<div>
+    @if (AuthoringToolWorkspaceVm.SelectedLearningWorld != null)
+    {
+        <label class="world-data">
+            Selected world: @AuthoringToolWorkspaceVm.SelectedLearningWorld.Name,
+            Description: @AuthoringToolWorkspaceVm.SelectedLearningWorld.Description,
+            Elements: @AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningElements.Count,
+            Spaces: @AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces.Count
+        </label>
+    }
+</div>
+<div>
+    <button class="btn btn-primary add-learning-world" @onclick="AddNewLearningWorld">Add Learning World</button>
+    <button class="btn btn-primary load-learning-world" @onclick="LoadLearningWorldAsync">Load Learning World</button>
+    <button class="btn btn-primary edit-learning-world" @onclick="OpenEditSelectedLearningWorldDialog" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Edit Learning World</button>
+    <button class="btn btn-primary delete-learning-world" @onclick="DeleteSelectedLearningWorld" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Delete selected Learning World</button>
+    <button class="btn btn-primary save-learning-world" @onclick="SaveSelectedLearningWorldAsync" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Save selected Learning World</button>
+    <button class="btn btn-primary export-learning-world" id="btnExport" @onclick="ExportLearningWorld">Create Export-File</button>
+</div>
+<DropZone OnNewStream=OnDragAndDropResult></DropZone>
+
+@if (AuthoringToolWorkspaceP.InformationMessageToShow != null)
+{
+    @ModalDialogFactory.GetInformationMessageFragment(OnShowInformationDialogClose, AuthoringToolWorkspaceP.InformationMessageToShow)
+}
+<!-- Save dialog for shutting down -->
+@if (AuthoringToolWorkspaceP.SaveUnsavedChangesDialogOpen && AuthoringToolWorkspaceP.UnsavedWorldsQueue != null
+     && AuthoringToolWorkspaceP.UnsavedWorldsQueue.Any())
+{
+    @ModalDialogFactory.GetSaveUnsavedWorldsFragment(OnSaveWorldDialogCloseAsync, AuthoringToolWorkspaceP.UnsavedWorldsQueue.Peek().Name)
+}
+
+@if (AuthoringToolWorkspaceP.WorldToReplaceWith != null)
+{
+    @ModalDialogFactory.GetReplaceWorldFragment(OnReplaceDialogClose, AuthoringToolWorkspaceP.WorldToReplaceWith.Name)
+}
+
+<!-- Save dialog for saving when replacing -->
+@if (AuthoringToolWorkspaceP.ReplacedUnsavedWorld != null)
+{
+    @ModalDialogFactory.GetReplaceUnsavedWorldFragment(OnSaveReplacedWorldDialogCloseAsync, AuthoringToolWorkspaceP.ReplacedUnsavedWorld.Name)
+}
+
+<!-- Save dialog for saving when deleting -->
+@if (AuthoringToolWorkspaceP.DeletedUnsavedWorld != null)
+{
+    @ModalDialogFactory.GetDeleteUnsavedWorldFragment(OnSaveDeletedWorldDialogCloseAsync, AuthoringToolWorkspaceP.DeletedUnsavedWorld.Name)
+}
+
+@if (AuthoringToolWorkspaceP.CreateLearningWorldDialogOpen)
+{
+    @ModalDialogFactory.GetCreateLearningWorldFragment(OnCreateWorldDialogClose)
+}
+@if (AuthoringToolWorkspaceVm.SelectedLearningWorld != null)
+{
+    <LearningWorldView>
+        </LearningWorldView>
+}
+
+@if (AuthoringToolWorkspaceP.EditLearningWorldDialogOpen)
+{
+    <!-- EditDialogInitialValues is set by presenter before setting EditLearningWorldDialogOpen to true -->
+    @ModalDialogFactory.GetEditLearningWorldFragment(AuthoringToolWorkspaceVm.EditDialogInitialValues!, OnEditWorldDialogClose)
+}
+
+@if (ErrorState != null)
+{
+    @ModalDialogFactory.GetErrorStateFragment(OnExceptionEncounteredDialogClose, ErrorState.ToString())
+}
+
+
+@code {
+
+#pragma warning disable CS8618 injected by framework - m.ho
+    [Inject]
+    public IMouseService MouseService { get; set; }
+    [Inject]
+    public IAuthoringToolWorkspacePresenter AuthoringToolWorkspaceP { get; set; }
+    [Inject]
+    public IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get; set; }
+    [Inject]
+    public IPresentationLogic PresentationLogic { get; set; }
+    [Inject]
+    public IAuthoringToolWorkspaceViewModalDialogFactory ModalDialogFactory { get; set; }
+#pragma warning restore CS8618
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        AuthoringToolWorkspaceP.OnForceViewUpdate += StateHasChanged;
+        AuthoringToolWorkspaceVm.PropertyChanged += async (_, _) => await InvokeAsync(StateHasChanged);
+    }
+    
+    private string filePath = "";
+
+    private ExceptionWrapper? ErrorState { get; set; }
+
+    private void AddNewLearningWorld()
+    {
+        AuthoringToolWorkspaceP.AddNewLearningWorld();
+    }
+
+    private void OpenEditSelectedLearningWorldDialog()
+    {
+        AuthoringToolWorkspaceP.OpenEditSelectedLearningWorldDialog();
+    }
+
+    private void DeleteSelectedLearningWorld()
+    {
+        AuthoringToolWorkspaceP.DeleteSelectedLearningWorld();
+    }
+
+    private async void LoadLearningWorldAsync()
+    {
+        try
+        {
+            await AuthoringToolWorkspaceP.LoadLearningWorldAsync();
+        }
+        catch (OperationCanceledException)
+        {
+    //nothing to do, perhaps we want to show a notification?
+        }
+        catch (Exception exception)
+        {
+            ErrorState = new ExceptionWrapper("Loading learning world", exception);
+        }
+        finally
+        {
+    //we need to tell blazor explicitly to re-render our component after we added the loaded learning world
+            StateHasChanged();
+        }
+    }
+
+    private async Task SaveSelectedLearningWorldAsync()
+    {
+        try
+        {
+            await AuthoringToolWorkspaceP.SaveSelectedLearningWorldAsync();
+        }
+        catch (OperationCanceledException)
+        {
+    //nothing to do, perhaps we want to show a notification?
+        }
+        catch (Exception exception)
+        {
+            ErrorState = new ExceptionWrapper("Saving learning world", exception);
+        }
+        finally
+        {
+            StateHasChanged();
+        }
+    }
+
+    private void OnCreateWorldDialogClose(ModalDialogOnCloseResult returnValueTuple)
+    {
+        AuthoringToolWorkspaceP.OnCreateWorldDialogClose(returnValueTuple);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void OnEditWorldDialogClose(ModalDialogOnCloseResult returnValueTuple)
+    {
+        AuthoringToolWorkspaceP.OnEditWorldDialogClose(returnValueTuple);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void OnSaveWorldDialogCloseAsync(ModalDialogOnCloseResult returnValueTuple)
+    {
+        try
+        {
+            AuthoringToolWorkspaceP.OnSaveWorldDialogClose(returnValueTuple);
+        }
+        catch (Exception ex)
+        {
+            ErrorState = new ExceptionWrapper(nameof(OnSaveWorldDialogCloseAsync), ex);
+        }
+        finally
+        {
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private void OnSaveReplacedWorldDialogCloseAsync(ModalDialogOnCloseResult returnValueTuple)
+    {
+        AuthoringToolWorkspaceP.OnSaveReplacedWorldDialogClose(returnValueTuple);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void OnReplaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
+    {
+        AuthoringToolWorkspaceP.OnReplaceDialogClose(returnValueTuple);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void OnSaveDeletedWorldDialogCloseAsync(ModalDialogOnCloseResult returnValueTuple)
+    {
+        AuthoringToolWorkspaceP.OnSaveDeletedWorldDialogClose(returnValueTuple);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void SetSelectedLearningWorld(string argsValue)
+    {
+        AuthoringToolWorkspaceP.SetSelectedLearningWorld(argsValue);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private async void ExportLearningWorld()
+    {
+    //Create XMl-files, Overwrite Encoding to UTF-8 and Create Backup-File
+        if (AuthoringToolWorkspaceVm.SelectedLearningWorld == null) return;
+        try
+        {
+            filePath = await PresentationLogic.ConstructBackupAsync(AuthoringToolWorkspaceVm.SelectedLearningWorld);
+        }
+        catch (OperationCanceledException)
+        {
+    //do nothing
+        }
+        StateHasChanged();
+    }
+
+    private async Task OnDragAndDropResult(Tuple<string, Stream> result)
+    {
+        await AuthoringToolWorkspaceP.ProcessDragAndDropResult(result);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void OnShowInformationDialogClose(ModalDialogOnCloseResult result)
+    {
+        AuthoringToolWorkspaceP.InformationMessageToShow = null;
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void OnExceptionEncounteredDialogClose(ModalDialogOnCloseResult result)
+    {
+        ErrorState = null;
+        InvokeAsync(StateHasChanged);
+    }
+}

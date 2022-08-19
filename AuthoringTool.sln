@@ -1,17 +1,23 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthoringTool", "AuthoringTool\AuthoringTool.csproj", "{0C6696A5-DF9A-491B-BC94-AE0B93C7F6AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthoringToolLib", "AuthoringToolLib\AuthoringToolLib.csproj", "{0C6696A5-DF9A-491B-BC94-AE0B93C7F6AA}"
 	ProjectSection(ProjectDependencies) = postProject
 		{E3066ECB-19B3-418F-9D5C-72D7D0B8DC34} = {E3066ECB-19B3-418F-9D5C-72D7D0B8DC34}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthoringToolTest", "AuthoringToolTest\AuthoringToolTest.csproj", "{E3CF76B7-1111-43E2-8374-4777709AFC93}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthoringToolLibTest", "AuthoringToolLibTest\AuthoringToolLibTest.csproj", "{E3CF76B7-1111-43E2-8374-4777709AFC93}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectronWrapper", "ElectronWrapper\ElectronWrapper.csproj", "{112586E3-8811-4701-9249-4FC3CC26EB65}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Generator", "Generator\Generator.csproj", "{BC36CCA5-A887-4662-B19B-6CC10EC79B25}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneratorTest", "GeneratorTest\GeneratorTest.csproj", "{ED8E1A40-C18F-4411-8478-CA0475B9339E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PersistEntities", "PersistEntities\PersistEntities.csproj", "{684362E4-EFA0-47CD-A45E-CD2FF5BAF62D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthoringTool", "AuthoringTool\AuthoringTool.csproj", "{4DB8867F-B4F9-4A96-85FD-8631776ECC75}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthoringToolTest", "AuthoringToolTest\AuthoringToolTest.csproj", "{C5105FD6-1B8F-405E-A1C8-CE3DE010A340}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,5 +45,17 @@ Global
 		{ED8E1A40-C18F-4411-8478-CA0475B9339E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED8E1A40-C18F-4411-8478-CA0475B9339E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED8E1A40-C18F-4411-8478-CA0475B9339E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{684362E4-EFA0-47CD-A45E-CD2FF5BAF62D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{684362E4-EFA0-47CD-A45E-CD2FF5BAF62D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{684362E4-EFA0-47CD-A45E-CD2FF5BAF62D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{684362E4-EFA0-47CD-A45E-CD2FF5BAF62D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4DB8867F-B4F9-4A96-85FD-8631776ECC75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4DB8867F-B4F9-4A96-85FD-8631776ECC75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4DB8867F-B4F9-4A96-85FD-8631776ECC75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4DB8867F-B4F9-4A96-85FD-8631776ECC75}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5105FD6-1B8F-405E-A1C8-CE3DE010A340}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5105FD6-1B8F-405E-A1C8-CE3DE010A340}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5105FD6-1B8F-405E-A1C8-CE3DE010A340}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5105FD6-1B8F-405E-A1C8-CE3DE010A340}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

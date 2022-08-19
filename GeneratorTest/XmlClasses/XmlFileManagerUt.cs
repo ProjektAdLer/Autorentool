@@ -1,7 +1,6 @@
-﻿using System.Collections.Generic;
-using System.IO.Abstractions.TestingHelpers;
-using AuthoringTool.DataAccess.XmlClasses;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Files.xml;
+﻿using System.IO.Abstractions.TestingHelpers;
+using Generator.XmlClasses;
+using Generator.XmlClasses.Entities.Files.xml;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.XmlClasses;

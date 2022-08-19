@@ -1,4 +1,4 @@
-﻿using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Resource.xml;
+﻿using Generator.XmlClasses.Entities._activities.Resource.xml;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Activities.Resource.xml;

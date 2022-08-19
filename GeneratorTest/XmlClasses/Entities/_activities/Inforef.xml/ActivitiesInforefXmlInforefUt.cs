@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using System.IO.Abstractions.TestingHelpers;
-using AuthoringTool.DataAccess.WorldExport;
-using AuthoringTool.DataAccess.XmlClasses;
-using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Inforef.xml;
+﻿using System.IO.Abstractions.TestingHelpers;
+using Generator.WorldExport;
+using Generator.XmlClasses;
+using Generator.XmlClasses.Entities._activities.Inforef.xml;
 using NSubstitute;
 using NUnit.Framework;
 

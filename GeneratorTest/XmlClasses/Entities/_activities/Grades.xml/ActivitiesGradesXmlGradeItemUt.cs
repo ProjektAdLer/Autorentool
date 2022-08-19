@@ -1,4 +1,4 @@
-﻿using AuthoringTool.DataAccess.XmlClasses.Entities._activities.Grades.xml;
+﻿using Generator.XmlClasses.Entities._activities.Grades.xml;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Activities.Grades.xml;

@@ -1,4 +1,4 @@
-﻿using AuthoringTool.DataAccess.XmlClasses.Entities._activities.H5PActivity.xml;
+﻿using Generator.XmlClasses.Entities._activities.H5PActivity.xml;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Activities.H5pActivity.xml;

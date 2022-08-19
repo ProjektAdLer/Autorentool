@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using AuthoringTool.DataAccess.DSL;
-using AuthoringTool.DataAccess.XmlClasses;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Course.Completiondefault.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Course.Course.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Course.Enrolments.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Course.Inforef.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Course.Roles.xml;
+﻿using Generator.DSL;
+using Generator.XmlClasses;
+using Generator.XmlClasses.Entities._course.Completiondefault.xml;
+using Generator.XmlClasses.Entities._course.Course.xml;
+using Generator.XmlClasses.Entities._course.Enrolments.xml;
+using Generator.XmlClasses.Entities._course.Inforef.xml;
+using Generator.XmlClasses.Entities._course.Roles.xml;
 using NSubstitute;
 using NUnit.Framework;
 

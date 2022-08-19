@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using AuthoringTool.DataAccess.DSL;
-using AuthoringTool.DataAccess.XmlClasses;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Gradebook.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Groups.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities.MoodleBackup.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Outcomes.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Questions.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Roles.xml;
-using AuthoringTool.DataAccess.XmlClasses.Entities.Scales.xml;
+﻿using Generator.DSL;
+using Generator.XmlClasses;
+using Generator.XmlClasses.Entities.Gradebook.xml;
+using Generator.XmlClasses.Entities.Groups.xml;
+using Generator.XmlClasses.Entities.MoodleBackup.xml;
+using Generator.XmlClasses.Entities.Outcomes.xml;
+using Generator.XmlClasses.Entities.Questions.xml;
+using Generator.XmlClasses.Entities.Roles.xml;
+using Generator.XmlClasses.Entities.Scales.xml;
 using NSubstitute;
 using NUnit.Framework;
 
