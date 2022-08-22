@@ -3,7 +3,7 @@ using Generator.XmlClasses;
 using Generator.XmlClasses.Entities.Files.xml;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses;
+namespace GeneratorTest.XmlClasses;
 
 [TestFixture]
 public class XmlFileManagerUt

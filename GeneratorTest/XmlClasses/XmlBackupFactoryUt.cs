@@ -10,7 +10,7 @@ using Generator.XmlClasses.Entities.Scales.xml;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses;
+namespace GeneratorTest.XmlClasses;
 
 [TestFixture]
 public class XmlBackupFactoryUt

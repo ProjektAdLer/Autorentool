@@ -8,7 +8,7 @@ using Generator.XmlClasses.Entities._course.Roles.xml;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses;
+namespace GeneratorTest.XmlClasses;
 
 [TestFixture]
 public class XmlCourseFactoryUt

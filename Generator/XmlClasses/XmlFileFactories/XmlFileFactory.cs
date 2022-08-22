@@ -22,24 +22,24 @@ public class XmlFileFactory
     public string FileElementId;
     public string FileElementName;
 
-    internal readonly IXmlFileManager FileManager;
-    internal IActivitiesGradesXmlGradeItem ActivitiesGradesXmlGradeItem { get; }
-    internal IActivitiesGradesXmlGradeItems ActivitiesGradesXmlGradeItems { get; }
-    internal IActivitiesGradesXmlActivityGradebook ActivitiesGradesXmlActivityGradebook { get; }
-    internal IActivitiesResourceXmlResource ActivitiesFileResourceXmlResource { get; }
-    internal IActivitiesResourceXmlActivity ActivitiesFileResourceXmlActivity { get; }
-    internal IActivitiesRolesXmlRoles ActivitiesRolesXmlRoles { get; }
-    internal IActivitiesModuleXmlModule ActivitiesModuleXmlModule { get; }
-    internal IActivitiesGradeHistoryXmlGradeHistory ActivitiesGradeHistoryXmlGradeHistory { get; }
-    internal IActivitiesInforefXmlFile ActivitiesInforefXmlFileBlock1 { get; }
-    internal IActivitiesInforefXmlFile ActivitiesInforefXmlFileBlock2 { get; }
-    internal IActivitiesInforefXmlFileref ActivitiesInforefXmlFileref { get; }
-    internal IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
-    internal IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
-    internal IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
-    internal ISectionsInforefXmlInforef SectionsInforefXmlInforef { get; }
-    internal ISectionsSectionXmlSection SectionsSectionXmlSection { get; }
-    internal IReadDsl ReadDsl { get; }
+    public readonly IXmlFileManager FileManager;
+    public IActivitiesGradesXmlGradeItem ActivitiesGradesXmlGradeItem { get; }
+    public IActivitiesGradesXmlGradeItems ActivitiesGradesXmlGradeItems { get; }
+    public IActivitiesGradesXmlActivityGradebook ActivitiesGradesXmlActivityGradebook { get; }
+    public IActivitiesResourceXmlResource ActivitiesFileResourceXmlResource { get; }
+    public IActivitiesResourceXmlActivity ActivitiesFileResourceXmlActivity { get; }
+    public IActivitiesRolesXmlRoles ActivitiesRolesXmlRoles { get; }
+    public IActivitiesModuleXmlModule ActivitiesModuleXmlModule { get; }
+    public IActivitiesGradeHistoryXmlGradeHistory ActivitiesGradeHistoryXmlGradeHistory { get; }
+    public IActivitiesInforefXmlFile ActivitiesInforefXmlFileBlock1 { get; }
+    public IActivitiesInforefXmlFile ActivitiesInforefXmlFileBlock2 { get; }
+    public IActivitiesInforefXmlFileref ActivitiesInforefXmlFileref { get; }
+    public IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
+    public IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
+    public IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
+    public ISectionsInforefXmlInforef SectionsInforefXmlInforef { get; }
+    public ISectionsSectionXmlSection SectionsSectionXmlSection { get; }
+    public IReadDsl ReadDsl { get; }
 
     public XmlFileFactory(IReadDsl readDsl, string dslpath, IXmlFileManager? xmlFileManager = null,
         IFileSystem? fileSystem = null, IActivitiesGradesXmlGradeItem? gradesGradeItem = null,

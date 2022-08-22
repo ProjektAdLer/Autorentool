@@ -15,7 +15,7 @@ using Generator.XmlClasses.XmlFileFactories;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses;
+namespace GeneratorTest.XmlClasses.XmlFileFactories;
 
 [TestFixture]
 public class XmlH5PFactoryUt
