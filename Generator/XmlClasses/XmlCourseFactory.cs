@@ -93,7 +93,7 @@ public class XmlCourseFactory
         CourseCourseXmlCourse.ShowCompletionConditions = "1";
         CourseCourseXmlCourse.EnableCompletion = "1";
         CourseCourseXmlCourse.IdNumber = _learningWorld.IdNumber;
-        CourseCourseXmlCourse.Category = CourseCourseXmlCategory as CourseCourseXmlCategory ?? new CourseCourseXmlCategory();
+        CourseCourseXmlCourse.Category = CourseCourseXmlCategory as CourseCourseXmlCategory;
 
         //create course/course.xml file
         CourseCourseXmlCourse.Serialize(); 
@@ -125,11 +125,11 @@ public class XmlCourseFactory
         CourseEnrolmentsXmlEnrolSelf.CustomInt5 = "0";
         CourseEnrolmentsXmlEnrolSelf.CustomInt6 = "1";
 
-        CourseEnrolmentsXmlEnrols.Enrol.Add(CourseEnrolmentsXmlEnrolManual as CourseEnrolmentsXmlEnrol ?? new CourseEnrolmentsXmlEnrol());
-        CourseEnrolmentsXmlEnrols.Enrol.Add(CourseEnrolmentsXmlEnrolGuest as CourseEnrolmentsXmlEnrol ?? new CourseEnrolmentsXmlEnrol());
-        CourseEnrolmentsXmlEnrols.Enrol.Add(CourseEnrolmentsXmlEnrolSelf as CourseEnrolmentsXmlEnrol ?? new CourseEnrolmentsXmlEnrol());
+        CourseEnrolmentsXmlEnrols.Enrol.Add(CourseEnrolmentsXmlEnrolManual as CourseEnrolmentsXmlEnrol);
+        CourseEnrolmentsXmlEnrols.Enrol.Add(CourseEnrolmentsXmlEnrolGuest as CourseEnrolmentsXmlEnrol);
+        CourseEnrolmentsXmlEnrols.Enrol.Add(CourseEnrolmentsXmlEnrolSelf as CourseEnrolmentsXmlEnrol);
 
-        CourseEnrolmentsXmlEnrolments.Enrols = CourseEnrolmentsXmlEnrols as CourseEnrolmentsXmlEnrols ?? new CourseEnrolmentsXmlEnrols();
+        CourseEnrolmentsXmlEnrolments.Enrols = CourseEnrolmentsXmlEnrols as CourseEnrolmentsXmlEnrols;
         
         //create course/enrolments.xml file
         CourseEnrolmentsXmlEnrolments.Serialize();
@@ -138,8 +138,8 @@ public class XmlCourseFactory
     public void CreateCourseInforefXml()
     {
         //set parameters of the course/inforef.xml file
-        CourseInforefXmlRoleref.Role = CourseInforefXmlRole as CourseInforefXmlRole ?? new CourseInforefXmlRole();
-        CourseInforefXmlInforef.Roleref = CourseInforefXmlRoleref as CourseInforefXmlRoleref ?? new CourseInforefXmlRoleref();
+        CourseInforefXmlRoleref.Role = CourseInforefXmlRole as CourseInforefXmlRole;
+        CourseInforefXmlInforef.Roleref = CourseInforefXmlRoleref as CourseInforefXmlRoleref;
         
         //create course/inforef.xml file
         CourseInforefXmlInforef.Serialize();

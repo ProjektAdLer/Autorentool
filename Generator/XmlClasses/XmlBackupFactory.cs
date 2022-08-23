@@ -19,56 +19,56 @@ public class XmlBackupFactory
     private readonly LearningWorldJson _learningWorld;
     private readonly List<LearningElementJson> _learningElement;
     private readonly List<LearningElementJson> _dslDocument;
-    public readonly IGradebookXmlGradeCategory GradebookXmlGradeCategory;
-    public readonly IGradebookXmlGradeCategories GradebookXmlGradeCategories;
-    public readonly IGradebookXmlGradeItem GradebookXmlGradeItem;
-    public readonly IGradebookXmlGradeItems GradebookXmlGradeItems;
+    internal IGradebookXmlGradeCategory GradebookXmlGradeCategory;
+    internal IGradebookXmlGradeCategories GradebookXmlGradeCategories;
+    internal IGradebookXmlGradeItem GradebookXmlGradeItem;
+    internal IGradebookXmlGradeItems GradebookXmlGradeItems;
 
-    public IGradebookXmlGradeSetting GradebookXmlGradebookSetting { get; }
-    public IGradebookXmlGradeSettings GradebookXmlGradebookSettings { get; }
-    public IGradebookXmlGradebook GradebookXmlGradebook { get; }
-    public IGroupsXmlGroupingsList GroupsXmlGroupingsList { get; }
-    public IGroupsXmlGroups GroupsXmlGroups { get; }
-    public IMoodleBackupXmlDetail MoodleBackupXmlDetail { get; }
-    public IMoodleBackupXmlDetails MoodleBackupXmlDetails { get; }
-    public IMoodleBackupXmlActivities MoodleBackupXmlActivities { get; }
-    public IMoodleBackupXmlSection MoodleBackupXmlSection { get; }
-    public IMoodleBackupXmlSections MoodleBackupXmlSections { get; }
-    public IMoodleBackupXmlCourse MoodleBackupXmlCourse { get; }
-    public IMoodleBackupXmlContents MoodleBackupXmlContents { get; }
+    internal IGradebookXmlGradeSetting GradebookXmlGradebookSetting { get; }
+    internal IGradebookXmlGradeSettings GradebookXmlGradebookSettings { get; }
+    internal IGradebookXmlGradebook GradebookXmlGradebook { get; }
+    internal IGroupsXmlGroupingsList GroupsXmlGroupingsList { get; }
+    internal IGroupsXmlGroups GroupsXmlGroups { get; }
+    internal IMoodleBackupXmlDetail MoodleBackupXmlDetail { get; }
+    internal IMoodleBackupXmlDetails MoodleBackupXmlDetails { get; }
+    internal IMoodleBackupXmlActivities MoodleBackupXmlActivities { get; }
+    internal IMoodleBackupXmlSection MoodleBackupXmlSection { get; }
+    internal IMoodleBackupXmlSections MoodleBackupXmlSections { get; }
+    internal IMoodleBackupXmlCourse MoodleBackupXmlCourse { get; }
+    internal IMoodleBackupXmlContents MoodleBackupXmlContents { get; }
     internal IMoodleBackupXmlSetting MoodleBackupXmlSettingFilename { get; }
-    public IMoodleBackupXmlSetting MoodleBackupXmlSettingImscc11 { get; }
-    public IMoodleBackupXmlSetting MoodleBackupXmlSettingUsers { get; }
-    public IMoodleBackupXmlSetting MoodleBackupXmlSettingAnonymize { get; }
-    public IMoodleBackupXmlSetting MoodleBackupXmlSettingRoleAssignments { get; }
-    public IMoodleBackupXmlSetting MoodleBackupXmlSettingActivities { get; }
-    public IMoodleBackupXmlSetting MoodleBackupXmlSettingBlocks { get; }
-    public IMoodleBackupXmlSetting MoodleBackupXmlSettingFiles { get; }
-    public IMoodleBackupXmlSetting MoodleBackupXmlSettingFilters { get; }
-    public IMoodleBackupXmlSetting MoodleBackupXmlSettingComments { get; }
-    public IMoodleBackupXmlSetting MoodleBackupXmlSettingBadges { get; }
-    public IMoodleBackupXmlSetting MoodleBackupXmlSettingCalendarevents { get; }
-    public IMoodleBackupXmlSetting MoodleBackupXmlSettingUserscompletion { get; }
-    public IMoodleBackupXmlSetting MoodleBackupXmlSettingLogs { get; }
-    public IMoodleBackupXmlSetting MoodleBackupXmlSettingGradeHistories { get; }
-    public IMoodleBackupXmlSetting MoodleBackupXmlSettingQuestionbank { get; }
-    public IMoodleBackupXmlSetting MoodleBackupXmlSettingGroups { get; }
-    public IMoodleBackupXmlSetting MoodleBackupXmlSettingCompetencies { get; }
-    public IMoodleBackupXmlSetting MoodleBackupXmlSettingCustomfield { get; }
-    public IMoodleBackupXmlSetting MoodleBackupXmlSettingContentbankcontent { get; }
-    public IMoodleBackupXmlSetting MoodleBackupXmlSettingLegacyfiles { get; }
-    public IMoodleBackupXmlSettings MoodleBackupXmlSettings { get; }
-    public IMoodleBackupXmlInformation MoodleBackupXmlInformation { get; }
-    public IMoodleBackupXmlMoodleBackup MoodleBackupXmlMoodleBackup { get; }
-    public IOutcomesXmlOutcomesDefinition OutcomesXmlOutcomesDefinition { get; }
-    public IQuestionsXmlQuestionsCategories QuestionsXmlQuestionsCategories { get; }
-    public IScalesXmlScalesDefinition ScalesXmlScalesDefinition { get; }
-    public IRolesXmlRole RolesXmlRole { get; }
-    public IRolesXmlRolesDefinition RolesXmlRolesDefinition{ get;}
+    internal IMoodleBackupXmlSetting MoodleBackupXmlSettingImscc11 { get; }
+    internal IMoodleBackupXmlSetting MoodleBackupXmlSettingUsers { get; }
+    internal IMoodleBackupXmlSetting MoodleBackupXmlSettingAnonymize { get; }
+    internal IMoodleBackupXmlSetting MoodleBackupXmlSettingRoleAssignments { get; }
+    internal IMoodleBackupXmlSetting MoodleBackupXmlSettingActivities { get; }
+    internal IMoodleBackupXmlSetting MoodleBackupXmlSettingBlocks { get; }
+    internal IMoodleBackupXmlSetting MoodleBackupXmlSettingFiles { get; }
+    internal IMoodleBackupXmlSetting MoodleBackupXmlSettingFilters { get; }
+    internal IMoodleBackupXmlSetting MoodleBackupXmlSettingComments { get; }
+    internal IMoodleBackupXmlSetting MoodleBackupXmlSettingBadges { get; }
+    internal IMoodleBackupXmlSetting MoodleBackupXmlSettingCalendarevents { get; }
+    internal IMoodleBackupXmlSetting MoodleBackupXmlSettingUserscompletion { get; }
+    internal IMoodleBackupXmlSetting MoodleBackupXmlSettingLogs { get; }
+    internal IMoodleBackupXmlSetting MoodleBackupXmlSettingGradeHistories { get; }
+    internal IMoodleBackupXmlSetting MoodleBackupXmlSettingQuestionbank { get; }
+    internal IMoodleBackupXmlSetting MoodleBackupXmlSettingGroups { get; }
+    internal IMoodleBackupXmlSetting MoodleBackupXmlSettingCompetencies { get; }
+    internal IMoodleBackupXmlSetting MoodleBackupXmlSettingCustomfield { get; }
+    internal IMoodleBackupXmlSetting MoodleBackupXmlSettingContentbankcontent { get; }
+    internal IMoodleBackupXmlSetting MoodleBackupXmlSettingLegacyfiles { get; }
+    internal IMoodleBackupXmlSettings MoodleBackupXmlSettings { get; }
+    internal IMoodleBackupXmlInformation MoodleBackupXmlInformation { get; }
+    internal IMoodleBackupXmlMoodleBackup MoodleBackupXmlMoodleBackup { get; }
+    internal IOutcomesXmlOutcomesDefinition OutcomesXmlOutcomesDefinition { get; }
+    internal IQuestionsXmlQuestionsCategories QuestionsXmlQuestionsCategories { get; }
+    internal IScalesXmlScalesDefinition ScalesXmlScalesDefinition { get; }
+    internal IRolesXmlRole RolesXmlRole { get; }
+    internal IRolesXmlRolesDefinition RolesXmlRolesDefinition{ get;}
 
-    public readonly List<MoodleBackupXmlActivity> MoodleBackupXmlActivityList;
-    public readonly List<MoodleBackupXmlSetting> MoodleBackupXmlSettingList;
-    public readonly List<MoodleBackupXmlSection> MoodleBackupXmlSectionList;
+    internal List<MoodleBackupXmlActivity> MoodleBackupXmlActivityList;
+    internal List<MoodleBackupXmlSetting> MoodleBackupXmlSettingList;
+    internal List<MoodleBackupXmlSection> MoodleBackupXmlSectionList;
     
     public XmlBackupFactory(IReadDsl readDsl, IGradebookXmlGradeItem? gradebookXmlGradeItem=null,
         IGradebookXmlGradeItems? gradebookXmlGradeItems=null,IGradebookXmlGradeCategory? gradebookXmlGradeCategory=null,
@@ -187,17 +187,17 @@ public class XmlBackupFactory
         //set the parameter of gradebook.xml file
         GradebookXmlGradeItem.Timecreated = _currentTime;
         GradebookXmlGradeItem.Timemodified = _currentTime;
-        GradebookXmlGradeItems.GradeItem = GradebookXmlGradeItem as GradebookXmlGradeItem ?? new GradebookXmlGradeItem();
+        GradebookXmlGradeItems.GradeItem = GradebookXmlGradeItem as GradebookXmlGradeItem;
         
         GradebookXmlGradeCategory.Timecreated = _currentTime;
         GradebookXmlGradeCategory.Timemodified = _currentTime;
-        GradebookXmlGradeCategories.GradeCategory = GradebookXmlGradeCategory as GradebookXmlGradeCategory ?? new GradebookXmlGradeCategory();
+        GradebookXmlGradeCategories.GradeCategory = GradebookXmlGradeCategory as GradebookXmlGradeCategory;
         
-        GradebookXmlGradebookSettings.GradeSetting = GradebookXmlGradebookSetting as GradebookXmlGradeSetting ?? new GradebookXmlGradeSetting(); 
+        GradebookXmlGradebookSettings.GradeSetting = GradebookXmlGradebookSetting as GradebookXmlGradeSetting; 
         
-        GradebookXmlGradebook.GradeCategories = GradebookXmlGradeCategories as GradebookXmlGradeCategories ?? new GradebookXmlGradeCategories();
-        GradebookXmlGradebook.GradeItems = GradebookXmlGradeItems as GradebookXmlGradeItems ?? new GradebookXmlGradeItems();
-        GradebookXmlGradebook.GradeSettings = GradebookXmlGradebookSettings as GradebookXmlGradeSettings ?? new GradebookXmlGradeSettings();
+        GradebookXmlGradebook.GradeCategories = GradebookXmlGradeCategories as GradebookXmlGradeCategories;
+        GradebookXmlGradebook.GradeItems = GradebookXmlGradeItems as GradebookXmlGradeItems;
+        GradebookXmlGradebook.GradeSettings = GradebookXmlGradebookSettings as GradebookXmlGradeSettings;
        
         //create the gradebook.xml file
         GradebookXmlGradebook.Serialize();
@@ -206,7 +206,7 @@ public class XmlBackupFactory
     public void CreateGroupsXml()
     {
         //set the parameter of groups.xml file
-        GroupsXmlGroups.GroupingsList = GroupsXmlGroupingsList as GroupsXmlGroupingsList ?? new GroupsXmlGroupingsList();
+        GroupsXmlGroups.GroupingsList = GroupsXmlGroupingsList as GroupsXmlGroupingsList;
         
         //create groups.xml file
         GroupsXmlGroups.Serialize();
@@ -215,7 +215,7 @@ public class XmlBackupFactory
     public void CreateMoodleBackupXml()
     {
         //set the parameter of the moodle_backup.xml file
-        MoodleBackupXmlDetails.Detail = MoodleBackupXmlDetail as MoodleBackupXmlDetail ?? new MoodleBackupXmlDetail();
+        MoodleBackupXmlDetails.Detail = MoodleBackupXmlDetail as MoodleBackupXmlDetail;
 
 
         MoodleBackupXmlCourse.Title = _learningWorld.Identifier.Value;
@@ -370,33 +370,90 @@ public class XmlBackupFactory
             }
         }
 
-        MoodleBackupXmlContents.Activities = MoodleBackupXmlActivities as MoodleBackupXmlActivities ?? new MoodleBackupXmlActivities();
-        MoodleBackupXmlContents.Sections = MoodleBackupXmlSections as MoodleBackupXmlSections ?? new MoodleBackupXmlSections();
-        MoodleBackupXmlContents.Course = MoodleBackupXmlCourse as MoodleBackupXmlCourse ?? new MoodleBackupXmlCourse();
+        /*
+        if (learningElement != null)
+            foreach (var element in learningElement)
+            {
+                string? learningElementId = element.id.ToString();
+                string? learningElementType = element.elementType;
+                string? learningElementName = element.identifier!.value;
+                if (learningElementType == "h5p")
+                {
+                    learningElementType = "lesson";
+                }
+
+                if (moodleBackupXmlActivityList != null)
+                {
+                    moodleBackupXmlActivityList.Add(new MoodleBackupXmlActivity());
+                    moodleBackupXmlActivityList[^1].SetParameters(
+                        learningElementId,
+                        learningElementId, learningElementType,
+                        learningElementName, "activities/" + learningElementType + "_" + learningElementId);
+                    MoodleBackupXmlActivities.SetParameters(moodleBackupXmlActivityList);
+                }
+
+                if (moodleBackupXmlSectionList != null)
+                {
+                    moodleBackupXmlSectionList.Add(new MoodleBackupXmlSection());
+                    moodleBackupXmlSectionList[^1].SetParameters(
+                        learningElementId,
+                        learningElementId, "sections/section_" + learningElementId);
+                    MoodleBackupXmlSections.SetParameters(moodleBackupXmlSectionList);
+                }
+
+                if (moodleBackupXmlSettingList != null)
+                {
+                    moodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting());
+                    moodleBackupXmlSettingList[^1]!.SetParametersSection(
+                        "section",
+                        "section_" + learningElementId,
+                        "section_" + learningElementId + "_included", "1");
+                    moodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting());
+                    moodleBackupXmlSettingList[^1]!.SetParametersSection(
+                        "section",
+                        "section_" + learningElementId,
+                        "section_" + learningElementId + "_userinfo", "0");
+                    moodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting());
+                    moodleBackupXmlSettingList[^1]!.SetParametersActivity(
+                        "activity",
+                        learningElementType + "_" + learningElementId,
+                        learningElementType + "_" + learningElementId + "_included", "1");
+                    moodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting());
+                    moodleBackupXmlSettingList[^1]!.SetParametersActivity(
+                        "activity",
+                        learningElementType + "_" + learningElementId,
+                        learningElementType + "_" + learningElementId + "_userinfo", "0");
+                }
+            }
+        */
+
+        MoodleBackupXmlContents.Activities = MoodleBackupXmlActivities as MoodleBackupXmlActivities;
+        MoodleBackupXmlContents.Sections = MoodleBackupXmlSections as MoodleBackupXmlSections;
+        MoodleBackupXmlContents.Course = MoodleBackupXmlCourse as MoodleBackupXmlCourse;
 
         if (MoodleBackupXmlSettingList != null)
         {
-            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingFilename as MoodleBackupXmlSetting ?? new MoodleBackupXmlSetting());
-            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingImscc11 as MoodleBackupXmlSetting ?? new MoodleBackupXmlSetting());
-            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingUsers as MoodleBackupXmlSetting ?? new MoodleBackupXmlSetting());
-            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingAnonymize as MoodleBackupXmlSetting ?? new MoodleBackupXmlSetting());
-            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingRoleAssignments as MoodleBackupXmlSetting ?? new MoodleBackupXmlSetting());
-            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingActivities as MoodleBackupXmlSetting ?? new MoodleBackupXmlSetting());
-            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingBlocks as MoodleBackupXmlSetting ?? new MoodleBackupXmlSetting());
-            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingFiles as MoodleBackupXmlSetting ?? new MoodleBackupXmlSetting());
-            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingFilters as MoodleBackupXmlSetting ?? new MoodleBackupXmlSetting());
-            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingComments as MoodleBackupXmlSetting ?? new MoodleBackupXmlSetting());
-            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingBadges as MoodleBackupXmlSetting ?? new MoodleBackupXmlSetting());
-            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingCalendarevents as MoodleBackupXmlSetting ?? new MoodleBackupXmlSetting());
-            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingUserscompletion as MoodleBackupXmlSetting ?? new MoodleBackupXmlSetting());
-            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingLogs as MoodleBackupXmlSetting ?? new MoodleBackupXmlSetting());
-            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingGradeHistories as MoodleBackupXmlSetting ?? new MoodleBackupXmlSetting());
-            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingQuestionbank as MoodleBackupXmlSetting ?? new MoodleBackupXmlSetting());
-            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingGroups as MoodleBackupXmlSetting ?? new MoodleBackupXmlSetting());
-            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingCompetencies as MoodleBackupXmlSetting ?? new MoodleBackupXmlSetting());
-            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingCustomfield as MoodleBackupXmlSetting ?? new MoodleBackupXmlSetting());
-            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingContentbankcontent as MoodleBackupXmlSetting ?? new MoodleBackupXmlSetting());
-            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingLegacyfiles as MoodleBackupXmlSetting ?? new MoodleBackupXmlSetting());
+            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingFilename as MoodleBackupXmlSetting);
+            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingImscc11 as MoodleBackupXmlSetting);
+            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingUsers as MoodleBackupXmlSetting);
+            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingAnonymize as MoodleBackupXmlSetting);
+            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingRoleAssignments as MoodleBackupXmlSetting);
+            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingActivities as MoodleBackupXmlSetting);
+            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingBlocks as MoodleBackupXmlSetting);
+            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingFiles as MoodleBackupXmlSetting);
+            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingFilters as MoodleBackupXmlSetting);
+            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingComments as MoodleBackupXmlSetting);
+            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingBadges as MoodleBackupXmlSetting);
+            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingCalendarevents as MoodleBackupXmlSetting);
+            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingUserscompletion as MoodleBackupXmlSetting);
+            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingLogs as MoodleBackupXmlSetting);
+            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingGradeHistories as MoodleBackupXmlSetting);
+            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingQuestionbank as MoodleBackupXmlSetting);
+            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingGroups as MoodleBackupXmlSetting);
+            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingCompetencies as MoodleBackupXmlSetting);
+            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingCustomfield as MoodleBackupXmlSetting);
+            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingContentbankcontent as MoodleBackupXmlSetting);
+            MoodleBackupXmlSettingList.Add(MoodleBackupXmlSettingLegacyfiles as MoodleBackupXmlSetting);
 
             MoodleBackupXmlSettings.Setting = MoodleBackupXmlSettingList;
         }
@@ -409,12 +466,12 @@ public class XmlBackupFactory
         MoodleBackupXmlInformation.OriginalCourseFullname = _learningWorld.Identifier.Value;
         MoodleBackupXmlInformation.OriginalCourseShortname = _learningWorld.Identifier.Value;
         MoodleBackupXmlInformation.OriginalCourseStartDate = _currentTime;
-        MoodleBackupXmlInformation.Details = MoodleBackupXmlDetails as MoodleBackupXmlDetails ?? new MoodleBackupXmlDetails();
-        MoodleBackupXmlInformation.Contents = MoodleBackupXmlContents as MoodleBackupXmlContents ?? new MoodleBackupXmlContents();
-        MoodleBackupXmlInformation.Settings = MoodleBackupXmlSettings as MoodleBackupXmlSettings ?? new MoodleBackupXmlSettings();
+        MoodleBackupXmlInformation.Details = MoodleBackupXmlDetails as MoodleBackupXmlDetails;
+        MoodleBackupXmlInformation.Contents = MoodleBackupXmlContents as MoodleBackupXmlContents;
+        MoodleBackupXmlInformation.Settings = MoodleBackupXmlSettings as MoodleBackupXmlSettings;
                 
 
-        MoodleBackupXmlMoodleBackup.Information = MoodleBackupXmlInformation as MoodleBackupXmlInformation ?? new MoodleBackupXmlInformation();
+        MoodleBackupXmlMoodleBackup.Information = MoodleBackupXmlInformation as MoodleBackupXmlInformation;
         
         //create moodle_backup.xml file
         MoodleBackupXmlMoodleBackup.Serialize();
@@ -437,7 +494,7 @@ public class XmlBackupFactory
     public void CreateRolesXml()
     {
         //set parameters of the roles.xml file
-        RolesXmlRolesDefinition.Role = RolesXmlRole as RolesXmlRole ?? new RolesXmlRole();
+        RolesXmlRolesDefinition.Role = RolesXmlRole as RolesXmlRole;
         
         //create roles.xml file
         RolesXmlRolesDefinition.Serialize();
