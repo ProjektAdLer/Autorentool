@@ -4,9 +4,12 @@ using System.Text.Json;
 
 namespace Generator.DSL;
 
+/// <summary>
+/// Read the DSL file, generate a LearningWorldJson class and fill it with the DSL data.
+/// </summary>
 public class ReadDsl : IReadDsl
 {
-    public readonly List<LearningElementJson> ListH5PElements;
+    private readonly List<LearningElementJson> _listH5PElements;
     private readonly List<LearningSpaceJson> _listLearningSpaces;
     private readonly List<LearningElementJson> _listDslDocument;
     private LearningWorldJson _learningWorldJson;
@@ -20,11 +23,17 @@ public class ReadDsl : IReadDsl
             new List<LearningSpaceJson>(), new List<LearningElementJson>());
         _rootJson = new DocumentRootJson(_learningWorldJson);
         _fileSystem = fileSystem;
-        ListH5PElements = new List<LearningElementJson>();
+        _listH5PElements = new List<LearningElementJson>();
         _listLearningSpaces = new List<LearningSpaceJson>();
         _listDslDocument = new List<LearningElementJson>();
     }
 
+    /// <summary>
+    /// Get the DSL file text and give the data to the needed methods. 
+    /// </summary>
+    /// <param name="dslPath"></param>
+    /// <param name="rootJsonForTest"></param>
+    /// <exception cref="InvalidOperationException"></exception>
     public void ReadLearningWorld(string dslPath, DocumentRootJson? rootJsonForTest = null)
     {
         var filepathDsl = dslPath;
@@ -39,34 +48,50 @@ public class ReadDsl : IReadDsl
              _rootJson = JsonSerializer.Deserialize<DocumentRootJson>(jsonString) ?? throw new InvalidOperationException("Could not deserialize DSL_Document");
         }
         GetH5PElements(_rootJson);
-        GetLearningSpaces(_rootJson);
+        CountLearningSpaces(_rootJson);
         GetDslDocument(_rootJson);
         SetLearningWorld(_rootJson);
     }
 
-    private void SetLearningWorld(DocumentRootJson? documentRootJson)
+    /// <summary>
+    /// Setter for the LearningWorldJson.
+    /// </summary>
+    /// <param name="documentRootJson"></param>
+    private void SetLearningWorld(DocumentRootJson documentRootJson)
     {
-        if (documentRootJson != null) _learningWorldJson = documentRootJson.LearningWorld;
+         _learningWorldJson = documentRootJson.LearningWorld;
     }
 
+    /// <summary>
+    /// Getter for the LearningWorldJson. Its needed to get the LearningWorldJson to the Factories.
+    /// </summary>
+    /// <returns></returns>
     public LearningWorldJson GetLearningWorld()
     {
         return _learningWorldJson;
     }
     
-    private void GetH5PElements(DocumentRootJson? documentRootJson)
+    /// <summary>
+    /// Count all H5P-Elements and add them to the _listH5PElements list.
+    /// The H5PFactory need to know how many H5P-Elements are in the Learning World.
+    /// </summary>
+    /// <param name="documentRootJson"></param>
+    private void GetH5PElements(DocumentRootJson documentRootJson)
     {
-        if (documentRootJson != null)
-            foreach (var element in documentRootJson.LearningWorld.LearningElements)
+        foreach (var element in documentRootJson.LearningWorld.LearningElements)
+        {
+            if (element.ElementType == "h5p")
             {
-                if (element.ElementType == "h5p")
-                {
-                    if (ListH5PElements != null) ListH5PElements.Add(element);
-                }
+                if (_listH5PElements != null) _listH5PElements.Add(element);
             }
+        }
     }
 
-    private void GetLearningSpaces(DocumentRootJson? documentRootJson)
+    /// <summary>
+    /// Count how many LearningSpaces are in the Learning World.
+    /// </summary>
+    /// <param name="documentRootJson"></param>
+    private void CountLearningSpaces(DocumentRootJson? documentRootJson)
     {
         if (documentRootJson != null)
             foreach (var space in documentRootJson.LearningWorld.LearningSpaces)
@@ -75,6 +100,11 @@ public class ReadDsl : IReadDsl
             }
     }
 
+    /// <summary>
+    /// Find the "DSL Dokument" Element in the dsl file and add it to the _listDslDocument list.
+    /// The FileFactory needs this Information to create the DSL Document in the MBZ-Structure. 
+    /// </summary>
+    /// <param name="documentRootJson"></param>
     private void GetDslDocument(DocumentRootJson? documentRootJson)
     {
         if (documentRootJson != null)
@@ -89,7 +119,7 @@ public class ReadDsl : IReadDsl
 
     public List<LearningElementJson> GetH5PElementsList()
     {
-        return ListH5PElements;
+        return _listH5PElements;
     }
 
     public List<LearningSpaceJson> GetLearningSpaceList()

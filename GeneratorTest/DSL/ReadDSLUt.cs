@@ -91,13 +91,13 @@ public class ReadDslUt
         var getH5PElementsList = systemUnderTest.GetH5PElementsList();
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.ListH5PElements, Is.Not.Null);
+            Assert.That(getH5PElementsList, Is.Not.Null);
             //Assert.That(h5PElementsList, Is.Not.Null);
             Assert.That(learningWorldJson, Is.Not.Null);
         });
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.ListH5PElements!, Has.Count.EqualTo(1));
+            Assert.That(systemUnderTest.GetH5PElementsList(), Has.Count.EqualTo(1));
             Assert.That(getLearningWorldJson!.LearningElements, Is.Not.Null);
             Assert.That(getLearningWorldJson.LearningSpaces, Is.Not.Null);
             Assert.That(getLearningWorldJson.LearningElements!, Has.Count.EqualTo(learningElementList.Count));

@@ -12,9 +12,12 @@ using Generator.XmlClasses.Entities.Files.xml;
 
 namespace Generator.XmlClasses.XmlFileFactories;
 
+/// <summary>
+/// Creates Files, like the DSL-Document or other files (.json, .xml, .txt, ...) into the Moodle Structure.
+/// </summary>
 public class XmlFileFactory
 {
-    private string _dslPath;
+    private readonly string _dslPath;
     public List<FilesXmlFile> FilesXmlFilesList;
     private List<ActivitiesInforefXmlFile> _activitiesInforefXmlFileList;
     public readonly string CurrentTime;
@@ -143,8 +146,8 @@ public class XmlFileFactory
         CreateActivityFolder(FileElementId);
         
         //file activities/resource.../grades.xml
-        ActivitiesGradesXmlGradeItems.GradeItem = ActivitiesGradesXmlGradeItem as ActivitiesGradesXmlGradeItem;
-        ActivitiesGradesXmlActivityGradebook.GradeItems = ActivitiesGradesXmlGradeItems as ActivitiesGradesXmlGradeItems;
+        ActivitiesGradesXmlGradeItems.GradeItem = ActivitiesGradesXmlGradeItem as ActivitiesGradesXmlGradeItem ?? new ActivitiesGradesXmlGradeItem();
+        ActivitiesGradesXmlActivityGradebook.GradeItems = ActivitiesGradesXmlGradeItems as ActivitiesGradesXmlGradeItems ?? new ActivitiesGradesXmlGradeItems();
 
         ActivitiesGradesXmlActivityGradebook.Serialize("resource", FileElementId);
         
@@ -153,7 +156,7 @@ public class XmlFileFactory
         ActivitiesFileResourceXmlResource.Timemodified = CurrentTime; 
         ActivitiesFileResourceXmlResource.Id = FileElementId;
 
-        ActivitiesFileResourceXmlActivity.Resource = ActivitiesFileResourceXmlResource as ActivitiesResourceXmlResource;
+        ActivitiesFileResourceXmlActivity.Resource = ActivitiesFileResourceXmlResource as ActivitiesResourceXmlResource ?? new ActivitiesResourceXmlResource();
         ActivitiesFileResourceXmlActivity.Id = FileElementId;
         ActivitiesFileResourceXmlActivity.ModuleId = FileElementId;
         ActivitiesFileResourceXmlActivity.ModuleName = "resource";
@@ -192,10 +195,10 @@ public class XmlFileFactory
 
         ActivitiesInforefXmlFileref.File = _activitiesInforefXmlFileList;
 
-        ActivitiesInforefXmlGradeItemref.GradeItem = ActivitiesInforefXmlGradeItem as ActivitiesInforefXmlGradeItem;
+        ActivitiesInforefXmlGradeItemref.GradeItem = ActivitiesInforefXmlGradeItem as ActivitiesInforefXmlGradeItem ?? new ActivitiesInforefXmlGradeItem();
         
-        ActivitiesInforefXmlInforef.Fileref = ActivitiesInforefXmlFileref as ActivitiesInforefXmlFileref; 
-        ActivitiesInforefXmlInforef.GradeItemref = ActivitiesInforefXmlGradeItemref as ActivitiesInforefXmlGradeItemref;
+        ActivitiesInforefXmlInforef.Fileref = ActivitiesInforefXmlFileref as ActivitiesInforefXmlFileref ?? new ActivitiesInforefXmlFileref(); 
+        ActivitiesInforefXmlInforef.GradeItemref = ActivitiesInforefXmlGradeItemref as ActivitiesInforefXmlGradeItemref ?? new ActivitiesInforefXmlGradeItemref();
         
         ActivitiesInforefXmlInforef.Serialize("resource", FileElementId);
     }
