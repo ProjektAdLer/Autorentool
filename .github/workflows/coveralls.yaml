@@ -41,7 +41,7 @@ jobs:
         run: dotnet test AuthoringToolLibTest\AuthoringToolLibTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=${{ github.workspace }}\TestResults\coverlet.info /p:MergeWith=${{ github.workspace }}\TestResults\coverlet.info /p:CoverletOutputFormat=lcov --% /p:Include=\"[AuthoringToolLib]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]\"
         
       - name: Run automated unit and integration test Generator
-        run: dotnet test AuthoringToolLibTest\AuthoringToolLibTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=${{ github.workspace }}\TestResults\coverlet.info /p:MergeWith=${{ github.workspace }}\TestResults\coverlet.info /p:CoverletOutputFormat=lcov --% /p:Include=\"[Generator]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]\"
+        run: dotnet test GeneratorTest\GeneratorTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=${{ github.workspace }}\TestResults\coverlet.info /p:MergeWith=${{ github.workspace }}\TestResults\coverlet.info /p:CoverletOutputFormat=lcov --% /p:Include=\"[Generator]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]\"
         
       - name: Publish coverage report to coveralls.io
         uses: coverallsapp/github-action@master
