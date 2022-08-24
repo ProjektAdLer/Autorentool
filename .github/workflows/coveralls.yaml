@@ -47,5 +47,5 @@ jobs:
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: .\AuthoringToolTest\TestResults\coverlet.info 
-          #path-to-lcov: ${{ github.workspace }}\TestResults\coverlet.info 
+          #path-to-lcov: .\AuthoringToolTest\TestResults\coverlet.info 
+          path-to-lcov: ${{ github.workspace }}\TestResults\coverlet.info 
