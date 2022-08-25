@@ -53,4 +53,4 @@ jobs:
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           #path-to-lcov: .\AuthoringToolTest\TestResults\coverlet.info 
-          path-to-lcov: D:/a/Autorentool/Autorentool/TestResults/coverlet.info 
+          path-to-lcov: D:/a/Autorentool/Autorentool/TestResults/coverage.info 
