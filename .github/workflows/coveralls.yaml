@@ -45,7 +45,7 @@ jobs:
       - name: Run automated unit and integration test Generator
         run: dotnet test GeneratorTest\GeneratorTest.csproj --configuration Release --results-directory D:/a/Autorentool/TestResults/ /p:CollectCoverage=true /p:CoverletOutput=D:/a/Autorentool/TestResults/ /p:MergeWith=D:/a/Autorentool/TestResults/coverlet.info /p:CoverletOutputFormat=lcov --% /p:Include=\"[Generator]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]\"
         
-      -name: Debugging show file tree
+      - name: Debugging show file tree
         run: tree /F
       
       - name: Publish coverage report to coveralls.io
