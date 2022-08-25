@@ -6,6 +6,9 @@
         <Nullable>enable</Nullable>
 
         <IsPackable>false</IsPackable>
+        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
+        <AssemblyName>AuthoringToolTest</AssemblyName>
+        <RootNamespace>AuthoringToolTest</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>

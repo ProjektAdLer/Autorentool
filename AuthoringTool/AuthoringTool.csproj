@@ -50,12 +50,6 @@
       <AdditionalFiles Include="View\Shared\MainLayout.razor" />
       <AdditionalFiles Include="View\Shared\NavMenu.razor" />
     </ItemGroup>
-	
-    <ItemGroup>
-      <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
-        <_Parameter1>AuthoringToolTest</_Parameter1>
-      </AssemblyAttribute>
-    </ItemGroup>
 
     <ItemGroup>
       <Folder Include="View" />
