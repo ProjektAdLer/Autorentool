@@ -6,12 +6,11 @@ using AuthoringTool.API.Configuration;
 using AuthoringTool.BusinessLogic.API;
 using AuthoringTool.Entities;
 using AuthoringTool.PresentationLogic.ElectronNET;
-using AuthoringTool.PresentationLogic.EntityMapping;
-using AuthoringTool.PresentationLogic.EntityMapping.LearningElementMapper;
 using AuthoringTool.PresentationLogic.LearningContent;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
+using AutoMapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -24,35 +23,28 @@ namespace AuthoringToolTest.PresentationLogic.API;
 public class PresentationLogicUt
 {
     [Test]
-    public void PresentationLogic_Standard_AllPropertiesInitialized()
+    public void Standard_AllPropertiesInitialized()
     {
         //Arrange
         var mockConfiguration = Substitute.For<IAuthoringToolConfiguration>();
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var mockWorldMapper = Substitute.For<ILearningWorldMapper>();
-        var mockSpaceMapper = Substitute.For<ILearningSpaceMapper>();
-        var mockElementMapper = Substitute.For<ILearningElementMapper>();
-        var mockContentMapper = Substitute.For<ILearningContentMapper>();
+        var mockMapper = Substitute.For<IMapper>();
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         var mockLogger = Substitute.For<ILogger<AuthoringTool.PresentationLogic.API.PresentationLogic>>();
 
         //Act
-        var systemUnderTest = CreateTestablePresentationLogic(mockConfiguration, mockBusinessLogic, mockWorldMapper,
-            mockSpaceMapper, mockElementMapper,mockContentMapper, mockServiceProvider, mockLogger);
+        var systemUnderTest = CreateTestablePresentationLogic(mockConfiguration, mockBusinessLogic, mockMapper, mockServiceProvider, mockLogger);
         Assert.Multiple(() =>
         {
             //Assert
             Assert.That(systemUnderTest.Configuration, Is.EqualTo(mockConfiguration));
             Assert.That(systemUnderTest.BusinessLogic, Is.EqualTo(mockBusinessLogic));
-            Assert.That(systemUnderTest.WorldMapper, Is.EqualTo(mockWorldMapper));
-            Assert.That(systemUnderTest.SpaceMapper, Is.EqualTo(mockSpaceMapper));
-            Assert.That(systemUnderTest.ElementMapper, Is.EqualTo(mockElementMapper));
-            Assert.That(systemUnderTest.ContentMapper, Is.EqualTo(mockContentMapper));
+            Assert.That(systemUnderTest.Mapper, Is.EqualTo(mockMapper));
         });
     }
 
     [Test]
-    public async Task PresentationLogic_ConstructBackup_CallsDialogManagerAndBusinessLogic()
+    public async Task ConstructBackup_CallsDialogManagerAndBusinessLogic()
     {
         //Arrange
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -61,14 +53,13 @@ public class PresentationLogicUt
             .ShowSaveAsDialogAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<IEnumerable<FileFilterProxy>?>())
             .Returns("supersecretfilepath");
         var viewModel = new LearningWorldViewModel("fo", "fo", "fo", "fo", "fo", "fo");
-        var mockWorldMapper = Substitute.For<ILearningWorldMapper>();
+        var mockMapper = Substitute.For<IMapper>();
         var entity = new AuthoringTool.Entities.LearningWorld("baba", "baba", "baba", "baba", "baba", "baba");
-        mockWorldMapper.ToEntity(viewModel)
-            .Returns(entity);
+        mockMapper.Map<AuthoringTool.Entities.LearningWorld>(viewModel).Returns(entity);
         var serviceProvider = new ServiceCollection();
         serviceProvider.Insert(0, new ServiceDescriptor(typeof(IElectronDialogManager), mockDialogManager));
         
-        var systemUnderTest = CreateTestablePresentationLogic(null, mockBusinessLogic, mockWorldMapper,
+        var systemUnderTest = CreateTestablePresentationLogic(null, mockBusinessLogic, mockMapper,
             serviceProvider: serviceProvider.BuildServiceProvider());
         //Act
         await systemUnderTest.ConstructBackupAsync(viewModel);
@@ -80,7 +71,7 @@ public class PresentationLogicUt
     #region Save/Load
 
     [Test]
-    public void PresentationLogic_SaveLearningWorldAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
+    public void SaveLearningWorldAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(false);
@@ -94,7 +85,7 @@ public class PresentationLogicUt
     }
 
     [Test]
-    public void PresentationLogic_SaveLearningWorldAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
+    public void SaveLearningWorldAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
@@ -108,15 +99,14 @@ public class PresentationLogicUt
     }
 
     [Test]
-    public async Task PresentationLogic_SaveLearningWorldAsync_CallsDialogManagerAndWorldMapperAndBusinessLogic()
+    public async Task SaveLearningWorldAsync_CallsDialogManagerAndWorldMapperAndBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
-        var mockWorldMapper = Substitute.For<ILearningWorldMapper>();
+        var mockMapper = Substitute.For<IMapper>();
         var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
         var entity = new AuthoringTool.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
-        mockWorldMapper.ToEntity(Arg.Any<LearningWorldViewModel>())
-            .Returns(entity);
+        mockMapper.Map<AuthoringTool.Entities.LearningWorld>(learningWorld).Returns(entity);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
         mockDialogManger
@@ -126,17 +116,17 @@ public class PresentationLogicUt
         mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManger);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            worldMapper: mockWorldMapper, serviceProvider: mockServiceProvider);
+            mapper: mockMapper, serviceProvider: mockServiceProvider);
 
         await systemUnderTest.SaveLearningWorldAsync(learningWorld);
 
         await mockDialogManger.Received().ShowSaveAsDialogAsync("Save Learning World", null, Arg.Any<IEnumerable<FileFilterProxy>>());
-        mockWorldMapper.Received().ToEntity(learningWorld);
+        mockMapper.Received().Map<AuthoringTool.Entities.LearningWorld>(learningWorld);
         mockBusinessLogic.Received().SaveLearningWorld(entity, filepath+".awf");
     }
 
     [Test]
-    public void PresentationLogic_SaveLearningWorldAsync_LogsAndRethrowsDialogCancelledException()
+    public void SaveLearningWorldAsync_LogsAndRethrowsDialogCancelledException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
@@ -159,7 +149,7 @@ public class PresentationLogicUt
     }
     
     [Test]
-    public void PresentationLogic_SaveLearningSpaceAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
+    public void SaveLearningSpaceAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(false);
@@ -173,7 +163,7 @@ public class PresentationLogicUt
     }
 
     [Test]
-    public void PresentationLogic_SaveLearningSpaceAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
+    public void SaveLearningSpaceAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
@@ -187,15 +177,14 @@ public class PresentationLogicUt
     }
 
     [Test]
-    public async Task PresentationLogic_SaveLearningSpaceAsync_CallsDialogManagerAndSpaceMapperAndBusinessLogic()
+    public async Task SaveLearningSpaceAsync_CallsDialogManagerAndSpaceMapperAndBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
-        var mockSpaceMapper = Substitute.For<ILearningSpaceMapper>();
+        var mockMapper = Substitute.For<IMapper>();
         var learningSpace = new LearningSpaceViewModel("f", "f", "f", "f", "f");
         var entity = new AuthoringTool.Entities.LearningSpace("f", "f", "f", "f", "f");
-        mockSpaceMapper.ToEntity(Arg.Any<LearningSpaceViewModel>())
-            .Returns(entity);
+        mockMapper.Map<AuthoringTool.Entities.LearningSpace>(Arg.Any<LearningSpaceViewModel>()).Returns(entity);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
         mockDialogManger
@@ -205,17 +194,17 @@ public class PresentationLogicUt
         mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManger);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            spaceMapper: mockSpaceMapper, serviceProvider: mockServiceProvider);
+            mapper: mockMapper, serviceProvider: mockServiceProvider);
 
         await systemUnderTest.SaveLearningSpaceAsync(learningSpace);
 
         await mockDialogManger.Received().ShowSaveAsDialogAsync("Save Learning Space", null, Arg.Any<IEnumerable<FileFilterProxy>>());
-        mockSpaceMapper.Received().ToEntity(learningSpace);
+        mockMapper.Received().Map<AuthoringTool.Entities.LearningSpace>(learningSpace);
         mockBusinessLogic.Received().SaveLearningSpace(entity, filepath+".asf");
     }
 
     [Test]
-    public void PresentationLogic_SaveLearningSpaceAsync_LogsAndRethrowsDialogCancelledException()
+    public void SaveLearningSpaceAsync_LogsAndRethrowsDialogCancelledException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
@@ -238,7 +227,7 @@ public class PresentationLogicUt
     }
     
     [Test]
-    public void PresentationLogic_SaveLearningElementAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
+    public void SaveLearningElementAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(false);
@@ -252,7 +241,7 @@ public class PresentationLogicUt
     }
 
     [Test]
-    public void PresentationLogic_SaveLearningElementAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
+    public void SaveLearningElementAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
@@ -266,15 +255,14 @@ public class PresentationLogicUt
     }
 
     [Test]
-    public async Task PresentationLogic_SaveLearningElementAsync_CallsDialogManagerAndElementMapperAndBusinessLogic()
+    public async Task SaveLearningElementAsync_CallsDialogManagerAndElementMapperAndBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
-        var mockElementMapper = Substitute.For<ILearningElementMapper>();
+        var mockMapper = Substitute.For<IMapper>();
         var learningElement = new LearningElementViewModel("f", "f", null,  null,"f", "f", "f",LearningElementDifficultyEnum.Easy);
-        var entity = new AuthoringTool.Entities.LearningElement("f", "f", "f", null,"f", "f", "f",LearningElementDifficultyEnum.Easy);
-        mockElementMapper.ToEntity(Arg.Any<LearningElementViewModel>())
-            .Returns(entity);
+        var entity = new AuthoringTool.Entities.LearningElement("f", "f", null, null,"f", "f", "f",LearningElementDifficultyEnum.Easy);
+        mockMapper.Map<AuthoringTool.Entities.LearningElement>(Arg.Any<LearningElementViewModel>()).Returns(entity);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
         mockDialogManger
@@ -284,17 +272,17 @@ public class PresentationLogicUt
         mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManger);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            elementMapper: mockElementMapper, serviceProvider: mockServiceProvider);
+            mapper: mockMapper, serviceProvider: mockServiceProvider);
 
         await systemUnderTest.SaveLearningElementAsync(learningElement);
 
         await mockDialogManger.Received().ShowSaveAsDialogAsync("Save Learning Element", null, Arg.Any<IEnumerable<FileFilterProxy>>());
-        mockElementMapper.Received().ToEntity(learningElement);
+        mockMapper.Received().Map<AuthoringTool.Entities.LearningElement>(learningElement);
         mockBusinessLogic.Received().SaveLearningElement(entity, filepath+".aef");
     }
 
     [Test]
-    public void PresentationLogic_SaveLearningElementAsync_LogsAndRethrowsDialogCancelledException()
+    public void SaveLearningElementAsync_LogsAndRethrowsDialogCancelledException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
@@ -317,7 +305,7 @@ public class PresentationLogicUt
     }
 
     [Test]
-    public void PresentationLogic_LoadLearningWorldAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
+    public void LoadLearningWorldAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(false);
@@ -330,7 +318,7 @@ public class PresentationLogicUt
     }
 
     [Test]
-    public void PresentationLogic_LoadLearningWorldAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
+    public void LoadLearningWorldAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
@@ -345,14 +333,14 @@ public class PresentationLogicUt
     }
     
     [Test]
-    public async Task PresentationLogic_LoadLearningWorldAsync_CallsDialogManagerAndElementMapperAndBusinessLogic()
+    public async Task LoadLearningWorldAsync_CallsDialogManagerAndElementMapperAndBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
-        var mockWorldMapper = Substitute.For<ILearningWorldMapper>();
+        var mockMapper = Substitute.For<IMapper>();
         var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
         var entity = new AuthoringTool.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
-        mockWorldMapper.ToViewModel(entity).Returns(learningWorld);
+        mockMapper.Map<LearningWorldViewModel>(Arg.Any<AuthoringTool.Entities.LearningWorld>()).Returns(learningWorld);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
         mockDialogManger
@@ -363,20 +351,20 @@ public class PresentationLogicUt
         mockBusinessLogic.LoadLearningWorld(filepath+".awf").Returns(entity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            worldMapper: mockWorldMapper, serviceProvider: mockServiceProvider);
+            mapper: mockMapper, serviceProvider: mockServiceProvider);
 
         var actualWorld = await systemUnderTest.LoadLearningWorldAsync();
 
         await mockDialogManger.Received()
             .ShowOpenFileDialogAsync("Load Learning World", null, Arg.Any<IEnumerable<FileFilterProxy>?>());
         mockBusinessLogic.Received().LoadLearningWorld(filepath + ".awf");
-        mockWorldMapper.Received().ToViewModel(entity);
+        mockMapper.Received().Map<LearningWorldViewModel>(entity);
         
         Assert.That(actualWorld, Is.EqualTo(learningWorld));
     }
 
     [Test]
-    public void PresentationLogic_LoadLearningWorldAsync_LogsAndRethrowsDialogCancelledException()
+    public void LoadLearningWorldAsync_LogsAndRethrowsDialogCancelledException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
@@ -399,7 +387,7 @@ public class PresentationLogicUt
     
     
     [Test]
-    public void PresentationLogic_LoadLearningSpaceAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
+    public void LoadLearningSpaceAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(false);
@@ -412,7 +400,7 @@ public class PresentationLogicUt
     }
 
     [Test]
-    public void PresentationLogic_LoadLearningSpaceAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
+    public void LoadLearningSpaceAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
@@ -427,14 +415,14 @@ public class PresentationLogicUt
     }
     
     [Test]
-    public async Task PresentationLogic_LoadLearningSpaceAsync_CallsDialogManagerAndSpaceMapperAndBusinessLogic()
+    public async Task LoadLearningSpaceAsync_CallsDialogManagerAndSpaceMapperAndBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
-        var mockSpaceMapper = Substitute.For<ILearningSpaceMapper>();
+        var mockMapper = Substitute.For<IMapper>();
         var learningSpace = new LearningSpaceViewModel("f", "f", "", "f", "f" );
         var entity = new AuthoringTool.Entities.LearningSpace("f", "f", "f", "f", "f");
-        mockSpaceMapper.ToViewModel(entity).Returns(learningSpace);
+        mockMapper.Map<LearningSpaceViewModel>(Arg.Any<AuthoringTool.Entities.LearningSpace>()).Returns(learningSpace);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
         mockDialogManger
@@ -445,20 +433,20 @@ public class PresentationLogicUt
         mockBusinessLogic.LoadLearningSpace(filepath+".asf").Returns(entity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            spaceMapper: mockSpaceMapper, serviceProvider: mockServiceProvider);
+            mapper: mockMapper, serviceProvider: mockServiceProvider);
 
         var actualSpace = await systemUnderTest.LoadLearningSpaceAsync();
 
         await mockDialogManger.Received()
             .ShowOpenFileDialogAsync("Load Learning Space", null, Arg.Any<IEnumerable<FileFilterProxy>?>());
         mockBusinessLogic.Received().LoadLearningSpace(filepath + ".asf");
-        mockSpaceMapper.Received().ToViewModel(entity);
+        mockMapper.Received().Map<LearningSpaceViewModel>(entity);
         
         Assert.That(actualSpace, Is.EqualTo(learningSpace));
     }
 
     [Test]
-    public void PresentationLogic_LoadLearningSpaceAsync_LogsAndRethrowsDialogCancelledException()
+    public void LoadLearningSpaceAsync_LogsAndRethrowsDialogCancelledException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
@@ -482,7 +470,7 @@ public class PresentationLogicUt
     
     
     [Test]
-    public void PresentationLogic_LoadLearningElementAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
+    public void LoadLearningElementAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(false);
@@ -495,7 +483,7 @@ public class PresentationLogicUt
     }
 
     [Test]
-    public void PresentationLogic_LoadLearningElementAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
+    public void LoadLearningElementAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
@@ -510,14 +498,14 @@ public class PresentationLogicUt
     }
     
     [Test]
-    public async Task PresentationLogic_LoadLearningElementAsync_CallsDialogManagerAndElementMapperAndBusinessLogic()
+    public async Task LoadLearningElementAsync_CallsDialogManagerAndElementMapperAndBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
-        var mockElementMapper = Substitute.For<ILearningElementMapper>();
+        var mockMapper = Substitute.For<IMapper>();
         var learningElement = new LearningElementViewModel("f", "f", null, null, "f", "f", "f",LearningElementDifficultyEnum.Easy );
-        var entity = new AuthoringTool.Entities.LearningElement("f", "f", "f", null, "f", "f", "f",LearningElementDifficultyEnum.Easy);
-        mockElementMapper.ToViewModel(entity).Returns(learningElement);
+        var entity = new AuthoringTool.Entities.LearningElement("f", "f", null, null, "f", "f", "f",LearningElementDifficultyEnum.Easy);
+        mockMapper.Map<LearningElementViewModel>(Arg.Any<AuthoringTool.Entities.LearningElement>()).Returns(learningElement);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
         mockDialogManger
@@ -528,20 +516,20 @@ public class PresentationLogicUt
         mockBusinessLogic.LoadLearningElement(filepath+".aef").Returns(entity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            elementMapper: mockElementMapper, serviceProvider: mockServiceProvider);
+            mapper: mockMapper, serviceProvider: mockServiceProvider);
 
         var actualElement = await systemUnderTest.LoadLearningElementAsync();
 
         await mockDialogManger.Received()
             .ShowOpenFileDialogAsync("Load Learning Element", null, Arg.Any<IEnumerable<FileFilterProxy>?>());
         mockBusinessLogic.Received().LoadLearningElement(filepath + ".aef");
-        mockElementMapper.Received().ToViewModel(entity);
+        mockMapper.Received().Map<LearningElementViewModel>(entity);
         
         Assert.That(actualElement, Is.EqualTo(learningElement));
     }
 
     [Test]
-    public void PresentationLogic_LoadLearningElementAsync_LogsAndRethrowsDialogCancelledException()
+    public void LoadLearningElementAsync_LogsAndRethrowsDialogCancelledException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
@@ -564,7 +552,7 @@ public class PresentationLogicUt
     
     
     [Test]
-    public void PresentationLogic_LoadImageAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
+    public void LoadImageAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(false);
@@ -577,7 +565,7 @@ public class PresentationLogicUt
     }
     
     [Test]
-    public void PresentationLogic_LoadImageAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
+    public void LoadImageAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
@@ -592,14 +580,14 @@ public class PresentationLogicUt
     }
     
     [Test]
-    public async Task PresentationLogic_LoadImageAsync_CallsDialogManagerAndContentMapperAndBusinessLogic()
+    public async Task LoadImageAsync_CallsDialogManagerAndContentMapperAndBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
-        var mockContentMapper = Substitute.For<ILearningContentMapper>();
+        var mockMapper = Substitute.For<IMapper>();
         var learningContent = new LearningContentViewModel("f", ".png", new byte[] { 0x00, 0x00, 0x00, 0x01 });
         var entity = new LearningContent("f", ".png", new byte[] { 0x00, 0x00, 0x00, 0x01 });
-        mockContentMapper.ToViewModel(entity).Returns(learningContent);
+        mockMapper.Map<LearningContentViewModel>(Arg.Any<LearningContent>()).Returns(learningContent);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
         mockDialogManger
@@ -610,20 +598,20 @@ public class PresentationLogicUt
         mockBusinessLogic.LoadLearningContent(filepath).Returns(entity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            contentMapper: mockContentMapper, serviceProvider: mockServiceProvider);
+            mapper: mockMapper, serviceProvider: mockServiceProvider);
 
         var loadedContent = await systemUnderTest.LoadImageAsync();
 
         await mockDialogManger.Received()
             .ShowOpenFileDialogAsync("Load image", null, Arg.Any<IEnumerable<FileFilterProxy>?>());
         mockBusinessLogic.Received().LoadLearningContent(filepath);
-        mockContentMapper.Received().ToViewModel(entity);
+        mockMapper.Received().Map<LearningContentViewModel>(entity);
         
         Assert.That(loadedContent, Is.EqualTo(learningContent));
     }
     
     [Test]
-    public void PresentationLogic_LoadImageAsync_LogsAndRethrowsDialogCancelledException()
+    public void LoadImageAsync_LogsAndRethrowsDialogCancelledException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
@@ -646,7 +634,7 @@ public class PresentationLogicUt
 
 
     [Test]
-    public void PresentationLogic_LoadVideoAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
+    public void LoadVideoAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(false);
@@ -659,7 +647,7 @@ public class PresentationLogicUt
     }
     
     [Test]
-    public void PresentationLogic_LoadVideoAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
+    public void LoadVideoAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
@@ -674,14 +662,14 @@ public class PresentationLogicUt
     }
     
     [Test]
-    public async Task PresentationLogic_LoadVideoAsync_CallsDialogManagerAndContentMapperAndBusinessLogic()
+    public async Task LoadVideoAsync_CallsDialogManagerAndContentMapperAndBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
-        var mockContentMapper = Substitute.For<ILearningContentMapper>();
+        var mockMapper = Substitute.For<IMapper>();
         var learningContent = new LearningContentViewModel("f", ".mp4", new byte[] { 0x01, 0x00, 0x00, 0x01 });
         var entity = new LearningContent("f", ".mp4", new byte[] { 0x01, 0x00, 0x00, 0x01 });
-        mockContentMapper.ToViewModel(entity).Returns(learningContent);
+        mockMapper.Map<LearningContentViewModel>(Arg.Any<LearningContent>()).Returns(learningContent);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
         mockDialogManger
@@ -692,20 +680,20 @@ public class PresentationLogicUt
         mockBusinessLogic.LoadLearningContent(filepath + ".mp4").Returns(entity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            contentMapper: mockContentMapper, serviceProvider: mockServiceProvider);
+            mapper: mockMapper, serviceProvider: mockServiceProvider);
 
         var loadedContent = await systemUnderTest.LoadVideoAsync();
 
         await mockDialogManger.Received()
             .ShowOpenFileDialogAsync("Load video", null, Arg.Any<IEnumerable<FileFilterProxy>?>());
         mockBusinessLogic.Received().LoadLearningContent(filepath + ".mp4");
-        mockContentMapper.Received().ToViewModel(entity);
+        mockMapper.Received().Map<LearningContentViewModel>(entity);
         
         Assert.That(loadedContent, Is.EqualTo(learningContent));
     }
     
     [Test]
-    public void PresentationLogic_LoadVideoAsync_LogsAndRethrowsDialogCancelledException()
+    public void LoadVideoAsync_LogsAndRethrowsDialogCancelledException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
@@ -728,7 +716,7 @@ public class PresentationLogicUt
     
     
     [Test]
-    public void PresentationLogic_LoadH5pAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
+    public void LoadH5pAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(false);
@@ -741,7 +729,7 @@ public class PresentationLogicUt
     }
     
     [Test]
-    public void PresentationLogic_LoadH5pAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
+    public void LoadH5pAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
@@ -756,14 +744,14 @@ public class PresentationLogicUt
     }
     
     [Test]
-    public async Task PresentationLogic_LoadH5pAsync_CallsDialogManagerAndContentMapperAndBusinessLogic()
+    public async Task LoadH5pAsync_CallsDialogManagerAndContentMapperAndBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
-        var mockContentMapper = Substitute.For<ILearningContentMapper>();
+        var mockMapper = Substitute.For<IMapper>();
         var learningContent = new LearningContentViewModel("f", ".h5p", new byte[] { 0x01, 0x01, 0x00, 0x01 });
         var entity = new LearningContent("f", ".h5p", new byte[] { 0x01, 0x01, 0x00, 0x01 });
-        mockContentMapper.ToViewModel(entity).Returns(learningContent);
+        mockMapper.Map<LearningContentViewModel>(Arg.Any<LearningContent>()).Returns(learningContent);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
         mockDialogManger
@@ -774,20 +762,20 @@ public class PresentationLogicUt
         mockBusinessLogic.LoadLearningContent(filepath + ".h5p").Returns(entity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            contentMapper: mockContentMapper, serviceProvider: mockServiceProvider);
+            mapper: mockMapper, serviceProvider: mockServiceProvider);
 
         var loadedContent = await systemUnderTest.LoadH5pAsync();
 
         await mockDialogManger.Received()
             .ShowOpenFileDialogAsync("Load h5p", null, Arg.Any<IEnumerable<FileFilterProxy>?>());
         mockBusinessLogic.Received().LoadLearningContent(filepath + ".h5p");
-        mockContentMapper.Received().ToViewModel(entity);
+        mockMapper.Received().Map<LearningContentViewModel>(entity);
         
         Assert.That(loadedContent, Is.EqualTo(learningContent));
     }
     
     [Test]
-    public void PresentationLogic_LoadH5pAsync_LogsAndRethrowsDialogCancelledException()
+    public void LoadH5pAsync_LogsAndRethrowsDialogCancelledException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
@@ -810,7 +798,7 @@ public class PresentationLogicUt
     
     
     [Test]
-    public void PresentationLogic_LoadPdfAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
+    public void LoadPdfAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(false);
@@ -823,7 +811,7 @@ public class PresentationLogicUt
     }
     
     [Test]
-    public void PresentationLogic_LoadPdfAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
+    public void LoadPdfAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
@@ -838,14 +826,14 @@ public class PresentationLogicUt
     }
     
     [Test]
-    public async Task PresentationLogic_LoadPdfAsync_CallsDialogManagerAndContentMapperAndBusinessLogic()
+    public async Task LoadPdfAsync_CallsDialogManagerAndContentMapperAndBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
-        var mockContentMapper = Substitute.For<ILearningContentMapper>();
+        var mockMapper = Substitute.For<IMapper>();
         var learningContent = new LearningContentViewModel("f", ".pdf", new byte[] { 0x01, 0x01, 0x01, 0x01 });
         var entity = new LearningContent("f", ".pdf", new byte[] { 0x01, 0x01, 0x01, 0x01 });
-        mockContentMapper.ToViewModel(entity).Returns(learningContent);
+        mockMapper.Map<LearningContentViewModel>(Arg.Any<LearningContent>()).Returns(learningContent);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
         mockDialogManger
@@ -856,20 +844,20 @@ public class PresentationLogicUt
         mockBusinessLogic.LoadLearningContent(filepath + ".pdf").Returns(entity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            contentMapper: mockContentMapper, serviceProvider: mockServiceProvider);
+            mapper: mockMapper, serviceProvider: mockServiceProvider);
 
         var loadedContent = await systemUnderTest.LoadPdfAsync();
 
         await mockDialogManger.Received()
             .ShowOpenFileDialogAsync("Load pdf", null, Arg.Any<IEnumerable<FileFilterProxy>?>());
         mockBusinessLogic.Received().LoadLearningContent(filepath + ".pdf");
-        mockContentMapper.Received().ToViewModel(entity);
+        mockMapper.Received().Map<LearningContentViewModel>(entity);
         
         Assert.That(loadedContent, Is.EqualTo(learningContent));
     }
     
     [Test]
-    public void PresentationLogic_LoadPdfAsync_LogsAndRethrowsDialogCancelledException()
+    public void LoadPdfAsync_LogsAndRethrowsDialogCancelledException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.RunningElectron.Returns(true);
@@ -894,29 +882,29 @@ public class PresentationLogicUt
     #region LoadFromStream
 
     [Test]
-    public void PresentationLogic_LoadLearningWorldViewModelFromStream_ReturnsLearningWorld()
+    public void LoadLearningWorldViewModelFromStream_ReturnsLearningWorld()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockLearningWorld = new AuthoringTool.Entities.LearningWorld("n", "sn", "a", "l", "d", "g");
         mockBusinessLogic.LoadLearningWorldFromStream(Arg.Any<Stream>()).Returns(mockLearningWorld);
         var mockLearningWorldViewModel = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
-        var mockWorldMapper = Substitute.For<ILearningWorldMapper>();
-        mockWorldMapper.ToViewModel(Arg.Any<AuthoringTool.Entities.LearningWorld>())
+        var mockMapper = Substitute.For<IMapper>();
+        mockMapper.Map<LearningWorldViewModel>(Arg.Any<AuthoringTool.Entities.LearningWorld>())
             .Returns(mockLearningWorldViewModel);
         var stream = Substitute.For<Stream>();
 
         var systemUnderTest =
-            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, worldMapper: mockWorldMapper);
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
 
         var result = systemUnderTest.LoadLearningWorldViewModelFromStream(stream);
 
         mockBusinessLogic.Received().LoadLearningWorldFromStream(stream);
-        mockWorldMapper.Received().ToViewModel(mockLearningWorld);
+        mockMapper.Received().Map<LearningWorldViewModel>(mockLearningWorld);
         Assert.That(result, Is.EqualTo(mockLearningWorldViewModel));
     }
 
     [Test]
-    public void PresentationLogic_LoadLearningWorldViewModelFromStream_CatchesException()
+    public void LoadLearningWorldViewModelFromStream_CatchesException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.LoadLearningWorldFromStream(Arg.Any<Stream>()).Throws(new Exception("Exception"));
@@ -930,29 +918,29 @@ public class PresentationLogicUt
     }
     
     [Test]
-    public void PresentationLogic_LoadLearningSpaceViewModelFromStream_ReturnsLearningSpace()
+    public void LoadLearningSpaceViewModelFromStream_ReturnsLearningSpace()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockLearningSpace = new AuthoringTool.Entities.LearningSpace("n", "sn", "a", "d", "g");
         mockBusinessLogic.LoadLearningSpaceFromStream(Arg.Any<Stream>()).Returns(mockLearningSpace);
         var mockLearningSpaceViewModel = new LearningSpaceViewModel("n", "sn", "a", "d", "g");
-        var mockSpaceMapper = Substitute.For<ILearningSpaceMapper>();
-        mockSpaceMapper.ToViewModel(Arg.Any<AuthoringTool.Entities.LearningSpace>())
+        var mockMapper = Substitute.For<IMapper>();
+        mockMapper.Map<LearningSpaceViewModel>(Arg.Any<AuthoringTool.Entities.LearningSpace>())
             .Returns(mockLearningSpaceViewModel);
         var stream = Substitute.For<Stream>();
 
         var systemUnderTest =
-            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, spaceMapper: mockSpaceMapper);
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
 
         var result = systemUnderTest.LoadLearningSpaceViewModelFromStream(stream);
 
         mockBusinessLogic.Received().LoadLearningSpaceFromStream(stream);
-        mockSpaceMapper.Received().ToViewModel(mockLearningSpace);
+        mockMapper.Received().Map<LearningSpaceViewModel>(mockLearningSpace);
         Assert.That(result, Is.EqualTo(mockLearningSpaceViewModel));
     }
 
     [Test]
-    public void PresentationLogic_LoadLearningSpaceViewModelFromStream_CatchesException()
+    public void LoadLearningSpaceViewModelFromStream_CatchesException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.LoadLearningSpaceFromStream(Arg.Any<Stream>()).Throws(new Exception("Exception"));
@@ -966,30 +954,30 @@ public class PresentationLogicUt
     }
     
     [Test]
-    public void PresentationLogic_LoadLearningElementViewModelFromStream_ReturnsLearningElement()
+    public void LoadLearningElementViewModelFromStream_ReturnsLearningElement()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var mockLearningElement = new AuthoringTool.Entities.LearningElement("n", "sn", "pn",null, "a", "d", "g",LearningElementDifficultyEnum.Easy);
+        var mockLearningElement = new AuthoringTool.Entities.LearningElement("n", "sn", null,null, "a", "d", "g",LearningElementDifficultyEnum.Easy);
         mockBusinessLogic.LoadLearningElementFromStream(Arg.Any<Stream>()).Returns(mockLearningElement);
         var mockLearningContent = new LearningContentViewModel("n", "t", Array.Empty<byte>());
         var mockLearningElementViewModel = new LearningElementViewModel("n", "sn", null, mockLearningContent, "a", "d", "g",LearningElementDifficultyEnum.Easy);
-        var mockElementMapper = Substitute.For<ILearningElementMapper>();
-        mockElementMapper.ToViewModel(Arg.Any<AuthoringTool.Entities.LearningElement>())
+        var mockMapper = Substitute.For<IMapper>();
+        mockMapper.Map<LearningElementViewModel>(Arg.Any<AuthoringTool.Entities.LearningElement>())
             .Returns(mockLearningElementViewModel);
         var stream = Substitute.For<Stream>();
 
         var systemUnderTest =
-            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, elementMapper: mockElementMapper);
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
 
         var result = systemUnderTest.LoadLearningElementViewModelFromStream(stream);
 
         mockBusinessLogic.Received().LoadLearningElementFromStream(stream);
-        mockElementMapper.Received().ToViewModel(mockLearningElement);
+        mockMapper.Received().Map<LearningElementViewModel>(mockLearningElement);
         Assert.That(result, Is.EqualTo(mockLearningElementViewModel));
     }
 
     [Test]
-    public void PresentationLogic_LoadLearningElementViewModelFromStream_CatchesException()
+    public void LoadLearningElementViewModelFromStream_CatchesException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.LoadLearningElementFromStream(Arg.Any<Stream>()).Throws(new Exception("Exception"));
@@ -1003,30 +991,30 @@ public class PresentationLogicUt
     }
 
     [Test]
-    public void PresentationLogic_LoadLearningContentViewModelFromStream_ReturnsLearningContent()
+    public void LoadLearningContentViewModelFromStream_ReturnsLearningContent()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockLearningContent = new LearningContent("n", "t", Array.Empty<byte>());
         mockBusinessLogic.LoadLearningContentFromStream(Arg.Any<string>(), Arg.Any<Stream>()).Returns(mockLearningContent);
         var mockLearningContentViewModel = new LearningContentViewModel("n", "t", Array.Empty<byte>());
-        var mockContentMapper = Substitute.For<ILearningContentMapper>();
-        mockContentMapper.ToViewModel(Arg.Any<LearningContent>())
+        var mockMapper = Substitute.For<IMapper>();
+        mockMapper.Map<LearningContentViewModel>(Arg.Any<LearningContent>())
             .Returns(mockLearningContentViewModel);
         var filename = "test.png";
         var stream = Substitute.For<Stream>();
 
         var systemUnderTest =
-            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, contentMapper: mockContentMapper);
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
 
         var result = systemUnderTest.LoadLearningContentViewModelFromStream(filename, stream);
 
         mockBusinessLogic.Received().LoadLearningContentFromStream(filename, stream);
-        mockContentMapper.Received().ToViewModel(mockLearningContent);
+        mockMapper.Received().Map<LearningContentViewModel>(mockLearningContent);
         Assert.That(result, Is.EqualTo(mockLearningContentViewModel));
     }
 
     [Test]
-    public void PresentationLogic_LoadLearningContentViewModelFromStream_CatchesException()
+    public void LoadLearningContentViewModelFromStream_CatchesException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.LoadLearningContentFromStream(Arg.Any<string>(), Arg.Any<Stream>()).Throws(new Exception("Exception"));
@@ -1043,20 +1031,14 @@ public class PresentationLogicUt
     #endregion
 
     private static AuthoringTool.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(
-        IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null,
-        ILearningWorldMapper? worldMapper = null, ILearningSpaceMapper? spaceMapper = null,
-        ILearningElementMapper? elementMapper = null, ILearningContentMapper? contentMapper = null,
+        IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null,
         IServiceProvider? serviceProvider = null, ILogger<AuthoringTool.PresentationLogic.API.PresentationLogic>? logger = null)
     {
         configuration ??= Substitute.For<IAuthoringToolConfiguration>();
         businessLogic ??= Substitute.For<IBusinessLogic>();
-        worldMapper ??= Substitute.For<ILearningWorldMapper>();
-        spaceMapper ??= Substitute.For<ILearningSpaceMapper>();
-        elementMapper ??= Substitute.For<ILearningElementMapper>();
-        contentMapper ??= Substitute.For<ILearningContentMapper>();
+        mapper ??= Substitute.For<IMapper>();
         serviceProvider ??= Substitute.For<IServiceProvider>();
         logger ??= Substitute.For<ILogger<AuthoringTool.PresentationLogic.API.PresentationLogic>>();
-        return new AuthoringTool.PresentationLogic.API.PresentationLogic(configuration, businessLogic,
-            worldMapper, spaceMapper, elementMapper, contentMapper, serviceProvider, logger);
+        return new AuthoringTool.PresentationLogic.API.PresentationLogic(configuration, businessLogic, mapper, serviceProvider, logger);
     }
 }

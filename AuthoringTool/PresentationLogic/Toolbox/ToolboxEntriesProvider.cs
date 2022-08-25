@@ -1,6 +1,5 @@
 using System.IO.Abstractions;
 using AuthoringTool.BusinessLogic.API;
-using AuthoringTool.PresentationLogic.EntityMapping;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
@@ -145,9 +144,9 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
         _worlds = worldFiles.Select(filepath => BusinessLogic.LoadLearningWorld(filepath))
             .Select(entity => Mapper.Map<LearningWorldViewModel>(entity)).ToList();
         _spaces = spaceFiles.Select(filepath => BusinessLogic.LoadLearningSpace(filepath))
-            .Select(entity => Mapper.Map<LearningSpaceViewModel>(entity)).ToList();
+            .Select(entity => Mapper.Map<LearningSpaceViewModel>(entity)).ToList<ILearningSpaceViewModel>();
         _elements = elementFiles.Select(filepath => BusinessLogic.LoadLearningElement(filepath))
-            .Select(entity => Mapper.Map<LearningElementViewModel>(entity)).ToList();
+            .Select(entity => Mapper.Map<LearningElementViewModel>(entity)).ToList<ILearningElementViewModel>();
 
         _initialized = true;
     }

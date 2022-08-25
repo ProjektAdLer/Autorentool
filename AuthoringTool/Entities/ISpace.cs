@@ -1,5 +1,5 @@
 ﻿namespace AuthoringTool.Entities;
 
-public interface ISpace
+public interface ISpace : ILearningElementParent
 {
 }

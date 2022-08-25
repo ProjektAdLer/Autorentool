@@ -11,8 +11,6 @@ using AuthoringTool.PresentationLogic;
 using AuthoringTool.PresentationLogic.API;
 using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
 using AuthoringTool.PresentationLogic.ElectronNET;
-using AuthoringTool.PresentationLogic.EntityMapping;
-using AuthoringTool.PresentationLogic.EntityMapping.LearningElementMapper;
 using AuthoringTool.PresentationLogic.LearningElement;
 using AuthoringTool.PresentationLogic.LearningSpace;
 using AuthoringTool.PresentationLogic.LearningWorld;
@@ -48,7 +46,6 @@ public class Startup
         ConfigureBusinessLogic(services);
         ConfigureDataAccess(services);
         ConfigureToolbox(services);
-        ConfigureMappers(services);
         ConfigureUtilities(services);
         ConfigureAutoMapper(services);
 

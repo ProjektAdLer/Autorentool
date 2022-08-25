@@ -134,7 +134,7 @@ public class BusinessLogicUt
     public void SaveLearningElement_CallsDataAccess()
     {
         var content = new LearningContent("a", "b", Array.Empty<byte>());
-        var learningElement = new LearningElement("fa", "f", "f", content, "f",
+        var learningElement = new LearningElement("fa", "f", null, content, "f",
             "f", "f", LearningElementDifficultyEnum.Easy);
         var contentPe = new LearningContentPe("a", "b", Array.Empty<byte>());
         var learningElementPe = new LearningElementPe("fa", "f", "f", contentPe, "f",
@@ -166,7 +166,7 @@ public class BusinessLogicUt
     public void LoadLearningElement_ReturnsLearningElement()
     {
         var content = new LearningContent("a", "b", Array.Empty<byte>());
-        var learningElement = new LearningElement("fa", "a", "f", content, "f", "f",
+        var learningElement = new LearningElement("fa", "a", null, content, "f", "f",
             "f", LearningElementDifficultyEnum.Easy);
         var contentPe = new LearningContentPe("a", "b", Array.Empty<byte>());
         var learningElementPe = new LearningElementPe("fa", "a", "f", contentPe, "f", "f", "f",
@@ -291,7 +291,7 @@ public class BusinessLogicUt
     public void LoadLearningElementFromStream_ReturnsLearningElement()
     {
         var content = new LearningContent("a", "b", Array.Empty<byte>());
-        var learningElement = new LearningElement("fa", "a", "f", content, "f", "f",
+        var learningElement = new LearningElement("fa", "a", null, content, "f", "f",
             "f", LearningElementDifficultyEnum.Easy);
         var contentPe = new LearningContentPe("a", "b", Array.Empty<byte>());
         var learningElementPe = new LearningElementPe("fa", "a", "f", contentPe, "f", "f", "f",
