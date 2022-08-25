@@ -49,7 +49,7 @@ jobs:
         D:/a/Autorentool/Autorentool/TestResults/ /p:CollectCoverage=true /p:CoverletOutput=D:/a/Autorentool/Autorentool/TestResults/ /p:MergeWith=D:/a/Autorentool/Autorentool/TestResults/coverlet.info /p:CoverletOutputFormat=lcov --% /p:Include=\"[Generator]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]\"
         
       - name: Debugging show file tree
-        run: tree "C:" /F /A; tree "D:" /F /A
+        run: tree "D:" /F /A
       
       - name: Publish coverage report to coveralls.io
         uses: coverallsapp/github-action@master
