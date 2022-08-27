@@ -1,9 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthoringToolLib", "AuthoringToolLib\AuthoringToolLib.csproj", "{0C6696A5-DF9A-491B-BC94-AE0B93C7F6AA}"
-	ProjectSection(ProjectDependencies) = postProject
-		{E3066ECB-19B3-418F-9D5C-72D7D0B8DC34} = {E3066ECB-19B3-418F-9D5C-72D7D0B8DC34}
-	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthoringToolLibTest", "AuthoringToolLibTest\AuthoringToolLibTest.csproj", "{E3CF76B7-1111-43E2-8374-4777709AFC93}"
 EndProject
