@@ -43,6 +43,9 @@ jobs:
       - name: Run automated unit and integration test Generator
         run: dotnet test GeneratorTest/GeneratorTest.csproj --configuration Release /p:CollectCoverage=true /p:MergeWith=../TestResults/coverlet.json /p:CoverletOutput=../TestResults/coverlet.info /p:CoverletOutputFormat=lcov --% /p:Include=\"[AuthoringTool]*,[Generator]*,[PersistEntities]*,[AuthoringToolLib]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]\"
             
+      - name: debugging output file system
+        run: tree /A /F
+      
       - name: Publish coverage report to coveralls.io
         uses: coverallsapp/github-action@master
         with:
