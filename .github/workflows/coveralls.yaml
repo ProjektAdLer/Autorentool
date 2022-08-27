@@ -34,11 +34,10 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-nuget
           
-      - name: Run automated unit and integration tests
-        run: dotnet test AuthoringToolTest/AuthoringToolTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=TestResults/coverlet.info /p:CoverletOutputFormat=lcov --% /p:Include=\"[AuthoringTool]*,[Generator]*,[PersistEntities]*,[AuthoringToolLib]*\" #/p:Exclude=\"[ElectronWrapper]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]*\"
-        #run: dotnet test AuthoringToolTest/AuthoringToolTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=TestResults/coverlet.info /p:CoverletOutputFormat=lcov --% /p:Include=\"[AuthoringTool]*,[Generator]*,[PersistEntities]*,[AuthoringToolLib]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]\"
-      - name: show file tree for debugging
-        run: tree /F /A
+      - name: Run automated unit and integration test AuthoringTool
+        #run: dotnet test AuthoringToolTest/AuthoringToolTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=TestResults/coverlet.info /p:CoverletOutputFormat=lcov --% /p:Include=\"[AuthoringTool]*,[Generator]*,[PersistEntities]*,[AuthoringToolLib]*\" #/p:Exclude=\"[ElectronWrapper]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]*\"
+        run: dotnet test AuthoringToolTest/AuthoringToolTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=TestResults/coverlet.info /p:CoverletOutputFormat=lcov --% /p:Include=\"[AuthoringTool]*,[Generator]*,[PersistEntities]*,[AuthoringToolLib]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]\"
+      
       
       - name: Publish coverage report to coveralls.io
         uses: coverallsapp/github-action@master
