@@ -35,7 +35,7 @@ jobs:
             ${{ runner.os }}-nuget
           
       - name: Run automated unit and integration test
-        run: dotnet test --configuration Release /p:CollectCoverage=true /p:CoverletOutput=../TestResults/coverlet.info /p:MergeWith=../TestResults/coverlet.info /p:CoverletOutputFormat=lcov --% /p:Include=\"[AuthoringTool]*,[Generator]*,[PersistEntities]*,[AuthoringToolLib]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]\"
+        run: dotnet test --configuration Release /p:CollectCoverage=true /p:CoverletOutput=../TestResults/coverlet.info /p:CoverletOutputFormat=lcov --% /p:Include=\"[AuthoringTool]*,[Generator]*,[PersistEntities]*,[AuthoringToolLib]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]\"
 
       #- name: Run automated unit and integration test AuthoringToolLib
       #  run: dotnet test AuthoringToolLibTest/AuthoringToolLibTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=../TestResults/ /p:MergeWith=../TestResults/coverlet.json /p:CoverletOutputFormat=json --% /p:Include=\"[AuthoringTool]*,[Generator]*,[PersistEntities]*,[AuthoringToolLib]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]\"
