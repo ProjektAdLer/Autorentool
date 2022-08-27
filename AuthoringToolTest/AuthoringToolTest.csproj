@@ -34,6 +34,11 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\AuthoringToolLibTest\AuthoringToolLibTest.csproj" />
+      <ProjectReference Include="..\GeneratorTest\GeneratorTest.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
       <Folder Include="View" />
     </ItemGroup>
 
