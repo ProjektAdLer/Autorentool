@@ -36,10 +36,13 @@ jobs:
           
       - name: Run automated unit and integration test AuthoringTool
         #run: dotnet test AuthoringToolTest/AuthoringToolTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=TestResults/coverlet.info /p:CoverletOutputFormat=lcov --% /p:Include=\"[AuthoringTool]*,[Generator]*,[PersistEntities]*,[AuthoringToolLib]*\" #/p:Exclude=\"[ElectronWrapper]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]*\"
-        run: dotnet test AuthoringToolTest/AuthoringToolTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=TestResults/coverlet.info /p:MergeWith=TestResults/coverlet.info /p:CoverletOutputFormat=lcov --% /p:Include=\"[AuthoringTool]*,[Generator]*,[PersistEntities]*,[AuthoringToolLib]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]\"
+        run: dotnet test AuthoringToolTest/AuthoringToolTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=TestResults/coverlet.info /p:MergeWith=TestResults/coverlet.info /p:CoverletOutputFormat=opencover --% /p:Include=\"[AuthoringTool]*,[Generator]*,[PersistEntities]*,[AuthoringToolLib]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]\"
       
       - name: Run automated unit and integration test AuthoringToolLib
-        run: dotnet test AuthoringToolLibTest/AuthoringToolLibTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=TestResults/coverlet.info /p:MergeWith=TestResults/coverlet.info /p:CoverletOutputFormat=lcov --% /p:Include=\"[AuthoringTool]*,[Generator]*,[PersistEntities]*,[AuthoringToolLib]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]\"
+        run: dotnet test AuthoringToolLibTest/AuthoringToolLibTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=TestResults/coverlet.info /p:MergeWith=TestResults/coverlet.info /p:CoverletOutputFormat=opencover --% /p:Include=\"[AuthoringTool]*,[Generator]*,[PersistEntities]*,[AuthoringToolLib]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]\"
+
+      - name: Aggregate LCOV results
+        uses: RauliL/lerna-lcov-aggregate-action@master
       
       - name: Publish coverage report to coveralls.io
         uses: coverallsapp/github-action@master
