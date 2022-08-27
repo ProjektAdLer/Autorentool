@@ -35,13 +35,13 @@ jobs:
             ${{ runner.os }}-nuget
           
       - name: Run automated unit and integration test AuthoringTool
-        run: dotnet test AuthoringToolTest/AuthoringToolTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=../TestResults/ /p:MergeWith=../TestResults/coverlet.json /p:CoverletOutputFormat=json --% /p:Include=\"[AuthoringTool]*,[Generator]*,[PersistEntities]*,[AuthoringToolLib]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]\"
+        run: dotnet test AuthoringToolTest/AuthoringToolTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=../TestResults/ /p:MergeWith=../TestResults/coverlet.json /p:CoverletOutputFormat=json,lcov --% /p:Include=\"[AuthoringTool]*,[Generator]*,[PersistEntities]*,[AuthoringToolLib]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]\"
 
       - name: Run automated unit and integration test AuthoringToolLib
-        run: dotnet test AuthoringToolLibTest/AuthoringToolLibTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=../TestResults/ /p:MergeWith=../TestResults/coverlet.json /p:CoverletOutputFormat=json --% /p:Include=\"[AuthoringTool]*,[Generator]*,[PersistEntities]*,[AuthoringToolLib]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]\"
+        run: dotnet test AuthoringToolLibTest/AuthoringToolLibTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=../TestResults/ /p:MergeWith=../TestResults/coverlet.json /p:CoverletOutputFormat=json,lcov --% /p:Include=\"[AuthoringTool]*,[Generator]*,[PersistEntities]*,[AuthoringToolLib]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]\"
 
       - name: Run automated unit and integration test Generator
-        run: dotnet test GeneratorTest/GeneratorTest.csproj --configuration Release /p:CollectCoverage=true /p:MergeWith=../TestResults/coverlet.json /p:CoverletOutput=../TestResults/coverlet.info /p:CoverletOutputFormat=lcov --% /p:Include=\"[AuthoringTool]*,[Generator]*,[PersistEntities]*,[AuthoringToolLib]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]\"
+        run: dotnet test GeneratorTest/GeneratorTest.csproj --configuration Release /p:CollectCoverage=true /p:MergeWith=../TestResults/coverlet.json /p:CoverletOutput=../TestResults/coverlet.info /p:CoverletOutputFormat=json,lcov --% /p:Include=\"[AuthoringTool]*,[Generator]*,[PersistEntities]*,[AuthoringToolLib]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]\"
             
       - name: debugging output file system
         run: tree /A /F
