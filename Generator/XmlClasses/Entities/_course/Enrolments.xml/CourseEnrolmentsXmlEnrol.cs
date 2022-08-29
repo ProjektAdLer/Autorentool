@@ -41,7 +41,7 @@ namespace Generator.XmlClasses.Entities._course.Enrolments.xml;
 			CustomText4 = "$@NULL@$";
 			Timecreated = "";
 			Timemodified = "";
-			User_enrolments = "";
+			UserEnrolments = "";
 
 		}
 		
@@ -142,7 +142,7 @@ namespace Generator.XmlClasses.Entities._course.Enrolments.xml;
 		public string Timemodified { get; set; }
 
 		[XmlElement(ElementName = "user_enrolments")] 
-		public string User_enrolments { get; set; }
+		public string UserEnrolments { get; set; }
 		
 		[XmlAttribute(AttributeName="id")]
 		public string Id { get; set; }

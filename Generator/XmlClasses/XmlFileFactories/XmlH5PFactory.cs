@@ -15,7 +15,7 @@ namespace Generator.XmlClasses.XmlFileFactories;
 /// <summary>
 /// Creates all H5P files in the needed XML File.
 /// </summary>
-public class XmlH5PFactory : IXmlH5PFactory
+public class XmlH5PFactory
 {
     private string _currWorkDir;
     private readonly string _hardcodedPath = "XMLFilesForExport";
@@ -197,8 +197,8 @@ public class XmlH5PFactory : IXmlH5PFactory
         ActivitiesGradesXmlGradeItem.Timemodified = CurrentTime;
         ActivitiesGradesXmlGradeItem.Id = H5PElementId;
         
-        ActivitiesGradesXmlGradeItems.GradeItem = ActivitiesGradesXmlGradeItem as ActivitiesGradesXmlGradeItem;
-        ActivitiesGradesXmlActivityGradebook.GradeItems = ActivitiesGradesXmlGradeItems as ActivitiesGradesXmlGradeItems;
+        ActivitiesGradesXmlGradeItems.GradeItem = ActivitiesGradesXmlGradeItem as ActivitiesGradesXmlGradeItem ?? new ActivitiesGradesXmlGradeItem();
+        ActivitiesGradesXmlActivityGradebook.GradeItems = ActivitiesGradesXmlGradeItems as ActivitiesGradesXmlGradeItems ?? new ActivitiesGradesXmlGradeItems();
 
         ActivitiesGradesXmlActivityGradebook.Serialize("h5pactivity", H5PElementId);
         
@@ -208,7 +208,7 @@ public class XmlH5PFactory : IXmlH5PFactory
         ActivitiesH5PActivityXmlH5PActivity.Timemodified = CurrentTime;
         ActivitiesH5PActivityXmlH5PActivity.Id = H5PElementId;
 
-        ActivitiesH5PActivityXmlActivity.H5pactivity = ActivitiesH5PActivityXmlH5PActivity as ActivitiesH5PActivityXmlH5PActivity;
+        ActivitiesH5PActivityXmlActivity.H5pactivity = ActivitiesH5PActivityXmlH5PActivity as ActivitiesH5PActivityXmlH5PActivity ?? new ActivitiesH5PActivityXmlH5PActivity();
         ActivitiesH5PActivityXmlActivity.Id = H5PElementId;
         ActivitiesH5PActivityXmlActivity.ModuleId = H5PElementId;
         ActivitiesH5PActivityXmlActivity.ModuleName = "h5pactivity";
@@ -250,10 +250,10 @@ public class XmlH5PFactory : IXmlH5PFactory
 
         ActivitiesInforefXmlFileref.File = _activitiesInforefXmlFileList;
         
-        ActivitiesInforefXmlGradeItemref.GradeItem = ActivitiesInforefXmlGradeItem as ActivitiesInforefXmlGradeItem;
+        ActivitiesInforefXmlGradeItemref.GradeItem = ActivitiesInforefXmlGradeItem as ActivitiesInforefXmlGradeItem ?? new ActivitiesInforefXmlGradeItem();
         
-        ActivitiesInforefXmlInforef.Fileref = ActivitiesInforefXmlFileref as ActivitiesInforefXmlFileref;
-        ActivitiesInforefXmlInforef.GradeItemref = ActivitiesInforefXmlGradeItemref as ActivitiesInforefXmlGradeItemref;
+        ActivitiesInforefXmlInforef.Fileref = ActivitiesInforefXmlFileref as ActivitiesInforefXmlFileref ?? new ActivitiesInforefXmlFileref();
+        ActivitiesInforefXmlInforef.GradeItemref = ActivitiesInforefXmlGradeItemref as ActivitiesInforefXmlGradeItemref ?? new ActivitiesInforefXmlGradeItemref();
         
         ActivitiesInforefXmlInforef.Serialize("h5pactivity", H5PElementId);
     }

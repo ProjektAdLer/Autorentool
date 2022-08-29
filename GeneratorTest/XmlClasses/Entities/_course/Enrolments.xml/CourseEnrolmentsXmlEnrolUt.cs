@@ -48,7 +48,7 @@ public class CourseEnrolmentsXmlEnrolUt
             Assert.That(systemUnderTest.CustomText4, Is.EqualTo("$@NULL@$"));
             Assert.That(systemUnderTest.Timecreated, Is.EqualTo(""));
             Assert.That(systemUnderTest.Timemodified, Is.EqualTo(""));
-            Assert.That(systemUnderTest.User_enrolments, Is.EqualTo(""));
+            Assert.That(systemUnderTest.UserEnrolments, Is.EqualTo(""));
             
         });
     }

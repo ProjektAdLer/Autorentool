@@ -55,7 +55,7 @@ public class XmlFileManager : IXmlFileManager
     }
 
     /// <summary>
-    /// Create needed folder for any file (only the first 2 letters of the hash value as foldername)
+    /// Create needed folder for any file (only the first 2 letters of the hash value as folder name)
     /// and copy file to the created folder
     /// </summary>
     /// <param name="filepath"></param>

@@ -66,7 +66,7 @@ public interface ICourseEnrolmentsXmlEnrol
 
 		string Timemodified { get; set; }
 
-		string User_enrolments { get; set; }
+		string UserEnrolments { get; set; }
 		
 		string Id { get; set; }
 }

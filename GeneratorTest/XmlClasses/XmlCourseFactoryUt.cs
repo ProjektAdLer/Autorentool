@@ -142,16 +142,16 @@ public class XmlCourseFactoryUt
         //Arrange 
         var mockReadDsl = Substitute.For<IReadDsl>();
         
-        var mockEnrolManual = Substitute.For<ICourseEnrolmentsXmlEnrol>();
-        var mockEnrolGuest = Substitute.For<ICourseEnrolmentsXmlEnrol>();
-        var mockEnrolSelf = Substitute.For<ICourseEnrolmentsXmlEnrol>();
+        var mockEnrolManual = new CourseEnrolmentsXmlEnrol();
+        var mockEnrolGuest = new CourseEnrolmentsXmlEnrol();
+        var mockEnrolSelf = new CourseEnrolmentsXmlEnrol();
         var mockEnrols = new CourseEnrolmentsXmlEnrols();
         var mockEnrolments = Substitute.For<ICourseEnrolmentsXmlEnrolments>();
         
         var enrolsList = new List<CourseEnrolmentsXmlEnrol>();
-        enrolsList.Add(mockEnrolManual as CourseEnrolmentsXmlEnrol);;
-        enrolsList.Add(mockEnrolGuest as CourseEnrolmentsXmlEnrol);;
-        enrolsList.Add(mockEnrolSelf as CourseEnrolmentsXmlEnrol);;
+        enrolsList.Add(mockEnrolManual);
+        enrolsList.Add(mockEnrolGuest);
+        enrolsList.Add(mockEnrolSelf);
         
         var systemUnderTest = new XmlCourseFactory(mockReadDsl, courseEnrolmentsXmlEnrolManual: mockEnrolManual,
             courseEnrolmentsXmlEnrolGuest: mockEnrolGuest, courseEnrolmentsXmlEnrolSelf: mockEnrolSelf,
