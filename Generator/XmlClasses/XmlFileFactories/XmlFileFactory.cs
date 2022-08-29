@@ -12,7 +12,7 @@ using Generator.XmlClasses.Entities.Files.xml;
 
 namespace Generator.XmlClasses.XmlFileFactories;
 
-public class XmlFileFactory
+public class XmlFileFactory : IXmlFileFactory
 {
     private string _dslPath;
     public List<FilesXmlFile> FilesXmlFilesList;

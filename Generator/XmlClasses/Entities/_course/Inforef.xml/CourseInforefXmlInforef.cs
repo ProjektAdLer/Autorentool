@@ -15,7 +15,7 @@ public class CourseInforefXmlInforef : ICourseInforefXmlInforef {
     public void Serialize()
     {
         var xml = new XmlSerialize();
-        xml.Serialize(this, "course/inforef.xml"); 
+        xml.Serialize(this, Path.Join("course", "inforef.xml")); 
     }
     
     [XmlElement(ElementName="roleref")]

@@ -1,4 +1,5 @@
-﻿using Generator.DSL;
+﻿using System.IO.Abstractions;
+using Generator.DSL;
 using Generator.XmlClasses.Entities._course.Completiondefault.xml;
 using Generator.XmlClasses.Entities._course.Course.xml;
 using Generator.XmlClasses.Entities._course.Enrolments.xml;
@@ -11,7 +12,7 @@ namespace Generator.XmlClasses;
 /// Sets the paramters of course/course.xml, course/enrolments.xml, course/inforef.xml, course/roles.xml,
 /// course/completiondefaults.xml and creates the files
 /// </summary>
-public class XmlCourseFactory
+public class XmlCourseFactory : IXmlCourseFactory
 {
     private LearningWorldJson _learningWorld;
     internal ICourseCourseXmlCategory CourseCourseXmlCategory { get; }
@@ -26,6 +27,8 @@ public class XmlCourseFactory
     internal ICourseInforefXmlRoleref CourseInforefXmlRoleref { get; }
     internal ICourseRolesXmlRoles CourseRolesXmlRoles { get; }
     internal ICourseCompletiondefaultXmlCourseCompletionDefaults CourseCompletiondefaultXmlCourseCompletionDefaults { get; }
+    public IReadDsl ReadDsl;
+
     
     
     public XmlCourseFactory(IReadDsl readDsl, ICourseCourseXmlCategory? courseCourseXmlCategory=null, ICourseCourseXmlCourse? courseCourseXmlCourse=null,
@@ -35,6 +38,7 @@ public class XmlCourseFactory
         ICourseInforefXmlRoleref? courseInforefXmlRoleref=null, ICourseInforefXmlInforef? courseInforefXmlInforef=null, 
         ICourseRolesXmlRoles? courseRolesXmlRoles=null, ICourseCompletiondefaultXmlCourseCompletionDefaults? courseCourseXmlCompletiondefault=null)
     {
+        
         CourseCourseXmlCategory = courseCourseXmlCategory?? new CourseCourseXmlCategory();
         CourseCourseXmlCourse = courseCourseXmlCourse?? new CourseCourseXmlCourse();
 
@@ -52,7 +56,8 @@ public class XmlCourseFactory
         
         CourseCompletiondefaultXmlCourseCompletionDefaults = courseCourseXmlCompletiondefault?? new CourseCompletiondefaultXmlCourseCompletionDefaults();
         
-        _learningWorld = readDsl.GetLearningWorld();
+        ReadDsl = readDsl;
+        _learningWorld = ReadDsl.GetLearningWorld();
     }
     
     /// <summary>

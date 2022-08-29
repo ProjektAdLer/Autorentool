@@ -15,7 +15,7 @@ namespace Generator.XmlClasses.XmlFileFactories;
 /// <summary>
 /// Creates all H5P files in the needed XML File.
 /// </summary>
-public class XmlH5PFactory
+public class XmlH5PFactory : IXmlH5PFactory
 {
     private string _currWorkDir;
     private readonly string _hardcodedPath = "XMLFilesForExport";

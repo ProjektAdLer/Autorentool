@@ -9,6 +9,6 @@ public class CourseCompletiondefaultXmlCourseCompletionDefaults : ICourseComplet
     public void Serialize()
     {
         var xml = new XmlSerialize();
-        xml.Serialize(this, "course/completiondefaults.xml");
+        xml.Serialize(this, Path.Join("course" ,"completiondefaults.xml"));
     }
 }

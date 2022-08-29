@@ -112,10 +112,10 @@ public class BackupFileGeneratorUt
         
         if (Directory.Exists(Path.Join(curDirectory, "XMLFilesForExport")))
         {
-            Directory.Delete(Path.Join(curDirectory, "XMLFilesForExport", "course"));
-            File.Delete(Path.Join(curDirectory, "XMLFilesForExport", "File.txt"));
-            Directory.Delete(Path.Join(curDirectory, "XMLFilesForExport"));
+            var dir = new DirectoryInfo(Path.Join(curDirectory, "XMLFilesForExport"));
+            dir.Delete(true);
         }
+        
         if (File.Exists(Path.Join(curDirectory, "XMLFilesForTesting")))
         {
             File.Delete(Path.Join(curDirectory, "XMLFilesForTesting"));

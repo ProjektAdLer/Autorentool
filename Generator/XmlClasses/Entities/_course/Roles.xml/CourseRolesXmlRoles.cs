@@ -17,7 +17,7 @@ public class CourseRolesXmlRoles : ICourseRolesXmlRoles
     public void Serialize()
     {
         var xml = new XmlSerialize();
-        xml.Serialize(this, "course/roles.xml");
+        xml.Serialize(this, Path.Join("course", "roles.xml"));
     }
 
 

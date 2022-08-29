@@ -16,7 +16,7 @@ public class CourseEnrolmentsXmlEnrolments : ICourseEnrolmentsXmlEnrolments
     public void Serialize()
     {
         var xml = new XmlSerialize();
-        xml.Serialize(this, "course/enrolments.xml");
+        xml.Serialize(this, Path.Join("course", "enrolments.xml"));
     }
     
     [XmlElement(ElementName = "enrols")] 

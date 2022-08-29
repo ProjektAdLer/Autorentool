@@ -25,15 +25,15 @@ public class WorldGeneratorUt
         var mockMapper = Substitute.For<IMapper>();
 
         // Act
-        var worldGenerator = new WorldGenerator(mockBackupFileGen, mockCreateDsl, mockReadDsl, mockFilesystem,  mockMapper);
+        var systemUnderTest = new WorldGenerator(mockBackupFileGen, mockCreateDsl, mockReadDsl, mockFilesystem,  mockMapper);
 
         // Assert
         Assert.Multiple(()=>
         {
-            Assert.That(worldGenerator.BackupFile, Is.EqualTo(mockBackupFileGen));
-            Assert.That(worldGenerator.CreateDsl, Is.EqualTo(mockCreateDsl));
-            Assert.That(worldGenerator.ReadDsl, Is.EqualTo(mockReadDsl));
-            Assert.That(worldGenerator.Mapper, Is.EqualTo(mockMapper));
+            Assert.That(systemUnderTest.BackupFile, Is.EqualTo(mockBackupFileGen));
+            Assert.That(systemUnderTest.CreateDsl, Is.EqualTo(mockCreateDsl));
+            Assert.That(systemUnderTest.ReadDsl, Is.EqualTo(mockReadDsl));
+            Assert.That(systemUnderTest.Mapper, Is.EqualTo(mockMapper));
         });
     }
 
@@ -46,10 +46,10 @@ public class WorldGeneratorUt
         var mockCreateDsl = Substitute.For<ICreateDsl>();
         var mockReadDsl = Substitute.For<IReadDsl>();
         var mockMapper = Substitute.For<IMapper>();
-        var worldGenerator = new WorldGenerator(mockBackupFileGen, mockCreateDsl, mockReadDsl, mockFilesystem,  mockMapper);
+        var systemUnderTest = new WorldGenerator(mockBackupFileGen, mockCreateDsl, mockReadDsl, mockFilesystem,  mockMapper);
 
         // Act
-        worldGenerator.ConstructBackup(Arg.Any<LearningWorld>(), "SomePath");
+        systemUnderTest.ConstructBackup(Arg.Any<LearningWorld>(), "SomePath");
         
         
         

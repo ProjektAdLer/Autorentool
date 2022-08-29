@@ -56,7 +56,7 @@ namespace Generator.XmlClasses.Entities._course.Course.xml;
 		public void Serialize()
 		{
 			var xml = new XmlSerialize();
-			xml.Serialize(this, "course/course.xml");
+			xml.Serialize(this, Path.Join("course","course.xml"));
 		}
 
 		[XmlElement(ElementName = "shortname")]

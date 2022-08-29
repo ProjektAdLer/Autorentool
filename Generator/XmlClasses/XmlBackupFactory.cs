@@ -1,4 +1,5 @@
-﻿using Generator.DSL;
+﻿using System.IO.Abstractions;
+using Generator.DSL;
 using Generator.XmlClasses.Entities.Gradebook.xml;
 using Generator.XmlClasses.Entities.Groups.xml;
 using Generator.XmlClasses.Entities.MoodleBackup.xml;
@@ -13,7 +14,7 @@ namespace Generator.XmlClasses;
 /// sets the Parameter of gradebook.xml, groups.xml, outcomes.xml, questions.xml, scales.xml, roles.xml and
 ///  moodle_backup.xml files and create it
 /// </summary>
-public class XmlBackupFactory
+public class XmlBackupFactory : IXmlBackupFactory
 {
     private readonly string _currentTime;
     private readonly LearningWorldJson _learningWorld;
@@ -69,6 +70,7 @@ public class XmlBackupFactory
     internal List<MoodleBackupXmlActivity> MoodleBackupXmlActivityList;
     internal List<MoodleBackupXmlSetting> MoodleBackupXmlSettingList;
     internal List<MoodleBackupXmlSection> MoodleBackupXmlSectionList;
+
     
     public XmlBackupFactory(IReadDsl readDsl, IGradebookXmlGradeItem? gradebookXmlGradeItem=null,
         IGradebookXmlGradeItems? gradebookXmlGradeItems=null,IGradebookXmlGradeCategory? gradebookXmlGradeCategory=null,
@@ -83,7 +85,6 @@ public class XmlBackupFactory
         IOutcomesXmlOutcomesDefinition? outcomesXmlOutcomesDefinition=null, IQuestionsXmlQuestionsCategories? questionsXmlQuestionsCategories=null,
         IRolesXmlRole? rolesXmlRole=null, IRolesXmlRolesDefinition? rolesXmlRolesDefinition=null, IScalesXmlScalesDefinition? scalesXmlScalesDefinition=null)
     {
-    
         GradebookXmlGradeItem = gradebookXmlGradeItem?? new GradebookXmlGradeItem();
         GradebookXmlGradeItems = gradebookXmlGradeItems?? new GradebookXmlGradeItems();
         GradebookXmlGradeCategory = gradebookXmlGradeCategory?? new GradebookXmlGradeCategory();
