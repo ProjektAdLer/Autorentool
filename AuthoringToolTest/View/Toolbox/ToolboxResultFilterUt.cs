@@ -28,12 +28,11 @@ public class ToolboxResultFilterUt
         Space3 = new LearningSpaceViewModel("measures of code quality", "fa", "fa", "ba", "ba");
         Space4 = new LearningSpaceViewModel("elements of code quality", "fa", "fa", "ba", "ba");
         //nullability overrides because we don't care about learningContent here
-        Element1 = new LearningElementViewModel("principles of unit testing", "s", null, null!, "s", 
-            "s", "s",LearningElementDifficultyEnum.Easy);
-        Element2 = new LearningElementViewModel("example calculation of lines of code metric", "s",
-            null, null!, "s", "s", "s",LearningElementDifficultyEnum.Easy);
-        Element3 = new LearningElementViewModel("real world example of measurable code quality", "s", null, null!, "s",
-            "s", "s",LearningElementDifficultyEnum.Easy);
+        Element1 = new LearningElementViewModel("principles of unit testing", "s", null!, "s", 
+            "s", "s",LearningElementDifficultyEnum.Easy, null);
+        Element2 = new LearningElementViewModel("example calculation of lines of code metric", "s", null!, "s", "s", "s",LearningElementDifficultyEnum.Easy, null);
+        Element3 = new LearningElementViewModel("real world example of measurable code quality", "s", null!, "s",
+            "s", "s",LearningElementDifficultyEnum.Easy, null);
         
         Collection = new List<IDisplayableLearningObject>
         {

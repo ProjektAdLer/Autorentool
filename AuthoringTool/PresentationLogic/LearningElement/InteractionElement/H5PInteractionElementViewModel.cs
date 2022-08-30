@@ -5,6 +5,13 @@ namespace AuthoringTool.PresentationLogic.LearningElement.InteractionElement;
 public class H5PInteractionElementViewModel : InteractionElementViewModel
 {
     /// <summary>
+    /// Private Constructor for AutoMapper
+    /// </summary>
+    private H5PInteractionElementViewModel() : base()
+    {
+    }
+    
+    /// <summary>
     /// Initializes a new instance of the <see cref="H5PInteractionElementViewModel"/> class.
     /// </summary>
     public H5PInteractionElementViewModel(string name, string shortname, ILearningElementViewModelParent? parent,

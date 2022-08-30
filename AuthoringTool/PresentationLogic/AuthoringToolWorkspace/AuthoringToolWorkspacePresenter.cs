@@ -413,6 +413,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
             if (_learningSpacePresenter.LearningSpaceVm is not { } space) return;
             learningElement.Parent = space;
             space.LearningElements.Add(learningElement);
+            learningElement.Parent = space;
             space.SelectedLearningObject = learningElement;
         }
         else

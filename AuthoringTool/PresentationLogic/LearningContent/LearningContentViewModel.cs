@@ -3,6 +3,13 @@ namespace AuthoringTool.PresentationLogic.LearningContent;
 public class LearningContentViewModel
 {
     /// <summary>
+    /// Private Constructor for AutoMapper
+    /// </summary>
+    private LearningContentViewModel()
+    {
+    }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="LearningContentViewModel"/> class.
     /// </summary>
     /// <param name="name">The name of the learning content</param>

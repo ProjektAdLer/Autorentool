@@ -519,8 +519,8 @@ public class LearningElementPresenterUt
     {
         var systemUnderTest = new LearningElementPresenter();
         var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
-        var element = new LearningElementViewModel("a", "b", null, content,
-            "e", "f","g", LearningElementDifficultyEnum.Medium, 8, 17f,29f);
+        var element = new LearningElementViewModel("a", "b", content,
+            "e", "f","g", LearningElementDifficultyEnum.Medium, null, 8,17f, 29f);
         
         var name = "new element";
         var shortname = "ne";
@@ -555,8 +555,8 @@ public class LearningElementPresenterUt
     {
         var systemUnderTest = new LearningElementPresenter();
         var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
-        var element = new LearningElementViewModel("a", "b", null, content,
-            "e", "f","g", LearningElementDifficultyEnum.Medium, 9, 17f,29f);
+        var element = new LearningElementViewModel("a", "b", content,
+            "e", "f","g", LearningElementDifficultyEnum.Medium, null, 9,17f, 29f);
         
         var name = "new element";
         var shortname = "ne";
@@ -592,8 +592,8 @@ public class LearningElementPresenterUt
         var systemUnderTest = new LearningElementPresenter();
         var parent = new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
         var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
-        var element = new LearningElementViewModel("a", "b", parent, content,
-            "e", "f","g", LearningElementDifficultyEnum.Easy, 4, 17f,29f);
+        var element = new LearningElementViewModel("a", "b", content,
+            "e", "f","g", LearningElementDifficultyEnum.Easy, parent, 4,17f, 29f);
         parent.LearningElements.Add(element);
         
         Assert.That(parent.LearningElements, Contains.Item(element));
@@ -609,8 +609,8 @@ public class LearningElementPresenterUt
         var systemUnderTest = new LearningElementPresenter();
         var parent = new LearningSpaceViewModel("a", "b", "c", "d", "e");
         var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
-        var element = new LearningElementViewModel("a", "b", parent, content ,
-            "e", "f","g", LearningElementDifficultyEnum.Hard, 9, 17f,29f);
+        var element = new LearningElementViewModel("a", "b", content ,
+            "e", "f","g", LearningElementDifficultyEnum.Hard, parent, 9,17f, 29f);
         parent.LearningElements.Add(element);
         
         Assert.That(parent.LearningElements, Contains.Item(element));

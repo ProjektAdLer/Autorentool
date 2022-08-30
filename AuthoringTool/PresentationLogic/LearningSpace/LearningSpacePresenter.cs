@@ -176,6 +176,7 @@ internal class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpaceP
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
         LearningSpaceVm.LearningElements.Add(element);
+        element.Parent = LearningSpaceVm;
     }
     
     /// <summary>

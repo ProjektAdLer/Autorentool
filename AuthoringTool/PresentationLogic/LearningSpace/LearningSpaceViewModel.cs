@@ -6,6 +6,13 @@ namespace AuthoringTool.PresentationLogic.LearningSpace;
 public class LearningSpaceViewModel : ILearningObjectViewModel, ILearningElementViewModelParent, ISerializableViewModel, ILearningSpaceViewModel
 {
     /// <summary>
+    /// Private Constructor for AutoMapper
+    /// </summary>
+    private LearningSpaceViewModel()
+    {
+    }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="LearningSpaceViewModel"/> class.
     /// </summary>
     /// <param name="name">The name of the learning space</param>

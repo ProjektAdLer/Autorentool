@@ -14,6 +14,7 @@ public class LearningWorld : ILearningWorld, IOriginator
         Goals = goals;
         LearningElements = learningElements ?? new List<LearningElement>();
         LearningSpaces = learningSpaces ?? new List<LearningSpace>();
+        UnsavedChanges = false;
     }
 
     public List<LearningElement> LearningElements { get; set; }
@@ -24,6 +25,8 @@ public class LearningWorld : ILearningWorld, IOriginator
     public string Language { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
+    
+    public bool UnsavedChanges { get; set; }
 
     public IMemento GetMemento()
     {

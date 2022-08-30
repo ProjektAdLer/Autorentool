@@ -1,11 +1,20 @@
 ﻿using AuthoringTool.PresentationLogic.LearningElement;
+using AutoMapper.Configuration.Annotations;
 
 namespace AuthoringTool.Entities;
 
 public class LearningElement : ILearningElement, IOriginator
 {
-    internal LearningElement(string name, string shortname,  ILearningElementParent? parent, LearningContent? learningContent,
-        string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload = 0,
+    /// <summary>
+    /// Protected Constructor for AutoMapper
+    /// </summary>
+    protected LearningElement()
+    {
+    }
+
+    internal LearningElement(string name, string shortname, LearningContent? learningContent,
+        string authors, string description, string goals, LearningElementDifficultyEnum difficulty,
+        ILearningElementParent parent, int workload = 0,
         double positionX = 0, double positionY = 0)
     {
         Name = name;

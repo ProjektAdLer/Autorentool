@@ -12,13 +12,13 @@ namespace AuthoringTool.DataAccess.PersistEntities;
 [Serializable]
 public class LearningElementPe : ILearningElementPe
 {
-    internal LearningElementPe(string name, string shortname,  string? parentName, LearningContentPe? content,
+    internal LearningElementPe(string name, string shortname, LearningContentPe? learningContent,
         string authors, string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload = 0,
         double positionX = 0, double positionY = 0)
     {
         Name = name;
         Shortname = shortname;
-        Content = content ?? new LearningContentPe();
+        LearningContent = learningContent ?? new LearningContentPe();
         Authors = authors;
         Description = description;
         Goals = goals;
@@ -26,7 +26,6 @@ public class LearningElementPe : ILearningElementPe
         Workload = workload;
         PositionX = positionX;
         PositionY = positionY;
-        ParentName = parentName;
     }
     /// <summary>
     /// Constructor for serialization. DO NOT USE FOR NORMAL INITIALIZATION.
@@ -35,7 +34,7 @@ public class LearningElementPe : ILearningElementPe
     {
         Name = "";
         Shortname = "";
-        Content = new LearningContentPe();
+        LearningContent = new LearningContentPe();
         Authors = "";
         Description = "";
         Goals = "";
@@ -43,13 +42,12 @@ public class LearningElementPe : ILearningElementPe
         Workload = 0;
         PositionX = 0;
         PositionY = 0;
-        ParentName = null;
     }
 
 
     public string Name { get; set; }
     public string Shortname { get; set; }
-    public LearningContentPe Content { get; set; }
+    public LearningContentPe LearningContent { get; set; }
     public string Authors { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
@@ -57,6 +55,5 @@ public class LearningElementPe : ILearningElementPe
     public LearningElementDifficultyEnumPe Difficulty { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
-    public string? ParentName { get; set; }
 }
 

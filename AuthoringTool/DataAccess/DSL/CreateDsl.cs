@@ -79,15 +79,15 @@ public class CreateDsl : ICreateDsl
 
         foreach (var learningElement in ListLearningElements)
         {
-            if (learningElement.Content.Type == ".h5p")
+            if (learningElement.LearningContent.Type == ".h5p")
             {
-                learningElement.Content.Type = "H5P";
+                learningElement.LearningContent.Type = "H5P";
             }
 
             IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", learningElement.Name);
 
             LearningElementJson learningElementJson = new LearningElementJson(learningElementId,
-                learningElementIdentifier, learningElement.Content.Type);
+                learningElementIdentifier, learningElement.LearningContent.Type);
 
             learningElementId++;
             
@@ -118,7 +118,7 @@ public class CreateDsl : ICreateDsl
         //After the files are added to the Backup-Structure, these Files will be deleted.
         foreach (var learningElement in ListLearningElements)
         {
-            _fileSystem.File.WriteAllBytes(_fileSystem.Path.Join("XMLFilesForExport", learningElement.Name), learningElement.Content.Content);
+            _fileSystem.File.WriteAllBytes(_fileSystem.Path.Join("XMLFilesForExport", learningElement.Name), learningElement.LearningContent.Content);
         }
         var dslPath = _fileSystem.Path.Join("XMLFilesForExport", "DSL_Document.json");
         _fileSystem.File.WriteAllText(dslPath, jsonFile);

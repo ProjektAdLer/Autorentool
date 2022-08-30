@@ -22,14 +22,14 @@ public class LearningWorldViewModelUt
         var Goals = "learn very many things";
         var content1 = new LearningContentViewModel("a", "b", new byte[]{0x01,0x02});
         var content2 = new LearningContentViewModel("z", "e", new byte[]{0x05,0x01});
-        var ele1 = new LearningElementViewModel("a", "b", null, content1, "e", "f", "g",LearningElementDifficultyEnum.Easy,17, 23);
-        var ele2 = new LearningElementViewModel("z", "zz", null,  content2, "z","zzz", "z",LearningElementDifficultyEnum.Medium, 444, double.MaxValue);
+        var ele1 = new LearningElementViewModel("a", "b", content1, "e", "f", "g",LearningElementDifficultyEnum.Easy,null, 17, 23);
+        var ele2 = new LearningElementViewModel("z", "zz",  content2, "z","zzz", "z",LearningElementDifficultyEnum.Medium, null, 444, double.MaxValue);
         var LearningElements = new List<ILearningElementViewModel> { ele1, ele2 };
         var space1 = new LearningSpaceViewModel("ff", "ff", "ff", "ff", "ff");
         var LearningSpaces = new List<ILearningSpaceViewModel> { space1 };
 
         var systemUnderTest = new LearningWorldViewModel(Name, Shortname, Authors, Language, Description, Goals, 
-            unsavedChanges:false, LearningElements, LearningSpaces);
+            unsavedChanges: false, learningElements: LearningElements, learningSpaces: LearningSpaces);
         
         Assert.Multiple(() =>
         {
@@ -57,11 +57,11 @@ public class LearningWorldViewModelUt
     public void Workload_ReturnsCorrectWorkload()
     {
         var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo");
-        var worldElement = new LearningElementViewModel("a", "b", systemUnderTest, null, "c", "d", "e",
-            LearningElementDifficultyEnum.Easy, 4);
+        var worldElement = new LearningElementViewModel("a", "b", null, "c", "d", "e",
+            LearningElementDifficultyEnum.Easy, systemUnderTest, 4);
         var space = new LearningSpaceViewModel("a", "b", "c", "d", "e");
-        var spaceElement = new LearningElementViewModel("a", "b", space, null, "c", "d", "e",
-            LearningElementDifficultyEnum.Easy, 6);
+        var spaceElement = new LearningElementViewModel("a", "b", null, "c", "d", "e",
+            LearningElementDifficultyEnum.Easy, space, 6);
         
         space.LearningElements.Add(spaceElement);
         systemUnderTest.LearningSpaces.Add(space);

@@ -24,17 +24,20 @@ public class ReadDslUt
         const string goals = "learn very many things";
         var content1 = new LearningContentPe("a", "h5p", new byte[] {0x01, 0x02});
         var content2 = new LearningContentPe("w", ".h5p", new byte[] {0x02, 0x01});
-        var ele1 = new LearningElementPe("a", "b", "e", content1, "pupup", "g", "h", LearningElementDifficultyEnumPe.Easy, 17, 23);
-        var ele2 = new LearningElementPe("z", "zz", "zzz", content2, "baba", "z", "zz", LearningElementDifficultyEnumPe.Easy, 444, double.MaxValue);
-        var ele3 = new LearningElementPe("a", "b", "e", content1, "pupup", "g", "h", LearningElementDifficultyEnumPe.Easy, 17, 23);
+        var ele1 = new LearningElementPe("a", "b", content1, "pupup", "g", "h", LearningElementDifficultyEnumPe.Easy, 17, 23);
+        var ele2 = new LearningElementPe("z", "zz", content2, "baba", "z", "zz", LearningElementDifficultyEnumPe.Easy, 444, double.MaxValue);
+        var ele3 = new LearningElementPe("a", "b", content1, "pupup", "g", "h", LearningElementDifficultyEnumPe.Easy, 17, 23);
         var learningElements = new List<LearningElementPe> {ele1, ele2};
         var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff");
         space1.LearningElements.Add(ele3);
+        // ele3.Parent = space1;
         var space2 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff");
         var learningSpaces = new List<LearningSpacePe> {space1, space2};
 
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals,
             learningElements, learningSpaces);
+        // ele1.Parent = learningWorld;
+        // ele2.Parent = learningWorld;
         var identifierLearningWorldJson = new IdentifierJson("name", "World");
 
         var identifierLearningSpaceJson_1 = new IdentifierJson("name", "Space_1");

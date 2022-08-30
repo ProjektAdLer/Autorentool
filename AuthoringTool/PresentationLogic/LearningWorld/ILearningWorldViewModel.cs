@@ -7,9 +7,9 @@ namespace AuthoringTool.PresentationLogic.LearningWorld;
 public interface ILearningWorldViewModel : ILearningElementViewModelParent, ISerializableViewModel, IDisplayableLearningObject, INotifyPropertyChanged
 {
     new string FileEnding { get; }
-    ICollection<ILearningElementViewModel> LearningElements { get; set; }
+    List<ILearningElementViewModel> LearningElements { get; set; }
     int Workload { get; }
-    ICollection<ILearningSpaceViewModel> LearningSpaces { get; set; }
+    List<ILearningSpaceViewModel> LearningSpaces { get; set; }
     IEnumerable<ILearningObjectViewModel> LearningObjects { get; }
     new string Name { get; set; }
     string Shortname { get; set; }

@@ -2,6 +2,7 @@ using System;
 using AuthoringTool.Entities;
 using AuthoringTool.PresentationLogic.LearningElement;
 using NUnit.Framework;
+using LearningElementDifficultyEnum = AuthoringTool.Entities.LearningElementDifficultyEnum;
 
 namespace AuthoringToolTest.Entities;
 
@@ -23,8 +24,8 @@ public class LearningElementUt
         var positionX = 5f;
         var positionY = 21f;
 
-        var systemUnderTest = new LearningElement(name, shortname, parent, content, authors, description, goals,
-             difficulty, workload, positionX, positionY);
+        var systemUnderTest = new LearningElement(name, shortname, content, authors, description, goals,
+             difficulty, parent, workload, positionX, positionY);
         
         Assert.Multiple(() =>
         {
@@ -57,8 +58,8 @@ public class LearningElementUt
         var positionX = 5f;
         var positionY = 21f;
 
-        var systemUnderTest = new LearningElement(name, shortname, parent, content, authors, description, goals,
-            difficulty, workload, positionX, positionY);
+        var systemUnderTest = new LearningElement(name, shortname, content, authors, description, goals,
+            difficulty, parent, workload, positionX, positionY);
 
         var learningElementMemento = systemUnderTest.GetMemento();
         
@@ -130,8 +131,8 @@ public class LearningElementUt
         var positionX = 5f;
         var positionY = 21f;
 
-        var systemUnderTest = new LearningElement(name, shortname, parent, content, authors, description, goals,
-            difficulty, workload, positionX, positionY);
+        var systemUnderTest = new LearningElement(name, shortname, content, authors, description, goals,
+            difficulty, parent, workload, positionX, positionY);
 
         var mementoMock = new MementoMock();
         

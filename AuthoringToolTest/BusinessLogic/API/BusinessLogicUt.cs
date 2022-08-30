@@ -9,6 +9,7 @@ using AuthoringTool.PresentationLogic.LearningElement;
 using AutoMapper;
 using ElectronWrapper;
 using NSubstitute;
+using LearningElementDifficultyEnum = AuthoringTool.Entities.LearningElementDifficultyEnum;
 
 namespace AuthoringToolTest.BusinessLogic.API;
 
@@ -134,10 +135,10 @@ public class BusinessLogicUt
     public void SaveLearningElement_CallsDataAccess()
     {
         var content = new LearningContent("a", "b", Array.Empty<byte>());
-        var learningElement = new LearningElement("fa", "f", null, content, "f",
-            "f", "f", LearningElementDifficultyEnum.Easy);
+        var learningElement = new LearningElement("fa", "f", content, "f",
+            "f", "f", LearningElementDifficultyEnum.Easy, null);
         var contentPe = new LearningContentPe("a", "b", Array.Empty<byte>());
-        var learningElementPe = new LearningElementPe("fa", "f", "f", contentPe, "f",
+        var learningElementPe = new LearningElementPe("fa", "f", contentPe, "f",
             "f", "f", LearningElementDifficultyEnumPe.Easy);
         var mockMapper = Substitute.For<IMapper>();
         mockMapper.Map<LearningElementPe>(learningElement).Returns(learningElementPe);
@@ -166,10 +167,10 @@ public class BusinessLogicUt
     public void LoadLearningElement_ReturnsLearningElement()
     {
         var content = new LearningContent("a", "b", Array.Empty<byte>());
-        var learningElement = new LearningElement("fa", "a", null, content, "f", "f",
-            "f", LearningElementDifficultyEnum.Easy);
+        var learningElement = new LearningElement("fa", "a", content, "f", "f",
+            "f", LearningElementDifficultyEnum.Easy, null);
         var contentPe = new LearningContentPe("a", "b", Array.Empty<byte>());
-        var learningElementPe = new LearningElementPe("fa", "a", "f", contentPe, "f", "f", "f",
+        var learningElementPe = new LearningElementPe("fa", "a", contentPe, "f", "f", "f",
             LearningElementDifficultyEnumPe.Easy);
         var mockMapper = Substitute.For<IMapper>();
         mockMapper.Map<LearningElement>(learningElementPe).Returns(learningElement);
@@ -291,10 +292,10 @@ public class BusinessLogicUt
     public void LoadLearningElementFromStream_ReturnsLearningElement()
     {
         var content = new LearningContent("a", "b", Array.Empty<byte>());
-        var learningElement = new LearningElement("fa", "a", null, content, "f", "f",
-            "f", LearningElementDifficultyEnum.Easy);
+        var learningElement = new LearningElement("fa", "a", content, "f", "f",
+            "f", LearningElementDifficultyEnum.Easy, null);
         var contentPe = new LearningContentPe("a", "b", Array.Empty<byte>());
-        var learningElementPe = new LearningElementPe("fa", "a", "f", contentPe, "f", "f", "f",
+        var learningElementPe = new LearningElementPe("fa", "a", contentPe, "f", "f", "f",
             LearningElementDifficultyEnumPe.Easy);
         var mockMapper = Substitute.For<IMapper>();
         mockMapper.Map<LearningElement>(learningElementPe).Returns(learningElement);

@@ -145,7 +145,7 @@ public class DataAccessUt
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerElement: mockFileSaveHandlerElement);
 
         var learningContent = new LearningContentPe("a", "b", Array.Empty<byte>());
-        var learningElement = new LearningElementPe("f","f", "f", learningContent, "f",
+        var learningElement = new LearningElementPe("f","f", learningContent, "f",
             "f", "f", LearningElementDifficultyEnumPe.Easy);
         systemUnderTest.SaveLearningElementToFile(
             learningElement,

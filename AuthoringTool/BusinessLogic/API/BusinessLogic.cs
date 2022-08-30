@@ -42,7 +42,9 @@ internal class BusinessLogic : IBusinessLogic
 
     public LearningWorld LoadLearningWorld(string filepath)
     {
-        return Mapper.Map<LearningWorld>(DataAccess.LoadLearningWorldFromFile(filepath));
+        var learningWorld = Mapper.Map<LearningWorld>(DataAccess.LoadLearningWorldFromFile(filepath));
+        AddParentToLearningElements(learningWorld);
+        return learningWorld;
     }
     
     public void SaveLearningSpace(LearningSpace learningSpace, string filepath)
@@ -52,7 +54,9 @@ internal class BusinessLogic : IBusinessLogic
 
     public LearningSpace LoadLearningSpace(string filepath)
     {
-        return Mapper.Map<LearningSpace>(DataAccess.LoadLearningSpaceFromFile(filepath));
+        var learningSpace = Mapper.Map<LearningSpace>(DataAccess.LoadLearningSpaceFromFile(filepath));
+        AddParentToLearningElements(learningSpace);
+        return learningSpace;
     }
     
     public void SaveLearningElement(LearningElement learningElement, string filepath)
@@ -77,17 +81,46 @@ internal class BusinessLogic : IBusinessLogic
 
     public LearningWorld LoadLearningWorldFromStream(Stream stream)
     {
-        return Mapper.Map<LearningWorld>(DataAccess.LoadLearningWorldFromStream(stream));
+        var learningWorld = Mapper.Map<LearningWorld>(DataAccess.LoadLearningWorldFromStream(stream));
+        AddParentToLearningElements(learningWorld);
+        return learningWorld;
     }
 
     public LearningSpace LoadLearningSpaceFromStream(Stream stream)
     {
-        return Mapper.Map<LearningSpace>(DataAccess.LoadLearningSpaceFromStream(stream));
+        var learningSpace = Mapper.Map<LearningSpace>(DataAccess.LoadLearningSpaceFromStream(stream));
+        AddParentToLearningElements(learningSpace);
+        return learningSpace;
     }
 
     public LearningElement LoadLearningElementFromStream(Stream stream)
     {
         return Mapper.Map<LearningElement>(DataAccess.LoadLearningElementFromStream(stream));
+    }
+    
+    private static void AddParentToLearningElements(ILearningElementParent learningElementParent)
+    {
+        switch (learningElementParent)
+        {
+            case LearningWorld learningWorld:
+                foreach (var element in learningWorld.LearningElements)
+                {
+                    element.Parent = learningWorld;
+                }
+
+                foreach (var space in learningWorld.LearningSpaces)
+                {
+                    AddParentToLearningElements(space);
+                }
+                break;
+            
+            case LearningSpace learningSpace:
+                foreach (var element in learningSpace.LearningElements)
+                {
+                    element.Parent = learningSpace;
+                }
+                break;
+        }
     }
 
     public string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding)

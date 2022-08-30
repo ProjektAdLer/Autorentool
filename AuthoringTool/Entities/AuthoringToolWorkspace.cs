@@ -2,6 +2,13 @@ namespace AuthoringTool.Entities;
 
 public class AuthoringToolWorkspace : IOriginator
 {
+    /// <summary>
+    /// Private Constructor for AutoMapper
+    /// </summary>
+    private AuthoringToolWorkspace()
+    {
+    }
+    
     public AuthoringToolWorkspace(LearningWorld? selectedLearningWorld, List<LearningWorld> learningWorlds)
     {
         SelectedLearningWorld = selectedLearningWorld;

@@ -4,9 +4,9 @@ namespace AuthoringTool.DataAccess.PersistEntities;
 
 public class H5PInteractionElementPe : LearningElementPe
 {
-    internal H5PInteractionElementPe(string name, string shortname,  string? parentName, LearningContentPe? content,
+    internal H5PInteractionElementPe(string name, string shortname, LearningContentPe? learningContent,
         string authors, string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload,
-        double positionX, double positionY) : base(name, shortname,parentName,content, authors, description, 
+        double positionX, double positionY) : base(name, shortname, learningContent, authors, description, 
         goals,difficulty,workload, positionX,positionY)
     {
     }

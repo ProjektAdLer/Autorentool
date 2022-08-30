@@ -17,6 +17,7 @@ public class MappingProfile: Profile
 {
     public MappingProfile()
     {
+        DisableConstructorMapping();
         CreateViewModelEntityMaps();
         CreatePersistEntityMaps();
     }
@@ -28,12 +29,31 @@ public class MappingProfile: Profile
             .ForMember(x => x.LearningObjects, opt => opt.Ignore())
             .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
             .ForMember(x => x.ShowingLearningSpaceView, opt => opt.Ignore())
+            .AfterMap((s, d) =>
+            {
+                foreach (var element in d.LearningElements)
+                {
+                    element.Parent = d;
+                }
+            })
             .ReverseMap();
         CreateMap<LearningSpace, LearningSpaceViewModel>()
             .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
+            .AfterMap((s, d) =>
+            {
+                foreach (var element in d.LearningElements)
+                {
+                    element.Parent = d;
+                }
+            })
             .ReverseMap();
-        CreateMap<LearningElement, LearningElementViewModel>().ReverseMap();
+        CreateMap<LearningElement, LearningElementViewModel>()
+            .ForMember(x => x.Parent, opt => opt.Ignore());
+        CreateMap<LearningElementViewModel, LearningElement>()
+            .ForMember(x => x.Parent, opt => opt.Ignore());
         CreateMap<LearningContent, LearningContentViewModel>().ReverseMap();
+        CreateMap<Entities.LearningElementDifficultyEnum,
+            AuthoringTool.PresentationLogic.LearningElement.LearningElementDifficultyEnum>().ReverseMap();
         
         CreateMap<H5PActivationElement, H5PActivationElementViewModel>().IncludeBase<LearningElement, LearningElementViewModel>().ReverseMap();
         CreateMap<H5PInteractionElement, H5PInteractionElementViewModel>().IncludeBase<LearningElement, LearningElementViewModel>().ReverseMap();
@@ -49,9 +69,10 @@ public class MappingProfile: Profile
         CreateMap<LearningWorld, LearningWorldPe>().ReverseMap();
         CreateMap<LearningSpace, LearningSpacePe>().ReverseMap();
         CreateMap<LearningElement, LearningElementPe>()
-            .ForMember(x => x.Content, opt => opt.MapFrom(src=>src.LearningContent));
+            // .ForSourceMember(x => x.Parent, opt => opt.DoNotValidate())
+            ;
         CreateMap<LearningElementPe, LearningElement>()
-            .ForMember(x => x.LearningContent, opt => opt.MapFrom(src => src.Content));
+            .ForMember(x => x.Parent, opt => opt.Ignore());
         CreateMap<LearningContent, LearningContentPe>().ReverseMap();
         
         CreateMap<H5PActivationElement, H5PActivationElementPe>().IncludeBase<LearningElement, LearningElementPe>().ReverseMap();
@@ -62,6 +83,6 @@ public class MappingProfile: Profile
         CreateMap<VideoActivationElement, VideoActivationElementPe>().IncludeBase<LearningElement, LearningElementPe>().ReverseMap();
         CreateMap<VideoTransferElement, VideoTransferElementPe>().IncludeBase<LearningElement, LearningElementPe>().ReverseMap();
         
-        CreateMap<LearningElementDifficultyEnum, LearningElementDifficultyEnumPe>().ReverseMap();
+        CreateMap<Entities.LearningElementDifficultyEnum, LearningElementDifficultyEnumPe>().ReverseMap();
     }
 }

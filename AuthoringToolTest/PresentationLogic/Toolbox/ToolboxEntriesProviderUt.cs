@@ -15,6 +15,7 @@ using AutoMapper;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
+using LearningElementDifficultyEnum = AuthoringTool.PresentationLogic.LearningElement.LearningElementDifficultyEnum;
 
 namespace AuthoringToolTest.PresentationLogic.Toolbox;
 
@@ -79,16 +80,16 @@ public class ToolboxEntriesProviderUt
         var lwEntity = new AuthoringTool.Entities.LearningWorld("foo", "foo", "foo", "foo", "foo", "foo");
         var lsEntity = new AuthoringTool.Entities.LearningSpace("foo", "foo", "foo", "foo", "foo");
         var leEntity =
-            new AuthoringTool.Entities.LearningElement("foo", "foo", null, null, "foo",
-                "foo", "foo",LearningElementDifficultyEnum.Easy);
+            new AuthoringTool.Entities.LearningElement("foo", "foo", null, "foo",
+                "foo", "foo", AuthoringTool.Entities.LearningElementDifficultyEnum.Easy, null);
         businessLogic.LoadLearningWorld(Arg.Any<string>()).Returns(lwEntity);
         businessLogic.LoadLearningSpace(Arg.Any<string>()).Returns(lsEntity);
         businessLogic.LoadLearningElement(Arg.Any<string>()).Returns(leEntity);
 
         var worldVm = new LearningWorldViewModel("ba", "ba", "ba", "ba", "ba", "ba");
         var spaceVm = new LearningSpaceViewModel("ba", "ba", "ba", "ba", "ba");
-        var elementVm = new LearningElementViewModel("ba", "ba", null, null, "ba",
-            "ba", "ba",LearningElementDifficultyEnum.Easy);
+        var elementVm = new LearningElementViewModel("ba", "ba", null, "ba",
+            "ba", "ba", LearningElementDifficultyEnum.Easy, null);
         var mockMapper = Substitute.For<IMapper>();
         mockMapper.Map<LearningWorldViewModel>(Arg.Any<ILearningWorld>()).Returns(worldVm);
         mockMapper.Map<LearningSpaceViewModel>(Arg.Any<ILearningSpace>()).Returns(spaceVm);
@@ -131,13 +132,13 @@ public class ToolboxEntriesProviderUt
 
         var lwViewModel = new LearningWorldViewModel("world", "foo", "foo", "foo", "foo", "foo");
         var lsViewModel = new LearningSpaceViewModel("space", "foo", "foo", "foo", "foo");
-        var leViewModel = new LearningElementViewModel("element", "foo", null, null, "foo", "foo", "foo",LearningElementDifficultyEnum.Easy);
+        var leViewModel = new LearningElementViewModel("element", "foo", null, "foo", "foo", "foo",LearningElementDifficultyEnum.Easy, null);
         
         var lwEntity = new AuthoringTool.Entities.LearningWorld("world", "foo", "foo", "foo", "foo", "foo");
         var lsEntity = new AuthoringTool.Entities.LearningSpace("space", "foo", "foo", "foo", "foo");
         var leEntity =
-            new AuthoringTool.Entities.LearningElement("element", "foo", null, null, "foo",
-                "foo", "foo",LearningElementDifficultyEnum.Easy);
+            new AuthoringTool.Entities.LearningElement("element", "foo", null, "foo",
+                "foo", "foo", AuthoringTool.Entities.LearningElementDifficultyEnum.Easy, null);
         mockMapper.Map<LearningWorldViewModel>(Arg.Any<ILearningWorld>()).Returns(lwViewModel);
         mockMapper.Map<LearningSpaceViewModel>(Arg.Any<ILearningSpace>()).Returns(lsViewModel);
         mockMapper.Map<LearningElementViewModel>(Arg.Any<AuthoringTool.Entities.LearningElement>()).Returns(leViewModel);
@@ -192,16 +193,16 @@ public class ToolboxEntriesProviderUt
         var lwEntity = new AuthoringTool.Entities.LearningWorld("world", "foo", "foo", "foo", "foo", "foo");
         var lsEntity = new AuthoringTool.Entities.LearningSpace("space", "foo", "foo", "foo", "foo");
         var leEntity =
-            new AuthoringTool.Entities.LearningElement("element", "foo", null, null,"foo",
-                "foo", null,LearningElementDifficultyEnum.Easy);
+            new AuthoringTool.Entities.LearningElement("element", "foo", null,"foo",
+                "foo", null, AuthoringTool.Entities.LearningElementDifficultyEnum.Easy, null);
         businessLogic.LoadLearningWorld(Arg.Any<string>()).Returns(lwEntity);
         businessLogic.LoadLearningSpace(Arg.Any<string>()).Returns(lsEntity);
         businessLogic.LoadLearningElement(Arg.Any<string>()).Returns(leEntity);
 
         var worldVm = new LearningWorldViewModel("world", "ba", "ba", "ba", "ba", "ba");
         var spaceVm = new LearningSpaceViewModel("space", "ba", "ba", "ba", "ba");
-        var elementVm = new LearningElementViewModel("element", "ba", null, null, "ba", "ba",
-            "foo",LearningElementDifficultyEnum.Easy);
+        var elementVm = new LearningElementViewModel("element", "ba", null, "ba", "ba",
+            "foo",LearningElementDifficultyEnum.Easy, null);
         var mockMapper = Substitute.For<IMapper>();
         mockMapper.Map<LearningWorldViewModel>(Arg.Any<ILearningWorld>()).Returns(worldVm);
         mockMapper.Map<LearningSpaceViewModel>(Arg.Any<ILearningSpace>()).Returns(spaceVm);

@@ -224,7 +224,7 @@ public class LearningWorldViewUt
     {
         //prepare presenter
         var learningWorld = Substitute.For<ILearningWorldViewModel>();
-        var learningSpaces = Array.Empty<ILearningSpaceViewModel>();
+        var learningSpaces = new List<ILearningSpaceViewModel>();
         learningWorld.Name.Returns("my learning world");
         learningWorld.LearningSpaces.Returns(learningSpaces);
         _worldPresenter.LearningWorldVm.Returns(learningWorld);

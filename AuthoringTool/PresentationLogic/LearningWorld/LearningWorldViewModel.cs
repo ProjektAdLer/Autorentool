@@ -10,6 +10,13 @@ namespace AuthoringTool.PresentationLogic.LearningWorld;
 public class LearningWorldViewModel : ILearningWorldViewModel
 {
     /// <summary>
+    /// Private Constructor for AutoMapper
+    /// </summary>
+    private LearningWorldViewModel()
+    {
+    }
+    
+    /// <summary>
     /// Initializes a new instance of the <see cref="LearningWorldViewModel"/> class.
     /// </summary>
     /// <param name="name">The name of the learning world.</param>
@@ -24,8 +31,8 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     /// <param name="learningSpaces">Optional collection of learning spaces contained in the learning world.
     /// Should be used when loading a saved learnign world into the application.</param>
     public LearningWorldViewModel(string name, string shortname, string authors, string language, string description,
-        string goals, bool unsavedChanges = true, ICollection<ILearningElementViewModel>? learningElements = null,
-        ICollection<ILearningSpaceViewModel>? learningSpaces = null)
+        string goals, bool unsavedChanges = true, List<ILearningElementViewModel>? learningElements = null,
+        List<ILearningSpaceViewModel>? learningSpaces = null)
     {
         Name = name;
         Shortname = shortname;
@@ -34,13 +41,14 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         Description = description;
         Goals = goals;
         UnsavedChanges = unsavedChanges;
-        LearningElements = learningElements ?? new Collection<ILearningElementViewModel>();
-        LearningSpaces = learningSpaces ?? new Collection<ILearningSpaceViewModel>();
+        LearningElements = learningElements ?? new List<ILearningElementViewModel>();
+        LearningSpaces = learningSpaces ?? new List<ILearningSpaceViewModel>();
     }
+    
     public const string fileEnding = "awf";
     
-    private ICollection<ILearningElementViewModel> _learningElements;
-    private ICollection<ILearningSpaceViewModel> _learningSpaces;
+    private List<ILearningElementViewModel> _learningElements;
+    private List<ILearningSpaceViewModel> _learningSpaces;
     private string _name;
     private string _shortname;
     private string _authors;
@@ -53,7 +61,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
 
     public string FileEnding => fileEnding;
 
-    public ICollection<ILearningElementViewModel> LearningElements
+    public List<ILearningElementViewModel> LearningElements
     {
         get => _learningElements;
         set
@@ -64,7 +72,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         }
     }
 
-    public ICollection<ILearningSpaceViewModel> LearningSpaces
+    public List<ILearningSpaceViewModel> LearningSpaces
     {
         get => _learningSpaces;
         set

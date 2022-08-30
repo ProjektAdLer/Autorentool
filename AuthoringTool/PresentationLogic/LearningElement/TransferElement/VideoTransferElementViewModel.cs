@@ -5,6 +5,13 @@ namespace AuthoringTool.PresentationLogic.LearningElement.TransferElement;
 public class VideoTransferElementViewModel : TransferElementViewModel
 {
     /// <summary>
+    /// Private Constructor for AutoMapper
+    /// </summary>
+    private VideoTransferElementViewModel() : base()
+    {
+    }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="VideoTransferElementViewModel"/> class.
     /// </summary>
     public VideoTransferElementViewModel(string name, string shortname, ILearningElementViewModelParent? parent,
