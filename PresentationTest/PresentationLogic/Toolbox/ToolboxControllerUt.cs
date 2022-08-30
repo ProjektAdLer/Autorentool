@@ -2,6 +2,12 @@ using System;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Toolbox;
+using Shared;
 
 namespace PresentationTest.PresentationLogic.Toolbox;
 

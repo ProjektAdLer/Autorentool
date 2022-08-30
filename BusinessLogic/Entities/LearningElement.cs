@@ -4,7 +4,7 @@ namespace BusinessLogic.Entities;
 
 public class LearningElement : ILearningElement, IOriginator
 {
-    internal LearningElement(string name, string shortname,  string? parentName, LearningContent? content,
+    public LearningElement(string name, string shortname,  string? parentName, LearningContent? content,
         string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload = 0,
         double positionX = 0, double positionY = 0)
     {

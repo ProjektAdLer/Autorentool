@@ -3,6 +3,10 @@ using AngleSharp.Dom;
 using Bunit;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.Components.ModalDialog;
+using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.ModalDialog;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.PresentationLogic.ModalDialog;

@@ -2,10 +2,23 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
+using BusinessLogic.API;
+using BusinessLogic.Entities;
+using ElectronWrapper;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
+using Presentation.PresentationLogic.ElectronNET;
+using Presentation.PresentationLogic.EntityMapping;
+using Presentation.PresentationLogic.EntityMapping.LearningElementMapper;
+using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningWorld;
+using Shared;
+using Shared.Configuration;
 
 namespace PresentationTest.PresentationLogic.API;
 
@@ -23,7 +36,7 @@ public class PresentationLogicUt
         var mockElementMapper = Substitute.For<ILearningElementMapper>();
         var mockContentMapper = Substitute.For<ILearningContentMapper>();
         var mockServiceProvider = Substitute.For<IServiceProvider>();
-        var mockLogger = Substitute.For<ILogger<AuthoringToolLib.PresentationLogic.API.PresentationLogic>>();
+        var mockLogger = Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
 
         //Act
         var systemUnderTest = CreateTestablePresentationLogic(mockConfiguration, mockBusinessLogic, mockWorldMapper,
@@ -51,9 +64,8 @@ public class PresentationLogicUt
             .Returns("supersecretfilepath");
         var viewModel = new LearningWorldViewModel("fo", "fo", "fo", "fo", "fo", "fo");
         var mockWorldMapper = Substitute.For<ILearningWorldMapper>();
-        var entity = new AuthoringToolLib.Entities.LearningWorld("baba", "baba", "baba", "baba", "baba", "baba");
-        mockWorldMapper.ToEntity(viewModel)
-            .Returns(entity);
+        var entity = new BusinessLogic.Entities.LearningWorld("baba", "baba", "baba", "baba", "baba", "baba");
+        mockWorldMapper.ToEntity(viewModel).Returns(entity);
         var serviceProvider = new ServiceCollection();
         serviceProvider.Insert(0, new ServiceDescriptor(typeof(IElectronDialogManager), mockDialogManager));
         
@@ -72,10 +84,11 @@ public class PresentationLogicUt
     public void PresentationLogic_SaveLearningWorldAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(false);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(false);
         var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
             await systemUnderTest.SaveLearningWorldAsync(learningWorld));
@@ -86,10 +99,11 @@ public class PresentationLogicUt
     public void PresentationLogic_SaveLearningWorldAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
         var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
             await systemUnderTest.SaveLearningWorldAsync(learningWorld));
@@ -100,10 +114,11 @@ public class PresentationLogicUt
     public async Task PresentationLogic_SaveLearningWorldAsync_CallsDialogManagerAndWorldMapperAndBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
         var mockWorldMapper = Substitute.For<ILearningWorldMapper>();
         var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
-        var entity = new AuthoringToolLib.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
+        var entity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
         mockWorldMapper.ToEntity(Arg.Any<LearningWorldViewModel>())
             .Returns(entity);
         const string filepath = "foobar";
@@ -115,7 +130,7 @@ public class PresentationLogicUt
         mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManger);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            worldMapper: mockWorldMapper, serviceProvider: mockServiceProvider);
+            worldMapper: mockWorldMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
         await systemUnderTest.SaveLearningWorldAsync(learningWorld);
 
@@ -128,8 +143,9 @@ public class PresentationLogicUt
     public void PresentationLogic_SaveLearningWorldAsync_LogsAndRethrowsDialogCancelledException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
-        var mockLogger = Substitute.For<ILogger<AuthoringToolLib.PresentationLogic.API.PresentationLogic>>();
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
+        var mockLogger = Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         var mockElectronDialogManager = Substitute.For<IElectronDialogManager>();
         mockElectronDialogManager
@@ -140,7 +156,7 @@ public class PresentationLogicUt
         var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
-            serviceProvider: mockServiceProvider);
+            serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.SaveLearningWorldAsync(learningWorld));
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
@@ -151,10 +167,12 @@ public class PresentationLogicUt
     public void PresentationLogic_SaveLearningSpaceAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(false);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(false);
         var learningSpace = new LearningSpaceViewModel("f", "f", "f", "f", "f");
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+        var systemUnderTest =
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
             await systemUnderTest.SaveLearningSpaceAsync(learningSpace));
@@ -165,10 +183,11 @@ public class PresentationLogicUt
     public void PresentationLogic_SaveLearningSpaceAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
         var learningSpace = new LearningSpaceViewModel("f", "f", "f", "f", "f");
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
             await systemUnderTest.SaveLearningSpaceAsync(learningSpace));
@@ -179,10 +198,11 @@ public class PresentationLogicUt
     public async Task PresentationLogic_SaveLearningSpaceAsync_CallsDialogManagerAndSpaceMapperAndBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
         var mockSpaceMapper = Substitute.For<ILearningSpaceMapper>();
         var learningSpace = new LearningSpaceViewModel("f", "f", "f", "f", "f");
-        var entity = new AuthoringToolLib.Entities.LearningSpace("f", "f", "f", "f", "f");
+        var entity = new BusinessLogic.Entities.LearningSpace("f", "f", "f", "f", "f");
         mockSpaceMapper.ToEntity(Arg.Any<LearningSpaceViewModel>())
             .Returns(entity);
         const string filepath = "foobar";
@@ -194,7 +214,7 @@ public class PresentationLogicUt
         mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManger);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            spaceMapper: mockSpaceMapper, serviceProvider: mockServiceProvider);
+            spaceMapper: mockSpaceMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
         await systemUnderTest.SaveLearningSpaceAsync(learningSpace);
 
@@ -207,8 +227,9 @@ public class PresentationLogicUt
     public void PresentationLogic_SaveLearningSpaceAsync_LogsAndRethrowsDialogCancelledException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
-        var mockLogger = Substitute.For<ILogger<AuthoringToolLib.PresentationLogic.API.PresentationLogic>>();
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
+        var mockLogger = Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         var mockElectronDialogManager = Substitute.For<IElectronDialogManager>();
         mockElectronDialogManager
@@ -219,7 +240,7 @@ public class PresentationLogicUt
         var learningSpace = new LearningSpaceViewModel("f", "f", "f", "f", "f");
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
-            serviceProvider: mockServiceProvider);
+            serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.SaveLearningSpaceAsync(learningSpace));
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
@@ -230,10 +251,11 @@ public class PresentationLogicUt
     public void PresentationLogic_SaveLearningElementAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(false);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(false);
         var learningElement = new LearningElementViewModel("f", "f", null, null, "f", "f", "f",LearningElementDifficultyEnum.Easy);
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
             await systemUnderTest.SaveLearningElementAsync(learningElement));
@@ -244,10 +266,12 @@ public class PresentationLogicUt
     public void PresentationLogic_SaveLearningElementAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
         var learningElement = new LearningElementViewModel("f", "f", null, null,"f", "f", "f",LearningElementDifficultyEnum.Easy);
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+        var systemUnderTest =
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
             await systemUnderTest.SaveLearningElementAsync(learningElement));
@@ -258,10 +282,11 @@ public class PresentationLogicUt
     public async Task PresentationLogic_SaveLearningElementAsync_CallsDialogManagerAndElementMapperAndBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
         var mockElementMapper = Substitute.For<ILearningElementMapper>();
         var learningElement = new LearningElementViewModel("f", "f", null,  null,"f", "f", "f",LearningElementDifficultyEnum.Easy);
-        var entity = new AuthoringToolLib.Entities.LearningElement("f", "f", "f", null,"f", "f", "f",LearningElementDifficultyEnum.Easy);
+        var entity = new BusinessLogic.Entities.LearningElement("f", "f", "f", null,"f", "f", "f",LearningElementDifficultyEnum.Easy);
         mockElementMapper.ToEntity(Arg.Any<LearningElementViewModel>())
             .Returns(entity);
         const string filepath = "foobar";
@@ -273,7 +298,7 @@ public class PresentationLogicUt
         mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManger);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            elementMapper: mockElementMapper, serviceProvider: mockServiceProvider);
+            elementMapper: mockElementMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
         await systemUnderTest.SaveLearningElementAsync(learningElement);
 
@@ -286,8 +311,9 @@ public class PresentationLogicUt
     public void PresentationLogic_SaveLearningElementAsync_LogsAndRethrowsDialogCancelledException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
-        var mockLogger = Substitute.For<ILogger<AuthoringToolLib.PresentationLogic.API.PresentationLogic>>();
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
+        var mockLogger = Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         var mockElectronDialogManager = Substitute.For<IElectronDialogManager>();
         mockElectronDialogManager
@@ -298,7 +324,7 @@ public class PresentationLogicUt
         var learningElement = new LearningElementViewModel("f", "f", null, null, "f", "f", "f",LearningElementDifficultyEnum.Easy);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
-            serviceProvider: mockServiceProvider);
+            serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.SaveLearningElementAsync(learningElement));
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
@@ -309,9 +335,10 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadLearningWorldAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(false);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(false);
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
             await systemUnderTest.LoadLearningWorldAsync());
@@ -322,12 +349,14 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadLearningWorldAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(null);
 
         var systemUnderTest =
-            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider);
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider,
+                hybridSupportWrapper: mockHybridSupport);
 
         var ex =Assert.ThrowsAsync<InvalidOperationException>(async () => await systemUnderTest.LoadLearningWorldAsync());
         Assert.That(ex!.Message, Is.EqualTo("dialogManager received from DI unexpectedly null"));
@@ -337,10 +366,11 @@ public class PresentationLogicUt
     public async Task PresentationLogic_LoadLearningWorldAsync_CallsDialogManagerAndElementMapperAndBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
         var mockWorldMapper = Substitute.For<ILearningWorldMapper>();
         var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
-        var entity = new AuthoringToolLib.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
+        var entity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
         mockWorldMapper.ToViewModel(entity).Returns(learningWorld);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
@@ -352,7 +382,7 @@ public class PresentationLogicUt
         mockBusinessLogic.LoadLearningWorld(filepath+".awf").Returns(entity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            worldMapper: mockWorldMapper, serviceProvider: mockServiceProvider);
+            worldMapper: mockWorldMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
         var actualWorld = await systemUnderTest.LoadLearningWorldAsync();
 
@@ -368,8 +398,9 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadLearningWorldAsync_LogsAndRethrowsDialogCancelledException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
-        var mockLogger = Substitute.For<ILogger<AuthoringToolLib.PresentationLogic.API.PresentationLogic>>();
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
+        var mockLogger = Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         var mockElectronDialogManager = Substitute.For<IElectronDialogManager>();
         mockElectronDialogManager
@@ -379,7 +410,7 @@ public class PresentationLogicUt
             .Returns(mockElectronDialogManager);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
-            serviceProvider: mockServiceProvider);
+            serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.LoadLearningWorldAsync());
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
@@ -391,7 +422,8 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadLearningSpaceAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(false);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(false);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
@@ -404,12 +436,14 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadLearningSpaceAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(null);
 
         var systemUnderTest =
-            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider);
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider,
+                hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<InvalidOperationException>(async () => await systemUnderTest.LoadLearningSpaceAsync());
         Assert.That(ex!.Message, Is.EqualTo("dialogManager received from DI unexpectedly null"));
@@ -419,10 +453,11 @@ public class PresentationLogicUt
     public async Task PresentationLogic_LoadLearningSpaceAsync_CallsDialogManagerAndSpaceMapperAndBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
         var mockSpaceMapper = Substitute.For<ILearningSpaceMapper>();
         var learningSpace = new LearningSpaceViewModel("f", "f", "", "f", "f" );
-        var entity = new AuthoringToolLib.Entities.LearningSpace("f", "f", "f", "f", "f");
+        var entity = new BusinessLogic.Entities.LearningSpace("f", "f", "f", "f", "f");
         mockSpaceMapper.ToViewModel(entity).Returns(learningSpace);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
@@ -434,7 +469,7 @@ public class PresentationLogicUt
         mockBusinessLogic.LoadLearningSpace(filepath+".asf").Returns(entity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            spaceMapper: mockSpaceMapper, serviceProvider: mockServiceProvider);
+            spaceMapper: mockSpaceMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
         var actualSpace = await systemUnderTest.LoadLearningSpaceAsync();
 
@@ -450,8 +485,9 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadLearningSpaceAsync_LogsAndRethrowsDialogCancelledException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
-        var mockLogger = Substitute.For<ILogger<AuthoringToolLib.PresentationLogic.API.PresentationLogic>>();
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
+        var mockLogger = Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         var mockElectronDialogManager = Substitute.For<IElectronDialogManager>();
         mockElectronDialogManager
@@ -461,7 +497,7 @@ public class PresentationLogicUt
             .Returns(mockElectronDialogManager);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
-            serviceProvider: mockServiceProvider);
+            serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.LoadLearningSpaceAsync());
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
@@ -474,9 +510,11 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadLearningElementAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(false);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(false);
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+        var systemUnderTest =
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
             await systemUnderTest.LoadLearningElementAsync());
@@ -487,12 +525,13 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadLearningElementAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(null);
 
         var systemUnderTest =
-            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider);
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<InvalidOperationException>(async () => await systemUnderTest.LoadLearningElementAsync());
         Assert.That(ex!.Message, Is.EqualTo("dialogManager received from DI unexpectedly null"));
@@ -502,10 +541,11 @@ public class PresentationLogicUt
     public async Task PresentationLogic_LoadLearningElementAsync_CallsDialogManagerAndElementMapperAndBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
         var mockElementMapper = Substitute.For<ILearningElementMapper>();
         var learningElement = new LearningElementViewModel("f", "f", null, null, "f", "f", "f",LearningElementDifficultyEnum.Easy );
-        var entity = new AuthoringToolLib.Entities.LearningElement("f", "f", "f", null, "f", "f", "f",LearningElementDifficultyEnum.Easy);
+        var entity = new BusinessLogic.Entities.LearningElement("f", "f", "f", null, "f", "f", "f",LearningElementDifficultyEnum.Easy);
         mockElementMapper.ToViewModel(entity).Returns(learningElement);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
@@ -517,7 +557,7 @@ public class PresentationLogicUt
         mockBusinessLogic.LoadLearningElement(filepath+".aef").Returns(entity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            elementMapper: mockElementMapper, serviceProvider: mockServiceProvider);
+            elementMapper: mockElementMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
         var actualElement = await systemUnderTest.LoadLearningElementAsync();
 
@@ -533,8 +573,9 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadLearningElementAsync_LogsAndRethrowsDialogCancelledException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
-        var mockLogger = Substitute.For<ILogger<AuthoringToolLib.PresentationLogic.API.PresentationLogic>>();
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
+        var mockLogger = Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         var mockElectronDialogManager = Substitute.For<IElectronDialogManager>();
         mockElectronDialogManager
@@ -544,7 +585,7 @@ public class PresentationLogicUt
             .Returns(mockElectronDialogManager);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
-            serviceProvider: mockServiceProvider);
+            serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.LoadLearningElementAsync());
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
@@ -556,9 +597,10 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadImageAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(false);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(false);
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
             await systemUnderTest.LoadImageAsync());
@@ -569,12 +611,14 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadImageAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(null);
 
         var systemUnderTest =
-            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider);
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider,
+                hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<InvalidOperationException>(async () => await systemUnderTest.LoadImageAsync());
         Assert.That(ex!.Message, Is.EqualTo("dialogManager received from DI unexpectedly null"));
@@ -584,7 +628,8 @@ public class PresentationLogicUt
     public async Task PresentationLogic_LoadImageAsync_CallsDialogManagerAndContentMapperAndBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
         var mockContentMapper = Substitute.For<ILearningContentMapper>();
         var learningContent = new LearningContentViewModel("f", ".png", new byte[] { 0x00, 0x00, 0x00, 0x01 });
         var entity = new LearningContent("f", ".png", new byte[] { 0x00, 0x00, 0x00, 0x01 });
@@ -599,7 +644,7 @@ public class PresentationLogicUt
         mockBusinessLogic.LoadLearningContent(filepath).Returns(entity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            contentMapper: mockContentMapper, serviceProvider: mockServiceProvider);
+            contentMapper: mockContentMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
         var loadedContent = await systemUnderTest.LoadImageAsync();
 
@@ -615,8 +660,9 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadImageAsync_LogsAndRethrowsDialogCancelledException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
-        var mockLogger = Substitute.For<ILogger<AuthoringToolLib.PresentationLogic.API.PresentationLogic>>();
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
+        var mockLogger = Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         var mockElectronDialogManager = Substitute.For<IElectronDialogManager>();
         mockElectronDialogManager
@@ -626,7 +672,7 @@ public class PresentationLogicUt
             .Returns(mockElectronDialogManager);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
-            serviceProvider: mockServiceProvider);
+            serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.LoadImageAsync());
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
@@ -638,9 +684,10 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadVideoAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(false);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(false);
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
             await systemUnderTest.LoadVideoAsync());
@@ -651,12 +698,14 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadVideoAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(null);
 
         var systemUnderTest =
-            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider);
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider,
+                hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<InvalidOperationException>(async () => await systemUnderTest.LoadVideoAsync());
         Assert.That(ex!.Message, Is.EqualTo("dialogManager received from DI unexpectedly null"));
@@ -666,7 +715,8 @@ public class PresentationLogicUt
     public async Task PresentationLogic_LoadVideoAsync_CallsDialogManagerAndContentMapperAndBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
         var mockContentMapper = Substitute.For<ILearningContentMapper>();
         var learningContent = new LearningContentViewModel("f", ".mp4", new byte[] { 0x01, 0x00, 0x00, 0x01 });
         var entity = new LearningContent("f", ".mp4", new byte[] { 0x01, 0x00, 0x00, 0x01 });
@@ -681,7 +731,7 @@ public class PresentationLogicUt
         mockBusinessLogic.LoadLearningContent(filepath + ".mp4").Returns(entity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            contentMapper: mockContentMapper, serviceProvider: mockServiceProvider);
+            contentMapper: mockContentMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper:mockHybridSupport);
 
         var loadedContent = await systemUnderTest.LoadVideoAsync();
 
@@ -697,8 +747,9 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadVideoAsync_LogsAndRethrowsDialogCancelledException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
-        var mockLogger = Substitute.For<ILogger<AuthoringToolLib.PresentationLogic.API.PresentationLogic>>();
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
+        var mockLogger = Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         var mockElectronDialogManager = Substitute.For<IElectronDialogManager>();
         mockElectronDialogManager
@@ -708,7 +759,7 @@ public class PresentationLogicUt
             .Returns(mockElectronDialogManager);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
-            serviceProvider: mockServiceProvider);
+            serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.LoadVideoAsync());
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
@@ -720,9 +771,11 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadH5pAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(false);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(false);
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
+            hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
             await systemUnderTest.LoadH5pAsync());
@@ -733,12 +786,14 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadH5pAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(null);
 
         var systemUnderTest =
-            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider);
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider,
+                hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<InvalidOperationException>(async () => await systemUnderTest.LoadH5pAsync());
         Assert.That(ex!.Message, Is.EqualTo("dialogManager received from DI unexpectedly null"));
@@ -748,7 +803,8 @@ public class PresentationLogicUt
     public async Task PresentationLogic_LoadH5pAsync_CallsDialogManagerAndContentMapperAndBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
         var mockContentMapper = Substitute.For<ILearningContentMapper>();
         var learningContent = new LearningContentViewModel("f", ".h5p", new byte[] { 0x01, 0x01, 0x00, 0x01 });
         var entity = new LearningContent("f", ".h5p", new byte[] { 0x01, 0x01, 0x00, 0x01 });
@@ -763,7 +819,7 @@ public class PresentationLogicUt
         mockBusinessLogic.LoadLearningContent(filepath + ".h5p").Returns(entity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            contentMapper: mockContentMapper, serviceProvider: mockServiceProvider);
+            contentMapper: mockContentMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
         var loadedContent = await systemUnderTest.LoadH5pAsync();
 
@@ -779,8 +835,9 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadH5pAsync_LogsAndRethrowsDialogCancelledException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
-        var mockLogger = Substitute.For<ILogger<AuthoringToolLib.PresentationLogic.API.PresentationLogic>>();
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
+        var mockLogger = Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         var mockElectronDialogManager = Substitute.For<IElectronDialogManager>();
         mockElectronDialogManager
@@ -790,7 +847,7 @@ public class PresentationLogicUt
             .Returns(mockElectronDialogManager);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
-            serviceProvider: mockServiceProvider);
+            serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.LoadH5pAsync());
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
@@ -802,7 +859,8 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadPdfAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(false);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(false);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
@@ -815,12 +873,14 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadPdfAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(null);
 
         var systemUnderTest =
-            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider);
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider,
+                hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<InvalidOperationException>(async () => await systemUnderTest.LoadPdfAsync());
         Assert.That(ex!.Message, Is.EqualTo("dialogManager received from DI unexpectedly null"));
@@ -830,7 +890,8 @@ public class PresentationLogicUt
     public async Task PresentationLogic_LoadPdfAsync_CallsDialogManagerAndContentMapperAndBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
         var mockContentMapper = Substitute.For<ILearningContentMapper>();
         var learningContent = new LearningContentViewModel("f", ".pdf", new byte[] { 0x01, 0x01, 0x01, 0x01 });
         var entity = new LearningContent("f", ".pdf", new byte[] { 0x01, 0x01, 0x01, 0x01 });
@@ -845,7 +906,7 @@ public class PresentationLogicUt
         mockBusinessLogic.LoadLearningContent(filepath + ".pdf").Returns(entity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            contentMapper: mockContentMapper, serviceProvider: mockServiceProvider);
+            contentMapper: mockContentMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
         var loadedContent = await systemUnderTest.LoadPdfAsync();
 
@@ -861,8 +922,9 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadPdfAsync_LogsAndRethrowsDialogCancelledException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.RunningElectron.Returns(true);
-        var mockLogger = Substitute.For<ILogger<AuthoringToolLib.PresentationLogic.API.PresentationLogic>>();
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
+        var mockLogger = Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         var mockElectronDialogManager = Substitute.For<IElectronDialogManager>();
         mockElectronDialogManager
@@ -872,7 +934,7 @@ public class PresentationLogicUt
             .Returns(mockElectronDialogManager);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
-            serviceProvider: mockServiceProvider);
+            serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.LoadPdfAsync());
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
@@ -880,123 +942,123 @@ public class PresentationLogicUt
     }
     #endregion
     
-    #region LoadFromStream
+    #region Load
 
     [Test]
-    public void PresentationLogic_LoadLearningWorldViewModelFromStream_ReturnsLearningWorld()
+    public void PresentationLogic_LoadLearningWorldViewModel_ReturnsLearningWorld()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var mockLearningWorld = new AuthoringToolLib.Entities.LearningWorld("n", "sn", "a", "l", "d", "g");
-        mockBusinessLogic.LoadLearningWorldFromStream(Arg.Any<Stream>()).Returns(mockLearningWorld);
+        var mockLearningWorld = new BusinessLogic.Entities.LearningWorld("n", "sn", "a", "l", "d", "g");
+        mockBusinessLogic.LoadLearningWorld(Arg.Any<Stream>()).Returns(mockLearningWorld);
         var mockLearningWorldViewModel = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
         var mockWorldMapper = Substitute.For<ILearningWorldMapper>();
-        mockWorldMapper.ToViewModel(Arg.Any<AuthoringToolLib.Entities.LearningWorld>())
+        mockWorldMapper.ToViewModel(Arg.Any<BusinessLogic.Entities.LearningWorld>())
             .Returns(mockLearningWorldViewModel);
         var stream = Substitute.For<Stream>();
 
         var systemUnderTest =
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, worldMapper: mockWorldMapper);
 
-        var result = systemUnderTest.LoadLearningWorldViewModelFromStream(stream);
+        var result = systemUnderTest.LoadLearningWorldViewModel(stream);
 
-        mockBusinessLogic.Received().LoadLearningWorldFromStream(stream);
+        mockBusinessLogic.Received().LoadLearningWorld(stream);
         mockWorldMapper.Received().ToViewModel(mockLearningWorld);
         Assert.That(result, Is.EqualTo(mockLearningWorldViewModel));
     }
 
     [Test]
-    public void PresentationLogic_LoadLearningWorldViewModelFromStream_CatchesException()
+    public void PresentationLogic_LoadLearningWorldViewModel_CatchesException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.LoadLearningWorldFromStream(Arg.Any<Stream>()).Throws(new Exception("Exception"));
+        mockBusinessLogic.LoadLearningWorld(Arg.Any<Stream>()).Throws(new Exception("Exception"));
         var stream = Substitute.For<Stream>();
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
-        var ex = Assert.Throws<Exception>(() => systemUnderTest.LoadLearningWorldViewModelFromStream(stream));
+        var ex = Assert.Throws<Exception>(() => systemUnderTest.LoadLearningWorldViewModel(stream));
         Assert.That(ex, Is.Not.Null);
         Assert.That(ex?.Message, Is.EqualTo("Exception"));
     }
     
     [Test]
-    public void PresentationLogic_LoadLearningSpaceViewModelFromStream_ReturnsLearningSpace()
+    public void PresentationLogic_LoadLearningSpaceViewModel_ReturnsLearningSpace()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var mockLearningSpace = new AuthoringToolLib.Entities.LearningSpace("n", "sn", "a", "d", "g");
-        mockBusinessLogic.LoadLearningSpaceFromStream(Arg.Any<Stream>()).Returns(mockLearningSpace);
+        var mockLearningSpace = new BusinessLogic.Entities.LearningSpace("n", "sn", "a", "d", "g");
+        mockBusinessLogic.LoadLearningSpace(Arg.Any<Stream>()).Returns(mockLearningSpace);
         var mockLearningSpaceViewModel = new LearningSpaceViewModel("n", "sn", "a", "d", "g");
         var mockSpaceMapper = Substitute.For<ILearningSpaceMapper>();
-        mockSpaceMapper.ToViewModel(Arg.Any<AuthoringToolLib.Entities.LearningSpace>())
+        mockSpaceMapper.ToViewModel(Arg.Any<BusinessLogic.Entities.LearningSpace>())
             .Returns(mockLearningSpaceViewModel);
         var stream = Substitute.For<Stream>();
 
         var systemUnderTest =
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, spaceMapper: mockSpaceMapper);
 
-        var result = systemUnderTest.LoadLearningSpaceViewModelFromStream(stream);
+        var result = systemUnderTest.LoadLearningSpaceViewModel(stream);
 
-        mockBusinessLogic.Received().LoadLearningSpaceFromStream(stream);
+        mockBusinessLogic.Received().LoadLearningSpace(stream);
         mockSpaceMapper.Received().ToViewModel(mockLearningSpace);
         Assert.That(result, Is.EqualTo(mockLearningSpaceViewModel));
     }
 
     [Test]
-    public void PresentationLogic_LoadLearningSpaceViewModelFromStream_CatchesException()
+    public void PresentationLogic_LoadLearningSpaceViewModel_CatchesException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.LoadLearningSpaceFromStream(Arg.Any<Stream>()).Throws(new Exception("Exception"));
+        mockBusinessLogic.LoadLearningSpace(Arg.Any<Stream>()).Throws(new Exception("Exception"));
         var stream = Substitute.For<Stream>();
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
-        var ex = Assert.Throws<Exception>(() => systemUnderTest.LoadLearningSpaceViewModelFromStream(stream));
+        var ex = Assert.Throws<Exception>(() => systemUnderTest.LoadLearningSpaceViewModel(stream));
         Assert.That(ex, Is.Not.Null);
         Assert.That(ex?.Message, Is.EqualTo("Exception"));
     }
     
     [Test]
-    public void PresentationLogic_LoadLearningElementViewModelFromStream_ReturnsLearningElement()
+    public void PresentationLogic_LoadLearningElementViewModel_ReturnsLearningElement()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var mockLearningElement = new AuthoringToolLib.Entities.LearningElement("n", "sn", "pn",null, "a", "d", "g",LearningElementDifficultyEnum.Easy);
-        mockBusinessLogic.LoadLearningElementFromStream(Arg.Any<Stream>()).Returns(mockLearningElement);
+        var mockLearningElement = new BusinessLogic.Entities.LearningElement("n", "sn", "pn",null, "a", "d", "g",LearningElementDifficultyEnum.Easy);
+        mockBusinessLogic.LoadLearningElement(Arg.Any<Stream>()).Returns(mockLearningElement);
         var mockLearningContent = new LearningContentViewModel("n", "t", Array.Empty<byte>());
         var mockLearningElementViewModel = new LearningElementViewModel("n", "sn", null, mockLearningContent, "a", "d", "g",LearningElementDifficultyEnum.Easy);
         var mockElementMapper = Substitute.For<ILearningElementMapper>();
-        mockElementMapper.ToViewModel(Arg.Any<AuthoringToolLib.Entities.LearningElement>())
+        mockElementMapper.ToViewModel(Arg.Any<BusinessLogic.Entities.LearningElement>())
             .Returns(mockLearningElementViewModel);
         var stream = Substitute.For<Stream>();
 
         var systemUnderTest =
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, elementMapper: mockElementMapper);
 
-        var result = systemUnderTest.LoadLearningElementViewModelFromStream(stream);
+        var result = systemUnderTest.LoadLearningElementViewModel(stream);
 
-        mockBusinessLogic.Received().LoadLearningElementFromStream(stream);
+        mockBusinessLogic.Received().LoadLearningElement(stream);
         mockElementMapper.Received().ToViewModel(mockLearningElement);
         Assert.That(result, Is.EqualTo(mockLearningElementViewModel));
     }
 
     [Test]
-    public void PresentationLogic_LoadLearningElementViewModelFromStream_CatchesException()
+    public void PresentationLogic_LoadLearningElementViewModel_CatchesException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.LoadLearningElementFromStream(Arg.Any<Stream>()).Throws(new Exception("Exception"));
+        mockBusinessLogic.LoadLearningElement(Arg.Any<Stream>()).Throws(new Exception("Exception"));
         var stream = Substitute.For<Stream>();
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
-        var ex = Assert.Throws<Exception>(() => systemUnderTest.LoadLearningElementViewModelFromStream(stream));
+        var ex = Assert.Throws<Exception>(() => systemUnderTest.LoadLearningElementViewModel(stream));
         Assert.That(ex, Is.Not.Null);
         Assert.That(ex?.Message, Is.EqualTo("Exception"));
     }
 
     [Test]
-    public void PresentationLogic_LoadLearningContentViewModelFromStream_ReturnsLearningContent()
+    public void PresentationLogic_LoadLearningContentViewModel_ReturnsLearningContent()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockLearningContent = new LearningContent("n", "t", Array.Empty<byte>());
-        mockBusinessLogic.LoadLearningContentFromStream(Arg.Any<string>(), Arg.Any<Stream>()).Returns(mockLearningContent);
+        mockBusinessLogic.LoadLearningContent(Arg.Any<string>(), Arg.Any<Stream>()).Returns(mockLearningContent);
         var mockLearningContentViewModel = new LearningContentViewModel("n", "t", Array.Empty<byte>());
         var mockContentMapper = Substitute.For<ILearningContentMapper>();
         mockContentMapper.ToViewModel(Arg.Any<LearningContent>())
@@ -1007,35 +1069,36 @@ public class PresentationLogicUt
         var systemUnderTest =
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, contentMapper: mockContentMapper);
 
-        var result = systemUnderTest.LoadLearningContentViewModelFromStream(filename, stream);
+        var result = systemUnderTest.LoadLearningContentViewModel(filename, stream);
 
-        mockBusinessLogic.Received().LoadLearningContentFromStream(filename, stream);
+        mockBusinessLogic.Received().LoadLearningContent(filename, stream);
         mockContentMapper.Received().ToViewModel(mockLearningContent);
         Assert.That(result, Is.EqualTo(mockLearningContentViewModel));
     }
 
     [Test]
-    public void PresentationLogic_LoadLearningContentViewModelFromStream_CatchesException()
+    public void PresentationLogic_LoadLearningContentViewModel_CatchesException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.LoadLearningContentFromStream(Arg.Any<string>(), Arg.Any<Stream>()).Throws(new Exception("Exception"));
+        mockBusinessLogic.LoadLearningContent(Arg.Any<string>(), Arg.Any<Stream>()).Throws(new Exception("Exception"));
         var filename = "test.png";
         var stream = Substitute.For<Stream>();
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
-        var ex = Assert.Throws<Exception>(() => systemUnderTest.LoadLearningContentViewModelFromStream(filename, stream));
+        var ex = Assert.Throws<Exception>(() => systemUnderTest.LoadLearningContentViewModel(filename, stream));
         Assert.That(ex, Is.Not.Null);
         Assert.That(ex?.Message, Is.EqualTo("Exception"));
     }
     
     #endregion
 
-    private static AuthoringToolLib.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(
+    private static Presentation.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(
         IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null,
         ILearningWorldMapper? worldMapper = null, ILearningSpaceMapper? spaceMapper = null,
         ILearningElementMapper? elementMapper = null, ILearningContentMapper? contentMapper = null,
-        IServiceProvider? serviceProvider = null, ILogger<AuthoringToolLib.PresentationLogic.API.PresentationLogic>? logger = null)
+        IServiceProvider? serviceProvider = null, ILogger<Presentation.PresentationLogic.API.PresentationLogic>? logger = null,
+        IHybridSupportWrapper? hybridSupportWrapper = null)
     {
         configuration ??= Substitute.For<IAuthoringToolConfiguration>();
         businessLogic ??= Substitute.For<IBusinessLogic>();
@@ -1044,8 +1107,10 @@ public class PresentationLogicUt
         elementMapper ??= Substitute.For<ILearningElementMapper>();
         contentMapper ??= Substitute.For<ILearningContentMapper>();
         serviceProvider ??= Substitute.For<IServiceProvider>();
-        logger ??= Substitute.For<ILogger<AuthoringToolLib.PresentationLogic.API.PresentationLogic>>();
-        return new AuthoringToolLib.PresentationLogic.API.PresentationLogic(configuration, businessLogic,
-            worldMapper, spaceMapper, elementMapper, contentMapper, serviceProvider, logger);
+        logger ??= Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
+        hybridSupportWrapper ??= Substitute.For<IHybridSupportWrapper>();
+        
+        return new Presentation.PresentationLogic.API.PresentationLogic(configuration, businessLogic,
+            worldMapper, spaceMapper, elementMapper, contentMapper, serviceProvider, logger, hybridSupportWrapper);
     }
 }

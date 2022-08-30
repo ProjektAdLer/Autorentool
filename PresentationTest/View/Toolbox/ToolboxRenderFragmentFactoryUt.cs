@@ -10,6 +10,13 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Primitives;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.PresentationLogic;
+using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Toolbox;
+using Presentation.View.Toolbox;
+using Shared;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.View.Toolbox;

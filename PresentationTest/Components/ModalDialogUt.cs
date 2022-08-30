@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using Bunit;
 using NUnit.Framework;
+using Presentation.Components.ModalDialog;
 
 namespace PresentationTest.Components;
 

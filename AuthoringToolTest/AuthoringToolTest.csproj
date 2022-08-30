@@ -16,7 +16,7 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.2.0" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.3.1" />
         <PackageReference Include="NSubstitute" Version="4.4.0" />
         <PackageReference Include="NUnit" Version="3.13.3" />
         <PackageReference Include="NUnit.Analyzers" Version="3.3.0" />
@@ -25,8 +25,8 @@
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="System.IO.Abstractions" Version="17.0.24" />
-        <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="17.0.24" />
+        <PackageReference Include="System.IO.Abstractions" Version="17.1.1" />
+        <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="17.1.1" />
     </ItemGroup>
 
     <ItemGroup>

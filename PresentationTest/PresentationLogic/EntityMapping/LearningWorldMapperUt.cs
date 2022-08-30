@@ -1,5 +1,13 @@
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.PresentationLogic;
+using Presentation.PresentationLogic.EntityMapping;
+using Presentation.PresentationLogic.EntityMapping.LearningElementMapper;
+using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningWorld;
+using Shared;
 
 namespace PresentationTest.PresentationLogic.EntityMapping;
 
@@ -14,7 +22,7 @@ public class LearningWorldMapperUt
         var space = new LearningSpaceViewModel("b", "b", "b", "b", "b");
         viewModel.LearningSpaces.Add(space);
         
-        spaceMapper.ToEntity(space).Returns(new AuthoringToolLib.Entities.LearningSpace("b", "b", "b", "b", "b"));
+        spaceMapper.ToEntity(space).Returns(new BusinessLogic.Entities.LearningSpace("b", "b", "b", "b", "b"));
 
         var systemUnderTest = CreateMapperForTesting(spaceMapper);
 
@@ -31,7 +39,7 @@ public class LearningWorldMapperUt
         var element = new LearningElementViewModel("a", "a", null, content, "a" , "a", "a",LearningElementDifficultyEnum.Easy);
         viewModel.LearningElements.Add(element);
 
-        elementMapper.ToEntity(element).Returns(new AuthoringToolLib.Entities.LearningElement("a","b",null, null,"g","h","i",LearningElementDifficultyEnum.Easy));
+        elementMapper.ToEntity(element).Returns(new BusinessLogic.Entities.LearningElement("a","b",null, null,"g","h","i",LearningElementDifficultyEnum.Easy));
 
         var systemUnderTest = CreateMapperForTesting(elementMapper: elementMapper);
 
@@ -66,8 +74,8 @@ public class LearningWorldMapperUt
     public void LearningWorldMapper_ToViewModel_CallsSpaceMapperForSpaces()
     {
         var spaceMapper = Substitute.For<ILearningSpaceMapper>();
-        var entity = new AuthoringToolLib.Entities.LearningWorld("a", "b", "c", "d", "e", "f");
-        var space = new AuthoringToolLib.Entities.LearningSpace("b", "b", "b", "b", "b");
+        var entity = new BusinessLogic.Entities.LearningWorld("a", "b", "c", "d", "e", "f");
+        var space = new BusinessLogic.Entities.LearningSpace("b", "b", "b", "b", "b");
         entity.LearningSpaces.Add(space);
 
         spaceMapper.ToViewModel(space).Returns(
@@ -83,8 +91,8 @@ public class LearningWorldMapperUt
     public void LearningWorldMapper_ToViewModel_CallsElementMapperForElements()
     {
         var elementMapper = Substitute.For<ILearningElementMapper>();
-        var entity = new AuthoringToolLib.Entities.LearningWorld("a", "b", "c", "d", "e", "f");
-        var element = new AuthoringToolLib.Entities.LearningElement("a","b","e",null, "f","nll","g",LearningElementDifficultyEnum.Easy);
+        var entity = new BusinessLogic.Entities.LearningWorld("a", "b", "c", "d", "e", "f");
+        var element = new BusinessLogic.Entities.LearningElement("a","b","e",null, "f","nll","g",LearningElementDifficultyEnum.Easy);
       
         entity.LearningElements.Add(element);
 
@@ -102,7 +110,7 @@ public class LearningWorldMapperUt
     {
         var subElementMapper = Substitute.For<ILearningElementMapper>();
         var spaceMapper = new LearningSpaceMapper(subElementMapper);
-        var entity = new AuthoringToolLib.Entities.LearningWorld("name", "shortname", "authors", "language",
+        var entity = new BusinessLogic.Entities.LearningWorld("name", "shortname", "authors", "language",
             "description", "goals");
 
         var systemUnderTest = CreateMapperForTesting(spaceMapper);

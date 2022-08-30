@@ -3,6 +3,9 @@ using Bunit.TestDoubles;
 using Microsoft.AspNetCore.Components;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.PresentationLogic.LearningSpace;
+using Presentation.View.LearningSpace;
+using Presentation.View.Toolbox;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.View.LearningSpace;

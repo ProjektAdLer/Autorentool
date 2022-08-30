@@ -5,6 +5,9 @@ using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.Components;
+using Presentation.PresentationLogic;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.Components;

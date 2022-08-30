@@ -1,12 +1,11 @@
-using System.Collections.Generic;
-using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
+using DataAccess.Persistence;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace PresentationTest.DataAccess.Persistence;
+namespace DataAccessTest.Persistence;
 
 [TestFixture]
 
@@ -54,6 +53,7 @@ public class ContentFileHandlerUt
         IFileSystem? fileSystem = null)
     {
         logger ??= Substitute.For<ILogger<ContentFileHandler>>();
-        return fileSystem == null ? new ContentFileHandler(logger) : new ContentFileHandler(logger, fileSystem);
+        fileSystem ??= new MockFileSystem();
+        return new ContentFileHandler(logger, fileSystem);
     }
 }

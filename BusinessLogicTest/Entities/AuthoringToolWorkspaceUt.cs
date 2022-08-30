@@ -1,8 +1,8 @@
-using System.Collections.Generic;
+using BusinessLogic.Entities;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace PresentationTest.Entities;
+namespace BusinessLogicTest.Entities;
 
 [TestFixture]
 public class AuthoringToolWorkspaceUt

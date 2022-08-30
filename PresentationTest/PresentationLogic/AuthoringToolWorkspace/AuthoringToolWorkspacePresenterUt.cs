@@ -6,6 +6,15 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.Components.ModalDialog;
+using Presentation.PresentationLogic;
+using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningWorld;
+using Shared;
 
 namespace PresentationTest.PresentationLogic.AuthoringToolWorkspace;
 
@@ -1083,7 +1092,7 @@ public class AuthoringToolWorkspacePresenterUt
         }
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var learningContent = new LearningContentViewModel(fileName, ending, Array.Empty<byte>());
-        presentationLogic.LoadLearningContentViewModelFromStream(Arg.Any<string>(), Arg.Any<Stream>())
+        presentationLogic.LoadLearningContentViewModel(Arg.Any<string>(), Arg.Any<Stream>())
             .Returns(learningContent);
         var learningWorldPresenter = Substitute.For<ILearningWorldPresenter>();
         var logger = Substitute.For<ILogger<AuthoringToolWorkspacePresenter>>();
@@ -1095,13 +1104,13 @@ public class AuthoringToolWorkspacePresenterUt
         switch (ending)
         {
             case "awf":
-                presentationLogic.Received().LoadLearningWorldViewModelFromStream(stream);
+                presentationLogic.Received().LoadLearningWorldViewModel(stream);
                 break;
             case "asf":
-                presentationLogic.Received().LoadLearningSpaceViewModelFromStream(stream);
+                presentationLogic.Received().LoadLearningSpaceViewModel(stream);
                 break;
             case "aef":
-                presentationLogic.Received().LoadLearningElementViewModelFromStream(stream);
+                presentationLogic.Received().LoadLearningElementViewModel(stream);
                 break;
             case "jpg":
             case "png":
@@ -1110,7 +1119,7 @@ public class AuthoringToolWorkspacePresenterUt
             case "mp4":
             case "h5p":
             case "pdf":
-                presentationLogic.Received().LoadLearningContentViewModelFromStream(fileName, stream);
+                presentationLogic.Received().LoadLearningContentViewModel(fileName, stream);
                 learningWorldPresenter.Received().CreateLearningElementWithPreloadedContent(learningContent);
                 break;
             default:
@@ -1205,14 +1214,14 @@ public class AuthoringToolWorkspacePresenterUt
     {
         var authoringToolWorkspace = new AuthoringToolWorkspaceViewModel();
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        presentationLogic.LoadLearningWorldViewModelFromStream(Arg.Any<Stream>())
+        presentationLogic.LoadLearningWorldViewModel(Arg.Any<Stream>())
             .Returns(new LearningWorldViewModel("n", "sn", "a", "l", "d", "g"));
         var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspace, presentationLogic);
         var stream = Substitute.For<Stream>();
 
         systemUnderTest.LoadLearningWorldFromFileStream(stream);
 
-        presentationLogic.Received().LoadLearningWorldViewModelFromStream(stream);
+        presentationLogic.Received().LoadLearningWorldViewModel(stream);
     }
 
     [Test]
@@ -1223,7 +1232,7 @@ public class AuthoringToolWorkspacePresenterUt
         authoringToolWorkspace.AddLearningWorld(new LearningWorldViewModel("n", "x", "x", "x", "x", "x"));
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var newLearningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
-        presentationLogic.LoadLearningWorldViewModelFromStream(Arg.Any<Stream>())
+        presentationLogic.LoadLearningWorldViewModel(Arg.Any<Stream>())
             .Returns(newLearningWorld);
         var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspace, presentationLogic);
         var stream = Substitute.For<Stream>();
@@ -1254,7 +1263,7 @@ public class AuthoringToolWorkspacePresenterUt
 
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var newLearningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
-        presentationLogic.LoadLearningWorldViewModelFromStream(Arg.Any<Stream>())
+        presentationLogic.LoadLearningWorldViewModel(Arg.Any<Stream>())
             .Returns(newLearningWorld);
         var stream = Substitute.For<Stream>();
         var callbackCalled = false;
@@ -1296,14 +1305,14 @@ public class AuthoringToolWorkspacePresenterUt
     {
         var authoringToolWorkspace = new AuthoringToolWorkspaceViewModel();
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        presentationLogic.LoadLearningSpaceViewModelFromStream(Arg.Any<Stream>())
+        presentationLogic.LoadLearningSpaceViewModel(Arg.Any<Stream>())
             .Returns(new LearningSpaceViewModel("n", "sn", "a", "d", "g"));
         var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspace, presentationLogic);
         var stream = Substitute.For<Stream>();
 
         systemUnderTest.LoadLearningSpaceFromFileStream(stream);
 
-        presentationLogic.Received().LoadLearningSpaceViewModelFromStream(stream);
+        presentationLogic.Received().LoadLearningSpaceViewModel(stream);
     }
 
     [Test]
@@ -1336,7 +1345,7 @@ public class AuthoringToolWorkspacePresenterUt
 
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var newLearningSpace = new LearningSpaceViewModel("n", "sn", "a", "d", "g");
-        presentationLogic.LoadLearningSpaceViewModelFromStream(Arg.Any<Stream>())
+        presentationLogic.LoadLearningSpaceViewModel(Arg.Any<Stream>())
             .Returns(newLearningSpace);
         var stream = Substitute.For<Stream>();
         var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspace, presentationLogic);
@@ -1363,14 +1372,14 @@ public class AuthoringToolWorkspacePresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var newLearningElement = new LearningElementViewModel("n", "sn", null,
             new LearningContentViewModel("n", "t", Array.Empty<byte>()), "a", "d", "g",LearningElementDifficultyEnum.Easy);
-        presentationLogic.LoadLearningElementViewModelFromStream(Arg.Any<Stream>())
+        presentationLogic.LoadLearningElementViewModel(Arg.Any<Stream>())
             .Returns(newLearningElement);
         var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspace, presentationLogic);
         var stream = Substitute.For<Stream>();
 
         systemUnderTest.LoadLearningElementFromFileStream(stream);
 
-        presentationLogic.Received().LoadLearningElementViewModelFromStream(stream);
+        presentationLogic.Received().LoadLearningElementViewModel(stream);
     }
 
     [Test]
@@ -1393,7 +1402,7 @@ public class AuthoringToolWorkspacePresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var newLearningElement = new LearningElementViewModel("n", "sn", null,
             new LearningContentViewModel("n", "t", Array.Empty<byte>()), "a", "d", "g",LearningElementDifficultyEnum.Easy);
-        presentationLogic.LoadLearningElementViewModelFromStream(Arg.Any<Stream>()).Returns(newLearningElement);
+        presentationLogic.LoadLearningElementViewModel(Arg.Any<Stream>()).Returns(newLearningElement);
         var stream = Substitute.For<Stream>();
         var spacePresenter = Substitute.For<ILearningSpacePresenter>();
         if (isLearningSpaceVmSet)

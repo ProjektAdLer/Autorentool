@@ -1,8 +1,8 @@
-using System;
-using System.Collections.Generic;
+using BusinessLogic.Entities;
 using NUnit.Framework;
+using Shared;
 
-namespace PresentationTest.Entities;
+namespace BusinessLogicTest.Entities;
 
 [TestFixture]
 public class LearningWorldUt

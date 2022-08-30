@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using ElectronWrapper;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.PresentationLogic.ElectronNET;
 
 namespace PresentationTest.PresentationLogic.ElectronNET;
 

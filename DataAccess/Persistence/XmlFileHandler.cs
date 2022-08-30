@@ -28,7 +28,7 @@ public class XmlFileHandler<T> : IXmlFileHandler<T> where T : class //new() cons
     /// <param name="fileSystem">File system to be used.</param>
     /// <exception cref="InvalidOperationException">Thrown when class T is either not serializable or doesn't have a
     /// parameterless constructor (necessary for XmlSerializer deserialization).</exception>
-    internal XmlFileHandler(ILogger<XmlFileHandler<T>> logger, IFileSystem fileSystem)
+    public XmlFileHandler(ILogger<XmlFileHandler<T>> logger, IFileSystem fileSystem)
     {
         _logger = logger;
         _fileSystem = fileSystem;

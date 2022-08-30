@@ -5,7 +5,17 @@ using Bunit;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
+using Presentation.Components.ModalDialog;
+using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.ModalDialog;
+using Presentation.View;
+using Presentation.View.LearningWorld;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.View;

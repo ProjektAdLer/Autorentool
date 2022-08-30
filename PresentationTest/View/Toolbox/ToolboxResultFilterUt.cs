@@ -1,6 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
+using Presentation.PresentationLogic;
+using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningWorld;
+using Presentation.View.Toolbox;
+using Shared;
 
 namespace PresentationTest.View.Toolbox;
 

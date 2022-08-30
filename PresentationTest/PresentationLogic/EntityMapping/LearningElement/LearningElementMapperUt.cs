@@ -1,7 +1,16 @@
 using System;
+using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.PresentationLogic.EntityMapping.LearningElementMapper;
+using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningElement.ActivationElement;
+using Presentation.PresentationLogic.LearningElement.InteractionElement;
+using Presentation.PresentationLogic.LearningElement.TestElement;
+using Presentation.PresentationLogic.LearningElement.TransferElement;
+using Presentation.PresentationLogic.LearningWorld;
+using Shared;
 
 namespace PresentationTest.PresentationLogic.EntityMapping.LearningElement;
 

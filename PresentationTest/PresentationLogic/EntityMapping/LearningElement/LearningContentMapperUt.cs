@@ -1,4 +1,7 @@
+using BusinessLogic.Entities;
 using NUnit.Framework;
+using Presentation.PresentationLogic.EntityMapping.LearningElementMapper;
+using Presentation.PresentationLogic.LearningContent;
 
 namespace PresentationTest.PresentationLogic.EntityMapping.LearningElement;
 

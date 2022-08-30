@@ -1,8 +1,9 @@
 ﻿using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
+using Shared.Configuration;
 
-namespace PresentationTest.API.Configuration;
+namespace SharedTest.Configuration;
 
 [TestFixture]
 public class AuthoringToolConfigurationUt

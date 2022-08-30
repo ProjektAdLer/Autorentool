@@ -1,8 +1,8 @@
-﻿using System;
+﻿using BusinessLogic.Commands;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace PresentationTest.BusinessLogic.Commands;
+namespace BusinessLogicTest.Commands;
 
 [TestFixture]
 public class CommandStateManagerUt

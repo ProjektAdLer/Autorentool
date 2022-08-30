@@ -1,12 +1,13 @@
-﻿using System;
-using System.IO;
-using AutoMapper;
-using ElectronWrapper;
+﻿using AutoMapper;
+using BusinessLogic.API;
+using BusinessLogic.Entities;
 using NSubstitute;
 using NUnit.Framework;
 using PersistEntities;
+using Shared;
+using Shared.Configuration;
 
-namespace PresentationTest.BusinessLogic.API;
+namespace BusinessLogicTest.API;
 
 [TestFixture]
 public class BusinessLogicUt
@@ -43,16 +44,13 @@ public class BusinessLogicUt
     public void SaveLearningWorld_CallsDataAccess()
     {
         var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f");
-        var learningWorldPe = new LearningWorldPe("fa", "a", "f", "f", "f", "f");
         var mockDataAccess = Substitute.For<IDataAccess>();
-        var mockMapper = Substitute.For<IMapper>();
-        mockMapper.Map<LearningWorldPe>(learningWorld).Returns(learningWorldPe);
 
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, mapper: mockMapper);
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
         systemUnderTest.SaveLearningWorld(learningWorld, "foobar");
 
-        mockDataAccess.Received().SaveLearningWorldToFile(learningWorldPe, "foobar");
+        mockDataAccess.Received().SaveLearningWorldToFile(learningWorld, "foobar");
     }
 
     [Test]
@@ -64,20 +62,17 @@ public class BusinessLogicUt
 
         systemUnderTest.LoadLearningWorld("foobar");
 
-        mockDataAccess.Received().LoadLearningWorldFromFile("foobar");
+        mockDataAccess.Received().LoadLearningWorld("foobar");
     }
 
     [Test]
     public void LoadLearningWorld_ReturnsLearningWorld()
     {
         var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f");
-        var learningWorldPe = new LearningWorldPe("fa", "a", "f", "f", "f", "f");
-        var mockMapper = Substitute.For<IMapper>();
-        mockMapper.Map<LearningWorld>(learningWorldPe).Returns(learningWorld);
         var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadLearningWorldFromFile("foobar").Returns(learningWorldPe);
+        mockDataAccess.LoadLearningWorld("foobar").Returns(learningWorld);
 
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, mapper: mockMapper);
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
         var learningWorldActual = systemUnderTest.LoadLearningWorld("foobar");
 
@@ -88,16 +83,13 @@ public class BusinessLogicUt
     public void SaveLearningSpace_CallsDataAccess()
     {
         var learningSpace = new LearningSpace("fa", "a", "f", "f", "f");
-        var learningSpacePe = new LearningSpacePe("fa", "a", "f", "f", "f");
-        var mockMapper = Substitute.For<IMapper>();
-        mockMapper.Map<LearningSpacePe>(learningSpace).Returns(learningSpacePe);
         var mockDataAccess = Substitute.For<IDataAccess>();
 
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, mapper: mockMapper);
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
         systemUnderTest.SaveLearningSpace(learningSpace, "foobar");
 
-        mockDataAccess.Received().SaveLearningSpaceToFile(learningSpacePe, "foobar");
+        mockDataAccess.Received().SaveLearningSpaceToFile(learningSpace, "foobar");
     }
 
     [Test]
@@ -109,20 +101,17 @@ public class BusinessLogicUt
 
         systemUnderTest.LoadLearningSpace("foobar");
 
-        mockDataAccess.Received().LoadLearningSpaceFromFile("foobar");
+        mockDataAccess.Received().LoadLearningSpace("foobar");
     }
 
     [Test]
     public void LoadLearningSpace_ReturnsLearningSpace()
     {
         var learningSpace = new LearningSpace("fa", "a", "f", "f", "f");
-        var learningSpacePe = new LearningSpacePe("fa", "a", "f", "f", "f");
-        var mockMapper = Substitute.For<IMapper>();
-        mockMapper.Map<LearningSpace>(learningSpacePe).Returns(learningSpace);
         var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadLearningSpaceFromFile("foobar").Returns(learningSpacePe);
+        mockDataAccess.LoadLearningSpace("foobar").Returns(learningSpace);
 
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, mapper: mockMapper);
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
         var learningSpaceActual = systemUnderTest.LoadLearningSpace("foobar");
 
@@ -135,18 +124,13 @@ public class BusinessLogicUt
         var content = new LearningContent("a", "b", Array.Empty<byte>());
         var learningElement = new LearningElement("fa", "f", "f", content, "f",
             "f", "f", LearningElementDifficultyEnum.Easy);
-        var contentPe = new LearningContentPe("a", "b", Array.Empty<byte>());
-        var learningElementPe = new LearningElementPe("fa", "f", "f", contentPe, "f",
-            "f", "f", LearningElementDifficultyEnumPe.Easy);
-        var mockMapper = Substitute.For<IMapper>();
-        mockMapper.Map<LearningElementPe>(learningElement).Returns(learningElementPe);
         var mockDataAccess = Substitute.For<IDataAccess>();
 
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, mapper: mockMapper);
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
         systemUnderTest.SaveLearningElement(learningElement, "foobar");
 
-        mockDataAccess.Received().SaveLearningElementToFile(learningElementPe, "foobar");
+        mockDataAccess.Received().SaveLearningElementToFile(learningElement, "foobar");
     }
 
     [Test]
@@ -158,7 +142,7 @@ public class BusinessLogicUt
 
         systemUnderTest.LoadLearningElement("foobar");
 
-        mockDataAccess.Received().LoadLearningElementFromFile("foobar");
+        mockDataAccess.Received().LoadLearningElement("foobar");
     }
 
     [Test]
@@ -167,15 +151,10 @@ public class BusinessLogicUt
         var content = new LearningContent("a", "b", Array.Empty<byte>());
         var learningElement = new LearningElement("fa", "a", "f", content, "f", "f",
             "f", LearningElementDifficultyEnum.Easy);
-        var contentPe = new LearningContentPe("a", "b", Array.Empty<byte>());
-        var learningElementPe = new LearningElementPe("fa", "a", "f", contentPe, "f", "f", "f",
-            LearningElementDifficultyEnumPe.Easy);
-        var mockMapper = Substitute.For<IMapper>();
-        mockMapper.Map<LearningElement>(learningElementPe).Returns(learningElement);
         var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadLearningElementFromFile("foobar").Returns(learningElementPe);
+        mockDataAccess.LoadLearningElement("foobar").Returns(learningElement);
 
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, mapper: mockMapper);
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
         var learningElementActual = systemUnderTest.LoadLearningElement("foobar");
 
@@ -191,20 +170,17 @@ public class BusinessLogicUt
 
         systemUnderTest.LoadLearningContent("foobar");
 
-        mockDataAccess.Received().LoadLearningContentFromFile("foobar");
+        mockDataAccess.Received().LoadLearningContent("foobar");
     }
 
     [Test]
     public void LoadLearningContent_ReturnsLearningElement()
     {
         var learningContent = new LearningContent("fa", "a", new byte[] {0x01, 0x02, 0x03});
-        var learningContentPe = new LearningContentPe("fa", "a", new byte[] {0x01, 0x02, 0x03});
-        var mockMapper = Substitute.For<IMapper>();
-        mockMapper.Map<LearningContent>(learningContentPe).Returns(learningContent);
         var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadLearningContentFromFile("foobar").Returns(learningContentPe);
+        mockDataAccess.LoadLearningContent("foobar").Returns(learningContent);
 
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, mapper: mockMapper);
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
         var learningElementActual = systemUnderTest.LoadLearningContent("foobar");
 
@@ -219,25 +195,22 @@ public class BusinessLogicUt
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.LoadLearningWorldFromStream(stream);
+        systemUnderTest.LoadLearningWorld(stream);
 
-        mockDataAccess.Received().LoadLearningWorldFromStream(stream);
+        mockDataAccess.Received().LoadLearningWorld(stream);
     }
 
     [Test]
     public void LoadLearningWorldFromStream_ReturnsLearningWorld()
     {
         var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f");
-        var learningWorldPe = new LearningWorldPe("fa", "a", "f", "f", "f", "f");
-        var mockMapper = Substitute.For<IMapper>();
-        mockMapper.Map<LearningWorld>(learningWorldPe).Returns(learningWorld);
         var stream = Substitute.For<Stream>();
         var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadLearningWorldFromStream(stream).Returns(learningWorldPe);
+        mockDataAccess.LoadLearningWorld(stream).Returns(learningWorld);
 
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, mapper: mockMapper);
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        var learningWorldActual = systemUnderTest.LoadLearningWorldFromStream(stream);
+        var learningWorldActual = systemUnderTest.LoadLearningWorld(stream);
 
         Assert.That(learningWorldActual, Is.EqualTo(learningWorld));
     }
@@ -250,25 +223,22 @@ public class BusinessLogicUt
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.LoadLearningSpaceFromStream(stream);
+        systemUnderTest.LoadLearningSpace(stream);
 
-        mockDataAccess.Received().LoadLearningSpaceFromStream(stream);
+        mockDataAccess.Received().LoadLearningSpace(stream);
     }
 
     [Test]
     public void LoadLearningSpaceFromStream_ReturnsLearningSpace()
     {
         var learningSpace = new LearningSpace("fa", "a", "f", "f", "f");
-        var learningSpacePe = new LearningSpacePe("fa", "a", "f", "f", "f");
-        var mockMapper = Substitute.For<IMapper>();
-        mockMapper.Map<LearningSpace>(learningSpacePe).Returns(learningSpace);
         var stream = Substitute.For<Stream>();
         var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadLearningSpaceFromStream(stream).Returns(learningSpacePe);
+        mockDataAccess.LoadLearningSpace(stream).Returns(learningSpace);
 
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, mapper: mockMapper);
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        var learningSpaceActual = systemUnderTest.LoadLearningSpaceFromStream(stream);
+        var learningSpaceActual = systemUnderTest.LoadLearningSpace(stream);
 
         Assert.That(learningSpaceActual, Is.EqualTo(learningSpace));
     }
@@ -281,9 +251,9 @@ public class BusinessLogicUt
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.LoadLearningElementFromStream(stream);
+        systemUnderTest.LoadLearningElement(stream);
 
-        mockDataAccess.Received().LoadLearningElementFromStream(stream);
+        mockDataAccess.Received().LoadLearningElement(stream);
     }
 
     [Test]
@@ -292,18 +262,13 @@ public class BusinessLogicUt
         var content = new LearningContent("a", "b", Array.Empty<byte>());
         var learningElement = new LearningElement("fa", "a", "f", content, "f", "f",
             "f", LearningElementDifficultyEnum.Easy);
-        var contentPe = new LearningContentPe("a", "b", Array.Empty<byte>());
-        var learningElementPe = new LearningElementPe("fa", "a", "f", contentPe, "f", "f", "f",
-            LearningElementDifficultyEnumPe.Easy);
-        var mockMapper = Substitute.For<IMapper>();
-        mockMapper.Map<LearningElement>(learningElementPe).Returns(learningElement);
         var stream = Substitute.For<Stream>();
         var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadLearningElementFromStream(stream).Returns(learningElementPe);
+        mockDataAccess.LoadLearningElement(stream).Returns(learningElement);
 
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, mapper: mockMapper);
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        var learningElementActual = systemUnderTest.LoadLearningElementFromStream(stream);
+        var learningElementActual = systemUnderTest.LoadLearningElement(stream);
 
         Assert.That(learningElementActual, Is.EqualTo(learningElement));
     }
@@ -316,25 +281,22 @@ public class BusinessLogicUt
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.LoadLearningContentFromStream("filename.extension", stream);
+        systemUnderTest.LoadLearningContent("filename.extension", stream);
 
-        mockDataAccess.Received().LoadLearningContentFromStream("filename.extension", stream);
+        mockDataAccess.Received().LoadLearningContent("filename.extension", stream);
     }
 
     [Test]
     public void LoadLearningContentFromStream_ReturnsLearningElement()
     {
         var learningContent = new LearningContent("filename", "extension", Array.Empty<byte>());
-        var learningContentPe = new LearningContentPe("filename", "extension", Array.Empty<byte>());
-        var mockMapper = Substitute.For<IMapper>();
-        mockMapper.Map<LearningContent>(learningContentPe).Returns(learningContent);
         var stream = Substitute.For<Stream>();
         var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadLearningContentFromStream("filename.extension", stream).Returns(learningContentPe);
+        mockDataAccess.LoadLearningContent("filename.extension", stream).Returns(learningContent);
 
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess, mapper: mockMapper);
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        var learningElementActual = systemUnderTest.LoadLearningContentFromStream("filename.extension", stream);
+        var learningElementActual = systemUnderTest.LoadLearningContent("filename.extension", stream);
 
         Assert.That(learningElementActual, Is.EqualTo(learningContent));
     }
@@ -350,20 +312,15 @@ public class BusinessLogicUt
         dataAccess.Received().FindSuitableNewSavePath("foo", "bar", "baz");
     }
 
-    private AuthoringToolLib.BusinessLogic.API.BusinessLogic CreateStandardBusinessLogic(
+    private BusinessLogic.API.BusinessLogic CreateStandardBusinessLogic(
         IAuthoringToolConfiguration? fakeConfiguration = null,
         IDataAccess? fakeDataAccess = null,
-        IHybridSupportWrapper? fakeHybridSupportWrapper = null,
-        IMapper? mapper = null,
         IWorldGenerator? worldGenerator = null)
     {
         fakeConfiguration ??= Substitute.For<IAuthoringToolConfiguration>();
         fakeDataAccess ??= Substitute.For<IDataAccess>();
-        fakeHybridSupportWrapper ??= Substitute.For<IHybridSupportWrapper>();
-        mapper ??= Substitute.For<IMapper>();
         worldGenerator ??= Substitute.For<IWorldGenerator>();
         
-        return new AuthoringToolLib.BusinessLogic.API.BusinessLogic(fakeConfiguration, fakeDataAccess,
-            fakeHybridSupportWrapper, mapper, worldGenerator);
+        return new BusinessLogic.API.BusinessLogic(fakeConfiguration, fakeDataAccess, worldGenerator);
     }
 }

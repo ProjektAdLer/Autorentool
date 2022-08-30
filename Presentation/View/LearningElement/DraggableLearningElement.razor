@@ -1,6 +1,7 @@
 @using Microsoft.AspNetCore.Components
 @using Presentation.PresentationLogic
 @using Presentation.PresentationLogic.LearningElement
+@using Presentation.Components
 @using Shared
 <Draggable LearningObject="LearningElement" OnClicked="@OnClicked"
            @bind-X="@LearningElement.PositionX" @bind-Y="@LearningElement.PositionY">

@@ -3,9 +3,20 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
+using System.Linq;
+using BusinessLogic.API;
+using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.PresentationLogic;
+using Presentation.PresentationLogic.EntityMapping;
+using Presentation.PresentationLogic.EntityMapping.LearningElementMapper;
+using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Toolbox;
+using Shared;
 
 namespace PresentationTest.PresentationLogic.Toolbox;
 
@@ -67,11 +78,11 @@ public class ToolboxEntriesProviderUt
         });
         
         var businessLogic = Substitute.For<IBusinessLogic>();
-        var lwEntity = new AuthoringToolLib.Entities.LearningWorld("foo", "foo", "foo", "foo", "foo", "foo");
-        var lsEntity = new AuthoringToolLib.Entities.LearningSpace("foo", "foo", "foo", "foo", "foo");
+        var lwEntity = new BusinessLogic.Entities.LearningWorld("world", "foo", "foo", "foo", "foo", "foo");
+        var lsEntity = new BusinessLogic.Entities.LearningSpace("space", "foo", "foo", "foo", "foo");
         var leEntity =
-            new AuthoringToolLib.Entities.LearningElement("foo", "foo", "foo", null, "foo",
-                "foo", "foo",LearningElementDifficultyEnum.Easy);
+            new BusinessLogic.Entities.LearningElement("element", "foo", "foo", null,"foo",
+                "foo", null,LearningElementDifficultyEnum.Easy);
         businessLogic.LoadLearningWorld(Arg.Any<string>()).Returns(lwEntity);
         businessLogic.LoadLearningSpace(Arg.Any<string>()).Returns(lsEntity);
         businessLogic.LoadLearningElement(Arg.Any<string>()).Returns(leEntity);
@@ -85,9 +96,9 @@ public class ToolboxEntriesProviderUt
         var elementMapper = Substitute.For<ILearningElementMapper>();
         var elementVm = new LearningElementViewModel("ba", "ba", null, null, "ba",
             "ba", "ba",LearningElementDifficultyEnum.Easy);
-        elementMapper.ToViewModel(Arg.Any<AuthoringToolLib.Entities.LearningElement>()).Returns(elementVm);
+        elementMapper.ToViewModel(Arg.Any<BusinessLogic.Entities.LearningElement>()).Returns(elementVm);
         var entityMapping =
-            new AuthoringToolLib.PresentationLogic.EntityMapping.EntityMapping(worldMapper, spaceMapper, elementMapper);
+            new Presentation.PresentationLogic.EntityMapping.EntityMapping(worldMapper, spaceMapper, elementMapper);
 
         IToolboxEntriesProvider systemUnderTest =
             CreateTestableToolboxEntriesProvider(null, businessLogic, entityMapping, fileSystem);
@@ -125,17 +136,17 @@ public class ToolboxEntriesProviderUt
         var spaceMapper = Substitute.For<ILearningSpaceMapper>();
         var elementMapper = Substitute.For<ILearningElementMapper>();
         var entityMapping =
-            new AuthoringToolLib.PresentationLogic.EntityMapping.EntityMapping(worldMapper, spaceMapper, elementMapper);
+            new Presentation.PresentationLogic.EntityMapping.EntityMapping(worldMapper, spaceMapper, elementMapper);
 
         var lwViewModel = new LearningWorldViewModel("world", "foo", "foo", "foo", "foo", "foo");
         var lsViewModel = new LearningSpaceViewModel("space", "foo", "foo", "foo", "foo");
         var leViewModel = new LearningElementViewModel("element", "foo", null, null, "foo", "foo", "foo",LearningElementDifficultyEnum.Easy);
         
-        var lwEntity = new AuthoringToolLib.Entities.LearningWorld("world", "foo", "foo", "foo", "foo", "foo");
-        var lsEntity = new AuthoringToolLib.Entities.LearningSpace("space", "foo", "foo", "foo", "foo");
+        var lwEntity = new BusinessLogic.Entities.LearningWorld("world", "foo", "foo", "foo", "foo", "foo");
+        var lsEntity = new BusinessLogic.Entities.LearningSpace("space", "foo", "foo", "foo", "foo");
         var leEntity =
-            new AuthoringToolLib.Entities.LearningElement("element", "foo", "foo", null, "foo",
-                "foo", "foo",LearningElementDifficultyEnum.Easy);
+            new BusinessLogic.Entities.LearningElement("element", "foo", "foo", null,"foo",
+                "foo", null,LearningElementDifficultyEnum.Easy);
         worldMapper.ToEntity(lwViewModel).Returns(lwEntity);
         spaceMapper.ToEntity(lsViewModel).Returns(lsEntity);
         elementMapper.ToEntity(leViewModel).Returns(leEntity);
@@ -187,10 +198,10 @@ public class ToolboxEntriesProviderUt
             {elementPath, new MockFileData("element")},
         });
         var businessLogic = Substitute.For<IBusinessLogic>();
-        var lwEntity = new AuthoringToolLib.Entities.LearningWorld("world", "foo", "foo", "foo", "foo", "foo");
-        var lsEntity = new AuthoringToolLib.Entities.LearningSpace("space", "foo", "foo", "foo", "foo");
+        var lwEntity = new BusinessLogic.Entities.LearningWorld("world", "foo", "foo", "foo", "foo", "foo");
+        var lsEntity = new BusinessLogic.Entities.LearningSpace("space", "foo", "foo", "foo", "foo");
         var leEntity =
-            new AuthoringToolLib.Entities.LearningElement("element", "foo", "foo", null,"foo",
+            new BusinessLogic.Entities.LearningElement("element", "foo", "foo", null,"foo",
                 "foo", null,LearningElementDifficultyEnum.Easy);
         businessLogic.LoadLearningWorld(Arg.Any<string>()).Returns(lwEntity);
         businessLogic.LoadLearningSpace(Arg.Any<string>()).Returns(lsEntity);
@@ -205,9 +216,9 @@ public class ToolboxEntriesProviderUt
         var elementMapper = Substitute.For<ILearningElementMapper>();
         var elementVm = new LearningElementViewModel("element", "ba", null, null, "ba", "ba",
             "foo",LearningElementDifficultyEnum.Easy);
-        elementMapper.ToViewModel(Arg.Any<AuthoringToolLib.Entities.LearningElement>()).Returns(elementVm);
+        elementMapper.ToViewModel(Arg.Any<BusinessLogic.Entities.LearningElement>()).Returns(elementVm);
         var entityMapping =
-            new AuthoringToolLib.PresentationLogic.EntityMapping.EntityMapping(worldMapper, spaceMapper, elementMapper);
+            new Presentation.PresentationLogic.EntityMapping.EntityMapping(worldMapper, spaceMapper, elementMapper);
 
         IToolboxEntriesProviderModifiable systemUnderTest = CreateTestableToolboxEntriesProvider(
             entityMapping: entityMapping,

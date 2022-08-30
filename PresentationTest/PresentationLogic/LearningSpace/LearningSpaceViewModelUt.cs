@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 using NUnit.Framework;
+using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace;
+using Shared;
 
 namespace PresentationTest.PresentationLogic.LearningSpace;
 

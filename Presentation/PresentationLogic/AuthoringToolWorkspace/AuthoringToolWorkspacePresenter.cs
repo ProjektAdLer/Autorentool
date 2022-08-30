@@ -345,7 +345,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
             case "mp4":
             case "h5p":
             case "pdf":
-                var learningContent = _presentationLogic.LoadLearningContentViewModelFromStream(name, stream);
+                var learningContent = _presentationLogic.LoadLearningContentViewModel(name, stream);
                 CallCreateLearningElementWithPreloadedContentFromActiveView(learningContent);
                 break;
             default:
@@ -375,7 +375,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     internal void LoadLearningWorldFromFileStream(Stream stream)
     {
         var learningWorld =
-            _presentationLogic.LoadLearningWorldViewModelFromStream(stream);
+            _presentationLogic.LoadLearningWorldViewModel(stream);
         if (AuthoringToolWorkspaceVm.LearningWorlds.Any(w => w.Name == learningWorld.Name))
         {
             WorldToReplaceWith = learningWorld;
@@ -389,7 +389,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     internal void LoadLearningSpaceFromFileStream(Stream stream)
     {
         var learningSpace =
-            _presentationLogic.LoadLearningSpaceViewModelFromStream(stream);
+            _presentationLogic.LoadLearningSpaceViewModel(stream);
         if (AuthoringToolWorkspaceVm.SelectedLearningWorld == null)
         {
             InformationMessageToShow = "A learning world must be selected to import a learning space.";
@@ -402,7 +402,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     internal void LoadLearningElementFromFileStream(Stream stream)
     {
         var learningElement =
-            _presentationLogic.LoadLearningElementViewModelFromStream(stream);
+            _presentationLogic.LoadLearningElementViewModel(stream);
         if (AuthoringToolWorkspaceVm.SelectedLearningWorld is not { } world)
         {
             InformationMessageToShow = "A learning world must be selected to import a learning element.";

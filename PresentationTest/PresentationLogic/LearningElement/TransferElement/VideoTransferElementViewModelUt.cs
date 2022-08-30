@@ -1,4 +1,8 @@
 using NUnit.Framework;
+using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningElement.TransferElement;
+using Presentation.PresentationLogic.LearningWorld;
+using Shared;
 
 namespace PresentationTest.PresentationLogic.LearningElement.TransferElement;
 

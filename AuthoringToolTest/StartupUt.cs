@@ -2,6 +2,7 @@ using System.IO.Abstractions;
 using AuthoringTool;
 using AutoMapper;
 using BusinessLogic.API;
+using DataAccess.Persistence;
 using Generator.DSL;
 using Generator.WorldExport;
 using Microsoft.Extensions.Caching.Memory;
@@ -9,6 +10,17 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using PersistEntities;
+using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.EntityMapping;
+using Presentation.PresentationLogic.EntityMapping.LearningElementMapper;
+using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.ModalDialog;
+using Presentation.PresentationLogic.Toolbox;
+using Presentation.View.Toolbox;
+using Shared.Configuration;
 
 namespace AuthoringToolTest;
 

@@ -1,6 +1,12 @@
 using System;
+using BusinessLogic.Entities;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.PresentationLogic.EntityMapping.LearningElementMapper;
+using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningElement.TransferElement;
+using Presentation.PresentationLogic.LearningWorld;
+using Shared;
 
 namespace PresentationTest.PresentationLogic.EntityMapping.LearningElement;
 

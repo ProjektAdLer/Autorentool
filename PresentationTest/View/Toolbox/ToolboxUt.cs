@@ -3,6 +3,9 @@ using Bunit;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.PresentationLogic;
+using Presentation.PresentationLogic.Toolbox;
+using Presentation.View.Toolbox;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.View.Toolbox;
@@ -90,8 +93,8 @@ public class ToolboxUt
         Assert.That(toolboxP!.InnerHtml, Is.EqualTo("foobar"));
     }
 
-    private IRenderedComponent<AuthoringToolLib.View.Toolbox.Toolbox> GetToolboxForTest()
+    private IRenderedComponent<Presentation.View.Toolbox.Toolbox> GetToolboxForTest()
     {
-        return ctx.RenderComponent<AuthoringToolLib.View.Toolbox.Toolbox>();
+        return ctx.RenderComponent<Presentation.View.Toolbox.Toolbox>();
     }
 }

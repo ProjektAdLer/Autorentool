@@ -4,6 +4,11 @@ using Bunit.TestDoubles;
 using Microsoft.AspNetCore.Components;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.Components;
+using Presentation.PresentationLogic;
+using Presentation.PresentationLogic.LearningElement;
+using Presentation.View.LearningElement;
+using Shared;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.View.LearningElement;

@@ -9,13 +9,12 @@ public class ContentFileHandler : IContentFileHandler
     private readonly ILogger<ContentFileHandler> _logger;
     private readonly IFileSystem _fileSystem;
 
-    internal ContentFileHandler(ILogger<ContentFileHandler> logger,IFileSystem fileSystem)
+    public ContentFileHandler(ILogger<ContentFileHandler> logger,IFileSystem fileSystem)
     {
         _fileSystem = fileSystem;
         _logger = logger;
     }
    
-    public ContentFileHandler(ILogger<ContentFileHandler> logger):this(logger, new FileSystem()){ }
 
     public LearningContentPe LoadFromDisk(string filepath)
     {

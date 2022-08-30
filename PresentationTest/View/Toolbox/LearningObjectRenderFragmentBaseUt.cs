@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.PresentationLogic;
+using Presentation.PresentationLogic.Toolbox;
+using Presentation.View.Toolbox;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.View.Toolbox;

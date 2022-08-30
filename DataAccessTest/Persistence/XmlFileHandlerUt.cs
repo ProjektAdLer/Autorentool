@@ -1,13 +1,12 @@
-using System;
-using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.Runtime.Serialization;
+using DataAccess.Persistence;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace PresentationTest.DataAccess.Persistence;
+namespace DataAccessTest.Persistence;
 
 [TestFixture]
 public class XmlFileHandlerUt

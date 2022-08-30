@@ -1,9 +1,8 @@
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using NUnit.Framework;
+using Shared.Extensions;
 
-namespace PresentationTest.Extensions;
+namespace SharedTest.Extensions;
 
 [TestFixture]
 public class EnumerableHelperUt

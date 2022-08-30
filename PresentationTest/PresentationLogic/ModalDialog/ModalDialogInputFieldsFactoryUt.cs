@@ -1,6 +1,14 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using NUnit.Framework;
+using Presentation.Components.ModalDialog;
+using Presentation.PresentationLogic;
+using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.ModalDialog;
+using Shared;
 
 namespace PresentationTest.PresentationLogic.ModalDialog;
 

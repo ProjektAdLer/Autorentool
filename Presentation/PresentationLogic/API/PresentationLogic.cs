@@ -160,25 +160,25 @@ public class PresentationLogic : IPresentationLogic
         return ContentMapper.ToViewModel(entity);
     }
 
-    public LearningWorldViewModel LoadLearningWorldViewModelFromStream(Stream stream)
+    public LearningWorldViewModel LoadLearningWorldViewModel(Stream stream)
     {
         var world = BusinessLogic.LoadLearningWorld(stream);
         return WorldMapper.ToViewModel(world);
     }
 
-    public ILearningSpaceViewModel LoadLearningSpaceViewModelFromStream(Stream stream)
+    public ILearningSpaceViewModel LoadLearningSpaceViewModel(Stream stream)
     {
         var space = BusinessLogic.LoadLearningSpace(stream);
         return SpaceMapper.ToViewModel(space);
     }
 
-    public ILearningElementViewModel LoadLearningElementViewModelFromStream(Stream stream)
+    public ILearningElementViewModel LoadLearningElementViewModel(Stream stream)
     {
         var element = BusinessLogic.LoadLearningElement(stream);
         return ElementMapper.ToViewModel(element);
     }
     
-    public LearningContentViewModel LoadLearningContentViewModelFromStream(string name, Stream stream)
+    public LearningContentViewModel LoadLearningContentViewModel(string name, Stream stream)
     {
         var entity = BusinessLogic.LoadLearningContent(name, stream);
         return ContentMapper.ToViewModel(entity);

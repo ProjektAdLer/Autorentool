@@ -4,6 +4,7 @@ using System.Linq;
 using Bunit;
 using Microsoft.AspNetCore.Components;
 using NUnit.Framework;
+using Presentation.Components;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.Components;

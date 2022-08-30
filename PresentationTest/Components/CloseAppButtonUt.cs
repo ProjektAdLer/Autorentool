@@ -2,6 +2,8 @@ using Bunit;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.Components;
+using Presentation.PresentationLogic;
 
 namespace PresentationTest.Components;
 

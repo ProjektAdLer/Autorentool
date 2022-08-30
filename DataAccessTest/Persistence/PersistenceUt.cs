@@ -1,15 +1,14 @@
-using System;
 using System.Collections;
-using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.Reflection;
+using DataAccess.Persistence;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using PersistEntities;
 
-namespace PresentationTest.DataAccess.Persistence;
+namespace DataAccessTest.Persistence;
 
 /// <summary>
 /// Component tests to test whether Persistence roundtrip produces equal objects

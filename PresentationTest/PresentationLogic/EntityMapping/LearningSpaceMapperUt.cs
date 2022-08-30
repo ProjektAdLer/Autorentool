@@ -1,5 +1,13 @@
+using BusinessLogic.Entities;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.PresentationLogic;
+using Presentation.PresentationLogic.EntityMapping;
+using Presentation.PresentationLogic.EntityMapping.LearningElementMapper;
+using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace;
+using Shared;
 
 namespace PresentationTest.PresentationLogic.EntityMapping;
 
@@ -16,7 +24,7 @@ public class LearningSpaceMapperUt
         var elementViewModel = new LearningElementViewModel("a", "a", spaceViewModel, contentvm,"a", "a", "a", LearningElementDifficultyEnum.Easy);
         spaceViewModel.LearningElements.Add(elementViewModel);
 
-        elementMapper.ToEntity(elementViewModel).Returns(new AuthoringToolLib.Entities.LearningElement( "a", "a","a", content, "a", "a", "a",LearningElementDifficultyEnum.Easy));
+        elementMapper.ToEntity(elementViewModel).Returns(new BusinessLogic.Entities.LearningElement( "a", "a","a", content, "a", "a", "a",LearningElementDifficultyEnum.Easy));
 
         var systemUnderTest = CreateMapperForTesting(elementMapper: elementMapper);
 
@@ -49,8 +57,8 @@ public class LearningSpaceMapperUt
     public void LearningSpaceMapper_ToViewModel_CallsElementMapperForElements()
     {
         var elementMapper = Substitute.For<ILearningElementMapper>();
-        var entity = new AuthoringToolLib.Entities.LearningSpace("a", "b", "c", "d", "e");
-        var element = new AuthoringToolLib.Entities.LearningElement("a", "a", "a", null, "a", "a", "a",LearningElementDifficultyEnum.Easy);
+        var entity = new BusinessLogic.Entities.LearningSpace("a", "b", "c", "d", "e");
+        var element = new BusinessLogic.Entities.LearningElement("a", "a", "a", null, "a", "a", "a",LearningElementDifficultyEnum.Easy);
         entity.LearningElements.Add(element);
 
         elementMapper.ToViewModel(element).Returns(new LearningElementViewModel("a", "a", null, null,"a","a", "a",LearningElementDifficultyEnum.Easy));
@@ -64,7 +72,7 @@ public class LearningSpaceMapperUt
     [Test]
     public void LearningWorldMapper_ToViewModel_MapsPropertiesCorrectly()
     {
-        var entity = new AuthoringToolLib.Entities.LearningSpace("name", "shortname", "authors", "description", "goals", null, 1, 2);
+        var entity = new BusinessLogic.Entities.LearningSpace("name", "shortname", "authors", "description", "goals", null, 1, 2);
 
         var systemUnderTest = CreateMapperForTesting();
 
