@@ -1,5 +1,5 @@
 
-namespace Generator.PersistEntities;
+namespace PersistEntities;
 
 [Serializable]
 

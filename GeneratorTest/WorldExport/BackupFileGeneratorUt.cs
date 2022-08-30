@@ -6,7 +6,7 @@ using Generator.XmlClasses;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.WorldExport;
+namespace GeneratorTest.WorldExport;
 
 [TestFixture]
 public class BackupFileGeneratorUt

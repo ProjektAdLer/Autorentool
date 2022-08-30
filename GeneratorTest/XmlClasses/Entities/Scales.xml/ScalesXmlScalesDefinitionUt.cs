@@ -3,7 +3,7 @@ using Generator.WorldExport;
 using Generator.XmlClasses.Entities.Scales.xml;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Scales.xml;
+namespace GeneratorTest.XmlClasses.Entities.Scales.xml;
 
 [TestFixture]
 public class ScalesXmlUt

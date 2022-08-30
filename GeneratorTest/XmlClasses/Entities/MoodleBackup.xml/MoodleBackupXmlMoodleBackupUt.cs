@@ -3,7 +3,7 @@ using Generator.WorldExport;
 using Generator.XmlClasses.Entities.MoodleBackup.xml;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.MoodleBackup.xml;
+namespace GeneratorTest.XmlClasses.Entities.MoodleBackup.xml;
 
 [TestFixture]
 public class MoodleBackupXmlMoodleBackupUt

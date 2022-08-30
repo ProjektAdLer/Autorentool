@@ -1,30 +1,16 @@
-using System;
 using System.IO.Abstractions;
-using AuthoringToolLib;
-using AuthoringToolLib.API.Configuration;
-using AuthoringToolLib.BusinessLogic.API;
-using AuthoringToolLib.DataAccess.API;
-using AuthoringToolLib.DataAccess.Persistence;
-using AuthoringToolLib.PresentationLogic.API;
-using AuthoringToolLib.PresentationLogic.AuthoringToolWorkspace;
-using AuthoringToolLib.PresentationLogic.EntityMapping;
-using AuthoringToolLib.PresentationLogic.EntityMapping.LearningElementMapper;
-using AuthoringToolLib.PresentationLogic.LearningElement;
-using AuthoringToolLib.PresentationLogic.LearningSpace;
-using AuthoringToolLib.PresentationLogic.LearningWorld;
-using AuthoringToolLib.PresentationLogic.ModalDialog;
-using AuthoringToolLib.PresentationLogic.Toolbox;
-using AuthoringToolLib.View.Toolbox;
+using AuthoringTool;
 using AutoMapper;
+using BusinessLogic.API;
 using Generator.DSL;
-using Generator.PersistEntities;
 using Generator.WorldExport;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using PersistEntities;
 
-namespace AuthoringToolLibTest;
+namespace AuthoringToolTest;
 
 [TestFixture]
 public class StartupUt

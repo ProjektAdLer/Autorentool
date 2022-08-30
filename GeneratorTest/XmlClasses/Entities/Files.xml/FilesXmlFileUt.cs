@@ -1,7 +1,7 @@
 ﻿using Generator.XmlClasses.Entities.Files.xml;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Files.xml;
+namespace GeneratorTest.XmlClasses.Entities.Files.xml;
 
 [TestFixture]
 public class FilesXmlFileUt

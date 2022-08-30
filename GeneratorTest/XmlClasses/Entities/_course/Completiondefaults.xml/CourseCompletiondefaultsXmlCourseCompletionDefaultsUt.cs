@@ -3,7 +3,7 @@ using Generator.WorldExport;
 using Generator.XmlClasses.Entities._course.Completiondefault.xml;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Course.Completiondefaults.xml;
+namespace GeneratorTest.XmlClasses.Entities._course.Completiondefaults.xml;
 
 [TestFixture]
 public class CourseCompletiondefaultsXmlCourseCompletionDefaults

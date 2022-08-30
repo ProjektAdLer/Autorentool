@@ -3,7 +3,7 @@ using Generator.WorldExport;
 using Generator.XmlClasses.Entities._course.Inforef.xml;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Course.Inforef.xml;
+namespace GeneratorTest.XmlClasses.Entities._course.Inforef.xml;
 
 [TestFixture]
 public class CourseInforefXmlInforefUt

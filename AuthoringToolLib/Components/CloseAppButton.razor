@@ -1,4 +1,0 @@
-@using AuthoringToolLib.PresentationLogic
-@inherits ComponentBase
-@inject IShutdownManager ShutdownManager
-<button class="btn btn-danger" @onclick="() => ShutdownManager.BeginShutdown()">Close application</button>

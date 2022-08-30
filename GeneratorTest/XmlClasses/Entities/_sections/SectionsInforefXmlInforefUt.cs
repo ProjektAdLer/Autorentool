@@ -3,7 +3,7 @@ using Generator.WorldExport;
 using Generator.XmlClasses.Entities._sections.Inforef.xml;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Sections;
+namespace GeneratorTest.XmlClasses.Entities._sections;
 
 [TestFixture]
 public class SectionsInforefXmlInforefUt

@@ -1,9 +1,5 @@
 using AngleSharp.Dom;
 using AuthoringTool.View.Shared;
-using AuthoringToolLib.PresentationLogic;
-using AuthoringToolLib.PresentationLogic.API;
-using AuthoringToolLib.PresentationLogic.Toolbox;
-using AuthoringToolLib.View.Toolbox;
 using Bunit;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
@@ -11,7 +7,7 @@ using NSubstitute;
 using NUnit.Framework;
 using TestContext = Bunit.TestContext;
 
-namespace AuthoringToolLibTest.View.Shared;
+namespace AuthoringToolTest.View.Shared;
 
 [TestFixture]
 public class MainLayoutUt

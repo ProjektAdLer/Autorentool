@@ -3,7 +3,7 @@ using Generator.WorldExport;
 using Generator.XmlClasses.Entities.Gradebook.xml;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Gradebook.xml;
+namespace GeneratorTest.XmlClasses.Entities.Gradebook.xml;
 
 [TestFixture]
 public class GradebookXmlUt

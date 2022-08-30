@@ -3,7 +3,7 @@ using Generator.WorldExport;
 using Generator.XmlClasses.Entities._activities.Module.xml;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Activities.Module.xml;
+namespace GeneratorTest.XmlClasses.Entities._activities.Module.xml;
 
 [TestFixture]
 public class ActivitiesModuleXmlModuleUt

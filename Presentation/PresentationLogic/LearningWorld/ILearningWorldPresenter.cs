@@ -1,0 +1,58 @@
+using System.ComponentModel;
+using Presentation.Components.ModalDialog;
+using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace;
+
+namespace Presentation.PresentationLogic.LearningWorld;
+
+public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyPropertyChanging
+{
+    LearningWorldViewModel CreateNewLearningWorld(string name, string shortname, string authors,
+        string language, string description, string goals);
+
+    LearningWorldViewModel EditLearningWorld(LearningWorldViewModel world, string name, string shortname,
+        string authors, string language, string description, string goals);
+
+    bool CreateLearningSpaceDialogOpen { get; }
+    bool EditLearningSpaceDialogOpen { get; }
+    Dictionary<string, string>? EditSpaceDialogInitialValues { get; }
+    Dictionary<string, string>? EditElementDialogInitialValues { get; }
+    bool EditLearningElementDialogOpen { get; }
+    bool CreateLearningElementDialogOpen { get; }
+    ILearningWorldViewModel? LearningWorldVm { get; }
+    bool SelectedLearningObjectIsSpace { get; }
+    bool ShowingLearningSpaceView { get; }
+    void SetSelectedLearningObject(ILearningObjectViewModel learningObject);
+    void DeleteSelectedLearningObject();
+    Task LoadLearningSpaceAsync();
+    Task LoadLearningElementAsync();
+    Task SaveSelectedLearningObjectAsync();
+    void OnCreateSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple);
+    void OnCreateElementDialogClose(ModalDialogOnCloseResult returnValueTuple);
+    void OpenEditSelectedLearningObjectDialog();
+    void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple);
+    void OnEditElementDialogClose(ModalDialogOnCloseResult returnValueTuple);
+    void SetLearningWorld(object? caller, LearningWorldViewModel? world);
+    void ShowSelectedLearningSpaceView();
+    void CloseLearningSpaceView();
+
+    /// <summary>
+    /// Adds the provided learning space to the selected world view model.
+    /// </summary>
+    /// <param name="learningSpace">The space to be added.</param>
+    /// <exception cref="ApplicationException"><see cref="LearningWorldVm"/> is null or space exists in world with same name.</exception>
+    public void AddLearningSpace(ILearningSpaceViewModel learningSpace);
+    
+    /// <summary>
+    /// Adds the provided learning element to the selected world view model.
+    /// </summary>
+    /// <param name="learningElement">The space to be added.</param>
+    /// <exception cref="ApplicationException"><see cref="LearningWorldVm"/> is null or element exists in world with same name.</exception>
+    public void AddLearningElement(ILearningElementViewModel learningElement);
+    
+    void CreateLearningElementWithPreloadedContent(LearningContentViewModel learningContent);
+    LearningContentViewModel? DragAndDropLearningContent { get; }
+    void AddNewLearningSpace();
+    void AddNewLearningElement();
+}

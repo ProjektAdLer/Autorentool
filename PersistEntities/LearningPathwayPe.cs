@@ -1,4 +1,4 @@
-﻿namespace Generator.PersistEntities;
+﻿namespace PersistEntities;
 
 internal class LearningPathwayPe: ILearningPathWayPe
 {

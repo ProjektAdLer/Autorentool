@@ -1,28 +1,27 @@
 using System.IO.Abstractions;
-using AuthoringToolLib.API.Configuration;
-using AuthoringToolLib.BusinessLogic.API;
-using AuthoringToolLib.DataAccess.API;
-using AuthoringToolLib.DataAccess.Persistence;
-using AuthoringToolLib.PresentationLogic;
-using AuthoringToolLib.PresentationLogic.API;
-using AuthoringToolLib.PresentationLogic.AuthoringToolWorkspace;
-using AuthoringToolLib.PresentationLogic.ElectronNET;
-using AuthoringToolLib.PresentationLogic.EntityMapping;
-using AuthoringToolLib.PresentationLogic.EntityMapping.LearningElementMapper;
-using AuthoringToolLib.PresentationLogic.LearningElement;
-using AuthoringToolLib.PresentationLogic.LearningSpace;
-using AuthoringToolLib.PresentationLogic.LearningWorld;
-using AuthoringToolLib.PresentationLogic.ModalDialog;
-using AuthoringToolLib.PresentationLogic.Toolbox;
-using AuthoringToolLib.View.Toolbox;
 using AutoMapper;
+using BusinessLogic.API;
+using DataAccess.Persistence;
 using ElectronWrapper;
 using Generator.API;
 using Generator.DSL;
 using Generator.WorldExport;
 using Microsoft.Extensions.Caching.Memory;
+using Presentation.PresentationLogic;
+using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.ElectronNET;
+using Presentation.PresentationLogic.EntityMapping;
+using Presentation.PresentationLogic.EntityMapping.LearningElementMapper;
+using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.ModalDialog;
+using Presentation.PresentationLogic.Toolbox;
+using Presentation.View.Toolbox;
+using Shared.Configuration;
 
-namespace AuthoringToolLib;
+namespace AuthoringTool;
 
 public class Startup
 {
@@ -80,7 +79,7 @@ public class Startup
     private void ConfigurePresentationLogic(IServiceCollection services)
     {
         services.AddSingleton<IAuthoringToolWorkspacePresenter, AuthoringToolWorkspacePresenter>();
-        services.AddSingleton<IPresentationLogic, PresentationLogic.API.PresentationLogic>();
+        services.AddSingleton<IPresentationLogic, PresentationLogic>();
         services.AddSingleton<ILearningWorldPresenter, LearningWorldPresenter>();
         services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
         services.AddSingleton<ILearningElementPresenter, LearningElementPresenter>();

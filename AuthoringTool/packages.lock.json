@@ -98,8 +98,8 @@
       },
       "Microsoft.Extensions.Logging.Abstractions": {
         "type": "Transitive",
-        "resolved": "6.0.0",
-        "contentHash": "/HggWBbTwy8TgebGSX5DBZ24ndhzi93sHUBDvP1IxbZD7FDokYzdAr6+vbWGjw2XAfR2EJ1sfKUotpjHnFWPxA=="
+        "resolved": "6.0.1",
+        "contentHash": "dzB2Cgg+JmrouhjkcQGzSFjjvpwlq353i8oBQO2GWNjCXSzhbtBRUf28HSauWe7eib3wYOdb3tItdjRwAdwCSg=="
       },
       "Microsoft.Extensions.Options": {
         "type": "Transitive",
@@ -516,8 +516,8 @@
       },
       "System.IO.Abstractions": {
         "type": "Transitive",
-        "resolved": "17.0.24",
-        "contentHash": "hA7bacntMiZv1Yf9xtjwl/GP3GT1mG84QxhAk7ijAUD0pJhJaVVwXScE13vMpXnNtlaRDW6SeyZdWg2j2qrh4w=="
+        "resolved": "17.1.1",
+        "contentHash": "LWOM12Bd0kp/gaH4g1o/O2/6JDcHF/fuctF1IqDZt0aAqU2BwGiMihi9Cdcm5jJz8La1wFWbRPuRui8WeX6m8w=="
       },
       "System.IO.FileSystem": {
         "type": "Transitive",
@@ -1207,19 +1207,19 @@
           "System.Threading.Timer": "4.3.0"
         }
       },
-      "authoringtoollib": {
+      "businesslogic": {
+        "type": "Project",
+        "dependencies": {
+          "Shared": "1.0.0"
+        }
+      },
+      "dataaccess": {
         "type": "Project",
         "dependencies": {
           "AutoMapper": "11.0.1",
-          "AutoMapper.Extensions.Microsoft.DependencyInjection": "11.0.0",
-          "ElectronWrapper": "1.0.0",
-          "Microsoft.Extensions.Caching.Memory": "6.0.1",
-          "NLog": "5.0.1",
-          "NLog.Extensions.Logging": "5.0.0",
-          "NLog.Web.AspNetCore": "5.0.0",
+          "BusinessLogic": "1.0.0",
           "PersistEntities": "1.0.0",
-          "SharpZipLib": "1.3.3",
-          "System.IO.Abstractions": "17.0.24"
+          "System.IO.Abstractions": "17.1.1"
         }
       },
       "electronwrapper": {
@@ -1231,13 +1231,37 @@
       "generator": {
         "type": "Project",
         "dependencies": {
-          "AuthoringToolLib": "1.0.0",
+          "AutoMapper": "11.0.1",
+          "BusinessLogic": "1.0.0",
+          "PersistEntities": "1.0.0",
           "SharpZipLib": "1.3.3",
           "System.IO.Abstractions": "17.0.24"
         }
       },
       "persistentities": {
         "type": "Project"
+      },
+      "presentation": {
+        "type": "Project",
+        "dependencies": {
+          "AutoMapper": "11.0.1",
+          "AutoMapper.Extensions.Microsoft.DependencyInjection": "11.0.0",
+          "BusinessLogic": "1.0.0",
+          "ElectronWrapper": "1.0.0",
+          "Microsoft.Extensions.Caching.Memory": "6.0.1",
+          "NLog": "5.0.1",
+          "NLog.Extensions.Logging": "5.0.0",
+          "NLog.Web.AspNetCore": "5.0.0",
+          "Shared": "1.0.0",
+          "SharpZipLib": "1.3.3",
+          "System.IO.Abstractions": "17.1.1"
+        }
+      },
+      "shared": {
+        "type": "Project",
+        "dependencies": {
+          "Microsoft.Extensions.Logging.Abstractions": "6.0.1"
+        }
       }
     }
   }

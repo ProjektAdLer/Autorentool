@@ -1,6 +1,6 @@
-namespace Generator.PersistEntities;
+namespace PersistEntities;
 
-public class LearningContentPe : Generator.PersistEntities.ILearningContentPe
+public class LearningContentPe : ILearningContentPe
 {
     public LearningContentPe(string name, string type, byte[] content)
     {

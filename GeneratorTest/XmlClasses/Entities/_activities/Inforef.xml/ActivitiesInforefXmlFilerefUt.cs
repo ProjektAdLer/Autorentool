@@ -2,7 +2,7 @@
 using NSubstitute;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Activities.Inforef.xml;
+namespace GeneratorTest.XmlClasses.Entities._activities.Inforef.xml;
 
 [TestFixture]
 public class ActivitiesInforefXmlFilerefUt

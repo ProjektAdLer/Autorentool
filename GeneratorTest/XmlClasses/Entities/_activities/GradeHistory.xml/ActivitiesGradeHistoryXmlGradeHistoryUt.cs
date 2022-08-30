@@ -3,7 +3,7 @@ using Generator.WorldExport;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Activities.GradeHistory.xml;
+namespace GeneratorTest.XmlClasses.Entities._activities.GradeHistory.xml;
 
 [TestFixture]
 public class ActivitiesGradeHistoryXmlUt

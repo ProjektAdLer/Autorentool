@@ -1,6 +1,6 @@
 ﻿
 
-namespace Generator.PersistEntities;
+namespace PersistEntities;
 
 public interface ILearningElementPe
 {

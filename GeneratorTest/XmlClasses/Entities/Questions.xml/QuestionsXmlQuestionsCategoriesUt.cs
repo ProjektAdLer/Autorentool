@@ -3,7 +3,7 @@ using Generator.WorldExport;
 using Generator.XmlClasses.Entities.Questions.xml;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Questions.xml;
+namespace GeneratorTest.XmlClasses.Entities.Questions.xml;
 
 [TestFixture]
 public class QuestionsXmlQuestionsCategoriesUt

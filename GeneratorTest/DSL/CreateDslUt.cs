@@ -1,11 +1,10 @@
 ﻿using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
-using AuthoringTool.DataAccess.PersistEntities;
 using Generator.DSL;
-using Generator.PersistEntities;
 using NUnit.Framework;
+using PersistEntities;
 
-namespace AuthoringToolTest.DataAccess.DSL;
+namespace GeneratorTest.DSL;
 
 [TestFixture]
 public class CreateDslUt

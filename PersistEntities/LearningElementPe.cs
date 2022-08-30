@@ -1,25 +1,24 @@
 ﻿using System.Xml.Serialization;
 
+namespace PersistEntities;
 
-namespace Generator.PersistEntities;
-
-[XmlInclude(typeof(Generator.PersistEntities.ImageTransferElementPe))]
+[XmlInclude(typeof(ImageTransferElementPe))]
 [XmlInclude(typeof(VideoTransferElementPe))]
 [XmlInclude(typeof(PdfTransferElementPe))]
 [XmlInclude(typeof(VideoActivationElementPe))]
-[XmlInclude(typeof(Generator.PersistEntities.H5PActivationElementPe))]
-[XmlInclude(typeof(Generator.PersistEntities.H5PInteractionElementPe))]
-[XmlInclude(typeof(Generator.PersistEntities.H5PTestElementPe))]
+[XmlInclude(typeof(H5PActivationElementPe))]
+[XmlInclude(typeof(H5PInteractionElementPe))]
+[XmlInclude(typeof(H5PTestElementPe))]
 [Serializable]
-public class LearningElementPe : Generator.PersistEntities.ILearningElementPe
+public class LearningElementPe : ILearningElementPe
 {
-    public LearningElementPe(string name, string shortname,  string? parentName, Generator.PersistEntities.LearningContentPe? content,
-        string authors, string description, string goals, Generator.PersistEntities.LearningElementDifficultyEnumPe difficulty, int workload = 0,
+    public LearningElementPe(string name, string shortname,  string? parentName, LearningContentPe? content,
+        string authors, string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload = 0,
         double positionX = 0, double positionY = 0)
     {
         Name = name;
         Shortname = shortname;
-        Content = content ?? new Generator.PersistEntities.LearningContentPe();
+        Content = content ?? new LearningContentPe();
         Authors = authors;
         Description = description;
         Goals = goals;
@@ -36,11 +35,11 @@ public class LearningElementPe : Generator.PersistEntities.ILearningElementPe
     {
         Name = "";
         Shortname = "";
-        Content = new Generator.PersistEntities.LearningContentPe();
+        Content = new LearningContentPe();
         Authors = "";
         Description = "";
         Goals = "";
-        Difficulty = Generator.PersistEntities.LearningElementDifficultyEnumPe.Medium;
+        Difficulty = LearningElementDifficultyEnumPe.Medium;
         Workload = 0;
         PositionX = 0;
         PositionY = 0;
@@ -50,12 +49,12 @@ public class LearningElementPe : Generator.PersistEntities.ILearningElementPe
 
     public string Name { get; set; }
     public string Shortname { get; set; }
-    public Generator.PersistEntities.LearningContentPe Content { get; set; }
+    public LearningContentPe Content { get; set; }
     public string Authors { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
     public int Workload { get; set; }
-    public Generator.PersistEntities.LearningElementDifficultyEnumPe Difficulty { get; set; }
+    public LearningElementDifficultyEnumPe Difficulty { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
     public string? ParentName { get; set; }

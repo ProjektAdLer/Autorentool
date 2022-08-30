@@ -3,7 +3,7 @@ using Generator.WorldExport;
 using Generator.XmlClasses.Entities._activities.Roles.xml;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Activities.Roles.xml;
+namespace GeneratorTest.XmlClasses.Entities._activities.Roles.xml;
 
 [TestFixture]
 public class ActivitiesRolesXmlRolesUt

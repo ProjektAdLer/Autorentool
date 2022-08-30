@@ -2,7 +2,7 @@
 using NSubstitute;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Activities.Grades.xml;
+namespace GeneratorTest.XmlClasses.Entities._activities.Grades.xml;
 
 [TestFixture]
 public class ActivitiesGradesXmlGradeItemsUt

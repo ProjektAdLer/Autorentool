@@ -3,7 +3,7 @@ using Generator.WorldExport;
 using Generator.XmlClasses.Entities.Groups.xml;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Groups.xml;
+namespace GeneratorTest.XmlClasses.Entities.Groups.xml;
 
 [TestFixture]
 public class GroupsXmlUt

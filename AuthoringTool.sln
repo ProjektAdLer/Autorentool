@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthoringToolLib", "AuthoringToolLib\AuthoringToolLib.csproj", "{0C6696A5-DF9A-491B-BC94-AE0B93C7F6AA}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Presentation", "Presentation\Presentation.csproj", "{0C6696A5-DF9A-491B-BC94-AE0B93C7F6AA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthoringToolLibTest", "AuthoringToolLibTest\AuthoringToolLibTest.csproj", "{E3CF76B7-1111-43E2-8374-4777709AFC93}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PresentationTest", "PresentationTest\PresentationTest.csproj", "{E3CF76B7-1111-43E2-8374-4777709AFC93}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectronWrapper", "ElectronWrapper\ElectronWrapper.csproj", "{112586E3-8811-4701-9249-4FC3CC26EB65}"
 EndProject
@@ -15,6 +15,14 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthoringTool", "AuthoringTool\AuthoringTool.csproj", "{4DB8867F-B4F9-4A96-85FD-8631776ECC75}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuthoringToolTest", "AuthoringToolTest\AuthoringToolTest.csproj", "{C5105FD6-1B8F-405E-A1C8-CE3DE010A340}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLogic", "BusinessLogic\BusinessLogic.csproj", "{216D8B3B-B343-4EF3-B20A-975F3792B472}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataAccess", "DataAccess\DataAccess.csproj", "{D2C2C941-CD1D-49CD-BE53-DA715619941E}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{26CB0AD6-8B7E-422E-AC51-5B38C0278892}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Shared\Shared.csproj", "{CF0A83D3-4B7F-453C-AC8A-998DA84BDDD5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,5 +62,22 @@ Global
 		{C5105FD6-1B8F-405E-A1C8-CE3DE010A340}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C5105FD6-1B8F-405E-A1C8-CE3DE010A340}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C5105FD6-1B8F-405E-A1C8-CE3DE010A340}.Release|Any CPU.Build.0 = Release|Any CPU
+		{216D8B3B-B343-4EF3-B20A-975F3792B472}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{216D8B3B-B343-4EF3-B20A-975F3792B472}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{216D8B3B-B343-4EF3-B20A-975F3792B472}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{216D8B3B-B343-4EF3-B20A-975F3792B472}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D2C2C941-CD1D-49CD-BE53-DA715619941E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D2C2C941-CD1D-49CD-BE53-DA715619941E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D2C2C941-CD1D-49CD-BE53-DA715619941E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D2C2C941-CD1D-49CD-BE53-DA715619941E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF0A83D3-4B7F-453C-AC8A-998DA84BDDD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF0A83D3-4B7F-453C-AC8A-998DA84BDDD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF0A83D3-4B7F-453C-AC8A-998DA84BDDD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF0A83D3-4B7F-453C-AC8A-998DA84BDDD5}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C5105FD6-1B8F-405E-A1C8-CE3DE010A340} = {26CB0AD6-8B7E-422E-AC51-5B38C0278892}
+		{E3CF76B7-1111-43E2-8374-4777709AFC93} = {26CB0AD6-8B7E-422E-AC51-5B38C0278892}
+		{ED8E1A40-C18F-4411-8478-CA0475B9339E} = {26CB0AD6-8B7E-422E-AC51-5B38C0278892}
 	EndGlobalSection
 EndGlobal

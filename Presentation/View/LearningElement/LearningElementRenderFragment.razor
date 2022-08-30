@@ -1,0 +1,9 @@
+@using Presentation.PresentationLogic.LearningElement
+<LearningObjectRenderFragmentBase Obj="ViewModel" CssClassSelector="learning-element">
+    <p>I am an element</p>
+</LearningObjectRenderFragmentBase>
+
+@code {
+    [Parameter, EditorRequired] 
+    public LearningElementViewModel ViewModel { get; set; }
+}

@@ -2,7 +2,7 @@
 using Generator.WorldExport;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.WorldExport;
+namespace GeneratorTest.WorldExport;
 
 [TestFixture]
 public class UpperCaseUTF8EncodingUt

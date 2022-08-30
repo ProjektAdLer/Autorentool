@@ -1,0 +1,9 @@
+@using Presentation.PresentationLogic.LearningWorld
+<LearningObjectRenderFragmentBase Obj="ViewModel" CssClassSelector="learning-world">
+    <i class="bi bi-globe"></i>
+</LearningObjectRenderFragmentBase>
+
+@code {
+    [Parameter, EditorRequired] 
+    public ILearningWorldViewModel ViewModel { get; set; }
+}

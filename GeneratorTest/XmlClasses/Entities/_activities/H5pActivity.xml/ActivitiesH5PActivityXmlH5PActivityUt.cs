@@ -1,7 +1,7 @@
 ﻿using Generator.XmlClasses.Entities._activities.H5PActivity.xml;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Activities.H5pActivity.xml;
+namespace GeneratorTest.XmlClasses.Entities._activities.H5pActivity.xml;
 
 [TestFixture]
 public class ActivitiesH5PActivityXmlH5PActivityUt

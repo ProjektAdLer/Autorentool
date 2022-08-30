@@ -1,7 +1,7 @@
 ﻿using Generator.DSL;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.DSL;
+namespace GeneratorTest.DSL;
 
 [TestFixture]
 public class LearningElementValueJsonUt

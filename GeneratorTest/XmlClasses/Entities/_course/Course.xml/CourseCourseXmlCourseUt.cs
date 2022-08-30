@@ -3,7 +3,7 @@ using Generator.WorldExport;
 using Generator.XmlClasses.Entities._course.Course.xml;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Course.Course.xml;
+namespace GeneratorTest.XmlClasses.Entities._course.Course.xml;
 
 [TestFixture]
 public class CourseCourseXmlCourseUt

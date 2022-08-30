@@ -1,11 +1,11 @@
-namespace Generator.PersistEntities;
+namespace PersistEntities;
 
 [Serializable]
 
-public class VideoTransferElementPe : Generator.PersistEntities.LearningElementPe
+public class VideoTransferElementPe : LearningElementPe
 {
-    public VideoTransferElementPe(string name, string shortname,  string? parentName, Generator.PersistEntities.LearningContentPe? content,
-        string authors, string description, string goals, Generator.PersistEntities.LearningElementDifficultyEnumPe difficulty, int workload,
+    public VideoTransferElementPe(string name, string shortname,  string? parentName, LearningContentPe? content,
+        string authors, string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload,
         double positionX, double positionY) : base(name, shortname,parentName,content, authors, description, 
         goals,difficulty,workload, positionX,positionY)
     {

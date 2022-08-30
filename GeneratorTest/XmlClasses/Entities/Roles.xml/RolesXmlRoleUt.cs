@@ -1,7 +1,7 @@
 ﻿using Generator.XmlClasses.Entities.Roles.xml;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Roles.xml;
+namespace GeneratorTest.XmlClasses.Entities.Roles.xml;
 
 [TestFixture]
 public class RolesXmlRolesUt

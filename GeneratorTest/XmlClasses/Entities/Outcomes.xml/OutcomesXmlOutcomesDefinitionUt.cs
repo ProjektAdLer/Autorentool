@@ -3,7 +3,7 @@ using Generator.WorldExport;
 using Generator.XmlClasses.Entities.Outcomes.xml;
 using NUnit.Framework;
 
-namespace AuthoringToolTest.DataAccess.XmlClasses.Entities.Outcomes.xml;
+namespace GeneratorTest.XmlClasses.Entities.Outcomes.xml;
 
 [TestFixture]
 public class OutcomesXmlOutcomesDefinitionUt

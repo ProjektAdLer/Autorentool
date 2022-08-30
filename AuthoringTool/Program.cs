@@ -1,4 +1,4 @@
-using AuthoringToolLib;
+using AuthoringTool;
 using ElectronWrapper;
 
 Host.CreateDefaultBuilder(args).ConfigureWebHostDefaults(builder =>

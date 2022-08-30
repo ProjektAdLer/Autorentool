@@ -1,5 +1,5 @@
 
-using Generator.PersistEntities;
+using PersistEntities;
 
 namespace Generator.DSL;
 

@@ -8,10 +8,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\AuthoringToolLib\AuthoringToolLib.csproj" />
+      <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
+      <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
       <ProjectReference Include="..\ElectronWrapper\ElectronWrapper.csproj" />
       <ProjectReference Include="..\Generator\Generator.csproj" />
       <ProjectReference Include="..\PersistEntities\PersistEntities.csproj" />
+      <ProjectReference Include="..\Presentation\Presentation.csproj" />
     </ItemGroup>
 
     <ItemGroup>
