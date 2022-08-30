@@ -37,9 +37,8 @@ public class CourseEnrolmentsXmlEnrolmentsUt
     {
         //Arrange 
         var mockFileSystem = new MockFileSystem();
-        var backupFileGen = new BackupFileGenerator(mockFileSystem);
-        backupFileGen.CreateBackupFolders();
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        mockFileSystem.AddDirectory(Path.Combine(curWorkDir, "XMLFilesForExport","course"));
         
         var enrolmentsEnrol1 = new CourseEnrolmentsXmlEnrol();
         var enrolmentsEnrol2 = new CourseEnrolmentsXmlEnrol();

@@ -31,9 +31,8 @@ public class CourseRoleXmlRolesUt
     {
         //Arrange 
         var mockFileSystem = new MockFileSystem();
-        var backupFileGen = new BackupFileGenerator(mockFileSystem);
-        backupFileGen.CreateBackupFolders();
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        mockFileSystem.AddDirectory(Path.Combine(curWorkDir, "XMLFilesForExport","course"));
         
         var systemUnderTest = new CourseRolesXmlRoles();
 

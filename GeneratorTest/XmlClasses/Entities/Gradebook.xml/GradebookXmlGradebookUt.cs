@@ -46,9 +46,8 @@ public class GradebookXmlUt
     {
         //Arrange 
         var mockFileSystem = new MockFileSystem();
-        var backupGenerator = new BackupFileGenerator(mockFileSystem);
-        backupGenerator.CreateBackupFolders();
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        mockFileSystem.AddDirectory(Path.Combine(curWorkDir, "XMLFilesForExport"));
         
         var gradecategory = new GradebookXmlGradeCategory();
         var gradeitem = new GradebookXmlGradeItem();

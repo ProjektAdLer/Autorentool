@@ -53,9 +53,8 @@ public class MoodleBackupXmlMoodleBackupUt
     {
         //Arrange 
         var mockFileSystem = new MockFileSystem();
-        var backupFileGen = new BackupFileGenerator(mockFileSystem);
-        backupFileGen.CreateBackupFolders();
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        mockFileSystem.AddDirectory(Path.Combine(curWorkDir, "XMLFilesForExport"));
         
         //Arrange
         var moodlebackupInformation = new MoodleBackupXmlInformation();

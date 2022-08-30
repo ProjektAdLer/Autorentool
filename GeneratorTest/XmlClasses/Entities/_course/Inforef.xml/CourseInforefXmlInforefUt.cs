@@ -31,9 +31,8 @@ public class CourseInforefXmlInforefUt
     {
         //Arrange 
         var mockFileSystem = new MockFileSystem();
-        var backupFileGen = new BackupFileGenerator(mockFileSystem);
-        backupFileGen.CreateBackupFolders();
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        mockFileSystem.AddDirectory(Path.Combine(curWorkDir, "XMLFilesForExport","course"));
         
         var inforefRole = new CourseInforefXmlRole();
         var inforefRoleref = new CourseInforefXmlRoleref();

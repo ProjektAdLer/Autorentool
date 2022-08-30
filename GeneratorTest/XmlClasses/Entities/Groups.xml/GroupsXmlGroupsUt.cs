@@ -30,9 +30,8 @@ public class GroupsXmlUt
     {
         //Arrange 
         var mockFileSystem = new MockFileSystem();
-        var backupFileGen = new BackupFileGenerator(mockFileSystem);
-        backupFileGen.CreateBackupFolders();
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        mockFileSystem.AddDirectory(Path.Combine(curWorkDir, "XMLFilesForExport"));
         
         var groupingsList = new GroupsXmlGroupingsList();
         var systemUnderTest = new GroupsXmlGroups();

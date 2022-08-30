@@ -44,7 +44,6 @@ public class ActivitiesLessonXmlActivityUt
     {
         //Arrange 
         var mockFileSystem = new MockFileSystem();
-        var backupFileGen = new BackupFileGenerator(mockFileSystem);
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         string activityName = "lesson";
         string moduleId = "1";

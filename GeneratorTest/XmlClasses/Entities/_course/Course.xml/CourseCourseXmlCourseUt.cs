@@ -72,13 +72,11 @@ public class CourseCourseXmlCourseUt
     {
         //Arrange 
         var mockFileSystem = new MockFileSystem();
-        var backupFileGen = new BackupFileGenerator(mockFileSystem);
-        backupFileGen.CreateBackupFolders();
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
-        
+        mockFileSystem.AddDirectory(Path.Combine(curWorkDir, "XMLFilesForExport","course"));
+
         var courseCategory = new CourseCourseXmlCategory();
         var systemUnderTest = new CourseCourseXmlCourse();
-
 
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;

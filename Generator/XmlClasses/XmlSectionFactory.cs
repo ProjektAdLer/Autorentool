@@ -1,33 +1,44 @@
 ﻿//First Attempts to add a Section into the Moodle Backup Structure
 
-/*using AuthoringToolLib.DataAccess.XmlClasses.sections;
+using Generator.XmlClasses.Entities._sections.Inforef.xml;
+using Generator.XmlClasses.Entities._sections.Section.xml;
 
-namespace AuthoringToolLib.DataAccess.XmlClasses;
+namespace Generator.XmlClasses;
 
 public class XmlSectionFactory
 {
 
-    internal ISectionsSectionXmlSection SectionsSectionXmlSection;
-    public XmlSectionFactory()
+    public ISectionsSectionXmlSection SectionsSectionXmlSection;
+    public ISectionsInforefXmlInforef SectionsInforefXmlInforef;
+    public string CurrentTime;
+    
+    public XmlSectionFactory(ISectionsSectionXmlSection? section = null, ISectionsInforefXmlInforef? inforef = null)
     {
-        SectionsSectionXmlSection = new SectionsSectionXmlSection();
+        SectionsSectionXmlSection = section ?? new SectionsSectionXmlSection();
+        SectionsInforefXmlInforef = inforef ?? new SectionsInforefXmlInforef();
+        CurrentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
     }
 
-    public XmlSectionFactory(ISectionsSectionXmlSection sectionsSectionXmlSection)
+    public void CreateSectionFactory(string sectionId, string sectionName, string? sectionSummary)
     {
-        SectionsSectionXmlSection = sectionsSectionXmlSection;
+        CreateSectionInforefXml();
+        CreateSectionSectionXml( sectionId,  sectionName, sectionSummary);
+    }
+    
+    public void CreateSectionInforefXml()
+    {
+        SectionsInforefXmlInforef.Serialize("","");
     }
 
-    public void CreateXmlSectionFactory()
-    {
-        CreateSectionSectionXml();
-    }
-
-    public void CreateSectionSectionXml()
+    public void CreateSectionSectionXml(string sectionId, string sectionName, string? sectionSummary)
     {
         //write section.xml file
-        SectionsSectionXmlSection.SetParameters("160","1");
-        
-        SectionsSectionXmlSection.Serialize();
+        SectionsSectionXmlSection.Id = sectionId;
+        SectionsSectionXmlSection.Number = sectionId;
+        SectionsSectionXmlSection.Name = sectionName;
+        SectionsSectionXmlSection.Summary = sectionSummary ?? "";
+        SectionsSectionXmlSection.Timemodified = CurrentTime;
+
+        SectionsSectionXmlSection.Serialize("","");
     }
-}*/
+}
