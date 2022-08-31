@@ -161,20 +161,20 @@ public class XmlH5PFactoryUt
         var mockReadDsl = Substitute.For<IReadDsl>();
         var mockFileSystem = new MockFileSystem();
         
-        var mockGradeItem = new ActivitiesGradesXmlGradeItem();
-        var mockGradeItems = new ActivitiesGradesXmlGradeItems();
+        var mockGradeItem = Substitute.For<IActivitiesGradesXmlGradeItem>();
+        var mockGradeItems = Substitute.For<IActivitiesGradesXmlGradeItems>();
         var mockActivityGradebook = Substitute.For<IActivitiesGradesXmlActivityGradebook>();
         
-        var mockActivityH5PActivity = new ActivitiesH5PActivityXmlH5PActivity();
+        var mockActivityH5PActivity = Substitute.For<IActivitiesH5PActivityXmlH5PActivity>();
         var mockH5PActivity = Substitute.For<IActivitiesH5PActivityXmlActivity>();
         var mockRoles = Substitute.For<IActivitiesRolesXmlRoles>();
         var mockModule = Substitute.For<IActivitiesModuleXmlModule>();
         var mockGradeHistory = Substitute.For<IActivitiesGradeHistoryXmlGradeHistory>();
 
-        var mockInforefFile = new ActivitiesInforefXmlFile();
-        var mockInforefFileref = new ActivitiesInforefXmlFileref();
-        var mockInforefGradeItem = new ActivitiesInforefXmlGradeItem();
-        var mockInforefGradeItemref = new ActivitiesInforefXmlGradeItemref();
+        var mockInforefFile = Substitute.For<IActivitiesInforefXmlFile>();
+        var mockInforefFileref = Substitute.For<IActivitiesInforefXmlFileref>();
+        var mockInforefGradeItem = Substitute.For<IActivitiesInforefXmlGradeItem>();
+        var mockInforefGradeItemref = Substitute.For<IActivitiesInforefXmlGradeItemref>();
         var mockInforefInforef = Substitute.For<IActivitiesInforefXmlInforef>();
 
 
