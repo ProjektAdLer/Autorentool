@@ -62,6 +62,9 @@ public class MappingProfile: Profile
         CreateMap<PdfTransferElement, PdfTransferElementViewModel>().IncludeBase<LearningElement, LearningElementViewModel>().ReverseMap();
         CreateMap<VideoActivationElement, VideoActivationElementViewModel>().IncludeBase<LearningElement, LearningElementViewModel>().ReverseMap();
         CreateMap<VideoTransferElement, VideoTransferElementViewModel>().IncludeBase<LearningElement, LearningElementViewModel>().ReverseMap();
+
+        CreateMap<LearningElement, ILearningElementViewModel>().As<LearningElementViewModel>();
+        CreateMap<LearningSpace, ILearningSpaceViewModel>().As<LearningSpaceViewModel>();
     }
 
     private void CreatePersistEntityMaps()
