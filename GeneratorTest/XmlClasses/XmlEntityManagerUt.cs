@@ -48,10 +48,10 @@ public class XmlEntityManagerUt
             identifierLearningSpaceJson_2, new List<int>() {3, 4});
         var learningSpacesList = new List<LearningSpaceJson>(){learningSpacesJson_1, learningSpacesJson_2};
         var learningElementJson_1 = new LearningElementJson(1,
-            identifierLearningElementJson_1, "h5p");
+            identifierLearningElementJson_1, "h5p", 0);
         learningElementJson_1.LearningElementValue = learningElementValueList_1;
         var learningElementJson_2 = new LearningElementJson(2,
-            identifierLearningElementJson_2, "json");
+            identifierLearningElementJson_2, "json", 0);
         learningElementJson_2.LearningElementValue = learningElementValueList_2;
         var learningElementList = new List<LearningElementJson>(){learningElementJson_1, learningElementJson_2};
         var learningWorldJson = new LearningWorldJson("uuid", identifierLearningWorldJson, learningWorldContentJson, topicsList, learningSpacesList, learningElementList);

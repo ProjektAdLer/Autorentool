@@ -39,7 +39,8 @@ public interface IXmlH5PFactory
     /// </summary>
     void CreateH5PFileFactory();
 
-    void ReadH5PListAndSetParameters(List<LearningElementJson> h5PElementsList);
+    void ReadH5PListAndSetParameters(List<LearningElementJson> h5PElementsList,
+        List<LearningSpaceJson> learningSpaceJsons);
 
     /// <summary>
     /// Setting Parameters for h5p element in files.xml, 
@@ -68,5 +69,5 @@ public interface IXmlH5PFactory
     /// Creates section folders in the sections folder. For every sectionId.
     /// </summary>
     /// <param name="sectionId"></param>
-    void CreateSectionsFolder(string? sectionId);
+    void CreateSectionsFolder(string sectionId);
 }

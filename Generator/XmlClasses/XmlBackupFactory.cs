@@ -326,6 +326,7 @@ public class XmlBackupFactory : IXmlBackupFactory
             string learningElementId = element.Id.ToString();
             string learningElementType = element.ElementType;
             string learningElementName = element.Identifier.Value;
+            string learningElementParentSpace = element.LearningSpaceParentId.ToString();
             if (learningElementType == "h5p")
             {
                 learningElementType = "h5pactivity";
@@ -336,7 +337,7 @@ public class XmlBackupFactory : IXmlBackupFactory
                 MoodleBackupXmlActivityList.Add(new MoodleBackupXmlActivity
                 {
                     ModuleId = learningElementId,
-                    SectionId = learningElementId,
+                    SectionId = learningElementParentSpace,
                     ModuleName = learningElementType,
                     Title = learningElementName,
                     Directory = "activities/" + learningElementType + "_" + learningElementId,

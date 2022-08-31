@@ -54,16 +54,15 @@ public class ReadDsl : IReadDsl
         return _learningWorldJson;
     }
     
-    private void GetH5PElements(DocumentRootJson? documentRootJson)
+    private void GetH5PElements(DocumentRootJson documentRootJson)
     {
-        if (documentRootJson != null)
-            foreach (var element in documentRootJson.LearningWorld.LearningElements)
+        foreach (var element in documentRootJson.LearningWorld.LearningElements)
+        {
+            if (element.ElementType == "h5p")
             {
-                if (element.ElementType == "h5p")
-                {
-                    if (ListH5PElements != null) ListH5PElements.Add(element);
-                }
+                if (ListH5PElements != null) ListH5PElements.Add(element);
             }
+        }
     }
 
     private void GetLearningSpaces(DocumentRootJson? documentRootJson)

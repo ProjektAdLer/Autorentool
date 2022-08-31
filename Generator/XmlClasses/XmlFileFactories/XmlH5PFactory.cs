@@ -21,6 +21,7 @@ public class XmlH5PFactory : IXmlH5PFactory
     private readonly string _hardcodedPath = "XMLFilesForExport";
     public string H5PElementId;
     public string H5PElementName;
+    public string H5PElementParentSpace;
     public string CurrentTime;
     private List<FilesXmlFile> _filesXmlFilesList;
     private List<ActivitiesInforefXmlFile> _activitiesInforefXmlFileList;
@@ -116,17 +117,18 @@ public class XmlH5PFactory : IXmlH5PFactory
         if (ReadDsl != null)
         {   // Get all the H5P elements that are in the DSL Document
             List<LearningElementJson> h5PElementsList = ReadDsl.GetH5PElementsList();
+            List<LearningSpaceJson> learningSpacesList = ReadDsl.GetLearningSpaceList();
             _filesXmlFilesList = new List<FilesXmlFile>();
             _filesXmlFilesList = FileManager.GetXmlFilesList();
             
-            ReadH5PListAndSetParameters(h5PElementsList);
+            ReadH5PListAndSetParameters(h5PElementsList, learningSpacesList);
         }
         
         FilesXmlFiles.File = _filesXmlFilesList;
         FilesXmlFiles.Serialize();
     }
     
-    public void ReadH5PListAndSetParameters(List<LearningElementJson> h5PElementsList)
+    public void ReadH5PListAndSetParameters(List<LearningElementJson> h5PElementsList, List<LearningSpaceJson> learningSpaceJsons)
     {
         // For Each H5P element in the list 
         // (for files.xml) set the H5P element id, name, hash value, copy the File to the needed location in the backup structure
@@ -136,6 +138,7 @@ public class XmlH5PFactory : IXmlH5PFactory
         {
             H5PElementId = h5PElement.Id.ToString();
             H5PElementName = h5PElement.Identifier.Value;
+            H5PElementParentSpace = h5PElement.LearningSpaceParentId.ToString();
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
                 h5PElement.Identifier.Value));
             FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath, 
@@ -221,7 +224,7 @@ public class XmlH5PFactory : IXmlH5PFactory
         
         //file activities/h5p.../module.xml
         ActivitiesModuleXmlModule.ModuleName = "h5pactivity";
-        ActivitiesModuleXmlModule.SectionId = H5PElementId;
+        ActivitiesModuleXmlModule.SectionId = H5PElementParentSpace;
         ActivitiesModuleXmlModule.SectionNumber = H5PElementId;
         ActivitiesModuleXmlModule.IdNumber = "";
         ActivitiesModuleXmlModule.Added = CurrentTime;
@@ -292,7 +295,7 @@ public class XmlH5PFactory : IXmlH5PFactory
     /// Creates section folders in the sections folder. For every sectionId.
     /// </summary>
     /// <param name="sectionId"></param>
-    public void CreateSectionsFolder(string? sectionId)
+    public void CreateSectionsFolder(string sectionId)
     {
         var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections", "section_"+sectionId));

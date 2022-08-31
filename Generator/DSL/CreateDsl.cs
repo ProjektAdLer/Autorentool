@@ -9,9 +9,10 @@ public class CreateDsl : ICreateDsl
 {
     public readonly List<LearningElementPe> ListLearningElements;
     public List<LearningSpacePe> ListLearningSpaces;
+    public List<LearningElementJson> ListLearningElementsJson;
     private readonly List<int> _listLearningSpaceContent;
     private readonly IFileSystem _fileSystem;
-    private readonly string Uuid;
+    private readonly string _uuid;
 
     /// <summary>
     /// Read the AuthoringToolLib Entities and create a Dsl Document with a specified syntax.
@@ -20,11 +21,12 @@ public class CreateDsl : ICreateDsl
     public CreateDsl(IFileSystem fileSystem)
     {
         _fileSystem = fileSystem;
+        ListLearningElementsJson = new List<LearningElementJson>();
         ListLearningElements = new List<LearningElementPe>();
         ListLearningSpaces = new List<LearningSpacePe>();
         _listLearningSpaceContent = new List<int>();
         Guid guid = Guid.NewGuid();
-        Uuid = guid.ToString();
+        _uuid = guid.ToString();
     }
     
     /// <summary>
@@ -35,7 +37,7 @@ public class CreateDsl : ICreateDsl
     {
         
         //Initialise learningWorldJson with empty values, they will be filled with information later in the method.
-        var learningWorldJson = new LearningWorldJson(Uuid, new IdentifierJson("name", learningWorld.Name), new List<int>(),
+        var learningWorldJson = new LearningWorldJson(_uuid, new IdentifierJson("name", learningWorld.Name), new List<int>(),
             new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>());
 
 
@@ -44,6 +46,7 @@ public class CreateDsl : ICreateDsl
         // Search for Learning Elements in Spaces and add to listLearningElements
         if (learningWorld.LearningSpaces != null) ListLearningSpaces = learningWorld.LearningSpaces;
         int learningSpaceId = 1;
+        int learningElementId_Space = 1;
         foreach (var learningSpace in ListLearningSpaces)
         {
             IdentifierJson learningSpaceIdentifier = new IdentifierJson("name", learningSpace.Name);
@@ -51,9 +54,15 @@ public class CreateDsl : ICreateDsl
             //Searching for Learning Elements in each Space
             foreach (var element in learningSpace.LearningElements)
             {
+                IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", element.Name);
+                LearningElementJson learningElementJson = new LearningElementJson(learningElementId_Space,
+                    learningElementIdentifier, element.Content.Type, learningSpaceId);
+                ListLearningElementsJson.Add(learningElementJson);
                 ListLearningElements.Add(element);
-                int elementIndex = ListLearningElements.IndexOf(element) + 1;
-                _listLearningSpaceContent.Add(elementIndex);
+                //int elementIndex = ListLearningElements.IndexOf(element) + 1;
+                _listLearningSpaceContent.Add(learningElementId_Space);
+                learningElementId_Space++;
+                learningWorldJson.LearningElements.Add(learningElementJson);
             }
 
             LearningSpaceJson learningSpaceJson = new LearningSpaceJson(learningSpaceId, learningSpace.Name,
@@ -70,34 +79,35 @@ public class CreateDsl : ICreateDsl
         // This Part only adds learning Elements which are in the Learning World (not into Spaces)
         // (the List includes Elements from Spaces & learning World)
         // learningElementId defines what the starting Id for Elements should be. 
-        foreach (var element in learningWorld.LearningElements)
+        /*foreach (var element in learningWorld.LearningElements)
         {
             ListLearningElements.Add(element);
         }
-        int learningElementId = 1;
+        int learningElementId = 1;*/
 
-        foreach (var learningElement in ListLearningElements)
+        foreach (var element in learningWorld.LearningElements)
         {
-            if (learningElement.Content.Type == ".h5p")
+            /*if (element.Content.Type == ".h5p")
             {
-                learningElement.Content.Type = "H5P";
-            }
+                element.Content.Type = "H5P";
+            }*/
 
-            IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", learningElement.Name);
+            IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", element.Name);
 
-            LearningElementJson learningElementJson = new LearningElementJson(learningElementId,
-                learningElementIdentifier, learningElement.Content.Type);
+            LearningElementJson learningElementJson = new LearningElementJson(learningElementId_Space,
+                learningElementIdentifier, element.Content.Type, 0);
 
-            learningElementId++;
+            learningElementId_Space++;
             
             //Add Learning Elements to Learning World
             learningWorldJson.LearningElements.Add(learningElementJson);
+            ListLearningElements.Add(element);
         }
         
         //Add another Element to the LearningElementList, representation for the DSL Document
         IdentifierJson dslDocumentIdentifier = new IdentifierJson("FileName", "DSL Dokument");
 
-        LearningElementJson dslDocumentJson = new LearningElementJson(learningElementId, dslDocumentIdentifier, "json");
+        LearningElementJson dslDocumentJson = new LearningElementJson(learningElementId_Space, dslDocumentIdentifier, "json", 0);
 
         learningWorldJson.LearningElements.Add(dslDocumentJson);
 

@@ -63,11 +63,11 @@ public class XmlBackupFactoryUt
         
         mockLearningWorld.Identifier = mockIdentifier;
 
-        var mockLearningElement = new LearningElementJson(1, mockIdentifier, "h5p");
+        var mockLearningElement = new LearningElementJson(1, mockIdentifier, "h5p",0);
         List<LearningElementJson> learningElementJsons = new List<LearningElementJson>();
         learningElementJsons.Add(mockLearningElement);
 
-        var mockDslDocumentJson = new LearningElementJson(2, mockIdentifier, "json");
+        var mockDslDocumentJson = new LearningElementJson(2, mockIdentifier, "json",0);
         mockDslDocument.Add(mockDslDocumentJson);
 
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
@@ -251,11 +251,11 @@ public class XmlBackupFactoryUt
         var mockLearningWorld = new LearningWorldJson("Uuid", mockIdentifier, new List<int>(),
             new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>() );
 
-        var mockLearningElement = new LearningElementJson(1, mockIdentifier, "h5p");
+        var mockLearningElement = new LearningElementJson(1, mockIdentifier, "h5p",0);
         List<LearningElementJson> learningElementJsons = new List<LearningElementJson>();
         learningElementJsons.Add(mockLearningElement);
 
-        var mockDslDocumentJson = new LearningElementJson(2, mockIdentifier, "json");
+        var mockDslDocumentJson = new LearningElementJson(2, mockIdentifier, "json",0);
         mockDslDocument.Add(mockDslDocumentJson);
 
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);

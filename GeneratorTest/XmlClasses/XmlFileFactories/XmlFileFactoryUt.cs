@@ -68,7 +68,7 @@ public class XmlFileFactoryUt
         
         var identifier = new IdentifierJson("FileName", "DSL_Document");
 
-        var dslDocument = new LearningElementJson(1, identifier, "json");
+        var dslDocument = new LearningElementJson(1, identifier, "json",0);
 
         var dslDocumentList = new List<LearningElementJson>()
         {

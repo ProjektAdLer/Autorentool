@@ -1,5 +1,6 @@
 ﻿//First Attempts to add a Section into the Moodle Backup Structure
 
+using Generator.DSL;
 using Generator.XmlClasses.Entities._sections.Inforef.xml;
 using Generator.XmlClasses.Entities._sections.Section.xml;
 
@@ -10,24 +11,31 @@ public class XmlSectionFactory
 
     public ISectionsSectionXmlSection SectionsSectionXmlSection;
     public ISectionsInforefXmlInforef SectionsInforefXmlInforef;
+    public IReadDsl ReadDsl;
     public string CurrentTime;
     
-    public XmlSectionFactory(ISectionsSectionXmlSection? section = null, ISectionsInforefXmlInforef? inforef = null)
+    public XmlSectionFactory(IReadDsl readDsl, ISectionsSectionXmlSection? section = null, ISectionsInforefXmlInforef? inforef = null)
     {
+        ReadDsl = readDsl;
         SectionsSectionXmlSection = section ?? new SectionsSectionXmlSection();
         SectionsInforefXmlInforef = inforef ?? new SectionsInforefXmlInforef();
         CurrentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
     }
 
-    public void CreateSectionFactory(string sectionId, string sectionName, string? sectionSummary)
+    public void CreateSectionFactory()
     {
-        CreateSectionInforefXml();
-        CreateSectionSectionXml( sectionId,  sectionName, sectionSummary);
+        var learningSpaces = ReadDsl.GetLearningSpaceList();
+        foreach (var space in learningSpaces)
+        {
+            CreateSectionInforefXml( space.SpaceId.ToString() );
+            CreateSectionSectionXml( space.SpaceId.ToString(),  space.LearningSpaceName, "Summary will follow");
+        }
+
     }
     
-    public void CreateSectionInforefXml()
+    public void CreateSectionInforefXml(string sectionid)
     {
-        SectionsInforefXmlInforef.Serialize("","");
+        SectionsInforefXmlInforef.Serialize("", sectionid);
     }
 
     public void CreateSectionSectionXml(string sectionId, string sectionName, string? sectionSummary)
@@ -39,6 +47,6 @@ public class XmlSectionFactory
         SectionsSectionXmlSection.Summary = sectionSummary ?? "";
         SectionsSectionXmlSection.Timemodified = CurrentTime;
 
-        SectionsSectionXmlSection.Serialize("","");
+        SectionsSectionXmlSection.Serialize("",sectionId);
     }
 }
