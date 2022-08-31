@@ -161,20 +161,20 @@ public class XmlH5PFactoryUt
         var mockReadDsl = Substitute.For<IReadDsl>();
         var mockFileSystem = new MockFileSystem();
         
-        var mockGradeItem = Substitute.For<IActivitiesGradesXmlGradeItem>();
-        var mockGradeItems = Substitute.For<IActivitiesGradesXmlGradeItems>();
+        var mockGradeItem = new ActivitiesGradesXmlGradeItem();
+        var mockGradeItems = new ActivitiesGradesXmlGradeItems();
         var mockActivityGradebook = Substitute.For<IActivitiesGradesXmlActivityGradebook>();
         
-        var mockActivityH5PActivity = Substitute.For<IActivitiesH5PActivityXmlH5PActivity>();
+        var mockActivityH5PActivity = new ActivitiesH5PActivityXmlH5PActivity();
         var mockH5PActivity = Substitute.For<IActivitiesH5PActivityXmlActivity>();
         var mockRoles = Substitute.For<IActivitiesRolesXmlRoles>();
         var mockModule = Substitute.For<IActivitiesModuleXmlModule>();
         var mockGradeHistory = Substitute.For<IActivitiesGradeHistoryXmlGradeHistory>();
 
-        var mockInforefFile = Substitute.For<IActivitiesInforefXmlFile>();
-        var mockInforefFileref = Substitute.For<IActivitiesInforefXmlFileref>();
-        var mockInforefGradeItem = Substitute.For<IActivitiesInforefXmlGradeItem>();
-        var mockInforefGradeItemref = Substitute.For<IActivitiesInforefXmlGradeItemref>();
+        var mockInforefFile = new ActivitiesInforefXmlFile();
+        var mockInforefFileref = new ActivitiesInforefXmlFileref();
+        var mockInforefGradeItem = new ActivitiesInforefXmlGradeItem();
+        var mockInforefGradeItemref = new ActivitiesInforefXmlGradeItemref();
         var mockInforefInforef = Substitute.For<IActivitiesInforefXmlInforef>();
 
 
@@ -219,13 +219,7 @@ public class XmlH5PFactoryUt
             
             systemUnderTest.ActivitiesRolesXmlRoles.Received().Serialize("h5pactivity", systemUnderTest.H5PElementId);
             
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.ModuleName, Is.EqualTo("h5pactivity"));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionId, Is.EqualTo(systemUnderTest.H5PElementId));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionNumber, Is.EqualTo(systemUnderTest.H5PElementId));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.IdNumber, Is.EqualTo(""));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Added, Is.EqualTo(systemUnderTest.CurrentTime));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.ShowDescription, Is.EqualTo("0"));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Id, Is.EqualTo(systemUnderTest.H5PElementId));
+            Assert.That(systemUnderTest.ActivitiesModuleXmlModule, Is.EqualTo(mockModule));
             systemUnderTest.ActivitiesModuleXmlModule.Received().Serialize("h5pactivity", systemUnderTest.H5PElementId);
             
             systemUnderTest.ActivitiesGradeHistoryXmlGradeHistory.Received().Serialize("h5pactivity", systemUnderTest.H5PElementId);
