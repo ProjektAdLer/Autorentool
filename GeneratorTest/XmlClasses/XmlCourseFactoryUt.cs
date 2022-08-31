@@ -56,16 +56,11 @@ public class XmlCourseFactoryUt
 
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
         
+        var mockEnrols = new CourseEnrolmentsXmlEnrols();
         var mockEnrolManual = Substitute.For<ICourseEnrolmentsXmlEnrol>();
         var mockEnrolGuest = Substitute.For<ICourseEnrolmentsXmlEnrol>();
         var mockEnrolSelf = Substitute.For<ICourseEnrolmentsXmlEnrol>();
-        var mockEnrols = new CourseEnrolmentsXmlEnrols();
         var mockEnrolments = Substitute.For<ICourseEnrolmentsXmlEnrolments>();
-        
-        var enrolsList = new List<CourseEnrolmentsXmlEnrol>();
-        enrolsList.Add(mockEnrolManual as CourseEnrolmentsXmlEnrol);
-        enrolsList.Add(mockEnrolGuest as CourseEnrolmentsXmlEnrol);
-        enrolsList.Add(mockEnrolSelf as CourseEnrolmentsXmlEnrol);
         
         var mockInforefRole = new CourseInforefXmlRole();
         var mockInforefRoleref = new CourseInforefXmlRoleref();

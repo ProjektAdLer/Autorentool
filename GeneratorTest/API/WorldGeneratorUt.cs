@@ -1,13 +1,13 @@
 
 using System.IO.Abstractions.TestingHelpers;
-using AuthoringToolLib.Entities;
 using AutoMapper;
+using BusinessLogic.Entities;
 using Generator.API;
 using Generator.DSL;
-using Generator.PersistEntities;
 using Generator.WorldExport;
 using NSubstitute;
 using NUnit.Framework;
+using PersistEntities;
 
 namespace GeneratorTest.API;
 

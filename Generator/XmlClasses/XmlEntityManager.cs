@@ -10,10 +10,10 @@ public class XmlEntityManager : IXmlEntityManager
     public static int FileIdBlock1 = 1;
     public static int FileIdBlock2 = 2;
     private IFileSystem _fileSystem;
-    private IXmlFileFactory _xmlFileFactory;
-    private IXmlH5PFactory _xmlH5PFactory;
-    private IXmlCourseFactory _xmlCourseFactory;
-    private IXmlBackupFactory _xmlBackupFactory;
+    private IXmlFileFactory? _xmlFileFactory;
+    private IXmlH5PFactory? _xmlH5PFactory;
+    private IXmlCourseFactory? _xmlCourseFactory;
+    private IXmlBackupFactory? _xmlBackupFactory;
 
     public XmlEntityManager(IFileSystem? fileSystem=null)
     {
