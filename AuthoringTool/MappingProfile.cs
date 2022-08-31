@@ -1,7 +1,8 @@
-﻿using AuthoringTool.DataAccess.PersistEntities;
-using AuthoringTool.Entities;
-using AuthoringTool.PresentationLogic.LearningElement;
-using AutoMapper;
+﻿using AutoMapper;
+using BusinessLogic.Entities;
+using PersistEntities;
+using Presentation.PresentationLogic.LearningElement;
+using Shared;
 
 namespace AuthoringTool;
 

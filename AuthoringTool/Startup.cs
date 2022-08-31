@@ -1,27 +1,25 @@
 using System.IO.Abstractions;
-using AuthoringTool.API.Configuration;
-using AuthoringTool.BusinessLogic.API;
-using AuthoringTool.DataAccess.API;
-using AuthoringTool.DataAccess.DSL;
-using AuthoringTool.DataAccess.Persistence;
-using AuthoringTool.DataAccess.PersistEntities;
-using AuthoringTool.DataAccess.WorldExport;
-using AuthoringTool.Entities;
-using AuthoringTool.PresentationLogic;
-using AuthoringTool.PresentationLogic.API;
-using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
-using AuthoringTool.PresentationLogic.ElectronNET;
-using AuthoringTool.PresentationLogic.EntityMapping;
-using AuthoringTool.PresentationLogic.EntityMapping.LearningElementMapper;
-using AuthoringTool.PresentationLogic.LearningElement;
-using AuthoringTool.PresentationLogic.LearningSpace;
-using AuthoringTool.PresentationLogic.LearningWorld;
-using AuthoringTool.PresentationLogic.ModalDialog;
-using AuthoringTool.PresentationLogic.Toolbox;
-using AuthoringTool.View.Toolbox;
 using AutoMapper;
+using BusinessLogic.API;
+using DataAccess.Persistence;
 using ElectronWrapper;
+using Generator.API;
+using Generator.DSL;
+using Generator.WorldExport;
 using Microsoft.Extensions.Caching.Memory;
+using Presentation.PresentationLogic;
+using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.ElectronNET;
+using Presentation.PresentationLogic.EntityMapping;
+using Presentation.PresentationLogic.EntityMapping.LearningElementMapper;
+using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.ModalDialog;
+using Presentation.PresentationLogic.Toolbox;
+using Presentation.View.Toolbox;
+using Shared.Configuration;
 
 namespace AuthoringTool;
 
@@ -41,11 +39,12 @@ public class Startup
         services.AddServerSideBlazor();
         
         
-        //AuthoringTool
+        //AuthoringToolLib
         //PLEASE add any services you add dependencies to to the unit tests in StartupUt!!!
         ConfigureAuthoringTool(services);
         ConfigurePresentationLogic(services);
         ConfigureBusinessLogic(services);
+        ConfigureGenerator(services);
         ConfigureDataAccess(services);
         ConfigureToolbox(services);
         ConfigureMappers(services);
@@ -80,7 +79,7 @@ public class Startup
     private void ConfigurePresentationLogic(IServiceCollection services)
     {
         services.AddSingleton<IAuthoringToolWorkspacePresenter, AuthoringToolWorkspacePresenter>();
-        services.AddSingleton<IPresentationLogic, PresentationLogic.API.PresentationLogic>();
+        services.AddSingleton<IPresentationLogic, PresentationLogic>();
         services.AddSingleton<ILearningWorldPresenter, LearningWorldPresenter>();
         services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
         services.AddSingleton<ILearningElementPresenter, LearningElementPresenter>();
@@ -102,10 +101,15 @@ public class Startup
     {
         services.AddTransient(typeof(IXmlFileHandler<>), typeof(XmlFileHandler<>));
         services.AddSingleton<IDataAccess, DataAccess.API.DataAccess>();
+        services.AddSingleton<IContentFileHandler, ContentFileHandler>();
+    }
+
+    private void ConfigureGenerator(IServiceCollection services)
+    {
+        services.AddSingleton<IWorldGenerator, WorldGenerator>();
+        services.AddSingleton<IBackupFileGenerator, BackupFileGenerator>();
         services.AddSingleton<ICreateDsl, CreateDsl>();
         services.AddSingleton<IReadDsl, ReadDsl>();
-        services.AddSingleton<IContentFileHandler, ContentFileHandler>();
-        services.AddSingleton<IBackupFileGenerator, BackupFileGenerator>();
     }
 
     private static void ConfigureToolbox(IServiceCollection services)

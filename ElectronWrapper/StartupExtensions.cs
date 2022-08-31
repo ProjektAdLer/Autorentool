@@ -9,7 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 namespace ElectronWrapper;
 
 /// <summary>
-/// Indirection so we don't have to reference ElectronNET.API directly in AuthoringTool
+/// Indirection so we don't have to reference ElectronNET.API directly in AuthoringToolLib
 /// </summary>
 public static class StartupExtensions
 {
