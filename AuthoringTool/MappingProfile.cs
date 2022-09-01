@@ -1,15 +1,16 @@
-﻿using AuthoringTool.DataAccess.PersistEntities;
-using AuthoringTool.Entities;
-using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
-using AuthoringTool.PresentationLogic.LearningContent;
-using AuthoringTool.PresentationLogic.LearningElement;
-using AuthoringTool.PresentationLogic.LearningElement.ActivationElement;
-using AuthoringTool.PresentationLogic.LearningElement.InteractionElement;
-using AuthoringTool.PresentationLogic.LearningElement.TestElement;
-using AuthoringTool.PresentationLogic.LearningElement.TransferElement;
-using AuthoringTool.PresentationLogic.LearningSpace;
-using AuthoringTool.PresentationLogic.LearningWorld;
 using AutoMapper;
+using BusinessLogic.Entities;
+using PersistEntities;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningElement.ActivationElement;
+using Presentation.PresentationLogic.LearningElement.InteractionElement;
+using Presentation.PresentationLogic.LearningElement.TestElement;
+using Presentation.PresentationLogic.LearningElement.TransferElement;
+using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningWorld;
+using Shared;
 
 namespace AuthoringTool;
 
@@ -52,8 +53,6 @@ public class MappingProfile: Profile
         CreateMap<LearningElementViewModel, LearningElement>()
             .ForMember(x => x.Parent, opt => opt.Ignore());
         CreateMap<LearningContent, LearningContentViewModel>().ReverseMap();
-        CreateMap<Entities.LearningElementDifficultyEnum,
-            AuthoringTool.PresentationLogic.LearningElement.LearningElementDifficultyEnum>().ReverseMap();
         
         CreateMap<H5PActivationElement, H5PActivationElementViewModel>().IncludeBase<LearningElement, LearningElementViewModel>().ReverseMap();
         CreateMap<H5PInteractionElement, H5PInteractionElementViewModel>().IncludeBase<LearningElement, LearningElementViewModel>().ReverseMap();
@@ -86,6 +85,6 @@ public class MappingProfile: Profile
         CreateMap<VideoActivationElement, VideoActivationElementPe>().IncludeBase<LearningElement, LearningElementPe>().ReverseMap();
         CreateMap<VideoTransferElement, VideoTransferElementPe>().IncludeBase<LearningElement, LearningElementPe>().ReverseMap();
         
-        CreateMap<Entities.LearningElementDifficultyEnum, LearningElementDifficultyEnumPe>().ReverseMap();
+        CreateMap<LearningElementDifficultyEnum, LearningElementDifficultyEnumPe>().ReverseMap();
     }
 }

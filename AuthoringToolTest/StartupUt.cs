@@ -1,26 +1,24 @@
-using System;
 using System.IO.Abstractions;
 using AuthoringTool;
-using AuthoringTool.API.Configuration;
-using AuthoringTool.BusinessLogic.API;
-using AuthoringTool.DataAccess.API;
-using AuthoringTool.DataAccess.DSL;
-using AuthoringTool.DataAccess.Persistence;
-using AuthoringTool.DataAccess.PersistEntities;
-using AuthoringTool.DataAccess.WorldExport;
-using AuthoringTool.PresentationLogic.API;
-using AuthoringTool.PresentationLogic.AuthoringToolWorkspace;
-using AuthoringTool.PresentationLogic.LearningElement;
-using AuthoringTool.PresentationLogic.LearningSpace;
-using AuthoringTool.PresentationLogic.LearningWorld;
-using AuthoringTool.PresentationLogic.ModalDialog;
-using AuthoringTool.PresentationLogic.Toolbox;
-using AuthoringTool.View.Toolbox;
 using AutoMapper;
+using BusinessLogic.API;
+using DataAccess.Persistence;
+using Generator.DSL;
+using Generator.WorldExport;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
+using PersistEntities;
+using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.ModalDialog;
+using Presentation.PresentationLogic.Toolbox;
+using Presentation.View.Toolbox;
+using Shared.Configuration;
 
 namespace AuthoringToolTest;
 
@@ -83,7 +81,7 @@ public class StartupUt
     private static readonly Type[] ConfigureDataAccessRequiredTypes =
     {
         typeof(IXmlFileHandler<LearningWorldPe>), typeof(IXmlFileHandler<LearningElementPe>), typeof(IXmlFileHandler<LearningSpacePe>),
-        typeof(IDataAccess), typeof(ICreateDsl), typeof(IReadDsl), typeof(IContentFileHandler), typeof(IBackupFileGenerator),
+        typeof(IDataAccess), typeof(IContentFileHandler)
         
     };
     [Test]
@@ -121,6 +119,18 @@ public class StartupUt
     {
         ConfigureServicesCoreTest(requiredType);
     }
+    
+    private static readonly Type[] ConfigureGeneratorRequiredTypes =
+    {
+        typeof(IWorldGenerator), typeof(IBackupFileGenerator), typeof(ICreateDsl), typeof(IReadDsl)
+    };
+    [Test]
+    [TestCaseSource(nameof(ConfigureGeneratorRequiredTypes))]
+    public void Startup_ConfigureServices_CanResolveAllGeneratorServices(Type requiredType)
+    {
+        ConfigureServicesCoreTest(requiredType);
+    }
+    
     
     private static readonly Type[] ConfigureAutoMapperRequiredTypes =
     {

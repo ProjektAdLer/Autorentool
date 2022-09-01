@@ -13,6 +13,8 @@ jobs:
       dotNetVersion: net6.0
       dotNetConfiguration: Release
       runtimeTarget: win-x86
+      includeMask: \"[AuthoringTool]*,[BusinessLogic]*,[DataAccess]*,[Generator]*,[PersistEntities]*,[Presentation]*,[Shared]*\"
+      excludeMask: \"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]\"
     steps:
       # checkout the repo
       - uses: actions/checkout@v2
@@ -33,11 +35,30 @@ jobs:
           key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
           restore-keys: |
             ${{ runner.os }}-nuget
-          
-      - name: Run automated unit and integration tests
-        run: dotnet test AuthoringToolTest/AuthoringToolTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=TestResults/coverlet.info /p:CoverletOutputFormat=lcov --% /p:Include=\"[AuthoringTool]*\" /p:Exclude=\"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*\"
+            
+      #This has to be the first Test run since it appends the first file and doesnt contain a merge
+      - name: Run AuthoringTool automated unit and integration test
+        run: dotnet test AuthoringToolTest/AuthoringToolTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=../TestResults/ --% /p:Include=${{ env.includeMask }} /p:Exclude=${{ env.excludeMask }}
+
+      #this is a typical test for the middle which merges into the the file created in first test
+      - name: Run BusinessLogic automated unit and integration test
+        run: dotnet test BusinessLogicTest/BusinessLogicTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=../TestResults/ /p:MergeWith=../TestResults/coverage.json --% /p:Include=${{ env.includeMask }} /p:Exclude=${{ env.excludeMask }}
+
+      - name: Run DataAccess automated unit and integration test
+        run: dotnet test DataAccessTest/DataAccessTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=../TestResults/ /p:MergeWith=../TestResults/coverage.json --% /p:Include=${{ env.includeMask }} /p:Exclude=${{ env.excludeMask }}
+
+      - name: Run Generator automated unit and integration test
+        run: dotnet test GeneratorTest/GeneratorTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=../TestResults/ /p:MergeWith=../TestResults/coverage.json --% /p:Include=${{ env.includeMask }} /p:Exclude=${{ env.excludeMask }}
+
+      - name: Run Presentation automated unit and integration test
+        run: dotnet test PresentationTest/PresentationTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=../TestResults/ /p:MergeWith=../TestResults/coverage.json --% /p:Include=${{ env.includeMask }} /p:Exclude=${{ env.excludeMask }}
+
+      #this has to be the last test since it merges into the already merged reports and after that creates the file format we need to post to coveralls
+      - name: Run Shared automated unit and integration test
+        run: dotnet test SharedTest/SharedTest.csproj --configuration Release /p:CollectCoverage=true /p:MergeWith=../TestResults/coverage.json /p:CoverletOutput=../TestResults/coverlet.info /p:CoverletOutputFormat=lcov --% /p:Include=${{ env.includeMask }} /p:Exclude=${{ env.excludeMask }}
+      
       - name: Publish coverage report to coveralls.io
         uses: coverallsapp/github-action@master
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: AuthoringToolTest/TestResults/coverlet.info 
+          path-to-lcov: ${{ github.workspace }}/TestResults/coverlet.info

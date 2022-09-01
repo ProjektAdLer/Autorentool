@@ -1,0 +1,10 @@
+@using Presentation.PresentationLogic.LearningSpace
+@using Presentation.View.Toolbox
+<LearningObjectRenderFragmentBase Obj="ViewModel" CssClassSelector="learning-space">
+    <p>@ViewModel.Description</p>
+</LearningObjectRenderFragmentBase>
+    
+@code {
+    [Parameter, EditorRequired] 
+    public ILearningSpaceViewModel ViewModel { get; set; }
+}

@@ -1,14 +1,14 @@
 using AngleSharp.Dom;
-using AuthoringTool.PresentationLogic;
-using AuthoringTool.PresentationLogic.API;
-using AuthoringTool.PresentationLogic.Toolbox;
 using AuthoringTool.View.Shared;
-using AuthoringTool.View.Toolbox;
 using Bunit;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.PresentationLogic;
+using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.Toolbox;
+using Presentation.View.Toolbox;
 using TestContext = Bunit.TestContext;
 
 namespace AuthoringToolTest.View.Shared;
