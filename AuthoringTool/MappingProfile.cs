@@ -1,6 +1,7 @@
 using AutoMapper;
 using BusinessLogic.Entities;
 using PersistEntities;
+using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
@@ -18,7 +19,6 @@ public class MappingProfile: Profile
 {
     public MappingProfile()
     {
-        DisableConstructorMapping();
         CreateViewModelEntityMaps();
         CreatePersistEntityMaps();
     }
@@ -64,6 +64,21 @@ public class MappingProfile: Profile
 
         CreateMap<LearningElement, ILearningElementViewModel>().As<LearningElementViewModel>();
         CreateMap<LearningSpace, ILearningSpaceViewModel>().As<LearningSpaceViewModel>();
+
+        CreateMap<ILearningElementParent, ILearningElementViewModelParent>()
+            .ReverseMap();
+        CreateMap<LearningWorld, ILearningElementViewModelParent>()
+            .IncludeBase<ILearningElementParent, ILearningElementViewModelParent>()
+            .As<LearningWorldViewModel>();
+        CreateMap<LearningSpace, ILearningElementViewModelParent>()
+            .IncludeBase<ILearningElementParent, ILearningElementViewModelParent>()
+            .As<LearningSpaceViewModel>();
+        CreateMap<LearningWorldViewModel, ILearningElementParent>()
+            .IncludeBase<ILearningElementViewModelParent, ILearningElementParent>()
+            .As<LearningWorld>();
+        CreateMap<LearningSpaceViewModel, ILearningElementParent>()
+            .IncludeBase<ILearningElementViewModelParent, ILearningElementParent>()
+            .As<LearningSpace>();
     }
 
     private void CreatePersistEntityMaps()

@@ -9,13 +9,6 @@ public class LearningContent : ILearningContent
         Content = content;
     }
     
-    internal LearningContent()
-    {
-        Name = "";
-        Type = "";
-        Content = Array.Empty<byte>();
-    }
-    
     public string Name { get; set; }
     public string Type { get; set; }
     public byte[] Content { get; set; }

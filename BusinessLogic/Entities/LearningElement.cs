@@ -4,13 +4,22 @@ namespace BusinessLogic.Entities;
 
 public class LearningElement : ILearningElement, IOriginator
 {
-    /// <summary>
-    /// Protected Constructor for AutoMapper
-    /// </summary>
-    protected LearningElement()
+    private LearningElement(string name, string shortname, LearningContent learningContent,
+        string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload = 0,
+        double positionX = 0, double positionY = 0)
     {
+        Name = name;
+        Shortname = shortname;
+        LearningContent = learningContent;
+        Authors = authors;
+        Description = description;
+        Goals = goals;
+        Difficulty = difficulty;
+        Workload = workload;
+        PositionX = positionX;
+        PositionY = positionY;
+        Parent = null;
     }
-
     public LearningElement(string name, string shortname, LearningContent learningContent,
         string authors, string description, string goals, LearningElementDifficultyEnum difficulty,
         ILearningElementParent? parent, int workload = 0,
