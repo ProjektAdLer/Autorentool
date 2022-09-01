@@ -49,6 +49,7 @@ public class XmlH5PFactory : IXmlH5PFactory
     public IReadDsl? ReadDsl { get; }
 
     private readonly IFileSystem _fileSystem;
+
     
 
     public XmlH5PFactory(IReadDsl readDsl, IXmlFileManager? xmlFileManager = null, IFileSystem? fileSystem = null,
@@ -146,7 +147,7 @@ public class XmlH5PFactory : IXmlH5PFactory
             FileManager.GetHashCheckSum());
             H5PSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize());
             H5PSetParametersActivity();
-            H5PSetParametersSections();
+            //H5PSetParametersSections();
 
             // These ints are needed for the activities/inforef.xml file. 
             XmlEntityManager.IncreaseFileId();
@@ -225,7 +226,7 @@ public class XmlH5PFactory : IXmlH5PFactory
         //file activities/h5p.../module.xml
         ActivitiesModuleXmlModule.ModuleName = "h5pactivity";
         ActivitiesModuleXmlModule.SectionId = H5PElementParentSpace;
-        ActivitiesModuleXmlModule.SectionNumber = H5PElementId;
+        ActivitiesModuleXmlModule.SectionNumber = H5PElementParentSpace;
         ActivitiesModuleXmlModule.IdNumber = "";
         ActivitiesModuleXmlModule.Added = CurrentTime;
         ActivitiesModuleXmlModule.ShowDescription = "0";
@@ -300,4 +301,6 @@ public class XmlH5PFactory : IXmlH5PFactory
         var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections", "section_"+sectionId));
     }
+    
+    
 }

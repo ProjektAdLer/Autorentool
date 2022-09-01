@@ -14,6 +14,7 @@ public class XmlEntityManager : IXmlEntityManager
     private IXmlH5PFactory? _xmlH5PFactory;
     private IXmlCourseFactory? _xmlCourseFactory;
     private IXmlBackupFactory? _xmlBackupFactory;
+    private XmlSectionFactory? _xmlSectionFactory;
 
     public XmlEntityManager(IFileSystem? fileSystem=null)
     {
@@ -26,20 +27,17 @@ public class XmlEntityManager : IXmlEntityManager
     {
         XmlFileManager filemanager = new XmlFileManager();
 
+        _xmlSectionFactory = new XmlSectionFactory(readDsl); ;
+        _xmlSectionFactory.CreateSectionFactory();
+        
         _xmlFileFactory = xmlFileFactory ?? new XmlFileFactory(readDsl, dslpath, filemanager, _fileSystem);
         _xmlFileFactory.CreateFileFactory();
 
-        //var xmlLessonFactory = new XmlLessonFactory(readDsl, filemanager);
-        //xmlLessonFactory.CreateLessonFactory();
-        
         _xmlH5PFactory = xmlH5PFactory ?? new XmlH5PFactory(readDsl, filemanager, _fileSystem);
         _xmlH5PFactory.CreateH5PFileFactory();
         
         _xmlCourseFactory = xmlCourseFactory ??  new XmlCourseFactory(readDsl);
         _xmlCourseFactory.CreateXmlCourseFactory();
-
-        /*var xmlSectionFactory = new XmlSectionFactory();
-        xmlSectionFactory.CreateXmlSectionFactory();*/
         
         _xmlBackupFactory = xmlBackupFactory ?? new XmlBackupFactory(readDsl);
         _xmlBackupFactory.CreateXmlBackupFactory();

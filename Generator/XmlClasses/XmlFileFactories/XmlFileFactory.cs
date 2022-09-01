@@ -112,7 +112,7 @@ public class XmlFileFactory : IXmlFileFactory
             FileManager.CreateFolderAndFiles(_dslPath, FileManager.GetHashCheckSum());
             FileSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize());
             FileSetParametersActivity();
-            FileSetParametersSections();
+            //FileSetParametersSections();
 
             // These ints are needed for the activities/inforef.xml file. 
             XmlEntityManager.IncreaseFileId();
