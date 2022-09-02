@@ -1,9 +1,6 @@
 name: OSX Application Build
 on: 
   workflow_dispatch: 
-  label:
-    types:
-      - created
 
 jobs:
   build:

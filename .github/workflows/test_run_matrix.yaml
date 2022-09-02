@@ -37,7 +37,7 @@ jobs:
             ${{ runner.os }}-nuget
 
       - name: Run automated unit and integration tests
-        run: dotnet test AuthoringToolTest/AuthoringToolTest.csproj 
+        run: dotnet test 
 
   publish-osx:
     needs: test
