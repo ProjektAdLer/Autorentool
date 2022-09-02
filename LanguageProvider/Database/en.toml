@@ -1,0 +1,31 @@
+#ProjektAdler AuthoringTool Language Database -- Language: English
+
+Database_Name = "AuthoringTool String Database: English"
+Database_Language = "en"
+
+[AuthoringTool]
+table_empty = true
+
+[BusinessLogic]
+table_empty = true
+
+[DataAccess]
+table_empty = true
+
+[ElectronWrapper]
+table_empty = true
+
+[Generator]
+table_empty = true
+
+[PersisEntities]
+table_empty = true
+
+[Presentation]
+table_empty = true
+
+[Shared]
+table_empty = true
+
+
+
