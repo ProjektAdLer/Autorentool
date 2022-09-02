@@ -8,7 +8,39 @@ namespace BusinessLogicTest.Entities;
 public class LearningElementUt
 {
     [Test]
-    public void Constructor_InitializesAllProperties()
+    public void AutomapperConstructor_InitializesAllProperties()
+    {
+        var name = "asdf";
+        var shortname = "jkl;";
+        var content = new LearningContent("a", "b", Array.Empty<byte>());
+        var authors = "ben and jerry";
+        var description = "very cool element";
+        var goals = "learn very many things";
+        var difficulty = LearningElementDifficultyEnum.Medium;
+        var workload = 5;
+        var positionX = 5f;
+        var positionY = 21f;
+
+        var systemUnderTest = new LearningElement(name, shortname, content, authors, description, goals, difficulty, workload, positionX, positionY);
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.Name, Is.EqualTo(name));
+            Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortname));
+            Assert.That(systemUnderTest.Parent, Is.Null);
+            Assert.That(systemUnderTest.LearningContent, Is.EqualTo(content));
+            Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
+            Assert.That(systemUnderTest.Description, Is.EqualTo(description));
+            Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
+            Assert.That(systemUnderTest.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(systemUnderTest.Workload, Is.EqualTo(workload));
+            Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
+            Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
+        });
+    }
+    
+    [Test]
+    public void NormalConstructor_InitializesAllProperties()
     {
         var name = "asdf";
         var shortname = "jkl;";

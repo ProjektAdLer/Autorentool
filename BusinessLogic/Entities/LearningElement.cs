@@ -4,7 +4,10 @@ namespace BusinessLogic.Entities;
 
 public class LearningElement : ILearningElement, IOriginator
 {
-    private LearningElement(string name, string shortname, LearningContent learningContent,
+    /// <summary>
+    /// Constructor for Automapper, do not use!
+    /// </summary>
+    internal LearningElement(string name, string shortname, LearningContent learningContent,
         string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload = 0,
         double positionX = 0, double positionY = 0)
     {
@@ -20,6 +23,7 @@ public class LearningElement : ILearningElement, IOriginator
         PositionY = positionY;
         Parent = null;
     }
+    
     public LearningElement(string name, string shortname, LearningContent learningContent,
         string authors, string description, string goals, LearningElementDifficultyEnum difficulty,
         ILearningElementParent? parent, int workload = 0,
