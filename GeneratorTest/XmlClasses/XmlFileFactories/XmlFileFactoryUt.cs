@@ -198,7 +198,7 @@ public class XmlFileFactoryUt
         });
     }
 
-    [Test]
+    /*[Test]
     public void FileSetParametersSections_CreateSectionFolder_SetsInforefSection_AndSerializes()
     {
         // Arrange
@@ -230,7 +230,7 @@ public class XmlFileFactoryUt
             
         });
         
-    }
+    }*/
     
 
     [Test]
@@ -250,6 +250,7 @@ public class XmlFileFactoryUt
         Assert.That(mockFileSystem.Directory.Exists(Path.Join("XMLFilesForExport", "activities", "resource_"+"1")), Is.True);
     }
     
+    /*
     [Test]
     public void CreateSectionFolder_ActivityFolderCreated()
     {
@@ -265,5 +266,5 @@ public class XmlFileFactoryUt
         
         //Assert
         Assert.That(mockFileSystem.Directory.Exists(Path.Join("XMLFilesForExport", "sections", "section_"+"1")), Is.True);
-    }
+    }*/
 }

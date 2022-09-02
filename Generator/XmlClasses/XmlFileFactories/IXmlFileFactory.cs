@@ -35,19 +35,9 @@ public interface IXmlFileFactory
     void FileSetParametersActivity();
 
     /// <summary>
-    /// Create Folder section/ in the folder sections. And both files inforef.xml and section.xml
-    /// </summary>
-    void FileSetParametersSections();
-
-    /// <summary>
     /// Creates a Resource folder in the activity folder. Each activity needs an folder.
     /// </summary>
     /// <param name="moduleId"></param>
     void CreateActivityFolder(string? moduleId);
 
-    /// <summary>
-    /// Creates section folders in the sections folder. For every sectionId.
-    /// </summary>
-    /// <param name="sectionId"></param>
-    void CreateSectionsFolder(string? sectionId);
 }

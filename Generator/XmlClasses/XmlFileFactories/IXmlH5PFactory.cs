@@ -53,21 +53,11 @@ public interface IXmlH5PFactory
     /// Create Folder Activity and the needed Activity Files
     /// </summary>
     void H5PSetParametersActivity();
-
-    /// <summary>
-    /// Create Folder section/ in the folder sections. And both files inforef.xml and section.xml
-    /// </summary>
-    void H5PSetParametersSections();
-
+    
     /// <summary>
     /// Creates a h5p folder in the activity folder. Each activity needs an folder.
     /// </summary>
     /// <param name="moduleId"></param>
     void CreateActivityFolder(string? moduleId);
-
-    /// <summary>
-    /// Creates section folders in the sections folder. For every sectionId.
-    /// </summary>
-    /// <param name="sectionId"></param>
-    void CreateSectionsFolder(string sectionId);
+    
 }

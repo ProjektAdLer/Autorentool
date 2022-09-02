@@ -233,6 +233,7 @@ public class XmlH5PFactoryUt
         });
     }
 
+    /*
     [Test]
     public void H5PSetParametersSections_SetsSectionInforefSection_AndSerializes()
     {
@@ -269,7 +270,7 @@ public class XmlH5PFactoryUt
             systemUnderTest.SectionsSectionXmlSection.Received().Serialize("", systemUnderTest.H5PElementId);
         });
 
-    }
+    }*/
 
     [Test]
     public void CreateActivityFolder_ActivityFolderCreated()
@@ -288,7 +289,7 @@ public class XmlH5PFactoryUt
         Assert.That(mockFileSystem.Directory.Exists(Path.Join("XMLFilesForExport", "activities", "h5pactivity_"+"1")), Is.True);
     }
     
-    
+    /*
     [Test]
     public void CreateSectionFolder_ActivityFolderCreated()
     {
@@ -304,5 +305,5 @@ public class XmlH5PFactoryUt
         
         //Assert
         Assert.That(mockFileSystem.Directory.Exists(Path.Join("XMLFilesForExport", "sections", "section_"+"1")), Is.True);
-    }
+    }*/
 }

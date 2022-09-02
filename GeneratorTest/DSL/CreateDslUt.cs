@@ -48,8 +48,6 @@ public class CreateDslUt
         var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "DSL_Document.json");
         Assert.Multiple(() =>
         {
-            //Assert.That(createDsl.ListLearningElements, Is.EqualTo(allLearningElements));
-            Assert.That(createDsl.ListLearningSpaces, Is.EqualTo(learningSpaces));
             Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
         });
     }

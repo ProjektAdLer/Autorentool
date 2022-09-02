@@ -14,13 +14,14 @@ namespace Generator.XmlClasses.XmlFileFactories;
 
 public class XmlFileFactory : IXmlFileFactory
 {
-    private string _dslPath;
+    private readonly string _dslPath;
     public List<FilesXmlFile> FilesXmlFilesList;
     private List<ActivitiesInforefXmlFile> _activitiesInforefXmlFileList;
     public readonly string CurrentTime;
     private readonly IFileSystem _fileSystem;
     public string FileElementId;
     public string FileElementName;
+    public string FileElementParentSpace;
 
     public readonly IXmlFileManager FileManager;
     public IActivitiesGradesXmlGradeItem ActivitiesGradesXmlGradeItem { get; }
@@ -41,7 +42,7 @@ public class XmlFileFactory : IXmlFileFactory
     public ISectionsSectionXmlSection SectionsSectionXmlSection { get; }
     public IReadDsl ReadDsl { get; }
 
-    public XmlFileFactory(IReadDsl readDsl, string dslpath, IXmlFileManager? xmlFileManager = null,
+    public XmlFileFactory(IReadDsl readDsl, string dslPath, IXmlFileManager? xmlFileManager = null,
         IFileSystem? fileSystem = null, IActivitiesGradesXmlGradeItem? gradesGradeItem = null,
         IActivitiesGradesXmlGradeItems? gradesGradeItems = null, IActivitiesGradesXmlActivityGradebook? gradebook = null,
         IActivitiesResourceXmlResource? fileResourceXmlResource = null,
@@ -54,18 +55,19 @@ public class XmlFileFactory : IXmlFileFactory
         IActivitiesInforefXmlInforef? inforefXmlInforef = null,
         ISectionsInforefXmlInforef? sectionsInforefXmlInforef = null,
         ISectionsSectionXmlSection? sectionsSectionXmlSection = null)
-    {
+    {        
+        ReadDsl = readDsl;   
+        _dslPath = dslPath;
         FileElementId = "";
         FileElementName = "";
+        FileElementParentSpace = "";
+        
+        CurrentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
+        _fileSystem = fileSystem?? new FileSystem();
+
+        FileManager = xmlFileManager?? new XmlFileManager();
         FilesXmlFilesList = new List<FilesXmlFile>();
         _activitiesInforefXmlFileList = new List<ActivitiesInforefXmlFile>();
-        _dslPath = dslpath;
-        CurrentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
-        _fileSystem = fileSystem?? new FileSystem(); 
-        ReadDsl = readDsl;
-        FileManager = xmlFileManager?? new XmlFileManager();
-
-        _fileSystem = fileSystem?? new FileSystem(); 
 
         ActivitiesGradesXmlGradeItem = gradesGradeItem?? new ActivitiesGradesXmlGradeItem();
         ActivitiesGradesXmlGradeItems = gradesGradeItems?? new ActivitiesGradesXmlGradeItems();
@@ -95,6 +97,7 @@ public class XmlFileFactory : IXmlFileFactory
     {
         var listDslDocument = ReadDsl.GetDslDocumentList();
         FilesXmlFilesList = new List<FilesXmlFile>();
+        FilesXmlFilesList = FileManager.GetXmlFilesList();
         
         ReadFileListAndSetParameters(listDslDocument);
         
@@ -103,17 +106,17 @@ public class XmlFileFactory : IXmlFileFactory
 
     public void ReadFileListAndSetParameters(List<LearningElementJson> listDslDocument)
     {
-        foreach (var dsldocument in listDslDocument)
+        foreach (var dslDocument in listDslDocument)
         {
-            FileElementId = dsldocument.Id.ToString();
+            FileElementId = dslDocument.Id.ToString();
             FileElementName = "DSL_Document";
+            FileElementParentSpace = dslDocument.LearningSpaceParentId.ToString();
 
             FileManager.CalculateHashCheckSumAndFileSize(_dslPath);
             FileManager.CreateFolderAndFiles(_dslPath, FileManager.GetHashCheckSum());
             FileSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize());
             FileSetParametersActivity();
-            //FileSetParametersSections();
-
+            
             // These ints are needed for the activities/inforef.xml file. 
             XmlEntityManager.IncreaseFileId();
         }
@@ -166,8 +169,8 @@ public class XmlFileFactory : IXmlFileFactory
         
         //file activities/resource.../module.xml
         ActivitiesModuleXmlModule.ModuleName = "resource";
-        ActivitiesModuleXmlModule.SectionId = FileElementId;
-        ActivitiesModuleXmlModule.SectionNumber = FileElementId;
+        ActivitiesModuleXmlModule.SectionId = FileElementParentSpace;
+        ActivitiesModuleXmlModule.SectionNumber = FileElementParentSpace;
         ActivitiesModuleXmlModule.Added = CurrentTime;
         ActivitiesModuleXmlModule.Id = FileElementId;
         
@@ -177,6 +180,8 @@ public class XmlFileFactory : IXmlFileFactory
         ActivitiesGradeHistoryXmlGradeHistory.Serialize("resource", FileElementId);
         
         //file activities/resource.../inforef.xml
+        _activitiesInforefXmlFileList = new List<ActivitiesInforefXmlFile>();
+        
         var file1 = new ActivitiesInforefXmlFile
         {
             Id = XmlEntityManager.GetFileIdBlock1().ToString()
@@ -185,11 +190,10 @@ public class XmlFileFactory : IXmlFileFactory
         {
             Id = XmlEntityManager.GetFileIdBlock1().ToString()
         };
-        _activitiesInforefXmlFileList = new List<ActivitiesInforefXmlFile>
-        {
-            file1, file2
-        };
 
+        _activitiesInforefXmlFileList.Add(file1);
+        _activitiesInforefXmlFileList.Add(file2);
+        
         ActivitiesInforefXmlFileref.File = _activitiesInforefXmlFileList;
 
         ActivitiesInforefXmlGradeItemref.GradeItem = ActivitiesInforefXmlGradeItem as ActivitiesInforefXmlGradeItem ?? new ActivitiesInforefXmlGradeItem();
@@ -201,27 +205,6 @@ public class XmlFileFactory : IXmlFileFactory
     }
      
      /// <summary>
-     /// Create Folder section/ in the folder sections. And both files inforef.xml and section.xml
-     /// </summary>
-     public void FileSetParametersSections()
-     {
-         CreateSectionsFolder(FileElementId);
-        
-         //file sections/section.../inforef.xml
-         SectionsInforefXmlInforef.Serialize("",FileElementId);
-        
-         //file sections/section.../section.xml
-         SectionsSectionXmlSection.Number = FileElementId;
-         SectionsSectionXmlSection.Name = "$@NULL@$";
-         SectionsSectionXmlSection.Summary = "$@NULL@$";
-         SectionsSectionXmlSection.Timemodified = CurrentTime;
-         SectionsSectionXmlSection.Id = FileElementId;
-
-         SectionsSectionXmlSection.Serialize("",FileElementId);
-     }
-     
-     
-     /// <summary>
      /// Creates a Resource folder in the activity folder. Each activity needs an folder.
      /// </summary>
      /// <param name="moduleId"></param>
@@ -230,14 +213,5 @@ public class XmlFileFactory : IXmlFileFactory
          var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
          _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities", "resource_"+moduleId));
      }
-
-     /// <summary>
-     /// Creates section folders in the sections folder. For every sectionId.
-     /// </summary>
-     /// <param name="sectionId"></param>
-     public void CreateSectionsFolder(string? sectionId)
-     {
-         var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
-         _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections", "section_"+sectionId));
-     }
+    
 }

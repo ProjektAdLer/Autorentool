@@ -279,13 +279,14 @@ public class XmlBackupFactory : IXmlBackupFactory
             string dslDocumentId = document.Id.ToString();
             string dslDocumentType = "resource";
             string dslDocumentName = document.Identifier.Value;
+            string dslParentSpace = document.LearningSpaceParentId.ToString();
 
             if (MoodleBackupXmlActivityList != null)
             {
                 MoodleBackupXmlActivityList.Add(new MoodleBackupXmlActivity()
                 {
                     ModuleId = dslDocumentId,
-                    SectionId = dslDocumentId,
+                    SectionId = dslParentSpace,
                     ModuleName = dslDocumentType,
                     Title = dslDocumentName,
                     Directory = "activities/" + dslDocumentType + "_" + dslDocumentId,
@@ -390,64 +391,6 @@ public class XmlBackupFactory : IXmlBackupFactory
                     "section_" + sectionId, true));
             }
         }
-        
-
-        /*
-        if (learningElement != null)
-            foreach (var element in learningElement)
-            {
-                string? learningElementId = element.id.ToString();
-                string? learningElementType = element.elementType;
-                string? learningElementName = element.identifier!.value;
-                if (learningElementType == "h5p")
-                {
-                    learningElementType = "lesson";
-                }
-
-                if (moodleBackupXmlActivityList != null)
-                {
-                    moodleBackupXmlActivityList.Add(new MoodleBackupXmlActivity());
-                    moodleBackupXmlActivityList[^1].SetParameters(
-                        learningElementId,
-                        learningElementId, learningElementType,
-                        learningElementName, "activities/" + learningElementType + "_" + learningElementId);
-                    MoodleBackupXmlActivities.SetParameters(moodleBackupXmlActivityList);
-                }
-
-                if (moodleBackupXmlSectionList != null)
-                {
-                    moodleBackupXmlSectionList.Add(new MoodleBackupXmlSection());
-                    moodleBackupXmlSectionList[^1].SetParameters(
-                        learningElementId,
-                        learningElementId, "sections/section_" + learningElementId);
-                    MoodleBackupXmlSections.SetParameters(moodleBackupXmlSectionList);
-                }
-
-                if (moodleBackupXmlSettingList != null)
-                {
-                    moodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting());
-                    moodleBackupXmlSettingList[^1]!.SetParametersSection(
-                        "section",
-                        "section_" + learningElementId,
-                        "section_" + learningElementId + "_included", "1");
-                    moodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting());
-                    moodleBackupXmlSettingList[^1]!.SetParametersSection(
-                        "section",
-                        "section_" + learningElementId,
-                        "section_" + learningElementId + "_userinfo", "0");
-                    moodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting());
-                    moodleBackupXmlSettingList[^1]!.SetParametersActivity(
-                        "activity",
-                        learningElementType + "_" + learningElementId,
-                        learningElementType + "_" + learningElementId + "_included", "1");
-                    moodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting());
-                    moodleBackupXmlSettingList[^1]!.SetParametersActivity(
-                        "activity",
-                        learningElementType + "_" + learningElementId,
-                        learningElementType + "_" + learningElementId + "_userinfo", "0");
-                }
-            }
-        */
 
         MoodleBackupXmlContents.Activities = MoodleBackupXmlActivities as MoodleBackupXmlActivities ?? new MoodleBackupXmlActivities();
         MoodleBackupXmlContents.Sections = MoodleBackupXmlSections as MoodleBackupXmlSections ?? new MoodleBackupXmlSections();
