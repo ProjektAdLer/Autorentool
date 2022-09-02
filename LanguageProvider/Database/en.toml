@@ -1,0 +1,6 @@
+title = "AuthoringTool String Database: English"
+language = "en"
+
+[AuthoringTool]
+table_empty = true
+#ProjektAdler AuthoringTool Language Database -- Language: English
