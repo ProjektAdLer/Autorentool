@@ -1,12 +1,56 @@
 using AuthoringTool;
 using AutoMapper;
+using BusinessLogic.Entities;
 using NUnit.Framework;
+using PersistEntities;
+using Presentation.PresentationLogic;
+using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningWorld;
+using Shared;
 
 namespace AuthoringToolTest;
 
 [TestFixture]
 public class MappingProfileUt
 {
+    private const string Name = "name";
+    private const string Shortname = "shortname";
+    private const string Authors = "authors";
+    private const string Language = "language";
+    private const string Description = "description";
+    private const string Goals = "goals";
+    private const string Type = "type";
+    private static readonly byte[] Content = new byte[] {0x01, 0x02, 0x03};
+    private const LearningElementDifficultyEnum Difficulty = LearningElementDifficultyEnum.Easy;
+    private const LearningElementDifficultyEnumPe DifficultyPe = LearningElementDifficultyEnumPe.Easy;
+    private const int Workload = 1;
+    private const double PositionX = 1.0;
+    private const double PositionY = 2.0;
+
+    private const string NewName = "newName";
+    private const string NewShortname = "newShortname";
+    private const string NewAuthors = "newAuthors";
+    private const string NewLanguage = "newLanguage";
+    private const string NewDescription = "newDescription";
+    private const string NewGoals = "newGoals";
+    private const string NewType = "newType";
+    private static readonly byte[] NewContent = new byte[] {0x04, 0x05, 0x06};
+    private const LearningElementDifficultyEnum NewDifficulty = LearningElementDifficultyEnum.Medium;
+    private const LearningElementDifficultyEnumPe NewDifficultyPe = LearningElementDifficultyEnumPe.Medium;
+    private const int NewWorkload = 2;
+    private const double NewPositionX = 3.0;
+    private const double NewPositionY = 4.0;
+
+    private static readonly List<LearningElement> LearningElementsEntities = new List<LearningElement>();
+    private static readonly List<LearningSpace> LearningSpacesEntities = new List<LearningSpace>();
+
+    private static readonly List<ILearningElementViewModel> LearningElementViewModels =
+        new List<ILearningElementViewModel>();
+
+    private static readonly List<ILearningSpaceViewModel> LearningSpaceViewModels = new List<ILearningSpaceViewModel>();
+
     [Test]
     public void Constructor_TestConfigurationIsValid()
     {
@@ -15,5 +59,509 @@ public class MappingProfileUt
             cfg.AddProfile(systemUnderTest));
 
         Assert.That(() => mapper.AssertConfigurationIsValid(), Throws.Nothing);
+    }
+
+    [Test]
+    public void MapLearningContentLearningContentViewModel_TestMappingIsValid()
+    {
+        var systemUnderTest = CreateTestableMapper();
+        var source = new LearningContent(Name, Type, Content);
+        var destination = new LearningContentViewModel("", "", Array.Empty<byte>());
+
+        systemUnderTest.Map(source, destination);
+
+        TestContent(destination, false);
+
+        destination.Name = NewName;
+        destination.Type = NewType;
+        destination.Content = NewContent;
+
+        systemUnderTest.Map(destination, source);
+
+        TestContent(source, true);
+    }
+
+    [Test]
+    public void MapLearningContentLearningContentPersistEntity_TestMappingIsValid()
+    {
+        var systemUnderTest = CreateTestableMapper();
+        var source = new LearningContent(Name, Type, Content);
+        var destination = new LearningContentPe("", "", Array.Empty<byte>());
+
+        systemUnderTest.Map(source, destination);
+
+        TestContent(destination, false);
+
+        destination.Name = NewName;
+        destination.Type = NewType;
+        destination.Content = NewContent;
+
+        systemUnderTest.Map(destination, source);
+
+        TestContent(source, true);
+    }
+
+    [Test]
+    public void MapLearningElementLearningElementViewModel_TestMappingIsValid()
+    {
+        var systemUnderTest = CreateTestableMapper();
+        var content = GetTestableContent();
+        var source = new LearningElement(Name, Shortname, content, Authors, Description, Goals,
+            Difficulty, null, Workload, PositionX, PositionY);
+        var destination = new LearningElementViewModel("", "",
+            new LearningContentViewModel("", "", Array.Empty<byte>()), "", "", "", LearningElementDifficultyEnum.None);
+
+        systemUnderTest.Map(source, destination);
+
+        TestElement(destination, null, false);
+
+        destination.Name = NewName;
+        destination.Shortname = NewShortname;
+        destination.LearningContent = new LearningContentViewModel(NewName, NewType, NewContent);
+        destination.Authors = NewAuthors;
+        destination.Description = NewDescription;
+        destination.Goals = NewGoals;
+        destination.Difficulty = NewDifficulty;
+        destination.Workload = NewWorkload;
+        destination.PositionX = NewPositionX;
+        destination.PositionY = NewPositionY;
+
+        systemUnderTest.Map(destination, source);
+
+        TestElement(source, null, true);
+    }
+
+    [Test]
+    public void MapLearningElementLearningElementPersistEntity_TestMappingIsValid()
+    {
+        var systemUnderTest = CreateTestableMapper();
+        var content = GetTestableContent();
+        var source = new LearningElement(Name, Shortname, content, Authors, Description, Goals,
+            Difficulty, null, Workload, PositionX, PositionY);
+        var destination = new LearningElementPe("", "", new LearningContentPe("", "", Array.Empty<byte>()), "", "", "",
+            LearningElementDifficultyEnumPe.None);
+
+        systemUnderTest.Map(source, destination);
+
+        TestElement(destination, null, false);
+
+        destination.Name = NewName;
+        destination.Shortname = NewShortname;
+        destination.LearningContent = new LearningContentPe(NewName, NewType, NewContent);
+        destination.Authors = NewAuthors;
+        destination.Description = NewDescription;
+        destination.Goals = NewGoals;
+        destination.Difficulty = NewDifficultyPe;
+        destination.Workload = NewWorkload;
+        destination.PositionX = NewPositionX;
+        destination.PositionY = NewPositionY;
+
+        systemUnderTest.Map(destination, source);
+
+        TestElement(source, null, true);
+    }
+
+    [Test]
+    public void MapLearningSpaceLearningSpaceViewModel_TestMappingIsValid()
+    {
+        var systemUnderTest = CreateTestableMapper();
+        var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, new List<LearningElement>(),
+            PositionX, PositionY);
+        source.LearningElements.Add(GetTestableElementWithParent(source));
+        var destination = new LearningSpaceViewModel("", "", "", "", "", null, 0, 0);
+
+        systemUnderTest.Map(source, destination);
+
+        TestSpace(destination, false);
+
+        destination.Name = NewName;
+        destination.Shortname = NewShortname;
+        destination.Authors = NewAuthors;
+        destination.Description = NewDescription;
+        destination.Goals = NewGoals;
+        destination.LearningElements = new List<ILearningElementViewModel>(){GetTestableNewElementViewModelWithParent(destination)};
+        destination.PositionX = NewPositionX;
+        destination.PositionY = NewPositionY;
+
+        systemUnderTest.Map(destination, source);
+
+        TestSpace(source, true);
+    }
+
+
+    [Test]
+    public void MapLearningWorldLearningWorldViewModel_TestMappingIsValid()
+    {
+        var systemUnderTest = CreateTestableMapper();
+
+        var learningElement = new LearningElement(Name, Shortname, new LearningContent("", "", Array.Empty<byte>()),
+            "a", "d",
+            "g",
+            LearningElementDifficultyEnum.Easy, null);
+        var learningElements = new List<LearningElement> {learningElement};
+        var learningSpaces = new List<LearningSpace>();
+        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, learningElements,
+            learningSpaces);
+        var destination = new LearningWorldViewModel("", "", "", "", "", "", false,
+            new List<ILearningElementViewModel>(), new List<ILearningSpaceViewModel>());
+
+        systemUnderTest.Map(source, destination);
+
+        Assert.Multiple(() =>
+        {
+            TestWorld(destination, false);
+            Assert.That(destination.LearningElements, Is.EqualTo(learningElements));
+            Assert.That(destination.LearningSpaces, Is.EqualTo(learningSpaces));
+        });
+
+
+        var newLearningElements = new List<ILearningElementViewModel>();
+        var newLearningSpaces = new List<ILearningSpaceViewModel>();
+        destination.Name = NewName;
+        destination.Shortname = NewShortname;
+        destination.Authors = NewAuthors;
+        destination.Language = NewLanguage;
+        destination.Description = NewDescription;
+        destination.Goals = NewGoals;
+        destination.LearningElements = newLearningElements;
+        destination.LearningSpaces = newLearningSpaces;
+
+        systemUnderTest.Map(destination, source);
+
+        Assert.Multiple(() =>
+        {
+            TestWorld(source, true);
+            Assert.That(source.LearningElements, Is.EqualTo(newLearningElements));
+            Assert.That(source.LearningSpaces, Is.EqualTo(newLearningSpaces));
+        });
+    }
+
+    #region testable Content/Element/Space/World
+
+    private static LearningContent GetTestableContent()
+    {
+        return new LearningContent(Name, Type, Content);
+    }
+
+    private static LearningContentViewModel GetTestableNewContentViewModel()
+    {
+        return new LearningContentViewModel(NewName, NewType, NewContent);
+    }
+
+    private static LearningContentPe GetTestableNewContentPersistEntity()
+    {
+        return new LearningContentPe(NewName, NewType, NewContent);
+    }
+
+    private static LearningElement GetTestableElementWithParent(object parent)
+    {
+        return parent switch
+        {
+            LearningWorld world => new LearningElement(Name, Shortname, GetTestableContent(), Authors, Description,
+                Goals, Difficulty, world, Workload, PositionX, PositionY),
+            LearningSpace space => new LearningElement(Name, Shortname, GetTestableContent(), Authors, Description,
+                Goals, Difficulty, space, Workload, PositionX, PositionY),
+            _ => throw new ArgumentException($"{parent.GetType().Name} is not a valid parent type")
+        };
+    }
+
+    private static LearningElementViewModel GetTestableNewElementViewModelWithParent(object parent)
+    {
+        return parent switch
+        {
+            LearningWorldViewModel world => new LearningElementViewModel(NewName, NewShortname,
+                GetTestableNewContentViewModel(), NewAuthors, NewDescription, NewGoals, NewDifficulty, world,
+                NewWorkload, NewPositionX, NewPositionY),
+            LearningSpaceViewModel space => new LearningElementViewModel(NewName, NewShortname,
+                GetTestableNewContentViewModel(), NewAuthors, NewDescription, NewGoals, NewDifficulty, space,
+                NewWorkload, NewPositionX, NewPositionY),
+            _ => throw new ArgumentException($"{parent.GetType().Name} is not a valid parent type")
+        };
+    }
+
+    private static LearningElementPe GetTestableNewElementPersistEntity()
+    {
+        return new LearningElementPe(NewName, NewShortname,
+            GetTestableNewContentPersistEntity(), NewAuthors, NewDescription, NewGoals, NewDifficultyPe, NewWorkload,
+            NewPositionX, NewPositionY);
+    }
+
+    private static LearningSpace GetTestableSpace()
+    {
+        var space = new LearningSpace(Name, Shortname, Authors, Description, Goals,
+            new List<LearningElement>(), PositionX, PositionY);
+        var element = GetTestableElementWithParent(space);
+        space.LearningElements.Add(element);
+        return space;
+    }
+
+    private static LearningWorld GetTestableWorld()
+    {
+        var world = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
+            new List<LearningElement>(), new List<LearningSpace>() {GetTestableSpace()});
+        var element = GetTestableElementWithParent(world);
+        world.LearningElements.Add(element);
+        return world;
+    }
+
+    #endregion
+
+    #region static test methods
+
+    private static void TestWorld(object destination, bool useNewFields)
+    {
+        switch (destination)
+        {
+            case LearningWorldViewModel world:
+                Assert.Multiple(() =>
+                {
+                    Assert.That(world.Name, Is.EqualTo(useNewFields ? NewName : Name));
+                    Assert.That(world.Shortname, Is.EqualTo(useNewFields ? NewShortname : Shortname));
+                    Assert.That(world.Authors, Is.EqualTo(useNewFields ? NewAuthors : Authors));
+                    Assert.That(world.Language, Is.EqualTo(useNewFields ? NewLanguage : Language));
+                    Assert.That(world.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
+                    Assert.That(world.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
+                    TestElementsList(world.LearningElements, world, useNewFields);
+                    TestSpacesList(world.LearningSpaces, useNewFields);
+                });
+                break;
+
+            case LearningWorld world:
+                Assert.Multiple(() =>
+                {
+                    Assert.That(world.Name, Is.EqualTo(useNewFields ? NewName : Name));
+                    Assert.That(world.Shortname, Is.EqualTo(useNewFields ? NewShortname : Shortname));
+                    Assert.That(world.Authors, Is.EqualTo(useNewFields ? NewAuthors : Authors));
+                    Assert.That(world.Language, Is.EqualTo(useNewFields ? NewLanguage : Language));
+                    Assert.That(world.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
+                    Assert.That(world.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
+                    TestElementsList(world.LearningElements, world, useNewFields);
+                    TestSpacesList(world.LearningSpaces, useNewFields);
+                });
+                break;
+            case LearningWorldPe world:
+                Assert.Multiple(() =>
+                {
+                    Assert.That(world.Name, Is.EqualTo(useNewFields ? NewName : Name));
+                    Assert.That(world.Shortname, Is.EqualTo(useNewFields ? NewShortname : Shortname));
+                    Assert.That(world.Authors, Is.EqualTo(useNewFields ? NewAuthors : Authors));
+                    Assert.That(world.Language, Is.EqualTo(useNewFields ? NewLanguage : Language));
+                    Assert.That(world.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
+                    Assert.That(world.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
+                    TestElementsList(world.LearningElements, world, useNewFields);
+                    TestSpacesList(world.LearningSpaces, useNewFields);
+                });
+                break;
+        }
+    }
+
+    private static void TestSpacesList(object worldLearningSpaces, bool useNewFields)
+    {
+        switch (worldLearningSpaces)
+        {
+            case List<ILearningSpaceViewModel> learningSpaces:
+                Assert.Multiple(() =>
+                {
+                    foreach (var learningSpace in learningSpaces)
+                    {
+                        TestSpace(learningSpace, useNewFields);
+                    }
+                });
+                break;
+            case List<LearningSpace> learningSpaces:
+                Assert.Multiple(() =>
+                {
+                    foreach (var learningSpace in learningSpaces)
+                    {
+                        TestSpace(learningSpace, useNewFields);
+                    }
+                });
+                break;
+            case List<LearningSpacePe> learningSpaces:
+                Assert.Multiple(() =>
+                {
+                    foreach (var learningSpace in learningSpaces)
+                    {
+                        TestSpace(learningSpace, useNewFields);
+                    }
+                });
+                break;
+        }
+    }
+
+    private static void TestSpace(object learningSpace, bool useNewFields)
+    {
+        switch (learningSpace)
+        {
+            case LearningSpaceViewModel space:
+                Assert.Multiple(() =>
+                {
+                    Assert.That(space.Name, Is.EqualTo(useNewFields ? NewName : Name));
+                    Assert.That(space.Shortname, Is.EqualTo(useNewFields ? NewShortname : Shortname));
+                    Assert.That(space.Authors, Is.EqualTo(useNewFields ? NewAuthors : Authors));
+                    Assert.That(space.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
+                    Assert.That(space.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
+                    TestElementsList(space.LearningElements, space, useNewFields);
+                    Assert.That(space.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
+                    Assert.That(space.PositionY, Is.EqualTo(useNewFields ? NewPositionY : PositionY));
+                });
+                break;
+            case LearningSpace space:
+                Assert.Multiple(() =>
+                {
+                    Assert.That(space.Name, Is.EqualTo(useNewFields ? NewName : Name));
+                    Assert.That(space.Shortname, Is.EqualTo(useNewFields ? NewShortname : Shortname));
+                    Assert.That(space.Authors, Is.EqualTo(useNewFields ? NewAuthors : Authors));
+                    Assert.That(space.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
+                    Assert.That(space.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
+                    TestElementsList(space.LearningElements, space, useNewFields);
+                    Assert.That(space.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
+                    Assert.That(space.PositionY, Is.EqualTo(useNewFields ? NewPositionY : PositionY));
+                });
+                break;
+            case LearningSpacePe space:
+                Assert.Multiple(() =>
+                {
+                    Assert.That(space.Name, Is.EqualTo(useNewFields ? NewName : Name));
+                    Assert.That(space.Shortname, Is.EqualTo(useNewFields ? NewShortname : Shortname));
+                    Assert.That(space.Authors, Is.EqualTo(useNewFields ? NewAuthors : Authors));
+                    Assert.That(space.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
+                    Assert.That(space.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
+                    TestElementsList(space.LearningElements, space, useNewFields);
+                    Assert.That(space.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
+                    Assert.That(space.PositionY, Is.EqualTo(useNewFields ? NewPositionY : PositionY));
+                });
+                break;
+        }
+    }
+
+    private static void TestElementsList(object worldLearningElements, object? parent, bool useNewFields)
+    {
+        switch (worldLearningElements)
+        {
+            case List<ILearningElementViewModel> learningElements:
+                Assert.Multiple(() =>
+                {
+                    foreach (var learningElement in learningElements)
+                    {
+                        TestElement(learningElement, parent, useNewFields);
+                    }
+                });
+                break;
+            case List<LearningElement> learningElements:
+                Assert.Multiple(() =>
+                {
+                    foreach (var learningElement in learningElements)
+                    {
+                        TestElement(learningElement, parent, useNewFields);
+                    }
+                });
+                break;
+            case List<LearningElementPe> learningElements:
+                Assert.Multiple(() =>
+                {
+                    foreach (var learningElement in learningElements)
+                    {
+                        TestElement(learningElement, parent, useNewFields);
+                    }
+                });
+                break;
+        }
+    }
+
+    private static void TestElement(object learningElement, object? parent, bool useNewFields)
+    {
+        switch (learningElement)
+        {
+            case LearningElementViewModel element:
+                Assert.Multiple(() =>
+                {
+                    Assert.That(element.Name, Is.EqualTo(useNewFields ? NewName : Name));
+                    Assert.That(element.Shortname, Is.EqualTo(useNewFields ? NewShortname : Shortname));
+                    TestContent(element.LearningContent, useNewFields);
+                    Assert.That(element.Authors, Is.EqualTo(useNewFields ? NewAuthors : Authors));
+                    Assert.That(element.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
+                    Assert.That(element.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
+                    Assert.That(element.Difficulty, Is.EqualTo(useNewFields ? NewDifficulty : Difficulty));
+                    Assert.That(parent, Is.EqualTo(element.Parent));
+                    Assert.That(element.Workload, Is.EqualTo(useNewFields ? NewWorkload : Workload));
+                    Assert.That(element.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
+                    Assert.That(element.PositionY, Is.EqualTo(useNewFields ? NewPositionY : PositionY));
+                });
+                break;
+            case LearningElement element:
+                Assert.Multiple(() =>
+                {
+                    Assert.That(element.Name, Is.EqualTo(useNewFields ? NewName : Name));
+                    Assert.That(element.Shortname, Is.EqualTo(useNewFields ? NewShortname : Shortname));
+                    TestContent(element.LearningContent, useNewFields);
+                    Assert.That(element.Authors, Is.EqualTo(useNewFields ? NewAuthors : Authors));
+                    Assert.That(element.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
+                    Assert.That(element.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
+                    Assert.That(element.Difficulty, Is.EqualTo(useNewFields ? NewDifficulty : Difficulty));
+                    Assert.That(parent, Is.EqualTo(element.Parent));
+                    Assert.That(element.Workload, Is.EqualTo(useNewFields ? NewWorkload : Workload));
+                    Assert.That(element.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
+                    Assert.That(element.PositionY, Is.EqualTo(useNewFields ? NewPositionY : PositionY));
+                });
+                break;
+            case LearningElementPe element:
+                Assert.Multiple(() =>
+                {
+                    Assert.That(element.Name, Is.EqualTo(useNewFields ? NewName : Name));
+                    Assert.That(element.Shortname, Is.EqualTo(useNewFields ? NewShortname : Shortname));
+                    TestContent(element.LearningContent, useNewFields);
+                    Assert.That(element.Authors, Is.EqualTo(useNewFields ? NewAuthors : Authors));
+                    Assert.That(element.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
+                    Assert.That(element.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
+                    Assert.That(element.Difficulty, Is.EqualTo(useNewFields ? NewDifficultyPe : DifficultyPe));
+                    Assert.That(element.Workload, Is.EqualTo(useNewFields ? NewWorkload : Workload));
+                    Assert.That(element.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
+                    Assert.That(element.PositionY, Is.EqualTo(useNewFields ? NewPositionY : PositionY));
+                });
+                break;
+        }
+    }
+
+    private static void TestContent(object elementLearningContent, bool useNewFields)
+    {
+        switch (elementLearningContent)
+        {
+            case LearningContentViewModel content:
+                Assert.Multiple(() =>
+                {
+                    Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
+                    Assert.That(content.Type, Is.EqualTo(useNewFields ? NewType : Type));
+                    Assert.That(content.Content, Is.EqualTo(useNewFields ? NewContent : Content));
+                });
+                break;
+            case LearningContent content:
+                Assert.Multiple(() =>
+                {
+                    Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
+                    Assert.That(content.Type, Is.EqualTo(useNewFields ? NewType : Type));
+                    Assert.That(content.Content, Is.EqualTo(useNewFields ? NewContent : Content));
+                });
+                break;
+            case LearningContentPe content:
+                Assert.Multiple(() =>
+                {
+                    Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
+                    Assert.That(content.Type, Is.EqualTo(useNewFields ? NewType : Type));
+                    Assert.That(content.Content, Is.EqualTo(useNewFields ? NewContent : Content));
+                });
+                break;
+        }
+    }
+
+    #endregion
+
+    private static IMapper CreateTestableMapper()
+    {
+        var mappingProfile = new MappingProfile();
+        var mapper = new MapperConfiguration(cfg =>
+            cfg.AddProfile(mappingProfile));
+        var systemUnderTest = mapper.CreateMapper();
+        return systemUnderTest;
     }
 }
