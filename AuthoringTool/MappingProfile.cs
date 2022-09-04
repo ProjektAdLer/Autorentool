@@ -15,7 +15,7 @@ using Shared;
 
 namespace AuthoringTool;
 
-public class MappingProfile: Profile
+public class MappingProfile : Profile
 {
     public MappingProfile()
     {
@@ -27,6 +27,13 @@ public class MappingProfile: Profile
     {
         CreateMap<AuthoringToolWorkspaceViewModel, AuthoringToolWorkspace>().ReverseMap();
         CreateMap<LearningWorld, LearningWorldViewModel>()
+            .BeforeMap((s, d) =>
+            {
+                foreach (var element in s.LearningElements)
+                {
+                    element.Parent = null;
+                }
+            })
             .ForMember(x => x.LearningObjects, opt => opt.Ignore())
             .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
             .ForMember(x => x.ShowingLearningSpaceView, opt => opt.Ignore())
@@ -37,8 +44,31 @@ public class MappingProfile: Profile
                     element.Parent = d;
                 }
             })
-            .ReverseMap();
+            // .ReverseMap()
+            ;
+        CreateMap<LearningWorldViewModel, LearningWorld>()
+            .BeforeMap((s, d) =>
+            {
+                foreach (var element in s.LearningElements)
+                {
+                    element.Parent = null;
+                }
+            })
+            .AfterMap((s, d) =>
+            {
+                foreach (var element in d.LearningElements)
+                {
+                    element.Parent = d;
+                }
+            });
         CreateMap<LearningSpace, LearningSpaceViewModel>()
+            .BeforeMap((s, d) =>
+            {
+                foreach (var element in s.LearningElements)
+                {
+                    element.Parent = null;
+                }
+            })
             .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
@@ -47,23 +77,55 @@ public class MappingProfile: Profile
                     element.Parent = d;
                 }
             })
-            .ReverseMap();
+            // .ReverseMap()
+            ;
+        CreateMap<LearningSpaceViewModel, LearningSpace>()
+            .BeforeMap((s, d) =>
+            {
+                foreach (var element in s.LearningElements)
+                {
+                    element.Parent = null;
+                }
+            })
+            .AfterMap((s, d) =>
+            {
+                foreach (var element in d.LearningElements)
+                {
+                    element.Parent = d;
+                }
+            });
         CreateMap<LearningElement, LearningElementViewModel>()
-            .ForMember(x => x.Parent, opt => opt.Ignore());
-        CreateMap<LearningElementViewModel, LearningElement>()
-            .ForMember(x => x.Parent, opt => opt.Ignore());
+            .BeforeMap((s, d) => s.Parent = null)
+            .ForMember(x => x.Parent, opt => opt.Ignore())
+            .ReverseMap();
         CreateMap<LearningContent, LearningContentViewModel>().ReverseMap();
-        
-        CreateMap<H5PActivationElement, H5PActivationElementViewModel>().IncludeBase<LearningElement, LearningElementViewModel>().ReverseMap();
-        CreateMap<H5PInteractionElement, H5PInteractionElementViewModel>().IncludeBase<LearningElement, LearningElementViewModel>().ReverseMap();
-        CreateMap<H5PTestElement, H5PTestElementViewModel>().IncludeBase<LearningElement, LearningElementViewModel>().ReverseMap();
-        CreateMap<ImageTransferElement, ImageTransferElementViewModel>().IncludeBase<LearningElement, LearningElementViewModel>().ReverseMap();
-        CreateMap<PdfTransferElement, PdfTransferElementViewModel>().IncludeBase<LearningElement, LearningElementViewModel>().ReverseMap();
-        CreateMap<VideoActivationElement, VideoActivationElementViewModel>().IncludeBase<LearningElement, LearningElementViewModel>().ReverseMap();
-        CreateMap<VideoTransferElement, VideoTransferElementViewModel>().IncludeBase<LearningElement, LearningElementViewModel>().ReverseMap();
 
-        CreateMap<LearningElement, ILearningElementViewModel>().As<LearningElementViewModel>();
-        CreateMap<LearningSpace, ILearningSpaceViewModel>().As<LearningSpaceViewModel>();
+        CreateMap<H5PActivationElement, H5PActivationElementViewModel>()
+            .IncludeBase<LearningElement, LearningElementViewModel>()
+            .ReverseMap();
+        CreateMap<H5PInteractionElement, H5PInteractionElementViewModel>()
+            .IncludeBase<LearningElement, LearningElementViewModel>()
+            .ReverseMap();
+        CreateMap<H5PTestElement, H5PTestElementViewModel>()
+            .IncludeBase<LearningElement, LearningElementViewModel>()
+            .ReverseMap();
+        CreateMap<ImageTransferElement, ImageTransferElementViewModel>()
+            .IncludeBase<LearningElement, LearningElementViewModel>()
+            .ReverseMap();
+        CreateMap<PdfTransferElement, PdfTransferElementViewModel>()
+            .IncludeBase<LearningElement, LearningElementViewModel>()
+            .ReverseMap();
+        CreateMap<VideoActivationElement, VideoActivationElementViewModel>()
+            .IncludeBase<LearningElement, LearningElementViewModel>()
+            .ReverseMap();
+        CreateMap<VideoTransferElement, VideoTransferElementViewModel>()
+            .IncludeBase<LearningElement, LearningElementViewModel>()
+            .ReverseMap();
+
+        CreateMap<LearningElement, ILearningElementViewModel>()
+            .As<LearningElementViewModel>();
+        CreateMap<LearningSpace, ILearningSpaceViewModel>()
+            .As<LearningSpaceViewModel>();
 
         CreateMap<ILearningElementParent, ILearningElementViewModelParent>()
             .ReverseMap();
@@ -91,15 +153,29 @@ public class MappingProfile: Profile
         CreateMap<LearningElementPe, LearningElement>()
             .ForMember(x => x.Parent, opt => opt.Ignore());
         CreateMap<LearningContent, LearningContentPe>().ReverseMap();
-        
-        CreateMap<H5PActivationElement, H5PActivationElementPe>().IncludeBase<LearningElement, LearningElementPe>().ReverseMap();
-        CreateMap<H5PInteractionElement, H5PInteractionElementPe>().IncludeBase<LearningElement, LearningElementPe>().ReverseMap();
-        CreateMap<H5PTestElement, H5PTestElementPe>().IncludeBase<LearningElement, LearningElementPe>().ReverseMap();
-        CreateMap<ImageTransferElement, ImageTransferElementPe>().IncludeBase<LearningElement, LearningElementPe>().ReverseMap();
-        CreateMap<PdfTransferElement, PdfTransferElementPe>().IncludeBase<LearningElement, LearningElementPe>().ReverseMap();
-        CreateMap<VideoActivationElement, VideoActivationElementPe>().IncludeBase<LearningElement, LearningElementPe>().ReverseMap();
-        CreateMap<VideoTransferElement, VideoTransferElementPe>().IncludeBase<LearningElement, LearningElementPe>().ReverseMap();
-        
+
+        CreateMap<H5PActivationElement, H5PActivationElementPe>()
+            .IncludeBase<LearningElement, LearningElementPe>()
+            .ReverseMap();
+        CreateMap<H5PInteractionElement, H5PInteractionElementPe>()
+            .IncludeBase<LearningElement, LearningElementPe>()
+            .ReverseMap();
+        CreateMap<H5PTestElement, H5PTestElementPe>()
+            .IncludeBase<LearningElement, LearningElementPe>()
+            .ReverseMap();
+        CreateMap<ImageTransferElement, ImageTransferElementPe>()
+            .IncludeBase<LearningElement, LearningElementPe>()
+            .ReverseMap();
+        CreateMap<PdfTransferElement, PdfTransferElementPe>()
+            .IncludeBase<LearningElement, LearningElementPe>()
+            .ReverseMap();
+        CreateMap<VideoActivationElement, VideoActivationElementPe>()
+            .IncludeBase<LearningElement, LearningElementPe>()
+            .ReverseMap();
+        CreateMap<VideoTransferElement, VideoTransferElementPe>()
+            .IncludeBase<LearningElement, LearningElementPe>()
+            .ReverseMap();
+
         CreateMap<LearningElementDifficultyEnum, LearningElementDifficultyEnumPe>().ReverseMap();
     }
 }
