@@ -64,7 +64,7 @@ public class MappingProfile : Profile
                     element.Parent = d;
                 }
             });
-            
+
         CreateMap<LearningElement, LearningElementViewModel>()
             .ForMember(x => x.Parent, opt => opt.Ignore())
             .ReverseMap()
@@ -116,14 +116,29 @@ public class MappingProfile : Profile
 
     private void CreatePersistEntityMaps()
     {
-        CreateMap<LearningWorld, LearningWorldPe>().ReverseMap();
-        CreateMap<LearningSpace, LearningSpacePe>().ReverseMap();
-        CreateMap<LearningElement, LearningElementPe>()
-            // .ForSourceMember(x => x.Parent, opt => opt.DoNotValidate())
-            ;
+        CreateMap<LearningWorld, LearningWorldPe>()
+            .ReverseMap()
+            .AfterMap((s, d) =>
+            {
+                foreach (var element in d.LearningElements)
+                {
+                    element.Parent = d;
+                }
+            });
+        CreateMap<LearningSpace, LearningSpacePe>()
+            .ReverseMap()
+            .AfterMap((s, d) =>
+            {
+                foreach (var element in d.LearningElements)
+                {
+                    element.Parent = d;
+                }
+            });
+        CreateMap<LearningElement, LearningElementPe>();
         CreateMap<LearningElementPe, LearningElement>()
             .ForMember(x => x.Parent, opt => opt.Ignore());
-        CreateMap<LearningContent, LearningContentPe>().ReverseMap();
+        CreateMap<LearningContent, LearningContentPe>()
+            .ReverseMap();
 
         CreateMap<H5PActivationElement, H5PActivationElementPe>()
             .IncludeBase<LearningElement, LearningElementPe>()
@@ -147,6 +162,7 @@ public class MappingProfile : Profile
             .IncludeBase<LearningElement, LearningElementPe>()
             .ReverseMap();
 
-        CreateMap<LearningElementDifficultyEnum, LearningElementDifficultyEnumPe>().ReverseMap();
+        CreateMap<LearningElementDifficultyEnum, LearningElementDifficultyEnumPe>()
+            .ReverseMap();
     }
 }
