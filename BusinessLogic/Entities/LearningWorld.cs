@@ -2,6 +2,9 @@
 
 public class LearningWorld : ILearningWorld, IOriginator
 {
+    /// <summary>
+    /// Constructor for Automapper. DO NOT USE.
+    /// </summary>
     private LearningWorld()
     {
         

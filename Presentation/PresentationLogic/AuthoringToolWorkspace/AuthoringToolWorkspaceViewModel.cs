@@ -10,6 +10,9 @@ public class AuthoringToolWorkspaceViewModel : IAuthoringToolWorkspaceViewModel
     private LearningWorldViewModel? selectedLearningWorld;
     private IDictionary<string, string>? editDialogInitialValues;
 
+    /// <summary>
+    /// Constructor for both normal usage and Automapper
+    /// </summary>
     public AuthoringToolWorkspaceViewModel()
     {
         _learningWorlds = new List<LearningWorldViewModel>();

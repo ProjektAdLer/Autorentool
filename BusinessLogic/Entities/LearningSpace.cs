@@ -2,6 +2,9 @@
 
 public class LearningSpace : ILearningSpace, IOriginator
 {
+    /// <summary>
+    /// Constructor for Automapper. DO NOT USE.
+    /// </summary>
     private LearningSpace()
     {
         

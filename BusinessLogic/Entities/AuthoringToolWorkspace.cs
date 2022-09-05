@@ -2,6 +2,9 @@ namespace BusinessLogic.Entities;
 
 public class AuthoringToolWorkspace : IOriginator
 {
+    /// <summary>
+    /// Constructor for Automapper. DO NOT USE.
+    /// </summary>
     private AuthoringToolWorkspace()
     {
         

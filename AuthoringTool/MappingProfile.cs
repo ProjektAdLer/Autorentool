@@ -24,6 +24,9 @@ public class MappingProfile : Profile
         CreatePersistEntityMaps();
     }
 
+    /// <summary>
+    /// Configures mappings between ViewModels and Entity classes.
+    /// </summary>
     private void CreateViewModelEntityMaps()
     {
         CreateMap<AuthoringToolWorkspaceViewModel, AuthoringToolWorkspace>().ReverseMap();
@@ -71,6 +74,7 @@ public class MappingProfile : Profile
             .ForMember(x => x.Parent, opt => opt.Ignore());
         CreateMap<LearningContent, LearningContentViewModel>().ReverseMap();
 
+        //Element derived types
         CreateMap<H5PActivationElement, H5PActivationElementViewModel>()
             .IncludeBase<LearningElement, LearningElementViewModel>()
             .ReverseMap();
@@ -93,11 +97,13 @@ public class MappingProfile : Profile
             .IncludeBase<LearningElement, LearningElementViewModel>()
             .ReverseMap();
 
+        //We must tell the automapper what class to use when it has to map from a class to an interface
         CreateMap<LearningElement, ILearningElementViewModel>()
             .As<LearningElementViewModel>();
         CreateMap<LearningSpace, ILearningSpaceViewModel>()
             .As<LearningSpaceViewModel>();
 
+        //Same deal here as above
         CreateMap<ILearningElementParent, ILearningElementViewModelParent>()
             .ReverseMap();
         CreateMap<LearningWorld, ILearningElementViewModelParent>()
@@ -114,6 +120,9 @@ public class MappingProfile : Profile
             .As<LearningSpace>();
     }
 
+    /// <summary>
+    /// Configures mappings between Entity and PersistEntity classes
+    /// </summary>
     private void CreatePersistEntityMaps()
     {
         CreateMap<LearningWorld, LearningWorldPe>()

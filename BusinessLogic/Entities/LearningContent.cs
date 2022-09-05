@@ -9,6 +9,9 @@ public class LearningContent : ILearningContent
         Content = content;
     }
     
+    /// <summary>
+    /// Constructor for Automapper. DO NOT USE.
+    /// </summary>
     internal LearningContent()
     {
         Name = "";
