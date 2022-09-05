@@ -50,6 +50,31 @@ public interface IPresentationLogic
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
     Task<LearningWorldViewModel> LoadLearningWorldAsync();
+
+    /// <summary>
+    /// Creates a new learning space in the given learning world with the corresponding command.
+    /// </summary>
+    /// <param name="learningWorldVm">Parent learning world of the learning space to create.</param>
+    /// <param name="shortname"></param>
+    /// <param name="authors"></param>
+    /// <param name="description"></param>
+    /// <param name="goals"></param>
+    /// <param name="name"></param>
+    void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name, string shortname,
+        string authors, string description, string goals);
+    
+    /// <summary>
+    /// Edits a given learning space in the given learning world with the corresponding command.
+    /// </summary>
+    /// <param name="learningWorldVm">Parent learning world of the learning space to edit.</param>
+    /// <param name="learningSpaceVm">Learning space to edit.</param>
+    /// <param name="name"></param>
+    /// <param name="shortname"></param>
+    /// <param name="authors"></param>
+    /// <param name="description"></param>
+    /// <param name="goals"></param>
+    void EditLearningSpace(ILearningWorldViewModel learningWorldVm, LearningSpaceViewModel learningSpaceVm, string name,
+        string shortname, string authors, string description, string goals);
     
     /// <summary>
     /// Asks user for path and saves <see cref="LearningSpaceViewModel"/> to disk.

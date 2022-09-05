@@ -1,6 +1,7 @@
 using System.IO.Abstractions;
 using AutoMapper;
 using BusinessLogic.API;
+using BusinessLogic.Commands;
 using DataAccess.Persistence;
 using ElectronWrapper;
 using Generator.API;
@@ -47,6 +48,7 @@ public class Startup
         ConfigureToolbox(services);
         ConfigureUtilities(services);
         ConfigureAutoMapper(services);
+        ConfigureCommands(services);
 
         
         //Electron Wrapper layer
@@ -140,6 +142,11 @@ public class Startup
         services.AddTransient<IMemoryCache>(_ => new MemoryCache(new MemoryCacheOptions()));
         services.AddSingleton<IMouseService, MouseService>();
         services.AddTransient<IFileSystem, FileSystem>();
+    }
+
+    private void ConfigureCommands(IServiceCollection services)
+    {
+        services.AddSingleton<ICommandStateManager, CommandStateManager>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
