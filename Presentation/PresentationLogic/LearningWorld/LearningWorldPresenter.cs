@@ -165,10 +165,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        var learningSpace =
-            _learningSpacePresenter.CreateNewLearningSpace(name, shortname, authors, description, goals);
-        AddLearningSpace(learningSpace);
-        SetSelectedLearningObject(learningSpace);
+        _presentationLogic.CreateLearningSpace(LearningWorldVm, name, shortname, authors, description, goals);
     }
 
     /// <summary>
@@ -271,7 +268,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
             throw new ApplicationException("LearningWorld is null");
         if (LearningWorldVm.SelectedLearningObject is not LearningSpaceViewModel
             learningSpaceViewModel) throw new ApplicationException("LearningObject is not a LearningSpace");
-        _learningSpacePresenter.EditLearningSpace(learningSpaceViewModel, name, shortname, authors,
+        _presentationLogic.EditLearningSpace(LearningWorldVm, learningSpaceViewModel, name, shortname, authors,
             description, goals);
     }
 
