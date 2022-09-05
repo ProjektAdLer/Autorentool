@@ -24,8 +24,8 @@ public class LearningElementViewModelUt
         var PositionX = 5f;
         var PositionY = 21f;
 
-        var systemUnderTest = new LearningElementViewModel(Name, Shortname, Parent, Content, Authors,
-            Description, Goals, Difficulty, Workload, PositionX, PositionY);
+        var systemUnderTest = new LearningElementViewModel(Name, Shortname, Content, Authors,
+            Description, Goals, Difficulty, Parent, Workload, PositionX, PositionY);
         
         Assert.Multiple(() =>
         {
@@ -48,8 +48,8 @@ public class LearningElementViewModelUt
     public void FileEnding_ReturnsCorrectEnding()
     {
         const string expectedFileEnding = "aef";
-        var systemUnderTest = new LearningElementViewModel("foo", "foo", null, null,
-            "foo",  "foo", "foo", LearningElementDifficultyEnum.Medium);
+        var systemUnderTest = new LearningElementViewModel("foo", "foo", null,
+            "foo",  "foo", "foo", LearningElementDifficultyEnum.Medium, null);
         Assert.That(systemUnderTest.FileEnding, Is.EqualTo(expectedFileEnding));
     }
 }

@@ -4,14 +4,13 @@ using System.IO;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.Linq;
+using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.PresentationLogic;
-using Presentation.PresentationLogic.EntityMapping;
-using Presentation.PresentationLogic.EntityMapping.LearningElementMapper;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
@@ -28,17 +27,17 @@ public class ToolboxEntriesProviderUt
     {
         var logger = Substitute.For<ILogger<ToolboxEntriesProvider>>();
         var businessLogic = Substitute.For<IBusinessLogic>();
-        var entityMapping = Substitute.For<IEntityMapping>();
+        var mockMapper = Substitute.For<IMapper>();
         var fileSystem = new MockFileSystem();
 
         var systemUnderTest = CreateTestableToolboxEntriesProvider(logger, businessLogic,
-            entityMapping, fileSystem);
+            mockMapper, fileSystem);
         
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Logger, Is.EqualTo(logger));
             Assert.That(systemUnderTest.BusinessLogic, Is.EqualTo(businessLogic));
-            Assert.That(systemUnderTest.EntityMapping, Is.EqualTo(entityMapping));
+            Assert.That(systemUnderTest.Mapper, Is.EqualTo(mockMapper));
             Assert.That(systemUnderTest.FileSystem, Is.EqualTo(fileSystem));
         });
     }
@@ -48,15 +47,15 @@ public class ToolboxEntriesProviderUt
     {
         var logger = Substitute.For<ILogger<ToolboxEntriesProvider>>();
         var businessLogic = Substitute.For<IBusinessLogic>();
-        var entityMapping = Substitute.For<IEntityMapping>();
+        var mockMapper = Substitute.For<IMapper>();
         
-        var systemUnderTest = new ToolboxEntriesProvider(logger, businessLogic, entityMapping);
+        var systemUnderTest = new ToolboxEntriesProvider(logger, businessLogic, mockMapper);
         
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Logger, Is.EqualTo(logger));
             Assert.That(systemUnderTest.BusinessLogic, Is.EqualTo(businessLogic));
-            Assert.That(systemUnderTest.EntityMapping, Is.EqualTo(entityMapping));
+            Assert.That(systemUnderTest.Mapper, Is.EqualTo(mockMapper));
             Assert.That(systemUnderTest.FileSystem, Is.Not.Null);
         });
         Assert.That(systemUnderTest.FileSystem, Is.TypeOf<FileSystem>());
@@ -81,27 +80,24 @@ public class ToolboxEntriesProviderUt
         var lwEntity = new BusinessLogic.Entities.LearningWorld("world", "foo", "foo", "foo", "foo", "foo");
         var lsEntity = new BusinessLogic.Entities.LearningSpace("space", "foo", "foo", "foo", "foo");
         var leEntity =
-            new BusinessLogic.Entities.LearningElement("element", "foo", "foo", null,"foo",
-                "foo", null,LearningElementDifficultyEnum.Easy);
+            new BusinessLogic.Entities.LearningElement("foo", "foo", null, "foo",
+                "foo", "foo", LearningElementDifficultyEnum.Easy, null);
         businessLogic.LoadLearningWorld(Arg.Any<string>()).Returns(lwEntity);
         businessLogic.LoadLearningSpace(Arg.Any<string>()).Returns(lsEntity);
         businessLogic.LoadLearningElement(Arg.Any<string>()).Returns(leEntity);
 
-        var worldMapper = Substitute.For<ILearningWorldMapper>();
         var worldVm = new LearningWorldViewModel("ba", "ba", "ba", "ba", "ba", "ba");
-        worldMapper.ToViewModel(Arg.Any<ILearningWorld>()).Returns(worldVm);
-        var spaceMapper = Substitute.For<ILearningSpaceMapper>();
         var spaceVm = new LearningSpaceViewModel("ba", "ba", "ba", "ba", "ba");
-        spaceMapper.ToViewModel(Arg.Any<ILearningSpace>()).Returns(spaceVm);
-        var elementMapper = Substitute.For<ILearningElementMapper>();
-        var elementVm = new LearningElementViewModel("ba", "ba", null, null, "ba",
-            "ba", "ba",LearningElementDifficultyEnum.Easy);
-        elementMapper.ToViewModel(Arg.Any<BusinessLogic.Entities.LearningElement>()).Returns(elementVm);
-        var entityMapping =
-            new Presentation.PresentationLogic.EntityMapping.EntityMapping(worldMapper, spaceMapper, elementMapper);
+        var elementVm = new LearningElementViewModel("ba", "ba", null, "ba",
+            "ba", "ba", LearningElementDifficultyEnum.Easy, null);
+        var mockMapper = Substitute.For<IMapper>();
+        mockMapper.Map<LearningWorldViewModel>(Arg.Any<ILearningWorld>()).Returns(worldVm);
+        mockMapper.Map<LearningSpaceViewModel>(Arg.Any<ILearningSpace>()).Returns(spaceVm);
+        mockMapper.Map<LearningElementViewModel>(Arg.Any<BusinessLogic.Entities.LearningElement>()).Returns(elementVm);
+        
 
         IToolboxEntriesProvider systemUnderTest =
-            CreateTestableToolboxEntriesProvider(null, businessLogic, entityMapping, fileSystem);
+            CreateTestableToolboxEntriesProvider(null, businessLogic, mockMapper, fileSystem);
 
         var entries = systemUnderTest.Entries.ToArray();
         
@@ -114,9 +110,9 @@ public class ToolboxEntriesProviderUt
         businessLogic.Received().LoadLearningSpace(spacePath);
         businessLogic.Received().LoadLearningElement(elementPath);
 
-        worldMapper.Received().ToViewModel(lwEntity);
-        spaceMapper.Received().ToViewModel(lsEntity);
-        elementMapper.Received().ToViewModel(leEntity);
+        mockMapper.Received().Map<LearningWorldViewModel>(lwEntity);
+        mockMapper.Received().Map<LearningSpaceViewModel>(lsEntity);
+        mockMapper.Received().Map<LearningElementViewModel>(leEntity);
     }
 
     [Test]
@@ -132,27 +128,23 @@ public class ToolboxEntriesProviderUt
         businessLogic.FindSuitableNewSavePath(targetFolder, "space", "asf").Returns(spacePath);
         businessLogic.FindSuitableNewSavePath(targetFolder, "element", "aef").Returns(elementPath);
         
-        var worldMapper = Substitute.For<ILearningWorldMapper>();
-        var spaceMapper = Substitute.For<ILearningSpaceMapper>();
-        var elementMapper = Substitute.For<ILearningElementMapper>();
-        var entityMapping =
-            new Presentation.PresentationLogic.EntityMapping.EntityMapping(worldMapper, spaceMapper, elementMapper);
+        var mockMapper = Substitute.For<IMapper>();
 
         var lwViewModel = new LearningWorldViewModel("world", "foo", "foo", "foo", "foo", "foo");
         var lsViewModel = new LearningSpaceViewModel("space", "foo", "foo", "foo", "foo");
-        var leViewModel = new LearningElementViewModel("element", "foo", null, null, "foo", "foo", "foo",LearningElementDifficultyEnum.Easy);
+        var leViewModel = new LearningElementViewModel("element", "foo", null!, "foo", "foo", "foo",LearningElementDifficultyEnum.Easy, null);
         
         var lwEntity = new BusinessLogic.Entities.LearningWorld("world", "foo", "foo", "foo", "foo", "foo");
         var lsEntity = new BusinessLogic.Entities.LearningSpace("space", "foo", "foo", "foo", "foo");
         var leEntity =
-            new BusinessLogic.Entities.LearningElement("element", "foo", "foo", null,"foo",
-                "foo", null,LearningElementDifficultyEnum.Easy);
-        worldMapper.ToEntity(lwViewModel).Returns(lwEntity);
-        spaceMapper.ToEntity(lsViewModel).Returns(lsEntity);
-        elementMapper.ToEntity(leViewModel).Returns(leEntity);
+            new BusinessLogic.Entities.LearningElement("element", "foo", null!, "foo",
+                "foo", "foo", LearningElementDifficultyEnum.Easy, null);
+        mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<ILearningWorldViewModel>()).Returns(lwEntity);
+        mockMapper.Map<BusinessLogic.Entities.LearningSpace>(Arg.Any<ILearningSpaceViewModel>()).Returns(lsEntity);
+        mockMapper.Map<BusinessLogic.Entities.LearningElement>(Arg.Any<LearningElementViewModel>()).Returns(leEntity);
 
         IToolboxEntriesProviderModifiable systemUnderTest =
-            CreateTestableToolboxEntriesProvider(businessLogic: businessLogic, entityMapping: entityMapping);
+            CreateTestableToolboxEntriesProvider(businessLogic: businessLogic, mapper: mockMapper);
         
         Assert.That(systemUnderTest.Entries, Is.Empty);
         Assert.Multiple(() =>
@@ -160,7 +152,7 @@ public class ToolboxEntriesProviderUt
             Assert.That(systemUnderTest.AddEntry(lwViewModel), Is.True);
             Assert.That(systemUnderTest.Entries, Contains.Item(lwViewModel));
         });
-        worldMapper.Received().ToEntity(lwViewModel);
+        mockMapper.Received().Map<BusinessLogic.Entities.LearningWorld>(lwViewModel);
         businessLogic.Received().FindSuitableNewSavePath(targetFolder, "world", "awf");
         businessLogic.Received().SaveLearningWorld(lwEntity, worldPath);
         
@@ -169,7 +161,7 @@ public class ToolboxEntriesProviderUt
             Assert.That(systemUnderTest.AddEntry(lsViewModel), Is.True);
             Assert.That(systemUnderTest.Entries, Contains.Item(lsViewModel));
         });
-        spaceMapper.Received().ToEntity(lsViewModel);
+        mockMapper.Received().Map<BusinessLogic.Entities.LearningSpace>(lsViewModel);
         businessLogic.Received().FindSuitableNewSavePath(targetFolder, "space", "asf");
         businessLogic.Received().SaveLearningSpace(lsEntity, spacePath);
         
@@ -178,7 +170,7 @@ public class ToolboxEntriesProviderUt
             Assert.That(systemUnderTest.AddEntry(leViewModel), Is.True);
             Assert.That(systemUnderTest.Entries, Contains.Item(leViewModel));
         });
-        elementMapper.Received().ToEntity(leViewModel);
+        mockMapper.Received().Map<BusinessLogic.Entities.LearningElement>(leViewModel);
         businessLogic.Received().FindSuitableNewSavePath(targetFolder, "element", "aef");
         businessLogic.Received().SaveLearningElement(leEntity, elementPath);
     }
@@ -201,27 +193,23 @@ public class ToolboxEntriesProviderUt
         var lwEntity = new BusinessLogic.Entities.LearningWorld("world", "foo", "foo", "foo", "foo", "foo");
         var lsEntity = new BusinessLogic.Entities.LearningSpace("space", "foo", "foo", "foo", "foo");
         var leEntity =
-            new BusinessLogic.Entities.LearningElement("element", "foo", "foo", null,"foo",
-                "foo", null,LearningElementDifficultyEnum.Easy);
+            new BusinessLogic.Entities.LearningElement("element", "foo", null,"foo",
+                "foo", null, LearningElementDifficultyEnum.Easy, null);
         businessLogic.LoadLearningWorld(Arg.Any<string>()).Returns(lwEntity);
         businessLogic.LoadLearningSpace(Arg.Any<string>()).Returns(lsEntity);
         businessLogic.LoadLearningElement(Arg.Any<string>()).Returns(leEntity);
 
-        var worldMapper = Substitute.For<ILearningWorldMapper>();
         var worldVm = new LearningWorldViewModel("world", "ba", "ba", "ba", "ba", "ba");
-        worldMapper.ToViewModel(Arg.Any<ILearningWorld>()).Returns(worldVm);
-        var spaceMapper = Substitute.For<ILearningSpaceMapper>();
         var spaceVm = new LearningSpaceViewModel("space", "ba", "ba", "ba", "ba");
-        spaceMapper.ToViewModel(Arg.Any<ILearningSpace>()).Returns(spaceVm);
-        var elementMapper = Substitute.For<ILearningElementMapper>();
-        var elementVm = new LearningElementViewModel("element", "ba", null, null, "ba", "ba",
-            "foo",LearningElementDifficultyEnum.Easy);
-        elementMapper.ToViewModel(Arg.Any<BusinessLogic.Entities.LearningElement>()).Returns(elementVm);
-        var entityMapping =
-            new Presentation.PresentationLogic.EntityMapping.EntityMapping(worldMapper, spaceMapper, elementMapper);
+        var elementVm = new LearningElementViewModel("element", "ba", null, "ba", "ba",
+            "foo",LearningElementDifficultyEnum.Easy, null);
+        var mockMapper = Substitute.For<IMapper>();
+        mockMapper.Map<LearningWorldViewModel>(Arg.Any<ILearningWorld>()).Returns(worldVm);
+        mockMapper.Map<LearningSpaceViewModel>(Arg.Any<ILearningSpace>()).Returns(spaceVm);
+        mockMapper.Map<LearningElementViewModel>(Arg.Any<BusinessLogic.Entities.LearningElement>()).Returns(elementVm);
 
         IToolboxEntriesProviderModifiable systemUnderTest = CreateTestableToolboxEntriesProvider(
-            entityMapping: entityMapping,
+            mapper: mockMapper,
             businessLogic: businessLogic, fileSystem: fileSystem);
 
         var entries = systemUnderTest.Entries.ToArray();
@@ -261,13 +249,13 @@ public class ToolboxEntriesProviderUt
     }
 
     private ToolboxEntriesProvider CreateTestableToolboxEntriesProvider(ILogger<ToolboxEntriesProvider>? logger = null,
-        IBusinessLogic? businessLogic = null, IEntityMapping? entityMapping = null, IFileSystem? fileSystem = null)
+        IBusinessLogic? businessLogic = null, IMapper? mapper = null, IFileSystem? fileSystem = null)
     {
         logger ??= Substitute.For<ILogger<ToolboxEntriesProvider>>();
         businessLogic ??= Substitute.For<IBusinessLogic>();
-        entityMapping ??= Substitute.For<IEntityMapping>();
+        mapper ??= Substitute.For<IMapper>();
         fileSystem ??= new MockFileSystem();
         
-        return new ToolboxEntriesProvider(logger, businessLogic, entityMapping, fileSystem);
+        return new ToolboxEntriesProvider(logger, businessLogic, mapper, fileSystem);
     }
 }

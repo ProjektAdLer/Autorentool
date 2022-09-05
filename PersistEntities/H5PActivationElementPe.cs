@@ -5,9 +5,9 @@ namespace PersistEntities;
 
 public class H5PActivationElementPe : LearningElementPe
 {
-    public H5PActivationElementPe(string name, string shortname,  string? parentName, LearningContentPe? content,
+    public H5PActivationElementPe(string name, string shortname, LearningContentPe? learningContent,
         string authors, string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload,
-        double positionX, double positionY) : base(name, shortname,parentName,content, authors, description, 
+        double positionX, double positionY) : base(name, shortname,learningContent, authors, description, 
         goals,difficulty,workload, positionX,positionY)
     {
     }

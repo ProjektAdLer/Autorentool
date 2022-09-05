@@ -6,6 +6,13 @@ namespace Presentation.PresentationLogic.LearningElement.TransferElement;
 public class PdfTransferElementViewModel : TransferElementViewModel
 {
     /// <summary>
+    /// Private Constructor for AutoMapper
+    /// </summary>
+    private PdfTransferElementViewModel() : base()
+    {
+    }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="PdfTransferElementViewModel"/> class.
     /// </summary>
     public PdfTransferElementViewModel(string name, string shortname, ILearningElementViewModelParent? parent,

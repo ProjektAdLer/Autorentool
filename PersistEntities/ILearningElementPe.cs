@@ -6,7 +6,7 @@ public interface ILearningElementPe
 {
     string Name { get; set; }
     string Shortname { get; set; }
-    LearningContentPe Content { get; set; }
+    LearningContentPe LearningContent { get; set; }
     string Authors { get; set; }
     string Description { get; set; }
     string Goals { get; set; }
@@ -14,5 +14,4 @@ public interface ILearningElementPe
     LearningElementDifficultyEnumPe Difficulty { get; set; }
     double PositionX { get; set; }
     double PositionY { get; set; }
-    string? ParentName { get; set; }
 }

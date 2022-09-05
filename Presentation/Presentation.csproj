@@ -69,4 +69,10 @@
     <UpToDateCheckInput Remove="Pages\_Host.cshtml" />
     <UpToDateCheckInput Remove="Pages\_Layout.cshtml" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="PresentationLogic\EntityMapping\LearningElementMapper\VideoActivationElementMapper.cs" />
+    <Compile Remove="PresentationLogic\EntityMapping\LearningElementMapper\PdfTransferElementMapper.cs" />
+    <Compile Remove="PresentationLogic\EntityMapping\LearningElementMapper\LearningElementMapper.cs" />
+    <Compile Remove="PresentationLogic\EntityMapping\LearningElementMapper\H5PActivationElementMapper.cs" />
+  </ItemGroup>
 </Project>

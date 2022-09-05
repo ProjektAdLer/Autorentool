@@ -12,8 +12,6 @@ using NUnit.Framework;
 using PersistEntities;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.EntityMapping;
-using Presentation.PresentationLogic.EntityMapping.LearningElementMapper;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
@@ -67,26 +65,6 @@ public class StartupUt
         ConfigureServicesCoreTest(requiredType);
     }
 
-    
-    private static readonly Type[] ConfigureMappersRequiredTypes =
-    {
-        typeof(ILearningElementMapper), typeof(ILearningSpaceMapper), typeof(ILearningWorldMapper),
-        typeof(ILearningContentMapper), typeof(IEntityMapping),
-        typeof(IImageTransferElementMapper),
-        typeof(IVideoTransferElementMapper),
-        typeof(IPdfTransferElementMapper),
-        typeof(IVideoActivationElementMapper),
-        typeof(IH5PActivationElementMapper),
-        typeof(IH5PInteractionElementMapper),
-        typeof(IH5PTestElementMapper)
-    };
-    [Test]
-    [TestCaseSource(nameof(ConfigureMappersRequiredTypes))]
-    public void Startup_ConfigureServices_CanResolveAllMapperServices(Type requiredType)
-    {
-        ConfigureServicesCoreTest(requiredType);
-    }
-    
 
     private static readonly Type[] ConfigureUtilitiesRequiredTypes =
     {

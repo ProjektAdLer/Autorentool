@@ -178,6 +178,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
         LearningSpaceVm.LearningElements.Add(element);
+        element.Parent = LearningSpaceVm;
     }
     
     /// <summary>

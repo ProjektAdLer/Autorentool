@@ -56,7 +56,7 @@ public class CreateDsl : ICreateDsl
             {
                 IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", element.Name);
                 LearningElementJson learningElementJson = new LearningElementJson(learningElementId_Space,
-                    learningElementIdentifier, element.Content.Type, learningSpaceId);
+                    learningElementIdentifier, element.LearningContent.Type, learningSpaceId);
                 ListLearningElementsJson.Add(learningElementJson);
                 ListLearningElements.Add(element);
                 //int elementIndex = ListLearningElements.IndexOf(element) + 1;
@@ -87,15 +87,15 @@ public class CreateDsl : ICreateDsl
 
         foreach (var element in learningWorld.LearningElements)
         {
-            /*if (element.Content.Type == ".h5p")
+            if (element.LearningContent.Type == ".h5p")
             {
-                element.Content.Type = "H5P";
-            }*/
+                element.LearningContent.Type = "H5P";
+            }
 
             IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", element.Name);
 
             LearningElementJson learningElementJson = new LearningElementJson(learningElementId_Space,
-                learningElementIdentifier, element.Content.Type, 0);
+                learningElementIdentifier, element.LearningContent.Type, 0);
 
             learningElementId_Space++;
             
@@ -127,7 +127,7 @@ public class CreateDsl : ICreateDsl
         //After the files are added to the Backup-Structure, these Files will be deleted.
         foreach (var learningElement in ListLearningElements)
         {
-            _fileSystem.File.WriteAllBytes(_fileSystem.Path.Join("XMLFilesForExport", learningElement.Name), learningElement.Content.Content);
+            _fileSystem.File.WriteAllBytes(_fileSystem.Path.Join("XMLFilesForExport", learningElement.Name), learningElement.LearningContent.Content);
         }
         var dslPath = _fileSystem.Path.Join("XMLFilesForExport", "DSL_Document.json");
         _fileSystem.File.WriteAllText(dslPath, jsonFile);

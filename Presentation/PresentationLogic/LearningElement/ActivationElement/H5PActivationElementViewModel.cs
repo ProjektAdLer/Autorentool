@@ -6,6 +6,13 @@ namespace Presentation.PresentationLogic.LearningElement.ActivationElement;
 public class H5PActivationElementViewModel : ActivationElementViewModel
 {
     /// <summary>
+    /// Private Constructor for AutoMapper
+    /// </summary>
+    private H5PActivationElementViewModel() : base()
+    {
+    }
+    
+    /// <summary>
     /// Initializes a new instance of the <see cref="H5PActivationElementViewModel"/> class.
     /// </summary>
     public H5PActivationElementViewModel(string name, string shortname, ILearningElementViewModelParent? parent,

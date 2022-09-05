@@ -1,8 +1,8 @@
-﻿using BusinessLogic.API;
+using AutoMapper;
+using BusinessLogic.API;
+using BusinessLogic.Entities;
 using ElectronWrapper;
 using Presentation.PresentationLogic.ElectronNET;
-using Presentation.PresentationLogic.EntityMapping;
-using Presentation.PresentationLogic.EntityMapping.LearningElementMapper;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
@@ -16,10 +16,7 @@ public class PresentationLogic : IPresentationLogic
     public PresentationLogic(
         IAuthoringToolConfiguration configuration,
         IBusinessLogic businessLogic,
-        ILearningWorldMapper worldMapper,
-        ILearningSpaceMapper spaceMapper,
-        ILearningElementMapper elementMapper,
-        ILearningContentMapper contentMapper,
+        IMapper mapper,
         IServiceProvider serviceProvider,
         ILogger<PresentationLogic> logger,
         IHybridSupportWrapper hybridSupportWrapper)
@@ -27,10 +24,7 @@ public class PresentationLogic : IPresentationLogic
         _logger = logger;
         Configuration = configuration;
         BusinessLogic = businessLogic;
-        WorldMapper = worldMapper;
-        SpaceMapper = spaceMapper;
-        ElementMapper = elementMapper;
-        ContentMapper = contentMapper;
+        Mapper = mapper;
         HybridSupportWrapper = hybridSupportWrapper;
         _dialogManager = serviceProvider.GetService(typeof(IElectronDialogManager)) as IElectronDialogManager;
     }
@@ -51,16 +45,13 @@ public class PresentationLogic : IPresentationLogic
 
     public IAuthoringToolConfiguration Configuration { get; }
     public IBusinessLogic BusinessLogic { get; }
+    internal IMapper Mapper { get; }
     public bool RunningElectron => HybridSupportWrapper.IsElectronActive;
-    public ILearningWorldMapper WorldMapper { get; }
-    public ILearningSpaceMapper SpaceMapper { get; }
-    public ILearningElementMapper ElementMapper { get; }
-    public ILearningContentMapper ContentMapper { get; }
-    public IHybridSupportWrapper HybridSupportWrapper { get; }
+    private IHybridSupportWrapper HybridSupportWrapper { get; }
 
     public async Task<string> ConstructBackupAsync(LearningWorldViewModel learningWorldViewModel)
     {
-        var entity = WorldMapper.ToEntity(learningWorldViewModel);
+        var entity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldViewModel);
         var filepath = await GetSaveFilepathAsync("Export learning world", "mbz", "Moodle Backup Zip");
         BusinessLogic.ConstructBackup(entity, filepath);
         return filepath;
@@ -71,7 +62,7 @@ public class PresentationLogic : IPresentationLogic
     {
         SaveOrLoadElectronCheck();
         var filepath = await GetSaveFilepathAsync("Save Learning World", WorldFileEnding, WorldFileFormatDescriptor);
-        var worldEntity = WorldMapper.ToEntity(learningWorldViewModel);
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldViewModel);
         BusinessLogic.SaveLearningWorld(worldEntity, filepath);
         learningWorldViewModel.UnsavedChanges = false;
     }
@@ -82,7 +73,7 @@ public class PresentationLogic : IPresentationLogic
         SaveOrLoadElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load Learning World", WorldFileEnding, WorldFileFormatDescriptor);
         var entity = BusinessLogic.LoadLearningWorld(filepath);
-        return WorldMapper.ToViewModel(entity);
+        return Mapper.Map<LearningWorldViewModel>(entity);
     }
 
     /// <inheritdoc cref="IPresentationLogic.SaveLearningSpaceAsync"/>
@@ -90,7 +81,7 @@ public class PresentationLogic : IPresentationLogic
     {
         SaveOrLoadElectronCheck();
         var filepath = await GetSaveFilepathAsync("Save Learning Space", SpaceFileEnding, SpaceFileFormatDescriptor);
-        var spaceEntity = SpaceMapper.ToEntity(learningSpaceViewModel);
+        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceViewModel);
         BusinessLogic.SaveLearningSpace(spaceEntity, filepath);
     }
 
@@ -100,7 +91,7 @@ public class PresentationLogic : IPresentationLogic
         SaveOrLoadElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load Learning Space", SpaceFileEnding, SpaceFileFormatDescriptor);
         var entity = BusinessLogic.LoadLearningSpace(filepath);
-        return SpaceMapper.ToViewModel(entity);
+        return Mapper.Map<LearningSpaceViewModel>(entity);
     }
 
     /// <inheritdoc cref="IPresentationLogic.SaveLearningElementAsync"/>
@@ -109,7 +100,7 @@ public class PresentationLogic : IPresentationLogic
         SaveOrLoadElectronCheck();
         var filepath =
             await GetSaveFilepathAsync("Save Learning Element", ElementFileEnding, ElementFileFormatDescriptor);
-        var elementEntity = ElementMapper.ToEntity(learningElementViewModel);
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementViewModel);
         BusinessLogic.SaveLearningElement(elementEntity, filepath);
     }
 
@@ -120,7 +111,7 @@ public class PresentationLogic : IPresentationLogic
         var filepath =
             await GetLoadFilepathAsync("Load Learning Element", ElementFileEnding, ElementFileFormatDescriptor);
         var entity = BusinessLogic.LoadLearningElement(filepath);
-        return ElementMapper.ToViewModel(entity);
+        return Mapper.Map<LearningElementViewModel>(entity);
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadImageAsync"/>
@@ -130,7 +121,7 @@ public class PresentationLogic : IPresentationLogic
         var fileFilter = new FileFilterProxy[] {new(" ", ImageFileEnding)};
         var filepath = await GetLoadFilepathAsync("Load image", fileFilter);
         var entity = BusinessLogic.LoadLearningContent(filepath);
-        return ContentMapper.ToViewModel(entity);
+        return Mapper.Map<LearningContentViewModel>(entity);
     }
         
     /// <inheritdoc cref="IPresentationLogic.LoadVideoAsync"/>
@@ -139,7 +130,7 @@ public class PresentationLogic : IPresentationLogic
         SaveOrLoadElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load video", VideoFileEnding, " ");
         var entity = BusinessLogic.LoadLearningContent(filepath);
-        return ContentMapper.ToViewModel(entity);
+        return Mapper.Map<LearningContentViewModel>(entity);
     }
         
     /// <inheritdoc cref="IPresentationLogic.LoadH5pAsync"/>
@@ -148,7 +139,7 @@ public class PresentationLogic : IPresentationLogic
         SaveOrLoadElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load h5p",H5PFileEnding, " ");
         var entity = BusinessLogic.LoadLearningContent(filepath);
-        return ContentMapper.ToViewModel(entity);
+        return Mapper.Map<LearningContentViewModel>(entity);
     }
         
     /// <inheritdoc cref="IPresentationLogic.LoadPdfAsync"/>
@@ -157,31 +148,31 @@ public class PresentationLogic : IPresentationLogic
         SaveOrLoadElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load pdf",PdfFileEnding, " ");
         var entity = BusinessLogic.LoadLearningContent(filepath);
-        return ContentMapper.ToViewModel(entity);
+        return Mapper.Map<LearningContentViewModel>(entity);
     }
 
     public LearningWorldViewModel LoadLearningWorldViewModel(Stream stream)
     {
         var world = BusinessLogic.LoadLearningWorld(stream);
-        return WorldMapper.ToViewModel(world);
+        return Mapper.Map<LearningWorldViewModel>(world);
     }
 
     public ILearningSpaceViewModel LoadLearningSpaceViewModel(Stream stream)
     {
         var space = BusinessLogic.LoadLearningSpace(stream);
-        return SpaceMapper.ToViewModel(space);
+        return Mapper.Map<LearningSpaceViewModel>(space);
     }
 
     public ILearningElementViewModel LoadLearningElementViewModel(Stream stream)
     {
         var element = BusinessLogic.LoadLearningElement(stream);
-        return ElementMapper.ToViewModel(element);
+        return Mapper.Map<LearningElementViewModel>(element);
     }
     
     public LearningContentViewModel LoadLearningContentViewModel(string name, Stream stream)
     {
         var entity = BusinessLogic.LoadLearningContent(name, stream);
-        return ContentMapper.ToViewModel(entity);
+        return Mapper.Map<LearningContentViewModel>(entity);
     }
 
     /// <summary>

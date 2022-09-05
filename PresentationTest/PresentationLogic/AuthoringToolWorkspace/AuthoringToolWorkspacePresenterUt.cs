@@ -1370,8 +1370,8 @@ public class AuthoringToolWorkspacePresenterUt
     {
         var authoringToolWorkspace = new AuthoringToolWorkspaceViewModel();
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var newLearningElement = new LearningElementViewModel("n", "sn", null,
-            new LearningContentViewModel("n", "t", Array.Empty<byte>()), "a", "d", "g",LearningElementDifficultyEnum.Easy);
+        var newLearningElement = new LearningElementViewModel("n", "sn",
+            new LearningContentViewModel("n", "t", Array.Empty<byte>()), "a", "d", "g",LearningElementDifficultyEnum.Easy, null);
         presentationLogic.LoadLearningElementViewModel(Arg.Any<Stream>())
             .Returns(newLearningElement);
         var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspace, presentationLogic);
@@ -1400,8 +1400,8 @@ public class AuthoringToolWorkspacePresenterUt
         existingLearningWorld.ShowingLearningSpaceView = showingLearningSpaceView;
 
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var newLearningElement = new LearningElementViewModel("n", "sn", null,
-            new LearningContentViewModel("n", "t", Array.Empty<byte>()), "a", "d", "g",LearningElementDifficultyEnum.Easy);
+        var newLearningElement = new LearningElementViewModel("n", "sn",
+            new LearningContentViewModel("n", "t", Array.Empty<byte>()), "a", "d", "g",LearningElementDifficultyEnum.Easy, null);
         presentationLogic.LoadLearningElementViewModel(Arg.Any<Stream>()).Returns(newLearningElement);
         var stream = Substitute.For<Stream>();
         var spacePresenter = Substitute.For<ILearningSpacePresenter>();

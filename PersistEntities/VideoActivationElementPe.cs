@@ -4,10 +4,10 @@ namespace PersistEntities;
 
 public class VideoActivationElementPe : LearningElementPe
 {
-    public VideoActivationElementPe(string name, string shortname,  string? parentName, LearningContentPe? content,
+    internal VideoActivationElementPe(string name, string shortname, LearningContentPe? learningContent,
         string authors, string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload,
-        double positionX, double positionY) : base(name, shortname,parentName,content, authors, description, 
-        goals,difficulty,workload, positionX,positionY)
+        double positionX, double positionY) : base(name, shortname, learningContent, authors, description, 
+        goals, difficulty, workload, positionX, positionY)
     {
     }
     /// <summary>

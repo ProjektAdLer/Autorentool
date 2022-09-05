@@ -1,5 +1,5 @@
 ﻿namespace BusinessLogic.Entities;
 
-public interface ISpace
+public interface ISpace : ILearningElementParent
 {
 }

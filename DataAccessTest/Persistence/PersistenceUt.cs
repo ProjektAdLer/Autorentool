@@ -25,7 +25,7 @@ public class PersistenceUt
             "Description", "Goals");
         var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals");
         var content = new LearningContentPe("a", "b", Array.Empty<byte>());
-        var element = new LearningElementPe("le", "la", "lu", content, "lll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
+        var element = new LearningElementPe("le", "la", content, "lll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
         world.LearningSpaces.Add(space);
         world.LearningElements.Add(element);
         
@@ -44,7 +44,7 @@ public class PersistenceUt
     {
         var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals");
         var content = new LearningContentPe("a", "b", Array.Empty<byte>());
-        var element = new LearningElementPe("le", "la", "lu", content,"ll", "l" ,"lll", LearningElementDifficultyEnumPe.Easy);
+        var element = new LearningElementPe("le", "la", content,"ll", "l" ,"lll", LearningElementDifficultyEnumPe.Easy);
         space.LearningElements.Add(element);
         
         using var stream = new MemoryStream();
@@ -61,7 +61,7 @@ public class PersistenceUt
     public void Persistence_SaveAndLoadElement_Stream_ObjectsAreEqual()
     {
         var content = new LearningContentPe("a", "b", Array.Empty<byte>());
-        var element = new LearningElementPe("le", "la", "lu", content, "ll", "ll", "lll", LearningElementDifficultyEnumPe.Easy);
+        var element = new LearningElementPe("le", "la", content, "ll", "ll", "lll", LearningElementDifficultyEnumPe.Easy);
         
         using var stream = new MemoryStream();
         var saveHandler = CreateTestableFileSaveHandler<LearningElementPe>();
@@ -80,7 +80,7 @@ public class PersistenceUt
             "Description", "Goals");
         var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals");
         var content = new LearningContentPe("a", "b", Array.Empty<byte>());
-        var element = new LearningElementPe("le", "la", world.Name, content, "lll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
+        var element = new LearningElementPe("le", "la", content, "lll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
         world.LearningSpaces.Add(space);
         world.LearningElements.Add(element);
         var mockFileSystem = new MockFileSystem();
@@ -98,7 +98,7 @@ public class PersistenceUt
     {
         var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals");
         var content = new LearningContentPe("a", "b", Array.Empty<byte>());
-        var element = new LearningElementPe("le", "la", "lu", content, "ll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
+        var element = new LearningElementPe("le", "la", content, "ll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
         space.LearningElements.Add(element);
         var mockFileSystem = new MockFileSystem();
         
@@ -114,7 +114,7 @@ public class PersistenceUt
     public void Persistence_SaveAndLoadElement_File_ObjectsAreEqual()
     {
         var content = new LearningContentPe("a", "b", Array.Empty<byte>());
-        var element = new LearningElementPe("le", "la", "lu", content, "ll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
+        var element = new LearningElementPe("le", "la", content, "ll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
         var mockFileSystem = new MockFileSystem();
 
         var saveHandler = CreateTestableFileSaveHandler<LearningElementPe>(fileSystem:mockFileSystem);

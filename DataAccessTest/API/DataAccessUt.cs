@@ -123,8 +123,8 @@ public class DataAccessUt
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerElement: mockFileSaveHandlerElement);
 
         var learningContent = new LearningContent("a", "b", Array.Empty<byte>());
-        var learningElement = new LearningElement("f","f", "f", learningContent, "f",
-            "f", "f", LearningElementDifficultyEnum.Easy);
+        var learningElement = new LearningElement("f","f", learningContent, "f",
+            "f", "f", LearningElementDifficultyEnum.Easy, null!);
         systemUnderTest.SaveLearningElementToFile(
             learningElement,
             "C:/nonsense");

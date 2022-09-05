@@ -122,8 +122,8 @@ public class BusinessLogicUt
     public void SaveLearningElement_CallsDataAccess()
     {
         var content = new LearningContent("a", "b", Array.Empty<byte>());
-        var learningElement = new LearningElement("fa", "f", "f", content, "f",
-            "f", "f", LearningElementDifficultyEnum.Easy);
+        var learningElement = new LearningElement("fa", "f", content, "f",
+            "f", "f", LearningElementDifficultyEnum.Easy, null);
         var mockDataAccess = Substitute.For<IDataAccess>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
@@ -149,8 +149,8 @@ public class BusinessLogicUt
     public void LoadLearningElement_ReturnsLearningElement()
     {
         var content = new LearningContent("a", "b", Array.Empty<byte>());
-        var learningElement = new LearningElement("fa", "a", "f", content, "f", "f",
-            "f", LearningElementDifficultyEnum.Easy);
+        var learningElement = new LearningElement("fa", "a", content, "f", "f",
+            "f", LearningElementDifficultyEnum.Easy, null);
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningElement("foobar").Returns(learningElement);
 
@@ -260,8 +260,8 @@ public class BusinessLogicUt
     public void LoadLearningElementFromStream_ReturnsLearningElement()
     {
         var content = new LearningContent("a", "b", Array.Empty<byte>());
-        var learningElement = new LearningElement("fa", "a", "f", content, "f", "f",
-            "f", LearningElementDifficultyEnum.Easy);
+        var learningElement = new LearningElement("fa", "a", content, "f", "f",
+            "f", LearningElementDifficultyEnum.Easy, null);
         var stream = Substitute.For<Stream>();
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningElement(stream).Returns(learningElement);

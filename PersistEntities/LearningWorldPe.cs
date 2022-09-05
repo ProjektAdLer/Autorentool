@@ -33,7 +33,7 @@ public class LearningWorldPe : ILearningWorldPe
     }
 
     public List<LearningElementPe> LearningElements { get; set; }
-    public List<LearningSpacePe>? LearningSpaces { get; set; }
+    public List<LearningSpacePe> LearningSpaces { get; set; }
     public string Name { get; set; }
     public string Shortname { get; set; }
     public string Authors { get; set; }

@@ -5,9 +5,9 @@ namespace PersistEntities;
 
 public class H5PTestElementPe : LearningElementPe
 {
-    public H5PTestElementPe(string name, string shortname,  string? parentName, LearningContentPe? content,
+    internal H5PTestElementPe(string name, string shortname, LearningContentPe? learningContent,
         string authors, string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload,
-        double positionX, double positionY) : base(name, shortname,parentName,content, authors, description, 
+        double positionX, double positionY) : base(name, shortname,learningContent, authors, description, 
         goals,difficulty,workload, positionX,positionY)
     {
     }

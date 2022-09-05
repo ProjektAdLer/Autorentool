@@ -36,4 +36,14 @@
       <ProjectReference Include="..\Presentation\Presentation.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Compile Remove="PresentationLogic\EntityMapping\LearningSpaceMapperUt.cs" />
+      <Compile Remove="PresentationLogic\EntityMapping\LearningElement\VideoTransferElementMapperUt.cs" />
+      <Compile Remove="PresentationLogic\EntityMapping\LearningElement\VideoActivationElementMapperUt.cs" />
+      <Compile Remove="PresentationLogic\EntityMapping\LearningElement\PdfTransferElementMapperUt.cs" />
+      <Compile Remove="PresentationLogic\EntityMapping\LearningElement\LearningElementMapperUt.cs" />
+      <Compile Remove="PresentationLogic\EntityMapping\LearningElement\LearningContentMapperUt.cs" />
+      <Compile Remove="PresentationLogic\EntityMapping\LearningElement\H5PTestElementMapperUt.cs" />
+    </ItemGroup>
+
 </Project>

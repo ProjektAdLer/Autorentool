@@ -11,8 +11,6 @@ using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
-using Presentation.PresentationLogic.EntityMapping;
-using Presentation.PresentationLogic.EntityMapping.LearningElementMapper;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
@@ -47,7 +45,6 @@ public class Startup
         ConfigureGenerator(services);
         ConfigureDataAccess(services);
         ConfigureToolbox(services);
-        ConfigureMappers(services);
         ConfigureUtilities(services);
         ConfigureAutoMapper(services);
 
@@ -126,22 +123,6 @@ public class Startup
         services.AddSingleton(p =>
             (ILearningSpacePresenterToolboxInterface)p.GetService(typeof(ILearningSpacePresenter))!);
     }
-
-    private static void ConfigureMappers(IServiceCollection services)
-    {
-        services.AddSingleton<ILearningElementMapper, LearningElementMapper>();
-        services.AddSingleton<IImageTransferElementMapper, ImageTransferElementMapper>();
-        services.AddSingleton<IVideoTransferElementMapper, VideoTransferElementMapper>();
-        services.AddSingleton<IPdfTransferElementMapper, PdfTransferElementMapper>();
-        services.AddSingleton<IVideoActivationElementMapper, VideoActivationElementMapper>();
-        services.AddSingleton<IH5PActivationElementMapper, H5PActivationElementMapper>();
-        services.AddSingleton<IH5PInteractionElementMapper, H5PInteractionElementMapper>();
-        services.AddSingleton<IH5PTestElementMapper, H5PTestElementMapper>();
-        services.AddSingleton<ILearningSpaceMapper, LearningSpaceMapper>();
-        services.AddSingleton<ILearningWorldMapper, LearningWorldMapper>();
-        services.AddSingleton<ILearningContentMapper, LearningContentMapper>();
-        services.AddSingleton<IEntityMapping, EntityMapping>();
-    }
     
     private static void ConfigureAutoMapper(IServiceCollection services)
     {
@@ -151,7 +132,7 @@ public class Startup
         });
         
         var mapper = config.CreateMapper();
-        services.AddSingleton<IMapper>(mapper);
+        services.AddSingleton(mapper);
     }
 
     private static void ConfigureUtilities(IServiceCollection services)

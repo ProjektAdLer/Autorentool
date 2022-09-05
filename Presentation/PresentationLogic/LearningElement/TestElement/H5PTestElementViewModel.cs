@@ -6,6 +6,13 @@ namespace Presentation.PresentationLogic.LearningElement.TestElement;
 public class H5PTestElementViewModel : TestElementViewModel
 {
     /// <summary>
+    /// Private Constructor for AutoMapper
+    /// </summary>
+    private H5PTestElementViewModel() : base()
+    {
+    }
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="H5PTestElementViewModel"/> class.
     /// </summary>
     public H5PTestElementViewModel(string name, string shortname, ILearningElementViewModelParent? parent,
