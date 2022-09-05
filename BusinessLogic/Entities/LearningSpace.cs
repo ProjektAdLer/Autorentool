@@ -2,6 +2,10 @@
 
 public class LearningSpace : ILearningSpace, IOriginator
 {
+    private LearningSpace()
+    {
+        
+    }
     public LearningSpace(string name, string shortname, string authors, string description,
         string goals, List<LearningElement>? learningElements = null, double positionX = 0, double positionY = 0)
     {

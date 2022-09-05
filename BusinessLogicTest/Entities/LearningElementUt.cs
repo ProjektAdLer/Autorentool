@@ -21,7 +21,7 @@ public class LearningElementUt
         var positionX = 5f;
         var positionY = 21f;
 
-        var systemUnderTest = new LearningElement(name, shortname, content, authors, description, goals, difficulty, workload, positionX, positionY);
+        var systemUnderTest = new LearningElement(name, shortname, content, authors, description, goals, difficulty, null, workload, positionX, positionY);
         
         Assert.Multiple(() =>
         {

@@ -2,6 +2,10 @@ namespace BusinessLogic.Entities;
 
 public class AuthoringToolWorkspace : IOriginator
 {
+    private AuthoringToolWorkspace()
+    {
+        
+    }
     public AuthoringToolWorkspace(LearningWorld? selectedLearningWorld, List<LearningWorld> learningWorlds)
     {
         SelectedLearningWorld = selectedLearningWorld;

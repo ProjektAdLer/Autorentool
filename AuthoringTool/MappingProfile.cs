@@ -19,6 +19,7 @@ public class MappingProfile : Profile
 {
     public MappingProfile()
     {
+        DisableConstructorMapping();
         CreateViewModelEntityMaps();
         CreatePersistEntityMaps();
     }
@@ -27,13 +28,6 @@ public class MappingProfile : Profile
     {
         CreateMap<AuthoringToolWorkspaceViewModel, AuthoringToolWorkspace>().ReverseMap();
         CreateMap<LearningWorld, LearningWorldViewModel>()
-            .BeforeMap((s, d) =>
-            {
-                foreach (var element in s.LearningElements)
-                {
-                    element.Parent = null;
-                }
-            })
             .ForMember(x => x.LearningObjects, opt => opt.Ignore())
             .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
             .ForMember(x => x.ShowingLearningSpaceView, opt => opt.Ignore())
@@ -44,16 +38,7 @@ public class MappingProfile : Profile
                     element.Parent = d;
                 }
             })
-            // .ReverseMap()
-            ;
-        CreateMap<LearningWorldViewModel, LearningWorld>()
-            .BeforeMap((s, d) =>
-            {
-                foreach (var element in s.LearningElements)
-                {
-                    element.Parent = null;
-                }
-            })
+            .ReverseMap()
             .AfterMap((s, d) =>
             {
                 foreach (var element in d.LearningElements)
@@ -61,14 +46,8 @@ public class MappingProfile : Profile
                     element.Parent = d;
                 }
             });
+
         CreateMap<LearningSpace, LearningSpaceViewModel>()
-            .BeforeMap((s, d) =>
-            {
-                foreach (var element in s.LearningElements)
-                {
-                    element.Parent = null;
-                }
-            })
             .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
@@ -77,16 +56,7 @@ public class MappingProfile : Profile
                     element.Parent = d;
                 }
             })
-            // .ReverseMap()
-            ;
-        CreateMap<LearningSpaceViewModel, LearningSpace>()
-            .BeforeMap((s, d) =>
-            {
-                foreach (var element in s.LearningElements)
-                {
-                    element.Parent = null;
-                }
-            })
+            .ReverseMap()
             .AfterMap((s, d) =>
             {
                 foreach (var element in d.LearningElements)
@@ -94,10 +64,11 @@ public class MappingProfile : Profile
                     element.Parent = d;
                 }
             });
+            
         CreateMap<LearningElement, LearningElementViewModel>()
-            .BeforeMap((s, d) => s.Parent = null)
             .ForMember(x => x.Parent, opt => opt.Ignore())
-            .ReverseMap();
+            .ReverseMap()
+            .ForMember(x => x.Parent, opt => opt.Ignore());
         CreateMap<LearningContent, LearningContentViewModel>().ReverseMap();
 
         CreateMap<H5PActivationElement, H5PActivationElementViewModel>()

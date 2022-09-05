@@ -190,18 +190,15 @@ public class MappingProfileUt
 
 
     [Test]
-    public void MapLearningWorldLearningWorldViewModel_TestMappingIsValid()
+    public void MapLearningWorldAndLearningWorldViewModel_WithElement_WithParentSet_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
 
-        var learningElement = new LearningElement(Name, Shortname, new LearningContent("", "", Array.Empty<byte>()),
-            "a", "d",
-            "g",
-            LearningElementDifficultyEnum.Easy, null);
-        var learningElements = new List<LearningElement> {learningElement};
+        var learningElements = new List<LearningElement>();
         var learningSpaces = new List<LearningSpace>();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, learningElements,
             learningSpaces);
+        source.LearningElements.Add(GetTestableElementWithParent(source));
         var destination = new LearningWorldViewModel("", "", "", "", "", "", false,
             new List<ILearningElementViewModel>(), new List<ILearningSpaceViewModel>());
 

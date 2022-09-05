@@ -2,6 +2,10 @@
 
 public class LearningWorld : ILearningWorld, IOriginator
 {
+    private LearningWorld()
+    {
+        
+    }
     public LearningWorld(string name, string shortname, string authors, string language, string description,
         string goals, List<LearningElement>? learningElements = null,
         List<LearningSpace>? learningSpaces = null)
