@@ -44,6 +44,7 @@ public class EditLearningSpace : IUndoCommand
             space.PositionX, space.PositionY);
         
         _learningWorld.LearningSpaces.Add(editedSpace);
+        _learningWorld.SelectedLearningObject = editedSpace;
         
         _mappingAction.Invoke(_learningWorld);
     }

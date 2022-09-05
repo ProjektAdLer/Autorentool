@@ -32,6 +32,7 @@ public class CreateLearningSpace : IUndoCommand
         var learningSpace = new LearningSpace(_name, _shortname, _authors, _description, _goals);
         
         _learningWorld.LearningSpaces.Add(learningSpace);
+        _learningWorld.SelectedLearningObject = learningSpace;
         
         _mappingAction.Invoke(_learningWorld);
     }

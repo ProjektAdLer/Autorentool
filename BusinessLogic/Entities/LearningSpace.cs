@@ -1,6 +1,6 @@
 ﻿namespace BusinessLogic.Entities;
 
-public class LearningSpace : ILearningSpace, IOriginator
+public class LearningSpace : ILearningSpace, IOriginator, ILearningObject
 {
     private LearningSpace()
     {

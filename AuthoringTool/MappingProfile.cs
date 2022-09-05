@@ -29,7 +29,6 @@ public class MappingProfile : Profile
         CreateMap<AuthoringToolWorkspaceViewModel, AuthoringToolWorkspace>().ReverseMap();
         CreateMap<LearningWorld, LearningWorldViewModel>()
             .ForMember(x => x.LearningObjects, opt => opt.Ignore())
-            .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
             .ForMember(x => x.ShowingLearningSpaceView, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
@@ -97,6 +96,21 @@ public class MappingProfile : Profile
             .As<LearningElementViewModel>();
         CreateMap<LearningSpace, ILearningSpaceViewModel>()
             .As<LearningSpaceViewModel>();
+
+        CreateMap<ILearningObject,ILearningObjectViewModel>()
+            .ReverseMap();
+        CreateMap<LearningElement, ILearningObjectViewModel>()
+            .IncludeBase<ILearningObject, ILearningObjectViewModel>()
+            .As<LearningElementViewModel>();
+        CreateMap<LearningSpace, ILearningObjectViewModel>()
+            .IncludeBase<ILearningObject, ILearningObjectViewModel>()
+            .As<LearningSpaceViewModel>();
+        CreateMap<LearningElementViewModel, ILearningObject>()
+            .IncludeBase<ILearningObjectViewModel, ILearningObject>()
+            .As<LearningElement>();
+        CreateMap<LearningSpaceViewModel, ILearningObject>()
+            .IncludeBase<ILearningObjectViewModel, ILearningObject>()
+            .As<LearningSpace>();
 
         CreateMap<ILearningElementParent, ILearningElementViewModelParent>()
             .ReverseMap();

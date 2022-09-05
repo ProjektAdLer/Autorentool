@@ -2,7 +2,7 @@ using LearningElementDifficultyEnum = Shared.LearningElementDifficultyEnum;
 
 namespace BusinessLogic.Entities;
 
-public class LearningElement : ILearningElement, IOriginator
+public class LearningElement : ILearningElement, IOriginator, ILearningObject
 {
     /// <summary>
     /// Protected Constructor for AutoMapper

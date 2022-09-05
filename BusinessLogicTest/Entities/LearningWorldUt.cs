@@ -25,7 +25,7 @@ public class LearningWorldUt
         var learningSpaces = new List<LearningSpace> { space1 };
 
         var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals,
-            learningElements, learningSpaces);
+            learningElements, learningSpaces, ele1);
         
         Assert.Multiple(() =>
         {
@@ -37,6 +37,7 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.LearningElements, Is.EqualTo(learningElements));
             Assert.That(systemUnderTest.LearningSpaces, Is.EqualTo(learningSpaces));
+            Assert.That(systemUnderTest.SelectedLearningObject, Is.EqualTo(ele1));
         });
     }
     
@@ -57,7 +58,7 @@ public class LearningWorldUt
         var space1 = new LearningSpace("ff", "ff", "ff", "ff", "ff");
         var learningSpaces = new List<LearningSpace> { space1 };
         
-        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, learningElements, learningSpaces);
+        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, learningElements, learningSpaces, ele1);
 
         var learningWorldMemento = systemUnderTest.GetMemento();
         
@@ -81,6 +82,7 @@ public class LearningWorldUt
         systemUnderTest.LearningElements.Remove(ele2);
         systemUnderTest.LearningElements.Add(newEle2);
         systemUnderTest.LearningSpaces.Add(space2);
+        systemUnderTest.SelectedLearningObject = ele2;
         
 
         Assert.Multiple(() =>
@@ -97,6 +99,7 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.LearningSpaces, Has.Count.EqualTo(2));
             Assert.That(systemUnderTest.LearningSpaces[0], Is.EqualTo(space1));
             Assert.That(systemUnderTest.LearningSpaces[1], Is.EqualTo(space2));
+            Assert.That(systemUnderTest.SelectedLearningObject, Is.EqualTo(ele2));
         });
         
         systemUnderTest.RestoreMemento(learningWorldMemento);
@@ -114,6 +117,7 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.LearningElements[1], Is.EqualTo(ele2));
             Assert.That(systemUnderTest.LearningSpaces, Has.Count.EqualTo(1));
             Assert.That(systemUnderTest.LearningSpaces[0], Is.EqualTo(space1));
+            Assert.That(systemUnderTest.SelectedLearningObject, Is.EqualTo(ele1));
         });
     }
 

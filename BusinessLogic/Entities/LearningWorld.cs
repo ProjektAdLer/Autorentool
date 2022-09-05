@@ -8,7 +8,7 @@ public class LearningWorld : ILearningWorld, IOriginator
     }
     public LearningWorld(string name, string shortname, string authors, string language, string description,
         string goals, List<LearningElement>? learningElements = null,
-        List<LearningSpace>? learningSpaces = null)
+        List<LearningSpace>? learningSpaces = null, ILearningObject? selectedLearningObject = null)
     {
         Name = name;
         Shortname = shortname;
@@ -18,11 +18,13 @@ public class LearningWorld : ILearningWorld, IOriginator
         Goals = goals;
         LearningElements = learningElements ?? new List<LearningElement>();
         LearningSpaces = learningSpaces ?? new List<LearningSpace>();
+        SelectedLearningObject = selectedLearningObject;
         UnsavedChanges = false;
     }
 
     public List<LearningElement> LearningElements { get; set; }
     public List<LearningSpace> LearningSpaces { get; set; }
+    public ILearningObject? SelectedLearningObject { get; set; }
     public string Name { get; set; }
     public string Shortname { get; set; }
     public string Authors { get; set; }
@@ -35,7 +37,7 @@ public class LearningWorld : ILearningWorld, IOriginator
     public IMemento GetMemento()
     {
         return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, LearningElements,
-            LearningSpaces);
+            LearningSpaces, SelectedLearningObject);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -52,13 +54,14 @@ public class LearningWorld : ILearningWorld, IOriginator
         Goals = learningWorldMemento.Goals;
         LearningElements = learningWorldMemento.LearningElements;
         LearningSpaces = learningWorldMemento.LearningSpaces;
+        SelectedLearningObject = learningWorldMemento.SelectedLearningObject;
     }
 
     private record LearningWorldMemento : IMemento
     {
         internal LearningWorldMemento(string name, string shortname, string authors, string language,
-            string description,
-            string goals, List<LearningElement> learningElements, List<LearningSpace> learningSpaces)
+            string description, string goals, List<LearningElement> learningElements,
+            List<LearningSpace> learningSpaces, ILearningObject? selectedLearningObject)
         {
             Name = name;
             Shortname = shortname;
@@ -68,10 +71,12 @@ public class LearningWorld : ILearningWorld, IOriginator
             Goals = goals;
             LearningElements = learningElements.ToList();
             LearningSpaces = learningSpaces.ToList();
+            SelectedLearningObject = selectedLearningObject;
         }
 
         internal List<LearningElement> LearningElements { get; }
         internal List<LearningSpace> LearningSpaces { get;  }
+        internal ILearningObject? SelectedLearningObject { get; }
         internal string Name { get; }
         internal string Shortname { get; }
         internal string Authors { get; }
