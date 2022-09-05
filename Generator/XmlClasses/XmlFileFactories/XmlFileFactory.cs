@@ -123,6 +123,8 @@ public class XmlFileFactory : IXmlFileFactory
     }
     public void FileSetParametersFilesXml(string hashCheckSum, string filesize)
     {
+        //Let this Null-Check in, otherwise a Unit-Test will fail
+        if(FilesXmlFilesList == null){ FilesXmlFilesList = new List<FilesXmlFile>();}
         var file1 = new FilesXmlFile
         {
             Id = XmlEntityManager.GetFileIdBlock1().ToString(),

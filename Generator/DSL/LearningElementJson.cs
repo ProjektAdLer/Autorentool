@@ -30,5 +30,5 @@ public class LearningElementJson : ILearningElementJson
     
     // requirements are needed to describe the Path of the Topic, Space and element. 
     // it is a list of topics, spaces or elements that need to be completed, before a particular element can be started
-    public List<RequirementJson>? Requirements { get; set; }
+    public List<RequirementJson>? Requirements { get; }
 }

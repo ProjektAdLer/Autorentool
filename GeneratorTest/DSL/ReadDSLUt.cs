@@ -1,5 +1,6 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
 using Generator.DSL;
+using NSubstitute;
 using NUnit.Framework;
 using PersistEntities;
 
@@ -92,20 +93,17 @@ public class ReadDslUt
         //Assert
         var getLearningWorldJson = systemUnderTest.GetLearningWorld();
         var getH5PElementsList = systemUnderTest.GetH5PElementsList();
+
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.ListH5PElements, Is.Not.Null);
-            //Assert.That(h5PElementsList, Is.Not.Null);
             Assert.That(learningWorldJson, Is.Not.Null);
-        });
-        Assert.Multiple(() =>
-        {
-            Assert.That(systemUnderTest.ListH5PElements!, Has.Count.EqualTo(1));
-            Assert.That(getLearningWorldJson!.LearningElements, Is.Not.Null);
+            Assert.That(systemUnderTest.ListH5PElements, Has.Count.EqualTo(1));
+            Assert.That(getLearningWorldJson.LearningElements, Is.Not.Null);
             Assert.That(getLearningWorldJson.LearningSpaces, Is.Not.Null);
-            Assert.That(getLearningWorldJson.LearningElements!, Has.Count.EqualTo(learningElementList.Count));
-            Assert.That(getLearningWorldJson.LearningSpaces!, Has.Count.EqualTo(learningSpacesList.Count));
-            Assert.That(getH5PElementsList!, Has.Count.EqualTo(1));
+            Assert.That(getLearningWorldJson.LearningElements, Has.Count.EqualTo(learningElementList.Count));
+            Assert.That(getLearningWorldJson.LearningSpaces, Has.Count.EqualTo(learningSpacesList.Count));
+            Assert.That(getH5PElementsList, Has.Count.EqualTo(1));
             Assert.That(listSpace.Count, Is.EqualTo(2));
             Assert.That(listDslDocument.Count, Is.EqualTo(1));
         });
