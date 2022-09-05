@@ -37,25 +37,32 @@ public class CreateDslUt
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals,
             learningElements, learningSpaces);
 
-        var createDsl = GetCreateDslForTest(mockFileSystem);
+        var systemUnderTest = new CreateDsl(mockFileSystem);
         
         var allLearningElements = new List<LearningElementPe> { ele3, ele1, ele2 };
-       
+
         //Act
-        createDsl.WriteLearningWorld(learningWorld);
+        systemUnderTest.WriteLearningWorld(learningWorld);
         
         //Assert
         var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "DSL_Document.json");
+        
         Assert.Multiple(() =>
         {
+            Assert.That(systemUnderTest.Uuid, Is.Not.Null);
+            Assert.That(systemUnderTest.LearningWorldJson, Is.Not.Null);
+            Assert.That(systemUnderTest.LearningWorldJson.Identifier.Value, Is.EqualTo(name));
+            
+            Assert.That(systemUnderTest.ListLearningElements, Is.EquivalentTo(allLearningElements));
+            
+            //Because SpaceId=0 is automatically created and has all elements free in the learning world. 
+            Assert.That(systemUnderTest.ListLearningSpaces, Has.Count.EqualTo(3));
+            Assert.That(systemUnderTest.ListLearningSpaces[0].Name, Is.EqualTo("Freie Lernelemente"));
+            Assert.That(systemUnderTest.LearningWorldJson.LearningElements[0].Identifier.Value, Is.EqualTo("DSL Dokument"));
+
+
             Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
         });
     }
-
-    private CreateDsl GetCreateDslForTest(IFileSystem? fileSystem = null)
-    {
-        fileSystem ??= new MockFileSystem();
-
-        return new CreateDsl(fileSystem);
-    }
+    
 }

@@ -66,6 +66,12 @@ public class XmlBackupFactoryUt
         var mockLearningElement = new LearningElementJson(1, mockIdentifier, "h5p",0);
         List<LearningElementJson> learningElementJsons = new List<LearningElementJson>();
         learningElementJsons.Add(mockLearningElement);
+        
+        var mockLearningSpaceContent = new List<int>();
+        mockLearningSpaceContent.Add(mockLearningElement.Id);
+        var mockLearningSpace = new LearningSpaceJson(1, "Space_Name",mockIdentifier, mockLearningSpaceContent);
+        List<LearningSpaceJson> learningSpacesJsons = new List<LearningSpaceJson>();
+        learningSpacesJsons.Add(mockLearningSpace);
 
         var mockDslDocumentJson = new LearningElementJson(2, mockIdentifier, "json",0);
         mockDslDocument.Add(mockDslDocumentJson);
@@ -73,6 +79,7 @@ public class XmlBackupFactoryUt
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
         mockReadDsl.GetH5PElementsList().Returns(learningElementJsons);
         mockReadDsl.GetDslDocumentList().Returns(mockDslDocument);
+        mockReadDsl.GetLearningSpaceList().Returns(learningSpacesJsons);
         
         var mockOutcomes = Substitute.For<IOutcomesXmlOutcomesDefinition>();
         
@@ -254,13 +261,21 @@ public class XmlBackupFactoryUt
         var mockLearningElement = new LearningElementJson(1, mockIdentifier, "h5p",0);
         List<LearningElementJson> learningElementJsons = new List<LearningElementJson>();
         learningElementJsons.Add(mockLearningElement);
+        
+        var mockLearningSpaceContent = new List<int>();
+        mockLearningSpaceContent.Add(mockLearningElement.Id);
+        var mockLearningSpace = new LearningSpaceJson(1, "Space_Name",mockIdentifier, mockLearningSpaceContent);
+        List<LearningSpaceJson> learningSpacesJsons = new List<LearningSpaceJson>();
+        learningSpacesJsons.Add(mockLearningSpace);
 
+        
         var mockDslDocumentJson = new LearningElementJson(2, mockIdentifier, "json",0);
         mockDslDocument.Add(mockDslDocumentJson);
 
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
         mockReadDsl.GetH5PElementsList().Returns(learningElementJsons);
         mockReadDsl.GetDslDocumentList().Returns(mockDslDocument);
+        mockReadDsl.GetLearningSpaceList().Returns(learningSpacesJsons);
         
         var systemUnderTest = new XmlBackupFactory(mockReadDsl, moodleBackupXmlDetail: mockDetail, moodleBackupXmlDetails: mockDetails,
             moodleBackupXmlSetting: mockSetting, moodleBackupXmlContents: mockContents,

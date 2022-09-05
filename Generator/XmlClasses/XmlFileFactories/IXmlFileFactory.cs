@@ -38,6 +38,6 @@ public interface IXmlFileFactory
     /// Creates a Resource folder in the activity folder. Each activity needs an folder.
     /// </summary>
     /// <param name="moduleId"></param>
-    void CreateActivityFolder(string? moduleId);
+    void CreateActivityFolder(string moduleId);
 
 }

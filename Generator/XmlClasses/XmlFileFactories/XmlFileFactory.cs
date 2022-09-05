@@ -208,7 +208,7 @@ public class XmlFileFactory : IXmlFileFactory
      /// Creates a Resource folder in the activity folder. Each activity needs an folder.
      /// </summary>
      /// <param name="moduleId"></param>
-     public void CreateActivityFolder(string? moduleId)
+     public void CreateActivityFolder(string moduleId)
      {
          var currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
          _fileSystem.Directory.CreateDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities", "resource_"+moduleId));

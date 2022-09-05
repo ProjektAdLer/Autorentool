@@ -160,10 +160,11 @@ public class XmlFileFactoryUt
         var mockInforefInforef = Substitute.For<IActivitiesInforefXmlInforef>();
 
         // Act
-        var systemUnderTest = new XmlFileFactory(mockReadDsl, "", mockFileManager, mockFileSystem, mockGradesGradeItem, 
-            mockGradesGradeItems, mockGradesGradebook, mockFileResource, mockFileResourceActivity, mockRoles, mockModule,
-            mockGradehistory, mockInforefFile, mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref, mockInforefInforef);
-        systemUnderTest.FileElementId = "1";
+        var systemUnderTest = new XmlFileFactory(mockReadDsl, "", mockFileManager, mockFileSystem, mockGradesGradeItem,
+            mockGradesGradeItems, mockGradesGradebook, mockFileResource, mockFileResourceActivity, mockRoles,
+            mockModule, mockGradehistory, mockInforefFile, mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref,
+            mockInforefInforef);
+
         systemUnderTest.FileSetParametersActivity();
         // Assert
         Assert.Multiple(() =>
@@ -182,8 +183,8 @@ public class XmlFileFactoryUt
             systemUnderTest.ActivitiesRolesXmlRoles.Received().Serialize("resource", systemUnderTest.FileElementId);
             
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.ModuleName, Is.EqualTo("resource"));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionId, Is.EqualTo(systemUnderTest.FileElementId));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionNumber, Is.EqualTo(systemUnderTest.FileElementId));
+            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionId, Is.EqualTo(systemUnderTest.FileElementParentSpace));
+            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionNumber, Is.EqualTo(systemUnderTest.FileElementParentSpace));
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Added, Is.EqualTo(systemUnderTest.CurrentTime));
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Id, Is.EqualTo(systemUnderTest.FileElementId));
             systemUnderTest.ActivitiesModuleXmlModule.Received().Serialize("resource", systemUnderTest.FileElementId);

@@ -1,6 +1,5 @@
 ﻿using System.IO.Abstractions;
 using System.Text.Json;
-using BusinessLogic.Entities;
 using Generator.WorldExport;
 using PersistEntities;
 
@@ -8,11 +7,12 @@ namespace Generator.DSL;
 
 public class CreateDsl : ICreateDsl
 {
-    private readonly List<LearningElementPe> _listLearningElements;
-    private readonly List<LearningSpacePe> _listLearningSpaces;
+    public readonly List<LearningElementPe> ListLearningElements;
+    public readonly List<LearningSpacePe> ListLearningSpaces;
+    public LearningWorldJson? LearningWorldJson;
     private List<int> _listLearningSpaceContent;
     private readonly IFileSystem _fileSystem;
-    private readonly string _uuid;
+    public readonly string Uuid;
 
     /// <summary>
     /// Read the AuthoringToolLib Entities and create a Dsl Document with a specified syntax.
@@ -21,11 +21,11 @@ public class CreateDsl : ICreateDsl
     public CreateDsl(IFileSystem fileSystem)
     {
         _fileSystem = fileSystem;
-        _listLearningElements = new List<LearningElementPe>();
-        _listLearningSpaces = new List<LearningSpacePe>();
+        ListLearningElements = new List<LearningElementPe>();
+        ListLearningSpaces = new List<LearningSpacePe>();
         _listLearningSpaceContent = new List<int>();
         Guid guid = Guid.NewGuid();
-        _uuid = guid.ToString();
+        Uuid = guid.ToString();
     }
     
     /// <summary>
@@ -36,23 +36,23 @@ public class CreateDsl : ICreateDsl
     {
         
         //Initialise learningWorldJson with empty values, will be filled with information later in the method.
-        var learningWorldJson = new LearningWorldJson(_uuid, new IdentifierJson("name", learningWorld.Name), new List<int>(),
+        LearningWorldJson = new LearningWorldJson(Uuid, new IdentifierJson("name", learningWorld.Name), new List<int>(),
             new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>());
 
         // All learningElements that have no learningSpace are added to the learningWorld (With the LearningSpaceParentId=0)
-        LearningSpacePe learningWorldElements = new LearningSpacePe("Freie Lernelemente", "FEE", "Dimitri",
+        var learningWorldElements = new LearningSpacePe("Freie Lernelemente", "FEE", "Dimitri",
             "Diese Lernelemente sind keinem Lernraum zugeordnet", "", learningWorld.LearningElements,1,1);
-        _listLearningSpaces.Add(learningWorldElements);
+        ListLearningSpaces.Add(learningWorldElements);
         
         // Create Learning Spaces & fill into Learning World
         // The learningSpaceId defines what the starting Id for Spaces should be. 
         // Search for Learning Elements in Spaces and add to listLearningElements
-        if (learningWorld.LearningSpaces != null) _listLearningSpaces.AddRange(learningWorld.LearningSpaces);
+        if (learningWorld.LearningSpaces != null) ListLearningSpaces.AddRange(learningWorld.LearningSpaces);
         
         int learningSpaceId = 0;
         // Starts with 2, because the DSL Document always has Element ID = 1. Therefore all other elements have to start with 2.
         int learningSpaceElementId = 2;
-        foreach (var learningSpace in _listLearningSpaces)
+        foreach (var learningSpace in ListLearningSpaces)
         {
             _listLearningSpaceContent = new List<int>();
             IdentifierJson learningSpaceIdentifier = new IdentifierJson("name", learningSpace.Name);
@@ -62,7 +62,7 @@ public class CreateDsl : ICreateDsl
             {
                 IdentifierJson dslDocumentIdentifier = new IdentifierJson("FileName", "DSL Dokument");
                 LearningElementJson dslDocumentJson = new LearningElementJson(1, dslDocumentIdentifier, "json", 0);
-                learningWorldJson.LearningElements.Add(dslDocumentJson);
+                LearningWorldJson.LearningElements.Add(dslDocumentJson);
                 _listLearningSpaceContent.Add(1);
             }
             //Searching for Learning Elements in each Space
@@ -71,16 +71,16 @@ public class CreateDsl : ICreateDsl
                 IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", element.Name);
                 LearningElementJson learningElementJson = new LearningElementJson(learningSpaceElementId,
                     learningElementIdentifier, element.LearningContent.Type, learningSpaceId);
-                _listLearningElements.Add(element);
+                ListLearningElements.Add(element);
                 //int elementIndex = ListLearningElements.IndexOf(element) + 1;
                 _listLearningSpaceContent.Add(learningSpaceElementId);
                 learningSpaceElementId++;
-                learningWorldJson.LearningElements.Add(learningElementJson);
+                LearningWorldJson.LearningElements.Add(learningElementJson);
             }
 
             
             // Add Learning Space to Learning World
-            learningWorldJson.LearningSpaces.Add(new LearningSpaceJson(learningSpaceId, learningSpace.Name,
+            LearningWorldJson.LearningSpaces.Add(new LearningSpaceJson(learningSpaceId, learningSpace.Name,
                 learningSpaceIdentifier, _listLearningSpaceContent));
 
             learningSpaceId++;
@@ -89,7 +89,7 @@ public class CreateDsl : ICreateDsl
         // Create DocumentRoot & JSON Document
         // And add the learningWorldJson to the DocumentRoot
         // The structure of the DSL needs DocumentRoot, because the learningWorld has its own tag
-        DocumentRootJson rootJson = new DocumentRootJson(learningWorldJson);
+        DocumentRootJson rootJson = new DocumentRootJson(LearningWorldJson);
 
         var options = new JsonSerializerOptions { WriteIndented = true };
         var jsonFile = JsonSerializer.Serialize(rootJson,options);
@@ -100,7 +100,7 @@ public class CreateDsl : ICreateDsl
         
         //All LearningElements are created at the specified location = Easier access to files in further Export-Operations.
         //After the files are added to the Backup-Structure, these Files will be deleted.
-        foreach (var learningElement in _listLearningElements)
+        foreach (var learningElement in ListLearningElements)
         {
             _fileSystem.File.WriteAllBytes(_fileSystem.Path.Join("XMLFilesForExport", learningElement.Name), learningElement.LearningContent.Content);
         }

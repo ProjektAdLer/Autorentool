@@ -26,7 +26,7 @@ public class XmlH5PFactory : IXmlH5PFactory
     private List<FilesXmlFile> _filesXmlFilesList;
     private List<ActivitiesInforefXmlFile> _activitiesInforefXmlFileList;
 
-    public IXmlFileManager FileManager;
+    public readonly IXmlFileManager FileManager;
     public IFilesXmlFiles FilesXmlFiles { get; }
     public IFilesXmlFile FilesXmlFileBlock1 { get; }
     public IFilesXmlFile FilesXmlFileBlock2 { get; }

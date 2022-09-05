@@ -26,6 +26,8 @@ public class XmlEntityManagerUt
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport"));
         mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "course"));
+        mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XmlFilesForExport", "sections"));
+        mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XmlFilesForExport", "sections", "section_1"));
         
         mockReadDsl.GetDslDocumentList().Returns(new List<LearningElementJson>());
         mockReadDsl.GetH5PElementsList().Returns(new List<LearningElementJson>());
@@ -55,8 +57,9 @@ public class XmlEntityManagerUt
         learningElementJson_2.LearningElementValue = learningElementValueList_2;
         var learningElementList = new List<LearningElementJson>(){learningElementJson_1, learningElementJson_2};
         var learningWorldJson = new LearningWorldJson("uuid", identifierLearningWorldJson, learningWorldContentJson, topicsList, learningSpacesList, learningElementList);
-
+        
         mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
+        mockReadDsl.GetLearningSpaceList().Returns(learningSpacesList);
         
         // Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;

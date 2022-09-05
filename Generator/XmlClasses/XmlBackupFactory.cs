@@ -1,5 +1,4 @@
-﻿using System.IO.Abstractions;
-using Generator.DSL;
+﻿using Generator.DSL;
 using Generator.XmlClasses.Entities.Gradebook.xml;
 using Generator.XmlClasses.Entities.Groups.xml;
 using Generator.XmlClasses.Entities.MoodleBackup.xml;
@@ -220,7 +219,6 @@ public class XmlBackupFactory : IXmlBackupFactory
     {
         //set the parameter of the moodle_backup.xml file
         MoodleBackupXmlDetails.Detail = MoodleBackupXmlDetail as MoodleBackupXmlDetail ?? new MoodleBackupXmlDetail();
-
 
         MoodleBackupXmlCourse.Title = _learningWorld.Identifier.Value;
 
