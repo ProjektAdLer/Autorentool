@@ -187,21 +187,18 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void CreateNewLearningSpace_CallsLearningSpacePresenter()
+    public void CreateNewLearningSpace_CallsPresentationLogic()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
-        learningSpacePresenter.CreateNewLearningSpace(Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(
-            new LearningSpaceViewModel("foo", "bar", "foo", "bar", "baz"));
+        var presentationLogic = Substitute.For<IPresentationLogic>();
 
-        var systemUnderTest = CreatePresenterForTesting(learningSpacePresenter: learningSpacePresenter);
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         systemUnderTest.SetLearningWorld(null, world);
 
         systemUnderTest.CreateNewLearningSpace("foo", "bar", "foo", "bar", "foo");
 
-        learningSpacePresenter.Received().CreateNewLearningSpace(Arg.Any<string>(), Arg.Any<string>(),
+        presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
     }
 
@@ -304,21 +301,14 @@ public class LearningWorldPresenterUt
     [Test]
     public void CreateNewLearningSpace_AddsLearningSpaceToViewModel()
     {
-        var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>(); //new LearningSpacePresenter();
-        learningSpacePresenter
-            .CreateNewLearningSpace(Arg.Any<String>(), Arg.Any<String>(), Arg.Any<String>(), Arg.Any<String>(),
-                Arg.Any<String>()).Returns(args =>
-                new LearningSpaceViewModel((String) args[0], (String) args[1], (String) args[2], (String) args[3],
-                    (String) args[4]));
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
 
-        var systemUnderTest = CreatePresenterForTesting( //workspaceVm,
-            learningSpacePresenter: learningSpacePresenter);
-
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        systemUnderTest.SetLearningWorld(null, world);
         Assert.IsEmpty(world.LearningSpaces);
 
-        systemUnderTest.SetLearningWorld(null, world);
         systemUnderTest.CreateNewLearningSpace("foo", "bar", "foo", "bar", "foo");
 
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
@@ -455,12 +445,9 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void OnCreateSpaceDialogClose_CallsLearningSpacePresenter()
+    public void OnCreateSpaceDialogClose_CallsPresentationLogic()
     {
-        var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
-        learningSpacePresenter.CreateNewLearningSpace(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-                Arg.Any<string>(), Arg.Any<string>())
-            .Returns(new LearningSpaceViewModel("ba", "ba", "ba", "ba", "ba"));
+        var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
 
@@ -474,13 +461,13 @@ public class LearningWorldPresenterUt
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
-        var systemUnderTest = CreatePresenterForTesting(learningSpacePresenter: learningSpacePresenter);
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         systemUnderTest.SetLearningWorld(null, world);
 
 
         systemUnderTest.OnCreateSpaceDialogClose(returnValueTuple);
 
-        learningSpacePresenter.Received().CreateNewLearningSpace("n", "sn", "a", "d", "g");
+        presentationLogic.Received().CreateLearningSpace(world, "n", "sn", "a", "d", "g");
     }
 
     [Test]
@@ -1137,12 +1124,9 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void OnEditSpaceDialogClose_CallsLearningSpacePresenter()
+    public void OnEditSpaceDialogClose_PresentationLogic()
     {
-        var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
-        learningSpacePresenter.EditLearningSpace(Arg.Any<LearningSpaceViewModel>(), Arg.Any<string>(),
-                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>())
-            .Returns(new LearningSpaceViewModel("ba", "ba", "ba", "ba", "ba"));
+        var presentaionLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var space = new LearningSpaceViewModel("foo", "bar", "foo", "bar", "foo");
@@ -1158,14 +1142,14 @@ public class LearningWorldPresenterUt
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
-        var systemUnderTest = CreatePresenterForTesting(learningSpacePresenter: learningSpacePresenter);
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentaionLogic);
         systemUnderTest.SetLearningWorld(null, world);
         world.SelectedLearningObject = space;
 
 
         systemUnderTest.OnEditSpaceDialogClose(returnValueTuple);
 
-        learningSpacePresenter.Received().EditLearningSpace(space, "n", "sn", "a", "d", "g");
+        presentaionLogic.Received().EditLearningSpace(world, space, "n", "sn", "a", "d", "g");
     }
     
     [Test]
