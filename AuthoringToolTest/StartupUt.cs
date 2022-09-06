@@ -2,6 +2,7 @@ using System.IO.Abstractions;
 using AuthoringTool;
 using AutoMapper;
 using BusinessLogic.API;
+using BusinessLogic.Commands;
 using DataAccess.Persistence;
 using Generator.DSL;
 using Generator.WorldExport;
@@ -139,6 +140,18 @@ public class StartupUt
     [Test]
     [TestCaseSource(nameof(ConfigureAutoMapperRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllAutoMapperServices(Type requiredType)
+    {
+        ConfigureServicesCoreTest(requiredType);
+    }
+    
+
+    private static readonly Type[] ConfigureCommandRequiredTypes =
+    {
+        typeof(ICommandStateManager)
+    };
+    [Test]
+    [TestCaseSource(nameof(ConfigureCommandRequiredTypes))]
+    public void Startup_ConfigureServices_CanResolveAllCommandServices(Type requiredType)
     {
         ConfigureServicesCoreTest(requiredType);
     }

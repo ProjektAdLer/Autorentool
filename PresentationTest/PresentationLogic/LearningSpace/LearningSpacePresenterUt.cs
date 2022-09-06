@@ -41,31 +41,6 @@ public class LearningSpacePresenterUt
         });
     }
 
-    [Test]
-    public void EditLearningSpace_EditsViewModelCorrectly()
-    {
-        var systemUnderTest = CreatePresenterForTesting();
-        ILearningSpaceViewModel space = new LearningSpaceViewModel("a", "b", "c", "d", "e");
-
-        var name = "space1";
-        var shortname = "sp";
-        var authors = "marvin";
-        var description = "room full of elements";
-        var goals = "learning";
-
-        space = systemUnderTest.EditLearningSpace(space, name, shortname, authors, description, goals);
-        
-        Assert.Multiple(() =>
-        {
-         Assert.That(space.Name, Is.EqualTo(name));   
-         Assert.That(space.Shortname, Is.EqualTo(shortname));   
-         Assert.That(space.Authors, Is.EqualTo(authors));   
-         Assert.That(space.Description, Is.EqualTo(description));   
-         Assert.That(space.Goals, Is.EqualTo(goals));   
-        });
-
-    }
-    
     #region OnEditSpaceDialogClose
     
     [Test]
@@ -101,35 +76,6 @@ public class LearningSpacePresenterUt
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditSpaceDialogClose(returnValueTuple));
         Assert.That(ex!.Message, Is.EqualTo("LearningSpaceVm is null"));
-    }
-    
-    [Test]
-    public void OnEditSpaceDialogClose_EditsLearningSpace()
-    {
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        IDictionary<string, string> dictionary = new Dictionary<string, string>();
-        dictionary["Name"] = "a";
-        dictionary["Shortname"] = "b";
-        dictionary["Authors"] = "e";
-        dictionary["Description"] = "f";
-        dictionary["Goals"] = "g";
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
-
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(space);
-
-        systemUnderTest.OnEditSpaceDialogClose(returnValueTuple);
-        Assert.Multiple(() =>
-        {
-            Assert.That(space.Name, Is.EqualTo("a"));
-            Assert.That(space.Shortname, Is.EqualTo("b"));
-            Assert.That(space.Authors, Is.EqualTo("e"));
-            Assert.That(space.Description, Is.EqualTo("f"));
-            Assert.That(space.Goals, Is.EqualTo("g"));
-        });
     }
 
     #endregion

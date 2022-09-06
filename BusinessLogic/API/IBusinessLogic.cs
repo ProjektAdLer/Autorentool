@@ -1,4 +1,5 @@
-﻿using BusinessLogic.Entities;
+﻿using BusinessLogic.Commands;
+using BusinessLogic.Entities;
 using Shared.Configuration;
 
 namespace BusinessLogic.API;
@@ -6,6 +7,12 @@ namespace BusinessLogic.API;
 public interface IBusinessLogic
 {
     IAuthoringToolConfiguration Configuration { get; }
+    
+    /// <summary>
+    /// Executes a given command.
+    /// </summary>
+    /// <param name="command">Command to be executed.</param>
+    void ExecuteCommand(ICommand command);
     void ConstructBackup(LearningWorld learningWorld, string filepath);
     void SaveLearningWorld(LearningWorld learningWorld, string filepath);
     LearningWorld LoadLearningWorld(string filepath);
