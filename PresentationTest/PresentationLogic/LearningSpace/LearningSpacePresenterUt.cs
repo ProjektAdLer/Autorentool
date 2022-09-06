@@ -42,6 +42,30 @@ public class LearningSpacePresenterUt
     }
 
     #region OnEditSpaceDialogClose
+
+    [Test]
+    public void OnEditSpaceDialogClose_CallsPresentationLogic()
+    {
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "a";
+        dictionary["Shortname"] = "b";
+        dictionary["Authors"] = "e";
+        dictionary["Description"] = "f";
+        dictionary["Goals"] = "g";
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.SetLearningSpace(space);
+        
+        systemUnderTest.OnEditSpaceDialogClose(returnValueTuple);
+        
+        presentationLogic.Received().EditLearningSpace(space, "a","b","e","f","g");
+    }
     
     [Test]
     public void OnEditSpaceDialogClose_ThrowsWhenDialogDataAreNull()
