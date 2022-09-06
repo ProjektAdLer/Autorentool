@@ -8,10 +8,7 @@ public interface ILearningSpacePresenter
     ILearningSpaceViewModel CreateNewLearningSpace(string name, string shortname, string authors, string description,
         string goals);
 
-    ILearningSpaceViewModel EditLearningSpace(ILearningSpaceViewModel space, string name, string shortname,
-        string authors, string description, string goals);
-    
-
+    void EditLearningSpace(string name, string shortname, string authors, string description, string goals);
     bool EditLearningSpaceDialogOpen { get; set; }
     IDictionary<string, string> EditLearningSpaceDialogInitialValues { get; }
     bool EditLearningElementDialogOpen { get; set; }

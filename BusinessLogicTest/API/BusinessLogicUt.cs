@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BusinessLogic.API;
+using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using NSubstitute;
 using NUnit.Framework;
@@ -38,6 +39,19 @@ public class BusinessLogicUt
         systemUnderTest.ConstructBackup(null!, "foobar");
 
         mockWorldGenerator.Received().ConstructBackup(null!, "foobar");
+    }
+
+    [Test]
+    public void ExecuteCommand_CallsCommandStateManager()
+    {
+        var mockCommandStateManager = Substitute.For<ICommandStateManager>();
+        var mockCommand = Substitute.For<ICommand>();
+        
+        var systemUnderTest = CreateStandardBusinessLogic(commandStateManager: mockCommandStateManager);
+        
+        systemUnderTest.ExecuteCommand(mockCommand);
+        
+        mockCommandStateManager.Received().Execute(mockCommand);
     }
 
     [Test]
@@ -315,12 +329,15 @@ public class BusinessLogicUt
     private BusinessLogic.API.BusinessLogic CreateStandardBusinessLogic(
         IAuthoringToolConfiguration? fakeConfiguration = null,
         IDataAccess? fakeDataAccess = null,
-        IWorldGenerator? worldGenerator = null)
+        IWorldGenerator? worldGenerator = null,
+        ICommandStateManager? commandStateManager = null)
     {
         fakeConfiguration ??= Substitute.For<IAuthoringToolConfiguration>();
         fakeDataAccess ??= Substitute.For<IDataAccess>();
         worldGenerator ??= Substitute.For<IWorldGenerator>();
+        commandStateManager ??= Substitute.For<ICommandStateManager>();
         
-        return new BusinessLogic.API.BusinessLogic(fakeConfiguration, fakeDataAccess, worldGenerator);
+        return new BusinessLogic.API.BusinessLogic(fakeConfiguration, fakeDataAccess, worldGenerator,
+            commandStateManager);
     }
 }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
 using BusinessLogic.API;
+using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using ElectronWrapper;
 using Microsoft.Extensions.DependencyInjection;
@@ -68,6 +69,32 @@ public class PresentationLogicUt
 
         //Assert
         mockBusinessLogic.Received().ConstructBackup(entity, "supersecretfilepath.mbz");
+    }
+
+    [Test]
+    public void CreateLearningSpace_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+        
+        systemUnderTest.CreateLearningSpace(learningWorldVm, "a","b","c","d","e");
+
+        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
+    }
+    
+    [Test]
+    public void EditLearningSpace_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var learningSpaceVm = new LearningSpaceViewModel("f", "f", "f", "f", "f");
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+        
+        systemUnderTest.EditLearningSpace(learningSpaceVm,"a","b","c","d","e");
+
+        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
     }
 
     #region Save/Load

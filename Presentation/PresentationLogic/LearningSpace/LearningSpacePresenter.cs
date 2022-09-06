@@ -33,15 +33,11 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         return new LearningSpaceViewModel(name, shortname, authors, description, goals);
     }
 
-    public ILearningSpaceViewModel EditLearningSpace(ILearningSpaceViewModel space, string name, string shortname,
-        string authors, string description, string goals)
+    public void EditLearningSpace(string name, string shortname, string authors, string description, string goals)
     {
-        space.Name = name;
-        space.Shortname = shortname;
-        space.Authors = authors;
-        space.Description = description;
-        space.Goals = goals;
-        return space;
+        if (LearningSpaceVm == null)
+            throw new ApplicationException("LearningSpaceVm is null");
+        _presentationLogic.EditLearningSpace(LearningSpaceVm, name, shortname, authors, description, goals);
     }
 
     public bool EditLearningSpaceDialogOpen { get; set; }
@@ -87,7 +83,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 
         if (LearningSpaceVm == null)
             throw new ApplicationException("LearningSpaceVm is null");
-        EditLearningSpace(LearningSpaceVm, name, shortname, authors,
+        EditLearningSpace(name, shortname, authors,
             description, goals);
     }
 

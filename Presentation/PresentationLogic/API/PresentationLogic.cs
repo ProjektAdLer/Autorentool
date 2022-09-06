@@ -1,5 +1,6 @@
 using AutoMapper;
 using BusinessLogic.API;
+using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using ElectronWrapper;
 using Presentation.PresentationLogic.ElectronNET;
@@ -74,6 +75,29 @@ public class PresentationLogic : IPresentationLogic
         var filepath = await GetLoadFilepathAsync("Load Learning World", WorldFileEnding, WorldFileFormatDescriptor);
         var entity = BusinessLogic.LoadLearningWorld(filepath);
         return Mapper.Map<LearningWorldViewModel>(entity);
+    }
+
+
+    /// <inheritdoc cref="IPresentationLogic.CreateLearningSpace"/>
+    public void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name, string shortname,
+        string authors, string description, string goals)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+
+        var command = new CreateLearningSpace(worldEntity, name, shortname, authors, description, goals,
+            world => Mapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.EditLearningSpace"/>
+    public void EditLearningSpace(ILearningSpaceViewModel learningSpaceVm, string name,
+        string shortname, string authors, string description, string goals)
+    {
+        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+
+        var command = new EditLearningSpace(spaceEntity, name, shortname, authors, description, goals,
+            space => Mapper.Map(space, learningSpaceVm));
+        BusinessLogic.ExecuteCommand(command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.SaveLearningSpaceAsync"/>

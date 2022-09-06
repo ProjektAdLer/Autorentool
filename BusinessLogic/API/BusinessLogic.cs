@@ -1,4 +1,5 @@
-﻿using BusinessLogic.Entities;
+﻿using BusinessLogic.Commands;
+using BusinessLogic.Entities;
 using Shared.Configuration;
 
 namespace BusinessLogic.API;
@@ -8,17 +9,24 @@ public class BusinessLogic : IBusinessLogic
     public BusinessLogic(
         IAuthoringToolConfiguration configuration,
         IDataAccess dataAccess,
-        IWorldGenerator worldGenerator)
+        IWorldGenerator worldGenerator,
+        ICommandStateManager commandStateManager)
     {
         Configuration = configuration;
         DataAccess = dataAccess;
         WorldGenerator = worldGenerator;
+        CommandStateManager = commandStateManager;
     }
     
     
     internal IWorldGenerator WorldGenerator { get; }
+    internal ICommandStateManager CommandStateManager { get; }
     internal IDataAccess DataAccess { get;  }
 
+    public void ExecuteCommand(ICommand command)
+    {
+        CommandStateManager.Execute(command);
+    }
 
     public void ConstructBackup(LearningWorld learningWorld, string filepath)
     {
