@@ -31,6 +31,7 @@ public class LearningElementViewModel : ISerializableViewModel, IDisplayableLear
         LearningElementDifficultyEnum difficulty, ILearningElementViewModelParent? parent = null,
         int workload = 0, double positionX = 0, double positionY = 0)
     {
+        Id = Guid.NewGuid();
         Name = name;
         Shortname = shortname;
         Parent = parent;
@@ -46,6 +47,8 @@ public class LearningElementViewModel : ISerializableViewModel, IDisplayableLear
     
     public const string fileEnding = "aef";
     public string FileEnding => fileEnding;
+    // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local - required for automapper n.stich
+    public Guid Id { get; private set; }
     public string Name { get; set; }
     public string Shortname { get; set; }
     public ILearningElementViewModelParent? Parent { get; set; }

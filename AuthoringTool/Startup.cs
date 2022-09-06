@@ -126,10 +126,7 @@ public class Startup
     
     private static void ConfigureAutoMapper(IServiceCollection services)
     {
-        var config = new MapperConfiguration(cfg =>
-        {
-            cfg.AddProfile(new MappingProfile());
-        });
+        var config = new MapperConfiguration(MappingProfile.Configure);
         
         var mapper = config.CreateMapper();
         services.AddSingleton(mapper);

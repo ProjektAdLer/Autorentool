@@ -124,6 +124,14 @@
           "AngleSharp.Css": "0.16.0"
         }
       },
+      "AutoMapper.Collection": {
+        "type": "Transitive",
+        "resolved": "8.0.0",
+        "contentHash": "GrW7DOb33f0FQP3I6lwFuyaA1TrQilEMB1NaI35/e0x+7Zjjc/xnKDmQm0tbWyQ3Z/CTBX/PSHZTMtUzF+9Xdw==",
+        "dependencies": {
+          "AutoMapper": "[11.0.0, 12.0.0)"
+        }
+      },
       "bunit.core": {
         "type": "Transitive",
         "resolved": "1.9.8",
@@ -1451,6 +1459,7 @@
       "authoringtool": {
         "type": "Project",
         "dependencies": {
+          "AutoMapper.Collection": "8.0.0",
           "BusinessLogic": "1.0.0",
           "DataAccess": "1.0.0",
           "ElectronWrapper": "1.0.0",

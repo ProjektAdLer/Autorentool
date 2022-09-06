@@ -2,6 +2,15 @@
   "version": 1,
   "dependencies": {
     "net6.0": {
+      "AutoMapper.Collection": {
+        "type": "Direct",
+        "requested": "[8.0.0, )",
+        "resolved": "8.0.0",
+        "contentHash": "GrW7DOb33f0FQP3I6lwFuyaA1TrQilEMB1NaI35/e0x+7Zjjc/xnKDmQm0tbWyQ3Z/CTBX/PSHZTMtUzF+9Xdw==",
+        "dependencies": {
+          "AutoMapper": "[11.0.0, 12.0.0)"
+        }
+      },
       "AutoMapper": {
         "type": "Transitive",
         "resolved": "11.0.1",

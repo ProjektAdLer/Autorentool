@@ -1,4 +1,5 @@
 using AutoMapper;
+using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Entities;
 using PersistEntities;
 using Presentation.PresentationLogic;
@@ -17,7 +18,13 @@ namespace AuthoringTool;
 
 public class MappingProfile : Profile
 {
-    public MappingProfile()
+    public static Action<IMapperConfigurationExpression> Configure => cfg =>
+    {
+        cfg.AddProfile(new MappingProfile());
+        cfg.AddCollectionMappers();
+    };
+    
+    private MappingProfile()
     {
         DisableConstructorMapping();
         CreateViewModelEntityMaps();
@@ -52,6 +59,7 @@ public class MappingProfile : Profile
 
         CreateMap<LearningSpace, LearningSpaceViewModel>()
             .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
+            .EqualityComparison((x, y) => x.Id == y.Id)
             .AfterMap((s, d) =>
             {
                 foreach (var element in d.LearningElements)
@@ -70,6 +78,7 @@ public class MappingProfile : Profile
 
         CreateMap<LearningElement, LearningElementViewModel>()
             .ForMember(x => x.Parent, opt => opt.Ignore())
+            .EqualityComparison((x, y) => x.Id == y.Id)
             .ReverseMap()
             .ForMember(x => x.Parent, opt => opt.Ignore());
         CreateMap<LearningContent, LearningContentViewModel>().ReverseMap();

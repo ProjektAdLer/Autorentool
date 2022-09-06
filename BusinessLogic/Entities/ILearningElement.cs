@@ -4,6 +4,7 @@ namespace BusinessLogic.Entities;
 
 public interface ILearningElement
 {
+    Guid Id { get; }
     string Name { get; set; }
     string Shortname { get; set; }
     public ILearningElementParent? Parent { get; set; }

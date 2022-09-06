@@ -1,5 +1,6 @@
 using AuthoringTool;
 using AutoMapper;
+using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Entities;
 using NUnit.Framework;
 using PersistEntities;
@@ -8,6 +9,7 @@ using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
+using MapperConfiguration = AutoMapper.MapperConfiguration;
 
 namespace AuthoringToolTest;
 
@@ -45,9 +47,7 @@ public class MappingProfileUt
     [Test]
     public void Constructor_TestConfigurationIsValid()
     {
-        var systemUnderTest = new MappingProfile();
-        var mapper = new MapperConfiguration(cfg =>
-            cfg.AddProfile(systemUnderTest));
+        var mapper = new MapperConfiguration(MappingProfile.Configure);
 
         Assert.That(() => mapper.AssertConfigurationIsValid(), Throws.Nothing);
     }
@@ -105,6 +105,7 @@ public class MappingProfileUt
         systemUnderTest.Map(source, destination);
 
         TestElement(destination, null, false);
+        Assert.That(destination.Id, Is.EqualTo(source.Id));
 
         destination.Name = NewName;
         destination.Shortname = NewShortname;
@@ -120,6 +121,7 @@ public class MappingProfileUt
         systemUnderTest.Map(destination, source);
 
         TestElement(source, null, true);
+        Assert.That(destination.Id, Is.EqualTo(source.Id));
     }
 
     [Test]
@@ -219,6 +221,7 @@ public class MappingProfileUt
 
         TestSpace(destination, false);
         Assert.That(destination.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(destination.Id, Is.EqualTo(source.Id));
 
         destination.Name = NewName;
         destination.Shortname = NewShortname;
@@ -234,6 +237,7 @@ public class MappingProfileUt
 
         TestSpace(source, true);
         Assert.That(source.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(destination.Id, Is.EqualTo(source.Id));
     }
 
     [Test]
@@ -581,6 +585,55 @@ public class MappingProfileUt
         });
     }
 
+    /// <summary>
+    /// This test tests whether or not the AutoMapper.Collection configuration works as intended.
+    /// See https://github.com/AutoMapper/AutoMapper.Collection
+    /// </summary>
+    [Test]
+    public void MapLearningWorldAndLearningWorldViewModel_WithSpacesAndElements_ObjectsStayEqual()
+    {
+        var elementVm1 =
+            new LearningElementViewModel("el1", Shortname, new LearningContentViewModel("foo", "bar", Content), Authors,
+                Description, Goals, Difficulty);
+        var elementVm2 =
+            new LearningElementViewModel("el2", Shortname, new LearningContentViewModel("foo", "bar", Content), Authors,
+                Description, Goals, Difficulty);
+
+        var space = new LearningSpaceViewModel("space", Shortname, Authors, Description, Goals,
+            new List<ILearningElementViewModel> { elementVm1 })
+        {
+            SelectedLearningObject = elementVm1
+        };
+        elementVm1.Parent = space;
+
+        var world = new LearningWorldViewModel("world", Shortname, Authors, Language, Description, Goals, true,
+        new List<ILearningElementViewModel> { elementVm2 }, new List<ILearningSpaceViewModel> { space })
+        {
+            SelectedLearningObject = space
+        };
+
+
+        var systemUnderTest = CreateTestableMapper();
+
+        var entity = systemUnderTest.Map<LearningWorld>(world);
+        
+        //map back into viewmodel - with update syntax
+        systemUnderTest.Map(entity, world);
+        
+        //we would expect that the objects are still the same and we retained view specific information
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.LearningSpaces.First(), Is.EqualTo(space));
+            Assert.That(world.LearningElements.First(), Is.EqualTo(elementVm2));
+        });
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.LearningSpaces.First().LearningElements.First(), Is.EqualTo(elementVm1));
+            Assert.That(world.SelectedLearningObject, Is.EqualTo(space));
+            Assert.That(world.LearningSpaces.First().SelectedLearningObject, Is.EqualTo(elementVm1));
+        });
+    }
+
     #region testable Content/Element/Space/World
 
     private static LearningContent GetTestableContent()
@@ -909,9 +962,7 @@ public class MappingProfileUt
 
     private static IMapper CreateTestableMapper()
     {
-        var mappingProfile = new MappingProfile();
-        var mapper = new MapperConfiguration(cfg =>
-            cfg.AddProfile(mappingProfile));
+        var mapper = new MapperConfiguration(MappingProfile.Configure);
         var systemUnderTest = mapper.CreateMapper();
         return systemUnderTest;
     }

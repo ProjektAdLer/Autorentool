@@ -12,6 +12,7 @@ public class LearningSpace : ILearningSpace, IOriginator
     public LearningSpace(string name, string shortname, string authors, string description,
         string goals, List<LearningElement>? learningElements = null, double positionX = 0, double positionY = 0)
     {
+        Id = Guid.NewGuid();
         Name = name;
         Shortname = shortname;
         Authors = authors;
@@ -22,6 +23,8 @@ public class LearningSpace : ILearningSpace, IOriginator
         PositionY = positionY;
     }
 
+    // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local - required for automapper n.stich
+    public Guid Id { get; private set; }
     public string Name { get; set; }
     public string Shortname { get; set; }
     public string Authors { get; set; }

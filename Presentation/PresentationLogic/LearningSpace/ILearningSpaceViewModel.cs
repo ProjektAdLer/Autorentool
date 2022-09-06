@@ -4,6 +4,7 @@ namespace Presentation.PresentationLogic.LearningSpace;
 
 public interface ILearningSpaceViewModel : IDisplayableLearningObject, ILearningElementViewModelParent, ILearningObjectViewModel
 {
+    Guid Id { get; }
     string FileEnding { get; }
     ICollection<ILearningElementViewModel> LearningElements { get; set; }
     int Workload { get; }

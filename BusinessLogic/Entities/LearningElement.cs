@@ -16,6 +16,7 @@ public class LearningElement : ILearningElement, IOriginator
         ILearningElementParent? parent = null, int workload = 0,
         double positionX = 0, double positionY = 0)
     {
+        Id = Guid.NewGuid();
         Name = name;
         Shortname = shortname;
         LearningContent = learningContent;
@@ -29,6 +30,8 @@ public class LearningElement : ILearningElement, IOriginator
         Parent = parent;
     }
 
+    // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local - required for automapper n.stich
+    public Guid Id { get; private set; }
     public string Name { get; set; }
     public string Shortname { get; set; }
     public ILearningElementParent? Parent { get; set; }

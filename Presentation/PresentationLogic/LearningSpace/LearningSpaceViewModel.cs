@@ -26,6 +26,7 @@ public class LearningSpaceViewModel : ILearningObjectViewModel, ILearningElement
     public LearningSpaceViewModel(string name, string shortname, string authors, string description, string goals,
         ICollection<ILearningElementViewModel>? learningElements = null, double positionX = 0, double positionY = 0)
     {
+        Id = Guid.NewGuid();
         Name = name;
         Shortname = shortname;
         Authors = authors;
@@ -40,6 +41,8 @@ public class LearningSpaceViewModel : ILearningObjectViewModel, ILearningElement
     public string FileEnding => fileEnding;
     public ICollection<ILearningElementViewModel> LearningElements { get; set; }
     public int Workload => LearningElements.Sum(element => element.Workload);
+    // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local - required for automapper n.stich
+    public Guid Id { get; private set; }
     public string Name { get; set; }
     public string Shortname { get; set; }
     public string Authors { get; set; }
