@@ -83,8 +83,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 
         if (LearningSpaceVm == null)
             throw new ApplicationException("LearningSpaceVm is null");
-        EditLearningSpace(name, shortname, authors,
-            description, goals);
+        _presentationLogic.EditLearningSpace(LearningSpaceVm, name, shortname, authors, description, goals);
     }
 
     #endregion

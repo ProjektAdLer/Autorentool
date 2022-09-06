@@ -74,6 +74,13 @@ public interface IPresentationLogic
     /// <param name="goals"></param>
     void EditLearningSpace(ILearningSpaceViewModel learningSpaceVm, string name,
         string shortname, string authors, string description, string goals);
+
+    /// <summary>
+    /// Deletes the given learning space in the given learning world.
+    /// </summary>
+    /// <param name="learningWorldVm">Parent learning world of the learning space.</param>
+    /// <param name="learningSpaceVm">Learning space to delete.</param>
+    void DeleteLearningSpace(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel learningSpaceVm);
     
     /// <summary>
     /// Asks user for path and saves <see cref="LearningSpaceViewModel"/> to disk.

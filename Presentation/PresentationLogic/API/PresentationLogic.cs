@@ -100,6 +100,17 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
+    /// <inheritdoc cref="IPresentationLogic.DeleteLearningSpace"/>
+    public void DeleteLearningSpace(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel learningSpaceVm)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+
+        var command = new DeleteLearningSpace(worldEntity, spaceEntity,
+            world => Mapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
     /// <inheritdoc cref="IPresentationLogic.SaveLearningSpaceAsync"/>
     public async Task SaveLearningSpaceAsync(LearningSpaceViewModel learningSpaceViewModel)
     {

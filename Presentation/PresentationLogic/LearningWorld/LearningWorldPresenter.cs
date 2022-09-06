@@ -166,6 +166,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         _presentationLogic.CreateLearningSpace(LearningWorldVm, name, shortname, authors, description, goals);
+        LearningWorldVm.SelectedLearningObject = LearningWorldVm.LearningSpaces.Last();
     }
 
     /// <summary>
@@ -553,7 +554,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
             case null:
                 return;
             case LearningSpaceViewModel learningSpace:
-                LearningWorldVm.LearningSpaces.Remove(learningSpace);
+                _presentationLogic.DeleteLearningSpace(LearningWorldVm, learningSpace);
                 break;
             case LearningElementViewModel learningElement:
                 _learningElementPresenter.RemoveLearningElementFromParentAssignment(learningElement);

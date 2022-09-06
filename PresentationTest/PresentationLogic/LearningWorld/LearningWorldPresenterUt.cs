@@ -191,10 +191,12 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
+        var space = new LearningSpaceViewModel("g", "g", "g", "g", "g");
         var presentationLogic = Substitute.For<IPresentationLogic>();
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm?.LearningSpaces.Add(space);
 
         systemUnderTest.CreateNewLearningSpace("foo", "bar", "foo", "bar", "foo");
 
@@ -425,6 +427,9 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
+        var space = new LearningSpaceViewModel("f", "f", "f", "f", "f");
+        world.LearningSpaces.Add(space);
+        world.SelectedLearningObject = space;
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
@@ -438,7 +443,6 @@ public class LearningWorldPresenterUt
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         systemUnderTest.SetLearningWorld(null, world);
-
 
         systemUnderTest.OnCreateSpaceDialogClose(returnValueTuple);
 
@@ -1356,23 +1360,21 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void DeleteSelectedLearningObject_DeletesSpaceFromViewModel_WithSpace()
+    public void DeleteSelectedLearningObject_DeletesSpaceFromViewModel_CallsPresentationLogic()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var space = new LearningSpaceViewModel("f", "f", "f", "f", "f");
         world.LearningSpaces.Add(space);
         world.SelectedLearningObject = space;
+        var presentationLogic = Substitute.For<IPresentationLogic>();
 
-        Assert.That(world.LearningSpaces, Contains.Item(space));
-        Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
-
-        var systemUnderTest = CreatePresenterForTesting();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         systemUnderTest.SetLearningWorld(null, world);
 
         systemUnderTest.DeleteSelectedLearningObject();
 
-        Assert.That(world.LearningSpaces, Is.Empty);
+        presentationLogic.Received().DeleteLearningSpace(world, space);
     }
 
     [Test]
@@ -1408,25 +1410,6 @@ public class LearningWorldPresenterUt
 
         var ex = Assert.Throws<NotImplementedException>(() => systemUnderTest.DeleteSelectedLearningObject());
         Assert.That(ex!.Message, Is.EqualTo("Type of LearningObject is not implemented"));
-    }
-
-    [Test]
-    public void DeleteSelectedLearningObject_MutatesSelectionInViewModel_WithSpace()
-    {
-        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
-            "foo");
-        var space = new LearningSpaceViewModel("f", "f", "f", "f", "f");
-        world.LearningSpaces.Add(space);
-        world.SelectedLearningObject = space;
-
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(space));
-
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
-
-        systemUnderTest.DeleteSelectedLearningObject();
-
-        Assert.That(world.SelectedLearningObject, Is.Null);
     }
 
     [Test]
