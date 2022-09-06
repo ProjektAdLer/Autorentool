@@ -88,12 +88,11 @@ public class PresentationLogicUt
     public void EditLearningSpace_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
         var learningSpaceVm = new LearningSpaceViewModel("f", "f", "f", "f", "f");
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
         
-        systemUnderTest.EditLearningSpace(learningWorldVm, learningSpaceVm,"a","b","c","d","e");
+        systemUnderTest.EditLearningSpace(learningSpaceVm,"a","b","c","d","e");
 
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
     }

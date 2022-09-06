@@ -66,14 +66,13 @@ public interface IPresentationLogic
     /// <summary>
     /// Edits a given learning space in the given learning world with the corresponding command.
     /// </summary>
-    /// <param name="learningWorldVm">Parent learning world of the learning space to edit.</param>
     /// <param name="learningSpaceVm">Learning space to edit.</param>
     /// <param name="name"></param>
     /// <param name="shortname"></param>
     /// <param name="authors"></param>
     /// <param name="description"></param>
     /// <param name="goals"></param>
-    void EditLearningSpace(ILearningWorldViewModel learningWorldVm, LearningSpaceViewModel learningSpaceVm, string name,
+    void EditLearningSpace(ILearningSpaceViewModel learningSpaceVm, string name,
         string shortname, string authors, string description, string goals);
     
     /// <summary>

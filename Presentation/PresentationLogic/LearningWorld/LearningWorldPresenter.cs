@@ -266,10 +266,9 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
 
         if (LearningWorldVm == null)
             throw new ApplicationException("LearningWorld is null");
-        if (LearningWorldVm.SelectedLearningObject is not LearningSpaceViewModel
-            learningSpaceViewModel) throw new ApplicationException("LearningObject is not a LearningSpace");
-        _presentationLogic.EditLearningSpace(LearningWorldVm, learningSpaceViewModel, name, shortname, authors,
-            description, goals);
+        if (LearningWorldVm.SelectedLearningObject is not LearningSpaceViewModel)
+            throw new ApplicationException("LearningObject is not a LearningSpace");
+        _learningSpacePresenter.EditLearningSpace(name, shortname, authors, description, goals);
     }
 
     #endregion

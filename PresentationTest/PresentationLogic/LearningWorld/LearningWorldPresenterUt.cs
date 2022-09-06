@@ -299,31 +299,6 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void CreateNewLearningSpace_AddsLearningSpaceToViewModel()
-    {
-        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
-            "foo");
-
-        var systemUnderTest = CreatePresenterForTesting();
-        
-        systemUnderTest.SetLearningWorld(null, world);
-        Assert.IsEmpty(world.LearningSpaces);
-
-        systemUnderTest.CreateNewLearningSpace("foo", "bar", "foo", "bar", "foo");
-
-        Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
-        var space = world.LearningSpaces.First();
-        Assert.Multiple(() =>
-        {
-            Assert.That(space.Name, Is.EqualTo("foo"));
-            Assert.That(space.Shortname, Is.EqualTo("bar"));
-            Assert.That(space.Authors, Is.EqualTo("foo"));
-            Assert.That(space.Description, Is.EqualTo("bar"));
-            Assert.That(space.Goals, Is.EqualTo("foo"));
-        });
-    }
-
-    [Test]
     public void CreateNewLearningElement_AddsLearningElementToWorldViewModel()
     {
         var learningElementPresenter = new LearningElementPresenter();
@@ -1124,9 +1099,9 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void OnEditSpaceDialogClose_PresentationLogic()
+    public void OnEditSpaceDialogClose_CallsLearningSpacePresenter()
     {
-        var presentaionLogic = Substitute.For<IPresentationLogic>();
+        var spacePresenter = Substitute.For<ILearningSpacePresenter>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var space = new LearningSpaceViewModel("foo", "bar", "foo", "bar", "foo");
@@ -1142,14 +1117,14 @@ public class LearningWorldPresenterUt
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentaionLogic);
+        var systemUnderTest = CreatePresenterForTesting(learningSpacePresenter: spacePresenter);
         systemUnderTest.SetLearningWorld(null, world);
         world.SelectedLearningObject = space;
 
 
         systemUnderTest.OnEditSpaceDialogClose(returnValueTuple);
 
-        presentaionLogic.Received().EditLearningSpace(world, space, "n", "sn", "a", "d", "g");
+        spacePresenter.Received().EditLearningSpace("n", "sn", "a", "d", "g");
     }
     
     [Test]

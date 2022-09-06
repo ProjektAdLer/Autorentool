@@ -4,20 +4,18 @@ namespace BusinessLogic.Commands;
 
 public class EditLearningSpace : IUndoCommand
 {
-    private readonly LearningWorld _learningWorld;
     private readonly LearningSpace _learningSpace;
     private readonly string _name;
     private readonly string _shortname;
     private readonly string _authors;
     private readonly string _description;
     private readonly string _goals;
-    private readonly Action<LearningWorld> _mappingAction;
+    private readonly Action<LearningSpace> _mappingAction;
     private IMemento? _memento;
 
-    public EditLearningSpace(LearningWorld learningWorld, LearningSpace learningSpace, string name, string shortname,
-        string authors, string description, string goals, Action<LearningWorld> mappingAction)
+    public EditLearningSpace(LearningSpace learningSpace, string name, string shortname,
+        string authors, string description, string goals, Action<LearningSpace> mappingAction)
     {
-        _learningWorld = learningWorld;
         _learningSpace = learningSpace;
         _name = name;
         _shortname = shortname;
@@ -29,24 +27,15 @@ public class EditLearningSpace : IUndoCommand
 
     public void Execute()
     {
-        _memento = _learningWorld.GetMemento();
+        _memento = _learningSpace.GetMemento();
 
-        var space = _learningWorld.LearningSpaces.FirstOrDefault(x => x.Name == _learningSpace.Name);
-
-        if (space == null)
-        {
-            throw new ApplicationException("LearningSpace is null");
-        }
-
-        _learningWorld.LearningSpaces.Remove(space);
-
-        var editedSpace = new LearningSpace(_name, _shortname, _authors, _description, _goals, space.LearningElements,
-            space.PositionX, space.PositionY);
+        _learningSpace.Name = _name;
+        _learningSpace.Shortname = _shortname;
+        _learningSpace.Authors = _authors;
+        _learningSpace.Description = _description;
+        _learningSpace.Goals = _goals;
         
-        _learningWorld.LearningSpaces.Add(editedSpace);
-        _learningWorld.SelectedLearningObject = editedSpace;
-        
-        _mappingAction.Invoke(_learningWorld);
+        _mappingAction.Invoke(_learningSpace);
     }
 
     public void Undo()
@@ -56,9 +45,9 @@ public class EditLearningSpace : IUndoCommand
             throw new InvalidOperationException("_memento is null");
         }
         
-        _learningWorld.RestoreMemento(_memento);
+        _learningSpace.RestoreMemento(_memento);
         
-        _mappingAction.Invoke(_learningWorld);
+        _mappingAction.Invoke(_learningSpace);
     }
 
     public void Redo() => Execute();
