@@ -145,6 +145,7 @@ public class MappingProfile : Profile
             });
         CreateMap<LearningSpace, LearningSpacePe>()
             .ReverseMap()
+            .ForMember(x => x.Id, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
                 foreach (var element in d.LearningElements)
@@ -154,7 +155,8 @@ public class MappingProfile : Profile
             });
         CreateMap<LearningElement, LearningElementPe>();
         CreateMap<LearningElementPe, LearningElement>()
-            .ForMember(x => x.Parent, opt => opt.Ignore());
+            .ForMember(x => x.Parent, opt => opt.Ignore())
+            .ForMember(x => x.Id, opt => opt.Ignore());
         CreateMap<LearningContent, LearningContentPe>()
             .ReverseMap();
 
