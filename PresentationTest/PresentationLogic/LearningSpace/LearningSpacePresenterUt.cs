@@ -41,6 +41,32 @@ public class LearningSpacePresenterUt
         });
     }
 
+    #region EditLearningSpace
+
+    [Test]
+    public void EditLearningSpace_LearningSpaceVmIsNull_ThrowsException()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditLearningSpace("a","b","c","d","e"));
+        Assert.That(ex!.Message, Is.EqualTo("LearningSpaceVm is null"));
+    }
+
+    [Test]
+    public void EditLearningSpace_CallsPresentationLogic()
+    {
+        var space = new LearningSpaceViewModel("a", "b", "c", "d", "e");
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        
+        systemUnderTest.SetLearningSpace(space);
+        systemUnderTest.EditLearningSpace("space", "b","c","d","e");
+        
+        presentationLogic.Received().EditLearningSpace(space, "space", "b", "c","d","e");
+    }
+
+    #endregion
+
     #region OnEditSpaceDialogClose
 
     [Test]

@@ -97,6 +97,20 @@ public class PresentationLogicUt
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
     }
 
+    [Test]
+    public void DeleteLearningSpace_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        var learningSpaceVm = new LearningSpaceViewModel("g", "g", "g", "g", "g");
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+        
+        systemUnderTest.DeleteLearningSpace(learningWorldVm, learningSpaceVm);
+
+        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
+    }
+
     #region Save/Load
 
     [Test]
