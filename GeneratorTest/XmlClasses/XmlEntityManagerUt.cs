@@ -26,8 +26,8 @@ public class XmlEntityManagerUt
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport"));
         mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "course"));
-        mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XmlFilesForExport", "sections"));
-        mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XmlFilesForExport", "sections", "section_1"));
+        mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections"));
+        mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections", "section_1"));
         
         mockReadDsl.GetDslDocumentList().Returns(new List<LearningElementJson>());
         mockReadDsl.GetH5PElementsList().Returns(new List<LearningElementJson>());
