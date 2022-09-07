@@ -91,42 +91,6 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     #region LearningElement
 
     /// <summary>
-    /// Creates a new learning element and assigns it to the selected learning space.
-    /// </summary>
-    /// <param name="name">Name of the element.</param>
-    /// <param name="shortname">Shortname of the element.</param>
-    /// <param name="parent">Parent of the learning element (selected learning space).</param>
-    /// <param name="elementType">Type of the element.</param>
-    /// <param name="contentType">Type of the content that the element contains.</param>
-    /// <param name="learningContent">The content of the element.</param>
-    /// <param name="authors">A list of authors of the element.</param>
-    /// <param name="description">A description of the element.</param>
-    /// <param name="goals">The goals of the element.</param>
-    /// <param name="difficulty">The difficulty of the element.</param>
-    /// <param name="workload">The time required to complete the learning element.</param>
-    /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
-    public void CreateNewLearningElement(string name, string shortname, ILearningElementViewModelParent parent,
-        ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContent,
-        string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload)
-    {
-        if (LearningSpaceVm == null)
-            throw new ApplicationException("SelectedLearningSpace is null");
-        var learningElement = elementType switch
-        {
-            ElementTypeEnum.Transfer => _learningElementPresenter.CreateNewTransferElement(name, shortname,
-                parent, contentType, learningContent, authors, description, goals, difficulty, workload),
-            ElementTypeEnum.Activation => _learningElementPresenter.CreateNewActivationElement(name, shortname,
-                parent, contentType, learningContent, authors, description, goals, difficulty, workload),
-            ElementTypeEnum.Interaction => _learningElementPresenter.CreateNewInteractionElement(name, shortname,
-                parent, contentType, learningContent, authors, description, goals, difficulty, workload),
-            ElementTypeEnum.Test => _learningElementPresenter.CreateNewTestElement(name, shortname,
-                parent, contentType, learningContent, authors, description, goals, difficulty, workload),
-            _ => throw new ApplicationException("no valid ElementType assigned")
-        };
-        SetSelectedLearningObject(learningElement);
-    }
-
-    /// <summary>
     /// Sets the initial values for the <see cref="ModalDialog"/> with the current values from the selected LearningElement.
     /// </summary>
     /// <exception cref="ApplicationException">Thrown if SelectedLearningObject is not a LearningElementViewModel.
@@ -184,11 +148,6 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     /// <exception cref="ApplicationException">Thrown if there is no valid ContentType assigned.</exception>
     private async Task<LearningContentViewModel> LoadLearningContent(ContentTypeEnum contentType)
     {
-        if (LearningSpaceVm == null)
-        {
-            throw new ApplicationException("SelectedLearningSpace is null");
-        }
-
         return contentType switch
         {
             ContentTypeEnum.Image => await _presentationLogic.LoadImageAsync(),
@@ -207,6 +166,8 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     /// values couldn't get parsed into enum.</exception>
     public void OnCreateElementDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
+        if (LearningSpaceVm == null)
+            throw new ApplicationException("SelectedLearningSpace is null");
         var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
         CreateLearningElementDialogOpen = false;
 
@@ -253,8 +214,8 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
                 learningContent = Task.Run(async () => await LoadLearningContent(contentType)).Result;
             }
                         
-            CreateNewLearningElement(name, shortname, parentElement, elementType, contentType, learningContent, authors, 
-                description, goals, difficulty, workload);
+            _presentationLogic.CreateLearningElement(parentElement, name, shortname, elementType, contentType,
+                learningContent, authors, description, goals, difficulty, workload);
 
         }
         catch (AggregateException)

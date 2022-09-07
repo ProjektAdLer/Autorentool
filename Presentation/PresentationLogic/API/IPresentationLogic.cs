@@ -4,6 +4,7 @@ using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
+using Shared;
 using Shared.Configuration;
 
 namespace Presentation.PresentationLogic.API;
@@ -102,6 +103,25 @@ public interface IPresentationLogic
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
     Task<ILearningSpaceViewModel> LoadLearningSpaceAsync();
+
+    /// <summary>
+    /// Creates a new learning element and assigns it to the selected learning world or to a learning space in the
+    /// selected learning world.
+    /// </summary>
+    /// <param name="name">Name of the element.</param>
+    /// <param name="shortname">Shortname of the element.</param>
+    /// <param name="elementParentVm">Parent of the element that can either be a world or a space.</param>
+    /// <param name="elementType">Type of the element.</param>
+    /// <param name="contentType">Type of the content that the element contains.</param>
+    /// <param name="learningContentVm">The content of the element.</param>
+    /// <param name="authors">A list of authors of the element.</param>
+    /// <param name="description">A description of the element.</param>
+    /// <param name="goals">The goals of the element.</param>
+    /// <param name="difficulty">The difficulty of the element.</param>
+    /// <param name="workload">The time required to complete the learning element.</param>
+    void CreateLearningElement(ILearningElementViewModelParent elementParentVm, string name, string shortname,
+        ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContentVm,
+        string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload);
     
     /// <summary>
     /// Asks user for path and saves <see cref="LearningElementViewModel"/> to disk.

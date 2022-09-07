@@ -110,6 +110,19 @@ public class PresentationLogicUt
 
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
     }
+    
+    [Test]
+    public void CreateLearningElement_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+        
+        systemUnderTest.CreateLearningElement(learningWorldVm, "a","b", ElementTypeEnum.Activation, ContentTypeEnum.Image, null,"c","d","e", LearningElementDifficultyEnum.Easy, 0);
+
+        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
+    }
 
     #region Save/Load
 

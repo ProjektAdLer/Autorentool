@@ -8,6 +8,7 @@ using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
+using Shared;
 using Shared.Configuration;
 
 namespace Presentation.PresentationLogic.API;
@@ -128,6 +129,19 @@ public class PresentationLogic : IPresentationLogic
         var entity = BusinessLogic.LoadLearningSpace(filepath);
         return Mapper.Map<LearningSpaceViewModel>(entity);
     }
+    
+    /// <inheritdoc cref="IPresentationLogic.CreateLearningElement"/>
+    public void CreateLearningElement(ILearningElementViewModelParent elementParentVm, string name, string shortname,
+        ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContentVm,
+        string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload)
+    {
+        var elementParent = Mapper.Map<ILearningElementParent>(elementParentVm);
+        var content = Mapper.Map<BusinessLogic.Entities.LearningContent>(learningContentVm);
+
+        var command = new CreateLearningElement(elementParent, name, shortname, elementType, contentType, content,
+            authors, description, goals, difficulty, workload, parent => Mapper.Map(parent, elementParentVm));
+        BusinessLogic.ExecuteCommand(command);
+    } 
 
     /// <inheritdoc cref="IPresentationLogic.SaveLearningElementAsync"/>
     public async Task SaveLearningElementAsync(LearningElementViewModel learningElementViewModel)
