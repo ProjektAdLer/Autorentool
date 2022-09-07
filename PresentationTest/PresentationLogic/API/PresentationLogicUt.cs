@@ -123,6 +123,20 @@ public class PresentationLogicUt
 
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
     }
+    
+    [Test]
+    public void EditLearningElement_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var elementParentVm = new LearningSpaceViewModel("a", "b", "c", "d", "e");
+        var learningElementVm = new LearningElementViewModel("f", "f", null, "f", "f", "f", LearningElementDifficultyEnum.Easy);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+        
+        systemUnderTest.EditLearningElement(learningElementVm, elementParentVm,"a","b","c","d","e",LearningElementDifficultyEnum.Easy,0);
+
+        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
+    }
 
     #region Save/Load
 

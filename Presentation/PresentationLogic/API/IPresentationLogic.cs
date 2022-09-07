@@ -122,6 +122,22 @@ public interface IPresentationLogic
     void CreateLearningElement(ILearningElementViewModelParent elementParentVm, string name, string shortname,
         ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContentVm,
         string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload);
+
+    /// <summary>
+    /// Edits a given learning element either in the learning world or learning space with the corresponding command.
+    /// </summary>
+    /// <param name="learningElementVm">Element to edit.</param>
+    /// <param name="learningElementParentVm">Parent of the element that can either be a world or a space.</param>
+    /// <param name="name">Name of the element.</param>
+    /// <param name="shortname">Shortname of the element.</param>
+    /// <param name="authors">A list of authors of the element.</param>
+    /// <param name="description">A description of the element.</param>
+    /// <param name="goals">The goals of the element.</param>
+    /// <param name="difficulty">The difficulty of the element.</param>
+    /// <param name="workload">The time required to complete the learning element.</param>
+    void EditLearningElement(ILearningElementViewModel learningElementVm,
+        ILearningElementViewModelParent learningElementParentVm, string name, string shortname, string authors,
+        string description, string goals, LearningElementDifficultyEnum difficulty, int workload);
     
     /// <summary>
     /// Asks user for path and saves <see cref="LearningElementViewModel"/> to disk.

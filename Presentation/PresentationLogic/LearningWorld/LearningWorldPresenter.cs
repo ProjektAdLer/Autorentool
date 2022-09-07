@@ -481,8 +481,8 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
             throw new ApplicationException("LearningWorldVm is null");
         if (LearningWorldVm.SelectedLearningObject is not LearningElementViewModel
             learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
-        _learningElementPresenter.EditLearningElement(learningElementViewModel, name, shortname, parentElement,
-            authors, description, goals, difficulty, workload);
+        _presentationLogic.EditLearningElement(learningElementViewModel, parentElement, name, shortname, authors,
+            description, goals, difficulty, workload);
     }
 
     #endregion

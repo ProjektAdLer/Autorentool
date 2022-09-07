@@ -478,13 +478,9 @@ public class LearningSpacePresenterUt
     }
     
     [Test]
-    public void OnEditElementDialogClose_CallsLearningElementPresenter()
+    public void OnEditElementDialogClose_CallsPresentationLogic()
     {
-        var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
-        learningElementPresenter.EditLearningElement(Arg.Any<LearningElementViewModel>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<ILearningElementViewModelParent>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<LearningElementDifficultyEnum>(),
-            Arg.Any<int>()).Returns(new LearningElementViewModel("ba", "ba", null, "ba", "ba", "ba",  LearningElementDifficultyEnum.Easy,null, 8));
+        var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
         var element = new LearningElementViewModel("foo", "bar", null,"bar",
             "foo", "bar", LearningElementDifficultyEnum.Easy, null);
@@ -506,23 +502,18 @@ public class LearningSpacePresenterUt
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
-        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         systemUnderTest.SetLearningSpace(space);
         space.SelectedLearningObject = element;
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
-        learningElementPresenter.Received().EditLearningElement(element, "a", "b", space, "e", "f", "g", LearningElementDifficultyEnum.Medium, 5);
+        presentationLogic.Received().EditLearningElement(element, space, "a", "b",  "e", "f", "g", LearningElementDifficultyEnum.Medium, 5);
     }
 
     [Test]
     public void OnEditElementDialogClose_ThrowsCouldntParseDifficulty()
     {
-        var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
-        learningElementPresenter.EditLearningElement(Arg.Any<LearningElementViewModel>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<ILearningElementViewModelParent>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>() , Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<int>()
-        ).Returns(new LearningElementViewModel("ba", "ba", null, "ba", null, "ba", LearningElementDifficultyEnum.Medium,null, 5));
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
         var element = new LearningElementViewModel("foo", "bar", null, "foo",
             "wa", "bar", LearningElementDifficultyEnum.Hard, null);
@@ -540,7 +531,7 @@ public class LearningSpacePresenterUt
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
-        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
+        var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(space);
         space.SelectedLearningObject = element;
 
@@ -552,11 +543,7 @@ public class LearningSpacePresenterUt
     [Test]
     public void OnEditElementDialogClose_CouldntParseWorkloadToInt()
     {
-        var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
-        learningElementPresenter.EditLearningElement(Arg.Any<LearningElementViewModel>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<ILearningElementViewModelParent>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>() , Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<int>()
-        ).Returns(new LearningElementViewModel("ba", "ba", null, "ba", null, "ba", LearningElementDifficultyEnum.Medium,null, 5));
+        var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
         var element = new LearningElementViewModel("foo", "bar", null, "foo",
             "wa", "bar", LearningElementDifficultyEnum.Hard, null);
@@ -574,23 +561,19 @@ public class LearningSpacePresenterUt
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
-        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         systemUnderTest.SetLearningSpace(space);
         space.SelectedLearningObject = element;
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
-        learningElementPresenter.Received().EditLearningElement(element,"a", "b", space, "e", "f", "g",LearningElementDifficultyEnum.Easy,0);
+        presentationLogic.Received().EditLearningElement(element, space,"a", "b",  "e", "f", "g",LearningElementDifficultyEnum.Easy,0);
     }
     
     [Test]
     public void OnEditElementDialogClose_NegativeWorkloadToZero()
     {
-        var learningElementPresenter = Substitute.For<ILearningElementPresenter>();
-        learningElementPresenter.EditLearningElement(Arg.Any<LearningElementViewModel>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<ILearningElementViewModelParent>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>() , Arg.Any<LearningElementDifficultyEnum>(), Arg.Any<int>()
-        ).Returns(new LearningElementViewModel("ba", "ba", null, "ba", null, "ba", LearningElementDifficultyEnum.Medium,null, 5));
+        var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
         var element = new LearningElementViewModel("foo", "bar", null, "foo",
             "wa", "bar", LearningElementDifficultyEnum.Hard, null);
@@ -610,13 +593,13 @@ public class LearningSpacePresenterUt
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
-        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: learningElementPresenter);
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         systemUnderTest.SetLearningSpace(space);
         space.SelectedLearningObject = element;
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
-        learningElementPresenter.Received().EditLearningElement(element,"a", "b", space, "e", "f", "g",LearningElementDifficultyEnum.Easy,0);
+        presentationLogic.Received().EditLearningElement(element, space,"a", "b",  "e", "f", "g",LearningElementDifficultyEnum.Easy,0);
     }
 
     [Test]
