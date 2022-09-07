@@ -1,4 +1,4 @@
-namespace Presentation.PresentationLogic;
+namespace Shared;
 
 public enum ContentTypeEnum
 {
