@@ -36,21 +36,6 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     void SetLearningWorld(object? caller, LearningWorldViewModel? world);
     void ShowSelectedLearningSpaceView();
     void CloseLearningSpaceView();
-
-    /// <summary>
-    /// Adds the provided learning space to the selected world view model.
-    /// </summary>
-    /// <param name="learningSpace">The space to be added.</param>
-    /// <exception cref="ApplicationException"><see cref="LearningWorldVm"/> is null or space exists in world with same name.</exception>
-    public void AddLearningSpace(ILearningSpaceViewModel learningSpace);
-    
-    /// <summary>
-    /// Adds the provided learning element to the selected world view model.
-    /// </summary>
-    /// <param name="learningElement">The space to be added.</param>
-    /// <exception cref="ApplicationException"><see cref="LearningWorldVm"/> is null or element exists in world with same name.</exception>
-    public void AddLearningElement(ILearningElementViewModel learningElement);
-    
     void CreateLearningElementWithPreloadedContent(LearningContentViewModel learningContent);
     LearningContentViewModel? DragAndDropLearningContent { get; }
     void AddNewLearningSpace();

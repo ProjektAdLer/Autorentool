@@ -19,27 +19,6 @@ namespace PresentationTest.PresentationLogic.LearningSpace;
 public class LearningSpacePresenterUt
 {
     #region LearningSpace
-    
-    [Test]
-    public void CreateNewLearningSpace_CreatesCorrectViewModel()
-    {
-        var systemUnderTest = CreatePresenterForTesting();
-        var name = "a";
-        var shortname = "b";
-        var authors = "d";
-        var description = "e";
-        var goals = "f";
-
-        var space = systemUnderTest.CreateNewLearningSpace(name, shortname, authors, description, goals);
-        Assert.Multiple(() =>
-        {
-            Assert.That(space.Name, Is.EqualTo(name));
-            Assert.That(space.Shortname, Is.EqualTo(shortname));
-            Assert.That(space.Authors, Is.EqualTo(authors));
-            Assert.That(space.Description, Is.EqualTo(description));
-            Assert.That(space.Goals, Is.EqualTo(goals));
-        });
-    }
 
     #region EditLearningSpace
 
@@ -230,9 +209,10 @@ public class LearningSpacePresenterUt
     [Test]
     public void OnCreateElementDialogClose_CallsPresentationLogic_WithImage()
     {
-        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+        var element = new LearningElementViewModel("a", "b", null, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        space.LearningElements.Add(element);
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
@@ -259,9 +239,10 @@ public class LearningSpacePresenterUt
     [Test]
     public void OnCreateElementDialogClose_CallsPresentationLogic_WithPdf()
     {
-        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+        var element = new LearningElementViewModel("a", "b", null, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        space.LearningElements.Add(element);
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
@@ -291,6 +272,8 @@ public class LearningSpacePresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
         var content = new LearningContentViewModel("a", "b", new byte[] {0, 1, 2});
+        var element = new LearningElementViewModel("a", "b", null, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        space.LearningElements.Add(element);
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
@@ -404,6 +387,8 @@ public class LearningSpacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+        var element = new LearningElementViewModel("a", "b", null, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        space.LearningElements.Add(element);
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
@@ -432,6 +417,8 @@ public class LearningSpacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+        var element = new LearningElementViewModel("a", "b", null, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        space.LearningElements.Add(element);
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         IDictionary<string, string> dictionary = new Dictionary<string, string>();

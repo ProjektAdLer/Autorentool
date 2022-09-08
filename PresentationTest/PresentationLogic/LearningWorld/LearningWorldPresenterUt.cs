@@ -127,21 +127,6 @@ public class LearningWorldPresenterUt
     }
     
     [Test]
-    public void CreateNewLearningSpace_ThrowsWhenSelectedWorldNull()
-    {
-        var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
-        learningSpacePresenter.CreateNewLearningSpace(Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()).Returns(
-            new LearningSpaceViewModel("foo", "bar", "foo", "bar", "baz"));
-
-        var systemUnderTest = CreatePresenterForTesting(learningSpacePresenter: learningSpacePresenter);
-
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.CreateNewLearningSpace("foo",
-            "this", "does", "not", "matter"));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
-    }
-    
-    [Test]
     public void AddLearningElement_CreateSecondElementWithSameName_ThrowsException()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
@@ -296,6 +281,8 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
+        var element = new LearningElementViewModel("a", "b", null, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        world.LearningElements.Add(element);
 
         const ModalDialogReturnValue modalDialogReturnValue = ModalDialogReturnValue.Ok;
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
@@ -327,6 +314,8 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
+        var element = new LearningElementViewModel("a", "b", null, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        world.LearningElements.Add(element);
 
         const ModalDialogReturnValue modalDialogReturnValue = ModalDialogReturnValue.Ok;
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
@@ -359,6 +348,8 @@ public class LearningWorldPresenterUt
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var content = new LearningContentViewModel("a", "b", new byte[] {0, 1, 2});
+        var element = new LearningElementViewModel("a", "b", null, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        world.LearningElements.Add(element);
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
@@ -509,6 +500,8 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
+        var element = new LearningElementViewModel("a", "b", null, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        world.LearningElements.Add(element);
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
@@ -540,6 +533,8 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
+        var element = new LearningElementViewModel("a", "b", null, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        world.LearningElements.Add(element);
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         IDictionary<string, string> dictionary = new Dictionary<string, string>();

@@ -24,12 +24,6 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 
     public LearningContentViewModel? DragAndDropLearningContent { get; private set; }
 
-    public ILearningSpaceViewModel CreateNewLearningSpace(string name, string shortname, string authors,
-        string description, string goals)
-    {
-        return new LearningSpaceViewModel(name, shortname, authors, description, goals);
-    }
-
     public void EditLearningSpace(string name, string shortname, string authors, string description, string goals)
     {
         if (LearningSpaceVm == null)
@@ -213,6 +207,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
                         
             _presentationLogic.CreateLearningElement(parentElement, name, shortname, elementType, contentType,
                 learningContent, authors, description, goals, difficulty, workload);
+            LearningSpaceVm.SelectedLearningObject = LearningSpaceVm.LearningElements.Last();
 
         }
         catch (AggregateException)

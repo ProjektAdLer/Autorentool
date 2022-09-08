@@ -401,6 +401,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
             
             _presentationLogic.CreateLearningElement(parentElement, name, shortname, elementType, contentType,
                 learningContent, authors, description, goals, difficulty, workload);
+            LearningWorldVm.SelectedLearningObject = LearningWorldVm.LearningElements.Last();
         }
         catch (AggregateException)
         {
