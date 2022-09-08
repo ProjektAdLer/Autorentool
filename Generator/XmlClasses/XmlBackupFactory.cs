@@ -18,7 +18,6 @@ public class XmlBackupFactory : IXmlBackupFactory
     private readonly string _currentTime;
     private readonly LearningWorldJson _learningWorld;
     private readonly List<LearningElementJson> _learningElement;
-    private readonly List<LearningElementJson> _dslDocument;
     internal IGradebookXmlGradeCategory GradebookXmlGradeCategory;
     internal IGradebookXmlGradeCategories GradebookXmlGradeCategories;
     internal IGradebookXmlGradeItem GradebookXmlGradeItem;
@@ -147,8 +146,8 @@ public class XmlBackupFactory : IXmlBackupFactory
         _currentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
         
         _learningWorld = readDsl.GetLearningWorld();
-        _learningElement = readDsl.GetH5PElementsList();
-        _dslDocument = readDsl.GetDslDocumentList();
+        _learningElement = readDsl.GetResourceList();
+        _learningElement.AddRange(readDsl.GetH5PElementsList());
         MoodleBackupXmlActivityList = new List<MoodleBackupXmlActivity>();
         MoodleBackupXmlSettingList = new List<MoodleBackupXmlSetting>();
         MoodleBackupXmlSectionList = new List<MoodleBackupXmlSection>();
@@ -270,59 +269,9 @@ public class XmlBackupFactory : IXmlBackupFactory
 
         MoodleBackupXmlSettingLegacyfiles.Name = "legacyfiles";
 
-        //create Tags for the DSL Document
-        //Documentpath and name is hardcoded
-        foreach (var document in _dslDocument)
-        {
-            string dslDocumentId = document.Id.ToString();
-            string dslDocumentType = "resource";
-            string dslDocumentName = document.Identifier.Value;
-            string dslParentSpace = document.LearningSpaceParentId.ToString();
-
-            if (MoodleBackupXmlActivityList != null)
-            {
-                MoodleBackupXmlActivityList.Add(new MoodleBackupXmlActivity()
-                {
-                    ModuleId = dslDocumentId,
-                    SectionId = dslParentSpace,
-                    ModuleName = dslDocumentType,
-                    Title = dslDocumentName,
-                    Directory = "activities/" + dslDocumentType + "_" + dslDocumentId,
-                });
-
-                MoodleBackupXmlActivities.Activity = MoodleBackupXmlActivityList;
-            }
-
-            if (MoodleBackupXmlSectionList != null)
-            {
-                MoodleBackupXmlSectionList.Add(new MoodleBackupXmlSection
-                {
-                    SectionId = dslDocumentId,
-                    Title = dslDocumentId,
-                    Directory = "sections/section_" + dslDocumentId,
-                });
-
-                MoodleBackupXmlSections.Section = MoodleBackupXmlSectionList;
-            }
-
-            if (MoodleBackupXmlSettingList != null)
-            {
-                MoodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting("section",
-                    "section_" + dslDocumentId + "_included", "1", "section_" + dslDocumentId, true));
-                MoodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting("section",
-                    "section_" + dslDocumentId + "_userinfo", "0", "section_" + dslDocumentId, true));
-
-                MoodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting("activity",
-                    dslDocumentType + "_" + dslDocumentId + "_included", "1",
-                    dslDocumentType + "_" + dslDocumentId, false));
-                MoodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting("activity",
-                    dslDocumentType + "_" + dslDocumentId + "_userinfo", "0",
-                    dslDocumentType + "_" + dslDocumentId, false));
-            }
-        }
 
         //Every activity needs the following tags in the moodle_backup.xml file
-        //The ElementType will be changed for other element types
+        //The ElementType is different for some element types
         foreach (var element in _learningElement)
         {
             string learningElementId = element.Id.ToString();
@@ -332,6 +281,10 @@ public class XmlBackupFactory : IXmlBackupFactory
             if (learningElementType == "h5p")
             {
                 learningElementType = "h5pactivity";
+            }
+            else if (learningElementType is "pdf" or "json" or "jpg" or "png" or "bmp" or "webp" or "mp4")
+            {
+                learningElementType = "resource";
             }
 
             if (MoodleBackupXmlActivityList != null)

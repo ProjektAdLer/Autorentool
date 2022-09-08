@@ -92,13 +92,13 @@ public class BackupFileGeneratorUt
         //Act
         var systemUnderTest = new BackupFileGenerator(mockFileSystem, mockEntityManager);
         systemUnderTest.CreateBackupFolders();
-        systemUnderTest.WriteXmlFiles(mockReadDsl, Path.Join(currWorkDir, "XMLFilesForExport", "Hello World"));
+        systemUnderTest.WriteXmlFiles(mockReadDsl);
         
         //Assert
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.XmlEntityManager, Is.Not.Null);
-            systemUnderTest.XmlEntityManager.Received().GetFactories(mockReadDsl, Path.Join(currWorkDir, "XMLFilesForExport", "Hello World"));
+            systemUnderTest.XmlEntityManager.Received().GetFactories(mockReadDsl);
             
         });
 

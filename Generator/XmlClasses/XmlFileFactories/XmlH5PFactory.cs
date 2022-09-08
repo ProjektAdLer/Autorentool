@@ -22,6 +22,7 @@ public class XmlH5PFactory : IXmlH5PFactory
     public string H5PElementId;
     public string H5PElementName;
     public string H5PElementParentSpace;
+    public string H5PElementType;
     public string CurrentTime;
     private List<FilesXmlFile> _filesXmlFilesList;
     private List<ActivitiesInforefXmlFile> _activitiesInforefXmlFileList;
@@ -70,6 +71,7 @@ public class XmlH5PFactory : IXmlH5PFactory
         H5PElementId = "";
         H5PElementName = "";
         H5PElementParentSpace = "";
+        H5PElementType = "";
         _filesXmlFilesList = new List<FilesXmlFile>();
         _activitiesInforefXmlFileList = new List<ActivitiesInforefXmlFile>();
         _fileSystem = fileSystem?? new FileSystem();
@@ -139,6 +141,7 @@ public class XmlH5PFactory : IXmlH5PFactory
             H5PElementId = h5PElement.Id.ToString();
             H5PElementName = h5PElement.Identifier.Value;
             H5PElementParentSpace = h5PElement.LearningSpaceParentId.ToString();
+            H5PElementType = h5PElement.ElementType;
             
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
                 h5PElement.Identifier.Value));
@@ -165,8 +168,8 @@ public class XmlH5PFactory : IXmlH5PFactory
             Id = XmlEntityManager.GetFileIdBlock1().ToString(),
             ContentHash = hashCheckSum,
             ContextId = H5PElementId,
-            Filename = H5PElementName,
-            Source = H5PElementName,
+            Filename = H5PElementName+"."+H5PElementType,
+            Source = H5PElementName+"."+H5PElementType,
             Filesize = filesize,
             Component = "mod_h5pactivity",
             FileArea = "package",

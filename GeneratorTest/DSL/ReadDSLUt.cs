@@ -88,7 +88,7 @@ public class ReadDslUt
         systemUnderTest.ReadLearningWorld("dslPath", rootJson);
 
         var listSpace = systemUnderTest.GetLearningSpaceList();
-        var listDslDocument = systemUnderTest.GetDslDocumentList();
+        var resourceList = systemUnderTest.GetResourceList();
 
         //Assert
         var getLearningWorldJson = systemUnderTest.GetLearningWorld();
@@ -103,9 +103,9 @@ public class ReadDslUt
             Assert.That(getLearningWorldJson.LearningSpaces, Is.Not.Null);
             Assert.That(getLearningWorldJson.LearningElements, Has.Count.EqualTo(learningElementList.Count));
             Assert.That(getLearningWorldJson.LearningSpaces, Has.Count.EqualTo(learningSpacesList.Count));
+            Assert.That(resourceList, Has.Count.EqualTo(1));
             Assert.That(getH5PElementsList, Has.Count.EqualTo(1));
             Assert.That(listSpace.Count, Is.EqualTo(2));
-            Assert.That(listDslDocument.Count, Is.EqualTo(1));
         });
     }
 

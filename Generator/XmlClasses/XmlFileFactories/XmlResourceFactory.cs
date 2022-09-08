@@ -12,9 +12,10 @@ using Generator.XmlClasses.Entities.Files.xml;
 
 namespace Generator.XmlClasses.XmlFileFactories;
 
-public class XmlFileFactory : IXmlFileFactory
+public class XmlResourceFactory : IXmlResourceFactory
 {
-    private readonly string _dslPath;
+    private readonly string _currWorkDir;
+    private readonly string _hardcodedPath = "XMLFilesForExport";
     public List<FilesXmlFile> FilesXmlFilesList;
     private List<ActivitiesInforefXmlFile> _activitiesInforefXmlFileList;
     public readonly string CurrentTime;
@@ -22,6 +23,7 @@ public class XmlFileFactory : IXmlFileFactory
     public string FileElementId;
     public string FileElementName;
     public string FileElementParentSpace;
+    public string FileElementType;
 
     public readonly IXmlFileManager FileManager;
     public IActivitiesGradesXmlGradeItem ActivitiesGradesXmlGradeItem { get; }
@@ -42,7 +44,7 @@ public class XmlFileFactory : IXmlFileFactory
     public ISectionsSectionXmlSection SectionsSectionXmlSection { get; }
     public IReadDsl ReadDsl { get; }
 
-    public XmlFileFactory(IReadDsl readDsl, string dslPath, IXmlFileManager? xmlFileManager = null,
+    public XmlResourceFactory(IReadDsl readDsl, IXmlFileManager? xmlFileManager = null,
         IFileSystem? fileSystem = null, IActivitiesGradesXmlGradeItem? gradesGradeItem = null,
         IActivitiesGradesXmlGradeItems? gradesGradeItems = null, IActivitiesGradesXmlActivityGradebook? gradebook = null,
         IActivitiesResourceXmlResource? fileResourceXmlResource = null,
@@ -56,14 +58,15 @@ public class XmlFileFactory : IXmlFileFactory
         ISectionsInforefXmlInforef? sectionsInforefXmlInforef = null,
         ISectionsSectionXmlSection? sectionsSectionXmlSection = null)
     {        
-        ReadDsl = readDsl;   
-        _dslPath = dslPath;
+        ReadDsl = readDsl;
         FileElementId = "";
         FileElementName = "";
         FileElementParentSpace = "";
+        FileElementType = "";
         
         CurrentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
         _fileSystem = fileSystem?? new FileSystem();
+        _currWorkDir = _fileSystem.Directory.GetCurrentDirectory();
 
         FileManager = xmlFileManager?? new XmlFileManager();
         FilesXmlFilesList = new List<FilesXmlFile>();
@@ -95,33 +98,54 @@ public class XmlFileFactory : IXmlFileFactory
     
     public void CreateFileFactory()
     {
-        var listDslDocument = ReadDsl.GetDslDocumentList();
+        var resourceList = ReadDsl.GetResourceList();
         FilesXmlFilesList = new List<FilesXmlFile>();
         FilesXmlFilesList = FileManager.GetXmlFilesList();
         
-        ReadFileListAndSetParameters(listDslDocument);
+        ReadFileListAndSetParametersResource(resourceList);
         
         FileManager.SetXmlFilesList(FilesXmlFilesList);
     }
 
-    public void ReadFileListAndSetParameters(List<LearningElementJson> listDslDocument)
+    public void ReadFileListAndSetParametersResource(List<LearningElementJson> resourceList)
     {
-        foreach (var dslDocument in listDslDocument)
+        foreach (var resource in resourceList)
         {
-            FileElementId = dslDocument.Id.ToString();
-            FileElementName = "DSL_Document";
-            FileElementParentSpace = dslDocument.LearningSpaceParentId.ToString();
+            FileElementId = resource.Id.ToString();
+            FileElementType = resource.ElementType;
+            FileElementName = resource.Identifier.Value;
+            FileElementParentSpace = resource.LearningSpaceParentId.ToString();
 
-            FileManager.CalculateHashCheckSumAndFileSize(_dslPath);
-            FileManager.CreateFolderAndFiles(_dslPath, FileManager.GetHashCheckSum());
-            FileSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize());
+            FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
+                resource.Identifier.Value));
+            FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
+                resource.Identifier.Value), FileManager.GetHashCheckSum());
+
+            if (resource.ElementType is "pdf" or "json")
+            {
+                FileSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "application/"+FileElementType);
+            }
+            else if (resource.ElementType is "jpg" or "png" or "bmp")
+            {
+                FileSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "image/"+FileElementType);
+            }
+            else if (resource.ElementType is "mp4")
+            {
+                FileSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "video/"+FileElementType);
+            }
+            else if (resource.ElementType is "webp")
+            {
+                FileSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "document/unknown");
+            }
+            
             FileSetParametersActivity();
             
             // These ints are needed for the activities/inforef.xml file. 
             XmlEntityManager.IncreaseFileId();
         }
     }
-    public void FileSetParametersFilesXml(string hashCheckSum, string filesize)
+    
+    public void FileSetParametersFilesXml(string hashCheckSum, string filesize, string mimeType)
     {
         //Let this Null-Check in, otherwise a Unit-Test will fail
         if(FilesXmlFilesList == null){ FilesXmlFilesList = new List<FilesXmlFile>();}
@@ -130,8 +154,9 @@ public class XmlFileFactory : IXmlFileFactory
             Id = XmlEntityManager.GetFileIdBlock1().ToString(),
             ContentHash = hashCheckSum,
             ContextId = FileElementId,
-            Filename = FileElementName,
-            Source = FileElementName,
+            Filename = FileElementName+"."+FileElementType,
+            Mimetype = mimeType,
+            Source = FileElementName+"."+FileElementType,
             Filesize = filesize,
             Timecreated = CurrentTime,
             Timemodified = CurrentTime,

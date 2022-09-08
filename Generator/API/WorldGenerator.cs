@@ -23,8 +23,8 @@ public class WorldGenerator : IWorldGenerator
     internal IMapper Mapper;
     private readonly IFileSystem _fileSystem;
     public IBackupFileGenerator BackupFile { get; }
-    public ICreateDsl CreateDsl;
-    public IReadDsl ReadDsl;
+    public readonly ICreateDsl CreateDsl;
+    public readonly IReadDsl ReadDsl;
 
     /// <summary>
     /// Creates the DSL document, reads it, creates the needed folder structure for the backup, fills the folders with
@@ -37,7 +37,7 @@ public class WorldGenerator : IWorldGenerator
         string dslpath = CreateDsl.WriteLearningWorld(Mapper.Map<LearningWorldPe>(learningWorld));
         ReadDsl.ReadLearningWorld(dslpath);
         BackupFile.CreateBackupFolders();
-        BackupFile.WriteXmlFiles(ReadDsl as ReadDsl, dslpath);
+        BackupFile.WriteXmlFiles((ReadDsl as ReadDsl)!);
         BackupFile.WriteBackupFile(filepath);
     }
     

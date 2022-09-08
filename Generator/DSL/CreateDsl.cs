@@ -60,7 +60,7 @@ public class CreateDsl : ICreateDsl
             //Add the DSL Document to the first LearningSpace
             if (learningSpaceId == 0)
             {
-                IdentifierJson dslDocumentIdentifier = new IdentifierJson("FileName", "DSL Dokument");
+                IdentifierJson dslDocumentIdentifier = new IdentifierJson("FileName", "DSL_Document");
                 LearningElementJson dslDocumentJson = new LearningElementJson(1, dslDocumentIdentifier, "json", 0);
                 LearningWorldJson.LearningElements.Add(dslDocumentJson);
                 _listLearningSpaceContent.Add(1);
@@ -104,7 +104,7 @@ public class CreateDsl : ICreateDsl
         {
             _fileSystem.File.WriteAllBytes(_fileSystem.Path.Join("XMLFilesForExport", learningElement.Name), learningElement.LearningContent.Content);
         }
-        var dslPath = _fileSystem.Path.Join("XMLFilesForExport", "DSL_Document.json");
+        var dslPath = _fileSystem.Path.Join("XMLFilesForExport", "DSL_Document");
         _fileSystem.File.WriteAllText(dslPath, jsonFile);
         Console.WriteLine(jsonFile);
         return dslPath;

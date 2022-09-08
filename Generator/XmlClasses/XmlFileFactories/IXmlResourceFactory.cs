@@ -10,7 +10,7 @@ using Generator.XmlClasses.Entities._sections.Section.xml;
 
 namespace Generator.XmlClasses.XmlFileFactories;
 
-public interface IXmlFileFactory
+public interface IXmlResourceFactory
 {
     IActivitiesGradesXmlGradeItem ActivitiesGradesXmlGradeItem { get; }
     IActivitiesGradesXmlGradeItems ActivitiesGradesXmlGradeItems { get; }
@@ -30,8 +30,9 @@ public interface IXmlFileFactory
     ISectionsSectionXmlSection SectionsSectionXmlSection { get; }
     IReadDsl ReadDsl { get; }
     void CreateFileFactory();
-    void ReadFileListAndSetParameters(List<LearningElementJson> listDslDocument);
-    void FileSetParametersFilesXml(string hashCheckSum, string filesize);
+    //void ReadFileListAndSetParameters(List<LearningElementJson> listDslDocument);
+    void ReadFileListAndSetParametersResource(List<LearningElementJson> listPdfDocument);
+    void FileSetParametersFilesXml(string hashCheckSum, string filesize, string mimeType);
     void FileSetParametersActivity();
 
     /// <summary>

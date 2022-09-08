@@ -7,8 +7,8 @@ namespace Generator.DSL;
 public class ReadDsl : IReadDsl
 {
     public readonly List<LearningElementJson> ListH5PElements;
+    public readonly List<LearningElementJson> ListResourceElements;
     private readonly List<LearningSpaceJson> _listLearningSpaces;
-    private readonly List<LearningElementJson> _listDslDocument;
     private LearningWorldJson _learningWorldJson;
     private readonly IFileSystem _fileSystem;
     private DocumentRootJson _rootJson;
@@ -21,8 +21,8 @@ public class ReadDsl : IReadDsl
         _rootJson = new DocumentRootJson(_learningWorldJson);
         _fileSystem = fileSystem;
         ListH5PElements = new List<LearningElementJson>();
+        ListResourceElements = new List<LearningElementJson>();
         _listLearningSpaces = new List<LearningSpaceJson>();
-        _listDslDocument = new List<LearningElementJson>();
     }
 
     public void ReadLearningWorld(string dslPath, DocumentRootJson? rootJsonForTest = null)
@@ -39,8 +39,8 @@ public class ReadDsl : IReadDsl
              _rootJson = JsonSerializer.Deserialize<DocumentRootJson>(jsonString) ?? throw new InvalidOperationException("Could not deserialize DSL_Document");
         }
         GetH5PElements(_rootJson);
+        GetResourceElements(_rootJson);
         GetLearningSpaces(_rootJson);
-        GetDslDocument(_rootJson);
         SetLearningWorld(_rootJson);
     }
 
@@ -60,7 +60,18 @@ public class ReadDsl : IReadDsl
         {
             if (element.ElementType == "h5p")
             {
-                if (ListH5PElements != null) ListH5PElements.Add(element);
+                ListH5PElements.Add(element);
+            }
+        }
+    }
+
+    private void GetResourceElements(DocumentRootJson documentRootJson)
+    {
+        foreach (var resource in documentRootJson.LearningWorld.LearningElements)
+        {
+            if (resource.ElementType is "pdf" or "json" or "jpg" or "png" or "webp" or "bmp")
+            {
+                ListResourceElements.Add(resource);
             }
         }
     }
@@ -74,18 +85,6 @@ public class ReadDsl : IReadDsl
             }
     }
 
-    private void GetDslDocument(DocumentRootJson? documentRootJson)
-    {
-        if (documentRootJson != null)
-            foreach (var element in documentRootJson.LearningWorld.LearningElements)
-            {
-                if (element.Identifier.Value == "DSL Dokument")
-                {
-                    if (_listDslDocument != null) _listDslDocument.Add(element);
-                }
-            }
-    }
-
     public List<LearningElementJson> GetH5PElementsList()
     {
         return ListH5PElements;
@@ -96,9 +95,9 @@ public class ReadDsl : IReadDsl
         return _listLearningSpaces;
     }
 
-    public List<LearningElementJson> GetDslDocumentList()
+    public List<LearningElementJson> GetResourceList()
     {
-        return _listDslDocument;
+        return ListResourceElements;
     }
     
     

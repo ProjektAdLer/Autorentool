@@ -145,11 +145,11 @@ public class XmlH5PFactoryUt
             //Every File has 2 FilesXmlFile Id´s thats why the Count has to be 2*FileCount
             Assert.That(systemUnderTest.FilesXmlFiles.File, Has.Count.EqualTo(4));
             Assert.That(systemUnderTest.FilesXmlFiles.File[0].ContextId , Is.EqualTo(h5pElement_1.Id.ToString()));
-            Assert.That(systemUnderTest.FilesXmlFiles.File[0].Filename , Is.EqualTo(identifier_1.Value.ToString()));
-            Assert.That(systemUnderTest.FilesXmlFiles.File[0].Source , Is.EqualTo(identifier_1.Value.ToString()));
+            Assert.That(systemUnderTest.FilesXmlFiles.File[0].Filename , Is.EqualTo(identifier_1.Value+ "." + h5pElement_1.ElementType));
+            Assert.That(systemUnderTest.FilesXmlFiles.File[0].Source , Is.EqualTo(identifier_1.Value+ "." + h5pElement_1.ElementType));
             Assert.That(systemUnderTest.FilesXmlFiles.File[2].ContextId , Is.EqualTo(h5pElement_2.Id.ToString()));
-            Assert.That(systemUnderTest.FilesXmlFiles.File[2].Filename , Is.EqualTo(identifier_2.Value.ToString()));
-            Assert.That(systemUnderTest.FilesXmlFiles.File[2].Source , Is.EqualTo(identifier_2.Value.ToString()));
+            Assert.That(systemUnderTest.FilesXmlFiles.File[2].Filename , Is.EqualTo(identifier_2.Value+ "." + h5pElement_2.ElementType));
+            Assert.That(systemUnderTest.FilesXmlFiles.File[2].Source , Is.EqualTo(identifier_2.Value+ "." + h5pElement_2.ElementType));
             Assert.That(systemUnderTest.FilesXmlFiles.File[2].Id , Is.EqualTo((int.Parse(systemUnderTest.FilesXmlFiles.File[0].Id)+2).ToString()));
         });
     }

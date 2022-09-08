@@ -10,7 +10,7 @@ public class XmlEntityManager : IXmlEntityManager
     public static int FileIdBlock1 = 1;
     public static int FileIdBlock2 = 2;
     private IFileSystem _fileSystem;
-    private IXmlFileFactory? _xmlFileFactory;
+    private IXmlResourceFactory? _xmlResourceFactory;
     private IXmlH5PFactory? _xmlH5PFactory;
     private IXmlCourseFactory? _xmlCourseFactory;
     private IXmlBackupFactory? _xmlBackupFactory;
@@ -22,7 +22,7 @@ public class XmlEntityManager : IXmlEntityManager
     }
 
     //run all factories that are available, to set the parameters and create the xml files
-    public void GetFactories(IReadDsl readDsl, string dslpath, IXmlFileFactory? xmlFileFactory=null, 
+    public void GetFactories(IReadDsl readDsl, IXmlResourceFactory? xmlFileFactory=null, 
         IXmlH5PFactory? xmlH5PFactory=null, IXmlCourseFactory? xmlCourseFactory=null, IXmlBackupFactory? xmlBackupFactory=null)
     {
         XmlFileManager filemanager = new XmlFileManager();
@@ -30,8 +30,8 @@ public class XmlEntityManager : IXmlEntityManager
         _xmlSectionFactory = new XmlSectionFactory(readDsl); ;
         _xmlSectionFactory.CreateSectionFactory();
         
-        _xmlFileFactory = xmlFileFactory ?? new XmlFileFactory(readDsl, dslpath, filemanager, _fileSystem);
-        _xmlFileFactory.CreateFileFactory();
+        _xmlResourceFactory = xmlFileFactory ?? new XmlResourceFactory(readDsl, filemanager, _fileSystem);
+        _xmlResourceFactory.CreateFileFactory();
 
         _xmlH5PFactory = xmlH5PFactory ?? new XmlH5PFactory(readDsl, filemanager, _fileSystem);
         _xmlH5PFactory.CreateH5PFileFactory();

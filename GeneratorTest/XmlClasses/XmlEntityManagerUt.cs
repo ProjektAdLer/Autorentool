@@ -17,7 +17,7 @@ public class XmlEntityManagerUt
     {
         // Arrange
         var mockReadDsl = Substitute.For<IReadDsl>();
-        var mockFileFactory = Substitute.For<IXmlFileFactory>();
+        var mockFileFactory = Substitute.For<IXmlResourceFactory>();
         var mockH5PFactory = Substitute.For<IXmlH5PFactory>();
         var mockCourseFactory = Substitute.For<IXmlCourseFactory>();
         var mockBackupFactory = Substitute.For<IXmlBackupFactory>();
@@ -29,7 +29,6 @@ public class XmlEntityManagerUt
         mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections"));
         mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections", "section_1"));
         
-        mockReadDsl.GetDslDocumentList().Returns(new List<LearningElementJson>());
         mockReadDsl.GetH5PElementsList().Returns(new List<LearningElementJson>());
         
         var identifierLearningWorldJson = new IdentifierJson("name", "World");
@@ -64,7 +63,7 @@ public class XmlEntityManagerUt
         // Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
         var systemUnderTest = new XmlEntityManager();
-        systemUnderTest.GetFactories(mockReadDsl, "SomePath", mockFileFactory, mockH5PFactory, mockCourseFactory, mockBackupFactory);
+        systemUnderTest.GetFactories(mockReadDsl, mockFileFactory, mockH5PFactory, mockCourseFactory, mockBackupFactory);
 
         // Assert
         Assert.Multiple(() =>
