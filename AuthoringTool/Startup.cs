@@ -81,7 +81,6 @@ public class Startup
         services.AddSingleton<IPresentationLogic, PresentationLogic>();
         services.AddSingleton<ILearningWorldPresenter, LearningWorldPresenter>();
         services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
-        services.AddSingleton<ILearningElementPresenter, LearningElementPresenter>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
         services.AddSingleton<ILearningSpaceViewModalDialogFactory, ModalDialogFactory>();
         services.AddSingleton<ILearningSpaceViewModalDialogInputFieldsFactory, ModalDialogInputFieldsFactory>();

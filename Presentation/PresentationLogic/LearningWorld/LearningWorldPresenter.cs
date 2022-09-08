@@ -14,17 +14,15 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
 {
     public LearningWorldPresenter(
         IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter,
-        ILearningElementPresenter learningElementPresenter, ILogger<LearningWorldPresenter> logger)
+        ILogger<LearningWorldPresenter> logger)
     {
         _learningSpacePresenter = learningSpacePresenter;
-        _learningElementPresenter = learningElementPresenter;
         _presentationLogic = presentationLogic;
         _logger = logger;
     }
 
     private readonly IPresentationLogic _presentationLogic;
     private readonly ILearningSpacePresenter _learningSpacePresenter;
-    private readonly ILearningElementPresenter _learningElementPresenter;
     private readonly ILogger<LearningWorldPresenter> _logger;
     
     

@@ -1454,30 +1454,24 @@ public class AuthoringToolWorkspacePresenterUt
     private AuthoringToolWorkspacePresenter CreatePresenterForTesting(
         IAuthoringToolWorkspaceViewModel? authoringToolWorkspaceVm = null, IPresentationLogic? presentationLogic = null,
         ILearningWorldPresenter? learningWorldPresenter = null, ILearningSpacePresenter? learningSpacePresenter = null,
-        ILearningElementPresenter? learningElementPresenter = null,
-        ILogger<AuthoringToolWorkspacePresenter>? logger = null,
-        IShutdownManager? shutdownManager = null)
+        ILogger<AuthoringToolWorkspacePresenter>? logger = null, IShutdownManager? shutdownManager = null)
     {
         authoringToolWorkspaceVm ??= Substitute.For<IAuthoringToolWorkspaceViewModel>();
         presentationLogic ??= Substitute.For<IPresentationLogic>();
         learningWorldPresenter ??= Substitute.For<ILearningWorldPresenter>();
         learningSpacePresenter ??= Substitute.For<ILearningSpacePresenter>();
-        learningElementPresenter ??= Substitute.For<ILearningElementPresenter>();
         logger ??= Substitute.For<ILogger<AuthoringToolWorkspacePresenter>>();
         shutdownManager ??= Substitute.For<IShutdownManager>();
         return new AuthoringToolWorkspacePresenter(authoringToolWorkspaceVm, presentationLogic, learningWorldPresenter,
-            learningSpacePresenter, learningElementPresenter, logger, shutdownManager);
+            learningSpacePresenter, logger, shutdownManager);
     }
 
     private LearningWorldPresenter CreateLearningWorldPresenter(IPresentationLogic? presentationLogic = null,
-        ILearningSpacePresenter? learningSpacePresenter = null,
-        ILearningElementPresenter? learningElementPresenter = null,
-        ILogger<LearningWorldPresenter>? logger = null)
+        ILearningSpacePresenter? learningSpacePresenter = null, ILogger<LearningWorldPresenter>? logger = null)
     {
         presentationLogic ??= Substitute.For<IPresentationLogic>();
         learningSpacePresenter ??= Substitute.For<ILearningSpacePresenter>();
-        learningElementPresenter ??= Substitute.For<ILearningElementPresenter>();
         logger ??= Substitute.For<ILogger<LearningWorldPresenter>>();
-        return new LearningWorldPresenter(presentationLogic, learningSpacePresenter, learningElementPresenter, logger);
+        return new LearningWorldPresenter(presentationLogic, learningSpacePresenter, logger);
     }
 }

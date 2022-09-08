@@ -11,16 +11,13 @@ namespace Presentation.PresentationLogic.LearningSpace;
 public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePresenterToolboxInterface
 {
     public LearningSpacePresenter(
-        IPresentationLogic presentationLogic, ILearningElementPresenter learningElementPresenter,
-        ILogger<LearningWorldPresenter> logger)
+        IPresentationLogic presentationLogic, ILogger<LearningWorldPresenter> logger)
     {
-        _learningElementPresenter = learningElementPresenter;
         _presentationLogic = presentationLogic;
         _logger = logger;
     }
 
     private readonly IPresentationLogic _presentationLogic;
-    private readonly ILearningElementPresenter _learningElementPresenter;
     private readonly ILogger<LearningWorldPresenter> _logger;
 
     public ILearningSpaceViewModel? LearningSpaceVm { get; private set; }

@@ -96,7 +96,7 @@ public class StartupUt
     private static readonly Type[] ConfigurePresentationLogicRequiredTypes =
     {
         typeof(IPresentationLogic), typeof(IAuthoringToolWorkspacePresenter), typeof(ILearningWorldPresenter),
-        typeof(ILearningSpacePresenter), typeof(ILearningElementPresenter), typeof(IAuthoringToolWorkspaceViewModel),
+        typeof(ILearningSpacePresenter), typeof(IAuthoringToolWorkspaceViewModel),
         typeof(ILearningSpaceViewModalDialogFactory), typeof(ILearningSpaceViewModalDialogInputFieldsFactory),
         typeof(ILearningWorldViewModalDialogFactory), typeof(ILearningWorldViewModalDialogInputFieldsFactory),
         typeof(IAuthoringToolWorkspaceViewModalDialogFactory), typeof(IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory),

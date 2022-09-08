@@ -1295,13 +1295,11 @@ public class LearningWorldPresenterUt
 
     private LearningWorldPresenter CreatePresenterForTesting(IPresentationLogic? presentationLogic = null,
         ILearningSpacePresenter? learningSpacePresenter = null,
-        ILearningElementPresenter? learningElementPresenter = null,
         ILogger<LearningWorldPresenter>? logger = null)
     {
         presentationLogic ??= Substitute.For<IPresentationLogic>();
         learningSpacePresenter ??= Substitute.For<ILearningSpacePresenter>();
-        learningElementPresenter ??= Substitute.For<ILearningElementPresenter>();
         logger ??= Substitute.For<ILogger<LearningWorldPresenter>>();
-        return new LearningWorldPresenter(presentationLogic, learningSpacePresenter, learningElementPresenter, logger);
+        return new LearningWorldPresenter(presentationLogic, learningSpacePresenter, logger);
     }
 }

@@ -15,11 +15,9 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     public AuthoringToolWorkspacePresenter(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
         IPresentationLogic presentationLogic,
         ILearningWorldPresenter learningWorldPresenter, ILearningSpacePresenter learningSpacePresenter,
-        ILearningElementPresenter learningElementPresenter, ILogger<AuthoringToolWorkspacePresenter> logger,
-        IShutdownManager shutdownManager)
+        ILogger<AuthoringToolWorkspacePresenter> logger, IShutdownManager shutdownManager)
     {
         _learningSpacePresenter = learningSpacePresenter;
-        _learningElementPresenter = learningElementPresenter;
         _learningWorldPresenter = learningWorldPresenter;
         AuthoringToolWorkspaceVm = authoringToolWorkspaceVm;
         _presentationLogic = presentationLogic;
@@ -45,7 +43,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     private readonly IPresentationLogic _presentationLogic;
     private readonly ILearningWorldPresenter _learningWorldPresenter;
     private readonly ILearningSpacePresenter _learningSpacePresenter;
-    private readonly ILearningElementPresenter _learningElementPresenter;
     private readonly ILogger<AuthoringToolWorkspacePresenter> _logger;
     private readonly IShutdownManager _shutdownManager;
 
