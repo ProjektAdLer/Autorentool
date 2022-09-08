@@ -144,8 +144,8 @@ public class PresentationLogic : IPresentationLogic
     } 
     
     /// <inheritdoc cref="IPresentationLogic.EditLearningElement"/>
-    public void EditLearningElement(ILearningElementViewModel learningElementVm,
-        ILearningElementViewModelParent elementParentVm, string name, string shortname, string authors,
+    public void EditLearningElement(ILearningElementViewModelParent elementParentVm,
+        ILearningElementViewModel learningElementVm, string name, string shortname, string authors,
         string description, string goals, LearningElementDifficultyEnum difficulty, int workload)
     {
         var learningElement = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
@@ -153,6 +153,18 @@ public class PresentationLogic : IPresentationLogic
 
         var command = new EditLearningElement(learningElement, elementParent, name, shortname, authors, description,
             goals, difficulty, workload, element => Mapper.Map(element, learningElementVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.DeleteLearningElement"/>
+    public void DeleteLearningElement(ILearningElementViewModelParent elementParentVm,
+        LearningElementViewModel learningElementVm)
+    {
+        var learningElement = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+        var elementParent = Mapper.Map<ILearningElementParent>(elementParentVm);
+
+        var command = new DeleteLearningElement(learningElement, elementParent, 
+            parent => Mapper.Map(parent, elementParentVm));
         BusinessLogic.ExecuteCommand(command);
     }
 

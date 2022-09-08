@@ -135,9 +135,17 @@ public interface IPresentationLogic
     /// <param name="goals">The goals of the element.</param>
     /// <param name="difficulty">The difficulty of the element.</param>
     /// <param name="workload">The time required to complete the learning element.</param>
-    void EditLearningElement(ILearningElementViewModel learningElementVm,
-        ILearningElementViewModelParent learningElementParentVm, string name, string shortname, string authors,
-        string description, string goals, LearningElementDifficultyEnum difficulty, int workload);
+    void EditLearningElement(ILearningElementViewModelParent learningElementParentVm,
+        ILearningElementViewModel learningElementVm, string name, string shortname, string authors, string description,
+        string goals, LearningElementDifficultyEnum difficulty, int workload);
+
+    /// <summary>
+    /// Deletes the given learning element either in the given learning world or in the given learning space.
+    /// </summary>
+    /// <param name="elementParentVm">Element to delete.</param>
+    /// <param name="learningElementVm">Parent of the element that can either be a world or a space.</param>
+    void DeleteLearningElement(ILearningElementViewModelParent elementParentVm,
+        LearningElementViewModel learningElementVm);
     
     /// <summary>
     /// Asks user for path and saves <see cref="LearningElementViewModel"/> to disk.

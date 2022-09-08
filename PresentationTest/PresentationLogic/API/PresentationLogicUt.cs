@@ -133,7 +133,21 @@ public class PresentationLogicUt
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
         
-        systemUnderTest.EditLearningElement(learningElementVm, elementParentVm,"a","b","c","d","e",LearningElementDifficultyEnum.Easy,0);
+        systemUnderTest.EditLearningElement(elementParentVm, learningElementVm, "a","b","c","d","e",LearningElementDifficultyEnum.Easy,0);
+
+        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
+    }
+    
+    [Test]
+    public void DeleteLearningElement_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        var learningElementVm = new LearningElementViewModel("g", "g", null, "g", "g", "g",LearningElementDifficultyEnum.Easy);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+        
+        systemUnderTest.DeleteLearningElement(learningWorldVm, learningElementVm);
 
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
     }

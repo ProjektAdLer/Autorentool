@@ -280,7 +280,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         
         if (LearningSpaceVm?.SelectedLearningObject is not LearningElementViewModel
             learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
-        _presentationLogic.EditLearningElement(learningElementViewModel, parentElement, name, shortname, authors,
+        _presentationLogic.EditLearningElement(parentElement, learningElementViewModel, name, shortname, authors,
             description, goals, difficulty, workload);
     }
 
@@ -316,7 +316,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
             case null:
                 return;
             case LearningElementViewModel learningElement:
-                _learningElementPresenter.RemoveLearningElementFromParentAssignment(learningElement);
+                _presentationLogic.DeleteLearningElement(LearningSpaceVm, learningElement);
                 break;
             default:
                 throw new NotImplementedException("Type of LearningObject is not implemented");

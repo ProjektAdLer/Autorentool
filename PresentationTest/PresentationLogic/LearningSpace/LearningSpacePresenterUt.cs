@@ -508,7 +508,7 @@ public class LearningSpacePresenterUt
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().EditLearningElement(element, space, "a", "b",  "e", "f", "g", LearningElementDifficultyEnum.Medium, 5);
+        presentationLogic.Received().EditLearningElement(space, element, "a", "b",  "e", "f", "g", LearningElementDifficultyEnum.Medium, 5);
     }
 
     [Test]
@@ -567,7 +567,7 @@ public class LearningSpacePresenterUt
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().EditLearningElement(element, space,"a", "b",  "e", "f", "g",LearningElementDifficultyEnum.Easy,0);
+        presentationLogic.Received().EditLearningElement(space, element, "a", "b",  "e", "f", "g",LearningElementDifficultyEnum.Easy,0);
     }
     
     [Test]
@@ -599,7 +599,7 @@ public class LearningSpacePresenterUt
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().EditLearningElement(element, space,"a", "b",  "e", "f", "g",LearningElementDifficultyEnum.Easy,0);
+        presentationLogic.Received().EditLearningElement(space, element, "a", "b",  "e", "f", "g",LearningElementDifficultyEnum.Easy,0);
     }
 
     [Test]
@@ -656,7 +656,7 @@ public class LearningSpacePresenterUt
     }
 
     [Test]
-    public void DeleteSelectedLearningObject_CallsElementPresenter_WithElement()
+    public void DeleteSelectedLearningObject_CallsPresentationLogic_WithElement()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
         var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
@@ -664,14 +664,14 @@ public class LearningSpacePresenterUt
         space.LearningElements.Add(element);
         space.SelectedLearningObject = element;
 
-        var mockElementPresenter = Substitute.For<ILearningElementPresenter>();
+        var mockPresentationLogic = Substitute.For<IPresentationLogic>();
 
-        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter:mockElementPresenter);
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic:mockPresentationLogic);
         systemUnderTest.SetLearningSpace(space);
 
         systemUnderTest.DeleteSelectedLearningObject();
 
-        mockElementPresenter.Received().RemoveLearningElementFromParentAssignment(element);
+        mockPresentationLogic.Received().DeleteLearningElement(space,element);
     }
 
     [Test]
@@ -686,39 +686,6 @@ public class LearningSpacePresenterUt
 
         var ex = Assert.Throws<NotImplementedException>(() => systemUnderTest.DeleteSelectedLearningObject());
         Assert.That(ex!.Message, Is.EqualTo("Type of LearningObject is not implemented"));
-    }
-
-    [Test]
-    public void DeleteSelectedLearningObject_MutatesSelectionInViewModel_WithElement()
-    {
-        var mockElementPresenter = Substitute.For<ILearningElementPresenter>();
-        mockElementPresenter.When(x => x.RemoveLearningElementFromParentAssignment(Arg.Any<LearningElementViewModel>())).Do(x =>
-        {
-            var ele = x.Arg<LearningElementViewModel>();
-            (((LearningSpaceViewModel) ele.Parent!)).LearningElements.Remove(ele);
-        });
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var content1 = new LearningContentViewModel("bare", "foof", new byte[] {0x01, 0x02});
-        var content2 = new LearningContentViewModel("bars", "foos", new byte[] {0x04, 0x03});
-        var element1 = new LearningElementViewModel("f", "f", content1, "f", "f", "f", LearningElementDifficultyEnum.Easy, space);
-        var element2 = new LearningElementViewModel("e", "e", content2, "f", "f", "f", LearningElementDifficultyEnum.Easy, space);
-        space.LearningElements.Add(element1);
-        space.LearningElements.Add(element2);
-        space.SelectedLearningObject = element1;
-
-        Assert.That(space.SelectedLearningObject, Is.EqualTo(element1));
-
-        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter:mockElementPresenter);
-        systemUnderTest.SetLearningSpace(space);
-
-        systemUnderTest.DeleteSelectedLearningObject();
-
-        Assert.That(space.SelectedLearningObject, Is.EqualTo(element2));
-        
-        systemUnderTest.DeleteSelectedLearningObject();
-        
-        Assert.That(space.SelectedLearningObject, Is.Null);
-        
     }
 
     #endregion

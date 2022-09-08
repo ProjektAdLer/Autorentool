@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BusinessLogic.Commands;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
@@ -696,7 +697,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().EditLearningElement(element, world,"a", "b",  "e", "f", "g",LearningElementDifficultyEnum.Easy,0);
+        presentationLogic.Received().EditLearningElement(world, element, "a", "b",  "e", "f", "g",LearningElementDifficultyEnum.Easy,0);
     }
     
     [Test]
@@ -729,7 +730,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().EditLearningElement(element, world,"a", "b", "e", "f", "g",LearningElementDifficultyEnum.Easy,0);
+        presentationLogic.Received().EditLearningElement(world, element,"a", "b", "e", "f", "g",LearningElementDifficultyEnum.Easy,0);
     }
 
     [Test]
@@ -838,7 +839,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().EditLearningElement(element, space, "a", "b",  "e", "f", "g", LearningElementDifficultyEnum.Easy,2);
+        presentationLogic.Received().EditLearningElement(space, element, "a", "b",  "e", "f", "g", LearningElementDifficultyEnum.Easy,2);
     }
     
     [Test]
@@ -915,7 +916,7 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void DeleteSelectedLearningObject_CallsElementPresenter_WithElement()
+    public void DeleteSelectedLearningObject_CallsPresentationLogic_WithElement()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -924,14 +925,14 @@ public class LearningWorldPresenterUt
         world.LearningElements.Add(element);
         world.SelectedLearningObject = element;
 
-        var mockElementPresenter = Substitute.For<ILearningElementPresenter>();
+        var mockPresentationLogic = Substitute.For<IPresentationLogic>();
 
-        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: mockElementPresenter);
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: mockPresentationLogic);
         systemUnderTest.SetLearningWorld(null, world);
 
         systemUnderTest.DeleteSelectedLearningObject();
 
-        mockElementPresenter.Received().RemoveLearningElementFromParentAssignment(element);
+        mockPresentationLogic.Received().DeleteLearningElement(world,element);
     }
 
     [Test]
@@ -947,40 +948,6 @@ public class LearningWorldPresenterUt
 
         var ex = Assert.Throws<NotImplementedException>(() => systemUnderTest.DeleteSelectedLearningObject());
         Assert.That(ex!.Message, Is.EqualTo("Type of LearningObject is not implemented"));
-    }
-
-    [Test]
-    public void DeleteSelectedLearningObject_MutatesSelectionInViewModel_WithElement()
-    {
-        var mockElementPresenter = Substitute.For<ILearningElementPresenter>();
-        mockElementPresenter.When(x => x.RemoveLearningElementFromParentAssignment(Arg.Any<LearningElementViewModel>()))
-            .Do(x =>
-            {
-                var ele = x.Arg<LearningElementViewModel>();
-                (((LearningWorldViewModel) ele.Parent!)).LearningElements.Remove(ele);
-            });
-        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
-            "foo");
-        var content1 = new LearningContentViewModel("r", "s", new byte[] {0x02, 0x01});
-        var content2 = new LearningContentViewModel("t", "q", new byte[] {0x03, 0x06});
-        var element1 = new LearningElementViewModel("f", "f", content1, "f", "f", "f", LearningElementDifficultyEnum.Medium, world);
-        var element2 = new LearningElementViewModel("e", "e", content2, "f", "f", "f", LearningElementDifficultyEnum.Medium, world);
-        world.LearningElements.Add(element1);
-        world.LearningElements.Add(element2);
-        world.SelectedLearningObject = element1;
-
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(element1));
-
-        var systemUnderTest = CreatePresenterForTesting(learningElementPresenter: mockElementPresenter);
-        systemUnderTest.SetLearningWorld(null, world);
-
-        systemUnderTest.DeleteSelectedLearningObject();
-
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(element2));
-
-        systemUnderTest.DeleteSelectedLearningObject();
-
-        Assert.That(world.SelectedLearningObject, Is.Null);
     }
 
     #endregion

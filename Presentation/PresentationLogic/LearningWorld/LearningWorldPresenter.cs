@@ -481,7 +481,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
             throw new ApplicationException("LearningWorldVm is null");
         if (LearningWorldVm.SelectedLearningObject is not LearningElementViewModel
             learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
-        _presentationLogic.EditLearningElement(learningElementViewModel, parentElement, name, shortname, authors,
+        _presentationLogic.EditLearningElement(parentElement, learningElementViewModel, name, shortname, authors,
             description, goals, difficulty, workload);
     }
 
@@ -521,7 +521,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
                 _presentationLogic.DeleteLearningSpace(LearningWorldVm, learningSpace);
                 break;
             case LearningElementViewModel learningElement:
-                _learningElementPresenter.RemoveLearningElementFromParentAssignment(learningElement);
+                _presentationLogic.DeleteLearningElement(LearningWorldVm, learningElement);
                 break;
             default:
                 throw new NotImplementedException("Type of LearningObject is not implemented");
