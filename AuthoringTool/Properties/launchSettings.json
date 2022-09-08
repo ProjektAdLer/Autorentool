@@ -18,18 +18,18 @@
         "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
-    "IIS Express": {
-      "commandName": "IISExpress",
-      "launchBrowser": true,
-      "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
-      }
-    },
 
     "Electron" : {
       "commandName": "Executable",
       "executablePath": "dotnet",
       "commandLineArgs": "electronize start watch",
+      "workingDirectory": "$(ProjectDir)"
+    },
+    
+    "Electron Mac M1" : {
+      "commandName": "Executable",
+      "executablePath": "electronize",
+      "commandLineArgs": "start watch",
       "workingDirectory": "$(ProjectDir)"
     }
   }
