@@ -36,7 +36,6 @@ public class WorldGenerator : IWorldGenerator
     {
         string dslpath = CreateDsl.WriteLearningWorld(Mapper.Map<LearningWorldPe>(learningWorld));
         ReadDsl.ReadLearningWorld(dslpath);
-        BackupFile.CreateBackupFolders();
         BackupFile.WriteXmlFiles((ReadDsl as ReadDsl)!);
         BackupFile.WriteBackupFile(filepath);
     }

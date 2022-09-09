@@ -7,20 +7,28 @@ namespace Generator.DSL;
 
 public class CreateDsl : ICreateDsl
 {
-    public readonly List<LearningElementPe> ListLearningElements;
-    public readonly List<LearningSpacePe> ListLearningSpaces;
+    public List<LearningElementPe> ListLearningElements;
+    public List<LearningSpacePe> ListLearningSpaces;
     public LearningWorldJson? LearningWorldJson;
     private List<int> _listLearningSpaceContent;
-    private readonly IFileSystem _fileSystem;
-    public readonly string Uuid;
+    private IFileSystem _fileSystem;
+    public string Uuid;
 
     /// <summary>
     /// Read the AuthoringToolLib Entities and create a Dsl Document with a specified syntax.
     /// </summary>
     /// <param name="fileSystem"></param>
+#pragma warning disable CS8618 @Dimitri_Bigler Lists are always initiated, Constructor just doesnt know.
     public CreateDsl(IFileSystem fileSystem)
+#pragma warning restore CS8618
     {
+        Initialize();
         _fileSystem = fileSystem;
+       
+    }
+
+    private void Initialize()
+    {
         ListLearningElements = new List<LearningElementPe>();
         ListLearningSpaces = new List<LearningSpacePe>();
         _listLearningSpaceContent = new List<int>();
@@ -34,6 +42,7 @@ public class CreateDsl : ICreateDsl
     /// <param name="learningWorld"></param> Information about the learningWorld, topics, spaces and elements
     public string WriteLearningWorld(LearningWorldPe learningWorld)
     {
+        Initialize();
         
         //Initialise learningWorldJson with empty values, will be filled with information later in the method.
         LearningWorldJson = new LearningWorldJson(Uuid, new IdentifierJson("name", learningWorld.Name), new List<int>(),

@@ -6,20 +6,28 @@ namespace Generator.DSL;
 
 public class ReadDsl : IReadDsl
 {
-    public readonly List<LearningElementJson> ListH5PElements;
-    public readonly List<LearningElementJson> ListResourceElements;
-    private readonly List<LearningSpaceJson> _listLearningSpaces;
+    public List<LearningElementJson> ListH5PElements;
+    public List<LearningElementJson> ListResourceElements;
+    private List<LearningSpaceJson> _listLearningSpaces;
     private LearningWorldJson _learningWorldJson;
-    private readonly IFileSystem _fileSystem;
+    private IFileSystem _fileSystem;
     private DocumentRootJson _rootJson;
+    
 
+#pragma warning disable CS8618 @Dimitri_Bigler Lists are always initiated, Constructor just doesnt know.
     public ReadDsl(IFileSystem fileSystem)
+#pragma warning restore CS8618
+    {
+        Initialize();
+        _fileSystem = fileSystem;
+    }
+
+    private void Initialize()
     {
         _learningWorldJson = new LearningWorldJson("Uuid",new IdentifierJson("LearningWorld", "Value"), 
             new List<int>(), new List<TopicJson>(), 
             new List<LearningSpaceJson>(), new List<LearningElementJson>());
         _rootJson = new DocumentRootJson(_learningWorldJson);
-        _fileSystem = fileSystem;
         ListH5PElements = new List<LearningElementJson>();
         ListResourceElements = new List<LearningElementJson>();
         _listLearningSpaces = new List<LearningSpaceJson>();
@@ -27,6 +35,8 @@ public class ReadDsl : IReadDsl
 
     public void ReadLearningWorld(string dslPath, DocumentRootJson? rootJsonForTest = null)
     {
+        Initialize();
+        
         var filepathDsl = dslPath;
         
         if (rootJsonForTest != null)
@@ -69,7 +79,7 @@ public class ReadDsl : IReadDsl
     {
         foreach (var resource in documentRootJson.LearningWorld.LearningElements)
         {
-            if (resource.ElementType is "pdf" or "json" or "jpg" or "png" or "webp" or "bmp")
+            if (resource.ElementType is "pdf" or "json" or "jpg" or "png" or "webp" or "bmp" or "mp4")
             {
                 ListResourceElements.Add(resource);
             }
