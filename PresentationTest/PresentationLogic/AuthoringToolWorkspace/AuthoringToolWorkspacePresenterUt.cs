@@ -65,7 +65,7 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
-    public void OnCreateWorldDialogClose_CallsLearningWorldPresenter()
+    public void OnCreateWorldDialogClose_CallsPresentationLogic()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
 
@@ -85,6 +85,60 @@ public class AuthoringToolWorkspacePresenterUt
 
         presentationLogic.Received()
             .CreateLearningWorld(Arg.Any<IAuthoringToolWorkspaceViewModel>(), "n", "sn", "a", "a", "d", "g");
+    }
+
+    [Test]
+    public void OnCreateWorldDialogClose_EventHandlerCalled()
+    {
+        var learningWorldVm = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "n";
+        dictionary["Shortname"] = "sn";
+        dictionary["Authors"] = "a";
+        dictionary["Language"] = "a";
+        dictionary["Description"] = "d";
+        dictionary["Goals"] = "g";
+        var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
+
+        var callbackCreateCalled = false;
+        LearningWorldViewModel? callbackCreateArg = null;
+        EventHandler<LearningWorldViewModel?> callbackCreate =
+            (sender, args) =>
+            {
+                callbackCreateCalled = true;
+                if (args != null)
+                {
+                    callbackCreateArg = args;
+                }
+            };
+        var callbackSelectCalled = false;
+        LearningWorldViewModel? callbackSelectArg = null;
+        EventHandler<LearningWorldViewModel?> callbackSelect =
+            (sender, args) =>
+            {
+                callbackSelectCalled = true;
+                if (args != null)
+                {
+                    callbackSelectArg = args;
+                }
+            };
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.AddLearningWorld(learningWorldVm);
+        systemUnderTest.SetSelectedLearningWorld(learningWorldVm);
+        systemUnderTest.OnLearningWorldCreate += callbackCreate;
+        systemUnderTest.OnLearningWorldSelect += callbackSelect;
+
+        systemUnderTest.OnCreateWorldDialogClose(returnValueTuple);
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(callbackCreateCalled, Is.True);
+            Assert.That(callbackSelectCalled, Is.True);
+            Assert.That(callbackCreateArg, Is.EqualTo(learningWorldVm));
+            Assert.That(callbackSelectArg, Is.EqualTo(learningWorldVm));
+        });
     }
 
     #endregion

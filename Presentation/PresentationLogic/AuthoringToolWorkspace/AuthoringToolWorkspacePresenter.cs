@@ -222,7 +222,8 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
         _presentationLogic.CreateLearningWorld(AuthoringToolWorkspaceVm, name, shortname, authors, language, description, goals);
-        OnLearningWorldCreate?.Invoke(this, AuthoringToolWorkspaceVm.LearningWorlds.Last());
+        OnLearningWorldCreate?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
+        OnLearningWorldSelect?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
     }
 
     public void OnEditWorldDialogClose(ModalDialogOnCloseResult returnValueTuple)

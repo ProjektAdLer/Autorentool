@@ -36,7 +36,18 @@ public class MappingProfile : Profile
     /// </summary>
     private void CreateViewModelEntityMaps()
     {
-        CreateMap<AuthoringToolWorkspaceViewModel, AuthoringToolWorkspace>().ReverseMap();
+        CreateMap<AuthoringToolWorkspace, AuthoringToolWorkspaceViewModel>()
+            .ForMember(x=>x.EditDialogInitialValues, opt=>opt.Ignore())
+            .ForMember(x=>x.SelectedLearningWorld, opt=>opt.Ignore())
+            .AfterMap((s, d) =>
+            {
+                d.SelectedLearningWorld = d.LearningWorlds.FirstOrDefault(x => x.Name == s.SelectedLearningWorld.Name);
+            }).ReverseMap()
+            .ForMember(x=>x.SelectedLearningWorld, opt=>opt.Ignore())
+            .AfterMap((s, d) =>
+            {
+                d.SelectedLearningWorld = d.LearningWorlds.FirstOrDefault(x => x.Name == s.SelectedLearningWorld.Name);
+            });
         CreateMap<LearningWorld, LearningWorldViewModel>()
             .ForMember(x => x.LearningObjects, opt => opt.Ignore())
             .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
