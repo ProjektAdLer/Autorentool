@@ -59,7 +59,6 @@ public class WorldGeneratorUt
         {
             mockCreateDsl.Received().WriteLearningWorld(Arg.Any<LearningWorldPe>());
             mockReadDsl.Received().ReadLearningWorld("", Arg.Any<DocumentRootJson?>());
-            mockBackupFileGen.Received().CreateBackupFolders();
             mockBackupFileGen.Received().WriteXmlFiles(Arg.Any<IReadDsl>());
             mockBackupFileGen.Received().WriteBackupFile("DestinationPath");
             
