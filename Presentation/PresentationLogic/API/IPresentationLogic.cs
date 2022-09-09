@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.API;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
@@ -30,6 +31,40 @@ public interface IPresentationLogic
     /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
     /// <returns>Filepath to the new backup file</returns>
     Task<string> ConstructBackupAsync(LearningWorldViewModel learningWorldViewModel);
+    
+    /// <summary>
+    /// Creates a new learning world in the authoring tool workspace with the corresponding command.
+    /// </summary>
+    /// <param name="authoringToolWorkspaceVm">Authoring Tool Workspace View Model to create the learning world in.</param>
+    /// <param name="shortname"></param>
+    /// <param name="authors"></param>
+    /// <param name="language"></param>
+    /// <param name="description"></param>
+    /// <param name="goals"></param>
+    /// <param name="name"></param>
+    void CreateLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string name, string shortname,
+        string authors, string language, string description, string goals);
+    
+    /// <summary>
+    /// Edits a given learning world in the authoring tool workspace with the corresponding command.
+    /// </summary>
+    /// <param name="learningWorldVm">Learning world to edit.</param>
+    /// <param name="name"></param>
+    /// <param name="shortname"></param>
+    /// <param name="authors"></param>
+    /// <param name="language"></param>
+    /// <param name="description"></param>
+    /// <param name="goals"></param>
+    void EditLearningWorld(ILearningWorldViewModel learningWorldVm, string name, string shortname, string authors, 
+        string language, string description, string goals);
+
+    /// <summary>
+    /// Deletes the given learning world in the authoring tool workspace.
+    /// </summary>
+    /// <param name="authoringToolWorkspaceVm"></param>
+    /// <param name="learningWorldVm">Learning world to delete.</param>
+    void DeleteLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
+        ILearningWorldViewModel learningWorldVm);
     
     /// <summary>
     /// Asks user for path and saves <see cref="LearningWorldViewModel"/> to disk.

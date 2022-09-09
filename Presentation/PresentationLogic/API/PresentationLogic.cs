@@ -3,6 +3,7 @@ using BusinessLogic.API;
 using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using ElectronWrapper;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
@@ -57,6 +58,39 @@ public class PresentationLogic : IPresentationLogic
         var filepath = await GetSaveFilepathAsync("Export learning world", "mbz", "Moodle Backup Zip");
         BusinessLogic.ConstructBackup(entity, filepath);
         return filepath;
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.CreateLearningWorld"/>
+    public void CreateLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string name,
+        string shortname, string authors, string language, string description, string goals)
+    {
+        var authoringToolWorkspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
+
+        var command = new CreateLearningWorld(authoringToolWorkspaceEntity, name, shortname, authors, language, description, goals,
+            workspace => Mapper.Map(workspace, authoringToolWorkspaceVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+    
+    /// <inheritdoc cref="IPresentationLogic.EditLearningWorld"/>
+    public void EditLearningWorld(ILearningWorldViewModel learningWorldVm, string name,
+        string shortname, string authors, string language, string description, string goals)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+
+        var command = new EditLearningWorld(worldEntity, name, shortname, authors, language, description, goals,
+            world => Mapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+    
+    /// <inheritdoc cref="IPresentationLogic.DeleteLearningWorld"/>
+    public void DeleteLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, ILearningWorldViewModel learningWorldVm)
+    {
+        var authoringToolWorkspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+
+        var command = new DeleteLearningWorld(authoringToolWorkspaceEntity, worldEntity,
+            workspace => Mapper.Map(workspace, authoringToolWorkspaceVm));
+        BusinessLogic.ExecuteCommand(command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.SaveLearningWorldAsync"/>

@@ -8,12 +8,6 @@ namespace Presentation.PresentationLogic.LearningWorld;
 
 public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyPropertyChanging
 {
-    LearningWorldViewModel CreateNewLearningWorld(string name, string shortname, string authors,
-        string language, string description, string goals);
-
-    LearningWorldViewModel EditLearningWorld(LearningWorldViewModel world, string name, string shortname,
-        string authors, string language, string description, string goals);
-
     bool CreateLearningSpaceDialogOpen { get; }
     bool EditLearningSpaceDialogOpen { get; }
     Dictionary<string, string>? EditSpaceDialogInitialValues { get; }

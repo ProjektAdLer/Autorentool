@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
@@ -69,6 +70,46 @@ public class PresentationLogicUt
 
         //Assert
         mockBusinessLogic.Received().ConstructBackup(entity, "supersecretfilepath.mbz");
+    }
+    
+    [Test]
+    public void CreateLearningWorld_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var workspaceVm = new AuthoringToolWorkspaceViewModel();
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+        
+        systemUnderTest.CreateLearningWorld(workspaceVm, "a","b","c","d","e", "f");
+
+        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
+    }
+    
+    [Test]
+    public void EditLearningWorld_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+        
+        systemUnderTest.EditLearningWorld(learningWorldVm,"a","b","c","d","e", "f");
+
+        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
+    }
+
+    [Test]
+    public void DeleteLearningWorld_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var workspaceVm = new AuthoringToolWorkspaceViewModel();
+        var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+        
+        systemUnderTest.DeleteLearningWorld(workspaceVm, learningWorldVm);
+
+        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
     }
 
     [Test]
