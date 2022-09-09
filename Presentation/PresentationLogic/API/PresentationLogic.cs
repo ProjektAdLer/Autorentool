@@ -83,10 +83,15 @@ public class PresentationLogic : IPresentationLogic
     }
     
     /// <inheritdoc cref="IPresentationLogic.DeleteLearningWorld"/>
-    public void DeleteLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, ILearningWorldViewModel learningWorldVm)
+    public void DeleteLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string worldName)
     {
         var authoringToolWorkspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
-        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var worldEntity = authoringToolWorkspaceEntity.LearningWorlds.Find(x=>x.Name == worldName);
+        if (worldEntity == null)
+        {
+            _logger.LogError("Learning world not found in authoring tool workspace");
+            return;
+        }
 
         var command = new DeleteLearningWorld(authoringToolWorkspaceEntity, worldEntity,
             workspace => Mapper.Map(workspace, authoringToolWorkspaceVm));

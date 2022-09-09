@@ -127,7 +127,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     {
         var learningWorld = AuthoringToolWorkspaceVm.SelectedLearningWorld;
         if (learningWorld == null) return;
-        _presentationLogic.DeleteLearningWorld(AuthoringToolWorkspaceVm, learningWorld);
+        _presentationLogic.DeleteLearningWorld(AuthoringToolWorkspaceVm, learningWorld.Name);
         if (learningWorld.UnsavedChanges) DeletedUnsavedWorld = learningWorld;
         SetSelectedLearningWorld(AuthoringToolWorkspaceVm.LearningWorlds.LastOrDefault());
         OnLearningWorldDelete?.Invoke(this, learningWorld);

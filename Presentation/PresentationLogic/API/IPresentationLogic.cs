@@ -62,9 +62,9 @@ public interface IPresentationLogic
     /// Deletes the given learning world in the authoring tool workspace.
     /// </summary>
     /// <param name="authoringToolWorkspaceVm"></param>
-    /// <param name="learningWorldVm">Learning world to delete.</param>
+    /// <param name="worldName">Name of the learning world to delete.</param>
     void DeleteLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
-        ILearningWorldViewModel learningWorldVm);
+        string worldName);
     
     /// <summary>
     /// Asks user for path and saves <see cref="LearningWorldViewModel"/> to disk.

@@ -311,10 +311,10 @@ public class AuthoringToolWorkspacePresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         presentationLogic
             .When(x => x.DeleteLearningWorld(Arg.Any<IAuthoringToolWorkspaceViewModel>(),
-                Arg.Any<ILearningWorldViewModel>()))
+                Arg.Any<string>()))
             .Do(y =>
             {
-                workspaceVm.RemoveLearningWorld((LearningWorldViewModel) y.Args()[1]);
+                workspaceVm.RemoveLearningWorld(((AuthoringToolWorkspaceViewModel) y.Args()[0]).SelectedLearningWorld!);
                 ((AuthoringToolWorkspaceViewModel) y.Args()[0]).SelectedLearningWorld =
                     ((AuthoringToolWorkspaceViewModel) y.Args()[0]).LearningWorlds.LastOrDefault();
             });
@@ -351,10 +351,10 @@ public class AuthoringToolWorkspacePresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         presentationLogic
             .When(x => x.DeleteLearningWorld(Arg.Any<IAuthoringToolWorkspaceViewModel>(),
-                Arg.Any<ILearningWorldViewModel>()))
+                Arg.Any<string>()))
             .Do(y =>
             {
-                workspaceVm.RemoveLearningWorld((LearningWorldViewModel) y.Args()[1]);
+                workspaceVm.RemoveLearningWorld(((AuthoringToolWorkspaceViewModel) y.Args()[0]).SelectedLearningWorld!);
                 ((AuthoringToolWorkspaceViewModel) y.Args()[0]).SelectedLearningWorld =
                     ((AuthoringToolWorkspaceViewModel) y.Args()[0]).LearningWorlds.LastOrDefault();
             });

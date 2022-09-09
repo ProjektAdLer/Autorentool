@@ -103,11 +103,18 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        var worldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        workspaceVm.AddLearningWorld(worldVm);
+        var mockMapper = Substitute.For<IMapper>();
+        var worldEntity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
+        var workspaceEntity = new BusinessLogic.Entities.AuthoringToolWorkspace(null,
+            new List<BusinessLogic.Entities.LearningWorld>() {worldEntity});
+        mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<AuthoringToolWorkspaceViewModel>())
+            .Returns(workspaceEntity);
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
-        
-        systemUnderTest.DeleteLearningWorld(workspaceVm, learningWorldVm);
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+
+        systemUnderTest.DeleteLearningWorld(workspaceVm, worldVm.Name);
 
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
     }
