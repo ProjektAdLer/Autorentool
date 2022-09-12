@@ -185,8 +185,11 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     /// <exception cref="ApplicationException">Thrown if <see cref="LearningWorldVm"/> is null</exception>
     public async Task LoadLearningSpaceAsync()
     {
-        var learningSpace = await _presentationLogic.LoadLearningSpaceAsync();
-        AddLearningSpace(learningSpace);
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        await _presentationLogic.LoadLearningSpaceAsync(LearningWorldVm);
+        var learningSpace = LearningWorldVm.LearningSpaces.Last();
+        SetSelectedLearningObject(learningSpace);
     }
 
     /// <summary>

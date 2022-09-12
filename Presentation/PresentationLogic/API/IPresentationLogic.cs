@@ -132,12 +132,13 @@ public interface IPresentationLogic
     /// <summary>
     /// Asks user for path and loads <see cref="LearningSpaceViewModel"/> from disk.
     /// </summary>
+    /// <param name="learningWorldVm">Learning world into which the learning space should be loaded.</param>
     /// <returns>Task containing deserialized object.</returns>
     /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
     /// <exception cref="NotImplementedException">Thrown when we are not running in Electron.</exception>
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
-    Task<ILearningSpaceViewModel> LoadLearningSpaceAsync();
+    Task LoadLearningSpaceAsync(ILearningWorldViewModel learningWorldVm);
 
     /// <summary>
     /// Creates a new learning element and assigns it to the selected learning world or to a learning space in the

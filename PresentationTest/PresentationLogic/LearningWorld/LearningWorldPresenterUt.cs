@@ -1129,12 +1129,14 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
+        var space = new LearningSpaceViewModel("a", "b", "c", "d", "e");
+        world.LearningSpaces.Add(space);
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
         systemUnderTest.SetLearningWorld(null, world);
         await systemUnderTest.LoadLearningSpaceAsync();
 
-        await presentationLogic.Received().LoadLearningSpaceAsync();
+        await presentationLogic.Received().LoadLearningSpaceAsync(world);
     }
 
     [Test]
@@ -1149,32 +1151,6 @@ public class LearningWorldPresenterUt
         await systemUnderTest.LoadLearningElementAsync();
 
         await presentationLogic.Received().LoadLearningElementAsync();
-    }
-
-    [Test]
-    public async Task LoadLearningSpace_AddsLearningSpaceToLearningWorld()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        presentationLogic.LoadLearningSpaceAsync().Returns(new LearningSpaceViewModel("n", "sn", "a", "d", "g"));
-        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
-            "foo");
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
-        systemUnderTest.SetLearningWorld(null, world);
-        Assert.That(systemUnderTest.LearningWorldVm, Is.Not.Null);
-        Assert.That(systemUnderTest.LearningWorldVm?.LearningSpaces, Is.Empty);
-
-        await systemUnderTest.LoadLearningSpaceAsync();
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(systemUnderTest.LearningWorldVm?.LearningSpaces.Count, Is.EqualTo(1));
-            Assert.That(systemUnderTest.LearningWorldVm?.LearningSpaces.First().Name, Is.EqualTo("n"));
-            Assert.That(systemUnderTest.LearningWorldVm?.LearningSpaces.First().Shortname, Is.EqualTo("sn"));
-            Assert.That(systemUnderTest.LearningWorldVm?.LearningSpaces.First().Authors, Is.EqualTo("a"));
-            Assert.That(systemUnderTest.LearningWorldVm?.LearningSpaces.First().Description, Is.EqualTo("d"));
-            Assert.That(systemUnderTest.LearningWorldVm?.LearningSpaces.First().Goals, Is.EqualTo("g"));
-        });
     }
 
     [Test]
