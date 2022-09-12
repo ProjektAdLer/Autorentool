@@ -7,9 +7,9 @@ public interface ILearningSpacePresenter
 {
     void EditLearningSpace(string name, string shortname, string authors, string description, string goals);
     bool EditLearningSpaceDialogOpen { get; set; }
-    IDictionary<string, string> EditLearningSpaceDialogInitialValues { get; }
+    IDictionary<string, string>? EditLearningSpaceDialogInitialValues { get; }
     bool EditLearningElementDialogOpen { get; set; }
-    IDictionary<string, string> EditLearningElementDialogInitialValues { get; }
+    IDictionary<string, string>? EditLearningElementDialogInitialValues { get; }
     bool CreateLearningElementDialogOpen { get; set; }
     ILearningSpaceViewModel? LearningSpaceVm { get; }
     void SetSelectedLearningObject(ILearningObjectViewModel learningObject);

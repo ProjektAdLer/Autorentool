@@ -720,10 +720,15 @@ public class LearningSpacePresenterUt
         systemUnderTest.SetLearningSpace(space);
         
         systemUnderTest.EditSelectedLearningObject();
+        
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.EditLearningElementDialogOpen, Is.True);
-            Assert.That(systemUnderTest.EditLearningElementDialogInitialValues["Name"], Is.EqualTo(element.Name));
+            Assert.That(systemUnderTest.EditLearningElementDialogInitialValues, Is.Not.Null);
+        });
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.EditLearningElementDialogInitialValues!["Name"], Is.EqualTo(element.Name));
             Assert.That(systemUnderTest.EditLearningElementDialogInitialValues["Shortname"], Is.EqualTo(element.Shortname));
             Assert.That(systemUnderTest.EditLearningElementDialogInitialValues["Authors"], Is.EqualTo(element.Authors));
             Assert.That(systemUnderTest.EditLearningElementDialogInitialValues["Description"], Is.EqualTo(element.Description));
@@ -883,10 +888,10 @@ public class LearningSpacePresenterUt
 
 
     private LearningSpacePresenter CreatePresenterForTesting(IPresentationLogic? presentationLogic = null,
-        ILogger<LearningWorldPresenter>? logger = null)
+        ILogger<LearningSpacePresenter>? logger = null)
     {
         presentationLogic ??= Substitute.For<IPresentationLogic>();
-        logger ??= Substitute.For<ILogger<LearningWorldPresenter>>();
+        logger ??= Substitute.For<ILogger<LearningSpacePresenter>>();
         return new LearningSpacePresenter(presentationLogic, logger);
     }
 }

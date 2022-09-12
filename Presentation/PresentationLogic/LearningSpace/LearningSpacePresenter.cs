@@ -11,14 +11,16 @@ namespace Presentation.PresentationLogic.LearningSpace;
 public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePresenterToolboxInterface
 {
     public LearningSpacePresenter(
-        IPresentationLogic presentationLogic, ILogger<LearningWorldPresenter> logger)
+        IPresentationLogic presentationLogic, ILogger<LearningSpacePresenter> logger)
     {
         _presentationLogic = presentationLogic;
         _logger = logger;
+        EditLearningSpaceDialogInitialValues = null;
+        EditLearningElementDialogInitialValues = null;
     }
 
     private readonly IPresentationLogic _presentationLogic;
-    private readonly ILogger<LearningWorldPresenter> _logger;
+    private readonly ILogger<LearningSpacePresenter> _logger;
 
     public ILearningSpaceViewModel? LearningSpaceVm { get; private set; }
 
@@ -32,9 +34,9 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     }
 
     public bool EditLearningSpaceDialogOpen { get; set; }
-    public IDictionary<string, string> EditLearningSpaceDialogInitialValues { get; private set; }
+    public IDictionary<string, string>? EditLearningSpaceDialogInitialValues { get; private set; }
     public bool EditLearningElementDialogOpen { get; set; }
-    public IDictionary<string, string> EditLearningElementDialogInitialValues { get; private set; }
+    public IDictionary<string, string>? EditLearningElementDialogInitialValues { get; private set; }
     public bool CreateLearningElementDialogOpen { get; set; }
 
     public void SetLearningSpace(ILearningSpaceViewModel space)
