@@ -38,7 +38,10 @@
 </svg>
 @if (LearningSpaceP.EditLearningSpaceDialogOpen && LearningSpaceP.LearningSpaceVm != null)
 {
-    @ModalDialogFactory.GetEditLearningSpaceFragment(LearningSpaceP.EditLearningSpaceDialogInitialValues, OnEditSpaceDialogClose)
+    @ModalDialogFactory.GetEditLearningSpaceFragment(
+        LearningSpaceP.EditLearningSpaceDialogInitialValues 
+        ?? throw new InvalidOperationException("LearningSpacePresenter.EditLearningSpaceDialogInitialValues unexpectedly null"),
+        OnEditSpaceDialogClose)
 }
 
 @if (LearningSpaceP.CreateLearningElementDialogOpen)
@@ -49,7 +52,10 @@
 
 @if (LearningSpaceP.EditLearningElementDialogOpen && LearningSpaceP.LearningSpaceVm != null)
 {
-    @ModalDialogFactory.GetEditLearningElementFragment(LearningSpaceP.EditLearningElementDialogInitialValues, OnEditElementDialogClose)
+    @ModalDialogFactory.GetEditLearningElementFragment(
+        LearningSpaceP.EditLearningElementDialogInitialValues
+        ?? throw new InvalidOperationException("LearningSpacePresenter.EditLearningSpaceDialogInitialValues unexpectedly null"),
+        OnEditElementDialogClose)
 }
 
 

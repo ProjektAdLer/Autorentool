@@ -107,17 +107,11 @@
 
 @code
 {
-    ///<summary>Default constructor.</summary>
-    public ModalDialog()
-    {
-        _inputFieldValues = new Dictionary<string, string>();
-        RequiredFieldsWarning = false;
-    }
-    
 
+#pragma warning disable CS8618 // Parameters provided by framework - n.stich
     ///<summary>The title of the dialog.</summary>
     [Parameter, EditorRequired]
-    public string Title { get; set; }
+        public string Title { get; set; }
     ///<summary>The text of the dialog.</summary>
     [Parameter, EditorRequired]
     public string Text { get; set; }
@@ -126,6 +120,7 @@
     ///<seealso cref="ModalDialogReturnValue"/>
     [Parameter, EditorRequired] 
     public ModalDialogOnClose OnClose { get; set; }
+#pragma warning restore CS8618
     ///<summary>The type of dialog.</summary>
     ///<seealso cref="ModalDialogType"/>
     [Parameter, EditorRequired] 
@@ -139,15 +134,21 @@
     [Parameter]
     public IDictionary<string, string>? InputFieldsInitialValue { get; set; }
     
-    
     ///<summary>Whether or not the required fields warning should be displayed or not.</summary>
     private bool RequiredFieldsWarning { get; set; }
+    
+    
+#pragma warning disable CS8618 // Set in OnParametersSet 
     ///<summary>Internal dictionary for storing values of input fields on change.</summary>
     private IDictionary<string, string> _inputFieldValues;
+#pragma warning restore CS8618
 
 
     protected override void OnParametersSet()
     {
+        _inputFieldValues = new Dictionary<string, string>();
+        RequiredFieldsWarning = false;
+        
         if (InputFields != null)
         {
             foreach (var field in InputFields.Where(field => !_inputFieldValues.ContainsKey(field.Name)))
