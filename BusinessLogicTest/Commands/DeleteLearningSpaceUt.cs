@@ -1,6 +1,5 @@
 using BusinessLogic.Commands;
 using BusinessLogic.Entities;
-using NSubstitute;
 using NUnit.Framework;
 
 namespace BusinessLogicTest.Commands;

@@ -63,6 +63,7 @@ public class ToolboxRenderFragmentFactoryUt
         firstPassRendered.MarkupMatches(expectedMarkup);
         
         //assert that entry was saved (in other words, Set was called)
+        //TODO: refactor into substitute and check call
         Assert.That(cache.Entries.Any(entry => entry.Key == obj && (RenderFragment)entry.Value == firstPass));
 
         var secondPass = systemUnderTest.GetRenderFragment(obj);
