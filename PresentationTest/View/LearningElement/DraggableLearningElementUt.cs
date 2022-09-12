@@ -16,7 +16,7 @@ namespace PresentationTest.View.LearningElement;
 [TestFixture]
 public class DraggableLearningElementUt
 {
-#pragma warning disable CS8618 set in setup - n.stich
+#pragma warning disable CS8618 //set in setup - n.stich
     private TestContext _ctx;
 #pragma warning restore CS8618
 

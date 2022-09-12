@@ -24,7 +24,7 @@ namespace PresentationTest.View;
 
 public class AuthoringToolWorkspaceViewUt
 {
-#pragma warning disable CS8618 set in setup - m.ho
+#pragma warning disable CS8618 //set in setup - m.ho
     private TestContext _ctx;
     private IAuthoringToolWorkspacePresenter _authoringToolWorkspacePresenter;
     private IAuthoringToolWorkspaceViewModel _authoringToolWorkspaceViewModel;

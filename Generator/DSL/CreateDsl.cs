@@ -18,7 +18,7 @@ public class CreateDsl : ICreateDsl
     /// Read the AuthoringToolLib Entities and create a Dsl Document with a specified syntax.
     /// </summary>
     /// <param name="fileSystem"></param>
-#pragma warning disable CS8618 @Dimitri_Bigler Lists are always initiated, Constructor just doesnt know.
+#pragma warning disable CS8618 //@Dimitri_Bigler Lists are always initiated, Constructor just doesnt know.
     public CreateDsl(IFileSystem fileSystem)
 #pragma warning restore CS8618
     {

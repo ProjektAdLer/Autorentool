@@ -25,7 +25,7 @@ namespace PresentationTest.View.LearningSpace;
 [TestFixture]
 public class LearningSpaceViewUt
 {
-#pragma warning disable CS8618 set in setup - n.stich
+#pragma warning disable CS8618 // set in setup - n.stich
     private TestContext _ctx;
     private ILearningSpacePresenter _learningSpacePresenter;
     private IMouseService _mouseService;

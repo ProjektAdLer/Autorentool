@@ -1509,8 +1509,7 @@
           "NUnit.Analyzers": "3.3.0",
           "NUnit3TestAdapter": "4.2.1",
           "System.IO.Abstractions": "17.1.1",
-          "System.IO.Abstractions.TestingHelpers": "17.1.1",
-          "coverlet.collector": "3.1.2"
+          "System.IO.Abstractions.TestingHelpers": "17.1.1"
         }
       },
       "persistentities": {
@@ -1542,8 +1541,7 @@
           "Presentation": "1.0.0",
           "System.IO.Abstractions": "17.1.1",
           "System.IO.Abstractions.TestingHelpers": "17.1.1",
-          "bunit": "1.9.8",
-          "coverlet.collector": "3.1.2"
+          "bunit": "1.9.8"
         }
       },
       "shared": {

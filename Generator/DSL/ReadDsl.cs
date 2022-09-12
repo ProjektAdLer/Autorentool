@@ -14,7 +14,7 @@ public class ReadDsl : IReadDsl
     private DocumentRootJson _rootJson;
     
 
-#pragma warning disable CS8618 @Dimitri_Bigler Lists are always initiated, Constructor just doesnt know.
+#pragma warning disable CS8618 //@Dimitri_Bigler Lists are always initiated, Constructor just doesnt know.
     public ReadDsl(IFileSystem fileSystem)
 #pragma warning restore CS8618
     {
