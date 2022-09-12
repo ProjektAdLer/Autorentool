@@ -626,13 +626,14 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        var mockLearningSpaceViewModel = new LearningSpaceViewModel("n", "sn", "a", "l", "d");
         mockHybridSupport.IsElectronActive.Returns(false);
 
         var systemUnderTest =
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
-            await systemUnderTest.LoadLearningElementAsync());
+            await systemUnderTest.LoadLearningElementAsync(mockLearningSpaceViewModel));
         Assert.That(ex!.Message, Is.EqualTo("Browser upload/download not yet implemented"));
     }
 
@@ -641,6 +642,7 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        var mockLearningSpaceViewModel = new LearningSpaceViewModel("sn", "a", "l", "d", "g");
         mockHybridSupport.IsElectronActive.Returns(true);
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(null);
@@ -648,40 +650,33 @@ public class PresentationLogicUt
         var systemUnderTest =
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
-        var ex = Assert.ThrowsAsync<InvalidOperationException>(async () => await systemUnderTest.LoadLearningElementAsync());
+        var ex = Assert.ThrowsAsync<InvalidOperationException>(async () => await systemUnderTest.LoadLearningElementAsync(mockLearningSpaceViewModel));
         Assert.That(ex!.Message, Is.EqualTo("dialogManager received from DI unexpectedly null"));
     }
     
     [Test]
-    public async Task LoadLearningElementAsync_CallsDialogManagerAndElementMapperAndBusinessLogic()
+    public async Task LoadLearningElementAsync_CallsDialogManagerAndBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(true);
-        var mockMapper = Substitute.For<IMapper>();
-        var learningElement = new LearningElementViewModel("f", "f", null!, "f", "f", "f",LearningElementDifficultyEnum.Easy, null);
-        var entity = new BusinessLogic.Entities.LearningElement("f", "f", null!, "f", "f", "f", LearningElementDifficultyEnum.Easy, null);
-        mockMapper.Map<LearningElementViewModel>(Arg.Any<BusinessLogic.Entities.LearningElement>()).Returns(learningElement);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
+        var mockLearningWorldViewModel = new LearningWorldViewModel("a", "l", "d", "g","h", "i");
         mockDialogManger
             .ShowOpenFileDialogAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<IEnumerable<FileFilterProxy>?>())
             .Returns(filepath);
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManger);
-        mockBusinessLogic.LoadLearningElement(filepath+".aef").Returns(entity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            mapper: mockMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
+            serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
-        var actualElement = await systemUnderTest.LoadLearningElementAsync();
-
+        await systemUnderTest.LoadLearningElementAsync(mockLearningWorldViewModel);
+        
         await mockDialogManger.Received()
             .ShowOpenFileDialogAsync("Load Learning Element", null, Arg.Any<IEnumerable<FileFilterProxy>?>());
-        mockBusinessLogic.Received().LoadLearningElement(filepath + ".aef");
-        mockMapper.Received().Map<LearningElementViewModel>(entity);
-        
-        Assert.That(actualElement, Is.EqualTo(learningElement));
+        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
     }
 
     [Test]
@@ -693,6 +688,7 @@ public class PresentationLogicUt
         var mockLogger = Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         var mockElectronDialogManager = Substitute.For<IElectronDialogManager>();
+        var mockLearningSpaceViewModel = new LearningSpaceViewModel("n", "sn", "a", "l", "d");
         mockElectronDialogManager
             .ShowOpenFileDialogAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<IEnumerable<FileFilterProxy>?>())
             .Throws(new OperationCanceledException("bububaba"));
@@ -702,7 +698,7 @@ public class PresentationLogicUt
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
             serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
-        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.LoadLearningElementAsync());
+        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.LoadLearningElementAsync(mockLearningSpaceViewModel));
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
         mockLogger.Received().LogInformation("Load dialog cancelled by user");
     }

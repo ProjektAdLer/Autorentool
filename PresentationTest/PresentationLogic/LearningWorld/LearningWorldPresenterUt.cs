@@ -1145,42 +1145,14 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-
+        var element = new LearningElementViewModel("a", "b", null!, "d", "e", "f", LearningElementDifficultyEnum.Medium, world);
+        world.LearningElements.Add(element);
+        
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
         systemUnderTest.SetLearningWorld(null, world);
         await systemUnderTest.LoadLearningElementAsync();
 
-        await presentationLogic.Received().LoadLearningElementAsync();
-    }
-
-    [Test]
-    public async Task LoadLearningElement_AddsLearningElementToLearningWorld()
-    {
-        var content = new LearningContentViewModel("a", "b", new byte[] {0x02, 0x01});
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        presentationLogic.LoadLearningElementAsync()
-            .Returns(new LearningElementViewModel("n", "sn", content, "a", "d", "g", LearningElementDifficultyEnum.Easy, null));
-        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
-            "foo");
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
-        systemUnderTest.SetLearningWorld(null, world);
-        Assert.That(systemUnderTest.LearningWorldVm, Is.Not.Null);
-        Assert.That(systemUnderTest.LearningWorldVm?.LearningElements, Is.Empty);
-
-        await systemUnderTest.LoadLearningElementAsync();
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(systemUnderTest.LearningWorldVm?.LearningElements.Count, Is.EqualTo(1));
-            Assert.That(systemUnderTest.LearningWorldVm?.LearningElements.First().Name, Is.EqualTo("n"));
-            Assert.That(systemUnderTest.LearningWorldVm?.LearningElements.First().Shortname, Is.EqualTo("sn"));
-            Assert.That(systemUnderTest.LearningWorldVm?.LearningElements.First().Parent, Is.EqualTo(world));
-            Assert.That(systemUnderTest.LearningWorldVm?.LearningElements.First().LearningContent, Is.EqualTo(content));
-            Assert.That(systemUnderTest.LearningWorldVm?.LearningElements.First().Authors, Is.EqualTo("a"));
-            Assert.That(systemUnderTest.LearningWorldVm?.LearningElements.First().Description, Is.EqualTo("d"));
-            Assert.That(systemUnderTest.LearningWorldVm?.LearningElements.First().Goals, Is.EqualTo("g"));
-        });
+        await presentationLogic.Received().LoadLearningElementAsync(world);
     }
 
     #endregion

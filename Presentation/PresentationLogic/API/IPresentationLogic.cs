@@ -197,12 +197,14 @@ public interface IPresentationLogic
     /// <summary>
     /// Asks user for path and loads <see cref="LearningElementViewModel"/> from disk.
     /// </summary>
+    /// <param name="elementParentVm">Either a learning world or a learning space into which the learning space
+    /// should be loaded.</param>
     /// <returns>Task containing deserialized object.</returns>
     /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
     /// <exception cref="NotImplementedException">Thrown when we are not running in Electron.</exception>
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
-    Task<ILearningElementViewModel> LoadLearningElementAsync();
+    Task LoadLearningElementAsync(ILearningElementViewModelParent elementParentVm);
     
     /// <summary>
     /// Asks user for path, loads an image file from disk and returns a <see cref="LearningContentViewModel"/>. 

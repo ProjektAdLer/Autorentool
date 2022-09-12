@@ -118,11 +118,11 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     /// <exception cref="ApplicationException">Thrown if <see cref="LearningSpaceVm"/> is null</exception>
     public async Task LoadLearningElementAsync()
     {
-        var learningElement = await _presentationLogic.LoadLearningElementAsync();
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
-        learningElement.Parent = LearningSpaceVm;
-        AddLearningElement(learningElement);
+        await _presentationLogic.LoadLearningElementAsync(LearningSpaceVm);
+        var learningElement = LearningSpaceVm.LearningElements.Last();
+        SetSelectedLearningObject(learningElement);
     }
 
     public void AddLearningElement(ILearningElementViewModel element)

@@ -220,13 +220,15 @@ public class PresentationLogic : IPresentationLogic
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadLearningElementAsync"/>
-    public async Task<ILearningElementViewModel> LoadLearningElementAsync()
+    public async Task LoadLearningElementAsync(ILearningElementViewModelParent elementParentVm)
     {
         SaveOrLoadElectronCheck();
         var filepath =
             await GetLoadFilepathAsync("Load Learning Element", ElementFileEnding, ElementFileFormatDescriptor);
-        var entity = BusinessLogic.LoadLearningElement(filepath);
-        return Mapper.Map<LearningElementViewModel>(entity);
+        var elementParent = Mapper.Map<ILearningElementParent>(elementParentVm);
+        var command = new LoadLearningElement(elementParent, filepath, BusinessLogic,
+            parent => Mapper.Map(parent, elementParentVm));
+        BusinessLogic.ExecuteCommand(command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadImageAsync"/>

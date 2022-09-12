@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
@@ -843,43 +844,18 @@ public class LearningSpacePresenterUt
     }
 
     [Test]
-    public void LoadLearningElementAsync_CallsPresentationLogic()
+    public async Task LoadLearningElementAsync_CallsPresentationLogic()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-
+        var element = new LearningElementViewModel("a", "b", null!, "d", "e", "f", LearningElementDifficultyEnum.Medium, space);
+        space.LearningElements.Add(element);
+        
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
         systemUnderTest.SetLearningSpace(space);
-        systemUnderTest.LoadLearningElementAsync();
+        await systemUnderTest.LoadLearningElementAsync();
 
-        presentationLogic.Received().LoadLearningElementAsync();
-    }
-
-    [Test]
-    public void LoadLearningElement_AddsLearningElementToLearningWorld()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        presentationLogic.LoadLearningElementAsync()
-            .Returns(new LearningElementViewModel("n", "sn", null!, "a", "d", "g", LearningElementDifficultyEnum.Easy, null));
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
-        systemUnderTest.SetLearningSpace(space);
-        Assert.That(systemUnderTest.LearningSpaceVm, Is.Not.Null);
-        Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements, Is.Empty);
-
-        systemUnderTest.LoadLearningElementAsync();
-
-        Assert.Multiple(() =>
-        {
-            Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.Count, Is.EqualTo(1));
-            Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.First().Name, Is.EqualTo("n"));
-            Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.First().Shortname, Is.EqualTo("sn"));
-            Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.First().Parent, Is.EqualTo(space));
-            Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.First().Authors, Is.EqualTo("a"));
-            Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.First().Description, Is.EqualTo("d"));
-            Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements.First().Goals, Is.EqualTo("g"));
-        });
+        await presentationLogic.Received().LoadLearningElementAsync(space);
     }
 
     #endregion

@@ -302,11 +302,11 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     /// <exception cref="ApplicationException">Thrown if <see cref="LearningWorldVm"/> is null</exception>
     public async Task LoadLearningElementAsync()
     {
-        var learningElement = await _presentationLogic.LoadLearningElementAsync();
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        learningElement.Parent = LearningWorldVm;
-        AddLearningElement(learningElement);
+        await _presentationLogic.LoadLearningElementAsync(LearningWorldVm);
+        var learningElement = LearningWorldVm.LearningElements.Last();
+        SetSelectedLearningObject(learningElement);
     }
 
     /// <summary>
