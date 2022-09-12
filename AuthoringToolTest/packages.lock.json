@@ -97,11 +97,11 @@
       },
       "System.IO.Abstractions.TestingHelpers": {
         "type": "Direct",
-        "requested": "[17.1.1, )",
-        "resolved": "17.1.1",
-        "contentHash": "IXsc9skbI+xsjgfsIH5xTdXN/QUyeBc1WVjiJ+IwOthFakBZmN2bqwPH/tYX0FeOEzJ6ZfrZyhqdJ/B+rPHLEQ==",
+        "requested": "[17.2.1, )",
+        "resolved": "17.2.1",
+        "contentHash": "1xR+k2ULLlKAgN2C8K+coW/EApThfTRiRh85fs/EfkgvcpYO8xSHlAWe/iaOQDRQi8n6v766+sbrXjDpRbeDdw==",
         "dependencies": {
-          "System.IO.Abstractions": "17.1.1"
+          "System.IO.Abstractions": "17.2.1"
         }
       },
       "AngleSharp": {
@@ -1521,7 +1521,7 @@
           "NUnit.Analyzers": "3.3.0",
           "NUnit3TestAdapter": "4.2.1",
           "System.IO.Abstractions": "17.2.1",
-          "System.IO.Abstractions.TestingHelpers": "17.1.1"
+          "System.IO.Abstractions.TestingHelpers": "17.2.1"
         }
       },
       "persistentities": {
@@ -1557,7 +1557,7 @@
           "NUnit3TestAdapter": "4.2.1",
           "Presentation": "1.0.0",
           "System.IO.Abstractions": "17.2.1",
-          "System.IO.Abstractions.TestingHelpers": "17.1.1",
+          "System.IO.Abstractions.TestingHelpers": "17.2.1",
           "bunit": "1.9.8"
         }
       },
