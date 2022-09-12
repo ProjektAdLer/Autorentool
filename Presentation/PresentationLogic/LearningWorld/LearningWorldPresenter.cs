@@ -146,7 +146,8 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         _presentationLogic.CreateLearningSpace(LearningWorldVm, name, shortname, authors, description, goals);
-        LearningWorldVm.SelectedLearningObject = LearningWorldVm.LearningSpaces.Last();
+        var learningSpace = LearningWorldVm.LearningSpaces.Last();
+        SetSelectedLearningObject(learningSpace);
     }
 
     /// <summary>
