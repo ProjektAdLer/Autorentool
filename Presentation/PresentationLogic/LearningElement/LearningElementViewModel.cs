@@ -10,6 +10,20 @@ public class LearningElementViewModel : ISerializableViewModel, IDisplayableLear
     /// </summary>
     protected LearningElementViewModel()
     {
+        Id = Guid.Empty;
+        Name = "";
+        Shortname = "";
+        Parent = null;
+        //We override nullability here because constructor is protected, only called by AutoMapper and field immediately
+        //set by AutoMapper afterwards - n.stich
+        LearningContent = null!;
+        Authors = "";
+        Description = "";
+        Goals = "";
+        Difficulty = LearningElementDifficultyEnum.None;
+        Workload = 0;
+        PositionX = 0;
+        PositionY = 0;
     }
 
     /// <summary>

@@ -13,6 +13,15 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     /// </summary>
     private LearningWorldViewModel()
     {
+        _name = "";
+        _shortname = "";
+        _authors = "";
+        _language = "";
+        _description = "";
+        _goals = "";
+        _unsavedChanges = false;
+        _learningElements = new List<ILearningElementViewModel>();
+        _learningSpaces = new List<ILearningSpaceViewModel>();
     }
     
     /// <summary>
@@ -33,15 +42,15 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         string goals, bool unsavedChanges = true, List<ILearningElementViewModel>? learningElements = null,
         List<ILearningSpaceViewModel>? learningSpaces = null)
     {
-        Name = name;
-        Shortname = shortname;
-        Authors = authors;
-        Language = language;
-        Description = description;
-        Goals = goals;
-        UnsavedChanges = unsavedChanges;
-        LearningElements = learningElements ?? new List<ILearningElementViewModel>();
-        LearningSpaces = learningSpaces ?? new List<ILearningSpaceViewModel>();
+        _name = name;
+        _shortname = shortname;
+        _authors = authors;
+        _language = language;
+        _description = description;
+        _goals = goals;
+        _unsavedChanges = unsavedChanges;
+        _learningElements = learningElements ?? new List<ILearningElementViewModel>();
+        _learningSpaces = learningSpaces ?? new List<ILearningSpaceViewModel>();
     }
     
     public const string fileEnding = "awf";

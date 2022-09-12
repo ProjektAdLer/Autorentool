@@ -10,6 +10,15 @@ public class LearningSpaceViewModel : ILearningObjectViewModel, ILearningElement
     /// </summary>
     private LearningSpaceViewModel()
     {
+        Id = Guid.Empty;
+        Name = "";
+        Shortname = "";
+        Authors = "";
+        Description = "";
+        Goals = "";
+        LearningElements = new Collection<ILearningElementViewModel>();
+        PositionX = 0;
+        PositionY = 0;
     }
 
     /// <summary>

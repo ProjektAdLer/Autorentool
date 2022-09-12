@@ -9,6 +9,20 @@ public class LearningElement : ILearningElement, IOriginator
     /// </summary>
     protected LearningElement()
     {
+        Id = Guid.Empty;
+        Name = "";
+        Shortname = "";
+        //We override nullability here because constructor is protected, only called by AutoMapper and field immediately
+        //set by AutoMapper afterwards - n.stich
+        LearningContent = null!;
+        Authors = "";
+        Description = "";
+        Goals = "";
+        Difficulty = LearningElementDifficultyEnum.None;
+        Workload = 0;
+        PositionX = 0;
+        PositionY = 0;
+        Parent = null;
     }
 
     public LearningElement(string name, string shortname, LearningContent learningContent,

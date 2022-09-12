@@ -7,7 +7,15 @@ public class LearningWorld : ILearningWorld, IOriginator
     /// </summary>
     private LearningWorld()
     {
-        
+        Name = "";
+        Shortname = "";
+        Authors = "";
+        Language = "";
+        Description = "";
+        Goals = "";
+        LearningElements = new List<LearningElement>();
+        LearningSpaces = new List<LearningSpace>();
+        UnsavedChanges = false;
     }
     public LearningWorld(string name, string shortname, string authors, string language, string description,
         string goals, List<LearningElement>? learningElements = null,

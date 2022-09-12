@@ -7,6 +7,9 @@ public class LearningContentViewModel
     /// </summary>
     private LearningContentViewModel()
     {
+        Name = "";
+        Type = "";
+        Content = Array.Empty<byte>();
     }
 
     /// <summary>

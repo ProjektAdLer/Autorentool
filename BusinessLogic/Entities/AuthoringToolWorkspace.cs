@@ -7,7 +7,7 @@ public class AuthoringToolWorkspace : IOriginator
     /// </summary>
     private AuthoringToolWorkspace()
     {
-        
+        LearningWorlds = new List<LearningWorld>();
     }
     public AuthoringToolWorkspace(LearningWorld? selectedLearningWorld, List<LearningWorld> learningWorlds)
     {
