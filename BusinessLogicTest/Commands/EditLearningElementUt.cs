@@ -26,13 +26,15 @@ public class EditLearningElementUt
         var goals = "learn";
         var workload = 7;
         var difficulty = LearningElementDifficultyEnum.Easy;
-        var mappingAction = Substitute.For<Action<LearningElement>>();
+        bool actionWasInvoked = false;
+        Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
         var command = new EditLearningElement(element, parent, name, shortname, authors, description, goals, difficulty,
             workload, mappingAction);
         
         Assert.Multiple(() =>
         {
+            Assert.IsFalse(actionWasInvoked);
             Assert.That(element.Name, Is.EqualTo("a"));
             Assert.That(element.Shortname, Is.EqualTo("b"));
             Assert.That(element.Parent, Is.EqualTo(parent));
@@ -51,6 +53,7 @@ public class EditLearningElementUt
         
         Assert.Multiple(() =>
         {
+            Assert.IsTrue(actionWasInvoked);
             Assert.That(element.Name, Is.EqualTo(name));
             Assert.That(element.Shortname, Is.EqualTo(shortname));
             Assert.That(element.LearningContent, Is.EqualTo(content));
@@ -81,13 +84,15 @@ public class EditLearningElementUt
         var goals = "learn";
         var workload = 7;
         var difficulty = LearningElementDifficultyEnum.Easy;
-        var mappingAction = Substitute.For<Action<LearningElement>>();
+        bool actionWasInvoked = false;
+        Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
         var command = new EditLearningElement(element, parent, name, shortname, authors, description, goals, difficulty,
             workload, mappingAction);
         
         Assert.Multiple(() =>
         {
+            Assert.IsFalse(actionWasInvoked);
             Assert.That(element.Name, Is.EqualTo("a"));
             Assert.That(element.Shortname, Is.EqualTo("b"));
             Assert.That(element.Parent, Is.EqualTo(parent));
@@ -106,6 +111,7 @@ public class EditLearningElementUt
         
         Assert.Multiple(() =>
         {
+            Assert.IsTrue(actionWasInvoked);
             Assert.That(element.Name, Is.EqualTo(name));
             Assert.That(element.Shortname, Is.EqualTo(shortname));
             Assert.That(element.Parent, Is.EqualTo(parent));
@@ -157,13 +163,15 @@ public class EditLearningElementUt
         var goals = "learn";
         var workload = 7;
         var difficulty = LearningElementDifficultyEnum.Easy;
-        var mappingAction = Substitute.For<Action<LearningElement>>();
+        bool actionWasInvoked = false;
+        Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
         var command = new EditLearningElement(element, parent, name, shortname, authors, description, goals, difficulty,
             workload, mappingAction);
         
         Assert.Multiple(() =>
         {
+            Assert.IsFalse(actionWasInvoked);
             Assert.That(element.Name, Is.EqualTo("a"));
             Assert.That(element.Shortname, Is.EqualTo("b"));
             Assert.That(element.Parent, Is.EqualTo(parent));
@@ -182,6 +190,7 @@ public class EditLearningElementUt
         
         Assert.Multiple(() =>
         {
+            Assert.IsTrue(actionWasInvoked);
             Assert.That(element.Name, Is.EqualTo(name));
             Assert.That(element.Shortname, Is.EqualTo(shortname));
             Assert.That(element.Parent, Is.EqualTo(parent));
@@ -195,11 +204,13 @@ public class EditLearningElementUt
             Assert.That(element.PositionY, Is.EqualTo(29f));
             Assert.That(parent.LearningElements, Has.Count.EqualTo(1));
         });
+        actionWasInvoked = false;
         
         command.Undo();
         
         Assert.Multiple(() =>
         {
+            Assert.IsTrue(actionWasInvoked);
             Assert.That(element.Name, Is.EqualTo("a"));
             Assert.That(element.Shortname, Is.EqualTo("b"));
             Assert.That(element.Parent, Is.EqualTo(parent));
@@ -213,11 +224,13 @@ public class EditLearningElementUt
             Assert.That(element.PositionY, Is.EqualTo(29f));
             Assert.That(parent.LearningElements, Has.Count.EqualTo(1));
         });
+        actionWasInvoked = false;
         
         command.Redo();
         
         Assert.Multiple(() =>
         {
+            Assert.IsTrue(actionWasInvoked);
             Assert.That(element.Name, Is.EqualTo(name));
             Assert.That(element.Shortname, Is.EqualTo(shortname));
             Assert.That(element.Parent, Is.EqualTo(parent));

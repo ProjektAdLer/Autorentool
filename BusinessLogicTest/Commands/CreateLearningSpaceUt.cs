@@ -19,15 +19,18 @@ public class CreateLearningSpaceUt
         var authors = "marvin";
         var description = "space for learning";
         var goals = "learning";
-        var mappingAction = Substitute.For<Action<LearningWorld>>();
+        bool actionWasInvoked = false;
+        Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
         var command = new CreateLearningSpace(world, name, shortname, authors, description, goals, mappingAction);
         
         Assert.IsEmpty(world.LearningSpaces);
+        Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
         
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked);
         var space = world.LearningSpaces.First();
         Assert.Multiple(() =>
         {
@@ -68,22 +71,27 @@ public class CreateLearningSpaceUt
         var authors = "marvin";
         var description = "space for learning";
         var goals = "learning";
-        var mappingAction = Substitute.For<Action<LearningWorld>>();
+        bool actionWasInvoked = false;
+        Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         
         var command = new CreateLearningSpace(world, name, shortname, authors, description, goals, mappingAction);
         
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
+        Assert.IsFalse(actionWasInvoked);
         
         command.Execute();
         
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(2));
+        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Undo();
         
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Redo();
         
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(2));
+        Assert.IsTrue(actionWasInvoked);
     }
 }

@@ -16,15 +16,18 @@ public class DeleteLearningElementUt
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         var element = new LearningElement("g", "h", null!, "i", "j", "k", LearningElementDifficultyEnum.Easy, world);
         world.LearningElements.Add(element);
-        var mappingAction = Substitute.For<Action<ILearningElementParent>>();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
 
         var command = new DeleteLearningElement(element, world, mappingAction);
         
         Assert.That(world.LearningElements, Does.Contain(element));
+        Assert.IsFalse(actionWasInvoked);
         
         command.Execute();
         
         Assert.That(world.LearningElements, Is.Empty);
+        Assert.IsTrue(actionWasInvoked);
     }
 
     [Test]
@@ -33,15 +36,18 @@ public class DeleteLearningElementUt
         var space = new LearningSpace("a", "b", "c","d", "e");
         var element = new LearningElement("g", "h", null!, "i", "j", "k", LearningElementDifficultyEnum.Easy, space);
         space.LearningElements.Add(element);
-        var mappingAction = Substitute.For<Action<ILearningElementParent>>();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
 
         var command = new DeleteLearningElement(element, space, mappingAction);
         
         Assert.That(space.LearningElements, Does.Contain(element));
+        Assert.IsFalse(actionWasInvoked);
         
         command.Execute();
         
         Assert.That(space.LearningElements, Is.Empty);
+        Assert.IsTrue(actionWasInvoked);
     }
 
     [Test]
@@ -63,23 +69,28 @@ public class DeleteLearningElementUt
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         var element = new LearningElement("g", "h", null!, "i", "j", "k", LearningElementDifficultyEnum.Easy, world);
         world.LearningElements.Add(element);
-        var mappingAction = Substitute.For<Action<ILearningElementParent>>();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
 
         var command = new DeleteLearningElement(element, world, mappingAction);
         
         Assert.That(world.LearningElements, Does.Contain(element));
+        Assert.IsFalse(actionWasInvoked);
         
         command.Execute();
         
         Assert.That(world.LearningElements, Is.Empty);
+        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Undo();
         
         Assert.That(world.LearningElements, Does.Contain(element));
+        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Redo();
         
         Assert.That(world.LearningElements, Is.Empty);
+        Assert.IsTrue(actionWasInvoked);
     }
 
     [Test]
@@ -88,22 +99,27 @@ public class DeleteLearningElementUt
         var space = new LearningSpace("a", "b", "c","d", "e");
         var element = new LearningElement("g", "h", null!, "i", "j", "k", LearningElementDifficultyEnum.Easy, space);
         space.LearningElements.Add(element);
-        var mappingAction = Substitute.For<Action<ILearningElementParent>>();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
 
         var command = new DeleteLearningElement(element, space, mappingAction);
         
         Assert.That(space.LearningElements, Does.Contain(element));
+        Assert.IsFalse(actionWasInvoked);
         
         command.Execute();
         
         Assert.That(space.LearningElements, Is.Empty);
+        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Undo();
         
         Assert.That(space.LearningElements, Does.Contain(element));
+        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Redo();
         
         Assert.That(space.LearningElements, Is.Empty);
+        Assert.IsTrue(actionWasInvoked);
     }
 }

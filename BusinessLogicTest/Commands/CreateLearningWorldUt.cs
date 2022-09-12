@@ -18,16 +18,19 @@ public class CreateLearningWorldUt
         var language = "l";
         var description = "d";
         var goals = "g";
-        var mappingAction = Substitute.For<Action<AuthoringToolWorkspace>>();
+        bool actionWasInvoked = false;
+        Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals,
             mappingAction);
 
         Assert.IsEmpty(workspace.LearningWorlds);
+        Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
         Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked);
         var world = workspace.LearningWorlds.First();
         Assert.Multiple(() =>
         {
@@ -91,23 +94,28 @@ public class CreateLearningWorldUt
         var language = "l";
         var description = "d";
         var goals = "g";
-        var mappingAction = Substitute.For<Action<AuthoringToolWorkspace>>();
+        bool actionWasInvoked = false;
+        Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals,
             mappingAction);
 
         Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
+        Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
         Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(2));
+        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
 
         command.Undo();
 
         Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
 
         command.Redo();
 
         Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(2));
+        Assert.IsTrue(actionWasInvoked); 
     }
 }

@@ -18,13 +18,15 @@ public class EditLearningWorldUt
         var language = "l";
         var description = "d";
         var goals = "g";
-        var mappingAction = Substitute.For<Action<LearningWorld>>();
+        bool actionWasInvoked = false;
+        Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
         var command =
             new EditLearningWorld(world, name, shortname, authors, language, description, goals, mappingAction);
 
         Assert.Multiple(() =>
         {
+            Assert.IsFalse(actionWasInvoked);
             Assert.That(world.Name, Is.EqualTo("a"));
             Assert.That(world.Shortname, Is.EqualTo("b"));
             Assert.That(world.Authors, Is.EqualTo("c"));
@@ -37,6 +39,7 @@ public class EditLearningWorldUt
 
         Assert.Multiple(() =>
         {
+            Assert.IsTrue(actionWasInvoked);
             Assert.That(world.Name, Is.EqualTo("n"));
             Assert.That(world.Shortname, Is.EqualTo("sn"));
             Assert.That(world.Authors, Is.EqualTo("a"));
@@ -75,13 +78,15 @@ public class EditLearningWorldUt
         var language = "l";
         var description = "d";
         var goals = "g";
-        var mappingAction = Substitute.For<Action<LearningWorld>>();
+        bool actionWasInvoked = false;
+        Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
         var command =
             new EditLearningWorld(world, name, shortname, authors, language, description, goals, mappingAction);
 
         Assert.Multiple(() =>
         {
+            Assert.IsFalse(actionWasInvoked);
             Assert.That(world.Name, Is.EqualTo("a"));
             Assert.That(world.Shortname, Is.EqualTo("b"));
             Assert.That(world.Authors, Is.EqualTo("c"));
@@ -94,6 +99,7 @@ public class EditLearningWorldUt
 
         Assert.Multiple(() =>
         {
+            Assert.IsTrue(actionWasInvoked);
             Assert.That(world.Name, Is.EqualTo("n"));
             Assert.That(world.Shortname, Is.EqualTo("sn"));
             Assert.That(world.Authors, Is.EqualTo("a"));
@@ -101,11 +107,13 @@ public class EditLearningWorldUt
             Assert.That(world.Description, Is.EqualTo("d"));
             Assert.That(world.Goals, Is.EqualTo("g"));
         });
+        actionWasInvoked = false;
 
         command.Undo();
 
         Assert.Multiple(() =>
         {
+            Assert.IsTrue(actionWasInvoked);
             Assert.That(world.Name, Is.EqualTo("a"));
             Assert.That(world.Shortname, Is.EqualTo("b"));
             Assert.That(world.Authors, Is.EqualTo("c"));
@@ -113,11 +121,13 @@ public class EditLearningWorldUt
             Assert.That(world.Description, Is.EqualTo("e"));
             Assert.That(world.Goals, Is.EqualTo("f"));
         });
+        actionWasInvoked = false;
 
         command.Redo();
 
         Assert.Multiple(() =>
         {
+            Assert.IsTrue(actionWasInvoked);
             Assert.That(world.Name, Is.EqualTo("n"));
             Assert.That(world.Shortname, Is.EqualTo("sn"));
             Assert.That(world.Authors, Is.EqualTo("a"));

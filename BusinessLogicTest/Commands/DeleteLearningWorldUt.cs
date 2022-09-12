@@ -14,15 +14,18 @@ public class DeleteLearningWorldUt
         var workspace = new AuthoringToolWorkspace(null, new List<LearningWorld>());
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         workspace.LearningWorlds.Add(world);
-        var mappingAction = Substitute.For<Action<AuthoringToolWorkspace>>();
+        bool actionWasInvoked = false;
+        Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new DeleteLearningWorld(workspace, world, mappingAction);
 
         Assert.That(workspace.LearningWorlds, Does.Contain(world));
+        Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
         Assert.That(workspace.LearningWorlds, Is.Empty);
+        Assert.IsTrue(actionWasInvoked);
     }
 
     [Test]
@@ -45,22 +48,27 @@ public class DeleteLearningWorldUt
         var workspace = new AuthoringToolWorkspace(null, new List<LearningWorld>());
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         workspace.LearningWorlds.Add(world);
-        var mappingAction = Substitute.For<Action<AuthoringToolWorkspace>>();
+        bool actionWasInvoked = false;
+        Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new DeleteLearningWorld(workspace, world, mappingAction);
 
         Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
+        Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
         Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(0));
+        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
 
         command.Undo();
 
         Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
 
         command.Redo();
 
         Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(0));
+        Assert.IsTrue(actionWasInvoked);
     }
 }

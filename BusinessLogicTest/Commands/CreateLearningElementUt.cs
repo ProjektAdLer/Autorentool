@@ -14,16 +14,20 @@ public class CreateLearningElementUt
     public void Execute_CreatesImageTransferElement_WorldParent()
     {
         var testParameter = new TestParameter();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.Image, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.MappingAction);
+            testParameter.Workload, mappingAction);
 
         Assert.IsEmpty(testParameter.WorldParent.LearningElements);
+        Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
         Assert.That(testParameter.WorldParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked);
         var element = testParameter.WorldParent.LearningElements.First();
         Assert.Multiple(() =>
         {
@@ -44,16 +48,20 @@ public class CreateLearningElementUt
     public void Execute_CreatesVideoTransferElement_WorldParent()
     {
         var testParameter = new TestParameter();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.Video, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.MappingAction);
+            testParameter.Workload, mappingAction);
 
         Assert.IsEmpty(testParameter.WorldParent.LearningElements);
+        Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
         Assert.That(testParameter.WorldParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked);
         var element = testParameter.WorldParent.LearningElements.First();
         Assert.Multiple(() =>
         {
@@ -74,16 +82,20 @@ public class CreateLearningElementUt
     public void Execute_CreatesPdfTransferElement_WorldParent()
     {
         var testParameter = new TestParameter();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.Pdf, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.MappingAction);
+            testParameter.Workload, mappingAction);
 
         Assert.IsEmpty(testParameter.WorldParent.LearningElements);
+        Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
         Assert.That(testParameter.WorldParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked);
         var element = testParameter.WorldParent.LearningElements.First();
         Assert.Multiple(() =>
         {
@@ -104,16 +116,20 @@ public class CreateLearningElementUt
     public void Execute_CreatesImageTransferElement_SpaceParent()
     {
         var testParameter = new TestParameter();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.Image, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.MappingAction);
+            testParameter.Workload, mappingAction);
 
         Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
         Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked);
         var element = testParameter.SpaceParent.LearningElements.First();
         Assert.Multiple(() =>
         {
@@ -134,16 +150,20 @@ public class CreateLearningElementUt
     public void Execute_CreatesVideoTransferElement_SpaceParent()
     {
         var testParameter = new TestParameter();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.Video, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.MappingAction);
+            testParameter.Workload, mappingAction);
 
         Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
         Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked);
         var element = testParameter.SpaceParent.LearningElements.First();
         Assert.Multiple(() =>
         {
@@ -164,16 +184,20 @@ public class CreateLearningElementUt
     public void Execute_CreatesPdfTransferElement_SpaceParent()
     {
         var testParameter = new TestParameter();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.Pdf, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.MappingAction);
+            testParameter.Workload, mappingAction);
 
         Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
         Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked);
         var element = testParameter.SpaceParent.LearningElements.First();
         Assert.Multiple(() =>
         {
@@ -194,10 +218,12 @@ public class CreateLearningElementUt
     public void Execute_CreateNewTransferElement_ThrowsException()
     {
         var testParameter = new TestParameter();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.H5P, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.MappingAction);
+            testParameter.Workload, mappingAction);
 
         var ex = Assert.Throws<ApplicationException>(() => command.Execute());
         Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
@@ -207,16 +233,20 @@ public class CreateLearningElementUt
     public void Execute_CreatesVideoActivationElement_WorldParent()
     {
         var testParameter = new TestParameter();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Activation, ContentTypeEnum.Video, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.MappingAction);
+            testParameter.Workload, mappingAction);
 
         Assert.IsEmpty(testParameter.WorldParent.LearningElements);
+        Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
         Assert.That(testParameter.WorldParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked);
         var element = testParameter.WorldParent.LearningElements.First();
         Assert.Multiple(() =>
         {
@@ -237,16 +267,20 @@ public class CreateLearningElementUt
     public void Execute_CreatesH5PActivationElement_WorldParent()
     {
         var testParameter = new TestParameter();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Activation, ContentTypeEnum.H5P, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.MappingAction);
+            testParameter.Workload, mappingAction);
 
         Assert.IsEmpty(testParameter.WorldParent.LearningElements);
+        Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
         Assert.That(testParameter.WorldParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked);
         var element = testParameter.WorldParent.LearningElements.First();
         Assert.Multiple(() =>
         {
@@ -267,16 +301,20 @@ public class CreateLearningElementUt
     public void Execute_CreatesVideoActivationElement_SpaceParent()
     {
         var testParameter = new TestParameter();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Activation, ContentTypeEnum.Video, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.MappingAction);
+            testParameter.Workload, mappingAction);
 
         Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
         Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked);
         var element = testParameter.SpaceParent.LearningElements.First();
         Assert.Multiple(() =>
         {
@@ -297,16 +335,20 @@ public class CreateLearningElementUt
     public void Execute_CreatesH5PActivationElement_SpaceParent()
     {
         var testParameter = new TestParameter();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Activation, ContentTypeEnum.H5P, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.MappingAction);
+            testParameter.Workload, mappingAction);
 
         Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
         Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked);
         var element = testParameter.SpaceParent.LearningElements.First();
         Assert.Multiple(() =>
         {
@@ -327,10 +369,12 @@ public class CreateLearningElementUt
     public void Execute_CreateNewActivationElement_ThrowsException()
     {
         var testParameter = new TestParameter();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Activation, ContentTypeEnum.Image, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.MappingAction);
+            testParameter.Workload, mappingAction);
 
         var ex = Assert.Throws<ApplicationException>(() => command.Execute());
         Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
@@ -340,16 +384,20 @@ public class CreateLearningElementUt
     public void Execute_CreatesH5PInteractionElement_WorldParent()
     {
         var testParameter = new TestParameter();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Interaction, ContentTypeEnum.H5P, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.MappingAction);
+            testParameter.Workload, mappingAction);
 
         Assert.IsEmpty(testParameter.WorldParent.LearningElements);
+        Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
         Assert.That(testParameter.WorldParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked);
         var element = testParameter.WorldParent.LearningElements.First();
         Assert.Multiple(() =>
         {
@@ -370,16 +418,20 @@ public class CreateLearningElementUt
     public void Execute_CreatesH5PInteractionElement_SpaceParent()
     {
         var testParameter = new TestParameter();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Interaction, ContentTypeEnum.H5P, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.MappingAction);
+            testParameter.Workload, mappingAction);
 
         Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
         Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked);
         var element = testParameter.SpaceParent.LearningElements.First();
         Assert.Multiple(() =>
         {
@@ -400,10 +452,12 @@ public class CreateLearningElementUt
     public void Execute_CreateNewInteractionElement_ThrowsException()
     {
         var testParameter = new TestParameter();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Interaction, ContentTypeEnum.Image, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.MappingAction);
+            testParameter.Workload, mappingAction);
 
         var ex = Assert.Throws<ApplicationException>(() => command.Execute());
         Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
@@ -413,16 +467,20 @@ public class CreateLearningElementUt
     public void Execute_CreatesH5PTestElement_WorldParent()
     {
         var testParameter = new TestParameter();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Test, ContentTypeEnum.H5P, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.MappingAction);
+            testParameter.Workload, mappingAction);
 
         Assert.IsEmpty(testParameter.WorldParent.LearningElements);
+        Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
         Assert.That(testParameter.WorldParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked);
         var element = testParameter.WorldParent.LearningElements.First();
         Assert.Multiple(() =>
         {
@@ -443,16 +501,20 @@ public class CreateLearningElementUt
     public void Execute_CreatesH5PTestElement_SpaceParent()
     {
         var testParameter = new TestParameter();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Test, ContentTypeEnum.H5P, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.MappingAction);
+            testParameter.Workload, mappingAction);
 
         Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
         Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked);
         var element = testParameter.SpaceParent.LearningElements.First();
         Assert.Multiple(() =>
         {
@@ -473,10 +535,12 @@ public class CreateLearningElementUt
     public void Execute_CreateNewTestElement_ThrowsException()
     {
         var testParameter = new TestParameter();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Test, ContentTypeEnum.Image, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.MappingAction);
+            testParameter.Workload, mappingAction);
 
         var ex = Assert.Throws<ApplicationException>(() => command.Execute());
         Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
@@ -486,10 +550,12 @@ public class CreateLearningElementUt
     public void Execute_NoValidElementType_ThrowsException()
     {
         var testParameter = new TestParameter();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             (ElementTypeEnum)5, ContentTypeEnum.Image, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.MappingAction);
+            testParameter.Workload, mappingAction);
 
         var ex = Assert.Throws<ApplicationException>(() => command.Execute());
         Assert.That(ex!.Message, Is.EqualTo("no valid ElementType assigned"));
@@ -499,34 +565,42 @@ public class CreateLearningElementUt
     public void UndoRedo_UndoesRedoesCreateLearningElement_WorldParent()
     {
         var testParameter = new TestParameter();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.Image, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.MappingAction);
+            testParameter.Workload, mappingAction);
 
         Assert.IsEmpty(testParameter.WorldParent.LearningElements);
+        Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
         Assert.That(testParameter.WorldParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Undo();
         
         Assert.IsEmpty(testParameter.WorldParent.LearningElements);
+        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Redo();
         
         Assert.That(testParameter.WorldParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked);
     }
 
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
         var testParameter = new TestParameter();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.Image, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.MappingAction);
+            testParameter.Workload, mappingAction);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -545,7 +619,6 @@ public class TestParameter
     public readonly string Goals;
     public readonly LearningElementDifficultyEnum Difficulty;
     public readonly int Workload;
-    public readonly Action<ILearningElementParent> MappingAction;
 
     internal TestParameter()
     {
@@ -559,6 +632,5 @@ public class TestParameter
         Goals = "f";
         Difficulty = LearningElementDifficultyEnum.Easy;
         Workload = 3;
-        MappingAction = Substitute.For<Action<ILearningElementParent>>();
     }
 }
