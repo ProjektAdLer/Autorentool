@@ -675,6 +675,23 @@ public class MappingProfileUt
             Assert.That(source.SelectedLearningWorld!.Name, Is.EqualTo("world1"));
             Assert.That(source.SelectedLearningWorld, Is.EqualTo(source.LearningWorlds.First()));
         });
+        
+        // Test the private constructor from AuthoringToolWorkspace
+        var source2 = systemUnderTest.Map<AuthoringToolWorkspace>(destination);
+        
+        Assert.That(source2.LearningWorlds, Is.Not.Null);
+        Assert.That(source2.LearningWorlds, Has.Count.EqualTo(2));
+        Assert.Multiple(() =>
+        {
+            Assert.That(source2.LearningWorlds.First().Name, Is.EqualTo("world1"));
+            Assert.That(source2.LearningWorlds.Last().Name, Is.EqualTo("world2"));
+            Assert.That(source2.SelectedLearningWorld, Is.Not.Null);
+        });
+        Assert.Multiple(() =>
+        {
+            Assert.That(source2.SelectedLearningWorld!.Name, Is.EqualTo("world1"));
+            Assert.That(source2.SelectedLearningWorld, Is.EqualTo(source2.LearningWorlds.First()));
+        });
     }
 
     #region testable Content/Element/Space/World
