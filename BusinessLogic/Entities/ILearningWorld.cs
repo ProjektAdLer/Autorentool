@@ -4,7 +4,6 @@ public interface ILearningWorld : ILearningElementParent
 {
     
     List<LearningSpace> LearningSpaces { get; set; }
-    string Name { get; set; }
     string Description { get; set; }
     string Shortname { get; set; }
     string Authors { get; set; }
