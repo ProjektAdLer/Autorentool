@@ -51,12 +51,15 @@ public class CreateLearningSpaceUt
         var authors = "marvin";
         var description = "space for learning";
         var goals = "learning";
-        var mappingAction = Substitute.For<Action<LearningWorld>>();
+        bool actionWasInvoked = false;
+        Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
         var command = new CreateLearningSpace(world, name, shortname, authors, description, goals, mappingAction);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
+        
+        Assert.IsFalse(actionWasInvoked);
     }
     
 

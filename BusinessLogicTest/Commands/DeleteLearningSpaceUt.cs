@@ -34,12 +34,15 @@ public class DeleteLearningSpaceUt
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         var space = new LearningSpace("g", "h", "i", "j", "k");
-        var mappingAction = Substitute.For<Action<LearningWorld>>();
+        bool actionWasInvoked = false;
+        Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
         var command = new DeleteLearningSpace(world,space, mappingAction);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
+        
+        Assert.IsFalse(actionWasInvoked);
     }
     
     [Test]

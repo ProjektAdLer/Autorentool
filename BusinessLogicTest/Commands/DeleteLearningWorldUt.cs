@@ -34,12 +34,15 @@ public class DeleteLearningWorldUt
         var workspace = new AuthoringToolWorkspace(null, new List<LearningWorld>());
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         workspace.LearningWorlds.Add(world);
-        var mappingAction = Substitute.For<Action<AuthoringToolWorkspace>>();
+        bool actionWasInvoked = false;
+        Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new DeleteLearningWorld(workspace, world, mappingAction);
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
+        
+        Assert.IsFalse(actionWasInvoked);
     }
 
     [Test]

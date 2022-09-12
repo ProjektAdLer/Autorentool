@@ -139,12 +139,15 @@ public class EditLearningElementUt
         var goals = "learn";
         var workload = 7;
         var difficulty = LearningElementDifficultyEnum.Easy;
-        var mappingAction = Substitute.For<Action<LearningElement>>();;
+        bool actionWasInvoked = false;
+        Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
         var command = new EditLearningElement(element, parent, name, shortname, authors, description, goals, difficulty, workload, mappingAction);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
+        
+        Assert.IsFalse(actionWasInvoked);
     }
     
     [Test]

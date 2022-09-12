@@ -55,12 +55,14 @@ public class EditLearningSpaceUt
         var authors = "marvin";
         var description = "space for learning";
         var goals = "learning";
-        var mappingAction = Substitute.For<Action<LearningSpace>>();
+        bool actionWasInvoked = false;
+        Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new EditLearningSpace(space, name, shortname, authors, description, goals, mappingAction);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
+        Assert.IsFalse(actionWasInvoked);
     }
     
     [Test]

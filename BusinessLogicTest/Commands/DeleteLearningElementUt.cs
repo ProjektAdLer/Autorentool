@@ -55,12 +55,15 @@ public class DeleteLearningElementUt
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         var element = new LearningElement("g", "h", null!, "i", "j", "k", LearningElementDifficultyEnum.Easy, world);
-        var mappingAction = Substitute.For<Action<ILearningElementParent>>();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
 
         var command = new DeleteLearningElement(element, world, mappingAction);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
+        
+        Assert.IsFalse(actionWasInvoked);
     }
     
     [Test]

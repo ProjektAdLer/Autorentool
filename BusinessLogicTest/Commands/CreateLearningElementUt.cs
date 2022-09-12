@@ -1,6 +1,5 @@
 using BusinessLogic.Commands;
 using BusinessLogic.Entities;
-using NSubstitute;
 using NUnit.Framework;
 using Shared;
 
@@ -227,6 +226,7 @@ public class CreateLearningElementUt
 
         var ex = Assert.Throws<ApplicationException>(() => command.Execute());
         Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
+        Assert.IsFalse(actionWasInvoked);
     }
     
     [Test]
@@ -378,6 +378,7 @@ public class CreateLearningElementUt
 
         var ex = Assert.Throws<ApplicationException>(() => command.Execute());
         Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
+        Assert.IsFalse(actionWasInvoked);
     }
     
     [Test]
@@ -461,6 +462,7 @@ public class CreateLearningElementUt
 
         var ex = Assert.Throws<ApplicationException>(() => command.Execute());
         Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
+        Assert.IsFalse(actionWasInvoked);
     }
     
     [Test]
@@ -544,6 +546,7 @@ public class CreateLearningElementUt
 
         var ex = Assert.Throws<ApplicationException>(() => command.Execute());
         Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
+        Assert.IsFalse(actionWasInvoked);
     }
     
     [Test]
@@ -559,6 +562,7 @@ public class CreateLearningElementUt
 
         var ex = Assert.Throws<ApplicationException>(() => command.Execute());
         Assert.That(ex!.Message, Is.EqualTo("no valid ElementType assigned"));
+        Assert.IsFalse(actionWasInvoked);
     }
     
     [Test]
@@ -604,6 +608,7 @@ public class CreateLearningElementUt
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
+        Assert.IsFalse(actionWasInvoked);
     }
 }
 

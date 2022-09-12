@@ -59,13 +59,16 @@ public class EditLearningWorldUt
         var language = "l";
         var description = "d";
         var goals = "g";
-        var mappingAction = Substitute.For<Action<LearningWorld>>();
+        bool actionWasInvoked = false;
+        Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
         var command =
             new EditLearningWorld(world, name, shortname, authors, language, description, goals, mappingAction);
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
+        
+        Assert.IsFalse(actionWasInvoked);
     }
 
     [Test]

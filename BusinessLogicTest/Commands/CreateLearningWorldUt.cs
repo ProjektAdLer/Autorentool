@@ -53,13 +53,16 @@ public class CreateLearningWorldUt
         var language = "l";
         var description = "d";
         var goals = "g";
-        var mappingAction = Substitute.For<Action<AuthoringToolWorkspace>>();
+        bool actionWasInvoked = false;
+        Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals,
             mappingAction);
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
+        
+        Assert.IsFalse(actionWasInvoked);
     }
 
     [Test]
@@ -72,13 +75,16 @@ public class CreateLearningWorldUt
         var language = "l";
         var description = "d";
         var goals = "g";
-        var mappingAction = Substitute.For<Action<AuthoringToolWorkspace>>();
+        bool actionWasInvoked = false;
+        Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals,
             mappingAction);
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Redo());
         Assert.That(ex!.Message, Is.EqualTo("_learningWorld is null"));
+        
+        Assert.IsFalse(actionWasInvoked);
     }
 
 
