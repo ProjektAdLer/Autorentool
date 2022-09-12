@@ -116,8 +116,8 @@ public class LearningSpacePresenterUt
     [Test]
     public void AddLearningElement_SelectedLearningSpaceIsNull_ThrowsException()
     {
-        var element = new LearningElementViewModel("foo", "bar", null, "foo",
-            "wa", "bar", LearningElementDifficultyEnum.Hard, null);
+        var element = new LearningElementViewModel("foo", "bar", null!, "foo",
+            "wa", "bar", LearningElementDifficultyEnum.Hard);
 
         var systemUnderTest = CreatePresenterForTesting();
 
@@ -143,7 +143,7 @@ public class LearningSpacePresenterUt
     public void SetSelectedLearningObject_SelectedLearningSpaceIsNull_ThrowsException()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        var element = new LearningElementViewModel("foo", "bar", null, "bar", "foo", "bar", LearningElementDifficultyEnum.Easy, null, 6);
+        var element = new LearningElementViewModel("foo", "bar", null!, "bar", "foo", "bar", LearningElementDifficultyEnum.Easy, null, 6);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetSelectedLearningObject(element));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
@@ -211,7 +211,7 @@ public class LearningSpacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var element = new LearningElementViewModel("a", "b", null, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        var element = new LearningElementViewModel("a", "b", null!, "c", "d", "e", LearningElementDifficultyEnum.Easy);
         space.LearningElements.Add(element);
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
@@ -233,7 +233,7 @@ public class LearningSpacePresenterUt
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().CreateLearningElement(space,"a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Image, null, "e", "f", "g", LearningElementDifficultyEnum.Easy,3);
+        presentationLogic.Received().CreateLearningElement(space,"a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Image, null!, "e", "f", "g", LearningElementDifficultyEnum.Easy,3);
     }
     
     [Test]
@@ -241,7 +241,7 @@ public class LearningSpacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var element = new LearningElementViewModel("a", "b", null, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        var element = new LearningElementViewModel("a", "b", null!, "c", "d", "e", LearningElementDifficultyEnum.Easy);
         space.LearningElements.Add(element);
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
@@ -263,7 +263,7 @@ public class LearningSpacePresenterUt
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().CreateLearningElement(space,"a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Pdf, null, "e", "f", "g", LearningElementDifficultyEnum.Easy,3);
+        presentationLogic.Received().CreateLearningElement(space,"a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Pdf, null!, "e", "f", "g", LearningElementDifficultyEnum.Easy,3);
     }
     
     [Test]
@@ -272,7 +272,7 @@ public class LearningSpacePresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
         var content = new LearningContentViewModel("a", "b", new byte[] {0, 1, 2});
-        var element = new LearningElementViewModel("a", "b", null, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        var element = new LearningElementViewModel("a", "b", null!, "c", "d", "e", LearningElementDifficultyEnum.Easy);
         space.LearningElements.Add(element);
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
@@ -387,7 +387,7 @@ public class LearningSpacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var element = new LearningElementViewModel("a", "b", null, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        var element = new LearningElementViewModel("a", "b", null!, "c", "d", "e", LearningElementDifficultyEnum.Easy);
         space.LearningElements.Add(element);
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
@@ -409,7 +409,7 @@ public class LearningSpacePresenterUt
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().CreateLearningElement(space, "a", "b", ElementTypeEnum.Test, ContentTypeEnum.H5P, null, "d", "e", "f",LearningElementDifficultyEnum.Easy,0);
+        presentationLogic.Received().CreateLearningElement(space, "a", "b", ElementTypeEnum.Test, ContentTypeEnum.H5P, null!, "d", "e", "f",LearningElementDifficultyEnum.Easy,0);
     }
     
     [Test]
@@ -417,7 +417,7 @@ public class LearningSpacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var element = new LearningElementViewModel("a", "b", null, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        var element = new LearningElementViewModel("a", "b", null!, "c", "d", "e", LearningElementDifficultyEnum.Easy);
         space.LearningElements.Add(element);
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
@@ -441,7 +441,7 @@ public class LearningSpacePresenterUt
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().CreateLearningElement(space, "a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Video, null, "d", "e", "f",LearningElementDifficultyEnum.Easy,0);
+        presentationLogic.Received().CreateLearningElement(space, "a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Video, null!, "d", "e", "f",LearningElementDifficultyEnum.Easy,0);
     }
 
     #endregion
@@ -469,7 +469,7 @@ public class LearningSpacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var element = new LearningElementViewModel("foo", "bar", null,"bar",
+        var element = new LearningElementViewModel("foo", "bar", null!,"bar",
             "foo", "bar", LearningElementDifficultyEnum.Easy, null);
         space.LearningElements.Add(element);
 
@@ -502,7 +502,7 @@ public class LearningSpacePresenterUt
     public void OnEditElementDialogClose_ThrowsCouldntParseDifficulty()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var element = new LearningElementViewModel("foo", "bar", null, "foo",
+        var element = new LearningElementViewModel("foo", "bar", null!, "foo",
             "wa", "bar", LearningElementDifficultyEnum.Hard, null);
         space.LearningElements.Add(element);
 
@@ -532,7 +532,7 @@ public class LearningSpacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var element = new LearningElementViewModel("foo", "bar", null, "foo",
+        var element = new LearningElementViewModel("foo", "bar", null!, "foo",
             "wa", "bar", LearningElementDifficultyEnum.Hard, null);
         space.LearningElements.Add(element);
 
@@ -562,7 +562,7 @@ public class LearningSpacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var element = new LearningElementViewModel("foo", "bar", null, "foo",
+        var element = new LearningElementViewModel("foo", "bar", null!, "foo",
             "wa", "bar", LearningElementDifficultyEnum.Hard, null);
         space.LearningElements.Add(element);
 
@@ -619,7 +619,7 @@ public class LearningSpacePresenterUt
     public void DeleteSelectedLearningObject_ThrowsWhenSelectedSpaceNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(null);
+        systemUnderTest.SetLearningSpace(null!);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteSelectedLearningObject());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
@@ -683,7 +683,7 @@ public class LearningSpacePresenterUt
     public void OpenEditSelectedLearningObjectDialog_ThrowsWhenSelectedWorldNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(null);
+        systemUnderTest.SetLearningSpace(null!);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditSelectedLearningObject());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
@@ -737,7 +737,7 @@ public class LearningSpacePresenterUt
     public void OpenEditSelectedLearningObjectDialog_ElementParentIsNull_ThrowsException()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var element = new LearningElementViewModel("n", "sn", null, "a", "d", "g", LearningElementDifficultyEnum.Easy, null);
+        var element = new LearningElementViewModel("n", "sn", null!, "a", "d", "g", LearningElementDifficultyEnum.Easy, null);
         space.LearningElements.Add(element);
         space.SelectedLearningObject = element;
 
@@ -772,7 +772,7 @@ public class LearningSpacePresenterUt
     public void SaveSelectedLearningObjectAsync_ThrowsWhenSelectedWorldNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(null);
+        systemUnderTest.SetLearningSpace(null!);
 
         var ex = Assert.ThrowsAsync<ApplicationException>(async () => await systemUnderTest.SaveSelectedLearningObjectAsync());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
@@ -809,7 +809,7 @@ public class LearningSpacePresenterUt
     }
 
     [Test]
-    public void SaveSelectedLearningObject_ThrowsNotImplemented_WithUnknownObjectAsync()
+    public void SaveSelectedLearningObjectAsync_ThrowsNotImplemented_WithUnknownObjectAsync()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
         var learningObject = Substitute.For<ILearningObjectViewModel>();
@@ -827,10 +827,10 @@ public class LearningSpacePresenterUt
     #region LoadLearningElement
 
     [Test]
-    public void LoadLearningElement_ThrowsWhenSelectedWorldNull()
+    public void LoadLearningElementAsync_ThrowsWhenSelectedWorldNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(null);
+        systemUnderTest.SetLearningSpace(null!);
 
         var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
             await systemUnderTest.LoadLearningElementAsync());
@@ -838,7 +838,7 @@ public class LearningSpacePresenterUt
     }
 
     [Test]
-    public void LoadLearningElement_CallsPresentationLogic()
+    public void LoadLearningElementAsync_CallsPresentationLogic()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
@@ -855,7 +855,7 @@ public class LearningSpacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         presentationLogic.LoadLearningElementAsync()
-            .Returns(new LearningElementViewModel("n", "sn", null, "a", "d", "g", LearningElementDifficultyEnum.Easy, null));
+            .Returns(new LearningElementViewModel("n", "sn", null!, "a", "d", "g", LearningElementDifficultyEnum.Easy, null));
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);

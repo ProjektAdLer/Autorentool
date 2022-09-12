@@ -60,7 +60,7 @@ public class ToolboxControllerUt
         var worldPresenter = Substitute.For<ILearningWorldPresenterToolboxInterface>();
         worldPresenter.ShowingLearningSpaceView.Returns(false);
         var spacePresenter = Substitute.For<ILearningSpacePresenterToolboxInterface>();
-        var learningElement = new LearningElementViewModel("foo", "bar", null,"foo", "bar",
+        var learningElement = new LearningElementViewModel("foo", "bar", null!,"foo", "bar",
             "bar",LearningElementDifficultyEnum.Easy, null);
 
         var systemUnderTest =
@@ -78,7 +78,7 @@ public class ToolboxControllerUt
         worldPresenter.ShowingLearningSpaceView.Returns(false);
         var spacePresenter = Substitute.For<ILearningSpacePresenterToolboxInterface>();
         var logger = Substitute.For<ILogger<ToolboxController>>();
-        var learningElement = new LearningElementViewModel("foo", "bar", null, "foo", "bar", 
+        var learningElement = new LearningElementViewModel("foo", "bar", null!, "foo", "bar", 
             "bar",LearningElementDifficultyEnum.Easy, null);
         worldPresenter
             .When(x => x.AddLearningElement(learningElement))
@@ -103,7 +103,7 @@ public class ToolboxControllerUt
         var worldPresenter = Substitute.For<ILearningWorldPresenterToolboxInterface>();
         worldPresenter.ShowingLearningSpaceView.Returns(true);
         var spacePresenter = Substitute.For<ILearningSpacePresenterToolboxInterface>();
-        var learningElement = new LearningElementViewModel("foo", "bar", null,
+        var learningElement = new LearningElementViewModel("foo", "bar", null!,
             "foo", "bar", "bar",LearningElementDifficultyEnum.Easy, null);
 
         var systemUnderTest =

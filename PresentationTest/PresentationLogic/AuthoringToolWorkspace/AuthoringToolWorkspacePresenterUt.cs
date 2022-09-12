@@ -56,7 +56,7 @@ public class AuthoringToolWorkspacePresenterUt
     {
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting();
 
@@ -431,7 +431,7 @@ public class AuthoringToolWorkspacePresenterUt
             "foo");
         
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+        var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetSelectedLearningWorld(world);
@@ -474,7 +474,7 @@ public class AuthoringToolWorkspacePresenterUt
     {
         var modalDialogReturnValue = ModalDialogReturnValue.Yes;
         var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.UnsavedWorldsQueue = null;
@@ -488,7 +488,7 @@ public class AuthoringToolWorkspacePresenterUt
     {
         var modalDialogReturnValue = ModalDialogReturnValue.Cancel;
         var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SaveUnsavedChangesDialogOpen = true;
@@ -511,7 +511,7 @@ public class AuthoringToolWorkspacePresenterUt
         
         var modalDialogReturnValue = ModalDialogReturnValue.Yes;
         var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting(viewModel);
 
@@ -533,7 +533,7 @@ public class AuthoringToolWorkspacePresenterUt
         
         var modalDialogReturnValue = ModalDialogReturnValue.No;
         var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting(viewModel);
 
@@ -555,7 +555,7 @@ public class AuthoringToolWorkspacePresenterUt
 
         var modalDialogReturnValue = (ModalDialogReturnValue)10;
         var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting(viewModel);
 
@@ -570,7 +570,7 @@ public class AuthoringToolWorkspacePresenterUt
     {
         var modalDialogReturnValue = ModalDialogReturnValue.Yes;
         var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.ReplacedUnsavedWorld = null;
@@ -591,7 +591,7 @@ public class AuthoringToolWorkspacePresenterUt
         
         var modalDialogReturnValue = ModalDialogReturnValue.Yes;
         var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting(viewModel, presentationLogic: presentationLogic);
         systemUnderTest.ReplacedUnsavedWorld = learningWorld;
@@ -610,7 +610,7 @@ public class AuthoringToolWorkspacePresenterUt
         
         var modalDialogReturnValue = ModalDialogReturnValue.No;
         var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting(viewModel);
         systemUnderTest.ReplacedUnsavedWorld = learningWorld;
@@ -629,7 +629,7 @@ public class AuthoringToolWorkspacePresenterUt
         
         var modalDialogReturnValue = (ModalDialogReturnValue)10;
         var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting(viewModel);
         systemUnderTest.ReplacedUnsavedWorld = learningWorld;
@@ -643,7 +643,7 @@ public class AuthoringToolWorkspacePresenterUt
     {
         var modalDialogReturnValue = ModalDialogReturnValue.Yes;
         var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.DeletedUnsavedWorld = null;
@@ -662,7 +662,7 @@ public class AuthoringToolWorkspacePresenterUt
     
         var modalDialogReturnValue = ModalDialogReturnValue.Yes;
         var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting(viewModel, presentationLogic : presentationLogic);
         systemUnderTest.DeletedUnsavedWorld = learningWorld;
@@ -681,7 +681,7 @@ public class AuthoringToolWorkspacePresenterUt
         
         var modalDialogReturnValue = ModalDialogReturnValue.No;
         var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting(viewModel);
         systemUnderTest.DeletedUnsavedWorld = learningWorld;
@@ -700,7 +700,7 @@ public class AuthoringToolWorkspacePresenterUt
         
         var modalDialogReturnValue = (ModalDialogReturnValue)10;
         var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting(viewModel);
         systemUnderTest.DeletedUnsavedWorld = learningWorld;
@@ -794,7 +794,7 @@ public class AuthoringToolWorkspacePresenterUt
     {
         var modalDialogReturnValue = ModalDialogReturnValue.Yes;
         var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.WorldToReplaceWith = null;
@@ -817,7 +817,7 @@ public class AuthoringToolWorkspacePresenterUt
         
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting(viewModel);
 
@@ -849,7 +849,7 @@ public class AuthoringToolWorkspacePresenterUt
         
         var modalDialogReturnValue = ModalDialogReturnValue.Cancel;
         var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting(viewModel);
 
@@ -875,7 +875,7 @@ public class AuthoringToolWorkspacePresenterUt
         
         var modalDialogReturnValue = (ModalDialogReturnValue)10;
         var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting(viewModel);
         systemUnderTest.WorldToReplaceWith = learningWorld;

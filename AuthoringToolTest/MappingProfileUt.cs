@@ -636,7 +636,8 @@ public class MappingProfileUt
     }
     
     [Test]
-    public void MapAuthoringToolWorkspaceAndAuthoringToolWorkspaceViewModel_TestMappingIsValid(){
+    public void MapAuthoringToolWorkspaceAndAuthoringToolWorkspaceViewModel_TestMappingIsValid()
+    {
         var systemUnderTest = CreateTestableMapper();
         var world1 = new LearningWorld("world1", Shortname, Authors, Language, Description, Goals);
         var world2 = new LearningWorld("world2", Shortname, Authors, Language, Description, Goals);
@@ -645,29 +646,34 @@ public class MappingProfileUt
         
         systemUnderTest.Map(source, destination);
         
+        Assert.That(destination.LearningWorlds, Is.Not.Null);
+        Assert.That(destination.LearningWorlds.Count, Is.EqualTo(2));
         Assert.Multiple(() =>
         {
-            Assert.That(destination.LearningWorlds, Is.Not.Null);
-            Assert.That(destination.LearningWorlds.Count, Is.EqualTo(2));
             Assert.That(destination.LearningWorlds.First().Name, Is.EqualTo("world1"));
             Assert.That(destination.LearningWorlds.Last().Name, Is.EqualTo("world2"));
             Assert.That(destination.SelectedLearningWorld, Is.Not.Null);
-            Assert.That(destination.SelectedLearningWorld.Name, Is.EqualTo("world2"));
+        });
+        Assert.Multiple(() =>
+        {
+            Assert.That(destination.SelectedLearningWorld!.Name, Is.EqualTo("world2"));
             Assert.That(destination.SelectedLearningWorld, Is.EqualTo(destination.LearningWorlds.Last()));
         });
-        
         destination.SelectedLearningWorld = destination.LearningWorlds.First();
         
         systemUnderTest.Map(destination, source);
         
+        Assert.That(source.LearningWorlds, Is.Not.Null);
+        Assert.That(source.LearningWorlds, Has.Count.EqualTo(2));
         Assert.Multiple(() =>
         {
-            Assert.That(source.LearningWorlds, Is.Not.Null);
-            Assert.That(source.LearningWorlds.Count, Is.EqualTo(2));
             Assert.That(source.LearningWorlds.First().Name, Is.EqualTo("world1"));
             Assert.That(source.LearningWorlds.Last().Name, Is.EqualTo("world2"));
             Assert.That(source.SelectedLearningWorld, Is.Not.Null);
-            Assert.That(source.SelectedLearningWorld.Name, Is.EqualTo("world1"));
+        });
+        Assert.Multiple(() =>
+        {
+            Assert.That(source.SelectedLearningWorld!.Name, Is.EqualTo("world1"));
             Assert.That(source.SelectedLearningWorld, Is.EqualTo(source.LearningWorlds.First()));
         });
     }

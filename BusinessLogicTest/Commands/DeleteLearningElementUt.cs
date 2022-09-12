@@ -14,7 +14,7 @@ public class DeleteLearningElementUt
     public void Execute_DeletesLearningElement_WorldParent()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var element = new LearningElement("g", "h", null, "i", "j", "k", LearningElementDifficultyEnum.Easy, world);
+        var element = new LearningElement("g", "h", null!, "i", "j", "k", LearningElementDifficultyEnum.Easy, world);
         world.LearningElements.Add(element);
         var mappingAction = Substitute.For<Action<ILearningElementParent>>();
 
@@ -31,7 +31,7 @@ public class DeleteLearningElementUt
     public void Execute_DeletesLearningElement_SpaceParent()
     {
         var space = new LearningSpace("a", "b", "c","d", "e");
-        var element = new LearningElement("g", "h", null, "i", "j", "k", LearningElementDifficultyEnum.Easy, space);
+        var element = new LearningElement("g", "h", null!, "i", "j", "k", LearningElementDifficultyEnum.Easy, space);
         space.LearningElements.Add(element);
         var mappingAction = Substitute.For<Action<ILearningElementParent>>();
 
@@ -48,7 +48,7 @@ public class DeleteLearningElementUt
     public void Undo_MementoIsNull_ThrowsException()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var element = new LearningElement("g", "h", null, "i", "j", "k", LearningElementDifficultyEnum.Easy, world);
+        var element = new LearningElement("g", "h", null!, "i", "j", "k", LearningElementDifficultyEnum.Easy, world);
         var mappingAction = Substitute.For<Action<ILearningElementParent>>();
 
         var command = new DeleteLearningElement(element, world, mappingAction);
@@ -61,7 +61,7 @@ public class DeleteLearningElementUt
     public void UndoRedo_UndoesRedoesDeleteLearningElement_WorldParent()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var element = new LearningElement("g", "h", null, "i", "j", "k", LearningElementDifficultyEnum.Easy, world);
+        var element = new LearningElement("g", "h", null!, "i", "j", "k", LearningElementDifficultyEnum.Easy, world);
         world.LearningElements.Add(element);
         var mappingAction = Substitute.For<Action<ILearningElementParent>>();
 
@@ -86,7 +86,7 @@ public class DeleteLearningElementUt
     public void UndoRedo_UndoesRedoesDeleteLearningElement_SpaceParent()
     {
         var space = new LearningSpace("a", "b", "c","d", "e");
-        var element = new LearningElement("g", "h", null, "i", "j", "k", LearningElementDifficultyEnum.Easy, space);
+        var element = new LearningElement("g", "h", null!, "i", "j", "k", LearningElementDifficultyEnum.Easy, space);
         space.LearningElements.Add(element);
         var mappingAction = Substitute.For<Action<ILearningElementParent>>();
 

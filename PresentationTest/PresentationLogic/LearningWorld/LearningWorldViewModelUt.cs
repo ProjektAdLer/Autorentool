@@ -58,10 +58,10 @@ public class LearningWorldViewModelUt
     public void Workload_ReturnsCorrectWorkload()
     {
         var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo");
-        var worldElement = new LearningElementViewModel("a", "b", null, "c", "d", "e",
+        var worldElement = new LearningElementViewModel("a", "b", null!, "c", "d", "e",
             LearningElementDifficultyEnum.Easy, systemUnderTest, 4);
         var space = new LearningSpaceViewModel("a", "b", "c", "d", "e");
-        var spaceElement = new LearningElementViewModel("a", "b", null, "c", "d", "e",
+        var spaceElement = new LearningElementViewModel("a", "b", null!, "c", "d", "e",
             LearningElementDifficultyEnum.Easy, space, 6);
         
         space.LearningElements.Add(spaceElement);

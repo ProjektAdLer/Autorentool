@@ -25,7 +25,6 @@ public class XmlFileFactoryUt
     {
         // Arrange
         var mockReadDsl = Substitute.For<IReadDsl>();
-        var fileString = "fileString";
         var mockFileManager = new XmlFileManager();
         var mockFileSystem = new MockFileSystem();
 
@@ -210,7 +209,6 @@ public class XmlFileFactoryUt
     {
         // Arrange
         var mockReadDsl = Substitute.For<IReadDsl>();
-        var fileString = "";
         var mockFileSystem = new MockFileSystem();
 
         var systemUnderTest = new XmlResourceFactory(mockReadDsl, fileSystem: mockFileSystem);

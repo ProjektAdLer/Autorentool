@@ -46,7 +46,7 @@ else
          xmlns="http://www.w3.org/2000/svg"
          @onmousemove=@(e => MouseService.FireMove(this, e))
              @onmouseup=@(e => MouseService.FireUp(this, e))
-             @onmouseleave=@(() => MouseService.FireOut(this, null))>
+             @onmouseleave=@(e => MouseService.FireOut(this, e))>
         @if (LearningWorldP.LearningWorldVm != null)
         {
             @foreach (var learningObject in LearningWorldP.LearningWorldVm.LearningObjects)

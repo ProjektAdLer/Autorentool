@@ -48,8 +48,8 @@ public class LearningElementViewModelUt
     public void FileEnding_ReturnsCorrectEnding()
     {
         const string expectedFileEnding = "aef";
-        var systemUnderTest = new LearningElementViewModel("foo", "foo", null,
-            "foo",  "foo", "foo", LearningElementDifficultyEnum.Medium, null);
+        var systemUnderTest = new LearningElementViewModel("foo", "foo", null!,
+            "foo",  "foo", "foo", LearningElementDifficultyEnum.Medium);
         Assert.That(systemUnderTest.FileEnding, Is.EqualTo(expectedFileEnding));
     }
 }

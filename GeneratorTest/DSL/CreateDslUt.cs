@@ -46,23 +46,27 @@ public class CreateDslUt
         
         //Assert
         var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "DSL_Document");
-        
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Uuid, Is.Not.Null);
             Assert.That(systemUnderTest.LearningWorldJson, Is.Not.Null);
-            Assert.That(systemUnderTest.LearningWorldJson.Identifier.Value, Is.EqualTo(name));
-            
+        });
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.LearningWorldJson!.Identifier.Value, Is.EqualTo(name));
+
             Assert.That(systemUnderTest.ListLearningElements, Is.EquivalentTo(allLearningElements));
-            
+
             //Because SpaceId=0 is automatically created and has all elements free in the learning world.
             //The Space count is 2 + 1
             Assert.That(systemUnderTest.ListLearningSpaces, Has.Count.EqualTo(3));
+        });
+        Assert.Multiple(() =>
+        {
             Assert.That(systemUnderTest.ListLearningSpaces[0].Name, Is.EqualTo("Freie Lernelemente"));
-            Assert.That(systemUnderTest.LearningWorldJson.LearningElements[0].Identifier.Value, Is.EqualTo("DSL_Document"));
-            
+            Assert.That(systemUnderTest.LearningWorldJson!.LearningElements[0].Identifier.Value, Is.EqualTo("DSL_Document"));
+
             Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
         });
     }
-    
 }

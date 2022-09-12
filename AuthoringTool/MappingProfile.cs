@@ -41,12 +41,12 @@ public class MappingProfile : Profile
             .ForMember(x=>x.SelectedLearningWorld, opt=>opt.Ignore())
             .AfterMap((s, d) =>
             {
-                d.SelectedLearningWorld = d.LearningWorlds.FirstOrDefault(x => x.Name == s.SelectedLearningWorld.Name);
+                d.SelectedLearningWorld = d.LearningWorlds.FirstOrDefault(x => x.Name == s.SelectedLearningWorld?.Name);
             }).ReverseMap()
             .ForMember(x=>x.SelectedLearningWorld, opt=>opt.Ignore())
             .AfterMap((s, d) =>
             {
-                d.SelectedLearningWorld = d.LearningWorlds.FirstOrDefault(x => x.Name == s.SelectedLearningWorld.Name);
+                d.SelectedLearningWorld = d.LearningWorlds.FirstOrDefault(x => x.Name == s.SelectedLearningWorld?.Name);
             });
         CreateMap<LearningWorld, LearningWorldViewModel>()
             .ForMember(x => x.LearningObjects, opt => opt.Ignore())

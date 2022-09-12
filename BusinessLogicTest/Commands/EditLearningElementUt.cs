@@ -125,7 +125,7 @@ public class EditLearningElementUt
     public void Undo_MementoIsNull_ThrowsException()
     {
         var parent = new LearningSpace("l", "k", "j", "j", "j");
-        var element = new LearningElement("a", "b", null, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        var element = new LearningElement("a", "b", null!, "c", "d", "e", LearningElementDifficultyEnum.Easy);
         var name = "new element";
         var shortname = "ne";
         var authors = "marvin";

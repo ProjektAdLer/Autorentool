@@ -19,8 +19,8 @@ public class LearningSpaceViewModelUt
         var Goals = "learn very many things";
         var PositionX = 5f;
         var PositionY = 21f;
-        var ele1 = new LearningElementViewModel("a", "b",  null, "g", "h","i", LearningElementDifficultyEnum.Easy, null, 17, 23);
-        var ele2 = new LearningElementViewModel("z", "zz",  null, "z","zz","zzz", LearningElementDifficultyEnum.Hard, null, 444, double.MaxValue);
+        var ele1 = new LearningElementViewModel("a", "b",  null!, "g", "h","i", LearningElementDifficultyEnum.Easy, null, 17, 23);
+        var ele2 = new LearningElementViewModel("z", "zz",  null!, "z","zz","zzz", LearningElementDifficultyEnum.Hard, null, 444, double.MaxValue);
         var learningElements = new List<ILearningElementViewModel> { ele1, ele2 };
         
         var systemUnderTest = new LearningSpaceViewModel(Name, Shortname, Authors, Description, Goals, learningElements,
@@ -53,9 +53,9 @@ public class LearningSpaceViewModelUt
     {
 
         var systemUnderTest = new LearningSpaceViewModel("a", "b", "c", "d", "e");
-        var element1 = new LearningElementViewModel("a", "b", null, "c", "d", "e",
+        var element1 = new LearningElementViewModel("a", "b", null!, "c", "d", "e",
             LearningElementDifficultyEnum.Easy, systemUnderTest, 6);
-        var element2 = new LearningElementViewModel("abc", "b", null, "c", "d", "e",
+        var element2 = new LearningElementViewModel("abc", "b", null!, "c", "d", "e",
             LearningElementDifficultyEnum.Easy, systemUnderTest, 14);
         
         Assert.That(systemUnderTest.Workload, Is.EqualTo(0));

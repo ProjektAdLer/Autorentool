@@ -414,7 +414,7 @@ public class LearningWorldViewUt
         var svg = systemUnderTest.FindOrFail("svg");
         svg.MouseLeave(mouseEventArgs);
         
-        _mouseService.Received().FireOut(systemUnderTest.Instance, null);
+        _mouseService.Received().FireOut(systemUnderTest.Instance, mouseEventArgs);
     }
 
     [Test]

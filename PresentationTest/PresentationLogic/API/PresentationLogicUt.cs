@@ -167,7 +167,7 @@ public class PresentationLogicUt
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
         
-        systemUnderTest.CreateLearningElement(learningWorldVm, "a","b", ElementTypeEnum.Activation, ContentTypeEnum.Image, null,"c","d","e", LearningElementDifficultyEnum.Easy, 0);
+        systemUnderTest.CreateLearningElement(learningWorldVm, "a","b", ElementTypeEnum.Activation, ContentTypeEnum.Image, null!,"c","d","e", LearningElementDifficultyEnum.Easy, 0);
 
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
     }
@@ -177,7 +177,7 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var elementParentVm = new LearningSpaceViewModel("a", "b", "c", "d", "e");
-        var learningElementVm = new LearningElementViewModel("f", "f", null, "f", "f", "f", LearningElementDifficultyEnum.Easy);
+        var learningElementVm = new LearningElementViewModel("f", "f", null!, "f", "f", "f", LearningElementDifficultyEnum.Easy);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
         
@@ -191,7 +191,7 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
-        var learningElementVm = new LearningElementViewModel("g", "g", null, "g", "g", "g",LearningElementDifficultyEnum.Easy);
+        var learningElementVm = new LearningElementViewModel("g", "g", null!, "g", "g", "g",LearningElementDifficultyEnum.Easy);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
         
@@ -373,7 +373,7 @@ public class PresentationLogicUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(false);
-        var learningElement = new LearningElementViewModel("f", "f", null, "f", "f", "f",LearningElementDifficultyEnum.Easy, null);
+        var learningElement = new LearningElementViewModel("f", "f", null!, "f", "f", "f",LearningElementDifficultyEnum.Easy, null);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
 
@@ -388,7 +388,7 @@ public class PresentationLogicUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(true);
-        var learningElement = new LearningElementViewModel("f", "f", null,"f", "f", "f",LearningElementDifficultyEnum.Easy, null);
+        var learningElement = new LearningElementViewModel("f", "f", null!,"f", "f", "f",LearningElementDifficultyEnum.Easy, null);
 
         var systemUnderTest =
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
@@ -405,8 +405,8 @@ public class PresentationLogicUt
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(true);
         var mockMapper = Substitute.For<IMapper>();
-        var learningElement = new LearningElementViewModel("f", "f",  null,"f", "f", "f",LearningElementDifficultyEnum.Easy, null);
-        var entity = new BusinessLogic.Entities.LearningElement("f", "f", null,"f", "f", "f", LearningElementDifficultyEnum.Easy, null);
+        var learningElement = new LearningElementViewModel("f", "f",  null!,"f", "f", "f",LearningElementDifficultyEnum.Easy, null);
+        var entity = new BusinessLogic.Entities.LearningElement("f", "f", null!,"f", "f", "f", LearningElementDifficultyEnum.Easy, null);
         mockMapper.Map<BusinessLogic.Entities.LearningElement>(Arg.Any<LearningElementViewModel>()).Returns(entity);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
@@ -440,7 +440,7 @@ public class PresentationLogicUt
             .Throws(new OperationCanceledException("bububaba"));
         mockServiceProvider.GetService(typeof(IElectronDialogManager))
             .Returns(mockElectronDialogManager);
-        var learningElement = new LearningElementViewModel("f", "f", null, "f", "f", "f",LearningElementDifficultyEnum.Easy, null);
+        var learningElement = new LearningElementViewModel("f", "f", null!, "f", "f", "f",LearningElementDifficultyEnum.Easy, null);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
             serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
@@ -659,8 +659,8 @@ public class PresentationLogicUt
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(true);
         var mockMapper = Substitute.For<IMapper>();
-        var learningElement = new LearningElementViewModel("f", "f", null, "f", "f", "f",LearningElementDifficultyEnum.Easy, null);
-        var entity = new BusinessLogic.Entities.LearningElement("f", "f", null, "f", "f", "f", LearningElementDifficultyEnum.Easy, null);
+        var learningElement = new LearningElementViewModel("f", "f", null!, "f", "f", "f",LearningElementDifficultyEnum.Easy, null);
+        var entity = new BusinessLogic.Entities.LearningElement("f", "f", null!, "f", "f", "f", LearningElementDifficultyEnum.Easy, null);
         mockMapper.Map<LearningElementViewModel>(Arg.Any<BusinessLogic.Entities.LearningElement>()).Returns(learningElement);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
@@ -1135,7 +1135,7 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadLearningElementViewModel_ReturnsLearningElement()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var mockLearningElement = new BusinessLogic.Entities.LearningElement("n", "sn",null, "a", "d", "g", LearningElementDifficultyEnum.Easy, null);
+        var mockLearningElement = new BusinessLogic.Entities.LearningElement("n", "sn",null!, "a", "d", "g", LearningElementDifficultyEnum.Easy, null);
         mockBusinessLogic.LoadLearningElement(Arg.Any<Stream>()).Returns(mockLearningElement);
         var mockLearningContent = new LearningContentViewModel("n", "t", Array.Empty<byte>());
         var mockLearningElementViewModel = new LearningElementViewModel("n", "sn", mockLearningContent, "a", "d", "g",LearningElementDifficultyEnum.Easy, null);

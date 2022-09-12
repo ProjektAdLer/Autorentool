@@ -230,7 +230,7 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var element = new LearningElementViewModel("a", "b", null, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        var element = new LearningElementViewModel("a", "b", null!, "c", "d", "e", LearningElementDifficultyEnum.Easy);
         world.LearningElements.Add(element);
 
         const ModalDialogReturnValue modalDialogReturnValue = ModalDialogReturnValue.Ok;
@@ -254,7 +254,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().CreateLearningElement(world,"a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Image, null, "d", "e", "f",LearningElementDifficultyEnum.Easy,2);
+        presentationLogic.Received().CreateLearningElement(world,"a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Image, null!, "d", "e", "f",LearningElementDifficultyEnum.Easy,2);
     }
     
     [Test]
@@ -263,7 +263,7 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var element = new LearningElementViewModel("a", "b", null, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        var element = new LearningElementViewModel("a", "b", null!, "c", "d", "e", LearningElementDifficultyEnum.Easy);
         world.LearningElements.Add(element);
 
         const ModalDialogReturnValue modalDialogReturnValue = ModalDialogReturnValue.Ok;
@@ -287,7 +287,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().CreateLearningElement(world,"a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Pdf, null, "d", "e", "f",LearningElementDifficultyEnum.Easy,2);
+        presentationLogic.Received().CreateLearningElement(world,"a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Pdf, null!, "d", "e", "f",LearningElementDifficultyEnum.Easy,2);
     }
     
     [Test]
@@ -297,7 +297,7 @@ public class LearningWorldPresenterUt
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var content = new LearningContentViewModel("a", "b", new byte[] {0, 1, 2});
-        var element = new LearningElementViewModel("a", "b", null, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        var element = new LearningElementViewModel("a", "b", null!, "c", "d", "e", LearningElementDifficultyEnum.Easy);
         world.LearningElements.Add(element);
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
@@ -333,7 +333,7 @@ public class LearningWorldPresenterUt
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "a";
         dictionary["Shortname"] = "b";
-        dictionary["Parent"] = null;
+        dictionary["Parent"] = null!;
         dictionary["Assignment"] = "foobar";
         dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
         dictionary["Content"] = ContentTypeEnum.Image.ToString();
@@ -449,7 +449,7 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var element = new LearningElementViewModel("a", "b", null, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        var element = new LearningElementViewModel("a", "b", null!, "c", "d", "e", LearningElementDifficultyEnum.Easy);
         world.LearningElements.Add(element);
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
@@ -473,7 +473,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().CreateLearningElement(world, "a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Video, null, "d", "e", "f",LearningElementDifficultyEnum.Easy,0);
+        presentationLogic.Received().CreateLearningElement(world, "a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Video, null!, "d", "e", "f",LearningElementDifficultyEnum.Easy,0);
     }
     
     [Test]
@@ -482,7 +482,7 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var element = new LearningElementViewModel("a", "b", null, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        var element = new LearningElementViewModel("a", "b", null!, "c", "d", "e", LearningElementDifficultyEnum.Easy);
         world.LearningElements.Add(element);
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
@@ -506,7 +506,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().CreateLearningElement(world,"a", "b", ElementTypeEnum.Test,  ContentTypeEnum.H5P, null, "d", "e", "f",LearningElementDifficultyEnum.Easy,0);
+        presentationLogic.Received().CreateLearningElement(world,"a", "b", ElementTypeEnum.Test,  ContentTypeEnum.H5P, null!, "d", "e", "f",LearningElementDifficultyEnum.Easy,0);
     }
 
     #endregion
@@ -521,7 +521,7 @@ public class LearningWorldPresenterUt
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningWorld(null, world);
@@ -538,7 +538,7 @@ public class LearningWorldPresenterUt
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, null);
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningWorld(null, world);
@@ -552,7 +552,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var element = new LearningElementViewModel("foo", "bar", null, "foo",
+        var element = new LearningElementViewModel("foo", "bar", null!, "foo",
             "wa", "bar", LearningElementDifficultyEnum.Hard, null);
         world.LearningElements.Add(element);
 
@@ -584,7 +584,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var element = new LearningElementViewModel("foo", "bar", null, "foo",
+        var element = new LearningElementViewModel("foo", "bar", null!, "foo",
             "wa", "bar", LearningElementDifficultyEnum.Hard, null);
         world.LearningElements.Add(element);
 
@@ -617,7 +617,7 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var element = new LearningElementViewModel("foo", "bar", null, "foo",
+        var element = new LearningElementViewModel("foo", "bar", null!, "foo",
             "wa", "bar", LearningElementDifficultyEnum.Hard, null);
         world.LearningElements.Add(element);
 
@@ -650,7 +650,7 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var element = new LearningElementViewModel("foo", "bar", null, "foo",
+        var element = new LearningElementViewModel("foo", "bar", null!, "foo",
             "wa", "bar", LearningElementDifficultyEnum.Hard, null);
         world.LearningElements.Add(element);
 
@@ -729,7 +729,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var element = new LearningElementViewModel("foo", "bar", null, "foo",
+        var element = new LearningElementViewModel("foo", "bar", null!, "foo",
             "wa", "bar", LearningElementDifficultyEnum.Hard, null);
         world.LearningElements.Add(element);
         
