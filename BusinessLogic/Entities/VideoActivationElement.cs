@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using Shared;
 
 namespace BusinessLogic.Entities;
@@ -7,7 +8,8 @@ public class VideoActivationElement : LearningElement
     /// <summary>
     /// Private Constructor for AutoMapper
     /// </summary>
-    private VideoActivationElement() : base()
+    [UsedImplicitly]
+    private VideoActivationElement()
     {
     }
 

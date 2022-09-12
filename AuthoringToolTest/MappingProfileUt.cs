@@ -1,6 +1,5 @@
 using AuthoringTool;
 using AutoMapper;
-using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Entities;
 using NUnit.Framework;
 using PersistEntities;

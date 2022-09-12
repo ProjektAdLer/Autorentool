@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using AuthoringTool.Annotations;
+using JetBrains.Annotations;
 using Presentation.PresentationLogic.LearningWorld;
 
 namespace Presentation.PresentationLogic.AuthoringToolWorkspace;

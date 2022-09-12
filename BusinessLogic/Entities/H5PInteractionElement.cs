@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using LearningElementDifficultyEnum = Shared.LearningElementDifficultyEnum;
 
 namespace BusinessLogic.Entities;
@@ -7,7 +8,8 @@ public class H5PInteractionElement : LearningElement
     /// <summary>
     /// Private Constructor for AutoMapper
     /// </summary>
-    private H5PInteractionElement() : base()
+    [UsedImplicitly]
+    private H5PInteractionElement()
     {
     }
 

@@ -8,7 +8,7 @@ public abstract class ActivationElementViewModel : LearningElementViewModel
     /// <summary>
     /// Protected Constructor for AutoMapper
     /// </summary>
-    protected ActivationElementViewModel() : base()
+    protected ActivationElementViewModel()
     {
     }
 

@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using LearningElementDifficultyEnum = Shared.LearningElementDifficultyEnum;
 
 namespace BusinessLogic.Entities;
@@ -7,6 +8,7 @@ public class LearningElement : ILearningElement, IOriginator
     /// <summary>
     /// Protected Constructor for AutoMapper
     /// </summary>
+    [UsedImplicitly]
     protected LearningElement()
     {
         Id = Guid.Empty;

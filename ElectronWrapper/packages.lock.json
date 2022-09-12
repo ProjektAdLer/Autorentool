@@ -12,6 +12,12 @@
           "System.Drawing.Common": "5.0.0"
         }
       },
+      "JetBrains.Annotations": {
+        "type": "Direct",
+        "requested": "[2022.1.0, )",
+        "resolved": "2022.1.0",
+        "contentHash": "ASfpoFJxiRsC9Xc4TWuPM41Zb/gl64xwfMOhnOZ3RnVWGYIZchjpWQV5zshJgoc/ZxVtgjaF7b577lURj7E6ig=="
+      },
       "EngineIoClientDotNet": {
         "type": "Transitive",
         "resolved": "1.0.5",

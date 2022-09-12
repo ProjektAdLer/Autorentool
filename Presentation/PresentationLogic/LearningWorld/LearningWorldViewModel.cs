@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using AutoMapper.Configuration.Annotations;
+using JetBrains.Annotations;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 
@@ -11,6 +12,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     /// <summary>
     /// Private Constructor for AutoMapper
     /// </summary>
+    [UsedImplicitly]
     private LearningWorldViewModel()
     {
         _name = "";

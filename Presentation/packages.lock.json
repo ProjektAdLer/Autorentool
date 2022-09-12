@@ -21,6 +21,12 @@
           "Microsoft.Extensions.Options": "6.0.0"
         }
       },
+      "JetBrains.Annotations": {
+        "type": "Direct",
+        "requested": "[2022.1.0, )",
+        "resolved": "2022.1.0",
+        "contentHash": "ASfpoFJxiRsC9Xc4TWuPM41Zb/gl64xwfMOhnOZ3RnVWGYIZchjpWQV5zshJgoc/ZxVtgjaF7b577lURj7E6ig=="
+      },
       "Microsoft.Extensions.Caching.Memory": {
         "type": "Direct",
         "requested": "[6.0.1, )",
@@ -1165,18 +1171,21 @@
       "businesslogic": {
         "type": "Project",
         "dependencies": {
+          "JetBrains.Annotations": "2022.1.0",
           "Shared": "1.0.0"
         }
       },
       "electronwrapper": {
         "type": "Project",
         "dependencies": {
-          "ElectronNET.API": "13.5.1"
+          "ElectronNET.API": "13.5.1",
+          "JetBrains.Annotations": "2022.1.0"
         }
       },
       "shared": {
         "type": "Project",
         "dependencies": {
+          "JetBrains.Annotations": "2022.1.0",
           "Microsoft.Extensions.Logging.Abstractions": "6.0.1"
         }
       }

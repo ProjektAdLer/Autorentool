@@ -1,5 +1,4 @@
-﻿using System.IO.Abstractions;
-using Generator.DSL;
+﻿using Generator.DSL;
 using Generator.XmlClasses.Entities._course.Completiondefault.xml;
 using Generator.XmlClasses.Entities._course.Course.xml;
 using Generator.XmlClasses.Entities._course.Enrolments.xml;

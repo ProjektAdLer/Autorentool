@@ -8,7 +8,7 @@ public abstract class InteractionElementViewModel : LearningElementViewModel
     /// <summary>
     /// Protected Constructor for AutoMapper
     /// </summary>
-    protected InteractionElementViewModel() : base()
+    protected InteractionElementViewModel()
     {
     }
 

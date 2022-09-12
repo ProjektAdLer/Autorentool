@@ -1,7 +1,6 @@
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
-using Presentation.PresentationLogic.LearningWorld;
 using Shared;
 using ModalDialogOnCloseResult = Presentation.Components.ModalDialog.ModalDialogOnCloseResult;
 using ModalDialogReturnValue = Presentation.Components.ModalDialog.ModalDialogReturnValue;
@@ -63,7 +62,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 
         foreach (var (key, value) in data)
         {
-            _logger.LogTrace($"{key}:{value}\n");
+            _logger.LogTrace("{Key}:{Value}\\n", key, value);
         }
 
         //required arguments
@@ -256,7 +255,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 
         foreach (var (key, value) in data)
         {
-            _logger.LogTrace($"{key}:{value}\n");
+            _logger.LogTrace("{Key}:{Value}\\n", key, value);
         }
 
         //required arguments

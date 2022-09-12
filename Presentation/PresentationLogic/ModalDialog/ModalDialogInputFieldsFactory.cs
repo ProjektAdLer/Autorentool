@@ -1,6 +1,5 @@
 ﻿using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.LearningContent;
-using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Shared;
 

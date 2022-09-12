@@ -53,7 +53,7 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
         get
         {
             EnsureEntriesPopulated();
-            return ((IEnumerable<IDisplayableLearningObject>)_worlds!).Concat(_spaces!).Concat(_elements!);
+            return ((IEnumerable<IDisplayableLearningObject>)_worlds).Concat(_spaces).Concat(_elements);
         }
     }
 

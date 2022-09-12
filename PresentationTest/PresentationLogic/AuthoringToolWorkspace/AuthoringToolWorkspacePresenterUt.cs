@@ -104,7 +104,7 @@ public class AuthoringToolWorkspacePresenterUt
         var callbackCreateCalled = false;
         LearningWorldViewModel? callbackCreateArg = null;
         EventHandler<LearningWorldViewModel?> callbackCreate =
-            (sender, args) =>
+            (_, args) =>
             {
                 callbackCreateCalled = true;
                 if (args != null)
@@ -115,7 +115,7 @@ public class AuthoringToolWorkspacePresenterUt
         var callbackSelectCalled = false;
         LearningWorldViewModel? callbackSelectArg = null;
         EventHandler<LearningWorldViewModel?> callbackSelect =
-            (sender, args) =>
+            (_, args) =>
             {
                 callbackSelectCalled = true;
                 if (args != null)
@@ -705,7 +705,7 @@ public class AuthoringToolWorkspacePresenterUt
         var systemUnderTest = CreatePresenterForTesting(viewModel);
         systemUnderTest.DeletedUnsavedWorld = learningWorld;
 
-        var ex = Assert.Throws<ArgumentOutOfRangeException>(() => systemUnderTest.OnSaveDeletedWorldDialogClose(returnValueTuple));
+        Assert.Throws<ArgumentOutOfRangeException>(() => systemUnderTest.OnSaveDeletedWorldDialogClose(returnValueTuple));
     }
 
     [Test]
@@ -1280,7 +1280,7 @@ public class AuthoringToolWorkspacePresenterUt
         var authoringToolWorkspace = new AuthoringToolWorkspaceViewModel();
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var newLearningElement = new LearningElementViewModel("n", "sn",
-            new LearningContentViewModel("n", "t", Array.Empty<byte>()), "a", "d", "g",LearningElementDifficultyEnum.Easy, null);
+            new LearningContentViewModel("n", "t", Array.Empty<byte>()), "a", "d", "g",LearningElementDifficultyEnum.Easy);
         presentationLogic.LoadLearningElementViewModel(Arg.Any<Stream>())
             .Returns(newLearningElement);
         var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspace, presentationLogic);
@@ -1310,7 +1310,7 @@ public class AuthoringToolWorkspacePresenterUt
 
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var newLearningElement = new LearningElementViewModel("n", "sn",
-            new LearningContentViewModel("n", "t", Array.Empty<byte>()), "a", "d", "g",LearningElementDifficultyEnum.Easy, null);
+            new LearningContentViewModel("n", "t", Array.Empty<byte>()), "a", "d", "g",LearningElementDifficultyEnum.Easy);
         presentationLogic.LoadLearningElementViewModel(Arg.Any<Stream>()).Returns(newLearningElement);
         var stream = Substitute.For<Stream>();
         var spacePresenter = Substitute.For<ILearningSpacePresenter>();

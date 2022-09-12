@@ -68,7 +68,7 @@ else
     //create space modal
     @if (LearningWorldP.CreateLearningSpaceDialogOpen)
     {
-        @ModalDialogFactory.GetCreateLearningSpaceFragment(OnCreateSpaceDialogClose);
+        @ModalDialogFactory.GetCreateLearningSpaceFragment(OnCreateSpaceDialogClose)
     }
     
     //create element modal
@@ -76,7 +76,7 @@ else
     {
         <!-- LearningWorld can't be null at this point - n.stich -->
         @ModalDialogFactory.GetCreateLearningElementFragment(LearningWorldP.DragAndDropLearningContent,
-            LearningWorldP.LearningWorldVm!.LearningSpaces, LearningWorldP.LearningWorldVm.Name, OnCreateElementDialogClose);
+            LearningWorldP.LearningWorldVm!.LearningSpaces, LearningWorldP.LearningWorldVm.Name, OnCreateElementDialogClose)
     }
     
     //edit space modal

@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using BusinessLogic.API;
+﻿using BusinessLogic.API;
 using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using NSubstitute;
 using NUnit.Framework;
-using PersistEntities;
 using Shared;
 using Shared.Configuration;
 
@@ -18,7 +16,6 @@ public class BusinessLogicUt
     {
         var mockConfiguration = Substitute.For<IAuthoringToolConfiguration>();
         var mockDataAccess = Substitute.For<IDataAccess>();
-        var mockGenerator = Substitute.For<IWorldGenerator>();
         
         var systemUnderTest = CreateStandardBusinessLogic(mockConfiguration, mockDataAccess);
         
@@ -137,7 +134,7 @@ public class BusinessLogicUt
     {
         var content = new LearningContent("a", "b", Array.Empty<byte>());
         var learningElement = new LearningElement("fa", "f", content, "f",
-            "f", "f", LearningElementDifficultyEnum.Easy, null);
+            "f", "f", LearningElementDifficultyEnum.Easy);
         var mockDataAccess = Substitute.For<IDataAccess>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
@@ -164,7 +161,7 @@ public class BusinessLogicUt
     {
         var content = new LearningContent("a", "b", Array.Empty<byte>());
         var learningElement = new LearningElement("fa", "a", content, "f", "f",
-            "f", LearningElementDifficultyEnum.Easy, null);
+            "f", LearningElementDifficultyEnum.Easy);
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningElement("foobar").Returns(learningElement);
 
@@ -275,7 +272,7 @@ public class BusinessLogicUt
     {
         var content = new LearningContent("a", "b", Array.Empty<byte>());
         var learningElement = new LearningElement("fa", "a", content, "f", "f",
-            "f", LearningElementDifficultyEnum.Easy, null);
+            "f", LearningElementDifficultyEnum.Easy);
         var stream = Substitute.For<Stream>();
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningElement(stream).Returns(learningElement);

@@ -1,13 +1,15 @@
 using System.Collections.ObjectModel;
+using JetBrains.Annotations;
 using Presentation.PresentationLogic.LearningElement;
 
 namespace Presentation.PresentationLogic.LearningSpace;
 
-public class LearningSpaceViewModel : ILearningObjectViewModel, ILearningElementViewModelParent, ISerializableViewModel, ILearningSpaceViewModel
+public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceViewModel
 {
     /// <summary>
     /// Private Constructor for AutoMapper
     /// </summary>
+    [UsedImplicitly]
     private LearningSpaceViewModel()
     {
         Id = Guid.Empty;

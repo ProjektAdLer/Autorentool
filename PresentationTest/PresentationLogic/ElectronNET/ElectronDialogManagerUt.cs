@@ -134,8 +134,9 @@ public class ElectronDialogManagerUt
         var retVal = await systemUnderTest.ShowOpenDialogAsync(title);
         
         await dialogWrapper.Received(1).ShowOpenDialogAsync(browserWindow, Arg.Any<OpenDialogOptions>());
-        Assert.That(retVal.Count(), Is.EqualTo(1));
-        Assert.That(retVal.First(), Is.EqualTo(path));
+        var enumerable = retVal as string[] ?? retVal.ToArray();
+        Assert.That(enumerable.Count, Is.EqualTo(1));
+        Assert.That(enumerable.First(), Is.EqualTo(path));
     }
     
     [Test]

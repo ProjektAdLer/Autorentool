@@ -21,7 +21,6 @@ public class MoodleBackupXmlInformationUt
         var moodlebackupSections = new MoodleBackupXmlSections();
         moodlebackupSections.Section.Add(moodlebackupSection);
         
-        var moodlebackupCourse = new MoodleBackupXmlCourse();
 
         var moodlebackupContents = new MoodleBackupXmlContents();
 

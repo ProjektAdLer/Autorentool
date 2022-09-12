@@ -1,5 +1,4 @@
-﻿using System.IO.Abstractions.TestingHelpers;
-using Generator.DSL;
+﻿using Generator.DSL;
 using Generator.XmlClasses;
 using Generator.XmlClasses.Entities.Gradebook.xml;
 using Generator.XmlClasses.Entities.Groups.xml;
@@ -49,7 +48,7 @@ public class XmlBackupFactoryUt
         var mockDetail = new MoodleBackupXmlDetail();
         var mockDetails = Substitute.For<IMoodleBackupXmlDetails>();
         var mockSetting = Substitute.For<IMoodleBackupXmlSetting>();
-        var mockSettings = Substitute.For<IMoodleBackupXmlSettings>();
+        Substitute.For<IMoodleBackupXmlSettings>();
         var mockContents = Substitute.For<IMoodleBackupXmlContents>();
         var mockInformation = Substitute.For<IMoodleBackupXmlInformation>();
         var mockMoodleBackup = Substitute.For<IMoodleBackupXmlMoodleBackup>();
@@ -59,7 +58,6 @@ public class XmlBackupFactoryUt
         var mockIdentifier = new IdentifierJson("name", "Element_1");
         var mockLearningWorld = new LearningWorldJson("Uuid", mockIdentifier, new List<int>(),
             new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>());
-        var mockDslDocument = new List<LearningElementJson>();
         
         mockLearningWorld.Identifier = mockIdentifier;
 
@@ -73,8 +71,6 @@ public class XmlBackupFactoryUt
         List<LearningSpaceJson> learningSpacesJsons = new List<LearningSpaceJson>();
         learningSpacesJsons.Add(mockLearningSpace);
 
-        var mockDslDocumentJson = new LearningElementJson(2, mockIdentifier, "json",0);
-        mockDslDocument.Add(mockDslDocumentJson);
 
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
         mockReadDsl.GetH5PElementsList().Returns(learningElementJsons);
@@ -268,7 +264,7 @@ public class XmlBackupFactoryUt
         var mockDetail = new MoodleBackupXmlDetail();
         var mockDetails = Substitute.For<IMoodleBackupXmlDetails>();
         var mockSetting = Substitute.For<IMoodleBackupXmlSetting>();
-        var mockSettings = Substitute.For<IMoodleBackupXmlSettings>();
+        Substitute.For<IMoodleBackupXmlSettings>();
         var mockContents = Substitute.For<IMoodleBackupXmlContents>();
         var mockInformation = Substitute.For<IMoodleBackupXmlInformation>();
         var mockMoodleBackup = Substitute.For<IMoodleBackupXmlMoodleBackup>();
@@ -277,7 +273,6 @@ public class XmlBackupFactoryUt
         var mockCourse = Substitute.For<IMoodleBackupXmlCourse>();
         var mockIdentifier = new IdentifierJson( "name", "Element_1");
        
-        var mockDslDocument = new List<LearningElementJson>();
         
         var mockLearningWorld = new LearningWorldJson("Uuid", mockIdentifier, new List<int>(),
             new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>() );
@@ -294,7 +289,6 @@ public class XmlBackupFactoryUt
 
         
         var mockDslDocumentJson = new LearningElementJson(2, mockIdentifier, "json",0);
-        mockDslDocument.Add(mockDslDocumentJson);
 
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
         mockReadDsl.GetH5PElementsList().Returns(learningElementJsons);

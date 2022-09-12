@@ -1,3 +1,5 @@
+using JetBrains.Annotations;
+
 namespace Presentation.PresentationLogic.LearningContent;
 
 public class LearningContentViewModel
@@ -5,6 +7,7 @@ public class LearningContentViewModel
     /// <summary>
     /// Private Constructor for AutoMapper
     /// </summary>
+    [UsedImplicitly]
     private LearningContentViewModel()
     {
         Name = "";

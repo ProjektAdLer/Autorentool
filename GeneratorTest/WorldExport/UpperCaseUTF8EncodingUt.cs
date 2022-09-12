@@ -1,5 +1,4 @@
-﻿using System.Xml;
-using Generator.WorldExport;
+﻿using Generator.WorldExport;
 using NUnit.Framework;
 
 namespace GeneratorTest.WorldExport;
@@ -14,14 +13,6 @@ public class UpperCaseUTF8EncodingUt
 
         //Act
         var upperCase = new UpperCaseUtf8Encoding();
-        
-        var settings = new XmlWriterSettings
-        {
-            Encoding = new UpperCaseUtf8Encoding(), // Moodle needs Encoding in Uppercase!
-            NewLineHandling = NewLineHandling.Replace,
-            NewLineOnAttributes = true,
-            Indent = true // Generate new lines for each element
-        };
         
         //Assert
         Assert.Multiple(() =>

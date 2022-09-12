@@ -60,7 +60,7 @@ public class XmlFileHandler<T> : IXmlFileHandler<T> where T : class //new() cons
         }
         catch (Exception e)
         {
-            _logger.LogError($"Couldn't serialize {typeof(T).Name} object into file at {filepath}: {e.Message}");
+            _logger.LogError("Couldn\'t serialize {Name} object into file at {Filepath}: {EMessage}", typeof(T).Name, filepath, e.Message);
             throw new SerializationException($"Couldn't serialize {typeof(T).Name} object into file at {filepath}.", e);
         }
     }
@@ -83,7 +83,7 @@ public class XmlFileHandler<T> : IXmlFileHandler<T> where T : class //new() cons
         }
         catch (Exception e)
         {
-            _logger.LogError($"Couldn't deserialize file at {filepath} into {typeof(T).Name} object: {e.Message}");
+            _logger.LogError("Couldn\'t deserialize file at {Filepath} into {Name} object: {EMessage}", filepath, typeof(T).Name, e.Message);
             throw new SerializationException($"Couldn't deserialize file at {filepath} into {typeof(T).Name} object.", e);
         }
         finally

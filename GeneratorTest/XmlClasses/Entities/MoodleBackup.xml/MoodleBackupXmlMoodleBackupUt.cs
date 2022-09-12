@@ -22,7 +22,6 @@ public class MoodleBackupXmlMoodleBackupUt
         var moodlebackupSections = new MoodleBackupXmlSections();
         moodlebackupSections.Section.Add(moodlebackupSection);
         
-        var moodlebackupCourse = new MoodleBackupXmlCourse();
 
         var moodlebackupContents = new MoodleBackupXmlContents();
 
@@ -67,7 +66,6 @@ public class MoodleBackupXmlMoodleBackupUt
         var moodlebackupSections = new MoodleBackupXmlSections();
         moodlebackupSections.Section.Add(moodlebackupSection);
         
-        var moodlebackupCourse = new MoodleBackupXmlCourse();
 
         var moodlebackupContents = new MoodleBackupXmlContents();
 

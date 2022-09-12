@@ -8,7 +8,7 @@ public abstract class TransferElementViewModel : LearningElementViewModel
         /// <summary>
         /// Protected Constructor for AutoMapper
         /// </summary>
-        protected TransferElementViewModel() : base()
+        protected TransferElementViewModel()
         {
         }
         

@@ -238,7 +238,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
 
         foreach (var (key, value) in data)
         {
-            _logger.LogTrace($"{key}:{value}\n");
+            _logger.LogTrace("{Key}:{Value}\\n", key, value);
         }
 
         //required arguments
@@ -443,7 +443,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
 
         foreach (var (key, value) in data)
         {
-            _logger.LogTrace($"{key}:{value}\n");
+            _logger.LogTrace("{Key}:{Value}\\n", key, value);
         }
 
         //required arguments
@@ -580,17 +580,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (EqualityComparer<T>.Default.Equals(field, value)) return;
         field = value;
         OnPropertyChanged(propertyName);
-    }
-
-    private bool SetField<T>(ref T field, T value, params string[] propertyNames)
-    {
-        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-        field = value;
-        foreach (var propertyName in propertyNames)
-        {
-            OnPropertyChanged(propertyName);
-        }
-        return true;
     }
 
     public event PropertyChangingEventHandler? PropertyChanging;

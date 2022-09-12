@@ -75,7 +75,6 @@ public class CourseCourseXmlCourseUt
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         mockFileSystem.AddDirectory(Path.Combine(curWorkDir, "XMLFilesForExport","course"));
 
-        var courseCategory = new CourseCourseXmlCategory();
         var systemUnderTest = new CourseCourseXmlCourse();
 
         //Act

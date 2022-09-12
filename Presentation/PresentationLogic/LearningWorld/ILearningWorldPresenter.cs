@@ -1,8 +1,6 @@
 using System.ComponentModel;
 using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.LearningContent;
-using Presentation.PresentationLogic.LearningElement;
-using Presentation.PresentationLogic.LearningSpace;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 

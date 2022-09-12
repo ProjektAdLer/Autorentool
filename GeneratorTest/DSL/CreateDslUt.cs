@@ -1,5 +1,4 @@
-﻿using System.IO.Abstractions;
-using System.IO.Abstractions.TestingHelpers;
+﻿using System.IO.Abstractions.TestingHelpers;
 using Generator.DSL;
 using NUnit.Framework;
 using PersistEntities;

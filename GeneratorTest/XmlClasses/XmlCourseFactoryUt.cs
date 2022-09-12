@@ -1,5 +1,4 @@
-﻿using System.IO.Abstractions.TestingHelpers;
-using Generator.DSL;
+﻿using Generator.DSL;
 using Generator.XmlClasses;
 using Generator.XmlClasses.Entities._course.Completiondefault.xml;
 using Generator.XmlClasses.Entities._course.Course.xml;

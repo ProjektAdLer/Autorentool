@@ -27,7 +27,7 @@ public class XmlEntityManager : IXmlEntityManager
     {
         XmlFileManager filemanager = new XmlFileManager();
 
-        _xmlSectionFactory = new XmlSectionFactory(readDsl); ;
+        _xmlSectionFactory = new XmlSectionFactory(readDsl);
         _xmlSectionFactory.CreateSectionFactory();
         
         _xmlResourceFactory = xmlFileFactory ?? new XmlResourceFactory(readDsl, filemanager, _fileSystem);

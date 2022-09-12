@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using Shared;
 
 namespace BusinessLogic.Entities;
@@ -7,7 +8,8 @@ public class H5PTestElement : LearningElement
     /// <summary>
     /// Private Constructor for AutoMapper
     /// </summary>
-    private H5PTestElement() : base()
+    [UsedImplicitly]
+    private H5PTestElement()
     {
     }
 

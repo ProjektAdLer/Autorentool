@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using Presentation.PresentationLogic.LearningContent;
 using Shared;
 
@@ -8,7 +9,8 @@ public class ImageTransferElementViewModel : TransferElementViewModel
     /// <summary>
     /// Private Constructor for AutoMapper
     /// </summary>
-    private ImageTransferElementViewModel() : base()
+    [UsedImplicitly]
+    private ImageTransferElementViewModel()
     {
     }
 

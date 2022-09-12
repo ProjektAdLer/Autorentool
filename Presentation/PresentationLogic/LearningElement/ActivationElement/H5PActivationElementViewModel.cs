@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using Presentation.PresentationLogic.LearningContent;
 using Shared;
 
@@ -8,7 +9,8 @@ public class H5PActivationElementViewModel : ActivationElementViewModel
     /// <summary>
     /// Private Constructor for AutoMapper
     /// </summary>
-    private H5PActivationElementViewModel() : base()
+    [UsedImplicitly]
+    private H5PActivationElementViewModel()
     {
     }
     

@@ -1,7 +1,6 @@
 ﻿using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent;
-using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 
@@ -63,14 +62,14 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     public string? InformationMessageToShow { get; set; }
 
     /// <summary>
-    /// This event is fired when <see cref="CreateNewLearningWorld"/> is called successfully and the newly created
+    /// This event is fired when a new <see cref="LearningWorldViewModel"/> is created and the newly created
     /// world is passed.
     /// </summary>
     internal event EventHandler<LearningWorldViewModel?>? OnLearningWorldCreate;
 
     /// <summary>
-    /// This event is fired when <see cref="ChangeSelectedLearningWorld"/> is called successfully and the new
-    /// selection is passed.
+    /// This event is fired when the selected learning world changed and the new
+    /// selected <see cref="LearningWorldViewModel"/> is passed.
     /// </summary>
     internal event EventHandler<LearningWorldViewModel?>? OnLearningWorldSelect;
 
@@ -79,12 +78,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     /// world is passed.
     /// </summary>
     internal event EventHandler<LearningWorldViewModel?>? OnLearningWorldDelete;
-
-    /// <summary>
-    /// This event is fired when <see cref="EditSelectedLearningWorld(string,string,string,string,string,string)"/> is called by the modal dialog as a callback.
-    /// The newly edited learning world is passed.
-    /// </summary>
-    internal event EventHandler<LearningWorldViewModel?>? OnLearningWorldEdit;
 
     public event Action? OnForceViewUpdate;
 
@@ -211,7 +204,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
 
         foreach (var pair in data)
         {
-            _logger.LogTrace($"{pair.Key}:{pair.Value}\n");
+            _logger.LogTrace("{PairKey}:{PairValue}\\n", pair.Key, pair.Value);
         }
 
         //required arguments
@@ -234,10 +227,9 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         if (response == ModalDialogReturnValue.Cancel) return;
         if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
 
-        //TODO: change this into a trace ILogger call
         foreach (var pair in data)
         {
-            _logger.LogTrace($"{pair.Key}:{pair.Value}\n");
+            _logger.LogTrace("{PairKey}:{PairValue}\\n", pair.Key, pair.Value);
         }
 
         //required arguments
@@ -252,7 +244,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         if (AuthoringToolWorkspaceVm.SelectedLearningWorld == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         _presentationLogic.EditLearningWorld(AuthoringToolWorkspaceVm.SelectedLearningWorld, name, shortname, authors, language, description, goals);
-        OnLearningWorldEdit?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
     }
 
     internal void OnBeforeShutdown(object? _, BeforeShutdownEventArgs args)
@@ -311,7 +302,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
                 CallCreateLearningElementWithPreloadedContentFromActiveView(learningContent);
                 break;
             default:
-                _logger.LogInformation($"Couldn't load file '{name}', because the file extension '{ending}' is not supported.");
+                _logger.LogInformation("Couldn\'t load file {Name} because the file extension {Ending} is not supported", name, ending);
                 InformationMessageToShow =
                     $"Couldn't load file '{name}', because the file extension '{ending}' is not supported.";
                 break;
@@ -325,7 +316,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         if (AuthoringToolWorkspaceVm.SelectedLearningWorld is not { } world) return;
         if (world.ShowingLearningSpaceView)
         {
-            if (_learningSpacePresenter.LearningSpaceVm is not { } space) return;
+            if (_learningSpacePresenter.LearningSpaceVm is not { }) return;
             _learningSpacePresenter.CreateLearningElementWithPreloadedContent(learningContent);
         }
         else

@@ -21,7 +21,7 @@ public class ContentFileHandler : IContentFileHandler
         var fileBytes = _fileSystem.File.ReadAllBytes(filepath);
         var fileType = Path.GetExtension(filepath).Trim('.').ToLower();
         var fileName = Path.GetFileName(filepath);
-        _logger.LogInformation($"File {fileName} of type {fileType} loaded");
+        _logger.LogInformation("File {FileName} of type {FileType} loaded", fileName, fileType);
         return new LearningContentPe(fileName, fileType, fileBytes);
     }
 
@@ -30,7 +30,7 @@ public class ContentFileHandler : IContentFileHandler
         var fileBytes = ((MemoryStream)stream).ToArray();
         var fileType = Path.GetExtension(name).Split(".").Last().ToLower();
         var fileName = Path.GetFileName(name);
-        _logger.LogInformation($"File {fileName} of type {fileType} loaded");
+        _logger.LogInformation("File {FileName} of type {FileType} loaded", fileName, fileType);
         return new LearningContentPe(fileName, fileType, fileBytes);
     }
 }

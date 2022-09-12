@@ -52,7 +52,7 @@ public class MappingProfile : Profile
             .ForMember(x => x.LearningObjects, opt => opt.Ignore())
             .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
             .ForMember(x => x.ShowingLearningSpaceView, opt => opt.Ignore())
-            .AfterMap((s, d) =>
+            .AfterMap((_, d) =>
             {
                 foreach (var element in d.LearningElements)
                 {
@@ -60,7 +60,7 @@ public class MappingProfile : Profile
                 }
             })
             .ReverseMap()
-            .AfterMap((s, d) =>
+            .AfterMap((_, d) =>
             {
                 foreach (var element in d.LearningElements)
                 {
@@ -71,7 +71,7 @@ public class MappingProfile : Profile
         CreateMap<LearningSpace, LearningSpaceViewModel>()
             .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
             .EqualityComparison((x, y) => x.Id == y.Id)
-            .AfterMap((s, d) =>
+            .AfterMap((_, d) =>
             {
                 foreach (var element in d.LearningElements)
                 {
@@ -79,7 +79,7 @@ public class MappingProfile : Profile
                 }
             })
             .ReverseMap()
-            .AfterMap((s, d) =>
+            .AfterMap((_, d) =>
             {
                 foreach (var element in d.LearningElements)
                 {
@@ -147,7 +147,7 @@ public class MappingProfile : Profile
     {
         CreateMap<LearningWorld, LearningWorldPe>()
             .ReverseMap()
-            .AfterMap((s, d) =>
+            .AfterMap((_, d) =>
             {
                 foreach (var element in d.LearningElements)
                 {
@@ -157,7 +157,7 @@ public class MappingProfile : Profile
         CreateMap<LearningSpace, LearningSpacePe>()
             .ReverseMap()
             .ForMember(x => x.Id, opt => opt.Ignore())
-            .AfterMap((s, d) =>
+            .AfterMap((_, d) =>
             {
                 foreach (var element in d.LearningElements)
                 {

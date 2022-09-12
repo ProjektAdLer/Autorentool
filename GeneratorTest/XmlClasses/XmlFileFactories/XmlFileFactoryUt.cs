@@ -8,8 +8,6 @@ using Generator.XmlClasses.Entities._activities.Inforef.xml;
 using Generator.XmlClasses.Entities._activities.Module.xml;
 using Generator.XmlClasses.Entities._activities.Resource.xml;
 using Generator.XmlClasses.Entities._activities.Roles.xml;
-using Generator.XmlClasses.Entities._sections.Inforef.xml;
-using Generator.XmlClasses.Entities._sections.Section.xml;
 using Generator.XmlClasses.Entities.Files.xml;
 using Generator.XmlClasses.XmlFileFactories;
 using NSubstitute;
@@ -110,7 +108,7 @@ public class XmlFileFactoryUt
         var mockReadDsl = Substitute.For<IReadDsl>();
         var mockFileSystem = new MockFileSystem();
         var mockFileManager = Substitute.For<IXmlFileManager>();
-        var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        mockFileSystem.Directory.GetCurrentDirectory();
         
         // Act
 
@@ -148,7 +146,7 @@ public class XmlFileFactoryUt
         var mockReadDsl = Substitute.For<IReadDsl>();
         var mockFileSystem = new MockFileSystem();
         var mockFileManager = Substitute.For<IXmlFileManager>();
-        var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        mockFileSystem.Directory.GetCurrentDirectory();
         
         var mockGradesGradeItem = new ActivitiesGradesXmlGradeItem();
         var mockGradesGradeItems = new ActivitiesGradesXmlGradeItems();

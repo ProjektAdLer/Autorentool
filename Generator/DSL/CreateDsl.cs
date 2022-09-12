@@ -56,7 +56,7 @@ public class CreateDsl : ICreateDsl
         // Create Learning Spaces & fill into Learning World
         // The learningSpaceId defines what the starting Id for Spaces should be. 
         // Search for Learning Elements in Spaces and add to listLearningElements
-        if (learningWorld.LearningSpaces != null) ListLearningSpaces.AddRange(learningWorld.LearningSpaces);
+        ListLearningSpaces.AddRange(learningWorld.LearningSpaces);
         
         int learningSpaceId = 0;
         // Starts with 2, because the DSL Document always has Element ID = 1. Therefore all other elements have to start with 2.

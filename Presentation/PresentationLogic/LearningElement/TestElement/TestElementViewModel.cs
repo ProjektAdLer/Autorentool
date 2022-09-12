@@ -8,7 +8,7 @@ public abstract class TestElementViewModel : LearningElementViewModel
     /// <summary>
     /// Protected Constructor for AutoMapper
     /// </summary>
-    protected TestElementViewModel() : base()
+    protected TestElementViewModel()
     {
     }
 

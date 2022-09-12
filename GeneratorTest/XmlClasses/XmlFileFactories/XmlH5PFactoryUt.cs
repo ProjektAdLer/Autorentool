@@ -8,8 +8,6 @@ using Generator.XmlClasses.Entities._activities.H5PActivity.xml;
 using Generator.XmlClasses.Entities._activities.Inforef.xml;
 using Generator.XmlClasses.Entities._activities.Module.xml;
 using Generator.XmlClasses.Entities._activities.Roles.xml;
-using Generator.XmlClasses.Entities._sections.Inforef.xml;
-using Generator.XmlClasses.Entities._sections.Section.xml;
 using Generator.XmlClasses.Entities.Files.xml;
 using Generator.XmlClasses.XmlFileFactories;
 using NSubstitute;

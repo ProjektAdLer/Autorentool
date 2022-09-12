@@ -3,7 +3,7 @@ using Shared;
 
 namespace Presentation.PresentationLogic.LearningElement;
 
-public class LearningElementViewModel : ISerializableViewModel, IDisplayableLearningObject, ILearningElementViewModel
+public class LearningElementViewModel : ISerializableViewModel, ILearningElementViewModel
 {
     /// <summary>
     /// Protected Constructor for AutoMapper

@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using Presentation.PresentationLogic.LearningContent;
 using Shared;
 
@@ -8,7 +9,8 @@ public class H5PTestElementViewModel : TestElementViewModel
     /// <summary>
     /// Private Constructor for AutoMapper
     /// </summary>
-    private H5PTestElementViewModel() : base()
+    [UsedImplicitly]
+    private H5PTestElementViewModel()
     {
     }
 

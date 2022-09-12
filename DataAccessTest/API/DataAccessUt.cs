@@ -124,7 +124,7 @@ public class DataAccessUt
 
         var learningContent = new LearningContent("a", "b", Array.Empty<byte>());
         var learningElement = new LearningElement("f","f", learningContent, "f",
-            "f", "f", LearningElementDifficultyEnum.Easy, null!);
+            "f", "f", LearningElementDifficultyEnum.Easy);
         systemUnderTest.SaveLearningElementToFile(
             learningElement,
             "C:/nonsense");

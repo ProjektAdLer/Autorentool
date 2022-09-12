@@ -1,10 +1,13 @@
-﻿namespace BusinessLogic.Entities;
+﻿using JetBrains.Annotations;
+
+namespace BusinessLogic.Entities;
 
 public class LearningWorld : ILearningWorld, IOriginator
 {
     /// <summary>
     /// Constructor for Automapper. DO NOT USE.
     /// </summary>
+    [UsedImplicitly]
     private LearningWorld()
     {
         Name = "";
