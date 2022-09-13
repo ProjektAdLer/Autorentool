@@ -6,12 +6,14 @@
 public class LearningSpaceJson : ILearningSpaceJson
 {
     // the id is incremented and is set for every Space
-    public LearningSpaceJson(int spaceId, string learningSpaceName, IdentifierJson identifier, List<int> learningSpaceContent)
+    public LearningSpaceJson(int spaceId, string learningSpaceName, IdentifierJson identifier, List<int> learningSpaceContent,
+        string? description=null)
     {
         SpaceId = spaceId;
         LearningSpaceName = learningSpaceName;
         Identifier = identifier;
         LearningSpaceContent = learningSpaceContent;
+        Description = description ?? "";
     }
 
     public int SpaceId { get; set; }
@@ -24,6 +26,9 @@ public class LearningSpaceJson : ILearningSpaceJson
     
     // A list that has all the id´s of the included elements of a space. 
     public List<int> LearningSpaceContent { get; set; }
+    
+    //A Description for the Learning Element
+    public string? Description { get; set; }
     
     // requirements are needed to describe the Path of the Topic, Space and element. 
     // it is a list of topics, spaces or elements that need to be completed, before a particular element can be startet

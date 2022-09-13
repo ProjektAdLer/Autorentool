@@ -47,11 +47,11 @@ public class ReadDslUt
         var learningSpacesList = new List<LearningSpaceJson>(){learningSpacesJson1, learningSpacesJson2};
 
         var learningElementJson1 = new LearningElementJson(1,
-            identifierLearningElementJson1, "h5p",0);
+            identifierLearningElementJson1, "h5p",0, null);
         learningElementJson1.LearningElementValue = learningElementValueList1;
 
         var learningElementJson2 = new LearningElementJson(2,
-            identifierLearningElementJson2, "json",0);
+            identifierLearningElementJson2, "json",0, null);
         learningElementJson2.LearningElementValue = learningElementValueList2;
 
         var learningElementList = new List<LearningElementJson>(){learningElementJson1, learningElementJson2};

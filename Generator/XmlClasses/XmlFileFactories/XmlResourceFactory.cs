@@ -1,4 +1,5 @@
 ﻿using System.IO.Abstractions;
+using System.Reflection;
 using Generator.DSL;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 using Generator.XmlClasses.Entities._activities.Grades.xml;
@@ -24,6 +25,7 @@ public class XmlResourceFactory : IXmlResourceFactory
     public string FileElementName;
     public string FileElementParentSpace;
     public string FileElementType;
+    public string FileElementDesc;
 
     public readonly IXmlFileManager FileManager;
     public IActivitiesGradesXmlGradeItem ActivitiesGradesXmlGradeItem { get; }
@@ -59,6 +61,7 @@ public class XmlResourceFactory : IXmlResourceFactory
         FileElementName = "";
         FileElementParentSpace = "";
         FileElementType = "";
+        FileElementDesc = "";
         
         CurrentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
         _fileSystem = fileSystem?? new FileSystem();
@@ -105,6 +108,7 @@ public class XmlResourceFactory : IXmlResourceFactory
             FileElementId = resource.Id.ToString();
             FileElementType = resource.ElementType;
             FileElementName = resource.Identifier.Value;
+            FileElementDesc = resource.Description ?? "";
             FileElementParentSpace = resource.LearningSpaceParentId.ToString();
 
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
@@ -171,6 +175,8 @@ public class XmlResourceFactory : IXmlResourceFactory
         ActivitiesFileResourceXmlResource.Name = FileElementName;
         ActivitiesFileResourceXmlResource.Timemodified = CurrentTime; 
         ActivitiesFileResourceXmlResource.Id = FileElementId;
+        ActivitiesFileResourceXmlResource.Intro = FileElementDesc;
+        //if(FileElementDesc != ""){ ActivitiesFileResourceXmlResource.DisplayOptions = "a:1:{s:10:\"printintro\";i:1;}";}
 
         ActivitiesFileResourceXmlActivity.Resource = ActivitiesFileResourceXmlResource as ActivitiesResourceXmlResource ?? new ActivitiesResourceXmlResource();
         ActivitiesFileResourceXmlActivity.Id = FileElementId;
@@ -190,6 +196,7 @@ public class XmlResourceFactory : IXmlResourceFactory
         ActivitiesModuleXmlModule.Indent = "1";
         ActivitiesModuleXmlModule.Added = CurrentTime;
         ActivitiesModuleXmlModule.Id = FileElementId;
+        if(FileElementDesc != ""){ActivitiesModuleXmlModule.ShowDescription = "1";}
         
         ActivitiesModuleXmlModule.Serialize("resource", FileElementId);
         

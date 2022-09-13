@@ -61,7 +61,7 @@ public class XmlBackupFactoryUt
         
         mockLearningWorld.Identifier = mockIdentifier;
 
-        var mockLearningElement = new LearningElementJson(1, mockIdentifier, "h5p",0);
+        var mockLearningElement = new LearningElementJson(1, mockIdentifier, "h5p",0, null);
         List<LearningElementJson> learningElementJsons = new List<LearningElementJson>();
         learningElementJsons.Add(mockLearningElement);
         
@@ -71,8 +71,8 @@ public class XmlBackupFactoryUt
         List<LearningSpaceJson> learningSpacesJsons = new List<LearningSpaceJson>();
         learningSpacesJsons.Add(mockLearningSpace);
 
-        var mockDslDocumentJson = new LearningElementJson(2, mockIdentifier, "json",0);
-        var mockSpaceElementJson = new LearningElementJson(3, mockIdentifier, "space",0);
+        var mockDslDocumentJson = new LearningElementJson(2, mockIdentifier, "json",0, null);
+        var mockSpaceElementJson = new LearningElementJson(3, mockIdentifier, "space",0, null);
 
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
         mockReadDsl.GetH5PElementsList().Returns(learningElementJsons);
@@ -127,7 +127,7 @@ public class XmlBackupFactoryUt
         var learningWorldJson = new LearningWorldJson("1", new IdentifierJson("1", "1"), new List<int>(){1},
             new List<TopicJson>() {new TopicJson()}, new List<LearningSpaceJson>(){new LearningSpaceJson(1, "name", 
                 new IdentifierJson("1","1"), new List<int>(){1})}, 
-            new List<LearningElementJson>(){new LearningElementJson(1, new IdentifierJson("1","1"), "h5p", 0)});
+            new List<LearningElementJson>(){new LearningElementJson(1, new IdentifierJson("1","1"), "h5p", 0, null)});
         mockReadDsl.GetResourceList().Returns(new List<LearningElementJson>());
         mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
         mockReadDsl.GetH5PElementsList().Returns(new List<LearningElementJson>());
@@ -186,7 +186,7 @@ public class XmlBackupFactoryUt
         var learningWorldJson = new LearningWorldJson("1", new IdentifierJson("1", "1"), new List<int>(){1},
             new List<TopicJson>() {new TopicJson()}, new List<LearningSpaceJson>(){new LearningSpaceJson(1, "name", 
                 new IdentifierJson("1","1"), new List<int>(){1})}, 
-            new List<LearningElementJson>(){new LearningElementJson(1, new IdentifierJson("1","1"), "h5p", 0)});
+            new List<LearningElementJson>(){new LearningElementJson(1, new IdentifierJson("1","1"), "h5p", 0, null)});
         mockReadDsl.GetResourceList().Returns(new List<LearningElementJson>());
         mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
         mockReadDsl.GetH5PElementsList().Returns(new List<LearningElementJson>());
@@ -242,7 +242,7 @@ public class XmlBackupFactoryUt
         var learningWorldJson = new LearningWorldJson("1", new IdentifierJson("1", "1"), new List<int>(){1},
             new List<TopicJson>() {new TopicJson()}, new List<LearningSpaceJson>(){new LearningSpaceJson(1, "name", 
                 new IdentifierJson("1","1"), new List<int>(){1})}, 
-            new List<LearningElementJson>(){new LearningElementJson(1, new IdentifierJson("1","1"), "h5p", 0)});
+            new List<LearningElementJson>(){new LearningElementJson(1, new IdentifierJson("1","1"), "h5p", 0, null)});
         mockReadDsl.GetResourceList().Returns(new List<LearningElementJson>());
         mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
         mockReadDsl.GetH5PElementsList().Returns(new List<LearningElementJson>());
@@ -283,7 +283,7 @@ public class XmlBackupFactoryUt
         var mockLearningWorld = new LearningWorldJson("Uuid", mockIdentifier, new List<int>(),
             new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>() );
 
-        var mockLearningElement = new LearningElementJson(1, mockIdentifier, "h5p",0);
+        var mockLearningElement = new LearningElementJson(1, mockIdentifier, "h5p",0, null);
         List<LearningElementJson> learningElementJsons = new List<LearningElementJson>();
         learningElementJsons.Add(mockLearningElement);
         
@@ -294,8 +294,8 @@ public class XmlBackupFactoryUt
         learningSpacesJsons.Add(mockLearningSpace);
 
         
-        var mockDslDocumentJson = new LearningElementJson(2, mockIdentifier, "json",0);
-        var mockSpaceElementJson = new LearningElementJson(3, mockIdentifier, "space",0);
+        var mockDslDocumentJson = new LearningElementJson(2, mockIdentifier, "json",0, null);
+        var mockSpaceElementJson = new LearningElementJson(3, mockIdentifier, "space",0, null);
         
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
         mockReadDsl.GetH5PElementsList().Returns(learningElementJsons);
@@ -354,7 +354,7 @@ public class XmlBackupFactoryUt
         var learningWorldJson = new LearningWorldJson("1", new IdentifierJson("1", "1"), new List<int>(){1},
             new List<TopicJson>() {new TopicJson()}, new List<LearningSpaceJson>(){new LearningSpaceJson(1, "name", 
                 new IdentifierJson("1","1"), new List<int>(){1})}, 
-            new List<LearningElementJson>(){new LearningElementJson(1, new IdentifierJson("1","1"), "h5p", 0)});
+            new List<LearningElementJson>(){new LearningElementJson(1, new IdentifierJson("1","1"), "h5p", 0, null)});
         mockReadDsl.GetResourceList().Returns(new List<LearningElementJson>());
         mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
         mockReadDsl.GetH5PElementsList().Returns(new List<LearningElementJson>());
@@ -377,7 +377,7 @@ public class XmlBackupFactoryUt
         var learningWorldJson = new LearningWorldJson("1", new IdentifierJson("1", "1"), new List<int>(){1},
             new List<TopicJson>() {new TopicJson()}, new List<LearningSpaceJson>(){new LearningSpaceJson(1, "name", 
                 new IdentifierJson("1","1"), new List<int>(){1})}, 
-            new List<LearningElementJson>(){new LearningElementJson(1, new IdentifierJson("1","1"), "h5p", 0)});
+            new List<LearningElementJson>(){new LearningElementJson(1, new IdentifierJson("1","1"), "h5p", 0, null)});
         mockReadDsl.GetResourceList().Returns(new List<LearningElementJson>());
         mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
         mockReadDsl.GetH5PElementsList().Returns(new List<LearningElementJson>());
@@ -400,7 +400,7 @@ public class XmlBackupFactoryUt
         var learningWorldJson = new LearningWorldJson("1", new IdentifierJson("1", "1"), new List<int>(){1},
             new List<TopicJson>() {new TopicJson()}, new List<LearningSpaceJson>(){new LearningSpaceJson(1, "name", 
                 new IdentifierJson("1","1"), new List<int>(){1})}, 
-            new List<LearningElementJson>(){new LearningElementJson(1, new IdentifierJson("1","1"), "h5p", 0)});
+            new List<LearningElementJson>(){new LearningElementJson(1, new IdentifierJson("1","1"), "h5p", 0, null)});
         mockReadDsl.GetResourceList().Returns(new List<LearningElementJson>());
         mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
         mockReadDsl.GetH5PElementsList().Returns(new List<LearningElementJson>());
@@ -428,7 +428,7 @@ public class XmlBackupFactoryUt
         var learningWorldJson = new LearningWorldJson("1", new IdentifierJson("1", "1"), new List<int>(){1},
             new List<TopicJson>() {new TopicJson()}, new List<LearningSpaceJson>(){new LearningSpaceJson(1, "name", 
                 new IdentifierJson("1","1"), new List<int>(){1})}, 
-            new List<LearningElementJson>(){new LearningElementJson(1, new IdentifierJson("1","1"), "h5p", 0)});
+            new List<LearningElementJson>(){new LearningElementJson(1, new IdentifierJson("1","1"), "h5p", 0, null)});
         mockReadDsl.GetResourceList().Returns(new List<LearningElementJson>());
         mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
         mockReadDsl.GetH5PElementsList().Returns(new List<LearningElementJson>());

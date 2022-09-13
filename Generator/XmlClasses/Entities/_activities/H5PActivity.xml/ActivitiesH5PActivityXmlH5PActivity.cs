@@ -14,7 +14,7 @@ public class ActivitiesH5PActivityXmlH5PActivity : IActivitiesH5PActivityXmlH5PA
         Intro = "";
         Introformat = "1";
         Grade = "100";
-        Displayoptions = "15";
+        DisplayOptions = "15";
         Enabletracking = "1";
         Grademethod = "1";
         Reviewmode = "1";
@@ -41,7 +41,7 @@ public class ActivitiesH5PActivityXmlH5PActivity : IActivitiesH5PActivityXmlH5PA
     public string Grade { get; set; }
     
     [XmlElement(ElementName="displayoptions")]
-    public string Displayoptions { get; set; }
+    public string DisplayOptions { get; set; }
     
     [XmlElement(ElementName="enabletracking")]
     public string Enabletracking { get; set; }

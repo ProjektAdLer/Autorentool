@@ -63,10 +63,10 @@ public class XmlFileFactoryUt
         
         var identifier = new IdentifierJson("FileName", "Document");
 
-        var jsonDocument = new LearningElementJson(1, identifier, "json",0);
-        var pngDocument = new LearningElementJson(2, identifier, "png",0);
-        var mp4Document = new LearningElementJson(3, identifier, "mp4",0);
-        var webpDocument = new LearningElementJson(4, identifier, "webp",0);
+        var jsonDocument = new LearningElementJson(1, identifier, "json",0, null);
+        var pngDocument = new LearningElementJson(2, identifier, "png",0, null);
+        var mp4Document = new LearningElementJson(3, identifier, "mp4",0, null);
+        var webpDocument = new LearningElementJson(4, identifier, "webp",0, null);
         
         var resourceList = new List<LearningElementJson>()
         {
@@ -167,7 +167,9 @@ public class XmlFileFactoryUt
             mockModule, mockGradehistory, mockInforefFile, mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref,
             mockInforefInforef);
 
+        systemUnderTest.FileElementDesc = "DESC";
         systemUnderTest.FileSetParametersActivity();
+        
         // Assert
         Assert.Multiple(() =>
         {

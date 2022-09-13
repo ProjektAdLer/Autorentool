@@ -6,9 +6,7 @@ using Generator.XmlClasses.Entities._activities.Inforef.xml;
 using Generator.XmlClasses.Entities._activities.Label.xml;
 using Generator.XmlClasses.Entities._activities.Module.xml;
 using Generator.XmlClasses.Entities._activities.Roles.xml;
-using Generator.XmlClasses.Entities._sections.Inforef.xml;
-using Generator.XmlClasses.Entities._sections.Section.xml;
-using Generator.XmlClasses.Entities.Files.xml;
+
 
 namespace Generator.XmlClasses.XmlFileFactories;
 
@@ -19,6 +17,7 @@ public class XmlLabelFactory
     public string LabelId;
     public string LabelName;
     public string LabelParentSpaceId;
+    public string LabelDescription;
     public IActivitiesGradesXmlGradeItem ActivitiesGradesXmlGradeItem { get; }
     public IActivitiesGradesXmlGradeItems ActivitiesGradesXmlGradeItems { get; }
     public IActivitiesGradesXmlActivityGradebook ActivitiesGradesXmlActivityGradebook { get; }
@@ -45,6 +44,7 @@ public class XmlLabelFactory
         LabelId = "";
         LabelName = "";
         LabelParentSpaceId = "";
+        LabelDescription = "";
 
         CurrentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
         _fileSystem = fileSystem?? new FileSystem();
@@ -86,6 +86,7 @@ public class XmlLabelFactory
                 LabelId = label.Id.ToString();
                 LabelName = label.Identifier.Value;
                 LabelParentSpaceId = label.LearningSpaceParentId.ToString();
+                LabelDescription = label.Description ?? "";
                 FileSetParametersActivity();
             }
         }
@@ -102,16 +103,16 @@ public class XmlLabelFactory
         ActivitiesGradesXmlActivityGradebook.Serialize("label", LabelId);
         
         //file activities/label.../label.xml
-        ActivitiesLabelXmlLabel.Name = LabelName;
+        ActivitiesLabelXmlLabel.Name = "<h4>"+LabelName+"</h4>"+"<p>&nbsp; &nbsp; &nbsp; "+LabelDescription+"</p>";
         ActivitiesLabelXmlLabel.Id = LabelId;
-        ActivitiesLabelXmlLabel.Intro = LabelName;
+        ActivitiesLabelXmlLabel.Intro = "<h4>"+LabelName+"</h4>"+"<p>&nbsp; &nbsp; &nbsp; "+LabelDescription+"</p>";
         ActivitiesLabelXmlLabel.Timemodified = CurrentTime;
-        
+
         ActivitiesLabelXmlActivity.Label = ActivitiesLabelXmlLabel as ActivitiesLabelXmlLabel ?? new ActivitiesLabelXmlLabel();
         ActivitiesLabelXmlActivity.Id = LabelId;
         ActivitiesLabelXmlActivity.ModuleId = LabelId;
         ActivitiesLabelXmlActivity.ContextId = LabelId;
-        
+
         ActivitiesLabelXmlActivity.Serialize("label", LabelId);
 
         //file activities/label.../roles.xml
@@ -123,6 +124,7 @@ public class XmlLabelFactory
         ActivitiesModuleXmlModule.SectionNumber = LabelParentSpaceId;
         ActivitiesModuleXmlModule.Added = CurrentTime;
         ActivitiesModuleXmlModule.Id = LabelId;
+        //if(LabelDescription != ""){ ActivitiesModuleXmlModule.ShowDescription = "1";}
         
         ActivitiesModuleXmlModule.Serialize("label", LabelId);
         

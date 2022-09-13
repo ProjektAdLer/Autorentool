@@ -1,4 +1,5 @@
 ﻿using System.IO.Abstractions;
+using System.Reflection;
 using Generator.DSL;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 using Generator.XmlClasses.Entities._activities.Grades.xml;
@@ -23,6 +24,7 @@ public class XmlH5PFactory : IXmlH5PFactory
     public string H5PElementName;
     public string H5PElementParentSpace;
     public string H5PElementType;
+    public string H5PElementDesc;
     public string CurrentTime;
     private List<FilesXmlFile> _filesXmlFilesList;
     private List<ActivitiesInforefXmlFile> _activitiesInforefXmlFileList;
@@ -68,6 +70,7 @@ public class XmlH5PFactory : IXmlH5PFactory
         H5PElementName = "";
         H5PElementParentSpace = "";
         H5PElementType = "";
+        H5PElementDesc = "";
         _filesXmlFilesList = new List<FilesXmlFile>();
         _activitiesInforefXmlFileList = new List<ActivitiesInforefXmlFile>();
         _fileSystem = fileSystem?? new FileSystem();
@@ -135,7 +138,8 @@ public class XmlH5PFactory : IXmlH5PFactory
             H5PElementName = h5PElement.Identifier.Value;
             H5PElementParentSpace = h5PElement.LearningSpaceParentId.ToString();
             H5PElementType = h5PElement.ElementType;
-            
+            H5PElementDesc = h5PElement.Description ?? "";
+
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
                 h5PElement.Identifier.Value));
             FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath, 
@@ -204,6 +208,7 @@ public class XmlH5PFactory : IXmlH5PFactory
         ActivitiesH5PActivityXmlH5PActivity.Timecreated = CurrentTime;
         ActivitiesH5PActivityXmlH5PActivity.Timemodified = CurrentTime;
         ActivitiesH5PActivityXmlH5PActivity.Id = H5PElementId;
+        ActivitiesH5PActivityXmlH5PActivity.Intro = H5PElementDesc;
 
         ActivitiesH5PActivityXmlActivity.H5pactivity = ActivitiesH5PActivityXmlH5PActivity as ActivitiesH5PActivityXmlH5PActivity ?? new ActivitiesH5PActivityXmlH5PActivity();
         ActivitiesH5PActivityXmlActivity.Id = H5PElementId;
@@ -225,7 +230,9 @@ public class XmlH5PFactory : IXmlH5PFactory
         ActivitiesModuleXmlModule.Added = CurrentTime;
         ActivitiesModuleXmlModule.ShowDescription = "0";
         ActivitiesModuleXmlModule.Id = H5PElementId;
-        
+        //Tiles-Format does not indent Description of Elements...
+        ActivitiesModuleXmlModule.ShowDescription = "1";
+
         ActivitiesModuleXmlModule.Serialize("h5pactivity", H5PElementId);
         
         //file activities/h5p.../grade_history.xml

@@ -88,7 +88,7 @@ public class XmlLabelFactoryUt
             mockLabel, mockLabelActivity, mockRoles, mockModule, mockGradeHistory, 
             mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref, mockInforefInforef);
 
-        var mockSpaceElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Space_1"), "space", 0);
+        var mockSpaceElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Space_1"), "space", 0, null);
         var spaceJsonList = new List<LearningElementJson> {mockSpaceElementJson};
 
         mockReadDsl.GetSpacesAndElementsOrderedList().Returns(spaceJsonList);
@@ -129,7 +129,7 @@ public class XmlLabelFactoryUt
             mockLabel, mockLabelActivity, mockRoles, mockModule, mockGradeHistory, 
             mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref, mockInforefInforef);
 
-        var mockSpaceElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Space_1"), "space", 0);
+        var mockSpaceElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Space_1"), "space", 0, null);
         var spaceJsonList = new List<LearningElementJson> {mockSpaceElementJson};
 
         mockReadDsl.GetSpacesAndElementsOrderedList().Returns(spaceJsonList);
@@ -146,9 +146,9 @@ public class XmlLabelFactoryUt
             systemUnderTest.ActivitiesGradesXmlActivityGradebook.Received().Serialize("label", "1");
             
             Assert.That(systemUnderTest.ActivitiesLabelXmlLabel, Is.EqualTo(mockLabel));
-            Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Name, Is.EqualTo("Space_1"));
+            Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Name, Is.EqualTo("<h4>Space_1</h4><p>&nbsp; &nbsp; &nbsp; </p>"));
             Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Id, Is.EqualTo("1"));
-            Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Intro, Is.EqualTo("Space_1"));
+            Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Intro, Is.EqualTo("<h4>Space_1</h4><p>&nbsp; &nbsp; &nbsp; </p>"));
             Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
             Assert.That(systemUnderTest.ActivitiesLabelXmlActivity.Id, Is.EqualTo("1"));
             Assert.That(systemUnderTest.ActivitiesLabelXmlActivity.ModuleId, Is.EqualTo("1"));
