@@ -768,33 +768,22 @@ public class AuthoringToolWorkspacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
-        presentationLogic.LoadLearningWorldAsync().Returns(learningWorld);
+        presentationLogic
+            .When(x => x.LoadLearningWorldAsync(Arg.Any<IAuthoringToolWorkspaceViewModel>()))
+            .Do(y =>
+            {
+                ((AuthoringToolWorkspaceViewModel)y.Args()[0]).AddLearningWorld(learningWorld);
+                ((AuthoringToolWorkspaceViewModel)y.Args()[0]).SelectedLearningWorld = learningWorld;
+            });
         var viewModel = new AuthoringToolWorkspaceViewModel();
 
         var systemUnderTest = CreatePresenterForTesting(viewModel, presentationLogic: presentationLogic);
 
         await systemUnderTest.LoadLearningWorldAsync();
-        await presentationLogic.Received().LoadLearningWorldAsync();
+        await presentationLogic.Received().LoadLearningWorldAsync(viewModel);
         Assert.That(viewModel.LearningWorlds, Contains.Item(learningWorld));
     }
 
-    [Test]
-    public async Task
-        LoadLearningWorldAsync_SetsWorldToReplaceWithWhenWorldWithNameExists()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
-        var learningWorld2 = new LearningWorldViewModel("f", "fu", "fu", "fu", "fu", "fu");
-        presentationLogic.LoadLearningWorldAsync().Returns(learningWorld2);
-        var viewModel = new AuthoringToolWorkspaceViewModel();
-        viewModel.AddLearningWorld(learningWorld);
-        
-        var systemUnderTest = CreatePresenterForTesting(viewModel, presentationLogic: presentationLogic);
-
-        await systemUnderTest.LoadLearningWorldAsync();
-        Assert.That(systemUnderTest.WorldToReplaceWith, Is.EqualTo(learningWorld2));
-    }
-    
     #endregion
     
     #region ReplaceLearningWorld

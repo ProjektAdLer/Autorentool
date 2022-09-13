@@ -115,12 +115,14 @@ public class PresentationLogic : IPresentationLogic
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadLearningWorldAsync"/>
-    public async Task<LearningWorldViewModel> LoadLearningWorldAsync()
+    public async Task LoadLearningWorldAsync(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm)
     {
         SaveOrLoadElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load Learning World", WorldFileEnding, WorldFileFormatDescriptor);
-        var entity = BusinessLogic.LoadLearningWorld(filepath);
-        return Mapper.Map<LearningWorldViewModel>(entity);
+        var workspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
+        var command = new LoadLearningWorld(workspaceEntity, filepath, BusinessLogic,
+            workspace => Mapper.Map(workspace, authoringToolWorkspaceVm));
+        BusinessLogic.ExecuteCommand(command);
     }
 
     public void AddLearningSpace(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel learningSpaceVm)

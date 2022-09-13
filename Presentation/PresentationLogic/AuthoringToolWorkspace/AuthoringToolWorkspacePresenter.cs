@@ -159,8 +159,8 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
 
     public async Task LoadLearningWorldAsync()
     {
-        var learningWorld = await _presentationLogic.LoadLearningWorldAsync();
-        AddLearningWorld(learningWorld);
+        await _presentationLogic.LoadLearningWorldAsync(AuthoringToolWorkspaceVm);
+        OnLearningWorldSelect?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
     }
 
     internal void ReplaceLearningWorld(LearningWorldViewModel toReplace)

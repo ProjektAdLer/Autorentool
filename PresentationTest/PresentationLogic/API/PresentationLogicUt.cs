@@ -560,11 +560,12 @@ public class PresentationLogicUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(false);
+        var authoringToolWorkspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
-            await systemUnderTest.LoadLearningWorldAsync());
+            await systemUnderTest.LoadLearningWorldAsync(authoringToolWorkspaceVm));
         Assert.That(ex!.Message, Is.EqualTo("Browser upload/download not yet implemented"));
     }
 
@@ -576,25 +577,25 @@ public class PresentationLogicUt
         mockHybridSupport.IsElectronActive.Returns(true);
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(null);
+        var authoringToolWorkspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
 
         var systemUnderTest =
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider,
                 hybridSupportWrapper: mockHybridSupport);
 
-        var ex =Assert.ThrowsAsync<InvalidOperationException>(async () => await systemUnderTest.LoadLearningWorldAsync());
+        var ex =Assert.ThrowsAsync<InvalidOperationException>(async () => await systemUnderTest.LoadLearningWorldAsync(authoringToolWorkspaceVm));
         Assert.That(ex!.Message, Is.EqualTo("dialogManager received from DI unexpectedly null"));
     }
     
     [Test]
-    public async Task LoadLearningWorldAsync_CallsDialogManagerAndElementMapperAndBusinessLogic()
+    public async Task LoadLearningWorldAsync_CallsDialogManagerAndElementMapper()
     {
-        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(true);
         var mockMapper = Substitute.For<IMapper>();
-        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
-        var entity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
-        mockMapper.Map<LearningWorldViewModel>(Arg.Any<BusinessLogic.Entities.LearningWorld>()).Returns(learningWorld);
+        
+        var workspaceEntity = new BusinessLogic.Entities.AuthoringToolWorkspace(null, new List<BusinessLogic.Entities.LearningWorld>());
+        mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<LearningWorldViewModel>()).Returns(workspaceEntity);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
         mockDialogManger
@@ -602,19 +603,15 @@ public class PresentationLogicUt
             .Returns(filepath);
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManger);
-        mockBusinessLogic.LoadLearningWorld(filepath+".awf").Returns(entity);
+        var authoringToolWorkspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            mapper: mockMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
+        var systemUnderTest = CreateTestablePresentationLogic(mapper: mockMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
-        var actualWorld = await systemUnderTest.LoadLearningWorldAsync();
+        await systemUnderTest.LoadLearningWorldAsync(authoringToolWorkspaceVm);
 
         await mockDialogManger.Received()
             .ShowOpenFileDialogAsync("Load Learning World", null, Arg.Any<IEnumerable<FileFilterProxy>?>());
-        mockBusinessLogic.Received().LoadLearningWorld(filepath + ".awf");
-        mockMapper.Received().Map<LearningWorldViewModel>(entity);
-        
-        Assert.That(actualWorld, Is.EqualTo(learningWorld));
+        mockMapper.Received().Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
     }
 
     [Test]
@@ -631,11 +628,12 @@ public class PresentationLogicUt
             .Throws(new OperationCanceledException("bububaba"));
         mockServiceProvider.GetService(typeof(IElectronDialogManager))
             .Returns(mockElectronDialogManager);
+        var authoringToolWorkspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
             serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
-        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.LoadLearningWorldAsync());
+        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.LoadLearningWorldAsync(authoringToolWorkspaceVm));
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
         mockLogger.Received().LogInformation("Load dialog cancelled by user");
     }

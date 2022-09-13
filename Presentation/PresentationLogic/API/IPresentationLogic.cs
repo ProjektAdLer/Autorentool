@@ -92,7 +92,7 @@ public interface IPresentationLogic
     /// <exception cref="NotImplementedException">Thrown when we are not running in Electron.</exception>
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
-    Task<LearningWorldViewModel> LoadLearningWorldAsync();
+    Task LoadLearningWorldAsync(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm);
 
     /// <summary>
     /// Adds a new learning space in the given learning world with the corresponding command.
