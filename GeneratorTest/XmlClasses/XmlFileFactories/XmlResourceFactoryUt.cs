@@ -19,7 +19,7 @@ namespace GeneratorTest.XmlClasses.XmlFileFactories;
 public class XmlFileFactoryUt
 {
     [Test]
-    public void XmFileFactory_Constructor_AllParametersSet()
+    public void XmlResourceFactory_Constructor_AllParametersSet()
     {
         // Arrange
         var mockReadDsl = Substitute.For<IReadDsl>();
@@ -48,14 +48,12 @@ public class XmlFileFactoryUt
             Assert.That(systemUnderTest.ActivitiesInforefXmlGradeItem, Is.Not.Null);
             Assert.That(systemUnderTest.ActivitiesInforefXmlGradeItemref, Is.Not.Null);
             Assert.That(systemUnderTest.ActivitiesInforefXmlInforef, Is.Not.Null);
-            Assert.That(systemUnderTest.SectionsInforefXmlInforef, Is.Not.Null);
-            Assert.That(systemUnderTest.SectionsSectionXmlSection, Is.Not.Null);
-            
+
         });
     }
 
     [Test]
-    public void XmlFileFactory_CreateFileFactory_FileListCreated()
+    public void XmlResourceFactory_CreateFileFactory_FileListCreated()
     {
         // Arrange
         var mockReadDsl = Substitute.For<IReadDsl>();
@@ -86,6 +84,7 @@ public class XmlFileFactoryUt
         // Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
         var systemUnderTest = new XmlResourceFactory(mockReadDsl, mockFileManager, mockFileSystem);
+        mockFileManager.GetXmlFilesList().Returns(new List<FilesXmlFile>());
         systemUnderTest.CreateFileFactory();
         
         

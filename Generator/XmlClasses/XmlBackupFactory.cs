@@ -146,8 +146,9 @@ public class XmlBackupFactory : IXmlBackupFactory
         _currentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
         
         _learningWorld = readDsl.GetLearningWorld();
-        _learningElement = readDsl.GetResourceList();
-        _learningElement.AddRange(readDsl.GetH5PElementsList());
+        _learningElement = readDsl.GetSpacesAndElementsOrderedList();
+        //_learningElement = readDsl.GetResourceList();
+        //_learningElement.AddRange(readDsl.GetH5PElementsList());
         MoodleBackupXmlActivityList = new List<MoodleBackupXmlActivity>();
         MoodleBackupXmlSettingList = new List<MoodleBackupXmlSetting>();
         MoodleBackupXmlSectionList = new List<MoodleBackupXmlSection>();
@@ -286,13 +287,17 @@ public class XmlBackupFactory : IXmlBackupFactory
             {
                 learningElementType = "resource";
             }
+            else if (learningElementType is "space")
+            {
+                learningElementType = "label";
+            }
 
             if (MoodleBackupXmlActivityList != null)
             {
                 MoodleBackupXmlActivityList.Add(new MoodleBackupXmlActivity
                 {
                     ModuleId = learningElementId,
-                    SectionId = learningElementParentSpace,
+                    SectionId = 0.ToString(),
                     ModuleName = learningElementType,
                     Title = learningElementName,
                     Directory = "activities/" + learningElementType + "_" + learningElementId,
@@ -312,7 +317,6 @@ public class XmlBackupFactory : IXmlBackupFactory
                     learningElementType + "_" + learningElementId, false));
             }
         }
-        
         
         foreach (var space in ReadDsl.GetLearningSpaceList())
         {

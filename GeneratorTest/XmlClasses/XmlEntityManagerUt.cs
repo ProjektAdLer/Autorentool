@@ -59,6 +59,7 @@ public class XmlEntityManagerUt
         
         mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
         mockReadDsl.GetLearningSpaceList().Returns(learningSpacesList);
+        mockReadDsl.GetSpacesAndElementsOrderedList().Returns(learningElementList);
         
         // Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;

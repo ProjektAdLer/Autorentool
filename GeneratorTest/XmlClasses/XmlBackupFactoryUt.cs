@@ -71,11 +71,17 @@ public class XmlBackupFactoryUt
         List<LearningSpaceJson> learningSpacesJsons = new List<LearningSpaceJson>();
         learningSpacesJsons.Add(mockLearningSpace);
 
+        var mockDslDocumentJson = new LearningElementJson(2, mockIdentifier, "json",0);
+        var mockSpaceElementJson = new LearningElementJson(3, mockIdentifier, "space",0);
 
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
         mockReadDsl.GetH5PElementsList().Returns(learningElementJsons);
         mockReadDsl.GetLearningSpaceList().Returns(learningSpacesJsons);
-        mockReadDsl.GetResourceList().Returns(new List<LearningElementJson>());
+        mockReadDsl.GetResourceList().Returns(new List<LearningElementJson>(){mockDslDocumentJson});
+        
+        learningElementJsons.Add(mockDslDocumentJson);
+        learningElementJsons.Add(mockSpaceElementJson);
+        mockReadDsl.GetSpacesAndElementsOrderedList().Returns(learningElementJsons);
         
         var mockOutcomes = Substitute.For<IOutcomesXmlOutcomesDefinition>();
         
@@ -289,11 +295,17 @@ public class XmlBackupFactoryUt
 
         
         var mockDslDocumentJson = new LearningElementJson(2, mockIdentifier, "json",0);
-
+        var mockSpaceElementJson = new LearningElementJson(3, mockIdentifier, "space",0);
+        
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
         mockReadDsl.GetH5PElementsList().Returns(learningElementJsons);
         mockReadDsl.GetLearningSpaceList().Returns(learningSpacesJsons);
         mockReadDsl.GetResourceList().Returns(new List<LearningElementJson>(){mockDslDocumentJson});
+        
+        learningElementJsons.Add(mockDslDocumentJson);
+        learningElementJsons.Add(mockSpaceElementJson);
+        
+        mockReadDsl.GetSpacesAndElementsOrderedList().Returns(learningElementJsons);
         
         var systemUnderTest = new XmlBackupFactory(mockReadDsl, moodleBackupXmlDetail: mockDetail, moodleBackupXmlDetails: mockDetails,
             moodleBackupXmlSetting: mockSetting, moodleBackupXmlContents: mockContents,
@@ -310,16 +322,23 @@ public class XmlBackupFactoryUt
             Assert.That(systemUnderTest.MoodleBackupXmlCourse.Title, Is.EqualTo(mockIdentifier.Value));
             Assert.That(systemUnderTest.MoodleBackupXmlSettingLegacyfiles.Name, Is.EqualTo("legacyfiles"));
             Assert.That(systemUnderTest.MoodleBackupXmlSettingFiles.Value, Is.EqualTo("1"));
-            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[0].ModuleId, Is.EqualTo(mockDslDocumentJson.Id.ToString()));
-            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[0].ModuleName, Is.EqualTo("resource"));
-            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[0].Title, Is.EqualTo(mockIdentifier.Value));
-            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[0].Directory, Is.EqualTo("activities/resource_" + mockDslDocumentJson.Id.ToString()));
-            Assert.That(systemUnderTest.MoodleBackupXmlSettingList[0].Level, Is.EqualTo("activity"));
-            Assert.That(systemUnderTest.MoodleBackupXmlSettingList[0].Name, Is.EqualTo("resource_" + mockDslDocumentJson.Id.ToString() + "_included"));
-            Assert.That(systemUnderTest.MoodleBackupXmlSettingList[0].Value, Is.EqualTo("1"));
-            Assert.That(systemUnderTest.MoodleBackupXmlSettingList[4].Section, Is.EqualTo("section_" + mockLearningSpace.SpaceId.ToString()));
-            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[0].ModuleName, Is.EqualTo("resource"));
-            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[1].ModuleName, Is.EqualTo("h5pactivity"));
+            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[0].ModuleName, Is.EqualTo("h5pactivity"));
+            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[1].ModuleId, Is.EqualTo(mockDslDocumentJson.Id.ToString()));
+            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[1].ModuleName, Is.EqualTo("resource"));
+            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[1].Title, Is.EqualTo(mockIdentifier.Value));
+            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[1].Directory, Is.EqualTo("activities/resource_" + mockDslDocumentJson.Id.ToString()));
+            
+            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[2].ModuleId, Is.EqualTo(mockSpaceElementJson.Id.ToString()));
+            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[2].ModuleName, Is.EqualTo("label"));
+            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[2].Title, Is.EqualTo(mockIdentifier.Value));
+            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[2].Directory, Is.EqualTo("activities/label_" + mockSpaceElementJson.Id.ToString()));
+            
+            Assert.That(systemUnderTest.MoodleBackupXmlSettingList[2].Level, Is.EqualTo("activity"));
+            Assert.That(systemUnderTest.MoodleBackupXmlSettingList[2].Name, Is.EqualTo("resource_" + mockDslDocumentJson.Id.ToString() + "_included"));
+            Assert.That(systemUnderTest.MoodleBackupXmlSettingList[2].Value, Is.EqualTo("1"));
+            
+            Assert.That(systemUnderTest.MoodleBackupXmlSettingList[6].Section, Is.EqualTo("section_" + mockLearningSpace.SpaceId.ToString()));
+            
             Assert.That(systemUnderTest.MoodleBackupXmlInformation, Is.EqualTo(mockInformation));
             systemUnderTest.MoodleBackupXmlMoodleBackup.Received().Serialize();
         });

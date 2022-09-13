@@ -15,6 +15,7 @@ public class XmlEntityManager : IXmlEntityManager
     private IXmlCourseFactory? _xmlCourseFactory;
     private IXmlBackupFactory? _xmlBackupFactory;
     private XmlSectionFactory? _xmlSectionFactory;
+    private XmlLabelFactory? _xmlLabelFactory;
 
     public XmlEntityManager(IFileSystem? fileSystem=null)
     {
@@ -23,12 +24,16 @@ public class XmlEntityManager : IXmlEntityManager
 
     //run all factories that are available, to set the parameters and create the xml files
     public void GetFactories(IReadDsl readDsl, IXmlResourceFactory? xmlFileFactory=null, 
-        IXmlH5PFactory? xmlH5PFactory=null, IXmlCourseFactory? xmlCourseFactory=null, IXmlBackupFactory? xmlBackupFactory=null)
+        IXmlH5PFactory? xmlH5PFactory=null, IXmlCourseFactory? xmlCourseFactory=null, IXmlBackupFactory? xmlBackupFactory=null,
+        XmlSectionFactory? xmlSectionFactory=null, XmlLabelFactory? xmlLabelFactory=null)
     {
         XmlFileManager filemanager = new XmlFileManager();
 
         _xmlSectionFactory = new XmlSectionFactory(readDsl);
         _xmlSectionFactory.CreateSectionFactory();
+        
+        _xmlLabelFactory = new XmlLabelFactory(readDsl);
+        _xmlLabelFactory.CreateLabelFactory();
         
         _xmlResourceFactory = xmlFileFactory ?? new XmlResourceFactory(readDsl, filemanager, _fileSystem);
         _xmlResourceFactory.CreateFileFactory();

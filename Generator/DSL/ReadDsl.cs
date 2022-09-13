@@ -9,6 +9,7 @@ public class ReadDsl : IReadDsl
     public List<LearningElementJson> ListH5PElements;
     public List<LearningElementJson> ListResourceElements;
     private List<LearningSpaceJson> _listLearningSpaces;
+    public List<LearningElementJson> ListAllSpacesAndElementsOrdered;
     private LearningWorldJson _learningWorldJson;
     private IFileSystem _fileSystem;
     private DocumentRootJson _rootJson;
@@ -31,6 +32,7 @@ public class ReadDsl : IReadDsl
         ListH5PElements = new List<LearningElementJson>();
         ListResourceElements = new List<LearningElementJson>();
         _listLearningSpaces = new List<LearningSpaceJson>();
+        ListAllSpacesAndElementsOrdered = new List<LearningElementJson>();
     }
 
     public void ReadLearningWorld(string dslPath, DocumentRootJson? rootJsonForTest = null)
@@ -51,6 +53,7 @@ public class ReadDsl : IReadDsl
         GetH5PElements(_rootJson);
         GetResourceElements(_rootJson);
         GetLearningSpaces(_rootJson);
+        GetSpacesAndElementsOrdered(_rootJson);
         SetLearningWorld(_rootJson);
     }
 
@@ -95,6 +98,22 @@ public class ReadDsl : IReadDsl
             }
     }
 
+    private void GetSpacesAndElementsOrdered(DocumentRootJson? documentRootJson)
+    {
+        if (documentRootJson != null)
+        {
+            foreach (var space in documentRootJson.LearningWorld.LearningSpaces)
+            {
+                ListAllSpacesAndElementsOrdered.Add(new LearningElementJson(space.SpaceId+1000, space.Identifier, "space", 0));
+                
+                foreach (int elementInSpace in space.LearningSpaceContent)
+                {
+                    ListAllSpacesAndElementsOrdered.Add(documentRootJson.LearningWorld.LearningElements[elementInSpace-1]);
+                }
+            }
+        }
+    }
+
     public List<LearningElementJson> GetH5PElementsList()
     {
         return ListH5PElements;
@@ -102,7 +121,11 @@ public class ReadDsl : IReadDsl
 
     public List<LearningSpaceJson> GetLearningSpaceList()
     {
-        return _listLearningSpaces;
+        //return _listLearningSpaces;
+        var space = new LearningSpaceJson(0, "Topic 0", new IdentifierJson("identifier", "value"), new List<int>());
+        var spaceList = new List<LearningSpaceJson>();
+        spaceList.Add(space);
+        return spaceList;
     }
 
     public List<LearningElementJson> GetResourceList()
@@ -110,5 +133,9 @@ public class ReadDsl : IReadDsl
         return ListResourceElements;
     }
     
-    
+    public List<LearningElementJson> GetSpacesAndElementsOrderedList()
+    {
+        return ListAllSpacesAndElementsOrdered;
+    }
+
 }

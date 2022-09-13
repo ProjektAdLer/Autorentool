@@ -45,8 +45,6 @@ public class XmlH5PFactory : IXmlH5PFactory
     public IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
     public IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
     public IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
-    public ISectionsInforefXmlInforef SectionsInforefXmlInforef { get; }
-    public ISectionsSectionXmlSection SectionsSectionXmlSection { get; }
     public IReadDsl ReadDsl { get; }
 
     private readonly IFileSystem _fileSystem;
@@ -64,9 +62,7 @@ public class XmlH5PFactory : IXmlH5PFactory
         IActivitiesInforefXmlFileref? inforefXmlFileref = null,
         IActivitiesInforefXmlGradeItem? inforefXmlGradeItem = null,
         IActivitiesInforefXmlGradeItemref? inforefXmlGradeItemref = null,
-        IActivitiesInforefXmlInforef? inforefXmlInforef = null,
-        ISectionsInforefXmlInforef? sectionsInforefXmlInforef = null,
-        ISectionsSectionXmlSection? sectionsSectionXmlSection = null)
+        IActivitiesInforefXmlInforef? inforefXmlInforef = null)
     {
         H5PElementId = "";
         H5PElementName = "";
@@ -102,9 +98,6 @@ public class XmlH5PFactory : IXmlH5PFactory
         ActivitiesInforefXmlGradeItem = inforefXmlGradeItem?? new ActivitiesInforefXmlGradeItem();
         ActivitiesInforefXmlGradeItemref = inforefXmlGradeItemref?? new ActivitiesInforefXmlGradeItemref();
         ActivitiesInforefXmlInforef = inforefXmlInforef?? new ActivitiesInforefXmlInforef();
-
-        SectionsInforefXmlInforef = sectionsInforefXmlInforef?? new SectionsInforefXmlInforef();
-        SectionsSectionXmlSection = sectionsSectionXmlSection?? new SectionsSectionXmlSection();
 
         ReadDsl = readDsl;
         CurrentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
@@ -228,6 +221,7 @@ public class XmlH5PFactory : IXmlH5PFactory
         ActivitiesModuleXmlModule.SectionId = H5PElementParentSpace;
         ActivitiesModuleXmlModule.SectionNumber = H5PElementParentSpace;
         ActivitiesModuleXmlModule.IdNumber = "";
+        ActivitiesModuleXmlModule.Indent = "1";
         ActivitiesModuleXmlModule.Added = CurrentTime;
         ActivitiesModuleXmlModule.ShowDescription = "0";
         ActivitiesModuleXmlModule.Id = H5PElementId;

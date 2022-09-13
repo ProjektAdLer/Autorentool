@@ -119,7 +119,7 @@ public class XmlCourseFactoryUt
             Assert.That(mockCourseCourse.Fullname, Is.EqualTo(mockLearningWorld.Identifier.Value));
             Assert.That(mockCourseCourse.Format, Is.EqualTo("tiles"));
             Assert.That(mockCourseCourse.BaseColour, Is.EqualTo("#009681"));
-            Assert.That(mockCourseCourse.CourseUseSubtiles, Is.EqualTo("1"));
+            Assert.That(mockCourseCourse.CourseUseSubtiles, Is.EqualTo("0"));
             Assert.That(mockCourseCourse.CourseShowTileProgress, Is.EqualTo("2"));
             Assert.That(mockCourseCourse.ShowGrades, Is.EqualTo("1"));
             Assert.That(mockCourseCourse.Visible, Is.EqualTo("1"));

@@ -89,7 +89,7 @@ public class XmlCourseFactory : IXmlCourseFactory
         CourseCourseXmlCourse.Fullname = _learningWorld.Identifier.Value;
         CourseCourseXmlCourse.Format = "tiles";
         CourseCourseXmlCourse.BaseColour = "#009681";
-        CourseCourseXmlCourse.CourseUseSubtiles = "1";
+        CourseCourseXmlCourse.CourseUseSubtiles = "0";
         CourseCourseXmlCourse.CourseShowTileProgress = "2";
         CourseCourseXmlCourse.ShowGrades = "1";
         CourseCourseXmlCourse.Visible = "1";

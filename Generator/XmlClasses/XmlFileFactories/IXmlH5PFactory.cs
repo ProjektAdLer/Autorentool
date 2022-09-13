@@ -30,8 +30,6 @@ public interface IXmlH5PFactory
     IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
     IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
     IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
-    ISectionsInforefXmlInforef SectionsInforefXmlInforef { get; }
-    ISectionsSectionXmlSection SectionsSectionXmlSection { get; }
     IReadDsl? ReadDsl { get; }
 
     /// <summary>

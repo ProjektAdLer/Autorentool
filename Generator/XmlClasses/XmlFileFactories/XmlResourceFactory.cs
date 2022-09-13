@@ -40,8 +40,6 @@ public class XmlResourceFactory : IXmlResourceFactory
     public IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
     public IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
     public IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
-    public ISectionsInforefXmlInforef SectionsInforefXmlInforef { get; }
-    public ISectionsSectionXmlSection SectionsSectionXmlSection { get; }
     public IReadDsl ReadDsl { get; }
 
     public XmlResourceFactory(IReadDsl readDsl, IXmlFileManager? xmlFileManager = null,
@@ -54,9 +52,7 @@ public class XmlResourceFactory : IXmlResourceFactory
         IActivitiesInforefXmlFileref? inforefXmlFileref = null,
         IActivitiesInforefXmlGradeItem? inforefXmlGradeItem = null,
         IActivitiesInforefXmlGradeItemref? inforefXmlGradeItemref = null,
-        IActivitiesInforefXmlInforef? inforefXmlInforef = null,
-        ISectionsInforefXmlInforef? sectionsInforefXmlInforef = null,
-        ISectionsSectionXmlSection? sectionsSectionXmlSection = null)
+        IActivitiesInforefXmlInforef? inforefXmlInforef = null)
     {        
         ReadDsl = readDsl;
         FileElementId = "";
@@ -91,17 +87,12 @@ public class XmlResourceFactory : IXmlResourceFactory
         ActivitiesInforefXmlGradeItem = inforefXmlGradeItem?? new ActivitiesInforefXmlGradeItem();
         ActivitiesInforefXmlGradeItemref = inforefXmlGradeItemref?? new ActivitiesInforefXmlGradeItemref();
         ActivitiesInforefXmlInforef = inforefXmlInforef?? new ActivitiesInforefXmlInforef();
-
-        SectionsInforefXmlInforef = sectionsInforefXmlInforef?? new SectionsInforefXmlInforef();
-        SectionsSectionXmlSection = sectionsSectionXmlSection?? new SectionsSectionXmlSection();
     }
     
     public void CreateFileFactory()
     {
         var resourceList = ReadDsl.GetResourceList();
-        FilesXmlFilesList = new List<FilesXmlFile>();
         FilesXmlFilesList = FileManager.GetXmlFilesList();
-        
         ReadFileListAndSetParametersResource(resourceList);
         
         FileManager.SetXmlFilesList(FilesXmlFilesList);
@@ -147,8 +138,6 @@ public class XmlResourceFactory : IXmlResourceFactory
     
     public void FileSetParametersFilesXml(string hashCheckSum, string filesize, string mimeType)
     {
-        //Let this Null-Check in, otherwise a Unit-Test will fail
-        if(FilesXmlFilesList == null){ FilesXmlFilesList = new List<FilesXmlFile>();}
         var file1 = new FilesXmlFile
         {
             Id = XmlEntityManager.GetFileIdBlock1().ToString(),
@@ -198,6 +187,7 @@ public class XmlResourceFactory : IXmlResourceFactory
         ActivitiesModuleXmlModule.ModuleName = "resource";
         ActivitiesModuleXmlModule.SectionId = FileElementParentSpace;
         ActivitiesModuleXmlModule.SectionNumber = FileElementParentSpace;
+        ActivitiesModuleXmlModule.Indent = "1";
         ActivitiesModuleXmlModule.Added = CurrentTime;
         ActivitiesModuleXmlModule.Id = FileElementId;
         

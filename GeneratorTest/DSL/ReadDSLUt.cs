@@ -1,5 +1,6 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
 using Generator.DSL;
+using NSubstitute;
 using NUnit.Framework;
 using PersistEntities;
 
@@ -14,11 +15,6 @@ public class ReadDslUt
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
-
-        var content1 = new LearningContentPe("a", "h5p", new byte[] {0x01, 0x02});
-        var ele3 = new LearningElementPe("a", "b", content1, "pupup", "g", "h", LearningElementDifficultyEnumPe.Easy, 17, 23, 23);
-        var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff");
-        space1.LearningElements.Add(ele3);
 
         var identifierLearningWorldJson = new IdentifierJson("name", "World");
 
@@ -43,10 +39,10 @@ public class ReadDslUt
         var topicsList = new List<TopicJson>(){topicsJson};
 
         var learningSpacesJson1 = new LearningSpaceJson(1, "Space_1",
-            identifierLearningSpaceJson1, new List<int>() {1, 2});
+            identifierLearningSpaceJson1, new List<int> {1, 2});
  
-        var learningSpacesJson2 = new LearningSpaceJson(1, "Space_1", 
-            identifierLearningSpaceJson2, new List<int>() {3, 4});
+        var learningSpacesJson2 = new LearningSpaceJson(2, "Space_2", 
+            identifierLearningSpaceJson2, new List<int>());
 
         var learningSpacesList = new List<LearningSpaceJson>(){learningSpacesJson1, learningSpacesJson2};
 
@@ -75,6 +71,7 @@ public class ReadDslUt
         //Assert
         var getLearningWorldJson = systemUnderTest.GetLearningWorld();
         var getH5PElementsList = systemUnderTest.GetH5PElementsList();
+        var getSpacesAndElementsList = systemUnderTest.GetSpacesAndElementsOrderedList();
 
         Assert.Multiple(() =>
         {
@@ -87,7 +84,12 @@ public class ReadDslUt
             Assert.That(getLearningWorldJson.LearningSpaces, Has.Count.EqualTo(learningSpacesList.Count));
             Assert.That(resourceList, Has.Count.EqualTo(1));
             Assert.That(getH5PElementsList, Has.Count.EqualTo(1));
-            Assert.That(listSpace.Count, Is.EqualTo(2));
+            
+            //Spaces + Elements 
+            Assert.That(getSpacesAndElementsList, Has.Count.EqualTo(4));
+            
+            //Because there are no Topics in the AuthoringTool, every learning space is added to Topic 0
+            Assert.That(listSpace.Count, Is.EqualTo(1));
         });
     }
 

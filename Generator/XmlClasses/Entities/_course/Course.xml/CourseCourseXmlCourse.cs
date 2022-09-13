@@ -17,7 +17,7 @@ namespace Generator.XmlClasses.Entities._course.Course.xml;
 			Format = "tiles";
 			DefaultTileIcon = "pie-chart";
 			BaseColour = "#009681";
-			CourseUseSubtiles = "1";
+			CourseUseSubtiles = "0";
 			UseSubtilesSecZero = "0";
 			CourseShowTileProgress = "2";
 			DisplayFilterbar = "0";

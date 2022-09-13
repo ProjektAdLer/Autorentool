@@ -26,8 +26,6 @@ public interface IXmlResourceFactory
     IActivitiesInforefXmlGradeItem ActivitiesInforefXmlGradeItem { get; }
     IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
     IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
-    ISectionsInforefXmlInforef SectionsInforefXmlInforef { get; }
-    ISectionsSectionXmlSection SectionsSectionXmlSection { get; }
     IReadDsl ReadDsl { get; }
     void CreateFileFactory();
     //void ReadFileListAndSetParameters(List<LearningElementJson> listDslDocument);

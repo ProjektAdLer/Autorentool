@@ -49,8 +49,6 @@ public class XmlH5PFactoryUt
             Assert.That(systemUnderTest.ActivitiesInforefXmlGradeItem, Is.Not.Null);
             Assert.That(systemUnderTest.ActivitiesInforefXmlGradeItemref, Is.Not.Null);
             Assert.That(systemUnderTest.ActivitiesInforefXmlInforef, Is.Not.Null);
-            Assert.That(systemUnderTest.SectionsInforefXmlInforef, Is.Not.Null);
-            Assert.That(systemUnderTest.SectionsSectionXmlSection, Is.Not.Null);
         });
     }
     
