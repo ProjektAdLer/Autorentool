@@ -97,7 +97,8 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
                             LearningElementDifficultyEnum.Hard.ToString(),
                             LearningElementDifficultyEnum.None.ToString() })
                 }, true),
-            new("Workload (min)", ModalDialogInputType.Number)
+            new("Workload (min)", ModalDialogInputType.Number),
+            new("Points", ModalDialogInputType.Number)
         };
 
     /// <summary>
@@ -130,7 +131,8 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
                             LearningElementDifficultyEnum.Medium.ToString(),
                             LearningElementDifficultyEnum.Hard.ToString() })
                 }, true),
-            new("Workload (min)", ModalDialogInputType.Number)
+            new("Workload (min)", ModalDialogInputType.Number),
+            new("Points", ModalDialogInputType.Number)
         };
 
     /// <summary>

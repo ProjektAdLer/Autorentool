@@ -19,8 +19,9 @@ public class ImageTransferElementViewModel : TransferElementViewModel
     /// </summary>
     public ImageTransferElementViewModel(string name, string shortname, ILearningElementViewModelParent? parent,
         LearningContentViewModel learningContent, string authors, string description, string goals,
-        LearningElementDifficultyEnum difficulty, int workload, double positionX, double positionY) : base(name,
-        shortname, parent, learningContent, authors, description, goals, difficulty, workload, positionX, positionY)
+        LearningElementDifficultyEnum difficulty, int workload, int points, double positionX, double positionY) : base(
+        name, shortname, parent, learningContent, authors, description, goals, difficulty, workload, points, positionX,
+        positionY)
     {
     }
 

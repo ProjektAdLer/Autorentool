@@ -27,6 +27,7 @@ public class MappingProfileUt
     private const LearningElementDifficultyEnum Difficulty = LearningElementDifficultyEnum.Easy;
     private const LearningElementDifficultyEnumPe DifficultyPe = LearningElementDifficultyEnumPe.Easy;
     private const int Workload = 1;
+    private const int Points = 2;
     private const double PositionX = 1.0;
     private const double PositionY = 2.0;
 
@@ -41,6 +42,7 @@ public class MappingProfileUt
     private const LearningElementDifficultyEnum NewDifficulty = LearningElementDifficultyEnum.Medium;
     private const LearningElementDifficultyEnumPe NewDifficultyPe = LearningElementDifficultyEnumPe.Medium;
     private const int NewWorkload = 2;
+    private const int NewPoints = 3;
     private const double NewPositionX = 3.0;
     private const double NewPositionY = 4.0;
 
@@ -98,7 +100,7 @@ public class MappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var content = GetTestableContent();
         var source = new LearningElement(Name, Shortname, content, Authors, Description, Goals,
-            Difficulty, null, Workload, PositionX, PositionY);
+            Difficulty, null, Workload, Points, PositionX, PositionY);
         var destination = new LearningElementViewModel("", "",
             new LearningContentViewModel("", "", Array.Empty<byte>()), "", "", "", LearningElementDifficultyEnum.None);
 
@@ -115,6 +117,7 @@ public class MappingProfileUt
         destination.Goals = NewGoals;
         destination.Difficulty = NewDifficulty;
         destination.Workload = NewWorkload;
+        destination.Points = NewPoints;
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
 
@@ -130,7 +133,7 @@ public class MappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var content = GetTestableContent();
         var source = new LearningElement(Name, Shortname, content, Authors, Description, Goals,
-            Difficulty, null, Workload, PositionX, PositionY);
+            Difficulty, null, Workload, Points, PositionX, PositionY);
         var destination = new LearningElementPe("", "", new LearningContentPe("", "", Array.Empty<byte>()), "", "", "",
             LearningElementDifficultyEnumPe.None);
 
@@ -146,6 +149,7 @@ public class MappingProfileUt
         destination.Goals = NewGoals;
         destination.Difficulty = NewDifficultyPe;
         destination.Workload = NewWorkload;
+        destination.Points = NewPoints;
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
 
@@ -716,9 +720,9 @@ public class MappingProfileUt
         return parent switch
         {
             LearningWorld world => new LearningElement(Name, Shortname, GetTestableContent(), Authors, Description,
-                Goals, Difficulty, world, Workload, PositionX, PositionY),
+                Goals, Difficulty, world, Workload, Points, PositionX, PositionY),
             LearningSpace space => new LearningElement(Name, Shortname, GetTestableContent(), Authors, Description,
-                Goals, Difficulty, space, Workload, PositionX, PositionY),
+                Goals, Difficulty, space, Workload, Points, PositionX, PositionY),
             _ => throw new ArgumentException($"{parent.GetType().Name} is not a valid parent type")
         };
     }
@@ -729,10 +733,10 @@ public class MappingProfileUt
         {
             LearningWorldViewModel world => new LearningElementViewModel(NewName, NewShortname,
                 GetTestableNewContentViewModel(), NewAuthors, NewDescription, NewGoals, NewDifficulty, world,
-                NewWorkload, NewPositionX, NewPositionY),
+                NewWorkload, NewPoints, NewPositionX, NewPositionY),
             LearningSpaceViewModel space => new LearningElementViewModel(NewName, NewShortname,
                 GetTestableNewContentViewModel(), NewAuthors, NewDescription, NewGoals, NewDifficulty, space,
-                NewWorkload, NewPositionX, NewPositionY),
+                NewWorkload, NewPoints, NewPositionX, NewPositionY),
             _ => throw new ArgumentException($"{parent.GetType().Name} is not a valid parent type")
         };
     }
@@ -741,7 +745,7 @@ public class MappingProfileUt
     {
         return new LearningElementPe(NewName, NewShortname,
             GetTestableNewContentPersistEntity(), NewAuthors, NewDescription, NewGoals, NewDifficultyPe, NewWorkload,
-            NewPositionX, NewPositionY);
+            NewPoints, NewPositionX, NewPositionY);
     }
 
     private static LearningSpace GetTestableSpace()
@@ -949,6 +953,7 @@ public class MappingProfileUt
                     Assert.That(element.Difficulty, Is.EqualTo(useNewFields ? NewDifficulty : Difficulty));
                     Assert.That(element.Parent, Is.EqualTo(parent));
                     Assert.That(element.Workload, Is.EqualTo(useNewFields ? NewWorkload : Workload));
+                    Assert.That(element.Points, Is.EqualTo(useNewFields ? NewPoints : Points));
                     Assert.That(element.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
                     Assert.That(element.PositionY, Is.EqualTo(useNewFields ? NewPositionY : PositionY));
                 });
@@ -965,6 +970,7 @@ public class MappingProfileUt
                     Assert.That(element.Difficulty, Is.EqualTo(useNewFields ? NewDifficulty : Difficulty));
                     Assert.That(element.Parent, Is.EqualTo(parent));
                     Assert.That(element.Workload, Is.EqualTo(useNewFields ? NewWorkload : Workload));
+                    Assert.That(element.Points, Is.EqualTo(useNewFields ? NewPoints : Points));
                     Assert.That(element.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
                     Assert.That(element.PositionY, Is.EqualTo(useNewFields ? NewPositionY : PositionY));
                 });
@@ -980,6 +986,7 @@ public class MappingProfileUt
                     Assert.That(element.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
                     Assert.That(element.Difficulty, Is.EqualTo(useNewFields ? NewDifficultyPe : DifficultyPe));
                     Assert.That(element.Workload, Is.EqualTo(useNewFields ? NewWorkload : Workload));
+                    Assert.That(element.Points, Is.EqualTo(useNewFields ? NewPoints : Points));
                     Assert.That(element.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
                     Assert.That(element.PositionY, Is.EqualTo(useNewFields ? NewPositionY : PositionY));
                 });

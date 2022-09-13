@@ -20,11 +20,12 @@ public class VideoTransferElementUt
         var goals = "learn very many things";
         var difficulty = LearningElementDifficultyEnum.Medium;
         var workload = 5;
+        var points = 6;
         var positionX = 5f;
         var positionY = 21f;
 
         var systemUnderTest = new VideoTransferElement(name, shortname, parent, content, authors, description, goals,
-            difficulty, workload, positionX, positionY);
+            difficulty, workload, points, positionX, positionY);
         
         Assert.Multiple(() =>
         {
@@ -37,6 +38,7 @@ public class VideoTransferElementUt
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.Difficulty, Is.EqualTo(difficulty));
             Assert.That(systemUnderTest.Workload, Is.EqualTo(workload));
+            Assert.That(systemUnderTest.Points, Is.EqualTo(points));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
         });

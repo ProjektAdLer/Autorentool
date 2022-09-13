@@ -6,8 +6,8 @@ public class VideoActivationElementPe : LearningElementPe
 {
     internal VideoActivationElementPe(string name, string shortname, LearningContentPe? learningContent,
         string authors, string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload,
-        double positionX, double positionY) : base(name, shortname, learningContent, authors, description, 
-        goals, difficulty, workload, positionX, positionY)
+        int points, double positionX, double positionY) : base(name, shortname, learningContent, authors, description, 
+        goals, difficulty, workload, points, positionX, positionY)
     {
     }
     /// <summary>

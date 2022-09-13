@@ -17,7 +17,7 @@ public class LoadLearningElementUt
         var world = new LearningWorld("a", "b", "b", "b", "b", "b");
         var element =
             new ImageTransferElement("a", "b", world, null!, "a", "b",
-                "c", LearningElementDifficultyEnum.Easy, 1,2,3);
+                "c", LearningElementDifficultyEnum.Easy, 1, 9, 2,3);
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         const string filepath = "c:\\temp\\test";
         mockBusinessLogic.LoadLearningElement(filepath).Returns(element);
@@ -44,7 +44,7 @@ public class LoadLearningElementUt
         var world = new LearningWorld("a", "b", "b", "b", "b", "b");
         var element =
             new VideoTransferElement("a", "b", world, null!, "a", "b",
-                "c", LearningElementDifficultyEnum.Easy, 1,2,3);
+                "c", LearningElementDifficultyEnum.Easy, 1, 9,2,3);
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         const string filepath = "c:\\temp\\test";
         mockBusinessLogic.LoadLearningElement(filepath).Returns(element);
@@ -71,7 +71,7 @@ public class LoadLearningElementUt
         var space = new LearningWorld("a", "b", "b", "b", "b", "b");
         var element =
             new PdfTransferElement("a", "b", space, null!, "a", "b",
-                "c", LearningElementDifficultyEnum.Easy, 1,2,3);
+                "c", LearningElementDifficultyEnum.Easy, 1, 9, 2,3);
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         const string filepath = "c:\\temp\\test";
         mockBusinessLogic.LoadLearningElement(filepath).Returns(element);
@@ -98,7 +98,7 @@ public class LoadLearningElementUt
         var space = new LearningWorld("a", "b", "b", "b", "b", "b");
         var element =
             new VideoActivationElement("a", "b", space, null!, "a", "b",
-                "c", LearningElementDifficultyEnum.Easy, 1,2,3);
+                "c", LearningElementDifficultyEnum.Easy, 1, 9, 2,3);
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         const string filepath = "c:\\temp\\test";
         mockBusinessLogic.LoadLearningElement(filepath).Returns(element);
@@ -125,7 +125,7 @@ public class LoadLearningElementUt
         var world = new LearningWorld("a", "b", "b", "b", "b", "b");
         var element =
             new H5PActivationElement("a", "b", world, null!, "a", "b",
-                "c", LearningElementDifficultyEnum.Easy, 1,2,3);
+                "c", LearningElementDifficultyEnum.Easy, 1, 9,2,3);
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         const string filepath = "c:\\temp\\test";
         mockBusinessLogic.LoadLearningElement(filepath).Returns(element);
@@ -152,7 +152,7 @@ public class LoadLearningElementUt
         var space = new LearningWorld("a", "b", "b", "b", "b", "b");
         var element =
             new H5PInteractionElement("a", "b", space, null!, "a", "b",
-                "c", LearningElementDifficultyEnum.Easy, 1,2,3);
+                "c", LearningElementDifficultyEnum.Easy, 1, 9, 2,3);
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         const string filepath = "c:\\temp\\test";
         mockBusinessLogic.LoadLearningElement(filepath).Returns(element);
@@ -179,7 +179,7 @@ public class LoadLearningElementUt
         var world = new LearningWorld("a", "b", "b", "b", "b", "b");
         var element =
             new H5PTestElement("a", "b", world, null!, "a", "b",
-                "c", LearningElementDifficultyEnum.Easy, 1,2,3);
+                "c", LearningElementDifficultyEnum.Easy, 1, 9,2,3);
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         const string filepath = "c:\\temp\\test";
         mockBusinessLogic.LoadLearningElement(filepath).Returns(element);
@@ -225,7 +225,7 @@ public class LoadLearningElementUt
         Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var element =
             new LearningElement("a", "b", null!, "a", "b",
-                "c", LearningElementDifficultyEnum.Easy, world, 1,2,3);
+                "c", LearningElementDifficultyEnum.Easy, world, 1, 9, 2,3);
         mockBusinessLogic.LoadLearningElement(Arg.Any<string>()).Returns(element);
         var command = new LoadLearningElement(world, "element", mockBusinessLogic, mappingAction);
         

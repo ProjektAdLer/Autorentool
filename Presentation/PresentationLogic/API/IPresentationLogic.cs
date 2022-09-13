@@ -154,9 +154,10 @@ public interface IPresentationLogic
     /// <param name="goals">The goals of the element.</param>
     /// <param name="difficulty">The difficulty of the element.</param>
     /// <param name="workload">The time required to complete the learning element.</param>
+    /// <param name="points">The number of points of the learning element.</param>
     void CreateLearningElement(ILearningElementViewModelParent elementParentVm, string name, string shortname,
         ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContentVm,
-        string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload);
+        string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points);
 
     /// <summary>
     /// Edits a given learning element either in the learning world or learning space with the corresponding command.
@@ -170,9 +171,10 @@ public interface IPresentationLogic
     /// <param name="goals">The goals of the element.</param>
     /// <param name="difficulty">The difficulty of the element.</param>
     /// <param name="workload">The time required to complete the learning element.</param>
+    /// <param name="points">The number of points of the learning element.</param>
     void EditLearningElement(ILearningElementViewModelParent learningElementParentVm,
         ILearningElementViewModel learningElementVm, string name, string shortname, string authors, string description,
-        string goals, LearningElementDifficultyEnum difficulty, int workload);
+        string goals, LearningElementDifficultyEnum difficulty, int workload, int points);
 
     /// <summary>
     /// Deletes the given learning element either in the given learning world or in the given learning space.

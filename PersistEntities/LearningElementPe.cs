@@ -14,7 +14,7 @@ public class LearningElementPe : ILearningElementPe
 {
     public LearningElementPe(string name, string shortname, LearningContentPe? learningContent,
         string authors, string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload = 0,
-        double positionX = 0, double positionY = 0)
+        int points = 0, double positionX = 0, double positionY = 0)
     {
         Name = name;
         Shortname = shortname;
@@ -24,6 +24,7 @@ public class LearningElementPe : ILearningElementPe
         Goals = goals;
         Difficulty = difficulty;
         Workload = workload;
+        Points = points;
         PositionX = positionX;
         PositionY = positionY;
     }
@@ -40,6 +41,7 @@ public class LearningElementPe : ILearningElementPe
         Goals = "";
         Difficulty = LearningElementDifficultyEnumPe.Medium;
         Workload = 0;
+        Points = 0;
         PositionX = 0;
         PositionY = 0;
     }
@@ -52,6 +54,7 @@ public class LearningElementPe : ILearningElementPe
     public string Description { get; set; }
     public string Goals { get; set; }
     public int Workload { get; set; }
+    public int Points { get; set; }
     public LearningElementDifficultyEnumPe Difficulty { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }

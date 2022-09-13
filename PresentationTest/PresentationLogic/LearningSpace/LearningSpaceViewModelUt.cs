@@ -12,30 +12,30 @@ public class LearningSpaceViewModelUt
     [Test]
     public void Constructor_InitializesAllProperties()
     {
-        var Name = "asdf";
-        var Shortname = "jkl;";
-        var Authors = "ben and jerry";
-        var Description = "very cool element";
-        var Goals = "learn very many things";
-        var PositionX = 5f;
-        var PositionY = 21f;
-        var ele1 = new LearningElementViewModel("a", "b",  null!, "g", "h","i", LearningElementDifficultyEnum.Easy, null, 17, 23);
-        var ele2 = new LearningElementViewModel("z", "zz",  null!, "z","zz","zzz", LearningElementDifficultyEnum.Hard, null, 444, double.MaxValue);
+        var name = "asdf";
+        var shortname = "jkl;";
+        var authors = "ben and jerry";
+        var description = "very cool element";
+        var goals = "learn very many things";
+        var positionX = 5f;
+        var positionY = 21f;
+        var ele1 = new LearningElementViewModel("a", "b",  null!, "g", "h","i", LearningElementDifficultyEnum.Easy, null, 17,11, 23);
+        var ele2 = new LearningElementViewModel("z", "zz",  null!, "z","zz","zzz", LearningElementDifficultyEnum.Hard, null, 444,12, double.MaxValue);
         var learningElements = new List<ILearningElementViewModel> { ele1, ele2 };
         
-        var systemUnderTest = new LearningSpaceViewModel(Name, Shortname, Authors, Description, Goals, learningElements,
-            PositionX, PositionY);
+        var systemUnderTest = new LearningSpaceViewModel(name, shortname, authors, description, goals, learningElements,
+            positionX, positionY);
         
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.Name, Is.EqualTo(Name));
-            Assert.That(systemUnderTest.Shortname, Is.EqualTo(Shortname));
-            Assert.That(systemUnderTest.Authors, Is.EqualTo(Authors));
-            Assert.That(systemUnderTest.Description, Is.EqualTo(Description));
-            Assert.That(systemUnderTest.Goals, Is.EqualTo(Goals));
+            Assert.That(systemUnderTest.Name, Is.EqualTo(name));
+            Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortname));
+            Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
+            Assert.That(systemUnderTest.Description, Is.EqualTo(description));
+            Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.LearningElements, Is.EqualTo(learningElements));
-            Assert.That(systemUnderTest.PositionX, Is.EqualTo(PositionX));
-            Assert.That(systemUnderTest.PositionY, Is.EqualTo(PositionY));
+            Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
+            Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
         });
         
     }

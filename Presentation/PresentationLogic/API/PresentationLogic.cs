@@ -169,26 +169,26 @@ public class PresentationLogic : IPresentationLogic
     /// <inheritdoc cref="IPresentationLogic.CreateLearningElement"/>
     public void CreateLearningElement(ILearningElementViewModelParent elementParentVm, string name, string shortname,
         ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContentVm,
-        string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload)
+        string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points)
     {
         var elementParent = Mapper.Map<ILearningElementParent>(elementParentVm);
         var content = Mapper.Map<BusinessLogic.Entities.LearningContent>(learningContentVm);
 
         var command = new CreateLearningElement(elementParent, name, shortname, elementType, contentType, content,
-            authors, description, goals, difficulty, workload, parent => Mapper.Map(parent, elementParentVm));
+            authors, description, goals, difficulty, workload, points,parent => Mapper.Map(parent, elementParentVm));
         BusinessLogic.ExecuteCommand(command);
     } 
     
     /// <inheritdoc cref="IPresentationLogic.EditLearningElement"/>
     public void EditLearningElement(ILearningElementViewModelParent elementParentVm,
         ILearningElementViewModel learningElementVm, string name, string shortname, string authors,
-        string description, string goals, LearningElementDifficultyEnum difficulty, int workload)
+        string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points)
     {
         var learningElement = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
         var elementParent = Mapper.Map<ILearningElementParent>(elementParentVm);
 
         var command = new EditLearningElement(learningElement, elementParent, name, shortname, authors, description,
-            goals, difficulty, workload, element => Mapper.Map(element, learningElementVm));
+            goals, difficulty, workload, points, element => Mapper.Map(element, learningElementVm));
         BusinessLogic.ExecuteCommand(command);
     }
 

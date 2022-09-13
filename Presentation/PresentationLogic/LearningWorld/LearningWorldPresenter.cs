@@ -280,7 +280,8 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
             {"Description", element.Description},
             {"Goals", element.Goals},
             {"Difficulty", element.Difficulty.ToString()},
-            {"Workload (min)", element.Workload.ToString()}
+            {"Workload (min)", element.Workload.ToString()},
+            {"Points", element.Points.ToString()}
         };
         EditLearningElementDialogOpen = true;
     }
@@ -371,6 +372,8 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
         if (Int32.TryParse(data["Workload (min)"], out int workload) == false || workload < 0)
             workload = 0;
+        if (Int32.TryParse(data["Points"], out int points) == false || points < 0)
+            points = 0;
 
         try
         {
@@ -386,7 +389,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
             }
             
             _presentationLogic.CreateLearningElement(parentElement, name, shortname, elementType, contentType,
-                learningContent, authors, description, goals, difficulty, workload);
+                learningContent, authors, description, goals, difficulty, workload, points);
             LearningWorldVm.SelectedLearningObject = LearningWorldVm.LearningElements.Last();
         }
         catch (AggregateException)
@@ -461,13 +464,15 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
         if (Int32.TryParse(data["Workload (min)"], out int workload) == false || workload < 0)
             workload = 0;
+        if (Int32.TryParse(data["Points"], out int points) == false || points < 0)
+            points = 0;
 
         if (LearningWorldVm == null)
             throw new ApplicationException("LearningWorldVm is null");
         if (LearningWorldVm.SelectedLearningObject is not LearningElementViewModel
             learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
         _presentationLogic.EditLearningElement(parentElement, learningElementViewModel, name, shortname, authors,
-            description, goals, difficulty, workload);
+            description, goals, difficulty, workload, points);
     }
 
     #endregion

@@ -244,6 +244,7 @@ public class LearningWorldPresenterUt
         dictionary["Goals"] = "f";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "2";
+        dictionary["Points"] = "4";
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
@@ -252,7 +253,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().CreateLearningElement(world,"a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Image, null!, "d", "e", "f",LearningElementDifficultyEnum.Easy,2);
+        presentationLogic.Received().CreateLearningElement(world,"a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Image, null!, "d", "e", "f",LearningElementDifficultyEnum.Easy,2, 4);
     }
     
     [Test]
@@ -277,6 +278,7 @@ public class LearningWorldPresenterUt
         dictionary["Goals"] = "f";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "2";
+        dictionary["Points"] = "4";
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
@@ -285,7 +287,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().CreateLearningElement(world,"a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Pdf, null!, "d", "e", "f",LearningElementDifficultyEnum.Easy,2);
+        presentationLogic.Received().CreateLearningElement(world,"a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Pdf, null!, "d", "e", "f",LearningElementDifficultyEnum.Easy,2, 4);
     }
     
     [Test]
@@ -311,6 +313,7 @@ public class LearningWorldPresenterUt
         dictionary["Goals"] = "f";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "2";
+        dictionary["Points"] = "4";
         var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
@@ -319,7 +322,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().CreateLearningElement(world, "a", "b",  ElementTypeEnum.Transfer, ContentTypeEnum.Pdf, content, "d", "e", "f",LearningElementDifficultyEnum.Easy,2);
+        presentationLogic.Received().CreateLearningElement(world, "a", "b",  ElementTypeEnum.Transfer, ContentTypeEnum.Pdf, content, "d", "e", "f",LearningElementDifficultyEnum.Easy,2, 4);
     }
 
     [Test]
@@ -340,6 +343,7 @@ public class LearningWorldPresenterUt
         dictionary["Goals"] = "g";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Medium.ToString();
         dictionary["Workload (min)"] = "7";
+        dictionary["Points"] = "4";
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
@@ -370,6 +374,7 @@ public class LearningWorldPresenterUt
         dictionary["Goals"] = "g";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Medium.ToString();
         dictionary["Workload (min)"] = "7";
+        dictionary["Points"] = "4";
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
@@ -400,6 +405,7 @@ public class LearningWorldPresenterUt
         dictionary["Goals"] = "g";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Medium.ToString();
         dictionary["Workload (min)"] = "7";
+        dictionary["Points"] = "4";
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
@@ -430,6 +436,7 @@ public class LearningWorldPresenterUt
         dictionary["Goals"] = "g";
         dictionary["Difficulty"] = "Easys";
         dictionary["Workload (min)"] = "7";
+        dictionary["Points"] = "4";
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
@@ -463,6 +470,7 @@ public class LearningWorldPresenterUt
         dictionary["Goals"] = "f";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "seven";
+        dictionary["Points"] = "4";
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
@@ -471,7 +479,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().CreateLearningElement(world, "a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Video, null!, "d", "e", "f",LearningElementDifficultyEnum.Easy,0);
+        presentationLogic.Received().CreateLearningElement(world, "a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Video, null!, "d", "e", "f",LearningElementDifficultyEnum.Easy,0, 4);
     }
     
     [Test]
@@ -496,6 +504,7 @@ public class LearningWorldPresenterUt
         dictionary["Goals"] = "f";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "-4";
+        dictionary["Points"] = "4";
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
@@ -504,7 +513,75 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().CreateLearningElement(world,"a", "b", ElementTypeEnum.Test,  ContentTypeEnum.H5P, null!, "d", "e", "f",LearningElementDifficultyEnum.Easy,0);
+        presentationLogic.Received().CreateLearningElement(world,"a", "b", ElementTypeEnum.Test,  ContentTypeEnum.H5P, null!, "d", "e", "f",LearningElementDifficultyEnum.Easy,0, 4);
+    }
+    
+       [Test]
+    public void OnCreateElementDialogClose_CouldntParsePointsToInt()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var element = new LearningElementViewModel("a", "b", null!, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        world.LearningElements.Add(element);
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "a";
+        dictionary["Shortname"] = "b";
+        dictionary["Parent"] = ElementParentEnum.World.ToString();
+        dictionary["Assignment"] = "foobar";
+        dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
+        dictionary["Content"] = ContentTypeEnum.Video.ToString();
+        dictionary["Authors"] = "d";
+        dictionary["Description"] = "e";
+        dictionary["Goals"] = "f";
+        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
+        dictionary["Workload (min)"] = "7";
+        dictionary["Points"] = "four";
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.SetLearningWorld(null, world);
+
+        systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
+
+        presentationLogic.Received().CreateLearningElement(world, "a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Video, null!, "d", "e", "f",LearningElementDifficultyEnum.Easy,7, 0);
+    }
+    
+    [Test]
+    public void OnCreateElementDialogClose_NegativePointsToZero()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var element = new LearningElementViewModel("a", "b", null!, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        world.LearningElements.Add(element);
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "a";
+        dictionary["Shortname"] = "b";
+        dictionary["Parent"] = ElementParentEnum.World.ToString();
+        dictionary["Assignment"] = "foobar";
+        dictionary["Type"] = ElementTypeEnum.Test.ToString();
+        dictionary["Content"] = ContentTypeEnum.H5P.ToString();
+        dictionary["Authors"] = "d";
+        dictionary["Description"] = "e";
+        dictionary["Goals"] = "f";
+        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
+        dictionary["Workload (min)"] = "4";
+        dictionary["Points"] = "-4";
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.SetLearningWorld(null, world);
+
+        systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
+
+        presentationLogic.Received().CreateLearningElement(world,"a", "b", ElementTypeEnum.Test,  ContentTypeEnum.H5P, null!, "d", "e", "f",LearningElementDifficultyEnum.Easy,4, 0);
     }
 
     #endregion
@@ -565,6 +642,7 @@ public class LearningWorldPresenterUt
         dictionary["Goals"] = "g";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "4";
+        dictionary["Points"] = "4";
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
@@ -597,6 +675,7 @@ public class LearningWorldPresenterUt
         dictionary["Goals"] = "g";
         dictionary["Difficulty"] = "mediums";
         dictionary["Workload (min)"] = "4";
+        dictionary["Points"] = "4";
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
@@ -630,6 +709,7 @@ public class LearningWorldPresenterUt
         dictionary["Goals"] = "g";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "five";
+        dictionary["Points"] = "4";
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
@@ -639,7 +719,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().EditLearningElement(world, element, "a", "b",  "e", "f", "g",LearningElementDifficultyEnum.Easy,0);
+        presentationLogic.Received().EditLearningElement(world, element, "a", "b",  "e", "f", "g",LearningElementDifficultyEnum.Easy,0,4);
     }
     
     [Test]
@@ -663,6 +743,7 @@ public class LearningWorldPresenterUt
         dictionary["Goals"] = "g";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "-5";
+        dictionary["Points"] = "4";
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
@@ -672,7 +753,75 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().EditLearningElement(world, element,"a", "b", "e", "f", "g",LearningElementDifficultyEnum.Easy,0);
+        presentationLogic.Received().EditLearningElement(world, element,"a", "b", "e", "f", "g",LearningElementDifficultyEnum.Easy,0,4);
+    }
+    
+        [Test]
+    public void OnEditElementDialogClose_CouldntParsePointsToInt()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var element = new LearningElementViewModel("foo", "bar", null!, "foo",
+            "wa", "bar", LearningElementDifficultyEnum.Hard, world);
+        world.LearningElements.Add(element);
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "a";
+        dictionary["Shortname"] = "b";
+        dictionary["Parent"] = ElementParentEnum.World.ToString();
+        dictionary["Assignment"] = "foo";
+        dictionary["Authors"] = "e";
+        dictionary["Description"] = "f";
+        dictionary["Goals"] = "g";
+        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
+        dictionary["Workload (min)"] = "5";
+        dictionary["Points"] = "four";
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.SetLearningWorld(null, world);
+        world.SelectedLearningObject = element;
+
+        systemUnderTest.OnEditElementDialogClose(returnValueTuple);
+
+        presentationLogic.Received().EditLearningElement(world, element, "a", "b",  "e", "f", "g",LearningElementDifficultyEnum.Easy,5,0);
+    }
+    
+    [Test]
+    public void OnEditElementDialogClose_NegativePointsToZero()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var element = new LearningElementViewModel("foo", "bar", null!, "foo",
+            "wa", "bar", LearningElementDifficultyEnum.Hard, world);
+        world.LearningElements.Add(element);
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "a";
+        dictionary["Shortname"] = "b";
+        dictionary["Parent"] = ElementParentEnum.World.ToString();
+        dictionary["Assignment"] = "foo";
+        dictionary["Authors"] = "e";
+        dictionary["Description"] = "f";
+        dictionary["Goals"] = "g";
+        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
+        dictionary["Workload (min)"] = "5";
+        dictionary["Points"] = "-4";
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.SetLearningWorld(null, world);
+        world.SelectedLearningObject = element;
+
+        systemUnderTest.OnEditElementDialogClose(returnValueTuple);
+
+        presentationLogic.Received().EditLearningElement(world, element,"a", "b", "e", "f", "g",LearningElementDifficultyEnum.Easy,5,0);
     }
 
     [Test]
@@ -770,6 +919,7 @@ public class LearningWorldPresenterUt
         dictionary["Goals"] = "g";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "2";
+        dictionary["Points"] = "3";
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
@@ -781,7 +931,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().EditLearningElement(space, element, "a", "b",  "e", "f", "g", LearningElementDifficultyEnum.Easy,2);
+        presentationLogic.Received().EditLearningElement(space, element, "a", "b",  "e", "f", "g", LearningElementDifficultyEnum.Easy,2,3);
     }
     
     [Test]
@@ -798,6 +948,7 @@ public class LearningWorldPresenterUt
         dictionary["Goals"] = "g";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "2";
+        dictionary["Points"] = "3";
         var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting();
@@ -996,7 +1147,6 @@ public class LearningWorldPresenterUt
         
         var ex = Assert.Throws<Exception>(() => systemUnderTest.OpenEditSelectedLearningObjectDialog());
         Assert.That(ex!.Message, Is.EqualTo("Element Parent is null"));
-        
     }
 
     [Test]

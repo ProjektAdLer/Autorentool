@@ -18,7 +18,7 @@ public class CreateLearningElementUt
         var command = new CreateLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.Image, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, mappingAction);
+            testParameter.Workload, testParameter.Points, mappingAction);
 
         Assert.IsEmpty(testParameter.WorldParent.LearningElements);
         Assert.IsFalse(actionWasInvoked);
@@ -38,6 +38,7 @@ public class CreateLearningElementUt
             Assert.That(element.Description, Is.EqualTo(testParameter.Description));
             Assert.That(element.Goals, Is.EqualTo(testParameter.Goals));
             Assert.That(element.Workload, Is.EqualTo(testParameter.Workload));
+            Assert.That(element.Points, Is.EqualTo(testParameter.Points));
             Assert.That(element.Difficulty, Is.EqualTo(testParameter.Difficulty));
             Assert.That(element, Is.InstanceOf(typeof(ImageTransferElement)));
         });
@@ -52,7 +53,7 @@ public class CreateLearningElementUt
         var command = new CreateLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.Video, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, mappingAction);
+            testParameter.Workload, testParameter.Points, mappingAction);
 
         Assert.IsEmpty(testParameter.WorldParent.LearningElements);
         Assert.IsFalse(actionWasInvoked);
@@ -72,6 +73,7 @@ public class CreateLearningElementUt
             Assert.That(element.Description, Is.EqualTo(testParameter.Description));
             Assert.That(element.Goals, Is.EqualTo(testParameter.Goals));
             Assert.That(element.Workload, Is.EqualTo(testParameter.Workload));
+            Assert.That(element.Points, Is.EqualTo(testParameter.Points));
             Assert.That(element.Difficulty, Is.EqualTo(testParameter.Difficulty));
             Assert.That(element, Is.InstanceOf(typeof(VideoTransferElement)));
         });
@@ -86,7 +88,7 @@ public class CreateLearningElementUt
         var command = new CreateLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.Pdf, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, mappingAction);
+            testParameter.Workload, testParameter.Points, mappingAction);
 
         Assert.IsEmpty(testParameter.WorldParent.LearningElements);
         Assert.IsFalse(actionWasInvoked);
@@ -106,6 +108,7 @@ public class CreateLearningElementUt
             Assert.That(element.Description, Is.EqualTo(testParameter.Description));
             Assert.That(element.Goals, Is.EqualTo(testParameter.Goals));
             Assert.That(element.Workload, Is.EqualTo(testParameter.Workload));
+            Assert.That(element.Points, Is.EqualTo(testParameter.Points));
             Assert.That(element.Difficulty, Is.EqualTo(testParameter.Difficulty));
             Assert.That(element, Is.InstanceOf(typeof(PdfTransferElement)));
         });
@@ -120,7 +123,7 @@ public class CreateLearningElementUt
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.Image, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, mappingAction);
+            testParameter.Workload, testParameter.Points, mappingAction);
 
         Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
         Assert.IsFalse(actionWasInvoked);
@@ -140,6 +143,7 @@ public class CreateLearningElementUt
             Assert.That(element.Description, Is.EqualTo(testParameter.Description));
             Assert.That(element.Goals, Is.EqualTo(testParameter.Goals));
             Assert.That(element.Workload, Is.EqualTo(testParameter.Workload));
+            Assert.That(element.Points, Is.EqualTo(testParameter.Points));
             Assert.That(element.Difficulty, Is.EqualTo(testParameter.Difficulty));
             Assert.That(element, Is.InstanceOf(typeof(ImageTransferElement)));
         });
@@ -154,7 +158,7 @@ public class CreateLearningElementUt
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.Video, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, mappingAction);
+            testParameter.Workload, testParameter.Points, mappingAction);
 
         Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
         Assert.IsFalse(actionWasInvoked);
@@ -174,6 +178,7 @@ public class CreateLearningElementUt
             Assert.That(element.Description, Is.EqualTo(testParameter.Description));
             Assert.That(element.Goals, Is.EqualTo(testParameter.Goals));
             Assert.That(element.Workload, Is.EqualTo(testParameter.Workload));
+            Assert.That(element.Points, Is.EqualTo(testParameter.Points));
             Assert.That(element.Difficulty, Is.EqualTo(testParameter.Difficulty));
             Assert.That(element, Is.InstanceOf(typeof(VideoTransferElement)));
         });
@@ -188,7 +193,7 @@ public class CreateLearningElementUt
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.Pdf, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, mappingAction);
+            testParameter.Workload, testParameter.Points, mappingAction);
 
         Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
         Assert.IsFalse(actionWasInvoked);
@@ -208,6 +213,7 @@ public class CreateLearningElementUt
             Assert.That(element.Description, Is.EqualTo(testParameter.Description));
             Assert.That(element.Goals, Is.EqualTo(testParameter.Goals));
             Assert.That(element.Workload, Is.EqualTo(testParameter.Workload));
+            Assert.That(element.Points, Is.EqualTo(testParameter.Points));
             Assert.That(element.Difficulty, Is.EqualTo(testParameter.Difficulty));
             Assert.That(element, Is.InstanceOf(typeof(PdfTransferElement)));
         });
@@ -222,7 +228,7 @@ public class CreateLearningElementUt
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.H5P, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, mappingAction);
+            testParameter.Workload, testParameter.Points, mappingAction);
 
         var ex = Assert.Throws<ApplicationException>(() => command.Execute());
         Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
@@ -238,7 +244,7 @@ public class CreateLearningElementUt
         var command = new CreateLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Activation, ContentTypeEnum.Video, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, mappingAction);
+            testParameter.Workload, testParameter.Points, mappingAction);
 
         Assert.IsEmpty(testParameter.WorldParent.LearningElements);
         Assert.IsFalse(actionWasInvoked);
@@ -258,6 +264,7 @@ public class CreateLearningElementUt
             Assert.That(element.Description, Is.EqualTo(testParameter.Description));
             Assert.That(element.Goals, Is.EqualTo(testParameter.Goals));
             Assert.That(element.Workload, Is.EqualTo(testParameter.Workload));
+            Assert.That(element.Points, Is.EqualTo(testParameter.Points));
             Assert.That(element.Difficulty, Is.EqualTo(testParameter.Difficulty));
             Assert.That(element, Is.InstanceOf(typeof(VideoActivationElement)));
         });
@@ -272,7 +279,7 @@ public class CreateLearningElementUt
         var command = new CreateLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Activation, ContentTypeEnum.H5P, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, mappingAction);
+            testParameter.Workload, testParameter.Points, mappingAction);
 
         Assert.IsEmpty(testParameter.WorldParent.LearningElements);
         Assert.IsFalse(actionWasInvoked);
@@ -292,6 +299,7 @@ public class CreateLearningElementUt
             Assert.That(element.Description, Is.EqualTo(testParameter.Description));
             Assert.That(element.Goals, Is.EqualTo(testParameter.Goals));
             Assert.That(element.Workload, Is.EqualTo(testParameter.Workload));
+            Assert.That(element.Points, Is.EqualTo(testParameter.Points));
             Assert.That(element.Difficulty, Is.EqualTo(testParameter.Difficulty));
             Assert.That(element, Is.InstanceOf(typeof(H5PActivationElement)));
         });
@@ -306,7 +314,7 @@ public class CreateLearningElementUt
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Activation, ContentTypeEnum.Video, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, mappingAction);
+            testParameter.Workload, testParameter.Points, mappingAction);
 
         Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
         Assert.IsFalse(actionWasInvoked);
@@ -326,6 +334,7 @@ public class CreateLearningElementUt
             Assert.That(element.Description, Is.EqualTo(testParameter.Description));
             Assert.That(element.Goals, Is.EqualTo(testParameter.Goals));
             Assert.That(element.Workload, Is.EqualTo(testParameter.Workload));
+            Assert.That(element.Points, Is.EqualTo(testParameter.Points));
             Assert.That(element.Difficulty, Is.EqualTo(testParameter.Difficulty));
             Assert.That(element, Is.InstanceOf(typeof(VideoActivationElement)));
         });
@@ -340,7 +349,7 @@ public class CreateLearningElementUt
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Activation, ContentTypeEnum.H5P, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, mappingAction);
+            testParameter.Workload, testParameter.Points, mappingAction);
 
         Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
         Assert.IsFalse(actionWasInvoked);
@@ -360,6 +369,7 @@ public class CreateLearningElementUt
             Assert.That(element.Description, Is.EqualTo(testParameter.Description));
             Assert.That(element.Goals, Is.EqualTo(testParameter.Goals));
             Assert.That(element.Workload, Is.EqualTo(testParameter.Workload));
+            Assert.That(element.Points, Is.EqualTo(testParameter.Points));
             Assert.That(element.Difficulty, Is.EqualTo(testParameter.Difficulty));
             Assert.That(element, Is.InstanceOf(typeof(H5PActivationElement)));
         });
@@ -374,7 +384,7 @@ public class CreateLearningElementUt
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Activation, ContentTypeEnum.Image, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, mappingAction);
+            testParameter.Workload, testParameter.Points, mappingAction);
 
         var ex = Assert.Throws<ApplicationException>(() => command.Execute());
         Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
@@ -390,7 +400,7 @@ public class CreateLearningElementUt
         var command = new CreateLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Interaction, ContentTypeEnum.H5P, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, mappingAction);
+            testParameter.Workload, testParameter.Points, mappingAction);
 
         Assert.IsEmpty(testParameter.WorldParent.LearningElements);
         Assert.IsFalse(actionWasInvoked);
@@ -410,6 +420,7 @@ public class CreateLearningElementUt
             Assert.That(element.Description, Is.EqualTo(testParameter.Description));
             Assert.That(element.Goals, Is.EqualTo(testParameter.Goals));
             Assert.That(element.Workload, Is.EqualTo(testParameter.Workload));
+            Assert.That(element.Points, Is.EqualTo(testParameter.Points));
             Assert.That(element.Difficulty, Is.EqualTo(testParameter.Difficulty));
             Assert.That(element, Is.InstanceOf(typeof(H5PInteractionElement)));
         });
@@ -424,7 +435,7 @@ public class CreateLearningElementUt
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Interaction, ContentTypeEnum.H5P, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, mappingAction);
+            testParameter.Workload, testParameter.Points, mappingAction);
 
         Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
         Assert.IsFalse(actionWasInvoked);
@@ -444,6 +455,7 @@ public class CreateLearningElementUt
             Assert.That(element.Description, Is.EqualTo(testParameter.Description));
             Assert.That(element.Goals, Is.EqualTo(testParameter.Goals));
             Assert.That(element.Workload, Is.EqualTo(testParameter.Workload));
+            Assert.That(element.Points, Is.EqualTo(testParameter.Points));
             Assert.That(element.Difficulty, Is.EqualTo(testParameter.Difficulty));
             Assert.That(element, Is.InstanceOf(typeof(H5PInteractionElement)));
         });
@@ -458,7 +470,7 @@ public class CreateLearningElementUt
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Interaction, ContentTypeEnum.Image, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, mappingAction);
+            testParameter.Workload, testParameter.Points, mappingAction);
 
         var ex = Assert.Throws<ApplicationException>(() => command.Execute());
         Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
@@ -474,7 +486,7 @@ public class CreateLearningElementUt
         var command = new CreateLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Test, ContentTypeEnum.H5P, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, mappingAction);
+            testParameter.Workload, testParameter.Points, mappingAction);
 
         Assert.IsEmpty(testParameter.WorldParent.LearningElements);
         Assert.IsFalse(actionWasInvoked);
@@ -494,6 +506,7 @@ public class CreateLearningElementUt
             Assert.That(element.Description, Is.EqualTo(testParameter.Description));
             Assert.That(element.Goals, Is.EqualTo(testParameter.Goals));
             Assert.That(element.Workload, Is.EqualTo(testParameter.Workload));
+            Assert.That(element.Points, Is.EqualTo(testParameter.Points));
             Assert.That(element.Difficulty, Is.EqualTo(testParameter.Difficulty));
             Assert.That(element, Is.InstanceOf(typeof(H5PTestElement)));
         });
@@ -508,7 +521,7 @@ public class CreateLearningElementUt
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Test, ContentTypeEnum.H5P, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, mappingAction);
+            testParameter.Workload, testParameter.Points, mappingAction);
 
         Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
         Assert.IsFalse(actionWasInvoked);
@@ -528,6 +541,7 @@ public class CreateLearningElementUt
             Assert.That(element.Description, Is.EqualTo(testParameter.Description));
             Assert.That(element.Goals, Is.EqualTo(testParameter.Goals));
             Assert.That(element.Workload, Is.EqualTo(testParameter.Workload));
+            Assert.That(element.Points, Is.EqualTo(testParameter.Points));
             Assert.That(element.Difficulty, Is.EqualTo(testParameter.Difficulty));
             Assert.That(element, Is.InstanceOf(typeof(H5PTestElement)));
         });
@@ -542,7 +556,7 @@ public class CreateLearningElementUt
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Test, ContentTypeEnum.Image, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, mappingAction);
+            testParameter.Workload, testParameter.Points, mappingAction);
 
         var ex = Assert.Throws<ApplicationException>(() => command.Execute());
         Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
@@ -558,7 +572,7 @@ public class CreateLearningElementUt
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
             (ElementTypeEnum)5, ContentTypeEnum.Image, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, mappingAction);
+            testParameter.Workload, testParameter.Points, mappingAction);
 
         var ex = Assert.Throws<ApplicationException>(() => command.Execute());
         Assert.That(ex!.Message, Is.EqualTo("no valid ElementType assigned"));
@@ -574,7 +588,7 @@ public class CreateLearningElementUt
         var command = new CreateLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.Image, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, mappingAction);
+            testParameter.Workload, testParameter.Points, mappingAction);
 
         Assert.IsEmpty(testParameter.WorldParent.LearningElements);
         Assert.IsFalse(actionWasInvoked);
@@ -604,7 +618,7 @@ public class CreateLearningElementUt
         var command = new CreateLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.Image, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, mappingAction);
+            testParameter.Workload, testParameter.Points, mappingAction);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -624,6 +638,7 @@ public class TestParameter
     public readonly string Goals;
     public readonly LearningElementDifficultyEnum Difficulty;
     public readonly int Workload;
+    public readonly int Points;
 
     internal TestParameter()
     {
@@ -637,5 +652,6 @@ public class TestParameter
         Goals = "f";
         Difficulty = LearningElementDifficultyEnum.Easy;
         Workload = 3;
+        Points = 4;
     }
 }

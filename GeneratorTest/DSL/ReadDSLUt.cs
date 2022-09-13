@@ -16,7 +16,7 @@ public class ReadDslUt
         var mockFileSystem = new MockFileSystem();
 
         var content1 = new LearningContentPe("a", "h5p", new byte[] {0x01, 0x02});
-        var ele3 = new LearningElementPe("a", "b", content1, "pupup", "g", "h", LearningElementDifficultyEnumPe.Easy, 17, 23);
+        var ele3 = new LearningElementPe("a", "b", content1, "pupup", "g", "h", LearningElementDifficultyEnumPe.Easy, 17, 23, 23);
         var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff");
         space1.LearningElements.Add(ele3);
 

@@ -13,10 +13,11 @@ public class H5PActivationElement : LearningElement
     {
     }
 
-    public H5PActivationElement(string name, string shortname, ILearningElementParent? parent, LearningContent learningContent,
-        string authors, string description, string goals, LearningElementDifficultyEnum difficulty,
-        int workload = 0, double positionX = 0, double positionY = 0) : base(name, shortname, learningContent, authors, description, 
-        goals, difficulty, parent, workload, positionX, positionY)
+    public H5PActivationElement(string name, string shortname, ILearningElementParent? parent,
+        LearningContent learningContent, string authors, string description, string goals,
+        LearningElementDifficultyEnum difficulty, int workload = 0, int points = 0, double positionX = 0,
+        double positionY = 0) : base(name, shortname, learningContent, authors, description, goals, difficulty, parent,
+        workload, points, positionX, positionY)
     {
     }
 }

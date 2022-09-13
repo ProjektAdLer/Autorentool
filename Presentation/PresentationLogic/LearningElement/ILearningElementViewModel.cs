@@ -14,4 +14,5 @@ public interface ILearningElementViewModel : ILearningObjectViewModel, IDisplaya
     string Goals { get; set; }
     LearningElementDifficultyEnum Difficulty { get; set; }
     int Workload { get; set; }
+    int Points { get; set; }
 }

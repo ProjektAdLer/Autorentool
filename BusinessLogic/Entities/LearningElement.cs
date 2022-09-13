@@ -22,6 +22,7 @@ public class LearningElement : ILearningElement, IOriginator
         Goals = "";
         Difficulty = LearningElementDifficultyEnum.None;
         Workload = 0;
+        Points = 0;
         PositionX = 0;
         PositionY = 0;
         Parent = null;
@@ -29,7 +30,7 @@ public class LearningElement : ILearningElement, IOriginator
 
     public LearningElement(string name, string shortname, LearningContent learningContent,
         string authors, string description, string goals, LearningElementDifficultyEnum difficulty,
-        ILearningElementParent? parent = null, int workload = 0,
+        ILearningElementParent? parent = null, int workload = 0, int points = 0,
         double positionX = 0, double positionY = 0)
     {
         Id = Guid.NewGuid();
@@ -41,6 +42,7 @@ public class LearningElement : ILearningElement, IOriginator
         Goals = goals;
         Difficulty = difficulty;
         Workload = workload;
+        Points = points;
         PositionX = positionX;
         PositionY = positionY;
         Parent = parent;
@@ -56,14 +58,15 @@ public class LearningElement : ILearningElement, IOriginator
     public string Description { get; set; }
     public string Goals { get; set; }
     public int Workload { get; set; }
+    public int Points { get; set; }
     public LearningElementDifficultyEnum Difficulty { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
 
     public IMemento GetMemento()
     {
-        return new LearningElementMemento(Name, Shortname, LearningContent, Authors, Description, Goals, Workload, Difficulty,
-            Parent, PositionX, PositionY);
+        return new LearningElementMemento(Name, Shortname, LearningContent, Authors, Description, Goals, Workload,
+            Points, Difficulty, Parent, PositionX, PositionY);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -79,6 +82,7 @@ public class LearningElement : ILearningElement, IOriginator
         Description = learningElementMemento.Description;
         Goals = learningElementMemento.Goals;
         Workload = learningElementMemento.Workload;
+        Points = learningElementMemento.Points;
         Difficulty = learningElementMemento.Difficulty;
         Parent = learningElementMemento.Parent;
         PositionX = learningElementMemento.PositionX;
@@ -88,8 +92,8 @@ public class LearningElement : ILearningElement, IOriginator
     private record LearningElementMemento : IMemento
     {
         internal LearningElementMemento(string name, string shortname, LearningContent content, string authors,
-            string description, string goals, int workload, LearningElementDifficultyEnum difficulty, ILearningElementParent? parent,
-            double positionX = 0, double positionY = 0)
+            string description, string goals, int workload, int points, LearningElementDifficultyEnum difficulty,
+            ILearningElementParent? parent, double positionX = 0, double positionY = 0)
         {
             Name = name;
             Shortname = shortname;
@@ -98,6 +102,7 @@ public class LearningElement : ILearningElement, IOriginator
             Description = description;
             Goals = goals;
             Workload = workload;
+            Points = points;
             Difficulty = difficulty;
             Parent = parent;
             PositionX = positionX;
@@ -112,6 +117,7 @@ public class LearningElement : ILearningElement, IOriginator
         internal string Description { get; }
         internal string Goals { get; }
         internal int Workload { get; }
+        internal int Points { get; }
         internal LearningElementDifficultyEnum Difficulty { get; }
         internal double PositionX { get; }
         internal double PositionY { get; }

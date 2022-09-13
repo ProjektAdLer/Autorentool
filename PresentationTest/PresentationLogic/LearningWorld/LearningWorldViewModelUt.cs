@@ -15,34 +15,34 @@ public class LearningWorldViewModelUt
     [Test]
     public void Constructor_InitializesAllProperties()
     {
-        var Name = "asdf";
-        var Shortname = "jkl;";
-        var Authors = "ben and jerry";
-        var Language = "german";
-        var Description = "very cool element";
-        var Goals = "learn very many things";
+        var name = "asdf";
+        var shortname = "jkl;";
+        var authors = "ben and jerry";
+        var language = "german";
+        var description = "very cool element";
+        var goals = "learn very many things";
         var content1 = new LearningContentViewModel("a", "b", new byte[]{0x01,0x02});
         var content2 = new LearningContentViewModel("z", "e", new byte[]{0x05,0x01});
-        var ele1 = new LearningElementViewModel("a", "b", content1, "e", "f", "g",LearningElementDifficultyEnum.Easy,null, 17, 23);
-        var ele2 = new LearningElementViewModel("z", "zz",  content2, "z","zzz", "z",LearningElementDifficultyEnum.Medium, null, 444, double.MaxValue);
-        var LearningElements = new List<ILearningElementViewModel> { ele1, ele2 };
+        var ele1 = new LearningElementViewModel("a", "b", content1, "e", "f", "g",LearningElementDifficultyEnum.Easy,null, 17, 32,23);
+        var ele2 = new LearningElementViewModel("z", "zz",  content2, "z","zzz", "z",LearningElementDifficultyEnum.Medium, null, 444, 33, double.MaxValue);
+        var learningElements = new List<ILearningElementViewModel> { ele1, ele2 };
         var space1 = new LearningSpaceViewModel("ff", "ff", "ff", "ff", "ff");
-        var LearningSpaces = new List<ILearningSpaceViewModel> { space1 };
+        var learningSpaces = new List<ILearningSpaceViewModel> { space1 };
 
-        var systemUnderTest = new LearningWorldViewModel(Name, Shortname, Authors, Language, Description, Goals, 
-            unsavedChanges: false, learningElements: LearningElements, learningSpaces: LearningSpaces);
+        var systemUnderTest = new LearningWorldViewModel(name, shortname, authors, language, description, goals, 
+            unsavedChanges: false, learningElements: learningElements, learningSpaces: learningSpaces);
         
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.Name, Is.EqualTo(Name));
-            Assert.That(systemUnderTest.Shortname, Is.EqualTo(Shortname));
-            Assert.That(systemUnderTest.Authors, Is.EqualTo(Authors));
-            Assert.That(systemUnderTest.Language, Is.EqualTo(Language)); 
-            Assert.That(systemUnderTest.Description, Is.EqualTo(Description));
-            Assert.That(systemUnderTest.Goals, Is.EqualTo(Goals));
+            Assert.That(systemUnderTest.Name, Is.EqualTo(name));
+            Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortname));
+            Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
+            Assert.That(systemUnderTest.Language, Is.EqualTo(language)); 
+            Assert.That(systemUnderTest.Description, Is.EqualTo(description));
+            Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.UnsavedChanges, Is.False);
-            Assert.That(systemUnderTest.LearningElements, Is.EqualTo(LearningElements));
-            Assert.That(systemUnderTest.LearningSpaces, Is.EqualTo(LearningSpaces));
+            Assert.That(systemUnderTest.LearningElements, Is.EqualTo(learningElements));
+            Assert.That(systemUnderTest.LearningSpaces, Is.EqualTo(learningSpaces));
         });
     }
 

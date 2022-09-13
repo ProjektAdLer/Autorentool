@@ -22,6 +22,7 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
         Goals = "";
         Difficulty = LearningElementDifficultyEnum.None;
         Workload = 0;
+        Points = 0;
         PositionX = 0;
         PositionY = 0;
     }
@@ -38,12 +39,13 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
     /// <param name="difficulty">Difficulty of the learning element.</param>
     /// <param name="parent">Decides whether the learning element belongs to a learning world or a learning space.</param>
     /// <param name="workload">The time required to complete the learning element.</param>
+    /// <param name="points">The number of points of the learning element.</param>
     /// <param name="positionX">x-position of the learning element in the workspace.</param>
     /// <param name="positionY">y-position of the learning element in the workspace.</param>
     public LearningElementViewModel(string name, string shortname,
         LearningContentViewModel learningContent, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, ILearningElementViewModelParent? parent = null,
-        int workload = 0, double positionX = 0, double positionY = 0)
+        int workload = 0, int points = 0, double positionX = 0, double positionY = 0)
     {
         Id = Guid.NewGuid();
         Name = name;
@@ -55,6 +57,7 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
         Goals = goals;
         Difficulty = difficulty;
         Workload = workload;
+        Points = points;
         PositionX = positionX;
         PositionY = positionY;
     }
@@ -72,6 +75,7 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
     public string Goals { get; set; }
     public LearningElementDifficultyEnum Difficulty { get; set; }
     public int Workload { get; set; }
+    public int Points { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
 }

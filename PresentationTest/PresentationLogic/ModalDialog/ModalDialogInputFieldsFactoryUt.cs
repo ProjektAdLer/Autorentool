@@ -1020,7 +1020,7 @@ public class ModalDialogInputFieldsFactoryUt
 
         var modalDialogInputFields = systemUnderTest.GetEditLearningElementInputFields().ToList();
         
-        Assert.That(modalDialogInputFields, Has.Count.EqualTo(7));
+        Assert.That(modalDialogInputFields, Has.Count.EqualTo(8));
         Assert.Multiple(() =>
         {
             Assert.That(modalDialogInputFields.ElementAt(0).Name, Is.EqualTo("Name"));
@@ -1060,6 +1060,14 @@ public class ModalDialogInputFieldsFactoryUt
             Assert.That(modalDialogInputFields.ElementAt(6).Name, Is.EqualTo("Workload (min)"));
             Assert.That(modalDialogInputFields.ElementAt(6).Type, Is.EqualTo(ModalDialogInputType.Number));
             Assert.That(modalDialogInputFields.ElementAt(6).Required, Is.EqualTo(false));
+            
+            Assert.That(modalDialogInputFields.ElementAt(6).Name, Is.EqualTo("Workload (min)"));
+            Assert.That(modalDialogInputFields.ElementAt(6).Type, Is.EqualTo(ModalDialogInputType.Number));
+            Assert.That(modalDialogInputFields.ElementAt(6).Required, Is.EqualTo(false));
+            
+            Assert.That(modalDialogInputFields.ElementAt(7).Name, Is.EqualTo("Points"));
+            Assert.That(modalDialogInputFields.ElementAt(7).Type, Is.EqualTo(ModalDialogInputType.Number));
+            Assert.That(modalDialogInputFields.ElementAt(7).Required, Is.EqualTo(false));
         });
         
 

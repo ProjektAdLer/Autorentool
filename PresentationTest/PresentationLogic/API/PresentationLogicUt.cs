@@ -178,7 +178,7 @@ public class PresentationLogicUt
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
         
-        systemUnderTest.CreateLearningElement(learningWorldVm, "a","b", ElementTypeEnum.Activation, ContentTypeEnum.Image, null!,"c","d","e", LearningElementDifficultyEnum.Easy, 0);
+        systemUnderTest.CreateLearningElement(learningWorldVm, "a","b", ElementTypeEnum.Activation, ContentTypeEnum.Image, null!,"c","d","e", LearningElementDifficultyEnum.Easy, 0,1);
 
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
     }
@@ -192,7 +192,7 @@ public class PresentationLogicUt
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
         
-        systemUnderTest.EditLearningElement(elementParentVm, learningElementVm, "a","b","c","d","e",LearningElementDifficultyEnum.Easy,0);
+        systemUnderTest.EditLearningElement(elementParentVm, learningElementVm, "a","b","c","d","e",LearningElementDifficultyEnum.Easy,0,1);
 
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
     }

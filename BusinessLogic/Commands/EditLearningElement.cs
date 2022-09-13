@@ -14,12 +14,13 @@ public class EditLearningElement : IUndoCommand
     private readonly string _goals;
     private readonly LearningElementDifficultyEnum _difficulty;
     private readonly int _workload;
+    private readonly int _points;
     private readonly Action<LearningElement> _mappingAction;
     private IMemento? _memento;
     
     public EditLearningElement(LearningElement learningElement, ILearningElementParent elementParent, string name,
         string shortName, string authors, string description, string goals, LearningElementDifficultyEnum difficulty,
-        int workload, Action<LearningElement> mappingAction)
+        int workload, int points, Action<LearningElement> mappingAction)
     {
         _learningElement = learningElement;
         _elementParent = elementParent;
@@ -30,6 +31,7 @@ public class EditLearningElement : IUndoCommand
         _goals = goals;
         _difficulty = difficulty;
         _workload = workload;
+        _points = points;
         _mappingAction = mappingAction;
     }
 
@@ -45,6 +47,7 @@ public class EditLearningElement : IUndoCommand
         _learningElement.Goals = _goals;
         _learningElement.Difficulty = _difficulty;
         _learningElement.Workload = _workload;
+        _learningElement.Points = _points;
         
         _mappingAction.Invoke(_learningElement);
     }

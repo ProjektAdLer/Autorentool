@@ -13,10 +13,11 @@ public class PdfTransferElement : LearningElement
     {
     }
 
-    public PdfTransferElement(string name, string shortname,  ILearningElementParent? parent, LearningContent learningContent,
-        string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload,
-        double positionX, double positionY) : base(name, shortname, learningContent, authors, description, 
-        goals, difficulty, parent, workload, positionX, positionY)
+    public PdfTransferElement(string name, string shortname, ILearningElementParent? parent,
+        LearningContent learningContent, string authors, string description, string goals,
+        LearningElementDifficultyEnum difficulty, int workload, int points, double positionX, double positionY) : base(
+        name, shortname, learningContent, authors, description, goals, difficulty, parent, workload, points, positionX,
+        positionY)
     {
     }
 }

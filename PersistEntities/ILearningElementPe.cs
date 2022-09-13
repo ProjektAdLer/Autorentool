@@ -11,6 +11,7 @@ public interface ILearningElementPe
     string Description { get; set; }
     string Goals { get; set; }
     int Workload { get; set; }
+    int Points { get; set; }
     LearningElementDifficultyEnumPe Difficulty { get; set; }
     double PositionX { get; set; }
     double PositionY { get; set; }

@@ -13,6 +13,7 @@ public interface ILearningElement
     string Description { get; set; }
     string Goals { get; set; }
     int Workload { get; set; }
+    int Points { get; set; }
     LearningElementDifficultyEnum Difficulty { get; set; }
     double PositionX { get; set; }
     double PositionY { get; set; }
