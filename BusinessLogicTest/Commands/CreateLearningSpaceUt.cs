@@ -40,6 +40,26 @@ public class CreateLearningSpaceUt
             Assert.That(space.Goals, Is.EqualTo("learning"));
         });
     }
+    
+    [Test]
+    public void Execute_AddsLearningSpace()
+    {
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
+        var space = new LearningSpace("z","y","x","w","v");
+        bool actionWasInvoked = false;
+        Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+
+        var command = new CreateLearningSpace(world, space, mappingAction);
+        
+        Assert.IsEmpty(world.LearningSpaces);
+        Assert.IsFalse(actionWasInvoked);
+
+        command.Execute();
+        
+        Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked);
+        Assert.That(world.LearningSpaces.First(), Is.EqualTo(space));
+    }
 
     [Test]
     public void Undo_MementoIsNull_ThrowsException()

@@ -41,6 +41,26 @@ public class CreateLearningWorldUt
             Assert.That(world.Goals, Is.EqualTo("g"));
         });
     }
+    
+    [Test]
+    public void Execute_AddsLearningWorld()
+    {
+        var workspace = new AuthoringToolWorkspace(null, new List<LearningWorld>());
+        var world = new LearningWorld("n", "sn", "a", "l", "d", "g");
+        bool actionWasInvoked = false;
+        Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
+
+        var command = new CreateLearningWorld(workspace, world, mappingAction);
+
+        Assert.IsEmpty(workspace.LearningWorlds);
+        Assert.IsFalse(actionWasInvoked);
+
+        command.Execute();
+
+        Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked);
+        Assert.That(workspace.LearningWorlds.First(), Is.EqualTo(world));
+    }
 
     [Test]
     public void Undo_MementoIsNull_ThrowsException()

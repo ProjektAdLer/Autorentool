@@ -8,7 +8,7 @@ public class CreateLearningWorld : IUndoCommand
     private readonly Action<AuthoringToolWorkspace> _mappingAction;
 
     private IMemento? _memento;
-    private LearningWorld _learningWorld;
+    private readonly LearningWorld _learningWorld;
 
     public CreateLearningWorld(AuthoringToolWorkspace authoringToolWorkspace, string name, string shortname,
         string authors,
