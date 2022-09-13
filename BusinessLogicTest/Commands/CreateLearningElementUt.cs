@@ -225,12 +225,14 @@ public class CreateLearningElementUt
         var testParameter = new TestParameter();
         bool actionWasInvoked = false;
         Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
-            ElementTypeEnum.Transfer, ContentTypeEnum.H5P, testParameter.Content,
-            testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.Points, mappingAction);
 
-        var ex = Assert.Throws<ApplicationException>(() => command.Execute());
+        var ex = Assert.Throws<ApplicationException>(() =>
+        {
+            var createLearningElement = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name,
+                testParameter.ShortName, ElementTypeEnum.Transfer, ContentTypeEnum.H5P, testParameter.Content,
+                testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
+                testParameter.Workload, testParameter.Points, mappingAction);
+        });
         Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
         Assert.IsFalse(actionWasInvoked);
     }
@@ -381,12 +383,14 @@ public class CreateLearningElementUt
         var testParameter = new TestParameter();
         bool actionWasInvoked = false;
         Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
-            ElementTypeEnum.Activation, ContentTypeEnum.Image, testParameter.Content,
-            testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.Points, mappingAction);
 
-        var ex = Assert.Throws<ApplicationException>(() => command.Execute());
+        var ex = Assert.Throws<ApplicationException>(() =>
+        {
+            var createLearningElement = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
+                ElementTypeEnum.Activation, ContentTypeEnum.Image, testParameter.Content,
+                testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
+                testParameter.Workload, testParameter.Points, mappingAction);
+        });
         Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
         Assert.IsFalse(actionWasInvoked);
     }
@@ -467,12 +471,14 @@ public class CreateLearningElementUt
         var testParameter = new TestParameter();
         bool actionWasInvoked = false;
         Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
-            ElementTypeEnum.Interaction, ContentTypeEnum.Image, testParameter.Content,
-            testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.Points, mappingAction);
 
-        var ex = Assert.Throws<ApplicationException>(() => command.Execute());
+        var ex = Assert.Throws<ApplicationException>(() =>
+        {
+            var createLearningElement = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
+                ElementTypeEnum.Interaction, ContentTypeEnum.Image, testParameter.Content,
+                testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
+                testParameter.Workload, testParameter.Points, mappingAction);
+        });
         Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
         Assert.IsFalse(actionWasInvoked);
     }
@@ -553,12 +559,14 @@ public class CreateLearningElementUt
         var testParameter = new TestParameter();
         bool actionWasInvoked = false;
         Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
-            ElementTypeEnum.Test, ContentTypeEnum.Image, testParameter.Content,
-            testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.Points, mappingAction);
 
-        var ex = Assert.Throws<ApplicationException>(() => command.Execute());
+        var ex = Assert.Throws<ApplicationException>(() =>
+        {
+            var createLearningElement = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name,
+                testParameter.ShortName, ElementTypeEnum.Test, ContentTypeEnum.Image, testParameter.Content,
+                testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
+                testParameter.Workload, testParameter.Points, mappingAction);
+        });
         Assert.That(ex!.Message, Is.EqualTo("No Valid ContentType assigned"));
         Assert.IsFalse(actionWasInvoked);
     }
@@ -569,12 +577,14 @@ public class CreateLearningElementUt
         var testParameter = new TestParameter();
         bool actionWasInvoked = false;
         Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
-            (ElementTypeEnum)5, ContentTypeEnum.Image, testParameter.Content,
-            testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.Points, mappingAction);
 
-        var ex = Assert.Throws<ApplicationException>(() => command.Execute());
+        var ex = Assert.Throws<ApplicationException>(() =>
+        {
+            var createLearningElement = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
+                (ElementTypeEnum)5, ContentTypeEnum.Image, testParameter.Content,
+                testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
+                testParameter.Workload, testParameter.Points, mappingAction);
+        });
         Assert.That(ex!.Message, Is.EqualTo("no valid ElementType assigned"));
         Assert.IsFalse(actionWasInvoked);
     }

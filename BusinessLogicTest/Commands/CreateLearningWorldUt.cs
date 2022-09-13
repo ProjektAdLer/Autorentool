@@ -65,29 +65,6 @@ public class CreateLearningWorldUt
     }
 
     [Test]
-    public void Redo_LearningWorldIsNull_ThrowsException()
-    {
-        var workspace = new AuthoringToolWorkspace(null, new List<LearningWorld>());
-        var name = "n";
-        var shortname = "sn";
-        var authors = "a";
-        var language = "l";
-        var description = "d";
-        var goals = "g";
-        bool actionWasInvoked = false;
-        Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
-
-        var command = new CreateLearningWorld(workspace, name, shortname, authors, language, description, goals,
-            mappingAction);
-
-        var ex = Assert.Throws<InvalidOperationException>(() => command.Redo());
-        Assert.That(ex!.Message, Is.EqualTo("_learningWorld is null"));
-        
-        Assert.IsFalse(actionWasInvoked);
-    }
-
-
-    [Test]
     public void UndoRedo_UndoesAndRedoesCreateLearningSpace()
     {
         var workspace = new AuthoringToolWorkspace(null, new List<LearningWorld>());

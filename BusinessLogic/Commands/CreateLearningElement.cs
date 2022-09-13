@@ -8,17 +8,7 @@ namespace BusinessLogic.Commands;
 public class CreateLearningElement : IUndoCommand
 {
     private readonly ILearningElementParent _elementParent;
-    private readonly string _name;
-    private readonly string _shortName;
-    private readonly ElementTypeEnum _elementType;
-    private readonly ContentTypeEnum _contentType;
-    private readonly LearningContent _learningContent;
-    private readonly string _authors;
-    private readonly string _description;
-    private readonly string _goals;
-    private readonly LearningElementDifficultyEnum _difficulty;
-    private readonly int _workload;
-    private readonly int _points;
+    private readonly LearningElement _learningElement;
     private readonly Action<ILearningElementParent> _mappingAction;
     private IMemento? _memento;
 
@@ -27,39 +17,35 @@ public class CreateLearningElement : IUndoCommand
         string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points,
         Action<ILearningElementParent> mappingAction)
     {
+        _learningElement = elementType switch
+        {
+            ElementTypeEnum.Transfer => CreateNewTransferElement(name, shortName, elementParent, contentType,
+                learningContent, authors, description, goals, difficulty, workload, points),
+            ElementTypeEnum.Activation => CreateNewActivationElement(name, shortName, elementParent, contentType,
+                learningContent, authors, description, goals, difficulty, workload, points),
+            ElementTypeEnum.Interaction => CreateNewInteractionElement(name, shortName, elementParent, contentType,
+                learningContent, authors, description, goals, difficulty, workload, points),
+            ElementTypeEnum.Test => CreateNewTestElement(name, shortName, elementParent, contentType,
+                learningContent, authors, description, goals, difficulty, workload, points),
+            _ => throw new ApplicationException("no valid ElementType assigned")
+        };
         _elementParent = elementParent;
-        _name = name;
-        _shortName = shortName;
-        _elementType = elementType;
-        _contentType = contentType;
-        _learningContent = learningContent;
-        _authors = authors;
-        _description = description;
-        _goals = goals;
-        _difficulty = difficulty;
-        _workload = workload;
-        _points = points;
+        _mappingAction = mappingAction;
+    }
+    
+    public CreateLearningElement(ILearningElementParent elementParent, LearningElement learningElement,
+        Action<ILearningElementParent> mappingAction)
+    {
+        _learningElement = learningElement;
+        _elementParent = elementParent;
         _mappingAction = mappingAction;
     }
 
     public void Execute()
     {
         _memento = _elementParent.GetMemento();
-        
-        var learningElement = _elementType switch
-        {
-            ElementTypeEnum.Transfer => CreateNewTransferElement(_name, _shortName, _elementParent, _contentType,
-                _learningContent, _authors, _description, _goals, _difficulty, _workload, _points),
-            ElementTypeEnum.Activation => CreateNewActivationElement(_name, _shortName, _elementParent, _contentType,
-                _learningContent, _authors, _description, _goals, _difficulty, _workload, _points),
-            ElementTypeEnum.Interaction => CreateNewInteractionElement(_name, _shortName, _elementParent, _contentType,
-                _learningContent, _authors, _description, _goals, _difficulty, _workload, _points),
-            ElementTypeEnum.Test => CreateNewTestElement(_name, _shortName, _elementParent, _contentType,
-                _learningContent, _authors, _description, _goals, _difficulty, _workload, _points),
-            _ => throw new ApplicationException("no valid ElementType assigned")
-        };
-        
-        _elementParent.LearningElements.Add(learningElement);
+
+        _elementParent.LearningElements.Add(_learningElement);
         
         _mappingAction.Invoke(_elementParent);
     }
