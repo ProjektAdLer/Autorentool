@@ -4,46 +4,46 @@ namespace BusinessLogic.Commands;
 
 public class DeleteLearningWorld : IUndoCommand
 {
-    private readonly AuthoringToolWorkspace _authoringToolWorkspace;
-    private readonly LearningWorld _learningWorld;
-    private readonly Action<AuthoringToolWorkspace> _mappingAction;
-    private IMemento? _memento;
+    internal AuthoringToolWorkspace AuthoringToolWorkspace { get; }
+    internal LearningWorld World { get; }
+    private Action<AuthoringToolWorkspace> MappingAction { get; }
+    private IMemento? Memento { get; set; }
 
     public DeleteLearningWorld(AuthoringToolWorkspace authoringToolWorkspace, LearningWorld learningWorld,
         Action<AuthoringToolWorkspace> mappingAction)
     {
-        _authoringToolWorkspace = authoringToolWorkspace;
-        _learningWorld = learningWorld;
-        _mappingAction = mappingAction;
+        AuthoringToolWorkspace = authoringToolWorkspace;
+        World = learningWorld;
+        MappingAction = mappingAction;
     }
 
     public void Execute()
     {
-        _memento = _authoringToolWorkspace.GetMemento();
+        Memento = AuthoringToolWorkspace.GetMemento();
 
-        var realLearningWorld = _authoringToolWorkspace.LearningWorlds.First(lw => lw.Id == _learningWorld.Id);
+        var realLearningWorld = AuthoringToolWorkspace.LearningWorlds.First(lw => lw.Id == World.Id);
 
-        _authoringToolWorkspace.LearningWorlds.Remove(realLearningWorld);
+        AuthoringToolWorkspace.LearningWorlds.Remove(realLearningWorld);
 
-        _mappingAction.Invoke(_authoringToolWorkspace);
+        MappingAction.Invoke(AuthoringToolWorkspace);
     }
 
     public void Undo()
     {
-        if (_memento == null)
+        if (Memento == null)
         {
             throw new InvalidOperationException("_memento is null");
         }
 
-        _authoringToolWorkspace.RestoreMemento(_memento);
+        AuthoringToolWorkspace.RestoreMemento(Memento);
 
-        _mappingAction.Invoke(_authoringToolWorkspace);
+        MappingAction.Invoke(AuthoringToolWorkspace);
     }
 
     public void Redo()
     {
-        _authoringToolWorkspace.LearningWorlds.Remove(_learningWorld);
+        AuthoringToolWorkspace.LearningWorlds.Remove(World);
 
-        _mappingAction.Invoke(_authoringToolWorkspace);
+        MappingAction.Invoke(AuthoringToolWorkspace);
     }
 }

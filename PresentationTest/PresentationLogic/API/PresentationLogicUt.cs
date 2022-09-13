@@ -102,6 +102,9 @@ public class PresentationLogicUt
     public void DeleteLearningWorld_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        DeleteLearningWorld? command = null;
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as DeleteLearningWorld);
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var worldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
         workspaceVm.AddLearningWorld(worldVm);
@@ -111,12 +114,20 @@ public class PresentationLogicUt
             new List<BusinessLogic.Entities.LearningWorld>{worldEntity});
         mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<AuthoringToolWorkspaceViewModel>())
             .Returns(workspaceEntity);
+        mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
+            .Returns(worldEntity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
 
         systemUnderTest.DeleteLearningWorld(workspaceVm, worldVm);
 
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
+        Assert.That(command, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(command!.AuthoringToolWorkspace, Is.EqualTo(workspaceEntity));
+            Assert.That(command.World, Is.EqualTo(worldEntity));
+        });
     }
 
     [Test]
