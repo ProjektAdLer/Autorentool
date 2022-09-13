@@ -10,6 +10,7 @@ public class LearningWorld : ILearningWorld, IOriginator
     [UsedImplicitly]
     private LearningWorld()
     {
+        Id = Guid.Empty;
         Name = "";
         Shortname = "";
         Authors = "";
@@ -24,6 +25,7 @@ public class LearningWorld : ILearningWorld, IOriginator
         string goals, List<LearningElement>? learningElements = null,
         List<LearningSpace>? learningSpaces = null)
     {
+        Id = Guid.NewGuid();
         Name = name;
         Shortname = shortname;
         Authors = authors;
@@ -35,6 +37,7 @@ public class LearningWorld : ILearningWorld, IOriginator
         UnsavedChanges = false;
     }
 
+    public Guid Id { get; private set; }
     public List<LearningElement> LearningElements { get; set; }
     public List<LearningSpace> LearningSpaces { get; set; }
     public string Name { get; set; }

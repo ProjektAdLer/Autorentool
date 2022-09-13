@@ -21,7 +21,9 @@ public class DeleteLearningWorld : IUndoCommand
     {
         _memento = _authoringToolWorkspace.GetMemento();
 
-        _authoringToolWorkspace.LearningWorlds.Remove(_learningWorld);
+        var realLearningWorld = _authoringToolWorkspace.LearningWorlds.First(lw => lw.Id == _learningWorld.Id);
+
+        _authoringToolWorkspace.LearningWorlds.Remove(realLearningWorld);
 
         _mappingAction.Invoke(_authoringToolWorkspace);
     }

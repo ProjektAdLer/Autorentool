@@ -15,6 +15,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     [UsedImplicitly]
     private LearningWorldViewModel()
     {
+        Id = Guid.Empty;
         _name = "";
         _shortname = "";
         _authors = "";
@@ -44,6 +45,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         string goals, bool unsavedChanges = true, List<ILearningElementViewModel>? learningElements = null,
         List<ILearningSpaceViewModel>? learningSpaces = null)
     {
+        Id = Guid.NewGuid();
         _name = name;
         _shortname = shortname;
         _authors = authors;
@@ -57,6 +59,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     
     public const string fileEnding = "awf";
     
+    public Guid Id { get; private set; }
     private List<ILearningElementViewModel> _learningElements;
     private List<ILearningSpaceViewModel> _learningSpaces;
     private string _name;
