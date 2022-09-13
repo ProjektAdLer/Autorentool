@@ -68,6 +68,7 @@ public class AuthoringToolWorkspacePresenterUt
     public void OnCreateWorldDialogClose_CallsPresentationLogic()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
+        var authoringToolWorkspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
@@ -79,12 +80,12 @@ public class AuthoringToolWorkspacePresenterUt
         dictionary["Goals"] = "g";
         var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspaceVm:authoringToolWorkspaceVm, presentationLogic: presentationLogic);
 
         systemUnderTest.OnCreateWorldDialogClose(returnValueTuple);
 
         presentationLogic.Received()
-            .CreateLearningWorld(Arg.Any<IAuthoringToolWorkspaceViewModel>(), "n", "sn", "a", "a", "d", "g");
+            .CreateLearningWorld(authoringToolWorkspaceVm, "n", "sn", "a", "a", "d", "g");
     }
 
     [Test]
@@ -291,50 +292,37 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
-    public void DeleteSelectedLearningWorld_DeletesWorldFromViewModelAndSetsUnsaved()
+    public void DeleteSelectedLearningWorld_CallsPresentationLogic()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
+        var presentationLogic = Substitute.For<IPresentationLogic>();
         var world1 = new LearningWorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo",
+            "Foo");
+        workspaceVm.AddLearningWorld(world1);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, presentationLogic: presentationLogic);
+
+        systemUnderTest.SetSelectedLearningWorld(world1.Name);
+        systemUnderTest.DeleteSelectedLearningWorld();
+        
+        presentationLogic.Received().DeleteLearningWorld(workspaceVm, world1);
+    }
+
+    [Test]
+    public void DeleteSelectedLearningWorld_SetsDeletedUnsavedWorld()
+    {
+        var workspaceVm = new AuthoringToolWorkspaceViewModel();
+        var world = new LearningWorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo",
             "Foo")
         {
             UnsavedChanges = true
         };
-        var world2 = new LearningWorldViewModel("tetete", "f", "bar", "de", "A test",
-            "testing");
-        workspaceVm.AddLearningWorld(world1);
-        workspaceVm.AddLearningWorld(world2);
+        workspaceVm.AddLearningWorld(world);
 
-        Assert.That(workspaceVm.LearningWorlds.Count(), Is.EqualTo(2));
-        Assert.That(workspaceVm.LearningWorlds, Does.Contain(world1));
-        Assert.That(workspaceVm.LearningWorlds, Does.Contain(world2));
-
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        presentationLogic
-            .When(x => x.DeleteLearningWorld(Arg.Any<IAuthoringToolWorkspaceViewModel>(),
-                Arg.Any<LearningWorldViewModel>()))
-            .Do(y =>
-            {
-                workspaceVm.RemoveLearningWorld(((AuthoringToolWorkspaceViewModel) y.Args()[0]).SelectedLearningWorld!);
-                ((AuthoringToolWorkspaceViewModel) y.Args()[0]).SelectedLearningWorld =
-                    ((AuthoringToolWorkspaceViewModel) y.Args()[0]).LearningWorlds.LastOrDefault();
-            });
-
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, presentationLogic: presentationLogic);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm);
+        systemUnderTest.SetSelectedLearningWorld(world);
 
         systemUnderTest.DeleteSelectedLearningWorld();
-        Assert.That(workspaceVm.LearningWorlds.Count(), Is.EqualTo(2));
-        Assert.That(workspaceVm.LearningWorlds, Does.Contain(world1));
-        Assert.That(workspaceVm.LearningWorlds, Does.Contain(world2));
-
-        systemUnderTest.SetSelectedLearningWorld(world1.Name);
-        systemUnderTest.DeleteSelectedLearningWorld();
-        Assert.That(workspaceVm.LearningWorlds.Count(), Is.EqualTo(1));
-        Assert.That(workspaceVm.LearningWorlds, Does.Contain(world2));
-        Assert.That(systemUnderTest.DeletedUnsavedWorld, Is.EqualTo(world1));
-
-        systemUnderTest.SetSelectedLearningWorld(world2.Name);
-        systemUnderTest.DeleteSelectedLearningWorld();
-        Assert.That(workspaceVm.LearningWorlds, Is.Empty);
+        Assert.That(systemUnderTest.DeletedUnsavedWorld, Is.EqualTo(world));
     }
 
     [Test]
@@ -439,9 +427,31 @@ public class AuthoringToolWorkspacePresenterUt
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditWorldDialogClose(returnValueTuple));
         Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
     }
+    
+    [Test]
+    public void OnEditWorldDialogClose_SelectedLearningWorldIsNull_ThrowsException()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "n";
+        dictionary["Shortname"] = "sn";
+        dictionary["Authors"] = "a";
+        dictionary["Language"] = "a";
+        dictionary["Description"] = "d";
+        dictionary["Goals"] = "g";
+        var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditWorldDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+    }
 
     [Test]
-    public void OnEditWorldDialogClose_CallsLearningWorldPresenter()
+    public void OnEditWorldDialogClose_CallsPresentationLogic()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
