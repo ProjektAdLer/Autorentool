@@ -4,38 +4,38 @@ namespace BusinessLogic.Commands;
 
 public class CreateLearningWorld : IUndoCommand
 {
-    private readonly AuthoringToolWorkspace _authoringToolWorkspace;
+    internal AuthoringToolWorkspace AuthoringToolWorkspace { get; }
     private readonly Action<AuthoringToolWorkspace> _mappingAction;
 
     private IMemento? _memento;
-    private readonly LearningWorld _learningWorld;
+    internal LearningWorld LearningWorld { get; }
 
     public CreateLearningWorld(AuthoringToolWorkspace authoringToolWorkspace, string name, string shortname,
         string authors,
         string language, string description, string goals, Action<AuthoringToolWorkspace> mappingAction)
     {
-        _learningWorld = new LearningWorld(name, shortname, authors, language, description, goals);
-        _authoringToolWorkspace = authoringToolWorkspace;
+        LearningWorld = new LearningWorld(name, shortname, authors, language, description, goals);
+        AuthoringToolWorkspace = authoringToolWorkspace;
         _mappingAction = mappingAction;
     }
     
     public CreateLearningWorld(AuthoringToolWorkspace authoringToolWorkspace, LearningWorld learningWorld,
         Action<AuthoringToolWorkspace> mappingAction)
     {
-        _learningWorld = learningWorld;
-        _authoringToolWorkspace = authoringToolWorkspace;
+        LearningWorld = learningWorld;
+        AuthoringToolWorkspace = authoringToolWorkspace;
         _mappingAction = mappingAction;
     }
 
     public void Execute()
     {
-        _memento = _authoringToolWorkspace.GetMemento();
+        _memento = AuthoringToolWorkspace.GetMemento();
 
-        _authoringToolWorkspace.LearningWorlds.Add(_learningWorld);
+        AuthoringToolWorkspace.LearningWorlds.Add(LearningWorld);
 
-        _authoringToolWorkspace.SelectedLearningWorld = _learningWorld;
+        AuthoringToolWorkspace.SelectedLearningWorld = LearningWorld;
 
-        _mappingAction.Invoke(_authoringToolWorkspace);
+        _mappingAction.Invoke(AuthoringToolWorkspace);
     }
 
     public void Undo()
@@ -45,9 +45,9 @@ public class CreateLearningWorld : IUndoCommand
             throw new InvalidOperationException("_memento is null");
         }
 
-        _authoringToolWorkspace.RestoreMemento(_memento);
+        AuthoringToolWorkspace.RestoreMemento(_memento);
 
-        _mappingAction.Invoke(_authoringToolWorkspace);
+        _mappingAction.Invoke(AuthoringToolWorkspace);
     }
 
     public void Redo() => Execute();

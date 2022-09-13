@@ -7,8 +7,8 @@ namespace BusinessLogic.Commands;
 
 public class CreateLearningElement : IUndoCommand
 {
-    private readonly ILearningElementParent _elementParent;
-    private readonly LearningElement _learningElement;
+    internal ILearningElementParent ElementParent { get; }
+    internal LearningElement LearningElement { get; }
     private readonly Action<ILearningElementParent> _mappingAction;
     private IMemento? _memento;
 
@@ -17,7 +17,7 @@ public class CreateLearningElement : IUndoCommand
         string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points,
         Action<ILearningElementParent> mappingAction)
     {
-        _learningElement = elementType switch
+        LearningElement = elementType switch
         {
             ElementTypeEnum.Transfer => CreateNewTransferElement(name, shortName, elementParent, contentType,
                 learningContent, authors, description, goals, difficulty, workload, points),
@@ -29,25 +29,25 @@ public class CreateLearningElement : IUndoCommand
                 learningContent, authors, description, goals, difficulty, workload, points),
             _ => throw new ApplicationException("no valid ElementType assigned")
         };
-        _elementParent = elementParent;
+        ElementParent = elementParent;
         _mappingAction = mappingAction;
     }
     
     public CreateLearningElement(ILearningElementParent elementParent, LearningElement learningElement,
         Action<ILearningElementParent> mappingAction)
     {
-        _learningElement = learningElement;
-        _elementParent = elementParent;
+        LearningElement = learningElement;
+        ElementParent = elementParent;
         _mappingAction = mappingAction;
     }
 
     public void Execute()
     {
-        _memento = _elementParent.GetMemento();
+        _memento = ElementParent.GetMemento();
 
-        _elementParent.LearningElements.Add(_learningElement);
+        ElementParent.LearningElements.Add(LearningElement);
         
-        _mappingAction.Invoke(_elementParent);
+        _mappingAction.Invoke(ElementParent);
     }
 
     private LearningElement CreateNewTransferElement(string name, string shortname, ILearningElementParent parent,
@@ -115,9 +115,9 @@ public class CreateLearningElement : IUndoCommand
             throw new InvalidOperationException("_memento is null");
         }
         
-        _elementParent.RestoreMemento(_memento);
+        ElementParent.RestoreMemento(_memento);
         
-        _mappingAction.Invoke(_elementParent);
+        _mappingAction.Invoke(ElementParent);
     }
 
     public void Redo() => Execute();

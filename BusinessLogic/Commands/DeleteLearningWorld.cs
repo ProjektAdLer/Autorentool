@@ -5,7 +5,7 @@ namespace BusinessLogic.Commands;
 public class DeleteLearningWorld : IUndoCommand
 {
     internal AuthoringToolWorkspace AuthoringToolWorkspace { get; }
-    internal LearningWorld World { get; }
+    internal LearningWorld LearningWorld { get; }
     private Action<AuthoringToolWorkspace> MappingAction { get; }
     private IMemento? Memento { get; set; }
 
@@ -13,7 +13,7 @@ public class DeleteLearningWorld : IUndoCommand
         Action<AuthoringToolWorkspace> mappingAction)
     {
         AuthoringToolWorkspace = authoringToolWorkspace;
-        World = learningWorld;
+        LearningWorld = learningWorld;
         MappingAction = mappingAction;
     }
 
@@ -21,7 +21,7 @@ public class DeleteLearningWorld : IUndoCommand
     {
         Memento = AuthoringToolWorkspace.GetMemento();
 
-        var realLearningWorld = AuthoringToolWorkspace.LearningWorlds.First(lw => lw.Id == World.Id);
+        var realLearningWorld = AuthoringToolWorkspace.LearningWorlds.First(lw => lw.Id == LearningWorld.Id);
 
         AuthoringToolWorkspace.LearningWorlds.Remove(realLearningWorld);
 
@@ -42,7 +42,7 @@ public class DeleteLearningWorld : IUndoCommand
 
     public void Redo()
     {
-        AuthoringToolWorkspace.LearningWorlds.Remove(World);
+        AuthoringToolWorkspace.LearningWorlds.Remove(LearningWorld);
 
         MappingAction.Invoke(AuthoringToolWorkspace);
     }

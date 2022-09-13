@@ -73,6 +73,37 @@ public class PresentationLogicUt
     }
     
     [Test]
+    public void AddLearningWorld_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        CreateLearningWorld? command = null;
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as CreateLearningWorld);
+        var workspaceVm = new AuthoringToolWorkspaceViewModel();
+        var worldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        var mockMapper = Substitute.For<IMapper>();
+        var worldEntity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
+        var workspaceEntity = new BusinessLogic.Entities.AuthoringToolWorkspace(null,
+            new List<BusinessLogic.Entities.LearningWorld>{worldEntity});
+        mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<AuthoringToolWorkspaceViewModel>())
+            .Returns(workspaceEntity);
+        mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
+            .Returns(worldEntity);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+
+        systemUnderTest.AddLearningWorld(workspaceVm, worldVm);
+
+        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
+        Assert.That(command, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(command!.AuthoringToolWorkspace, Is.EqualTo(workspaceEntity));
+            Assert.That(command.LearningWorld, Is.EqualTo(worldEntity));
+        });
+    }
+    
+    [Test]
     public void CreateLearningWorld_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
@@ -126,7 +157,37 @@ public class PresentationLogicUt
         Assert.Multiple(() =>
         {
             Assert.That(command!.AuthoringToolWorkspace, Is.EqualTo(workspaceEntity));
-            Assert.That(command.World, Is.EqualTo(worldEntity));
+            Assert.That(command.LearningWorld, Is.EqualTo(worldEntity));
+        });
+    }
+    
+    [Test]
+    public void AddLearningSpace_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        CreateLearningSpace? command = null;
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
+            Do(sub => command = sub.Arg<ICommand>() as CreateLearningSpace);
+        var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        var learningSpaceVm = new LearningSpaceViewModel("z", "z", "z", "z", "z");
+        var mockMapper = Substitute.For<IMapper>();
+        var learningWorldEntity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
+        var learningSpaceEntity = new BusinessLogic.Entities.LearningSpace("a", "b", "c", "d", "e");
+        mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
+            .Returns(learningWorldEntity);
+        mockMapper.Map<BusinessLogic.Entities.LearningSpace>(Arg.Any<LearningSpaceViewModel>())
+            .Returns(learningSpaceEntity);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+        
+        systemUnderTest.AddLearningSpace(learningWorldVm, learningSpaceVm);
+        
+        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
+        Assert.That(command, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(command!.LearningWorld, Is.EqualTo(learningWorldEntity));
+            Assert.That(command!.LearningSpace, Is.EqualTo(learningSpaceEntity));
         });
     }
 
@@ -168,6 +229,38 @@ public class PresentationLogicUt
         systemUnderTest.DeleteLearningSpace(learningWorldVm, learningSpaceVm);
 
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
+    }
+    
+    [Test]
+    public void AddLearningElement_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        CreateLearningElement? command = null;
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
+            Do(sub => command = sub.Arg<ICommand>() as CreateLearningElement);
+        var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        var learningElementVm = new LearningElementViewModel("a", "b", null!, "c", "d", "e",
+            LearningElementDifficultyEnum.Easy, learningWorldVm);
+        var mockMapper = Substitute.For<IMapper>();
+        var learningWorldEntity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
+        var learningElementEntity = new BusinessLogic.Entities.LearningElement("a", "b", null!, "c", "d", "e",
+            LearningElementDifficultyEnum.Easy, learningWorldEntity);
+        mockMapper.Map<ILearningElementParent>(Arg.Any<LearningWorldViewModel>())
+            .Returns(learningWorldEntity);
+        mockMapper.Map<BusinessLogic.Entities.LearningElement>(Arg.Any<LearningElementViewModel>())
+            .Returns(learningElementEntity);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+        
+        systemUnderTest.AddLearningElement(learningWorldVm, learningElementVm);
+
+        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
+        Assert.That(command, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(command!.ElementParent, Is.EqualTo(learningWorldEntity));
+            Assert.That(command!.LearningElement, Is.EqualTo(learningElementEntity));
+        });
     }
     
     [Test]
@@ -900,7 +993,7 @@ public class PresentationLogicUt
             hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
-            await systemUnderTest.LoadH5pAsync());
+            await systemUnderTest.LoadH5PAsync());
         Assert.That(ex!.Message, Is.EqualTo("Browser upload/download not yet implemented"));
     }
     
@@ -917,7 +1010,7 @@ public class PresentationLogicUt
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider,
                 hybridSupportWrapper: mockHybridSupport);
 
-        var ex = Assert.ThrowsAsync<InvalidOperationException>(async () => await systemUnderTest.LoadH5pAsync());
+        var ex = Assert.ThrowsAsync<InvalidOperationException>(async () => await systemUnderTest.LoadH5PAsync());
         Assert.That(ex!.Message, Is.EqualTo("dialogManager received from DI unexpectedly null"));
     }
     
@@ -943,7 +1036,7 @@ public class PresentationLogicUt
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
             mapper: mockMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
-        var loadedContent = await systemUnderTest.LoadH5pAsync();
+        var loadedContent = await systemUnderTest.LoadH5PAsync();
 
         await mockDialogManger.Received()
             .ShowOpenFileDialogAsync("Load h5p", null, Arg.Any<IEnumerable<FileFilterProxy>?>());
@@ -971,7 +1064,7 @@ public class PresentationLogicUt
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
             serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
-        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.LoadH5pAsync());
+        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.LoadH5PAsync());
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
         mockLogger.Received().LogInformation("Load dialog cancelled by user");
     }

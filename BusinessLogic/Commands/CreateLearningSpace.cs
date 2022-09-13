@@ -4,33 +4,33 @@ namespace BusinessLogic.Commands;
 
 public class CreateLearningSpace : IUndoCommand
 {
-    private readonly LearningWorld _learningWorld;
-    private readonly LearningSpace _learningSpace;
+    internal LearningWorld LearningWorld { get; }
+    internal LearningSpace LearningSpace { get; }
     private readonly Action<LearningWorld> _mappingAction;
     private IMemento? _memento;
 
     public CreateLearningSpace(LearningWorld learningWorld, string name, string shortname, string authors,
         string description, string goals, Action<LearningWorld> mappingAction)
     {
-        _learningSpace = new LearningSpace(name, shortname, authors, description, goals);
-        _learningWorld = learningWorld;
+        LearningSpace = new LearningSpace(name, shortname, authors, description, goals);
+        LearningWorld = learningWorld;
         _mappingAction = mappingAction;
     }
 
     public CreateLearningSpace(LearningWorld learningWorld, LearningSpace learningSpace, Action<LearningWorld> mappingAction)
     {
-        _learningSpace = learningSpace;
-        _learningWorld = learningWorld;
+        LearningSpace = learningSpace;
+        LearningWorld = learningWorld;
         _mappingAction = mappingAction;
     }
 
     public void Execute()
     {
-        _memento = _learningWorld.GetMemento();
+        _memento = LearningWorld.GetMemento();
 
-        _learningWorld.LearningSpaces.Add(_learningSpace);
+        LearningWorld.LearningSpaces.Add(LearningSpace);
         
-        _mappingAction.Invoke(_learningWorld);
+        _mappingAction.Invoke(LearningWorld);
     }
 
     public void Undo()
@@ -40,9 +40,9 @@ public class CreateLearningSpace : IUndoCommand
             throw new InvalidOperationException("_memento is null");
         }
         
-        _learningWorld.RestoreMemento(_memento);
+        LearningWorld.RestoreMemento(_memento);
         
-        _mappingAction.Invoke(_learningWorld);
+        _mappingAction.Invoke(LearningWorld);
     }
 
     public void Redo() => Execute();

@@ -31,6 +31,14 @@ public interface IPresentationLogic
     /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
     /// <returns>Filepath to the new backup file</returns>
     Task<string> ConstructBackupAsync(LearningWorldViewModel learningWorldViewModel);
+
+    /// <summary>
+    /// Adds a new learning world in the authoring tool workspace with the corresponding command.
+    /// </summary>
+    /// <param name="authoringToolWorkspaceVm">Authoring Tool Workspace View Model to add the learning world in.</param>
+    /// <param name="learningWorldVm">Learning world to add.</param>
+    void AddLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
+        ILearningWorldViewModel learningWorldVm);
     
     /// <summary>
     /// Creates a new learning world in the authoring tool workspace with the corresponding command.
@@ -87,6 +95,13 @@ public interface IPresentationLogic
     Task<LearningWorldViewModel> LoadLearningWorldAsync();
 
     /// <summary>
+    /// Adds a new learning space in the given learning world with the corresponding command.
+    /// </summary>
+    /// <param name="learningWorldVm">Learning world to add the learning space in.</param>
+    /// <param name="learningSpaceVm">Learning space to add.</param>
+    void AddLearningSpace(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel learningSpaceVm);
+    
+    /// <summary>
     /// Creates a new learning space in the given learning world with the corresponding command.
     /// </summary>
     /// <param name="learningWorldVm">Parent learning world of the learning space to create.</param>
@@ -139,6 +154,13 @@ public interface IPresentationLogic
     /// implementation is present in dependency injection container.</exception>
     Task LoadLearningSpaceAsync(ILearningWorldViewModel learningWorldVm);
 
+    /// <summary>
+    /// Adds a new learning element to its parent.
+    /// </summary>
+    /// <param name="elementParentVm">Parent of the element that can either be a world or a space.</param>
+    /// <param name="learningElementVm">Learning element to add.</param>
+    void AddLearningElement(ILearningElementViewModelParent elementParentVm, ILearningElementViewModel learningElementVm);
+    
     /// <summary>
     /// Creates a new learning element and assigns it to the selected learning world or to a learning space in the
     /// selected learning world.
@@ -223,7 +245,7 @@ public interface IPresentationLogic
     /// Asks user for path, loads a h5p file from disk and returns a <see cref="LearningContentViewModel"/>. 
     /// </summary>
     /// <returns></returns>
-    Task<LearningContentViewModel> LoadH5pAsync();
+    Task<LearningContentViewModel> LoadH5PAsync();
     
     /// <summary>
     /// Asks user for path, loads a pdf file from disk and returns a <see cref="LearningContentViewModel"/>. 

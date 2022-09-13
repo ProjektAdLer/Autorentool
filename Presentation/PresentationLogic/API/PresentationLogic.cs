@@ -60,6 +60,17 @@ public class PresentationLogic : IPresentationLogic
         return filepath;
     }
 
+    public void AddLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
+        ILearningWorldViewModel learningWorldVm)
+    {
+        var authoringToolWorkspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+
+        var command = new CreateLearningWorld(authoringToolWorkspaceEntity, worldEntity,
+            workspace => Mapper.Map(workspace, authoringToolWorkspaceVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
     /// <inheritdoc cref="IPresentationLogic.CreateLearningWorld"/>
     public void CreateLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string name,
         string shortname, string authors, string language, string description, string goals)
@@ -112,6 +123,15 @@ public class PresentationLogic : IPresentationLogic
         return Mapper.Map<LearningWorldViewModel>(entity);
     }
 
+    public void AddLearningSpace(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel learningSpaceVm)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+
+        var command = new CreateLearningSpace(worldEntity, spaceEntity, 
+            world => Mapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
 
     /// <inheritdoc cref="IPresentationLogic.CreateLearningSpace"/>
     public void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name, string shortname,
@@ -160,9 +180,19 @@ public class PresentationLogic : IPresentationLogic
     {
         SaveOrLoadElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load Learning Space", SpaceFileEnding, SpaceFileFormatDescriptor);
-        var learningWorld = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
-        var command = new LoadLearningSpace(learningWorld, filepath, BusinessLogic, 
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var command = new LoadLearningSpace(worldEntity, filepath, BusinessLogic, 
             world => Mapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+    
+    public void AddLearningElement(ILearningElementViewModelParent elementParentVm, ILearningElementViewModel learningElementVm)
+    {
+        var elementParentEntity = Mapper.Map<ILearningElementParent>(elementParentVm);
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+
+        var command = new CreateLearningElement(elementParentEntity, elementEntity, 
+            parent => Mapper.Map(parent, elementParentVm));
         BusinessLogic.ExecuteCommand(command);
     }
     
@@ -171,10 +201,10 @@ public class PresentationLogic : IPresentationLogic
         ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContentVm,
         string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points)
     {
-        var elementParent = Mapper.Map<ILearningElementParent>(elementParentVm);
-        var content = Mapper.Map<BusinessLogic.Entities.LearningContent>(learningContentVm);
+        var elementParentEntity = Mapper.Map<ILearningElementParent>(elementParentVm);
+        var contentEntity = Mapper.Map<BusinessLogic.Entities.LearningContent>(learningContentVm);
 
-        var command = new CreateLearningElement(elementParent, name, shortname, elementType, contentType, content,
+        var command = new CreateLearningElement(elementParentEntity, name, shortname, elementType, contentType, contentEntity,
             authors, description, goals, difficulty, workload, points,parent => Mapper.Map(parent, elementParentVm));
         BusinessLogic.ExecuteCommand(command);
     } 
@@ -184,10 +214,10 @@ public class PresentationLogic : IPresentationLogic
         ILearningElementViewModel learningElementVm, string name, string shortname, string authors,
         string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points)
     {
-        var learningElement = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
-        var elementParent = Mapper.Map<ILearningElementParent>(elementParentVm);
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+        var elementParentEntity = Mapper.Map<ILearningElementParent>(elementParentVm);
 
-        var command = new EditLearningElement(learningElement, elementParent, name, shortname, authors, description,
+        var command = new EditLearningElement(elementEntity, elementParentEntity, name, shortname, authors, description,
             goals, difficulty, workload, points, element => Mapper.Map(element, learningElementVm));
         BusinessLogic.ExecuteCommand(command);
     }
@@ -196,10 +226,10 @@ public class PresentationLogic : IPresentationLogic
     public void DeleteLearningElement(ILearningElementViewModelParent elementParentVm,
         LearningElementViewModel learningElementVm)
     {
-        var learningElement = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
-        var elementParent = Mapper.Map<ILearningElementParent>(elementParentVm);
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+        var elementParentEntity = Mapper.Map<ILearningElementParent>(elementParentVm);
 
-        var command = new DeleteLearningElement(learningElement, elementParent, 
+        var command = new DeleteLearningElement(elementEntity, elementParentEntity, 
             parent => Mapper.Map(parent, elementParentVm));
         BusinessLogic.ExecuteCommand(command);
     }
@@ -220,8 +250,8 @@ public class PresentationLogic : IPresentationLogic
         SaveOrLoadElectronCheck();
         var filepath =
             await GetLoadFilepathAsync("Load Learning Element", ElementFileEnding, ElementFileFormatDescriptor);
-        var elementParent = Mapper.Map<ILearningElementParent>(elementParentVm);
-        var command = new LoadLearningElement(elementParent, filepath, BusinessLogic,
+        var elementParentEntity = Mapper.Map<ILearningElementParent>(elementParentVm);
+        var command = new LoadLearningElement(elementParentEntity, filepath, BusinessLogic,
             parent => Mapper.Map(parent, elementParentVm));
         BusinessLogic.ExecuteCommand(command);
     }
@@ -245,8 +275,8 @@ public class PresentationLogic : IPresentationLogic
         return Mapper.Map<LearningContentViewModel>(entity);
     }
         
-    /// <inheritdoc cref="IPresentationLogic.LoadH5pAsync"/>
-    public async Task<LearningContentViewModel> LoadH5pAsync()
+    /// <inheritdoc cref="IPresentationLogic.LoadH5PAsync"/>
+    public async Task<LearningContentViewModel> LoadH5PAsync()
     {
         SaveOrLoadElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load h5p",H5PFileEnding, " ");
