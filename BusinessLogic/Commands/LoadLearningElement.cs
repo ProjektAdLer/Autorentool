@@ -7,7 +7,7 @@ public class LoadLearningElement : IUndoCommand
 {
     private readonly IBusinessLogic _businessLogic;
     
-    private readonly ILearningElementParent _elementParent;
+    internal ILearningElementParent ElementParent { get; }
     private LearningElement? _learningElement;
     private readonly string _filepath;
     private readonly Action<ILearningElementParent> _mappingAction;
@@ -16,19 +16,19 @@ public class LoadLearningElement : IUndoCommand
     public LoadLearningElement(ILearningElementParent elementParent, string filepath, IBusinessLogic businessLogic, 
         Action<ILearningElementParent> mappingAction)
     {
-        _elementParent = elementParent;
+        ElementParent = elementParent;
         _filepath = filepath;
         _businessLogic = businessLogic;
         _mappingAction = mappingAction;
     }
     public void Execute()
     {
-        _memento = _elementParent.GetMemento();
+        _memento = ElementParent.GetMemento();
         
         _learningElement ??= _businessLogic.LoadLearningElement(_filepath);
-        _elementParent.LearningElements.Add(_learningElement);
+        ElementParent.LearningElements.Add(_learningElement);
         
-        _mappingAction.Invoke(_elementParent);
+        _mappingAction.Invoke(ElementParent);
     }
 
     public void Undo()
@@ -38,9 +38,9 @@ public class LoadLearningElement : IUndoCommand
             throw new InvalidOperationException("_memento is null");
         }
         
-        _elementParent.RestoreMemento(_memento);
+        ElementParent.RestoreMemento(_memento);
         
-        _mappingAction.Invoke(_elementParent);
+        _mappingAction.Invoke(ElementParent);
     }
 
     public void Redo() => Execute();

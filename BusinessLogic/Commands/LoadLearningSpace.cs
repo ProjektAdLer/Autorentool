@@ -7,7 +7,7 @@ public class LoadLearningSpace : IUndoCommand
 {
     private readonly IBusinessLogic _businessLogic;
     
-    private readonly LearningWorld _learningWorld;
+    internal LearningWorld LearningWorld { get; }
     private LearningSpace? _learningSpace;
     private readonly string _filepath;
     private readonly Action<LearningWorld> _mappingAction;
@@ -16,19 +16,19 @@ public class LoadLearningSpace : IUndoCommand
     public LoadLearningSpace(LearningWorld learningWorld, string filepath, IBusinessLogic businessLogic,
         Action<LearningWorld> mappingAction)
     {
-        _learningWorld = learningWorld;
+        LearningWorld = learningWorld;
         _filepath = filepath;
         _businessLogic = businessLogic;
         _mappingAction = mappingAction;
     }
     public void Execute()
     {
-        _memento = _learningWorld.GetMemento();
+        _memento = LearningWorld.GetMemento();
         
         _learningSpace ??= _businessLogic.LoadLearningSpace(_filepath);
-        _learningWorld.LearningSpaces.Add(_learningSpace);
+        LearningWorld.LearningSpaces.Add(_learningSpace);
         
-        _mappingAction.Invoke(_learningWorld);
+        _mappingAction.Invoke(LearningWorld);
     }
 
     public void Undo()
@@ -38,9 +38,9 @@ public class LoadLearningSpace : IUndoCommand
             throw new InvalidOperationException("_memento is null");
         }
         
-        _learningWorld.RestoreMemento(_memento);
+        LearningWorld.RestoreMemento(_memento);
         
-        _mappingAction.Invoke(_learningWorld);
+        _mappingAction.Invoke(LearningWorld);
     }
 
     public void Redo() => Execute();

@@ -174,7 +174,8 @@ public class PresentationLogic : IPresentationLogic
         SaveOrLoadElectronCheck();
         var filepath = await GetSaveFilepathAsync("Save Learning Space", SpaceFileEnding, SpaceFileFormatDescriptor);
         var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceViewModel);
-        BusinessLogic.SaveLearningSpace(spaceEntity, filepath);
+        var command = new SaveLearningSpace(BusinessLogic, spaceEntity, filepath);
+        BusinessLogic.ExecuteCommand(command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadLearningSpaceAsync"/>
@@ -243,7 +244,8 @@ public class PresentationLogic : IPresentationLogic
         var filepath =
             await GetSaveFilepathAsync("Save Learning Element", ElementFileEnding, ElementFileFormatDescriptor);
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementViewModel);
-        BusinessLogic.SaveLearningElement(elementEntity, filepath);
+        var command = new SaveLearningElement(BusinessLogic, elementEntity, filepath);
+        BusinessLogic.ExecuteCommand(command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadLearningElementAsync"/>
