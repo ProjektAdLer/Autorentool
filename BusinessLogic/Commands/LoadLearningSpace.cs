@@ -25,7 +25,7 @@ public class LoadLearningSpace : IUndoCommand
     {
         _memento = _learningWorld.GetMemento();
         
-        _learningSpace = _businessLogic.LoadLearningSpace(_filepath);
+        _learningSpace ??= _businessLogic.LoadLearningSpace(_filepath);
         _learningWorld.LearningSpaces.Add(_learningSpace);
         
         _mappingAction.Invoke(_learningWorld);
@@ -43,12 +43,5 @@ public class LoadLearningSpace : IUndoCommand
         _mappingAction.Invoke(_learningWorld);
     }
 
-    public void Redo()
-    {
-        _memento = _learningWorld.GetMemento();
-        
-        if (_learningSpace != null) _learningWorld.LearningSpaces.Add(_learningSpace);
-
-        _mappingAction.Invoke(_learningWorld);
-    }
+    public void Redo() => Execute();
 }

@@ -25,7 +25,7 @@ public class LoadLearningElement : IUndoCommand
     {
         _memento = _elementParent.GetMemento();
         
-        _learningElement = _businessLogic.LoadLearningElement(_filepath);
+        _learningElement ??= _businessLogic.LoadLearningElement(_filepath);
         _elementParent.LearningElements.Add(_learningElement);
         
         _mappingAction.Invoke(_elementParent);
@@ -43,12 +43,5 @@ public class LoadLearningElement : IUndoCommand
         _mappingAction.Invoke(_elementParent);
     }
 
-    public void Redo()
-    {
-        _memento = _elementParent.GetMemento();
-        
-        if(_learningElement != null) _elementParent.LearningElements.Add(_learningElement);
-        
-        _mappingAction.Invoke(_elementParent);
-    }
+    public void Redo() => Execute();
 }
