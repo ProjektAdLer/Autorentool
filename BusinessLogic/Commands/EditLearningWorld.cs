@@ -4,7 +4,7 @@ namespace BusinessLogic.Commands;
 
 public class EditLearningWorld : IUndoCommand
 {
-    private readonly LearningWorld _learningWorld;
+    internal LearningWorld LearningWorld { get; }
     private readonly string _name;
     private readonly string _shortname;
     private readonly string _authors;
@@ -17,7 +17,7 @@ public class EditLearningWorld : IUndoCommand
     public EditLearningWorld(LearningWorld learningWorld, string name, string shortname,
         string authors, string language, string description, string goals, Action<LearningWorld> mappingAction)
     {
-        _learningWorld = learningWorld;
+        LearningWorld = learningWorld;
         _name = name;
         _shortname = shortname;
         _authors = authors;
@@ -29,16 +29,16 @@ public class EditLearningWorld : IUndoCommand
 
     public void Execute()
     {
-        _memento ??= _learningWorld.GetMemento();
+        _memento ??= LearningWorld.GetMemento();
 
-        _learningWorld.Name = _name;
-        _learningWorld.Shortname = _shortname;
-        _learningWorld.Authors = _authors;
-        _learningWorld.Language = _language;
-        _learningWorld.Description = _description;
-        _learningWorld.Goals = _goals;
+        LearningWorld.Name = _name;
+        LearningWorld.Shortname = _shortname;
+        LearningWorld.Authors = _authors;
+        LearningWorld.Language = _language;
+        LearningWorld.Description = _description;
+        LearningWorld.Goals = _goals;
 
-        _mappingAction.Invoke(_learningWorld);
+        _mappingAction.Invoke(LearningWorld);
     }
 
     public void Undo()
@@ -48,9 +48,9 @@ public class EditLearningWorld : IUndoCommand
             throw new InvalidOperationException("_memento is null");
         }
 
-        _learningWorld.RestoreMemento(_memento);
+        LearningWorld.RestoreMemento(_memento);
 
-        _mappingAction.Invoke(_learningWorld);
+        _mappingAction.Invoke(LearningWorld);
     }
 
     public void Redo() => Execute();

@@ -4,28 +4,28 @@ namespace BusinessLogic.Commands;
 
 public class DeleteLearningSpace : IUndoCommand
 {
-    private readonly LearningWorld _learningWorld;
-    private readonly LearningSpace _learningSpace;
+    internal LearningWorld LearningWorld { get; }
+    internal LearningSpace LearningSpace { get; }
     private readonly Action<LearningWorld> _mappingAction;
     private IMemento? _memento;
 
     public DeleteLearningSpace(LearningWorld learningWorld, LearningSpace learningSpace,
         Action<LearningWorld> mappingAction)
     {
-        _learningWorld = learningWorld;
-        _learningSpace = learningSpace;
+        LearningWorld = learningWorld;
+        LearningSpace = learningSpace;
         _mappingAction = mappingAction;
     }
     
     public void Execute()
     {
-        _memento = _learningWorld.GetMemento();
+        _memento = LearningWorld.GetMemento();
 
-        var space = _learningWorld.LearningSpaces.First(x => x.Id == _learningSpace.Id);
+        var space = LearningWorld.LearningSpaces.First(x => x.Id == LearningSpace.Id);
         
-        _learningWorld.LearningSpaces.Remove(space);
+        LearningWorld.LearningSpaces.Remove(space);
         
-        _mappingAction.Invoke(_learningWorld);
+        _mappingAction.Invoke(LearningWorld);
     }
 
     public void Undo()
@@ -35,9 +35,9 @@ public class DeleteLearningSpace : IUndoCommand
             throw new InvalidOperationException("_memento is null");
         }
         
-        _learningWorld.RestoreMemento(_memento);
+        LearningWorld.RestoreMemento(_memento);
         
-        _mappingAction.Invoke(_learningWorld);
+        _mappingAction.Invoke(LearningWorld);
     }
 
     public void Redo() => Execute();

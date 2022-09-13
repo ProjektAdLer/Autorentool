@@ -5,8 +5,8 @@ namespace BusinessLogic.Commands;
 
 public class EditLearningElement : IUndoCommand
 {
-    private readonly LearningElement _learningElement;
-    private readonly ILearningElementParent _elementParent;
+    internal LearningElement LearningElement { get; }
+    internal ILearningElementParent ElementParent { get; }
     private readonly string _name;
     private readonly string _shortName;
     private readonly string _authors;
@@ -22,8 +22,8 @@ public class EditLearningElement : IUndoCommand
         string shortName, string authors, string description, string goals, LearningElementDifficultyEnum difficulty,
         int workload, int points, Action<LearningElement> mappingAction)
     {
-        _learningElement = learningElement;
-        _elementParent = elementParent;
+        LearningElement = learningElement;
+        ElementParent = elementParent;
         _name = name;
         _shortName = shortName;
         _authors = authors;
@@ -37,19 +37,19 @@ public class EditLearningElement : IUndoCommand
 
     public void Execute()
     {
-        _memento = _learningElement.GetMemento();
+        _memento = LearningElement.GetMemento();
 
-        _learningElement.Name = _name;
-        _learningElement.Shortname = _shortName;
-        _learningElement.Parent = _elementParent;
-        _learningElement.Authors = _authors;
-        _learningElement.Description = _description;
-        _learningElement.Goals = _goals;
-        _learningElement.Difficulty = _difficulty;
-        _learningElement.Workload = _workload;
-        _learningElement.Points = _points;
+        LearningElement.Name = _name;
+        LearningElement.Shortname = _shortName;
+        LearningElement.Parent = ElementParent;
+        LearningElement.Authors = _authors;
+        LearningElement.Description = _description;
+        LearningElement.Goals = _goals;
+        LearningElement.Difficulty = _difficulty;
+        LearningElement.Workload = _workload;
+        LearningElement.Points = _points;
         
-        _mappingAction.Invoke(_learningElement);
+        _mappingAction.Invoke(LearningElement);
     }
 
     public void Undo()
@@ -59,9 +59,9 @@ public class EditLearningElement : IUndoCommand
             throw new InvalidOperationException("_memento is null");
         }
         
-        _learningElement.RestoreMemento(_memento);
+        LearningElement.RestoreMemento(_memento);
 
-        _mappingAction.Invoke(_learningElement);
+        _mappingAction.Invoke(LearningElement);
     }
 
     public void Redo() => Execute();

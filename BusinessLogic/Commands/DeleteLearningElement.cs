@@ -4,28 +4,28 @@ namespace BusinessLogic.Commands;
 
 public class DeleteLearningElement : IUndoCommand
 {
-    private readonly LearningElement _learningElement;
-    private readonly ILearningElementParent _elementParent;
+    internal LearningElement LearningElement { get; }
+    internal ILearningElementParent ElementParent { get; }
     private readonly Action<ILearningElementParent> _mappingAction;
     private IMemento? _memento;
 
     public DeleteLearningElement(LearningElement learningElement, ILearningElementParent elementParent,
         Action<ILearningElementParent> mappingAction)
     {
-        _learningElement = learningElement;
-        _elementParent = elementParent;
+        LearningElement = learningElement;
+        ElementParent = elementParent;
         _mappingAction = mappingAction;
     }
     
     public void Execute()
     {
-        _memento = _elementParent.GetMemento();
+        _memento = ElementParent.GetMemento();
 
-        var element = _elementParent.LearningElements.First(x => x.Id == _learningElement.Id);
+        var element = ElementParent.LearningElements.First(x => x.Id == LearningElement.Id);
 
-        _elementParent.LearningElements.Remove(element);
+        ElementParent.LearningElements.Remove(element);
         
-        _mappingAction.Invoke(_elementParent);
+        _mappingAction.Invoke(ElementParent);
     }
 
     public void Undo()
@@ -35,9 +35,9 @@ public class DeleteLearningElement : IUndoCommand
             throw new InvalidOperationException("_memento is null");
         }
         
-        _elementParent.RestoreMemento(_memento);
+        ElementParent.RestoreMemento(_memento);
         
-        _mappingAction.Invoke(_elementParent);
+        _mappingAction.Invoke(ElementParent);
     }
 
     public void Redo() => Execute();
