@@ -100,7 +100,8 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     public IEnumerable<ILearningObjectViewModel> LearningObjects => LearningElements.Concat<ILearningObjectViewModel>(LearningSpaces);
     public int Workload =>
         LearningSpaces.Sum(space => space.Workload) + LearningElements.Sum(element => element.Workload);
-
+    public int Points =>
+        LearningSpaces.Sum(space => space.Points) + LearningElements.Sum(element => element.Points);
     public string Name
     {
         get => _name;

@@ -81,15 +81,17 @@ public class LearningSpaceViewUt
         var learningSpace = Substitute.For<ILearningSpaceViewModel>();
         learningSpace.Name.Returns("foobar");
         learningSpace.Workload.Returns(42);
+        learningSpace.Points.Returns(8);
         _learningSpacePresenter.LearningSpaceVm.Returns(learningSpace);
         
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
         var nameHeader = systemUnderTest.FindOrFail("h2");
-        var workloadHeader = systemUnderTest.FindOrFail("h5");
+        var workloadPointsHeader = systemUnderTest.FindAll("h5");
         
         nameHeader.MarkupMatches("<h2>LearningSpace foobar</h2>");
-        workloadHeader.MarkupMatches("<h5>Workload: 42 minutes</h5>");
+        workloadPointsHeader[0].MarkupMatches("<h5>Workload: 42 minutes</h5>");
+        workloadPointsHeader[1].MarkupMatches("<h5>Points: 8</h5>");
     }
 
     [Test]

@@ -69,4 +69,26 @@ public class LearningSpaceViewModelUt
         systemUnderTest.LearningElements.Remove(element1);
         Assert.That(systemUnderTest.Workload, Is.EqualTo(14));
     }
+    
+    [Test]
+    public void Points_ReturnsCorrectSum()
+    {
+
+        var systemUnderTest = new LearningSpaceViewModel("a", "b", "c", "d", "e");
+        var element1 = new LearningElementViewModel("a", "b", null!, "c", "d", "e",
+            LearningElementDifficultyEnum.Easy, systemUnderTest, 6,7);
+        var element2 = new LearningElementViewModel("abc", "b", null!, "c", "d", "e",
+            LearningElementDifficultyEnum.Easy, systemUnderTest, 14,15);
+        
+        Assert.That(systemUnderTest.Points, Is.EqualTo(0));
+        
+        systemUnderTest.LearningElements.Add(element1);
+        Assert.That(systemUnderTest.Points, Is.EqualTo(7));
+
+        systemUnderTest.LearningElements.Add(element2);
+        Assert.That(systemUnderTest.Points, Is.EqualTo(22));
+
+        systemUnderTest.LearningElements.Remove(element1);
+        Assert.That(systemUnderTest.Points, Is.EqualTo(15));
+    }
 }

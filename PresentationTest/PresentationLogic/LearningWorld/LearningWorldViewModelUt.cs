@@ -74,4 +74,25 @@ public class LearningWorldViewModelUt
         
         Assert.That(systemUnderTest.Workload, Is.EqualTo(4));
     }
+    
+    [Test]
+    public void Points_ReturnsCorrectSum()
+    {
+        var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo");
+        var worldElement = new LearningElementViewModel("a", "b", null!, "c", "d", "e",
+            LearningElementDifficultyEnum.Easy, systemUnderTest, 4,5);
+        var space = new LearningSpaceViewModel("a", "b", "c", "d", "e");
+        var spaceElement = new LearningElementViewModel("a", "b", null!, "c", "d", "e",
+            LearningElementDifficultyEnum.Easy, space, 6,7);
+        
+        space.LearningElements.Add(spaceElement);
+        systemUnderTest.LearningSpaces.Add(space);
+        systemUnderTest.LearningElements.Add(worldElement);
+        
+        Assert.That(systemUnderTest.Points, Is.EqualTo(12));
+
+        systemUnderTest.LearningSpaces.Remove(space);
+        
+        Assert.That(systemUnderTest.Points, Is.EqualTo(5));
+    }
 }

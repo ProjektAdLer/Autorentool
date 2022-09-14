@@ -122,19 +122,21 @@ public class LearningWorldViewUt
     }
 
     [Test]
-    public void Render_LearningWorldSet_RendersNameAndWorkload()
+    public void Render_LearningWorldSet_RendersNameWorkloadAndPoints()
     {
         var learningWorld = Substitute.For<ILearningWorldViewModel>();
         learningWorld.Name.Returns("my insanely sophisticated name");
         learningWorld.Workload.Returns(42);
+        learningWorld.Points.Returns(9);
         _worldPresenter.LearningWorldVm.Returns(learningWorld);
         
         var systemUnderTest = GetLearningWorldViewForTesting();
 
         var h2 = systemUnderTest.FindOrFail("h2");
         h2.MarkupMatches(@"<h2>World: my insanely sophisticated name</h2>");
-        var h5 = systemUnderTest.FindOrFail("h5");
-        h5.MarkupMatches(@"<h5>Workload: 42 minutes</h5>");
+        var h5 = systemUnderTest.FindAll("h5");
+        h5[0].MarkupMatches(@"<h5>Workload: 42 minutes</h5>");
+        h5[1].MarkupMatches(@"<h5>Points: 9</h5>");
     }
     
     [Test]

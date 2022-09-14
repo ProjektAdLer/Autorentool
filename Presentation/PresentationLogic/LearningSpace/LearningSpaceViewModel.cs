@@ -53,6 +53,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     public ICollection<ILearningElementViewModel> LearningElements { get; set; }
     public int Workload => LearningElements.Sum(element => element.Workload);
     // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local - required for automapper n.stich
+    public int Points => LearningElements.Sum(element => element.Points);
     public Guid Id { get; private set; }
     public string Name { get; set; }
     public string Shortname { get; set; }

@@ -9,6 +9,7 @@ public interface ILearningWorldViewModel : ILearningElementViewModelParent, ISer
     new string FileEnding { get; }
     List<ILearningElementViewModel> LearningElements { get; set; }
     int Workload { get; }
+    int Points { get; }
     List<ILearningSpaceViewModel> LearningSpaces { get; set; }
     IEnumerable<ILearningObjectViewModel> LearningObjects { get; }
     new string Name { get; set; }
