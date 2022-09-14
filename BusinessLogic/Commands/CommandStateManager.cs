@@ -24,10 +24,16 @@ public sealed class CommandStateManager : ICommandStateManager
     public void Execute(ICommand command)
     {
         command.Execute();
-        if (command is IUndoCommand undoCommand)
+        switch (command)
         {
-            _undo.Push(undoCommand);
+            // ReSharper disable once SuspiciousTypeConversion.Global - suppressed for the time being while we finish the command implementations n.stich
+            case ICommandWithError { HasError: true }:
+                return;
+            case IUndoCommand undoCommand:
+                _undo.Push(undoCommand);
+                break;
         }
+
         _redo.Clear();
         OnPropertyChanged(nameof(CanUndo));
     }
