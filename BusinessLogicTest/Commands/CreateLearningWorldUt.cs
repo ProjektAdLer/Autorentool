@@ -41,6 +41,19 @@ public class CreateLearningWorldUt
             Assert.That(world.Goals, Is.EqualTo("g"));
         });
     }
+
+    [Test]
+    public void Execute_WithDuplicateName_CreatesWorldWithNewUniqueName()
+    {
+        var world1 = new LearningWorld("Foo", "", "", "", "", "");
+        var world2 = new LearningWorld("Foo(1)", "", "", "", "", "");
+        var workspace = new AuthoringToolWorkspace(null, new List<LearningWorld> { world1, world2 });
+
+        var systemUnderTest = new CreateLearningWorld(workspace, "Foo", "", "", "", "", "", _ => { });
+        
+        systemUnderTest.Execute();
+        Assert.That(workspace.LearningWorlds.Last().Name, Is.EqualTo("Foo(2)"));
+    }
     
     [Test]
     public void Execute_AddsLearningWorld()

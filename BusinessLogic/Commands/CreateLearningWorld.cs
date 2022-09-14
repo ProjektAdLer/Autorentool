@@ -1,4 +1,6 @@
+using System.Text.RegularExpressions;
 using BusinessLogic.Entities;
+using Shared.Extensions;
 
 namespace BusinessLogic.Commands;
 
@@ -31,6 +33,11 @@ public class CreateLearningWorld : IUndoCommand
     {
         _memento = AuthoringToolWorkspace.GetMemento();
 
+        if (AuthoringToolWorkspace.LearningWorlds.Any(lw => lw.Name == LearningWorld.Name))
+        {
+            LearningWorld.Name = StringHelper.GetUniqueName(AuthoringToolWorkspace.LearningWorlds.Select(lw => lw.Name),
+                LearningWorld.Name);
+        }
         AuthoringToolWorkspace.LearningWorlds.Add(LearningWorld);
 
         AuthoringToolWorkspace.SelectedLearningWorld = LearningWorld;
