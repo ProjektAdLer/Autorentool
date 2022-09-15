@@ -38,21 +38,19 @@ public class ReadDslUt
         var topicsJson = new TopicJson();
         var topicsList = new List<TopicJson>(){topicsJson};
 
-        var learningSpacesJson1 = new LearningSpaceJson(1, "Space_1",
-            identifierLearningSpaceJson1, new List<int> {1, 2});
+        var learningSpacesJson1 = new LearningSpaceJson(1, identifierLearningSpaceJson1, 
+            new List<int> {1, 2});
  
-        var learningSpacesJson2 = new LearningSpaceJson(2, "Space_2", 
-            identifierLearningSpaceJson2, new List<int>());
+        var learningSpacesJson2 = new LearningSpaceJson(2, identifierLearningSpaceJson2, 
+            new List<int>());
 
         var learningSpacesList = new List<LearningSpaceJson>(){learningSpacesJson1, learningSpacesJson2};
 
         var learningElementJson1 = new LearningElementJson(1,
-            identifierLearningElementJson1, "h5p",0, null);
-        learningElementJson1.LearningElementValue = learningElementValueList1;
-
+            identifierLearningElementJson1, "h5p",0, learningElementValueList1);
+        
         var learningElementJson2 = new LearningElementJson(2,
-            identifierLearningElementJson2, "json",0, null);
-        learningElementJson2.LearningElementValue = learningElementValueList2;
+            identifierLearningElementJson2, "json",0, learningElementValueList2);
 
         var learningElementList = new List<LearningElementJson>(){learningElementJson1, learningElementJson2};
         

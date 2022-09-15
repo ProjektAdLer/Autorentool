@@ -208,7 +208,7 @@ public class XmlH5PFactory : IXmlH5PFactory
         ActivitiesH5PActivityXmlH5PActivity.Timecreated = CurrentTime;
         ActivitiesH5PActivityXmlH5PActivity.Timemodified = CurrentTime;
         ActivitiesH5PActivityXmlH5PActivity.Id = H5PElementId;
-        ActivitiesH5PActivityXmlH5PActivity.Intro = H5PElementDesc;
+        ActivitiesH5PActivityXmlH5PActivity.Intro = "<p style=\"position:relative; bottom:13px; background-color:#e6e9ed;\">"+H5PElementDesc+"</p>";
 
         ActivitiesH5PActivityXmlActivity.H5pactivity = ActivitiesH5PActivityXmlH5PActivity as ActivitiesH5PActivityXmlH5PActivity ?? new ActivitiesH5PActivityXmlH5PActivity();
         ActivitiesH5PActivityXmlActivity.Id = H5PElementId;
@@ -230,7 +230,6 @@ public class XmlH5PFactory : IXmlH5PFactory
         ActivitiesModuleXmlModule.Added = CurrentTime;
         ActivitiesModuleXmlModule.ShowDescription = "0";
         ActivitiesModuleXmlModule.Id = H5PElementId;
-        //Tiles-Format does not indent Description of Elements...
         ActivitiesModuleXmlModule.ShowDescription = "1";
 
         ActivitiesModuleXmlModule.Serialize("h5pactivity", H5PElementId);

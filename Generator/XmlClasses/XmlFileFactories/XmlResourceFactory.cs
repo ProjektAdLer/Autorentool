@@ -140,6 +140,7 @@ public class XmlResourceFactory : IXmlResourceFactory
         }
     }
     
+    //Every resource has to be put into files.xml file
     public void FileSetParametersFilesXml(string hashCheckSum, string filesize, string mimeType)
     {
         var file1 = new FilesXmlFile
@@ -175,8 +176,8 @@ public class XmlResourceFactory : IXmlResourceFactory
         ActivitiesFileResourceXmlResource.Name = FileElementName;
         ActivitiesFileResourceXmlResource.Timemodified = CurrentTime; 
         ActivitiesFileResourceXmlResource.Id = FileElementId;
-        ActivitiesFileResourceXmlResource.Intro = FileElementDesc;
-        //if(FileElementDesc != ""){ ActivitiesFileResourceXmlResource.DisplayOptions = "a:1:{s:10:\"printintro\";i:1;}";}
+        ActivitiesFileResourceXmlResource.Intro = "<p style=\"position:relative; bottom:13px; background-color:#e6e9ed;\">"+FileElementDesc+"</p>";
+        
 
         ActivitiesFileResourceXmlActivity.Resource = ActivitiesFileResourceXmlResource as ActivitiesResourceXmlResource ?? new ActivitiesResourceXmlResource();
         ActivitiesFileResourceXmlActivity.Id = FileElementId;
@@ -196,7 +197,7 @@ public class XmlResourceFactory : IXmlResourceFactory
         ActivitiesModuleXmlModule.Indent = "1";
         ActivitiesModuleXmlModule.Added = CurrentTime;
         ActivitiesModuleXmlModule.Id = FileElementId;
-        if(FileElementDesc != ""){ActivitiesModuleXmlModule.ShowDescription = "1";}
+        ActivitiesModuleXmlModule.ShowDescription = "1";
         
         ActivitiesModuleXmlModule.Serialize("resource", FileElementId);
         

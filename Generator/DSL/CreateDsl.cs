@@ -71,7 +71,10 @@ public class CreateDsl : ICreateDsl
             if (learningSpaceId == 0)
             {
                 IdentifierJson dslDocumentIdentifier = new IdentifierJson("FileName", "DSL_Document");
-                LearningElementJson dslDocumentJson = new LearningElementJson(1, dslDocumentIdentifier, "json", 0, null);
+                List<LearningElementValueJson> learningElementValueList = new List<LearningElementValueJson>();
+                LearningElementValueJson learningElementValueJson = new LearningElementValueJson("Points", "0");
+                learningElementValueList.Add(learningElementValueJson);
+                LearningElementJson dslDocumentJson = new LearningElementJson(1, dslDocumentIdentifier, "json", 0, learningElementValueList,null);
                 LearningWorldJson.LearningElements.Add(dslDocumentJson);
                 _listLearningSpaceContent.Add(1);
             }
@@ -79,8 +82,13 @@ public class CreateDsl : ICreateDsl
             foreach (var element in learningSpace.LearningElements)
             {
                 IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", element.Name);
+                List<LearningElementValueJson> learningElementValueList = new List<LearningElementValueJson>();
+                LearningElementValueJson learningElementValueJson = new LearningElementValueJson("Points", element.Points.ToString());
+                learningElementValueList.Add(learningElementValueJson);
+
                 LearningElementJson learningElementJson = new LearningElementJson(learningSpaceElementId,
-                    learningElementIdentifier, element.LearningContent.Type, learningSpaceId, element.Description);
+                    learningElementIdentifier, element.LearningContent.Type, learningSpaceId, learningElementValueList, element.Description
+                    );
                 ListLearningElements.Add(element);
                 //int elementIndex = ListLearningElements.IndexOf(element) + 1;
                 _listLearningSpaceContent.Add(learningSpaceElementId);
@@ -90,7 +98,7 @@ public class CreateDsl : ICreateDsl
 
             
             // Add Learning Space to Learning World
-            LearningWorldJson.LearningSpaces.Add(new LearningSpaceJson(learningSpaceId, learningSpace.Name,
+            LearningWorldJson.LearningSpaces.Add(new LearningSpaceJson(learningSpaceId,
                 learningSpaceIdentifier, _listLearningSpaceContent, learningSpace.Description));
 
             learningSpaceId++;

@@ -8,8 +8,8 @@ public class LearningWorldJson : ILearningWorldJson
         List<LearningSpaceJson> learningSpaces, List<LearningElementJson> learningElements, string? description = null)
     {
         IdNumber = idNumber;
-        Description = description ?? "";
         Identifier = identifier;
+        Description = description ?? "";
         LearningWorldContent = learningWorldContent;
         Topics = topics;
         LearningSpaces = learningSpaces;
@@ -17,9 +17,10 @@ public class LearningWorldJson : ILearningWorldJson
     }
     
     public string IdNumber { get; set; }
-    public string? Description { get; set; }
-
+    
     public IdentifierJson Identifier { get; set; }
+    
+    public string? Description { get; set; }
     
     // A list that has all the id´s of the included Topics of a learningWorld. 
     public List<int> LearningWorldContent { get; set; }

@@ -3,12 +3,11 @@
 public interface ILearningSpaceJson
 {
     int SpaceId { get; set; }
-    
-    // The Name of the learning Space
-    string LearningSpaceName { get; set; }
-    
+
     // the identifier has the name of the element, this information is needed for the API calls from the 2D3D Team.
    IdentifierJson Identifier { get; set; }
+   
+   string? Description { get; set; }
     
     // A list that has all the id´s of the included elements of a space. 
    List<int> LearningSpaceContent { get; set; }

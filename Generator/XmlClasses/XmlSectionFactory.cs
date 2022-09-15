@@ -36,7 +36,7 @@ public class XmlSectionFactory
         {
             CreateSectionsFolder(space.SpaceId.ToString());
             CreateSectionInforefXml( space.SpaceId.ToString() );
-            CreateSectionSectionXml( space.SpaceId.ToString(),  space.LearningSpaceName, "Summary will follow");
+            CreateSectionSectionXml( space.SpaceId.ToString(),  space.Identifier.Value, "Summary will follow");
         }
 
     }

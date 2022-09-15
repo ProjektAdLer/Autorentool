@@ -321,7 +321,7 @@ public class XmlBackupFactory : IXmlBackupFactory
         foreach (var space in ReadDsl.GetLearningSpaceList())
         {
             var sectionId = space.SpaceId.ToString();
-            var sectionName = space.LearningSpaceName;
+            var sectionName = space.Identifier.Value;
 
             if (MoodleBackupXmlSectionList != null)
             {

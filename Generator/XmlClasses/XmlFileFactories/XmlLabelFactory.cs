@@ -10,7 +10,7 @@ using Generator.XmlClasses.Entities._activities.Roles.xml;
 
 namespace Generator.XmlClasses.XmlFileFactories;
 
-public class XmlLabelFactory
+public class XmlLabelFactory : IXmlLabelFactory
 {
     public readonly string CurrentTime;
     private readonly IFileSystem _fileSystem;
@@ -81,18 +81,20 @@ public class XmlLabelFactory
     {
         foreach (var label in labelList)
         {
+            LabelId = label.Id.ToString();
+            LabelName = label.Identifier.Value;
+            LabelParentSpaceId = label.LearningSpaceParentId.ToString();
+            LabelDescription = label.Description ?? "";
+            
+            //A Space got another Font in his Name.
             if (label.ElementType is "space")
             {
-                LabelId = label.Id.ToString();
-                LabelName = label.Identifier.Value;
-                LabelParentSpaceId = label.LearningSpaceParentId.ToString();
-                LabelDescription = label.Description ?? "";
-                FileSetParametersActivity();
+                FileSetParametersActivitySpace();
             }
         }
     }
 
-    public void FileSetParametersActivity()
+    public void FileSetParametersActivitySpace()
     {
         CreateActivityFolder(LabelId);
         
@@ -124,8 +126,9 @@ public class XmlLabelFactory
         ActivitiesModuleXmlModule.SectionNumber = LabelParentSpaceId;
         ActivitiesModuleXmlModule.Added = CurrentTime;
         ActivitiesModuleXmlModule.Id = LabelId;
-        //if(LabelDescription != ""){ ActivitiesModuleXmlModule.ShowDescription = "1";}
-        
+        //Activity Completion is not needed on labels
+        ActivitiesModuleXmlModule.Completion = "0";
+
         ActivitiesModuleXmlModule.Serialize("label", LabelId);
         
         //file activities/label.../grade_history.xml

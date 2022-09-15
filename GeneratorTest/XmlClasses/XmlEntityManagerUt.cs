@@ -43,17 +43,15 @@ public class XmlEntityManagerUt
         var learningWorldContentJson = new List<int>(){1,2};
         var topicsJson = new TopicJson();
         var topicsList = new List<TopicJson>(){topicsJson};
-        var learningSpacesJson_1 = new LearningSpaceJson(1, "Space_1",
-            identifierLearningSpaceJson_1, new List<int>() {1, 2});
-        var learningSpacesJson_2 = new LearningSpaceJson(1, "Space_1", 
-            identifierLearningSpaceJson_2, new List<int>() {3, 4});
+        var learningSpacesJson_1 = new LearningSpaceJson(1, identifierLearningSpaceJson_1, 
+            new List<int>() {1, 2});
+        var learningSpacesJson_2 = new LearningSpaceJson(1, identifierLearningSpaceJson_2, 
+            new List<int>() {3, 4});
         var learningSpacesList = new List<LearningSpaceJson>(){learningSpacesJson_1, learningSpacesJson_2};
         var learningElementJson_1 = new LearningElementJson(1,
-            identifierLearningElementJson_1, "h5p", 0, null);
-        learningElementJson_1.LearningElementValue = learningElementValueList_1;
+            identifierLearningElementJson_1, "h5p", 0, learningElementValueList_1);
         var learningElementJson_2 = new LearningElementJson(2,
-            identifierLearningElementJson_2, "json", 0, null);
-        learningElementJson_2.LearningElementValue = learningElementValueList_2;
+            identifierLearningElementJson_2, "json", 0, learningElementValueList_2);
         var learningElementList = new List<LearningElementJson>(){learningElementJson_1, learningElementJson_2};
         var learningWorldJson = new LearningWorldJson("uuid", identifierLearningWorldJson, learningWorldContentJson, topicsList, learningSpacesList, learningElementList);
         

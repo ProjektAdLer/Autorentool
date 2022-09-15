@@ -104,7 +104,8 @@ public class ReadDsl : IReadDsl
         {
             foreach (var space in documentRootJson.LearningWorld.LearningSpaces)
             {
-                ListAllSpacesAndElementsOrdered.Add(new LearningElementJson(space.SpaceId+1000, space.Identifier, "space", 0, space.Description));
+                List<LearningElementValueJson> values = new List<LearningElementValueJson>{new("Points", "Value Until Spaces Get Points")};
+                ListAllSpacesAndElementsOrdered.Add(new LearningElementJson(space.SpaceId+1000, space.Identifier, "space", 0, values, space.Description));
                 
                 foreach (int elementInSpace in space.LearningSpaceContent)
                 {
@@ -122,7 +123,7 @@ public class ReadDsl : IReadDsl
     public List<LearningSpaceJson> GetLearningSpaceList()
     {
         //return _listLearningSpaces;
-        var space = new LearningSpaceJson(0, "Topic 0", new IdentifierJson("identifier", "value"), new List<int>());
+        var space = new LearningSpaceJson(0, new IdentifierJson("identifier", "Topic 0"), new List<int>());
         var spaceList = new List<LearningSpaceJson>();
         spaceList.Add(space);
         return spaceList;
@@ -133,6 +134,9 @@ public class ReadDsl : IReadDsl
         return ListResourceElements;
     }
     
+    //A List that contains all Spaces and Elements in the correct order. 
+    //First comes a Spaces followed by all his Elements until another Space appears.
+    //The Spaces where transformed to LearningElementJson, so they can be used in the same List.
     public List<LearningElementJson> GetSpacesAndElementsOrderedList()
     {
         return ListAllSpacesAndElementsOrdered;

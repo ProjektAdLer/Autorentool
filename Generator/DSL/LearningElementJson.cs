@@ -6,13 +6,16 @@
 public class LearningElementJson : ILearningElementJson
 {
     // incremented ID for every element, it will also be used as moduleid, sectionid ...
-    public LearningElementJson(int id, IdentifierJson identifier, string elementType, int learningSpaceParentId, string? description=null)
+    public LearningElementJson(int id, IdentifierJson identifier, string elementType, int learningSpaceParentId, List<LearningElementValueJson> learningElementValueList, 
+        string? description=null
+        )
     {
         Id = id;
         Identifier = identifier;
+        Description = description ?? "";
         ElementType = elementType;
         LearningSpaceParentId = learningSpaceParentId;
-        Description = description ?? "";
+        LearningElementValueList = learningElementValueList;
     }
 
     public int Id { get; set; }
@@ -20,17 +23,18 @@ public class LearningElementJson : ILearningElementJson
     // the identifier has the name of the element
     public IdentifierJson Identifier { get; set; }
     
+    //A Description for the Learning Element
+    public string? Description { get; set; }
+    
     // the elementType describes the Filetype of the element. (H5P, Picture, Video, PDF)
     public string ElementType { get; set; }
     
     // learningElementValue describes the Points or Badge the element gives
-    public List<LearningElementValueJson>? LearningElementValue { get; set; }
+    public List<LearningElementValueJson> LearningElementValueList { get; set; }
     
     // The LearningSpaceParentId describes the Space the current Learning Element is in.
     public int LearningSpaceParentId { get; set; }
     
-    //A Description for the Learning Element
-    public string? Description { get; set; }
     
     // requirements are needed to describe the Path of the Topic, Space and element. 
     // it is a list of topics, spaces or elements that need to be completed, before a particular element can be started
