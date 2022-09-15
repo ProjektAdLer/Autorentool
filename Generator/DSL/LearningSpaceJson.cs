@@ -7,11 +7,12 @@ public class LearningSpaceJson : ILearningSpaceJson
 {
     // the id is incremented and is set for every Space
     public LearningSpaceJson(int spaceId, IdentifierJson identifier, List<int> learningSpaceContent,
-        string? description=null)
+        string? description=null, string? goals = null)
     {
         SpaceId = spaceId;
         Identifier = identifier;
         Description = description ?? "";
+        Goals = goals ?? "";
         LearningSpaceContent = learningSpaceContent;
     }
 
@@ -22,6 +23,8 @@ public class LearningSpaceJson : ILearningSpaceJson
     
     //A Description for the Learning Space
     public string? Description { get; set; }
+    
+    public string? Goals { get; set; }
     
     // A list that has all the id´s of the included elements of a space. 
     public List<int> LearningSpaceContent { get; set; }

@@ -47,7 +47,7 @@ public class CreateDsl : ICreateDsl
         //Initialise learningWorldJson with empty values, will be filled with information later in the method.
         LearningWorldJson = new LearningWorldJson(Uuid, new IdentifierJson("name", learningWorld.Name), new List<int>(),
             new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>(), 
-            learningWorld.Description);
+            learningWorld.Description, learningWorld.Goals);
 
         // All learningElements that have no learningSpace are added to the learningWorld (With the LearningSpaceParentId=0)
         var learningWorldElements = new LearningSpacePe("Freie Lernelemente", "FEE", "Dimitri",
@@ -74,7 +74,8 @@ public class CreateDsl : ICreateDsl
                 List<LearningElementValueJson> learningElementValueList = new List<LearningElementValueJson>();
                 LearningElementValueJson learningElementValueJson = new LearningElementValueJson("Points", "0");
                 learningElementValueList.Add(learningElementValueJson);
-                LearningElementJson dslDocumentJson = new LearningElementJson(1, dslDocumentIdentifier, "json", 0, learningElementValueList,null);
+                LearningElementJson dslDocumentJson = new LearningElementJson(1, dslDocumentIdentifier, "json", 
+                    0, learningElementValueList,null, null);
                 LearningWorldJson.LearningElements.Add(dslDocumentJson);
                 _listLearningSpaceContent.Add(1);
             }
@@ -87,8 +88,8 @@ public class CreateDsl : ICreateDsl
                 learningElementValueList.Add(learningElementValueJson);
 
                 LearningElementJson learningElementJson = new LearningElementJson(learningSpaceElementId,
-                    learningElementIdentifier, element.LearningContent.Type, learningSpaceId, learningElementValueList, element.Description
-                    );
+                    learningElementIdentifier, element.LearningContent.Type, learningSpaceId, learningElementValueList, 
+                    element.Description, element.Goals);
                 ListLearningElements.Add(element);
                 //int elementIndex = ListLearningElements.IndexOf(element) + 1;
                 _listLearningSpaceContent.Add(learningSpaceElementId);
@@ -99,7 +100,7 @@ public class CreateDsl : ICreateDsl
             
             // Add Learning Space to Learning World
             LearningWorldJson.LearningSpaces.Add(new LearningSpaceJson(learningSpaceId,
-                learningSpaceIdentifier, _listLearningSpaceContent, learningSpace.Description));
+                learningSpaceIdentifier, _listLearningSpaceContent, learningSpace.Description, learningSpace.Goals));
 
             learningSpaceId++;
         }

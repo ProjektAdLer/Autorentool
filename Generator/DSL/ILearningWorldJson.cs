@@ -6,6 +6,10 @@ public interface ILearningWorldJson
 
     IdentifierJson Identifier { get; set; }
     
+    string? Description { get; set; }
+    
+    string? Goals { get; set; }
+    
     // A list that has all the id´s of the included Topics of a learningWorld. 
     List<int> LearningWorldContent { get; set; }
     

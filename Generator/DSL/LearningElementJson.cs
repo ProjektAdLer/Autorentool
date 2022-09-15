@@ -7,12 +7,12 @@ public class LearningElementJson : ILearningElementJson
 {
     // incremented ID for every element, it will also be used as moduleid, sectionid ...
     public LearningElementJson(int id, IdentifierJson identifier, string elementType, int learningSpaceParentId, List<LearningElementValueJson> learningElementValueList, 
-        string? description=null
-        )
+        string? description=null, string? goals = null)
     {
         Id = id;
         Identifier = identifier;
         Description = description ?? "";
+        Goals = goals ?? "";
         ElementType = elementType;
         LearningSpaceParentId = learningSpaceParentId;
         LearningElementValueList = learningElementValueList;
@@ -25,6 +25,9 @@ public class LearningElementJson : ILearningElementJson
     
     //A Description for the Learning Element
     public string? Description { get; set; }
+    
+    //A Goal for the Learning Element
+    public string? Goals { get; set; }
     
     // the elementType describes the Filetype of the element. (H5P, Picture, Video, PDF)
     public string ElementType { get; set; }
