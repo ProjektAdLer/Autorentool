@@ -113,26 +113,6 @@ public class ModalDialogFactory : ILearningSpaceViewModalDialogFactory, ILearnin
         return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType);
     }
 
-    /// <inheritdoc cref="IAuthoringToolWorkspaceViewModalDialogFactory.GetReplaceWorldFragment"/>
-    public RenderFragment GetReplaceWorldFragment(ModalDialogOnClose onCloseCallback, string worldToReplaceWithName)
-    {
-        const string title = "Replace world?";
-        var text = $"You already have a world with the name {worldToReplaceWithName} loaded." +
-                   " Do you want to replace it?";
-        const ModalDialogType dialogType = ModalDialogType.OkCancel;
-        return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType);
-    }
-
-    /// <inheritdoc cref="IAuthoringToolWorkspaceViewModalDialogFactory.GetReplaceUnsavedWorldFragment"/>
-    public RenderFragment GetReplaceUnsavedWorldFragment(ModalDialogOnClose onCloseCallback,
-        string replacedUnsavedWorldName)
-    {
-        const string title = "Save replaced world?";
-        var text = $"Replaced world {replacedUnsavedWorldName} has unsaved changes. Do you want to save it?";
-        const ModalDialogType dialogType = ModalDialogType.YesNo;
-        return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType);
-    }
-
     /// <inheritdoc cref="IAuthoringToolWorkspaceViewModalDialogFactory.GetDeleteUnsavedWorldFragment"/>
     public RenderFragment GetDeleteUnsavedWorldFragment(ModalDialogOnClose onCloseCallback,
         string deletedUnsavedWorldName)

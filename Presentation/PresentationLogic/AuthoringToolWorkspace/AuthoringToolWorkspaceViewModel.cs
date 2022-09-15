@@ -20,17 +20,10 @@ public class AuthoringToolWorkspaceViewModel : IAuthoringToolWorkspaceViewModel
         EditDialogInitialValues = null;
     }
 
-    private List<LearningWorldViewModel> _learningWorlds;
+    internal List<LearningWorldViewModel> _learningWorlds;
     
     /// <inheritdoc cref="IAuthoringToolWorkspaceViewModel.LearningWorlds"/>
-    public IEnumerable<LearningWorldViewModel> LearningWorlds => _learningWorlds;
-
-    /// <inheritdoc cref="IAuthoringToolWorkspaceViewModel.AddLearningWorld"/>
-    public void AddLearningWorld(LearningWorldViewModel learningWorld)
-    {
-        _learningWorlds.Add(learningWorld);
-        OnPropertyChanged(nameof(LearningWorlds));
-    }
+    public IList<LearningWorldViewModel> LearningWorlds => _learningWorlds;
 
     /// <inheritdoc cref="IAuthoringToolWorkspaceViewModel.RemoveLearningWorld"/>
     public void RemoveLearningWorld(LearningWorldViewModel learningWorld)

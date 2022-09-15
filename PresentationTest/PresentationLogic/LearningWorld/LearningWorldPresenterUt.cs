@@ -58,40 +58,6 @@ public class LearningWorldPresenterUt
     }
     
     [Test]
-    public void AddLearningSpace_CreateSecondSpaceWithSameName_ThrowsException()
-    {
-        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
-            "foo");
-        var space1 = new LearningSpaceViewModel("foo", "bar", "foo", "bar", "baz");
-        var space2 = new LearningSpaceViewModel("foo", "bar", "foo", "bar", "baz");
-        world.LearningSpaces.Add(space1);
-        
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
-
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.AddLearningSpace(space2));
-        Assert.That(ex!.Message, Is.EqualTo("World already contains a space with same name"));
-    }
-    
-    [Test]
-    public void AddLearningElement_CreateSecondElementWithSameName_ThrowsException()
-    {
-        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
-            "foo");
-        var element1 = new LearningElementViewModel("foo", "bar", null!, "foo",
-            "wa", "bar", LearningElementDifficultyEnum.Hard);
-        var element2 = new LearningElementViewModel("foo", "bar", null!, "foo",
-            "wa", "bar", LearningElementDifficultyEnum.Hard);
-        world.LearningElements.Add(element1);
-        
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
-
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.AddLearningElement(element2));
-        Assert.That(ex!.Message, Is.EqualTo("World already contains an element with same name"));
-    }
-    
-    [Test]
     public void AddLearningElement_SelectedLearningWorldIsNull_ThrowsException()
     {
         var element = new LearningElementViewModel("foo", "bar", null!, "foo",

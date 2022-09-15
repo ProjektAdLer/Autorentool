@@ -19,49 +19,12 @@ public class AuthoringToolWorkspaceViewModelUt
     }
     
     [Test]
-    public void AuthoringToolWorkspaceViewModel_AddLearningWorld_AddsLearningWorldToEnumerable()
-    {
-        var viewModel = GetLearningWorldViewModelForTesting();
-        
-        IAuthoringToolWorkspaceViewModel systemUnderTest = GetViewModelForTesting();
-        
-        systemUnderTest.AddLearningWorld(viewModel);
-        Assert.Multiple(() =>
-        {
-            Assert.That(systemUnderTest.LearningWorlds.Count(), Is.EqualTo(1));
-            Assert.That(systemUnderTest.LearningWorlds, Contains.Item(viewModel));
-        });
-    }
-
-    [Test]
-    public void AuthoringToolWorkspaceViewModel_AddLearningWorld_RaisesStateChangeEventWithCurrentState()
-    {
-        var viewModel = GetLearningWorldViewModelForTesting();
-        var handlerCalled = false;
-
-        IAuthoringToolWorkspaceViewModel systemUnderTest = GetViewModelForTesting();
-        systemUnderTest.PropertyChanged += (caller, changedEventArgs) => {
-            if (handlerCalled) Assert.Fail("handler called twice");
-            handlerCalled = true;
-            Assert.Multiple(() =>
-            {
-                Assert.That(caller, Is.EqualTo(systemUnderTest));
-                Assert.That(changedEventArgs.PropertyName, Is.EqualTo(nameof(systemUnderTest.LearningWorlds)));
-            });
-        };
-        
-        systemUnderTest.AddLearningWorld(viewModel);
-        
-        Assert.That(handlerCalled, Is.True);
-    }
-
-    [Test]
     public void AuthoringToolWorkspaceViewModel_RemoveLearningWorld_RemovesLearningWorldFromEnumerable()
     {
         var viewModel = GetLearningWorldViewModelForTesting();
 
-        IAuthoringToolWorkspaceViewModel systemUnderTest = GetViewModelForTesting();
-        systemUnderTest.AddLearningWorld(viewModel);
+        var systemUnderTest = GetViewModelForTesting();
+        systemUnderTest._learningWorlds.Add(viewModel);
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.LearningWorlds.Count(), Is.EqualTo(1));
@@ -78,8 +41,8 @@ public class AuthoringToolWorkspaceViewModelUt
         var viewModel = GetLearningWorldViewModelForTesting();
         var handlerCalled = false;
 
-        IAuthoringToolWorkspaceViewModel systemUnderTest = GetViewModelForTesting();
-        systemUnderTest.AddLearningWorld(viewModel);
+        var systemUnderTest = GetViewModelForTesting();
+        systemUnderTest._learningWorlds.Add(viewModel);
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.LearningWorlds.Count(), Is.EqualTo(1));
@@ -106,8 +69,8 @@ public class AuthoringToolWorkspaceViewModelUt
     {
         var viewModel = GetLearningWorldViewModelForTesting();
 
-        IAuthoringToolWorkspaceViewModel systemUnderTest = GetViewModelForTesting();
-        systemUnderTest.AddLearningWorld(viewModel);
+        var systemUnderTest = GetViewModelForTesting();
+        systemUnderTest._learningWorlds.Add(viewModel);
         
         Assert.That(systemUnderTest.SelectedLearningWorld, Is.Null);
 
@@ -134,8 +97,8 @@ public class AuthoringToolWorkspaceViewModelUt
         var viewModel = GetLearningWorldViewModelForTesting();
         var handlerCalled = false;
 
-        IAuthoringToolWorkspaceViewModel systemUnderTest = GetViewModelForTesting();
-        systemUnderTest.AddLearningWorld(viewModel);
+        var systemUnderTest = GetViewModelForTesting();
+        systemUnderTest._learningWorlds.Add(viewModel);
         
         systemUnderTest.PropertyChanged += (caller, changedEventArgs) => {
             if (handlerCalled) Assert.Fail("handler called twice");

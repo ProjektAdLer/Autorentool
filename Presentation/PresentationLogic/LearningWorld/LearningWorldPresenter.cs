@@ -174,9 +174,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        if (LearningWorldVm.LearningSpaces.Any(space => space.Name == learningSpace.Name))
-            throw new ApplicationException("World already contains a space with same name");
-        LearningWorldVm.LearningSpaces.Add(learningSpace);
+        _presentationLogic.AddLearningSpace(LearningWorldVm, learningSpace);
     }
 
     /// <summary>
@@ -290,10 +288,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        if (LearningWorldVm.LearningElements.Any(elements => elements.Name == learningElement.Name))
-            throw new ApplicationException("World already contains an element with same name");
-        learningElement.Parent = LearningWorldVm;
-        LearningWorldVm.LearningElements.Add(learningElement);
+        _presentationLogic.AddLearningElement(LearningWorldVm, learningElement);
     }
 
     /// <summary>

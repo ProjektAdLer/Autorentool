@@ -11,13 +11,8 @@ public interface IAuthoringToolWorkspaceViewModel : INotifyPropertyChanged
     /// <summary>
     /// Read-only list of the LearningWorlds contained in the Workspace ViewModel.
     /// </summary>
-    IEnumerable<LearningWorldViewModel> LearningWorlds { get; }
+    IList<LearningWorldViewModel> LearningWorlds { get; }
 
-    /// <summary>
-    /// Adds a <see cref="LearningWorldViewModel"/> to the Workspace ViewModel.
-    /// </summary>
-    /// <param name="learningWorld">The learning world that shall be added.</param>
-    void AddLearningWorld(LearningWorldViewModel learningWorld);
     
     /// <summary>
     /// Removes a <see cref="LearningWorldViewModel"/> from the Workspace ViewModel.

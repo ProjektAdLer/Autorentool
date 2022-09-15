@@ -22,22 +22,6 @@ public interface IAuthoringToolWorkspaceViewModalDialogFactory
     RenderFragment GetSaveUnsavedWorldsFragment(ModalDialogOnClose onCloseCallback, string unsavedWorldName);
 
     /// <summary>
-    /// Dynamically generates a ModalDialog Render Fragment for a "Replace world?" dialog.
-    /// </summary>
-    /// <param name="onCloseCallback">The callback that should be called upon closing the dialog.</param>
-    /// <param name="worldToReplaceWithName">Name of the world to replace with.</param>
-    /// <returns>A RenderFragment containing the dialog.</returns>
-    RenderFragment GetReplaceWorldFragment(ModalDialogOnClose onCloseCallback, string worldToReplaceWithName);
-
-    /// <summary>
-    /// Dynamically generates a ModalDialog Render Fragment for a "Save replaced world?" dialog. 
-    /// </summary>
-    /// <param name="onCloseCallback">The callback that should be called upon closing the dialog.</param>
-    /// <param name="replacedUnsavedWorldName">Name of the replaced world with unsaved changes.</param>
-    /// <returns>A RenderFragment containing the dialog.</returns>
-    RenderFragment GetReplaceUnsavedWorldFragment(ModalDialogOnClose onCloseCallback, string replacedUnsavedWorldName);
-
-    /// <summary>
     /// Dynamically generates a ModalDialog Render Fragment for a "Save deleted world?" dialog. 
     /// </summary>
     /// <param name="onCloseCallback">The callback that should be called upon closing the dialog.</param>

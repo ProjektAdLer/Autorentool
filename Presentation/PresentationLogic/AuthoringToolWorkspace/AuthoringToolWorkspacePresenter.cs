@@ -26,8 +26,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         EditLearningWorldDialogOpen = false;
         CreateLearningSpaceDialogOpen = false;
         EditLearningSpaceDialogOpen = false;
-        WorldToReplaceWith = null;
-        ReplacedUnsavedWorld = null;
         DeletedUnsavedWorld = null;
         InformationMessageToShow = null;
         OnLearningWorldSelect += _learningWorldPresenter.SetLearningWorld;
@@ -56,8 +54,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     public bool LearningWorldSelected => AuthoringToolWorkspaceVm.SelectedLearningWorld != null;
 
     public Queue<LearningWorldViewModel>? UnsavedWorldsQueue { get; set; }
-    public LearningWorldViewModel? WorldToReplaceWith { get; set; }
-    public LearningWorldViewModel? ReplacedUnsavedWorld { get; set; }
     public LearningWorldViewModel? DeletedUnsavedWorld { get; set; }
     public string? InformationMessageToShow { get; set; }
 
@@ -148,38 +144,13 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     
     public void AddLearningWorld(LearningWorldViewModel learningWorld)
     {
-        if (AuthoringToolWorkspaceVm.LearningWorlds.Any(world => world.Name == learningWorld.Name))
-        {
-            WorldToReplaceWith = learningWorld;
-            return;
-        }
-
-        AuthoringToolWorkspaceVm.AddLearningWorld(learningWorld);
+        _presentationLogic.AddLearningWorld(AuthoringToolWorkspaceVm, learningWorld);
     }
 
     public async Task LoadLearningWorldAsync()
     {
         await _presentationLogic.LoadLearningWorldAsync(AuthoringToolWorkspaceVm);
         OnLearningWorldSelect?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
-    }
-
-    internal void ReplaceLearningWorld(LearningWorldViewModel toReplace)
-    {
-        var toBeReplaced = AuthoringToolWorkspaceVm.LearningWorlds.First(world => world.Name == toReplace.Name);
-        AuthoringToolWorkspaceVm.RemoveLearningWorld(toBeReplaced);
-        if (toBeReplaced.UnsavedChanges)
-        {
-            if (ReplacedUnsavedWorld != null)
-                throw new ApplicationException("multiple unsaved replaced worlds, this should not happen");
-            ReplacedUnsavedWorld = toBeReplaced;
-        }
-
-        AuthoringToolWorkspaceVm.AddLearningWorld(toReplace);
-        if (AuthoringToolWorkspaceVm.SelectedLearningWorld == toBeReplaced)
-        {
-            AuthoringToolWorkspaceVm.SelectedLearningWorld = toReplace;
-            OnLearningWorldSelect?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
-        }
     }
 
     internal async Task SaveLearningWorldAsync(LearningWorldViewModel world)
@@ -327,20 +298,18 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
 
     internal void LoadLearningWorldFromFileStream(Stream stream)
     {
+        //TODO: refactor this method to use a load command
         var learningWorld =
             _presentationLogic.LoadLearningWorldViewModel(stream);
-        if (AuthoringToolWorkspaceVm.LearningWorlds.Any(w => w.Name == learningWorld.Name))
-        {
-            WorldToReplaceWith = learningWorld;
-        }
 
-        AuthoringToolWorkspaceVm.AddLearningWorld(learningWorld);
+        AuthoringToolWorkspaceVm.LearningWorlds.Add(learningWorld);
         AuthoringToolWorkspaceVm.SelectedLearningWorld ??= learningWorld;
         OnLearningWorldSelect?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
     }
 
     internal void LoadLearningSpaceFromFileStream(Stream stream)
     {
+        //TODO: refactor this method to use a load command
         var learningSpace =
             _presentationLogic.LoadLearningSpaceViewModel(stream);
         if (AuthoringToolWorkspaceVm.SelectedLearningWorld == null)
@@ -354,6 +323,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
 
     internal void LoadLearningElementFromFileStream(Stream stream)
     {
+        //TODO: refactor this method to use a load command
         var learningElement =
             _presentationLogic.LoadLearningElementViewModel(stream);
         if (AuthoringToolWorkspaceVm.SelectedLearningWorld is not { } world)
@@ -416,57 +386,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         if (!UnsavedWorldsQueue.Any())
         {
             CompletedSaveQueue();
-        }
-    }
-
-    public void OnSaveReplacedWorldDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        if (ReplacedUnsavedWorld == null)
-            throw new ApplicationException("SaveReplacedWorld modal returned value despite ReplacedUnsavedWorld being null");
-        var returnValue = returnValueTuple.ReturnValue;
-        switch (returnValue)
-        {
-            case ModalDialogReturnValue.Yes:
-            {
-                SaveLearningWorldAsync(ReplacedUnsavedWorld).Wait();
-                break;
-            }
-            case ModalDialogReturnValue.No:
-            {
-                break;
-            }
-            case ModalDialogReturnValue.Ok:
-            case ModalDialogReturnValue.Cancel:
-            case ModalDialogReturnValue.Delete:
-            default:
-                throw new ArgumentOutOfRangeException(nameof(returnValueTuple), $"Unexpected return value of {returnValue}");
-        }
-        ReplacedUnsavedWorld = null;
-    }
-
-    public void OnReplaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        var returnValue = returnValueTuple.ReturnValue;
-        if (WorldToReplaceWith == null)
-            throw new ApplicationException("WorldToReplaceWith was null but OnReplaceDialogClose was called");
-        switch (returnValue)
-        {
-            case ModalDialogReturnValue.Ok:
-            {
-                ReplaceLearningWorld(WorldToReplaceWith);
-                WorldToReplaceWith = null;
-                break;
-            }
-            case ModalDialogReturnValue.Cancel:
-            {
-                WorldToReplaceWith = null;
-                break;
-            }
-            case ModalDialogReturnValue.Delete:
-            case ModalDialogReturnValue.Yes:
-            case ModalDialogReturnValue.No:
-            default:
-                throw new ArgumentOutOfRangeException(nameof(returnValueTuple), $"Unexpected return value of {returnValue}");
         }
     }
 

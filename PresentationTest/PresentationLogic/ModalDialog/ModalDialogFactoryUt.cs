@@ -337,53 +337,6 @@ public class ModalDialogFactoryUt
     }
 
     [Test]
-    public void IAuthoringToolWorkspaceViewModalDialogFactory_GetReplaceWorldFragment_ReturnsFragment()
-    {
-        //Arrange
-        IAuthoringToolWorkspaceViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
-        const string worldToReplaceWithName = "World";
-
-        //Act
-        var fragment = systemUnderTest.GetReplaceWorldFragment(_ => { }, worldToReplaceWithName);
-        var renderedFragment = ctx.Render(fragment);
-
-        //Assert
-        Assert.Multiple(() =>
-        {
-            Assert.That(renderedFragment, Is.Not.Null);
-            TestModalDialogBasicStructure(renderedFragment);
-            TestDialogHeader(renderedFragment, "Replace world?", true);
-            TestModalBody(renderedFragment,
-                $"You already have a world with the name {worldToReplaceWithName} loaded. Do you want to replace it?",
-                false);
-            TestFooterOkCancel(renderedFragment);
-        });
-    }
-
-    [Test]
-    public void IAuthoringToolWorkspaceViewModalDialogFactory_GetReplaceUnsavedWorldFragment_ReturnsFragment()
-    {
-        //Arrange
-        IAuthoringToolWorkspaceViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
-        const string replacedUnsavedWorldName = "World";
-
-        //Act
-        var fragment = systemUnderTest.GetReplaceUnsavedWorldFragment(_ => { }, replacedUnsavedWorldName);
-        var renderedFragment = ctx.Render(fragment);
-
-        //Assert
-        Assert.Multiple(() =>
-        {
-            Assert.That(renderedFragment, Is.Not.Null);
-            TestModalDialogBasicStructure(renderedFragment);
-            TestDialogHeader(renderedFragment, "Save replaced world?", false);
-            TestModalBody(renderedFragment,
-                $"Replaced world {replacedUnsavedWorldName} has unsaved changes. Do you want to save it?", false);
-            TestFooterYesNo(renderedFragment);
-        });
-    }
-
-    [Test]
     public void IAuthoringToolWorkspaceViewModalDialogFactory_GetDeleteUnsavedWorldFragment_ReturnsFragment()
     {
         //Arrange

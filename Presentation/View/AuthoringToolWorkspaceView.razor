@@ -57,17 +57,6 @@
     @ModalDialogFactory.GetSaveUnsavedWorldsFragment(OnSaveWorldDialogCloseAsync, AuthoringToolWorkspaceP.UnsavedWorldsQueue.Peek().Name)
 }
 
-@if (AuthoringToolWorkspaceP.WorldToReplaceWith != null)
-{
-    @ModalDialogFactory.GetReplaceWorldFragment(OnReplaceDialogClose, AuthoringToolWorkspaceP.WorldToReplaceWith.Name)
-}
-
-<!-- Save dialog for saving when replacing -->
-@if (AuthoringToolWorkspaceP.ReplacedUnsavedWorld != null)
-{
-    @ModalDialogFactory.GetReplaceUnsavedWorldFragment(OnSaveReplacedWorldDialogCloseAsync, AuthoringToolWorkspaceP.ReplacedUnsavedWorld.Name)
-}
-
 <!-- Save dialog for saving when deleting -->
 @if (AuthoringToolWorkspaceP.DeletedUnsavedWorld != null)
 {
@@ -204,18 +193,6 @@
         {
             InvokeAsync(StateHasChanged);
         }
-    }
-
-    private void OnSaveReplacedWorldDialogCloseAsync(ModalDialogOnCloseResult returnValueTuple)
-    {
-        AuthoringToolWorkspaceP.OnSaveReplacedWorldDialogClose(returnValueTuple);
-        InvokeAsync(StateHasChanged);
-    }
-
-    private void OnReplaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        AuthoringToolWorkspaceP.OnReplaceDialogClose(returnValueTuple);
-        InvokeAsync(StateHasChanged);
     }
 
     private void OnSaveDeletedWorldDialogCloseAsync(ModalDialogOnCloseResult returnValueTuple)

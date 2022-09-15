@@ -10,8 +10,6 @@ public interface IAuthoringToolWorkspacePresenter
     bool EditLearningWorldDialogOpen { get; set; }
     bool SaveUnsavedChangesDialogOpen { get; set; }
     bool LearningWorldSelected { get; }
-    LearningWorldViewModel? WorldToReplaceWith { get; set; }
-    LearningWorldViewModel? ReplacedUnsavedWorld { get; set; }
     LearningWorldViewModel? DeletedUnsavedWorld { get; set; }
     string? InformationMessageToShow { get; set; }
     Queue<LearningWorldViewModel>? UnsavedWorldsQueue { get; set; }
@@ -38,7 +36,5 @@ public interface IAuthoringToolWorkspacePresenter
     void OnEditWorldDialogClose(ModalDialogOnCloseResult returnValueTuple);
     Task ProcessDragAndDropResult(Tuple<string, Stream> result);
     void OnSaveWorldDialogClose(ModalDialogOnCloseResult returnValueTuple);
-    void OnSaveReplacedWorldDialogClose(ModalDialogOnCloseResult returnValueTuple);
-    void OnReplaceDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void OnSaveDeletedWorldDialogClose(ModalDialogOnCloseResult returnValueTuple);
 }

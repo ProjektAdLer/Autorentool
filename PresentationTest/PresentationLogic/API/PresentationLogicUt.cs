@@ -158,7 +158,7 @@ public class PresentationLogicUt
             .Do(sub => command = sub.Arg<ICommand>() as DeleteLearningWorld);
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var worldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
-        workspaceVm.AddLearningWorld(worldVm);
+        workspaceVm._learningWorlds.Add(worldVm);
         var mockMapper = Substitute.For<IMapper>();
         var worldEntity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
         var workspaceEntity = new BusinessLogic.Entities.AuthoringToolWorkspace(null,
