@@ -5,8 +5,6 @@ using Generator.XmlClasses.Entities._activities.Inforef.xml;
 using Generator.XmlClasses.Entities._activities.Module.xml;
 using Generator.XmlClasses.Entities._activities.Resource.xml;
 using Generator.XmlClasses.Entities._activities.Roles.xml;
-using Generator.XmlClasses.Entities._sections.Inforef.xml;
-using Generator.XmlClasses.Entities._sections.Section.xml;
 
 namespace Generator.XmlClasses.XmlFileFactories;
 

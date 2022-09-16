@@ -1,8 +1,6 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
 using Generator.DSL;
-using NSubstitute;
 using NUnit.Framework;
-using PersistEntities;
 
 namespace GeneratorTest.DSL;
 

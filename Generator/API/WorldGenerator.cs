@@ -1,4 +1,3 @@
-using System.IO.Abstractions;
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Entities;
@@ -10,10 +9,8 @@ namespace Generator.API;
 
 public class WorldGenerator : IWorldGenerator
 {
-    public WorldGenerator(IBackupFileGenerator backupFileGenerator, ICreateDsl createDsl, IReadDsl readDsl, 
-        IFileSystem fileSystem, IMapper mapper)
+    public WorldGenerator(IBackupFileGenerator backupFileGenerator, ICreateDsl createDsl, IReadDsl readDsl, IMapper mapper)
     {
-        _fileSystem = fileSystem;
         BackupFile = backupFileGenerator;
         CreateDsl = createDsl;
         ReadDsl = readDsl;
@@ -21,7 +18,6 @@ public class WorldGenerator : IWorldGenerator
     }
 
     internal IMapper Mapper;
-    private readonly IFileSystem _fileSystem;
     public IBackupFileGenerator BackupFile { get; }
     public readonly ICreateDsl CreateDsl;
     public readonly IReadDsl ReadDsl;

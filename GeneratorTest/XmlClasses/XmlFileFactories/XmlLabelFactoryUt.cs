@@ -83,12 +83,14 @@ public class XmlLabelFactoryUt
         var mockInforefGradeItem = Substitute.For<ActivitiesInforefXmlGradeItem>();
         var mockInforefGradeItemref = Substitute.For<IActivitiesInforefXmlGradeItemref>();
         var mockInforefInforef = Substitute.For<IActivitiesInforefXmlInforef>();
+        
+        var mockElementValueList = new List<LearningElementValueJson>{new ("type","value")};
 
         var systemUnderTest = new XmlLabelFactory(mockReadDsl, mockFileSystem, mockGradeItem, mockGradeItems, mockGradebook, 
             mockLabel, mockLabelActivity, mockRoles, mockModule, mockGradeHistory, 
             mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref, mockInforefInforef);
 
-        var mockSpaceElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Space_1"), "space", 0, null);
+        var mockSpaceElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Space_1"), "space", 0, mockElementValueList);
         var spaceJsonList = new List<LearningElementJson> {mockSpaceElementJson};
 
         mockReadDsl.GetSpacesAndElementsOrderedList().Returns(spaceJsonList);
@@ -128,8 +130,10 @@ public class XmlLabelFactoryUt
         var systemUnderTest = new XmlLabelFactory(mockReadDsl, mockFileSystem, mockGradeItem, mockGradeItems, mockGradebook, 
             mockLabel, mockLabelActivity, mockRoles, mockModule, mockGradeHistory, 
             mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref, mockInforefInforef);
+        
+        var mockElementValueList = new List<LearningElementValueJson>{new ("type","value")};
 
-        var mockSpaceElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Space_1"), "space", 0, null);
+        var mockSpaceElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Space_1"), "space", 0, mockElementValueList);
         var spaceJsonList = new List<LearningElementJson> {mockSpaceElementJson};
 
         mockReadDsl.GetSpacesAndElementsOrderedList().Returns(spaceJsonList);

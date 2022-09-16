@@ -8,7 +8,6 @@ public class ReadDsl : IReadDsl
 {
     public List<LearningElementJson> ListH5PElements;
     public List<LearningElementJson> ListResourceElements;
-    private List<LearningSpaceJson> _listLearningSpaces;
     public List<LearningElementJson> ListAllSpacesAndElementsOrdered;
     private LearningWorldJson _learningWorldJson;
     private IFileSystem _fileSystem;
@@ -31,7 +30,6 @@ public class ReadDsl : IReadDsl
         _rootJson = new DocumentRootJson(_learningWorldJson);
         ListH5PElements = new List<LearningElementJson>();
         ListResourceElements = new List<LearningElementJson>();
-        _listLearningSpaces = new List<LearningSpaceJson>();
         ListAllSpacesAndElementsOrdered = new List<LearningElementJson>();
     }
 
@@ -52,7 +50,6 @@ public class ReadDsl : IReadDsl
         }
         GetH5PElements(_rootJson);
         GetResourceElements(_rootJson);
-        GetLearningSpaces(_rootJson);
         GetSpacesAndElementsOrdered(_rootJson);
         SetLearningWorld(_rootJson);
     }
@@ -82,21 +79,14 @@ public class ReadDsl : IReadDsl
     {
         foreach (var resource in documentRootJson.LearningWorld.LearningElements)
         {
-            if (resource.ElementType is "pdf" or "json" or "jpg" or "png" or "webp" or "bmp" or "mp4")
+            if (resource.ElementType is "pdf" or "json" or "jpg" or "png" or "webp" or "bmp" or "mp4" or "txt" or "c"
+                or "h" or "cpp" or "cc" or "c++" or "py" or "cs" or "js" or "php" or "html" or "css")
             {
                 ListResourceElements.Add(resource);
             }
         }
     }
-
-    private void GetLearningSpaces(DocumentRootJson? documentRootJson)
-    {
-        if (documentRootJson != null)
-            foreach (var space in documentRootJson.LearningWorld.LearningSpaces)
-            {
-                _listLearningSpaces.Add(space);
-            }
-    }
+    
 
     private void GetSpacesAndElementsOrdered(DocumentRootJson? documentRootJson)
     {
@@ -122,7 +112,6 @@ public class ReadDsl : IReadDsl
 
     public List<LearningSpaceJson> GetLearningSpaceList()
     {
-        //return _listLearningSpaces;
         var space = new LearningSpaceJson(0, new IdentifierJson("identifier", "Topic 0"), new List<int>());
         var spaceList = new List<LearningSpaceJson>();
         spaceList.Add(space);

@@ -63,19 +63,20 @@ public class XmlH5PFactoryUt
         var mockFileManager = Substitute.For<IXmlFileManager>();
         var mockFiles = Substitute.For<IFilesXmlFiles>();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        var mockElementValueList = new List<LearningElementValueJson>{new ("type","value")};
         
         var identifier = new IdentifierJson( "FileName", "Element_1");
 
-        var h5pElement_1 = new LearningElementJson(1, identifier, "h5p",0, null);
+        var h5PElement1 = new LearningElementJson(1, identifier, "h5p",0, mockElementValueList);
 
-        var h5pElement_2 = new LearningElementJson(2, identifier, "h5p",0, null);
+        var h5PElement2 = new LearningElementJson(2, identifier, "h5p",0, mockElementValueList);
 
-        var h5pList = new List<LearningElementJson>()
+        var h5PList = new List<LearningElementJson>()
         {
-            h5pElement_1, h5pElement_2
+            h5PElement1, h5PElement2
         };
         
-        mockReadDsl.GetH5PElementsList().Returns(h5pList);
+        mockReadDsl.GetH5PElementsList().Returns(h5PList);
         mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport", identifier.Value), new MockFileData("Hello World"));
         
         var systemUnderTest = new XmlH5PFactory(mockReadDsl, xmlFileManager: mockFileManager, fileSystem: mockFileSystem, filesXmlFile: mockFile, filesXmlFiles: mockFiles);
@@ -110,22 +111,24 @@ public class XmlH5PFactoryUt
         var mockFiles = Substitute.For<IFilesXmlFiles>();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
-        var identifier_1 = new IdentifierJson("FileName", "Element_1");
+        var mockElementValueList = new List<LearningElementValueJson>{new ("type","value")};
         
-        var identifier_2 = new IdentifierJson( "FileName", "Element_2");
+        var identifier1 = new IdentifierJson("FileName", "Element_1");
+        
+        var identifier2 = new IdentifierJson( "FileName", "Element_2");
 
 
-        var h5pElement_1 = new LearningElementJson(1,  identifier_1, "h5p",0, null);
+        var h5PElement1 = new LearningElementJson(1,  identifier1, "h5p",0, mockElementValueList);
 
-        var h5pElement_2 = new LearningElementJson(2, identifier_2, "h5p",0, null);
+        var h5PElement2 = new LearningElementJson(2, identifier2, "h5p",0, mockElementValueList);
 
-        var h5pList = new List<LearningElementJson>()
+        var h5PList = new List<LearningElementJson>()
         {
-            h5pElement_1, h5pElement_2
+            h5PElement1, h5PElement2
         };
         
-        mockReadDsl.GetH5PElementsList().Returns(h5pList);
-        mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport", identifier_1.Value), new MockFileData("Hello World"));
+        mockReadDsl.GetH5PElementsList().Returns(h5PList);
+        mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport", identifier1.Value), new MockFileData("Hello World"));
         
         var systemUnderTest = new XmlH5PFactory(mockReadDsl, xmlFileManager: mockFileManager, fileSystem: mockFileSystem, filesXmlFile: mockFile, filesXmlFiles: mockFiles);
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
@@ -140,12 +143,12 @@ public class XmlH5PFactoryUt
         {
             //Every File has 2 FilesXmlFile Id´s thats why the Count has to be 2*FileCount
             Assert.That(systemUnderTest.FilesXmlFiles.File, Has.Count.EqualTo(4));
-            Assert.That(systemUnderTest.FilesXmlFiles.File[0].ContextId , Is.EqualTo(h5pElement_1.Id.ToString()));
-            Assert.That(systemUnderTest.FilesXmlFiles.File[0].Filename , Is.EqualTo(identifier_1.Value+ "." + h5pElement_1.ElementType));
-            Assert.That(systemUnderTest.FilesXmlFiles.File[0].Source , Is.EqualTo(identifier_1.Value+ "." + h5pElement_1.ElementType));
-            Assert.That(systemUnderTest.FilesXmlFiles.File[2].ContextId , Is.EqualTo(h5pElement_2.Id.ToString()));
-            Assert.That(systemUnderTest.FilesXmlFiles.File[2].Filename , Is.EqualTo(identifier_2.Value+ "." + h5pElement_2.ElementType));
-            Assert.That(systemUnderTest.FilesXmlFiles.File[2].Source , Is.EqualTo(identifier_2.Value+ "." + h5pElement_2.ElementType));
+            Assert.That(systemUnderTest.FilesXmlFiles.File[0].ContextId , Is.EqualTo(h5PElement1.Id.ToString()));
+            Assert.That(systemUnderTest.FilesXmlFiles.File[0].Filename , Is.EqualTo(identifier1.Value+ "." + h5PElement1.ElementType));
+            Assert.That(systemUnderTest.FilesXmlFiles.File[0].Source , Is.EqualTo(identifier1.Value+ "." + h5PElement1.ElementType));
+            Assert.That(systemUnderTest.FilesXmlFiles.File[2].ContextId , Is.EqualTo(h5PElement2.Id.ToString()));
+            Assert.That(systemUnderTest.FilesXmlFiles.File[2].Filename , Is.EqualTo(identifier2.Value+ "." + h5PElement2.ElementType));
+            Assert.That(systemUnderTest.FilesXmlFiles.File[2].Source , Is.EqualTo(identifier2.Value+ "." + h5PElement2.ElementType));
             Assert.That(systemUnderTest.FilesXmlFiles.File[2].Id , Is.EqualTo((int.Parse(systemUnderTest.FilesXmlFiles.File[0].Id)+2).ToString()));
         });
     }

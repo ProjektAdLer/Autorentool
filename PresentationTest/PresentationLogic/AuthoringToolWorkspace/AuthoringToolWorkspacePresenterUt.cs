@@ -431,7 +431,7 @@ public class AuthoringToolWorkspacePresenterUt
     [Test]
     public void OnEditWorldDialogClose_SelectedLearningWorldIsNull_ThrowsException()
     {
-        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+        new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;

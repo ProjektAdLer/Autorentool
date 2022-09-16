@@ -64,12 +64,12 @@ a, .btn-link {
     }
     
     #btnExport{
-        position: fixed;
+        position: absolute;
         right: 0.75rem;
         top: 5rem;
     }
    #filepath{
-       position: fixed;
+       position: absolute;
        right: 0.75rem;
        top: 3.5rem;
    }

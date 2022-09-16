@@ -75,7 +75,7 @@ public class CreateDsl : ICreateDsl
                 LearningElementValueJson learningElementValueJson = new LearningElementValueJson("Points", "0");
                 learningElementValueList.Add(learningElementValueJson);
                 LearningElementJson dslDocumentJson = new LearningElementJson(1, dslDocumentIdentifier, "json", 
-                    0, learningElementValueList,null, null);
+                    0, learningElementValueList);
                 LearningWorldJson.LearningElements.Add(dslDocumentJson);
                 _listLearningSpaceContent.Add(1);
             }

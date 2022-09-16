@@ -1,5 +1,4 @@
 ﻿using System.IO.Abstractions;
-using System.Reflection;
 using Generator.DSL;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 using Generator.XmlClasses.Entities._activities.Grades.xml;
@@ -7,8 +6,6 @@ using Generator.XmlClasses.Entities._activities.H5PActivity.xml;
 using Generator.XmlClasses.Entities._activities.Inforef.xml;
 using Generator.XmlClasses.Entities._activities.Module.xml;
 using Generator.XmlClasses.Entities._activities.Roles.xml;
-using Generator.XmlClasses.Entities._sections.Inforef.xml;
-using Generator.XmlClasses.Entities._sections.Section.xml;
 using Generator.XmlClasses.Entities.Files.xml;
 
 namespace Generator.XmlClasses.XmlFileFactories;
@@ -208,9 +205,9 @@ public class XmlH5PFactory : IXmlH5PFactory
         ActivitiesH5PActivityXmlH5PActivity.Timecreated = CurrentTime;
         ActivitiesH5PActivityXmlH5PActivity.Timemodified = CurrentTime;
         ActivitiesH5PActivityXmlH5PActivity.Id = H5PElementId;
-        ActivitiesH5PActivityXmlH5PActivity.Intro = "<p style=\"position:relative; bottom:13px; background-color:#e6e9ed;\">"+H5PElementDesc+"</p>";
+        ActivitiesH5PActivityXmlH5PActivity.Intro = "<p style=\"position:relative; background-color:#e6e9ed;\">"+H5PElementDesc+"</p>";
 
-        ActivitiesH5PActivityXmlActivity.H5pactivity = ActivitiesH5PActivityXmlH5PActivity as ActivitiesH5PActivityXmlH5PActivity ?? new ActivitiesH5PActivityXmlH5PActivity();
+        ActivitiesH5PActivityXmlActivity.H5Pactivity = ActivitiesH5PActivityXmlH5PActivity as ActivitiesH5PActivityXmlH5PActivity ?? new ActivitiesH5PActivityXmlH5PActivity();
         ActivitiesH5PActivityXmlActivity.Id = H5PElementId;
         ActivitiesH5PActivityXmlActivity.ModuleId = H5PElementId;
         ActivitiesH5PActivityXmlActivity.ModuleName = "h5pactivity";

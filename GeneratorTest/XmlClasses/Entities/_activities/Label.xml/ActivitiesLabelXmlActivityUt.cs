@@ -39,7 +39,6 @@ public class ActivitiesLabelXmlActivityUt
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport","activities", "label_1000"));
         
-        var mockLabel = Substitute.For<ActivitiesLabelXmlLabel>();
 
         var systemUnderTest = new ActivitiesLabelXmlActivity();
         

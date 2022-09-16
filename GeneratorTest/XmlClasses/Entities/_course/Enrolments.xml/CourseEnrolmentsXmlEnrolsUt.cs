@@ -20,13 +20,13 @@ public class CourseEnrolmentsXmlEnrolsUt
         systemUnderTest.Enrol.Add(enrolmentsEnrol2);
         systemUnderTest.Enrol.Add(enrolmentsEnrol3);
 
-        var expected_result = new List<CourseEnrolmentsXmlEnrol?>();
-        expected_result.Add(enrolmentsEnrol1);
-        expected_result.Add(enrolmentsEnrol2);
-        expected_result.Add(enrolmentsEnrol3);
+        var expectedResult = new List<CourseEnrolmentsXmlEnrol?>();
+        expectedResult.Add(enrolmentsEnrol1);
+        expectedResult.Add(enrolmentsEnrol2);
+        expectedResult.Add(enrolmentsEnrol3);
         
         //Assert
-        Assert.That(systemUnderTest.Enrol, Is.EqualTo(expected_result));
+        Assert.That(systemUnderTest.Enrol, Is.EqualTo(expectedResult));
     }
 
 }

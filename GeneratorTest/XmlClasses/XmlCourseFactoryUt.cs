@@ -161,7 +161,7 @@ public class XmlCourseFactoryUt
             Assert.That(mockEnrolSelf.Id, Is.EqualTo("3"));
             Assert.That(mockEnrolSelf.RoleId, Is.EqualTo("5"));
             Assert.That(mockEnrolSelf.EnrolMethod, Is.EqualTo("self"));
-            Assert.That(mockEnrolSelf.Status, Is.EqualTo("1"));
+            Assert.That(mockEnrolSelf.Status, Is.EqualTo("0"));
             Assert.That(mockEnrolSelf.CustomInt1, Is.EqualTo("0"));
             Assert.That(mockEnrolSelf.CustomInt2, Is.EqualTo("0"));
             Assert.That(mockEnrolSelf.CustomInt3, Is.EqualTo("0"));

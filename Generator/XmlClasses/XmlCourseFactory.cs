@@ -116,12 +116,12 @@ public class XmlCourseFactory : IXmlCourseFactory
         CourseEnrolmentsXmlEnrolGuest.Id = "2";
         CourseEnrolmentsXmlEnrolGuest.RoleId = "0";
         CourseEnrolmentsXmlEnrolGuest.EnrolMethod = "guest";
-        CourseEnrolmentsXmlEnrolGuest.Status = "0";
+        CourseEnrolmentsXmlEnrolGuest.Status = "1";
 
         CourseEnrolmentsXmlEnrolSelf.Id = "3";
         CourseEnrolmentsXmlEnrolSelf.RoleId = "5";
         CourseEnrolmentsXmlEnrolSelf.EnrolMethod = "self";
-        CourseEnrolmentsXmlEnrolSelf.Status = "1";
+        CourseEnrolmentsXmlEnrolSelf.Status = "0";
         CourseEnrolmentsXmlEnrolSelf.CustomInt1 = "0";
         CourseEnrolmentsXmlEnrolSelf.CustomInt2 = "0";
         CourseEnrolmentsXmlEnrolSelf.CustomInt3 = "0";

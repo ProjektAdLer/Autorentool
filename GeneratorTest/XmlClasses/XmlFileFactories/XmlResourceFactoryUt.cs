@@ -62,18 +62,34 @@ public class XmlFileFactoryUt
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
         var identifier = new IdentifierJson("FileName", "Document");
-
-        var jsonDocument = new LearningElementJson(1, identifier, "json",0, null);
-        var pngDocument = new LearningElementJson(2, identifier, "png",0, null);
-        var mp4Document = new LearningElementJson(3, identifier, "mp4",0, null);
-        var webpDocument = new LearningElementJson(4, identifier, "webp",0, null);
+        var learningEvl = new List<LearningElementValueJson>{new ("Points", "15")};
         
+        var jsonDocument = new LearningElementJson(1, identifier, "json",0, learningEvl);
+        var pngDocument = new LearningElementJson(2, identifier, "png",0, learningEvl);
+        var mp4Document = new LearningElementJson(3, identifier, "mp4",0, learningEvl);
+        var webpDocument = new LearningElementJson(4, identifier, "webp",0, learningEvl);
+        var jsDocument = new LearningElementJson(5, identifier, "js",0, learningEvl);
+        var cssDocument = new LearningElementJson(6, identifier, "css",0, learningEvl);
+        var htmlDocument = new LearningElementJson(7, identifier, "html",0, learningEvl);
+        var csDocument = new LearningElementJson(8, identifier, "cs",0, learningEvl);
+        var ccDocument = new LearningElementJson(9, identifier, "cc",0, learningEvl);
+        var cPlusPlusDocument = new LearningElementJson(10, identifier, "cpp",0, learningEvl);
+        var txtDocument = new LearningElementJson(11, identifier, "txt",0, learningEvl);
+
+
         var resourceList = new List<LearningElementJson>()
         {
             jsonDocument,
             pngDocument,
             mp4Document,
-            webpDocument
+            webpDocument,
+            jsDocument,
+            cssDocument,
+            htmlDocument,
+            csDocument,
+            ccDocument,
+            cPlusPlusDocument,
+            txtDocument
         };
         
         mockReadDsl.GetResourceList().Returns(resourceList);

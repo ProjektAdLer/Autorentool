@@ -1,5 +1,4 @@
 
-using System.IO.Abstractions.TestingHelpers;
 using AutoMapper;
 using BusinessLogic.Entities;
 using Generator.API;
@@ -18,14 +17,13 @@ public class WorldGeneratorUt
     public void WorldGenerator_DefaultConstructor_AllParametersSet()
     {
         // Arrange
-        var mockFilesystem = new MockFileSystem();
         var mockBackupFileGen = Substitute.For<IBackupFileGenerator>();
         var mockCreateDsl = Substitute.For<ICreateDsl>();
         var mockReadDsl = Substitute.For<IReadDsl>();
         var mockMapper = Substitute.For<IMapper>();
 
         // Act
-        var systemUnderTest = new WorldGenerator(mockBackupFileGen, mockCreateDsl, mockReadDsl, mockFilesystem,  mockMapper);
+        var systemUnderTest = new WorldGenerator(mockBackupFileGen, mockCreateDsl, mockReadDsl,  mockMapper);
 
         // Assert
         Assert.Multiple(()=>
@@ -41,13 +39,12 @@ public class WorldGeneratorUt
     public void WorldGenerator_ConstructBackup_AllMethodCallsReceived()
     {
         // Arrange
-        var mockFilesystem = new MockFileSystem();
         var mockBackupFileGen = Substitute.For<IBackupFileGenerator>();
         var mockCreateDsl = Substitute.For<ICreateDsl>();
         var mockReadDsl = Substitute.For<IReadDsl>();
         var mockMapper = Substitute.For<IMapper>();
         
-        var systemUnderTest = new WorldGenerator(mockBackupFileGen, mockCreateDsl, mockReadDsl, mockFilesystem, mockMapper);
+        var systemUnderTest = new WorldGenerator(mockBackupFileGen, mockCreateDsl, mockReadDsl, mockMapper);
 
         // Act
         systemUnderTest.ConstructBackup(Arg.Any<LearningWorld>(), "DestinationPath");

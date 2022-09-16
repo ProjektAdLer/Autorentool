@@ -1,5 +1,4 @@
 ﻿using System.IO.Abstractions;
-using System.Reflection;
 using Generator.DSL;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 using Generator.XmlClasses.Entities._activities.Grades.xml;
@@ -7,8 +6,6 @@ using Generator.XmlClasses.Entities._activities.Inforef.xml;
 using Generator.XmlClasses.Entities._activities.Module.xml;
 using Generator.XmlClasses.Entities._activities.Resource.xml;
 using Generator.XmlClasses.Entities._activities.Roles.xml;
-using Generator.XmlClasses.Entities._sections.Inforef.xml;
-using Generator.XmlClasses.Entities._sections.Section.xml;
 using Generator.XmlClasses.Entities.Files.xml;
 
 namespace Generator.XmlClasses.XmlFileFactories;
@@ -120,6 +117,14 @@ public class XmlResourceFactory : IXmlResourceFactory
             {
                 FileSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "application/"+FileElementType);
             }
+            else if (resource.ElementType is "js")
+            {
+                FileSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "application/x-javascript");
+            }
+            else if (resource.ElementType is "cs")
+            {
+                FileSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "application/x-csh");
+            }
             else if (resource.ElementType is "jpg" or "png" or "bmp")
             {
                 FileSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "image/"+FileElementType);
@@ -128,11 +133,19 @@ public class XmlResourceFactory : IXmlResourceFactory
             {
                 FileSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "video/"+FileElementType);
             }
-            else if (resource.ElementType is "webp")
+            else if (resource.ElementType is "webp" or "cc" or "c++" )
             {
                 FileSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "document/unknown");
             }
-            
+            else if (resource.ElementType is "txt" or "c" or "h" or "py" or "cpp" or "php")
+            {
+                FileSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "text/plain");
+            }
+            else if (resource.ElementType is "css" or "html")
+            {
+                FileSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "text/"+FileElementType);
+            }
+
             FileSetParametersActivity();
             
             // These ints are needed for the activities/inforef.xml file. 
@@ -176,7 +189,7 @@ public class XmlResourceFactory : IXmlResourceFactory
         ActivitiesFileResourceXmlResource.Name = FileElementName;
         ActivitiesFileResourceXmlResource.Timemodified = CurrentTime; 
         ActivitiesFileResourceXmlResource.Id = FileElementId;
-        ActivitiesFileResourceXmlResource.Intro = "<p style=\"position:relative; bottom:13px; background-color:#e6e9ed;\">"+FileElementDesc+"</p>";
+        ActivitiesFileResourceXmlResource.Intro = "<p style=\"position:relative; background-color:#e6e9ed;\">"+FileElementDesc+"</p>";
         
 
         ActivitiesFileResourceXmlActivity.Resource = ActivitiesFileResourceXmlResource as ActivitiesResourceXmlResource ?? new ActivitiesResourceXmlResource();
