@@ -93,6 +93,33 @@ public class LoadLearningElementUt
     }
     
     [Test]
+    public void Execute_LoadsLearningElement_TextTransfer()
+    {
+        var world = new LearningWorld("a", "b", "b", "b", "b", "b");
+        var element =
+            new TextTransferElement("a", "b", world, null!, "a", "b",
+                "c", LearningElementDifficultyEnum.Easy, 1, 9, 2,3);
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        const string filepath = "c:\\temp\\test";
+        mockBusinessLogic.LoadLearningElement(filepath).Returns(element);
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
+
+        var command = new LoadLearningElement(world, filepath, mockBusinessLogic, mappingAction);
+        
+        Assert.That(world.LearningElements, Is.Empty);
+        Assert.IsFalse(actionWasInvoked);
+        
+        command.Execute();
+
+        mockBusinessLogic.Received().LoadLearningElement(filepath);
+        Assert.That(world.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(world.LearningElements[0], Is.EqualTo(element));
+        Assert.That(world.LearningElements[0], Is.InstanceOf(typeof(TextTransferElement)));
+        Assert.IsTrue(actionWasInvoked);
+    }
+    
+    [Test]
     public void Execute_LoadsLearningElement_VideoActivation()
     {
         var space = new LearningWorld("a", "b", "b", "b", "b", "b");

@@ -1279,6 +1279,92 @@ public class PresentationLogicUt
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
         mockLogger.Received().LogInformation("Load dialog cancelled by user");
     }
+    
+        [Test]
+    public void LoadTextAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(false);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
+
+        var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
+            await systemUnderTest.LoadTextAsync());
+        Assert.That(ex!.Message, Is.EqualTo("Browser upload/download not yet implemented"));
+    }
+    
+    [Test]
+    public void LoadTextAsync_ThrowsExceptionWhenNoDialogManagerInServiceProvider()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(null);
+
+        var systemUnderTest =
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider,
+                hybridSupportWrapper: mockHybridSupport);
+
+        var ex = Assert.ThrowsAsync<InvalidOperationException>(async () => await systemUnderTest.LoadTextAsync());
+        Assert.That(ex!.Message, Is.EqualTo("dialogManager received from DI unexpectedly null"));
+    }
+    
+    [Test]
+    public async Task LoadTextAsync_CallsDialogManagerAndContentMapperAndBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
+        var mockMapper = Substitute.For<IMapper>();
+        var learningContent = new LearningContentViewModel("f", ".txt", new byte[] { 0x00, 0x00, 0x00, 0x01 });
+        var entity = new LearningContent("f", ".txt", new byte[] { 0x00, 0x00, 0x00, 0x01 });
+        mockMapper.Map<LearningContentViewModel>(Arg.Any<LearningContent>()).Returns(learningContent);
+        const string filepath = "foobar";
+        var mockDialogManger = Substitute.For<IElectronDialogManager>();
+        mockDialogManger
+            .ShowOpenFileDialogAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<IEnumerable<FileFilterProxy>?>())
+            .Returns(filepath);
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManger);
+        mockBusinessLogic.LoadLearningContent(filepath).Returns(entity);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
+            mapper: mockMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
+
+        var loadedContent = await systemUnderTest.LoadTextAsync();
+
+        await mockDialogManger.Received()
+            .ShowOpenFileDialogAsync("Load text", null, Arg.Any<IEnumerable<FileFilterProxy>?>());
+        mockBusinessLogic.Received().LoadLearningContent(filepath);
+        mockMapper.Received().Map<LearningContentViewModel>(entity);
+        
+        Assert.That(loadedContent, Is.EqualTo(learningContent));
+    }
+    
+    [Test]
+    public void LoadTextAsync_LogsAndRethrowsDialogCancelledException()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
+        var mockLogger = Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        var mockElectronDialogManager = Substitute.For<IElectronDialogManager>();
+        mockElectronDialogManager
+            .ShowOpenFileDialogAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<IEnumerable<FileFilterProxy>?>())
+            .Throws(new OperationCanceledException("bububaba"));
+        mockServiceProvider.GetService(typeof(IElectronDialogManager))
+            .Returns(mockElectronDialogManager);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
+            serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
+
+        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.LoadTextAsync());
+        Assert.That(ex!.Message, Is.EqualTo("bububaba"));
+        mockLogger.Received().LogInformation("Load dialog cancelled by user");
+    }
     #endregion
     
     #region Load

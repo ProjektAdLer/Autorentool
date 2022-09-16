@@ -319,6 +319,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
             ContentTypeEnum.Video => await _presentationLogic.LoadVideoAsync(),
             ContentTypeEnum.Pdf => await _presentationLogic.LoadPdfAsync(),
             ContentTypeEnum.H5P => await _presentationLogic.LoadH5PAsync(),
+            ContentTypeEnum.Text => await _presentationLogic.LoadTextAsync(),
             _ => throw new ApplicationException("No valid ContentType assigned")
         };
     }

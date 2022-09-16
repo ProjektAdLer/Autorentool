@@ -767,6 +767,9 @@ public class AuthoringToolWorkspacePresenterUt
     [Test]
     [TestCase("awf"), TestCase("asf"), TestCase("aef"), 
      TestCase("jpg"), TestCase("png"), TestCase("webp"), TestCase("bmp"), 
+     TestCase("txt"), TestCase("c"), TestCase("h"), TestCase("cpp"), 
+     TestCase("cc"), TestCase("c++"), TestCase("py"), TestCase("cs"), 
+     TestCase("js"), TestCase("php"), TestCase("html"), TestCase("css"), 
      TestCase("mp4"), TestCase("h5p"), TestCase("pdf"), TestCase("unsupportedEnding")]
     public void ProcessDragAndDropResult_CallsPresentationLogic(string ending)
     {
@@ -807,6 +810,18 @@ public class AuthoringToolWorkspacePresenterUt
             case "png":
             case "webp":
             case "bmp":
+            case "txt":
+            case "c":
+            case "h":
+            case "cpp":
+            case "cc":
+            case "c++":
+            case "py":
+            case "cs":
+            case "js":
+            case "php":
+            case "html":
+            case "css":
             case "mp4":
             case "h5p":
             case "pdf":

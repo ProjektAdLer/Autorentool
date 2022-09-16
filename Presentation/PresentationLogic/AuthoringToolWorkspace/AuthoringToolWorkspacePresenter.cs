@@ -266,6 +266,18 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
             case "png":
             case "webp":
             case "bmp":
+            case "txt":
+            case "c":
+            case "h":
+            case "cpp":
+            case "cc":
+            case "c++":
+            case "py":
+            case "cs":
+            case "js":
+            case "php":
+            case "html":
+            case "css":
             case "mp4":
             case "h5p":
             case "pdf":

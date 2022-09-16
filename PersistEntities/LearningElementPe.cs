@@ -5,6 +5,7 @@ namespace PersistEntities;
 [XmlInclude(typeof(ImageTransferElementPe))]
 [XmlInclude(typeof(VideoTransferElementPe))]
 [XmlInclude(typeof(PdfTransferElementPe))]
+[XmlInclude(typeof(TextTransferElementPe))]
 [XmlInclude(typeof(VideoActivationElementPe))]
 [XmlInclude(typeof(H5PActivationElementPe))]
 [XmlInclude(typeof(H5PInteractionElementPe))]

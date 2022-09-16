@@ -38,7 +38,9 @@ public class PresentationLogic : IPresentationLogic
     private const string WorldFileEnding = "awf";
     private const string SpaceFileEnding = "asf";
     private const string ElementFileEnding = "aef";
-    private string[] ImageFileEnding = {"jpg", "png", "webp", "bmp"};
+    private readonly string[] _imageFileEnding = {"jpg", "png", "webp", "bmp"};
+    private readonly string[] _textFileEnding =
+        { "txt", "c", "h", "cpp", "cc", "c++", "py", "cs", "js", "php", "html", "css" };
     private const string VideoFileEnding = "mp4";
     private const string H5PFileEnding = "h5p";
     private const string PdfFileEnding = "pdf";
@@ -264,7 +266,7 @@ public class PresentationLogic : IPresentationLogic
     public async Task<LearningContentViewModel> LoadImageAsync()
     {
         SaveOrLoadElectronCheck();
-        var fileFilter = new FileFilterProxy[] {new(" ", ImageFileEnding)};
+        var fileFilter = new FileFilterProxy[] {new(" ", _imageFileEnding)};
         var filepath = await GetLoadFilepathAsync("Load image", fileFilter);
         var entity = BusinessLogic.LoadLearningContent(filepath);
         return Mapper.Map<LearningContentViewModel>(entity);
@@ -293,6 +295,16 @@ public class PresentationLogic : IPresentationLogic
     {
         SaveOrLoadElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load pdf",PdfFileEnding, " ");
+        var entity = BusinessLogic.LoadLearningContent(filepath);
+        return Mapper.Map<LearningContentViewModel>(entity);
+    }
+    
+    /// <inheritdoc cref="IPresentationLogic.LoadTextAsync"/>
+    public async Task<LearningContentViewModel> LoadTextAsync()
+    {
+        SaveOrLoadElectronCheck();
+        var fileFilter = new FileFilterProxy[] {new(" ", _textFileEnding)};
+        var filepath = await GetLoadFilepathAsync("Load text", fileFilter);
         var entity = BusinessLogic.LoadLearningContent(filepath);
         return Mapper.Map<LearningContentViewModel>(entity);
     }

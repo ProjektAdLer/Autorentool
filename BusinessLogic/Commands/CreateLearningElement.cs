@@ -62,6 +62,8 @@ public class CreateLearningElement : IUndoCommand
                 authors, description, goals, difficulty, workload, points, posx, posy),
             ContentTypeEnum.Pdf => new PdfTransferElement(name, shortname, parent, learningContent, authors,
                 description, goals, difficulty, workload, points, posx, posy),
+            ContentTypeEnum.Text => new TextTransferElement(name, shortname, parent, learningContent, authors,
+            description, goals, difficulty, workload, points, posx, posy),
             _ => throw new ApplicationException("No Valid ContentType assigned")
         };
         return element;

@@ -19,6 +19,18 @@ public class ModalDialogInputFieldsFactoryUt
     [TestCase("png", ContentTypeEnum.Image)]
     [TestCase("webp", ContentTypeEnum.Image)]
     [TestCase("bmp", ContentTypeEnum.Image)]
+    [TestCase("txt", ContentTypeEnum.Text)]
+    [TestCase("c", ContentTypeEnum.Text)]
+    [TestCase("h", ContentTypeEnum.Text)]
+    [TestCase("cpp", ContentTypeEnum.Text)]
+    [TestCase("cc", ContentTypeEnum.Text)]
+    [TestCase("c++", ContentTypeEnum.Text)]
+    [TestCase("py", ContentTypeEnum.Text)]
+    [TestCase("cs", ContentTypeEnum.Text)]
+    [TestCase("js", ContentTypeEnum.Text)]
+    [TestCase("php", ContentTypeEnum.Text)]
+    [TestCase("html", ContentTypeEnum.Text)]
+    [TestCase("css", ContentTypeEnum.Text)]
     [TestCase("mp4", ContentTypeEnum.Video)]
     [TestCase("h5p", ContentTypeEnum.H5P)]
     [TestCase("pdf", ContentTypeEnum.Pdf)]
@@ -103,6 +115,7 @@ public class ModalDialogInputFieldsFactoryUt
         switch (correctFileTypeForTest)
         {
             case ContentTypeEnum.Image:
+            case ContentTypeEnum.Text:
             case ContentTypeEnum.Pdf:
             {
                 Assert.That(typeChoiceMapping.AvailableChoices.Count(), Is.EqualTo(1));
@@ -267,6 +280,18 @@ public class ModalDialogInputFieldsFactoryUt
     [TestCase("png", ContentTypeEnum.Image)]
     [TestCase("webp", ContentTypeEnum.Image)]
     [TestCase("bmp", ContentTypeEnum.Image)]
+    [TestCase("txt", ContentTypeEnum.Text)]
+    [TestCase("c", ContentTypeEnum.Text)]
+    [TestCase("h", ContentTypeEnum.Text)]
+    [TestCase("cpp", ContentTypeEnum.Text)]
+    [TestCase("cc", ContentTypeEnum.Text)]
+    [TestCase("c++", ContentTypeEnum.Text)]
+    [TestCase("py", ContentTypeEnum.Text)]
+    [TestCase("cs", ContentTypeEnum.Text)]
+    [TestCase("js", ContentTypeEnum.Text)]
+    [TestCase("php", ContentTypeEnum.Text)]
+    [TestCase("html", ContentTypeEnum.Text)]
+    [TestCase("css", ContentTypeEnum.Text)]
     [TestCase("mp4", ContentTypeEnum.Video)]
     [TestCase("h5p", ContentTypeEnum.H5P)]
     [TestCase("pdf", ContentTypeEnum.Pdf)]
@@ -366,10 +391,11 @@ public class ModalDialogInputFieldsFactoryUt
             Assert.That(contentValuesToChoiceList.ElementAt(0).RequiredValues, Contains.Key("Type"));
             Assert.That(contentValuesToChoiceList.ElementAt(0).RequiredValues!["Type"], Is.EqualTo(ElementTypeEnum.Transfer.ToString()));
                 
-            Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.Count(), Is.EqualTo(3));
+            Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.Count(), Is.EqualTo(4));
             Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(0), Is.EqualTo(ContentTypeEnum.Image.ToString()));
-            Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(1), Is.EqualTo(ContentTypeEnum.Video.ToString()));
-            Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(2), Is.EqualTo(ContentTypeEnum.Pdf.ToString()));
+            Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(1), Is.EqualTo(ContentTypeEnum.Text.ToString()));
+            Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(2), Is.EqualTo(ContentTypeEnum.Video.ToString()));
+            Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(3), Is.EqualTo(ContentTypeEnum.Pdf.ToString()));
             
             Assert.That(contentValuesToChoiceList.ElementAt(1).RequiredValues, Is.TypeOf<Dictionary<string,string>>());
             Assert.That(contentValuesToChoiceList.ElementAt(1).RequiredValues!.Count(), Is.EqualTo(1));
@@ -434,7 +460,7 @@ public class ModalDialogInputFieldsFactoryUt
 
     [TestCase("abc")]
     [TestCase("xyz")]
-    [TestCase("js")]
+    [TestCase("pqr")]
     [TestCase("baz")]
     public void GetCreateLearningElementInputFields_ThrowsException_ForWrongFileExtension(string wrongFileExtensionForTest)
     {
@@ -455,6 +481,18 @@ public class ModalDialogInputFieldsFactoryUt
     [TestCase("png", ContentTypeEnum.Image)]
     [TestCase("webp", ContentTypeEnum.Image)]
     [TestCase("bmp", ContentTypeEnum.Image)]
+    [TestCase("txt", ContentTypeEnum.Text)]
+    [TestCase("c", ContentTypeEnum.Text)]
+    [TestCase("h", ContentTypeEnum.Text)]
+    [TestCase("cpp", ContentTypeEnum.Text)]
+    [TestCase("cc", ContentTypeEnum.Text)]
+    [TestCase("c++", ContentTypeEnum.Text)]
+    [TestCase("py", ContentTypeEnum.Text)]
+    [TestCase("cs", ContentTypeEnum.Text)]
+    [TestCase("js", ContentTypeEnum.Text)]
+    [TestCase("php", ContentTypeEnum.Text)]
+    [TestCase("html", ContentTypeEnum.Text)]
+    [TestCase("css", ContentTypeEnum.Text)]
     [TestCase("mp4", ContentTypeEnum.Video)]
     [TestCase("h5p", ContentTypeEnum.H5P)]
     [TestCase("pdf", ContentTypeEnum.Pdf)]
@@ -571,6 +609,7 @@ public class ModalDialogInputFieldsFactoryUt
         switch (correctFileTypeForTest)
         {
             case ContentTypeEnum.Image:
+            case ContentTypeEnum.Text:
             case ContentTypeEnum.Pdf:
             {
                 Assert.That(typeChoiceMapping.AvailableChoices.Count(), Is.EqualTo(1));
@@ -735,6 +774,18 @@ public class ModalDialogInputFieldsFactoryUt
     [TestCase("png", ContentTypeEnum.Image)]
     [TestCase("webp", ContentTypeEnum.Image)]
     [TestCase("bmp", ContentTypeEnum.Image)]
+    [TestCase("txt", ContentTypeEnum.Text)]
+    [TestCase("c", ContentTypeEnum.Text)]
+    [TestCase("h", ContentTypeEnum.Text)]
+    [TestCase("cpp", ContentTypeEnum.Text)]
+    [TestCase("cc", ContentTypeEnum.Text)]
+    [TestCase("c++", ContentTypeEnum.Text)]
+    [TestCase("py", ContentTypeEnum.Text)]
+    [TestCase("cs", ContentTypeEnum.Text)]
+    [TestCase("js", ContentTypeEnum.Text)]
+    [TestCase("php", ContentTypeEnum.Text)]
+    [TestCase("html", ContentTypeEnum.Text)]
+    [TestCase("css", ContentTypeEnum.Text)]
     [TestCase("mp4", ContentTypeEnum.Video)]
     [TestCase("h5p", ContentTypeEnum.H5P)]
     [TestCase("pdf", ContentTypeEnum.Pdf)]
@@ -864,10 +915,11 @@ public class ModalDialogInputFieldsFactoryUt
         Assert.That(contentValuesToChoiceList.ElementAt(0).RequiredValues, Contains.Key("Type"));
         Assert.That(contentValuesToChoiceList.ElementAt(0).RequiredValues!["Type"], Is.EqualTo(ElementTypeEnum.Transfer.ToString()));
                 
-        Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.Count(), Is.EqualTo(3));
+        Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.Count(), Is.EqualTo(4));
         Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(0), Is.EqualTo(ContentTypeEnum.Image.ToString()));
-        Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(1), Is.EqualTo(ContentTypeEnum.Video.ToString()));
-        Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(2), Is.EqualTo(ContentTypeEnum.Pdf.ToString()));
+        Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(1), Is.EqualTo(ContentTypeEnum.Text.ToString()));
+        Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(2), Is.EqualTo(ContentTypeEnum.Video.ToString()));
+        Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(3), Is.EqualTo(ContentTypeEnum.Pdf.ToString()));
                 
                 
         Assert.That(contentValuesToChoiceList.ElementAt(1).RequiredValues, Is.TypeOf<Dictionary<string,string>>());
@@ -935,7 +987,7 @@ public class ModalDialogInputFieldsFactoryUt
     
     [TestCase("abc")]
     [TestCase("xyz")]
-    [TestCase("js")]
+    [TestCase("pqw")]
     [TestCase("baz")]
     public void GetCreateLearningElementInputFields_OverloadedFunction_ThrowsException_ForWrongFileExtension(string wrongFileExtensionForTest)
     {

@@ -252,6 +252,12 @@ public interface IPresentationLogic
     /// </summary>
     /// <returns></returns>
     Task<LearningContentViewModel> LoadPdfAsync();
+    
+    /// <summary>
+    /// Asks user for path, loads a text file from disk and returns a <see cref="LearningContentViewModel"/>. 
+    /// </summary>
+    /// <returns></returns>
+    Task<LearningContentViewModel> LoadTextAsync();
 
     LearningContentViewModel LoadLearningContentViewModel(string name, Stream stream);
     LearningWorldViewModel LoadLearningWorldViewModel(Stream stream);

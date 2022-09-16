@@ -116,6 +116,9 @@ public class MappingProfile : Profile
         CreateMap<VideoTransferElement, VideoTransferElementViewModel>()
             .IncludeBase<LearningElement, LearningElementViewModel>()
             .ReverseMap();
+        CreateMap<TextTransferElement, TextTransferElementViewModel>()
+            .IncludeBase<LearningElement, LearningElementViewModel>()
+            .ReverseMap();
 
         //We must tell the automapper what class to use when it has to map from a class to an interface
         CreateMap<LearningElement, ILearningElementViewModel>()
@@ -190,6 +193,9 @@ public class MappingProfile : Profile
             .IncludeBase<LearningElement, LearningElementPe>()
             .ReverseMap();
         CreateMap<VideoTransferElement, VideoTransferElementPe>()
+            .IncludeBase<LearningElement, LearningElementPe>()
+            .ReverseMap();
+        CreateMap<TextTransferElement, TextTransferElementPe>()
             .IncludeBase<LearningElement, LearningElementPe>()
             .ReverseMap();
 

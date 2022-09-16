@@ -113,6 +113,41 @@ public class CreateLearningElementUt
             Assert.That(element, Is.InstanceOf(typeof(PdfTransferElement)));
         });
     }
+    
+    [Test]
+    public void Execute_CreatesTextTransferElement_WorldParent()
+    {
+        var testParameter = new TestParameter();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
+        var command = new CreateLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.ShortName,
+            ElementTypeEnum.Transfer, ContentTypeEnum.Text, testParameter.Content,
+            testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
+            testParameter.Workload, testParameter.Points, mappingAction);
+
+        Assert.IsEmpty(testParameter.WorldParent.LearningElements);
+        Assert.IsFalse(actionWasInvoked);
+
+        command.Execute();
+
+        Assert.That(testParameter.WorldParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked);
+        var element = testParameter.WorldParent.LearningElements.First();
+        Assert.Multiple(() =>
+        {
+            Assert.That(element.Name, Is.EqualTo(testParameter.Name));
+            Assert.That(element.Shortname, Is.EqualTo(testParameter.ShortName));
+            Assert.That(element.Parent, Is.EqualTo(testParameter.WorldParent));
+            Assert.That(element.LearningContent, Is.EqualTo(testParameter.Content));
+            Assert.That(element.Authors, Is.EqualTo(testParameter.Authors));
+            Assert.That(element.Description, Is.EqualTo(testParameter.Description));
+            Assert.That(element.Goals, Is.EqualTo(testParameter.Goals));
+            Assert.That(element.Workload, Is.EqualTo(testParameter.Workload));
+            Assert.That(element.Points, Is.EqualTo(testParameter.Points));
+            Assert.That(element.Difficulty, Is.EqualTo(testParameter.Difficulty));
+            Assert.That(element, Is.InstanceOf(typeof(TextTransferElement)));
+        });
+    }
 
     [Test]
     public void Execute_CreatesImageTransferElement_SpaceParent()
@@ -216,6 +251,41 @@ public class CreateLearningElementUt
             Assert.That(element.Points, Is.EqualTo(testParameter.Points));
             Assert.That(element.Difficulty, Is.EqualTo(testParameter.Difficulty));
             Assert.That(element, Is.InstanceOf(typeof(PdfTransferElement)));
+        });
+    }
+    
+    [Test]
+    public void Execute_CreatesTextTransferElement_SpaceParent()
+    {
+        var testParameter = new TestParameter();
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
+        var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
+            ElementTypeEnum.Transfer, ContentTypeEnum.Text, testParameter.Content,
+            testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
+            testParameter.Workload, testParameter.Points, mappingAction);
+
+        Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsFalse(actionWasInvoked);
+
+        command.Execute();
+
+        Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.IsTrue(actionWasInvoked);
+        var element = testParameter.SpaceParent.LearningElements.First();
+        Assert.Multiple(() =>
+        {
+            Assert.That(element.Name, Is.EqualTo(testParameter.Name));
+            Assert.That(element.Shortname, Is.EqualTo(testParameter.ShortName));
+            Assert.That(element.Parent, Is.EqualTo(testParameter.SpaceParent));
+            Assert.That(element.LearningContent, Is.EqualTo(testParameter.Content));
+            Assert.That(element.Authors, Is.EqualTo(testParameter.Authors));
+            Assert.That(element.Description, Is.EqualTo(testParameter.Description));
+            Assert.That(element.Goals, Is.EqualTo(testParameter.Goals));
+            Assert.That(element.Workload, Is.EqualTo(testParameter.Workload));
+            Assert.That(element.Points, Is.EqualTo(testParameter.Points));
+            Assert.That(element.Difficulty, Is.EqualTo(testParameter.Difficulty));
+            Assert.That(element, Is.InstanceOf(typeof(TextTransferElement)));
         });
     }
 

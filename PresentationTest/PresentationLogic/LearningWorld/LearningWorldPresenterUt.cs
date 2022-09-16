@@ -430,7 +430,7 @@ public class LearningWorldPresenterUt
         dictionary["Parent"] = ElementParentEnum.World.ToString();
         dictionary["Assignment"] = "foobar";
         dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
-        dictionary["Content"] = ContentTypeEnum.Video.ToString();
+        dictionary["Content"] = ContentTypeEnum.Text.ToString();
         dictionary["Authors"] = "d";
         dictionary["Description"] = "e";
         dictionary["Goals"] = "f";
@@ -445,7 +445,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().CreateLearningElement(world, "a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Video, null!, "d", "e", "f",LearningElementDifficultyEnum.Easy,0, 4);
+        presentationLogic.Received().CreateLearningElement(world, "a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Text, null!, "d", "e", "f",LearningElementDifficultyEnum.Easy,0, 4);
     }
     
     [Test]
