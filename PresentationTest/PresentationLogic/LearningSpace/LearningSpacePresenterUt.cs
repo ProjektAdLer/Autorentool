@@ -26,7 +26,7 @@ public class LearningSpacePresenterUt
     {
         var systemUnderTest = CreatePresenterForTesting();
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditLearningSpace("a","b","c","d","e"));
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditLearningSpace("a","b","c","d","e", 5));
         Assert.That(ex!.Message, Is.EqualTo("LearningSpaceVm is null"));
     }
 
@@ -38,9 +38,9 @@ public class LearningSpacePresenterUt
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         
         systemUnderTest.SetLearningSpace(space);
-        systemUnderTest.EditLearningSpace("space", "b","c","d","e");
+        systemUnderTest.EditLearningSpace("space", "b","c","d","e", 5);
         
-        presentationLogic.Received().EditLearningSpace(space, "space", "b", "c","d","e");
+        presentationLogic.Received().EditLearningSpace(space, "space", "b", "c","d","e", 5);
     }
 
     #endregion
@@ -60,6 +60,7 @@ public class LearningSpacePresenterUt
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
         dictionary["Goals"] = "g";
+        dictionary["Required Points"] = "5";
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
@@ -68,7 +69,7 @@ public class LearningSpacePresenterUt
         
         systemUnderTest.OnEditSpaceDialogClose(returnValueTuple);
         
-        presentationLogic.Received().EditLearningSpace(space, "a","b","e","f","g");
+        presentationLogic.Received().EditLearningSpace(space, "a","b","e","f","g", 5);
     }
     
     [Test]

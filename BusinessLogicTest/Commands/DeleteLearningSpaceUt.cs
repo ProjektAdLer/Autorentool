@@ -12,7 +12,7 @@ public class DeleteLearningSpaceUt
     public void Execute_DeletesLearningSpace()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space = new LearningSpace("g", "h", "i", "j", "k");
+        var space = new LearningSpace("g", "h", "i", "j", "k", 5);
         world.LearningSpaces.Add(space);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
@@ -32,7 +32,7 @@ public class DeleteLearningSpaceUt
     public void Undo_MementoIsNull_ThrowsException()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space = new LearningSpace("g", "h", "i", "j", "k");
+        var space = new LearningSpace("g", "h", "i", "j", "k", 5);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
@@ -48,7 +48,7 @@ public class DeleteLearningSpaceUt
     public void UndoRedo_UndoesAndRedoesCreateLearningSpace()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space = new LearningSpace("g", "h", "i", "j", "k");
+        var space = new LearningSpace("g", "h", "i", "j", "k", 5);
         world.LearningSpaces.Add(space);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;

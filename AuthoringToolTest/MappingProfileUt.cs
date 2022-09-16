@@ -28,6 +28,7 @@ public class MappingProfileUt
     private const LearningElementDifficultyEnumPe DifficultyPe = LearningElementDifficultyEnumPe.Easy;
     private const int Workload = 1;
     private const int Points = 2;
+    private const int RequiredPoints = 3;
     private const double PositionX = 1.0;
     private const double PositionY = 2.0;
 
@@ -43,6 +44,7 @@ public class MappingProfileUt
     private const LearningElementDifficultyEnumPe NewDifficultyPe = LearningElementDifficultyEnumPe.Medium;
     private const int NewWorkload = 2;
     private const int NewPoints = 3;
+    private const int NewRequiredPoints = 4;
     private const double NewPositionX = 3.0;
     private const double NewPositionY = 4.0;
 
@@ -162,7 +164,7 @@ public class MappingProfileUt
     public void MapLearningSpaceAndLearningSpaceViewModel_WithoutLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, null, PositionX, PositionY);
+        var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, null, PositionX, PositionY);
         var destination = new LearningSpaceViewModel("", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
@@ -175,6 +177,7 @@ public class MappingProfileUt
         destination.Authors = NewAuthors;
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
+        destination.RequiredPoints = NewRequiredPoints;
         destination.LearningElements = new List<ILearningElementViewModel>();
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
@@ -189,8 +192,8 @@ public class MappingProfileUt
     public void MapLearningSpaceAndLearningSpacePersistEntity_WithoutLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, null, PositionX, PositionY);
-        var destination = new LearningSpacePe("", "", "", "", "");
+        var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, null, PositionX, PositionY);
+        var destination = new LearningSpacePe("", "", "", "", "", 0);
 
         systemUnderTest.Map(source, destination);
 
@@ -202,6 +205,7 @@ public class MappingProfileUt
         destination.Authors = NewAuthors;
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
+        destination.RequiredPoints = NewRequiredPoints;
         destination.LearningElements = new List<LearningElementPe>();
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
@@ -216,7 +220,7 @@ public class MappingProfileUt
     public void MapLearningSpaceAndLearningSpaceViewModel_WithLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, new List<LearningElement>(),
+        var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, new List<LearningElement>(),
             PositionX, PositionY);
         source.LearningElements.Add(GetTestableElementWithParent(source));
         var destination = new LearningSpaceViewModel("", "", "", "", "");
@@ -232,6 +236,7 @@ public class MappingProfileUt
         destination.Authors = NewAuthors;
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
+        destination.RequiredPoints = NewRequiredPoints;
         destination.LearningElements = new List<ILearningElementViewModel>()
             {GetTestableNewElementViewModelWithParent(destination)};
         destination.PositionX = NewPositionX;
@@ -248,10 +253,10 @@ public class MappingProfileUt
     public void MapLearningSpaceAndLearningSpacePersistEntity_WithLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, new List<LearningElement>(),
+        var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, new List<LearningElement>(),
             PositionX, PositionY);
         source.LearningElements.Add(GetTestableElementWithParent(source));
-        var destination = new LearningSpacePe("", "", "", "", "");
+        var destination = new LearningSpacePe("", "", "", "", "", 0);
 
         systemUnderTest.Map(source, destination);
 
@@ -263,6 +268,7 @@ public class MappingProfileUt
         destination.Authors = NewAuthors;
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
+        destination.RequiredPoints = NewRequiredPoints;
         destination.LearningElements = new List<LearningElementPe>() {GetTestableNewElementPersistEntity()};
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
@@ -426,7 +432,7 @@ public class MappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
             new List<LearningElement>(), new List<LearningSpace>());
-        source.LearningSpaces.Add(new LearningSpace(Name, Shortname, Authors, Description, Goals, null, PositionX,
+        source.LearningSpaces.Add(new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, null, PositionX,
             PositionY));
         var destination = new LearningWorldViewModel("", "", "", "", "", "");
 
@@ -448,8 +454,8 @@ public class MappingProfileUt
         destination.Goals = NewGoals;
         destination.LearningSpaces = new List<ILearningSpaceViewModel>()
         {
-            new LearningSpaceViewModel(NewName, NewShortname, NewAuthors, NewDescription, NewGoals, null, NewPositionX,
-                NewPositionY)
+            new LearningSpaceViewModel(NewName, NewShortname, NewAuthors, NewDescription, NewGoals, NewRequiredPoints,
+                null, NewPositionX, NewPositionY)
         };
         destination.LearningElements = new List<ILearningElementViewModel>();
 
@@ -470,8 +476,8 @@ public class MappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
             new List<LearningElement>(), new List<LearningSpace>());
-        source.LearningSpaces.Add(new LearningSpace(Name, Shortname, Authors, Description, Goals, null, PositionX,
-            PositionY));
+        source.LearningSpaces.Add(new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints,
+            null, PositionX, PositionY));
         var destination = new LearningWorldPe("", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
@@ -492,8 +498,8 @@ public class MappingProfileUt
         destination.Goals = NewGoals;
         destination.LearningSpaces = new List<LearningSpacePe>()
         {
-            new LearningSpacePe(NewName, NewShortname, NewAuthors, NewDescription, NewGoals, null, NewPositionX,
-                NewPositionY)
+            new LearningSpacePe(NewName, NewShortname, NewAuthors, NewDescription, NewGoals, NewRequiredPoints, 
+                null, NewPositionX, NewPositionY)
         };
         destination.LearningElements = new List<LearningElementPe>();
 
@@ -603,7 +609,7 @@ public class MappingProfileUt
             new LearningElementViewModel("el2", Shortname, new LearningContentViewModel("foo", "bar", Content), Authors,
                 Description, Goals, Difficulty);
 
-        var space = new LearningSpaceViewModel("space", Shortname, Authors, Description, Goals,
+        var space = new LearningSpaceViewModel("space", Shortname, Authors, Description, Goals, RequiredPoints,
             new List<ILearningElementViewModel> { elementVm1 })
         {
             SelectedLearningObject = elementVm1
@@ -750,7 +756,7 @@ public class MappingProfileUt
 
     private static LearningSpace GetTestableSpace()
     {
-        var space = new LearningSpace(Name, Shortname, Authors, Description, Goals,
+        var space = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints,
             new List<LearningElement>(), PositionX, PositionY);
         var element = GetTestableElementWithParent(space);
         space.LearningElements.Add(element);
@@ -759,7 +765,7 @@ public class MappingProfileUt
 
     private static LearningSpaceViewModel GetTestableNewSpaceViewModel()
     {
-        var space = new LearningSpaceViewModel(NewName, NewShortname, NewAuthors, NewDescription, NewGoals,
+        var space = new LearningSpaceViewModel(NewName, NewShortname, NewAuthors, NewDescription, NewGoals, NewRequiredPoints,
             new List<ILearningElementViewModel>(), NewPositionX, NewPositionY);
         var element = GetTestableNewElementViewModelWithParent(space);
         space.LearningElements.Add(element);
@@ -768,7 +774,7 @@ public class MappingProfileUt
 
     private static LearningSpacePe GetTestableNewSpacePersistEntity()
     {
-        return new LearningSpacePe(NewName, NewShortname, NewAuthors, NewDescription, NewGoals,
+        return new LearningSpacePe(NewName, NewShortname, NewAuthors, NewDescription, NewGoals, NewRequiredPoints,
             new List<LearningElementPe>() {GetTestableNewElementPersistEntity()}, NewPositionX, NewPositionY);
     }
 
@@ -869,6 +875,7 @@ public class MappingProfileUt
                     Assert.That(space.Authors, Is.EqualTo(useNewFields ? NewAuthors : Authors));
                     Assert.That(space.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(space.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
+                    Assert.That(space.RequiredPoints, Is.EqualTo(useNewFields ? NewRequiredPoints : RequiredPoints));
                     TestElementsList(space.LearningElements, space, useNewFields);
                     Assert.That(space.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
                     Assert.That(space.PositionY, Is.EqualTo(useNewFields ? NewPositionY : PositionY));
@@ -882,6 +889,7 @@ public class MappingProfileUt
                     Assert.That(space.Authors, Is.EqualTo(useNewFields ? NewAuthors : Authors));
                     Assert.That(space.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(space.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
+                    Assert.That(space.RequiredPoints, Is.EqualTo(useNewFields ? NewRequiredPoints : RequiredPoints));
                     TestElementsList(space.LearningElements, space, useNewFields);
                     Assert.That(space.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
                     Assert.That(space.PositionY, Is.EqualTo(useNewFields ? NewPositionY : PositionY));
@@ -895,6 +903,7 @@ public class MappingProfileUt
                     Assert.That(space.Authors, Is.EqualTo(useNewFields ? NewAuthors : Authors));
                     Assert.That(space.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(space.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
+                    Assert.That(space.RequiredPoints, Is.EqualTo(useNewFields ? NewRequiredPoints : RequiredPoints));
                     TestElementsList(space.LearningElements, space, useNewFields);
                     Assert.That(space.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
                     Assert.That(space.PositionY, Is.EqualTo(useNewFields ? NewPositionY : PositionY));

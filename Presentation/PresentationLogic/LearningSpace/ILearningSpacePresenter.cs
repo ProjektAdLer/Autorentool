@@ -5,7 +5,7 @@ namespace Presentation.PresentationLogic.LearningSpace;
 
 public interface ILearningSpacePresenter
 {
-    void EditLearningSpace(string name, string shortname, string authors, string description, string goals);
+    void EditLearningSpace(string name, string shortname, string authors, string description, string goals, int requiredPoints);
     bool EditLearningSpaceDialogOpen { get; set; }
     IDictionary<string, string>? EditLearningSpaceDialogInitialValues { get; }
     bool EditLearningElementDialogOpen { get; set; }

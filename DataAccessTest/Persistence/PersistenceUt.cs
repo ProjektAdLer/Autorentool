@@ -23,7 +23,7 @@ public class PersistenceUt
     {
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
             "Description", "Goals");
-        var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals");
+        var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
         var content = new LearningContentPe("a", "b", Array.Empty<byte>());
         var element = new LearningElementPe("le", "la", content, "lll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
         world.LearningSpaces.Add(space);
@@ -42,7 +42,7 @@ public class PersistenceUt
     [Test]
     public void Persistence_SaveAndLoadSpace_Stream_ObjectsAreEqual()
     {
-        var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals");
+        var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
         var content = new LearningContentPe("a", "b", Array.Empty<byte>());
         var element = new LearningElementPe("le", "la", content,"ll", "l" ,"lll", LearningElementDifficultyEnumPe.Easy);
         space.LearningElements.Add(element);
@@ -78,7 +78,7 @@ public class PersistenceUt
     {
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
             "Description", "Goals");
-        var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals");
+        var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
         var content = new LearningContentPe("a", "b", Array.Empty<byte>());
         var element = new LearningElementPe("le", "la", content, "lll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
         world.LearningSpaces.Add(space);
@@ -96,7 +96,7 @@ public class PersistenceUt
     [Test]
     public void Persistence_SaveAndLoadSpace_File_ObjectsAreEqual()
     {
-        var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals");
+        var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
         var content = new LearningContentPe("a", "b", Array.Empty<byte>());
         var element = new LearningElementPe("le", "la", content, "ll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
         space.LearningElements.Add(element);

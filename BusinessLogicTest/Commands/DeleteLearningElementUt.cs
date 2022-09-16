@@ -32,7 +32,7 @@ public class DeleteLearningElementUt
     [Test]
     public void Execute_DeletesLearningElement_SpaceParent()
     {
-        var space = new LearningSpace("a", "b", "c","d", "e");
+        var space = new LearningSpace("a", "b", "c","d", "e", 5);
         var element = new LearningElement("g", "h", null!, "i", "j", "k", LearningElementDifficultyEnum.Easy, space);
         space.LearningElements.Add(element);
         bool actionWasInvoked = false;
@@ -98,7 +98,7 @@ public class DeleteLearningElementUt
     [Test]
     public void UndoRedo_UndoesRedoesDeleteLearningElement_SpaceParent()
     {
-        var space = new LearningSpace("a", "b", "c","d", "e");
+        var space = new LearningSpace("a", "b", "c","d", "e", 5);
         var element = new LearningElement("g", "h", null!, "i", "j", "k", LearningElementDifficultyEnum.Easy, space);
         space.LearningElements.Add(element);
         bool actionWasInvoked = false;

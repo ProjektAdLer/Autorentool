@@ -14,7 +14,7 @@ public class SaveLearningSpaceUt
     public void Execute_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var space = new LearningSpace("a", "b", "c", "d", "e");
+        var space = new LearningSpace("a", "b", "c", "d", "e", 5);
         const string filepath = "c:\\temp\\test";
         mockBusinessLogic.LoadLearningSpace(filepath).Returns(space);
         

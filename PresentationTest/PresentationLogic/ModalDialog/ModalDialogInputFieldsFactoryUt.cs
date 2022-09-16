@@ -512,6 +512,7 @@ public class ModalDialogInputFieldsFactoryUt
             string authorsLearningSpace = "boo";
             string descriptionLearningSpace = "maz";
             string goalsLearningSpace = "moo";
+            int requiredPointsLearningSpace = 10;
             ICollection<ILearningElementViewModel>? learningElements = null;
             double positionXLearningSpace = 1D;
             double positionYLearningSpace = 2D;
@@ -523,6 +524,7 @@ public class ModalDialogInputFieldsFactoryUt
                     authorsLearningSpace,
                     descriptionLearningSpace, 
                     goalsLearningSpace,
+                    requiredPointsLearningSpace,
                     learningElements,
                     positionXLearningSpace,
                     positionYLearningSpace
@@ -799,6 +801,7 @@ public class ModalDialogInputFieldsFactoryUt
         string authorsLearningSpace = "boo";
         string descriptionLearningSpace = "maz";
         string goalsLearningSpace = "moo";
+        int requiredPointsLearningSpace = 10;
         ICollection<ILearningElementViewModel>? learningElements = null;
         double positionXLearningSpace = 1D;
         double positionYLearningSpace = 2D;
@@ -810,6 +813,7 @@ public class ModalDialogInputFieldsFactoryUt
                 authorsLearningSpace,
                 descriptionLearningSpace, 
                 goalsLearningSpace,
+                requiredPointsLearningSpace,
                 learningElements,
                 positionXLearningSpace,
                 positionYLearningSpace
@@ -1004,6 +1008,7 @@ public class ModalDialogInputFieldsFactoryUt
         string authorsLearningSpace = "boo";
         string descriptionLearningSpace = "maz";
         string goalsLearningSpace = "moo";
+        int requiredPointsLearningSpace = 10;
         ICollection<ILearningElementViewModel>? learningElements = null;
         double positionXLearningSpace = 1D;
         double positionYLearningSpace = 2D;
@@ -1015,6 +1020,7 @@ public class ModalDialogInputFieldsFactoryUt
                 authorsLearningSpace,
                 descriptionLearningSpace, 
                 goalsLearningSpace,
+                requiredPointsLearningSpace,
                 learningElements,
                 positionXLearningSpace,
                 positionYLearningSpace

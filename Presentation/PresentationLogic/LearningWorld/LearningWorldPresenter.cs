@@ -30,6 +30,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     private LearningContentViewModel? _dragAndDropLearningContent;
     private bool _editLearningSpaceDialogOpen;
     private Dictionary<string, string>? _editSpaceDialogInitialValues;
+    private Dictionary<string, string>? _editSpaceDialogAnnotations;
     private Dictionary<string, string>? _editElementDialogInitialValues;
     private bool _createLearningSpaceDialogOpen;
     private bool _editLearningElementDialogOpen;
@@ -76,6 +77,12 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         get => _editSpaceDialogInitialValues;
         private set => SetField(ref _editSpaceDialogInitialValues, value);
+    }
+    
+    public Dictionary<string, string>? EditSpaceDialogAnnotations
+    {
+        get => _editSpaceDialogAnnotations;
+        private set => SetField(ref _editSpaceDialogAnnotations, value);
     }
 
     public Dictionary<string, string>? EditElementDialogInitialValues
@@ -139,13 +146,14 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     /// <param name="authors"></param>
     /// <param name="description"></param>
     /// <param name="goals"></param>
+    /// <param name="requiredPoints"></param>
     /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
     public void CreateNewLearningSpace(string name, string shortname,
-        string authors, string description, string goals)
+        string authors, string description, string goals, int requiredPoints)
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        _presentationLogic.CreateLearningSpace(LearningWorldVm, name, shortname, authors, description, goals);
+        _presentationLogic.CreateLearningSpace(LearningWorldVm, name, shortname, authors, description, goals, requiredPoints);
         var learningSpace = LearningWorldVm.LearningSpaces.Last();
         SetSelectedLearningObject(learningSpace);
     }
@@ -165,6 +173,11 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
             {"Authors", space.Authors},
             {"Description", space.Description},
             {"Goals", space.Goals},
+            {"Required Points", space.RequiredPoints.ToString()},
+        };
+        EditSpaceDialogAnnotations = new Dictionary<string, string>
+        {
+            {"Required Points", "/" + space.Points.ToString()},
         };
         EditLearningSpaceDialogOpen = true;
     }
@@ -216,7 +229,8 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         //optional arguments
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
-        CreateNewLearningSpace(name, shortname, authors, description, goals);
+        var requiredPoints = data.ContainsKey("Required Points") && data["Required Points"] != "" && !data["Required Points"].StartsWith("e") ? int.Parse(data["Required Points"]) : 0;
+        CreateNewLearningSpace(name, shortname, authors, description, goals, requiredPoints);
     }
 
     /// <summary>
@@ -246,12 +260,13 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         //optional arguments
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
+        var requiredPoints = data.ContainsKey("Required Points") && data["Required Points"] != "" && !data["Required Points"].StartsWith("e") ? int.Parse(data["Required Points"]) : 0;
 
         if (LearningWorldVm == null)
             throw new ApplicationException("LearningWorld is null");
         if (LearningWorldVm.SelectedLearningObject is not LearningSpaceViewModel)
             throw new ApplicationException("LearningObject is not a LearningSpace");
-        _learningSpacePresenter.EditLearningSpace(name, shortname, authors, description, goals);
+        _learningSpacePresenter.EditLearningSpace(name, shortname, authors, description, goals, requiredPoints);
     }
 
     #endregion

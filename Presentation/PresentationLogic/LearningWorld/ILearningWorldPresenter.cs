@@ -9,6 +9,7 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     bool CreateLearningSpaceDialogOpen { get; }
     bool EditLearningSpaceDialogOpen { get; }
     Dictionary<string, string>? EditSpaceDialogInitialValues { get; }
+    Dictionary<string, string>? EditSpaceDialogAnnotations { get; }
     Dictionary<string, string>? EditElementDialogInitialValues { get; }
     bool EditLearningElementDialogOpen { get; }
     bool CreateLearningElementDialogOpen { get; }

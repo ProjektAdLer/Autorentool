@@ -100,19 +100,20 @@ public interface IPresentationLogic
     /// <param name="learningWorldVm">Learning world to add the learning space in.</param>
     /// <param name="learningSpaceVm">Learning space to add.</param>
     void AddLearningSpace(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel learningSpaceVm);
-    
+
     /// <summary>
     /// Creates a new learning space in the given learning world with the corresponding command.
     /// </summary>
     /// <param name="learningWorldVm">Parent learning world of the learning space to create.</param>
+    /// <param name="name"></param>
     /// <param name="shortname"></param>
     /// <param name="authors"></param>
     /// <param name="description"></param>
     /// <param name="goals"></param>
-    /// <param name="name"></param>
+    /// <param name="requiredPoints"></param>
     void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name, string shortname,
-        string authors, string description, string goals);
-    
+        string authors, string description, string goals, int requiredPoints);
+
     /// <summary>
     /// Edits a given learning space in the given learning world with the corresponding command.
     /// </summary>
@@ -122,8 +123,9 @@ public interface IPresentationLogic
     /// <param name="authors"></param>
     /// <param name="description"></param>
     /// <param name="goals"></param>
+    /// <param name="requiredPoints"></param>
     void EditLearningSpace(ILearningSpaceViewModel learningSpaceVm, string name,
-        string shortname, string authors, string description, string goals);
+        string shortname, string authors, string description, string goals, int requiredPoints);
 
     /// <summary>
     /// Deletes the given learning space in the given learning world.

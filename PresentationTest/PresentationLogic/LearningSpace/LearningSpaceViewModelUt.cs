@@ -17,14 +17,15 @@ public class LearningSpaceViewModelUt
         var authors = "ben and jerry";
         var description = "very cool element";
         var goals = "learn very many things";
+        var requiredPoints = 10;
         var positionX = 5f;
         var positionY = 21f;
         var ele1 = new LearningElementViewModel("a", "b",  null!, "g", "h","i", LearningElementDifficultyEnum.Easy, null, 17,11, 23);
         var ele2 = new LearningElementViewModel("z", "zz",  null!, "z","zz","zzz", LearningElementDifficultyEnum.Hard, null, 444,12, double.MaxValue);
         var learningElements = new List<ILearningElementViewModel> { ele1, ele2 };
         
-        var systemUnderTest = new LearningSpaceViewModel(name, shortname, authors, description, goals, learningElements,
-            positionX, positionY);
+        var systemUnderTest = new LearningSpaceViewModel(name, shortname, authors, description, goals, requiredPoints, 
+            learningElements, positionX, positionY);
         
         Assert.Multiple(() =>
         {

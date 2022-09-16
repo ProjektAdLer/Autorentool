@@ -15,7 +15,7 @@ public class LoadLearningSpaceUt
     {
         var world = new LearningWorld("a", "b", "b", "b", "b", "b");
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var space = new LearningSpace("a", "b", "c", "d", "e");
+        var space = new LearningSpace("a", "b", "c", "d", "e", 5);
         const string filepath = "c:\\temp\\test";
         mockBusinessLogic.LoadLearningSpace(filepath).Returns(space);
         bool actionWasInvoked = false;
@@ -57,7 +57,7 @@ public class LoadLearningSpaceUt
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
-        var space = new LearningSpace("a", "b", "c", "d", "e");
+        var space = new LearningSpace("a", "b", "c", "d", "e", 5);
         mockBusinessLogic.LoadLearningSpace(Arg.Any<string>()).Returns(space);
         var command = new LoadLearningSpace(world, "space", mockBusinessLogic, mappingAction);
         

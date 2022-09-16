@@ -84,7 +84,7 @@ else
     @if (LearningWorldP.EditLearningSpaceDialogOpen && LearningWorldP.LearningWorldVm != null)
     {
         <!-- EditSpaceDialogInitialValues is set by presenter before setting EditLearningSpaceDialogOpen to true -->
-        @ModalDialogFactory.GetEditLearningSpaceFragment(LearningWorldP.EditSpaceDialogInitialValues!, OnEditSpaceDialogClose)
+        @ModalDialogFactory.GetEditLearningSpaceFragment(LearningWorldP.EditSpaceDialogInitialValues!, OnEditSpaceDialogClose, LearningWorldP.EditSpaceDialogAnnotations)
     }
 
     //edit element modal

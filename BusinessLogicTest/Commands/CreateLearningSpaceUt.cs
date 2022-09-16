@@ -18,10 +18,11 @@ public class CreateLearningSpaceUt
         var authors = "marvin";
         var description = "space for learning";
         var goals = "learning";
+        var requiredPoints = 10;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateLearningSpace(world, name, shortname, authors, description, goals, mappingAction);
+        var command = new CreateLearningSpace(world, name, shortname, authors, description, goals, requiredPoints, mappingAction);
         
         Assert.IsEmpty(world.LearningSpaces);
         Assert.IsFalse(actionWasInvoked);
@@ -45,7 +46,7 @@ public class CreateLearningSpaceUt
     public void Execute_AddsLearningSpace()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space = new LearningSpace("z","y","x","w","v");
+        var space = new LearningSpace("z","y","x","w","v", 5);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
@@ -70,10 +71,11 @@ public class CreateLearningSpaceUt
         var authors = "marvin";
         var description = "space for learning";
         var goals = "learning";
+        var requiredPoints = 10;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateLearningSpace(world, name, shortname, authors, description, goals, mappingAction);
+        var command = new CreateLearningSpace(world, name, shortname, authors, description, goals, requiredPoints, mappingAction);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -86,17 +88,18 @@ public class CreateLearningSpaceUt
     public void UndoRedo_UndoesAndRedoesCreateLearningSpace()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space = new LearningSpace("g", "h", "i", "j", "k");
+        var space = new LearningSpace("g", "h", "i", "j", "k", 5);
         world.LearningSpaces.Add(space);
         var name = "space1";
         var shortname = "sp1";
         var authors = "marvin";
         var description = "space for learning";
         var goals = "learning";
+        var requiredPoints = 10;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         
-        var command = new CreateLearningSpace(world, name, shortname, authors, description, goals, mappingAction);
+        var command = new CreateLearningSpace(world, name, shortname, authors, description, goals, requiredPoints, mappingAction);
         
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
         Assert.IsFalse(actionWasInvoked);

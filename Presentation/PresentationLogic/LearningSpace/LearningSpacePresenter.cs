@@ -25,11 +25,11 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 
     public LearningContentViewModel? DragAndDropLearningContent { get; private set; }
 
-    public void EditLearningSpace(string name, string shortname, string authors, string description, string goals)
+    public void EditLearningSpace(string name, string shortname, string authors, string description, string goals, int requiredPoints)
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("LearningSpaceVm is null");
-        _presentationLogic.EditLearningSpace(LearningSpaceVm, name, shortname, authors, description, goals);
+        _presentationLogic.EditLearningSpace(LearningSpaceVm, name, shortname, authors, description, goals, requiredPoints);
     }
 
     public bool EditLearningSpaceDialogOpen { get; set; }
@@ -72,10 +72,11 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         //optional arguments
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
+        var requiredPoints = data.ContainsKey("Required Points") && data["Required Points"] != "" && !data["Required Points"].StartsWith("e") ? int.Parse(data["Required Points"]) : 0;
 
         if (LearningSpaceVm == null)
             throw new ApplicationException("LearningSpaceVm is null");
-        _presentationLogic.EditLearningSpace(LearningSpaceVm, name, shortname, authors, description, goals);
+        _presentationLogic.EditLearningSpace(LearningSpaceVm, name, shortname, authors, description, goals, requiredPoints);
     }
 
     #endregion

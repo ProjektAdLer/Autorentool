@@ -21,9 +21,10 @@ public interface ILearningSpaceViewModalDialogFactory
     /// </summary>
     /// <param name="initialInputValues">The initial values for the input fields.</param>
     /// <param name="onCloseCallback">The callback that should be called upon closing the dialog.</param>
+    /// <param name="annotations"></param>
     /// <returns>A RenderFragment containing the dialog.</returns>
     RenderFragment GetEditLearningSpaceFragment(IDictionary<string, string> initialInputValues,
-        ModalDialogOnClose onCloseCallback);
+        ModalDialogOnClose onCloseCallback, IDictionary<string, string>? annotations = null);
     
     /// <summary>
     /// Dynamically generates a ModalDialog Render Fragment for a "Edit learning element" dialog with initial values.

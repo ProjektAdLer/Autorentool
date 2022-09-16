@@ -884,7 +884,7 @@ public class TestParameter
     internal TestParameter()
     {
         WorldParent = new LearningWorld("w", "x", "y", "z", "zz", "zzz");
-        SpaceParent = new LearningSpace("l", "m", "n", "o", "p");
+        SpaceParent = new LearningSpace("l", "m", "n", "o", "p", 0);
         Name = "a";
         ShortName = "b";
         Content = new("bar", "foo", new byte[] {0x01, 0x02});

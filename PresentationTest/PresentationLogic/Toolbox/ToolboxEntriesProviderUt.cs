@@ -78,7 +78,7 @@ public class ToolboxEntriesProviderUt
         
         var businessLogic = Substitute.For<IBusinessLogic>();
         var lwEntity = new BusinessLogic.Entities.LearningWorld("world", "foo", "foo", "foo", "foo", "foo");
-        var lsEntity = new BusinessLogic.Entities.LearningSpace("space", "foo", "foo", "foo", "foo");
+        var lsEntity = new BusinessLogic.Entities.LearningSpace("space", "foo", "foo", "foo", "foo", 5);
         var leEntity =
             new BusinessLogic.Entities.LearningElement("foo", "foo", null!, "foo",
                 "foo", "foo", LearningElementDifficultyEnum.Easy);
@@ -135,7 +135,7 @@ public class ToolboxEntriesProviderUt
         var leViewModel = new LearningElementViewModel("element", "foo", null!, "foo", "foo", "foo",LearningElementDifficultyEnum.Easy);
         
         var lwEntity = new BusinessLogic.Entities.LearningWorld("world", "foo", "foo", "foo", "foo", "foo");
-        var lsEntity = new BusinessLogic.Entities.LearningSpace("space", "foo", "foo", "foo", "foo");
+        var lsEntity = new BusinessLogic.Entities.LearningSpace("space", "foo", "foo", "foo", "foo", 5);
         var leEntity =
             new BusinessLogic.Entities.LearningElement("element", "foo", null!, "foo",
                 "foo", "foo", LearningElementDifficultyEnum.Easy);
@@ -191,7 +191,7 @@ public class ToolboxEntriesProviderUt
         });
         var businessLogic = Substitute.For<IBusinessLogic>();
         var lwEntity = new BusinessLogic.Entities.LearningWorld("world", "foo", "foo", "foo", "foo", "foo");
-        var lsEntity = new BusinessLogic.Entities.LearningSpace("space", "foo", "foo", "foo", "foo");
+        var lsEntity = new BusinessLogic.Entities.LearningSpace("space", "foo", "foo", "foo", "foo", 5);
         var leEntity =
             new BusinessLogic.Entities.LearningElement("element", "foo", null!,"foo",
                 "foo", null!, LearningElementDifficultyEnum.Easy);

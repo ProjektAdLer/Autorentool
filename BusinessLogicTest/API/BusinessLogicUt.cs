@@ -93,7 +93,7 @@ public class BusinessLogicUt
     [Test]
     public void SaveLearningSpace_CallsDataAccess()
     {
-        var learningSpace = new LearningSpace("fa", "a", "f", "f", "f");
+        var learningSpace = new LearningSpace("fa", "a", "f", "f", "f", 0);
         var mockDataAccess = Substitute.For<IDataAccess>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
@@ -118,7 +118,7 @@ public class BusinessLogicUt
     [Test]
     public void LoadLearningSpace_ReturnsLearningSpace()
     {
-        var learningSpace = new LearningSpace("fa", "a", "f", "f", "f");
+        var learningSpace = new LearningSpace("fa", "a", "f", "f", "f", 0);
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningSpace("foobar").Returns(learningSpace);
 
@@ -242,7 +242,7 @@ public class BusinessLogicUt
     [Test]
     public void LoadLearningSpaceFromStream_ReturnsLearningSpace()
     {
-        var learningSpace = new LearningSpace("fa", "a", "f", "f", "f");
+        var learningSpace = new LearningSpace("fa", "a", "f", "f", "f", 0);
         var stream = Substitute.For<Stream>();
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningSpace(stream).Returns(learningSpace);

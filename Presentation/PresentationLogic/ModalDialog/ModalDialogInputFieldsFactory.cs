@@ -73,7 +73,8 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
             new("Shortname", ModalDialogInputType.Text, true),
             new("Authors", ModalDialogInputType.Text),
             new("Description", ModalDialogInputType.Text, true),
-            new("Goals", ModalDialogInputType.Text)
+            new("Goals", ModalDialogInputType.Text),
+            new("Required Points", ModalDialogInputType.Number)
         };
 
     /// <inheritdoc cref="GetEditLearningSpaceInputFields"/>

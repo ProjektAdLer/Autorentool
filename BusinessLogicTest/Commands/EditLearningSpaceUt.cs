@@ -11,16 +11,17 @@ public class EditLearningSpaceUt
     [Test]
     public void Execute_EditsLearningSpace()
     {
-        var space = new LearningSpace("a", "b", "c", "d", "e");
+        var space = new LearningSpace("a", "b", "c", "d", "e", 5);
         var name = "space1";
         var shortname = "sp1";
         var authors = "marvin";
         var description = "space for learning";
         var goals = "learning";
+        var requiredPoints = 10;
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new EditLearningSpace(space, name, shortname, authors, description, goals, mappingAction);
+        var command = new EditLearningSpace(space, name, shortname, authors, description, goals, requiredPoints, mappingAction);
         
         Assert.Multiple(() =>
         {
@@ -48,16 +49,17 @@ public class EditLearningSpaceUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var space = new LearningSpace("a", "b", "c", "d", "e");
+        var space = new LearningSpace("a", "b", "c", "d", "e", 5);
         var name = "space1";
         var shortname = "sp1";
         var authors = "marvin";
         var description = "space for learning";
         var goals = "learning";
+        var requiredPoints = 10;
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new EditLearningSpace(space, name, shortname, authors, description, goals, mappingAction);
+        var command = new EditLearningSpace(space, name, shortname, authors, description, goals, requiredPoints, mappingAction);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -67,16 +69,17 @@ public class EditLearningSpaceUt
     [Test]
     public void UndoRedo_UndoesAndRedoesEditLearningSpace()
     {
-        var space = new LearningSpace("g", "h", "i", "j", "k");
+        var space = new LearningSpace("g", "h", "i", "j", "k", 5);
         var name = "space1";
         var shortname = "sp1";
         var authors = "marvin";
         var description = "space for learning";
         var goals = "learning";
+        var requiredPoints = 10;
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
         
-        var command = new EditLearningSpace(space, name, shortname, authors, description, goals, mappingAction);
+        var command = new EditLearningSpace(space, name, shortname, authors, description, goals, requiredPoints, mappingAction);
         
         Assert.Multiple(() =>
         {

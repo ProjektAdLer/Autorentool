@@ -21,7 +21,7 @@ public class LearningWorldUt
         var ele1 = new LearningElement("a", "b", content1, "pupup", "g","h",LearningElementDifficultyEnum.Easy, null, 17,21, 23);
         var ele2 = new LearningElement("z", "zz", content2,"baba", "z","zz",LearningElementDifficultyEnum.Medium, null, 444,12, double.MaxValue);
         var learningElements = new List<LearningElement> { ele1, ele2 };
-        var space1 = new LearningSpace("ff", "ff", "ff", "ff", "ff");
+        var space1 = new LearningSpace("ff", "ff", "ff", "ff", "ff", 5);
         var learningSpaces = new List<LearningSpace> { space1 };
 
         var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals,
@@ -54,7 +54,7 @@ public class LearningWorldUt
         var ele1 = new LearningElement("a", "b", content1, "pupup", "g","h",LearningElementDifficultyEnum.Easy, null, 17,65, 23);
         var ele2 = new LearningElement("z", "zz", content2,"baba", "z","zz",LearningElementDifficultyEnum.Medium, null, 444, 56,double.MaxValue);
         var learningElements = new List<LearningElement> { ele1, ele2 };
-        var space1 = new LearningSpace("ff", "ff", "ff", "ff", "ff");
+        var space1 = new LearningSpace("ff", "ff", "ff", "ff", "ff", 5);
         var learningSpaces = new List<LearningSpace> { space1 };
         
         var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, learningElements, learningSpaces);
@@ -69,7 +69,7 @@ public class LearningWorldUt
         var goalsChanged = "new goals";
         var newContent2 = new LearningContent("w", "e", new byte[]{0x08,0x02});
         var newEle2 = new LearningElement("uu", "iii", newContent2,"lll", "kkk","fff", LearningElementDifficultyEnum.Hard, null, 77, 33,66);
-        var space2 = new LearningSpace("gg", "gg", "gg", "gg", "gg");
+        var space2 = new LearningSpace("gg", "gg", "gg", "gg", "gg", 5);
 
         
         systemUnderTest.Name = nameChanged;
@@ -131,7 +131,7 @@ public class LearningWorldUt
         var ele1 = new LearningElement("a", "b", content1, "pupup", "g","h",LearningElementDifficultyEnum.Easy, null, 17, 12,23);
         var ele2 = new LearningElement("z", "zz", content2,"baba", "z","zz",LearningElementDifficultyEnum.Medium, null, 444, 11,double.MaxValue);
         var learningElements = new List<LearningElement> { ele1, ele2 };
-        var space1 = new LearningSpace("ff", "ff", "ff", "ff", "ff");
+        var space1 = new LearningSpace("ff", "ff", "ff", "ff", "ff", 5);
         var learningSpaces = new List<LearningSpace> { space1 };
         
         var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, learningElements, learningSpaces);

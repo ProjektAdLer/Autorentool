@@ -81,10 +81,10 @@ public class LearningWorldPresenterUt
         systemUnderTest.SetLearningWorld(null, world);
         systemUnderTest.LearningWorldVm?.LearningSpaces.Add(space);
 
-        systemUnderTest.CreateNewLearningSpace("foo", "bar", "foo", "bar", "foo");
+        systemUnderTest.CreateNewLearningSpace("foo", "bar", "foo", "bar", "foo", 5);
 
         presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>());
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int>());
     }
 
     [Test]
@@ -177,6 +177,7 @@ public class LearningWorldPresenterUt
         dictionary["Description"] = "d";
         dictionary["Authors"] = "a";
         dictionary["Goals"] = "g";
+        dictionary["Required Points"] = "10";
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
@@ -185,7 +186,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnCreateSpaceDialogClose(returnValueTuple);
 
-        presentationLogic.Received().CreateLearningSpace(world, "n", "sn", "a", "d", "g");
+        presentationLogic.Received().CreateLearningSpace(world, "n", "sn", "a", "d", "g", 10);
     }
 
     [Test]
@@ -806,6 +807,7 @@ public class LearningWorldPresenterUt
         dictionary["Description"] = "d";
         dictionary["Authors"] = "a";
         dictionary["Goals"] = "g";
+        dictionary["Required Points"] = "10";
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
@@ -816,7 +818,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnEditSpaceDialogClose(returnValueTuple);
 
-        spacePresenter.Received().EditLearningSpace("n", "sn", "a", "d", "g");
+        spacePresenter.Received().EditLearningSpace("n", "sn", "a", "d", "g", 10);
     }
     
     [Test]
@@ -1066,6 +1068,11 @@ public class LearningWorldPresenterUt
             Assert.That(systemUnderTest.EditSpaceDialogInitialValues["Authors"], Is.EqualTo(space.Authors));
             Assert.That(systemUnderTest.EditSpaceDialogInitialValues["Description"], Is.EqualTo(space.Description));
             Assert.That(systemUnderTest.EditSpaceDialogInitialValues["Goals"], Is.EqualTo(space.Goals));
+            Assert.That(systemUnderTest.EditSpaceDialogInitialValues["Required Points"], Is.EqualTo(space.RequiredPoints.ToString()));
+            
+            Assert.That(systemUnderTest.EditSpaceDialogAnnotations, Is.Not.Null);
+            Assert.That(systemUnderTest.EditSpaceDialogAnnotations!.Count, Is.EqualTo(1));
+            Assert.That(systemUnderTest.EditSpaceDialogAnnotations["Required Points"], Is.EqualTo("/"+space.Points));
         });
     }
 

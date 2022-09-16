@@ -15,6 +15,7 @@ public class LearningSpaceUt
         var authors = "ben and jerry";
         var description = "very cool element";
         var goals = "learn very many things";
+        var requiredPoints = 10;
         var positionX = 5f;
         var positionY = 21f;
         var content1 = new LearningContent("a", "b", new byte[]{0x01,0x02});
@@ -23,8 +24,8 @@ public class LearningSpaceUt
         var ele2 = new LearningElement("z", "zz", content2,"baba", "z","zz", LearningElementDifficultyEnum.Medium, null, 444, 9,double.MaxValue);
         var learningElements = new List<LearningElement> { ele1, ele2 };
         
-        var systemUnderTest = new LearningSpace(name, shortname, authors, description, goals, learningElements,
-            positionX, positionY);
+        var systemUnderTest = new LearningSpace(name, shortname, authors, description, goals, requiredPoints, 
+            learningElements, positionX, positionY);
         
         Assert.Multiple(() =>
         {
@@ -47,6 +48,7 @@ public class LearningSpaceUt
         var authors = "ben and jerry";
         var description = "very cool element";
         var goals = "learn very many things";
+        var requiredPoints = 10;
         var positionX = 5f;
         var positionY = 21f;
         var content1 = new LearningContent("a", "b", new byte[]{0x01,0x02});
@@ -55,8 +57,8 @@ public class LearningSpaceUt
         var ele2 = new LearningElement("z", "zz", content2,"baba", "z","zz", LearningElementDifficultyEnum.Medium, null, 444,9, double.MaxValue);
         var learningElements = new List<LearningElement> { ele1, ele2 };
         
-        var systemUnderTest = new LearningSpace(name, shortname, authors, description, goals, learningElements,
-            positionX, positionY);
+        var systemUnderTest = new LearningSpace(name, shortname, authors, description, goals, requiredPoints, 
+            learningElements, positionX, positionY);
 
         var learningSpaceMemento = systemUnderTest.GetMemento();
         
@@ -119,6 +121,7 @@ public class LearningSpaceUt
         var authors = "ben and jerry";
         var description = "very cool element";
         var goals = "learn very many things";
+        var requiredPoints = 10;
         var positionX = 5f;
         var positionY = 21f;
         var content1 = new LearningContent("a", "b", new byte[]{0x01,0x02});
@@ -127,8 +130,8 @@ public class LearningSpaceUt
         var ele2 = new LearningElement("z", "zz", content2,"baba", "z","zz", LearningElementDifficultyEnum.Medium, null, 444,34, double.MaxValue);
         var learningElements = new List<LearningElement> { ele1, ele2 };
         
-        var systemUnderTest = new LearningSpace(name, shortname, authors, description, goals, learningElements,
-            positionX, positionY);
+        var systemUnderTest = new LearningSpace(name, shortname, authors, description, goals, requiredPoints, 
+            learningElements, positionX, positionY);
 
         var mementoMock = new MementoMock();
         

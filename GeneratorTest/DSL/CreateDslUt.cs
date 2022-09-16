@@ -28,9 +28,9 @@ public class CreateDslUt
         var ele2 = new LearningElementPe("z", "zz", content2,"baba", "z","zz", LearningElementDifficultyEnumPe.Easy, 444, 3,double.MaxValue);
         var ele3 = new LearningElementPe("a", "b",content1, "pupup", "g","h", LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
         var learningElements = new List<LearningElementPe> { ele1, ele2 };
-        var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff");
+        var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5);
         space1.LearningElements.Add(ele3);
-        var space2 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff");
+        var space2 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5);
         var learningSpaces = new List<LearningSpacePe> { space1, space2 };
 
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals,

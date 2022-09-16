@@ -16,12 +16,13 @@ public class LearningSpace : ILearningSpace, IOriginator
         Authors = "";
         Description = "";
         Goals = "";
+        RequiredPoints = 0;
         LearningElements = new List<LearningElement>();
         PositionX = 0;
         PositionY = 0;
     }
     public LearningSpace(string name, string shortname, string authors, string description,
-        string goals, List<LearningElement>? learningElements = null, double positionX = 0, double positionY = 0)
+        string goals, int requiredPoints, List<LearningElement>? learningElements = null, double positionX = 0, double positionY = 0)
     {
         Id = Guid.NewGuid();
         Name = name;
@@ -29,6 +30,7 @@ public class LearningSpace : ILearningSpace, IOriginator
         Authors = authors;
         Description = description;
         Goals = goals;
+        RequiredPoints = requiredPoints;
         LearningElements = learningElements ?? new List<LearningElement>();
         PositionX = positionX;
         PositionY = positionY;
@@ -41,6 +43,7 @@ public class LearningSpace : ILearningSpace, IOriginator
     public string Authors { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
+    public int RequiredPoints { get; set; }
     public List<LearningElement> LearningElements { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
