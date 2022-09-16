@@ -21,6 +21,17 @@ public class LoadLearningWorld : IUndoCommand
         _businessLogic = businessLogic;
         _mappingAction = mappingAction;
     }
+    
+    public LoadLearningWorld(AuthoringToolWorkspace workspace, Stream stream, IBusinessLogic businessLogic,
+        Action<AuthoringToolWorkspace> mappingAction)
+    {
+        _filepath = "";
+        _workspace = workspace;
+        _businessLogic = businessLogic;
+        _learningWorld = _businessLogic.LoadLearningWorld(stream);
+        _mappingAction = mappingAction;
+    }
+    
     public void Execute()
     {
         _memento = _workspace.GetMemento();

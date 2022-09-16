@@ -798,7 +798,7 @@ public class AuthoringToolWorkspacePresenterUt
         switch (ending)
         {
             case "awf":
-                presentationLogic.Received().LoadLearningWorldViewModel(stream);
+                presentationLogic.Received().LoadLearningWorldViewModel(authoringToolWorkspace, stream);
                 break;
             case "asf":
                 presentationLogic.Received().LoadLearningSpaceViewModel(stream);
@@ -920,34 +920,28 @@ public class AuthoringToolWorkspacePresenterUt
     {
         var authoringToolWorkspace = new AuthoringToolWorkspaceViewModel();
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        presentationLogic.LoadLearningWorldViewModel(Arg.Any<Stream>())
-            .Returns(new LearningWorldViewModel("n", "sn", "a", "l", "d", "g"));
         var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspace, presentationLogic);
         var stream = Substitute.For<Stream>();
 
         systemUnderTest.LoadLearningWorldFromFileStream(stream);
 
-        presentationLogic.Received().LoadLearningWorldViewModel(stream);
+        presentationLogic.Received().LoadLearningWorldViewModel(authoringToolWorkspace, stream);
     }
 
     [Test]
-    [TestCase(true)]
-    [TestCase(false)]
-    public void LoadLearningWorldFromFileStream_AddsAndSetSelectedLearningWorld(
-        bool otherLearningWorldWasSelected)
+    public void LoadLearningWorldFromFileStream_CallsEventHandler()
     {
         var authoringToolWorkspace = new AuthoringToolWorkspaceViewModel();
-        var existingLearningWorld = new LearningWorldViewModel("existing", "x", "x", "x", "x", "x");
-        authoringToolWorkspace._learningWorlds.Add(existingLearningWorld);
-        if (otherLearningWorldWasSelected)
-        {
-            authoringToolWorkspace.SelectedLearningWorld = existingLearningWorld;
-        }
-
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var newLearningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
-        presentationLogic.LoadLearningWorldViewModel(Arg.Any<Stream>())
-            .Returns(newLearningWorld);
+        presentationLogic
+            .When(x => x.LoadLearningWorldViewModel(Arg.Any<IAuthoringToolWorkspaceViewModel>(), Arg.Any<Stream>()))
+            .Do(y =>
+            {
+                y.Arg<IAuthoringToolWorkspaceViewModel>().LearningWorlds.Add(newLearningWorld);
+                y.Arg<IAuthoringToolWorkspaceViewModel>().SelectedLearningWorld = newLearningWorld;
+            });
+        
         var stream = Substitute.For<Stream>();
         var callbackCalled = false;
         LearningWorldViewModel? callbackSelectedWorld = null;
@@ -959,28 +953,13 @@ public class AuthoringToolWorkspacePresenterUt
         };
         systemUnderTest.OnLearningWorldSelect += callback;
 
-        if (otherLearningWorldWasSelected)
-        {
-            Assert.That(authoringToolWorkspace.SelectedLearningWorld, Is.EqualTo(existingLearningWorld));
-        }
-        else
-        {
-            Assert.That(authoringToolWorkspace.SelectedLearningWorld, Is.Null);
-        }
-
         systemUnderTest.LoadLearningWorldFromFileStream(stream);
-
-        Assert.That(callbackCalled, Is.True);
-        if (otherLearningWorldWasSelected)
+        
+        Assert.Multiple(() =>
         {
-            Assert.That(authoringToolWorkspace.SelectedLearningWorld, Is.EqualTo(existingLearningWorld));
-            Assert.That(callbackSelectedWorld, Is.EqualTo(existingLearningWorld));
-        }
-        else
-        {
-            Assert.That(authoringToolWorkspace.SelectedLearningWorld, Is.EqualTo(newLearningWorld));
+            Assert.That(callbackCalled, Is.True);
             Assert.That(callbackSelectedWorld, Is.EqualTo(newLearningWorld));
-        }
+        });
     }
 
     [Test]

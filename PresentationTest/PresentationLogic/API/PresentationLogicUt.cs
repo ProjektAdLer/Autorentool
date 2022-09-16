@@ -1375,20 +1375,15 @@ public class PresentationLogicUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockLearningWorld = new BusinessLogic.Entities.LearningWorld("n", "sn", "a", "l", "d", "g");
         mockBusinessLogic.LoadLearningWorld(Arg.Any<Stream>()).Returns(mockLearningWorld);
-        var mockLearningWorldViewModel = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
-        var mockMapper = Substitute.For<IMapper>();
-        mockMapper.Map<LearningWorldViewModel>(Arg.Any<BusinessLogic.Entities.LearningWorld>())
-            .Returns(mockLearningWorldViewModel);
+        var workspace = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         var stream = Substitute.For<Stream>();
 
         var systemUnderTest =
-            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
-        var result = systemUnderTest.LoadLearningWorldViewModel(stream);
+        systemUnderTest.LoadLearningWorldViewModel(workspace, stream);
 
         mockBusinessLogic.Received().LoadLearningWorld(stream);
-        mockMapper.Received().Map<LearningWorldViewModel>(mockLearningWorld);
-        Assert.That(result, Is.EqualTo(mockLearningWorldViewModel));
     }
 
     [Test]
@@ -1396,11 +1391,12 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.LoadLearningWorld(Arg.Any<Stream>()).Throws(new Exception("Exception"));
+        var workspace = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         var stream = Substitute.For<Stream>();
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
-        var ex = Assert.Throws<Exception>(() => systemUnderTest.LoadLearningWorldViewModel(stream));
+        var ex = Assert.Throws<Exception>(() => systemUnderTest.LoadLearningWorldViewModel(workspace, stream));
         Assert.That(ex, Is.Not.Null);
         Assert.That(ex?.Message, Is.EqualTo("Exception"));
     }

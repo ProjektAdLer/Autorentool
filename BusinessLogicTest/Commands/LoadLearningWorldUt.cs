@@ -37,6 +37,34 @@ public class LoadLearningWorldUt
             Assert.That(actionWasInvoked, Is.True);
         });
     }
+    
+    [Test]
+    public void Execute_LoadsLearningWorld_WithStream()
+    {
+        var authoringToolWorkspace = new AuthoringToolWorkspace(null, new List<LearningWorld>());
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var world = new LearningWorld("a", "b", "b", "b", "b", "b");
+        var stream = Substitute.For<Stream>();
+        mockBusinessLogic.LoadLearningWorld(stream).Returns(world);
+        bool actionWasInvoked = false;
+        Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
+
+        var command = new LoadLearningWorld(authoringToolWorkspace, stream, mockBusinessLogic, mappingAction);
+        Assert.Multiple(() =>
+        {
+            Assert.That(authoringToolWorkspace.LearningWorlds, Is.Empty);
+            Assert.That(actionWasInvoked, Is.False);
+        });
+        command.Execute();
+        
+        mockBusinessLogic.Received().LoadLearningWorld(stream);
+        Assert.That(authoringToolWorkspace.LearningWorlds, Has.Count.EqualTo(1));
+        Assert.Multiple(() =>
+        {
+            Assert.That(authoringToolWorkspace.LearningWorlds[0], Is.EqualTo(world));
+            Assert.That(actionWasInvoked, Is.True);
+        });
+    }
 
     [Test]
     public void Undo_MementoIsNull_ThrowsException()

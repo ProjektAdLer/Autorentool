@@ -262,7 +262,7 @@ public interface IPresentationLogic
     Task<LearningContentViewModel> LoadTextAsync();
 
     LearningContentViewModel LoadLearningContentViewModel(string name, Stream stream);
-    LearningWorldViewModel LoadLearningWorldViewModel(Stream stream);
+    void LoadLearningWorldViewModel(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, Stream stream);
     ILearningSpaceViewModel LoadLearningSpaceViewModel(Stream stream);
     ILearningElementViewModel LoadLearningElementViewModel(Stream stream);
 }

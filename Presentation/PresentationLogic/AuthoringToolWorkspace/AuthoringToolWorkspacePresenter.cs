@@ -310,12 +310,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
 
     internal void LoadLearningWorldFromFileStream(Stream stream)
     {
-        //TODO: refactor this method to use a load command
-        var learningWorld =
-            _presentationLogic.LoadLearningWorldViewModel(stream);
-
-        AuthoringToolWorkspaceVm.LearningWorlds.Add(learningWorld);
-        AuthoringToolWorkspaceVm.SelectedLearningWorld ??= learningWorld;
+        _presentationLogic.LoadLearningWorldViewModel(AuthoringToolWorkspaceVm, stream);
         OnLearningWorldSelect?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
     }
 

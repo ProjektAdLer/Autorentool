@@ -309,10 +309,12 @@ public class PresentationLogic : IPresentationLogic
         return Mapper.Map<LearningContentViewModel>(entity);
     }
 
-    public LearningWorldViewModel LoadLearningWorldViewModel(Stream stream)
+    public void LoadLearningWorldViewModel(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, Stream stream)
     {
-        var world = BusinessLogic.LoadLearningWorld(stream);
-        return Mapper.Map<LearningWorldViewModel>(world);
+        var workspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
+        var command = new LoadLearningWorld(workspaceEntity, stream, BusinessLogic,
+            workspace => Mapper.Map(workspace, authoringToolWorkspaceVm));
+        BusinessLogic.ExecuteCommand(command);
     }
 
     public ILearningSpaceViewModel LoadLearningSpaceViewModel(Stream stream)
