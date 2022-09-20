@@ -112,7 +112,8 @@ public class PresentationLogic : IPresentationLogic
         SaveOrLoadElectronCheck();
         var filepath = await GetSaveFilepathAsync("Save Learning World", WorldFileEnding, WorldFileFormatDescriptor);
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldViewModel);
-        BusinessLogic.SaveLearningWorld(worldEntity, filepath);
+        var command = new SaveLearningWorld(BusinessLogic, worldEntity, filepath);
+        BusinessLogic.ExecuteCommand(command);
         learningWorldViewModel.UnsavedChanges = false;
     }
 

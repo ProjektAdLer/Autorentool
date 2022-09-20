@@ -18,7 +18,6 @@ public class SaveLearningElementUt
         var parent  = new LearningWorld("a", "b","c","d","e","f");
         var element = new LearningElement("a", "b", null!, "c", "d", "e", LearningElementDifficultyEnum.Easy,parent);
         const string filepath = "c:\\temp\\test";
-        mockBusinessLogic.LoadLearningElement(filepath).Returns(element);
         
         var command = new SaveLearningElement(mockBusinessLogic, element, filepath);
         

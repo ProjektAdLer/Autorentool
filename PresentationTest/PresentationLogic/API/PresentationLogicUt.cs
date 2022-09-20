@@ -439,7 +439,10 @@ public class PresentationLogicUt
     [Test]
     public async Task SaveLearningWorldAsync_CallsDialogManagerAndWorldMapperAndBusinessLogic()
     {
+        SaveLearningWorld? command = null;
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
+            Do(sub => command = sub.Arg<ICommand>() as SaveLearningWorld);
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(true);
         var mockMapper = Substitute.For<IMapper>();
@@ -461,7 +464,8 @@ public class PresentationLogicUt
 
         await mockDialogManger.Received().ShowSaveAsDialogAsync("Save Learning World", null, Arg.Any<IEnumerable<FileFilterProxy>>());
         mockMapper.Received().Map<BusinessLogic.Entities.LearningWorld>(learningWorld);
-        mockBusinessLogic.Received().SaveLearningWorld(entity, filepath+".awf");
+        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
+        Assert.That(command, Is.Not.Null);
     }
 
     [Test]

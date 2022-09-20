@@ -8,19 +8,19 @@ namespace BusinessLogicTest.Commands;
 
 [TestFixture]
 
-public class SaveLearningSpaceUt
+public class SaveLearningWorldUt
 {
     [Test]
     public void Execute_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var space = new LearningSpace("a", "b", "c", "d", "e", 5);
-        const string filepath = "c:\\temp\\test";
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
+        const string filepath = "filepath";
         
-        var command = new SaveLearningSpace(mockBusinessLogic, space, filepath);
+        var command = new SaveLearningWorld(mockBusinessLogic, world, filepath);
         
         command.Execute();
         
-        mockBusinessLogic.Received().SaveLearningSpace(space,filepath);
+        mockBusinessLogic.Received().SaveLearningWorld(world, filepath);
     }
 }
