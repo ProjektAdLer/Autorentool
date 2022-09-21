@@ -34,6 +34,7 @@ public class LanguageProviderUt
         Assert.That(LanguageProvider.LanguageProvider.GetContent("SecondTable", "SecondKey"), Is.EqualTo("Second Database, Second Table, Second Key"));
         Assert.That(LanguageProvider.LanguageProvider.GetContent("SecondTable", "table_empty"), Is.EqualTo(false.ToString()));
         Directory.SetCurrentDirectory("../");
+        LanguageProvider.LanguageProvider.Unload();
     }
 
     [TestCase(".FirstTestDatabase")]
@@ -42,14 +43,72 @@ public class LanguageProviderUt
     [TestCase("F/irstTestDatabase")]
     [TestCase("\\FirstTestDatabase")]
     [TestCase("$FirstTestD%atabase")]
-    public void LanguageProvider_SetLanguage_ThrowsException_ForInvalidFileName(string databaseName)
+    public void LanguageProvider_SetLanguage_ThrowsException_ForInvalidFormattedFileName(string databaseName)
     {
         Directory.SetCurrentDirectory("./LanguageProvider/");
 
         Assert.Throws<DatabaseNameFormatException>(() => { LanguageProvider.LanguageProvider.SetLanguage(databaseName);}, "Name Included a not alphanumeric character");
         Directory.SetCurrentDirectory("../");
+        LanguageProvider.LanguageProvider.Unload();
+    }
+
+    [TestCase("skazzle")]
+    [TestCase("bazzle")]
+    [TestCase("root")]
+    public void LanguageProvider_SetLanguage_ThrowsException_ForInvalidFileName_WithCorrectFileNameFormatting(string databaseName)
+    {
+        Directory.SetCurrentDirectory("./LanguageProvider/");
+        var pathToDatabase = $"{Directory.GetCurrentDirectory()}/LanguageProvider/Database/{databaseName}.toml";
+        Assert.Throws<DatabaseNotFoundException>(() => { LanguageProvider.LanguageProvider.SetLanguage(databaseName);}, $"DATABASE_NOT_FOUND: Failed to find Database in '{pathToDatabase}'!");
+        Directory.SetCurrentDirectory("../");
+        LanguageProvider.LanguageProvider.Unload();
     }
     
+    [TestCase("ThirdTestDatabase")]
+    public void LanguageProvider_SetLanguage_ThrowsException_ForInvalidDatabaseFormatting(string databaseName)
+    {
+        Directory.SetCurrentDirectory("./LanguageProvider/");
+
+        Assert.Throws<DatabaseParseException>(() => { LanguageProvider.LanguageProvider.SetLanguage(databaseName);}, $"DATABASE_PARSING_ERROR:Failed to Load Database '{databaseName}.toml'!");
+        Directory.SetCurrentDirectory("../");
+        LanguageProvider.LanguageProvider.Unload();
+    }
+
+    [Test]
+    public void LanguageProvider_GetContent_ThrowsInnerException_ForNoLoadedDatabase()
+    {
+        Directory.SetCurrentDirectory("./LanguageProvider/");
+        Assert.That(LanguageProvider.LanguageProvider.GetContent("test", "test") , Is.EqualTo("DATABASE_NULL_EXCEPTION: No Database loaded into memory!"));
+        Directory.SetCurrentDirectory("../");
+        LanguageProvider.LanguageProvider.Unload();
+    }
+    
+    [TestCase("FourthTestDatabase")]
+    public void LanguageProvider_GetContent_ThrowsInnerException_ForLookingUpEmptyTable(string databaseName)
+    {
+        Directory.SetCurrentDirectory("./LanguageProvider/");
+        var spaceName = "test";
+        LanguageProvider.LanguageProvider.SetLanguage(databaseName);
+        Assert.That(LanguageProvider.LanguageProvider.GetContent(spaceName, "test") , Is.EqualTo($"DATABASE_EMPTY_TABLE_EXCEPTION: '{spaceName}' in '{databaseName}' was empty!"));
+        Directory.SetCurrentDirectory("../");
+        LanguageProvider.LanguageProvider.Unload();
+    }
+    
+    [TestCase("FourthTestDatabase")]
+    public void LanguageProvider_GetContent_ThrowsInnerException_(string databaseName)
+    {
+        Directory.SetCurrentDirectory("./LanguageProvider/");
+        var spaceName = "FirstTable";
+        var tagName = "test";
+        LanguageProvider.LanguageProvider.SetLanguage(databaseName);
+        Assert.That(LanguageProvider.LanguageProvider.GetContent(spaceName, tagName) , Is.EqualTo($"DATABASE_LOOKUP_EXCEPTION: '{tagName}' was not found in '{spaceName}'"));
+        Directory.SetCurrentDirectory("../");
+        LanguageProvider.LanguageProvider.Unload();
+    }
+    
+
 }
+
+
 
 

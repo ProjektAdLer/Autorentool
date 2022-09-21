@@ -1165,19 +1165,19 @@
       "businesslogic": {
         "type": "Project",
         "dependencies": {
-          "Shared": "1.0.0"
+          "Shared": "[1.0.0, )"
         }
       },
       "electronwrapper": {
         "type": "Project",
         "dependencies": {
-          "ElectronNET.API": "13.5.1"
+          "ElectronNET.API": "[13.5.1, )"
         }
       },
       "shared": {
         "type": "Project",
         "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "6.0.1"
+          "Microsoft.Extensions.Logging.Abstractions": "[6.0.1, )"
         }
       }
     },

@@ -1,0 +1,8 @@
+#this is the fourth Test Database
+
+[test]
+table_empty = true
+
+[FirstTable]
+baz = "foo"
+table_empty = false

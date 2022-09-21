@@ -10,6 +10,8 @@ namespace LanguageProvider
         static readonly string _mFileExtension = ".toml";
         private static TomlTable? _mDatabase = null;
 
+        
+
         public static void SetLanguage(string databaseName)
         {
             if (IsAlphaNumeric(databaseName))
@@ -19,7 +21,7 @@ namespace LanguageProvider
             }
             else
             {
-                throw new Exceptions.DatabaseNameFormatException("Name Included a not alphanumeric character");
+                throw new Exceptions.DatabaseNameFormatException($"DATABASE_NAME_FORMAT_EXCEPTION: Name Included a not alphanumeric character");
             }
         }
 
@@ -41,23 +43,23 @@ namespace LanguageProvider
                 {
                     if (_mDatabase[spaceName]["table_empty"].AsBoolean)
                     {
-                        throw new Exceptions.DatabaseEmptyTableException($"DatabaseEmptyTableException: '{spaceName}' was empty!");
+                        throw new Exceptions.DatabaseEmptyTableException($"DATABASE_EMPTY_TABLE_EXCEPTION: '{spaceName}' in '{_mLanguage}' was empty!");
                     }
                     else
                     {
                         try
                         {
-                            output = _mDatabase[spaceName][tagName].ToString();
+                            output = _mDatabase[spaceName][tagName].AsString;
                         }
                         catch (Exception errorMessage)
                         {
-                            throw new Exceptions.DatabaseLookupException($"DatabaseLookupException: '{tagName}' was not found in '{spaceName}'");
+                            throw new Exceptions.DatabaseLookupException($"DATABASE_LOOKUP_EXCEPTION: '{tagName}' was not found in '{spaceName}'");
                         }
                     }
                 }
                 else
                 {
-                    throw new Exceptions.DatabaseLoadException($"Failed to Load Database '{_mPathToDatabaseDirectory + _mLanguage + _mFileExtension}'");
+                    throw new Exceptions.DatabaseNullException($"DATABASE_NULL_EXCEPTION: No Database loaded into memory!");
                 }
             }
             catch (Exceptions.LanguageProviderBaseException error)
@@ -73,20 +75,43 @@ namespace LanguageProvider
             string pathToDatabase = _mPathToDatabaseDirectory + _mLanguage + _mFileExtension;
             try
             {
-                using (StreamReader reader = File.OpenText(pathToDatabase))
+                if (File.Exists(pathToDatabase))
                 {
-                    _mDatabase = TOML.Parse(reader);
+                    using (StreamReader reader = File.OpenText(pathToDatabase))
+                    {
+                        _mDatabase = TOML.Parse(reader);
+                    }
                 }
+                else
+                {
+                    throw new Exceptions.DatabaseNotFoundException($"DATABASE_NOT_FOUND: Failed to find Database in '{pathToDatabase}'!");
+                }
+                
             }
             catch (Exception error)
             {
                 Console.WriteLine(error);
-                throw new Exceptions.DatabaseLoadException(error.Message);
+
+                if (error.GetType() == typeof(TomlParseException))
+                {
+                    throw new Exceptions.DatabaseParseException($"DATABASE_PARSING_ERROR:Failed to Load Database '{_mLanguage + _mFileExtension}'!");
+                }
+                else if (error.GetType() == typeof(Exceptions.DatabaseNotFoundException))
+                {
+                    throw new Exceptions.DatabaseNotFoundException(error.Message);
+                }
             }
+        }
+        
+        //for testing only
+        public static void Unload()
+        {
+            _mLanguage = "";
+            _mDatabase = null;
         }
         private static bool IsAlphaNumeric(string strToCheck)
         {
-            Regex rg = new Regex(@"^[a-zA-Z0-9\s,]*$");
+            Regex rg = new Regex(@"^[a-zA-Z0-9\s]*$");
             return rg.IsMatch(strToCheck);
         }
     }
@@ -103,13 +128,43 @@ namespace LanguageProvider
             {
             }
         }
-        public class DatabaseLoadException : LanguageProviderBaseException
+        public class DatabaseLoaderException : LanguageProviderBaseException
         {
-            public DatabaseLoadException() : base()
+            public DatabaseLoaderException() : base()
             {
             }
 
-            public DatabaseLoadException(string message) : base(message)
+            public DatabaseLoaderException(string message) : base(message)
+            {
+            }
+        }
+        public class DatabaseParseException : DatabaseLoaderException
+        {
+            public DatabaseParseException() : base()
+            {
+            }
+
+            public DatabaseParseException(string message) : base(message)
+            {
+            }
+        }
+        public class DatabaseNullException : DatabaseLoaderException
+        {
+            public DatabaseNullException() : base()
+            {
+            }
+
+            public DatabaseNullException(string message) : base(message)
+            {
+            }
+        }
+        public class DatabaseNotFoundException : DatabaseLoaderException
+        {
+            public DatabaseNotFoundException() : base()
+            {
+            }
+
+            public DatabaseNotFoundException(string message) : base(message)
             {
             }
         }

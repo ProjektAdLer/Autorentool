@@ -1,14 +1,11 @@
 ##this is the first Test Database
 
 [FirstTable]
-FirstKey="First Database, First Table, First Key"
-SecondKey="First Database, First Table, Second Key"
+FirstKey = "First Database, First Table, First Key"
+SecondKey = "First Database, First Table, Second Key"
 table_empty = false
 
 [SecondTable]
-FirstKey="First Database, Second Table, First Key"
-SecondKey="First Database, Second Table, Second Key"
+FirstKey = "First Database, Second Table, First Key"
+SecondKey = "First Database, Second Table, Second Key"
 table_empty = false
-
-[ThirdTable]
-table_empty = true

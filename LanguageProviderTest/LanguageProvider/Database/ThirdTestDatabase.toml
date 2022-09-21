@@ -1,0 +1,9 @@
+##this is the third Test Database
+
+[FirstTable
+table_empty = false
+
+[SecondTable]
+table_empty = false
+
+[ThirdTable]
