@@ -1,18 +1,34 @@
+#ProjektAdler AuthoringTool Language Database -- Language: German
+
 title = "AuthoringTool String Database: German"
 language = "de"
 
 [AuthoringTool]
+Index_GetStarted = "Bitte klicken Sie auf die Schaltfläche 'Arbeitsbereich' auf der linken Seite, um zu beginnen."
+table_empty = false
 
 [BusinessLogic]
+table_empty = true
 
 [DataAccess]
+table_empty = true
 
 [ElectronWrapper]
+table_empty = true
 
 [Generator]
+table_empty = true
 
 [PersistEntities]
+table_empty = true
 
 [Presentation]
+table_empty = true
 
 [Shared]
+table_empty = true
+
+[BlazorMainLayout]
+LanguageSwitchLanguage = "Sprache"
+table_empty = false
+

@@ -4,7 +4,8 @@ Database_Name = "AuthoringTool String Database: English"
 Database_Language = "en"
 
 [AuthoringTool]
-table_empty = true
+Index_GetStarted = 'Please click on the "Workspace" button to the left to get started.'
+table_empty = false
 
 [BusinessLogic]
 table_empty = true
@@ -18,7 +19,7 @@ table_empty = true
 [Generator]
 table_empty = true
 
-[PersisEntities]
+[PersistEntities]
 table_empty = true
 
 [Presentation]
@@ -26,6 +27,10 @@ table_empty = true
 
 [Shared]
 table_empty = true
+
+[BlazorMainLayout]
+LanguageSwitchLanguage = "Language"
+table_empty = false
 
 
 

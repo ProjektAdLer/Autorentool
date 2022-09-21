@@ -1,6 +1,0 @@
-##this is a sample file
-
-[mysqldatabase]
-hostname="dev"
-username="user"
-password="pass"

@@ -3,30 +3,28 @@ using Tommy;
 
 namespace LanguageProvider
 {
-    public class LanguageProvider
+    public static class LanguageProvider
     {
-        private static string mLanguage = "en";
-        private static string mPathToDatabaseDirectory = "./Database/";
-        private static string mFileExtension = ".toml";
-        private static TomlTable? mDatabase = null;
-        private static string mSpaceName = "";
+        private static string _mLanguage = "";
+        static readonly string _mPathToDatabaseDirectory = "../LanguageProvider/Database/";
+        static readonly string _mFileExtension = ".toml";
+        private static TomlTable? _mDatabase = null;
 
-        public LanguageProvider()
-        {
-            LoadDatabase();
-        }
-
-        public LanguageProvider(string databaseName)
+        public static void SetLanguage(string databaseName)
         {
             if (IsAlphaNumeric(databaseName))
             {
-                mLanguage = databaseName;
+                _mLanguage = databaseName;
+                LoadDatabase();
             }
-            LoadDatabase();
+            else
+            {
+                throw new Exceptions.DatabaseNameFormatException("Name Included a not alphanumeric character");
+            }
         }
-        
+
         /// <summary>
-        /// This function gets the content of the specified tag inside the specified table/space
+        /// gets the content of the specified tag inside the specified table/space
         /// </summary>
         /// <param name="spaceName">The space within the database to operate in</param>
         /// <param name="tagName">The tag to look up in the database</param>
@@ -37,42 +35,53 @@ namespace LanguageProvider
         {
             string? output = "Something went wrong!";
 
-            if (mDatabase is not null)
+            try
             {
-                if (mDatabase[spaceName]["table_empty"].AsBoolean)
+                if (_mDatabase is not null)
                 {
-                    output = $"Database Table '{spaceName}' was empty!";
-                    throw new Exceptions.DatabaseEmptyTableException($"TOML table: '{spaceName}' was empty!");
+                    if (_mDatabase[spaceName]["table_empty"].AsBoolean)
+                    {
+                        throw new Exceptions.DatabaseEmptyTableException($"DatabaseEmptyTableException: '{spaceName}' was empty!");
+                    }
+                    else
+                    {
+                        try
+                        {
+                            output = _mDatabase[spaceName][tagName].ToString();
+                        }
+                        catch (Exception errorMessage)
+                        {
+                            throw new Exceptions.DatabaseLookupException($"DatabaseLookupException: '{tagName}' was not found in '{spaceName}'");
+                        }
+                    }
                 }
                 else
                 {
-                    try
-                    {
-                        output = mDatabase[spaceName][tagName].ToString();
-                    }
-                    catch (Exception errorMessage)
-                    {
-                        output = $"'{tagName}' not found in '{spaceName}'!";
-                        throw new Exceptions.DatabaseLookupException($"Tag: '{tagName}' was not found in '{spaceName}'");
-                    }
+                    throw new Exceptions.DatabaseLoadException($"Failed to Load Database '{_mPathToDatabaseDirectory + _mLanguage + _mFileExtension}'");
                 }
             }
+            catch (Exceptions.LanguageProviderBaseException error)
+            {
+                Console.WriteLine(error.Message);
+                output = error.Message;
+            }
+            
             return output;
         }
         private static void LoadDatabase()
         {
-            string pathToDatabase = mPathToDatabaseDirectory + mLanguage + mFileExtension;
+            string pathToDatabase = _mPathToDatabaseDirectory + _mLanguage + _mFileExtension;
             try
             {
                 using (StreamReader reader = File.OpenText(pathToDatabase))
                 {
-                    mDatabase = TOML.Parse(reader);
+                    _mDatabase = TOML.Parse(reader);
                 }
             }
-            catch (Exception errorMessage)
+            catch (Exception error)
             {
-                Console.WriteLine(errorMessage);
-                throw new Exceptions.DatabaseLoadException(errorMessage.Message);
+                Console.WriteLine(error);
+                throw new Exceptions.DatabaseLoadException(error.Message);
             }
         }
         private static bool IsAlphaNumeric(string strToCheck)
@@ -119,6 +128,15 @@ namespace LanguageProvider
             {
             }
             public DatabaseLookupException(string message) : base(message)
+            {
+            }
+        }
+        public class DatabaseNameFormatException : LanguageProviderBaseException
+        {
+            public DatabaseNameFormatException() : base()
+            {
+            }
+            public DatabaseNameFormatException(string message) : base(message)
             {
             }
         }

@@ -4,10 +4,10 @@
         <TargetFramework>net6.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
+        <OutputType>Library</OutputType>
     </PropertyGroup>
 
     <ItemGroup>
-      <PackageReference Include="Samboy063.Tomlet" Version="3.2.2" />
       <PackageReference Include="Tommy" Version="3.1.2" />
     </ItemGroup>
 

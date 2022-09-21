@@ -1,7 +1,8 @@
 ﻿@page "/"
-
+@using LanguageProvider
 <PageTitle>Start</PageTitle>
 
 <h1>AdLer Authoring Tool</h1>
 
-Please click on the workspace button to the left to get started.
+
+@LanguageProvider.GetContent("AuthoringTool","Index_GetStarted")

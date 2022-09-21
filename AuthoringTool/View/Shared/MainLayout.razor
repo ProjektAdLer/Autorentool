@@ -1,9 +1,86 @@
 ﻿@using Presentation.PresentationLogic.API
 @using Presentation.Components
 @using Presentation.View.Toolbox
+@using LanguageProvider
+@using Microsoft.AspNetCore.Http.Extensions
+@using Microsoft.AspNetCore.Mvc
+@using Microsoft.AspNetCore.Mvc.RazorPages
+@inject NavigationManager uriHelper
 @inherits LayoutComponentBase
 
 <PageTitle>AuthoringTool</PageTitle>
+
+<style>
+        .switch-button {
+            background-color: #4CAF50;
+            border-radius: 12px;
+            border: none;
+            padding: 4px;
+            text-align: center;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            background: linear-gradient(90deg, #172d4d 50%, #cfd8e5 50%);
+            display: inline;
+        }
+
+        .switch-button:active {
+            background: linear-gradient(-90deg, #172d4d 50%, #cfd8e5 50%);
+        }
+
+        .info-button {
+            background-color: #2d415d;
+            border-radius: 50%;
+            border: none;
+            color: #e2e5e9;
+            display: inline;
+            height: 20px;
+            width: 20px;
+        }
+
+        .info-button:hover {
+            background-color: #36475e;
+            border-radius: 50%;
+            border: none;
+            color: #e2e5e9;
+            display: inline;
+            height: 20px;
+            width: 20px;
+        }
+
+        .button-text-DE, .button-text-EN {
+            display: inline;
+            font-weight: bold;
+        }
+
+        .button-text-DE {
+            padding-right: 3px;
+        }
+        .button-text-EN {
+
+        }
+
+        .button-text-DE:before {
+            color: #cfd8e5;
+        }
+
+        .button-text-DE:after {
+            color: #4f617b;
+            padding-right: 3px;
+        }
+
+        .button-text-EN:before {
+            color: #4f617b;
+            padding-left: 3px;
+        }
+
+        .button-text-EN:after {
+            color: #cfd8e5;
+            padding-left: 3px;
+        }
+    </style>
+
 
 <div class="page">
     <div class="sidebar">
@@ -16,11 +93,20 @@
     </div>
 
     <main>
-        <div class="top-row px-4">
+        <div class="top-row px-4" style="background-color: #7b8596">
             @if (PresentationLogic?.RunningElectron == true)
             {
                 <CloseAppButton/>
             }
+            <div class="language-switch px-4" style="font-family:'Roboto Light'; font-weight: lighter; color: #cfd8e5">
+                @LanguageProvider.GetContent("BlazorMainLayout", "LanguageSwitchLanguage")
+                <button class="info-button">i</button>
+                <div class="language-switch-button-group" style="display: inline">
+                    <input type="checkbox" @onclick="LanguagePresentationLogicSwitch" class="language-switch" checked=@LanguageButtonElement.GetCheckBoxState()>
+                    <div class="button-text-DE">DE</div>
+                    <div class="button-text-EN">EN</div>
+                </div>
+            </div>
         </div>
 
         <article class="content px-4">
@@ -29,9 +115,44 @@
     </main>
 </div>
 
-
 @code {
+
     [Inject]
     public IPresentationLogic? PresentationLogic { get; set; }
+}
 
+
+@code
+{
+    //Element logic for LanguageSwitch using the LanguageProvider
+    private void LanguagePresentationLogicSwitch()
+    {
+        LanguageButtonElement.ToggleSwitchLanguage();
+        uriHelper.NavigateTo(uriHelper.Uri, forceLoad:true);
+    }
+    
+    internal static class LanguageButtonElement
+    {
+        static bool _mCheckboxState = false;
+        private static uint _mSwitchIterator = 0;
+        static readonly string[] MDatabasesForSwitch = {"de", "en"};
+
+        static LanguageButtonElement()
+        {
+            LanguageProvider.SetLanguage(MDatabasesForSwitch[_mSwitchIterator]);
+        }
+        
+        internal static void ToggleSwitchLanguage()
+        {
+            _mSwitchIterator++;
+            _mSwitchIterator %= (uint)MDatabasesForSwitch.Length;
+            _mCheckboxState = !_mCheckboxState;
+            LanguageProvider.SetLanguage(MDatabasesForSwitch[_mSwitchIterator]);
+        }
+
+        internal static bool GetCheckBoxState()
+        {
+            return _mCheckboxState;
+        }
+    }
 }

@@ -1,0 +1,14 @@
+##this is the second Test Database
+
+[FirstTable]
+FirstKey="Second Database, First Table, First Key"
+SecondKey="Second Database, First Table, Second Key"
+table_empty = false
+
+[SecondTable]
+FirstKey="Second Database, Second Table, First Key"
+SecondKey="Second Database, Second Table, Second Key"
+table_empty = false
+
+[ThirdTable]
+table_empty = true

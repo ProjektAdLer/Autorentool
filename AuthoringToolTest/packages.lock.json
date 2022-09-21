@@ -1434,6 +1434,14 @@
           "System.Xml.ReaderWriter": "4.0.11"
         }
       },
+      "Tommy": {
+        "type": "Transitive",
+        "resolved": "3.1.2",
+        "contentHash": "fUImOjo1D8gzFDn5kLoR2Cv/Y50F24+bgovLUTYQdVXsh1u6FkSXA8teSikt9bXNHV+NUFavFZfEIsbI6m+wXw==",
+        "dependencies": {
+          "Microsoft.NETFramework.ReferenceAssemblies": "1.0.2"
+        }
+      },
       "WebSocket4Net": {
         "type": "Transitive",
         "resolved": "0.15.1",
@@ -1455,6 +1463,7 @@
           "DataAccess": "1.0.0",
           "ElectronWrapper": "1.0.0",
           "Generator": "1.0.0",
+          "LanguageProvider": "1.0.0",
           "PersistEntities": "1.0.0",
           "Presentation": "1.0.0"
         }
@@ -1502,6 +1511,12 @@
           "System.IO.Abstractions": "17.1.1",
           "System.IO.Abstractions.TestingHelpers": "17.1.1",
           "coverlet.collector": "3.1.2"
+        }
+      },
+      "languageprovider": {
+        "type": "Project",
+        "dependencies": {
+          "Tommy": "3.1.2"
         }
       },
       "persistentities": {
