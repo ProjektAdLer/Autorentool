@@ -1,3 +1,5 @@
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using Tommy;
 
@@ -35,8 +37,7 @@ namespace LanguageProvider
         /// <exception cref="DatabaseLookupException">Thrown if the delivered Tag is not found in the specified table</exception>
         public static string GetContent(string spaceName, string tagName)
         {
-            string? output = "Something went wrong!";
-
+            var output = "Something went wrong!";
             try
             {
                 if (_mDatabase is not null)
@@ -49,7 +50,7 @@ namespace LanguageProvider
                     {
                         try
                         {
-                            output = _mDatabase[spaceName][tagName].AsString;
+                            output = _mDatabase[spaceName][tagName].AsString.ToString();
                         }
                         catch (Exception errorMessage)
                         {
@@ -64,10 +65,8 @@ namespace LanguageProvider
             }
             catch (Exceptions.LanguageProviderBaseException error)
             {
-                Console.WriteLine(error.Message);
                 output = error.Message;
             }
-            
             return output;
         }
         private static void LoadDatabase()
@@ -77,10 +76,8 @@ namespace LanguageProvider
             {
                 if (File.Exists(pathToDatabase))
                 {
-                    using (StreamReader reader = File.OpenText(pathToDatabase))
-                    {
-                        _mDatabase = TOML.Parse(reader);
-                    }
+                    using var reader = File.OpenText(pathToDatabase);
+                    _mDatabase = TOML.Parse(reader);
                 }
                 else
                 {
@@ -90,13 +87,11 @@ namespace LanguageProvider
             }
             catch (Exception error)
             {
-                Console.WriteLine(error);
-
                 if (error.GetType() == typeof(TomlParseException))
                 {
                     throw new Exceptions.DatabaseParseException($"DATABASE_PARSING_ERROR:Failed to Load Database '{_mLanguage + _mFileExtension}'!");
                 }
-                else if (error.GetType() == typeof(Exceptions.DatabaseNotFoundException))
+                if (error.GetType() == typeof(Exceptions.DatabaseNotFoundException))
                 {
                     throw new Exceptions.DatabaseNotFoundException(error.Message);
                 }

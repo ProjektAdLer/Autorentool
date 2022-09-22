@@ -2,9 +2,6 @@
 @using Presentation.Components
 @using Presentation.View.Toolbox
 @using LanguageProvider
-@using Microsoft.AspNetCore.Http.Extensions
-@using Microsoft.AspNetCore.Mvc
-@using Microsoft.AspNetCore.Mvc.RazorPages
 @inject NavigationManager uriHelper
 @inherits LayoutComponentBase
 
@@ -102,7 +99,7 @@
                 @LanguageProvider.GetContent("BlazorMainLayout", "LanguageSwitchLanguage")
                 <button class="info-button">i</button>
                 <div class="language-switch-button-group" style="display: inline">
-                    <input type="checkbox" @onclick="LanguagePresentationLogicSwitch" class="language-switch" checked=@LanguageButtonElement.GetCheckBoxState()>
+                    <input type="checkbox" @onclick="LanguagePresentationLogicSwitch" class="language-switch" checked=@MainLayout.LanguageButtonElement.GetCheckBoxState()>
                     <div class="button-text-DE">DE</div>
                     <div class="button-text-EN">EN</div>
                 </div>
@@ -125,12 +122,6 @@
 @code
 {
     //Element logic for LanguageSwitch using the LanguageProvider
-    private void LanguagePresentationLogicSwitch()
-    {
-        LanguageButtonElement.ToggleSwitchLanguage();
-        uriHelper.NavigateTo(uriHelper.Uri, forceLoad:true);
-    }
-    
     internal static class LanguageButtonElement
     {
         static bool _mCheckboxState = false;
@@ -139,7 +130,15 @@
 
         static LanguageButtonElement()
         {
-            LanguageProvider.SetLanguage(MDatabasesForSwitch[_mSwitchIterator]);
+            try
+            {
+                LanguageProvider.SetLanguage(MDatabasesForSwitch[_mSwitchIterator]);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+            }
+            
         }
         
         internal static void ToggleSwitchLanguage()
@@ -154,5 +153,10 @@
         {
             return _mCheckboxState;
         }
+    }
+    private void LanguagePresentationLogicSwitch()
+    {
+        LanguageButtonElement.ToggleSwitchLanguage();
+        uriHelper.NavigateTo(uriHelper.Uri, forceLoad:true);
     }
 }
