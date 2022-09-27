@@ -86,7 +86,7 @@ public class CreateLearningElementUt
         bool actionWasInvoked = false;
         Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.ShortName,
-            ElementTypeEnum.Transfer, ContentTypeEnum.Pdf, testParameter.Content,
+            ElementTypeEnum.Transfer, ContentTypeEnum.PDF, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points, mappingAction);
 
@@ -226,7 +226,7 @@ public class CreateLearningElementUt
         bool actionWasInvoked = false;
         Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
-            ElementTypeEnum.Transfer, ContentTypeEnum.Pdf, testParameter.Content,
+            ElementTypeEnum.Transfer, ContentTypeEnum.PDF, testParameter.Content,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points, mappingAction);
 

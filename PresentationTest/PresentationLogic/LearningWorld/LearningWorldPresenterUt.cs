@@ -239,7 +239,7 @@ public class LearningWorldPresenterUt
         dictionary["Parent"] = ElementParentEnum.World.ToString();
         dictionary["Assignment"] = "foobar";
         dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
-        dictionary["Content"] = ContentTypeEnum.Pdf.ToString();
+        dictionary["Content"] = ContentTypeEnum.PDF.ToString();
         dictionary["Authors"] = "d";
         dictionary["Description"] = "e";
         dictionary["Goals"] = "f";
@@ -254,7 +254,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().CreateLearningElement(world,"a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Pdf, null!, "d", "e", "f",LearningElementDifficultyEnum.Easy,2, 4);
+        presentationLogic.Received().CreateLearningElement(world,"a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.PDF, null!, "d", "e", "f",LearningElementDifficultyEnum.Easy,2, 4);
     }
     
     [Test]
@@ -274,7 +274,7 @@ public class LearningWorldPresenterUt
         dictionary["Parent"] = ElementParentEnum.World.ToString();
         dictionary["Assignment"] = "foobar";
         dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
-        dictionary["Content"] = ContentTypeEnum.Pdf.ToString();
+        dictionary["Content"] = ContentTypeEnum.PDF.ToString();
         dictionary["Authors"] = "d";
         dictionary["Description"] = "e";
         dictionary["Goals"] = "f";
@@ -289,7 +289,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().CreateLearningElement(world, "a", "b",  ElementTypeEnum.Transfer, ContentTypeEnum.Pdf, content, "d", "e", "f",LearningElementDifficultyEnum.Easy,2, 4);
+        presentationLogic.Received().CreateLearningElement(world, "a", "b",  ElementTypeEnum.Transfer, ContentTypeEnum.PDF, content, "d", "e", "f",LearningElementDifficultyEnum.Easy,2, 4);
     }
 
     [Test]

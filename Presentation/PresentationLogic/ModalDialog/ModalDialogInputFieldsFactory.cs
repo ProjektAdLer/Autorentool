@@ -195,7 +195,7 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
             "css" => ContentTypeEnum.Text,
             "mp4" => ContentTypeEnum.Video,
             "h5p" => ContentTypeEnum.H5P,
-            "pdf" => ContentTypeEnum.Pdf,
+            "pdf" => ContentTypeEnum.PDF,
             _ => throw new Exception(
                 $"Can not map the file extension '{dragAndDropLearningContent.Type}' to a ContentType ")
         };
@@ -228,7 +228,7 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
                     new ModalDialogDropdownInputFieldChoiceMapping(null,
                         new[] { ElementTypeEnum.Transfer.ToString(), ElementTypeEnum.Activation.ToString() })
                 }, true),
-            ContentTypeEnum.Pdf => new ModalDialogDropdownInputField("Type",
+            ContentTypeEnum.PDF => new ModalDialogDropdownInputField("Type",
                 new[]
                 {
                     new ModalDialogDropdownInputFieldChoiceMapping(null,
@@ -282,12 +282,12 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
                         new Dictionary<string, string> { { "Type", ElementTypeEnum.Activation.ToString() } },
                         new[] { ContentTypeEnum.Video.ToString() })
                 }, true),
-            ContentTypeEnum.Pdf => new ModalDialogDropdownInputField("Content",
+            ContentTypeEnum.PDF => new ModalDialogDropdownInputField("Content",
                 new[]
                 {
                     new ModalDialogDropdownInputFieldChoiceMapping(
                         new Dictionary<string, string> { { "Type", ElementTypeEnum.Transfer.ToString() } },
-                        new[] { ContentTypeEnum.Pdf.ToString() })
+                        new[] { ContentTypeEnum.PDF.ToString() })
                 }, true),
             ContentTypeEnum.H5P => new ModalDialogDropdownInputField("Content",
                 new[]
@@ -335,7 +335,7 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
                     new[]
                     {
                         ContentTypeEnum.Image.ToString(), ContentTypeEnum.Text.ToString(),
-                        ContentTypeEnum.Video.ToString(), ContentTypeEnum.Pdf.ToString()
+                        ContentTypeEnum.Video.ToString(), ContentTypeEnum.PDF.ToString()
                     }),
                 new ModalDialogDropdownInputFieldChoiceMapping(
                     new Dictionary<string, string> { { "Type", ElementTypeEnum.Activation.ToString() } },

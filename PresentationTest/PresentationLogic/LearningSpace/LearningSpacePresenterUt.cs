@@ -251,7 +251,7 @@ public class LearningSpacePresenterUt
         dictionary["Name"] = "a";
         dictionary["Shortname"] = "b";
         dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
-        dictionary["Content"] = ContentTypeEnum.Pdf.ToString();
+        dictionary["Content"] = ContentTypeEnum.PDF.ToString();
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
         dictionary["Goals"] = "g";
@@ -266,7 +266,7 @@ public class LearningSpacePresenterUt
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().CreateLearningElement(space,"a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Pdf, null!, "e", "f", "g", LearningElementDifficultyEnum.Easy,3,4);
+        presentationLogic.Received().CreateLearningElement(space,"a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.PDF, null!, "e", "f", "g", LearningElementDifficultyEnum.Easy,3,4);
     }
     
     [Test]
@@ -285,7 +285,7 @@ public class LearningSpacePresenterUt
         dictionary["Parent"] = ElementParentEnum.Space.ToString();
         dictionary["Assignment"] = "foobar";
         dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
-        dictionary["Content"] = ContentTypeEnum.Pdf.ToString();
+        dictionary["Content"] = ContentTypeEnum.PDF.ToString();
         dictionary["Authors"] = "d";
         dictionary["Description"] = "e";
         dictionary["Goals"] = "f";
@@ -300,7 +300,7 @@ public class LearningSpacePresenterUt
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().CreateLearningElement(space, "a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Pdf, content, "d", "e", "f",LearningElementDifficultyEnum.Easy,2,4);
+        presentationLogic.Received().CreateLearningElement(space, "a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.PDF, content, "d", "e", "f",LearningElementDifficultyEnum.Easy,2,4);
     }
 
     [Test]

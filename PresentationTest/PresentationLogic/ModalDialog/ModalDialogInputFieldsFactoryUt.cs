@@ -33,7 +33,7 @@ public class ModalDialogInputFieldsFactoryUt
     [TestCase("css", ContentTypeEnum.Text)]
     [TestCase("mp4", ContentTypeEnum.Video)]
     [TestCase("h5p", ContentTypeEnum.H5P)]
-    [TestCase("pdf", ContentTypeEnum.Pdf)]
+    [TestCase("pdf", ContentTypeEnum.PDF)]
     public void GetCreateLearningElementInputFields_ValidDragAndDrop_ReturnsCorrectInputFields_ForCorrectFileExtensionAndCorrectFileType(string 
         correctFileExtensionForTest, ContentTypeEnum correctFileTypeForTest)
     {
@@ -116,7 +116,7 @@ public class ModalDialogInputFieldsFactoryUt
         {
             case ContentTypeEnum.Image:
             case ContentTypeEnum.Text:
-            case ContentTypeEnum.Pdf:
+            case ContentTypeEnum.PDF:
             {
                 Assert.That(typeChoiceMapping.AvailableChoices.Count(), Is.EqualTo(1));
                 Assert.That(typeChoiceMapping.AvailableChoices.ElementAt(0), Is.EqualTo(ElementTypeEnum.Transfer.ToString()));
@@ -190,7 +190,7 @@ public class ModalDialogInputFieldsFactoryUt
                 Assert.That(secondMapping.AvailableChoices.ElementAt(0), Is.EqualTo(ContentTypeEnum.Video.ToString()));
                 break;
             }
-            case ContentTypeEnum.Pdf:
+            case ContentTypeEnum.PDF:
             {
                 Assert.That(contentChoiceMappings.Count, Is.EqualTo(1));
             
@@ -201,7 +201,7 @@ public class ModalDialogInputFieldsFactoryUt
                 Assert.That(firstMapping.RequiredValues!["Type"], Is.EqualTo(ElementTypeEnum.Transfer.ToString()));
             
                 Assert.That(firstMapping.AvailableChoices.Count(), Is.EqualTo(1));
-                Assert.That(firstMapping.AvailableChoices.ElementAt(0), Is.EqualTo(ContentTypeEnum.Pdf.ToString()));
+                Assert.That(firstMapping.AvailableChoices.ElementAt(0), Is.EqualTo(ContentTypeEnum.PDF.ToString()));
                 break;
             }
             case ContentTypeEnum.H5P:
@@ -294,7 +294,7 @@ public class ModalDialogInputFieldsFactoryUt
     [TestCase("css", ContentTypeEnum.Text)]
     [TestCase("mp4", ContentTypeEnum.Video)]
     [TestCase("h5p", ContentTypeEnum.H5P)]
-    [TestCase("pdf", ContentTypeEnum.Pdf)]
+    [TestCase("pdf", ContentTypeEnum.PDF)]
     public void GetCreateLearningElementInputFields_NoDragAndDrop_ReturnsCorrectInputFields(string 
         correctFileExtensionForTest, ContentTypeEnum correctFileTypeForTest)
     {
@@ -395,7 +395,7 @@ public class ModalDialogInputFieldsFactoryUt
             Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(0), Is.EqualTo(ContentTypeEnum.Image.ToString()));
             Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(1), Is.EqualTo(ContentTypeEnum.Text.ToString()));
             Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(2), Is.EqualTo(ContentTypeEnum.Video.ToString()));
-            Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(3), Is.EqualTo(ContentTypeEnum.Pdf.ToString()));
+            Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(3), Is.EqualTo(ContentTypeEnum.PDF.ToString()));
             
             Assert.That(contentValuesToChoiceList.ElementAt(1).RequiredValues, Is.TypeOf<Dictionary<string,string>>());
             Assert.That(contentValuesToChoiceList.ElementAt(1).RequiredValues!.Count(), Is.EqualTo(1));
@@ -495,7 +495,7 @@ public class ModalDialogInputFieldsFactoryUt
     [TestCase("css", ContentTypeEnum.Text)]
     [TestCase("mp4", ContentTypeEnum.Video)]
     [TestCase("h5p", ContentTypeEnum.H5P)]
-    [TestCase("pdf", ContentTypeEnum.Pdf)]
+    [TestCase("pdf", ContentTypeEnum.PDF)]
     public void GetCreateLearningElementInputFields_OverloadedFunction_ValidDragAndDrop_ReturnsCorrectInputFields_ForCorrectFileExtensionAndCorrectFileType(
         string correctFileExtensionForTest, 
         ContentTypeEnum correctFileTypeForTest)
@@ -612,7 +612,7 @@ public class ModalDialogInputFieldsFactoryUt
         {
             case ContentTypeEnum.Image:
             case ContentTypeEnum.Text:
-            case ContentTypeEnum.Pdf:
+            case ContentTypeEnum.PDF:
             {
                 Assert.That(typeChoiceMapping.AvailableChoices.Count(), Is.EqualTo(1));
                 Assert.That(typeChoiceMapping.AvailableChoices.ElementAt(0), Is.EqualTo(ElementTypeEnum.Transfer.ToString()));
@@ -686,7 +686,7 @@ public class ModalDialogInputFieldsFactoryUt
                 Assert.That(secondMapping.AvailableChoices.ElementAt(0), Is.EqualTo(ContentTypeEnum.Video.ToString()));
                 break;
             }
-            case ContentTypeEnum.Pdf:
+            case ContentTypeEnum.PDF:
             {
                 Assert.That(contentChoiceMappings.Count, Is.EqualTo(1));
             
@@ -697,7 +697,7 @@ public class ModalDialogInputFieldsFactoryUt
                 Assert.That(firstMapping.RequiredValues!["Type"], Is.EqualTo(ElementTypeEnum.Transfer.ToString()));
             
                 Assert.That(firstMapping.AvailableChoices.Count(), Is.EqualTo(1));
-                Assert.That(firstMapping.AvailableChoices.ElementAt(0), Is.EqualTo(ContentTypeEnum.Pdf.ToString()));
+                Assert.That(firstMapping.AvailableChoices.ElementAt(0), Is.EqualTo(ContentTypeEnum.PDF.ToString()));
                 break;
             }
             case ContentTypeEnum.H5P:
@@ -790,7 +790,7 @@ public class ModalDialogInputFieldsFactoryUt
     [TestCase("css", ContentTypeEnum.Text)]
     [TestCase("mp4", ContentTypeEnum.Video)]
     [TestCase("h5p", ContentTypeEnum.H5P)]
-    [TestCase("pdf", ContentTypeEnum.Pdf)]
+    [TestCase("pdf", ContentTypeEnum.PDF)]
     public void GetCreateLearningElementInputFields_OverloadedFunction_NoDragAndDrop_ReturnsCorrectInputFields(string correctFileExtensionForTest, 
         ContentTypeEnum correctFileTypeForTest)
     {
@@ -923,7 +923,7 @@ public class ModalDialogInputFieldsFactoryUt
         Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(0), Is.EqualTo(ContentTypeEnum.Image.ToString()));
         Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(1), Is.EqualTo(ContentTypeEnum.Text.ToString()));
         Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(2), Is.EqualTo(ContentTypeEnum.Video.ToString()));
-        Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(3), Is.EqualTo(ContentTypeEnum.Pdf.ToString()));
+        Assert.That(contentValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(3), Is.EqualTo(ContentTypeEnum.PDF.ToString()));
                 
                 
         Assert.That(contentValuesToChoiceList.ElementAt(1).RequiredValues, Is.TypeOf<Dictionary<string,string>>());
