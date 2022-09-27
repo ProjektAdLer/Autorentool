@@ -112,7 +112,8 @@ public class ReadDsl : IReadDsl
 
     public List<LearningSpaceJson> GetLearningSpaceList()
     {
-        var space = new LearningSpaceJson(0, new IdentifierJson("identifier", "Topic 0"), new List<int>());
+        var space = new LearningSpaceJson(0, new IdentifierJson("identifier", "Topic 0"), 
+            new List<int>(), "0" ,"0" );
         var spaceList = new List<LearningSpaceJson>();
         spaceList.Add(space);
         return spaceList;
