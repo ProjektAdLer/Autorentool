@@ -1,7 +1,9 @@
-﻿namespace PersistEntities;
+﻿using System.Runtime.Serialization;
+
+namespace PersistEntities;
 
 [Serializable]
-public class LearningSpacePe : ILearningSpacePe
+public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
 {
     public LearningSpacePe(string name, string shortname, string authors, string description, string goals,
         int requiredPoints, List<LearningElementPe>? learningElements = null, double positionX = 0, double positionY = 0)
@@ -43,4 +45,5 @@ public class LearningSpacePe : ILearningSpacePe
     public List<LearningElementPe> LearningElements { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
+    public ExtensionDataObject? ExtensionData { get; set; }
 }

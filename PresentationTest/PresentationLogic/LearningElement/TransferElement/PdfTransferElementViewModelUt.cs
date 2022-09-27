@@ -16,7 +16,7 @@ public class PdfTransferElementViewModelUt
         var name = "zzz";
         var shortname = "aaa";
         var parent = new LearningWorldViewModel("abb", "bbc", "ccc", "", "", "");
-        var content = new LearningContentViewModel("ddd", "dee", new byte[] {0x02, 0x01});
+        var content = new LearningContentViewModel("ddd", "dee", "");
         var authors = "eef";
         var description = "fff";
         var goals = "ggg";

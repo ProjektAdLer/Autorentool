@@ -42,7 +42,7 @@ public class ModalDialogInputFieldsFactoryUt
             new LearningContentViewModel(
                 name,
                 correctFileExtensionForTest,
-                Array.Empty<byte>()
+                ""
             );
         var spaceName = "skazzle";
 
@@ -469,7 +469,7 @@ public class ModalDialogInputFieldsFactoryUt
             new LearningContentViewModel(
                 name,
                 wrongFileExtensionForTest,
-                Array.Empty<byte>()
+                ""
             );
         var spaceName = "skazzle";
         var systemUnderTest = GetModalDialogInputFieldsFactoryForTesting();
@@ -504,7 +504,7 @@ public class ModalDialogInputFieldsFactoryUt
             LearningContentViewModel dragAndDropLearningContent = new LearningContentViewModel(
                 nameLearningContentViewModel,
                 correctFileExtensionForTest,
-                Array.Empty<byte>()
+                ""
             );
             
             string nameLearningSpace = "foo";
@@ -1000,7 +1000,7 @@ public class ModalDialogInputFieldsFactoryUt
             new LearningContentViewModel(
                 name,
                 wrongFileExtensionForTest,
-                Array.Empty<byte>()
+                ""
             );
             
         string nameLearningSpace = "skazzle";

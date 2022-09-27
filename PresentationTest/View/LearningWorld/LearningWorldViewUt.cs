@@ -231,7 +231,7 @@ public class LearningWorldViewUt
         learningWorld.LearningSpaces.Returns(learningSpaces);
         _worldPresenter.LearningWorldVm.Returns(learningWorld);
         _worldPresenter.CreateLearningElementDialogOpen.Returns(true);
-        var content = new LearningContentViewModel("foo", "bar", Array.Empty<byte>());
+        var content = new LearningContentViewModel("foo", "bar", "");
         _worldPresenter.DragAndDropLearningContent.Returns(content);
         
         RenderFragment fragment = builder =>

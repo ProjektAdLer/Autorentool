@@ -785,7 +785,7 @@ public class AuthoringToolWorkspacePresenterUt
                     authoringToolWorkspace.SelectedLearningWorld = learningWorld;
         }
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var learningContent = new LearningContentViewModel(fileName, ending, Array.Empty<byte>());
+        var learningContent = new LearningContentViewModel(fileName, ending, "");
         presentationLogic.LoadLearningContentViewModel(Arg.Any<string>(), Arg.Any<Stream>())
             .Returns(learningContent);
         var learningWorldPresenter = Substitute.For<ILearningWorldPresenter>();
@@ -839,7 +839,7 @@ public class AuthoringToolWorkspacePresenterUt
     public void
         CallCreateLearningElementWithPreloadedContentFromActiveView_NoLearningWorldSelected_DoNothing()
     {
-        var learningContent = new LearningContentViewModel("n", "t", Array.Empty<byte>());
+        var learningContent = new LearningContentViewModel("n", "t", "");
 
         var systemUnderTest = CreatePresenterForTesting();
         
@@ -852,7 +852,7 @@ public class AuthoringToolWorkspacePresenterUt
     public void
         CallCreateLearningElementWithPreloadedContentFromActiveView_LearningWorldSelected_CallsWorldPresenter()
     {
-        var learningContent = new LearningContentViewModel("n", "t", Array.Empty<byte>());
+        var learningContent = new LearningContentViewModel("n", "t", "");
         var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
         var authoringToolWorkspaceVm = new AuthoringToolWorkspaceViewModel();
         authoringToolWorkspaceVm._learningWorlds.Add(learningWorld);
@@ -871,7 +871,7 @@ public class AuthoringToolWorkspacePresenterUt
     public void
         CallCreateLearningElementWithPreloadedContentFromActiveView_LearningSpaceSelected_CallsSpacePresenter()
     {
-        var learningContent = new LearningContentViewModel("n", "t", Array.Empty<byte>());
+        var learningContent = new LearningContentViewModel("n", "t", "");
         var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
         var learningSpace = new LearningSpaceViewModel("n", "sn", "a", "d", "g");
         learningWorld.LearningSpaces.Add(learningSpace);
@@ -895,7 +895,7 @@ public class AuthoringToolWorkspacePresenterUt
     public void
         CallCreateLearningElementWithPreloadedContentFromActiveView_LearningSpaceSelectedButSpaceVmIsNull_DoNothing()
     {
-        var learningContent = new LearningContentViewModel("n", "t", Array.Empty<byte>());
+        var learningContent = new LearningContentViewModel("n", "t", "");
         var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
         var learningSpace = new LearningSpaceViewModel("n", "sn", "a", "d", "g");
         learningWorld.LearningSpaces.Add(learningSpace);
@@ -1033,7 +1033,7 @@ public class AuthoringToolWorkspacePresenterUt
         var authoringToolWorkspace = new AuthoringToolWorkspaceViewModel();
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var newLearningElement = new LearningElementViewModel("n", "sn",
-            new LearningContentViewModel("n", "t", Array.Empty<byte>()), "a", "d", "g",LearningElementDifficultyEnum.Easy);
+            new LearningContentViewModel("n", "t", ""), "a", "d", "g",LearningElementDifficultyEnum.Easy);
         presentationLogic.LoadLearningElementViewModel(Arg.Any<Stream>())
             .Returns(newLearningElement);
         var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspace, presentationLogic);
@@ -1063,7 +1063,7 @@ public class AuthoringToolWorkspacePresenterUt
 
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var newLearningElement = new LearningElementViewModel("n", "sn",
-            new LearningContentViewModel("n", "t", Array.Empty<byte>()), "a", "d", "g",LearningElementDifficultyEnum.Easy);
+            new LearningContentViewModel("n", "t", ""), "a", "d", "g",LearningElementDifficultyEnum.Easy);
         presentationLogic.LoadLearningElementViewModel(Arg.Any<Stream>()).Returns(newLearningElement);
         var stream = Substitute.For<Stream>();
         var spacePresenter = Substitute.For<ILearningSpacePresenter>();

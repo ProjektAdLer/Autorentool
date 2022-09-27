@@ -23,7 +23,7 @@ public class MappingProfileUt
     private const string Description = "description";
     private const string Goals = "goals";
     private const string Type = "type";
-    private static readonly byte[] Content = new byte[] {0x01, 0x02, 0x03};
+    private static readonly string Filepath = "bar/baz/buz.txt";
     private const LearningElementDifficultyEnum Difficulty = LearningElementDifficultyEnum.Easy;
     private const LearningElementDifficultyEnumPe DifficultyPe = LearningElementDifficultyEnumPe.Easy;
     private const int Workload = 1;
@@ -39,7 +39,7 @@ public class MappingProfileUt
     private const string NewDescription = "newDescription";
     private const string NewGoals = "newGoals";
     private const string NewType = "newType";
-    private static readonly byte[] NewContent = new byte[] {0x04, 0x05, 0x06};
+    private static readonly string NewFilepath = "/foo/bar/baz.txt";
     private const LearningElementDifficultyEnum NewDifficulty = LearningElementDifficultyEnum.Medium;
     private const LearningElementDifficultyEnumPe NewDifficultyPe = LearningElementDifficultyEnumPe.Medium;
     private const int NewWorkload = 2;
@@ -60,8 +60,8 @@ public class MappingProfileUt
     public void MapLearningContentAndLearningContentViewModel_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningContent(Name, Type, Content);
-        var destination = new LearningContentViewModel("", "", Array.Empty<byte>());
+        var source = new LearningContent(Name, Type, Filepath);
+        var destination = new LearningContentViewModel("", "", "bar/baz/buz.txt");
 
         systemUnderTest.Map(source, destination);
 
@@ -69,7 +69,7 @@ public class MappingProfileUt
 
         destination.Name = NewName;
         destination.Type = NewType;
-        destination.Content = NewContent;
+        destination.Filepath = NewFilepath;
 
         systemUnderTest.Map(destination, source);
 
@@ -80,8 +80,8 @@ public class MappingProfileUt
     public void MapLearningContentAndLearningContentPersistEntity_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningContent(Name, Type, Content);
-        var destination = new LearningContentPe("", "", Array.Empty<byte>());
+        var source = new LearningContent(Name, Type, Filepath);
+        var destination = new LearningContentPe("", "", "");
 
         systemUnderTest.Map(source, destination);
 
@@ -89,7 +89,7 @@ public class MappingProfileUt
 
         destination.Name = NewName;
         destination.Type = NewType;
-        destination.Content = NewContent;
+        destination.Filepath = NewFilepath;
 
         systemUnderTest.Map(destination, source);
 
@@ -104,7 +104,7 @@ public class MappingProfileUt
         var source = new LearningElement(Name, Shortname, content, Authors, Description, Goals,
             Difficulty, null, Workload, Points, PositionX, PositionY);
         var destination = new LearningElementViewModel("", "",
-            new LearningContentViewModel("", "", Array.Empty<byte>()), "", "", "", LearningElementDifficultyEnum.None);
+            new LearningContentViewModel("", "", Filepath), "", "", "", LearningElementDifficultyEnum.None);
 
         systemUnderTest.Map(source, destination);
 
@@ -113,7 +113,7 @@ public class MappingProfileUt
 
         destination.Name = NewName;
         destination.Shortname = NewShortname;
-        destination.LearningContent = new LearningContentViewModel(NewName, NewType, NewContent);
+        destination.LearningContent = new LearningContentViewModel(NewName, NewType, NewFilepath);
         destination.Authors = NewAuthors;
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
@@ -136,7 +136,7 @@ public class MappingProfileUt
         var content = GetTestableContent();
         var source = new LearningElement(Name, Shortname, content, Authors, Description, Goals,
             Difficulty, null, Workload, Points, PositionX, PositionY);
-        var destination = new LearningElementPe("", "", new LearningContentPe("", "", Array.Empty<byte>()), "", "", "",
+        var destination = new LearningElementPe("", "", new LearningContentPe("", "", "bar/baz/buz.txt"), "", "", "",
             LearningElementDifficultyEnumPe.None);
 
         systemUnderTest.Map(source, destination);
@@ -145,7 +145,7 @@ public class MappingProfileUt
 
         destination.Name = NewName;
         destination.Shortname = NewShortname;
-        destination.LearningContent = new LearningContentPe(NewName, NewType, NewContent);
+        destination.LearningContent = new LearningContentPe(NewName, NewType, NewFilepath);
         destination.Authors = NewAuthors;
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
@@ -603,10 +603,10 @@ public class MappingProfileUt
     public void MapLearningWorldAndLearningWorldViewModel_WithSpacesAndElements_ObjectsStayEqual()
     {
         var elementVm1 =
-            new LearningElementViewModel("el1", Shortname, new LearningContentViewModel("foo", "bar", Content), Authors,
+            new LearningElementViewModel("el1", Shortname, new LearningContentViewModel("foo", "bar", Filepath), Authors,
                 Description, Goals, Difficulty);
         var elementVm2 =
-            new LearningElementViewModel("el2", Shortname, new LearningContentViewModel("foo", "bar", Content), Authors,
+            new LearningElementViewModel("el2", Shortname, new LearningContentViewModel("foo", "bar", Filepath), Authors,
                 Description, Goals, Difficulty);
 
         var space = new LearningSpaceViewModel("space", Shortname, Authors, Description, Goals, RequiredPoints,
@@ -708,17 +708,17 @@ public class MappingProfileUt
 
     private static LearningContent GetTestableContent()
     {
-        return new LearningContent(Name, Type, Content);
+        return new LearningContent(Name, Type, Filepath);
     }
 
     private static LearningContentViewModel GetTestableNewContentViewModel()
     {
-        return new LearningContentViewModel(NewName, NewType, NewContent);
+        return new LearningContentViewModel(NewName, NewType, NewFilepath);
     }
 
     private static LearningContentPe GetTestableNewContentPersistEntity()
     {
-        return new LearningContentPe(NewName, NewType, NewContent);
+        return new LearningContentPe(NewName, NewType, NewFilepath);
     }
 
     private static LearningElement GetTestableElementWithParent(object parent)
@@ -1012,7 +1012,7 @@ public class MappingProfileUt
                 {
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(content.Type, Is.EqualTo(useNewFields ? NewType : Type));
-                    Assert.That(content.Content, Is.EqualTo(useNewFields ? NewContent : Content));
+                    Assert.That(content.Filepath, Is.EqualTo(useNewFields ? NewFilepath : Filepath));
                 });
                 break;
             case LearningContent content:
@@ -1020,7 +1020,7 @@ public class MappingProfileUt
                 {
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(content.Type, Is.EqualTo(useNewFields ? NewType : Type));
-                    Assert.That(content.Content, Is.EqualTo(useNewFields ? NewContent : Content));
+                    Assert.That(content.Filepath, Is.EqualTo(useNewFields ? NewFilepath : Filepath));
                 });
                 break;
             case LearningContentPe content:
@@ -1028,7 +1028,7 @@ public class MappingProfileUt
                 {
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(content.Type, Is.EqualTo(useNewFields ? NewType : Type));
-                    Assert.That(content.Content, Is.EqualTo(useNewFields ? NewContent : Content));
+                    Assert.That(content.Filepath, Is.EqualTo(useNewFields ? NewFilepath : Filepath));
                 });
                 break;
         }

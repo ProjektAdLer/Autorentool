@@ -1,4 +1,5 @@
-﻿using System.Xml.Serialization;
+﻿using System.Runtime.Serialization;
+using System.Xml.Serialization;
 
 namespace PersistEntities;
 
@@ -11,7 +12,7 @@ namespace PersistEntities;
 [XmlInclude(typeof(H5PInteractionElementPe))]
 [XmlInclude(typeof(H5PTestElementPe))]
 [Serializable]
-public class LearningElementPe : ILearningElementPe
+public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
 {
     public LearningElementPe(string name, string shortname, LearningContentPe? learningContent,
         string authors, string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload = 0,
@@ -59,5 +60,6 @@ public class LearningElementPe : ILearningElementPe
     public LearningElementDifficultyEnumPe Difficulty { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
+    public ExtensionDataObject? ExtensionData { get; set; }
 }
 

@@ -4,5 +4,5 @@ public interface ILearningContentPe
 {
     string Name { get; set; }
     string Type { get; set; }
-    byte[] Content { get; set; }
+    string Filepath { get; set; }
 }

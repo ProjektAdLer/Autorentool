@@ -90,7 +90,7 @@ public class LearningWorldPresenterUt
     [Test]
     public void CreateLearningElementWithPreloadedContent_SetsFieldToTrue()
     {
-        var learningContent = new LearningContentViewModel("n", "t", Array.Empty<byte>());
+        var learningContent = new LearningContentViewModel("n", "t", "");
         var systemUnderTest = CreatePresenterForTesting();
         
         Assert.That(systemUnderTest.CreateLearningElementDialogOpen, Is.False);
@@ -263,7 +263,7 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var content = new LearningContentViewModel("a", "b", new byte[] {0, 1, 2});
+        var content = new LearningContentViewModel("a", "b", "");
         var element = new LearningElementViewModel("a", "b", null!, "c", "d", "e", LearningElementDifficultyEnum.Easy);
         world.LearningElements.Add(element);
 
@@ -871,7 +871,7 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var content = new LearningContentViewModel("a", "b", new byte[] {0, 5, 4});
+        var content = new LearningContentViewModel("a", "b", "");
         var element = new LearningElementViewModel("foo", "bar", content, "foo",
             "nll", "bar", LearningElementDifficultyEnum.Hard);
         var space = new LearningSpaceViewModel("foobar", "fb", "foo", "bar", "foo");
@@ -981,7 +981,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var content = new LearningContentViewModel("t", "s", new byte[] {4, 3, 2});
+        var content = new LearningContentViewModel("t", "s", "");
         var element = new LearningElementViewModel("f", "f", content, "f", "nll", "f", LearningElementDifficultyEnum.Easy, world);
         world.LearningElements.Add(element);
         world.SelectedLearningObject = element;
@@ -1190,7 +1190,7 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var content = new LearningContentViewModel("g", "h", new byte[] {3, 2, 1});
+        var content = new LearningContentViewModel("g", "h", "");
         var element = new LearningElementViewModel("f","f",content,"f","f","f", LearningElementDifficultyEnum.Medium, world);
         world.LearningElements.Add(element);
         world.SelectedLearningObject = element;

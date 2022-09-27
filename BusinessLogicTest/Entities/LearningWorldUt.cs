@@ -16,8 +16,8 @@ public class LearningWorldUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
-        var content1 = new LearningContent("a", "b", new byte[]{0x01,0x02});
-        var content2 = new LearningContent("w", "e", new byte[]{0x02,0x01});
+        var content1 = new LearningContent("a", "b", "");
+        var content2 = new LearningContent("w", "e", "");
         var ele1 = new LearningElement("a", "b", content1, "pupup", "g","h",LearningElementDifficultyEnum.Easy, null, 17,21, 23);
         var ele2 = new LearningElement("z", "zz", content2,"baba", "z","zz",LearningElementDifficultyEnum.Medium, null, 444,12, double.MaxValue);
         var learningElements = new List<LearningElement> { ele1, ele2 };
@@ -49,8 +49,8 @@ public class LearningWorldUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
-        var content1 = new LearningContent("a", "b", new byte[]{0x01,0x02});
-        var content2 = new LearningContent("w", "e", new byte[]{0x02,0x01});
+        var content1 = new LearningContent("a", "b", "");
+        var content2 = new LearningContent("w", "e", "");
         var ele1 = new LearningElement("a", "b", content1, "pupup", "g","h",LearningElementDifficultyEnum.Easy, null, 17,65, 23);
         var ele2 = new LearningElement("z", "zz", content2,"baba", "z","zz",LearningElementDifficultyEnum.Medium, null, 444, 56,double.MaxValue);
         var learningElements = new List<LearningElement> { ele1, ele2 };
@@ -67,7 +67,7 @@ public class LearningWorldUt
         var languageChanged = "english";
         var descriptionChanged = "changed description";
         var goalsChanged = "new goals";
-        var newContent2 = new LearningContent("w", "e", new byte[]{0x08,0x02});
+        var newContent2 = new LearningContent("w", "e", "");
         var newEle2 = new LearningElement("uu", "iii", newContent2,"lll", "kkk","fff", LearningElementDifficultyEnum.Hard, null, 77, 33,66);
         var space2 = new LearningSpace("gg", "gg", "gg", "gg", "gg", 5);
 
@@ -126,8 +126,8 @@ public class LearningWorldUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
-        var content1 = new LearningContent("a", "b", new byte[]{0x01,0x02});
-        var content2 = new LearningContent("w", "e", new byte[]{0x02,0x01});
+        var content1 = new LearningContent("a", "b", "");
+        var content2 = new LearningContent("w", "e", "");
         var ele1 = new LearningElement("a", "b", content1, "pupup", "g","h",LearningElementDifficultyEnum.Easy, null, 17, 12,23);
         var ele2 = new LearningElement("z", "zz", content2,"baba", "z","zz",LearningElementDifficultyEnum.Medium, null, 444, 11,double.MaxValue);
         var learningElements = new List<LearningElement> { ele1, ele2 };

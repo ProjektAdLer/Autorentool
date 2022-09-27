@@ -122,7 +122,7 @@ public class DataAccessUt
         var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElementPe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerElement: mockFileSaveHandlerElement);
 
-        var learningContent = new LearningContent("a", "b", Array.Empty<byte>());
+        var learningContent = new LearningContent("a", "b", "");
         var learningElement = new LearningElement("f","f", learningContent, "f",
             "f", "f", LearningElementDifficultyEnum.Easy);
         systemUnderTest.SaveLearningElementToFile(

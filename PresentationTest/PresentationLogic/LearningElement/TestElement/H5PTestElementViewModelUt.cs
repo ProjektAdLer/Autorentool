@@ -16,7 +16,7 @@ public class H5PTestElementViewModelUt
         var name = "rrs";
         var shortname = "stt";
         var parent = new LearningWorldViewModel("uuv", "vww", "xxy", "", "", "");
-        var content = new LearningContentViewModel("yzz", "aaa", new byte[] {0x04, 0x05});
+        var content = new LearningContentViewModel("yzz", "aaa", "");
         var authors = "bbb";
         var description = "ccc";
         var goals = "ddd";

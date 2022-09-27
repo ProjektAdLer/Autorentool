@@ -24,7 +24,7 @@ public class PersistenceUt
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
             "Description", "Goals");
         var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
-        var content = new LearningContentPe("a", "b", Array.Empty<byte>());
+        var content = new LearningContentPe("a", "b", "");
         var element = new LearningElementPe("le", "la", content, "lll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
         world.LearningSpaces.Add(space);
         world.LearningElements.Add(element);
@@ -43,7 +43,7 @@ public class PersistenceUt
     public void Persistence_SaveAndLoadSpace_Stream_ObjectsAreEqual()
     {
         var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
-        var content = new LearningContentPe("a", "b", Array.Empty<byte>());
+        var content = new LearningContentPe("a", "b", "");
         var element = new LearningElementPe("le", "la", content,"ll", "l" ,"lll", LearningElementDifficultyEnumPe.Easy);
         space.LearningElements.Add(element);
         
@@ -60,7 +60,7 @@ public class PersistenceUt
     [Test]
     public void Persistence_SaveAndLoadElement_Stream_ObjectsAreEqual()
     {
-        var content = new LearningContentPe("a", "b", Array.Empty<byte>());
+        var content = new LearningContentPe("a", "b", "");
         var element = new LearningElementPe("le", "la", content, "ll", "ll", "lll", LearningElementDifficultyEnumPe.Easy);
         
         using var stream = new MemoryStream();
@@ -79,7 +79,7 @@ public class PersistenceUt
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
             "Description", "Goals");
         var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
-        var content = new LearningContentPe("a", "b", Array.Empty<byte>());
+        var content = new LearningContentPe("a", "b", "");
         var element = new LearningElementPe("le", "la", content, "lll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
         world.LearningSpaces.Add(space);
         world.LearningElements.Add(element);
@@ -97,7 +97,7 @@ public class PersistenceUt
     public void Persistence_SaveAndLoadSpace_File_ObjectsAreEqual()
     {
         var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
-        var content = new LearningContentPe("a", "b", Array.Empty<byte>());
+        var content = new LearningContentPe("a", "b", "");
         var element = new LearningElementPe("le", "la", content, "ll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
         space.LearningElements.Add(element);
         var mockFileSystem = new MockFileSystem();
@@ -113,7 +113,7 @@ public class PersistenceUt
     [Test]
     public void Persistence_SaveAndLoadElement_File_ObjectsAreEqual()
     {
-        var content = new LearningContentPe("a", "b", Array.Empty<byte>());
+        var content = new LearningContentPe("a", "b", "");
         var element = new LearningElementPe("le", "la", content, "ll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
         var mockFileSystem = new MockFileSystem();
 
@@ -153,7 +153,7 @@ public class PersistenceUt
                 {
                     Assert.That(actualContent.Name, Is.EqualTo(expectedContent.Name));
                     Assert.That(actualContent.Type, Is.EqualTo(expectedContent.Type));
-                    Assert.That(actualContent.Content, Is.EqualTo(expectedContent.Content));
+                    Assert.That(actualContent.Filepath, Is.EqualTo(expectedContent.Filepath));
                 });
             }
             else if (!Equals(expectedValue, actualValue)) 

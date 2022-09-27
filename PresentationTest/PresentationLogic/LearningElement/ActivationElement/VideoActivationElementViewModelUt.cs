@@ -16,7 +16,7 @@ public class VideoActivationElementViewModelUt
         var name = "abc";
         var shortname = "def";
         var parent = new LearningWorldViewModel("ghi", "jkl", "mno", "", "", "");
-        var content = new LearningContentViewModel("pqr", "stu", new byte[] {0x05, 0x01});
+        var content = new LearningContentViewModel("pqr", "stu", "");
         var authors = "vwx";
         var description = "yza";
         var goals = "abb";

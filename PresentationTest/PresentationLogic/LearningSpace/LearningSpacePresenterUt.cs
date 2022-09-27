@@ -152,7 +152,7 @@ public class LearningSpacePresenterUt
     [Test]
     public void CreateLearningElementWithPreloadedContent_SetsFieldToTrue()
     {
-        var learningContent = new LearningContentViewModel("n", "t", Array.Empty<byte>());
+        var learningContent = new LearningContentViewModel("n", "t", "");
         var systemUnderTest = CreatePresenterForTesting();
         
         Assert.That(systemUnderTest.CreateLearningElementDialogOpen, Is.False);
@@ -274,7 +274,7 @@ public class LearningSpacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var content = new LearningContentViewModel("a", "b", new byte[] {0, 1, 2});
+        var content = new LearningContentViewModel("a", "b", "");
         var element = new LearningElementViewModel("a", "b", null!, "c", "d", "e", LearningElementDifficultyEnum.Easy);
         space.LearningElements.Add(element);
 
@@ -788,7 +788,7 @@ public class LearningSpacePresenterUt
     public void DeleteSelectedLearningObject_CallsPresentationLogic_WithElement()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var content = new LearningContentViewModel("bar", "foo", "");
         var element = new LearningElementViewModel("f", "f", content, "f", "f", "f", LearningElementDifficultyEnum.Easy, space);
         space.LearningElements.Add(element);
         space.SelectedLearningObject = element;
@@ -853,7 +853,7 @@ public class LearningSpacePresenterUt
     public void OpenEditSelectedLearningObjectDialog_CallsMethod_WithElement()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var content = new LearningContentViewModel("bar", "foo", "");
         var element = new LearningElementViewModel("n", "sn", content,"a", "d", "g", LearningElementDifficultyEnum.Easy,space, 3);
         space.LearningElements.Add(element);
         space.SelectedLearningObject = element;
@@ -942,7 +942,7 @@ public class LearningSpacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var content = new LearningContentViewModel("bar", "foo", "");
         var element = new LearningElementViewModel("f", "f", content,"f",
             "f", "f", LearningElementDifficultyEnum.Easy, space);
         space.LearningElements.Add(element);

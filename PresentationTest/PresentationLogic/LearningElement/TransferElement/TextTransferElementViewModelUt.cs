@@ -16,7 +16,7 @@ public class TextTransferElementViewModelUt
         var name = "eee";
         var shortname = "fff";
         var parent = new LearningWorldViewModel("ggg", "hhh", "iii", "", "", "");
-        var content = new LearningContentViewModel("jjj", "kkk", new byte[] {0x06, 0x03});
+        var content = new LearningContentViewModel("jjj", "kkk", "");
         var authors = "lll";
         var description = "mmm";
         var goals = "nnn";

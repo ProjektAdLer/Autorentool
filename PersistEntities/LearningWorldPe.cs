@@ -1,7 +1,9 @@
-﻿namespace PersistEntities;
+﻿using System.Runtime.Serialization;
+
+namespace PersistEntities;
 
 [Serializable]
-public class LearningWorldPe : ILearningWorldPe
+public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
 {
     public LearningWorldPe(string name, string shortname, string authors, string language, string description,
         string goals, List<LearningElementPe>? learningElements = null,
@@ -40,4 +42,5 @@ public class LearningWorldPe : ILearningWorldPe
     public string Language { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
+    public ExtensionDataObject? ExtensionData { get; set; }
 }

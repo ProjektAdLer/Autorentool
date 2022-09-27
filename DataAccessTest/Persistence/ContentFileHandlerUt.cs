@@ -27,7 +27,7 @@ public class ContentFileHandlerUt
         {
             Assert.That(objActual.Name, Is.EqualTo("foobar.png"));
             Assert.That(objActual.Type, Is.EqualTo("png"));
-            Assert.That(objActual.Content, Is.EqualTo(new byte[] {0x42, 0x24, 0x53, 0x54}));
+            Assert.That(objActual.Filepath, Is.EqualTo(new byte[] {0x42, 0x24, 0x53, 0x54}));
         });
     }
     
@@ -45,7 +45,7 @@ public class ContentFileHandlerUt
         {
             Assert.That(objActual.Name, Is.EqualTo("foobar.png"));
             Assert.That(objActual.Type, Is.EqualTo("png"));
-            Assert.That(objActual.Content, Is.EqualTo(new byte[] {0x42, 0x24, 0x53, 0x54}));
+            Assert.That(objActual.Filepath, Is.EqualTo(new byte[] {0x42, 0x24, 0x53, 0x54}));
         });
     }
 

@@ -18,8 +18,8 @@ public class LearningSpaceUt
         var requiredPoints = 10;
         var positionX = 5f;
         var positionY = 21f;
-        var content1 = new LearningContent("a", "b", new byte[]{0x01,0x02});
-        var content2 = new LearningContent("w", "e", new byte[]{0x02,0x01});
+        var content1 = new LearningContent("a", "b", "");
+        var content2 = new LearningContent("w", "e", "");
         var ele1 = new LearningElement("a", "b", content1, "pupup", "g","h",LearningElementDifficultyEnum.Easy, null, 17, 6, 23);
         var ele2 = new LearningElement("z", "zz", content2,"baba", "z","zz", LearningElementDifficultyEnum.Medium, null, 444, 9,double.MaxValue);
         var learningElements = new List<LearningElement> { ele1, ele2 };
@@ -51,8 +51,8 @@ public class LearningSpaceUt
         var requiredPoints = 10;
         var positionX = 5f;
         var positionY = 21f;
-        var content1 = new LearningContent("a", "b", new byte[]{0x01,0x02});
-        var content2 = new LearningContent("w", "e", new byte[]{0x02,0x01});
+        var content1 = new LearningContent("a", "b", "");
+        var content2 = new LearningContent("w", "e", "");
         var ele1 = new LearningElement("a", "b", content1, "pupup", "g","h",LearningElementDifficultyEnum.Easy, null, 17,90, 23);
         var ele2 = new LearningElement("z", "zz", content2,"baba", "z","zz", LearningElementDifficultyEnum.Medium, null, 444,9, double.MaxValue);
         var learningElements = new List<LearningElement> { ele1, ele2 };
@@ -69,8 +69,8 @@ public class LearningSpaceUt
         var goalsChanged = "new goals";
         var positionXChanged = 10f;
         var positionYChanged = 14f;
-        var content1Changed = new LearningContent("a", "b", new byte[]{0x05,0x06});
-        var content2Changed = new LearningContent("w", "e", new byte[]{0x08,0x02});
+        var content1Changed = new LearningContent("a", "b", "");
+        var content2Changed = new LearningContent("w", "e", "");
         var ele1Changed = new LearningElement("ab", "bc", content1Changed, "pupuper", "ffg","hgg",LearningElementDifficultyEnum.Medium, null, 20,50, 33);
         var ele2Changed = new LearningElement("uu", "iii", content2Changed,"lll", "kkk","fff", LearningElementDifficultyEnum.Hard, null, 77,40, 66);
         learningElements.Add(ele1Changed);
@@ -124,8 +124,8 @@ public class LearningSpaceUt
         var requiredPoints = 10;
         var positionX = 5f;
         var positionY = 21f;
-        var content1 = new LearningContent("a", "b", new byte[]{0x01,0x02});
-        var content2 = new LearningContent("w", "e", new byte[]{0x02,0x01});
+        var content1 = new LearningContent("a", "b", "");
+        var content2 = new LearningContent("w", "e", "");
         var ele1 = new LearningElement("a", "b", content1, "pupup", "g","h",LearningElementDifficultyEnum.Easy, null, 17,13, 23);
         var ele2 = new LearningElement("z", "zz", content2,"baba", "z","zz", LearningElementDifficultyEnum.Medium, null, 444,34, double.MaxValue);
         var learningElements = new List<LearningElement> { ele1, ele2 };

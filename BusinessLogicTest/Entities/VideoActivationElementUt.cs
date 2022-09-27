@@ -14,7 +14,7 @@ public class VideoActivationElementUt
         var name = "asdf";
         var shortname = "jkl;";
         var parent = new LearningWorld("foo", "bar", "", "", "", "");
-        var content = new LearningContent("a", "b", Array.Empty<byte>());
+        var content = new LearningContent("a", "b", "");
         var authors = "ben and jerry";
         var description = "very cool element";
         var goals = "learn very many things";

@@ -21,8 +21,8 @@ public class LearningWorldViewModelUt
         var language = "german";
         var description = "very cool element";
         var goals = "learn very many things";
-        var content1 = new LearningContentViewModel("a", "b", new byte[]{0x01,0x02});
-        var content2 = new LearningContentViewModel("z", "e", new byte[]{0x05,0x01});
+        var content1 = new LearningContentViewModel("a", "b", "");
+        var content2 = new LearningContentViewModel("z", "e", "");
         var ele1 = new LearningElementViewModel("a", "b", content1, "e", "f", "g",LearningElementDifficultyEnum.Easy,null, 17, 32,23);
         var ele2 = new LearningElementViewModel("z", "zz",  content2, "z","zzz", "z",LearningElementDifficultyEnum.Medium, null, 444, 33, double.MaxValue);
         var learningElements = new List<ILearningElementViewModel> { ele1, ele2 };
