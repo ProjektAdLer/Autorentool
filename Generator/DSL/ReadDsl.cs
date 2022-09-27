@@ -8,6 +8,7 @@ public class ReadDsl : IReadDsl
 {
     public List<LearningElementJson> ListH5PElements;
     public List<LearningElementJson> ListResourceElements;
+    public List<LearningElementJson> ListLabelElements;
     public List<LearningElementJson> ListAllSpacesAndElementsOrdered;
     private LearningWorldJson _learningWorldJson;
     private IFileSystem _fileSystem;
@@ -30,6 +31,7 @@ public class ReadDsl : IReadDsl
         _rootJson = new DocumentRootJson(_learningWorldJson);
         ListH5PElements = new List<LearningElementJson>();
         ListResourceElements = new List<LearningElementJson>();
+        ListLabelElements = new List<LearningElementJson>();
         ListAllSpacesAndElementsOrdered = new List<LearningElementJson>();
     }
 
@@ -50,6 +52,7 @@ public class ReadDsl : IReadDsl
         }
         GetH5PElements(_rootJson);
         GetResourceElements(_rootJson);
+        GetLabelElements(_rootJson);
         GetSpacesAndElementsOrdered(_rootJson);
         SetLearningWorld(_rootJson);
     }
@@ -79,10 +82,21 @@ public class ReadDsl : IReadDsl
     {
         foreach (var resource in documentRootJson.LearningWorld.LearningElements)
         {
-            if (resource.ElementType is "pdf" or "json" or "jpg" or "png" or "webp" or "bmp" or "mp4" or "txt" or "c"
+            if (resource.ElementType is "pdf" or "json" or "jpg" or "png" or "webp" or "bmp" or "txt" or "c"
                 or "h" or "cpp" or "cc" or "c++" or "py" or "cs" or "js" or "php" or "html" or "css")
             {
                 ListResourceElements.Add(resource);
+            }
+        }
+    }
+    
+    private void GetLabelElements(DocumentRootJson documentRootJson)
+    {
+        foreach (var label in documentRootJson.LearningWorld.LearningElements)
+        {
+            if (label.ElementType is "mp4")
+            {
+                ListResourceElements.Add(label);
             }
         }
     }
@@ -122,6 +136,11 @@ public class ReadDsl : IReadDsl
     public List<LearningElementJson> GetResourceList()
     {
         return ListResourceElements;
+    }
+    
+    public List<LearningElementJson> GetLabelsList()
+    {
+        return ListLabelElements;
     }
     
     //A List that contains all Spaces and Elements in the correct order. 

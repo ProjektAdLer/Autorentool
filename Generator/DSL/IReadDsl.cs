@@ -7,5 +7,6 @@ public interface IReadDsl
     LearningWorldJson GetLearningWorld();
     List<LearningSpaceJson> GetLearningSpaceList();
     List<LearningElementJson> GetResourceList();
+    List<LearningElementJson> GetLabelsList();
     List<LearningElementJson> GetSpacesAndElementsOrderedList();
 }

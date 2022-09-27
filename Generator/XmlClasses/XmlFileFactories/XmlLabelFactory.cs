@@ -72,8 +72,13 @@ public class XmlLabelFactory : IXmlLabelFactory
     
     public void CreateLabelFactory()
     {
-        var labelList = ReadDsl.GetSpacesAndElementsOrderedList();
+        // This step is important to get all spaces included in the world
+        var spaceLabelList = ReadDsl.GetSpacesAndElementsOrderedList();
+        var videoLinkLabelList = ReadDsl.GetLabelsList();
 
+        var labelList = spaceLabelList;
+        labelList.AddRange(videoLinkLabelList);
+        
         LabelSetParameters(labelList);
     }
 
@@ -89,12 +94,17 @@ public class XmlLabelFactory : IXmlLabelFactory
             //A Space got another Font in his Name.
             if (label.ElementType is "space")
             {
-                FileSetParametersActivitySpace();
+                LabelSetParametersActivitySpace();
+            }
+
+            if (label.ElementType is "mp4")
+            {
+                LabelSetParametersActivityVideoLink();
             }
         }
     }
 
-    public void FileSetParametersActivitySpace()
+    public void LabelSetParametersActivitySpace()
     {
         CreateActivityFolder(LabelId);
         
@@ -128,6 +138,54 @@ public class XmlLabelFactory : IXmlLabelFactory
         ActivitiesModuleXmlModule.Id = LabelId;
         //Activity Completion is not needed on labels
         ActivitiesModuleXmlModule.Completion = "0";
+
+        ActivitiesModuleXmlModule.Serialize("label", LabelId);
+        
+        //file activities/label.../grade_history.xml
+        ActivitiesGradeHistoryXmlGradeHistory.Serialize("label", LabelId);
+        
+        //file activities/label.../inforef.xml
+        ActivitiesInforefXmlGradeItemref.GradeItem = ActivitiesInforefXmlGradeItem as ActivitiesInforefXmlGradeItem ?? new ActivitiesInforefXmlGradeItem();
+        ActivitiesInforefXmlInforef.Fileref = ActivitiesInforefXmlFileref as ActivitiesInforefXmlFileref ?? new ActivitiesInforefXmlFileref(); 
+        ActivitiesInforefXmlInforef.GradeItemref = ActivitiesInforefXmlGradeItemref as ActivitiesInforefXmlGradeItemref ?? new ActivitiesInforefXmlGradeItemref();
+        
+        ActivitiesInforefXmlInforef.Serialize("label", LabelId);
+    }
+    
+    public void LabelSetParametersActivityVideoLink()
+    {
+        CreateActivityFolder(LabelId);
+        
+        //file activities/label.../grades.xml
+        ActivitiesGradesXmlGradeItems.GradeItem = ActivitiesGradesXmlGradeItem as ActivitiesGradesXmlGradeItem ?? new ActivitiesGradesXmlGradeItem();
+        ActivitiesGradesXmlActivityGradebook.GradeItems = ActivitiesGradesXmlGradeItems as ActivitiesGradesXmlGradeItems ?? new ActivitiesGradesXmlGradeItems();
+
+        ActivitiesGradesXmlActivityGradebook.Serialize("label", LabelId);
+        
+        //file activities/label.../label.xml
+        ActivitiesLabelXmlLabel.Name = LabelName + " " + LabelDescription;
+        ActivitiesLabelXmlLabel.Id = LabelId;
+        ActivitiesLabelXmlLabel.Intro = LabelName + " " + LabelDescription;
+        ActivitiesLabelXmlLabel.Timemodified = CurrentTime;
+
+        ActivitiesLabelXmlActivity.Label = ActivitiesLabelXmlLabel as ActivitiesLabelXmlLabel ?? new ActivitiesLabelXmlLabel();
+        ActivitiesLabelXmlActivity.Id = LabelId;
+        ActivitiesLabelXmlActivity.ModuleId = LabelId;
+        ActivitiesLabelXmlActivity.ContextId = LabelId;
+
+        ActivitiesLabelXmlActivity.Serialize("label", LabelId);
+
+        //file activities/label.../roles.xml
+        ActivitiesRolesXmlRoles.Serialize("label", LabelId);
+        
+        //file activities/label.../module.xml
+        ActivitiesModuleXmlModule.ModuleName = "label";
+        ActivitiesModuleXmlModule.SectionId = LabelParentSpaceId;
+        ActivitiesModuleXmlModule.SectionNumber = LabelParentSpaceId;
+        ActivitiesModuleXmlModule.Added = CurrentTime;
+        ActivitiesModuleXmlModule.Id = LabelId;
+        //Activity Completion is not needed on labels
+        ActivitiesModuleXmlModule.Completion = "1";
 
         ActivitiesModuleXmlModule.Serialize("label", LabelId);
         
