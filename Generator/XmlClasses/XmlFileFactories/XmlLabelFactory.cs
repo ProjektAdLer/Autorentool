@@ -76,8 +76,8 @@ public class XmlLabelFactory : IXmlLabelFactory
         var spaceLabelList = ReadDsl.GetSpacesAndElementsOrderedList();
         var videoLinkLabelList = ReadDsl.GetLabelsList();
 
-        var labelList = spaceLabelList;
-        labelList.AddRange(videoLinkLabelList);
+        var labelList = videoLinkLabelList;
+        labelList.AddRange(spaceLabelList);
         
         LabelSetParameters(labelList);
     }

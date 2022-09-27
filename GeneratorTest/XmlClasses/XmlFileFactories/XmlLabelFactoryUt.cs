@@ -91,9 +91,13 @@ public class XmlLabelFactoryUt
             mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref, mockInforefInforef);
 
         var mockSpaceElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Space_1"), "space", 0, mockElementValueList);
+        var mockLabelsElementJson = new LearningElementJson(2, new IdentifierJson("Name", "Labels_1"), "mp4", 1, mockElementValueList);
+        
         var spaceJsonList = new List<LearningElementJson> {mockSpaceElementJson};
+        var labelJsonList = new List<LearningElementJson> {mockLabelsElementJson};
 
         mockReadDsl.GetSpacesAndElementsOrderedList().Returns(spaceJsonList);
+        mockReadDsl.GetLabelsList().Returns(labelJsonList);
 
         // Act
         systemUnderTest.CreateLabelFactory();
@@ -134,9 +138,13 @@ public class XmlLabelFactoryUt
         var mockElementValueList = new List<LearningElementValueJson>{new ("type","value")};
 
         var mockSpaceElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Space_1"), "space", 0, mockElementValueList);
+        var mockLabelsElementJson = new LearningElementJson(2, new IdentifierJson("Name", "Labels_1"), "mp4", 1, mockElementValueList);
+        
         var spaceJsonList = new List<LearningElementJson> {mockSpaceElementJson};
+        var labelJsonList = new List<LearningElementJson> {mockLabelsElementJson};
 
         mockReadDsl.GetSpacesAndElementsOrderedList().Returns(spaceJsonList);
+        mockReadDsl.GetLabelsList().Returns(labelJsonList);
 
         // Act
         systemUnderTest.CreateLabelFactory();

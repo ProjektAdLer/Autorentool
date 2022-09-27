@@ -28,6 +28,7 @@ public class XmlEntityManagerUt
         mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "course"));
         mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections"));
         mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "sections", "section_1"));
+        mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport", "activities", "label_2"));
         
         mockReadDsl.GetH5PElementsList().Returns(new List<LearningElementJson>());
         
@@ -55,9 +56,16 @@ public class XmlEntityManagerUt
         var learningElementList = new List<LearningElementJson>(){learningElementJson1, learningElementJson2};
         var learningWorldJson = new LearningWorldJson("uuid", identifierLearningWorldJson, learningWorldContentJson, topicsList, learningSpacesList, learningElementList);
         
+        var mockElementValueList = new List<LearningElementValueJson>{new ("type","value")};
+        var mockLabelsElementJson = new LearningElementJson(2, new IdentifierJson("Name", "Labels_1"), "mp4", 1, mockElementValueList);
+        
+        var labelJsonList = new List<LearningElementJson> {mockLabelsElementJson};
+        
+        mockReadDsl.GetLabelsList().Returns(labelJsonList);
         mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
         mockReadDsl.GetLearningSpaceList().Returns(learningSpacesList);
         mockReadDsl.GetSpacesAndElementsOrderedList().Returns(learningElementList);
+        mockReadDsl.GetLabelsList().Returns(labelJsonList);
         
         // Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
