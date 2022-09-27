@@ -41,50 +41,66 @@ public class MappingProfile : Profile
             .ForMember(x=>x.SelectedLearningWorld, opt=>opt.Ignore())
             .AfterMap((s, d) =>
             {
-                d.SelectedLearningWorld = d.LearningWorlds.FirstOrDefault(x => x.Name == s.SelectedLearningWorld?.Name);
+                d.SelectedLearningWorld = d.LearningWorlds.FirstOrDefault(x => x.Id == s.SelectedLearningWorld?.Id);
             }).ReverseMap()
             .ForMember(x=>x.SelectedLearningWorld, opt=>opt.Ignore())
             .AfterMap((s, d) =>
             {
-                d.SelectedLearningWorld = d.LearningWorlds.FirstOrDefault(x => x.Name == s.SelectedLearningWorld?.Name);
+                d.SelectedLearningWorld = d.LearningWorlds.FirstOrDefault(x => x.Id == s.SelectedLearningWorld?.Id);
             });
         CreateMap<LearningWorld, LearningWorldViewModel>()
+            .EqualityComparison((x, y) => x.Id == y.Id)
             .ForMember(x => x.LearningObjects, opt => opt.Ignore())
             .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
             .ForMember(x => x.ShowingLearningSpaceView, opt => opt.Ignore())
-            .AfterMap((_, d) =>
+            .AfterMap((s, d) =>
             {
                 foreach (var element in d.LearningElements)
                 {
                     element.Parent = d;
                 }
+
+                d.SelectedLearningObject =
+                    (ILearningObjectViewModel?) d.LearningSpaces.FirstOrDefault(x =>
+                        x.Id == s.SelectedLearningObject?.Id) ??
+                    d.LearningElements.FirstOrDefault(x => x.Id == s.SelectedLearningObject?.Id);
             })
             .ReverseMap()
-            .AfterMap((_, d) =>
+            .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
+            .AfterMap((s, d) =>
             {
                 foreach (var element in d.LearningElements)
                 {
                     element.Parent = d;
                 }
+
+                d.SelectedLearningObject =
+                    (ILearningObject?) d.LearningSpaces.FirstOrDefault(x => x.Id == s.SelectedLearningObject?.Id) ??
+                    d.LearningElements.FirstOrDefault(x => x.Id == s.SelectedLearningObject?.Id);
             });
 
         CreateMap<LearningSpace, LearningSpaceViewModel>()
             .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
             .EqualityComparison((x, y) => x.Id == y.Id)
-            .AfterMap((_, d) =>
+            .AfterMap((s, d) =>
             {
                 foreach (var element in d.LearningElements)
                 {
                     element.Parent = d;
                 }
+
+                d.SelectedLearningObject = d.LearningElements.FirstOrDefault(x => x.Id == s.SelectedLearningObject?.Id);
             })
             .ReverseMap()
-            .AfterMap((_, d) =>
+            .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
+            .AfterMap((s, d) =>
             {
                 foreach (var element in d.LearningElements)
                 {
                     element.Parent = d;
                 }
+
+                d.SelectedLearningObject = d.LearningElements.FirstOrDefault(x => x.Id == s.SelectedLearningObject?.Id);
             });
 
         CreateMap<LearningElement, LearningElementViewModel>()

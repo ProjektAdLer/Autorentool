@@ -46,13 +46,14 @@ public class LearningWorld : ILearningWorld, IOriginator
     public string Language { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
-    
+    public ILearningObject? SelectedLearningObject { get; set; }
+
     public bool UnsavedChanges { get; set; }
 
     public IMemento GetMemento()
     {
         return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, LearningElements,
-            LearningSpaces);
+            LearningSpaces, SelectedLearningObject);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -69,13 +70,14 @@ public class LearningWorld : ILearningWorld, IOriginator
         Goals = learningWorldMemento.Goals;
         LearningElements = learningWorldMemento.LearningElements;
         LearningSpaces = learningWorldMemento.LearningSpaces;
+        SelectedLearningObject = learningWorldMemento.SelectedLearningObject;
     }
 
     private record LearningWorldMemento : IMemento
     {
         internal LearningWorldMemento(string name, string shortname, string authors, string language,
-            string description,
-            string goals, List<LearningElement> learningElements, List<LearningSpace> learningSpaces)
+            string description, string goals, List<LearningElement> learningElements, 
+            List<LearningSpace> learningSpaces, ILearningObject? selectedLearningObject = null)
         {
             Name = name;
             Shortname = shortname;
@@ -85,6 +87,7 @@ public class LearningWorld : ILearningWorld, IOriginator
             Goals = goals;
             LearningElements = learningElements.ToList();
             LearningSpaces = learningSpaces.ToList();
+            SelectedLearningObject = selectedLearningObject;
         }
 
         internal List<LearningElement> LearningElements { get; }
@@ -95,5 +98,6 @@ public class LearningWorld : ILearningWorld, IOriginator
         internal string Language { get; }
         internal string Description { get; }
         internal string Goals { get; }
+        internal ILearningObject? SelectedLearningObject { get; }
     }
 }

@@ -28,6 +28,7 @@ public class LoadLearningElementUt
         
         Assert.That(world.LearningElements, Is.Empty);
         Assert.IsFalse(actionWasInvoked);
+        Assert.That(world.SelectedLearningObject, Is.Null);
         
         command.Execute();
 
@@ -36,6 +37,7 @@ public class LoadLearningElementUt
         Assert.That(world.LearningElements[0], Is.EqualTo(element));
         Assert.That(world.LearningElements[0], Is.InstanceOf(typeof(ImageTransferElement)));
         Assert.IsTrue(actionWasInvoked);
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(element));
     }
     
     [Test]
@@ -55,6 +57,7 @@ public class LoadLearningElementUt
         
         Assert.That(world.LearningElements, Is.Empty);
         Assert.IsFalse(actionWasInvoked);
+        Assert.That(world.SelectedLearningObject, Is.Null);
         
         command.Execute();
 
@@ -63,6 +66,7 @@ public class LoadLearningElementUt
         Assert.That(world.LearningElements[0], Is.EqualTo(element));
         Assert.That(world.LearningElements[0], Is.InstanceOf(typeof(VideoTransferElement)));
         Assert.IsTrue(actionWasInvoked);
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(element));
     }
     
     [Test]
@@ -82,6 +86,7 @@ public class LoadLearningElementUt
         
         Assert.That(space.LearningElements, Is.Empty);
         Assert.IsFalse(actionWasInvoked);
+        Assert.That(space.SelectedLearningObject, Is.Null);
         
         command.Execute();
 
@@ -90,6 +95,7 @@ public class LoadLearningElementUt
         Assert.That(space.LearningElements[0], Is.EqualTo(element));
         Assert.That(space.LearningElements[0], Is.InstanceOf(typeof(PdfTransferElement)));
         Assert.IsTrue(actionWasInvoked);
+        Assert.That(space.SelectedLearningObject, Is.EqualTo(element));
     }
     
     [Test]
@@ -109,6 +115,7 @@ public class LoadLearningElementUt
         
         Assert.That(world.LearningElements, Is.Empty);
         Assert.IsFalse(actionWasInvoked);
+        Assert.That(world.SelectedLearningObject, Is.Null);
         
         command.Execute();
 
@@ -117,15 +124,16 @@ public class LoadLearningElementUt
         Assert.That(world.LearningElements[0], Is.EqualTo(element));
         Assert.That(world.LearningElements[0], Is.InstanceOf(typeof(TextTransferElement)));
         Assert.IsTrue(actionWasInvoked);
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(element));
     }
-    
+
     [Test]
     public void Execute_LoadsLearningElement_VideoActivation()
     {
         var space = new LearningWorld("a", "b", "b", "b", "b", "b");
         var element =
             new VideoActivationElement("a", "b", space, null!, "a", "b",
-                "c", LearningElementDifficultyEnum.Easy, 1, 9, 2,3);
+                "c", LearningElementDifficultyEnum.Easy, 1, 9, 2, 3);
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         const string filepath = "c:\\temp\\test";
         mockBusinessLogic.LoadLearningElement(filepath).Returns(element);
@@ -133,10 +141,11 @@ public class LoadLearningElementUt
         Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
 
         var command = new LoadLearningElement(space, filepath, mockBusinessLogic, mappingAction);
-        
+
         Assert.That(space.LearningElements, Is.Empty);
         Assert.IsFalse(actionWasInvoked);
-        
+        Assert.That(space.SelectedLearningObject, Is.Null);
+
         command.Execute();
 
         mockBusinessLogic.Received().LoadLearningElement(filepath);
@@ -144,8 +153,9 @@ public class LoadLearningElementUt
         Assert.That(space.LearningElements[0], Is.EqualTo(element));
         Assert.That(space.LearningElements[0], Is.InstanceOf(typeof(VideoActivationElement)));
         Assert.IsTrue(actionWasInvoked);
+        Assert.That(space.SelectedLearningObject, Is.EqualTo(element));
     }
-    
+
     [Test]
     public void Execute_LoadsLearningElement_H5PActivation()
     {
@@ -163,6 +173,7 @@ public class LoadLearningElementUt
         
         Assert.That(world.LearningElements, Is.Empty);
         Assert.IsFalse(actionWasInvoked);
+        Assert.That(world.SelectedLearningObject, Is.Null);
         
         command.Execute();
 
@@ -171,6 +182,7 @@ public class LoadLearningElementUt
         Assert.That(world.LearningElements[0], Is.EqualTo(element));
         Assert.That(world.LearningElements[0], Is.InstanceOf(typeof(H5PActivationElement)));
         Assert.IsTrue(actionWasInvoked);
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(element));
     }
     
     [Test]
@@ -190,6 +202,7 @@ public class LoadLearningElementUt
         
         Assert.That(space.LearningElements, Is.Empty);
         Assert.IsFalse(actionWasInvoked);
+        Assert.That(space.SelectedLearningObject, Is.Null);
         
         command.Execute();
 
@@ -198,6 +211,7 @@ public class LoadLearningElementUt
         Assert.That(space.LearningElements[0], Is.EqualTo(element));
         Assert.That(space.LearningElements[0], Is.InstanceOf(typeof(H5PInteractionElement)));
         Assert.IsTrue(actionWasInvoked);
+        Assert.That(space.SelectedLearningObject, Is.EqualTo(element));
     }
     
     [Test]
@@ -217,6 +231,7 @@ public class LoadLearningElementUt
         
         Assert.That(world.LearningElements, Is.Empty);
         Assert.IsFalse(actionWasInvoked);
+        Assert.That(world.SelectedLearningObject, Is.Null);
         
         command.Execute();
 
@@ -225,6 +240,7 @@ public class LoadLearningElementUt
         Assert.That(world.LearningElements[0], Is.EqualTo(element));
         Assert.That(world.LearningElements[0], Is.InstanceOf(typeof(H5PTestElement)));
         Assert.IsTrue(actionWasInvoked);
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(element));
     }
     
     [Test]
@@ -253,37 +269,54 @@ public class LoadLearningElementUt
         var element =
             new LearningElement("a", "b", null!, "a", "b",
                 "c", LearningElementDifficultyEnum.Easy, world, 1, 9, 2,3);
+        var element2 = new LearningElement("f", "g", null!, "h", "i", "j",
+            LearningElementDifficultyEnum.Easy, world, 5, 2, 1,5);
         mockBusinessLogic.LoadLearningElement(Arg.Any<string>()).Returns(element);
+        world.LearningElements.Add(element2);
+        world.SelectedLearningObject = element2;
         var command = new LoadLearningElement(world, "element", mockBusinessLogic, mappingAction);
         
-        Assert.That(world.LearningElements, Is.Empty);
+        Assert.That(world.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(world.LearningElements[0], Is.EqualTo(element2));
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(element2));
         
         command.Execute();
         
-        Assert.That(world.LearningElements, Has.Count.EqualTo(1));
-        Assert.That(world.LearningElements[0], Is.EqualTo(element));
+        Assert.That(world.LearningElements, Has.Count.EqualTo(2));
+        Assert.That(world.LearningElements[0], Is.EqualTo(element2));
+        Assert.That(world.LearningElements[1], Is.EqualTo(element));
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(element));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Undo();
         
-        Assert.That(world.LearningElements, Is.Empty);
+        Assert.That(world.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(world.LearningElements[0], Is.EqualTo(element2));
+        Assert.That(world.SelectedLearningObject.Name, Is.EqualTo(element2.Name));
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(element2));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Redo();
         
-        Assert.That(world.LearningElements, Has.Count.EqualTo(1));
-        Assert.That(world.LearningElements[0], Is.EqualTo(element));
+        Assert.That(world.LearningElements, Has.Count.EqualTo(2));
+        Assert.That(world.LearningElements[0], Is.EqualTo(element2));
+        Assert.That(world.LearningElements[1], Is.EqualTo(element));
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(element));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Undo();
         
-        Assert.That(world.LearningElements, Is.Empty);
+        Assert.That(world.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(world.LearningElements[0], Is.EqualTo(element2));
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(element2));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Redo();
         
-        Assert.That(world.LearningElements, Has.Count.EqualTo(1));
-        Assert.That(world.LearningElements[0], Is.EqualTo(element));
+        Assert.That(world.LearningElements, Has.Count.EqualTo(2));
+        Assert.That(world.LearningElements[0], Is.EqualTo(element2));
+        Assert.That(world.LearningElements[1], Is.EqualTo(element));
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(element));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
     }
 }

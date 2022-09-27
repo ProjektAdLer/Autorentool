@@ -1,6 +1,6 @@
-﻿namespace Presentation.PresentationLogic;
+﻿namespace BusinessLogic.Entities;
 
-public interface ILearningObjectViewModel
+public interface ILearningObject
 {
     Guid Id { get; }
     public string Name { get; set; }

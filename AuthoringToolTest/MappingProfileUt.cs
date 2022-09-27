@@ -676,6 +676,8 @@ public class MappingProfileUt
         Assert.That(source.LearningWorlds, Has.Count.EqualTo(2));
         Assert.Multiple(() =>
         {
+            Assert.That(source.LearningWorlds.First(), Is.EqualTo(world1));
+            Assert.That(source.LearningWorlds.Last(), Is.EqualTo(world2));
             Assert.That(source.LearningWorlds.First().Name, Is.EqualTo("world1"));
             Assert.That(source.LearningWorlds.Last().Name, Is.EqualTo("world2"));
             Assert.That(source.SelectedLearningWorld, Is.Not.Null);

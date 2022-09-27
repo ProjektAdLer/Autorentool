@@ -24,6 +24,7 @@ public class DeleteLearningWorld : IUndoCommand
         var realLearningWorld = AuthoringToolWorkspace.LearningWorlds.First(lw => lw.Id == LearningWorld.Id);
 
         AuthoringToolWorkspace.LearningWorlds.Remove(realLearningWorld);
+        AuthoringToolWorkspace.SelectedLearningWorld = AuthoringToolWorkspace.LearningWorlds.LastOrDefault();
 
         MappingAction.Invoke(AuthoringToolWorkspace);
     }
@@ -40,10 +41,5 @@ public class DeleteLearningWorld : IUndoCommand
         MappingAction.Invoke(AuthoringToolWorkspace);
     }
 
-    public void Redo()
-    {
-        AuthoringToolWorkspace.LearningWorlds.Remove(LearningWorld);
-
-        MappingAction.Invoke(AuthoringToolWorkspace);
-    }
+    public void Redo() => Execute();
 }

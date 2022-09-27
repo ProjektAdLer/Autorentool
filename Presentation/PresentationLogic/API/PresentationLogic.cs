@@ -318,16 +318,21 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
-    public ILearningSpaceViewModel LoadLearningSpaceViewModel(Stream stream)
+    public void LoadLearningSpaceViewModel(ILearningWorldViewModel learningWorldVm, Stream stream)
     {
-        var space = BusinessLogic.LoadLearningSpace(stream);
-        return Mapper.Map<LearningSpaceViewModel>(space);
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var command = new LoadLearningSpace(worldEntity, stream, BusinessLogic,
+            world => Mapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
     }
 
-    public ILearningElementViewModel LoadLearningElementViewModel(Stream stream)
+    public void LoadLearningElementViewModel(ILearningElementViewModelParent parentVm, Stream stream)
     {
-        var element = BusinessLogic.LoadLearningElement(stream);
-        return Mapper.Map<LearningElementViewModel>(element);
+        var parentEntity = Mapper.Map<ILearningElementParent>(parentVm);
+        var command =
+            new LoadLearningElement(parentEntity, stream, BusinessLogic,
+                parent => Mapper.Map(parent, parentVm));
+        BusinessLogic.ExecuteCommand(command);
     }
     
     public LearningContentViewModel LoadLearningContentViewModel(string name, Stream stream)

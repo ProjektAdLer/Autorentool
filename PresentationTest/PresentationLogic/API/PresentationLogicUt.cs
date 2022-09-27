@@ -1415,16 +1415,16 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         mockMapper.Map<LearningSpaceViewModel>(Arg.Any<BusinessLogic.Entities.LearningSpace>())
             .Returns(mockLearningSpaceViewModel);
+        var learningWorldVm = Substitute.For<ILearningWorldViewModel>();
         var stream = Substitute.For<Stream>();
 
         var systemUnderTest =
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
 
-        var result = systemUnderTest.LoadLearningSpaceViewModel(stream);
+       systemUnderTest.LoadLearningSpaceViewModel(learningWorldVm, stream);
 
         mockBusinessLogic.Received().LoadLearningSpace(stream);
-        mockMapper.Received().Map<LearningSpaceViewModel>(mockLearningSpace);
-        Assert.That(result, Is.EqualTo(mockLearningSpaceViewModel));
+        mockMapper.Received().Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
     }
 
     [Test]
@@ -1432,11 +1432,12 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.LoadLearningSpace(Arg.Any<Stream>()).Throws(new Exception("Exception"));
+        var learningWorldVm = Substitute.For<ILearningWorldViewModel>();
         var stream = Substitute.For<Stream>();
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
-        var ex = Assert.Throws<Exception>(() => systemUnderTest.LoadLearningSpaceViewModel(stream));
+        var ex = Assert.Throws<Exception>(() => systemUnderTest.LoadLearningSpaceViewModel(learningWorldVm, stream));
         Assert.That(ex, Is.Not.Null);
         Assert.That(ex?.Message, Is.EqualTo("Exception"));
     }
@@ -1452,16 +1453,16 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         mockMapper.Map<LearningElementViewModel>(Arg.Any<BusinessLogic.Entities.LearningElement>())
             .Returns(mockLearningElementViewModel);
+        var learningSpaceVm = Substitute.For<ILearningSpaceViewModel>();
         var stream = Substitute.For<Stream>();
 
         var systemUnderTest =
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
 
-        var result = systemUnderTest.LoadLearningElementViewModel(stream);
+        systemUnderTest.LoadLearningElementViewModel(learningSpaceVm, stream);
 
         mockBusinessLogic.Received().LoadLearningElement(stream);
-        mockMapper.Received().Map<LearningElementViewModel>(mockLearningElement);
-        Assert.That(result, Is.EqualTo(mockLearningElementViewModel));
+        mockMapper.Received().Map<ILearningElementParent>(learningSpaceVm);
     }
 
     [Test]
@@ -1469,11 +1470,12 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         mockBusinessLogic.LoadLearningElement(Arg.Any<Stream>()).Throws(new Exception("Exception"));
+        var learningSpaceVm = Substitute.For<ILearningSpaceViewModel>();
         var stream = Substitute.For<Stream>();
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
-        var ex = Assert.Throws<Exception>(() => systemUnderTest.LoadLearningElementViewModel(stream));
+        var ex = Assert.Throws<Exception>(() => systemUnderTest.LoadLearningElementViewModel(learningSpaceVm, stream));
         Assert.That(ex, Is.Not.Null);
         Assert.That(ex?.Message, Is.EqualTo("Exception"));
     }

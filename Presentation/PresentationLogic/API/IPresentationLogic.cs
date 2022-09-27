@@ -263,6 +263,6 @@ public interface IPresentationLogic
 
     LearningContentViewModel LoadLearningContentViewModel(string name, Stream stream);
     void LoadLearningWorldViewModel(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, Stream stream);
-    ILearningSpaceViewModel LoadLearningSpaceViewModel(Stream stream);
-    ILearningElementViewModel LoadLearningElementViewModel(Stream stream);
+    void LoadLearningSpaceViewModel(ILearningWorldViewModel learningWorldVm, Stream stream);
+    void LoadLearningElementViewModel(ILearningElementViewModelParent parentVm, Stream stream);
 }

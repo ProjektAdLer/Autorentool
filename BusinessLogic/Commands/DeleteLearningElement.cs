@@ -24,6 +24,18 @@ public class DeleteLearningElement : IUndoCommand
         var element = ElementParent.LearningElements.First(x => x.Id == LearningElement.Id);
 
         ElementParent.LearningElements.Remove(element);
+
+        switch (ElementParent)
+        {
+            case LearningWorld world:
+                world.SelectedLearningObject =
+                    (ILearningObject?)world.LearningSpaces.LastOrDefault() ?? world.LearningElements.LastOrDefault();
+                break;
+            case LearningSpace space:
+                space.SelectedLearningObject =
+                    space.LearningElements.LastOrDefault();
+                break;
+        }
         
         _mappingAction.Invoke(ElementParent);
     }

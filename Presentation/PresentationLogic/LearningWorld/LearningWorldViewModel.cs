@@ -153,6 +153,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     public bool ShowingLearningSpaceView
     {
         get => _showingLearningSpaceView;
+        //TODO: Throw exception if ShowingLearningSpaceView is set to true but LearningSpaceViewModel in LearningSpacePresenter is null
         set => SetField(ref _showingLearningSpaceView, value);
     }
     

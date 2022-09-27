@@ -821,32 +821,99 @@ public class CreateLearningElementUt
     }
     
     [Test]
-    public void UndoRedo_UndoesRedoesCreateLearningElement_WorldParent()
+    public void CreateLearningElement_SetElementAsSelectedInParent_WorldParent()
     {
         var testParameter = new TestParameter();
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.ShortName,
-            ElementTypeEnum.Transfer, ContentTypeEnum.Image, testParameter.Content,
-            testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.Points, mappingAction);
+        var element = new H5PTestElement(testParameter.Name, testParameter.ShortName, testParameter.WorldParent,
+            testParameter.Content, testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
+            testParameter.Workload, testParameter.Points,1,2);
+        
+        var command = new CreateLearningElement(testParameter.WorldParent, element, mappingAction);
 
         Assert.IsEmpty(testParameter.WorldParent.LearningElements);
         Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
-
+        
+        Assert.That(actionWasInvoked, Is.True);
         Assert.That(testParameter.WorldParent.LearningElements, Has.Count.EqualTo(1));
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(testParameter.WorldParent.LearningElements.First(), Is.InstanceOf(typeof(H5PTestElement))); 
+            Assert.That(testParameter.WorldParent.LearningElements.First(), Is.EqualTo(element));
+            Assert.That(testParameter.WorldParent.SelectedLearningObject, Is.EqualTo(element));
+        });
+    }
+    
+    [Test]
+    public void CreateLearningElement_SetElementAsSelectedInParent_SpaceParent()
+    {
+        var testParameter = new TestParameter();
+        var actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
+        var element = new H5PTestElement(testParameter.Name, testParameter.ShortName, testParameter.SpaceParent,
+            testParameter.Content, testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
+            testParameter.Workload, testParameter.Points,1,2);
+        
+        var command = new CreateLearningElement(testParameter.SpaceParent, element, mappingAction);
+
+        Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsFalse(actionWasInvoked);
+
+        command.Execute();
+        
+        Assert.That(actionWasInvoked, Is.True);
+        Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(testParameter.SpaceParent.LearningElements.First(), Is.InstanceOf(typeof(H5PTestElement))); 
+            Assert.That(testParameter.SpaceParent.LearningElements.First(), Is.EqualTo(element));
+            Assert.That(testParameter.SpaceParent.SelectedLearningObject, Is.EqualTo(element));
+        });
+    }
+
+    [Test]
+    public void UndoRedo_UndoesRedoesCreateLearningElement_WorldParent()
+    {
+        var testParameter = new TestParameter();
+        var worldParent = testParameter.WorldParent;
+        bool actionWasInvoked = false;
+        Action<ILearningElementParent> mappingAction = _ => actionWasInvoked = true;
+        var command = new CreateLearningElement(worldParent, testParameter.Name, testParameter.ShortName,
+            ElementTypeEnum.Transfer, ContentTypeEnum.Image, testParameter.Content,
+            testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
+            testParameter.Workload, testParameter.Points, mappingAction);
+        var element2 = new LearningElement("x", "x", null!, "x", "x", "x", LearningElementDifficultyEnum.Easy);
+        worldParent.LearningElements.Add(element2);
+        worldParent.SelectedLearningObject = element2;
+        
+
+        Assert.That(worldParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(worldParent.LearningElements.First(), Is.EqualTo(element2));
+        Assert.That(worldParent.SelectedLearningObject, Is.EqualTo(element2));
+        Assert.IsFalse(actionWasInvoked);
+
+        command.Execute();
+
+        Assert.That(worldParent.LearningElements, Has.Count.EqualTo(2));
+        Assert.That(worldParent.SelectedLearningObject, Is.EqualTo(worldParent.LearningElements.Last()));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Undo();
         
-        Assert.IsEmpty(testParameter.WorldParent.LearningElements);
+        Assert.That(worldParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(worldParent.LearningElements.First(), Is.EqualTo(element2));
+        Assert.That(worldParent.SelectedLearningObject, Is.EqualTo(element2));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Redo();
         
-        Assert.That(testParameter.WorldParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(worldParent.LearningElements, Has.Count.EqualTo(2));
+        Assert.That(worldParent.SelectedLearningObject, Is.EqualTo(worldParent.LearningElements.Last()));
         Assert.IsTrue(actionWasInvoked);
     }
 

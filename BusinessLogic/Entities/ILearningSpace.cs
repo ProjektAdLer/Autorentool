@@ -1,9 +1,8 @@
 ﻿namespace BusinessLogic.Entities;
 
-public interface ILearningSpace : ISpace
+public interface ILearningSpace : ISpace, ILearningObject
 {
-    Guid Id { get; }
-    string Description { get; set; }
+    new string Description { get; set; }
     string Shortname { get; set; }
     string Authors { get; set; }
     string Goals { get; set; }

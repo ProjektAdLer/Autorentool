@@ -122,8 +122,6 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
         await _presentationLogic.LoadLearningElementAsync(LearningSpaceVm);
-        var learningElement = LearningSpaceVm.LearningElements.Last();
-        SetSelectedLearningObject(learningElement);
     }
 
     public void AddLearningElement(ILearningElementViewModel element)
@@ -212,7 +210,6 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
                         
             _presentationLogic.CreateLearningElement(parentElement, name, shortname, elementType, contentType,
                 learningContent, authors, description, goals, difficulty, workload, points);
-            LearningSpaceVm.SelectedLearningObject = LearningSpaceVm.LearningElements.Last();
 
         }
         catch (AggregateException)

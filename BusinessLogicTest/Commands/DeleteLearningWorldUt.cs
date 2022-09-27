@@ -8,11 +8,12 @@ namespace BusinessLogicTest.Commands;
 public class DeleteLearningWorldUt
 {
     [Test]
-    public void Execute_DeletesLearningSpace()
+    public void Execute_DeletesLearningWorld()
     {
         var workspace = new AuthoringToolWorkspace(null, new List<LearningWorld>());
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         workspace.LearningWorlds.Add(world);
+        workspace.SelectedLearningWorld = world;
         bool actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
@@ -20,11 +21,41 @@ public class DeleteLearningWorldUt
 
         Assert.That(workspace.LearningWorlds, Does.Contain(world));
         Assert.IsFalse(actionWasInvoked);
+        Assert.That(workspace.SelectedLearningWorld, Is.EqualTo(world));
 
         command.Execute();
 
         Assert.That(workspace.LearningWorlds, Is.Empty);
         Assert.IsTrue(actionWasInvoked);
+        Assert.That(workspace.SelectedLearningWorld, Is.Null);
+    }
+    
+    [Test]
+    public void Execute_DeletesLearningWorldAndSetsAnotherLearningWorldAsSelected()
+    {
+        var workspace = new AuthoringToolWorkspace(null, new List<LearningWorld>());
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
+        var world2 = new LearningWorld("g", "h", "i", "j", "k", "l");
+        workspace.LearningWorlds.Add(world);
+        workspace.LearningWorlds.Add(world2);
+        workspace.SelectedLearningWorld = world;
+        bool actionWasInvoked = false;
+        Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
+
+        var command = new DeleteLearningWorld(workspace, world, mappingAction);
+
+        Assert.That(workspace.LearningWorlds.Count, Is.EqualTo(2));
+        Assert.That(workspace.LearningWorlds, Does.Contain(world));
+        Assert.IsFalse(actionWasInvoked);
+        Assert.That(workspace.SelectedLearningWorld, Is.EqualTo(world));
+
+        command.Execute();
+
+        
+        Assert.That(workspace.LearningWorlds.Count, Is.EqualTo(1));
+        Assert.That(workspace.LearningWorlds, Does.Not.Contain(world));
+        Assert.IsTrue(actionWasInvoked);
+        Assert.That(workspace.SelectedLearningWorld, Is.EqualTo(world2));
     }
 
     [Test]
@@ -45,32 +76,39 @@ public class DeleteLearningWorldUt
     }
 
     [Test]
-    public void UndoRedo_UndoesAndRedoesCreateLearningSpace()
+    public void UndoRedo_UndoesAndRedoesCreateLearningWorld()
     {
         var workspace = new AuthoringToolWorkspace(null, new List<LearningWorld>());
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
+        var world2 = new LearningWorld("g", "h", "i", "j", "k", "l");
         workspace.LearningWorlds.Add(world);
+        workspace.LearningWorlds.Add(world2);
+        workspace.SelectedLearningWorld = world;
         bool actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new DeleteLearningWorld(workspace, world, mappingAction);
 
-        Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
+        Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(2));
+        Assert.That(workspace.SelectedLearningWorld, Is.EqualTo(world));
         Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
-        Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(0));
+        Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
+        Assert.That(workspace.SelectedLearningWorld, Is.EqualTo(world2));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
 
         command.Undo();
 
-        Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
+        Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(2));
+        Assert.That(workspace.SelectedLearningWorld, Is.EqualTo(world));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
 
         command.Redo();
 
-        Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(0));
+        Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
+        Assert.That(workspace.SelectedLearningWorld, Is.EqualTo(world2));
         Assert.IsTrue(actionWasInvoked);
     }
 }

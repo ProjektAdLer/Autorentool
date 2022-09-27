@@ -154,8 +154,8 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         _presentationLogic.CreateLearningSpace(LearningWorldVm, name, shortname, authors, description, goals, requiredPoints);
-        var learningSpace = LearningWorldVm.LearningSpaces.Last();
-        SetSelectedLearningObject(learningSpace);
+        //TODO: Return error in the command in case of failure
+        _learningSpacePresenter.SetLearningSpace((LearningSpaceViewModel) LearningWorldVm.SelectedLearningObject);
     }
 
     /// <summary>
@@ -316,8 +316,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         await _presentationLogic.LoadLearningElementAsync(LearningWorldVm);
-        var learningElement = LearningWorldVm.LearningElements.Last();
-        SetSelectedLearningObject(learningElement);
     }
 
     /// <summary>
@@ -401,7 +399,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
             
             _presentationLogic.CreateLearningElement(parentElement, name, shortname, elementType, contentType,
                 learningContent, authors, description, goals, difficulty, workload, points);
-            LearningWorldVm.SelectedLearningObject = LearningWorldVm.LearningElements.Last();
         }
         catch (AggregateException)
         {

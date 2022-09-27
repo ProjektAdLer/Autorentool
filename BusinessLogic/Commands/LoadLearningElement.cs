@@ -21,12 +21,24 @@ public class LoadLearningElement : IUndoCommand
         _businessLogic = businessLogic;
         _mappingAction = mappingAction;
     }
+    
+    public LoadLearningElement(ILearningElementParent elementParent, Stream stream, IBusinessLogic businessLogic,
+        Action<ILearningElementParent> mappingAction)
+    {
+        ElementParent = elementParent;
+        _filepath = "";
+        _businessLogic = businessLogic;
+        _learningElement = _businessLogic.LoadLearningElement(stream);
+        _mappingAction = mappingAction;
+    }
     public void Execute()
     {
         _memento = ElementParent.GetMemento();
         
         _learningElement ??= _businessLogic.LoadLearningElement(_filepath);
+        _learningElement.Parent = ElementParent;
         ElementParent.LearningElements.Add(_learningElement);
+        ElementParent.SelectedLearningObject = _learningElement;
         
         _mappingAction.Invoke(ElementParent);
     }

@@ -2,19 +2,16 @@
 
 namespace BusinessLogic.Entities;
 
-public interface ILearningElement
+public interface ILearningElement : ILearningObject
 {
-    Guid Id { get; }
-    string Name { get; set; }
+    new string Name { get; set; }
     string Shortname { get; set; }
     public ILearningElementParent? Parent { get; set; }
     LearningContent LearningContent { get; set; }
     string Authors { get; set; }
-    string Description { get; set; }
+    new string Description { get; set; }
     string Goals { get; set; }
     int Workload { get; set; }
     int Points { get; set; }
     LearningElementDifficultyEnum Difficulty { get; set; }
-    double PositionX { get; set; }
-    double PositionY { get; set; }
 }

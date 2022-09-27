@@ -46,6 +46,7 @@ public class CreateLearningElement : IUndoCommand
         _memento = ElementParent.GetMemento();
 
         ElementParent.LearningElements.Add(LearningElement);
+        ElementParent.SelectedLearningObject = LearningElement;
         
         _mappingAction.Invoke(ElementParent);
     }

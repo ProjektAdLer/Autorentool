@@ -25,6 +25,7 @@ public class CreateLearningWorldUt
 
         Assert.IsEmpty(workspace.LearningWorlds);
         Assert.IsFalse(actionWasInvoked);
+        Assert.That(workspace.SelectedLearningWorld, Is.Null);
 
         command.Execute();
 
@@ -40,6 +41,7 @@ public class CreateLearningWorldUt
             Assert.That(world.Description, Is.EqualTo("d"));
             Assert.That(world.Goals, Is.EqualTo("g"));
         });
+        Assert.That(workspace.SelectedLearningWorld, Is.SameAs(world));
     }
 
     [Test]
@@ -103,6 +105,7 @@ public class CreateLearningWorldUt
         var workspace = new AuthoringToolWorkspace(null, new List<LearningWorld>());
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         workspace.LearningWorlds.Add(world);
+        workspace.SelectedLearningWorld = world;
         var name = "n";
         var shortname = "sn";
         var authors = "a";
@@ -116,21 +119,25 @@ public class CreateLearningWorldUt
             mappingAction);
 
         Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
+        Assert.That(workspace.SelectedLearningWorld, Is.EqualTo(world));
         Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
         Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(2));
+        Assert.That(workspace.SelectedLearningWorld, Is.EqualTo(command.LearningWorld));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
 
         command.Undo();
 
         Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(1));
+        Assert.That(workspace.SelectedLearningWorld, Is.EqualTo(world));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
 
         command.Redo();
 
         Assert.That(workspace.LearningWorlds, Has.Count.EqualTo(2));
+        Assert.That(workspace.SelectedLearningWorld, Is.EqualTo(command.LearningWorld));
         Assert.IsTrue(actionWasInvoked); 
     }
 }

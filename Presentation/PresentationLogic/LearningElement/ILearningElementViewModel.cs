@@ -5,7 +5,6 @@ namespace Presentation.PresentationLogic.LearningElement;
 
 public interface ILearningElementViewModel : ILearningObjectViewModel, IDisplayableLearningObject
 {
-    Guid Id { get; }
     new string Name { get; set; }
     string Shortname { get; set; }
     ILearningElementViewModelParent? Parent { get; set; }
