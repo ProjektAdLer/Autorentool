@@ -51,7 +51,7 @@ public class CreateDsl : ICreateDsl
 
         // All learningElements that have no learningSpace are added to the learningWorld (With the LearningSpaceParentId=0)
         var learningWorldElements = new LearningSpacePe("Freie Lernelemente", "FEE", "Dimitri",
-            "Diese Lernelemente sind keinem Lernraum zugeordnet", "", 5, learningWorld.LearningElements,1,1);
+            "Diese Lernelemente sind keinem Lernraum zugeordnet", "", 0, learningWorld.LearningElements,1,1);
         ListLearningSpaces.Add(learningWorldElements);
         
         // Create Learning Spaces & fill into Learning World
@@ -96,11 +96,14 @@ public class CreateDsl : ICreateDsl
                 learningSpaceElementId++;
                 LearningWorldJson.LearningElements.Add(learningElementJson);
             }
-
+            
             
             // Add Learning Space to Learning World
             LearningWorldJson.LearningSpaces.Add(new LearningSpaceJson(learningSpaceId,
-                learningSpaceIdentifier, _listLearningSpaceContent, learningSpace.Description, learningSpace.Goals));
+                learningSpaceIdentifier, _listLearningSpaceContent, 
+                learningSpace.RequiredPoints.ToString(), 
+                learningSpace.LearningElements.Sum(element => element.Points).ToString(),
+                learningSpace.Description, learningSpace.Goals));
 
             learningSpaceId++;
         }
