@@ -78,7 +78,7 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
         systemUnderTest.LearningWorldVm?.LearningSpaces.Add(space);
 
         systemUnderTest.CreateNewLearningSpace("foo", "bar", "foo", "bar", "foo", 5);
@@ -117,7 +117,7 @@ public class LearningWorldPresenterUt
             new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnCreateSpaceDialogClose(returnValueTuple));
         Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
@@ -135,8 +135,8 @@ public class LearningWorldPresenterUt
             new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
-
+        systemUnderTest.LearningWorldVm = world;
+        
         var ex = Assert.Throws<ApplicationException>(() =>
             systemUnderTest.OnCreateElementDialogClose(returnValueTuple));
         Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
@@ -182,7 +182,7 @@ public class LearningWorldPresenterUt
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
 
         systemUnderTest.OnCreateSpaceDialogClose(returnValueTuple);
 
@@ -216,7 +216,7 @@ public class LearningWorldPresenterUt
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
@@ -250,7 +250,7 @@ public class LearningWorldPresenterUt
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
@@ -284,7 +284,7 @@ public class LearningWorldPresenterUt
         var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
         systemUnderTest.CreateLearningElementWithPreloadedContent(content);
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
@@ -315,7 +315,7 @@ public class LearningWorldPresenterUt
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
 
         var ex = Assert.Throws<ApplicationException>(() =>
             systemUnderTest.OnCreateElementDialogClose(returnValueTuple));
@@ -346,8 +346,8 @@ public class LearningWorldPresenterUt
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
-        
+        systemUnderTest.LearningWorldVm = world;
+
         var ex = Assert.Throws<ApplicationException>(() =>
             systemUnderTest.OnCreateElementDialogClose(returnValueTuple));
         Assert.That(ex!.Message, Is.EqualTo("Couldn't parse returned element type"));
@@ -377,8 +377,8 @@ public class LearningWorldPresenterUt
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
-        
+        systemUnderTest.LearningWorldVm = world;
+
         var ex = Assert.Throws<ApplicationException>(() =>
             systemUnderTest.OnCreateElementDialogClose(returnValueTuple));
         Assert.That(ex!.Message, Is.EqualTo("Couldn't parse returned content type"));
@@ -408,8 +408,8 @@ public class LearningWorldPresenterUt
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
-        
+        systemUnderTest.LearningWorldVm = world;
+
         var ex = Assert.Throws<ApplicationException>(() =>
             systemUnderTest.OnCreateElementDialogClose(returnValueTuple));
         Assert.That(ex!.Message, Is.EqualTo("Couldn't parse returned difficulty"));
@@ -442,7 +442,7 @@ public class LearningWorldPresenterUt
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
@@ -476,7 +476,7 @@ public class LearningWorldPresenterUt
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
@@ -510,7 +510,7 @@ public class LearningWorldPresenterUt
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
@@ -544,7 +544,7 @@ public class LearningWorldPresenterUt
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
 
         systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
 
@@ -566,7 +566,7 @@ public class LearningWorldPresenterUt
             new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditSpaceDialogClose(returnValueTuple));
         Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
@@ -583,7 +583,7 @@ public class LearningWorldPresenterUt
             new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditElementDialogClose(returnValueTuple));
         Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
@@ -614,7 +614,7 @@ public class LearningWorldPresenterUt
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
         world.SelectedLearningObject = element;
 
         var ex = Assert.Throws<ApplicationException>(() =>
@@ -647,7 +647,7 @@ public class LearningWorldPresenterUt
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
         world.SelectedLearningObject = element;
 
         var ex = Assert.Throws<ApplicationException>(() =>
@@ -681,7 +681,7 @@ public class LearningWorldPresenterUt
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
         world.SelectedLearningObject = element;
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
@@ -715,7 +715,7 @@ public class LearningWorldPresenterUt
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
         world.SelectedLearningObject = element;
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
@@ -749,7 +749,7 @@ public class LearningWorldPresenterUt
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
         world.SelectedLearningObject = element;
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
@@ -783,7 +783,7 @@ public class LearningWorldPresenterUt
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
         world.SelectedLearningObject = element;
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
@@ -812,7 +812,7 @@ public class LearningWorldPresenterUt
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(learningSpacePresenter: spacePresenter);
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
         world.SelectedLearningObject = space;
 
 
@@ -858,7 +858,7 @@ public class LearningWorldPresenterUt
         var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
         world.SelectedLearningObject = element;
         
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditSpaceDialogClose(returnValueTuple));
@@ -892,7 +892,7 @@ public class LearningWorldPresenterUt
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
         world.LearningElements.Add(element);
         world.LearningSpaces.Add(space);
         world.SelectedLearningObject = element;
@@ -933,7 +933,7 @@ public class LearningWorldPresenterUt
     public void DeleteSelectedLearningObject_ThrowsWhenSelectedWorldNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, null);
+        systemUnderTest.LearningWorldVm = null;
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteSelectedLearningObject());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
@@ -946,7 +946,7 @@ public class LearningWorldPresenterUt
             "foo");
 
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
 
         Assert.Multiple(() =>
         {
@@ -969,7 +969,7 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
 
         systemUnderTest.DeleteSelectedLearningObject();
 
@@ -989,7 +989,7 @@ public class LearningWorldPresenterUt
         var mockPresentationLogic = Substitute.For<IPresentationLogic>();
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: mockPresentationLogic);
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
 
         systemUnderTest.DeleteSelectedLearningObject();
 
@@ -1005,7 +1005,7 @@ public class LearningWorldPresenterUt
         world.SelectedLearningObject = learningObject;
 
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
 
         var ex = Assert.Throws<NotImplementedException>(() => systemUnderTest.DeleteSelectedLearningObject());
         Assert.That(ex!.Message, Is.EqualTo("Type of LearningObject is not implemented"));
@@ -1019,7 +1019,7 @@ public class LearningWorldPresenterUt
     public void OpenEditSelectedLearningObjectDialog_ThrowsWhenSelectedWorldNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, null);
+        systemUnderTest.LearningWorldVm = null;
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OpenEditSelectedLearningObjectDialog());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
@@ -1032,7 +1032,7 @@ public class LearningWorldPresenterUt
             "foo");
 
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
 
         systemUnderTest.OpenEditSelectedLearningObjectDialog();
         Assert.Multiple(() =>
@@ -1055,7 +1055,7 @@ public class LearningWorldPresenterUt
         world.SelectedLearningObject = space;
 
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
 
         systemUnderTest.OpenEditSelectedLearningObjectDialog();
         Assert.Multiple(() =>
@@ -1086,7 +1086,7 @@ public class LearningWorldPresenterUt
         world.SelectedLearningObject = element;
 
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
 
         systemUnderTest.OpenEditSelectedLearningObjectDialog();
         Assert.Multiple(() =>
@@ -1116,7 +1116,7 @@ public class LearningWorldPresenterUt
         world.SelectedLearningObject = element;
 
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
         
         var ex = Assert.Throws<Exception>(() => systemUnderTest.OpenEditSelectedLearningObjectDialog());
         Assert.That(ex!.Message, Is.EqualTo("Element Parent is null"));
@@ -1132,7 +1132,7 @@ public class LearningWorldPresenterUt
         world.SelectedLearningObject = learningObject;
 
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
 
         var ex = Assert.Throws<NotImplementedException>(() => systemUnderTest.OpenEditSelectedLearningObjectDialog());
         Assert.That(ex!.Message, Is.EqualTo("Type of LearningObject is not implemented"));
@@ -1146,7 +1146,7 @@ public class LearningWorldPresenterUt
     public void SaveSelectedLearningObjectAsync_ThrowsWhenSelectedWorldNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, null);
+        systemUnderTest.LearningWorldVm = null;
 
         var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
             await systemUnderTest.SaveSelectedLearningObjectAsync());
@@ -1160,7 +1160,7 @@ public class LearningWorldPresenterUt
             "foo");
 
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
 
         var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
             await systemUnderTest.SaveSelectedLearningObjectAsync());
@@ -1178,7 +1178,7 @@ public class LearningWorldPresenterUt
         world.SelectedLearningObject = space;
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
         await systemUnderTest.SaveSelectedLearningObjectAsync();
 
         await presentationLogic.Received().SaveLearningSpaceAsync(space);
@@ -1196,7 +1196,7 @@ public class LearningWorldPresenterUt
         world.SelectedLearningObject = element;
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
         await systemUnderTest.SaveSelectedLearningObjectAsync();
 
         await presentationLogic.Received().SaveLearningElementAsync(element);
@@ -1211,7 +1211,7 @@ public class LearningWorldPresenterUt
         world.SelectedLearningObject = learningObject;
 
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
 
         var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
             await systemUnderTest.SaveSelectedLearningObjectAsync());
@@ -1226,7 +1226,7 @@ public class LearningWorldPresenterUt
     public void LoadLearningSpace_ThrowsWhenSelectedWorldNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, null);
+        systemUnderTest.LearningWorldVm = null;
 
         var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
             await systemUnderTest.LoadLearningSpaceAsync());
@@ -1237,7 +1237,7 @@ public class LearningWorldPresenterUt
     public void LoadLearningElement_ThrowsWhenSelectedWorldNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, null);
+        systemUnderTest.LearningWorldVm = null;
 
         var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
             await systemUnderTest.LoadLearningElementAsync());
@@ -1254,7 +1254,7 @@ public class LearningWorldPresenterUt
         world.LearningSpaces.Add(space);
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
         await systemUnderTest.LoadLearningSpaceAsync();
 
         await presentationLogic.Received().LoadLearningSpaceAsync(world);
@@ -1270,7 +1270,7 @@ public class LearningWorldPresenterUt
         world.LearningElements.Add(element);
         
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
         await systemUnderTest.LoadLearningElementAsync();
 
         await presentationLogic.Received().LoadLearningElementAsync(world);
@@ -1289,7 +1289,7 @@ public class LearningWorldPresenterUt
         world.SelectedLearningObject = learningSpace;
 
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningWorld(null, world);
+        systemUnderTest.LearningWorldVm = world;
 
         Assert.That(systemUnderTest.ShowingLearningSpaceView, Is.False);
         

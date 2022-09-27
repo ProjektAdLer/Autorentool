@@ -1,3 +1,4 @@
+using System.ComponentModel;
 using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.LearningContent;
 
@@ -24,4 +25,5 @@ public interface ILearningSpacePresenter
     void SetLearningSpace(ILearningSpaceViewModel space);
     void CreateLearningElementWithPreloadedContent(LearningContentViewModel learningContent);
     LearningContentViewModel? DragAndDropLearningContent { get; }
+    void OnWorldPropertyChanged(object? caller, PropertyChangedEventArgs e);
 }

@@ -26,11 +26,11 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     void OpenEditSelectedLearningObjectDialog();
     void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void OnEditElementDialogClose(ModalDialogOnCloseResult returnValueTuple);
-    void SetLearningWorld(object? caller, LearningWorldViewModel? world);
     void ShowSelectedLearningSpaceView();
     void CloseLearningSpaceView();
     void CreateLearningElementWithPreloadedContent(LearningContentViewModel learningContent);
     LearningContentViewModel? DragAndDropLearningContent { get; }
     void AddNewLearningSpace();
     void AddNewLearningElement();
+    void OnWorkspacePropertyChanged(object? caller, PropertyChangedEventArgs e);
 }

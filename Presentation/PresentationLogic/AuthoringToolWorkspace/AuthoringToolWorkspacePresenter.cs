@@ -28,11 +28,11 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         EditLearningSpaceDialogOpen = false;
         DeletedUnsavedWorld = null;
         InformationMessageToShow = null;
-        OnLearningWorldSelect += _learningWorldPresenter.SetLearningWorld;
         if (!presentationLogic.RunningElectron) return;
         //register callback so we can check for unsaved data on quit
         //TODO: register to our own quit button
         shutdownManager.BeforeShutdown += OnBeforeShutdown;
+        AuthoringToolWorkspaceVm.PropertyChanged += learningWorldPresenter.OnWorkspacePropertyChanged;
     }
 
     public IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get;}
@@ -119,7 +119,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         _presentationLogic.DeleteLearningWorld(AuthoringToolWorkspaceVm, learningWorld);
         if (learningWorld.UnsavedChanges) DeletedUnsavedWorld = learningWorld;
         OnLearningWorldDelete?.Invoke(this, learningWorld);
-        OnLearningWorldSelect?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
     }
 
     public void OpenEditSelectedLearningWorldDialog()
@@ -150,7 +149,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     public async Task LoadLearningWorldAsync()
     {
         await _presentationLogic.LoadLearningWorldAsync(AuthoringToolWorkspaceVm);
-        OnLearningWorldSelect?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
     }
 
     internal async Task SaveLearningWorldAsync(LearningWorldViewModel world)
@@ -187,7 +185,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
         _presentationLogic.CreateLearningWorld(AuthoringToolWorkspaceVm, name, shortname, authors, language, description, goals);
         OnLearningWorldCreate?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
-        OnLearningWorldSelect?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
     }
 
     public void OnEditWorldDialogClose(ModalDialogOnCloseResult returnValueTuple)
@@ -311,7 +308,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     internal void LoadLearningWorldFromFileStream(Stream stream)
     {
         _presentationLogic.LoadLearningWorldViewModel(AuthoringToolWorkspaceVm, stream);
-        OnLearningWorldSelect?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
     }
 
     internal void LoadLearningSpaceFromFileStream(Stream stream)

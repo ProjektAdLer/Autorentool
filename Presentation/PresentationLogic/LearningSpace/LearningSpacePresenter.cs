@@ -1,6 +1,9 @@
+using System.ComponentModel;
 using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningWorld;
 using Shared;
 using ModalDialogOnCloseResult = Presentation.Components.ModalDialog.ModalDialogOnCloseResult;
 using ModalDialogReturnValue = Presentation.Components.ModalDialog.ModalDialogReturnValue;
@@ -41,6 +44,16 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     public void SetLearningSpace(ILearningSpaceViewModel space)
     {
         LearningSpaceVm = space;
+    }
+    public void OnWorldPropertyChanged(object? caller, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName == nameof(LearningWorldViewModel.SelectedLearningObject))
+        {
+            if (caller is not ILearningWorldViewModel worldVm)
+                throw new ArgumentException("Caller must be of type ILearningWorldViewModel");
+        
+            LearningSpaceVm = worldVm.SelectedLearningObject as ILearningSpaceViewModel;
+        }
     }
 
     #region LearningSpace

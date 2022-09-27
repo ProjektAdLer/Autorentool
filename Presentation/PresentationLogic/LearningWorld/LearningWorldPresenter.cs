@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
@@ -47,13 +48,15 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     public ILearningWorldViewModel? LearningWorldVm
     {
         get => _learningWorldVm;
-        private set
+        internal set
         {
             var selectedLearningObjectIsSpaceBefore = SelectedLearningObjectIsSpace;
             var showingLearningSpaceViewBefore = ShowingLearningSpaceView;
             if (!BeforeSetField(_learningWorldVm, value))
                 return;
             SetField(ref _learningWorldVm, value);
+            if (_learningWorldVm != null)
+                _learningWorldVm.PropertyChanged += _learningSpacePresenter.OnWorldPropertyChanged;
             if (SelectedLearningObjectIsSpace != selectedLearningObjectIsSpaceBefore)
                 OnPropertyChanged(nameof(SelectedLearningObjectIsSpace));
             if (ShowingLearningSpaceView != showingLearningSpaceViewBefore)
@@ -119,11 +122,15 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         CreateLearningElementDialogOpen = true;
     }
 
-
-    public void SetLearningWorld(object? caller, LearningWorldViewModel? world)
+    public void OnWorkspacePropertyChanged(object? caller, PropertyChangedEventArgs e)
     {
-        LearningWorldVm = world;
-        if (LearningWorldVm != null) LearningWorldVm.ShowingLearningSpaceView = false;
+        if (e.PropertyName == nameof(AuthoringToolWorkspaceViewModel.SelectedLearningWorld))
+        {
+            if (caller is not IAuthoringToolWorkspaceViewModel workspaceVm)
+                throw new ArgumentException("Caller must be of type IAuthoringToolWorkspaceViewModel");
+        
+            LearningWorldVm = workspaceVm.SelectedLearningWorld;
+        }
     }
 
     public void ShowSelectedLearningSpaceView()

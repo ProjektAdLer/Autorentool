@@ -113,32 +113,18 @@ public class AuthoringToolWorkspacePresenterUt
                     callbackCreateArg = args;
                 }
             };
-        var callbackSelectCalled = false;
-        LearningWorldViewModel? callbackSelectArg = null;
-        EventHandler<LearningWorldViewModel?> callbackSelect =
-            (_, args) =>
-            {
-                callbackSelectCalled = true;
-                if (args != null)
-                {
-                    callbackSelectArg = args;
-                }
-            };
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.AddLearningWorld(learningWorldVm);
         systemUnderTest.SetSelectedLearningWorld(learningWorldVm);
         systemUnderTest.OnLearningWorldCreate += callbackCreate;
-        systemUnderTest.OnLearningWorldSelect += callbackSelect;
 
         systemUnderTest.OnCreateWorldDialogClose(returnValueTuple);
         
         Assert.Multiple(() =>
         {
             Assert.That(callbackCreateCalled, Is.True);
-            Assert.That(callbackSelectCalled, Is.True);
             Assert.That(callbackCreateArg, Is.EqualTo(learningWorldVm));
-            Assert.That(callbackSelectArg, Is.EqualTo(learningWorldVm));
         });
     }
 
@@ -924,40 +910,6 @@ public class AuthoringToolWorkspacePresenterUt
         systemUnderTest.LoadLearningWorldFromFileStream(stream);
 
         presentationLogic.Received().LoadLearningWorldViewModel(authoringToolWorkspace, stream);
-    }
-
-    [Test]
-    public void LoadLearningWorldFromFileStream_CallsEventHandler()
-    {
-        var authoringToolWorkspace = new AuthoringToolWorkspaceViewModel();
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var newLearningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
-        presentationLogic
-            .When(x => x.LoadLearningWorldViewModel(Arg.Any<IAuthoringToolWorkspaceViewModel>(), Arg.Any<Stream>()))
-            .Do(y =>
-            {
-                y.Arg<IAuthoringToolWorkspaceViewModel>().LearningWorlds.Add(newLearningWorld);
-                y.Arg<IAuthoringToolWorkspaceViewModel>().SelectedLearningWorld = newLearningWorld;
-            });
-        
-        var stream = Substitute.For<Stream>();
-        var callbackCalled = false;
-        LearningWorldViewModel? callbackSelectedWorld = null;
-        var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspace, presentationLogic);
-        EventHandler<LearningWorldViewModel?> callback = delegate(object? _, LearningWorldViewModel? model)
-        {
-            callbackCalled = true;
-            callbackSelectedWorld = model;
-        };
-        systemUnderTest.OnLearningWorldSelect += callback;
-
-        systemUnderTest.LoadLearningWorldFromFileStream(stream);
-        
-        Assert.Multiple(() =>
-        {
-            Assert.That(callbackCalled, Is.True);
-            Assert.That(callbackSelectedWorld, Is.EqualTo(newLearningWorld));
-        });
     }
 
     [Test]
