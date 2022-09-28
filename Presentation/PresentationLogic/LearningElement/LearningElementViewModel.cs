@@ -1,4 +1,5 @@
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningSpace;
 using Shared;
 
 namespace Presentation.PresentationLogic.LearningElement;
@@ -44,7 +45,7 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
     /// <param name="positionY">y-position of the learning element in the workspace.</param>
     public LearningElementViewModel(string name, string shortname,
         LearningContentViewModel learningContent, string authors, string description, string goals,
-        LearningElementDifficultyEnum difficulty, ILearningElementViewModelParent? parent = null,
+        LearningElementDifficultyEnum difficulty, ILearningSpaceViewModel? parent = null,
         int workload = 0, int points = 0, double positionX = 0, double positionY = 0)
     {
         Id = Guid.NewGuid();
@@ -68,7 +69,7 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
     public Guid Id { get; private set; }
     public string Name { get; set; }
     public string Shortname { get; set; }
-    public ILearningElementViewModelParent? Parent { get; set; }
+    public ILearningSpaceViewModel? Parent { get; set; }
     public LearningContentViewModel LearningContent { get; set; }
     public string Authors { get; set; }
     public string Description { get; set; }

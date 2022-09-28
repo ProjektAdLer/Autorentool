@@ -17,13 +17,11 @@ public class LearningWorld : ILearningWorld, IOriginator
         Language = "";
         Description = "";
         Goals = "";
-        LearningElements = new List<LearningElement>();
         LearningSpaces = new List<LearningSpace>();
         UnsavedChanges = false;
     }
     public LearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals, List<LearningElement>? learningElements = null,
-        List<LearningSpace>? learningSpaces = null)
+        string goals, List<LearningSpace>? learningSpaces = null)
     {
         Id = Guid.NewGuid();
         Name = name;
@@ -32,13 +30,11 @@ public class LearningWorld : ILearningWorld, IOriginator
         Language = language;
         Description = description;
         Goals = goals;
-        LearningElements = learningElements ?? new List<LearningElement>();
         LearningSpaces = learningSpaces ?? new List<LearningSpace>();
         UnsavedChanges = false;
     }
 
     public Guid Id { get; private set; }
-    public List<LearningElement> LearningElements { get; set; }
     public List<LearningSpace> LearningSpaces { get; set; }
     public string Name { get; set; }
     public string Shortname { get; set; }
@@ -46,14 +42,14 @@ public class LearningWorld : ILearningWorld, IOriginator
     public string Language { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
-    public ILearningObject? SelectedLearningObject { get; set; }
+    public LearningSpace? SelectedLearningSpace { get; set; }
 
     public bool UnsavedChanges { get; set; }
 
     public IMemento GetMemento()
     {
-        return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, LearningElements,
-            LearningSpaces, SelectedLearningObject);
+        return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, LearningSpaces,
+            SelectedLearningSpace);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -68,16 +64,15 @@ public class LearningWorld : ILearningWorld, IOriginator
         Language = learningWorldMemento.Language;
         Description = learningWorldMemento.Description;
         Goals = learningWorldMemento.Goals;
-        LearningElements = learningWorldMemento.LearningElements;
         LearningSpaces = learningWorldMemento.LearningSpaces;
-        SelectedLearningObject = learningWorldMemento.SelectedLearningObject;
+        SelectedLearningSpace = learningWorldMemento.SelectedLearningSpace;
     }
 
     private record LearningWorldMemento : IMemento
     {
         internal LearningWorldMemento(string name, string shortname, string authors, string language,
-            string description, string goals, List<LearningElement> learningElements, 
-            List<LearningSpace> learningSpaces, ILearningObject? selectedLearningObject = null)
+            string description, string goals, List<LearningSpace> learningSpaces,
+            LearningSpace? selectedLearningSpace = null)
         {
             Name = name;
             Shortname = shortname;
@@ -85,12 +80,10 @@ public class LearningWorld : ILearningWorld, IOriginator
             Language = language;
             Description = description;
             Goals = goals;
-            LearningElements = learningElements.ToList();
             LearningSpaces = learningSpaces.ToList();
-            SelectedLearningObject = selectedLearningObject;
+            SelectedLearningSpace = selectedLearningSpace;
         }
 
-        internal List<LearningElement> LearningElements { get; }
         internal List<LearningSpace> LearningSpaces { get;  }
         internal string Name { get; }
         internal string Shortname { get; }
@@ -98,6 +91,6 @@ public class LearningWorld : ILearningWorld, IOriginator
         internal string Language { get; }
         internal string Description { get; }
         internal string Goals { get; }
-        internal ILearningObject? SelectedLearningObject { get; }
+        internal LearningSpace? SelectedLearningSpace { get; }
     }
 }

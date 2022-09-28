@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement.TransferElement;
-using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.LearningSpace;
 using Shared;
 
 namespace PresentationTest.PresentationLogic.LearningElement.TransferElement;
@@ -15,7 +15,7 @@ public class VideoTransferElementViewModelUt
     {
         var name = "ppp";
         var shortname = "qqq";
-        var parent = new LearningWorldViewModel("rrr", "sss", "ttt", "", "", "");
+        var parent = new LearningSpaceViewModel("rrr", "sss", "ttt", "", "", 2);
         var content = new LearningContentViewModel("uuu", "vvv", new byte[] {0x08, 0x07});
         var authors = "www";
         var description = "xxx";

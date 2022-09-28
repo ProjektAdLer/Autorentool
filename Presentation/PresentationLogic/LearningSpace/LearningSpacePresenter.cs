@@ -1,6 +1,5 @@
 using System.ComponentModel;
 using Presentation.PresentationLogic.API;
-using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningWorld;
@@ -47,12 +46,12 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     }
     public void OnWorldPropertyChanged(object? caller, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(LearningWorldViewModel.SelectedLearningObject))
+        if (e.PropertyName == nameof(LearningWorldViewModel.SelectedLearningSpace))
         {
             if (caller is not ILearningWorldViewModel worldVm)
                 throw new ArgumentException("Caller must be of type ILearningWorldViewModel");
         
-            LearningSpaceVm = worldVm.SelectedLearningObject as ILearningSpaceViewModel;
+            LearningSpaceVm = worldVm.SelectedLearningSpace;
         }
     }
 
@@ -99,11 +98,10 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     /// <summary>
     /// Sets the initial values for the <see cref="ModalDialog"/> with the current values from the selected LearningElement.
     /// </summary>
-    /// <exception cref="ApplicationException">Thrown if SelectedLearningObject is not a LearningElementViewModel.
-    /// Shouldn't occur, because this is checked in <see cref="EditSelectedLearningObject"/></exception>
+    /// <exception cref="Exception">Thrown if Element Parent is null.</exception>
     private void OpenEditSelectedLearningElementDialog()
     {
-        var element = (LearningElementViewModel) LearningSpaceVm?.SelectedLearningObject!;
+        var element = (LearningElementViewModel) LearningSpaceVm?.SelectedLearningElement!;
         if (element.Parent == null) throw new Exception("Element Parent is null");
         //prepare dictionary property to pass to dialog
         EditLearningElementDialogInitialValues = new Dictionary<string, string>
@@ -241,9 +239,9 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     /// Returns the parent of the learning element which is the selected learning space.
     /// </summary>
     /// <exception cref="Exception">Thrown if parent element is null.</exception>
-    private ILearningElementViewModelParent GetLearningElementParent()
+    private ILearningSpaceViewModel GetLearningElementParent()
     {
-        ILearningElementViewModelParent? parentElement = LearningSpaceVm;
+        ILearningSpaceViewModel? parentElement = LearningSpaceVm;
 
         if (parentElement == null)
         {
@@ -287,7 +285,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         if (Int32.TryParse(data["Points"], out int points) == false || points < 0)
             points = 0;
         
-        if (LearningSpaceVm?.SelectedLearningObject is not LearningElementViewModel
+        if (LearningSpaceVm?.SelectedLearningElement is not LearningElementViewModel
             learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
         _presentationLogic.EditLearningElement(parentElement, learningElementViewModel, name, shortname, authors,
             description, goals, difficulty, workload, points);
@@ -297,82 +295,62 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 
     #endregion
 
-    #region LearningObject
+    #region LearningElement
 
     /// <summary>
     /// Changes the selected <see cref="ILearningObjectViewModel"/> in the currently selected learning space.
     /// </summary>
-    /// <param name="learningObject">The learning object that should be set as selected</param>
+    /// <param name="learningElement">The learning element that should be set as selected</param>
     /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
-    public void SetSelectedLearningObject(ILearningObjectViewModel learningObject)
+    public void SetSelectedLearningElement(ILearningObjectViewModel learningElement)
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
-        LearningSpaceVm.SelectedLearningObject = learningObject;
+        LearningSpaceVm.SelectedLearningElement = learningElement;
     }
 
     /// <summary>
-    /// Deletes the selected learning object in the currently selected learning space and sets an other element as selected learning object.
+    /// Deletes the selected learning element in the currently selected learning space and sets an other element as selected learning element.
     /// </summary>
     /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
-    /// <exception cref="NotImplementedException">Thrown if the selected learning object is of an other type than element.</exception>
-    public void DeleteSelectedLearningObject()
+    public void DeleteSelectedLearningElement()
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
-        switch (LearningSpaceVm.SelectedLearningObject)
-        {
-            case null:
-                return;
-            case LearningElementViewModel learningElement:
-                _presentationLogic.DeleteLearningElement(LearningSpaceVm, learningElement);
-                break;
-            default:
-                throw new NotImplementedException("Type of LearningObject is not implemented");
-        }
-
-        LearningSpaceVm.SelectedLearningObject = LearningSpaceVm?.LearningElements.LastOrDefault();
+        if (LearningSpaceVm.SelectedLearningElement == null)
+            return;
+        _presentationLogic.DeleteLearningElement(LearningSpaceVm, (LearningElementViewModel)LearningSpaceVm.SelectedLearningElement);
     }
 
     /// <summary>
-    /// Opens the OpenEditDialog for Learning Element if the selected learning object is an learning element.
+    /// Opens the OpenEditDialog for the selected learning element.
     /// </summary>
     /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
-    /// <exception cref="NotImplementedException">Thrown if the selected learning object is of an other type than element.</exception>
-    public void EditSelectedLearningObject()
+    public void EditSelectedLearningElement()
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
-        switch (LearningSpaceVm.SelectedLearningObject)
-        {
-            case null:
-                return;
-            case LearningElementViewModel:
-                OpenEditSelectedLearningElementDialog();
-                break;
-            default:
-                throw new NotImplementedException("Type of LearningObject is not implemented");
-        }
+        if (LearningSpaceVm.SelectedLearningElement == null)
+            return;
+        
+        OpenEditSelectedLearningElementDialog();
     }
 
     /// <summary>
-    /// Calls the the Save methode for Learning Element if the selected learning object is an learning element.
+    /// Calls the the Save methode for the selected learning element.
     /// </summary>
     /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
-    /// <exception cref="NotImplementedException">Thrown if the selected learning object is of an other type than element.</exception>
-    public async Task SaveSelectedLearningObjectAsync()
+    public async Task SaveSelectedLearningElementAsync()
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
-        switch (LearningSpaceVm.SelectedLearningObject)
+        switch (LearningSpaceVm.SelectedLearningElement)
         {
             case null:
-                throw new ApplicationException("SelectedLearningObject is null");
+                throw new ApplicationException("SelectedLearningElement is null");
             case LearningElementViewModel learningElement:
                 await _presentationLogic.SaveLearningElementAsync(learningElement);
                 break;
-            default:
-                throw new NotImplementedException("Type of LearningObject is not implemented");
         }
     }
 

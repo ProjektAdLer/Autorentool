@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement.ActivationElement;
-using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.LearningSpace;
 using Shared;
 
 namespace PresentationTest.PresentationLogic.LearningElement.ActivationElement;
@@ -15,7 +15,7 @@ public class H5PActivationElementViewModelUt
     {
         var name = "qwert";
         var shortname = "asdf";
-        var parent = new LearningWorldViewModel("foo", "bar", "baz", "", "", "");
+        var parent = new LearningSpaceViewModel("foo", "bar", "baz", "", "", 2);
         var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
         var authors = "trewq";
         var description = "fdsa";

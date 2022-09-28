@@ -6,7 +6,7 @@ namespace BusinessLogic.Commands;
 public class EditLearningElement : IUndoCommand
 {
     internal LearningElement LearningElement { get; }
-    internal ILearningElementParent ElementParent { get; }
+    internal LearningSpace ParentSpace { get; }
     private readonly string _name;
     private readonly string _shortName;
     private readonly string _authors;
@@ -18,12 +18,12 @@ public class EditLearningElement : IUndoCommand
     private readonly Action<LearningElement> _mappingAction;
     private IMemento? _memento;
     
-    public EditLearningElement(LearningElement learningElement, ILearningElementParent elementParent, string name,
+    public EditLearningElement(LearningElement learningElement, LearningSpace parentSpace, string name,
         string shortName, string authors, string description, string goals, LearningElementDifficultyEnum difficulty,
         int workload, int points, Action<LearningElement> mappingAction)
     {
         LearningElement = learningElement;
-        ElementParent = elementParent;
+        ParentSpace = parentSpace;
         _name = name;
         _shortName = shortName;
         _authors = authors;
@@ -41,7 +41,7 @@ public class EditLearningElement : IUndoCommand
 
         LearningElement.Name = _name;
         LearningElement.Shortname = _shortName;
-        LearningElement.Parent = ElementParent;
+        LearningElement.Parent = ParentSpace;
         LearningElement.Authors = _authors;
         LearningElement.Description = _description;
         LearningElement.Goals = _goals;

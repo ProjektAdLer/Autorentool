@@ -5,39 +5,29 @@ namespace BusinessLogic.Commands;
 public class DeleteLearningElement : IUndoCommand
 {
     internal LearningElement LearningElement { get; }
-    internal ILearningElementParent ElementParent { get; }
-    private readonly Action<ILearningElementParent> _mappingAction;
+    internal LearningSpace ParentSpace { get; }
+    private readonly Action<LearningSpace> _mappingAction;
     private IMemento? _memento;
 
-    public DeleteLearningElement(LearningElement learningElement, ILearningElementParent elementParent,
-        Action<ILearningElementParent> mappingAction)
+    public DeleteLearningElement(LearningElement learningElement, LearningSpace parentSpace,
+        Action<LearningSpace> mappingAction)
     {
         LearningElement = learningElement;
-        ElementParent = elementParent;
+        ParentSpace = parentSpace;
         _mappingAction = mappingAction;
     }
     
     public void Execute()
     {
-        _memento = ElementParent.GetMemento();
+        _memento = ParentSpace.GetMemento();
 
-        var element = ElementParent.LearningElements.First(x => x.Id == LearningElement.Id);
+        var element = ParentSpace.LearningElements.First(x => x.Id == LearningElement.Id);
 
-        ElementParent.LearningElements.Remove(element);
+        ParentSpace.LearningElements.Remove(element);
 
-        switch (ElementParent)
-        {
-            case LearningWorld world:
-                world.SelectedLearningObject =
-                    (ILearningObject?)world.LearningSpaces.LastOrDefault() ?? world.LearningElements.LastOrDefault();
-                break;
-            case LearningSpace space:
-                space.SelectedLearningObject =
-                    space.LearningElements.LastOrDefault();
-                break;
-        }
-        
-        _mappingAction.Invoke(ElementParent);
+        ParentSpace.SelectedLearningElement = ParentSpace.LearningElements.LastOrDefault();
+
+        _mappingAction.Invoke(ParentSpace);
     }
 
     public void Undo()
@@ -47,9 +37,9 @@ public class DeleteLearningElement : IUndoCommand
             throw new InvalidOperationException("_memento is null");
         }
         
-        ElementParent.RestoreMemento(_memento);
+        ParentSpace.RestoreMemento(_memento);
         
-        _mappingAction.Invoke(ElementParent);
+        _mappingAction.Invoke(ParentSpace);
     }
 
     public void Redo() => Execute();

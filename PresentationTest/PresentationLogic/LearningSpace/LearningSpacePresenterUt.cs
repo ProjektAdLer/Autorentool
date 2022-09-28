@@ -140,12 +140,12 @@ public class LearningSpacePresenterUt
     }
     
     [Test]
-    public void SetSelectedLearningObject_SelectedLearningSpaceIsNull_ThrowsException()
+    public void SetSelectedLearningElement_SelectedLearningSpaceIsNull_ThrowsException()
     {
         var systemUnderTest = CreatePresenterForTesting();
         var element = new LearningElementViewModel("foo", "bar", null!, "bar", "foo", "bar", LearningElementDifficultyEnum.Easy, null, 6);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetSelectedLearningObject(element));
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetSelectedLearningElement(element));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
     }
 
@@ -525,6 +525,9 @@ public class LearningSpacePresenterUt
     public void OnEditElementDialogClose_ThrowsWhenDialogDataAreNull()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+        var element = new LearningElementViewModel("foo", "bar", null!, "foo",
+            "wa", "bar", LearningElementDifficultyEnum.Hard);
+        space.LearningElements.Add(element);
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         var returnValueTuple =
@@ -532,6 +535,7 @@ public class LearningSpacePresenterUt
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(space);
+        systemUnderTest.SetSelectedLearningElement(element);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditElementDialogClose(returnValueTuple));
         Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
@@ -566,7 +570,7 @@ public class LearningSpacePresenterUt
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         systemUnderTest.SetLearningSpace(space);
-        space.SelectedLearningObject = element;
+        space.SelectedLearningElement = element;
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
@@ -596,7 +600,7 @@ public class LearningSpacePresenterUt
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(space);
-        space.SelectedLearningObject = element;
+        space.SelectedLearningElement = element;
 
         var ex = Assert.Throws<ApplicationException>(() =>
             systemUnderTest.OnEditElementDialogClose(returnValueTuple));
@@ -627,7 +631,7 @@ public class LearningSpacePresenterUt
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         systemUnderTest.SetLearningSpace(space);
-        space.SelectedLearningObject = element;
+        space.SelectedLearningElement = element;
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
@@ -660,7 +664,7 @@ public class LearningSpacePresenterUt
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         systemUnderTest.SetLearningSpace(space);
-        space.SelectedLearningObject = element;
+        space.SelectedLearningElement = element;
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
@@ -691,7 +695,7 @@ public class LearningSpacePresenterUt
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         systemUnderTest.SetLearningSpace(space);
-        space.SelectedLearningObject = element;
+        space.SelectedLearningElement = element;
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
@@ -724,7 +728,7 @@ public class LearningSpacePresenterUt
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         systemUnderTest.SetLearningSpace(space);
-        space.SelectedLearningObject = element;
+        space.SelectedLearningElement = element;
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
@@ -745,6 +749,7 @@ public class LearningSpacePresenterUt
         dictionary["Goals"] = "g";
         dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
         dictionary["Workload (min)"] = "-5";
+        dictionary["Points"] = "-4";
         var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting();
@@ -755,20 +760,20 @@ public class LearningSpacePresenterUt
 
     #endregion
 
-    #region DeleteSelectedLearningObject
+    #region DeleteSelectedLearningElement
     
     [Test]
-    public void DeleteSelectedLearningObject_ThrowsWhenSelectedSpaceNull()
+    public void DeleteSelectedLearningElement_ThrowsWhenSelectedSpaceNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(null!);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteSelectedLearningObject());
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteSelectedLearningElement());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
     }
 
     [Test]
-    public void DeleteSelectedLearningObject_DoesNotThrowWhenSelectedObjectNull()
+    public void DeleteSelectedLearningElement_DoesNotThrowWhenSelectedObjectNull()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
 
@@ -778,90 +783,76 @@ public class LearningSpacePresenterUt
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.LearningSpaceVm,Is.Not.Null);
-            Assert.That(systemUnderTest.LearningSpaceVm?.SelectedLearningObject, Is.Null);
+            Assert.That(systemUnderTest.LearningSpaceVm?.SelectedLearningElement, Is.Null);
             Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements, Is.Empty);
-            Assert.DoesNotThrow(() => systemUnderTest.DeleteSelectedLearningObject());
+            Assert.DoesNotThrow(() => systemUnderTest.DeleteSelectedLearningElement());
         });
     }
 
     [Test]
-    public void DeleteSelectedLearningObject_CallsPresentationLogic_WithElement()
+    public void DeleteSelectedLearningElement_CallsPresentationLogic_WithElement()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
         var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
         var element = new LearningElementViewModel("f", "f", content, "f", "f", "f", LearningElementDifficultyEnum.Easy, space);
         space.LearningElements.Add(element);
-        space.SelectedLearningObject = element;
+        space.SelectedLearningElement = element;
 
         var mockPresentationLogic = Substitute.For<IPresentationLogic>();
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic:mockPresentationLogic);
         systemUnderTest.SetLearningSpace(space);
 
-        systemUnderTest.DeleteSelectedLearningObject();
+        systemUnderTest.DeleteSelectedLearningElement();
 
         mockPresentationLogic.Received().DeleteLearningElement(space,element);
     }
 
-    [Test]
-    public void DeleteSelectedLearningObject_ThrowsNotImplemented_WithUnknownObject()
-    {
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var learningObject = Substitute.For<ILearningObjectViewModel>();
-        space.SelectedLearningObject = learningObject;
-
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(space);
-
-        var ex = Assert.Throws<NotImplementedException>(() => systemUnderTest.DeleteSelectedLearningObject());
-        Assert.That(ex!.Message, Is.EqualTo("Type of LearningObject is not implemented"));
-    }
-
     #endregion
 
-    #region OpenEditSelectedLearningObjectDialog
+    #region OpenEditSelectedLearningElementDialog
 
     [Test]
-    public void OpenEditSelectedLearningObjectDialog_ThrowsWhenSelectedWorldNull()
+    public void OpenEditSelectedLearningElementDialog_ThrowsWhenSelectedWorldNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(null!);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditSelectedLearningObject());
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditSelectedLearningElement());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
     }
 
     [Test]
-    public void OpenEditSelectedLearningObjectDialog_DoesNotThrowWhenSelectedObjectNull()
+    public void OpenEditSelectedLearningElementDialog_DoesNotThrowWhenSelectedObjectNull()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(space);
 
-        systemUnderTest.EditSelectedLearningObject();
+        systemUnderTest.EditSelectedLearningElement();
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.LearningSpaceVm,Is.Not.Null);
-            Assert.That(systemUnderTest.LearningSpaceVm?.SelectedLearningObject, Is.EqualTo(null));
+            Assert.That(systemUnderTest.LearningSpaceVm?.SelectedLearningElement, Is.EqualTo(null));
             Assert.That(systemUnderTest.LearningSpaceVm?.LearningElements, Is.Empty);
-            Assert.DoesNotThrow(() => systemUnderTest.DeleteSelectedLearningObject());
+            Assert.DoesNotThrow(() => systemUnderTest.DeleteSelectedLearningElement());
         });
     }
 
     [Test]
-    public void OpenEditSelectedLearningObjectDialog_CallsMethod_WithElement()
+    public void OpenEditSelectedLearningElementDialog_CallsMethod_WithElement()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
         var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
         var element = new LearningElementViewModel("n", "sn", content,"a", "d", "g", LearningElementDifficultyEnum.Easy,space, 3);
         space.LearningElements.Add(element);
-        space.SelectedLearningObject = element;
+        space.SelectedLearningElement = element;
         
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(space);
         
-        systemUnderTest.EditSelectedLearningObject();
+        systemUnderTest.EditSelectedLearningElement();
         
         Assert.Multiple(() =>
         {
@@ -881,64 +872,49 @@ public class LearningSpacePresenterUt
     }
     
     [Test]
-    public void OpenEditSelectedLearningObjectDialog_ElementParentIsNull_ThrowsException()
+    public void OpenEditSelectedLearningElementDialog_ElementParentIsNull_ThrowsException()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
         var element = new LearningElementViewModel("n", "sn", null!, "a", "d", "g", LearningElementDifficultyEnum.Easy);
         space.LearningElements.Add(element);
-        space.SelectedLearningObject = element;
+        space.SelectedLearningElement = element;
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(space);
         
-        var ex = Assert.Throws<Exception>(() => systemUnderTest.EditSelectedLearningObject());
+        var ex = Assert.Throws<Exception>(() => systemUnderTest.EditSelectedLearningElement());
         Assert.That(ex!.Message, Is.EqualTo("Element Parent is null"));
         
     }
 
-    [Test]
-    public void
-        OpenEditSelectedLearningObjectDialog_ThrowsNotImplemented_WithUnknownObject()
-    {
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var learningObject = Substitute.For<ILearningObjectViewModel>();
-        space.SelectedLearningObject = learningObject;
-
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(space);
-
-        var ex = Assert.Throws<NotImplementedException>(() => systemUnderTest.EditSelectedLearningObject());
-        Assert.That(ex!.Message, Is.EqualTo("Type of LearningObject is not implemented"));
-    }
-
     #endregion
 
-    #region SaveSelectedLearningObject
+    #region SaveSelectedLearningElement
 
     [Test]
-    public void SaveSelectedLearningObjectAsync_ThrowsWhenSelectedWorldNull()
+    public void SaveSelectedLearningElementAsync_ThrowsWhenSelectedWorldNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(null!);
 
-        var ex = Assert.ThrowsAsync<ApplicationException>(async () => await systemUnderTest.SaveSelectedLearningObjectAsync());
+        var ex = Assert.ThrowsAsync<ApplicationException>(async () => await systemUnderTest.SaveSelectedLearningElementAsync());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
     }
 
     [Test]
-    public void SaveSelectedLearningObjectAsync_DoesNotThrowWhenSelectedObjectNull()
+    public void SaveSelectedLearningElementAsync_DoesNotThrowWhenSelectedObjectNull()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(space);
 
-        var ex = Assert.ThrowsAsync<ApplicationException>(async () => await systemUnderTest.SaveSelectedLearningObjectAsync());
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningObject is null"));
+        var ex = Assert.ThrowsAsync<ApplicationException>(async () => await systemUnderTest.SaveSelectedLearningElementAsync());
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningElement is null"));
     }
 
     [Test]
-    public async Task SaveSelectedLearningObject_CallsPresentationLogic_WithElement()
+    public async Task SaveSelectedLearningElement_CallsPresentationLogic_WithElement()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
@@ -946,27 +922,13 @@ public class LearningSpacePresenterUt
         var element = new LearningElementViewModel("f", "f", content,"f",
             "f", "f", LearningElementDifficultyEnum.Easy, space);
         space.LearningElements.Add(element);
-        space.SelectedLearningObject = element;
+        space.SelectedLearningElement = element;
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
         systemUnderTest.SetLearningSpace(space);
-        await systemUnderTest.SaveSelectedLearningObjectAsync();
+        await systemUnderTest.SaveSelectedLearningElementAsync();
 
         await presentationLogic.Received().SaveLearningElementAsync(element);
-    }
-
-    [Test]
-    public void SaveSelectedLearningObjectAsync_ThrowsNotImplemented_WithUnknownObjectAsync()
-    {
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var learningObject = Substitute.For<ILearningObjectViewModel>();
-        space.SelectedLearningObject = learningObject;
-
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(space);
-
-        var ex = Assert.ThrowsAsync<NotImplementedException>(async () => await systemUnderTest.SaveSelectedLearningObjectAsync());
-        Assert.That(ex!.Message, Is.EqualTo("Type of LearningObject is not implemented"));
     }
 
     #endregion

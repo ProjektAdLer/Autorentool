@@ -13,8 +13,6 @@ using NUnit.Framework;
 using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.LearningContent;
-using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.ModalDialog;
@@ -140,17 +138,13 @@ public class LearningWorldViewUt
     }
     
     [Test]
-    public void Render_LearningSpacesAndElementsInWorld_CorrectDraggableForEachObject()
+    public void Render_LearningSpaceInWorld_CorrectDraggableForEachSpace()
     {
         var space1 = Substitute.For<ILearningSpaceViewModel>();
         var space2 = Substitute.For<ILearningSpaceViewModel>();
         var learningSpaces = new List<ILearningSpaceViewModel> { space1, space2 };
-        var element1 = Substitute.For<ILearningElementViewModel>();
-        var element2 = Substitute.For<ILearningElementViewModel>();
-        var element3 = Substitute.For<ILearningElementViewModel>();
-        var learningElements = new List<ILearningElementViewModel> { element1, element2, element3 };
-        var objects = new List<ILearningObjectViewModel> { space1, element1, element2, element3, space2 };
-        
+        var objects = new List<ILearningObjectViewModel> { space1, space2 };
+
         var learningWorld = Substitute.For<ILearningWorldViewModel>();
         learningWorld.LearningObjects.Returns(objects);
         _worldPresenter.LearningWorldVm.Returns(learningWorld);
@@ -158,14 +152,9 @@ public class LearningWorldViewUt
         var systemUnderTest = GetLearningWorldViewForTesting();
 
         var draggableLearningSpaces = systemUnderTest.FindComponentsOrFail<Stub<DraggableLearningSpace>>().ToList();
-        var draggableLearningElements = systemUnderTest.FindComponentsOrFail<Stub<DraggableLearningElement>>().ToList();
-        
+
         Assert.Multiple(() =>
         {
-            Assert.That(draggableLearningElements, Has.Count.EqualTo(learningElements.Count));
-            Assert.That(learningElements.All(le =>
-                draggableLearningElements.Any(dle =>
-                    dle.Instance.Parameters[nameof(DraggableLearningElement.LearningElement)] == le)));
             Assert.That(draggableLearningSpaces, Has.Count.EqualTo(learningSpaces.Count));
             Assert.That(learningSpaces.All(le =>
                 draggableLearningSpaces.Any(dle =>
@@ -222,61 +211,6 @@ public class LearningWorldViewUt
     }
 
     [Test]
-    public void CreateLearningElementDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
-    {
-        //prepare presenter
-        var learningWorld = Substitute.For<ILearningWorldViewModel>();
-        var learningSpaces = new List<ILearningSpaceViewModel>();
-        learningWorld.Name.Returns("my learning world");
-        learningWorld.LearningSpaces.Returns(learningSpaces);
-        _worldPresenter.LearningWorldVm.Returns(learningWorld);
-        _worldPresenter.CreateLearningElementDialogOpen.Returns(true);
-        var content = new LearningContentViewModel("foo", "bar", Array.Empty<byte>());
-        _worldPresenter.DragAndDropLearningContent.Returns(content);
-        
-        RenderFragment fragment = builder =>
-        {
-            builder.OpenElement(0, "p");
-            builder.AddContent(1, "foobar");
-            builder.CloseElement();
-        };
-        ModalDialogOnClose? callback = null;
-        _modalDialogFactory
-            .GetCreateLearningElementFragment(content, learningWorld.LearningSpaces,
-                learningWorld.Name, Arg.Any<ModalDialogOnClose>())
-            .Returns(fragment)
-            .AndDoes(ci =>
-            {
-                callback = ci.Arg<ModalDialogOnClose>();
-            });
-        
-        var systemUnderTest = GetLearningWorldViewForTesting();
-
-        _modalDialogFactory.Received().GetCreateLearningElementFragment(content, learningWorld.LearningSpaces,
-            learningWorld.Name, Arg.Any<ModalDialogOnClose>());
-        var p = systemUnderTest.FindOrFail("p");
-        p.MarkupMatches("<p>foobar</p>");
-
-        if (callback == null)
-        {
-            Assert.Fail("Didn't get a callback from call to modal dialog factory");
-        }
-
-        var returnDictionary = new Dictionary<string, string>
-        {
-            { "foo", "baz" },
-            { "bar", "baz" }
-        };
-        var returnValue = new ModalDialogOnCloseResult(ModalDialogReturnValue.Ok, returnDictionary);
-        
-        //call the callback with the return value
-        callback!.Invoke(returnValue);
-        
-        //assert that the delegate we called executed presenter
-        _worldPresenter.Received().OnCreateElementDialogClose(returnValue);
-    }
-
-    [Test]
     public void EditLearningSpaceDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
     {
         //prepare presenter
@@ -329,59 +263,6 @@ public class LearningWorldViewUt
         _worldPresenter.Received().OnEditSpaceDialogClose(returnValue);
     }
 
-    [Test]
-    public void EditLearningElementDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
-    {
-        //prepare presenter
-        var learningWorld = Substitute.For<ILearningWorldViewModel>();
-        _worldPresenter.LearningWorldVm.Returns(learningWorld);
-        _worldPresenter.EditLearningElementDialogOpen.Returns(true);
-        var initialValues = new Dictionary<string, string>
-        {
-            {"baba", "bubu"}
-        };
-        _worldPresenter.EditElementDialogInitialValues.Returns(initialValues);
-        
-        RenderFragment fragment = builder =>
-        {
-            builder.OpenElement(0, "p");
-            builder.AddContent(1, "foobar");
-            builder.CloseElement();
-        };
-        ModalDialogOnClose? callback = null;
-        _modalDialogFactory
-            .GetEditLearningElementFragment(initialValues, Arg.Any<ModalDialogOnClose>())
-            .Returns(fragment)
-            .AndDoes(ci =>
-            {
-                callback = ci.Arg<ModalDialogOnClose>();
-            });
-        
-        var systemUnderTest = GetLearningWorldViewForTesting();
-
-        _modalDialogFactory.Received().GetEditLearningElementFragment(initialValues, Arg.Any<ModalDialogOnClose>());
-        var p = systemUnderTest.FindOrFail("p");
-        p.MarkupMatches("<p>foobar</p>");
-
-        if (callback == null)
-        {
-            Assert.Fail("Didn't get a callback from call to modal dialog factory");
-        }
-
-        var returnDictionary = new Dictionary<string, string>
-        {
-            { "foo", "baz" },
-            { "bar", "baz" }
-        };
-        var returnValue = new ModalDialogOnCloseResult(ModalDialogReturnValue.Ok, returnDictionary);
-        
-        //call the callback with the return value
-        callback!.Invoke(returnValue);
-        
-        //assert that the delegate we called executed presenter
-        _worldPresenter.Received().OnEditElementDialogClose(returnValue);
-    }
-    
 
     [Test]
     public void Svg_MouseMove_CallsMouseService()
@@ -427,16 +308,6 @@ public class LearningWorldViewUt
         var addSpaceButton = systemUnderTest.FindOrFail("button.btn.btn-primary.add-learning-space");
         addSpaceButton.Click();
         _worldPresenter.Received().AddNewLearningSpace();
-    }
-
-    [Test]
-    public void AddElementButton_Clicked_CallsAddNewLearningElement()
-    {
-        var systemUnderTest = GetLearningWorldViewForTesting();
-
-        var addElementButton = systemUnderTest.FindOrFail("button.btn.btn-primary.add-learning-element");
-        addElementButton.Click();
-        _worldPresenter.Received().AddNewLearningElement();
     }
 
     [Test]
@@ -491,118 +362,81 @@ saatana"));
     }
     
     [Test]
-    public void LoadElementButton_Clicked_CallsLoadLearningElementAsync()
+    public void EditSpaceButton_Clicked_CallsOpenEditSelectedLearningSpaceDialog()
     {
-        var systemUnderTest = GetLearningWorldViewForTesting();
-        
-        var loadElementButton = systemUnderTest.FindOrFail("button.btn.btn-primary.load-learning-element");
-        loadElementButton.Click();
-        _worldPresenter.Received().LoadLearningElementAsync();
-    }
-    
-    [Test]
-    public void LoadElementButton_Clicked_OperationCancelledExceptionCaught()
-    {
-        _worldPresenter.LoadLearningElementAsync().Throws<OperationCanceledException>();
-        
-        var systemUnderTest = GetLearningWorldViewForTesting();
-        
-        var loadElementButton = systemUnderTest.FindOrFail("button.btn.btn-primary.load-learning-element");
-        Assert.That(() => loadElementButton.Click(), Throws.Nothing);
-        _worldPresenter.Received().LoadLearningElementAsync();
-    }
-    
-    [Test]
-    public void LoadElementButton_Clicked_OtherExceptionsWrappedInErrorState()
-    {
-        _worldPresenter.LoadLearningElementAsync().Throws(new Exception("saatana"));
-        
-        var systemUnderTest = GetLearningWorldViewForTesting();
-        
-        var loadElementButton = systemUnderTest.FindOrFail("button.btn.btn-primary.load-learning-element");
-        Assert.That(() => loadElementButton.Click(), Throws.Nothing);
-        _worldPresenter.Received().LoadLearningElementAsync();
-    }
-    
-    [Test]
-    public void EditObjectButton_Clicked_CallsOpenEditSelectedLearningObjectDialog()
-    {
-        var element = Substitute.For<ILearningElementViewModel>();
+        var space = Substitute.For<ILearningSpaceViewModel>();
         var worldVm = Substitute.For<ILearningWorldViewModel>();
-        worldVm.LearningElements.Returns(new List<ILearningElementViewModel> { element });
-        worldVm.SelectedLearningObject.Returns(element);
+        worldVm.LearningSpaces.Returns(new List<ILearningSpaceViewModel> { space });
+        worldVm.SelectedLearningSpace.Returns(space);
         _worldPresenter.LearningWorldVm.Returns(worldVm);
 
         var systemUnderTest = GetLearningWorldViewForTesting();
         
-        var editObjectButton = systemUnderTest.FindOrFail("button.btn.btn-primary.edit-learning-object");
-        editObjectButton.Click();
-        _worldPresenter.Received().OpenEditSelectedLearningObjectDialog();
+        var editSpaceButton = systemUnderTest.FindOrFail("button.btn.btn-primary.edit-learning-space");
+        editSpaceButton.Click();
+        _worldPresenter.Received().OpenEditSelectedLearningSpaceDialog();
     }
 
     [Test]
-    public void DeleteObjectButton_Clicked_CallsDeleteSelectedLearningObject()
+    public void DeleteSpaceButton_Clicked_CallsDeleteSelectedLearningSpace()
     {
-        var element = Substitute.For<ILearningElementViewModel>();
+        var space = Substitute.For<ILearningSpaceViewModel>();
         var worldVm = Substitute.For<ILearningWorldViewModel>();
-        worldVm.LearningElements.Returns(new List<ILearningElementViewModel> { element });
-        worldVm.SelectedLearningObject.Returns(element);
+        worldVm.LearningSpaces.Returns(new List<ILearningSpaceViewModel> { space });
+        worldVm.SelectedLearningSpace.Returns(space);
         _worldPresenter.LearningWorldVm.Returns(worldVm);
 
         var systemUnderTest = GetLearningWorldViewForTesting();
         
-        var editObjectButton = systemUnderTest.FindOrFail("button.btn.btn-primary.delete-learning-object");
-        editObjectButton.Click();
-        _worldPresenter.Received().DeleteSelectedLearningObject();
+        var editSpaceButton = systemUnderTest.FindOrFail("button.btn.btn-primary.delete-learning-space");
+        editSpaceButton.Click();
+        _worldPresenter.Received().DeleteSelectedLearningSpace();
     }
     
     [Test]
-    public void SaveObjectButton_Clicked_CallsSaveSelectedLearningObjectAsync()
+    public void SaveSpaceButton_Clicked_CallsSaveSelectedLearningSpaceAsync()
     {
         var systemUnderTest = GetLearningWorldViewForTesting();
         
-        var loadElementButton = systemUnderTest.FindOrFail("button.btn.btn-primary.save-learning-object");
+        var loadElementButton = systemUnderTest.FindOrFail("button.btn.btn-primary.save-learning-space");
         loadElementButton.Click();
-        _worldPresenter.Received().SaveSelectedLearningObjectAsync();
+        _worldPresenter.Received().SaveSelectedLearningSpaceAsync();
     }
     
     [Test]
-    public void SaveObjectButton_Clicked_OperationCancelledExceptionCaught()
+    public void SaveSpaceButton_Clicked_OperationCancelledExceptionCaught()
     {
-        _worldPresenter.SaveSelectedLearningObjectAsync().Throws<OperationCanceledException>();
+        _worldPresenter.SaveSelectedLearningSpaceAsync().Throws<OperationCanceledException>();
         
         var systemUnderTest = GetLearningWorldViewForTesting();
         
-        var loadElementButton = systemUnderTest.FindOrFail("button.btn.btn-primary.save-learning-object");
+        var loadElementButton = systemUnderTest.FindOrFail("button.btn.btn-primary.save-learning-space");
         Assert.That(() => loadElementButton.Click(), Throws.Nothing);
-        _worldPresenter.Received().SaveSelectedLearningObjectAsync();
+        _worldPresenter.Received().SaveSelectedLearningSpaceAsync();
     }
     
     [Test]
-    public void SaveObjectButton_Clicked_OtherExceptionsWrappedInErrorState()
+    public void SaveSpaceButton_Clicked_OtherExceptionsWrappedInErrorState()
     {
-        _worldPresenter.SaveSelectedLearningObjectAsync().Throws(new Exception("saatana"));
+        _worldPresenter.SaveSelectedLearningSpaceAsync().Throws(new Exception("saatana"));
         
         var systemUnderTest = GetLearningWorldViewForTesting();
         
-        var loadElementButton = systemUnderTest.FindOrFail("button.btn.btn-primary.save-learning-object");
+        var loadElementButton = systemUnderTest.FindOrFail("button.btn.btn-primary.save-learning-space");
         Assert.That(() => loadElementButton.Click(), Throws.Nothing);
-        _worldPresenter.Received().SaveSelectedLearningObjectAsync();
+        _worldPresenter.Received().SaveSelectedLearningSpaceAsync();
     }
     
     [Test]
     public void ShowSelectedSpace_Called_CallsShowSelectedLearningSpaceView()
     {
-        var element = Substitute.For<ILearningElementViewModel>();
         var worldVm = Substitute.For<ILearningWorldViewModel>();
-        worldVm.LearningElements.Returns(new List<ILearningElementViewModel> { element });
-        worldVm.SelectedLearningObject.Returns(element);
         _worldPresenter.LearningWorldVm.Returns(worldVm);
 
         var systemUnderTest = GetLearningWorldViewForTesting();
         
-        var editObjectButton = systemUnderTest.FindOrFail("button.btn.btn-primary.show-learning-space");
-        editObjectButton.Click();
+        var editSpaceButton = systemUnderTest.FindOrFail("button.btn.btn-primary.show-learning-space");
+        editSpaceButton.Click();
         _worldPresenter.Received().ShowSelectedLearningSpaceView();
     }
     

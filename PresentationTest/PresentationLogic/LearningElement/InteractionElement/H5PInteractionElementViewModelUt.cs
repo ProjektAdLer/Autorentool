@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement.InteractionElement;
-using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.LearningSpace;
 using Shared;
 
 namespace PresentationTest.PresentationLogic.LearningElement.InteractionElement;
@@ -15,7 +15,7 @@ public class H5PInteractionElementViewModelUt
     {
         var name = "ccd";
         var shortname = "dee";
-        var parent = new LearningWorldViewModel("ffg", "ghh", "iij", "", "", "");
+        var parent = new LearningSpaceViewModel("ffg", "ghh", "iij", "", "", 2);
         var content = new LearningContentViewModel("jkk", "llm", new byte[] {0x09, 0x03});
         var authors = "mnn";
         var description = "oop";

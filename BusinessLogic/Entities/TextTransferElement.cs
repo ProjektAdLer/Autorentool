@@ -13,7 +13,7 @@ public class TextTransferElement : LearningElement
     {
     }
     
-    internal TextTransferElement(string name, string shortname, ILearningElementParent? parent,
+    internal TextTransferElement(string name, string shortname, ILearningSpace? parent,
         LearningContent learningContent, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double positionX, double positionY) : base(
         name, shortname, learningContent, authors, description, goals, difficulty, parent, workload, points, positionX,

@@ -50,9 +50,9 @@ public class CreateDsl : ICreateDsl
             learningWorld.Description, learningWorld.Goals);
 
         // All learningElements that have no learningSpace are added to the learningWorld (With the LearningSpaceParentId=0)
-        var learningWorldElements = new LearningSpacePe("Freie Lernelemente", "FEE", "Dimitri",
-            "Diese Lernelemente sind keinem Lernraum zugeordnet", "", 0, learningWorld.LearningElements,1,1);
-        ListLearningSpaces.Add(learningWorldElements);
+        //var learningWorldElements = new LearningSpacePe("Freie Lernelemente", "FEE", "Dimitri",
+        //    "Diese Lernelemente sind keinem Lernraum zugeordnet", "", 0, learningWorld.LearningElements,1,1);
+        //ListLearningSpaces.Add(learningWorldElements);
         
         // Create Learning Spaces & fill into Learning World
         // The learningSpaceId defines what the starting Id for Spaces should be. 

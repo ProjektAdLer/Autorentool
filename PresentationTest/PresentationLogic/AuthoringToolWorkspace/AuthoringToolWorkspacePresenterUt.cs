@@ -765,6 +765,10 @@ public class AuthoringToolWorkspacePresenterUt
         var authoringToolWorkspace = new AuthoringToolWorkspaceViewModel();
         
         var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
+        var space = new LearningSpaceViewModel("a", "b", "c", "d", "e", 5);
+        learningWorld.LearningSpaces.Add(space);
+        learningWorld.SelectedLearningSpace = space;
+        learningWorld.ShowingLearningSpaceView = true;
         authoringToolWorkspace._learningWorlds.Add(learningWorld);
         authoringToolWorkspace.SelectedLearningWorld = learningWorld;
         
@@ -773,9 +777,11 @@ public class AuthoringToolWorkspacePresenterUt
         presentationLogic.LoadLearningContentViewModel(Arg.Any<string>(), Arg.Any<Stream>())
             .Returns(learningContent);
         var learningWorldPresenter = Substitute.For<ILearningWorldPresenter>();
+        var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
+        learningSpacePresenter.LearningSpaceVm.Returns(space);
         var logger = Substitute.For<ILogger<AuthoringToolWorkspacePresenter>>();
         var systemUnderTest = 
-            CreatePresenterForTesting(authoringToolWorkspace, presentationLogic, learningWorldPresenter, logger: logger);
+            CreatePresenterForTesting(authoringToolWorkspace, presentationLogic, learningWorldPresenter, learningSpacePresenter, logger: logger);
 
         systemUnderTest.ProcessDragAndDropResult(resultTuple);
 
@@ -788,7 +794,7 @@ public class AuthoringToolWorkspacePresenterUt
                 presentationLogic.Received().LoadLearningSpaceViewModel(learningWorld, stream);
                 break;
             case "aef":
-                presentationLogic.Received().LoadLearningElementViewModel(learningWorld, stream);
+                presentationLogic.Received().LoadLearningElementViewModel(space, stream);
                 break;
             case "jpg":
             case "png":
@@ -810,7 +816,6 @@ public class AuthoringToolWorkspacePresenterUt
             case "h5p":
             case "pdf":
                 presentationLogic.Received().LoadLearningContentViewModel(fileName, stream);
-                learningWorldPresenter.Received().CreateLearningElementWithPreloadedContent(learningContent);
                 break;
             default:
                 //logger.Received().Log(LogLevel.Information,$"Couldn't load file 'testFile.{ending}', because the file extension '{ending}' is not supported.");
@@ -833,22 +838,27 @@ public class AuthoringToolWorkspacePresenterUt
     }
     
     [Test]
-    public void
-        CallCreateLearningElementWithPreloadedContentFromActiveView_LearningWorldSelected_CallsWorldPresenter()
+    public void CallCreateLearningElementWithPreloadedContentFromActiveView_ShowingLearningSpaceViewIsFalse_CorrectInformationMessageToShow()
     {
         var learningContent = new LearningContentViewModel("n", "t", Array.Empty<byte>());
         var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
+        var learningSpace = new LearningSpaceViewModel("n", "sn", "a", "d", "g");
+        learningWorld.LearningSpaces.Add(learningSpace);
+        learningWorld.SelectedLearningSpace = learningSpace;
+        learningWorld.ShowingLearningSpaceView = false;
         var authoringToolWorkspaceVm = new AuthoringToolWorkspaceViewModel();
         authoringToolWorkspaceVm._learningWorlds.Add(learningWorld);
         authoringToolWorkspaceVm.SelectedLearningWorld = learningWorld;
-        var learningWorldPresenter = Substitute.For<ILearningWorldPresenter>();
+        var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
+        learningSpacePresenter.LearningSpaceVm.Returns(learningSpace);
 
         var systemUnderTest =
-            CreatePresenterForTesting(authoringToolWorkspaceVm, learningWorldPresenter: learningWorldPresenter);
+            CreatePresenterForTesting(authoringToolWorkspaceVm, learningSpacePresenter: learningSpacePresenter);
         
         systemUnderTest.CallCreateLearningElementWithPreloadedContentFromActiveView(learningContent);
-        
-        learningWorldPresenter.Received().CreateLearningElementWithPreloadedContent(learningContent);
+
+        Assert.That(systemUnderTest.InformationMessageToShow, Is.EqualTo("Learning elements can only get loaded into learning spaces."));
+        Assert.Pass();
     }
     
     [Test]
@@ -859,7 +869,7 @@ public class AuthoringToolWorkspacePresenterUt
         var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
         var learningSpace = new LearningSpaceViewModel("n", "sn", "a", "d", "g");
         learningWorld.LearningSpaces.Add(learningSpace);
-        learningWorld.SelectedLearningObject = learningSpace;
+        learningWorld.SelectedLearningSpace = learningSpace;
         learningWorld.ShowingLearningSpaceView = true;
         var authoringToolWorkspaceVm = new AuthoringToolWorkspaceViewModel();
         authoringToolWorkspaceVm._learningWorlds.Add(learningWorld);
@@ -883,7 +893,7 @@ public class AuthoringToolWorkspacePresenterUt
         var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
         var learningSpace = new LearningSpaceViewModel("n", "sn", "a", "d", "g");
         learningWorld.LearningSpaces.Add(learningSpace);
-        learningWorld.SelectedLearningObject = learningSpace;
+        learningWorld.SelectedLearningSpace = learningSpace;
         learningWorld.ShowingLearningSpaceView = true;
         var authoringToolWorkspaceVm = new AuthoringToolWorkspaceViewModel();
         authoringToolWorkspaceVm._learningWorlds.Add(learningWorld);
@@ -958,6 +968,28 @@ public class AuthoringToolWorkspacePresenterUt
     }
     
     [Test]
+    public void LoadLearningElementFromFileStream_ShowingLearningSpaceViewIsFalse_CorrectInformationMessageToShow()
+    {
+        var authoringToolWorkspace = new AuthoringToolWorkspaceViewModel();
+        var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g")
+        {
+            ShowingLearningSpaceView = false
+        };
+        authoringToolWorkspace.LearningWorlds.Add(learningWorld);
+        authoringToolWorkspace.SelectedLearningWorld = learningWorld;
+        var spacePresenter = Substitute.For<ILearningSpacePresenter>();
+        spacePresenter.LearningSpaceVm.Returns((LearningSpaceViewModel?) null);
+        var stream = Substitute.For<Stream>();
+        
+        var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspace, learningSpacePresenter: spacePresenter);
+        
+        systemUnderTest.LoadLearningElementFromFileStream(stream);
+
+        Assert.That(systemUnderTest.InformationMessageToShow, Is.EqualTo("Learning elements can only get loaded into learning spaces."));
+        Assert.Pass();
+    }
+    
+    [Test]
     public void LoadLearningElementFromFileStream_LearningSpaceVmInLearningSpacePresenterIsNull_ThrowsException()
     {
         var authoringToolWorkspace = new AuthoringToolWorkspaceViewModel();
@@ -1003,10 +1035,6 @@ public class AuthoringToolWorkspacePresenterUt
         if (showingLearningSpaceView)
         {
             presentationLogic.Received().LoadLearningElementViewModel(existingLearningSpace, stream);
-        }
-        else
-        {
-            presentationLogic.Received().LoadLearningElementViewModel(learningWorld, stream);
         }
     }
 

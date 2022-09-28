@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement.TransferElement;
-using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.LearningSpace;
 using Shared;
 
 namespace PresentationTest.PresentationLogic.LearningElement.TransferElement;
@@ -15,7 +15,7 @@ public class PdfTransferElementViewModelUt
     {
         var name = "zzz";
         var shortname = "aaa";
-        var parent = new LearningWorldViewModel("abb", "bbc", "ccc", "", "", "");
+        var parent = new LearningSpaceViewModel("abb", "bbc", "ccc", "", "", 2);
         var content = new LearningContentViewModel("ddd", "dee", new byte[] {0x02, 0x01});
         var authors = "eef";
         var description = "fff";

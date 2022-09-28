@@ -301,7 +301,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         }
         else
         {
-            _learningWorldPresenter.CreateLearningElementWithPreloadedContent(learningContent);
+            InformationMessageToShow = "Learning elements can only get loaded into learning spaces.";
         }
     }
 
@@ -339,7 +339,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         }
         else
         {
-            _presentationLogic.LoadLearningElementViewModel(world, stream);
+            InformationMessageToShow = "Learning elements can only get loaded into learning spaces.";
         }
     }
     

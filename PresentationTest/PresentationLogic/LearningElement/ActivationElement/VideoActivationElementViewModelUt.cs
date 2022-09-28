@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement.ActivationElement;
-using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.LearningSpace;
 using Shared;
 
 namespace PresentationTest.PresentationLogic.LearningElement.ActivationElement;
@@ -15,7 +15,7 @@ public class VideoActivationElementViewModelUt
     {
         var name = "abc";
         var shortname = "def";
-        var parent = new LearningWorldViewModel("ghi", "jkl", "mno", "", "", "");
+        var parent = new LearningSpaceViewModel("ghi", "jkl", "mno", "", "", 2);
         var content = new LearningContentViewModel("pqr", "stu", new byte[] {0x05, 0x01});
         var authors = "vwx";
         var description = "yza";

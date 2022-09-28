@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement.TestElement;
-using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.LearningSpace;
 using Shared;
 
 namespace PresentationTest.PresentationLogic.LearningElement.TestElement;
@@ -15,7 +15,7 @@ public class H5PTestElementViewModelUt
     {
         var name = "rrs";
         var shortname = "stt";
-        var parent = new LearningWorldViewModel("uuv", "vww", "xxy", "", "", "");
+        var parent = new LearningSpaceViewModel("uuv", "vww", "xxy", "", "", 2);
         var content = new LearningContentViewModel("yzz", "aaa", new byte[] {0x04, 0x05});
         var authors = "bbb";
         var description = "ccc";

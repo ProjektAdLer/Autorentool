@@ -157,19 +157,19 @@ public interface IPresentationLogic
     Task LoadLearningSpaceAsync(ILearningWorldViewModel learningWorldVm);
 
     /// <summary>
-    /// Adds a new learning element to its parent.
+    /// Adds a new learning element to its parent space.
     /// </summary>
-    /// <param name="elementParentVm">Parent of the element that can either be a world or a space.</param>
+    /// <param name="parentSpaceVm">Parent space of the element.</param>
     /// <param name="learningElementVm">Learning element to add.</param>
-    void AddLearningElement(ILearningElementViewModelParent elementParentVm, ILearningElementViewModel learningElementVm);
+    void AddLearningElement(ILearningSpaceViewModel parentSpaceVm, ILearningElementViewModel learningElementVm);
     
     /// <summary>
-    /// Creates a new learning element and assigns it to the selected learning world or to a learning space in the
+    /// Creates a new learning element and assigns it to the opened learning space in the
     /// selected learning world.
     /// </summary>
     /// <param name="name">Name of the element.</param>
     /// <param name="shortname">Shortname of the element.</param>
-    /// <param name="elementParentVm">Parent of the element that can either be a world or a space.</param>
+    /// <param name="parentSpaceVm">Parent space of the element.</param>
     /// <param name="elementType">Type of the element.</param>
     /// <param name="contentType">Type of the content that the element contains.</param>
     /// <param name="learningContentVm">The content of the element.</param>
@@ -179,15 +179,15 @@ public interface IPresentationLogic
     /// <param name="difficulty">The difficulty of the element.</param>
     /// <param name="workload">The time required to complete the learning element.</param>
     /// <param name="points">The number of points of the learning element.</param>
-    void CreateLearningElement(ILearningElementViewModelParent elementParentVm, string name, string shortname,
+    void CreateLearningElement(ILearningSpaceViewModel parentSpaceVm, string name, string shortname,
         ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContentVm,
         string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points);
 
     /// <summary>
-    /// Edits a given learning element either in the learning world or learning space with the corresponding command.
+    /// Edits a given learning element in the opened learning space with the corresponding command.
     /// </summary>
     /// <param name="learningElementVm">Element to edit.</param>
-    /// <param name="learningElementParentVm">Parent of the element that can either be a world or a space.</param>
+    /// <param name="parentSpaceVm">Parent space of the element.</param>
     /// <param name="name">Name of the element.</param>
     /// <param name="shortname">Shortname of the element.</param>
     /// <param name="authors">A list of authors of the element.</param>
@@ -196,16 +196,16 @@ public interface IPresentationLogic
     /// <param name="difficulty">The difficulty of the element.</param>
     /// <param name="workload">The time required to complete the learning element.</param>
     /// <param name="points">The number of points of the learning element.</param>
-    void EditLearningElement(ILearningElementViewModelParent learningElementParentVm,
+    void EditLearningElement(ILearningSpaceViewModel parentSpaceVm,
         ILearningElementViewModel learningElementVm, string name, string shortname, string authors, string description,
         string goals, LearningElementDifficultyEnum difficulty, int workload, int points);
 
     /// <summary>
-    /// Deletes the given learning element either in the given learning world or in the given learning space.
+    /// Deletes the given learning element in the given learning space.
     /// </summary>
-    /// <param name="elementParentVm">Element to delete.</param>
-    /// <param name="learningElementVm">Parent of the element that can either be a world or a space.</param>
-    void DeleteLearningElement(ILearningElementViewModelParent elementParentVm,
+    /// <param name="parentSpaceVm">Parent space of the element.</param>
+    /// <param name="learningElementVm">Element to delete.</param>
+    void DeleteLearningElement(ILearningSpaceViewModel parentSpaceVm,
         LearningElementViewModel learningElementVm);
     
     /// <summary>
@@ -222,14 +222,13 @@ public interface IPresentationLogic
     /// <summary>
     /// Asks user for path and loads <see cref="LearningElementViewModel"/> from disk.
     /// </summary>
-    /// <param name="elementParentVm">Either a learning world or a learning space into which the learning space
-    /// should be loaded.</param>
+    /// <param name="parentSpaceVm">Learning space into which the learning element should be loaded.</param>
     /// <returns>Task containing deserialized object.</returns>
     /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
     /// <exception cref="NotImplementedException">Thrown when we are not running in Electron.</exception>
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
-    Task LoadLearningElementAsync(ILearningElementViewModelParent elementParentVm);
+    Task LoadLearningElementAsync(ILearningSpaceViewModel parentSpaceVm);
     
     /// <summary>
     /// Asks user for path, loads an image file from disk and returns a <see cref="LearningContentViewModel"/>. 
@@ -264,5 +263,5 @@ public interface IPresentationLogic
     LearningContentViewModel LoadLearningContentViewModel(string name, Stream stream);
     void LoadLearningWorldViewModel(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, Stream stream);
     void LoadLearningSpaceViewModel(ILearningWorldViewModel learningWorldVm, Stream stream);
-    void LoadLearningElementViewModel(ILearningElementViewModelParent parentVm, Stream stream);
+    void LoadLearningElementViewModel(ILearningSpaceViewModel parentSpaceVm, Stream stream);
 }

@@ -2,8 +2,6 @@
 
 public interface ILearningWorldPe
 {
-    
-    List<LearningElementPe> LearningElements { get; set; }
     List<LearningSpacePe> LearningSpaces { get; set; }
     string Name { get; set; }
     string Description { get; set; }

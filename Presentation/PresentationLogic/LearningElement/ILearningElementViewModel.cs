@@ -1,4 +1,5 @@
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningSpace;
 using Shared;
 
 namespace Presentation.PresentationLogic.LearningElement;
@@ -7,7 +8,7 @@ public interface ILearningElementViewModel : ILearningObjectViewModel, IDisplaya
 {
     new string Name { get; set; }
     string Shortname { get; set; }
-    ILearningElementViewModelParent? Parent { get; set; }
+    ILearningSpaceViewModel? Parent { get; set; }
     LearningContentViewModel LearningContent { get; set; }
     string Authors { get; set; }
     string Goals { get; set; }

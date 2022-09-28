@@ -25,9 +25,7 @@ public class DeleteLearningSpace : IUndoCommand
 
         LearningWorld.LearningSpaces.Remove(space);
 
-        LearningWorld.SelectedLearningObject =
-            (ILearningObject?) LearningWorld.LearningSpaces.LastOrDefault() ??
-            LearningWorld.LearningElements.LastOrDefault();
+        LearningWorld.SelectedLearningSpace = LearningWorld.LearningSpaces.LastOrDefault();
 
         _mappingAction.Invoke(LearningWorld);
     }

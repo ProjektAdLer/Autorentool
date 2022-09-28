@@ -192,51 +192,51 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
     
-    public void AddLearningElement(ILearningElementViewModelParent elementParentVm, ILearningElementViewModel learningElementVm)
+    public void AddLearningElement(ILearningSpaceViewModel parentSpaceVm, ILearningElementViewModel learningElementVm)
     {
-        var elementParentEntity = Mapper.Map<ILearningElementParent>(elementParentVm);
+        var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
 
-        var command = new CreateLearningElement(elementParentEntity, elementEntity, 
-            parent => Mapper.Map(parent, elementParentVm));
+        var command = new CreateLearningElement(parentSpaceEntity, elementEntity, 
+            parent => Mapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
     }
     
     /// <inheritdoc cref="IPresentationLogic.CreateLearningElement"/>
-    public void CreateLearningElement(ILearningElementViewModelParent elementParentVm, string name, string shortname,
+    public void CreateLearningElement(ILearningSpaceViewModel parentSpaceVm, string name, string shortname,
         ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContentVm,
         string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points)
     {
-        var elementParentEntity = Mapper.Map<ILearningElementParent>(elementParentVm);
+        var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
         var contentEntity = Mapper.Map<BusinessLogic.Entities.LearningContent>(learningContentVm);
 
-        var command = new CreateLearningElement(elementParentEntity, name, shortname, elementType, contentType, contentEntity,
-            authors, description, goals, difficulty, workload, points,parent => Mapper.Map(parent, elementParentVm));
+        var command = new CreateLearningElement(parentSpaceEntity, name, shortname, elementType, contentType, contentEntity,
+            authors, description, goals, difficulty, workload, points,parent => Mapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
     } 
     
     /// <inheritdoc cref="IPresentationLogic.EditLearningElement"/>
-    public void EditLearningElement(ILearningElementViewModelParent elementParentVm,
+    public void EditLearningElement(ILearningSpaceViewModel parentSpaceVm,
         ILearningElementViewModel learningElementVm, string name, string shortname, string authors,
         string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points)
     {
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
-        var elementParentEntity = Mapper.Map<ILearningElementParent>(elementParentVm);
+        var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
 
-        var command = new EditLearningElement(elementEntity, elementParentEntity, name, shortname, authors, description,
+        var command = new EditLearningElement(elementEntity, parentSpaceEntity, name, shortname, authors, description,
             goals, difficulty, workload, points, element => Mapper.Map(element, learningElementVm));
         BusinessLogic.ExecuteCommand(command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.DeleteLearningElement"/>
-    public void DeleteLearningElement(ILearningElementViewModelParent elementParentVm,
+    public void DeleteLearningElement(ILearningSpaceViewModel parentSpaceVm,
         LearningElementViewModel learningElementVm)
     {
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
-        var elementParentEntity = Mapper.Map<ILearningElementParent>(elementParentVm);
+        var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
 
-        var command = new DeleteLearningElement(elementEntity, elementParentEntity, 
-            parent => Mapper.Map(parent, elementParentVm));
+        var command = new DeleteLearningElement(elementEntity, parentSpaceEntity, 
+            parent => Mapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -252,14 +252,14 @@ public class PresentationLogic : IPresentationLogic
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadLearningElementAsync"/>
-    public async Task LoadLearningElementAsync(ILearningElementViewModelParent elementParentVm)
+    public async Task LoadLearningElementAsync(ILearningSpaceViewModel parentSpaceVm)
     {
         SaveOrLoadElectronCheck();
         var filepath =
             await GetLoadFilepathAsync("Load Learning Element", ElementFileEnding, ElementFileFormatDescriptor);
-        var elementParentEntity = Mapper.Map<ILearningElementParent>(elementParentVm);
-        var command = new LoadLearningElement(elementParentEntity, filepath, BusinessLogic,
-            parent => Mapper.Map(parent, elementParentVm));
+        var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
+        var command = new LoadLearningElement(parentSpaceEntity, filepath, BusinessLogic,
+            parent => Mapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -326,12 +326,12 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
-    public void LoadLearningElementViewModel(ILearningElementViewModelParent parentVm, Stream stream)
+    public void LoadLearningElementViewModel(ILearningSpaceViewModel parentSpaceVm, Stream stream)
     {
-        var parentEntity = Mapper.Map<ILearningElementParent>(parentVm);
+        var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
         var command =
-            new LoadLearningElement(parentEntity, stream, BusinessLogic,
-                parent => Mapper.Map(parent, parentVm));
+            new LoadLearningElement(parentSpaceEntity, stream, BusinessLogic,
+                parent => Mapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
     }
     

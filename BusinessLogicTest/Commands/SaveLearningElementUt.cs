@@ -15,7 +15,7 @@ public class SaveLearningElementUt
     public void Execute_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var parent  = new LearningWorld("a", "b","c","d","e","f");
+        var parent  = new LearningSpace("a", "b","c","d","e",4);
         var element = new LearningElement("a", "b", null!, "c", "d", "e", LearningElementDifficultyEnum.Easy,parent);
         const string filepath = "c:\\temp\\test";
         

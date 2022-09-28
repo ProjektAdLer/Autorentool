@@ -2,7 +2,6 @@
 using System.Runtime.CompilerServices;
 using AutoMapper.Configuration.Annotations;
 using JetBrains.Annotations;
-using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 
 namespace Presentation.PresentationLogic.LearningWorld;
@@ -23,7 +22,6 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _description = "";
         _goals = "";
         _unsavedChanges = false;
-        _learningElements = new List<ILearningElementViewModel>();
         _learningSpaces = new List<ILearningSpaceViewModel>();
     }
     
@@ -37,13 +35,10 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     /// <param name="description">A description of the learning world and its contents.</param>
     /// <param name="goals">A description of the goals this learning world is supposed to achieve.</param>
     /// <param name="unsavedChanges">Whether or not the object contains changes that are yet to be saved to disk.</param>
-    /// <param name="learningElements">Optional collection of learning elements contained in the learning world.
-    /// Should be used when loading a saved learning world into the application.</param>
     /// <param name="learningSpaces">Optional collection of learning spaces contained in the learning world.
     /// Should be used when loading a saved learnign world into the application.</param>
     public LearningWorldViewModel(string name, string shortname, string authors, string language, string description,
-        string goals, bool unsavedChanges = true, List<ILearningElementViewModel>? learningElements = null,
-        List<ILearningSpaceViewModel>? learningSpaces = null)
+        string goals, bool unsavedChanges = true, List<ILearningSpaceViewModel>? learningSpaces = null)
     {
         Id = Guid.NewGuid();
         _name = name;
@@ -53,14 +48,12 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _description = description;
         _goals = goals;
         _unsavedChanges = unsavedChanges;
-        _learningElements = learningElements ?? new List<ILearningElementViewModel>();
         _learningSpaces = learningSpaces ?? new List<ILearningSpaceViewModel>();
     }
     
     public const string fileEnding = "awf";
     
     public Guid Id { get; private set; }
-    private List<ILearningElementViewModel> _learningElements;
     private List<ILearningSpaceViewModel> _learningSpaces;
     private string _name;
     private string _shortname;
@@ -69,21 +62,10 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     private string _description;
     private string _goals;
     private bool _unsavedChanges;
-    private ILearningObjectViewModel? _selectedLearningObject;
+    private ILearningSpaceViewModel? _selectedLearningSpace;
     private bool _showingLearningSpaceView;
 
     public string FileEnding => fileEnding;
-
-    public List<ILearningElementViewModel> LearningElements
-    {
-        get => _learningElements;
-        set
-        {
-            if (!SetField(ref _learningElements, value)) return;
-            OnPropertyChanged(nameof(LearningObjects));
-            OnPropertyChanged(nameof(Workload));
-        }
-    }
 
     public List<ILearningSpaceViewModel> LearningSpaces
     {
@@ -91,17 +73,17 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         set
         {
             if (!SetField(ref _learningSpaces, value)) return;
-            OnPropertyChanged(nameof(LearningObjects));
             OnPropertyChanged(nameof(Workload));
         }
     }
 
     [Ignore]
-    public IEnumerable<ILearningObjectViewModel> LearningObjects => LearningElements.Concat<ILearningObjectViewModel>(LearningSpaces);
+    public IEnumerable<ILearningObjectViewModel> LearningObjects => LearningSpaces;
     public int Workload =>
-        LearningSpaces.Sum(space => space.Workload) + LearningElements.Sum(element => element.Workload);
+        LearningSpaces.Sum(space => space.Workload);
+
     public int Points =>
-        LearningSpaces.Sum(space => space.Points) + LearningElements.Sum(element => element.Points);
+        LearningSpaces.Sum(space => space.Points);
     public string Name
     {
         get => _name;
@@ -144,10 +126,10 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         set => SetField(ref _unsavedChanges, value);
     }
 
-    public ILearningObjectViewModel? SelectedLearningObject
+    public ILearningSpaceViewModel? SelectedLearningSpace
     {
-        get => _selectedLearningObject;
-        set => SetField(ref _selectedLearningObject, value);
+        get => _selectedLearningSpace;
+        set => SetField(ref _selectedLearningSpace, value);
     }
 
     public bool ShowingLearningSpaceView

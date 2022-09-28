@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
-using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.LearningSpace;
 using Shared;
 
 namespace PresentationTest.PresentationLogic.LearningElement;
@@ -14,7 +14,7 @@ public class LearningElementViewModelUt
     {
         var name = "asdf";
         var shortname = "jkl;";
-        var parent = new LearningWorldViewModel("foo", "bar", "baz", "", "", "");
+        var parent = new LearningSpaceViewModel("foo", "bar", "baz", "", "", 2);
         var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
         var authors = "ben and jerry";
         var description = "very cool element";

@@ -4,10 +4,9 @@ using Presentation.PresentationLogic.LearningSpace;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
-public interface ILearningWorldViewModel : ILearningElementViewModelParent, ISerializableViewModel, IDisplayableLearningObject, INotifyPropertyChanged
+public interface ILearningWorldViewModel : ISerializableViewModel, IDisplayableLearningObject, INotifyPropertyChanged
 {
     new string FileEnding { get; }
-    List<ILearningElementViewModel> LearningElements { get; set; }
     int Workload { get; }
     int Points { get; }
     List<ILearningSpaceViewModel> LearningSpaces { get; set; }
@@ -19,6 +18,6 @@ public interface ILearningWorldViewModel : ILearningElementViewModelParent, ISer
     string Description { get; set; }
     string Goals { get; set; }
     bool UnsavedChanges { get; set; }
-    ILearningObjectViewModel? SelectedLearningObject { get; set; }
+    ILearningSpaceViewModel? SelectedLearningSpace { get; set; }
     bool ShowingLearningSpaceView { get; set; }
 }

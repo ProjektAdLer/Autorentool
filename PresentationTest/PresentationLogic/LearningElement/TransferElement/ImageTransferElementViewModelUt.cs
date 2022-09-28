@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement.TransferElement;
-using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.LearningSpace;
 using Shared;
 
 namespace PresentationTest.PresentationLogic.LearningElement.TransferElement;
@@ -15,7 +15,7 @@ public class ImageTransferElementViewModelUt
     {
         var name = "eee";
         var shortname = "fff";
-        var parent = new LearningWorldViewModel("ggg", "hhh", "iii", "", "", "");
+        var parent = new LearningSpaceViewModel("ggg", "hhh", "iii", "", "", 2);
         var content = new LearningContentViewModel("jjj", "kkk", new byte[] {0x06, 0x03});
         var authors = "lll";
         var description = "mmm";
