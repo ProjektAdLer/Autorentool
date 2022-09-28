@@ -4,9 +4,11 @@ using Shared;
 
 namespace Presentation.PresentationLogic.LearningElement;
 
-public interface ILearningElementViewModel : ILearningObjectViewModel, IDisplayableLearningObject
+public interface ILearningElementViewModel : IDisplayableLearningObject
 {
+    Guid Id { get; }
     new string Name { get; set; }
+    string Description { get; set; }
     string Shortname { get; set; }
     ILearningSpaceViewModel? Parent { get; set; }
     LearningContentViewModel LearningContent { get; set; }
@@ -15,4 +17,6 @@ public interface ILearningElementViewModel : ILearningObjectViewModel, IDisplaya
     LearningElementDifficultyEnum Difficulty { get; set; }
     int Workload { get; set; }
     int Points { get; set; }
+    double PositionX { get; set; }
+    double PositionY { get; set; }
 }

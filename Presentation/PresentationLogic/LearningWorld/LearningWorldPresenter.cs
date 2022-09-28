@@ -276,15 +276,15 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     }
 
     /// <summary>
-    /// Changes the selected <see cref="ILearningObjectViewModel"/> in the currently selected learning world.
+    /// Changes the selected <see cref="ILearningSpaceViewModel"/> in the currently selected learning world.
     /// </summary>
     /// <param name="learningSpace">The learning space that should be set as selected</param>
     /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
-    public void SetSelectedLearningSpace(ILearningObjectViewModel learningSpace)
+    public void SetSelectedLearningSpace(ILearningSpaceViewModel learningSpace)
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        LearningWorldVm.SelectedLearningSpace = (ILearningSpaceViewModel)learningSpace;
+        LearningWorldVm.SelectedLearningSpace = learningSpace;
         if (SelectedLearningObjectIsSpace)
             _learningSpacePresenter.SetLearningSpace(LearningWorldVm.SelectedLearningSpace);
     }

@@ -298,11 +298,11 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     #region LearningElement
 
     /// <summary>
-    /// Changes the selected <see cref="ILearningObjectViewModel"/> in the currently selected learning space.
+    /// Changes the selected <see cref="ILearningElementViewModel"/> in the currently selected learning space.
     /// </summary>
     /// <param name="learningElement">The learning element that should be set as selected</param>
     /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
-    public void SetSelectedLearningElement(ILearningObjectViewModel learningElement)
+    public void SetSelectedLearningElement(ILearningElementViewModel learningElement)
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");

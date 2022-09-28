@@ -361,7 +361,7 @@ public class MappingProfileUt
         Assert.Multiple(() =>
         {
             Assert.That(destination.LearningSpaces, Has.Count.EqualTo(1));
-            Assert.That(destination.LearningSpaces[0].LearningElements, Is.Empty);
+            Assert.That(destination.LearningSpaces.First().LearningElements, Is.Empty);
         });
 
         destination.Name = NewName;
@@ -442,7 +442,7 @@ public class MappingProfileUt
         Assert.Multiple(() =>
         {
             Assert.That(destination.LearningSpaces, Has.Count.EqualTo(1));
-            Assert.That(destination.LearningSpaces[0].LearningElements, Has.Count.EqualTo(1));
+            Assert.That(destination.LearningSpaces.First().LearningElements, Has.Count.EqualTo(1));
         });
 
         destination.Name = NewName;

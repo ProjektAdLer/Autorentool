@@ -22,9 +22,9 @@ public class LearningWorldPresenterUt
     public void SetSelectedLearningSpace_SelectedLearningWorldIsNull_ThrowsException()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        var element = new LearningElementViewModel("foo", "bar", null!, "bar", "foo", "bar", LearningElementDifficultyEnum.Easy, null, 6);
+        var space = new LearningSpaceViewModel("a", "v", "d", "f", "f", 4);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetSelectedLearningSpace(element));
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetSelectedLearningSpace(space));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
         

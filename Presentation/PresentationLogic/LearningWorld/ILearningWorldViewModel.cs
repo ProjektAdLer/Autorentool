@@ -9,8 +9,7 @@ public interface ILearningWorldViewModel : ISerializableViewModel, IDisplayableL
     new string FileEnding { get; }
     int Workload { get; }
     int Points { get; }
-    List<ILearningSpaceViewModel> LearningSpaces { get; set; }
-    IEnumerable<ILearningObjectViewModel> LearningObjects { get; }
+    ICollection<ILearningSpaceViewModel> LearningSpaces { get; set; }
     new string Name { get; set; }
     string Shortname { get; set; }
     string Authors { get; set; }

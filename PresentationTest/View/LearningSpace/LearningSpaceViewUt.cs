@@ -98,7 +98,7 @@ public class LearningSpaceViewUt
     public void Render_LearningObjectSelected_RendersLearningObjectSection()
     {
         var learningSpace = Substitute.For<ILearningSpaceViewModel>();
-        var learningObject = Substitute.For<ILearningObjectViewModel>();
+        var learningObject = Substitute.For<ILearningElementViewModel>();
         learningSpace.SelectedLearningElement.Returns(learningObject);
         learningObject.Name.Returns("my secret name");
         learningObject.Description.Returns("a super long description");
@@ -370,7 +370,7 @@ public class LearningSpaceViewUt
     public void EditObjectButton_Clicked_CallsEditSelectedLearningObject()
     {
         var space = Substitute.For<ILearningSpaceViewModel>();
-        space.SelectedLearningElement.Returns(Substitute.For<ILearningObjectViewModel>());
+        space.SelectedLearningElement.Returns(Substitute.For<ILearningElementViewModel>());
         _learningSpacePresenter.LearningSpaceVm.Returns(space);
         var systemUnderTest = GetLearningSpaceViewForTesting();
         
@@ -384,7 +384,7 @@ public class LearningSpaceViewUt
     public void DeleteObjectButton_Clicked_CallsDeleteSelectedLearningObject()
     {
         var space = Substitute.For<ILearningSpaceViewModel>();
-        space.SelectedLearningElement.Returns(Substitute.For<ILearningObjectViewModel>());
+        space.SelectedLearningElement.Returns(Substitute.For<ILearningElementViewModel>());
         _learningSpacePresenter.LearningSpaceVm.Returns(space);
         var systemUnderTest = GetLearningSpaceViewForTesting();
         

@@ -11,7 +11,6 @@ using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using Presentation.Components.ModalDialog;
-using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
@@ -143,10 +142,9 @@ public class LearningWorldViewUt
         var space1 = Substitute.For<ILearningSpaceViewModel>();
         var space2 = Substitute.For<ILearningSpaceViewModel>();
         var learningSpaces = new List<ILearningSpaceViewModel> { space1, space2 };
-        var objects = new List<ILearningObjectViewModel> { space1, space2 };
 
         var learningWorld = Substitute.For<ILearningWorldViewModel>();
-        learningWorld.LearningObjects.Returns(objects);
+        learningWorld.LearningSpaces.Returns(learningSpaces);
         _worldPresenter.LearningWorldVm.Returns(learningWorld);
         
         var systemUnderTest = GetLearningWorldViewForTesting();

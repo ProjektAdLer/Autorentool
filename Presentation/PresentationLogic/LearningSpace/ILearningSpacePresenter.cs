@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningElement;
 
 namespace Presentation.PresentationLogic.LearningSpace;
 
@@ -13,7 +14,7 @@ public interface ILearningSpacePresenter
     IDictionary<string, string>? EditLearningElementDialogInitialValues { get; }
     bool CreateLearningElementDialogOpen { get; set; }
     ILearningSpaceViewModel? LearningSpaceVm { get; }
-    void SetSelectedLearningElement(ILearningObjectViewModel learningObject);
+    void SetSelectedLearningElement(ILearningElementViewModel learningElement);
     void DeleteSelectedLearningElement();
     void AddNewLearningElement();
     Task LoadLearningElementAsync();

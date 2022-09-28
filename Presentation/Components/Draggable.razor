@@ -1,8 +1,10 @@
 @inject IMouseService MouseService
-@inject ILogger<Draggable> Logger;
+@inject ILogger<Draggable<T>> Logger;
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic
 @implements IDisposable
+@typeparam T
+
 <g transform="translate(@X, @Y)" @onmousedown="OnDown" cursor="@_cursor" @onmousedown:stopPropagation="true">
     @ChildContent
 </g>
@@ -18,7 +20,7 @@
 
 
     [Parameter, EditorRequired]
-    public ILearningObjectViewModel? LearningObject { get; set; }
+    public T? LearningObject { get; set; }
 
     [Parameter]
     public double X { get; set; }
@@ -33,9 +35,8 @@
     [Parameter]
     public EventCallback<double> YChanged { get; set; }
     
-
     [Parameter]
-    public EventCallback<ILearningObjectViewModel> OnClicked { get; set; }
+    public EventCallback<T> OnClicked { get; set; }
 
     //cursorX and cursorY are used to remove the offset between cursor and element on move, so we only get a delta
     private double _cursorX;
@@ -101,14 +102,12 @@
     {
         Logger.LogDebug("OnClick");
         //override nullability because we check in OnParametersSet - n.stich
-        Logger.LogDebug("LearningObject.Name: {LearningObjectName}", LearningObject!.Name);
         Logger.LogDebug("e.OffsetX:{EOffsetX} e.OffsetY:{EOffsetY}", e.OffsetX, e.OffsetY);
         return OnClicked.InvokeAsync(LearningObject);
     }
 
     public void Dispose()
     {
-        Logger.LogDebug("Dispose: {LearningObjectName}", LearningObject!.Name);
         MouseService.OnMove -= OnMove;
         MouseService.OnUp -= OnUpOrOut;
         MouseService.OnOut -= OnUpOrOut;

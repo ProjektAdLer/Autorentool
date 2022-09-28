@@ -49,7 +49,6 @@ public class MappingProfile : Profile
             });
         CreateMap<LearningWorld, LearningWorldViewModel>()
             .EqualityComparison((x, y) => x.Id == y.Id)
-            .ForMember(x => x.LearningObjects, opt => opt.Ignore())
             .ForMember(x => x.SelectedLearningSpace, opt => opt.Ignore())
             .ForMember(x => x.ShowingLearningSpaceView, opt => opt.Ignore())
             .AfterMap((s, d) =>

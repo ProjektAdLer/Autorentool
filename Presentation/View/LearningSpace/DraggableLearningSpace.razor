@@ -10,9 +10,9 @@
 @code {
     // Overwrite nullability warning below because we check in OnParametersSet -n.stich
     [Parameter, EditorRequired]
-    public ILearningObjectViewModel LearningSpace { get; set; } = null!;
+    public ILearningSpaceViewModel LearningSpace { get; set; } = null!;
     [Parameter, EditorRequired]
-    public EventCallback<ILearningObjectViewModel> OnClicked { get; set; }
+    public EventCallback<ILearningSpaceViewModel> OnClicked { get; set; }
 
     protected override void OnParametersSet()
     {

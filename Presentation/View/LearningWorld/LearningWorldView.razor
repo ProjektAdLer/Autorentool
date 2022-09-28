@@ -48,7 +48,7 @@ else
              @onmouseleave=@(e => MouseService.FireOut(this, e))>
         @if (LearningWorldP.LearningWorldVm != null)
         {
-            @foreach (var learningSpace in LearningWorldP.LearningWorldVm.LearningObjects)
+            @foreach (var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
             {
                 <DraggableLearningSpace LearningSpace="learningSpace"
                                         OnClicked="@LearningWorldP.SetSelectedLearningSpace"/>

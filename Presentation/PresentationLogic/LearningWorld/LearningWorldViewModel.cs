@@ -54,7 +54,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     public const string fileEnding = "awf";
     
     public Guid Id { get; private set; }
-    private List<ILearningSpaceViewModel> _learningSpaces;
+    private ICollection<ILearningSpaceViewModel> _learningSpaces;
     private string _name;
     private string _shortname;
     private string _authors;
@@ -67,7 +67,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
 
     public string FileEnding => fileEnding;
 
-    public List<ILearningSpaceViewModel> LearningSpaces
+    public ICollection<ILearningSpaceViewModel> LearningSpaces
     {
         get => _learningSpaces;
         set
@@ -76,9 +76,6 @@ public class LearningWorldViewModel : ILearningWorldViewModel
             OnPropertyChanged(nameof(Workload));
         }
     }
-
-    [Ignore]
-    public IEnumerable<ILearningObjectViewModel> LearningObjects => LearningSpaces;
     public int Workload =>
         LearningSpaces.Sum(space => space.Workload);
 

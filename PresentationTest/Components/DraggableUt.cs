@@ -6,8 +6,8 @@ using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components;
-using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.LearningElement;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.Components;
@@ -35,12 +35,12 @@ public class DraggableUt
     public void StandardConstructor_AllPropertiesInitialized()
     {
         RenderFragment childContent = builder => builder.AddContent(0, "<text/>");
-        var learningObject = Substitute.For<ILearningObjectViewModel>();
+        var learningObject = Substitute.For<ILearningElementViewModel>();
         double x = 10;
         double y = 20;
         Action<double> xChanged = _ => { };
         Action<double> yChanged = _ => { };
-        Action<ILearningObjectViewModel> onClicked = _ => { };
+        Action<ILearningElementViewModel> onClicked = _ => { };
 
         var systemUnderTest =
             CreateRenderedDraggableComponent(childContent, learningObject, x, y, xChanged, yChanged, onClicked);
@@ -66,10 +66,10 @@ public class DraggableUt
     [Test]
     public void ClickAndRelease_OnClickedTriggered()
     {
-        ILearningObjectViewModel? onClickedEventTriggered = null;
-        var learningObject = Substitute.For<ILearningObjectViewModel>();
+        ILearningElementViewModel? onClickedEventTriggered = null;
+        var learningObject = Substitute.For<ILearningElementViewModel>();
 
-        Action<ILearningObjectViewModel> onClicked = e => { onClickedEventTriggered = e; };
+        Action<ILearningElementViewModel> onClicked = e => { onClickedEventTriggered = e; };
 
         var systemUnderTest =
             CreateRenderedDraggableComponent(null, learningObject, 0, 0, _ => { }, _ => { }, onClicked);
@@ -83,10 +83,10 @@ public class DraggableUt
     [Test]
     public void ClickMoveAndRelease_OnClickedNotTriggered()
     {
-        ILearningObjectViewModel? onClickedEventTriggered = null;
-        var learningObject = Substitute.For<ILearningObjectViewModel>();
+        ILearningElementViewModel? onClickedEventTriggered = null;
+        var learningObject = Substitute.For<ILearningElementViewModel>();
 
-        Action<ILearningObjectViewModel> onClicked = e => { onClickedEventTriggered = e; };
+        Action<ILearningElementViewModel> onClicked = e => { onClickedEventTriggered = e; };
 
         var systemUnderTest =
             CreateRenderedDraggableComponent(null, learningObject, 0, 0, _ => { }, _ => { }, onClicked);
@@ -101,11 +101,11 @@ public class DraggableUt
     [Test]
     public void ClickMoveAndRelease_PositionChanged()
     {
-        var learningObject = Substitute.For<ILearningObjectViewModel>();
+        var learningObject = Substitute.For<ILearningElementViewModel>();
 
         double x = 10;
         double y = 20;
-        Action<ILearningObjectViewModel> onClicked = _ => { };
+        Action<ILearningElementViewModel> onClicked = _ => { };
 
         var systemUnderTest =
             CreateRenderedDraggableComponent(null, learningObject, x, y, _ => { }, _ => { }, onClicked);
@@ -125,11 +125,11 @@ public class DraggableUt
     [Test]
     public void MoveAndReleaseWithoutPreviousClick_PositionNotChanged()
     {
-        var learningObject = Substitute.For<ILearningObjectViewModel>();
+        var learningObject = Substitute.For<ILearningElementViewModel>();
 
         double x = 10;
         double y = 20;
-        Action<ILearningObjectViewModel> onClicked = _ => { };
+        Action<ILearningElementViewModel> onClicked = _ => { };
 
         var systemUnderTest =
             CreateRenderedDraggableComponent(null, learningObject, x, y, _ => { }, _ => { }, onClicked);
@@ -145,14 +145,14 @@ public class DraggableUt
         });
     }
 
-    private IRenderedComponent<Draggable> CreateRenderedDraggableComponent(RenderFragment? childContent = null,
-        ILearningObjectViewModel? learningObject = null, double x = 0, double y = 0, Action<double>? xChanged = null,
-        Action<double>? yChanged = null, Action<ILearningObjectViewModel>? onClicked = null)
+    private IRenderedComponent<Draggable<ILearningElementViewModel>> CreateRenderedDraggableComponent(RenderFragment? childContent = null,
+        ILearningElementViewModel? learningObject = null, double x = 0, double y = 0, Action<double>? xChanged = null,
+        Action<double>? yChanged = null, Action<ILearningElementViewModel>? onClicked = null)
     {
         xChanged ??= _ => { };
         yChanged ??= _ => { };
         onClicked ??= _ => { };
-        return _testContext.RenderComponent<Draggable>(parameters => parameters
+        return _testContext.RenderComponent<Draggable<ILearningElementViewModel>>(parameters => parameters
             .Add(p => p.ChildContent, childContent)
             .Add(p => p.LearningObject, learningObject)
             .Add(p => p.X, x)

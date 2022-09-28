@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningSpace;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
@@ -13,7 +14,7 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     ILearningWorldViewModel? LearningWorldVm { get; }
     bool SelectedLearningObjectIsSpace { get; }
     bool ShowingLearningSpaceView { get; }
-    void SetSelectedLearningSpace(ILearningObjectViewModel learningSpace);
+    void SetSelectedLearningSpace(ILearningSpaceViewModel learningSpace);
     void DeleteSelectedLearningSpace();
     Task LoadLearningSpaceAsync();
     Task SaveSelectedLearningSpaceAsync();
