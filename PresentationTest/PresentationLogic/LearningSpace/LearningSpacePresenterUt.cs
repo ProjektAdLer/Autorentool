@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.ModalDialog;
-using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
@@ -124,6 +123,26 @@ public class LearningSpacePresenterUt
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.AddLearningElement(element));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
     }
+    
+    [Test]
+    public void AddLearningElement_CallsPresentationLogic()
+    {
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var element = new LearningElementViewModel("f", "f", content, "f", "f", "f", LearningElementDifficultyEnum.Easy, space);
+        space.LearningElements.Add(element);
+        space.SelectedLearningElement = element;
+
+        var mockPresentationLogic = Substitute.For<IPresentationLogic>();
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic:mockPresentationLogic);
+        systemUnderTest.SetLearningSpace(space);
+
+        systemUnderTest.AddLearningElement(element);
+
+        mockPresentationLogic.Received().AddLearningElement(space,element);
+    }
+
 
     #region CreateNewLearningElement
 

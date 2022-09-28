@@ -6,10 +6,8 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.API;
-using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
-using Shared;
 
 namespace PresentationTest.PresentationLogic.LearningWorld;
 
@@ -27,9 +25,49 @@ public class LearningWorldPresenterUt
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetSelectedLearningSpace(space));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
+
+    [Test]
+    public void SetSelectedLearningSpace_CallsSpacePresenter()
+    { 
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var space = new LearningSpaceViewModel("g", "g", "g", "g", "g");
+        var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
+
+        var systemUnderTest = CreatePresenterForTesting(learningSpacePresenter: learningSpacePresenter);
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.SetSelectedLearningSpace(space);
+
+        learningSpacePresenter.Received().SetLearningSpace(space);
+    }
         
         
-    #region CreateNewLearningSpace
+    #region Create/AddLearningSpace
+    
+    [Test]
+    public void AddLearningSpace_LearningWorldIsNull_ThrowsException()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        var space = new LearningSpaceViewModel("a", "v", "d", "f", "f", 4);
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.AddLearningSpace(space));
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+    }
+
+    [Test]
+    public void AddLearningSpace_CallsPresentationLogic()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var space = new LearningSpaceViewModel("g", "g", "g", "g", "g");
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.AddLearningSpace(space);
+
+        presentationLogic.Received().AddLearningSpace(world,space);
+    }
 
     [Test]
     public void AddNewLearningSpace_SetsFieldToTrue()

@@ -163,7 +163,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         EditLearningSpaceDialogOpen = true;
     }
     
-    /// <inheritdoc cref="ILearningWorldPresenter.AddLearningSpace"/>
+    /// <inheritdoc cref="ILearningWorldPresenterToolboxInterface.AddLearningSpace"/>
     public void AddLearningSpace(ILearningSpaceViewModel learningSpace)
     {
         if (LearningWorldVm == null)
