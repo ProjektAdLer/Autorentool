@@ -82,7 +82,7 @@ public class CreateDsl : ICreateDsl
             //Searching for Learning Elements in each Space
             foreach (var element in learningSpace.LearningElements)
             {
-                IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", element.Name);
+                IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", $"{element.Name}.{element.LearningContent.Type}");
                 List<LearningElementValueJson> learningElementValueList = new List<LearningElementValueJson>();
                 LearningElementValueJson learningElementValueJson = new LearningElementValueJson("Points", element.Points.ToString());
                 learningElementValueList.Add(learningElementValueJson);
@@ -121,7 +121,8 @@ public class CreateDsl : ICreateDsl
         //After the files are added to the Backup-Structure, these Files will be deleted.
         foreach (var learningElement in ListLearningElements)
         {
-            _fileSystem.File.WriteAllBytes(_fileSystem.Path.Join("XMLFilesForExport", learningElement.Name), learningElement.LearningContent.Filepath);
+            _fileSystem.File.Copy(learningElement.LearningContent.Filepath,
+                _fileSystem.Path.Join("XMLFilesForExport", $"{learningElement.Name}.{learningElement.LearningContent.Type}"));
         }
         var dslPath = _fileSystem.Path.Join("XMLFilesForExport", "DSL_Document");
         _fileSystem.File.WriteAllText(dslPath, jsonFile);

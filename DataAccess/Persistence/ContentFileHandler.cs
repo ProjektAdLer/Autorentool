@@ -18,11 +18,10 @@ public class ContentFileHandler : IContentFileHandler
 
     public LearningContentPe LoadFromDisk(string filepath)
     {
-        var fileBytes = _fileSystem.File.ReadAllBytes(filepath);
         var fileType = Path.GetExtension(filepath).Trim('.').ToLower();
         var fileName = Path.GetFileName(filepath);
         _logger.LogInformation("File {FileName} of type {FileType} loaded", fileName, fileType);
-        return new LearningContentPe(fileName, fileType, fileBytes);
+        return new LearningContentPe(fileName, fileType, filepath);
     }
 
     public LearningContentPe LoadFromStream(string name, Stream stream)
@@ -31,6 +30,6 @@ public class ContentFileHandler : IContentFileHandler
         var fileType = Path.GetExtension(name).Split(".").Last().ToLower();
         var fileName = Path.GetFileName(name);
         _logger.LogInformation("File {FileName} of type {FileType} loaded", fileName, fileType);
-        return new LearningContentPe(fileName, fileType, fileBytes);
+        return new LearningContentPe(fileName, fileType, "");
     }
 }

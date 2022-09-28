@@ -14,6 +14,8 @@ public class CreateDslUt
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
+        mockFileSystem.AddFile("/foo/bar.txt", new MockFileData("barbaz"));
+        mockFileSystem.AddFile("/foo/foo.txt", new MockFileData("foo"));
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
 
         const string name = "asdf";
@@ -22,11 +24,11 @@ public class CreateDslUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
-        var content1 = new LearningContentPe("a", "h5p", "");
-        var content2 = new LearningContentPe("w", "e", "");
+        var content1 = new LearningContentPe("a", "h5p", "/foo/bar.txt");
+        var content2 = new LearningContentPe("w", "e", "/foo/foo.txt");
         var ele1 = new LearningElementPe("a", "b",content1, "pupup", "g","h", LearningElementDifficultyEnumPe.Easy, 17, 1,23);
         var ele2 = new LearningElementPe("z", "zz", content2,"baba", "z","zz", LearningElementDifficultyEnumPe.Easy, 444, 3,double.MaxValue);
-        var ele3 = new LearningElementPe("a", "b",content1, "pupup", "g","h", LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
+        var ele3 = new LearningElementPe("a(1)", "b",content1, "pupup", "g","h", LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
         var learningElements = new List<LearningElementPe> { ele1, ele2 };
         var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5);
         space1.LearningElements.Add(ele3);
