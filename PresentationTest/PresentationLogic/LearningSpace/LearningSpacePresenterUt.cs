@@ -282,8 +282,6 @@ public class LearningSpacePresenterUt
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "a";
         dictionary["Shortname"] = "b";
-        dictionary["Parent"] = ElementParentEnum.Space.ToString();
-        dictionary["Assignment"] = "foobar";
         dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
         dictionary["Content"] = ContentTypeEnum.PDF.ToString();
         dictionary["Authors"] = "d";
@@ -368,8 +366,6 @@ public class LearningSpacePresenterUt
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "a";
         dictionary["Shortname"] = "b";
-        dictionary["Parent"] = ElementParentEnum.World.ToString();
-        dictionary["Assignment"] = "foo";
         dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
         dictionary["Content"] = ContentTypeEnum.Image.ToString();
         dictionary["Authors"] = "e";
@@ -432,8 +428,6 @@ public class LearningSpacePresenterUt
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "a";
         dictionary["Shortname"] = "b";
-        dictionary["Parent"] = ElementParentEnum.World.ToString();
-        dictionary["Assignment"] = "foobar";
         dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
         dictionary["Content"] = ContentTypeEnum.Text.ToString();
         dictionary["Authors"] = "d";
@@ -496,8 +490,6 @@ public class LearningSpacePresenterUt
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "a";
         dictionary["Shortname"] = "b";
-        dictionary["Parent"] = ElementParentEnum.World.ToString();
-        dictionary["Assignment"] = "foobar";
         dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
         dictionary["Content"] = ContentTypeEnum.Video.ToString();
         dictionary["Authors"] = "d";
@@ -554,8 +546,6 @@ public class LearningSpacePresenterUt
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "a";
         dictionary["Shortname"] = "b";
-        dictionary["Parent"] = "Learning Space";
-        dictionary["Assignment"] = "foo";
         dictionary["Type"] = "c";
         dictionary["Content"] = "d";
         dictionary["Authors"] = "e";
@@ -651,8 +641,6 @@ public class LearningSpacePresenterUt
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "a";
         dictionary["Shortname"] = "b";
-        dictionary["Parent"] = ElementParentEnum.Space.ToString();
-        dictionary["Assignment"] = "foo";
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
         dictionary["Goals"] = "g";
@@ -715,8 +703,6 @@ public class LearningSpacePresenterUt
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "a";
         dictionary["Shortname"] = "b";
-        dictionary["Parent"] = ElementParentEnum.Space.ToString();
-        dictionary["Assignment"] = "foo";
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
         dictionary["Goals"] = "g";
@@ -742,8 +728,6 @@ public class LearningSpacePresenterUt
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "a";
         dictionary["Shortname"] = "b";
-        dictionary["Parent"] = ElementParentEnum.Space.ToString();
-        dictionary["Assignment"] = "foo";
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
         dictionary["Goals"] = "g";
