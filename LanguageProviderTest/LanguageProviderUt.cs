@@ -1,15 +1,12 @@
-using System.Net;
-using System.Reflection.Metadata;
 using NUnit.Framework;
-using LanguageProvider;
 using LanguageProvider.Exceptions;
-using Tommy;
+using LanguageProvider;
 
 namespace LanguageProviderTest;
 [TestFixture]
 public class LanguageProviderUt
 {
-    private string _pathToDatabaseDirectory = $"{Directory.GetCurrentDirectory()}/LanguageProvider/";
+    private string _pathToDatabaseDirectory = $".\\Database\\";
 
     [Test]
     public void LanguageProvider_SetLanguage_SetsCorrectDatabase_And_GetsCorrectContent_ForCorrectKeys()
@@ -17,22 +14,19 @@ public class LanguageProviderUt
         var firstDatabase = "FirstTestDatabase";
         var secondDatabase = "SecondTestDatabase";
         
-        Directory.SetCurrentDirectory(_pathToDatabaseDirectory);
-
-        LanguageProvider.LanguageProvider.SetLanguage(firstDatabase);
-        Assert.That(LanguageProvider.LanguageProvider.GetContent("FirstTable", "FirstKey"), Is.EqualTo("First Database, First Table, First Key"));
-        Assert.That(LanguageProvider.LanguageProvider.GetContent("FirstTable", "SecondKey"), Is.EqualTo("First Database, First Table, Second Key"));
+        var systemUnderTest = GetLanguageProvider_ForTests(firstDatabase);
+        Assert.That(systemUnderTest.GetContent("FirstTable", "FirstKey"), Is.EqualTo("First Database, First Table, First Key"));
+        Assert.That(systemUnderTest.GetContent("FirstTable", "SecondKey"), Is.EqualTo("First Database, First Table, Second Key"));
         
-        Assert.That(LanguageProvider.LanguageProvider.GetContent("SecondTable", "FirstKey"), Is.EqualTo("First Database, Second Table, First Key"));
-        Assert.That(LanguageProvider.LanguageProvider.GetContent("SecondTable", "SecondKey"), Is.EqualTo("First Database, Second Table, Second Key"));
+        Assert.That(systemUnderTest.GetContent("SecondTable", "FirstKey"), Is.EqualTo("First Database, Second Table, First Key"));
+        Assert.That(systemUnderTest.GetContent("SecondTable", "SecondKey"), Is.EqualTo("First Database, Second Table, Second Key"));
 
-        LanguageProvider.LanguageProvider.SetLanguage(secondDatabase);
-        Assert.That(LanguageProvider.LanguageProvider.GetContent("FirstTable", "FirstKey"), Is.EqualTo("Second Database, First Table, First Key"));
-        Assert.That(LanguageProvider.LanguageProvider.GetContent("FirstTable", "SecondKey"), Is.EqualTo("Second Database, First Table, Second Key"));
+        systemUnderTest.SetLanguage(secondDatabase);
+        Assert.That(systemUnderTest.GetContent("FirstTable", "FirstKey"), Is.EqualTo("Second Database, First Table, First Key"));
+        Assert.That(systemUnderTest.GetContent("FirstTable", "SecondKey"), Is.EqualTo("Second Database, First Table, Second Key"));
         
-        Assert.That(LanguageProvider.LanguageProvider.GetContent("SecondTable", "FirstKey"), Is.EqualTo("Second Database, Second Table, First Key"));
-        Assert.That(LanguageProvider.LanguageProvider.GetContent("SecondTable", "SecondKey"), Is.EqualTo("Second Database, Second Table, Second Key"));
-        LanguageProvider.LanguageProvider.Unload();
+        Assert.That(systemUnderTest.GetContent("SecondTable", "FirstKey"), Is.EqualTo("Second Database, Second Table, First Key"));
+        Assert.That(systemUnderTest.GetContent("SecondTable", "SecondKey"), Is.EqualTo("Second Database, Second Table, Second Key"));
     }
 
     [TestCase(".FirstTestDatabase")]
@@ -41,60 +35,33 @@ public class LanguageProviderUt
     [TestCase("F/irstTestDatabase")]
     [TestCase("\\FirstTestDatabase")]
     [TestCase("$FirstTestD%atabase")]
-    public void LanguageProvider_SetLanguage_ThrowsException_ForInvalidFormattedFileName(string databaseName)
+    public void LanguageProvider_SetLanguage_ThrowsNameFormatException_ForInvalidFormattedFileName(string databaseName)
     {
-        Directory.SetCurrentDirectory(_pathToDatabaseDirectory);
-
-        Assert.Throws<DatabaseNameFormatException>(() => { LanguageProvider.LanguageProvider.SetLanguage(databaseName);}, "Name Included a not alphanumeric character");
-        LanguageProvider.LanguageProvider.Unload();
+        
+        Assert.Throws<DatabaseNameFormatException>(() => { var systemUnderTest = GetLanguageProvider_ForTests(databaseName);;}, "Name Included a not alphanumeric character");
     }
 
-    [TestCase("skazzle")]
-    [TestCase("bazzle")]
-    [TestCase("root")]
-    public void LanguageProvider_SetLanguage_ThrowsException_ForInvalidFileName_WithCorrectFileNameFormatting(string databaseName)
-    {
-        Directory.SetCurrentDirectory(_pathToDatabaseDirectory);
-        var pathToDatabase = $"{Directory.GetCurrentDirectory()}/LanguageProvider/Database/{databaseName}.toml";
-        Assert.Throws<DatabaseNotFoundException>(() => { LanguageProvider.LanguageProvider.SetLanguage(databaseName);}, $"DATABASE_NOT_FOUND: Failed to find Database in '{pathToDatabase}'!");
-        Directory.SetCurrentDirectory("../");
-        LanguageProvider.LanguageProvider.Unload();
-    }
-    
-    [TestCase("ThirdTestDatabase")]
-    public void LanguageProvider_SetLanguage_ThrowsException_ForInvalidDatabaseFormatting(string databaseName)
-    {
-        Directory.SetCurrentDirectory(_pathToDatabaseDirectory);
-        Assert.Throws<DatabaseParseException>(() => { LanguageProvider.LanguageProvider.SetLanguage(databaseName);}, $"DATABASE_PARSING_ERROR:Failed to Load Database '{databaseName}.toml'!");
-        LanguageProvider.LanguageProvider.Unload();
-    }
-
-    [Test]
-    public void LanguageProvider_GetContent_ThrowsInnerException_ForNoLoadedDatabase()
-    {
-        Directory.SetCurrentDirectory(_pathToDatabaseDirectory);
-        Assert.That(LanguageProvider.LanguageProvider.GetContent("test", "test") , Is.EqualTo("DATABASE_NULL_EXCEPTION: No Database loaded into memory!"));
-        LanguageProvider.LanguageProvider.Unload();
-    }
-    
     [TestCase("FourthTestDatabase")]
     public void LanguageProvider_GetContent_ThrowsInnerException_ForLookingUpEmptyTable(string databaseName)
     {
-        Directory.SetCurrentDirectory(_pathToDatabaseDirectory);
+        var systemUnderTest = GetLanguageProvider_ForTests(databaseName);
         var spaceName = "test";
-        LanguageProvider.LanguageProvider.SetLanguage(databaseName);
-        Assert.That(LanguageProvider.LanguageProvider.GetContent(spaceName, "test") , Is.EqualTo($"DATABASE_EMPTY_TABLE_EXCEPTION: '{spaceName}' in '{databaseName}' was empty!"));
-        LanguageProvider.LanguageProvider.Unload();
+        Assert.Throws<DatabaseEmptyTableException>(() => { systemUnderTest.GetContent(spaceName, "test"); },
+            $"DATABASE_EMPTY_TABLE_EXCEPTION: '{spaceName}' in '{databaseName}' was empty!");
     }
     
     [TestCase("FourthTestDatabase")]
-    public void LanguageProvider_GetContent_ThrowsInnerException_(string databaseName)
+    public void LanguageProvider_GetContent_ThrowsDatabaseLookUpException_ForWrongTag_InCorrectTable(string databaseName)
     {
-        Directory.SetCurrentDirectory(_pathToDatabaseDirectory);
+        var systemUnderTest = GetLanguageProvider_ForTests(databaseName);
         var spaceName = "FirstTable";
         var tagName = "test";
-        LanguageProvider.LanguageProvider.SetLanguage(databaseName);
-        Assert.That(LanguageProvider.LanguageProvider.GetContent(spaceName, tagName) , Is.EqualTo($"DATABASE_LOOKUP_EXCEPTION: '{tagName}' was not found in '{spaceName}'"));
-        LanguageProvider.LanguageProvider.Unload();
+        Assert.Throws<DatabaseLookupException>(() => { systemUnderTest.GetContent(spaceName, tagName); },
+            $"DATABASE_LOOKUP_EXCEPTION: '{tagName}' was not found in '{spaceName}'");
+    }
+
+    private LanguageProvider.LanguageProvider GetLanguageProvider_ForTests(string fileName)
+    {
+        return new LanguageProvider.LanguageProvider(fileName, _pathToDatabaseDirectory);
     }
 }

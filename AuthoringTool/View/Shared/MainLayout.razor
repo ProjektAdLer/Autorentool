@@ -96,7 +96,7 @@
                 <CloseAppButton/>
             }
             <div class="language-switch px-4" style="font-family:'Roboto Light'; font-weight: lighter; color: #cfd8e5">
-                @LanguageProvider.GetContent("BlazorMainLayout", "LanguageSwitchLanguage")
+                @LanguageProviderForRazor.GetContent("BlazorMainLayout", "LanguageSwitchLanguage")
                 <button class="info-button">i</button>
                 <div class="language-switch-button-group" style="display: inline">
                     <input type="checkbox" @onclick="LanguagePresentationLogicSwitch" class="language-switch" checked=@MainLayout.LanguageButtonElement.GetCheckBoxState()>
@@ -132,7 +132,7 @@
         {
             try
             {
-                LanguageProvider.SetLanguage(MDatabasesForSwitch[_mSwitchIterator]);
+                LanguageProviderForRazor.SetLanguage(MDatabasesForSwitch[_mSwitchIterator]);
             }
             catch (Exception e)
             {
@@ -146,7 +146,7 @@
             _mSwitchIterator++;
             _mSwitchIterator %= (uint)MDatabasesForSwitch.Length;
             _mCheckboxState = !_mCheckboxState;
-            LanguageProvider.SetLanguage(MDatabasesForSwitch[_mSwitchIterator]);
+            LanguageProviderForRazor.SetLanguage(MDatabasesForSwitch[_mSwitchIterator]);
         }
 
         internal static bool GetCheckBoxState()

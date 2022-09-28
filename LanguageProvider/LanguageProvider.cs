@@ -1,25 +1,38 @@
-using System.Diagnostics;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using Tommy;
 
 namespace LanguageProvider
 {
-    public static class LanguageProvider
+    public class LanguageProvider
     {
-        private static string _mLanguage = "";
-        static readonly string _mPathToDatabaseDirectory = "../LanguageProvider/Database/";
-        static readonly string _mFileExtension = ".toml";
-        private static TomlTable? _mDatabase = null;
-
-        
-
-        public static void SetLanguage(string databaseName)
+        private string DatabaseFileName;
+        private string PathToDatabaseDirectory;
+        private string FileExtension = ".toml";
+        private LanguageProviderDatabase _languageProviderDatabase;
+        private string? PathToDatabase = null;
+        public LanguageProvider()
         {
-            if (IsAlphaNumeric(databaseName))
+            _languageProviderDatabase = new LanguageProviderDatabase();
+        }
+        public LanguageProvider(string databaseFileName, string? pathToDatabaseDirectory = null)
+        {
+            if (pathToDatabaseDirectory is not null)
             {
-                _mLanguage = databaseName;
-                LoadDatabase();
+                PathToDatabaseDirectory = pathToDatabaseDirectory;
+            }
+            else
+            {
+                PathToDatabaseDirectory = "../Database/";
+            }
+            
+            DatabaseFileName = databaseFileName;
+            SetLanguage(databaseFileName);
+        }
+        public void SetLanguage(string databaseFileName)
+        {
+            if (IsStringAlphaNumeric(databaseFileName))
+            {
+                DatabaseFileName = databaseFileName;
+                _languageProviderDatabase = new LanguageProviderDatabase($"{PathToDatabaseDirectory + DatabaseFileName + FileExtension}");
             }
             else
             {
@@ -35,160 +48,35 @@ namespace LanguageProvider
         /// <returns>string</returns>
         /// <exception cref="DatabaseEmptyTableException">Thrown if the table_empty Tag in Database table is set to true</exception>
         /// <exception cref="DatabaseLookupException">Thrown if the delivered Tag is not found in the specified table</exception>
-        public static string GetContent(string spaceName, string tagName)
+        public string GetContent(string spaceName, string tagName)
         {
-            var output = "Something went wrong!";
+            var output = "Something went wrong in LanguageProvider!";
+            if (_languageProviderDatabase.Database is null)
+            {
+                throw new Exceptions.DatabaseNullException($"DATABASE_NULL_EXCEPTION: No Database loaded into memory!");
+            }
+
+            if (_languageProviderDatabase.Database[spaceName]["table_empty"].AsBoolean)
+            {
+                throw new Exceptions.DatabaseEmptyTableException($"DATABASE_EMPTY_TABLE_EXCEPTION: '{spaceName}' in '{Directory.GetCurrentDirectory() + PathToDatabase}' was empty!");
+            }
+                
             try
             {
-                if (_mDatabase is not null)
-                {
-                    if (_mDatabase[spaceName]["table_empty"].AsBoolean)
-                    {
-                        throw new Exceptions.DatabaseEmptyTableException($"DATABASE_EMPTY_TABLE_EXCEPTION: '{spaceName}' in '{_mLanguage}' was empty!");
-                    }
-                    else
-                    {
-                        try
-                        {
-                            output = _mDatabase[spaceName][tagName].AsString.ToString();
-                        }
-                        catch (Exception errorMessage)
-                        {
-                            throw new Exceptions.DatabaseLookupException($"DATABASE_LOOKUP_EXCEPTION: '{tagName}' was not found in '{spaceName}'");
-                        }
-                    }
-                }
-                else
-                {
-                    throw new Exceptions.DatabaseNullException($"DATABASE_NULL_EXCEPTION: No Database loaded into memory!");
-                }
+                output = _languageProviderDatabase.Database[spaceName][tagName].AsString.ToString();
             }
-            catch (Exceptions.LanguageProviderBaseException error)
+            catch (Exception errorMessage)
             {
-                output = error.Message;
+                throw new Exceptions.DatabaseLookupException(
+                    $"DATABASE_LOOKUP_EXCEPTION: '{tagName}' was not found in '{spaceName}'");
             }
             return output;
         }
-        private static void LoadDatabase()
-        {
-            string pathToDatabase = _mPathToDatabaseDirectory + _mLanguage + _mFileExtension;
-            try
-            {
-                if (File.Exists(pathToDatabase))
-                {
-                    using var reader = File.OpenText(pathToDatabase);
-                    _mDatabase = TOML.Parse(reader);
-                }
-                else
-                {
-                    throw new Exceptions.DatabaseNotFoundException($"DATABASE_NOT_FOUND: Failed to find Database in '{pathToDatabase}'!");
-                }
-                
-            }
-            catch (Exception error)
-            {
-                if (error.GetType() == typeof(TomlParseException))
-                {
-                    throw new Exceptions.DatabaseParseException($"DATABASE_PARSING_ERROR:Failed to Load Database '{_mLanguage + _mFileExtension}'!");
-                }
-                if (error.GetType() == typeof(Exceptions.DatabaseNotFoundException))
-                {
-                    throw new Exceptions.DatabaseNotFoundException(error.Message);
-                }
-            }
-        }
-        
-        //for testing only
-        public static void Unload()
-        {
-            _mLanguage = "";
-            _mDatabase = null;
-        }
-        private static bool IsAlphaNumeric(string strToCheck)
+
+        private bool IsStringAlphaNumeric(string strToCheck)
         {
             Regex rg = new Regex(@"^[a-zA-Z0-9\s]*$");
             return rg.IsMatch(strToCheck);
-        }
-    }
-
-    namespace Exceptions
-    {
-        public class LanguageProviderBaseException : Exception
-        {
-            public LanguageProviderBaseException() : base()
-            {
-            }
-
-            public LanguageProviderBaseException(string message) : base(message)
-            {
-            }
-        }
-        public class DatabaseLoaderException : LanguageProviderBaseException
-        {
-            public DatabaseLoaderException() : base()
-            {
-            }
-
-            public DatabaseLoaderException(string message) : base(message)
-            {
-            }
-        }
-        public class DatabaseParseException : DatabaseLoaderException
-        {
-            public DatabaseParseException() : base()
-            {
-            }
-
-            public DatabaseParseException(string message) : base(message)
-            {
-            }
-        }
-        public class DatabaseNullException : DatabaseLoaderException
-        {
-            public DatabaseNullException() : base()
-            {
-            }
-
-            public DatabaseNullException(string message) : base(message)
-            {
-            }
-        }
-        public class DatabaseNotFoundException : DatabaseLoaderException
-        {
-            public DatabaseNotFoundException() : base()
-            {
-            }
-
-            public DatabaseNotFoundException(string message) : base(message)
-            {
-            }
-        }
-        public class DatabaseEmptyTableException : LanguageProviderBaseException
-        {
-            public DatabaseEmptyTableException() : base()
-            {
-            }
-            public DatabaseEmptyTableException(string message) : base(message)
-            {
-            }
-        }
-        public class DatabaseLookupException : LanguageProviderBaseException
-        {
-            public DatabaseLookupException() : base()
-            {
-            }
-            public DatabaseLookupException(string message) : base(message)
-            {
-            }
-        }
-        public class DatabaseNameFormatException : LanguageProviderBaseException
-        {
-            public DatabaseNameFormatException() : base()
-            {
-            }
-            public DatabaseNameFormatException(string message) : base(message)
-            {
-            }
         }
     }
 }

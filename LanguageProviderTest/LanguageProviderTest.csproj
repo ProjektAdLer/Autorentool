@@ -25,13 +25,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <Content Include="AppData\**">
-            
-        </Content>
+        <Content Include="Database\FirstTestDatabase.toml" />
+        <Content Include="Database\FourthTestDatabase.toml" />
+        <Content Include="Database\SecondTestDatabase.toml" />
+        <Content Include="Database\ThirdTestDatabase.toml" />
     </ItemGroup>
     
     <ItemGroup>
-        <Content Include=".\LanguageProvider\Database\**">
+        <Content Include=".\Database\**">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </Content>
     </ItemGroup>
