@@ -318,7 +318,7 @@ public class XmlBackupFactory : IXmlBackupFactory
             }
         }
         
-        foreach (var space in ReadDsl.GetLearningSpaceList())
+        foreach (var space in ReadDsl.GetSectionList())
         {
             var sectionId = space.SpaceId.ToString();
             var sectionName = space.Identifier.Value;

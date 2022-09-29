@@ -8,6 +8,7 @@ namespace GeneratorTest.DSL;
 [TestFixture]
 public class CreateDslUt
 {
+    [Test]
     public void CreateDSL_WriteLearningWorld_DSLDocumentWritten()
     {
         //Arrange
@@ -21,11 +22,7 @@ public class CreateDslUt
         const string description = "very cool element";
         const string goals = "learn very many things";
         var content1 = new LearningContentPe("a", "h5p", new byte[]{0x01,0x02});
-        var content2 = new LearningContentPe("w", "e", new byte[]{0x02,0x01});
-        var ele1 = new LearningElementPe("a", "b",content1, "pupup", "g","h", LearningElementDifficultyEnumPe.Easy, 17, 1,23);
-        var ele2 = new LearningElementPe("z", "zz", content2,"baba", "z","zz", LearningElementDifficultyEnumPe.Easy, 444, 3,double.MaxValue);
         var ele3 = new LearningElementPe("a", "b",content1, "pupup", "g","h", LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
-        var learningElements = new List<LearningElementPe> { ele1, ele2 };
         var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5);
         space1.LearningElements.Add(ele3);
         var space2 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5);
@@ -37,7 +34,7 @@ public class CreateDslUt
         var systemUnderTest = new CreateDsl(mockFileSystem);
         
         //var allLearningElements = new List<LearningElementPe> { ele3, ele1, ele2 };
-        var allLearningElements = new List<LearningElementPe> { ele2 };
+        var learningElementsList = new List<LearningElementPe> { ele3 };
 
         //Act
         systemUnderTest.WriteLearningWorld(learningWorld);
@@ -53,11 +50,9 @@ public class CreateDslUt
         {
             Assert.That(systemUnderTest.LearningWorldJson!.Identifier.Value, Is.EqualTo(name));
 
-            Assert.That(systemUnderTest.ListLearningElements, Is.EquivalentTo(allLearningElements));
-
-            //Because SpaceId=0 is automatically created and has all elements free in the learning world.
-            //The Space count is 2 + 1
-            Assert.That(systemUnderTest.ListLearningSpaces, Has.Count.EqualTo(3));
+            Assert.That(systemUnderTest.ListLearningElements, Is.EquivalentTo(learningElementsList));
+            
+            Assert.That(systemUnderTest.ListLearningSpaces, Has.Count.EqualTo(2));
         });
         Assert.Multiple(() =>
         {

@@ -96,7 +96,7 @@ public class ReadDsl : IReadDsl
         {
             if (label.ElementType is "mp4")
             {
-                ListResourceElements.Add(label);
+                ListLabelElements.Add(label);
             }
         }
     }
@@ -108,7 +108,7 @@ public class ReadDsl : IReadDsl
         {
             foreach (var space in documentRootJson.LearningWorld.LearningSpaces)
             {
-                List<LearningElementValueJson> values = new List<LearningElementValueJson>{new("Points", "Value Until Spaces Get Points")};
+                List<LearningElementValueJson> values = new List<LearningElementValueJson>{new("", "")};
                 ListAllSpacesAndElementsOrdered.Add(new LearningElementJson(space.SpaceId+1000, space.Identifier, "space", 0, values, space.Description));
                 
                 foreach (int elementInSpace in space.LearningSpaceContent)
@@ -124,7 +124,7 @@ public class ReadDsl : IReadDsl
         return ListH5PElements;
     }
 
-    public List<LearningSpaceJson> GetLearningSpaceList()
+    public List<LearningSpaceJson> GetSectionList()
     {
         var space = new LearningSpaceJson(0, new IdentifierJson("identifier", "Topic 0"), 
             new List<int>(), "0" ,"0" );

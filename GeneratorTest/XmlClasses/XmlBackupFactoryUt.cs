@@ -77,7 +77,7 @@ public class XmlBackupFactoryUt
 
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
         mockReadDsl.GetH5PElementsList().Returns(learningElementJsons);
-        mockReadDsl.GetLearningSpaceList().Returns(learningSpacesJsons);
+        mockReadDsl.GetSectionList().Returns(learningSpacesJsons);
         mockReadDsl.GetResourceList().Returns(new List<LearningElementJson>(){mockDslDocumentJson});
         
         learningElementJsons.Add(mockDslDocumentJson);
@@ -304,7 +304,7 @@ public class XmlBackupFactoryUt
         
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
         mockReadDsl.GetH5PElementsList().Returns(learningElementJsons);
-        mockReadDsl.GetLearningSpaceList().Returns(learningSpacesJsons);
+        mockReadDsl.GetSectionList().Returns(learningSpacesJsons);
         mockReadDsl.GetResourceList().Returns(new List<LearningElementJson>(){mockDslDocumentJson});
         
         learningElementJsons.Add(mockDslDocumentJson);

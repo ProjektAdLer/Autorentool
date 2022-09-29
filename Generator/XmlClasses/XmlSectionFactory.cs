@@ -29,7 +29,7 @@ public class XmlSectionFactory
 
     public void CreateSectionFactory()
     {
-        LearningSpaceJsons = ReadDsl.GetLearningSpaceList();
+        LearningSpaceJsons = ReadDsl.GetSectionList();
         
         //Add A Section for every LearningSpace
         foreach (var space in LearningSpaceJsons)

@@ -49,19 +49,14 @@ public class CreateDsl : ICreateDsl
             new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>(), 
             learningWorld.Description, learningWorld.Goals);
 
-        // All learningElements that have no learningSpace are added to the learningWorld (With the LearningSpaceParentId=0)
-        //var learningWorldElements = new LearningSpacePe("Freie Lernelemente", "FEE", "Dimitri",
-        //    "Diese Lernelemente sind keinem Lernraum zugeordnet", "", 0, learningWorld.LearningElements,1,1);
-        //ListLearningSpaces.Add(learningWorldElements);
-        
         // Create Learning Spaces & fill into Learning World
         // The learningSpaceId defines what the starting Id for Spaces should be. 
         // Search for Learning Elements in Spaces and add to listLearningElements
         ListLearningSpaces.AddRange(learningWorld.LearningSpaces);
         
-        int learningSpaceId = 0;
+        int learningSpaceId = 1;
         // Starts with 2, because the DSL Document always has Element ID = 1. Therefore all other elements have to start with 2.
-        int learningSpaceElementId = 2;
+        int learningSpaceElementId = 1;
         foreach (var learningSpace in ListLearningSpaces)
         {
             _listLearningSpaceContent = new List<int>();

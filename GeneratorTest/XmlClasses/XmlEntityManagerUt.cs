@@ -63,7 +63,7 @@ public class XmlEntityManagerUt
         
         mockReadDsl.GetLabelsList().Returns(labelJsonList);
         mockReadDsl.GetLearningWorld().Returns(learningWorldJson);
-        mockReadDsl.GetLearningSpaceList().Returns(learningSpacesList);
+        mockReadDsl.GetSectionList().Returns(learningSpacesList);
         mockReadDsl.GetSpacesAndElementsOrderedList().Returns(learningElementList);
         mockReadDsl.GetLabelsList().Returns(labelJsonList);
         
