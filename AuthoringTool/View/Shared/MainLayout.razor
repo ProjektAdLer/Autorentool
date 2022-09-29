@@ -8,74 +8,87 @@
 <PageTitle>AuthoringTool</PageTitle>
 
 <style>
-        .switch-button {
-            background-color: #4CAF50;
+        .language-switch {
+            font-family:'Roboto Light';
+            font-weight: lighter;
+            color: #cfd8e5;
+        }
+        
+        .languageprovider-checkbox-group {
+            display: inline;
+        }
+        
+        .languageprovider-switch-text {
             border-radius: 12px;
             border: none;
-            padding: 4px;
+            padding: 3px;
             text-align: center;
             display: inline-block;
             font-size: 16px;
             margin: 4px 2px;
             cursor: pointer;
             background: linear-gradient(90deg, #172d4d 50%, #cfd8e5 50%);
-            display: inline;
+            display: inline-block;
+            position: relative;
+        }
+        
+        .languageprovider-switch-text ~ input[id="languageprovider-checkbox"]:checked {
+            background: linear-gradient(-90deg, #172d4d 50%, #cfd8e5 50%);
         }
 
-        .switch-button:active {
-            background: linear-gradient(-90deg, #172d4d 50%, #cfd8e5 50%);
+        input[id="languageprovider-checkbox"] {
+            display:none;
         }
 
         .info-button {
             background-color: #2d415d;
-            border-radius: 50%;
+            border-radius: 100%;
             border: none;
             color: #e2e5e9;
-            display: inline;
-            height: 20px;
-            width: 20px;
+            position: relative;
+            display: inline-block;
+            text-align:center;
+            height: 17px;
+            width: 17px;
+            cursor: help;
         }
 
         .info-button:hover {
-            background-color: #36475e;
-            border-radius: 50%;
-            border: none;
-            color: #e2e5e9;
-            display: inline;
-            height: 20px;
-            width: 20px;
+            background-color: #687a92;
         }
 
-        .button-text-DE, .button-text-EN {
+        label {
+            padding: 5px;
+            border-radius: 5px;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
             display: inline;
+            font-family:'Roboto Light';
             font-weight: bold;
         }
 
-        .button-text-DE {
-            padding-right: 3px;
-        }
-        .button-text-EN {
 
-        }
-
-        .button-text-DE:before {
+        label .switch-text-DE {
             color: #cfd8e5;
+            display: inline;
+            padding-right: 4px;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
-        .button-text-DE:after {
+        label .switch-text-EN {
             color: #4f617b;
-            padding-right: 3px;
+            display: inline;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
-        .button-text-EN:before {
-            color: #4f617b;
-            padding-left: 3px;
-        }
-
-        .button-text-EN:after {
-            color: #cfd8e5;
-            padding-left: 3px;
-        }
+        
     </style>
 
 
@@ -95,15 +108,19 @@
             {
                 <CloseAppButton/>
             }
-            <div class="language-switch px-4" style="font-family:'Roboto Light'; font-weight: lighter; color: #cfd8e5">
-                @LanguageProviderForRazor.GetContent("BlazorMainLayout", "LanguageSwitchLanguage")
-                <button class="info-button">i</button>
-                <div class="language-switch-button-group" style="display: inline">
-                    <input type="checkbox" @onclick="LanguagePresentationLogicSwitch" class="language-switch" checked=@MainLayout.LanguageButtonElement.GetCheckBoxState()>
-                    <div class="button-text-DE">DE</div>
-                    <div class="button-text-EN">EN</div>
-                </div>
-            </div>
+            <div class="language-switch">
+                        @LanguageProviderForRazor.GetContent("BlazorMainLayout", "LanguageSwitchLanguage")
+                        <div class="info-button">i</div>
+                        <div class="languageprovider-checkbox-group">
+                            <input type="checkbox" id="languageprovider-checkbox" @onclick="LanguagePresentationLogicSwitch" checked="@LanguageButtonElement.GetCheckBoxState()">
+                            <label for="languageprovider-checkbox">
+                                <span class="languageprovider-switch-text">
+                                    <div class="switch-text-DE">DE</div>
+                                    <div class="switch-text-EN">EN</div>
+                                </span>
+                            </label>
+                        </div>
+                    </div>
         </div>
 
         <article class="content px-4">
@@ -116,17 +133,18 @@
 
     [Inject]
     public IPresentationLogic? PresentationLogic { get; set; }
+
 }
 
 
 @code
 {
-    //Element logic for LanguageSwitch using the LanguageProvider
+    //Element logic for LanguageSwitch using the LanguageProviderForRazor
     internal static class LanguageButtonElement
     {
         static bool _mCheckboxState = false;
         private static uint _mSwitchIterator = 0;
-        static readonly string[] MDatabasesForSwitch = {"de", "en"};
+        static readonly string[] MDatabasesForSwitch = { "de", "en" };
 
         static LanguageButtonElement()
         {
@@ -138,9 +156,8 @@
             {
                 Console.WriteLine(e);
             }
-            
         }
-        
+
         internal static void ToggleSwitchLanguage()
         {
             _mSwitchIterator++;
@@ -154,9 +171,10 @@
             return _mCheckboxState;
         }
     }
+
     private void LanguagePresentationLogicSwitch()
     {
         LanguageButtonElement.ToggleSwitchLanguage();
-        uriHelper.NavigateTo(uriHelper.Uri, forceLoad:true);
+        uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);
     }
 }
