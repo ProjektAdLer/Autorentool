@@ -33,14 +33,13 @@ public class CreateDslUt
 
         var systemUnderTest = new CreateDsl(mockFileSystem);
         
-        //var allLearningElements = new List<LearningElementPe> { ele3, ele1, ele2 };
         var learningElementsList = new List<LearningElementPe> { ele3 };
 
         //Act
         systemUnderTest.WriteLearningWorld(learningWorld);
         
         //Assert
-        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "DSL_Document");
+        var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "DSL_Document.json");
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Uuid, Is.Not.Null);
@@ -56,7 +55,6 @@ public class CreateDslUt
         });
         Assert.Multiple(() =>
         {
-
             Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
         });
     }

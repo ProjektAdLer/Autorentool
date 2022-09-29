@@ -62,18 +62,6 @@ public class CreateDsl : ICreateDsl
             _listLearningSpaceContent = new List<int>();
             IdentifierJson learningSpaceIdentifier = new IdentifierJson("name", learningSpace.Name);
             
-            //Add the DSL Document to the first LearningSpace
-            if (learningSpaceId == 0)
-            {
-                IdentifierJson dslDocumentIdentifier = new IdentifierJson("FileName", "DSL_Document");
-                List<LearningElementValueJson> learningElementValueList = new List<LearningElementValueJson>();
-                LearningElementValueJson learningElementValueJson = new LearningElementValueJson("Points", "0");
-                learningElementValueList.Add(learningElementValueJson);
-                LearningElementJson dslDocumentJson = new LearningElementJson(1, dslDocumentIdentifier, "json", 
-                    0, learningElementValueList);
-                LearningWorldJson.LearningElements.Add(dslDocumentJson);
-                _listLearningSpaceContent.Add(1);
-            }
             //Searching for Learning Elements in each Space
             foreach (var element in learningSpace.LearningElements)
             {
@@ -121,7 +109,8 @@ public class CreateDsl : ICreateDsl
         {
             _fileSystem.File.WriteAllBytes(_fileSystem.Path.Join("XMLFilesForExport", learningElement.Name), learningElement.LearningContent.Content);
         }
-        var dslPath = _fileSystem.Path.Join("XMLFilesForExport", "DSL_Document");
+        var currentDirectory = _fileSystem.Directory.GetCurrentDirectory();
+        var dslPath = _fileSystem.Path.Join(currentDirectory, "XMLFilesForExport", "DSL_Document.json");
         _fileSystem.File.WriteAllText(dslPath, jsonFile);
         Console.WriteLine(jsonFile);
         return dslPath;
