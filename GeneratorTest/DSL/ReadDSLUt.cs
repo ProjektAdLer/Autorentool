@@ -45,15 +45,18 @@ public class ReadDslUt
         var learningSpacesList = new List<LearningSpaceJson>(){learningSpacesJson1, learningSpacesJson2};
 
         var learningElementJson1 = new LearningElementJson(1,
-            identifierLearningElementJson1, "h5p",1, learningElementValueList1);
+            identifierLearningElementJson1, "", "", "h5p",1, learningElementValueList1);
         
         var learningElementJson2 = new LearningElementJson(2,
-            identifierLearningElementJson2, "json",1, learningElementValueList2);
+            identifierLearningElementJson2, "", "", "json",1, learningElementValueList2);
         
         var learningElementJson3 = new LearningElementJson(3,
-            identifierLearningElementJson2, "mp4",1, learningElementValueList2);
+            identifierLearningElementJson2, "", "", "mp4",1, learningElementValueList2);
+        
+        var learningElementJson4 = new LearningElementJson(4,
+            identifierLearningElementJson2, "", "", "label",1, learningElementValueList2);
 
-        var learningElementList = new List<LearningElementJson>(){learningElementJson1, learningElementJson2, learningElementJson3};
+        var learningElementList = new List<LearningElementJson>(){learningElementJson1, learningElementJson2, learningElementJson3, learningElementJson4};
         
         var learningWorldJson = new LearningWorldJson("uuid", identifierLearningWorldJson, learningWorldContentJson, topicsList, learningSpacesList, learningElementList);
 
@@ -72,6 +75,7 @@ public class ReadDslUt
         var getH5PElementsList = systemUnderTest.GetH5PElementsList();
         var getSpacesAndElementsList = systemUnderTest.GetSpacesAndElementsOrderedList();
         var getLabelsList = systemUnderTest.GetLabelsList();
+        var getUrlList = systemUnderTest.GetUrlList();
 
         Assert.Multiple(() =>
         {
@@ -91,6 +95,9 @@ public class ReadDslUt
             
             //Because there are no Topics in the AuthoringTool, every learning space is added to Topic 0
             Assert.That(listSpace.Count, Is.EqualTo(1));
+            
+            //Currently all elements with Element-Type "mp4" are added to the list of Urls
+            Assert.That(getUrlList, Has.Count.EqualTo(1));
         });
     }
 

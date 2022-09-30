@@ -13,6 +13,8 @@ public class CreateDsl : ICreateDsl
     private List<int> _listLearningSpaceContent;
     private IFileSystem _fileSystem;
     public string Uuid;
+    private string _dslPath;
+    private string _xmlFilesForExportPath;
 
     /// <summary>
     /// Read the AuthoringToolLib Entities and create a Dsl Document with a specified syntax.
@@ -65,13 +67,32 @@ public class CreateDsl : ICreateDsl
             //Searching for Learning Elements in each Space
             foreach (var element in learningSpace.LearningElements)
             {
+                var elementCategory = "";
+                switch (element.LearningContent.Type)
+                {
+                    case "png" or "jpg" or "bmp" or "webp":
+                        elementCategory = "image";
+                        break;
+                    case "mp4":
+                        elementCategory = "video";
+                        break;
+                    case "txt" or "c" or "h" or "cpp" or "cc" or "c++" or "py" or "js" or "php" or "html" or "css":
+                        elementCategory = "text";
+                        break;
+                    case "h5p":
+                        elementCategory = "h5p";
+                        break;
+                    case "pdf":
+                        elementCategory = "pdf";
+                        break;
+                }
                 IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", element.Name);
                 List<LearningElementValueJson> learningElementValueList = new List<LearningElementValueJson>();
                 LearningElementValueJson learningElementValueJson = new LearningElementValueJson("Points", element.Points.ToString());
                 learningElementValueList.Add(learningElementValueJson);
 
                 LearningElementJson learningElementJson = new LearningElementJson(learningSpaceElementId,
-                    learningElementIdentifier, element.LearningContent.Type, learningSpaceId, learningElementValueList, 
+                    learningElementIdentifier, "", elementCategory,element.LearningContent.Type, learningSpaceId, learningElementValueList, 
                     element.Description, element.Goals);
                 ListLearningElements.Add(element);
                 //int elementIndex = ListLearningElements.IndexOf(element) + 1;
@@ -100,6 +121,15 @@ public class CreateDsl : ICreateDsl
         var jsonFile = JsonSerializer.Serialize(rootJson,options);
         
         //Create Backup Folder structure and the DSL Document in it
+        var currentDirectory = _fileSystem.Directory.GetCurrentDirectory();
+        _xmlFilesForExportPath = _fileSystem.Path.Join(currentDirectory, "XMLFilesForExport");
+        _dslPath = _fileSystem.Path.Join(currentDirectory, "XMLFilesForExport", "DSL_Document.json");
+        
+        if (_fileSystem.Directory.Exists(_xmlFilesForExportPath))
+        {
+            _fileSystem.Directory.Delete(_xmlFilesForExportPath, true);
+        }
+        
         BackupFileGenerator createFolders = new BackupFileGenerator(_fileSystem);
         createFolders.CreateBackupFolders();
         
@@ -109,10 +139,9 @@ public class CreateDsl : ICreateDsl
         {
             _fileSystem.File.WriteAllBytes(_fileSystem.Path.Join("XMLFilesForExport", learningElement.Name), learningElement.LearningContent.Content);
         }
-        var currentDirectory = _fileSystem.Directory.GetCurrentDirectory();
-        var dslPath = _fileSystem.Path.Join(currentDirectory, "XMLFilesForExport", "DSL_Document.json");
-        _fileSystem.File.WriteAllText(dslPath, jsonFile);
+
+        _fileSystem.File.WriteAllText(_dslPath, jsonFile);
         Console.WriteLine(jsonFile);
-        return dslPath;
+        return _dslPath;
     }
 }

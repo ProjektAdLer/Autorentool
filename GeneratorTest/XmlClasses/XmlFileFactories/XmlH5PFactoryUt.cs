@@ -67,9 +67,9 @@ public class XmlH5PFactoryUt
         
         var identifier = new IdentifierJson( "FileName", "Element_1");
 
-        var h5PElement1 = new LearningElementJson(1, identifier, "h5p",0, mockElementValueList);
+        var h5PElement1 = new LearningElementJson(1, identifier, "", "", "h5p",0, mockElementValueList);
 
-        var h5PElement2 = new LearningElementJson(2, identifier, "h5p",0, mockElementValueList);
+        var h5PElement2 = new LearningElementJson(2, identifier, "", "", "h5p",0, mockElementValueList);
 
         var h5PList = new List<LearningElementJson>()
         {
@@ -118,9 +118,9 @@ public class XmlH5PFactoryUt
         var identifier2 = new IdentifierJson( "FileName", "Element_2");
 
 
-        var h5PElement1 = new LearningElementJson(1,  identifier1, "h5p",0, mockElementValueList);
+        var h5PElement1 = new LearningElementJson(1,  identifier1, "", "", "h5p",0, mockElementValueList);
 
-        var h5PElement2 = new LearningElementJson(2, identifier2, "h5p",0, mockElementValueList);
+        var h5PElement2 = new LearningElementJson(2, identifier2, "", "", "h5p",0, mockElementValueList);
 
         var h5PList = new List<LearningElementJson>()
         {

@@ -7,7 +7,7 @@ using Generator.XmlClasses.Entities._sections.Section.xml;
 
 namespace Generator.XmlClasses;
 
-public class XmlSectionFactory
+public class XmlSectionFactory : IXmlSectionFactory
 {
 
     public ISectionsSectionXmlSection SectionsSectionXmlSection;

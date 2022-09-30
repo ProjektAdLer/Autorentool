@@ -16,7 +16,7 @@ using NUnit.Framework;
 namespace GeneratorTest.XmlClasses.XmlFileFactories;
 
 [TestFixture]
-public class XmlFileFactoryUt
+public class XmlResourceFactoryUt
 {
     [Test]
     public void XmlResourceFactory_Constructor_AllParametersSet()
@@ -64,17 +64,17 @@ public class XmlFileFactoryUt
         var identifier = new IdentifierJson("FileName", "Document");
         var learningEvl = new List<LearningElementValueJson>{new ("Points", "15")};
         
-        var jsonDocument = new LearningElementJson(1, identifier, "json",0, learningEvl);
-        var pngDocument = new LearningElementJson(2, identifier, "png",0, learningEvl);
-        var mp4Document = new LearningElementJson(3, identifier, "mp4",0, learningEvl);
-        var webpDocument = new LearningElementJson(4, identifier, "webp",0, learningEvl);
-        var jsDocument = new LearningElementJson(5, identifier, "js",0, learningEvl);
-        var cssDocument = new LearningElementJson(6, identifier, "css",0, learningEvl);
-        var htmlDocument = new LearningElementJson(7, identifier, "html",0, learningEvl);
-        var csDocument = new LearningElementJson(8, identifier, "cs",0, learningEvl);
-        var ccDocument = new LearningElementJson(9, identifier, "cc",0, learningEvl);
-        var cPlusPlusDocument = new LearningElementJson(10, identifier, "cpp",0, learningEvl);
-        var txtDocument = new LearningElementJson(11, identifier, "txt",0, learningEvl);
+        var jsonDocument = new LearningElementJson(1, identifier, "", "", "json",0, learningEvl);
+        var pngDocument = new LearningElementJson(2, identifier, "", "", "png",0, learningEvl);
+        var mp4Document = new LearningElementJson(3, identifier, "", "", "mp4",0, learningEvl);
+        var webpDocument = new LearningElementJson(4, identifier, "", "", "webp",0, learningEvl);
+        var jsDocument = new LearningElementJson(5, identifier, "", "", "js",0, learningEvl);
+        var cssDocument = new LearningElementJson(6, identifier, "", "", "css",0, learningEvl);
+        var htmlDocument = new LearningElementJson(7, identifier, "", "", "html",0, learningEvl);
+        var csDocument = new LearningElementJson(8, identifier, "", "", "cs",0, learningEvl);
+        var ccDocument = new LearningElementJson(9, identifier, "", "", "cc",0, learningEvl);
+        var cPlusPlusDocument = new LearningElementJson(10, identifier, "", "", "cpp",0, learningEvl);
+        var txtDocument = new LearningElementJson(11, identifier, "", "", "txt",0, learningEvl);
 
 
         var resourceList = new List<LearningElementJson>()
@@ -101,7 +101,7 @@ public class XmlFileFactoryUt
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
         var systemUnderTest = new XmlResourceFactory(mockReadDsl, mockFileManager, mockFileSystem);
         mockFileManager.GetXmlFilesList().Returns(new List<FilesXmlFile>());
-        systemUnderTest.CreateFileFactory();
+        systemUnderTest.CreateResourceFactory();
         
         
         // Assert
@@ -131,7 +131,7 @@ public class XmlFileFactoryUt
         systemUnderTest.FilesXmlFilesList = new List<FilesXmlFile>();
         systemUnderTest.FileElementId = "1";
         systemUnderTest.FileElementName = "FileName";
-        systemUnderTest.FileSetParametersFilesXml("1234", "456789", "something");
+        systemUnderTest.ResourceSetParametersFilesXml("1234", "456789", "something");
         
         // Assert
         Assert.Multiple(() =>

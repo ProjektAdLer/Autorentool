@@ -21,6 +21,9 @@ public class XmlEntityManagerUt
         var mockH5PFactory = Substitute.For<IXmlH5PFactory>();
         var mockCourseFactory = Substitute.For<IXmlCourseFactory>();
         var mockBackupFactory = Substitute.For<IXmlBackupFactory>();
+        var mockSectionFactory = Substitute.For<IXmlSectionFactory>();
+        var mockLabelFactory = Substitute.For<IXmlLabelFactory>();
+        var mockUrlFactory = Substitute.For<IXmlUrlFactory>();
         
         var mockFileSystem = new MockFileSystem();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
@@ -50,14 +53,14 @@ public class XmlEntityManagerUt
             new List<int>() {3, 4}, "0", "0");
         var learningSpacesList = new List<LearningSpaceJson>(){learningSpacesJson1, learningSpacesJson2};
         var learningElementJson1 = new LearningElementJson(1,
-            identifierLearningElementJson1, "h5p", 0, learningElementValueList1);
+            identifierLearningElementJson1, "", "", "h5p", 0, learningElementValueList1);
         var learningElementJson2 = new LearningElementJson(2,
-            identifierLearningElementJson2, "json", 0, learningElementValueList2);
+            identifierLearningElementJson2, "", "", "json", 0, learningElementValueList2);
         var learningElementList = new List<LearningElementJson>(){learningElementJson1, learningElementJson2};
         var learningWorldJson = new LearningWorldJson("uuid", identifierLearningWorldJson, learningWorldContentJson, topicsList, learningSpacesList, learningElementList);
         
         var mockElementValueList = new List<LearningElementValueJson>{new ("type","value")};
-        var mockLabelsElementJson = new LearningElementJson(2, new IdentifierJson("Name", "Labels_1"), "mp4", 1, mockElementValueList);
+        var mockLabelsElementJson = new LearningElementJson(2, new IdentifierJson("Name", "Labels_1"), "", "", "mp4", 1, mockElementValueList);
         
         var labelJsonList = new List<LearningElementJson> {mockLabelsElementJson};
         
@@ -70,12 +73,13 @@ public class XmlEntityManagerUt
         // Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
         var systemUnderTest = new XmlEntityManager();
-        systemUnderTest.GetFactories(mockReadDsl, mockFileFactory, mockH5PFactory, mockCourseFactory, mockBackupFactory);
+        systemUnderTest.GetFactories(mockReadDsl, mockFileFactory, mockH5PFactory, mockCourseFactory, 
+            mockBackupFactory, mockSectionFactory, mockLabelFactory,mockUrlFactory);
 
         // Assert
         Assert.Multiple(() =>
         {
-            mockFileFactory.Received().CreateFileFactory();
+            mockFileFactory.Received().CreateResourceFactory();
             mockH5PFactory.Received().CreateH5PFileFactory();
             mockCourseFactory.Received().CreateXmlCourseFactory();
             mockBackupFactory.Received().CreateXmlBackupFactory();

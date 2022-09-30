@@ -14,8 +14,9 @@ public class XmlEntityManager : IXmlEntityManager
     private IXmlH5PFactory? _xmlH5PFactory;
     private IXmlCourseFactory? _xmlCourseFactory;
     private IXmlBackupFactory? _xmlBackupFactory;
-    private XmlSectionFactory? _xmlSectionFactory;
-    private XmlLabelFactory? _xmlLabelFactory;
+    private IXmlSectionFactory? _xmlSectionFactory;
+    private IXmlLabelFactory? _xmlLabelFactory;
+    private IXmlUrlFactory? _xmlUrlFactory;
 
     public XmlEntityManager(IFileSystem? fileSystem=null)
     {
@@ -25,18 +26,21 @@ public class XmlEntityManager : IXmlEntityManager
     //run all factories that are available, to set the parameters and create the xml files
     public void GetFactories(IReadDsl readDsl, IXmlResourceFactory? xmlFileFactory=null, 
         IXmlH5PFactory? xmlH5PFactory=null, IXmlCourseFactory? xmlCourseFactory=null, IXmlBackupFactory? xmlBackupFactory=null,
-        XmlSectionFactory? xmlSectionFactory=null, XmlLabelFactory? xmlLabelFactory=null)
+        IXmlSectionFactory? xmlSectionFactory=null, IXmlLabelFactory? xmlLabelFactory=null, IXmlUrlFactory? xmlUrlFactory=null)
     {
         XmlFileManager filemanager = new XmlFileManager();
 
-        _xmlSectionFactory = new XmlSectionFactory(readDsl);
+        _xmlSectionFactory = xmlSectionFactory ?? new XmlSectionFactory(readDsl);
         _xmlSectionFactory.CreateSectionFactory();
         
-        _xmlLabelFactory = new XmlLabelFactory(readDsl);
+        _xmlLabelFactory = xmlLabelFactory ?? new XmlLabelFactory(readDsl);
         _xmlLabelFactory.CreateLabelFactory();
+
+        _xmlUrlFactory = xmlUrlFactory ?? new XmlUrlFactory(readDsl);
+        _xmlUrlFactory.CreateUrlFactory();
         
         _xmlResourceFactory = xmlFileFactory ?? new XmlResourceFactory(readDsl, filemanager, _fileSystem);
-        _xmlResourceFactory.CreateFileFactory();
+        _xmlResourceFactory.CreateResourceFactory();
 
         _xmlH5PFactory = xmlH5PFactory ?? new XmlH5PFactory(readDsl, filemanager, _fileSystem);
         _xmlH5PFactory.CreateH5PFileFactory();
