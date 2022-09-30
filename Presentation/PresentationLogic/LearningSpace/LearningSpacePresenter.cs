@@ -39,6 +39,12 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     public bool EditLearningElementDialogOpen { get; set; }
     public IDictionary<string, string>? EditLearningElementDialogInitialValues { get; private set; }
     public bool CreateLearningElementDialogOpen { get; set; }
+    
+    public event Action OnUndoRedoPerformed
+    {
+        add => _presentationLogic.OnUndoRedoPerformed += value;
+        remove => _presentationLogic.OnUndoRedoPerformed -= value;
+    }
 
     public void SetLearningSpace(ILearningSpaceViewModel space)
     {

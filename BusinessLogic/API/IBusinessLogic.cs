@@ -13,6 +13,10 @@ public interface IBusinessLogic
     /// </summary>
     /// <param name="command">Command to be executed.</param>
     void ExecuteCommand(ICommand command);
+    bool CanUndo { get; }
+    bool CanRedo { get; }
+    void UndoCommand();
+    void RedoCommand();
     void ConstructBackup(LearningWorld learningWorld, string filepath);
     void SaveLearningWorld(LearningWorld learningWorld, string filepath);
     LearningWorld LoadLearningWorld(string filepath);
@@ -28,4 +32,6 @@ public interface IBusinessLogic
     
     /// <inheritdoc cref="IDataAccess.FindSuitableNewSavePath"/>
     string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding);
+
+    event Action? OnUndoRedoPerformed;
 }

@@ -31,6 +31,11 @@ public interface IPresentationLogic
     /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
     /// <returns>Filepath to the new backup file</returns>
     Task<string> ConstructBackupAsync(LearningWorldViewModel learningWorldViewModel);
+    
+    bool CanUndo { get; }
+    bool CanRedo { get; }
+    void UndoCommand();
+    void RedoCommand();
 
     /// <summary>
     /// Adds a new learning world in the authoring tool workspace with the corresponding command.
@@ -264,4 +269,5 @@ public interface IPresentationLogic
     void LoadLearningWorldViewModel(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, Stream stream);
     void LoadLearningSpaceViewModel(ILearningWorldViewModel learningWorldVm, Stream stream);
     void LoadLearningElementViewModel(ILearningSpaceViewModel parentSpaceVm, Stream stream);
+    event Action? OnUndoRedoPerformed;
 }

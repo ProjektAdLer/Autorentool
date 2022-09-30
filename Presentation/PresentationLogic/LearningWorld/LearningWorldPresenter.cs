@@ -89,6 +89,12 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         private set => SetField(ref _createLearningSpaceDialogOpen, value);
     }
 
+    public event Action OnUndoRedoPerformed
+    {
+        add => _presentationLogic.OnUndoRedoPerformed += value;
+        remove => _presentationLogic.OnUndoRedoPerformed -= value;
+    }
+    
     public void AddNewLearningSpace()
     {
         CreateLearningSpaceDialogOpen = true;

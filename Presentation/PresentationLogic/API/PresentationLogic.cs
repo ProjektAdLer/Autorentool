@@ -53,6 +53,13 @@ public class PresentationLogic : IPresentationLogic
     internal IMapper Mapper { get; }
     public bool RunningElectron => HybridSupportWrapper.IsElectronActive;
     private IHybridSupportWrapper HybridSupportWrapper { get; }
+    public bool CanUndo => BusinessLogic.CanUndo;
+    public bool CanRedo => BusinessLogic.CanRedo;
+    public event Action OnUndoRedoPerformed
+    {
+        add => BusinessLogic.OnUndoRedoPerformed += value;
+        remove => BusinessLogic.OnUndoRedoPerformed -= value;
+    }
 
     public async Task<string> ConstructBackupAsync(LearningWorldViewModel learningWorldViewModel)
     {
@@ -60,6 +67,16 @@ public class PresentationLogic : IPresentationLogic
         var filepath = await GetSaveFilepathAsync("Export learning world", "mbz", "Moodle Backup Zip");
         BusinessLogic.ConstructBackup(entity, filepath);
         return filepath;
+    }
+    
+    public void UndoCommand()
+    {
+        BusinessLogic.UndoCommand();
+    }
+    
+    public void RedoCommand()
+    {
+        BusinessLogic.RedoCommand();
     }
 
     public void AddLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
