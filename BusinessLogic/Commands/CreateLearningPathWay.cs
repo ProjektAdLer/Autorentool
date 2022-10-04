@@ -17,10 +17,13 @@ public class CreateLearningPathWay : IUndoCommand, ICommandWithError
         LearningWorld = learningWorld;
         _mappingAction = mappingAction;
     }
+
+    
     public void Execute()
     {
-        if(LearningWorld.LearningPathways.Contains(LearningPathway ) ||
-           LearningPathway.SourceSpace.Id == LearningPathway.TargetSpace.Id || IsCircular(LearningPathway))
+        if( LearningWorld.LearningPathways.Any(x => x.SourceSpace == LearningPathway.SourceSpace &&
+                                                    x.TargetSpace == LearningPathway.TargetSpace) 
+            || LearningPathway.SourceSpace.Id == LearningPathway.TargetSpace.Id || IsCircular(LearningPathway))
         {
             HasError = true;
             return;
