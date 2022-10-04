@@ -85,6 +85,9 @@ public class CreateDsl : ICreateDsl
                     case "pdf":
                         elementCategory = "pdf";
                         break;
+                    default:
+                        ArgumentException e = new ArgumentException("The given LearningContent Type is not supported - in CreateDsl.");
+                        break;
                 }
                 IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", element.Name);
                 List<LearningElementValueJson> learningElementValueList = new List<LearningElementValueJson>();
