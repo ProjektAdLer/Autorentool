@@ -29,4 +29,6 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     ILearningSpaceViewModel? GetObjectAtPosition(double x, double y);
     void AddLearningPathWay(ILearningSpaceViewModel sourceSpace, ILearningSpaceViewModel targetSpace);
     void DeleteLearningPathWay(ILearningSpaceViewModel targetSpace);
+    void LearningPathWayHoverUp(ILearningSpaceViewModel? learningSpace);
+    void LearningPathWayHoverDown();
 }

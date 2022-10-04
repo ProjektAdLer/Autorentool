@@ -19,5 +19,6 @@ public interface ILearningWorldViewModel : ISerializableViewModel, IDisplayableL
     string Goals { get; set; }
     bool UnsavedChanges { get; set; }
     ILearningSpaceViewModel? SelectedLearningSpace { get; set; }
+    ILearningSpaceViewModel? PathWayHoverSpace { get; set; }
     bool ShowingLearningSpaceView { get; set; }
 }

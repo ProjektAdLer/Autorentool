@@ -299,6 +299,20 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         return objectAtPosition;
     }
 
+    public void LearningPathWayHoverUp(ILearningSpaceViewModel? learningSpace)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        LearningWorldVm.PathWayHoverSpace = learningSpace;
+    }
+
+    public void LearningPathWayHoverDown()
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        LearningWorldVm.PathWayHoverSpace = null;
+    }
+
     #endregion
 
     #region LearningPathWay
@@ -307,7 +321,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        
+        LearningWorldVm.PathWayHoverSpace = null;
         _presentationLogic.AddLearningPathWay(LearningWorldVm, sourceSpace, targetSpace);
     }
 

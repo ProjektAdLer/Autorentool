@@ -79,6 +79,15 @@
 
         X2 = e.ClientX - _cursorX + X1;
         Y2 = e.ClientY - _cursorY + Y1;
+        
+        if (PositioningSrv?.GetObjectAtPosition(X2+100, Y2+25) != null && PositioningSrv.GetObjectAtPosition(X2+100, Y2+25) != LearningObject)
+        {
+            PositioningSrv.LearningPathWayHoverUp(PositioningSrv.GetObjectAtPosition(X2+100, Y2+25));
+        }
+        else
+        {
+            PositioningSrv?.LearningPathWayHoverDown();
+        }
 
         _hasMoved = true;
     }

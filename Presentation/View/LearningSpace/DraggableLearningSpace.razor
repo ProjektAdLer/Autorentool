@@ -4,9 +4,14 @@
 @using Presentation.PresentationLogic.LearningWorld
 <Draggable LearningObject="LearningSpace" OnClicked="@OnClickedDraggable"
            @bind-X="@LearningSpace.PositionX" @bind-Y="@LearningSpace.PositionY">
+    @if (LearningSpace == PositioningService?.LearningWorldVm?.PathWayHoverSpace)
+    {
+        <rect transform="translate(-3, -3)" height="56" width="106" fill="lightblue"></rect>
+        <circle r="6" transform="translate(0, 25)" fill="lightblue"/>
+    }
     <rect height="50" width="100" style="fill:lightgreen;stroke:black"></rect>
     <text x="3" y="15">@LearningSpace.Name</text>
-    <Clickable LearningObject="LearningSpace" OnClicked="@OnClickedClickable" >
+    <Clickable LearningObject="LearningSpace" OnClicked="@OnClickedClickable">
         @if (LearningSpace.InBoundSpaces.Any())
         {
             <circle r="6" transform="translate(0, 25)" fill="white" stroke="gray"/>
