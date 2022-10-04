@@ -1,0 +1,114 @@
+@inject IMouseService MouseService
+@inject ILogger<PullablePath> Logger;
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.LearningSpace
+@using Shared
+
+<marker
+    id="arrow"
+    viewBox="0 0 10 10"
+    refX="10"
+    refY="5"
+    markerWidth="6"
+    markerHeight="6"
+    stroke="rgb(108, 117, 125)"
+    fill="rgb(108, 117, 125)"
+    orient="auto-start-reverse">
+    <path d="M 0 0 L 10 5 L 0 10 z" />
+</marker>
+<g @onmousedown="OnDown" cursor="@_cursor" @onmousedown:stopPropagation="true">
+    <circle r="6" transform="translate(@(X1+100), @(Y1+25))" fill="white" stroke="gray"/>
+    <polyline points="0,0 0,2 0,-2 0,0 2,0 -2,0" transform="translate(@(X1+100), @(Y1+25))" style="fill:none;stroke:lime;stroke-width:1"/>
+    @if (_isDown)
+    {
+        <path d="M @(X1+6) @Y1 C @_c1X @C1Y, @_c2X @C2Y, @X2 @Y2" transform="translate(100, 25)" stroke="rgb(108, 117, 125)" stroke-width="1.5" fill="transparent" marker-end="url(#arrow)"/>
+    }
+</g>
+
+@code {
+    [Parameter] public ILearningWorldPresenter? PositioningSrv { get; set; }
+    
+    [Parameter] public Direction Dir1 { get; set; } = Direction.Right;
+    [Parameter] public double X1 { get; set; }
+    [Parameter] public double Y1 { get; set; }
+
+    [Parameter] public Direction Dir2 { get; set; } = Direction.Left;
+    [Parameter] public double X2 { get; set; }
+    [Parameter] public double Y2 { get; set; }
+
+    [Parameter, EditorRequired]
+    public ILearningSpaceViewModel? LearningObject { get; set; }
+
+    double _c1X;
+    double _c2X;
+    double C1Y => Y1;
+    double C2Y => Y2;
+    
+    private double _cursorX;
+    private double _cursorY;
+
+    private bool _isDown;
+    private string _cursor = "grab";
+    private bool _hasMoved;
+
+    protected override void OnParametersSet()
+    {
+        _c1X = Cx(Dir1, X1);
+        _c2X = Cx(Dir2, X2);
+    }
+
+        const int Coef = 0;
+
+    double Cx(Direction dir, double x)
+        => dir == Direction.Right ? x + Coef : x - Coef;
+
+    protected override void OnInitialized()
+    {
+        X2 = X1;
+        Y2 = Y1;
+        MouseService.OnMove += OnMove;
+        MouseService.OnUp += OnUpOrOut;
+        MouseService.OnOut += OnUpOrOut;
+        base.OnInitialized();
+    }
+    
+    private void OnMove(object? sender, MouseEventArgs e)
+    {
+        if (!_isDown) return;
+
+        X2 = e.ClientX - _cursorX + X1;
+        Y2 = e.ClientY - _cursorY + Y1;
+
+        _hasMoved = true;
+    }
+    
+    private void OnDown(MouseEventArgs e)
+    {
+        _cursorX = e.ClientX;
+        _cursorY = e.ClientY;
+        X2 = e.ClientX - _cursorX + X1;
+        Y2 = e.ClientY - _cursorY + Y1;
+        _isDown = true;
+        _cursor = "grabbing";
+        _hasMoved = false;
+    }
+    
+    private void OnUpOrOut(object? sender, MouseEventArgs e)
+    {
+        if (!_hasMoved)
+        {
+            X2 = X1;
+            Y2 = Y1;
+        }
+        if (_isDown)
+        {
+            var obj = PositioningSrv?.GetObjectAtPosition(X2+100, Y2+25);
+            if (obj != null && LearningObject != null)
+            {
+                PositioningSrv?.AddLearningPathWay(LearningObject, obj);
+            }
+        }
+        _isDown = false;
+    }
+}

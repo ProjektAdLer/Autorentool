@@ -20,6 +20,8 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         Goals = "";
         RequiredPoints = 0;
         LearningElements = new Collection<ILearningElementViewModel>();
+        InBoundSpaces = new Collection<ILearningSpaceViewModel>();
+        OutBoundSpaces = new Collection<ILearningSpaceViewModel>();
         PositionX = 0;
         PositionY = 0;
     }
@@ -34,10 +36,13 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     /// <param name="goals">A description of the goals this learning space is supposed to achieve.</param>
     /// <param name="requiredPoints">Points required to complete the learning space</param>
     /// <param name="learningElements">Optional collection of learning elements contained in the learning space.</param>
+    /// <param name="inBoundSpaces"></param>
+    /// <param name="outBoundSpaces"></param>
     /// <param name="positionX">x-position of the learning space in the workspace</param>
     /// <param name="positionY">y-position of the learning space in the workspace</param>
     public LearningSpaceViewModel(string name, string shortname, string authors, string description, string goals, int requiredPoints = 0,
-        ICollection<ILearningElementViewModel>? learningElements = null, double positionX = 0, double positionY = 0)
+        ICollection<ILearningElementViewModel>? learningElements = null, int positionX = 0, int positionY = 0,
+        ICollection<ILearningSpaceViewModel>? inBoundSpaces = null, ICollection<ILearningSpaceViewModel>? outBoundSpaces = null)
     {
         Id = Guid.NewGuid();
         Name = name;
@@ -47,6 +52,8 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         Goals = goals;
         RequiredPoints = requiredPoints;
         LearningElements = learningElements ?? new Collection<ILearningElementViewModel>();
+        InBoundSpaces = inBoundSpaces ?? new Collection<ILearningSpaceViewModel>();
+        OutBoundSpaces = outBoundSpaces ?? new Collection<ILearningSpaceViewModel>();
         PositionX = positionX;
         PositionY = positionY;
     }
@@ -54,6 +61,8 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     public const string fileEnding = "asf";
     public string FileEnding => fileEnding;
     public ICollection<ILearningElementViewModel> LearningElements { get; set; }
+    public ICollection<ILearningSpaceViewModel> InBoundSpaces { get; set; }
+    public ICollection<ILearningSpaceViewModel> OutBoundSpaces { get; set; }
     public int Workload => LearningElements.Sum(element => element.Workload);
     // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local - required for automapper n.stich
     public int Points => LearningElements.Sum(element => element.Points);

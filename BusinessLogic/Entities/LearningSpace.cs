@@ -18,11 +18,14 @@ public class LearningSpace : ILearningSpace, IOriginator
         Goals = "";
         RequiredPoints = 0;
         LearningElements = new List<LearningElement>();
+        InBoundSpaces = new List<LearningSpace>();
+        OutBoundSpaces = new List<LearningSpace>();
         PositionX = 0;
         PositionY = 0;
     }
     public LearningSpace(string name, string shortname, string authors, string description,
-        string goals, int requiredPoints, List<LearningElement>? learningElements = null, double positionX = 0, double positionY = 0)
+        string goals, int requiredPoints, List<LearningElement>? learningElements = null ,double positionX = 0,
+        double positionY = 0, List<LearningSpace>? inBoundSpaces = null, List<LearningSpace>? outBoundSpaces = null)
     {
         Id = Guid.NewGuid();
         Name = name;
@@ -32,6 +35,8 @@ public class LearningSpace : ILearningSpace, IOriginator
         Goals = goals;
         RequiredPoints = requiredPoints;
         LearningElements = learningElements ?? new List<LearningElement>();
+        InBoundSpaces = inBoundSpaces ?? new List<LearningSpace>();
+        OutBoundSpaces = outBoundSpaces ?? new List<LearningSpace>();
         PositionX = positionX;
         PositionY = positionY;
     }
@@ -45,14 +50,16 @@ public class LearningSpace : ILearningSpace, IOriginator
     public string Goals { get; set; }
     public int RequiredPoints { get; set; }
     public List<LearningElement> LearningElements { get; set; }
+    public List<LearningSpace> InBoundSpaces { get; set; }
+    public List<LearningSpace> OutBoundSpaces { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
     public ILearningElement? SelectedLearningElement { get; set; }
 
     public IMemento GetMemento()
     {
-        return new LearningSpaceMemento(Name, Shortname, Authors, Description, Goals, LearningElements, PositionX,
-            PositionY, SelectedLearningElement);
+        return new LearningSpaceMemento(Name, Shortname, Authors, Description, Goals, LearningElements, InBoundSpaces, 
+            OutBoundSpaces, PositionX, PositionY, SelectedLearningElement);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -67,6 +74,8 @@ public class LearningSpace : ILearningSpace, IOriginator
         Description = learningSpaceMemento.Description;
         Goals = learningSpaceMemento.Goals;
         LearningElements = learningSpaceMemento.LearningElements;
+        InBoundSpaces = learningSpaceMemento.InBoundSpaces;
+        OutBoundSpaces = learningSpaceMemento.OutBoundSpaces;
         PositionX = learningSpaceMemento.PositionX;
         PositionY = learningSpaceMemento.PositionY;
         SelectedLearningElement = learningSpaceMemento.SelectedLearningElement;
@@ -75,8 +84,8 @@ public class LearningSpace : ILearningSpace, IOriginator
     private record LearningSpaceMemento : IMemento
     {
         internal LearningSpaceMemento(string name, string shortname, string authors, string description,
-            string goals, List<LearningElement> learningElements, double positionX = 0, double positionY = 0, 
-            ILearningElement? selectedLearningElement = null)
+            string goals, List<LearningElement> learningElements, List<LearningSpace> inBoundSpaces,
+            List<LearningSpace> outBoundSpaces, double positionX = 0, double positionY = 0, ILearningElement? selectedLearningElement = null)
         {
             Name = name;
             Shortname = shortname;
@@ -84,6 +93,8 @@ public class LearningSpace : ILearningSpace, IOriginator
             Description = description;
             Goals = goals;
             LearningElements = learningElements.ToList();
+            InBoundSpaces = inBoundSpaces.ToList();
+            OutBoundSpaces = outBoundSpaces.ToList();
             PositionX = positionX;
             PositionY = positionY;
             SelectedLearningElement = selectedLearningElement;
@@ -98,5 +109,7 @@ public class LearningSpace : ILearningSpace, IOriginator
         internal double PositionX { get; }
         internal double PositionY { get; }
         internal ILearningElement? SelectedLearningElement { get; }
+        public List<LearningSpace> InBoundSpaces { get; set; }
+        public List<LearningSpace> OutBoundSpaces { get; set; }
     }
 }

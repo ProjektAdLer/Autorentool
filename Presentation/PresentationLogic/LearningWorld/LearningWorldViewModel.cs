@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using AutoMapper.Configuration.Annotations;
 using JetBrains.Annotations;
+using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 
 namespace Presentation.PresentationLogic.LearningWorld;
@@ -23,6 +23,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _goals = "";
         _unsavedChanges = false;
         _learningSpaces = new List<ILearningSpaceViewModel>();
+        _learningPathWays = new List<ILearningPathWayViewModel>();
     }
     
     /// <summary>
@@ -37,8 +38,10 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     /// <param name="unsavedChanges">Whether or not the object contains changes that are yet to be saved to disk.</param>
     /// <param name="learningSpaces">Optional collection of learning spaces contained in the learning world.
     /// Should be used when loading a saved learnign world into the application.</param>
+    /// <param name="learningPathWays">Optional collection of learning pathways in the learning world.</param>
     public LearningWorldViewModel(string name, string shortname, string authors, string language, string description,
-        string goals, bool unsavedChanges = true, List<ILearningSpaceViewModel>? learningSpaces = null)
+        string goals, bool unsavedChanges = true, List<ILearningSpaceViewModel>? learningSpaces = null,
+        List<ILearningPathWayViewModel>? learningPathWays = null)
     {
         Id = Guid.NewGuid();
         _name = name;
@@ -49,12 +52,14 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _goals = goals;
         _unsavedChanges = unsavedChanges;
         _learningSpaces = learningSpaces ?? new List<ILearningSpaceViewModel>();
+        _learningPathWays = learningPathWays ?? new List<ILearningPathWayViewModel>();
     }
     
     public const string fileEnding = "awf";
     
     public Guid Id { get; private set; }
     private ICollection<ILearningSpaceViewModel> _learningSpaces;
+    private ICollection<ILearningPathWayViewModel> _learningPathWays;
     private string _name;
     private string _shortname;
     private string _authors;
@@ -75,6 +80,12 @@ public class LearningWorldViewModel : ILearningWorldViewModel
             if (!SetField(ref _learningSpaces, value)) return;
             OnPropertyChanged(nameof(Workload));
         }
+    }
+    
+    public ICollection<ILearningPathWayViewModel> LearningPathWays
+    {
+        get => _learningPathWays;
+        set => SetField(ref _learningPathWays, value);
     }
     public int Workload =>
         LearningSpaces.Sum(space => space.Workload);

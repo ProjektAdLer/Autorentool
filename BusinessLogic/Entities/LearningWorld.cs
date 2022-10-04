@@ -18,10 +18,11 @@ public class LearningWorld : ILearningWorld, IOriginator
         Description = "";
         Goals = "";
         LearningSpaces = new List<LearningSpace>();
+        LearningPathways = new List<LearningPathway>();
         UnsavedChanges = false;
     }
     public LearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals, List<LearningSpace>? learningSpaces = null)
+        string goals, List<LearningSpace>? learningSpaces = null, List<LearningPathway>? learningPathways = null)
     {
         Id = Guid.NewGuid();
         Name = name;
@@ -31,11 +32,13 @@ public class LearningWorld : ILearningWorld, IOriginator
         Description = description;
         Goals = goals;
         LearningSpaces = learningSpaces ?? new List<LearningSpace>();
+        LearningPathways = learningPathways ?? new List<LearningPathway>();
         UnsavedChanges = false;
     }
 
     public Guid Id { get; private set; }
     public List<LearningSpace> LearningSpaces { get; set; }
+    public List<LearningPathway> LearningPathways { get; set; }
     public string Name { get; set; }
     public string Shortname { get; set; }
     public string Authors { get; set; }
@@ -49,7 +52,7 @@ public class LearningWorld : ILearningWorld, IOriginator
     public IMemento GetMemento()
     {
         return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, LearningSpaces,
-            SelectedLearningSpace);
+            LearningPathways, SelectedLearningSpace);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -65,13 +68,14 @@ public class LearningWorld : ILearningWorld, IOriginator
         Description = learningWorldMemento.Description;
         Goals = learningWorldMemento.Goals;
         LearningSpaces = learningWorldMemento.LearningSpaces;
+        LearningPathways = learningWorldMemento.LearningPathways;
         SelectedLearningSpace = learningWorldMemento.SelectedLearningSpace;
     }
 
     private record LearningWorldMemento : IMemento
     {
         internal LearningWorldMemento(string name, string shortname, string authors, string language,
-            string description, string goals, List<LearningSpace> learningSpaces,
+            string description, string goals, List<LearningSpace> learningSpaces, List<LearningPathway> learningPathways,
             LearningSpace? selectedLearningSpace = null)
         {
             Name = name;
@@ -81,10 +85,12 @@ public class LearningWorld : ILearningWorld, IOriginator
             Description = description;
             Goals = goals;
             LearningSpaces = learningSpaces.ToList();
+            LearningPathways = learningPathways.ToList();
             SelectedLearningSpace = selectedLearningSpace;
         }
 
         internal List<LearningSpace> LearningSpaces { get;  }
+        internal List<LearningPathway> LearningPathways { get;  }
         internal string Name { get; }
         internal string Shortname { get; }
         internal string Authors { get; }

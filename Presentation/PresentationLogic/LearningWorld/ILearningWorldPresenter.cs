@@ -26,4 +26,7 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     LearningContentViewModel? DragAndDropLearningContent { get; }
     void AddNewLearningSpace();
     void OnWorkspacePropertyChanged(object? caller, PropertyChangedEventArgs e);
+    ILearningSpaceViewModel? GetObjectAtPosition(double x, double y);
+    void AddLearningPathWay(ILearningSpaceViewModel sourceSpace, ILearningSpaceViewModel targetSpace);
+    void DeleteLearningPathWay(ILearningSpaceViewModel targetSpace);
 }

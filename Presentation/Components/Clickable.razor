@@ -1,0 +1,43 @@
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using BusinessLogic.Entities
+@inject IMouseService MouseSrv;
+@typeparam T
+<g @onmousedown="OnDown" @onmousedown:stopPropagation="true">
+    @ChildContent
+</g>
+
+@code {
+    [Parameter] public RenderFragment? ChildContent { get; set; }
+    
+    [Parameter] public EventCallback<T> OnClicked { get; set; }
+    
+    [Parameter, EditorRequired] public T? LearningObject { get; set; }
+    
+    private bool _isDown;
+
+    private Task OnClick(object? sender, MouseEventArgs e)
+    {
+        return OnClicked.InvokeAsync(LearningObject);
+    }
+
+    protected override void OnInitialized()
+    {
+        MouseSrv.OnUp += OnUpOrOut;
+        MouseSrv.OnOut += OnUpOrOut;
+        base.OnInitialized();
+    }
+    
+    private void OnDown(MouseEventArgs e)
+    {
+        _isDown = true;
+    }
+    
+    private void OnUpOrOut(object? sender, MouseEventArgs e)
+    {
+        if (_isDown)
+        {
+            OnClick(sender, e);
+        }
+        _isDown = false;
+    }
+}

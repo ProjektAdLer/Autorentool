@@ -6,6 +6,8 @@ public interface ILearningSpaceViewModel : IDisplayableLearningObject
 {
     Guid Id { get; }
     ICollection<ILearningElementViewModel> LearningElements { get; set; }
+    ICollection<ILearningSpaceViewModel> InBoundSpaces { get; set; }
+    ICollection<ILearningSpaceViewModel> OutBoundSpaces { get; set; }
     int Workload { get; }
     int Points { get; }
     int RequiredPoints { get; }

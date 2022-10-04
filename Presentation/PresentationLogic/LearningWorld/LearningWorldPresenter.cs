@@ -288,6 +288,35 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (SelectedLearningObjectIsSpace)
             _learningSpacePresenter.SetLearningSpace(LearningWorldVm.SelectedLearningSpace);
     }
+    
+    public ILearningSpaceViewModel? GetObjectAtPosition(double x, double y)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        var objectAtPosition = LearningWorldVm.LearningSpaces.FirstOrDefault(ls => ls.PositionX <= x &&
+                                                                   ls.PositionX + 100 >= x && ls.PositionY <= y &&
+                                                                   ls.PositionY + 50 >= y);
+        return objectAtPosition;
+    }
+
+    #endregion
+
+    #region LearningPathWay
+
+    public void AddLearningPathWay(ILearningSpaceViewModel sourceSpace, ILearningSpaceViewModel targetSpace)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        
+        _presentationLogic.AddLearningPathWay(LearningWorldVm, sourceSpace, targetSpace);
+    }
+
+    public void DeleteLearningPathWay(ILearningSpaceViewModel targetSpace)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        _presentationLogic.DeleteLearningPathWay(LearningWorldVm, targetSpace);
+    }
 
     #endregion
 
