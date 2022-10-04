@@ -41,7 +41,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     /// <param name="positionX">x-position of the learning space in the workspace</param>
     /// <param name="positionY">y-position of the learning space in the workspace</param>
     public LearningSpaceViewModel(string name, string shortname, string authors, string description, string goals, int requiredPoints = 0,
-        ICollection<ILearningElementViewModel>? learningElements = null, int positionX = 0, int positionY = 0,
+        ICollection<ILearningElementViewModel>? learningElements = null, double positionX = 0, double positionY = 0,
         ICollection<ILearningSpaceViewModel>? inBoundSpaces = null, ICollection<ILearningSpaceViewModel>? outBoundSpaces = null)
     {
         Id = Guid.NewGuid();

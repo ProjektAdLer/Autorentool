@@ -43,16 +43,6 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     public void SetLearningSpace(ILearningSpaceViewModel space)
     {
         LearningSpaceVm = space;
-        _logger.LogInformation("LearningSpaceVm set to {LearningSpaceVm}", LearningSpaceVm.Name);
-        foreach (var inBoundSpace in LearningSpaceVm.InBoundSpaces)
-        {
-            _logger.LogInformation("InBoundSpace: {InBoundSpace}", inBoundSpace.Name);
-        }
-
-        foreach (var outBoundSpace in LearningSpaceVm.OutBoundSpaces)
-        {
-            _logger.LogInformation("OutBoundSpace: {OutBoundSpace}", outBoundSpace.Name);
-        }
     }
     public void OnWorldPropertyChanged(object? caller, PropertyChangedEventArgs e)
     {
