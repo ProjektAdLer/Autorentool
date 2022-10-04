@@ -5,7 +5,6 @@ using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 using Generator.XmlClasses.Entities._activities.Grades.xml;
 using Generator.XmlClasses.Entities._activities.Inforef.xml;
 using Generator.XmlClasses.Entities._activities.Module.xml;
-using Generator.XmlClasses.Entities._activities.Resource.xml;
 using Generator.XmlClasses.Entities._activities.Roles.xml;
 using Generator.XmlClasses.Entities._activities.Url.xml;
 using Generator.XmlClasses.XmlFileFactories;
@@ -63,7 +62,7 @@ public class XmlUrlFactoryUt
 
         var urlLearningElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Video auf Youtube"),
             "youtube.de", "video", "Video-Link", 1, 
-            new List<LearningElementValueJson>(){new LearningElementValueJson("Points", "10")}, 
+            new List<LearningElementValueJson>(){new LearningElementValueJson("Points", 10)}, 
             "desc", "goal");
         var urlList = new List<LearningElementJson>(){urlLearningElementJson};
 
@@ -103,7 +102,7 @@ public class XmlUrlFactoryUt
         
         var urlLearningElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Video auf Youtube"),
             "youtube.de", "video", "Video-Link", 1, 
-            new List<LearningElementValueJson>(){new LearningElementValueJson("Points", "10")}, 
+            new List<LearningElementValueJson>(){new LearningElementValueJson("Points", 10)}, 
             "desc", "goal");
         var urlList = new List<LearningElementJson>(){urlLearningElementJson};
         

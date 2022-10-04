@@ -84,7 +84,7 @@ public class XmlLabelFactoryUt
         var mockInforefGradeItemref = Substitute.For<IActivitiesInforefXmlGradeItemref>();
         var mockInforefInforef = Substitute.For<IActivitiesInforefXmlInforef>();
         
-        var mockElementValueList = new List<LearningElementValueJson>{new ("type","value")};
+        var mockElementValueList = new List<LearningElementValueJson>{new ("points",0)};
 
         var systemUnderTest = new XmlLabelFactory(mockReadDsl, mockFileSystem, mockGradeItem, mockGradeItems, mockGradebook, 
             mockLabel, mockLabelActivity, mockRoles, mockModule, mockGradeHistory, 
@@ -135,7 +135,7 @@ public class XmlLabelFactoryUt
             mockLabel, mockLabelActivity, mockRoles, mockModule, mockGradeHistory, 
             mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref, mockInforefInforef);
         
-        var mockElementValueList = new List<LearningElementValueJson>{new ("type","value")};
+        var mockElementValueList = new List<LearningElementValueJson>{new ("points",0)};
 
         var mockSpaceElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Space_1"), "", "", "space", 0, mockElementValueList);
         var mockLabelsElementJson = new LearningElementJson(2, new IdentifierJson("Name", "Labels_1"), "", "", "mp4", 1, mockElementValueList);

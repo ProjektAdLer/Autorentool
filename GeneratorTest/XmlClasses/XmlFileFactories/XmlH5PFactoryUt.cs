@@ -63,7 +63,7 @@ public class XmlH5PFactoryUt
         var mockFileManager = Substitute.For<IXmlFileManager>();
         var mockFiles = Substitute.For<IFilesXmlFiles>();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
-        var mockElementValueList = new List<LearningElementValueJson>{new ("type","value")};
+        var mockElementValueList = new List<LearningElementValueJson>{new ("points",0)};
         
         var identifier = new IdentifierJson( "FileName", "Element_1");
 
@@ -111,7 +111,7 @@ public class XmlH5PFactoryUt
         var mockFiles = Substitute.For<IFilesXmlFiles>();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
-        var mockElementValueList = new List<LearningElementValueJson>{new ("type","value")};
+        var mockElementValueList = new List<LearningElementValueJson>{new ("points",0)};
         
         var identifier1 = new IdentifierJson("FileName", "Element_1");
         

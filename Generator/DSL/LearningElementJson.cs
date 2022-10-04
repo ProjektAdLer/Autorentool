@@ -45,8 +45,4 @@ public class LearningElementJson : ILearningElementJson
     // The LearningSpaceParentId describes the Space the current Learning Element is in.
     public int LearningSpaceParentId { get; set; }
     
-    
-    // requirements are needed to describe the Path of the Topic, Space and element. 
-    // it is a list of topics, spaces or elements that need to be completed, before a particular element can be started
-    public List<RequirementJson>? Requirements { get; }
 }

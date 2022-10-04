@@ -62,7 +62,7 @@ public class XmlResourceFactoryUt
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
         var identifier = new IdentifierJson("FileName", "Document");
-        var learningEvl = new List<LearningElementValueJson>{new ("Points", "15")};
+        var learningEvl = new List<LearningElementValueJson>{new ("Points", 15)};
         
         var jsonDocument = new LearningElementJson(1, identifier, "", "", "json",0, learningEvl);
         var pngDocument = new LearningElementJson(2, identifier, "", "", "png",0, learningEvl);

@@ -4,7 +4,7 @@ using NUnit.Framework;
 namespace GeneratorTest.WorldExport;
 
 [TestFixture]
-public class UpperCaseUTF8EncodingUt
+public class UpperCaseUtf8EncodingUt
 {
     [Test]
     public void UpperCaseUTF8Encoding_EncodingIsUpperCase()

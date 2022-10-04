@@ -50,7 +50,8 @@ public class ReadDsl : IReadDsl
         else if (rootJsonForTest == null)
         {
              var jsonString = _fileSystem.File.ReadAllText(filepathDsl);
-             _rootJson = JsonSerializer.Deserialize<DocumentRootJson>(jsonString) ?? throw new InvalidOperationException("Could not deserialize DSL_Document");
+             var options = new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true};
+             _rootJson = JsonSerializer.Deserialize<DocumentRootJson>(jsonString, options) ?? throw new InvalidOperationException("Could not deserialize DSL_Document");
         }
         GetH5PElements(_rootJson);
         GetResourceElements(_rootJson);
@@ -121,7 +122,7 @@ public class ReadDsl : IReadDsl
         {
             foreach (var space in documentRootJson.LearningWorld.LearningSpaces)
             {
-                List<LearningElementValueJson> values = new List<LearningElementValueJson>{new("", "")};
+                List<LearningElementValueJson> values = new List<LearningElementValueJson>{new("", 0)};
                 ListAllSpacesAndElementsOrdered.Add(new LearningElementJson(space.SpaceId+1000, space.Identifier, "", "space","space", 0, values, space.Description));
                 
                 foreach (int elementInSpace in space.LearningSpaceContent)
@@ -140,9 +141,8 @@ public class ReadDsl : IReadDsl
     public List<LearningSpaceJson> GetSectionList()
     {
         var space = new LearningSpaceJson(0, new IdentifierJson("identifier", "Topic 0"), 
-            new List<int>(), "0" ,"0" );
-        var spaceList = new List<LearningSpaceJson>();
-        spaceList.Add(space);
+            new List<int>(), 0 ,0 );
+        var spaceList = new List<LearningSpaceJson> {space};
         return spaceList;
     }
 

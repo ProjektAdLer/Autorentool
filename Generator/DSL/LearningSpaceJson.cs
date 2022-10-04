@@ -6,8 +6,8 @@
 public class LearningSpaceJson : ILearningSpaceJson
 {
     // the id is incremented and is set for every Space
-    public LearningSpaceJson(int spaceId, IdentifierJson identifier, List<int> learningSpaceContent, string requiredPoints,
-        string includedPoints,string? description=null, string? goals = null)
+    public LearningSpaceJson(int spaceId, IdentifierJson identifier, List<int> learningSpaceContent, int requiredPoints,
+        int includedPoints,string? description=null, string? goals = null)
     {
         SpaceId = spaceId;
         Identifier = identifier;
@@ -32,10 +32,10 @@ public class LearningSpaceJson : ILearningSpaceJson
     public List<int> LearningSpaceContent { get; set; }
     
     // Maximum Points and Points that are needed to complete the Space
-    public string RequiredPoints { get; set; }
+    public int RequiredPoints { get; set; }
     
     // Maximum Points and Points that are needed to complete the Space
-    public string IncludedPoints { get; set; }
+    public int IncludedPoints { get; set; }
     
     // requirements are needed to describe the Path of the Topic, Space and element. 
     // it is a list of topics, spaces or elements that need to be completed, before a particular element can be startet

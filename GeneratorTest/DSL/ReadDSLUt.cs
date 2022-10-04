@@ -24,9 +24,9 @@ public class ReadDslUt
    
         var identifierLearningElementJson2 = new IdentifierJson("name", "DSL Dokument");
 
-        var learningElementValueJson1 = new LearningElementValueJson("text", "Hello World");
+        var learningElementValueJson1 = new LearningElementValueJson("points", 0);
 
-        var learningElementValueJson2 = new LearningElementValueJson("text", "Hello Space");
+        var learningElementValueJson2 = new LearningElementValueJson("points", 0);
 
         var learningElementValueList1 = new List<LearningElementValueJson>(){learningElementValueJson1};
         var learningElementValueList2 = new List<LearningElementValueJson>(){learningElementValueJson2};
@@ -37,10 +37,10 @@ public class ReadDslUt
         var topicsList = new List<TopicJson>(){topicsJson};
 
         var learningSpacesJson1 = new LearningSpaceJson(1, identifierLearningSpaceJson1, 
-            new List<int> {1, 2}, "0", "0");
+            new List<int> {1, 2}, 0, 0);
  
         var learningSpacesJson2 = new LearningSpaceJson(2, identifierLearningSpaceJson2, 
-            new List<int>(), "0", "0");
+            new List<int>(), 0, 0);
 
         var learningSpacesList = new List<LearningSpaceJson>(){learningSpacesJson1, learningSpacesJson2};
 

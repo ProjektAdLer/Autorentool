@@ -88,7 +88,7 @@ public class CreateDsl : ICreateDsl
                 }
                 IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", element.Name);
                 List<LearningElementValueJson> learningElementValueList = new List<LearningElementValueJson>();
-                LearningElementValueJson learningElementValueJson = new LearningElementValueJson("Points", element.Points.ToString());
+                LearningElementValueJson learningElementValueJson = new LearningElementValueJson("Points", element.Points);
                 learningElementValueList.Add(learningElementValueJson);
 
                 LearningElementJson learningElementJson = new LearningElementJson(learningSpaceElementId,
@@ -105,8 +105,8 @@ public class CreateDsl : ICreateDsl
             // Add Learning Space to Learning World
             LearningWorldJson.LearningSpaces.Add(new LearningSpaceJson(learningSpaceId,
                 learningSpaceIdentifier, _listLearningSpaceContent, 
-                learningSpace.RequiredPoints.ToString(), 
-                learningSpace.LearningElements.Sum(element => element.Points).ToString(),
+                learningSpace.RequiredPoints, 
+                learningSpace.LearningElements.Sum(element => element.Points),
                 learningSpace.Description, learningSpace.Goals));
 
             learningSpaceId++;
@@ -117,7 +117,7 @@ public class CreateDsl : ICreateDsl
         // The structure of the DSL needs DocumentRoot, because the learningWorld has its own tag
         DocumentRootJson rootJson = new DocumentRootJson(LearningWorldJson);
 
-        var options = new JsonSerializerOptions { WriteIndented = true };
+        var options = new JsonSerializerOptions { WriteIndented = true,  PropertyNamingPolicy = JsonNamingPolicy.CamelCase};
         var jsonFile = JsonSerializer.Serialize(rootJson,options);
         
         //Create Backup Folder structure and the DSL Document in it

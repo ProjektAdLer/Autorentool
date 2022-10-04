@@ -13,11 +13,11 @@ public class LearningElementValueJsonUt
         //Arrange
       
         //Act
-        var learningElementValue = new LearningElementValueJson("type", "value");
+        var learningElementValue = new LearningElementValueJson("points", 10);
 
         //Assert
-        Assert.That(learningElementValue.Type, Is.EqualTo("type"));
-        Assert.That(learningElementValue.Value, Is.EqualTo("value"));
+        Assert.That(learningElementValue.Type, Is.EqualTo("points"));
+        Assert.That(learningElementValue.Value, Is.EqualTo(10));
 
     }
 }
