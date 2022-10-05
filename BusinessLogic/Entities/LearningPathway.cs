@@ -10,8 +10,10 @@ public class LearningPathway: ILearningPathWay
     [UsedImplicitly]
     protected LearningPathway()
     {
-        SourceSpace = null;
-        TargetSpace = null;
+        //We override nullability here because constructor is protected, only called by AutoMapper and field immediately
+        //set by AutoMapper afterwards. - m.ho
+        SourceSpace = null!;
+        TargetSpace = null!;
     }
     
     public LearningPathway(LearningSpace sourceSpace, LearningSpace targetSpace)

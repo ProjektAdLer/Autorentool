@@ -162,7 +162,7 @@ public interface IPresentationLogic
     /// <param name="learningWorldVm">Learning world into which the learning pathway gets created.</param>
     /// <param name="sourceSpaceVm">Learning space from which the path starts.</param>
     /// <param name="targetSpaceVm">Learning space where the path ends.</param>
-    void AddLearningPathWay(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel sourceSpaceVm,
+    void CreateLearningPathWay(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel sourceSpaceVm,
         ILearningSpaceViewModel targetSpaceVm);
 
     /// <summary>

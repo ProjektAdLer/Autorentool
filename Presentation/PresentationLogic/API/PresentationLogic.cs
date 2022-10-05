@@ -1,7 +1,6 @@
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
-using BusinessLogic.Entities;
 using ElectronWrapper;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
@@ -192,8 +191,8 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
     
-    /// <inheritdoc cref="IPresentationLogic.AddLearningPathWay"/>
-    public void AddLearningPathWay(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel sourceSpaceVm,
+    /// <inheritdoc cref="IPresentationLogic.CreateLearningPathWay"/>
+    public void CreateLearningPathWay(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel sourceSpaceVm,
         ILearningSpaceViewModel targetSpaceVm)
     {
         var learningWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
