@@ -175,16 +175,50 @@ public class MappingProfile : Profile
     private void CreatePersistEntityMaps()
     {
         CreateMap<LearningWorld, LearningWorldPe>()
-            .ReverseMap();
-        CreateMap<LearningSpace, LearningSpacePe>()
+            .AfterMap((s, d) =>
+            {
+                foreach (var pathWay in d.LearningPathWays)
+                {
+                    pathWay.SourceSpace = d.LearningSpaces.First(x => x.Id == pathWay.SourceSpace?.Id);
+                    pathWay.TargetSpace = d.LearningSpaces.First(x => x.Id == pathWay.TargetSpace?.Id);
+                }
+            })
+            .AfterMap((s, d) =>
+            {
+                foreach (var learningSpace in d.LearningSpaces)
+                {
+                    learningSpace.InBoundSpaces = d.LearningPathWays.Where(x => x.TargetSpace.Id == learningSpace.Id).Select(x => x.SourceSpace).ToList();
+                    learningSpace.OutBoundSpaces = d.LearningPathWays.Where(x => x.SourceSpace.Id == learningSpace.Id).Select(x => x.TargetSpace).ToList();
+                }
+            })
+            .ReverseMap()
+            .AfterMap((s, d) =>
+            {
+                foreach (var pathWay in d.LearningPathways)
+                {
+                    pathWay.SourceSpace = d.LearningSpaces.First(x => x.Id == pathWay.SourceSpace?.Id);
+                    pathWay.TargetSpace = d.LearningSpaces.First(x => x.Id == pathWay.TargetSpace?.Id);
+                }
+            })
+            .AfterMap((s, d) =>
+            {
+                foreach (var learningSpace in d.LearningSpaces)
+                {
+                    learningSpace.InBoundSpaces = d.LearningPathways.Where(x => x.TargetSpace.Id == learningSpace.Id).Select(x => x.SourceSpace).ToList();
+                    learningSpace.OutBoundSpaces = d.LearningPathways.Where(x => x.SourceSpace.Id == learningSpace.Id).Select(x => x.TargetSpace).ToList();
+                }
+            });
+        CreateMap<LearningSpacePe, LearningSpace>()
             .ReverseMap()
             .ForMember(x => x.Id, opt => opt.Ignore())
-            .AfterMap((_, d) =>
+            .ForMember(x => x.InBoundSpaces, opt => opt.Ignore())
+            .ForMember(x => x.OutBoundSpaces, opt => opt.Ignore());
+        CreateMap<LearningPathway, LearningPathwayPe>()
+            .ReverseMap()
+            .AfterMap((s, d) =>
             {
-                foreach (var element in d.LearningElements)
-                {
-                    element.Parent = d;
-                }
+                s.SourceSpace.Id = new Guid();
+                s.TargetSpace.Id = new Guid();
             });
         CreateMap<LearningElement, LearningElementPe>();
         CreateMap<LearningElementPe, LearningElement>()
@@ -192,7 +226,6 @@ public class MappingProfile : Profile
             .ForMember(x => x.Id, opt => opt.Ignore());
         CreateMap<LearningContent, LearningContentPe>()
             .ReverseMap();
-
         CreateMap<H5PActivationElement, H5PActivationElementPe>()
             .IncludeBase<LearningElement, LearningElementPe>()
             .ReverseMap();

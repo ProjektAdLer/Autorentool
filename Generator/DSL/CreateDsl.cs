@@ -100,7 +100,13 @@ public class CreateDsl : ICreateDsl
                 learningSpaceElementId++;
                 LearningWorldJson.LearningElements.Add(learningElementJson);
             }
-            
+
+            var requirements = new List<Guid>();
+            foreach (var connectIn in learningSpace.InBoundSpaces)
+            {
+                requirements.Add(connectIn.Id);
+            }
+
             
             // Add Learning Space to Learning World
             LearningWorldJson.LearningSpaces.Add(new LearningSpaceJson(learningSpaceId,
