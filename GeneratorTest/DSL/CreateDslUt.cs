@@ -29,6 +29,7 @@ public class CreateDslUt
         var content3 = new LearningContentPe("FileName", "mp4", new byte[]{0x01,0x02});
         var content4 = new LearningContentPe("FileName", "txt", new byte[]{0x01,0x02});
         var content5 = new LearningContentPe("FileName", "pdf", new byte[]{0x01,0x02});
+        var content6 = new LearningContentPe("FileName", "mp3", new byte[]{0x01,0x02});
 
         var ele1 = new LearningElementPe("a", "b",content1, "pupup", "g","h", 
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
@@ -40,9 +41,11 @@ public class CreateDslUt
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
         var ele5 = new LearningElementPe("e", "b",content5, "pupup", "g","h", 
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
+        var ele6 = new LearningElementPe("f", "b",content6, "pupup", "g","h", 
+            LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
         
         var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5);
-        space1.LearningElements.AddRange(new List<LearningElementPe>{ele1, ele2, ele3, ele4, ele5});
+        space1.LearningElements.AddRange(new List<LearningElementPe>{ele1, ele2, ele3, ele4, ele5, ele6});
         var space2 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5);
         var learningSpaces = new List<LearningSpacePe> { space1, space2 };
 
@@ -51,7 +54,7 @@ public class CreateDslUt
 
         var systemUnderTest = new CreateDsl(mockFileSystem);
         
-        var learningElementsList = new List<LearningElementPe> { ele1, ele2, ele3, ele4, ele5 };
+        var learningElementsList = new List<LearningElementPe> { ele1, ele2, ele3, ele4, ele5, ele6 };
 
         //Act
         systemUnderTest.WriteLearningWorld(learningWorld);
