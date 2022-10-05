@@ -322,7 +322,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         LearningWorldVm.PathWayHoverSpace = null;
-        _presentationLogic.AddLearningPathWay(LearningWorldVm, sourceSpace, targetSpace);
+        _presentationLogic.CreateLearningPathWay(LearningWorldVm, sourceSpace, targetSpace);
     }
 
     public void DeleteLearningPathWay(ILearningSpaceViewModel targetSpace)

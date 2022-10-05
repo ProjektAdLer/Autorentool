@@ -404,6 +404,74 @@ public class PresentationLogicUt
         });
     }
 
+    [Test]
+    public void CreateLearningPathWay_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        CreateLearningPathWay? command = null;
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
+            Do(sub => command = sub.Arg<ICommand>() as CreateLearningPathWay);
+        var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        var sourceSpaceVm = new LearningSpaceViewModel("f", "f", "f", "f", "f", 4);
+        var targetSpaceVm = new LearningSpaceViewModel("f", "f", "f", "f", "f", 4);
+        var mockMapper = Substitute.For<IMapper>();
+        var learningWorldEntity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
+        var sourceSpaceEntity = new BusinessLogic.Entities.LearningSpace("f", "f", "f", "f", "f", 3);
+        var targetSpaceEntity = new BusinessLogic.Entities.LearningSpace("f", "f", "f", "f", "f", 3);
+
+        mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
+            .Returns(learningWorldEntity);
+        mockMapper.Map<BusinessLogic.Entities.LearningSpace>(sourceSpaceVm)
+            .Returns(sourceSpaceEntity);
+        mockMapper.Map<BusinessLogic.Entities.LearningSpace>(targetSpaceVm)
+            .Returns(targetSpaceEntity);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+        
+        systemUnderTest.CreateLearningPathWay(learningWorldVm, sourceSpaceVm, targetSpaceVm);
+
+        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
+        Assert.That(command, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(command!.LearningWorld, Is.EqualTo(learningWorldEntity));
+            Assert.That(command!.LearningPathway.SourceSpace.Id, Is.EqualTo(sourceSpaceEntity.Id));
+            Assert.That(command!.LearningPathway.TargetSpace.Id, Is.EqualTo(targetSpaceEntity.Id));
+        });
+    }
+
+    [Test]
+    public void DeleteLearningPathWay_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        DeleteLearningPathWay? command = null;
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
+            Do(sub => command = sub.Arg<ICommand>() as DeleteLearningPathWay);
+        var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        var targetSpaceVm = new LearningSpaceViewModel("z", "z", "z", "z", "z");
+        
+        var mockMapper = Substitute.For<IMapper>();
+        var learningWorldEntity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
+        var targetSpaceEntity = new BusinessLogic.Entities.LearningSpace("a", "b", "c", "d", "e", 5);
+        
+        mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
+            .Returns(learningWorldEntity);
+        mockMapper.Map<BusinessLogic.Entities.LearningSpace>(Arg.Any<LearningSpaceViewModel>())
+            .Returns(targetSpaceEntity);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+        
+        systemUnderTest.DeleteLearningPathWay(learningWorldVm, targetSpaceVm);
+        
+        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
+        Assert.That(command, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(command!.LearningWorld, Is.EqualTo(learningWorldEntity));
+            Assert.That(command!.TargetSpace, Is.EqualTo(targetSpaceEntity));
+        });
+    }
+
     #region Save/Load
 
     [Test]
