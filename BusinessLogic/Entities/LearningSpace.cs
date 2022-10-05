@@ -42,7 +42,7 @@ public class LearningSpace : ILearningSpace, IOriginator
     }
 
     // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local - required for automapper n.stich
-    public Guid Id { get; private set; }
+    public Guid Id { get; set; }
     public string Name { get; set; }
     public string Shortname { get; set; }
     public string Authors { get; set; }

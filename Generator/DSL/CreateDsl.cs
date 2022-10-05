@@ -11,6 +11,7 @@ public class CreateDsl : ICreateDsl
     public List<LearningSpacePe> ListLearningSpaces;
     public LearningWorldJson? LearningWorldJson;
     private List<int> _listLearningSpaceContent;
+    private List<int> _requirements;
     private IFileSystem _fileSystem;
     public string Uuid;
     private string _dslPath;
@@ -34,6 +35,7 @@ public class CreateDsl : ICreateDsl
         ListLearningElements = new List<LearningElementPe>();
         ListLearningSpaces = new List<LearningSpacePe>();
         _listLearningSpaceContent = new List<int>();
+        _requirements = new List<int>();
         Guid guid = Guid.NewGuid();
         Uuid = guid.ToString();
     }
@@ -55,7 +57,16 @@ public class CreateDsl : ICreateDsl
         // The learningSpaceId defines what the starting Id for Spaces should be. 
         // Search for Learning Elements in Spaces and add to listLearningElements
         ListLearningSpaces.AddRange(learningWorld.LearningSpaces);
+
+        int learningSpaceIdForDictionary = 1;
         
+        var idDictionary = new Dictionary<int, Guid>();
+        foreach (var space in ListLearningSpaces)
+        {
+            idDictionary.Add(learningSpaceIdForDictionary, space.Id);
+            learningSpaceIdForDictionary++;
+        }
+
         int learningSpaceId = 1;
         // Starts with 2, because the DSL Document always has Element ID = 1. Therefore all other elements have to start with 2.
         int learningSpaceElementId = 1;
@@ -101,10 +112,12 @@ public class CreateDsl : ICreateDsl
                 LearningWorldJson.LearningElements.Add(learningElementJson);
             }
 
-            var requirements = new List<Guid>();
+            _requirements = new List<int>();
             foreach (var connectIn in learningSpace.InBoundSpaces)
             {
-                requirements.Add(connectIn.Id);
+                _requirements.Add(idDictionary.Where(x => x.Value == connectIn.Id)
+                    .Select(x => x.Key)
+                    .FirstOrDefault());
             }
 
             
@@ -113,7 +126,7 @@ public class CreateDsl : ICreateDsl
                 learningSpaceIdentifier, _listLearningSpaceContent, 
                 learningSpace.RequiredPoints, 
                 learningSpace.LearningElements.Sum(element => element.Points),
-                learningSpace.Description, learningSpace.Goals));
+                learningSpace.Description, learningSpace.Goals, _requirements));
 
             learningSpaceId++;
         }

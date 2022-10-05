@@ -6,7 +6,6 @@ public class LearningSpacePe : ILearningSpacePe
     public LearningSpacePe(string name, string shortname, string authors, string description, string goals,
         int requiredPoints, List<LearningElementPe>? learningElements = null, double positionX = 0, double positionY = 0)
     {
-        Id = new Guid();
         Name = name;
         Shortname = shortname;
         Authors = authors;
