@@ -149,6 +149,7 @@ public class MappingProfile : Profile
     private void CreatePersistEntityMaps()
     {
         CreateMap<LearningWorld, LearningWorldPe>()
+            .ForMember(x => x.ExtensionData, opt => opt.Ignore())
             .ReverseMap()
             .AfterMap((_, d) =>
             {
@@ -158,6 +159,7 @@ public class MappingProfile : Profile
                 }
             });
         CreateMap<LearningSpace, LearningSpacePe>()
+            .ForMember(x => x.ExtensionData, opt => opt.Ignore())
             .ReverseMap()
             .ForMember(x => x.Id, opt => opt.Ignore())
             .AfterMap((_, d) =>
@@ -167,7 +169,8 @@ public class MappingProfile : Profile
                     element.Parent = d;
                 }
             });
-        CreateMap<LearningElement, LearningElementPe>();
+        CreateMap<LearningElement, LearningElementPe>()
+            .ForMember(x => x.ExtensionData, opt => opt.Ignore());
         CreateMap<LearningElementPe, LearningElement>()
             .ForMember(x => x.Parent, opt => opt.Ignore())
             .ForMember(x => x.Id, opt => opt.Ignore());

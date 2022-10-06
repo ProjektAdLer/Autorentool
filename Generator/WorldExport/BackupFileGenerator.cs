@@ -106,7 +106,7 @@ public class BackupFileGenerator : IBackupFileGenerator
         var files = _fileSystem.Directory.EnumerateFiles(source, "*", SearchOption.AllDirectories);
         foreach (var file in files)
         {
-            var filename = Path.GetRelativePath(source, file);
+            var filename = _fileSystem.Path.GetFileName(file);
             _fileSystem.File.Copy(file, _fileSystem.Path.Combine(targetPrefix, filename));
         }
     }
