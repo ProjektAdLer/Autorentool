@@ -4,7 +4,8 @@
 public class LearningSpacePe : ILearningSpacePe
 {
     public LearningSpacePe(string name, string shortname, string authors, string description, string goals,
-        int requiredPoints, List<LearningElementPe>? learningElements = null, double positionX = 0, double positionY = 0)
+        int requiredPoints, List<LearningElementPe>? learningElements = null, double positionX = 0, double positionY = 0,
+        List<LearningSpacePe>? inBoundSpaces = null, List<LearningSpacePe>? outBoundSpaces = null)
     {
         Name = name;
         Shortname = shortname;
@@ -13,8 +14,8 @@ public class LearningSpacePe : ILearningSpacePe
         Goals = goals;
         RequiredPoints = requiredPoints;
         LearningElements = learningElements ?? new List<LearningElementPe>();
-        InBoundSpaces = new List<LearningSpacePe>();
-        OutBoundSpaces = new List<LearningSpacePe>();
+        InBoundSpaces = inBoundSpaces ?? new List<LearningSpacePe>();
+        OutBoundSpaces = outBoundSpaces ?? new List<LearningSpacePe>();
         PositionX = positionX;
         PositionY = positionY;
     }

@@ -193,7 +193,8 @@ public class MappingProfileUt
     public void MapLearningSpaceAndLearningSpacePersistEntity_WithoutLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, null, PositionX, PositionY);
+        var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, null, 
+            PositionX, PositionY, new List<LearningSpace>(), new List<LearningSpace>());
         var destination = new LearningSpacePe("", "", "", "", "", 0);
 
         systemUnderTest.Map(source, destination);
@@ -210,6 +211,8 @@ public class MappingProfileUt
         destination.LearningElements = new List<LearningElementPe>();
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
+        destination.InBoundSpaces = new List<LearningSpacePe>();
+        destination.OutBoundSpaces = new List<LearningSpacePe>();
 
         systemUnderTest.Map(destination, source);
 
@@ -255,7 +258,7 @@ public class MappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, new List<LearningElement>(),
-            PositionX, PositionY);
+            PositionX, PositionY, new List<LearningSpace>(), new List<LearningSpace>());
         source.LearningElements.Add(GetTestableElementWithParent(source));
         var destination = new LearningSpacePe("", "", "", "", "", 0);
 
@@ -273,6 +276,8 @@ public class MappingProfileUt
         destination.LearningElements = new List<LearningElementPe>() {GetTestableNewElementPersistEntity()};
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
+        destination.InBoundSpaces = new List<LearningSpacePe>();
+        destination.OutBoundSpaces = new List<LearningSpacePe>();
 
         systemUnderTest.Map(destination, source);
 
@@ -394,7 +399,7 @@ public class MappingProfileUt
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
             new List<LearningSpace>());
         source.LearningSpaces.Add(new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints,
-            null, PositionX, PositionY));
+            null, PositionX, PositionY, new List<LearningSpace>(), new List<LearningSpace>()));
         var destination = new LearningWorldPe("", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
@@ -415,7 +420,7 @@ public class MappingProfileUt
         destination.LearningSpaces = new List<LearningSpacePe>()
         {
             new LearningSpacePe(NewName, NewShortname, NewAuthors, NewDescription, NewGoals, NewRequiredPoints, 
-                null, NewPositionX, NewPositionY)
+                null, NewPositionX, NewPositionY, new List<LearningSpacePe>(), new List<LearningSpacePe>())
         };
 
         systemUnderTest.Map(destination, source);

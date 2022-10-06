@@ -192,10 +192,12 @@ public class MappingProfile : Profile
                     learningSpace.OutBoundSpaces = d.LearningPathWays.Where(x => x.SourceSpace.Id == learningSpace.Id)
                         .Select(x => x.TargetSpace).ToList();
                 }
-            });
+            })
+            .ReverseMap();
         CreateMap<LearningSpace, LearningSpacePe>()
             .ForMember(x => x.InBoundSpaces, opt => opt.Ignore())
-            .ForMember(x => x.OutBoundSpaces, opt => opt.Ignore());
+            .ForMember(x => x.OutBoundSpaces, opt => opt.Ignore())
+            .ReverseMap();
         CreateMap<LearningPathway, LearningPathwayPe>()
             .ReverseMap()
             .AfterMap((s, d) =>
