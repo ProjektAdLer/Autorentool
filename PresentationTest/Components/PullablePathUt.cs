@@ -1,10 +1,13 @@
+using System;
 using Bunit;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningWorld;
 using Shared;
 using TestContext = Bunit.TestContext;
 
@@ -17,6 +20,7 @@ public class PullablePathUt
     #pragma warning disable CS8618
     private TestContext _testContext;
     private IMouseService _mouseService;
+    private IPositioningService _positioningService;
 #pragma warning restore CS8618
 
     [SetUp]
@@ -24,6 +28,7 @@ public class PullablePathUt
     {
         _testContext = new TestContext();
         _mouseService = Substitute.For<IMouseService>();
+        _positioningService = Substitute.For<IPositioningService>();
         _testContext.Services.AddSingleton(_mouseService);
     }
 
@@ -36,11 +41,8 @@ public class PullablePathUt
         var learningObject = Substitute.For<ILearningSpaceViewModel>();
         double x1 = 5;
         double y1 = 6;
-        double x2 = 10;
-        double y2 = 11;
 
-        var systemUnderTest =
-            CreateRenderedPullablePathComponent(learningObject, x1, y1, x2, y2);
+        var systemUnderTest = CreateRenderedPullablePathComponent(learningObject, x1, y1);
 
         Assert.Multiple(() =>
         {
@@ -52,18 +54,60 @@ public class PullablePathUt
         });
     }
     
+    [Test]
+    public void ClickAndMove_CallsWorldPresenter()
+    {
+        var learningSpace = Substitute.For<ILearningSpaceViewModel>();
+
+        double x1 = 5;
+        double y1 = 6;
+
+       var systemUnderTest = CreateRenderedPullablePathComponent(learningSpace, x1, y1);
+        
+        systemUnderTest.WaitForElement("g").MouseDown(new MouseEventArgs());
+        _mouseService.OnMove +=
+            Raise.EventWith(new MouseEventArgs {ClientX = 13, ClientY = 24});
+        _mouseService.OnUp += Raise.EventWith(new MouseEventArgs());
+        
+        Assert.That(systemUnderTest.Instance.X1, Is.EqualTo(x1));
+        Assert.That(systemUnderTest.Instance.Y1, Is.EqualTo(y1));
+        Assert.That(systemUnderTest.Instance.X2, Is.EqualTo(x1 + 13));
+        Assert.That(systemUnderTest.Instance.Y2, Is.EqualTo(y1 + 24));
+        
+        _positioningService.Received().SetOnHoveredLearningSpace(learningSpace, x1+13+100, y1+24+25);
+        _positioningService.Received().AddLearningPathWay(learningSpace, x1+13+100, y1+24+25);
+    }
+
+    [Test]
+    public void ClickAndNotMoved_X2AndY2Set()
+    {
+        var learningSpace = Substitute.For<ILearningSpaceViewModel>();
+
+        double x1 = 5;
+        double y1 = 6;
+
+        var systemUnderTest = CreateRenderedPullablePathComponent(learningSpace, x1, y1);
+        
+        systemUnderTest.WaitForElement("g").MouseDown(new MouseEventArgs());
+        _mouseService.OnUp += Raise.EventWith(new MouseEventArgs());
+        
+        Assert.That(systemUnderTest.Instance.X1, Is.EqualTo(x1));
+        Assert.That(systemUnderTest.Instance.Y1, Is.EqualTo(y1));
+        Assert.That(systemUnderTest.Instance.X2, Is.EqualTo(x1));
+        Assert.That(systemUnderTest.Instance.Y2, Is.EqualTo(y1));
+    }
+    
     private IRenderedComponent<PullablePath> CreateRenderedPullablePathComponent(
-        ILearningSpaceViewModel? learningObject = null, double x1 = 0, double y1 = 0, double x2 = 0, double y2 = 0,
+        ILearningSpaceViewModel? learningObject = null, double x1 = 0, double y1 = 0,
         Direction dir1 = Direction.Right, Direction dir2 = Direction.Left)
     {
         return _testContext.RenderComponent<PullablePath>(parameters => parameters
             .Add(p => p.LearningSpace, learningObject)
             .Add(p => p.X1, x1)
             .Add(p => p.Y1, y1)
-            .Add(p => p.X2, x2)
-            .Add(p => p.Y2, y2)
             .Add(p => p.Dir1, dir1)
             .Add(p => p.Dir2, dir2)
+            .Add(p => p.PositioningSrv, _positioningService)
         );
     }
 }
