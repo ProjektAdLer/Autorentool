@@ -197,7 +197,14 @@ public class MappingProfile : Profile
         CreateMap<LearningSpace, LearningSpacePe>()
             .ForMember(x => x.InBoundSpaces, opt => opt.Ignore())
             .ForMember(x => x.OutBoundSpaces, opt => opt.Ignore())
-            .ReverseMap();
+            .ReverseMap()
+            .AfterMap((_, d) =>
+            {
+                foreach (var element in d.LearningElements)
+                {
+                    element.Parent = d;
+                }
+            });
         CreateMap<LearningPathway, LearningPathwayPe>()
             .ReverseMap()
             .AfterMap((s, d) =>
