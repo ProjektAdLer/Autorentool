@@ -14,6 +14,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
+using Presentation.Components;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
@@ -35,11 +36,12 @@ public class PresentationLogicUt
         var mockConfiguration = Substitute.For<IAuthoringToolConfiguration>();
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockMapper = Substitute.For<IMapper>();
+        var mockCachingMapper = Substitute.For<ICachingMapper>();
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         var mockLogger = Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
 
         //Act
-        var systemUnderTest = CreateTestablePresentationLogic(mockConfiguration, mockBusinessLogic, mockMapper, mockServiceProvider, mockLogger);
+        var systemUnderTest = CreateTestablePresentationLogic(mockConfiguration, mockBusinessLogic, mockMapper, mockCachingMapper, mockServiceProvider, mockLogger);
         Assert.Multiple(() =>
         {
             //Assert
@@ -228,7 +230,7 @@ public class PresentationLogicUt
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
         
-        systemUnderTest.CreateLearningSpace(learningWorldVm, "z", "z", "z", "z", "z", 5);
+        systemUnderTest.CreateLearningSpace(learningWorldVm, "z", "z", "z", "z", "z", 5, 6, 7);
         
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
         Assert.That(command, Is.Not.Null);
@@ -335,7 +337,7 @@ public class PresentationLogicUt
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
 
         systemUnderTest.CreateLearningElement(learningSpaceVm, "a", "b", ElementTypeEnum.Activation,
-            ContentTypeEnum.H5P, null!, "c", "d", "e", LearningElementDifficultyEnum.Easy, 1, 2);
+            ContentTypeEnum.H5P, null!, "c", "d", "e", LearningElementDifficultyEnum.Easy, 1, 2, 3, 4);
 
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
         Assert.That(command, Is.Not.Null);
@@ -1529,7 +1531,8 @@ public class PresentationLogicUt
         var businessLogic = new global::BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager);
         var config = new MapperConfiguration(MappingProfile.Configure);
         var mapper = config.CreateMapper();
-        var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper);
+        var cachingMapper = new CachingMapper(mapper);
+        var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper);
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         systemUnderTest.CreateLearningWorld(workspaceVm, "a","b","c","d","e","f");
         Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
@@ -1563,12 +1566,13 @@ public class PresentationLogicUt
         var businessLogic = new global::BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager);
         var config = new MapperConfiguration(MappingProfile.Configure);
         var mapper = config.CreateMapper();
-        var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper);
+        var cachingMapper = new CachingMapper(mapper);
+        var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper);
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         systemUnderTest.CreateLearningWorld(workspaceVm, "a","b","c","d","e","f");
         Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
         var worldVm = workspaceVm.LearningWorlds[0];
-        systemUnderTest.CreateLearningSpace(worldVm, "g","h","i","j","k",1);
+        systemUnderTest.CreateLearningSpace(worldVm, "g","h","i","j","k",1, 2, 3);
         Assert.That(worldVm.LearningSpaces, Has.Count.EqualTo(1));
         var spaceVm = worldVm.LearningSpaces.First();
         
@@ -1601,18 +1605,20 @@ public class PresentationLogicUt
     }
 
     private static Presentation.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(
-        IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null,
-        IServiceProvider? serviceProvider = null, ILogger<Presentation.PresentationLogic.API.PresentationLogic>? logger = null,
+        IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null, 
+        ICachingMapper? cachingMapper = null, IServiceProvider? serviceProvider = null, 
+        ILogger<Presentation.PresentationLogic.API.PresentationLogic>? logger = null, 
         IHybridSupportWrapper? hybridSupportWrapper = null)
     {
         configuration ??= Substitute.For<IAuthoringToolConfiguration>();
         businessLogic ??= Substitute.For<IBusinessLogic>();
         mapper ??= Substitute.For<IMapper>();
+        cachingMapper ??= Substitute.For<ICachingMapper>();
         serviceProvider ??= Substitute.For<IServiceProvider>();
         logger ??= Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
         hybridSupportWrapper ??= Substitute.For<IHybridSupportWrapper>();
 
-        return new Presentation.PresentationLogic.API.PresentationLogic(configuration, businessLogic, mapper,
+        return new Presentation.PresentationLogic.API.PresentationLogic(configuration, businessLogic, mapper, cachingMapper,
             serviceProvider, logger, hybridSupportWrapper);
     }
 }

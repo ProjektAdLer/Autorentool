@@ -15,18 +15,18 @@ public class CreateLearningElement : IUndoCommand
     public CreateLearningElement(LearningSpace parentSpace, string name, string shortName,
         ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContent learningContent, string authors,
         string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points,
-        Action<LearningSpace> mappingAction)
+        double positionX, double positionY, Action<LearningSpace> mappingAction)
     {
         LearningElement = elementType switch
         {
             ElementTypeEnum.Transfer => CreateNewTransferElement(name, shortName, parentSpace, contentType,
-                learningContent, authors, description, goals, difficulty, workload, points),
+                learningContent, authors, description, goals, difficulty, workload, points, positionX, positionY),
             ElementTypeEnum.Activation => CreateNewActivationElement(name, shortName, parentSpace, contentType,
-                learningContent, authors, description, goals, difficulty, workload, points),
+                learningContent, authors, description, goals, difficulty, workload, points, positionX, positionY),
             ElementTypeEnum.Interaction => CreateNewInteractionElement(name, shortName, parentSpace, contentType,
-                learningContent, authors, description, goals, difficulty, workload, points),
+                learningContent, authors, description, goals, difficulty, workload, points, positionX, positionY),
             ElementTypeEnum.Test => CreateNewTestElement(name, shortName, parentSpace, contentType,
-                learningContent, authors, description, goals, difficulty, workload, points),
+                learningContent, authors, description, goals, difficulty, workload, points, positionX, positionY),
             _ => throw new ApplicationException("no valid ElementType assigned")
         };
         ParentSpace = parentSpace;

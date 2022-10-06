@@ -22,6 +22,8 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 
     private readonly IPresentationLogic _presentationLogic;
     private readonly ILogger<LearningSpacePresenter> _logger;
+    
+    private int _creationCounter = 0;
 
     public ILearningSpaceViewModel? LearningSpaceVm { get; private set; }
 
@@ -224,9 +226,10 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
             {
                 learningContent = Task.Run(async () => await LoadLearningContent(contentType)).Result;
             }
-                        
+            var offset = 15 * _creationCounter;
+            _creationCounter = (_creationCounter + 1) % 10;
             _presentationLogic.CreateLearningElement(parentElement, name, shortname, elementType, contentType,
-                learningContent, authors, description, goals, difficulty, workload, points);
+                learningContent, authors, description, goals, difficulty, workload, points, offset, offset);
 
         }
         catch (AggregateException)

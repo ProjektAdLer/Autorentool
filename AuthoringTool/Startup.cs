@@ -8,6 +8,7 @@ using Generator.API;
 using Generator.DSL;
 using Generator.WorldExport;
 using Microsoft.Extensions.Caching.Memory;
+using Presentation.Components;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -130,6 +131,7 @@ public class Startup
         
         var mapper = config.CreateMapper();
         services.AddSingleton(mapper);
+        services.AddSingleton<ICachingMapper, CachingMapper>();
     }
 
     private static void ConfigureUtilities(IServiceCollection services)
