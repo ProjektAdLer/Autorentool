@@ -11,19 +11,18 @@
     
     [Parameter] public EventCallback<T> OnClicked { get; set; }
     
-    [Parameter, EditorRequired] public T? LearningObject { get; set; }
+    [Parameter, EditorRequired] public T? OnClickedParam { get; set; }
     
     private bool _isDown;
 
     private Task OnClick(object? sender, MouseEventArgs e)
     {
-        return OnClicked.InvokeAsync(LearningObject);
+        return OnClicked.InvokeAsync(OnClickedParam);
     }
 
     protected override void OnInitialized()
     {
-        MouseSrv.OnUp += OnUpOrOut;
-        MouseSrv.OnOut += OnUpOrOut;
+        MouseSrv.OnUp += OnUp;
         base.OnInitialized();
     }
     
@@ -32,7 +31,7 @@
         _isDown = true;
     }
     
-    private void OnUpOrOut(object? sender, MouseEventArgs e)
+    private void OnUp(object? sender, MouseEventArgs e)
     {
         if (_isDown)
         {

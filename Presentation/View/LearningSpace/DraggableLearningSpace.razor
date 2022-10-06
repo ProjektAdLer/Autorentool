@@ -4,14 +4,14 @@
 @using Presentation.PresentationLogic.LearningWorld
 <Draggable LearningObject="LearningSpace" OnClicked="@OnClickedDraggable"
            @bind-X="@LearningSpace.PositionX" @bind-Y="@LearningSpace.PositionY">
-    @if (LearningSpace == PositioningService?.LearningWorldVm?.PathWayHoverSpace)
+    @if (LearningSpace == PositioningService.LearningWorldVm?.PathWayHoverSpace)
     {
         <rect transform="translate(-3, -3)" height="56" width="106" fill="lightblue"></rect>
         <circle r="6" transform="translate(0, 25)" fill="lightblue"/>
     }
     <rect height="50" width="100" style="fill:lightgreen;stroke:black"></rect>
     <text x="3" y="15">@LearningSpace.Name</text>
-    <Clickable LearningObject="LearningSpace" OnClicked="@OnClickedClickable">
+    <Clickable OnClickedParam="LearningSpace" OnClicked="@OnClickedClickable">
         @if (LearningSpace.InBoundSpaces.Any())
         {
             <circle r="6" transform="translate(0, 25)" fill="white" stroke="gray"/>
@@ -19,7 +19,7 @@
         }
     </Clickable>
 </Draggable>
-<PullablePath LearningObject="LearningSpace" X1=@LearningSpace.PositionX
+<PullablePath LearningSpace="LearningSpace" X1=@LearningSpace.PositionX
                Y1="@LearningSpace.PositionY" PositioningSrv="@PositioningService"></PullablePath>
 
 @code {
@@ -30,8 +30,9 @@
     public EventCallback<ILearningSpaceViewModel> OnClickedDraggable { get; set; }
     [Parameter, EditorRequired]
     public EventCallback<ILearningSpaceViewModel> OnClickedClickable { get; set; }
+    // Overwrite nullability warning below because service may never be null -n.stich
     [Parameter, EditorRequired]
-    public ILearningWorldPresenter? PositioningService { get; set; }
+    public ILearningWorldPresenter PositioningService { get; set; } = null!;
 
     protected override void OnParametersSet()
     {

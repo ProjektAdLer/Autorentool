@@ -15,7 +15,7 @@
     double _c2X;
     double C1Y => Y1;
     double C2Y => Y2;
-    double Lenght => Math.Sqrt(Math.Pow(X2 - X1, 2) + Math.Pow(Y2 - Y1, 2));
+    double Length => Math.Sqrt(Math.Pow(X2 - X1, 2) + Math.Pow(Y2 - Y1, 2));
 
     protected override void OnParametersSet() {
         _c1X = Cx(Dir1, X1);
@@ -28,7 +28,7 @@
     {
         get
         {
-            switch (Lenght)
+            switch (Length)
             {
                 case < 50:
                     return 1;

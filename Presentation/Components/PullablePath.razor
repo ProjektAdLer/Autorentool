@@ -27,7 +27,9 @@
 </g>
 
 @code {
-    [Parameter] public ILearningWorldPresenter? PositioningSrv { get; set; }
+    // Overwrite nullability warning below because service may never be null -n.stich
+    [Parameter, EditorRequired] 
+    public ILearningWorldPresenter PositioningSrv { get; set; } = null!;
     
     [Parameter] public Direction Dir1 { get; set; } = Direction.Right;
     [Parameter] public double X1 { get; set; }
@@ -37,8 +39,9 @@
     [Parameter] public double X2 { get; set; }
     [Parameter] public double Y2 { get; set; }
 
+    // Overwrite nullability warning below because we check in OnParametersSet -n.stich
     [Parameter, EditorRequired]
-    public ILearningSpaceViewModel? LearningObject { get; set; }
+    public ILearningSpaceViewModel LearningSpace { get; set; } = null!;
 
     private double _c1X;
     private double _c2X;
@@ -56,9 +59,13 @@
     {
         _c1X = Cx(Dir1, X1);
         _c2X = Cx(Dir2, X2);
+        if (LearningSpace is null)
+        {
+            throw new ArgumentNullException(nameof(LearningSpace));
+        }
     }
 
-        const int Coef = 0;
+    const int Coef = 0;
 
     double Cx(Direction dir, double x)
         => dir == Direction.Right ? x + Coef : x - Coef;
@@ -80,13 +87,13 @@
         X2 = e.ClientX - _cursorX + X1;
         Y2 = e.ClientY - _cursorY + Y1;
         
-        if (PositioningSrv?.GetObjectAtPosition(X2+100, Y2+25) != null && PositioningSrv.GetObjectAtPosition(X2+100, Y2+25) != LearningObject)
+        if (PositioningSrv.GetObjectAtPosition(X2+100, Y2+25) != null && PositioningSrv.GetObjectAtPosition(X2+100, Y2+25) != LearningSpace)
         {
             PositioningSrv.LearningPathWayHoverUp(PositioningSrv.GetObjectAtPosition(X2+100, Y2+25));
         }
         else
         {
-            PositioningSrv?.LearningPathWayHoverDown();
+            PositioningSrv.LearningPathWayHoverDown();
         }
 
         _hasMoved = true;
@@ -112,10 +119,10 @@
         }
         if (_isDown)
         {
-            var obj = PositioningSrv?.GetObjectAtPosition(X2+100, Y2+25);
-            if (obj != null && LearningObject != null)
+            var obj = PositioningSrv.GetObjectAtPosition(X2+100, Y2+25);
+            if (obj != null)
             {
-                PositioningSrv?.AddLearningPathWay(LearningObject, obj);
+                PositioningSrv.AddLearningPathWay(LearningSpace, obj);
             }
         }
         _isDown = false;
