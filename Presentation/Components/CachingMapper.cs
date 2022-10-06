@@ -13,13 +13,14 @@ public class CachingMapper : ICachingMapper
     public CachingMapper(IMapper mapper)
     {
         _mapper = mapper;
+        _cache = new Dictionary<Guid, object>();
     }
     
     private readonly IMapper _mapper;
     
-    private static Dictionary<Guid, object> _cache = new Dictionary<Guid, object>();
+    private Dictionary<Guid, object> _cache;
 
-    private static T Cache<T>(T viewModel)
+    private T Cache<T>(T viewModel)
     {
         if (viewModel == null){
             throw new ArgumentException("ViewModel is null");
@@ -48,7 +49,7 @@ public class CachingMapper : ICachingMapper
         return (T)_cache[key];
     }
     
-    private static T Get<T>(Guid id)
+    private T Get<T>(Guid id)
     {
         if (_cache.ContainsKey(id))
         {
