@@ -29,7 +29,7 @@
 @code {
     // Overwrite nullability warning below because service may never be null -n.stich
     [Parameter, EditorRequired] 
-    public ILearningWorldPresenter PositioningSrv { get; set; } = null!;
+    public IPositioningService PositioningSrv { get; set; } = null!;
     
     [Parameter] public Direction Dir1 { get; set; } = Direction.Right;
     [Parameter] public double X1 { get; set; }
@@ -87,14 +87,7 @@
         X2 = e.ClientX - _cursorX + X1;
         Y2 = e.ClientY - _cursorY + Y1;
         
-        if (PositioningSrv.GetObjectAtPosition(X2+100, Y2+25) != null && PositioningSrv.GetObjectAtPosition(X2+100, Y2+25) != LearningSpace)
-        {
-            PositioningSrv.LearningPathWayHoverUp(PositioningSrv.GetObjectAtPosition(X2+100, Y2+25));
-        }
-        else
-        {
-            PositioningSrv.LearningPathWayHoverDown();
-        }
+        PositioningSrv.SetOnHoveredLearningSpace(LearningSpace,X2+100, Y2+25);
 
         _hasMoved = true;
     }
@@ -119,11 +112,7 @@
         }
         if (_isDown)
         {
-            var obj = PositioningSrv.GetObjectAtPosition(X2+100, Y2+25);
-            if (obj != null)
-            {
-                PositioningSrv.AddLearningPathWay(LearningSpace, obj);
-            }
+            PositioningSrv.AddLearningPathWay(LearningSpace, X2+100, Y2+25);
         }
         _isDown = false;
     }

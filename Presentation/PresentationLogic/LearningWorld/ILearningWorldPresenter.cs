@@ -5,7 +5,7 @@ using Presentation.PresentationLogic.LearningSpace;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
-public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyPropertyChanging
+public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyPropertyChanging, IPositioningService
 {
     bool CreateLearningSpaceDialogOpen { get; }
     bool EditLearningSpaceDialogOpen { get; }
@@ -26,9 +26,4 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     LearningContentViewModel? DragAndDropLearningContent { get; }
     void AddNewLearningSpace();
     void OnWorkspacePropertyChanged(object? caller, PropertyChangedEventArgs e);
-    ILearningSpaceViewModel? GetObjectAtPosition(double x, double y);
-    void AddLearningPathWay(ILearningSpaceViewModel sourceSpace, ILearningSpaceViewModel targetSpace);
-    void DeleteLearningPathWay(ILearningSpaceViewModel targetSpace);
-    void LearningPathWayHoverUp(ILearningSpaceViewModel? learningSpace);
-    void LearningPathWayHoverDown();
 }

@@ -4,7 +4,7 @@
 @using Presentation.PresentationLogic.LearningWorld
 <Draggable LearningObject="LearningSpace" OnClicked="@OnClickedDraggable"
            @bind-X="@LearningSpace.PositionX" @bind-Y="@LearningSpace.PositionY">
-    @if (LearningSpace == PositioningService.LearningWorldVm?.PathWayHoverSpace)
+    @if (LearningSpace == PositioningService.LearningWorldVm?.OnHoveredLearningSpace)
     {
         <rect transform="translate(-3, -3)" height="56" width="106" fill="lightblue"></rect>
         <circle r="6" transform="translate(0, 25)" fill="lightblue"/>

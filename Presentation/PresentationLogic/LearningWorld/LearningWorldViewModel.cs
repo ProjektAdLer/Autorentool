@@ -68,7 +68,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     private string _goals;
     private bool _unsavedChanges;
     private ILearningSpaceViewModel? _selectedLearningSpace;
-    private ILearningSpaceViewModel? _pathWayHoverSpace;
+    private ILearningSpaceViewModel? _onHoveredLearningSpace;
     private bool _showingLearningSpaceView;
 
     public string FileEnding => fileEnding;
@@ -141,10 +141,10 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         set => SetField(ref _selectedLearningSpace, value);
     }
     
-    public ILearningSpaceViewModel? PathWayHoverSpace
+    public ILearningSpaceViewModel? OnHoveredLearningSpace
     {
-        get => _pathWayHoverSpace;
-        set => SetField(ref _pathWayHoverSpace, value);
+        get => _onHoveredLearningSpace;
+        set => SetField(ref _onHoveredLearningSpace, value);
     }
 
     public bool ShowingLearningSpaceView

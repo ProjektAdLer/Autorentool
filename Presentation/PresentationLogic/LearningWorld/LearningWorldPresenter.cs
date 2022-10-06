@@ -288,40 +288,44 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (SelectedLearningObjectIsSpace)
             _learningSpacePresenter.SetLearningSpace(LearningWorldVm.SelectedLearningSpace);
     }
-    
-    public ILearningSpaceViewModel? GetObjectAtPosition(double x, double y)
-    {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        var objectAtPosition = LearningWorldVm.LearningSpaces.FirstOrDefault(ls => ls.PositionX <= x &&
-                                                                   ls.PositionX + 100 >= x && ls.PositionY <= y &&
-                                                                   ls.PositionY + 50 >= y);
-        return objectAtPosition;
-    }
-
-    public void LearningPathWayHoverUp(ILearningSpaceViewModel? learningSpace)
-    {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        LearningWorldVm.PathWayHoverSpace = learningSpace;
-    }
-
-    public void LearningPathWayHoverDown()
-    {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        LearningWorldVm.PathWayHoverSpace = null;
-    }
 
     #endregion
 
     #region LearningPathWay
 
-    public void AddLearningPathWay(ILearningSpaceViewModel sourceSpace, ILearningSpaceViewModel targetSpace)
+    public void SetOnHoveredLearningSpace(ILearningSpaceViewModel sourceSpace, double x, double y)
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        LearningWorldVm.PathWayHoverSpace = null;
+        var objectAtPosition = GetObjectAtPosition(x, y);
+        if (objectAtPosition == null || objectAtPosition == sourceSpace)
+        {
+            LearningWorldVm.OnHoveredLearningSpace = null;
+        }
+        else
+        
+        {
+            LearningWorldVm.OnHoveredLearningSpace = objectAtPosition;
+        }
+    }
+    
+    private ILearningSpaceViewModel? GetObjectAtPosition(double x, double y)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        var objectAtPosition = LearningWorldVm.LearningSpaces.FirstOrDefault(ls => ls.PositionX <= x &&
+            ls.PositionX + 100 >= x && ls.PositionY <= y &&
+            ls.PositionY + 50 >= y);
+        return objectAtPosition;
+    }
+    public void AddLearningPathWay(ILearningSpaceViewModel sourceSpace, double x, double y)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        var targetSpace = GetObjectAtPosition(x, y);
+        if (targetSpace == null)
+            return;
+        LearningWorldVm.OnHoveredLearningSpace = null;
         _presentationLogic.CreateLearningPathWay(LearningWorldVm, sourceSpace, targetSpace);
     }
 
