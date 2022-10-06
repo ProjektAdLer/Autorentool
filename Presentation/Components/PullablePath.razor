@@ -40,10 +40,10 @@
     [Parameter, EditorRequired]
     public ILearningSpaceViewModel? LearningObject { get; set; }
 
-    double _c1X;
-    double _c2X;
-    double C1Y => Y1;
-    double C2Y => Y2;
+    private double _c1X;
+    private double _c2X;
+    private double C1Y => Y1;
+    private double C2Y => Y2;
     
     private double _cursorX;
     private double _cursorY;

@@ -1,14 +1,15 @@
-using JetBrains.Annotations;
 using Presentation.PresentationLogic.LearningSpace;
 
 namespace Presentation.PresentationLogic.LearningPathway;
 
 public class LearningPathwayViewModel : ILearningPathWayViewModel
 {
-    private LearningPathwayViewModel()
+    protected LearningPathwayViewModel()
     {
-        SourceSpace = null;
-        TargetSpace = null;
+        //We override nullability here because constructor is protected, only called by AutoMapper and field immediately
+        //set by AutoMapper afterwards - m.ho
+        SourceSpace = null!;
+        TargetSpace = null!;
     }
     
     public LearningPathwayViewModel(ILearningSpaceViewModel sourceSpace, ILearningSpaceViewModel targetSpace)
