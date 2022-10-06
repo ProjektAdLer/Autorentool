@@ -80,12 +80,12 @@ public class DataAccess : IDataAccess
 
     public LearningContent LoadLearningContent(string filepath)
     {
-        return Mapper.Map<LearningContent>(XmlHandlerContent.LoadFromDisk(filepath));
+        return Mapper.Map<LearningContent>(XmlHandlerContent.LoadContentAsync(filepath).Result);
     }
 
     public LearningContent LoadLearningContent(string name, Stream stream)
     {
-        return Mapper.Map<LearningContent>(XmlHandlerContent.LoadFromStream(name, stream));
+        return Mapper.Map<LearningContent>(XmlHandlerContent.LoadContentAsync(name, stream).Result);
     }
 
     /// <inheritdoc cref="IDataAccess.FindSuitableNewSavePath"/>

@@ -15,4 +15,9 @@
     <ItemGroup>
       <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
     </ItemGroup>
+    <ItemGroup>
+      <Reference Include="Microsoft.Extensions.Options">
+        <HintPath>..\..\..\..\..\usr\local\share\dotnet\shared\Microsoft.AspNetCore.App\6.0.8\Microsoft.Extensions.Options.dll</HintPath>
+      </Reference>
+    </ItemGroup>
 </Project>

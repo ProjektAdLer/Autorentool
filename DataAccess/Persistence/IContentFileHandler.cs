@@ -4,6 +4,6 @@ namespace DataAccess.Persistence;
 
 public interface IContentFileHandler
 {
-    LearningContentPe LoadFromDisk (string filepath);
-    LearningContentPe LoadFromStream(string name, Stream stream);
+    public Task<LearningContentPe> LoadContentAsync(string filepath);
+    public Task<LearningContentPe> LoadContentAsync(string name, Stream stream);
 }

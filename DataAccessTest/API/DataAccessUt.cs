@@ -163,7 +163,7 @@ public class DataAccessUt
 
         systemUnderTest.LoadLearningContent("C:/nonsense");
 
-        mockContentFileHandler.Received().LoadFromDisk("C:/nonsense");
+        mockContentFileHandler.Received().LoadContentAsync("C:/nonsense");
     }
     
     [Test]
@@ -175,7 +175,7 @@ public class DataAccessUt
 
         systemUnderTest.LoadLearningContent("filename.extension", stream);
 
-        mockContentFileHandler.Received().LoadFromStream("filename.extension", stream);
+        mockContentFileHandler.Received().LoadContentAsync("filename.extension", stream);
     }
 
     [Test]
