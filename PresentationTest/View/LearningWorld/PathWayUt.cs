@@ -29,8 +29,8 @@ public class PathWayUt
         
         var systemUnderTest = GetPathWayForTesting(x1, y1, x2, y2);
         
-        Assert.That(systemUnderTest.Instance.Dir1, Is.EqualTo(Direction.Right));
-        Assert.That(systemUnderTest.Instance.Dir2, Is.EqualTo(Direction.Left));
+        Assert.That(systemUnderTest.Instance.Direction1, Is.EqualTo(Direction.Right));
+        Assert.That(systemUnderTest.Instance.Direction2, Is.EqualTo(Direction.Left));
         Assert.That(systemUnderTest.Instance.X1, Is.EqualTo(x1));
         Assert.That(systemUnderTest.Instance.Y1, Is.EqualTo(y1));
         Assert.That(systemUnderTest.Instance.X2, Is.EqualTo(x2));

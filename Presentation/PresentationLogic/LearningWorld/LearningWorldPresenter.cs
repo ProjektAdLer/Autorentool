@@ -293,6 +293,13 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
 
     #region LearningPathWay
 
+    /// <summary>
+    /// Sets the on hovered learning space of the learning world to the target space on the given position.
+    /// When there is no learning space on the given position, the on hovered learning space is set to null.
+    /// </summary>
+    /// <param name="sourceSpace">The learning space from which the path starts.</param>
+    /// <param name="x">The x-coordinate of the target space</param>
+    /// <param name="y">The y-coordinate of the target space</param>
     public void SetOnHoveredLearningSpace(ILearningSpaceViewModel sourceSpace, double x, double y)
     {
         if (LearningWorldVm == null)
@@ -309,6 +316,12 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         }
     }
     
+    /// <summary>
+    /// Localizes and returns the learning space at the given position in the currently selected learning world.
+    /// </summary>
+    /// <param name="x">The x-coordinate of the target space</param>
+    /// <param name="y">The y-coordinate of the target space</param>
+    /// <returns>The learning space at the given position.</returns>
     private ILearningSpaceViewModel? GetObjectAtPosition(double x, double y)
     {
         //LearningWorldVm can not be null because it is checked before call. -m.ho
@@ -317,6 +330,14 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
                                                     && ls.PositionY <= y && ls.PositionY + 50 >= y);
         return objectAtPosition;
     }
+    
+    /// <summary>
+    /// Creates a learning pathway from the given source space to the target space on the given position.
+    /// Does nothing when there is no learning space on the given position.
+    /// </summary>
+    /// <param name="sourceSpace">The learning space from which the path starts.</param>
+    /// <param name="x">The x-coordinate of the target space</param>
+    /// <param name="y">The y-coordinate of the target space</param>
     public void CreateLearningPathWay(ILearningSpaceViewModel sourceSpace, double x, double y)
     {
         if (LearningWorldVm == null)
@@ -328,6 +349,10 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         _presentationLogic.CreateLearningPathWay(LearningWorldVm, sourceSpace, targetSpace);
     }
 
+    /// <summary>
+    /// Deletes the last created learning pathway leading to the target space.
+    /// </summary>
+    /// <param name="targetSpace">The learning space where the path ends.</param>
     public void DeleteLearningPathWay(ILearningSpaceViewModel targetSpace)
     {
         if (LearningWorldVm == null)

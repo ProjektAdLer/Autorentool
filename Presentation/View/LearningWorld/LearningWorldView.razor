@@ -59,8 +59,8 @@ else
             @foreach (var learningPathWay in LearningWorldP.LearningWorldVm.LearningPathWays)
             {
                 <PathWay X1=@(learningPathWay.SourceSpace.PositionX+106) Y1=@(learningPathWay.SourceSpace.PositionY+25)
-                         Dir1=Direction.Right X2=@(learningPathWay.TargetSpace.PositionX-6)
-                         Y2=@(learningPathWay.TargetSpace.PositionY+25) Dir2=Direction.Left />
+                         Direction1=Direction.Right X2=@(learningPathWay.TargetSpace.PositionX-6)
+                         Y2=@(learningPathWay.TargetSpace.PositionY+25) Direction2=Direction.Left />
             }
         }
     </svg>

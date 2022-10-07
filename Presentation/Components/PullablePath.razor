@@ -31,18 +31,24 @@
     [Parameter, EditorRequired] 
     public IPositioningService PositioningSrv { get; set; } = null!;
     
-    [Parameter] public Direction Dir1 { get; set; } = Direction.Right;
+    // Coordinates of the start of the pathway
     [Parameter] public double X1 { get; set; }
     [Parameter] public double Y1 { get; set; }
 
-    [Parameter] public Direction Dir2 { get; set; } = Direction.Left;
+    // Coordinates of the end of the pathway
     [Parameter] public double X2 { get; set; }
     [Parameter] public double Y2 { get; set; }
+    
+    // Direction of curvature of the first half of the pathway
+    [Parameter] public Direction Direction1 { get; set; } = Direction.Right;
+    // Direction of curvature of the first half of the pathway
+    [Parameter] public Direction Direction2 { get; set; } = Direction.Left;
 
     // Overwrite nullability warning below because we check in OnParametersSet -n.stich
     [Parameter, EditorRequired]
     public ILearningSpaceViewModel LearningSpace { get; set; } = null!;
 
+    // The following coordinates are used as control points for the Bezier curve
     private double _c1X;
     private double _c2X;
     private double C1Y => Y1;
@@ -57,19 +63,20 @@
 
     protected override void OnParametersSet()
     {
-        _c1X = Cx(Dir1, X1);
-        _c2X = Cx(Dir2, X2);
+        _c1X = GetControlPoint(Direction1, X1);
+        _c2X = GetControlPoint(Direction2, X2);
         if (LearningSpace is null)
         {
             throw new ArgumentNullException(nameof(LearningSpace));
         }
     }
 
-    const int Coef = 0;
+    const int Coefficient = 0;
 
-    double Cx(Direction dir, double x)
-        => dir == Direction.Right ? x + Coef : x - Coef;
+    double GetControlPoint(Direction dir, double x)
+        => dir == Direction.Right ? x + Coefficient : x - Coefficient;
 
+    //This is called after component has received initial parameters in SetParametersAsync
     protected override void OnInitialized()
     {
         X2 = X1;
