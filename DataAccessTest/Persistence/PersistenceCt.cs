@@ -125,6 +125,56 @@ public class PersistenceUt
 
         PropertyValuesAreEqual(restoredElement, element);
     }
+
+    [Test]
+    public void SaveAndLoadWorld_WithExactSameElementInTwoSpaces_ElementIsEqualObject()
+    {
+        var content = new LearningContentPe("a", "b", "");
+        var element = new LearningElementPe("le", "la", content, "ll", "llll", "lllll",
+            LearningElementDifficultyEnumPe.Easy);
+        var space1 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5,
+            new List<LearningElementPe> { element });
+        var space2 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5,
+            new List<LearningElementPe> { element });
+        var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
+            "Description", "Goals", learningSpaces: new List<LearningSpacePe> { space1, space2 });
+        
+        var mockFileSystem = new MockFileSystem();
+
+        var saveHandler = CreateTestableFileSaveHandler<LearningWorldPe>(fileSystem:mockFileSystem);
+        
+        saveHandler.SaveToDisk(world, "foobar.txt");
+
+        var actual = saveHandler.LoadFromDisk("foobar.txt");
+        
+        Assert.That(actual.LearningSpaces[0].LearningElements.First(), Is.EqualTo(actual.LearningSpaces[1].LearningElements.First()));
+    }
+    
+    [Test]
+    public void SaveAndLoadWorld_WithTwoEquivalentElementsInTwoSpaces_ElementIsNotEqualObject()
+    {
+        var content = new LearningContentPe("a", "b", "");
+        var element1 = new LearningElementPe("le", "la", content, "ll", "llll", "lllll",
+            LearningElementDifficultyEnumPe.Easy);
+        var element2 = new LearningElementPe("le", "la", content, "ll", "llll", "lllll",
+            LearningElementDifficultyEnumPe.Easy);
+        var space1 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5,
+            new List<LearningElementPe> { element1 });
+        var space2 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5,
+            new List<LearningElementPe> { element2 });
+        var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
+            "Description", "Goals", learningSpaces: new List<LearningSpacePe> { space1, space2 });
+        
+        var mockFileSystem = new MockFileSystem();
+
+        var saveHandler = CreateTestableFileSaveHandler<LearningWorldPe>(fileSystem:mockFileSystem);
+        
+        saveHandler.SaveToDisk(world, "foobar.txt");
+
+        var actual = saveHandler.LoadFromDisk("foobar.txt");
+        
+        Assert.That(actual.LearningSpaces[0].LearningElements.First(), Is.Not.EqualTo(actual.LearningSpaces[1].LearningElements.First()));
+    }
     
     private XmlFileHandler<T> CreateTestableFileSaveHandler<T>(ILogger<XmlFileHandler<T>>? logger = null, IFileSystem? fileSystem = null) where T : class
     {
