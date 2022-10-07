@@ -14,7 +14,7 @@ public abstract class InteractionElementViewModel : LearningElementViewModel
     }
 
     protected InteractionElementViewModel(string name, string shortname, ILearningSpaceViewModel? parent,
-        LearningContentViewModel content, string? url, string authors, string description, string goals,
+        LearningContentViewModel content, string url, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double positionX, double positionY) : base(
         name, shortname, content, url, authors, description, goals, difficulty, parent, workload, points, positionX,
         positionY)

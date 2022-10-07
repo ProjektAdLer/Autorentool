@@ -4,7 +4,7 @@ namespace PersistEntities;
 
 public class TextTransferElementPe : LearningElementPe
 {
-    internal TextTransferElementPe(string name, string shortname, LearningContentPe? learningContent, string? url,
+    internal TextTransferElementPe(string name, string shortname, LearningContentPe? learningContent, string url,
         string authors, string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload,
         int points, double positionX, double positionY) : base(name, shortname,learningContent, url, authors, description, 
         goals, difficulty, workload, points, positionX,positionY)

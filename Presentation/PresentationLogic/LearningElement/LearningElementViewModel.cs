@@ -46,7 +46,7 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
     /// <param name="positionX">x-position of the learning element in the workspace.</param>
     /// <param name="positionY">y-position of the learning element in the workspace.</param>
     public LearningElementViewModel(string name, string shortname,
-        LearningContentViewModel learningContent, string? url, string authors, string description, string goals,
+        LearningContentViewModel learningContent, string url, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, ILearningSpaceViewModel? parent = null,
         int workload = 0, int points = 0, double positionX = 0, double positionY = 0)
     {
@@ -74,7 +74,7 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
     public string Shortname { get; set; }
     public ILearningSpaceViewModel? Parent { get; set; }
     public LearningContentViewModel LearningContent { get; set; }
-    public string? Url { get; set; }
+    public string Url { get; set; }
     public string Authors { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }

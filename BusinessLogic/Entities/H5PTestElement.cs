@@ -14,7 +14,7 @@ public class H5PTestElement : LearningElement
     }
 
     public H5PTestElement(string name, string shortname, ILearningSpace? parent,
-        LearningContent learningContent, string? url, string authors, string description, string goals,
+        LearningContent learningContent, string url, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double positionX, double positionY) : base(
         name, shortname, learningContent, url, authors, description, goals, difficulty, parent, workload, points, positionX,
         positionY)

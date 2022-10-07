@@ -13,7 +13,7 @@ public class CreateLearningElement : IUndoCommand
     private IMemento? _memento;
 
     public CreateLearningElement(LearningSpace parentSpace, string name, string shortName,
-        ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContent learningContent, string? url, 
+        ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContent learningContent, string url, 
         string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload, 
         int points, Action<LearningSpace> mappingAction)
     {
@@ -52,7 +52,7 @@ public class CreateLearningElement : IUndoCommand
     }
 
     private LearningElement CreateNewTransferElement(string name, string shortname, LearningSpace parentSpace,
-        ContentTypeEnum contentType, LearningContent learningContent, string? url, string authors, string description, string goals,
+        ContentTypeEnum contentType, LearningContent learningContent, string url, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double posx = 0f, double posy = 0f)
     {
         LearningElement element = contentType switch
@@ -71,7 +71,7 @@ public class CreateLearningElement : IUndoCommand
     }
     
     private LearningElement CreateNewActivationElement(string name, string shortname, LearningSpace parentSpace,
-        ContentTypeEnum contentType, LearningContent learningContent, string? url, string authors, string description, string goals,
+        ContentTypeEnum contentType, LearningContent learningContent, string url, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double posx = 0f, double posy = 0f)
     {
         LearningElement element = contentType switch
@@ -86,7 +86,7 @@ public class CreateLearningElement : IUndoCommand
     }
     
     private LearningElement CreateNewInteractionElement(string name, string shortname, LearningSpace parentSpace,
-        ContentTypeEnum contentType, LearningContent learningContent, string? url, string authors, string description, string goals,
+        ContentTypeEnum contentType, LearningContent learningContent, string url, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double posx = 0f, double posy = 0f)
     {
         LearningElement element = contentType switch
@@ -99,7 +99,7 @@ public class CreateLearningElement : IUndoCommand
     }
     
     private LearningElement CreateNewTestElement(string name, string shortname, LearningSpace parentSpace,
-        ContentTypeEnum contentType, LearningContent learningContent, string? url, string authors, string description, string goals,
+        ContentTypeEnum contentType, LearningContent learningContent, string url, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double posx = 0f, double posy = 0f)
     {
         LearningElement element = contentType switch

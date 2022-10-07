@@ -240,7 +240,7 @@ public class LearningSpacePresenterUt
         dictionary["Shortname"] = "b";
         dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
         dictionary["Content"] = ContentTypeEnum.Image.ToString();
-        dictionary["Video-Url"] = "url";
+        dictionary["Url"] = "url";
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
         dictionary["Goals"] = "g";
@@ -272,7 +272,7 @@ public class LearningSpacePresenterUt
         dictionary["Shortname"] = "b";
         dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
         dictionary["Content"] = ContentTypeEnum.PDF.ToString();
-        dictionary["Video-Url"] = "url";
+        dictionary["Url"] = "url";
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
         dictionary["Goals"] = "g";
@@ -305,7 +305,7 @@ public class LearningSpacePresenterUt
         dictionary["Shortname"] = "b";
         dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
         dictionary["Content"] = ContentTypeEnum.PDF.ToString();
-        dictionary["Video-Url"] = "url";
+        dictionary["Url"] = "url";
         dictionary["Authors"] = "d";
         dictionary["Description"] = "e";
         dictionary["Goals"] = "f";
@@ -421,7 +421,7 @@ public class LearningSpacePresenterUt
         dictionary["Shortname"] = "b";
         dictionary["Type"] = ElementTypeEnum.Test.ToString();
         dictionary["Content"] = ContentTypeEnum.H5P.ToString();
-        dictionary["Video-Url"] = "url";
+        dictionary["Url"] = "url";
         dictionary["Authors"] = "d";
         dictionary["Description"] = "e";
         dictionary["Goals"] = "f";
@@ -453,7 +453,7 @@ public class LearningSpacePresenterUt
         dictionary["Shortname"] = "b";
         dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
         dictionary["Content"] = ContentTypeEnum.Text.ToString();
-        dictionary["Video-Url"] = "url";
+        dictionary["Url"] = "url";
         dictionary["Authors"] = "d";
         dictionary["Description"] = "e";
         dictionary["Goals"] = "f";
@@ -485,7 +485,7 @@ public class LearningSpacePresenterUt
         dictionary["Shortname"] = "b";
         dictionary["Type"] = ElementTypeEnum.Test.ToString();
         dictionary["Content"] = ContentTypeEnum.H5P.ToString();
-        dictionary["Video-Url"] = "url";
+        dictionary["Url"] = "url";
         dictionary["Authors"] = "d";
         dictionary["Description"] = "e";
         dictionary["Goals"] = "f";
@@ -517,7 +517,7 @@ public class LearningSpacePresenterUt
         dictionary["Shortname"] = "b";
         dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
         dictionary["Content"] = ContentTypeEnum.H5P.ToString();
-        dictionary["Video-Url"] = "url";
+        dictionary["Url"] = "url";
         dictionary["Authors"] = "d";
         dictionary["Description"] = "e";
         dictionary["Goals"] = "f";

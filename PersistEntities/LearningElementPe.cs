@@ -13,7 +13,7 @@ namespace PersistEntities;
 [Serializable]
 public class LearningElementPe : ILearningElementPe
 {
-    public LearningElementPe(string name, string shortname, LearningContentPe? learningContent, string? url,
+    public LearningElementPe(string name, string shortname, LearningContentPe? learningContent, string url,
         string authors, string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload = 0,
         int points = 0, double positionX = 0, double positionY = 0)
     {
@@ -53,7 +53,7 @@ public class LearningElementPe : ILearningElementPe
     public string Name { get; set; }
     public string Shortname { get; set; }
     public LearningContentPe LearningContent { get; set; }
-    public string? Url { get; set; }
+    public string Url { get; set; }
     public string Authors { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }

@@ -108,6 +108,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         {
             {"Name", element.Name},
             {"Shortname", element.Shortname},
+            {"Url", element.Url},
             {"Authors", element.Authors},
             {"Description", element.Description},
             {"Goals", element.Goals},
@@ -199,7 +200,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         if (Enum.TryParse(data["Difficulty"], out LearningElementDifficultyEnum difficulty) == false)
             throw new ApplicationException("Couldn't parse returned difficulty");
         //optional arguments
-        var url = data.ContainsKey("Video-Url") ? data["Video-Url"] : "";
+        var url = data.ContainsKey("Url") ? data["Url"] : "";
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
         if (Int32.TryParse(data["Workload (min)"], out int workload) == false || workload < 0)

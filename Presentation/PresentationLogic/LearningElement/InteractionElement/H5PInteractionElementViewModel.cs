@@ -19,7 +19,7 @@ public class H5PInteractionElementViewModel : InteractionElementViewModel
     /// Initializes a new instance of the <see cref="H5PInteractionElementViewModel"/> class.
     /// </summary>
     public H5PInteractionElementViewModel(string name, string shortname, ILearningSpaceViewModel? parent,
-        LearningContentViewModel learningContent, string? url, string authors, string description, string goals,
+        LearningContentViewModel learningContent, string url, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double positionX, double positionY) : base(
         name, shortname, parent, learningContent, url, authors, description, goals, difficulty, workload, points, positionX,
         positionY)
