@@ -1,9 +1,9 @@
-
+using System.Runtime.Serialization;
 
 namespace PersistEntities;
 
 [Serializable]
-
+[DataContract]
 public class ImageTransferElementPe : LearningElementPe
 {
     internal ImageTransferElementPe(string name, string shortname, LearningContentPe? learningContent,

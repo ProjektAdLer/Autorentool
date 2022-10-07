@@ -1,6 +1,9 @@
+using System.Runtime.Serialization;
+
 namespace PersistEntities;
 
 [Serializable]
+[DataContract]
 public class PdfTransferElementPe : LearningElementPe
 {
     public PdfTransferElementPe(string name, string shortname, LearningContentPe? learningContent,

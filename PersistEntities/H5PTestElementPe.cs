@@ -1,8 +1,9 @@
+using System.Runtime.Serialization;
 
 namespace PersistEntities;
 
 [Serializable]
-
+[DataContract]
 public class H5PTestElementPe : LearningElementPe
 {
     internal H5PTestElementPe(string name, string shortname, LearningContentPe? learningContent,

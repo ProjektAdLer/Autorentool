@@ -1,7 +1,9 @@
+using System.Runtime.Serialization;
+
 namespace PersistEntities;
 
 [Serializable]
-
+[DataContract]
 public class TextTransferElementPe : LearningElementPe
 {
     internal TextTransferElementPe(string name, string shortname, LearningContentPe? learningContent,

@@ -1,8 +1,9 @@
+using System.Runtime.Serialization;
 
 namespace PersistEntities;
 
 [Serializable]
-
+[DataContract]
 public class H5PActivationElementPe : LearningElementPe
 {
     public H5PActivationElementPe(string name, string shortname, LearningContentPe? learningContent,

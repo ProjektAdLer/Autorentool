@@ -11,7 +11,8 @@ public class XmlFileHandler<T> : IXmlFileHandler<T> where T : class //new() cons
 {
     private readonly ILogger<XmlFileHandler<T>> _logger;
     private readonly IFileSystem _fileSystem;
-    private readonly XmlSerializer _serializer;
+    private readonly DataContractSerializer _serializer;
+    private readonly DataContractSerializerSettings _settings;
 
     /// <summary>
     /// Default constructor, no FileSystem mocking.
@@ -32,21 +33,19 @@ public class XmlFileHandler<T> : IXmlFileHandler<T> where T : class //new() cons
     {
         _logger = logger;
         _fileSystem = fileSystem;
+        _settings = new DataContractSerializerSettings
+        {
+            PreserveObjectReferences = true
+        };
         //Check if type T is serializable in the first place
         var typeT = typeof(T);
-        if (!typeT.IsSerializable && !typeof(ISerializable).IsAssignableFrom(typeT))
+        if (typeT.GetCustomAttributesData().All(ca => ca.AttributeType != typeof(DataContractAttribute)))
         {
             throw new InvalidOperationException($"Type {typeT.Name} is not serializable.");
         }
         
-        //Check that type T has a parameterless constructor (otherwise deserialization will fail)
-        if (typeT.GetConstructor(BindingFlags.Instance | BindingFlags.NonPublic | BindingFlags.Public, Type.EmptyTypes) == null)
-        {
-            throw new InvalidOperationException($"Type {typeT.Name} has no required parameterless constructor.");
-        }
-        
         //Create actual serializer once for performance
-        _serializer = new XmlSerializer(typeof(T));
+        _serializer = new DataContractSerializer(typeof(T), _settings);
     }
 
     /// <inheritdoc cref="IXmlFileHandler{T}.SaveToDisk"/>
@@ -68,7 +67,7 @@ public class XmlFileHandler<T> : IXmlFileHandler<T> where T : class //new() cons
     /// <inheritdoc cref="IXmlFileHandler{T}.SaveToStream"/>
     public void SaveToStream(T obj, Stream stream)
     {
-        _serializer.Serialize(stream, obj);
+        _serializer.WriteObject(stream, obj);
         stream.Flush();
     }
 
@@ -95,6 +94,6 @@ public class XmlFileHandler<T> : IXmlFileHandler<T> where T : class //new() cons
     /// <inheritdoc cref="IXmlFileHandler{T}.LoadFromStream"/>
     public T LoadFromStream(Stream stream)
     {
-        return _serializer.Deserialize(stream) as T ?? throw new SerializationException($"Cast result to type {typeof(T).Name} null.");
+        return _serializer.ReadObject(stream) as T ?? throw new SerializationException($"Cast result to type {typeof(T).Name} null.");
     }
 }

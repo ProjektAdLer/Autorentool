@@ -2,6 +2,7 @@ using System.Collections;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.Reflection;
+using System.Runtime.Serialization;
 using DataAccess.Persistence;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -19,7 +20,7 @@ public class PersistenceUt
     private const string FilePath = "awesomefile.txt";
 
     [Test]
-    public void Persistence_SaveAndLoadWorld_Stream_ObjectsAreEqual()
+    public void Persistence_SaveAndLoadWorld_Stream_ObjectsAreEquivalent()
     {
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
             "Description", "Goals");
@@ -40,7 +41,7 @@ public class PersistenceUt
     }
     
     [Test]
-    public void Persistence_SaveAndLoadSpace_Stream_ObjectsAreEqual()
+    public void Persistence_SaveAndLoadSpace_Stream_ObjectsAreEquivalent()
     {
         var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
         var content = new LearningContentPe("a", "b", "");
@@ -58,7 +59,7 @@ public class PersistenceUt
     }
     
     [Test]
-    public void Persistence_SaveAndLoadElement_Stream_ObjectsAreEqual()
+    public void Persistence_SaveAndLoadElement_Stream_ObjectsAreEquivalent()
     {
         var content = new LearningContentPe("a", "b", "");
         var element = new LearningElementPe("le", "la", content, "ll", "ll", "lll", LearningElementDifficultyEnumPe.Easy);
@@ -74,7 +75,7 @@ public class PersistenceUt
     }
 
     [Test]
-    public void Persistence_SaveAndLoadWorld_File_ObjectsAreEqual()
+    public void Persistence_SaveAndLoadWorld_File_ObjectsAreEquivalent()
     {
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
             "Description", "Goals");
@@ -94,7 +95,7 @@ public class PersistenceUt
     }
     
     [Test]
-    public void Persistence_SaveAndLoadSpace_File_ObjectsAreEqual()
+    public void Persistence_SaveAndLoadSpace_File_ObjectsAreEquivalent()
     {
         var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
         var content = new LearningContentPe("a", "b", "");
@@ -111,7 +112,7 @@ public class PersistenceUt
     }
     
     [Test]
-    public void Persistence_SaveAndLoadElement_File_ObjectsAreEqual()
+    public void Persistence_SaveAndLoadElement_File_ObjectsAreEquivalent()
     {
         var content = new LearningContentPe("a", "b", "");
         var element = new LearningElementPe("le", "la", content, "ll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
@@ -144,20 +145,31 @@ public class PersistenceUt
         {
             var expectedValue = property.GetValue(expected, null);
             var actualValue = property.GetValue(actual, null);
-
-            if (actualValue is IList actualList && expectedValue is IList expectedList)
-                AssertListsAreEqual(property, actualList, expectedList);
-            else if (actualValue is LearningContentPe actualContent && expectedValue is LearningContentPe expectedContent)
+            //ignore extensiondata on deserialization if it is empty in expected but not in actual
+            if (property.Name == "ExtensionData" && expectedValue == null && actualValue is ExtensionDataObject edo)
             {
-                Assert.Multiple(() =>
-                {
-                    Assert.That(actualContent.Name, Is.EqualTo(expectedContent.Name));
-                    Assert.That(actualContent.Type, Is.EqualTo(expectedContent.Type));
-                    Assert.That(actualContent.Filepath, Is.EqualTo(expectedContent.Filepath));
-                });
+                continue;
             }
-            else if (!Equals(expectedValue, actualValue)) 
-                Assert.Fail($"Property {property.DeclaringType?.Name}.{property.Name} does not match. Expected: {expectedValue} but was: {actualValue}");
+            switch (actualValue)
+            {
+                case IList actualList when expectedValue is IList expectedList:
+                    AssertListsAreEqual(property, actualList, expectedList);
+                    break;
+                case LearningContentPe actualContent when expectedValue is LearningContentPe expectedContent:
+                    Assert.Multiple(() =>
+                    {
+                        Assert.That(actualContent.Name, Is.EqualTo(expectedContent.Name));
+                        Assert.That(actualContent.Type, Is.EqualTo(expectedContent.Type));
+                        Assert.That(actualContent.Filepath, Is.EqualTo(expectedContent.Filepath));
+                    });
+                    break;
+                default:
+                {
+                    if (!Equals(expectedValue, actualValue)) 
+                        Assert.Fail($"Property {property.DeclaringType?.Name}.{property.Name} does not match. Expected: {expectedValue} but was: {actualValue}");
+                    break;
+                }
+            }
         }
     }
     private void AssertListsAreEqual(PropertyInfo property, IList actualList, IList expectedList)

@@ -1,17 +1,9 @@
 ﻿using System.Runtime.Serialization;
-using System.Xml.Serialization;
 
 namespace PersistEntities;
 
-[XmlInclude(typeof(ImageTransferElementPe))]
-[XmlInclude(typeof(VideoTransferElementPe))]
-[XmlInclude(typeof(PdfTransferElementPe))]
-[XmlInclude(typeof(TextTransferElementPe))]
-[XmlInclude(typeof(VideoActivationElementPe))]
-[XmlInclude(typeof(H5PActivationElementPe))]
-[XmlInclude(typeof(H5PInteractionElementPe))]
-[XmlInclude(typeof(H5PTestElementPe))]
 [Serializable]
+[DataContract]
 public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
 {
     public LearningElementPe(string name, string shortname, LearningContentPe? learningContent,
@@ -48,17 +40,27 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
         PositionY = 0;
     }
 
-
+    [DataMember]
     public string Name { get; set; }
+    [DataMember]
     public string Shortname { get; set; }
+    [DataMember]
     public LearningContentPe LearningContent { get; set; }
+    [DataMember]
     public string Authors { get; set; }
+    [DataMember]
     public string Description { get; set; }
+    [DataMember]
     public string Goals { get; set; }
+    [DataMember]
     public int Workload { get; set; }
+    [DataMember]
     public int Points { get; set; }
+    [DataMember]
     public LearningElementDifficultyEnumPe Difficulty { get; set; }
+    [DataMember]
     public double PositionX { get; set; }
+    [DataMember]
     public double PositionY { get; set; }
     public ExtensionDataObject? ExtensionData { get; set; }
 }
