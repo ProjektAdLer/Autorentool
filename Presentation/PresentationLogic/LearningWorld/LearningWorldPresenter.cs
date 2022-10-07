@@ -311,19 +311,18 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     
     private ILearningSpaceViewModel? GetObjectAtPosition(double x, double y)
     {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        var objectAtPosition = LearningWorldVm.LearningSpaces.FirstOrDefault(ls => ls.PositionX <= x &&
-            ls.PositionX + 100 >= x && ls.PositionY <= y &&
-            ls.PositionY + 50 >= y);
+        //LearningWorldVm can not be null because it is checked before call. -m.ho
+        var objectAtPosition = LearningWorldVm?.LearningSpaces
+            .FirstOrDefault(ls => ls.PositionX <= x && ls.PositionX + 100 >= x 
+                                                    && ls.PositionY <= y && ls.PositionY + 50 >= y);
         return objectAtPosition;
     }
-    public void AddLearningPathWay(ILearningSpaceViewModel sourceSpace, double x, double y)
+    public void CreateLearningPathWay(ILearningSpaceViewModel sourceSpace, double x, double y)
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         var targetSpace = GetObjectAtPosition(x, y);
-        if (targetSpace == null)
+        if (targetSpace == null || targetSpace == sourceSpace)
             return;
         LearningWorldVm.OnHoveredLearningSpace = null;
         _presentationLogic.CreateLearningPathWay(LearningWorldVm, sourceSpace, targetSpace);
