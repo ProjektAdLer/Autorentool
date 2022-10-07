@@ -97,7 +97,6 @@ public class Startup
     private void ConfigureDataAccess(IServiceCollection services)
     {
         services.AddTransient(typeof(IXmlFileHandler<>), typeof(XmlFileHandler<>));
-        services.AddSingleton(typeof(IDataContractSerializer<>), typeof(DataContractSerializerWrapper<>));
         services.AddSingleton<IDataAccess, DataAccess.API.DataAccess>();
         services.AddSingleton<IContentFileHandler, ContentFileHandler>();
     }
