@@ -1,5 +1,6 @@
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using BusinessLogic.Entities
+@inject ILogger<Clickable<T>> Logger;
 @inject IMouseService MouseSrv;
 @typeparam T
 <g @onmousedown="OnDown" @onmousedown:stopPropagation="true">
@@ -14,6 +15,7 @@
     [Parameter, EditorRequired] public T? OnClickedParam { get; set; }
     
     private bool _isDown;
+    private bool _hasMoved;
 
     private Task OnClick(object? sender, MouseEventArgs e)
     {
@@ -22,21 +24,32 @@
 
     protected override void OnInitialized()
     {
+        MouseSrv.OnMove += OnMove;
         MouseSrv.OnUp += OnUp;
         base.OnInitialized();
     }
     
     private void OnDown(MouseEventArgs e)
     {
+        Logger.LogDebug("OnDown");
         _isDown = true;
+        _hasMoved = false;
     }
     
     private void OnUp(object? sender, MouseEventArgs e)
     {
-        if (_isDown)
+        Logger.LogDebug("OnUp");
+        if (_isDown && !_hasMoved)
         {
             OnClick(sender, e);
         }
         _isDown = false;
+    }
+    
+    private void OnMove(object? sender, MouseEventArgs e)
+    {
+        Logger.LogDebug("OnUp");
+        if (!_isDown) return;
+        _hasMoved = true;
     }
 }
