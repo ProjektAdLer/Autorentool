@@ -218,7 +218,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
             }
             else if (contentType == ContentTypeEnum.Video)
             {
-                learningContent = new LearningContentViewModel("url", "url", Array.Empty<byte>());
+                learningContent = new LearningContentViewModel("url", "url", "");
             }
             else
             {

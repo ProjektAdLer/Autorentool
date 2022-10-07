@@ -26,12 +26,12 @@ public class CreateDslUt
         const string description = "very cool element";
         const string goals = "learn very many things";
         
-        var content1 = new LearningContentPe("FileName", "h5p", "");
-        var content2 = new LearningContentPe("FileName", "png", "");
-        var content3 = new LearningContentPe("FileName", "url", "");
-        var content4 = new LearningContentPe("FileName", "txt", "");
-        var content5 = new LearningContentPe("FileName", "pdf", "");
-        var content6 = new LearningContentPe("FileName", "mp3", "");
+        var content1 = new LearningContentPe("FileName", "h5p", "/foo/bar.txt");
+        var content2 = new LearningContentPe("FileName", "png", "/foo/bar.txt");
+        var content3 = new LearningContentPe("FileName", "url", "/foo/bar.txt");
+        var content4 = new LearningContentPe("FileName", "txt", "/foo/foo.txt");
+        var content5 = new LearningContentPe("FileName", "pdf", "/foo/foo.txt");
+        var content6 = new LearningContentPe("FileName", "mp3", "/foo/foo.txt");
 
         var ele1 = new LearningElementPe("a", "b",content1, "", "pupup", "g","h", 
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
