@@ -1,6 +1,7 @@
 @using System.Collections
 @using System.ComponentModel
 @using System.Threading.Tasks
+@using Presentation.PresentationLogic.ModalDialog
 <div class="modal fade show" id="myModal" style="display:block; background-color: rgba(10,10,10,.8);" aria-modal="true" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -26,6 +27,22 @@
                             @foreach (var field in InputFields.Where(FieldRequiredAndNotFilled))
                             {
                                 <span>@($"-{field.Name} ")</span>
+                            }
+                        </p>
+                    </div>
+                }
+                @if (InputFields != null && InputFields.Any(FieldValidationFailed))
+                {
+                    //Display warning as soon, as the user types in a wrong value.
+                    <div class="modal-input-warning">
+                        <p>
+                            <i class="bi bi-textarea-t"></i> Not allowed Symbols ? \ / &lt; &gt; : in Field
+                            @foreach (var field in InputFields.Where(FieldValidationFailed))
+                            {
+                                if (field.Name == "Name")
+                                {
+                                    <span>@($"-{field.Name} ")</span>
+                                }
                             }
                         </p>
                     </div>
@@ -59,16 +76,17 @@
                                     else
                                     {
                                         var fieldType = input.Type.ToString().ToLower();
+                                        if (input.Name.ToLower() != "url"){_fieldIsUrl = false;}
+                                        
                                         //we are binding the oninput event to the value in our dictionary
-
                                         <input id="@($"modal-input-field-{input.Name.ToLower()}")"
                                                type="@fieldType"
+                                               disabled="@_fieldIsUrl"
                                                placeholder="@input.Name"
                                                value="@_inputFieldValues[input.Name]"
-                                               @oninput="@(e => { if (e.Value != null) 
-                                                             _inputFieldValues[input.Name] = (string)e.Value;  })"
-                                               @onkeydown="@(e => {if (e.Code == "Enter") 
-                                                               TryCloseWithPositiveResult();})"/>
+                                               @oninput="@(e => { if (e.Value != null) _inputFieldValues[input.Name] = (string) e.Value; })"
+                                               @onkeydown="@(e => {if (e.Code == "Enter") TryCloseWithPositiveResult();})"/>
+                                        
                                         @if (_inputFieldAnnotations[input.Name] != "")
                                         {
                                             <p id="@($"modal-input-field-{input.Name.ToLower()}-annotation")">
@@ -153,7 +171,7 @@
 
     ///<summary>Whether or not the required fields warning should be displayed or not.</summary>
     private bool RequiredFieldsWarning { get; set; }
-
+    private bool FieldValidationWarning { get; set; }
 
 #pragma warning disable CS8618 // Set in OnParametersSet 
     ///<summary>Internal dictionary for storing values of input fields on change.</summary>
@@ -168,6 +186,7 @@
         _inputFieldValues = new Dictionary<string, string>();
         _inputFieldAnnotations = new Dictionary<string, string>();
         RequiredFieldsWarning = false;
+        FieldValidationWarning = false;
 
         if (InputFields != null)
         {
@@ -207,16 +226,27 @@
     /// <see cref="Task.CompletedTask"/> otherwise.</returns>
     private Task ModalTryClose(ModalDialogReturnValue dialogReturnValue)
     {
+
         IDictionary<string, string>? inputFieldValues = null;
         //if this is a positive response, we will set the inputFieldValues to the dictionary we have been keeping this whole time
         if (dialogReturnValue is ModalDialogReturnValue.Ok or ModalDialogReturnValue.Yes && InputFields != null)
         {
+
             //check that all required fields are set
             if (InputFields.Any(FieldRequiredAndNotFilled))
             {
                 RequiredFieldsWarning = true;
                 return Task.CompletedTask;
             }
+            
+            //check that fields dont contain specified characters
+            if(InputFields.Any(FieldValidationFailed))
+            {
+                FieldValidationWarning = true;
+                return Task.CompletedTask;
+            }
+            
+            
             inputFieldValues = _inputFieldValues;
         }
         //we return result and optional dictionary as tuple
@@ -249,11 +279,29 @@
     private bool FieldRequiredAndNotFilled(ModalDialogInputField field) =>
         field.Required && (!_inputFieldValues.ContainsKey(field.Name) || _inputFieldValues[field.Name] == "");
 
+    private bool FieldValidationFailed(ModalDialogInputField field) =>
+        _inputFieldValues.ContainsKey("Name") && (_inputFieldValues["Name"].Contains("?") 
+        || _inputFieldValues["Name"].Contains("<") || _inputFieldValues["Name"].Contains(">") 
+        || _inputFieldValues["Name"].Contains("/") || _inputFieldValues["Name"].Contains("\\")
+        || _inputFieldValues["Name"].Contains(":"));
+
+    private bool _fieldIsUrl = false;
+
     /// <summary>Determines whether the dropdown input field is unlocked or not.</summary>
     /// <returns>true if the input field is unlocked, false if it isn't.</returns>
     /// <param name="requiredValues">The input field to check for.</param>
     private bool IsUnlocked(ModalDialogDropdownInputField requiredValues)
     {
+        var videoContent = new ModalDialogDropdownInputField("Type",
+            new[]
+            {
+                new ModalDialogDropdownInputFieldChoiceMapping(
+                    new Dictionary<string, string> {{"Content", "Video"}},
+                    new[] {"Video"}),
+            });
+        
+        _fieldIsUrl = !videoContent.ValuesToChoiceMapping.Any(MappingSatisfied);
+        
         return !requiredValues.ValuesToChoiceMapping.Any() || requiredValues.ValuesToChoiceMapping.Any(MappingSatisfied);
     }
 

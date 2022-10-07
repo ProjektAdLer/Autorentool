@@ -10,7 +10,6 @@ using NUnit.Framework;
 using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.ModalDialog;
@@ -91,8 +90,6 @@ public class AuthoringToolWorkspaceViewUt
         var world1 = new LearningWorldViewModel("ab", "eb", "ic", "od", "ue", "af");
         var world2 = new LearningWorldViewModel("aa", "bb", "cc", "dd", "ee", "ff");
         var world3 = new LearningWorldViewModel("gg", "hh", "ii", "jj", "kk", "ll");
-        var element1 = Substitute.For<ILearningElementViewModel>();
-        var element2 = Substitute.For<ILearningElementViewModel>();
         var space = Substitute.For<ILearningSpaceViewModel>();
 
         _authoringToolWorkspaceViewModel.LearningWorlds.Returns(new List<LearningWorldViewModel>()
@@ -102,8 +99,6 @@ public class AuthoringToolWorkspaceViewUt
 
         _authoringToolWorkspaceViewModel.SelectedLearningWorld = world1;
         
-        world1.LearningElements.Add(element1);
-        world1.LearningElements.Add(element2);
         world1.LearningSpaces.Add(space);
         
         Assert.That(_authoringToolWorkspaceViewModel.SelectedLearningWorld, Is.Not.EqualTo(null));
@@ -114,7 +109,7 @@ public class AuthoringToolWorkspaceViewUt
         var worldSelection = systemUnderTest.FindOrFail("select");
 
         worldSelection.MarkupMatches("<select  value=\"ab\"><option value=\"ab\" selected=\"\">ab</option><option value=\"aa\">aa</option><option value=\"gg\">gg</option></select>");
-        worldData.MarkupMatches("<label class=\"world-data\"> Selected world: ab, Description: ue, Elements: 2, Spaces: 1</label>");
+        worldData.MarkupMatches("<label class=\"world-data\"> Selected world: ab, Description: ue, Spaces: 1</label>");
     }
 
     [Test]

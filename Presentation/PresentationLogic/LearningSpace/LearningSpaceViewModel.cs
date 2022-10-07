@@ -66,5 +66,5 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     public int RequiredPoints { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
-    public ILearningObjectViewModel? SelectedLearningObject { get; set; }
+    public ILearningElementViewModel? SelectedLearningElement { get; set; }
 }

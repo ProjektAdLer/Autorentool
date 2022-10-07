@@ -17,6 +17,7 @@ public class LearningElement : ILearningElement, IOriginator
         //We override nullability here because constructor is protected, only called by AutoMapper and field immediately
         //set by AutoMapper afterwards - n.stich
         LearningContent = null!;
+        Url = "";
         Authors = "";
         Description = "";
         Goals = "";
@@ -28,15 +29,16 @@ public class LearningElement : ILearningElement, IOriginator
         Parent = null;
     }
 
-    public LearningElement(string name, string shortname, LearningContent learningContent,
+    public LearningElement(string name, string shortname, LearningContent learningContent, string url,
         string authors, string description, string goals, LearningElementDifficultyEnum difficulty,
-        ILearningElementParent? parent = null, int workload = 0, int points = 0,
+        ILearningSpace? parent = null, int workload = 0, int points = 0,
         double positionX = 0, double positionY = 0)
     {
         Id = Guid.NewGuid();
         Name = name;
         Shortname = shortname;
         LearningContent = learningContent;
+        Url = url ?? "";
         Authors = authors;
         Description = description;
         Goals = goals;
@@ -52,8 +54,9 @@ public class LearningElement : ILearningElement, IOriginator
     public Guid Id { get; private set; }
     public string Name { get; set; }
     public string Shortname { get; set; }
-    public ILearningElementParent? Parent { get; set; }
+    public ILearningSpace? Parent { get; set; }
     public LearningContent LearningContent { get; set; }
+    public string Url { get; set; }
     public string Authors { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
@@ -93,7 +96,7 @@ public class LearningElement : ILearningElement, IOriginator
     {
         internal LearningElementMemento(string name, string shortname, LearningContent content, string authors,
             string description, string goals, int workload, int points, LearningElementDifficultyEnum difficulty,
-            ILearningElementParent? parent, double positionX = 0, double positionY = 0)
+            ILearningSpace? parent, double positionX = 0, double positionY = 0)
         {
             Name = name;
             Shortname = shortname;
@@ -111,7 +114,7 @@ public class LearningElement : ILearningElement, IOriginator
         
         internal string Name { get; }
         internal string Shortname { get; }
-        internal ILearningElementParent? Parent { get; }
+        internal ILearningSpace? Parent { get; }
         internal LearningContent Content { get; }
         internal string Authors { get; }
         internal string Description { get; }

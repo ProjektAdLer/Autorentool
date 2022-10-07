@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningSpace;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
@@ -10,27 +11,19 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     bool EditLearningSpaceDialogOpen { get; }
     Dictionary<string, string>? EditSpaceDialogInitialValues { get; }
     Dictionary<string, string>? EditSpaceDialogAnnotations { get; }
-    Dictionary<string, string>? EditElementDialogInitialValues { get; }
-    bool EditLearningElementDialogOpen { get; }
-    bool CreateLearningElementDialogOpen { get; }
     ILearningWorldViewModel? LearningWorldVm { get; }
     bool SelectedLearningObjectIsSpace { get; }
     bool ShowingLearningSpaceView { get; }
-    void SetSelectedLearningObject(ILearningObjectViewModel learningObject);
-    void DeleteSelectedLearningObject();
+    void SetSelectedLearningSpace(ILearningSpaceViewModel learningSpace);
+    void DeleteSelectedLearningSpace();
     Task LoadLearningSpaceAsync();
-    Task LoadLearningElementAsync();
-    Task SaveSelectedLearningObjectAsync();
+    Task SaveSelectedLearningSpaceAsync();
     void OnCreateSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple);
-    void OnCreateElementDialogClose(ModalDialogOnCloseResult returnValueTuple);
-    void OpenEditSelectedLearningObjectDialog();
+    void OpenEditSelectedLearningSpaceDialog();
     void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple);
-    void OnEditElementDialogClose(ModalDialogOnCloseResult returnValueTuple);
-    void SetLearningWorld(object? caller, LearningWorldViewModel? world);
     void ShowSelectedLearningSpaceView();
     void CloseLearningSpaceView();
-    void CreateLearningElementWithPreloadedContent(LearningContentViewModel learningContent);
     LearningContentViewModel? DragAndDropLearningContent { get; }
     void AddNewLearningSpace();
-    void AddNewLearningElement();
+    void OnWorkspacePropertyChanged(object? caller, PropertyChangedEventArgs e);
 }

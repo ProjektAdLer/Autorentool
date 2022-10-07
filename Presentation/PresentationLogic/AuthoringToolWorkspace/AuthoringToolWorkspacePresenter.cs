@@ -28,11 +28,11 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         EditLearningSpaceDialogOpen = false;
         DeletedUnsavedWorld = null;
         InformationMessageToShow = null;
-        OnLearningWorldSelect += _learningWorldPresenter.SetLearningWorld;
         if (!presentationLogic.RunningElectron) return;
         //register callback so we can check for unsaved data on quit
         //TODO: register to our own quit button
         shutdownManager.BeforeShutdown += OnBeforeShutdown;
+        AuthoringToolWorkspaceVm.PropertyChanged += learningWorldPresenter.OnWorkspacePropertyChanged;
     }
 
     public IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get;}
@@ -118,7 +118,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         if (learningWorld == null) return;
         _presentationLogic.DeleteLearningWorld(AuthoringToolWorkspaceVm, learningWorld);
         if (learningWorld.UnsavedChanges) DeletedUnsavedWorld = learningWorld;
-        SetSelectedLearningWorld(AuthoringToolWorkspaceVm.LearningWorlds.LastOrDefault());
         OnLearningWorldDelete?.Invoke(this, learningWorld);
     }
 
@@ -150,7 +149,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     public async Task LoadLearningWorldAsync()
     {
         await _presentationLogic.LoadLearningWorldAsync(AuthoringToolWorkspaceVm);
-        OnLearningWorldSelect?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
     }
 
     internal async Task SaveLearningWorldAsync(LearningWorldViewModel world)
@@ -187,7 +185,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
         _presentationLogic.CreateLearningWorld(AuthoringToolWorkspaceVm, name, shortname, authors, language, description, goals);
         OnLearningWorldCreate?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
-        OnLearningWorldSelect?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
     }
 
     public void OnEditWorldDialogClose(ModalDialogOnCloseResult returnValueTuple)
@@ -304,35 +301,27 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         }
         else
         {
-            _learningWorldPresenter.CreateLearningElementWithPreloadedContent(learningContent);
+            InformationMessageToShow = "Learning elements can only get loaded into learning spaces.";
         }
     }
 
     internal void LoadLearningWorldFromFileStream(Stream stream)
     {
         _presentationLogic.LoadLearningWorldViewModel(AuthoringToolWorkspaceVm, stream);
-        OnLearningWorldSelect?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
     }
 
     internal void LoadLearningSpaceFromFileStream(Stream stream)
     {
-        //TODO: refactor this method to use a load command
-        var learningSpace =
-            _presentationLogic.LoadLearningSpaceViewModel(stream);
         if (AuthoringToolWorkspaceVm.SelectedLearningWorld == null)
         {
             InformationMessageToShow = "A learning world must be selected to import a learning space.";
             return;
         }
-        AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces.Add(learningSpace);
-        AuthoringToolWorkspaceVm.SelectedLearningWorld.SelectedLearningObject = learningSpace;
+        _presentationLogic.LoadLearningSpaceViewModel(AuthoringToolWorkspaceVm.SelectedLearningWorld, stream);
     }
 
     internal void LoadLearningElementFromFileStream(Stream stream)
     {
-        //TODO: refactor this method to use a load command
-        var learningElement =
-            _presentationLogic.LoadLearningElementViewModel(stream);
         if (AuthoringToolWorkspaceVm.SelectedLearningWorld is not { } world)
         {
             InformationMessageToShow = "A learning world must be selected to import a learning element.";
@@ -340,17 +329,17 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         }
         if (world.ShowingLearningSpaceView)
         {
-            if (_learningSpacePresenter.LearningSpaceVm is not { } space) return;
-            learningElement.Parent = space;
-            space.LearningElements.Add(learningElement);
-            learningElement.Parent = space;
-            space.SelectedLearningObject = learningElement;
+            if (_learningSpacePresenter.LearningSpaceVm is not { } space)
+            {
+                throw new ApplicationException(
+                    $"ShowingLearningSpaceView for LearningWorld '{world.Name}' is true, but LearningSpaceVm in LearningSpacePresenter is null");
+            }
+
+            _presentationLogic.LoadLearningElementViewModel(space, stream);
         }
         else
         {
-            learningElement.Parent = world;
-            world.LearningElements.Add(learningElement);
-            world.SelectedLearningObject = learningElement;
+            InformationMessageToShow = "Learning elements can only get loaded into learning spaces.";
         }
     }
     

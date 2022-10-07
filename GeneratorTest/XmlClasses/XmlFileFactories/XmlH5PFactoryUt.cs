@@ -63,13 +63,13 @@ public class XmlH5PFactoryUt
         var mockFileManager = Substitute.For<IXmlFileManager>();
         var mockFiles = Substitute.For<IFilesXmlFiles>();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
-        var mockElementValueList = new List<LearningElementValueJson>{new ("type","value")};
+        var mockElementValueList = new List<LearningElementValueJson>{new ("points",0)};
         
         var identifier = new IdentifierJson( "FileName", "Element_1");
 
-        var h5PElement1 = new LearningElementJson(1, identifier, "h5p",0, mockElementValueList);
+        var h5PElement1 = new LearningElementJson(1, identifier, "", "", "h5p",0, mockElementValueList);
 
-        var h5PElement2 = new LearningElementJson(2, identifier, "h5p",0, mockElementValueList);
+        var h5PElement2 = new LearningElementJson(2, identifier, "", "", "h5p",0, mockElementValueList);
 
         var h5PList = new List<LearningElementJson>()
         {
@@ -111,16 +111,16 @@ public class XmlH5PFactoryUt
         var mockFiles = Substitute.For<IFilesXmlFiles>();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
-        var mockElementValueList = new List<LearningElementValueJson>{new ("type","value")};
+        var mockElementValueList = new List<LearningElementValueJson>{new ("points",0)};
         
         var identifier1 = new IdentifierJson("FileName", "Element_1");
         
         var identifier2 = new IdentifierJson( "FileName", "Element_2");
 
 
-        var h5PElement1 = new LearningElementJson(1,  identifier1, "h5p",0, mockElementValueList);
+        var h5PElement1 = new LearningElementJson(1,  identifier1, "", "", "h5p",0, mockElementValueList);
 
-        var h5PElement2 = new LearningElementJson(2, identifier2, "h5p",0, mockElementValueList);
+        var h5PElement2 = new LearningElementJson(2, identifier2, "", "", "h5p",0, mockElementValueList);
 
         var h5PList = new List<LearningElementJson>()
         {

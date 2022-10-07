@@ -14,7 +14,7 @@ public interface ILearningSpaceViewModalDialogFactory
     /// <param name="spaceName">Name of the learning space.</param>
     /// <returns>A RenderFragment containing the dialog.</returns>
     RenderFragment GetCreateLearningElementFragment(LearningContentViewModel? dragAndDropLearningContent,
-        ModalDialogOnClose onCloseCallback, string spaceName);
+        ModalDialogOnClose onCloseCallback);
 
     /// <summary>
     /// Dynamically generates a ModalDialog Render Fragment for a "Edit learning space" dialog with initial values.

@@ -1,6 +1,6 @@
 ﻿namespace BusinessLogic.Entities;
 
-public interface ILearningWorld : ILearningElementParent
+public interface ILearningWorld
 {
     
     List<LearningSpace> LearningSpaces { get; set; }

@@ -25,10 +25,10 @@ public interface IXmlResourceFactory
     IActivitiesInforefXmlGradeItemref ActivitiesInforefXmlGradeItemref { get; }
     IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
     IReadDsl ReadDsl { get; }
-    void CreateFileFactory();
+    void CreateResourceFactory();
     //void ReadFileListAndSetParameters(List<LearningElementJson> listDslDocument);
     void ReadFileListAndSetParametersResource(List<LearningElementJson> listPdfDocument);
-    void FileSetParametersFilesXml(string hashCheckSum, string filesize, string mimeType);
+    void ResourceSetParametersFilesXml(string hashCheckSum, string filesize, string mimeType);
     void FileSetParametersActivity();
 
     /// <summary>

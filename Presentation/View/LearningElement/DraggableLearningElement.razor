@@ -17,7 +17,7 @@
     [Parameter, EditorRequired]
     public ILearningElementViewModel LearningElement { get; set; } = null!;
     [Parameter, EditorRequired]
-    public EventCallback<ILearningObjectViewModel> OnClicked { get; set; }
+    public EventCallback<ILearningElementViewModel> OnClicked { get; set; }
 
     private string? PolygonPoints { get; set; }
     private string? PolygonColor { get; set; }

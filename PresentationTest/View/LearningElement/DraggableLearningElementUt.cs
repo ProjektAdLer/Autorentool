@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Components;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components;
-using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.View.LearningElement;
 using Shared;
@@ -24,14 +23,14 @@ public class DraggableLearningElementUt
     public void Setup()
     {
         _ctx = new TestContext();
-        _ctx.ComponentFactories.AddStub<Draggable>();
+        _ctx.ComponentFactories.AddStub<Draggable<ILearningElementViewModel>>();
     }
     
     [Test]
     public void Constructor_SetsParametersCorrectly()
     {
         var learningElement = Substitute.For<ILearningElementViewModel>();
-        var onClicked = new Action<ILearningObjectViewModel>(_ => { });
+        var onClicked = new Action<ILearningElementViewModel>(_ => { });
         var systemUnderTest = GetRenderedDraggableLearningElement(learningElement, onClicked);
         
         Assert.Multiple(() =>
@@ -48,19 +47,19 @@ public class DraggableLearningElementUt
         var learningElement = Substitute.For<ILearningElementViewModel>();
         learningElement.Difficulty.Returns(LearningElementDifficultyEnum.Medium);
         learningElement.Name.Returns("foo bar super cool name");
-        var onClicked = new Action<ILearningObjectViewModel>(_ => { });
+        var onClicked = new Action<ILearningElementViewModel>(_ => { });
         var systemUnderTest = GetRenderedDraggableLearningElement(learningElement, onClicked);
 
-        Assert.That(systemUnderTest.HasComponent<Stub<Draggable>>());
-        var stub = systemUnderTest.FindComponent<Stub<Draggable>>();
+        Assert.That(systemUnderTest.HasComponent<Stub<Draggable<ILearningElementViewModel>>>());
+        var stub = systemUnderTest.FindComponent<Stub<Draggable<ILearningElementViewModel>>>();
         Assert.Multiple(() =>
         {
-            Assert.That(stub.Instance.Parameters[nameof(Draggable.LearningObject)], Is.EqualTo(learningElement));
+            Assert.That(stub.Instance.Parameters[nameof(Draggable<ILearningElementViewModel>.LearningObject)], Is.EqualTo(learningElement));
             //overriding nullability warning because we know target isn't null as onClicked isn't a static method but instead a lambda -n.stich
-            Assert.That(stub.Instance.Parameters[nameof(Draggable.OnClicked)], Is.EqualTo(EventCallback.Factory.Create(onClicked.Target!, onClicked)));
-            Assert.That(stub.Instance.Parameters[nameof(Draggable.ChildContent)], Is.Not.Null);
+            Assert.That(stub.Instance.Parameters[nameof(Draggable<ILearningElementViewModel>.OnClicked)], Is.EqualTo(EventCallback.Factory.Create(onClicked.Target!, onClicked)));
+            Assert.That(stub.Instance.Parameters[nameof(Draggable<ILearningElementViewModel>.ChildContent)], Is.Not.Null);
         });
-        var childContent = _ctx.Render((RenderFragment)stub.Instance.Parameters[nameof(Draggable.ChildContent)]);
+        var childContent = _ctx.Render((RenderFragment)stub.Instance.Parameters[nameof(Draggable<ILearningElementViewModel>.ChildContent)]);
         childContent.MarkupMatches(
             @"<rect height=""50"" width=""100"" style=""fill:lightblue""></rect>" +
             @"<polygon transform=""translate(75,1)"" fill=""yellow"" points=""13 1 5 25 24 10 2 10 21 25""></polygon>" +
@@ -95,7 +94,7 @@ public class DraggableLearningElementUt
         });
     }
 
-    private IRenderedComponent<DraggableLearningElement> GetRenderedDraggableLearningElement(ILearningElementViewModel objectViewmodel, Action<ILearningObjectViewModel> onClicked)
+    private IRenderedComponent<DraggableLearningElement> GetRenderedDraggableLearningElement(ILearningElementViewModel objectViewmodel, Action<ILearningElementViewModel> onClicked)
     {
         return _ctx.RenderComponent<DraggableLearningElement>(parameters => parameters
                 .Add(p => p.LearningElement, objectViewmodel)

@@ -16,15 +16,17 @@ public class DeleteLearningSpace : IUndoCommand
         LearningSpace = learningSpace;
         _mappingAction = mappingAction;
     }
-    
+
     public void Execute()
     {
         _memento = LearningWorld.GetMemento();
 
         var space = LearningWorld.LearningSpaces.First(x => x.Id == LearningSpace.Id);
-        
+
         LearningWorld.LearningSpaces.Remove(space);
-        
+
+        LearningWorld.SelectedLearningSpace = LearningWorld.LearningSpaces.LastOrDefault();
+
         _mappingAction.Invoke(LearningWorld);
     }
 
@@ -34,9 +36,9 @@ public class DeleteLearningSpace : IUndoCommand
         {
             throw new InvalidOperationException("_memento is null");
         }
-        
+
         LearningWorld.RestoreMemento(_memento);
-        
+
         _mappingAction.Invoke(LearningWorld);
     }
 

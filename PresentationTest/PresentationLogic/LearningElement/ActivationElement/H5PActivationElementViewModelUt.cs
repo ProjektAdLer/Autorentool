@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement.ActivationElement;
-using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.LearningSpace;
 using Shared;
 
 namespace PresentationTest.PresentationLogic.LearningElement.ActivationElement;
@@ -15,8 +15,9 @@ public class H5PActivationElementViewModelUt
     {
         var name = "qwert";
         var shortname = "asdf";
-        var parent = new LearningWorldViewModel("foo", "bar", "baz", "", "", "");
+        var parent = new LearningSpaceViewModel("foo", "bar", "baz", "", "", 2);
         var content = new LearningContentViewModel("bar", "foo", "");
+        var url = "url";
         var authors = "trewq";
         var description = "fdsa";
         var goals = "barfoo";
@@ -26,7 +27,7 @@ public class H5PActivationElementViewModelUt
         var positionX = 5f;
         var positionY = 21f;
 
-        var systemUnderTest = new H5PActivationElementViewModel(name, shortname, parent, content, authors,
+        var systemUnderTest = new H5PActivationElementViewModel(name, shortname, parent, content, url, authors,
             description, goals, difficulty, workload, points, positionX, positionY);
 
         Assert.Multiple(() =>
@@ -35,6 +36,7 @@ public class H5PActivationElementViewModelUt
             Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortname));
             Assert.That(systemUnderTest.Parent, Is.EqualTo(parent));
             Assert.That(systemUnderTest.LearningContent, Is.EqualTo(content));
+            Assert.That(systemUnderTest.Url, Is.EqualTo(url));
             Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));

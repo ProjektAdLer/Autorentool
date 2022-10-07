@@ -47,11 +47,12 @@ public class LearningSpace : ILearningSpace, IOriginator
     public List<LearningElement> LearningElements { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
+    public ILearningElement? SelectedLearningElement { get; set; }
 
     public IMemento GetMemento()
     {
         return new LearningSpaceMemento(Name, Shortname, Authors, Description, Goals, LearningElements, PositionX,
-            PositionY);
+            PositionY, SelectedLearningElement);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -68,12 +69,14 @@ public class LearningSpace : ILearningSpace, IOriginator
         LearningElements = learningSpaceMemento.LearningElements;
         PositionX = learningSpaceMemento.PositionX;
         PositionY = learningSpaceMemento.PositionY;
+        SelectedLearningElement = learningSpaceMemento.SelectedLearningElement;
     }
 
     private record LearningSpaceMemento : IMemento
     {
         internal LearningSpaceMemento(string name, string shortname, string authors, string description,
-            string goals, List<LearningElement> learningElements, double positionX = 0, double positionY = 0)
+            string goals, List<LearningElement> learningElements, double positionX = 0, double positionY = 0, 
+            ILearningElement? selectedLearningElement = null)
         {
             Name = name;
             Shortname = shortname;
@@ -83,6 +86,7 @@ public class LearningSpace : ILearningSpace, IOriginator
             LearningElements = learningElements.ToList();
             PositionX = positionX;
             PositionY = positionY;
+            SelectedLearningElement = selectedLearningElement;
         }
         
         internal string Name { get; }
@@ -93,5 +97,6 @@ public class LearningSpace : ILearningSpace, IOriginator
         internal List<LearningElement> LearningElements { get; }
         internal double PositionX { get; }
         internal double PositionY { get; }
+        internal ILearningElement? SelectedLearningElement { get; }
     }
 }

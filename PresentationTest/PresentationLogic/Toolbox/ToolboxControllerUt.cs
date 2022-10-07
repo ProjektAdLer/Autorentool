@@ -55,56 +55,13 @@ public class ToolboxControllerUt
     }
 
     [Test]
-    public void ToolboxController_LoadObjectIntoWorkspace_Element_CallsWorldPresenterIfNoSpaceViewShowing()
-    {
-        var worldPresenter = Substitute.For<ILearningWorldPresenterToolboxInterface>();
-        worldPresenter.ShowingLearningSpaceView.Returns(false);
-        var spacePresenter = Substitute.For<ILearningSpacePresenterToolboxInterface>();
-        var learningElement = new LearningElementViewModel("foo", "bar", null!,"foo", "bar",
-            "bar",LearningElementDifficultyEnum.Easy);
-
-        var systemUnderTest =
-            GetTestableToolboxController(worldPresenter: worldPresenter, spacePresenter: spacePresenter);
-        
-        systemUnderTest.LoadObjectIntoWorkspace(learningElement);
-        
-        worldPresenter.Received().AddLearningElement(learningElement);
-    }
-
-    [Test]
-    public void ToolboxController_LoadObjectIntoWorkspace_Element_CatchesApplicationException()
-    {
-        var worldPresenter = Substitute.For<ILearningWorldPresenterToolboxInterface>();
-        worldPresenter.ShowingLearningSpaceView.Returns(false);
-        var spacePresenter = Substitute.For<ILearningSpacePresenterToolboxInterface>();
-        var logger = Substitute.For<ILogger<ToolboxController>>();
-        var learningElement = new LearningElementViewModel("foo", "bar", null!, "foo", "bar", 
-            "bar",LearningElementDifficultyEnum.Easy);
-        worldPresenter
-            .When(x => x.AddLearningElement(learningElement))
-            .Do(_ => throw new ApplicationException());
-
-        var systemUnderTest =
-            GetTestableToolboxController(worldPresenter: worldPresenter, spacePresenter: spacePresenter, logger:logger);
-        
-        Assert.DoesNotThrow(() => systemUnderTest.LoadObjectIntoWorkspace(learningElement));
-
-        worldPresenter.ShowingLearningSpaceView.Returns(true);
-        spacePresenter
-            .When(x => x.AddLearningElement(learningElement))
-            .Do(_ => throw new ApplicationException());
-        
-        Assert.DoesNotThrow(() => systemUnderTest.LoadObjectIntoWorkspace(learningElement));
-    }
-
-    [Test]
     public void ToolboxController_LoadObjectIntoWorkspace_Element_CallsSpacePresenterIfSpaceViewShowing()
     {
         var worldPresenter = Substitute.For<ILearningWorldPresenterToolboxInterface>();
         worldPresenter.ShowingLearningSpaceView.Returns(true);
         var spacePresenter = Substitute.For<ILearningSpacePresenterToolboxInterface>();
         var learningElement = new LearningElementViewModel("foo", "bar", null!,
-            "foo", "bar", "bar",LearningElementDifficultyEnum.Easy);
+            "url", "foo", "bar", "bar",LearningElementDifficultyEnum.Easy);
 
         var systemUnderTest =
             GetTestableToolboxController(worldPresenter: worldPresenter, spacePresenter: spacePresenter);

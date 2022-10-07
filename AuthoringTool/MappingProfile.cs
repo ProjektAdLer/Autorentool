@@ -2,7 +2,6 @@ using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Entities;
 using PersistEntities;
-using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
@@ -41,50 +40,50 @@ public class MappingProfile : Profile
             .ForMember(x=>x.SelectedLearningWorld, opt=>opt.Ignore())
             .AfterMap((s, d) =>
             {
-                d.SelectedLearningWorld = d.LearningWorlds.FirstOrDefault(x => x.Name == s.SelectedLearningWorld?.Name);
+                d.SelectedLearningWorld = d.LearningWorlds.FirstOrDefault(x => x.Id == s.SelectedLearningWorld?.Id);
             }).ReverseMap()
             .ForMember(x=>x.SelectedLearningWorld, opt=>opt.Ignore())
             .AfterMap((s, d) =>
             {
-                d.SelectedLearningWorld = d.LearningWorlds.FirstOrDefault(x => x.Name == s.SelectedLearningWorld?.Name);
+                d.SelectedLearningWorld = d.LearningWorlds.FirstOrDefault(x => x.Id == s.SelectedLearningWorld?.Id);
             });
         CreateMap<LearningWorld, LearningWorldViewModel>()
-            .ForMember(x => x.LearningObjects, opt => opt.Ignore())
-            .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
+            .EqualityComparison((x, y) => x.Id == y.Id)
+            .ForMember(x => x.SelectedLearningSpace, opt => opt.Ignore())
             .ForMember(x => x.ShowingLearningSpaceView, opt => opt.Ignore())
-            .AfterMap((_, d) =>
+            .AfterMap((s, d) =>
             {
-                foreach (var element in d.LearningElements)
-                {
-                    element.Parent = d;
-                }
+                d.SelectedLearningSpace = d.LearningSpaces.FirstOrDefault(z => z.Id == s.SelectedLearningSpace?.Id);
             })
             .ReverseMap()
-            .AfterMap((_, d) =>
+            .ForMember(x => x.SelectedLearningSpace, opt => opt.Ignore())
+            .AfterMap((s, d) =>
             {
-                foreach (var element in d.LearningElements)
-                {
-                    element.Parent = d;
-                }
+                d.SelectedLearningSpace = d.LearningSpaces.FirstOrDefault(z => z.Id == s.SelectedLearningSpace?.Id);
             });
 
         CreateMap<LearningSpace, LearningSpaceViewModel>()
-            .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
+            .ForMember(x => x.SelectedLearningElement, opt => opt.Ignore())
             .EqualityComparison((x, y) => x.Id == y.Id)
-            .AfterMap((_, d) =>
+            .AfterMap((s, d) =>
             {
                 foreach (var element in d.LearningElements)
                 {
                     element.Parent = d;
                 }
+
+                d.SelectedLearningElement = d.LearningElements.FirstOrDefault(x => x.Id == s.SelectedLearningElement?.Id);
             })
             .ReverseMap()
-            .AfterMap((_, d) =>
+            .ForMember(x => x.SelectedLearningElement, opt => opt.Ignore())
+            .AfterMap((s, d) =>
             {
                 foreach (var element in d.LearningElements)
                 {
                     element.Parent = d;
                 }
+
+                d.SelectedLearningElement = d.LearningElements.FirstOrDefault(x => x.Id == s.SelectedLearningElement?.Id);
             });
 
         CreateMap<LearningElement, LearningElementViewModel>()
@@ -125,22 +124,6 @@ public class MappingProfile : Profile
             .As<LearningElementViewModel>();
         CreateMap<LearningSpace, ILearningSpaceViewModel>()
             .As<LearningSpaceViewModel>();
-
-        //Same deal here as above
-        CreateMap<ILearningElementParent, ILearningElementViewModelParent>()
-            .ReverseMap();
-        CreateMap<LearningWorld, ILearningElementViewModelParent>()
-            .IncludeBase<ILearningElementParent, ILearningElementViewModelParent>()
-            .As<LearningWorldViewModel>();
-        CreateMap<LearningSpace, ILearningElementViewModelParent>()
-            .IncludeBase<ILearningElementParent, ILearningElementViewModelParent>()
-            .As<LearningSpaceViewModel>();
-        CreateMap<LearningWorldViewModel, ILearningElementParent>()
-            .IncludeBase<ILearningElementViewModelParent, ILearningElementParent>()
-            .As<LearningWorld>();
-        CreateMap<LearningSpaceViewModel, ILearningElementParent>()
-            .IncludeBase<ILearningElementViewModelParent, ILearningElementParent>()
-            .As<LearningSpace>();
     }
 
     /// <summary>
@@ -150,14 +133,7 @@ public class MappingProfile : Profile
     {
         CreateMap<LearningWorld, LearningWorldPe>()
             .ForMember(x => x.ExtensionData, opt => opt.Ignore())
-            .ReverseMap()
-            .AfterMap((_, d) =>
-            {
-                foreach (var element in d.LearningElements)
-                {
-                    element.Parent = d;
-                }
-            });
+            .ReverseMap();
         CreateMap<LearningSpace, LearningSpacePe>()
             .ForMember(x => x.ExtensionData, opt => opt.Ignore())
             .ReverseMap()
@@ -176,7 +152,6 @@ public class MappingProfile : Profile
             .ForMember(x => x.Id, opt => opt.Ignore());
         CreateMap<LearningContent, LearningContentPe>()
             .ReverseMap();
-
         CreateMap<H5PActivationElement, H5PActivationElementPe>()
             .IncludeBase<LearningElement, LearningElementPe>()
             .ReverseMap();

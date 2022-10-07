@@ -21,13 +21,24 @@ public class LoadLearningSpace : IUndoCommand
         _businessLogic = businessLogic;
         _mappingAction = mappingAction;
     }
+    
+    public LoadLearningSpace(LearningWorld learningWorld, Stream stream, IBusinessLogic businessLogic,
+        Action<LearningWorld> mappingAction)
+    {
+        LearningWorld = learningWorld;
+        _filepath = "";
+        _businessLogic = businessLogic;
+        _learningSpace = _businessLogic.LoadLearningSpace(stream);
+        _mappingAction = mappingAction;
+    }
     public void Execute()
     {
         _memento = LearningWorld.GetMemento();
         
         _learningSpace ??= _businessLogic.LoadLearningSpace(_filepath);
         LearningWorld.LearningSpaces.Add(_learningSpace);
-        
+        LearningWorld.SelectedLearningSpace = _learningSpace;
+
         _mappingAction.Invoke(LearningWorld);
     }
 

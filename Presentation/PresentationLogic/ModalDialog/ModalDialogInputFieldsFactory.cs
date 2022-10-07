@@ -1,6 +1,5 @@
 ﻿using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.LearningContent;
-using Presentation.PresentationLogic.LearningSpace;
 using Shared;
 
 namespace Presentation.PresentationLogic.ModalDialog;
@@ -8,45 +7,7 @@ namespace Presentation.PresentationLogic.ModalDialog;
 public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputFieldsFactory, ILearningWorldViewModalDialogInputFieldsFactory, IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory
 {
     /// <inheritdoc cref="ILearningSpaceViewModalDialogInputFieldsFactory.GetCreateLearningElementInputFields"/>
-    public IEnumerable<ModalDialogInputField> GetCreateLearningElementInputFields(LearningContentViewModel? dragAndDropLearningContent, string spaceName)
-    {
-        var parentField = new ModalDialogDropdownInputField("Parent",
-            new[]
-            {
-                new ModalDialogDropdownInputFieldChoiceMapping(null,
-                    new[] {ElementParentEnum.Space.ToString()})
-            }, true);
-        
-        var assignmentField = new ModalDialogDropdownInputField("Assignment",
-            new[]
-            {
-                new ModalDialogDropdownInputFieldChoiceMapping(
-                    new Dictionary<string, string> {{"Parent", ElementParentEnum.Space.ToString()}},
-                    new []{spaceName}),
-            }, true);
-        
-        return GetCreateLearningElementInputFieldsInternal(dragAndDropLearningContent, parentField, assignmentField);
-    }
-
-    /// <inheritdoc cref="ILearningWorldViewModalDialogInputFieldsFactory.GetCreateLearningElementInputFields"/>
-    public IEnumerable<ModalDialogInputField> GetCreateLearningElementInputFields(LearningContentViewModel? dragAndDropLearningContent,
-        IEnumerable<ILearningSpaceViewModel> learningSpaces, string worldName)
-    {
-        var parentField = GetParentDropdownInputField();
-        var assignmentField = GetAssignmentDropdownInputField(learningSpaces, worldName);
-        
-        return GetCreateLearningElementInputFieldsInternal(dragAndDropLearningContent, parentField, assignmentField);
-    }
-
-    /// <summary>
-    /// Gets the input fields for the modal dialog.
-    /// </summary>
-    /// <param name="dragAndDropLearningContent">Possibly drag-and-dropped learning content.</param>
-    /// <param name="parentField">Dropdown input field of the element-parent.</param>
-    /// <param name="assignmentField">Dropdown input field of the parent-assignment.</param>
-    /// <returns>The input fields for the modal dialog.</returns>
-    private IEnumerable<ModalDialogInputField> GetCreateLearningElementInputFieldsInternal(LearningContentViewModel? dragAndDropLearningContent,
-        ModalDialogDropdownInputField parentField, ModalDialogDropdownInputField assignmentField)
+    public IEnumerable<ModalDialogInputField> GetCreateLearningElementInputFields(LearningContentViewModel? dragAndDropLearningContent)
     {
         ModalDialogDropdownInputField typeField;
         ModalDialogDropdownInputField contentField;
@@ -62,7 +23,7 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
             contentField = GetDefaultContentDropdownInputField();
         }
 
-        return BuildModalDialogCreateElementInputFields(parentField, assignmentField, typeField, contentField);
+        return BuildModalDialogCreateElementInputFields(typeField, contentField);
     }
 
     /// <inheritdoc cref="ILearningWorldViewModalDialogInputFieldsFactory.GetCreateLearningSpaceInputFields"/>
@@ -77,15 +38,16 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
             new("Required Points", ModalDialogInputType.Number)
         };
 
-    /// <inheritdoc cref="GetEditLearningSpaceInputFields"/>
+    /// <inheritdoc cref="ILearningWorldViewModalDialogInputFieldsFactory.GetEditLearningSpaceInputFields"/>
     public IEnumerable<ModalDialogInputField> GetEditLearningSpaceInputFields() => GetCreateLearningSpaceInputFields();
 
-    /// <inheritdoc cref="GetEditLearningElementInputFields"/>
+    /// <inheritdoc cref="ILearningSpaceViewModalDialogInputFieldsFactory.GetEditLearningElementInputFields"/>
     public IEnumerable<ModalDialogInputField> GetEditLearningElementInputFields() =>
         new ModalDialogInputField[]
         {
             new("Name", ModalDialogInputType.Text, true),
             new("Shortname", ModalDialogInputType.Text, true),
+            new("Url", ModalDialogInputType.Text),
             new("Authors", ModalDialogInputType.Text),
             new("Description", ModalDialogInputType.Text, true),
             new("Goals", ModalDialogInputType.Text),
@@ -105,22 +67,18 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
     /// <summary>
     /// Builds modal dialog from input fields.
     /// </summary>
-    /// <param name="parentField">Dropdown input field of the element-parent.</param>
-    /// <param name="assignmentField">Dropdown input field of the parent-assignment.</param>
     /// <param name="typeField">Dropdown input field of the element type.</param>
     /// <param name="contentField">Dropdown input field of the content type.</param>
     /// <returns>IEnumerable of modal dialog input fields.</returns>
     private IEnumerable<ModalDialogInputField> BuildModalDialogCreateElementInputFields(
-        ModalDialogDropdownInputField parentField, ModalDialogDropdownInputField assignmentField,
         ModalDialogDropdownInputField typeField, ModalDialogDropdownInputField contentField) =>
         new ModalDialogInputField[]
         {
             new("Name", ModalDialogInputType.Text, true),
             new("Shortname", ModalDialogInputType.Text, true),
-            parentField,
-            assignmentField,
             typeField,
             contentField,
+            new("Url", ModalDialogInputType.Text),
             new("Authors", ModalDialogInputType.Text),
             new("Description", ModalDialogInputType.Text, true),
             new("Goals", ModalDialogInputType.Text),
@@ -135,37 +93,6 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
             new("Workload (min)", ModalDialogInputType.Number),
             new("Points", ModalDialogInputType.Number)
         };
-
-    /// <summary>
-    /// Gets dropdown input field of the element-parent.
-    /// </summary>
-    /// <returns>Modal dialog input field of the element-parent.</returns>
-    private ModalDialogDropdownInputField GetParentDropdownInputField() =>
-        new ("Parent",
-            new[]
-            {
-                new ModalDialogDropdownInputFieldChoiceMapping(null,
-                    new[] {ElementParentEnum.World.ToString(), ElementParentEnum.Space.ToString()})
-            }, true);
-
-    /// <summary>
-    /// Gets dropdown input field of the parent-assignment.
-    /// </summary>
-    /// <param name="learningSpaces">LearningSpaces that already exist in the learning world.</param>
-    /// <param name="worldName">Name of the learning world.</param>
-    /// <returns>Modal dialog input field of the parent-assignment.</returns>
-    private ModalDialogDropdownInputField GetAssignmentDropdownInputField(
-        IEnumerable<ILearningSpaceViewModel> learningSpaces, string worldName) =>
-        new ("Assignment",
-            new[]
-            {
-                new ModalDialogDropdownInputFieldChoiceMapping(
-                    new Dictionary<string, string> {{"Parent", ElementParentEnum.Space.ToString()}},
-                    learningSpaces.Select(space => space.Name)),
-                new ModalDialogDropdownInputFieldChoiceMapping(
-                    new Dictionary<string, string> {{"Parent", ElementParentEnum.World.ToString()}},
-                    new[] {worldName})
-            }, true);
 
 
     /// <summary>
@@ -193,9 +120,9 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
             "php" => ContentTypeEnum.Text, 
             "html" => ContentTypeEnum.Text, 
             "css" => ContentTypeEnum.Text,
-            "mp4" => ContentTypeEnum.Video,
+            //"mp4" => ContentTypeEnum.Video,
             "h5p" => ContentTypeEnum.H5P,
-            "pdf" => ContentTypeEnum.Pdf,
+            "pdf" => ContentTypeEnum.PDF,
             _ => throw new Exception(
                 $"Can not map the file extension '{dragAndDropLearningContent.Type}' to a ContentType ")
         };
@@ -228,7 +155,7 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
                     new ModalDialogDropdownInputFieldChoiceMapping(null,
                         new[] { ElementTypeEnum.Transfer.ToString(), ElementTypeEnum.Activation.ToString() })
                 }, true),
-            ContentTypeEnum.Pdf => new ModalDialogDropdownInputField("Type",
+            ContentTypeEnum.PDF => new ModalDialogDropdownInputField("Type",
                 new[]
                 {
                     new ModalDialogDropdownInputFieldChoiceMapping(null,
@@ -282,12 +209,12 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
                         new Dictionary<string, string> { { "Type", ElementTypeEnum.Activation.ToString() } },
                         new[] { ContentTypeEnum.Video.ToString() })
                 }, true),
-            ContentTypeEnum.Pdf => new ModalDialogDropdownInputField("Content",
+            ContentTypeEnum.PDF => new ModalDialogDropdownInputField("Content",
                 new[]
                 {
                     new ModalDialogDropdownInputFieldChoiceMapping(
                         new Dictionary<string, string> { { "Type", ElementTypeEnum.Transfer.ToString() } },
-                        new[] { ContentTypeEnum.Pdf.ToString() })
+                        new[] { ContentTypeEnum.PDF.ToString() })
                 }, true),
             ContentTypeEnum.H5P => new ModalDialogDropdownInputField("Content",
                 new[]
@@ -335,7 +262,7 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
                     new[]
                     {
                         ContentTypeEnum.Image.ToString(), ContentTypeEnum.Text.ToString(),
-                        ContentTypeEnum.Video.ToString(), ContentTypeEnum.Pdf.ToString()
+                        ContentTypeEnum.Video.ToString(), ContentTypeEnum.PDF.ToString()
                     }),
                 new ModalDialogDropdownInputFieldChoiceMapping(
                     new Dictionary<string, string> { { "Type", ElementTypeEnum.Activation.ToString() } },

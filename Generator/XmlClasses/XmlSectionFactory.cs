@@ -7,7 +7,7 @@ using Generator.XmlClasses.Entities._sections.Section.xml;
 
 namespace Generator.XmlClasses;
 
-public class XmlSectionFactory
+public class XmlSectionFactory : IXmlSectionFactory
 {
 
     public ISectionsSectionXmlSection SectionsSectionXmlSection;
@@ -29,14 +29,14 @@ public class XmlSectionFactory
 
     public void CreateSectionFactory()
     {
-        LearningSpaceJsons = ReadDsl.GetLearningSpaceList();
+        LearningSpaceJsons = ReadDsl.GetSectionList();
         
         //Add A Section for every LearningSpace
         foreach (var space in LearningSpaceJsons)
         {
             CreateSectionsFolder(space.SpaceId.ToString());
             CreateSectionInforefXml( space.SpaceId.ToString() );
-            CreateSectionSectionXml( space.SpaceId.ToString(),  space.Identifier.Value, "Summary will follow");
+            CreateSectionSectionXml( space.SpaceId.ToString(),  space.Identifier.Value, "");
         }
 
     }

@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.LearningContent;
-using Presentation.PresentationLogic.LearningSpace;
 
 namespace Presentation.PresentationLogic.ModalDialog;
 
@@ -21,21 +20,10 @@ public class ModalDialogFactory : ILearningSpaceViewModalDialogFactory, ILearnin
     private ILearningWorldViewModalDialogInputFieldsFactory WorldViewInputFieldsFactory { get; }
 
     /// <inheritdoc cref="ILearningSpaceViewModalDialogFactory.GetCreateLearningElementFragment"/>
-    RenderFragment ILearningSpaceViewModalDialogFactory.GetCreateLearningElementFragment(
-        LearningContentViewModel? dragAndDropLearningContent, ModalDialogOnClose onCloseCallback, string spaceName)
+    public RenderFragment GetCreateLearningElementFragment(
+        LearningContentViewModel? dragAndDropLearningContent, ModalDialogOnClose onCloseCallback)
     {
-        var inputFields = SpaceViewInputFieldsFactory.GetCreateLearningElementInputFields(dragAndDropLearningContent, spaceName);
-        const string title = "Create new learning element";
-        const string text = "Please enter the required data for the learning element below:";
-        const ModalDialogType dialogType = ModalDialogType.OkCancel;
-        return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType, inputFields);
-    }
-    
-    /// <inheritdoc cref="ILearningWorldViewModalDialogFactory.GetCreateLearningElementFragment"/>
-    RenderFragment ILearningWorldViewModalDialogFactory.GetCreateLearningElementFragment(LearningContentViewModel? dragAndDropLearningContent,
-        IEnumerable<ILearningSpaceViewModel> learningSpaces, string worldName, ModalDialogOnClose onCloseCallback)
-    {
-        var inputFields = WorldViewInputFieldsFactory.GetCreateLearningElementInputFields(dragAndDropLearningContent, learningSpaces, worldName);
+        var inputFields = SpaceViewInputFieldsFactory.GetCreateLearningElementInputFields(dragAndDropLearningContent);
         const string title = "Create new learning element";
         const string text = "Please enter the required data for the learning element below:";
         const ModalDialogType dialogType = ModalDialogType.OkCancel;
@@ -53,7 +41,7 @@ public class ModalDialogFactory : ILearningSpaceViewModalDialogFactory, ILearnin
     }
 
     /// <inheritdoc cref="ILearningSpaceViewModalDialogFactory.GetEditLearningSpaceFragment"/>
-    RenderFragment ILearningSpaceViewModalDialogFactory.GetEditLearningSpaceFragment(IDictionary<string, string> initialInputValues, ModalDialogOnClose onCloseCallback, IDictionary<string, string>? annotations = null)
+    public RenderFragment GetEditLearningSpaceFragment(IDictionary<string, string> initialInputValues, ModalDialogOnClose onCloseCallback, IDictionary<string, string>? annotations = null)
     {
         var inputFields = SpaceViewInputFieldsFactory.GetEditLearningSpaceInputFields();
         const string title = "Edit existing learning space";
@@ -75,20 +63,9 @@ public class ModalDialogFactory : ILearningSpaceViewModalDialogFactory, ILearnin
     }
 
     /// <inheritdoc cref="ILearningSpaceViewModalDialogFactory.GetEditLearningElementFragment"/>
-    RenderFragment ILearningSpaceViewModalDialogFactory.GetEditLearningElementFragment(IDictionary<string, string> initialInputValues, ModalDialogOnClose onCloseCallback)
+    public RenderFragment GetEditLearningElementFragment(IDictionary<string, string> initialInputValues, ModalDialogOnClose onCloseCallback)
     {
         var inputFields = SpaceViewInputFieldsFactory.GetEditLearningElementInputFields();
-        const string title = "Edit existing learning element";
-        const string text = "Please enter the required data for the learning element below:";
-        const ModalDialogType dialogType = ModalDialogType.OkCancel;
-        return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType, inputFields,
-            initialInputValues);
-    }
-    
-    /// <inheritdoc cref="ILearningWorldViewModalDialogFactory.GetEditLearningElementFragment"/>
-    RenderFragment ILearningWorldViewModalDialogFactory.GetEditLearningElementFragment(IDictionary<string, string> initialInputValues, ModalDialogOnClose onCloseCallback)
-    {
-        var inputFields = WorldViewInputFieldsFactory.GetEditLearningElementInputFields();
         const string title = "Edit existing learning element";
         const string text = "Please enter the required data for the learning element below:";
         const ModalDialogType dialogType = ModalDialogType.OkCancel;

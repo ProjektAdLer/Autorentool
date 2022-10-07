@@ -15,8 +15,7 @@ namespace PersistEntities;
 public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
 {
     public LearningWorldPe(string name, string shortname, string authors, string language, string description,
-        string goals, List<LearningElementPe>? learningElements = null,
-        List<LearningSpacePe>? learningSpaces = null)
+        string goals, List<LearningSpacePe>? learningSpaces = null)
     {
         Name = name;
         Shortname = shortname;
@@ -24,7 +23,6 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         Language = language;
         Description = description;
         Goals = goals;
-        LearningElements = learningElements ?? new List<LearningElementPe>();
         LearningSpaces = learningSpaces ?? new List<LearningSpacePe>();
     }
 
@@ -39,12 +37,9 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         Language = "";
         Description = "";
         Goals = "";
-        LearningElements = new List<LearningElementPe>();
         LearningSpaces = new List<LearningSpacePe>();
     }
 
-    [DataMember]
-    public List<LearningElementPe> LearningElements { get; set; }
     [DataMember]
     public List<LearningSpacePe> LearningSpaces { get; set; }
     [DataMember]

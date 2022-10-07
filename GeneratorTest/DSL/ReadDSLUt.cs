@@ -24,9 +24,9 @@ public class ReadDslUt
    
         var identifierLearningElementJson2 = new IdentifierJson("name", "DSL Dokument");
 
-        var learningElementValueJson1 = new LearningElementValueJson("text", "Hello World");
+        var learningElementValueJson1 = new LearningElementValueJson("points", 0);
 
-        var learningElementValueJson2 = new LearningElementValueJson("text", "Hello Space");
+        var learningElementValueJson2 = new LearningElementValueJson("points", 0);
 
         var learningElementValueList1 = new List<LearningElementValueJson>(){learningElementValueJson1};
         var learningElementValueList2 = new List<LearningElementValueJson>(){learningElementValueJson2};
@@ -37,20 +37,26 @@ public class ReadDslUt
         var topicsList = new List<TopicJson>(){topicsJson};
 
         var learningSpacesJson1 = new LearningSpaceJson(1, identifierLearningSpaceJson1, 
-            new List<int> {1, 2});
+            new List<int> {1, 2}, 0, 0);
  
         var learningSpacesJson2 = new LearningSpaceJson(2, identifierLearningSpaceJson2, 
-            new List<int>());
+            new List<int>(), 0, 0);
 
         var learningSpacesList = new List<LearningSpaceJson>(){learningSpacesJson1, learningSpacesJson2};
 
         var learningElementJson1 = new LearningElementJson(1,
-            identifierLearningElementJson1, "h5p",0, learningElementValueList1);
+            identifierLearningElementJson1, "", "", "h5p",1, learningElementValueList1);
         
         var learningElementJson2 = new LearningElementJson(2,
-            identifierLearningElementJson2, "json",0, learningElementValueList2);
+            identifierLearningElementJson2, "", "", "json",1, learningElementValueList2);
+        
+        var learningElementJson3 = new LearningElementJson(3,
+            identifierLearningElementJson2, "", "", "url",1, learningElementValueList2);
+        
+        var learningElementJson4 = new LearningElementJson(4,
+            identifierLearningElementJson2, "", "", "label",1, learningElementValueList2);
 
-        var learningElementList = new List<LearningElementJson>(){learningElementJson1, learningElementJson2};
+        var learningElementList = new List<LearningElementJson>(){learningElementJson1, learningElementJson2, learningElementJson3, learningElementJson4};
         
         var learningWorldJson = new LearningWorldJson("uuid", identifierLearningWorldJson, learningWorldContentJson, topicsList, learningSpacesList, learningElementList);
 
@@ -61,13 +67,15 @@ public class ReadDslUt
         var systemUnderTest = new ReadDsl(mockFileSystem);
         systemUnderTest.ReadLearningWorld("dslPath", rootJson);
 
-        var listSpace = systemUnderTest.GetLearningSpaceList();
+        var listSpace = systemUnderTest.GetSectionList();
         var resourceList = systemUnderTest.GetResourceList();
 
         //Assert
         var getLearningWorldJson = systemUnderTest.GetLearningWorld();
         var getH5PElementsList = systemUnderTest.GetH5PElementsList();
         var getSpacesAndElementsList = systemUnderTest.GetSpacesAndElementsOrderedList();
+        var getLabelsList = systemUnderTest.GetLabelsList();
+        var getUrlList = systemUnderTest.GetUrlList();
 
         Assert.Multiple(() =>
         {
@@ -83,9 +91,13 @@ public class ReadDslUt
             
             //Spaces + Elements 
             Assert.That(getSpacesAndElementsList, Has.Count.EqualTo(4));
+            Assert.That(getLabelsList, Has.Count.EqualTo(1));
             
             //Because there are no Topics in the AuthoringTool, every learning space is added to Topic 0
             Assert.That(listSpace.Count, Is.EqualTo(1));
+            
+            //Currently all elements with Element-Type "mp4" are added to the list of Urls
+            Assert.That(getUrlList, Has.Count.EqualTo(1));
         });
     }
 

@@ -7,28 +7,40 @@ public class LoadLearningElement : IUndoCommand
 {
     private readonly IBusinessLogic _businessLogic;
     
-    internal ILearningElementParent ElementParent { get; }
+    internal LearningSpace ParentSpace { get; }
     private LearningElement? _learningElement;
     private readonly string _filepath;
-    private readonly Action<ILearningElementParent> _mappingAction;
+    private readonly Action<LearningSpace> _mappingAction;
     private IMemento? _memento;
     
-    public LoadLearningElement(ILearningElementParent elementParent, string filepath, IBusinessLogic businessLogic, 
-        Action<ILearningElementParent> mappingAction)
+    public LoadLearningElement(LearningSpace parentSpace, string filepath, IBusinessLogic businessLogic, 
+        Action<LearningSpace> mappingAction)
     {
-        ElementParent = elementParent;
+        ParentSpace = parentSpace;
         _filepath = filepath;
         _businessLogic = businessLogic;
         _mappingAction = mappingAction;
     }
+    
+    public LoadLearningElement(LearningSpace parentSpace, Stream stream, IBusinessLogic businessLogic,
+        Action<LearningSpace> mappingAction)
+    {
+        ParentSpace = parentSpace;
+        _filepath = "";
+        _businessLogic = businessLogic;
+        _learningElement = _businessLogic.LoadLearningElement(stream);
+        _mappingAction = mappingAction;
+    }
     public void Execute()
     {
-        _memento = ElementParent.GetMemento();
+        _memento = ParentSpace.GetMemento();
         
         _learningElement ??= _businessLogic.LoadLearningElement(_filepath);
-        ElementParent.LearningElements.Add(_learningElement);
+        _learningElement.Parent = ParentSpace;
+        ParentSpace.LearningElements.Add(_learningElement);
+        ParentSpace.SelectedLearningElement = _learningElement;
         
-        _mappingAction.Invoke(ElementParent);
+        _mappingAction.Invoke(ParentSpace);
     }
 
     public void Undo()
@@ -38,9 +50,9 @@ public class LoadLearningElement : IUndoCommand
             throw new InvalidOperationException("_memento is null");
         }
         
-        ElementParent.RestoreMemento(_memento);
+        ParentSpace.RestoreMemento(_memento);
         
-        _mappingAction.Invoke(ElementParent);
+        _mappingAction.Invoke(ParentSpace);
     }
 
     public void Redo() => Execute();

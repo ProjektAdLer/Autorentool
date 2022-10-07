@@ -22,24 +22,22 @@ else
     <h5>Points: @LearningWorldP.LearningWorldVm?.Points </h5>
     <button class="btn btn-primary add-learning-space" @onclick="AddNewLearningSpace">Add Learning Space</button>
     <button class="btn btn-primary load-learning-space" @onclick="LoadLearningSpaceAsync">Load Learning Space</button>
-    <button class="btn btn-primary add-learning-element" @onclick="AddNewLearningElement">Add Learning Element</button>
-    <button class="btn btn-primary load-learning-element" @onclick="LoadLearningElementAsync">Load Learning Element</button>
     <br>
 
-    @if (LearningWorldP.LearningWorldVm?.SelectedLearningObject != null)
+    @if (LearningWorldP.LearningWorldVm?.SelectedLearningSpace != null)
     {
         <label>
             Selected element:
             <text>
-                @LearningWorldP.LearningWorldVm.SelectedLearningObject.Name
+                @LearningWorldP.LearningWorldVm.SelectedLearningSpace.Name
                 , Description:
-                @LearningWorldP.LearningWorldVm.SelectedLearningObject.Description
+                @LearningWorldP.LearningWorldVm.SelectedLearningSpace.Description
             </text>
         </label>
         <br>
-        <button class="btn btn-primary edit-learning-object" @onclick="EditLearningObject">Edit selected Learning Object</button>
-        <button class="btn btn-primary delete-learning-object" @onclick="DeleteSelectedLearningObject">Delete Learning Object</button>
-        <button class="btn btn-primary save-learning-object" @onclick="SaveSelectedLearningObjectAsync">Save selected Learning Object</button>
+        <button class="btn btn-primary edit-learning-space" @onclick="EditLearningSpace">Edit selected Learning Space</button>
+        <button class="btn btn-primary delete-learning-space" @onclick="DeleteSelectedLearningSpace">Delete Learning Space</button>
+        <button class="btn btn-primary save-learning-space" @onclick="SaveSelectedLearningSpaceAsync">Save selected Learning Space</button>
         <button class="btn btn-primary show-learning-space" @onclick="ShowSelectedLearningSpaceView"
                 hidden="@(!LearningWorldP.SelectedLearningObjectIsSpace)">Open selected Learning Space</button>
     }
@@ -50,19 +48,10 @@ else
              @onmouseleave=@(e => MouseService.FireOut(this, e))>
         @if (LearningWorldP.LearningWorldVm != null)
         {
-            @foreach (var learningObject in LearningWorldP.LearningWorldVm.LearningObjects)
+            @foreach (var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
             {
-                @switch (learningObject)
-                {
-                    case ILearningElementViewModel learningElementViewModel:
-                        <DraggableLearningElement LearningElement="learningElementViewModel"
-                                                  OnClicked="@LearningWorldP.SetSelectedLearningObject"/>
-                        break;
-                    case ILearningSpaceViewModel learningSpaceViewModel:
-                        <DraggableLearningSpace LearningSpace="learningSpaceViewModel"
-                                                OnClicked="@LearningWorldP.SetSelectedLearningObject"/>
-                        break;
-                }
+                <DraggableLearningSpace LearningSpace="learningSpace"
+                                        OnClicked="@LearningWorldP.SetSelectedLearningSpace"/>
             }
         }
     </svg>
@@ -72,26 +61,11 @@ else
         @ModalDialogFactory.GetCreateLearningSpaceFragment(OnCreateSpaceDialogClose)
     }
     
-    //create element modal
-    @if (LearningWorldP.CreateLearningElementDialogOpen)
-    {
-        <!-- LearningWorld can't be null at this point - n.stich -->
-        @ModalDialogFactory.GetCreateLearningElementFragment(LearningWorldP.DragAndDropLearningContent,
-            LearningWorldP.LearningWorldVm!.LearningSpaces, LearningWorldP.LearningWorldVm.Name, OnCreateElementDialogClose)
-    }
-    
     //edit space modal
     @if (LearningWorldP.EditLearningSpaceDialogOpen && LearningWorldP.LearningWorldVm != null)
     {
         <!-- EditSpaceDialogInitialValues is set by presenter before setting EditLearningSpaceDialogOpen to true -->
         @ModalDialogFactory.GetEditLearningSpaceFragment(LearningWorldP.EditSpaceDialogInitialValues!, OnEditSpaceDialogClose, LearningWorldP.EditSpaceDialogAnnotations)
-    }
-
-    //edit element modal
-    @if (LearningWorldP.EditLearningElementDialogOpen && LearningWorldP.LearningWorldVm != null)
-    {
-        <!-- EditElementDialogInitialValues is set by presenter before setting EditLearningElementDialogOpen to true -->
-        @ModalDialogFactory.GetEditLearningElementFragment(LearningWorldP.EditElementDialogInitialValues!, OnEditElementDialogClose)
     }
 
     @if (ErrorState != null)
@@ -132,14 +106,9 @@ else
         LearningWorldP.AddNewLearningSpace();
     }
 
-    private void AddNewLearningElement()
+    private void DeleteSelectedLearningSpace()
     {
-        LearningWorldP.AddNewLearningElement();
-    }
-
-    private void DeleteSelectedLearningObject()
-    {
-        LearningWorldP.DeleteSelectedLearningObject();
+        LearningWorldP.DeleteSelectedLearningSpace();
     }
 
     private async Task LoadLearningSpaceAsync()
@@ -158,16 +127,16 @@ else
         }
         finally
         {
-    //we need to tell blazor explicitly to re-render our component after we added the loaded learning object
+    //we need to tell blazor explicitly to re-render our component after we added the loaded learning space
             StateHasChanged();
         }
     }
 
-    private async Task LoadLearningElementAsync()
+    private async Task SaveSelectedLearningSpaceAsync()
     {
         try
         {
-            await LearningWorldP.LoadLearningElementAsync();
+            await LearningWorldP.SaveSelectedLearningSpaceAsync();
         }
         catch (OperationCanceledException)
         {
@@ -175,32 +144,11 @@ else
         }
         catch (Exception exception)
         {
-            ErrorState = new ExceptionWrapper("Load learning element", exception);
+            ErrorState = new ExceptionWrapper("Save learning space", exception);
         }
         finally
         {
-    //we need to tell blazor explicitly to re-render our component after we added the loaded learning object
-            StateHasChanged();
-        }
-    }
-
-    private async Task SaveSelectedLearningObjectAsync()
-    {
-        try
-        {
-            await LearningWorldP.SaveSelectedLearningObjectAsync();
-        }
-        catch (OperationCanceledException)
-        {
-    //nothing to do, show notification?
-        }
-        catch (Exception exception)
-        {
-            ErrorState = new ExceptionWrapper("Save learning object", exception);
-        }
-        finally
-        {
-    //we need to tell blazor explicitly to re-render our component after we added the loaded learning object
+    //we need to tell blazor explicitly to re-render our component after we added the loaded learning space
             StateHasChanged();
         }
     }
@@ -211,26 +159,14 @@ else
         InvokeAsync(StateHasChanged);
     }
 
-    private void OnCreateElementDialogClose(ModalDialogOnCloseResult returnValueTuple)
+    private void EditLearningSpace()
     {
-        LearningWorldP.OnCreateElementDialogClose(returnValueTuple);
-        InvokeAsync(StateHasChanged);
-    }
-
-    private void EditLearningObject()
-    {
-        LearningWorldP.OpenEditSelectedLearningObjectDialog();
+        LearningWorldP.OpenEditSelectedLearningSpaceDialog();
     }
 
     private void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
         LearningWorldP.OnEditSpaceDialogClose(returnValueTuple);
-        InvokeAsync(StateHasChanged);
-    }
-
-    private void OnEditElementDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        LearningWorldP.OnEditElementDialogClose(returnValueTuple);
         InvokeAsync(StateHasChanged);
     }
 

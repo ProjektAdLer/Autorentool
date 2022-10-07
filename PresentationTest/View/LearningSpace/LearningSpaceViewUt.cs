@@ -98,8 +98,8 @@ public class LearningSpaceViewUt
     public void Render_LearningObjectSelected_RendersLearningObjectSection()
     {
         var learningSpace = Substitute.For<ILearningSpaceViewModel>();
-        var learningObject = Substitute.For<ILearningObjectViewModel>();
-        learningSpace.SelectedLearningObject.Returns(learningObject);
+        var learningObject = Substitute.For<ILearningElementViewModel>();
+        learningSpace.SelectedLearningElement.Returns(learningObject);
         learningObject.Name.Returns("my secret name");
         learningObject.Description.Returns("a super long description");
         _learningSpacePresenter.LearningSpaceVm.Returns(learningSpace);
@@ -107,14 +107,14 @@ public class LearningSpaceViewUt
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
         var label = systemUnderTest.FindOrFail("label");
-        var editButton = systemUnderTest.FindOrFail("button.btn.btn-primary.edit-learning-object");
-        var deleteButton = systemUnderTest.FindOrFail("button.btn.btn-primary.delete-learning-object");
-        var saveButton = systemUnderTest.FindOrFail("button.btn.btn-primary.save-learning-object");
+        var editButton = systemUnderTest.FindOrFail("button.btn.btn-primary.edit-learning-element");
+        var deleteButton = systemUnderTest.FindOrFail("button.btn.btn-primary.delete-learning-element");
+        var saveButton = systemUnderTest.FindOrFail("button.btn.btn-primary.save-learning-element");
         
-        label.MarkupMatches(@"<label id=""learning-object-info"">Selected element: my secret name, Description: a super long description</label>");
-        editButton.MarkupMatches(@"<button class=""btn btn-primary edit-learning-object"">Edit selected Learning Object</button>");
-        deleteButton.MarkupMatches(@"<button class=""btn btn-primary delete-learning-object"">Delete Learning Object</button>");
-        saveButton.MarkupMatches(@"<button class=""btn btn-primary save-learning-object"">Save selected Learning Object</button>");
+        label.MarkupMatches(@"<label id=""learning-element-info"">Selected element: my secret name, Description: a super long description</label>");
+        editButton.MarkupMatches(@"<button class=""btn btn-primary edit-learning-element"">Edit selected Learning Element</button>");
+        deleteButton.MarkupMatches(@"<button class=""btn btn-primary delete-learning-element"">Delete Learning Element</button>");
+        saveButton.MarkupMatches(@"<button class=""btn btn-primary save-learning-element"">Save selected Learning Element</button>");
     }
 
     [Test]
@@ -274,7 +274,7 @@ public class LearningSpaceViewUt
 
         ModalDialogOnClose? callback = null;
         _modalDialogFactory
-            .GetCreateLearningElementFragment(contentMock, Arg.Any<ModalDialogOnClose>(), space.Name)
+            .GetCreateLearningElementFragment(contentMock, Arg.Any<ModalDialogOnClose>())
             .Returns(fragment)
             .AndDoes(ci =>
             {
@@ -283,7 +283,7 @@ public class LearningSpaceViewUt
 
         var systemUnderTest = GetLearningSpaceViewForTesting();
         
-        _modalDialogFactory.Received().GetCreateLearningElementFragment(contentMock, Arg.Any<ModalDialogOnClose>(), space.Name);
+        _modalDialogFactory.Received().GetCreateLearningElementFragment(contentMock, Arg.Any<ModalDialogOnClose>());
         var p = systemUnderTest.FindOrFail("p");
         p.MarkupMatches("<p>foobar</p>");
         
@@ -370,13 +370,13 @@ public class LearningSpaceViewUt
     public void EditObjectButton_Clicked_CallsEditSelectedLearningObject()
     {
         var space = Substitute.For<ILearningSpaceViewModel>();
-        space.SelectedLearningObject.Returns(Substitute.For<ILearningObjectViewModel>());
+        space.SelectedLearningElement.Returns(Substitute.For<ILearningElementViewModel>());
         _learningSpacePresenter.LearningSpaceVm.Returns(space);
         var systemUnderTest = GetLearningSpaceViewForTesting();
         
-        var button = systemUnderTest.FindOrFail("button.btn.btn-primary.edit-learning-object");
+        var button = systemUnderTest.FindOrFail("button.btn.btn-primary.edit-learning-element");
         button.Click();
-        _learningSpacePresenter.Received().EditSelectedLearningObject();
+        _learningSpacePresenter.Received().EditSelectedLearningElement();
         
     }
     
@@ -384,13 +384,13 @@ public class LearningSpaceViewUt
     public void DeleteObjectButton_Clicked_CallsDeleteSelectedLearningObject()
     {
         var space = Substitute.For<ILearningSpaceViewModel>();
-        space.SelectedLearningObject.Returns(Substitute.For<ILearningObjectViewModel>());
+        space.SelectedLearningElement.Returns(Substitute.For<ILearningElementViewModel>());
         _learningSpacePresenter.LearningSpaceVm.Returns(space);
         var systemUnderTest = GetLearningSpaceViewForTesting();
         
-        var button = systemUnderTest.FindOrFail("button.btn.btn-primary.delete-learning-object");
+        var button = systemUnderTest.FindOrFail("button.btn.btn-primary.delete-learning-element");
         button.Click();
-        _learningSpacePresenter.Received().DeleteSelectedLearningObject();
+        _learningSpacePresenter.Received().DeleteSelectedLearningElement();
         
     }
 
@@ -443,32 +443,32 @@ public class LearningSpaceViewUt
     {
         var systemUnderTest = GetLearningSpaceViewForTesting();
         
-        var button = systemUnderTest.Find("button.btn.btn-primary.save-learning-object");
+        var button = systemUnderTest.Find("button.btn.btn-primary.save-learning-element");
         button.Click();
-        _learningSpacePresenter.Received().SaveSelectedLearningObjectAsync();
+        _learningSpacePresenter.Received().SaveSelectedLearningElementAsync();
     }
     
     [Test]
     public void SaveObjectButton_Clicked_OperationCanceledExceptionCaught()
     {
-        _learningSpacePresenter.SaveSelectedLearningObjectAsync().Throws(new OperationCanceledException());
+        _learningSpacePresenter.SaveSelectedLearningElementAsync().Throws(new OperationCanceledException());
         
         var systemUnderTest = GetLearningSpaceViewForTesting();
         
-        var button = systemUnderTest.Find("button.btn.btn-primary.save-learning-object");
+        var button = systemUnderTest.Find("button.btn.btn-primary.save-learning-element");
         Assert.That(() => button.Click(), Throws.Nothing);
-        _learningSpacePresenter.Received().SaveSelectedLearningObjectAsync();
+        _learningSpacePresenter.Received().SaveSelectedLearningElementAsync();
     }
     
     [Test]
     public void SaveObjectButton_Clicked_OtherExceptionsWrappedInErrorState()
     {
         var ex = new Exception();
-        _learningSpacePresenter.SaveSelectedLearningObjectAsync().Throws(ex);
+        _learningSpacePresenter.SaveSelectedLearningElementAsync().Throws(ex);
         
         var systemUnderTest = GetLearningSpaceViewForTesting();
         
-        var button = systemUnderTest.Find("button.btn.btn-primary.save-learning-object");
+        var button = systemUnderTest.Find("button.btn.btn-primary.save-learning-element");
         Assert.Multiple(() =>
         {
             Assert.That(() => button.Click(), Throws.Nothing);
@@ -476,10 +476,10 @@ public class LearningSpaceViewUt
         });
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.Instance.ErrorState!.CallSite, Is.EqualTo("Save learning object"));
+            Assert.That(systemUnderTest.Instance.ErrorState!.CallSite, Is.EqualTo("Save learning element"));
             Assert.That(systemUnderTest.Instance.ErrorState!.Exception, Is.EqualTo(ex));
         });
-        _learningSpacePresenter.Received().SaveSelectedLearningObjectAsync();
+        _learningSpacePresenter.Received().SaveSelectedLearningElementAsync();
     }
     private IRenderedComponent<LearningSpaceView> GetLearningSpaceViewForTesting(RenderFragment? childContent = null)
     {

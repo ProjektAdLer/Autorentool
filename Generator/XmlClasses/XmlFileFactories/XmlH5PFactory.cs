@@ -112,7 +112,7 @@ public class XmlH5PFactory : IXmlH5PFactory
     {
         // Get all the H5P elements that are in the DSL Document
         List<LearningElementJson> h5PElementsList = ReadDsl.GetH5PElementsList();
-        List<LearningSpaceJson> learningSpacesList = ReadDsl.GetLearningSpaceList();
+        List<LearningSpaceJson> learningSpacesList = ReadDsl.GetSectionList();
         _filesXmlFilesList = new List<FilesXmlFile>();
         _filesXmlFilesList = FileManager.GetXmlFilesList();
 

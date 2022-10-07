@@ -8,6 +8,8 @@ public class ReadDsl : IReadDsl
 {
     public List<LearningElementJson> ListH5PElements;
     public List<LearningElementJson> ListResourceElements;
+    public List<LearningElementJson> ListLabelElements;
+    public List<LearningElementJson> ListUrlElements;
     public List<LearningElementJson> ListAllSpacesAndElementsOrdered;
     private LearningWorldJson _learningWorldJson;
     private IFileSystem _fileSystem;
@@ -30,6 +32,8 @@ public class ReadDsl : IReadDsl
         _rootJson = new DocumentRootJson(_learningWorldJson);
         ListH5PElements = new List<LearningElementJson>();
         ListResourceElements = new List<LearningElementJson>();
+        ListLabelElements = new List<LearningElementJson>();
+        ListUrlElements = new List<LearningElementJson>();
         ListAllSpacesAndElementsOrdered = new List<LearningElementJson>();
     }
 
@@ -46,10 +50,13 @@ public class ReadDsl : IReadDsl
         else if (rootJsonForTest == null)
         {
              var jsonString = _fileSystem.File.ReadAllText(filepathDsl);
-             _rootJson = JsonSerializer.Deserialize<DocumentRootJson>(jsonString) ?? throw new InvalidOperationException("Could not deserialize DSL_Document");
+             var options = new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true};
+             _rootJson = JsonSerializer.Deserialize<DocumentRootJson>(jsonString, options) ?? throw new InvalidOperationException("Could not deserialize DSL_Document");
         }
         GetH5PElements(_rootJson);
         GetResourceElements(_rootJson);
+        GetLabelElements(_rootJson);
+        GetUrlElements(_rootJson);
         GetSpacesAndElementsOrdered(_rootJson);
         SetLearningWorld(_rootJson);
     }
@@ -79,7 +86,7 @@ public class ReadDsl : IReadDsl
     {
         foreach (var resource in documentRootJson.LearningWorld.LearningElements)
         {
-            if (resource.ElementType is "pdf" or "json" or "jpg" or "png" or "webp" or "bmp" or "mp4" or "txt" or "c"
+            if (resource.ElementType is "pdf" or "json" or "jpg" or "png" or "webp" or "bmp" or "txt" or "c"
                 or "h" or "cpp" or "cc" or "c++" or "py" or "cs" or "js" or "php" or "html" or "css")
             {
                 ListResourceElements.Add(resource);
@@ -87,6 +94,27 @@ public class ReadDsl : IReadDsl
         }
     }
     
+    private void GetLabelElements(DocumentRootJson documentRootJson)
+    {
+        foreach (var label in documentRootJson.LearningWorld.LearningElements)
+        {
+            if (label.ElementType is "label")
+            {
+                ListLabelElements.Add(label);
+            }
+        }
+    }
+
+    private void GetUrlElements(DocumentRootJson documentRootJson)
+    {
+        foreach (var url in documentRootJson.LearningWorld.LearningElements)
+        {
+            if (url.ElementType is "url")
+            {
+                ListUrlElements.Add(url);
+            }
+        }
+    }
 
     private void GetSpacesAndElementsOrdered(DocumentRootJson? documentRootJson)
     {
@@ -94,8 +122,8 @@ public class ReadDsl : IReadDsl
         {
             foreach (var space in documentRootJson.LearningWorld.LearningSpaces)
             {
-                List<LearningElementValueJson> values = new List<LearningElementValueJson>{new("Points", "Value Until Spaces Get Points")};
-                ListAllSpacesAndElementsOrdered.Add(new LearningElementJson(space.SpaceId+1000, space.Identifier, "space", 0, values, space.Description));
+                List<LearningElementValueJson> values = new List<LearningElementValueJson>{new("", 0)};
+                ListAllSpacesAndElementsOrdered.Add(new LearningElementJson(space.SpaceId+1000, space.Identifier, "", "space","space", 0, values, space.Description));
                 
                 foreach (int elementInSpace in space.LearningSpaceContent)
                 {
@@ -110,17 +138,27 @@ public class ReadDsl : IReadDsl
         return ListH5PElements;
     }
 
-    public List<LearningSpaceJson> GetLearningSpaceList()
+    public List<LearningSpaceJson> GetSectionList()
     {
-        var space = new LearningSpaceJson(0, new IdentifierJson("identifier", "Topic 0"), new List<int>());
-        var spaceList = new List<LearningSpaceJson>();
-        spaceList.Add(space);
+        var space = new LearningSpaceJson(0, new IdentifierJson("identifier", "Topic 0"), 
+            new List<int>(), 0 ,0 );
+        var spaceList = new List<LearningSpaceJson> {space};
         return spaceList;
     }
 
     public List<LearningElementJson> GetResourceList()
     {
         return ListResourceElements;
+    }
+    
+    public List<LearningElementJson> GetLabelsList()
+    {
+        return ListLabelElements;
+    }
+    
+    public List<LearningElementJson> GetUrlList()
+    {
+        return ListUrlElements;
     }
     
     //A List that contains all Spaces and Elements in the correct order. 

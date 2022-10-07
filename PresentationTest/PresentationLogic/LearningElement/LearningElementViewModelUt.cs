@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
-using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.LearningSpace;
 using Shared;
 
 namespace PresentationTest.PresentationLogic.LearningElement;
@@ -14,8 +14,9 @@ public class LearningElementViewModelUt
     {
         var name = "asdf";
         var shortname = "jkl;";
-        var parent = new LearningWorldViewModel("foo", "bar", "baz", "", "", "");
+        var parent = new LearningSpaceViewModel("foo", "bar", "baz", "", "", 2);
         var content = new LearningContentViewModel("bar", "foo", "");
+        var url = "url";
         var authors = "ben and jerry";
         var description = "very cool element";
         var goals = "learn very many things";
@@ -25,7 +26,7 @@ public class LearningElementViewModelUt
         var positionX = 5f;
         var positionY = 21f;
 
-        var systemUnderTest = new LearningElementViewModel(name, shortname, content, authors,
+        var systemUnderTest = new LearningElementViewModel(name, shortname, content, url, authors,
             description, goals, difficulty, parent, workload, points, positionX, positionY);
         
         Assert.Multiple(() =>
@@ -34,6 +35,7 @@ public class LearningElementViewModelUt
             Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortname));
             Assert.That(systemUnderTest.Parent, Is.EqualTo(parent));
             Assert.That(systemUnderTest.LearningContent, Is.EqualTo(content));
+            Assert.That(systemUnderTest.Url, Is.EqualTo(url));
             Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
@@ -51,7 +53,7 @@ public class LearningElementViewModelUt
     {
         const string expectedFileEnding = "aef";
         var systemUnderTest = new LearningElementViewModel("foo", "foo", null!,
-            "foo",  "foo", "foo", LearningElementDifficultyEnum.Medium);
+            "url","foo",  "foo", "foo", LearningElementDifficultyEnum.Medium);
         Assert.That(systemUnderTest.FileEnding, Is.EqualTo(expectedFileEnding));
     }
 }

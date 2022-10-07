@@ -1,5 +1,7 @@
+using System.ComponentModel;
 using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningElement;
 
 namespace Presentation.PresentationLogic.LearningSpace;
 
@@ -12,16 +14,17 @@ public interface ILearningSpacePresenter
     IDictionary<string, string>? EditLearningElementDialogInitialValues { get; }
     bool CreateLearningElementDialogOpen { get; set; }
     ILearningSpaceViewModel? LearningSpaceVm { get; }
-    void SetSelectedLearningObject(ILearningObjectViewModel learningObject);
-    void DeleteSelectedLearningObject();
+    void SetSelectedLearningElement(ILearningElementViewModel learningElement);
+    void DeleteSelectedLearningElement();
     void AddNewLearningElement();
     Task LoadLearningElementAsync();
-    Task SaveSelectedLearningObjectAsync();
+    Task SaveSelectedLearningElementAsync();
     void OnCreateElementDialogClose(ModalDialogOnCloseResult returnValueTuple);
-    void EditSelectedLearningObject();
+    void EditSelectedLearningElement();
     void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void OnEditElementDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void SetLearningSpace(ILearningSpaceViewModel space);
     void CreateLearningElementWithPreloadedContent(LearningContentViewModel learningContent);
     LearningContentViewModel? DragAndDropLearningContent { get; }
+    void OnWorldPropertyChanged(object? caller, PropertyChangedEventArgs e);
 }

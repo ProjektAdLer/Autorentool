@@ -282,7 +282,7 @@ public class XmlBackupFactory : IXmlBackupFactory
             {
                 learningElementType = "h5pactivity";
             }
-            else if (learningElementType is "pdf" or "json" or "jpg" or "png" or "bmp" or "webp" or "mp4" or "txt" or "c"
+            else if (learningElementType is "pdf" or "json" or "jpg" or "png" or "bmp" or "webp" or "txt" or "c"
                      or "h" or "cpp" or "cc" or "c++" or "py" or "cs" or "js" or "php" or "html" or "css")
             {
                 learningElementType = "resource";
@@ -290,6 +290,10 @@ public class XmlBackupFactory : IXmlBackupFactory
             else if (learningElementType is "space")
             {
                 learningElementType = "label";
+            }
+            else if (learningElementType is "mp4")
+            {
+                learningElementType = "url";
             }
 
             if (MoodleBackupXmlActivityList != null)
@@ -318,7 +322,7 @@ public class XmlBackupFactory : IXmlBackupFactory
             }
         }
         
-        foreach (var space in ReadDsl.GetLearningSpaceList())
+        foreach (var space in ReadDsl.GetSectionList())
         {
             var sectionId = space.SpaceId.ToString();
             var sectionName = space.Identifier.Value;

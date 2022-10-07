@@ -12,17 +12,17 @@
 @ChildContent
 <br>
 
-@if (LearningSpaceP.LearningSpaceVm?.SelectedLearningObject != null)
+@if (LearningSpaceP.LearningSpaceVm?.SelectedLearningElement != null)
 {
-    <label id="learning-object-info">
+    <label id="learning-element-info">
         Selected element: 
-        @LearningSpaceP.LearningSpaceVm.SelectedLearningObject.Name, 
-        Description: @LearningSpaceP.LearningSpaceVm.SelectedLearningObject.Description
+        @LearningSpaceP.LearningSpaceVm.SelectedLearningElement.Name, 
+        Description: @LearningSpaceP.LearningSpaceVm.SelectedLearningElement.Description
     </label>
     <br>
-    <button class="btn btn-primary edit-learning-object" @onclick="EditSelectedLearningObject">Edit selected Learning Object</button>
-    <button class="btn btn-primary delete-learning-object" @onclick="DeleteSelectedLearningObject">Delete Learning Object</button>
-    <button class="btn btn-primary save-learning-object" @onclick="SaveSelectedLearningObjectAsync">Save selected Learning Object</button>
+    <button class="btn btn-primary edit-learning-element" @onclick="EditSelectedLearningElement">Edit selected Learning Element</button>
+    <button class="btn btn-primary delete-learning-element" @onclick="DeleteSelectedLearningElement">Delete Learning Element</button>
+    <button class="btn btn-primary save-learning-element" @onclick="SaveSelectedLearningElementAsync">Save selected Learning Element</button>
 }
 <svg style="width: 100%; height: 600px; border: 1px solid green"
      xmlns="http://www.w3.org/2000/svg"
@@ -33,7 +33,7 @@
     {
         @foreach (var learningObject in LearningSpaceP.LearningSpaceVm.LearningElements)
         {
-            <DraggableLearningElement LearningElement="@learningObject" OnClicked="@LearningSpaceP.SetSelectedLearningObject"/>
+            <DraggableLearningElement LearningElement="@learningObject" OnClicked="@LearningSpaceP.SetSelectedLearningElement"/>
         }
     }
 </svg>
@@ -48,7 +48,7 @@
 @if (LearningSpaceP.CreateLearningElementDialogOpen)
 {
     //Override nullability because LearningSpaceVm can't be null at this point. - m.ho, n.stich
-    @ModalDialogFactory.GetCreateLearningElementFragment(LearningSpaceP.DragAndDropLearningContent, OnCreateElementDialogClose, LearningSpaceP.LearningSpaceVm!.Name)
+    @ModalDialogFactory.GetCreateLearningElementFragment(LearningSpaceP.DragAndDropLearningContent, OnCreateElementDialogClose)
 }
 
 @if (LearningSpaceP.EditLearningElementDialogOpen && LearningSpaceP.LearningSpaceVm != null)
@@ -82,9 +82,9 @@
         LearningSpaceP.AddNewLearningElement();
     }
 
-    private void DeleteSelectedLearningObject()
+    private void DeleteSelectedLearningElement()
     {
-        LearningSpaceP.DeleteSelectedLearningObject();
+        LearningSpaceP.DeleteSelectedLearningElement();
     }
 
     private async Task LoadLearningElementAsync()
@@ -103,16 +103,16 @@
         }
         finally
         {
-    //we need to tell blazor explicitly to re-render our component after we added the loaded learning object
+    //we need to tell blazor explicitly to re-render our component after we added the loaded learning element
             await InvokeAsync(StateHasChanged);
         }
     }
 
-    private async Task SaveSelectedLearningObjectAsync()
+    private async Task SaveSelectedLearningElementAsync()
     {
         try
         {
-            await LearningSpaceP.SaveSelectedLearningObjectAsync();
+            await LearningSpaceP.SaveSelectedLearningElementAsync();
         }
         catch (OperationCanceledException)
         {
@@ -120,11 +120,11 @@
         }
         catch (Exception exception)
         {
-            ErrorState = new ExceptionWrapper("Save learning object", exception);
+            ErrorState = new ExceptionWrapper("Save learning element", exception);
         }
         finally
         {
-    //we need to tell blazor explicitly to re-render our component after we added the loaded learning object
+    //we need to tell blazor explicitly to re-render our component after we added the loaded learning element
             await InvokeAsync(StateHasChanged);
         }
     }
@@ -135,9 +135,9 @@
         InvokeAsync(StateHasChanged);
     }
 
-    private void EditSelectedLearningObject()
+    private void EditSelectedLearningElement()
     {
-        LearningSpaceP.EditSelectedLearningObject();
+        LearningSpaceP.EditSelectedLearningElement();
     }
 
     private void OnEditSpaceDialogClose(ModalDialogOnCloseResult closeResult)

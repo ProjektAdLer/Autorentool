@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
-using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
-using Shared;
 using ModalDialogOnCloseResult = Presentation.Components.ModalDialog.ModalDialogOnCloseResult;
 using ModalDialogReturnValue = Presentation.Components.ModalDialog.ModalDialogReturnValue;
 
@@ -31,13 +30,10 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     private bool _editLearningSpaceDialogOpen;
     private Dictionary<string, string>? _editSpaceDialogInitialValues;
     private Dictionary<string, string>? _editSpaceDialogAnnotations;
-    private Dictionary<string, string>? _editElementDialogInitialValues;
     private bool _createLearningSpaceDialogOpen;
-    private bool _editLearningElementDialogOpen;
-    private bool _createLearningElementDialogOpen;
 
     public bool SelectedLearningObjectIsSpace =>
-        LearningWorldVm?.SelectedLearningObject?.GetType() == typeof(LearningSpaceViewModel);
+        LearningWorldVm?.SelectedLearningSpace?.GetType() == typeof(LearningSpaceViewModel);
 
     public bool ShowingLearningSpaceView => LearningWorldVm is { ShowingLearningSpaceView: true };
     
@@ -47,13 +43,15 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     public ILearningWorldViewModel? LearningWorldVm
     {
         get => _learningWorldVm;
-        private set
+        internal set
         {
             var selectedLearningObjectIsSpaceBefore = SelectedLearningObjectIsSpace;
             var showingLearningSpaceViewBefore = ShowingLearningSpaceView;
             if (!BeforeSetField(_learningWorldVm, value))
                 return;
             SetField(ref _learningWorldVm, value);
+            if (_learningWorldVm != null)
+                _learningWorldVm.PropertyChanged += _learningSpacePresenter.OnWorldPropertyChanged;
             if (SelectedLearningObjectIsSpace != selectedLearningObjectIsSpaceBefore)
                 OnPropertyChanged(nameof(SelectedLearningObjectIsSpace));
             if (ShowingLearningSpaceView != showingLearningSpaceViewBefore)
@@ -85,45 +83,26 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         private set => SetField(ref _editSpaceDialogAnnotations, value);
     }
 
-    public Dictionary<string, string>? EditElementDialogInitialValues
-    {
-        get => _editElementDialogInitialValues;
-        private set => SetField(ref _editElementDialogInitialValues, value);
-    }
-
     public bool CreateLearningSpaceDialogOpen
     {
         get => _createLearningSpaceDialogOpen;
         private set => SetField(ref _createLearningSpaceDialogOpen, value);
     }
 
-    public bool EditLearningElementDialogOpen
-    {
-        get => _editLearningElementDialogOpen;
-        private set => SetField(ref _editLearningElementDialogOpen, value);
-    }
-
-    public bool CreateLearningElementDialogOpen
-    {
-        get => _createLearningElementDialogOpen;
-        private set => SetField(ref _createLearningElementDialogOpen, value);
-    }
-    
     public void AddNewLearningSpace()
     {
         CreateLearningSpaceDialogOpen = true;
     }
 
-    public void AddNewLearningElement()
+    public void OnWorkspacePropertyChanged(object? caller, PropertyChangedEventArgs e)
     {
-        CreateLearningElementDialogOpen = true;
-    }
-
-
-    public void SetLearningWorld(object? caller, LearningWorldViewModel? world)
-    {
-        LearningWorldVm = world;
-        if (LearningWorldVm != null) LearningWorldVm.ShowingLearningSpaceView = false;
+        if (e.PropertyName == nameof(AuthoringToolWorkspaceViewModel.SelectedLearningWorld))
+        {
+            if (caller is not IAuthoringToolWorkspaceViewModel workspaceVm)
+                throw new ArgumentException("Caller must be of type IAuthoringToolWorkspaceViewModel");
+        
+            LearningWorldVm = workspaceVm.SelectedLearningWorld;
+        }
     }
 
     public void ShowSelectedLearningSpaceView()
@@ -154,17 +133,19 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         _presentationLogic.CreateLearningSpace(LearningWorldVm, name, shortname, authors, description, goals, requiredPoints);
-        var learningSpace = LearningWorldVm.LearningSpaces.Last();
-        SetSelectedLearningObject(learningSpace);
+        //TODO: Return error in the command in case of failure
     }
 
     /// <summary>
     /// Sets the initial values for the <see cref="ModalDialog"/> with the current values from the selected LearningSpace.
     /// </summary>
-    /// <exception cref="ApplicationException">Thrown if SelectedLearningObject is not a LearningSpace. Shouldn't occur, because this is checked in <see cref="OpenEditSelectedLearningObjectDialog"/></exception>
-    private void OpenEditSelectedLearningSpaceDialog()
+    public void OpenEditSelectedLearningSpaceDialog()
     {
-        var space = (LearningSpaceViewModel) LearningWorldVm?.SelectedLearningObject!;
+        if(_learningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        if (_learningWorldVm.SelectedLearningSpace == null)
+            return;
+        var space = (LearningSpaceViewModel) LearningWorldVm?.SelectedLearningSpace!;
         //prepare dictionary property to pass to dialog
         EditSpaceDialogInitialValues = new Dictionary<string, string>
         {
@@ -182,7 +163,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         EditLearningSpaceDialogOpen = true;
     }
     
-    /// <inheritdoc cref="ILearningWorldPresenter.AddLearningSpace"/>
+    /// <inheritdoc cref="ILearningWorldPresenterToolboxInterface.AddLearningSpace"/>
     public void AddLearningSpace(ILearningSpaceViewModel learningSpace)
     {
         if (LearningWorldVm == null)
@@ -199,8 +180,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         await _presentationLogic.LoadLearningSpaceAsync(LearningWorldVm);
-        var learningSpace = LearningWorldVm.LearningSpaces.Last();
-        SetSelectedLearningObject(learningSpace);
     }
 
     /// <summary>
@@ -264,245 +243,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
 
         if (LearningWorldVm == null)
             throw new ApplicationException("LearningWorld is null");
-        if (LearningWorldVm.SelectedLearningObject is not LearningSpaceViewModel)
-            throw new ApplicationException("LearningObject is not a LearningSpace");
         _learningSpacePresenter.EditLearningSpace(name, shortname, authors, description, goals, requiredPoints);
-    }
-
-    #endregion
-
-    #region LearningElement
-
-    /// <summary>
-    /// Sets the initial values for the <see cref="ModalDialog"/> with the current values from the selected LearningElement.
-    /// </summary>
-    /// <exception cref="ApplicationException">Thrown if SelectedLearningObject is not a LearningElementViewModel.
-    /// Shouldn't occur, because this is checked in <see cref="OpenEditSelectedLearningObjectDialog"/></exception>
-    private void OpenEditSelectedLearningElementDialog()
-    {
-        var element = (LearningElementViewModel) LearningWorldVm?.SelectedLearningObject!;
-        if (element.Parent == null) throw new Exception("Element Parent is null");
-        //prepare dictionary property to pass to dialog
-        EditElementDialogInitialValues = new Dictionary<string, string>
-        {
-            {"Name", element.Name},
-            {"Shortname", element.Shortname},
-            {"Parent", ElementParentEnum.World.ToString()},
-            {"Assignment", element.Parent.Name},
-            {"Authors", element.Authors},
-            {"Description", element.Description},
-            {"Goals", element.Goals},
-            {"Difficulty", element.Difficulty.ToString()},
-            {"Workload (min)", element.Workload.ToString()},
-            {"Points", element.Points.ToString()}
-        };
-        EditLearningElementDialogOpen = true;
-    }
-    
-    public void AddLearningElement(ILearningElementViewModel learningElement)
-    {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        _presentationLogic.AddLearningElement(LearningWorldVm, learningElement);
-    }
-
-    /// <summary>
-    /// Calls the LoadLearningElementAsync method in <see cref="_presentationLogic"/> and adds the returned
-    /// learning element to its parent.
-    /// </summary>
-    /// <exception cref="ApplicationException">Thrown if <see cref="LearningWorldVm"/> is null</exception>
-    public async Task LoadLearningElementAsync()
-    {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        await _presentationLogic.LoadLearningElementAsync(LearningWorldVm);
-        var learningElement = LearningWorldVm.LearningElements.Last();
-        SetSelectedLearningObject(learningElement);
-    }
-
-    /// <summary>
-    /// Calls a load method in <see cref="_presentationLogic"/> depending on the content type and returns a
-    /// LearningContentViewModel.
-    /// </summary>
-    /// <param name="contentType">The type of the content that can either be an image, a video, a pdf or a h5p.</param>
-    /// <exception cref="ApplicationException">Thrown if there is no valid ContentType assigned.</exception>
-    private async Task<LearningContentViewModel> LoadLearningContent(ContentTypeEnum contentType)
-    {
-        return contentType switch
-        {
-            ContentTypeEnum.Image => await _presentationLogic.LoadImageAsync(),
-            ContentTypeEnum.Video => await _presentationLogic.LoadVideoAsync(),
-            ContentTypeEnum.Pdf => await _presentationLogic.LoadPdfAsync(),
-            ContentTypeEnum.H5P => await _presentationLogic.LoadH5PAsync(),
-            ContentTypeEnum.Text => await _presentationLogic.LoadTextAsync(),
-            _ => throw new ApplicationException("No valid ContentType assigned")
-        };
-    }
-
-    /// <summary>
-    /// Creates a learning element with dialog return values after a content has been loaded.
-    /// </summary>
-    /// <param name="returnValueTuple">Modal dialog return values.</param>
-    /// <exception cref="ApplicationException">Thrown if dialog data null or dropdown value or one of the dropdown
-    /// values couldn't get parsed into enum.</exception>
-    public void OnCreateElementDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
-        CreateLearningElementDialogOpen = false;
-
-        if (response == ModalDialogReturnValue.Cancel)
-        {
-            DragAndDropLearningContent = null;
-            return;
-        }
-        if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
-
-        foreach (var pair in data)
-        {
-            Console.Write($"{pair.Key}:{pair.Value}\n");
-        }
-
-        //required arguments
-        var name = data["Name"];
-        var shortname = data["Shortname"];
-        if (Enum.TryParse(data["Parent"], out ElementParentEnum parent) == false)
-            throw new ApplicationException("Couldn't parse returned parent type");
-        var assignment = data["Assignment"];
-        var parentElement = GetLearningElementParent(parent, assignment);
-        if (Enum.TryParse(data["Type"], out ElementTypeEnum elementType) == false)
-            throw new ApplicationException("Couldn't parse returned element type");
-        if (Enum.TryParse(data["Content"], out ContentTypeEnum contentType) == false)
-            throw new ApplicationException("Couldn't parse returned content type");
-        var description = data["Description"];
-        if (Enum.TryParse(data["Difficulty"], out LearningElementDifficultyEnum difficulty) == false)
-            throw new ApplicationException("Couldn't parse returned difficulty");
-        //optional arguments
-        var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
-        var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
-        if (Int32.TryParse(data["Workload (min)"], out int workload) == false || workload < 0)
-            workload = 0;
-        if (Int32.TryParse(data["Points"], out int points) == false || points < 0)
-            points = 0;
-
-        try
-        {
-            LearningContentViewModel learningContent;
-            if (DragAndDropLearningContent is not null)
-            {
-                learningContent = DragAndDropLearningContent;
-                DragAndDropLearningContent = null;
-            }
-            else
-            {
-                learningContent = Task.Run(async () => await LoadLearningContent(contentType)).Result;
-            }
-            
-            _presentationLogic.CreateLearningElement(parentElement, name, shortname, elementType, contentType,
-                learningContent, authors, description, goals, difficulty, workload, points);
-            LearningWorldVm.SelectedLearningObject = LearningWorldVm.LearningElements.Last();
-        }
-        catch (AggregateException)
-        {
-                
-        }
-    }
-    
-    public void CreateLearningElementWithPreloadedContent(LearningContentViewModel learningContent)
-    {
-        DragAndDropLearningContent = learningContent;
-        CreateLearningElementDialogOpen = true;
-    }
-
-    /// <summary>
-    /// Returns the parent viewmodel of the learning element. 
-    /// </summary>
-    /// <param name="parent">Type of parent that can be either a space or a world.</param>
-    /// <param name="assignment">Name of the parent.</param>
-    /// <exception cref="ApplicationException">Thrown if parent is neither a space or a world.</exception>
-    /// <exception cref="Exception">Thrown if parent element is null</exception>
-    private ILearningElementViewModelParent GetLearningElementParent(ElementParentEnum parent, string assignment)
-    {
-        ILearningElementViewModelParent? parentElement = parent switch
-        {
-            ElementParentEnum.Space => LearningWorldVm?.LearningSpaces.FirstOrDefault(space =>
-                space.Name == assignment),
-            ElementParentEnum.World => LearningWorldVm,
-            _ => throw new ApplicationException("No valid element parent")
-        };
-
-        if (parentElement == null)
-        {
-            throw new Exception("Parent element is null");
-        }
-
-        return parentElement;
-    }
-
-    /// <summary>
-    /// Changes property values of learning element viewmodel with return values of dialog
-    /// </summary>
-    /// <param name="returnValueTuple">Return values of dialog</param>
-    /// <returns></returns>
-    /// <exception cref="ApplicationException">Thrown if return values of dialog null
-    /// or selected learning object not a learning element</exception>
-    public void OnEditElementDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
-        EditLearningElementDialogOpen = false;
-
-        if (response == ModalDialogReturnValue.Cancel) return;
-        if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
-
-        foreach (var (key, value) in data)
-        {
-            _logger.LogTrace("{Key}:{Value}\\n", key, value);
-        }
-
-        //required arguments
-        var name = data["Name"];
-        var shortname = data["Shortname"];
-        if(Enum.TryParse(data["Parent"], out ElementParentEnum parent) == false)
-            throw new ApplicationException("Couldn't parse returned parent type");
-        var assignment = data["Assignment"];
-        var parentElement = GetLearningElementParent(parent, assignment);
-        var description = data["Description"];
-        if (Enum.TryParse(data["Difficulty"], out LearningElementDifficultyEnum difficulty) == false)
-            throw new ApplicationException("Couldn't parse returned difficulty");
-        //optional arguments
-        var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
-        var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
-        if (Int32.TryParse(data["Workload (min)"], out int workload) == false || workload < 0)
-            workload = 0;
-        if (Int32.TryParse(data["Points"], out int points) == false || points < 0)
-            points = 0;
-
-        if (LearningWorldVm == null)
-            throw new ApplicationException("LearningWorldVm is null");
-        if (LearningWorldVm.SelectedLearningObject is not LearningElementViewModel
-            learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
-        _presentationLogic.EditLearningElement(parentElement, learningElementViewModel, name, shortname, authors,
-            description, goals, difficulty, workload, points);
-    }
-
-    #endregion
-
-    #region LearningObject
-
-    /// <summary>
-    /// Changes the selected <see cref="ILearningObjectViewModel"/> in the currently selected learning world.
-    /// </summary>
-    /// <param name="learningObject">The learning object that should be set as selected</param>
-    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
-    public void SetSelectedLearningObject(ILearningObjectViewModel learningObject)
-    {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        LearningWorldVm.SelectedLearningObject = learningObject;
-        if (SelectedLearningObjectIsSpace)
-            _learningSpacePresenter.SetLearningSpace(
-                (LearningSpaceViewModel) LearningWorldVm.SelectedLearningObject);
     }
 
     /// <summary>
@@ -510,76 +251,42 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     /// </summary>
     /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
     /// <exception cref="NotImplementedException">Thrown if the selected learning object is of an other type than space or element.</exception>
-    public void DeleteSelectedLearningObject()
+    public void DeleteSelectedLearningSpace()
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        switch (LearningWorldVm.SelectedLearningObject)
-        {
-            case null:
-                return;
-            case LearningSpaceViewModel learningSpace:
-                _presentationLogic.DeleteLearningSpace(LearningWorldVm, learningSpace);
-                break;
-            case LearningElementViewModel learningElement:
-                _presentationLogic.DeleteLearningElement(LearningWorldVm, learningElement);
-                break;
-            default:
-                throw new NotImplementedException("Type of LearningObject is not implemented");
-        }
-
-        LearningWorldVm.SelectedLearningObject =
-            (ILearningObjectViewModel?) LearningWorldVm?.LearningSpaces
-                .LastOrDefault() ??
-            LearningWorldVm?.LearningElements.LastOrDefault();
-    }
-
-    /// <summary>
-    /// Opens the respective OpenEditDialog for Learning Space or Learning Element depending on which learning object is selected.
-    /// </summary>
-    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
-    /// <exception cref="NotImplementedException">Thrown if the selected learning object is of an other type than space or element.</exception>
-    public void OpenEditSelectedLearningObjectDialog()
-    {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        switch (LearningWorldVm.SelectedLearningObject)
-        {
-            case null:
-                return;
-            case LearningSpaceViewModel:
-                OpenEditSelectedLearningSpaceDialog();
-                break;
-            case LearningElementViewModel:
-                OpenEditSelectedLearningElementDialog();
-                break;
-            default:
-                throw new NotImplementedException("Type of LearningObject is not implemented");
-        }
+        if (LearningWorldVm.SelectedLearningSpace == null)
+            return;
+        _presentationLogic.DeleteLearningSpace(LearningWorldVm, LearningWorldVm.SelectedLearningSpace);
     }
 
     /// <summary>
     /// Calls the respective Save methode for Learning Space or Learning Element depending on which learning object is selected
     /// </summary>
     /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
-    /// <exception cref="NotImplementedException">Thrown if the selected learning object is of an other type than space or element.</exception>
-    public async Task SaveSelectedLearningObjectAsync()
+    /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
+    public async Task SaveSelectedLearningSpaceAsync()
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        switch (LearningWorldVm.SelectedLearningObject)
-        {
-            case null:
-                throw new ApplicationException("SelectedLearningObject is null");
-            case LearningSpaceViewModel learningSpace:
-                await _presentationLogic.SaveLearningSpaceAsync(learningSpace);
-                break;
-            case LearningElementViewModel learningElement:
-                await _presentationLogic.SaveLearningElementAsync(learningElement);
-                break;
-            default:
-                throw new NotImplementedException("Type of LearningObject is not implemented");
-        }
+        if (LearningWorldVm.SelectedLearningSpace == null)
+                throw new ApplicationException("SelectedLearningSpace is null");
+            
+        await _presentationLogic.SaveLearningSpaceAsync((LearningSpaceViewModel)LearningWorldVm.SelectedLearningSpace);
+    }
+
+    /// <summary>
+    /// Changes the selected <see cref="ILearningSpaceViewModel"/> in the currently selected learning world.
+    /// </summary>
+    /// <param name="learningSpace">The learning space that should be set as selected</param>
+    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
+    public void SetSelectedLearningSpace(ILearningSpaceViewModel learningSpace)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        LearningWorldVm.SelectedLearningSpace = learningSpace;
+        if (SelectedLearningObjectIsSpace)
+            _learningSpacePresenter.SetLearningSpace(LearningWorldVm.SelectedLearningSpace);
     }
 
     #endregion
