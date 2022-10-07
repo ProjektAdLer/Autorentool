@@ -16,7 +16,7 @@ public class XmlUrlFactory : IXmlUrlFactory
     public string UrlId;
     public string UrlName;
     public string UrlParentSpaceId;
-    public string UrlDescription;
+    public string UrlLink;
     public List<LearningElementJson> UrlList;
     public IActivitiesGradesXmlGradeItem ActivitiesGradesXmlGradeItem { get; }
     public IActivitiesGradesXmlGradeItems ActivitiesGradesXmlGradeItems { get; }
@@ -44,7 +44,7 @@ public class XmlUrlFactory : IXmlUrlFactory
         UrlId = "";
         UrlName = "";
         UrlParentSpaceId = "";
-        UrlDescription = "";
+        UrlLink = "";
         UrlList = new List<LearningElementJson>();
 
         CurrentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
@@ -84,7 +84,7 @@ public class XmlUrlFactory : IXmlUrlFactory
             UrlId = url.Id.ToString();
             UrlName = url.Identifier.Value;
             UrlParentSpaceId = url.LearningSpaceParentId.ToString();
-            UrlDescription = url.Description ?? "";
+            UrlLink = url.Url ?? "";
 
             SetParametersActivityUrl();
         }
@@ -102,8 +102,8 @@ public class XmlUrlFactory : IXmlUrlFactory
         
         //file activities/url.../url.xml
         ActivitiesUrlXmlUrl.Name = UrlName;
-        ActivitiesUrlXmlUrl.Intro = UrlDescription;
-        ActivitiesUrlXmlUrl.Externalurl = UrlDescription;
+        ActivitiesUrlXmlUrl.Intro = UrlLink;
+        ActivitiesUrlXmlUrl.Externalurl = UrlLink;
         ActivitiesUrlXmlUrl.Timemodified = CurrentTime;
         
         ActivitiesUrlXmlActivity.Url = ActivitiesUrlXmlUrl as ActivitiesUrlXmlUrl ?? new ActivitiesUrlXmlUrl();

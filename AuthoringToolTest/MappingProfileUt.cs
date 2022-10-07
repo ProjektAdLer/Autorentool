@@ -20,6 +20,7 @@ public class MappingProfileUt
     private const string Shortname = "shortname";
     private const string Authors = "authors";
     private const string Language = "language";
+    private const string Url = "google";
     private const string Description = "description";
     private const string Goals = "goals";
     private const string Type = "type";
@@ -34,6 +35,7 @@ public class MappingProfileUt
 
     private const string NewName = "newName";
     private const string NewShortname = "newShortname";
+    private const string NewUrl = "newgoogle";
     private const string NewAuthors = "newAuthors";
     private const string NewLanguage = "newLanguage";
     private const string NewDescription = "newDescription";
@@ -101,10 +103,10 @@ public class MappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var content = GetTestableContent();
-        var source = new LearningElement(Name, Shortname, content, Authors, Description, Goals,
+        var source = new LearningElement(Name, Shortname, content, Url, Authors, Description, Goals,
             Difficulty, null, Workload, Points, PositionX, PositionY);
         var destination = new LearningElementViewModel("", "",
-            new LearningContentViewModel("", "", Array.Empty<byte>()), "", "", "", LearningElementDifficultyEnum.None);
+            new LearningContentViewModel("", "", Array.Empty<byte>()), Url, "", "", "", LearningElementDifficultyEnum.None);
 
         systemUnderTest.Map(source, destination);
 
@@ -114,6 +116,7 @@ public class MappingProfileUt
         destination.Name = NewName;
         destination.Shortname = NewShortname;
         destination.LearningContent = new LearningContentViewModel(NewName, NewType, NewContent);
+        destination.Url = NewUrl;
         destination.Authors = NewAuthors;
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
@@ -134,9 +137,9 @@ public class MappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var content = GetTestableContent();
-        var source = new LearningElement(Name, Shortname, content, Authors, Description, Goals,
+        var source = new LearningElement(Name, Shortname, content, Url, Authors, Description, Goals,
             Difficulty, null, Workload, Points, PositionX, PositionY);
-        var destination = new LearningElementPe("", "", new LearningContentPe("", "", Array.Empty<byte>()), "", "", "",
+        var destination = new LearningElementPe("", "", new LearningContentPe("", "", Array.Empty<byte>()), "google.com","", "", "",
             LearningElementDifficultyEnumPe.None);
 
         systemUnderTest.Map(source, destination);
@@ -146,6 +149,7 @@ public class MappingProfileUt
         destination.Name = NewName;
         destination.Shortname = NewShortname;
         destination.LearningContent = new LearningContentPe(NewName, NewType, NewContent);
+        destination.Url = NewUrl;
         destination.Authors = NewAuthors;
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
@@ -507,10 +511,10 @@ public class MappingProfileUt
     public void MapLearningWorldAndLearningWorldViewModel_WithSpaces_ObjectsStayEqual()
     {
         var elementVm1 =
-            new LearningElementViewModel("el1", Shortname, new LearningContentViewModel("foo", "bar", Content), Authors,
+            new LearningElementViewModel("el1", Shortname, new LearningContentViewModel("foo", "bar", Content), Url, Authors,
                 Description, Goals, Difficulty);
         var elementVm2 =
-            new LearningElementViewModel("el2", Shortname, new LearningContentViewModel("foo", "bar", Content), Authors,
+            new LearningElementViewModel("el2", Shortname, new LearningContentViewModel("foo", "bar", Content), Url, Authors,
                 Description, Goals, Difficulty);
 
         var space = new LearningSpaceViewModel("space", Shortname, Authors, Description, Goals, RequiredPoints,
@@ -628,7 +632,7 @@ public class MappingProfileUt
     {
         return parent switch
         {
-            LearningSpace space => new LearningElement(Name, Shortname, GetTestableContent(), Authors, Description,
+            LearningSpace space => new LearningElement(Name, Shortname, GetTestableContent(), Url, Authors, Description,
                 Goals, Difficulty, space, Workload, Points, PositionX, PositionY),
             _ => throw new ArgumentException($"{parent.GetType().Name} is not a valid parent type")
         };
@@ -639,7 +643,7 @@ public class MappingProfileUt
         return parent switch
         {
             LearningSpaceViewModel space => new LearningElementViewModel(NewName, NewShortname,
-                GetTestableNewContentViewModel(), NewAuthors, NewDescription, NewGoals, NewDifficulty, space,
+                GetTestableNewContentViewModel(), NewUrl, NewAuthors, NewDescription, NewGoals, NewDifficulty, space,
                 NewWorkload, NewPoints, NewPositionX, NewPositionY),
             _ => throw new ArgumentException($"{parent.GetType().Name} is not a valid parent type")
         };
@@ -648,7 +652,7 @@ public class MappingProfileUt
     private static LearningElementPe GetTestableNewElementPersistEntity()
     {
         return new LearningElementPe(NewName, NewShortname,
-            GetTestableNewContentPersistEntity(), NewAuthors, NewDescription, NewGoals, NewDifficultyPe, NewWorkload,
+            GetTestableNewContentPersistEntity(), NewUrl, NewAuthors, NewDescription, NewGoals, NewDifficultyPe, NewWorkload,
             NewPoints, NewPositionX, NewPositionY);
     }
 
@@ -851,6 +855,7 @@ public class MappingProfileUt
                     Assert.That(element.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(element.Shortname, Is.EqualTo(useNewFields ? NewShortname : Shortname));
                     TestContent(element.LearningContent, useNewFields);
+                    Assert.That(element.Url, Is.EqualTo(useNewFields ? NewUrl : Url));
                     Assert.That(element.Authors, Is.EqualTo(useNewFields ? NewAuthors : Authors));
                     Assert.That(element.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(element.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
@@ -868,6 +873,7 @@ public class MappingProfileUt
                     Assert.That(element.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(element.Shortname, Is.EqualTo(useNewFields ? NewShortname : Shortname));
                     TestContent(element.LearningContent, useNewFields);
+                    Assert.That(element.Url, Is.EqualTo(useNewFields ? NewUrl : Url));
                     Assert.That(element.Authors, Is.EqualTo(useNewFields ? NewAuthors : Authors));
                     Assert.That(element.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(element.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
@@ -885,6 +891,7 @@ public class MappingProfileUt
                     Assert.That(element.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(element.Shortname, Is.EqualTo(useNewFields ? NewShortname : Shortname));
                     TestContent(element.LearningContent, useNewFields);
+                    Assert.That(element.Url, Is.EqualTo(useNewFields ? NewUrl : Url));
                     Assert.That(element.Authors, Is.EqualTo(useNewFields ? NewAuthors : Authors));
                     Assert.That(element.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(element.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));

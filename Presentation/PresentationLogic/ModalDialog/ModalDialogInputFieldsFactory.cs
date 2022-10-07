@@ -47,6 +47,7 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
         {
             new("Name", ModalDialogInputType.Text, true),
             new("Shortname", ModalDialogInputType.Text, true),
+            new("Url", ModalDialogInputType.Text),
             new("Authors", ModalDialogInputType.Text),
             new("Description", ModalDialogInputType.Text, true),
             new("Goals", ModalDialogInputType.Text),
@@ -77,6 +78,7 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
             new("Shortname", ModalDialogInputType.Text, true),
             typeField,
             contentField,
+            new("Url", ModalDialogInputType.Text),
             new("Authors", ModalDialogInputType.Text),
             new("Description", ModalDialogInputType.Text, true),
             new("Goals", ModalDialogInputType.Text),
@@ -118,7 +120,7 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
             "php" => ContentTypeEnum.Text, 
             "html" => ContentTypeEnum.Text, 
             "css" => ContentTypeEnum.Text,
-            "mp4" => ContentTypeEnum.Video,
+            //"mp4" => ContentTypeEnum.Video,
             "h5p" => ContentTypeEnum.H5P,
             "pdf" => ContentTypeEnum.PDF,
             _ => throw new Exception(

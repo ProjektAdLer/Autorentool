@@ -15,6 +15,7 @@ public class VideoTransferElementUt
         var shortname = "jkl;";
         var parent = new LearningSpace("foo", "bar", "", "", "", 2);
         var content = new LearningContent("a", "b", Array.Empty<byte>());
+        var url = "url";
         var authors = "ben and jerry";
         var description = "very cool element";
         var goals = "learn very many things";
@@ -24,7 +25,7 @@ public class VideoTransferElementUt
         var positionX = 5f;
         var positionY = 21f;
 
-        var systemUnderTest = new VideoTransferElement(name, shortname, parent, content, authors, description, goals,
+        var systemUnderTest = new VideoTransferElement(name, shortname, parent, content, url, authors, description, goals,
             difficulty, workload, points, positionX, positionY);
         
         Assert.Multiple(() =>
@@ -33,6 +34,7 @@ public class VideoTransferElementUt
             Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortname));
             Assert.That(systemUnderTest.Parent, Is.EqualTo(parent));
             Assert.That(systemUnderTest.LearningContent, Is.EqualTo(content));
+            Assert.That(systemUnderTest.Url, Is.EqualTo(url));
             Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));

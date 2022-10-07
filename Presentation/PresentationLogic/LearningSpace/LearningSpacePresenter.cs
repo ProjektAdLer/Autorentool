@@ -199,6 +199,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         if (Enum.TryParse(data["Difficulty"], out LearningElementDifficultyEnum difficulty) == false)
             throw new ApplicationException("Couldn't parse returned difficulty");
         //optional arguments
+        var url = data.ContainsKey("Video-Url") ? data["Video-Url"] : "";
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
         if (Int32.TryParse(data["Workload (min)"], out int workload) == false || workload < 0)
@@ -214,13 +215,17 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
                 learningContent = DragAndDropLearningContent;
                 DragAndDropLearningContent = null;
             }
+            else if (contentType == ContentTypeEnum.Video)
+            {
+                learningContent = new LearningContentViewModel("url", "url", Array.Empty<byte>());
+            }
             else
             {
                 learningContent = Task.Run(async () => await LoadLearningContent(contentType)).Result;
             }
                         
             _presentationLogic.CreateLearningElement(parentElement, name, shortname, elementType, contentType,
-                learningContent, authors, description, goals, difficulty, workload, points);
+                learningContent, url, authors, description, goals, difficulty, workload, points);
 
         }
         catch (AggregateException)

@@ -51,7 +51,7 @@ public class ReadDslUt
             identifierLearningElementJson2, "", "", "json",1, learningElementValueList2);
         
         var learningElementJson3 = new LearningElementJson(3,
-            identifierLearningElementJson2, "", "", "mp4",1, learningElementValueList2);
+            identifierLearningElementJson2, "", "", "url",1, learningElementValueList2);
         
         var learningElementJson4 = new LearningElementJson(4,
             identifierLearningElementJson2, "", "", "label",1, learningElementValueList2);

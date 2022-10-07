@@ -149,7 +149,6 @@ public class MappingProfile : Profile
             .ForMember(x => x.Id, opt => opt.Ignore());
         CreateMap<LearningContent, LearningContentPe>()
             .ReverseMap();
-
         CreateMap<H5PActivationElement, H5PActivationElementPe>()
             .IncludeBase<LearningElement, LearningElementPe>()
             .ReverseMap();

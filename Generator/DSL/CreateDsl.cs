@@ -73,7 +73,7 @@ public class CreateDsl : ICreateDsl
                     case "png" or "jpg" or "bmp" or "webp":
                         elementCategory = "image";
                         break;
-                    case "mp4":
+                    case "url":
                         elementCategory = "video";
                         break;
                     case "txt" or "c" or "h" or "cpp" or "cc" or "c++" or "py" or "js" or "php" or "html" or "css":
@@ -95,9 +95,10 @@ public class CreateDsl : ICreateDsl
                 learningElementValueList.Add(learningElementValueJson);
 
                 LearningElementJson learningElementJson = new LearningElementJson(learningSpaceElementId,
-                    learningElementIdentifier, "", elementCategory,element.LearningContent.Type, learningSpaceId, learningElementValueList, 
-                    element.Description, element.Goals);
+                    learningElementIdentifier, element.Url, elementCategory, element.LearningContent.Type, 
+                    learningSpaceId, learningElementValueList, element.Description, element.Goals);
                 ListLearningElements.Add(element);
+                
                 //int elementIndex = ListLearningElements.IndexOf(element) + 1;
                 _listLearningSpaceContent.Add(learningSpaceElementId);
                 learningSpaceElementId++;

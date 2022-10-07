@@ -61,7 +61,7 @@ public class ToolboxControllerUt
         worldPresenter.ShowingLearningSpaceView.Returns(true);
         var spacePresenter = Substitute.For<ILearningSpacePresenterToolboxInterface>();
         var learningElement = new LearningElementViewModel("foo", "bar", null!,
-            "foo", "bar", "bar",LearningElementDifficultyEnum.Easy);
+            "url", "foo", "bar", "bar",LearningElementDifficultyEnum.Easy);
 
         var systemUnderTest =
             GetTestableToolboxController(worldPresenter: worldPresenter, spacePresenter: spacePresenter);

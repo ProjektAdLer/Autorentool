@@ -162,7 +162,7 @@ public interface IPresentationLogic
     /// <param name="parentSpaceVm">Parent space of the element.</param>
     /// <param name="learningElementVm">Learning element to add.</param>
     void AddLearningElement(ILearningSpaceViewModel parentSpaceVm, ILearningElementViewModel learningElementVm);
-    
+
     /// <summary>
     /// Creates a new learning element and assigns it to the opened learning space in the
     /// selected learning world.
@@ -173,6 +173,7 @@ public interface IPresentationLogic
     /// <param name="elementType">Type of the element.</param>
     /// <param name="contentType">Type of the content that the element contains.</param>
     /// <param name="learningContentVm">The content of the element.</param>
+    /// <param name="url"></param>
     /// <param name="authors">A list of authors of the element.</param>
     /// <param name="description">A description of the element.</param>
     /// <param name="goals">The goals of the element.</param>
@@ -181,7 +182,8 @@ public interface IPresentationLogic
     /// <param name="points">The number of points of the learning element.</param>
     void CreateLearningElement(ILearningSpaceViewModel parentSpaceVm, string name, string shortname,
         ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContentVm,
-        string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points);
+        string url, string authors, string description, string goals, LearningElementDifficultyEnum difficulty, 
+        int workload, int points);
 
     /// <summary>
     /// Edits a given learning element in the opened learning space with the corresponding command.

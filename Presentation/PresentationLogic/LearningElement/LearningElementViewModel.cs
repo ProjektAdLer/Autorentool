@@ -18,6 +18,7 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
         //We override nullability here because constructor is protected, only called by AutoMapper and field immediately
         //set by AutoMapper afterwards - n.stich
         LearningContent = null!;
+        Url = "";
         Authors = "";
         Description = "";
         Goals = "";
@@ -34,6 +35,7 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
     /// <param name="name">The name of the learning element.</param>
     /// <param name="shortname">The short name (abbreviation) of the learning element (Maybe not relevant).</param>
     /// <param name="learningContent">Represents the loaded content of the learning element.</param>
+    /// <param name="url"></param>
     /// <param name="authors">The string containing the names of all the authors working on the learning element.</param>
     /// <param name="description">A description of the learning element and its contents.</param>
     /// <param name="goals">A description of the goals this learning element is supposed to achieve.</param>
@@ -44,7 +46,7 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
     /// <param name="positionX">x-position of the learning element in the workspace.</param>
     /// <param name="positionY">y-position of the learning element in the workspace.</param>
     public LearningElementViewModel(string name, string shortname,
-        LearningContentViewModel learningContent, string authors, string description, string goals,
+        LearningContentViewModel learningContent, string? url, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, ILearningSpaceViewModel? parent = null,
         int workload = 0, int points = 0, double positionX = 0, double positionY = 0)
     {
@@ -53,6 +55,7 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
         Shortname = shortname;
         Parent = parent;
         LearningContent = learningContent;
+        Url = url ?? "";
         Authors = authors;
         Description = description;
         Goals = goals;
@@ -71,6 +74,7 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
     public string Shortname { get; set; }
     public ILearningSpaceViewModel? Parent { get; set; }
     public LearningContentViewModel LearningContent { get; set; }
+    public string? Url { get; set; }
     public string Authors { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }

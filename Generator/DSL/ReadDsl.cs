@@ -109,7 +109,7 @@ public class ReadDsl : IReadDsl
     {
         foreach (var url in documentRootJson.LearningWorld.LearningElements)
         {
-            if (url.ElementType is "mp4")
+            if (url.ElementType is "url")
             {
                 ListUrlElements.Add(url);
             }
