@@ -7,7 +7,7 @@ namespace Generator.DSL;
 
 public class CreateDsl : ICreateDsl
 {
-    public List<LearningElementPe> ListLearningElements;
+    public List<LearningElementPe> ContentListLearningElements;
     public List<LearningSpacePe> ListLearningSpaces;
     public LearningWorldJson? LearningWorldJson;
     private List<int> _listLearningSpaceContent;
@@ -31,7 +31,7 @@ public class CreateDsl : ICreateDsl
 
     private void Initialize()
     {
-        ListLearningElements = new List<LearningElementPe>();
+        ContentListLearningElements = new List<LearningElementPe>();
         ListLearningSpaces = new List<LearningSpacePe>();
         _listLearningSpaceContent = new List<int>();
         Guid guid = Guid.NewGuid();
@@ -97,9 +97,16 @@ public class CreateDsl : ICreateDsl
                 LearningElementJson learningElementJson = new LearningElementJson(learningSpaceElementId,
                     learningElementIdentifier, element.Url, elementCategory, element.LearningContent.Type, 
                     learningSpaceId, learningElementValueList, element.Description, element.Goals);
-                ListLearningElements.Add(element);
+
+                // Add Elements that have Content to the List, they will be copied at the end of the method.
+                if (element.LearningContent.Type != "url")
+                {
+                    ContentListLearningElements.Add(element);
+                }
                 
-                //int elementIndex = ListLearningElements.IndexOf(element) + 1;
+
+                
+                //int elementIndex = ContentListLearningElements.IndexOf(element) + 1;
                 _listLearningSpaceContent.Add(learningSpaceElementId);
                 learningSpaceElementId++;
                 LearningWorldJson.LearningElements.Add(learningElementJson);
@@ -139,7 +146,7 @@ public class CreateDsl : ICreateDsl
         
         //All LearningElements are created at the specified location = Easier access to files in further Export-Operations.
         //After the files are added to the Backup-Structure, these Files will be deleted.
-        foreach (var learningElement in ListLearningElements)
+        foreach (var learningElement in ContentListLearningElements)
         {
             _fileSystem.File.Copy(learningElement.LearningContent.Filepath,
                 _fileSystem.Path.Join("XMLFilesForExport", $"{learningElement.Name}.{learningElement.LearningContent.Type}"));
