@@ -1,96 +1,9 @@
 ﻿@using Presentation.PresentationLogic.API
 @using Presentation.Components
 @using Presentation.View.Toolbox
-@using LanguageProvider
-@inject NavigationManager uriHelper
 @inherits LayoutComponentBase
 
 <PageTitle>AuthoringTool</PageTitle>
-
-<style>
-        .language-switch {
-            font-family:'Roboto Light';
-            font-weight: lighter;
-            color: #cfd8e5;
-        }
-        
-        .languageprovider-checkbox-group {
-            display: inline;
-        }
-        
-        .languageprovider-switch-text {
-            border-radius: 12px;
-            border: none;
-            padding: 3px;
-            text-align: center;
-            display: inline-block;
-            font-size: 16px;
-            margin: 4px 2px;
-            cursor: pointer;
-            background: linear-gradient(90deg, #172d4d 50%, #cfd8e5 50%);
-            display: inline-block;
-            position: relative;
-        }
-        
-        .languageprovider-switch-text ~ input[id="languageprovider-checkbox"]:checked {
-            background: linear-gradient(-90deg, #172d4d 50%, #cfd8e5 50%);
-        }
-
-        input[id="languageprovider-checkbox"] {
-            display:none;
-        }
-
-        .info-button {
-            background-color: #2d415d;
-            border-radius: 100%;
-            border: none;
-            color: #e2e5e9;
-            position: relative;
-            display: inline-block;
-            text-align:center;
-            height: 17px;
-            width: 17px;
-            cursor: help;
-        }
-
-        .info-button:hover {
-            background-color: #687a92;
-        }
-
-        label {
-            padding: 5px;
-            border-radius: 5px;
-            position: relative;
-            cursor: pointer;
-            overflow: hidden;
-            display: inline;
-            font-family:'Roboto Light';
-            font-weight: bold;
-        }
-
-
-        label .switch-text-DE {
-            color: #cfd8e5;
-            display: inline;
-            padding-right: 4px;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
-        label .switch-text-EN {
-            color: #4f617b;
-            display: inline;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            -ms-user-select: none;
-            user-select: none;
-        }
-
-        
-    </style>
-
 
 <div class="page">
     <div class="sidebar">
@@ -108,19 +21,7 @@
             {
                 <CloseAppButton/>
             }
-            <div class="language-switch">
-                        @LanguageProviderForRazor.GetContent("BlazorMainLayout", "LanguageSwitchLanguage")
-                        <div class="info-button">i</div>
-                        <div class="languageprovider-checkbox-group">
-                            <input type="checkbox" id="languageprovider-checkbox" @onclick="LanguagePresentationLogicSwitch" checked="@LanguageButtonElement.GetCheckBoxState()">
-                            <label for="languageprovider-checkbox">
-                                <span class="languageprovider-switch-text">
-                                    <div class="switch-text-DE">DE</div>
-                                    <div class="switch-text-EN">EN</div>
-                                </span>
-                            </label>
-                        </div>
-                    </div>
+            <LanguageSwitch/>
         </div>
 
         <article class="content px-4">
@@ -134,47 +35,4 @@
     [Inject]
     public IPresentationLogic? PresentationLogic { get; set; }
 
-}
-
-
-@code
-{
-    //Element logic for LanguageSwitch using the LanguageProviderForRazor
-    internal static class LanguageButtonElement
-    {
-        static bool _mCheckboxState = false;
-        private static uint _mSwitchIterator = 0;
-        static readonly string[] MDatabasesForSwitch = { "de", "en" };
-
-        static LanguageButtonElement()
-        {
-            try
-            {
-                LanguageProviderForRazor.SetLanguage(MDatabasesForSwitch[_mSwitchIterator]);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
-        }
-
-        internal static void ToggleSwitchLanguage()
-        {
-            _mSwitchIterator++;
-            _mSwitchIterator %= (uint)MDatabasesForSwitch.Length;
-            _mCheckboxState = !_mCheckboxState;
-            LanguageProviderForRazor.SetLanguage(MDatabasesForSwitch[_mSwitchIterator]);
-        }
-
-        internal static bool GetCheckBoxState()
-        {
-            return _mCheckboxState;
-        }
-    }
-
-    private void LanguagePresentationLogicSwitch()
-    {
-        LanguageButtonElement.ToggleSwitchLanguage();
-        uriHelper.NavigateTo(uriHelper.Uri, forceLoad: true);
-    }
 }

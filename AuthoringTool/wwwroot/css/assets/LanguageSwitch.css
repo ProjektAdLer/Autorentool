@@ -1,0 +1,79 @@
+.language-switch {
+    font-family:'Roboto Light';
+    font-weight: lighter;
+    color: #cfd8e5;
+}
+
+.languageprovider-checkbox-group {
+    display: inline;
+}
+
+.languageprovider-switch-text {
+    border-radius: 12px;
+    border: none;
+    padding: 3px;
+    text-align: center;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    background: linear-gradient(90deg, #172d4d 50%, #cfd8e5 50%);
+    display: inline-block;
+    position: relative;
+}
+
+input[id="languageprovider-checkbox"]:checked ~ #visuals{
+    background: red;
+}
+
+input[id="languageprovider-checkbox"] {
+    display:inline;
+}
+
+.info-button {
+    background-color: #2d415d;
+    border-radius: 100%;
+    border: none;
+    color: #e2e5e9;
+    position: relative;
+    display: inline-block;
+    text-align:center;
+    height: 17px;
+    width: 17px;
+    cursor: help;
+}
+
+.info-button:hover {
+    background-color: #687a92;
+}
+
+label {
+    padding: 5px;
+    border-radius: 5px;
+    position: relative;
+    cursor: pointer;
+    overflow: hidden;
+    display: inline;
+    font-family:'Roboto Light';
+    font-weight: bold;
+}
+
+
+label .switch-text-DE {
+    color: #cfd8e5;
+    display: inline;
+    padding-right: 4px;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+label .switch-text-EN {
+    color: #4f617b;
+    display: inline;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}

@@ -57,5 +57,9 @@
     <ItemGroup>
       <Folder Include="View" />
     </ItemGroup>
+
+    <ItemGroup>
+      <None Include="wwwroot\css\assets\LanguageSwitch.css" />
+    </ItemGroup>
     
 </Project>
