@@ -21,7 +21,7 @@ public class ContentFileHandler : IContentFileHandler
         //make sure that the folder exists
         AssertContentFilesFolderExists();
         _logger.LogInformation("ContentFilesFolderPath is {}", ContentFilesFolderPath);
-        AssertAllFilesHaveHashAsync();
+        AssertAllFilesInContentFilesFolderHaveHashAsync();
     }
     
     private void AssertContentFilesFolderExists()
@@ -31,9 +31,10 @@ public class ContentFileHandler : IContentFileHandler
         _fileSystem.Directory.CreateDirectory(ContentFilesFolderPath);
     }
 
+    /// <inheritdoc cref="IContentFileHandler.LoadContentAsync(string)"/>
     public async Task<LearningContentPe> LoadContentAsync(string filepath)
     {
-        var (duplicatePath, hash) = await ExistsAlreadyInContentFilesFolderAsync(filepath);
+        var (duplicatePath, hash) = await GetFilePathOfExistingCopyAndHash(filepath);
         if (duplicatePath == null)
             _logger.LogDebug("{} not found in {}, copying file", filepath, ContentFilesFolderPath);
         else
@@ -49,9 +50,10 @@ public class ContentFileHandler : IContentFileHandler
         return new LearningContentPe(fileName, fileType, finalPath);
     }
 
+    /// <inheritdoc cref="IContentFileHandler.LoadContentAsync(string,System.IO.MemoryStream)"/>
     public async Task<LearningContentPe> LoadContentAsync(string name, MemoryStream stream)
     {
-        var (duplicatePath, hash) = await ExistsAlreadyInContentFilesFolderAsync(stream);
+        var (duplicatePath, hash) = await GetFilePathOfExistingCopyAndHash(stream);
         if (duplicatePath == null)
             _logger.LogDebug("stream {} not found in {}, copying file", name, ContentFilesFolderPath);
         else
@@ -67,6 +69,9 @@ public class ContentFileHandler : IContentFileHandler
         return new LearningContentPe(fileName, fileType, finalPath);
     }
 
+    /// <summary>
+    /// For a given path and a hash, write the hash to [<paramref name="finalPath"/>].hash
+    /// </summary>
     private async void SaveHashForFileAsync(string finalPath, byte[] hash)
     {
         var finalHashPath = finalPath + ".hash";
@@ -75,18 +80,17 @@ public class ContentFileHandler : IContentFileHandler
         _logger.LogDebug("Wrote hash for {} to {}", finalPath, finalHashPath);
     }
 
-
-    internal async Task<(string?,byte[])> ExistsAlreadyInContentFilesFolderAsync(string filepath)
+    internal async Task<(string?,byte[])> GetFilePathOfExistingCopyAndHash(string filepath)
     {
         if (string.IsNullOrWhiteSpace(filepath))
             throw new ArgumentException("Path cannot be null or whitespace.", nameof(filepath));
         await using var stream = _fileSystem.File.OpenRead(filepath);
-        return await ExistsAlreadyInContentFilesFolderAsync(stream);
+        return await GetFilePathOfExistingCopyAndHash(stream);
     }
 
-    private async Task<(string?,byte[])> ExistsAlreadyInContentFilesFolderAsync(Stream stream)
+    private async Task<(string?,byte[])> GetFilePathOfExistingCopyAndHash(Stream stream)
     {
-        AssertAllFilesHaveHashAsync();
+        AssertAllFilesInContentFilesFolderHaveHashAsync();
 
         var streamHash = await ComputeHashAsync(stream);
 
@@ -98,7 +102,7 @@ public class ContentFileHandler : IContentFileHandler
         return match == null ? (null, streamHash) : (Path.Join(ContentFilesFolderPath, Path.GetFileNameWithoutExtension(match)), streamHash);
     }
 
-    private async void AssertAllFilesHaveHashAsync()
+    private async void AssertAllFilesInContentFilesFolderHaveHashAsync()
     {
         IEnumerable<(string realPath, string hashPath)> filesWithoutHash = _fileSystem.Directory.GetFiles(ContentFilesFolderPath)
             //macOS specific

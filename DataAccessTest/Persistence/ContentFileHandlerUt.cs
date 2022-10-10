@@ -138,7 +138,7 @@ public class ContentFileHandlerUt
         
         var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
         
-        var (actual, _) = await systemUnderTest.ExistsAlreadyInContentFilesFolderAsync("a.txt");
+        var (actual, _) = await systemUnderTest.GetFilePathOfExistingCopyAndHash("a.txt");
         
         Assert.That(actual, Is.EqualTo(Path.Join(ContentFilesFolderPath, "a.txt")));
     }
@@ -154,7 +154,7 @@ public class ContentFileHandlerUt
         
         var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
         
-        var (actual, _) = await systemUnderTest.ExistsAlreadyInContentFilesFolderAsync("foobar.txt");
+        var (actual, _) = await systemUnderTest.GetFilePathOfExistingCopyAndHash("foobar.txt");
         
         Assert.That(actual, Is.EqualTo(Path.Join(ContentFilesFolderPath, "a.txt")));
     }
@@ -170,7 +170,7 @@ public class ContentFileHandlerUt
         
         var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
         
-        var (actual, _) = await systemUnderTest.ExistsAlreadyInContentFilesFolderAsync("a.txt");
+        var (actual, _) = await systemUnderTest.GetFilePathOfExistingCopyAndHash("a.txt");
         
         Assert.That(actual, Is.Null);
     }
@@ -186,7 +186,7 @@ public class ContentFileHandlerUt
         
         var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
         
-        var (actual, _) = await systemUnderTest.ExistsAlreadyInContentFilesFolderAsync("a.txt");
+        var (actual, _) = await systemUnderTest.GetFilePathOfExistingCopyAndHash("a.txt");
         
         Assert.That(actual, Is.Null);
     }
@@ -199,7 +199,7 @@ public class ContentFileHandlerUt
         
         var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
         
-        var (actual, _) = await systemUnderTest.ExistsAlreadyInContentFilesFolderAsync("a.txt");
+        var (actual, _) = await systemUnderTest.GetFilePathOfExistingCopyAndHash("a.txt");
         
         Assert.That(actual, Is.Null);
     }
@@ -214,7 +214,7 @@ public class ContentFileHandlerUt
         
         var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
         
-        var (actual, _) = await systemUnderTest.ExistsAlreadyInContentFilesFolderAsync("a.txt");
+        var (actual, _) = await systemUnderTest.GetFilePathOfExistingCopyAndHash("a.txt");
         
         Assert.Multiple(() =>
         {
@@ -232,7 +232,7 @@ public class ContentFileHandlerUt
         
         var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
         
-        var (actual, _) = await systemUnderTest.ExistsAlreadyInContentFilesFolderAsync("a.txt");
+        var (actual, _) = await systemUnderTest.GetFilePathOfExistingCopyAndHash("a.txt");
         
         Assert.Multiple(() =>
         {
