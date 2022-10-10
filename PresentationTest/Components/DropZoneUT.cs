@@ -32,7 +32,7 @@ public class DropZoneUt
     [Test]
     public void DefaultConstructor_AllPropertiesInitialized()
     {
-        Action<Tuple<string, Stream>> onNewStream = _ => { };
+        Action<Tuple<string, MemoryStream>> onNewStream = _ => { };
 
         var systemUnderTest = CreateRenderedDropZoneComponent(onNewStream);
 
@@ -44,8 +44,8 @@ public class DropZoneUt
     [Test]
     public void OnChange_OnNewStreamTriggered()
     {
-        Tuple<string, Stream>? onNewStreamEventTriggered = null;
-        Action<Tuple<string, Stream>> onNewStream = e => { onNewStreamEventTriggered = e; };
+        Tuple<string, MemoryStream>? onNewStreamEventTriggered = null;
+        Action<Tuple<string, MemoryStream>> onNewStream = e => { onNewStreamEventTriggered = e; };
         const string testFileName = "TestFileName";
 
         var fileToUpload = new InputFileChangeEventArgs(new[]
@@ -65,8 +65,8 @@ public class DropZoneUt
     [Test]
     public void OnChange_StreamToLarge_ThrowException()
     {
-        Tuple<string, Stream>? onNewStreamEventTriggered = null;
-        Action<Tuple<string, Stream>> onNewStream = e => { onNewStreamEventTriggered = e; };
+        Tuple<string, MemoryStream>? onNewStreamEventTriggered = null;
+        Action<Tuple<string, MemoryStream>> onNewStream = e => { onNewStreamEventTriggered = e; };
         const string testFileName = "TestFileName";
 
         var fileToUpload = new InputFileChangeEventArgs(new[]
@@ -104,7 +104,7 @@ public class DropZoneUt
     }
 
     private IRenderedComponent<DropZone> CreateRenderedDropZoneComponent(
-        Action<Tuple<string, Stream>>? onNewStream = null)
+        Action<Tuple<string, MemoryStream>>? onNewStream = null)
     {
         onNewStream ??= _ => { };
         return _testContext.RenderComponent<DropZone>(parameters => parameters

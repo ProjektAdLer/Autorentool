@@ -244,7 +244,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
 
     #region DragAndDrop
 
-    public Task ProcessDragAndDropResult(Tuple<string, Stream> result)
+    public Task ProcessDragAndDropResult(Tuple<string, MemoryStream> result)
     {
         var (name, stream) = result;
         var ending = name.Split(".").Last().ToLower();

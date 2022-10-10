@@ -171,7 +171,7 @@ public class DataAccessUt
     {
         var mockContentFileHandler = Substitute.For<IContentFileHandler>();
         var systemUnderTest = CreateTestableDataAccess(contentHandler: mockContentFileHandler);
-        var stream = Substitute.For<Stream>();
+        var stream = Substitute.For<MemoryStream>();
 
         systemUnderTest.LoadLearningContent("filename.extension", stream);
 

@@ -335,7 +335,7 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
     
-    public LearningContentViewModel LoadLearningContentViewModel(string name, Stream stream)
+    public LearningContentViewModel LoadLearningContentViewModel(string name, MemoryStream stream)
     {
         var entity = BusinessLogic.LoadLearningContent(name, stream);
         return Mapper.Map<LearningContentViewModel>(entity);

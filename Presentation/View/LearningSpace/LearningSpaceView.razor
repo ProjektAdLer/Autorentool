@@ -3,6 +3,7 @@
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.ModalDialog
+@using System.ComponentModel
 
 <h2>LearningSpace @LearningSpaceP.LearningSpaceVm?.Name</h2>
 <h5>Workload: @LearningSpaceP.LearningSpaceVm?.Workload minutes</h5>
@@ -69,6 +70,15 @@
     [Inject]
     public ILearningSpaceViewModalDialogFactory ModalDialogFactory { get; set; }
 #pragma warning restore CS8618
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        LearningSpaceP.PropertyChanged += (sender, earg) =>
+        {
+            if(earg.PropertyName == nameof(LearningSpaceP.CreateLearningElementDialogOpen)) StateHasChanged();
+        };
+    }
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }

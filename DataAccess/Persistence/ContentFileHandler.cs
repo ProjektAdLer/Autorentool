@@ -20,13 +20,15 @@ public class ContentFileHandler : IContentFileHandler
         _logger = logger;
         //make sure that the folder exists
         AssertContentFilesFolderExists();
+        _logger.LogInformation("ContentFilesFolderPath is {}", ContentFilesFolderPath);
         AssertAllFilesHaveHashAsync();
     }
     
     private void AssertContentFilesFolderExists()
     {
-        if (!_fileSystem.Directory.Exists(ContentFilesFolderPath))
-            _fileSystem.Directory.CreateDirectory(ContentFilesFolderPath);
+        if (_fileSystem.Directory.Exists(ContentFilesFolderPath)) return;
+        _logger.LogDebug("Folder {} did not exist, creating", ContentFilesFolderPath);
+        _fileSystem.Directory.CreateDirectory(ContentFilesFolderPath);
     }
 
     public async Task<LearningContentPe> LoadContentAsync(string filepath)
@@ -42,11 +44,12 @@ public class ContentFileHandler : IContentFileHandler
         var fileType = Path.GetExtension(finalPath).Trim('.').ToLower();
         var fileName = Path.GetFileName(finalPath);
         _logger.LogInformation("File {FileName} of type {FileType} loaded", fileName, fileType);
-        SaveHashForFileAsync(finalPath, hash);
+        if (duplicatePath == null)
+            SaveHashForFileAsync(finalPath, hash);
         return new LearningContentPe(fileName, fileType, finalPath);
     }
 
-    public async Task<LearningContentPe> LoadContentAsync(string name, Stream stream)
+    public async Task<LearningContentPe> LoadContentAsync(string name, MemoryStream stream)
     {
         var (duplicatePath, hash) = await ExistsAlreadyInContentFilesFolderAsync(stream);
         if (duplicatePath == null)
@@ -56,10 +59,11 @@ public class ContentFileHandler : IContentFileHandler
         
         var finalPath = duplicatePath ?? await CopyFileToContentFilesFolderAsync(name, stream);
         
-        var fileType = Path.GetExtension(name).Split(".").Last().ToLower();
+        var fileType = Path.GetExtension(name).Trim('.').ToLower();
         var fileName = Path.GetFileName(name);
         _logger.LogInformation("File {FileName} of type {FileType} loaded", fileName, fileType);
-        SaveHashForFileAsync(finalPath, hash);
+        if (duplicatePath == null)
+            SaveHashForFileAsync(finalPath, hash);
         return new LearningContentPe(fileName, fileType, finalPath);
     }
 
@@ -97,8 +101,10 @@ public class ContentFileHandler : IContentFileHandler
     private async void AssertAllFilesHaveHashAsync()
     {
         IEnumerable<(string realPath, string hashPath)> filesWithoutHash = _fileSystem.Directory.GetFiles(ContentFilesFolderPath)
+            //macOS specific
+            .Where(path => !path.EndsWith(".DS_Store"))
             .Where(path => !path.EndsWith(".hash"))
-            .Where(path => !_fileSystem.Directory.Exists($"{path}.hash"))
+            .Where(path => !_fileSystem.File.Exists($"{path}.hash"))
             .Select(path => (path, $"{path}.hash"));
         foreach (var path in filesWithoutHash)
         {
@@ -142,11 +148,12 @@ public class ContentFileHandler : IContentFileHandler
         return uniqueDestination;
     }
 
-    private async Task<string> CopyFileToContentFilesFolderAsync(string file, Stream stream)
+    private async Task<string> CopyFileToContentFilesFolderAsync(string file, MemoryStream stream)
     {
         var uniqueDestination = FindUniqueDestination(file);
         await using var writeStream = _fileSystem.File.OpenWrite(uniqueDestination);
-        await stream.CopyToAsync(writeStream);
+        stream.Position = 0;
+        stream.WriteTo(writeStream);
         return uniqueDestination;
     }
 

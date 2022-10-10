@@ -288,7 +288,7 @@ public class BusinessLogicUt
     public void LoadLearningContentFromStream_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
-        var stream = Substitute.For<Stream>();
+        var stream = Substitute.For<MemoryStream>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
@@ -301,7 +301,7 @@ public class BusinessLogicUt
     public void LoadLearningContentFromStream_ReturnsLearningElement()
     {
         var learningContent = new LearningContent("filename", "extension", "");
-        var stream = Substitute.For<Stream>();
+        var stream = Substitute.For<MemoryStream>();
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningContent("filename.extension", stream).Returns(learningContent);
 

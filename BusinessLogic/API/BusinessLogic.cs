@@ -68,7 +68,7 @@ public class BusinessLogic : IBusinessLogic
         return DataAccess.LoadLearningContent(filepath);
     }
 
-    public LearningContent LoadLearningContent(string name, Stream stream)
+    public LearningContent LoadLearningContent(string name, MemoryStream stream)
     {
         return DataAccess.LoadLearningContent(name, stream);
     }

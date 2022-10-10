@@ -83,7 +83,7 @@ public class DataAccess : IDataAccess
         return Mapper.Map<LearningContent>(XmlHandlerContent.LoadContentAsync(filepath).Result);
     }
 
-    public LearningContent LoadLearningContent(string name, Stream stream)
+    public LearningContent LoadLearningContent(string name, MemoryStream stream)
     {
         return Mapper.Map<LearningContent>(XmlHandlerContent.LoadContentAsync(name, stream).Result);
     }

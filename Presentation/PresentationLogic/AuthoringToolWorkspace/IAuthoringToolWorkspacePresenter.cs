@@ -34,7 +34,7 @@ public interface IAuthoringToolWorkspacePresenter
     Task SaveSelectedLearningWorldAsync();
     void OnCreateWorldDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void OnEditWorldDialogClose(ModalDialogOnCloseResult returnValueTuple);
-    Task ProcessDragAndDropResult(Tuple<string, Stream> result);
+    Task ProcessDragAndDropResult(Tuple<string, MemoryStream> result);
     void OnSaveWorldDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void OnSaveDeletedWorldDialogClose(ModalDialogOnCloseResult returnValueTuple);
 }

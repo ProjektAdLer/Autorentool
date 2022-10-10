@@ -760,8 +760,8 @@ public class AuthoringToolWorkspacePresenterUt
     public void ProcessDragAndDropResult_CallsPresentationLogic(string ending)
     {
         var fileName = "testFile." + ending;
-        var stream = Substitute.For<Stream>();
-        var resultTuple = new Tuple<string, Stream>(fileName, stream);
+        var stream = Substitute.For<MemoryStream>();
+        var resultTuple = new Tuple<string, MemoryStream>(fileName, stream);
         var authoringToolWorkspace = new AuthoringToolWorkspaceViewModel();
         
         var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
@@ -774,7 +774,7 @@ public class AuthoringToolWorkspacePresenterUt
         
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var learningContent = new LearningContentViewModel(fileName, ending, "");
-        presentationLogic.LoadLearningContentViewModel(Arg.Any<string>(), Arg.Any<Stream>())
+        presentationLogic.LoadLearningContentViewModel(Arg.Any<string>(), Arg.Any<MemoryStream>())
             .Returns(learningContent);
         var learningWorldPresenter = Substitute.For<ILearningWorldPresenter>();
         var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
