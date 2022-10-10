@@ -289,7 +289,7 @@ public class XmlBackupFactoryUt
             new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>() );
 
         var mockLearningElement1 = new LearningElementJson(1, mockIdentifier, "", "", "h5p",0, mockElementValueList);
-        var mockLearningElement2 = new LearningElementJson(2, mockIdentifier, "", "", "mp4",0, mockElementValueList);
+        var mockLearningElement2 = new LearningElementJson(2, mockIdentifier, "", "", "url",0, mockElementValueList);
         List<LearningElementJson> learningElementJsons = new List<LearningElementJson>();
         learningElementJsons.Add(mockLearningElement1);
         learningElementJsons.Add(mockLearningElement2);
