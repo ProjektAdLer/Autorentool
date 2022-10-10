@@ -56,6 +56,7 @@ public class ReadDsl : IReadDsl
         GetH5PElements(_rootJson);
         GetResourceElements(_rootJson);
         GetLabelElements(_rootJson);
+        GetWorldAttributes(_rootJson);
         GetUrlElements(_rootJson);
         GetSpacesAndElementsOrdered(_rootJson);
         SetLearningWorld(_rootJson);
@@ -103,6 +104,23 @@ public class ReadDsl : IReadDsl
                 ListLabelElements.Add(label);
             }
         }
+    }
+
+    private void GetWorldAttributes(DocumentRootJson documentRootJson)
+    {
+        // World Attributes like Description & Goals are added to the label-list, as they are represented as Labels in Moodle
+        if(documentRootJson.LearningWorld.Description == "" && documentRootJson.LearningWorld.Goals == "") return;
+        
+        int lastId;
+        lastId = documentRootJson.LearningWorld.LearningElements.Count > 0 ? documentRootJson.LearningWorld.LearningElements.Last().Id : 1;
+
+        var worldAttributes = new LearningElementJson(lastId, 
+            new IdentifierJson("Description",documentRootJson.LearningWorld.Description), "", 
+            "World Attributes", "label", 1, 
+            new List<LearningElementValueJson>(), documentRootJson.LearningWorld.Description,
+            documentRootJson.LearningWorld.Goals);
+        
+        ListAllSpacesAndElementsOrdered.Add(worldAttributes);
     }
 
     private void GetUrlElements(DocumentRootJson documentRootJson)
@@ -168,5 +186,5 @@ public class ReadDsl : IReadDsl
     {
         return ListAllSpacesAndElementsOrdered;
     }
-
+    
 }

@@ -56,9 +56,10 @@ public class CreateDsl : ICreateDsl
         // Search for Learning Elements in Spaces and add to listLearningElements
         ListLearningSpaces.AddRange(learningWorld.LearningSpaces);
         
+        // Starting Value for Learning Space Ids & Learning Element Ids
         int learningSpaceId = 1;
-        // Starts with 2, because the DSL Document always has Element ID = 1. Therefore all other elements have to start with 2.
         int learningSpaceElementId = 1;
+        
         foreach (var learningSpace in ListLearningSpaces)
         {
             _listLearningSpaceContent = new List<int>();
@@ -104,8 +105,7 @@ public class CreateDsl : ICreateDsl
                 learningSpaceElementId++;
                 LearningWorldJson.LearningElements.Add(learningElementJson);
             }
-            
-            
+
             // Add Learning Space to Learning World
             LearningWorldJson.LearningSpaces.Add(new LearningSpaceJson(learningSpaceId,
                 learningSpaceIdentifier, _listLearningSpaceContent, 
