@@ -12,7 +12,7 @@ public class LearningElementJson : ILearningElementJson
     {
         Id = id;
         Identifier = identifier;
-        Url = url ?? "";
+        Url = url;
         Description = description ?? "";
         Goals = goals ?? "";
         ElementCategory = elementCategory;
