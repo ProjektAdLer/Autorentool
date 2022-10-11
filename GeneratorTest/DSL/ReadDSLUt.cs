@@ -103,5 +103,50 @@ public class ReadDslUt
         });
     }
 
+    [Test]
+    public void ReadDSL_ReadLearningWorld_DSLDocumentReadWithEmptyWorldDescriptionAndGoals()
+    {
+        //Arrange
+        var mockFileSystem = new MockFileSystem();
+
+        var identifierLearningWorldJson = new IdentifierJson("name", "World");
+        var topicsJson = new TopicJson();
+        var topicsList = new List<TopicJson>(){topicsJson};
+        
+     
+        var learningWorldJson = new LearningWorldJson("uuid", identifierLearningWorldJson, 
+            new List<int>(), topicsList, new List<LearningSpaceJson>(), 
+            new List<LearningElementJson>(), "", "");
+
+        var rootJson = new DocumentRootJson(learningWorldJson);
+        
+
+        //Act
+        var systemUnderTest = new ReadDsl(mockFileSystem);
+        systemUnderTest.ReadLearningWorld("dslPath", rootJson);
+
+        var listSpace = systemUnderTest.GetSectionList();
+
+        //Assert
+        var getLearningWorldJson = systemUnderTest.GetLearningWorld();
+        var getSpacesAndElementsList = systemUnderTest.GetSpacesAndElementsOrderedList();
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.ListH5PElements, Is.Not.Null);
+            Assert.That(learningWorldJson, Is.Not.Null);
+            Assert.That(getLearningWorldJson.LearningElements, Is.Not.Null);
+            Assert.That(getLearningWorldJson.LearningSpaces, Is.Not.Null);
+
+            //If Description and Goals are empty, they are not added to the list of Labels
+            //But 
+            Assert.That(getSpacesAndElementsList, Has.Count.EqualTo(0));
+
+            //There is always at least 1 Section (Topic 0) in a Moodle Course
+            Assert.That(listSpace.Count, Is.EqualTo(1));
+
+        });
+    }
+
     
 }
