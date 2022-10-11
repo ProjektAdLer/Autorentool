@@ -76,16 +76,17 @@
                                     else
                                     {
                                         var fieldType = input.Type.ToString().ToLower();
+                                        if (input.Name.ToLower() != "url"){_fieldIsUrl = false;}
+                                        
                                         //we are binding the oninput event to the value in our dictionary
-
                                         <input id="@($"modal-input-field-{input.Name.ToLower()}")"
                                                type="@fieldType"
+                                               disabled="@_fieldIsUrl"
                                                placeholder="@input.Name"
                                                value="@_inputFieldValues[input.Name]"
-                                               @oninput="@(e => { if (e.Value != null) 
-                                                             _inputFieldValues[input.Name] = (string)e.Value;  })"
-                                               @onkeydown="@(e => {if (e.Code == "Enter") 
-                                                               TryCloseWithPositiveResult();})"/>
+                                               @oninput="@(e => { if (e.Value != null) _inputFieldValues[input.Name] = (string) e.Value; })"
+                                               @onkeydown="@(e => {if (e.Code == "Enter") TryCloseWithPositiveResult();})"/>
+                                        
                                         @if (_inputFieldAnnotations[input.Name] != "")
                                         {
                                             <p id="@($"modal-input-field-{input.Name.ToLower()}-annotation")">
@@ -284,11 +285,24 @@
         || _inputFieldValues["Name"].Contains("/") || _inputFieldValues["Name"].Contains("\\")
         || _inputFieldValues["Name"].Contains(":"));
 
+    private bool _fieldIsUrl = false;
+
     /// <summary>Determines whether the dropdown input field is unlocked or not.</summary>
     /// <returns>true if the input field is unlocked, false if it isn't.</returns>
+    /// Also checks if the dropdown "Content" has video selected, if yes it will unlock the url input field
     /// <param name="requiredValues">The input field to check for.</param>
     private bool IsUnlocked(ModalDialogDropdownInputField requiredValues)
     {
+        var videoContent = new ModalDialogDropdownInputField("Type",
+            new[]
+            {
+                new ModalDialogDropdownInputFieldChoiceMapping(
+                    new Dictionary<string, string> {{"Content", "Video"}},
+                    new[] {"Video"}),
+            });
+        
+        _fieldIsUrl = !videoContent.ValuesToChoiceMapping.Any(MappingSatisfied);
+        
         return !requiredValues.ValuesToChoiceMapping.Any() || requiredValues.ValuesToChoiceMapping.Any(MappingSatisfied);
     }
 

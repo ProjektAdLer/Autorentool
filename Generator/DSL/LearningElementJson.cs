@@ -6,7 +6,7 @@
 public class LearningElementJson : ILearningElementJson
 {
     // incremented ID for every element, it will also be used as moduleid, sectionid ...
-    public LearningElementJson(int id, IdentifierJson identifier, string? url, string elementCategory, 
+    public LearningElementJson(int id, IdentifierJson identifier, string url, string elementCategory, 
         string elementType, int learningSpaceParentId, List<LearningElementValueJson> learningElementValueList, 
         string? description=null, string? goals = null)
     {
@@ -26,7 +26,7 @@ public class LearningElementJson : ILearningElementJson
     // the identifier has the name of the element
     public IdentifierJson Identifier { get; set; }
     
-    public string? Url { get; set; }
+    public string Url { get; set; }
     
     //A Description for the Learning Element
     public string? Description { get; set; }

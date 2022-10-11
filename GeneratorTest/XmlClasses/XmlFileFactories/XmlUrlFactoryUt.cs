@@ -33,7 +33,7 @@ public class XmlUrlFactoryUt
             Assert.That(systemUnderTest.UrlId, Is.EqualTo(""));
             Assert.That(systemUnderTest.UrlName, Is.EqualTo(""));
             Assert.That(systemUnderTest.UrlParentSpaceId, Is.EqualTo(""));
-            Assert.That(systemUnderTest.UrlDescription, Is.EqualTo(""));
+            Assert.That(systemUnderTest.UrlLink, Is.EqualTo(""));
             Assert.That(systemUnderTest.CurrentTime, Is.Not.Null);
             Assert.That(systemUnderTest.UrlList, Is.Not.Null);
             
@@ -101,7 +101,7 @@ public class XmlUrlFactoryUt
             mockInforefInforef);
         
         var urlLearningElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Video auf Youtube"),
-            "youtube.de", "video", "Video-Link", 1, 
+            "youtube.de", "video", "url", 1, 
             new List<LearningElementValueJson>(){new LearningElementValueJson("Points", 10)}, 
             "desc", "goal");
         var urlList = new List<LearningElementJson>(){urlLearningElementJson};
@@ -117,7 +117,7 @@ public class XmlUrlFactoryUt
             Assert.That(systemUnderTest.UrlId, Is.EqualTo("1"));
             Assert.That(systemUnderTest.UrlName, Is.EqualTo("Video auf Youtube"));
             Assert.That(systemUnderTest.UrlParentSpaceId, Is.EqualTo("1"));
-            Assert.That(systemUnderTest.UrlDescription, Is.EqualTo("desc"));
+            Assert.That(systemUnderTest.UrlLink, Is.EqualTo("youtube.de"));
             
             Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItem, Is.EqualTo(mockGradesGradeItem));
             Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItems, Is.EqualTo(mockGradesGradeItems));
@@ -126,8 +126,8 @@ public class XmlUrlFactoryUt
             
             Assert.That(systemUnderTest.ActivitiesUrlXmlUrl, Is.EqualTo(mockUrl));
             Assert.That(systemUnderTest.ActivitiesUrlXmlUrl.Name, Is.EqualTo(systemUnderTest.UrlName));
-            Assert.That(systemUnderTest.ActivitiesUrlXmlUrl.Intro, Is.EqualTo(systemUnderTest.UrlDescription));
-            Assert.That(systemUnderTest.ActivitiesUrlXmlUrl.Externalurl, Is.EqualTo(systemUnderTest.UrlDescription));
+            Assert.That(systemUnderTest.ActivitiesUrlXmlUrl.Intro, Is.EqualTo(systemUnderTest.UrlLink + "<p style=\"position:relative; background-color:#e6e9ed;\">" + systemUnderTest.UrlDescription + "</p>"));
+            Assert.That(systemUnderTest.ActivitiesUrlXmlUrl.Externalurl, Is.EqualTo(systemUnderTest.UrlLink));
             Assert.That(systemUnderTest.ActivitiesUrlXmlUrl.Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
             
             Assert.That(systemUnderTest.ActivitiesUrlXmlActivity, Is.EqualTo(mockUrlActivity));

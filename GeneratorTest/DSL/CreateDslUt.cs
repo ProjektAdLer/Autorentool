@@ -26,19 +26,22 @@ public class CreateDslUt
         
         var content1 = new LearningContentPe("FileName", "h5p", new byte[]{0x01,0x02});
         var content2 = new LearningContentPe("FileName", "png", new byte[]{0x01,0x02});
-        var content3 = new LearningContentPe("FileName", "mp4", new byte[]{0x01,0x02});
+        var content3 = new LearningContentPe("FileName", "url", new byte[]{0x01,0x02});
         var content4 = new LearningContentPe("FileName", "txt", new byte[]{0x01,0x02});
         var content5 = new LearningContentPe("FileName", "pdf", new byte[]{0x01,0x02});
+        var content6 = new LearningContentPe("FileName", "mp3", new byte[]{0x01,0x02});
 
-        var ele1 = new LearningElementPe("a", "b",content1, "pupup", "g","h", 
+        var ele1 = new LearningElementPe("a", "b",content1, "", "pupup", "g","h", 
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
-        var ele2 = new LearningElementPe("b", "b",content2, "pupup", "g","h", 
+        var ele2 = new LearningElementPe("b", "b",content2, "", "pupup", "g","h", 
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
-        var ele3 = new LearningElementPe("c", "b",content3, "pupup", "g","h", 
+        var ele3 = new LearningElementPe("c", "b", content3, "","pupup", "g","h", 
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
-        var ele4 = new LearningElementPe("d", "b",content4, "pupup", "g","h", 
+        var ele4 = new LearningElementPe("d", "b",content4, "","pupup", "g","h", 
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
-        var ele5 = new LearningElementPe("e", "b",content5, "pupup", "g","h", 
+        var ele5 = new LearningElementPe("e", "b",content5, "","pupup", "g","h", 
+            LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
+        var ele6 = new LearningElementPe("f", "b",content6, "","pupup", "g","h", 
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
         
         var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
@@ -56,7 +59,7 @@ public class CreateDslUt
 
         var systemUnderTest = new CreateDsl(mockFileSystem);
         
-        var learningElementsList = new List<LearningElementPe> { ele1, ele2, ele3, ele4, ele5 };
+        var learningElementsList = new List<LearningElementPe> { ele1, ele2, ele3, ele4, ele5, ele6 };
 
         //Act
         systemUnderTest.WriteLearningWorld(learningWorld);

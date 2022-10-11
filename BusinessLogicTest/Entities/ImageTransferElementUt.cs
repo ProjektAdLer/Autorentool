@@ -15,6 +15,7 @@ public class ImageTransferElementUt
         var shortname = "jkl;";
         var parent = new LearningSpace("foo", "bar", "", "", "", 3);
         var content = new LearningContent("a", "b", Array.Empty<byte>());
+        var url = "url";
         var authors = "ben and jerry";
         var description = "very cool element";
         var goals = "learn very many things";
@@ -24,7 +25,7 @@ public class ImageTransferElementUt
         var positionX = 5f;
         var positionY = 21f;
 
-        var systemUnderTest = new ImageTransferElement(name, shortname, parent, content, authors, description, goals,
+        var systemUnderTest = new ImageTransferElement(name, shortname, parent, content, url, authors, description, goals,
             difficulty, workload, points, positionX, positionY);
         
         Assert.Multiple(() =>

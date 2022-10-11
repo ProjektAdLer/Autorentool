@@ -52,7 +52,7 @@ public class LearningWorldViewModelUt
     {
         var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo");
         var space = new LearningSpaceViewModel("a", "b", "c", "d", "e");
-        var spaceElement = new LearningElementViewModel("a", "b", null!, "c", "d", "e",
+        var spaceElement = new LearningElementViewModel("a", "b", null!, "url","c", "d", "e",
             LearningElementDifficultyEnum.Easy, space, 6);
         
         space.LearningElements.Add(spaceElement);
@@ -66,10 +66,10 @@ public class LearningWorldViewModelUt
     {
         var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo");
         var space = new LearningSpaceViewModel("a", "b", "c", "d", "e");
-        var spaceElement = new LearningElementViewModel("a", "b", null!, "c", "d", "e",
+        var spaceElement = new LearningElementViewModel("a", "b", null!, "url","c", "d", "e",
             LearningElementDifficultyEnum.Easy, space, 6,7);
         var space2 = new LearningSpaceViewModel("a", "b", "c", "d", "e");
-        var spaceElement2 = new LearningElementViewModel("a", "b", null!, "c", "d", "e",
+        var spaceElement2 = new LearningElementViewModel("a", "b", null!, "url","c", "d", "e",
             LearningElementDifficultyEnum.Easy, space, 4,5);
         
         space.LearningElements.Add(spaceElement);

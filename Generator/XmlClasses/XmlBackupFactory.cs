@@ -291,10 +291,6 @@ public class XmlBackupFactory : IXmlBackupFactory
             {
                 learningElementType = "label";
             }
-            else if (learningElementType is "mp4")
-            {
-                learningElementType = "url";
-            }
 
             if (MoodleBackupXmlActivityList != null)
             {

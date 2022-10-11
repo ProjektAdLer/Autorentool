@@ -14,7 +14,7 @@ public class EditLearningElementUt
     {
         var parent = new LearningSpace("l", "k", "j", "j", "j", 5);
         var content = new LearningContent("bar", "foo", new byte[] {0x01, 0x02});
-        var element = new LearningElement("a", "b", content,
+        var element = new LearningElement("a", "b", content, "url",
             "e", "f","g", LearningElementDifficultyEnum.Medium, parent, 8, 9, 17f, 29f);
         parent.LearningElements.Add(element);
         
@@ -75,7 +75,7 @@ public class EditLearningElementUt
     public void Undo_MementoIsNull_ThrowsException()
     {
         var parent = new LearningSpace("l", "k", "j", "j", "j", 5);
-        var element = new LearningElement("a", "b", null!, "c", "d", "e", LearningElementDifficultyEnum.Easy);
+        var element = new LearningElement("a", "b", null!, "url","c", "d", "e", LearningElementDifficultyEnum.Easy);
         var name = "new element";
         var shortname = "ne";
         var authors = "marvin";
@@ -100,7 +100,7 @@ public class EditLearningElementUt
     {
         var parent = new LearningSpace("l", "k", "j", "j", "j", 5);
         var content = new LearningContent("bar", "foo", new byte[] {0x01, 0x02});
-        var element = new LearningElement("a", "b", content,
+        var element = new LearningElement("a", "b", content, "url",
             "e", "f","g", LearningElementDifficultyEnum.Medium, parent, 8, 9, 17f, 29f);
         parent.LearningElements.Add(element);
         

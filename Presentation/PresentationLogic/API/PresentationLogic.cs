@@ -229,13 +229,13 @@ public class PresentationLogic : IPresentationLogic
     
     /// <inheritdoc cref="IPresentationLogic.CreateLearningElement"/>
     public void CreateLearningElement(ILearningSpaceViewModel parentSpaceVm, string name, string shortname,
-        ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContentVm,
+        ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContentVm, string url,
         string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points)
     {
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
         var contentEntity = Mapper.Map<BusinessLogic.Entities.LearningContent>(learningContentVm);
 
-        var command = new CreateLearningElement(parentSpaceEntity, name, shortname, elementType, contentType, contentEntity,
+        var command = new CreateLearningElement(parentSpaceEntity, name, shortname, elementType, contentType, contentEntity, url,
             authors, description, goals, difficulty, workload, points,parent => Mapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
     } 

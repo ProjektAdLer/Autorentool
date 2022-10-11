@@ -17,6 +17,7 @@ public class H5PInteractionElementViewModelUt
         var shortname = "dee";
         var parent = new LearningSpaceViewModel("ffg", "ghh", "iij", "", "", 2);
         var content = new LearningContentViewModel("jkk", "llm", new byte[] {0x09, 0x03});
+        var url = "url";
         var authors = "mnn";
         var description = "oop";
         var goals = "pqq";
@@ -26,7 +27,7 @@ public class H5PInteractionElementViewModelUt
         var positionX = 5f;
         var positionY = 21f;
 
-        var systemUnderTest = new H5PInteractionElementViewModel(name, shortname, parent, content, authors,
+        var systemUnderTest = new H5PInteractionElementViewModel(name, shortname, parent, content, url,authors,
             description, goals, difficulty, workload, points, positionX, positionY);
 
         Assert.Multiple(() =>
@@ -35,6 +36,7 @@ public class H5PInteractionElementViewModelUt
             Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortname));
             Assert.That(systemUnderTest.Parent, Is.EqualTo(parent));
             Assert.That(systemUnderTest.LearningContent, Is.EqualTo(content));
+            Assert.That(systemUnderTest.Url, Is.EqualTo(url));
             Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));

@@ -19,9 +19,9 @@ public class H5PActivationElementViewModel : ActivationElementViewModel
     /// Initializes a new instance of the <see cref="H5PActivationElementViewModel"/> class.
     /// </summary>
     public H5PActivationElementViewModel(string name, string shortname, ILearningSpaceViewModel? parent,
-        LearningContentViewModel learningContent, string authors, string description, string goals,
+        LearningContentViewModel learningContent, string url, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double positionX, double positionY) : base(
-        name, shortname, parent, learningContent, authors, description, goals, difficulty, workload, points, positionX,
+        name, shortname, parent, learningContent, url, authors, description, goals, difficulty, workload, points, positionX,
         positionY)
     {
     } 

@@ -60,6 +60,7 @@ public class CreateDsl : ICreateDsl
 
         int learningSpaceIdForDictionary = 1;
         
+
         var idDictionary = new Dictionary<int, Guid>();
         foreach (var space in ListLearningSpaces)
         {
@@ -67,9 +68,10 @@ public class CreateDsl : ICreateDsl
             learningSpaceIdForDictionary++;
         }
 
+        // Starting Value for Learning Space Ids & Learning Element Ids
         int learningSpaceId = 1;
-        // Starts with 2, because the DSL Document always has Element ID = 1. Therefore all other elements have to start with 2.
         int learningSpaceElementId = 1;
+        
         foreach (var learningSpace in ListLearningSpaces)
         {
             _listLearningSpaceContent = new List<int>();
@@ -84,7 +86,7 @@ public class CreateDsl : ICreateDsl
                     case "png" or "jpg" or "bmp" or "webp":
                         elementCategory = "image";
                         break;
-                    case "mp4":
+                    case "url":
                         elementCategory = "video";
                         break;
                     case "txt" or "c" or "h" or "cpp" or "cc" or "c++" or "py" or "js" or "php" or "html" or "css":
@@ -96,6 +98,9 @@ public class CreateDsl : ICreateDsl
                     case "pdf":
                         elementCategory = "pdf";
                         break;
+                    default:
+                        ArgumentException e = new ArgumentException("The given LearningContent Type is not supported - in CreateDsl.");
+                        break;
                 }
                 IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", element.Name);
                 List<LearningElementValueJson> learningElementValueList = new List<LearningElementValueJson>();
@@ -103,9 +108,10 @@ public class CreateDsl : ICreateDsl
                 learningElementValueList.Add(learningElementValueJson);
 
                 LearningElementJson learningElementJson = new LearningElementJson(learningSpaceElementId,
-                    learningElementIdentifier, "", elementCategory,element.LearningContent.Type, learningSpaceId, learningElementValueList, 
-                    element.Description, element.Goals);
+                    learningElementIdentifier, element.Url, elementCategory, element.LearningContent.Type, 
+                    learningSpaceId, learningElementValueList, element.Description, element.Goals);
                 ListLearningElements.Add(element);
+                
                 //int elementIndex = ListLearningElements.IndexOf(element) + 1;
                 _listLearningSpaceContent.Add(learningSpaceElementId);
                 learningSpaceElementId++;
@@ -119,8 +125,7 @@ public class CreateDsl : ICreateDsl
                     .Select(x => x.Key)
                     .FirstOrDefault());
             }
-
-            
+      
             // Add Learning Space to Learning World
             LearningWorldJson.LearningSpaces.Add(new LearningSpaceJson(learningSpaceId,
                 learningSpaceIdentifier, _listLearningSpaceContent, 
