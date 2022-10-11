@@ -13,7 +13,7 @@ public class ImageTransferElement : LearningElement
     {
     }
 
-    internal ImageTransferElement(string name, string shortname, ILearningSpace? parent,
+    public ImageTransferElement(string name, string shortname, ILearningSpace? parent,
         LearningContent learningContent, string url, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double positionX, double positionY) : base(
         name, shortname, learningContent, url, authors, description, goals, difficulty, parent, workload, points, positionX,
