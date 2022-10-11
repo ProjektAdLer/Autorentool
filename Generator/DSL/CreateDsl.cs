@@ -1,6 +1,7 @@
 ﻿using System.IO.Abstractions;
 using System.Text.Json;
 using Generator.WorldExport;
+using Microsoft.Extensions.Logging;
 using PersistEntities;
 
 namespace Generator.DSL;
@@ -16,17 +17,19 @@ public class CreateDsl : ICreateDsl
     public string Uuid;
     private string _dslPath;
     private string _xmlFilesForExportPath;
+    internal ILogger<CreateDsl> Logger { get; }
 
     /// <summary>
     /// Read the AuthoringToolLib Entities and create a Dsl Document with a specified syntax.
     /// </summary>
     /// <param name="fileSystem"></param>
 #pragma warning disable CS8618 //@Dimitri_Bigler Lists are always initiated, Constructor just doesnt know.
-    public CreateDsl(IFileSystem fileSystem)
+    public CreateDsl(IFileSystem fileSystem, ILogger<CreateDsl> logger)
 #pragma warning restore CS8618
     {
         Initialize();
         _fileSystem = fileSystem;
+        Logger = logger;
        
     }
 
@@ -165,7 +168,7 @@ public class CreateDsl : ICreateDsl
         }
 
         _fileSystem.File.WriteAllText(_dslPath, jsonFile);
-        Console.WriteLine(jsonFile);
+        Logger.LogDebug(jsonFile);
         return _dslPath;
     }
 }

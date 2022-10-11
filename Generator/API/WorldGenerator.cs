@@ -30,8 +30,8 @@ public class WorldGenerator : IWorldGenerator
     /// <param name="filepath"></param> Desired filepath for the .mbz file. Given by user, when Export Button is pressed.
     public void ConstructBackup(LearningWorld learningWorld, string filepath)
     {
-        string dslpath = CreateDsl.WriteLearningWorld(Mapper.Map<LearningWorldPe>(learningWorld));
-        ReadDsl.ReadLearningWorld(dslpath);
+        string dslPath = CreateDsl.WriteLearningWorld(Mapper.Map<LearningWorldPe>(learningWorld));
+        ReadDsl.ReadLearningWorld(dslPath);
         BackupFile.WriteXmlFiles((ReadDsl as ReadDsl)!);
         BackupFile.WriteBackupFile(filepath);
     }

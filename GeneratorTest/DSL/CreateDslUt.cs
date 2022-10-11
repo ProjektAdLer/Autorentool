@@ -1,7 +1,10 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
 using Generator.DSL;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 using PersistEntities;
+using ILogger = Castle.Core.Logging.ILogger;
 
 namespace GeneratorTest.DSL;
 
@@ -16,6 +19,7 @@ public class CreateDslUt
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         mockFileSystem.AddDirectory(Path.Join(curWorkDir, "XMLFilesForExport"));
         mockFileSystem.AddFile(curWorkDir + "\\XMLFilesForExport\\LearningWorld.xml", new MockFileData(""));
+        var mockLogger = Substitute.For<ILogger<CreateDsl>>();
         
         const string name = "asdf";
         const string shortname = "jkl;";
@@ -57,7 +61,7 @@ public class CreateDslUt
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals,
              learningSpaces);
 
-        var systemUnderTest = new CreateDsl(mockFileSystem);
+        var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
         
         var learningElementsList = new List<LearningElementPe> { ele1, ele2, ele3, ele4, ele5, ele6 };
 
