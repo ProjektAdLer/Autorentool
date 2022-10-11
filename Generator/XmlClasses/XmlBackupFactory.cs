@@ -287,7 +287,7 @@ public class XmlBackupFactory : IXmlBackupFactory
             {
                 learningElementType = "resource";
             }
-            else if (learningElementType is "space" or "mp4")
+            else if (learningElementType is "space")
             {
                 learningElementType = "label";
             }

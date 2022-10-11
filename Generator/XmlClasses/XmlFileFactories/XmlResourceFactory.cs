@@ -89,7 +89,7 @@ public class XmlResourceFactory : IXmlResourceFactory
         ActivitiesInforefXmlInforef = inforefXmlInforef?? new ActivitiesInforefXmlInforef();
     }
     
-    public void CreateFileFactory()
+    public void CreateResourceFactory()
     {
         var resourceList = ReadDsl.GetResourceList();
         FilesXmlFilesList = FileManager.GetXmlFilesList();
@@ -115,35 +115,35 @@ public class XmlResourceFactory : IXmlResourceFactory
 
             if (resource.ElementType is "pdf" or "json")
             {
-                FileSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "application/"+FileElementType);
+                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "application/"+FileElementType);
             }
             else if (resource.ElementType is "js")
             {
-                FileSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "application/x-javascript");
+                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "application/x-javascript");
             }
             else if (resource.ElementType is "cs")
             {
-                FileSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "application/x-csh");
+                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "application/x-csh");
             }
             else if (resource.ElementType is "jpg" or "png" or "bmp")
             {
-                FileSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "image/"+FileElementType);
+                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "image/"+FileElementType);
             }
             /*else if (resource.ElementType is "mp4")
             {
-                FileSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "video/"+FileElementType);
+                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "video/"+FileElementType);
             }*/
             else if (resource.ElementType is "webp" or "cc" or "c++" )
             {
-                FileSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "document/unknown");
+                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "document/unknown");
             }
             else if (resource.ElementType is "txt" or "c" or "h" or "py" or "cpp" or "php")
             {
-                FileSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "text/plain");
+                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "text/plain");
             }
             else if (resource.ElementType is "css" or "html")
             {
-                FileSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "text/"+FileElementType);
+                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "text/"+FileElementType);
             }
 
             FileSetParametersActivity();
@@ -154,7 +154,7 @@ public class XmlResourceFactory : IXmlResourceFactory
     }
     
     //Every resource has to be put into files.xml file
-    public void FileSetParametersFilesXml(string hashCheckSum, string filesize, string mimeType)
+    public void ResourceSetParametersFilesXml(string hashCheckSum, string filesize, string mimeType)
     {
         var file1 = new FilesXmlFile
         {

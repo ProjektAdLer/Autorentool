@@ -7,6 +7,7 @@
 @using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.ModalDialog
+@using Shared
 
 <h2>World: @LearningWorldP.LearningWorldVm?.Name</h2>
 @ChildContent
@@ -51,7 +52,15 @@ else
             @foreach (var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
             {
                 <DraggableLearningSpace LearningSpace="learningSpace"
-                                        OnClicked="@LearningWorldP.SetSelectedLearningSpace"/>
+                                        OnClickedDraggable="@LearningWorldP.SetSelectedLearningSpace"
+                                        OnClickedClickable="@LearningWorldP.DeleteLearningPathWay"
+                                        PositioningService="@LearningWorldP"/>
+            }
+            @foreach (var learningPathWay in LearningWorldP.LearningWorldVm.LearningPathWays)
+            {
+                <PathWay X1=@(learningPathWay.SourceSpace.PositionX+106) Y1=@(learningPathWay.SourceSpace.PositionY+25)
+                         Direction1=Direction.Right X2=@(learningPathWay.TargetSpace.PositionX-6)
+                         Y2=@(learningPathWay.TargetSpace.PositionY+25) Direction2=Direction.Left />
             }
         }
     </svg>

@@ -7,7 +7,7 @@ using Generator.XmlClasses.Entities._sections.Section.xml;
 
 namespace Generator.XmlClasses;
 
-public class XmlSectionFactory
+public class XmlSectionFactory : IXmlSectionFactory
 {
 
     public ISectionsSectionXmlSection SectionsSectionXmlSection;
@@ -36,7 +36,7 @@ public class XmlSectionFactory
         {
             CreateSectionsFolder(space.SpaceId.ToString());
             CreateSectionInforefXml( space.SpaceId.ToString() );
-            CreateSectionSectionXml( space.SpaceId.ToString(),  space.Identifier.Value, "Summary will follow");
+            CreateSectionSectionXml( space.SpaceId.ToString(),  space.Identifier.Value, "");
         }
 
     }

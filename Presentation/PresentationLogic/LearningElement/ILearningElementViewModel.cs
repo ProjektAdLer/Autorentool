@@ -12,6 +12,7 @@ public interface ILearningElementViewModel : IDisplayableLearningObject
     string Shortname { get; set; }
     ILearningSpaceViewModel? Parent { get; set; }
     LearningContentViewModel LearningContent { get; set; }
+    string Url { get; set; }
     string Authors { get; set; }
     string Goals { get; set; }
     LearningElementDifficultyEnum Difficulty { get; set; }

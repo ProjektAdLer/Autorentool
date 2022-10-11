@@ -9,6 +9,7 @@ public class ReadDsl : IReadDsl
     public List<LearningElementJson> ListH5PElements;
     public List<LearningElementJson> ListResourceElements;
     public List<LearningElementJson> ListLabelElements;
+    public List<LearningElementJson> ListUrlElements;
     public List<LearningElementJson> ListAllSpacesAndElementsOrdered;
     private LearningWorldJson _learningWorldJson;
     private IFileSystem _fileSystem;
@@ -32,6 +33,7 @@ public class ReadDsl : IReadDsl
         ListH5PElements = new List<LearningElementJson>();
         ListResourceElements = new List<LearningElementJson>();
         ListLabelElements = new List<LearningElementJson>();
+        ListUrlElements = new List<LearningElementJson>();
         ListAllSpacesAndElementsOrdered = new List<LearningElementJson>();
     }
 
@@ -48,11 +50,14 @@ public class ReadDsl : IReadDsl
         else if (rootJsonForTest == null)
         {
              var jsonString = _fileSystem.File.ReadAllText(filepathDsl);
-             _rootJson = JsonSerializer.Deserialize<DocumentRootJson>(jsonString) ?? throw new InvalidOperationException("Could not deserialize DSL_Document");
+             var options = new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true};
+             _rootJson = JsonSerializer.Deserialize<DocumentRootJson>(jsonString, options) ?? throw new InvalidOperationException("Could not deserialize DSL_Document");
         }
         GetH5PElements(_rootJson);
         GetResourceElements(_rootJson);
         GetLabelElements(_rootJson);
+        GetWorldAttributes(_rootJson);
+        GetUrlElements(_rootJson);
         GetSpacesAndElementsOrdered(_rootJson);
         SetLearningWorld(_rootJson);
     }
@@ -94,13 +99,40 @@ public class ReadDsl : IReadDsl
     {
         foreach (var label in documentRootJson.LearningWorld.LearningElements)
         {
-            if (label.ElementType is "mp4")
+            if (label.ElementType is "label")
             {
                 ListLabelElements.Add(label);
             }
         }
     }
-    
+
+    private void GetWorldAttributes(DocumentRootJson documentRootJson)
+    {
+        // World Attributes like Description & Goals are added to the label-list, as they are represented as Labels in Moodle
+        if(documentRootJson.LearningWorld.Description == "" && documentRootJson.LearningWorld.Goals == "") return;
+        
+        int lastId;
+        lastId = documentRootJson.LearningWorld.LearningElements.Count > 0 ? documentRootJson.LearningWorld.LearningElements.Last().Id : 1;
+
+        var worldAttributes = new LearningElementJson(lastId, 
+            new IdentifierJson("Description",documentRootJson.LearningWorld.Description), "", 
+            "World Attributes", "label", 1, 
+            new List<LearningElementValueJson>(), documentRootJson.LearningWorld.Description,
+            documentRootJson.LearningWorld.Goals);
+        
+        ListAllSpacesAndElementsOrdered.Add(worldAttributes);
+    }
+
+    private void GetUrlElements(DocumentRootJson documentRootJson)
+    {
+        foreach (var url in documentRootJson.LearningWorld.LearningElements)
+        {
+            if (url.ElementType is "url")
+            {
+                ListUrlElements.Add(url);
+            }
+        }
+    }
 
     private void GetSpacesAndElementsOrdered(DocumentRootJson? documentRootJson)
     {
@@ -108,8 +140,8 @@ public class ReadDsl : IReadDsl
         {
             foreach (var space in documentRootJson.LearningWorld.LearningSpaces)
             {
-                List<LearningElementValueJson> values = new List<LearningElementValueJson>{new("", "")};
-                ListAllSpacesAndElementsOrdered.Add(new LearningElementJson(space.SpaceId+1000, space.Identifier, "space", 0, values, space.Description));
+                List<LearningElementValueJson> values = new List<LearningElementValueJson>{new("", 0)};
+                ListAllSpacesAndElementsOrdered.Add(new LearningElementJson(space.SpaceId+1000, space.Identifier, "", "space","space", 0, values, space.Description));
                 
                 foreach (int elementInSpace in space.LearningSpaceContent)
                 {
@@ -127,9 +159,8 @@ public class ReadDsl : IReadDsl
     public List<LearningSpaceJson> GetSectionList()
     {
         var space = new LearningSpaceJson(0, new IdentifierJson("identifier", "Topic 0"), 
-            new List<int>(), "0" ,"0" );
-        var spaceList = new List<LearningSpaceJson>();
-        spaceList.Add(space);
+            new List<int>(), 0 ,0 );
+        var spaceList = new List<LearningSpaceJson> {space};
         return spaceList;
     }
 
@@ -143,6 +174,11 @@ public class ReadDsl : IReadDsl
         return ListLabelElements;
     }
     
+    public List<LearningElementJson> GetUrlList()
+    {
+        return ListUrlElements;
+    }
+    
     //A List that contains all Spaces and Elements in the correct order. 
     //First comes a Spaces followed by all his Elements until another Space appears.
     //The Spaces where transformed to LearningElementJson, so they can be used in the same List.
@@ -150,5 +186,5 @@ public class ReadDsl : IReadDsl
     {
         return ListAllSpacesAndElementsOrdered;
     }
-
+    
 }

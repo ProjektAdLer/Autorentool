@@ -12,6 +12,7 @@ using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.ModalDialog;
@@ -42,6 +43,7 @@ public class LearningWorldViewUt
         _ctx.ComponentFactories.AddStub<LearningSpaceView>();
         _ctx.ComponentFactories.AddStub<DraggableLearningSpace>();
         _ctx.ComponentFactories.AddStub<DraggableLearningElement>();
+        _ctx.ComponentFactories.AddStub<PathWay>();
         _ctx.ComponentFactories.AddStub<ModalDialog>();
         _ctx.Services.AddSingleton(_mouseService);
         _ctx.Services.AddSingleton(_worldPresenter);
@@ -142,14 +144,18 @@ public class LearningWorldViewUt
         var space1 = Substitute.For<ILearningSpaceViewModel>();
         var space2 = Substitute.For<ILearningSpaceViewModel>();
         var learningSpaces = new List<ILearningSpaceViewModel> { space1, space2 };
+        var learningPathWay = new LearningPathwayViewModel(space1, space2);
+        var learningPathWays = new List<ILearningPathWayViewModel> { learningPathWay };
 
         var learningWorld = Substitute.For<ILearningWorldViewModel>();
         learningWorld.LearningSpaces.Returns(learningSpaces);
+        learningWorld.LearningPathWays.Returns(learningPathWays);
         _worldPresenter.LearningWorldVm.Returns(learningWorld);
         
         var systemUnderTest = GetLearningWorldViewForTesting();
 
         var draggableLearningSpaces = systemUnderTest.FindComponentsOrFail<Stub<DraggableLearningSpace>>().ToList();
+        var pathWays = systemUnderTest.FindComponentsOrFail<Stub<PathWay>>().ToList();
 
         Assert.Multiple(() =>
         {
@@ -157,6 +163,7 @@ public class LearningWorldViewUt
             Assert.That(learningSpaces.All(le =>
                 draggableLearningSpaces.Any(dle =>
                     dle.Instance.Parameters[nameof(DraggableLearningSpace.LearningSpace)] == le)));
+            Assert.That(pathWays, Has.Count.EqualTo(learningPathWays.Count));
         });
     }
 

@@ -164,6 +164,22 @@ public interface IPresentationLogic
     Task LoadLearningSpaceAsync(ILearningWorldViewModel learningWorldVm);
 
     /// <summary>
+    /// Adds a new learning pathway between two learning spaces in the given learning world.
+    /// </summary>
+    /// <param name="learningWorldVm">Learning world into which the learning pathway gets created.</param>
+    /// <param name="sourceSpaceVm">Learning space from which the path starts.</param>
+    /// <param name="targetSpaceVm">Learning space where the path ends.</param>
+    void CreateLearningPathWay(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel sourceSpaceVm,
+        ILearningSpaceViewModel targetSpaceVm);
+
+    /// <summary>
+    /// Deletes the last pathway that was created to the targetSpace.
+    /// </summary>
+    /// <param name="learningWorldVm">Learning world in which the learning pathway gets deleted.</param>
+    /// <param name="targetSpaceVm">Learning space where the path ends.</param>
+    void DeleteLearningPathWay(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel targetSpaceVm);
+    
+    /// <summary>
     /// Adds a new learning element to its parent space.
     /// </summary>
     /// <param name="parentSpaceVm">Parent space of the element.</param>
@@ -180,6 +196,7 @@ public interface IPresentationLogic
     /// <param name="elementType">Type of the element.</param>
     /// <param name="contentType">Type of the content that the element contains.</param>
     /// <param name="learningContentVm">The content of the element.</param>
+    /// <param name="url"></param>
     /// <param name="authors">A list of authors of the element.</param>
     /// <param name="description">A description of the element.</param>
     /// <param name="goals">The goals of the element.</param>
@@ -188,7 +205,7 @@ public interface IPresentationLogic
     /// <param name="points">The number of points of the learning element.</param>
     /// <param name="positionX"></param>
     /// <param name="positionY"></param>
-    void CreateLearningElement(ILearningSpaceViewModel parentSpaceVm, string name, string shortname,
+    void CreateLearningElement(ILearningSpaceViewModel parentSpaceVm, string name, string shortname, string url,
         ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContentVm,
         string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points,
         double positionX = 0, double positionY = 0);
@@ -274,5 +291,4 @@ public interface IPresentationLogic
     void LoadLearningWorldViewModel(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, Stream stream);
     void LoadLearningSpaceViewModel(ILearningWorldViewModel learningWorldVm, Stream stream);
     void LoadLearningElementViewModel(ILearningSpaceViewModel parentSpaceVm, Stream stream);
-    event Action? OnUndoRedoPerformed;
 }

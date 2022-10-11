@@ -10,7 +10,7 @@ public interface ILearningElement
     public ILearningSpace? Parent { get; set; }
     LearningContent LearningContent { get; set; }
     string Authors { get; set; }
-    new string Description { get; set; }
+    string Description { get; set; }
     string Goals { get; set; }
     int Workload { get; set; }
     int Points { get; set; }

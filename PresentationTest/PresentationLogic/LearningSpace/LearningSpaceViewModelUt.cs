@@ -20,8 +20,8 @@ public class LearningSpaceViewModelUt
         var requiredPoints = 10;
         var positionX = 5f;
         var positionY = 21f;
-        var ele1 = new LearningElementViewModel("a", "b",  null!, "g", "h","i", LearningElementDifficultyEnum.Easy, null, 17,11, 23);
-        var ele2 = new LearningElementViewModel("z", "zz",  null!, "z","zz","zzz", LearningElementDifficultyEnum.Hard, null, 444,12, double.MaxValue);
+        var ele1 = new LearningElementViewModel("a", "b",  null!, "url","g", "h","i", LearningElementDifficultyEnum.Easy, null, 17,11, 23);
+        var ele2 = new LearningElementViewModel("z", "zz",  null!, "url","z","zz","zzz", LearningElementDifficultyEnum.Hard, null, 444,12, double.MaxValue);
         var learningElements = new List<ILearningElementViewModel> { ele1, ele2 };
         
         var systemUnderTest = new LearningSpaceViewModel(name, shortname, authors, description, goals, requiredPoints, 
@@ -54,9 +54,9 @@ public class LearningSpaceViewModelUt
     {
 
         var systemUnderTest = new LearningSpaceViewModel("a", "b", "c", "d", "e");
-        var element1 = new LearningElementViewModel("a", "b", null!, "c", "d", "e",
+        var element1 = new LearningElementViewModel("a", "b", null!, "url","c", "d", "e",
             LearningElementDifficultyEnum.Easy, systemUnderTest, 6);
-        var element2 = new LearningElementViewModel("abc", "b", null!, "c", "d", "e",
+        var element2 = new LearningElementViewModel("abc", "b", null!, "url","c", "d", "e",
             LearningElementDifficultyEnum.Easy, systemUnderTest, 14);
         
         Assert.That(systemUnderTest.Workload, Is.EqualTo(0));
@@ -76,9 +76,9 @@ public class LearningSpaceViewModelUt
     {
 
         var systemUnderTest = new LearningSpaceViewModel("a", "b", "c", "d", "e");
-        var element1 = new LearningElementViewModel("a", "b", null!, "c", "d", "e",
+        var element1 = new LearningElementViewModel("a", "b", null!, "url","c", "d", "e",
             LearningElementDifficultyEnum.Easy, systemUnderTest, 6,7);
-        var element2 = new LearningElementViewModel("abc", "b", null!, "c", "d", "e",
+        var element2 = new LearningElementViewModel("abc", "b", null!, "url","c", "d", "e",
             LearningElementDifficultyEnum.Easy, systemUnderTest, 14,15);
         
         Assert.That(systemUnderTest.Points, Is.EqualTo(0));

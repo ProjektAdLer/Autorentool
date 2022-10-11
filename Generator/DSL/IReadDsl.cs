@@ -8,5 +8,6 @@ public interface IReadDsl
     List<LearningSpaceJson> GetSectionList();
     List<LearningElementJson> GetResourceList();
     List<LearningElementJson> GetLabelsList();
+    List<LearningElementJson> GetUrlList();
     List<LearningElementJson> GetSpacesAndElementsOrderedList();
 }

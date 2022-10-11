@@ -211,6 +211,32 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
     
+    /// <inheritdoc cref="IPresentationLogic.CreateLearningPathWay"/>
+    public void CreateLearningPathWay(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel sourceSpaceVm,
+        ILearningSpaceViewModel targetSpaceVm)
+    {
+        var learningWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var sourceSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(sourceSpaceVm);
+        var targetSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(targetSpaceVm);
+
+        var command = new CreateLearningPathWay(learningWorldEntity, sourceSpaceEntity, targetSpaceEntity,
+            world => Mapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.DeleteLearningPathWay"/>
+    public void DeleteLearningPathWay(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel targetSpaceVm)
+    {
+        var learningWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var targetSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(targetSpaceVm);
+
+        _logger.LogInformation("Deleting Learning Path Way from {0}", targetSpaceVm.Name);
+        
+        var command = new DeleteLearningPathWay(learningWorldEntity, targetSpaceEntity,
+            world => Mapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
     public void AddLearningElement(ILearningSpaceViewModel parentSpaceVm, ILearningElementViewModel learningElementVm)
     {
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
@@ -223,7 +249,7 @@ public class PresentationLogic : IPresentationLogic
     
     /// <inheritdoc cref="IPresentationLogic.CreateLearningElement"/>
     public void CreateLearningElement(ILearningSpaceViewModel parentSpaceVm, string name, string shortname,
-        ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContentVm,
+        ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContentVm, string url,
         string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload,
         int points, double positionX = 0, double positionY = 0)
     {
@@ -231,7 +257,8 @@ public class PresentationLogic : IPresentationLogic
         var contentEntity = Mapper.Map<BusinessLogic.Entities.LearningContent>(learningContentVm);
 
         var command = new CreateLearningElement(parentSpaceEntity, name, shortname, elementType, contentType, contentEntity,
-            authors, description, goals, difficulty, workload, points, positionX, positionY, parent => CMapper.Map(parent, parentSpaceVm));
+            url, authors, description, goals, difficulty, workload, points, positionX, positionY, 
+            parent => CMapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
     } 
     

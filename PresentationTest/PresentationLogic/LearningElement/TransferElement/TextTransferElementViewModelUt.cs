@@ -17,6 +17,7 @@ public class TextTransferElementViewModelUt
         var shortname = "fff";
         var parent = new LearningSpaceViewModel("ggg", "hhh", "iii", "", "", 2);
         var content = new LearningContentViewModel("jjj", "kkk", new byte[] {0x06, 0x03});
+        var url = "url";
         var authors = "lll";
         var description = "mmm";
         var goals = "nnn";
@@ -26,7 +27,7 @@ public class TextTransferElementViewModelUt
         var positionX = 5f;
         var positionY = 21f;
 
-        var systemUnderTest = new TextTransferElementViewModel(name, shortname, parent, content, authors,
+        var systemUnderTest = new TextTransferElementViewModel(name, shortname, parent, content, url, authors,
             description, goals, difficulty, workload, points, positionX, positionY);
 
         Assert.Multiple(() =>
@@ -35,6 +36,7 @@ public class TextTransferElementViewModelUt
             Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortname));
             Assert.That(systemUnderTest.Parent, Is.EqualTo(parent));
             Assert.That(systemUnderTest.LearningContent, Is.EqualTo(content));
+            Assert.That(systemUnderTest.Url, Is.EqualTo(url));
             Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
