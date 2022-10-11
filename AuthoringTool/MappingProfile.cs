@@ -167,6 +167,24 @@ public class MappingProfile : Profile
             .As<LearningSpaceViewModel>();
         CreateMap<LearningPathway, ILearningPathWayViewModel>()
             .As<LearningPathwayViewModel>();
+        
+        CreateMap<H5PActivationElement, ILearningElementViewModel>().As<H5PActivationElementViewModel>();
+        CreateMap<H5PInteractionElement, ILearningElementViewModel>().As<H5PInteractionElementViewModel>();
+        CreateMap<H5PTestElement, ILearningElementViewModel>().As<H5PTestElementViewModel>();
+        CreateMap<ImageTransferElement, ILearningElementViewModel>().As<ImageTransferElementViewModel>();
+        CreateMap<PdfTransferElement, ILearningElementViewModel>().As<PdfTransferElementViewModel>();
+        CreateMap<VideoActivationElement, ILearningElementViewModel>().As<VideoActivationElementViewModel>();
+        CreateMap<VideoTransferElement, ILearningElementViewModel>().As<VideoTransferElementViewModel>();
+        CreateMap<TextTransferElement, ILearningElementViewModel>().As<TextTransferElementViewModel>();
+
+        CreateMap<H5PActivationElementViewModel, ILearningElement>().As<H5PActivationElement>();
+        CreateMap<H5PInteractionElementViewModel, ILearningElement>().As<H5PInteractionElement>();
+        CreateMap<H5PTestElementViewModel, ILearningElement>().As<H5PTestElement>();
+        CreateMap<ImageTransferElementViewModel, ILearningElement>().As<ImageTransferElement>();
+        CreateMap<PdfTransferElementViewModel, ILearningElement>().As<PdfTransferElement>();
+        CreateMap<VideoActivationElementViewModel, ILearningElement>().As<VideoActivationElement>();
+        CreateMap<VideoTransferElementViewModel, ILearningElement>().As<VideoTransferElement>();
+        CreateMap<TextTransferElementViewModel, ILearningElement>().As<TextTransferElement>();
     }
 
     /// <summary>
