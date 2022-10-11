@@ -11,34 +11,32 @@ namespace AuthoringTool;
 
 public class CachingMapper : ICachingMapper
 {
-    public CachingMapper(IMapper mapper, ICommandStateManager commandStateManager)
+    public CachingMapper(IMapper mapper, ICommandStateManager commandStateManager, ILogger<CachingMapper> logger)
     {
         _mapper = mapper;
-        _commandStateManager = commandStateManager;
-        _commandStateManager.RemovedCommandsFromStacks += OnRemovedCommandsFromStacks;
+        commandStateManager.RemovedCommandsFromStacks += OnRemovedCommandsFromStacks;
+        _logger = logger;
         _cache = new Dictionary<Guid, object>();
     }
 
     private readonly IMapper _mapper;
-    private readonly ICommandStateManager _commandStateManager;
+    private readonly ILogger<CachingMapper> _logger;
     
     private readonly Dictionary<Guid, object> _cache;
+    internal IReadOnlyDictionary<Guid, object> ReadOnlyCache => _cache;
 
     public void Map<TSource, TDestination>(TSource entity, TDestination viewModel)
     {
         switch (entity, viewModel)
         {
             case (AuthoringToolWorkspace s, IAuthoringToolWorkspaceViewModel d):
-                Map(s, d);
+                MapInternal(s, d);
                 break;
             case (LearningWorld s, ILearningWorldViewModel d):
-                Map(s, d);
+                MapInternal(s, d);
                 break;
             case (LearningSpace s, ILearningSpaceViewModel d):
-                Map(s, d);
-                break;
-            case (LearningElement s, ILearningElementViewModel d):
-                Map(s, d);
+                MapInternal(s, d);
                 break;
             default:
                 _mapper.Map(entity, viewModel);
@@ -46,14 +44,13 @@ public class CachingMapper : ICachingMapper
         }
     }
     
-    private Task RemoveUnusedKeys(IEnumerable<Guid> usedKeys)
+    private void RemoveUnusedKeys(IEnumerable<Guid> usedKeys)
     {
         var unusedKeys = _cache.Keys.Except(usedKeys).ToList();
         foreach (var key in unusedKeys)
         {
             _cache.Remove(key);
         }
-        return Task.CompletedTask;
     }
 
 
@@ -93,7 +90,7 @@ public class CachingMapper : ICachingMapper
         throw new ApplicationException("No cached object found. Check if the object is cached before calling this method.");
     }
 
-    private void Map(AuthoringToolWorkspace authoringToolWorkspaceEntity,
+    private void MapInternal(AuthoringToolWorkspace authoringToolWorkspaceEntity,
         IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm)
     {
         var nLearningWorlds = authoringToolWorkspaceEntity.LearningWorlds
@@ -110,12 +107,12 @@ public class CachingMapper : ICachingMapper
         }
     }
 
-    private void Map(LearningWorld learningWorldEntity, ILearningWorldViewModel learningWorldVm)
+    private void MapInternal(LearningWorld learningWorldEntity, ILearningWorldViewModel learningWorldVm)
     {
         learningWorldVm = Cache(learningWorldVm);
-        var nLearningSpaces = learningWorldEntity.LearningSpaces
+        var newLearningSpacesInEntity = learningWorldEntity.LearningSpaces
             .FindAll(p => learningWorldVm.LearningSpaces.All(l => p.Id != l.Id));
-        foreach (var s in nLearningSpaces)
+        foreach (var s in newLearningSpacesInEntity)
         {
             if(_cache.ContainsKey(s.Id)) learningWorldVm.LearningSpaces.Add(Get<LearningSpaceViewModel>(s.Id));
         }
@@ -127,12 +124,12 @@ public class CachingMapper : ICachingMapper
         }
     }
 
-    private void Map(LearningSpace learningSpaceEntity, ILearningSpaceViewModel learningSpaceVm)
+    private void MapInternal(LearningSpace learningSpaceEntity, ILearningSpaceViewModel learningSpaceVm)
     {
         learningSpaceVm = Cache(learningSpaceVm);
-        var nLearningElements = learningSpaceEntity.LearningElements
+        var newLearningElementsInEntity = learningSpaceEntity.LearningElements
             .FindAll(p => learningSpaceVm.LearningElements.All(l => p.Id != l.Id));
-        foreach (var e in nLearningElements)
+        foreach (var e in newLearningElementsInEntity)
         {
             if(_cache.ContainsKey(e.Id)) learningSpaceVm.LearningElements.Add(Get<LearningElementViewModel>(e.Id));
         }
@@ -142,12 +139,6 @@ public class CachingMapper : ICachingMapper
         {
             Cache(elementVm);
         }
-    }
-
-    private void Map(LearningElement learningElementEntity, ILearningElementViewModel learningElementVm)
-    {
-        learningElementVm = Cache(learningElementVm);
-        _mapper.Map(learningElementEntity, learningElementVm);
     }
 
     private void OnRemovedCommandsFromStacks(object sender, RemoveCommandsFromStacksEventArgs removeCommandsFromStacksEventArgs)

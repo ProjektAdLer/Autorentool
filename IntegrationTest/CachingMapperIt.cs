@@ -24,7 +24,8 @@ public class CachingMapperIt
         var businessLogic = new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager);
         var config = new MapperConfiguration(MappingProfile.Configure);
         var mapper = config.CreateMapper();
-        var cachingMapper = new CachingMapper(mapper, commandStateManager);
+        var logger = Substitute.For<ILogger<CachingMapper>>();
+        var cachingMapper = new CachingMapper(mapper, commandStateManager, logger);
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper);
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         systemUnderTest.CreateLearningWorld(workspaceVm, "a","b","c","d","e","f");
@@ -59,7 +60,8 @@ public class CachingMapperIt
         var businessLogic = new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager);
         var config = new MapperConfiguration(MappingProfile.Configure);
         var mapper = config.CreateMapper();
-        var cachingMapper = new CachingMapper(mapper, commandStateManager);
+        var logger = Substitute.For<ILogger<CachingMapper>>();
+        var cachingMapper = new CachingMapper(mapper, commandStateManager, logger);
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper);
         
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
@@ -113,7 +115,8 @@ public class CachingMapperIt
         var businessLogic = new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager);
         var config = new MapperConfiguration(MappingProfile.Configure);
         var mapper = config.CreateMapper();
-        var cachingMapper = new CachingMapper(mapper, commandStateManager);
+        var logger = Substitute.For<ILogger<CachingMapper>>();
+        var cachingMapper = new CachingMapper(mapper, commandStateManager, logger);
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper);
 
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
