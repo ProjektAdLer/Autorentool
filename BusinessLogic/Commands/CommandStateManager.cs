@@ -68,11 +68,11 @@ public sealed class CommandStateManager : ICommandStateManager
     private IEnumerable<object> GetObjects()
     {
         var objects = new HashSet<object>();
-        foreach (var myObject in _undo.Select(GetObjectFromCommand).Where(guid => guid != null))
+        foreach (var myObject in _undo.Select(GetObjectFromCommand).Where(obj => obj != null))
         {
             if (myObject != null) objects.Add(myObject);
         }
-        foreach (var myObject in _redo.Select(GetObjectFromCommand).Where(guid => guid != null))
+        foreach (var myObject in _redo.Select(GetObjectFromCommand).Where(obj => obj != null))
         {
             if (myObject != null) objects.Add(myObject);
         }
