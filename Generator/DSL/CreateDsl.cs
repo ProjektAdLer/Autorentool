@@ -11,6 +11,7 @@ public class CreateDsl : ICreateDsl
     public List<LearningSpacePe> ListLearningSpaces;
     public LearningWorldJson? LearningWorldJson;
     private List<int> _listLearningSpaceContent;
+    private List<int> _requirements;
     private IFileSystem _fileSystem;
     public string Uuid;
     private string _dslPath;
@@ -34,6 +35,7 @@ public class CreateDsl : ICreateDsl
         ListLearningElements = new List<LearningElementPe>();
         ListLearningSpaces = new List<LearningSpacePe>();
         _listLearningSpaceContent = new List<int>();
+        _requirements = new List<int>();
         Guid guid = Guid.NewGuid();
         Uuid = guid.ToString();
     }
@@ -55,7 +57,17 @@ public class CreateDsl : ICreateDsl
         // The learningSpaceId defines what the starting Id for Spaces should be. 
         // Search for Learning Elements in Spaces and add to listLearningElements
         ListLearningSpaces.AddRange(learningWorld.LearningSpaces);
+
+        int learningSpaceIdForDictionary = 1;
         
+
+        var idDictionary = new Dictionary<int, Guid>();
+        foreach (var space in ListLearningSpaces)
+        {
+            idDictionary.Add(learningSpaceIdForDictionary, space.Id);
+            learningSpaceIdForDictionary++;
+        }
+
         // Starting Value for Learning Space Ids & Learning Element Ids
         int learningSpaceId = 1;
         int learningSpaceElementId = 1;
@@ -106,12 +118,20 @@ public class CreateDsl : ICreateDsl
                 LearningWorldJson.LearningElements.Add(learningElementJson);
             }
 
+            _requirements = new List<int>();
+            foreach (var connectIn in learningSpace.InBoundSpaces)
+            {
+                _requirements.Add(idDictionary.Where(x => x.Value == connectIn.Id)
+                    .Select(x => x.Key)
+                    .FirstOrDefault());
+            }
+      
             // Add Learning Space to Learning World
             LearningWorldJson.LearningSpaces.Add(new LearningSpaceJson(learningSpaceId,
                 learningSpaceIdentifier, _listLearningSpaceContent, 
                 learningSpace.RequiredPoints, 
                 learningSpace.LearningElements.Sum(element => element.Points),
-                learningSpace.Description, learningSpace.Goals));
+                learningSpace.Description, learningSpace.Goals, _requirements));
 
             learningSpaceId++;
         }

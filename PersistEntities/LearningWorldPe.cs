@@ -4,7 +4,7 @@
 public class LearningWorldPe : ILearningWorldPe
 {
     public LearningWorldPe(string name, string shortname, string authors, string language, string description,
-        string goals, List<LearningSpacePe>? learningSpaces = null)
+        string goals, List<LearningSpacePe>? learningSpaces = null,  List<LearningPathwayPe>? learningPathWays = null)
     {
         Name = name;
         Shortname = shortname;
@@ -13,6 +13,7 @@ public class LearningWorldPe : ILearningWorldPe
         Description = description;
         Goals = goals;
         LearningSpaces = learningSpaces ?? new List<LearningSpacePe>();
+        LearningPathWays = learningPathWays ?? new List<LearningPathwayPe>();
     }
 
     /// <summary>
@@ -27,9 +28,11 @@ public class LearningWorldPe : ILearningWorldPe
         Description = "";
         Goals = "";
         LearningSpaces = new List<LearningSpacePe>();
+        LearningPathWays = new List<LearningPathwayPe>();
     }
 
     public List<LearningSpacePe> LearningSpaces { get; set; }
+    public List<LearningPathwayPe> LearningPathWays { get; set; }
     public string Name { get; set; }
     public string Shortname { get; set; }
     public string Authors { get; set; }

@@ -6,6 +6,7 @@ using PersistEntities;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
@@ -196,7 +197,8 @@ public class MappingProfileUt
     public void MapLearningSpaceAndLearningSpacePersistEntity_WithoutLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, null, PositionX, PositionY);
+        var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, null, 
+            PositionX, PositionY, new List<LearningSpace>(), new List<LearningSpace>());
         var destination = new LearningSpacePe("", "", "", "", "", 0);
 
         systemUnderTest.Map(source, destination);
@@ -213,6 +215,8 @@ public class MappingProfileUt
         destination.LearningElements = new List<LearningElementPe>();
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
+        destination.InBoundSpaces = new List<LearningSpacePe>();
+        destination.OutBoundSpaces = new List<LearningSpacePe>();
 
         systemUnderTest.Map(destination, source);
 
@@ -258,7 +262,7 @@ public class MappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, new List<LearningElement>(),
-            PositionX, PositionY);
+            PositionX, PositionY, new List<LearningSpace>(), new List<LearningSpace>());
         source.LearningElements.Add(GetTestableElementWithParent(source));
         var destination = new LearningSpacePe("", "", "", "", "", 0);
 
@@ -276,6 +280,8 @@ public class MappingProfileUt
         destination.LearningElements = new List<LearningElementPe>() {GetTestableNewElementPersistEntity()};
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
+        destination.InBoundSpaces = new List<LearningSpacePe>();
+        destination.OutBoundSpaces = new List<LearningSpacePe>();
 
         systemUnderTest.Map(destination, source);
 
@@ -397,7 +403,7 @@ public class MappingProfileUt
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
             new List<LearningSpace>());
         source.LearningSpaces.Add(new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints,
-            null, PositionX, PositionY));
+            null, PositionX, PositionY, new List<LearningSpace>(), new List<LearningSpace>()));
         var destination = new LearningWorldPe("", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
@@ -418,7 +424,7 @@ public class MappingProfileUt
         destination.LearningSpaces = new List<LearningSpacePe>()
         {
             new LearningSpacePe(NewName, NewShortname, NewAuthors, NewDescription, NewGoals, NewRequiredPoints, 
-                null, NewPositionX, NewPositionY)
+                null, NewPositionX, NewPositionY, new List<LearningSpacePe>(), new List<LearningSpacePe>())
         };
 
         systemUnderTest.Map(destination, source);
@@ -464,6 +470,61 @@ public class MappingProfileUt
         {
             Assert.That(source.LearningSpaces, Has.Count.EqualTo(1));
             Assert.That(source.LearningSpaces[0].LearningElements, Has.Count.EqualTo(1));
+        });
+    }
+    
+    [Test]
+    public void MapLearningWorldAndLearningWorldViewModel_WithLearningSpacesAndLearningPathWay_TestMappingIsValid()
+    {
+        var systemUnderTest = CreateTestableMapper();
+        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
+            new List<LearningSpace>());
+        var space1 = GetTestableSpace();
+        var space2 = GetTestableSpace();
+        source.LearningSpaces.Add(space1);
+        source.LearningSpaces.Add(space2);
+        var destination = new LearningWorldViewModel("", "", "", "", "", "");
+        
+        source.LearningPathways.Add(new LearningPathway(space1, space2));
+
+        systemUnderTest.Map(source, destination);
+
+        TestWorld(destination, false);
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(destination.LearningSpaces, Has.Count.EqualTo(2));
+            Assert.That(destination.LearningSpaces.First().LearningElements, Has.Count.EqualTo(1));
+            Assert.That(destination.LearningSpaces.First().OutBoundSpaces, Has.Count.EqualTo(1));
+            Assert.That(destination.LearningSpaces.Last().InBoundSpaces, Has.Count.EqualTo(1));
+            Assert.That(destination.LearningSpaces.Last().LearningElements, Has.Count.EqualTo(1));
+            Assert.That(destination.LearningPathWays, Has.Count.EqualTo(1));
+        });
+
+        destination.Name = NewName;
+        destination.Shortname = NewShortname;
+        destination.Authors = NewAuthors;
+        destination.Language = NewLanguage;
+        destination.Description = NewDescription;
+        destination.Goals = NewGoals;
+
+        var spaceVm1 = GetTestableNewSpaceViewModel();
+        var spaceVm2 = GetTestableNewSpaceViewModel();
+        destination.LearningSpaces = new List<ILearningSpaceViewModel>() {spaceVm1, spaceVm2};
+        destination.LearningPathWays = new List<ILearningPathWayViewModel>();
+        destination.LearningPathWays.Add(new LearningPathwayViewModel(spaceVm1, spaceVm2));
+
+        systemUnderTest.Map(destination, source);
+
+        TestWorld(source, true);
+        Assert.Multiple(() =>
+        {
+            Assert.That(source.LearningSpaces, Has.Count.EqualTo(2));
+            Assert.That(source.LearningSpaces[0].LearningElements, Has.Count.EqualTo(1));
+            Assert.That(source.LearningSpaces[0].OutBoundSpaces, Has.Count.EqualTo(1));
+            Assert.That(source.LearningSpaces[1].LearningElements, Has.Count.EqualTo(1));
+            Assert.That(source.LearningSpaces[1].InBoundSpaces, Has.Count.EqualTo(1));
+            Assert.That(source.LearningPathways, Has.Count.EqualTo(1));
         });
     }
 

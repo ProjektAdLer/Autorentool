@@ -13,11 +13,22 @@ public class DeleteLearningSpaceUt
     public void Execute_DeletesLearningSpace()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
+        var space0 = new LearningSpace("a", "b", "c", "d", "e", 4);
         var space = new LearningSpace("g", "h", "i", "j", "k", 5);
+        var space1 = new LearningSpace("g", "h", "i", "j", "k", 5);
+        world.LearningSpaces.Add(space0);
         world.LearningSpaces.Add(space);
+        world.LearningSpaces.Add(space1);
         world.SelectedLearningSpace = space;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+        
+        world.LearningPathways.Add(new LearningPathway(space0, space));
+        space0.OutBoundSpaces.Add(space);
+        space.InBoundSpaces.Add(space0);
+        world.LearningPathways.Add(new LearningPathway(space, space1));
+        space.OutBoundSpaces.Add(space1);
+        space1.InBoundSpaces.Add(space);
 
         var command = new DeleteLearningSpace(world, space, mappingAction);
         
@@ -27,37 +38,12 @@ public class DeleteLearningSpaceUt
         
         command.Execute();
         
-        Assert.That(world.LearningSpaces, Is.Empty);
+        Assert.That(world.LearningSpaces, Has.Count.EqualTo(2));
         Assert.IsTrue(actionWasInvoked);
-        Assert.That(world.SelectedLearningSpace, Is.Null);
-    }
-
-    [Test]
-    public void Execute_DeletesLearningSpaceAndSetsAnotherLearningSpaceAsSelectedLearningSpace()
-    {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space1 = new LearningSpace("g", "h", "i", "j", "k", 5);
-        var space2 = new LearningSpace("g2", "h2", "i2", "j2", "k2", 5);
-        world.LearningSpaces.Add(space1);
-        world.LearningSpaces.Add(space2);
-        world.SelectedLearningSpace = space1;
-        bool actionWasInvoked = false;
-        Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
-
-        var command = new DeleteLearningSpace(world, space1, mappingAction);
-        
-        Assert.That(world.LearningSpaces, Does.Contain(space1));
-        Assert.That(world.LearningSpaces, Does.Contain(space2));
-        Assert.IsFalse(actionWasInvoked);
         Assert.That(world.SelectedLearningSpace, Is.EqualTo(space1));
-        
-        command.Execute();
-        
-        Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked);
-        Assert.That(world.SelectedLearningSpace, Is.EqualTo(space2));
+        Assert.That(world.LearningPathways, Has.Count.EqualTo(0));
     }
-    
+
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
@@ -75,7 +61,7 @@ public class DeleteLearningSpaceUt
     }
     
     [Test]
-    public void UndoRedo_UndoesAndRedoesCreateLearningSpace()
+    public void UndoRedo_UndoesAndRedoesDeleteLearningSpace()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         var space = new LearningSpace("g", "h", "i", "j", "k", 5);

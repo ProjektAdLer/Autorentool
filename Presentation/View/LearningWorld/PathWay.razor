@@ -1,0 +1,50 @@
+@using Presentation.Components
+@using Shared
+<path d="M @X1 @Y1 C @_c1X @C1Y, @_c2X @C2Y, @X2 @Y2" stroke="rgb(108, 117, 125)" stroke-width="1.5" fill="transparent" marker-end="url(#arrow)" style="pointer-events:none !important;" />
+
+@code {
+    // Coordinates of the start of the pathway
+    [Parameter] public double X1 { get; set; }
+    [Parameter] public double Y1 { get; set; }
+
+    // Coordinates of the end of the pathway
+    [Parameter] public double X2 { get; set; }
+    [Parameter] public double Y2 { get; set; }
+    
+    // Direction of curvature of the first half of the pathway
+    [Parameter] public Direction Direction1 { get; set; } = Direction.Right;
+    // Direction of curvature of the first half of the pathway
+    [Parameter] public Direction Direction2 { get; set; } = Direction.Left;
+
+    // The following coordinates are used as control points for the Bezier curve
+    private double _c1X;
+    private double _c2X;
+    private double C1Y => Y1;
+    private double C2Y => Y2;
+    private double Length => Math.Sqrt(Math.Pow(X2 - X1, 2) + Math.Pow(Y2 - Y1, 2));
+
+    protected override void OnParametersSet() {
+        _c1X = GetControlPoint(Direction1, X1);
+        _c2X = GetControlPoint(Direction2, X2);
+
+        base.OnParametersSet();
+    }
+
+    double Coefficient
+    {
+        get
+        {
+            switch (Length)
+            {
+                case < 50:
+                    return 1;
+                case >= 50:
+                    return 75;
+            }
+            return 0;
+        }
+    }
+
+    double GetControlPoint(Direction direction, double x)
+        => direction == Direction.Right ? x + Coefficient : x - Coefficient;
+}

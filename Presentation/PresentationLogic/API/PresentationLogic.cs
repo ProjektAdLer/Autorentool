@@ -1,7 +1,6 @@
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
-using BusinessLogic.Entities;
 using ElectronWrapper;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
@@ -192,6 +191,32 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
     
+    /// <inheritdoc cref="IPresentationLogic.CreateLearningPathWay"/>
+    public void CreateLearningPathWay(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel sourceSpaceVm,
+        ILearningSpaceViewModel targetSpaceVm)
+    {
+        var learningWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var sourceSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(sourceSpaceVm);
+        var targetSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(targetSpaceVm);
+
+        var command = new CreateLearningPathWay(learningWorldEntity, sourceSpaceEntity, targetSpaceEntity,
+            world => Mapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.DeleteLearningPathWay"/>
+    public void DeleteLearningPathWay(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel targetSpaceVm)
+    {
+        var learningWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var targetSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(targetSpaceVm);
+
+        _logger.LogInformation("Deleting Learning Path Way from {0}", targetSpaceVm.Name);
+        
+        var command = new DeleteLearningPathWay(learningWorldEntity, targetSpaceEntity,
+            world => Mapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
     public void AddLearningElement(ILearningSpaceViewModel parentSpaceVm, ILearningElementViewModel learningElementVm)
     {
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);

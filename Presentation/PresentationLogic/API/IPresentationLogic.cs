@@ -157,6 +157,22 @@ public interface IPresentationLogic
     Task LoadLearningSpaceAsync(ILearningWorldViewModel learningWorldVm);
 
     /// <summary>
+    /// Adds a new learning pathway between two learning spaces in the given learning world.
+    /// </summary>
+    /// <param name="learningWorldVm">Learning world into which the learning pathway gets created.</param>
+    /// <param name="sourceSpaceVm">Learning space from which the path starts.</param>
+    /// <param name="targetSpaceVm">Learning space where the path ends.</param>
+    void CreateLearningPathWay(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel sourceSpaceVm,
+        ILearningSpaceViewModel targetSpaceVm);
+
+    /// <summary>
+    /// Deletes the last pathway that was created to the targetSpace.
+    /// </summary>
+    /// <param name="learningWorldVm">Learning world in which the learning pathway gets deleted.</param>
+    /// <param name="targetSpaceVm">Learning space where the path ends.</param>
+    void DeleteLearningPathWay(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel targetSpaceVm);
+    
+    /// <summary>
     /// Adds a new learning element to its parent space.
     /// </summary>
     /// <param name="parentSpaceVm">Parent space of the element.</param>
