@@ -80,16 +80,42 @@ public class ContentFileHandler : IContentFileHandler
         _logger.LogDebug("Wrote hash for {} to {}", finalPath, finalHashPath);
     }
 
+    /// <summary>
+    /// Calculates hash of file content and finds path of duplicate files in <see cref="ContentFilesFolderPath"/>.
+    /// </summary>
+    /// <param name="filepath">The path to the file which should be checked.</param>
+    /// <returns>A file path if any duplicate is found, null otherwise, and a byte array containing the hash of the file contents.</returns>
+    /// <exception cref="IOException">The file has a length of 0 and is empty.</exception>
+    /// <exception cref="ArgumentException">The filepath was null or whitespace.</exception>
     internal async Task<(string?,byte[])> GetFilePathOfExistingCopyAndHash(string filepath)
     {
         if (string.IsNullOrWhiteSpace(filepath))
             throw new ArgumentException("Path cannot be null or whitespace.", nameof(filepath));
         await using var stream = _fileSystem.File.OpenRead(filepath);
-        return await GetFilePathOfExistingCopyAndHash(stream);
+        try
+        {
+            return await GetFilePathOfExistingCopyAndHash(stream);
+        }
+        catch (IOException ioex)
+        {
+            _logger.LogError("File at path {} is empty", filepath);
+            throw new IOException($"File at path {filepath} is empty.", ioex);
+        }
     }
 
+    /// <summary>
+    /// Calculates hash of stream content and finds path of duplicate files in <see cref="ContentFilesFolderPath"/>.
+    /// </summary>
+    /// <param name="stream">The stream which should be checked.</param>
+    /// <returns>A file path if any duplicate is found, null otherwise, and a byte array containing the hash of the stream contents.</returns>
+    /// <exception cref="IOException">The stream has a length of 0 and is empty.</exception>
     private async Task<(string?,byte[])> GetFilePathOfExistingCopyAndHash(Stream stream)
     {
+        if (stream.Length == 0)
+        {
+            _logger.LogError("Stream to check for duplicate was empty");
+            throw new IOException("The given stream is empty.");
+        }
         AssertAllFilesInContentFilesFolderHaveHashAsync();
 
         var streamHash = await ComputeHashAsync(stream);

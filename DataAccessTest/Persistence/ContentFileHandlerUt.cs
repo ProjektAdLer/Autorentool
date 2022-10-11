@@ -83,6 +83,26 @@ public class ContentFileHandlerUt
             Assert.That(fileSystem.Directory.EnumerateFiles(ContentFilesFolderPath).Count(), Is.EqualTo(4));
         });
     }
+
+    [Test]
+    public void LoadContentAsync_WithFilepath_EmptyFile_ThrowsException()
+    {
+        const string filepath = "foobar.png";
+        var fileSystem = new MockFileSystem(new Dictionary<string, MockFileData>
+        {
+            { filepath, new MockFileData(Array.Empty<byte>())},
+        });
+        
+        var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
+
+        Assert.ThrowsAsync(
+            Is.TypeOf<IOException>()
+                .And.Message.EqualTo($"File at path {filepath} is empty.")
+                .And.InnerException.Not.Null
+                .And.InnerException.TypeOf<IOException>()
+                .And.InnerException.Message.EqualTo("The given stream is empty."),
+            async () => await systemUnderTest.LoadContentAsync(filepath));
+    }
     
     
     [Test]
@@ -125,6 +145,23 @@ public class ContentFileHandlerUt
             //two files: the content itself and its hash file
             Assert.That(fileSystem.Directory.EnumerateFiles(ContentFilesFolderPath).Count(), Is.EqualTo(2));
         });
+    }
+
+    [Test]
+    public void LoadContentAsync_WithStream_EmptyStream_ThrowsException()
+    {
+        var fileSystem = new MockFileSystem();
+        var stream = new MemoryStream();
+#pragma warning disable NUnit2046
+        Assert.That(stream.Length, Is.EqualTo(0));
+#pragma warning restore NUnit2046
+        
+        var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
+
+        Assert.ThrowsAsync(
+            Is.TypeOf<IOException>()
+                .And.Message.EqualTo("The given stream is empty."),
+            async () => await systemUnderTest.LoadContentAsync("foo", stream));
     }
 
     [Test]
