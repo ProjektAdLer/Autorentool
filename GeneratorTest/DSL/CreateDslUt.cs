@@ -56,7 +56,7 @@ public class CreateDslUt
 
         var systemUnderTest = new CreateDsl(mockFileSystem);
         
-        var learningElementsList = new List<LearningElementPe> { ele1, ele2, ele4, ele5, ele6 };
+        var learningElementsWithContentList = new List<LearningElementPe> { ele1, ele2, ele4, ele5, ele6 };
 
         //Act
         systemUnderTest.WriteLearningWorld(learningWorld);
@@ -72,7 +72,7 @@ public class CreateDslUt
         {
             Assert.That(systemUnderTest.LearningWorldJson!.Identifier.Value, Is.EqualTo(name));
 
-            Assert.That(systemUnderTest.ContentListLearningElements, Is.EquivalentTo(learningElementsList));
+            Assert.That(systemUnderTest.ContentListLearningElements, Is.EquivalentTo(learningElementsWithContentList));
             
             Assert.That(systemUnderTest.ListLearningSpaces, Has.Count.EqualTo(2));
         });
