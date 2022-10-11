@@ -249,9 +249,9 @@ public class PresentationLogic : IPresentationLogic
     
     /// <inheritdoc cref="IPresentationLogic.CreateLearningElement"/>
     public void CreateLearningElement(ILearningSpaceViewModel parentSpaceVm, string name, string shortname,
-        ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContentVm, string url,
-        string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload,
-        int points, double positionX = 0, double positionY = 0)
+        ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContentVm,
+        string url, string authors, string description, string goals, LearningElementDifficultyEnum difficulty,
+        int workload, int points, double positionX = 0, double positionY = 0)
     {
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
         var contentEntity = Mapper.Map<BusinessLogic.Entities.LearningContent>(learningContentVm);

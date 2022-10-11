@@ -130,7 +130,7 @@ public class CachingMapperIt
 
         var spaceVm = worldVm.LearningSpaces.First();
 
-        systemUnderTest.CreateLearningElement(spaceVm, "l", "m", ElementTypeEnum.Transfer,ContentTypeEnum.PDF, null!, "n", "o","p", LearningElementDifficultyEnum.Easy, 2, 3);
+        systemUnderTest.CreateLearningElement(spaceVm, "l", "m", ElementTypeEnum.Transfer,ContentTypeEnum.PDF, null!, "url", "n", "o","p", LearningElementDifficultyEnum.Easy, 2, 3);
 
         Assert.That(spaceVm.LearningElements, Has.Count.EqualTo(1));
 

@@ -205,9 +205,9 @@ public interface IPresentationLogic
     /// <param name="points">The number of points of the learning element.</param>
     /// <param name="positionX"></param>
     /// <param name="positionY"></param>
-    void CreateLearningElement(ILearningSpaceViewModel parentSpaceVm, string name, string shortname, string url,
+    void CreateLearningElement(ILearningSpaceViewModel parentSpaceVm, string name, string shortname,
         ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContentVm,
-        string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points,
+        string url, string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points,
         double positionX = 0, double positionY = 0);
 
     /// <summary>
@@ -291,4 +291,5 @@ public interface IPresentationLogic
     void LoadLearningWorldViewModel(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, Stream stream);
     void LoadLearningSpaceViewModel(ILearningWorldViewModel learningWorldVm, Stream stream);
     void LoadLearningElementViewModel(ILearningSpaceViewModel parentSpaceVm, Stream stream);
+    event Action? OnUndoRedoPerformed;
 }
