@@ -8,7 +8,6 @@ using Generator.API;
 using Generator.DSL;
 using Generator.WorldExport;
 using Microsoft.Extensions.Caching.Memory;
-using Presentation.Components;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -18,6 +17,7 @@ using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.ModalDialog;
 using Presentation.PresentationLogic.Toolbox;
 using Presentation.View.Toolbox;
+using Shared;
 using Shared.Configuration;
 
 namespace AuthoringTool;

@@ -8,7 +8,7 @@ public class LoadLearningWorld : IUndoCommand
     private readonly IBusinessLogic _businessLogic;
     
     private readonly AuthoringToolWorkspace _workspace;
-    private LearningWorld? _learningWorld;
+    internal LearningWorld? LearningWorld;
     private readonly string _filepath;
     private readonly Action<AuthoringToolWorkspace> _mappingAction;
     private IMemento? _memento;
@@ -28,7 +28,7 @@ public class LoadLearningWorld : IUndoCommand
         _filepath = "";
         _workspace = workspace;
         _businessLogic = businessLogic;
-        _learningWorld = _businessLogic.LoadLearningWorld(stream);
+        LearningWorld = _businessLogic.LoadLearningWorld(stream);
         _mappingAction = mappingAction;
     }
     
@@ -36,10 +36,10 @@ public class LoadLearningWorld : IUndoCommand
     {
         _memento = _workspace.GetMemento();
         
-        _learningWorld ??= _businessLogic.LoadLearningWorld(_filepath);
+        LearningWorld ??= _businessLogic.LoadLearningWorld(_filepath);
         
-        _workspace.LearningWorlds.Add(_learningWorld);
-        _workspace.SelectedLearningWorld = _learningWorld;
+        _workspace.LearningWorlds.Add(LearningWorld);
+        _workspace.SelectedLearningWorld = LearningWorld;
         
         _mappingAction.Invoke(_workspace);
     }

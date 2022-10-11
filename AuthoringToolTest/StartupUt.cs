@@ -19,6 +19,7 @@ using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.ModalDialog;
 using Presentation.PresentationLogic.Toolbox;
 using Presentation.View.Toolbox;
+using Shared;
 using Shared.Configuration;
 
 namespace AuthoringToolTest;

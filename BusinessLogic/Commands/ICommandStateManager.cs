@@ -31,4 +31,5 @@ public interface ICommandStateManager : INotifyPropertyChanged
     /// </summary>
     /// <exception cref="InvalidOperationException"><see cref="CanRedo"/> is false.</exception>
     public void Redo();
+    event CommandStateManager.RemovedCommandsFromStacksHandler RemovedCommandsFromStacks;
 }

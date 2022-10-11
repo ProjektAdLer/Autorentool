@@ -1,9 +1,7 @@
 using AutoMapper;
-using BusinessLogic;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
 using ElectronWrapper;
-using Presentation.Components;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
