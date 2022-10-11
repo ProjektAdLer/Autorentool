@@ -34,7 +34,7 @@ public class ContentFileHandler : IContentFileHandler
     /// <inheritdoc cref="IContentFileHandler.LoadContentAsync(string)"/>
     public async Task<LearningContentPe> LoadContentAsync(string filepath)
     {
-        var (duplicatePath, hash) = await GetFilePathOfExistingCopyAndHash(filepath);
+        var (duplicatePath, hash) = await GetFilePathOfExistingCopyAndHashAsync(filepath);
         if (duplicatePath == null)
             _logger.LogDebug("{} not found in {}, copying file", filepath, ContentFilesFolderPath);
         else
@@ -53,7 +53,7 @@ public class ContentFileHandler : IContentFileHandler
     /// <inheritdoc cref="IContentFileHandler.LoadContentAsync(string,System.IO.MemoryStream)"/>
     public async Task<LearningContentPe> LoadContentAsync(string name, MemoryStream stream)
     {
-        var (duplicatePath, hash) = await GetFilePathOfExistingCopyAndHash(stream);
+        var (duplicatePath, hash) = await GetFilePathOfExistingCopyAndHashAsync(stream);
         if (duplicatePath == null)
             _logger.LogDebug("stream {} not found in {}, copying file", name, ContentFilesFolderPath);
         else
@@ -86,15 +86,15 @@ public class ContentFileHandler : IContentFileHandler
     /// <param name="filepath">The path to the file which should be checked.</param>
     /// <returns>A file path if any duplicate is found, null otherwise, and a byte array containing the hash of the file contents.</returns>
     /// <exception cref="IOException">The file has a length of 0 and is empty.</exception>
-    /// <exception cref="ArgumentException">The filepath was null or whitespace.</exception>
-    internal async Task<(string?,byte[])> GetFilePathOfExistingCopyAndHash(string filepath)
+    /// <exception cref="ArgumentException">The <paramref name="filepath"/> was null or whitespace.</exception>
+    internal async Task<(string?,byte[])> GetFilePathOfExistingCopyAndHashAsync(string filepath)
     {
         if (string.IsNullOrWhiteSpace(filepath))
             throw new ArgumentException("Path cannot be null or whitespace.", nameof(filepath));
         await using var stream = _fileSystem.File.OpenRead(filepath);
         try
         {
-            return await GetFilePathOfExistingCopyAndHash(stream);
+            return await GetFilePathOfExistingCopyAndHashAsync(stream);
         }
         catch (IOException ioex)
         {
@@ -109,7 +109,7 @@ public class ContentFileHandler : IContentFileHandler
     /// <param name="stream">The stream which should be checked.</param>
     /// <returns>A file path if any duplicate is found, null otherwise, and a byte array containing the hash of the stream contents.</returns>
     /// <exception cref="IOException">The stream has a length of 0 and is empty.</exception>
-    private async Task<(string?,byte[])> GetFilePathOfExistingCopyAndHash(Stream stream)
+    private async Task<(string?,byte[])> GetFilePathOfExistingCopyAndHashAsync(Stream stream)
     {
         if (stream.Length == 0)
         {

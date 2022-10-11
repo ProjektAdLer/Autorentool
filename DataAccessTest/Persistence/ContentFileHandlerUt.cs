@@ -165,7 +165,7 @@ public class ContentFileHandlerUt
     }
 
     [Test]
-    public async Task ExistsAlreadyInContentFilesFolderAsync_WithExactSameFile_ReturnsPath()
+    public async Task GetFilePathOfExistingCopyAndHashAsync_WithExactSameFile_ReturnsPath()
     {
         var fileSystem = new MockFileSystem();
         fileSystem.AddFile("a.txt", new MockFileData(new byte[] {0x42, 0x24, 0x53, 0x54}));
@@ -175,13 +175,13 @@ public class ContentFileHandlerUt
         
         var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
         
-        var (actual, _) = await systemUnderTest.GetFilePathOfExistingCopyAndHash("a.txt");
+        var (actual, _) = await systemUnderTest.GetFilePathOfExistingCopyAndHashAsync("a.txt");
         
         Assert.That(actual, Is.EqualTo(Path.Join(ContentFilesFolderPath, "a.txt")));
     }
 
     [Test]
-    public async Task ExistsAlreadyInContentFilesFolderAsync_SameContentDifferentName_ReturnsPath()
+    public async Task GetFilePathOfExistingCopyAndHashAsync_SameContentDifferentName_ReturnsPath()
     {
         var fileSystem = new MockFileSystem();
         fileSystem.AddFile("foobar.txt", new MockFileData(new byte[] {0x42, 0x24, 0x53, 0x54}));
@@ -191,13 +191,13 @@ public class ContentFileHandlerUt
         
         var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
         
-        var (actual, _) = await systemUnderTest.GetFilePathOfExistingCopyAndHash("foobar.txt");
+        var (actual, _) = await systemUnderTest.GetFilePathOfExistingCopyAndHashAsync("foobar.txt");
         
         Assert.That(actual, Is.EqualTo(Path.Join(ContentFilesFolderPath, "a.txt")));
     }
 
     [Test]
-    public async Task ExistsAlreadyInContentFilesFolderAsync_DifferentLength_ReturnsNull()
+    public async Task GetFilePathOfExistingCopyAndHashAsync_DifferentLength_ReturnsNull()
     {
         var fileSystem = new MockFileSystem();
         fileSystem.AddFile("a.txt", new MockFileData(new byte[] {0x42, 0x24, 0x53, 0x54, 0x00}));
@@ -207,13 +207,13 @@ public class ContentFileHandlerUt
         
         var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
         
-        var (actual, _) = await systemUnderTest.GetFilePathOfExistingCopyAndHash("a.txt");
+        var (actual, _) = await systemUnderTest.GetFilePathOfExistingCopyAndHashAsync("a.txt");
         
         Assert.That(actual, Is.Null);
     }
     
     [Test]
-    public async Task ExistsAlreadyInContentFilesFolderAsync_DifferentContent_ReturnsNull()
+    public async Task GetFilePathOfExistingCopyAndHashAsync_DifferentContent_ReturnsNull()
     {
         var fileSystem = new MockFileSystem();
         fileSystem.AddFile("a.txt", new MockFileData(new byte[] {0x13, 0x37}));
@@ -223,26 +223,26 @@ public class ContentFileHandlerUt
         
         var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
         
-        var (actual, _) = await systemUnderTest.GetFilePathOfExistingCopyAndHash("a.txt");
+        var (actual, _) = await systemUnderTest.GetFilePathOfExistingCopyAndHashAsync("a.txt");
         
         Assert.That(actual, Is.Null);
     }
     
     [Test]
-    public async Task ExistsAlreadyInContentFilesFolderAsync_NoFilesInContentFolder_ReturnsNull()
+    public async Task GetFilePathOfExistingCopyAndHashAsync_NoFilesInContentFolder_ReturnsNull()
     {
         var fileSystem = new MockFileSystem();
         fileSystem.AddFile("a.txt", new MockFileData(new byte[] {0x42, 0x24, 0x53, 0x54, 0x00}));
         
         var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
         
-        var (actual, _) = await systemUnderTest.GetFilePathOfExistingCopyAndHash("a.txt");
+        var (actual, _) = await systemUnderTest.GetFilePathOfExistingCopyAndHashAsync("a.txt");
         
         Assert.That(actual, Is.Null);
     }
     
     [Test]
-    public async Task ExistsAlreadyInContentFilesFolderAsync_HashButNoRealFile_SilentlyDeletesHashFile_ThenReturnsNull()
+    public async Task GetFilePathOfExistingCopyAndHashAsync_HashButNoRealFile_SilentlyDeletesHashFile_ThenReturnsNull()
     {
         var fileSystem = new MockFileSystem();
         fileSystem.AddFile("a.txt", new MockFileData(new byte[] {0x42, 0x24, 0x53, 0x54, 0x00}));
@@ -251,7 +251,7 @@ public class ContentFileHandlerUt
         
         var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
         
-        var (actual, _) = await systemUnderTest.GetFilePathOfExistingCopyAndHash("a.txt");
+        var (actual, _) = await systemUnderTest.GetFilePathOfExistingCopyAndHashAsync("a.txt");
         
         Assert.Multiple(() =>
         {
@@ -261,7 +261,7 @@ public class ContentFileHandlerUt
     }
     
     [Test]
-    public async Task ExistsAlreadyInContentFilesFolderAsync_RealFileButNoHash_SilentlyCreatesHashFile_ThenReturnsPath()
+    public async Task GetFilePathOfExistingCopyAndHashAsync_RealFileButNoHash_SilentlyCreatesHashFile_ThenReturnsPath()
     {
         var fileSystem = new MockFileSystem();
         fileSystem.AddFile("a.txt", new MockFileData(new byte[] {0x42, 0x24, 0x53, 0x54}));
@@ -269,13 +269,28 @@ public class ContentFileHandlerUt
         
         var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
         
-        var (actual, _) = await systemUnderTest.GetFilePathOfExistingCopyAndHash("a.txt");
+        var (actual, _) = await systemUnderTest.GetFilePathOfExistingCopyAndHashAsync("a.txt");
         
         Assert.Multiple(() =>
         {
             Assert.That(actual, Is.EqualTo(Path.Join(ContentFilesFolderPath, "a.txt")));
             Assert.That(fileSystem.File.Exists(Path.Join(ContentFilesFolderPath, "a.txt.hash")), Is.True);
         });
+    }
+
+    [Test]
+    public void GetFilePathOfExistingCopyAndHashAsync_EmptyOrNullFilePath_ThrowsArgumentException()
+    {
+        var systemUnderTest = CreateTestableContentFileHandler();
+
+        Assert.ThrowsAsync(
+            Is.TypeOf<ArgumentException>()
+                .And.Message.EqualTo("Path cannot be null or whitespace. (Parameter 'filepath')"),
+            async () => await systemUnderTest.GetFilePathOfExistingCopyAndHashAsync(null!));
+        Assert.ThrowsAsync(
+            Is.TypeOf<ArgumentException>()
+                .And.Message.EqualTo("Path cannot be null or whitespace. (Parameter 'filepath')"),
+            async () => await systemUnderTest.GetFilePathOfExistingCopyAndHashAsync(""));
     }
 
     private ContentFileHandler CreateTestableContentFileHandler(ILogger<ContentFileHandler>? logger = null,
