@@ -1,4 +1,3 @@
-using System;
 using Bunit;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
@@ -105,8 +104,8 @@ public class PullablePathUt
             .Add(p => p.LearningSpace, learningObject)
             .Add(p => p.X1, x1)
             .Add(p => p.Y1, y1)
-            .Add(p => p.Dir1, dir1)
-            .Add(p => p.Dir2, dir2)
+            .Add(p => p.Direction1, dir1)
+            .Add(p => p.Direction2, dir2)
             .Add(p => p.PositioningSrv, _positioningService)
         );
     }
