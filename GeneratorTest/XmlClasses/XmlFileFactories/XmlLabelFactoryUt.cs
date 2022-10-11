@@ -137,8 +137,10 @@ public class XmlLabelFactoryUt
         
         var mockElementValueList = new List<LearningElementValueJson>{new ("points",0)};
 
-        var mockSpaceElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Space_1"), "", "", "space", 0, mockElementValueList);
-        var mockLabelsElementJson = new LearningElementJson(2, new IdentifierJson("Name", "Labels_1"), "", "", "mp4", 1, mockElementValueList);
+        var mockSpaceElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Space_1"), "", 
+            "", "space", 0, mockElementValueList);
+        var mockLabelsElementJson = new LearningElementJson(2, new IdentifierJson("Name", "World Description"), "",
+            "World Attributes", "World Attributes", 1, mockElementValueList, "World Description", "World Goals");
         
         var spaceJsonList = new List<LearningElementJson> {mockSpaceElementJson};
         var labelJsonList = new List<LearningElementJson> {mockLabelsElementJson};
