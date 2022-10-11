@@ -529,22 +529,29 @@ public class MappingProfileUt
     }
 
     [Test]
-    public void MapLearningWorldAndLearningWorldPersistEntity_WithLearningSpace_TestMappingIsValid()
+    public void MapLearningWorldAndLearningWorldPersistEntity_WithLearningSpaceAndLearningPathWay_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
             new List<LearningSpace>());
-        source.LearningSpaces.Add(GetTestableSpace());
+        var space1 = GetTestableSpace();
+        var space2 = GetTestableSpace();
+        source.LearningSpaces.Add(space1);
+        source.LearningSpaces.Add(space2);
         var destination = new LearningWorldPe("", "", "", "", "", "");
+        
+        source.LearningPathways.Add(new LearningPathway(space1, space2));
 
         systemUnderTest.Map(source, destination);
 
         TestWorld(destination, false);
-        Assert.Multiple(() =>
-        {
-            Assert.That(destination.LearningSpaces, Has.Count.EqualTo(1));
+        //Assert.Multiple(() =>
+        //{
+            Assert.That(destination.LearningSpaces, Has.Count.EqualTo(2));
             Assert.That(destination.LearningSpaces[0].LearningElements, Has.Count.EqualTo(1));
-        });
+            Assert.That(destination.LearningSpaces[1].LearningElements, Has.Count.EqualTo(1));
+            Assert.That(destination.LearningPathWays, Has.Count.EqualTo(1));
+        //});
 
         destination.Name = NewName;
         destination.Shortname = NewShortname;
@@ -552,15 +559,21 @@ public class MappingProfileUt
         destination.Language = NewLanguage;
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
-        destination.LearningSpaces = new List<LearningSpacePe>() {GetTestableNewSpacePersistEntity()};
+        var spacePe1 = GetTestableNewSpacePersistEntity();
+        var spacePe2 = GetTestableNewSpacePersistEntity();
+        destination.LearningSpaces = new List<LearningSpacePe>() {spacePe1, spacePe2};
+        destination.LearningPathWays = new List<LearningPathwayPe>();
+        destination.LearningPathWays.Add(new LearningPathwayPe(spacePe1, spacePe2));
 
         systemUnderTest.Map(destination, source);
 
         TestWorld(source, true);
         Assert.Multiple(() =>
         {
-            Assert.That(source.LearningSpaces, Has.Count.EqualTo(1));
+            Assert.That(source.LearningSpaces, Has.Count.EqualTo(2));
             Assert.That(source.LearningSpaces[0].LearningElements, Has.Count.EqualTo(1));
+            Assert.That(source.LearningSpaces[1].LearningElements, Has.Count.EqualTo(1));
+            Assert.That(source.LearningPathways, Has.Count.EqualTo(1));
         });
     }
 
