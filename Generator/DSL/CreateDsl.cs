@@ -164,7 +164,17 @@ public class CreateDsl : ICreateDsl
         //After the files are added to the Backup-Structure, these Files will be deleted.
         foreach (var learningElement in ListLearningElements)
         {
-            _fileSystem.File.WriteAllBytes(_fileSystem.Path.Join("XMLFilesForExport", learningElement.Name), learningElement.LearningContent.Content);
+            try
+            {
+                _fileSystem.File.WriteAllBytes(_fileSystem.Path.Join("XMLFilesForExport", learningElement.Name),
+                    learningElement.LearningContent.Content);
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Something went wrong while creating the LearningElements for the Backup-Structure.");
+                throw;
+            }
+
         }
 
         _fileSystem.File.WriteAllText(_dslPath, jsonFile);
