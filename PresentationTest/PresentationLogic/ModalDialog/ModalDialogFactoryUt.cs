@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using AngleSharp.Dom;
 using Bunit;
 using NSubstitute;
@@ -461,8 +462,9 @@ public class ModalDialogFactoryUt
         Assert.Multiple(() =>
         {
             Assert.That(modalInput.Children[0].Children[0].ClassName, Is.EqualTo("col"));
-            Assert.That(modalInput.Children[0].Children[0].InnerHtml,
-                Is.EqualTo("UnitTest <span style=\"color:#FF0000\" b-ije7p1vi5g=\"\">*</span>"));
+            Assert.That(modalInput.Children[0].Children[0].GetInnerText(), Is.EqualTo("UnitTest *"));
+            //use semantic comparison https://bunit.dev/docs/verification/semantic-html-comparison
+            Assert.That(() => modalInput.Children[0].Children[0].Children.First().MarkupMatches(@"<span style=""color:#FF0000"">*</span>"), Throws.Nothing);
             Assert.That(modalInput.Children[0].Children[1].ClassName, Is.EqualTo("col"));
             Assert.That(modalInput.Children[0].Children[1].Children,
                 Has.Length.EqualTo(1));
