@@ -565,17 +565,24 @@ public class MappingProfileUt
         var destination = new LearningWorldPe("", "", "", "", "", "");
         
         source.LearningPathways.Add(new LearningPathway(space1, space2));
+        space1.OutBoundSpaces.Add(space2);
+        space2.InBoundSpaces.Add(space1);
 
         systemUnderTest.Map(source, destination);
 
+        var destinationSpace1 = destination.LearningSpaces[0];
+        var destinationSpace2 = destination.LearningSpaces[1];
         TestWorld(destination, false);
-        //Assert.Multiple(() =>
-        //{
+        Assert.Multiple(() =>
+        {
             Assert.That(destination.LearningSpaces, Has.Count.EqualTo(2));
-            Assert.That(destination.LearningSpaces[0].LearningElements, Has.Count.EqualTo(1));
-            Assert.That(destination.LearningSpaces[1].LearningElements, Has.Count.EqualTo(1));
-            Assert.That(destination.LearningPathWays, Has.Count.EqualTo(1));
-        //});
+            Assert.That(destinationSpace1.LearningElements, Has.Count.EqualTo(1));
+            Assert.That(destinationSpace1.OutBoundSpaces, Does.Contain(destinationSpace2));
+            Assert.That(destinationSpace2.LearningElements, Has.Count.EqualTo(1));
+            Assert.That(destinationSpace2.InBoundSpaces, Does.Contain(destinationSpace1));
+            Assert.That(destination.LearningPathways, Has.Count.EqualTo(1));
+        });
+
 
         destination.Name = NewName;
         destination.Shortname = NewShortname;
@@ -586,19 +593,44 @@ public class MappingProfileUt
         var spacePe1 = GetTestableNewSpacePersistEntity();
         var spacePe2 = GetTestableNewSpacePersistEntity();
         destination.LearningSpaces = new List<LearningSpacePe>() {spacePe1, spacePe2};
-        destination.LearningPathWays = new List<LearningPathwayPe>();
-        destination.LearningPathWays.Add(new LearningPathwayPe(spacePe1, spacePe2));
+        destination.LearningPathways = new List<LearningPathwayPe> { new(spacePe1, spacePe2) };
+        spacePe1.OutBoundSpaces.Add(spacePe2);
+        spacePe2.InBoundSpaces.Add(spacePe1);
 
-        systemUnderTest.Map(destination, source);
-
-        TestWorld(source, true);
-        Assert.Multiple(() =>
         {
-            Assert.That(source.LearningSpaces, Has.Count.EqualTo(2));
-            Assert.That(source.LearningSpaces[0].LearningElements, Has.Count.EqualTo(1));
-            Assert.That(source.LearningSpaces[1].LearningElements, Has.Count.EqualTo(1));
-            Assert.That(source.LearningPathways, Has.Count.EqualTo(1));
-        });
+            systemUnderTest.Map(destination, source);
+            var sourceSpace1 = source.LearningSpaces[0];
+            var sourceSpace2 = source.LearningSpaces[1];
+
+            TestWorld(source, true);
+            Assert.Multiple(() =>
+            {
+                Assert.That(source.LearningSpaces, Has.Count.EqualTo(2));
+                Assert.That(sourceSpace1.LearningElements, Has.Count.EqualTo(1));
+                Assert.That(sourceSpace1.OutBoundSpaces, Does.Contain(sourceSpace2));
+                Assert.That(sourceSpace2.LearningElements, Has.Count.EqualTo(1));
+                Assert.That(sourceSpace2.InBoundSpaces, Does.Contain(sourceSpace1));
+                Assert.That(source.LearningPathways, Has.Count.EqualTo(1));
+            });
+        }
+
+        {
+            var newSource = systemUnderTest.Map<LearningWorld>(destination);
+            systemUnderTest.Map(destination, newSource);
+            var newSourceSpace1 = source.LearningSpaces[0];
+            var newSourceSpace2 = source.LearningSpaces[1];
+
+            TestWorld(newSource, true);
+            Assert.Multiple(() =>
+            {
+                Assert.That(newSource.LearningSpaces, Has.Count.EqualTo(2));
+                Assert.That(newSourceSpace1.LearningElements, Has.Count.EqualTo(1));
+                Assert.That(newSourceSpace1.OutBoundSpaces, Does.Contain(newSourceSpace2));
+                Assert.That(newSourceSpace2.LearningElements, Has.Count.EqualTo(1));
+                Assert.That(newSourceSpace2.InBoundSpaces, Does.Contain(newSourceSpace1));
+                Assert.That(newSource.LearningPathways, Has.Count.EqualTo(1));
+            });
+        }
     }
 
     /// <summary>

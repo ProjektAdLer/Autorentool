@@ -1,6 +1,6 @@
 ﻿namespace BusinessLogic.Entities;
 
-internal interface ILearningPathWay
+internal interface ILearningPathway
 {
     LearningSpace SourceSpace { get; set; }
     LearningSpace TargetSpace { get; set; }

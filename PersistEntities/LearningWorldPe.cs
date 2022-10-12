@@ -24,7 +24,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         Description = description;
         Goals = goals;
         LearningSpaces = learningSpaces ?? new List<LearningSpacePe>();
-        LearningPathWays = learningPathWays ?? new List<LearningPathwayPe>();
+        LearningPathways = learningPathWays ?? new List<LearningPathwayPe>();
     }
 
     /// <summary>
@@ -39,13 +39,13 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         Description = "";
         Goals = "";
         LearningSpaces = new List<LearningSpacePe>();
-        LearningPathWays = new List<LearningPathwayPe>();
+        LearningPathways = new List<LearningPathwayPe>();
     }
 
     [DataMember]
     public List<LearningSpacePe> LearningSpaces { get; set; }
     [DataMember]
-    public List<LearningPathwayPe> LearningPathWays { get; set; }
+    public List<LearningPathwayPe> LearningPathways { get; set; }
     [DataMember]
     public string Name { get; set; }
     [DataMember]
@@ -64,7 +64,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
     private void OnDeserializing(StreamingContext context)
     {
         //rebuild InBound and OutBound on all spaces
-        foreach (var learningPathwayPe in LearningPathWays)
+        foreach (var learningPathwayPe in LearningPathways)
         {
             learningPathwayPe.SourceSpace.OutBoundSpaces.Add(learningPathwayPe.TargetSpace);
             learningPathwayPe.TargetSpace.InBoundSpaces.Add(learningPathwayPe.SourceSpace);

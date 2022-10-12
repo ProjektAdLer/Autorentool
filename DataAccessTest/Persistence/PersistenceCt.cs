@@ -89,7 +89,7 @@ public class PersistenceCt
         world.LearningSpaces.Add(space2);
         space1.OutBoundSpaces.Add(space2);
         space2.InBoundSpaces.Add(space1);
-        world.LearningPathWays.Add(new LearningPathwayPe(space1, space2));
+        world.LearningPathways.Add(new LearningPathwayPe(space1, space2));
         var mockFileSystem = new MockFileSystem();
 
         var saveHandler = CreateTestableFileSaveHandler<LearningWorldPe>(fileSystem:mockFileSystem);
@@ -98,6 +98,8 @@ public class PersistenceCt
         var restoredWorld = saveHandler.LoadFromDisk(FilePath);
         
         restoredWorld.Should().BeEquivalentTo(world, options => options.IgnoringCyclicReferences());
+        Assert.That(restoredWorld.LearningSpaces[0].OutBoundSpaces, Does.Contain(restoredWorld.LearningSpaces[1]));
+        Assert.That(restoredWorld.LearningSpaces[1].InBoundSpaces, Does.Contain(restoredWorld.LearningSpaces[0]));
     }
     
     [Test]

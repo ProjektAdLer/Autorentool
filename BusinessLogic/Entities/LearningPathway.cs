@@ -2,7 +2,7 @@
 
 namespace BusinessLogic.Entities;
 
-public class LearningPathway: ILearningPathWay
+public class LearningPathway : ILearningPathway
 {
     /// <summary>
     /// Constructor for Automapper. DO NOT USE.

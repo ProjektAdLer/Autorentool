@@ -18,6 +18,7 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
         int requiredPoints, List<LearningElementPe>? learningElements = null, double positionX = 0, double positionY = 0,
         List<LearningSpacePe>? inBoundSpaces = null, List<LearningSpacePe>? outBoundSpaces = null)
     {
+        Id = Guid.NewGuid();
         Name = name;
         Shortname = shortname;
         Authors = authors;
