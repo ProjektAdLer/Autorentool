@@ -297,6 +297,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         var description = data["Description"];
         //optional arguments
         var shortname = data.ContainsKey("Shortname") ? data["Shortname"] : "";
+        var url = data.ContainsKey("Url") ? data["Url"] : "";
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
         if (Enum.TryParse(data["Difficulty"], out LearningElementDifficultyEnum difficulty) == false)
@@ -308,7 +309,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         
         if (LearningSpaceVm?.SelectedLearningElement is not LearningElementViewModel
             learningElementViewModel) throw new ApplicationException("LearningObject is not a LearningElement");
-        _presentationLogic.EditLearningElement(parentElement, learningElementViewModel, name, shortname, authors,
+        _presentationLogic.EditLearningElement(parentElement, learningElementViewModel, name, shortname, url, authors,
             description, goals, difficulty, workload, points);
     }
 

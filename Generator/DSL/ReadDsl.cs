@@ -112,7 +112,8 @@ public class ReadDsl : IReadDsl
         if(documentRootJson.LearningWorld.Description == "" && documentRootJson.LearningWorld.Goals == "") return;
         
         int lastId;
-        lastId = documentRootJson.LearningWorld.LearningElements.Count > 0 ? documentRootJson.LearningWorld.LearningElements.Last().Id : 1;
+        
+        lastId = documentRootJson.LearningWorld.LearningElements.Count+1;
 
         var worldAttributes = new LearningElementJson(lastId, 
             new IdentifierJson("Description",documentRootJson.LearningWorld.Description), "", 

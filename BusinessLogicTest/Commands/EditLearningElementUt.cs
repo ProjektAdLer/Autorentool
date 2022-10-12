@@ -20,6 +20,7 @@ public class EditLearningElementUt
         
         var name = "new element";
         var shortname = "ne";
+        var url = "google.com";
         var authors = "marvin";
         var description = "video of learning stuff";
         var goals = "learn";
@@ -29,7 +30,7 @@ public class EditLearningElementUt
         bool actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new EditLearningElement(element, parent, name, shortname, authors, description, goals, difficulty,
+        var command = new EditLearningElement(element, parent, name, shortname, url, authors, description, goals, difficulty,
             workload, points, mappingAction);
         
         Assert.Multiple(() =>
@@ -78,6 +79,7 @@ public class EditLearningElementUt
         var element = new LearningElement("a", "b", null!, "url","c", "d", "e", LearningElementDifficultyEnum.Easy);
         var name = "new element";
         var shortname = "ne";
+        var url = "google.com";
         var authors = "marvin";
         var description = "video of learning stuff";
         var goals = "learn";
@@ -87,7 +89,7 @@ public class EditLearningElementUt
         bool actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new EditLearningElement(element, parent, name, shortname, authors, description, goals, difficulty, workload, points, mappingAction);
+        var command = new EditLearningElement(element, parent, name, shortname, url ,authors, description, goals, difficulty, workload, points, mappingAction);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -106,6 +108,7 @@ public class EditLearningElementUt
         
         var name = "new element";
         var shortname = "ne";
+        var url = "google.com";
         var authors = "marvin";
         var description = "video of learning stuff";
         var goals = "learn";
@@ -115,7 +118,7 @@ public class EditLearningElementUt
         bool actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new EditLearningElement(element, parent, name, shortname, authors, description, goals, difficulty,
+        var command = new EditLearningElement(element, parent, name, shortname, url, authors, description, goals, difficulty,
             workload, points, mappingAction);
         
         Assert.Multiple(() =>

@@ -64,7 +64,8 @@ public class CreateDslUt
 
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
         
-        var learningElementsList = new List<LearningElementPe> { ele1, ele2, ele3, ele4, ele5, ele6 };
+        //Every Element except Content with "url" is added to the comparison list.
+        var learningElementsList = new List<LearningElementPe> { ele1, ele2, ele4, ele5, ele6 };
 
         //Act
         systemUnderTest.WriteLearningWorld(learningWorld);
@@ -79,7 +80,7 @@ public class CreateDslUt
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.LearningWorldJson!.Identifier.Value, Is.EqualTo(name));
-            Assert.That(systemUnderTest.ListLearningElements, Is.EquivalentTo(learningElementsList));
+            Assert.That(systemUnderTest.ListLearningElementsWithContent, Is.EquivalentTo(learningElementsList));
             Assert.That(systemUnderTest.ListLearningSpaces, Is.EquivalentTo(learningSpaces));
             Assert.That(systemUnderTest.LearningWorldJson.LearningSpaces[0].Requirements,
                 Is.EqualTo(new List<int>()));

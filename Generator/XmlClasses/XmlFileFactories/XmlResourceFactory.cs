@@ -129,10 +129,6 @@ public class XmlResourceFactory : IXmlResourceFactory
             {
                 ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "image/"+FileElementType);
             }
-            /*else if (resource.ElementType is "mp4")
-            {
-                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "video/"+FileElementType);
-            }*/
             else if (resource.ElementType is "webp" or "cc" or "c++" )
             {
                 ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "document/unknown");

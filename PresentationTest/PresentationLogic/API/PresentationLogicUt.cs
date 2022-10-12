@@ -416,7 +416,8 @@ public class PresentationLogicUt
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
         
-        systemUnderTest.EditLearningElement(learningSpaceVm, learningElementVm, "a","b","c","d","e",LearningElementDifficultyEnum.Easy,1,2);
+        systemUnderTest.EditLearningElement(learningSpaceVm, learningElementVm, "a","b","c", "Google.com", "d",
+            "e",LearningElementDifficultyEnum.Easy,1,2);
 
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
         Assert.That(command, Is.Not.Null);
