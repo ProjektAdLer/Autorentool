@@ -17,6 +17,7 @@ using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.ModalDialog;
 using Presentation.PresentationLogic.Toolbox;
 using Presentation.View.Toolbox;
+using Shared;
 using Shared.Configuration;
 
 namespace AuthoringTool;
@@ -130,6 +131,7 @@ public class Startup
         
         var mapper = config.CreateMapper();
         services.AddSingleton(mapper);
+        services.AddSingleton<ICachingMapper, CachingMapper>();
     }
 
     private static void ConfigureUtilities(IServiceCollection services)

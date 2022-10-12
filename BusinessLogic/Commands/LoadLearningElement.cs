@@ -8,7 +8,7 @@ public class LoadLearningElement : IUndoCommand
     private readonly IBusinessLogic _businessLogic;
     
     internal LearningSpace ParentSpace { get; }
-    private LearningElement? _learningElement;
+    internal LearningElement? LearningElement;
     private readonly string _filepath;
     private readonly Action<LearningSpace> _mappingAction;
     private IMemento? _memento;
@@ -28,17 +28,17 @@ public class LoadLearningElement : IUndoCommand
         ParentSpace = parentSpace;
         _filepath = "";
         _businessLogic = businessLogic;
-        _learningElement = _businessLogic.LoadLearningElement(stream);
+        LearningElement = _businessLogic.LoadLearningElement(stream);
         _mappingAction = mappingAction;
     }
     public void Execute()
     {
         _memento = ParentSpace.GetMemento();
         
-        _learningElement ??= _businessLogic.LoadLearningElement(_filepath);
-        _learningElement.Parent = ParentSpace;
-        ParentSpace.LearningElements.Add(_learningElement);
-        ParentSpace.SelectedLearningElement = _learningElement;
+        LearningElement ??= _businessLogic.LoadLearningElement(_filepath);
+        LearningElement.Parent = ParentSpace;
+        ParentSpace.LearningElements.Add(LearningElement);
+        ParentSpace.SelectedLearningElement = LearningElement;
         
         _mappingAction.Invoke(ParentSpace);
     }

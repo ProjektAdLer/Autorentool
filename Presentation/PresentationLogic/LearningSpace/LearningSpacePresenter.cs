@@ -22,6 +22,8 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 
     private readonly IPresentationLogic _presentationLogic;
     private readonly ILogger<LearningSpacePresenter> _logger;
+    
+    private int _creationCounter = 0;
 
     public ILearningSpaceViewModel? LearningSpaceVm { get; private set; }
 
@@ -39,6 +41,12 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     public bool EditLearningElementDialogOpen { get; set; }
     public IDictionary<string, string>? EditLearningElementDialogInitialValues { get; private set; }
     public bool CreateLearningElementDialogOpen { get; set; }
+    
+    public event Action OnUndoRedoPerformed
+    {
+        add => _presentationLogic.OnUndoRedoPerformed += value;
+        remove => _presentationLogic.OnUndoRedoPerformed -= value;
+    }
 
     public void SetLearningSpace(ILearningSpaceViewModel space)
     {
@@ -224,9 +232,10 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
             {
                 learningContent = Task.Run(async () => await LoadLearningContent(contentType)).Result;
             }
-                        
+            var offset = 15 * _creationCounter;
+            _creationCounter = (_creationCounter + 1) % 10;
             _presentationLogic.CreateLearningElement(parentElement, name, shortname, elementType, contentType,
-                learningContent, url, authors, description, goals, difficulty, workload, points);
+                learningContent, url, authors, description, goals, difficulty, workload, points, offset, offset);
 
         }
         catch (AggregateException)

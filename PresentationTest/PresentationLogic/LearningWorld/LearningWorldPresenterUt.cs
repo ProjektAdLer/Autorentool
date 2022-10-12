@@ -96,7 +96,7 @@ public class LearningWorldPresenterUt
         systemUnderTest.CreateNewLearningSpace("foo", "bar", "foo", "bar", "foo", 5);
 
         presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int>());
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int>(), Arg.Any<double>(), Arg.Any<double>());
     }
 
     #endregion
@@ -147,7 +147,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnCreateSpaceDialogClose(returnValueTuple);
 
-        presentationLogic.Received().CreateLearningSpace(world, "n", "sn", "a", "d", "g", 10);
+        presentationLogic.Received().CreateLearningSpace(world, "n", "sn", "a", "d", "g", 10, Arg.Any<double>(), Arg.Any<double>());
     }
 
     #endregion

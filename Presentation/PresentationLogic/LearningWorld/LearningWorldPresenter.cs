@@ -31,6 +31,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     private Dictionary<string, string>? _editSpaceDialogInitialValues;
     private Dictionary<string, string>? _editSpaceDialogAnnotations;
     private bool _createLearningSpaceDialogOpen;
+    private int _creationCounter = 0;
 
     public bool SelectedLearningObjectIsSpace =>
         LearningWorldVm?.SelectedLearningSpace?.GetType() == typeof(LearningSpaceViewModel);
@@ -89,6 +90,12 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         private set => SetField(ref _createLearningSpaceDialogOpen, value);
     }
 
+    public event Action OnUndoRedoPerformed
+    {
+        add => _presentationLogic.OnUndoRedoPerformed += value;
+        remove => _presentationLogic.OnUndoRedoPerformed -= value;
+    }
+    
     public void AddNewLearningSpace()
     {
         CreateLearningSpaceDialogOpen = true;
@@ -126,13 +133,15 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     /// <param name="description"></param>
     /// <param name="goals"></param>
     /// <param name="requiredPoints"></param>
+    /// <param name="positionX"></param>
+    /// <param name="positionY"></param>
     /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
     public void CreateNewLearningSpace(string name, string shortname,
-        string authors, string description, string goals, int requiredPoints)
+        string authors, string description, string goals, int requiredPoints, double positionX = 0, double positionY = 0)
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        _presentationLogic.CreateLearningSpace(LearningWorldVm, name, shortname, authors, description, goals, requiredPoints);
+        _presentationLogic.CreateLearningSpace(LearningWorldVm, name, shortname, authors, description, goals, requiredPoints, positionX, positionY);
         //TODO: Return error in the command in case of failure
     }
 
@@ -209,7 +218,9 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
         var requiredPoints = data.ContainsKey("Required Points") && data["Required Points"] != "" && !data["Required Points"].StartsWith("e") ? int.Parse(data["Required Points"]) : 0;
-        CreateNewLearningSpace(name, shortname, authors, description, goals, requiredPoints);
+        var offset = 15 * _creationCounter;
+        _creationCounter = (_creationCounter + 1) % 10;
+        CreateNewLearningSpace(name, shortname, authors, description, goals, requiredPoints, offset, offset);
     }
 
     /// <summary>

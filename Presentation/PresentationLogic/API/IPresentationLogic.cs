@@ -31,6 +31,11 @@ public interface IPresentationLogic
     /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
     /// <returns>Filepath to the new backup file</returns>
     Task<string> ConstructBackupAsync(LearningWorldViewModel learningWorldViewModel);
+    
+    bool CanUndo { get; }
+    bool CanRedo { get; }
+    void UndoCommand();
+    void RedoCommand();
 
     /// <summary>
     /// Adds a new learning world in the authoring tool workspace with the corresponding command.
@@ -111,8 +116,10 @@ public interface IPresentationLogic
     /// <param name="description"></param>
     /// <param name="goals"></param>
     /// <param name="requiredPoints"></param>
+    /// <param name="positionX"></param>
+    /// <param name="positionY"></param>
     void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name, string shortname,
-        string authors, string description, string goals, int requiredPoints);
+        string authors, string description, string goals, int requiredPoints, double positionX, double positionY);
 
     /// <summary>
     /// Edits a given learning space in the given learning world with the corresponding command.
@@ -183,9 +190,9 @@ public interface IPresentationLogic
     /// Creates a new learning element and assigns it to the opened learning space in the
     /// selected learning world.
     /// </summary>
+    /// <param name="parentSpaceVm">Parent space of the element.</param>
     /// <param name="name">Name of the element.</param>
     /// <param name="shortname">Shortname of the element.</param>
-    /// <param name="parentSpaceVm">Parent space of the element.</param>
     /// <param name="elementType">Type of the element.</param>
     /// <param name="contentType">Type of the content that the element contains.</param>
     /// <param name="learningContentVm">The content of the element.</param>
@@ -196,10 +203,12 @@ public interface IPresentationLogic
     /// <param name="difficulty">The difficulty of the element.</param>
     /// <param name="workload">The time required to complete the learning element.</param>
     /// <param name="points">The number of points of the learning element.</param>
+    /// <param name="positionX"></param>
+    /// <param name="positionY"></param>
     void CreateLearningElement(ILearningSpaceViewModel parentSpaceVm, string name, string shortname,
         ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContentVm,
-        string url, string authors, string description, string goals, LearningElementDifficultyEnum difficulty, 
-        int workload, int points);
+        string url, string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points,
+        double positionX = 0, double positionY = 0);
 
     /// <summary>
     /// Edits a given learning element in the opened learning space with the corresponding command.
@@ -282,4 +291,5 @@ public interface IPresentationLogic
     void LoadLearningWorldViewModel(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, Stream stream);
     void LoadLearningSpaceViewModel(ILearningWorldViewModel learningWorldVm, Stream stream);
     void LoadLearningElementViewModel(ILearningSpaceViewModel parentSpaceVm, Stream stream);
+    event Action? OnUndoRedoPerformed;
 }

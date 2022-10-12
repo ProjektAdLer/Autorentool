@@ -1575,107 +1575,108 @@
       "authoringtool": {
         "type": "Project",
         "dependencies": {
-          "AutoMapper.Collection": "8.0.0",
-          "BusinessLogic": "1.0.0",
-          "DataAccess": "1.0.0",
-          "ElectronWrapper": "1.0.0",
-          "Generator": "1.0.0",
-          "JetBrains.Annotations": "2022.1.0",
-          "PersistEntities": "1.0.0",
-          "Presentation": "1.0.0"
+          "AutoMapper.Collection": "[8.0.0, )",
+          "BusinessLogic": "[1.0.0, )",
+          "DataAccess": "[1.0.0, )",
+          "ElectronWrapper": "[1.0.0, )",
+          "Generator": "[1.0.0, )",
+          "JetBrains.Annotations": "[2022.1.0, )",
+          "PersistEntities": "[1.0.0, )",
+          "Presentation": "[1.0.0, )"
         }
       },
       "businesslogic": {
         "type": "Project",
         "dependencies": {
-          "JetBrains.Annotations": "2022.1.0",
-          "Shared": "1.0.0"
+          "JetBrains.Annotations": "[2022.1.0, )",
+          "Shared": "[1.0.0, )"
         }
       },
       "dataaccess": {
         "type": "Project",
         "dependencies": {
-          "AutoMapper": "11.0.1",
-          "BusinessLogic": "1.0.0",
-          "JetBrains.Annotations": "2022.1.0",
-          "PersistEntities": "1.0.0",
-          "System.IO.Abstractions": "17.2.3"
+          "AutoMapper": "[11.0.1, )",
+          "BusinessLogic": "[1.0.0, )",
+          "JetBrains.Annotations": "[2022.1.0, )",
+          "PersistEntities": "[1.0.0, )",
+          "System.IO.Abstractions": "[17.2.3, )"
         }
       },
       "electronwrapper": {
         "type": "Project",
         "dependencies": {
-          "ElectronNET.API": "13.5.1",
-          "JetBrains.Annotations": "2022.1.0"
+          "ElectronNET.API": "[13.5.1, )",
+          "JetBrains.Annotations": "[2022.1.0, )"
         }
       },
       "generator": {
         "type": "Project",
         "dependencies": {
-          "AutoMapper": "11.0.1",
-          "BusinessLogic": "1.0.0",
-          "JetBrains.Annotations": "2022.1.0",
-          "PersistEntities": "1.0.0",
-          "SharpZipLib": "1.3.3",
-          "System.IO.Abstractions": "17.2.3"
+          "AutoMapper": "[11.0.1, )",
+          "BusinessLogic": "[1.0.0, )",
+          "JetBrains.Annotations": "[2022.1.0, )",
+          "PersistEntities": "[1.0.0, )",
+          "SharpZipLib": "[1.3.3, )",
+          "System.IO.Abstractions": "[17.2.3, )"
         }
       },
       "generatortest": {
         "type": "Project",
         "dependencies": {
-          "Generator": "1.0.0",
-          "Microsoft.NET.Test.Sdk": "17.3.1",
-          "NSubstitute": "4.4.0",
-          "NUnit": "3.13.3",
-          "NUnit.Analyzers": "3.3.0",
-          "NUnit3TestAdapter": "4.2.1",
-          "System.IO.Abstractions": "17.2.3",
-          "System.IO.Abstractions.TestingHelpers": "17.2.3",
-          "coverlet.collector": "3.1.2"
+          "Generator": "[1.0.0, )",
+          "Microsoft.NET.Test.Sdk": "[17.3.1, )",
+          "NSubstitute": "[4.4.0, )",
+          "NUnit": "[3.13.3, )",
+          "NUnit.Analyzers": "[3.3.0, )",
+          "NUnit3TestAdapter": "[4.2.1, )",
+          "System.IO.Abstractions": "[17.2.3, )",
+          "System.IO.Abstractions.TestingHelpers": "[17.2.3, )",
+          "coverlet.collector": "[3.1.2, )"
         }
       },
       "persistentities": {
         "type": "Project",
         "dependencies": {
-          "JetBrains.Annotations": "2022.1.0"
+          "JetBrains.Annotations": "[2022.1.0, )"
         }
       },
       "presentation": {
         "type": "Project",
         "dependencies": {
-          "AutoMapper": "11.0.1",
-          "AutoMapper.Extensions.Microsoft.DependencyInjection": "11.0.0",
-          "BusinessLogic": "1.0.0",
-          "ElectronWrapper": "1.0.0",
-          "JetBrains.Annotations": "2022.1.0",
-          "Microsoft.Extensions.Caching.Memory": "6.0.1",
-          "Shared": "1.0.0",
-          "SharpZipLib": "1.3.3",
-          "System.IO.Abstractions": "17.2.3"
+          "AutoMapper": "[11.0.1, )",
+          "AutoMapper.Extensions.Microsoft.DependencyInjection": "[11.0.0, )",
+          "BusinessLogic": "[1.0.0, )",
+          "ElectronWrapper": "[1.0.0, )",
+          "JetBrains.Annotations": "[2022.1.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[6.0.1, )",
+          "Shared": "[1.0.0, )",
+          "SharpZipLib": "[1.3.3, )",
+          "System.IO.Abstractions": "[17.2.3, )"
         }
       },
       "presentationtest": {
         "type": "Project",
         "dependencies": {
-          "AutoMapper": "11.0.1",
-          "AutoMapper.Extensions.Microsoft.DependencyInjection": "11.0.0",
-          "JetBrains.Annotations": "2022.1.0",
-          "Microsoft.NET.Test.Sdk": "17.3.1",
-          "NSubstitute": "4.4.0",
-          "NUnit": "3.13.3",
-          "NUnit.Analyzers": "3.3.0",
-          "NUnit3TestAdapter": "4.2.1",
-          "Presentation": "1.0.0",
-          "System.IO.Abstractions": "17.2.3",
-          "System.IO.Abstractions.TestingHelpers": "17.2.3",
-          "bunit": "1.10.14"
+          "AuthoringTool": "[1.0.0, )",
+          "AutoMapper": "[11.0.1, )",
+          "AutoMapper.Extensions.Microsoft.DependencyInjection": "[11.0.0, )",
+          "JetBrains.Annotations": "[2022.1.0, )",
+          "Microsoft.NET.Test.Sdk": "[17.3.1, )",
+          "NSubstitute": "[4.4.0, )",
+          "NUnit": "[3.13.3, )",
+          "NUnit.Analyzers": "[3.3.0, )",
+          "NUnit3TestAdapter": "[4.2.1, )",
+          "Presentation": "[1.0.0, )",
+          "System.IO.Abstractions": "[17.2.3, )",
+          "System.IO.Abstractions.TestingHelpers": "[17.2.3, )",
+          "bunit": "[1.10.14, )"
         }
       },
       "shared": {
         "type": "Project",
         "dependencies": {
-          "JetBrains.Annotations": "2022.1.0",
-          "Microsoft.Extensions.Logging.Abstractions": "6.0.2"
+          "JetBrains.Annotations": "[2022.1.0, )",
+          "Microsoft.Extensions.Logging.Abstractions": "[6.0.2, )"
         }
       }
     }

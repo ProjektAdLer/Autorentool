@@ -76,6 +76,12 @@
     //TODO: Instead of setting a value here we need some sort of central service that we can notify about the error to
     //then display it in the UI - n.stich
     internal ExceptionWrapper? ErrorState { get; private set; }
+    
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        LearningSpaceP.OnUndoRedoPerformed += StateHasChanged;
+    }
 
     private void AddNewLearningElement()
     {

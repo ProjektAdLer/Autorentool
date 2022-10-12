@@ -33,17 +33,19 @@ public class PresentationLogicUt
         var mockConfiguration = Substitute.For<IAuthoringToolConfiguration>();
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockMapper = Substitute.For<IMapper>();
+        var mockCachingMapper = Substitute.For<ICachingMapper>();
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         var mockLogger = Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
 
         //Act
-        var systemUnderTest = CreateTestablePresentationLogic(mockConfiguration, mockBusinessLogic, mockMapper, mockServiceProvider, mockLogger);
+        var systemUnderTest = CreateTestablePresentationLogic(mockConfiguration, mockBusinessLogic, mockMapper, mockCachingMapper, mockServiceProvider, mockLogger);
         Assert.Multiple(() =>
         {
             //Assert
             Assert.That(systemUnderTest.Configuration, Is.EqualTo(mockConfiguration));
             Assert.That(systemUnderTest.BusinessLogic, Is.EqualTo(mockBusinessLogic));
             Assert.That(systemUnderTest.Mapper, Is.EqualTo(mockMapper));
+            Assert.That(systemUnderTest.CMapper, Is.EqualTo(mockCachingMapper));
         });
     }
 
@@ -101,6 +103,59 @@ public class PresentationLogicUt
             Assert.That(command!.AuthoringToolWorkspace, Is.EqualTo(workspaceEntity));
             Assert.That(command.LearningWorld, Is.EqualTo(worldEntity));
         });
+    }
+    
+    [Test]
+    public void CanUndoCanRedo_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.CanUndo.Returns(true);
+        mockBusinessLogic.CanRedo.Returns(false);
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+
+        var canUndo = systemUnderTest.CanUndo;
+        var canRedo = systemUnderTest.CanRedo;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(canUndo, Is.True);
+            Assert.That(canRedo, Is.False);
+        });
+    }
+    
+    [Test]
+    public void OnUndoRedoPerformed_SubscribesToBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+
+        var wasCalled = false;
+        systemUnderTest.OnUndoRedoPerformed += () => wasCalled = true;
+        mockBusinessLogic.OnUndoRedoPerformed += Raise.Event<Action>();
+
+        Assert.That(wasCalled, Is.True);
+    }
+    
+    [Test]
+    public void CallUndoCommand_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+
+        systemUnderTest.UndoCommand();
+
+        mockBusinessLogic.Received().UndoCommand();
+    }
+    
+    [Test]
+    public void CallRedoCommand_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+
+        systemUnderTest.RedoCommand();
+
+        mockBusinessLogic.Received().RedoCommand();
     }
     
     [Test]
@@ -226,7 +281,7 @@ public class PresentationLogicUt
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
         
-        systemUnderTest.CreateLearningSpace(learningWorldVm, "z", "z", "z", "z", "z", 5);
+        systemUnderTest.CreateLearningSpace(learningWorldVm, "z", "z", "z", "z", "z", 5, 6, 7);
         
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
         Assert.That(command, Is.Not.Null);
@@ -333,7 +388,7 @@ public class PresentationLogicUt
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
 
         systemUnderTest.CreateLearningElement(learningSpaceVm, "a", "b", ElementTypeEnum.Activation,
-            ContentTypeEnum.H5P, null!, "url","c", "d", "e", LearningElementDifficultyEnum.Easy, 1, 2);
+            ContentTypeEnum.H5P, null!, "url", "c", "d", "e", LearningElementDifficultyEnum.Easy, 1, 2, 3, 4);
 
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
         Assert.That(command, Is.Not.Null);
@@ -724,7 +779,7 @@ public class PresentationLogicUt
             .Throws(new OperationCanceledException("bububaba"));
         mockServiceProvider.GetService(typeof(IElectronDialogManager))
             .Returns(mockElectronDialogManager);
-        var learningElement = new LearningElementViewModel("f", "f", null!, "url","f", "f", "f",LearningElementDifficultyEnum.Easy);
+        var learningElement = new LearningElementViewModel("f", "f", null!, "url", "f", "f", "f",LearningElementDifficultyEnum.Easy);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
             serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
@@ -1589,18 +1644,20 @@ public class PresentationLogicUt
     #endregion
 
     private static Presentation.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(
-        IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null,
-        IServiceProvider? serviceProvider = null, ILogger<Presentation.PresentationLogic.API.PresentationLogic>? logger = null,
+        IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null, 
+        ICachingMapper? cachingMapper = null, IServiceProvider? serviceProvider = null, 
+        ILogger<Presentation.PresentationLogic.API.PresentationLogic>? logger = null, 
         IHybridSupportWrapper? hybridSupportWrapper = null)
     {
         configuration ??= Substitute.For<IAuthoringToolConfiguration>();
         businessLogic ??= Substitute.For<IBusinessLogic>();
         mapper ??= Substitute.For<IMapper>();
+        cachingMapper ??= Substitute.For<ICachingMapper>();
         serviceProvider ??= Substitute.For<IServiceProvider>();
         logger ??= Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
         hybridSupportWrapper ??= Substitute.For<IHybridSupportWrapper>();
 
-        return new Presentation.PresentationLogic.API.PresentationLogic(configuration, businessLogic, mapper,
+        return new Presentation.PresentationLogic.API.PresentationLogic(configuration, businessLogic, mapper, cachingMapper,
             serviceProvider, logger, hybridSupportWrapper);
     }
 }

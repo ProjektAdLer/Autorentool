@@ -107,6 +107,7 @@ else
         base.OnParametersSet();
         LearningWorldP.PropertyChanging += OnLearningWorldPresenterPropertyChanging;
         LearningWorldP.PropertyChanged += OnLearningWorldPresenterPropertyChanged;
+        LearningWorldP.OnUndoRedoPerformed += StateHasChanged;
     }
 
 
