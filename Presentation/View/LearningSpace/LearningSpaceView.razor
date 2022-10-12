@@ -71,15 +71,6 @@
     public ILearningSpaceViewModalDialogFactory ModalDialogFactory { get; set; }
 #pragma warning restore CS8618
 
-    protected override void OnParametersSet()
-    {
-        base.OnParametersSet();
-        LearningSpaceP.PropertyChanged += (sender, earg) =>
-        {
-            if(earg.PropertyName == nameof(LearningSpaceP.CreateLearningElementDialogOpen)) StateHasChanged();
-        };
-    }
-
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
     
@@ -91,6 +82,10 @@
     {
         base.OnParametersSet();
         LearningSpaceP.OnUndoRedoPerformed += StateHasChanged;
+        LearningSpaceP.PropertyChanged += (sender, earg) =>
+        {
+            if(earg.PropertyName == nameof(LearningSpaceP.CreateLearningElementDialogOpen)) StateHasChanged();
+        };
     }
 
     private void AddNewLearningElement()
