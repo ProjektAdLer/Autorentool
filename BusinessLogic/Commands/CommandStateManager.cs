@@ -72,10 +72,7 @@ public sealed class CommandStateManager : ICommandStateManager
         {
             if (myObject != null) objects.Add(myObject);
         }
-        foreach (var myObject in _redo.Select(GetObjectFromCommand).Where(obj => obj != null))
-        {
-            if (myObject != null) objects.Add(myObject);
-        }
+        // do the same for _redo, if it is possible that RemovedCommandsFromStacks is invoked when _redo is not empty
         return objects;
     }
     

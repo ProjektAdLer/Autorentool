@@ -1,4 +1,5 @@
-﻿using BusinessLogic.Commands;
+﻿using BusinessLogic.API;
+using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using NSubstitute;
 using NUnit.Framework;
@@ -189,6 +190,13 @@ public class CommandStateManagerUt
         var deleteLearningElementCommand = new DeleteLearningElement(learningElement, learningSpace, _ => { });
         var deleteLearningSpaceCommand = new DeleteLearningSpace(learningWorld, learningSpace, _ => { });
         var deleteLearningWorldCommand = new DeleteLearningWorld(workspace, learningWorld, _ => { });
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.LoadLearningElement(Arg.Any<string>()).Returns(learningElement);
+        mockBusinessLogic.LoadLearningSpace(Arg.Any<string>()).Returns(learningSpace);
+        mockBusinessLogic.LoadLearningWorld(Arg.Any<string>()).Returns(learningWorld);
+        var loadLearningElementCommand = new LoadLearningElement(learningSpace, "e", mockBusinessLogic, _ => { });
+        var loadLearningSpaceCommand = new LoadLearningSpace(learningWorld, "s", mockBusinessLogic, _ => { });
+        var loadLearningWorldCommand = new LoadLearningWorld(workspace, "w", mockBusinessLogic, _ => { });
 
         var secondLearningWorld = new LearningWorld("n2", "s2", "a2", "l2","d2", "g2");
         var thirdLearningWorld = new LearningWorld("n3", "s3", "a3", "l3","d3", "g3");
@@ -210,6 +218,9 @@ public class CommandStateManagerUt
         systemUnderTest.Execute(deleteLearningElementCommand);
         systemUnderTest.Execute(deleteLearningSpaceCommand);
         systemUnderTest.Execute(deleteLearningWorldCommand);
+        systemUnderTest.Execute(loadLearningWorldCommand);
+        systemUnderTest.Execute(loadLearningSpaceCommand);
+        systemUnderTest.Execute(loadLearningElementCommand);
         // command to remove
         systemUnderTest.Execute(createSecondLearningWorldCommand);
         systemUnderTest.Undo();
