@@ -21,7 +21,7 @@ public class ActivitiesUrlXmlUrlUt
             Assert.That(systemUnderTest.Intro, Is.EqualTo(""));
             Assert.That(systemUnderTest.Introformat, Is.EqualTo("1"));
             Assert.That(systemUnderTest.Externalurl, Is.EqualTo(""));
-            Assert.That(systemUnderTest.Display, Is.EqualTo("1"));
+            Assert.That(systemUnderTest.Display, Is.EqualTo("0"));
             Assert.That(systemUnderTest.Displayoptions, Is.EqualTo("a:1:{s:10:\"printintro\";i:0;}"));
             Assert.That(systemUnderTest.Parameters, Is.EqualTo("a:0:{}"));
             Assert.That(systemUnderTest.Timemodified, Is.EqualTo(""));

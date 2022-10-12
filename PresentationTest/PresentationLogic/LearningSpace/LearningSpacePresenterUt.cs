@@ -610,6 +610,7 @@ public class LearningSpacePresenterUt
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "a";
         dictionary["Shortname"] = "b";
+        dictionary["Url"] = "Google.com";
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
         dictionary["Goals"] = "g";
@@ -624,7 +625,7 @@ public class LearningSpacePresenterUt
         space.SelectedLearningElement = element;
         
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
-        presentationLogic.Received().EditLearningElement(space, element, "a", "b",  "e", "f", "g", LearningElementDifficultyEnum.None, 4,4);
+        presentationLogic.Received().EditLearningElement(space, element, "a", "b", "Google.com", "e", "f", "g", LearningElementDifficultyEnum.None, 4,4);
     }
     
     [Test]
