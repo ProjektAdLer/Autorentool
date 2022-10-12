@@ -45,6 +45,7 @@ public class PresentationLogicUt
             Assert.That(systemUnderTest.Configuration, Is.EqualTo(mockConfiguration));
             Assert.That(systemUnderTest.BusinessLogic, Is.EqualTo(mockBusinessLogic));
             Assert.That(systemUnderTest.Mapper, Is.EqualTo(mockMapper));
+            Assert.That(systemUnderTest.CMapper, Is.EqualTo(mockCachingMapper));
         });
     }
 
@@ -102,6 +103,59 @@ public class PresentationLogicUt
             Assert.That(command!.AuthoringToolWorkspace, Is.EqualTo(workspaceEntity));
             Assert.That(command.LearningWorld, Is.EqualTo(worldEntity));
         });
+    }
+    
+    [Test]
+    public void CanUndoCanRedo_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.CanUndo.Returns(true);
+        mockBusinessLogic.CanRedo.Returns(false);
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+
+        var canUndo = systemUnderTest.CanUndo;
+        var canRedo = systemUnderTest.CanRedo;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(canUndo, Is.True);
+            Assert.That(canRedo, Is.False);
+        });
+    }
+    
+    [Test]
+    public void OnUndoRedoPerformed_SubscribesToBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+
+        var wasCalled = false;
+        systemUnderTest.OnUndoRedoPerformed += () => wasCalled = true;
+        mockBusinessLogic.OnUndoRedoPerformed += Raise.Event<Action>();
+
+        Assert.That(wasCalled, Is.True);
+    }
+    
+    [Test]
+    public void CallUndoCommand_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+
+        systemUnderTest.UndoCommand();
+
+        mockBusinessLogic.Received().UndoCommand();
+    }
+    
+    [Test]
+    public void CallRedoCommand_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+
+        systemUnderTest.RedoCommand();
+
+        mockBusinessLogic.Received().RedoCommand();
     }
     
     [Test]

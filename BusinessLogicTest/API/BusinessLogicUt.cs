@@ -50,6 +50,86 @@ public class BusinessLogicUt
         
         mockCommandStateManager.Received().Execute(mockCommand);
     }
+    
+    [Test]
+    public void ExecuteCommand_InvokesOnUndoRedoPerformed(){
+        var mockCommandStateManager = Substitute.For<ICommandStateManager>();
+        var mockCommand = Substitute.For<ICommand>();
+        var mockOnUndoRedoPerformed = Substitute.For<Action>();
+        
+        var systemUnderTest = CreateStandardBusinessLogic(commandStateManager: mockCommandStateManager);
+        
+        systemUnderTest.OnUndoRedoPerformed += mockOnUndoRedoPerformed;
+        systemUnderTest.ExecuteCommand(mockCommand);
+        
+        mockOnUndoRedoPerformed.Received().Invoke();
+    }
+    
+    [Test]
+    public void CanUndoCanRedo_CallsCommandStateManager()
+    {
+        var mockCommandStateManager = Substitute.For<ICommandStateManager>();
+        mockCommandStateManager.CanUndo.Returns(true);
+        mockCommandStateManager.CanRedo.Returns(false);
+        var systemUnderTest = CreateStandardBusinessLogic(commandStateManager: mockCommandStateManager);
+
+        var canUndo = systemUnderTest.CanUndo;
+        var canRedo = systemUnderTest.CanRedo;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(canUndo, Is.True);
+            Assert.That(canRedo, Is.False);
+        });
+    }
+    
+    [Test]
+    public void CallUndoCommand_CallsCommandStateManager()
+    {
+        var mockCommandStateManager = Substitute.For<ICommandStateManager>();
+        var systemUnderTest = CreateStandardBusinessLogic(commandStateManager: mockCommandStateManager);
+
+        systemUnderTest.UndoCommand();
+
+        mockCommandStateManager.Received().Undo();
+    }
+    
+    [Test]
+    public void CallUndoCommand_InvokesOnUndoRedoPerformed(){
+        var mockCommandStateManager = Substitute.For<ICommandStateManager>();
+        var mockOnUndoRedoPerformed = Substitute.For<Action>();
+        
+        var systemUnderTest = CreateStandardBusinessLogic(commandStateManager: mockCommandStateManager);
+        
+        systemUnderTest.OnUndoRedoPerformed += mockOnUndoRedoPerformed;
+        systemUnderTest.UndoCommand();
+        
+        mockOnUndoRedoPerformed.Received().Invoke();
+    }
+    
+    [Test]
+    public void CallRedoCommand_CallsCommandStateManager()
+    {
+        var mockCommandStateManager = Substitute.For<ICommandStateManager>();
+        var systemUnderTest = CreateStandardBusinessLogic(commandStateManager: mockCommandStateManager);
+
+        systemUnderTest.RedoCommand();
+
+        mockCommandStateManager.Received().Redo();
+    }
+    
+    [Test]
+    public void CallRedoCommand_InvokesOnUndoRedoPerformed(){
+        var mockCommandStateManager = Substitute.For<ICommandStateManager>();
+        var mockOnUndoRedoPerformed = Substitute.For<Action>();
+        
+        var systemUnderTest = CreateStandardBusinessLogic(commandStateManager: mockCommandStateManager);
+        
+        systemUnderTest.OnUndoRedoPerformed += mockOnUndoRedoPerformed;
+        systemUnderTest.RedoCommand();
+        
+        mockOnUndoRedoPerformed.Received().Invoke();
+    }
 
     [Test]
     public void SaveLearningWorld_CallsDataAccess()

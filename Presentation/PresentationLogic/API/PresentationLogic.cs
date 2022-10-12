@@ -57,7 +57,7 @@ public class PresentationLogic : IPresentationLogic
     private IHybridSupportWrapper HybridSupportWrapper { get; }
     public bool CanUndo => BusinessLogic.CanUndo;
     public bool CanRedo => BusinessLogic.CanRedo;
-    public event Action OnUndoRedoPerformed
+    public event Action? OnUndoRedoPerformed
     {
         add => BusinessLogic.OnUndoRedoPerformed += value;
         remove => BusinessLogic.OnUndoRedoPerformed -= value;
