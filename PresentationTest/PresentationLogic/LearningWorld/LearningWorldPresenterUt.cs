@@ -96,7 +96,7 @@ public class LearningWorldPresenterUt
         systemUnderTest.CreateNewLearningSpace("foo", "bar", "foo", "bar", "foo", 5);
 
         presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int>());
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int>(), Arg.Any<double>(), Arg.Any<double>());
     }
 
     #endregion
@@ -147,7 +147,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnCreateSpaceDialogClose(returnValueTuple);
 
-        presentationLogic.Received().CreateLearningSpace(world, "n", "sn", "a", "d", "g", 10);
+        presentationLogic.Received().CreateLearningSpace(world, "n", "sn", "a", "d", "g", 10, Arg.Any<double>(), Arg.Any<double>());
     }
 
     #endregion
@@ -436,6 +436,199 @@ public class LearningWorldPresenterUt
         systemUnderTest.CloseLearningSpaceView();
         
         Assert.That(systemUnderTest.ShowingLearningSpaceView, Is.False);
+    }
+    
+    #endregion
+
+    #endregion
+
+    #region LearningPathWays
+    
+    #region SetOnHoveredLearningSpace
+    
+    [Test]
+    public void SetOnHoveredLearningSpace_ObjectAtPositionIsNull_SetsHoveredLearningSpaceToNull()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var sourceSpace = new LearningSpaceViewModel("g", "g", "g", "g", "g",
+            positionX:25, positionY:25);
+        var targetSpace = new LearningSpaceViewModel("u", "u", "u", "u", "u",
+            positionX:250, positionY:250);
+        world.LearningSpaces.Add(sourceSpace);
+        world.LearningSpaces.Add(targetSpace);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.LearningWorldVm.OnHoveredLearningSpace = targetSpace;
+        
+        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredLearningSpace, Is.EqualTo(targetSpace));
+        
+        systemUnderTest.SetOnHoveredLearningSpace(sourceSpace, 400,400);
+        
+        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredLearningSpace, Is.Null);
+    }
+    
+    [Test]
+    public void SetOnHoveredLearningSpace_ObjectAtPositionIsSourceSpace_SetsHoveredLearningSpaceToNull()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var sourceSpace = new LearningSpaceViewModel("g", "g", "g", "g", "g",
+            positionX:25, positionY:25);
+        world.LearningSpaces.Add(sourceSpace);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world; ;
+
+        systemUnderTest.SetOnHoveredLearningSpace(sourceSpace, 30,30);
+        
+        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredLearningSpace, Is.Null);
+    }
+    
+    [Test]
+    public void SetOnHoveredLearningSpace_SetsCorrectObjectAtPosition()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var sourceSpace = new LearningSpaceViewModel("g", "g", "g", "g", "g",
+            positionX:25, positionY:25);
+        var targetSpace1 = new LearningSpaceViewModel("u", "u", "u", "u", "u",
+            positionX:250, positionY:250);
+        var targetSpace2 = new LearningSpaceViewModel("u", "u", "u", "u", "u",
+            positionX:500, positionY:500);
+        world.LearningSpaces.Add(sourceSpace);
+        world.LearningSpaces.Add(targetSpace1);
+        world.LearningSpaces.Add(targetSpace2);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.LearningWorldVm.OnHoveredLearningSpace = targetSpace1;
+        
+        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredLearningSpace, Is.EqualTo(targetSpace1));
+        
+        systemUnderTest.SetOnHoveredLearningSpace(sourceSpace, 510,510);
+        
+        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredLearningSpace, Is.EqualTo(targetSpace2));
+    }
+
+    [Test]
+    public void SetOnHoveredLearningSpace_SelectedLearningWorldIsNull_ThrowsException()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        var space = new LearningSpaceViewModel("a", "v", "d", "f", "f", 4);
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetOnHoveredLearningSpace(space, 3,3));
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+    }
+    
+    #endregion
+    
+    #region CreateLearningPathWay
+    
+    [Test]
+    public void CreateLearningPathWay_WithoutTargetSpace_DoesNotCallPresentationLogic()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var sourceSpace = new LearningSpaceViewModel("g", "g", "g", "g", "g",
+            positionX:25, positionY:25);
+        var targetSpace = new LearningSpaceViewModel("u", "u", "u", "u", "u",
+            positionX:50, positionY:50);
+        world.LearningSpaces.Add(sourceSpace);
+        world.LearningSpaces.Add(targetSpace);
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+        
+        systemUnderTest.CreateLearningPathWay(sourceSpace, 25,25);
+        
+        presentationLogic.DidNotReceive().CreateLearningPathWay(world, sourceSpace, targetSpace);
+    }
+    
+    [Test]
+    public void CreateLearningPathWay_TargetSpaceIsSourceSpace_DoesNotCallPresentationLogic()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var sourceSpace = new LearningSpaceViewModel("g", "g", "g", "g", "g",
+            positionX:25, positionY:25);
+        var targetSpace = new LearningSpaceViewModel("u", "u", "u", "u", "u",
+            positionX:50, positionY:50);
+        world.LearningSpaces.Add(sourceSpace);
+        world.LearningSpaces.Add(targetSpace);
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+        
+        systemUnderTest.CreateLearningPathWay(sourceSpace, 60,60);
+        
+        presentationLogic.DidNotReceive().CreateLearningPathWay(world, sourceSpace, sourceSpace);
+    }
+    
+    [Test]
+    public void CreateLearningPathWay_WithTargetSpace_CallsPresentationLogic()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var sourceSpace = new LearningSpaceViewModel("g", "g", "g", "g", "g",
+            positionX:25, positionY:25);
+        var targetSpace = new LearningSpaceViewModel("u", "u", "u", "u", "u",
+            positionX:250, positionY:250);
+        world.LearningSpaces.Add(sourceSpace);
+        world.LearningSpaces.Add(targetSpace);
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+
+        systemUnderTest.CreateLearningPathWay(sourceSpace, 260,260);
+        
+        presentationLogic.Received().CreateLearningPathWay(world, sourceSpace, targetSpace);
+    }
+
+    [Test]
+    public void CreateLearningPathWay_SelectedLearningWorldIsNull_ThrowsException()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        var space = new LearningSpaceViewModel("a", "v", "d", "f", "f", 4);
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.CreateLearningPathWay(space, 3,3));
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+    }
+    
+    #endregion
+
+    #region DeleteLearningPathWay
+
+    [Test]
+    public void DeleteLearningPathWay_CallsPresentationLogic()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var targetSpace = new LearningSpaceViewModel("u", "u", "u", "u", "u",
+            positionX:250, positionY:250);
+        world.LearningSpaces.Add(targetSpace);
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+        
+        systemUnderTest.DeleteLearningPathWay(targetSpace);
+        
+        presentationLogic.Received().DeleteLearningPathWay(world, targetSpace);
+    }
+    
+    [Test]
+    public void DeleteLearningPathWay_SelectedLearningWorldIsNull_ThrowsException()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        var space = new LearningSpaceViewModel("a", "v", "d", "f", "f", 4);
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteLearningPathWay(space));
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
     
     #endregion

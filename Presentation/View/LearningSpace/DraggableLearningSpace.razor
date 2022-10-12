@@ -1,18 +1,38 @@
 @using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic
 @using Presentation.Components
-<Draggable LearningObject="LearningSpace" OnClicked="@OnClicked"
+@using Presentation.PresentationLogic.LearningWorld
+<Draggable LearningObject="LearningSpace" OnClicked="@OnClickedDraggable"
            @bind-X="@LearningSpace.PositionX" @bind-Y="@LearningSpace.PositionY">
+    @if (LearningSpace == PositioningService.LearningWorldVm?.OnHoveredLearningSpace)
+    {
+        <rect transform="translate(-3, -3)" height="56" width="106" fill="lightblue"></rect>
+        <circle r="6" transform="translate(0, 25)" fill="lightblue"/>
+    }
     <rect height="50" width="100" style="fill:lightgreen;stroke:black"></rect>
     <text x="3" y="15">@LearningSpace.Name</text>
+    <Clickable OnClickedParam="LearningSpace" OnClicked="@OnClickedClickable">
+        @if (LearningSpace.InBoundSpaces.Any())
+        {
+            <circle r="6" transform="translate(0, 25)" fill="white" stroke="gray"/>
+            <polyline points="0,0 2,0 -2,0" transform="translate(0,25)" style="fill:none;stroke:red;stroke-width:1"/>
+        }
+    </Clickable>
 </Draggable>
+<PullablePath LearningSpace="LearningSpace" X1=@LearningSpace.PositionX
+               Y1="@LearningSpace.PositionY" PositioningSrv="@PositioningService"></PullablePath>
 
 @code {
     // Overwrite nullability warning below because we check in OnParametersSet -n.stich
     [Parameter, EditorRequired]
     public ILearningSpaceViewModel LearningSpace { get; set; } = null!;
     [Parameter, EditorRequired]
-    public EventCallback<ILearningSpaceViewModel> OnClicked { get; set; }
+    public EventCallback<ILearningSpaceViewModel> OnClickedDraggable { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningSpaceViewModel> OnClickedClickable { get; set; }
+    // Overwrite nullability warning below because service may never be null -n.stich
+    [Parameter, EditorRequired]
+    public ILearningWorldPresenter PositioningService { get; set; } = null!;
 
     protected override void OnParametersSet()
     {

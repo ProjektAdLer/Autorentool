@@ -8,7 +8,7 @@ public class LoadLearningSpace : IUndoCommand
     private readonly IBusinessLogic _businessLogic;
     
     internal LearningWorld LearningWorld { get; }
-    private LearningSpace? _learningSpace;
+    internal LearningSpace? LearningSpace;
     private readonly string _filepath;
     private readonly Action<LearningWorld> _mappingAction;
     private IMemento? _memento;
@@ -28,16 +28,16 @@ public class LoadLearningSpace : IUndoCommand
         LearningWorld = learningWorld;
         _filepath = "";
         _businessLogic = businessLogic;
-        _learningSpace = _businessLogic.LoadLearningSpace(stream);
+        LearningSpace = _businessLogic.LoadLearningSpace(stream);
         _mappingAction = mappingAction;
     }
     public void Execute()
     {
         _memento = LearningWorld.GetMemento();
         
-        _learningSpace ??= _businessLogic.LoadLearningSpace(_filepath);
-        LearningWorld.LearningSpaces.Add(_learningSpace);
-        LearningWorld.SelectedLearningSpace = _learningSpace;
+        LearningSpace ??= _businessLogic.LoadLearningSpace(_filepath);
+        LearningWorld.LearningSpaces.Add(LearningSpace);
+        LearningWorld.SelectedLearningSpace = LearningSpace;
 
         _mappingAction.Invoke(LearningWorld);
     }

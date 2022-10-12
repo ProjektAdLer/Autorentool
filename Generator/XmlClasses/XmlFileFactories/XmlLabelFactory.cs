@@ -16,6 +16,7 @@ public class XmlLabelFactory : IXmlLabelFactory
     private readonly IFileSystem _fileSystem;
     public string LabelId;
     public string LabelName;
+    public string LabelGoal;
     public string LabelParentSpaceId;
     public string LabelDescription;
     public IActivitiesGradesXmlGradeItem ActivitiesGradesXmlGradeItem { get; }
@@ -43,6 +44,7 @@ public class XmlLabelFactory : IXmlLabelFactory
         ReadDsl = readDsl;
         LabelId = "";
         LabelName = "";
+        LabelGoal = "";
         LabelParentSpaceId = "";
         LabelDescription = "";
 
@@ -73,11 +75,11 @@ public class XmlLabelFactory : IXmlLabelFactory
     public void CreateLabelFactory()
     {
         // This step is important to get all spaces included in the world
-        var spaceLabelList = ReadDsl.GetSpacesAndElementsOrderedList();
+        var spaceAndWorldAttributesLabelList = ReadDsl.GetSpacesAndElementsOrderedList();
         var videoLinkLabelList = ReadDsl.GetLabelsList();
 
         var labelList = videoLinkLabelList;
-        labelList.AddRange(spaceLabelList);
+        labelList.AddRange(spaceAndWorldAttributesLabelList);
         
         LabelSetParameters(labelList);
     }
@@ -88,6 +90,7 @@ public class XmlLabelFactory : IXmlLabelFactory
         {
             LabelId = label.Id.ToString();
             LabelName = label.Identifier.Value;
+            LabelGoal = label.Goals ?? "";
             LabelParentSpaceId = label.LearningSpaceParentId.ToString();
             LabelDescription = label.Description ?? "";
             
@@ -97,9 +100,9 @@ public class XmlLabelFactory : IXmlLabelFactory
                 LabelSetParametersActivitySpace();
             }
 
-            if (label.ElementType is "mp4")
+            if (label.ElementCategory is "World Attributes")
             {
-                LabelSetParametersActivityVideoLink();
+                LabelSetParametersWorldAttributes();
             }
         }
     }
@@ -152,7 +155,7 @@ public class XmlLabelFactory : IXmlLabelFactory
         ActivitiesInforefXmlInforef.Serialize("label", LabelId);
     }
     
-    public void LabelSetParametersActivityVideoLink()
+    public void LabelSetParametersWorldAttributes()
     {
         CreateActivityFolder(LabelId);
         
@@ -163,9 +166,11 @@ public class XmlLabelFactory : IXmlLabelFactory
         ActivitiesGradesXmlActivityGradebook.Serialize("label", LabelId);
         
         //file activities/label.../label.xml
-        ActivitiesLabelXmlLabel.Name = LabelName + " " + LabelDescription;
+        ActivitiesLabelXmlLabel.Name = "<h5>Description:</h5> " + "<p>" + LabelDescription + "</p>" + 
+                                       "<h5>Goals:</h5> " + "<p>" + LabelGoal + "</p>";
         ActivitiesLabelXmlLabel.Id = LabelId;
-        ActivitiesLabelXmlLabel.Intro = LabelName + " " + LabelDescription;
+        ActivitiesLabelXmlLabel.Intro = "<h5>Description:</h5> " + "<p>" + LabelDescription + "</p>" + 
+                                        "<h5>Goals:</h5> " + "<p>" + LabelGoal + "</p>";
         ActivitiesLabelXmlLabel.Timemodified = CurrentTime;
 
         ActivitiesLabelXmlActivity.Label = ActivitiesLabelXmlLabel as ActivitiesLabelXmlLabel ?? new ActivitiesLabelXmlLabel();
@@ -185,7 +190,7 @@ public class XmlLabelFactory : IXmlLabelFactory
         ActivitiesModuleXmlModule.Added = CurrentTime;
         ActivitiesModuleXmlModule.Id = LabelId;
         //Activity Completion is not needed on labels
-        ActivitiesModuleXmlModule.Completion = "1";
+        ActivitiesModuleXmlModule.Completion = "0";
 
         ActivitiesModuleXmlModule.Serialize("label", LabelId);
         

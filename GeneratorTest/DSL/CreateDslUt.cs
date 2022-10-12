@@ -1,5 +1,7 @@
 ﻿using System.IO.Abstractions.TestingHelpers;
 using Generator.DSL;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using NUnit.Framework;
 using PersistEntities;
 
@@ -18,6 +20,7 @@ public class CreateDslUt
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         mockFileSystem.AddDirectory(Path.Join(curWorkDir, "XMLFilesForExport"));
         mockFileSystem.AddFile(curWorkDir + "\\XMLFilesForExport\\LearningWorld.xml", new MockFileData(""));
+        var mockLogger = Substitute.For<ILogger<CreateDsl>>();
         
         const string name = "asdf";
         const string shortname = "jkl;";
@@ -46,15 +49,20 @@ public class CreateDslUt
         var ele6 = new LearningElementPe("f", "b",content6, "","pupup", "g","h", 
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
         
-        var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5);
+        var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
+            null, 0, 0, new List<LearningSpacePe>(), 
+            new List<LearningSpacePe>());
         space1.LearningElements.AddRange(new List<LearningElementPe>{ele1, ele2, ele3, ele4, ele5, ele6});
-        var space2 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5);
+        var space2 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
+            null, 0, 0, new List<LearningSpacePe>(), new List<LearningSpacePe>());
+        space1.OutBoundSpaces = new List<LearningSpacePe>() {space2};
+        space2.InBoundSpaces = new List<LearningSpacePe>() {space1};
         var learningSpaces = new List<LearningSpacePe> { space1, space2 };
 
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals,
              learningSpaces);
 
-        var systemUnderTest = new CreateDsl(mockFileSystem);
+        var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
         
         var learningElementsWithContentList = new List<LearningElementPe> { ele1, ele2, ele4, ele5, ele6 };
 
@@ -71,10 +79,12 @@ public class CreateDslUt
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.LearningWorldJson!.Identifier.Value, Is.EqualTo(name));
-
             Assert.That(systemUnderTest.ContentListLearningElements, Is.EquivalentTo(learningElementsWithContentList));
-            
-            Assert.That(systemUnderTest.ListLearningSpaces, Has.Count.EqualTo(2));
+            Assert.That(systemUnderTest.ListLearningSpaces, Is.EquivalentTo(learningSpaces));
+            Assert.That(systemUnderTest.LearningWorldJson.LearningSpaces[0].Requirements,
+                Is.EqualTo(new List<int>()));
+            Assert.That(systemUnderTest.LearningWorldJson.LearningSpaces[1].Requirements,
+                Is.EqualTo(new List<int>() {1}));
         });
         Assert.Multiple(() =>
         {

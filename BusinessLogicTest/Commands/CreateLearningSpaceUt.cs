@@ -19,10 +19,12 @@ public class CreateLearningSpaceUt
         var description = "space for learning";
         var goals = "learning";
         var requiredPoints = 10;
+        var positionX = 1;
+        var positionY = 2;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateLearningSpace(world, name, shortname, authors, description, goals, requiredPoints, mappingAction);
+        var command = new CreateLearningSpace(world, name, shortname, authors, description, goals, requiredPoints, positionX, positionY, mappingAction);
         
         Assert.IsEmpty(world.LearningSpaces);
         Assert.IsFalse(actionWasInvoked);
@@ -74,10 +76,12 @@ public class CreateLearningSpaceUt
         var description = "space for learning";
         var goals = "learning";
         var requiredPoints = 10;
+        var positionX = 1;
+        var positionY = 2;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateLearningSpace(world, name, shortname, authors, description, goals, requiredPoints, mappingAction);
+        var command = new CreateLearningSpace(world, name, shortname, authors, description, goals, requiredPoints, positionX, positionY, mappingAction);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -99,10 +103,12 @@ public class CreateLearningSpaceUt
         var description = "space for learning";
         var goals = "learning";
         var requiredPoints = 10;
+        var positionX = 1;
+        var positionY = 2;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         
-        var command = new CreateLearningSpace(world, name, shortname, authors, description, goals, requiredPoints, mappingAction);
+        var command = new CreateLearningSpace(world, name, shortname, authors, description, goals, requiredPoints, positionX, positionY, mappingAction);
         
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
         Assert.That(world.SelectedLearningSpace, Is.EqualTo(space));

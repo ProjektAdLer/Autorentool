@@ -53,7 +53,14 @@
                         @foreach (var input in InputFields)
                         {
                             <div class="row pb-2 align-items-center">
-                                <div class="col">@input.Name</div>
+                                @if (input.Required)
+                                {
+                                    <div class="col">@input.Name <span style="color:#FF0000">&#x002a;</span></div>
+                                }
+                                else
+                                {
+                                    <div class="col">@input.Name</div>
+                                }
                                 <div class="col">
                                     @if (input is ModalDialogDropdownInputField dropdownInput)
                                     {
@@ -289,6 +296,7 @@
 
     /// <summary>Determines whether the dropdown input field is unlocked or not.</summary>
     /// <returns>true if the input field is unlocked, false if it isn't.</returns>
+    /// Also checks if the dropdown "Content" has video selected, if yes it will unlock the url input field
     /// <param name="requiredValues">The input field to check for.</param>
     private bool IsUnlocked(ModalDialogDropdownInputField requiredValues)
     {

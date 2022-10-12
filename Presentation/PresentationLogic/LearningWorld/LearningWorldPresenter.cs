@@ -31,6 +31,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     private Dictionary<string, string>? _editSpaceDialogInitialValues;
     private Dictionary<string, string>? _editSpaceDialogAnnotations;
     private bool _createLearningSpaceDialogOpen;
+    private int _creationCounter = 0;
 
     public bool SelectedLearningObjectIsSpace =>
         LearningWorldVm?.SelectedLearningSpace?.GetType() == typeof(LearningSpaceViewModel);
@@ -89,6 +90,12 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         private set => SetField(ref _createLearningSpaceDialogOpen, value);
     }
 
+    public event Action OnUndoRedoPerformed
+    {
+        add => _presentationLogic.OnUndoRedoPerformed += value;
+        remove => _presentationLogic.OnUndoRedoPerformed -= value;
+    }
+    
     public void AddNewLearningSpace()
     {
         CreateLearningSpaceDialogOpen = true;
@@ -126,13 +133,15 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     /// <param name="description"></param>
     /// <param name="goals"></param>
     /// <param name="requiredPoints"></param>
+    /// <param name="positionX"></param>
+    /// <param name="positionY"></param>
     /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
     public void CreateNewLearningSpace(string name, string shortname,
-        string authors, string description, string goals, int requiredPoints)
+        string authors, string description, string goals, int requiredPoints, double positionX = 0, double positionY = 0)
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        _presentationLogic.CreateLearningSpace(LearningWorldVm, name, shortname, authors, description, goals, requiredPoints);
+        _presentationLogic.CreateLearningSpace(LearningWorldVm, name, shortname, authors, description, goals, requiredPoints, positionX, positionY);
         //TODO: Return error in the command in case of failure
     }
 
@@ -203,13 +212,15 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
 
         //required arguments
         var name = data["Name"];
-        var shortname = data["Shortname"];
-        var description = data["Description"];
         //optional arguments
+        var shortname = data.ContainsKey("Shortname") ? data["Shortname"] : "";
+        var description = data.ContainsKey("Description") ? data["Description"] : "";
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
         var requiredPoints = data.ContainsKey("Required Points") && data["Required Points"] != "" && !data["Required Points"].StartsWith("e") ? int.Parse(data["Required Points"]) : 0;
-        CreateNewLearningSpace(name, shortname, authors, description, goals, requiredPoints);
+        var offset = 15 * _creationCounter;
+        _creationCounter = (_creationCounter + 1) % 10;
+        CreateNewLearningSpace(name, shortname, authors, description, goals, requiredPoints, offset, offset);
     }
 
     /// <summary>
@@ -234,9 +245,9 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
 
         //required arguments
         var name = data["Name"];
-        var shortname = data["Shortname"];
-        var description = data["Description"];
         //optional arguments
+        var shortname = data.ContainsKey("Shortname") ? data["Shortname"] : "";
+        var description = data.ContainsKey("Description") ? data["Description"] : "";
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
         var requiredPoints = data.ContainsKey("Required Points") && data["Required Points"] != "" && !data["Required Points"].StartsWith("e") ? int.Parse(data["Required Points"]) : 0;
@@ -287,6 +298,77 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         LearningWorldVm.SelectedLearningSpace = learningSpace;
         if (SelectedLearningObjectIsSpace)
             _learningSpacePresenter.SetLearningSpace(LearningWorldVm.SelectedLearningSpace);
+    }
+
+    #endregion
+
+    #region LearningPathWay
+
+    /// <summary>
+    /// Sets the on hovered learning space of the learning world to the target space on the given position.
+    /// When there is no learning space on the given position, the on hovered learning space is set to null.
+    /// </summary>
+    /// <param name="sourceSpace">The learning space from which the path starts.</param>
+    /// <param name="x">The x-coordinate of the target space</param>
+    /// <param name="y">The y-coordinate of the target space</param>
+    public void SetOnHoveredLearningSpace(ILearningSpaceViewModel sourceSpace, double x, double y)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        var objectAtPosition = GetObjectAtPosition(x, y);
+        if (objectAtPosition == null || objectAtPosition == sourceSpace)
+        {
+            LearningWorldVm.OnHoveredLearningSpace = null;
+        }
+        else
+        
+        {
+            LearningWorldVm.OnHoveredLearningSpace = objectAtPosition;
+        }
+    }
+    
+    /// <summary>
+    /// Localizes and returns the learning space at the given position in the currently selected learning world.
+    /// </summary>
+    /// <param name="x">The x-coordinate of the target space</param>
+    /// <param name="y">The y-coordinate of the target space</param>
+    /// <returns>The learning space at the given position.</returns>
+    private ILearningSpaceViewModel? GetObjectAtPosition(double x, double y)
+    {
+        //LearningWorldVm can not be null because it is checked before call. -m.ho
+        var objectAtPosition = LearningWorldVm?.LearningSpaces
+            .FirstOrDefault(ls => ls.PositionX <= x && ls.PositionX + 100 >= x 
+                                                    && ls.PositionY <= y && ls.PositionY + 50 >= y);
+        return objectAtPosition;
+    }
+    
+    /// <summary>
+    /// Creates a learning pathway from the given source space to the target space on the given position.
+    /// Does nothing when there is no learning space on the given position.
+    /// </summary>
+    /// <param name="sourceSpace">The learning space from which the path starts.</param>
+    /// <param name="x">The x-coordinate of the target space</param>
+    /// <param name="y">The y-coordinate of the target space</param>
+    public void CreateLearningPathWay(ILearningSpaceViewModel sourceSpace, double x, double y)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        var targetSpace = GetObjectAtPosition(x, y);
+        if (targetSpace == null || targetSpace == sourceSpace)
+            return;
+        LearningWorldVm.OnHoveredLearningSpace = null;
+        _presentationLogic.CreateLearningPathWay(LearningWorldVm, sourceSpace, targetSpace);
+    }
+
+    /// <summary>
+    /// Deletes the last created learning pathway leading to the target space.
+    /// </summary>
+    /// <param name="targetSpace">The learning space where the path ends.</param>
+    public void DeleteLearningPathWay(ILearningSpaceViewModel targetSpace)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        _presentationLogic.DeleteLearningPathWay(LearningWorldVm, targetSpace);
     }
 
     #endregion

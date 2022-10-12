@@ -126,7 +126,7 @@ public class XmlUrlFactoryUt
             
             Assert.That(systemUnderTest.ActivitiesUrlXmlUrl, Is.EqualTo(mockUrl));
             Assert.That(systemUnderTest.ActivitiesUrlXmlUrl.Name, Is.EqualTo(systemUnderTest.UrlName));
-            Assert.That(systemUnderTest.ActivitiesUrlXmlUrl.Intro, Is.EqualTo(systemUnderTest.UrlLink));
+            Assert.That(systemUnderTest.ActivitiesUrlXmlUrl.Intro, Is.EqualTo(systemUnderTest.UrlLink + "<p style=\"position:relative; background-color:#e6e9ed;\">" + systemUnderTest.UrlDescription + "</p>"));
             Assert.That(systemUnderTest.ActivitiesUrlXmlUrl.Externalurl, Is.EqualTo(systemUnderTest.UrlLink));
             Assert.That(systemUnderTest.ActivitiesUrlXmlUrl.Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
             

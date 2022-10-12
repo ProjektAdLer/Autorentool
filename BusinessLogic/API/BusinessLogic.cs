@@ -22,10 +22,26 @@ public class BusinessLogic : IBusinessLogic
     internal IWorldGenerator WorldGenerator { get; }
     internal ICommandStateManager CommandStateManager { get; }
     internal IDataAccess DataAccess { get;  }
+    public event Action? OnUndoRedoPerformed;
 
     public void ExecuteCommand(ICommand command)
     {
         CommandStateManager.Execute(command);
+        OnUndoRedoPerformed?.Invoke();
+    }
+    public bool CanUndo => CommandStateManager.CanUndo;
+    public bool CanRedo => CommandStateManager.CanRedo;
+    
+    public void UndoCommand()
+    {
+        CommandStateManager.Undo();
+        OnUndoRedoPerformed?.Invoke();
+    }
+    
+    public void RedoCommand()
+    {
+        CommandStateManager.Redo();
+        OnUndoRedoPerformed?.Invoke();
     }
 
     public void ConstructBackup(LearningWorld learningWorld, string filepath)

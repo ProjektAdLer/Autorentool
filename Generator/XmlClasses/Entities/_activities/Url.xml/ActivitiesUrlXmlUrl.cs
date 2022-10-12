@@ -12,7 +12,7 @@ public class ActivitiesUrlXmlUrl : IActivitiesUrlXmlUrl
         Introformat = "1";
         Externalurl = "";
         Display = "1";
-        Displayoptions = "a:1:{s:10:\"printintro\";i:1;}";
+        Displayoptions = "a:1:{s:10:\"printintro\";i:0;}";
         Parameters = "a:0:{}";
         Timemodified = "";
         Id = "";
@@ -28,6 +28,8 @@ public class ActivitiesUrlXmlUrl : IActivitiesUrlXmlUrl
     public string Externalurl { get; set; }
     [XmlElement(ElementName="display")]
     public string Display { get; set; }
+    
+    //Represents the settings in the Appearance section of an Activity in Moodle.
     [XmlElement(ElementName="displayoptions")]
     public string Displayoptions { get; set; }
     [XmlElement(ElementName="parameters")]

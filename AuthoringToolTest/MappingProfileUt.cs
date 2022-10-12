@@ -6,6 +6,11 @@ using PersistEntities;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningElement.ActivationElement;
+using Presentation.PresentationLogic.LearningElement.InteractionElement;
+using Presentation.PresentationLogic.LearningElement.TestElement;
+using Presentation.PresentationLogic.LearningElement.TransferElement;
+using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
@@ -196,7 +201,8 @@ public class MappingProfileUt
     public void MapLearningSpaceAndLearningSpacePersistEntity_WithoutLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, null, PositionX, PositionY);
+        var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, null, 
+            PositionX, PositionY, new List<LearningSpace>(), new List<LearningSpace>());
         var destination = new LearningSpacePe("", "", "", "", "", 0);
 
         systemUnderTest.Map(source, destination);
@@ -213,6 +219,8 @@ public class MappingProfileUt
         destination.LearningElements = new List<LearningElementPe>();
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
+        destination.InBoundSpaces = new List<LearningSpacePe>();
+        destination.OutBoundSpaces = new List<LearningSpacePe>();
 
         systemUnderTest.Map(destination, source);
 
@@ -220,19 +228,28 @@ public class MappingProfileUt
         Assert.That(source.LearningElements, Is.Empty);
     }
 
-    [Test]
-    public void MapLearningSpaceAndLearningSpaceViewModel_WithLearningElement_TestMappingIsValid()
+    [TestCase(ElementType.TextTransfer, typeof(TextTransferElementViewModel), typeof(TextTransferElement))]
+    [TestCase(ElementType.ImageTransfer, typeof(ImageTransferElementViewModel), typeof(ImageTransferElement))]
+    [TestCase(ElementType.VideoTransfer, typeof(VideoTransferElementViewModel), typeof(VideoTransferElement))]
+    [TestCase(ElementType.PdfTransfer, typeof(PdfTransferElementViewModel), typeof(PdfTransferElement))]
+    [TestCase(ElementType.VideoActivation, typeof(VideoActivationElementViewModel), typeof(VideoActivationElement))]
+    [TestCase(ElementType.H5PActivation, typeof(H5PActivationElementViewModel), typeof(H5PActivationElement))]
+    [TestCase(ElementType.H5PInteraction, typeof(H5PInteractionElementViewModel), typeof(H5PInteractionElement))]
+    [TestCase(ElementType.H5PTest, typeof(H5PTestElementViewModel), typeof(H5PTestElement))]
+    public void MapLearningSpaceAndLearningSpaceViewModel_WithLearningElement_TestMappingIsValid
+        (ElementType elementType, Type expectedElementViewModelType, Type expectedElementType)
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, new List<LearningElement>(),
             PositionX, PositionY);
-        source.LearningElements.Add(GetTestableElementWithParent(source));
+        source.LearningElements.Add(GetTestableElementWithParent(source, elementType));
         var destination = new LearningSpaceViewModel("", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
 
         TestSpace(destination, false);
         Assert.That(destination.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(destination.LearningElements.First(), Is.InstanceOf(expectedElementViewModelType));
         Assert.That(destination.Id, Is.EqualTo(source.Id));
 
         destination.Name = NewName;
@@ -242,7 +259,7 @@ public class MappingProfileUt
         destination.Goals = NewGoals;
         destination.RequiredPoints = NewRequiredPoints;
         destination.LearningElements = new List<ILearningElementViewModel>()
-            {GetTestableNewElementViewModelWithParent(destination)};
+            {GetTestableElementViewModelWithParent(destination, elementType)};
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
 
@@ -250,22 +267,32 @@ public class MappingProfileUt
 
         TestSpace(source, true);
         Assert.That(source.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(source.LearningElements.First(), Is.InstanceOf(expectedElementType));
         Assert.That(destination.Id, Is.EqualTo(source.Id));
     }
 
-    [Test]
-    public void MapLearningSpaceAndLearningSpacePersistEntity_WithLearningElement_TestMappingIsValid()
+    [TestCase(ElementType.TextTransfer, typeof(TextTransferElementPe), typeof(TextTransferElement))]
+    [TestCase(ElementType.ImageTransfer, typeof(ImageTransferElementPe), typeof(ImageTransferElement))]
+    [TestCase(ElementType.VideoTransfer, typeof(VideoTransferElementPe), typeof(VideoTransferElement))]
+    [TestCase(ElementType.PdfTransfer, typeof(PdfTransferElementPe), typeof(PdfTransferElement))]
+    [TestCase(ElementType.VideoActivation, typeof(VideoActivationElementPe), typeof(VideoActivationElement))]
+    [TestCase(ElementType.H5PActivation, typeof(H5PActivationElementPe), typeof(H5PActivationElement))]
+    [TestCase(ElementType.H5PInteraction, typeof(H5PInteractionElementPe), typeof(H5PInteractionElement))]
+    [TestCase(ElementType.H5PTest, typeof(H5PTestElementPe), typeof(H5PTestElement))]
+    public void MapLearningSpaceAndLearningSpacePersistEntity_WithLearningElement_TestMappingIsValid
+        (ElementType elementType, Type expectedElementPeType, Type expectedElementType)
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, new List<LearningElement>(),
-            PositionX, PositionY);
-        source.LearningElements.Add(GetTestableElementWithParent(source));
+            PositionX, PositionY, new List<LearningSpace>(), new List<LearningSpace>());
+        source.LearningElements.Add(GetTestableElementWithParent(source, elementType));
         var destination = new LearningSpacePe("", "", "", "", "", 0);
 
         systemUnderTest.Map(source, destination);
 
         TestSpace(destination, false);
         Assert.That(destination.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(destination.LearningElements.First(), Is.InstanceOf(expectedElementPeType));
 
         destination.Name = NewName;
         destination.Shortname = NewShortname;
@@ -273,14 +300,17 @@ public class MappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.RequiredPoints = NewRequiredPoints;
-        destination.LearningElements = new List<LearningElementPe>() {GetTestableNewElementPersistEntity()};
+        destination.LearningElements = new List<LearningElementPe>() {GetTestableElementPersistEntity(elementType)};
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
+        destination.InBoundSpaces = new List<LearningSpacePe>();
+        destination.OutBoundSpaces = new List<LearningSpacePe>();
 
         systemUnderTest.Map(destination, source);
 
         TestSpace(source, true);
         Assert.That(source.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(source.LearningElements.First(), Is.InstanceOf(expectedElementType));
     }
 
     [Test]
@@ -397,7 +427,7 @@ public class MappingProfileUt
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
             new List<LearningSpace>());
         source.LearningSpaces.Add(new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints,
-            null, PositionX, PositionY));
+            null, PositionX, PositionY, new List<LearningSpace>(), new List<LearningSpace>()));
         var destination = new LearningWorldPe("", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
@@ -418,7 +448,7 @@ public class MappingProfileUt
         destination.LearningSpaces = new List<LearningSpacePe>()
         {
             new LearningSpacePe(NewName, NewShortname, NewAuthors, NewDescription, NewGoals, NewRequiredPoints, 
-                null, NewPositionX, NewPositionY)
+                null, NewPositionX, NewPositionY, new List<LearningSpacePe>(), new List<LearningSpacePe>())
         };
 
         systemUnderTest.Map(destination, source);
@@ -466,23 +496,33 @@ public class MappingProfileUt
             Assert.That(source.LearningSpaces[0].LearningElements, Has.Count.EqualTo(1));
         });
     }
-
+    
     [Test]
-    public void MapLearningWorldAndLearningWorldPersistEntity_WithLearningSpace_TestMappingIsValid()
+    public void MapLearningWorldAndLearningWorldViewModel_WithLearningSpacesAndLearningPathWay_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
             new List<LearningSpace>());
-        source.LearningSpaces.Add(GetTestableSpace());
-        var destination = new LearningWorldPe("", "", "", "", "", "");
+        var space1 = GetTestableSpace();
+        var space2 = GetTestableSpace();
+        source.LearningSpaces.Add(space1);
+        source.LearningSpaces.Add(space2);
+        var destination = new LearningWorldViewModel("", "", "", "", "", "");
+        
+        source.LearningPathways.Add(new LearningPathway(space1, space2));
 
         systemUnderTest.Map(source, destination);
 
         TestWorld(destination, false);
+
         Assert.Multiple(() =>
         {
-            Assert.That(destination.LearningSpaces, Has.Count.EqualTo(1));
-            Assert.That(destination.LearningSpaces[0].LearningElements, Has.Count.EqualTo(1));
+            Assert.That(destination.LearningSpaces, Has.Count.EqualTo(2));
+            Assert.That(destination.LearningSpaces.First().LearningElements, Has.Count.EqualTo(1));
+            Assert.That(destination.LearningSpaces.First().OutBoundSpaces, Has.Count.EqualTo(1));
+            Assert.That(destination.LearningSpaces.Last().InBoundSpaces, Has.Count.EqualTo(1));
+            Assert.That(destination.LearningSpaces.Last().LearningElements, Has.Count.EqualTo(1));
+            Assert.That(destination.LearningPathWays, Has.Count.EqualTo(1));
         });
 
         destination.Name = NewName;
@@ -491,15 +531,73 @@ public class MappingProfileUt
         destination.Language = NewLanguage;
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
-        destination.LearningSpaces = new List<LearningSpacePe>() {GetTestableNewSpacePersistEntity()};
+
+        var spaceVm1 = GetTestableNewSpaceViewModel();
+        var spaceVm2 = GetTestableNewSpaceViewModel();
+        destination.LearningSpaces = new List<ILearningSpaceViewModel>() {spaceVm1, spaceVm2};
+        destination.LearningPathWays = new List<ILearningPathWayViewModel>();
+        destination.LearningPathWays.Add(new LearningPathwayViewModel(spaceVm1, spaceVm2));
 
         systemUnderTest.Map(destination, source);
 
         TestWorld(source, true);
         Assert.Multiple(() =>
         {
-            Assert.That(source.LearningSpaces, Has.Count.EqualTo(1));
+            Assert.That(source.LearningSpaces, Has.Count.EqualTo(2));
             Assert.That(source.LearningSpaces[0].LearningElements, Has.Count.EqualTo(1));
+            Assert.That(source.LearningSpaces[0].OutBoundSpaces, Has.Count.EqualTo(1));
+            Assert.That(source.LearningSpaces[1].LearningElements, Has.Count.EqualTo(1));
+            Assert.That(source.LearningSpaces[1].InBoundSpaces, Has.Count.EqualTo(1));
+            Assert.That(source.LearningPathways, Has.Count.EqualTo(1));
+        });
+    }
+
+    [Test]
+    public void MapLearningWorldAndLearningWorldPersistEntity_WithLearningSpaceAndLearningPathWay_TestMappingIsValid()
+    {
+        var systemUnderTest = CreateTestableMapper();
+        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
+            new List<LearningSpace>());
+        var space1 = GetTestableSpace();
+        var space2 = GetTestableSpace();
+        source.LearningSpaces.Add(space1);
+        source.LearningSpaces.Add(space2);
+        var destination = new LearningWorldPe("", "", "", "", "", "");
+        
+        source.LearningPathways.Add(new LearningPathway(space1, space2));
+
+        systemUnderTest.Map(source, destination);
+
+        TestWorld(destination, false);
+        //Assert.Multiple(() =>
+        //{
+            Assert.That(destination.LearningSpaces, Has.Count.EqualTo(2));
+            Assert.That(destination.LearningSpaces[0].LearningElements, Has.Count.EqualTo(1));
+            Assert.That(destination.LearningSpaces[1].LearningElements, Has.Count.EqualTo(1));
+            Assert.That(destination.LearningPathWays, Has.Count.EqualTo(1));
+        //});
+
+        destination.Name = NewName;
+        destination.Shortname = NewShortname;
+        destination.Authors = NewAuthors;
+        destination.Language = NewLanguage;
+        destination.Description = NewDescription;
+        destination.Goals = NewGoals;
+        var spacePe1 = GetTestableNewSpacePersistEntity();
+        var spacePe2 = GetTestableNewSpacePersistEntity();
+        destination.LearningSpaces = new List<LearningSpacePe>() {spacePe1, spacePe2};
+        destination.LearningPathWays = new List<LearningPathwayPe>();
+        destination.LearningPathWays.Add(new LearningPathwayPe(spacePe1, spacePe2));
+
+        systemUnderTest.Map(destination, source);
+
+        TestWorld(source, true);
+        Assert.Multiple(() =>
+        {
+            Assert.That(source.LearningSpaces, Has.Count.EqualTo(2));
+            Assert.That(source.LearningSpaces[0].LearningElements, Has.Count.EqualTo(1));
+            Assert.That(source.LearningSpaces[1].LearningElements, Has.Count.EqualTo(1));
+            Assert.That(source.LearningPathways, Has.Count.EqualTo(1));
         });
     }
 
@@ -628,39 +726,121 @@ public class MappingProfileUt
         return new LearningContentPe(NewName, NewType, NewFilepath);
     }
 
-    private static LearningElement GetTestableElementWithParent(object parent)
+    private static LearningElement GetTestableElementWithParent(LearningSpace parent, ElementType elementType)
     {
-        return parent switch
+        return elementType switch
         {
-            LearningSpace space => new LearningElement(Name, Shortname, GetTestableContent(), Url, Authors, Description,
-                Goals, Difficulty, space, Workload, Points, PositionX, PositionY),
-            _ => throw new ArgumentException($"{parent.GetType().Name} is not a valid parent type")
+            ElementType.TextTransfer => new TextTransferElement(Name, Shortname, parent,
+                GetTestableContent(), Url, Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
+                PositionY),
+            ElementType.ImageTransfer => new ImageTransferElement(Name, Shortname, parent,
+                GetTestableContent(), Url, Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
+                PositionY),
+            ElementType.VideoTransfer => new VideoTransferElement(Name, Shortname, parent,
+                GetTestableContent(), Url, Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
+                PositionY),
+            ElementType.PdfTransfer => new PdfTransferElement(Name, Shortname, parent,
+                GetTestableContent(), Url, Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
+                PositionY),
+            ElementType.VideoActivation => new VideoActivationElement(Name, Shortname, parent,
+                GetTestableContent(), Url, Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
+                PositionY),
+            ElementType.H5PActivation => new H5PActivationElement(Name, Shortname, parent,
+                GetTestableContent(), Url, Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
+                PositionY),
+            ElementType.H5PInteraction => new H5PInteractionElement(Name, Shortname, parent,
+                GetTestableContent(), Url, Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
+                PositionY),
+            ElementType.H5PTest => new H5PTestElement(Name, Shortname, parent, GetTestableContent(), Url,
+                Authors, Description, Goals, Difficulty, Workload, Points, PositionX, PositionY),
+            _ => throw new ArgumentOutOfRangeException(nameof(elementType), elementType, null)
         };
     }
 
-    private static LearningElementViewModel GetTestableNewElementViewModelWithParent(object parent)
+    private static LearningElementViewModel GetTestableElementViewModelWithParent(LearningSpaceViewModel parent, ElementType elementType)
     {
-        return parent switch
+        switch (elementType)
         {
-            LearningSpaceViewModel space => new LearningElementViewModel(NewName, NewShortname,
-                GetTestableNewContentViewModel(), NewUrl, NewAuthors, NewDescription, NewGoals, NewDifficulty, space,
-                NewWorkload, NewPoints, NewPositionX, NewPositionY),
-            _ => throw new ArgumentException($"{parent.GetType().Name} is not a valid parent type")
-        };
+            case ElementType.TextTransfer:
+                return new TextTransferElementViewModel(NewName, NewShortname, parent,
+                    GetTestableNewContentViewModel(), NewUrl, NewAuthors, NewDescription, NewGoals, NewDifficulty,
+                    NewWorkload, NewPoints, NewPositionX, NewPositionY);
+            case ElementType.ImageTransfer:
+                return new ImageTransferElementViewModel(NewName, NewShortname, parent,
+                    GetTestableNewContentViewModel(), NewUrl, NewAuthors, NewDescription, NewGoals, NewDifficulty,
+                    NewWorkload, NewPoints, NewPositionX, NewPositionY);
+            case ElementType.VideoTransfer:
+                return new VideoTransferElementViewModel(NewName, NewShortname, parent,
+                    GetTestableNewContentViewModel(), NewUrl, NewAuthors, NewDescription, NewGoals, NewDifficulty,
+                    NewWorkload, NewPoints, NewPositionX, NewPositionY);
+            case ElementType.PdfTransfer:
+                return new PdfTransferElementViewModel(NewName, NewShortname, parent,
+                    GetTestableNewContentViewModel(), NewUrl, NewAuthors, NewDescription, NewGoals, NewDifficulty,
+                    NewWorkload, NewPoints, NewPositionX, NewPositionY);
+            case ElementType.VideoActivation:
+                return new VideoActivationElementViewModel(NewName, NewShortname, parent,
+                    GetTestableNewContentViewModel(), NewUrl, NewAuthors, NewDescription, NewGoals, NewDifficulty,
+                    NewWorkload, NewPoints, NewPositionX, NewPositionY);
+            case ElementType.H5PActivation:
+                return new H5PActivationElementViewModel(NewName, NewShortname, parent,
+                    GetTestableNewContentViewModel(), NewUrl, NewAuthors, NewDescription, NewGoals, NewDifficulty,
+                    NewWorkload, NewPoints, NewPositionX, NewPositionY);
+            case ElementType.H5PInteraction:
+                return new H5PInteractionElementViewModel(NewName, NewShortname, parent,
+                    GetTestableNewContentViewModel(), NewUrl, NewAuthors, NewDescription, NewGoals, NewDifficulty,
+                    NewWorkload, NewPoints, NewPositionX, NewPositionY);
+            case ElementType.H5PTest:
+                return new H5PTestElementViewModel(NewName, NewShortname, parent,
+                    GetTestableNewContentViewModel(), NewUrl, NewAuthors, NewDescription, NewGoals, NewDifficulty,
+                    NewWorkload, NewPoints, NewPositionX, NewPositionY);
+            default:
+                throw new ArgumentOutOfRangeException(nameof(elementType), elementType, null);
+        }
     }
 
-    private static LearningElementPe GetTestableNewElementPersistEntity()
+    private static LearningElementPe GetTestableElementPersistEntity(ElementType elementType)
     {
-        return new LearningElementPe(NewName, NewShortname,
-            GetTestableNewContentPersistEntity(), NewUrl, NewAuthors, NewDescription, NewGoals, NewDifficultyPe, NewWorkload,
-            NewPoints, NewPositionX, NewPositionY);
+        switch (elementType)
+        {
+            case ElementType.TextTransfer:
+                return new TextTransferElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(), NewUrl,
+                    NewAuthors, NewDescription, NewGoals, NewDifficultyPe, NewWorkload, NewPoints, NewPositionX, NewPositionY);
+            case ElementType.ImageTransfer:
+                return new ImageTransferElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(), NewUrl,
+                    NewAuthors, NewDescription, NewGoals, NewDifficultyPe, NewWorkload, NewPoints, NewPositionX, NewPositionY);
+            case ElementType.VideoTransfer:
+                return new VideoTransferElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(), NewUrl,
+                    NewAuthors, NewDescription, NewGoals, NewDifficultyPe, NewWorkload, NewPoints, NewPositionX, NewPositionY);
+            case ElementType.PdfTransfer:
+                return new PdfTransferElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(), NewUrl,
+                    NewAuthors, NewDescription, NewGoals, NewDifficultyPe, NewWorkload, NewPoints, NewPositionX, NewPositionY);
+            case ElementType.VideoActivation:
+                return new VideoActivationElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(), NewUrl,
+                    NewAuthors, NewDescription, NewGoals, NewDifficultyPe, NewWorkload, NewPoints, NewPositionX, NewPositionY);
+            case ElementType.H5PActivation:
+                return new H5PActivationElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(), NewUrl,
+                    NewAuthors, NewDescription, NewGoals, NewDifficultyPe, NewWorkload, NewPoints, NewPositionX, NewPositionY);
+            case ElementType.H5PInteraction:
+                return new H5PInteractionElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(), NewUrl,
+                    NewAuthors, NewDescription, NewGoals, NewDifficultyPe, NewWorkload, NewPoints, NewPositionX, NewPositionY);
+            case ElementType.H5PTest:
+                return new H5PTestElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(), NewUrl,
+                    NewAuthors, NewDescription, NewGoals, NewDifficultyPe, NewWorkload, NewPoints, NewPositionX, NewPositionY);
+            default:
+                throw new ArgumentOutOfRangeException(nameof(elementType), elementType, null);
+        }
+    }
+    
+    public enum ElementType
+    {
+        TextTransfer, ImageTransfer, VideoTransfer, PdfTransfer, VideoActivation, H5PActivation, H5PInteraction, H5PTest
     }
 
     private static LearningSpace GetTestableSpace()
     {
         var space = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints,
             new List<LearningElement>(), PositionX, PositionY);
-        var element = GetTestableElementWithParent(space);
+        var element = GetTestableElementWithParent(space, ElementType.TextTransfer);
         space.LearningElements.Add(element);
         return space;
     }
@@ -669,7 +849,7 @@ public class MappingProfileUt
     {
         var space = new LearningSpaceViewModel(NewName, NewShortname, NewAuthors, NewDescription, NewGoals, NewRequiredPoints,
             new List<ILearningElementViewModel>(), NewPositionX, NewPositionY);
-        var element = GetTestableNewElementViewModelWithParent(space);
+        var element = GetTestableElementViewModelWithParent(space, ElementType.TextTransfer);
         space.LearningElements.Add(element);
         return space;
     }
@@ -677,7 +857,7 @@ public class MappingProfileUt
     private static LearningSpacePe GetTestableNewSpacePersistEntity()
     {
         return new LearningSpacePe(NewName, NewShortname, NewAuthors, NewDescription, NewGoals, NewRequiredPoints,
-            new List<LearningElementPe>() {GetTestableNewElementPersistEntity()}, NewPositionX, NewPositionY);
+            new List<LearningElementPe>() {GetTestableElementPersistEntity(ElementType.TextTransfer)}, NewPositionX, NewPositionY);
     }
 
     #endregion

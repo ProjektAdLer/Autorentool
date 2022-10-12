@@ -15,7 +15,8 @@ namespace PersistEntities;
 public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
 {
     public LearningSpacePe(string name, string shortname, string authors, string description, string goals,
-        int requiredPoints, List<LearningElementPe>? learningElements = null, double positionX = 0, double positionY = 0)
+        int requiredPoints, List<LearningElementPe>? learningElements = null, double positionX = 0, double positionY = 0,
+        List<LearningSpacePe>? inBoundSpaces = null, List<LearningSpacePe>? outBoundSpaces = null)
     {
         Name = name;
         Shortname = shortname;
@@ -24,6 +25,8 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
         Goals = goals;
         RequiredPoints = requiredPoints;
         LearningElements = learningElements ?? new List<LearningElementPe>();
+        InBoundSpaces = inBoundSpaces ?? new List<LearningSpacePe>();
+        OutBoundSpaces = outBoundSpaces ?? new List<LearningSpacePe>();
         PositionX = positionX;
         PositionY = positionY;
     }
@@ -33,6 +36,7 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
     /// </summary>
     private LearningSpacePe()
     {
+        Id = Guid.Empty;
         Name = "";
         Shortname = "";
         Authors = "";
@@ -40,11 +44,14 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
         Goals = "";
         RequiredPoints = 0;
         LearningElements = new List<LearningElementPe>();
+        InBoundSpaces = new List<LearningSpacePe>();
+        OutBoundSpaces = new List<LearningSpacePe>();
         PositionX = 0;
         PositionY = 0;
     }
 
-
+    [DataMember]
+    public Guid Id { get; set; }
     [DataMember]
     public string Name { get; set; }
     [DataMember]
@@ -59,6 +66,8 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
     public int RequiredPoints { get; set; }
     [DataMember]
     public List<LearningElementPe> LearningElements { get; set; }
+    public List<LearningSpacePe> InBoundSpaces { get; set; }
+    public List<LearningSpacePe> OutBoundSpaces { get; set; }
     [DataMember]
     public double PositionX { get; set; }
     [DataMember]

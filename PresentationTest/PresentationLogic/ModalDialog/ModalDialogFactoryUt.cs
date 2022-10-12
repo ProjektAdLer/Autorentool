@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using AngleSharp.Dom;
 using Bunit;
 using NSubstitute;
@@ -332,14 +333,14 @@ public class ModalDialogFactoryUt
         var renderedFragment = ctx.Render(fragment);
 
         //Assert
-        Assert.Multiple(() =>
-        {
+        //Assert.Multiple(() =>
+        //{
             Assert.That(renderedFragment, Is.Not.Null);
             TestModalDialogBasicStructure(renderedFragment);
             TestDialogHeader(renderedFragment, "Create new learning world", true);
             TestModalBody(renderedFragment, "Please enter the required data for the learning world below:", true);
             TestFooterOkCancel(renderedFragment);
-        });
+        //});
     }
 
     [Test]
@@ -461,8 +462,9 @@ public class ModalDialogFactoryUt
         Assert.Multiple(() =>
         {
             Assert.That(modalInput.Children[0].Children[0].ClassName, Is.EqualTo("col"));
-            Assert.That(modalInput.Children[0].Children[0].InnerHtml,
-                Is.EqualTo("UnitTest"));
+            Assert.That(modalInput.Children[0].Children[0].GetInnerText(), Is.EqualTo("UnitTest *"));
+            //use semantic comparison https://bunit.dev/docs/verification/semantic-html-comparison
+            Assert.That(() => modalInput.Children[0].Children[0].Children.First().MarkupMatches(@"<span style=""color:#FF0000"">*</span>"), Throws.Nothing);
             Assert.That(modalInput.Children[0].Children[1].ClassName, Is.EqualTo("col"));
             Assert.That(modalInput.Children[0].Children[1].Children,
                 Has.Length.EqualTo(1));

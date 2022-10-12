@@ -23,6 +23,18 @@ public class DeleteLearningSpace : IUndoCommand
 
         var space = LearningWorld.LearningSpaces.First(x => x.Id == LearningSpace.Id);
 
+        foreach (var inBoundSpace in space.InBoundSpaces)
+        {
+            LearningWorld.LearningPathways
+                .Where(x => x.SourceSpace.Id == inBoundSpace.Id && x.TargetSpace.Id == space.Id)
+                .ToList().ForEach(x => LearningWorld.LearningPathways.Remove(x));
+        }
+        foreach (var outBoundSpace in space.OutBoundSpaces)
+        {
+            LearningWorld.LearningPathways
+                .Where(x => x.SourceSpace.Id == space.Id && x.TargetSpace.Id == outBoundSpace.Id)
+                .ToList().ForEach(x => LearningWorld.LearningPathways.Remove(x));
+        }
         LearningWorld.LearningSpaces.Remove(space);
 
         LearningWorld.SelectedLearningSpace = LearningWorld.LearningSpaces.LastOrDefault();

@@ -59,7 +59,7 @@ public class ModalDialogInputFieldsFactoryUt
         var shortnameInputField = modalDialogInputFields.ElementAt(1);
         Assert.That(shortnameInputField.Name, Is.EqualTo("Shortname"));
         Assert.That(shortnameInputField.Type, Is.EqualTo(ModalDialogInputType.Text));
-        Assert.That(shortnameInputField.Required, Is.True);
+        Assert.That(shortnameInputField.Required, Is.False);
 
 
         //Type drop down
@@ -209,7 +209,7 @@ public class ModalDialogInputFieldsFactoryUt
 
         Assert.That(modalDialogInputFields.ElementAt(6).Name, Is.EqualTo("Description"));
         Assert.That(modalDialogInputFields.ElementAt(6).Type, Is.EqualTo(ModalDialogInputType.Text));
-        Assert.That(modalDialogInputFields.ElementAt(6).Required, Is.True);
+        Assert.That(modalDialogInputFields.ElementAt(6).Required, Is.False);
 
         Assert.That(modalDialogInputFields.ElementAt(7).Name, Is.EqualTo("Goals"));
         Assert.That(modalDialogInputFields.ElementAt(7).Type, Is.EqualTo(ModalDialogInputType.Text));
@@ -220,17 +220,18 @@ public class ModalDialogInputFieldsFactoryUt
         var difficultyDropDownInput = (ModalDialogDropdownInputField)modalDialogInputFields.ElementAt(8);
         Assert.That(difficultyDropDownInput.Name, Is.EqualTo("Difficulty"));
         Assert.That(difficultyDropDownInput.Type, Is.EqualTo(ModalDialogInputType.Text));
-        Assert.That(difficultyDropDownInput.Required, Is.True);
+        Assert.That(difficultyDropDownInput.Required, Is.False);
         var difficultyChoiceMappings = difficultyDropDownInput.ValuesToChoiceMapping.ToList();
         
         Assert.That(difficultyChoiceMappings.Count, Is.EqualTo(1));
         var difficultyMapping = difficultyChoiceMappings.First();
         
         Assert.That(difficultyMapping.RequiredValues, Is.Null);
-        Assert.That(difficultyMapping.AvailableChoices.Count(), Is.EqualTo(3));
-        Assert.That(difficultyMapping.AvailableChoices.ElementAt(0), Is.EqualTo(LearningElementDifficultyEnum.Easy.ToString()));
-        Assert.That(difficultyMapping.AvailableChoices.ElementAt(1), Is.EqualTo(LearningElementDifficultyEnum.Medium.ToString()));
-        Assert.That(difficultyMapping.AvailableChoices.ElementAt(2), Is.EqualTo(LearningElementDifficultyEnum.Hard.ToString()));
+        Assert.That(difficultyMapping.AvailableChoices.Count(), Is.EqualTo(4));
+        Assert.That(difficultyMapping.AvailableChoices.ElementAt(0), Is.EqualTo(LearningElementDifficultyEnum.None.ToString()));
+        Assert.That(difficultyMapping.AvailableChoices.ElementAt(1), Is.EqualTo(LearningElementDifficultyEnum.Easy.ToString()));
+        Assert.That(difficultyMapping.AvailableChoices.ElementAt(2), Is.EqualTo(LearningElementDifficultyEnum.Medium.ToString()));
+        Assert.That(difficultyMapping.AvailableChoices.ElementAt(3), Is.EqualTo(LearningElementDifficultyEnum.Hard.ToString()));
 
         Assert.That(modalDialogInputFields.ElementAt(9).Name, Is.EqualTo("Workload (min)"));
         Assert.That(modalDialogInputFields.ElementAt(9).Type, Is.EqualTo(ModalDialogInputType.Number));
@@ -274,7 +275,7 @@ public class ModalDialogInputFieldsFactoryUt
 
             Assert.That(modalDialogInputFields.ElementAt(1).Name, Is.EqualTo("Shortname"));
             Assert.That(modalDialogInputFields.ElementAt(1).Type, Is.EqualTo(ModalDialogInputType.Text));
-            Assert.That(modalDialogInputFields.ElementAt(1).Required, Is.True);
+            Assert.That(modalDialogInputFields.ElementAt(1).Required, Is.False);
 
             //type field: solved
             var typeDropDownInput = (ModalDialogDropdownInputField)modalDialogInputFields.ElementAt(2);
@@ -355,7 +356,7 @@ public class ModalDialogInputFieldsFactoryUt
 
             Assert.That(modalDialogInputFields.ElementAt(6).Name, Is.EqualTo("Description"));
             Assert.That(modalDialogInputFields.ElementAt(6).Type, Is.EqualTo(ModalDialogInputType.Text));
-            Assert.That(modalDialogInputFields.ElementAt(6).Required, Is.True);
+            Assert.That(modalDialogInputFields.ElementAt(6).Required, Is.False);
 
             Assert.That(modalDialogInputFields.ElementAt(7).Name, Is.EqualTo("Goals"));
             Assert.That(modalDialogInputFields.ElementAt(7).Type, Is.EqualTo(ModalDialogInputType.Text));
@@ -365,17 +366,18 @@ public class ModalDialogInputFieldsFactoryUt
             var difficultyDropDownInput = (ModalDialogDropdownInputField)modalDialogInputFields.ElementAt(8);
             Assert.That(difficultyDropDownInput.Name, Is.EqualTo("Difficulty"));
             Assert.That(difficultyDropDownInput.Type, Is.EqualTo(ModalDialogInputType.Text));
-            Assert.That(difficultyDropDownInput.Required, Is.True);
+            Assert.That(difficultyDropDownInput.Required, Is.False);
             Assert.That(difficultyDropDownInput, Is.TypeOf<ModalDialogDropdownInputField>());
             
             var difficultyValuesToChoiceList = difficultyDropDownInput.ValuesToChoiceMapping.ToList();
             Assert.That(difficultyValuesToChoiceList.Count(), Is.EqualTo(1));
             Assert.That(difficultyValuesToChoiceList.ElementAt(0).RequiredValues, Is.Null);
                 
-            Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.Count(), Is.EqualTo(3));
-            Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(0), Is.EqualTo(LearningElementDifficultyEnum.Easy.ToString()));
-            Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(1), Is.EqualTo(LearningElementDifficultyEnum.Medium.ToString()));
-            Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(2), Is.EqualTo(LearningElementDifficultyEnum.Hard.ToString()));
+            Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.Count(), Is.EqualTo(4));
+            Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(0), Is.EqualTo(LearningElementDifficultyEnum.None.ToString()));
+            Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(1), Is.EqualTo(LearningElementDifficultyEnum.Easy.ToString()));
+            Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(2), Is.EqualTo(LearningElementDifficultyEnum.Medium.ToString()));
+            Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(3), Is.EqualTo(LearningElementDifficultyEnum.Hard.ToString()));
             
 
             Assert.That(modalDialogInputFields.ElementAt(9).Name, Is.EqualTo("Workload (min)"));
@@ -471,7 +473,7 @@ public class ModalDialogInputFieldsFactoryUt
         var shortnameInputField = modalDialogInputFields.ElementAt(1);
         Assert.That(shortnameInputField.Name, Is.EqualTo("Shortname"));
         Assert.That(shortnameInputField.Type, Is.EqualTo(ModalDialogInputType.Text));
-        Assert.That(shortnameInputField.Required, Is.True);
+        Assert.That(shortnameInputField.Required, Is.False);
 
 
         //Type drop down
@@ -622,7 +624,7 @@ public class ModalDialogInputFieldsFactoryUt
 
         Assert.That(modalDialogInputFields.ElementAt(6).Name, Is.EqualTo("Description"));
         Assert.That(modalDialogInputFields.ElementAt(6).Type, Is.EqualTo(ModalDialogInputType.Text));
-        Assert.That(modalDialogInputFields.ElementAt(6).Required, Is.True);
+        Assert.That(modalDialogInputFields.ElementAt(6).Required, Is.False);
 
         Assert.That(modalDialogInputFields.ElementAt(7).Name, Is.EqualTo("Goals"));
         Assert.That(modalDialogInputFields.ElementAt(7).Type, Is.EqualTo(ModalDialogInputType.Text));
@@ -633,17 +635,18 @@ public class ModalDialogInputFieldsFactoryUt
         var difficultyDropDownInput = (ModalDialogDropdownInputField)modalDialogInputFields.ElementAt(8);
         Assert.That(difficultyDropDownInput.Name, Is.EqualTo("Difficulty"));
         Assert.That(difficultyDropDownInput.Type, Is.EqualTo(ModalDialogInputType.Text));
-        Assert.That(difficultyDropDownInput.Required, Is.True);
+        Assert.That(difficultyDropDownInput.Required, Is.False);
         var difficultyChoiceMappings = difficultyDropDownInput.ValuesToChoiceMapping.ToList();
         
         Assert.That(difficultyChoiceMappings.Count, Is.EqualTo(1));
         var difficultyMapping = difficultyChoiceMappings.First();
         
         Assert.That(difficultyMapping.RequiredValues, Is.Null);
-        Assert.That(difficultyMapping.AvailableChoices.Count(), Is.EqualTo(3));
-        Assert.That(difficultyMapping.AvailableChoices.ElementAt(0), Is.EqualTo(LearningElementDifficultyEnum.Easy.ToString()));
-        Assert.That(difficultyMapping.AvailableChoices.ElementAt(1), Is.EqualTo(LearningElementDifficultyEnum.Medium.ToString()));
-        Assert.That(difficultyMapping.AvailableChoices.ElementAt(2), Is.EqualTo(LearningElementDifficultyEnum.Hard.ToString()));
+        Assert.That(difficultyMapping.AvailableChoices.Count(), Is.EqualTo(4));
+        Assert.That(difficultyMapping.AvailableChoices.ElementAt(0), Is.EqualTo(LearningElementDifficultyEnum.None.ToString()));
+        Assert.That(difficultyMapping.AvailableChoices.ElementAt(1), Is.EqualTo(LearningElementDifficultyEnum.Easy.ToString()));
+        Assert.That(difficultyMapping.AvailableChoices.ElementAt(2), Is.EqualTo(LearningElementDifficultyEnum.Medium.ToString()));
+        Assert.That(difficultyMapping.AvailableChoices.ElementAt(3), Is.EqualTo(LearningElementDifficultyEnum.Hard.ToString()));
 
         Assert.That(modalDialogInputFields.ElementAt(9).Name, Is.EqualTo("Workload (min)"));
         Assert.That(modalDialogInputFields.ElementAt(9).Type, Is.EqualTo(ModalDialogInputType.Number));
@@ -712,7 +715,7 @@ public class ModalDialogInputFieldsFactoryUt
 
         Assert.That(modalDialogInputFields.ElementAt(1).Name, Is.EqualTo("Shortname"));
         Assert.That(modalDialogInputFields.ElementAt(1).Type, Is.EqualTo(ModalDialogInputType.Text));
-        Assert.That(modalDialogInputFields.ElementAt(1).Required, Is.True);
+        Assert.That(modalDialogInputFields.ElementAt(1).Required, Is.False);
 
         //type field: solved
         var typeDropDownInput = (ModalDialogDropdownInputField)modalDialogInputFields.ElementAt(2);
@@ -799,7 +802,7 @@ public class ModalDialogInputFieldsFactoryUt
 
         Assert.That(modalDialogInputFields.ElementAt(6).Name, Is.EqualTo("Description"));
         Assert.That(modalDialogInputFields.ElementAt(6).Type, Is.EqualTo(ModalDialogInputType.Text));
-        Assert.That(modalDialogInputFields.ElementAt(6).Required, Is.True);
+        Assert.That(modalDialogInputFields.ElementAt(6).Required, Is.False);
 
         Assert.That(modalDialogInputFields.ElementAt(7).Name, Is.EqualTo("Goals"));
         Assert.That(modalDialogInputFields.ElementAt(7).Type, Is.EqualTo(ModalDialogInputType.Text));
@@ -809,17 +812,18 @@ public class ModalDialogInputFieldsFactoryUt
         var difficultyDropDownInput = (ModalDialogDropdownInputField)modalDialogInputFields.ElementAt(8);
         Assert.That(difficultyDropDownInput.Name, Is.EqualTo("Difficulty"));
         Assert.That(difficultyDropDownInput.Type, Is.EqualTo(ModalDialogInputType.Text));
-        Assert.That(difficultyDropDownInput.Required, Is.True);
+        Assert.That(difficultyDropDownInput.Required, Is.False);
         Assert.That(difficultyDropDownInput, Is.TypeOf<ModalDialogDropdownInputField>());
         
         var difficultyValuesToChoiceList = difficultyDropDownInput.ValuesToChoiceMapping.ToList();
         Assert.That(difficultyValuesToChoiceList.Count(), Is.EqualTo(1));
         Assert.That(difficultyValuesToChoiceList.ElementAt(0).RequiredValues, Is.Null);
                 
-        Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.Count(), Is.EqualTo(3));
-        Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(0), Is.EqualTo(LearningElementDifficultyEnum.Easy.ToString()));
-        Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(1), Is.EqualTo(LearningElementDifficultyEnum.Medium.ToString()));
-        Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(2), Is.EqualTo(LearningElementDifficultyEnum.Hard.ToString()));
+        Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.Count(), Is.EqualTo(4));
+        Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(0), Is.EqualTo(LearningElementDifficultyEnum.None.ToString()));
+        Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(1), Is.EqualTo(LearningElementDifficultyEnum.Easy.ToString()));
+        Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(2), Is.EqualTo(LearningElementDifficultyEnum.Medium.ToString()));
+        Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(3), Is.EqualTo(LearningElementDifficultyEnum.Hard.ToString()));
         
 
         Assert.That(modalDialogInputFields.ElementAt(9).Name, Is.EqualTo("Workload (min)"));
@@ -892,7 +896,7 @@ public class ModalDialogInputFieldsFactoryUt
 
             Assert.That(modalDialogInputFields.ElementAt(1).Name, Is.EqualTo(shortname));
             Assert.That(modalDialogInputFields.ElementAt(1).Type, Is.EqualTo(modalDialogInputType));
-            Assert.That(modalDialogInputFields.ElementAt(1).Required, Is.EqualTo(true));
+            Assert.That(modalDialogInputFields.ElementAt(1).Required, Is.EqualTo(false));
 
             Assert.That(modalDialogInputFields.ElementAt(2).Name, Is.EqualTo(authors));
             Assert.That(modalDialogInputFields.ElementAt(2).Type, Is.EqualTo(modalDialogInputType));
@@ -900,7 +904,7 @@ public class ModalDialogInputFieldsFactoryUt
 
             Assert.That(modalDialogInputFields.ElementAt(3).Name, Is.EqualTo(description));
             Assert.That(modalDialogInputFields.ElementAt(3).Type, Is.EqualTo(modalDialogInputType));
-            Assert.That(modalDialogInputFields.ElementAt(3).Required, Is.EqualTo(true));
+            Assert.That(modalDialogInputFields.ElementAt(3).Required, Is.EqualTo(false));
 
             Assert.That(modalDialogInputFields.ElementAt(4).Name, Is.EqualTo(goals));
             Assert.That(modalDialogInputFields.ElementAt(4).Type, Is.EqualTo(modalDialogInputType));
@@ -924,7 +928,7 @@ public class ModalDialogInputFieldsFactoryUt
 
             Assert.That(modalDialogInputFields.ElementAt(1).Name, Is.EqualTo("Shortname"));
             Assert.That(modalDialogInputFields.ElementAt(1).Type, Is.EqualTo(ModalDialogInputType.Text));
-            Assert.That(modalDialogInputFields.ElementAt(1).Required, Is.EqualTo(true));
+            Assert.That(modalDialogInputFields.ElementAt(1).Required, Is.EqualTo(false));
 
             Assert.That(modalDialogInputFields.ElementAt(2).Name, Is.EqualTo("Url"));
             Assert.That(modalDialogInputFields.ElementAt(2).Type, Is.EqualTo(ModalDialogInputType.Text));
@@ -936,7 +940,7 @@ public class ModalDialogInputFieldsFactoryUt
 
             Assert.That(modalDialogInputFields.ElementAt(4).Name, Is.EqualTo("Description"));
             Assert.That(modalDialogInputFields.ElementAt(4).Type, Is.EqualTo(ModalDialogInputType.Text));
-            Assert.That(modalDialogInputFields.ElementAt(4).Required, Is.EqualTo(true));
+            Assert.That(modalDialogInputFields.ElementAt(4).Required, Is.EqualTo(false));
 
             Assert.That(modalDialogInputFields.ElementAt(5).Name, Is.EqualTo("Goals"));
             Assert.That(modalDialogInputFields.ElementAt(5).Type, Is.EqualTo(ModalDialogInputType.Text));
@@ -989,7 +993,7 @@ public class ModalDialogInputFieldsFactoryUt
         Assert.That(modalDialogInputFields.ElementAt(1), Is.TypeOf<ModalDialogInputField>());
         Assert.That(modalDialogInputFields.ElementAt(1).Name, Is.EqualTo("Shortname"));
         Assert.That(modalDialogInputFields.ElementAt(1).Type, Is.EqualTo(ModalDialogInputType.Text));
-        Assert.That(modalDialogInputFields.ElementAt(1).Required, Is.True);
+        Assert.That(modalDialogInputFields.ElementAt(1).Required, Is.False);
         
         Assert.That(modalDialogInputFields.ElementAt(2), Is.TypeOf<ModalDialogInputField>());
         Assert.That(modalDialogInputFields.ElementAt(2).Name, Is.EqualTo("Authors"));
@@ -999,12 +1003,12 @@ public class ModalDialogInputFieldsFactoryUt
         Assert.That(modalDialogInputFields.ElementAt(3), Is.TypeOf<ModalDialogInputField>());
         Assert.That(modalDialogInputFields.ElementAt(3).Name, Is.EqualTo("Language"));
         Assert.That(modalDialogInputFields.ElementAt(3).Type, Is.EqualTo(ModalDialogInputType.Text));
-        Assert.That(modalDialogInputFields.ElementAt(3).Required, Is.True);
+        Assert.That(modalDialogInputFields.ElementAt(3).Required, Is.False);
         
         Assert.That(modalDialogInputFields.ElementAt(4), Is.TypeOf<ModalDialogInputField>());
         Assert.That(modalDialogInputFields.ElementAt(4).Name, Is.EqualTo("Description"));
         Assert.That(modalDialogInputFields.ElementAt(4).Type, Is.EqualTo(ModalDialogInputType.Text));
-        Assert.That(modalDialogInputFields.ElementAt(4).Required, Is.True);
+        Assert.That(modalDialogInputFields.ElementAt(4).Required, Is.False);
         
         Assert.That(modalDialogInputFields.ElementAt(5), Is.TypeOf<ModalDialogInputField>());
         Assert.That(modalDialogInputFields.ElementAt(5).Name, Is.EqualTo("Goals"));
@@ -1029,7 +1033,7 @@ public class ModalDialogInputFieldsFactoryUt
         Assert.That(modalDialogInputFields.ElementAt(1), Is.TypeOf<ModalDialogInputField>());
         Assert.That(modalDialogInputFields.ElementAt(1).Name, Is.EqualTo("Shortname"));
         Assert.That(modalDialogInputFields.ElementAt(1).Type, Is.EqualTo(ModalDialogInputType.Text));
-        Assert.That(modalDialogInputFields.ElementAt(1).Required, Is.True);
+        Assert.That(modalDialogInputFields.ElementAt(1).Required, Is.False);
         
         Assert.That(modalDialogInputFields.ElementAt(2), Is.TypeOf<ModalDialogInputField>());
         Assert.That(modalDialogInputFields.ElementAt(2).Name, Is.EqualTo("Authors"));
@@ -1039,12 +1043,12 @@ public class ModalDialogInputFieldsFactoryUt
         Assert.That(modalDialogInputFields.ElementAt(3), Is.TypeOf<ModalDialogInputField>());
         Assert.That(modalDialogInputFields.ElementAt(3).Name, Is.EqualTo("Language"));
         Assert.That(modalDialogInputFields.ElementAt(3).Type, Is.EqualTo(ModalDialogInputType.Text));
-        Assert.That(modalDialogInputFields.ElementAt(3).Required, Is.True);
+        Assert.That(modalDialogInputFields.ElementAt(3).Required, Is.False);
         
         Assert.That(modalDialogInputFields.ElementAt(4), Is.TypeOf<ModalDialogInputField>());
         Assert.That(modalDialogInputFields.ElementAt(4).Name, Is.EqualTo("Description"));
         Assert.That(modalDialogInputFields.ElementAt(4).Type, Is.EqualTo(ModalDialogInputType.Text));
-        Assert.That(modalDialogInputFields.ElementAt(4).Required, Is.True);
+        Assert.That(modalDialogInputFields.ElementAt(4).Required, Is.False);
         
         Assert.That(modalDialogInputFields.ElementAt(5), Is.TypeOf<ModalDialogInputField>());
         Assert.That(modalDialogInputFields.ElementAt(5).Name, Is.EqualTo("Goals"));

@@ -26,6 +26,10 @@
     </select>
 </label>
 <div>
+    <div>
+        <button class="btn btn-primary" @onclick="PresentationLogic.UndoCommand" disabled="@(!PresentationLogic.CanUndo)">Undo</button>
+        <button class="btn btn-primary" @onclick="PresentationLogic.RedoCommand" disabled="@(!PresentationLogic.CanRedo)">Redo</button>
+    </div>
     @if (AuthoringToolWorkspaceVm.SelectedLearningWorld != null)
     {
         <label class="world-data">
@@ -104,6 +108,7 @@
         base.OnParametersSet();
         AuthoringToolWorkspaceP.OnForceViewUpdate += StateHasChanged;
         AuthoringToolWorkspaceVm.PropertyChanged += async (_, _) => await InvokeAsync(StateHasChanged);
+        PresentationLogic.OnUndoRedoPerformed += StateHasChanged;
     }
     
     private string filePath = "";

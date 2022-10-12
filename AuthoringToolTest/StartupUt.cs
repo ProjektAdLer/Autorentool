@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using PersistEntities;
+using Presentation.Components;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningSpace;
@@ -18,6 +19,7 @@ using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.ModalDialog;
 using Presentation.PresentationLogic.Toolbox;
 using Presentation.View.Toolbox;
+using Shared;
 using Shared.Configuration;
 
 namespace AuthoringToolTest;
@@ -134,7 +136,7 @@ public class StartupUt
     
     private static readonly Type[] ConfigureAutoMapperRequiredTypes =
     {
-        typeof(IMapper)
+        typeof(IMapper), typeof(ICachingMapper)
     };
     [Test]
     [TestCaseSource(nameof(ConfigureAutoMapperRequiredTypes))]

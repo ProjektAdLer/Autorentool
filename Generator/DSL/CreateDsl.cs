@@ -1,6 +1,7 @@
 ﻿using System.IO.Abstractions;
 using System.Text.Json;
 using Generator.WorldExport;
+using Microsoft.Extensions.Logging;
 using PersistEntities;
 
 namespace Generator.DSL;
@@ -11,21 +12,24 @@ public class CreateDsl : ICreateDsl
     public List<LearningSpacePe> ListLearningSpaces;
     public LearningWorldJson? LearningWorldJson;
     private List<int> _listLearningSpaceContent;
+    private List<int> _requirements;
     private IFileSystem _fileSystem;
     public string Uuid;
     private string _dslPath;
     private string _xmlFilesForExportPath;
+    internal ILogger<CreateDsl> Logger { get; }
 
     /// <summary>
     /// Read the AuthoringToolLib Entities and create a Dsl Document with a specified syntax.
     /// </summary>
     /// <param name="fileSystem"></param>
 #pragma warning disable CS8618 //@Dimitri_Bigler Lists are always initiated, Constructor just doesnt know.
-    public CreateDsl(IFileSystem fileSystem)
+    public CreateDsl(IFileSystem fileSystem, ILogger<CreateDsl> logger)
 #pragma warning restore CS8618
     {
         Initialize();
         _fileSystem = fileSystem;
+        Logger = logger;
        
     }
 
@@ -34,6 +38,7 @@ public class CreateDsl : ICreateDsl
         ContentListLearningElements = new List<LearningElementPe>();
         ListLearningSpaces = new List<LearningSpacePe>();
         _listLearningSpaceContent = new List<int>();
+        _requirements = new List<int>();
         Guid guid = Guid.NewGuid();
         Uuid = guid.ToString();
     }
@@ -55,10 +60,21 @@ public class CreateDsl : ICreateDsl
         // The learningSpaceId defines what the starting Id for Spaces should be. 
         // Search for Learning Elements in Spaces and add to listLearningElements
         ListLearningSpaces.AddRange(learningWorld.LearningSpaces);
+
+        int learningSpaceIdForDictionary = 1;
         
+
+        var idDictionary = new Dictionary<int, Guid>();
+        foreach (var space in ListLearningSpaces)
+        {
+            idDictionary.Add(learningSpaceIdForDictionary, space.Id);
+            learningSpaceIdForDictionary++;
+        }
+
+        // Starting Value for Learning Space Ids & Learning Element Ids
         int learningSpaceId = 1;
-        // Starts with 2, because the DSL Document always has Element ID = 1. Therefore all other elements have to start with 2.
         int learningSpaceElementId = 1;
+        
         foreach (var learningSpace in ListLearningSpaces)
         {
             _listLearningSpaceContent = new List<int>();
@@ -111,14 +127,21 @@ public class CreateDsl : ICreateDsl
                 learningSpaceElementId++;
                 LearningWorldJson.LearningElements.Add(learningElementJson);
             }
-            
-            
+
+            _requirements = new List<int>();
+            foreach (var connectIn in learningSpace.InBoundSpaces)
+            {
+                _requirements.Add(idDictionary.Where(x => x.Value == connectIn.Id)
+                    .Select(x => x.Key)
+                    .FirstOrDefault());
+            }
+      
             // Add Learning Space to Learning World
             LearningWorldJson.LearningSpaces.Add(new LearningSpaceJson(learningSpaceId,
                 learningSpaceIdentifier, _listLearningSpaceContent, 
                 learningSpace.RequiredPoints, 
                 learningSpace.LearningElements.Sum(element => element.Points),
-                learningSpace.Description, learningSpace.Goals));
+                learningSpace.Description, learningSpace.Goals, _requirements));
 
             learningSpaceId++;
         }
@@ -148,12 +171,20 @@ public class CreateDsl : ICreateDsl
         //After the files are added to the Backup-Structure, these Files will be deleted.
         foreach (var learningElement in ContentListLearningElements)
         {
-            _fileSystem.File.Copy(learningElement.LearningContent.Filepath,
+            try
+            {
+                _fileSystem.File.Copy(learningElement.LearningContent.Filepath,
                 _fileSystem.Path.Join("XMLFilesForExport", $"{learningElement.Name}.{learningElement.LearningContent.Type}"));
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Something went wrong while creating the LearningElements for the Backup-Structure.");
+                throw;
+            }
         }
 
         _fileSystem.File.WriteAllText(_dslPath, jsonFile);
-        Console.WriteLine(jsonFile);
+        Logger.LogDebug(jsonFile);
         return _dslPath;
     }
 }
