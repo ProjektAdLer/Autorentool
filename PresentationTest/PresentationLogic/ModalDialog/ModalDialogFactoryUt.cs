@@ -332,14 +332,14 @@ public class ModalDialogFactoryUt
         var renderedFragment = ctx.Render(fragment);
 
         //Assert
-        Assert.Multiple(() =>
-        {
+        //Assert.Multiple(() =>
+        //{
             Assert.That(renderedFragment, Is.Not.Null);
             TestModalDialogBasicStructure(renderedFragment);
             TestDialogHeader(renderedFragment, "Create new learning world", true);
             TestModalBody(renderedFragment, "Please enter the required data for the learning world below:", true);
             TestFooterOkCancel(renderedFragment);
-        });
+        //});
     }
 
     [Test]
@@ -462,7 +462,7 @@ public class ModalDialogFactoryUt
         {
             Assert.That(modalInput.Children[0].Children[0].ClassName, Is.EqualTo("col"));
             Assert.That(modalInput.Children[0].Children[0].InnerHtml,
-                Is.EqualTo("UnitTest"));
+                Is.EqualTo("UnitTest <span style=\"color:#FF0000\" b-ije7p1vi5g=\"\">*</span>"));
             Assert.That(modalInput.Children[0].Children[1].ClassName, Is.EqualTo("col"));
             Assert.That(modalInput.Children[0].Children[1].Children,
                 Has.Length.EqualTo(1));

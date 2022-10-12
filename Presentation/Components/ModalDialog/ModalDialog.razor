@@ -53,7 +53,14 @@
                         @foreach (var input in InputFields)
                         {
                             <div class="row pb-2 align-items-center">
-                                <div class="col">@input.Name</div>
+                                @if (input.Required)
+                                {
+                                    <div class="col">@input.Name <span style="color:#FF0000">&#x002a;</span></div>
+                                }
+                                else
+                                {
+                                    <div class="col">@input.Name</div>
+                                }
                                 <div class="col">
                                     @if (input is ModalDialogDropdownInputField dropdownInput)
                                     {
