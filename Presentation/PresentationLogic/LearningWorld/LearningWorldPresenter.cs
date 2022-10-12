@@ -203,9 +203,9 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
 
         //required arguments
         var name = data["Name"];
-        var shortname = data["Shortname"];
-        var description = data["Description"];
         //optional arguments
+        var shortname = data.ContainsKey("Shortname") ? data["Shortname"] : "";
+        var description = data.ContainsKey("Description") ? data["Description"] : "";
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
         var requiredPoints = data.ContainsKey("Required Points") && data["Required Points"] != "" && !data["Required Points"].StartsWith("e") ? int.Parse(data["Required Points"]) : 0;
@@ -234,9 +234,9 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
 
         //required arguments
         var name = data["Name"];
-        var shortname = data["Shortname"];
-        var description = data["Description"];
         //optional arguments
+        var shortname = data.ContainsKey("Shortname") ? data["Shortname"] : "";
+        var description = data.ContainsKey("Description") ? data["Description"] : "";
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
         var requiredPoints = data.ContainsKey("Required Points") && data["Required Points"] != "" && !data["Required Points"].StartsWith("e") ? int.Parse(data["Required Points"]) : 0;

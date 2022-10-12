@@ -79,9 +79,9 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 
         //required arguments
         var name = data["Name"];
-        var shortname = data["Shortname"];
-        var description = data["Description"];
         //optional arguments
+        var shortname = data.ContainsKey("Shortname") ? data["Shortname"] : "";
+        var description = data.ContainsKey("Description") ? data["Description"] : "";
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
         var requiredPoints = data.ContainsKey("Required Points") && data["Required Points"] != "" && !data["Required Points"].StartsWith("e") ? int.Parse(data["Required Points"]) : 0;
@@ -190,19 +190,19 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 
         //required arguments
         var name = data["Name"];
-        var shortname = data["Shortname"];
         var parentElement = GetLearningElementParent();
         if(Enum.TryParse(data["Type"], out ElementTypeEnum elementType) == false)
             throw new ApplicationException("Couldn't parse returned element type");
         if (Enum.TryParse(data["Content"], out ContentTypeEnum contentType) == false)
             throw new ApplicationException("Couldn't parse returned content type");
         var description = data["Description"];
-        if (Enum.TryParse(data["Difficulty"], out LearningElementDifficultyEnum difficulty) == false)
-            throw new ApplicationException("Couldn't parse returned difficulty");
         //optional arguments
+        var shortname = data.ContainsKey("Shortname") ? data["Shortname"] : "";
         var url = data.ContainsKey("Url") ? data["Url"] : "";
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
+        if (Enum.TryParse(data["Difficulty"], out LearningElementDifficultyEnum difficulty) == false)
+            difficulty = LearningElementDifficultyEnum.None;
         if (Int32.TryParse(data["Workload (min)"], out int workload) == false || workload < 0)
             workload = 0;
         if (Int32.TryParse(data["Points"], out int points) == false || points < 0)
@@ -278,14 +278,14 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 
         //required arguments
         var name = data["Name"];
-        var shortname = data["Shortname"];
         var parentElement = GetLearningElementParent();
         var description = data["Description"];
-        if (Enum.TryParse(data["Difficulty"], out LearningElementDifficultyEnum difficulty) == false)
-            throw new ApplicationException("Couldn't parse returned difficulty");
         //optional arguments
+        var shortname = data.ContainsKey("Shortname") ? data["Shortname"] : "";
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
+        if (Enum.TryParse(data["Difficulty"], out LearningElementDifficultyEnum difficulty) == false)
+            difficulty = LearningElementDifficultyEnum.None;
         if (Int32.TryParse(data["Workload (min)"], out int workload) == false || workload < 0)
             workload = 0;
         if (Int32.TryParse(data["Points"], out int points) == false || points < 0)
@@ -296,12 +296,6 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         _presentationLogic.EditLearningElement(parentElement, learningElementViewModel, name, shortname, authors,
             description, goals, difficulty, workload, points);
     }
-
-
-
-    #endregion
-
-    #region LearningElement
 
     /// <summary>
     /// Changes the selected <see cref="ILearningElementViewModel"/> in the currently selected learning space.
