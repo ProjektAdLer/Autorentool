@@ -59,4 +59,16 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
     [DataMember]
     public string Goals { get; set; }
     public ExtensionDataObject? ExtensionData { get; set; }
+
+    [OnDeserialized]
+    private void OnDeserializing(StreamingContext context)
+    {
+        //rebuild InBound and OutBound on all spaces
+        foreach (var learningPathwayPe in LearningPathWays)
+        {
+            learningPathwayPe.SourceSpace.OutBoundSpaces.Add(learningPathwayPe.TargetSpace);
+            learningPathwayPe.TargetSpace.InBoundSpaces.Add(learningPathwayPe.SourceSpace);
+        }
+    }
+    
 }

@@ -79,11 +79,16 @@ public class PersistenceUt
     {
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
             "Description", "Goals");
-        var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
+        var space1 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
+        var space2 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
         var content = new LearningContentPe("a", "b", "");
         var element = new LearningElementPe("le", "la", content, "url","lll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
-        space.LearningElements.Add(element);
-        world.LearningSpaces.Add(space);
+        space1.LearningElements.Add(element);
+        world.LearningSpaces.Add(space1);
+        world.LearningSpaces.Add(space2);
+        space1.OutBoundSpaces.Add(space2);
+        space2.InBoundSpaces.Add(space1);
+        world.LearningPathWays.Add(new LearningPathwayPe(space1, space2));
         var mockFileSystem = new MockFileSystem();
 
         var saveHandler = CreateTestableFileSaveHandler<LearningWorldPe>(fileSystem:mockFileSystem);

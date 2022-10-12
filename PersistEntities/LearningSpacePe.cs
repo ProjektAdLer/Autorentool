@@ -66,11 +66,20 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
     public int RequiredPoints { get; set; }
     [DataMember]
     public List<LearningElementPe> LearningElements { get; set; }
+    [IgnoreDataMember]
     public List<LearningSpacePe> InBoundSpaces { get; set; }
+    [IgnoreDataMember]
     public List<LearningSpacePe> OutBoundSpaces { get; set; }
     [DataMember]
     public double PositionX { get; set; }
     [DataMember]
     public double PositionY { get; set; }
     public ExtensionDataObject? ExtensionData { get; set; }
+
+    [OnDeserializing]
+    private void OnDeserializing(StreamingContext context)
+    {
+        InBoundSpaces = new List<LearningSpacePe>();
+        OutBoundSpaces = new List<LearningSpacePe>();
+    }
 }
