@@ -4,6 +4,7 @@ using System.IO.Abstractions.TestingHelpers;
 using System.Reflection;
 using System.Runtime.Serialization;
 using DataAccess.Persistence;
+using FluentAssertions;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
@@ -15,7 +16,7 @@ namespace DataAccessTest.Persistence;
 /// Component tests to test whether Persistence roundtrip produces equal objects
 /// </summary>
 [TestFixture]
-public class PersistenceUt
+public class PersistenceCt
 {
     private const string FilePath = "awesomefile.txt";
 
@@ -37,7 +38,7 @@ public class PersistenceUt
         stream.Position = 0;
         var restoredWorld = saveHandler.LoadFromStream(stream);
         
-        PropertyValuesAreEqual(restoredWorld, world);
+        restoredWorld.Should().BeEquivalentTo(world, options => options.IgnoringCyclicReferences());
     }
     
     [Test]
@@ -55,7 +56,7 @@ public class PersistenceUt
         stream.Position = 0;
         var restoredSpace = saveHandler.LoadFromStream(stream);
         
-        PropertyValuesAreEqual(restoredSpace, space);
+        restoredSpace.Should().BeEquivalentTo(space);
     }
     
     [Test]
@@ -71,7 +72,7 @@ public class PersistenceUt
         stream.Position = 0;
         var restoredElement = saveHandler.LoadFromStream(stream);
 
-        PropertyValuesAreEqual(restoredElement, element);
+        restoredElement.Should().BeEquivalentTo(element);
     }
 
     [Test]
@@ -96,7 +97,7 @@ public class PersistenceUt
         saveHandler.SaveToDisk(world, FilePath);
         var restoredWorld = saveHandler.LoadFromDisk(FilePath);
         
-        PropertyValuesAreEqual(restoredWorld, world);
+        restoredWorld.Should().BeEquivalentTo(world, options => options.IgnoringCyclicReferences());
     }
     
     [Test]
@@ -113,7 +114,7 @@ public class PersistenceUt
         saveHandler.SaveToDisk(space, FilePath);
         var restoredSpace = saveHandler.LoadFromDisk(FilePath);
         
-        PropertyValuesAreEqual(restoredSpace, space);
+        restoredSpace.Should().BeEquivalentTo(space);
     }
     
     [Test]
@@ -128,7 +129,7 @@ public class PersistenceUt
         saveHandler.SaveToDisk(element, FilePath);
         var restoredElement = saveHandler.LoadFromDisk(FilePath);
 
-        PropertyValuesAreEqual(restoredElement, element);
+        restoredElement.Should().BeEquivalentTo(element);
     }
 
     [Test]
@@ -187,57 +188,4 @@ public class PersistenceUt
         return fileSystem == null ? new XmlFileHandler<T>(logger) : new XmlFileHandler<T>(logger, fileSystem);
     }
 
-    private void PropertyValuesAreEqual<T>(T actual, T expected) where T : class?
-    {
-        if (expected == actual && actual == null)
-        {
-            return;
-        }
-        if (expected == null || actual == null && expected != actual)
-            Assert.Fail($"expected {expected} != actual {actual}");
-        var properties = expected!.GetType().GetProperties();
-        foreach (var property in properties)
-        {
-            var expectedValue = property.GetValue(expected, null);
-            var actualValue = property.GetValue(actual, null);
-            //ignore extensiondata on deserialization if it is empty in expected but not in actual
-            if (property.Name == "ExtensionData" && expectedValue == null && actualValue is ExtensionDataObject edo)
-            {
-                continue;
-            }
-            switch (actualValue)
-            {
-                case IList actualList when expectedValue is IList expectedList:
-                    AssertListsAreEqual(property, actualList, expectedList);
-                    break;
-                case LearningContentPe actualContent when expectedValue is LearningContentPe expectedContent:
-                    Assert.Multiple(() =>
-                    {
-                        Assert.That(actualContent.Name, Is.EqualTo(expectedContent.Name));
-                        Assert.That(actualContent.Type, Is.EqualTo(expectedContent.Type));
-                        Assert.That(actualContent.Filepath, Is.EqualTo(expectedContent.Filepath));
-                    });
-                    break;
-                default:
-                {
-                    if (!Equals(expectedValue, actualValue)) 
-                        Assert.Fail($"Property {property.DeclaringType?.Name}.{property.Name} does not match. Expected: {expectedValue} but was: {actualValue}");
-                    break;
-                }
-            }
-        }
-    }
-    private void AssertListsAreEqual(PropertyInfo property, IList actualList, IList expectedList)
-    { 
-        if (actualList.Count != expectedList.Count)
-            Assert.Fail($"Property {property.PropertyType.Name}.{property.Name} does not match. Expected IList containing {expectedList.Count} elements but was IList containing {actualList.Count} elements");
- 
-        for (var i = 0; i < actualList.Count; i++)
-            if (!actualList[i]!.GetType().IsValueType)
-            {
-                PropertyValuesAreEqual(actualList[i], expectedList[i]);
-            }
-            else if (!Equals(actualList[i], expectedList[i]))
-                Assert.Fail("Property {0}.{1} does not match. Expected IList with element {1} equals to {2} but was IList with element {1} equals to {3}", property.PropertyType.Name, property.Name, expectedList[i], actualList[i]);
-    }
 }

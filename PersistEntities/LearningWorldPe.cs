@@ -58,7 +58,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
     public string Description { get; set; }
     [DataMember]
     public string Goals { get; set; }
-    public ExtensionDataObject? ExtensionData { get; set; }
+    ExtensionDataObject? IExtensibleDataObject.ExtensionData { get; set; }
 
     [OnDeserialized]
     private void OnDeserializing(StreamingContext context)

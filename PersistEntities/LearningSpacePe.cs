@@ -74,7 +74,7 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
     public double PositionX { get; set; }
     [DataMember]
     public double PositionY { get; set; }
-    public ExtensionDataObject? ExtensionData { get; set; }
+    ExtensionDataObject? IExtensibleDataObject.ExtensionData { get; set; }
 
     [OnDeserializing]
     private void OnDeserializing(StreamingContext context)

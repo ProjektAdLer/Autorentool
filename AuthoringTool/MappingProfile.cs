@@ -211,12 +211,10 @@ public class MappingProfile : Profile
                         .Select(x => x.TargetSpace).ToList();
                 }
             })
-            .ForMember(x => x.ExtensionData, opt => opt.Ignore())
             .ReverseMap();
         CreateMap<LearningSpace, LearningSpacePe>()
             .ForMember(x => x.InBoundSpaces, opt => opt.Ignore())
             .ForMember(x => x.OutBoundSpaces, opt => opt.Ignore())
-            .ForMember(x => x.ExtensionData, opt => opt.Ignore())
             .ReverseMap()
             .AfterMap((_, d) =>
             {
@@ -232,8 +230,7 @@ public class MappingProfile : Profile
                 s.SourceSpace.Id = new Guid();
                 s.TargetSpace.Id = new Guid();
             });
-        CreateMap<LearningElement, LearningElementPe>()
-            .ForMember(x => x.ExtensionData, opt => opt.Ignore());
+        CreateMap<LearningElement, LearningElementPe>();
         CreateMap<LearningElementPe, LearningElement>()
             .ForMember(x => x.Parent, opt => opt.Ignore())
             .ForMember(x => x.Id, opt => opt.Ignore());

@@ -66,6 +66,6 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
     public double PositionX { get; set; }
     [DataMember]
     public double PositionY { get; set; }
-    public ExtensionDataObject? ExtensionData { get; set; }
+    ExtensionDataObject? IExtensibleDataObject.ExtensionData { get; set; }
 }
 
