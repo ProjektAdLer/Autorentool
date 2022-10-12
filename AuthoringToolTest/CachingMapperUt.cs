@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
@@ -241,10 +242,10 @@ switch (entity, viewModel)
     [Test]
     public void OnRemovedCommandsFromStacksInvoked_UnusedViewModelsAreRemoved()
     {
-        var world = new LearningWorld("n","s","a","l","d","g");
-        var worldViewModel = new LearningWorldViewModel("x","x","x","x","x","x");
+        var worldEntity = new LearningWorld("n","s","a","l","d","g");
+        var workspace = new AuthoringToolWorkspace(worldEntity, new List<LearningWorld>(){worldEntity});
+        var workspaceViewModel = new AuthoringToolWorkspaceViewModel();
         var spaceEntity = new LearningSpace("n", "s", "a", "d", "g", 5);
-        world.LearningSpaces.Add(spaceEntity);
         var elementEntity = new LearningElement("n", "s", null!,"u","a", "d", "g", LearningElementDifficultyEnum.Easy);
         var secondElementEntity = new LearningElement("n2", "s2", null!,"u2","a2", "d2", "g2", LearningElementDifficultyEnum.Easy);
         var config = new MapperConfiguration(MappingProfile.Configure);
@@ -253,7 +254,13 @@ switch (entity, viewModel)
         var systemUnderTest = CreateTestableCachingMapper(mapper, mockCommandStateManager);
 
         Assert.That(systemUnderTest.ReadOnlyCache, Has.Count.EqualTo(0));
-        systemUnderTest.Map(world, worldViewModel);
+        systemUnderTest.Map(workspace, workspaceViewModel);
+        
+        Assert.That(systemUnderTest.ReadOnlyCache, Has.Count.EqualTo(1));
+        
+        worldEntity.LearningSpaces.Add(spaceEntity);
+        var worldViewModel = workspaceViewModel.LearningWorlds.First();
+        systemUnderTest.Map(worldEntity, worldViewModel);
         
         Assert.That(systemUnderTest.ReadOnlyCache, Has.Count.EqualTo(2));
         
@@ -268,13 +275,37 @@ switch (entity, viewModel)
         
         Assert.That(systemUnderTest.ReadOnlyCache, Has.Count.EqualTo(4));
         
-        var objectList = new List<object> {secondElementEntity};
+        var objectList = new List<object> {worldEntity, spaceEntity, elementEntity};
         mockCommandStateManager.RemovedCommandsFromStacks +=
             Raise.Event<CommandStateManager.RemovedCommandsFromStacksHandler>(mockCommandStateManager, new RemoveCommandsFromStacksEventArgs(objectList));
 
-        Assert.That(systemUnderTest.ReadOnlyCache, Has.Count.EqualTo(1));
+        Assert.That(systemUnderTest.ReadOnlyCache, Has.Count.EqualTo(3));
     }
 
+    [Test]
+    public void MapSomethingOtherThanWorkspaceOrWorldOrSpace_DoesNotCache()
+    {
+        var elementEntity = new LearningElement("n", "s", null!,"u","a", "d", "g", LearningElementDifficultyEnum.Easy);
+        var elementViewModel = new LearningElementViewModel("x","x",null!,"x","x","x","x",LearningElementDifficultyEnum.Easy);
+        var config = new MapperConfiguration(MappingProfile.Configure);
+        var mapper = config.CreateMapper();
+        var systemUnderTest = CreateTestableCachingMapper(mapper);
+
+        Assert.That(systemUnderTest.ReadOnlyCache, Has.Count.EqualTo(0));
+        systemUnderTest.Map(elementEntity, elementViewModel);
+        Assert.That(systemUnderTest.ReadOnlyCache, Has.Count.EqualTo(0));
+    }
+    
+    [Test]
+    public void MapSomethingOtherThanWorkspaceOrWorldOrSpace_CallsMapper(){
+        var elementEntity = new LearningElement("n", "s", null!,"u","a", "d", "g", LearningElementDifficultyEnum.Easy);
+        var elementViewModel = new LearningElementViewModel("x","x",null!,"x","x","x","x",LearningElementDifficultyEnum.Easy);
+        var mapper = Substitute.For<IMapper>();
+        var systemUnderTest = CreateTestableCachingMapper(mapper);
+
+        systemUnderTest.Map(elementEntity, elementViewModel);
+        mapper.Received(1).Map(elementEntity, elementViewModel);
+    }
 
     private static CachingMapper CreateTestableCachingMapper(
         IMapper? mapper = null, ICommandStateManager? commandStateManager = null, ILogger<CachingMapper>? logger = null)
