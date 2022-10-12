@@ -263,5 +263,23 @@ public class MappingProfile : Profile
 
         CreateMap<LearningElementDifficultyEnum, LearningElementDifficultyEnumPe>()
             .ReverseMap();
+        
+        CreateMap<H5PActivationElement, ILearningElementPe>().As<H5PActivationElementPe>();
+        CreateMap<H5PInteractionElement, ILearningElementPe>().As<H5PInteractionElementPe>();
+        CreateMap<H5PTestElement, ILearningElementPe>().As<H5PTestElementPe>();
+        CreateMap<ImageTransferElement, ILearningElementPe>().As<ImageTransferElementPe>();
+        CreateMap<PdfTransferElement, ILearningElementPe>().As<PdfTransferElementPe>();
+        CreateMap<VideoActivationElement, ILearningElementPe>().As<VideoActivationElementPe>();
+        CreateMap<VideoTransferElement, ILearningElementPe>().As<VideoTransferElementPe>();
+        CreateMap<TextTransferElement, ILearningElementPe>().As<TextTransferElementPe>();
+
+        CreateMap<H5PActivationElementPe, ILearningElement>().As<H5PActivationElement>();
+        CreateMap<H5PInteractionElementPe, ILearningElement>().As<H5PInteractionElement>();
+        CreateMap<H5PTestElementPe, ILearningElement>().As<H5PTestElement>();
+        CreateMap<ImageTransferElementPe, ILearningElement>().As<ImageTransferElement>();
+        CreateMap<PdfTransferElementPe, ILearningElement>().As<PdfTransferElement>();
+        CreateMap<VideoActivationElementPe, ILearningElement>().As<VideoActivationElement>();
+        CreateMap<VideoTransferElementPe, ILearningElement>().As<VideoTransferElement>();
+        CreateMap<TextTransferElementPe, ILearningElement>().As<TextTransferElement>();
     }
 }

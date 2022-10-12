@@ -31,9 +31,9 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
         new ModalDialogInputField[]
         {
             new("Name", ModalDialogInputType.Text, true),
-            new("Shortname", ModalDialogInputType.Text, true),
+            new("Shortname", ModalDialogInputType.Text),
             new("Authors", ModalDialogInputType.Text),
-            new("Description", ModalDialogInputType.Text, true),
+            new("Description", ModalDialogInputType.Text),
             new("Goals", ModalDialogInputType.Text),
             new("Required Points", ModalDialogInputType.Number)
         };
@@ -46,10 +46,10 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
         new ModalDialogInputField[]
         {
             new("Name", ModalDialogInputType.Text, true),
-            new("Shortname", ModalDialogInputType.Text, true),
+            new("Shortname", ModalDialogInputType.Text),
             new("Url", ModalDialogInputType.Text),
             new("Authors", ModalDialogInputType.Text),
-            new("Description", ModalDialogInputType.Text, true),
+            new("Description", ModalDialogInputType.Text),
             new("Goals", ModalDialogInputType.Text),
             new ModalDialogDropdownInputField("Difficulty",
                 new[]
@@ -75,21 +75,22 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
         new ModalDialogInputField[]
         {
             new("Name", ModalDialogInputType.Text, true),
-            new("Shortname", ModalDialogInputType.Text, true),
+            new("Shortname", ModalDialogInputType.Text),
             typeField,
             contentField,
             new("Url", ModalDialogInputType.Text),
             new("Authors", ModalDialogInputType.Text),
-            new("Description", ModalDialogInputType.Text, true),
+            new("Description", ModalDialogInputType.Text),
             new("Goals", ModalDialogInputType.Text),
             new ModalDialogDropdownInputField("Difficulty",
                 new[]
                 {
                     new ModalDialogDropdownInputFieldChoiceMapping(null,
-                        new[] {LearningElementDifficultyEnum.Easy.ToString(),
+                        new[] { LearningElementDifficultyEnum.None.ToString(),
+                            LearningElementDifficultyEnum.Easy.ToString(),
                             LearningElementDifficultyEnum.Medium.ToString(),
                             LearningElementDifficultyEnum.Hard.ToString() })
-                }, true),
+                }),
             new("Workload (min)", ModalDialogInputType.Number),
             new("Points", ModalDialogInputType.Number)
         };
@@ -280,10 +281,10 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
         new ModalDialogInputField[]
         {
                 new("Name", ModalDialogInputType.Text, true),
-                new("Shortname", ModalDialogInputType.Text, true),
+                new("Shortname", ModalDialogInputType.Text),
                 new("Authors", ModalDialogInputType.Text),
-                new("Language", ModalDialogInputType.Text, true),
-                new("Description", ModalDialogInputType.Text, true),
+                new("Language", ModalDialogInputType.Text),
+                new("Description", ModalDialogInputType.Text),
                 new("Goals", ModalDialogInputType.Text)
         };
 
