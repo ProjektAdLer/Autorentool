@@ -29,12 +29,11 @@ public class CreateDslUt
         const string description = "very cool element";
         const string goals = "learn very many things";
         
-        var content1 = new LearningContentPe("FileName", "h5p", new byte[]{0x01,0x02});
-        var content2 = new LearningContentPe("FileName", "png", new byte[]{0x01,0x02});
-        var content3 = new LearningContentPe("FileName", "url", new byte[]{0x01,0x02});
-        var content4 = new LearningContentPe("FileName", "txt", new byte[]{0x01,0x02});
-        var content5 = new LearningContentPe("FileName", "pdf", new byte[]{0x01,0x02});
-        var content6 = new LearningContentPe("FileName", "cpp", new byte[]{0x01,0x02});
+        var content1 = new LearningContentPe("FileName", "h5p", "/foo/bar.txt");
+        var content2 = new LearningContentPe("FileName", "png", "/foo/bar.txt");
+        var content3 = new LearningContentPe("FileName", "url", "/foo/bar.txt");
+        var content4 = new LearningContentPe("FileName", "txt", "/foo/foo.txt");
+        var content5 = new LearningContentPe("FileName", "pdf", "/foo/foo.txt");
 
         var ele1 = new LearningElementPe("a", "b",content1, "", "pupup", "g","h", 
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
@@ -46,13 +45,12 @@ public class CreateDslUt
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
         var ele5 = new LearningElementPe("e", "b",content5, "","pupup", "g","h", 
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
-        var ele6 = new LearningElementPe("f", "b",content6, "","pupup", "g","h", 
-            LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
         
+
         var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
             null, 0, 0, new List<LearningSpacePe>(), 
             new List<LearningSpacePe>());
-        space1.LearningElements.AddRange(new List<LearningElementPe>{ele1, ele2, ele3, ele4, ele5, ele6});
+        space1.LearningElements.AddRange(new List<LearningElementPe>{ele1, ele2, ele3, ele4, ele5});
         var space2 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
             null, 0, 0, new List<LearningSpacePe>(), new List<LearningSpacePe>());
         space1.OutBoundSpaces = new List<LearningSpacePe>() {space2};
@@ -65,7 +63,7 @@ public class CreateDslUt
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
         
         //Every Element except Content with "url" is added to the comparison list.
-        var learningElementsList = new List<LearningElementPe> { ele1, ele2, ele4, ele5, ele6 };
+        var learningElementsWithContentList = new List<LearningElementPe> { ele1, ele2, ele4, ele5 };
 
         //Act
         systemUnderTest.WriteLearningWorld(learningWorld);
@@ -80,7 +78,7 @@ public class CreateDslUt
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.LearningWorldJson!.Identifier.Value, Is.EqualTo(name));
-            Assert.That(systemUnderTest.ListLearningElementsWithContent, Is.EquivalentTo(learningElementsList));
+            Assert.That(systemUnderTest.ContentListLearningElements, Is.EquivalentTo(learningElementsWithContentList));
             Assert.That(systemUnderTest.ListLearningSpaces, Is.EquivalentTo(learningSpaces));
             Assert.That(systemUnderTest.LearningWorldJson.LearningSpaces[0].Requirements,
                 Is.EqualTo(new List<int>()));
@@ -99,6 +97,7 @@ public class CreateDslUt
         //Arrange
         var mockFileSystem = new MockFileSystem();
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        mockFileSystem.AddFile("/foo/foo.txt", new MockFileData("foo"));
         var mockLogger = Substitute.For<ILogger<CreateDsl>>();
         
         const string name = "asdf";
@@ -108,7 +107,7 @@ public class CreateDslUt
         const string description = "very cool element";
         const string goals = "learn very many things";
         
-        var content1 = new LearningContentPe("FileName", "mp3", new byte[]{0x01,0x02});
+        var content1 = new LearningContentPe("FileName", "mp3", "/foo/bar.txt");
 
         var ele1 = new LearningElementPe("a", "b",content1, "", "pupup", "g","h", 
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
