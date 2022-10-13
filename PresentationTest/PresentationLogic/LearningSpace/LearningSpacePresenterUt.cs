@@ -142,7 +142,20 @@ public class LearningSpacePresenterUt
 
         mockPresentationLogic.Received().AddLearningElement(space,element);
     }
+    
+    [Test]
+    public void DragLearningElement_CallsPresentationLogic()
+    {
+        var element = new LearningElementViewModel("g", "g", null!, "g", "g", "g", "g", LearningElementDifficultyEnum.Easy);
+        double oldPositionX = 5;
+        double oldPositionY = 7;
+        var presentationLogic = Substitute.For<IPresentationLogic>();
 
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.DragLearningElement((element, oldPositionX, oldPositionY));
+
+        presentationLogic.Received().DragLearningElement(element, oldPositionX, oldPositionY);
+    }
 
     #region CreateNewLearningElement
 

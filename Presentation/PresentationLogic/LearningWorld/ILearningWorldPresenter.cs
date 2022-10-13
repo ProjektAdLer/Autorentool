@@ -27,4 +27,5 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     void AddNewLearningSpace();
     void OnWorkspacePropertyChanged(object? caller, PropertyChangedEventArgs e);
     event Action OnUndoRedoPerformed;
+    void DragLearningSpace((ILearningSpaceViewModel, double, double) obj);
 }

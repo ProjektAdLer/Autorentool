@@ -54,6 +54,11 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         remove => _presentationLogic.OnUndoRedoPerformed -= value;
     }
 
+    public void DragLearningElement((ILearningElementViewModel, double, double) obj)
+    {
+        _presentationLogic.DragLearningElement(obj.Item1, obj.Item2, obj.Item3);
+    }
+
     public void SetLearningSpace(ILearningSpaceViewModel space)
     {
         LearningSpaceVm = space;

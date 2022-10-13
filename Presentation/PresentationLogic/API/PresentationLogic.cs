@@ -178,6 +178,15 @@ public class PresentationLogic : IPresentationLogic
             space => CMapper.Map(space, learningSpaceVm));
         BusinessLogic.ExecuteCommand(command);
     }
+    
+    public void DragLearningSpace(ILearningSpaceViewModel learningSpaceVm, double oldPositionX, double oldPositionY)
+    {
+        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+        
+        var command = new DragLearningSpace(spaceEntity, oldPositionX, oldPositionY, spaceEntity.PositionX,
+            spaceEntity.PositionY, space => CMapper.Map(space, learningSpaceVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
 
     /// <inheritdoc cref="IPresentationLogic.DeleteLearningSpace"/>
     public void DeleteLearningSpace(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel learningSpaceVm)
@@ -272,6 +281,15 @@ public class PresentationLogic : IPresentationLogic
 
         var command = new EditLearningElement(elementEntity, parentSpaceEntity, name, shortname, url, authors, description,
             goals, difficulty, workload, points, element => CMapper.Map(element, learningElementVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+    
+    public void DragLearningElement(ILearningElementViewModel learningElementVm, double oldPositionX, double oldPositionY)
+    {
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+        
+        var command = new DragLearningElement(elementEntity, oldPositionX, oldPositionY, elementEntity.PositionX,
+            elementEntity.PositionY, space => CMapper.Map(space, learningElementVm));
         BusinessLogic.ExecuteCommand(command);
     }
 

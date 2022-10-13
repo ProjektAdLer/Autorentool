@@ -95,7 +95,12 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         add => _presentationLogic.OnUndoRedoPerformed += value;
         remove => _presentationLogic.OnUndoRedoPerformed -= value;
     }
-    
+
+    public void DragLearningSpace((ILearningSpaceViewModel, double, double) obj)
+    {
+        _presentationLogic.DragLearningSpace(obj.Item1, obj.Item2, obj.Item3);
+    }
+
     public void AddNewLearningSpace()
     {
         CreateLearningSpaceDialogOpen = true;

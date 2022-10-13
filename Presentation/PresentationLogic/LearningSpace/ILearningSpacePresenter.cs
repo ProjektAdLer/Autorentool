@@ -28,4 +28,5 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     LearningContentViewModel? DragAndDropLearningContent { get; }
     void OnWorldPropertyChanged(object? caller, PropertyChangedEventArgs e);
     event Action OnUndoRedoPerformed;
+    void DragLearningElement((ILearningElementViewModel, double, double) obj);
 }

@@ -3,7 +3,7 @@
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.Components
 @using Shared
-<Draggable LearningObject="LearningElement" OnClicked="@OnClicked"
+<Draggable LearningObject="LearningElement" OnClicked="@OnClicked" OnDragged="@OnDragged"
            @bind-X="@LearningElement.PositionX" @bind-Y="@LearningElement.PositionY">
     <rect height="50" width="100" style="fill:lightblue;stroke: black"></rect>
     <polygon transform="translate(75,1)" fill="@PolygonColor"
@@ -18,6 +18,8 @@
     public ILearningElementViewModel LearningElement { get; set; } = null!;
     [Parameter, EditorRequired]
     public EventCallback<ILearningElementViewModel> OnClicked { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback<(ILearningElementViewModel, double, double)> OnDragged { get; set; }
 
     private string? PolygonPoints { get; set; }
     private string? PolygonColor { get; set; }

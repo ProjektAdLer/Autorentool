@@ -292,4 +292,6 @@ public interface IPresentationLogic
     void LoadLearningSpaceViewModel(ILearningWorldViewModel learningWorldVm, Stream stream);
     void LoadLearningElementViewModel(ILearningSpaceViewModel parentSpaceVm, Stream stream);
     event Action? OnUndoRedoPerformed;
+    void DragLearningSpace(ILearningSpaceViewModel learningSpaceVm, double oldPositionX, double oldPositionY);
+    void DragLearningElement(ILearningElementViewModel learningElementVm, double oldPositionX, double oldPositionY);
 }

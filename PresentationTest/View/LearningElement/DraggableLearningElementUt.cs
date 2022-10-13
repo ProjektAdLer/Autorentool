@@ -31,7 +31,8 @@ public class DraggableLearningElementUt
     {
         var learningElement = Substitute.For<ILearningElementViewModel>();
         var onClicked = new Action<ILearningElementViewModel>(_ => { });
-        var systemUnderTest = GetRenderedDraggableLearningElement(learningElement, onClicked);
+        var onDragged = new Action<(ILearningElementViewModel, double, double)>(_ => { });
+        var systemUnderTest = GetRenderedDraggableLearningElement(learningElement, onClicked, onDragged);
         
         Assert.Multiple(() =>
         {
@@ -48,7 +49,8 @@ public class DraggableLearningElementUt
         learningElement.Difficulty.Returns(LearningElementDifficultyEnum.Medium);
         learningElement.Name.Returns("foo bar super cool name");
         var onClicked = new Action<ILearningElementViewModel>(_ => { });
-        var systemUnderTest = GetRenderedDraggableLearningElement(learningElement, onClicked);
+        var onDragged = new Action<(ILearningElementViewModel, double, double)>(_ => { });
+        var systemUnderTest = GetRenderedDraggableLearningElement(learningElement, onClicked, onDragged);
 
         Assert.That(systemUnderTest.HasComponent<Stub<Draggable<ILearningElementViewModel>>>());
         var stub = systemUnderTest.FindComponent<Stub<Draggable<ILearningElementViewModel>>>();
@@ -70,7 +72,7 @@ public class DraggableLearningElementUt
     public void Constructor_ElementNull_ThrowsException()
     {
         //Override warning for this test as we are testing exactly what happens when we break the nullability contract - n.stich
-        Assert.That(() => GetRenderedDraggableLearningElement(null!, _ => { }), Throws.ArgumentNullException);
+        Assert.That(() => GetRenderedDraggableLearningElement(null!, _ => { },_ => { }), Throws.ArgumentNullException);
     }
     
     [Test]
@@ -94,11 +96,12 @@ public class DraggableLearningElementUt
         });
     }
 
-    private IRenderedComponent<DraggableLearningElement> GetRenderedDraggableLearningElement(ILearningElementViewModel objectViewmodel, Action<ILearningElementViewModel> onClicked)
+    private IRenderedComponent<DraggableLearningElement> GetRenderedDraggableLearningElement(ILearningElementViewModel objectViewmodel, Action<ILearningElementViewModel> onClicked, Action<(ILearningElementViewModel, double, double)> onDragged)
     {
         return _ctx.RenderComponent<DraggableLearningElement>(parameters => parameters
-                .Add(p => p.LearningElement, objectViewmodel)
-                .Add(p => p.OnClicked, onClicked));
+            .Add(p => p.LearningElement, objectViewmodel)
+            .Add(p => p.OnClicked, onClicked)
+            .Add(p => p.OnDragged, onDragged));
     }
 
 }
