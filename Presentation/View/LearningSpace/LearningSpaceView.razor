@@ -3,6 +3,7 @@
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.ModalDialog
+@using System.ComponentModel
 
 <h2>LearningSpace @LearningSpaceP.LearningSpaceVm?.Name</h2>
 <h5>Workload: @LearningSpaceP.LearningSpaceVm?.Workload minutes</h5>
@@ -81,6 +82,10 @@
     {
         base.OnParametersSet();
         LearningSpaceP.OnUndoRedoPerformed += StateHasChanged;
+        LearningSpaceP.PropertyChanged += (sender, earg) =>
+        {
+            if(earg.PropertyName == nameof(LearningSpaceP.CreateLearningElementDialogOpen)) StateHasChanged();
+        };
     }
 
     private void AddNewLearningElement()

@@ -13,7 +13,7 @@ public class EditLearningElementUt
     public void Execute_EditsLearningElement()
     {
         var parent = new LearningSpace("l", "k", "j", "j", "j", 5);
-        var content = new LearningContent("bar", "foo", new byte[] {0x01, 0x02});
+        var content = new LearningContent("bar", "foo", "");
         var element = new LearningElement("a", "b", content, "url",
             "e", "f","g", LearningElementDifficultyEnum.Medium, parent, 8, 9, 17f, 29f);
         parent.LearningElements.Add(element);
@@ -99,7 +99,7 @@ public class EditLearningElementUt
     public void UndoRedo_UndoesAndRedoesEditLearningElement()
     {
         var parent = new LearningSpace("l", "k", "j", "j", "j", 5);
-        var content = new LearningContent("bar", "foo", new byte[] {0x01, 0x02});
+        var content = new LearningContent("bar", "foo", "");
         var element = new LearningElement("a", "b", content, "url",
             "e", "f","g", LearningElementDifficultyEnum.Medium, parent, 8, 9, 17f, 29f);
         parent.LearningElements.Add(element);

@@ -1097,8 +1097,8 @@ public class PresentationLogicUt
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(true);
         var mockMapper = Substitute.For<IMapper>();
-        var learningContent = new LearningContentViewModel("f", ".png", new byte[] { 0x00, 0x00, 0x00, 0x01 });
-        var entity = new LearningContent("f", ".png", new byte[] { 0x00, 0x00, 0x00, 0x01 });
+        var learningContent = new LearningContentViewModel("f", ".png", "");
+        var entity = new LearningContent("f", ".png", "");
         mockMapper.Map<LearningContentViewModel>(Arg.Any<LearningContent>()).Returns(learningContent);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
@@ -1184,8 +1184,8 @@ public class PresentationLogicUt
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(true);
         var mockMapper = Substitute.For<IMapper>();
-        var learningContent = new LearningContentViewModel("f", ".mp4", new byte[] { 0x01, 0x00, 0x00, 0x01 });
-        var entity = new LearningContent("f", ".mp4", new byte[] { 0x01, 0x00, 0x00, 0x01 });
+        var learningContent = new LearningContentViewModel("f", ".mp4", "");
+        var entity = new LearningContent("f", ".mp4", "");
         mockMapper.Map<LearningContentViewModel>(Arg.Any<LearningContent>()).Returns(learningContent);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
@@ -1272,8 +1272,8 @@ public class PresentationLogicUt
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(true);
         var mockMapper = Substitute.For<IMapper>();
-        var learningContent = new LearningContentViewModel("f", ".h5p", new byte[] { 0x01, 0x01, 0x00, 0x01 });
-        var entity = new LearningContent("f", ".h5p", new byte[] { 0x01, 0x01, 0x00, 0x01 });
+        var learningContent = new LearningContentViewModel("f", ".h5p", "");
+        var entity = new LearningContent("f", ".h5p", "");
         mockMapper.Map<LearningContentViewModel>(Arg.Any<LearningContent>()).Returns(learningContent);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
@@ -1359,8 +1359,8 @@ public class PresentationLogicUt
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(true);
         var mockMapper = Substitute.For<IMapper>();
-        var learningContent = new LearningContentViewModel("f", ".pdf", new byte[] { 0x01, 0x01, 0x01, 0x01 });
-        var entity = new LearningContent("f", ".pdf", new byte[] { 0x01, 0x01, 0x01, 0x01 });
+        var learningContent = new LearningContentViewModel("f", ".pdf", "");
+        var entity = new LearningContent("f", ".pdf", "");
         mockMapper.Map<LearningContentViewModel>(Arg.Any<LearningContent>()).Returns(learningContent);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
@@ -1445,8 +1445,8 @@ public class PresentationLogicUt
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(true);
         var mockMapper = Substitute.For<IMapper>();
-        var learningContent = new LearningContentViewModel("f", ".txt", new byte[] { 0x00, 0x00, 0x00, 0x01 });
-        var entity = new LearningContent("f", ".txt", new byte[] { 0x00, 0x00, 0x00, 0x01 });
+        var learningContent = new LearningContentViewModel("f", ".txt", "");
+        var entity = new LearningContent("f", ".txt", "");
         mockMapper.Map<LearningContentViewModel>(Arg.Any<LearningContent>()).Returns(learningContent);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
@@ -1571,7 +1571,7 @@ public class PresentationLogicUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockLearningElement = new BusinessLogic.Entities.LearningElement("n", "sn",null!, "url","a", "d", "g", LearningElementDifficultyEnum.Easy);
         mockBusinessLogic.LoadLearningElement(Arg.Any<Stream>()).Returns(mockLearningElement);
-        var mockLearningContent = new LearningContentViewModel("n", "t", Array.Empty<byte>());
+        var mockLearningContent = new LearningContentViewModel("n", "t", "");
         var mockLearningElementViewModel = new LearningElementViewModel("n", "sn", mockLearningContent, "url","a", "d", "g",LearningElementDifficultyEnum.Easy);
         var mockMapper = Substitute.For<IMapper>();
         mockMapper.Map<LearningElementViewModel>(Arg.Any<BusinessLogic.Entities.LearningElement>())
@@ -1607,14 +1607,14 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadLearningContentViewModel_ReturnsLearningContent()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var mockLearningContent = new LearningContent("n", "t", Array.Empty<byte>());
-        mockBusinessLogic.LoadLearningContent(Arg.Any<string>(), Arg.Any<Stream>()).Returns(mockLearningContent);
-        var mockLearningContentViewModel = new LearningContentViewModel("n", "t", Array.Empty<byte>());
+        var mockLearningContent = new LearningContent("n", "t", "");
+        mockBusinessLogic.LoadLearningContent(Arg.Any<string>(), Arg.Any<MemoryStream>()).Returns(mockLearningContent);
+        var mockLearningContentViewModel = new LearningContentViewModel("n", "t", "");
         var mockMapper = Substitute.For<IMapper>();
         mockMapper.Map<LearningContentViewModel>(Arg.Any<LearningContent>())
             .Returns(mockLearningContentViewModel);
         var filename = "test.png";
-        var stream = Substitute.For<Stream>();
+        var stream = Substitute.For<MemoryStream>();
 
         var systemUnderTest =
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
@@ -1630,9 +1630,9 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadLearningContentViewModel_CatchesException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.LoadLearningContent(Arg.Any<string>(), Arg.Any<Stream>()).Throws(new Exception("Exception"));
+        mockBusinessLogic.LoadLearningContent(Arg.Any<string>(), Arg.Any<MemoryStream>()).Throws(new Exception("Exception"));
         var filename = "test.png";
-        var stream = Substitute.For<Stream>();
+        var stream = Substitute.For<MemoryStream>();
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 

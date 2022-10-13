@@ -14,7 +14,7 @@ public class H5PTestElementUt
         var name = "asdf";
         var shortname = "jkl;";
         var parent = new LearningSpace("foo", "bar", "", "", "", 2);
-        var content = new LearningContent("a", "b", Array.Empty<byte>());
+        var content = new LearningContent("a", "b", "");
         var url = "url";
         var authors = "ben and jerry";
         var description = "very cool element";

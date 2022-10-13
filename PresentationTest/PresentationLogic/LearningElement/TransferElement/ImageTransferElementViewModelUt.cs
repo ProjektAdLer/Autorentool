@@ -16,7 +16,7 @@ public class ImageTransferElementViewModelUt
         var name = "eee";
         var shortname = "fff";
         var parent = new LearningSpaceViewModel("ggg", "hhh", "iii", "", "", 2);
-        var content = new LearningContentViewModel("jjj", "kkk", new byte[] {0x06, 0x03});
+        var content = new LearningContentViewModel("jjj", "kkk", "");
         var url = "url";
         var authors = "lll";
         var description = "mmm";

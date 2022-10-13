@@ -2,11 +2,11 @@ namespace PersistEntities;
 
 public class LearningContentPe : ILearningContentPe
 {
-    public LearningContentPe(string name, string type, byte[] content)
+    public LearningContentPe(string name, string type, string filepath)
     {
         Name = name;
         Type = type;
-        Content = content;
+        Filepath = filepath;
     }
     /// <summary>
     /// Constructor for serialization. DO NOT USE FOR NORMAL INITIALIZATION.
@@ -15,10 +15,10 @@ public class LearningContentPe : ILearningContentPe
     {
         Name = "";
         Type = "";
-        Content = Array.Empty<byte>();
+        Filepath = "";
     }
     
     public string Name { get; set; }
     public string Type { get; set; }
-    public byte[] Content { get; set; }
+    public string Filepath { get; set; }
 }

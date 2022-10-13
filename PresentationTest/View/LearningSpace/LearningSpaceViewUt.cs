@@ -259,7 +259,7 @@ public class LearningSpaceViewUt
     public void CreateLearningElementDialogOpen_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
     {
         _learningSpacePresenter.CreateLearningElementDialogOpen.Returns(true);
-        var contentMock = new LearningContentViewModel("foo", "bla", Array.Empty<byte>());
+        var contentMock = new LearningContentViewModel("foo", "bla", "");
         _learningSpacePresenter.DragAndDropLearningContent.Returns(contentMock);
         var space = Substitute.For<ILearningSpaceViewModel>();
         space.Name = "spacename";

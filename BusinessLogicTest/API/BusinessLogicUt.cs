@@ -212,7 +212,7 @@ public class BusinessLogicUt
     [Test]
     public void SaveLearningElement_CallsDataAccess()
     {
-        var content = new LearningContent("a", "b", Array.Empty<byte>());
+        var content = new LearningContent("a", "b", "");
         var learningElement = new LearningElement("fa", "f", content, "","f",
             "f", "f", LearningElementDifficultyEnum.Easy);
         var mockDataAccess = Substitute.For<IDataAccess>();
@@ -239,7 +239,7 @@ public class BusinessLogicUt
     [Test]
     public void LoadLearningElement_ReturnsLearningElement()
     {
-        var content = new LearningContent("a", "b", Array.Empty<byte>());
+        var content = new LearningContent("a", "b", "");
         var learningElement = new LearningElement("fa", "a", content, "", "f", "f",
             "f", LearningElementDifficultyEnum.Easy);
         var mockDataAccess = Substitute.For<IDataAccess>();
@@ -267,7 +267,7 @@ public class BusinessLogicUt
     [Test]
     public void LoadLearningContent_ReturnsLearningElement()
     {
-        var learningContent = new LearningContent("fa", "a", new byte[] {0x01, 0x02, 0x03});
+        var learningContent = new LearningContent("fa", "a", "");
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningContent("foobar").Returns(learningContent);
 
@@ -350,7 +350,7 @@ public class BusinessLogicUt
     [Test]
     public void LoadLearningElementFromStream_ReturnsLearningElement()
     {
-        var content = new LearningContent("a", "b", Array.Empty<byte>());
+        var content = new LearningContent("a", "b", "");
         var learningElement = new LearningElement("fa", "a", content, "","f", "f",
             "f", LearningElementDifficultyEnum.Easy);
         var stream = Substitute.For<Stream>();
@@ -368,7 +368,7 @@ public class BusinessLogicUt
     public void LoadLearningContentFromStream_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
-        var stream = Substitute.For<Stream>();
+        var stream = Substitute.For<MemoryStream>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
@@ -380,8 +380,8 @@ public class BusinessLogicUt
     [Test]
     public void LoadLearningContentFromStream_ReturnsLearningElement()
     {
-        var learningContent = new LearningContent("filename", "extension", Array.Empty<byte>());
-        var stream = Substitute.For<Stream>();
+        var learningContent = new LearningContent("filename", "extension", "");
+        var stream = Substitute.For<MemoryStream>();
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningContent("filename.extension", stream).Returns(learningContent);
 

@@ -55,7 +55,7 @@ public class LearningWorldUt
         var languageChanged = "english";
         var descriptionChanged = "changed description";
         var goalsChanged = "new goals";
-        var newContent2 = new LearningContent("w", "e", new byte[]{0x08,0x02});
+        var newContent2 = new LearningContent("w", "e", "");
         var space2 = new LearningSpace("gg", "gg", "gg", "gg", "gg", 5);
 
         

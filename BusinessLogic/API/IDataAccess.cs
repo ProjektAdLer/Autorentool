@@ -17,7 +17,7 @@ public interface IDataAccess
     LearningElement LoadLearningElement(string filepath);
     LearningElement LoadLearningElement(Stream stream);
     LearningContent LoadLearningContent(string filepath);
-    LearningContent LoadLearningContent(string name, Stream stream);
+    LearningContent LoadLearningContent(string name, MemoryStream stream);
     
     /// <summary>
     /// Finds a save path in <paramref name="targetFolder"/> containing <paramref name="fileName"/> and ending with <paramref name="fileEnding"/>,

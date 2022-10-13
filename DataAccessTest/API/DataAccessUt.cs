@@ -122,7 +122,7 @@ public class DataAccessUt
         var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElementPe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerElement: mockFileSaveHandlerElement);
 
-        var learningContent = new LearningContent("a", "b", Array.Empty<byte>());
+        var learningContent = new LearningContent("a", "b", "");
         var learningElement = new LearningElement("f","f", learningContent, "url","f",
             "f", "f", LearningElementDifficultyEnum.Easy);
         systemUnderTest.SaveLearningElementToFile(
@@ -163,7 +163,7 @@ public class DataAccessUt
 
         systemUnderTest.LoadLearningContent("C:/nonsense");
 
-        mockContentFileHandler.Received().LoadFromDisk("C:/nonsense");
+        mockContentFileHandler.Received().LoadContentAsync("C:/nonsense");
     }
     
     [Test]
@@ -171,11 +171,11 @@ public class DataAccessUt
     {
         var mockContentFileHandler = Substitute.For<IContentFileHandler>();
         var systemUnderTest = CreateTestableDataAccess(contentHandler: mockContentFileHandler);
-        var stream = Substitute.For<Stream>();
+        var stream = Substitute.For<MemoryStream>();
 
         systemUnderTest.LoadLearningContent("filename.extension", stream);
 
-        mockContentFileHandler.Received().LoadFromStream("filename.extension", stream);
+        mockContentFileHandler.Received().LoadContentAsync("filename.extension", stream);
     }
 
     [Test]

@@ -11,7 +11,7 @@ public class LearningContentUt
     {
         var name = "foobar";
         var type = "barbaz";
-        var content = new byte[] { 0x00, 0x0f, 0xf0, 0xff };
+        var content = "";
         
         var systemUnderTest = new LearningContent(name, type, content);
         
@@ -19,7 +19,7 @@ public class LearningContentUt
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
             Assert.That(systemUnderTest.Type, Is.EqualTo(type));
-            Assert.That(systemUnderTest.Content, Is.EqualTo(content));
+            Assert.That(systemUnderTest.Filepath, Is.EqualTo(content));
         });
     }
 }

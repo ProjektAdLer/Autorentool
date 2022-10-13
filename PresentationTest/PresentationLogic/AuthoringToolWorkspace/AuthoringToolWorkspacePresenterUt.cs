@@ -760,8 +760,8 @@ public class AuthoringToolWorkspacePresenterUt
     public void ProcessDragAndDropResult_CallsPresentationLogic(string ending)
     {
         var fileName = "testFile." + ending;
-        var stream = Substitute.For<Stream>();
-        var resultTuple = new Tuple<string, Stream>(fileName, stream);
+        var stream = Substitute.For<MemoryStream>();
+        var resultTuple = new Tuple<string, MemoryStream>(fileName, stream);
         var authoringToolWorkspace = new AuthoringToolWorkspaceViewModel();
         
         var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
@@ -773,8 +773,8 @@ public class AuthoringToolWorkspacePresenterUt
         authoringToolWorkspace.SelectedLearningWorld = learningWorld;
         
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var learningContent = new LearningContentViewModel(fileName, ending, Array.Empty<byte>());
-        presentationLogic.LoadLearningContentViewModel(Arg.Any<string>(), Arg.Any<Stream>())
+        var learningContent = new LearningContentViewModel(fileName, ending, "");
+        presentationLogic.LoadLearningContentViewModel(Arg.Any<string>(), Arg.Any<MemoryStream>())
             .Returns(learningContent);
         var learningWorldPresenter = Substitute.For<ILearningWorldPresenter>();
         var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
@@ -828,7 +828,7 @@ public class AuthoringToolWorkspacePresenterUt
     public void
         CallCreateLearningElementWithPreloadedContentFromActiveView_NoLearningWorldSelected_DoNothing()
     {
-        var learningContent = new LearningContentViewModel("n", "t", Array.Empty<byte>());
+        var learningContent = new LearningContentViewModel("n", "t", "");
 
         var systemUnderTest = CreatePresenterForTesting();
         
@@ -840,7 +840,7 @@ public class AuthoringToolWorkspacePresenterUt
     [Test]
     public void CallCreateLearningElementWithPreloadedContentFromActiveView_ShowingLearningSpaceViewIsFalse_CorrectInformationMessageToShow()
     {
-        var learningContent = new LearningContentViewModel("n", "t", Array.Empty<byte>());
+        var learningContent = new LearningContentViewModel("n", "t", "");
         var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
         var learningSpace = new LearningSpaceViewModel("n", "sn", "a", "d", "g");
         learningWorld.LearningSpaces.Add(learningSpace);
@@ -865,7 +865,7 @@ public class AuthoringToolWorkspacePresenterUt
     public void
         CallCreateLearningElementWithPreloadedContentFromActiveView_LearningSpaceSelected_CallsSpacePresenter()
     {
-        var learningContent = new LearningContentViewModel("n", "t", Array.Empty<byte>());
+        var learningContent = new LearningContentViewModel("n", "t", "");
         var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
         var learningSpace = new LearningSpaceViewModel("n", "sn", "a", "d", "g");
         learningWorld.LearningSpaces.Add(learningSpace);
@@ -889,7 +889,7 @@ public class AuthoringToolWorkspacePresenterUt
     public void
         CallCreateLearningElementWithPreloadedContentFromActiveView_LearningSpaceSelectedButSpaceVmIsNull_DoNothing()
     {
-        var learningContent = new LearningContentViewModel("n", "t", Array.Empty<byte>());
+        var learningContent = new LearningContentViewModel("n", "t", "");
         var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
         var learningSpace = new LearningSpaceViewModel("n", "sn", "a", "d", "g");
         learningWorld.LearningSpaces.Add(learningSpace);

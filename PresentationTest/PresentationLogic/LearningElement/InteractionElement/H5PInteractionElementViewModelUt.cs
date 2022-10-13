@@ -16,7 +16,7 @@ public class H5PInteractionElementViewModelUt
         var name = "ccd";
         var shortname = "dee";
         var parent = new LearningSpaceViewModel("ffg", "ghh", "iij", "", "", 2);
-        var content = new LearningContentViewModel("jkk", "llm", new byte[] {0x09, 0x03});
+        var content = new LearningContentViewModel("jkk", "llm", "");
         var url = "url";
         var authors = "mnn";
         var description = "oop";

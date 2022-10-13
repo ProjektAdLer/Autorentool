@@ -11,6 +11,9 @@ namespace DataAccessTest.Persistence;
 [TestFixture]
 public class XmlFileHandlerUt
 {
+    private string TestSerializableXmlString =>
+        @"<XmlFileHandlerUt.TestSerializable z:Id=""1"" xmlns=""http://schemas.datacontract.org/2004/07/DataAccessTest.Persistence"" xmlns:i=""http://www.w3.org/2001/XMLSchema-instance"" xmlns:z=""http://schemas.microsoft.com/2003/10/Serialization/""><Name z:Id=""2"">foo</Name><Number>123</Number></XmlFileHandlerUt.TestSerializable>";
+    
     private class TestNotSerializable
     {
         public TestNotSerializable()
@@ -23,6 +26,7 @@ public class XmlFileHandlerUt
     }
 
     [Serializable]
+    [DataContract]
     private class TestNoParameterlessConstructor
     {
         public TestNoParameterlessConstructor(string name)
@@ -33,6 +37,7 @@ public class XmlFileHandlerUt
     }
 
     [Serializable]
+    [DataContract]
     public class TestSerializable
     {
         public TestSerializable()
@@ -45,8 +50,9 @@ public class XmlFileHandlerUt
             Name = name;
             Number = number;
         }
-        
+        [DataMember]
         public string Name { get; set; }
+        [DataMember]
         public int Number { get; set; }
     }
     
@@ -57,15 +63,6 @@ public class XmlFileHandlerUt
         // ReSharper disable once ObjectCreationAsStatement
         var ex = Assert.Throws<InvalidOperationException>(() => { new XmlFileHandler<TestNotSerializable>(null!); });
         Assert.That(ex!.Message, Is.EqualTo($"Type {nameof(TestNotSerializable)} is not serializable."));
-    }
-    
-    [Test]
-    public void XmlFileHandler_Constructor_FailsIfTypeDoesNotHaveParameterlessConstructor()
-    {
-        //Disable warning for test
-        // ReSharper disable once ObjectCreationAsStatement
-        var ex = Assert.Throws<InvalidOperationException>(() => { new XmlFileHandler<TestNoParameterlessConstructor>(null!); });
-        Assert.That(ex!.Message, Is.EqualTo($"Type {nameof(TestNoParameterlessConstructor)} has no required parameterless constructor."));
     }
     
     [Test]
@@ -80,7 +77,7 @@ public class XmlFileHandlerUt
         systemUnderTest.SaveToDisk(obj, filepath);
         
         var file = mockFileSystem.GetFile(filepath);
-        Assert.That(file.TextContents, Is.EqualTo("<?xml version=\"1.0\" encoding=\"utf-8\"?><TestSerializable xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><Name>foo</Name><Number>123</Number></TestSerializable>"));
+        Assert.That(file.TextContents, Is.EqualTo(TestSerializableXmlString));
     }
 
     [Test]
@@ -88,7 +85,7 @@ public class XmlFileHandlerUt
     {
         var mockFileSystem = new MockFileSystem();
         const string filepath = "foobar.txt";
-        mockFileSystem.AddFile(filepath, "<?xml version=\"1.0\" encoding=\"utf-8\"?><TestSerializable xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\"><Name>foo</Name><Number>123</Number></TestSerializable>");
+        mockFileSystem.AddFile(filepath, TestSerializableXmlString);
         
         var systemUnderTest = CreateTestableXmlFileHandler<TestSerializable>(fileSystem: mockFileSystem);
 

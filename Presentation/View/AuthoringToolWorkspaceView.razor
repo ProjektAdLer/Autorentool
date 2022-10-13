@@ -226,7 +226,7 @@
         StateHasChanged();
     }
 
-    private async Task OnDragAndDropResult(Tuple<string, Stream> result)
+    private async Task OnDragAndDropResult(Tuple<string, MemoryStream> result)
     {
         await AuthoringToolWorkspaceP.ProcessDragAndDropResult(result);
         await InvokeAsync(StateHasChanged);

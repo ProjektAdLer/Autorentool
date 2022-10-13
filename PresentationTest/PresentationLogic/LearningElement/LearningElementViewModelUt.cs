@@ -15,7 +15,7 @@ public class LearningElementViewModelUt
         var name = "asdf";
         var shortname = "jkl;";
         var parent = new LearningSpaceViewModel("foo", "bar", "baz", "", "", 2);
-        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var content = new LearningContentViewModel("bar", "foo", "");
         var url = "url";
         var authors = "ben and jerry";
         var description = "very cool element";

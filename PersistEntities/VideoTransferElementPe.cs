@@ -1,7 +1,9 @@
+using System.Runtime.Serialization;
+
 namespace PersistEntities;
 
 [Serializable]
-
+[DataContract]
 public class VideoTransferElementPe : LearningElementPe
 {
     internal VideoTransferElementPe(string name, string shortname, LearningContentPe? learningContent, string url,

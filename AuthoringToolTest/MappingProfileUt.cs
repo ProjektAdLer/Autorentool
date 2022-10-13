@@ -29,7 +29,7 @@ public class MappingProfileUt
     private const string Description = "description";
     private const string Goals = "goals";
     private const string Type = "type";
-    private static readonly byte[] Content = new byte[] {0x01, 0x02, 0x03};
+    private static readonly string Filepath = "bar/baz/buz.txt";
     private const LearningElementDifficultyEnum Difficulty = LearningElementDifficultyEnum.Easy;
     private const LearningElementDifficultyEnumPe DifficultyPe = LearningElementDifficultyEnumPe.Easy;
     private const int Workload = 1;
@@ -46,7 +46,7 @@ public class MappingProfileUt
     private const string NewDescription = "newDescription";
     private const string NewGoals = "newGoals";
     private const string NewType = "newType";
-    private static readonly byte[] NewContent = new byte[] {0x04, 0x05, 0x06};
+    private static readonly string NewFilepath = "/foo/bar/baz.txt";
     private const LearningElementDifficultyEnum NewDifficulty = LearningElementDifficultyEnum.Medium;
     private const LearningElementDifficultyEnumPe NewDifficultyPe = LearningElementDifficultyEnumPe.Medium;
     private const int NewWorkload = 2;
@@ -67,8 +67,8 @@ public class MappingProfileUt
     public void MapLearningContentAndLearningContentViewModel_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningContent(Name, Type, Content);
-        var destination = new LearningContentViewModel("", "", Array.Empty<byte>());
+        var source = new LearningContent(Name, Type, Filepath);
+        var destination = new LearningContentViewModel("", "", "bar/baz/buz.txt");
 
         systemUnderTest.Map(source, destination);
 
@@ -76,7 +76,7 @@ public class MappingProfileUt
 
         destination.Name = NewName;
         destination.Type = NewType;
-        destination.Content = NewContent;
+        destination.Filepath = NewFilepath;
 
         systemUnderTest.Map(destination, source);
 
@@ -87,8 +87,8 @@ public class MappingProfileUt
     public void MapLearningContentAndLearningContentPersistEntity_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningContent(Name, Type, Content);
-        var destination = new LearningContentPe("", "", Array.Empty<byte>());
+        var source = new LearningContent(Name, Type, Filepath);
+        var destination = new LearningContentPe("", "", "");
 
         systemUnderTest.Map(source, destination);
 
@@ -96,7 +96,7 @@ public class MappingProfileUt
 
         destination.Name = NewName;
         destination.Type = NewType;
-        destination.Content = NewContent;
+        destination.Filepath = NewFilepath;
 
         systemUnderTest.Map(destination, source);
 
@@ -111,7 +111,7 @@ public class MappingProfileUt
         var source = new LearningElement(Name, Shortname, content, Url, Authors, Description, Goals,
             Difficulty, null, Workload, Points, PositionX, PositionY);
         var destination = new LearningElementViewModel("", "",
-            new LearningContentViewModel("", "", Array.Empty<byte>()), Url, "", "", "", LearningElementDifficultyEnum.None);
+            new LearningContentViewModel("", "", Filepath), Url, "", "", "", LearningElementDifficultyEnum.None);
 
         systemUnderTest.Map(source, destination);
 
@@ -120,7 +120,7 @@ public class MappingProfileUt
 
         destination.Name = NewName;
         destination.Shortname = NewShortname;
-        destination.LearningContent = new LearningContentViewModel(NewName, NewType, NewContent);
+        destination.LearningContent = new LearningContentViewModel(NewName, NewType, NewFilepath);
         destination.Url = NewUrl;
         destination.Authors = NewAuthors;
         destination.Description = NewDescription;
@@ -144,7 +144,7 @@ public class MappingProfileUt
         var content = GetTestableContent();
         var source = new LearningElement(Name, Shortname, content, Url, Authors, Description, Goals,
             Difficulty, null, Workload, Points, PositionX, PositionY);
-        var destination = new LearningElementPe("", "", new LearningContentPe("", "", Array.Empty<byte>()), "google.com","", "", "",
+        var destination = new LearningElementPe("", "", new LearningContentPe("", "", "bar/baz/buz.txt"), "google.com","", "", "",
             LearningElementDifficultyEnumPe.None);
 
         systemUnderTest.Map(source, destination);
@@ -153,7 +153,7 @@ public class MappingProfileUt
 
         destination.Name = NewName;
         destination.Shortname = NewShortname;
-        destination.LearningContent = new LearningContentPe(NewName, NewType, NewContent);
+        destination.LearningContent = new LearningContentPe(NewName, NewType, NewFilepath);
         destination.Url = NewUrl;
         destination.Authors = NewAuthors;
         destination.Description = NewDescription;
@@ -565,17 +565,24 @@ public class MappingProfileUt
         var destination = new LearningWorldPe("", "", "", "", "", "");
         
         source.LearningPathways.Add(new LearningPathway(space1, space2));
+        space1.OutBoundSpaces.Add(space2);
+        space2.InBoundSpaces.Add(space1);
 
         systemUnderTest.Map(source, destination);
 
+        var destinationSpace1 = destination.LearningSpaces[0];
+        var destinationSpace2 = destination.LearningSpaces[1];
         TestWorld(destination, false);
-        //Assert.Multiple(() =>
-        //{
+        Assert.Multiple(() =>
+        {
             Assert.That(destination.LearningSpaces, Has.Count.EqualTo(2));
-            Assert.That(destination.LearningSpaces[0].LearningElements, Has.Count.EqualTo(1));
-            Assert.That(destination.LearningSpaces[1].LearningElements, Has.Count.EqualTo(1));
-            Assert.That(destination.LearningPathWays, Has.Count.EqualTo(1));
-        //});
+            Assert.That(destinationSpace1.LearningElements, Has.Count.EqualTo(1));
+            Assert.That(destinationSpace1.OutBoundSpaces, Does.Contain(destinationSpace2));
+            Assert.That(destinationSpace2.LearningElements, Has.Count.EqualTo(1));
+            Assert.That(destinationSpace2.InBoundSpaces, Does.Contain(destinationSpace1));
+            Assert.That(destination.LearningPathways, Has.Count.EqualTo(1));
+        });
+
 
         destination.Name = NewName;
         destination.Shortname = NewShortname;
@@ -586,19 +593,44 @@ public class MappingProfileUt
         var spacePe1 = GetTestableNewSpacePersistEntity();
         var spacePe2 = GetTestableNewSpacePersistEntity();
         destination.LearningSpaces = new List<LearningSpacePe>() {spacePe1, spacePe2};
-        destination.LearningPathWays = new List<LearningPathwayPe>();
-        destination.LearningPathWays.Add(new LearningPathwayPe(spacePe1, spacePe2));
+        destination.LearningPathways = new List<LearningPathwayPe> { new(spacePe1, spacePe2) };
+        spacePe1.OutBoundSpaces.Add(spacePe2);
+        spacePe2.InBoundSpaces.Add(spacePe1);
 
-        systemUnderTest.Map(destination, source);
-
-        TestWorld(source, true);
-        Assert.Multiple(() =>
         {
-            Assert.That(source.LearningSpaces, Has.Count.EqualTo(2));
-            Assert.That(source.LearningSpaces[0].LearningElements, Has.Count.EqualTo(1));
-            Assert.That(source.LearningSpaces[1].LearningElements, Has.Count.EqualTo(1));
-            Assert.That(source.LearningPathways, Has.Count.EqualTo(1));
-        });
+            systemUnderTest.Map(destination, source);
+            var sourceSpace1 = source.LearningSpaces[0];
+            var sourceSpace2 = source.LearningSpaces[1];
+
+            TestWorld(source, true);
+            Assert.Multiple(() =>
+            {
+                Assert.That(source.LearningSpaces, Has.Count.EqualTo(2));
+                Assert.That(sourceSpace1.LearningElements, Has.Count.EqualTo(1));
+                Assert.That(sourceSpace1.OutBoundSpaces, Does.Contain(sourceSpace2));
+                Assert.That(sourceSpace2.LearningElements, Has.Count.EqualTo(1));
+                Assert.That(sourceSpace2.InBoundSpaces, Does.Contain(sourceSpace1));
+                Assert.That(source.LearningPathways, Has.Count.EqualTo(1));
+            });
+        }
+
+        {
+            var newSource = systemUnderTest.Map<LearningWorld>(destination);
+            systemUnderTest.Map(destination, newSource);
+            var newSourceSpace1 = source.LearningSpaces[0];
+            var newSourceSpace2 = source.LearningSpaces[1];
+
+            TestWorld(newSource, true);
+            Assert.Multiple(() =>
+            {
+                Assert.That(newSource.LearningSpaces, Has.Count.EqualTo(2));
+                Assert.That(newSourceSpace1.LearningElements, Has.Count.EqualTo(1));
+                Assert.That(newSourceSpace1.OutBoundSpaces, Does.Contain(newSourceSpace2));
+                Assert.That(newSourceSpace2.LearningElements, Has.Count.EqualTo(1));
+                Assert.That(newSourceSpace2.InBoundSpaces, Does.Contain(newSourceSpace1));
+                Assert.That(newSource.LearningPathways, Has.Count.EqualTo(1));
+            });
+        }
     }
 
     /// <summary>
@@ -609,10 +641,10 @@ public class MappingProfileUt
     public void MapLearningWorldAndLearningWorldViewModel_WithSpaces_ObjectsStayEqual()
     {
         var elementVm1 =
-            new LearningElementViewModel("el1", Shortname, new LearningContentViewModel("foo", "bar", Content), Url, Authors,
+            new LearningElementViewModel("el1", Shortname, new LearningContentViewModel("foo", "bar", Filepath), Url, Authors,
                 Description, Goals, Difficulty);
         var elementVm2 =
-            new LearningElementViewModel("el2", Shortname, new LearningContentViewModel("foo", "bar", Content), Url, Authors,
+            new LearningElementViewModel("el2", Shortname, new LearningContentViewModel("foo", "bar", Filepath), Url, Authors,
                 Description, Goals, Difficulty);
 
         var space = new LearningSpaceViewModel("space", Shortname, Authors, Description, Goals, RequiredPoints,
@@ -713,17 +745,17 @@ public class MappingProfileUt
 
     private static LearningContent GetTestableContent()
     {
-        return new LearningContent(Name, Type, Content);
+        return new LearningContent(Name, Type, Filepath);
     }
 
     private static LearningContentViewModel GetTestableNewContentViewModel()
     {
-        return new LearningContentViewModel(NewName, NewType, NewContent);
+        return new LearningContentViewModel(NewName, NewType, NewFilepath);
     }
 
     private static LearningContentPe GetTestableNewContentPersistEntity()
     {
-        return new LearningContentPe(NewName, NewType, NewContent);
+        return new LearningContentPe(NewName, NewType, NewFilepath);
     }
 
     private static LearningElement GetTestableElementWithParent(LearningSpace parent, ElementType elementType)
@@ -1094,7 +1126,7 @@ public class MappingProfileUt
                 {
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(content.Type, Is.EqualTo(useNewFields ? NewType : Type));
-                    Assert.That(content.Content, Is.EqualTo(useNewFields ? NewContent : Content));
+                    Assert.That(content.Filepath, Is.EqualTo(useNewFields ? NewFilepath : Filepath));
                 });
                 break;
             case LearningContent content:
@@ -1102,7 +1134,7 @@ public class MappingProfileUt
                 {
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(content.Type, Is.EqualTo(useNewFields ? NewType : Type));
-                    Assert.That(content.Content, Is.EqualTo(useNewFields ? NewContent : Content));
+                    Assert.That(content.Filepath, Is.EqualTo(useNewFields ? NewFilepath : Filepath));
                 });
                 break;
             case LearningContentPe content:
@@ -1110,7 +1142,7 @@ public class MappingProfileUt
                 {
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(content.Type, Is.EqualTo(useNewFields ? NewType : Type));
-                    Assert.That(content.Content, Is.EqualTo(useNewFields ? NewContent : Content));
+                    Assert.That(content.Filepath, Is.EqualTo(useNewFields ? NewFilepath : Filepath));
                 });
                 break;
         }

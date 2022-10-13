@@ -11,7 +11,7 @@
     public ILogger<DropZone> Logger { get; set; } = null!;
 
     [Parameter, EditorRequired]
-    public EventCallback<Tuple<String, Stream>> OnNewStream { get; set; }
+    public EventCallback<Tuple<string, MemoryStream>> OnNewStream { get; set; }
 
 
     ElementReference dropZoneElement;
@@ -20,12 +20,12 @@
 
     async Task OnChange(InputFileChangeEventArgs eventArgs)
     {
-        Stream myS = new MemoryStream();
+        var myS = new MemoryStream();
         try
         {
             await eventArgs.File.OpenReadStream(1073741824L).CopyToAsync(myS);
             myS.Position = 0;
-            await OnNewStream.InvokeAsync(new Tuple<string, Stream>(eventArgs.File.Name, myS));
+            await OnNewStream.InvokeAsync(new Tuple<string, MemoryStream>(eventArgs.File.Name, myS));
         }
         catch (Exception e)
         {

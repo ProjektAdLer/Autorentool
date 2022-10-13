@@ -8,7 +8,7 @@ namespace Generator.DSL;
 
 public class CreateDsl : ICreateDsl
 {
-    public List<LearningElementPe> ListLearningElements;
+    public List<LearningElementPe> ContentListLearningElements;
     public List<LearningSpacePe> ListLearningSpaces;
     public LearningWorldJson? LearningWorldJson;
     private List<int> _listLearningSpaceContent;
@@ -35,7 +35,7 @@ public class CreateDsl : ICreateDsl
 
     private void Initialize()
     {
-        ListLearningElements = new List<LearningElementPe>();
+        ContentListLearningElements = new List<LearningElementPe>();
         ListLearningSpaces = new List<LearningSpacePe>();
         _listLearningSpaceContent = new List<int>();
         _requirements = new List<int>();
@@ -105,7 +105,7 @@ public class CreateDsl : ICreateDsl
                         ArgumentException e = new ArgumentException("The given LearningContent Type is not supported - in CreateDsl.");
                         break;
                 }
-                IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", element.Name);
+                IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", $"{element.Name}.{element.LearningContent.Type}");
                 List<LearningElementValueJson> learningElementValueList = new List<LearningElementValueJson>();
                 LearningElementValueJson learningElementValueJson = new LearningElementValueJson("Points", element.Points);
                 learningElementValueList.Add(learningElementValueJson);
@@ -113,9 +113,16 @@ public class CreateDsl : ICreateDsl
                 LearningElementJson learningElementJson = new LearningElementJson(learningSpaceElementId,
                     learningElementIdentifier, element.Url, elementCategory, element.LearningContent.Type, 
                     learningSpaceId, learningElementValueList, element.Description, element.Goals);
-                ListLearningElements.Add(element);
+
+                // Add Elements that have Content to the List, they will be copied at the end of the method.
+                if (element.LearningContent.Type != "url")
+                {
+                    ContentListLearningElements.Add(element);
+                }
                 
-                //int elementIndex = ListLearningElements.IndexOf(element) + 1;
+
+                
+                //int elementIndex = ContentListLearningElements.IndexOf(element) + 1;
                 _listLearningSpaceContent.Add(learningSpaceElementId);
                 learningSpaceElementId++;
                 LearningWorldJson.LearningElements.Add(learningElementJson);
@@ -162,19 +169,18 @@ public class CreateDsl : ICreateDsl
         
         //All LearningElements are created at the specified location = Easier access to files in further Export-Operations.
         //After the files are added to the Backup-Structure, these Files will be deleted.
-        foreach (var learningElement in ListLearningElements)
+        foreach (var learningElement in ContentListLearningElements)
         {
             try
             {
-                _fileSystem.File.WriteAllBytes(_fileSystem.Path.Join("XMLFilesForExport", learningElement.Name),
-                    learningElement.LearningContent.Content);
+                _fileSystem.File.Copy(learningElement.LearningContent.Filepath,
+                _fileSystem.Path.Join("XMLFilesForExport", $"{learningElement.Name}.{learningElement.LearningContent.Type}"));
             }
             catch (Exception e)
             {
                 Console.WriteLine("Something went wrong while creating the LearningElements for the Backup-Structure.");
                 throw;
             }
-
         }
 
         _fileSystem.File.WriteAllText(_dslPath, jsonFile);

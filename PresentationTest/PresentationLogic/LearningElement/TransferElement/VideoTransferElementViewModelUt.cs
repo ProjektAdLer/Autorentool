@@ -16,7 +16,7 @@ public class VideoTransferElementViewModelUt
         var name = "ppp";
         var shortname = "qqq";
         var parent = new LearningSpaceViewModel("rrr", "sss", "ttt", "", "", 2);
-        var content = new LearningContentViewModel("uuu", "vvv", new byte[] {0x08, 0x07});
+        var content = new LearningContentViewModel("uuu", "vvv", "");
         var url = "url";
         var authors = "www";
         var description = "xxx";

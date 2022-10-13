@@ -16,7 +16,7 @@ public class H5PActivationElementViewModelUt
         var name = "qwert";
         var shortname = "asdf";
         var parent = new LearningSpaceViewModel("foo", "bar", "baz", "", "", 2);
-        var content = new LearningContentViewModel("bar", "foo", new byte[] {0x01, 0x02});
+        var content = new LearningContentViewModel("bar", "foo", "");
         var url = "url";
         var authors = "trewq";
         var description = "fdsa";

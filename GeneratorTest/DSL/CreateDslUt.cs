@@ -4,7 +4,6 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using PersistEntities;
-using ILogger = Castle.Core.Logging.ILogger;
 
 namespace GeneratorTest.DSL;
 
@@ -16,6 +15,8 @@ public class CreateDslUt
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
+        mockFileSystem.AddFile("/foo/bar.txt", new MockFileData("barbaz"));
+        mockFileSystem.AddFile("/foo/foo.txt", new MockFileData("foo"));
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         mockFileSystem.AddDirectory(Path.Join(curWorkDir, "XMLFilesForExport"));
         mockFileSystem.AddFile(curWorkDir + "\\XMLFilesForExport\\LearningWorld.xml", new MockFileData(""));
@@ -28,12 +29,12 @@ public class CreateDslUt
         const string description = "very cool element";
         const string goals = "learn very many things";
         
-        var content1 = new LearningContentPe("FileName", "h5p", new byte[]{0x01,0x02});
-        var content2 = new LearningContentPe("FileName", "png", new byte[]{0x01,0x02});
-        var content3 = new LearningContentPe("FileName", "url", new byte[]{0x01,0x02});
-        var content4 = new LearningContentPe("FileName", "txt", new byte[]{0x01,0x02});
-        var content5 = new LearningContentPe("FileName", "pdf", new byte[]{0x01,0x02});
-        var content6 = new LearningContentPe("FileName", "mp3", new byte[]{0x01,0x02});
+        var content1 = new LearningContentPe("FileName", "h5p", "/foo/bar.txt");
+        var content2 = new LearningContentPe("FileName", "png", "/foo/bar.txt");
+        var content3 = new LearningContentPe("FileName", "url", "/foo/bar.txt");
+        var content4 = new LearningContentPe("FileName", "txt", "/foo/foo.txt");
+        var content5 = new LearningContentPe("FileName", "pdf", "/foo/foo.txt");
+        var content6 = new LearningContentPe("FileName", "mp3", "/foo/foo.txt");
 
         var ele1 = new LearningElementPe("a", "b",content1, "", "pupup", "g","h", 
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
@@ -63,7 +64,7 @@ public class CreateDslUt
 
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
         
-        var learningElementsList = new List<LearningElementPe> { ele1, ele2, ele3, ele4, ele5, ele6 };
+        var learningElementsWithContentList = new List<LearningElementPe> { ele1, ele2, ele4, ele5, ele6 };
 
         //Act
         systemUnderTest.WriteLearningWorld(learningWorld);
@@ -78,7 +79,7 @@ public class CreateDslUt
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.LearningWorldJson!.Identifier.Value, Is.EqualTo(name));
-            Assert.That(systemUnderTest.ListLearningElements, Is.EquivalentTo(learningElementsList));
+            Assert.That(systemUnderTest.ContentListLearningElements, Is.EquivalentTo(learningElementsWithContentList));
             Assert.That(systemUnderTest.ListLearningSpaces, Is.EquivalentTo(learningSpaces));
             Assert.That(systemUnderTest.LearningWorldJson.LearningSpaces[0].Requirements,
                 Is.EqualTo(new List<int>()));

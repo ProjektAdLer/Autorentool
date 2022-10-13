@@ -653,7 +653,7 @@ public class TestParameter
         SpaceParent = new LearningSpace("l", "m", "n", "o", "p", 0);
         Name = "a";
         ShortName = "b";
-        Content = new("bar", "foo", new byte[] {0x01, 0x02});
+        Content = new LearningContent("bar", "foo", "");
         Url = "http://www.google.de";
         Authors = "d";
         Description = "e";

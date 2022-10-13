@@ -5,7 +5,7 @@ using Presentation.PresentationLogic.LearningElement;
 
 namespace Presentation.PresentationLogic.LearningSpace;
 
-public interface ILearningSpacePresenter
+public interface ILearningSpacePresenter : INotifyPropertyChanged
 {
     void EditLearningSpace(string name, string shortname, string authors, string description, string goals, int requiredPoints);
     bool EditLearningSpaceDialogOpen { get; set; }

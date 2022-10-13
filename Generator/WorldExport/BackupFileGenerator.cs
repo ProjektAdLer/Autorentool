@@ -59,7 +59,12 @@ public class BackupFileGenerator : IBackupFileGenerator
         using (var gzoStream = new GZipOutputStream(outStream))
         using (var tarArchive = TarArchive.CreateOutputTarArchive(gzoStream))
         {
-            tarArchive.RootPath = tempDir;
+            //we need to remove the first slash from our rootDir, because absolute paths are not allowed in the tar entries
+            //and the sharpziplib removes them from the entry names. this is a bug in the library.
+            var rootDir = tempDir;
+            while(rootDir.StartsWith("/"))
+                rootDir = rootDir.Substring(1);
+            tarArchive.RootPath = rootDir;
             SaveDirectoryToTar(tarArchive, tempDir, true);
         }
 
@@ -95,14 +100,14 @@ public class BackupFileGenerator : IBackupFileGenerator
         var directories = _fileSystem.Directory.EnumerateDirectories(source, "*", SearchOption.AllDirectories);
         foreach (var directory in directories)
         {
-            var directoryName = directory.Remove(0, _fileSystem.Path.Join(source, "\\").Length);
-            _fileSystem.Directory.CreateDirectory(_fileSystem.Path.Combine(targetPrefix, directoryName));
+            var relativeDirectoryPath = _fileSystem.Path.GetRelativePath(source, directory);
+            _fileSystem.Directory.CreateDirectory(_fileSystem.Path.Combine(targetPrefix, relativeDirectoryPath));
         }
         var files = _fileSystem.Directory.EnumerateFiles(source, "*", SearchOption.AllDirectories);
-        foreach (var file in files) 
+        foreach (var file in files)
         {
-            var filename = file.Remove(0, _fileSystem.Path.Join(source, "\\").Length);
-            _fileSystem.File.Copy(file, _fileSystem.Path.Combine(targetPrefix, filename));
+            var relativeFilepath = _fileSystem.Path.GetRelativePath(source, file);
+            _fileSystem.File.Copy(file, _fileSystem.Path.Combine(targetPrefix, relativeFilepath));
         }
     }
     

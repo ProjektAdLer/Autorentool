@@ -14,7 +14,7 @@ public class ImageTransferElementUt
         var name = "asdf";
         var shortname = "jkl;";
         var parent = new LearningSpace("foo", "bar", "", "", "", 3);
-        var content = new LearningContent("a", "b", Array.Empty<byte>());
+        var content = new LearningContent("a", "b", "");
         var url = "url";
         var authors = "ben and jerry";
         var description = "very cool element";

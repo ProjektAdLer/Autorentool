@@ -12,7 +12,7 @@ public class LearningElementUt
     {
         var name = "asdf";
         var shortname = "jkl;";
-        var content = new LearningContent("a", "b", Array.Empty<byte>());
+        var content = new LearningContent("a", "b", "");
         var authors = "ben and jerry";
         var url = "url";
         var description = "very cool element";
@@ -49,7 +49,7 @@ public class LearningElementUt
         var name = "asdf";
         var shortname = "jkl;";
         var parent = new LearningSpace("foo", "bar", "", "", "", 3);
-        var content = new LearningContent("a", "b", Array.Empty<byte>());
+        var content = new LearningContent("a", "b", "");
         var url = "url";
         var authors = "ben and jerry";
         var description = "very cool element";
@@ -87,7 +87,7 @@ public class LearningElementUt
         var name = "asdf";
         var shortname = "jkl;";
         var parent = new LearningSpace("foo", "bar", "", "", "", 4);
-        var content = new LearningContent("a", "b", new byte[]{0x05,0x06});
+        var content = new LearningContent("a", "b", "");
         var url = "url";
         var authors = "ben and jerry";
         var description = "very cool element";
@@ -105,7 +105,7 @@ public class LearningElementUt
         
         var nameChanged = "qwertz";
         var shortnameChanged = "uiop";
-        var contentChanged = new LearningContent("b", "c", new byte[] {0x03, 0x04});
+        var contentChanged = new LearningContent("b", "c", "");
         var urlChanged = "urlChanged";
         var authorsChanged = "sdfg";
         var descriptionChanged = "changed description";
@@ -169,7 +169,7 @@ public class LearningElementUt
         var name = "asdf";
         var shortname = "jkl;";
         var parent = new LearningSpace("foo", "bar", "", "", "", 4);
-        var content = new LearningContent("a", "b", new byte[]{0x05,0x06});
+        var content = new LearningContent("a", "b", "");
         var url = "url";
         var authors = "ben and jerry";
         var description = "very cool element";

@@ -17,7 +17,7 @@ public class H5PTestElementViewModelUt
         var shortname = "stt";
         var parent = new LearningSpaceViewModel("uuv", "vww", "xxy", "", "", 2);
         var url = "url";
-        var content = new LearningContentViewModel("yzz", "aaa", new byte[] {0x04, 0x05});
+        var content = new LearningContentViewModel("yzz", "aaa", "");
         var authors = "bbb";
         var description = "ccc";
         var goals = "ddd";

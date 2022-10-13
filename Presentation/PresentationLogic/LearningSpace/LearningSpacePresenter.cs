@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
@@ -22,7 +23,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 
     private readonly IPresentationLogic _presentationLogic;
     private readonly ILogger<LearningSpacePresenter> _logger;
-    
+    private bool _createLearningElementDialogOpen;
     private int _creationCounter = 0;
 
     public ILearningSpaceViewModel? LearningSpaceVm { get; private set; }
@@ -40,7 +41,12 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     public IDictionary<string, string>? EditLearningSpaceDialogInitialValues { get; private set; }
     public bool EditLearningElementDialogOpen { get; set; }
     public IDictionary<string, string>? EditLearningElementDialogInitialValues { get; private set; }
-    public bool CreateLearningElementDialogOpen { get; set; }
+
+    public bool CreateLearningElementDialogOpen
+    {
+        get => _createLearningElementDialogOpen;
+        set => SetField(ref _createLearningElementDialogOpen, value);
+    }
     
     public event Action OnUndoRedoPerformed
     {
@@ -226,7 +232,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
             }
             else if (contentType == ContentTypeEnum.Video)
             {
-                learningContent = new LearningContentViewModel("url", "url", Array.Empty<byte>());
+                learningContent = new LearningContentViewModel("url", "url", "");
             }
             else
             {
@@ -364,4 +370,19 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     }
 
     #endregion
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        field = value;
+        OnPropertyChanged(propertyName);
+        return true;
+    }
 }

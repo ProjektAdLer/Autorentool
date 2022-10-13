@@ -68,8 +68,8 @@ public class BackupFileGeneratorUt
         var tempDir = backupFileGen.GetTempDir();
 
         //Act
-        backupFileGen.DirectoryCopy("XMLFilesForExport", tempDir);
         var fullDirPath = mockFileSystem.Path.GetFullPath("XMLFilesForExport");
+        backupFileGen.DirectoryCopy(fullDirPath, tempDir);
         
         //Assert
         var copiedDirectory = mockFileSystem.Directory.GetDirectories(mockFileSystem.Directory.GetCurrentDirectory());
