@@ -61,7 +61,7 @@ public class DraggableLearningElementUt
         });
         var childContent = _ctx.Render((RenderFragment)stub.Instance.Parameters[nameof(Draggable<ILearningElementViewModel>.ChildContent)]);
         childContent.MarkupMatches(
-            @"<rect height=""50"" width=""100"" style=""fill:lightblue""></rect>" +
+            @"<rect height=""50"" width=""100"" style=""fill:lightblue;stroke:black""></rect>" +
             @"<polygon transform=""translate(75,1)"" fill=""yellow"" points=""13 1 5 25 24 10 2 10 21 25""></polygon>" +
             @$"<text x=""3"" y=""15"">{learningElement.Name}</text>");
     }

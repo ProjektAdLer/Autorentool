@@ -5,7 +5,7 @@
 @using Shared
 <Draggable LearningObject="LearningElement" OnClicked="@OnClicked"
            @bind-X="@LearningElement.PositionX" @bind-Y="@LearningElement.PositionY">
-    <rect height="50" width="100" style="fill:lightblue"></rect>
+    <rect height="50" width="100" style="fill:lightblue;stroke: black"></rect>
     <polygon transform="translate(75,1)" fill="@PolygonColor"
              points="@PolygonPoints"></polygon>
     <text x="3" y="15">@LearningElement.Name</text>
