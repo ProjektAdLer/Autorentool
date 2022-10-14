@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Presentation.Components;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
@@ -54,9 +55,9 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         remove => _presentationLogic.OnUndoRedoPerformed -= value;
     }
 
-    public void DragLearningElement((ILearningElementViewModel, double, double) obj)
+    public void DragLearningElement(object sender, DraggedEventArgs<ILearningElementViewModel> args)
     {
-        _presentationLogic.DragLearningElement(obj.Item1, obj.Item2, obj.Item3);
+        _presentationLogic.DragLearningElement(args.LearningObject, args.OldPositionX, args.OldPositionY);
     }
 
     public void SetLearningSpace(ILearningSpaceViewModel space)

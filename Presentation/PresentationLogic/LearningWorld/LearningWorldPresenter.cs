@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using Presentation.Components;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
@@ -96,9 +97,9 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         remove => _presentationLogic.OnUndoRedoPerformed -= value;
     }
 
-    public void DragLearningSpace((ILearningSpaceViewModel, double, double) obj)
+    public void DragLearningSpace(object sender, DraggedEventArgs<ILearningSpaceViewModel> args)
     {
-        _presentationLogic.DragLearningSpace(obj.Item1, obj.Item2, obj.Item3);
+        _presentationLogic.DragLearningSpace(args.LearningObject, args.OldPositionX, args.OldPositionY);
     }
 
     public void AddNewLearningSpace()

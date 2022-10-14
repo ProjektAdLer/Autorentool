@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using Presentation.Components;
 using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningSpace;
@@ -27,5 +28,5 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     void AddNewLearningSpace();
     void OnWorkspacePropertyChanged(object? caller, PropertyChangedEventArgs e);
     event Action OnUndoRedoPerformed;
-    void DragLearningSpace((ILearningSpaceViewModel, double, double) obj);
+    void DragLearningSpace(object sender, DraggedEventArgs<ILearningSpaceViewModel> draggedEventArgs);
 }

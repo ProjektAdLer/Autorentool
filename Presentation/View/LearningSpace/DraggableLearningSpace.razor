@@ -29,7 +29,8 @@
     [Parameter, EditorRequired]
     public EventCallback<ILearningSpaceViewModel> OnClickedDraggable { get; set; }
     [Parameter, EditorRequired]
-    public EventCallback<(ILearningSpaceViewModel, double, double)> OnDraggedDraggable { get; set; }
+    public DraggedEventArgs<ILearningSpaceViewModel>.DraggedEventHandler? OnDraggedDraggable { get; set; }
+    // public EventCallback<Draggable<ILearningSpaceViewModel>.DraggedEventArgs> OnDraggedDraggable { get; set; }
     [Parameter, EditorRequired]
     public EventCallback<ILearningSpaceViewModel> OnClickedClickable { get; set; }
     // Overwrite nullability warning below because service may never be null -n.stich

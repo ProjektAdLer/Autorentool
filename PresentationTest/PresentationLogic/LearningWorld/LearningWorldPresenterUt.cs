@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.Components;
 using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningSpace;
@@ -50,7 +51,7 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.DragLearningSpace((space, oldPositionX, oldPositionY));
+        systemUnderTest.DragLearningSpace(space, new DraggedEventArgs<ILearningSpaceViewModel> (space, oldPositionX, oldPositionY));
 
         presentationLogic.Received().DragLearningSpace(space, oldPositionX, oldPositionY);
     }

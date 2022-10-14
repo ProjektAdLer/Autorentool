@@ -19,7 +19,8 @@
     [Parameter, EditorRequired]
     public EventCallback<ILearningElementViewModel> OnClicked { get; set; }
     [Parameter, EditorRequired]
-    public EventCallback<(ILearningElementViewModel, double, double)> OnDragged { get; set; }
+    public DraggedEventArgs<ILearningElementViewModel>.DraggedEventHandler? OnDragged { get; set; }
+    // public EventCallback<Draggable<ILearningElementViewModel>.DraggedEventArgs> OnDragged { get; set; }
 
     private string? PolygonPoints { get; set; }
     private string? PolygonColor { get; set; }

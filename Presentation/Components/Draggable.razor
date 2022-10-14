@@ -39,7 +39,8 @@
     public EventCallback<T> OnClicked { get; set; }
     
     [Parameter]
-    public EventCallback<(T, double, double)> OnDragged { get; set; }
+    public DraggedEventArgs<T>.DraggedEventHandler OnDragged { get; set; }
+    
 
     //cursorX and cursorY are used to remove the offset between cursor and element on move, so we only get a delta
     private double _cursorX;
@@ -117,9 +118,9 @@
         return OnClicked.InvokeAsync(LearningObject);
     }
     
-    private Task OnDrag(object? sender, MouseEventArgs e)
+    private void OnDrag(object? sender, MouseEventArgs e)
     {
-        return OnDragged.InvokeAsync((LearningObject, _oldPositionX, _oldPositionY));
+        if(LearningObject != null) OnDragged?.Invoke(LearningObject, new DraggedEventArgs<T>(LearningObject, _oldPositionX, _oldPositionY));
     }
 
     public void Dispose()
