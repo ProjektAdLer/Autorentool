@@ -1,8 +1,5 @@
-using System.Collections;
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
-using System.Reflection;
-using System.Runtime.Serialization;
 using DataAccess.Persistence;
 using FluentAssertions;
 using Microsoft.Extensions.Logging;
@@ -32,11 +29,11 @@ public class PersistenceCt
         world.LearningSpaces.Add(space);
 
         using var stream = new MemoryStream();
-        var saveHandler = CreateTestableFileSaveHandler<LearningWorldPe>();
+        var systemUnderTest = CreateTestableFileSaveHandler<LearningWorldPe>();
         
-        saveHandler.SaveToStream(world, stream);
+        systemUnderTest.SaveToStream(world, stream);
         stream.Position = 0;
-        var restoredWorld = saveHandler.LoadFromStream(stream);
+        var restoredWorld = systemUnderTest.LoadFromStream(stream);
         
         restoredWorld.Should().BeEquivalentTo(world, options => options.IgnoringCyclicReferences());
     }
@@ -50,11 +47,11 @@ public class PersistenceCt
         space.LearningElements.Add(element);
         
         using var stream = new MemoryStream();
-        var saveHandler = CreateTestableFileSaveHandler<LearningSpacePe>();
+        var systemUnderTest = CreateTestableFileSaveHandler<LearningSpacePe>();
         
-        saveHandler.SaveToStream(space, stream);
+        systemUnderTest.SaveToStream(space, stream);
         stream.Position = 0;
-        var restoredSpace = saveHandler.LoadFromStream(stream);
+        var restoredSpace = systemUnderTest.LoadFromStream(stream);
         
         restoredSpace.Should().BeEquivalentTo(space);
     }
@@ -66,11 +63,11 @@ public class PersistenceCt
         var element = new LearningElementPe("le", "la", content, "url","ll", "ll", "lll", LearningElementDifficultyEnumPe.Easy);
         
         using var stream = new MemoryStream();
-        var saveHandler = CreateTestableFileSaveHandler<LearningElementPe>();
+        var systemUnderTest = CreateTestableFileSaveHandler<LearningElementPe>();
         
-        saveHandler.SaveToStream(element, stream);
+        systemUnderTest.SaveToStream(element, stream);
         stream.Position = 0;
-        var restoredElement = saveHandler.LoadFromStream(stream);
+        var restoredElement = systemUnderTest.LoadFromStream(stream);
 
         restoredElement.Should().BeEquivalentTo(element);
     }
@@ -92,10 +89,10 @@ public class PersistenceCt
         world.LearningPathways.Add(new LearningPathwayPe(space1, space2));
         var mockFileSystem = new MockFileSystem();
 
-        var saveHandler = CreateTestableFileSaveHandler<LearningWorldPe>(fileSystem:mockFileSystem);
+        var systemUnderTest = CreateTestableFileSaveHandler<LearningWorldPe>(fileSystem:mockFileSystem);
         
-        saveHandler.SaveToDisk(world, FilePath);
-        var restoredWorld = saveHandler.LoadFromDisk(FilePath);
+        systemUnderTest.SaveToDisk(world, FilePath);
+        var restoredWorld = systemUnderTest.LoadFromDisk(FilePath);
         
         restoredWorld.Should().BeEquivalentTo(world, options => options.IgnoringCyclicReferences());
         Assert.That(restoredWorld.LearningSpaces[0].OutBoundSpaces, Does.Contain(restoredWorld.LearningSpaces[1]));
@@ -111,11 +108,25 @@ public class PersistenceCt
         space.LearningElements.Add(element);
         var mockFileSystem = new MockFileSystem();
         
-        var saveHandler = CreateTestableFileSaveHandler<LearningSpacePe>(fileSystem:mockFileSystem);
+        var systemUnderTest = CreateTestableFileSaveHandler<LearningSpacePe>(fileSystem:mockFileSystem);
         
-        saveHandler.SaveToDisk(space, FilePath);
-        var restoredSpace = saveHandler.LoadFromDisk(FilePath);
+        systemUnderTest.SaveToDisk(space, FilePath);
+        var restoredSpace = systemUnderTest.LoadFromDisk(FilePath);
         
+        restoredSpace.Should().BeEquivalentTo(space);
+    }
+
+    [Test]
+    public void Persistence_SaveAndLoadSpace_File_WithAllElementTypes_ObjectsAreEquivalent()
+    {
+        var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
+        space.LearningElements.AddRange(GetAllLearningElementTypes());
+        
+        var systemUnderTest = CreateTestableFileSaveHandler<LearningSpacePe>();
+        
+        systemUnderTest.SaveToDisk(space, FilePath);
+        var restoredSpace = systemUnderTest.LoadFromDisk(FilePath);
+
         restoredSpace.Should().BeEquivalentTo(space);
     }
     
@@ -126,12 +137,45 @@ public class PersistenceCt
         var element = new LearningElementPe("le", "la", content, "url","ll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
         var mockFileSystem = new MockFileSystem();
 
-        var saveHandler = CreateTestableFileSaveHandler<LearningElementPe>(fileSystem:mockFileSystem);
+        var systemUnderTest = CreateTestableFileSaveHandler<LearningElementPe>(fileSystem:mockFileSystem);
         
-        saveHandler.SaveToDisk(element, FilePath);
-        var restoredElement = saveHandler.LoadFromDisk(FilePath);
+        systemUnderTest.SaveToDisk(element, FilePath);
+        var restoredElement = systemUnderTest.LoadFromDisk(FilePath);
 
         restoredElement.Should().BeEquivalentTo(element);
+    }
+
+    [Test]
+    [TestCaseSource(nameof(GetAllLearningElementTypes))]
+    public void Persistence_SaveAndLoadElement_File_SerializationWorksForEveryType(LearningElementPe lep)
+    {
+        var systemUnderTest = CreateTestableFileSaveHandler<LearningElementPe>();
+        
+        systemUnderTest.SaveToDisk(lep, "element.aef");
+        var restoredLep = systemUnderTest.LoadFromDisk("element.aef");
+
+        restoredLep.Should().BeEquivalentTo(lep);
+    }
+
+    static IEnumerable<LearningElementPe> GetAllLearningElementTypes()
+    {
+        var content = new LearningContentPe("a", "b", "");
+        yield return new H5PActivationElementPe("h5pAct", "asdf", content, "", "me :)", "description", "a goal",
+            LearningElementDifficultyEnumPe.Easy, 123, 42, 0, 0);
+        yield return new H5PInteractionElementPe("h5pInt", "blabla", content, "", "me :)", "description", "a goal",
+            LearningElementDifficultyEnumPe.Medium, 123, 42, 0, 0);
+        yield return new H5PTestElementPe("h5pTest", "bababubu", content, "", "me :)", "description", "a goal",
+            LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0);
+        yield return new ImageTransferElementPe("imgTrans", "bababubu", content, "", "me :)", "description", "a goal",
+            LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0);
+        yield return new PdfTransferElementPe("pdfTrans", "bababubu", content, "", "me :)", "description", "a goal",
+            LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0);
+        yield return new TextTransferElementPe("txtTrans", "bababubu", content, "", "me :)", "description", "a goal",
+            LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0);
+        yield return new VideoActivationElementPe("vidAct", "bababubu", content, "", "me :)", "description", "a goal",
+            LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0);
+        yield return new VideoTransferElementPe("vidTrans", "bababubu", content, "", "me :)", "description", "a goal",
+            LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0);
     }
 
     [Test]
@@ -149,11 +193,11 @@ public class PersistenceCt
         
         var mockFileSystem = new MockFileSystem();
 
-        var saveHandler = CreateTestableFileSaveHandler<LearningWorldPe>(fileSystem:mockFileSystem);
+        var systemUnderTest = CreateTestableFileSaveHandler<LearningWorldPe>(fileSystem:mockFileSystem);
         
-        saveHandler.SaveToDisk(world, "foobar.txt");
+        systemUnderTest.SaveToDisk(world, "foobar.txt");
 
-        var actual = saveHandler.LoadFromDisk("foobar.txt");
+        var actual = systemUnderTest.LoadFromDisk("foobar.txt");
         
         Assert.That(actual.LearningSpaces[0].LearningElements.First(), Is.EqualTo(actual.LearningSpaces[1].LearningElements.First()));
     }
@@ -175,11 +219,11 @@ public class PersistenceCt
         
         var mockFileSystem = new MockFileSystem();
 
-        var saveHandler = CreateTestableFileSaveHandler<LearningWorldPe>(fileSystem:mockFileSystem);
+        var systemUnderTest = CreateTestableFileSaveHandler<LearningWorldPe>(fileSystem:mockFileSystem);
         
-        saveHandler.SaveToDisk(world, "foobar.txt");
+        systemUnderTest.SaveToDisk(world, "foobar.txt");
 
-        var actual = saveHandler.LoadFromDisk("foobar.txt");
+        var actual = systemUnderTest.LoadFromDisk("foobar.txt");
         
         Assert.That(actual.LearningSpaces[0].LearningElements.First(), Is.Not.EqualTo(actual.LearningSpaces[1].LearningElements.First()));
     }
