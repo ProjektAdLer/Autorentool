@@ -4,14 +4,6 @@ namespace PersistEntities;
 
 [Serializable]
 [DataContract]
-[KnownType(typeof(H5PActivationElementPe))]
-[KnownType(typeof(H5PInteractionElementPe))]
-[KnownType(typeof(H5PTestElementPe))]
-[KnownType(typeof(ImageTransferElementPe))]
-[KnownType(typeof(PdfTransferElementPe))]
-[KnownType(typeof(TextTransferElementPe))]
-[KnownType(typeof(VideoActivationElementPe))]
-[KnownType(typeof(VideoTransferElementPe))]
 public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
 {
     public LearningSpacePe(string name, string shortname, string authors, string description, string goals,
