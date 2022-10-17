@@ -22,9 +22,12 @@ public class PersistenceCt
     {
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
             "Description", "Goals");
+        var initialWorldId = world.Id;
         var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
+        var initialSpaceId = space.Id;
         var content = new LearningContentPe("a", "b", "");
         var element = new LearningElementPe("le", "la", content, "url","lll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
+        var initialElementId = element.Id;
         space.LearningElements.Add(element);
         world.LearningSpaces.Add(space);
 
@@ -35,15 +38,27 @@ public class PersistenceCt
         stream.Position = 0;
         var restoredWorld = systemUnderTest.LoadFromStream(stream);
         
-        restoredWorld.Should().BeEquivalentTo(world, options => options.IgnoringCyclicReferences());
+        restoredWorld.Should().BeEquivalentTo(world, options => options.IgnoringCyclicReferences()
+            .Excluding(obj => obj.Id)
+            .For(obj => obj.LearningSpaces).Exclude(obj => obj.Id)
+            .For(obj => obj.LearningSpaces).Exclude(obj => obj.InBoundSpaces)
+            .For(obj => obj.LearningSpaces).Exclude(obj => obj.OutBoundSpaces)
+            .For(obj => obj.LearningSpaces).For(obj => obj.LearningElements).Exclude(obj => obj.Id)
+            .Excluding(obj => obj.LearningPathways));
+
+        Assert.That(initialWorldId, Is.Not.EqualTo(restoredWorld.Id));
+        Assert.That(initialSpaceId, Is.Not.EqualTo(restoredWorld.LearningSpaces.First().Id));
+        Assert.That(initialElementId, Is.Not.EqualTo(restoredWorld.LearningSpaces.First().LearningElements.First().Id));
     }
     
     [Test]
     public void Persistence_SaveAndLoadSpace_Stream_ObjectsAreEquivalent()
     {
         var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
+        var initialSpaceId = space.Id;
         var content = new LearningContentPe("a", "b", "");
         var element = new LearningElementPe("le", "la", content,"url","ll", "l" ,"lll", LearningElementDifficultyEnumPe.Easy);
+        var initialElementId = element.Id;
         space.LearningElements.Add(element);
         
         using var stream = new MemoryStream();
@@ -53,7 +68,10 @@ public class PersistenceCt
         stream.Position = 0;
         var restoredSpace = systemUnderTest.LoadFromStream(stream);
         
-        restoredSpace.Should().BeEquivalentTo(space);
+        restoredSpace.Should().BeEquivalentTo(space, options => options.Excluding(obj => obj.Id)
+            .For(obj => obj.LearningElements).Exclude(obj => obj.Id));
+        Assert.That(initialSpaceId, Is.Not.EqualTo(restoredSpace.Id));
+        Assert.That(initialElementId, Is.Not.EqualTo(restoredSpace.LearningElements.First().Id));
     }
     
     [Test]
@@ -61,6 +79,7 @@ public class PersistenceCt
     {
         var content = new LearningContentPe("a", "b", "");
         var element = new LearningElementPe("le", "la", content, "url","ll", "ll", "lll", LearningElementDifficultyEnumPe.Easy);
+        var initialElementId = element.Id;
         
         using var stream = new MemoryStream();
         var systemUnderTest = CreateTestableFileSaveHandler<LearningElementPe>();
@@ -69,7 +88,8 @@ public class PersistenceCt
         stream.Position = 0;
         var restoredElement = systemUnderTest.LoadFromStream(stream);
 
-        restoredElement.Should().BeEquivalentTo(element);
+        restoredElement.Should().BeEquivalentTo(element, options => options.Excluding(obj => obj.Id));
+        Assert.That(initialElementId, Is.Not.EqualTo(restoredElement.Id));
     }
 
     [Test]
@@ -77,10 +97,14 @@ public class PersistenceCt
     {
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
             "Description", "Goals");
+        var initialWorldId = world.Id;
         var space1 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
+        var initialSpace1Id = space1.Id;
         var space2 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
+        var initialSpace2Id = space2.Id;
         var content = new LearningContentPe("a", "b", "");
         var element = new LearningElementPe("le", "la", content, "url","lll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
+        var initialElementId = element.Id;
         space1.LearningElements.Add(element);
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
@@ -93,18 +117,34 @@ public class PersistenceCt
         
         systemUnderTest.SaveToDisk(world, FilePath);
         var restoredWorld = systemUnderTest.LoadFromDisk(FilePath);
-        
-        restoredWorld.Should().BeEquivalentTo(world, options => options.IgnoringCyclicReferences());
+
+        restoredWorld.Should().BeEquivalentTo(world, options => options.IgnoringCyclicReferences()
+            .Excluding(obj => obj.Id)
+            .For(obj => obj.LearningSpaces).Exclude(obj => obj.Id)
+            .For(obj => obj.LearningSpaces).Exclude(obj => obj.InBoundSpaces)
+            .For(obj => obj.LearningSpaces).Exclude(obj => obj.OutBoundSpaces)
+            .For(obj => obj.LearningSpaces).For(obj => obj.LearningElements)
+            .Exclude(obj => obj.Id)
+            .Excluding(obj => obj.LearningPathways));
         Assert.That(restoredWorld.LearningSpaces[0].OutBoundSpaces, Does.Contain(restoredWorld.LearningSpaces[1]));
         Assert.That(restoredWorld.LearningSpaces[1].InBoundSpaces, Does.Contain(restoredWorld.LearningSpaces[0]));
+        Assert.That(restoredWorld.LearningPathways[0].SourceSpace, Is.EqualTo(restoredWorld.LearningSpaces[0]));
+        Assert.That(restoredWorld.LearningPathways[0].TargetSpace, Is.EqualTo(restoredWorld.LearningSpaces[1]));
+        
+        Assert.That(initialWorldId, Is.Not.EqualTo(restoredWorld.Id));
+        Assert.That(initialSpace1Id, Is.Not.EqualTo(restoredWorld.LearningSpaces.First().Id));
+        Assert.That(initialSpace2Id, Is.Not.EqualTo(restoredWorld.LearningSpaces.Last().Id));
+        Assert.That(initialElementId, Is.Not.EqualTo(restoredWorld.LearningSpaces.First().LearningElements.First().Id));
     }
     
     [Test]
     public void Persistence_SaveAndLoadSpace_File_ObjectsAreEquivalent()
     {
         var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
+        var initialSpaceId = space.Id;
         var content = new LearningContentPe("a", "b", "");
         var element = new LearningElementPe("le", "la", content, "url","ll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
+        var initialElementId = element.Id;
         space.LearningElements.Add(element);
         var mockFileSystem = new MockFileSystem();
         
@@ -113,7 +153,10 @@ public class PersistenceCt
         systemUnderTest.SaveToDisk(space, FilePath);
         var restoredSpace = systemUnderTest.LoadFromDisk(FilePath);
         
-        restoredSpace.Should().BeEquivalentTo(space);
+        restoredSpace.Should().BeEquivalentTo(space, options => options.Excluding(obj => obj.Id)
+            .For(obj => obj.LearningElements).Exclude(obj => obj.Id));
+        Assert.That(initialSpaceId, Is.Not.EqualTo(restoredSpace.Id));
+        Assert.That(initialElementId, Is.Not.EqualTo(restoredSpace.LearningElements.First().Id));
     }
 
     [Test]
@@ -127,7 +170,8 @@ public class PersistenceCt
         systemUnderTest.SaveToDisk(space, FilePath);
         var restoredSpace = systemUnderTest.LoadFromDisk(FilePath);
 
-        restoredSpace.Should().BeEquivalentTo(space);
+        restoredSpace.Should().BeEquivalentTo(space, options => options.Excluding(obj => obj.Id)
+            .For(obj => obj.LearningElements).Exclude(obj => obj.Id));
     }
     
     [Test]
@@ -135,6 +179,7 @@ public class PersistenceCt
     {
         var content = new LearningContentPe("a", "b", "");
         var element = new LearningElementPe("le", "la", content, "url","ll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
+        var initialElementId = element.Id;
         var mockFileSystem = new MockFileSystem();
 
         var systemUnderTest = CreateTestableFileSaveHandler<LearningElementPe>(fileSystem:mockFileSystem);
@@ -142,7 +187,8 @@ public class PersistenceCt
         systemUnderTest.SaveToDisk(element, FilePath);
         var restoredElement = systemUnderTest.LoadFromDisk(FilePath);
 
-        restoredElement.Should().BeEquivalentTo(element);
+        restoredElement.Should().BeEquivalentTo(element, options => options.Excluding(obj => obj.Id));
+        Assert.That(initialElementId, Is.Not.EqualTo(restoredElement.Id));
     }
 
     [Test]
@@ -154,7 +200,7 @@ public class PersistenceCt
         systemUnderTest.SaveToDisk(lep, "element.aef");
         var restoredLep = systemUnderTest.LoadFromDisk("element.aef");
 
-        restoredLep.Should().BeEquivalentTo(lep);
+        restoredLep.Should().BeEquivalentTo(lep, options => options.Excluding(obj => obj.Id));
     }
 
     static IEnumerable<LearningElementPe> GetAllLearningElementTypes()

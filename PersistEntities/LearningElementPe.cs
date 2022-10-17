@@ -18,6 +18,7 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
         string authors, string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload = 0,
         int points = 0, double positionX = 0, double positionY = 0)
     {
+        Id = Guid.NewGuid();
         Name = name;
         Shortname = shortname;
         LearningContent = learningContent ?? new LearningContentPe();
@@ -36,6 +37,7 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
     /// </summary>
     internal LearningElementPe()
     {
+        Id = Guid.Empty;
         Name = "";
         Shortname = "";
         LearningContent = new LearningContentPe();
@@ -49,7 +51,8 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
         PositionX = 0;
         PositionY = 0;
     }
-
+    [IgnoreDataMember]
+    public Guid Id { get; set; }
     [DataMember]
     public string Name { get; set; }
     [DataMember]
@@ -75,5 +78,11 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
     [DataMember]
     public double PositionY { get; set; }
     ExtensionDataObject? IExtensibleDataObject.ExtensionData { get; set; }
+
+    [OnDeserializing]
+    private void OnDeserializing(StreamingContext context)
+    {
+        Id = Guid.NewGuid();
+    }
 }
 

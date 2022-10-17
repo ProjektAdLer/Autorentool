@@ -43,7 +43,7 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
         PositionY = 0;
     }
 
-    [DataMember]
+    [IgnoreDataMember]
     public Guid Id { get; set; }
     [DataMember]
     public string Name { get; set; }
@@ -72,6 +72,7 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
     [OnDeserializing]
     private void OnDeserializing(StreamingContext context)
     {
+        Id = Guid.NewGuid();
         InBoundSpaces = new List<LearningSpacePe>();
         OutBoundSpaces = new List<LearningSpacePe>();
     }

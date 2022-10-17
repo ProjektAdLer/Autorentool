@@ -9,6 +9,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
     public LearningWorldPe(string name, string shortname, string authors, string language, string description,
         string goals, List<LearningSpacePe>? learningSpaces = null,  List<LearningPathwayPe>? learningPathWays = null)
     {
+        Id = Guid.NewGuid();
         Name = name;
         Shortname = shortname;
         Authors = authors;
@@ -24,6 +25,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
     /// </summary>
     private LearningWorldPe()
     {
+        Id = Guid.Empty;
         Name = "";
         Shortname = "";
         Authors = "";
@@ -33,6 +35,9 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         LearningSpaces = new List<LearningSpacePe>();
         LearningPathways = new List<LearningPathwayPe>();
     }
+    
+    [IgnoreDataMember]
+    public Guid Id { get; set; }
 
     [DataMember]
     public List<LearningSpacePe> LearningSpaces { get; set; }
@@ -53,8 +58,9 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
     ExtensionDataObject? IExtensibleDataObject.ExtensionData { get; set; }
 
     [OnDeserialized]
-    private void OnDeserializing(StreamingContext context)
+    private void OnDeserialized(StreamingContext context)
     {
+        Id = Guid.NewGuid();
         //rebuild InBound and OutBound on all spaces
         foreach (var learningPathwayPe in LearningPathways)
         {
