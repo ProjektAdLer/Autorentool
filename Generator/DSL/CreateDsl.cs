@@ -23,6 +23,7 @@ public class CreateDsl : ICreateDsl
     /// Read the AuthoringToolLib Entities and create a Dsl Document with a specified syntax.
     /// </summary>
     /// <param name="fileSystem"></param>
+    /// <param name="logger"></param>
 #pragma warning disable CS8618 //@Dimitri_Bigler Lists are always initiated, Constructor just doesnt know.
     public CreateDsl(IFileSystem fileSystem, ILogger<CreateDsl> logger)
 #pragma warning restore CS8618
@@ -83,7 +84,7 @@ public class CreateDsl : ICreateDsl
             //Searching for Learning Elements in each Space
             foreach (var element in learningSpace.LearningElements)
             {
-                var elementCategory = "";
+                string elementCategory;
                 switch (element.LearningContent.Type)
                 {
                     case "png" or "jpg" or "bmp" or "webp":
@@ -102,8 +103,7 @@ public class CreateDsl : ICreateDsl
                         elementCategory = "pdf";
                         break;
                     default:
-                        ArgumentException e = new ArgumentException("The given LearningContent Type is not supported - in CreateDsl.");
-                        break;
+                        throw new ArgumentException("The given LearningContent Type is not supported - in CreateDsl.");
                 }
                 IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", $"{element.Name}.{element.LearningContent.Type}");
                 List<LearningElementValueJson> learningElementValueList = new List<LearningElementValueJson>();
@@ -176,7 +176,7 @@ public class CreateDsl : ICreateDsl
                 _fileSystem.File.Copy(learningElement.LearningContent.Filepath,
                 _fileSystem.Path.Join("XMLFilesForExport", $"{learningElement.Name}.{learningElement.LearningContent.Type}"));
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 Console.WriteLine("Something went wrong while creating the LearningElements for the Backup-Structure.");
                 throw;
@@ -184,7 +184,7 @@ public class CreateDsl : ICreateDsl
         }
 
         _fileSystem.File.WriteAllText(_dslPath, jsonFile);
-        Logger.LogDebug(jsonFile);
+        Logger.LogDebug("Generated DSL Document: {JsonFile}",jsonFile);
         return _dslPath;
     }
 }

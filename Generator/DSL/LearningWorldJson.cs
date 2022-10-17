@@ -24,7 +24,7 @@ public class LearningWorldJson : ILearningWorldJson
     
     public string Description { get; set; }
     
-    public string? Goals { get; set; }
+    public string Goals { get; set; }
     
     // A list that has all the id´s of the included Topics of a learningWorld. 
     public List<int> LearningWorldContent { get; set; }

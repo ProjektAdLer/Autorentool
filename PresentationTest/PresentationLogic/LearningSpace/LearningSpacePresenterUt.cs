@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.Components;
 using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent;
@@ -142,7 +143,20 @@ public class LearningSpacePresenterUt
 
         mockPresentationLogic.Received().AddLearningElement(space,element);
     }
+    
+    [Test]
+    public void DragLearningElement_CallsPresentationLogic()
+    {
+        var element = new LearningElementViewModel("g", "g", null!, "g", "g", "g", "g", LearningElementDifficultyEnum.Easy);
+        double oldPositionX = 5;
+        double oldPositionY = 7;
+        var presentationLogic = Substitute.For<IPresentationLogic>();
 
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.DragLearningElement(element, new DraggedEventArgs<ILearningElementViewModel>(element, oldPositionX, oldPositionY));
+
+        presentationLogic.Received().DragLearningElement(element, oldPositionX, oldPositionY);
+    }
 
     #region CreateNewLearningElement
 
@@ -576,6 +590,7 @@ public class LearningSpacePresenterUt
         dictionary["Shortname"] = "b";
         dictionary["Type"] = "c";
         dictionary["Content"] = "d";
+        dictionary["Url"] = "Google.com";
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
         dictionary["Goals"] = "g";
@@ -592,7 +607,8 @@ public class LearningSpacePresenterUt
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().EditLearningElement(space, element, "a", "b",  "e", "f", "g", LearningElementDifficultyEnum.Medium, 5,4);
+        presentationLogic.Received().EditLearningElement(space, element, "a", "b",  "Google.com", "e", 
+            "f", "g", LearningElementDifficultyEnum.Medium, 5,4);
     }
 
     [Test]
@@ -608,6 +624,7 @@ public class LearningSpacePresenterUt
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "a";
         dictionary["Shortname"] = "b";
+        dictionary["Url"] = "Google.com";
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
         dictionary["Goals"] = "g";
@@ -622,7 +639,7 @@ public class LearningSpacePresenterUt
         space.SelectedLearningElement = element;
         
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
-        presentationLogic.Received().EditLearningElement(space, element, "a", "b",  "e", "f", "g", LearningElementDifficultyEnum.None, 4,4);
+        presentationLogic.Received().EditLearningElement(space, element, "a", "b", "Google.com", "e", "f", "g", LearningElementDifficultyEnum.None, 4,4);
     }
     
     [Test]
@@ -638,6 +655,7 @@ public class LearningSpacePresenterUt
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "a";
         dictionary["Shortname"] = "b";
+        dictionary["Url"] = "Google.com";
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
         dictionary["Goals"] = "g";
@@ -653,7 +671,8 @@ public class LearningSpacePresenterUt
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().EditLearningElement(space, element, "a", "b",  "e", "f", "g",LearningElementDifficultyEnum.Easy,0,4);
+        presentationLogic.Received().EditLearningElement(space, element, "a", "b",  "Google.com", 
+            "e", "f", "g",LearningElementDifficultyEnum.Easy,0,4);
     }
     
     [Test]
@@ -669,6 +688,7 @@ public class LearningSpacePresenterUt
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "a";
         dictionary["Shortname"] = "b";
+        dictionary["Url"] = "Google.com";
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
         dictionary["Goals"] = "g";
@@ -684,7 +704,8 @@ public class LearningSpacePresenterUt
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().EditLearningElement(space, element, "a", "b",  "e", "f", "g",LearningElementDifficultyEnum.Easy,0,4);
+        presentationLogic.Received().EditLearningElement(space, element, "a", "b",  "Google.com", "e", 
+            "f", "g",LearningElementDifficultyEnum.Easy,0,4);
     }
     
     [Test]
@@ -700,6 +721,7 @@ public class LearningSpacePresenterUt
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "a";
         dictionary["Shortname"] = "b";
+        dictionary["Url"] = "Google.com";
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
         dictionary["Goals"] = "g";
@@ -715,7 +737,8 @@ public class LearningSpacePresenterUt
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().EditLearningElement(space, element, "a", "b",  "e", "f", "g",LearningElementDifficultyEnum.Easy,5,0);
+        presentationLogic.Received().EditLearningElement(space, element, "a", "b",  "Google.com", "e", 
+            "f", "g",LearningElementDifficultyEnum.Easy,5,0);
     }
     
     [Test]
@@ -731,6 +754,7 @@ public class LearningSpacePresenterUt
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "a";
         dictionary["Shortname"] = "b";
+        dictionary["Url"] = "Google.com";
         dictionary["Authors"] = "e";
         dictionary["Description"] = "f";
         dictionary["Goals"] = "g";
@@ -746,7 +770,8 @@ public class LearningSpacePresenterUt
 
         systemUnderTest.OnEditElementDialogClose(returnValueTuple);
 
-        presentationLogic.Received().EditLearningElement(space, element, "a", "b",  "e", "f", "g",LearningElementDifficultyEnum.Easy,5,0);
+        presentationLogic.Received().EditLearningElement(space, element, "a", "b",  "Google.com", "e", 
+            "f", "g",LearningElementDifficultyEnum.Easy,5,0);
     }
 
     [Test]

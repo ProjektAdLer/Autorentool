@@ -31,7 +31,8 @@ public class DraggableLearningElementUt
     {
         var learningElement = Substitute.For<ILearningElementViewModel>();
         var onClicked = new Action<ILearningElementViewModel>(_ => { });
-        var systemUnderTest = GetRenderedDraggableLearningElement(learningElement, onClicked);
+        var onDragged = new DraggedEventArgs<ILearningElementViewModel>.DraggedEventHandler((_,_) => { });
+        var systemUnderTest = GetRenderedDraggableLearningElement(learningElement, onClicked, onDragged);
         
         Assert.Multiple(() =>
         {
@@ -48,7 +49,8 @@ public class DraggableLearningElementUt
         learningElement.Difficulty.Returns(LearningElementDifficultyEnum.Medium);
         learningElement.Name.Returns("foo bar super cool name");
         var onClicked = new Action<ILearningElementViewModel>(_ => { });
-        var systemUnderTest = GetRenderedDraggableLearningElement(learningElement, onClicked);
+        var onDragged = new DraggedEventArgs<ILearningElementViewModel>.DraggedEventHandler((_,_) => { });
+        var systemUnderTest = GetRenderedDraggableLearningElement(learningElement, onClicked, onDragged);
 
         Assert.That(systemUnderTest.HasComponent<Stub<Draggable<ILearningElementViewModel>>>());
         var stub = systemUnderTest.FindComponent<Stub<Draggable<ILearningElementViewModel>>>();
@@ -61,7 +63,7 @@ public class DraggableLearningElementUt
         });
         var childContent = _ctx.Render((RenderFragment)stub.Instance.Parameters[nameof(Draggable<ILearningElementViewModel>.ChildContent)]);
         childContent.MarkupMatches(
-            @"<rect height=""50"" width=""100"" style=""fill:lightblue""></rect>" +
+            @"<rect height=""50"" width=""100"" style=""fill:lightblue;stroke:black""></rect>" +
             @"<polygon transform=""translate(75,1)"" fill=""yellow"" points=""13 1 5 25 24 10 2 10 21 25""></polygon>" +
             @$"<text x=""3"" y=""15"">{learningElement.Name}</text>");
     }
@@ -70,7 +72,7 @@ public class DraggableLearningElementUt
     public void Constructor_ElementNull_ThrowsException()
     {
         //Override warning for this test as we are testing exactly what happens when we break the nullability contract - n.stich
-        Assert.That(() => GetRenderedDraggableLearningElement(null!, _ => { }), Throws.ArgumentNullException);
+        Assert.That(() => GetRenderedDraggableLearningElement(null!, _ => { },(_,_) => { }), Throws.ArgumentNullException);
     }
     
     [Test]
@@ -94,11 +96,12 @@ public class DraggableLearningElementUt
         });
     }
 
-    private IRenderedComponent<DraggableLearningElement> GetRenderedDraggableLearningElement(ILearningElementViewModel objectViewmodel, Action<ILearningElementViewModel> onClicked)
+    private IRenderedComponent<DraggableLearningElement> GetRenderedDraggableLearningElement(ILearningElementViewModel objectViewmodel, Action<ILearningElementViewModel> onClicked, DraggedEventArgs<ILearningElementViewModel>.DraggedEventHandler onDragged)
     {
         return _ctx.RenderComponent<DraggableLearningElement>(parameters => parameters
-                .Add(p => p.LearningElement, objectViewmodel)
-                .Add(p => p.OnClicked, onClicked));
+            .Add(p => p.LearningElement, objectViewmodel)
+            .Add(p => p.OnClicked, onClicked)
+            .Add(p => p.OnDragged, onDragged));
     }
 
 }

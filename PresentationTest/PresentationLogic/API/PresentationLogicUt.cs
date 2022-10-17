@@ -309,6 +309,28 @@ public class PresentationLogicUt
         Assert.That(command, Is.Not.Null);
         Assert.That(command!.LearningSpace, Is.EqualTo(learningSpaceEntity));
     }
+    
+    [Test]
+    public void DragLearningSpace_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        DragLearningSpace? command = null;
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
+            Do(sub => command = sub.Arg<ICommand>() as DragLearningSpace);
+        var learningSpaceVm = new LearningSpaceViewModel("z", "z", "z", "z", "z");
+        var mockMapper = Substitute.For<IMapper>();
+        var learningSpaceEntity = new BusinessLogic.Entities.LearningSpace("a", "b", "c", "d", "e" , 5);
+        mockMapper.Map<BusinessLogic.Entities.LearningSpace>(Arg.Any<LearningSpaceViewModel>())
+            .Returns(learningSpaceEntity);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+        
+        systemUnderTest.DragLearningSpace(learningSpaceVm, 5, 6);
+        
+        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
+        Assert.That(command, Is.Not.Null);
+        Assert.That(command!.LearningSpace, Is.EqualTo(learningSpaceEntity));
+    }
 
     [Test]
     public void DeleteLearningSpace_CallsBusinessLogic()
@@ -416,7 +438,8 @@ public class PresentationLogicUt
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
         
-        systemUnderTest.EditLearningElement(learningSpaceVm, learningElementVm, "a","b","c","d","e",LearningElementDifficultyEnum.Easy,1,2);
+        systemUnderTest.EditLearningElement(learningSpaceVm, learningElementVm, "a","b","c", "Google.com", "d",
+            "e",LearningElementDifficultyEnum.Easy,1,2);
 
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
         Assert.That(command, Is.Not.Null);
@@ -425,6 +448,31 @@ public class PresentationLogicUt
             Assert.That(command!.ParentSpace, Is.EqualTo(learningSpaceEntity));
             Assert.That(command!.LearningElement, Is.EqualTo(learningElementEntity));
         });
+    }
+    
+    [Test]
+    public void DragLearningElement_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        DragLearningElement? command = null;
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
+            Do(sub => command = sub.Arg<ICommand>() as DragLearningElement);
+        var learningElementVm = new LearningElementViewModel("a", "b", null!, "url","c", "d", "e",
+            LearningElementDifficultyEnum.Easy);
+        var mockMapper = Substitute.For<IMapper>();
+        var learningElementEntity = new BusinessLogic.Entities.LearningElement("a", "b", null!, "url","c", "d", "e",
+            LearningElementDifficultyEnum.Easy);
+        mockMapper.Map<BusinessLogic.Entities.LearningElement>(Arg.Any<LearningElementViewModel>())
+            .Returns(learningElementEntity);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+        
+        systemUnderTest.DragLearningElement(learningElementVm, 1, 2);
+
+        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
+        Assert.That(command, Is.Not.Null);
+        Assert.That(command!.LearningElement, Is.EqualTo(learningElementEntity));
+        
     }
     
     [Test]

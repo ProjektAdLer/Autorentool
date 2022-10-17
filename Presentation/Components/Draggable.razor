@@ -37,6 +37,10 @@
     
     [Parameter]
     public EventCallback<T> OnClicked { get; set; }
+    
+    [Parameter]
+    public DraggedEventArgs<T>.DraggedEventHandler OnDragged { get; set; }
+    
 
     //cursorX and cursorY are used to remove the offset between cursor and element on move, so we only get a delta
     private double _cursorX;
@@ -46,6 +50,8 @@
     private string _cursor = "grab";
     private bool _hasMoved;
 
+    private double _oldPositionX;
+    private double _oldPositionY;
 
     //This is called after component has received initial parameters in SetParametersAsync
     protected override void OnInitialized()
@@ -71,6 +77,8 @@
         _isDown = true;
         _cursor = "grabbing";
         _hasMoved = false;
+        _oldPositionX = X;
+        _oldPositionY = Y;
     }
 
     private void OnUpOrOut(object? sender, MouseEventArgs e)
@@ -78,6 +86,10 @@
         if (_isDown && !_hasMoved)
         {
             OnClick(sender, e);
+        }
+        else if (_isDown && _hasMoved)
+        {
+            OnDrag(sender, e);
         }
         _isDown = false;
         _cursor = "grab";
@@ -105,6 +117,11 @@
         Logger.LogDebug("e.OffsetX:{EOffsetX} e.OffsetY:{EOffsetY}", e.OffsetX, e.OffsetY);
         return OnClicked.InvokeAsync(LearningObject);
     }
+    
+    private void OnDrag(object? sender, MouseEventArgs e)
+    {
+        if(LearningObject != null) OnDragged?.Invoke(LearningObject, new DraggedEventArgs<T>(LearningObject, _oldPositionX, _oldPositionY));
+    }
 
     public void Dispose()
     {
@@ -112,5 +129,4 @@
         MouseService.OnUp -= OnUpOrOut;
         MouseService.OnOut -= OnUpOrOut;
     }
-
 }

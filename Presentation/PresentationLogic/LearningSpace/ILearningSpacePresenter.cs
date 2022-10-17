@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using Presentation.Components;
 using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
@@ -28,4 +29,5 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     LearningContentViewModel? DragAndDropLearningContent { get; }
     void OnWorldPropertyChanged(object? caller, PropertyChangedEventArgs e);
     event Action OnUndoRedoPerformed;
+    void DragLearningElement(object sender, DraggedEventArgs<ILearningElementViewModel> draggedEventArgs);
 }

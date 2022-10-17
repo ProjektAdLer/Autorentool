@@ -2,7 +2,7 @@
 @using Presentation.PresentationLogic
 @using Presentation.Components
 @using Presentation.PresentationLogic.LearningWorld
-<Draggable LearningObject="LearningSpace" OnClicked="@OnClickedDraggable"
+<Draggable LearningObject="LearningSpace" OnClicked="@OnClickedDraggable" OnDragged="@OnDraggedDraggable"
            @bind-X="@LearningSpace.PositionX" @bind-Y="@LearningSpace.PositionY">
     @if (LearningSpace == PositioningService.LearningWorldVm?.OnHoveredLearningSpace)
     {
@@ -28,6 +28,9 @@
     public ILearningSpaceViewModel LearningSpace { get; set; } = null!;
     [Parameter, EditorRequired]
     public EventCallback<ILearningSpaceViewModel> OnClickedDraggable { get; set; }
+    [Parameter, EditorRequired]
+    public DraggedEventArgs<ILearningSpaceViewModel>.DraggedEventHandler? OnDraggedDraggable { get; set; }
+    // public EventCallback<Draggable<ILearningSpaceViewModel>.DraggedEventArgs> OnDraggedDraggable { get; set; }
     [Parameter, EditorRequired]
     public EventCallback<ILearningSpaceViewModel> OnClickedClickable { get; set; }
     // Overwrite nullability warning below because service may never be null -n.stich

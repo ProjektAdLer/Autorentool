@@ -18,14 +18,12 @@ public class BackupFileGeneratorUt
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
-        var backupFileGen = new BackupFileGenerator(mockFileSystem);
+        var systemUnderTest = new BackupFileGenerator(mockFileSystem);
         var fullDirPath = mockFileSystem.Path.GetFullPath("XMLFilesForExport");
-        var fullDirPathCourse = Path.Join(fullDirPath, "course");
-        var fullDirPathSections = Path.Join(fullDirPath, "sections");
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
         //Act
-        backupFileGen.CreateBackupFolders();
+        systemUnderTest.CreateBackupFolders();
 
         
         //Assert
@@ -34,52 +32,62 @@ public class BackupFileGeneratorUt
         
         mockFileSystem.Directory.SetCurrentDirectory(fullDirPath);
         var directoryNamesOneLevelDeeper = mockFileSystem.Directory.GetDirectories(mockFileSystem.Directory.GetCurrentDirectory());
-        Assert.That(directoryNamesOneLevelDeeper, Contains.Item(fullDirPathCourse));
-        Assert.That(directoryNamesOneLevelDeeper, Contains.Item(fullDirPathSections));
+        Assert.Multiple(() =>
+        {
+            Assert.That(directoryNamesOneLevelDeeper, Contains.Item(Path.Join(fullDirPath, "course")));
+            Assert.That(directoryNamesOneLevelDeeper, Contains.Item(Path.Join(fullDirPath, "sections")));
+            Assert.That(directoryNamesOneLevelDeeper, Contains.Item(Path.Join(fullDirPath, "files")));
+            Assert.That(directoryNamesOneLevelDeeper, Contains.Item(Path.Join(fullDirPath, "activities")));
+        });
     }
 
-    
     [Test]
     public void BackupFileGenerator_GetTempDir_TemporaryDirectoryCreatedAndReturned()
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
-        var backupFileGen = new BackupFileGenerator(mockFileSystem);
+        var systemUnderTest = new BackupFileGenerator(mockFileSystem);
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
         //Act
-        backupFileGen.GetTempDir();
+        var tempFolder = systemUnderTest.GetTempDir();
         
         //Assert
         var fileSystemTempDir = mockFileSystem.Directory.GetDirectories(curWorkDir);
-        var pathTempDir = Path.Join(curWorkDir, "temp");
-        Assert.That(fileSystemTempDir, Contains.Item(pathTempDir));
+        var concreteTempDir = mockFileSystem.Directory.GetDirectories(fileSystemTempDir[0]);
+        Assert.That(tempFolder, Is.EqualTo(concreteTempDir[0]));
     }
-
+    
     [Test]
     public void BackupFileGenerator_DirectoryCopy_TargetDirectoryCopied()
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
-        var backupFileGen = new BackupFileGenerator(mockFileSystem);
-        backupFileGen.CreateBackupFolders();
+        var systemUnderTest = new BackupFileGenerator(mockFileSystem);
+        systemUnderTest.CreateBackupFolders();
         var fullPathFile = mockFileSystem.Path.Join(mockFileSystem.Path.GetFullPath("XMLFilesForExport"), "course.xml");
         mockFileSystem.AddFile(fullPathFile, "encoding=UTF-8");
-        var tempDir = backupFileGen.GetTempDir();
+        var tempDir = systemUnderTest.GetTempDir();
 
         //Act
         var fullDirPath = mockFileSystem.Path.GetFullPath("XMLFilesForExport");
-        backupFileGen.DirectoryCopy(fullDirPath, tempDir);
+        systemUnderTest.DirectoryCopy(fullDirPath, tempDir);
         
         //Assert
-        var copiedDirectory = mockFileSystem.Directory.GetDirectories(mockFileSystem.Directory.GetCurrentDirectory());
+        var copiedDirectoriesInTemp = mockFileSystem.Directory.GetDirectories(tempDir);
         var copiedFile = mockFileSystem.AllFiles;
-        Assert.That(copiedDirectory, Contains.Item(fullDirPath));
-        Assert.That(copiedFile, Contains.Item(fullPathFile));
+        Assert.Multiple(() =>
+        {
+            Assert.That(copiedDirectoriesInTemp[0], Is.EqualTo(mockFileSystem.Path.Join(tempDir, "activities")));
+            Assert.That(copiedDirectoriesInTemp[1], Is.EqualTo(mockFileSystem.Path.Join(tempDir, "files")));
+            Assert.That(copiedDirectoriesInTemp[2], Is.EqualTo(mockFileSystem.Path.Join(tempDir, "course")));
+            Assert.That(copiedDirectoriesInTemp[3], Is.EqualTo(mockFileSystem.Path.Join(tempDir, "sections")));
+            Assert.That(copiedFile, Contains.Item(fullPathFile));
+        });
     }
 
     [Test]
-    public void BackupFileGenerator_WriteBackupFile_BackupFileCreated()
+    public void BackupFileGenerator_WriteXmlFiles_GetFactoriesReceived()
     {
         //Arrange 
         var mockReadDsl = Substitute.For<IReadDsl>();
@@ -88,9 +96,10 @@ public class BackupFileGeneratorUt
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport"), new MockFileData("Hello World"));
         
-        //Act
         var systemUnderTest = new BackupFileGenerator(mockFileSystem, mockEntityManager);
         systemUnderTest.CreateBackupFolders();
+        
+        //Act
         systemUnderTest.WriteXmlFiles(mockReadDsl);
         
         //Assert

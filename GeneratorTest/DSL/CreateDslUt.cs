@@ -34,7 +34,6 @@ public class CreateDslUt
         var content3 = new LearningContentPe("FileName", "url", "/foo/bar.txt");
         var content4 = new LearningContentPe("FileName", "txt", "/foo/foo.txt");
         var content5 = new LearningContentPe("FileName", "pdf", "/foo/foo.txt");
-        var content6 = new LearningContentPe("FileName", "mp3", "/foo/foo.txt");
 
         var ele1 = new LearningElementPe("a", "b",content1, "", "pupup", "g","h", 
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
@@ -46,13 +45,12 @@ public class CreateDslUt
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
         var ele5 = new LearningElementPe("e", "b",content5, "","pupup", "g","h", 
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
-        var ele6 = new LearningElementPe("f", "b",content6, "","pupup", "g","h", 
-            LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
         
+
         var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
             null, 0, 0, new List<LearningSpacePe>(), 
             new List<LearningSpacePe>());
-        space1.LearningElements.AddRange(new List<LearningElementPe>{ele1, ele2, ele3, ele4, ele5, ele6});
+        space1.LearningElements.AddRange(new List<LearningElementPe>{ele1, ele2, ele3, ele4, ele5});
         var space2 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
             null, 0, 0, new List<LearningSpacePe>(), new List<LearningSpacePe>());
         space1.OutBoundSpaces = new List<LearningSpacePe>() {space2};
@@ -64,7 +62,8 @@ public class CreateDslUt
 
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
         
-        var learningElementsWithContentList = new List<LearningElementPe> { ele1, ele2, ele4, ele5, ele6 };
+        //Every Element except Content with "url" is added to the comparison list.
+        var learningElementsWithContentList = new List<LearningElementPe> { ele1, ele2, ele4, ele5 };
 
         //Act
         systemUnderTest.WriteLearningWorld(learningWorld);
@@ -91,4 +90,51 @@ public class CreateDslUt
             Assert.That(mockFileSystem.FileExists(pathXmlFile), Is.True);
         });
     }
+    
+    [Test]
+     public void CreateDSL_WriteLearningWorld_UnsupportedTypeExceptionThrown()
+    {
+        //Arrange
+        var mockFileSystem = new MockFileSystem();
+        var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
+        mockFileSystem.AddFile("/foo/foo.txt", new MockFileData("foo"));
+        var mockLogger = Substitute.For<ILogger<CreateDsl>>();
+        
+        const string name = "asdf";
+        const string shortname = "jkl;";
+        const string authors = "ben and jerry";
+        const string language = "german";
+        const string description = "very cool element";
+        const string goals = "learn very many things";
+        
+        var content1 = new LearningContentPe("FileName", "mp3", "/foo/bar.txt");
+
+        var ele1 = new LearningElementPe("a", "b",content1, "", "pupup", "g","h", 
+            LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
+
+        var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
+            null, 0, 0, new List<LearningSpacePe>(), 
+            new List<LearningSpacePe>());
+        space1.LearningElements.AddRange(new List<LearningElementPe>{ele1});
+        var learningSpaces = new List<LearningSpacePe> { space1 };
+
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals,
+             learningSpaces);
+
+        var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
+
+        //Act
+        try
+        {
+            systemUnderTest.WriteLearningWorld(learningWorld); 
+            Assert.Fail("Learning Content Exception was not thrown");
+        }
+        catch (Exception e)
+        {
+            //Assert
+            Assert.That(e.Message, Is.EqualTo("The given LearningContent Type is not supported - in CreateDsl."));
+        }
+
+    }
+    
 }

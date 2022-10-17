@@ -224,7 +224,7 @@ public interface IPresentationLogic
     /// <param name="workload">The time required to complete the learning element.</param>
     /// <param name="points">The number of points of the learning element.</param>
     void EditLearningElement(ILearningSpaceViewModel parentSpaceVm,
-        ILearningElementViewModel learningElementVm, string name, string shortname, string authors, string description,
+        ILearningElementViewModel learningElementVm, string name, string shortname, string url, string authors, string description,
         string goals, LearningElementDifficultyEnum difficulty, int workload, int points);
 
     /// <summary>
@@ -292,4 +292,6 @@ public interface IPresentationLogic
     void LoadLearningSpaceViewModel(ILearningWorldViewModel learningWorldVm, Stream stream);
     void LoadLearningElementViewModel(ILearningSpaceViewModel parentSpaceVm, Stream stream);
     event Action? OnUndoRedoPerformed;
+    void DragLearningSpace(ILearningSpaceViewModel learningSpaceVm, double oldPositionX, double oldPositionY);
+    void DragLearningElement(ILearningElementViewModel learningElementVm, double oldPositionX, double oldPositionY);
 }

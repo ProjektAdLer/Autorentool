@@ -86,7 +86,7 @@ public class XmlUrlFactory : IXmlUrlFactory
             UrlId = url.Id.ToString();
             UrlName = url.Identifier.Value;
             UrlParentSpaceId = url.LearningSpaceParentId.ToString();
-            UrlLink = url.Url ?? "";
+            UrlLink = url.Url;
             UrlDescription = url.Description ?? "";
 
             SetParametersActivityUrl();

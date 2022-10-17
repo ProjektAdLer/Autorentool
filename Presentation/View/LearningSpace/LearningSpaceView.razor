@@ -34,7 +34,9 @@
     {
         @foreach (var learningObject in LearningSpaceP.LearningSpaceVm.LearningElements)
         {
-            <DraggableLearningElement LearningElement="@learningObject" OnClicked="@LearningSpaceP.SetSelectedLearningElement"/>
+            <DraggableLearningElement LearningElement="@learningObject" 
+                                      OnClicked="@LearningSpaceP.SetSelectedLearningElement"
+                                      OnDragged="@LearningSpaceP.DragLearningElement"/>
         }
     }
 </svg>

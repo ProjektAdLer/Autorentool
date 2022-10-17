@@ -11,7 +11,7 @@ public class ActivitiesUrlXmlUrl : IActivitiesUrlXmlUrl
         Intro = "";
         Introformat = "1";
         Externalurl = "";
-        Display = "1";
+        Display = "0";
         Displayoptions = "a:1:{s:10:\"printintro\";i:0;}";
         Parameters = "a:0:{}";
         Timemodified = "";
