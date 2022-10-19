@@ -5,5 +5,5 @@ public interface ILearningElementValueJson
     string Type { get; set; }
     
     // describes the amount of points or name of the badge
-    int Value { get; set; }
+    string Value { get; set; }
 }

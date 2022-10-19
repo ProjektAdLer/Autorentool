@@ -62,7 +62,7 @@ public class XmlUrlFactoryUt
 
         var urlLearningElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Video auf Youtube"),
             "youtube.de", "video", "Video-Link", 1, 
-            new List<LearningElementValueJson>(){new LearningElementValueJson("Points", 10)}, 
+            new List<LearningElementValueJson>(){new LearningElementValueJson("Points", "10")}, 
             "desc", "goal");
         var urlList = new List<LearningElementJson>(){urlLearningElementJson};
 
@@ -102,7 +102,7 @@ public class XmlUrlFactoryUt
         
         var urlLearningElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Video auf Youtube"),
             "youtube.de", "video", "url", 1, 
-            new List<LearningElementValueJson>(){new LearningElementValueJson("Points", 10)}, 
+            new List<LearningElementValueJson>(){new LearningElementValueJson("Points", "10")}, 
             "desc", "goal");
         var urlList = new List<LearningElementJson>(){urlLearningElementJson};
         

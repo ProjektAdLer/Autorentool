@@ -107,7 +107,7 @@ public class CreateDsl : ICreateDsl
                 }
                 IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", $"{element.Name}.{element.LearningContent.Type}");
                 List<LearningElementValueJson> learningElementValueList = new List<LearningElementValueJson>();
-                LearningElementValueJson learningElementValueJson = new LearningElementValueJson("Points", element.Points);
+                LearningElementValueJson learningElementValueJson = new LearningElementValueJson("Points", element.Points.ToString());
                 learningElementValueList.Add(learningElementValueJson);
 
                 LearningElementJson learningElementJson = new LearningElementJson(learningSpaceElementId,

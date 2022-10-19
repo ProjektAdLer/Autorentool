@@ -24,9 +24,9 @@ public class ReadDslUt
    
         var identifierLearningElementJson2 = new IdentifierJson("name", "DSL Dokument");
 
-        var learningElementValueJson1 = new LearningElementValueJson("points", 0);
+        var learningElementValueJson1 = new LearningElementValueJson("points", "0");
 
-        var learningElementValueJson2 = new LearningElementValueJson("points", 0);
+        var learningElementValueJson2 = new LearningElementValueJson("points", "0");
 
         var learningElementValueList1 = new List<LearningElementValueJson>(){learningElementValueJson1};
         var learningElementValueList2 = new List<LearningElementValueJson>(){learningElementValueJson2};

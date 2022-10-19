@@ -6,7 +6,7 @@
 public class LearningElementValueJson : ILearningElementValueJson
 {
     // describes if the type are points or badge
-    public LearningElementValueJson(string type, int value)
+    public LearningElementValueJson(string type, string value)
     {
         Type = type;
         Value = value;
@@ -15,5 +15,5 @@ public class LearningElementValueJson : ILearningElementValueJson
     public string Type { get; set; }
     
     // describes the amount of points or name of the badge
-    public int Value { get; set; }
+    public string Value { get; set; }
 }

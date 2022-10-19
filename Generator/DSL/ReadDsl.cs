@@ -141,7 +141,7 @@ public class ReadDsl : IReadDsl
         {
             foreach (var space in documentRootJson.LearningWorld.LearningSpaces)
             {
-                List<LearningElementValueJson> values = new List<LearningElementValueJson>{new("", 0)};
+                List<LearningElementValueJson> values = new List<LearningElementValueJson>{new("", "0")};
                 ListAllSpacesAndElementsOrdered.Add(new LearningElementJson(space.SpaceId+1000, space.Identifier, "", "space","space", 0, values, space.Description));
                 
                 foreach (int elementInSpace in space.LearningSpaceContent)

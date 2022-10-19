@@ -96,7 +96,6 @@ public class CreateDslUt
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
-        var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         mockFileSystem.AddFile("/foo/foo.txt", new MockFileData("foo"));
         var mockLogger = Substitute.For<ILogger<CreateDsl>>();
         
