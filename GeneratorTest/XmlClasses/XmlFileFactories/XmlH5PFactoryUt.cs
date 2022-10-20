@@ -92,7 +92,7 @@ public class XmlH5PFactoryUt
             
             Assert.That(systemUnderTest.FilesXmlFiles, Is.EqualTo(mockFiles));
             systemUnderTest.FileManager.Received().GetXmlFilesList();
-            systemUnderTest.FileManager.Received().CalculateHashCheckSumAndFileSize(Path.Join(currWorkDir, "XMLFilesForExport", identifier.Value));
+            systemUnderTest.FileManager.Received().CalculateHashCheckSumAndFileSize(Path.Join(currWorkDir, "XMLFilesForExport", identifier.Value +"."+h5PElement2.ElementType));
             systemUnderTest.FileManager.Received().GetHashCheckSum();
             systemUnderTest.FileManager.Received().GetFileSize();
             systemUnderTest.FileManager.Received().CreateFolderAndFiles(Arg.Any<string>(), Arg.Any<string>());
@@ -144,10 +144,10 @@ public class XmlH5PFactoryUt
             //Every File has 2 FilesXmlFile Id´s thats why the Count has to be 2*FileCount
             Assert.That(systemUnderTest.FilesXmlFiles.File, Has.Count.EqualTo(4));
             Assert.That(systemUnderTest.FilesXmlFiles.File[0].ContextId , Is.EqualTo(h5PElement1.Id.ToString()));
-            Assert.That(systemUnderTest.FilesXmlFiles.File[0].Filename , Is.EqualTo(identifier1.Value+ "." + h5PElement1.ElementType));
+            Assert.That(systemUnderTest.FilesXmlFiles.File[0].Filename , Is.EqualTo(identifier1.Value));
             Assert.That(systemUnderTest.FilesXmlFiles.File[0].Source , Is.EqualTo(identifier1.Value+ "." + h5PElement1.ElementType));
             Assert.That(systemUnderTest.FilesXmlFiles.File[2].ContextId , Is.EqualTo(h5PElement2.Id.ToString()));
-            Assert.That(systemUnderTest.FilesXmlFiles.File[2].Filename , Is.EqualTo(identifier2.Value+ "." + h5PElement2.ElementType));
+            Assert.That(systemUnderTest.FilesXmlFiles.File[2].Filename , Is.EqualTo(identifier2.Value));
             Assert.That(systemUnderTest.FilesXmlFiles.File[2].Source , Is.EqualTo(identifier2.Value+ "." + h5PElement2.ElementType));
             Assert.That(systemUnderTest.FilesXmlFiles.File[2].Id , Is.EqualTo((int.Parse(systemUnderTest.FilesXmlFiles.File[0].Id)+2).ToString()));
         });

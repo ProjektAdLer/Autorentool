@@ -36,7 +36,7 @@
                     //Display warning as soon, as the user types in a wrong value.
                     <div class="modal-input-warning">
                         <p>
-                            <i class="bi bi-textarea-t"></i> Not allowed Symbols ? \ / &lt; &gt; : in Field
+                            <i class="bi bi-textarea-t"></i> Not allowed Symbols ? \ / &lt; &gt; : . in Field
                             @foreach (var field in InputFields.Where(FieldValidationFailed))
                             {
                                 if (field.Name == "Name")
@@ -290,7 +290,7 @@
         _inputFieldValues.ContainsKey("Name") && (_inputFieldValues["Name"].Contains("?") 
         || _inputFieldValues["Name"].Contains("<") || _inputFieldValues["Name"].Contains(">") 
         || _inputFieldValues["Name"].Contains("/") || _inputFieldValues["Name"].Contains("\\")
-        || _inputFieldValues["Name"].Contains(":"));
+        || _inputFieldValues["Name"].Contains(":") || _inputFieldValues["Name"].Contains("."));
 
     private bool _fieldIsUrl = false;
 

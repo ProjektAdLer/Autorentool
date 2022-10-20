@@ -138,9 +138,9 @@ public class XmlH5PFactory : IXmlH5PFactory
             H5PElementDesc = h5PElement.Description ?? "";
 
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
-                h5PElement.Identifier.Value));
+                h5PElement.Identifier.Value+"."+h5PElement.ElementType));
             FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath, 
-                    h5PElement.Identifier.Value), 
+                    h5PElement.Identifier.Value+"."+h5PElement.ElementType), 
             FileManager.GetHashCheckSum());
             H5PSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize());
             H5PSetParametersActivity();
@@ -162,7 +162,7 @@ public class XmlH5PFactory : IXmlH5PFactory
             Id = XmlEntityManager.GetFileIdBlock1().ToString(),
             ContentHash = hashCheckSum,
             ContextId = H5PElementId,
-            Filename = H5PElementName+"."+H5PElementType,
+            Filename = H5PElementName,
             Source = H5PElementName+"."+H5PElementType,
             Filesize = filesize,
             Component = "mod_h5pactivity",

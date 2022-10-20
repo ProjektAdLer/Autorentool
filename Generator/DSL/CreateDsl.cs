@@ -105,7 +105,7 @@ public class CreateDsl : ICreateDsl
                     default:
                         throw new ArgumentException("The given LearningContent Type is not supported - in CreateDsl.");
                 }
-                IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", $"{element.Name}.{element.LearningContent.Type}");
+                IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", element.Name);
                 List<LearningElementValueJson> learningElementValueList = new List<LearningElementValueJson>();
                 LearningElementValueJson learningElementValueJson = new LearningElementValueJson("Points", element.Points.ToString());
                 learningElementValueList.Add(learningElementValueJson);
