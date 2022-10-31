@@ -45,7 +45,7 @@ public class PullablePathUt
 
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.Instance.LearningSpace, Is.EqualTo(learningObject));
+            Assert.That(systemUnderTest.Instance.LearningObject, Is.EqualTo(learningObject));
             Assert.That(systemUnderTest.Instance.X1, Is.EqualTo(x1));
             Assert.That(systemUnderTest.Instance.Y1, Is.EqualTo(y1));
             Assert.That(systemUnderTest.Instance.X2, Is.EqualTo(x1));
@@ -73,8 +73,8 @@ public class PullablePathUt
         Assert.That(systemUnderTest.Instance.X2, Is.EqualTo(x1 + 13));
         Assert.That(systemUnderTest.Instance.Y2, Is.EqualTo(y1 + 24));
         
-        _positioningService.Received().SetOnHoveredLearningSpace(learningSpace, x1+13+100, y1+24+25);
-        _positioningService.Received().CreateLearningPathWay(learningSpace, x1+13+100, y1+24+25);
+        _positioningService.Received().SetOnHoveredLearningObject(learningSpace, x1+13, y1+24);
+        _positioningService.Received().CreateLearningPathWay(learningSpace, x1+13, y1+24);
     }
 
     [Test]
@@ -101,7 +101,7 @@ public class PullablePathUt
         Direction dir1 = Direction.Right, Direction dir2 = Direction.Left)
     {
         return _testContext.RenderComponent<PullablePath>(parameters => parameters
-            .Add(p => p.LearningSpace, learningObject)
+            .Add(p => p.LearningObject, learningObject)
             .Add(p => p.X1, x1)
             .Add(p => p.Y1, y1)
             .Add(p => p.Direction1, dir1)

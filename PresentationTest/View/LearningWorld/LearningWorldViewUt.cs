@@ -17,6 +17,7 @@ using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.ModalDialog;
 using Presentation.View.LearningElement;
+using Presentation.View.LearningPathWay;
 using Presentation.View.LearningSpace;
 using Presentation.View.LearningWorld;
 using TestContext = Bunit.TestContext;
@@ -41,7 +42,7 @@ public class LearningWorldViewUt
         _worldPresenter = Substitute.For<ILearningWorldPresenter>();
         _modalDialogFactory = Substitute.For<ILearningWorldViewModalDialogFactory>();
         _ctx.ComponentFactories.AddStub<LearningSpaceView>();
-        _ctx.ComponentFactories.AddStub<DraggableLearningSpace>();
+        _ctx.ComponentFactories.AddStub<DraggableObjectInPathWay>();
         _ctx.ComponentFactories.AddStub<DraggableLearningElement>();
         _ctx.ComponentFactories.AddStub<PathWay>();
         _ctx.ComponentFactories.AddStub<ModalDialog>();
@@ -149,12 +150,13 @@ public class LearningWorldViewUt
 
         var learningWorld = Substitute.For<ILearningWorldViewModel>();
         learningWorld.LearningSpaces.Returns(learningSpaces);
+        learningWorld.ObjectsInPathWays.Returns(learningSpaces);
         learningWorld.LearningPathWays.Returns(learningPathWays);
         _worldPresenter.LearningWorldVm.Returns(learningWorld);
         
         var systemUnderTest = GetLearningWorldViewForTesting();
 
-        var draggableLearningSpaces = systemUnderTest.FindComponentsOrFail<Stub<DraggableLearningSpace>>().ToList();
+        var draggableLearningSpaces = systemUnderTest.FindComponentsOrFail<Stub<DraggableObjectInPathWay>>().ToList();
         var pathWays = systemUnderTest.FindComponentsOrFail<Stub<PathWay>>().ToList();
 
         Assert.Multiple(() =>
@@ -162,7 +164,7 @@ public class LearningWorldViewUt
             Assert.That(draggableLearningSpaces, Has.Count.EqualTo(learningSpaces.Count));
             Assert.That(learningSpaces.All(le =>
                 draggableLearningSpaces.Any(dle =>
-                    dle.Instance.Parameters[nameof(DraggableLearningSpace.LearningSpace)] == le)));
+                    dle.Instance.Parameters[nameof(DraggableObjectInPathWay.ObjectInPathWay)] == le)));
             Assert.That(pathWays, Has.Count.EqualTo(learningPathWays.Count));
         });
     }
@@ -214,7 +216,108 @@ public class LearningWorldViewUt
         //assert that the delegate we called executed presenter
         _worldPresenter.Received().OnCreateSpaceDialogClose(returnValue);
     }
+    
+    [Test]
+    public void CreatePathWayConditionDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
+    {
+        //prepare presenter
+        var learningWorld = Substitute.For<ILearningWorldViewModel>();
+        _worldPresenter.LearningWorldVm.Returns(learningWorld);
+        _worldPresenter.CreatePathWayConditionDialogOpen.Returns(true);
+        
+        RenderFragment fragment = builder =>
+        {
+            builder.OpenElement(0, "p");
+            builder.AddContent(1, "foobar");
+            builder.CloseElement();
+        };
+        ModalDialogOnClose? callback = null;
+        _modalDialogFactory
+            .GetCreatePathWayConditionFragment(Arg.Any<ModalDialogOnClose>())
+            .Returns(fragment)
+            .AndDoes(ci =>
+            {
+                callback = ci.Arg<ModalDialogOnClose>();
+            });
+        
+        var systemUnderTest = GetLearningWorldViewForTesting();
 
+        _modalDialogFactory.Received().GetCreatePathWayConditionFragment(Arg.Any<ModalDialogOnClose>());
+        var p = systemUnderTest.FindOrFail("p");
+        p.MarkupMatches("<p>foobar</p>");
+
+        if (callback == null)
+        {
+            Assert.Fail("Didn't get a callback from call to modal dialog factory");
+        }
+
+        var returnDictionary = new Dictionary<string, string>
+        {
+            { "foo", "baz" },
+            { "bar", "baz" }
+        };
+        var returnValue = new ModalDialogOnCloseResult(ModalDialogReturnValue.Ok, returnDictionary);
+        
+        //call the callback with the return value
+        callback!.Invoke(returnValue);
+        
+        //assert that the delegate we called executed presenter
+        _worldPresenter.Received().OnCreatePathWayConditionDialogClose(returnValue);
+    }
+
+    [Test]
+    public void EditPathWayConditionDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
+    {
+        //prepare presenter
+        var learningWorld = Substitute.For<ILearningWorldViewModel>();
+        _worldPresenter.LearningWorldVm.Returns(learningWorld);
+        _worldPresenter.EditPathWayConditionDialogOpen.Returns(true);
+        var initialValues = new Dictionary<string, string>
+        {
+            {"baba", "bubu"}
+        };
+        _worldPresenter.EditConditionDialogInitialValues.Returns(initialValues);
+        
+        RenderFragment fragment = builder =>
+        {
+            builder.OpenElement(0, "p");
+            builder.AddContent(1, "foobar");
+            builder.CloseElement();
+        };
+        ModalDialogOnClose? callback = null;
+        _modalDialogFactory
+            .GetEditPathWayConditionFragment(initialValues, Arg.Any<ModalDialogOnClose>())
+            .Returns(fragment)
+            .AndDoes(ci =>
+            {
+                callback = ci.Arg<ModalDialogOnClose>();
+            });
+        
+        var systemUnderTest = GetLearningWorldViewForTesting();
+
+        _modalDialogFactory.Received().GetEditPathWayConditionFragment(initialValues, Arg.Any<ModalDialogOnClose>());
+        var p = systemUnderTest.FindOrFail("p");
+        p.MarkupMatches("<p>foobar</p>");
+
+        if (callback == null)
+        {
+            Assert.Fail("Didn't get a callback from call to modal dialog factory");
+        }
+
+        var returnDictionary = new Dictionary<string, string>
+        {
+            { "foo", "baz" },
+            { "bar", "baz" }
+        };
+        var returnValue = new ModalDialogOnCloseResult(ModalDialogReturnValue.Ok, returnDictionary);
+        
+        //call the callback with the return value
+        callback!.Invoke(returnValue);
+        
+        //assert that the delegate we called executed presenter
+        _worldPresenter.Received().OnEditPathWayConditionDialogClose(returnValue);
+    }
+    
     [Test]
     public void EditLearningSpaceDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
     {
@@ -314,6 +417,16 @@ public class LearningWorldViewUt
         addSpaceButton.Click();
         _worldPresenter.Received().AddNewLearningSpace();
     }
+    
+    [Test]
+    public void AddConditionButton_Clicked_CallsAddNewPathWayCondition()
+    {
+        var systemUnderTest = GetLearningWorldViewForTesting();
+
+        var addConditionButton = systemUnderTest.FindOrFail("button.btn.btn-primary.add-pathway-condition");
+        addConditionButton.Click();
+        _worldPresenter.Received().AddNewPathWayCondition();
+    }
 
     [Test]
     public void LoadSpaceButton_Clicked_CallsLoadLearningSpaceAsync()
@@ -372,14 +485,14 @@ saatana"));
         var space = Substitute.For<ILearningSpaceViewModel>();
         var worldVm = Substitute.For<ILearningWorldViewModel>();
         worldVm.LearningSpaces.Returns(new List<ILearningSpaceViewModel> { space });
-        worldVm.SelectedLearningSpace.Returns(space);
+        worldVm.SelectedLearningObject.Returns(space);
         _worldPresenter.LearningWorldVm.Returns(worldVm);
 
         var systemUnderTest = GetLearningWorldViewForTesting();
         
-        var editSpaceButton = systemUnderTest.FindOrFail("button.btn.btn-primary.edit-learning-space");
+        var editSpaceButton = systemUnderTest.FindOrFail("button.btn.btn-primary.edit-learning-object");
         editSpaceButton.Click();
-        _worldPresenter.Received().OpenEditSelectedLearningSpaceDialog();
+        _worldPresenter.Received().OpenEditSelectedObjectDialog();
     }
 
     [Test]
@@ -388,14 +501,14 @@ saatana"));
         var space = Substitute.For<ILearningSpaceViewModel>();
         var worldVm = Substitute.For<ILearningWorldViewModel>();
         worldVm.LearningSpaces.Returns(new List<ILearningSpaceViewModel> { space });
-        worldVm.SelectedLearningSpace.Returns(space);
+        worldVm.SelectedLearningObject.Returns(space);
         _worldPresenter.LearningWorldVm.Returns(worldVm);
 
         var systemUnderTest = GetLearningWorldViewForTesting();
         
-        var editSpaceButton = systemUnderTest.FindOrFail("button.btn.btn-primary.delete-learning-space");
+        var editSpaceButton = systemUnderTest.FindOrFail("button.btn.btn-primary.delete-learning-object");
         editSpaceButton.Click();
-        _worldPresenter.Received().DeleteSelectedLearningSpace();
+        _worldPresenter.Received().DeleteSelectedLearningObject();
     }
     
     [Test]

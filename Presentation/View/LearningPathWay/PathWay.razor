@@ -1,6 +1,14 @@
 @using Presentation.Components
+@inject IMouseService MouseSrv
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.PresentationLogic.LearningPathway
+@using Presentation.PresentationLogic.LearningWorld
+@inject ILogger<PathWay> Logger;
 @using Shared
-<path d="M @X1 @Y1 C @_c1X @C1Y, @_c2X @C2Y, @X2 @Y2" stroke="rgb(108, 117, 125)" stroke-width="1.5" fill="transparent" marker-end="url(#arrow)" style="pointer-events:none !important;" />
+<Clickable OnClickedParam="LearningPathWay" OnClicked="@OnClickedClickable">
+    <path d="M @X1 @Y1 C @_c1X @C1Y, @_c2X @C2Y, @X2 @Y2" stroke="rgb(108, 117, 125)" stroke-width="@StrokeWidth" fill="transparent" marker-end="url(#arrow)"/>
+    <path d="M @X1 @Y1 C @_c1X @C1Y, @_c2X @C2Y, @X2 @Y2" stroke="transparent" stroke-width="30" fill="transparent"/>
+</Clickable>
 
 @code {
     // Coordinates of the start of the pathway
@@ -15,6 +23,18 @@
     [Parameter] public Direction Direction1 { get; set; } = Direction.Right;
     // Direction of curvature of the first half of the pathway
     [Parameter] public Direction Direction2 { get; set; } = Direction.Left;
+    
+    [Parameter, EditorRequired]
+    public ILearningPathWayViewModel? LearningPathWay { get; set; }
+    
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningPathWayViewModel> OnClickedClickable { get; set; }
+    
+    // Overwrite nullability warning below because service may never be null -m.ho
+    [Parameter, EditorRequired]
+    public ILearningWorldPresenter PositioningService { get; set; } = null!;
+    
+    private double StrokeWidth => PositioningService.LearningWorldVm?.SelectedLearningObject == LearningPathWay ? 3 : 2;
 
     // The following coordinates are used as control points for the Bezier curve
     private double _c1X;

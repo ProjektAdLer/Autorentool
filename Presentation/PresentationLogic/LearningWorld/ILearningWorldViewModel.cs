@@ -9,8 +9,10 @@ public interface ILearningWorldViewModel : ISerializableViewModel, IDisplayableL
     new string FileEnding { get; }
     int Workload { get; }
     int Points { get; }
-    ICollection<ILearningSpaceViewModel> LearningSpaces { get; set; }
-    ICollection<ILearningPathWayViewModel> LearningPathWays { get; set; }
+    ICollection<ILearningSpaceViewModel> LearningSpaces { get; }
+    ICollection<PathWayConditionViewModel> PathWayConditions { get; }
+    IEnumerable<IObjectInPathWayViewModel> ObjectsInPathWays { get; }
+    ICollection<ILearningPathWayViewModel> LearningPathWays { get; }
     new string Name { get; set; }
     string Shortname { get; set; }
     string Authors { get; set; }
@@ -18,7 +20,7 @@ public interface ILearningWorldViewModel : ISerializableViewModel, IDisplayableL
     string Description { get; set; }
     string Goals { get; set; }
     bool UnsavedChanges { get; set; }
-    ILearningSpaceViewModel? SelectedLearningSpace { get; set; }
-    ILearningSpaceViewModel? OnHoveredLearningSpace { get; set; }
+    ISelectableObjectInWorldViewModel? SelectedLearningObject { get; set; }
+    IObjectInPathWayViewModel? OnHoveredLearningObject { get; set; }
     bool ShowingLearningSpaceView { get; set; }
 }

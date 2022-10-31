@@ -4,23 +4,22 @@ namespace BusinessLogic.Commands;
 
 public class DeleteLearningPathWay : IUndoCommand
 {
-    internal LearningWorld LearningWorld { get; set; }
-    internal LearningSpace TargetSpace { get; set; }
+    internal LearningWorld LearningWorld { get; }
+    internal LearningPathway LearningPathway { get; }
     private readonly Action<LearningWorld> _mappingAction;
     private IMemento? _memento;
-    public DeleteLearningPathWay(LearningWorld learningWorld, LearningSpace targetSpace,
+    public DeleteLearningPathWay(LearningWorld learningWorld, LearningPathway learningPathway,
         Action<LearningWorld> mappingAction)
     {
         LearningWorld = learningWorld;
-        TargetSpace = targetSpace;
+        LearningPathway = learningPathway;
         _mappingAction = mappingAction;
     }
     public void Execute()
     {
         _memento = LearningWorld.GetMemento();
         
-        var learningPathWay = LearningWorld.LearningPathways.Last(x => x.TargetSpace.Id == TargetSpace.Id);
-        LearningWorld.LearningPathways.Remove(learningPathWay);
+        LearningWorld.LearningPathways.Remove(LearningPathway);
         
         _mappingAction.Invoke(LearningWorld);
     }

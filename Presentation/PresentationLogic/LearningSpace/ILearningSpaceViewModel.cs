@@ -2,12 +2,9 @@
 
 namespace Presentation.PresentationLogic.LearningSpace;
 
-public interface ILearningSpaceViewModel : IDisplayableLearningObject
+public interface ILearningSpaceViewModel : IDisplayableLearningObject, IObjectInPathWayViewModel
 {
-    Guid Id { get; }
     ICollection<ILearningElementViewModel> LearningElements { get; set; }
-    ICollection<ILearningSpaceViewModel> InBoundSpaces { get; set; }
-    ICollection<ILearningSpaceViewModel> OutBoundSpaces { get; set; }
     int Workload { get; }
     int Points { get; }
     int RequiredPoints { get; }
@@ -16,7 +13,5 @@ public interface ILearningSpaceViewModel : IDisplayableLearningObject
     string Shortname { get; set; }
     string Authors { get; set; }
     string Goals { get; set; }
-    double PositionX { get; set; }
-    double PositionY { get; set; }
     ILearningElementViewModel? SelectedLearningElement { get; set; }
 }

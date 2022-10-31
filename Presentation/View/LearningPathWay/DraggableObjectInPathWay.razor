@@ -1,0 +1,85 @@
+@using Presentation.PresentationLogic.LearningSpace
+@using Presentation.PresentationLogic
+@using Presentation.Components
+@using Presentation.PresentationLogic.LearningWorld
+@using BusinessLogic.Entities
+@using Presentation.PresentationLogic.LearningPathway
+<Draggable LearningObject="ObjectInPathWay" OnClicked="@OnClickedDraggable" OnDragged="@OnDraggedDraggable"
+           @bind-X="@ObjectInPathWay.PositionX" @bind-Y="@ObjectInPathWay.PositionY">
+    @if (ObjectInPathWay == PositioningService.LearningWorldVm?.OnHoveredLearningObject)
+    {
+        @((MarkupString)OnHoveredObjectShape)
+    }
+    @((MarkupString)String.Format(ObjectShape, StrokeWidth, Text))
+    <Clickable OnClickedParam="ObjectInPathWay" OnClicked="@OnClickedClickable">
+        @if (ObjectInPathWay.InBoundObjects.Any())
+        {
+            @((MarkupString)DeletePathButtonShape)
+        }
+    </Clickable>
+</Draggable>
+<PullablePath LearningObject="@ObjectInPathWay" X1=@ObjectInPathWay.OutputConnectionX 
+              Y1="@ObjectInPathWay.OutputConnectionY"
+              PositioningSrv="@PositioningService"></PullablePath>
+
+
+@code {
+    // Overwrite nullability warning below because we check in OnParametersSet -n.stich
+    [Parameter, EditorRequired]
+    public IObjectInPathWayViewModel ObjectInPathWay { get; set; } = null!;
+    [Parameter, EditorRequired]
+    public EventCallback<IObjectInPathWayViewModel> OnClickedDraggable { get; set; }
+    [Parameter, EditorRequired]
+    public DraggedEventArgs<IObjectInPathWayViewModel>.DraggedEventHandler? OnDraggedDraggable { get; set; }
+    //public EventCallback<Draggable<ILearningSpaceViewModel>.DraggedEventArgs> OnDraggedDraggable { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback<IObjectInPathWayViewModel> OnClickedClickable { get; set; }
+    // Overwrite nullability warning below because service may never be null -n.stich
+    [Parameter, EditorRequired]
+    public ILearningWorldPresenter PositioningService { get; set; } = null!;
+
+    private string Text => ObjectInPathWay switch
+    {
+        LearningSpaceViewModel space => space.Name,
+        PathWayConditionViewModel pathWayCondition => pathWayCondition.Condition.ToString(),
+        _ => ""
+    };
+
+    private double StrokeWidth => PositioningService.LearningWorldVm?.SelectedLearningObject == ObjectInPathWay ? 2 : 1;
+
+    private string OnHoveredObjectShape => ObjectInPathWay switch
+    {
+        LearningSpaceViewModel => @"<rect transform=""translate(-3, -3)"" height=""56"" width=""106"" fill=""lightblue""></rect>
+                                    <circle r=""6"" transform=""translate(0, 25)"" fill=""lightblue""/>",
+        PathWayConditionViewModel => @"<circle r=""25"" style=""fill:lightblue""></circle>
+                                       <circle r=""6"" transform=""translate(-25)"" fill=""lightblue""/>",
+        _ => ""
+    };
+
+    private string ObjectShape => ObjectInPathWay switch
+    {
+        LearningSpaceViewModel => @"<rect height=""50"" width=""100"" style=""fill:lightgreen;stroke:black;stroke-width:{0}""></rect> 
+                                    <text x=""3"" y=""15"">{1}</text>",
+        PathWayConditionViewModel => @"<circle r=""20"" style=""fill:darkgray;stroke:black;stroke-width:{0}""></circle>
+                                       <text x=""3"" y=""15"" transform=""translate(-16,-10)"">{1}</text>",
+        _ => ""
+    };
+
+    private string DeletePathButtonShape => ObjectInPathWay switch
+    {
+        LearningSpaceViewModel => @"<circle r=""6"" transform=""translate(0, 25)"" fill=""white"" stroke=""gray""/>
+                                    <polyline points=""0,0 2,0 -2,0"" transform=""translate(0,25)"" style=""fill:none;stroke:red;stroke-width:1""/>",
+        PathWayConditionViewModel => @"<circle r=""6"" transform=""translate(-19, 0)"" fill=""white"" stroke=""gray""/>
+                                       <polyline points=""0,0 2,0 -2,0"" transform=""translate(-19, 0)"" style=""fill:none;stroke:red;stroke-width:1""/>",
+        _ => ""
+    };
+    
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (ObjectInPathWay is null)
+        {
+            throw new ArgumentNullException(nameof(ObjectInPathWay));
+        }
+    }
+}

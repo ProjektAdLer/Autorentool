@@ -202,7 +202,7 @@ public class MappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, null, 
-            PositionX, PositionY, new List<LearningSpace>(), new List<LearningSpace>());
+            PositionX, PositionY, new List<IObjectInPathWay>(), new List<IObjectInPathWay>());
         var destination = new LearningSpacePe("", "", "", "", "", 0);
 
         systemUnderTest.Map(source, destination);
@@ -284,7 +284,7 @@ public class MappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, new List<LearningElement>(),
-            PositionX, PositionY, new List<LearningSpace>(), new List<LearningSpace>());
+            PositionX, PositionY, new List<IObjectInPathWay>(), new List<IObjectInPathWay>());
         source.LearningElements.Add(GetTestableElementWithParent(source, elementType));
         var destination = new LearningSpacePe("", "", "", "", "", 0);
 
@@ -427,7 +427,7 @@ public class MappingProfileUt
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
             new List<LearningSpace>());
         source.LearningSpaces.Add(new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints,
-            null, PositionX, PositionY, new List<LearningSpace>(), new List<LearningSpace>()));
+            null, PositionX, PositionY, new List<IObjectInPathWay>(), new List<IObjectInPathWay>()));
         var destination = new LearningWorldPe("", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
@@ -504,12 +504,12 @@ public class MappingProfileUt
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
             new List<LearningSpace>());
         var space1 = GetTestableSpace();
-        var space2 = GetTestableSpace();
+        var pathWayCondition = new PathWayCondition(ConditionEnum.And,3,2);
         source.LearningSpaces.Add(space1);
-        source.LearningSpaces.Add(space2);
+        source.PathWayConditions.Add(pathWayCondition);
         var destination = new LearningWorldViewModel("", "", "", "", "", "");
         
-        source.LearningPathways.Add(new LearningPathway(space1, space2));
+        source.LearningPathways.Add(new LearningPathway(space1, pathWayCondition));
 
         systemUnderTest.Map(source, destination);
 
@@ -517,11 +517,11 @@ public class MappingProfileUt
 
         Assert.Multiple(() =>
         {
-            Assert.That(destination.LearningSpaces, Has.Count.EqualTo(2));
+            Assert.That(destination.LearningSpaces, Has.Count.EqualTo(1));
+            Assert.That(destination.PathWayConditions, Has.Count.EqualTo(1));
             Assert.That(destination.LearningSpaces.First().LearningElements, Has.Count.EqualTo(1));
-            Assert.That(destination.LearningSpaces.First().OutBoundSpaces, Has.Count.EqualTo(1));
-            Assert.That(destination.LearningSpaces.Last().InBoundSpaces, Has.Count.EqualTo(1));
-            Assert.That(destination.LearningSpaces.Last().LearningElements, Has.Count.EqualTo(1));
+            Assert.That(destination.LearningSpaces.First().OutBoundObjects, Has.Count.EqualTo(1));
+            Assert.That(destination.PathWayConditions.First().InBoundObjects, Has.Count.EqualTo(1));
             Assert.That(destination.LearningPathWays, Has.Count.EqualTo(1));
         });
 
@@ -533,21 +533,22 @@ public class MappingProfileUt
         destination.Goals = NewGoals;
 
         var spaceVm1 = GetTestableNewSpaceViewModel();
-        var spaceVm2 = GetTestableNewSpaceViewModel();
-        destination.LearningSpaces = new List<ILearningSpaceViewModel>() {spaceVm1, spaceVm2};
+        var pathWayConditionVm = new PathWayConditionViewModel(ConditionEnum.And,2,1);
+        destination.LearningSpaces = new List<ILearningSpaceViewModel>() {spaceVm1};
+        destination.PathWayConditions = new List<PathWayConditionViewModel>() {pathWayConditionVm};
         destination.LearningPathWays = new List<ILearningPathWayViewModel>();
-        destination.LearningPathWays.Add(new LearningPathwayViewModel(spaceVm1, spaceVm2));
+        destination.LearningPathWays.Add(new LearningPathwayViewModel(spaceVm1, pathWayConditionVm));
 
         systemUnderTest.Map(destination, source);
 
         TestWorld(source, true);
         Assert.Multiple(() =>
         {
-            Assert.That(source.LearningSpaces, Has.Count.EqualTo(2));
+            Assert.That(source.LearningSpaces, Has.Count.EqualTo(1));
+            Assert.That(source.PathWayConditions, Has.Count.EqualTo(1));
             Assert.That(source.LearningSpaces[0].LearningElements, Has.Count.EqualTo(1));
-            Assert.That(source.LearningSpaces[0].OutBoundSpaces, Has.Count.EqualTo(1));
-            Assert.That(source.LearningSpaces[1].LearningElements, Has.Count.EqualTo(1));
-            Assert.That(source.LearningSpaces[1].InBoundSpaces, Has.Count.EqualTo(1));
+            Assert.That(source.LearningSpaces[0].OutBoundObjects, Has.Count.EqualTo(1));
+            Assert.That(source.PathWayConditions[0].InBoundObjects, Has.Count.EqualTo(1));
             Assert.That(source.LearningPathways, Has.Count.EqualTo(1));
         });
     }
@@ -565,8 +566,8 @@ public class MappingProfileUt
         var destination = new LearningWorldPe("", "", "", "", "", "");
         
         source.LearningPathways.Add(new LearningPathway(space1, space2));
-        space1.OutBoundSpaces.Add(space2);
-        space2.InBoundSpaces.Add(space1);
+        space1.OutBoundObjects.Add(space2);
+        space2.InBoundObjects.Add(space1);
 
         systemUnderTest.Map(source, destination);
 
@@ -607,9 +608,9 @@ public class MappingProfileUt
             {
                 Assert.That(source.LearningSpaces, Has.Count.EqualTo(2));
                 Assert.That(sourceSpace1.LearningElements, Has.Count.EqualTo(1));
-                Assert.That(sourceSpace1.OutBoundSpaces, Does.Contain(sourceSpace2));
+                Assert.That(sourceSpace1.OutBoundObjects, Does.Contain(sourceSpace2));
                 Assert.That(sourceSpace2.LearningElements, Has.Count.EqualTo(1));
-                Assert.That(sourceSpace2.InBoundSpaces, Does.Contain(sourceSpace1));
+                Assert.That(sourceSpace2.InBoundObjects, Does.Contain(sourceSpace1));
                 Assert.That(source.LearningPathways, Has.Count.EqualTo(1));
             });
         }
@@ -625,9 +626,9 @@ public class MappingProfileUt
             {
                 Assert.That(newSource.LearningSpaces, Has.Count.EqualTo(2));
                 Assert.That(newSourceSpace1.LearningElements, Has.Count.EqualTo(1));
-                Assert.That(newSourceSpace1.OutBoundSpaces, Does.Contain(newSourceSpace2));
+                Assert.That(newSourceSpace1.OutBoundObjects, Does.Contain(newSourceSpace2));
                 Assert.That(newSourceSpace2.LearningElements, Has.Count.EqualTo(1));
-                Assert.That(newSourceSpace2.InBoundSpaces, Does.Contain(newSourceSpace1));
+                Assert.That(newSourceSpace2.InBoundObjects, Does.Contain(newSourceSpace1));
                 Assert.That(newSource.LearningPathways, Has.Count.EqualTo(1));
             });
         }
@@ -657,7 +658,7 @@ public class MappingProfileUt
         var world = new LearningWorldViewModel("world", Shortname, Authors, Language, Description, Goals, true,
         new List<ILearningSpaceViewModel> { space })
         {
-            SelectedLearningSpace = space
+            SelectedLearningObject = space
         };
 
 
@@ -674,7 +675,7 @@ public class MappingProfileUt
         Assert.Multiple(() =>
         {
             Assert.That(world.LearningSpaces.First().LearningElements.First(), Is.EqualTo(elementVm1));
-            Assert.That(world.SelectedLearningSpace, Is.EqualTo(space));
+            Assert.That(world.SelectedLearningObject, Is.EqualTo(space));
             Assert.That(world.LearningSpaces.First().SelectedLearningElement, Is.EqualTo(elementVm1));
         });
     }

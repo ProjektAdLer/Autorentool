@@ -767,7 +767,7 @@ public class AuthoringToolWorkspacePresenterUt
         var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
         var space = new LearningSpaceViewModel("a", "b", "c", "d", "e", 5);
         learningWorld.LearningSpaces.Add(space);
-        learningWorld.SelectedLearningSpace = space;
+        learningWorld.SelectedLearningObject = space;
         learningWorld.ShowingLearningSpaceView = true;
         authoringToolWorkspace._learningWorlds.Add(learningWorld);
         authoringToolWorkspace.SelectedLearningWorld = learningWorld;
@@ -844,7 +844,7 @@ public class AuthoringToolWorkspacePresenterUt
         var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
         var learningSpace = new LearningSpaceViewModel("n", "sn", "a", "d", "g");
         learningWorld.LearningSpaces.Add(learningSpace);
-        learningWorld.SelectedLearningSpace = learningSpace;
+        learningWorld.SelectedLearningObject = learningSpace;
         learningWorld.ShowingLearningSpaceView = false;
         var authoringToolWorkspaceVm = new AuthoringToolWorkspaceViewModel();
         authoringToolWorkspaceVm._learningWorlds.Add(learningWorld);
@@ -869,7 +869,7 @@ public class AuthoringToolWorkspacePresenterUt
         var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
         var learningSpace = new LearningSpaceViewModel("n", "sn", "a", "d", "g");
         learningWorld.LearningSpaces.Add(learningSpace);
-        learningWorld.SelectedLearningSpace = learningSpace;
+        learningWorld.SelectedLearningObject = learningSpace;
         learningWorld.ShowingLearningSpaceView = true;
         var authoringToolWorkspaceVm = new AuthoringToolWorkspaceViewModel();
         authoringToolWorkspaceVm._learningWorlds.Add(learningWorld);
@@ -893,7 +893,7 @@ public class AuthoringToolWorkspacePresenterUt
         var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
         var learningSpace = new LearningSpaceViewModel("n", "sn", "a", "d", "g");
         learningWorld.LearningSpaces.Add(learningSpace);
-        learningWorld.SelectedLearningSpace = learningSpace;
+        learningWorld.SelectedLearningObject = learningSpace;
         learningWorld.ShowingLearningSpaceView = true;
         var authoringToolWorkspaceVm = new AuthoringToolWorkspaceViewModel();
         authoringToolWorkspaceVm._learningWorlds.Add(learningWorld);

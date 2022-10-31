@@ -19,28 +19,28 @@ public class DeleteLearningSpaceUt
         world.LearningSpaces.Add(space0);
         world.LearningSpaces.Add(space);
         world.LearningSpaces.Add(space1);
-        world.SelectedLearningSpace = space;
+        world.SelectedLearningObject = space;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         
         world.LearningPathways.Add(new LearningPathway(space0, space));
-        space0.OutBoundSpaces.Add(space);
-        space.InBoundSpaces.Add(space0);
+        space0.OutBoundObjects.Add(space);
+        space.InBoundObjects.Add(space0);
         world.LearningPathways.Add(new LearningPathway(space, space1));
-        space.OutBoundSpaces.Add(space1);
-        space1.InBoundSpaces.Add(space);
+        space.OutBoundObjects.Add(space1);
+        space1.InBoundObjects.Add(space);
 
         var command = new DeleteLearningSpace(world, space, mappingAction);
         
         Assert.That(world.LearningSpaces, Does.Contain(space));
         Assert.IsFalse(actionWasInvoked);
-        Assert.That(world.SelectedLearningSpace, Is.EqualTo(space));
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(space));
         
         command.Execute();
         
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(2));
         Assert.IsTrue(actionWasInvoked);
-        Assert.That(world.SelectedLearningSpace, Is.EqualTo(space1));
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(space1));
         Assert.That(world.LearningPathways, Has.Count.EqualTo(0));
     }
 
@@ -68,32 +68,32 @@ public class DeleteLearningSpaceUt
         var space2 = new LearningSpace("l", "m", "n", "o", "p", 7);
         world.LearningSpaces.Add(space);
         world.LearningSpaces.Add(space2);
-        world.SelectedLearningSpace = space;
+        world.SelectedLearningObject = space;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         
         var command = new DeleteLearningSpace(world, space, mappingAction);
         
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(2));
-        Assert.That(world.SelectedLearningSpace, Is.EqualTo(space));
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(space));
         Assert.IsFalse(actionWasInvoked);
         
         command.Execute();
         
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
-        Assert.That(world.SelectedLearningSpace, Is.EqualTo(space2));
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(space2));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Undo();
         
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(2));
-        Assert.That(world.SelectedLearningSpace, Is.EqualTo(space));
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(space));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Redo();
         
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
-        Assert.That(world.SelectedLearningSpace, Is.EqualTo(space2));
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(space2));
         Assert.IsTrue(actionWasInvoked);
     }
 }

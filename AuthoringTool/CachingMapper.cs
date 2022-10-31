@@ -3,6 +3,7 @@ using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
@@ -69,6 +70,9 @@ public class CachingMapper : ICachingMapper
             case LearningSpaceViewModel vM:
                 key = vM.Id;
                 break;
+            case PathWayConditionViewModel vM:
+                key = vM.Id;
+                break;
             case LearningElementViewModel vM:
                 key = vM.Id;
                 break;
@@ -116,7 +120,18 @@ public class CachingMapper : ICachingMapper
         {
             if(_cache.ContainsKey(s.Id)) learningWorldVm.LearningSpaces.Add(Get<LearningSpaceViewModel>(s.Id));
         }
+        var newPathWayConditionInEntity = learningWorldEntity.PathWayConditions
+            .FindAll(p => learningWorldVm.PathWayConditions.All(l => p.Id != l.Id));
+        foreach (var s in newPathWayConditionInEntity)
+        {
+            if(_cache.ContainsKey(s.Id)) learningWorldVm.PathWayConditions.Add(Get<PathWayConditionViewModel>(s.Id));
+        }
         _mapper.Map(learningWorldEntity, learningWorldVm);
+        foreach (var conditionVm in learningWorldVm.PathWayConditions.Where(w =>
+                     !_cache.ContainsKey(w.Id)))
+        {
+            Cache(conditionVm);
+        }
         foreach (var spaceVm in learningWorldVm.LearningSpaces.Where(w =>
                      !_cache.ContainsKey(w.Id)))
         {
@@ -154,6 +169,7 @@ public class CachingMapper : ICachingMapper
             {
                 LearningWorld e => e.Id,
                 LearningSpace e => e.Id,
+                PathWayCondition e => e.Id,
                 LearningElement e => e.Id,
                 _ => throw new ArgumentException("Object is not a World, Space or Element")
             };

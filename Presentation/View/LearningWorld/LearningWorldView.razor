@@ -1,9 +1,11 @@
 ﻿@using Presentation.View.LearningSpace
+@using Presentation.View.LearningPathWay
 @using Presentation.View.LearningElement
 @using System.ComponentModel
 @using Presentation.Components.ModalDialog
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningElement
+@using Presentation.PresentationLogic.LearningPathway
 @using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.ModalDialog
@@ -23,24 +25,16 @@ else
     <h5>Points: @LearningWorldP.LearningWorldVm?.Points </h5>
     <button class="btn btn-primary add-learning-space" @onclick="AddNewLearningSpace">Add Learning Space</button>
     <button class="btn btn-primary load-learning-space" @onclick="LoadLearningSpaceAsync">Load Learning Space</button>
+    <button class="btn btn-primary add-pathway-condition" @onclick="AddNewPathWayCondition">Add Condition</button>                                         
     <br>
 
-    @if (LearningWorldP.LearningWorldVm?.SelectedLearningSpace != null)
+    @if (LearningWorldP.LearningWorldVm?.SelectedLearningObject != null)
     {
-        <label>
-            Selected element:
-            <text>
-                @LearningWorldP.LearningWorldVm.SelectedLearningSpace.Name
-                , Description:
-                @LearningWorldP.LearningWorldVm.SelectedLearningSpace.Description
-            </text>
-        </label>
-        <br>
-        <button class="btn btn-primary edit-learning-space" @onclick="EditLearningSpace">Edit selected Learning Space</button>
-        <button class="btn btn-primary delete-learning-space" @onclick="DeleteSelectedLearningSpace">Delete Learning Space</button>
-        <button class="btn btn-primary save-learning-space" @onclick="SaveSelectedLearningSpaceAsync">Save selected Learning Space</button>
-        <button class="btn btn-primary show-learning-space" @onclick="ShowSelectedLearningSpaceView"
-                hidden="@(!LearningWorldP.SelectedLearningObjectIsSpace)">Open selected Learning Space</button>
+        <br/>
+        <button class="btn btn-primary edit-learning-object" @onclick="EditLearningObject" disabled="@(LearningWorldP.LearningWorldVm.SelectedLearningObject is ILearningPathWayViewModel)">Edit selected Object</button>
+        <button class="btn btn-primary delete-learning-object" @onclick="DeleteSelectedLearningObject">Delete selected Object</button>
+        <button class="btn btn-primary save-learning-space" @onclick="SaveSelectedLearningSpaceAsync" disabled="@(!LearningWorldP.SelectedLearningObjectIsSpace)">Save selected Learning Space</button>
+        <button class="btn btn-primary show-learning-space" @onclick="ShowSelectedLearningSpaceView" disabled="@(!LearningWorldP.SelectedLearningObjectIsSpace)">Open selected Learning Space</button>
     }
     <svg style="width: 100%; height: 600px; border: 1px solid green"
          xmlns="http://www.w3.org/2000/svg"
@@ -49,19 +43,21 @@ else
              @onmouseleave=@(e => MouseService.FireOut(this, e))>
         @if (LearningWorldP.LearningWorldVm != null)
         {
-            @foreach (var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
+            @foreach (var pathWayObjects in LearningWorldP.LearningWorldVm.ObjectsInPathWays)
             {
-                <DraggableLearningSpace LearningSpace="learningSpace"
-                                        OnClickedDraggable="@LearningWorldP.SetSelectedLearningSpace"
-                                        OnDraggedDraggable="@LearningWorldP.DragLearningSpace"
+                <DraggableObjectInPathWay ObjectInPathWay="pathWayObjects"
+                                        OnClickedDraggable="@LearningWorldP.SetSelectedLearningObject"
+                                        OnDraggedDraggable="@LearningWorldP.DragObjectInPathWay"
                                         OnClickedClickable="@LearningWorldP.DeleteLearningPathWay"
                                         PositioningService="@LearningWorldP"/>
             }
             @foreach (var learningPathWay in LearningWorldP.LearningWorldVm.LearningPathWays)
             {
-                <PathWay X1=@(learningPathWay.SourceSpace.PositionX+106) Y1=@(learningPathWay.SourceSpace.PositionY+25)
-                         Direction1=Direction.Right X2=@(learningPathWay.TargetSpace.PositionX-6)
-                         Y2=@(learningPathWay.TargetSpace.PositionY+25) Direction2=Direction.Left />
+                <PathWay X1=@(learningPathWay.SourceObject.OutputConnectionX+6) Y1=@(learningPathWay.SourceObject.OutputConnectionY)
+                         Direction1=Direction.Right X2=@(learningPathWay.TargetObject.InputConnectionX)
+                         Y2=@(learningPathWay.TargetObject.InputConnectionY) Direction2=Direction.Left
+                         LearningPathWay="learningPathWay" OnClickedClickable="@LearningWorldP.SetSelectedLearningObject"
+                         PositioningService="LearningWorldP"/>
             }
         }
     </svg>
@@ -71,11 +67,24 @@ else
         @ModalDialogFactory.GetCreateLearningSpaceFragment(OnCreateSpaceDialogClose)
     }
     
+    //create pathway condition modal
+    @if (LearningWorldP.CreatePathWayConditionDialogOpen)
+    {
+        @ModalDialogFactory.GetCreatePathWayConditionFragment(OnCreatePathWayConditionDialogClose)
+    }
+    
     //edit space modal
     @if (LearningWorldP.EditLearningSpaceDialogOpen && LearningWorldP.LearningWorldVm != null)
     {
         <!-- EditSpaceDialogInitialValues is set by presenter before setting EditLearningSpaceDialogOpen to true -->
         @ModalDialogFactory.GetEditLearningSpaceFragment(LearningWorldP.EditSpaceDialogInitialValues!, OnEditSpaceDialogClose, LearningWorldP.EditSpaceDialogAnnotations)
+    }
+    
+    //edit pathway condition modal
+    @if (LearningWorldP.EditPathWayConditionDialogOpen && LearningWorldP.LearningWorldVm != null)
+    {
+        <!-- EditConditionDialogInitialValues is set by presenter before setting EditPathWayConditionDialogOpen to true -->
+        @ModalDialogFactory.GetEditPathWayConditionFragment(LearningWorldP.EditConditionDialogInitialValues!, OnEditCreatePathWayConditionDialogClose)
     }
 
     @if (ErrorState != null)
@@ -111,15 +120,19 @@ else
         LearningWorldP.OnUndoRedoPerformed += StateHasChanged;
     }
 
-
     private void AddNewLearningSpace()
     {
         LearningWorldP.AddNewLearningSpace();
     }
-
-    private void DeleteSelectedLearningSpace()
+    
+    private void AddNewPathWayCondition()
     {
-        LearningWorldP.DeleteSelectedLearningSpace();
+        LearningWorldP.AddNewPathWayCondition();
+    }
+
+    private void DeleteSelectedLearningObject()
+    {
+        LearningWorldP.DeleteSelectedLearningObject();
     }
 
     private async Task LoadLearningSpaceAsync()
@@ -169,10 +182,22 @@ else
         LearningWorldP.OnCreateSpaceDialogClose(returnValueTuple);
         InvokeAsync(StateHasChanged);
     }
-
-    private void EditLearningSpace()
+    
+    private void OnCreatePathWayConditionDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
-        LearningWorldP.OpenEditSelectedLearningSpaceDialog();
+        LearningWorldP.OnCreatePathWayConditionDialogClose(returnValueTuple);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void EditLearningObject()
+    {
+        LearningWorldP.OpenEditSelectedObjectDialog();
+    }
+    
+    private void OnEditCreatePathWayConditionDialogClose(ModalDialogOnCloseResult returnValueTuple)
+    {
+        LearningWorldP.OnEditPathWayConditionDialogClose(returnValueTuple);
+        InvokeAsync(StateHasChanged);
     }
 
     private void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)

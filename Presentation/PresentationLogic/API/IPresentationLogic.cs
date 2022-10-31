@@ -3,6 +3,7 @@ using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
@@ -162,22 +163,46 @@ public interface IPresentationLogic
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
     Task LoadLearningSpaceAsync(ILearningWorldViewModel learningWorldVm);
+    
+    /// <summary>
+    /// Creates a new pathway condition in the given learning world with the corresponding command.
+    /// </summary>
+    /// <param name="learningWorldVm">Parent learning world of the condition to create.</param>
+    /// <param name="condition">Enum that can either be an AND or an OR condition.</param>
+    /// <param name="positionX">X-coordinate of the condition to create. </param>
+    /// <param name="positionY">Y-coordinate of the condition to create.</param>
+    void CreatePathWayCondition(ILearningWorldViewModel learningWorldVm, ConditionEnum condition, double positionX,
+        double positionY);
 
     /// <summary>
-    /// Adds a new learning pathway between two learning spaces in the given learning world.
+    /// Edits the given pathway condition in the given learning world with the corresponding command.
+    /// </summary>
+    /// <param name="pathWayConditionVm">The path way condition to be edited.</param>
+    /// <param name="newCondition">The new condition to be set.</param>
+    void EditPathWayCondition(PathWayConditionViewModel pathWayConditionVm, ConditionEnum newCondition);
+
+    /// <summary>
+    /// Deletes the given pathway condition in the given learning world.
+    /// </summary>
+    /// <param name="learningWorldVm">Parent learning world.</param>
+    /// <param name="pathWayConditionVm">Pathway condition to be deleted.</param>
+    void DeletePathWayCondition(ILearningWorldViewModel learningWorldVm, PathWayConditionViewModel pathWayConditionVm);
+
+    /// <summary>
+    /// Adds a new learning pathway between two objects (learning space or pathway condition) in the given learning world.
     /// </summary>
     /// <param name="learningWorldVm">Learning world into which the learning pathway gets created.</param>
-    /// <param name="sourceSpaceVm">Learning space from which the path starts.</param>
-    /// <param name="targetSpaceVm">Learning space where the path ends.</param>
-    void CreateLearningPathWay(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel sourceSpaceVm,
-        ILearningSpaceViewModel targetSpaceVm);
+    /// <param name="sourceObjectVm">Learning object from which the path starts.</param>
+    /// <param name="targetObjectVm">Learning object where the path ends.</param>
+    void CreateLearningPathWay(ILearningWorldViewModel learningWorldVm, IObjectInPathWayViewModel sourceObjectVm,
+        IObjectInPathWayViewModel targetObjectVm);
 
     /// <summary>
     /// Deletes the last pathway that was created to the targetSpace.
     /// </summary>
     /// <param name="learningWorldVm">Learning world in which the learning pathway gets deleted.</param>
-    /// <param name="targetSpaceVm">Learning space where the path ends.</param>
-    void DeleteLearningPathWay(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel targetSpaceVm);
+    /// <param name="learningPathWayVm">Learning PathWay to delete.</param>
+    void DeleteLearningPathWay(ILearningWorldViewModel learningWorldVm, ILearningPathWayViewModel learningPathWayVm);
     
     /// <summary>
     /// Adds a new learning element to its parent space.
@@ -292,6 +317,6 @@ public interface IPresentationLogic
     void LoadLearningSpaceViewModel(ILearningWorldViewModel learningWorldVm, Stream stream);
     void LoadLearningElementViewModel(ILearningSpaceViewModel parentSpaceVm, Stream stream);
     event Action? OnUndoRedoPerformed;
-    void DragLearningSpace(ILearningSpaceViewModel learningSpaceVm, double oldPositionX, double oldPositionY);
+    void DragObjectInPathWay(IObjectInPathWayViewModel pathWayObjectVm, double oldPositionX, double oldPositionY);
     void DragLearningElement(ILearningElementViewModel learningElementVm, double oldPositionX, double oldPositionY);
 }
