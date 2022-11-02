@@ -57,6 +57,9 @@ public class Startup
         //Wrapper around HybridSupport
         var hybridSupportWrapper = new HybridSupportWrapper();
         services.AddSingleton<IHybridSupportWrapper, HybridSupportWrapper>(_ => hybridSupportWrapper);
+        //Wrapper around Shell
+        var shellWrapper = new ShellWrapper();
+        services.AddSingleton<IShellWrapper, ShellWrapper>(_ => shellWrapper);
         
         //Insert electron dependant services as required
         if (hybridSupportWrapper.IsElectronActive)

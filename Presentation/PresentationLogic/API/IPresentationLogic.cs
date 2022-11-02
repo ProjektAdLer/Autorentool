@@ -258,6 +258,13 @@ public interface IPresentationLogic
     Task LoadLearningElementAsync(ILearningSpaceViewModel parentSpaceVm);
     
     /// <summary>
+    /// Open the given content file of the learning element in the desktop's default manner.
+    /// </summary>
+    /// <param name="learningElementVm">Element which contains the content file to be opened.</param>
+    /// <returns></returns>
+    Task ShowLearningElementContentAsync(LearningElementViewModel learningElementVm);
+    
+    /// <summary>
     /// Asks user for path, loads an image file from disk and returns a <see cref="LearningContentViewModel"/>. 
     /// </summary>
     /// <returns></returns>

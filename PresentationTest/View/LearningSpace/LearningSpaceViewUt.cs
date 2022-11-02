@@ -481,6 +481,50 @@ public class LearningSpaceViewUt
         });
         _learningSpacePresenter.Received().SaveSelectedLearningElementAsync();
     }
+    
+    [Test]
+    public void ShowElementContentButton_Clicked_CallsShowSelectedElementContentAsync()
+    {
+        var systemUnderTest = GetLearningSpaceViewForTesting();
+        
+        var button = systemUnderTest.Find("button.btn.btn-primary.show-element-content");
+        button.Click();
+        _learningSpacePresenter.Received().ShowSelectedElementContentAsync();
+    }
+    
+    [Test]
+    public void ShowElementContentButton_Clicked_OperationCanceledExceptionCaught()
+    {
+        _learningSpacePresenter.ShowSelectedElementContentAsync().Throws(new OperationCanceledException());
+        
+        var systemUnderTest = GetLearningSpaceViewForTesting();
+        
+        var button = systemUnderTest.Find("button.btn.btn-primary.show-element-content");
+        Assert.That(() => button.Click(), Throws.Nothing);
+        _learningSpacePresenter.Received().ShowSelectedElementContentAsync();
+    }
+    
+    [Test]
+    public void ShowElementContentButton_Clicked_OtherExceptionsWrappedInErrorState()
+    {
+        var ex = new Exception();
+        _learningSpacePresenter.ShowSelectedElementContentAsync().Throws(ex);
+        
+        var systemUnderTest = GetLearningSpaceViewForTesting();
+        
+        var button = systemUnderTest.Find("button.btn.btn-primary.show-element-content");
+        Assert.Multiple(() =>
+        {
+            Assert.That(() => button.Click(), Throws.Nothing);
+            Assert.That(systemUnderTest.Instance.ErrorState, Is.Not.Null);
+        });
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.Instance.ErrorState!.CallSite, Is.EqualTo("Show learning element content"));
+            Assert.That(systemUnderTest.Instance.ErrorState!.Exception, Is.EqualTo(ex));
+        });
+        _learningSpacePresenter.Received().ShowSelectedElementContentAsync();
+    }
     private IRenderedComponent<LearningSpaceView> GetLearningSpaceViewForTesting(RenderFragment? childContent = null)
     {
         childContent ??= delegate {  };

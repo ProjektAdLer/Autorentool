@@ -24,6 +24,7 @@
     <button class="btn btn-primary edit-learning-element" @onclick="EditSelectedLearningElement">Edit selected Learning Element</button>
     <button class="btn btn-primary delete-learning-element" @onclick="DeleteSelectedLearningElement">Delete Learning Element</button>
     <button class="btn btn-primary save-learning-element" @onclick="SaveSelectedLearningElementAsync">Save selected Learning Element</button>
+    <button class="btn btn-primary show-element-content" @onclick="ShowSelectedElementContentAsync">Show content of Learning Element</button>
 }
 <svg style="width: 100%; height: 600px; border: 1px solid green"
      xmlns="http://www.w3.org/2000/svg"
@@ -138,6 +139,25 @@
         finally
         {
     //we need to tell blazor explicitly to re-render our component after we added the loaded learning element
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task ShowSelectedElementContentAsync()
+    {
+        try
+        {
+            await LearningSpaceP.ShowSelectedElementContentAsync();
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch (Exception exception)
+        {
+            ErrorState = new ExceptionWrapper("Show learning element content", exception);
+        }
+        finally
+        {
             await InvokeAsync(StateHasChanged);
         }
     }

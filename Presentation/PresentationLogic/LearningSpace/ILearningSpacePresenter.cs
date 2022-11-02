@@ -20,6 +20,7 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     void AddNewLearningElement();
     Task LoadLearningElementAsync();
     Task SaveSelectedLearningElementAsync();
+    Task ShowSelectedElementContentAsync();
     void OnCreateElementDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void EditSelectedLearningElement();
     void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple);
