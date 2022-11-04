@@ -12,7 +12,7 @@ public class DeleteLearningPathWay : IUndoCommand
         Action<LearningWorld> mappingAction)
     {
         LearningWorld = learningWorld;
-        LearningPathway = learningPathway;
+        LearningPathway = learningWorld.LearningPathways.Single(x => x.Id == learningPathway.Id);
         _mappingAction = mappingAction;
     }
     public void Execute()
