@@ -15,7 +15,8 @@ assignees: ''
 (Erwartetes Verhalten nach eigenem Verständnis)
 ## Tatsächliches Verhalten:
 (ausführliche Beschreibung des Fehlerverhaltens, falls möglich. Gerne auch Screenshot, Log, etc.)
- 
+## Ansprechpartner:
+(für weitere Fragen)
 ## Ursache (erst bei Fix angeben): 
 (wird durch Team AMG ausgefüllt)
 ## Lösung (erst bei Fix angeben): 
