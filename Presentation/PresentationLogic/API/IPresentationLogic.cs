@@ -175,6 +175,16 @@ public interface IPresentationLogic
         double positionY);
 
     /// <summary>
+    /// Creates a new pathway condition between two given objects in the given learning world.
+    /// </summary>
+    /// <param name="learningWorldVm">Parent learning world of the condition to create.</param>
+    /// <param name="condition">Enum that can either be an AND or an OR condition.</param>
+    /// <param name="sourceObject">Inbound object of the new pathway condition.</param>
+    /// <param name="targetObject">Outbound object of the new pathway condition.</param>
+    void CreatePathWayConditionBetweenObjects(ILearningWorldViewModel learningWorldVm, ConditionEnum condition,
+        IObjectInPathWayViewModel sourceObject, ILearningSpaceViewModel targetObject);
+
+    /// <summary>
     /// Edits the given pathway condition in the given learning world with the corresponding command.
     /// </summary>
     /// <param name="pathWayConditionVm">The path way condition to be edited.</param>

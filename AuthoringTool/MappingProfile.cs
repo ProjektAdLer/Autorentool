@@ -54,7 +54,6 @@ public class MappingProfile : Profile
             .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
             .ForMember(x => x.OnHoveredLearningObject, opt => opt.Ignore())
             .ForMember(x => x.ShowingLearningSpaceView, opt => opt.Ignore())
-            .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
             .ForMember(x => x.SelectableWorldObjects, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
@@ -77,7 +76,6 @@ public class MappingProfile : Profile
                 }
             })
             .ReverseMap()
-            .ForMember(x => x.PathWayObjects, opt => opt.Ignore())
             .ForMember(x => x.SelectableWorldObjects, opt => opt.Ignore())
             .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
             .AfterMap((s, d) =>
@@ -104,10 +102,15 @@ public class MappingProfile : Profile
         CreateMap<LearningPathwayViewModel, LearningPathway>()
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ReverseMap();
-        CreateMap<PathWayConditionViewModel, PathWayCondition>()
-            .EqualityComparison((x,y) => x.Id == y.Id)
-            .IncludeBase<IObjectInPathWayViewModel, IObjectInPathWay>()
-            .ReverseMap();
+        CreateMap<PathWayCondition, PathWayConditionViewModel>()
+            .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
+            .IncludeBase<IObjectInPathWay, IObjectInPathWayViewModel>()
+            .EqualityComparison((x, y) => x.Id == y.Id)
+            .ReverseMap()
+            .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.OutBoundObjects, opt => opt.Ignore());
+
         CreateMap<IObjectInPathWay, IObjectInPathWayViewModel>()
             .IncludeBase<ISelectableObjectInWorld, ISelectableObjectInWorldViewModel>()
             .ReverseMap();

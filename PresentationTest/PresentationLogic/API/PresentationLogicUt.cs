@@ -560,6 +560,7 @@ public class PresentationLogicUt
         var pathWayEntity = new BusinessLogic.Entities.LearningPathway(
             new BusinessLogic.Entities.LearningSpace("f", "f", "f", "f", "f", 3),
             new BusinessLogic.Entities.LearningSpace("z", "z", "z", "z", "z",5));
+        learningWorldEntity.LearningPathways.Add(pathWayEntity);
         
         
         mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
@@ -600,6 +601,45 @@ public class PresentationLogicUt
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
         Assert.That(command, Is.Not.Null);
         Assert.That(command!.LearningWorld, Is.EqualTo(learningWorldEntity));
+    }
+    
+    [Test]
+    public void CreatePathWayConditionBetweenObjects_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        CreatePathWayCondition? command = null;
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
+            Do(sub => command = sub.Arg<ICommand>() as CreatePathWayCondition);
+        var condition = ConditionEnum.And;
+        var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        var sourceSpaceVm = new LearningSpaceViewModel("f", "f", "f", "f", "f", 4);
+        var targetSpaceVm = new LearningSpaceViewModel("f", "f", "f", "f", "f", 4);
+        var mockMapper = Substitute.For<IMapper>();
+        var learningWorldEntity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
+        var sourceSpaceEntity = new BusinessLogic.Entities.LearningSpace("f", "f", "f", "f", "f", 3);
+        var targetSpaceEntity = new BusinessLogic.Entities.LearningSpace("f", "f", "f", "f", "f", 3);
+        learningWorldEntity.LearningSpaces.Add(sourceSpaceEntity);
+        learningWorldEntity.LearningSpaces.Add(targetSpaceEntity);
+        
+        mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
+            .Returns(learningWorldEntity);
+        mockMapper.Map<BusinessLogic.Entities.IObjectInPathWay>(sourceSpaceVm)
+            .Returns(sourceSpaceEntity);
+        mockMapper.Map<BusinessLogic.Entities.LearningSpace>(targetSpaceVm)
+            .Returns(targetSpaceEntity);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+        
+        systemUnderTest.CreatePathWayConditionBetweenObjects(learningWorldVm, condition, sourceSpaceVm, targetSpaceVm);
+
+        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
+        Assert.That(command, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(command!.LearningWorld.Id, Is.EqualTo(learningWorldEntity.Id));
+            Assert.That(command!.SourceObject!.Id, Is.EqualTo(sourceSpaceEntity.Id));
+            Assert.That(command!.TargetObject!.Id, Is.EqualTo(targetSpaceEntity.Id));
+        });
     }
     
     [Test]

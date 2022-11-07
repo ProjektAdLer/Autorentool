@@ -171,7 +171,7 @@ public class CachingMapper : ICachingMapper
                 LearningSpace e => e.Id,
                 PathWayCondition e => e.Id,
                 LearningElement e => e.Id,
-                _ => throw new ArgumentException("Object is not a World, Space or Element")
+                _ => throw new ArgumentException("Object is neither a World, Space, Condition or an Element")
             };
         });
     }

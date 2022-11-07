@@ -627,6 +627,25 @@ public class LearningWorldPresenterUt
     }
     
     [Test]
+    public void OnCreatePathWayConditionDialogClose_ModalDialogCancel_Returns()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var condition = ConditionEnum.And;
+        const ModalDialogReturnValue modalDialogReturnValue = ModalDialogReturnValue.Cancel;
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var returnValueTuple =
+            //nullability overridden because required for test - m.ho
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.OnCreatePathWayConditionDialogClose(returnValueTuple);
+
+        presentationLogic.DidNotReceive().CreatePathWayCondition(world, condition, 20, 100);
+    }
+    
+    [Test]
     public void OnCreatePathWayConditionDialogClose_ThrowsWhenConditionIsNotValid()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
@@ -915,6 +934,40 @@ public class LearningWorldPresenterUt
         systemUnderTest.CreateLearningPathWay(sourceSpace, 260,260);
         
         presentationLogic.Received().CreateLearningPathWay(world, sourceSpace, targetSpace);
+    }
+    
+    [Test]
+    public void CreateLearningPathWay_TargetSpaceHasInBoundObject_CallsPresentationLogic()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var sourceSpace = new LearningSpaceViewModel("g", "g", "g", "g", "g",
+            positionX:25, positionY:25);
+        var sourceCondition = new PathWayConditionViewModel(ConditionEnum.And,3,1);
+        var targetSpace = new LearningSpaceViewModel("u", "u", "u", "u", "u",
+            positionX:250, positionY:250);
+        targetSpace.InBoundObjects.Add(sourceCondition);
+        world.PathWayConditions.Add(sourceCondition);
+        world.LearningSpaces.Add(sourceSpace);
+        world.LearningSpaces.Add(targetSpace);
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+
+        systemUnderTest.CreateLearningPathWay(sourceSpace, 260,260);
+        
+        presentationLogic.DidNotReceive().CreateLearningPathWay(world, sourceSpace, targetSpace);
+        
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Condition"] = ConditionEnum.And.ToString();
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
+        
+        systemUnderTest.OnCreatePathWayConditionDialogClose(returnValueTuple);
+        
+        presentationLogic.Received().CreatePathWayConditionBetweenObjects(world, ConditionEnum.And, sourceSpace, targetSpace);
     }
 
     [Test]

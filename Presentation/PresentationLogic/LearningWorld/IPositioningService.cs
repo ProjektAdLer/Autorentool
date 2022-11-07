@@ -1,5 +1,3 @@
-using Presentation.PresentationLogic.LearningSpace;
-
 namespace Presentation.PresentationLogic.LearningWorld;
 
 public interface IPositioningService

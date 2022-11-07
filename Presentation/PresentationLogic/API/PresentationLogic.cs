@@ -230,6 +230,19 @@ public class PresentationLogic : IPresentationLogic
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
     }
+
+    /// <inheritdoc cref="IPresentationLogic.CreatePathWayConditionBetweenObjects"/>
+    public void CreatePathWayConditionBetweenObjects(ILearningWorldViewModel learningWorldVm, ConditionEnum condition,
+        IObjectInPathWayViewModel sourceObject, ILearningSpaceViewModel targetObject)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var sourceObjectEntity = Mapper.Map<BusinessLogic.Entities.IObjectInPathWay>(sourceObject);
+        var targetObjectEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(targetObject);
+        
+        var command = new CreatePathWayCondition(worldEntity, condition, sourceObjectEntity, targetObjectEntity, 
+            world => CMapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
     
     /// <inheritdoc cref="IPresentationLogic.EditPathWayCondition"/>
     public void EditPathWayCondition(PathWayConditionViewModel pathWayConditionVm, ConditionEnum newCondition)

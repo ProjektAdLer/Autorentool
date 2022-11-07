@@ -54,6 +54,7 @@ public class DeleteLearningPathWayUt
         var pathWay = new LearningPathway(space1, space2);
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
+        world.LearningPathways.Add(pathWay);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         

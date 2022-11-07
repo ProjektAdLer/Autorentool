@@ -67,7 +67,7 @@ public class ModalDialogFactory : ILearningSpaceViewModalDialogFactory, ILearnin
         const string title = "Edit existing pathway condition";
         const string text = "Please choose between an and or an or pathway condition below:";
         const ModalDialogType dialogType = ModalDialogType.OkCancel;
-        return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType, inputFields);
+        return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType, inputFields, initialInputValues);
     }
 
     /// <inheritdoc cref="ILearningWorldViewModalDialogFactory.GetEditLearningSpaceFragment"/>

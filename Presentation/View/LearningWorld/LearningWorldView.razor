@@ -84,7 +84,7 @@ else
     @if (LearningWorldP.EditPathWayConditionDialogOpen && LearningWorldP.LearningWorldVm != null)
     {
         <!-- EditConditionDialogInitialValues is set by presenter before setting EditPathWayConditionDialogOpen to true -->
-        @ModalDialogFactory.GetEditPathWayConditionFragment(LearningWorldP.EditConditionDialogInitialValues!, OnEditCreatePathWayConditionDialogClose)
+        @ModalDialogFactory.GetEditPathWayConditionFragment(LearningWorldP.EditConditionDialogInitialValues!, OnEditPathWayConditionDialogClose)
     }
 
     @if (ErrorState != null)
@@ -194,7 +194,7 @@ else
         LearningWorldP.OpenEditSelectedObjectDialog();
     }
     
-    private void OnEditCreatePathWayConditionDialogClose(ModalDialogOnCloseResult returnValueTuple)
+    private void OnEditPathWayConditionDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
         LearningWorldP.OnEditPathWayConditionDialogClose(returnValueTuple);
         InvokeAsync(StateHasChanged);

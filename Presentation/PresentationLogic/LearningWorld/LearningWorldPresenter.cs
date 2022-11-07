@@ -30,6 +30,8 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     
     private ILearningWorldViewModel? _learningWorldVm;
     private LearningContentViewModel? _dragAndDropLearningContent;
+    private IObjectInPathWayViewModel? _newConditionSourceObject;
+    private LearningSpaceViewModel? _newConditionTargetSpace;
     private bool _editLearningSpaceDialogOpen;
     private bool _editPathWayConditionDialogOpen;
     private Dictionary<string, string>? _editSpaceDialogInitialValues;
@@ -384,7 +386,12 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
         CreatePathWayConditionDialogOpen = false;
 
-        if (response == ModalDialogReturnValue.Cancel) return;
+        if (response == ModalDialogReturnValue.Cancel)
+        {
+            _newConditionSourceObject = null;
+            _newConditionTargetSpace = null;
+            return;
+        }
         if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
 
         foreach (var pair in data)
@@ -395,6 +402,15 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         //required arguments
         if (Enum.TryParse(data["Condition"], out ConditionEnum condition) == false)
             throw new ApplicationException("Condition is not a valid enum value");
+
+        if (_newConditionSourceObject != null && _newConditionTargetSpace != null)
+        {
+            _presentationLogic.CreatePathWayConditionBetweenObjects(LearningWorldVm, condition, _newConditionSourceObject, _newConditionTargetSpace);
+            _newConditionSourceObject = null;
+            _newConditionTargetSpace = null;
+            return;
+        }
+        
         var offset = 15 * _conditionCreationCounter;
         _conditionCreationCounter = (_conditionCreationCounter + 1) % 10;
         _presentationLogic.CreatePathWayCondition(LearningWorldVm, condition, offset+20, offset+100);
@@ -499,6 +515,13 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (targetObject == null || targetObject == sourceObject)
             return;
         LearningWorldVm.OnHoveredLearningObject = null;
+        if (targetObject.InBoundObjects.Count == 1 && targetObject is LearningSpaceViewModel space)
+        {
+            _newConditionSourceObject = sourceObject;
+            _newConditionTargetSpace = space;
+            _createPathWayConditionDialogOpen = true;
+            return;
+        }
         _presentationLogic.CreateLearningPathWay(LearningWorldVm, sourceObject, targetObject);
     }
 
