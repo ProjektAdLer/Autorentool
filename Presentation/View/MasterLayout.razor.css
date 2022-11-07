@@ -1,0 +1,11 @@
+.blue {
+    background-color: lightblue;
+}
+
+::deep .green {
+    background-color: lightgreen;
+}
+
+.test {
+    height: 80%;
+}

@@ -1,0 +1,55 @@
+@using Presentation.View.Layout
+@page "/app"
+<div class="h-screen w-screen columns-3 flex flex-row justify-evenly items-center">
+    <SideContainer Side="Side.Left">
+        <Sidebar SidebarSide="Side.Left">
+            <SidebarItem>
+                <SidebarContent>
+                    <p>Ico</p>
+                </SidebarContent>
+                <MainContent>
+                    <p>Some elaborate content</p>
+                </MainContent>
+            </SidebarItem>
+            <SidebarItem>
+                <SidebarContent>
+                    <p>Ico2</p>
+                </SidebarContent>
+                <MainContent>
+                    <p>even more cool content!</p>
+                </MainContent>
+            </SidebarItem>
+        </Sidebar>
+    </SideContainer>
+    <CenterContainer>
+        <div class="blue test">
+            Center
+        </div>
+        <div>
+            Bar
+        </div>
+    </CenterContainer>
+    <SideContainer Side="Side.Right">
+        <Sidebar SidebarSide="Side.Right">
+            <SidebarItem>
+                <SidebarContent>
+                    <MudIcon Icon="@Icons.Material.Rounded.Apps" Title="Foobar"/>
+                </SidebarContent>
+                <MainContent>
+                    <p>Some elaborate content</p>
+                </MainContent>
+            </SidebarItem>
+            <SidebarItem>
+                <SidebarContent>
+                    <MudIcon Icon="@Icons.Material.Rounded.Apps" Title="Foobar"/>
+                </SidebarContent>
+                <MainContent>
+                    <p>even more cool content!</p>
+                </MainContent>
+            </SidebarItem>
+        </Sidebar>
+    </SideContainer>
+</div>
+@code {
+    
+}

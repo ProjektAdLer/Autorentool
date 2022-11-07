@@ -8,6 +8,7 @@ using Generator.API;
 using Generator.DSL;
 using Generator.WorldExport;
 using Microsoft.Extensions.Caching.Memory;
+using MudBlazor.Services;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -19,6 +20,7 @@ using Presentation.PresentationLogic.Toolbox;
 using Presentation.View.Toolbox;
 using Shared;
 using Shared.Configuration;
+using Tailwind;
 
 namespace AuthoringTool;
 
@@ -36,6 +38,9 @@ public class Startup
         //Blazor and Electron (framework)
         services.AddRazorPages();
         services.AddServerSideBlazor();
+        
+        //MudBlazor
+        services.AddMudServices();
         
         
         //AuthoringToolLib
@@ -151,6 +156,7 @@ public class Startup
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
+            app.RunTailwind("tailwind");
         }
         else
         {

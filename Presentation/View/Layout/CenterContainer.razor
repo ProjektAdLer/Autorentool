@@ -1,0 +1,8 @@
+<div class="center-container basis-8/12 h-[70%] green">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+}

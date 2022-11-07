@@ -1,7 +1,13 @@
 ﻿@page "/"
+@inject NavigationManager NavManager
 
 <PageTitle>Start</PageTitle>
 
-<h1>AdLer Authoring Tool</h1>
+@code {
 
-Please click on the workspace button to the left to get started.
+    protected override void OnInitialized()
+    {
+        NavManager.NavigateTo("/app");
+    }
+
+}

@@ -1,0 +1,18 @@
+<div class="@GetSide basis-3/12 h-[90%] m-3 green">
+    @ChildContent
+</div>
+
+@code {
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+    [Parameter, EditorRequired]
+    public Side Side { get; set; }
+
+    private string GetSide => Side switch 
+    {
+        Side.Left => "left",
+        Side.Right => "right",
+        _ => throw new ArgumentOutOfRangeException(nameof(Side))
+    };
+
+}

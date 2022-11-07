@@ -1,0 +1,31 @@
+<div class="h-full relative">
+    <aside class="absolute w-1/6 h-full bg-gray-700 @SidebarSide.AsCssClass()">
+        <div class="bg-gray-50">
+            <CascadingValue Value="this">
+                @ChildContent
+            </CascadingValue>
+        </div>
+    </aside>
+    <div class="absolute w-5/6 h-full bg-gray-300 @SidebarSide.OppositeAsCssClass()">
+        @if (CurrentItem is not null)
+        {
+            @CurrentItem.MainContent
+        }
+    </div>
+</div>
+@code {
+    [Parameter]
+#pragma warning disable CS8618 - injected by framework n.stich
+    public RenderFragment ChildContent { get; set; }
+    [Parameter, EditorRequired]
+    public Side SidebarSide { get; set; }
+#pragma warning restore CS8618
+
+    private SidebarItem? CurrentItem { get; set; }
+
+    public void SetSidebarItem(SidebarItem item)
+    {
+        CurrentItem = CurrentItem != item ? item : null;
+        InvokeAsync(StateHasChanged);
+    }
+}

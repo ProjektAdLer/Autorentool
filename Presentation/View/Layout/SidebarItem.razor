@@ -1,0 +1,15 @@
+<span onclick="@SetAsCurrentItem" class="cursor-pointer">
+    @SidebarContent
+</span>
+@code {
+#pragma warning disable CS8618 - injected by framework n.stich
+    [CascadingParameter]
+    public Sidebar Sidebar { get; set; }
+    [Parameter]
+    public RenderFragment SidebarContent { get; set; }
+    [Parameter]
+    public RenderFragment MainContent { get; set; }
+#pragma warning restore CS8618
+
+    private void SetAsCurrentItem() => Sidebar.SetSidebarItem(this);
+}
