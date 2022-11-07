@@ -2,7 +2,7 @@
 name: User Story Template
 about: Allgemeine User Story im AdLer Projekt
 title: ''
-labels: ''
+labels: 'User Story'
 assignees: ''
 
 ---
