@@ -1,54 +1,56 @@
 @using Presentation.View.Layout
 @page "/app"
-<div class="h-screen w-screen columns-3 flex flex-row justify-evenly items-center">
-    <SideContainer Side="Side.Left">
-        <Sidebar SidebarSide="Side.Left">
-            <SidebarItem>
-                <SidebarContent>
-                    <p>Ico</p>
-                </SidebarContent>
-                <MainContent>
-                    <p>Some elaborate content</p>
-                </MainContent>
-            </SidebarItem>
-            <SidebarItem>
-                <SidebarContent>
-                    <p>Ico2</p>
-                </SidebarContent>
-                <MainContent>
-                    <p>even more cool content!</p>
-                </MainContent>
-            </SidebarItem>
-        </Sidebar>
-    </SideContainer>
-    <CenterContainer>
-        <div class="blue test">
-            Center
-        </div>
-        <div>
-            Bar
-        </div>
-    </CenterContainer>
-    <SideContainer Side="Side.Right">
-        <Sidebar SidebarSide="Side.Right">
-            <SidebarItem>
-                <SidebarContent>
-                    <MudIcon Icon="@Icons.Material.Rounded.Apps" Title="Foobar"/>
-                </SidebarContent>
-                <MainContent>
-                    <p>Some elaborate content</p>
-                </MainContent>
-            </SidebarItem>
-            <SidebarItem>
-                <SidebarContent>
-                    <MudIcon Icon="@Icons.Material.Rounded.Apps" Title="Foobar"/>
-                </SidebarContent>
-                <MainContent>
-                    <p>even more cool content!</p>
-                </MainContent>
-            </SidebarItem>
-        </Sidebar>
-    </SideContainer>
+<div class="flex flex-col h-screen w-screen bg-adlerblue-100 font-sans">
+    <HeaderBar/>
+    <div class="columns-3 flex-1 flex flex-row justify-between items-center">
+        <SideContainer Side="Side.Left">
+            <Sidebar SidebarSide="Side.Left">
+                <SidebarItem>
+                    <SidebarContent>
+                        <p class="text-center">Ico</p>
+                    </SidebarContent>
+                    <MainContent>
+                        <p class="text-center">Some elaborate content</p>
+                    </MainContent>
+                </SidebarItem>
+                <SidebarItem>
+                    <SidebarContent>
+                        <p>Ico2</p>
+                    </SidebarContent>
+                    <MainContent>
+                        <p class="whitespace-normal break-all">even more cool contentbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb</p>
+                    </MainContent>
+                </SidebarItem>
+            </Sidebar>
+        </SideContainer>
+        <CenterContainer>
+            <div class="bg-blue-400">
+                Center
+            </div>
+        </CenterContainer>
+        <SideContainer Side="Side.Right">
+            <Sidebar SidebarSide="Side.Right">
+                <SidebarItem>
+                    <SidebarContent>
+                        <div title="Apfelkischte">
+                            <MudIcon Icon="@Icons.Custom.Brands.Apple" Size="Size.Large"/>
+                        </div>
+                    </SidebarContent>
+                    <MainContent>
+                        <p>Some elaborate content</p>
+                    </MainContent>
+                </SidebarItem>
+                <SidebarItem>
+                    <SidebarContent>
+                        <MudIcon Icon="@Icons.Material.Rounded.Headset" Size="Size.Large"/>
+                    </SidebarContent>
+                    <MainContent>
+                        <p>even more cool content!</p>
+                    </MainContent>
+                </SidebarItem>
+            </Sidebar>
+        </SideContainer>
+    </div>
 </div>
 @code {
     

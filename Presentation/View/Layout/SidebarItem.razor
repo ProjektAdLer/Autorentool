@@ -1,6 +1,6 @@
-<span onclick="@SetAsCurrentItem" class="cursor-pointer">
+<button onclick="@SetAsCurrentItem" class="@BackgroundColour() min-h-[50px] cursor-pointer flex justify-center items-center @Rounded()">
     @SidebarContent
-</span>
+</button>
 @code {
 #pragma warning disable CS8618 - injected by framework n.stich
     [CascadingParameter]
@@ -12,4 +12,13 @@
 #pragma warning restore CS8618
 
     private void SetAsCurrentItem() => Sidebar.SetSidebarItem(this);
+    private bool IsCurrentItem() => Sidebar.CurrentItem == this;
+    private string BackgroundColour() => IsCurrentItem() ? "bg-adlergrey-300" : "bg-adlergrey-100";
+    private string Rounded() => IsCurrentItem() ? RoundedInFocus() : "rounded-lg";
+    private string RoundedInFocus() => Sidebar.SidebarSide switch
+    {
+        Side.Left => "rounded-l-lg",
+        Side.Right => "rounded-r-lg",
+        _ => throw new ArgumentOutOfRangeException()
+    };
 }
