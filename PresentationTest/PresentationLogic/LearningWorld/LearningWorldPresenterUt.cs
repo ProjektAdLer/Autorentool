@@ -55,6 +55,72 @@ public class LearningWorldPresenterUt
 
         presentationLogic.Received().DragLearningSpace(space, oldPositionX, oldPositionY);
     }
+
+    [Test]
+    public void EditLearningSpace_SetsSelectedLearningSpaceAndSetsEditLearningSpaceDialogOpenToTrue()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var space = new LearningSpaceViewModel("g", "g", "g", "g", "g");
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.EditLearningSpace(space);
+        
+        Assert.That(world.SelectedLearningSpace, Is.EqualTo(space));
+        Assert.That(systemUnderTest.EditLearningSpaceDialogOpen, Is.True);
+    }
+    
+    [Test]
+    public void DeleteLearningSpace_CallsPresentationLogic()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var space = new LearningSpaceViewModel("g", "g", "g", "g", "g");
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.DeleteLearningSpace(space);
+
+        presentationLogic.Received().DeleteLearningSpace(world, space);
+    }
+    
+    [Test]
+    public void RightClickedLearningSpace_SetsRightClickedLearningObjectToSpace()
+    {
+        var space = new LearningSpaceViewModel("g", "g", "g", "g", "g");
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.RightClickedLearningSpace(space);
+        
+        Assert.That(systemUnderTest.RightClickedLearningObject, Is.EqualTo(space));
+    }
+    
+    [Test]
+    public void HideRightClickMenu_SetsRightClickedLearningObjectToNull()
+    {
+        var space = new LearningSpaceViewModel("g", "g", "g", "g", "g");
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        systemUnderTest.RightClickedLearningSpace(space);
+        Assert.That(systemUnderTest.RightClickedLearningObject, Is.EqualTo(space));
+        
+        systemUnderTest.HideRightClickMenu();
+        
+        Assert.That(systemUnderTest.RightClickedLearningObject, Is.Null);
+    }
+    
+    [Test]
+    public void ClickedLearningSpace_SetsSelectedLearningSpace()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var space = new LearningSpaceViewModel("g", "g", "g", "g", "g");
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.ClickedLearningSpace(space);
+        
+        Assert.That(world.SelectedLearningSpace, Is.EqualTo(space));
+    }
         
         
     #region Create/AddLearningSpace

@@ -27,7 +27,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     
     
     private ILearningWorldViewModel? _learningWorldVm;
-    private LearningContentViewModel? _dragAndDropLearningContent;
     private bool _editLearningSpaceDialogOpen;
     private Dictionary<string, string>? _editSpaceDialogInitialValues;
     private Dictionary<string, string>? _editSpaceDialogAnnotations;
@@ -58,14 +57,10 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
                 OnPropertyChanged(nameof(SelectedLearningObjectIsSpace));
             if (ShowingLearningSpaceView != showingLearningSpaceViewBefore)
                 OnPropertyChanged(nameof(ShowingLearningSpaceView));
+            HideRightClickMenu();
         }
     }
 
-    public LearningContentViewModel? DragAndDropLearningContent
-    {
-        get => _dragAndDropLearningContent;
-        private set => SetField(ref _dragAndDropLearningContent, value);
-    }
 
     public bool EditLearningSpaceDialogOpen
     {
@@ -97,9 +92,43 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         remove => _presentationLogic.OnUndoRedoPerformed -= value;
     }
 
+    /// <summary>
+    /// If any object in the LearningWorld has an active RightClickMenu, this object is set in this variable.
+    /// Otherwise, it is null.
+    /// </summary>
+    public IDisplayableLearningObject? RightClickedLearningObject { get; private set; }
+    public void EditLearningSpace(ILearningSpaceViewModel obj)
+    {
+        SetSelectedLearningSpace(obj);
+        OpenEditSelectedLearningSpaceDialog();
+    }
+
+    public void DeleteLearningSpace(ILearningSpaceViewModel obj)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        _presentationLogic.DeleteLearningSpace(LearningWorldVm, obj);
+    }
+
     public void DragLearningSpace(object sender, DraggedEventArgs<ILearningSpaceViewModel> args)
     {
         _presentationLogic.DragLearningSpace(args.LearningObject, args.OldPositionX, args.OldPositionY);
+        HideRightClickMenu();
+    }
+
+    public void RightClickedLearningSpace(ILearningSpaceViewModel obj)
+    {
+        RightClickedLearningObject = obj;
+    }
+
+    public void ClickedLearningSpace(ILearningSpaceViewModel obj)
+    {
+        SetSelectedLearningSpace(obj);
+    }
+
+    public void HideRightClickMenu()
+    {
+        RightClickedLearningObject = null;
     }
 
     public void AddNewLearningSpace()
@@ -121,6 +150,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     public void ShowSelectedLearningSpaceView()
     {
         if (LearningWorldVm != null) LearningWorldVm.ShowingLearningSpaceView = true;
+        HideRightClickMenu();
     }
 
     public void CloseLearningSpaceView()
@@ -304,6 +334,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         LearningWorldVm.SelectedLearningSpace = learningSpace;
         if (SelectedLearningObjectIsSpace)
             _learningSpacePresenter.SetLearningSpace(LearningWorldVm.SelectedLearningSpace);
+        HideRightClickMenu();
     }
 
     #endregion

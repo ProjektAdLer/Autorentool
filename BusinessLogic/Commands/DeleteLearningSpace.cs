@@ -37,7 +37,10 @@ public class DeleteLearningSpace : IUndoCommand
         }
         LearningWorld.LearningSpaces.Remove(space);
 
-        LearningWorld.SelectedLearningSpace = LearningWorld.LearningSpaces.LastOrDefault();
+        if (space == LearningWorld.SelectedLearningSpace || LearningWorld.SelectedLearningSpace == null)
+        {
+            LearningWorld.SelectedLearningSpace = LearningWorld.LearningSpaces.LastOrDefault();
+        }
 
         _mappingAction.Invoke(LearningWorld);
     }

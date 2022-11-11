@@ -24,9 +24,14 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void ShowSelectedLearningSpaceView();
     void CloseLearningSpaceView();
-    LearningContentViewModel? DragAndDropLearningContent { get; }
     void AddNewLearningSpace();
     void OnWorkspacePropertyChanged(object? caller, PropertyChangedEventArgs e);
     event Action OnUndoRedoPerformed;
     void DragLearningSpace(object sender, DraggedEventArgs<ILearningSpaceViewModel> draggedEventArgs);
+    void RightClickedLearningSpace(ILearningSpaceViewModel obj);
+    void ClickedLearningSpace(ILearningSpaceViewModel obj);
+    void HideRightClickMenu();
+    IDisplayableLearningObject? RightClickedLearningObject { get; }
+    void EditLearningSpace(ILearningSpaceViewModel obj);
+    void DeleteLearningSpace(ILearningSpaceViewModel obj);
 }

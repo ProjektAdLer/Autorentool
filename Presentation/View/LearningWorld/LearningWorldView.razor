@@ -2,6 +2,7 @@
 @using Presentation.View.LearningElement
 @using System.ComponentModel
 @using Presentation.Components.ModalDialog
+@using Presentation.Components.RightClickMenu
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningSpace
@@ -46,15 +47,22 @@ else
          xmlns="http://www.w3.org/2000/svg"
          @onmousemove=@(e => MouseService.FireMove(this, e))
              @onmouseup=@(e => MouseService.FireUp(this, e))
-             @onmouseleave=@(e => MouseService.FireOut(this, e))>
+             @onmouseleave=@(e => MouseService.FireOut(this, e))
+            @onmousedown="@LearningWorldP.HideRightClickMenu">
         @if (LearningWorldP.LearningWorldVm != null)
         {
             @foreach (var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
             {
                 <DraggableLearningSpace LearningSpace="learningSpace"
-                                        OnClickedDraggable="@LearningWorldP.SetSelectedLearningSpace"
+                                        OnClickedDraggable="@LearningWorldP.ClickedLearningSpace"
                                         OnDraggedDraggable="@LearningWorldP.DragLearningSpace"
                                         OnClickedClickable="@LearningWorldP.DeleteLearningPathWay"
+                                        OnRightClickedDraggable="@LearningWorldP.RightClickedLearningSpace"
+                                        ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject"
+                                        OnOpenLearningSpace="@LearningWorldP.ShowSelectedLearningSpaceView"
+                                        OnEditLearningSpace="@LearningWorldP.EditLearningSpace"
+                                        OnDeleteLearningSpace="@LearningWorldP.DeleteLearningSpace"
+                                        OnCloseRightClickMenu="@LearningWorldP.HideRightClickMenu"
                                         PositioningService="@LearningWorldP"/>
             }
             @foreach (var learningPathWay in LearningWorldP.LearningWorldVm.LearningPathWays)
@@ -64,6 +72,9 @@ else
                          Y2=@(learningPathWay.TargetSpace.PositionY+25) Direction2=Direction.Left />
             }
         }
+        <!-- The RightClickMenu might lies behind other spaces. 
+        This line brings the RightClickMenu back to top, but the clickable buttons do not work anymore. -->
+        <!--<use xlink:href="#rightClickMenu" />-->
     </svg>
     //create space modal
     @if (LearningWorldP.CreateLearningSpaceDialogOpen)
@@ -110,7 +121,7 @@ else
         LearningWorldP.PropertyChanged += OnLearningWorldPresenterPropertyChanged;
         LearningWorldP.OnUndoRedoPerformed += StateHasChanged;
     }
-
+    
 
     private void AddNewLearningSpace()
     {
