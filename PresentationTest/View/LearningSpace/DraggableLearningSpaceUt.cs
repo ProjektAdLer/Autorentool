@@ -2,12 +2,14 @@
 using Bunit;
 using Bunit.TestDoubles;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningWorld;
 using Presentation.View.LearningSpace;
-using Shared;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.View.LearningSpace;
@@ -17,6 +19,7 @@ public class DraggableLearningSpaceUt
 {
 #pragma warning disable CS8618 //set in setup - n.stich
     private TestContext _ctx;
+    private IMouseService _mouseService;
 #pragma warning restore CS8618
 
     [SetUp]
@@ -24,6 +27,8 @@ public class DraggableLearningSpaceUt
     {
         _ctx = new TestContext();
         _ctx.ComponentFactories.AddStub<Draggable<ILearningSpaceViewModel>>();
+        _mouseService = Substitute.For<IMouseService>();
+        _ctx.Services.AddSingleton(_mouseService);
     }
     
     [Test]
@@ -39,10 +44,11 @@ public class DraggableLearningSpaceUt
         var onEditLearningSpace = new Action<ILearningSpaceViewModel>(_ => { });
         var onDeleteLearningSpace = new Action<ILearningSpaceViewModel>(_ => { });
         var onCloseRightClickMenu = new Action<ILearningSpaceViewModel>(_ => { });
+        var positioningService = Substitute.For<ILearningWorldPresenter>();
         var systemUnderTest =
             GetRenderedDraggableLearningSpace(learningSpace, onClicked, onDragged, onDoubleClicked, onRightClicked,
                 showingRightClickMenu, onOpenLearningSpace, onEditLearningSpace, onDeleteLearningSpace,
-                onCloseRightClickMenu);
+                onCloseRightClickMenu, positioningService);
         
         Assert.Multiple(() =>
         {
@@ -56,7 +62,44 @@ public class DraggableLearningSpaceUt
             Assert.That(systemUnderTest.Instance.OnEditLearningSpace, Is.EqualTo(EventCallback.Factory.Create(onEditLearningSpace.Target!, onEditLearningSpace)));
             Assert.That(systemUnderTest.Instance.OnDeleteLearningSpace, Is.EqualTo(EventCallback.Factory.Create(onDeleteLearningSpace.Target!, onDeleteLearningSpace)));
             Assert.That(systemUnderTest.Instance.OnCloseRightClickMenu, Is.EqualTo(EventCallback.Factory.Create(onCloseRightClickMenu.Target!, onCloseRightClickMenu)));
+            Assert.That(systemUnderTest.Instance.PositioningService, Is.EqualTo(positioningService));
         });
+    }
+
+    [Test]
+    public void Constructor_PassesCorrectValuesToDraggable()
+    {
+        var learningSpace = Substitute.For<ILearningSpaceViewModel>();
+        learningSpace.Name.Returns("foo bar super cool name");
+        var onClicked = new Action<ILearningSpaceViewModel>(_ => { });
+        var onDragged = new DraggedEventArgs<ILearningSpaceViewModel>.DraggedEventHandler((_,_) => { });
+        var onDoubleClicked = new Action<ILearningSpaceViewModel>(_ => { });
+        var onRightClicked = new Action<ILearningSpaceViewModel>(_ => { });
+        const bool showingRightClickMenu = false;
+        var onOpenLearningSpace = new Action<ILearningSpaceViewModel>(_ => { });
+        var onEditLearningSpace = new Action<ILearningSpaceViewModel>(_ => { });
+        var onDeleteLearningSpace = new Action<ILearningSpaceViewModel>(_ => { });
+        var onCloseRightClickMenu = new Action<ILearningSpaceViewModel>(_ => { });
+        var positioningService = Substitute.For<ILearningWorldPresenter>();
+        var systemUnderTest =
+            GetRenderedDraggableLearningSpace(learningSpace, onClicked, onDragged, onDoubleClicked, onRightClicked,
+                showingRightClickMenu, onOpenLearningSpace, onEditLearningSpace, onDeleteLearningSpace,
+                onCloseRightClickMenu, positioningService);
+
+        Assert.That(systemUnderTest.HasComponent<Stub<Draggable<ILearningSpaceViewModel>>>());
+        var stub = systemUnderTest.FindComponent<Stub<Draggable<ILearningSpaceViewModel>>>();
+        Assert.Multiple(() =>
+        {
+            Assert.That(stub.Instance.Parameters[nameof(Draggable<ILearningSpaceViewModel>.LearningObject)], Is.EqualTo(learningSpace));
+            //overriding nullability warning because we know target isn't null as onClicked isn't a static method but instead a lambda -n.stich
+            Assert.That(stub.Instance.Parameters[nameof(Draggable<ILearningSpaceViewModel>.OnClicked)], Is.EqualTo(EventCallback.Factory.Create(onClicked.Target!, onClicked)));
+            Assert.That(stub.Instance.Parameters[nameof(Draggable<ILearningSpaceViewModel>.ChildContent)], Is.Not.Null);
+        });
+        var childContent = _ctx.Render((RenderFragment)stub.Instance.Parameters[nameof(Draggable<ILearningSpaceViewModel>.ChildContent)]);
+        childContent.MarkupMatches(
+            @"<rect height=""50"" width=""100"" style=""fill:lightgreen;stroke:black""></rect>" +
+            @$"<text x=""3"" y=""15"">{learningSpace.Name}</text>" +
+            @"<g  ></g>");
     }
 
     [Test]
@@ -65,7 +108,7 @@ public class DraggableLearningSpaceUt
         //Override warning for this test as we are testing exactly what happens when we break the nullability contract - n.stich
         Assert.That(
             () => GetRenderedDraggableLearningSpace(null!, _ => { }, (_, _) => { }, _ => { }, _ => { }, false, _ => { },
-                _ => { }, _ => { }, _ => { }), Throws.ArgumentNullException);
+                _ => { }, _ => { }, _ => { }, null!), Throws.ArgumentNullException);
     }
 
     private IRenderedComponent<DraggableLearningSpace> GetRenderedDraggableLearningSpace(
@@ -73,7 +116,8 @@ public class DraggableLearningSpaceUt
         DraggedEventArgs<ILearningSpaceViewModel>.DraggedEventHandler onDragged, Action<ILearningSpaceViewModel> onDoubleClicked,
         Action<ILearningSpaceViewModel> onRightClicked, bool showingRightClickMenu, 
         Action<ILearningSpaceViewModel> onOpenLearningSpace, Action<ILearningSpaceViewModel> onEditLearningSpace, 
-        Action<ILearningSpaceViewModel> onDeleteLearningSpace, Action<ILearningSpaceViewModel> onCloseRightClickMenu)
+        Action<ILearningSpaceViewModel> onDeleteLearningSpace, Action<ILearningSpaceViewModel> onCloseRightClickMenu,
+        ILearningWorldPresenter positioningService)
     {
         return _ctx.RenderComponent<DraggableLearningSpace>(parameters => parameters
             .Add(p => p.LearningSpace, objectViewmodel)
@@ -86,6 +130,7 @@ public class DraggableLearningSpaceUt
             .Add(p=>p.OnEditLearningSpace, onEditLearningSpace)
             .Add(p=>p.OnDeleteLearningSpace, onDeleteLearningSpace)
             .Add(p=>p.OnCloseRightClickMenu, onCloseRightClickMenu)
+            .Add(p=>p.PositioningService, positioningService)
         );
     }
 
