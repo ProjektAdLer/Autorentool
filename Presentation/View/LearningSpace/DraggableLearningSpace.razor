@@ -22,13 +22,13 @@
         }
     </Clickable>
 </Draggable>
+<PullablePath LearningSpace="LearningSpace" X1=@LearningSpace.PositionX
+                   Y1="@LearningSpace.PositionY" PositioningSrv="@PositioningService"></PullablePath>
 @if (ShowingRightClickMenu)
 {
     <RightClickMenu LearningObject="@LearningSpace"
                                     MenuEntries="@GetRightClickMenuEntries()"
                                     OnClose="() => OnCloseRightClickMenu.InvokeAsync()"/>
-    <PullablePath LearningSpace="LearningSpace" X1=@LearningSpace.PositionX
-                   Y1="@LearningSpace.PositionY" PositioningSrv="@PositioningService"></PullablePath>
 }
 
 @code {
