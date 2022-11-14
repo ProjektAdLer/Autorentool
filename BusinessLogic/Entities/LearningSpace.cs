@@ -10,7 +10,7 @@ public class LearningSpace : ILearningSpace, IOriginator
     [UsedImplicitly]
     private LearningSpace()
     {
-        Id = Guid.Empty;
+        Id = Guid.NewGuid();
         Name = "";
         Shortname = "";
         Authors = "";

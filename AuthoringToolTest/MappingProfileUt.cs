@@ -634,6 +634,46 @@ public class MappingProfileUt
     }
 
     /// <summary>
+    /// Regression test for https://github.com/projektadler/autorentool/issues/254
+    /// </summary>
+    [Test]
+    public void
+        MapLearningWorldAndLearningWorldPersistEntity_WithMultipleLearningSpacesAndLearningPathWays_TestMappingIsValid()
+    {
+        var systemUnderTest = CreateTestableMapper();
+        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
+            new List<LearningSpace>());
+        var space1 = GetTestableSpace();
+        space1.Name = "space1";
+        var space2 = GetTestableSpace();
+        space2.Name = "space2";
+        var space3 = GetTestableSpace();
+        space3.Name = "space3";
+        source.LearningSpaces.Add(space1);
+        source.LearningSpaces.Add(space2);
+        source.LearningSpaces.Add(space3);
+        
+        source.LearningPathways.Add(new LearningPathway(space1, space2));
+        space1.OutBoundSpaces.Add(space2);
+        space2.InBoundSpaces.Add(space1);
+        source.LearningPathways.Add(new LearningPathway(space2, space3));
+        space1.OutBoundSpaces.Add(space3);
+        space2.InBoundSpaces.Add(space2);
+
+        var persistEntity = systemUnderTest.Map<LearningWorldPe>(source);
+        var restored = systemUnderTest.Map<LearningWorld>(persistEntity);
+
+        Assert.That(restored.LearningPathways, Has.Count.EqualTo(2));
+        Assert.Multiple(() =>
+        {
+            Assert.That(restored.LearningPathways[0].SourceSpace.Name, Is.EqualTo("space1"));
+            Assert.That(restored.LearningPathways[1].SourceSpace.Name, Is.EqualTo("space2"));
+            Assert.That(restored.LearningPathways[0].TargetSpace.Name, Is.EqualTo("space2"));
+            Assert.That(restored.LearningPathways[1].TargetSpace.Name, Is.EqualTo("space3"));
+        });
+    }
+
+    /// <summary>
     /// This test tests whether or not the AutoMapper.Collection configuration works as intended.
     /// See https://github.com/AutoMapper/AutoMapper.Collection
     /// </summary>
