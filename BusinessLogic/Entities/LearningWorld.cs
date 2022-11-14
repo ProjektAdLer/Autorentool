@@ -10,7 +10,7 @@ public class LearningWorld : ILearningWorld, IOriginator
     [UsedImplicitly]
     private LearningWorld()
     {
-        Id = Guid.Empty;
+        Id = Guid.NewGuid();
         Name = "";
         Shortname = "";
         Authors = "";

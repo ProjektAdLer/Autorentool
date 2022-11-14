@@ -11,7 +11,7 @@ public class LearningElement : ILearningElement, IOriginator
     [UsedImplicitly]
     protected LearningElement()
     {
-        Id = Guid.Empty;
+        Id = Guid.NewGuid();
         Name = "";
         Shortname = "";
         //We override nullability here because constructor is protected, only called by AutoMapper and field immediately

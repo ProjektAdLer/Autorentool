@@ -244,12 +244,7 @@ public class MappingProfile : Profile
                 }
             });
         CreateMap<LearningPathway, LearningPathwayPe>()
-            .ReverseMap()
-            .AfterMap((s, d) =>
-            {
-                s.SourceSpace.Id = new Guid();
-                s.TargetSpace.Id = new Guid();
-            });
+            .ReverseMap();
         CreateMap<LearningElement, LearningElementPe>();
         CreateMap<LearningElementPe, LearningElement>()
             .ForMember(x => x.Parent, opt => opt.Ignore())
