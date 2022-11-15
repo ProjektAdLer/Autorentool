@@ -327,7 +327,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     /// </summary>
     /// <param name="learningSpace">The learning space that should be set as selected</param>
     /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
-    public void SetSelectedLearningSpace(ILearningSpaceViewModel learningSpace)
+    internal void SetSelectedLearningSpace(ILearningSpaceViewModel learningSpace)
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");

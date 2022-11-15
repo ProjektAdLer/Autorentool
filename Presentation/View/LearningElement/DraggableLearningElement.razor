@@ -2,6 +2,7 @@
 @using Presentation.PresentationLogic
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.Components
+@using Presentation.Components.RightClickMenu
 @using Shared
 <Draggable LearningObject="LearningElement" OnClicked="@OnClicked" OnDoubleClicked="@OnDoubleClicked" 
            OnRightClicked="@OnRightClicked" OnDragged="@OnDragged"
@@ -12,6 +13,12 @@
     <text x="3" y="15">@LearningElement.Name</text>
 
 </Draggable>
+@if (ShowingRightClickMenu)
+{
+    <RightClickMenu LearningObject="@LearningElement"
+                                    MenuEntries="@GetRightClickMenuEntries()"
+                                    OnClose="() => OnCloseRightClickMenu.InvokeAsync()"/>
+}
 
 @code {
     // Overwrite nullability warning below because we check in OnParametersSet -n.stich
@@ -21,11 +28,21 @@
     public EventCallback<ILearningElementViewModel> OnClicked { get; set; }
     [Parameter]
     public EventCallback<ILearningElementViewModel> OnDoubleClicked { get; set; }
-    [Parameter]
+    [Parameter, EditorRequired]
     public EventCallback<ILearningElementViewModel> OnRightClicked { get; set; }
     [Parameter, EditorRequired]
     public DraggedEventArgs<ILearningElementViewModel>.DraggedEventHandler? OnDragged { get; set; }
-    // public EventCallback<Draggable<ILearningElementViewModel>.DraggedEventArgs> OnDragged { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningElementViewModel> OnEditLearningElement { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningElementViewModel> OnDeleteLearningElement { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningElementViewModel> OnShowLearningElementContent { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningElementViewModel> OnCloseRightClickMenu { get; set; }
+    [Parameter, EditorRequired]
+    public bool ShowingRightClickMenu { get; set; }
+    
 
     private string? PolygonPoints { get; set; }
     private string? PolygonColor { get; set; }
@@ -59,6 +76,16 @@
             LearningElementDifficultyEnum.Hard => (HardPolygonPoints, HardPolygonColor),
             LearningElementDifficultyEnum.None => (NonePolygonPoints, NonePolygonColor),
             _ => throw new ArgumentOutOfRangeException(nameof(difficulty))
+        };
+    }
+    
+    private List<RightClickMenuEntry> GetRightClickMenuEntries()
+    {
+        return new List<RightClickMenuEntry>()
+        {
+            new("Edit", () => OnEditLearningElement.InvokeAsync(LearningElement)),
+            new("Delete", () => OnDeleteLearningElement.InvokeAsync(LearningElement)),
+            new("Show", () => OnShowLearningElementContent.InvokeAsync(LearningElement))
         };
     }
 

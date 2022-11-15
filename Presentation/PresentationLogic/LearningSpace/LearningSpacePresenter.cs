@@ -30,6 +30,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     public ILearningSpaceViewModel? LearningSpaceVm { get; private set; }
 
     public LearningContentViewModel? DragAndDropLearningContent { get; private set; }
+    public IDisplayableLearningObject? RightClickedLearningObject { get; private set; }
 
     public void EditLearningSpace(string name, string shortname, string authors, string description, string goals, int requiredPoints)
     {
@@ -58,6 +59,40 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     public void DragLearningElement(object sender, DraggedEventArgs<ILearningElementViewModel> args)
     {
         _presentationLogic.DragLearningElement(args.LearningObject, args.OldPositionX, args.OldPositionY);
+    }
+
+    public void ClickedLearningElement(ILearningElementViewModel obj)
+    {
+        SetSelectedLearningElement(obj);
+    }
+
+    public void RightClickedLearningElement(ILearningElementViewModel obj)
+    {
+        RightClickedLearningObject = obj;
+    }
+
+    public void EditLearningElement(ILearningElementViewModel obj)
+    {
+        SetSelectedLearningElement(obj);
+        OpenEditSelectedLearningElementDialog();
+    }
+
+    public void DeleteLearningElement(ILearningElementViewModel obj)
+    {
+        if (LearningSpaceVm == null)
+            throw new ApplicationException("SelectedLearningSpace is null");
+        _presentationLogic.DeleteLearningElement(LearningSpaceVm, obj);
+    }
+
+    public void HideRightClickMenu()
+    {
+        RightClickedLearningObject = null;
+    }
+
+    public async void ShowElementContent(ILearningElementViewModel obj)
+    {
+        SetSelectedLearningElement(obj);
+        await ShowSelectedElementContentAsync();
     }
 
     public void SetLearningSpace(ILearningSpaceViewModel space)
@@ -329,6 +364,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
         LearningSpaceVm.SelectedLearningElement = learningElement;
+        HideRightClickMenu();
     }
 
     /// <summary>

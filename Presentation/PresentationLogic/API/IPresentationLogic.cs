@@ -233,7 +233,7 @@ public interface IPresentationLogic
     /// <param name="parentSpaceVm">Parent space of the element.</param>
     /// <param name="learningElementVm">Element to delete.</param>
     void DeleteLearningElement(ILearningSpaceViewModel parentSpaceVm,
-        LearningElementViewModel learningElementVm);
+        ILearningElementViewModel learningElementVm);
     
     /// <summary>
     /// Asks user for path and saves <see cref="LearningElementViewModel"/> to disk.
