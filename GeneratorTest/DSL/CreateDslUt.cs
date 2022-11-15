@@ -53,8 +53,8 @@ public class CreateDslUt
         space1.LearningElements.AddRange(new List<LearningElementPe>{ele1, ele2, ele3, ele4, ele5});
         var space2 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
             null, 0, 0, new List<LearningSpacePe>(), new List<LearningSpacePe>());
-        space1.OutBoundSpaces = new List<LearningSpacePe>() {space2};
-        space2.InBoundSpaces = new List<LearningSpacePe>() {space1};
+        space1.OutBoundObjects = new List<LearningSpacePe>() {space2};
+        space2.InBoundObjects = new List<LearningSpacePe>() {space1};
         var learningSpaces = new List<LearningSpacePe> { space1, space2 };
 
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals,

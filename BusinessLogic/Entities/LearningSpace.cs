@@ -11,7 +11,7 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
     [UsedImplicitly]
     private LearningSpace()
     {
-        Id = Guid.Empty;
+        Id = Guid.NewGuid();
         Name = "";
         Shortname = "";
         Authors = "";

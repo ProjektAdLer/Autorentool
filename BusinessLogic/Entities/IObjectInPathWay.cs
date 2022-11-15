@@ -1,5 +1,3 @@
-using Shared;
-
 namespace BusinessLogic.Entities;
 
 public interface IObjectInPathWay : IOriginator, ISelectableObjectInWorld

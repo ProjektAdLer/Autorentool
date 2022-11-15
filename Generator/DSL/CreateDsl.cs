@@ -129,7 +129,7 @@ public class CreateDsl : ICreateDsl
             }
 
             _requirements = new List<int>();
-            foreach (var connectIn in learningSpace.InBoundSpaces)
+            foreach (var connectIn in learningSpace.InBoundObjects)
             {
                 _requirements.Add(idDictionary.Where(x => x.Value == connectIn.Id)
                     .Select(x => x.Key)

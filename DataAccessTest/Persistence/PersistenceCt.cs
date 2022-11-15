@@ -41,8 +41,8 @@ public class PersistenceCt
         restoredWorld.Should().BeEquivalentTo(world, options => options.IgnoringCyclicReferences()
             .Excluding(obj => obj.Id)
             .For(obj => obj.LearningSpaces).Exclude(obj => obj.Id)
-            .For(obj => obj.LearningSpaces).Exclude(obj => obj.InBoundSpaces)
-            .For(obj => obj.LearningSpaces).Exclude(obj => obj.OutBoundSpaces)
+            .For(obj => obj.LearningSpaces).Exclude(obj => obj.InBoundObjects)
+            .For(obj => obj.LearningSpaces).Exclude(obj => obj.OutBoundObjects)
             .For(obj => obj.LearningSpaces).For(obj => obj.LearningElements).Exclude(obj => obj.Id)
             .Excluding(obj => obj.LearningPathways));
 
@@ -108,8 +108,8 @@ public class PersistenceCt
         space1.LearningElements.Add(element);
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
-        space1.OutBoundSpaces.Add(space2);
-        space2.InBoundSpaces.Add(space1);
+        space1.OutBoundObjects.Add(space2);
+        space2.InBoundObjects.Add(space1);
         world.LearningPathways.Add(new LearningPathwayPe(space1, space2));
         var mockFileSystem = new MockFileSystem();
 
@@ -121,15 +121,15 @@ public class PersistenceCt
         restoredWorld.Should().BeEquivalentTo(world, options => options.IgnoringCyclicReferences()
             .Excluding(obj => obj.Id)
             .For(obj => obj.LearningSpaces).Exclude(obj => obj.Id)
-            .For(obj => obj.LearningSpaces).Exclude(obj => obj.InBoundSpaces)
-            .For(obj => obj.LearningSpaces).Exclude(obj => obj.OutBoundSpaces)
+            .For(obj => obj.LearningSpaces).Exclude(obj => obj.InBoundObjects)
+            .For(obj => obj.LearningSpaces).Exclude(obj => obj.OutBoundObjects)
             .For(obj => obj.LearningSpaces).For(obj => obj.LearningElements)
             .Exclude(obj => obj.Id)
             .Excluding(obj => obj.LearningPathways));
-        Assert.That(restoredWorld.LearningSpaces[0].OutBoundSpaces, Does.Contain(restoredWorld.LearningSpaces[1]));
-        Assert.That(restoredWorld.LearningSpaces[1].InBoundSpaces, Does.Contain(restoredWorld.LearningSpaces[0]));
-        Assert.That(restoredWorld.LearningPathways[0].SourceSpace, Is.EqualTo(restoredWorld.LearningSpaces[0]));
-        Assert.That(restoredWorld.LearningPathways[0].TargetSpace, Is.EqualTo(restoredWorld.LearningSpaces[1]));
+        Assert.That(restoredWorld.LearningSpaces[0].OutBoundObjects, Does.Contain(restoredWorld.LearningSpaces[1]));
+        Assert.That(restoredWorld.LearningSpaces[1].InBoundObjects, Does.Contain(restoredWorld.LearningSpaces[0]));
+        Assert.That(restoredWorld.LearningPathways[0].SourceObject, Is.EqualTo(restoredWorld.LearningSpaces[0]));
+        Assert.That(restoredWorld.LearningPathways[0].TargetObject, Is.EqualTo(restoredWorld.LearningSpaces[1]));
         
         Assert.That(initialWorldId, Is.Not.EqualTo(restoredWorld.Id));
         Assert.That(initialSpace1Id, Is.Not.EqualTo(restoredWorld.LearningSpaces.First().Id));

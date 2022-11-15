@@ -219,8 +219,8 @@ public class MappingProfileUt
         destination.LearningElements = new List<LearningElementPe>();
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
-        destination.InBoundSpaces = new List<LearningSpacePe>();
-        destination.OutBoundSpaces = new List<LearningSpacePe>();
+        destination.InBoundObjects = new List<IObjectInPathWayPe>();
+        destination.OutBoundObjects = new List<IObjectInPathWayPe>();
 
         systemUnderTest.Map(destination, source);
 
@@ -303,8 +303,8 @@ public class MappingProfileUt
         destination.LearningElements = new List<LearningElementPe>() {GetTestableElementPersistEntity(elementType)};
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
-        destination.InBoundSpaces = new List<LearningSpacePe>();
-        destination.OutBoundSpaces = new List<LearningSpacePe>();
+        destination.InBoundObjects = new List<LearningSpacePe>();
+        destination.OutBoundObjects = new List<LearningSpacePe>();
 
         systemUnderTest.Map(destination, source);
 
@@ -578,9 +578,9 @@ public class MappingProfileUt
         {
             Assert.That(destination.LearningSpaces, Has.Count.EqualTo(2));
             Assert.That(destinationSpace1.LearningElements, Has.Count.EqualTo(1));
-            Assert.That(destinationSpace1.OutBoundSpaces, Does.Contain(destinationSpace2));
+            Assert.That(destinationSpace1.OutBoundObjects, Does.Contain(destinationSpace2));
             Assert.That(destinationSpace2.LearningElements, Has.Count.EqualTo(1));
-            Assert.That(destinationSpace2.InBoundSpaces, Does.Contain(destinationSpace1));
+            Assert.That(destinationSpace2.InBoundObjects, Does.Contain(destinationSpace1));
             Assert.That(destination.LearningPathways, Has.Count.EqualTo(1));
         });
 
@@ -595,8 +595,8 @@ public class MappingProfileUt
         var spacePe2 = GetTestableNewSpacePersistEntity();
         destination.LearningSpaces = new List<LearningSpacePe>() {spacePe1, spacePe2};
         destination.LearningPathways = new List<LearningPathwayPe> { new(spacePe1, spacePe2) };
-        spacePe1.OutBoundSpaces.Add(spacePe2);
-        spacePe2.InBoundSpaces.Add(spacePe1);
+        spacePe1.OutBoundObjects.Add(spacePe2);
+        spacePe2.InBoundObjects.Add(spacePe1);
 
         {
             systemUnderTest.Map(destination, source);

@@ -7,7 +7,7 @@ namespace PersistEntities;
 public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
 {
     public LearningWorldPe(string name, string shortname, string authors, string language, string description,
-        string goals, List<LearningSpacePe>? learningSpaces = null,  List<LearningPathwayPe>? learningPathWays = null)
+        string goals, List<LearningSpacePe>? learningSpaces = null, List<PathWayConditionPe>? pathWayConditions = null, List<LearningPathwayPe>? learningPathWays = null)
     {
         Id = Guid.NewGuid();
         Name = name;
@@ -17,6 +17,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         Description = description;
         Goals = goals;
         LearningSpaces = learningSpaces ?? new List<LearningSpacePe>();
+        PathWayConditions = pathWayConditions ?? new List<PathWayConditionPe>();
         LearningPathways = learningPathWays ?? new List<LearningPathwayPe>();
     }
 
@@ -33,6 +34,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         Description = "";
         Goals = "";
         LearningSpaces = new List<LearningSpacePe>();
+        PathWayConditions = new List<PathWayConditionPe>();
         LearningPathways = new List<LearningPathwayPe>();
     }
     
@@ -43,6 +45,10 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
     public List<LearningSpacePe> LearningSpaces { get; set; }
     [DataMember]
     public List<LearningPathwayPe> LearningPathways { get; set; }
+    [DataMember]
+    public List<PathWayConditionPe> PathWayConditions { get; set; }
+    [DataMember]
+    public List<IObjectInPathWayPe> PathWayObjects => new List<IObjectInPathWayPe>(LearningSpaces).Concat(PathWayConditions).ToList();
     [DataMember]
     public string Name { get; set; }
     [DataMember]
@@ -64,8 +70,8 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         //rebuild InBound and OutBound on all spaces
         foreach (var learningPathwayPe in LearningPathways)
         {
-            learningPathwayPe.SourceSpace.OutBoundSpaces.Add(learningPathwayPe.TargetSpace);
-            learningPathwayPe.TargetSpace.InBoundSpaces.Add(learningPathwayPe.SourceSpace);
+            learningPathwayPe.SourceObject.OutBoundObjects.Add(learningPathwayPe.TargetObject);
+            learningPathwayPe.TargetObject.InBoundObjects.Add(learningPathwayPe.SourceObject);
         }
     }
     

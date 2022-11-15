@@ -11,7 +11,7 @@ public class PathWayCondition : IObjectInPathWay
     [UsedImplicitly]
     private PathWayCondition()
     {
-        Id = Guid.Empty;
+        Id = Guid.NewGuid();
         PositionX = 0;
         PositionY = 0;
         InBoundObjects = new List<IObjectInPathWay>();
