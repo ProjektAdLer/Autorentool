@@ -45,10 +45,10 @@ public class LearningSpaceViewModelUt
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
             Assert.That(systemUnderTest.InBoundObjects, Is.EqualTo(inBoundObjects));
             Assert.That(systemUnderTest.OutBoundObjects, Is.EqualTo(outBoundObjects));
-            Assert.That(systemUnderTest.InputConnectionX, Is.EqualTo(positionX - 6));
-            Assert.That(systemUnderTest.InputConnectionY, Is.EqualTo(positionY + 25));
-            Assert.That(systemUnderTest.OutputConnectionX, Is.EqualTo(positionX + 106));
-            Assert.That(systemUnderTest.OutputConnectionY, Is.EqualTo(positionY + 25));
+            Assert.That(systemUnderTest.InputConnectionX, Is.EqualTo(positionX + 50));
+            Assert.That(systemUnderTest.InputConnectionY, Is.EqualTo(positionY - 6));
+            Assert.That(systemUnderTest.OutputConnectionX, Is.EqualTo(positionX + 50));
+            Assert.That(systemUnderTest.OutputConnectionY, Is.EqualTo(positionY + 56));
         });
         
     }

@@ -2,7 +2,6 @@
 @using Presentation.PresentationLogic
 @using Presentation.Components
 @using Presentation.PresentationLogic.LearningWorld
-@using BusinessLogic.Entities
 @using Presentation.PresentationLogic.LearningPathway
 <Draggable LearningObject="ObjectInPathWay" OnClicked="@OnClickedDraggable" OnDragged="@OnDraggedDraggable"
            @bind-X="@ObjectInPathWay.PositionX" @bind-Y="@ObjectInPathWay.PositionY">
@@ -47,32 +46,14 @@
 
     private double StrokeWidth => PositioningService.LearningWorldVm?.SelectedLearningObject == ObjectInPathWay ? 2 : 1;
 
-    private string OnHoveredObjectShape => ObjectInPathWay switch
-    {
-        LearningSpaceViewModel => @"<rect transform=""translate(-3, -3)"" height=""56"" width=""106"" fill=""lightblue""></rect>
-                                    <circle r=""6"" transform=""translate(0, 25)"" fill=""lightblue""/>",
-        PathWayConditionViewModel => @"<circle r=""25"" style=""fill:lightblue""></circle>
-                                       <circle r=""6"" transform=""translate(-25)"" fill=""lightblue""/>",
-        _ => ""
-    };
+    [Parameter]
+    public string OnHoveredObjectShape { get; set; } = "";
 
-    private string ObjectShape => ObjectInPathWay switch
-    {
-        LearningSpaceViewModel => @"<rect height=""50"" width=""100"" style=""fill:lightgreen;stroke:black;stroke-width:{0}""></rect> 
-                                    <text x=""3"" y=""15"">{1}</text>",
-        PathWayConditionViewModel => @"<circle r=""20"" style=""fill:darkgray;stroke:black;stroke-width:{0}""></circle>
-                                       <text x=""3"" y=""15"" transform=""translate(-16,-10)"">{1}</text>",
-        _ => ""
-    };
+    [Parameter]
+    public string ObjectShape { get; set; } = "";
 
-    private string DeletePathButtonShape => ObjectInPathWay switch
-    {
-        LearningSpaceViewModel => @"<circle r=""6"" transform=""translate(0, 25)"" fill=""white"" stroke=""gray""/>
-                                    <polyline points=""0,0 2,0 -2,0"" transform=""translate(0,25)"" style=""fill:none;stroke:red;stroke-width:1""/>",
-        PathWayConditionViewModel => @"<circle r=""6"" transform=""translate(-19, 0)"" fill=""white"" stroke=""gray""/>
-                                       <polyline points=""0,0 2,0 -2,0"" transform=""translate(-19, 0)"" style=""fill:none;stroke:red;stroke-width:1""/>",
-        _ => ""
-    };
+    [Parameter]
+    public string DeletePathButtonShape { get; set; } = "";
     
     protected override void OnParametersSet()
     {

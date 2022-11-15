@@ -6,8 +6,8 @@
 @inject ILogger<PathWay> Logger;
 @using Shared
 <Clickable OnClickedParam="LearningPathWay" OnClicked="@OnClickedClickable">
-    <path d="M @X1 @Y1 C @_c1X @C1Y, @_c2X @C2Y, @X2 @Y2" stroke="rgb(108, 117, 125)" stroke-width="@StrokeWidth" fill="transparent" marker-end="url(#arrow)"/>
-    <path d="M @X1 @Y1 C @_c1X @C1Y, @_c2X @C2Y, @X2 @Y2" stroke="transparent" stroke-width="30" fill="transparent"/>
+    <path d="M @X1 @Y1 C @C1X @_c1Y, @C2X @_c2Y, @X2 @Y2" stroke="rgb(108, 117, 125)" stroke-width="@StrokeWidth" fill="transparent" marker-end="url(#arrow)"/>
+    <path d="M @X1 @Y1 C @C1X @_c1Y, @C2X @_c2Y, @X2 @Y2" stroke="transparent" stroke-width="30" fill="transparent"/>
 </Clickable>
 
 @code {
@@ -37,15 +37,15 @@
     private double StrokeWidth => PositioningService.LearningWorldVm?.SelectedLearningObject == LearningPathWay ? 3 : 2;
 
     // The following coordinates are used as control points for the Bezier curve
-    private double _c1X;
-    private double _c2X;
-    private double C1Y => Y1;
-    private double C2Y => Y2;
+    private double C1X => X1;
+    private double C2X => X2;
+    private double _c1Y;
+    private double _c2Y;
     private double Length => Math.Sqrt(Math.Pow(X2 - X1, 2) + Math.Pow(Y2 - Y1, 2));
 
     protected override void OnParametersSet() {
-        _c1X = GetControlPoint(Direction1, X1);
-        _c2X = GetControlPoint(Direction2, X2);
+        _c1Y = GetControlPoint(Direction1, Y1);
+        _c2Y = GetControlPoint(Direction2, Y2);
 
         base.OnParametersSet();
     }
@@ -65,6 +65,6 @@
         }
     }
 
-    double GetControlPoint(Direction direction, double x)
-        => direction == Direction.Right ? x + Coefficient : x - Coefficient;
+    double GetControlPoint(Direction direction, double y)
+        => direction == Direction.Right ? y + Coefficient : y - Coefficient;
 }

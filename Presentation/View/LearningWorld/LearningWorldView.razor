@@ -43,17 +43,27 @@ else
              @onmouseleave=@(e => MouseService.FireOut(this, e))>
         @if (LearningWorldP.LearningWorldVm != null)
         {
-            @foreach (var pathWayObjects in LearningWorldP.LearningWorldVm.ObjectsInPathWays)
+            @foreach (var pathWayCondition in LearningWorldP.LearningWorldVm.PathWayConditions)
             {
-                <DraggableObjectInPathWay ObjectInPathWay="pathWayObjects"
+                <DraggablePathWayCondition ObjectInPathWay="pathWayCondition"
                                         OnClickedDraggable="@LearningWorldP.SetSelectedLearningObject"
                                         OnDraggedDraggable="@LearningWorldP.DragObjectInPathWay"
                                         OnClickedClickable="@LearningWorldP.DeleteLearningPathWay"
                                         PositioningService="@LearningWorldP"/>
             }
+            
+            @foreach(var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
+            {
+                <DraggableLearningSpace ObjectInPathWay="learningSpace"
+                                        OnClickedDraggable="@LearningWorldP.SetSelectedLearningObject"
+                                        OnDraggedDraggable="@LearningWorldP.DragObjectInPathWay"
+                                        OnClickedClickable="@LearningWorldP.DeleteLearningPathWay"
+                                        PositioningService="@LearningWorldP"/>
+            }
+            
             @foreach (var learningPathWay in LearningWorldP.LearningWorldVm.LearningPathWays)
             {
-                <PathWay X1=@(learningPathWay.SourceObject.OutputConnectionX+6) Y1=@(learningPathWay.SourceObject.OutputConnectionY)
+                <PathWay X1=@(learningPathWay.SourceObject.OutputConnectionX) Y1=@(learningPathWay.SourceObject.OutputConnectionY+6)
                          Direction1=Direction.Right X2=@(learningPathWay.TargetObject.InputConnectionX)
                          Y2=@(learningPathWay.TargetObject.InputConnectionY) Direction2=Direction.Left
                          LearningPathWay="learningPathWay" OnClickedClickable="@LearningWorldP.SetSelectedLearningObject"

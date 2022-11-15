@@ -31,10 +31,10 @@ public class PathWayConditionViewModelUt
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
             Assert.That(systemUnderTest.InBoundObjects, Is.EqualTo(inBoundObjects));
             Assert.That(systemUnderTest.OutBoundObjects, Is.EqualTo(outBoundObjects));
-            Assert.That(systemUnderTest.InputConnectionX, Is.EqualTo(positionX - 26));
-            Assert.That(systemUnderTest.InputConnectionY, Is.EqualTo(positionY));
-            Assert.That(systemUnderTest.OutputConnectionX, Is.EqualTo(positionX + 26));
-            Assert.That(systemUnderTest.OutputConnectionY, Is.EqualTo(positionY));
+            Assert.That(systemUnderTest.InputConnectionX, Is.EqualTo(positionX));
+            Assert.That(systemUnderTest.InputConnectionY, Is.EqualTo(positionY - 26));
+            Assert.That(systemUnderTest.OutputConnectionX, Is.EqualTo(positionX));
+            Assert.That(systemUnderTest.OutputConnectionY, Is.EqualTo(positionY + 26));
         });
         
     }
