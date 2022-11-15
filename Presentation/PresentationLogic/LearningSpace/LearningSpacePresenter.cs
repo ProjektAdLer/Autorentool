@@ -376,6 +376,25 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
                 break;
         }
     }
+    
+    /// <summary>
+    /// Calls the the show learning element content method for the selected learning element.
+    /// </summary>
+    /// <exception cref="ApplicationException">Thrown if no learning space is currently selected or no learning element
+    /// is selected in the learning space.</exception>
+    public async Task ShowSelectedElementContentAsync()
+    {
+        if (LearningSpaceVm == null)
+            throw new ApplicationException("SelectedLearningSpace is null");
+        switch (LearningSpaceVm.SelectedLearningElement)
+        {
+            case null:
+                throw new ApplicationException("SelectedLearningElement is null");
+            case LearningElementViewModel learningElement:
+                await _presentationLogic.ShowLearningElementContentAsync(learningElement);
+                break;
+        }
+    }
 
     #endregion
 

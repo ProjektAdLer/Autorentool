@@ -171,7 +171,7 @@ public class CachingMapperIt
         IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null, 
         ICachingMapper? cachingMapper = null, IServiceProvider? serviceProvider = null, 
         ILogger<Presentation.PresentationLogic.API.PresentationLogic>? logger = null, 
-        IHybridSupportWrapper? hybridSupportWrapper = null)
+        IHybridSupportWrapper? hybridSupportWrapper = null, IShellWrapper? shellWrapper = null)
     {
         configuration ??= Substitute.For<IAuthoringToolConfiguration>();
         businessLogic ??= Substitute.For<IBusinessLogic>();
@@ -180,8 +180,9 @@ public class CachingMapperIt
         serviceProvider ??= Substitute.For<IServiceProvider>();
         logger ??= Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
         hybridSupportWrapper ??= Substitute.For<IHybridSupportWrapper>();
+        shellWrapper ??= Substitute.For<IShellWrapper>();
 
         return new Presentation.PresentationLogic.API.PresentationLogic(configuration, businessLogic, mapper, cachingMapper,
-            serviceProvider, logger, hybridSupportWrapper);
+            serviceProvider, logger, hybridSupportWrapper, shellWrapper);
     }
 }

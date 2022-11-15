@@ -23,7 +23,8 @@ public class PresentationLogic : IPresentationLogic
         ICachingMapper cMapper,
         IServiceProvider serviceProvider,
         ILogger<PresentationLogic> logger,
-        IHybridSupportWrapper hybridSupportWrapper)
+        IHybridSupportWrapper hybridSupportWrapper,
+        IShellWrapper shellWrapper)
     {
         _logger = logger;
         Configuration = configuration;
@@ -31,6 +32,7 @@ public class PresentationLogic : IPresentationLogic
         Mapper = mapper;
         CMapper = cMapper;
         HybridSupportWrapper = hybridSupportWrapper;
+        ShellWrapper = shellWrapper;
         _dialogManager = serviceProvider.GetService(typeof(IElectronDialogManager)) as IElectronDialogManager;
     }
 
@@ -56,6 +58,7 @@ public class PresentationLogic : IPresentationLogic
     internal ICachingMapper CMapper { get; }
     public bool RunningElectron => HybridSupportWrapper.IsElectronActive;
     private IHybridSupportWrapper HybridSupportWrapper { get; }
+    private IShellWrapper ShellWrapper { get; }
     public bool CanUndo => BusinessLogic.CanUndo;
     public bool CanRedo => BusinessLogic.CanRedo;
     public event Action? OnUndoRedoPerformed
@@ -370,6 +373,19 @@ public class PresentationLogic : IPresentationLogic
         var command = new LoadLearningElement(parentSpaceEntity, filepath, BusinessLogic,
             parent => CMapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.ShowLearningElementContentAsync"/>
+    public Task ShowLearningElementContentAsync(LearningElementViewModel learningElementVm)
+    {
+        SaveOrLoadElectronCheck();
+        var filepath = learningElementVm.LearningContent.Filepath;
+        var error = ShellWrapper.OpenPathAsync(filepath).Result;
+        if (error != "")
+        {
+            _logger.LogError(error);
+        }
+        return Task.CompletedTask;
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadImageAsync"/>

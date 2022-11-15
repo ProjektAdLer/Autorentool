@@ -970,6 +970,50 @@ public class LearningSpacePresenterUt
 
     #endregion
     
+    #region ShowSelectedElementContent
+
+    [Test]
+    public void ShowSelectedElementContent_ThrowsWhenSelectedWorldNull()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.SetLearningSpace(null!);
+
+        var ex = Assert.ThrowsAsync<ApplicationException>(async () => await systemUnderTest.ShowSelectedElementContentAsync());
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
+    }
+
+    [Test]
+    public void ShowSelectedElementContent_DoesNotThrowWhenSelectedObjectNull()
+    {
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.SetLearningSpace(space);
+
+        var ex = Assert.ThrowsAsync<ApplicationException>(async () => await systemUnderTest.ShowSelectedElementContentAsync());
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningElement is null"));
+    }
+
+    [Test]
+    public async Task ShowSelectedElementContent_CallsPresentationLogic_WithElement()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+        var content = new LearningContentViewModel("bar", "foo", "");
+        var element = new LearningElementViewModel("f", "f", content,"url","f",
+            "f", "f", LearningElementDifficultyEnum.Easy, space);
+        space.LearningElements.Add(element);
+        space.SelectedLearningElement = element;
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
+        systemUnderTest.SetLearningSpace(space);
+        await systemUnderTest.ShowSelectedElementContentAsync();
+
+        await presentationLogic.Received().ShowLearningElementContentAsync(element);
+    }
+    
+    #endregion
+    
     #region LoadLearningElement
 
     [Test]

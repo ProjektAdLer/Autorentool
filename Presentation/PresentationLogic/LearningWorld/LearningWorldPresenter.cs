@@ -29,7 +29,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     
     
     private ILearningWorldViewModel? _learningWorldVm;
-    private LearningContentViewModel? _dragAndDropLearningContent;
     private IObjectInPathWayViewModel? _newConditionSourceObject;
     private LearningSpaceViewModel? _newConditionTargetSpace;
     private bool _editLearningSpaceDialogOpen;
@@ -66,14 +65,10 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
                 OnPropertyChanged(nameof(SelectedLearningObjectIsSpace));
             if (ShowingLearningSpaceView != showingLearningSpaceViewBefore)
                 OnPropertyChanged(nameof(ShowingLearningSpaceView));
+            HideRightClickMenu();
         }
     }
 
-    public LearningContentViewModel? DragAndDropLearningContent
-    {
-        get => _dragAndDropLearningContent;
-        private set => SetField(ref _dragAndDropLearningContent, value);
-    }
 
     public bool CreatePathWayConditionDialogOpen
     {
@@ -126,6 +121,40 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     public void DragObjectInPathWay(object sender, DraggedEventArgs<IObjectInPathWayViewModel> args)
     {
         _presentationLogic.DragObjectInPathWay(args.LearningObject, args.OldPositionX, args.OldPositionY);
+        HideRightClickMenu();
+    }
+
+    /// <summary>
+    /// If any object in the LearningWorld has an active RightClickMenu, this object is set in this variable.
+    /// Otherwise, it is null.
+    /// </summary>
+    public IObjectInPathWayViewModel? RightClickedLearningObject { get; private set; }
+    public void EditObjectInPathWay(IObjectInPathWayViewModel obj)
+    {
+        SetSelectedLearningObject(obj);
+        OpenEditSelectedObjectDialog();
+    }
+
+    public void DeleteLearningSpace(ILearningSpaceViewModel obj)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        _presentationLogic.DeleteLearningSpace(LearningWorldVm, obj);
+    }
+
+    public void RightClickOnObjectInPathWay(IObjectInPathWayViewModel obj)
+    {
+        RightClickedLearningObject = obj;
+    }
+
+    public void ClickOnObjectInWorld(ISelectableObjectInWorldViewModel obj)
+    {
+        SetSelectedLearningObject(obj);
+    }
+
+    public void HideRightClickMenu()
+    {
+        RightClickedLearningObject = null;
     }
 
     public void AddNewLearningSpace()
@@ -147,6 +176,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     public void ShowSelectedLearningSpaceView()
     {
         if (LearningWorldVm != null) LearningWorldVm.ShowingLearningSpaceView = true;
+        HideRightClickMenu();
     }
 
     public void CloseLearningSpaceView()
@@ -351,7 +381,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     /// </summary>
     /// <param name="pathWayObject">The pathway object that should be set as selected</param>
     /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
-    public void SetSelectedLearningObject(ISelectableObjectInWorldViewModel pathWayObject)
+    internal void SetSelectedLearningObject(ISelectableObjectInWorldViewModel pathWayObject)
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
@@ -362,6 +392,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         {
             LearningWorldVm.SelectedLearningObject = pathWayObject;
         }
+        HideRightClickMenu();
     }
 
     #endregion
@@ -458,6 +489,13 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (LearningWorldVm.SelectedLearningObject is not PathWayConditionViewModel pathWayCondition)
             throw new ApplicationException("LearningObject is not a pathWayCondition");
         _presentationLogic.EditPathWayCondition(pathWayCondition, condition);
+    }
+
+    public void DeletePathWayCondition(PathWayConditionViewModel pathWayCondition)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        _presentationLogic.DeletePathWayCondition(LearningWorldVm, pathWayCondition);
     }
 
     /// <summary>

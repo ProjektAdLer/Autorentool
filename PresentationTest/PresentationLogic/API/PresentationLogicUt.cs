@@ -1810,11 +1810,30 @@ public class PresentationLogicUt
     
     #endregion
 
+    [Test]
+    public void ShowLearningElementContentAsync_CallsShellWrapper()
+    {
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
+        var mockShellWrapper = Substitute.For<IShellWrapper>();
+        mockShellWrapper.OpenPathAsync(Arg.Any<string>()).Returns("");
+        var mockContent = new LearningContentViewModel("a", "r", "pathpath");
+        var mockLearningElement = new LearningElementViewModel("n", "sn",mockContent, "url","a", "d", "g", LearningElementDifficultyEnum.Easy);
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        var mockDialogManager = Substitute.For<IElectronDialogManager>();
+        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManager);
+
+        var systemUnderTest = CreateTestablePresentationLogic(shellWrapper:mockShellWrapper, hybridSupportWrapper: mockHybridSupport, serviceProvider: mockServiceProvider);
+
+        systemUnderTest.ShowLearningElementContentAsync(mockLearningElement);
+        
+        mockShellWrapper.Received().OpenPathAsync("pathpath");
+    }
     private static Presentation.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(
         IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null, 
         ICachingMapper? cachingMapper = null, IServiceProvider? serviceProvider = null, 
         ILogger<Presentation.PresentationLogic.API.PresentationLogic>? logger = null, 
-        IHybridSupportWrapper? hybridSupportWrapper = null)
+        IHybridSupportWrapper? hybridSupportWrapper = null, IShellWrapper? shellWrapper = null)
     {
         configuration ??= Substitute.For<IAuthoringToolConfiguration>();
         businessLogic ??= Substitute.For<IBusinessLogic>();
@@ -1823,8 +1842,9 @@ public class PresentationLogicUt
         serviceProvider ??= Substitute.For<IServiceProvider>();
         logger ??= Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
         hybridSupportWrapper ??= Substitute.For<IHybridSupportWrapper>();
+        shellWrapper ??= Substitute.For<IShellWrapper>();
 
         return new Presentation.PresentationLogic.API.PresentationLogic(configuration, businessLogic, mapper, cachingMapper,
-            serviceProvider, logger, hybridSupportWrapper);
+            serviceProvider, logger, hybridSupportWrapper,shellWrapper);
     }
 }

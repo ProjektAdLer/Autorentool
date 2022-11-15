@@ -1,7 +1,9 @@
 using System.ComponentModel;
 using Presentation.Components;
 using Presentation.Components.ModalDialog;
-using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningPathway;
+using Presentation.PresentationLogic.LearningSpace;
+
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
@@ -17,7 +19,6 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     ILearningWorldViewModel? LearningWorldVm { get; }
     bool SelectedLearningObjectIsSpace { get; }
     bool ShowingLearningSpaceView { get; }
-    void SetSelectedLearningObject(ISelectableObjectInWorldViewModel learningObject);
     void DeleteSelectedLearningObject();
     Task LoadLearningSpaceAsync();
     Task SaveSelectedLearningSpaceAsync();
@@ -28,10 +29,16 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void ShowSelectedLearningSpaceView();
     void CloseLearningSpaceView();
-    LearningContentViewModel? DragAndDropLearningContent { get; }
     void AddNewLearningSpace();
     void AddNewPathWayCondition();
+    void DeletePathWayCondition(PathWayConditionViewModel pathWayCondition);
     void OnWorkspacePropertyChanged(object? caller, PropertyChangedEventArgs e);
     event Action OnUndoRedoPerformed;
     void DragObjectInPathWay(object sender, DraggedEventArgs<IObjectInPathWayViewModel> draggedEventArgs);
+    void RightClickOnObjectInPathWay(IObjectInPathWayViewModel objectInPathWay);
+    void ClickOnObjectInWorld(ISelectableObjectInWorldViewModel obj);
+    void HideRightClickMenu();
+    IObjectInPathWayViewModel? RightClickedLearningObject { get; }
+    void EditObjectInPathWay(IObjectInPathWayViewModel obj);
+    void DeleteLearningSpace(ILearningSpaceViewModel obj);
 }

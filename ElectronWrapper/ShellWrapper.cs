@@ -7,7 +7,7 @@ namespace ElectronWrapper;
 /// <summary>
 /// Manage files and URLs using their default applications.
 /// </summary>
-class ShellWrapper : IShellWrapper
+public class ShellWrapper : IShellWrapper
 {
     private Shell shell;
 
