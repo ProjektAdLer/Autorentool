@@ -46,14 +46,11 @@
 
     private double StrokeWidth => PositioningService.LearningWorldVm?.SelectedLearningObject == ObjectInPathWay ? 2 : 1;
 
-    [Parameter]
-    public string OnHoveredObjectShape { get; set; } = "";
+    protected abstract string OnHoveredObjectShape { get; }
 
-    [Parameter]
-    public string ObjectShape { get; set; } = "";
+    protected abstract string ObjectShape { get; }
 
-    [Parameter]
-    public string DeletePathButtonShape { get; set; } = "";
+    protected abstract string DeletePathButtonShape { get;}
     
     protected override void OnParametersSet()
     {
