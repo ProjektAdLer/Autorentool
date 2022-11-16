@@ -52,15 +52,10 @@
     [Parameter, EditorRequired]
     public ILearningWorldPresenter PositioningService { get; set; } = null!;
 
-    private string Text => ObjectInPathWay switch
-    {
-        LearningSpaceViewModel space => space.Name,
-        PathWayConditionViewModel pathWayCondition => pathWayCondition.Condition.ToString(),
-        _ => ""
-    };
-
     private double StrokeWidth => PositioningService.LearningWorldVm?.SelectedLearningObject == ObjectInPathWay ? 2 : 1;
 
+    protected abstract string Text { get; }
+    
     protected abstract string OnHoveredObjectShape { get; }
 
     protected abstract string ObjectShape { get; }

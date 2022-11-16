@@ -6,6 +6,7 @@ namespace Presentation.View.LearningPathWay;
 
 public class DraggablePathWayCondition : DraggableObjectInPathWay
 {
+    protected override string Text => ((PathWayConditionViewModel)ObjectInPathWay).Condition.ToString();
     protected override string OnHoveredObjectShape => @"<circle r=""25"" style=""fill:lightblue""></circle>
                                        <circle r=""6"" transform=""translate(0,-25)"" fill=""lightblue""/>";
 

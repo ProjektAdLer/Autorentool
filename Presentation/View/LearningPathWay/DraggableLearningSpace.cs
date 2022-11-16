@@ -6,6 +6,7 @@ namespace Presentation.View.LearningPathWay;
 
 public class DraggableLearningSpace : DraggableObjectInPathWay
 {
+    protected override string Text => ((ILearningSpaceViewModel)ObjectInPathWay).Name;
     protected override string OnHoveredObjectShape =>  @"<rect transform=""translate(-3, -3)"" height=""56"" width=""106"" fill=""lightblue""></rect>
                                     <circle r=""6"" transform=""translate(50, 0)"" fill=""lightblue""/>";
 
