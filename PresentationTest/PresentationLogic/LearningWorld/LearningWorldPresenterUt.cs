@@ -674,6 +674,33 @@ public class LearningWorldPresenterUt
     }
     
     [Test]
+    public void DeletePathWayCondition_CallsPresentationLogic()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        world.SelectedLearningObject = condition;
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.DeletePathWayCondition(condition);
+
+        presentationLogic.Received().DeletePathWayCondition(world, condition);
+    }
+    
+    [Test]
+    public void DeletePathWayCondition_ThrowsWhenWorldIsNull()
+    {
+        var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+
+        var systemUnderTest = CreatePresenterForTesting();
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeletePathWayCondition(condition));
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+    }
+    
+    [Test]
     public void RightClickedPathWayCondition_SetsRightClickedLearningObjectToSpace()
     {
         var condition = new PathWayConditionViewModel(ConditionEnum.And,2,1);
