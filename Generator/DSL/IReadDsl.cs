@@ -5,6 +5,7 @@ public interface IReadDsl
     void ReadLearningWorld(string dslPath, DocumentRootJson? rootJsonForTest = null);
     List<LearningElementJson> GetH5PElementsList();
     LearningWorldJson GetLearningWorld();
+    List<LearningSpaceJson> GetSpaceList();
     List<LearningSpaceJson> GetSectionList();
     List<LearningElementJson> GetResourceList();
     List<LearningElementJson> GetLabelsList();

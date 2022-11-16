@@ -51,7 +51,7 @@ public class CreateDslUt
             null, 0, 0, new List<LearningSpacePe>(), 
             new List<LearningSpacePe>());
         space1.LearningElements.AddRange(new List<LearningElementPe>{ele1, ele2, ele3, ele4, ele5});
-        var space2 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
+        var space2 = new LearningSpacePe("ff2", "ff", "ff", "ff", "ff", 5, 
             null, 0, 0, new List<LearningSpacePe>(), new List<LearningSpacePe>());
         space1.OutBoundSpaces = new List<LearningSpacePe>() {space2};
         space2.InBoundSpaces = new List<LearningSpacePe>() {space1};
@@ -63,7 +63,11 @@ public class CreateDslUt
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
         
         //Every Element except Content with "url" is added to the comparison list.
-        var learningElementsWithContentList = new List<LearningElementPe> { ele1, ele2, ele4, ele5 };
+        var learningElementsSpace1 = new List<LearningElementPe> { ele1, ele2, ele4, ele5 };
+        var learningElementsSpace2 = new List<LearningElementPe>();
+        
+        var learningElementsForComparison = new List<List<LearningElementPe>> {learningElementsSpace1, learningElementsSpace2};
+        
 
         //Act
         systemUnderTest.WriteLearningWorld(learningWorld);
@@ -78,7 +82,7 @@ public class CreateDslUt
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.LearningWorldJson!.Identifier.Value, Is.EqualTo(name));
-            Assert.That(systemUnderTest.ContentListLearningElements, Is.EquivalentTo(learningElementsWithContentList));
+            Assert.That(systemUnderTest.DictionaryLearningSpaceToLearningElements.Values, Is.EqualTo(learningElementsForComparison));
             Assert.That(systemUnderTest.ListLearningSpaces, Is.EquivalentTo(learningSpaces));
             Assert.That(systemUnderTest.LearningWorldJson.LearningSpaces[0].Requirements,
                 Is.EqualTo(new List<int>()));

@@ -77,6 +77,7 @@ public class ReadDslUt
         var getSpacesAndElementsList = systemUnderTest.GetSpacesAndElementsOrderedList();
         var getLabelsList = systemUnderTest.GetLabelsList();
         var getUrlList = systemUnderTest.GetUrlList();
+        var getSpaceList = systemUnderTest.GetSpaceList();
 
         Assert.Multiple(() =>
         {
@@ -93,6 +94,7 @@ public class ReadDslUt
             
             //Spaces + Elements + World Description & Goals (As they are created as Labels in Moodle)
             Assert.That(getSpacesAndElementsList, Has.Count.EqualTo(5));
+            Assert.That(getSpaceList, Has.Count.EqualTo(2));
             Assert.That(getLabelsList, Has.Count.EqualTo(1));
             
             //Because there are no Topics in the AuthoringTool, every learning space is added to Topic 0

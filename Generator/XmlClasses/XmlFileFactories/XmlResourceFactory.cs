@@ -20,7 +20,9 @@ public class XmlResourceFactory : IXmlResourceFactory
     private readonly IFileSystem _fileSystem;
     public string FileElementId;
     public string FileElementName;
-    public string FileElementParentSpace;
+    public string FileElementParentSpaceString;
+    public string FileElementParentSpaceName;
+    public List<LearningSpaceJson> LearningSpaceJsonList;
     public string FileElementType;
     public string FileElementDesc;
 
@@ -56,7 +58,9 @@ public class XmlResourceFactory : IXmlResourceFactory
         ReadDsl = readDsl;
         FileElementId = "";
         FileElementName = "";
-        FileElementParentSpace = "";
+        FileElementParentSpaceString = "";
+        FileElementParentSpaceName = "";
+        LearningSpaceJsonList = new List<LearningSpaceJson>();
         FileElementType = "";
         FileElementDesc = "";
         
@@ -93,6 +97,7 @@ public class XmlResourceFactory : IXmlResourceFactory
     {
         var resourceList = ReadDsl.GetResourceList();
         FilesXmlFilesList = FileManager.GetXmlFilesList();
+        LearningSpaceJsonList = ReadDsl.GetSpaceList();
         ReadFileListAndSetParametersResource(resourceList);
         
         FileManager.SetXmlFilesList(FilesXmlFilesList);
@@ -106,12 +111,13 @@ public class XmlResourceFactory : IXmlResourceFactory
             FileElementType = resource.ElementType;
             FileElementName = resource.Identifier.Value;
             FileElementDesc = resource.Description ?? "";
-            FileElementParentSpace = resource.LearningSpaceParentId.ToString();
+            FileElementParentSpaceString = resource.LearningSpaceParentId.ToString();
+            FileElementParentSpaceName =  LearningSpaceJsonList[resource.LearningSpaceParentId - 1].Identifier.Value;
 
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
-                resource.Identifier.Value + "." + resource.ElementType));
+                FileElementParentSpaceName + "_" + resource.Identifier.Value + "." + resource.ElementType));
             FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
-                resource.Identifier.Value + "." + resource.ElementType), FileManager.GetHashCheckSum());
+                FileElementParentSpaceName + "_" + resource.Identifier.Value + "." + resource.ElementType), FileManager.GetHashCheckSum());
 
             if (resource.ElementType is "pdf" or "json")
             {
@@ -159,7 +165,7 @@ public class XmlResourceFactory : IXmlResourceFactory
             ContextId = FileElementId,
             Filename = FileElementName,
             Mimetype = mimeType,
-            Source = FileElementName+"."+FileElementType,
+            Source =   FileElementParentSpaceName + "_" + FileElementName+"."+FileElementType,
             Filesize = filesize,
             Timecreated = CurrentTime,
             Timemodified = CurrentTime,
@@ -201,8 +207,8 @@ public class XmlResourceFactory : IXmlResourceFactory
         
         //file activities/resource.../module.xml
         ActivitiesModuleXmlModule.ModuleName = "resource";
-        ActivitiesModuleXmlModule.SectionId = FileElementParentSpace;
-        ActivitiesModuleXmlModule.SectionNumber = FileElementParentSpace;
+        ActivitiesModuleXmlModule.SectionId = "0";
+        ActivitiesModuleXmlModule.SectionNumber = "0";
         ActivitiesModuleXmlModule.Indent = "1";
         ActivitiesModuleXmlModule.Added = CurrentTime;
         ActivitiesModuleXmlModule.Id = FileElementId;

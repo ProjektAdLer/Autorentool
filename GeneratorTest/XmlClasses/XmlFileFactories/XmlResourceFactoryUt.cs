@@ -64,17 +64,17 @@ public class XmlResourceFactoryUt
         var identifier = new IdentifierJson("FileName", "Document");
         var learningEvl = new List<LearningElementValueJson>{new ("Points", "15")};
         
-        var jsonDocument = new LearningElementJson(1, identifier, "", "", "json",0, learningEvl);
-        var pngDocument = new LearningElementJson(2, identifier, "", "", "png",0, learningEvl);
-        var mp4Document = new LearningElementJson(3, identifier, "", "", "mp4",0, learningEvl);
-        var webpDocument = new LearningElementJson(4, identifier, "", "", "webp",0, learningEvl);
-        var jsDocument = new LearningElementJson(5, identifier, "", "", "js",0, learningEvl);
-        var cssDocument = new LearningElementJson(6, identifier, "", "", "css",0, learningEvl);
-        var htmlDocument = new LearningElementJson(7, identifier, "", "", "html",0, learningEvl);
-        var csDocument = new LearningElementJson(8, identifier, "", "", "cs",0, learningEvl);
-        var ccDocument = new LearningElementJson(9, identifier, "", "", "cc",0, learningEvl);
-        var cPlusPlusDocument = new LearningElementJson(10, identifier, "", "", "cpp",0, learningEvl);
-        var txtDocument = new LearningElementJson(11, identifier, "", "", "txt",0, learningEvl);
+        var jsonDocument = new LearningElementJson(1, identifier, "", "", "json",1, learningEvl);
+        var pngDocument = new LearningElementJson(2, identifier, "", "", "png",1, learningEvl);
+        var mp4Document = new LearningElementJson(3, identifier, "", "", "mp4",1, learningEvl);
+        var webpDocument = new LearningElementJson(4, identifier, "", "", "webp",1, learningEvl);
+        var jsDocument = new LearningElementJson(5, identifier, "", "", "js",1, learningEvl);
+        var cssDocument = new LearningElementJson(6, identifier, "", "", "css",1, learningEvl);
+        var htmlDocument = new LearningElementJson(7, identifier, "", "", "html",1, learningEvl);
+        var csDocument = new LearningElementJson(8, identifier, "", "", "cs",1, learningEvl);
+        var ccDocument = new LearningElementJson(9, identifier, "", "", "cc",1, learningEvl);
+        var cPlusPlusDocument = new LearningElementJson(10, identifier, "", "", "cpp",1, learningEvl);
+        var txtDocument = new LearningElementJson(11, identifier, "", "", "txt",1, learningEvl);
 
 
         var resourceList = new List<LearningElementJson>()
@@ -93,7 +93,9 @@ public class XmlResourceFactoryUt
         };
         
         mockReadDsl.GetResourceList().Returns(resourceList);
-        var fileString = Path.Join(currWorkDir, "XMLFilesForExport", identifier.Value);
+        var space_1 = new LearningSpaceJson(1, new IdentifierJson("space", "spacename"), new List<int>() {1, 2}, 10, 10);
+        mockReadDsl.GetSpaceList().Returns(new List<LearningSpaceJson>() {space_1});
+        var fileString = Path.Join(currWorkDir, "XMLFilesForExport", space_1.Identifier.Value+"_"+identifier.Value);
         mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport", identifier.Value), new MockFileData("Hello World"));
 
         
@@ -126,7 +128,6 @@ public class XmlResourceFactoryUt
         mockFileSystem.Directory.GetCurrentDirectory();
         
         // Act
-
         var systemUnderTest = new XmlResourceFactory(mockReadDsl, mockFileManager, mockFileSystem);
         systemUnderTest.FilesXmlFilesList = new List<FilesXmlFile>();
         systemUnderTest.FileElementId = "1";
@@ -140,14 +141,14 @@ public class XmlResourceFactoryUt
             Assert.That(systemUnderTest.FilesXmlFilesList[0].ContextId, Is.EqualTo(systemUnderTest.FileElementId));
             Assert.That(systemUnderTest.FilesXmlFilesList[0].Filename, Is.EqualTo(systemUnderTest.FileElementName));
             Assert.That(systemUnderTest.FilesXmlFilesList[0].Filesize, Is.EqualTo("456789"));
-            Assert.That(systemUnderTest.FilesXmlFilesList[0].Source, Is.EqualTo(systemUnderTest.FileElementName + "."));
+            Assert.That(systemUnderTest.FilesXmlFilesList[0].Source, Is.EqualTo("_"+systemUnderTest.FileElementName + "."));
             Assert.That(systemUnderTest.FilesXmlFilesList[0].Timecreated, Is.EqualTo(systemUnderTest.CurrentTime));
             Assert.That(systemUnderTest.FilesXmlFilesList[0].Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
             Assert.That(systemUnderTest.FilesXmlFilesList[1].ContentHash, Is.EqualTo("1234"));
             Assert.That(systemUnderTest.FilesXmlFilesList[1].ContextId, Is.EqualTo(systemUnderTest.FileElementId));
             Assert.That(systemUnderTest.FilesXmlFilesList[1].Filename, Is.EqualTo(systemUnderTest.FileElementName));
             Assert.That(systemUnderTest.FilesXmlFilesList[1].Filesize, Is.EqualTo("456789"));
-            Assert.That(systemUnderTest.FilesXmlFilesList[1].Source, Is.EqualTo(systemUnderTest.FileElementName + "."));
+            Assert.That(systemUnderTest.FilesXmlFilesList[1].Source, Is.EqualTo("_"+systemUnderTest.FileElementName + "."));
             Assert.That(systemUnderTest.FilesXmlFilesList[1].Timecreated, Is.EqualTo(systemUnderTest.CurrentTime));
             Assert.That(systemUnderTest.FilesXmlFilesList[1].Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
             Assert.That(systemUnderTest.FilesXmlFilesList, Has.Count.EqualTo(2));
@@ -203,8 +204,8 @@ public class XmlResourceFactoryUt
             systemUnderTest.ActivitiesRolesXmlRoles.Received().Serialize("resource", systemUnderTest.FileElementId);
             
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.ModuleName, Is.EqualTo("resource"));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionId, Is.EqualTo(systemUnderTest.FileElementParentSpace));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionNumber, Is.EqualTo(systemUnderTest.FileElementParentSpace));
+            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionId, Is.EqualTo("0"));
+            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionNumber, Is.EqualTo("0"));
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Added, Is.EqualTo(systemUnderTest.CurrentTime));
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Id, Is.EqualTo(systemUnderTest.FileElementId));
             systemUnderTest.ActivitiesModuleXmlModule.Received().Serialize("resource", systemUnderTest.FileElementId);
