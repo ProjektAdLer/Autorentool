@@ -69,7 +69,7 @@ public class LearningWorldPresenterUt
         systemUnderTest.LearningWorldVm = world;
         systemUnderTest.EditObjectInPathWay(space);
         
-        Assert.That(world.SelectableWorldObjects, Is.EqualTo(space));
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(space));
         Assert.That(systemUnderTest.EditLearningSpaceDialogOpen, Is.True);
     }
     
@@ -113,7 +113,7 @@ public class LearningWorldPresenterUt
     }
     
     [Test]
-    public void ClickedLearningSpace_SetsSelectedLearningSpace()
+    public void ClickedLearningSpace_SetsSelectedLearningObjectToSpace()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -123,6 +123,21 @@ public class LearningWorldPresenterUt
         systemUnderTest.ClickOnObjectInWorld(space);
         
         Assert.That(world.SelectedLearningObject, Is.EqualTo(space));
+    }
+
+    [Test]
+    public void DoubleClickedLearningSpace_SetsSelectedLearningObjectAndShowsLearningSpaceView()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var space = new LearningSpaceViewModel("g", "g", "g", "g", "g");
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.DoubleClickOnObjectInWorld(space);
+        
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(space));
+        Assert.That(systemUnderTest.ShowingLearningSpaceView, Is.True);
+        Assert.That(systemUnderTest.RightClickedLearningObject, Is.Null);
     }
         
         
@@ -656,6 +671,57 @@ public class LearningWorldPresenterUt
         systemUnderTest.SetSelectedLearningObject(condition);
 
         Assert.That(systemUnderTest.LearningWorldVm.SelectedLearningObject, Is.EqualTo(condition));
+    }
+    
+    [Test]
+    public void RightClickedPathWayCondition_SetsRightClickedLearningObjectToSpace()
+    {
+        var condition = new PathWayConditionViewModel(ConditionEnum.And,2,1);
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.RightClickOnObjectInPathWay(condition);
+        
+        Assert.That(systemUnderTest.RightClickedLearningObject, Is.EqualTo(condition));
+    }
+    
+    [Test]
+    public void HideRightClickMenuFromCondition_SetsRightClickedLearningObjectToNull()
+    {
+        var conditionViewModel = new PathWayConditionViewModel(ConditionEnum.Or,2,1);
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        systemUnderTest.RightClickOnObjectInPathWay(conditionViewModel);
+        Assert.That(systemUnderTest.RightClickedLearningObject, Is.EqualTo(conditionViewModel));
+        
+        systemUnderTest.HideRightClickMenu();
+        
+        Assert.That(systemUnderTest.RightClickedLearningObject, Is.Null);
+    }
+    
+    [Test]
+    public void ClickedPathWayCondition_SetsSelectedLearningObjectToCondition()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var conditionViewModel = new PathWayConditionViewModel(ConditionEnum.And,2,1);
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.ClickOnObjectInWorld(conditionViewModel);
+        
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(conditionViewModel));
+    }
+    
+    [Test]
+    public void DoubleClickedPathWayCondition_CallsPresentationLogic()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var condition = new PathWayConditionViewModel(ConditionEnum.And,2,1);
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.DoubleClickOnObjectInWorld(condition);
+        
+        presentationLogic.Received().EditPathWayCondition(condition, ConditionEnum.Or);
     }
 
     #region OnCreatePathWayConditionDialogClose

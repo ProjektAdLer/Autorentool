@@ -3,7 +3,6 @@ using System.Runtime.CompilerServices;
 using Presentation.Components;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Shared;
@@ -150,6 +149,21 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     public void ClickOnObjectInWorld(ISelectableObjectInWorldViewModel obj)
     {
         SetSelectedLearningObject(obj);
+    }
+
+    public void DoubleClickOnObjectInWorld(IObjectInPathWayViewModel obj)
+    {
+        switch (obj)
+        {
+            case PathWayConditionViewModel pathWayConditionViewModel:
+                _presentationLogic.EditPathWayCondition(pathWayConditionViewModel,
+                    pathWayConditionViewModel.Condition == ConditionEnum.And ? ConditionEnum.Or : ConditionEnum.And);
+                break;
+            case LearningSpaceViewModel learningSpaceViewModel:
+                SetSelectedLearningObject(learningSpaceViewModel);
+                ShowSelectedLearningSpaceView();
+                break;
+        }
     }
 
     public void HideRightClickMenu()

@@ -37,6 +37,7 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     void DragObjectInPathWay(object sender, DraggedEventArgs<IObjectInPathWayViewModel> draggedEventArgs);
     void RightClickOnObjectInPathWay(IObjectInPathWayViewModel objectInPathWay);
     void ClickOnObjectInWorld(ISelectableObjectInWorldViewModel obj);
+    void DoubleClickOnObjectInWorld(IObjectInPathWayViewModel obj);
     void HideRightClickMenu();
     IObjectInPathWayViewModel? RightClickedLearningObject { get; }
     void EditObjectInPathWay(IObjectInPathWayViewModel obj);
