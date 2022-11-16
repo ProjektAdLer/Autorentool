@@ -13,6 +13,7 @@ public class CreateDsl : ICreateDsl
     public LearningWorldJson? LearningWorldJson;
     private List<int> _listLearningSpaceContent;
     private List<int> _requirements;
+    public Dictionary<string,List<LearningElementPe>> DictionaryLearningSpaceToLearningElements;
     private IFileSystem _fileSystem;
     public string Uuid;
     private string _dslPath;
@@ -40,6 +41,7 @@ public class CreateDsl : ICreateDsl
         ListLearningSpaces = new List<LearningSpacePe>();
         _listLearningSpaceContent = new List<int>();
         _requirements = new List<int>();
+        DictionaryLearningSpaceToLearningElements = new Dictionary<string, List<LearningElementPe>>();
         Guid guid = Guid.NewGuid();
         Uuid = guid.ToString();
     }
@@ -119,9 +121,7 @@ public class CreateDsl : ICreateDsl
                 {
                     ContentListLearningElements.Add(element);
                 }
-                
 
-                
                 //int elementIndex = ContentListLearningElements.IndexOf(element) + 1;
                 _listLearningSpaceContent.Add(learningSpaceElementId);
                 learningSpaceElementId++;
@@ -143,6 +143,8 @@ public class CreateDsl : ICreateDsl
                 learningSpace.LearningElements.Sum(element => element.Points),
                 learningSpace.Description, learningSpace.Goals, _requirements));
 
+            DictionaryLearningSpaceToLearningElements.Add(learningSpace.Name, ContentListLearningElements);
+            ContentListLearningElements = new List<LearningElementPe>();
             learningSpaceId++;
         }
 
@@ -169,18 +171,25 @@ public class CreateDsl : ICreateDsl
         
         //All LearningElements are created at the specified location = Easier access to files in further Export-Operations.
         //After the files are added to the Backup-Structure, these Files will be deleted.
-        foreach (var learningElement in ContentListLearningElements)
+        foreach (KeyValuePair<string,List<LearningElementPe>> kvp in DictionaryLearningSpaceToLearningElements)
         {
-            try
+            var space = kvp.Key;
+            var list = kvp.Value;
+
+            foreach (var learningElement in list)
             {
-                _fileSystem.File.Copy(learningElement.LearningContent.Filepath,
-                _fileSystem.Path.Join("XMLFilesForExport", $"{learningElement.Name}.{learningElement.LearningContent.Type}"));
+                try
+                {
+                    _fileSystem.File.Copy(learningElement.LearningContent.Filepath,
+                        _fileSystem.Path.Join("XMLFilesForExport", $"{space}_{learningElement.Name}.{learningElement.LearningContent.Type}"));
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Something went wrong while creating the LearningElements for the Backup-Structure.");
+                    throw;
+                }
             }
-            catch (Exception)
-            {
-                Console.WriteLine("Something went wrong while creating the LearningElements for the Backup-Structure.");
-                throw;
-            }
+            
         }
 
         _fileSystem.File.WriteAllText(_dslPath, jsonFile);
