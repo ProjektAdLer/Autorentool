@@ -115,56 +115,57 @@ public class BackupFileGeneratorUt
     [Test]
     public void BackupFileGenerator_WriteBackupFile_FilesCreated_AndTempDirectoryDeleted()
     {
-        //Arrange
         var curDirectory = Directory.GetCurrentDirectory();
-        
-        if (Directory.Exists(Path.Join(curDirectory, "XMLFilesForExport")))
+        try
         {
-            var dir = new DirectoryInfo(Path.Join(curDirectory, "XMLFilesForExport"));
-            dir.Delete(true);
-        }
+            //Arrange
         
-        if (File.Exists(Path.Join(curDirectory, "XMLFilesForTesting")))
-        {
-            File.Delete(Path.Join(curDirectory, "XMLFilesForTesting"));
-        }
+            if (Directory.Exists(Path.Join(curDirectory, "XMLFilesForExport")))
+            {
+                var dir = new DirectoryInfo(Path.Join(curDirectory, "XMLFilesForExport"));
+                dir.Delete(true);
+            }
         
-        var mockEntityManager = Substitute.For<IXmlEntityManager>();
-        var systemUnderTest = new BackupFileGenerator(entityManager: mockEntityManager);
+            if (File.Exists(Path.Join(curDirectory, "XMLFilesForTesting")))
+            {
+                File.Delete(Path.Join(curDirectory, "XMLFilesForTesting"));
+            }
         
-        //Create a File and 2 Folders 
-        Directory.CreateDirectory(Path.Join(curDirectory, "XMLFilesForExport"));
-        Directory.CreateDirectory(Path.Join(curDirectory, "XMLFilesForExport", "course"));
-        using (FileStream fs = File.Create(Path.Join(curDirectory, "XMLFilesForExport", "File.txt")))     
-        {    
-            // Add some text to file    
-            Byte[] title = new UTF8Encoding(true).GetBytes("New Text File");    
-            fs.Write(title, 0, title.Length);
-        }
-        using (FileStream fs = File.Create(Path.Join(curDirectory, "EmptyWorld.mbz")))     
-        {    
-            // Add some text to file    
-            Byte[] title = new UTF8Encoding(true).GetBytes("New Text File");    
-            fs.Write(title, 0, title.Length);
-        }
+            var mockEntityManager = Substitute.For<IXmlEntityManager>();
+            var systemUnderTest = new BackupFileGenerator(entityManager: mockEntityManager);
         
-        //Act
-        systemUnderTest.WriteBackupFile(Path.Join(curDirectory, "XMLFilesForTesting"));
+            //Create a File and 2 Folders 
+            Directory.CreateDirectory(Path.Join(curDirectory, "XMLFilesForExport"));
+            Directory.CreateDirectory(Path.Join(curDirectory, "XMLFilesForExport", "course"));
+            using (FileStream fs = File.Create(Path.Join(curDirectory, "XMLFilesForExport", "File.txt")))     
+            {    
+                // Add some text to file    
+                Byte[] title = new UTF8Encoding(true).GetBytes("New Text File");    
+                fs.Write(title, 0, title.Length);
+            }
+            using (FileStream fs = File.Create(Path.Join(curDirectory, "EmptyWorld.mbz")))     
+            {    
+                // Add some text to file    
+                Byte[] title = new UTF8Encoding(true).GetBytes("New Text File");    
+                fs.Write(title, 0, title.Length);
+            }
         
-        //Assert
-        Assert.Multiple(() =>
-        {
+            //Act
+            systemUnderTest.WriteBackupFile(Path.Join(curDirectory, "XMLFilesForTesting"));
+        
+            //Assert
             Assert.That(File.Exists(Path.Join(curDirectory, "XMLFilesForTesting")), Is.True);
-            Assert.That(Directory.Exists(Path.Join(curDirectory, "XMLFilesForExport", "course")), Is.False);
-            Assert.That(Directory.Exists(Path.Join(curDirectory, "XMLFilesForExport")), Is.False);
-            Assert.That(File.Exists(Path.Join(curDirectory, "XMLFilesForExport", "File.txt")), Is.False);
-        });
-        
-        //Delete all Files and Folders created during the Test
-        if (File.Exists(Path.Join(curDirectory, "XMLFilesForTesting")))
-        {
-            File.Delete(Path.Join(curDirectory, "XMLFilesForTesting"));
         }
+        finally
+        {
+            //Delete all Files and Folders created during the Test
+            if (File.Exists(Path.Join(curDirectory, "XMLFilesForTesting")))
+            {
+                File.Delete(Path.Join(curDirectory, "XMLFilesForTesting"));
+            }
+            
+        }
+        
            
     }
 
@@ -182,6 +183,52 @@ public class BackupFileGeneratorUt
         //Assert
         Assert.That(tempDir, Is.Not.Empty);
 
+    }
+
+    /// <summary>
+    /// This is a regression test for https://github.com/ProjektAdLer/Autorentool/issues/253
+    /// </summary>
+    [Test]
+    public void WriteBackupFile_MbzFileAlreadyExists_OverwritesFile()
+    {
+        //we can't mock the filesystem here unfortunately because sharpziplib which we use for creating the tar file
+        //does not support substituting the file system
+        const string mbzName = "boobaz.mbz";
+        const string contents = "OverwriteMePlease";
+        const string directory = "XMLFilesForExport";
+        try
+        {
+            long streamLengthAfterWrite;
+            Directory.CreateDirectory(directory);
+            var joinedPath = Path.Join(directory, mbzName);
+            using (var stream = File.OpenWrite(joinedPath))
+            {
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.WriteLine(contents);
+                }
+            }
+
+            using (var stream = File.OpenRead(joinedPath))
+                streamLengthAfterWrite = stream.Length;
+
+
+            var systemUnderTest = new BackupFileGenerator();
+        
+            systemUnderTest.WriteBackupFile(joinedPath);
+            
+            using (var stream = File.OpenRead(joinedPath))
+            {
+                //comparing stream length has to be enough of a sanity check here because 
+                Assert.That(stream, Has.Length.Not.EqualTo(streamLengthAfterWrite));
+            }
+
+        }
+        finally
+        {
+            if (Directory.Exists(directory))
+                Directory.Delete(directory, recursive: true);
+        }
     }
     
 }
