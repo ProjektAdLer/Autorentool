@@ -20,10 +20,8 @@ public class XmlH5PFactory : IXmlH5PFactory
     public string H5PElementId;
     public string H5PElementName;
     public string H5PElementParentSpaceString;
-    public string H5PElementParentSpaceName;
     public string H5PElementType;
     public string H5PElementDesc;
-    public List<LearningSpaceJson> LearningSpaceJsonList;
     public string CurrentTime;
     private List<FilesXmlFile> _filesXmlFilesList;
     private List<ActivitiesInforefXmlFile> _activitiesInforefXmlFileList;
@@ -68,10 +66,8 @@ public class XmlH5PFactory : IXmlH5PFactory
         H5PElementId = "";
         H5PElementName = "";
         H5PElementParentSpaceString = "";
-        H5PElementParentSpaceName = "";
         H5PElementType = "";
         H5PElementDesc = "";
-        LearningSpaceJsonList = new List<LearningSpaceJson>();
         _filesXmlFilesList = new List<FilesXmlFile>();
         _activitiesInforefXmlFileList = new List<ActivitiesInforefXmlFile>();
         _fileSystem = fileSystem?? new FileSystem();
@@ -116,8 +112,7 @@ public class XmlH5PFactory : IXmlH5PFactory
     {
         // Get all the H5P elements that are in the DSL Document
         List<LearningElementJson> h5PElementsList = ReadDsl.GetH5PElementsList();
-        LearningSpaceJsonList = ReadDsl.GetSpaceList();
-        
+
         _filesXmlFilesList = new List<FilesXmlFile>();
         _filesXmlFilesList = FileManager.GetXmlFilesList();
 
@@ -139,14 +134,13 @@ public class XmlH5PFactory : IXmlH5PFactory
             H5PElementId = h5PElement.Id.ToString();
             H5PElementName = h5PElement.Identifier.Value;
             H5PElementParentSpaceString = h5PElement.LearningSpaceParentId.ToString();
-            H5PElementParentSpaceName =  LearningSpaceJsonList[h5PElement.LearningSpaceParentId - 1].Identifier.Value;
             H5PElementType = h5PElement.ElementType;
             H5PElementDesc = h5PElement.Description ?? "";
 
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
-                H5PElementParentSpaceName+"_"+h5PElement.Identifier.Value+"."+h5PElement.ElementType));
+                h5PElement.Identifier.Value+"."+h5PElement.ElementType));
             FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath, 
-                    H5PElementParentSpaceName+"_"+h5PElement.Identifier.Value+"."+h5PElement.ElementType), 
+                h5PElement.Identifier.Value+"."+h5PElement.ElementType), 
             FileManager.GetHashCheckSum());
             H5PSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize());
             H5PSetParametersActivity();
@@ -169,7 +163,7 @@ public class XmlH5PFactory : IXmlH5PFactory
             ContentHash = hashCheckSum,
             ContextId = H5PElementId,
             Filename = H5PElementName,
-            Source = H5PElementParentSpaceName + "_" + H5PElementName+"."+H5PElementType,
+            Source = H5PElementName+"."+H5PElementType,
             Filesize = filesize,
             Component = "mod_h5pactivity",
             FileArea = "package",

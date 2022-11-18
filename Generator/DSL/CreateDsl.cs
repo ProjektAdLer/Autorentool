@@ -3,6 +3,7 @@ using System.Text.Json;
 using Generator.WorldExport;
 using Microsoft.Extensions.Logging;
 using PersistEntities;
+using Shared.Extensions;
 
 namespace Generator.DSL;
 
@@ -13,7 +14,7 @@ public class CreateDsl : ICreateDsl
     public LearningWorldJson? LearningWorldJson;
     private List<int> _listLearningSpaceContent;
     private List<int> _requirements;
-    public Dictionary<string,List<LearningElementPe>> DictionaryLearningSpaceToLearningElements;
+    public List<LearningElementPe> ListAllLearningElements;
     private IFileSystem _fileSystem;
     public string Uuid;
     private string _dslPath;
@@ -41,11 +42,62 @@ public class CreateDsl : ICreateDsl
         ListLearningSpaces = new List<LearningSpacePe>();
         _listLearningSpaceContent = new List<int>();
         _requirements = new List<int>();
-        DictionaryLearningSpaceToLearningElements = new Dictionary<string, List<LearningElementPe>>();
+        ListAllLearningElements = new List<LearningElementPe>();
         Guid guid = Guid.NewGuid();
         Uuid = guid.ToString();
     }
-    
+
+    //Search through all LearningElements and look for duplicates. 
+    //If a duplicate is found, the duplicate Values get a incremented Number behind them for example: (1), (2)...
+    public List<LearningSpacePe> SearchDuplicateLearningElementNames(List<LearningSpacePe> listLearningSpace)
+    {
+        var incrementedNamesDictionary = new Dictionary<string,string>();
+        
+        //Get All LearningElements
+        foreach (var learningSpace in listLearningSpace)
+        {
+            foreach (var element in learningSpace.LearningElements)
+            {
+                ListAllLearningElements.Add(element);
+            }
+        }
+        
+        //Search for duplicates
+        var duplicateLearningElements = ListAllLearningElements.GroupBy(x => x.Name).Where(x => x.Count() > 1)
+            .Select(x => x).ToList();
+
+        //To avoid duplicate names, we increment the name of the learning element.
+        //That happens in yet another loop, because we have to respect the Space -> Element hierarchy.
+        foreach (var duplicateElement in duplicateLearningElements)
+        {
+            foreach (var learningSpace in listLearningSpace)
+            {
+                foreach (var element in learningSpace.LearningElements)
+                {
+                    if(element.Name == duplicateElement.Key)
+                    {
+                        var incrementedElementName = "";
+                        
+                        if (incrementedNamesDictionary.ContainsKey(element.Name))
+                        {
+                            incrementedElementName = StringHelper.IncrementName(incrementedNamesDictionary[element.Name]);
+                            incrementedNamesDictionary[element.Name] = incrementedElementName;
+                        }
+                        else
+                        {
+                            incrementedElementName = StringHelper.IncrementName(element.Name);
+                            incrementedNamesDictionary.Add(element.Name, incrementedElementName);
+                        }
+                        
+                        element.Name = incrementedElementName;
+                    }
+                }
+            }
+        }
+
+        return listLearningSpace;
+    }
+
     /// <summary>
     /// Reads the LearningWord Entity and creates an DSL Document with the given information.
     /// </summary>
@@ -73,15 +125,19 @@ public class CreateDsl : ICreateDsl
             idDictionary.Add(learningSpaceIdForDictionary, space.Id);
             learningSpaceIdForDictionary++;
         }
+        
+        //Search for duplicate LearningElement Names and increment them.
+        ListLearningSpaces = SearchDuplicateLearningElementNames(ListLearningSpaces);
 
         // Starting Value for Learning Space Ids & Learning Element Ids
         int learningSpaceId = 1;
         int learningSpaceElementId = 1;
-        
+
         foreach (var learningSpace in ListLearningSpaces)
         {
             _listLearningSpaceContent = new List<int>();
             IdentifierJson learningSpaceIdentifier = new IdentifierJson("name", learningSpace.Name);
+            
             
             //Searching for Learning Elements in each Space
             foreach (var element in learningSpace.LearningElements)
@@ -142,9 +198,7 @@ public class CreateDsl : ICreateDsl
                 learningSpace.RequiredPoints, 
                 learningSpace.LearningElements.Sum(element => element.Points),
                 learningSpace.Description, learningSpace.Goals, _requirements));
-
-            DictionaryLearningSpaceToLearningElements.Add(learningSpace.Name, ContentListLearningElements);
-            ContentListLearningElements = new List<LearningElementPe>();
+            
             learningSpaceId++;
         }
 
@@ -171,17 +225,12 @@ public class CreateDsl : ICreateDsl
         
         //All LearningElements are created at the specified location = Easier access to files in further Export-Operations.
         //After the files are added to the Backup-Structure, these Files will be deleted.
-        foreach (KeyValuePair<string,List<LearningElementPe>> kvp in DictionaryLearningSpaceToLearningElements)
-        {
-            var space = kvp.Key;
-            var list = kvp.Value;
-
-            foreach (var learningElement in list)
+        foreach (var learningElement in ContentListLearningElements)
             {
                 try
                 {
                     _fileSystem.File.Copy(learningElement.LearningContent.Filepath,
-                        _fileSystem.Path.Join("XMLFilesForExport", $"{space}_{learningElement.Name}.{learningElement.LearningContent.Type}"));
+                        _fileSystem.Path.Join("XMLFilesForExport", $"{learningElement.Name}.{learningElement.LearningContent.Type}"));
                 }
                 catch (Exception)
                 {
@@ -189,8 +238,6 @@ public class CreateDsl : ICreateDsl
                     throw;
                 }
             }
-            
-        }
 
         _fileSystem.File.WriteAllText(_dslPath, jsonFile);
         Logger.LogDebug("Generated DSL Document: {JsonFile}",jsonFile);
