@@ -21,8 +21,6 @@ public class XmlResourceFactory : IXmlResourceFactory
     public string FileElementId;
     public string FileElementName;
     public string FileElementParentSpaceString;
-    public string FileElementParentSpaceName;
-    public List<LearningSpaceJson> LearningSpaceJsonList;
     public string FileElementType;
     public string FileElementDesc;
 
@@ -59,8 +57,6 @@ public class XmlResourceFactory : IXmlResourceFactory
         FileElementId = "";
         FileElementName = "";
         FileElementParentSpaceString = "";
-        FileElementParentSpaceName = "";
-        LearningSpaceJsonList = new List<LearningSpaceJson>();
         FileElementType = "";
         FileElementDesc = "";
         
@@ -97,7 +93,6 @@ public class XmlResourceFactory : IXmlResourceFactory
     {
         var resourceList = ReadDsl.GetResourceList();
         FilesXmlFilesList = FileManager.GetXmlFilesList();
-        LearningSpaceJsonList = ReadDsl.GetSpaceList();
         ReadFileListAndSetParametersResource(resourceList);
         
         FileManager.SetXmlFilesList(FilesXmlFilesList);
@@ -112,12 +107,11 @@ public class XmlResourceFactory : IXmlResourceFactory
             FileElementName = resource.Identifier.Value;
             FileElementDesc = resource.Description ?? "";
             FileElementParentSpaceString = resource.LearningSpaceParentId.ToString();
-            FileElementParentSpaceName =  LearningSpaceJsonList[resource.LearningSpaceParentId - 1].Identifier.Value;
 
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
-                FileElementParentSpaceName + "_" + resource.Identifier.Value + "." + resource.ElementType));
+                resource.Identifier.Value + "." + resource.ElementType));
             FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
-                FileElementParentSpaceName + "_" + resource.Identifier.Value + "." + resource.ElementType), FileManager.GetHashCheckSum());
+                resource.Identifier.Value + "." + resource.ElementType), FileManager.GetHashCheckSum());
 
             if (resource.ElementType is "pdf" or "json")
             {
@@ -165,7 +159,7 @@ public class XmlResourceFactory : IXmlResourceFactory
             ContextId = FileElementId,
             Filename = FileElementName,
             Mimetype = mimeType,
-            Source =   FileElementParentSpaceName + "_" + FileElementName+"."+FileElementType,
+            Source =   FileElementName+"."+FileElementType,
             Filesize = filesize,
             Timecreated = CurrentTime,
             Timemodified = CurrentTime,

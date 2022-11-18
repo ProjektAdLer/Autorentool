@@ -11,7 +11,6 @@ public class ReadDsl : IReadDsl
     public List<LearningElementJson> ListLabelElements;
     public List<LearningElementJson> ListUrlElements;
     public List<LearningElementJson> ListAllSpacesAndElementsOrdered;
-    public List<LearningSpaceJson> ListLearningSpaces;
     private LearningWorldJson _learningWorldJson;
     private IFileSystem _fileSystem;
     private DocumentRootJson _rootJson;
@@ -36,7 +35,6 @@ public class ReadDsl : IReadDsl
         ListLabelElements = new List<LearningElementJson>();
         ListUrlElements = new List<LearningElementJson>();
         ListAllSpacesAndElementsOrdered = new List<LearningElementJson>();
-        ListLearningSpaces = new List<LearningSpaceJson>();
     }
 
     public void ReadLearningWorld(string dslPath, DocumentRootJson? rootJsonForTest = null)
@@ -62,7 +60,6 @@ public class ReadDsl : IReadDsl
         GetUrlElements(_rootJson);
         GetSpacesAndElementsOrdered(_rootJson);
         SetLearningWorld(_rootJson);
-        GetSpaces(_rootJson);
     }
 
     private void SetLearningWorld(DocumentRootJson? documentRootJson)
@@ -154,16 +151,7 @@ public class ReadDsl : IReadDsl
             }
         }
     }
-
-    private void GetSpaces(DocumentRootJson documentRootJson)
-    {
-        ListLearningSpaces = documentRootJson.LearningWorld.LearningSpaces;
-    }
     
-    public List<LearningSpaceJson>  GetSpaceList()
-    {
-        return ListLearningSpaces;
-    }
 
     public List<LearningElementJson> GetH5PElementsList()
     {

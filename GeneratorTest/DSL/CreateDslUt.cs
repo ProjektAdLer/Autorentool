@@ -10,6 +10,57 @@ namespace GeneratorTest.DSL;
 [TestFixture]
 public class CreateDslUt
 {
+
+    [Test]
+    public void CreateDSL_SearchDuplicateLearningElementNames_DuplicatesFoundAndNamesChanged()
+    {
+        //Arrange
+        var mockElement1 = new LearningElementPe("Same Name Element", "el", null, "", 
+            "", "", "", PersistEntities.LearningElementDifficultyEnumPe.Easy);
+        var mockElement2 = new LearningElementPe("Another Element", "el", null, "", 
+            "", "", "", PersistEntities.LearningElementDifficultyEnumPe.Easy);
+        var mockElement3 = new LearningElementPe("Same Name Element", "el", null, "", 
+            "", "", "", PersistEntities.LearningElementDifficultyEnumPe.Easy);
+        var mockElement4 = new LearningElementPe("Same Name Element", "el", null, "", 
+            "", "", "", PersistEntities.LearningElementDifficultyEnumPe.Easy);
+        var mockElement5 = new LearningElementPe("Same Name Element", "el", null, "", 
+            "", "", "", PersistEntities.LearningElementDifficultyEnumPe.Easy);
+        
+        var mockLearningElements1 = new List<LearningElementPe> {mockElement1, mockElement2};
+        var mockLearningElements2 = new List<LearningElementPe> {mockElement3};
+        var mockLearningElements3 = new List<LearningElementPe> {mockElement4, mockElement5};
+
+        var mockSpace1 = new LearningSpacePe("Space1", "sp", null, "", "", 1,
+            mockLearningElements1);
+        var mockSpace2 = new LearningSpacePe("Space2", "sp", null, "", "", 1,
+            mockLearningElements2);
+        var mockSpace3 = new LearningSpacePe("Space3", "sp", null, "", "", 1,
+            mockLearningElements3);
+        
+        
+        var mockSpaces = new List<LearningSpacePe> {mockSpace1, mockSpace2, mockSpace3};
+        
+        var mockFileSystem = new MockFileSystem();
+        var mockLogger = Substitute.For<ILogger<CreateDsl>>();
+
+        //Act
+        var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
+        var learningSpaceList = systemUnderTest.SearchDuplicateLearningElementNames(mockSpaces);
+
+        //Assert
+        Assert.Multiple(()=>{ 
+            Assert.That(mockElement1.Name, Is.EqualTo("Same Name Element(1)"));
+            Assert.That(mockElement2.Name, Is.EqualTo("Another Element"));
+            Assert.That(mockElement3.Name, Is.EqualTo("Same Name Element(2)"));
+            Assert.That(mockElement4.Name, Is.EqualTo("Same Name Element(3)"));
+            Assert.That(mockElement5.Name, Is.EqualTo("Same Name Element(4)"));
+            Assert.That(learningSpaceList.Count, Is.EqualTo(3));
+            Assert.That(learningSpaceList[0].LearningElements.Count, Is.EqualTo(2));
+            Assert.That(learningSpaceList[1].LearningElements.Count, Is.EqualTo(1));
+            Assert.That(learningSpaceList[2].LearningElements.Count, Is.EqualTo(2));
+        });
+    }
+    
     [Test]
     public void CreateDSL_WriteLearningWorld_DSLDocumentWritten()
     {
@@ -82,7 +133,6 @@ public class CreateDslUt
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.LearningWorldJson!.Identifier.Value, Is.EqualTo(name));
-            Assert.That(systemUnderTest.DictionaryLearningSpaceToLearningElements.Values, Is.EqualTo(learningElementsForComparison));
             Assert.That(systemUnderTest.ListLearningSpaces, Is.EquivalentTo(learningSpaces));
             Assert.That(systemUnderTest.LearningWorldJson.LearningSpaces[0].Requirements,
                 Is.EqualTo(new List<int>()));
