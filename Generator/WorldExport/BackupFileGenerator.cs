@@ -98,6 +98,7 @@ public class BackupFileGenerator : IBackupFileGenerator
         _fileSystem.Directory.CreateDirectory(tempDir);
         return tempDir;
     }
+    
 
     /// <summary>
     /// Copies an entire directories contents into a target.
