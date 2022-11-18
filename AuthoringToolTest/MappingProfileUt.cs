@@ -303,8 +303,8 @@ public class MappingProfileUt
         destination.LearningElements = new List<LearningElementPe>() {GetTestableElementPersistEntity(elementType)};
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
-        destination.InBoundObjects = new List<LearningSpacePe>();
-        destination.OutBoundObjects = new List<LearningSpacePe>();
+        destination.InBoundObjects = new List<IObjectInPathWayPe>();
+        destination.OutBoundObjects = new List<IObjectInPathWayPe>();
 
         systemUnderTest.Map(destination, source);
 
@@ -448,7 +448,7 @@ public class MappingProfileUt
         destination.LearningSpaces = new List<LearningSpacePe>()
         {
             new LearningSpacePe(NewName, NewShortname, NewAuthors, NewDescription, NewGoals, NewRequiredPoints, 
-                null, NewPositionX, NewPositionY, new List<LearningSpacePe>(), new List<LearningSpacePe>())
+                null, NewPositionX, NewPositionY, new List<IObjectInPathWayPe>(), new List<IObjectInPathWayPe>())
         };
 
         systemUnderTest.Map(destination, source);
@@ -655,11 +655,11 @@ public class MappingProfileUt
         source.LearningSpaces.Add(space3);
         
         source.LearningPathways.Add(new LearningPathway(space1, space2));
-        space1.OutBoundSpaces.Add(space2);
-        space2.InBoundSpaces.Add(space1);
+        space1.OutBoundObjects.Add(space2);
+        space2.InBoundObjects.Add(space1);
         source.LearningPathways.Add(new LearningPathway(space2, space3));
-        space1.OutBoundSpaces.Add(space3);
-        space2.InBoundSpaces.Add(space2);
+        space1.OutBoundObjects.Add(space3);
+        space2.InBoundObjects.Add(space2);
 
         var persistEntity = systemUnderTest.Map<LearningWorldPe>(source);
         var restored = systemUnderTest.Map<LearningWorld>(persistEntity);
@@ -667,10 +667,10 @@ public class MappingProfileUt
         Assert.That(restored.LearningPathways, Has.Count.EqualTo(2));
         Assert.Multiple(() =>
         {
-            Assert.That(restored.LearningPathways[0].SourceSpace.Name, Is.EqualTo("space1"));
-            Assert.That(restored.LearningPathways[1].SourceSpace.Name, Is.EqualTo("space2"));
-            Assert.That(restored.LearningPathways[0].TargetSpace.Name, Is.EqualTo("space2"));
-            Assert.That(restored.LearningPathways[1].TargetSpace.Name, Is.EqualTo("space3"));
+            Assert.That(((LearningSpace)restored.LearningPathways[0].SourceObject).Name, Is.EqualTo("space1"));
+            Assert.That(((LearningSpace)restored.LearningPathways[1].SourceObject).Name, Is.EqualTo("space2"));
+            Assert.That(((LearningSpace)restored.LearningPathways[0].TargetObject).Name, Is.EqualTo("space2"));
+            Assert.That(((LearningSpace)restored.LearningPathways[1].TargetObject).Name, Is.EqualTo("space3"));
         });
     }
 

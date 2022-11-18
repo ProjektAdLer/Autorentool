@@ -1,7 +1,11 @@
+using System.Runtime.Serialization;
 using JetBrains.Annotations;
 
 namespace PersistEntities;
 
+
+[Serializable]
+[DataContract]
 public class PathWayConditionPe : IObjectInPathWayPe
 {
     /// <summary>
@@ -30,10 +34,24 @@ public class PathWayConditionPe : IObjectInPathWayPe
         PositionY = positionY;
     }
     
+    [IgnoreDataMember]
     public Guid Id { get; set; }
+    [DataMember]
     public double PositionX { get; set; }
+    [DataMember]
     public double PositionY { get; set; }
+    [IgnoreDataMember]
     public List<IObjectInPathWayPe> InBoundObjects { get; set; }
+    [IgnoreDataMember]
     public List<IObjectInPathWayPe> OutBoundObjects { get; set; }
+    [DataMember]
     public ConditionEnumPe Condition { get; set; }
+    
+    [OnDeserializing]
+    private void OnDeserializing(StreamingContext context)
+    {
+        Id = Guid.NewGuid();
+        InBoundObjects = new List<IObjectInPathWayPe>();
+        OutBoundObjects = new List<IObjectInPathWayPe>();
+    }
 }
