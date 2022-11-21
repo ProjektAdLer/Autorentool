@@ -54,6 +54,7 @@ public class MappingProfile : Profile
             .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
             .ForMember(x => x.OnHoveredLearningObject, opt => opt.Ignore())
             .ForMember(x => x.ShowingLearningSpaceView, opt => opt.Ignore())
+            .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
             .ForMember(x => x.SelectableWorldObjects, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
@@ -76,6 +77,7 @@ public class MappingProfile : Profile
                 }
             })
             .ReverseMap()
+            .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
             .ForMember(x => x.SelectableWorldObjects, opt => opt.Ignore())
             .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
             .AfterMap((s, d) =>
@@ -86,13 +88,13 @@ public class MappingProfile : Profile
             {
                 foreach (var pathWay in d.LearningPathways)
                 {
-                    pathWay.SourceObject = d.PathWayObjects.First(x => x.Id == pathWay.SourceObject?.Id);
-                    pathWay.TargetObject = d.PathWayObjects.First(x => x.Id == pathWay.TargetObject?.Id);
+                    pathWay.SourceObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.SourceObject?.Id);
+                    pathWay.TargetObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.TargetObject?.Id);
                 }
             })
             .AfterMap((s, d) =>
             {
-                foreach (var pathWayObject in d.PathWayObjects)
+                foreach (var pathWayObject in d.ObjectsInPathWays)
                 {
                     pathWayObject.InBoundObjects = d.LearningPathways.Where(x => x.TargetObject.Id == pathWayObject.Id).Select(x => x.SourceObject).ToList();
                     pathWayObject.OutBoundObjects = d.LearningPathways.Where(x => x.SourceObject.Id == pathWayObject.Id).Select(x => x.TargetObject).ToList();
@@ -217,17 +219,18 @@ public class MappingProfile : Profile
     private void CreatePersistEntityMaps()
     {
         CreateMap<LearningWorld, LearningWorldPe>()
+            .ForMember(x => x.ObjectsInPathWaysPe, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
                 foreach (var pathWay in d.LearningPathways)
                 {
-                    pathWay.SourceObject = d.PathWayObjects.First(x => x.Id == pathWay.SourceObject?.Id);
-                    pathWay.TargetObject = d.PathWayObjects.First(x => x.Id == pathWay.TargetObject?.Id);
+                    pathWay.SourceObject = d.ObjectsInPathWaysPe.First(x => x.Id == pathWay.SourceObject?.Id);
+                    pathWay.TargetObject = d.ObjectsInPathWaysPe.First(x => x.Id == pathWay.TargetObject?.Id);
                 }
             })
             .AfterMap((s, d) =>
             {
-                foreach (var learningObjects in d.PathWayObjects)
+                foreach (var learningObjects in d.ObjectsInPathWaysPe)
                 {
                     learningObjects.InBoundObjects = d.LearningPathways.Where(x => x.TargetObject.Id == learningObjects.Id)
                         .Select(x => x.SourceObject).ToList();
@@ -236,6 +239,7 @@ public class MappingProfile : Profile
                 }
             })
             .ReverseMap()
+            .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
                 foreach (var pathWay in d.LearningPathways)

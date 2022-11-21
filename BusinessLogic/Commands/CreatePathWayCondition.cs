@@ -24,7 +24,7 @@ public class CreatePathWayCondition : IUndoCommand
         LearningSpace targetObject, Action<LearningWorld> mappingAction)
     {
         LearningWorld = learningWorld;
-        SourceObject = LearningWorld.PathWayObjects.First(x => x.Id == sourceObject.Id);
+        SourceObject = LearningWorld.ObjectsInPathWays.First(x => x.Id == sourceObject.Id);
         TargetObject = LearningWorld.LearningSpaces.First(x => x.Id == targetObject.Id);
         PathWayCondition = new PathWayCondition(condition, TargetObject.PositionX +50, TargetObject.PositionY - 75);
         _mappingAction = mappingAction;

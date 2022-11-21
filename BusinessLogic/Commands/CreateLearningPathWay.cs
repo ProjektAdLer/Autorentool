@@ -40,8 +40,8 @@ public class CreateLearningPathWay : IUndoCommand, ICommandWithError
     private bool IsCircular(LearningPathway learningPathway)
     {
         var isCircular = false;
-        var sourceObject = LearningWorld.PathWayObjects.First(x => x.Id == learningPathway.SourceObject.Id);
-        var targetObject = LearningWorld.PathWayObjects.First(x => x.Id == learningPathway.TargetObject.Id);
+        var sourceObject = LearningWorld.ObjectsInPathWays.First(x => x.Id == learningPathway.SourceObject.Id);
+        var targetObject = LearningWorld.ObjectsInPathWays.First(x => x.Id == learningPathway.TargetObject.Id);
 
         if(!targetObject.OutBoundObjects.Any())
         {

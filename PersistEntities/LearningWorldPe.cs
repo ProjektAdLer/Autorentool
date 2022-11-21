@@ -48,7 +48,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
     [DataMember]
     public List<PathWayConditionPe> PathWayConditions { get; set; }
     [DataMember]
-    public List<IObjectInPathWayPe> PathWayObjects => new List<IObjectInPathWayPe>(LearningSpaces).Concat(PathWayConditions).ToList();
+    public List<IObjectInPathWayPe> ObjectsInPathWaysPe => new List<IObjectInPathWayPe>(LearningSpaces).Concat(PathWayConditions).ToList();
     [DataMember]
     public string Name { get; set; }
     [DataMember]

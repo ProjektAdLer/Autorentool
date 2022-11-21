@@ -5,7 +5,7 @@ public interface ILearningWorld
     
     List<LearningSpace> LearningSpaces { get; set; }
     List<PathWayCondition> PathWayConditions { get; set; }
-    List<IObjectInPathWay> PathWayObjects { get; }
+    List<IObjectInPathWay> ObjectsInPathWays { get; }
     List<LearningPathway> LearningPathways { get; set; }
     string Description { get; set; }
     string Shortname { get; set; }

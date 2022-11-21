@@ -42,7 +42,7 @@ public class LearningWorld : ILearningWorld, IOriginator
     public Guid Id { get; private set; }
     public List<LearningSpace> LearningSpaces { get; set; }
     public List<PathWayCondition> PathWayConditions { get; set; }
-    public List<IObjectInPathWay> PathWayObjects => new List<IObjectInPathWay>(LearningSpaces).Concat(PathWayConditions).ToList();
+    public List<IObjectInPathWay> ObjectsInPathWays => new List<IObjectInPathWay>(LearningSpaces).Concat(PathWayConditions).ToList();
     public List<ISelectableObjectInWorld> SelectableWorldObjects => new List<ISelectableObjectInWorld>(LearningSpaces).
         Concat(PathWayConditions).Concat(LearningPathways).ToList();
     public List<LearningPathway> LearningPathways { get; set; }
