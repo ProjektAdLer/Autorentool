@@ -4,6 +4,8 @@ namespace PersistEntities;
 
 [Serializable]
 [DataContract]
+[KnownType(typeof(LearningSpacePe))]
+[KnownType(typeof(PathWayConditionPe))]
 public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
 {
     public LearningWorldPe(string name, string shortname, string authors, string language, string description,
@@ -47,7 +49,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
     public List<LearningPathwayPe> LearningPathways { get; set; }
     [DataMember]
     public List<PathWayConditionPe> PathWayConditions { get; set; }
-    [DataMember]
+    [IgnoreDataMember]
     public List<IObjectInPathWayPe> ObjectsInPathWaysPe => new List<IObjectInPathWayPe>(LearningSpaces).Concat(PathWayConditions).ToList();
     [DataMember]
     public string Name { get; set; }

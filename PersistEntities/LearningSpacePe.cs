@@ -4,6 +4,8 @@ namespace PersistEntities;
 
 [Serializable]
 [DataContract]
+[KnownType(typeof(PathWayConditionPe))]
+[KnownType(typeof(LearningSpacePe))]
 public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
 {
     public LearningSpacePe(string name, string shortname, string authors, string description, string goals,

@@ -64,6 +64,9 @@ public class PersistenceCt
             .For(obj => obj.PathWayConditions).Exclude(obj => obj.Id)
             .For(obj => obj.PathWayConditions).Exclude(obj => obj.InBoundObjects)
             .For(obj => obj.PathWayConditions).Exclude(obj => obj.OutBoundObjects)
+            .For(obj => obj.ObjectsInPathWaysPe).Exclude(obj => obj.Id)
+            .For(obj => obj.ObjectsInPathWaysPe).Exclude(obj => obj.InBoundObjects)
+            .For(obj => obj.ObjectsInPathWaysPe).Exclude(obj => obj.OutBoundObjects)
             .For(obj => obj.LearningSpaces).For(obj => obj.LearningElements).Exclude(obj => obj.Id)
             .Excluding(obj => obj.LearningPathways));
 
@@ -176,6 +179,9 @@ public class PersistenceCt
             .For(obj => obj.PathWayConditions).Exclude(obj => obj.Id)
             .For(obj => obj.PathWayConditions).Exclude(obj => obj.InBoundObjects)
             .For(obj => obj.PathWayConditions).Exclude(obj => obj.OutBoundObjects)
+            .For(obj => obj.ObjectsInPathWaysPe).Exclude(obj => obj.Id)
+            .For(obj => obj.ObjectsInPathWaysPe).Exclude(obj => obj.InBoundObjects)
+            .For(obj => obj.ObjectsInPathWaysPe).Exclude(obj => obj.OutBoundObjects)
             .For(obj => obj.LearningSpaces).For(obj => obj.LearningElements)
             .Exclude(obj => obj.Id)
             .Excluding(obj => obj.LearningPathways));
