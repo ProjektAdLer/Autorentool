@@ -230,11 +230,11 @@ public class MappingProfile : Profile
             })
             .AfterMap((s, d) =>
             {
-                foreach (var learningObjects in d.ObjectsInPathWaysPe)
+                foreach (var objectInPathWayPe in d.ObjectsInPathWaysPe)
                 {
-                    learningObjects.InBoundObjects = d.LearningPathways.Where(x => x.TargetObject.Id == learningObjects.Id)
+                    objectInPathWayPe.InBoundObjects = d.LearningPathways.Where(x => x.TargetObject.Id == objectInPathWayPe.Id)
                         .Select(x => x.SourceObject).ToList();
-                    learningObjects.OutBoundObjects = d.LearningPathways.Where(x => x.SourceObject.Id == learningObjects.Id)
+                    objectInPathWayPe.OutBoundObjects = d.LearningPathways.Where(x => x.SourceObject.Id == objectInPathWayPe.Id)
                         .Select(x => x.TargetObject).ToList();
                 }
             })
@@ -244,17 +244,17 @@ public class MappingProfile : Profile
             {
                 foreach (var pathWay in d.LearningPathways)
                 {
-                    pathWay.SourceObject = d.LearningSpaces.First(x => x.Id == pathWay.SourceObject?.Id);
-                    pathWay.TargetObject = d.LearningSpaces.First(x => x.Id == pathWay.TargetObject?.Id);
+                    pathWay.SourceObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.SourceObject?.Id);
+                    pathWay.TargetObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.TargetObject?.Id);
                 }
             })
             .AfterMap((s, d) =>
             {
-                foreach (var learningSpace in d.LearningSpaces)
+                foreach (var objectInPathWay in d.ObjectsInPathWays)
                 {
-                    learningSpace.InBoundObjects = d.LearningPathways.Where(x => x.TargetObject.Id == learningSpace.Id)
+                    objectInPathWay.InBoundObjects = d.LearningPathways.Where(x => x.TargetObject.Id == objectInPathWay.Id)
                         .Select(x => x.SourceObject).ToList();
-                    learningSpace.OutBoundObjects = d.LearningPathways.Where(x => x.SourceObject.Id == learningSpace.Id)
+                    objectInPathWay.OutBoundObjects = d.LearningPathways.Where(x => x.SourceObject.Id == objectInPathWay.Id)
                         .Select(x => x.TargetObject).ToList();
                 }
             });
