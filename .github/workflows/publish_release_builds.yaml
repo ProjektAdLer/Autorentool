@@ -191,9 +191,10 @@ jobs:
           name: authoringtool-linux
           path: ./AuthoringTool/bin/Desktop_Publish/
       
-      - name: Pack linux-unpacked into tarball
+      - name: Pack linux-unpacked into gzipped tarball
         working-directory: ./AuthoringTool/bin/Desktop_Publish
-        run: tar -cvf ${{ github.ref_name }}-linux-unpacked.tar ./linux-unpacked
+        run: tar -cavf ${{ github.ref_name }}-linux-unpacked.tar.gz ./linux-unpacked
+        
       
       - name: Upload linux snap to release
         uses: svenstaro/upload-release-action@v2
@@ -215,6 +216,6 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-linux-unpacked.tar
-          asset_name: AuthoringTool-${{ github.ref_name }}-linux-unpacked.tar
+          file: AuthoringTool/bin/Desktop_Publish/${{ github.ref_name }}-linux-unpacked.tar.gz
+          asset_name: AuthoringTool-${{ github.ref_name }}-linux-unpacked.tar.gz
           tag: ${{ github.ref }}
