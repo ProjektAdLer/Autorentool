@@ -52,7 +52,7 @@ public class MappingProfile : Profile
         CreateMap<LearningWorld, LearningWorldViewModel>()
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
-            .ForMember(x => x.OnHoveredLearningObject, opt => opt.Ignore())
+            .ForMember(x => x.OnHoveredObjectInPathWay, opt => opt.Ignore())
             .ForMember(x => x.ShowingLearningSpaceView, opt => opt.Ignore())
             .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
             .ForMember(x => x.SelectableWorldObjects, opt => opt.Ignore())

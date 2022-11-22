@@ -7,7 +7,7 @@
 <Draggable LearningObject="ObjectInPathWay" OnClicked="@OnClickedDraggable" OnDoubleClicked="@OnDoubleClickedDraggable" 
            OnRightClicked="@OnRightClickedDraggable" OnDragged="@OnDraggedDraggable"
            @bind-X="@ObjectInPathWay.PositionX" @bind-Y="@ObjectInPathWay.PositionY">
-    @if (ObjectInPathWay == PositioningService.LearningWorldVm?.OnHoveredLearningObject)
+    @if (ObjectInPathWay == PositioningService.LearningWorldVm?.OnHoveredObjectInPathWay)
     {
         @((MarkupString)OnHoveredObjectShape)
     }

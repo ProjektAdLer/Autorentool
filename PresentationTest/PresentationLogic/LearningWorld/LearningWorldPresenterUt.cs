@@ -949,10 +949,10 @@ public class LearningWorldPresenterUt
     
     #endregion
     
-    #region SetOnHoveredLearningSpace
+    #region SetOnHoveredObjectInPathWay
     
     [Test]
-    public void SetOnHoveredLearningSpace_ObjectAtPositionIsNull_SetsHoveredLearningSpaceToNull()
+    public void SetOnHoveredPathWayObject_ObjectAtPositionIsNull_SetsOnHoveredObjectInPathWayToNull()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -965,17 +965,17 @@ public class LearningWorldPresenterUt
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.LearningWorldVm = world;
-        systemUnderTest.LearningWorldVm.OnHoveredLearningObject = targetSpace;
+        systemUnderTest.LearningWorldVm.OnHoveredObjectInPathWay = targetSpace;
         
-        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredLearningObject, Is.EqualTo(targetSpace));
+        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredObjectInPathWay, Is.EqualTo(targetSpace));
         
-        systemUnderTest.SetOnHoveredLearningObject(sourceSpace, 400,400);
+        systemUnderTest.SetOnHoveredObjectInPathWay(sourceSpace, 400,400);
         
-        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredLearningObject, Is.Null);
+        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredObjectInPathWay, Is.Null);
     }
     
     [Test]
-    public void SetOnHoveredLearningSpace_ObjectAtPositionIsSourceSpace_SetsHoveredLearningSpaceToNull()
+    public void SetOnHoveredObjectInPathWay_ObjectAtPositionIsSourceSpace_SetsOnHoveredObjectInPathWayToNull()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -986,13 +986,30 @@ public class LearningWorldPresenterUt
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.LearningWorldVm = world; ;
 
-        systemUnderTest.SetOnHoveredLearningObject(sourceSpace, 30,30);
+        systemUnderTest.SetOnHoveredObjectInPathWay(sourceSpace, 30,30);
         
-        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredLearningObject, Is.Null);
+        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredObjectInPathWay, Is.Null);
     }
     
     [Test]
-    public void SetOnHoveredLearningSpace_SetsCorrectObjectAtPosition()
+    public void SetOnHoveredObjectInPathWay_ObjectAtPositionIsSourceCondition_SetsOnHoveredObjectInPathWayToNull()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var sourceCondition = new PathWayConditionViewModel( ConditionEnum.And,
+            positionX:25, positionY:25);
+        world.PathWayConditions.Add(sourceCondition);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world; ;
+
+        systemUnderTest.SetOnHoveredObjectInPathWay(sourceCondition, 30,30);
+        
+        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredObjectInPathWay, Is.Null);
+    }
+    
+    [Test]
+    public void SetOnHoveredObjectInPathWay_SetsCorrectObjectAtPosition()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -1008,22 +1025,22 @@ public class LearningWorldPresenterUt
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.LearningWorldVm = world;
-        systemUnderTest.LearningWorldVm.OnHoveredLearningObject = targetSpace1;
+        systemUnderTest.LearningWorldVm.OnHoveredObjectInPathWay = targetSpace1;
         
-        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredLearningObject, Is.EqualTo(targetSpace1));
+        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredObjectInPathWay, Is.EqualTo(targetSpace1));
         
-        systemUnderTest.SetOnHoveredLearningObject(sourceSpace, 510,510);
+        systemUnderTest.SetOnHoveredObjectInPathWay(sourceSpace, 510,510);
         
-        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredLearningObject, Is.EqualTo(targetSpace2));
+        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredObjectInPathWay, Is.EqualTo(targetSpace2));
     }
 
     [Test]
-    public void SetOnHoveredLearningSpace_SelectedLearningWorldIsNull_ThrowsException()
+    public void SetOnHoveredObjectInPathWay_SelectedLearningWorldIsNull_ThrowsException()
     {
         var systemUnderTest = CreatePresenterForTesting();
         var space = new LearningSpaceViewModel("a", "v", "d", "f", "f", 4);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetOnHoveredLearningObject(space, 3,3));
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetOnHoveredObjectInPathWay(space, 3,3));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
     

@@ -73,7 +73,7 @@ public class PullablePathUt
         Assert.That(systemUnderTest.Instance.X2, Is.EqualTo(x1 + 13));
         Assert.That(systemUnderTest.Instance.Y2, Is.EqualTo(y1 + 24));
         
-        _positioningService.Received().SetOnHoveredLearningObject(learningSpace, x1+13, y1+24);
+        _positioningService.Received().SetOnHoveredObjectInPathWay(learningSpace, x1+13, y1+24);
         _positioningService.Received().CreateLearningPathWay(learningSpace, x1+13, y1+24);
     }
 

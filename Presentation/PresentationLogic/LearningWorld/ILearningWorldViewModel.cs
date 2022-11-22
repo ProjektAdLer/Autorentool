@@ -21,6 +21,6 @@ public interface ILearningWorldViewModel : ISerializableViewModel, IDisplayableL
     string Goals { get; set; }
     bool UnsavedChanges { get; set; }
     ISelectableObjectInWorldViewModel? SelectedLearningObject { get; set; }
-    IObjectInPathWayViewModel? OnHoveredLearningObject { get; set; }
+    IObjectInPathWayViewModel? OnHoveredObjectInPathWay { get; set; }
     bool ShowingLearningSpaceView { get; set; }
 }

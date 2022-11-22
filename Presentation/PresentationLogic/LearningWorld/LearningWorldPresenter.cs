@@ -519,19 +519,19 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     /// <param name="sourceObject">The learning object from which the path starts.</param>
     /// <param name="x">The x-coordinate of the target object.</param>
     /// <param name="y">The y-coordinate of the target object.</param>
-    public void SetOnHoveredLearningObject(IObjectInPathWayViewModel sourceObject, double x, double y)
+    public void SetOnHoveredObjectInPathWay(IObjectInPathWayViewModel sourceObject, double x, double y)
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         var objectAtPosition = GetObjectAtPosition(x, y);
         if (objectAtPosition == null || objectAtPosition == sourceObject)
         {
-            LearningWorldVm.OnHoveredLearningObject = null;
+            LearningWorldVm.OnHoveredObjectInPathWay = null;
         }
         else
         
         {
-            LearningWorldVm.OnHoveredLearningObject = objectAtPosition;
+            LearningWorldVm.OnHoveredObjectInPathWay = objectAtPosition;
             _logger.LogDebug("ObjectAtPosition: {0} ", sourceObject.Id);
         }
     }
@@ -566,7 +566,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         var targetObject = GetObjectAtPosition( x, y);
         if (targetObject == null || targetObject == sourceObject)
             return;
-        LearningWorldVm.OnHoveredLearningObject = null;
+        LearningWorldVm.OnHoveredObjectInPathWay = null;
         if (targetObject.InBoundObjects.Count == 1 && targetObject is LearningSpaceViewModel space)
         {
             _newConditionSourceObject = sourceObject;

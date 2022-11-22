@@ -158,7 +158,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         set => SetField(ref _selectedLearningObject, value);
     }
     
-    public IObjectInPathWayViewModel? OnHoveredLearningObject
+    public IObjectInPathWayViewModel? OnHoveredObjectInPathWay
     {
         get => _onHoveredLearningObject;
         set => SetField(ref _onHoveredLearningObject, value);
