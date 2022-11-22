@@ -89,6 +89,16 @@ public class LearningWorldPresenterUt
     }
     
     [Test]
+    public void DeleteLearningSpace_SelectedLearningWorldIsNull_ThrowsException()
+    {
+        var space = new LearningSpaceViewModel("g", "g", "g", "g", "g");
+
+        var systemUnderTest = CreatePresenterForTesting();
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteLearningSpace(space));
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+    }
+    
+    [Test]
     public void RightClickedLearningSpace_SetsRightClickedLearningObjectToSpace()
     {
         var space = new LearningSpaceViewModel("g", "g", "g", "g", "g");
@@ -196,6 +206,14 @@ public class LearningWorldPresenterUt
 
         presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int>(), Arg.Any<double>(), Arg.Any<double>());
+    }
+    
+    [Test]
+    public void CreateNewLearningSpace_SelectedLearningWorldIsNull_ThrowsException()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.CreateNewLearningSpace("foo", "bar", "foo", "bar", "foo", 5));
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
 
     #endregion
@@ -1187,6 +1205,20 @@ public class LearningWorldPresenterUt
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteLearningPathWay(space));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+    }
+    
+    [Test]
+    public void DeleteLearningPathWay_PathWayIsNull_ThrowsException()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+        
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteLearningPathWay(null!));
+        Assert.That(ex!.Message, Is.EqualTo("LearningPathWay is null"));
     }
     
     #endregion
