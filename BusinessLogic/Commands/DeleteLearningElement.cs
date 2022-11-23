@@ -25,7 +25,10 @@ public class DeleteLearningElement : IUndoCommand
 
         ParentSpace.LearningElements.Remove(element);
 
-        ParentSpace.SelectedLearningElement = ParentSpace.LearningElements.LastOrDefault();
+        if (element == ParentSpace.SelectedLearningElement || ParentSpace.SelectedLearningElement == null)
+        {
+            ParentSpace.SelectedLearningElement = ParentSpace.LearningElements.LastOrDefault();
+        }
 
         _mappingAction.Invoke(ParentSpace);
     }

@@ -342,7 +342,7 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.DeleteLearningElement"/>
     public void DeleteLearningElement(ILearningSpaceViewModel parentSpaceVm,
-        LearningElementViewModel learningElementVm)
+        ILearningElementViewModel learningElementVm)
     {
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);

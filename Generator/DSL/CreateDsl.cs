@@ -3,6 +3,7 @@ using System.Text.Json;
 using Generator.WorldExport;
 using Microsoft.Extensions.Logging;
 using PersistEntities;
+using Shared.Extensions;
 
 namespace Generator.DSL;
 
@@ -14,6 +15,7 @@ public class CreateDsl : ICreateDsl
     public string Uuid;
     public Dictionary<int, Guid> IdDictionary;
     private List<int> _listLearningSpaceContent;
+    public List<LearningElementPe> ListAllLearningElements;
     private string _booleanAlgebraRequirements;
     private string _currentConditionDirectSpaces;
     private IFileSystem _fileSystem;
@@ -45,6 +47,58 @@ public class CreateDsl : ICreateDsl
         Guid guid = Guid.NewGuid();
         Uuid = guid.ToString();
         _currentConditionDirectSpaces = "";
+        ListAllLearningElements = new List<LearningElementPe>();
+    }
+
+    //Search through all LearningElements and look for duplicates. 
+    //If a duplicate is found, the duplicate Values get a incremented Number behind them for example: (1), (2)...
+    public List<LearningSpacePe> SearchDuplicateLearningElementNames(List<LearningSpacePe> listLearningSpace)
+    {
+        var incrementedNamesDictionary = new Dictionary<string,string>();
+        
+        //Get All LearningElements
+        foreach (var learningSpace in listLearningSpace)
+        {
+            foreach (var element in learningSpace.LearningElements)
+            {
+                ListAllLearningElements.Add(element);
+            }
+        }
+        
+        //Search for duplicates
+        var duplicateLearningElements = ListAllLearningElements.GroupBy(x => x.Name).Where(x => x.Count() > 1)
+            .Select(x => x).ToList();
+
+        //To avoid duplicate names, we increment the name of the learning element.
+        //That happens in yet another loop, because we have to respect the Space -> Element hierarchy.
+        foreach (var duplicateElement in duplicateLearningElements)
+        {
+            foreach (var learningSpace in listLearningSpace)
+            {
+                foreach (var element in learningSpace.LearningElements)
+                {
+                    if(element.Name == duplicateElement.Key)
+                    {
+                        var incrementedElementName = "";
+                        
+                        if (incrementedNamesDictionary.ContainsKey(element.Name))
+                        {
+                            incrementedElementName = StringHelper.IncrementName(incrementedNamesDictionary[element.Name]);
+                            incrementedNamesDictionary[element.Name] = incrementedElementName;
+                        }
+                        else
+                        {
+                            incrementedElementName = StringHelper.IncrementName(element.Name);
+                            incrementedNamesDictionary.Add(element.Name, incrementedElementName);
+                        }
+                        
+                        element.Name = incrementedElementName;
+                    }
+                }
+            }
+        }
+
+        return listLearningSpace;
     }
 
     /// <summary>
@@ -124,6 +178,9 @@ public class CreateDsl : ICreateDsl
             IdDictionary.Add(learningSpaceIdForDictionary, space.Id);
             learningSpaceIdForDictionary++;
         }
+        
+        //Search for duplicate LearningElement Names and increment them.
+        ListLearningSpaces = SearchDuplicateLearningElementNames(ListLearningSpaces);
 
         foreach (var learningSpace in ListLearningSpaces)
         {
@@ -206,7 +263,7 @@ public class CreateDsl : ICreateDsl
                 learningSpace.RequiredPoints, 
                 learningSpace.LearningElements.Sum(element => element.Points),
                 learningSpace.Description, learningSpace.Goals, requirements:_booleanAlgebraRequirements));
-
+            
             learningSpaceId++;
         }
 
@@ -234,18 +291,18 @@ public class CreateDsl : ICreateDsl
         //All LearningElements are created at the specified location = Easier access to files in further Export-Operations.
         //After the files are added to the Backup-Structure, these Files will be deleted.
         foreach (var learningElement in ListLearningElementsWithContents)
-        {
-            try
             {
-                _fileSystem.File.Copy(learningElement.LearningContent.Filepath,
-                _fileSystem.Path.Join("XMLFilesForExport", $"{learningElement.Name}.{learningElement.LearningContent.Type}"));
+                try
+                {
+                    _fileSystem.File.Copy(learningElement.LearningContent.Filepath,
+                        _fileSystem.Path.Join("XMLFilesForExport", $"{learningElement.Name}.{learningElement.LearningContent.Type}"));
+                }
+                catch (Exception)
+                {
+                    Console.WriteLine("Something went wrong while creating the LearningElements for the Backup-Structure.");
+                    throw;
+                }
             }
-            catch (Exception)
-            {
-                Console.WriteLine("Something went wrong while creating the LearningElements for the Backup-Structure.");
-                throw;
-            }
-        }
 
         _fileSystem.File.WriteAllText(_dslPath, jsonFile);
         Logger.LogDebug("Generated DSL Document: {JsonFile}",jsonFile);

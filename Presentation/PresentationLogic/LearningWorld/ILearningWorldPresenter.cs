@@ -4,7 +4,6 @@ using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 
-
 namespace Presentation.PresentationLogic.LearningWorld;
 
 public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyPropertyChanging, IPositioningService

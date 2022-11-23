@@ -30,14 +30,21 @@
      xmlns="http://www.w3.org/2000/svg"
      @onmousemove="@(e => MouseService.FireMove(this, e))"
      @onmouseup="@(e => MouseService.FireUp(this, e))"
-     @onmouseleave="@(e => MouseService.FireOut(this, e))">
+     @onmouseleave="@(e => MouseService.FireOut(this, e))"
+     @onmousedown="@LearningSpaceP.HideRightClickMenu">
     @if (LearningSpaceP.LearningSpaceVm != null)
     {
-        @foreach (var learningObject in LearningSpaceP.LearningSpaceVm.LearningElements)
+        @foreach (var learningElement in LearningSpaceP.LearningSpaceVm.LearningElements)
         {
-            <DraggableLearningElement LearningElement="@learningObject" 
-                                      OnClicked="@LearningSpaceP.SetSelectedLearningElement"
-                                      OnDragged="@LearningSpaceP.DragLearningElement"/>
+            <DraggableLearningElement LearningElement="@learningElement" 
+                                      OnClicked="@LearningSpaceP.ClickedLearningElement"
+                                      OnDragged="@LearningSpaceP.DragLearningElement"
+                                      OnRightClicked="@LearningSpaceP.RightClickedLearningElement"
+                                      OnEditLearningElement="@LearningSpaceP.EditLearningElement"
+                                      OnDeleteLearningElement="@LearningSpaceP.DeleteLearningElement"
+                                      OnShowLearningElementContent="@LearningSpaceP.ShowElementContent"
+                                      OnCloseRightClickMenu="@LearningSpaceP.HideRightClickMenu"
+                                      ShowingRightClickMenu="learningElement == LearningSpaceP.RightClickedLearningObject"/>
         }
     }
 </svg>
