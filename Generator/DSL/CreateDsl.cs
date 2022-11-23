@@ -8,19 +8,21 @@ namespace Generator.DSL;
 
 public class CreateDsl : ICreateDsl
 {
-    public List<LearningElementPe> ContentListLearningElements;
+    public List<LearningElementPe> ListLearningElementsWithContents;
     public List<LearningSpacePe> ListLearningSpaces;
-    public LearningWorldJson? LearningWorldJson;
-    private List<int> _listLearningSpaceContent;
-    private List<int> _requirements;
-    private IFileSystem _fileSystem;
+    public LearningWorldJson LearningWorldJson;
     public string Uuid;
+    public Dictionary<int, Guid> IdDictionary;
+    private List<int> _listLearningSpaceContent;
+    private string _booleanAlgebraRequirements;
+    private string _currentConditionDirectSpaces;
+    private IFileSystem _fileSystem;
     private string _dslPath;
     private string _xmlFilesForExportPath;
-    internal ILogger<CreateDsl> Logger { get; }
+    private ILogger<CreateDsl> Logger { get; }
 
     /// <summary>
-    /// Read the AuthoringToolLib Entities and create a Dsl Document with a specified syntax.
+    /// Read the PersistEntities and create a Dsl Document with a specified syntax.
     /// </summary>
     /// <param name="fileSystem"></param>
     /// <param name="logger"></param>
@@ -31,26 +33,81 @@ public class CreateDsl : ICreateDsl
         Initialize();
         _fileSystem = fileSystem;
         Logger = logger;
-       
     }
 
     private void Initialize()
     {
-        ContentListLearningElements = new List<LearningElementPe>();
+        ListLearningElementsWithContents = new List<LearningElementPe>();
         ListLearningSpaces = new List<LearningSpacePe>();
         _listLearningSpaceContent = new List<int>();
-        _requirements = new List<int>();
+        _booleanAlgebraRequirements = "";
+        IdDictionary = new Dictionary<int, Guid>();
         Guid guid = Guid.NewGuid();
         Uuid = guid.ToString();
+        _currentConditionDirectSpaces = "";
+    }
+
+    /// <summary>
+    /// Takes a Condition and builds a boolean algebra string.
+    /// Method searches recursively for all conditions and their inbound Spaces.
+    /// </summary>
+    /// <param name="learningCondition"></param>
+    /// <returns>A string that describes a boolean algebra expression</returns>
+    public string DefineLogicalExpression(PathWayConditionPe learningCondition)
+    {
+        string condition = learningCondition.Condition.ToString();
+        if(condition == "And")
+        {
+            condition = "^";
+        }
+        else if(condition == "Or")
+        {
+            condition = "v";
+        }
+        
+        foreach (var learningObject in learningCondition.InBoundObjects)
+        {
+            if(learningObject is LearningSpacePe)
+            {
+                _currentConditionDirectSpaces += "(";
+                string spaceId = IdDictionary.Where(x => x.Value == learningObject.Id)
+                    .Select(x => x.Key)
+                    .FirstOrDefault().ToString();
+                _currentConditionDirectSpaces += spaceId+")" + condition;
+            }
+            else if (learningObject is PathWayConditionPe pathWayConditionPe)
+            {
+                //special case for nested conditions (conditions that are in conditions)
+                if (learningObject.InBoundObjects.Count == 1)
+                {
+                    DefineLogicalExpression(pathWayConditionPe);
+                }
+                else
+                {
+                    _currentConditionDirectSpaces += "("; 
+                    DefineLogicalExpression(pathWayConditionPe);
+                    _currentConditionDirectSpaces += ")";
+                    _currentConditionDirectSpaces += condition;
+                }
+            }
+        }
+        _currentConditionDirectSpaces = _currentConditionDirectSpaces.Substring(0, _currentConditionDirectSpaces.LastIndexOf(")", StringComparison.Ordinal)+1);
+        return _currentConditionDirectSpaces;
     }
     
     /// <summary>
-    /// Reads the LearningWord Entity and creates an DSL Document with the given information.
+    /// Reads the LearningWorld Entity and creates an DSL Document with the given information.
     /// </summary>
     /// <param name="learningWorld"></param> Information about the learningWorld, topics, spaces and elements
     public string WriteLearningWorld(LearningWorldPe learningWorld)
     {
         Initialize();
+        //Starting ID for LearningSpaces
+        int learningSpaceIdForDictionary = 1;
+        
+        // Starting Value for Learning Space Ids & Learning Element Ids
+        int learningSpaceId = 1;
+        int learningSpaceElementId = 1;
         
         //Initialise learningWorldJson with empty values, will be filled with information later in the method.
         LearningWorldJson = new LearningWorldJson(Uuid, new IdentifierJson("name", learningWorld.Name), new List<int>(),
@@ -61,24 +118,19 @@ public class CreateDsl : ICreateDsl
         // The learningSpaceId defines what the starting Id for Spaces should be. 
         // Search for Learning Elements in Spaces and add to listLearningElements
         ListLearningSpaces.AddRange(learningWorld.LearningSpaces);
-
-        int learningSpaceIdForDictionary = 1;
         
-
-        var idDictionary = new Dictionary<int, Guid>();
         foreach (var space in ListLearningSpaces)
         {
-            idDictionary.Add(learningSpaceIdForDictionary, space.Id);
+            IdDictionary.Add(learningSpaceIdForDictionary, space.Id);
             learningSpaceIdForDictionary++;
         }
 
-        // Starting Value for Learning Space Ids & Learning Element Ids
-        int learningSpaceId = 1;
-        int learningSpaceElementId = 1;
-        
         foreach (var learningSpace in ListLearningSpaces)
         {
             _listLearningSpaceContent = new List<int>();
+            _booleanAlgebraRequirements = "";
+            _currentConditionDirectSpaces = "";
+            
             IdentifierJson learningSpaceIdentifier = new IdentifierJson("name", learningSpace.Name);
             
             //Searching for Learning Elements in each Space
@@ -105,6 +157,7 @@ public class CreateDsl : ICreateDsl
                     default:
                         throw new ArgumentException("The given LearningContent Type is not supported - in CreateDsl.");
                 }
+                
                 IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", element.Name);
                 List<LearningElementValueJson> learningElementValueList = new List<LearningElementValueJson>();
                 LearningElementValueJson learningElementValueJson = new LearningElementValueJson("Points", element.Points.ToString());
@@ -117,31 +170,42 @@ public class CreateDsl : ICreateDsl
                 // Add Elements that have Content to the List, they will be copied at the end of the method.
                 if (element.LearningContent.Type != "url")
                 {
-                    ContentListLearningElements.Add(element);
+                    ListLearningElementsWithContents.Add(element);
                 }
                 
-
-                
-                //int elementIndex = ContentListLearningElements.IndexOf(element) + 1;
+                //int elementIndex = ListLearningElementsWithContents.IndexOf(element) + 1;
                 _listLearningSpaceContent.Add(learningSpaceElementId);
                 learningSpaceElementId++;
                 LearningWorldJson.LearningElements.Add(learningElementJson);
             }
-
-            _requirements = new List<int>();
-            foreach (var connectIn in learningSpace.InBoundObjects)
+          
+            // Create Learning Space Requirements
+            // If the inbound-type is not a PathWayCondition there can only be 1 LearningSpacePe, so we do not have to construct a boolean algebra expression.
+            // If the inbound-type is a PathWayCondition, we have to construct a boolean algebra expression.
+            if (learningSpace.InBoundObjects.Count > 0)
             {
-                _requirements.Add(idDictionary.Where(x => x.Value == connectIn.Id)
-                    .Select(x => x.Key)
-                    .FirstOrDefault());
+                foreach (var inbound in learningSpace.InBoundObjects)
+                {
+                    if (inbound is PathWayConditionPe curCondition)
+                    {
+                        _booleanAlgebraRequirements = DefineLogicalExpression(curCondition);
+                    }
+                    //It can only be 1 Space that does not have a condition with it.
+                    else
+                    {
+                        _booleanAlgebraRequirements = (IdDictionary.Where(x => x.Value == inbound.Id)
+                            .Select(x => x.Key)
+                            .FirstOrDefault().ToString());
+                    }
+                }
             }
-      
-            // Add Learning Space to Learning World
+
+            // Add the constructed Learning Space to Learning World
             LearningWorldJson.LearningSpaces.Add(new LearningSpaceJson(learningSpaceId,
                 learningSpaceIdentifier, _listLearningSpaceContent, 
                 learningSpace.RequiredPoints, 
                 learningSpace.LearningElements.Sum(element => element.Points),
-                learningSpace.Description, learningSpace.Goals, _requirements));
+                learningSpace.Description, learningSpace.Goals, requirements:_booleanAlgebraRequirements));
 
             learningSpaceId++;
         }
@@ -169,7 +233,7 @@ public class CreateDsl : ICreateDsl
         
         //All LearningElements are created at the specified location = Easier access to files in further Export-Operations.
         //After the files are added to the Backup-Structure, these Files will be deleted.
-        foreach (var learningElement in ContentListLearningElements)
+        foreach (var learningElement in ListLearningElementsWithContents)
         {
             try
             {
