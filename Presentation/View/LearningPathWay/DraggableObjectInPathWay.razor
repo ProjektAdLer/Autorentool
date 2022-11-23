@@ -1,0 +1,75 @@
+@using Presentation.PresentationLogic.LearningSpace
+@using Presentation.PresentationLogic
+@using Presentation.Components
+@using Presentation.Components.RightClickMenu
+@using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.LearningPathway
+<Draggable LearningObject="ObjectInPathWay" OnClicked="@OnClickedDraggable" OnDoubleClicked="@OnDoubleClickedDraggable" 
+           OnRightClicked="@OnRightClickedDraggable" OnDragged="@OnDraggedDraggable"
+           @bind-X="@ObjectInPathWay.PositionX" @bind-Y="@ObjectInPathWay.PositionY">
+    @if (ObjectInPathWay == PositioningService.LearningWorldVm?.OnHoveredObjectInPathWay)
+    {
+        @((MarkupString)OnHoveredObjectShape)
+    }
+    @((MarkupString)String.Format(ObjectShape, StrokeWidth, Text))
+    <Clickable OnClickedParam="ObjectInPathWay" OnClicked="@OnClickedClickable">
+        @if (ObjectInPathWay.InBoundObjects.Any())
+        {
+            @((MarkupString)DeletePathButtonShape)
+        }
+    </Clickable>
+</Draggable>
+<PullablePath LearningObject="@ObjectInPathWay" X1=@ObjectInPathWay.OutputConnectionX 
+              Y1="@ObjectInPathWay.OutputConnectionY"
+              PositioningSrv="@PositioningService"></PullablePath>
+@if (ShowingRightClickMenu)
+{
+    <RightClickMenu LearningObject="@ObjectInPathWay"
+                                    MenuEntries="@GetRightClickMenuEntries()"
+                                    OnClose="() => OnCloseRightClickMenu.InvokeAsync()"/>
+}
+
+
+@code {
+    // Overwrite nullability warning below because we check in OnParametersSet -n.stich
+    [Parameter, EditorRequired]
+    public IObjectInPathWayViewModel ObjectInPathWay { get; set; } = null!;
+    [Parameter, EditorRequired]
+    public EventCallback<IObjectInPathWayViewModel> OnClickedDraggable { get; set; }
+    [Parameter]
+    public EventCallback<IObjectInPathWayViewModel> OnDoubleClickedDraggable { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback<IObjectInPathWayViewModel> OnRightClickedDraggable { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback OnCloseRightClickMenu { get; set; }
+    [Parameter, EditorRequired]
+    public bool ShowingRightClickMenu { get; set; }
+    [Parameter, EditorRequired]
+    public DraggedEventArgs<IObjectInPathWayViewModel>.DraggedEventHandler? OnDraggedDraggable { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback<IObjectInPathWayViewModel> OnClickedClickable { get; set; }
+    // Overwrite nullability warning below because service may never be null -n.stich
+    [Parameter, EditorRequired]
+    public ILearningWorldPresenter PositioningService { get; set; } = null!;
+
+    private double StrokeWidth => PositioningService.LearningWorldVm?.SelectedLearningObject == ObjectInPathWay ? 2 : 1;
+
+    protected abstract string Text { get; }
+    
+    protected abstract string OnHoveredObjectShape { get; }
+
+    protected abstract string ObjectShape { get; }
+
+    protected abstract string DeletePathButtonShape { get;}
+    
+    protected abstract List<RightClickMenuEntry> GetRightClickMenuEntries();
+    
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (ObjectInPathWay is null)
+        {
+            throw new ArgumentNullException(nameof(ObjectInPathWay));
+        }
+    }
+}

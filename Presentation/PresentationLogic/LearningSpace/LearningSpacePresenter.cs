@@ -101,12 +101,13 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     }
     public void OnWorldPropertyChanged(object? caller, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(LearningWorldViewModel.SelectedLearningSpace))
+        if (e.PropertyName == nameof(LearningWorldViewModel.SelectedLearningObject))
         {
             if (caller is not ILearningWorldViewModel worldVm)
                 throw new ArgumentException("Caller must be of type ILearningWorldViewModel");
         
-            LearningSpaceVm = worldVm.SelectedLearningSpace;
+            if(worldVm.SelectedLearningObject is LearningSpaceViewModel space)
+                LearningSpaceVm = space;
         }
     }
 

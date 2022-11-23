@@ -1,9 +1,7 @@
 ﻿using AuthoringTool;
 using AutoMapper;
-using BusinessLogic.API;
 using BusinessLogic.Commands;
 using BusinessLogic.Entities;
-using ElectronWrapper;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
@@ -12,7 +10,6 @@ using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
-using Shared.Configuration;
 
 namespace AuthoringToolTest;
 
@@ -122,12 +119,16 @@ switch (entity, viewModel)
     }
     
     [Test]
-    public void MapLearningWorldEntityToViewModel_MapsLearningSpaceToViewModel()
+    public void MapLearningWorldEntityToViewModel_MapsLearningSpaceConditionAndPathWayToViewModel()
     {
         var world = new LearningWorld("n","s","a","l","d","g");
         var worldViewModel = new LearningWorldViewModel("x","x","x","x","x","x");
         var spaceEntity = new LearningSpace("n", "s", "a", "d", "g", 5);
+        var conditionEntity = new PathWayCondition(ConditionEnum.And, 2, 1);
+        var pathWayEntity = new LearningPathway(spaceEntity,conditionEntity);
         world.LearningSpaces.Add(spaceEntity);
+        world.PathWayConditions.Add(conditionEntity);
+        world.LearningPathways.Add(pathWayEntity);
         var config = new MapperConfiguration(MappingProfile.Configure);
         var mapper = config.CreateMapper();
         var systemUnderTest = CreateTestableCachingMapper(mapper);
@@ -135,6 +136,8 @@ switch (entity, viewModel)
         systemUnderTest.Map(world, worldViewModel);
 
         Assert.That(worldViewModel.LearningSpaces, Has.Count.EqualTo(1));
+        Assert.That(worldViewModel.PathWayConditions, Has.Count.EqualTo(1));
+        Assert.That(worldViewModel.LearningPathWays, Has.Count.EqualTo(1));
         Assert.Multiple(() =>
         {
             Assert.That(worldViewModel.LearningSpaces.First().Id, Is.EqualTo(spaceEntity.Id));
@@ -145,15 +148,30 @@ switch (entity, viewModel)
             Assert.That(worldViewModel.LearningSpaces.First().Goals, Is.EqualTo(spaceEntity.Goals));
             Assert.That(worldViewModel.LearningSpaces.First().RequiredPoints, Is.EqualTo(spaceEntity.RequiredPoints));
         });
+        Assert.Multiple(() =>
+        {
+            Assert.That(worldViewModel.PathWayConditions.First().Id, Is.EqualTo(conditionEntity.Id));    
+            Assert.That(worldViewModel.PathWayConditions.First().Condition, Is.EqualTo(conditionEntity.Condition));
+        });
+        Assert.Multiple(() =>
+        {
+            Assert.That(worldViewModel.LearningPathWays.First().Id, Is.EqualTo(pathWayEntity.Id));
+            Assert.That(worldViewModel.LearningPathWays.First().SourceObject.Id, Is.EqualTo(spaceEntity.Id));
+            Assert.That(worldViewModel.LearningPathWays.First().TargetObject.Id, Is.EqualTo(conditionEntity.Id));
+        });
     }
     
     [Test]
-    public void MapLearningWorldEntityToViewModel_MapsSpaceToTheSameViewModelAfterFirstCall()
+    public void MapLearningWorldEntityToViewModel_MapsSpaceConditionAndPathWayToTheSameViewModelAfterFirstCall()
     {
         var world = new LearningWorld("n","s","a","l","d","g");
         var worldViewModel = new LearningWorldViewModel("x","x","x","x","x","x");
         var spaceEntity = new LearningSpace("n", "s", "a", "d", "g", 5);
+        var conditionEntity = new PathWayCondition(ConditionEnum.And, 2, 1);
+        var pathWayEntity = new LearningPathway(spaceEntity,conditionEntity);
         world.LearningSpaces.Add(spaceEntity);
+        world.PathWayConditions.Add(conditionEntity);
+        world.LearningPathways.Add(pathWayEntity);
         var config = new MapperConfiguration(MappingProfile.Configure);
         var mapper = config.CreateMapper();
         var systemUnderTest = CreateTestableCachingMapper(mapper);
@@ -161,16 +179,29 @@ switch (entity, viewModel)
         systemUnderTest.Map(world, worldViewModel);
 
         Assert.That(worldViewModel.LearningSpaces, Has.Count.EqualTo(1));
+        Assert.That(worldViewModel.PathWayConditions, Has.Count.EqualTo(1));
+        Assert.That(worldViewModel.LearningPathWays, Has.Count.EqualTo(1));
         Assert.That(worldViewModel.LearningSpaces.First().Id, Is.EqualTo(spaceEntity.Id));
+        Assert.That(worldViewModel.PathWayConditions.First().Id, Is.EqualTo(conditionEntity.Id));
+        Assert.That(worldViewModel.LearningPathWays.First().Id, Is.EqualTo(pathWayEntity.Id));
         
         var spaceViewModel = worldViewModel.LearningSpaces.First();
+        var conditionViewModel = worldViewModel.PathWayConditions.First();
+        var pathWayViewModel = worldViewModel.LearningPathWays.First();
         worldViewModel.LearningSpaces.Clear();
+        worldViewModel.PathWayConditions.Clear();
+        worldViewModel.LearningPathWays.Clear();
         Assert.That(worldViewModel.LearningSpaces, Has.Count.EqualTo(0));
+        Assert.That(worldViewModel.PathWayConditions, Has.Count.EqualTo(0));
+        Assert.That(worldViewModel.LearningPathWays, Has.Count.EqualTo(0));
         
         systemUnderTest.Map(world, worldViewModel);
         
         Assert.That(worldViewModel.LearningSpaces, Has.Count.EqualTo(1));
+        Assert.That(worldViewModel.PathWayConditions, Has.Count.EqualTo(1));
+        Assert.That(worldViewModel.LearningPathWays, Has.Count.EqualTo(1));
         Assert.That(worldViewModel.LearningSpaces.First(), Is.EqualTo(spaceViewModel));
+        Assert.That(worldViewModel.PathWayConditions.First(), Is.EqualTo(conditionViewModel));
     }
     
     [Test]

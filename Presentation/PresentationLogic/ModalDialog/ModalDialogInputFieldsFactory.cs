@@ -26,6 +26,17 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
         return BuildModalDialogCreateElementInputFields(typeField, contentField);
     }
 
+    public IEnumerable<ModalDialogInputField> GetCreatePathWayConditionInputFields() =>
+        new ModalDialogInputField[]
+        {
+            new ModalDialogDropdownInputField("Condition",
+                new[]
+                {
+                    new ModalDialogDropdownInputFieldChoiceMapping(null,
+                        new[] {ConditionEnum.And.ToString(), ConditionEnum.Or.ToString()})
+                }, true),
+        };
+
     /// <inheritdoc cref="ILearningWorldViewModalDialogInputFieldsFactory.GetCreateLearningSpaceInputFields"/>
     public IEnumerable<ModalDialogInputField> GetCreateLearningSpaceInputFields() =>
         new ModalDialogInputField[]
@@ -40,6 +51,9 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
 
     /// <inheritdoc cref="ILearningWorldViewModalDialogInputFieldsFactory.GetEditLearningSpaceInputFields"/>
     public IEnumerable<ModalDialogInputField> GetEditLearningSpaceInputFields() => GetCreateLearningSpaceInputFields();
+
+    /// <inheritdoc cref="ILearningWorldViewModalDialogInputFieldsFactory.GetEditPathWayConditionInputFields"/>
+    public IEnumerable<ModalDialogInputField> GetEditPathWayConditionInputFields() => GetCreatePathWayConditionInputFields();
 
     /// <inheritdoc cref="ILearningSpaceViewModalDialogInputFieldsFactory.GetEditLearningElementInputFields"/>
     public IEnumerable<ModalDialogInputField> GetEditLearningElementInputFields() =>

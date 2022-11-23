@@ -1,6 +1,7 @@
 using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using NUnit.Framework;
+using Shared;
 
 namespace BusinessLogicTest.Commands;
 
@@ -13,27 +14,27 @@ public class CreateLearningPathWayUt
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         var space1 = new LearningSpace("z", "y", "x", "w", "v", 5);
-        var space2 = new LearningSpace("l", "m", "n", "o", "p", 3);
+        var pathWayCondition = new PathWayCondition(ConditionEnum.And,3, 3);
         var space3 = new LearningSpace("l", "m", "n", "o", "p", 3);
         var space4 = new LearningSpace("l", "m", "n", "o", "p", 3);
         world.LearningSpaces.Add(space1);
-        world.LearningSpaces.Add(space2);
+        world.PathWayConditions.Add(pathWayCondition);
         world.LearningSpaces.Add(space3);
         world.LearningSpaces.Add(space4);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         
-        var pathway1 = new LearningPathway(space1, space2);
-        space1.OutBoundSpaces.Add(space2);
-        space2.InBoundSpaces.Add(space1);
+        var pathway1 = new LearningPathway(space1, pathWayCondition);
+        space1.OutBoundObjects.Add(pathWayCondition);
+        pathWayCondition.InBoundObjects.Add(space1);
         var pathway2 = new LearningPathway(space3, space4);
-        space3.OutBoundSpaces.Add(space4);
-        space4.InBoundSpaces.Add(space3);
+        space3.OutBoundObjects.Add(space4);
+        space4.InBoundObjects.Add(space3);
         
         world.LearningPathways.Add(pathway1);
         world.LearningPathways.Add(pathway2);
 
-        var command = new CreateLearningPathWay(world, space2, space3, mappingAction);
+        var command = new CreateLearningPathWay(world, pathWayCondition, space3, mappingAction);
 
         Assert.That(world.LearningPathways, Has.Count.EqualTo(2));
         Assert.IsFalse(actionWasInvoked);
@@ -44,8 +45,8 @@ public class CreateLearningPathWayUt
             Assert.That(actionWasInvoked, Is.True);
             Assert.That(command.HasError, Is.False);
             Assert.That(world.LearningPathways, Has.Count.EqualTo(3));
-            Assert.That(world.LearningPathways.Last().SourceSpace, Is.EqualTo(space2));
-            Assert.That(world.LearningPathways.Last().TargetSpace, Is.EqualTo(space3));
+            Assert.That(world.LearningPathways.Last().SourceObject, Is.EqualTo(pathWayCondition));
+            Assert.That(world.LearningPathways.Last().TargetObject, Is.EqualTo(space3));
         });
     }
 
@@ -91,6 +92,30 @@ public class CreateLearningPathWayUt
     }
     
     [Test]
+    public void Execute_TargetSpaceAlreadyHasInboundSpace_HasErrorIsTrue()
+    {
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
+        var space0 = new LearningSpace("z", "y", "x", "w", "v", 5);
+        var space1 = new LearningSpace("z", "y", "x", "w", "v", 5);
+        var space2 = new LearningSpace("z", "y", "x", "w", "v", 5);
+        world.LearningSpaces.Add(space0);
+        world.LearningSpaces.Add(space1);
+        world.LearningSpaces.Add(space2);
+        var pathway = new LearningPathway(space0, space1);
+        world.LearningPathways.Add(pathway);
+        bool actionWasInvoked = false;
+        Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
+
+        var command = new CreateLearningPathWay(world, space2, space1, mappingAction);
+        
+        command.Execute();
+        
+        Assert.That(actionWasInvoked, Is.False);
+        Assert.That(command.HasError, Is.True);
+        Assert.That(world.LearningPathways, Has.Count.EqualTo(1));
+    }
+    
+    [Test]
     public void Execute_PathWayIsCircular_HasErrorIsTrue()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
@@ -106,14 +131,14 @@ public class CreateLearningPathWayUt
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
         var pathway1 = new LearningPathway(space1, space2);
-        space1.OutBoundSpaces.Add(space2);
-        space2.InBoundSpaces.Add(space1);
+        space1.OutBoundObjects.Add(space2);
+        space2.InBoundObjects.Add(space1);
         var pathway2 = new LearningPathway(space2, space3);
-        space2.OutBoundSpaces.Add(space3);
-        space3.InBoundSpaces.Add(space2);
+        space2.OutBoundObjects.Add(space3);
+        space3.InBoundObjects.Add(space2);
         var pathway3 = new LearningPathway(space3, space4);
-        space3.OutBoundSpaces.Add(space4);
-        space4.InBoundSpaces.Add(space3);
+        space3.OutBoundObjects.Add(space4);
+        space4.InBoundObjects.Add(space3);
         
         world.LearningPathways.Add(pathway1);
         world.LearningPathways.Add(pathway2);
@@ -168,8 +193,8 @@ public class CreateLearningPathWayUt
         {
             Assert.That(actionWasInvoked, Is.True); actionWasInvoked = false;
             Assert.That(world.LearningPathways, Has.Count.EqualTo(1));
-            Assert.That(world.LearningPathways.First().SourceSpace, Is.EqualTo(space1));
-            Assert.That(world.LearningPathways.First().TargetSpace, Is.EqualTo(space2));
+            Assert.That(world.LearningPathways.First().SourceObject, Is.EqualTo(space1));
+            Assert.That(world.LearningPathways.First().TargetObject, Is.EqualTo(space2));
         });
         
         command.Undo();
@@ -182,8 +207,8 @@ public class CreateLearningPathWayUt
         {
             Assert.That(actionWasInvoked, Is.True); actionWasInvoked = false;
             Assert.That(world.LearningPathways, Has.Count.EqualTo(1));
-            Assert.That(world.LearningPathways.First().SourceSpace, Is.EqualTo(space1));
-            Assert.That(world.LearningPathways.First().TargetSpace, Is.EqualTo(space2));
+            Assert.That(world.LearningPathways.First().SourceObject, Is.EqualTo(space1));
+            Assert.That(world.LearningPathways.First().TargetObject, Is.EqualTo(space2));
         });
     }
 }

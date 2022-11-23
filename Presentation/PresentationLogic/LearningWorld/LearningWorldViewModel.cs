@@ -23,6 +23,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _goals = "";
         _unsavedChanges = false;
         _learningSpaces = new List<ILearningSpaceViewModel>();
+        _pathWayConditions = new List<PathWayConditionViewModel>();
         _learningPathWays = new List<ILearningPathWayViewModel>();
     }
     
@@ -38,10 +39,11 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     /// <param name="unsavedChanges">Whether or not the object contains changes that are yet to be saved to disk.</param>
     /// <param name="learningSpaces">Optional collection of learning spaces contained in the learning world.
     /// Should be used when loading a saved learnign world into the application.</param>
+    /// <param name="pathWayConditions">Conditions within learning pathways.</param>
     /// <param name="learningPathWays">Optional collection of learning pathways in the learning world.</param>
     public LearningWorldViewModel(string name, string shortname, string authors, string language, string description,
         string goals, bool unsavedChanges = true, List<ILearningSpaceViewModel>? learningSpaces = null,
-        List<ILearningPathWayViewModel>? learningPathWays = null)
+        List<PathWayConditionViewModel>? pathWayConditions = null, List<ILearningPathWayViewModel>? learningPathWays = null)
     {
         Id = Guid.NewGuid();
         _name = name;
@@ -52,6 +54,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _goals = goals;
         _unsavedChanges = unsavedChanges;
         _learningSpaces = learningSpaces ?? new List<ILearningSpaceViewModel>();
+        _pathWayConditions = pathWayConditions ?? new List<PathWayConditionViewModel>();
         _learningPathWays = learningPathWays ?? new List<ILearningPathWayViewModel>();
     }
     
@@ -59,6 +62,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     
     public Guid Id { get; private set; }
     private ICollection<ILearningSpaceViewModel> _learningSpaces;
+    private ICollection<PathWayConditionViewModel> _pathWayConditions;
     private ICollection<ILearningPathWayViewModel> _learningPathWays;
     private string _name;
     private string _shortname;
@@ -67,8 +71,8 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     private string _description;
     private string _goals;
     private bool _unsavedChanges;
-    private ILearningSpaceViewModel? _selectedLearningSpace;
-    private ILearningSpaceViewModel? _onHoveredLearningSpace;
+    private ISelectableObjectInWorldViewModel? _selectedLearningObject;
+    private IObjectInPathWayViewModel? _onHoveredLearningObject;
     private bool _showingLearningSpaceView;
 
     public string FileEnding => fileEnding;
@@ -83,11 +87,24 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         }
     }
     
+    public ICollection<PathWayConditionViewModel> PathWayConditions
+    {
+        get => _pathWayConditions;
+        set => SetField(ref _pathWayConditions, value);
+    }
+
     public ICollection<ILearningPathWayViewModel> LearningPathWays
     {
         get => _learningPathWays;
         set => SetField(ref _learningPathWays, value);
     }
+
+    public IEnumerable<IObjectInPathWayViewModel> ObjectsInPathWays =>
+        LearningSpaces.Concat<IObjectInPathWayViewModel>(PathWayConditions);
+    
+    public IEnumerable<ISelectableObjectInWorldViewModel> SelectableWorldObjects =>
+        ObjectsInPathWays.Concat<ISelectableObjectInWorldViewModel>(LearningPathWays);
+
     public int Workload =>
         LearningSpaces.Sum(space => space.Workload);
 
@@ -135,16 +152,16 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         set => SetField(ref _unsavedChanges, value);
     }
 
-    public ILearningSpaceViewModel? SelectedLearningSpace
+    public ISelectableObjectInWorldViewModel? SelectedLearningObject
     {
-        get => _selectedLearningSpace;
-        set => SetField(ref _selectedLearningSpace, value);
+        get => _selectedLearningObject;
+        set => SetField(ref _selectedLearningObject, value);
     }
     
-    public ILearningSpaceViewModel? OnHoveredLearningSpace
+    public IObjectInPathWayViewModel? OnHoveredObjectInPathWay
     {
-        get => _onHoveredLearningSpace;
-        set => SetField(ref _onHoveredLearningSpace, value);
+        get => _onHoveredLearningObject;
+        set => SetField(ref _onHoveredLearningObject, value);
     }
 
     public bool ShowingLearningSpaceView

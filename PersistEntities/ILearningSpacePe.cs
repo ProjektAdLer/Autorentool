@@ -1,6 +1,6 @@
 ﻿namespace PersistEntities;
 
-public interface ILearningSpacePe : ISpacePe
+public interface ILearningSpacePe : ISpacePe, IObjectInPathWayPe
 {
     string Name { get; set; }
     string Description { get; set; }
@@ -9,6 +9,4 @@ public interface ILearningSpacePe : ISpacePe
     string Goals { get; set; }
     int RequiredPoints { get; set; }
     List<LearningElementPe> LearningElements { get; set; }
-    double PositionX { get; set; }
-    double PositionY { get; set; }
 }

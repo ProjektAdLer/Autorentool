@@ -23,23 +23,23 @@ public class DeleteLearningSpace : IUndoCommand
 
         var space = LearningWorld.LearningSpaces.First(x => x.Id == LearningSpace.Id);
 
-        foreach (var inBoundSpace in space.InBoundSpaces)
+        foreach (var inBoundSpace in space.InBoundObjects)
         {
             LearningWorld.LearningPathways
-                .Where(x => x.SourceSpace.Id == inBoundSpace.Id && x.TargetSpace.Id == space.Id)
+                .Where(x => x.SourceObject.Id == inBoundSpace.Id && x.TargetObject.Id == space.Id)
                 .ToList().ForEach(x => LearningWorld.LearningPathways.Remove(x));
         }
-        foreach (var outBoundSpace in space.OutBoundSpaces)
+        foreach (var outBoundSpace in space.OutBoundObjects)
         {
             LearningWorld.LearningPathways
-                .Where(x => x.SourceSpace.Id == space.Id && x.TargetSpace.Id == outBoundSpace.Id)
+                .Where(x => x.SourceObject.Id == space.Id && x.TargetObject.Id == outBoundSpace.Id)
                 .ToList().ForEach(x => LearningWorld.LearningPathways.Remove(x));
         }
         LearningWorld.LearningSpaces.Remove(space);
 
-        if (space == LearningWorld.SelectedLearningSpace || LearningWorld.SelectedLearningSpace == null)
+        if (space == LearningWorld.SelectedLearningObject || LearningWorld.SelectedLearningObject == null)
         {
-            LearningWorld.SelectedLearningSpace = LearningWorld.LearningSpaces.LastOrDefault();
+            LearningWorld.SelectedLearningObject = LearningWorld.SelectableWorldObjects.LastOrDefault();
         }
 
         _mappingAction.Invoke(LearningWorld);

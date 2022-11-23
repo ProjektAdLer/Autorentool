@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using NUnit.Framework;
+using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Shared;
 
@@ -18,14 +20,18 @@ public class LearningSpaceViewModelUt
         var description = "very cool element";
         var goals = "learn very many things";
         var requiredPoints = 10;
-        var positionX = 5f;
-        var positionY = 21f;
+        var positionX = 20;
+        var positionY = 30;
         var ele1 = new LearningElementViewModel("a", "b",  null!, "url","g", "h","i", LearningElementDifficultyEnum.Easy, null, 17,11, 23);
         var ele2 = new LearningElementViewModel("z", "zz",  null!, "url","z","zz","zzz", LearningElementDifficultyEnum.Hard, null, 444,12, double.MaxValue);
+        var inBoundCondition = new PathWayConditionViewModel(ConditionEnum.And, 2, 3);
+        var outBoundSpace = new LearningSpaceViewModel("a", "z", "d", "b", "t", 3);
+        var inBoundObjects = new List<IObjectInPathWayViewModel> { inBoundCondition };
+        var outBoundObjects = new List<IObjectInPathWayViewModel> { outBoundSpace };
         var learningElements = new List<ILearningElementViewModel> { ele1, ele2 };
         
         var systemUnderTest = new LearningSpaceViewModel(name, shortname, authors, description, goals, requiredPoints, 
-            learningElements, positionX, positionY);
+            learningElements, positionX, positionY, inBoundObjects, outBoundObjects);
         
         Assert.Multiple(() =>
         {
@@ -37,6 +43,12 @@ public class LearningSpaceViewModelUt
             Assert.That(systemUnderTest.LearningElements, Is.EqualTo(learningElements));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
+            Assert.That(systemUnderTest.InBoundObjects, Is.EqualTo(inBoundObjects));
+            Assert.That(systemUnderTest.OutBoundObjects, Is.EqualTo(outBoundObjects));
+            Assert.That(systemUnderTest.InputConnectionX, Is.EqualTo(positionX + 50));
+            Assert.That(systemUnderTest.InputConnectionY, Is.EqualTo(positionY - 6));
+            Assert.That(systemUnderTest.OutputConnectionX, Is.EqualTo(positionX + 50));
+            Assert.That(systemUnderTest.OutputConnectionY, Is.EqualTo(positionY + 56));
         });
         
     }

@@ -1,7 +1,7 @@
 ﻿namespace BusinessLogic.Entities;
 
-internal interface ILearningPathway
+internal interface ILearningPathway : ISelectableObjectInWorld
 {
-    LearningSpace SourceSpace { get; set; }
-    LearningSpace TargetSpace { get; set; }
+    IObjectInPathWay SourceObject { get; set; }
+    IObjectInPathWay TargetObject { get; set; }
 }

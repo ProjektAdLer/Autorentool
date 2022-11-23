@@ -1,6 +1,12 @@
+using System;
 using Bunit;
+using Microsoft.Extensions.DependencyInjection;
+using NSubstitute;
 using NUnit.Framework;
-using Presentation.View.LearningWorld;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.LearningPathway;
+using Presentation.PresentationLogic.LearningWorld;
+using Presentation.View.LearningPathWay;
 using Shared;
 using TestContext = Bunit.TestContext;
 
@@ -11,12 +17,17 @@ public class PathWayUt
 {
 #pragma warning disable CS8618 // set in setup - n.stich
     private TestContext _ctx;
+    private IMouseService _mouseService;
+    private ILearningWorldPresenter _positioningService;
 #pragma warning restore CS8618
     
     [SetUp]
     public void Setup()
     {
         _ctx = new TestContext();
+        _mouseService = Substitute.For<IMouseService>();
+        _positioningService = Substitute.For<ILearningWorldPresenter>();
+        _ctx.Services.AddSingleton(_mouseService);
     }
     
     [Test]
@@ -37,12 +48,18 @@ public class PathWayUt
         Assert.That(systemUnderTest.Instance.Y2, Is.EqualTo(y2));
     }
     
-    private IRenderedComponent<PathWay> GetPathWayForTesting( double x1 = 0, double y1 = 0, double x2 = 0, double y2 = 0)
+    private IRenderedComponent<PathWay> GetPathWayForTesting( double x1 = 0, double y1 = 0, double x2 = 0,
+        double y2 = 0, ILearningPathWayViewModel? pathWay =null, Action<ILearningPathWayViewModel>? onClicked = null)
     {
+        onClicked ??= _ => { };
         return _ctx.RenderComponent<PathWay>(parameters => parameters
+            .Add(p => p.LearningPathWay, pathWay)
             .Add(p => p.X1, x1)
             .Add(p => p.Y1, y1)
             .Add(p => p.X2, x2)
-            .Add(p => p.Y2, y2));
+            .Add(p => p.Y2, y2)
+            .Add(p => p.PositioningService, _positioningService)
+            .Add(p => p.OnClickedClickable, onClicked)
+        );
     }
 }

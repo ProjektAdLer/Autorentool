@@ -151,18 +151,14 @@ public class ReadDsl : IReadDsl
             }
         }
     }
-    
 
     public List<LearningElementJson> GetH5PElementsList()
     {
         return ListH5PElements;
     }
 
-    /// <summary>
-    /// A Section represents a Group of Spaces (Themenbereiche/Topics)
-    /// We create 1 Section, as it is mandatory in Moodle. It is represented as a Space right now. Later it will be a Topic.
-    /// </summary>
-    /// <returns></returns>
+    //because sections are not supported in the authoringTool yet, a dummy section is created
+    //right now this dummy is just a space, but it will be a section in the future
     public List<LearningSpaceJson> GetSectionList()
     {
         var space = new LearningSpaceJson(0, new IdentifierJson("identifier", "Topic 0"), 

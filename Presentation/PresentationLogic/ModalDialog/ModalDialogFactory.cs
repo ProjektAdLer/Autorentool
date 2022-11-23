@@ -40,6 +40,15 @@ public class ModalDialogFactory : ILearningSpaceViewModalDialogFactory, ILearnin
         return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType, inputFields, annotations: annotations);
     }
 
+    public RenderFragment GetCreatePathWayConditionFragment(ModalDialogOnClose onCloseCallback)
+    {
+        var inputFields = WorldViewInputFieldsFactory.GetCreatePathWayConditionInputFields();
+        const string title = "Create new pathway condition";
+        const string text = "Please choose between an and or an or pathway condition below:";
+        const ModalDialogType dialogType = ModalDialogType.OkCancel;
+        return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType, inputFields);
+    }
+
     /// <inheritdoc cref="ILearningSpaceViewModalDialogFactory.GetEditLearningSpaceFragment"/>
     public RenderFragment GetEditLearningSpaceFragment(IDictionary<string, string> initialInputValues, ModalDialogOnClose onCloseCallback, IDictionary<string, string>? annotations = null)
     {
@@ -49,6 +58,16 @@ public class ModalDialogFactory : ILearningSpaceViewModalDialogFactory, ILearnin
         const ModalDialogType dialogType = ModalDialogType.OkCancel;
         return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType, inputFields,
             initialInputValues, annotations);
+    }
+
+    /// <inheritdoc cref="ILearningSpaceViewModalDialogFactory.GetEditLearningSpaceFragment"/>
+    public RenderFragment GetEditPathWayConditionFragment(IDictionary<string, string> initialInputValues, ModalDialogOnClose onCloseCallback)
+    {
+        var inputFields = WorldViewInputFieldsFactory.GetEditPathWayConditionInputFields();
+        const string title = "Edit existing pathway condition";
+        const string text = "Please choose between an and or an or pathway condition below:";
+        const ModalDialogType dialogType = ModalDialogType.OkCancel;
+        return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType, inputFields, initialInputValues);
     }
 
     /// <inheritdoc cref="ILearningWorldViewModalDialogFactory.GetEditLearningSpaceFragment"/>

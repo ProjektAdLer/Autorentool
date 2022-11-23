@@ -4,6 +4,7 @@
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.LearningSpace
 @using Shared
+@using Presentation.PresentationLogic
 
 <marker
     id="arrow"
@@ -18,11 +19,11 @@
     <path d="M 0 0 L 10 5 L 0 10 z" />
 </marker>
 <g @onmousedown="OnDown" cursor="@_cursor" @onmousedown:stopPropagation="true">
-    <circle r="6" transform="translate(@(X1+100), @(Y1+25))" fill="white" stroke="gray"/>
-    <polyline points="0,0 0,2 0,-2 0,0 2,0 -2,0" transform="translate(@(X1+100), @(Y1+25))" style="fill:none;stroke:lime;stroke-width:1"/>
+    <circle r="6" transform="translate(@(X1), @(Y1))" fill="white" stroke="gray"/>
+    <polyline points="0,0 0,2 0,-2 0,0 2,0 -2,0" transform="translate(@(X1), @(Y1))" style="fill:none;stroke:lime;stroke-width:1"/>
     @if (_isDown)
     {
-        <path d="M @(X1+6) @Y1 C @_c1X @C1Y, @_c2X @C2Y, @X2 @Y2" transform="translate(100, 25)" stroke="rgb(108, 117, 125)" stroke-width="1.5" fill="transparent" marker-end="url(#arrow)"/>
+        <path d="M @X1 @(Y1+6) C @_c1X @C1Y, @_c2X @C2Y, @X2 @Y2" stroke="rgb(108, 117, 125)" stroke-width="2" fill="transparent" marker-end="url(#arrow)"/>
     }
 </g>
 
@@ -46,7 +47,11 @@
 
     // Overwrite nullability warning below because we check in OnParametersSet -n.stich
     [Parameter, EditorRequired]
-    public ILearningSpaceViewModel LearningSpace { get; set; } = null!;
+    public IObjectInPathWayViewModel LearningObject { get; set; } = null!;
+    
+    // Size of the given LearningObject
+    [Parameter] public double SizeX { get; set; }
+    [Parameter] public double SizeY { get; set; }
 
     // The following coordinates are used as control points for the Bezier curve
     private double _c1X;
@@ -65,9 +70,9 @@
     {
         _c1X = GetControlPoint(Direction1, X1);
         _c2X = GetControlPoint(Direction2, X2);
-        if (LearningSpace is null)
+        if (LearningObject is null)
         {
-            throw new ArgumentNullException(nameof(LearningSpace));
+            throw new ArgumentNullException(nameof(LearningObject));
         }
     }
 
@@ -94,7 +99,7 @@
         X2 = e.ClientX - _cursorX + X1;
         Y2 = e.ClientY - _cursorY + Y1;
         
-        PositioningSrv.SetOnHoveredLearningSpace(LearningSpace,X2+100, Y2+25);
+        PositioningSrv.SetOnHoveredObjectInPathWay(LearningObject,X2, Y2);
 
         _hasMoved = true;
     }
@@ -119,7 +124,7 @@
         }
         if (_isDown)
         {
-            PositioningSrv.CreateLearningPathWay(LearningSpace, X2+100, Y2+25);
+            PositioningSrv.CreateLearningPathWay(LearningObject, X2, Y2);
         }
         _isDown = false;
     }

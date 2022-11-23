@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using NUnit.Framework;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
@@ -22,9 +23,14 @@ public class LearningWorldViewModelUt
         var goals = "learn very many things";
         var space1 = new LearningSpaceViewModel("ff", "ff", "ff", "ff", "ff");
         var learningSpaces = new List<ILearningSpaceViewModel> { space1 };
+        var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        var pathWayConditions = new List<PathWayConditionViewModel> { condition };
+        var pathWay = new LearningPathwayViewModel(space1, condition);
+        var learningPathways = new List<ILearningPathWayViewModel> { pathWay };
 
         var systemUnderTest = new LearningWorldViewModel(name, shortname, authors, language, description, goals, 
-            unsavedChanges: false, learningSpaces: learningSpaces);
+            unsavedChanges: false, learningSpaces: learningSpaces, pathWayConditions: pathWayConditions,
+            learningPathWays: learningPathways);
         
         Assert.Multiple(() =>
         {
@@ -36,6 +42,8 @@ public class LearningWorldViewModelUt
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.UnsavedChanges, Is.False);
             Assert.That(systemUnderTest.LearningSpaces, Is.EqualTo(learningSpaces));
+            Assert.That(systemUnderTest.PathWayConditions, Is.EqualTo(pathWayConditions));
+            Assert.That(systemUnderTest.LearningPathWays, Is.EqualTo(learningPathways));
         });
     }
 

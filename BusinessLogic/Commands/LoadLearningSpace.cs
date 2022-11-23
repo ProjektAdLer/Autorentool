@@ -37,7 +37,7 @@ public class LoadLearningSpace : IUndoCommand
         
         LearningSpace ??= _businessLogic.LoadLearningSpace(_filepath);
         LearningWorld.LearningSpaces.Add(LearningSpace);
-        LearningWorld.SelectedLearningSpace = LearningSpace;
+        LearningWorld.SelectedLearningObject = LearningSpace;
 
         _mappingAction.Invoke(LearningWorld);
     }
