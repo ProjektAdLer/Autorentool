@@ -63,7 +63,8 @@ public class XmlEntityManager : IXmlEntityManager
         return FileIdBlock2;
     }
     
-    //The id´s need to be incremental. Block1 and Block2 should not have the same values.
+    //The id´s need to be incremental. Block1 and Block2 should not have the same values. 
+    //The reason for this is that the id´s are used in the files.xml file, every Resource gets 2 Blocks and therefore 2 id´s are needed.
     public static void IncreaseFileId()
     {
         FileIdBlock1 = FileIdBlock1 + 2;

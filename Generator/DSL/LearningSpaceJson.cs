@@ -16,7 +16,7 @@ public class LearningSpaceJson : ILearningSpaceJson
         LearningSpaceContent = learningSpaceContent;
         RequiredPoints = requiredPoints;
         IncludedPoints = includedPoints;
-       Requirements = requirements;
+        Requirements = requirements;
     }
 
     public int SpaceId { get; set; }

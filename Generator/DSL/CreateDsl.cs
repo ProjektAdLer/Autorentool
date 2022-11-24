@@ -15,7 +15,7 @@ public class CreateDsl : ICreateDsl
     public string Uuid;
     public Dictionary<int, Guid> IdDictionary;
     private List<int> _listLearningSpaceContent;
-    public List<LearningElementPe> ListAllLearningElements;
+    private List<LearningElementPe> _listAllLearningElements;
     private string _booleanAlgebraRequirements;
     private string _currentConditionDirectSpaces;
     private IFileSystem _fileSystem;
@@ -47,7 +47,7 @@ public class CreateDsl : ICreateDsl
         Guid guid = Guid.NewGuid();
         Uuid = guid.ToString();
         _currentConditionDirectSpaces = "";
-        ListAllLearningElements = new List<LearningElementPe>();
+        _listAllLearningElements = new List<LearningElementPe>();
     }
 
     //Search through all LearningElements and look for duplicates. 
@@ -61,12 +61,12 @@ public class CreateDsl : ICreateDsl
         {
             foreach (var element in learningSpace.LearningElements)
             {
-                ListAllLearningElements.Add(element);
+                _listAllLearningElements.Add(element);
             }
         }
         
         //Search for duplicates
-        var duplicateLearningElements = ListAllLearningElements.GroupBy(x => x.Name).Where(x => x.Count() > 1)
+        var duplicateLearningElements = _listAllLearningElements.GroupBy(x => x.Name).Where(x => x.Count() > 1)
             .Select(x => x).ToList();
 
         //To avoid duplicate names, we increment the name of the learning element.
@@ -79,7 +79,7 @@ public class CreateDsl : ICreateDsl
                 {
                     if(element.Name == duplicateElement.Key)
                     {
-                        var incrementedElementName = "";
+                        string incrementedElementName;
                         
                         if (incrementedNamesDictionary.ContainsKey(element.Name))
                         {
@@ -97,7 +97,6 @@ public class CreateDsl : ICreateDsl
                 }
             }
         }
-
         return listLearningSpace;
     }
 
@@ -159,7 +158,7 @@ public class CreateDsl : ICreateDsl
         //Starting ID for LearningSpaces
         int learningSpaceIdForDictionary = 1;
         
-        // Starting Value for Learning Space Ids & Learning Element Ids
+        // Starting Value for Learning Space Ids & Learning Element Ids in the DSL-Document
         int learningSpaceId = 1;
         int learningSpaceElementId = 1;
         
@@ -291,18 +290,18 @@ public class CreateDsl : ICreateDsl
         //All LearningElements are created at the specified location = Easier access to files in further Export-Operations.
         //After the files are added to the Backup-Structure, these Files will be deleted.
         foreach (var learningElement in ListLearningElementsWithContents)
+        {
+            try
             {
-                try
-                {
-                    _fileSystem.File.Copy(learningElement.LearningContent.Filepath,
-                        _fileSystem.Path.Join("XMLFilesForExport", $"{learningElement.Name}.{learningElement.LearningContent.Type}"));
-                }
-                catch (Exception)
-                {
-                    Console.WriteLine("Something went wrong while creating the LearningElements for the Backup-Structure.");
-                    throw;
-                }
+                _fileSystem.File.Copy(learningElement.LearningContent.Filepath,
+                    _fileSystem.Path.Join("XMLFilesForExport", $"{learningElement.Name}.{learningElement.LearningContent.Type}"));
             }
+            catch (Exception)
+            {
+                Console.WriteLine("Something went wrong while creating the LearningElements for the Backup-Structure.");
+                throw;
+            }
+        }
 
         _fileSystem.File.WriteAllText(_dslPath, jsonFile);
         Logger.LogDebug("Generated DSL Document: {JsonFile}",jsonFile);
