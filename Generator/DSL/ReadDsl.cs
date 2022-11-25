@@ -6,11 +6,11 @@ namespace Generator.DSL;
 
 public class ReadDsl : IReadDsl
 {
-    public List<LearningElementJson> ListH5PElements;
-    public List<LearningElementJson> ListResourceElements;
-    public List<LearningElementJson> ListLabelElements;
-    public List<LearningElementJson> ListUrlElements;
-    public List<LearningElementJson> ListAllSpacesAndElementsOrdered;
+    private List<LearningElementJson> _listH5PElements;
+    private List<LearningElementJson> _listResourceElements;
+    private List<LearningElementJson> _listLabelElements;
+    private List<LearningElementJson> _listUrlElements;
+    private List<LearningElementJson> _listAllSpacesAndElementsOrdered;
     private LearningWorldJson _learningWorldJson;
     private IFileSystem _fileSystem;
     private DocumentRootJson _rootJson;
@@ -30,11 +30,11 @@ public class ReadDsl : IReadDsl
             new List<int>(), new List<TopicJson>(), 
             new List<LearningSpaceJson>(), new List<LearningElementJson>());
         _rootJson = new DocumentRootJson(_learningWorldJson);
-        ListH5PElements = new List<LearningElementJson>();
-        ListResourceElements = new List<LearningElementJson>();
-        ListLabelElements = new List<LearningElementJson>();
-        ListUrlElements = new List<LearningElementJson>();
-        ListAllSpacesAndElementsOrdered = new List<LearningElementJson>();
+        _listH5PElements = new List<LearningElementJson>();
+        _listResourceElements = new List<LearningElementJson>();
+        _listLabelElements = new List<LearningElementJson>();
+        _listUrlElements = new List<LearningElementJson>();
+        _listAllSpacesAndElementsOrdered = new List<LearningElementJson>();
     }
 
     public void ReadLearningWorld(string dslPath, DocumentRootJson? rootJsonForTest = null)
@@ -78,7 +78,7 @@ public class ReadDsl : IReadDsl
         {
             if (element.ElementType == "h5p")
             {
-                ListH5PElements.Add(element);
+                _listH5PElements.Add(element);
             }
         }
     }
@@ -90,7 +90,7 @@ public class ReadDsl : IReadDsl
             if (resource.ElementType is "pdf" or "json" or "jpg" or "png" or "webp" or "bmp" or "txt" or "c"
                 or "h" or "cpp" or "cc" or "c++" or "py" or "cs" or "js" or "php" or "html" or "css")
             {
-                ListResourceElements.Add(resource);
+                _listResourceElements.Add(resource);
             }
         }
     }
@@ -101,7 +101,7 @@ public class ReadDsl : IReadDsl
         {
             if (label.ElementType is "label")
             {
-                ListLabelElements.Add(label);
+                _listLabelElements.Add(label);
             }
         }
     }
@@ -110,10 +110,8 @@ public class ReadDsl : IReadDsl
     {
         // World Attributes like Description & Goals are added to the label-list, as they are represented as Labels in Moodle
         if(documentRootJson.LearningWorld.Description == "" && documentRootJson.LearningWorld.Goals == "") return;
-        
-        int lastId;
-        
-        lastId = documentRootJson.LearningWorld.LearningElements.Count+1;
+
+        var lastId = documentRootJson.LearningWorld.LearningElements.Count+1;
 
         var worldAttributes = new LearningElementJson(lastId, 
             new IdentifierJson("Description",documentRootJson.LearningWorld.Description), "", 
@@ -121,7 +119,7 @@ public class ReadDsl : IReadDsl
             new List<LearningElementValueJson>(), documentRootJson.LearningWorld.Description,
             documentRootJson.LearningWorld.Goals);
         
-        ListAllSpacesAndElementsOrdered.Add(worldAttributes);
+        _listAllSpacesAndElementsOrdered.Add(worldAttributes);
     }
 
     private void GetUrlElements(DocumentRootJson documentRootJson)
@@ -130,7 +128,7 @@ public class ReadDsl : IReadDsl
         {
             if (url.ElementType is "url")
             {
-                ListUrlElements.Add(url);
+                _listUrlElements.Add(url);
             }
         }
     }
@@ -145,11 +143,11 @@ public class ReadDsl : IReadDsl
             foreach (var space in documentRootJson.LearningWorld.LearningSpaces)
             {
                 List<LearningElementValueJson> values = new List<LearningElementValueJson>{new("", "0")};
-                ListAllSpacesAndElementsOrdered.Add(new LearningElementJson(space.SpaceId+10000, space.Identifier, "", "space","space", 0, values, space.Description));
+                _listAllSpacesAndElementsOrdered.Add(new LearningElementJson(space.SpaceId+10000, space.Identifier, "", "space","space", 0, values, space.Description));
                 
                 foreach (int elementInSpace in space.LearningSpaceContent)
                 {
-                    ListAllSpacesAndElementsOrdered.Add(documentRootJson.LearningWorld.LearningElements[elementInSpace-1]);
+                    _listAllSpacesAndElementsOrdered.Add(documentRootJson.LearningWorld.LearningElements[elementInSpace-1]);
                 }
             }
         }
@@ -157,7 +155,7 @@ public class ReadDsl : IReadDsl
 
     public List<LearningElementJson> GetH5PElementsList()
     {
-        return ListH5PElements;
+        return _listH5PElements;
     }
 
     //because sections are not supported in the authoringTool yet, a dummy section is created
@@ -172,17 +170,17 @@ public class ReadDsl : IReadDsl
 
     public List<LearningElementJson> GetResourceList()
     {
-        return ListResourceElements;
+        return _listResourceElements;
     }
     
     public List<LearningElementJson> GetLabelsList()
     {
-        return ListLabelElements;
+        return _listLabelElements;
     }
     
     public List<LearningElementJson> GetUrlList()
     {
-        return ListUrlElements;
+        return _listUrlElements;
     }
     
     //A List that contains all Spaces and Elements in the correct order. 
@@ -190,7 +188,7 @@ public class ReadDsl : IReadDsl
     //The Spaces where transformed to LearningElementJson, so they can be used in the same List.
     public List<LearningElementJson> GetSpacesAndElementsOrderedList()
     {
-        return ListAllSpacesAndElementsOrdered;
+        return _listAllSpacesAndElementsOrdered;
     }
     
 }

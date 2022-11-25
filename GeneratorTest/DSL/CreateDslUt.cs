@@ -41,7 +41,7 @@ public class CreateDslUt
         int incrementId = 1;
         foreach (var space in listLearningSpaces)
         {
-            systemUnderTest.IdDictionary.Add(incrementId, space.Id);
+            systemUnderTest.DictionarySpaceIdToGuid.Add(incrementId, space.Id);
             incrementId++;
         }
         

@@ -80,9 +80,7 @@ public class ReadDslUt
 
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.ListH5PElements, Is.Not.Null);
             Assert.That(learningWorldJson, Is.Not.Null);
-            Assert.That(systemUnderTest.ListH5PElements, Has.Count.EqualTo(1));
             Assert.That(getLearningWorldJson.LearningElements, Is.Not.Null);
             Assert.That(getLearningWorldJson.LearningSpaces, Is.Not.Null);
             
@@ -133,7 +131,6 @@ public class ReadDslUt
 
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.ListH5PElements, Is.Not.Null);
             Assert.That(learningWorldJson, Is.Not.Null);
             Assert.That(getLearningWorldJson.LearningElements, Is.Not.Null);
             Assert.That(getLearningWorldJson.LearningSpaces, Is.Not.Null);
