@@ -10,18 +10,21 @@ public class LearningPathway : ILearningPathway
     [UsedImplicitly]
     protected LearningPathway()
     {
+        Id = Guid.Empty;
         //We override nullability here because constructor is protected, only called by AutoMapper and field immediately
         //set by AutoMapper afterwards. - m.ho
-        SourceSpace = null!;
-        TargetSpace = null!;
+        SourceObject = null!;
+        TargetObject = null!;
     }
     
-    public LearningPathway(LearningSpace sourceSpace, LearningSpace targetSpace)
+    public LearningPathway(IObjectInPathWay sourceObject, IObjectInPathWay targetObject)
     {
-        SourceSpace = sourceSpace;
-        TargetSpace = targetSpace;
+        Id = Guid.NewGuid();
+        SourceObject = sourceObject;
+        TargetObject = targetObject;
     }
     
-    public LearningSpace SourceSpace { get; set; }
-    public LearningSpace TargetSpace { get; set; }
+    public IObjectInPathWay SourceObject { get; set; }
+    public IObjectInPathWay TargetObject { get; set; }
+    public Guid Id { get; private set; }
 }

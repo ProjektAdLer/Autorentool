@@ -1,0 +1,75 @@
+﻿@inject ILogger<RightClickMenu<T>> Logger;
+@using Presentation.PresentationLogic.LearningElement
+@using Presentation.PresentationLogic.LearningPathway
+@using Presentation.PresentationLogic.LearningSpace
+@implements IDisposable
+@typeparam T
+
+<g transform="translate(@_x, @_y)" cursor="@_cursor" id="rightClickMenu">
+
+    @foreach (var (item, position) in MenuEntries.Select((item, position) => (item, position * _heightOfMenuItem)))
+    {
+        <g transform="translate(0, @position)">
+            <Clickable OnClickedParam="LearningObject" OnClicked="(T? x) => { item.Action.Invoke(); OnClose.InvokeAsync(); }">
+                <rect x="0" y="0" width="@_widthOfMenuItem" height="@_heightOfMenuItem" fill="white" stroke="black"/>
+                <text x="@(_widthOfMenuItem / 2)" y="15" text-anchor="middle" font-size="12" font-family="Verdana" fill="black">@item.DisplayedText</text>
+            </Clickable>
+        </g>
+    }
+
+    <g transform="translate(0, @(MenuEntries.Count * _heightOfMenuItem))">
+        <Clickable OnClickedParam="LearningObject" OnClicked="(T? x) => OnClose.InvokeAsync()">
+            <rect x="0" y="0" width="@_widthOfMenuItem" height="@_heightOfMenuItem" fill="white" stroke="black"/>
+            <text x="@(_widthOfMenuItem / 2)" y="15" text-anchor="middle" font-size="12" font-family="Verdana" fill="black">Close</text>
+        </Clickable>
+    </g>
+</g>
+
+@code {
+
+    [Parameter, EditorRequired]
+    public T? LearningObject { get; set; }
+
+    [Parameter, EditorRequired]
+    public List<RightClickMenuEntry> MenuEntries { get; set; } = new List<RightClickMenuEntry>();
+
+    [Parameter]
+    public EventCallback OnClose { get; set; }
+
+    private double _x;
+    private double _y;
+
+    private string _cursor = "grab";
+
+    private readonly int _heightOfMenuItem = 20;
+    private readonly int _widthOfMenuItem = 70;
+
+    protected override void OnParametersSet()
+    {
+        if (LearningObject == null)
+        {
+            throw new ArgumentNullException(nameof(LearningObject));
+        }
+        switch (LearningObject)
+        {
+            case ILearningSpaceViewModel ls:
+                _x = ls.PositionX + 100;
+                _y = ls.PositionY;
+                break;
+            case ILearningElementViewModel le:
+                _x = le.PositionX + 100;
+                _y = le.PositionY;
+                break;
+            case PathWayConditionViewModel pc:
+                _x = pc.PositionX + 20;
+                _y = pc.PositionY;
+                break;
+            default:
+                throw new ArgumentException(nameof(LearningObject) + " is not of supported type");
+        }
+    }
+
+    public void Dispose()
+    {
+    }
+}

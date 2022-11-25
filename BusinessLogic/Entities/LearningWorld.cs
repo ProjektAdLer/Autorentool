@@ -10,7 +10,7 @@ public class LearningWorld : ILearningWorld, IOriginator
     [UsedImplicitly]
     private LearningWorld()
     {
-        Id = Guid.Empty;
+        Id = Guid.NewGuid();
         Name = "";
         Shortname = "";
         Authors = "";
@@ -18,11 +18,13 @@ public class LearningWorld : ILearningWorld, IOriginator
         Description = "";
         Goals = "";
         LearningSpaces = new List<LearningSpace>();
+        PathWayConditions = new List<PathWayCondition>();
         LearningPathways = new List<LearningPathway>();
         UnsavedChanges = false;
     }
     public LearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals, List<LearningSpace>? learningSpaces = null, List<LearningPathway>? learningPathways = null)
+        string goals, List<LearningSpace>? learningSpaces = null,
+        List<PathWayCondition>? pathWayConditions = null, List<LearningPathway>? learningPathways = null)
     {
         Id = Guid.NewGuid();
         Name = name;
@@ -32,12 +34,17 @@ public class LearningWorld : ILearningWorld, IOriginator
         Description = description;
         Goals = goals;
         LearningSpaces = learningSpaces ?? new List<LearningSpace>();
+        PathWayConditions = pathWayConditions ?? new List<PathWayCondition>();
         LearningPathways = learningPathways ?? new List<LearningPathway>();
         UnsavedChanges = false;
     }
 
     public Guid Id { get; private set; }
     public List<LearningSpace> LearningSpaces { get; set; }
+    public List<PathWayCondition> PathWayConditions { get; set; }
+    public List<IObjectInPathWay> ObjectsInPathWays => new List<IObjectInPathWay>(LearningSpaces).Concat(PathWayConditions).ToList();
+    public List<ISelectableObjectInWorld> SelectableWorldObjects => new List<ISelectableObjectInWorld>(LearningSpaces).
+        Concat(PathWayConditions).Concat(LearningPathways).ToList();
     public List<LearningPathway> LearningPathways { get; set; }
     public string Name { get; set; }
     public string Shortname { get; set; }
@@ -45,14 +52,14 @@ public class LearningWorld : ILearningWorld, IOriginator
     public string Language { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
-    public LearningSpace? SelectedLearningSpace { get; set; }
+    public ISelectableObjectInWorld? SelectedLearningObject { get; set; }
 
     public bool UnsavedChanges { get; set; }
 
     public IMemento GetMemento()
     {
         return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, LearningSpaces,
-            LearningPathways, SelectedLearningSpace);
+            PathWayConditions, LearningPathways, SelectedLearningObject);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -68,15 +75,16 @@ public class LearningWorld : ILearningWorld, IOriginator
         Description = learningWorldMemento.Description;
         Goals = learningWorldMemento.Goals;
         LearningSpaces = learningWorldMemento.LearningSpaces;
+        PathWayConditions = learningWorldMemento.PathWayConditions;
         LearningPathways = learningWorldMemento.LearningPathways;
-        SelectedLearningSpace = learningWorldMemento.SelectedLearningSpace;
+        SelectedLearningObject = learningWorldMemento.SelectedLearningSpace;
     }
 
     private record LearningWorldMemento : IMemento
     {
         internal LearningWorldMemento(string name, string shortname, string authors, string language,
-            string description, string goals, List<LearningSpace> learningSpaces, List<LearningPathway> learningPathways,
-            LearningSpace? selectedLearningSpace = null)
+            string description, string goals, List<LearningSpace> learningSpaces, List<PathWayCondition> pathWayConditions,
+            List<LearningPathway> learningPathways, ISelectableObjectInWorld? selectedLearningSpace = null)
         {
             Name = name;
             Shortname = shortname;
@@ -85,11 +93,13 @@ public class LearningWorld : ILearningWorld, IOriginator
             Description = description;
             Goals = goals;
             LearningSpaces = learningSpaces.ToList();
+            PathWayConditions = pathWayConditions.ToList();
             LearningPathways = learningPathways.ToList();
             SelectedLearningSpace = selectedLearningSpace;
         }
 
         internal List<LearningSpace> LearningSpaces { get;  }
+        internal List<PathWayCondition> PathWayConditions { get;  }
         internal List<LearningPathway> LearningPathways { get;  }
         internal string Name { get; }
         internal string Shortname { get; }
@@ -97,6 +107,6 @@ public class LearningWorld : ILearningWorld, IOriginator
         internal string Language { get; }
         internal string Description { get; }
         internal string Goals { get; }
-        internal LearningSpace? SelectedLearningSpace { get; }
+        internal ISelectableObjectInWorld? SelectedLearningSpace { get; }
     }
 }

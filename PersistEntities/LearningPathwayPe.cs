@@ -6,16 +6,16 @@ public class LearningPathwayPe: ILearningPathWayPe
     {
         //We override nullability here because constructor is protected, only called by AutoMapper and field immediately
         //set by AutoMapper afterwards. - m.ho
-        SourceSpace = null!;
-        TargetSpace = null!;
+        SourceObject = null!;
+        TargetObject = null!;
     }
     
-    public LearningPathwayPe(LearningSpacePe sourceSpace, LearningSpacePe targetSpace)
+    public LearningPathwayPe(IObjectInPathWayPe sourceObject, IObjectInPathWayPe targetObject)
     {
-        SourceSpace = sourceSpace;
-        TargetSpace = targetSpace;
+        SourceObject = sourceObject;
+        TargetObject = targetObject;
     }
     
-    public LearningSpacePe SourceSpace { get; set; }
-    public LearningSpacePe TargetSpace { get; set; }
+    public IObjectInPathWayPe SourceObject { get; set; }
+    public IObjectInPathWayPe TargetObject { get; set; }
 }

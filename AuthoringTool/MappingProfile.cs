@@ -2,6 +2,7 @@ using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Entities;
 using PersistEntities;
+using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
@@ -50,59 +51,79 @@ public class MappingProfile : Profile
             });
         CreateMap<LearningWorld, LearningWorldViewModel>()
             .EqualityComparison((x, y) => x.Id == y.Id)
-            .ForMember(x => x.SelectedLearningSpace, opt => opt.Ignore())
-            .ForMember(x => x.OnHoveredLearningSpace, opt => opt.Ignore())
+            .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
+            .ForMember(x => x.OnHoveredObjectInPathWay, opt => opt.Ignore())
             .ForMember(x => x.ShowingLearningSpaceView, opt => opt.Ignore())
+            .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
+            .ForMember(x => x.SelectableWorldObjects, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
-                d.SelectedLearningSpace = d.LearningSpaces.FirstOrDefault(z => z.Id == s.SelectedLearningSpace?.Id);
+                d.SelectedLearningObject = d.SelectableWorldObjects.FirstOrDefault(z => z.Id == s.SelectedLearningObject?.Id);
             })
             .AfterMap((s, d) =>
             {
                 foreach (var pathWay in d.LearningPathWays)
                 {
-                    pathWay.SourceSpace = d.LearningSpaces.First(x => x.Id == pathWay.SourceSpace?.Id);
-                    pathWay.TargetSpace = d.LearningSpaces.First(x => x.Id == pathWay.TargetSpace?.Id);
+                    pathWay.SourceObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.SourceObject?.Id);
+                    pathWay.TargetObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.TargetObject?.Id);
                 }
             })
             .AfterMap((s, d) =>
             {
-                foreach (var learningSpace in d.LearningSpaces)
+                foreach (var pathWayObject in d.ObjectsInPathWays)
                 {
-                    learningSpace.InBoundSpaces = d.LearningPathWays.Where(x => x.TargetSpace.Id == learningSpace.Id).Select(x => x.SourceSpace).ToList();
-                    learningSpace.OutBoundSpaces = d.LearningPathWays.Where(x => x.SourceSpace.Id == learningSpace.Id).Select(x => x.TargetSpace).ToList();
+                    pathWayObject.InBoundObjects = d.LearningPathWays.Where(x => x.TargetObject.Id == pathWayObject.Id).Select(x => x.SourceObject).ToList();
+                    pathWayObject.OutBoundObjects = d.LearningPathWays.Where(x => x.SourceObject.Id == pathWayObject.Id).Select(x => x.TargetObject).ToList();
                 }
             })
             .ReverseMap()
-            .ForMember(x => x.SelectedLearningSpace, opt => opt.Ignore())
+            .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
+            .ForMember(x => x.SelectableWorldObjects, opt => opt.Ignore())
+            .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
-                d.SelectedLearningSpace = d.LearningSpaces.FirstOrDefault(z => z.Id == s.SelectedLearningSpace?.Id);
+                d.SelectedLearningObject = d.SelectableWorldObjects.FirstOrDefault(z => z.Id == s.SelectedLearningObject?.Id);
             })
             .AfterMap((s, d) =>
             {
                 foreach (var pathWay in d.LearningPathways)
                 {
-                    pathWay.SourceSpace = d.LearningSpaces.First(x => x.Id == pathWay.SourceSpace?.Id);
-                    pathWay.TargetSpace = d.LearningSpaces.First(x => x.Id == pathWay.TargetSpace?.Id);
+                    pathWay.SourceObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.SourceObject?.Id);
+                    pathWay.TargetObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.TargetObject?.Id);
                 }
             })
             .AfterMap((s, d) =>
             {
-                foreach (var learningSpace in d.LearningSpaces)
+                foreach (var pathWayObject in d.ObjectsInPathWays)
                 {
-                    learningSpace.InBoundSpaces = d.LearningPathways.Where(x => x.TargetSpace.Id == learningSpace.Id).Select(x => x.SourceSpace).ToList();
-                    learningSpace.OutBoundSpaces = d.LearningPathways.Where(x => x.SourceSpace.Id == learningSpace.Id).Select(x => x.TargetSpace).ToList();
+                    pathWayObject.InBoundObjects = d.LearningPathways.Where(x => x.TargetObject.Id == pathWayObject.Id).Select(x => x.SourceObject).ToList();
+                    pathWayObject.OutBoundObjects = d.LearningPathways.Where(x => x.SourceObject.Id == pathWayObject.Id).Select(x => x.TargetObject).ToList();
                 }
             });
 
-        CreateMap<LearningPathway, LearningPathwayViewModel>()
+        CreateMap<LearningPathwayViewModel, LearningPathway>()
+            .EqualityComparison((x, y) => x.Id == y.Id)
             .ReverseMap();
-            
+        CreateMap<PathWayCondition, PathWayConditionViewModel>()
+            .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
+            .IncludeBase<IObjectInPathWay, IObjectInPathWayViewModel>()
+            .EqualityComparison((x, y) => x.Id == y.Id)
+            .ReverseMap()
+            .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.OutBoundObjects, opt => opt.Ignore());
+
+        CreateMap<IObjectInPathWay, IObjectInPathWayViewModel>()
+            .IncludeBase<ISelectableObjectInWorld, ISelectableObjectInWorldViewModel>()
+            .ReverseMap();
+        CreateMap<ISelectableObjectInWorld, ISelectableObjectInWorldViewModel>()
+            .ReverseMap();
+
         CreateMap<LearningSpace, LearningSpaceViewModel>()
             .ForMember(x => x.SelectedLearningElement, opt => opt.Ignore())
-            .ForMember(x => x.InBoundSpaces, opt => opt.Ignore())
-            .ForMember(x => x.OutBoundSpaces, opt => opt.Ignore())
+            .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
+            .IncludeBase<IObjectInPathWay, IObjectInPathWayViewModel>()
             .EqualityComparison((x, y) => x.Id == y.Id)
             .AfterMap((s, d) =>
             {
@@ -115,8 +136,8 @@ public class MappingProfile : Profile
             })
             .ReverseMap()
             .ForMember(x => x.SelectedLearningElement, opt => opt.Ignore())
-            .ForMember(x => x.InBoundSpaces, opt => opt.Ignore())
-            .ForMember(x => x.OutBoundSpaces, opt => opt.Ignore())
+            .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
                 foreach (var element in d.LearningElements)
@@ -168,6 +189,11 @@ public class MappingProfile : Profile
         CreateMap<LearningPathway, ILearningPathWayViewModel>()
             .As<LearningPathwayViewModel>();
         
+        
+        CreateMap<PathWayCondition, IObjectInPathWayViewModel>().As<PathWayConditionViewModel>();
+        CreateMap<LearningSpace, IObjectInPathWayViewModel>().As<LearningSpaceViewModel>();
+
+        
         CreateMap<H5PActivationElement, ILearningElementViewModel>().As<H5PActivationElementViewModel>();
         CreateMap<H5PInteractionElement, ILearningElementViewModel>().As<H5PInteractionElementViewModel>();
         CreateMap<H5PTestElement, ILearningElementViewModel>().As<H5PTestElementViewModel>();
@@ -193,49 +219,52 @@ public class MappingProfile : Profile
     private void CreatePersistEntityMaps()
     {
         CreateMap<LearningWorld, LearningWorldPe>()
+            .ForMember(x => x.ObjectsInPathWaysPe, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
                 foreach (var pathWay in d.LearningPathways)
                 {
-                    pathWay.SourceSpace = d.LearningSpaces.First(x => x.Id == pathWay.SourceSpace?.Id);
-                    pathWay.TargetSpace = d.LearningSpaces.First(x => x.Id == pathWay.TargetSpace?.Id);
+                    pathWay.SourceObject = d.ObjectsInPathWaysPe.First(x => x.Id == pathWay.SourceObject?.Id);
+                    pathWay.TargetObject = d.ObjectsInPathWaysPe.First(x => x.Id == pathWay.TargetObject?.Id);
                 }
             })
             .AfterMap((s, d) =>
             {
-                foreach (var learningSpace in d.LearningSpaces)
+                foreach (var objectInPathWayPe in d.ObjectsInPathWaysPe)
                 {
-                    learningSpace.InBoundSpaces = d.LearningPathways.Where(x => x.TargetSpace.Id == learningSpace.Id)
-                        .Select(x => x.SourceSpace).ToList();
-                    learningSpace.OutBoundSpaces = d.LearningPathways.Where(x => x.SourceSpace.Id == learningSpace.Id)
-                        .Select(x => x.TargetSpace).ToList();
+                    objectInPathWayPe.InBoundObjects = d.LearningPathways.Where(x => x.TargetObject.Id == objectInPathWayPe.Id)
+                        .Select(x => x.SourceObject).ToList();
+                    objectInPathWayPe.OutBoundObjects = d.LearningPathways.Where(x => x.SourceObject.Id == objectInPathWayPe.Id)
+                        .Select(x => x.TargetObject).ToList();
                 }
             })
             .ReverseMap()
+            .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
                 foreach (var pathWay in d.LearningPathways)
                 {
-                    pathWay.SourceSpace = d.LearningSpaces.First(x => x.Id == pathWay.SourceSpace?.Id);
-                    pathWay.TargetSpace = d.LearningSpaces.First(x => x.Id == pathWay.TargetSpace?.Id);
+                    pathWay.SourceObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.SourceObject?.Id);
+                    pathWay.TargetObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.TargetObject?.Id);
                 }
             })
             .AfterMap((s, d) =>
             {
-                foreach (var learningSpace in d.LearningSpaces)
+                foreach (var objectInPathWay in d.ObjectsInPathWays)
                 {
-                    learningSpace.InBoundSpaces = d.LearningPathways.Where(x => x.TargetSpace.Id == learningSpace.Id)
-                        .Select(x => x.SourceSpace).ToList();
-                    learningSpace.OutBoundSpaces = d.LearningPathways.Where(x => x.SourceSpace.Id == learningSpace.Id)
-                        .Select(x => x.TargetSpace).ToList();
+                    objectInPathWay.InBoundObjects = d.LearningPathways.Where(x => x.TargetObject.Id == objectInPathWay.Id)
+                        .Select(x => x.SourceObject).ToList();
+                    objectInPathWay.OutBoundObjects = d.LearningPathways.Where(x => x.SourceObject.Id == objectInPathWay.Id)
+                        .Select(x => x.TargetObject).ToList();
                 }
             });
         CreateMap<LearningSpace, LearningSpacePe>()
-            .ForMember(x => x.InBoundSpaces, opt => opt.Ignore())
-            .ForMember(x => x.OutBoundSpaces, opt => opt.Ignore())
+            .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
+            .IncludeBase<IObjectInPathWay, IObjectInPathWayPe>()
             .ReverseMap()
-            .ForMember(x => x.InBoundSpaces, opt => opt.Ignore())
-            .ForMember(x => x.OutBoundSpaces, opt => opt.Ignore())
+            .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
             .AfterMap((_, d) =>
             {
                 foreach (var element in d.LearningElements)
@@ -244,12 +273,17 @@ public class MappingProfile : Profile
                 }
             });
         CreateMap<LearningPathway, LearningPathwayPe>()
+            .ReverseMap();
+        CreateMap<PathWayCondition, PathWayConditionPe>()
+            .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
+            .IncludeBase<IObjectInPathWay, IObjectInPathWayPe>()
             .ReverseMap()
-            .AfterMap((s, d) =>
-            {
-                s.SourceSpace.Id = new Guid();
-                s.TargetSpace.Id = new Guid();
-            });
+            .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.OutBoundObjects, opt => opt.Ignore());
+        CreateMap<IObjectInPathWay, IObjectInPathWayPe>()
+            .ReverseMap();
+
         CreateMap<LearningElement, LearningElementPe>();
         CreateMap<LearningElementPe, LearningElement>()
             .ForMember(x => x.Parent, opt => opt.Ignore())
@@ -283,6 +317,12 @@ public class MappingProfile : Profile
 
         CreateMap<LearningElementDifficultyEnum, LearningElementDifficultyEnumPe>()
             .ReverseMap();
+        
+        CreateMap<ConditionEnum, ConditionEnumPe>()
+            .ReverseMap();
+        
+        CreateMap<PathWayCondition, IObjectInPathWayPe>().As<PathWayConditionPe>();
+        CreateMap<LearningSpace, IObjectInPathWayPe>().As<LearningSpacePe>();
         
         CreateMap<H5PActivationElement, ILearningElementPe>().As<H5PActivationElementPe>();
         CreateMap<H5PInteractionElement, ILearningElementPe>().As<H5PInteractionElementPe>();

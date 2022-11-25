@@ -1,3 +1,4 @@
+using System.IO.Abstractions;
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Entities;
@@ -9,15 +10,17 @@ namespace Generator.API;
 
 public class WorldGenerator : IWorldGenerator
 {
-    public WorldGenerator(IBackupFileGenerator backupFileGenerator, ICreateDsl createDsl, IReadDsl readDsl, IMapper mapper)
+    public WorldGenerator(IBackupFileGenerator backupFileGenerator, ICreateDsl createDsl, IReadDsl readDsl, IMapper mapper, IFileSystem fileSystem)
     {
         BackupFile = backupFileGenerator;
         CreateDsl = createDsl;
         ReadDsl = readDsl;
         Mapper = mapper;
+        _fileSystem = fileSystem;
     }
 
     internal IMapper Mapper;
+    private readonly IFileSystem _fileSystem;
     public IBackupFileGenerator BackupFile { get; }
     public readonly ICreateDsl CreateDsl;
     public readonly IReadDsl ReadDsl;
@@ -30,10 +33,18 @@ public class WorldGenerator : IWorldGenerator
     /// <param name="filepath"></param> Desired filepath for the .mbz file. Given by user, when Export Button is pressed.
     public void ConstructBackup(LearningWorld learningWorld, string filepath)
     {
-        string dslPath = CreateDsl.WriteLearningWorld(Mapper.Map<LearningWorldPe>(learningWorld));
-        ReadDsl.ReadLearningWorld(dslPath);
-        BackupFile.WriteXmlFiles((ReadDsl as ReadDsl)!);
-        BackupFile.WriteBackupFile(filepath);
+        try
+        {
+            string dslPath = CreateDsl.WriteLearningWorld(Mapper.Map<LearningWorldPe>(learningWorld));
+            ReadDsl.ReadLearningWorld(dslPath);
+            BackupFile.WriteXmlFiles((ReadDsl as ReadDsl)!);
+            BackupFile.WriteBackupFile(filepath);
+        }
+        finally
+        {
+            if (_fileSystem.Directory.Exists("XMLFilesForExport"))
+                _fileSystem.Directory.Delete("XMLFilesForExport", true);
+        }
     }
     
 }

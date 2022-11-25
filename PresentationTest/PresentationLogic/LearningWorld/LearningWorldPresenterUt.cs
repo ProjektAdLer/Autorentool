@@ -6,9 +6,12 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components;
 using Presentation.Components.ModalDialog;
+using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
+using Shared;
 
 namespace PresentationTest.PresentationLogic.LearningWorld;
 
@@ -18,17 +21,17 @@ public class LearningWorldPresenterUt
     #region LearningSpace
 
     [Test]
-    public void SetSelectedLearningSpace_SelectedLearningWorldIsNull_ThrowsException()
+    public void SetSelectedLearningObject_SelectedLearningWorldIsNull_ThrowsException()
     {
         var systemUnderTest = CreatePresenterForTesting();
         var space = new LearningSpaceViewModel("a", "v", "d", "f", "f", 4);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetSelectedLearningSpace(space));
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetSelectedLearningObject(space));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
 
     [Test]
-    public void SetSelectedLearningSpace_CallsSpacePresenter()
+    public void SetSelectedLearningObject_CallsSpacePresenter()
     { 
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -37,13 +40,13 @@ public class LearningWorldPresenterUt
 
         var systemUnderTest = CreatePresenterForTesting(learningSpacePresenter: learningSpacePresenter);
         systemUnderTest.LearningWorldVm = world;
-        systemUnderTest.SetSelectedLearningSpace(space);
+        systemUnderTest.SetSelectedLearningObject(space);
 
         learningSpacePresenter.Received().SetLearningSpace(space);
     }
     
     [Test]
-    public void DragLearningSpace_CallsPresentationLogic()
+    public void DragObjectInPathWay_CallsPresentationLogic()
     {
         var space = new LearningSpaceViewModel("g", "g", "g", "g", "g");
         double oldPositionX = 5;
@@ -51,9 +54,100 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.DragLearningSpace(space, new DraggedEventArgs<ILearningSpaceViewModel> (space, oldPositionX, oldPositionY));
+        systemUnderTest.DragObjectInPathWay(space, new DraggedEventArgs<IObjectInPathWayViewModel> (space, oldPositionX, oldPositionY));
 
-        presentationLogic.Received().DragLearningSpace(space, oldPositionX, oldPositionY);
+        presentationLogic.Received().DragObjectInPathWay(space, oldPositionX, oldPositionY);
+    }
+
+    [Test]
+    public void EditLearningSpace_SetsSelectedLearningSpaceAndSetsEditLearningSpaceDialogOpenToTrue()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var space = new LearningSpaceViewModel("g", "g", "g", "g", "g");
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.EditObjectInPathWay(space);
+        
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(space));
+        Assert.That(systemUnderTest.EditLearningSpaceDialogOpen, Is.True);
+    }
+    
+    [Test]
+    public void DeleteLearningSpace_CallsPresentationLogic()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var space = new LearningSpaceViewModel("g", "g", "g", "g", "g");
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.DeleteLearningSpace(space);
+
+        presentationLogic.Received().DeleteLearningSpace(world, space);
+    }
+    
+    [Test]
+    public void DeleteLearningSpace_SelectedLearningWorldIsNull_ThrowsException()
+    {
+        var space = new LearningSpaceViewModel("g", "g", "g", "g", "g");
+
+        var systemUnderTest = CreatePresenterForTesting();
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteLearningSpace(space));
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+    }
+    
+    [Test]
+    public void RightClickedLearningSpace_SetsRightClickedLearningObjectToSpace()
+    {
+        var space = new LearningSpaceViewModel("g", "g", "g", "g", "g");
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.RightClickOnObjectInPathWay(space);
+        
+        Assert.That(systemUnderTest.RightClickedLearningObject, Is.EqualTo(space));
+    }
+    
+    [Test]
+    public void HideRightClickMenu_SetsRightClickedLearningObjectToNull()
+    {
+        var space = new LearningSpaceViewModel("g", "g", "g", "g", "g");
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        systemUnderTest.RightClickOnObjectInPathWay(space);
+        Assert.That(systemUnderTest.RightClickedLearningObject, Is.EqualTo(space));
+        
+        systemUnderTest.HideRightClickMenu();
+        
+        Assert.That(systemUnderTest.RightClickedLearningObject, Is.Null);
+    }
+    
+    [Test]
+    public void ClickedLearningSpace_SetsSelectedLearningObjectToSpace()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var space = new LearningSpaceViewModel("g", "g", "g", "g", "g");
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.ClickOnObjectInWorld(space);
+        
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(space));
+    }
+
+    [Test]
+    public void DoubleClickedLearningSpace_SetsSelectedLearningObjectAndShowsLearningSpaceView()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var space = new LearningSpaceViewModel("g", "g", "g", "g", "g");
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.DoubleClickOnObjectInWorld(space);
+        
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(space));
+        Assert.That(systemUnderTest.ShowingLearningSpaceView, Is.True);
+        Assert.That(systemUnderTest.RightClickedLearningObject, Is.Null);
     }
         
         
@@ -113,6 +207,14 @@ public class LearningWorldPresenterUt
         presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int>(), Arg.Any<double>(), Arg.Any<double>());
     }
+    
+    [Test]
+    public void CreateNewLearningSpace_SelectedLearningWorldIsNull_ThrowsException()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.CreateNewLearningSpace("foo", "bar", "foo", "bar", "foo", 5));
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+    }
 
     #endregion
 
@@ -144,7 +246,7 @@ public class LearningWorldPresenterUt
             "foo");
         var space = new LearningSpaceViewModel("f", "f", "f", "f", "f");
         world.LearningSpaces.Add(space);
-        world.SelectedLearningSpace = space;
+        world.SelectedLearningObject = space;
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
@@ -208,7 +310,7 @@ public class LearningWorldPresenterUt
 
         var systemUnderTest = CreatePresenterForTesting(learningSpacePresenter: spacePresenter);
         systemUnderTest.LearningWorldVm = world;
-        world.SelectedLearningSpace = space;
+        world.SelectedLearningObject = space;
 
 
         systemUnderTest.OnEditSpaceDialogClose(returnValueTuple);
@@ -236,20 +338,20 @@ public class LearningWorldPresenterUt
 
     #endregion
 
-    #region DeleteSelectedLearningSpace
+    #region DeleteSelectedLearningObject
 
     [Test]
-    public void DeleteSelectedLearningSpace_ThrowsWhenSelectedWorldNull()
+    public void DeleteSelectedLearningObject_ThrowsWhenSelectedWorldNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.LearningWorldVm = null;
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteSelectedLearningSpace());
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteSelectedLearningObject());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
 
     [Test]
-    public void DeleteSelectedLearningSpace_DoesNotThrowWhenSelectedSpaceNull()
+    public void DeleteSelectedLearningObject_DoesNotThrowWhenSelectedSpaceNull()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -261,46 +363,84 @@ public class LearningWorldPresenterUt
         {
             Assert.That(systemUnderTest.LearningWorldVm, Is.Not.Null);
             //nullability overridden because of assert - n.stich
-            Assert.That(systemUnderTest.LearningWorldVm!.SelectedLearningSpace, Is.Null);
+            Assert.That(systemUnderTest.LearningWorldVm!.SelectedLearningObject, Is.Null);
             Assert.That(systemUnderTest.LearningWorldVm.LearningSpaces, Is.Empty);
-            Assert.DoesNotThrow(() => systemUnderTest.DeleteSelectedLearningSpace());
+            Assert.DoesNotThrow(() => systemUnderTest.DeleteSelectedLearningObject());
         });
     }
 
     [Test]
-    public void DeleteSelectedLearningSpace_DeletesSpaceFromViewModel_CallsPresentationLogic()
+    public void DeleteSelectedLearningObject_DeletesSpaceFromViewModel_CallsPresentationLogic()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var space = new LearningSpaceViewModel("f", "f", "f", "f", "f");
         world.LearningSpaces.Add(space);
-        world.SelectedLearningSpace = space;
+        world.SelectedLearningObject = space;
         var presentationLogic = Substitute.For<IPresentationLogic>();
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         systemUnderTest.LearningWorldVm = world;
 
-        systemUnderTest.DeleteSelectedLearningSpace();
+        systemUnderTest.DeleteSelectedLearningObject();
 
         presentationLogic.Received().DeleteLearningSpace(world, space);
+    }
+    
+    [Test]
+    public void DeleteSelectedLearningObject_DeletesConditionFromViewModel_CallsPresentationLogic()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var condition = new PathWayConditionViewModel(ConditionEnum.And,2,1);
+        world.PathWayConditions.Add(condition);
+        world.SelectedLearningObject = condition;
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+
+        systemUnderTest.DeleteSelectedLearningObject();
+
+        presentationLogic.Received().DeletePathWayCondition(world, condition);
+    }
+    
+    [Test]
+    public void DeleteSelectedLearningObject_DeletesPathWayFromViewModel_CallsPresentationLogic()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var condition = new PathWayConditionViewModel(ConditionEnum.And,2,1);
+        var space = new LearningSpaceViewModel("f","f","f,","f","f");
+        var pathWay = new LearningPathwayViewModel(space, condition);
+        world.LearningPathWays.Add(pathWay);
+        world.SelectedLearningObject = pathWay;
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+
+        systemUnderTest.DeleteSelectedLearningObject();
+
+        presentationLogic.Received().DeleteLearningPathWay(world, pathWay);
     }
 
     #endregion
 
-    #region OpenEditSelectedLearningSpaceDialog
+    #region OpenEditSelectedObjectDialog
 
     [Test]
-    public void OpenEditSelectedLearningSpaceDialog_ThrowsWhenSelectedWorldNull()
+    public void OpenEditSelectedObjectDialog_ThrowsWhenSelectedWorldNull()
     {
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.LearningWorldVm = null;
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OpenEditSelectedLearningSpaceDialog());
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OpenEditSelectedObjectDialog());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
 
     [Test]
-    public void OpenEditSelectedLearningSpaceDialog_DoesNotThrowWhenSelectedSpaceNull()
+    public void OpenEditSelectedObjectDialog_DoesNotThrowWhenSelectedObjectNull()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -308,14 +448,40 @@ public class LearningWorldPresenterUt
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.LearningWorldVm = world;
 
-        systemUnderTest.OpenEditSelectedLearningSpaceDialog();
+        systemUnderTest.OpenEditSelectedObjectDialog();
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.LearningWorldVm, Is.Not.Null);
             //nullability overridden because of assert - n.stich
-            Assert.That(systemUnderTest.LearningWorldVm!.SelectedLearningSpace, Is.EqualTo(null));
+            Assert.That(systemUnderTest.LearningWorldVm!.SelectedLearningObject, Is.EqualTo(null));
             Assert.That(systemUnderTest.LearningWorldVm.LearningSpaces, Is.Empty);
-            Assert.DoesNotThrow(() => systemUnderTest.DeleteSelectedLearningSpace());
+            Assert.DoesNotThrow(() => systemUnderTest.OpenEditSelectedObjectDialog());
+        });
+    }
+    
+    [Test]
+    public void OpenEditSelectedObjectDialog_DoesNotThrowWhenSelectedObjectIsLearningPathWay()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        var space = new LearningSpaceViewModel("f","f","f","f","f");
+        var pathWay = new LearningPathwayViewModel(condition, space);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.LearningWorldVm.LearningPathWays.Add(pathWay);
+        systemUnderTest.LearningWorldVm.SelectedLearningObject = pathWay;
+
+        systemUnderTest.OpenEditSelectedObjectDialog();
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.LearningWorldVm, Is.Not.Null);
+            //nullability overridden because of assert - n.stich
+            Assert.That(systemUnderTest.LearningWorldVm!.SelectedLearningObject, Is.EqualTo(pathWay));
+            Assert.That(systemUnderTest.LearningWorldVm.LearningSpaces, Is.Empty);
+            Assert.That(systemUnderTest.LearningWorldVm.LearningPathWays, Is.Not.Empty);
+            Assert.DoesNotThrow(() => systemUnderTest.OpenEditSelectedObjectDialog());
         });
     }
 
@@ -326,12 +492,12 @@ public class LearningWorldPresenterUt
             "foo");
         var space = new LearningSpaceViewModel("n", "sn", "a", "d", "g");
         world.LearningSpaces.Add(space);
-        world.SelectedLearningSpace = space;
+        world.SelectedLearningObject = space;
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.LearningWorldVm = world;
 
-        systemUnderTest.OpenEditSelectedLearningSpaceDialog();
+        systemUnderTest.OpenEditSelectedObjectDialog();
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.EditLearningSpaceDialogOpen, Is.True);
@@ -347,6 +513,28 @@ public class LearningWorldPresenterUt
             Assert.That(systemUnderTest.EditSpaceDialogAnnotations, Is.Not.Null);
             Assert.That(systemUnderTest.EditSpaceDialogAnnotations!.Count, Is.EqualTo(1));
             Assert.That(systemUnderTest.EditSpaceDialogAnnotations["Required Points"], Is.EqualTo("/"+space.Points));
+        });
+    }
+    
+    [Test]
+    public void OpenEditSelectedPathWayConditionDialog_CallsMethod()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        world.PathWayConditions.Add(condition);
+        world.SelectedLearningObject = condition;
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+
+        systemUnderTest.OpenEditSelectedObjectDialog();
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.EditPathWayConditionDialogOpen, Is.True);
+            Assert.That(systemUnderTest.EditConditionDialogInitialValues, Is.Not.Null);
+            //overriding nullability because we test for that above - m.ho
+            Assert.That(systemUnderTest.EditConditionDialogInitialValues!["Condition"], Is.EqualTo(condition.Condition.ToString()));
         });
     }
 
@@ -387,7 +575,7 @@ public class LearningWorldPresenterUt
             "foo");
         var space = new LearningSpaceViewModel("f", "f", "f", "f", "f");
         world.LearningSpaces.Add(space);
-        world.SelectedLearningSpace = space;
+        world.SelectedLearningObject = space;
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
         systemUnderTest.LearningWorldVm = world;
@@ -398,7 +586,7 @@ public class LearningWorldPresenterUt
 
     #endregion
 
-    #region LoadLearningSpace/Element
+    #region LoadLearningSpace
 
     [Test]
     public void LoadLearningSpace_ThrowsWhenSelectedWorldNull()
@@ -437,7 +625,7 @@ public class LearningWorldPresenterUt
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var learningSpace = new LearningSpaceViewModel("a", "b", "c", "d", "e");
-        world.SelectedLearningSpace = learningSpace;
+        world.SelectedLearningObject = learningSpace;
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.LearningWorldVm = world;
@@ -459,10 +647,330 @@ public class LearningWorldPresenterUt
 
     #region LearningPathWays
     
-    #region SetOnHoveredLearningSpace
+    [Test]
+    public void SetSelectedLearningObject_SetsPathWayToSelectedObject()
+    { 
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        var space = new LearningSpaceViewModel("f", "f", "f", "f", "f");
+        var pathWay = new LearningPathwayViewModel(condition, space);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.SetSelectedLearningObject(pathWay);
+
+        Assert.That(systemUnderTest.LearningWorldVm.SelectedLearningObject, Is.EqualTo(pathWay));
+    }
+    
+    #region PathWayCondition
     
     [Test]
-    public void SetOnHoveredLearningSpace_ObjectAtPositionIsNull_SetsHoveredLearningSpaceToNull()
+    public void AddNewPathWayCondition_SetsFieldToTrue()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        Assert.That(!systemUnderTest.CreatePathWayConditionDialogOpen);
+        
+        systemUnderTest.AddNewPathWayCondition();
+        
+        Assert.That(systemUnderTest.CreatePathWayConditionDialogOpen);
+    }
+    
+    [Test]
+    public void SetSelectedLearningObject_SetsConditionToSelectedObject()
+    { 
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.SetSelectedLearningObject(condition);
+
+        Assert.That(systemUnderTest.LearningWorldVm.SelectedLearningObject, Is.EqualTo(condition));
+    }
+    
+    [Test]
+    public void DeletePathWayCondition_CallsPresentationLogic()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        world.SelectedLearningObject = condition;
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.DeletePathWayCondition(condition);
+
+        presentationLogic.Received().DeletePathWayCondition(world, condition);
+    }
+    
+    [Test]
+    public void DeletePathWayCondition_ThrowsWhenWorldIsNull()
+    {
+        var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+
+        var systemUnderTest = CreatePresenterForTesting();
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeletePathWayCondition(condition));
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+    }
+    
+    [Test]
+    public void RightClickedPathWayCondition_SetsRightClickedLearningObjectToSpace()
+    {
+        var condition = new PathWayConditionViewModel(ConditionEnum.And,2,1);
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.RightClickOnObjectInPathWay(condition);
+        
+        Assert.That(systemUnderTest.RightClickedLearningObject, Is.EqualTo(condition));
+    }
+    
+    [Test]
+    public void HideRightClickMenuFromCondition_SetsRightClickedLearningObjectToNull()
+    {
+        var conditionViewModel = new PathWayConditionViewModel(ConditionEnum.Or,2,1);
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        systemUnderTest.RightClickOnObjectInPathWay(conditionViewModel);
+        Assert.That(systemUnderTest.RightClickedLearningObject, Is.EqualTo(conditionViewModel));
+        
+        systemUnderTest.HideRightClickMenu();
+        
+        Assert.That(systemUnderTest.RightClickedLearningObject, Is.Null);
+    }
+    
+    [Test]
+    public void ClickedPathWayCondition_SetsSelectedLearningObjectToCondition()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var conditionViewModel = new PathWayConditionViewModel(ConditionEnum.And,2,1);
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.ClickOnObjectInWorld(conditionViewModel);
+        
+        Assert.That(world.SelectedLearningObject, Is.EqualTo(conditionViewModel));
+    }
+    
+    [Test]
+    public void DoubleClickedPathWayCondition_CallsPresentationLogic()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var condition = new PathWayConditionViewModel(ConditionEnum.And,2,1);
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.DoubleClickOnObjectInWorld(condition);
+        
+        presentationLogic.Received().EditPathWayCondition(condition, ConditionEnum.Or);
+    }
+
+    #region OnCreatePathWayConditionDialogClose
+
+    [Test]
+    public void OnCreatePathWayConditionDialogClose_ThrowsWhenDialogDataAreNull()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+
+        const ModalDialogReturnValue modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        var returnValueTuple =
+            //nullability overridden because required for test - m.ho
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnCreatePathWayConditionDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
+    }
+    
+    [Test]
+    public void OnCreatePathWayConditionDialogClose_ThrowsWhenLearningWorldIsNull()
+    {
+        const ModalDialogReturnValue modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        var returnValueTuple =
+            //nullability overridden because required for test - m.ho
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
+
+        var systemUnderTest = CreatePresenterForTesting();
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnCreatePathWayConditionDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("LearningWorld is null"));
+    }
+    
+    [Test]
+    public void OnCreatePathWayConditionDialogClose_ModalDialogCancel_Returns()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var condition = ConditionEnum.And;
+        const ModalDialogReturnValue modalDialogReturnValue = ModalDialogReturnValue.Cancel;
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var returnValueTuple =
+            //nullability overridden because required for test - m.ho
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.OnCreatePathWayConditionDialogClose(returnValueTuple);
+
+        presentationLogic.DidNotReceive().CreatePathWayCondition(world, condition, 20, 100);
+    }
+    
+    [Test]
+    public void OnCreatePathWayConditionDialogClose_ThrowsWhenConditionIsNotValid()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Condition"] = "XOR";
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnCreatePathWayConditionDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("Condition is not a valid enum value"));
+    }
+
+    [Test]
+    public void OnCreatePathWayConditionDialogClose_CallsPresentationLogic()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Condition"] = ConditionEnum.And.ToString();
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+
+        systemUnderTest.OnCreatePathWayConditionDialogClose(returnValueTuple);
+
+        presentationLogic.Received().CreatePathWayCondition(world, ConditionEnum.And, 20, 100);
+    }
+
+    #endregion
+
+    #region OnEditPathWayConditionDialogClose
+
+    [Test]
+    public void OnEditPathWayConditionDialogClose_ThrowsWhenDialogDataAreNull()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditPathWayConditionDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
+    }
+    
+    [Test]
+    public void OnEditPathWayConditionDialogClose_ThrowsWhenConditionIsNotValid()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Condition"] = "XOR";
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditPathWayConditionDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("Condition is not a valid enum value"));
+    }
+    
+    [Test]
+    public void OnEditPathWayConditionDialogClose_ThrowsWhenSelectedObjectIsNotACondition()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var space = new LearningSpaceViewModel("f","f", "f", "f", "f", 3);
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Condition"] = ConditionEnum.And.ToString();
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.LearningWorldVm.SelectedLearningObject = space;
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditPathWayConditionDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("LearningObject is not a pathWayCondition"));
+    }
+
+    [Test]
+    public void OnEditPathWayConditionDialogClose_CallsPresentationLogic()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        world.PathWayConditions.Add(condition);
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Condition"] = ConditionEnum.And.ToString();
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+        world.SelectedLearningObject = condition;
+
+
+        systemUnderTest.OnEditPathWayConditionDialogClose(returnValueTuple);
+
+        presentationLogic.Received().EditPathWayCondition(condition, ConditionEnum.And);
+    }
+    
+    [Test]
+    public void OnEditPathWayConditionDialogClose_ThrowsWhenLearningWorldIsNull()
+    {
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Condition"] = ConditionEnum.And.ToString();
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditPathWayConditionDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("LearningWorld is null"));
+    }
+
+    #endregion
+    
+    #endregion
+    
+    #region SetOnHoveredObjectInPathWay
+    
+    [Test]
+    public void SetOnHoveredPathWayObject_ObjectAtPositionIsNull_SetsOnHoveredObjectInPathWayToNull()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -475,17 +983,17 @@ public class LearningWorldPresenterUt
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.LearningWorldVm = world;
-        systemUnderTest.LearningWorldVm.OnHoveredLearningSpace = targetSpace;
+        systemUnderTest.LearningWorldVm.OnHoveredObjectInPathWay = targetSpace;
         
-        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredLearningSpace, Is.EqualTo(targetSpace));
+        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredObjectInPathWay, Is.EqualTo(targetSpace));
         
-        systemUnderTest.SetOnHoveredLearningSpace(sourceSpace, 400,400);
+        systemUnderTest.SetOnHoveredObjectInPathWay(sourceSpace, 400,400);
         
-        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredLearningSpace, Is.Null);
+        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredObjectInPathWay, Is.Null);
     }
     
     [Test]
-    public void SetOnHoveredLearningSpace_ObjectAtPositionIsSourceSpace_SetsHoveredLearningSpaceToNull()
+    public void SetOnHoveredObjectInPathWay_ObjectAtPositionIsSourceSpace_SetsOnHoveredObjectInPathWayToNull()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -496,13 +1004,30 @@ public class LearningWorldPresenterUt
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.LearningWorldVm = world; ;
 
-        systemUnderTest.SetOnHoveredLearningSpace(sourceSpace, 30,30);
+        systemUnderTest.SetOnHoveredObjectInPathWay(sourceSpace, 30,30);
         
-        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredLearningSpace, Is.Null);
+        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredObjectInPathWay, Is.Null);
     }
     
     [Test]
-    public void SetOnHoveredLearningSpace_SetsCorrectObjectAtPosition()
+    public void SetOnHoveredObjectInPathWay_ObjectAtPositionIsSourceCondition_SetsOnHoveredObjectInPathWayToNull()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var sourceCondition = new PathWayConditionViewModel( ConditionEnum.And,
+            positionX:25, positionY:25);
+        world.PathWayConditions.Add(sourceCondition);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world; ;
+
+        systemUnderTest.SetOnHoveredObjectInPathWay(sourceCondition, 30,30);
+        
+        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredObjectInPathWay, Is.Null);
+    }
+    
+    [Test]
+    public void SetOnHoveredObjectInPathWay_SetsCorrectObjectAtPosition()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
@@ -518,28 +1043,29 @@ public class LearningWorldPresenterUt
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.LearningWorldVm = world;
-        systemUnderTest.LearningWorldVm.OnHoveredLearningSpace = targetSpace1;
+        systemUnderTest.LearningWorldVm.OnHoveredObjectInPathWay = targetSpace1;
         
-        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredLearningSpace, Is.EqualTo(targetSpace1));
+        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredObjectInPathWay, Is.EqualTo(targetSpace1));
         
-        systemUnderTest.SetOnHoveredLearningSpace(sourceSpace, 510,510);
+        systemUnderTest.SetOnHoveredObjectInPathWay(sourceSpace, 510,510);
         
-        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredLearningSpace, Is.EqualTo(targetSpace2));
+        Assert.That(systemUnderTest.LearningWorldVm.OnHoveredObjectInPathWay, Is.EqualTo(targetSpace2));
     }
 
     [Test]
-    public void SetOnHoveredLearningSpace_SelectedLearningWorldIsNull_ThrowsException()
+    public void SetOnHoveredObjectInPathWay_SelectedLearningWorldIsNull_ThrowsException()
     {
         var systemUnderTest = CreatePresenterForTesting();
         var space = new LearningSpaceViewModel("a", "v", "d", "f", "f", 4);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetOnHoveredLearningSpace(space, 3,3));
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetOnHoveredObjectInPathWay(space, 3,3));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
     
     #endregion
     
-    #region CreateLearningPathWay
+    
+     #region CreateLearningPathWay
     
     [Test]
     public void CreateLearningPathWay_WithoutTargetSpace_DoesNotCallPresentationLogic()
@@ -603,6 +1129,40 @@ public class LearningWorldPresenterUt
         
         presentationLogic.Received().CreateLearningPathWay(world, sourceSpace, targetSpace);
     }
+    
+    [Test]
+    public void CreateLearningPathWay_TargetSpaceHasInBoundObject_CallsPresentationLogic()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var sourceSpace = new LearningSpaceViewModel("g", "g", "g", "g", "g",
+            positionX:25, positionY:25);
+        var sourceCondition = new PathWayConditionViewModel(ConditionEnum.And,3,1);
+        var targetSpace = new LearningSpaceViewModel("u", "u", "u", "u", "u",
+            positionX:250, positionY:250);
+        targetSpace.InBoundObjects.Add(sourceCondition);
+        world.PathWayConditions.Add(sourceCondition);
+        world.LearningSpaces.Add(sourceSpace);
+        world.LearningSpaces.Add(targetSpace);
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+
+        systemUnderTest.CreateLearningPathWay(sourceSpace, 260,260);
+        
+        presentationLogic.DidNotReceive().CreateLearningPathWay(world, sourceSpace, targetSpace);
+        
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Condition"] = ConditionEnum.And.ToString();
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
+        
+        systemUnderTest.OnCreatePathWayConditionDialogClose(returnValueTuple);
+        
+        presentationLogic.Received().CreatePathWayConditionBetweenObjects(world, ConditionEnum.And, sourceSpace, targetSpace);
+    }
 
     [Test]
     public void CreateLearningPathWay_SelectedLearningWorldIsNull_ThrowsException()
@@ -623,17 +1183,18 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var targetSpace = new LearningSpaceViewModel("u", "u", "u", "u", "u",
-            positionX:250, positionY:250);
-        world.LearningSpaces.Add(targetSpace);
+        var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        var space = new LearningSpaceViewModel("a", "d", "f", "g", "f", 2);
+        var learningPathWay = new LearningPathwayViewModel(condition,space);
+        world.LearningPathWays.Add(learningPathWay);
         var presentationLogic = Substitute.For<IPresentationLogic>();
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         systemUnderTest.LearningWorldVm = world;
         
-        systemUnderTest.DeleteLearningPathWay(targetSpace);
+        systemUnderTest.DeleteLearningPathWay(space);
         
-        presentationLogic.Received().DeleteLearningPathWay(world, targetSpace);
+        presentationLogic.Received().DeleteLearningPathWay(world, learningPathWay);
     }
     
     [Test]
@@ -644,6 +1205,20 @@ public class LearningWorldPresenterUt
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteLearningPathWay(space));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+    }
+    
+    [Test]
+    public void DeleteLearningPathWay_PathWayIsNull_ThrowsException()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+        
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteLearningPathWay(null!));
+        Assert.That(ex!.Message, Is.EqualTo("LearningPathWay is null"));
     }
     
     #endregion

@@ -10,6 +10,7 @@
 </g>
 
 @code {
+
     ///Code from https://github.com/AlexeyBoiko/BlazorDraggableDemo
     //get (optional) child html content as a RenderFragment
     [Parameter]
@@ -27,20 +28,26 @@
 
     [Parameter]
     public double Y { get; set; }
-    
+
     //we need these lines for @bind-X and @bind-Y to work, even if they look like we don't use them anywhere
     [Parameter]
     public EventCallback<double> XChanged { get; set; }
 
     [Parameter]
     public EventCallback<double> YChanged { get; set; }
-    
+
     [Parameter]
     public EventCallback<T> OnClicked { get; set; }
-    
+
+    [Parameter]
+    public EventCallback<T> OnDoubleClicked { get; set; }
+
+    [Parameter]
+    public EventCallback<T> OnRightClicked { get; set; }
+
     [Parameter]
     public DraggedEventArgs<T>.DraggedEventHandler OnDragged { get; set; }
-    
+
 
     //cursorX and cursorY are used to remove the offset between cursor and element on move, so we only get a delta
     private double _cursorX;
@@ -52,6 +59,9 @@
 
     private double _oldPositionX;
     private double _oldPositionY;
+
+    private DateTime _lastOnDown;
+    private DateTime _lastClick;
 
     //This is called after component has received initial parameters in SetParametersAsync
     protected override void OnInitialized()
@@ -72,6 +82,7 @@
 
     private void OnDown(MouseEventArgs e)
     {
+        _lastOnDown = DateTime.Now;
         _cursorX = e.ClientX;
         _cursorY = e.ClientY;
         _isDown = true;
@@ -83,13 +94,28 @@
 
     private void OnUpOrOut(object? sender, MouseEventArgs e)
     {
-        if (_isDown && !_hasMoved)
+        switch (_isDown)
         {
-            OnClick(sender, e);
-        }
-        else if (_isDown && _hasMoved)
-        {
-            OnDrag(sender, e);
+            case true when !_hasMoved:
+            {
+                switch (e.Button)
+                {
+                    case 0 when (DateTime.Now - _lastClick).TotalMilliseconds < 300:
+                        OnDoubleClicked.InvokeAsync(LearningObject);
+                        break;
+                    case 0:
+                        _lastClick = DateTime.Now;
+                        OnClick(sender, e);
+                        break;
+                    case 2:
+                        OnRightClicked.InvokeAsync(LearningObject);
+                        break;
+                }
+                break;
+            }
+            case true when _hasMoved:
+                OnDrag(sender, e);
+                break;
         }
         _isDown = false;
         _cursor = "grab";
@@ -103,7 +129,7 @@
 
         _cursorX = e.ClientX;
         _cursorY = e.ClientY;
-        
+
         XChanged.InvokeAsync(X);
         YChanged.InvokeAsync(Y);
 
@@ -117,10 +143,10 @@
         Logger.LogDebug("e.OffsetX:{EOffsetX} e.OffsetY:{EOffsetY}", e.OffsetX, e.OffsetY);
         return OnClicked.InvokeAsync(LearningObject);
     }
-    
+
     private void OnDrag(object? sender, MouseEventArgs e)
     {
-        if(LearningObject != null) OnDragged?.Invoke(LearningObject, new DraggedEventArgs<T>(LearningObject, _oldPositionX, _oldPositionY));
+        if (LearningObject != null) OnDragged?.Invoke(LearningObject, new DraggedEventArgs<T>(LearningObject, _oldPositionX, _oldPositionY));
     }
 
     public void Dispose()
@@ -129,4 +155,5 @@
         MouseService.OnUp -= OnUpOrOut;
         MouseService.OnOut -= OnUpOrOut;
     }
+
 }

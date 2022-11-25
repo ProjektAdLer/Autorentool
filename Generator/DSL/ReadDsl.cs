@@ -135,6 +135,9 @@ public class ReadDsl : IReadDsl
         }
     }
 
+    //Because spaces are represented as labels in Moodle, they are added as a LearningElementJson to the List.
+    //If the User can somehow create more than 10000 LearningElements, this will break. (But that´s unlikely)
+    //Spaces are also added as "LearningElements", because we need a list containing both spaces and elements.
     private void GetSpacesAndElementsOrdered(DocumentRootJson? documentRootJson)
     {
         if (documentRootJson != null)
@@ -142,7 +145,7 @@ public class ReadDsl : IReadDsl
             foreach (var space in documentRootJson.LearningWorld.LearningSpaces)
             {
                 List<LearningElementValueJson> values = new List<LearningElementValueJson>{new("", "0")};
-                ListAllSpacesAndElementsOrdered.Add(new LearningElementJson(space.SpaceId+1000, space.Identifier, "", "space","space", 0, values, space.Description));
+                ListAllSpacesAndElementsOrdered.Add(new LearningElementJson(space.SpaceId+10000, space.Identifier, "", "space","space", 0, values, space.Description));
                 
                 foreach (int elementInSpace in space.LearningSpaceContent)
                 {
@@ -157,6 +160,8 @@ public class ReadDsl : IReadDsl
         return ListH5PElements;
     }
 
+    //because sections are not supported in the authoringTool yet, a dummy section is created
+    //right now this dummy is just a space, but it will be a section in the future
     public List<LearningSpaceJson> GetSectionList()
     {
         var space = new LearningSpaceJson(0, new IdentifierJson("identifier", "Topic 0"), 

@@ -318,10 +318,10 @@ public class XmlBackupFactory : IXmlBackupFactory
             }
         }
         
-        foreach (var space in ReadDsl.GetSectionList())
+        foreach (var section in ReadDsl.GetSectionList())
         {
-            var sectionId = space.SpaceId.ToString();
-            var sectionName = space.Identifier.Value;
+            var sectionId = section.SpaceId.ToString();
+            var sectionName = section.Identifier.Value;
 
             if (MoodleBackupXmlSectionList != null)
             {

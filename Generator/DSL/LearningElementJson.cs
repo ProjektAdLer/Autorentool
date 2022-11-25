@@ -5,7 +5,7 @@
 /// </summary>
 public class LearningElementJson : ILearningElementJson
 {
-    // incremented ID for every element, it will also be used as moduleid, sectionid ...
+    // incremented ID for every element, it will also be used as moduleid, sectionid, contextid ...
     public LearningElementJson(int id, IdentifierJson identifier, string url, string elementCategory, 
         string elementType, int learningSpaceParentId, List<LearningElementValueJson> learningElementValueList, 
         string? description=null, string? goals = null)

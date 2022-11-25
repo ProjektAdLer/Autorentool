@@ -9,6 +9,4 @@ public interface ILearningSpace
     string Authors { get; set; }
     string Goals { get; set; }
     int RequiredPoints { get; set; }
-    double PositionX { get; set; }
-    double PositionY { get; set; }
 }

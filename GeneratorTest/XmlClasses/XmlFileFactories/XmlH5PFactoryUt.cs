@@ -67,9 +67,9 @@ public class XmlH5PFactoryUt
         
         var identifier = new IdentifierJson( "FileName", "Element_1");
 
-        var h5PElement1 = new LearningElementJson(1, identifier, "", "", "h5p",0, mockElementValueList);
+        var h5PElement1 = new LearningElementJson(1, identifier, "", "", "h5p",1, mockElementValueList);
 
-        var h5PElement2 = new LearningElementJson(2, identifier, "", "", "h5p",0, mockElementValueList);
+        var h5PElement2 = new LearningElementJson(2, identifier, "", "", "h5p",1, mockElementValueList);
 
         var h5PList = new List<LearningElementJson>()
         {
@@ -84,6 +84,8 @@ public class XmlH5PFactoryUt
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
         mockFileManager.GetXmlFilesList().Returns(new List<FilesXmlFile>());
+        var space_1 = new LearningSpaceJson(1, new IdentifierJson("space", "spacename"), new List<int>() {1, 2}, 10, 10);
+        mockReadDsl.GetH5PElementsList().Returns(h5PList);
         systemUnderTest.CreateH5PFileFactory();
 
         //Assert
@@ -92,7 +94,7 @@ public class XmlH5PFactoryUt
             
             Assert.That(systemUnderTest.FilesXmlFiles, Is.EqualTo(mockFiles));
             systemUnderTest.FileManager.Received().GetXmlFilesList();
-            systemUnderTest.FileManager.Received().CalculateHashCheckSumAndFileSize(Path.Join(currWorkDir, "XMLFilesForExport", identifier.Value +"."+h5PElement2.ElementType));
+            systemUnderTest.FileManager.Received().CalculateHashCheckSumAndFileSize(Path.Join(currWorkDir, "XMLFilesForExport",identifier.Value +"."+h5PElement2.ElementType));
             systemUnderTest.FileManager.Received().GetHashCheckSum();
             systemUnderTest.FileManager.Received().GetFileSize();
             systemUnderTest.FileManager.Received().CreateFolderAndFiles(Arg.Any<string>(), Arg.Any<string>());
@@ -118,15 +120,17 @@ public class XmlH5PFactoryUt
         var identifier2 = new IdentifierJson( "FileName", "Element_2");
 
 
-        var h5PElement1 = new LearningElementJson(1,  identifier1, "", "", "h5p",0, mockElementValueList);
+        var h5PElement1 = new LearningElementJson(1,  identifier1, "", "", "h5p",1, mockElementValueList);
 
-        var h5PElement2 = new LearningElementJson(2, identifier2, "", "", "h5p",0, mockElementValueList);
+        var h5PElement2 = new LearningElementJson(2, identifier2, "", "", "h5p",1, mockElementValueList);
 
         var h5PList = new List<LearningElementJson>()
         {
             h5PElement1, h5PElement2
         };
-        
+
+        var space_1 =
+            new LearningSpaceJson(1, new IdentifierJson("space", "spacename"), new List<int>() {1, 2}, 10, 10);
         mockReadDsl.GetH5PElementsList().Returns(h5PList);
         mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport", identifier1.Value), new MockFileData("Hello World"));
         

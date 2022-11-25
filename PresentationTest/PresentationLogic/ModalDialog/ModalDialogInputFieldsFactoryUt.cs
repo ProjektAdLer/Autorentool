@@ -972,8 +972,26 @@ public class ModalDialogInputFieldsFactoryUt
             Assert.That(modalDialogInputFields.ElementAt(8).Type, Is.EqualTo(ModalDialogInputType.Number));
             Assert.That(modalDialogInputFields.ElementAt(8).Required, Is.EqualTo(false));
         });
-        
+    }
+    
+    [Test]
+    public void GetEditPathWayConditionInputFields_ReturnsCorrectInputFields()
+    {
+        var systemUnderTest = new ModalDialogInputFieldsFactory();
 
+        var modalDialogInputFields = systemUnderTest.GetEditPathWayConditionInputFields().ToList();
+        
+        Assert.That(modalDialogInputFields.ElementAt(0), Is.TypeOf<ModalDialogDropdownInputField>());
+        var conditionDropdownInput = (ModalDialogDropdownInputField) modalDialogInputFields.ElementAt(0);
+        Assert.That(conditionDropdownInput.Name, Is.EqualTo("Condition"));
+        Assert.That(conditionDropdownInput.Type, Is.EqualTo(ModalDialogInputType.Text));
+        Assert.That(conditionDropdownInput.Required, Is.EqualTo(true));
+        Assert.That(conditionDropdownInput.ValuesToChoiceMapping.Count(), Is.EqualTo(1));
+        
+        var mapping = conditionDropdownInput.ValuesToChoiceMapping.First();
+        Assert.That(mapping.RequiredValues, Is.Null);
+        Assert.That(mapping.AvailableChoices.ElementAt(0), Is.EqualTo(ConditionEnum.And.ToString()));
+        Assert.That(mapping.AvailableChoices.ElementAt(1), Is.EqualTo(ConditionEnum.Or.ToString()));
     }
     
     [Test]

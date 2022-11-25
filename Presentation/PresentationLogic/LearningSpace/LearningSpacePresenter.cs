@@ -30,6 +30,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     public ILearningSpaceViewModel? LearningSpaceVm { get; private set; }
 
     public LearningContentViewModel? DragAndDropLearningContent { get; private set; }
+    public IDisplayableLearningObject? RightClickedLearningObject { get; private set; }
 
     public void EditLearningSpace(string name, string shortname, string authors, string description, string goals, int requiredPoints)
     {
@@ -60,18 +61,53 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         _presentationLogic.DragLearningElement(args.LearningObject, args.OldPositionX, args.OldPositionY);
     }
 
+    public void ClickedLearningElement(ILearningElementViewModel obj)
+    {
+        SetSelectedLearningElement(obj);
+    }
+
+    public void RightClickedLearningElement(ILearningElementViewModel obj)
+    {
+        RightClickedLearningObject = obj;
+    }
+
+    public void EditLearningElement(ILearningElementViewModel obj)
+    {
+        SetSelectedLearningElement(obj);
+        OpenEditSelectedLearningElementDialog();
+    }
+
+    public void DeleteLearningElement(ILearningElementViewModel obj)
+    {
+        if (LearningSpaceVm == null)
+            throw new ApplicationException("SelectedLearningSpace is null");
+        _presentationLogic.DeleteLearningElement(LearningSpaceVm, obj);
+    }
+
+    public void HideRightClickMenu()
+    {
+        RightClickedLearningObject = null;
+    }
+
+    public async void ShowElementContent(ILearningElementViewModel obj)
+    {
+        SetSelectedLearningElement(obj);
+        await ShowSelectedElementContentAsync();
+    }
+
     public void SetLearningSpace(ILearningSpaceViewModel space)
     {
         LearningSpaceVm = space;
     }
     public void OnWorldPropertyChanged(object? caller, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(LearningWorldViewModel.SelectedLearningSpace))
+        if (e.PropertyName == nameof(LearningWorldViewModel.SelectedLearningObject))
         {
             if (caller is not ILearningWorldViewModel worldVm)
                 throw new ArgumentException("Caller must be of type ILearningWorldViewModel");
         
-            LearningSpaceVm = worldVm.SelectedLearningSpace;
+            if(worldVm.SelectedLearningObject is LearningSpaceViewModel space)
+                LearningSpaceVm = space;
         }
     }
 
@@ -329,6 +365,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
         LearningSpaceVm.SelectedLearningElement = learningElement;
+        HideRightClickMenu();
     }
 
     /// <summary>
@@ -372,6 +409,25 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
                 throw new ApplicationException("SelectedLearningElement is null");
             case LearningElementViewModel learningElement:
                 await _presentationLogic.SaveLearningElementAsync(learningElement);
+                break;
+        }
+    }
+    
+    /// <summary>
+    /// Calls the the show learning element content method for the selected learning element.
+    /// </summary>
+    /// <exception cref="ApplicationException">Thrown if no learning space is currently selected or no learning element
+    /// is selected in the learning space.</exception>
+    public async Task ShowSelectedElementContentAsync()
+    {
+        if (LearningSpaceVm == null)
+            throw new ApplicationException("SelectedLearningSpace is null");
+        switch (LearningSpaceVm.SelectedLearningElement)
+        {
+            case null:
+                throw new ApplicationException("SelectedLearningElement is null");
+            case LearningElementViewModel learningElement:
+                await _presentationLogic.ShowLearningElementContentAsync(learningElement);
                 break;
         }
     }

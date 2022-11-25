@@ -4,11 +4,13 @@ namespace PersistEntities;
 
 [Serializable]
 [DataContract]
+[KnownType(typeof(PathWayConditionPe))]
+[KnownType(typeof(LearningSpacePe))]
 public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
 {
     public LearningSpacePe(string name, string shortname, string authors, string description, string goals,
         int requiredPoints, List<LearningElementPe>? learningElements = null, double positionX = 0, double positionY = 0,
-        List<LearningSpacePe>? inBoundSpaces = null, List<LearningSpacePe>? outBoundSpaces = null)
+        List<IObjectInPathWayPe>? inBoundObjects = null, List<IObjectInPathWayPe>? outBoundObjects = null)
     {
         Id = Guid.NewGuid();
         Name = name;
@@ -18,8 +20,8 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
         Goals = goals;
         RequiredPoints = requiredPoints;
         LearningElements = learningElements ?? new List<LearningElementPe>();
-        InBoundSpaces = inBoundSpaces ?? new List<LearningSpacePe>();
-        OutBoundSpaces = outBoundSpaces ?? new List<LearningSpacePe>();
+        InBoundObjects = inBoundObjects ?? new List<IObjectInPathWayPe>();
+        OutBoundObjects = outBoundObjects ?? new List<IObjectInPathWayPe>();
         PositionX = positionX;
         PositionY = positionY;
     }
@@ -37,8 +39,8 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
         Goals = "";
         RequiredPoints = 0;
         LearningElements = new List<LearningElementPe>();
-        InBoundSpaces = new List<LearningSpacePe>();
-        OutBoundSpaces = new List<LearningSpacePe>();
+        InBoundObjects = new List<IObjectInPathWayPe>();
+        OutBoundObjects = new List<IObjectInPathWayPe>();
         PositionX = 0;
         PositionY = 0;
     }
@@ -60,9 +62,9 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
     [DataMember]
     public List<LearningElementPe> LearningElements { get; set; }
     [IgnoreDataMember]
-    public List<LearningSpacePe> InBoundSpaces { get; set; }
+    public List<IObjectInPathWayPe> InBoundObjects { get; set; }
     [IgnoreDataMember]
-    public List<LearningSpacePe> OutBoundSpaces { get; set; }
+    public List<IObjectInPathWayPe> OutBoundObjects { get; set; }
     [DataMember]
     public double PositionX { get; set; }
     [DataMember]
@@ -73,7 +75,7 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
     private void OnDeserializing(StreamingContext context)
     {
         Id = Guid.NewGuid();
-        InBoundSpaces = new List<LearningSpacePe>();
-        OutBoundSpaces = new List<LearningSpacePe>();
+        InBoundObjects = new List<IObjectInPathWayPe>();
+        OutBoundObjects = new List<IObjectInPathWayPe>();
     }
 }

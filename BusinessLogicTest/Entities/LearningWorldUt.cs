@@ -1,5 +1,6 @@
 using BusinessLogic.Entities;
 using NUnit.Framework;
+using Shared;
 
 namespace BusinessLogicTest.Entities;
 
@@ -16,10 +17,16 @@ public class LearningWorldUt
         const string description = "very cool element";
         const string goals = "learn very many things";
         var space1 = new LearningSpace("ff", "ff", "ff", "ff", "ff", 5);
+        var pathWayCondition = new PathWayCondition(ConditionEnum.And, 2, 3);
+        var pathWay = new LearningPathway(space1, pathWayCondition);
         var learningSpaces = new List<LearningSpace> { space1 };
+        var pathWayConditions = new List<PathWayCondition> { pathWayCondition };
+        var pathWays = new List<LearningPathway> { pathWay };
+        
+        var selectableObjects = new List<ISelectableObjectInWorld> { space1, pathWayCondition, pathWay };
 
         var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals,
-            learningSpaces);
+            learningSpaces, pathWayConditions, pathWays);
         
         Assert.Multiple(() =>
         {
@@ -30,6 +37,9 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.LearningSpaces, Is.EqualTo(learningSpaces));
+            Assert.That(systemUnderTest.PathWayConditions, Is.EqualTo(pathWayConditions));
+            Assert.That(systemUnderTest.LearningPathways, Is.EqualTo(pathWays));
+            Assert.That(systemUnderTest.SelectableWorldObjects, Is.EqualTo(selectableObjects));
         });
     }
     
@@ -97,7 +107,7 @@ public class LearningWorldUt
     }
 
     [Test]
-    public void RestoreMemento_MementoIsNotLearningSpaceMemento_ThrowsException()
+    public void RestoreMemento_MementoIsNotLearningWorldMemento_ThrowsException()
     {
         const string name = "asdf";
         const string shortname = "jkl;";

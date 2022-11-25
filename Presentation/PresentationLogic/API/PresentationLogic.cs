@@ -6,6 +6,7 @@ using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
@@ -22,7 +23,8 @@ public class PresentationLogic : IPresentationLogic
         ICachingMapper cMapper,
         IServiceProvider serviceProvider,
         ILogger<PresentationLogic> logger,
-        IHybridSupportWrapper hybridSupportWrapper)
+        IHybridSupportWrapper hybridSupportWrapper,
+        IShellWrapper shellWrapper)
     {
         _logger = logger;
         Configuration = configuration;
@@ -30,6 +32,7 @@ public class PresentationLogic : IPresentationLogic
         Mapper = mapper;
         CMapper = cMapper;
         HybridSupportWrapper = hybridSupportWrapper;
+        ShellWrapper = shellWrapper;
         _dialogManager = serviceProvider.GetService(typeof(IElectronDialogManager)) as IElectronDialogManager;
     }
 
@@ -55,6 +58,7 @@ public class PresentationLogic : IPresentationLogic
     internal ICachingMapper CMapper { get; }
     public bool RunningElectron => HybridSupportWrapper.IsElectronActive;
     private IHybridSupportWrapper HybridSupportWrapper { get; }
+    private IShellWrapper ShellWrapper { get; }
     public bool CanUndo => BusinessLogic.CanUndo;
     public bool CanRedo => BusinessLogic.CanRedo;
     public event Action? OnUndoRedoPerformed
@@ -179,12 +183,12 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
     
-    public void DragLearningSpace(ILearningSpaceViewModel learningSpaceVm, double oldPositionX, double oldPositionY)
+    public void DragObjectInPathWay(IObjectInPathWayViewModel objectInPathWayVm , double oldPositionX, double oldPositionY)
     {
-        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+        var objectInPathWayEntity = Mapper.Map<BusinessLogic.Entities.IObjectInPathWay>(objectInPathWayVm);
         
-        var command = new DragLearningSpace(spaceEntity, oldPositionX, oldPositionY, spaceEntity.PositionX,
-            spaceEntity.PositionY, space => CMapper.Map(space, learningSpaceVm));
+        var command = new DragObjectInPathWay(objectInPathWayEntity, oldPositionX, oldPositionY, objectInPathWayEntity.PositionX,
+            objectInPathWayEntity.PositionY, space => CMapper.Map(space, objectInPathWayVm));
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -220,29 +224,72 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
     
+    /// <inheritdoc cref="IPresentationLogic.CreatePathWayCondition"/>
+    public void CreatePathWayCondition(ILearningWorldViewModel learningWorldVm, ConditionEnum condition, double positionX, double positionY)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        
+        var command = new CreatePathWayCondition(worldEntity, condition, positionX, positionY, 
+            world => CMapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.CreatePathWayConditionBetweenObjects"/>
+    public void CreatePathWayConditionBetweenObjects(ILearningWorldViewModel learningWorldVm, ConditionEnum condition,
+        IObjectInPathWayViewModel sourceObject, ILearningSpaceViewModel targetObject)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var sourceObjectEntity = Mapper.Map<BusinessLogic.Entities.IObjectInPathWay>(sourceObject);
+        var targetObjectEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(targetObject);
+        
+        var command = new CreatePathWayCondition(worldEntity, condition, sourceObjectEntity, targetObjectEntity, 
+            world => CMapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+    
+    /// <inheritdoc cref="IPresentationLogic.EditPathWayCondition"/>
+    public void EditPathWayCondition(PathWayConditionViewModel pathWayConditionVm, ConditionEnum newCondition)
+    {
+        var pathWayConditionEntity = Mapper.Map<BusinessLogic.Entities.PathWayCondition>(pathWayConditionVm);
+        
+        var command = new EditPathWayCondition(pathWayConditionEntity, newCondition, 
+            condition => CMapper.Map(condition, pathWayConditionVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.DeletePathWayCondition"/>
+    public void DeletePathWayCondition(ILearningWorldViewModel learningWorldVm,
+        PathWayConditionViewModel pathWayConditionVm)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var pathWayConditionEntity = Mapper.Map<BusinessLogic.Entities.PathWayCondition>(pathWayConditionVm);
+
+        var command = new DeletePathWayCondition(worldEntity, pathWayConditionEntity,
+            world => CMapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+    
     /// <inheritdoc cref="IPresentationLogic.CreateLearningPathWay"/>
-    public void CreateLearningPathWay(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel sourceSpaceVm,
-        ILearningSpaceViewModel targetSpaceVm)
+    public void CreateLearningPathWay(ILearningWorldViewModel learningWorldVm, IObjectInPathWayViewModel sourceObjectVm,
+        IObjectInPathWayViewModel targetObjectVm)
     {
         var learningWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
-        var sourceSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(sourceSpaceVm);
-        var targetSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(targetSpaceVm);
+        var sourceObjectEntity = Mapper.Map<BusinessLogic.Entities.IObjectInPathWay>(sourceObjectVm);
+        var targetObjectEntity = Mapper.Map<BusinessLogic.Entities.IObjectInPathWay>(targetObjectVm);
 
-        var command = new CreateLearningPathWay(learningWorldEntity, sourceSpaceEntity, targetSpaceEntity,
-            world => Mapper.Map(world, learningWorldVm));
+        var command = new CreateLearningPathWay(learningWorldEntity, sourceObjectEntity, targetObjectEntity,
+            world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.DeleteLearningPathWay"/>
-    public void DeleteLearningPathWay(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel targetSpaceVm)
+    public void DeleteLearningPathWay(ILearningWorldViewModel learningWorldVm, ILearningPathWayViewModel learningPathWayVm)
     {
         var learningWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
-        var targetSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(targetSpaceVm);
+        var learningPathWayEntity = Mapper.Map<BusinessLogic.Entities.LearningPathway>(learningPathWayVm);
 
-        _logger.LogInformation("Deleting Learning Path Way from {0}", targetSpaceVm.Name);
-        
-        var command = new DeleteLearningPathWay(learningWorldEntity, targetSpaceEntity,
-            world => Mapper.Map(world, learningWorldVm));
+        var command = new DeleteLearningPathWay(learningWorldEntity, learningPathWayEntity,
+            world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -295,7 +342,7 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.DeleteLearningElement"/>
     public void DeleteLearningElement(ILearningSpaceViewModel parentSpaceVm,
-        LearningElementViewModel learningElementVm)
+        ILearningElementViewModel learningElementVm)
     {
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
@@ -326,6 +373,19 @@ public class PresentationLogic : IPresentationLogic
         var command = new LoadLearningElement(parentSpaceEntity, filepath, BusinessLogic,
             parent => CMapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.ShowLearningElementContentAsync"/>
+    public Task ShowLearningElementContentAsync(LearningElementViewModel learningElementVm)
+    {
+        SaveOrLoadElectronCheck();
+        var filepath = learningElementVm.LearningContent.Filepath;
+        var error = ShellWrapper.OpenPathAsync(filepath).Result;
+        if (error != "")
+        {
+            _logger.LogError(error);
+        }
+        return Task.CompletedTask;
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadImageAsync"/>

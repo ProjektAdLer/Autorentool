@@ -11,6 +11,136 @@ namespace GeneratorTest.DSL;
 public class CreateDslUt
 {
     [Test]
+    public void CreateDSL_DefineLogicalExpression_RequirementDefined()
+    {
+        //Arrange
+        var mockFileSystem = new MockFileSystem();
+        var mockLogger = Substitute.For<ILogger<CreateDsl>>();
+        var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
+        
+        var inboundObject1 = new LearningSpacePe("1", "1", "dimi", "", "",
+            1, null, 0, 0, null, null);
+        var inboundObject2 = new LearningSpacePe("2", "1", "dimi", "", "",
+            1, null, 0, 0, null, null);
+        var inboundObject3 = new LearningSpacePe("3", "1", "dimi", "", "",
+            1, null, 0, 0, null, null);
+        var inboundObject4 = new LearningSpacePe("4", "1", "dimi", "", "",
+            1, null, 0, 0, null, null);
+        var inboundObject5 = new LearningSpacePe("5", "1", "dimi", "", "",
+            1, null, 0, 0, null, null);
+       
+        var listLearningSpaces = new List<LearningSpacePe>
+        {
+            inboundObject1,
+            inboundObject2,
+            inboundObject3,
+            inboundObject4,
+            inboundObject5
+        };
+
+        int incrementId = 1;
+        foreach (var space in listLearningSpaces)
+        {
+            systemUnderTest.IdDictionary.Add(incrementId, space.Id);
+            incrementId++;
+        }
+        
+        var inboundObjectList1 = new List<IObjectInPathWayPe>
+        {
+            inboundObject3,
+            inboundObject4
+        };
+        var inboundObject6 = new PathWayConditionPe(ConditionEnumPe.And, 0, 0, inboundObjectList1, 
+            null);
+        
+        var inboundObjectList2 = new List<IObjectInPathWayPe>
+        {
+            inboundObject5
+        };
+        var inboundObject7 = new PathWayConditionPe(ConditionEnumPe.Or, 0, 0, inboundObjectList2, 
+            null);
+        
+        
+        var inboundObjects = new List<IObjectInPathWayPe>
+        {
+            //Space = 1
+            inboundObject1,
+            
+            //Space = 2
+            inboundObject2,
+            
+            //List (3 & 4)
+            inboundObject6,
+            
+            //List (5)
+            inboundObject7
+        };
+        
+        var pathwayConditionPe = new PathWayConditionPe(ConditionEnumPe.Or, 0, 0, inboundObjects, null);
+        
+        //Act
+        var stringUnderTest = systemUnderTest.DefineLogicalExpression(pathwayConditionPe);
+
+        //Assert
+        Assert.Multiple(() =>
+        {
+            Assert.That(stringUnderTest, Is.EqualTo("(1)v(2)v((3)^(4))v(5)"));
+        });
+
+    }
+    
+
+    [Test]
+    public void CreateDSL_SearchDuplicateLearningElementNames_DuplicatesFoundAndNamesChanged()
+    {
+        //Arrange
+        var mockElement1 = new LearningElementPe("Same Name Element", "el", null, "", 
+            "", "", "", PersistEntities.LearningElementDifficultyEnumPe.Easy);
+        var mockElement2 = new LearningElementPe("Another Element", "el", null, "", 
+            "", "", "", PersistEntities.LearningElementDifficultyEnumPe.Easy);
+        var mockElement3 = new LearningElementPe("Same Name Element", "el", null, "", 
+            "", "", "", PersistEntities.LearningElementDifficultyEnumPe.Easy);
+        var mockElement4 = new LearningElementPe("Same Name Element", "el", null, "", 
+            "", "", "", PersistEntities.LearningElementDifficultyEnumPe.Easy);
+        var mockElement5 = new LearningElementPe("Same Name Element", "el", null, "", 
+            "", "", "", PersistEntities.LearningElementDifficultyEnumPe.Easy);
+        
+        var mockLearningElements1 = new List<LearningElementPe> {mockElement1, mockElement2};
+        var mockLearningElements2 = new List<LearningElementPe> {mockElement3};
+        var mockLearningElements3 = new List<LearningElementPe> {mockElement4, mockElement5};
+
+        var mockSpace1 = new LearningSpacePe("Space1", "sp", null, "", "", 1,
+            mockLearningElements1);
+        var mockSpace2 = new LearningSpacePe("Space2", "sp", null, "", "", 1,
+            mockLearningElements2);
+        var mockSpace3 = new LearningSpacePe("Space3", "sp", null, "", "", 1,
+            mockLearningElements3);
+        
+        
+        var mockSpaces = new List<LearningSpacePe> {mockSpace1, mockSpace2, mockSpace3};
+        
+        var mockFileSystem = new MockFileSystem();
+        var mockLogger = Substitute.For<ILogger<CreateDsl>>();
+
+        //Act
+        var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
+        var learningSpaceList = systemUnderTest.SearchDuplicateLearningElementNames(mockSpaces);
+
+        //Assert
+        Assert.Multiple(()=>{ 
+            Assert.That(mockElement1.Name, Is.EqualTo("Same Name Element(1)"));
+            Assert.That(mockElement2.Name, Is.EqualTo("Another Element"));
+            Assert.That(mockElement3.Name, Is.EqualTo("Same Name Element(2)"));
+            Assert.That(mockElement4.Name, Is.EqualTo("Same Name Element(3)"));
+            Assert.That(mockElement5.Name, Is.EqualTo("Same Name Element(4)"));
+            Assert.That(learningSpaceList.Count, Is.EqualTo(3));
+            Assert.That(learningSpaceList[0].LearningElements.Count, Is.EqualTo(2));
+            Assert.That(learningSpaceList[1].LearningElements.Count, Is.EqualTo(1));
+            Assert.That(learningSpaceList[2].LearningElements.Count, Is.EqualTo(2));
+        });
+    }
+    
+    [Test]
     public void CreateDSL_WriteLearningWorld_DSLDocumentWritten()
     {
         //Arrange
@@ -48,14 +178,21 @@ public class CreateDslUt
         
 
         var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
-            null, 0, 0, new List<LearningSpacePe>(), 
-            new List<LearningSpacePe>());
+            null, 0, 0, new List<IObjectInPathWayPe>(), 
+            new List<IObjectInPathWayPe>());
         space1.LearningElements.AddRange(new List<LearningElementPe>{ele1, ele2, ele3, ele4, ele5});
-        var space2 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
-            null, 0, 0, new List<LearningSpacePe>(), new List<LearningSpacePe>());
-        space1.OutBoundSpaces = new List<LearningSpacePe>() {space2};
-        space2.InBoundSpaces = new List<LearningSpacePe>() {space1};
-        var learningSpaces = new List<LearningSpacePe> { space1, space2 };
+        var space2 = new LearningSpacePe("ff2", "ff", "ff", "ff", "ff", 5, 
+            null, 0, 0, new List<IObjectInPathWayPe>(), new List<IObjectInPathWayPe>());
+        var space3 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
+            null, 0, 0, new List<IObjectInPathWayPe>(), new List<IObjectInPathWayPe>());
+        var condition1 = new PathWayConditionPe(ConditionEnumPe.And, 0, 0, 
+            new List<IObjectInPathWayPe>{space1, space2}, null);
+        space1.OutBoundObjects = new List<IObjectInPathWayPe>() {condition1};
+        space2.InBoundObjects = new List<IObjectInPathWayPe>() {condition1};
+        space2.OutBoundObjects = new List<IObjectInPathWayPe>() {space3};
+        space3.InBoundObjects = new List<IObjectInPathWayPe>() {space2};
+        var learningSpaces = new List<LearningSpacePe> { space1, space2, space3 };
+        
 
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals,
              learningSpaces);
@@ -63,7 +200,11 @@ public class CreateDslUt
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
         
         //Every Element except Content with "url" is added to the comparison list.
-        var learningElementsWithContentList = new List<LearningElementPe> { ele1, ele2, ele4, ele5 };
+        var learningElementsSpace1 = new List<LearningElementPe> { ele1, ele2, ele4, ele5 };
+        var learningElementsSpace2 = new List<LearningElementPe>();
+        
+        var learningElementsForComparison = new List<List<LearningElementPe>> {learningElementsSpace1, learningElementsSpace2};
+        
 
         //Act
         systemUnderTest.WriteLearningWorld(learningWorld);
@@ -78,12 +219,12 @@ public class CreateDslUt
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.LearningWorldJson!.Identifier.Value, Is.EqualTo(name));
-            Assert.That(systemUnderTest.ContentListLearningElements, Is.EquivalentTo(learningElementsWithContentList));
+            Assert.That(systemUnderTest.ListLearningElementsWithContents, Is.EquivalentTo(learningElementsSpace1));
             Assert.That(systemUnderTest.ListLearningSpaces, Is.EquivalentTo(learningSpaces));
             Assert.That(systemUnderTest.LearningWorldJson.LearningSpaces[0].Requirements,
-                Is.EqualTo(new List<int>()));
+                Is.EqualTo(""));
             Assert.That(systemUnderTest.LearningWorldJson.LearningSpaces[1].Requirements,
-                Is.EqualTo(new List<int>() {1}));
+                Is.EqualTo("(1)^(2)"));
         });
         Assert.Multiple(() =>
         {
@@ -112,8 +253,8 @@ public class CreateDslUt
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
 
         var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
-            null, 0, 0, new List<LearningSpacePe>(), 
-            new List<LearningSpacePe>());
+            null, 0, 0, new List<IObjectInPathWayPe>(), 
+            new List<IObjectInPathWayPe>());
         space1.LearningElements.AddRange(new List<LearningElementPe>{ele1});
         var learningSpaces = new List<LearningSpacePe> { space1 };
 

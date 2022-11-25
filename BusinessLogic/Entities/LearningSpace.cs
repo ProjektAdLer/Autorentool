@@ -1,8 +1,9 @@
 ﻿using JetBrains.Annotations;
+using Shared;
 
 namespace BusinessLogic.Entities;
 
-public class LearningSpace : ILearningSpace, IOriginator
+public class LearningSpace : ILearningSpace,IObjectInPathWay
 {
     /// <summary>
     /// Constructor for Automapper. DO NOT USE.
@@ -10,7 +11,7 @@ public class LearningSpace : ILearningSpace, IOriginator
     [UsedImplicitly]
     private LearningSpace()
     {
-        Id = Guid.Empty;
+        Id = Guid.NewGuid();
         Name = "";
         Shortname = "";
         Authors = "";
@@ -18,14 +19,14 @@ public class LearningSpace : ILearningSpace, IOriginator
         Goals = "";
         RequiredPoints = 0;
         LearningElements = new List<LearningElement>();
-        InBoundSpaces = new List<LearningSpace>();
-        OutBoundSpaces = new List<LearningSpace>();
+        InBoundObjects = new List<IObjectInPathWay>();
+        OutBoundObjects = new List<IObjectInPathWay>();
         PositionX = 0;
         PositionY = 0;
     }
     public LearningSpace(string name, string shortname, string authors, string description,
         string goals, int requiredPoints, List<LearningElement>? learningElements = null ,double positionX = 0,
-        double positionY = 0, List<LearningSpace>? inBoundSpaces = null, List<LearningSpace>? outBoundSpaces = null)
+        double positionY = 0, List<IObjectInPathWay>? inBoundSpaces = null, List<IObjectInPathWay>? outBoundSpaces = null)
     {
         Id = Guid.NewGuid();
         Name = name;
@@ -35,8 +36,8 @@ public class LearningSpace : ILearningSpace, IOriginator
         Goals = goals;
         RequiredPoints = requiredPoints;
         LearningElements = learningElements ?? new List<LearningElement>();
-        InBoundSpaces = inBoundSpaces ?? new List<LearningSpace>();
-        OutBoundSpaces = outBoundSpaces ?? new List<LearningSpace>();
+        InBoundObjects = inBoundSpaces ?? new List<IObjectInPathWay>();
+        OutBoundObjects = outBoundSpaces ?? new List<IObjectInPathWay>();
         PositionX = positionX;
         PositionY = positionY;
     }
@@ -50,16 +51,16 @@ public class LearningSpace : ILearningSpace, IOriginator
     public string Goals { get; set; }
     public int RequiredPoints { get; set; }
     public List<LearningElement> LearningElements { get; set; }
-    public List<LearningSpace> InBoundSpaces { get; set; }
-    public List<LearningSpace> OutBoundSpaces { get; set; }
+    public List<IObjectInPathWay> InBoundObjects { get; set; }
+    public List<IObjectInPathWay> OutBoundObjects { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
     public ILearningElement? SelectedLearningElement { get; set; }
 
     public IMemento GetMemento()
     {
-        return new LearningSpaceMemento(Name, Shortname, Authors, Description, Goals, LearningElements, InBoundSpaces, 
-            OutBoundSpaces, PositionX, PositionY, SelectedLearningElement);
+        return new LearningSpaceMemento(Name, Shortname, Authors, Description, Goals, LearningElements, InBoundObjects, 
+            OutBoundObjects, positionX: PositionX, positionY: PositionY, selectedLearningElement: SelectedLearningElement);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -74,8 +75,8 @@ public class LearningSpace : ILearningSpace, IOriginator
         Description = learningSpaceMemento.Description;
         Goals = learningSpaceMemento.Goals;
         LearningElements = learningSpaceMemento.LearningElements;
-        InBoundSpaces = learningSpaceMemento.InBoundSpaces;
-        OutBoundSpaces = learningSpaceMemento.OutBoundSpaces;
+        InBoundObjects = learningSpaceMemento.InBoundObjects;
+        OutBoundObjects = learningSpaceMemento.OutBoundObjects;
         PositionX = learningSpaceMemento.PositionX;
         PositionY = learningSpaceMemento.PositionY;
         SelectedLearningElement = learningSpaceMemento.SelectedLearningElement;
@@ -84,8 +85,9 @@ public class LearningSpace : ILearningSpace, IOriginator
     private record LearningSpaceMemento : IMemento
     {
         internal LearningSpaceMemento(string name, string shortname, string authors, string description,
-            string goals, List<LearningElement> learningElements, List<LearningSpace> inBoundSpaces,
-            List<LearningSpace> outBoundSpaces, double positionX = 0, double positionY = 0, ILearningElement? selectedLearningElement = null)
+            string goals, List<LearningElement> learningElements, List<IObjectInPathWay> inBoundSpaces,
+            List<IObjectInPathWay> outBoundSpaces, double positionX = 0, double positionY = 0,
+            ILearningElement? selectedLearningElement = null)
         {
             Name = name;
             Shortname = shortname;
@@ -93,8 +95,8 @@ public class LearningSpace : ILearningSpace, IOriginator
             Description = description;
             Goals = goals;
             LearningElements = learningElements.ToList();
-            InBoundSpaces = inBoundSpaces.ToList();
-            OutBoundSpaces = outBoundSpaces.ToList();
+            InBoundObjects = inBoundSpaces.ToList();
+            OutBoundObjects = outBoundSpaces.ToList();
             PositionX = positionX;
             PositionY = positionY;
             SelectedLearningElement = selectedLearningElement;
@@ -109,7 +111,7 @@ public class LearningSpace : ILearningSpace, IOriginator
         internal double PositionX { get; }
         internal double PositionY { get; }
         internal ILearningElement? SelectedLearningElement { get; }
-        public List<LearningSpace> InBoundSpaces { get; set; }
-        public List<LearningSpace> OutBoundSpaces { get; set; }
+        public List<IObjectInPathWay> InBoundObjects { get; set; }
+        public List<IObjectInPathWay> OutBoundObjects { get; set; }
     }
 }

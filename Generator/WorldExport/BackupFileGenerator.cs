@@ -47,36 +47,45 @@ public class BackupFileGenerator : IBackupFileGenerator
     /// <inheritdoc cref="IBackupFileGenerator.WriteBackupFile"/>
     public void WriteBackupFile(string filepath)
     {
-        //copy template from current workdir
-        var tempDir = GetTempDir();
-        DirectoryCopy("XMLFilesForExport", tempDir);
-
-        //construct tarball 
-        const string tarName = "EmptyWorld.mbz";
-        var tarPath = _fileSystem.Path.Combine(tempDir, tarName);
-
-        using (var outStream = _fileSystem.File.Create(tarPath))
-        using (var gzoStream = new GZipOutputStream(outStream))
-        using (var tarArchive = TarArchive.CreateOutputTarArchive(gzoStream))
+        string? tempDir = null;
+        try
         {
-            //we need to remove the first slash from our rootDir, because absolute paths are not allowed in the tar entries
-            //and the sharpziplib removes them from the entry names. this is a bug in the library.
-            var rootDir = tempDir;
-            while(rootDir.StartsWith("/"))
-                rootDir = rootDir.Substring(1);
-            tarArchive.RootPath = rootDir;
-            SaveDirectoryToTar(tarArchive, tempDir, true);
-        }
+            //copy template from current workdir
+            tempDir = GetTempDir();
+            DirectoryCopy("XMLFilesForExport", tempDir);
 
-        //move file and delete dir
-        if (_fileSystem.File.Exists(tarName))
+            //construct tarball 
+            const string tarName = "EmptyWorld.mbz";
+            var tarPath = _fileSystem.Path.Combine(tempDir, tarName);
+
+            using (var outStream = _fileSystem.File.Create(tarPath))
+            using (var gzoStream = new GZipOutputStream(outStream))
+            using (var tarArchive = TarArchive.CreateOutputTarArchive(gzoStream))
+            {
+                //we need to remove the first slash from our rootDir, because absolute paths are not allowed in the tar entries
+                //and the sharpziplib removes them from the entry names. this is a bug in the library.
+                var rootDir = tempDir;
+                while (rootDir.StartsWith("/"))
+                    rootDir = rootDir.Substring(1);
+                tarArchive.RootPath = rootDir;
+                SaveDirectoryToTar(tarArchive, tempDir, true);
+            }
+
+            //delete tar
+            if (_fileSystem.File.Exists(tarName))
+            {
+                _fileSystem.File.Delete(tarName);
+            }
+            
+            //move file
+            _fileSystem.File.Move(tarPath, filepath, true);
+        }
+        finally
         {
-            _fileSystem.File.Delete(tarName);
+            //clean up directory
+            if (tempDir != null)
+                _fileSystem.Directory.Delete(tempDir, true);
         }
-
-        _fileSystem.File.Move(tarPath, filepath);
-        _fileSystem.Directory.Delete(tempDir, true);
-        _fileSystem.Directory.Delete("XMLFilesForExport", true);
     }
 
     /// <summary>
@@ -89,6 +98,7 @@ public class BackupFileGenerator : IBackupFileGenerator
         _fileSystem.Directory.CreateDirectory(tempDir);
         return tempDir;
     }
+    
 
     /// <summary>
     /// Copies an entire directories contents into a target.
