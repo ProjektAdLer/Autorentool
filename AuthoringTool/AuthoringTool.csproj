@@ -64,4 +64,8 @@
       <PackageReference Include="Tailwind.Extensions.AspNetCore" Version="1.0.0-beta3" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Include="wwwroot\CustomIcons\world-icon-nobg.png" />
+    </ItemGroup>
+
 </Project>
