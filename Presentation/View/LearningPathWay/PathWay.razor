@@ -5,6 +5,7 @@
 @using Presentation.PresentationLogic.LearningWorld
 @inject ILogger<PathWay> Logger;
 @using Shared
+@using Direction = Shared.Direction
 <Clickable OnClickedParam="LearningPathWay" OnClicked="@OnClickedClickable">
     <path d="M @X1 @Y1 C @C1X @_c1Y, @C2X @_c2Y, @X2 @Y2" stroke="rgb(108, 117, 125)" stroke-width="@StrokeWidth" fill="transparent" marker-end="url(#arrow)"/>
     <path d="M @X1 @Y1 C @C1X @_c1Y, @C2X @_c2Y, @X2 @Y2" stroke="transparent" stroke-width="30" fill="transparent"/>
