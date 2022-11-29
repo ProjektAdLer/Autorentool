@@ -1,4 +1,5 @@
-﻿using BusinessLogic.Entities;
+﻿using BusinessLogic.Commands;
+using BusinessLogic.Entities;
 using Shared.Configuration;
 
 namespace BusinessLogic.API;
@@ -6,6 +7,16 @@ namespace BusinessLogic.API;
 public interface IBusinessLogic
 {
     IAuthoringToolConfiguration Configuration { get; }
+    
+    /// <summary>
+    /// Executes a given command.
+    /// </summary>
+    /// <param name="command">Command to be executed.</param>
+    void ExecuteCommand(ICommand command);
+    bool CanUndo { get; }
+    bool CanRedo { get; }
+    void UndoCommand();
+    void RedoCommand();
     void ConstructBackup(LearningWorld learningWorld, string filepath);
     void SaveLearningWorld(LearningWorld learningWorld, string filepath);
     LearningWorld LoadLearningWorld(string filepath);
@@ -17,8 +28,10 @@ public interface IBusinessLogic
     LearningElement LoadLearningElement(string filepath);
     LearningElement LoadLearningElement(Stream stream);
     LearningContent LoadLearningContent(string filepath);
-    LearningContent LoadLearningContent(string name, Stream stream);
+    LearningContent LoadLearningContent(string name, MemoryStream stream);
     
     /// <inheritdoc cref="IDataAccess.FindSuitableNewSavePath"/>
     string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding);
+
+    event Action? OnUndoRedoPerformed;
 }

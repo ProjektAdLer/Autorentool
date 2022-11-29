@@ -10,10 +10,9 @@ public interface ILearningSpaceViewModalDialogInputFieldsFactory
     /// dragged and dropped learning content.
     /// </summary>
     /// <param name="dragAndDropLearningContent">Possibly drag-and-dropped learning content.</param>
-    /// <param name="spaceName">Name of the learning space.</param>
     /// <returns>The input fields for the modal dialog.</returns>
     IEnumerable<ModalDialogInputField> GetCreateLearningElementInputFields(
-        LearningContentViewModel? dragAndDropLearningContent, string spaceName);
+        LearningContentViewModel? dragAndDropLearningContent);
     
     /// <summary>
     /// Get the input fields for the edit space modal dialog.

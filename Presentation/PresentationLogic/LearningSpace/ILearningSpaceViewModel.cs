@@ -2,17 +2,21 @@
 
 namespace Presentation.PresentationLogic.LearningSpace;
 
-public interface ILearningSpaceViewModel : IDisplayableLearningObject, ILearningElementViewModelParent, ILearningObjectViewModel
+public interface ILearningSpaceViewModel : IDisplayableLearningObject
 {
-    string FileEnding { get; }
+    Guid Id { get; }
     ICollection<ILearningElementViewModel> LearningElements { get; set; }
+    ICollection<ILearningSpaceViewModel> InBoundSpaces { get; set; }
+    ICollection<ILearningSpaceViewModel> OutBoundSpaces { get; set; }
     int Workload { get; }
-    string Name { get; set; }
+    int Points { get; }
+    int RequiredPoints { get; }
+    new string Name { get; set; }
+    string Description { get; set; }
     string Shortname { get; set; }
     string Authors { get; set; }
-    string Description { get; set; }
     string Goals { get; set; }
     double PositionX { get; set; }
     double PositionY { get; set; }
-    ILearningObjectViewModel? SelectedLearningObject { get; set; }
+    ILearningElementViewModel? SelectedLearningElement { get; set; }
 }

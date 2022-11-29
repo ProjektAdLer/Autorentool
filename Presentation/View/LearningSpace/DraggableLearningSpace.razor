@@ -1,18 +1,64 @@
 @using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic
 @using Presentation.Components
-<Draggable LearningObject="LearningSpace" OnClicked="@OnClicked"
+@using Presentation.Components.RightClickMenu
+@using Presentation.PresentationLogic.LearningWorld
+@using BusinessLogic.Commands
+<Draggable LearningObject="LearningSpace" OnClicked="@OnClickedDraggable" OnDoubleClicked="@OnDoubleClickedDraggable" 
+           OnRightClicked="@OnRightClickedDraggable" OnDragged="@OnDraggedDraggable"
            @bind-X="@LearningSpace.PositionX" @bind-Y="@LearningSpace.PositionY">
+    @if (LearningSpace == PositioningService.LearningWorldVm?.OnHoveredLearningSpace)
+    {
+        <rect transform="translate(-3, -3)" height="56" width="106" fill="lightblue"></rect>
+        <circle r="6" transform="translate(0, 25)" fill="lightblue"/>
+    }
     <rect height="50" width="100" style="fill:lightgreen;stroke:black"></rect>
     <text x="3" y="15">@LearningSpace.Name</text>
+    <Clickable OnClickedParam="LearningSpace" OnClicked="@OnClickedClickable">
+        @if (LearningSpace.InBoundSpaces.Any())
+        {
+            <circle r="6" transform="translate(0, 25)" fill="white" stroke="gray"/>
+            <polyline points="0,0 2,0 -2,0" transform="translate(0,25)" style="fill:none;stroke:red;stroke-width:1"/>
+        }
+    </Clickable>
 </Draggable>
+<PullablePath LearningSpace="LearningSpace" X1=@LearningSpace.PositionX
+                   Y1="@LearningSpace.PositionY" PositioningSrv="@PositioningService"></PullablePath>
+@if (ShowingRightClickMenu)
+{
+    <RightClickMenu LearningObject="@LearningSpace"
+                                    MenuEntries="@GetRightClickMenuEntries()"
+                                    OnClose="() => OnCloseRightClickMenu.InvokeAsync()"/>
+}
 
 @code {
     // Overwrite nullability warning below because we check in OnParametersSet -n.stich
     [Parameter, EditorRequired]
     public ILearningSpaceViewModel LearningSpace { get; set; } = null!;
     [Parameter, EditorRequired]
-    public EventCallback<ILearningObjectViewModel> OnClicked { get; set; }
+    public EventCallback<ILearningSpaceViewModel> OnClickedDraggable { get; set; }
+    [Parameter]
+    public EventCallback<ILearningSpaceViewModel> OnDoubleClickedDraggable { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningSpaceViewModel> OnRightClickedDraggable { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningSpaceViewModel> OnOpenLearningSpace { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningSpaceViewModel> OnEditLearningSpace { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningSpaceViewModel> OnDeleteLearningSpace { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningSpaceViewModel> OnCloseRightClickMenu { get; set; }
+    [Parameter, EditorRequired]
+    public bool ShowingRightClickMenu { get; set; }
+    [Parameter, EditorRequired]
+    public DraggedEventArgs<ILearningSpaceViewModel>.DraggedEventHandler? OnDraggedDraggable { get; set; }
+    // public EventCallback<Draggable<ILearningSpaceViewModel>.DraggedEventArgs> OnDraggedDraggable { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningSpaceViewModel> OnClickedClickable { get; set; }
+    // Overwrite nullability warning below because service may never be null -n.stich
+    [Parameter, EditorRequired]
+    public ILearningWorldPresenter PositioningService { get; set; } = null!;
 
     protected override void OnParametersSet()
     {
@@ -22,4 +68,15 @@
             throw new ArgumentNullException(nameof(LearningSpace));
         }
     }
+
+    private List<RightClickMenuEntry> GetRightClickMenuEntries()
+    {
+        return new List<RightClickMenuEntry>()
+        {
+            new("Open", () => OnOpenLearningSpace.InvokeAsync(LearningSpace)),
+            new("Edit", () => OnEditLearningSpace.InvokeAsync(LearningSpace)),
+            new("Delete", () => OnDeleteLearningSpace.InvokeAsync(LearningSpace)),
+        };
+    }
+
 }

@@ -53,17 +53,6 @@ public class ToolboxController : IToolboxController
                         _logger.LogError(ex, "Failed to add element to space");
                     }
                 }
-                else
-                {
-                    try
-                    {
-                        _worldPresenter.AddLearningElement(learningElementViewModel);
-                    }
-                    catch (ApplicationException ex)
-                    {
-                        _logger.LogError(ex, "Failed to add element to world");
-                    }
-                }
                 break;
             default: 
                 _logger.LogError("Unknown type {} encountered in ToolboxController", obj.GetType().Name);

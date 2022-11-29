@@ -3,7 +3,7 @@
 
 <div @ref="dropZoneElement" class="drop-zone">
     <label for="inputFileElement">Drop a file or paste an image from the clipboard or select a file using the input</label>
-    <InputFile id="inputFileElement" OnChange="@OnChange" @ref="inputFile" accept=".awf,.asf,.aef,.jpg,.png,.webp,.bmp,.mp4,.h5p,.pdf"/>
+    <InputFile id="inputFileElement" OnChange="@OnChange" @ref="inputFile" accept=".awf,.asf,.aef,.jpg,.png,.webp,.bmp,.txt,.c,.h,.cpp,.cc,.c++,.py.,.cs,.js,.php,.html,.css,.mp4,.h5p,.pdf"/>
 </div>
 
 @code {
@@ -11,7 +11,7 @@
     public ILogger<DropZone> Logger { get; set; } = null!;
 
     [Parameter, EditorRequired]
-    public EventCallback<Tuple<String, Stream>> OnNewStream { get; set; }
+    public EventCallback<Tuple<string, MemoryStream>> OnNewStream { get; set; }
 
 
     ElementReference dropZoneElement;
@@ -20,16 +20,16 @@
 
     async Task OnChange(InputFileChangeEventArgs eventArgs)
     {
-        Stream myS = new MemoryStream();
+        var myS = new MemoryStream();
         try
         {
             await eventArgs.File.OpenReadStream(1073741824L).CopyToAsync(myS);
             myS.Position = 0;
-            await OnNewStream.InvokeAsync(new Tuple<string, Stream>(eventArgs.File.Name, myS));
+            await OnNewStream.InvokeAsync(new Tuple<string, MemoryStream>(eventArgs.File.Name, myS));
         }
         catch (Exception e)
         {
-            Logger.LogDebug($"{e.Message} {e.InnerException?.Message}");
+            Logger.LogDebug("{EMessage} {InnerExceptionMessage}", e.Message, e.InnerException?.Message);
         }
         finally
         {

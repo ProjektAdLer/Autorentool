@@ -3,7 +3,7 @@ using System.Threading.Tasks;
 
 namespace ElectronWrapper;
 
-interface IShellWrapper
+public interface IShellWrapper
 {
     void Beep();
     Task<string> OpenExternalAsync(string url);

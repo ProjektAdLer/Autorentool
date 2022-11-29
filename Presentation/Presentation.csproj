@@ -13,9 +13,10 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="11.0.1" />
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
+    <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1" />
     <PackageReference Include="SharpZipLib" Version="1.3.3" />
-    <PackageReference Include="System.IO.Abstractions" Version="17.1.1" />
+    <PackageReference Include="System.IO.Abstractions" Version="17.2.3" />
   </ItemGroup>
   <ItemGroup>
     <Content Update="View\Toolbox\LearningObjectRenderFragmentBase.razor.css">
@@ -68,5 +69,14 @@
     <UpToDateCheckInput Remove="Pages\Error.cshtml" />
     <UpToDateCheckInput Remove="Pages\_Host.cshtml" />
     <UpToDateCheckInput Remove="Pages\_Layout.cshtml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="PresentationLogic\EntityMapping\LearningElementMapper\VideoActivationElementMapper.cs" />
+    <Compile Remove="PresentationLogic\EntityMapping\LearningElementMapper\PdfTransferElementMapper.cs" />
+    <Compile Remove="PresentationLogic\EntityMapping\LearningElementMapper\LearningElementMapper.cs" />
+    <Compile Remove="PresentationLogic\EntityMapping\LearningElementMapper\H5PActivationElementMapper.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="View\LearningPathWay" />
   </ItemGroup>
 </Project>

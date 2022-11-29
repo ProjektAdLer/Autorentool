@@ -18,14 +18,12 @@ public class BackupFileGeneratorUt
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
-        var backupFileGen = new BackupFileGenerator(mockFileSystem);
+        var systemUnderTest = new BackupFileGenerator(mockFileSystem);
         var fullDirPath = mockFileSystem.Path.GetFullPath("XMLFilesForExport");
-        var fullDirPathCourse = Path.Join(fullDirPath, "course");
-        var fullDirPathSections = Path.Join(fullDirPath, "sections");
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
         //Act
-        backupFileGen.CreateBackupFolders();
+        systemUnderTest.CreateBackupFolders();
 
         
         //Assert
@@ -34,53 +32,62 @@ public class BackupFileGeneratorUt
         
         mockFileSystem.Directory.SetCurrentDirectory(fullDirPath);
         var directoryNamesOneLevelDeeper = mockFileSystem.Directory.GetDirectories(mockFileSystem.Directory.GetCurrentDirectory());
-        Assert.That(directoryNamesOneLevelDeeper, Contains.Item(fullDirPathCourse));
-        Assert.That(directoryNamesOneLevelDeeper, Contains.Item(fullDirPathSections));
+        Assert.Multiple(() =>
+        {
+            Assert.That(directoryNamesOneLevelDeeper, Contains.Item(Path.Join(fullDirPath, "course")));
+            Assert.That(directoryNamesOneLevelDeeper, Contains.Item(Path.Join(fullDirPath, "sections")));
+            Assert.That(directoryNamesOneLevelDeeper, Contains.Item(Path.Join(fullDirPath, "files")));
+            Assert.That(directoryNamesOneLevelDeeper, Contains.Item(Path.Join(fullDirPath, "activities")));
+        });
     }
 
-    
     [Test]
     public void BackupFileGenerator_GetTempDir_TemporaryDirectoryCreatedAndReturned()
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
-        var backupFileGen = new BackupFileGenerator(mockFileSystem);
+        var systemUnderTest = new BackupFileGenerator(mockFileSystem);
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
         //Act
-        backupFileGen.GetTempDir();
+        var tempFolder = systemUnderTest.GetTempDir();
         
         //Assert
         var fileSystemTempDir = mockFileSystem.Directory.GetDirectories(curWorkDir);
-        var pathTempDir = Path.Join(curWorkDir, "temp");
-        Assert.That(fileSystemTempDir, Contains.Item(pathTempDir));
+        var concreteTempDir = mockFileSystem.Directory.GetDirectories(fileSystemTempDir[0]);
+        Assert.That(tempFolder, Is.EqualTo(concreteTempDir[0]));
     }
-
+    
     [Test]
     public void BackupFileGenerator_DirectoryCopy_TargetDirectoryCopied()
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
-        var backupFileGen = new BackupFileGenerator(mockFileSystem);
-        backupFileGen.CreateBackupFolders();
+        var systemUnderTest = new BackupFileGenerator(mockFileSystem);
+        systemUnderTest.CreateBackupFolders();
         var fullPathFile = mockFileSystem.Path.Join(mockFileSystem.Path.GetFullPath("XMLFilesForExport"), "course.xml");
         mockFileSystem.AddFile(fullPathFile, "encoding=UTF-8");
-        var tempDir = backupFileGen.GetTempDir();
+        var tempDir = systemUnderTest.GetTempDir();
 
         //Act
-        backupFileGen.DirectoryCopy("XMLFilesForExport", tempDir);
         var fullDirPath = mockFileSystem.Path.GetFullPath("XMLFilesForExport");
+        systemUnderTest.DirectoryCopy(fullDirPath, tempDir);
         
         //Assert
-        var currentDir = mockFileSystem.Directory.GetDirectories(tempDir);
-        var copiedDirectory = mockFileSystem.Directory.GetDirectories(mockFileSystem.Directory.GetCurrentDirectory());
+        var copiedDirectoriesInTemp = mockFileSystem.Directory.GetDirectories(tempDir);
         var copiedFile = mockFileSystem.AllFiles;
-        Assert.That(copiedDirectory, Contains.Item(fullDirPath));
-        Assert.That(copiedFile, Contains.Item(fullPathFile));
+        Assert.Multiple(() =>
+        {
+            Assert.That(copiedDirectoriesInTemp[0], Is.EqualTo(mockFileSystem.Path.Join(tempDir, "activities")));
+            Assert.That(copiedDirectoriesInTemp[1], Is.EqualTo(mockFileSystem.Path.Join(tempDir, "files")));
+            Assert.That(copiedDirectoriesInTemp[2], Is.EqualTo(mockFileSystem.Path.Join(tempDir, "course")));
+            Assert.That(copiedDirectoriesInTemp[3], Is.EqualTo(mockFileSystem.Path.Join(tempDir, "sections")));
+            Assert.That(copiedFile, Contains.Item(fullPathFile));
+        });
     }
 
     [Test]
-    public void BackupFileGenerator_WriteBackupFile_BackupFileCreated()
+    public void BackupFileGenerator_WriteXmlFiles_GetFactoriesReceived()
     {
         //Arrange 
         var mockReadDsl = Substitute.For<IReadDsl>();
@@ -89,16 +96,17 @@ public class BackupFileGeneratorUt
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport"), new MockFileData("Hello World"));
         
-        //Act
         var systemUnderTest = new BackupFileGenerator(mockFileSystem, mockEntityManager);
         systemUnderTest.CreateBackupFolders();
-        systemUnderTest.WriteXmlFiles(mockReadDsl, Path.Join(currWorkDir, "XMLFilesForExport", "Hello World"));
+        
+        //Act
+        systemUnderTest.WriteXmlFiles(mockReadDsl);
         
         //Assert
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.XmlEntityManager, Is.Not.Null);
-            systemUnderTest.XmlEntityManager.Received().GetFactories(mockReadDsl, Path.Join(currWorkDir, "XMLFilesForExport", "Hello World"));
+            systemUnderTest.XmlEntityManager.Received().GetFactories(mockReadDsl);
             
         });
 
@@ -107,57 +115,57 @@ public class BackupFileGeneratorUt
     [Test]
     public void BackupFileGenerator_WriteBackupFile_FilesCreated_AndTempDirectoryDeleted()
     {
-        //Arrange
         var curDirectory = Directory.GetCurrentDirectory();
-        
-        if (Directory.Exists(Path.Join(curDirectory, "XMLFilesForExport")))
+        try
         {
-            var dir = new DirectoryInfo(Path.Join(curDirectory, "XMLFilesForExport"));
-            dir.Delete(true);
-        }
+            //Arrange
         
-        if (File.Exists(Path.Join(curDirectory, "XMLFilesForTesting")))
-        {
-            File.Delete(Path.Join(curDirectory, "XMLFilesForTesting"));
-        }
+            if (Directory.Exists(Path.Join(curDirectory, "XMLFilesForExport")))
+            {
+                var dir = new DirectoryInfo(Path.Join(curDirectory, "XMLFilesForExport"));
+                dir.Delete(true);
+            }
         
-        var mockEntityManager = Substitute.For<IXmlEntityManager>();
-        var systemUnderTest = new BackupFileGenerator(entityManager: mockEntityManager);
+            if (File.Exists(Path.Join(curDirectory, "XMLFilesForTesting")))
+            {
+                File.Delete(Path.Join(curDirectory, "XMLFilesForTesting"));
+            }
         
-        //Create a File and 2 Folders 
-        Directory.CreateDirectory(Path.Join(curDirectory, "XMLFilesForExport"));
-        Directory.CreateDirectory(Path.Join(curDirectory, "XMLFilesForExport", "course"));
-        using (FileStream fs = File.Create(Path.Join(curDirectory, "XMLFilesForExport", "File.txt")))     
-        {    
-            // Add some text to file    
-            Byte[] title = new UTF8Encoding(true).GetBytes("New Text File");    
-            fs.Write(title, 0, title.Length);
-        }
-        using (FileStream fs = File.Create(Path.Join(curDirectory, "EmptyWorld.mbz")))     
-        {    
-            // Add some text to file    
-            Byte[] title = new UTF8Encoding(true).GetBytes("New Text File");    
-            fs.Write(title, 0, title.Length);
-        }
+            var mockEntityManager = Substitute.For<IXmlEntityManager>();
+            var systemUnderTest = new BackupFileGenerator(entityManager: mockEntityManager);
         
-        //Act
-        systemUnderTest.WriteBackupFile(Path.Join(curDirectory, "XMLFilesForTesting"));
-        var tempDir = systemUnderTest.GetTempDir();
+            //Create a File and 2 Folders 
+            Directory.CreateDirectory(Path.Join(curDirectory, "XMLFilesForExport"));
+            Directory.CreateDirectory(Path.Join(curDirectory, "XMLFilesForExport", "course"));
+            using (FileStream fs = File.Create(Path.Join(curDirectory, "XMLFilesForExport", "File.txt")))     
+            {    
+                // Add some text to file    
+                Byte[] title = new UTF8Encoding(true).GetBytes("New Text File");    
+                fs.Write(title, 0, title.Length);
+            }
+            using (FileStream fs = File.Create(Path.Join(curDirectory, "EmptyWorld.mbz")))     
+            {    
+                // Add some text to file    
+                Byte[] title = new UTF8Encoding(true).GetBytes("New Text File");    
+                fs.Write(title, 0, title.Length);
+            }
         
-        //Assert
-        Assert.Multiple(() =>
-        {
+            //Act
+            systemUnderTest.WriteBackupFile(Path.Join(curDirectory, "XMLFilesForTesting"));
+        
+            //Assert
             Assert.That(File.Exists(Path.Join(curDirectory, "XMLFilesForTesting")), Is.True);
-            Assert.That(Directory.Exists(Path.Join(curDirectory, "XMLFilesForExport", "course")), Is.False);
-            Assert.That(Directory.Exists(Path.Join(curDirectory, "XMLFilesForExport")), Is.False);
-            Assert.That(File.Exists(Path.Join(curDirectory, "XMLFilesForExport", "File.txt")), Is.False);
-        });
-        
-        //Delete all Files and Folders created during the Test
-        if (File.Exists(Path.Join(curDirectory, "XMLFilesForTesting")))
-        {
-            File.Delete(Path.Join(curDirectory, "XMLFilesForTesting"));
         }
+        finally
+        {
+            //Delete all Files and Folders created during the Test
+            if (File.Exists(Path.Join(curDirectory, "XMLFilesForTesting")))
+            {
+                File.Delete(Path.Join(curDirectory, "XMLFilesForTesting"));
+            }
+            
+        }
+        
            
     }
 
@@ -175,6 +183,52 @@ public class BackupFileGeneratorUt
         //Assert
         Assert.That(tempDir, Is.Not.Empty);
 
+    }
+
+    /// <summary>
+    /// This is a regression test for https://github.com/ProjektAdLer/Autorentool/issues/253
+    /// </summary>
+    [Test]
+    public void WriteBackupFile_MbzFileAlreadyExists_OverwritesFile()
+    {
+        //we can't mock the filesystem here unfortunately because sharpziplib which we use for creating the tar file
+        //does not support substituting the file system
+        const string mbzName = "boobaz.mbz";
+        const string contents = "OverwriteMePlease";
+        const string directory = "XMLFilesForExport";
+        try
+        {
+            long streamLengthAfterWrite;
+            Directory.CreateDirectory(directory);
+            var joinedPath = Path.Join(directory, mbzName);
+            using (var stream = File.OpenWrite(joinedPath))
+            {
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.WriteLine(contents);
+                }
+            }
+
+            using (var stream = File.OpenRead(joinedPath))
+                streamLengthAfterWrite = stream.Length;
+
+
+            var systemUnderTest = new BackupFileGenerator();
+        
+            systemUnderTest.WriteBackupFile(joinedPath);
+            
+            using (var stream = File.OpenRead(joinedPath))
+            {
+                //comparing stream length has to be enough of a sanity check here because 
+                Assert.That(stream, Has.Length.Not.EqualTo(streamLengthAfterWrite));
+            }
+
+        }
+        finally
+        {
+            if (Directory.Exists(directory))
+                Directory.Delete(directory, recursive: true);
+        }
     }
     
 }

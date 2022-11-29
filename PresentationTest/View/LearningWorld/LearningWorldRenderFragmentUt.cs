@@ -13,7 +13,7 @@ namespace PresentationTest.View.LearningWorld;
 [TestFixture]
 public class LearningWorldRenderFragmentUt
 {
-#pragma warning disable CS8618 - n.stich
+#pragma warning disable CS8618 // set in setup - n.stich
     private TestContext _ctx;
 #pragma warning restore CS8618
     

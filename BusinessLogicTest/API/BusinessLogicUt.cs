@@ -1,9 +1,8 @@
-﻿using AutoMapper;
-using BusinessLogic.API;
+﻿using BusinessLogic.API;
+using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using NSubstitute;
 using NUnit.Framework;
-using PersistEntities;
 using Shared;
 using Shared.Configuration;
 
@@ -17,7 +16,6 @@ public class BusinessLogicUt
     {
         var mockConfiguration = Substitute.For<IAuthoringToolConfiguration>();
         var mockDataAccess = Substitute.For<IDataAccess>();
-        var mockGenerator = Substitute.For<IWorldGenerator>();
         
         var systemUnderTest = CreateStandardBusinessLogic(mockConfiguration, mockDataAccess);
         
@@ -38,6 +36,99 @@ public class BusinessLogicUt
         systemUnderTest.ConstructBackup(null!, "foobar");
 
         mockWorldGenerator.Received().ConstructBackup(null!, "foobar");
+    }
+
+    [Test]
+    public void ExecuteCommand_CallsCommandStateManager()
+    {
+        var mockCommandStateManager = Substitute.For<ICommandStateManager>();
+        var mockCommand = Substitute.For<ICommand>();
+        
+        var systemUnderTest = CreateStandardBusinessLogic(commandStateManager: mockCommandStateManager);
+        
+        systemUnderTest.ExecuteCommand(mockCommand);
+        
+        mockCommandStateManager.Received().Execute(mockCommand);
+    }
+    
+    [Test]
+    public void ExecuteCommand_InvokesOnUndoRedoPerformed(){
+        var mockCommandStateManager = Substitute.For<ICommandStateManager>();
+        var mockCommand = Substitute.For<ICommand>();
+        var mockOnUndoRedoPerformed = Substitute.For<Action>();
+        
+        var systemUnderTest = CreateStandardBusinessLogic(commandStateManager: mockCommandStateManager);
+        
+        systemUnderTest.OnUndoRedoPerformed += mockOnUndoRedoPerformed;
+        systemUnderTest.ExecuteCommand(mockCommand);
+        
+        mockOnUndoRedoPerformed.Received().Invoke();
+    }
+    
+    [Test]
+    public void CanUndoCanRedo_CallsCommandStateManager()
+    {
+        var mockCommandStateManager = Substitute.For<ICommandStateManager>();
+        mockCommandStateManager.CanUndo.Returns(true);
+        mockCommandStateManager.CanRedo.Returns(false);
+        var systemUnderTest = CreateStandardBusinessLogic(commandStateManager: mockCommandStateManager);
+
+        var canUndo = systemUnderTest.CanUndo;
+        var canRedo = systemUnderTest.CanRedo;
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(canUndo, Is.True);
+            Assert.That(canRedo, Is.False);
+        });
+    }
+    
+    [Test]
+    public void CallUndoCommand_CallsCommandStateManager()
+    {
+        var mockCommandStateManager = Substitute.For<ICommandStateManager>();
+        var systemUnderTest = CreateStandardBusinessLogic(commandStateManager: mockCommandStateManager);
+
+        systemUnderTest.UndoCommand();
+
+        mockCommandStateManager.Received().Undo();
+    }
+    
+    [Test]
+    public void CallUndoCommand_InvokesOnUndoRedoPerformed(){
+        var mockCommandStateManager = Substitute.For<ICommandStateManager>();
+        var mockOnUndoRedoPerformed = Substitute.For<Action>();
+        
+        var systemUnderTest = CreateStandardBusinessLogic(commandStateManager: mockCommandStateManager);
+        
+        systemUnderTest.OnUndoRedoPerformed += mockOnUndoRedoPerformed;
+        systemUnderTest.UndoCommand();
+        
+        mockOnUndoRedoPerformed.Received().Invoke();
+    }
+    
+    [Test]
+    public void CallRedoCommand_CallsCommandStateManager()
+    {
+        var mockCommandStateManager = Substitute.For<ICommandStateManager>();
+        var systemUnderTest = CreateStandardBusinessLogic(commandStateManager: mockCommandStateManager);
+
+        systemUnderTest.RedoCommand();
+
+        mockCommandStateManager.Received().Redo();
+    }
+    
+    [Test]
+    public void CallRedoCommand_InvokesOnUndoRedoPerformed(){
+        var mockCommandStateManager = Substitute.For<ICommandStateManager>();
+        var mockOnUndoRedoPerformed = Substitute.For<Action>();
+        
+        var systemUnderTest = CreateStandardBusinessLogic(commandStateManager: mockCommandStateManager);
+        
+        systemUnderTest.OnUndoRedoPerformed += mockOnUndoRedoPerformed;
+        systemUnderTest.RedoCommand();
+        
+        mockOnUndoRedoPerformed.Received().Invoke();
     }
 
     [Test]
@@ -82,7 +173,7 @@ public class BusinessLogicUt
     [Test]
     public void SaveLearningSpace_CallsDataAccess()
     {
-        var learningSpace = new LearningSpace("fa", "a", "f", "f", "f");
+        var learningSpace = new LearningSpace("fa", "a", "f", "f", "f", 0);
         var mockDataAccess = Substitute.For<IDataAccess>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
@@ -107,7 +198,7 @@ public class BusinessLogicUt
     [Test]
     public void LoadLearningSpace_ReturnsLearningSpace()
     {
-        var learningSpace = new LearningSpace("fa", "a", "f", "f", "f");
+        var learningSpace = new LearningSpace("fa", "a", "f", "f", "f", 0);
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningSpace("foobar").Returns(learningSpace);
 
@@ -121,8 +212,8 @@ public class BusinessLogicUt
     [Test]
     public void SaveLearningElement_CallsDataAccess()
     {
-        var content = new LearningContent("a", "b", Array.Empty<byte>());
-        var learningElement = new LearningElement("fa", "f", "f", content, "f",
+        var content = new LearningContent("a", "b", "");
+        var learningElement = new LearningElement("fa", "f", content, "","f",
             "f", "f", LearningElementDifficultyEnum.Easy);
         var mockDataAccess = Substitute.For<IDataAccess>();
 
@@ -148,8 +239,8 @@ public class BusinessLogicUt
     [Test]
     public void LoadLearningElement_ReturnsLearningElement()
     {
-        var content = new LearningContent("a", "b", Array.Empty<byte>());
-        var learningElement = new LearningElement("fa", "a", "f", content, "f", "f",
+        var content = new LearningContent("a", "b", "");
+        var learningElement = new LearningElement("fa", "a", content, "", "f", "f",
             "f", LearningElementDifficultyEnum.Easy);
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningElement("foobar").Returns(learningElement);
@@ -176,7 +267,7 @@ public class BusinessLogicUt
     [Test]
     public void LoadLearningContent_ReturnsLearningElement()
     {
-        var learningContent = new LearningContent("fa", "a", new byte[] {0x01, 0x02, 0x03});
+        var learningContent = new LearningContent("fa", "a", "");
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningContent("foobar").Returns(learningContent);
 
@@ -231,7 +322,7 @@ public class BusinessLogicUt
     [Test]
     public void LoadLearningSpaceFromStream_ReturnsLearningSpace()
     {
-        var learningSpace = new LearningSpace("fa", "a", "f", "f", "f");
+        var learningSpace = new LearningSpace("fa", "a", "f", "f", "f", 0);
         var stream = Substitute.For<Stream>();
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningSpace(stream).Returns(learningSpace);
@@ -259,8 +350,8 @@ public class BusinessLogicUt
     [Test]
     public void LoadLearningElementFromStream_ReturnsLearningElement()
     {
-        var content = new LearningContent("a", "b", Array.Empty<byte>());
-        var learningElement = new LearningElement("fa", "a", "f", content, "f", "f",
+        var content = new LearningContent("a", "b", "");
+        var learningElement = new LearningElement("fa", "a", content, "","f", "f",
             "f", LearningElementDifficultyEnum.Easy);
         var stream = Substitute.For<Stream>();
         var mockDataAccess = Substitute.For<IDataAccess>();
@@ -277,7 +368,7 @@ public class BusinessLogicUt
     public void LoadLearningContentFromStream_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
-        var stream = Substitute.For<Stream>();
+        var stream = Substitute.For<MemoryStream>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
@@ -289,8 +380,8 @@ public class BusinessLogicUt
     [Test]
     public void LoadLearningContentFromStream_ReturnsLearningElement()
     {
-        var learningContent = new LearningContent("filename", "extension", Array.Empty<byte>());
-        var stream = Substitute.For<Stream>();
+        var learningContent = new LearningContent("filename", "extension", "");
+        var stream = Substitute.For<MemoryStream>();
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningContent("filename.extension", stream).Returns(learningContent);
 
@@ -315,12 +406,15 @@ public class BusinessLogicUt
     private BusinessLogic.API.BusinessLogic CreateStandardBusinessLogic(
         IAuthoringToolConfiguration? fakeConfiguration = null,
         IDataAccess? fakeDataAccess = null,
-        IWorldGenerator? worldGenerator = null)
+        IWorldGenerator? worldGenerator = null,
+        ICommandStateManager? commandStateManager = null)
     {
         fakeConfiguration ??= Substitute.For<IAuthoringToolConfiguration>();
         fakeDataAccess ??= Substitute.For<IDataAccess>();
         worldGenerator ??= Substitute.For<IWorldGenerator>();
+        commandStateManager ??= Substitute.For<ICommandStateManager>();
         
-        return new BusinessLogic.API.BusinessLogic(fakeConfiguration, fakeDataAccess, worldGenerator);
+        return new BusinessLogic.API.BusinessLogic(fakeConfiguration, fakeDataAccess, worldGenerator,
+            commandStateManager);
     }
 }

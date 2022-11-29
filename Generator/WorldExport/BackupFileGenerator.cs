@@ -37,9 +37,9 @@ public class BackupFileGenerator : IBackupFileGenerator
     }
 
     /// <inheritdoc cref="IBackupFileGenerator.WriteXmlFiles"/>
-    public void WriteXmlFiles(IReadDsl? readDsl, string dslpath)
+    public void WriteXmlFiles(IReadDsl readDsl)
     {
-        if (readDsl != null) XmlEntityManager.GetFactories(readDsl, dslpath);
+        XmlEntityManager.GetFactories(readDsl);
     }
     
     // Get all files from source Folder "XMLFilesForExport" and pack all files and folders into a tar-file 
@@ -47,31 +47,45 @@ public class BackupFileGenerator : IBackupFileGenerator
     /// <inheritdoc cref="IBackupFileGenerator.WriteBackupFile"/>
     public void WriteBackupFile(string filepath)
     {
-        //copy template from current workdir
-        var tempDir = GetTempDir();
-        DirectoryCopy("XMLFilesForExport", tempDir);
-
-        //construct tarball 
-        const string tarName = "EmptyWorld.mbz";
-        var tarPath = _fileSystem.Path.Combine(tempDir, tarName);
-
-        using (var outStream = _fileSystem.File.Create(tarPath))
-        using (var gzoStream = new GZipOutputStream(outStream))
-        using (var tarArchive = TarArchive.CreateOutputTarArchive(gzoStream))
+        string? tempDir = null;
+        try
         {
-            tarArchive.RootPath = tempDir;
-            SaveDirectoryToTar(tarArchive, tempDir, true);
-        }
+            //copy template from current workdir
+            tempDir = GetTempDir();
+            DirectoryCopy("XMLFilesForExport", tempDir);
 
-        //move file and delete dir
-        if (_fileSystem.File.Exists(tarName))
+            //construct tarball 
+            const string tarName = "EmptyWorld.mbz";
+            var tarPath = _fileSystem.Path.Combine(tempDir, tarName);
+
+            using (var outStream = _fileSystem.File.Create(tarPath))
+            using (var gzoStream = new GZipOutputStream(outStream))
+            using (var tarArchive = TarArchive.CreateOutputTarArchive(gzoStream))
+            {
+                //we need to remove the first slash from our rootDir, because absolute paths are not allowed in the tar entries
+                //and the sharpziplib removes them from the entry names. this is a bug in the library.
+                var rootDir = tempDir;
+                while (rootDir.StartsWith("/"))
+                    rootDir = rootDir.Substring(1);
+                tarArchive.RootPath = rootDir;
+                SaveDirectoryToTar(tarArchive, tempDir, true);
+            }
+
+            //delete tar
+            if (_fileSystem.File.Exists(tarName))
+            {
+                _fileSystem.File.Delete(tarName);
+            }
+            
+            //move file
+            _fileSystem.File.Move(tarPath, filepath, true);
+        }
+        finally
         {
-            _fileSystem.File.Delete(tarName);
+            //clean up directory
+            if (tempDir != null)
+                _fileSystem.Directory.Delete(tempDir, true);
         }
-
-        _fileSystem.File.Move(tarPath, filepath);
-        _fileSystem.Directory.Delete(tempDir, true);
-        _fileSystem.Directory.Delete("XMLFilesForExport", true);
     }
 
     /// <summary>
@@ -95,14 +109,14 @@ public class BackupFileGenerator : IBackupFileGenerator
         var directories = _fileSystem.Directory.EnumerateDirectories(source, "*", SearchOption.AllDirectories);
         foreach (var directory in directories)
         {
-            var directoryName = directory.Remove(0, _fileSystem.Path.Join(source, "\\").Length);
-            _fileSystem.Directory.CreateDirectory(_fileSystem.Path.Combine(targetPrefix, directoryName));
+            var relativeDirectoryPath = _fileSystem.Path.GetRelativePath(source, directory);
+            _fileSystem.Directory.CreateDirectory(_fileSystem.Path.Combine(targetPrefix, relativeDirectoryPath));
         }
         var files = _fileSystem.Directory.EnumerateFiles(source, "*", SearchOption.AllDirectories);
-        foreach (var file in files) 
+        foreach (var file in files)
         {
-            var filename = file.Remove(0, _fileSystem.Path.Join(source, "\\").Length);
-            _fileSystem.File.Copy(file, _fileSystem.Path.Combine(targetPrefix, filename));
+            var relativeFilepath = _fileSystem.Path.GetRelativePath(source, file);
+            _fileSystem.File.Copy(file, _fileSystem.Path.Combine(targetPrefix, relativeFilepath));
         }
     }
     

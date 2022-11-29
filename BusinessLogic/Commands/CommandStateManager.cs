@@ -19,16 +19,31 @@ public sealed class CommandStateManager : ICommandStateManager
     
     /// <inheritdoc cref="ICommandStateManager.CanRedo"/>
     public bool CanRedo => _redo.Any();
+
+
+    public delegate void RemovedCommandsFromStacksHandler(object sender, RemoveCommandsFromStacksEventArgs e);
+
+    public event RemovedCommandsFromStacksHandler? RemovedCommandsFromStacks;
     
     /// <inheritdoc cref="ICommandStateManager.Execute"/>
     public void Execute(ICommand command)
     {
         command.Execute();
-        if (command is IUndoCommand undoCommand)
+        switch (command)
         {
-            _undo.Push(undoCommand);
+            // ReSharper disable once SuspiciousTypeConversion.Global - suppressed for the time being while we finish the command implementations n.stich
+            case ICommandWithError { HasError: true }:
+                return;
+            case IUndoCommand undoCommand:
+                _undo.Push(undoCommand);
+                break;
         }
-        _redo.Clear();
+
+        if (_redo.Any())
+        {
+            _redo.Clear();
+            RemovedCommandsFromStacks?.Invoke(this, new RemoveCommandsFromStacksEventArgs(GetObjects()));
+        }
         OnPropertyChanged(nameof(CanUndo));
     }
 
@@ -48,6 +63,34 @@ public sealed class CommandStateManager : ICommandStateManager
         var command = PopRedo();
         command.Redo();
         PushUndo(command);
+    }
+    
+    private IEnumerable<object> GetObjects()
+    {
+        var objects = new HashSet<object>();
+        foreach (var myObject in _undo.Select(GetObjectFromCommand).Where(obj => obj != null))
+        {
+            if (myObject != null) objects.Add(myObject);
+        }
+        // do the same for _redo, if it is possible that RemovedCommandsFromStacks is invoked when _redo is not empty
+        return objects;
+    }
+    
+    private static object? GetObjectFromCommand(IUndoCommand command)
+    {
+        return command switch
+        {
+            CreateLearningElement c => c.LearningElement,
+            CreateLearningSpace c => c.LearningSpace,
+            CreateLearningWorld c => c.LearningWorld,
+            DeleteLearningElement c => c.LearningElement,
+            DeleteLearningSpace c => c.LearningSpace,
+            DeleteLearningWorld c => c.LearningWorld,
+            LoadLearningElement c => c.LearningElement,
+            LoadLearningSpace c => c.LearningSpace,
+            LoadLearningWorld c => c.LearningWorld,
+            _ => null
+        };
     }
 
     private IUndoCommand PopUndo()
@@ -100,4 +143,14 @@ public sealed class CommandStateManager : ICommandStateManager
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
+}
+
+public class RemoveCommandsFromStacksEventArgs
+{
+    public RemoveCommandsFromStacksEventArgs(IEnumerable<object> objectsInStacks)
+    {
+        ObjectsInStacks = objectsInStacks;
+    }
+
+    public IEnumerable<object> ObjectsInStacks { get; }
 }

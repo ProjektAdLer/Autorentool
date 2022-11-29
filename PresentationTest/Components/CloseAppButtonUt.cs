@@ -11,33 +11,33 @@ namespace PresentationTest.Components;
 public class CloseAppButtonUt
 {
 #pragma warning disable CS8618
-    private Bunit.TestContext context;
-    private IShutdownManager shutdownManager;
+    private Bunit.TestContext _context;
+    private IShutdownManager _shutdownManager;
 #pragma warning restore CS8618
     [SetUp]
     public void Setup()
     {
-        context = new Bunit.TestContext();
-        shutdownManager = Substitute.For<IShutdownManager>();
-        context.Services.AddSingleton(shutdownManager);
+        _context = new Bunit.TestContext();
+        _shutdownManager = Substitute.For<IShutdownManager>();
+        _context.Services.AddSingleton(_shutdownManager);
     }
 
     [Test]
     public void OnClick_CallsShutdownManager()
     {
-        using (context)
+        using (_context)
         {
             var systemUnderTest = CreateTestableCloseAppButtonComponent();
 
             var button = systemUnderTest.Find(".btn");
             button.Click();
 
-            shutdownManager.Received().BeginShutdown();
+            _shutdownManager.Received().BeginShutdown();
         }
     }
 
     private IRenderedComponent<CloseAppButton> CreateTestableCloseAppButtonComponent()
     {
-        return context.RenderComponent<CloseAppButton>();
+        return _context.RenderComponent<CloseAppButton>();
     }
 }

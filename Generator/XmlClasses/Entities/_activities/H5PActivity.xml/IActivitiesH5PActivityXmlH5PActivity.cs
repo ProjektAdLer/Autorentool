@@ -14,7 +14,7 @@ public interface IActivitiesH5PActivityXmlH5PActivity
     
     string Grade { get; set; }
     
-    string Displayoptions { get; set; }
+    string DisplayOptions { get; set; }
     
     string Enabletracking { get; set; }
     

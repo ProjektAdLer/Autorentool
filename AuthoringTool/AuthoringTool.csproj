@@ -59,6 +59,11 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="AutoMapper.Collection" Version="8.0.0" />
+      <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
+    </ItemGroup>
+
+    <ItemGroup>
       <None Include="wwwroot\css\assets\LanguageSwitch.css" />
     </ItemGroup>
     

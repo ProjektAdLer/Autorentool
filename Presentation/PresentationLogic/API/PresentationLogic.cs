@@ -1,12 +1,14 @@
-﻿using BusinessLogic.API;
+using AutoMapper;
+using BusinessLogic.API;
+using BusinessLogic.Commands;
 using ElectronWrapper;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
-using Presentation.PresentationLogic.EntityMapping;
-using Presentation.PresentationLogic.EntityMapping.LearningElementMapper;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
+using Shared;
 using Shared.Configuration;
 
 namespace Presentation.PresentationLogic.API;
@@ -16,22 +18,20 @@ public class PresentationLogic : IPresentationLogic
     public PresentationLogic(
         IAuthoringToolConfiguration configuration,
         IBusinessLogic businessLogic,
-        ILearningWorldMapper worldMapper,
-        ILearningSpaceMapper spaceMapper,
-        ILearningElementMapper elementMapper,
-        ILearningContentMapper contentMapper,
+        IMapper mapper,
+        ICachingMapper cMapper,
         IServiceProvider serviceProvider,
         ILogger<PresentationLogic> logger,
-        IHybridSupportWrapper hybridSupportWrapper)
+        IHybridSupportWrapper hybridSupportWrapper,
+        IShellWrapper shellWrapper)
     {
         _logger = logger;
         Configuration = configuration;
         BusinessLogic = businessLogic;
-        WorldMapper = worldMapper;
-        SpaceMapper = spaceMapper;
-        ElementMapper = elementMapper;
-        ContentMapper = contentMapper;
+        Mapper = mapper;
+        CMapper = cMapper;
         HybridSupportWrapper = hybridSupportWrapper;
+        ShellWrapper = shellWrapper;
         _dialogManager = serviceProvider.GetService(typeof(IElectronDialogManager)) as IElectronDialogManager;
     }
 
@@ -41,7 +41,9 @@ public class PresentationLogic : IPresentationLogic
     private const string WorldFileEnding = "awf";
     private const string SpaceFileEnding = "asf";
     private const string ElementFileEnding = "aef";
-    private string[] ImageFileEnding = {"jpg", "png", "webp", "bmp"};
+    private readonly string[] _imageFileEnding = {"jpg", "png", "webp", "bmp"};
+    private readonly string[] _textFileEnding =
+        { "txt", "c", "h", "cpp", "cc", "c++", "py", "cs", "js", "php", "html", "css" };
     private const string VideoFileEnding = "mp4";
     private const string H5PFileEnding = "h5p";
     private const string PdfFileEnding = "pdf";
@@ -51,19 +53,79 @@ public class PresentationLogic : IPresentationLogic
 
     public IAuthoringToolConfiguration Configuration { get; }
     public IBusinessLogic BusinessLogic { get; }
+    internal IMapper Mapper { get; }
+    internal ICachingMapper CMapper { get; }
     public bool RunningElectron => HybridSupportWrapper.IsElectronActive;
-    public ILearningWorldMapper WorldMapper { get; }
-    public ILearningSpaceMapper SpaceMapper { get; }
-    public ILearningElementMapper ElementMapper { get; }
-    public ILearningContentMapper ContentMapper { get; }
-    public IHybridSupportWrapper HybridSupportWrapper { get; }
+    private IHybridSupportWrapper HybridSupportWrapper { get; }
+    private IShellWrapper ShellWrapper { get; }
+    public bool CanUndo => BusinessLogic.CanUndo;
+    public bool CanRedo => BusinessLogic.CanRedo;
+    public event Action? OnUndoRedoPerformed
+    {
+        add => BusinessLogic.OnUndoRedoPerformed += value;
+        remove => BusinessLogic.OnUndoRedoPerformed -= value;
+    }
 
     public async Task<string> ConstructBackupAsync(LearningWorldViewModel learningWorldViewModel)
     {
-        var entity = WorldMapper.ToEntity(learningWorldViewModel);
+        var entity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldViewModel);
         var filepath = await GetSaveFilepathAsync("Export learning world", "mbz", "Moodle Backup Zip");
         BusinessLogic.ConstructBackup(entity, filepath);
         return filepath;
+    }
+    
+    public void UndoCommand()
+    {
+        BusinessLogic.UndoCommand();
+    }
+    
+    public void RedoCommand()
+    {
+        BusinessLogic.RedoCommand();
+    }
+
+    public void AddLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
+        ILearningWorldViewModel learningWorldVm)
+    {
+        var authoringToolWorkspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+
+        var command = new CreateLearningWorld(authoringToolWorkspaceEntity, worldEntity,
+            workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.CreateLearningWorld"/>
+    public void CreateLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string name,
+        string shortname, string authors, string language, string description, string goals)
+    {
+        var authoringToolWorkspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
+
+        var command = new CreateLearningWorld(authoringToolWorkspaceEntity, name, shortname, authors, language, description, goals,
+            workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+    
+    /// <inheritdoc cref="IPresentationLogic.EditLearningWorld"/>
+    public void EditLearningWorld(ILearningWorldViewModel learningWorldVm, string name,
+        string shortname, string authors, string language, string description, string goals)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+
+        var command = new EditLearningWorld(worldEntity, name, shortname, authors, language, description, goals,
+            world => CMapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+    
+    /// <inheritdoc cref="IPresentationLogic.DeleteLearningWorld"/>
+    public void DeleteLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, LearningWorldViewModel worldVm)
+    {
+        var authoringToolWorkspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(worldVm);
+
+        var command = new DeleteLearningWorld(authoringToolWorkspaceEntity, worldEntity,
+            workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
+        BusinessLogic.ExecuteCommand(command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.SaveLearningWorldAsync"/>
@@ -71,18 +133,73 @@ public class PresentationLogic : IPresentationLogic
     {
         SaveOrLoadElectronCheck();
         var filepath = await GetSaveFilepathAsync("Save Learning World", WorldFileEnding, WorldFileFormatDescriptor);
-        var worldEntity = WorldMapper.ToEntity(learningWorldViewModel);
-        BusinessLogic.SaveLearningWorld(worldEntity, filepath);
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldViewModel);
+        var command = new SaveLearningWorld(BusinessLogic, worldEntity, filepath);
+        BusinessLogic.ExecuteCommand(command);
         learningWorldViewModel.UnsavedChanges = false;
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadLearningWorldAsync"/>
-    public async Task<LearningWorldViewModel> LoadLearningWorldAsync()
+    public async Task LoadLearningWorldAsync(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm)
     {
         SaveOrLoadElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load Learning World", WorldFileEnding, WorldFileFormatDescriptor);
-        var entity = BusinessLogic.LoadLearningWorld(filepath);
-        return WorldMapper.ToViewModel(entity);
+        var workspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
+        var command = new LoadLearningWorld(workspaceEntity, filepath, BusinessLogic,
+            workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    public void AddLearningSpace(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel learningSpaceVm)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+
+        var command = new CreateLearningSpace(worldEntity, spaceEntity, 
+            world => CMapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.CreateLearningSpace"/>
+    public void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name, string shortname,
+        string authors, string description, string goals, int requiredPoints, double positionX, double positionY)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+
+        var command = new CreateLearningSpace(worldEntity, name, shortname, authors, description, goals, requiredPoints, 
+            positionX, positionY, world => CMapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.EditLearningSpace"/>
+    public void EditLearningSpace(ILearningSpaceViewModel learningSpaceVm, string name,
+        string shortname, string authors, string description, string goals, int requiredPoints)
+    {
+        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+
+        var command = new EditLearningSpace(spaceEntity, name, shortname, authors, description, goals, requiredPoints,
+            space => CMapper.Map(space, learningSpaceVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+    
+    public void DragLearningSpace(ILearningSpaceViewModel learningSpaceVm, double oldPositionX, double oldPositionY)
+    {
+        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+        
+        var command = new DragLearningSpace(spaceEntity, oldPositionX, oldPositionY, spaceEntity.PositionX,
+            spaceEntity.PositionY, space => CMapper.Map(space, learningSpaceVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.DeleteLearningSpace"/>
+    public void DeleteLearningSpace(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel learningSpaceVm)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+
+        var command = new DeleteLearningSpace(worldEntity, spaceEntity,
+            world => CMapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.SaveLearningSpaceAsync"/>
@@ -90,17 +207,105 @@ public class PresentationLogic : IPresentationLogic
     {
         SaveOrLoadElectronCheck();
         var filepath = await GetSaveFilepathAsync("Save Learning Space", SpaceFileEnding, SpaceFileFormatDescriptor);
-        var spaceEntity = SpaceMapper.ToEntity(learningSpaceViewModel);
-        BusinessLogic.SaveLearningSpace(spaceEntity, filepath);
+        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceViewModel);
+        var command = new SaveLearningSpace(BusinessLogic, spaceEntity, filepath);
+        BusinessLogic.ExecuteCommand(command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadLearningSpaceAsync"/>
-    public async Task<ILearningSpaceViewModel> LoadLearningSpaceAsync()
+    public async Task LoadLearningSpaceAsync(ILearningWorldViewModel learningWorldVm)
     {
         SaveOrLoadElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load Learning Space", SpaceFileEnding, SpaceFileFormatDescriptor);
-        var entity = BusinessLogic.LoadLearningSpace(filepath);
-        return SpaceMapper.ToViewModel(entity);
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var command = new LoadLearningSpace(worldEntity, filepath, BusinessLogic, 
+            world => CMapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+    
+    /// <inheritdoc cref="IPresentationLogic.CreateLearningPathWay"/>
+    public void CreateLearningPathWay(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel sourceSpaceVm,
+        ILearningSpaceViewModel targetSpaceVm)
+    {
+        var learningWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var sourceSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(sourceSpaceVm);
+        var targetSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(targetSpaceVm);
+
+        var command = new CreateLearningPathWay(learningWorldEntity, sourceSpaceEntity, targetSpaceEntity,
+            world => Mapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.DeleteLearningPathWay"/>
+    public void DeleteLearningPathWay(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel targetSpaceVm)
+    {
+        var learningWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var targetSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(targetSpaceVm);
+
+        _logger.LogInformation("Deleting Learning Path Way from {0}", targetSpaceVm.Name);
+        
+        var command = new DeleteLearningPathWay(learningWorldEntity, targetSpaceEntity,
+            world => Mapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    public void AddLearningElement(ILearningSpaceViewModel parentSpaceVm, ILearningElementViewModel learningElementVm)
+    {
+        var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+
+        var command = new CreateLearningElement(parentSpaceEntity, elementEntity, 
+            parent => CMapper.Map(parent, parentSpaceVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+    
+    /// <inheritdoc cref="IPresentationLogic.CreateLearningElement"/>
+    public void CreateLearningElement(ILearningSpaceViewModel parentSpaceVm, string name, string shortname,
+        ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContentVm,
+        string url, string authors, string description, string goals, LearningElementDifficultyEnum difficulty,
+        int workload, int points, double positionX = 0, double positionY = 0)
+    {
+        var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
+        var contentEntity = Mapper.Map<BusinessLogic.Entities.LearningContent>(learningContentVm);
+
+        var command = new CreateLearningElement(parentSpaceEntity, name, shortname, elementType, contentType, contentEntity,
+            url, authors, description, goals, difficulty, workload, points, positionX, positionY, 
+            parent => CMapper.Map(parent, parentSpaceVm));
+        BusinessLogic.ExecuteCommand(command);
+    } 
+    
+    /// <inheritdoc cref="IPresentationLogic.EditLearningElement"/>
+    public void EditLearningElement(ILearningSpaceViewModel parentSpaceVm,
+        ILearningElementViewModel learningElementVm, string name, string shortname, string url, string authors,
+        string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points)
+    {
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+        var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
+
+        var command = new EditLearningElement(elementEntity, parentSpaceEntity, name, shortname, url, authors, description,
+            goals, difficulty, workload, points, element => CMapper.Map(element, learningElementVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+    
+    public void DragLearningElement(ILearningElementViewModel learningElementVm, double oldPositionX, double oldPositionY)
+    {
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+        
+        var command = new DragLearningElement(elementEntity, oldPositionX, oldPositionY, elementEntity.PositionX,
+            elementEntity.PositionY, space => CMapper.Map(space, learningElementVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.DeleteLearningElement"/>
+    public void DeleteLearningElement(ILearningSpaceViewModel parentSpaceVm,
+        ILearningElementViewModel learningElementVm)
+    {
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+        var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
+
+        var command = new DeleteLearningElement(elementEntity, parentSpaceEntity, 
+            parent => CMapper.Map(parent, parentSpaceVm));
+        BusinessLogic.ExecuteCommand(command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.SaveLearningElementAsync"/>
@@ -109,28 +314,44 @@ public class PresentationLogic : IPresentationLogic
         SaveOrLoadElectronCheck();
         var filepath =
             await GetSaveFilepathAsync("Save Learning Element", ElementFileEnding, ElementFileFormatDescriptor);
-        var elementEntity = ElementMapper.ToEntity(learningElementViewModel);
-        BusinessLogic.SaveLearningElement(elementEntity, filepath);
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementViewModel);
+        var command = new SaveLearningElement(BusinessLogic, elementEntity, filepath);
+        BusinessLogic.ExecuteCommand(command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadLearningElementAsync"/>
-    public async Task<ILearningElementViewModel> LoadLearningElementAsync()
+    public async Task LoadLearningElementAsync(ILearningSpaceViewModel parentSpaceVm)
     {
         SaveOrLoadElectronCheck();
         var filepath =
             await GetLoadFilepathAsync("Load Learning Element", ElementFileEnding, ElementFileFormatDescriptor);
-        var entity = BusinessLogic.LoadLearningElement(filepath);
-        return ElementMapper.ToViewModel(entity);
+        var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
+        var command = new LoadLearningElement(parentSpaceEntity, filepath, BusinessLogic,
+            parent => CMapper.Map(parent, parentSpaceVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.ShowLearningElementContentAsync"/>
+    public Task ShowLearningElementContentAsync(LearningElementViewModel learningElementVm)
+    {
+        SaveOrLoadElectronCheck();
+        var filepath = learningElementVm.LearningContent.Filepath;
+        var error = ShellWrapper.OpenPathAsync(filepath).Result;
+        if (error != "")
+        {
+            _logger.LogError(error);
+        }
+        return Task.CompletedTask;
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadImageAsync"/>
     public async Task<LearningContentViewModel> LoadImageAsync()
     {
         SaveOrLoadElectronCheck();
-        var fileFilter = new FileFilterProxy[] {new(" ", ImageFileEnding)};
+        var fileFilter = new FileFilterProxy[] {new(" ", _imageFileEnding)};
         var filepath = await GetLoadFilepathAsync("Load image", fileFilter);
         var entity = BusinessLogic.LoadLearningContent(filepath);
-        return ContentMapper.ToViewModel(entity);
+        return Mapper.Map<LearningContentViewModel>(entity);
     }
         
     /// <inheritdoc cref="IPresentationLogic.LoadVideoAsync"/>
@@ -139,16 +360,16 @@ public class PresentationLogic : IPresentationLogic
         SaveOrLoadElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load video", VideoFileEnding, " ");
         var entity = BusinessLogic.LoadLearningContent(filepath);
-        return ContentMapper.ToViewModel(entity);
+        return Mapper.Map<LearningContentViewModel>(entity);
     }
         
-    /// <inheritdoc cref="IPresentationLogic.LoadH5pAsync"/>
-    public async Task<LearningContentViewModel> LoadH5pAsync()
+    /// <inheritdoc cref="IPresentationLogic.LoadH5PAsync"/>
+    public async Task<LearningContentViewModel> LoadH5PAsync()
     {
         SaveOrLoadElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load h5p",H5PFileEnding, " ");
         var entity = BusinessLogic.LoadLearningContent(filepath);
-        return ContentMapper.ToViewModel(entity);
+        return Mapper.Map<LearningContentViewModel>(entity);
     }
         
     /// <inheritdoc cref="IPresentationLogic.LoadPdfAsync"/>
@@ -157,31 +378,48 @@ public class PresentationLogic : IPresentationLogic
         SaveOrLoadElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load pdf",PdfFileEnding, " ");
         var entity = BusinessLogic.LoadLearningContent(filepath);
-        return ContentMapper.ToViewModel(entity);
-    }
-
-    public LearningWorldViewModel LoadLearningWorldViewModel(Stream stream)
-    {
-        var world = BusinessLogic.LoadLearningWorld(stream);
-        return WorldMapper.ToViewModel(world);
-    }
-
-    public ILearningSpaceViewModel LoadLearningSpaceViewModel(Stream stream)
-    {
-        var space = BusinessLogic.LoadLearningSpace(stream);
-        return SpaceMapper.ToViewModel(space);
-    }
-
-    public ILearningElementViewModel LoadLearningElementViewModel(Stream stream)
-    {
-        var element = BusinessLogic.LoadLearningElement(stream);
-        return ElementMapper.ToViewModel(element);
+        return Mapper.Map<LearningContentViewModel>(entity);
     }
     
-    public LearningContentViewModel LoadLearningContentViewModel(string name, Stream stream)
+    /// <inheritdoc cref="IPresentationLogic.LoadTextAsync"/>
+    public async Task<LearningContentViewModel> LoadTextAsync()
+    {
+        SaveOrLoadElectronCheck();
+        var fileFilter = new FileFilterProxy[] {new(" ", _textFileEnding)};
+        var filepath = await GetLoadFilepathAsync("Load text", fileFilter);
+        var entity = BusinessLogic.LoadLearningContent(filepath);
+        return Mapper.Map<LearningContentViewModel>(entity);
+    }
+
+    public void LoadLearningWorldViewModel(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, Stream stream)
+    {
+        var workspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
+        var command = new LoadLearningWorld(workspaceEntity, stream, BusinessLogic,
+            workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    public void LoadLearningSpaceViewModel(ILearningWorldViewModel learningWorldVm, Stream stream)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var command = new LoadLearningSpace(worldEntity, stream, BusinessLogic,
+            world => CMapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    public void LoadLearningElementViewModel(ILearningSpaceViewModel parentSpaceVm, Stream stream)
+    {
+        var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
+        var command =
+            new LoadLearningElement(parentSpaceEntity, stream, BusinessLogic,
+                parent => CMapper.Map(parent, parentSpaceVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+    
+    public LearningContentViewModel LoadLearningContentViewModel(string name, MemoryStream stream)
     {
         var entity = BusinessLogic.LoadLearningContent(name, stream);
-        return ContentMapper.ToViewModel(entity);
+        return Mapper.Map<LearningContentViewModel>(entity);
     }
 
     /// <summary>

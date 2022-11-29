@@ -1,6 +1,7 @@
 using System.IO.Abstractions;
 using AutoMapper;
 using BusinessLogic.API;
+using BusinessLogic.Commands;
 using DataAccess.Persistence;
 using ElectronWrapper;
 using Generator.API;
@@ -11,14 +12,12 @@ using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
-using Presentation.PresentationLogic.EntityMapping;
-using Presentation.PresentationLogic.EntityMapping.LearningElementMapper;
-using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.ModalDialog;
 using Presentation.PresentationLogic.Toolbox;
 using Presentation.View.Toolbox;
+using Shared;
 using Shared.Configuration;
 
 namespace AuthoringTool;
@@ -47,9 +46,9 @@ public class Startup
         ConfigureGenerator(services);
         ConfigureDataAccess(services);
         ConfigureToolbox(services);
-        ConfigureMappers(services);
         ConfigureUtilities(services);
         ConfigureAutoMapper(services);
+        ConfigureCommands(services);
 
         
         //Electron Wrapper layer
@@ -58,6 +57,9 @@ public class Startup
         //Wrapper around HybridSupport
         var hybridSupportWrapper = new HybridSupportWrapper();
         services.AddSingleton<IHybridSupportWrapper, HybridSupportWrapper>(_ => hybridSupportWrapper);
+        //Wrapper around Shell
+        var shellWrapper = new ShellWrapper();
+        services.AddSingleton<IShellWrapper, ShellWrapper>(_ => shellWrapper);
         
         //Insert electron dependant services as required
         if (hybridSupportWrapper.IsElectronActive)
@@ -82,7 +84,6 @@ public class Startup
         services.AddSingleton<IPresentationLogic, PresentationLogic>();
         services.AddSingleton<ILearningWorldPresenter, LearningWorldPresenter>();
         services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
-        services.AddSingleton<ILearningElementPresenter, LearningElementPresenter>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
         services.AddSingleton<ILearningSpaceViewModalDialogFactory, ModalDialogFactory>();
         services.AddSingleton<ILearningSpaceViewModalDialogInputFieldsFactory, ModalDialogInputFieldsFactory>();
@@ -126,32 +127,14 @@ public class Startup
         services.AddSingleton(p =>
             (ILearningSpacePresenterToolboxInterface)p.GetService(typeof(ILearningSpacePresenter))!);
     }
-
-    private static void ConfigureMappers(IServiceCollection services)
-    {
-        services.AddSingleton<ILearningElementMapper, LearningElementMapper>();
-        services.AddSingleton<IImageTransferElementMapper, ImageTransferElementMapper>();
-        services.AddSingleton<IVideoTransferElementMapper, VideoTransferElementMapper>();
-        services.AddSingleton<IPdfTransferElementMapper, PdfTransferElementMapper>();
-        services.AddSingleton<IVideoActivationElementMapper, VideoActivationElementMapper>();
-        services.AddSingleton<IH5PActivationElementMapper, H5PActivationElementMapper>();
-        services.AddSingleton<IH5PInteractionElementMapper, H5PInteractionElementMapper>();
-        services.AddSingleton<IH5PTestElementMapper, H5PTestElementMapper>();
-        services.AddSingleton<ILearningSpaceMapper, LearningSpaceMapper>();
-        services.AddSingleton<ILearningWorldMapper, LearningWorldMapper>();
-        services.AddSingleton<ILearningContentMapper, LearningContentMapper>();
-        services.AddSingleton<IEntityMapping, EntityMapping>();
-    }
     
     private static void ConfigureAutoMapper(IServiceCollection services)
     {
-        var config = new MapperConfiguration(cfg =>
-        {
-            cfg.AddProfile(new MappingProfile());
-        });
+        var config = new MapperConfiguration(MappingProfile.Configure);
         
         var mapper = config.CreateMapper();
-        services.AddSingleton<IMapper>(mapper);
+        services.AddSingleton(mapper);
+        services.AddSingleton<ICachingMapper, CachingMapper>();
     }
 
     private static void ConfigureUtilities(IServiceCollection services)
@@ -159,6 +142,11 @@ public class Startup
         services.AddTransient<IMemoryCache>(_ => new MemoryCache(new MemoryCacheOptions()));
         services.AddSingleton<IMouseService, MouseService>();
         services.AddTransient<IFileSystem, FileSystem>();
+    }
+
+    private void ConfigureCommands(IServiceCollection services)
+    {
+        services.AddSingleton<ICommandStateManager, CommandStateManager>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)

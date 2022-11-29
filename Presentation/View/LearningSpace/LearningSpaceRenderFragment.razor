@@ -6,5 +6,7 @@
     
 @code {
     [Parameter, EditorRequired] 
-    public ILearningSpaceViewModel ViewModel { get; set; }
+#pragma warning disable CS8618 // Parameters provided by framework - n.stich
+        public ILearningSpaceViewModel ViewModel { get; set; }
+#pragma warning restore CS8618
 }

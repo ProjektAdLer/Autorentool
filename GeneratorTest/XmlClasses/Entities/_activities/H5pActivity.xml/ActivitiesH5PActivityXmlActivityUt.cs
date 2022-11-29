@@ -19,12 +19,12 @@ public class ActivitiesH5PActivityXmlActivityUt
         var systemUnderTest = new ActivitiesH5PActivityXmlActivity();
         
         //Act
-        systemUnderTest.H5pactivity = h5pActivity;
+        systemUnderTest.H5Pactivity = h5pActivity;
         
         //Assert
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.H5pactivity, Is.EqualTo(h5pActivity));
+            Assert.That(systemUnderTest.H5Pactivity, Is.EqualTo(h5pActivity));
             Assert.That(systemUnderTest.Id, Is.EqualTo(""));
             Assert.That(systemUnderTest.ModuleId, Is.EqualTo(""));
             Assert.That(systemUnderTest.ModuleName, Is.EqualTo(""));
@@ -40,9 +40,9 @@ public class ActivitiesH5PActivityXmlActivityUt
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         mockFileSystem.AddDirectory(Path.Join(currWorkDir, "XMLFilesForExport","activities", "h5pactivity_1000"));
         
-        var h5pActivity = new ActivitiesH5PActivityXmlH5PActivity();
+        var h5PActivity = new ActivitiesH5PActivityXmlH5PActivity();
         var systemUnderTest = new ActivitiesH5PActivityXmlActivity();
-        systemUnderTest.H5pactivity = h5pActivity;
+        systemUnderTest.H5Pactivity = h5PActivity;
         
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;

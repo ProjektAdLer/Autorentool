@@ -2,7 +2,7 @@
 
 public interface IActivitiesH5PActivityXmlActivity : IXmlSerializablePath
 {
-    ActivitiesH5PActivityXmlH5PActivity H5pactivity { get; set; }
+    ActivitiesH5PActivityXmlH5PActivity H5Pactivity { get; set; }
     
     string Id { get; set; }
     

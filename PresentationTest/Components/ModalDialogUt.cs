@@ -487,6 +487,38 @@ public class ModalDialogUt
         Assert.DoesNotThrow(() => systemUnderTest.Find("#modal-input-drop-test2-foz"));
         Assert.DoesNotThrow(() => systemUnderTest.Find("#modal-input-drop-test2-baz"));
     }
+    
+    [Test]
+    public void Annotations_CorrectlyDisplayedOrNotCreated()
+    {
+        using var ctx = new Bunit.TestContext();
+        
+        const string title = "Test Dialog";
+        const string text = "This is a dialog for automated testing purposes";
+        ModalDialogOnClose onClose = _ => { };
+        const ModalDialogType dialogType = ModalDialogType.Ok;
+        var inputFields = new List<ModalDialogInputField>
+        {
+            new("Test1", ModalDialogInputType.Text),
+            new("Test2", ModalDialogInputType.Text),
+            new("Test3", ModalDialogInputType.Text)
+        };
+        var inputFieldsAnnotations = new Dictionary<string, string>
+        {
+            {"Test1", "foobar"},
+            {"Test2", ""}
+        };
+        
+
+        var systemUnderTest = CreateRenderedModalDialogComponentForTesting(ctx, title, text, onClose,
+            dialogType, inputFields, null, inputFieldsAnnotations);
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.Find("#modal-input-field-test1-annotation").InnerHtml, Is.EqualTo("foobar"));
+            Assert.Throws<ElementNotFoundException>(() => systemUnderTest.Find("#modal-input-field-test2-annotation"));
+            Assert.Throws<ElementNotFoundException>(() => systemUnderTest.Find("#modal-input-field-test3-annotation"));
+        });
+    }
 
     [Test]
     public void CreateComponentWithInvalidModalDialogType_ThrowsException()
@@ -544,7 +576,7 @@ public class ModalDialogUt
     private IRenderedComponent<ModalDialog> CreateRenderedModalDialogComponentForTesting(Bunit.TestContext ctx, string title, string text,
         ModalDialogOnClose onClose,
         ModalDialogType dialogType,
-        IEnumerable<ModalDialogInputField>? inputFields = null, IDictionary<string, string>? initialValues = null)
+        IEnumerable<ModalDialogInputField>? inputFields = null, IDictionary<string, string>? initialValues = null, IDictionary<string, string>? annotations = null)
     {
         return ctx.RenderComponent<ModalDialog>(parameters => parameters
             .Add(p => p.Title, title)
@@ -552,6 +584,7 @@ public class ModalDialogUt
             .Add(p => p.OnClose, onClose)
             .Add(p => p.DialogType, dialogType)
             .Add(p => p.InputFields, inputFields)
-            .Add(p => p.InputFieldsInitialValue, initialValues));
+            .Add(p => p.InputFieldsInitialValue, initialValues)
+            .Add(p => p.InputFieldsAnnotations, annotations));
     }
 }

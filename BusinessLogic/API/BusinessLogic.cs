@@ -1,4 +1,5 @@
-﻿using BusinessLogic.Entities;
+﻿using BusinessLogic.Commands;
+using BusinessLogic.Entities;
 using Shared.Configuration;
 
 namespace BusinessLogic.API;
@@ -8,17 +9,40 @@ public class BusinessLogic : IBusinessLogic
     public BusinessLogic(
         IAuthoringToolConfiguration configuration,
         IDataAccess dataAccess,
-        IWorldGenerator worldGenerator)
+        IWorldGenerator worldGenerator,
+        ICommandStateManager commandStateManager)
     {
         Configuration = configuration;
         DataAccess = dataAccess;
         WorldGenerator = worldGenerator;
+        CommandStateManager = commandStateManager;
     }
     
     
     internal IWorldGenerator WorldGenerator { get; }
+    internal ICommandStateManager CommandStateManager { get; }
     internal IDataAccess DataAccess { get;  }
+    public event Action? OnUndoRedoPerformed;
 
+    public void ExecuteCommand(ICommand command)
+    {
+        CommandStateManager.Execute(command);
+        OnUndoRedoPerformed?.Invoke();
+    }
+    public bool CanUndo => CommandStateManager.CanUndo;
+    public bool CanRedo => CommandStateManager.CanRedo;
+    
+    public void UndoCommand()
+    {
+        CommandStateManager.Undo();
+        OnUndoRedoPerformed?.Invoke();
+    }
+    
+    public void RedoCommand()
+    {
+        CommandStateManager.Redo();
+        OnUndoRedoPerformed?.Invoke();
+    }
 
     public void ConstructBackup(LearningWorld learningWorld, string filepath)
     {
@@ -60,7 +84,7 @@ public class BusinessLogic : IBusinessLogic
         return DataAccess.LoadLearningContent(filepath);
     }
 
-    public LearningContent LoadLearningContent(string name, Stream stream)
+    public LearningContent LoadLearningContent(string name, MemoryStream stream)
     {
         return DataAccess.LoadLearningContent(name, stream);
     }

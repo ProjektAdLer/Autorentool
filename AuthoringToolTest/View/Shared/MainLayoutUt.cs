@@ -16,7 +16,7 @@ namespace AuthoringToolTest.View.Shared;
 [TestFixture]
 public class MainLayoutUt
 {
-#pragma warning disable CS8618 set in setup - n.stich
+#pragma warning disable CS8618 // set in setup - n.stich
     private TestContext _ctx;
     private IPresentationLogic _presentationLogic;
     private IAbstractToolboxRenderFragmentFactory _abstractToolboxRenderFragmentFactory;

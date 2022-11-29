@@ -1,7 +1,17 @@
+using JetBrains.Annotations;
+
 namespace BusinessLogic.Entities;
 
 public class AuthoringToolWorkspace : IOriginator
 {
+    /// <summary>
+    /// Constructor for Automapper. DO NOT USE.
+    /// </summary>
+    [UsedImplicitly]
+    private AuthoringToolWorkspace()
+    {
+        LearningWorlds = new List<LearningWorld>();
+    }
     public AuthoringToolWorkspace(LearningWorld? selectedLearningWorld, List<LearningWorld> learningWorlds)
     {
         SelectedLearningWorld = selectedLearningWorld;

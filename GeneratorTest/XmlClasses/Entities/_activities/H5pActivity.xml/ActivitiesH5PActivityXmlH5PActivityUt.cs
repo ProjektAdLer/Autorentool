@@ -24,7 +24,7 @@ public class ActivitiesH5PActivityXmlH5PActivityUt
             Assert.That(systemUnderTest.Intro, Is.EqualTo(""));
             Assert.That(systemUnderTest.Introformat, Is.EqualTo("1"));
             Assert.That(systemUnderTest.Grade, Is.EqualTo("100"));
-            Assert.That(systemUnderTest.Displayoptions, Is.EqualTo("15"));
+            Assert.That(systemUnderTest.DisplayOptions, Is.EqualTo("15"));
             Assert.That(systemUnderTest.Enabletracking, Is.EqualTo("1"));
             Assert.That(systemUnderTest.Grademethod, Is.EqualTo("1"));
             Assert.That(systemUnderTest.Reviewmode, Is.EqualTo("1"));

@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using NUnit.Framework;
-using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
@@ -15,34 +14,28 @@ public class LearningWorldViewModelUt
     [Test]
     public void Constructor_InitializesAllProperties()
     {
-        var Name = "asdf";
-        var Shortname = "jkl;";
-        var Authors = "ben and jerry";
-        var Language = "german";
-        var Description = "very cool element";
-        var Goals = "learn very many things";
-        var content1 = new LearningContentViewModel("a", "b", new byte[]{0x01,0x02});
-        var content2 = new LearningContentViewModel("z", "e", new byte[]{0x05,0x01});
-        var ele1 = new LearningElementViewModel("a", "b", null, content1, "e", "f", "g",LearningElementDifficultyEnum.Easy,17, 23);
-        var ele2 = new LearningElementViewModel("z", "zz", null,  content2, "z","zzz", "z",LearningElementDifficultyEnum.Medium, 444, double.MaxValue);
-        var LearningElements = new List<ILearningElementViewModel> { ele1, ele2 };
+        var name = "asdf";
+        var shortname = "jkl;";
+        var authors = "ben and jerry";
+        var language = "german";
+        var description = "very cool element";
+        var goals = "learn very many things";
         var space1 = new LearningSpaceViewModel("ff", "ff", "ff", "ff", "ff");
-        var LearningSpaces = new List<ILearningSpaceViewModel> { space1 };
+        var learningSpaces = new List<ILearningSpaceViewModel> { space1 };
 
-        var systemUnderTest = new LearningWorldViewModel(Name, Shortname, Authors, Language, Description, Goals, 
-            unsavedChanges:false, LearningElements, LearningSpaces);
+        var systemUnderTest = new LearningWorldViewModel(name, shortname, authors, language, description, goals, 
+            unsavedChanges: false, learningSpaces: learningSpaces);
         
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.Name, Is.EqualTo(Name));
-            Assert.That(systemUnderTest.Shortname, Is.EqualTo(Shortname));
-            Assert.That(systemUnderTest.Authors, Is.EqualTo(Authors));
-            Assert.That(systemUnderTest.Language, Is.EqualTo(Language)); 
-            Assert.That(systemUnderTest.Description, Is.EqualTo(Description));
-            Assert.That(systemUnderTest.Goals, Is.EqualTo(Goals));
+            Assert.That(systemUnderTest.Name, Is.EqualTo(name));
+            Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortname));
+            Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
+            Assert.That(systemUnderTest.Language, Is.EqualTo(language)); 
+            Assert.That(systemUnderTest.Description, Is.EqualTo(description));
+            Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.UnsavedChanges, Is.False);
-            Assert.That(systemUnderTest.LearningElements, Is.EqualTo(LearningElements));
-            Assert.That(systemUnderTest.LearningSpaces, Is.EqualTo(LearningSpaces));
+            Assert.That(systemUnderTest.LearningSpaces, Is.EqualTo(learningSpaces));
         });
     }
 
@@ -58,20 +51,36 @@ public class LearningWorldViewModelUt
     public void Workload_ReturnsCorrectWorkload()
     {
         var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo");
-        var worldElement = new LearningElementViewModel("a", "b", systemUnderTest, null, "c", "d", "e",
-            LearningElementDifficultyEnum.Easy, 4);
         var space = new LearningSpaceViewModel("a", "b", "c", "d", "e");
-        var spaceElement = new LearningElementViewModel("a", "b", space, null, "c", "d", "e",
-            LearningElementDifficultyEnum.Easy, 6);
+        var spaceElement = new LearningElementViewModel("a", "b", null!, "url","c", "d", "e",
+            LearningElementDifficultyEnum.Easy, space, 6);
         
         space.LearningElements.Add(spaceElement);
         systemUnderTest.LearningSpaces.Add(space);
-        systemUnderTest.LearningElements.Add(worldElement);
+
+        Assert.That(systemUnderTest.Workload, Is.EqualTo(6));
+    }
+    
+    [Test]
+    public void Points_ReturnsCorrectSum()
+    {
+        var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo");
+        var space = new LearningSpaceViewModel("a", "b", "c", "d", "e");
+        var spaceElement = new LearningElementViewModel("a", "b", null!, "url","c", "d", "e",
+            LearningElementDifficultyEnum.Easy, space, 6,7);
+        var space2 = new LearningSpaceViewModel("a", "b", "c", "d", "e");
+        var spaceElement2 = new LearningElementViewModel("a", "b", null!, "url","c", "d", "e",
+            LearningElementDifficultyEnum.Easy, space, 4,5);
         
-        Assert.That(systemUnderTest.Workload, Is.EqualTo(10));
+        space.LearningElements.Add(spaceElement);
+        space2.LearningElements.Add(spaceElement2);
+        systemUnderTest.LearningSpaces.Add(space);
+        systemUnderTest.LearningSpaces.Add(space2);
+
+        Assert.That(systemUnderTest.Points, Is.EqualTo(12));
 
         systemUnderTest.LearningSpaces.Remove(space);
         
-        Assert.That(systemUnderTest.Workload, Is.EqualTo(4));
+        Assert.That(systemUnderTest.Points, Is.EqualTo(5));
     }
 }

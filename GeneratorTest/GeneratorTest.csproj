@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
@@ -21,8 +21,8 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="System.IO.Abstractions" Version="17.1.1" />
-        <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="17.1.1" />
+        <PackageReference Include="System.IO.Abstractions" Version="17.2.3" />
+        <PackageReference Include="System.IO.Abstractions.TestingHelpers" Version="17.2.3" />
     </ItemGroup>
 
     <ItemGroup>

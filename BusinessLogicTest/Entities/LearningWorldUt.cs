@@ -1,6 +1,5 @@
 using BusinessLogic.Entities;
 using NUnit.Framework;
-using Shared;
 
 namespace BusinessLogicTest.Entities;
 
@@ -16,16 +15,11 @@ public class LearningWorldUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
-        var content1 = new LearningContent("a", "b", new byte[]{0x01,0x02});
-        var content2 = new LearningContent("w", "e", new byte[]{0x02,0x01});
-        var ele1 = new LearningElement("a", "b", "e",content1, "pupup", "g","h",LearningElementDifficultyEnum.Easy, 17, 23);
-        var ele2 = new LearningElement("z", "zz", "zzz", content2,"baba", "z","zz",LearningElementDifficultyEnum.Medium, 444, double.MaxValue);
-        var learningElements = new List<LearningElement> { ele1, ele2 };
-        var space1 = new LearningSpace("ff", "ff", "ff", "ff", "ff");
+        var space1 = new LearningSpace("ff", "ff", "ff", "ff", "ff", 5);
         var learningSpaces = new List<LearningSpace> { space1 };
 
         var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals,
-            learningElements, learningSpaces);
+            learningSpaces);
         
         Assert.Multiple(() =>
         {
@@ -35,7 +29,6 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.Language, Is.EqualTo(language)); 
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
-            Assert.That(systemUnderTest.LearningElements, Is.EqualTo(learningElements));
             Assert.That(systemUnderTest.LearningSpaces, Is.EqualTo(learningSpaces));
         });
     }
@@ -49,15 +42,10 @@ public class LearningWorldUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
-        var content1 = new LearningContent("a", "b", new byte[]{0x01,0x02});
-        var content2 = new LearningContent("w", "e", new byte[]{0x02,0x01});
-        var ele1 = new LearningElement("a", "b", "e",content1, "pupup", "g","h",LearningElementDifficultyEnum.Easy, 17, 23);
-        var ele2 = new LearningElement("z", "zz", "zzz", content2,"baba", "z","zz",LearningElementDifficultyEnum.Medium, 444, double.MaxValue);
-        var learningElements = new List<LearningElement> { ele1, ele2 };
-        var space1 = new LearningSpace("ff", "ff", "ff", "ff", "ff");
+        var space1 = new LearningSpace("ff", "ff", "ff", "ff", "ff", 5);
         var learningSpaces = new List<LearningSpace> { space1 };
         
-        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, learningElements, learningSpaces);
+        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, learningSpaces);
 
         var learningWorldMemento = systemUnderTest.GetMemento();
         
@@ -67,9 +55,8 @@ public class LearningWorldUt
         var languageChanged = "english";
         var descriptionChanged = "changed description";
         var goalsChanged = "new goals";
-        var newContent2 = new LearningContent("w", "e", new byte[]{0x08,0x02});
-        var newEle2 = new LearningElement("uu", "iii", "ooo", newContent2,"lll", "kkk","fff", LearningElementDifficultyEnum.Hard, 77, 66);
-        var space2 = new LearningSpace("gg", "gg", "gg", "gg", "gg");
+        var newContent2 = new LearningContent("w", "e", "");
+        var space2 = new LearningSpace("gg", "gg", "gg", "gg", "gg", 5);
 
         
         systemUnderTest.Name = nameChanged;
@@ -78,8 +65,6 @@ public class LearningWorldUt
         systemUnderTest.Language = languageChanged;
         systemUnderTest.Description = descriptionChanged;
         systemUnderTest.Goals = goalsChanged;
-        systemUnderTest.LearningElements.Remove(ele2);
-        systemUnderTest.LearningElements.Add(newEle2);
         systemUnderTest.LearningSpaces.Add(space2);
         
 
@@ -91,9 +76,6 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.Language, Is.EqualTo(languageChanged));
             Assert.That(systemUnderTest.Description, Is.EqualTo(descriptionChanged));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goalsChanged));
-            Assert.That(systemUnderTest.LearningElements, Has.Count.EqualTo(2));
-            Assert.That(systemUnderTest.LearningElements[0], Is.EqualTo(ele1));
-            Assert.That(systemUnderTest.LearningElements[1], Is.EqualTo(newEle2));
             Assert.That(systemUnderTest.LearningSpaces, Has.Count.EqualTo(2));
             Assert.That(systemUnderTest.LearningSpaces[0], Is.EqualTo(space1));
             Assert.That(systemUnderTest.LearningSpaces[1], Is.EqualTo(space2));
@@ -109,9 +91,6 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.Language, Is.EqualTo(language));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
-            Assert.That(systemUnderTest.LearningElements, Has.Count.EqualTo(2));
-            Assert.That(systemUnderTest.LearningElements[0], Is.EqualTo(ele1));
-            Assert.That(systemUnderTest.LearningElements[1], Is.EqualTo(ele2));
             Assert.That(systemUnderTest.LearningSpaces, Has.Count.EqualTo(1));
             Assert.That(systemUnderTest.LearningSpaces[0], Is.EqualTo(space1));
         });
@@ -126,15 +105,10 @@ public class LearningWorldUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
-        var content1 = new LearningContent("a", "b", new byte[]{0x01,0x02});
-        var content2 = new LearningContent("w", "e", new byte[]{0x02,0x01});
-        var ele1 = new LearningElement("a", "b", "e",content1, "pupup", "g","h",LearningElementDifficultyEnum.Easy, 17, 23);
-        var ele2 = new LearningElement("z", "zz", "zzz", content2,"baba", "z","zz",LearningElementDifficultyEnum.Medium, 444, double.MaxValue);
-        var learningElements = new List<LearningElement> { ele1, ele2 };
-        var space1 = new LearningSpace("ff", "ff", "ff", "ff", "ff");
+        var space1 = new LearningSpace("ff", "ff", "ff", "ff", "ff", 5);
         var learningSpaces = new List<LearningSpace> { space1 };
         
-        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, learningElements, learningSpaces);
+        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, learningSpaces);
 
 
         var mementoMock = new MementoMock();

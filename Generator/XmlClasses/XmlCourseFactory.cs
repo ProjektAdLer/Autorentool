@@ -1,5 +1,4 @@
-﻿using System.IO.Abstractions;
-using Generator.DSL;
+﻿using Generator.DSL;
 using Generator.XmlClasses.Entities._course.Completiondefault.xml;
 using Generator.XmlClasses.Entities._course.Course.xml;
 using Generator.XmlClasses.Entities._course.Enrolments.xml;
@@ -90,7 +89,7 @@ public class XmlCourseFactory : IXmlCourseFactory
         CourseCourseXmlCourse.Fullname = _learningWorld.Identifier.Value;
         CourseCourseXmlCourse.Format = "tiles";
         CourseCourseXmlCourse.BaseColour = "#009681";
-        CourseCourseXmlCourse.CourseUseSubtiles = "1";
+        CourseCourseXmlCourse.CourseUseSubtiles = "0";
         CourseCourseXmlCourse.CourseShowTileProgress = "2";
         CourseCourseXmlCourse.ShowGrades = "1";
         CourseCourseXmlCourse.Visible = "1";
@@ -117,12 +116,12 @@ public class XmlCourseFactory : IXmlCourseFactory
         CourseEnrolmentsXmlEnrolGuest.Id = "2";
         CourseEnrolmentsXmlEnrolGuest.RoleId = "0";
         CourseEnrolmentsXmlEnrolGuest.EnrolMethod = "guest";
-        CourseEnrolmentsXmlEnrolGuest.Status = "0";
+        CourseEnrolmentsXmlEnrolGuest.Status = "1";
 
         CourseEnrolmentsXmlEnrolSelf.Id = "3";
         CourseEnrolmentsXmlEnrolSelf.RoleId = "5";
         CourseEnrolmentsXmlEnrolSelf.EnrolMethod = "self";
-        CourseEnrolmentsXmlEnrolSelf.Status = "1";
+        CourseEnrolmentsXmlEnrolSelf.Status = "0";
         CourseEnrolmentsXmlEnrolSelf.CustomInt1 = "0";
         CourseEnrolmentsXmlEnrolSelf.CustomInt2 = "0";
         CourseEnrolmentsXmlEnrolSelf.CustomInt3 = "0";

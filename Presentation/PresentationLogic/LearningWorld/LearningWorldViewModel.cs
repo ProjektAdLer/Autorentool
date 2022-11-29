@@ -1,13 +1,31 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Presentation.PresentationLogic.LearningElement;
+using JetBrains.Annotations;
+using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
 public class LearningWorldViewModel : ILearningWorldViewModel
 {
+    /// <summary>
+    /// Private Constructor for AutoMapper
+    /// </summary>
+    [UsedImplicitly]
+    private LearningWorldViewModel()
+    {
+        Id = Guid.Empty;
+        _name = "";
+        _shortname = "";
+        _authors = "";
+        _language = "";
+        _description = "";
+        _goals = "";
+        _unsavedChanges = false;
+        _learningSpaces = new List<ILearningSpaceViewModel>();
+        _learningPathWays = new List<ILearningPathWayViewModel>();
+    }
+    
     /// <summary>
     /// Initializes a new instance of the <see cref="LearningWorldViewModel"/> class.
     /// </summary>
@@ -18,28 +36,30 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     /// <param name="description">A description of the learning world and its contents.</param>
     /// <param name="goals">A description of the goals this learning world is supposed to achieve.</param>
     /// <param name="unsavedChanges">Whether or not the object contains changes that are yet to be saved to disk.</param>
-    /// <param name="learningElements">Optional collection of learning elements contained in the learning world.
-    /// Should be used when loading a saved learning world into the application.</param>
     /// <param name="learningSpaces">Optional collection of learning spaces contained in the learning world.
     /// Should be used when loading a saved learnign world into the application.</param>
+    /// <param name="learningPathWays">Optional collection of learning pathways in the learning world.</param>
     public LearningWorldViewModel(string name, string shortname, string authors, string language, string description,
-        string goals, bool unsavedChanges = true, ICollection<ILearningElementViewModel>? learningElements = null,
-        ICollection<ILearningSpaceViewModel>? learningSpaces = null)
+        string goals, bool unsavedChanges = true, List<ILearningSpaceViewModel>? learningSpaces = null,
+        List<ILearningPathWayViewModel>? learningPathWays = null)
     {
-        Name = name;
-        Shortname = shortname;
-        Authors = authors;
-        Language = language;
-        Description = description;
-        Goals = goals;
-        UnsavedChanges = unsavedChanges;
-        LearningElements = learningElements ?? new Collection<ILearningElementViewModel>();
-        LearningSpaces = learningSpaces ?? new Collection<ILearningSpaceViewModel>();
+        Id = Guid.NewGuid();
+        _name = name;
+        _shortname = shortname;
+        _authors = authors;
+        _language = language;
+        _description = description;
+        _goals = goals;
+        _unsavedChanges = unsavedChanges;
+        _learningSpaces = learningSpaces ?? new List<ILearningSpaceViewModel>();
+        _learningPathWays = learningPathWays ?? new List<ILearningPathWayViewModel>();
     }
+    
     public const string fileEnding = "awf";
     
-    private ICollection<ILearningElementViewModel> _learningElements;
+    public Guid Id { get; private set; }
     private ICollection<ILearningSpaceViewModel> _learningSpaces;
+    private ICollection<ILearningPathWayViewModel> _learningPathWays;
     private string _name;
     private string _shortname;
     private string _authors;
@@ -47,21 +67,11 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     private string _description;
     private string _goals;
     private bool _unsavedChanges;
-    private ILearningObjectViewModel? _selectedLearningObject;
+    private ILearningSpaceViewModel? _selectedLearningSpace;
+    private ILearningSpaceViewModel? _onHoveredLearningSpace;
     private bool _showingLearningSpaceView;
 
     public string FileEnding => fileEnding;
-
-    public ICollection<ILearningElementViewModel> LearningElements
-    {
-        get => _learningElements;
-        set
-        {
-            if (!SetField(ref _learningElements, value)) return;
-            OnPropertyChanged(nameof(LearningObjects));
-            OnPropertyChanged(nameof(Workload));
-        }
-    }
 
     public ICollection<ILearningSpaceViewModel> LearningSpaces
     {
@@ -69,15 +79,20 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         set
         {
             if (!SetField(ref _learningSpaces, value)) return;
-            OnPropertyChanged(nameof(LearningObjects));
             OnPropertyChanged(nameof(Workload));
         }
     }
-
-    public IEnumerable<ILearningObjectViewModel> LearningObjects => LearningElements.Concat<ILearningObjectViewModel>(LearningSpaces);
+    
+    public ICollection<ILearningPathWayViewModel> LearningPathWays
+    {
+        get => _learningPathWays;
+        set => SetField(ref _learningPathWays, value);
+    }
     public int Workload =>
-        LearningSpaces.Sum(space => space.Workload) + LearningElements.Sum(element => element.Workload);
+        LearningSpaces.Sum(space => space.Workload);
 
+    public int Points =>
+        LearningSpaces.Sum(space => space.Points);
     public string Name
     {
         get => _name;
@@ -120,22 +135,29 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         set => SetField(ref _unsavedChanges, value);
     }
 
-    public ILearningObjectViewModel? SelectedLearningObject
+    public ILearningSpaceViewModel? SelectedLearningSpace
     {
-        get => _selectedLearningObject;
-        set => SetField(ref _selectedLearningObject, value);
+        get => _selectedLearningSpace;
+        set => SetField(ref _selectedLearningSpace, value);
+    }
+    
+    public ILearningSpaceViewModel? OnHoveredLearningSpace
+    {
+        get => _onHoveredLearningSpace;
+        set => SetField(ref _onHoveredLearningSpace, value);
     }
 
     public bool ShowingLearningSpaceView
     {
         get => _showingLearningSpaceView;
+        //TODO: Throw exception if ShowingLearningSpaceView is set to true but LearningSpaceViewModel in LearningSpacePresenter is null
         set => SetField(ref _showingLearningSpaceView, value);
     }
     
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
-    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }

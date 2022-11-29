@@ -63,6 +63,7 @@ public class ToolboxRenderFragmentFactoryUt
         firstPassRendered.MarkupMatches(expectedMarkup);
         
         //assert that entry was saved (in other words, Set was called)
+        //TODO: refactor into substitute and check call
         Assert.That(cache.Entries.Any(entry => entry.Key == obj && (RenderFragment)entry.Value == firstPass));
 
         var secondPass = systemUnderTest.GetRenderFragment(obj);
@@ -118,7 +119,7 @@ a name
 
             yield return new object[]
             {
-                new LearningElementViewModel("another name", "an", null, null, "authors", "description", "goals",LearningElementDifficultyEnum.Easy),
+                new LearningElementViewModel("another name", "an", null!, "url","authors", "description", "goals",LearningElementDifficultyEnum.Easy),
                 @"<div class=""col-3 element text-center text-wrap learning-element"">
 another name
 <br/>

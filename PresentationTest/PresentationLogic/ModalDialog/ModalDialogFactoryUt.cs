@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using AngleSharp.Dom;
 using Bunit;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.LearningContent;
-using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.ModalDialog;
 using TestContext = Bunit.TestContext;
 
@@ -29,7 +29,7 @@ public class ModalDialogFactoryUt
         ILearningSpaceViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
 
         // Act
-        var fragment = systemUnderTest.GetCreateLearningElementFragment(null, _ => { }, "");
+        var fragment = systemUnderTest.GetCreateLearningElementFragment(null, _ => { });
         var renderedFragment = ctx.Render(fragment);
 
         // Assert
@@ -49,11 +49,11 @@ public class ModalDialogFactoryUt
         ILearningSpaceViewModalDialogFactory systemUnderTest = CreateFactoryForTesting(spaceViewInputFieldsFactory);
 
         //Act
-        systemUnderTest.GetCreateLearningElementFragment(null, _ => { }, "");
+        systemUnderTest.GetCreateLearningElementFragment(null, _ => { });
 
         //Assert
         spaceViewInputFieldsFactory.Received()
-            .GetCreateLearningElementInputFields(Arg.Any<LearningContentViewModel>(), Arg.Any<string>());
+            .GetCreateLearningElementInputFields(Arg.Any<LearningContentViewModel>());
     }
 
     [Test]
@@ -63,7 +63,7 @@ public class ModalDialogFactoryUt
         ILearningSpaceViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
 
         //Act
-        var fragment = systemUnderTest.GetCreateLearningElementFragment(null, _ => { }, "");
+        var fragment = systemUnderTest.GetCreateLearningElementFragment(null, _ => { });
         var renderedFragment = ctx.Render(fragment);
 
         //Assert
@@ -129,68 +129,6 @@ public class ModalDialogFactoryUt
 
         //Assert
         TestCreateOrEditLearningElementOrSpaceModalDialog(renderedFragment, false, false);
-    }
-
-    [Test]
-    public void ILearningWorldViewModalDialogFactory_GetCreateLearningElement_CallsModalDialogInputFieldsFactory()
-    {
-        //Arrange
-        var worldViewInputFieldsFactory = Substitute.For<ILearningWorldViewModalDialogInputFieldsFactory>();
-        ILearningWorldViewModalDialogFactory systemUnderTest =
-            CreateFactoryForTesting(worldViewInputFieldsFactory: worldViewInputFieldsFactory);
-
-        //Act
-        systemUnderTest.GetCreateLearningElementFragment(null, new List<ILearningSpaceViewModel>(), "", _ => { });
-
-        //Assert
-        worldViewInputFieldsFactory.Received().GetCreateLearningElementInputFields(Arg.Any<LearningContentViewModel>(),
-            Arg.Any<List<ILearningSpaceViewModel>>(), Arg.Any<string>());
-    }
-
-    [Test]
-    public void ILearningWorldViewModalDialogFactory_GetCreateLearningElement_ReturnsFragment()
-    {
-        //Arrange
-        ILearningWorldViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
-
-        //Act
-        var fragment =
-            systemUnderTest.GetCreateLearningElementFragment(null, new List<ILearningSpaceViewModel>(), "", _ => { });
-        var renderedFragment = ctx.Render(fragment);
-
-        //Assert
-        TestCreateOrEditLearningElementOrSpaceModalDialog(renderedFragment, true, true);
-    }
-
-    [Test]
-    public void ILearningWorldViewModalDialogFactory_GetEditLearningElement_CallsModalDialogInputFieldsFactory()
-    {
-        //Arrange
-        var worldViewInputFieldsFactory = Substitute.For<ILearningWorldViewModalDialogInputFieldsFactory>();
-        ILearningWorldViewModalDialogFactory systemUnderTest =
-            CreateFactoryForTesting(worldViewInputFieldsFactory: worldViewInputFieldsFactory);
-
-        //Act
-        systemUnderTest.GetEditLearningElementFragment(new Dictionary<string, string>(), _ => { });
-
-        //Assert
-        worldViewInputFieldsFactory.Received().GetEditLearningElementInputFields();
-    }
-
-    [Test]
-    public void ILearningWorldViewModalDialogFactory_GetEditLearningElement_ReturnsFragment()
-    {
-        //Arrange
-        ILearningWorldViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
-
-        //Act
-        var fragment =
-            systemUnderTest.GetEditLearningElementFragment(new Dictionary<string, string>() {{"UnitTest", "TestValue"}},
-                _ => { });
-        var renderedFragment = ctx.Render(fragment);
-
-        //Assert
-        TestCreateOrEditLearningElementOrSpaceModalDialog(renderedFragment, false, true);
     }
 
     [Test]
@@ -337,53 +275,6 @@ public class ModalDialogFactoryUt
     }
 
     [Test]
-    public void IAuthoringToolWorkspaceViewModalDialogFactory_GetReplaceWorldFragment_ReturnsFragment()
-    {
-        //Arrange
-        IAuthoringToolWorkspaceViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
-        const string worldToReplaceWithName = "World";
-
-        //Act
-        var fragment = systemUnderTest.GetReplaceWorldFragment(_ => { }, worldToReplaceWithName);
-        var renderedFragment = ctx.Render(fragment);
-
-        //Assert
-        Assert.Multiple(() =>
-        {
-            Assert.That(renderedFragment, Is.Not.Null);
-            TestModalDialogBasicStructure(renderedFragment);
-            TestDialogHeader(renderedFragment, "Replace world?", true);
-            TestModalBody(renderedFragment,
-                $"You already have a world with the name {worldToReplaceWithName} loaded. Do you want to replace it?",
-                false);
-            TestFooterOkCancel(renderedFragment);
-        });
-    }
-
-    [Test]
-    public void IAuthoringToolWorkspaceViewModalDialogFactory_GetReplaceUnsavedWorldFragment_ReturnsFragment()
-    {
-        //Arrange
-        IAuthoringToolWorkspaceViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
-        const string replacedUnsavedWorldName = "World";
-
-        //Act
-        var fragment = systemUnderTest.GetReplaceUnsavedWorldFragment(_ => { }, replacedUnsavedWorldName);
-        var renderedFragment = ctx.Render(fragment);
-
-        //Assert
-        Assert.Multiple(() =>
-        {
-            Assert.That(renderedFragment, Is.Not.Null);
-            TestModalDialogBasicStructure(renderedFragment);
-            TestDialogHeader(renderedFragment, "Save replaced world?", false);
-            TestModalBody(renderedFragment,
-                $"Replaced world {replacedUnsavedWorldName} has unsaved changes. Do you want to save it?", false);
-            TestFooterYesNo(renderedFragment);
-        });
-    }
-
-    [Test]
     public void IAuthoringToolWorkspaceViewModalDialogFactory_GetDeleteUnsavedWorldFragment_ReturnsFragment()
     {
         //Arrange
@@ -442,14 +333,14 @@ public class ModalDialogFactoryUt
         var renderedFragment = ctx.Render(fragment);
 
         //Assert
-        Assert.Multiple(() =>
-        {
+        //Assert.Multiple(() =>
+        //{
             Assert.That(renderedFragment, Is.Not.Null);
             TestModalDialogBasicStructure(renderedFragment);
             TestDialogHeader(renderedFragment, "Create new learning world", true);
             TestModalBody(renderedFragment, "Please enter the required data for the learning world below:", true);
             TestFooterOkCancel(renderedFragment);
-        });
+        //});
     }
 
     [Test]
@@ -571,8 +462,9 @@ public class ModalDialogFactoryUt
         Assert.Multiple(() =>
         {
             Assert.That(modalInput.Children[0].Children[0].ClassName, Is.EqualTo("col"));
-            Assert.That(modalInput.Children[0].Children[0].InnerHtml,
-                Is.EqualTo("UnitTest"));
+            Assert.That(modalInput.Children[0].Children[0].GetInnerText(), Is.EqualTo("UnitTest *"));
+            //use semantic comparison https://bunit.dev/docs/verification/semantic-html-comparison
+            Assert.That(() => modalInput.Children[0].Children[0].Children.First().MarkupMatches(@"<span style=""color:#FF0000"">*</span>"), Throws.Nothing);
             Assert.That(modalInput.Children[0].Children[1].ClassName, Is.EqualTo("col"));
             Assert.That(modalInput.Children[0].Children[1].Children,
                 Has.Length.EqualTo(1));
@@ -664,7 +556,7 @@ public class ModalDialogFactoryUt
             spaceViewInputFieldsFactory = Substitute.For<ILearningSpaceViewModalDialogInputFieldsFactory>();
 
             spaceViewInputFieldsFactory
-                .GetCreateLearningElementInputFields(Arg.Any<LearningContentViewModel>(), Arg.Any<string>())
+                .GetCreateLearningElementInputFields(Arg.Any<LearningContentViewModel>())
                 .Returns(modalDialogInputFieldReturnValue);
 
             spaceViewInputFieldsFactory.GetEditLearningElementInputFields().Returns(modalDialogInputFieldReturnValue);
@@ -675,13 +567,6 @@ public class ModalDialogFactoryUt
         if (worldViewInputFieldsFactory == null)
         {
             worldViewInputFieldsFactory = Substitute.For<ILearningWorldViewModalDialogInputFieldsFactory>();
-
-            worldViewInputFieldsFactory
-                .GetCreateLearningElementInputFields(Arg.Any<LearningContentViewModel>(),
-                    Arg.Any<IEnumerable<ILearningSpaceViewModel>>(), Arg.Any<string>())
-                .Returns(modalDialogInputFieldReturnValue);
-
-            worldViewInputFieldsFactory.GetEditLearningElementInputFields().Returns(modalDialogInputFieldReturnValue);
 
             worldViewInputFieldsFactory.GetCreateLearningSpaceInputFields().Returns(modalDialogInputFieldReturnValue);
 

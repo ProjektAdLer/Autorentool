@@ -1,14 +1,15 @@
+using System.Runtime.Serialization;
 
 namespace PersistEntities;
 
 [Serializable]
-
+[DataContract]
 public class H5PTestElementPe : LearningElementPe
 {
-    public H5PTestElementPe(string name, string shortname,  string? parentName, LearningContentPe? content,
+    internal H5PTestElementPe(string name, string shortname, LearningContentPe? learningContent, string url,
         string authors, string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload,
-        double positionX, double positionY) : base(name, shortname,parentName,content, authors, description, 
-        goals,difficulty,workload, positionX,positionY)
+        int points, double positionX, double positionY) : base(name, shortname,learningContent, url, authors, description, 
+        goals, difficulty, workload, points, positionX, positionY)
     {
     }
     /// <summary>

@@ -30,7 +30,7 @@ public class CourseCourseXmlCourseUt
                 Assert.That(systemUnderTest.Format, Is.EqualTo("tiles"));
                 Assert.That(systemUnderTest.DefaultTileIcon, Is.EqualTo("pie-chart"));
                 Assert.That(systemUnderTest.BaseColour, Is.EqualTo("#009681"));
-                Assert.That(systemUnderTest.CourseUseSubtiles, Is.EqualTo("1"));
+                Assert.That(systemUnderTest.CourseUseSubtiles, Is.EqualTo("0"));
                 Assert.That(systemUnderTest.UseSubtilesSecZero, Is.EqualTo("0"));
                 Assert.That(systemUnderTest.CourseShowTileProgress, Is.EqualTo("2"));
                 Assert.That(systemUnderTest.DisplayFilterbar, Is.EqualTo("0"));
@@ -75,7 +75,6 @@ public class CourseCourseXmlCourseUt
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         mockFileSystem.AddDirectory(Path.Combine(curWorkDir, "XMLFilesForExport","course"));
 
-        var courseCategory = new CourseCourseXmlCategory();
         var systemUnderTest = new CourseCourseXmlCourse();
 
         //Act

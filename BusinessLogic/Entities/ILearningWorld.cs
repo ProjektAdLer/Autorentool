@@ -3,9 +3,8 @@
 public interface ILearningWorld
 {
     
-    List<LearningElement> LearningElements { get; set; }
     List<LearningSpace> LearningSpaces { get; set; }
-    string Name { get; set; }
+    List<LearningPathway> LearningPathways { get; set; }
     string Description { get; set; }
     string Shortname { get; set; }
     string Authors { get; set; }

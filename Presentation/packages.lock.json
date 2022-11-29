@@ -21,6 +21,12 @@
           "Microsoft.Extensions.Options": "6.0.0"
         }
       },
+      "JetBrains.Annotations": {
+        "type": "Direct",
+        "requested": "[2022.1.0, )",
+        "resolved": "2022.1.0",
+        "contentHash": "ASfpoFJxiRsC9Xc4TWuPM41Zb/gl64xwfMOhnOZ3RnVWGYIZchjpWQV5zshJgoc/ZxVtgjaF7b577lURj7E6ig=="
+      },
       "Microsoft.Extensions.Caching.Memory": {
         "type": "Direct",
         "requested": "[6.0.1, )",
@@ -42,9 +48,9 @@
       },
       "System.IO.Abstractions": {
         "type": "Direct",
-        "requested": "[17.1.1, )",
-        "resolved": "17.1.1",
-        "contentHash": "LWOM12Bd0kp/gaH4g1o/O2/6JDcHF/fuctF1IqDZt0aAqU2BwGiMihi9Cdcm5jJz8La1wFWbRPuRui8WeX6m8w=="
+        "requested": "[17.2.3, )",
+        "resolved": "17.2.3",
+        "contentHash": "VcozGeE4SxIo0cnXrDHhbrh/Gb8KQnZ3BvMelvh+iw0PrIKtuuA46U2Xm4e4pgnaWFgT4RdZfTpWl/WPRdw0WQ=="
       },
       "ElectronNET.API": {
         "type": "Transitive",
@@ -86,8 +92,8 @@
       },
       "Microsoft.Extensions.Logging.Abstractions": {
         "type": "Transitive",
-        "resolved": "6.0.1",
-        "contentHash": "dzB2Cgg+JmrouhjkcQGzSFjjvpwlq353i8oBQO2GWNjCXSzhbtBRUf28HSauWe7eib3wYOdb3tItdjRwAdwCSg=="
+        "resolved": "6.0.2",
+        "contentHash": "pwXCZKaA7m5wgmCj49dW+H1RPSY7U62SKLTQYCcavf/k3Nyt/WnBgAjG4jMGnwy9rElfAZ2KvxvM5CJzJWG0hg=="
       },
       "Microsoft.Extensions.Options": {
         "type": "Transitive",
@@ -1165,19 +1171,22 @@
       "businesslogic": {
         "type": "Project",
         "dependencies": {
-          "Shared": "[1.0.0, )"
+          "JetBrains.Annotations": "2022.1.0",
+          "Shared": "1.0.0"
         }
       },
       "electronwrapper": {
         "type": "Project",
         "dependencies": {
-          "ElectronNET.API": "[13.5.1, )"
+          "ElectronNET.API": "13.5.1",
+          "JetBrains.Annotations": "2022.1.0"
         }
       },
       "shared": {
         "type": "Project",
         "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "[6.0.1, )"
+          "JetBrains.Annotations": "2022.1.0",
+          "Microsoft.Extensions.Logging.Abstractions": "6.0.2"
         }
       }
     },

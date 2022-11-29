@@ -7,6 +7,7 @@ public interface ILearningSpacePe : ISpacePe
     string Shortname { get; set; }
     string Authors { get; set; }
     string Goals { get; set; }
+    int RequiredPoints { get; set; }
     List<LearningElementPe> LearningElements { get; set; }
     double PositionX { get; set; }
     double PositionY { get; set; }

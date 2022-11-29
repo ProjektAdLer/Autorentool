@@ -9,7 +9,7 @@ public class ActivitiesH5PActivityXmlActivity : IActivitiesH5PActivityXmlActivit
 
     public ActivitiesH5PActivityXmlActivity()
     {
-        H5pactivity = new ActivitiesH5PActivityXmlH5PActivity();
+        H5Pactivity = new ActivitiesH5PActivityXmlH5PActivity();
         Id = "";
         ModuleId = "";
         ModuleName = "";
@@ -24,7 +24,7 @@ public class ActivitiesH5PActivityXmlActivity : IActivitiesH5PActivityXmlActivit
     }
     
     [XmlElement(ElementName="h5pactivity")]
-    public ActivitiesH5PActivityXmlH5PActivity H5pactivity { get; set; }
+    public ActivitiesH5PActivityXmlH5PActivity H5Pactivity { get; set; }
     
     [XmlAttribute(AttributeName="id")]
     public string Id { get; set; }

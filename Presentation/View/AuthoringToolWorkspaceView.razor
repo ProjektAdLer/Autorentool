@@ -1,5 +1,6 @@
 ﻿@page "/AuthoringToolWorkspaceView"
 @using Presentation.View.LearningWorld
+@using Presentation.Components
 @using Presentation.Components.ModalDialog
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
@@ -25,12 +26,15 @@
     </select>
 </label>
 <div>
+    <div>
+        <button class="btn btn-primary" @onclick="PresentationLogic.UndoCommand" disabled="@(!PresentationLogic.CanUndo)">Undo</button>
+        <button class="btn btn-primary" @onclick="PresentationLogic.RedoCommand" disabled="@(!PresentationLogic.CanRedo)">Redo</button>
+    </div>
     @if (AuthoringToolWorkspaceVm.SelectedLearningWorld != null)
     {
         <label class="world-data">
             Selected world: @AuthoringToolWorkspaceVm.SelectedLearningWorld.Name,
             Description: @AuthoringToolWorkspaceVm.SelectedLearningWorld.Description,
-            Elements: @AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningElements.Count,
             Spaces: @AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces.Count
         </label>
     }
@@ -54,17 +58,6 @@
      && AuthoringToolWorkspaceP.UnsavedWorldsQueue.Any())
 {
     @ModalDialogFactory.GetSaveUnsavedWorldsFragment(OnSaveWorldDialogCloseAsync, AuthoringToolWorkspaceP.UnsavedWorldsQueue.Peek().Name)
-}
-
-@if (AuthoringToolWorkspaceP.WorldToReplaceWith != null)
-{
-    @ModalDialogFactory.GetReplaceWorldFragment(OnReplaceDialogClose, AuthoringToolWorkspaceP.WorldToReplaceWith.Name)
-}
-
-<!-- Save dialog for saving when replacing -->
-@if (AuthoringToolWorkspaceP.ReplacedUnsavedWorld != null)
-{
-    @ModalDialogFactory.GetReplaceUnsavedWorldFragment(OnSaveReplacedWorldDialogCloseAsync, AuthoringToolWorkspaceP.ReplacedUnsavedWorld.Name)
 }
 
 <!-- Save dialog for saving when deleting -->
@@ -97,7 +90,7 @@
 
 @code {
 
-#pragma warning disable CS8618 injected by framework - m.ho
+#pragma warning disable CS8618 // injected by framework - m.ho
     [Inject]
     public IMouseService MouseService { get; set; }
     [Inject]
@@ -115,6 +108,7 @@
         base.OnParametersSet();
         AuthoringToolWorkspaceP.OnForceViewUpdate += StateHasChanged;
         AuthoringToolWorkspaceVm.PropertyChanged += async (_, _) => await InvokeAsync(StateHasChanged);
+        PresentationLogic.OnUndoRedoPerformed += StateHasChanged;
     }
     
     private string filePath = "";
@@ -205,18 +199,6 @@
         }
     }
 
-    private void OnSaveReplacedWorldDialogCloseAsync(ModalDialogOnCloseResult returnValueTuple)
-    {
-        AuthoringToolWorkspaceP.OnSaveReplacedWorldDialogClose(returnValueTuple);
-        InvokeAsync(StateHasChanged);
-    }
-
-    private void OnReplaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        AuthoringToolWorkspaceP.OnReplaceDialogClose(returnValueTuple);
-        InvokeAsync(StateHasChanged);
-    }
-
     private void OnSaveDeletedWorldDialogCloseAsync(ModalDialogOnCloseResult returnValueTuple)
     {
         AuthoringToolWorkspaceP.OnSaveDeletedWorldDialogClose(returnValueTuple);
@@ -244,7 +226,7 @@
         StateHasChanged();
     }
 
-    private async Task OnDragAndDropResult(Tuple<string, Stream> result)
+    private async Task OnDragAndDropResult(Tuple<string, MemoryStream> result)
     {
         await AuthoringToolWorkspaceP.ProcessDragAndDropResult(result);
         await InvokeAsync(StateHasChanged);

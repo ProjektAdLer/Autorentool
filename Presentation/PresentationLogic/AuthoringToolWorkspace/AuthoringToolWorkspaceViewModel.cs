@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using AuthoringTool.Annotations;
+using JetBrains.Annotations;
 using Presentation.PresentationLogic.LearningWorld;
 
 namespace Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -10,6 +10,9 @@ public class AuthoringToolWorkspaceViewModel : IAuthoringToolWorkspaceViewModel
     private LearningWorldViewModel? selectedLearningWorld;
     private IDictionary<string, string>? editDialogInitialValues;
 
+    /// <summary>
+    /// Constructor for both normal usage and Automapper
+    /// </summary>
     public AuthoringToolWorkspaceViewModel()
     {
         _learningWorlds = new List<LearningWorldViewModel>();
@@ -17,17 +20,10 @@ public class AuthoringToolWorkspaceViewModel : IAuthoringToolWorkspaceViewModel
         EditDialogInitialValues = null;
     }
 
-    private List<LearningWorldViewModel> _learningWorlds;
+    internal List<LearningWorldViewModel> _learningWorlds;
     
     /// <inheritdoc cref="IAuthoringToolWorkspaceViewModel.LearningWorlds"/>
-    public IEnumerable<LearningWorldViewModel> LearningWorlds => _learningWorlds;
-
-    /// <inheritdoc cref="IAuthoringToolWorkspaceViewModel.AddLearningWorld"/>
-    public void AddLearningWorld(LearningWorldViewModel learningWorld)
-    {
-        _learningWorlds.Add(learningWorld);
-        OnPropertyChanged(nameof(LearningWorlds));
-    }
+    public IList<LearningWorldViewModel> LearningWorlds => _learningWorlds;
 
     /// <inheritdoc cref="IAuthoringToolWorkspaceViewModel.RemoveLearningWorld"/>
     public void RemoveLearningWorld(LearningWorldViewModel learningWorld)

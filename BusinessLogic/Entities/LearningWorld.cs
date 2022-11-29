@@ -1,34 +1,58 @@
-﻿namespace BusinessLogic.Entities;
+﻿using JetBrains.Annotations;
+
+namespace BusinessLogic.Entities;
 
 public class LearningWorld : ILearningWorld, IOriginator
 {
-    public LearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals, List<LearningElement>? learningElements = null,
-        List<LearningSpace>? learningSpaces = null)
+    /// <summary>
+    /// Constructor for Automapper. DO NOT USE.
+    /// </summary>
+    [UsedImplicitly]
+    private LearningWorld()
     {
+        Id = Guid.NewGuid();
+        Name = "";
+        Shortname = "";
+        Authors = "";
+        Language = "";
+        Description = "";
+        Goals = "";
+        LearningSpaces = new List<LearningSpace>();
+        LearningPathways = new List<LearningPathway>();
+        UnsavedChanges = false;
+    }
+    public LearningWorld(string name, string shortname, string authors, string language, string description,
+        string goals, List<LearningSpace>? learningSpaces = null, List<LearningPathway>? learningPathways = null)
+    {
+        Id = Guid.NewGuid();
         Name = name;
         Shortname = shortname;
         Authors = authors;
         Language = language;
         Description = description;
         Goals = goals;
-        LearningElements = learningElements ?? new List<LearningElement>();
         LearningSpaces = learningSpaces ?? new List<LearningSpace>();
+        LearningPathways = learningPathways ?? new List<LearningPathway>();
+        UnsavedChanges = false;
     }
 
-    public List<LearningElement> LearningElements { get; set; }
+    public Guid Id { get; private set; }
     public List<LearningSpace> LearningSpaces { get; set; }
+    public List<LearningPathway> LearningPathways { get; set; }
     public string Name { get; set; }
     public string Shortname { get; set; }
     public string Authors { get; set; }
     public string Language { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
+    public LearningSpace? SelectedLearningSpace { get; set; }
+
+    public bool UnsavedChanges { get; set; }
 
     public IMemento GetMemento()
     {
-        return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, LearningElements,
-            LearningSpaces);
+        return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, LearningSpaces,
+            LearningPathways, SelectedLearningSpace);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -43,15 +67,16 @@ public class LearningWorld : ILearningWorld, IOriginator
         Language = learningWorldMemento.Language;
         Description = learningWorldMemento.Description;
         Goals = learningWorldMemento.Goals;
-        LearningElements = learningWorldMemento.LearningElements;
         LearningSpaces = learningWorldMemento.LearningSpaces;
+        LearningPathways = learningWorldMemento.LearningPathways;
+        SelectedLearningSpace = learningWorldMemento.SelectedLearningSpace;
     }
 
     private record LearningWorldMemento : IMemento
     {
         internal LearningWorldMemento(string name, string shortname, string authors, string language,
-            string description,
-            string goals, List<LearningElement> learningElements, List<LearningSpace> learningSpaces)
+            string description, string goals, List<LearningSpace> learningSpaces, List<LearningPathway> learningPathways,
+            LearningSpace? selectedLearningSpace = null)
         {
             Name = name;
             Shortname = shortname;
@@ -59,17 +84,19 @@ public class LearningWorld : ILearningWorld, IOriginator
             Language = language;
             Description = description;
             Goals = goals;
-            LearningElements = learningElements.ToList();
             LearningSpaces = learningSpaces.ToList();
+            LearningPathways = learningPathways.ToList();
+            SelectedLearningSpace = selectedLearningSpace;
         }
 
-        internal List<LearningElement> LearningElements { get; }
         internal List<LearningSpace> LearningSpaces { get;  }
+        internal List<LearningPathway> LearningPathways { get;  }
         internal string Name { get; }
         internal string Shortname { get; }
         internal string Authors { get; }
         internal string Language { get; }
         internal string Description { get; }
         internal string Goals { get; }
+        internal LearningSpace? SelectedLearningSpace { get; }
     }
 }

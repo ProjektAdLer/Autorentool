@@ -1,6 +1,6 @@
 using System.IO.Abstractions;
+using AutoMapper;
 using BusinessLogic.API;
-using Presentation.PresentationLogic.EntityMapping;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
@@ -10,13 +10,13 @@ namespace Presentation.PresentationLogic.Toolbox;
 public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
 {
     public ToolboxEntriesProvider(ILogger<ToolboxEntriesProvider> logger, IBusinessLogic businessLogic,
-        IEntityMapping entityMapping) : this(logger, businessLogic, entityMapping, new FileSystem()) { }
+        IMapper mapper) : this(logger, businessLogic, mapper, new FileSystem()) { }
     public ToolboxEntriesProvider(ILogger<ToolboxEntriesProvider> logger, IBusinessLogic businessLogic,
-        IEntityMapping entityMapping, IFileSystem fileSystem)
+        IMapper mapper, IFileSystem fileSystem)
     {
         Logger = logger;
         BusinessLogic = businessLogic;
-        EntityMapping = entityMapping;
+        Mapper = mapper;
         FileSystem = fileSystem;
 
         _toolboxSavePath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
@@ -36,7 +36,7 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
 
     internal ILogger<ToolboxEntriesProvider> Logger { get; }
     internal IBusinessLogic BusinessLogic { get; }
-    internal IEntityMapping EntityMapping { get; }
+    internal IMapper Mapper { get; }
     internal IFileSystem FileSystem { get; }
 
     private List<LearningWorldViewModel> _worlds;
@@ -53,7 +53,7 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
         get
         {
             EnsureEntriesPopulated();
-            return ((IEnumerable<IDisplayableLearningObject>)_worlds!).Concat(_spaces!).Concat(_elements!);
+            return ((IEnumerable<IDisplayableLearningObject>)_worlds).Concat(_spaces).Concat(_elements);
         }
     }
 
@@ -77,15 +77,15 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
         switch (obj)
         {
                 case LearningWorldViewModel learningWorldViewModel:
-                    BusinessLogic.SaveLearningWorld(EntityMapping.WorldMapper.ToEntity(learningWorldViewModel), savePath);
+                    BusinessLogic.SaveLearningWorld(Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldViewModel), savePath);
                     _worlds.Add(learningWorldViewModel);
                     break;
                 case LearningSpaceViewModel learningSpaceViewModel:
-                    BusinessLogic.SaveLearningSpace(EntityMapping.SpaceMapper.ToEntity(learningSpaceViewModel), savePath);
+                    BusinessLogic.SaveLearningSpace(Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceViewModel), savePath);
                     _spaces.Add(learningSpaceViewModel);
                     break;
                 case LearningElementViewModel learningElementViewModel:
-                    BusinessLogic.SaveLearningElement(EntityMapping.ElementMapper.ToEntity(learningElementViewModel), savePath);
+                    BusinessLogic.SaveLearningElement(Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementViewModel), savePath);
                     _elements.Add(learningElementViewModel);
                     break;
         }
@@ -142,11 +142,11 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
         var elementFiles = files.Where(filepath => filepath.EndsWith(LearningElementViewModel.fileEnding));
         
         _worlds = worldFiles.Select(filepath => BusinessLogic.LoadLearningWorld(filepath))
-            .Select(entity => EntityMapping.WorldMapper.ToViewModel(entity)).ToList();
+            .Select(entity => Mapper.Map<LearningWorldViewModel>(entity)).ToList();
         _spaces = spaceFiles.Select(filepath => BusinessLogic.LoadLearningSpace(filepath))
-            .Select(entity => EntityMapping.SpaceMapper.ToViewModel(entity)).ToList();
+            .Select(entity => Mapper.Map<LearningSpaceViewModel>(entity)).ToList<ILearningSpaceViewModel>();
         _elements = elementFiles.Select(filepath => BusinessLogic.LoadLearningElement(filepath))
-            .Select(entity => EntityMapping.ElementMapper.ToViewModel(entity)).ToList();
+            .Select(entity => Mapper.Map<LearningElementViewModel>(entity)).ToList<ILearningElementViewModel>();
 
         _initialized = true;
     }

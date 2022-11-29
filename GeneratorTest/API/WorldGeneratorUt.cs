@@ -18,14 +18,14 @@ public class WorldGeneratorUt
     public void WorldGenerator_DefaultConstructor_AllParametersSet()
     {
         // Arrange
-        var mockFilesystem = new MockFileSystem();
         var mockBackupFileGen = Substitute.For<IBackupFileGenerator>();
         var mockCreateDsl = Substitute.For<ICreateDsl>();
         var mockReadDsl = Substitute.For<IReadDsl>();
         var mockMapper = Substitute.For<IMapper>();
+        var mockFileSystem = new MockFileSystem();
 
         // Act
-        var systemUnderTest = new WorldGenerator(mockBackupFileGen, mockCreateDsl, mockReadDsl, mockFilesystem,  mockMapper);
+        var systemUnderTest = new WorldGenerator(mockBackupFileGen, mockCreateDsl, mockReadDsl,  mockMapper, mockFileSystem);
 
         // Assert
         Assert.Multiple(()=>
@@ -41,15 +41,16 @@ public class WorldGeneratorUt
     public void WorldGenerator_ConstructBackup_AllMethodCallsReceived()
     {
         // Arrange
-        var mockFilesystem = new MockFileSystem();
         var mockBackupFileGen = Substitute.For<IBackupFileGenerator>();
         var mockCreateDsl = Substitute.For<ICreateDsl>();
         var mockReadDsl = Substitute.For<IReadDsl>();
         var mockMapper = Substitute.For<IMapper>();
-        var systemUnderTest = new WorldGenerator(mockBackupFileGen, mockCreateDsl, mockReadDsl, mockFilesystem,  mockMapper);
+        var mockFileSystem = new MockFileSystem();
+        
+        var systemUnderTest = new WorldGenerator(mockBackupFileGen, mockCreateDsl, mockReadDsl, mockMapper, mockFileSystem);
 
         // Act
-        systemUnderTest.ConstructBackup(Arg.Any<LearningWorld>(), "SomePath");
+        systemUnderTest.ConstructBackup(Arg.Any<LearningWorld>(), "DestinationPath");
         
         
         
@@ -58,9 +59,8 @@ public class WorldGeneratorUt
         {
             mockCreateDsl.Received().WriteLearningWorld(Arg.Any<LearningWorldPe>());
             mockReadDsl.Received().ReadLearningWorld("", Arg.Any<DocumentRootJson?>());
-            mockBackupFileGen.Received().CreateBackupFolders();
-            mockBackupFileGen.Received().WriteXmlFiles(Arg.Any<IReadDsl>(), "");
-            mockBackupFileGen.Received().WriteBackupFile("SomePath");
+            mockBackupFileGen.Received().WriteXmlFiles(Arg.Any<IReadDsl>());
+            mockBackupFileGen.Received().WriteBackupFile("DestinationPath");
             
         });
     }

@@ -5,8 +5,10 @@ namespace Generator.XmlClasses;
 
 public interface IXmlEntityManager
 {
-    void GetFactories(IReadDsl readDsl, string dslpath, IXmlFileFactory? xmlFileFactory = null,
+    void GetFactories(IReadDsl readDsl, IXmlResourceFactory? xmlFileFactory = null,
         IXmlH5PFactory? xmlH5PFactory = null, IXmlCourseFactory? xmlCourseFactory = null,
-        IXmlBackupFactory? xmlBackupFactory = null);
-
+        IXmlBackupFactory? xmlBackupFactory = null,
+        IXmlSectionFactory? xmlSectionFactory = null, IXmlLabelFactory? xmlLabelFactory = null,
+        IXmlUrlFactory? xmlUrlFactory = null);
+    
 }

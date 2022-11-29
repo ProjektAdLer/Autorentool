@@ -12,30 +12,31 @@ public class LearningSpaceViewModelUt
     [Test]
     public void Constructor_InitializesAllProperties()
     {
-        var Name = "asdf";
-        var Shortname = "jkl;";
-        var Authors = "ben and jerry";
-        var Description = "very cool element";
-        var Goals = "learn very many things";
-        var PositionX = 5f;
-        var PositionY = 21f;
-        var ele1 = new LearningElementViewModel("a", "b", null,  null, "g", "h","i", LearningElementDifficultyEnum.Easy, 17, 23);
-        var ele2 = new LearningElementViewModel("z", "zz", null,  null, "z","zz","zzz", LearningElementDifficultyEnum.Hard, 444, double.MaxValue);
+        var name = "asdf";
+        var shortname = "jkl;";
+        var authors = "ben and jerry";
+        var description = "very cool element";
+        var goals = "learn very many things";
+        var requiredPoints = 10;
+        var positionX = 5f;
+        var positionY = 21f;
+        var ele1 = new LearningElementViewModel("a", "b",  null!, "url","g", "h","i", LearningElementDifficultyEnum.Easy, null, 17,11, 23);
+        var ele2 = new LearningElementViewModel("z", "zz",  null!, "url","z","zz","zzz", LearningElementDifficultyEnum.Hard, null, 444,12, double.MaxValue);
         var learningElements = new List<ILearningElementViewModel> { ele1, ele2 };
         
-        var systemUnderTest = new LearningSpaceViewModel(Name, Shortname, Authors, Description, Goals, learningElements,
-            PositionX, PositionY);
+        var systemUnderTest = new LearningSpaceViewModel(name, shortname, authors, description, goals, requiredPoints, 
+            learningElements, positionX, positionY);
         
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.Name, Is.EqualTo(Name));
-            Assert.That(systemUnderTest.Shortname, Is.EqualTo(Shortname));
-            Assert.That(systemUnderTest.Authors, Is.EqualTo(Authors));
-            Assert.That(systemUnderTest.Description, Is.EqualTo(Description));
-            Assert.That(systemUnderTest.Goals, Is.EqualTo(Goals));
+            Assert.That(systemUnderTest.Name, Is.EqualTo(name));
+            Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortname));
+            Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
+            Assert.That(systemUnderTest.Description, Is.EqualTo(description));
+            Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.LearningElements, Is.EqualTo(learningElements));
-            Assert.That(systemUnderTest.PositionX, Is.EqualTo(PositionX));
-            Assert.That(systemUnderTest.PositionY, Is.EqualTo(PositionY));
+            Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
+            Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
         });
         
     }
@@ -53,10 +54,10 @@ public class LearningSpaceViewModelUt
     {
 
         var systemUnderTest = new LearningSpaceViewModel("a", "b", "c", "d", "e");
-        var element1 = new LearningElementViewModel("a", "b", systemUnderTest, null, "c", "d", "e",
-            LearningElementDifficultyEnum.Easy, 6);
-        var element2 = new LearningElementViewModel("abc", "b", systemUnderTest, null, "c", "d", "e",
-            LearningElementDifficultyEnum.Easy, 14);
+        var element1 = new LearningElementViewModel("a", "b", null!, "url","c", "d", "e",
+            LearningElementDifficultyEnum.Easy, systemUnderTest, 6);
+        var element2 = new LearningElementViewModel("abc", "b", null!, "url","c", "d", "e",
+            LearningElementDifficultyEnum.Easy, systemUnderTest, 14);
         
         Assert.That(systemUnderTest.Workload, Is.EqualTo(0));
         
@@ -68,5 +69,27 @@ public class LearningSpaceViewModelUt
 
         systemUnderTest.LearningElements.Remove(element1);
         Assert.That(systemUnderTest.Workload, Is.EqualTo(14));
+    }
+    
+    [Test]
+    public void Points_ReturnsCorrectSum()
+    {
+
+        var systemUnderTest = new LearningSpaceViewModel("a", "b", "c", "d", "e");
+        var element1 = new LearningElementViewModel("a", "b", null!, "url","c", "d", "e",
+            LearningElementDifficultyEnum.Easy, systemUnderTest, 6,7);
+        var element2 = new LearningElementViewModel("abc", "b", null!, "url","c", "d", "e",
+            LearningElementDifficultyEnum.Easy, systemUnderTest, 14,15);
+        
+        Assert.That(systemUnderTest.Points, Is.EqualTo(0));
+        
+        systemUnderTest.LearningElements.Add(element1);
+        Assert.That(systemUnderTest.Points, Is.EqualTo(7));
+
+        systemUnderTest.LearningElements.Add(element2);
+        Assert.That(systemUnderTest.Points, Is.EqualTo(22));
+
+        systemUnderTest.LearningElements.Remove(element1);
+        Assert.That(systemUnderTest.Points, Is.EqualTo(15));
     }
 }

@@ -10,7 +10,6 @@ using NUnit.Framework;
 using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.ModalDialog;
@@ -24,7 +23,7 @@ namespace PresentationTest.View;
 
 public class AuthoringToolWorkspaceViewUt
 {
-#pragma warning disable CS8618 set in setup - m.ho
+#pragma warning disable CS8618 //set in setup - m.ho
     private TestContext _ctx;
     private IAuthoringToolWorkspacePresenter _authoringToolWorkspacePresenter;
     private IAuthoringToolWorkspaceViewModel _authoringToolWorkspaceViewModel;
@@ -91,8 +90,6 @@ public class AuthoringToolWorkspaceViewUt
         var world1 = new LearningWorldViewModel("ab", "eb", "ic", "od", "ue", "af");
         var world2 = new LearningWorldViewModel("aa", "bb", "cc", "dd", "ee", "ff");
         var world3 = new LearningWorldViewModel("gg", "hh", "ii", "jj", "kk", "ll");
-        var element1 = Substitute.For<ILearningElementViewModel>();
-        var element2 = Substitute.For<ILearningElementViewModel>();
         var space = Substitute.For<ILearningSpaceViewModel>();
 
         _authoringToolWorkspaceViewModel.LearningWorlds.Returns(new List<LearningWorldViewModel>()
@@ -102,8 +99,6 @@ public class AuthoringToolWorkspaceViewUt
 
         _authoringToolWorkspaceViewModel.SelectedLearningWorld = world1;
         
-        world1.LearningElements.Add(element1);
-        world1.LearningElements.Add(element2);
         world1.LearningSpaces.Add(space);
         
         Assert.That(_authoringToolWorkspaceViewModel.SelectedLearningWorld, Is.Not.EqualTo(null));
@@ -114,7 +109,7 @@ public class AuthoringToolWorkspaceViewUt
         var worldSelection = systemUnderTest.FindOrFail("select");
 
         worldSelection.MarkupMatches("<select  value=\"ab\"><option value=\"ab\" selected=\"\">ab</option><option value=\"aa\">aa</option><option value=\"gg\">gg</option></select>");
-        worldData.MarkupMatches("<label class=\"world-data\"> Selected world: ab, Description: ue, Elements: 2, Spaces: 1</label>");
+        worldData.MarkupMatches("<label class=\"world-data\"> Selected world: ab, Description: ue, Spaces: 1</label>");
     }
 
     [Test]
@@ -196,86 +191,6 @@ public class AuthoringToolWorkspaceViewUt
         callback!.Invoke(returnValue);
         
         _authoringToolWorkspacePresenter.Received().OnSaveWorldDialogClose(returnValue);
-    }
-    
-    [Test]
-    public void ShowReplaceWorldDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
-    {
-        var world = new LearningWorldViewModel("a","b","c","d","e","f");
-
-        _authoringToolWorkspacePresenter.WorldToReplaceWith = world;
-
-        RenderFragment fragment = builder =>
-        {
-            builder.OpenElement(0, "p");
-            builder.AddContent(1, "bar");
-            builder.CloseElement();
-        };
-        ModalDialogOnClose? callback = null;
-
-        _modalDialogFactory.GetReplaceWorldFragment(Arg.Any<ModalDialogOnClose>(), _authoringToolWorkspacePresenter.WorldToReplaceWith.Name)
-            .Returns(fragment)
-            .AndDoes(ci =>
-            {
-                callback = ci.Arg<ModalDialogOnClose>();
-            });
-
-        var systemUnderTest = GetWorkspaceViewForTesting();
-
-        _modalDialogFactory.Received().GetReplaceWorldFragment(Arg.Any<ModalDialogOnClose>(), world.Name);
-        var p = systemUnderTest.FindAllOrFail("p").ElementAt(2);
-        p.MarkupMatches("<p>bar</p>");
-
-        if (callback == null)
-        {
-            Assert.Fail("Didn't get a callback from call to modal dialog factory");
-        }
-
-        var returnValue = new ModalDialogOnCloseResult(ModalDialogReturnValue.Ok);
-        
-        callback!.Invoke(returnValue);
-        
-        _authoringToolWorkspacePresenter.Received().OnReplaceDialogClose(returnValue);
-    }
-    
-    [Test]
-    public void ShowReplaceUnsavedWorldDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
-    {
-        var world = new LearningWorldViewModel("a","b","c","d","e","f");
-
-        _authoringToolWorkspacePresenter.ReplacedUnsavedWorld = world;
-
-        RenderFragment fragment = builder =>
-        {
-            builder.OpenElement(0, "p");
-            builder.AddContent(1, "bar");
-            builder.CloseElement();
-        };
-        ModalDialogOnClose? callback = null;
-
-        _modalDialogFactory.GetReplaceUnsavedWorldFragment(Arg.Any<ModalDialogOnClose>(), _authoringToolWorkspacePresenter.ReplacedUnsavedWorld.Name)
-            .Returns(fragment)
-            .AndDoes(ci =>
-            {
-                callback = ci.Arg<ModalDialogOnClose>();
-            });
-
-        var systemUnderTest = GetWorkspaceViewForTesting();
-
-        _modalDialogFactory.Received().GetReplaceUnsavedWorldFragment(Arg.Any<ModalDialogOnClose>(), world.Name);
-        var p = systemUnderTest.FindAllOrFail("p").ElementAt(2);
-        p.MarkupMatches("<p>bar</p>");
-
-        if (callback == null)
-        {
-            Assert.Fail("Didn't get a callback from call to modal dialog factory");
-        }
-
-        var returnValue = new ModalDialogOnCloseResult(ModalDialogReturnValue.Yes);
-        
-        callback!.Invoke(returnValue);
-        
-        _authoringToolWorkspacePresenter.Received().OnSaveReplacedWorldDialogClose(returnValue);
     }
     
     [Test]

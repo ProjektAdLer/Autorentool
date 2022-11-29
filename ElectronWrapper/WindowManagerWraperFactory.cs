@@ -2,7 +2,7 @@
 
 interface IWindowManagerWraperFactory
 {
-    ElectronWrapper.WindowManagerWrapper Create();
+    WindowManagerWrapper Create();
 }
 
 class WindowManagerWraperFactory : IWindowManagerWraperFactory

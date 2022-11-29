@@ -1,5 +1,4 @@
-﻿using System.IO.Abstractions.TestingHelpers;
-using Generator.DSL;
+﻿using Generator.DSL;
 using Generator.XmlClasses;
 using Generator.XmlClasses.Entities._course.Completiondefault.xml;
 using Generator.XmlClasses.Entities._course.Course.xml;
@@ -120,7 +119,7 @@ public class XmlCourseFactoryUt
             Assert.That(mockCourseCourse.Fullname, Is.EqualTo(mockLearningWorld.Identifier.Value));
             Assert.That(mockCourseCourse.Format, Is.EqualTo("tiles"));
             Assert.That(mockCourseCourse.BaseColour, Is.EqualTo("#009681"));
-            Assert.That(mockCourseCourse.CourseUseSubtiles, Is.EqualTo("1"));
+            Assert.That(mockCourseCourse.CourseUseSubtiles, Is.EqualTo("0"));
             Assert.That(mockCourseCourse.CourseShowTileProgress, Is.EqualTo("2"));
             Assert.That(mockCourseCourse.ShowGrades, Is.EqualTo("1"));
             Assert.That(mockCourseCourse.Visible, Is.EqualTo("1"));
@@ -162,7 +161,7 @@ public class XmlCourseFactoryUt
             Assert.That(mockEnrolSelf.Id, Is.EqualTo("3"));
             Assert.That(mockEnrolSelf.RoleId, Is.EqualTo("5"));
             Assert.That(mockEnrolSelf.EnrolMethod, Is.EqualTo("self"));
-            Assert.That(mockEnrolSelf.Status, Is.EqualTo("1"));
+            Assert.That(mockEnrolSelf.Status, Is.EqualTo("0"));
             Assert.That(mockEnrolSelf.CustomInt1, Is.EqualTo("0"));
             Assert.That(mockEnrolSelf.CustomInt2, Is.EqualTo("0"));
             Assert.That(mockEnrolSelf.CustomInt3, Is.EqualTo("0"));

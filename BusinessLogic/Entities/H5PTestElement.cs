@@ -1,13 +1,23 @@
+using JetBrains.Annotations;
 using Shared;
 
 namespace BusinessLogic.Entities;
 
 public class H5PTestElement : LearningElement
 {
-    public H5PTestElement(string name, string shortname,  string? parentName, LearningContent? content,
-        string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload,
-        double positionX, double positionY) : base(name, shortname,parentName,content, authors, description, 
-        goals,difficulty,workload, positionX,positionY)
+    /// <summary>
+    /// Private Constructor for AutoMapper
+    /// </summary>
+    [UsedImplicitly]
+    private H5PTestElement()
+    {
+    }
+
+    public H5PTestElement(string name, string shortname, ILearningSpace? parent,
+        LearningContent learningContent, string url, string authors, string description, string goals,
+        LearningElementDifficultyEnum difficulty, int workload, int points, double positionX, double positionY) : base(
+        name, shortname, learningContent, url, authors, description, goals, difficulty, parent, workload, points, positionX,
+        positionY)
     {
     }
 }
