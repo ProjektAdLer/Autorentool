@@ -1,7 +1,12 @@
 ﻿@page "/"
+@using System.Globalization
+@using Microsoft.Extensions.Localization
+@inject IStringLocalizer<Index> Localizer
 
 <PageTitle>Start</PageTitle>
 
-<h1>AdLer Authoring Tool</h1>
+<h1>@Localizer["Heading"]</h1>
+<p>@Localizer["CurrentCulture"]: @CultureInfo.CurrentCulture</p>
+<p>@Localizer["CurrentUICulture"]: @CultureInfo.CurrentUICulture</p>
 
-Please click on the workspace button to the left to get started.
+@Localizer["Explanation"]

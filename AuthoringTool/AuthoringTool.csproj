@@ -60,6 +60,31 @@
     <ItemGroup>
       <PackageReference Include="AutoMapper.Collection" Version="8.0.0" />
       <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
+      <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Pages\Index.de.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Index.de.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Pages\Index.en.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>Index.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
+    <ItemGroup>
+      <Compile Update="Pages\Index.de.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Index.razor.de.resx</DependentUpon>
+      </Compile>
+      <Compile Update="Pages\Index.en.Designer.cs">
+        <DesignTime>True</DesignTime>
+        <AutoGen>True</AutoGen>
+        <DependentUpon>Index.razor.en.resx</DependentUpon>
+      </Compile>
     </ItemGroup>
 
 </Project>

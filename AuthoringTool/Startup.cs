@@ -7,6 +7,7 @@ using ElectronWrapper;
 using Generator.API;
 using Generator.DSL;
 using Generator.WorldExport;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Caching.Memory;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
@@ -36,6 +37,16 @@ public class Startup
         //Blazor and Electron (framework)
         services.AddRazorPages();
         services.AddServerSideBlazor();
+        
+        //localization
+        services.AddLocalization();
+
+        services.AddLogging(builder =>
+        {
+            builder.ClearProviders();
+            builder.AddConsole();
+            builder.SetMinimumLevel(LogLevel.Trace);
+        });
         
         
         //AuthoringToolLib
@@ -164,11 +175,23 @@ public class Startup
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
+        
+        var supportedCultures = new[] { "de-DE", "en-DE" };
+        var localizationOptions = new RequestLocalizationOptions()
+            .SetDefaultCulture(supportedCultures[0])
+            .AddSupportedCultures(supportedCultures)
+            .AddSupportedUICultures(supportedCultures);
+        localizationOptions.RequestCultureProviders.Clear();
+        localizationOptions.AddInitialRequestCultureProvider(new CookieRequestCultureProvider());
+        var providers = localizationOptions.RequestCultureProviders;
+
+        app.UseRequestLocalization(localizationOptions);
 
         app.UseRouting();
 
         app.UseEndpoints(endpoints =>
         {
+            endpoints.MapControllers();
             endpoints.MapBlazorHub();
             endpoints.MapFallbackToPage("/_Host");
         });
