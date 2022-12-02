@@ -88,6 +88,8 @@ public class Startup
         services.AddSingleton<IAuthoringToolWorkspacePresenter, AuthoringToolWorkspacePresenter>();
         services.AddSingleton<IPresentationLogic, PresentationLogic>();
         services.AddSingleton<ILearningWorldPresenter, LearningWorldPresenter>();
+        services.AddSingleton(p =>
+            (ILearningWorldPresenterOverviewInterface)p.GetService(typeof(ILearningWorldPresenter))!);
         services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
         services.AddSingleton<ILearningSpaceViewModalDialogFactory, ModalDialogFactory>();

@@ -11,7 +11,7 @@ using ModalDialogReturnValue = Presentation.Components.ModalDialog.ModalDialogRe
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
-public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPresenterToolboxInterface
+public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPresenterToolboxInterface, ILearningWorldPresenterOverviewInterface
 {
     public LearningWorldPresenter(
         IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter,
