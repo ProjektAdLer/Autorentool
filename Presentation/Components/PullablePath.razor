@@ -20,11 +20,11 @@
     <path d="M 0 0 L 10 5 L 0 10 z" />
 </marker>
 <g @onmousedown="OnDown" cursor="@_cursor" @onmousedown:stopPropagation="true">
-    <circle r="6" transform="translate(@(X1), @(Y1))" fill="white" stroke="gray"/>
-    <polyline points="0,0 0,2 0,-2 0,0 2,0 -2,0" transform="translate(@(X1), @(Y1))" style="fill:none;stroke:lime;stroke-width:1"/>
+    <circle r="7" transform="translate(@(X1), @(Y1))" fill="green" stroke="green"/>
+    <polyline points="0,0 0,4 0,-4 0,0 4,0 -4,0" transform="translate(@(X1), @(Y1))" style="fill:none;stroke:white;stroke-width:1"/>
     @if (_isDown)
     {
-        <path d="M @X1 @(Y1+6) C @_c1X @C1Y, @_c2X @C2Y, @X2 @Y2" stroke="rgb(108, 117, 125)" stroke-width="2" fill="transparent" marker-end="url(#arrow)"/>
+        <path d="M @X1 @(Y1+6) C @_c1X @C1Y, @_c2X @C2Y, @X2 @Y2" stroke="rgb(108, 117, 125)" stroke-width="2" fill="transparent" marker-end="url(#arrow)" pointer-events="none"/>
     }
 </g>
 

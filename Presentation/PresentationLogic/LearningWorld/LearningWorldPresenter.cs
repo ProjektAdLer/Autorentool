@@ -546,7 +546,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         //LearningWorldVm can not be null because it is checked before call. -m.ho
         var objectAtPosition = LearningWorldVm?.LearningSpaces.FirstOrDefault(ls =>
-                                   ls.PositionX <= x && ls.PositionX + 100 >= x && ls.PositionY <= y && ls.PositionY + 50 >= y) ??
+                                   ls.PositionX <= x && ls.PositionX + 84 >= x && ls.PositionY <= y && ls.PositionY + 84 >= y) ??
                                (IObjectInPathWayViewModel?)LearningWorldVm?.PathWayConditions.FirstOrDefault(lc =>
                                    Math.Pow(x - lc.PositionX, 2) + Math.Pow(y - lc.PositionY, 2) <= 400);
         return objectAtPosition;

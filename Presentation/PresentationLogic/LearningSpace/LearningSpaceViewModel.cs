@@ -75,9 +75,9 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     public int RequiredPoints { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
-    public double InputConnectionX => PositionX + 50;
-    public double InputConnectionY => PositionY - 6;
-    public double OutputConnectionX => PositionX + 50; 
-    public double OutputConnectionY => PositionY + 56;
+    public double InputConnectionX => PositionX + 42;
+    public double InputConnectionY => PositionY - 7;
+    public double OutputConnectionX => PositionX + 42; 
+    public double OutputConnectionY => PositionY + 82;
     public ILearningElementViewModel? SelectedLearningElement { get; set; }
 }

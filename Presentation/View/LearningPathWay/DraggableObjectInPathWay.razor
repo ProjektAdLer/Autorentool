@@ -1,9 +1,7 @@
-@using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic
 @using Presentation.Components
 @using Presentation.Components.RightClickMenu
 @using Presentation.PresentationLogic.LearningWorld
-@using Presentation.PresentationLogic.LearningPathway
 <Draggable LearningObject="ObjectInPathWay" OnClicked="@OnClickedDraggable" OnDoubleClicked="@OnDoubleClickedDraggable" 
            OnRightClicked="@OnRightClickedDraggable" OnDragged="@OnDraggedDraggable"
            @bind-X="@ObjectInPathWay.PositionX" @bind-Y="@ObjectInPathWay.PositionY">
@@ -11,7 +9,7 @@
     {
         @((MarkupString)OnHoveredObjectShape)
     }
-    @((MarkupString)String.Format(ObjectShape, StrokeWidth, Text))
+    @((MarkupString)String.Format(ObjectShape, ObjectStyle, Text))
     <Clickable OnClickedParam="ObjectInPathWay" OnClicked="@OnClickedClickable">
         @if (ObjectInPathWay.InBoundObjects.Any())
         {
@@ -52,13 +50,17 @@
     [Parameter, EditorRequired]
     public ILearningWorldPresenter PositioningService { get; set; } = null!;
 
-    private double StrokeWidth => PositioningService.LearningWorldVm?.SelectedLearningObject == ObjectInPathWay ? 2 : 1;
-
     protected abstract string Text { get; }
     
     protected abstract string OnHoveredObjectShape { get; }
 
     protected abstract string ObjectShape { get; }
+    
+    protected abstract string ObjectStyleWhenSelected { get; }
+    
+    protected abstract string ObjectStyleWhenNotSelected { get; }
+    
+    private string ObjectStyle => PositioningService.LearningWorldVm?.SelectedLearningObject == ObjectInPathWay ? ObjectStyleWhenSelected : ObjectStyleWhenNotSelected;
 
     protected abstract string DeletePathButtonShape { get;}
     
