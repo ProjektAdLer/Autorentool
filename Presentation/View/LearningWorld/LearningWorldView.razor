@@ -19,9 +19,9 @@
     <h5>Points: @LearningWorldP.LearningWorldVm?.Points </h5>
 </div>
 <div class="p-2">
-    <MudButton Variant="Variant.Filled" Color="Color.Tertiary" @onclick="AddNewLearningSpace">New Learning Space</MudButton>
-    <MudButton Variant="Variant.Filled" Color="Color.Tertiary" @onclick="LoadLearningSpaceAsync">Load Learning Space</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Tertiary" @onclick="AddNewLearningSpace">New Space</MudButton>
     <MudButton Variant="Variant.Filled" Color="Color.Tertiary" @onclick="AddNewPathWayCondition">New Condition</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Tertiary" @onclick="LoadLearningSpaceAsync">Load Space</MudButton>
 </div>
 <div class="p-2">
     <MudFab Size="Size.Small" Color="Color.Primary" StartIcon="@Icons.Material.Rounded.Edit" Disabled="@(LearningWorldP.LearningWorldVm?.SelectedLearningObject == null || LearningWorldP.LearningWorldVm.SelectedLearningObject is ILearningPathWayViewModel)" @onclick="EditLearningObject"></MudFab>
