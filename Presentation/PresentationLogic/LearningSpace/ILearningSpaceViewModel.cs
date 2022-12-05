@@ -4,7 +4,8 @@ namespace Presentation.PresentationLogic.LearningSpace;
 
 public interface ILearningSpaceViewModel : IDisplayableLearningObject, IObjectInPathWayViewModel
 {
-    ICollection<ILearningElementViewModel> LearningElements { get; set; }
+    ICollection<ILearningElementViewModel> LearningElements => LearningSpaceLayout.LearningElements;
+    ILearningSpaceLayout LearningSpaceLayout { get; set; }
     int Workload { get; }
     int Points { get; }
     int RequiredPoints { get; }

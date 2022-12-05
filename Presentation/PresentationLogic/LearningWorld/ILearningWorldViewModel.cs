@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 
@@ -23,4 +24,5 @@ public interface ILearningWorldViewModel : ISerializableViewModel, IDisplayableL
     ISelectableObjectInWorldViewModel? SelectedLearningObject { get; set; }
     IObjectInPathWayViewModel? OnHoveredObjectInPathWay { get; set; }
     bool ShowingLearningSpaceView { get; set; }
+    ICollection<ILearningElementViewModel> UnplacedLearningElements { get; set; }
 }
