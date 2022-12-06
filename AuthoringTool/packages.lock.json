@@ -17,6 +17,18 @@
         "resolved": "2022.1.0",
         "contentHash": "ASfpoFJxiRsC9Xc4TWuPM41Zb/gl64xwfMOhnOZ3RnVWGYIZchjpWQV5zshJgoc/ZxVtgjaF7b577lURj7E6ig=="
       },
+      "Microsoft.Extensions.Localization": {
+        "type": "Direct",
+        "requested": "[7.0.0, )",
+        "resolved": "7.0.0",
+        "contentHash": "hc+3uiY/ZYufz6GC39ODQ1Pk9lMnSg+ORZIIEv7W2VJpekc43GoJ3EcwDu5ggLcVvb8ff87peXt8WEtbCVsWPQ==",
+        "dependencies": {
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "7.0.0",
+          "Microsoft.Extensions.Localization.Abstractions": "7.0.0",
+          "Microsoft.Extensions.Logging.Abstractions": "7.0.0",
+          "Microsoft.Extensions.Options": "7.0.0"
+        }
+      },
       "AutoMapper": {
         "type": "Transitive",
         "resolved": "11.0.1",
@@ -81,27 +93,32 @@
       },
       "Microsoft.Extensions.DependencyInjection.Abstractions": {
         "type": "Transitive",
-        "resolved": "6.0.0",
-        "contentHash": "xlzi2IYREJH3/m6+lUrQlujzX8wDitm4QGnUu6kUXTQAWPuZY8i+ticFJbzfqaetLA6KR/rO6Ew/HuYD+bxifg=="
+        "resolved": "7.0.0",
+        "contentHash": "h3j/QfmFN4S0w4C2A6X7arXij/M/OVw3uQHSOFxnND4DyAzO1F9eMX7Eti7lU/OkSthEE0WzRsfT/Dmx86jzCw=="
+      },
+      "Microsoft.Extensions.Localization.Abstractions": {
+        "type": "Transitive",
+        "resolved": "7.0.0",
+        "contentHash": "OhKe14cdR3aNJ2eFUrLIKEEXAmudZD7TmV+Exw9Y1OWCaV2vkvp4DLnz0GgYbRGpTPPgS50f1c/hK7JkV3uVcA=="
       },
       "Microsoft.Extensions.Logging.Abstractions": {
         "type": "Transitive",
-        "resolved": "6.0.2",
-        "contentHash": "pwXCZKaA7m5wgmCj49dW+H1RPSY7U62SKLTQYCcavf/k3Nyt/WnBgAjG4jMGnwy9rElfAZ2KvxvM5CJzJWG0hg=="
+        "resolved": "7.0.0",
+        "contentHash": "kmn78+LPVMOWeITUjIlfxUPDsI0R6G0RkeAMBmQxAJ7vBJn4q2dTva7pWi65ceN5vPGjJ9q/Uae2WKgvfktJAw=="
       },
       "Microsoft.Extensions.Options": {
         "type": "Transitive",
-        "resolved": "6.0.0",
-        "contentHash": "dzXN0+V1AyjOe2xcJ86Qbo233KHuLEY0njf/P2Kw8SfJU+d45HNS2ctJdnEnrWbM9Ye2eFgaC5Mj9otRMU6IsQ==",
+        "resolved": "7.0.0",
+        "contentHash": "lP1yBnTTU42cKpMozuafbvNtQ7QcBjr/CcK3bYOGEMH55Fjt+iecXjT6chR7vbgCMqy3PG3aNQSZgo/EuY/9qQ==",
         "dependencies": {
-          "Microsoft.Extensions.DependencyInjection.Abstractions": "6.0.0",
-          "Microsoft.Extensions.Primitives": "6.0.0"
+          "Microsoft.Extensions.DependencyInjection.Abstractions": "7.0.0",
+          "Microsoft.Extensions.Primitives": "7.0.0"
         }
       },
       "Microsoft.Extensions.Primitives": {
         "type": "Transitive",
-        "resolved": "6.0.0",
-        "contentHash": "9+PnzmQFfEFNR9J2aDTfJGGupShHjOuGw4VUv+JB044biSHrnmCIMD+mJHmb2H7YryrfBEXDurxQ47gJZdCKNQ==",
+        "resolved": "7.0.0",
+        "contentHash": "um1KU5kxcRp3CNuI8o/GrZtD4AIOXDk+RLsytjZ9QPok3ttLUelLKpilVPuaFT3TFjOhSibUAso0odbOaCDj3Q==",
         "dependencies": {
           "System.Runtime.CompilerServices.Unsafe": "6.0.0"
         }
@@ -1175,63 +1192,63 @@
       "businesslogic": {
         "type": "Project",
         "dependencies": {
-          "JetBrains.Annotations": "2022.1.0",
-          "Shared": "1.0.0"
+          "JetBrains.Annotations": "[2022.1.0, )",
+          "Shared": "[1.0.0, )"
         }
       },
       "dataaccess": {
         "type": "Project",
         "dependencies": {
-          "AutoMapper": "11.0.1",
-          "BusinessLogic": "1.0.0",
-          "JetBrains.Annotations": "2022.1.0",
-          "PersistEntities": "1.0.0",
-          "System.IO.Abstractions": "17.2.3"
+          "AutoMapper": "[11.0.1, )",
+          "BusinessLogic": "[1.0.0, )",
+          "JetBrains.Annotations": "[2022.1.0, )",
+          "PersistEntities": "[1.0.0, )",
+          "System.IO.Abstractions": "[17.2.3, )"
         }
       },
       "electronwrapper": {
         "type": "Project",
         "dependencies": {
-          "ElectronNET.API": "13.5.1",
-          "JetBrains.Annotations": "2022.1.0"
+          "ElectronNET.API": "[13.5.1, )",
+          "JetBrains.Annotations": "[2022.1.0, )"
         }
       },
       "generator": {
         "type": "Project",
         "dependencies": {
-          "AutoMapper": "11.0.1",
-          "BusinessLogic": "1.0.0",
-          "JetBrains.Annotations": "2022.1.0",
-          "PersistEntities": "1.0.0",
-          "SharpZipLib": "1.3.3",
-          "System.IO.Abstractions": "17.2.3"
+          "AutoMapper": "[11.0.1, )",
+          "BusinessLogic": "[1.0.0, )",
+          "JetBrains.Annotations": "[2022.1.0, )",
+          "PersistEntities": "[1.0.0, )",
+          "SharpZipLib": "[1.3.3, )",
+          "System.IO.Abstractions": "[17.2.3, )"
         }
       },
       "persistentities": {
         "type": "Project",
         "dependencies": {
-          "JetBrains.Annotations": "2022.1.0"
+          "JetBrains.Annotations": "[2022.1.0, )"
         }
       },
       "presentation": {
         "type": "Project",
         "dependencies": {
-          "AutoMapper": "11.0.1",
-          "AutoMapper.Extensions.Microsoft.DependencyInjection": "11.0.0",
-          "BusinessLogic": "1.0.0",
-          "ElectronWrapper": "1.0.0",
-          "JetBrains.Annotations": "2022.1.0",
-          "Microsoft.Extensions.Caching.Memory": "6.0.1",
-          "Shared": "1.0.0",
-          "SharpZipLib": "1.3.3",
-          "System.IO.Abstractions": "17.2.3"
+          "AutoMapper": "[11.0.1, )",
+          "AutoMapper.Extensions.Microsoft.DependencyInjection": "[11.0.0, )",
+          "BusinessLogic": "[1.0.0, )",
+          "ElectronWrapper": "[1.0.0, )",
+          "JetBrains.Annotations": "[2022.1.0, )",
+          "Microsoft.Extensions.Caching.Memory": "[6.0.1, )",
+          "Shared": "[1.0.0, )",
+          "SharpZipLib": "[1.3.3, )",
+          "System.IO.Abstractions": "[17.2.3, )"
         }
       },
       "shared": {
         "type": "Project",
         "dependencies": {
-          "JetBrains.Annotations": "2022.1.0",
-          "Microsoft.Extensions.Logging.Abstractions": "6.0.2"
+          "JetBrains.Annotations": "[2022.1.0, )",
+          "Microsoft.Extensions.Logging.Abstractions": "[6.0.2, )"
         }
       }
     }

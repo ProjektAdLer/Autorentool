@@ -81,7 +81,7 @@ public class MainLayoutUt
         if (sidebarMain is null)
             Assert.Fail("Could not find sidebar main");
         
-        Assert.That(sidebarMain!.Children, Has.Length.EqualTo(2));
+        Assert.That(sidebarMain!.Children, Has.Length.EqualTo(3));
     }
     
     [Test]
