@@ -1,27 +1,25 @@
-@using  System.Globalization
+@using System.Globalization
+@using Microsoft.Extensions.Localization
+@using MudBlazor
 @inject NavigationManager Navigation
+@inject IStringLocalizer<CultureSelector> Localizer
 
 <p>
     <label>
-        Select your locale:
-        <select @bind="Culture">
-            @foreach (var culture in supportedCultures)
-            {
-                <option value="@culture">@culture.DisplayName</option>
-            }
-        </select>
+        <MudRadioGroup @bind-SelectedOption="Culture">
+            <MudRadio Option="supportedCultures[0]">DE</MudRadio>
+            <MudRadio Option="supportedCultures[1]">EN</MudRadio>
+        </MudRadioGroup>
     </label>
 </p>
 
 @code
 {
-    private CultureInfo[] supportedCultures = new[]
+    private CultureInfo[] supportedCultures = 
     {
-        new CultureInfo("de-DE"),
-        new CultureInfo("en-DE"),
+        new("de-DE"),
+        new("en-DE")
     };
-    
-    private CultureInfo DefaultCulture => supportedCultures.First();
 
     protected override void OnInitialized()
     {

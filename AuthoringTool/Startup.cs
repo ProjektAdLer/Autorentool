@@ -9,6 +9,7 @@ using Generator.DSL;
 using Generator.WorldExport;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Caching.Memory;
+using MudBlazor.Services;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -37,6 +38,9 @@ public class Startup
         //Blazor and Electron (framework)
         services.AddRazorPages();
         services.AddServerSideBlazor();
+        
+        //MudBlazor
+        services.AddMudServices();
         
         //localization
         services.AddLocalization();

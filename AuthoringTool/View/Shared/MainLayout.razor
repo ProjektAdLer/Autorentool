@@ -1,6 +1,7 @@
 ﻿@using Presentation.PresentationLogic.API
 @using Presentation.Components
 @using Presentation.View.Toolbox
+@using Presentation.Components.Culture
 @inherits LayoutComponentBase
 
 <PageTitle>AuthoringTool</PageTitle>
@@ -30,6 +31,9 @@
     </main>
 </div>
 
+<MudThemeProvider/>
+<MudDialogProvider/>
+<MudSnackbarProvider/>
 
 @code {
     [Inject]
