@@ -135,7 +135,6 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
             "php" => ContentTypeEnum.Text, 
             "html" => ContentTypeEnum.Text, 
             "css" => ContentTypeEnum.Text,
-            //"mp4" => ContentTypeEnum.Video,
             "h5p" => ContentTypeEnum.H5P,
             "pdf" => ContentTypeEnum.PDF,
             _ => throw new Exception(

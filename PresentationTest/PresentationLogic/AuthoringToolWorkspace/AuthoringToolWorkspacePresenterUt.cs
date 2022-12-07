@@ -756,7 +756,7 @@ public class AuthoringToolWorkspacePresenterUt
      TestCase("txt"), TestCase("c"), TestCase("h"), TestCase("cpp"), 
      TestCase("cc"), TestCase("c++"), TestCase("py"), TestCase("cs"), 
      TestCase("js"), TestCase("php"), TestCase("html"), TestCase("css"), 
-     TestCase("mp4"), TestCase("h5p"), TestCase("pdf"), TestCase("unsupportedEnding")]
+     TestCase("h5p"), TestCase("pdf"), TestCase("unsupportedEnding")]
     public void ProcessDragAndDropResult_CallsPresentationLogic(string ending)
     {
         var fileName = "testFile." + ending;
@@ -812,7 +812,6 @@ public class AuthoringToolWorkspacePresenterUt
             case "php":
             case "html":
             case "css":
-            case "mp4":
             case "h5p":
             case "pdf":
                 presentationLogic.Received().LoadLearningContentViewModel(fileName, stream);

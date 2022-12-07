@@ -276,7 +276,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
             case "php":
             case "html":
             case "css":
-            case "mp4":
             case "h5p":
             case "pdf":
                 var learningContent = _presentationLogic.LoadLearningContentViewModel(name, stream);

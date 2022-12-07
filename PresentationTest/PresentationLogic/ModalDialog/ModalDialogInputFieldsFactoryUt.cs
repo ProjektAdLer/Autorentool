@@ -671,7 +671,6 @@ public class ModalDialogInputFieldsFactoryUt
     [TestCase("php", ContentTypeEnum.Text)]
     [TestCase("html", ContentTypeEnum.Text)]
     [TestCase("css", ContentTypeEnum.Text)]
-    [TestCase("mp4", ContentTypeEnum.Video)]
     [TestCase("h5p", ContentTypeEnum.H5P)]
     [TestCase("pdf", ContentTypeEnum.PDF)]
     public void GetCreateLearningElementInputFields_OverloadedFunction_NoDragAndDrop_ReturnsCorrectInputFields(string correctFileExtensionForTest, 
