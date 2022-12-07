@@ -176,15 +176,16 @@ public class Startup
         app.UseHttpsRedirection();
         app.UseStaticFiles();
         
+        // Add localization cultures
         var supportedCultures = new[] { "de-DE", "en-DE" };
         var localizationOptions = new RequestLocalizationOptions()
             .SetDefaultCulture(supportedCultures[0])
             .AddSupportedCultures(supportedCultures)
             .AddSupportedUICultures(supportedCultures);
+        // Clear all other providers and register the cookie provider as the only one
         localizationOptions.RequestCultureProviders.Clear();
         localizationOptions.AddInitialRequestCultureProvider(new CookieRequestCultureProvider());
-        var providers = localizationOptions.RequestCultureProviders;
-
+        // Require request localization (this applies the requested culture to the actual application)
         app.UseRequestLocalization(localizationOptions);
 
         app.UseRouting();

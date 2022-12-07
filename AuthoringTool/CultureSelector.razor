@@ -28,22 +28,23 @@
         Culture = CultureInfo.CurrentCulture;
     }
 
+    /// <summary>
+    /// Gets or sets the current culture of the application.
+    /// </summary>
     private CultureInfo Culture
     {
         get => CultureInfo.CurrentCulture;
         set
         {
-            if (CultureInfo.CurrentCulture != value)
-            {
-                var uri = new Uri(Navigation.Uri)
-                    .GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
-                var cultureEscaped = Uri.EscapeDataString(value.Name);
-                var uriEscaped = Uri.EscapeDataString(uri);
+            if (Equals(CultureInfo.CurrentCulture, value)) return;
+            var uri = new Uri(Navigation.Uri)
+                .GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+            var cultureEscaped = Uri.EscapeDataString(value.Name);
+            var uriEscaped = Uri.EscapeDataString(uri);
 
-                Navigation.NavigateTo(
-                    $"Culture/Set?culture={cultureEscaped}&redirectUri={uriEscaped}",
-                    forceLoad: true);
-            }
+            Navigation.NavigateTo(
+                $"Culture/Set?culture={cultureEscaped}&redirectUri={uriEscaped}",
+                forceLoad: true);
         }
     }
 }
