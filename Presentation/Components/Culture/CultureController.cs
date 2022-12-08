@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace AuthoringTool;
+namespace Presentation.Components.Culture;
 
 /// <summary>
 /// Sets RequestCulture cookie for localization.

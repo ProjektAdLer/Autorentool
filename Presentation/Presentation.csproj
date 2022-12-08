@@ -78,12 +78,10 @@
     <Compile Remove="PresentationLogic\EntityMapping\LearningElementMapper\H5PActivationElementMapper.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Update="Components\Culture\CultureSelector.en.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>CultureSelector.e.Designer.cs</LastGenOutput>
+    <EmbeddedResource Update="Resources\Components\Culture\CultureSelector.en.resx">
+      <LastGenOutput>CultureSelector.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <EmbeddedResource Update="Components\Culture\CultureSelector.de.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
+    <EmbeddedResource Update="Resources\Components\Culture\CultureSelector.de.resx">
       <LastGenOutput>CultureSelector.de.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>

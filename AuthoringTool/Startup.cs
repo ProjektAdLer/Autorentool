@@ -43,7 +43,7 @@ public class Startup
         services.AddMudServices();
         
         //localization
-        services.AddLocalization();
+        services.AddLocalization(options => options.ResourcesPath = "Resources");
 
         services.AddLogging(builder =>
         {

@@ -64,10 +64,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Update="Pages\Index.de.resx">
+      <EmbeddedResource Update="Resources\Pages\Index.de.resx">
         <LastGenOutput>Index.de.Designer.cs</LastGenOutput>
       </EmbeddedResource>
-      <EmbeddedResource Update="Pages\Index.en.resx">
+      <EmbeddedResource Update="Resources\Pages\Index.en.resx">
         <LastGenOutput>Index.en.Designer.cs</LastGenOutput>
       </EmbeddedResource>
     </ItemGroup>
