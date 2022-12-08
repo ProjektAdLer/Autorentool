@@ -3,8 +3,13 @@ using AuthoringTool.View.Shared;
 using Bunit;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Logging.Abstractions;
+using Microsoft.Extensions.Options;
+using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.Components.Culture;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.Toolbox;
@@ -23,6 +28,7 @@ public class MainLayoutUt
     private IToolboxEntriesProvider _toolboxEntriesProvider;
     private IToolboxResultFilter _toolboxResultFilter;
     private IShutdownManager _shutdownManager;
+    private IStringLocalizer<CultureSelector> _stringLocalizer;
 #pragma warning restore CS8618
     
     [SetUp]
@@ -34,12 +40,22 @@ public class MainLayoutUt
         _toolboxEntriesProvider = Substitute.For<IToolboxEntriesProvider>();
         _toolboxResultFilter = Substitute.For<IToolboxResultFilter>();
         _shutdownManager = Substitute.For<IShutdownManager>();
+        _stringLocalizer = Substitute.For<IStringLocalizer<CultureSelector>>();
+        _stringLocalizer[Arg.Any<string>()]
+            .Returns(cinfo => new LocalizedString(cinfo.Arg<string>(), cinfo.Arg<string>()));
+        
         _ctx.Services.AddSingleton(_presentationLogic);
         _ctx.Services.AddSingleton(_abstractToolboxRenderFragmentFactory);
         _ctx.Services.AddSingleton(_toolboxEntriesProvider);
         _ctx.Services.AddSingleton(_toolboxResultFilter);
         _ctx.Services.AddSingleton(_shutdownManager);
+        _ctx.Services.AddSingleton(_stringLocalizer);
         _ctx.Services.AddLogging();
+
+        _ctx.ComponentFactories.AddStub<MudThemeProvider>();
+        _ctx.ComponentFactories.AddStub<MudDialogProvider>();
+        _ctx.ComponentFactories.AddStub<MudSnackbarProvider>();
+        _ctx.ComponentFactories.AddStub<CultureSelector>();
     }
     
     [Test]
@@ -81,7 +97,7 @@ public class MainLayoutUt
         if (sidebarMain is null)
             Assert.Fail("Could not find sidebar main");
         
-        Assert.That(sidebarMain!.Children, Has.Length.EqualTo(3));
+        Assert.That(sidebarMain!.Children, Has.Length.EqualTo(2));
     }
     
     [Test]
@@ -129,6 +145,9 @@ public class MainLayoutUt
 
     private IRenderedComponent<MainLayout> GetFragmentForTesting(RenderFragment? body = null)
     {
+        var options = Options.Create(new LocalizationOptions {ResourcesPath = "View/Shared"});
+        var factory = new ResourceManagerStringLocalizerFactory(options, NullLoggerFactory.Instance);
+        var localizer = new StringLocalizer<MainLayout>(factory);
         body ??= delegate {  };
         return _ctx.RenderComponent<MainLayout>(
             parameters => parameters
