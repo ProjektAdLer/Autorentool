@@ -200,62 +200,6 @@ public class LearningSpaceViewUt
     }
 
     [Test]
-    public void EditLearningSpaceDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
-    {
-        //prepare presenter return values
-        var learningSpace = Substitute.For<ILearningSpaceViewModel>();
-        _learningSpacePresenter.EditLearningSpaceDialogOpen.Returns(true);
-        _learningSpacePresenter.LearningSpaceVm.Returns(learningSpace);
-        var initialValues = new Dictionary<string, string>
-        {
-            { "foo", "bar" }
-        };
-        _learningSpacePresenter.EditLearningSpaceDialogInitialValues.Returns(initialValues);
-
-        RenderFragment fragment = builder =>
-        {
-            builder.OpenElement(0, "p");
-            builder.AddContent(1, "foobar");
-            builder.CloseElement();
-        };
-        //prepare dialog factory return value and capture passed callback
-        ModalDialogOnClose? callback = null;
-        _modalDialogFactory
-            .GetEditLearningSpaceFragment(initialValues, Arg.Any<ModalDialogOnClose>())
-            .Returns(fragment)
-            .AndDoes(ci =>
-            {
-                callback = ci.Arg<ModalDialogOnClose>();
-            });
-
-        //create system under test which will immediately render, therefore execute
-        var systemUnderTest = GetLearningSpaceViewForTesting();
-        
-        //assert dialogFactory was called and that our dialog fragment was rendered
-        _modalDialogFactory.Received().GetEditLearningSpaceFragment(initialValues, Arg.Any<ModalDialogOnClose>());
-        var p = systemUnderTest.FindOrFail("p");
-        p.MarkupMatches("<p>foobar</p>");
-
-        if (callback == null)
-        {
-            Assert.Fail("Didn't get a callback from call to modal dialog factory");
-        }
-
-        var returnDictionary = new Dictionary<string, string>
-        {
-            { "foo", "baz" },
-            { "bar", "baz" }
-        };
-        var returnValue = new ModalDialogOnCloseResult(ModalDialogReturnValue.Ok, returnDictionary);
-        
-        //call the callback with the return value
-        callback!.Invoke(returnValue);
-        
-        //assert that the delegate we called executed presenter
-        _learningSpacePresenter.Received().OnEditSpaceDialogClose(returnValue);
-    }
-    
-    [Test]
     public void CreateLearningElementDialogOpen_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
     {
         _learningSpacePresenter.CreateLearningElementDialogOpen.Returns(true);

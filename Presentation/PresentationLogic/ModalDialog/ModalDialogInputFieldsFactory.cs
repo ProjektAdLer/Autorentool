@@ -37,8 +37,14 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
                 }, true),
         };
 
+    public IEnumerable<ModalDialogInputField> GetCreateTopicInputFields() =>
+        new ModalDialogInputField[]
+        {
+            new("Name", ModalDialogInputType.Text, true)
+        };
+
     /// <inheritdoc cref="ILearningWorldViewModalDialogInputFieldsFactory.GetCreateLearningSpaceInputFields"/>
-    public IEnumerable<ModalDialogInputField> GetCreateLearningSpaceInputFields() =>
+    public IEnumerable<ModalDialogInputField> GetCreateLearningSpaceInputFields(List<string> topics) =>
         new ModalDialogInputField[]
         {
             new("Name", ModalDialogInputType.Text, true),
@@ -46,14 +52,41 @@ public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputF
             new("Authors", ModalDialogInputType.Text),
             new("Description", ModalDialogInputType.Text),
             new("Goals", ModalDialogInputType.Text),
+            new ModalDialogDropdownInputField("Topic",
+                new[]
+                {
+                    new ModalDialogDropdownInputFieldChoiceMapping(null, topics.ToArray())
+                }),
             new("Required Points", ModalDialogInputType.Number)
         };
 
     /// <inheritdoc cref="ILearningWorldViewModalDialogInputFieldsFactory.GetEditLearningSpaceInputFields"/>
-    public IEnumerable<ModalDialogInputField> GetEditLearningSpaceInputFields() => GetCreateLearningSpaceInputFields();
+    public IEnumerable<ModalDialogInputField> GetEditLearningSpaceInputFields(List<string> topics) =>
+        GetCreateLearningSpaceInputFields(topics);
 
     /// <inheritdoc cref="ILearningWorldViewModalDialogInputFieldsFactory.GetEditPathWayConditionInputFields"/>
     public IEnumerable<ModalDialogInputField> GetEditPathWayConditionInputFields() => GetCreatePathWayConditionInputFields();
+
+    public IEnumerable<ModalDialogInputField> GetEditTopicInputFields(List<string> topics) => 
+        new ModalDialogInputField[]
+        {
+            new ModalDialogDropdownInputField("Topics",
+                new[]
+                {
+                    new ModalDialogDropdownInputFieldChoiceMapping(null, topics.ToArray())
+                }, true),
+            new("New Name", ModalDialogInputType.Text, true)
+        };
+
+    public IEnumerable<ModalDialogInputField> GetDeleteTopicInputFields(List<string> topics) => 
+        new ModalDialogInputField[]
+        {
+            new ModalDialogDropdownInputField("Topics",
+                new[]
+                {
+                    new ModalDialogDropdownInputFieldChoiceMapping(null, topics.ToArray())
+                }, true),
+        };
 
     /// <inheritdoc cref="ILearningSpaceViewModalDialogInputFieldsFactory.GetEditLearningElementInputFields"/>
     public IEnumerable<ModalDialogInputField> GetEditLearningElementInputFields() =>

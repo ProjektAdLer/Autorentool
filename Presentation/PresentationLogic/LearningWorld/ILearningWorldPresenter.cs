@@ -10,10 +10,15 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
 {
     bool CreateLearningSpaceDialogOpen { get; }
     bool CreatePathWayConditionDialogOpen { get; }
+    bool CreateTopicDialogOpen { get; }
     bool EditLearningSpaceDialogOpen { get; }
     bool EditPathWayConditionDialogOpen { get; }
+    bool EditTopicDialogOpen { get; }
+    bool DeleteTopicDialogOpen { get; }
     Dictionary<string, string>? EditSpaceDialogInitialValues { get; }
     Dictionary<string, string>? EditConditionDialogInitialValues { get; }
+    List<string>? EditTopicDialogInitialValues { get; }
+    List<string>? DeleteTopicDialogInitialValues { get; }
     Dictionary<string, string>? EditSpaceDialogAnnotations { get; }
     ILearningWorldViewModel? LearningWorldVm { get; }
     bool SelectedLearningObjectIsSpace { get; }
@@ -23,14 +28,20 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     Task SaveSelectedLearningSpaceAsync();
     void OnCreateSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void OnCreatePathWayConditionDialogClose(ModalDialogOnCloseResult returnValueTuple);
+    void OnCreateTopicDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void OpenEditSelectedObjectDialog();
+    void OpenEditTopicDialog();
     void OnEditPathWayConditionDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple);
+    void OnEditTopicDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void ShowSelectedLearningSpaceView();
     void CloseLearningSpaceView();
     void AddNewLearningSpace();
     void AddNewPathWayCondition();
+    void AddNewTopic();
     void DeletePathWayCondition(PathWayConditionViewModel pathWayCondition);
+    void OpenDeleteTopicDialog();
+    void OnDeleteTopicDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void OnWorkspacePropertyChanged(object? caller, PropertyChangedEventArgs e);
     event Action OnUndoRedoPerformed;
     void DragObjectInPathWay(object sender, DraggedEventArgs<IObjectInPathWayViewModel> draggedEventArgs);

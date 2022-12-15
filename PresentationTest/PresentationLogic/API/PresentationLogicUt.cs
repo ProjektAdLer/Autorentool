@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using AutoMapper;
 using BusinessLogic.API;
@@ -19,6 +20,7 @@ using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Topic;
 using Shared;
 using Shared.Configuration;
 
@@ -275,18 +277,24 @@ public class PresentationLogicUt
         mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
             Do(sub => command = sub.Arg<ICommand>() as CreateLearningSpace);
         var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        var topicVm = new TopicViewModel("topic1");
         var mockMapper = Substitute.For<IMapper>();
         var learningWorldEntity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
+        var topicEntity = new BusinessLogic.Entities.Topic("topic1");
         mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
             .Returns(learningWorldEntity);
+        mockMapper.Map<BusinessLogic.Entities.Topic>(Arg.Any<TopicViewModel>())
+            .Returns(topicEntity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
         
-        systemUnderTest.CreateLearningSpace(learningWorldVm, "z", "z", "z", "z", "z", 5, 6, 7);
+        systemUnderTest.CreateLearningSpace(learningWorldVm, "z", "z", "z", "z", "z", 5, 6, 7, topicVm);
         
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
         Assert.That(command, Is.Not.Null);
         Assert.That(command!.LearningWorld, Is.EqualTo(learningWorldEntity));
+        Assert.That(command!.LearningSpace, Is.Not.Null);
+        Assert.That(command!.LearningSpace.AssignedTopic, Is.EqualTo(topicEntity));
     }
     
     [Test]
@@ -691,6 +699,108 @@ public class PresentationLogicUt
         {
             Assert.That(command!.LearningWorld, Is.EqualTo(learningWorldEntity));
             Assert.That(command!.PathWayCondition, Is.EqualTo(pathWayConditionEntity));
+        });
+    }
+
+    [Test]
+    public void CreateTopic_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        CreateTopic? command = null;
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
+            Do(sub => command = sub.Arg<ICommand>() as CreateTopic);
+        var learningWorldVm = new LearningWorldViewModel("a","b","c","d","e","f");
+        var mockMapper = Substitute.For<IMapper>();
+        var learningWorldEntity = new BusinessLogic.Entities.LearningWorld("a","b","c","d","e","f");
+        mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
+            .Returns(learningWorldEntity);
+        
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+        
+        systemUnderTest.CreateTopic(learningWorldVm, "f");
+        
+        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
+        Assert.That(command, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(command!.LearningWorld, Is.EqualTo(learningWorldEntity));
+            Assert.That(command!.Topic, Is.Not.Null);
+            Assert.That(command!.Topic.Name, Is.EqualTo("f"));
+        });
+    }
+
+    [Test]
+    public void EditTopic_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        EditTopic? command = null;
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
+            Do(sub => command = sub.Arg<ICommand>() as EditTopic);
+        var topicVm = new TopicViewModel("f");
+        var mockMapper = Substitute.For<IMapper>();
+        var topicEntity = new BusinessLogic.Entities.Topic("f");
+        mockMapper.Map<BusinessLogic.Entities.Topic>(Arg.Any<TopicViewModel>())
+            .Returns(topicEntity);
+        
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+        
+        systemUnderTest.EditTopic(topicVm, "g");
+        
+        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
+        Assert.Multiple(() =>
+        {
+            Assert.That(command, Is.Not.Null);
+            Assert.That(command!.Topic, Is.EqualTo(topicEntity));
+        });
+    }
+    
+    [Test]
+    public void DeleteTopic_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        BatchCommand? command = null;
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
+            Do(sub => command = sub.Arg<ICommand>() as BatchCommand);
+        var learningWorldVm = new LearningWorldViewModel("a","b","c","d","e","f");
+        var topicVm = new TopicViewModel("a");
+        var spaceVm1 = new LearningSpaceViewModel("a", "b", "c", "d", "e", 2, assignedTopic: topicVm);
+        var spaceVm2 = new LearningSpaceViewModel("a", "b", "c", "d", "e", 2, assignedTopic: topicVm);
+        var spaceVm3 = new LearningSpaceViewModel("a", "b", "c", "d", "e", 2, assignedTopic: topicVm);
+        learningWorldVm.LearningSpaces.Add(spaceVm1);
+        learningWorldVm.LearningSpaces.Add(spaceVm2);
+        learningWorldVm.LearningSpaces.Add(spaceVm3);
+        learningWorldVm.Topics.Add(topicVm);
+        var mockMapper = Substitute.For<IMapper>();
+        var learningWorldEntity = new BusinessLogic.Entities.LearningWorld("a","b","c","d","e","f");
+        var topicEntity = new BusinessLogic.Entities.Topic("a");
+        var spaceEntity1 = new BusinessLogic.Entities.LearningSpace("a", "b", "c", "d", "e", 2, assignedTopic: topicEntity);
+        var spaceEntity2 = new BusinessLogic.Entities.LearningSpace("a", "b", "c", "d", "e", 2, assignedTopic: topicEntity);
+        var spaceEntity3 = new BusinessLogic.Entities.LearningSpace("a", "b", "c", "d", "e", 2, assignedTopic: topicEntity);
+        learningWorldEntity.LearningSpaces.Add(spaceEntity1);
+        learningWorldEntity.LearningSpaces.Add(spaceEntity2);
+        learningWorldEntity.LearningSpaces.Add(spaceEntity3);
+        learningWorldEntity.Topics.Add(topicEntity);
+
+        mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
+            .Returns(learningWorldEntity);
+        mockMapper.Map<BusinessLogic.Entities.Topic>(Arg.Any<TopicViewModel>())
+            .Returns(topicEntity);
+        mockMapper.Map<BusinessLogic.Entities.LearningSpace>(spaceVm1)
+            .Returns(spaceEntity1);
+        mockMapper.Map<BusinessLogic.Entities.LearningSpace>(spaceVm2)
+            .Returns(spaceEntity2);
+        mockMapper.Map<BusinessLogic.Entities.LearningSpace>(spaceVm3)
+            .Returns(spaceEntity3);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+        
+        systemUnderTest.DeleteTopic(learningWorldVm, topicVm);
+        
+        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<BatchCommand>());
+        Assert.Multiple(() =>
+        {
+            Assert.That(command, Is.Not.Null);
+            Assert.That(command!.Commands.Count, Is.EqualTo(4));
         });
     }
 

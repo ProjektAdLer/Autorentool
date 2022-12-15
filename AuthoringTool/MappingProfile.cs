@@ -13,6 +13,7 @@ using Presentation.PresentationLogic.LearningElement.TransferElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Topic;
 using Shared;
 
 namespace AuthoringTool;
@@ -58,7 +59,8 @@ public class MappingProfile : Profile
             .ForMember(x => x.SelectableWorldObjects, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
-                d.SelectedLearningObject = d.SelectableWorldObjects.FirstOrDefault(z => z.Id == s.SelectedLearningObject?.Id);
+                d.SelectedLearningObject =
+                    d.SelectableWorldObjects.FirstOrDefault(z => z.Id == s.SelectedLearningObject?.Id);
             })
             .AfterMap((s, d) =>
             {
@@ -72,8 +74,10 @@ public class MappingProfile : Profile
             {
                 foreach (var pathWayObject in d.ObjectsInPathWays)
                 {
-                    pathWayObject.InBoundObjects = d.LearningPathWays.Where(x => x.TargetObject.Id == pathWayObject.Id).Select(x => x.SourceObject).ToList();
-                    pathWayObject.OutBoundObjects = d.LearningPathWays.Where(x => x.SourceObject.Id == pathWayObject.Id).Select(x => x.TargetObject).ToList();
+                    pathWayObject.InBoundObjects = d.LearningPathWays.Where(x => x.TargetObject.Id == pathWayObject.Id)
+                        .Select(x => x.SourceObject).ToList();
+                    pathWayObject.OutBoundObjects = d.LearningPathWays.Where(x => x.SourceObject.Id == pathWayObject.Id)
+                        .Select(x => x.TargetObject).ToList();
                 }
             })
             .ReverseMap()
@@ -82,7 +86,8 @@ public class MappingProfile : Profile
             .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
-                d.SelectedLearningObject = d.SelectableWorldObjects.FirstOrDefault(z => z.Id == s.SelectedLearningObject?.Id);
+                d.SelectedLearningObject =
+                    d.SelectableWorldObjects.FirstOrDefault(z => z.Id == s.SelectedLearningObject?.Id);
             })
             .AfterMap((s, d) =>
             {
@@ -96,11 +101,16 @@ public class MappingProfile : Profile
             {
                 foreach (var pathWayObject in d.ObjectsInPathWays)
                 {
-                    pathWayObject.InBoundObjects = d.LearningPathways.Where(x => x.TargetObject.Id == pathWayObject.Id).Select(x => x.SourceObject).ToList();
-                    pathWayObject.OutBoundObjects = d.LearningPathways.Where(x => x.SourceObject.Id == pathWayObject.Id).Select(x => x.TargetObject).ToList();
+                    pathWayObject.InBoundObjects = d.LearningPathways.Where(x => x.TargetObject.Id == pathWayObject.Id)
+                        .Select(x => x.SourceObject).ToList();
+                    pathWayObject.OutBoundObjects = d.LearningPathways.Where(x => x.SourceObject.Id == pathWayObject.Id)
+                        .Select(x => x.TargetObject).ToList();
                 }
             });
 
+        CreateMap<TopicViewModel, Topic>()
+            .EqualityComparison((x, y) => x.Id == y.Id)
+            .ReverseMap();
         CreateMap<LearningPathwayViewModel, LearningPathway>()
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ReverseMap();
@@ -188,6 +198,8 @@ public class MappingProfile : Profile
             .As<LearningSpaceViewModel>();
         CreateMap<LearningPathway, ILearningPathWayViewModel>()
             .As<LearningPathwayViewModel>();
+        CreateMap<Topic, ITopicViewModel>()
+            .As<TopicViewModel>();
         
         
         CreateMap<PathWayCondition, IObjectInPathWayViewModel>().As<PathWayConditionViewModel>();

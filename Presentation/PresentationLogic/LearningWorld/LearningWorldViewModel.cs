@@ -3,6 +3,7 @@ using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.Topic;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
@@ -25,6 +26,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _learningSpaces = new List<ILearningSpaceViewModel>();
         _pathWayConditions = new List<PathWayConditionViewModel>();
         _learningPathWays = new List<ILearningPathWayViewModel>();
+        _topics = new List<TopicViewModel>();
     }
     
     /// <summary>
@@ -41,9 +43,11 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     /// Should be used when loading a saved learnign world into the application.</param>
     /// <param name="pathWayConditions">Conditions within learning pathways.</param>
     /// <param name="learningPathWays">Optional collection of learning pathways in the learning world.</param>
+    /// <param name="topics">Optional collection of topics in the learning world.</param>
     public LearningWorldViewModel(string name, string shortname, string authors, string language, string description,
         string goals, bool unsavedChanges = true, List<ILearningSpaceViewModel>? learningSpaces = null,
-        List<PathWayConditionViewModel>? pathWayConditions = null, List<ILearningPathWayViewModel>? learningPathWays = null)
+        List<PathWayConditionViewModel>? pathWayConditions = null, List<ILearningPathWayViewModel>? learningPathWays = null,
+        List<TopicViewModel>? topics = null)
     {
         Id = Guid.NewGuid();
         _name = name;
@@ -56,6 +60,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _learningSpaces = learningSpaces ?? new List<ILearningSpaceViewModel>();
         _pathWayConditions = pathWayConditions ?? new List<PathWayConditionViewModel>();
         _learningPathWays = learningPathWays ?? new List<ILearningPathWayViewModel>();
+        _topics = topics ?? new List<TopicViewModel>();
     }
     
     public const string fileEnding = "awf";
@@ -64,6 +69,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     private ICollection<ILearningSpaceViewModel> _learningSpaces;
     private ICollection<PathWayConditionViewModel> _pathWayConditions;
     private ICollection<ILearningPathWayViewModel> _learningPathWays;
+    private ICollection<TopicViewModel> _topics;
     private string _name;
     private string _shortname;
     private string _authors;
@@ -97,6 +103,12 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     {
         get => _learningPathWays;
         set => SetField(ref _learningPathWays, value);
+    }
+
+    public ICollection<TopicViewModel> Topics
+    {
+        get => _topics;
+        set => SetField(ref _topics, value);
     }
 
     public IEnumerable<IObjectInPathWayViewModel> ObjectsInPathWays =>

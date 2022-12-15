@@ -18,7 +18,7 @@ public interface ILearningSpaceViewModalDialogInputFieldsFactory
     /// Get the input fields for the edit space modal dialog.
     /// </summary>
     /// <returns>The input fields for the modal dialog.</returns>
-    IEnumerable<ModalDialogInputField> GetEditLearningSpaceInputFields();
+    IEnumerable<ModalDialogInputField> GetEditLearningSpaceInputFields(List<string> topics);
     
     /// <summary>
     /// Get the input fields for the edit element modal dialog.

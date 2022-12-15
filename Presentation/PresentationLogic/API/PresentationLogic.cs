@@ -9,6 +9,7 @@ using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Topic;
 using Shared;
 using Shared.Configuration;
 
@@ -163,22 +164,26 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.CreateLearningSpace"/>
     public void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name, string shortname,
-        string authors, string description, string goals, int requiredPoints, double positionX, double positionY)
+        string authors, string description, string goals, int requiredPoints, double positionX, double positionY,
+        ITopicViewModel? topicVm)
     {
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var topicEntity = Mapper.Map<BusinessLogic.Entities.Topic>(topicVm);
 
         var command = new CreateLearningSpace(worldEntity, name, shortname, authors, description, goals, requiredPoints, 
-            positionX, positionY, world => CMapper.Map(world, learningWorldVm));
+            positionX, positionY, topicEntity, world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.EditLearningSpace"/>
     public void EditLearningSpace(ILearningSpaceViewModel learningSpaceVm, string name,
-        string shortname, string authors, string description, string goals, int requiredPoints)
+        string shortname, string authors, string description, string goals, int requiredPoints, ITopicViewModel? topicVm = null)
     {
         var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+        var topicEntity = topicVm != null ? Mapper.Map<BusinessLogic.Entities.Topic>(topicVm) : null;
 
-        var command = new EditLearningSpace(spaceEntity, name, shortname, authors, description, goals, requiredPoints,
+        learningSpaceVm.AssignedTopic = null;
+        var command = new EditLearningSpace(spaceEntity, name, shortname, authors, description, goals, requiredPoints, topicEntity,
             space => CMapper.Map(space, learningSpaceVm));
         BusinessLogic.ExecuteCommand(command);
     }
@@ -269,6 +274,50 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
     
+    /// <inheritdoc cref="IPresentationLogic.CreateTopic"/>
+    public void CreateTopic(ILearningWorldViewModel learningWorldVm, string name)
+    {
+        var learningWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+
+        var command = new CreateTopic(learningWorldEntity, name, world => CMapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.EditTopic"/>
+    public void EditTopic(ITopicViewModel topicVm, string newName)
+    {
+        var topicEntity = Mapper.Map<BusinessLogic.Entities.Topic>(topicVm);
+
+        var command = new EditTopic(topicEntity, newName, topic => CMapper.Map(topic, topicVm));
+
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    /// <inheritdoc cref="IPresentationLogic.DeleteTopic"/>
+    public void DeleteTopic(ILearningWorldViewModel learningWorldVm, ITopicViewModel topicVm)
+    {
+        var learningWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var topicEntity = Mapper.Map<BusinessLogic.Entities.Topic>(topicVm);
+
+        var listOfCommands = new List<IUndoCommand>();
+        
+        foreach (var spaceEntity in learningWorldEntity.LearningSpaces.Where(x => x.AssignedTopic?.Id == topicEntity.Id))
+        {
+            var spaceVm = Mapper.Map<LearningSpaceViewModel>(spaceEntity);
+            listOfCommands.Add(new EditLearningSpace(spaceEntity, spaceEntity.Name, spaceEntity.Shortname, spaceEntity.Authors,
+                spaceEntity.Description, spaceEntity.Goals, spaceEntity.RequiredPoints, null,
+                space => CMapper.Map(space, spaceVm)));
+        }
+
+        var deleteTopic = new DeleteTopic(learningWorldEntity, topicEntity, world => CMapper.Map(world, learningWorldVm));
+
+        listOfCommands.Add(deleteTopic);
+
+        var batchCommand = new BatchCommand(listOfCommands);
+
+        BusinessLogic.ExecuteCommand(batchCommand);
+    }
+
     /// <inheritdoc cref="IPresentationLogic.CreateLearningPathWay"/>
     public void CreateLearningPathWay(ILearningWorldViewModel learningWorldVm, IObjectInPathWayViewModel sourceObjectVm,
         IObjectInPathWayViewModel targetObjectVm)

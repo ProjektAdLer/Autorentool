@@ -11,6 +11,7 @@ using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Topic;
 using Shared;
 
 namespace PresentationTest.PresentationLogic.LearningWorld;
@@ -190,32 +191,6 @@ public class LearningWorldPresenterUt
         Assert.That(systemUnderTest.CreateLearningSpaceDialogOpen);
     }
 
-    [Test]
-    public void CreateNewLearningSpace_CallsPresentationLogic()
-    {
-        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
-            "foo");
-        var space = new LearningSpaceViewModel("g", "g", "g", "g", "g");
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.LearningWorldVm = world;
-        systemUnderTest.LearningWorldVm?.LearningSpaces.Add(space);
-
-        systemUnderTest.CreateNewLearningSpace("foo", "bar", "foo", "bar", "foo", 5);
-
-        presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int>(), Arg.Any<double>(), Arg.Any<double>());
-    }
-    
-    [Test]
-    public void CreateNewLearningSpace_SelectedLearningWorldIsNull_ThrowsException()
-    {
-        var systemUnderTest = CreatePresenterForTesting();
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.CreateNewLearningSpace("foo", "bar", "foo", "bar", "foo", 5));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
-    }
-
     #endregion
 
     #region OnCreateSpaceDialogClose
@@ -237,6 +212,20 @@ public class LearningWorldPresenterUt
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnCreateSpaceDialogClose(returnValueTuple));
         Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
     }
+    
+    [Test]
+    public void OnCreateSpaceDialogClose_SelectedLearningWorldIsNull_ThrowsException()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        const ModalDialogReturnValue modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        var returnValueTuple =
+            //nullability overridden because required for test - n.mho
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
+        
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnCreateSpaceDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+    }
 
     [Test]
     public void OnCreateSpaceDialogClose_CallsPresentationLogic()
@@ -245,8 +234,10 @@ public class LearningWorldPresenterUt
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var space = new LearningSpaceViewModel("f", "f", "f", "f", "f");
+        var topic = new TopicViewModel("abc");
         world.LearningSpaces.Add(space);
         world.SelectedLearningObject = space;
+        world.Topics.Add(topic);
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
@@ -255,6 +246,7 @@ public class LearningWorldPresenterUt
         dictionary["Description"] = "d";
         dictionary["Authors"] = "a";
         dictionary["Goals"] = "g";
+        dictionary["Topic"] = "abc";
         dictionary["Required Points"] = "10";
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
@@ -264,7 +256,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnCreateSpaceDialogClose(returnValueTuple);
 
-        presentationLogic.Received().CreateLearningSpace(world, "n", "sn", "a", "d", "g", 10, Arg.Any<double>(), Arg.Any<double>());
+        presentationLogic.Received().CreateLearningSpace(world, "n", "sn", "a", "d", "g", 10, Arg.Any<double>(), Arg.Any<double>(), topic);
     }
 
     #endregion
@@ -295,7 +287,9 @@ public class LearningWorldPresenterUt
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var space = new LearningSpaceViewModel("foo", "bar", "foo", "bar", "foo");
+        var topic = new TopicViewModel("abc");
         world.LearningSpaces.Add(space);
+        world.Topics.Add(topic);
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
@@ -304,6 +298,7 @@ public class LearningWorldPresenterUt
         dictionary["Description"] = "d";
         dictionary["Authors"] = "a";
         dictionary["Goals"] = "g";
+        dictionary["Topic"] = "abc";
         dictionary["Required Points"] = "10";
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
@@ -315,7 +310,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.OnEditSpaceDialogClose(returnValueTuple);
 
-        spacePresenter.Received().EditLearningSpace("n", "sn", "a", "d", "g", 10);
+        spacePresenter.Received().EditLearningSpace("n", "sn", "a", "d", "g", 10, topic);
     }
     
     [Test]
@@ -1223,6 +1218,343 @@ public class LearningWorldPresenterUt
     
     #endregion
 
+    #endregion
+    
+    #region Topics
+    
+    #region CreateTopic
+
+    [Test]
+    public void AddNewTopic_SetsFieldToTrue()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        Assert.That(!systemUnderTest.CreateTopicDialogOpen);
+        
+        systemUnderTest.AddNewTopic();
+        
+        Assert.That(systemUnderTest.CreateTopicDialogOpen);
+    }
+    
+    [Test]
+    public void OnCreateTopicDialogClose_ThrowsWhenDialogDataAreNull()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+
+        const ModalDialogReturnValue modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        var returnValueTuple =
+            //nullability overridden because required for test - m.ho
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnCreateTopicDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
+    }
+    
+    [Test]
+    public void OnCreateTopicDialogClose_ThrowsWhenLearningWorldIsNull()
+    {
+        const ModalDialogReturnValue modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        var returnValueTuple =
+            //nullability overridden because required for test - m.ho
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
+
+        var systemUnderTest = CreatePresenterForTesting();
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnCreateTopicDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("LearningWorld is null"));
+    }
+    
+    [Test]
+    public void OnCreateTopicDialogClose_ModalDialogCancel_Returns()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        const ModalDialogReturnValue modalDialogReturnValue = ModalDialogReturnValue.Cancel;
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var returnValueTuple =
+            //nullability overridden because required for test - m.ho
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.OnCreateTopicDialogClose(returnValueTuple);
+
+        presentationLogic.DidNotReceive().CreateTopic(world, "name");
+    }
+
+    [Test]
+    public void OnCreateTopicDialogClose_CallsPresentationLogic()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Name"] = "blabla";
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+
+        systemUnderTest.OnCreateTopicDialogClose(returnValueTuple);
+
+        presentationLogic.Received().CreateTopic(world, "blabla");
+    }
+    
+    #endregion
+    
+    #region EditTopic
+
+    [Test]
+    public void OpenEditTopicDialog_ThrowsWhenLearningWorldIsNull()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OpenEditTopicDialog());
+        Assert.That(ex!.Message, Is.EqualTo("LearningWorld is null"));
+    }
+
+    [Test]
+    public void OpenEditTopicDialog_NoTopicsInWorld_Returns()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+
+        Assert.That(world.Topics.Count, Is.EqualTo(0));
+        
+        systemUnderTest.OpenEditTopicDialog();
+        
+        Assert.That(!systemUnderTest.EditTopicDialogOpen);
+    }
+    
+    [Test]
+    public void OpenEditTopicDialog_OpensDialog()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+        
+        world.Topics.Add(new TopicViewModel("a"));
+
+        Assert.That(world.Topics.Count, Is.EqualTo(1));
+        Assert.That(systemUnderTest.EditTopicDialogInitialValues, Is.Null);
+        
+        systemUnderTest.OpenEditTopicDialog();
+        
+        Assert.That(systemUnderTest.EditTopicDialogInitialValues, Contains.Item("a"));
+        Assert.That(systemUnderTest.EditTopicDialogOpen);
+    }
+    
+    [Test]
+    public void OnEditTopicDialogClose_ThrowsWhenDialogDataAreNull()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditTopicDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
+    }
+
+    [Test]
+    public void OnEditTopicDialogClose_CallsPresentationLogic()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var topic = new TopicViewModel("a");
+        world.Topics.Add(topic);
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Topics"] = "a";
+        dictionary["New Name"] = "b";
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+        
+        systemUnderTest.OnEditTopicDialogClose(returnValueTuple);
+
+        presentationLogic.Received().EditTopic(topic, "b");
+    }
+    
+    [Test]
+    public void OnEditTopicDialogClose_ThrowsWhenLearningWorldIsNull()
+    {
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["New Name"] = "a";
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditTopicDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("LearningWorld is null"));
+    }
+    
+    [Test]
+    public void OnEditTopicDialogClose_ModalDialogCancel_Returns()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        const ModalDialogReturnValue modalDialogReturnValue = ModalDialogReturnValue.Cancel;
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var returnValueTuple =
+            //nullability overridden because required for test - m.ho
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.OnEditTopicDialogClose(returnValueTuple);
+
+        presentationLogic.DidNotReceive().CreateTopic(world, "name");
+    }
+    
+    #endregion
+    
+    #region DeleteTopic
+
+    [Test]
+    public void OpenDeleteTopicDialog_ThrowsWhenLearningWorldIsNull()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OpenDeleteTopicDialog());
+        Assert.That(ex!.Message, Is.EqualTo("LearningWorld is null"));
+    }
+
+    [Test]
+    public void OpenDeleteTopicDialog_NoTopicsInWorld_Returns()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+
+        Assert.That(world.Topics.Count, Is.EqualTo(0));
+        
+        systemUnderTest.OpenDeleteTopicDialog();
+        
+        Assert.That(!systemUnderTest.DeleteTopicDialogOpen);
+    }
+    
+    [Test]
+    public void OpenDeleteTopicDialog_OpensDialog()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+        
+        world.Topics.Add(new TopicViewModel("a"));
+
+        Assert.That(world.Topics.Count, Is.EqualTo(1));
+        Assert.That(systemUnderTest.DeleteTopicDialogInitialValues, Is.Null);
+        
+        systemUnderTest.OpenDeleteTopicDialog();
+        
+        Assert.That(systemUnderTest.DeleteTopicDialogInitialValues, Contains.Item("a"));
+        Assert.That(systemUnderTest.DeleteTopicDialogOpen);
+    }
+    
+    [Test]
+    public void OnDeleteTopicDialogClose_ThrowsWhenDialogDataAreNull()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        systemUnderTest.LearningWorldVm = world;
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnDeleteTopicDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
+    }
+
+    [Test]
+    public void OnDeleteTopicDialogClose_CallsPresentationLogic()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var topic = new TopicViewModel("a");
+        world.Topics.Add(topic);
+
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["Topics"] = "a";
+        dictionary["New Name"] = "b";
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+        
+        systemUnderTest.OnDeleteTopicDialogClose(returnValueTuple);
+
+        presentationLogic.Received().DeleteTopic(world, topic);
+    }
+    
+    [Test]
+    public void OnDeleteTopicDialogClose_ThrowsWhenLearningWorldIsNull()
+    {
+        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
+        IDictionary<string, string> dictionary = new Dictionary<string, string>();
+        dictionary["New Name"] = "a";
+        var returnValueTuple =
+            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
+
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnDeleteTopicDialogClose(returnValueTuple));
+        Assert.That(ex!.Message, Is.EqualTo("LearningWorld is null"));
+    }
+    
+    [Test]
+    public void OnDeleteTopicDialogClose_ModalDialogCancel_Returns()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        const ModalDialogReturnValue modalDialogReturnValue = ModalDialogReturnValue.Cancel;
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var returnValueTuple =
+            //nullability overridden because required for test - m.ho
+            new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
+
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.OnDeleteTopicDialogClose(returnValueTuple);
+
+        presentationLogic.DidNotReceive().CreateTopic(world, "name");
+    }
+    
+    #endregion
+    
     #endregion
 
     private LearningWorldPresenter CreatePresenterForTesting(IPresentationLogic? presentationLogic = null,

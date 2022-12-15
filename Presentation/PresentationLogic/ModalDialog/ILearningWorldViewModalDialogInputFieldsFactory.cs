@@ -1,6 +1,4 @@
 using Presentation.Components.ModalDialog;
-using Presentation.PresentationLogic.LearningContent;
-using Presentation.PresentationLogic.LearningSpace;
 
 namespace Presentation.PresentationLogic.ModalDialog;
 
@@ -10,7 +8,7 @@ public interface ILearningWorldViewModalDialogInputFieldsFactory
     /// Gets the input fields for the create space modal dialog.
     /// </summary>
     /// <returns>The input fields for the modal dialog.</returns>
-    IEnumerable<ModalDialogInputField> GetCreateLearningSpaceInputFields();
+    IEnumerable<ModalDialogInputField> GetCreateLearningSpaceInputFields(List<string> topics);
     
     /// <summary>
     /// Gets the input fields for the create pathway condition modal dialog.
@@ -19,14 +17,32 @@ public interface ILearningWorldViewModalDialogInputFieldsFactory
     IEnumerable<ModalDialogInputField> GetCreatePathWayConditionInputFields();
     
     /// <summary>
+    /// Gets the input fields for the create topic modal dialog.
+    /// </summary>
+    /// <returns>The input fields for the modal dialog.</returns>
+    IEnumerable<ModalDialogInputField> GetCreateTopicInputFields();
+    
+    /// <summary>
     /// Gets the input fields for the edit space modal dialog.
     /// </summary>
     /// <returns>The input fields for the modal dialog.</returns>
-    IEnumerable<ModalDialogInputField> GetEditLearningSpaceInputFields();
+    IEnumerable<ModalDialogInputField> GetEditLearningSpaceInputFields(List<string> topics);
     
     /// <summary>
     /// Gets the input fields for the edit pathway condition modal dialog.
     /// </summary>
     /// <returns>The input fields for the modal dialog.</returns>
     IEnumerable<ModalDialogInputField> GetEditPathWayConditionInputFields();
+    
+    /// <summary>
+    /// Gets the input fields for the edit topic modal dialog.
+    /// </summary>
+    /// <returns>The input fields for the modal dialog.</returns>
+    IEnumerable<ModalDialogInputField> GetEditTopicInputFields(List<string> topics);
+    
+    /// <summary>
+    /// Gets the input fields for the delete topic modal dialog.
+    /// </summary>
+    /// <returns>The input fields for the modal dialog.</returns>
+    IEnumerable<ModalDialogInputField> GetDeleteTopicInputFields(List<string> topics);
 }

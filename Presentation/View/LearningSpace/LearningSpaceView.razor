@@ -48,13 +48,6 @@
         }
     }
 </svg>
-@if (LearningSpaceP.EditLearningSpaceDialogOpen && LearningSpaceP.LearningSpaceVm != null)
-{
-    @ModalDialogFactory.GetEditLearningSpaceFragment(
-        LearningSpaceP.EditLearningSpaceDialogInitialValues 
-        ?? throw new InvalidOperationException("LearningSpacePresenter.EditLearningSpaceDialogInitialValues unexpectedly null"),
-        OnEditSpaceDialogClose)
-}
 
 @if (LearningSpaceP.CreateLearningElementDialogOpen)
 {
@@ -178,12 +171,6 @@
     private void EditSelectedLearningElement()
     {
         LearningSpaceP.EditSelectedLearningElement();
-    }
-
-    private void OnEditSpaceDialogClose(ModalDialogOnCloseResult closeResult)
-    {
-        LearningSpaceP.OnEditSpaceDialogClose(closeResult);
-        InvokeAsync(StateHasChanged);
     }
 
     private void OnEditElementDialogClose(ModalDialogOnCloseResult closeResult)

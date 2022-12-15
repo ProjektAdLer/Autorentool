@@ -32,11 +32,16 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     private LearningSpaceViewModel? _newConditionTargetSpace;
     private bool _editLearningSpaceDialogOpen;
     private bool _editPathWayConditionDialogOpen;
+    private bool _editTopicDialogOpen;
     private Dictionary<string, string>? _editSpaceDialogInitialValues;
     private Dictionary<string, string>? _editConditionDialogInitialValues;
+    private List<string>? _editTopicDialogInitialValues;
+    private List<string>? _deleteTopicDialogInitialValues;
     private Dictionary<string, string>? _editSpaceDialogAnnotations;
     private bool _createLearningSpaceDialogOpen;
     private bool _createPathWayConditionDialogOpen;
+    private bool _createTopicDialogOpen;
+    private bool _deleteTopicDialogOpen;
     private int _spaceCreationCounter = 0;
     private int _conditionCreationCounter = 0;
 
@@ -75,6 +80,12 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         private set => SetField(ref _createPathWayConditionDialogOpen, value);
     }
     
+    public bool CreateTopicDialogOpen
+    {
+        get => _createTopicDialogOpen;
+        private set => SetField(ref _createTopicDialogOpen, value);
+    }
+
     public bool EditLearningSpaceDialogOpen
     {
         get => _editLearningSpaceDialogOpen;
@@ -85,6 +96,18 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         get => _editPathWayConditionDialogOpen;
         private set => SetField(ref _editPathWayConditionDialogOpen, value);
+    }
+
+    public bool EditTopicDialogOpen
+    {
+        get => _editTopicDialogOpen;
+        private set => SetField(ref _editTopicDialogOpen, value);
+    }
+
+    public bool DeleteTopicDialogOpen
+    {
+        get => _deleteTopicDialogOpen;
+        private set => SetField(ref _deleteTopicDialogOpen, value);
     }
 
     public Dictionary<string, string>? EditSpaceDialogInitialValues
@@ -99,6 +122,18 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         private set => SetField(ref _editConditionDialogInitialValues, value);
     }
     
+    public List<string>? EditTopicDialogInitialValues
+    {
+        get => _editTopicDialogInitialValues;
+        private set => SetField(ref _editTopicDialogInitialValues, value);
+    }
+    
+    public List<string>? DeleteTopicDialogInitialValues
+    {
+        get => _deleteTopicDialogInitialValues;
+        private set => SetField(ref _deleteTopicDialogInitialValues, value);
+    }
+
     public Dictionary<string, string>? EditSpaceDialogAnnotations
     {
         get => _editSpaceDialogAnnotations;
@@ -219,28 +254,98 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         }
     }
 
-    #region LearningSpace
-
-    /// <summary>
-    /// Creates a new learning space in the currently selected learning world.
-    /// </summary>
-    /// <param name="name"></param>
-    /// <param name="shortname"></param>
-    /// <param name="authors"></param>
-    /// <param name="description"></param>
-    /// <param name="goals"></param>
-    /// <param name="requiredPoints"></param>
-    /// <param name="positionX"></param>
-    /// <param name="positionY"></param>
-    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
-    public void CreateNewLearningSpace(string name, string shortname,
-        string authors, string description, string goals, int requiredPoints, double positionX = 0, double positionY = 0)
+    #region Topic
+    
+    public void AddNewTopic()
     {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        _presentationLogic.CreateLearningSpace(LearningWorldVm, name, shortname, authors, description, goals, requiredPoints, positionX, positionY);
-        //TODO: Return error in the command in case of failure
+        CreateTopicDialogOpen = true;
     }
+    
+    public void OnCreateTopicDialogClose(ModalDialogOnCloseResult returnValueTuple)
+    {
+        if(LearningWorldVm == null) throw new ApplicationException("LearningWorld is null");
+        
+        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
+        CreateTopicDialogOpen = false;
+
+        if (response == ModalDialogReturnValue.Cancel) return;
+        if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
+
+        foreach (var pair in data)
+        {
+            Console.Write($"{pair.Key}:{pair.Value}\n");
+        }
+
+        //required argument
+        var name = data["Name"];
+        
+        _presentationLogic.CreateTopic(LearningWorldVm, name);
+    }
+    
+    public void OpenEditTopicDialog()
+    {
+        if(LearningWorldVm == null) throw new ApplicationException("LearningWorld is null");
+        if(!LearningWorldVm.Topics.Any()) return;
+
+        EditTopicDialogInitialValues = LearningWorldVm.Topics.Select(topic => topic.Name).ToList();
+        EditTopicDialogOpen = true;
+    }
+
+    public void OnEditTopicDialogClose(ModalDialogOnCloseResult returnValueTuple)
+    {
+        if (LearningWorldVm == null) throw new ApplicationException("LearningWorld is null");
+        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
+        EditTopicDialogOpen = false;
+
+        if (response == ModalDialogReturnValue.Cancel) return;
+        if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
+
+        foreach (var (key, value) in data)
+        {
+            _logger.LogTrace("{Key}:{Value}\\n", key, value);
+        }
+
+        //required argument
+        var topicName = data["Topics"];
+        var newName = data["New Name"];
+        var topic = LearningWorldVm.Topics.First(topic => topic.Name == topicName);
+        
+        _presentationLogic.EditTopic(topic, newName);
+    }
+    
+    public void OpenDeleteTopicDialog()
+    {
+        if(LearningWorldVm == null) throw new ApplicationException("LearningWorld is null");
+        if(!LearningWorldVm.Topics.Any()) return;
+        
+        DeleteTopicDialogInitialValues = LearningWorldVm.Topics.Select(topic => topic.Name).ToList();
+        DeleteTopicDialogOpen = true;
+    }
+
+    public void OnDeleteTopicDialogClose(ModalDialogOnCloseResult returnValueTuple)
+    {
+        if (LearningWorldVm == null) throw new ApplicationException("LearningWorld is null");
+        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
+        DeleteTopicDialogOpen = false;
+
+        if (response == ModalDialogReturnValue.Cancel) return;
+        if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
+
+        foreach (var (key, value) in data)
+        {
+            _logger.LogTrace("{Key}:{Value}\\n", key, value);
+        }
+
+        //required argument
+        var topicName = data["Topics"];
+        var topic = LearningWorldVm.Topics.First(topic => topic.Name == topicName);
+        
+        _presentationLogic.DeleteTopic(LearningWorldVm, topic);
+    }
+
+    #endregion
+
+    #region LearningSpace
 
     /// <summary>
     /// Sets the initial values for the <see cref="ModalDialog"/> with the current values from the selected LearningSpace.
@@ -256,7 +361,8 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
             {"Authors", space.Authors},
             {"Description", space.Description},
             {"Goals", space.Goals},
-            {"Required Points", space.RequiredPoints.ToString()},
+            {"Topic", space.AssignedTopic != null ? space.AssignedTopic.Name : ""},
+            {"Required Points", space.RequiredPoints.ToString()}
         };
         EditSpaceDialogAnnotations = new Dictionary<string, string>
         {
@@ -292,6 +398,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     /// <exception cref="ApplicationException">Thrown if the dictionary in return values of dialog null while return value is ok</exception>
     public void OnCreateSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
+        if(LearningWorldVm == null) throw new ApplicationException("SelectedLearningWorld is null");
         var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
         CreateLearningSpaceDialogOpen = false;
 
@@ -310,10 +417,14 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         var description = data.ContainsKey("Description") ? data["Description"] : "";
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
+        var topicName = data.ContainsKey("Topic") ? data["Topic"] : "";
         var requiredPoints = data.ContainsKey("Required Points") && data["Required Points"] != "" && !data["Required Points"].StartsWith("e") ? int.Parse(data["Required Points"]) : 0;
         var offset = 15 * _spaceCreationCounter;
         _spaceCreationCounter = (_spaceCreationCounter + 1) % 10;
-        CreateNewLearningSpace(name, shortname, authors, description, goals, requiredPoints, offset, offset);
+        
+        var topic = LearningWorldVm.Topics.FirstOrDefault(topic => topic.Name == topicName);
+        _presentationLogic.CreateLearningSpace(LearningWorldVm, name, shortname, authors, description, goals, requiredPoints, offset, offset, topic);
+
     }
 
     /// <summary>
@@ -343,11 +454,18 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         var description = data.ContainsKey("Description") ? data["Description"] : "";
         var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
         var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
-        var requiredPoints = data.ContainsKey("Required Points") && data["Required Points"] != "" && !data["Required Points"].StartsWith("e") ? int.Parse(data["Required Points"]) : 0;
+        var topicName = data.ContainsKey("Topic") ? data["Topic"] : "";
+        var requiredPoints =
+            data.ContainsKey("Required Points") && data["Required Points"] != "" &&
+            !data["Required Points"].StartsWith("e")
+                ? int.Parse(data["Required Points"])
+                : 0;
 
         if (LearningWorldVm == null)
             throw new ApplicationException("LearningWorld is null");
-        _learningSpacePresenter.EditLearningSpace(name, shortname, authors, description, goals, requiredPoints);
+
+        var topic = LearningWorldVm.Topics.FirstOrDefault(topic => topic.Name == topicName);
+        _learningSpacePresenter.EditLearningSpace(name, shortname, authors, description, goals, requiredPoints, topic);
     }
 
     /// <summary>

@@ -26,7 +26,10 @@ else
     <h5>Points: @LearningWorldP.LearningWorldVm?.Points </h5>
     <button class="btn btn-primary add-learning-space" @onclick="AddNewLearningSpace">Add Learning Space</button>
     <button class="btn btn-primary load-learning-space" @onclick="LoadLearningSpaceAsync">Load Learning Space</button>
-    <button class="btn btn-primary add-pathway-condition" @onclick="AddNewPathWayCondition">Add Condition</button>                                         
+    <button class="btn btn-primary add-pathway-condition" @onclick="AddNewPathWayCondition">Add Condition</button>  
+    <button class="btn btn-primary delete-topic" style="float: right;" @onclick="DeleteTopic">Delete Topic</button>
+    <button class="btn btn-primary edit-topic" style="float: right;" @onclick="EditTopic">Edit Topic</button>
+    <button class="btn btn-primary add-topic" style="float: right;" @onclick="AddNewTopic">Add Topic</button>
     <br>
 
     @if (LearningWorldP.LearningWorldVm?.SelectedLearningObject != null)
@@ -90,9 +93,10 @@ else
         <!--<use xlink:href="#rightClickMenu" />-->
     </svg>
     //create space modal
-    @if (LearningWorldP.CreateLearningSpaceDialogOpen)
+    @if (LearningWorldP is { CreateLearningSpaceDialogOpen: true,LearningWorldVm: { } })
     {
-        @ModalDialogFactory.GetCreateLearningSpaceFragment(OnCreateSpaceDialogClose)
+        @ModalDialogFactory.GetCreateLearningSpaceFragment(OnCreateSpaceDialogClose,
+            LearningWorldP.LearningWorldVm.Topics.Select(topic => topic.Name).ToList())
     }
     
     //create pathway condition modal
@@ -101,11 +105,19 @@ else
         @ModalDialogFactory.GetCreatePathWayConditionFragment(OnCreatePathWayConditionDialogClose)
     }
     
+    //create topic modal
+    @if (LearningWorldP.CreateTopicDialogOpen)
+    {
+        @ModalDialogFactory.GetCreateTopicFragment(OnCreateTopicDialogClose)
+    }
+    
     //edit space modal
     @if (LearningWorldP.EditLearningSpaceDialogOpen && LearningWorldP.LearningWorldVm != null)
     {
         <!-- EditSpaceDialogInitialValues is set by presenter before setting EditLearningSpaceDialogOpen to true -->
-        @ModalDialogFactory.GetEditLearningSpaceFragment(LearningWorldP.EditSpaceDialogInitialValues!, OnEditSpaceDialogClose, LearningWorldP.EditSpaceDialogAnnotations)
+        @ModalDialogFactory.GetEditLearningSpaceFragment(LearningWorldP.EditSpaceDialogInitialValues!,
+            LearningWorldP.LearningWorldVm.Topics.Select(topic => topic.Name).ToList(), 
+            OnEditSpaceDialogClose, LearningWorldP.EditSpaceDialogAnnotations)
     }
     
     //edit pathway condition modal
@@ -113,6 +125,19 @@ else
     {
         <!-- EditConditionDialogInitialValues is set by presenter before setting EditPathWayConditionDialogOpen to true -->
         @ModalDialogFactory.GetEditPathWayConditionFragment(LearningWorldP.EditConditionDialogInitialValues!, OnEditPathWayConditionDialogClose)
+    }
+    
+    //edit topic modal
+    @if (LearningWorldP is { EditTopicDialogOpen: true,LearningWorldVm: { } })
+    {
+        <!-- EditTopicDialogInitialValues is set by presenter before setting EditTopicDialogOpen to true -->
+        @ModalDialogFactory.GetEditTopicFragment(LearningWorldP.EditTopicDialogInitialValues!, OnEditTopicDialogClose)
+    }
+    
+    //delete topic modal
+    @if (LearningWorldP.DeleteTopicDialogOpen)
+    {
+        @ModalDialogFactory.GetDeleteTopicFragment(LearningWorldP.DeleteTopicDialogInitialValues!, OnDeleteTopicDialogClose)
     }
 
     @if (ErrorState != null)
@@ -158,9 +183,19 @@ else
         LearningWorldP.AddNewPathWayCondition();
     }
 
+    private void AddNewTopic()
+    {
+        LearningWorldP.AddNewTopic();
+    }
+
     private void DeleteSelectedLearningObject()
     {
         LearningWorldP.DeleteSelectedLearningObject();
+    }
+    
+    private void DeleteTopic()
+    {
+        LearningWorldP.OpenDeleteTopicDialog();
     }
 
     private async Task LoadLearningSpaceAsync()
@@ -208,7 +243,7 @@ else
     private void OnCreateSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
         LearningWorldP.OnCreateSpaceDialogClose(returnValueTuple);
-        InvokeAsync(StateHasChanged);
+        TriggerStateHasChanged();
     }
     
     private void OnCreatePathWayConditionDialogClose(ModalDialogOnCloseResult returnValueTuple)
@@ -216,10 +251,21 @@ else
         LearningWorldP.OnCreatePathWayConditionDialogClose(returnValueTuple);
         InvokeAsync(StateHasChanged);
     }
+    
+    private void OnCreateTopicDialogClose(ModalDialogOnCloseResult returnValueTuple)
+    {
+        LearningWorldP.OnCreateTopicDialogClose(returnValueTuple);
+        TriggerStateHasChanged();
+    }
 
     private void EditLearningObject()
     {
         LearningWorldP.OpenEditSelectedObjectDialog();
+    }
+
+    private void EditTopic()
+    {
+        LearningWorldP.OpenEditTopicDialog();
     }
     
     private void OnEditPathWayConditionDialogClose(ModalDialogOnCloseResult returnValueTuple)
@@ -231,7 +277,19 @@ else
     private void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
     {
         LearningWorldP.OnEditSpaceDialogClose(returnValueTuple);
-        InvokeAsync(StateHasChanged);
+        TriggerStateHasChanged();
+    }
+    
+    private void OnEditTopicDialogClose(ModalDialogOnCloseResult returnValueTuple)
+    {
+        LearningWorldP.OnEditTopicDialogClose(returnValueTuple);
+        TriggerStateHasChanged();
+    }
+
+    private void OnDeleteTopicDialogClose(ModalDialogOnCloseResult returnValueTuple)
+    {
+        LearningWorldP.OnDeleteTopicDialogClose(returnValueTuple);
+        TriggerStateHasChanged();
     }
 
     public void TriggerStateHasChanged()

@@ -5,6 +5,7 @@ using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Topic;
 using Shared;
 using ModalDialogOnCloseResult = Presentation.Components.ModalDialog.ModalDialogOnCloseResult;
 using ModalDialogReturnValue = Presentation.Components.ModalDialog.ModalDialogReturnValue;
@@ -32,11 +33,12 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     public LearningContentViewModel? DragAndDropLearningContent { get; private set; }
     public IDisplayableLearningObject? RightClickedLearningObject { get; private set; }
 
-    public void EditLearningSpace(string name, string shortname, string authors, string description, string goals, int requiredPoints)
+    public void EditLearningSpace(string name, string shortname, string authors, string description, string goals,
+        int requiredPoints, ITopicViewModel? topic)
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("LearningSpaceVm is null");
-        _presentationLogic.EditLearningSpace(LearningSpaceVm, name, shortname, authors, description, goals, requiredPoints);
+        _presentationLogic.EditLearningSpace(LearningSpaceVm, name, shortname, authors, description, goals, requiredPoints, topic);
     }
 
     public bool EditLearningSpaceDialogOpen { get; set; }
@@ -112,40 +114,6 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     }
 
     #region LearningSpace
-
-    /// <summary>
-    /// Changes property values of the learning space viewmodel with return values from the dialog.
-    /// </summary>
-    /// <param name="returnValueTuple">Return values from the dialog</param>
-    /// <returns></returns>
-    /// <exception cref="ApplicationException">Thrown if the dictionary in return values of dialog null while return value is ok
-    /// or if <see cref="LearningSpaceVm"/> is null.</exception>
-    public void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
-        EditLearningSpaceDialogOpen = false;
-
-        if (response == ModalDialogReturnValue.Cancel) return;
-        if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
-
-        foreach (var (key, value) in data)
-        {
-            _logger.LogTrace("{Key}:{Value}\\n", key, value);
-        }
-
-        //required arguments
-        var name = data["Name"];
-        //optional arguments
-        var shortname = data.ContainsKey("Shortname") ? data["Shortname"] : "";
-        var description = data.ContainsKey("Description") ? data["Description"] : "";
-        var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
-        var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
-        var requiredPoints = data.ContainsKey("Required Points") && data["Required Points"] != "" && !data["Required Points"].StartsWith("e") ? int.Parse(data["Required Points"]) : 0;
-
-        if (LearningSpaceVm == null)
-            throw new ApplicationException("LearningSpaceVm is null");
-        _presentationLogic.EditLearningSpace(LearningSpaceVm, name, shortname, authors, description, goals, requiredPoints);
-    }
 
     #endregion
 

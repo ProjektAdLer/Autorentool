@@ -10,6 +10,7 @@ using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.Topic;
 using Shared;
 
 namespace PresentationTest.PresentationLogic.LearningSpace;
@@ -26,7 +27,7 @@ public class LearningSpacePresenterUt
     {
         var systemUnderTest = CreatePresenterForTesting();
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditLearningSpace("a","b","c","d","e", 5));
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditLearningSpace("a","b","c","d","e", 5, null));
         Assert.That(ex!.Message, Is.EqualTo("LearningSpaceVm is null"));
     }
 
@@ -34,77 +35,14 @@ public class LearningSpacePresenterUt
     public void EditLearningSpace_CallsPresentationLogic()
     {
         var space = new LearningSpaceViewModel("a", "b", "c", "d", "e");
+        var topic = new TopicViewModel("abc");
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         
         systemUnderTest.SetLearningSpace(space);
-        systemUnderTest.EditLearningSpace("space", "b","c","d","e", 5);
+        systemUnderTest.EditLearningSpace("space", "b","c","d","e", 5, topic);
         
-        presentationLogic.Received().EditLearningSpace(space, "space", "b", "c","d","e", 5);
-    }
-
-    #endregion
-
-    #region OnEditSpaceDialogClose
-
-    [Test]
-    public void OnEditSpaceDialogClose_CallsPresentationLogic()
-    {
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        IDictionary<string, string> dictionary = new Dictionary<string, string>();
-        dictionary["Name"] = "a";
-        dictionary["Shortname"] = "b";
-        dictionary["Authors"] = "e";
-        dictionary["Description"] = "f";
-        dictionary["Goals"] = "g";
-        dictionary["Required Points"] = "5";
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningSpace(space);
-        
-        systemUnderTest.OnEditSpaceDialogClose(returnValueTuple);
-        
-        presentationLogic.Received().EditLearningSpace(space, "a","b","e","f","g", 5);
-    }
-    
-    [Test]
-    public void OnEditSpaceDialogClose_ThrowsWhenDialogDataAreNull()
-    {
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue);
-
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(space);
-
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditSpaceDialogClose(returnValueTuple));
-        Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
-    }
-    
-    [Test]
-    public void OnEditSpaceDialogClose_ThrowsWhenSpaceIsNull()
-    {
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        IDictionary<string, string> dictionary = new Dictionary<string, string>();
-        dictionary["Name"] = "a";
-        dictionary["Shortname"] = "b";
-        dictionary["Authors"] = "e";
-        dictionary["Description"] = "f";
-        dictionary["Goals"] = "g";
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
-
-        var systemUnderTest = CreatePresenterForTesting();
-
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditSpaceDialogClose(returnValueTuple));
-        Assert.That(ex!.Message, Is.EqualTo("LearningSpaceVm is null"));
+        presentationLogic.Received().EditLearningSpace(space, "space", "b", "c","d","e", 5, topic);
     }
 
     #endregion

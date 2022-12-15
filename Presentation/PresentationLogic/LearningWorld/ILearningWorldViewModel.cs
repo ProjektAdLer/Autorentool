@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.Topic;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
@@ -13,6 +14,7 @@ public interface ILearningWorldViewModel : ISerializableViewModel, IDisplayableL
     ICollection<PathWayConditionViewModel> PathWayConditions { get; }
     IEnumerable<IObjectInPathWayViewModel> ObjectsInPathWays { get; }
     ICollection<ILearningPathWayViewModel> LearningPathWays { get; }
+    ICollection<TopicViewModel> Topics { get; }
     new string Name { get; set; }
     string Shortname { get; set; }
     string Authors { get; set; }

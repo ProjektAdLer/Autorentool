@@ -7,6 +7,7 @@ public interface ILearningWorld
     List<PathWayCondition> PathWayConditions { get; set; }
     List<IObjectInPathWay> ObjectsInPathWays { get; }
     List<LearningPathway> LearningPathways { get; set; }
+    List<Topic> Topics { get; set; }
     string Description { get; set; }
     string Shortname { get; set; }
     string Authors { get; set; }

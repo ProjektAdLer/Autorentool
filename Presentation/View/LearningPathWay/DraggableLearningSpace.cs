@@ -1,12 +1,13 @@
 using Microsoft.AspNetCore.Components;
 using Presentation.Components.RightClickMenu;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.View.LearningWorld;
 
 namespace Presentation.View.LearningPathWay;
 
 public class DraggableLearningSpace : DraggableObjectInPathWay
 {
-    protected override string Text => ((ILearningSpaceViewModel)ObjectInPathWay).Name;
+    protected override string Text => ((ILearningSpaceViewModel)ObjectInPathWay).Name + Topic;
     protected override string OnHoveredObjectShape =>  @"<rect transform=""translate(-3, -3)"" height=""56"" width=""106"" fill=""lightblue""></rect>
                                     <circle r=""6"" transform=""translate(50, 0)"" fill=""lightblue""/>";
 
@@ -17,6 +18,8 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
                                     <polyline points=""0,0 2,0 -2,0"" transform=""translate(50,0)"" 
                                     style=""fill:none;stroke:red;stroke-width:1""/>";
     
+    private string Topic => ((ILearningSpaceViewModel)ObjectInPathWay).AssignedTopic == null ? "" : "(" + ((ILearningSpaceViewModel)ObjectInPathWay).AssignedTopic!.Name + ")";
+
     [Parameter, EditorRequired]
     public EventCallback<ILearningSpaceViewModel> OnOpenLearningSpace { get; set; }
     [Parameter, EditorRequired]

@@ -16,6 +16,7 @@ using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.ModalDialog;
+using Presentation.PresentationLogic.Topic;
 using Presentation.View.LearningElement;
 using Presentation.View.LearningPathWay;
 using Presentation.View.LearningSpace;
@@ -191,7 +192,7 @@ public class LearningWorldViewUt
         };
         ModalDialogOnClose? callback = null;
         _modalDialogFactory
-            .GetCreateLearningSpaceFragment(Arg.Any<ModalDialogOnClose>())
+            .GetCreateLearningSpaceFragment(Arg.Any<ModalDialogOnClose>(), Arg.Any<List<string>>())
             .Returns(fragment)
             .AndDoes(ci =>
             {
@@ -200,7 +201,7 @@ public class LearningWorldViewUt
         
         var systemUnderTest = GetLearningWorldViewForTesting();
 
-        _modalDialogFactory.Received().GetCreateLearningSpaceFragment(Arg.Any<ModalDialogOnClose>());
+        _modalDialogFactory.Received().GetCreateLearningSpaceFragment(Arg.Any<ModalDialogOnClose>(),Arg.Any<List<string>>());
         var p = systemUnderTest.FindOrFail("p");
         p.MarkupMatches("<p>foobar</p>");
 
@@ -269,6 +270,54 @@ public class LearningWorldViewUt
         
         //assert that the delegate we called executed presenter
         _worldPresenter.Received().OnCreatePathWayConditionDialogClose(returnValue);
+    }
+    
+    [Test]
+    public void CreateTopicDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
+    {
+        //prepare presenter
+        var learningWorld = Substitute.For<ILearningWorldViewModel>();
+        _worldPresenter.LearningWorldVm.Returns(learningWorld);
+        _worldPresenter.CreateTopicDialogOpen.Returns(true);
+        
+        RenderFragment fragment = builder =>
+        {
+            builder.OpenElement(0, "p");
+            builder.AddContent(1, "foobar");
+            builder.CloseElement();
+        };
+        ModalDialogOnClose? callback = null;
+        _modalDialogFactory
+            .GetCreateTopicFragment(Arg.Any<ModalDialogOnClose>())
+            .Returns(fragment)
+            .AndDoes(ci =>
+            {
+                callback = ci.Arg<ModalDialogOnClose>();
+            });
+        
+        var systemUnderTest = GetLearningWorldViewForTesting();
+
+        _modalDialogFactory.Received().GetCreateTopicFragment(Arg.Any<ModalDialogOnClose>());
+        var p = systemUnderTest.FindOrFail("p");
+        p.MarkupMatches("<p>foobar</p>");
+
+        if (callback == null)
+        {
+            Assert.Fail("Didn't get a callback from call to modal dialog factory");
+        }
+
+        var returnDictionary = new Dictionary<string, string>
+        {
+            { "foo", "baz" },
+            { "bar", "baz" }
+        };
+        var returnValue = new ModalDialogOnCloseResult(ModalDialogReturnValue.Ok, returnDictionary);
+        
+        //call the callback with the return value
+        callback!.Invoke(returnValue);
+        
+        //assert that the delegate we called executed presenter
+        _worldPresenter.Received().OnCreateTopicDialogClose(returnValue);
     }
 
     [Test]
@@ -345,7 +394,7 @@ public class LearningWorldViewUt
         };
         ModalDialogOnClose? callback = null;
         _modalDialogFactory
-            .GetEditLearningSpaceFragment(initialValues, Arg.Any<ModalDialogOnClose>())
+            .GetEditLearningSpaceFragment(initialValues, Arg.Any<List<string>>(), Arg.Any<ModalDialogOnClose>())
             .Returns(fragment)
             .AndDoes(ci =>
             {
@@ -354,7 +403,7 @@ public class LearningWorldViewUt
         
         var systemUnderTest = GetLearningWorldViewForTesting();
 
-        _modalDialogFactory.Received().GetEditLearningSpaceFragment(initialValues, Arg.Any<ModalDialogOnClose>());
+        _modalDialogFactory.Received().GetEditLearningSpaceFragment(initialValues, Arg.Any<List<string>>(), Arg.Any<ModalDialogOnClose>());
         var p = systemUnderTest.FindOrFail("p");
         p.MarkupMatches("<p>foobar</p>");
 
@@ -375,6 +424,112 @@ public class LearningWorldViewUt
         
         //assert that the delegate we called executed presenter
         _worldPresenter.Received().OnEditSpaceDialogClose(returnValue);
+    }
+    
+    [Test]
+    public void EditTopicDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
+    {
+        //prepare presenter
+        var learningWorld = Substitute.For<ILearningWorldViewModel>();
+        _worldPresenter.LearningWorldVm.Returns(learningWorld);
+        _worldPresenter.EditTopicDialogOpen.Returns(true);
+        var initialValues = new List<string>()
+        {
+            "baba", "bubu"
+        };
+        _worldPresenter.EditTopicDialogInitialValues.Returns(initialValues);
+        
+        RenderFragment fragment = builder =>
+        {
+            builder.OpenElement(0, "p");
+            builder.AddContent(1, "foobar");
+            builder.CloseElement();
+        };
+        ModalDialogOnClose? callback = null;
+        _modalDialogFactory
+            .GetEditTopicFragment(initialValues, Arg.Any<ModalDialogOnClose>())
+            .Returns(fragment)
+            .AndDoes(ci =>
+            {
+                callback = ci.Arg<ModalDialogOnClose>();
+            });
+        
+        var systemUnderTest = GetLearningWorldViewForTesting();
+
+        _modalDialogFactory.Received().GetEditTopicFragment(initialValues, Arg.Any<ModalDialogOnClose>());
+        var p = systemUnderTest.FindOrFail("p");
+        p.MarkupMatches("<p>foobar</p>");
+
+        if (callback == null)
+        {
+            Assert.Fail("Didn't get a callback from call to modal dialog factory");
+        }
+
+        var returnDictionary = new Dictionary<string, string>
+        {
+            { "foo", "baz" },
+            { "bar", "baz" }
+        };
+        var returnValue = new ModalDialogOnCloseResult(ModalDialogReturnValue.Ok, returnDictionary);
+        
+        //call the callback with the return value
+        callback!.Invoke(returnValue);
+        
+        //assert that the delegate we called executed presenter
+        _worldPresenter.Received().OnEditTopicDialogClose(returnValue);
+    }
+    
+    [Test]
+    public void DeleteTopicDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
+    {
+        //prepare presenter
+        var learningWorld = Substitute.For<ILearningWorldViewModel>();
+        _worldPresenter.LearningWorldVm.Returns(learningWorld);
+        _worldPresenter.DeleteTopicDialogOpen.Returns(true);
+        var initialValues = new List<string>()
+        {
+            "baba", "bubu"
+        };
+        _worldPresenter.DeleteTopicDialogInitialValues.Returns(initialValues);
+        
+        RenderFragment fragment = builder =>
+        {
+            builder.OpenElement(0, "p");
+            builder.AddContent(1, "foobar");
+            builder.CloseElement();
+        };
+        ModalDialogOnClose? callback = null;
+        _modalDialogFactory
+            .GetDeleteTopicFragment(initialValues, Arg.Any<ModalDialogOnClose>())
+            .Returns(fragment)
+            .AndDoes(ci =>
+            {
+                callback = ci.Arg<ModalDialogOnClose>();
+            });
+        
+        var systemUnderTest = GetLearningWorldViewForTesting();
+
+        _modalDialogFactory.Received().GetDeleteTopicFragment(initialValues, Arg.Any<ModalDialogOnClose>());
+        var p = systemUnderTest.FindOrFail("p");
+        p.MarkupMatches("<p>foobar</p>");
+
+        if (callback == null)
+        {
+            Assert.Fail("Didn't get a callback from call to modal dialog factory");
+        }
+
+        var returnDictionary = new Dictionary<string, string>
+        {
+            { "foo", "baz" },
+            { "bar", "baz" }
+        };
+        var returnValue = new ModalDialogOnCloseResult(ModalDialogReturnValue.Ok, returnDictionary);
+        
+        //call the callback with the return value
+        callback!.Invoke(returnValue);
+        
+        //assert that the delegate we called executed presenter
+        _worldPresenter.Received().OnDeleteTopicDialogClose(returnValue);
     }
 
 
@@ -432,6 +587,16 @@ public class LearningWorldViewUt
         var addConditionButton = systemUnderTest.FindOrFail("button.btn.btn-primary.add-pathway-condition");
         addConditionButton.Click();
         _worldPresenter.Received().AddNewPathWayCondition();
+    }
+    
+    [Test]
+    public void AddTopicButton_Clicked_CallsAddNewTopic()
+    {
+        var systemUnderTest = GetLearningWorldViewForTesting();
+
+        var addConditionButton = systemUnderTest.FindOrFail("button.btn.btn-primary.add-topic");
+        addConditionButton.Click();
+        _worldPresenter.Received().AddNewTopic();
     }
 
     [Test]
@@ -500,6 +665,21 @@ saatana"));
         editSpaceButton.Click();
         _worldPresenter.Received().OpenEditSelectedObjectDialog();
     }
+    
+    [Test]
+    public void EditTopicButton_Clicked_CallsOpenEditTopicDialog()
+    {
+        var topic = Substitute.For<TopicViewModel>();
+        var worldVm = Substitute.For<ILearningWorldViewModel>();
+        worldVm.Topics.Returns(new List<TopicViewModel> { topic });
+        _worldPresenter.LearningWorldVm.Returns(worldVm);
+
+        var systemUnderTest = GetLearningWorldViewForTesting();
+        
+        var editTopicButton = systemUnderTest.FindOrFail("button.btn.btn-primary.edit-topic");
+        editTopicButton.Click();
+        _worldPresenter.Received().OpenEditTopicDialog();
+    }
 
     [Test]
     public void DeleteSpaceButton_Clicked_CallsDeleteSelectedLearningSpace()
@@ -515,6 +695,21 @@ saatana"));
         var editSpaceButton = systemUnderTest.FindOrFail("button.btn.btn-primary.delete-learning-object");
         editSpaceButton.Click();
         _worldPresenter.Received().DeleteSelectedLearningObject();
+    }
+    
+    [Test]
+    public void DeleteTopicButton_Clicked_CallsOpenDeleteTopicDialog()
+    {
+        var topic = Substitute.For<TopicViewModel>();
+        var worldVm = Substitute.For<ILearningWorldViewModel>();
+        worldVm.Topics.Returns(new List<TopicViewModel> { topic });
+        _worldPresenter.LearningWorldVm.Returns(worldVm);
+
+        var systemUnderTest = GetLearningWorldViewForTesting();
+        
+        var deleteTopicButton = systemUnderTest.FindOrFail("button.btn.btn-primary.delete-topic");
+        deleteTopicButton.Click();
+        _worldPresenter.Received().OpenDeleteTopicDialog();
     }
     
     [Test]

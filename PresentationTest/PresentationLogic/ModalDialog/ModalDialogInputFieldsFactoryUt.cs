@@ -883,10 +883,14 @@ public class ModalDialogInputFieldsFactoryUt
         var authors = "Authors";
         var description = "Description";
         var goals = "Goals";
+        var topics = new List<string>()
+        {
+            "a", "b", "c"
+        };
 
         var modalDialogInputType = ModalDialogInputType.Text;
 
-        var modalDialogInputFields = systemUnderTest.GetEditLearningSpaceInputFields().ToList();
+        var modalDialogInputFields = systemUnderTest.GetEditLearningSpaceInputFields(topics).ToList();
         Assert.Multiple(() =>
         {
             Assert.That(modalDialogInputFields.ElementAt(0).Name, Is.EqualTo(name));
@@ -908,6 +912,20 @@ public class ModalDialogInputFieldsFactoryUt
             Assert.That(modalDialogInputFields.ElementAt(4).Name, Is.EqualTo(goals));
             Assert.That(modalDialogInputFields.ElementAt(4).Type, Is.EqualTo(modalDialogInputType));
             Assert.That(modalDialogInputFields.ElementAt(4).Required, Is.EqualTo(false));
+            
+            Assert.That(modalDialogInputFields.ElementAt(5), Is.TypeOf<ModalDialogDropdownInputField>());
+            var topicDropdownInput = (ModalDialogDropdownInputField) modalDialogInputFields.ElementAt(5);
+            Assert.That(topicDropdownInput.Name, Is.EqualTo("Topic"));
+            Assert.That(topicDropdownInput.Type, Is.EqualTo(ModalDialogInputType.Text));
+            Assert.That(topicDropdownInput.Required, Is.EqualTo(false));
+            Assert.That(topicDropdownInput.ValuesToChoiceMapping.Count(), Is.EqualTo(1));
+            
+            var mapping = topicDropdownInput.ValuesToChoiceMapping.First();
+            Assert.That(mapping.RequiredValues, Is.Null);
+            Assert.That(mapping.AvailableChoices.ElementAt(0), Is.EqualTo("a"));
+            Assert.That(mapping.AvailableChoices.ElementAt(1), Is.EqualTo("b"));
+            Assert.That(mapping.AvailableChoices.ElementAt(2), Is.EqualTo("c"));
+
         });
     }
 
@@ -991,6 +1009,56 @@ public class ModalDialogInputFieldsFactoryUt
         Assert.That(mapping.RequiredValues, Is.Null);
         Assert.That(mapping.AvailableChoices.ElementAt(0), Is.EqualTo(ConditionEnum.And.ToString()));
         Assert.That(mapping.AvailableChoices.ElementAt(1), Is.EqualTo(ConditionEnum.Or.ToString()));
+    }
+    
+    [Test]
+    public void GetCreateTopicInputFields_ReturnsCorrectInputFields()
+    {
+        var systemUnderTest = new ModalDialogInputFieldsFactory();
+        
+        var modalDialogInputFields = systemUnderTest.GetCreateTopicInputFields().ToList();
+        
+        Assert.That(modalDialogInputFields.ElementAt(0).Name, Is.EqualTo("Name"));
+        Assert.That(modalDialogInputFields.ElementAt(0).Type, Is.EqualTo(ModalDialogInputType.Text));
+        Assert.That(modalDialogInputFields.ElementAt(0).Required, Is.EqualTo(true));
+    }
+    
+    [Test]
+    public void GetEditTopicInputFields_ReturnsCorrectInputFields()
+    {
+        var systemUnderTest = new ModalDialogInputFieldsFactory();
+        
+        var initalInput = new List<string>(){ "Topic1", "Topic2" };
+        
+        var modalDialogInputFields = systemUnderTest.GetEditTopicInputFields(initalInput).ToList();
+        
+        Assert.That(modalDialogInputFields.ElementAt(0), Is.TypeOf<ModalDialogDropdownInputField>());
+        var topicDropdownInput = (ModalDialogDropdownInputField) modalDialogInputFields.ElementAt(0);
+        Assert.That(topicDropdownInput.Name, Is.EqualTo("Topics"));
+        Assert.That(topicDropdownInput.Type, Is.EqualTo(ModalDialogInputType.Text));
+        Assert.That(topicDropdownInput.Required, Is.EqualTo(true));
+        Assert.That(topicDropdownInput.ValuesToChoiceMapping.Count(), Is.EqualTo(1));
+        
+        Assert.That(modalDialogInputFields.ElementAt(1).Name, Is.EqualTo("New Name"));
+        Assert.That(modalDialogInputFields.ElementAt(1).Type, Is.EqualTo(ModalDialogInputType.Text));
+        Assert.That(modalDialogInputFields.ElementAt(1).Required, Is.EqualTo(true));
+    }
+    
+    [Test]
+    public void GetDeleteTopicInputFields_ReturnsCorrectInputFields()
+    {
+        var systemUnderTest = new ModalDialogInputFieldsFactory();
+        
+        var initalInput = new List<string>(){ "Topic1", "Topic2" };
+        
+        var modalDialogInputFields = systemUnderTest.GetDeleteTopicInputFields(initalInput).ToList();
+        
+        Assert.That(modalDialogInputFields.ElementAt(0), Is.TypeOf<ModalDialogDropdownInputField>());
+        var topicDropdownInput = (ModalDialogDropdownInputField) modalDialogInputFields.ElementAt(0);
+        Assert.That(topicDropdownInput.Name, Is.EqualTo("Topics"));
+        Assert.That(topicDropdownInput.Type, Is.EqualTo(ModalDialogInputType.Text));
+        Assert.That(topicDropdownInput.Required, Is.EqualTo(true));
+        Assert.That(topicDropdownInput.ValuesToChoiceMapping.Count(), Is.EqualTo(1));
     }
     
     [Test]

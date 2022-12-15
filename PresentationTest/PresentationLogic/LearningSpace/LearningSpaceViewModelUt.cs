@@ -22,6 +22,7 @@ public class LearningSpaceViewModelUt
         var requiredPoints = 10;
         var positionX = 20;
         var positionY = 30;
+        var topic = new Presentation.PresentationLogic.Topic.TopicViewModel("topic1");
         var ele1 = new LearningElementViewModel("a", "b",  null!, "url","g", "h","i", LearningElementDifficultyEnum.Easy, null, 17,11, 23);
         var ele2 = new LearningElementViewModel("z", "zz",  null!, "url","z","zz","zzz", LearningElementDifficultyEnum.Hard, null, 444,12, double.MaxValue);
         var inBoundCondition = new PathWayConditionViewModel(ConditionEnum.And, 2, 3);
@@ -31,7 +32,7 @@ public class LearningSpaceViewModelUt
         var learningElements = new List<ILearningElementViewModel> { ele1, ele2 };
         
         var systemUnderTest = new LearningSpaceViewModel(name, shortname, authors, description, goals, requiredPoints, 
-            learningElements, positionX, positionY, inBoundObjects, outBoundObjects);
+            learningElements, positionX, positionY, inBoundObjects, outBoundObjects, topic);
         
         Assert.Multiple(() =>
         {
@@ -45,6 +46,7 @@ public class LearningSpaceViewModelUt
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
             Assert.That(systemUnderTest.InBoundObjects, Is.EqualTo(inBoundObjects));
             Assert.That(systemUnderTest.OutBoundObjects, Is.EqualTo(outBoundObjects));
+            Assert.That(systemUnderTest.AssignedTopic, Is.EqualTo(topic));
             Assert.That(systemUnderTest.InputConnectionX, Is.EqualTo(positionX + 50));
             Assert.That(systemUnderTest.InputConnectionY, Is.EqualTo(positionY - 6));
             Assert.That(systemUnderTest.OutputConnectionX, Is.EqualTo(positionX + 50));

@@ -134,7 +134,7 @@ public class DraggableObjectInPathWay
         childContent.MarkupMatches(
             @"<rect height=""50"" width=""100"" style=""fill:lightgreen;stroke:black;stroke-width:1""></rect>" +
             @$"<text x=""3"" y=""15"">{learningSpace.Name}</text>" +
-            @"<g  ></g>");
+            @"<g></g>");
     }
     
     [Test]

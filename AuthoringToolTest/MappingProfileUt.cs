@@ -13,6 +13,7 @@ using Presentation.PresentationLogic.LearningElement.TransferElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Topic;
 using Shared;
 using MapperConfiguration = AutoMapper.MapperConfiguration;
 
@@ -61,6 +62,24 @@ public class MappingProfileUt
         var mapper = new MapperConfiguration(MappingProfile.Configure);
 
         Assert.That(() => mapper.AssertConfigurationIsValid(), Throws.Nothing);
+    }
+    
+    [Test]
+    public void MapTopicAndTopicViewModel_TestMappingIsValid()
+    {
+        var systemUnderTest = CreateTestableMapper();
+        var source = new BusinessLogic.Entities.Topic(Name);
+        var destination = new TopicViewModel("");
+
+        systemUnderTest.Map(source, destination);
+
+        TestContent(destination, false);
+
+        destination.Name = NewName;
+
+        systemUnderTest.Map(destination, source);
+
+        TestContent(source, true);
     }
 
     [Test]
@@ -240,8 +259,9 @@ public class MappingProfileUt
         (ElementType elementType, Type expectedElementViewModelType, Type expectedElementType)
     {
         var systemUnderTest = CreateTestableMapper();
+        var assignedTopic = GetTestableTopic();
         var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, new List<LearningElement>(),
-            PositionX, PositionY);
+            PositionX, PositionY,assignedTopic:assignedTopic);
         source.LearningElements.Add(GetTestableElementWithParent(source, elementType));
         var destination = new LearningSpaceViewModel("", "", "", "", "");
 
@@ -260,6 +280,7 @@ public class MappingProfileUt
         destination.RequiredPoints = NewRequiredPoints;
         destination.LearningElements = new List<ILearningElementViewModel>()
             {GetTestableElementViewModelWithParent(destination, elementType)};
+        destination.AssignedTopic = GetTestableTopicViewModel();
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
 
@@ -267,6 +288,7 @@ public class MappingProfileUt
 
         TestSpace(source, true);
         Assert.That(source.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(source.AssignedTopic?.Id, Is.EqualTo(assignedTopic.Id));
         Assert.That(source.LearningElements.First(), Is.InstanceOf(expectedElementType));
         Assert.That(destination.Id, Is.EqualTo(source.Id));
     }
@@ -383,10 +405,11 @@ public class MappingProfileUt
     public void MapLearningWorldAndLearningWorldViewModel_WithEmptyLearningSpace_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
+        var topic = GetTestableTopic();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
-            new List<LearningSpace>());
+            new List<LearningSpace>(), topics: new List<BusinessLogic.Entities.Topic>(){topic});
         source.LearningSpaces.Add(new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, null, PositionX,
-            PositionY));
+            PositionY, assignedTopic: topic));
         var destination = new LearningWorldViewModel("", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
@@ -396,6 +419,7 @@ public class MappingProfileUt
         {
             Assert.That(destination.LearningSpaces, Has.Count.EqualTo(1));
             Assert.That(destination.LearningSpaces.First().LearningElements, Is.Empty);
+            Assert.That(destination.LearningSpaces.First().AssignedTopic, Is.Not.Null);
         });
 
         destination.Name = NewName;
@@ -407,8 +431,9 @@ public class MappingProfileUt
         destination.LearningSpaces = new List<ILearningSpaceViewModel>()
         {
             new LearningSpaceViewModel(NewName, NewShortname, NewAuthors, NewDescription, NewGoals, NewRequiredPoints,
-                null, NewPositionX, NewPositionY)
+                null, NewPositionX, NewPositionY, assignedTopic: GetTestableTopicViewModel())
         };
+        destination.Topics = new List<TopicViewModel>() { GetTestableTopicViewModel() };
 
         systemUnderTest.Map(destination, source);
 
@@ -417,6 +442,7 @@ public class MappingProfileUt
         {
             Assert.That(source.LearningSpaces, Has.Count.EqualTo(1));
             Assert.That(source.LearningSpaces[0].LearningElements, Is.Empty);
+            Assert.That(source.Topics, Has.Count.EqualTo(1));
         });
     }
 
@@ -810,7 +836,17 @@ public class MappingProfileUt
         });
     }
 
-    #region testable Content/Element/Space/World
+    #region testable Content/Element/Space/World/Topic
+
+    private static Topic GetTestableTopic()
+    {
+        return new Topic(Name);
+    }
+
+    private static TopicViewModel GetTestableTopicViewModel()
+    {
+        return new TopicViewModel(NewName);
+    }
 
     private static LearningContent GetTestableContent()
     {

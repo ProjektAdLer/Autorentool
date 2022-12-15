@@ -3,12 +3,13 @@ using Presentation.Components;
 using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.Topic;
 
 namespace Presentation.PresentationLogic.LearningSpace;
 
 public interface ILearningSpacePresenter : INotifyPropertyChanged
 {
-    void EditLearningSpace(string name, string shortname, string authors, string description, string goals, int requiredPoints);
+    void EditLearningSpace(string name, string shortname, string authors, string description, string goals, int requiredPoints, ITopicViewModel? topic);
     bool EditLearningSpaceDialogOpen { get; set; }
     IDictionary<string, string>? EditLearningSpaceDialogInitialValues { get; }
     bool EditLearningElementDialogOpen { get; set; }
@@ -23,7 +24,6 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     Task ShowSelectedElementContentAsync();
     void OnCreateElementDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void EditSelectedLearningElement();
-    void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void OnEditElementDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void SetLearningSpace(ILearningSpaceViewModel space);
     void CreateLearningElementWithPreloadedContent(LearningContentViewModel learningContent);

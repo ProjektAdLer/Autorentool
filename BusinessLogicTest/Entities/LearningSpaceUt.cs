@@ -24,9 +24,10 @@ public class LearningSpaceUt
         var ele1 = new LearningElement("a", "b", content1, "url","pupup", "g","h",LearningElementDifficultyEnum.Easy, null, 17, 6, 23);
         var ele2 = new LearningElement("z", "zz", content2,"url","baba", "z","zz", LearningElementDifficultyEnum.Medium, null, 444, 9,double.MaxValue);
         var learningElements = new List<LearningElement> { ele1, ele2 };
+        var assignedTopic = new Topic("topic1");
         
         var systemUnderTest = new LearningSpace(name, shortname, authors, description, goals, requiredPoints, 
-            learningElements, positionX, positionY);
+            learningElements, positionX, positionY, assignedTopic:assignedTopic);
         
         Assert.Multiple(() =>
         {
@@ -36,6 +37,7 @@ public class LearningSpaceUt
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.LearningElements, Is.EqualTo(learningElements));
+            Assert.That(systemUnderTest.AssignedTopic, Is.EqualTo(assignedTopic));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
         });
@@ -57,9 +59,10 @@ public class LearningSpaceUt
         var ele1 = new LearningElement("a", "b", content1,"url", "pupup", "g","h",LearningElementDifficultyEnum.Easy, null, 17,90, 23);
         var ele2 = new LearningElement("z", "zz", content2,"url","baba", "z","zz", LearningElementDifficultyEnum.Medium, null, 444,9, double.MaxValue);
         var learningElements = new List<LearningElement> { ele1, ele2 };
+        var assignedTopic = new Topic("topic1");
         
         var systemUnderTest = new LearningSpace(name, shortname, authors, description, goals, requiredPoints, 
-            learningElements, positionX, positionY);
+            learningElements, positionX, positionY, assignedTopic:assignedTopic);
 
         var learningSpaceMemento = systemUnderTest.GetMemento();
         
@@ -76,6 +79,7 @@ public class LearningSpaceUt
         var ele2Changed = new LearningElement("uu", "iii", content2Changed,"url","lll", "kkk","fff", LearningElementDifficultyEnum.Hard, null, 77,40, 66);
         learningElements.Add(ele1Changed);
         learningElements.Add(ele2Changed);
+        var topicChanged = new Topic("topic2");
 
         systemUnderTest.Name = nameChanged;
         systemUnderTest.Shortname = shortnameChanged;
@@ -84,6 +88,7 @@ public class LearningSpaceUt
         systemUnderTest.Goals = goalsChanged;
         systemUnderTest.PositionX = positionXChanged;
         systemUnderTest.PositionY = positionYChanged;
+        systemUnderTest.AssignedTopic = topicChanged;
 
         Assert.Multiple(() =>
         {
@@ -96,6 +101,7 @@ public class LearningSpaceUt
             Assert.That(systemUnderTest.LearningElements, Contains.Item(ele2Changed));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionXChanged));
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionYChanged));
+            Assert.That(systemUnderTest.AssignedTopic, Is.EqualTo(topicChanged));
         });
         
         systemUnderTest.RestoreMemento(learningSpaceMemento);
@@ -111,6 +117,7 @@ public class LearningSpaceUt
             Assert.That(systemUnderTest.LearningElements, Does.Not.Contain(ele2Changed));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
+            Assert.That(systemUnderTest.AssignedTopic, Is.EqualTo(assignedTopic));
         });
     }
 

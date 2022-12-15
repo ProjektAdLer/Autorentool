@@ -31,15 +31,16 @@ public class ModalDialogFactory : ILearningSpaceViewModalDialogFactory, ILearnin
     }
 
     /// <inheritdoc cref="ILearningWorldViewModalDialogFactory.GetCreateLearningSpaceFragment"/>
-    public RenderFragment GetCreateLearningSpaceFragment(ModalDialogOnClose onCloseCallback, IDictionary<string, string>? annotations = null)
+    public RenderFragment GetCreateLearningSpaceFragment(ModalDialogOnClose onCloseCallback, List<string> initialTopics, IDictionary<string, string>? annotations = null)
     {
-        var inputFields = WorldViewInputFieldsFactory.GetCreateLearningSpaceInputFields();
+        var inputFields = WorldViewInputFieldsFactory.GetCreateLearningSpaceInputFields(initialTopics);
         const string title = "Create new learning space";
         const string text = "Please enter the required data for the learning space below:";
         const ModalDialogType dialogType = ModalDialogType.OkCancel;
         return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType, inputFields, annotations: annotations);
     }
 
+    /// <inheritdoc cref="ILearningWorldViewModalDialogFactory.GetCreatePathWayConditionFragment"/>
     public RenderFragment GetCreatePathWayConditionFragment(ModalDialogOnClose onCloseCallback)
     {
         var inputFields = WorldViewInputFieldsFactory.GetCreatePathWayConditionInputFields();
@@ -49,10 +50,20 @@ public class ModalDialogFactory : ILearningSpaceViewModalDialogFactory, ILearnin
         return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType, inputFields);
     }
 
-    /// <inheritdoc cref="ILearningSpaceViewModalDialogFactory.GetEditLearningSpaceFragment"/>
-    public RenderFragment GetEditLearningSpaceFragment(IDictionary<string, string> initialInputValues, ModalDialogOnClose onCloseCallback, IDictionary<string, string>? annotations = null)
+    /// <inheritdoc cref="ILearningWorldViewModalDialogFactory.GetCreateTopicFragment"/>
+    public RenderFragment GetCreateTopicFragment(ModalDialogOnClose onCloseCallback)
     {
-        var inputFields = SpaceViewInputFieldsFactory.GetEditLearningSpaceInputFields();
+        var inputFields = WorldViewInputFieldsFactory.GetCreateTopicInputFields();
+        const string title = "Create new topic";
+        const string text = "Please enter the required data for the topic below:";
+        const ModalDialogType dialogType = ModalDialogType.OkCancel;
+        return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType, inputFields);
+    }
+
+    /// <inheritdoc cref="ILearningSpaceViewModalDialogFactory.GetEditLearningSpaceFragment"/>
+    public RenderFragment GetEditLearningSpaceFragment(IDictionary<string, string> initialInputValues, List<string> initialTopics, ModalDialogOnClose onCloseCallback, IDictionary<string, string>? annotations = null)
+    {
+        var inputFields = SpaceViewInputFieldsFactory.GetEditLearningSpaceInputFields(initialTopics);
         const string title = "Edit existing learning space";
         const string text = "Please enter the required data for the learning space below:";
         const ModalDialogType dialogType = ModalDialogType.OkCancel;
@@ -70,10 +81,30 @@ public class ModalDialogFactory : ILearningSpaceViewModalDialogFactory, ILearnin
         return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType, inputFields, initialInputValues);
     }
 
-    /// <inheritdoc cref="ILearningWorldViewModalDialogFactory.GetEditLearningSpaceFragment"/>
-    RenderFragment ILearningWorldViewModalDialogFactory.GetEditLearningSpaceFragment(IDictionary<string, string> initialInputValues, ModalDialogOnClose onCloseCallback, IDictionary<string, string>? annotations = null)
+    /// <inheritdoc cref="ILearningWorldViewModalDialogFactory.GetEditTopicFragment"/>
+    public RenderFragment GetEditTopicFragment(List<string> initialInputValues, ModalDialogOnClose onCloseCallback)
     {
-        var inputFields = WorldViewInputFieldsFactory.GetEditLearningSpaceInputFields();
+        var inputFields = WorldViewInputFieldsFactory.GetEditTopicInputFields(initialInputValues);
+        const string title = "Edit existing topic";
+        const string text = "Please enter the required data for the topic below:";
+        const ModalDialogType dialogType = ModalDialogType.OkCancel;
+        return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType, inputFields);
+    }
+
+    /// <inheritdoc cref="ILearningWorldViewModalDialogFactory.GetDeleteTopicFragment"/>
+    public RenderFragment GetDeleteTopicFragment(List<string> initialInputValues, ModalDialogOnClose onCloseCallback)
+    {
+        var inputFields = WorldViewInputFieldsFactory.GetDeleteTopicInputFields(initialInputValues);
+        const string title = "Delete topic";
+        const string text = "Please select an topic to delete:";
+        const ModalDialogType dialogType = ModalDialogType.OkCancel;
+        return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType, inputFields);
+    }
+
+    /// <inheritdoc cref="ILearningWorldViewModalDialogFactory.GetEditLearningSpaceFragment"/>
+    RenderFragment ILearningWorldViewModalDialogFactory.GetEditLearningSpaceFragment(IDictionary<string, string> initialInputValues, List<string> initialTopics, ModalDialogOnClose onCloseCallback, IDictionary<string, string>? annotations = null)
+    {
+        var inputFields = WorldViewInputFieldsFactory.GetEditLearningSpaceInputFields(initialTopics);
         const string title = "Edit existing learning space";
         const string text = "Please enter the required data for the learning space below:";
         const ModalDialogType dialogType = ModalDialogType.OkCancel;
