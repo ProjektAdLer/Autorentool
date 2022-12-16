@@ -26,13 +26,22 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
     public EventCallback<ILearningSpaceViewModel> OnEditLearningSpace { get; set; }
     [Parameter, EditorRequired]
     public EventCallback<ILearningSpaceViewModel> OnDeleteLearningSpace { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningSpaceViewModel> OnRemoveLearningSpaceFromTopic { get; set; }
     protected override List<RightClickMenuEntry> GetRightClickMenuEntries()
     {
-        return new List<RightClickMenuEntry>()
+        var menuEntries = new List<RightClickMenuEntry>()
         {
             new("Open", () => OnOpenLearningSpace.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay)),
             new("Edit", () => OnEditLearningSpace.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay)),
-            new("Delete", () => OnDeleteLearningSpace.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay)),
+            new("Delete", () => OnDeleteLearningSpace.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay))
         };
+
+        if (((LearningSpaceViewModel)ObjectInPathWay).AssignedTopic != null)
+        {
+            menuEntries.Add(new("Remove topic", () => OnRemoveLearningSpaceFromTopic.InvokeAsync((ILearningSpaceViewModel)ObjectInPathWay)));
+        }
+
+        return menuEntries;
     }
 }

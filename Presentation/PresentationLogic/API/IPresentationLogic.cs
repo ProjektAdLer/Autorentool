@@ -136,7 +136,7 @@ public interface IPresentationLogic
     /// <param name="requiredPoints"></param>
     /// <param name="topicVm"></param>
     void EditLearningSpace(ILearningSpaceViewModel learningSpaceVm, string name,
-        string shortname, string authors, string description, string goals, int requiredPoints, ITopicViewModel topicVm);
+        string shortname, string authors, string description, string goals, int requiredPoints, ITopicViewModel? topicVm);
 
     /// <summary>
     /// Deletes the given learning space in the given learning world.

@@ -1553,6 +1553,53 @@ public class LearningWorldPresenterUt
         presentationLogic.DidNotReceive().CreateTopic(world, "name");
     }
     
+    [Test]
+    public void RemoveLearningSpaceFromTopic_ThrowsWhenLearningWorldIsNull()
+    {
+        var space = new LearningSpaceViewModel("a", "d", "rf", "r", "r", 3);
+        var systemUnderTest = CreatePresenterForTesting();
+        
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.RemoveLearningSpaceFromTopic(space));
+        Assert.That(ex!.Message, Is.EqualTo("LearningWorld is null"));
+    }
+    
+    [Test]
+    public void RemoveLearningSpaceFromTopic_ReturnsWhenAssignedTopicIsNull()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var space = new LearningSpaceViewModel("a", "d", "rf", "r", "r", 3);
+        
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+        
+        systemUnderTest.RemoveLearningSpaceFromTopic(space);
+        
+        presentationLogic.DidNotReceive().EditLearningSpace(Arg.Any<LearningSpaceViewModel>(), Arg.Any<string>(),
+            Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<int>(), Arg.Any<TopicViewModel>());
+    }
+    
+    [Test]
+    public void RemoveLearningSpaceFromTopic_CallsPresentationLogic()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var topic = new TopicViewModel("topic1");
+        var space = new LearningSpaceViewModel("a", "d", "rf", "r", "r",
+            3, assignedTopic: topic);
+        
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
+        systemUnderTest.LearningWorldVm = world;
+        
+        systemUnderTest.RemoveLearningSpaceFromTopic(space);
+
+        presentationLogic.Received().EditLearningSpace(space, space.Name, space.Shortname, space.Authors,
+            space.Description, space.Goals, space.RequiredPoints, null);
+    }
+    
     #endregion
     
     #endregion

@@ -342,6 +342,15 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         
         _presentationLogic.DeleteTopic(LearningWorldVm, topic);
     }
+    
+    public void RemoveLearningSpaceFromTopic(ILearningSpaceViewModel learningSpace)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("LearningWorld is null");
+        if(learningSpace.AssignedTopic == null) return;
+        _presentationLogic.EditLearningSpace(learningSpace, learningSpace.Name, learningSpace.Shortname, 
+            learningSpace.Authors, learningSpace.Description, learningSpace.Goals, learningSpace.RequiredPoints,null);
+    }
 
     #endregion
 

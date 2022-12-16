@@ -1,9 +1,7 @@
-@using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic
 @using Presentation.Components
 @using Presentation.Components.RightClickMenu
 @using Presentation.PresentationLogic.LearningWorld
-@using Presentation.PresentationLogic.LearningPathway
 <Draggable LearningObject="ObjectInPathWay" OnClicked="@OnClickedDraggable" OnDoubleClicked="@OnDoubleClickedDraggable" 
            OnRightClicked="@OnRightClickedDraggable" OnDragged="@OnDraggedDraggable"
            @bind-X="@ObjectInPathWay.PositionX" @bind-Y="@ObjectInPathWay.PositionY">

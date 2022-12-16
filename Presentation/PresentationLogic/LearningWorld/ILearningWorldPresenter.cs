@@ -51,5 +51,6 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     void HideRightClickMenu();
     IObjectInPathWayViewModel? RightClickedLearningObject { get; }
     void EditObjectInPathWay(IObjectInPathWayViewModel obj);
+    void RemoveLearningSpaceFromTopic(ILearningSpaceViewModel learningSpace);
     void DeleteLearningSpace(ILearningSpaceViewModel obj);
 }
