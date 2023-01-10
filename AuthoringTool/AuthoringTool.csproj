@@ -60,6 +60,7 @@
 
     <ItemGroup>
       <PackageReference Include="AutoMapper.Collection" Version="8.0.0" />
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.4.0" />
       <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
       <PackageReference Include="Tailwind.Extensions.AspNetCore" Version="1.0.0-beta3" />
     </ItemGroup>

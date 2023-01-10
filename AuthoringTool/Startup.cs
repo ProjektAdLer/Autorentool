@@ -1,9 +1,11 @@
 using System.IO.Abstractions;
+using System.Reflection;
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
 using DataAccess.Persistence;
 using ElectronWrapper;
+using FluentValidation;
 using Generator.API;
 using Generator.DSL;
 using Generator.WorldExport;
@@ -54,6 +56,7 @@ public class Startup
         ConfigureUtilities(services);
         ConfigureAutoMapper(services);
         ConfigureCommands(services);
+        ConfigureValidation(services);
 
         
         //Electron Wrapper layer
@@ -76,6 +79,13 @@ public class Startup
         {
             services.AddSingleton<IShutdownManager, BrowserShutdownManager>();
         }
+    }
+
+    private void ConfigureValidation(IServiceCollection services)
+    {
+        services.AddValidatorsFromAssembly(Assembly.Load("Presentation"));
+        services.AddSingleton<ILearningWorldNamesProvider>(p =>
+            p.GetService<IAuthoringToolWorkspaceViewModel>() ?? throw new InvalidOperationException());
     }
 
     private void ConfigureAuthoringTool(IServiceCollection services)

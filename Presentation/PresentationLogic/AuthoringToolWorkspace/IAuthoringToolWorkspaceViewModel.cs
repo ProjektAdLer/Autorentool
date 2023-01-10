@@ -6,7 +6,7 @@ namespace Presentation.PresentationLogic.AuthoringToolWorkspace;
 /// <summary>
 /// Interface for the ViewModel for the AuthoringToolWorkspace component.
 /// </summary>
-public interface IAuthoringToolWorkspaceViewModel : INotifyPropertyChanged
+public interface IAuthoringToolWorkspaceViewModel : INotifyPropertyChanged, ILearningWorldNamesProvider
 {
     /// <summary>
     /// Read-only list of the LearningWorlds contained in the Workspace ViewModel.
