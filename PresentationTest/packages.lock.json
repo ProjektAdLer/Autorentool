@@ -192,6 +192,20 @@
           "WebSocket4Net": "0.15.1"
         }
       },
+      "FluentValidation": {
+        "type": "Transitive",
+        "resolved": "11.4.0",
+        "contentHash": "WZJyrNf4suiaI6avVG32W9kmBLC3+V5rDTcLeRJjeU4tDmTyDIOz1459DzCKppXs34YpZg9rCUzDY3M4XxG7Ug=="
+      },
+      "FluentValidation.DependencyInjectionExtensions": {
+        "type": "Transitive",
+        "resolved": "11.4.0",
+        "contentHash": "iZXtoDqfRnggHwIbFWnK1sFs3KlTadH5ezNDiXz411OSkUNowBRboaZBcSvx4gEot7CNZdoReUKWYJwow2+mbg==",
+        "dependencies": {
+          "FluentValidation": "11.4.0",
+          "Microsoft.Extensions.Dependencyinjection.Abstractions": "2.1.0"
+        }
+      },
       "Microsoft.AspNetCore.Authorization": {
         "type": "Transitive",
         "resolved": "6.0.9",
@@ -1604,6 +1618,7 @@
           "BusinessLogic": "[1.0.0, )",
           "DataAccess": "[1.0.0, )",
           "ElectronWrapper": "[1.0.0, )",
+          "FluentValidation.DependencyInjectionExtensions": "[11.4.0, )",
           "Generator": "[1.0.0, )",
           "JetBrains.Annotations": "[2022.1.0, )",
           "PersistEntities": "[1.0.0, )",
@@ -1659,6 +1674,7 @@
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "[11.0.0, )",
           "BusinessLogic": "[1.0.0, )",
           "ElectronWrapper": "[1.0.0, )",
+          "FluentValidation": "[11.4.0, )",
           "JetBrains.Annotations": "[2022.1.0, )",
           "Microsoft.Extensions.Caching.Memory": "[6.0.1, )",
           "MudBlazor": "[6.0.17, )",
