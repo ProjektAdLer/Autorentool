@@ -28,10 +28,10 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         EditLearningSpaceDialogOpen = false;
         DeletedUnsavedWorld = null;
         InformationMessageToShow = null;
-        if (!presentationLogic.RunningElectron) return;
-        //register callback so we can check for unsaved data on quit
-        //TODO: register to our own quit button
-        shutdownManager.BeforeShutdown += OnBeforeShutdown;
+        if (presentationLogic.RunningElectron) 
+            //register callback so we can check for unsaved data on quit
+            //TODO: register to our own quit button
+            shutdownManager.BeforeShutdown += OnBeforeShutdown;
         AuthoringToolWorkspaceVm.PropertyChanged += learningWorldPresenter.OnWorkspacePropertyChanged;
     }
 
