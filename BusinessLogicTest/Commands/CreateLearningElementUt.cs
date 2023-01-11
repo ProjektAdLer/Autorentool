@@ -15,19 +15,19 @@ public class CreateLearningElementUt
         var testParameter = new TestParameter();
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
+        var command = new CreateLearningElement(testParameter.SpaceParent, 0, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.Image, testParameter.Content,testParameter.Url,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points, testParameter.PositionX,testParameter.PositionY, mappingAction);
 
-        Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsEmpty(testParameter.SpaceParent.ContainedLearningElements);
         Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
-        Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
         Assert.IsTrue(actionWasInvoked);
-        var element = testParameter.SpaceParent.LearningElements.First();
+        var element = testParameter.SpaceParent.ContainedLearningElements.First();
         Assert.Multiple(() =>
         {
             Assert.That(element.Name, Is.EqualTo(testParameter.Name));
@@ -51,19 +51,19 @@ public class CreateLearningElementUt
         var testParameter = new TestParameter();
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
+        var command = new CreateLearningElement(testParameter.SpaceParent, 0, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.Video, testParameter.Content, testParameter.Url,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY, mappingAction);
 
-        Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsEmpty(testParameter.SpaceParent.ContainedLearningElements);
         Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
-        Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
         Assert.IsTrue(actionWasInvoked);
-        var element = testParameter.SpaceParent.LearningElements.First();
+        var element = testParameter.SpaceParent.ContainedLearningElements.First();
         Assert.Multiple(() =>
         {
             Assert.That(element.Name, Is.EqualTo(testParameter.Name));
@@ -87,19 +87,19 @@ public class CreateLearningElementUt
         var testParameter = new TestParameter();
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
+        var command = new CreateLearningElement(testParameter.SpaceParent, 0, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.PDF, testParameter.Content, testParameter.Url,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points,testParameter.PositionX, testParameter.PositionY, mappingAction);
 
-        Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsEmpty(testParameter.SpaceParent.ContainedLearningElements);
         Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
-        Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
         Assert.IsTrue(actionWasInvoked);
-        var element = testParameter.SpaceParent.LearningElements.First();
+        var element = testParameter.SpaceParent.ContainedLearningElements.First();
         Assert.Multiple(() =>
         {
             Assert.That(element.Name, Is.EqualTo(testParameter.Name));
@@ -122,19 +122,19 @@ public class CreateLearningElementUt
         var testParameter = new TestParameter();
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
+        var command = new CreateLearningElement(testParameter.SpaceParent, 0, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.Text, testParameter.Content, testParameter.Url,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY, mappingAction);
 
-        Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsEmpty(testParameter.SpaceParent.ContainedLearningElements);
         Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
-        Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
         Assert.IsTrue(actionWasInvoked);
-        var element = testParameter.SpaceParent.LearningElements.First();
+        var element = testParameter.SpaceParent.ContainedLearningElements.First();
         Assert.Multiple(() =>
         {
             Assert.That(element.Name, Is.EqualTo(testParameter.Name));
@@ -160,7 +160,7 @@ public class CreateLearningElementUt
 
         var ex = Assert.Throws<ApplicationException>(() =>
         {
-            var createLearningElement = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name,
+            var createLearningElement = new CreateLearningElement(testParameter.SpaceParent, 0, testParameter.Name,
                 testParameter.ShortName, ElementTypeEnum.Transfer, ContentTypeEnum.H5P, testParameter.Content, testParameter.Url,
                 testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
                 testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY, mappingAction);
@@ -175,19 +175,19 @@ public class CreateLearningElementUt
         var testParameter = new TestParameter();
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
+        var command = new CreateLearningElement(testParameter.SpaceParent, 0, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Activation, ContentTypeEnum.Video, testParameter.Content, testParameter.Url,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY, mappingAction);
 
-        Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsEmpty(testParameter.SpaceParent.ContainedLearningElements);
         Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
-        Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
         Assert.IsTrue(actionWasInvoked);
-        var element = testParameter.SpaceParent.LearningElements.First();
+        var element = testParameter.SpaceParent.ContainedLearningElements.First();
         Assert.Multiple(() =>
         {
             Assert.That(element.Name, Is.EqualTo(testParameter.Name));
@@ -211,19 +211,19 @@ public class CreateLearningElementUt
         var testParameter = new TestParameter();
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
+        var command = new CreateLearningElement(testParameter.SpaceParent, 0, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Activation, ContentTypeEnum.H5P, testParameter.Content, testParameter.Url,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY, mappingAction);
 
-        Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsEmpty(testParameter.SpaceParent.ContainedLearningElements);
         Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
-        Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
         Assert.IsTrue(actionWasInvoked);
-        var element = testParameter.SpaceParent.LearningElements.First();
+        var element = testParameter.SpaceParent.ContainedLearningElements.First();
         Assert.Multiple(() =>
         {
             Assert.That(element.Name, Is.EqualTo(testParameter.Name));
@@ -250,7 +250,7 @@ public class CreateLearningElementUt
 
         var ex = Assert.Throws<ApplicationException>(() =>
         {
-            var createLearningElement = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
+            var createLearningElement = new CreateLearningElement(testParameter.SpaceParent, 0, testParameter.Name, testParameter.ShortName,
                 ElementTypeEnum.Activation, ContentTypeEnum.Image, testParameter.Content, testParameter.Url,
                 testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
                 testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY, mappingAction);
@@ -265,19 +265,19 @@ public class CreateLearningElementUt
         var testParameter = new TestParameter();
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
+        var command = new CreateLearningElement(testParameter.SpaceParent, 0, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Interaction, ContentTypeEnum.H5P, testParameter.Content, testParameter.Url,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY, mappingAction);
 
-        Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsEmpty(testParameter.SpaceParent.ContainedLearningElements);
         Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
-        Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
         Assert.IsTrue(actionWasInvoked);
-        var element = testParameter.SpaceParent.LearningElements.First();
+        var element = testParameter.SpaceParent.ContainedLearningElements.First();
         Assert.Multiple(() =>
         {
             Assert.That(element.Name, Is.EqualTo(testParameter.Name));
@@ -304,7 +304,7 @@ public class CreateLearningElementUt
 
         var ex = Assert.Throws<ApplicationException>(() =>
         {
-            var createLearningElement = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
+            var createLearningElement = new CreateLearningElement(testParameter.SpaceParent, 0, testParameter.Name, testParameter.ShortName,
                 ElementTypeEnum.Interaction, ContentTypeEnum.Image, testParameter.Content, testParameter.Url,
                 testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
                 testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY, mappingAction);
@@ -319,19 +319,19 @@ public class CreateLearningElementUt
         var testParameter = new TestParameter();
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
+        var command = new CreateLearningElement(testParameter.SpaceParent, 0, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Test, ContentTypeEnum.H5P, testParameter.Content, testParameter.Url,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY, mappingAction);
 
-        Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsEmpty(testParameter.SpaceParent.ContainedLearningElements);
         Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
-        Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
         Assert.IsTrue(actionWasInvoked);
-        var element = testParameter.SpaceParent.LearningElements.First();
+        var element = testParameter.SpaceParent.ContainedLearningElements.First();
         Assert.Multiple(() =>
         {
             Assert.That(element.Name, Is.EqualTo(testParameter.Name));
@@ -358,7 +358,7 @@ public class CreateLearningElementUt
 
         var ex = Assert.Throws<ApplicationException>(() =>
         {
-            var createLearningElement = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name,
+            var createLearningElement = new CreateLearningElement(testParameter.SpaceParent, 0, testParameter.Name,
                 testParameter.ShortName, ElementTypeEnum.Test, ContentTypeEnum.Image, testParameter.Content, testParameter.Url,
                 testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
                 testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY, mappingAction);
@@ -377,16 +377,16 @@ public class CreateLearningElementUt
             testParameter.Content, testParameter.Url, testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points,1,2);
         
-        var command = new CreateLearningElement(testParameter.SpaceParent, element, mappingAction);
+        var command = new CreateLearningElement(testParameter.SpaceParent, 0, element, mappingAction);
 
-        Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsEmpty(testParameter.SpaceParent.ContainedLearningElements);
         Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
-        Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
-        Assert.That(testParameter.SpaceParent.LearningElements.First(), Is.EqualTo(element));
-        Assert.That(testParameter.SpaceParent.LearningElements.First(), Is.InstanceOf(typeof(ImageTransferElement)));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.First(), Is.EqualTo(element));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.First(), Is.InstanceOf(typeof(ImageTransferElement)));
         Assert.IsTrue(actionWasInvoked);
     }
     
@@ -400,16 +400,16 @@ public class CreateLearningElementUt
             testParameter.Content, testParameter.Url, testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points,1,2);
         
-        var command = new CreateLearningElement(testParameter.SpaceParent, element, mappingAction);
+        var command = new CreateLearningElement(testParameter.SpaceParent, 0, element, mappingAction);
 
-        Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsEmpty(testParameter.SpaceParent.ContainedLearningElements);
         Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
-        Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
-        Assert.That(testParameter.SpaceParent.LearningElements.First(), Is.EqualTo(element));
-        Assert.That(testParameter.SpaceParent.LearningElements.First(), Is.InstanceOf(typeof(VideoTransferElement)));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.First(), Is.EqualTo(element));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.First(), Is.InstanceOf(typeof(VideoTransferElement)));
         Assert.IsTrue(actionWasInvoked);
     }
     
@@ -423,16 +423,16 @@ public class CreateLearningElementUt
             testParameter.Content, testParameter.Url, testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points,1,2);
         
-        var command = new CreateLearningElement(testParameter.SpaceParent, element, mappingAction);
+        var command = new CreateLearningElement(testParameter.SpaceParent, 0, element, mappingAction);
 
-        Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsEmpty(testParameter.SpaceParent.ContainedLearningElements);
         Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
-        Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
-        Assert.That(testParameter.SpaceParent.LearningElements.First(), Is.EqualTo(element));
-        Assert.That(testParameter.SpaceParent.LearningElements.First(), Is.InstanceOf(typeof(PdfTransferElement)));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.First(), Is.EqualTo(element));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.First(), Is.InstanceOf(typeof(PdfTransferElement)));
         Assert.IsTrue(actionWasInvoked);
     }
     
@@ -446,16 +446,16 @@ public class CreateLearningElementUt
             testParameter.Content, testParameter.Url, testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points,1,2);
         
-        var command = new CreateLearningElement(testParameter.SpaceParent, element, mappingAction);
+        var command = new CreateLearningElement(testParameter.SpaceParent, 0, element, mappingAction);
 
-        Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsEmpty(testParameter.SpaceParent.ContainedLearningElements);
         Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
-        Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
-        Assert.That(testParameter.SpaceParent.LearningElements.First(), Is.EqualTo(element));
-        Assert.That(testParameter.SpaceParent.LearningElements.First(), Is.InstanceOf(typeof(VideoActivationElement)));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.First(), Is.EqualTo(element));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.First(), Is.InstanceOf(typeof(VideoActivationElement)));
         Assert.IsTrue(actionWasInvoked);
     }
     
@@ -469,16 +469,16 @@ public class CreateLearningElementUt
             testParameter.Content, testParameter.Url, testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points,1,2);
         
-        var command = new CreateLearningElement(testParameter.SpaceParent, element, mappingAction);
+        var command = new CreateLearningElement(testParameter.SpaceParent, 0, element, mappingAction);
 
-        Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsEmpty(testParameter.SpaceParent.ContainedLearningElements);
         Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
-        Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
-        Assert.That(testParameter.SpaceParent.LearningElements.First(), Is.EqualTo(element));
-        Assert.That(testParameter.SpaceParent.LearningElements.First(), Is.InstanceOf(typeof(H5PActivationElement)));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.First(), Is.EqualTo(element));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.First(), Is.InstanceOf(typeof(H5PActivationElement)));
         Assert.IsTrue(actionWasInvoked);
     }
     
@@ -492,16 +492,16 @@ public class CreateLearningElementUt
             testParameter.Content, testParameter.Url, testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points,1,2);
         
-        var command = new CreateLearningElement(testParameter.SpaceParent, element, mappingAction);
+        var command = new CreateLearningElement(testParameter.SpaceParent, 0, element, mappingAction);
 
-        Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsEmpty(testParameter.SpaceParent.ContainedLearningElements);
         Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
-        Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
-        Assert.That(testParameter.SpaceParent.LearningElements.First(), Is.EqualTo(element));
-        Assert.That(testParameter.SpaceParent.LearningElements.First(), Is.InstanceOf(typeof(H5PInteractionElement)));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.First(), Is.EqualTo(element));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.First(), Is.InstanceOf(typeof(H5PInteractionElement)));
         Assert.IsTrue(actionWasInvoked);
     }
     
@@ -515,16 +515,16 @@ public class CreateLearningElementUt
             testParameter.Content, testParameter.Url, testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points,1,2);
         
-        var command = new CreateLearningElement(testParameter.SpaceParent, element, mappingAction);
+        var command = new CreateLearningElement(testParameter.SpaceParent, 0, element, mappingAction);
 
-        Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsEmpty(testParameter.SpaceParent.ContainedLearningElements);
         Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
-        Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
-        Assert.That(testParameter.SpaceParent.LearningElements.First(), Is.EqualTo(element));
-        Assert.That(testParameter.SpaceParent.LearningElements.First(), Is.InstanceOf(typeof(H5PTestElement)));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.First(), Is.EqualTo(element));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.First(), Is.InstanceOf(typeof(H5PTestElement)));
         Assert.IsTrue(actionWasInvoked);
     }
     
@@ -537,7 +537,7 @@ public class CreateLearningElementUt
 
         var ex = Assert.Throws<ApplicationException>(() =>
         {
-            var createLearningElement = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
+            var createLearningElement = new CreateLearningElement(testParameter.SpaceParent, 0, testParameter.Name, testParameter.ShortName,
                 (ElementTypeEnum)5, ContentTypeEnum.Image, testParameter.Content, testParameter.Url,
                 testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
                 testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY, mappingAction);
@@ -556,20 +556,20 @@ public class CreateLearningElementUt
             testParameter.Content, testParameter.Url, testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points,1,2);
         
-        var command = new CreateLearningElement(testParameter.SpaceParent, element, mappingAction);
+        var command = new CreateLearningElement(testParameter.SpaceParent, 0, element, mappingAction);
 
-        Assert.IsEmpty(testParameter.SpaceParent.LearningElements);
+        Assert.IsEmpty(testParameter.SpaceParent.ContainedLearningElements);
         Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
         
         Assert.That(actionWasInvoked, Is.True);
-        Assert.That(testParameter.SpaceParent.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(testParameter.SpaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
         
         Assert.Multiple(() =>
         {
-            Assert.That(testParameter.SpaceParent.LearningElements.First(), Is.InstanceOf(typeof(H5PTestElement))); 
-            Assert.That(testParameter.SpaceParent.LearningElements.First(), Is.EqualTo(element));
+            Assert.That(testParameter.SpaceParent.ContainedLearningElements.First(), Is.InstanceOf(typeof(H5PTestElement))); 
+            Assert.That(testParameter.SpaceParent.ContainedLearningElements.First(), Is.EqualTo(element));
             Assert.That(testParameter.SpaceParent.SelectedLearningElement, Is.EqualTo(element));
         });
     }
@@ -581,37 +581,38 @@ public class CreateLearningElementUt
         var spaceParent = testParameter.SpaceParent;
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateLearningElement(spaceParent, testParameter.Name, testParameter.ShortName,
+        var command = new CreateLearningElement(spaceParent, 1, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.Image, testParameter.Content, testParameter.Url,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY, mappingAction);
+            testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY,
+            mappingAction);
         var element2 = new LearningElement("x", "x", null!, "url", "x", "x", "x", LearningElementDifficultyEnum.Easy);
-        spaceParent.LearningElements.Add(element2);
+        spaceParent.LearningSpaceLayout.LearningElements = new ILearningElement?[]{element2, null, null, null, null, null};
         spaceParent.SelectedLearningElement = element2;
         
 
-        Assert.That(spaceParent.LearningElements, Has.Count.EqualTo(1));
-        Assert.That(spaceParent.LearningElements.First(), Is.EqualTo(element2));
+        Assert.That(spaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
+        Assert.That(spaceParent.ContainedLearningElements.First(), Is.EqualTo(element2));
         Assert.That(spaceParent.SelectedLearningElement, Is.EqualTo(element2));
         Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
-        Assert.That(spaceParent.LearningElements, Has.Count.EqualTo(2));
-        Assert.That(spaceParent.SelectedLearningElement, Is.EqualTo(spaceParent.LearningElements.Last()));
+        Assert.That(spaceParent.ContainedLearningElements.Count(), Is.EqualTo(2));
+        Assert.That(spaceParent.SelectedLearningElement, Is.EqualTo(spaceParent.ContainedLearningElements.Last()));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Undo();
         
-        Assert.That(spaceParent.LearningElements, Has.Count.EqualTo(1));
-        Assert.That(spaceParent.LearningElements.First(), Is.EqualTo(element2));
+        Assert.That(spaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
+        Assert.That(spaceParent.ContainedLearningElements.First(), Is.EqualTo(element2));
         Assert.That(spaceParent.SelectedLearningElement, Is.EqualTo(element2));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Redo();
         
-        Assert.That(spaceParent.LearningElements, Has.Count.EqualTo(2));
-        Assert.That(spaceParent.SelectedLearningElement, Is.EqualTo(spaceParent.LearningElements.Last()));
+        Assert.That(spaceParent.ContainedLearningElements.Count(), Is.EqualTo(2));
+        Assert.That(spaceParent.SelectedLearningElement, Is.EqualTo(spaceParent.ContainedLearningElements.Last()));
         Assert.IsTrue(actionWasInvoked);
     }
 
@@ -621,7 +622,7 @@ public class CreateLearningElementUt
         var testParameter = new TestParameter();
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateLearningElement(testParameter.SpaceParent, testParameter.Name, testParameter.ShortName,
+        var command = new CreateLearningElement(testParameter.SpaceParent, 0, testParameter.Name, testParameter.ShortName,
             ElementTypeEnum.Transfer, ContentTypeEnum.Image, testParameter.Content, testParameter.Url,
             testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY, mappingAction);
@@ -650,7 +651,7 @@ public class TestParameter
 
     internal TestParameter()
     {
-        SpaceParent = new LearningSpace("l", "m", "n", "o", "p", 0);
+        SpaceParent = new LearningSpace("l", "m", "n", "o", "p", 0, new LearningSpaceLayout(new ILearningElement?[6], FloorPlanEnum.Rectangle2X3));
         Name = "a";
         ShortName = "b";
         Content = new LearningContent("bar", "foo", "");

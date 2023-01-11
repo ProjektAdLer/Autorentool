@@ -23,10 +23,11 @@ public class LearningSpaceUt
         var content2 = new LearningContent("w", "e", "");
         var ele1 = new LearningElement("a", "b", content1, "url","pupup", "g","h",LearningElementDifficultyEnum.Easy, null, 17, 6, 23);
         var ele2 = new LearningElement("z", "zz", content2,"url","baba", "z","zz", LearningElementDifficultyEnum.Medium, null, 444, 9,double.MaxValue);
-        var learningElements = new List<LearningElement> { ele1, ele2 };
+        var learningElements = new ILearningElement?[] { ele1, ele2 };
+        var learningSpaceLayout = new LearningSpaceLayout(){LearningElements = learningElements};
         
         var systemUnderTest = new LearningSpace(name, shortname, authors, description, goals, requiredPoints, 
-            learningElements, positionX, positionY);
+            learningSpaceLayout, positionX, positionY);
         
         Assert.Multiple(() =>
         {
@@ -35,7 +36,7 @@ public class LearningSpaceUt
             Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
-            Assert.That(systemUnderTest.LearningElements, Is.EqualTo(learningElements));
+            Assert.That(systemUnderTest.ContainedLearningElements, Is.EqualTo(learningElements));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
         });
@@ -56,12 +57,14 @@ public class LearningSpaceUt
         var content2 = new LearningContent("w", "e", "");
         var ele1 = new LearningElement("a", "b", content1,"url", "pupup", "g","h",LearningElementDifficultyEnum.Easy, null, 17,90, 23);
         var ele2 = new LearningElement("z", "zz", content2,"url","baba", "z","zz", LearningElementDifficultyEnum.Medium, null, 444,9, double.MaxValue);
-        var learningElements = new List<LearningElement> { ele1, ele2 };
+        var learningElements = new ILearningElement?[] { ele1, ele2 };
+        var learningSpaceLayout = new LearningSpaceLayout(){LearningElements = learningElements};
         
         var systemUnderTest = new LearningSpace(name, shortname, authors, description, goals, requiredPoints, 
-            learningElements, positionX, positionY);
+            learningSpaceLayout, positionX, positionY);
 
         var learningSpaceMemento = systemUnderTest.GetMemento();
+        var learningSpaceLayoutMemento = systemUnderTest.LearningSpaceLayout.GetMemento();
         
         var nameChanged = "qwertz";
         var shortnameChanged = "uiop";
@@ -74,8 +77,7 @@ public class LearningSpaceUt
         var content2Changed = new LearningContent("w", "e", "");
         var ele1Changed = new LearningElement("ab", "bc", content1Changed, "url","pupuper", "ffg","hgg",LearningElementDifficultyEnum.Medium, null, 20,50, 33);
         var ele2Changed = new LearningElement("uu", "iii", content2Changed,"url","lll", "kkk","fff", LearningElementDifficultyEnum.Hard, null, 77,40, 66);
-        learningElements.Add(ele1Changed);
-        learningElements.Add(ele2Changed);
+        learningElements = new ILearningElement?[] { ele1Changed, ele2Changed };
 
         systemUnderTest.Name = nameChanged;
         systemUnderTest.Shortname = shortnameChanged;
@@ -84,6 +86,7 @@ public class LearningSpaceUt
         systemUnderTest.Goals = goalsChanged;
         systemUnderTest.PositionX = positionXChanged;
         systemUnderTest.PositionY = positionYChanged;
+        systemUnderTest.LearningSpaceLayout.LearningElements = learningElements;
 
         Assert.Multiple(() =>
         {
@@ -92,13 +95,14 @@ public class LearningSpaceUt
             Assert.That(systemUnderTest.Authors, Is.EqualTo(authorsChanged));
             Assert.That(systemUnderTest.Description, Is.EqualTo(descriptionChanged));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goalsChanged));
-            Assert.That(systemUnderTest.LearningElements, Contains.Item(ele1Changed));
-            Assert.That(systemUnderTest.LearningElements, Contains.Item(ele2Changed));
+            Assert.That(systemUnderTest.ContainedLearningElements, Contains.Item(ele1Changed));
+            Assert.That(systemUnderTest.ContainedLearningElements, Contains.Item(ele2Changed));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionXChanged));
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionYChanged));
         });
         
         systemUnderTest.RestoreMemento(learningSpaceMemento);
+        systemUnderTest.LearningSpaceLayout.RestoreMemento(learningSpaceLayoutMemento);
         
         Assert.Multiple(() =>
         {
@@ -107,8 +111,8 @@ public class LearningSpaceUt
             Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
-            Assert.That(systemUnderTest.LearningElements, Does.Not.Contain(ele1Changed));
-            Assert.That(systemUnderTest.LearningElements, Does.Not.Contain(ele2Changed));
+            Assert.That(systemUnderTest.ContainedLearningElements, Does.Not.Contain(ele1Changed));
+            Assert.That(systemUnderTest.ContainedLearningElements, Does.Not.Contain(ele2Changed));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
         });
@@ -129,10 +133,11 @@ public class LearningSpaceUt
         var content2 = new LearningContent("w", "e", "");
         var ele1 = new LearningElement("a", "b", content1, "url","pupup", "g","h",LearningElementDifficultyEnum.Easy, null, 17,13, 23);
         var ele2 = new LearningElement("z", "zz", content2,"url","baba", "z","zz", LearningElementDifficultyEnum.Medium, null, 444,34, double.MaxValue);
-        var learningElements = new List<LearningElement> { ele1, ele2 };
+        var learningElements = new ILearningElement?[] { ele1, ele2 };
+        var learningSpaceLayout = new LearningSpaceLayout(){LearningElements = learningElements};
         
         var systemUnderTest = new LearningSpace(name, shortname, authors, description, goals, requiredPoints, 
-            learningElements, positionX, positionY);
+            learningSpaceLayout, positionX, positionY);
 
         var mementoMock = new MementoMock();
         

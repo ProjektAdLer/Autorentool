@@ -136,6 +136,13 @@ public interface IPresentationLogic
         string shortname, string authors, string description, string goals, int requiredPoints);
 
     /// <summary>
+    /// Changes the layout of the given learning space to the given layout.
+    /// </summary>
+    /// <param name="learningSpaceVm">Learning space to edit.</param>
+    /// <param name="floorPlanName">Enum of the FloorPlan to change the layout to.</param>
+    void ChangeLearningSpaceLayout(ILearningSpaceViewModel learningSpaceVm, FloorPlanEnum floorPlanName);
+    
+    /// <summary>
     /// Deletes the given learning space in the given learning world.
     /// </summary>
     /// <param name="learningWorldVm">Parent learning world of the learning space.</param>
@@ -213,19 +220,21 @@ public interface IPresentationLogic
     /// <param name="learningWorldVm">Learning world in which the learning pathway gets deleted.</param>
     /// <param name="learningPathWayVm">Learning PathWay to delete.</param>
     void DeleteLearningPathWay(ILearningWorldViewModel learningWorldVm, ILearningPathWayViewModel learningPathWayVm);
-    
+
     /// <summary>
     /// Adds a new learning element to its parent space.
     /// </summary>
     /// <param name="parentSpaceVm">Parent space of the element.</param>
+    /// <param name="slotIndex">Index of the slot in which the element should be created.</param>
     /// <param name="learningElementVm">Learning element to add.</param>
-    void AddLearningElement(ILearningSpaceViewModel parentSpaceVm, ILearningElementViewModel learningElementVm);
+    void AddLearningElement(ILearningSpaceViewModel parentSpaceVm, int slotIndex, ILearningElementViewModel learningElementVm);
 
     /// <summary>
     /// Creates a new learning element and assigns it to the opened learning space in the
     /// selected learning world.
     /// </summary>
     /// <param name="parentSpaceVm">Parent space of the element.</param>
+    /// <param name="slotIndex">Index of the slot in which the element should be created.</param>
     /// <param name="name">Name of the element.</param>
     /// <param name="shortname">Shortname of the element.</param>
     /// <param name="elementType">Type of the element.</param>
@@ -240,7 +249,7 @@ public interface IPresentationLogic
     /// <param name="points">The number of points of the learning element.</param>
     /// <param name="positionX"></param>
     /// <param name="positionY"></param>
-    void CreateLearningElement(ILearningSpaceViewModel parentSpaceVm, string name, string shortname,
+    void CreateLearningElement(ILearningSpaceViewModel parentSpaceVm, int slotIndex, string name, string shortname,
         ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContentVm,
         string url, string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points,
         double positionX = 0, double positionY = 0);
@@ -280,17 +289,18 @@ public interface IPresentationLogic
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
     Task SaveLearningElementAsync(LearningElementViewModel learningElementViewModel);
-    
+
     /// <summary>
     /// Asks user for path and loads <see cref="LearningElementViewModel"/> from disk.
     /// </summary>
     /// <param name="parentSpaceVm">Learning space into which the learning element should be loaded.</param>
+    /// <param name="slotIndex">Index of the slot in which the element should be loaded..</param>
     /// <returns>Task containing deserialized object.</returns>
     /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
     /// <exception cref="NotImplementedException">Thrown when we are not running in Electron.</exception>
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
-    Task LoadLearningElementAsync(ILearningSpaceViewModel parentSpaceVm);
+    Task LoadLearningElementAsync(ILearningSpaceViewModel parentSpaceVm, int slotIndex);
     
     /// <summary>
     /// Open the given content file of the learning element in the desktop's default manner.
@@ -332,7 +342,7 @@ public interface IPresentationLogic
     LearningContentViewModel LoadLearningContentViewModel(string name, MemoryStream stream);
     void LoadLearningWorldViewModel(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, Stream stream);
     void LoadLearningSpaceViewModel(ILearningWorldViewModel learningWorldVm, Stream stream);
-    void LoadLearningElementViewModel(ILearningSpaceViewModel parentSpaceVm, Stream stream);
+    void LoadLearningElementViewModel(ILearningSpaceViewModel parentSpaceVm, int slotIndex, Stream stream);
     event Action? OnUndoRedoPerformed;
     void DragObjectInPathWay(IObjectInPathWayViewModel pathWayObjectVm, double oldPositionX, double oldPositionY);
     void DragLearningElement(ILearningElementViewModel learningElementVm, double oldPositionX, double oldPositionY);

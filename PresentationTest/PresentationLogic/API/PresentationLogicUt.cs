@@ -384,7 +384,7 @@ public class PresentationLogicUt
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
         
-        systemUnderTest.AddLearningElement(learningSpaceVm, learningElementVm);
+        systemUnderTest.AddLearningElement(learningSpaceVm, 0, learningElementVm);
 
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
         Assert.That(command, Is.Not.Null);
@@ -410,7 +410,7 @@ public class PresentationLogicUt
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
 
-        systemUnderTest.CreateLearningElement(learningSpaceVm, "a", "b", ElementTypeEnum.Activation,
+        systemUnderTest.CreateLearningElement(learningSpaceVm, 0, "a", "b", ElementTypeEnum.Activation,
             ContentTypeEnum.H5P, null!, "url", "c", "d", "e", LearningElementDifficultyEnum.Easy, 1, 2, 3, 4);
 
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
@@ -1146,7 +1146,7 @@ public class PresentationLogicUt
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
-            await systemUnderTest.LoadLearningElementAsync(mockLearningSpaceViewModel));
+            await systemUnderTest.LoadLearningElementAsync(mockLearningSpaceViewModel, 0));
         Assert.That(ex!.Message, Is.EqualTo("Browser upload/download not yet implemented"));
     }
 
@@ -1163,7 +1163,7 @@ public class PresentationLogicUt
         var systemUnderTest =
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
-        var ex = Assert.ThrowsAsync<InvalidOperationException>(async () => await systemUnderTest.LoadLearningElementAsync(mockLearningSpaceViewModel));
+        var ex = Assert.ThrowsAsync<InvalidOperationException>(async () => await systemUnderTest.LoadLearningElementAsync(mockLearningSpaceViewModel, 0));
         Assert.That(ex!.Message, Is.EqualTo("dialogManager received from DI unexpectedly null"));
     }
     
@@ -1192,7 +1192,7 @@ public class PresentationLogicUt
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
             serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport, mapper: mockMapper);
 
-        await systemUnderTest.LoadLearningElementAsync(mockLearningSpaceViewModel);
+        await systemUnderTest.LoadLearningElementAsync(mockLearningSpaceViewModel, 0);
         
         await mockDialogManger.Received()
             .ShowOpenFileDialogAsync("Load Learning Element", null, Arg.Any<IEnumerable<FileFilterProxy>?>());
@@ -1220,7 +1220,7 @@ public class PresentationLogicUt
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
             serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
-        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.LoadLearningElementAsync(mockLearningSpaceViewModel));
+        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.LoadLearningElementAsync(mockLearningSpaceViewModel, 0));
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
         mockLogger.Received().LogInformation("Load dialog cancelled by user");
     }
@@ -1749,7 +1749,7 @@ public class PresentationLogicUt
         var systemUnderTest =
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
 
-        systemUnderTest.LoadLearningElementViewModel(learningSpaceVm, stream);
+        systemUnderTest.LoadLearningElementViewModel(learningSpaceVm, 0, stream);
 
         mockBusinessLogic.Received().LoadLearningElement(stream);
         mockMapper.Received().Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
@@ -1765,7 +1765,7 @@ public class PresentationLogicUt
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
-        var ex = Assert.Throws<Exception>(() => systemUnderTest.LoadLearningElementViewModel(learningSpaceVm, stream));
+        var ex = Assert.Throws<Exception>(() => systemUnderTest.LoadLearningElementViewModel(learningSpaceVm, 0, stream));
         Assert.That(ex, Is.Not.Null);
         Assert.That(ex?.Message, Is.EqualTo("Exception"));
     }

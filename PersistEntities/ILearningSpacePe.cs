@@ -8,5 +8,5 @@ public interface ILearningSpacePe : ISpacePe, IObjectInPathWayPe
     string Authors { get; set; }
     string Goals { get; set; }
     int RequiredPoints { get; set; }
-    List<LearningElementPe> LearningElements { get; set; }
+    ILearningSpaceLayoutPe LearningSpaceLayout { get; set; }
 }

@@ -68,7 +68,7 @@ public class ToolboxControllerUt
         
         systemUnderTest.LoadObjectIntoWorkspace(learningElement);
         
-        spacePresenter.Received().AddLearningElement(learningElement);
+        spacePresenter.Received().AddLearningElement(learningElement, 0);
     }
     
     

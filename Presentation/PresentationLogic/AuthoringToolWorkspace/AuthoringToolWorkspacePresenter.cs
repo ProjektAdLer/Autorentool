@@ -258,7 +258,8 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
                 LoadLearningSpaceFromFileStream(stream);
                 break;
             case "aef":
-                LoadLearningElementFromFileStream(stream);
+                //TODO: LearningElements should be dropped into specific Slot. At the moment they are loaded into Slot 0. - AW
+                LoadLearningElementFromFileStream(stream, 0);
                 break;
             case "jpg":
             case "png":
@@ -321,7 +322,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         _presentationLogic.LoadLearningSpaceViewModel(AuthoringToolWorkspaceVm.SelectedLearningWorld, stream);
     }
 
-    internal void LoadLearningElementFromFileStream(Stream stream)
+    internal void LoadLearningElementFromFileStream(Stream stream, int slotIndex)
     {
         if (AuthoringToolWorkspaceVm.SelectedLearningWorld is not { } world)
         {
@@ -336,7 +337,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
                     $"ShowingLearningSpaceView for LearningWorld '{world.Name}' is true, but LearningSpaceVm in LearningSpacePresenter is null");
             }
 
-            _presentationLogic.LoadLearningElementViewModel(space, stream);
+            _presentationLogic.LoadLearningElementViewModel(space, slotIndex, stream);
         }
         else
         {

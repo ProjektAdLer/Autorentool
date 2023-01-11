@@ -3,6 +3,7 @@ using NUnit.Framework;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
 
@@ -59,11 +60,11 @@ public class LearningWorldViewModelUt
     public void Workload_ReturnsCorrectWorkload()
     {
         var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo");
-        var space = new LearningSpaceViewModel("a", "b", "c", "d", "e");
+        var space = new LearningSpaceViewModel("a", "b", "c", "d", "e", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         var spaceElement = new LearningElementViewModel("a", "b", null!, "url","c", "d", "e",
             LearningElementDifficultyEnum.Easy, space, 6);
         
-        space.LearningElements.Add(spaceElement);
+        space.LearningSpaceLayout.PutElement(0, spaceElement);
         systemUnderTest.LearningSpaces.Add(space);
 
         Assert.That(systemUnderTest.Workload, Is.EqualTo(6));
@@ -73,15 +74,15 @@ public class LearningWorldViewModelUt
     public void Points_ReturnsCorrectSum()
     {
         var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo");
-        var space = new LearningSpaceViewModel("a", "b", "c", "d", "e");
+        var space = new LearningSpaceViewModel("a", "b", "c", "d", "e", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         var spaceElement = new LearningElementViewModel("a", "b", null!, "url","c", "d", "e",
             LearningElementDifficultyEnum.Easy, space, 6,7);
-        var space2 = new LearningSpaceViewModel("a", "b", "c", "d", "e");
+        var space2 = new LearningSpaceViewModel("a", "b", "c", "d", "e", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         var spaceElement2 = new LearningElementViewModel("a", "b", null!, "url","c", "d", "e",
             LearningElementDifficultyEnum.Easy, space, 4,5);
         
-        space.LearningElements.Add(spaceElement);
-        space2.LearningElements.Add(spaceElement2);
+        space.LearningSpaceLayout.PutElement(0, spaceElement);
+        space2.LearningSpaceLayout.PutElement(0, spaceElement2);
         systemUnderTest.LearningSpaces.Add(space);
         systemUnderTest.LearningSpaces.Add(space2);
 

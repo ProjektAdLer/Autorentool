@@ -137,7 +137,7 @@
         base.OnParametersSet();
         LearningWorldP.PropertyChanging += OnLearningWorldPresenterPropertyChanging;
         LearningWorldP.PropertyChanged += OnLearningWorldPresenterPropertyChanged;
-        LearningWorldP.OnUndoRedoPerformed += StateHasChanged;
+        LearningWorldP.OnUndoRedoPerformed += async () => await InvokeAsync(StateHasChanged);
     }
 
     private void AddNewLearningSpace()
@@ -172,7 +172,7 @@
         finally
         {
     //we need to tell blazor explicitly to re-render our component after we added the loaded learning space
-            StateHasChanged();
+            await InvokeAsync(StateHasChanged);
         }
     }
 
@@ -193,7 +193,7 @@
         finally
         {
     //we need to tell blazor explicitly to re-render our component after we added the loaded learning space
-            StateHasChanged();
+            await InvokeAsync(StateHasChanged);
         }
     }
 

@@ -12,6 +12,7 @@ using Presentation.PresentationLogic.LearningElement.TestElement;
 using Presentation.PresentationLogic.LearningElement.TransferElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
 using MapperConfiguration = AutoMapper.MapperConfiguration;
@@ -179,7 +180,7 @@ public class MappingProfileUt
         systemUnderTest.Map(source, destination);
 
         TestSpace(destination, false);
-        Assert.That(destination.LearningElements, Is.Empty);
+        Assert.That(destination.ContainedLearningElements, Is.Empty);
 
         destination.Name = NewName;
         destination.Shortname = NewShortname;
@@ -187,14 +188,14 @@ public class MappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.RequiredPoints = NewRequiredPoints;
-        destination.LearningElements = new List<ILearningElementViewModel>();
+        destination.LearningSpaceLayout.LearningElements = Array.Empty<ILearningElementViewModel?>();
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
 
         systemUnderTest.Map(destination, source);
 
         TestSpace(source, true);
-        Assert.That(source.LearningElements, Is.Empty);
+        Assert.That(source.ContainedLearningElements, Is.Empty);
     }
 
     [Test]
@@ -208,7 +209,7 @@ public class MappingProfileUt
         systemUnderTest.Map(source, destination);
 
         TestSpace(destination, false);
-        Assert.That(destination.LearningElements, Is.Empty);
+        Assert.That(destination.LearningSpaceLayout.ContainedLearningElements, Is.Empty);
 
         destination.Name = NewName;
         destination.Shortname = NewShortname;
@@ -216,7 +217,7 @@ public class MappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.RequiredPoints = NewRequiredPoints;
-        destination.LearningElements = new List<LearningElementPe>();
+        destination.LearningSpaceLayout.LearningElements = Array.Empty<ILearningElementPe?>();
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
         destination.InBoundObjects = new List<IObjectInPathWayPe>();
@@ -225,7 +226,7 @@ public class MappingProfileUt
         systemUnderTest.Map(destination, source);
 
         TestSpace(source, true);
-        Assert.That(source.LearningElements, Is.Empty);
+        Assert.That(source.ContainedLearningElements, Is.Empty);
     }
 
     [TestCase(ElementType.TextTransfer, typeof(TextTransferElementViewModel), typeof(TextTransferElement))]
@@ -240,16 +241,16 @@ public class MappingProfileUt
         (ElementType elementType, Type expectedElementViewModelType, Type expectedElementType)
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, new List<LearningElement>(),
+        var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, new LearningSpaceLayout(new ILearningElement?[6], FloorPlanEnum.Rectangle2X3),
             PositionX, PositionY);
-        source.LearningElements.Add(GetTestableElementWithParent(source, elementType));
+        source.LearningSpaceLayout.LearningElements[0] = GetTestableElementWithParent(source, elementType);
         var destination = new LearningSpaceViewModel("", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
 
         TestSpace(destination, false);
-        Assert.That(destination.LearningElements, Has.Count.EqualTo(1));
-        Assert.That(destination.LearningElements.First(), Is.InstanceOf(expectedElementViewModelType));
+        Assert.That(destination.ContainedLearningElements.Count(), Is.EqualTo(1));
+        Assert.That(destination.ContainedLearningElements.First(), Is.InstanceOf(expectedElementViewModelType));
         Assert.That(destination.Id, Is.EqualTo(source.Id));
 
         destination.Name = NewName;
@@ -258,16 +259,16 @@ public class MappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.RequiredPoints = NewRequiredPoints;
-        destination.LearningElements = new List<ILearningElementViewModel>()
-            {GetTestableElementViewModelWithParent(destination, elementType)};
+        destination.LearningSpaceLayout.LearningElements = new ILearningElementViewModel?[6]
+            {GetTestableElementViewModelWithParent(destination, elementType), null, null, null, null, null};
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
 
         systemUnderTest.Map(destination, source);
 
         TestSpace(source, true);
-        Assert.That(source.LearningElements, Has.Count.EqualTo(1));
-        Assert.That(source.LearningElements.First(), Is.InstanceOf(expectedElementType));
+        Assert.That(source.ContainedLearningElements.Count(), Is.EqualTo(1));
+        Assert.That(source.ContainedLearningElements.First(), Is.InstanceOf(expectedElementType));
         Assert.That(destination.Id, Is.EqualTo(source.Id));
     }
 
@@ -283,16 +284,16 @@ public class MappingProfileUt
         (ElementType elementType, Type expectedElementPeType, Type expectedElementType)
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, new List<LearningElement>(),
+        var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, new LearningSpaceLayout(new ILearningElement?[6], FloorPlanEnum.Rectangle2X3),
             PositionX, PositionY, new List<IObjectInPathWay>(), new List<IObjectInPathWay>());
-        source.LearningElements.Add(GetTestableElementWithParent(source, elementType));
+        source.LearningSpaceLayout.LearningElements[0] = GetTestableElementWithParent(source, elementType);
         var destination = new LearningSpacePe("", "", "", "", "", 0);
 
         systemUnderTest.Map(source, destination);
 
         TestSpace(destination, false);
-        Assert.That(destination.LearningElements, Has.Count.EqualTo(1));
-        Assert.That(destination.LearningElements.First(), Is.InstanceOf(expectedElementPeType));
+        Assert.That(destination.LearningSpaceLayout.ContainedLearningElements.Count(), Is.EqualTo(1));
+        Assert.That(destination.LearningSpaceLayout.ContainedLearningElements.First(), Is.InstanceOf(expectedElementPeType));
 
         destination.Name = NewName;
         destination.Shortname = NewShortname;
@@ -300,7 +301,7 @@ public class MappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.RequiredPoints = NewRequiredPoints;
-        destination.LearningElements = new List<LearningElementPe>() {GetTestableElementPersistEntity(elementType)};
+        destination.LearningSpaceLayout.LearningElements = new ILearningElementPe[] {GetTestableElementPersistEntity(elementType)};
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
         destination.InBoundObjects = new List<IObjectInPathWayPe>();
@@ -309,8 +310,8 @@ public class MappingProfileUt
         systemUnderTest.Map(destination, source);
 
         TestSpace(source, true);
-        Assert.That(source.LearningElements, Has.Count.EqualTo(1));
-        Assert.That(source.LearningElements.First(), Is.InstanceOf(expectedElementType));
+        Assert.That(source.ContainedLearningElements.Count(), Is.EqualTo(1));
+        Assert.That(source.ContainedLearningElements.First(), Is.InstanceOf(expectedElementType));
     }
 
     [Test]
@@ -395,7 +396,7 @@ public class MappingProfileUt
         Assert.Multiple(() =>
         {
             Assert.That(destination.LearningSpaces, Has.Count.EqualTo(1));
-            Assert.That(destination.LearningSpaces.First().LearningElements, Is.Empty);
+            Assert.That(destination.LearningSpaces.First().ContainedLearningElements, Is.Empty);
         });
 
         destination.Name = NewName;
@@ -416,7 +417,7 @@ public class MappingProfileUt
         Assert.Multiple(() =>
         {
             Assert.That(source.LearningSpaces, Has.Count.EqualTo(1));
-            Assert.That(source.LearningSpaces[0].LearningElements, Is.Empty);
+            Assert.That(source.LearningSpaces[0].ContainedLearningElements, Is.Empty);
         });
     }
 
@@ -436,7 +437,7 @@ public class MappingProfileUt
         Assert.Multiple(() =>
         {
             Assert.That(destination.LearningSpaces, Has.Count.EqualTo(1));
-            Assert.That(destination.LearningSpaces[0].LearningElements, Is.Empty);
+            Assert.That(destination.LearningSpaces[0].LearningSpaceLayout.ContainedLearningElements, Is.Empty);
         });
 
         destination.Name = NewName;
@@ -457,7 +458,7 @@ public class MappingProfileUt
         Assert.Multiple(() =>
         {
             Assert.That(source.LearningSpaces, Has.Count.EqualTo(1));
-            Assert.That(source.LearningSpaces[0].LearningElements, Is.Empty);
+            Assert.That(source.LearningSpaces[0].ContainedLearningElements, Is.Empty);
         });
     }
 
@@ -476,7 +477,7 @@ public class MappingProfileUt
         Assert.Multiple(() =>
         {
             Assert.That(destination.LearningSpaces, Has.Count.EqualTo(1));
-            Assert.That(destination.LearningSpaces.First().LearningElements, Has.Count.EqualTo(1));
+            Assert.That(destination.LearningSpaces.First().ContainedLearningElements.Count, Is.EqualTo(1));
         });
 
         destination.Name = NewName;
@@ -493,7 +494,7 @@ public class MappingProfileUt
         Assert.Multiple(() =>
         {
             Assert.That(source.LearningSpaces, Has.Count.EqualTo(1));
-            Assert.That(source.LearningSpaces[0].LearningElements, Has.Count.EqualTo(1));
+            Assert.That(source.LearningSpaces[0].ContainedLearningElements.Count(), Is.EqualTo(1));
         });
     }
     
@@ -519,7 +520,7 @@ public class MappingProfileUt
         {
             Assert.That(destination.LearningSpaces, Has.Count.EqualTo(1));
             Assert.That(destination.PathWayConditions, Has.Count.EqualTo(1));
-            Assert.That(destination.LearningSpaces.First().LearningElements, Has.Count.EqualTo(1));
+            Assert.That(destination.LearningSpaces.First().ContainedLearningElements.Count(), Is.EqualTo(1));
             Assert.That(destination.LearningSpaces.First().OutBoundObjects, Has.Count.EqualTo(1));
             Assert.That(destination.PathWayConditions.First().InBoundObjects, Has.Count.EqualTo(1));
             Assert.That(destination.LearningPathWays, Has.Count.EqualTo(1));
@@ -546,7 +547,7 @@ public class MappingProfileUt
         {
             Assert.That(source.LearningSpaces, Has.Count.EqualTo(1));
             Assert.That(source.PathWayConditions, Has.Count.EqualTo(1));
-            Assert.That(source.LearningSpaces[0].LearningElements, Has.Count.EqualTo(1));
+            Assert.That(source.LearningSpaces[0].ContainedLearningElements.Count(), Is.EqualTo(1));
             Assert.That(source.LearningSpaces[0].OutBoundObjects, Has.Count.EqualTo(1));
             Assert.That(source.PathWayConditions[0].InBoundObjects, Has.Count.EqualTo(1));
             Assert.That(source.LearningPathways, Has.Count.EqualTo(1));
@@ -584,9 +585,9 @@ public class MappingProfileUt
         {
             Assert.That(destination.LearningSpaces, Has.Count.EqualTo(2));
             Assert.That(destination.PathWayConditions, Has.Count.EqualTo(1));
-            Assert.That(destinationSpace1.LearningElements, Has.Count.EqualTo(1));
+            Assert.That(destinationSpace1.LearningSpaceLayout.ContainedLearningElements.Count(), Is.EqualTo(1));
             Assert.That(destinationSpace1.OutBoundObjects, Does.Contain(destinationCondition));
-            Assert.That(destinationSpace2.LearningElements, Has.Count.EqualTo(1));
+            Assert.That(destinationSpace2.LearningSpaceLayout.ContainedLearningElements.Count(), Is.EqualTo(1));
             Assert.That(destinationSpace2.InBoundObjects, Does.Contain(destinationCondition));
             Assert.That(destinationCondition.InBoundObjects, Does.Contain(destinationSpace1));
             Assert.That(destinationCondition.OutBoundObjects, Does.Contain(destinationSpace2));
@@ -622,11 +623,11 @@ public class MappingProfileUt
             {
                 Assert.That(source.LearningSpaces, Has.Count.EqualTo(2));
                 Assert.That(source.PathWayConditions, Has.Count.EqualTo(1));
-                Assert.That(sourceSpace1.LearningElements, Has.Count.EqualTo(1));
+                Assert.That(sourceSpace1.ContainedLearningElements.Count(), Is.EqualTo(1));
                 Assert.That(sourceSpace1.OutBoundObjects, Does.Contain(sourceCondition));
                 Assert.That(sourceCondition.InBoundObjects, Does.Contain(sourceSpace1));
                 Assert.That(sourceCondition.OutBoundObjects, Does.Contain(sourceSpace2));
-                Assert.That(sourceSpace2.LearningElements, Has.Count.EqualTo(1));
+                Assert.That(sourceSpace2.ContainedLearningElements.Count(), Is.EqualTo(1));
                 Assert.That(sourceSpace2.InBoundObjects, Does.Contain(sourceCondition));
                 Assert.That(source.LearningPathways, Has.Count.EqualTo(2));
             });
@@ -644,11 +645,11 @@ public class MappingProfileUt
             {
                 Assert.That(newSource.LearningSpaces, Has.Count.EqualTo(2));
                 Assert.That(newSource.PathWayConditions, Has.Count.EqualTo(1));
-                Assert.That(newSourceSpace1.LearningElements, Has.Count.EqualTo(1));
+                Assert.That(newSourceSpace1.ContainedLearningElements.Count(), Is.EqualTo(1));
                 Assert.That(newSourceSpace1.OutBoundObjects, Does.Contain(newSourceCondition));
                 Assert.That(newSourceCondition.InBoundObjects, Does.Contain(newSourceSpace1));
                 Assert.That(newSourceCondition.OutBoundObjects, Does.Contain(newSourceSpace2));
-                Assert.That(newSourceSpace2.LearningElements, Has.Count.EqualTo(1));
+                Assert.That(newSourceSpace2.ContainedLearningElements.Count(), Is.EqualTo(1));
                 Assert.That(newSourceSpace2.InBoundObjects, Does.Contain(newSourceCondition));
                 Assert.That(newSource.LearningPathways, Has.Count.EqualTo(2));
             });
@@ -717,7 +718,7 @@ public class MappingProfileUt
                 Description, Goals, Difficulty);
 
         var space = new LearningSpaceViewModel("space", Shortname, Authors, Description, Goals, RequiredPoints,
-            new List<ILearningElementViewModel> { elementVm1 })
+            new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3) { LearningElements = new ILearningElementViewModel?[6] { elementVm1, null, null, null, null, null } })
         {
             SelectedLearningElement = elementVm1
         };
@@ -733,6 +734,8 @@ public class MappingProfileUt
         var systemUnderTest = CreateTestableMapper();
 
         var entity = systemUnderTest.Map<LearningWorld>(world);
+        world.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().Authors = "foooooooooo";
+        
         
         //map back into viewmodel - with update syntax
         systemUnderTest.Map(entity, world);
@@ -742,7 +745,7 @@ public class MappingProfileUt
         
         Assert.Multiple(() =>
         {
-            Assert.That(world.LearningSpaces.First().LearningElements.First(), Is.EqualTo(elementVm1));
+            Assert.That(world.LearningSpaces.First().ContainedLearningElements.First(), Is.EqualTo(elementVm1));
             Assert.That(world.SelectedLearningObject, Is.EqualTo(space));
             Assert.That(world.LearningSpaces.First().SelectedLearningElement, Is.EqualTo(elementVm1));
         });
@@ -940,25 +943,25 @@ public class MappingProfileUt
     private static LearningSpace GetTestableSpace()
     {
         var space = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints,
-            new List<LearningElement>(), PositionX, PositionY);
+            new LearningSpaceLayout(new ILearningElement[6], FloorPlanEnum.Rectangle2X3), PositionX, PositionY);
         var element = GetTestableElementWithParent(space, ElementType.TextTransfer);
-        space.LearningElements.Add(element);
+        space.LearningSpaceLayout.LearningElements[0] = element;
         return space;
     }
 
     private static LearningSpaceViewModel GetTestableNewSpaceViewModel()
     {
         var space = new LearningSpaceViewModel(NewName, NewShortname, NewAuthors, NewDescription, NewGoals, NewRequiredPoints,
-            new List<ILearningElementViewModel>(), NewPositionX, NewPositionY);
+            new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3), NewPositionX, NewPositionY);
         var element = GetTestableElementViewModelWithParent(space, ElementType.TextTransfer);
-        space.LearningElements.Add(element);
+        space.LearningSpaceLayout.PutElement(0, element);
         return space;
     }
 
     private static LearningSpacePe GetTestableNewSpacePersistEntity()
     {
         return new LearningSpacePe(NewName, NewShortname, NewAuthors, NewDescription, NewGoals, NewRequiredPoints,
-            new List<LearningElementPe>() {GetTestableElementPersistEntity(ElementType.TextTransfer)}, NewPositionX, NewPositionY);
+            new LearningSpaceLayoutPe(new ILearningElementPe[] {GetTestableElementPersistEntity(ElementType.TextTransfer)}, FloorPlanEnumPe.Rectangle2X3), NewPositionX, NewPositionY);
     }
 
     #endregion
@@ -1056,7 +1059,7 @@ public class MappingProfileUt
                     Assert.That(space.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(space.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
                     Assert.That(space.RequiredPoints, Is.EqualTo(useNewFields ? NewRequiredPoints : RequiredPoints));
-                    TestElementsList(space.LearningElements, space, useNewFields);
+                    TestElementsList(space.ContainedLearningElements, space, useNewFields);
                     Assert.That(space.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
                     Assert.That(space.PositionY, Is.EqualTo(useNewFields ? NewPositionY : PositionY));
                 });
@@ -1070,7 +1073,7 @@ public class MappingProfileUt
                     Assert.That(space.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(space.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
                     Assert.That(space.RequiredPoints, Is.EqualTo(useNewFields ? NewRequiredPoints : RequiredPoints));
-                    TestElementsList(space.LearningElements, space, useNewFields);
+                    TestElementsList(space.ContainedLearningElements, space, useNewFields);
                     Assert.That(space.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
                     Assert.That(space.PositionY, Is.EqualTo(useNewFields ? NewPositionY : PositionY));
                 });
@@ -1084,7 +1087,7 @@ public class MappingProfileUt
                     Assert.That(space.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(space.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
                     Assert.That(space.RequiredPoints, Is.EqualTo(useNewFields ? NewRequiredPoints : RequiredPoints));
-                    TestElementsList(space.LearningElements, space, useNewFields);
+                    TestElementsList(space.LearningSpaceLayout.ContainedLearningElements, space, useNewFields);
                     Assert.That(space.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
                     Assert.That(space.PositionY, Is.EqualTo(useNewFields ? NewPositionY : PositionY));
                 });

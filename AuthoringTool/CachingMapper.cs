@@ -142,14 +142,31 @@ public class CachingMapper : ICachingMapper
     private void MapInternal(LearningSpace learningSpaceEntity, ILearningSpaceViewModel learningSpaceVm)
     {
         learningSpaceVm = Cache(learningSpaceVm);
-        var newLearningElementsInEntity = learningSpaceEntity.LearningElements
-            .FindAll(p => learningSpaceVm.LearningElements.All(l => p.Id != l.Id));
+        //var newLearningElementsInEntityO = learningSpaceEntity.LearningSpaceLayout.LearningElements.Where((p, i) => learningSpaceVm.LearningSpaceLayoutViewModel.LearningElements.All(l => p?.Id != l?.Id));
+        //TODO: Check if this works - AW
+        var newLearningElementsInEntity = learningSpaceEntity.LearningSpaceLayout.LearningElements
+            .Select((s,i)=>new {i,s})
+            .Where(x => x.s != null)
+            .Where((p, x) => learningSpaceVm.ContainedLearningElements.All(l => p.s!.Id != l.Id)).ToList();
+        if (newLearningElementsInEntity.Any())
+        {
+            var max = newLearningElementsInEntity.Max(x => x.i);
+            if (max >= learningSpaceVm.LearningSpaceLayout.LearningElements.Length)
+            {
+                var newLearningElementsVm = new ILearningElementViewModel?[max + 1];
+                foreach (var (v, i) in learningSpaceVm.LearningSpaceLayout.LearningElements.Select((v,i)=>(v,i)))
+                {
+                    newLearningElementsVm[i] = v;
+                }
+                learningSpaceVm.LearningSpaceLayout.LearningElements = newLearningElementsVm;
+            }
+        }
         foreach (var e in newLearningElementsInEntity)
         {
-            if(_cache.ContainsKey(e.Id)) learningSpaceVm.LearningElements.Add(Get<LearningElementViewModel>(e.Id));
+            if (_cache.ContainsKey(e.s!.Id)) learningSpaceVm.LearningSpaceLayout.PutElement(e.i, Get<LearningElementViewModel>(e.s!.Id));
         }
         _mapper.Map(learningSpaceEntity, learningSpaceVm);
-        foreach (var elementVm in learningSpaceVm.LearningElements.Where(w =>
+        foreach (var elementVm in learningSpaceVm.ContainedLearningElements.Where(w =>
                      !_cache.ContainsKey(w.Id)))
         {
             Cache(elementVm);

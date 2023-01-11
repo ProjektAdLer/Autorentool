@@ -142,12 +142,12 @@ public class LearningSpaceViewUt
         var element1 = Substitute.For<ILearningElementViewModel>();
         var element2 = Substitute.For<ILearningElementViewModel>();
         var element3 = Substitute.For<ILearningElementViewModel>();
-        var learningElements = new List<ILearningElementViewModel>
+        var learningElements = new ILearningElementViewModel?[]
         {
             element1, element2, element3
         };
         var learningSpace = Substitute.For<ILearningSpaceViewModel>();
-        learningSpace.LearningElements = learningElements;
+        learningSpace.LearningSpaceLayout.LearningElements = learningElements;
         _learningSpacePresenter.LearningSpaceVm.Returns(learningSpace);
         
         var systemUnderTest = GetLearningSpaceViewForTesting();
@@ -156,7 +156,7 @@ public class LearningSpaceViewUt
         Assert.Multiple(() =>
         {
             var renderedComponents = draggableLearningElements.ToList();
-            Assert.That(renderedComponents, Has.Count.EqualTo(learningElements.Count));
+            Assert.That(renderedComponents, Has.Count.EqualTo(learningElements.Length));
             Assert.That(learningElements.All(le =>
                 renderedComponents.Any(dle =>
                     dle.Instance.Parameters[nameof(DraggableLearningElement.LearningElement)] == le)));
@@ -401,26 +401,26 @@ public class LearningSpaceViewUt
         
         var button = systemUnderTest.Find("button.btn.btn-primary.load-learning-element");
         button.Click();
-        _learningSpacePresenter.Received().LoadLearningElementAsync();
+        _learningSpacePresenter.Received().LoadLearningElementAsync(0);
     }
     
     [Test]
     public void LoadElementButton_Clicked_OperationCanceledExceptionCaught()
     {
-        _learningSpacePresenter.LoadLearningElementAsync().Throws(new OperationCanceledException());
+        _learningSpacePresenter.LoadLearningElementAsync(0).Throws(new OperationCanceledException());
         
         var systemUnderTest = GetLearningSpaceViewForTesting();
         
         var button = systemUnderTest.Find("button.btn.btn-primary.load-learning-element");
         Assert.That(() => button.Click(), Throws.Nothing);
-        _learningSpacePresenter.Received().LoadLearningElementAsync();
+        _learningSpacePresenter.Received().LoadLearningElementAsync(0);
     }
     
     [Test]
     public void LoadElementButton_Clicked_OtherExceptionsWrappedInErrorState()
     {
         var ex = new Exception();
-        _learningSpacePresenter.LoadLearningElementAsync().Throws(ex);
+        _learningSpacePresenter.LoadLearningElementAsync(0).Throws(ex);
         
         var systemUnderTest = GetLearningSpaceViewForTesting();
         
@@ -435,7 +435,7 @@ public class LearningSpaceViewUt
             Assert.That(systemUnderTest.Instance.ErrorState!.CallSite, Is.EqualTo("Load learning element"));
             Assert.That(systemUnderTest.Instance.ErrorState!.Exception, Is.EqualTo(ex));
         });
-        _learningSpacePresenter.Received().LoadLearningElementAsync();
+        _learningSpacePresenter.Received().LoadLearningElementAsync(0);
     }
 
     [Test]

@@ -52,6 +52,7 @@ public class LearningWorld : ILearningWorld, IOriginator
     public string Language { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
+    public ICollection<ILearningElement> UnplacedLearningElements { get; set; } 
     public ISelectableObjectInWorld? SelectedLearningObject { get; set; }
 
     public bool UnsavedChanges { get; set; }

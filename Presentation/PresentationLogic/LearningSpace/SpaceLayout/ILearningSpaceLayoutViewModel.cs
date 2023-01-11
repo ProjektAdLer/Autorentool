@@ -1,18 +1,22 @@
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans;
+using Shared;
 
-namespace Presentation.PresentationLogic.LearningSpace;
+namespace Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 
 /// <summary>
 /// Holds information about the floor plan of the space and where which element should go.
 /// </summary>
-public interface ILearningSpaceLayout
+public interface ILearningSpaceLayoutViewModel
 {
+    ILearningElementViewModel?[] LearningElements { get; set; }
+    FloorPlanEnum FloorPlanName { get; set; }
     /// <summary>
-    /// Floor plan of the current <see cref="ILearningSpaceLayout"/>.
+    /// Floor plan of the current <see cref="ILearningSpaceLayoutViewModel"/>.
     /// </summary>
-    IFloorPlan FloorPlan { get; }
+    IFloorPlanViewModel FloorPlanViewModel { get; }
     /// <summary>
-    /// The maximum number of <see cref="ILearningElementViewModel"/>s the <see cref="ILearningSpaceLayout"/> can hold.
+    /// The maximum number of <see cref="ILearningElementViewModel"/>s the <see cref="ILearningSpaceLayoutViewModel"/> can hold.
     /// </summary>
     int Capacity { get; }
     /// <summary>
@@ -26,7 +30,7 @@ public interface ILearningSpaceLayout
     /// <summary>
     /// List of currently held <see cref="ILearningElementViewModel"/>.
     /// </summary>
-    IEnumerable<ILearningElementViewModel> LearningElements { get; }
+    IEnumerable<ILearningElementViewModel> ContainedLearningElements { get; }
     /// <summary>
     /// Gets the element at the specified index.
     /// </summary>
@@ -44,29 +48,13 @@ public interface ILearningSpaceLayout
     /// </summary>
     /// <param name="index">The index from which to remove the element.</param>
     void RemoveElement(int index);
-}
-
-/// <summary>
-/// Holds information about the geometric properties of the space layout.
-/// </summary>
-public interface IFloorPlan
-{
     /// <summary>
-    /// The maximum number of <see cref="ILearningElementViewModel"/>s the <see cref="ILearningSpaceLayout"/> can hold.
+    /// Overrides all elements in this layout with null.
     /// </summary>
-    int Capacity { get; }
+    void ClearAllElements();
     /// <summary>
-    /// List of X/Y coordinates of the corner points of the shape.
+    /// Changes the current floor plan to the specified one.
     /// </summary>
-    IEnumerable<Point> CornerPoints { get; }
-    /// <summary>
-    /// List of X/Y coordinates of the centers of the slots for LearningElements.
-    /// </summary>
-    IEnumerable<Point> ElementSlotPositions { get; }
-}
-
-public struct Point
-{
-    public int X { get; init; }
-    public int Y { get; init; }
+    /// <param name="floorPlanName">Name of the new floor plan</param>
+    void ChangeFloorPlan(FloorPlanEnum floorPlanName);
 }

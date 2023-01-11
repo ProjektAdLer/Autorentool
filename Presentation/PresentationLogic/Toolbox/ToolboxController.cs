@@ -46,7 +46,8 @@ public class ToolboxController : IToolboxController
                 {
                     try
                     {
-                        _spacePresenter.AddLearningElement(learningElementViewModel);
+                        //TODO: We need to specify the slot to add the element to - AW
+                        _spacePresenter.AddLearningElement(learningElementViewModel, 0);
                     }
                     catch (ApplicationException ex)
                     {

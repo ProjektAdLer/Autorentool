@@ -12,6 +12,7 @@ using Presentation.PresentationLogic.LearningElement.TestElement;
 using Presentation.PresentationLogic.LearningElement.TransferElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
 
@@ -123,30 +124,46 @@ public class MappingProfile : Profile
             .ForMember(x => x.SelectedLearningElement, opt => opt.Ignore())
             .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
             .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
             .IncludeBase<IObjectInPathWay, IObjectInPathWayViewModel>()
             .EqualityComparison((x, y) => x.Id == y.Id)
             .AfterMap((s, d) =>
             {
-                foreach (var element in d.LearningElements)
+                foreach (var element in d.ContainedLearningElements)
                 {
                     element.Parent = d;
                 }
 
-                d.SelectedLearningElement = d.LearningElements.FirstOrDefault(x => x.Id == s.SelectedLearningElement?.Id);
+                d.SelectedLearningElement = d.ContainedLearningElements.FirstOrDefault(x => x.Id == s.SelectedLearningElement?.Id);
             })
             .ReverseMap()
             .ForMember(x => x.SelectedLearningElement, opt => opt.Ignore())
             .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
             .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
-                foreach (var element in d.LearningElements)
+                foreach (var element in d.ContainedLearningElements)
                 {
                     element.Parent = d;
                 }
 
-                d.SelectedLearningElement = d.LearningElements.FirstOrDefault(x => x.Id == s.SelectedLearningElement?.Id);
+                d.SelectedLearningElement = d.ContainedLearningElements.FirstOrDefault(x => x.Id == s.SelectedLearningElement?.Id);
             });
+        
+        CreateMap<ILearningSpaceLayout, LearningSpaceLayoutViewModel>()
+            .ForMember(x => x.FloorPlanViewModel, opt => opt.Ignore())
+            .ForMember(x => x.UsedIndices, opt => opt.Ignore())
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
+        CreateMap<ILearningSpaceLayoutViewModel, LearningSpaceLayout>()
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
+        
+        CreateMap<LearningSpaceLayout, LearningSpaceLayoutViewModel>()
+            .ForMember(x => x.FloorPlanViewModel, opt => opt.Ignore())
+            .ForMember(x => x.UsedIndices, opt => opt.Ignore())
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .ReverseMap()
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
 
         CreateMap<LearningElement, LearningElementViewModel>()
             .ForMember(x => x.Parent, opt => opt.Ignore())
@@ -182,8 +199,8 @@ public class MappingProfile : Profile
             .ReverseMap();
 
         //We must tell the automapper what class to use when it has to map from a class to an interface
-        CreateMap<LearningElement, ILearningElementViewModel>()
-            .As<LearningElementViewModel>();
+        CreateMap<LearningElement, ILearningElementViewModel>().As<LearningElementViewModel>();
+        CreateMap<LearningElementViewModel, ILearningElement>().As<LearningElement>();
         CreateMap<LearningSpace, ILearningSpaceViewModel>()
             .As<LearningSpaceViewModel>();
         CreateMap<LearningPathway, ILearningPathWayViewModel>()
@@ -192,6 +209,11 @@ public class MappingProfile : Profile
         
         CreateMap<PathWayCondition, IObjectInPathWayViewModel>().As<PathWayConditionViewModel>();
         CreateMap<LearningSpace, IObjectInPathWayViewModel>().As<LearningSpaceViewModel>();
+        
+        CreateMap<LearningSpaceLayout, ILearningSpaceLayoutViewModel>().As<LearningSpaceLayoutViewModel>();
+        CreateMap<LearningSpaceLayoutViewModel, ILearningSpaceLayout>().As<LearningSpaceLayout>();
+        CreateMap<ILearningSpaceLayout, ILearningSpaceLayoutViewModel>().As<LearningSpaceLayoutViewModel>();
+        CreateMap<ILearningSpaceLayoutViewModel, ILearningSpaceLayout>().As<LearningSpaceLayout>();
 
         
         CreateMap<H5PActivationElement, ILearningElementViewModel>().As<H5PActivationElementViewModel>();
@@ -267,11 +289,16 @@ public class MappingProfile : Profile
             .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
             .AfterMap((_, d) =>
             {
-                foreach (var element in d.LearningElements)
+                foreach (var element in d.ContainedLearningElements)
                 {
                     element.Parent = d;
                 }
             });
+        CreateMap<LearningSpaceLayout, LearningSpaceLayoutPe>()
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .ReverseMap()
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
+        
         CreateMap<LearningPathway, LearningPathwayPe>()
             .ReverseMap();
         CreateMap<PathWayCondition, PathWayConditionPe>()
@@ -341,5 +368,12 @@ public class MappingProfile : Profile
         CreateMap<VideoActivationElementPe, ILearningElement>().As<VideoActivationElement>();
         CreateMap<VideoTransferElementPe, ILearningElement>().As<VideoTransferElement>();
         CreateMap<TextTransferElementPe, ILearningElement>().As<TextTransferElement>();
+        
+        CreateMap<LearningSpaceLayout, ILearningSpaceLayoutPe>().As<LearningSpaceLayoutPe>();
+        CreateMap<LearningSpaceLayoutPe, ILearningSpaceLayout>().As<LearningSpaceLayout>();
+        CreateMap<ILearningSpaceLayout, ILearningSpaceLayoutPe>().As<LearningSpaceLayoutPe>();
+        CreateMap<ILearningSpaceLayoutPe, ILearningSpaceLayout>().As<LearningSpaceLayout>();
+        CreateMap<ILearningSpaceLayout, LearningSpaceLayoutPe>().ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
+        CreateMap<ILearningSpaceLayoutPe, LearningSpaceLayout>().ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
     }
 }

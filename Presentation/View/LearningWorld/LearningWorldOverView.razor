@@ -12,7 +12,7 @@
                 @foreach (var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
                 {
                     <MudNavGroup Title="@learningSpace.Name" Icon="@Icons.Sharp.Room" Expanded="true">
-                        @foreach (var element in learningSpace.LearningElements)
+                        @foreach (var element in learningSpace.ContainedLearningElements)
                         {
                             <MudNavLink>@element.Name</MudNavLink>
                         }

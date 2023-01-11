@@ -12,4 +12,5 @@ public interface ILearningWorld
     string Authors { get; set; }
     string Language { get; set; }
     string Goals { get; set; }
+    ICollection<ILearningElement> UnplacedLearningElements { get; set; }
 }

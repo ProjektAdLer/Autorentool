@@ -181,10 +181,10 @@ public class CommandStateManagerUt
     {
         var learningElement =
             new LearningElement("n", "s", null!, "u", "a", "d", "g", LearningElementDifficultyEnum.Easy);
-        var learningSpace = new LearningSpace("n", "s", "a", "d", "g", 5);
+        var learningSpace = new LearningSpace("n", "s", "a", "d", "g", 5, new LearningSpaceLayout(new ILearningElement?[6],FloorPlanEnum.Rectangle2X3));
         var learningWorld = new LearningWorld("n", "s", "a", "l","d", "g");
         var workspace = new AuthoringToolWorkspace(null, new List<LearningWorld>());
-        var createLearningElementCommand = new CreateLearningElement(learningSpace, learningElement, _ => { });
+        var createLearningElementCommand = new CreateLearningElement(learningSpace, 0, learningElement, _ => { });
         var createLearningSpaceCommand = new CreateLearningSpace(learningWorld, learningSpace, _ => { });
         var createLearningWorldCommand = new CreateLearningWorld(workspace, learningWorld, _ => { });
         var deleteLearningElementCommand = new DeleteLearningElement(learningElement, learningSpace, _ => { });
@@ -194,7 +194,7 @@ public class CommandStateManagerUt
         mockBusinessLogic.LoadLearningElement(Arg.Any<string>()).Returns(learningElement);
         mockBusinessLogic.LoadLearningSpace(Arg.Any<string>()).Returns(learningSpace);
         mockBusinessLogic.LoadLearningWorld(Arg.Any<string>()).Returns(learningWorld);
-        var loadLearningElementCommand = new LoadLearningElement(learningSpace, "e", mockBusinessLogic, _ => { });
+        var loadLearningElementCommand = new LoadLearningElement(learningSpace, 0, "e", mockBusinessLogic, _ => { });
         var loadLearningSpaceCommand = new LoadLearningSpace(learningWorld, "s", mockBusinessLogic, _ => { });
         var loadLearningWorldCommand = new LoadLearningWorld(workspace, "w", mockBusinessLogic, _ => { });
 

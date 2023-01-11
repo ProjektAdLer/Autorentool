@@ -8,6 +8,7 @@ public class DeleteLearningElement : IUndoCommand
     internal LearningSpace ParentSpace { get; }
     private readonly Action<LearningSpace> _mappingAction;
     private IMemento? _memento;
+    private IMemento? _mementoSpaceLayout;
 
     public DeleteLearningElement(LearningElement learningElement, LearningSpace parentSpace,
         Action<LearningSpace> mappingAction)
@@ -16,18 +17,20 @@ public class DeleteLearningElement : IUndoCommand
         ParentSpace = parentSpace;
         _mappingAction = mappingAction;
     }
-    
+
     public void Execute()
     {
         _memento = ParentSpace.GetMemento();
+        _mementoSpaceLayout = ParentSpace.LearningSpaceLayout.GetMemento();
 
-        var element = ParentSpace.LearningElements.First(x => x.Id == LearningElement.Id);
+        var element = ParentSpace.LearningSpaceLayout.LearningElements.First(x => x?.Id == LearningElement.Id);
+        var elementIndex = Array.IndexOf(ParentSpace.LearningSpaceLayout.LearningElements, element);
 
-        ParentSpace.LearningElements.Remove(element);
+        ParentSpace.LearningSpaceLayout.LearningElements[elementIndex] = null;
 
         if (element == ParentSpace.SelectedLearningElement || ParentSpace.SelectedLearningElement == null)
         {
-            ParentSpace.SelectedLearningElement = ParentSpace.LearningElements.LastOrDefault();
+            ParentSpace.SelectedLearningElement = ParentSpace.LearningSpaceLayout.LearningElements.LastOrDefault();
         }
 
         _mappingAction.Invoke(ParentSpace);
@@ -39,9 +42,15 @@ public class DeleteLearningElement : IUndoCommand
         {
             throw new InvalidOperationException("_memento is null");
         }
-        
+
+        if (_mementoSpaceLayout == null)
+        {
+            throw new InvalidOperationException("_mementoSpaceLayout is null");
+        }
+
         ParentSpace.RestoreMemento(_memento);
-        
+        ParentSpace.LearningSpaceLayout.RestoreMemento(_mementoSpaceLayout);
+
         _mappingAction.Invoke(ParentSpace);
     }
 

@@ -106,9 +106,9 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        AuthoringToolWorkspaceP.OnForceViewUpdate += StateHasChanged;
+        AuthoringToolWorkspaceP.OnForceViewUpdate += async () => await InvokeAsync(StateHasChanged);
         AuthoringToolWorkspaceVm.PropertyChanged += async (_, _) => await InvokeAsync(StateHasChanged);
-        PresentationLogic.OnUndoRedoPerformed += StateHasChanged;
+        PresentationLogic.OnUndoRedoPerformed += async () => await InvokeAsync(StateHasChanged);
     }
     
     private string filePath = "";
@@ -147,7 +147,7 @@
         finally
         {
     //we need to tell blazor explicitly to re-render our component after we added the loaded learning world
-            StateHasChanged();
+            await InvokeAsync(StateHasChanged);
         }
     }
 
@@ -167,7 +167,7 @@
         }
         finally
         {
-            StateHasChanged();
+            await InvokeAsync(StateHasChanged);
         }
     }
 
@@ -223,7 +223,7 @@
         {
     //do nothing
         }
-        StateHasChanged();
+        await InvokeAsync(StateHasChanged);
     }
 
     private async Task OnDragAndDropResult(Tuple<string, MemoryStream> result)

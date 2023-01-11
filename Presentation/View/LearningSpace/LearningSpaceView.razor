@@ -4,12 +4,14 @@
 @using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.ModalDialog
 @using System.ComponentModel
+@using Shared
 
 <h2>LearningSpace @LearningSpaceP.LearningSpaceVm?.Name</h2>
 <h5>Workload: @LearningSpaceP.LearningSpaceVm?.Workload minutes</h5>
 <h5>Points: @LearningSpaceP.LearningSpaceVm?.Points</h5>
 <button class="btn btn-primary add-learning-element" @onclick="AddNewLearningElement">Add Learning Element</button>
 <button class="btn btn-primary load-learning-element" @onclick="LoadLearningElementAsync">Load Learning Element</button>
+<h1>Anzahl Lernelemente: @LearningSpaceP.LearningSpaceVm?.LearningSpaceLayout.Count</h1>
 @ChildContent
 <br>
 
@@ -26,6 +28,40 @@
     <button class="btn btn-primary save-learning-element" @onclick="SaveSelectedLearningElementAsync">Save selected Learning Element</button>
     <button class="btn btn-primary show-element-content" @onclick="ShowSelectedElementContentAsync">Show content of Learning Element</button>
 }
+<br>
+Select learning world:
+    <select @onchange="args => SetLearningSpaceLayout(args.Value!.ToString())"
+            value="@(LearningSpaceP.LearningSpaceVm?.LearningSpaceLayout.FloorPlanName)">
+        @foreach (var floorPlan in Enum.GetValues(typeof(FloorPlanEnum)).Cast<FloorPlanEnum>())
+        {
+            <option value="@floorPlan">@floorPlan.ToString()</option>
+        }
+    </select>
+@if (LearningSpaceP.LearningSpaceVm != null)
+{
+    <div style="width: 200px; height: 200px; border: 2px solid orange;"></div>
+    @for (var i = 0; i<LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.Capacity;  i++)
+    {
+        var x = i;
+        if (LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.GetElement(i) != null)
+        {
+            <MudButton
+                Variant="Variant.Filled" Color="Color.Secondary"
+                @onclick="() => EditLearningElement(x)">
+                @x @LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.GetElement(x)?.Name
+            </MudButton>
+        }
+        else
+        {
+            <MudButton
+                Variant="Variant.Filled" Color="Color.Tertiary"
+                @onclick="() => AddNewLearningElement(x)">
+                Slot @x
+            </MudButton>
+        }
+    }
+}
+
 <svg style="width: 100%; height: 600px; border: 1px solid green"
      xmlns="http://www.w3.org/2000/svg"
      @onmousemove="@(e => MouseService.FireMove(this, e))"
@@ -34,7 +70,7 @@
      @onmousedown="@LearningSpaceP.HideRightClickMenu">
     @if (LearningSpaceP.LearningSpaceVm != null)
     {
-        @foreach (var learningElement in LearningSpaceP.LearningSpaceVm.LearningElements)
+        @foreach (var learningElement in LearningSpaceP.LearningSpaceVm.ContainedLearningElements)
         {
             <DraggableLearningElement LearningElement="@learningElement" 
                                       OnClicked="@LearningSpaceP.ClickedLearningElement"
@@ -91,11 +127,16 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        LearningSpaceP.OnUndoRedoPerformed += StateHasChanged;
+        LearningSpaceP.OnUndoRedoPerformed += async () => await InvokeAsync(StateHasChanged);
         LearningSpaceP.PropertyChanged += (sender, earg) =>
         {
-            if(earg.PropertyName == nameof(LearningSpaceP.CreateLearningElementDialogOpen)) StateHasChanged();
+            if(earg.PropertyName == nameof(LearningSpaceP.CreateLearningElementDialogOpen)) InvokeAsync(StateHasChanged);
         };
+    }
+    
+    private void AddNewLearningElement(int slotIndex)
+    {
+        LearningSpaceP.AddNewLearningElement(slotIndex);
     }
 
     private void AddNewLearningElement()
@@ -108,11 +149,23 @@
         LearningSpaceP.DeleteSelectedLearningElement();
     }
 
-    private async Task LoadLearningElementAsync()
+    private async Task LoadLearningElementAsync(){
+        //TODO: Remove parameterless method and use the one with the parameter - AW
+        try
+        {
+            await LoadLearningElementAsync(0);
+        }
+        catch (Exception e)
+        {
+            ErrorState = new ExceptionWrapper("", e);
+        }
+    }
+
+    private async Task LoadLearningElementAsync(int slotIndex)
     {
         try
         {
-            await LearningSpaceP.LoadLearningElementAsync();
+            await LearningSpaceP.LoadLearningElementAsync(slotIndex);
         }
         catch (OperationCanceledException)
         {
@@ -174,6 +227,10 @@
         LearningSpaceP.OnCreateElementDialogClose(closeResult);
         InvokeAsync(StateHasChanged);
     }
+    
+    private void EditLearningElement(int slotIndex){
+        LearningSpaceP.EditLearningElement(slotIndex);
+    }
 
     private void EditSelectedLearningElement()
     {
@@ -189,6 +246,13 @@
     private void OnEditElementDialogClose(ModalDialogOnCloseResult closeResult)
     {
         LearningSpaceP.OnEditElementDialogClose(closeResult);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void SetLearningSpaceLayout(string floorPlanName)
+    {
+        Enum.TryParse(floorPlanName, out FloorPlanEnum floorPlan);
+        LearningSpaceP.SetLearningSpaceLayout(floorPlan);
         InvokeAsync(StateHasChanged);
     }
 

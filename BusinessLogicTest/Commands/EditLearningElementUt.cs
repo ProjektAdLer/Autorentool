@@ -15,10 +15,10 @@ public class EditLearningElementUt
         var parent = new LearningSpace("l", "k", "j", "j", "j", 5);
         var content = new LearningContent("bar", "foo", "");
         var element = new LearningElement("a", "b", content, "url",
-            "e", "f","g", LearningElementDifficultyEnum.Medium, parent, 8, 9, 17f, 29f);
-        parent.LearningElements.Add(element);
-        
-        var name = "new element";
+            "e", "f", "g", LearningElementDifficultyEnum.Medium, parent, 8, 9, 17f, 29f);
+        parent.LearningSpaceLayout.LearningElements = new ILearningElement[]{element};
+
+    var name = "new element";
         var shortname = "ne";
         var url = "google.com";
         var authors = "marvin";
@@ -48,7 +48,7 @@ public class EditLearningElementUt
             Assert.That(element.Difficulty, Is.EqualTo(LearningElementDifficultyEnum.Medium));
             Assert.That(element.PositionX, Is.EqualTo(17f));
             Assert.That(element.PositionY, Is.EqualTo(29f));
-            Assert.That(parent.LearningElements, Has.Count.EqualTo(1));
+            Assert.That(parent.ContainedLearningElements.Count(), Is.EqualTo(1));
         });
         
         command.Execute();
@@ -68,7 +68,7 @@ public class EditLearningElementUt
             Assert.That(element.Difficulty, Is.EqualTo(difficulty));
             Assert.That(element.PositionX, Is.EqualTo(17f));
             Assert.That(element.PositionY, Is.EqualTo(29f));
-            Assert.That(parent.LearningElements, Has.Count.EqualTo(1));
+            Assert.That(parent.ContainedLearningElements.Count(), Is.EqualTo(1));
         });
     }
 
@@ -104,7 +104,7 @@ public class EditLearningElementUt
         var content = new LearningContent("bar", "foo", "");
         var element = new LearningElement("a", "b", content, "url",
             "e", "f","g", LearningElementDifficultyEnum.Medium, parent, 8, 9, 17f, 29f);
-        parent.LearningElements.Add(element);
+        parent.LearningSpaceLayout.LearningElements = new ILearningElement[] {element};
         
         var name = "new element";
         var shortname = "ne";
@@ -136,7 +136,7 @@ public class EditLearningElementUt
             Assert.That(element.Difficulty, Is.EqualTo(LearningElementDifficultyEnum.Medium));
             Assert.That(element.PositionX, Is.EqualTo(17f));
             Assert.That(element.PositionY, Is.EqualTo(29f));
-            Assert.That(parent.LearningElements, Has.Count.EqualTo(1));
+            Assert.That(parent.ContainedLearningElements.Count(), Is.EqualTo(1));
         });
         
         command.Execute();
@@ -156,7 +156,7 @@ public class EditLearningElementUt
             Assert.That(element.Difficulty, Is.EqualTo(difficulty));
             Assert.That(element.PositionX, Is.EqualTo(17f));
             Assert.That(element.PositionY, Is.EqualTo(29f));
-            Assert.That(parent.LearningElements, Has.Count.EqualTo(1));
+            Assert.That(parent.ContainedLearningElements.Count(), Is.EqualTo(1));
         });
         actionWasInvoked = false;
         
@@ -177,7 +177,7 @@ public class EditLearningElementUt
             Assert.That(element.Difficulty, Is.EqualTo(LearningElementDifficultyEnum.Medium));
             Assert.That(element.PositionX, Is.EqualTo(17f));
             Assert.That(element.PositionY, Is.EqualTo(29f));
-            Assert.That(parent.LearningElements, Has.Count.EqualTo(1));
+            Assert.That(parent.ContainedLearningElements.Count(), Is.EqualTo(1));
         });
         actionWasInvoked = false;
         
@@ -198,7 +198,7 @@ public class EditLearningElementUt
             Assert.That(element.Difficulty, Is.EqualTo(difficulty));
             Assert.That(element.PositionX, Is.EqualTo(17f));
             Assert.That(element.PositionY, Is.EqualTo(29f));
-            Assert.That(parent.LearningElements, Has.Count.EqualTo(1));
+            Assert.That(parent.ContainedLearningElements.Count(), Is.EqualTo(1));
         });
     }
 

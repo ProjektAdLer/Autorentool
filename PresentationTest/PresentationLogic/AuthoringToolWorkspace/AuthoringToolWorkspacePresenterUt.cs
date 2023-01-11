@@ -794,7 +794,7 @@ public class AuthoringToolWorkspacePresenterUt
                 presentationLogic.Received().LoadLearningSpaceViewModel(learningWorld, stream);
                 break;
             case "aef":
-                presentationLogic.Received().LoadLearningElementViewModel(space, stream);
+                presentationLogic.Received().LoadLearningElementViewModel(space, 0, stream);
                 break;
             case "jpg":
             case "png":
@@ -962,7 +962,7 @@ public class AuthoringToolWorkspacePresenterUt
         
         Assert.That(systemUnderTest.InformationMessageToShow, Is.Not.EqualTo("A learning world must be selected to import a learning element."));
 
-        systemUnderTest.LoadLearningElementFromFileStream(stream);
+        systemUnderTest.LoadLearningElementFromFileStream(stream, 0);
         
         Assert.That(systemUnderTest.InformationMessageToShow, Is.EqualTo("A learning world must be selected to import a learning element."));
     }
@@ -983,7 +983,7 @@ public class AuthoringToolWorkspacePresenterUt
         
         var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspace, learningSpacePresenter: spacePresenter);
         
-        systemUnderTest.LoadLearningElementFromFileStream(stream);
+        systemUnderTest.LoadLearningElementFromFileStream(stream, 0);
 
         Assert.That(systemUnderTest.InformationMessageToShow, Is.EqualTo("Learning elements can only get loaded into learning spaces."));
         Assert.Pass();
@@ -1005,7 +1005,7 @@ public class AuthoringToolWorkspacePresenterUt
         
         var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspace, learningSpacePresenter: spacePresenter);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.LoadLearningElementFromFileStream(stream));
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.LoadLearningElementFromFileStream(stream, 0));
         Assert.That(ex!.Message, Is.EqualTo("ShowingLearningSpaceView for LearningWorld 'n' is true, but LearningSpaceVm in LearningSpacePresenter is null"));
     }
     
@@ -1030,11 +1030,11 @@ public class AuthoringToolWorkspacePresenterUt
             learningSpacePresenter: spacePresenter);
         var stream = Substitute.For<Stream>();
 
-        systemUnderTest.LoadLearningElementFromFileStream(stream);
+        systemUnderTest.LoadLearningElementFromFileStream(stream, 0);
         
         if (showingLearningSpaceView)
         {
-            presentationLogic.Received().LoadLearningElementViewModel(existingLearningSpace, stream);
+            presentationLogic.Received().LoadLearningElementViewModel(existingLearningSpace, 0, stream);
         }
     }
 

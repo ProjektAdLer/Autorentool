@@ -6,10 +6,11 @@ namespace PersistEntities;
 [DataContract]
 [KnownType(typeof(PathWayConditionPe))]
 [KnownType(typeof(LearningSpacePe))]
+[KnownType(typeof(LearningSpaceLayoutPe))]
 public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
 {
     public LearningSpacePe(string name, string shortname, string authors, string description, string goals,
-        int requiredPoints, List<LearningElementPe>? learningElements = null, double positionX = 0, double positionY = 0,
+        int requiredPoints, ILearningSpaceLayoutPe? learningSpaceLayout = null, double positionX = 0, double positionY = 0,
         List<IObjectInPathWayPe>? inBoundObjects = null, List<IObjectInPathWayPe>? outBoundObjects = null)
     {
         Id = Guid.NewGuid();
@@ -19,7 +20,7 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
         Description = description;
         Goals = goals;
         RequiredPoints = requiredPoints;
-        LearningElements = learningElements ?? new List<LearningElementPe>();
+        LearningSpaceLayout = learningSpaceLayout ?? new LearningSpaceLayoutPe(null, null);
         InBoundObjects = inBoundObjects ?? new List<IObjectInPathWayPe>();
         OutBoundObjects = outBoundObjects ?? new List<IObjectInPathWayPe>();
         PositionX = positionX;
@@ -38,7 +39,7 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
         Description = "";
         Goals = "";
         RequiredPoints = 0;
-        LearningElements = new List<LearningElementPe>();
+        LearningSpaceLayout = new LearningSpaceLayoutPe(null, null);
         InBoundObjects = new List<IObjectInPathWayPe>();
         OutBoundObjects = new List<IObjectInPathWayPe>();
         PositionX = 0;
@@ -60,7 +61,7 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
     [DataMember]
     public int RequiredPoints { get; set; }
     [DataMember]
-    public List<LearningElementPe> LearningElements { get; set; }
+    public ILearningSpaceLayoutPe LearningSpaceLayout { get; set; }
     [IgnoreDataMember]
     public List<IObjectInPathWayPe> InBoundObjects { get; set; }
     [IgnoreDataMember]

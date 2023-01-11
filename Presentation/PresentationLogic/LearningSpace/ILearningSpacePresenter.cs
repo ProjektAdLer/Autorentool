@@ -3,6 +3,7 @@ using Presentation.Components;
 using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
+using Shared;
 
 namespace Presentation.PresentationLogic.LearningSpace;
 
@@ -17,8 +18,9 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     ILearningSpaceViewModel? LearningSpaceVm { get; }
     void SetSelectedLearningElement(ILearningElementViewModel learningElement);
     void DeleteSelectedLearningElement();
+    void AddNewLearningElement(int slotIndex);
     void AddNewLearningElement();
-    Task LoadLearningElementAsync();
+    Task LoadLearningElementAsync(int slotIndex);
     Task SaveSelectedLearningElementAsync();
     Task ShowSelectedElementContentAsync();
     void OnCreateElementDialogClose(ModalDialogOnCloseResult returnValueTuple);
@@ -35,7 +37,9 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     void ClickedLearningElement(ILearningElementViewModel obj);
     void RightClickedLearningElement(ILearningElementViewModel obj);
     void EditLearningElement(ILearningElementViewModel obj);
+    void EditLearningElement(int slotIndex);
     void DeleteLearningElement(ILearningElementViewModel obj);
     void HideRightClickMenu();
     void ShowElementContent(ILearningElementViewModel obj);
+    void SetLearningSpaceLayout(FloorPlanEnum floorPlanName);
 }
