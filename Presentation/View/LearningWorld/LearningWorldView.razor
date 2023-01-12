@@ -81,28 +81,29 @@
     This line brings the RightClickMenu back to top, but the clickable buttons do not work anymore. -->
     <!--<use xlink:href="#rightClickMenu" />-->
 </svg>
-    //create space modal
-    @if (LearningWorldP.CreateLearningSpaceDialogOpen)
+
+@if (LearningWorldP.CreateLearningSpaceDialogOpen)
     {
+        //create space modal
         @ModalDialogFactory.GetCreateLearningSpaceFragment(OnCreateSpaceDialogClose)
     }
-    
-    //create pathway condition modal
+
     @if (LearningWorldP.CreatePathWayConditionDialogOpen)
     {
+        //create pathway condition modal
         @ModalDialogFactory.GetCreatePathWayConditionFragment(OnCreatePathWayConditionDialogClose)
     }
-    
-    //edit space modal
+
     @if (LearningWorldP.EditLearningSpaceDialogOpen && LearningWorldP.LearningWorldVm != null)
     {
+        //edit space modal
         <!-- EditSpaceDialogInitialValues is set by presenter before setting EditLearningSpaceDialogOpen to true -->
         @ModalDialogFactory.GetEditLearningSpaceFragment(LearningWorldP.EditSpaceDialogInitialValues!, OnEditSpaceDialogClose, LearningWorldP.EditSpaceDialogAnnotations)
     }
-    
-    //edit pathway condition modal
+
     @if (LearningWorldP.EditPathWayConditionDialogOpen && LearningWorldP.LearningWorldVm != null)
     {
+        //edit pathway condition modal
         <!-- EditConditionDialogInitialValues is set by presenter before setting EditPathWayConditionDialogOpen to true -->
         @ModalDialogFactory.GetEditPathWayConditionFragment(LearningWorldP.EditConditionDialogInitialValues!, OnEditPathWayConditionDialogClose)
     }
@@ -112,7 +113,6 @@
         <ModalDialog Title="Exception encountered" Text=@ErrorState.ToString()
                      OnClose="@ErrorDialogOnClose" DialogType=@ModalDialogType.Ok/>
     }
-}
 
 @code {
 

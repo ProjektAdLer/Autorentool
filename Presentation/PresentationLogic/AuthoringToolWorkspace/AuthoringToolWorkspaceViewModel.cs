@@ -25,6 +25,12 @@ public class AuthoringToolWorkspaceViewModel : IAuthoringToolWorkspaceViewModel
     /// <inheritdoc cref="IAuthoringToolWorkspaceViewModel.LearningWorlds"/>
     public IList<LearningWorldViewModel> LearningWorlds => _learningWorlds;
 
+    /// <inheritdoc cref="ILearningWorldNamesProvider.WorldNames"/>
+    public IEnumerable<string> WorldNames => _learningWorlds.Select(world => world.Name);
+    
+    /// <inheritdoc cref="ILearningWorldNamesProvider.WorldShortNames"/>
+    public IEnumerable<string> WorldShortNames => _learningWorlds.Select(world => world.Shortname);
+
     /// <inheritdoc cref="IAuthoringToolWorkspaceViewModel.RemoveLearningWorld"/>
     public void RemoveLearningWorld(LearningWorldViewModel learningWorld)
     {

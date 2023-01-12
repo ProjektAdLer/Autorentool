@@ -1,5 +1,6 @@
 @using Presentation.View.Layout
 @using Presentation.View.LearningWorld
+@using Presentation.Components.Forms
 @using Presentation.View.LearningSpace
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningSpace
@@ -59,7 +60,15 @@
                             <LearningWorldOverView></LearningWorldOverView>
                         </MainContent>
                     </SidebarItem>
-                </Sidebar>
+                <SidebarItem>
+                    <SidebarContent>
+                        <MudIcon Icon="@Icons.Material.Filled.PlusOne"></MudIcon>
+                    </SidebarContent>
+                    <MainContent>
+                        <CreateWorldForm/>
+                    </MainContent>
+                </SidebarItem>
+            </Sidebar>
             </SideContainer>
     </MudDropContainer>
 </div>
