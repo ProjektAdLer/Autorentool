@@ -1,0 +1,89 @@
+@using Microsoft.AspNetCore.Components
+@using FluentValidation
+@using Severity = MudBlazor.Severity
+@typeparam T where T : new()
+<MudCard>
+    <MudForm Model="@Model" @ref="@_form" Validation="@ValidateModel">
+        <MudCardContent>
+            @ChildContent
+            @if (SubmitErrorMessage != null)
+            {
+                <div class="mt-2">
+                    <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">@SubmitErrorMessage</MudAlert>
+                </div>
+            }
+        </MudCardContent>
+    </MudForm>
+    <MudCardActions>
+        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="@(async () => await SubmitAsync())">Create</MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="@(Reset)">Reset</MudButton>
+    </MudCardActions>
+</MudCard>
+
+@code {
+#pragma warning disable CS8618 - injected by framework - n.stich
+    [Inject]
+    private IValidator<T> Validator { get; set; }
+    [Inject]
+    private ISnackbar Snackbar { get; set; }
+#pragma warning restore CS8618
+    
+    [Parameter, EditorRequired]
+    public EventCallback<T> OnValidSubmit { get; set; }
+#pragma warning disable CS8618 - provided by framework - n.stich
+    [Parameter]
+    public RenderFragment ChildContent { get; set; }
+#pragma warning restore CS8618
+    
+#pragma warning disable CS8618 - set in OnInitialized and by framework via @ref - n.stich
+    private MudForm _form;
+    public T Model { get; private set; }
+#pragma warning restore CS8618
+    
+    private string? SubmitErrorMessage { get; set; }
+
+    //Wrapper function around ValidateAsync to only validate a given property
+    //We must use object here and cast to T later because MudBlazor field validation expects a Func<obj, str, Task<...>>
+    //If we want to do Func<T, Task<IEnumerable<string>> then we have to handle every type of field separately, 
+    //for example for T=string for text inputs, T=int for number inputs etc.
+    //By the way, this information is not written anywhere in the documentation and I had to dive pretty deep into the
+    //framework to find this out :) - n.stich
+    private Func<object, string, Task<IEnumerable<string>>> ValidateModel => async (model, propertyName) =>
+    {
+        var result = await Validator.ValidateAsync(
+            ValidationContext<T>.CreateWithOptions((T)model,
+                x => x.IncludeProperties(propertyName))
+            );
+        return result.IsValid ? Enumerable.Empty<string>() : result.Errors.Select(e => e.ErrorMessage);
+    };
+
+    private void Reset()
+    {
+        Model = new T();
+        _form.Reset();
+    }
+    
+    private async Task SubmitAsync()
+    {
+        await _form.Validate();
+        if (_form.IsValid)
+        {
+            try
+            {
+                await OnValidSubmit.InvokeAsync(Model);
+            }
+            catch (Exception e)
+            {
+                SubmitErrorMessage = $"An error has occured trying to submit the form: {e.Message}";
+            }
+            Snackbar.Add("World added!");
+            Reset();
+        }
+    }
+    
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        Model = new T();
+    }
+}

@@ -1,116 +1,52 @@
-@using FluentValidation
-@using Microsoft.AspNetCore.Components
 @using Presentation.Components.Forms.Models
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
-@using Presentation.PresentationLogic.LearningWorld
-@using Severity = MudBlazor.Severity
-<MudCard>
-    <MudForm Model="@_model" @ref="@_form" Validation="@ValidateModel">
-        <MudCardContent>
-            <MudTextField @bind-Value="_model.Name"
-                          For="@(() => _model.Name)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label="@nameof(_model.Name)"/>
-            <MudTextField @bind-Value="_model.Shortname"
-                          For="@(() => _model.Shortname)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label="@nameof(_model.Shortname)"/>
-            <MudTextField @bind-Value="_model.Authors"
-                          For="@(() => _model.Authors)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label="@nameof(_model.Authors)"/>
-            <MudTextField @bind-Value="_model.Language"
-                          For="@(() => _model.Language)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label="@nameof(_model.Language)"/>
-            <MudTextField @bind-Value="_model.Description"
-                          For="@(() => _model.Description)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label="@nameof(_model.Description)"/>
-            <MudTextField @bind-Value="_model.Goals"
-                          For="@(() => _model.Goals)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label="@nameof(_model.Goals)"/>
-            @if (SubmitErrorMessage != null)
-            {
-                <div class="mt-2">
-                    <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">@SubmitErrorMessage</MudAlert>
-                </div>
-            }
-        </MudCardContent>
-    </MudForm>
-    <MudCardActions>
-        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="@(async () => await SubmitAsync())">Create</MudButton>
-    </MudCardActions>
-</MudCard>
+<BaseForm T="LearningWorldFormModel" @ref="_form" OnValidSubmit="OnValidSubmit">
+    <MudTextField @bind-Value="Model.Name"
+                  For="@(() => Model.Name)"
+                  Immediate="true"
+                  DebounceInterval="300"
+                  Label="@nameof(Model.Name)"/>
+    <MudTextField @bind-Value="Model.Shortname"
+                  For="@(() => Model.Shortname)"
+                  Immediate="true"
+                  DebounceInterval="300"
+                  Label="@nameof(Model.Shortname)"/>
+    <MudTextField @bind-Value="Model.Authors"
+                  For="@(() => Model.Authors)"
+                  Immediate="true"
+                  DebounceInterval="300"
+                  Label="@nameof(Model.Authors)"/>
+    <MudTextField @bind-Value="Model.Language"
+                  For="@(() => Model.Language)"
+                  Immediate="true"
+                  DebounceInterval="300"
+                  Label="@nameof(Model.Language)"/>
+    <MudTextField @bind-Value="Model.Description"
+                  For="@(() => Model.Description)"
+                  Immediate="true"
+                  DebounceInterval="300"
+                  Label="@nameof(Model.Description)"/>
+    <MudTextField @bind-Value="Model.Goals"
+                  For="@(() => Model.Goals)"
+                  Immediate="true"
+                  DebounceInterval="300"
+                  Label="@nameof(Model.Goals)"/>
+</BaseForm>
 @code {
-    
 #pragma warning disable CS8618 - injected by framework - n.stich
-    [Inject]
-    private IValidator<LearningWorldFormModel> Validator { get; set; }
-    [Inject]
-    private ISnackbar Snackbar { get; set; }
     [Inject]
     private IPresentationLogic PresentationLogic { get; set; }
     [Inject]
     private IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceViewModel { get; set; }
-    [Inject]
-    private ILearningWorldPresenter LearningWorldPresenter { get; set; }
-    [Inject]
-    private IAuthoringToolWorkspacePresenter AuthoringToolWorkspacePresenter { get; set; }
 #pragma warning restore CS8618
 
-#pragma warning disable CS8618 - set in OnInitialized and by framework - n.stich
-    private LearningWorldFormModel _model;
-    private MudForm _form;
-#pragma warning restore CS8618
-    
-    private string? SubmitErrorMessage { get; set; }
-    
-    //Wrapper function around ValidateAsync to only validate a given property
-    //We must use object here and cast to T later because MudBlazor field validation expects a Func<obj, str, Task<...>>
-    //If we want to do Func<T, Task<IEnumerable<string>> then we have to handle every type of field separately, 
-    //for example for T=string for text inputs, T=int for number inputs etc.
-    //By the way, this information is not written anywhere in the documentation and I had to dive pretty deep into the
-    //framework to find this out :) - n.stich
-    public Func<object, string, Task<IEnumerable<string>>> ValidateModel => async (model, propertyName) =>
+    private BaseForm<LearningWorldFormModel> _form;
+    private LearningWorldFormModel Model => _form.Model;
+
+    private void OnValidSubmit(LearningWorldFormModel model)
     {
-        var result = await Validator.ValidateAsync(ValidationContext<LearningWorldFormModel>.CreateWithOptions((LearningWorldFormModel)model, x => x.IncludeProperties(propertyName)));
-        return result.IsValid ? Enumerable.Empty<string>() : result.Errors.Select(e => e.ErrorMessage);
-    };
-    
-    private async Task SubmitAsync()
-    {
-        await _form.Validate();
-        if (_form.IsValid)
-        {
-            //call presentationlogic here and begin command
-            try
-            {
-                PresentationLogic.CreateLearningWorld(AuthoringToolWorkspaceViewModel, _model.Name, _model.Shortname, _model.Authors, _model.Language, _model.Description, _model.Goals);
-            }
-            catch (Exception e)
-            {
-                SubmitErrorMessage = $"An error has occured trying to submit the form: {e.Message}";
-            }
-            Snackbar.Add("Added!");
-            _model = new LearningWorldFormModel();
-            _form.Reset();
-        }
+        PresentationLogic.CreateLearningWorld(AuthoringToolWorkspaceViewModel, model.Name, model.Shortname,
+            model.Authors, model.Language, model.Description, model.Goals);
     }
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        _model = new LearningWorldFormModel();
-    }
-
-
 }
