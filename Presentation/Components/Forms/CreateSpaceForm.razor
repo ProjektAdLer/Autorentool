@@ -1,0 +1,52 @@
+@using Presentation.Components.Forms.Models
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+<BaseForm T="LearningSpaceFormModel" @ref="_form" OnValidSubmit="OnValidSubmit">
+    <MudTextField @bind-Value="Model.Name"
+                  For="@(() => Model.Name)"
+                  Immediate="true"
+                  DebounceInterval="300"
+                  Label="@nameof(Model.Name)"/>
+    <MudTextField @bind-Value="Model.Shortname"
+                  For="@(() => Model.Shortname)"
+                  Immediate="true"
+                  DebounceInterval="300"
+                  Label="@nameof(Model.Shortname)"/>
+    <MudTextField @bind-Value="Model.Authors"
+                  For="@(() => Model.Authors)"
+                  Immediate="true"
+                  DebounceInterval="300"
+                  Label="@nameof(Model.Authors)"/>
+    <MudTextField @bind-Value="Model.Description"
+                  For="@(() => Model.Description)"
+                  Immediate="true"
+                  DebounceInterval="300"
+                  Label="@nameof(Model.Description)"/>
+    <MudTextField @bind-Value="Model.Goals"
+                  For="@(() => Model.Goals)"
+                  Immediate="true"
+                  DebounceInterval="300"
+                  Label="@nameof(Model.Goals)"/>
+    <MudNumericField @bind-Value="Model.RequiredPoints"
+                     For="@(() => Model.RequiredPoints)"
+                     Immediate="true"
+                     DebounceInterval="300"
+                     Label="@nameof(Model.RequiredPoints)"/>
+</BaseForm>
+@code {
+#pragma warning disable CS8618 - injected by framework - n.stich
+    [Inject]
+    private IPresentationLogic PresentationLogic { get; set; }
+    [Inject]
+    private IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceViewModel { get; set; }
+#pragma warning restore CS8618
+
+    private BaseForm<LearningSpaceFormModel> _form;
+    private LearningSpaceFormModel Model => _form.Model;
+
+    private void OnValidSubmit(LearningSpaceFormModel model)
+    {
+        throw new NotImplementedException();
+    }
+
+}
