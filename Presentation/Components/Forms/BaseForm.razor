@@ -30,6 +30,8 @@
     
     [Parameter, EditorRequired]
     public EventCallback<T> OnValidSubmit { get; set; }
+    [Parameter, EditorRequired]
+    public string SnackbarMessage { get; set; }
 #pragma warning disable CS8618 - provided by framework - n.stich
     [Parameter]
     public RenderFragment ChildContent { get; set; }
@@ -76,9 +78,14 @@
             {
                 SubmitErrorMessage = $"An error has occured trying to submit the form: {e.Message}";
             }
-            Snackbar.Add("World added!");
+            Snackbar.Add(SnackbarMessage);
             Reset();
         }
+    }
+
+    internal async Task Validate()
+    {
+        await _form.Validate();
     }
     
     protected override void OnInitialized()

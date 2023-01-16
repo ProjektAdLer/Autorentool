@@ -1,7 +1,7 @@
 @using Presentation.Components.Forms.Models
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
-<BaseForm T="LearningWorldFormModel" @ref="_form" OnValidSubmit="OnValidSubmit">
+<BaseForm T="LearningWorldFormModel" @ref="_form" OnValidSubmit="OnValidSubmit" SnackbarMessage="World created">
     <MudTextField @bind-Value="Model.Name"
                   For="@(() => Model.Name)"
                   Immediate="true"

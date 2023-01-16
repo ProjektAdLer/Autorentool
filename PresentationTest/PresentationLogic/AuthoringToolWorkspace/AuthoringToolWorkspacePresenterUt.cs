@@ -21,6 +21,8 @@ namespace PresentationTest.PresentationLogic.AuthoringToolWorkspace;
 [TestFixture]
 public class AuthoringToolWorkspacePresenterUt
 {
+    private IAuthoringToolWorkspaceViewModel _authoringToolWorkspaceViewModel;
+
     [Test]
     public void StandardConstructor_AllPropertiesInitialized()
     {
@@ -1052,7 +1054,7 @@ public class AuthoringToolWorkspacePresenterUt
         learningSpacePresenter ??= Substitute.For<ILearningSpacePresenter>();
         logger ??= Substitute.For<ILogger<AuthoringToolWorkspacePresenter>>();
         shutdownManager ??= Substitute.For<IShutdownManager>();
-        return new AuthoringToolWorkspacePresenter(authoringToolWorkspaceVm, presentationLogic, learningWorldPresenter,
+        return new AuthoringToolWorkspacePresenter(authoringToolWorkspaceVm, presentationLogic,
             learningSpacePresenter, logger, shutdownManager);
     }
 
@@ -1062,6 +1064,7 @@ public class AuthoringToolWorkspacePresenterUt
         presentationLogic ??= Substitute.For<IPresentationLogic>();
         learningSpacePresenter ??= Substitute.For<ILearningSpacePresenter>();
         logger ??= Substitute.For<ILogger<LearningWorldPresenter>>();
-        return new LearningWorldPresenter(presentationLogic, learningSpacePresenter, logger);
+        _authoringToolWorkspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
+        return new LearningWorldPresenter(presentationLogic, learningSpacePresenter, logger, _authoringToolWorkspaceViewModel);
     }
 }

@@ -86,6 +86,8 @@ public class Startup
         services.AddValidatorsFromAssembly(Assembly.Load("Presentation"));
         services.AddSingleton<ILearningWorldNamesProvider>(p =>
             p.GetService<IAuthoringToolWorkspaceViewModel>() ?? throw new InvalidOperationException());
+        services.AddSingleton<ILearningSpaceNamesProvider>(p =>
+            p.GetService<ILearningWorldPresenter>() ?? throw new InvalidOperationException());
     }
 
     private void ConfigureAuthoringTool(IServiceCollection services)

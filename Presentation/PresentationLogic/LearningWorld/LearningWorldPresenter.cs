@@ -15,11 +15,14 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
 {
     public LearningWorldPresenter(
         IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter,
-        ILogger<LearningWorldPresenter> logger)
+        ILogger<LearningWorldPresenter> logger, IAuthoringToolWorkspaceViewModel authoringToolWorkspaceViewModel)
     {
         _learningSpacePresenter = learningSpacePresenter;
         _presentationLogic = presentationLogic;
         _logger = logger;
+        authoringToolWorkspaceViewModel.PropertyChanged += OnWorkspacePropertyChanged;
+        //first-time update in case a learning world was selected before we were instantiated 
+        LearningWorldVm = authoringToolWorkspaceViewModel.SelectedLearningWorld;
     }
 
     private readonly IPresentationLogic _presentationLogic;
@@ -110,6 +113,14 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         get => _createLearningSpaceDialogOpen;
         private set => SetField(ref _createLearningSpaceDialogOpen, value);
     }
+
+    /// <inheritdoc cref="ILearningSpaceNamesProvider.LearningSpaceNames"/>
+    public IEnumerable<string>? LearningSpaceNames =>
+        LearningWorldVm?.LearningSpaces.Select(space => space.Name);
+
+    /// <inheritdoc cref="ILearningSpaceNamesProvider.LearningSpaceShortnames"/>
+    public IEnumerable<string>? LearningSpaceShortnames =>
+        LearningWorldVm?.LearningSpaces.Select(space => space.Shortname);
 
     public event Action OnUndoRedoPerformed
     {
@@ -385,7 +396,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         if (LearningWorldVm.SelectedLearningObject == null)
-                throw new ApplicationException("SelectedLearningSpace is null");
+            throw new ApplicationException("SelectedLearningSpace is null");
             
         await _presentationLogic.SaveLearningSpaceAsync((LearningSpaceViewModel)LearningWorldVm.SelectedLearningObject);
     }

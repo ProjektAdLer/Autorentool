@@ -1,33 +1,41 @@
 using FluentValidation;
 using Presentation.Components.Forms.Models;
+using Presentation.PresentationLogic.LearningWorld;
 
 namespace Presentation.Components.Forms.Validators;
 
 public class LearningSpaceValidator : AbstractValidator<LearningSpaceFormModel>
 {
-    public LearningSpaceValidator()
+    private ILearningSpaceNamesProvider LearningSpaceNamesProvider { get; }
+
+    public LearningSpaceValidator(ILearningSpaceNamesProvider learningSpaceNamesProvider)
     {
+        LearningSpaceNamesProvider = learningSpaceNamesProvider;
         RuleFor(x => x.Name)
             .NotEmpty()
             .Length(4, 100)
-            .Must(IsUniqueName)
+            .Must(IsUniqueNameInWorld)
             .WithMessage("Already in use.");
         RuleFor(x => x.Shortname)
             .MaximumLength(30)
-            .Must(IsUniqueShortName)
+            .Must(IsUniqueShortNameInWorld)
             .WithMessage("Already in use.");
         RuleFor(x => x.RequiredPoints)
             .NotEmpty()
             .GreaterThanOrEqualTo(0);
     }
 
-    private bool IsUniqueName(string arg)
+    private bool IsUniqueNameInWorld(string arg)
     {
-        throw new NotImplementedException();
+        return !LearningSpaceNamesProvider
+            .LearningSpaceNames
+            ?.Contains(arg) ?? throw new ValidationException("No learning world selected.");
     }
     
-    private bool IsUniqueShortName(string arg)
+    private bool IsUniqueShortNameInWorld(string arg)
     {
-        throw new NotImplementedException();
+        return !LearningSpaceNamesProvider
+            .LearningSpaceShortnames
+            ?.Contains(arg) ?? throw new ValidationException("No learning world selected.");
     }
 }

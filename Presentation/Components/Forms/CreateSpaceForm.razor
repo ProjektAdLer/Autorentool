@@ -1,7 +1,10 @@
 @using Presentation.Components.Forms.Models
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
-<BaseForm T="LearningSpaceFormModel" @ref="_form" OnValidSubmit="OnValidSubmit">
+@using System.ComponentModel
+@implements IDisposable
+@implements IAsyncDisposable
+<BaseForm T="LearningSpaceFormModel" @ref="_form" OnValidSubmit="OnValidSubmit" SnackbarMessage="Space created">
     <MudTextField @bind-Value="Model.Name"
                   For="@(() => Model.Name)"
                   Immediate="true"
@@ -46,7 +49,34 @@
 
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
-        throw new NotImplementedException();
+        if (AuthoringToolWorkspaceViewModel.SelectedLearningWorld == null) throw new InvalidOperationException("No learning world selected.");
+        PresentationLogic.CreateLearningSpace(AuthoringToolWorkspaceViewModel.SelectedLearningWorld, Model.Name,
+            Model.Shortname, Model.Authors, Model.Description,
+            //ignore null warning here because validation ensures that RequiredPoints is not null - n.stich
+            Model.Goals, (int)Model.RequiredPoints!, 0, 0);
+    }
+
+    protected override void OnInitialized()
+    {
+        AuthoringToolWorkspaceViewModel.PropertyChanged += OnWorkspaceViewModelChange;
+        base.OnInitialized();
+    }
+
+    private async void OnWorkspaceViewModelChange(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)
+    {
+        if(propertyChangedEventArgs.PropertyName == nameof(AuthoringToolWorkspaceViewModel.SelectedLearningWorld))
+            await _form.Validate();
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        Dispose();
+        return ValueTask.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        AuthoringToolWorkspaceViewModel.PropertyChanged -= OnWorkspaceViewModelChange;
     }
 
 }
