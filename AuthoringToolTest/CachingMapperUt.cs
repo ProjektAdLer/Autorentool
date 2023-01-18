@@ -317,9 +317,15 @@ switch (entity, viewModel)
         Assert.That(spaceViewModel.ContainedLearningElements.Count(), Is.EqualTo(0));
         
         systemUnderTest.Map(space, spaceViewModel);
-        
-        Assert.That(spaceViewModel.ContainedLearningElements.Count(), Is.EqualTo(1));
-        Assert.That(spaceViewModel.ContainedLearningElements.First(), Is.EqualTo(elementViewModel));
+        Assert.Multiple(() =>
+        {
+            Assert.That(spaceViewModel.ContainedLearningElements.Count(), Is.EqualTo(1));
+            Assert.That(spaceViewModel.ContainedLearningElements.First().Id, Is.EqualTo(elementViewModel.Id));
+            Assert.That(spaceViewModel.ContainedLearningElements.First().Name, Is.EqualTo(elementViewModel.Name));
+            Assert.That(spaceViewModel.ContainedLearningElements.First(), Is.EqualTo(elementViewModel));
+            Assert.That(spaceViewModel.ContainedLearningElements.First(), Is.EqualTo(systemUnderTest.ReadOnlyCache[elementEntity.Id]));
+            Assert.That(elementViewModel, Is.EqualTo(systemUnderTest.ReadOnlyCache[elementEntity.Id]));
+        });
     }
     
     [Test]

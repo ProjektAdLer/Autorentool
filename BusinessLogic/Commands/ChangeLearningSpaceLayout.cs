@@ -27,7 +27,6 @@ public class ChangeLearningSpaceLayout : IUndoCommand
         {
             newLearningElementArray[i] = LearningSpace.LearningSpaceLayout.LearningElements[i];
         }
-        // var newLearningSpaceLayout = new LearningSpaceLayout(newLearningElementArray, FloorPlanName);
         LearningSpace.LearningSpaceLayout.LearningElements = newLearningElementArray;
         LearningSpace.LearningSpaceLayout.FloorPlanName = FloorPlanName;
         

@@ -4,6 +4,8 @@
 @using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.ModalDialog
 @using System.ComponentModel
+@using MudBlazor.Extensions
+@using Presentation.PresentationLogic.LearningElement
 @using Shared
 
 <h2>LearningSpace @LearningSpaceP.LearningSpaceVm?.Name</h2>
@@ -14,6 +16,21 @@
 <h1>Anzahl Lernelemente: @LearningSpaceP.LearningSpaceVm?.LearningSpaceLayout.Count</h1>
 @ChildContent
 <br>
+    
+<MudDropZone T="ILearningElementViewModel" Identifier="unplacedElements"
+             Class="rounded-lg border-2 border-solid mud-border-lines-default p-6 m-8 w-28 min-h-1 flex justify-center items-center flex-col">
+        <ItemRenderer>
+            @{
+                var item = (ILearningElementViewModel) context;
+                var text = item.Name + " " + item.Parent?.Name;
+            }
+            <MudListItem Text="@text"></MudListItem>
+    
+        </ItemRenderer>
+</MudDropZone>
+    
+@if(LearningSpaceP.LearningSpaceVm != null)
+{
 
 @if (LearningSpaceP.LearningSpaceVm?.SelectedLearningElement != null)
 {
@@ -29,7 +46,7 @@
     <button class="btn btn-primary show-element-content" @onclick="ShowSelectedElementContentAsync">Show content of Learning Element</button>
 }
 <br>
-Select learning world:
+    <p>Select learning world:</p>
     <select @onchange="args => SetLearningSpaceLayout(args.Value!.ToString())"
             value="@(LearningSpaceP.LearningSpaceVm?.LearningSpaceLayout.FloorPlanName)">
         @foreach (var floorPlan in Enum.GetValues(typeof(FloorPlanEnum)).Cast<FloorPlanEnum>())
@@ -43,6 +60,11 @@ Select learning world:
     @for (var i = 0; i<LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.Capacity;  i++)
     {
         var x = i;
+        var identifier = LearningSpaceP.LearningSpaceVm.Id.ToString() + x;
+        
+            
+        
+        
         if (LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.GetElement(i) != null)
         {
             <MudButton
@@ -59,6 +81,18 @@ Select learning world:
                 Slot @x
             </MudButton>
         }
+        <MudDropZone T="ILearningElementViewModel" Identifier="@identifier"
+                     Class="rounded-lg border-2 border-solid mud-border-lines-default p-6 m-8 w-28 h-3 flex justify-center items-center"
+                     @onclick="() => AddNewLearningElement(x)">
+            <ItemRenderer>
+                <DragDropLearningElement 
+                    LearningElement="@context" 
+                    OnEditLearningElement="@LearningSpaceP.EditLearningElement" 
+                    OnDeleteLearningElement="@LearningSpaceP.DeleteLearningElement"
+                    OnClicked="@LearningSpaceP.ClickedLearningElement"
+                />
+            </ItemRenderer>
+        </MudDropZone>
     }
 }
 
@@ -105,6 +139,7 @@ Select learning world:
         ?? throw new InvalidOperationException("LearningSpacePresenter.EditLearningSpaceDialogInitialValues unexpectedly null"),
         OnEditElementDialogClose)
 }
+}
 
 
 @code {
@@ -136,7 +171,10 @@ Select learning world:
     
     private void AddNewLearningElement(int slotIndex)
     {
-        LearningSpaceP.AddNewLearningElement(slotIndex);
+        if (LearningSpaceP.LearningSpaceVm?.LearningSpaceLayout.GetElement(slotIndex) == null)
+        {
+            LearningSpaceP.AddNewLearningElement(slotIndex);
+        }
     }
 
     private void AddNewLearningElement()
@@ -254,6 +292,24 @@ Select learning world:
         Enum.TryParse(floorPlanName, out FloorPlanEnum floorPlan);
         LearningSpaceP.SetLearningSpaceLayout(floorPlan);
         InvokeAsync(StateHasChanged);
+    }
+
+    private Task RightClickedDropItem(MouseEventArgs mouseEventArgs, ILearningElementViewModel item)
+    {
+        LearningSpaceP.RightClickedLearningElement(item);
+        return Task.CompletedTask;
+    }
+
+    private Task DeleteRightClickedLearningElement(ILearningElementViewModel item)
+    {
+        LearningSpaceP.DeleteLearningElement(item);
+        return Task.CompletedTask;
+    }
+
+    private Task EditRightClickedLearningElement(ILearningElementViewModel item)
+    {
+        LearningSpaceP.EditLearningElement(item);
+        return Task.CompletedTask;
     }
 
 }

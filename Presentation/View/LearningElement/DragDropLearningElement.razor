@@ -1,0 +1,44 @@
+﻿@using Presentation.PresentationLogic.LearningElement
+<MudMenu ActivationEvent="MouseEvent.RightClick" PositionAtCursor="true" @onclick="() => OnClicked.InvokeAsync(LearningElement)">
+    <ActivatorContent>
+        <MudCard >
+            @{
+                var item = LearningElement;
+                var text = item.Name;
+            }
+            <MudListItem Text="@text"></MudListItem>
+        </MudCard>
+    </ActivatorContent>
+    <ChildContent>
+        <MudMenuItem OnClick="() => OnEditLearningElement.InvokeAsync(LearningElement)">Edit</MudMenuItem>
+        <MudMenuItem OnClick="() => OnDeleteLearningElement.InvokeAsync(LearningElement)">Delete</MudMenuItem>
+    </ChildContent>
+</MudMenu>
+
+@code {
+
+    [Parameter, EditorRequired]
+    public ILearningElementViewModel LearningElement { get; set; } = null!;
+
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningElementViewModel> OnEditLearningElement { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningElementViewModel> OnDeleteLearningElement { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningElementViewModel> OnClicked { get; set; }
+
+    [Parameter]
+    public EventCallback<ILearningElementViewModel> OnDoubleClicked { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (LearningElement is null)
+        {
+            throw new ArgumentNullException(nameof(LearningElement));
+        }
+    }
+
+}
