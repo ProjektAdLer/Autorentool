@@ -5,16 +5,23 @@
 /// </summary>
 public class TopicJson : ITopicJson
 {
+    public TopicJson(int topicId, string name, IdentifierJson identifier, List<int> topicContent)
+    {
+        TopicId = topicId;
+        Name = name;
+        Identifier = identifier;
+        TopicContent = topicContent;
+    }
+    
     // incremented id for all topics
-    public int? TopicId { get; set; }
+    public int TopicId { get; set; }
     
     // the name of the topic
-    public string? Name { get; set; }
+    public string Name { get; set; }
     
     // the identifier has the name of the element, this information is needed for the API calls from the 2D3D Team.
-    public IdentifierJson? Identifier {get; set; }
+    public IdentifierJson Identifier {get; set; }
     
     // Which spaces are in a topic
-    public List<int>? TopicContent { get; set; }
-
+    public List<int> TopicContent { get; set; }
 }

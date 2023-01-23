@@ -10,7 +10,8 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
 {
     public LearningSpacePe(string name, string shortname, string authors, string description, string goals,
         int requiredPoints, List<LearningElementPe>? learningElements = null, double positionX = 0, double positionY = 0,
-        List<IObjectInPathWayPe>? inBoundObjects = null, List<IObjectInPathWayPe>? outBoundObjects = null)
+        List<IObjectInPathWayPe>? inBoundObjects = null, List<IObjectInPathWayPe>? outBoundObjects = null,
+        TopicPe? assignedTopic = null)
     {
         Id = Guid.NewGuid();
         Name = name;
@@ -22,6 +23,7 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
         LearningElements = learningElements ?? new List<LearningElementPe>();
         InBoundObjects = inBoundObjects ?? new List<IObjectInPathWayPe>();
         OutBoundObjects = outBoundObjects ?? new List<IObjectInPathWayPe>();
+        AssignedTopic = assignedTopic;
         PositionX = positionX;
         PositionY = positionY;
     }
@@ -41,6 +43,7 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
         LearningElements = new List<LearningElementPe>();
         InBoundObjects = new List<IObjectInPathWayPe>();
         OutBoundObjects = new List<IObjectInPathWayPe>();
+        AssignedTopic = null;
         PositionX = 0;
         PositionY = 0;
     }
@@ -65,6 +68,8 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
     public List<IObjectInPathWayPe> InBoundObjects { get; set; }
     [IgnoreDataMember]
     public List<IObjectInPathWayPe> OutBoundObjects { get; set; }
+    [DataMember]
+    public TopicPe? AssignedTopic { get; set; }
     [DataMember]
     public double PositionX { get; set; }
     [DataMember]

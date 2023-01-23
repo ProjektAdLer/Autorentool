@@ -9,7 +9,8 @@ namespace PersistEntities;
 public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
 {
     public LearningWorldPe(string name, string shortname, string authors, string language, string description,
-        string goals, List<LearningSpacePe>? learningSpaces = null, List<PathWayConditionPe>? pathWayConditions = null, List<LearningPathwayPe>? learningPathWays = null)
+        string goals, List<LearningSpacePe>? learningSpaces = null, List<PathWayConditionPe>? pathWayConditions = null,
+        List<LearningPathwayPe>? learningPathWays = null, List<TopicPe>? topics = null)
     {
         Id = Guid.NewGuid();
         Name = name;
@@ -21,6 +22,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         LearningSpaces = learningSpaces ?? new List<LearningSpacePe>();
         PathWayConditions = pathWayConditions ?? new List<PathWayConditionPe>();
         LearningPathways = learningPathWays ?? new List<LearningPathwayPe>();
+        Topics = topics ?? new List<TopicPe>();
     }
 
     /// <summary>
@@ -38,6 +40,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         LearningSpaces = new List<LearningSpacePe>();
         PathWayConditions = new List<PathWayConditionPe>();
         LearningPathways = new List<LearningPathwayPe>();
+        Topics = new List<TopicPe>();
     }
     
     [IgnoreDataMember]
@@ -51,6 +54,8 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
     public List<PathWayConditionPe> PathWayConditions { get; set; }
     [IgnoreDataMember]
     public List<IObjectInPathWayPe> ObjectsInPathWaysPe => new List<IObjectInPathWayPe>(LearningSpaces).Concat(PathWayConditions).ToList();
+    [DataMember]
+    public List<TopicPe> Topics { get; set; }
     [DataMember]
     public string Name { get; set; }
     [DataMember]

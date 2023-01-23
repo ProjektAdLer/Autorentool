@@ -33,7 +33,8 @@ public class ReadDslUt
         
         var learningWorldContentJson = new List<int>(){1,2};
         
-        var topicsJson = new TopicJson();
+        var topicsJson = new TopicJson(1, "A", new IdentifierJson("name", "A"), 
+            new List<int> {1, 2});
         var topicsList = new List<TopicJson>(){topicsJson};
 
         var learningSpacesJson1 = new LearningSpaceJson(1, identifierLearningSpaceJson1, 
@@ -52,9 +53,9 @@ public class ReadDslUt
         
         var learningElementJson3 = new LearningElementJson(3,
             identifierLearningElementJson2, "", "", "url",1, learningElementValueList2);
-        
+
         var learningElementJson4 = new LearningElementJson(4,
-            identifierLearningElementJson2, "", "", "label",1, learningElementValueList2);
+            identifierLearningElementJson2, "", "", "label", 1, learningElementValueList2);
 
         var learningElementList = new List<LearningElementJson>(){learningElementJson1, learningElementJson2, learningElementJson3, learningElementJson4};
         
@@ -108,7 +109,8 @@ public class ReadDslUt
         var mockFileSystem = new MockFileSystem();
 
         var identifierLearningWorldJson = new IdentifierJson("name", "World");
-        var topicsJson = new TopicJson();
+        var topicsJson = new TopicJson(1, "A", new IdentifierJson("name", "A"), 
+            new List<int> {1, 2});
         var topicsList = new List<TopicJson>(){topicsJson};
         
      

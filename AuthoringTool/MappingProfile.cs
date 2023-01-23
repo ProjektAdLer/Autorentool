@@ -295,6 +295,8 @@ public class MappingProfile : Profile
             .ForMember(x => x.OutBoundObjects, opt => opt.Ignore());
         CreateMap<IObjectInPathWay, IObjectInPathWayPe>()
             .ReverseMap();
+        CreateMap<Topic, TopicPe>()
+            .ReverseMap();
 
         CreateMap<LearningElement, LearningElementPe>();
         CreateMap<LearningElementPe, LearningElement>()

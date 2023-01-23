@@ -23,9 +23,11 @@ public class PersistenceCt
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
             "Description", "Goals");
         var initialWorldId = world.Id;
-        var space1 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
+        var topic = new TopicPe("Topic");
+        var initialTopicId = topic.Id;
+        var space1 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5, assignedTopic:topic);
         var initialSpace1Id = space1.Id;
-        var space2 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
+        var space2 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5, assignedTopic:topic);
         var initialSpace2Id = space2.Id;
         var condition1 = new PathWayConditionPe(ConditionEnumPe.Or, 2, 1);
         var initialCondition1Id = condition1.Id;
@@ -37,6 +39,7 @@ public class PersistenceCt
         space1.LearningElements.Add(element);
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
+        world.Topics.Add(topic);
         world.PathWayConditions.Add(condition1);
         world.PathWayConditions.Add(condition2);
         space1.OutBoundObjects.Add(condition1);
@@ -61,6 +64,8 @@ public class PersistenceCt
             .For(obj => obj.LearningSpaces).Exclude(obj => obj.Id)
             .For(obj => obj.LearningSpaces).Exclude(obj => obj.InBoundObjects)
             .For(obj => obj.LearningSpaces).Exclude(obj => obj.OutBoundObjects)
+            .For(obj => obj.LearningSpaces).Exclude(obj => obj.AssignedTopic)
+            .For(obj => obj.Topics).Exclude(obj => obj.Id)
             .For(obj => obj.PathWayConditions).Exclude(obj => obj.Id)
             .For(obj => obj.PathWayConditions).Exclude(obj => obj.InBoundObjects)
             .For(obj => obj.PathWayConditions).Exclude(obj => obj.OutBoundObjects)
@@ -71,6 +76,8 @@ public class PersistenceCt
             .Excluding(obj => obj.LearningPathways));
 
         Assert.That(restoredWorld.LearningSpaces[0].OutBoundObjects, Does.Contain(restoredWorld.PathWayConditions[0]));
+        Assert.That(restoredWorld.LearningSpaces[0].AssignedTopic, Is.EqualTo(restoredWorld.Topics[0]));
+        Assert.That(restoredWorld.LearningSpaces[1].AssignedTopic, Is.EqualTo(restoredWorld.Topics[0]));
         Assert.That(restoredWorld.PathWayConditions[0].InBoundObjects, Does.Contain(restoredWorld.LearningSpaces[0]));
         Assert.That(restoredWorld.PathWayConditions[0].OutBoundObjects, Does.Contain(restoredWorld.LearningSpaces[1]));
         Assert.That(restoredWorld.LearningSpaces[1].InBoundObjects, Does.Contain(restoredWorld.PathWayConditions[0]));
@@ -87,6 +94,7 @@ public class PersistenceCt
         Assert.That(initialWorldId, Is.Not.EqualTo(restoredWorld.Id));
         Assert.That(initialSpace1Id, Is.Not.EqualTo(restoredWorld.LearningSpaces.First().Id));
         Assert.That(initialSpace2Id, Is.Not.EqualTo(restoredWorld.LearningSpaces.Last().Id));
+        Assert.That(initialTopicId, Is.Not.EqualTo(restoredWorld.Topics.First().Id));
         Assert.That(initialElementId, Is.Not.EqualTo(restoredWorld.LearningSpaces.First().LearningElements.First().Id));
         Assert.That(initialCondition1Id, Is.Not.EqualTo(restoredWorld.PathWayConditions.First().Id));
         Assert.That(initialCondition2Id, Is.Not.EqualTo(restoredWorld.PathWayConditions.Last().Id));
@@ -139,9 +147,11 @@ public class PersistenceCt
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
             "Description", "Goals");
         var initialWorldId = world.Id;
-        var space1 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
+        var topic = new TopicPe("Topic");
+        var initialTopicId = topic.Id;
+        var space1 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5, assignedTopic:topic);
         var initialSpace1Id = space1.Id;
-        var space2 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
+        var space2 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5, assignedTopic:topic);
         var initialSpace2Id = space2.Id;
         var condition1 = new PathWayConditionPe(ConditionEnumPe.Or, 2, 1);
         var initialCondition1Id = condition1.Id;
@@ -153,6 +163,7 @@ public class PersistenceCt
         space1.LearningElements.Add(element);
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
+        world.Topics.Add(topic);
         world.PathWayConditions.Add(condition1);
         world.PathWayConditions.Add(condition2);
         space1.OutBoundObjects.Add(condition1);
@@ -176,6 +187,8 @@ public class PersistenceCt
             .For(obj => obj.LearningSpaces).Exclude(obj => obj.Id)
             .For(obj => obj.LearningSpaces).Exclude(obj => obj.InBoundObjects)
             .For(obj => obj.LearningSpaces).Exclude(obj => obj.OutBoundObjects)
+            .For(obj => obj.LearningSpaces).Exclude(obj => obj.AssignedTopic)
+            .For(obj => obj.Topics).Exclude(obj => obj.Id)
             .For(obj => obj.PathWayConditions).Exclude(obj => obj.Id)
             .For(obj => obj.PathWayConditions).Exclude(obj => obj.InBoundObjects)
             .For(obj => obj.PathWayConditions).Exclude(obj => obj.OutBoundObjects)
@@ -186,6 +199,8 @@ public class PersistenceCt
             .Exclude(obj => obj.Id)
             .Excluding(obj => obj.LearningPathways));
         Assert.That(restoredWorld.LearningSpaces[0].OutBoundObjects, Does.Contain(restoredWorld.PathWayConditions[0]));
+        Assert.That(restoredWorld.LearningSpaces[0].AssignedTopic, Is.EqualTo(restoredWorld.Topics[0]));
+        Assert.That(restoredWorld.LearningSpaces[1].AssignedTopic, Is.EqualTo(restoredWorld.Topics[0]));
         Assert.That(restoredWorld.PathWayConditions[0].InBoundObjects, Does.Contain(restoredWorld.LearningSpaces[0]));
         Assert.That(restoredWorld.PathWayConditions[0].OutBoundObjects, Does.Contain(restoredWorld.LearningSpaces[1]));
         Assert.That(restoredWorld.LearningSpaces[1].InBoundObjects, Does.Contain(restoredWorld.PathWayConditions[0]));
@@ -202,6 +217,7 @@ public class PersistenceCt
         Assert.That(initialWorldId, Is.Not.EqualTo(restoredWorld.Id));
         Assert.That(initialSpace1Id, Is.Not.EqualTo(restoredWorld.LearningSpaces.First().Id));
         Assert.That(initialSpace2Id, Is.Not.EqualTo(restoredWorld.LearningSpaces.Last().Id));
+        Assert.That(initialTopicId, Is.Not.EqualTo(restoredWorld.Topics.First().Id));
         Assert.That(initialElementId, Is.Not.EqualTo(restoredWorld.LearningSpaces.First().LearningElements.First().Id));
         Assert.That(initialCondition1Id, Is.Not.EqualTo(restoredWorld.PathWayConditions.First().Id));
         Assert.That(initialCondition2Id, Is.Not.EqualTo(restoredWorld.PathWayConditions.Last().Id));

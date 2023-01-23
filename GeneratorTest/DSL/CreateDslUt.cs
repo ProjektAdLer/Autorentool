@@ -176,15 +176,19 @@ public class CreateDslUt
         var ele5 = new LearningElementPe("e", "b",content5, "","pupup", "g","h", 
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
         
+        var topic1 = new TopicPe("topic1");
+        var topic2 = new TopicPe("topic2");
 
         var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
             null, 0, 0, new List<IObjectInPathWayPe>(), 
-            new List<IObjectInPathWayPe>());
+            new List<IObjectInPathWayPe>(), topic1);
         space1.LearningElements.AddRange(new List<LearningElementPe>{ele1, ele2, ele3, ele4, ele5});
         var space2 = new LearningSpacePe("ff2", "ff", "ff", "ff", "ff", 5, 
-            null, 0, 0, new List<IObjectInPathWayPe>(), new List<IObjectInPathWayPe>());
+            null, 0, 0, new List<IObjectInPathWayPe>(), 
+            new List<IObjectInPathWayPe>(), topic1);
         var space3 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
-            null, 0, 0, new List<IObjectInPathWayPe>(), new List<IObjectInPathWayPe>());
+            null, 0, 0, new List<IObjectInPathWayPe>(),
+            new List<IObjectInPathWayPe>(), topic2);
         var condition1 = new PathWayConditionPe(ConditionEnumPe.And, 0, 0, 
             new List<IObjectInPathWayPe>{space1, space2}, null);
         space1.OutBoundObjects = new List<IObjectInPathWayPe>() {condition1};
@@ -192,10 +196,11 @@ public class CreateDslUt
         space2.OutBoundObjects = new List<IObjectInPathWayPe>() {space3};
         space3.InBoundObjects = new List<IObjectInPathWayPe>() {space2};
         var learningSpaces = new List<LearningSpacePe> { space1, space2, space3 };
+        var topics = new List<TopicPe>() {topic1, topic2};
         
 
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals,
-             learningSpaces);
+             learningSpaces, topics:topics);
 
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
         
@@ -221,6 +226,7 @@ public class CreateDslUt
             Assert.That(systemUnderTest.LearningWorldJson!.Identifier.Value, Is.EqualTo(name));
             Assert.That(systemUnderTest.ListLearningElementsWithContents, Is.EquivalentTo(learningElementsSpace1));
             Assert.That(systemUnderTest.ListLearningSpaces, Is.EquivalentTo(learningSpaces));
+            Assert.That(systemUnderTest.ListTopics, Is.EquivalentTo(topics));
             Assert.That(systemUnderTest.LearningWorldJson.LearningSpaces[0].Requirements,
                 Is.EqualTo(""));
             Assert.That(systemUnderTest.LearningWorldJson.LearningSpaces[1].Requirements,
@@ -258,8 +264,7 @@ public class CreateDslUt
         space1.LearningElements.AddRange(new List<LearningElementPe>{ele1});
         var learningSpaces = new List<LearningSpacePe> { space1 };
 
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals,
-             learningSpaces);
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, learningSpaces);
 
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
 

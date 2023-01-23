@@ -11,6 +11,7 @@ public class CreateDsl : ICreateDsl
 {
     public List<LearningElementPe> ListLearningElementsWithContents;
     public List<LearningSpacePe> ListLearningSpaces;
+    public List<TopicPe> ListTopics;
     public LearningWorldJson LearningWorldJson;
     public string Uuid;
     public Dictionary<int, Guid> DictionarySpaceIdToGuid;
@@ -41,6 +42,7 @@ public class CreateDsl : ICreateDsl
     {
         ListLearningElementsWithContents = new List<LearningElementPe>();
         ListLearningSpaces = new List<LearningSpacePe>();
+        ListTopics = new List<TopicPe>();
         _listLearningSpaceElements = new List<int>();
         _booleanAlgebraRequirements = "";
         DictionarySpaceIdToGuid = new Dictionary<int, Guid>();
@@ -159,9 +161,10 @@ public class CreateDsl : ICreateDsl
         //Starting ID for LearningSpaces
         int learningSpaceIdForDictionary = 1;
         
-        // Starting Value for Learning Space Ids & Learning Element Ids in the DSL-Document
+        // Starting Value for Learning Space Ids, Learning Element Ids & Topic Ids in the DSL-Document
         int learningSpaceId = 1;
         int learningSpaceElementId = 1;
+        int topicId = 1;
         
         //Initialise learningWorldJson with empty values, will be filled with information later in the method.
         LearningWorldJson = new LearningWorldJson(Uuid, new IdentifierJson("name", learningWorld.Name), new List<int>(),
@@ -182,6 +185,14 @@ public class CreateDsl : ICreateDsl
         //Search for duplicate LearningElement Names and increment them.
         ListLearningSpaces = SearchDuplicateLearningElementNames(ListLearningSpaces);
 
+        ListTopics.AddRange(learningWorld.Topics);
+        
+        foreach (var topic in ListTopics)
+        {
+            LearningWorldJson.Topics.Add(new TopicJson(topicId, topic.Name, new IdentifierJson("Topic", topic.Name), new List<int>()));
+            topicId++;
+        }
+        
         foreach (var space in ListLearningSpaces)
         {
             _listLearningSpaceElements = new List<int>();
@@ -190,6 +201,18 @@ public class CreateDsl : ICreateDsl
             
             IdentifierJson learningSpaceIdentifier = new IdentifierJson("name", space.Name);
             
+            
+            var assignedTopicId = 0;
+            
+            if (space.AssignedTopic != null)
+            {
+                var assignedTopic = LearningWorldJson.Topics.Find(topic => topic.Name == space.AssignedTopic.Name);
+                if(assignedTopic != null)
+                {
+                    assignedTopicId = assignedTopic.TopicId;
+                    assignedTopic.TopicContent.Add(learningSpaceId);
+                }
+            }
             //Searching for Learning Elements in each Space
             foreach (var element in space.LearningElements)
             {

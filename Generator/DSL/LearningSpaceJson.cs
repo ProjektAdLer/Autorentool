@@ -38,7 +38,7 @@ public class LearningSpaceJson : ILearningSpaceJson
     // Maximum Points and Points that are needed to complete the Space
     public int IncludedPoints { get; set; }
     
-    // requirements are needed to describe the Path of the Topic, Space and element. 
+    // requirements are needed to describe the Path of the Spaces. 
     // It is a boolean algebra string, that describes which spaces are needed to complete the space.
     public string? Requirements { get; set; }
 }

@@ -68,7 +68,7 @@ public class MappingProfileUt
     public void MapTopicAndTopicViewModel_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new BusinessLogic.Entities.Topic(Name);
+        var source = new Topic(Name);
         var destination = new TopicViewModel("");
 
         systemUnderTest.Map(source, destination);
@@ -82,6 +82,24 @@ public class MappingProfileUt
         TestContent(source, true);
     }
 
+    [Test]
+    public void MapTopicAndTopicPersistEntity_TestMappingIsValid()
+    {
+        var systemUnderTest = CreateTestableMapper();
+        var source = new Topic(Name);
+        var destination = new TopicPe("");
+
+        systemUnderTest.Map(source, destination);
+
+        TestContent(destination, false);
+
+        destination.Name = NewName;
+
+        systemUnderTest.Map(destination, source);
+
+        TestContent(source, true);
+    }
+    
     [Test]
     public void MapLearningContentAndLearningContentViewModel_TestMappingIsValid()
     {
@@ -450,10 +468,11 @@ public class MappingProfileUt
     public void MapLearningWorldAndLearningWorldPersistEntity_WithEmptyLearningSpace_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
+        var topic = GetTestableTopic();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
-            new List<LearningSpace>());
+            new List<LearningSpace>(), topics: new List<BusinessLogic.Entities.Topic>() { topic });
         source.LearningSpaces.Add(new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints,
-            null, PositionX, PositionY, new List<IObjectInPathWay>(), new List<IObjectInPathWay>()));
+            null, PositionX, PositionY, new List<IObjectInPathWay>(), new List<IObjectInPathWay>(), assignedTopic:topic));
         var destination = new LearningWorldPe("", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
@@ -463,6 +482,7 @@ public class MappingProfileUt
         {
             Assert.That(destination.LearningSpaces, Has.Count.EqualTo(1));
             Assert.That(destination.LearningSpaces[0].LearningElements, Is.Empty);
+            Assert.That(destination.LearningSpaces[0].AssignedTopic, Is.Not.Null);
         });
 
         destination.Name = NewName;
@@ -474,8 +494,9 @@ public class MappingProfileUt
         destination.LearningSpaces = new List<LearningSpacePe>()
         {
             new LearningSpacePe(NewName, NewShortname, NewAuthors, NewDescription, NewGoals, NewRequiredPoints, 
-                null, NewPositionX, NewPositionY, new List<IObjectInPathWayPe>(), new List<IObjectInPathWayPe>())
+                null, NewPositionX, NewPositionY, new List<IObjectInPathWayPe>(), new List<IObjectInPathWayPe>(), assignedTopic: GetTestableTopicPe())
         };
+        destination.Topics = new List<TopicPe>() { GetTestableTopicPe() };
 
         systemUnderTest.Map(destination, source);
 
@@ -484,6 +505,7 @@ public class MappingProfileUt
         {
             Assert.That(source.LearningSpaces, Has.Count.EqualTo(1));
             Assert.That(source.LearningSpaces[0].LearningElements, Is.Empty);
+            Assert.That(source.Topics, Has.Count.EqualTo(1));
         });
     }
 
@@ -846,6 +868,11 @@ public class MappingProfileUt
     private static TopicViewModel GetTestableTopicViewModel()
     {
         return new TopicViewModel(NewName);
+    }
+    
+    private static TopicPe GetTestableTopicPe()
+    {
+        return new TopicPe(Name);
     }
 
     private static LearningContent GetTestableContent()

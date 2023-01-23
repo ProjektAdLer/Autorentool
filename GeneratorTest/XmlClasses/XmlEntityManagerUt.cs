@@ -45,7 +45,7 @@ public class XmlEntityManagerUt
         var learningElementValueList1 = new List<LearningElementValueJson>(){learningElementValueJson1};
         var learningElementValueList2 = new List<LearningElementValueJson>(){learningElementValueJson2};
         var learningWorldContentJson = new List<int>(){1,2};
-        var topicsJson = new TopicJson();
+        var topicsJson = new TopicJson(1, "Topic", new IdentifierJson("topic", "Topic0"), new List<int>(){1});
         var topicsList = new List<TopicJson>(){topicsJson};
         var learningSpacesJson1 = new LearningSpaceJson(1, identifierLearningSpaceJson1, 
             new List<int>() {1, 2}, 0, 0);
