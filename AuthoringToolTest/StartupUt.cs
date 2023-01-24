@@ -11,7 +11,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using PersistEntities;
-using Presentation.Components;
+using Presentation.Components.Forms.Validators;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.DropZone;
@@ -154,6 +154,18 @@ public class StartupUt
     [Test]
     [TestCaseSource(nameof(ConfigureCommandRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllCommandServices(Type requiredType)
+    {
+        ConfigureServicesCoreTest(requiredType);
+    }
+    
+    private static readonly Type[] ConfigureValidationRequiredTypes =
+    {
+        typeof(LearningWorldValidator), typeof(LearningSpaceValidator),
+        typeof(ILearningSpaceNamesProvider), typeof(ILearningWorldNamesProvider)
+    };
+    [Test]
+    [TestCaseSource(nameof(ConfigureValidationRequiredTypes))]
+    public void Startup_ConfigureServices_CanResolveAllValidationServices(Type requiredType)
     {
         ConfigureServicesCoreTest(requiredType);
     }

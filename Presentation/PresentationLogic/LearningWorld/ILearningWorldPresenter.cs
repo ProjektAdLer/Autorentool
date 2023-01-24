@@ -6,7 +6,7 @@ using Presentation.PresentationLogic.LearningSpace;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
-public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyPropertyChanging, IPositioningService
+public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyPropertyChanging, IPositioningService, ILearningSpaceNamesProvider
 {
     bool CreateLearningSpaceDialogOpen { get; }
     bool CreatePathWayConditionDialogOpen { get; }

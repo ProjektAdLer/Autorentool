@@ -8,6 +8,7 @@ using Presentation.Components;
 using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
@@ -18,6 +19,8 @@ namespace PresentationTest.PresentationLogic.LearningWorld;
 [TestFixture]
 public class LearningWorldPresenterUt
 {
+    private IAuthoringToolWorkspaceViewModel _authoringToolWorkspaceViewModel;
+
     #region LearningSpace
 
     [Test]
@@ -1232,6 +1235,7 @@ public class LearningWorldPresenterUt
         presentationLogic ??= Substitute.For<IPresentationLogic>();
         learningSpacePresenter ??= Substitute.For<ILearningSpacePresenter>();
         logger ??= Substitute.For<ILogger<LearningWorldPresenter>>();
-        return new LearningWorldPresenter(presentationLogic, learningSpacePresenter, logger);
+        _authoringToolWorkspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
+        return new LearningWorldPresenter(presentationLogic, learningSpacePresenter, logger, _authoringToolWorkspaceViewModel);
     }
 }

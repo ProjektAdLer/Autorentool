@@ -12,12 +12,10 @@ namespace Presentation.PresentationLogic.AuthoringToolWorkspace;
 public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter, IAuthoringToolWorkspacePresenterToolboxInterface
 {
     public AuthoringToolWorkspacePresenter(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
-        IPresentationLogic presentationLogic,
-        ILearningWorldPresenter learningWorldPresenter, ILearningSpacePresenter learningSpacePresenter,
+        IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter,
         ILogger<AuthoringToolWorkspacePresenter> logger, IShutdownManager shutdownManager)
     {
         _learningSpacePresenter = learningSpacePresenter;
-        _learningWorldPresenter = learningWorldPresenter;
         AuthoringToolWorkspaceVm = authoringToolWorkspaceVm;
         _presentationLogic = presentationLogic;
         _logger = logger;
@@ -32,13 +30,11 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
             //register callback so we can check for unsaved data on quit
             //TODO: register to our own quit button
             shutdownManager.BeforeShutdown += OnBeforeShutdown;
-        AuthoringToolWorkspaceVm.PropertyChanged += learningWorldPresenter.OnWorkspacePropertyChanged;
     }
 
     public IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get;}
     
     private readonly IPresentationLogic _presentationLogic;
-    private readonly ILearningWorldPresenter _learningWorldPresenter;
     private readonly ILearningSpacePresenter _learningSpacePresenter;
     private readonly ILogger<AuthoringToolWorkspacePresenter> _logger;
     private readonly IShutdownManager _shutdownManager;
