@@ -18,5 +18,5 @@ public interface IFloorPlanViewModel
     /// <summary>
     /// List of X/Y coordinates of the centers of the slots for LearningElements.
     /// </summary>
-    IEnumerable<Point> ElementSlotPositions { get; }
+    IList<Point> ElementSlotPositions { get; }
 }

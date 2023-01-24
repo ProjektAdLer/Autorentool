@@ -29,7 +29,11 @@ public class LearningSpaceLayoutViewModel : ILearningSpaceLayoutViewModel
     public FloorPlanEnum FloorPlanName
     {
         get => _floorPlanName;
-        set => _floorPlanName = value;
+        set
+        {
+            _floorPlanName = value;
+            ChangeFloorPlan(_floorPlanName);
+        }
     }
 
     public ILearningElementViewModel?[] LearningElements

@@ -14,7 +14,7 @@ public class LShape3L2ViewModel : IFloorPlanViewModel
         new() {X = 25, Y = 0}
     };
 
-    public IEnumerable<Point> ElementSlotPositions { get; } = new List<Point>
+    public IList<Point> ElementSlotPositions { get; } = new List<Point>
     {
         new() {X = 10, Y = 10},
         new() {X = 10, Y = 50},

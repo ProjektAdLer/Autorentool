@@ -12,11 +12,11 @@ public class Rectangle2X2ViewModel : IFloorPlanViewModel
         new() {X = 50, Y = 0}
     };
 
-    public IEnumerable<Point> ElementSlotPositions { get; } = new List<Point>
+    public IList<Point> ElementSlotPositions { get; } = new List<Point>
     {
         new() {X = 10, Y = 10},
         new() {X = 10, Y = 40},
         new() {X = 40, Y = 10},
-        new() {X = 40, Y = 10}
+        new() {X = 40, Y = 40}
     };
 }
