@@ -36,7 +36,6 @@ public class LearningSpaceViewUt
     public void Setup()
     {
         _ctx = new TestContext();
-        _ctx.ComponentFactories.AddStub<DraggableLearningElement>();
         _learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
         _mouseService = Substitute.For<IMouseService>();
         _modalDialogFactory = Substitute.For<ILearningSpaceViewModalDialogFactory>();
@@ -133,33 +132,6 @@ public class LearningSpaceViewUt
                 Throws.TypeOf<ElementNotFoundException>());
             Assert.That(() => systemUnderTest.Find("button.btn.btn-primary.save-learning-object"),
                 Throws.TypeOf<ElementNotFoundException>());
-        });
-    }
-
-    [Test]
-    public void Render_LearningElementsInSpace_DraggableLearningElementForEachElementWithCorrectParameters()
-    {
-        var element1 = Substitute.For<ILearningElementViewModel>();
-        var element2 = Substitute.For<ILearningElementViewModel>();
-        var element3 = Substitute.For<ILearningElementViewModel>();
-        var learningElements = new ILearningElementViewModel?[]
-        {
-            element1, element2, element3
-        };
-        var learningSpace = Substitute.For<ILearningSpaceViewModel>();
-        learningSpace.LearningSpaceLayout.LearningElements = learningElements;
-        _learningSpacePresenter.LearningSpaceVm.Returns(learningSpace);
-        
-        var systemUnderTest = GetLearningSpaceViewForTesting();
-
-        var draggableLearningElements = systemUnderTest.FindComponentsOrFail<Stub<DraggableLearningElement>>();
-        Assert.Multiple(() =>
-        {
-            var renderedComponents = draggableLearningElements.ToList();
-            Assert.That(renderedComponents, Has.Count.EqualTo(learningElements.Length));
-            Assert.That(learningElements.All(le =>
-                renderedComponents.Any(dle =>
-                    dle.Instance.Parameters[nameof(DraggableLearningElement.LearningElement)] == le)));
         });
     }
 

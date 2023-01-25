@@ -39,13 +39,15 @@ public class MappingProfile : Profile
     private void CreateViewModelEntityMaps()
     {
         CreateMap<AuthoringToolWorkspace, AuthoringToolWorkspaceViewModel>()
-            .ForMember(x=>x.EditDialogInitialValues, opt=>opt.Ignore())
-            .ForMember(x=>x.SelectedLearningWorld, opt=>opt.Ignore())
+            .ForMember(x => x.EditDialogInitialValues, opt => opt.Ignore())
+            .ForMember(x => x.SelectedLearningWorld, opt => opt.Ignore())
+            .ForMember(x => x.WorldNames, opt => opt.Ignore())
+            .ForMember(x => x.WorldShortNames, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
                 d.SelectedLearningWorld = d.LearningWorlds.FirstOrDefault(x => x.Id == s.SelectedLearningWorld?.Id);
             }).ReverseMap()
-            .ForMember(x=>x.SelectedLearningWorld, opt=>opt.Ignore())
+            .ForMember(x => x.SelectedLearningWorld, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
                 d.SelectedLearningWorld = d.LearningWorlds.FirstOrDefault(x => x.Id == s.SelectedLearningWorld?.Id);
@@ -78,6 +80,7 @@ public class MappingProfile : Profile
                 }
             })
             .ReverseMap()
+            .EqualityComparison((x, y) => x.Id == y.Id)
             .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
             .ForMember(x => x.SelectableWorldObjects, opt => opt.Ignore())
             .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
@@ -111,6 +114,7 @@ public class MappingProfile : Profile
             .IncludeBase<IObjectInPathWay, IObjectInPathWayViewModel>()
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ReverseMap()
+            .EqualityComparison((x, y) => x.Id == y.Id)
             .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
             .ForMember(x => x.OutBoundObjects, opt => opt.Ignore());
 
@@ -141,6 +145,7 @@ public class MappingProfile : Profile
             .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
             .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .EqualityComparison((x, y) => x.Id == y.Id)
             .AfterMap((s, d) =>
             {
                 foreach (var element in d.ContainedLearningElements)
@@ -150,25 +155,24 @@ public class MappingProfile : Profile
 
                 d.SelectedLearningElement = d.ContainedLearningElements.FirstOrDefault(x => x.Id == s.SelectedLearningElement?.Id);
             });
-        
+
         CreateMap<ILearningSpaceLayout, LearningSpaceLayoutViewModel>()
             .ForMember(x => x.FloorPlanViewModel, opt => opt.Ignore())
             .ForMember(x => x.UsedIndices, opt => opt.Ignore())
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
         CreateMap<ILearningSpaceLayoutViewModel, LearningSpaceLayout>()
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
-        
+
         CreateMap<LearningSpaceLayout, LearningSpaceLayoutViewModel>()
-            .ForMember(x => x.FloorPlanViewModel, opt => opt.Ignore())
-            .ForMember(x => x.UsedIndices, opt => opt.Ignore())
-            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .IncludeBase<ILearningSpaceLayout, LearningSpaceLayoutViewModel>()
             .ReverseMap()
-            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
+            .IncludeBase<ILearningSpaceLayoutViewModel, LearningSpaceLayout>();
 
         CreateMap<LearningElement, LearningElementViewModel>()
             .ForMember(x => x.Parent, opt => opt.Ignore())
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ReverseMap()
+            .EqualityComparison((x, y) => x.Id == y.Id)
             .ForMember(x => x.Parent, opt => opt.Ignore());
         CreateMap<LearningContent, LearningContentViewModel>().ReverseMap();
 
