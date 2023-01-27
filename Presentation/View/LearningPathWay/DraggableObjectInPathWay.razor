@@ -1,7 +1,9 @@
 @using Presentation.PresentationLogic
 @using Presentation.Components
 @using Presentation.Components.RightClickMenu
+@using Presentation.PresentationLogic.LearningPathway
 @using Presentation.PresentationLogic.LearningWorld
+@using Shared
 <Draggable LearningObject="ObjectInPathWay" OnClicked="@OnClickedDraggable" OnDoubleClicked="@OnDoubleClickedDraggable" 
            OnRightClicked="@OnRightClickedDraggable" OnDragged="@OnDraggedDraggable"
            @bind-X="@ObjectInPathWay.PositionX" @bind-Y="@ObjectInPathWay.PositionY">
@@ -9,14 +11,31 @@
     {
         @((MarkupString)OnHoveredObjectShape)
     }
-    @((MarkupString)String.Format(ObjectShape, ObjectStyle, Text))
-    <Clickable OnClickedParam="ObjectInPathWay" OnClicked="@OnClickedClickable">
+    @((MarkupString)String.Format(ObjectShape, ObjectStyle, ObjectName))
+    <Clickable OnClickedParam="ObjectInPathWay" OnClicked="@OnClickedDeletePath">
         @if (ObjectInPathWay.InBoundObjects.Any())
         {
             @((MarkupString)DeletePathButtonShape)
         }
     </Clickable>
+    <Clickable OnClickedParam="ObjectInPathWay" OnClicked="@OnClickedDeleteObject">
+        @((MarkupString)DeleteObjectButtonShape)
+    </Clickable>
 </Draggable>
+@if (ObjectInPathWay is PathWayConditionViewModel)
+    {
+            <foreignObject transform="translate(9,7)" x=@ObjectInPathWay.PositionX y=@ObjectInPathWay.PositionY width="56" height="28">
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" checked="@ConditionValue" onclick="@HandleCheckboxChanged" class="sr-only peer">
+                  <div class="w-14 h-7 bg-[#172D4C] rounded-full peer  peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all dark:border-gray-600 peer-checked:bg-[#172D4C]"></div>
+                </label>
+            </foreignobject>  
+    }
+
+<text pointer-events=""> </text>
+
+@((MarkupString)String.Format(Text, ObjectName, ObjectInPathWay.PositionX, ObjectInPathWay.PositionY))
+
 <PullablePath LearningObject="@ObjectInPathWay" X1=@ObjectInPathWay.OutputConnectionX 
               Y1="@ObjectInPathWay.OutputConnectionY"
               PositioningSrv="@PositioningService"></PullablePath>
@@ -29,6 +48,30 @@
 
 
 @code {
+        
+    [Parameter]
+    public EventCallback<PathWayConditionViewModel> OnSwitchPathWayCondition { get; set; }
+
+    private void HandleCheckboxChanged() {
+        OnSwitchPathWayCondition.InvokeAsync((PathWayConditionViewModel)ObjectInPathWay);
+    }
+
+    private bool ConditionValue
+    {
+        get
+        {
+            switch (((PathWayConditionViewModel)ObjectInPathWay).Condition)
+            {
+                case ConditionEnum.And:
+                    return true;
+                case ConditionEnum.Or:
+                    return false;
+                default:
+                    return false;
+            }
+        }
+    }
+    
     // Overwrite nullability warning below because we check in OnParametersSet -n.stich
     [Parameter, EditorRequired]
     public IObjectInPathWayViewModel ObjectInPathWay { get; set; } = null!;
@@ -45,12 +88,16 @@
     [Parameter, EditorRequired]
     public DraggedEventArgs<IObjectInPathWayViewModel>.DraggedEventHandler? OnDraggedDraggable { get; set; }
     [Parameter, EditorRequired]
-    public EventCallback<IObjectInPathWayViewModel> OnClickedClickable { get; set; }
+    public EventCallback<IObjectInPathWayViewModel> OnClickedDeletePath { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback<IObjectInPathWayViewModel> OnClickedDeleteObject { get; set; }
     // Overwrite nullability warning below because service may never be null -n.stich
     [Parameter, EditorRequired]
     public ILearningWorldPresenter PositioningService { get; set; } = null!;
 
     protected abstract string Text { get; }
+    
+    protected abstract string ObjectName { get; }
     
     protected abstract string OnHoveredObjectShape { get; }
 
@@ -63,6 +110,8 @@
     private string ObjectStyle => PositioningService.LearningWorldVm?.SelectedLearningObject == ObjectInPathWay ? ObjectStyleWhenSelected : ObjectStyleWhenNotSelected;
 
     protected abstract string DeletePathButtonShape { get;}
+    
+    protected abstract string DeleteObjectButtonShape { get; }
     
     protected abstract List<RightClickMenuEntry> GetRightClickMenuEntries();
     

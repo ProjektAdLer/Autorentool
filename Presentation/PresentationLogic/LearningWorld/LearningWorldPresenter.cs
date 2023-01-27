@@ -152,6 +152,23 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         _presentationLogic.DeleteLearningSpace(LearningWorldVm, obj);
     }
 
+    public void DeleteLearningObject(IObjectInPathWayViewModel obj)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        switch (obj)
+        {
+            case PathWayConditionViewModel pathWayConditionViewModel:
+                _presentationLogic.DeletePathWayCondition(LearningWorldVm, pathWayConditionViewModel);
+                break;
+            case LearningSpaceViewModel learningSpaceViewModel:
+                _presentationLogic.DeleteLearningSpace(LearningWorldVm, learningSpaceViewModel);
+                break;
+            default:
+                throw new ArgumentOutOfRangeException(nameof(obj));
+        }
+    }
+
     public void RightClickOnObjectInPathWay(IObjectInPathWayViewModel obj)
     {
         RightClickedLearningObject = obj;
@@ -162,19 +179,15 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         SetSelectedLearningObject(obj);
     }
 
-    public void DoubleClickOnObjectInWorld(IObjectInPathWayViewModel obj)
+    public void DoubleClickOnLearningSpaceInWorld(IObjectInPathWayViewModel obj)
     {
-        switch (obj)
-        {
-            case PathWayConditionViewModel pathWayConditionViewModel:
-                _presentationLogic.EditPathWayCondition(pathWayConditionViewModel,
-                    pathWayConditionViewModel.Condition == ConditionEnum.And ? ConditionEnum.Or : ConditionEnum.And);
-                break;
-            case LearningSpaceViewModel learningSpaceViewModel:
-                SetSelectedLearningObject(learningSpaceViewModel);
-                ShowSelectedLearningSpaceView();
-                break;
-        }
+        SetSelectedLearningObject(obj);
+        ShowSelectedLearningSpaceView();
+    }
+    
+    public void SwitchPathWayCondition(PathWayConditionViewModel pathWayCondition)
+    {
+        _presentationLogic.EditPathWayCondition(pathWayCondition, pathWayCondition.Condition == ConditionEnum.And ? ConditionEnum.Or : ConditionEnum.And);
     }
 
     public void HideRightClickMenu()
@@ -559,7 +572,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         var objectAtPosition = LearningWorldVm?.LearningSpaces.FirstOrDefault(ls =>
                                    ls.PositionX <= x && ls.PositionX + 84 >= x && ls.PositionY <= y && ls.PositionY + 84 >= y) ??
                                (IObjectInPathWayViewModel?)LearningWorldVm?.PathWayConditions.FirstOrDefault(lc =>
-                                   Math.Pow(x - lc.PositionX, 2) + Math.Pow(y - lc.PositionY, 2) <= 400);
+                                   lc.PositionX <= x && lc.PositionX + 76 >= x && lc.PositionY <= y && lc.PositionY + 43 >= y);
         return objectAtPosition;
     }
     

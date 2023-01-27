@@ -6,7 +6,8 @@ namespace Presentation.View.LearningPathWay;
 
 public class DraggableLearningSpace : DraggableObjectInPathWay
 {
-    protected override string Text => ((ILearningSpaceViewModel)ObjectInPathWay).Name;
+    protected override string ObjectName => ((ILearningSpaceViewModel)ObjectInPathWay).Name;
+    protected override string Text => "";
     protected override string ObjectStyleWhenSelected => @"fill:rgba(226,234,242,255);opacity:80%;stroke:rgba(69,160,229,255);stroke-width:50";
     protected override string ObjectStyleWhenNotSelected => @"fill:rgba(226,234,242,255);opacity:80%;stroke:rgba(61,200,229,255);stroke-width:25";
     protected override string OnHoveredObjectShape =>  
@@ -75,6 +76,8 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
     protected override string DeletePathButtonShape => @"<circle r=""7"" transform=""translate(42,0)"" fill=""red"" stroke=""red""/>
                                     <polyline points=""0,0 4,0 -4,0 4,0 -4,0"" transform=""translate(42,0)"" 
                                     style=""fill:none;stroke:white;stroke-width:1""/>";
+    
+    protected override string DeleteObjectButtonShape => @"<text font-size=""12"" transform=""translate(72,14)"" fill=""gray"" style=""user-select:none;"">X</text>";
     
     [Parameter, EditorRequired]
     public EventCallback<ILearningSpaceViewModel> OnOpenLearningSpace { get; set; }
