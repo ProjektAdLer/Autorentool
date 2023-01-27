@@ -344,7 +344,42 @@ public class PresentationLogic : IPresentationLogic
             goals, difficulty, workload, points, element => CMapper.Map(element, learningElementVm));
         BusinessLogic.ExecuteCommand(command);
     }
-    
+
+    public void DragLearningElementFromUnplaced(ILearningWorldViewModel learningWorldVm,
+        ILearningSpaceViewModel learningSpaceVm, ILearningElementViewModel learningElementVm, int newSlotIndex)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+
+        var command = new DragLearningElementFromUnplaced(worldEntity, spaceEntity, elementEntity, newSlotIndex,
+            world => CMapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    public void DragLearningElementToUnplaced(ILearningWorldViewModel learningWorldVm,
+        ILearningSpaceViewModel learningSpaceVm, ILearningElementViewModel learningElementVm)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+
+        var command = new DragLearningElementToUnplaced(worldEntity, spaceEntity, elementEntity,
+            world => CMapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    public void SwitchLearningElementSlot(ILearningSpaceViewModel learningSpaceVm,
+        ILearningElementViewModel learningElementVm, int newSlotIndex)
+    {
+        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+
+        var command = new SwitchLearningElementSlot(spaceEntity, elementEntity, newSlotIndex,
+            space => CMapper.Map(space, learningSpaceVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
     public void DragLearningElement(ILearningElementViewModel learningElementVm, double oldPositionX, double oldPositionY)
     {
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);

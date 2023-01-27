@@ -2,5 +2,5 @@
 
 public class NoFloorPlan : IFloorPlan
 {
-    public int Capacity { get; } = 0;
+    public int Capacity => 0;
 }

@@ -272,6 +272,34 @@ public interface IPresentationLogic
         string goals, LearningElementDifficultyEnum difficulty, int workload, int points);
 
     /// <summary>
+    /// Moves the given learning element from unplaced elements to the given slot index in the given learning space.
+    /// </summary>
+    /// <param name="learningWorldVm">Learning World with the unplaced elements.</param>
+    /// <param name="learningSpaceVm">Learning space to place the learning element in.</param>
+    /// <param name="learningElementVm">Learning element to place.</param>
+    /// <param name="newSlotIndex">Index of the slot in the learning space to place the learning element in.</param>
+    void DragLearningElementFromUnplaced(ILearningWorldViewModel learningWorldVm,
+        ILearningSpaceViewModel learningSpaceVm, ILearningElementViewModel learningElementVm, int newSlotIndex);
+
+    /// <summary>
+    /// Moves the given learning element from the learning space to unplaced elements in the learning world.
+    /// </summary>
+    /// <param name="learningWorldVm">Learning World with the unplaced elements.</param>
+    /// <param name="learningSpaceVm">Learning space from which the element should be removed.</param>
+    /// <param name="learningElementVm">Learning element to remove.</param>
+    void DragLearningElementToUnplaced(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel learningSpaceVm,
+        ILearningElementViewModel learningElementVm);
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="learningSpaceVm"></param>
+    /// <param name="learningElementVm"></param>
+    /// <param name="newSlotIndex"></param>
+    void SwitchLearningElementSlot(ILearningSpaceViewModel learningSpaceVm, ILearningElementViewModel learningElementVm,
+        int newSlotIndex);
+
+    /// <summary>
     /// Deletes the given learning element in the given learning space.
     /// </summary>
     /// <param name="parentSpaceVm">Parent space of the element.</param>

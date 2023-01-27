@@ -21,6 +21,7 @@ public class LearningWorld : ILearningWorld, IOriginator
         PathWayConditions = new List<PathWayCondition>();
         LearningPathways = new List<LearningPathway>();
         UnsavedChanges = false;
+        UnplacedLearningElements = new List<ILearningElement>();
     }
     public LearningWorld(string name, string shortname, string authors, string language, string description,
         string goals, List<LearningSpace>? learningSpaces = null,
@@ -37,6 +38,7 @@ public class LearningWorld : ILearningWorld, IOriginator
         PathWayConditions = pathWayConditions ?? new List<PathWayCondition>();
         LearningPathways = learningPathways ?? new List<LearningPathway>();
         UnsavedChanges = false;
+        UnplacedLearningElements = new List<ILearningElement>();
     }
 
     public Guid Id { get; private set; }

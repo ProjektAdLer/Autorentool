@@ -2,5 +2,5 @@
 
 public class LShape3L2 : IFloorPlan
 {
-    public int Capacity { get; } = 5;
+    public int Capacity => 5;
 }
