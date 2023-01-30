@@ -35,10 +35,10 @@ public class PathWayConditionViewModel : IObjectInPathWayViewModel
     public Guid Id { get; private set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
-    public double InputConnectionX => PositionX;
-    public double InputConnectionY => PositionY - 26;
-    public double OutputConnectionX => PositionX;
-    public double OutputConnectionY => PositionY + 26;
+    public double InputConnectionX => PositionX + 38;
+    public double InputConnectionY => PositionY - 10;
+    public double OutputConnectionX => PositionX + 38;
+    public double OutputConnectionY => PositionY + 45;
     public ICollection<IObjectInPathWayViewModel> InBoundObjects { get; set; }
     public ICollection<IObjectInPathWayViewModel> OutBoundObjects { get; set; }
     public ConditionEnum Condition { get; set; }

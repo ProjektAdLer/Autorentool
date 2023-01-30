@@ -1,4 +1,4 @@
-@page "/LearningWorldViewRedesign"
+﻿@page "/LearningWorldViewRedesign"
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.ModalDialog
 @using Presentation.View.LearningSpace
@@ -42,13 +42,14 @@
             <DraggablePathWayCondition ObjectInPathWay="pathWayCondition"
                                        OnClickedDraggable="@LearningWorldP.ClickOnObjectInWorld"
                                        OnDraggedDraggable="@LearningWorldP.DragObjectInPathWay"
-                                       OnClickedClickable="@LearningWorldP.DeleteLearningPathWay"
-                                       OnDoubleClickedDraggable="@LearningWorldP.DoubleClickOnObjectInWorld"
+                                       OnClickedDeletePath="@LearningWorldP.DeleteLearningPathWay"
+                                       OnClickedDeleteObject="@LearningWorldP.DeleteLearningObject"
                                        OnRightClickedDraggable="@LearningWorldP.RightClickOnObjectInPathWay"
                                        ShowingRightClickMenu="pathWayCondition == LearningWorldP.RightClickedLearningObject"
                                        OnEditPathWayCondition="@LearningWorldP.EditObjectInPathWay"
                                        OnDeletePathWayCondition="@LearningWorldP.DeletePathWayCondition"
                                        OnCloseRightClickMenu="@LearningWorldP.HideRightClickMenu"
+                                       OnSwitchPathWayCondition="@LearningWorldP.SwitchPathWayCondition"
                                        PositioningService="@LearningWorldP"/>
         }
         
@@ -57,8 +58,9 @@
             <DraggableLearningSpace ObjectInPathWay="learningSpace"
                                     OnClickedDraggable="@LearningWorldP.ClickOnObjectInWorld"
                                     OnDraggedDraggable="@LearningWorldP.DragObjectInPathWay"
-                                    OnClickedClickable="@LearningWorldP.DeleteLearningPathWay"
-                                    OnDoubleClickedDraggable="@LearningWorldP.DoubleClickOnObjectInWorld"
+                                    OnClickedDeletePath="@LearningWorldP.DeleteLearningPathWay"
+                                    OnClickedDeleteObject="@LearningWorldP.DeleteLearningObject"
+                                    OnDoubleClickedDraggable="@LearningWorldP.DoubleClickOnLearningSpaceInWorld"
                                     OnRightClickedDraggable="@LearningWorldP.RightClickOnObjectInPathWay"
                                     ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject"
                                     OnOpenLearningSpace="@LearningWorldP.ShowSelectedLearningSpaceView"
@@ -116,6 +118,7 @@
 
 @code {
 
+    public bool Basic_Switch1 { get; set; } = false;
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
