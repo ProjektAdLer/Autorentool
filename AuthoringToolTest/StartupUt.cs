@@ -14,6 +14,7 @@ using PersistEntities;
 using Presentation.Components.Forms.Validators;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.DropZone;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.ModalDialog;
@@ -101,7 +102,7 @@ public class StartupUt
         typeof(ILearningSpaceViewModalDialogFactory), typeof(ILearningSpaceViewModalDialogInputFieldsFactory),
         typeof(ILearningWorldViewModalDialogFactory), typeof(ILearningWorldViewModalDialogInputFieldsFactory),
         typeof(IAuthoringToolWorkspaceViewModalDialogFactory), typeof(IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory),
-        typeof(ILearningWorldViewModalDialogInputFieldsFactory)
+        typeof(ILearningWorldViewModalDialogInputFieldsFactory), typeof(ILearningElementDropZoneHelper)
     };
     [Test]
     [TestCaseSource(nameof(ConfigurePresentationLogicRequiredTypes))]

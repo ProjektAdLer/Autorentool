@@ -183,6 +183,16 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
     
+    /// <inheritdoc cref="IPresentationLogic.ChangeLearningSpaceLayout"/>
+    public void ChangeLearningSpaceLayout(ILearningSpaceViewModel learningSpaceVm, FloorPlanEnum floorPlanName)
+    {
+        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+
+        var command = new ChangeLearningSpaceLayout(spaceEntity, floorPlanName,
+            space => CMapper.Map(space, learningSpaceVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+    
     public void DragObjectInPathWay(IObjectInPathWayViewModel objectInPathWayVm , double oldPositionX, double oldPositionY)
     {
         var objectInPathWayEntity = Mapper.Map<BusinessLogic.Entities.IObjectInPathWay>(objectInPathWayVm);
@@ -293,26 +303,30 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
-    public void AddLearningElement(ILearningSpaceViewModel parentSpaceVm, ILearningElementViewModel learningElementVm)
+    /// <inheritdoc cref="IPresentationLogic.AddLearningElement"/>
+    public void AddLearningElement(ILearningSpaceViewModel parentSpaceVm, int slotIndex, ILearningElementViewModel learningElementVm)
     {
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
 
-        var command = new CreateLearningElement(parentSpaceEntity, elementEntity, 
+        var command = new CreateLearningElement(parentSpaceEntity, slotIndex, elementEntity, 
             parent => CMapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
     }
     
     /// <inheritdoc cref="IPresentationLogic.CreateLearningElement"/>
-    public void CreateLearningElement(ILearningSpaceViewModel parentSpaceVm, string name, string shortname,
+    public void CreateLearningElement(ILearningSpaceViewModel parentSpaceVm, int slotIndex, string name, string shortname,
         ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContentVm,
         string url, string authors, string description, string goals, LearningElementDifficultyEnum difficulty,
         int workload, int points, double positionX = 0, double positionY = 0)
     {
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
         var contentEntity = Mapper.Map<BusinessLogic.Entities.LearningContent>(learningContentVm);
+        
+        //TODO: temporary testing code
+        
 
-        var command = new CreateLearningElement(parentSpaceEntity, name, shortname, elementType, contentType, contentEntity,
+        var command = new CreateLearningElement(parentSpaceEntity, slotIndex, name, shortname, elementType, contentType, contentEntity,
             url, authors, description, goals, difficulty, workload, points, positionX, positionY, 
             parent => CMapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
@@ -330,7 +344,42 @@ public class PresentationLogic : IPresentationLogic
             goals, difficulty, workload, points, element => CMapper.Map(element, learningElementVm));
         BusinessLogic.ExecuteCommand(command);
     }
-    
+
+    public void DragLearningElementFromUnplaced(ILearningWorldViewModel learningWorldVm,
+        ILearningSpaceViewModel learningSpaceVm, ILearningElementViewModel learningElementVm, int newSlotIndex)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+
+        var command = new DragLearningElementFromUnplaced(worldEntity, spaceEntity, elementEntity, newSlotIndex,
+            world => CMapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    public void DragLearningElementToUnplaced(ILearningWorldViewModel learningWorldVm,
+        ILearningSpaceViewModel learningSpaceVm, ILearningElementViewModel learningElementVm)
+    {
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+
+        var command = new DragLearningElementToUnplaced(worldEntity, spaceEntity, elementEntity,
+            world => CMapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    public void SwitchLearningElementSlot(ILearningSpaceViewModel learningSpaceVm,
+        ILearningElementViewModel learningElementVm, int newSlotIndex)
+    {
+        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+
+        var command = new SwitchLearningElementSlot(spaceEntity, elementEntity, newSlotIndex,
+            space => CMapper.Map(space, learningSpaceVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
     public void DragLearningElement(ILearningElementViewModel learningElementVm, double oldPositionX, double oldPositionY)
     {
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
@@ -364,13 +413,13 @@ public class PresentationLogic : IPresentationLogic
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadLearningElementAsync"/>
-    public async Task LoadLearningElementAsync(ILearningSpaceViewModel parentSpaceVm)
+    public async Task LoadLearningElementAsync(ILearningSpaceViewModel parentSpaceVm, int slotIndex)
     {
         SaveOrLoadElectronCheck();
         var filepath =
             await GetLoadFilepathAsync("Load Learning Element", ElementFileEnding, ElementFileFormatDescriptor);
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
-        var command = new LoadLearningElement(parentSpaceEntity, filepath, BusinessLogic,
+        var command = new LoadLearningElement(parentSpaceEntity, slotIndex, filepath, BusinessLogic,
             parent => CMapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
     }
@@ -451,11 +500,12 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
-    public void LoadLearningElementViewModel(ILearningSpaceViewModel parentSpaceVm, Stream stream)
+    /// <inheritdoc cref="IPresentationLogic.LoadLearningElementViewModel"/>
+    public void LoadLearningElementViewModel(ILearningSpaceViewModel parentSpaceVm, int slotIndex, Stream stream)
     {
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
         var command =
-            new LoadLearningElement(parentSpaceEntity, stream, BusinessLogic,
+            new LoadLearningElement(parentSpaceEntity, slotIndex, stream, BusinessLogic,
                 parent => CMapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
     }

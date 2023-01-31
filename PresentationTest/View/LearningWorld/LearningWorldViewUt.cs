@@ -44,7 +44,6 @@ public class LearningWorldViewUt
         _modalDialogFactory = Substitute.For<ILearningWorldViewModalDialogFactory>();
         _ctx.ComponentFactories.AddStub<LearningSpaceView>();
         _ctx.ComponentFactories.AddStub<DraggableObjectInPathWay>();
-        _ctx.ComponentFactories.AddStub<DraggableLearningElement>();
         _ctx.ComponentFactories.AddStub<PathWay>();
         _ctx.ComponentFactories.AddStub<ModalDialog>();
         _ctx.Services.AddSingleton(_mouseService);

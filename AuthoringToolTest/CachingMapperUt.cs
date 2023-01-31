@@ -8,6 +8,7 @@ using NUnit.Framework;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
 
@@ -203,7 +204,55 @@ switch (entity, viewModel)
         Assert.That(worldViewModel.LearningSpaces.First(), Is.EqualTo(spaceViewModel));
         Assert.That(worldViewModel.PathWayConditions.First(), Is.EqualTo(conditionViewModel));
     }
-    
+
+    [Test]
+    public void
+        MapLearningSpaceEntityToViewModel_ChangedLayoutWithElementWithIndexBiggerThanTheOldLearningElementsArray_MapsCorrectly()
+    {
+        var spaceEntity = new LearningSpace("n", "s", "a", "d", "g", 5, new LearningSpaceLayout(new ILearningElement?[4], FloorPlanEnum.Rectangle2X2));
+        var elementEntity = new LearningElement("n", "s", new LearningContent("n", "t", "f"), "u", "a", "d", "g", LearningElementDifficultyEnum.Easy, spaceEntity);
+        spaceEntity.LearningSpaceLayout.LearningElements[3] = elementEntity;
+        
+        var config = new MapperConfiguration(MappingProfile.Configure);
+        var mapper = config.CreateMapper();
+        var systemUnderTest = CreateTestableCachingMapper(mapper);
+        
+        var spaceViewModel = new LearningSpaceViewModel("", "", "", "", "", 0, new LearningSpaceLayoutViewModel());
+        
+        systemUnderTest.Map<LearningSpace, LearningSpaceViewModel>(spaceEntity, spaceViewModel);
+        
+        Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements, Has.Length.EqualTo(4));
+        Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[3], Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[3]!.Id, Is.EqualTo(elementEntity.Id));
+            Assert.That(spaceViewModel.Name, Is.EqualTo(spaceEntity.Name));
+            Assert.That(spaceViewModel.Shortname, Is.EqualTo(spaceEntity.Shortname));
+            Assert.That(spaceViewModel.Authors, Is.EqualTo(spaceEntity.Authors));
+            Assert.That(spaceViewModel.Description, Is.EqualTo(spaceEntity.Description));
+            Assert.That(spaceViewModel.Goals, Is.EqualTo(spaceEntity.Goals));
+            Assert.That(spaceViewModel.RequiredPoints, Is.EqualTo(spaceEntity.RequiredPoints));
+        });
+
+        spaceEntity.LearningSpaceLayout = new LearningSpaceLayout(new ILearningElement[6], FloorPlanEnum.Rectangle2X3);
+        spaceEntity.LearningSpaceLayout.LearningElements[5] = elementEntity;
+
+        systemUnderTest.Map<LearningSpace, LearningSpaceViewModel>(spaceEntity, spaceViewModel);
+        
+        Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements, Has.Length.EqualTo(6));
+        Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[5], Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[5]!.Id, Is.EqualTo(elementEntity.Id));
+            Assert.That(spaceViewModel.Name, Is.EqualTo(spaceEntity.Name));
+            Assert.That(spaceViewModel.Shortname, Is.EqualTo(spaceEntity.Shortname));
+            Assert.That(spaceViewModel.Authors, Is.EqualTo(spaceEntity.Authors));
+            Assert.That(spaceViewModel.Description, Is.EqualTo(spaceEntity.Description));
+            Assert.That(spaceViewModel.Goals, Is.EqualTo(spaceEntity.Goals));
+            Assert.That(spaceViewModel.RequiredPoints, Is.EqualTo(spaceEntity.RequiredPoints));
+        });
+    }
+
     [Test]
     public void MapLearningSpaceEntityToViewModel_MapperReceivedCallWithCorrectParameters()
     {
@@ -220,54 +269,63 @@ switch (entity, viewModel)
     [Test]
     public void MapLearningSpaceEntityToViewModel_MapsLearningElementToViewModel()
     {
-        var space = new LearningSpace("n", "s", "a", "d", "g", 5);
+        var space = new LearningSpace("n", "s", "a", "d", "g", 5, new LearningSpaceLayout(new ILearningElement[6], FloorPlanEnum.Rectangle2X3));
         var spaceViewModel = new LearningSpaceViewModel("x","x","x","x","x",5);
         var elementEntity = new LearningElement("n", "s", null!,"u","a", "d", "g", LearningElementDifficultyEnum.Easy);
-        space.LearningElements.Add(elementEntity);
+        space.LearningSpaceLayout.LearningElements[0] = elementEntity;
         var config = new MapperConfiguration(MappingProfile.Configure);
         var mapper = config.CreateMapper();
         var systemUnderTest = CreateTestableCachingMapper(mapper);
 
         systemUnderTest.Map(space, spaceViewModel);
 
-        Assert.That(spaceViewModel.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(spaceViewModel.ContainedLearningElements.Count(), Is.EqualTo(1));
         Assert.Multiple(() =>
         {
-            Assert.That(spaceViewModel.LearningElements.First().Id, Is.EqualTo(elementEntity.Id));
-            Assert.That(spaceViewModel.LearningElements.First().Name, Is.EqualTo(elementEntity.Name));
-            Assert.That(spaceViewModel.LearningElements.First().Shortname, Is.EqualTo(elementEntity.Shortname));
-            Assert.That(spaceViewModel.LearningElements.First().Url, Is.EqualTo(elementEntity.Url));
-            Assert.That(spaceViewModel.LearningElements.First().Authors, Is.EqualTo(elementEntity.Authors));
-            Assert.That(spaceViewModel.LearningElements.First().Description, Is.EqualTo(elementEntity.Description));
-            Assert.That(spaceViewModel.LearningElements.First().Goals, Is.EqualTo(elementEntity.Goals));
-            Assert.That(spaceViewModel.LearningElements.First().Difficulty, Is.EqualTo(elementEntity.Difficulty));
+            Assert.That(spaceViewModel.ContainedLearningElements.First().Id, Is.EqualTo(elementEntity.Id));
+            Assert.That(spaceViewModel.ContainedLearningElements.First().Name, Is.EqualTo(elementEntity.Name));
+            Assert.That(spaceViewModel.ContainedLearningElements.First().Shortname, Is.EqualTo(elementEntity.Shortname));
+            Assert.That(spaceViewModel.ContainedLearningElements.First().Url, Is.EqualTo(elementEntity.Url));
+            Assert.That(spaceViewModel.ContainedLearningElements.First().Authors, Is.EqualTo(elementEntity.Authors));
+            Assert.That(spaceViewModel.ContainedLearningElements.First().Description, Is.EqualTo(elementEntity.Description));
+            Assert.That(spaceViewModel.ContainedLearningElements.First().Goals, Is.EqualTo(elementEntity.Goals));
+            Assert.That(spaceViewModel.ContainedLearningElements.First().Difficulty, Is.EqualTo(elementEntity.Difficulty));
         });
     }
     
     [Test]
     public void MapLearningSpaceEntityToViewModel_MapsElementToTheSameViewModelAfterFirstCall()
     {
-        var space = new LearningSpace("n", "s", "a", "d", "g", 5);
-        var spaceViewModel = new LearningSpaceViewModel("x","x","x","x","x",5);
-        var elementEntity = new LearningElement("n", "s", null!,"u","a", "d", "g", LearningElementDifficultyEnum.Easy);
-        space.LearningElements.Add(elementEntity);
+        var space = new LearningSpace("n", "s", "a", "d", "g", 5,
+            new LearningSpaceLayout(new ILearningElement[6], FloorPlanEnum.Rectangle2X3));
+        var spaceViewModel = new LearningSpaceViewModel("x", "x", "x", "x", "x", 5,
+            new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+        var elementEntity =
+            new LearningElement("n", "s", null!, "u", "a", "d", "g", LearningElementDifficultyEnum.Easy);
+        space.LearningSpaceLayout.LearningElements[0] = elementEntity;
         var config = new MapperConfiguration(MappingProfile.Configure);
         var mapper = config.CreateMapper();
         var systemUnderTest = CreateTestableCachingMapper(mapper);
 
         systemUnderTest.Map(space, spaceViewModel);
 
-        Assert.That(spaceViewModel.LearningElements, Has.Count.EqualTo(1));
-        Assert.That(spaceViewModel.LearningElements.First().Id, Is.EqualTo(elementEntity.Id));
+        Assert.That(spaceViewModel.ContainedLearningElements.Count(), Is.EqualTo(1));
+        Assert.That(spaceViewModel.ContainedLearningElements.First().Id, Is.EqualTo(elementEntity.Id));
         
-        var elementViewModel = spaceViewModel.LearningElements.First();
-        spaceViewModel.LearningElements.Clear();
-        Assert.That(spaceViewModel.LearningElements, Has.Count.EqualTo(0));
+        var elementViewModel = spaceViewModel.ContainedLearningElements.First();
+        spaceViewModel.LearningSpaceLayout.ClearAllElements();
+        Assert.That(spaceViewModel.ContainedLearningElements.Count(), Is.EqualTo(0));
         
         systemUnderTest.Map(space, spaceViewModel);
-        
-        Assert.That(spaceViewModel.LearningElements, Has.Count.EqualTo(1));
-        Assert.That(spaceViewModel.LearningElements.First(), Is.EqualTo(elementViewModel));
+        Assert.Multiple(() =>
+        {
+            Assert.That(spaceViewModel.ContainedLearningElements.Count(), Is.EqualTo(1));
+            Assert.That(spaceViewModel.ContainedLearningElements.First().Id, Is.EqualTo(elementViewModel.Id));
+            Assert.That(spaceViewModel.ContainedLearningElements.First().Name, Is.EqualTo(elementViewModel.Name));
+            Assert.That(spaceViewModel.ContainedLearningElements.First(), Is.EqualTo(elementViewModel));
+            Assert.That(spaceViewModel.ContainedLearningElements.First(), Is.EqualTo(systemUnderTest.ReadOnlyCache[elementEntity.Id]));
+            Assert.That(elementViewModel, Is.EqualTo(systemUnderTest.ReadOnlyCache[elementEntity.Id]));
+        });
     }
     
     [Test]
@@ -276,7 +334,7 @@ switch (entity, viewModel)
         var worldEntity = new LearningWorld("n","s","a","l","d","g");
         var workspace = new AuthoringToolWorkspace(worldEntity, new List<LearningWorld>(){worldEntity});
         var workspaceViewModel = new AuthoringToolWorkspaceViewModel();
-        var spaceEntity = new LearningSpace("n", "s", "a", "d", "g", 5);
+        var spaceEntity = new LearningSpace("n", "s", "a", "d", "g", 5, new LearningSpaceLayout(new ILearningElement?[6], FloorPlanEnum.Rectangle2X3));
         var elementEntity = new LearningElement("n", "s", null!,"u","a", "d", "g", LearningElementDifficultyEnum.Easy);
         var secondElementEntity = new LearningElement("n2", "s2", null!,"u2","a2", "d2", "g2", LearningElementDifficultyEnum.Easy);
         var config = new MapperConfiguration(MappingProfile.Configure);
@@ -295,13 +353,13 @@ switch (entity, viewModel)
         
         Assert.That(systemUnderTest.ReadOnlyCache, Has.Count.EqualTo(2));
         
-        spaceEntity.LearningElements.Add(elementEntity);
+        spaceEntity.LearningSpaceLayout.LearningElements[0] = elementEntity;
         var spaceViewModel = worldViewModel.LearningSpaces.First();
         systemUnderTest.Map(spaceEntity, spaceViewModel);
         
         Assert.That(systemUnderTest.ReadOnlyCache, Has.Count.EqualTo(3));
         
-        spaceEntity.LearningElements.Add(secondElementEntity);
+        spaceEntity.LearningSpaceLayout.LearningElements[1] = secondElementEntity;
         systemUnderTest.Map(spaceEntity, spaceViewModel);
         
         Assert.That(systemUnderTest.ReadOnlyCache, Has.Count.EqualTo(4));

@@ -6,6 +6,7 @@ using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.ModalDialog;
 using Shared;
 
@@ -440,7 +441,8 @@ public class ModalDialogInputFieldsFactoryUt
             string descriptionLearningSpace = "maz";
             string goalsLearningSpace = "moo";
             int requiredPointsLearningSpace = 10;
-            ICollection<ILearningElementViewModel>? learningElements = null;
+            ILearningElementViewModel?[] learningElements = Array.Empty<ILearningElementViewModel?>();
+            var learningSpaceLayoutVm = new LearningSpaceLayoutViewModel(){LearningElements = learningElements};
             double positionXLearningSpace = 1D;
             double positionYLearningSpace = 2D;
             
@@ -452,7 +454,7 @@ public class ModalDialogInputFieldsFactoryUt
                     descriptionLearningSpace, 
                     goalsLearningSpace,
                     requiredPointsLearningSpace,
-                    learningElements,
+                    learningSpaceLayoutVm,
                     positionXLearningSpace,
                     positionYLearningSpace
                 );
@@ -685,7 +687,8 @@ public class ModalDialogInputFieldsFactoryUt
         string descriptionLearningSpace = "maz";
         string goalsLearningSpace = "moo";
         int requiredPointsLearningSpace = 10;
-        ICollection<ILearningElementViewModel>? learningElements = null;
+        ILearningElementViewModel?[] learningElements = Array.Empty<ILearningElementViewModel?>();
+        var learningSpaceLayoutVm = new LearningSpaceLayoutViewModel(){LearningElements = learningElements};
         double positionXLearningSpace = 1D;
         double positionYLearningSpace = 2D;
             
@@ -697,7 +700,7 @@ public class ModalDialogInputFieldsFactoryUt
                 descriptionLearningSpace, 
                 goalsLearningSpace,
                 requiredPointsLearningSpace,
-                learningElements,
+                learningSpaceLayoutVm,
                 positionXLearningSpace,
                 positionYLearningSpace
             );
@@ -851,7 +854,8 @@ public class ModalDialogInputFieldsFactoryUt
         string descriptionLearningSpace = "maz";
         string goalsLearningSpace = "moo";
         int requiredPointsLearningSpace = 10;
-        ICollection<ILearningElementViewModel>? learningElements = null;
+        ILearningElementViewModel?[] learningElements = Array.Empty<ILearningElementViewModel?>();
+        var learningSpaceLayoutVm = new LearningSpaceLayoutViewModel(){LearningElements = learningElements};
         double positionXLearningSpace = 1D;
         double positionYLearningSpace = 2D;
             
@@ -863,7 +867,7 @@ public class ModalDialogInputFieldsFactoryUt
                 descriptionLearningSpace, 
                 goalsLearningSpace,
                 requiredPointsLearningSpace,
-                learningElements,
+                learningSpaceLayoutVm,
                 positionXLearningSpace,
                 positionYLearningSpace
             );

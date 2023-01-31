@@ -26,6 +26,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     private readonly ILogger<LearningSpacePresenter> _logger;
     private bool _createLearningElementDialogOpen;
     private int _creationCounter = 0;
+    private int _activeSlot = -1;
 
     public ILearningSpaceViewModel? LearningSpaceVm { get; private set; }
 
@@ -55,6 +56,13 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         add => _presentationLogic.OnUndoRedoPerformed += value;
         remove => _presentationLogic.OnUndoRedoPerformed -= value;
     }
+    
+    public void SetLearningSpaceLayout(FloorPlanEnum floorPlanName)
+    {
+        if (LearningSpaceVm == null)
+            throw new ApplicationException("LearningSpaceVm is null");
+        _presentationLogic.ChangeLearningSpaceLayout(LearningSpaceVm, floorPlanName);
+    }
 
     public void DragLearningElement(object sender, DraggedEventArgs<ILearningElementViewModel> args)
     {
@@ -74,6 +82,17 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     public void EditLearningElement(ILearningElementViewModel obj)
     {
         SetSelectedLearningElement(obj);
+        OpenEditSelectedLearningElementDialog();
+    }
+
+    public void EditLearningElement(int slotIndex)
+    {
+        if (LearningSpaceVm == null)
+            throw new ApplicationException("LearningSpaceVm is null");
+        var element = LearningSpaceVm.LearningSpaceLayout.GetElement(slotIndex);
+        if (element == null)
+            throw new ApplicationException($"LearningElement at slotIndex {slotIndex} is null");
+        SetSelectedLearningElement(element);
         OpenEditSelectedLearningElementDialog();
     }
 
@@ -175,6 +194,12 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         EditLearningElementDialogOpen = true;
     }
 
+    public void AddNewLearningElement(int slotIndex)
+    {
+        _activeSlot = slotIndex;
+        CreateLearningElementDialogOpen = true;
+    }
+    
     public void AddNewLearningElement()
     {
         CreateLearningElementDialogOpen = true;
@@ -185,18 +210,18 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     /// learning element to its parent.
     /// </summary>
     /// <exception cref="ApplicationException">Thrown if <see cref="LearningSpaceVm"/> is null</exception>
-    public async Task LoadLearningElementAsync()
+    public async Task LoadLearningElementAsync(int slotIndex)
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
-        await _presentationLogic.LoadLearningElementAsync(LearningSpaceVm);
+        await _presentationLogic.LoadLearningElementAsync(LearningSpaceVm, slotIndex);
     }
 
-    public void AddLearningElement(ILearningElementViewModel element)
+    public void AddLearningElement(ILearningElementViewModel element, int slotIndex)
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
-        _presentationLogic.AddLearningElement(LearningSpaceVm, element);
+        _presentationLogic.AddLearningElement(LearningSpaceVm, slotIndex, element);
     }
     
     /// <summary>
@@ -234,6 +259,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         if (response == ModalDialogReturnValue.Cancel)
         {
             DragAndDropLearningContent = null;
+            _activeSlot = -1;
             return;
         }
 
@@ -282,8 +308,14 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
             }
             var offset = 15 * _creationCounter;
             _creationCounter = (_creationCounter + 1) % 10;
-            _presentationLogic.CreateLearningElement(parentElement, name, shortname, elementType, contentType,
+            //TODO: We need the slotIndex here - AW
+            if (_activeSlot < 0)
+            {
+                _activeSlot = 0;
+            }
+            _presentationLogic.CreateLearningElement(parentElement, _activeSlot, name, shortname, elementType, contentType,
                 learningContent, url, authors, description, goals, difficulty, workload, points, offset, offset);
+            _activeSlot = -1;
 
         }
         catch (AggregateException)

@@ -21,6 +21,7 @@ public class LearningWorld : ILearningWorld, IOriginator
         PathWayConditions = new List<PathWayCondition>();
         LearningPathways = new List<LearningPathway>();
         UnsavedChanges = false;
+        UnplacedLearningElements = new List<ILearningElement>();
     }
     public LearningWorld(string name, string shortname, string authors, string language, string description,
         string goals, List<LearningSpace>? learningSpaces = null,
@@ -37,6 +38,7 @@ public class LearningWorld : ILearningWorld, IOriginator
         PathWayConditions = pathWayConditions ?? new List<PathWayCondition>();
         LearningPathways = learningPathways ?? new List<LearningPathway>();
         UnsavedChanges = false;
+        UnplacedLearningElements = new List<ILearningElement>();
     }
 
     public Guid Id { get; private set; }
@@ -52,6 +54,7 @@ public class LearningWorld : ILearningWorld, IOriginator
     public string Language { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
+    public ICollection<ILearningElement> UnplacedLearningElements { get; set; } 
     public ISelectableObjectInWorld? SelectedLearningObject { get; set; }
 
     public bool UnsavedChanges { get; set; }
@@ -59,7 +62,7 @@ public class LearningWorld : ILearningWorld, IOriginator
     public IMemento GetMemento()
     {
         return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, LearningSpaces,
-            PathWayConditions, LearningPathways, SelectedLearningObject);
+            PathWayConditions, LearningPathways, UnplacedLearningElements, SelectedLearningObject);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -77,6 +80,7 @@ public class LearningWorld : ILearningWorld, IOriginator
         LearningSpaces = learningWorldMemento.LearningSpaces;
         PathWayConditions = learningWorldMemento.PathWayConditions;
         LearningPathways = learningWorldMemento.LearningPathways;
+        UnplacedLearningElements = learningWorldMemento.UnplacedLearningElements;
         SelectedLearningObject = learningWorldMemento.SelectedLearningSpace;
     }
 
@@ -84,7 +88,7 @@ public class LearningWorld : ILearningWorld, IOriginator
     {
         internal LearningWorldMemento(string name, string shortname, string authors, string language,
             string description, string goals, List<LearningSpace> learningSpaces, List<PathWayCondition> pathWayConditions,
-            List<LearningPathway> learningPathways, ISelectableObjectInWorld? selectedLearningSpace = null)
+            List<LearningPathway> learningPathways, IEnumerable<ILearningElement> unplacedLearningElements, ISelectableObjectInWorld? selectedLearningSpace = null)
         {
             Name = name;
             Shortname = shortname;
@@ -95,6 +99,7 @@ public class LearningWorld : ILearningWorld, IOriginator
             LearningSpaces = learningSpaces.ToList();
             PathWayConditions = pathWayConditions.ToList();
             LearningPathways = learningPathways.ToList();
+            UnplacedLearningElements = unplacedLearningElements.ToList();
             SelectedLearningSpace = selectedLearningSpace;
         }
 
@@ -107,6 +112,7 @@ public class LearningWorld : ILearningWorld, IOriginator
         internal string Language { get; }
         internal string Description { get; }
         internal string Goals { get; }
+        internal List<ILearningElement> UnplacedLearningElements { get; }
         internal ISelectableObjectInWorld? SelectedLearningSpace { get; }
     }
 }

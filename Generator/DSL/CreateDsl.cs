@@ -59,7 +59,7 @@ public class CreateDsl : ICreateDsl
         //Get All LearningElements
         foreach (var learningSpace in listLearningSpace)
         {
-            foreach (var element in learningSpace.LearningElements)
+            foreach (var element in learningSpace.LearningSpaceLayout.ContainedLearningElements)
             {
                 _listAllLearningElements.Add(element);
             }
@@ -75,7 +75,7 @@ public class CreateDsl : ICreateDsl
         {
             foreach (var learningSpace in listLearningSpace)
             {
-                foreach (var element in learningSpace.LearningElements)
+                foreach (var element in learningSpace.LearningSpaceLayout.ContainedLearningElements)
                 {
                     if(element.Name == duplicateElement.Key)
                     {
@@ -190,7 +190,7 @@ public class CreateDsl : ICreateDsl
             IdentifierJson learningSpaceIdentifier = new IdentifierJson("name", learningSpace.Name);
             
             //Searching for Learning Elements in each Space
-            foreach (var element in learningSpace.LearningElements)
+            foreach (var element in learningSpace.LearningSpaceLayout.ContainedLearningElements)
             {
                 string elementCategory;
                 switch (element.LearningContent.Type)
@@ -260,7 +260,7 @@ public class CreateDsl : ICreateDsl
             LearningWorldJson.LearningSpaces.Add(new LearningSpaceJson(learningSpaceId,
                 learningSpaceIdentifier, _listLearningSpaceContent, 
                 learningSpace.RequiredPoints, 
-                learningSpace.LearningElements.Sum(element => element.Points),
+                learningSpace.LearningSpaceLayout.ContainedLearningElements.Sum(element => element.Points),
                 learningSpace.Description, learningSpace.Goals, requirements:_booleanAlgebraRequirements));
             
             learningSpaceId++;

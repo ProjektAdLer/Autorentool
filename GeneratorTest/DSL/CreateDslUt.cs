@@ -105,16 +105,19 @@ public class CreateDslUt
         var mockElement5 = new LearningElementPe("Same Name Element", "el", null, "", 
             "", "", "", PersistEntities.LearningElementDifficultyEnumPe.Easy);
         
-        var mockLearningElements1 = new List<LearningElementPe> {mockElement1, mockElement2};
-        var mockLearningElements2 = new List<LearningElementPe> {mockElement3};
-        var mockLearningElements3 = new List<LearningElementPe> {mockElement4, mockElement5};
+        var mockLearningElements1 = new ILearningElementPe?[] {mockElement1, mockElement2};
+        var mockLearningSpaceLayout1 = new LearningSpaceLayoutPe(mockLearningElements1, FloorPlanEnumPe.Rectangle2X3);
+        var mockLearningElements2 = new ILearningElementPe?[] {mockElement3};
+        var mockLearningSpaceLayout2 = new LearningSpaceLayoutPe(mockLearningElements2, FloorPlanEnumPe.Rectangle2X3);
+        var mockLearningElements3 = new ILearningElementPe?[] {mockElement4, mockElement5};
+        var mockLearningSpaceLayout3 = new LearningSpaceLayoutPe(mockLearningElements3, FloorPlanEnumPe.Rectangle2X3);
 
         var mockSpace1 = new LearningSpacePe("Space1", "sp", null, "", "", 1,
-            mockLearningElements1);
+            mockLearningSpaceLayout1);
         var mockSpace2 = new LearningSpacePe("Space2", "sp", null, "", "", 1,
-            mockLearningElements2);
+            mockLearningSpaceLayout2);
         var mockSpace3 = new LearningSpacePe("Space3", "sp", null, "", "", 1,
-            mockLearningElements3);
+            mockLearningSpaceLayout3);
         
         
         var mockSpaces = new List<LearningSpacePe> {mockSpace1, mockSpace2, mockSpace3};
@@ -134,9 +137,9 @@ public class CreateDslUt
             Assert.That(mockElement4.Name, Is.EqualTo("Same Name Element(3)"));
             Assert.That(mockElement5.Name, Is.EqualTo("Same Name Element(4)"));
             Assert.That(learningSpaceList.Count, Is.EqualTo(3));
-            Assert.That(learningSpaceList[0].LearningElements.Count, Is.EqualTo(2));
-            Assert.That(learningSpaceList[1].LearningElements.Count, Is.EqualTo(1));
-            Assert.That(learningSpaceList[2].LearningElements.Count, Is.EqualTo(2));
+            Assert.That(learningSpaceList[0].LearningSpaceLayout.ContainedLearningElements.Count, Is.EqualTo(2));
+            Assert.That(learningSpaceList[1].LearningSpaceLayout.ContainedLearningElements.Count, Is.EqualTo(1));
+            Assert.That(learningSpaceList[2].LearningSpaceLayout.ContainedLearningElements.Count, Is.EqualTo(2));
         });
     }
     
@@ -180,7 +183,7 @@ public class CreateDslUt
         var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
             null, 0, 0, new List<IObjectInPathWayPe>(), 
             new List<IObjectInPathWayPe>());
-        space1.LearningElements.AddRange(new List<LearningElementPe>{ele1, ele2, ele3, ele4, ele5});
+        space1.LearningSpaceLayout.LearningElements = new ILearningElementPe[] {ele1, ele2, ele3, ele4, ele5};
         var space2 = new LearningSpacePe("ff2", "ff", "ff", "ff", "ff", 5, 
             null, 0, 0, new List<IObjectInPathWayPe>(), new List<IObjectInPathWayPe>());
         var space3 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
@@ -255,7 +258,7 @@ public class CreateDslUt
         var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
             null, 0, 0, new List<IObjectInPathWayPe>(), 
             new List<IObjectInPathWayPe>());
-        space1.LearningElements.AddRange(new List<LearningElementPe>{ele1});
+        space1.LearningSpaceLayout.LearningElements = new ILearningElementPe[] {ele1};
         var learningSpaces = new List<LearningSpacePe> { space1 };
 
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals,

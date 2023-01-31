@@ -18,14 +18,14 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
         Description = "";
         Goals = "";
         RequiredPoints = 0;
-        LearningElements = new List<LearningElement>();
+        LearningSpaceLayout = new LearningSpaceLayout();
         InBoundObjects = new List<IObjectInPathWay>();
         OutBoundObjects = new List<IObjectInPathWay>();
         PositionX = 0;
         PositionY = 0;
     }
     public LearningSpace(string name, string shortname, string authors, string description,
-        string goals, int requiredPoints, List<LearningElement>? learningElements = null ,double positionX = 0,
+        string goals, int requiredPoints, LearningSpaceLayout? learningSpaceLayout = null ,double positionX = 0,
         double positionY = 0, List<IObjectInPathWay>? inBoundSpaces = null, List<IObjectInPathWay>? outBoundSpaces = null)
     {
         Id = Guid.NewGuid();
@@ -35,7 +35,7 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
         Description = description;
         Goals = goals;
         RequiredPoints = requiredPoints;
-        LearningElements = learningElements ?? new List<LearningElement>();
+        LearningSpaceLayout = learningSpaceLayout ?? new LearningSpaceLayout(Array.Empty<ILearningElement>(), FloorPlanEnum.NoFloorPlan);
         InBoundObjects = inBoundSpaces ?? new List<IObjectInPathWay>();
         OutBoundObjects = outBoundSpaces ?? new List<IObjectInPathWay>();
         PositionX = positionX;
@@ -50,16 +50,17 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
     public string Description { get; set; }
     public string Goals { get; set; }
     public int RequiredPoints { get; set; }
-    public List<LearningElement> LearningElements { get; set; }
+    public ILearningSpaceLayout LearningSpaceLayout { get; set; }
     public List<IObjectInPathWay> InBoundObjects { get; set; }
     public List<IObjectInPathWay> OutBoundObjects { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
     public ILearningElement? SelectedLearningElement { get; set; }
+    public IEnumerable<ILearningElement> ContainedLearningElements => LearningSpaceLayout.ContainedLearningElements;
 
     public IMemento GetMemento()
     {
-        return new LearningSpaceMemento(Name, Shortname, Authors, Description, Goals, LearningElements, InBoundObjects, 
+        return new LearningSpaceMemento(Name, Shortname, Authors, Description, Goals, LearningSpaceLayout, InBoundObjects, 
             OutBoundObjects, positionX: PositionX, positionY: PositionY, selectedLearningElement: SelectedLearningElement);
     }
 
@@ -74,7 +75,7 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
         Authors = learningSpaceMemento.Authors;
         Description = learningSpaceMemento.Description;
         Goals = learningSpaceMemento.Goals;
-        LearningElements = learningSpaceMemento.LearningElements;
+        LearningSpaceLayout = learningSpaceMemento.LearningSpaceLayout;
         InBoundObjects = learningSpaceMemento.InBoundObjects;
         OutBoundObjects = learningSpaceMemento.OutBoundObjects;
         PositionX = learningSpaceMemento.PositionX;
@@ -85,7 +86,7 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
     private record LearningSpaceMemento : IMemento
     {
         internal LearningSpaceMemento(string name, string shortname, string authors, string description,
-            string goals, List<LearningElement> learningElements, List<IObjectInPathWay> inBoundSpaces,
+            string goals, ILearningSpaceLayout learningSpaceLayout, List<IObjectInPathWay> inBoundSpaces,
             List<IObjectInPathWay> outBoundSpaces, double positionX = 0, double positionY = 0,
             ILearningElement? selectedLearningElement = null)
         {
@@ -94,7 +95,7 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
             Authors = authors;
             Description = description;
             Goals = goals;
-            LearningElements = learningElements.ToList();
+            LearningSpaceLayout = learningSpaceLayout;
             InBoundObjects = inBoundSpaces.ToList();
             OutBoundObjects = outBoundSpaces.ToList();
             PositionX = positionX;
@@ -107,7 +108,7 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
         internal string Authors { get; }
         internal string Description { get; }
         internal string Goals { get; }
-        internal List<LearningElement> LearningElements { get; }
+        internal ILearningSpaceLayout LearningSpaceLayout { get; }
         internal double PositionX { get; }
         internal double PositionY { get; }
         internal ILearningElement? SelectedLearningElement { get; }

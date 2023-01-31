@@ -1,8 +1,11 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
+using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
+using Shared;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
@@ -26,7 +29,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _pathWayConditions = new List<PathWayConditionViewModel>();
         _learningPathWays = new List<ILearningPathWayViewModel>();
     }
-    
+
     /// <summary>
     /// Initializes a new instance of the <see cref="LearningWorldViewModel"/> class.
     /// </summary>
@@ -41,9 +44,11 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     /// Should be used when loading a saved learnign world into the application.</param>
     /// <param name="pathWayConditions">Conditions within learning pathways.</param>
     /// <param name="learningPathWays">Optional collection of learning pathways in the learning world.</param>
+    /// <param name="unplacedLearningElements">All learning elements in the learning world that are not placed in any learning space</param>
     public LearningWorldViewModel(string name, string shortname, string authors, string language, string description,
         string goals, bool unsavedChanges = true, List<ILearningSpaceViewModel>? learningSpaces = null,
-        List<PathWayConditionViewModel>? pathWayConditions = null, List<ILearningPathWayViewModel>? learningPathWays = null)
+        List<PathWayConditionViewModel>? pathWayConditions = null, List<ILearningPathWayViewModel>? learningPathWays = null,
+        List<ILearningElementViewModel>? unplacedLearningElements = null)
     {
         Id = Guid.NewGuid();
         _name = name;
@@ -56,6 +61,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _learningSpaces = learningSpaces ?? new List<ILearningSpaceViewModel>();
         _pathWayConditions = pathWayConditions ?? new List<PathWayConditionViewModel>();
         _learningPathWays = learningPathWays ?? new List<ILearningPathWayViewModel>();
+        _unplacedLearningElements = unplacedLearningElements ?? new List<ILearningElementViewModel>();
     }
     
     public const string fileEnding = "awf";
@@ -64,6 +70,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     private ICollection<ILearningSpaceViewModel> _learningSpaces;
     private ICollection<PathWayConditionViewModel> _pathWayConditions;
     private ICollection<ILearningPathWayViewModel> _learningPathWays;
+    private ICollection<ILearningElementViewModel> _unplacedLearningElements;
     private string _name;
     private string _shortname;
     private string _authors;
@@ -98,6 +105,12 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         get => _learningPathWays;
         set => SetField(ref _learningPathWays, value);
     }
+    
+    public ICollection<ILearningElementViewModel> UnplacedLearningElements
+    {
+        get => _unplacedLearningElements;
+        set => SetField(ref _unplacedLearningElements, value);
+    } 
 
     public IEnumerable<IObjectInPathWayViewModel> ObjectsInPathWays =>
         LearningSpaces.Concat<IObjectInPathWayViewModel>(PathWayConditions);

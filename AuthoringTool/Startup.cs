@@ -15,6 +15,7 @@ using MudBlazor.Services;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.DropZone;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
@@ -111,6 +112,7 @@ public class Startup
         services.AddSingleton<ILearningWorldViewModalDialogInputFieldsFactory, ModalDialogInputFieldsFactory>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory, ModalDialogInputFieldsFactory>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModalDialogFactory, ModalDialogFactory>();
+        services.AddSingleton<ILearningElementDropZoneHelper, LearningElementDropZoneHelper>();
     }
 
     private void ConfigureBusinessLogic(IServiceCollection services)

@@ -128,23 +128,26 @@ public class CachingMapperIt
         var worldVm = workspaceVm.LearningWorlds[0];
 
         systemUnderTest.CreateLearningSpace(worldVm, "g", "h", "i", "j", "k", 1, 2, 3);
+        systemUnderTest.ChangeLearningSpaceLayout(worldVm.LearningSpaces.First(), FloorPlanEnum.Rectangle2X3);
 
         Assert.That(worldVm.LearningSpaces, Has.Count.EqualTo(1));
 
         var spaceVm = worldVm.LearningSpaces.First();
 
-        systemUnderTest.CreateLearningElement(spaceVm, "l", "m", ElementTypeEnum.Transfer,ContentTypeEnum.PDF, null!, "url", "n", "o","p", LearningElementDifficultyEnum.Easy, 2, 3);
+        systemUnderTest.CreateLearningElement(spaceVm, 0, "l", "m", ElementTypeEnum.Transfer,ContentTypeEnum.PDF, null!, "url", "n", "o","p", LearningElementDifficultyEnum.Easy, 2, 3);
 
-        Assert.That(spaceVm.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(spaceVm.ContainedLearningElements.Count(), Is.EqualTo(1));
 
-        var elementVm = spaceVm.LearningElements.First();
+        var elementVm = spaceVm.ContainedLearningElements.First();
 
         Assert.That(elementVm.Name, Is.EqualTo("l"));
 
-        //Undo Redo CreateLearningElementCommand and CreateLearningSpaceCommand and CreateLearningWorldCommand
+        //Undo Redo CreateLearningElementCommand and ChangeLearningSpaceLayoutCommand and CreateLearningSpaceCommand and CreateLearningWorldCommand
         systemUnderTest.UndoCommand();
         systemUnderTest.UndoCommand();
         systemUnderTest.UndoCommand();
+        systemUnderTest.UndoCommand();
+        systemUnderTest.RedoCommand();
         systemUnderTest.RedoCommand();
         systemUnderTest.RedoCommand();
         systemUnderTest.RedoCommand();
@@ -162,8 +165,8 @@ public class CachingMapperIt
         });
         Assert.Multiple(() =>
         {
-            Assert.That(workspaceVm.LearningWorlds[0].LearningSpaces.First().LearningElements, Has.Count.EqualTo(1));
-            Assert.That(workspaceVm.LearningWorlds[0].LearningSpaces.First().LearningElements.First(), Is.EqualTo(elementVm));
+            Assert.That(workspaceVm.LearningWorlds[0].LearningSpaces.First().ContainedLearningElements.Count(), Is.EqualTo(1));
+            Assert.That(workspaceVm.LearningWorlds[0].LearningSpaces.First().ContainedLearningElements.First(), Is.EqualTo(elementVm));
         });
     }
 

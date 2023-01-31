@@ -146,7 +146,7 @@ public class LearningWorldPresenterUt
         var space = new LearningSpaceViewModel("g", "g", "g", "g", "g");
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.LearningWorldVm = world;
-        systemUnderTest.DoubleClickOnObjectInWorld(space);
+        systemUnderTest.DoubleClickOnLearningSpaceInWorld(space);
         
         Assert.That(world.SelectedLearningObject, Is.EqualTo(space));
         Assert.That(systemUnderTest.ShowingLearningSpaceView, Is.True);
@@ -767,7 +767,7 @@ public class LearningWorldPresenterUt
         var condition = new PathWayConditionViewModel(ConditionEnum.And,2,1);
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
         systemUnderTest.LearningWorldVm = world;
-        systemUnderTest.DoubleClickOnObjectInWorld(condition);
+        systemUnderTest.DoubleClickOnLearningSpaceInWorld(condition);
         
         presentationLogic.Received().EditPathWayCondition(condition, ConditionEnum.Or);
     }

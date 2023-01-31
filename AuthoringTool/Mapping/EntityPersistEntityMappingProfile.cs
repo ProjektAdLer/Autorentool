@@ -16,6 +16,7 @@ public class EntityPersistEntityMappingProfile : Profile
         cfg.AddProfile(new EntityPersistEntityMappingProfile());
         cfg.AddCollectionMappers();
     };
+
     private EntityPersistEntityMappingProfile()
     {
         DisableConstructorMapping();
@@ -27,6 +28,19 @@ public class EntityPersistEntityMappingProfile : Profile
         CreateDerivedElementMaps();
         CreateInterfaceMaps();
         CreateEnumMaps();
+        CreateLearningSpaceLayoutMap();
+    }
+
+    private void CreateLearningSpaceLayoutMap()
+    {
+        CreateMap<ILearningSpaceLayout, LearningSpaceLayoutPe>()
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
+        CreateMap<ILearningSpaceLayoutPe, LearningSpaceLayout>()
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
+        CreateMap<LearningSpaceLayout, LearningSpaceLayoutPe>()
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .ReverseMap()
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
     }
 
     private void CreateEnumMaps()
@@ -78,9 +92,14 @@ public class EntityPersistEntityMappingProfile : Profile
         CreateMap<VideoActivationElementPe, ILearningElement>().As<VideoActivationElement>();
         CreateMap<VideoTransferElementPe, ILearningElement>().As<VideoTransferElement>();
         CreateMap<TextTransferElementPe, ILearningElement>().As<TextTransferElement>();
-        
+
         CreateMap<IObjectInPathWay, IObjectInPathWayPe>()
             .ReverseMap();
+
+        CreateMap<LearningSpaceLayout, ILearningSpaceLayoutPe>().As<LearningSpaceLayoutPe>();
+        CreateMap<LearningSpaceLayoutPe, ILearningSpaceLayout>().As<LearningSpaceLayout>();
+        CreateMap<ILearningSpaceLayout, ILearningSpaceLayoutPe>().As<LearningSpaceLayoutPe>();
+        CreateMap<ILearningSpaceLayoutPe, ILearningSpaceLayout>().As<LearningSpaceLayout>();
     }
 
     private void CreateDerivedElementMaps()
@@ -130,7 +149,7 @@ public class EntityPersistEntityMappingProfile : Profile
             .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
             .AfterMap((_, d) =>
             {
-                foreach (var element in d.LearningElements)
+                foreach (var element in d.ContainedLearningElements)
                 {
                     element.Parent = d;
                 }
@@ -175,9 +194,11 @@ public class EntityPersistEntityMappingProfile : Profile
             {
                 foreach (var objectInPathWay in d.ObjectsInPathWays)
                 {
-                    objectInPathWay.InBoundObjects = d.LearningPathways.Where(x => x.TargetObject.Id == objectInPathWay.Id)
+                    objectInPathWay.InBoundObjects = d.LearningPathways
+                        .Where(x => x.TargetObject.Id == objectInPathWay.Id)
                         .Select(x => x.SourceObject).ToList();
-                    objectInPathWay.OutBoundObjects = d.LearningPathways.Where(x => x.SourceObject.Id == objectInPathWay.Id)
+                    objectInPathWay.OutBoundObjects = d.LearningPathways
+                        .Where(x => x.SourceObject.Id == objectInPathWay.Id)
                         .Select(x => x.TargetObject).ToList();
                 }
             });

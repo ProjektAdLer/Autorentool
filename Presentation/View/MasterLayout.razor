@@ -1,65 +1,77 @@
 @using Presentation.View.Layout
 @using Presentation.View.LearningWorld
 @using Presentation.Components.Forms
+@using Presentation.PresentationLogic.DropZone
+@using Presentation.PresentationLogic.LearningElement
+@using Presentation.View.LearningSpace
 @page "/app"
 <div class="flex flex-col h-screen w-screen bg-adlerblue-100 font-sans">
     <HeaderBar/>
-    <div class="columns-3 flex-1 flex flex-row justify-between items-center">
-        <SideContainer Side="Side.Left">
-            <Sidebar SidebarSide="Side.Left">
-                <SidebarItem>
-                    <SidebarContent>
-                        <p class="text-center">Ico</p>
-                    </SidebarContent>
-                    <MainContent>
-                        <p class="text-center">Some elaborate content</p>
-                    </MainContent>
-                </SidebarItem>
-                <SidebarItem>
-                    <SidebarContent>
-                        <p>Ico2</p>
-                    </SidebarContent>
-                    <MainContent>
-                        <p class="whitespace-normal break-all">even more cool contentbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb</p>
-                    </MainContent>
-                </SidebarItem>
-            </Sidebar>
-        </SideContainer>
-        <CenterContainer>
-            <div class="bg-blue-400">
-                Center
-            </div>
-        </CenterContainer>
-        <SideContainer Side="Side.Right">
-            <Sidebar SidebarSide="Side.Right">
-                <SidebarItem>
-                    <SidebarContent>
-                        <div title="LerarningPathWays">
-                            <img class="w-8" src="CustomIcons/world-icon-nobg.png" alt="blabla">
-                        </div>
-                    </SidebarContent>
-                    <MainContent>
-                        <LearningWorldView></LearningWorldView>
-                    </MainContent>
-                </SidebarItem>
-                <SidebarItem>
-                    <SidebarContent>
-                        <div title="LearningWorldOverView">
-                            <img class="w-8" src="CustomIcons/hierarchy-nobg.png" alt="blabla">
-                        </div>
-                    </SidebarContent>
-                    <MainContent>
-                        <LearningWorldOverView></LearningWorldOverView>
-                    </MainContent>
-                </SidebarItem>
-                <SidebarItem>
-                    <SidebarContent>
-                        <MudIcon Icon="@Icons.Material.Filled.PlusOne"></MudIcon>
-                    </SidebarContent>
-                    <MainContent>
-                        <CreateWorldForm/>
-                    </MainContent>
-                </SidebarItem>
+    <MudDropContainer T="ILearningElementViewModel"
+                      Items="ElementDropZoneHelper.GetWorldAndSpaceElements()"
+                      ItemsSelector="ElementDropZoneHelper.IsItemInDropZone"
+                      ItemDropped="ElementDropZoneHelper.ItemUpdated"
+                      class="columns-3 flex-1 flex flex-row justify-between items-center">
+        <ChildContent>
+            <SideContainer Side="Side.Left">
+                <Sidebar SidebarSide="Side.Left">
+                    <SidebarItem>
+                        <SidebarContent>
+                            <p class="text-center">Ico</p>
+                        </SidebarContent>
+                        <MainContent>
+                            <p class="text-center">Some elaborate content</p>
+                            <AuthoringToolWorkspaceView></AuthoringToolWorkspaceView>
+                        </MainContent>
+                    </SidebarItem>
+                    <SidebarItem>
+                        <SidebarContent>
+                            <p>Ico2</p>
+                        </SidebarContent>
+                        <MainContent>
+                            <MudDropZone T="ILearningElementViewModel">
+                                <h2>DropZone1</h2>
+                            </MudDropZone>
+                        </MainContent>
+                    </SidebarItem>
+                </Sidebar>
+            </SideContainer>
+            <CenterContainer>
+                <div class="bg-blue-400">
+                    Center
+                    <LearningSpaceView></LearningSpaceView>
+                </div>
+            </CenterContainer>
+            <SideContainer Side="Side.Right">
+                <Sidebar SidebarSide="Side.Right">
+                    <SidebarItem>
+                        <SidebarContent>
+                            <div title="LerarningPathWays">
+                                <img class="w-8" src="CustomIcons/world-icon-nobg.png" alt="blabla">
+                            </div>
+                        </SidebarContent>
+                        <MainContent>
+                            <LearningWorldView></LearningWorldView>
+                        </MainContent>
+                    </SidebarItem>
+                    <SidebarItem>
+                        <SidebarContent>
+                            <div title="LearningWorldOverView">
+                                <img class="w-8" src="CustomIcons/hierarchy-nobg.png" alt="blabla">
+                            </div>
+                        </SidebarContent>
+                        <MainContent>
+                            <LearningWorldOverView></LearningWorldOverView>
+                        </MainContent>
+                    </SidebarItem>
+                    <SidebarItem>
+                        <SidebarContent>
+                            <MudIcon Icon="@Icons.Material.Filled.PlusOne"></MudIcon>
+                        </SidebarContent>
+                        <MainContent>
+                            <CreateWorldForm/>
+                        </MainContent>
+                    </SidebarItem>
                 <SidebarItem>
                     <SidebarContent>
                         <MudIcon Icon="@Icons.Material.Filled.PlusOne"></MudIcon>
@@ -69,9 +81,18 @@
                     </MainContent>
                 </SidebarItem>
             </Sidebar>
-        </SideContainer>
-    </div>
+            </SideContainer>
+        </ChildContent>
+        <ItemRenderer>
+            <MudListItem Text="@context.Name"></MudListItem>
+
+        </ItemRenderer>
+    </MudDropContainer>
 </div>
+
 @code {
-    
+
+    [Inject]
+    public ILearningElementDropZoneHelper ElementDropZoneHelper { get; set; }
+
 }

@@ -1,10 +1,12 @@
 ﻿using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 
 namespace Presentation.PresentationLogic.LearningSpace;
 
 public interface ILearningSpaceViewModel : IDisplayableLearningObject, IObjectInPathWayViewModel
 {
-    ICollection<ILearningElementViewModel> LearningElements { get; set; }
+    IEnumerable<ILearningElementViewModel> ContainedLearningElements => LearningSpaceLayout.ContainedLearningElements;
+    ILearningSpaceLayoutViewModel LearningSpaceLayout { get; set; }
     int Workload { get; }
     int Points { get; }
     int RequiredPoints { get; }

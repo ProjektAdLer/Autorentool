@@ -71,8 +71,8 @@ public class CreatePathWayConditionUt
         Assert.Multiple(() =>
         {
             Assert.That(pathWayCondition.Condition, Is.EqualTo(ConditionEnum.And));
-            Assert.That(pathWayCondition.PositionX, Is.EqualTo(250));
-            Assert.That(pathWayCondition.PositionY, Is.EqualTo(125));
+            Assert.That(pathWayCondition.PositionX, Is.EqualTo(242));
+            Assert.That(pathWayCondition.PositionY, Is.EqualTo(140));
             Assert.That(world.SelectedLearningObject, Is.EqualTo(pathWayCondition));
         });
         
@@ -93,8 +93,8 @@ public class CreatePathWayConditionUt
         Assert.Multiple(() =>
         {
             Assert.That(pathWayConditionRedo.Condition, Is.EqualTo(ConditionEnum.And));
-            Assert.That(pathWayConditionRedo.PositionX, Is.EqualTo(250));
-            Assert.That(pathWayConditionRedo.PositionY, Is.EqualTo(125));
+            Assert.That(pathWayConditionRedo.PositionX, Is.EqualTo(242));
+            Assert.That(pathWayConditionRedo.PositionY, Is.EqualTo(140));
             Assert.That(world.SelectedLearningObject, Is.EqualTo(pathWayConditionRedo));
         });
     }

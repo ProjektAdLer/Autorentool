@@ -23,9 +23,9 @@ public class PersistenceCt
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
             "Description", "Goals");
         var initialWorldId = world.Id;
-        var space1 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
+        var space1 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5, new LearningSpaceLayoutPe(new ILearningElementPe[6], FloorPlanEnumPe.Rectangle2X3));
         var initialSpace1Id = space1.Id;
-        var space2 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
+        var space2 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5, new LearningSpaceLayoutPe(new ILearningElementPe[6], FloorPlanEnumPe.Rectangle2X3));
         var initialSpace2Id = space2.Id;
         var condition1 = new PathWayConditionPe(ConditionEnumPe.Or, 2, 1);
         var initialCondition1Id = condition1.Id;
@@ -34,7 +34,7 @@ public class PersistenceCt
         var content = new LearningContentPe("a", "b", "");
         var element = new LearningElementPe("le", "la", content, "url","lll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
         var initialElementId = element.Id;
-        space1.LearningElements.Add(element);
+        space1.LearningSpaceLayout.LearningElements[0] = element;
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
         world.PathWayConditions.Add(condition1);
@@ -67,7 +67,7 @@ public class PersistenceCt
             .For(obj => obj.ObjectsInPathWaysPe).Exclude(obj => obj.Id)
             .For(obj => obj.ObjectsInPathWaysPe).Exclude(obj => obj.InBoundObjects)
             .For(obj => obj.ObjectsInPathWaysPe).Exclude(obj => obj.OutBoundObjects)
-            .For(obj => obj.LearningSpaces).For(obj => obj.LearningElements).Exclude(obj => obj.Id)
+            .For(obj => obj.LearningSpaces).For(obj => obj.LearningSpaceLayout.ContainedLearningElements).Exclude(obj => obj.Id)
             .Excluding(obj => obj.LearningPathways));
 
         Assert.That(restoredWorld.LearningSpaces[0].OutBoundObjects, Does.Contain(restoredWorld.PathWayConditions[0]));
@@ -87,7 +87,7 @@ public class PersistenceCt
         Assert.That(initialWorldId, Is.Not.EqualTo(restoredWorld.Id));
         Assert.That(initialSpace1Id, Is.Not.EqualTo(restoredWorld.LearningSpaces.First().Id));
         Assert.That(initialSpace2Id, Is.Not.EqualTo(restoredWorld.LearningSpaces.Last().Id));
-        Assert.That(initialElementId, Is.Not.EqualTo(restoredWorld.LearningSpaces.First().LearningElements.First().Id));
+        Assert.That(initialElementId, Is.Not.EqualTo(restoredWorld.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().Id));
         Assert.That(initialCondition1Id, Is.Not.EqualTo(restoredWorld.PathWayConditions.First().Id));
         Assert.That(initialCondition2Id, Is.Not.EqualTo(restoredWorld.PathWayConditions.Last().Id));
     }
@@ -95,12 +95,12 @@ public class PersistenceCt
     [Test]
     public void Persistence_SaveAndLoadSpace_Stream_ObjectsAreEquivalent()
     {
-        var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
+        var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5, new LearningSpaceLayoutPe(new ILearningElementPe[6], FloorPlanEnumPe.Rectangle2X3));
         var initialSpaceId = space.Id;
         var content = new LearningContentPe("a", "b", "");
         var element = new LearningElementPe("le", "la", content,"url","ll", "l" ,"lll", LearningElementDifficultyEnumPe.Easy);
         var initialElementId = element.Id;
-        space.LearningElements.Add(element);
+        space.LearningSpaceLayout.LearningElements[0] = element;
         
         using var stream = new MemoryStream();
         var systemUnderTest = CreateTestableFileSaveHandler<LearningSpacePe>();
@@ -110,9 +110,9 @@ public class PersistenceCt
         var restoredSpace = systemUnderTest.LoadFromStream(stream);
         
         restoredSpace.Should().BeEquivalentTo(space, options => options.Excluding(obj => obj.Id)
-            .For(obj => obj.LearningElements).Exclude(obj => obj.Id));
+            .For(obj => obj.LearningSpaceLayout.ContainedLearningElements).Exclude(obj => obj.Id));
         Assert.That(initialSpaceId, Is.Not.EqualTo(restoredSpace.Id));
-        Assert.That(initialElementId, Is.Not.EqualTo(restoredSpace.LearningElements.First().Id));
+        Assert.That(initialElementId, Is.Not.EqualTo(restoredSpace.LearningSpaceLayout.ContainedLearningElements.First().Id));
     }
     
     [Test]
@@ -139,9 +139,9 @@ public class PersistenceCt
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
             "Description", "Goals");
         var initialWorldId = world.Id;
-        var space1 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
+        var space1 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5, new LearningSpaceLayoutPe(new ILearningElementPe[6], FloorPlanEnumPe.Rectangle2X3));
         var initialSpace1Id = space1.Id;
-        var space2 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
+        var space2 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5, new LearningSpaceLayoutPe(new ILearningElementPe[6], FloorPlanEnumPe.Rectangle2X3));
         var initialSpace2Id = space2.Id;
         var condition1 = new PathWayConditionPe(ConditionEnumPe.Or, 2, 1);
         var initialCondition1Id = condition1.Id;
@@ -150,7 +150,7 @@ public class PersistenceCt
         var content = new LearningContentPe("a", "b", "");
         var element = new LearningElementPe("le", "la", content, "url","lll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
         var initialElementId = element.Id;
-        space1.LearningElements.Add(element);
+        space1.LearningSpaceLayout.LearningElements[0] = element;
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
         world.PathWayConditions.Add(condition1);
@@ -182,7 +182,7 @@ public class PersistenceCt
             .For(obj => obj.ObjectsInPathWaysPe).Exclude(obj => obj.Id)
             .For(obj => obj.ObjectsInPathWaysPe).Exclude(obj => obj.InBoundObjects)
             .For(obj => obj.ObjectsInPathWaysPe).Exclude(obj => obj.OutBoundObjects)
-            .For(obj => obj.LearningSpaces).For(obj => obj.LearningElements)
+            .For(obj => obj.LearningSpaces).For(obj => obj.LearningSpaceLayout.ContainedLearningElements)
             .Exclude(obj => obj.Id)
             .Excluding(obj => obj.LearningPathways));
         Assert.That(restoredWorld.LearningSpaces[0].OutBoundObjects, Does.Contain(restoredWorld.PathWayConditions[0]));
@@ -202,7 +202,7 @@ public class PersistenceCt
         Assert.That(initialWorldId, Is.Not.EqualTo(restoredWorld.Id));
         Assert.That(initialSpace1Id, Is.Not.EqualTo(restoredWorld.LearningSpaces.First().Id));
         Assert.That(initialSpace2Id, Is.Not.EqualTo(restoredWorld.LearningSpaces.Last().Id));
-        Assert.That(initialElementId, Is.Not.EqualTo(restoredWorld.LearningSpaces.First().LearningElements.First().Id));
+        Assert.That(initialElementId, Is.Not.EqualTo(restoredWorld.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().Id));
         Assert.That(initialCondition1Id, Is.Not.EqualTo(restoredWorld.PathWayConditions.First().Id));
         Assert.That(initialCondition2Id, Is.Not.EqualTo(restoredWorld.PathWayConditions.Last().Id));
     }
@@ -210,12 +210,12 @@ public class PersistenceCt
     [Test]
     public void Persistence_SaveAndLoadSpace_File_ObjectsAreEquivalent()
     {
-        var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
+        var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5, new LearningSpaceLayoutPe(new ILearningElementPe?[6], FloorPlanEnumPe.Rectangle2X3));
         var initialSpaceId = space.Id;
         var content = new LearningContentPe("a", "b", "");
         var element = new LearningElementPe("le", "la", content, "url","ll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
         var initialElementId = element.Id;
-        space.LearningElements.Add(element);
+        space.LearningSpaceLayout.LearningElements[0] = element;
         var mockFileSystem = new MockFileSystem();
         
         var systemUnderTest = CreateTestableFileSaveHandler<LearningSpacePe>(fileSystem:mockFileSystem);
@@ -224,16 +224,16 @@ public class PersistenceCt
         var restoredSpace = systemUnderTest.LoadFromDisk(FilePath);
         
         restoredSpace.Should().BeEquivalentTo(space, options => options.Excluding(obj => obj.Id)
-            .For(obj => obj.LearningElements).Exclude(obj => obj.Id));
+            .For(obj => obj.LearningSpaceLayout.ContainedLearningElements).Exclude(obj => obj.Id));
         Assert.That(initialSpaceId, Is.Not.EqualTo(restoredSpace.Id));
-        Assert.That(initialElementId, Is.Not.EqualTo(restoredSpace.LearningElements.First().Id));
+        Assert.That(initialElementId, Is.Not.EqualTo(restoredSpace.LearningSpaceLayout.ContainedLearningElements.First().Id));
     }
 
     [Test]
     public void Persistence_SaveAndLoadSpace_File_WithAllElementTypes_ObjectsAreEquivalent()
     {
         var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5);
-        space.LearningElements.AddRange(GetAllLearningElementTypes());
+        space.LearningSpaceLayout.LearningElements = GetAllLearningElementTypes();
         
         var systemUnderTest = CreateTestableFileSaveHandler<LearningSpacePe>();
         
@@ -241,7 +241,7 @@ public class PersistenceCt
         var restoredSpace = systemUnderTest.LoadFromDisk(FilePath);
 
         restoredSpace.Should().BeEquivalentTo(space, options => options.Excluding(obj => obj.Id)
-            .For(obj => obj.LearningElements).Exclude(obj => obj.Id));
+            .For(obj => obj.LearningSpaceLayout.ContainedLearningElements).Exclude(obj => obj.Id));
     }
     
     [Test]
@@ -273,25 +273,28 @@ public class PersistenceCt
         restoredLep.Should().BeEquivalentTo(lep, options => options.Excluding(obj => obj.Id));
     }
 
-    static IEnumerable<LearningElementPe> GetAllLearningElementTypes()
+    static ILearningElementPe?[] GetAllLearningElementTypes()
     {
         var content = new LearningContentPe("a", "b", "");
-        yield return new H5PActivationElementPe("h5pAct", "asdf", content, "", "me :)", "description", "a goal",
-            LearningElementDifficultyEnumPe.Easy, 123, 42, 0, 0);
-        yield return new H5PInteractionElementPe("h5pInt", "blabla", content, "", "me :)", "description", "a goal",
-            LearningElementDifficultyEnumPe.Medium, 123, 42, 0, 0);
-        yield return new H5PTestElementPe("h5pTest", "bababubu", content, "", "me :)", "description", "a goal",
-            LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0);
-        yield return new ImageTransferElementPe("imgTrans", "bababubu", content, "", "me :)", "description", "a goal",
-            LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0);
-        yield return new PdfTransferElementPe("pdfTrans", "bababubu", content, "", "me :)", "description", "a goal",
-            LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0);
-        yield return new TextTransferElementPe("txtTrans", "bababubu", content, "", "me :)", "description", "a goal",
-            LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0);
-        yield return new VideoActivationElementPe("vidAct", "bababubu", content, "", "me :)", "description", "a goal",
-            LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0);
-        yield return new VideoTransferElementPe("vidTrans", "bababubu", content, "", "me :)", "description", "a goal",
-            LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0);
+        return new ILearningElementPe[]
+        {
+            new H5PActivationElementPe("h5pAct", "asdf", content, "", "me :)", "description", "a goal",
+                LearningElementDifficultyEnumPe.Easy, 123, 42, 0, 0),
+            new H5PInteractionElementPe("h5pInt", "blabla", content, "", "me :)", "description", "a goal",
+                LearningElementDifficultyEnumPe.Medium, 123, 42, 0, 0),
+            new H5PTestElementPe("h5pTest", "bababubu", content, "", "me :)", "description", "a goal",
+                LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0),
+            new ImageTransferElementPe("imgTrans", "bababubu", content, "", "me :)", "description", "a goal",
+                LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0),
+            new PdfTransferElementPe("pdfTrans", "bababubu", content, "", "me :)", "description", "a goal",
+                LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0),
+            new TextTransferElementPe("txtTrans", "bababubu", content, "", "me :)", "description", "a goal",
+                LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0),
+            new VideoActivationElementPe("vidAct", "bababubu", content, "", "me :)", "description", "a goal",
+                LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0),
+            new VideoTransferElementPe("vidTrans", "bababubu", content, "", "me :)", "description", "a goal",
+                LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0),
+        };
     }
 
     [Test]
@@ -301,9 +304,9 @@ public class PersistenceCt
         var element = new LearningElementPe("le", "la", content,"",  "ll", "llll", "lllll",
             LearningElementDifficultyEnumPe.Easy);
         var space1 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5,
-            new List<LearningElementPe> { element });
+            new LearningSpaceLayoutPe(new ILearningElementPe?[] {element}, FloorPlanEnumPe.Rectangle2X3));
         var space2 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5,
-            new List<LearningElementPe> { element });
+            new LearningSpaceLayoutPe(new ILearningElementPe?[] {element}, FloorPlanEnumPe.Rectangle2X3));
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
             "Description", "Goals", learningSpaces: new List<LearningSpacePe> { space1, space2 });
         
@@ -314,8 +317,9 @@ public class PersistenceCt
         systemUnderTest.SaveToDisk(world, "foobar.txt");
 
         var actual = systemUnderTest.LoadFromDisk("foobar.txt");
-        
-        Assert.That(actual.LearningSpaces[0].LearningElements.First(), Is.EqualTo(actual.LearningSpaces[1].LearningElements.First()));
+
+        Assert.That(actual.LearningSpaces[0].LearningSpaceLayout.ContainedLearningElements.First(),
+            Is.EqualTo(actual.LearningSpaces[1].LearningSpaceLayout.ContainedLearningElements.First()));
     }
     
     [Test]
@@ -327,9 +331,9 @@ public class PersistenceCt
         var element2 = new LearningElementPe("le", "la", content, "","ll", "llll", "lllll",
             LearningElementDifficultyEnumPe.Easy);
         var space1 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5,
-            new List<LearningElementPe> { element1 });
+            new LearningSpaceLayoutPe(new ILearningElementPe?[] {element1}, FloorPlanEnumPe.Rectangle2X3));
         var space2 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5,
-            new List<LearningElementPe> { element2 });
+            new LearningSpaceLayoutPe(new ILearningElementPe[] {element2}, FloorPlanEnumPe.Rectangle2X3));
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
             "Description", "Goals", learningSpaces: new List<LearningSpacePe> { space1, space2 });
         
@@ -340,8 +344,9 @@ public class PersistenceCt
         systemUnderTest.SaveToDisk(world, "foobar.txt");
 
         var actual = systemUnderTest.LoadFromDisk("foobar.txt");
-        
-        Assert.That(actual.LearningSpaces[0].LearningElements.First(), Is.Not.EqualTo(actual.LearningSpaces[1].LearningElements.First()));
+
+        Assert.That(actual.LearningSpaces[0].LearningSpaceLayout.ContainedLearningElements.First(),
+            Is.Not.EqualTo(actual.LearningSpaces[1].LearningSpaceLayout.ContainedLearningElements.First()));
     }
     
     private XmlFileHandler<T> CreateTestableFileSaveHandler<T>(ILogger<XmlFileHandler<T>>? logger = null, IFileSystem? fileSystem = null) where T : class

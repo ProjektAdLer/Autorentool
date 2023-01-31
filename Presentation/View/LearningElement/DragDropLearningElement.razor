@@ -1,0 +1,64 @@
+﻿@using Presentation.PresentationLogic.LearningElement
+@using Shared
+@using Presentation.Components
+<MudMenu ActivationEvent="MouseEvent.RightClick" PositionAtCursor="true" @onclick="() => OnClicked.InvokeAsync(LearningElement)">
+    <ActivatorContent>
+        <MudCard Class="flex">
+            @{
+                var item = LearningElement;
+                var text = item.Name;
+            }
+            <MudListItem Text="@text"></MudListItem>
+            <MudIcon Icon="@GetDifficultyIcon(LearningElement.Difficulty)"/>
+        </MudCard>
+    </ActivatorContent>
+    <ChildContent>
+        <MudMenuItem OnClick="() => OnShowLearningElementContent.InvokeAsync(LearningElement)">Show</MudMenuItem>
+        <MudMenuItem OnClick="() => OnEditLearningElement.InvokeAsync(LearningElement)">Edit</MudMenuItem>
+        <MudMenuItem OnClick="() => OnDeleteLearningElement.InvokeAsync(LearningElement)">Delete</MudMenuItem>
+    </ChildContent>
+</MudMenu>
+
+@code {
+
+    [Parameter, EditorRequired]
+    public ILearningElementViewModel LearningElement { get; set; } = null!;
+
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningElementViewModel> OnShowLearningElementContent { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningElementViewModel> OnEditLearningElement { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningElementViewModel> OnDeleteLearningElement { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningElementViewModel> OnClicked { get; set; }
+
+    [Parameter]
+    public EventCallback<ILearningElementViewModel> OnDoubleClicked { get; set; }
+
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (LearningElement is null)
+        {
+            throw new ArgumentNullException(nameof(LearningElement));
+        }
+    }
+
+    internal static string GetDifficultyIcon(LearningElementDifficultyEnum difficulty)
+    {
+        return difficulty switch
+        {
+            LearningElementDifficultyEnum.Easy => CustomIcons.DifficultyPolygonEasy,
+            LearningElementDifficultyEnum.Medium => CustomIcons.DifficultyPolygonMedium,
+            LearningElementDifficultyEnum.Hard => CustomIcons.DifficultyPolygonHard,
+            LearningElementDifficultyEnum.None => CustomIcons.DifficultyPolygonNone,
+            _ => throw new ArgumentOutOfRangeException(nameof(difficulty))
+            };
+    }
+
+}
