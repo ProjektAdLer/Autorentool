@@ -8,7 +8,7 @@ using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
 
-namespace AuthoringTool;
+namespace AuthoringTool.Mapping;
 
 public class CachingMapper : ICachingMapper
 {

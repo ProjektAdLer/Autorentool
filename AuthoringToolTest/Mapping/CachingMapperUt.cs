@@ -1,4 +1,5 @@
 ﻿using AuthoringTool;
+using AuthoringTool.Mapping;
 using AutoMapper;
 using BusinessLogic.Commands;
 using BusinessLogic.Entities;
@@ -12,7 +13,7 @@ using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
 
-namespace AuthoringToolTest;
+namespace AuthoringToolTest.Mapping;
 
 [TestFixture]
 public class CachingMapperUt
@@ -61,9 +62,8 @@ switch (entity, viewModel)
         var workspaceViewModel = new AuthoringToolWorkspaceViewModel();
         var worldEntity = new LearningWorld("n", "s", "a", "l", "d", "g");
         workspace.LearningWorlds.Add(worldEntity);
-        var config = new MapperConfiguration(MappingProfile.Configure);
-        var mapper = config.CreateMapper();
-        var systemUnderTest = CreateTestableCachingMapper(mapper);
+        
+        var systemUnderTest = CreateTestableCachingMapper();
 
         systemUnderTest.Map(workspace, workspaceViewModel);
 
@@ -87,9 +87,8 @@ switch (entity, viewModel)
         var workspaceViewModel = new AuthoringToolWorkspaceViewModel();
         var worldEntity = new LearningWorld("n", "s", "a", "l", "d", "g");
         workspace.LearningWorlds.Add(worldEntity);
-        var config = new MapperConfiguration(MappingProfile.Configure);
-        var mapper = config.CreateMapper();
-        var systemUnderTest = CreateTestableCachingMapper(mapper);
+        
+        var systemUnderTest = CreateTestableCachingMapper();
 
         systemUnderTest.Map(workspace, workspaceViewModel);
 
@@ -130,9 +129,8 @@ switch (entity, viewModel)
         world.LearningSpaces.Add(spaceEntity);
         world.PathWayConditions.Add(conditionEntity);
         world.LearningPathways.Add(pathWayEntity);
-        var config = new MapperConfiguration(MappingProfile.Configure);
-        var mapper = config.CreateMapper();
-        var systemUnderTest = CreateTestableCachingMapper(mapper);
+        
+        var systemUnderTest = CreateTestableCachingMapper();
 
         systemUnderTest.Map(world, worldViewModel);
 
@@ -173,9 +171,8 @@ switch (entity, viewModel)
         world.LearningSpaces.Add(spaceEntity);
         world.PathWayConditions.Add(conditionEntity);
         world.LearningPathways.Add(pathWayEntity);
-        var config = new MapperConfiguration(MappingProfile.Configure);
-        var mapper = config.CreateMapper();
-        var systemUnderTest = CreateTestableCachingMapper(mapper);
+        
+        var systemUnderTest = CreateTestableCachingMapper();
 
         systemUnderTest.Map(world, worldViewModel);
 
@@ -213,9 +210,7 @@ switch (entity, viewModel)
         var elementEntity = new LearningElement("n", "s", new LearningContent("n", "t", "f"), "u", "a", "d", "g", LearningElementDifficultyEnum.Easy, spaceEntity);
         spaceEntity.LearningSpaceLayout.LearningElements[3] = elementEntity;
         
-        var config = new MapperConfiguration(MappingProfile.Configure);
-        var mapper = config.CreateMapper();
-        var systemUnderTest = CreateTestableCachingMapper(mapper);
+        var systemUnderTest = CreateTestableCachingMapper();
         
         var spaceViewModel = new LearningSpaceViewModel("", "", "", "", "", 0, new LearningSpaceLayoutViewModel());
         
@@ -273,9 +268,8 @@ switch (entity, viewModel)
         var spaceViewModel = new LearningSpaceViewModel("x","x","x","x","x",5);
         var elementEntity = new LearningElement("n", "s", null!,"u","a", "d", "g", LearningElementDifficultyEnum.Easy);
         space.LearningSpaceLayout.LearningElements[0] = elementEntity;
-        var config = new MapperConfiguration(MappingProfile.Configure);
-        var mapper = config.CreateMapper();
-        var systemUnderTest = CreateTestableCachingMapper(mapper);
+        
+        var systemUnderTest = CreateTestableCachingMapper();
 
         systemUnderTest.Map(space, spaceViewModel);
 
@@ -303,9 +297,8 @@ switch (entity, viewModel)
         var elementEntity =
             new LearningElement("n", "s", null!, "u", "a", "d", "g", LearningElementDifficultyEnum.Easy);
         space.LearningSpaceLayout.LearningElements[0] = elementEntity;
-        var config = new MapperConfiguration(MappingProfile.Configure);
-        var mapper = config.CreateMapper();
-        var systemUnderTest = CreateTestableCachingMapper(mapper);
+        
+        var systemUnderTest = CreateTestableCachingMapper();
 
         systemUnderTest.Map(space, spaceViewModel);
 
@@ -337,10 +330,9 @@ switch (entity, viewModel)
         var spaceEntity = new LearningSpace("n", "s", "a", "d", "g", 5, new LearningSpaceLayout(new ILearningElement?[6], FloorPlanEnum.Rectangle2X3));
         var elementEntity = new LearningElement("n", "s", null!,"u","a", "d", "g", LearningElementDifficultyEnum.Easy);
         var secondElementEntity = new LearningElement("n2", "s2", null!,"u2","a2", "d2", "g2", LearningElementDifficultyEnum.Easy);
-        var config = new MapperConfiguration(MappingProfile.Configure);
-        var mapper = config.CreateMapper();
+        
         var mockCommandStateManager = Substitute.For<ICommandStateManager>();
-        var systemUnderTest = CreateTestableCachingMapper(mapper, mockCommandStateManager);
+        var systemUnderTest = CreateTestableCachingMapper(commandStateManager: mockCommandStateManager);
 
         Assert.That(systemUnderTest.ReadOnlyCache, Has.Count.EqualTo(0));
         systemUnderTest.Map(workspace, workspaceViewModel);
@@ -376,9 +368,8 @@ switch (entity, viewModel)
     {
         var elementEntity = new LearningElement("n", "s", null!,"u","a", "d", "g", LearningElementDifficultyEnum.Easy);
         var elementViewModel = new LearningElementViewModel("x","x",null!,"x","x","x","x",LearningElementDifficultyEnum.Easy);
-        var config = new MapperConfiguration(MappingProfile.Configure);
-        var mapper = config.CreateMapper();
-        var systemUnderTest = CreateTestableCachingMapper(mapper);
+        
+        var systemUnderTest = CreateTestableCachingMapper();
 
         Assert.That(systemUnderTest.ReadOnlyCache, Has.Count.EqualTo(0));
         systemUnderTest.Map(elementEntity, elementViewModel);
@@ -399,7 +390,8 @@ switch (entity, viewModel)
     private static CachingMapper CreateTestableCachingMapper(
         IMapper? mapper = null, ICommandStateManager? commandStateManager = null, ILogger<CachingMapper>? logger = null)
     {
-        mapper ??= Substitute.For<IMapper>();
+        var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
+        mapper ??= config.CreateMapper();
         commandStateManager ??= Substitute.For<ICommandStateManager>();
         logger ??= Substitute.For<ILogger<CachingMapper>>();
 

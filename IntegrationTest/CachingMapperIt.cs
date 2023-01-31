@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using AuthoringTool;
+using AuthoringTool.Mapping;
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
@@ -8,6 +9,7 @@ using ElectronWrapper;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Shared;
 using Shared.Configuration;
@@ -22,27 +24,27 @@ public class CachingMapperIt
     {
         var commandStateManager = new CommandStateManager();
         var businessLogic = new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager);
-        var config = new MapperConfiguration(MappingProfile.Configure);
+        var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
         var logger = Substitute.For<ILogger<CachingMapper>>();
         var cachingMapper = new CachingMapper(mapper, commandStateManager, logger);
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper);
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        systemUnderTest.CreateLearningWorld(workspaceVm, "a","b","c","d","e","f");
+        systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f");
         Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
         var worldVm = workspaceVm.LearningWorlds[0];
-        
+
         Assert.That(workspaceVm.SelectedLearningWorld, Is.EqualTo(worldVm));
-        systemUnderTest.EditLearningWorld(workspaceVm.SelectedLearningWorld!, "a1","b1","c1","d1","e1","f1");
+        systemUnderTest.EditLearningWorld(workspaceVm.SelectedLearningWorld!, "a1", "b1", "c1", "d1", "e1", "f1");
         systemUnderTest.UndoCommand();
         Assert.That(workspaceVm.SelectedLearningWorld, Is.EqualTo(worldVm));
-        
+
         systemUnderTest.UndoCommand();
-        
+
         Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(0));
-        
+
         systemUnderTest.RedoCommand();
-        
+
         Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
         Assert.Multiple(() =>
         {
@@ -50,52 +52,51 @@ public class CachingMapperIt
             Assert.That(workspaceVm.LearningWorlds[0].Name, Is.EqualTo(worldVm.Name));
             Assert.That(workspaceVm.LearningWorlds[0].Description, Is.EqualTo(worldVm.Description));
         });
-        
     }
-    
+
     [Test]
     public void CreateWorldAndSpaceThenUndoAndRedo_CheckIfWorldViewModelStaysTheSame()
     {
         var commandStateManager = new CommandStateManager();
         var businessLogic = new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager);
-        var config = new MapperConfiguration(MappingProfile.Configure);
+        var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
         var logger = Substitute.For<ILogger<CachingMapper>>();
         var cachingMapper = new CachingMapper(mapper, commandStateManager, logger);
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper);
-        
+
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        
-        systemUnderTest.CreateLearningWorld(workspaceVm, "a","b","c","d","e","f");
-        
+
+        systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f");
+
         Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
 
         var worldVm = workspaceVm.LearningWorlds[0];
-        
-        systemUnderTest.CreateLearningSpace(worldVm, "g","h","i","j","k",1, 2, 3);
-        
+
+        systemUnderTest.CreateLearningSpace(worldVm, "g", "h", "i", "j", "k", 1, 2, 3);
+
         Assert.That(worldVm.LearningSpaces, Has.Count.EqualTo(1));
-        
+
         var spaceVm = worldVm.LearningSpaces.First();
-        
+
         Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
         Assert.That(worldVm.Name, Is.EqualTo("a"));
         Assert.That(spaceVm.Name, Is.EqualTo("g"));
-        
+
         Assert.That(worldVm.LearningSpaces.First(), Is.EqualTo(spaceVm));
-        
+
         //Undo Redo CreateLearningSpaceCommand
         systemUnderTest.UndoCommand();
         systemUnderTest.RedoCommand();
-        
+
         Assert.That(worldVm.LearningSpaces.First(), Is.EqualTo(spaceVm));
-        
+
         //Undo Redo CreateLearningSpaceCommand and CreateLearningWorldCommand
         systemUnderTest.UndoCommand();
         systemUnderTest.UndoCommand();
         systemUnderTest.RedoCommand();
         systemUnderTest.RedoCommand();
-        
+
         Assert.That(workspaceVm.LearningWorlds[0], Is.EqualTo(worldVm));
         Assert.Multiple(() =>
         {
@@ -113,7 +114,7 @@ public class CachingMapperIt
     {
         var commandStateManager = new CommandStateManager();
         var businessLogic = new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager);
-        var config = new MapperConfiguration(MappingProfile.Configure);
+        var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
         var logger = Substitute.For<ILogger<CachingMapper>>();
         var cachingMapper = new CachingMapper(mapper, commandStateManager, logger);
@@ -134,7 +135,8 @@ public class CachingMapperIt
 
         var spaceVm = worldVm.LearningSpaces.First();
 
-        systemUnderTest.CreateLearningElement(spaceVm, 0, "l", "m", ElementTypeEnum.Transfer,ContentTypeEnum.PDF, null!, "url", "n", "o","p", LearningElementDifficultyEnum.Easy, 2, 3);
+        systemUnderTest.CreateLearningElement(spaceVm, 0, "l", "m", ElementTypeEnum.Transfer, ContentTypeEnum.PDF,
+            null!, "url", "n", "o", "p", LearningElementDifficultyEnum.Easy, 2, 3);
 
         Assert.That(spaceVm.ContainedLearningElements.Count(), Is.EqualTo(1));
 
@@ -165,15 +167,17 @@ public class CachingMapperIt
         });
         Assert.Multiple(() =>
         {
-            Assert.That(workspaceVm.LearningWorlds[0].LearningSpaces.First().ContainedLearningElements.Count(), Is.EqualTo(1));
-            Assert.That(workspaceVm.LearningWorlds[0].LearningSpaces.First().ContainedLearningElements.First(), Is.EqualTo(elementVm));
+            Assert.That(workspaceVm.LearningWorlds[0].LearningSpaces.First().ContainedLearningElements.Count(),
+                Is.EqualTo(1));
+            Assert.That(workspaceVm.LearningWorlds[0].LearningSpaces.First().ContainedLearningElements.First(),
+                Is.EqualTo(elementVm));
         });
     }
 
-    private static Presentation.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(
-        IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null, 
-        ICachingMapper? cachingMapper = null, IServiceProvider? serviceProvider = null, 
-        ILogger<Presentation.PresentationLogic.API.PresentationLogic>? logger = null, 
+    private static PresentationLogic CreateTestablePresentationLogic(
+        IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null,
+        ICachingMapper? cachingMapper = null, IServiceProvider? serviceProvider = null,
+        ILogger<PresentationLogic>? logger = null,
         IHybridSupportWrapper? hybridSupportWrapper = null, IShellWrapper? shellWrapper = null)
     {
         configuration ??= Substitute.For<IAuthoringToolConfiguration>();
@@ -181,11 +185,12 @@ public class CachingMapperIt
         mapper ??= Substitute.For<IMapper>();
         cachingMapper ??= Substitute.For<ICachingMapper>();
         serviceProvider ??= Substitute.For<IServiceProvider>();
-        logger ??= Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
+        logger ??= Substitute.For<ILogger<PresentationLogic>>();
         hybridSupportWrapper ??= Substitute.For<IHybridSupportWrapper>();
         shellWrapper ??= Substitute.For<IShellWrapper>();
 
-        return new Presentation.PresentationLogic.API.PresentationLogic(configuration, businessLogic, mapper, cachingMapper,
+        return new PresentationLogic(configuration, businessLogic, mapper,
+            cachingMapper,
             serviceProvider, logger, hybridSupportWrapper, shellWrapper);
     }
 }
