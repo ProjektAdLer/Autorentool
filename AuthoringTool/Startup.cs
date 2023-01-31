@@ -1,5 +1,6 @@
 using System.IO.Abstractions;
 using System.Reflection;
+using AuthoringTool.Mapping;
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
@@ -149,7 +150,12 @@ public class Startup
     
     private static void ConfigureAutoMapper(IServiceCollection services)
     {
-        var config = new MapperConfiguration(MappingProfile.Configure);
+        var config = new MapperConfiguration(cfg =>
+        {
+            ViewModelEntityMappingProfile.Configure(cfg);
+            EntityPersistEntityMappingProfile.Configure(cfg);
+            //FormModelEntityMappingProfile.Configure(cfg);
+        });
         
         var mapper = config.CreateMapper();
         services.AddSingleton(mapper);
