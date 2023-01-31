@@ -1,4 +1,5 @@
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Layout;
 using BusinessLogic.Entities;
 using NUnit.Framework;
 using Shared;
@@ -22,7 +23,7 @@ public class SwitchLearningElementSlotUt
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new SwitchLearningElementSlot(parent, element, 2, mappingAction);
+        var command = new PlaceLearningElementInLayoutFromLayout(parent, element, 2, mappingAction);
 
         Assert.Multiple(() =>
         {
@@ -58,7 +59,7 @@ public class SwitchLearningElementSlotUt
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new SwitchLearningElementSlot(parent, element, 2, mappingAction);
+        var command = new PlaceLearningElementInLayoutFromLayout(parent, element, 2, mappingAction);
 
         Assert.Multiple(() =>
         {
@@ -93,7 +94,7 @@ public class SwitchLearningElementSlotUt
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new SwitchLearningElementSlot(parent, element, 2, mappingAction);
+        var command = new PlaceLearningElementInLayoutFromLayout(parent, element, 2, mappingAction);
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.Multiple(() =>
@@ -117,7 +118,7 @@ public class SwitchLearningElementSlotUt
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new SwitchLearningElementSlot(parent, element, 2, mappingAction);
+        var command = new PlaceLearningElementInLayoutFromLayout(parent, element, 2, mappingAction);
 
         Assert.Multiple(() =>
         {
@@ -173,7 +174,7 @@ public class SwitchLearningElementSlotUt
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new SwitchLearningElementSlot(parent, element, 2, mappingAction);
+        var command = new PlaceLearningElementInLayoutFromLayout(parent, element, 2, mappingAction);
 
         Assert.Multiple(() =>
         {

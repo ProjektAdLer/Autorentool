@@ -1,22 +1,27 @@
 using BusinessLogic.Entities;
 
-namespace BusinessLogic.Commands;
+namespace BusinessLogic.Commands.Layout;
 
-public class DragLearningElementToUnplaced : IUndoCommand
+/// <summary>
+/// Places an unplaced learning element in a slot in a layout.
+/// </summary>
+public class PlaceLearningElementInLayoutFromUnplaced : IUndoCommand
 {
     internal LearningWorld LearningWorld { get; }
     internal LearningSpace LearningSpace { get; }
+    internal int NewSlotIndex { get; }
     internal ILearningElement LearningElement { get; }
     private readonly Action<LearningWorld> _mappingAction;
     private IMemento? _mementoWorld;
     private IMemento? _mementoSpaceLayout;
 
-    public DragLearningElementToUnplaced(LearningWorld learningWorld, LearningSpace learningSpace,
-        ILearningElement learningElement, Action<LearningWorld> mappingAction)
+    public PlaceLearningElementInLayoutFromUnplaced(LearningWorld learningWorld, LearningSpace learningSpace,
+        ILearningElement learningElement, int newSlotIndex, Action<LearningWorld> mappingAction)
     {
         LearningWorld = learningWorld;
         LearningSpace = LearningWorld.LearningSpaces.First(x => x.Id == learningSpace.Id);
-        LearningElement = LearningSpace.ContainedLearningElements.First(x => x.Id == learningElement.Id);
+        LearningElement = LearningWorld.UnplacedLearningElements.First(x => x.Id == learningElement.Id);
+        NewSlotIndex = newSlotIndex;
         _mappingAction = mappingAction;
     }
 
@@ -25,17 +30,21 @@ public class DragLearningElementToUnplaced : IUndoCommand
         _mementoWorld = LearningWorld.GetMemento();
         _mementoSpaceLayout = LearningSpace.LearningSpaceLayout.GetMemento();
 
-        var oldSlot = Array.IndexOf(LearningSpace.LearningSpaceLayout.LearningElements, LearningElement);
-
-        if (oldSlot >= 0)
+        if (LearningWorld.UnplacedLearningElements.Contains(LearningElement))
         {
-            LearningSpace.LearningSpaceLayout.LearningElements[oldSlot] = null;
+            LearningWorld.UnplacedLearningElements.Remove(LearningElement);
         }
 
-        if (LearningWorld.UnplacedLearningElements.Contains(LearningElement) == false)
+        var oldElement = LearningSpace.LearningSpaceLayout.LearningElements[NewSlotIndex];
+        if (oldElement != null)
         {
-            LearningWorld.UnplacedLearningElements.Add(LearningElement);
+            if (LearningWorld.UnplacedLearningElements.Contains(oldElement) == false)
+            {
+                LearningWorld.UnplacedLearningElements.Add(oldElement);
+            }
         }
+
+        LearningSpace.LearningSpaceLayout.LearningElements[NewSlotIndex] = LearningElement;
 
         _mappingAction.Invoke(LearningWorld);
     }

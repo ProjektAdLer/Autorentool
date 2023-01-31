@@ -1,8 +1,7 @@
-using System.ComponentModel.DataAnnotations;
 using BusinessLogic.Entities;
 using LearningElementDifficultyEnum = Shared.LearningElementDifficultyEnum;
 
-namespace BusinessLogic.Commands;
+namespace BusinessLogic.Commands.Element;
 
 public class EditLearningElement : IUndoCommand
 {

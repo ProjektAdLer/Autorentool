@@ -1,4 +1,5 @@
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Space;
 using BusinessLogic.Entities;
 using NUnit.Framework;
 using Shared;

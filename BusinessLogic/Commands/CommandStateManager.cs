@@ -1,5 +1,8 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using BusinessLogic.Commands.Element;
+using BusinessLogic.Commands.Space;
+using BusinessLogic.Commands.World;
 
 namespace BusinessLogic.Commands;
 

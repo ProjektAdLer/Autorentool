@@ -1,44 +1,36 @@
-using BusinessLogic.API;
 using BusinessLogic.Entities;
 
-namespace BusinessLogic.Commands;
+namespace BusinessLogic.Commands.Space;
 
-public class LoadLearningSpace : IUndoCommand
+public class CreateLearningSpace : IUndoCommand
 {
-    private readonly IBusinessLogic _businessLogic;
-    
     internal LearningWorld LearningWorld { get; }
-    internal LearningSpace? LearningSpace;
-    private readonly string _filepath;
+    internal LearningSpace LearningSpace { get; }
     private readonly Action<LearningWorld> _mappingAction;
     private IMemento? _memento;
 
-    public LoadLearningSpace(LearningWorld learningWorld, string filepath, IBusinessLogic businessLogic,
-        Action<LearningWorld> mappingAction)
+    public CreateLearningSpace(LearningWorld learningWorld, string name, string shortname, string authors,
+        string description, string goals, int requiredPoints, double positionX, double positionY, Action<LearningWorld> mappingAction)
     {
+        LearningSpace = new LearningSpace(name, shortname, authors, description, goals, requiredPoints, null, positionX, positionY);
         LearningWorld = learningWorld;
-        _filepath = filepath;
-        _businessLogic = businessLogic;
         _mappingAction = mappingAction;
     }
-    
-    public LoadLearningSpace(LearningWorld learningWorld, Stream stream, IBusinessLogic businessLogic,
-        Action<LearningWorld> mappingAction)
+
+    public CreateLearningSpace(LearningWorld learningWorld, LearningSpace learningSpace, Action<LearningWorld> mappingAction)
     {
+        LearningSpace = learningSpace;
         LearningWorld = learningWorld;
-        _filepath = "";
-        _businessLogic = businessLogic;
-        LearningSpace = _businessLogic.LoadLearningSpace(stream);
         _mappingAction = mappingAction;
     }
+
     public void Execute()
     {
         _memento = LearningWorld.GetMemento();
-        
-        LearningSpace ??= _businessLogic.LoadLearningSpace(_filepath);
+
         LearningWorld.LearningSpaces.Add(LearningSpace);
         LearningWorld.SelectedLearningObject = LearningSpace;
-
+        
         _mappingAction.Invoke(LearningWorld);
     }
 

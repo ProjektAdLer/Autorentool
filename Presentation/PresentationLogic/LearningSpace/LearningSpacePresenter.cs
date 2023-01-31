@@ -27,8 +27,13 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     private bool _createLearningElementDialogOpen;
     private int _creationCounter = 0;
     private int _activeSlot = -1;
+    private ILearningSpaceViewModel? _learningSpaceVm;
 
-    public ILearningSpaceViewModel? LearningSpaceVm { get; private set; }
+    public ILearningSpaceViewModel? LearningSpaceVm
+    {
+        get => _learningSpaceVm;
+        private set => SetField(ref _learningSpaceVm, value);
+    }
 
     public LearningContentViewModel? DragAndDropLearningContent { get; private set; }
     public IDisplayableLearningObject? RightClickedLearningObject { get; private set; }

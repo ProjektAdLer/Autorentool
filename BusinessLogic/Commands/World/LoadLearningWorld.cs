@@ -1,7 +1,7 @@
 using BusinessLogic.API;
 using BusinessLogic.Entities;
 
-namespace BusinessLogic.Commands;
+namespace BusinessLogic.Commands.World;
 
 public class LoadLearningWorld : IUndoCommand
 {

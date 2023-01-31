@@ -1,6 +1,6 @@
 using BusinessLogic.Entities;
 
-namespace BusinessLogic.Commands;
+namespace BusinessLogic.Commands.World;
 
 public class EditLearningWorld : IUndoCommand
 {

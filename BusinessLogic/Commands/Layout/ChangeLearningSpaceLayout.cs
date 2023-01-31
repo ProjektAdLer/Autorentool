@@ -2,7 +2,7 @@ using BusinessLogic.Entities;
 using BusinessLogic.Entities.FloorPlans;
 using Shared;
 
-namespace BusinessLogic.Commands;
+namespace BusinessLogic.Commands.Layout;
 
 public class ChangeLearningSpaceLayout : IUndoCommand
 {

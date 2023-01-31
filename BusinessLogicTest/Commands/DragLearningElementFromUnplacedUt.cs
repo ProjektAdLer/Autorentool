@@ -1,4 +1,5 @@
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Layout;
 using BusinessLogic.Entities;
 using NUnit.Framework;
 using Shared;
@@ -24,7 +25,7 @@ public class DragLearningElementFromUnplacedUt
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new DragLearningElementFromUnplaced(world, space, element, 2, mappingAction);
+        var command = new PlaceLearningElementInLayoutFromUnplaced(world, space, element, 2, mappingAction);
 
         Assert.Multiple(() =>
         {
@@ -64,7 +65,7 @@ public class DragLearningElementFromUnplacedUt
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new DragLearningElementFromUnplaced(world, space, element, 2, mappingAction);
+        var command = new PlaceLearningElementInLayoutFromUnplaced(world, space, element, 2, mappingAction);
 
         Assert.Multiple(() =>
         {
@@ -103,7 +104,7 @@ public class DragLearningElementFromUnplacedUt
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new DragLearningElementFromUnplaced(world, space, element, 2, mappingAction);
+        var command = new PlaceLearningElementInLayoutFromUnplaced(world, space, element, 2, mappingAction);
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.Multiple(() =>
@@ -129,7 +130,7 @@ public class DragLearningElementFromUnplacedUt
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new DragLearningElementFromUnplaced(world, space, element, 2, mappingAction);
+        var command = new PlaceLearningElementInLayoutFromUnplaced(world, space, element, 2, mappingAction);
 
         Assert.Multiple(() =>
         {
@@ -191,7 +192,7 @@ public class DragLearningElementFromUnplacedUt
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new DragLearningElementFromUnplaced(world, space, element, 2, mappingAction);
+        var command = new PlaceLearningElementInLayoutFromUnplaced(world, space, element, 2, mappingAction);
 
         Assert.Multiple(() =>
         {

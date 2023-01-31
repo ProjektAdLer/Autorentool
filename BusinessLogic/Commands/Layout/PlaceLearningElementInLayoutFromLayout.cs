@@ -1,8 +1,11 @@
 using BusinessLogic.Entities;
 
-namespace BusinessLogic.Commands;
+namespace BusinessLogic.Commands.Layout;
 
-public class SwitchLearningElementSlot : IUndoCommand
+/// <summary>
+/// Places a learning element that is already contained in the layout into a different slot in that layout.
+/// </summary>
+public class PlaceLearningElementInLayoutFromLayout : IUndoCommand
 {
     internal LearningSpace ParentSpace { get; }
     internal int NewSlotIndex { get; }
@@ -10,7 +13,7 @@ public class SwitchLearningElementSlot : IUndoCommand
     private readonly Action<LearningSpace> _mappingAction;
     private IMemento? _memento;
 
-    public SwitchLearningElementSlot(LearningSpace parentSpace, ILearningElement learningElement, int newNewSlotIndex,
+    public PlaceLearningElementInLayoutFromLayout(LearningSpace parentSpace, ILearningElement learningElement, int newNewSlotIndex,
         Action<LearningSpace> mappingAction)
     {
         ParentSpace = parentSpace;

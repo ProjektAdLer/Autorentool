@@ -1,5 +1,6 @@
 using BusinessLogic.API;
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Space;
 using BusinessLogic.Entities;
 using NSubstitute;
 using NUnit.Framework;

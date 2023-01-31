@@ -1,8 +1,7 @@
-using System.Text.RegularExpressions;
 using BusinessLogic.Entities;
 using Shared.Extensions;
 
-namespace BusinessLogic.Commands;
+namespace BusinessLogic.Commands.World;
 
 public class CreateLearningWorld : IUndoCommand
 {

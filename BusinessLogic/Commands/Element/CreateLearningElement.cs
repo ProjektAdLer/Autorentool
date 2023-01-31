@@ -3,7 +3,7 @@ using ElementTypeEnum = Shared.ElementTypeEnum;
 using ContentTypeEnum = Shared.ContentTypeEnum;
 using LearningElementDifficultyEnum = Shared.LearningElementDifficultyEnum;
 
-namespace BusinessLogic.Commands;
+namespace BusinessLogic.Commands.Element;
 
 public class CreateLearningElement : IUndoCommand
 {

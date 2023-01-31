@@ -1,7 +1,7 @@
 using BusinessLogic.Entities;
 using Shared;
 
-namespace BusinessLogic.Commands;
+namespace BusinessLogic.Commands.Condition;
 
 public class CreatePathWayCondition : IUndoCommand
 {

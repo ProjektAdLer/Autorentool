@@ -1,4 +1,5 @@
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Layout;
 using BusinessLogic.Entities;
 using NUnit.Framework;
 using Shared;
@@ -24,7 +25,7 @@ public class DragLearningElementToUnplacedUt
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new DragLearningElementToUnplaced(world, space, element, mappingAction);
+        var command = new RemoveLearningElementFromLayout(world, space, element, mappingAction);
 
         Assert.Multiple(() =>
         {
@@ -61,7 +62,7 @@ public class DragLearningElementToUnplacedUt
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new DragLearningElementToUnplaced(world, space, element, mappingAction);
+        var command = new RemoveLearningElementFromLayout(world, space, element, mappingAction);
 
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.Multiple(() =>
@@ -87,7 +88,7 @@ public class DragLearningElementToUnplacedUt
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new DragLearningElementToUnplaced(world, space, element, mappingAction);
+        var command = new RemoveLearningElementFromLayout(world, space, element, mappingAction);
 
         Assert.Multiple(() =>
         {

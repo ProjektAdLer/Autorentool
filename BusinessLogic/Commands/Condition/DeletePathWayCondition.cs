@@ -1,19 +1,19 @@
 using BusinessLogic.Entities;
 
-namespace BusinessLogic.Commands;
+namespace BusinessLogic.Commands.Condition;
 
-public class DeleteLearningSpace : IUndoCommand
+public class DeletePathWayCondition : IUndoCommand
 {
     internal LearningWorld LearningWorld { get; }
-    internal LearningSpace LearningSpace { get; }
+    internal PathWayCondition PathWayCondition { get; }
     private readonly Action<LearningWorld> _mappingAction;
     private IMemento? _memento;
 
-    public DeleteLearningSpace(LearningWorld learningWorld, LearningSpace learningSpace,
+    public DeletePathWayCondition(LearningWorld learningWorld, PathWayCondition pathWayCondition,
         Action<LearningWorld> mappingAction)
     {
         LearningWorld = learningWorld;
-        LearningSpace = learningSpace;
+        PathWayCondition = pathWayCondition;
         _mappingAction = mappingAction;
     }
 
@@ -21,23 +21,23 @@ public class DeleteLearningSpace : IUndoCommand
     {
         _memento = LearningWorld.GetMemento();
 
-        var space = LearningWorld.LearningSpaces.First(x => x.Id == LearningSpace.Id);
+        var pathWayCondition = LearningWorld.PathWayConditions.First(x => x.Id == PathWayCondition.Id);
 
-        foreach (var inBoundSpace in space.InBoundObjects)
+        foreach (var inBoundSpace in pathWayCondition.InBoundObjects)
         {
             LearningWorld.LearningPathways
-                .Where(x => x.SourceObject.Id == inBoundSpace.Id && x.TargetObject.Id == space.Id)
+                .Where(x => x.SourceObject.Id == inBoundSpace.Id && x.TargetObject.Id == pathWayCondition.Id)
                 .ToList().ForEach(x => LearningWorld.LearningPathways.Remove(x));
         }
-        foreach (var outBoundSpace in space.OutBoundObjects)
+        foreach (var outBoundSpace in pathWayCondition.OutBoundObjects)
         {
             LearningWorld.LearningPathways
-                .Where(x => x.SourceObject.Id == space.Id && x.TargetObject.Id == outBoundSpace.Id)
+                .Where(x => x.SourceObject.Id == pathWayCondition.Id && x.TargetObject.Id == outBoundSpace.Id)
                 .ToList().ForEach(x => LearningWorld.LearningPathways.Remove(x));
         }
-        LearningWorld.LearningSpaces.Remove(space);
+        LearningWorld.PathWayConditions.Remove(pathWayCondition);
 
-        if (space == LearningWorld.SelectedLearningObject || LearningWorld.SelectedLearningObject == null)
+        if (pathWayCondition == LearningWorld.SelectedLearningObject || LearningWorld.SelectedLearningObject == null)
         {
             LearningWorld.SelectedLearningObject = LearningWorld.SelectableWorldObjects.LastOrDefault();
         }
