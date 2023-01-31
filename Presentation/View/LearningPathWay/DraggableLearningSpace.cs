@@ -77,7 +77,7 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
                                     <polyline points=""0,0 4,0 -4,0 4,0 -4,0"" transform=""translate(42,0)"" 
                                     style=""fill:none;stroke:white;stroke-width:1""/>";
     
-    protected override string DeleteObjectButtonShape => @"<text font-size=""12"" transform=""translate(72,14)"" fill=""gray"" style=""user-select:none;"">X</text>";
+    protected override string DeleteObjectButtonShape => @"<text font-size=""12"" transform=""translate(72,14)"" fill=""gray"" style=""user-select:none; cursor: pointer"">X</text>";
     
     [Parameter, EditorRequired]
     public EventCallback<ILearningSpaceViewModel> OnOpenLearningSpace { get; set; }

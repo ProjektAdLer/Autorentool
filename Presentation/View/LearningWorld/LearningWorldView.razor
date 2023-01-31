@@ -49,8 +49,10 @@
                                        OnEditPathWayCondition="@LearningWorldP.EditObjectInPathWay"
                                        OnDeletePathWayCondition="@LearningWorldP.DeletePathWayCondition"
                                        OnCloseRightClickMenu="@LearningWorldP.HideRightClickMenu"
-                                       OnSwitchPathWayCondition="@LearningWorldP.SwitchPathWayCondition"
-                                       PositioningService="@LearningWorldP"/>
+                                       PositioningService="@LearningWorldP">
+                <ConditionToggleSwitch ObjectInPathWay="pathWayCondition"
+                                            OnSwitchPathWayCondition="@LearningWorldP.SwitchPathWayCondition"/>
+            </DraggablePathWayCondition>
         }
         
         @foreach(var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
@@ -117,8 +119,6 @@
     }
 
 @code {
-
-    public bool Basic_Switch1 { get; set; } = false;
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
