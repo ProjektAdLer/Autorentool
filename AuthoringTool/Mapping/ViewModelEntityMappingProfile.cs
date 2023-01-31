@@ -25,7 +25,6 @@ public class ViewModelEntityMappingProfile : Profile
     public static Action<IMapperConfigurationExpression> Configure => cfg =>
     {
         cfg.AddProfile(new ViewModelEntityMappingProfile());
-        cfg.AddCollectionMappers();
     };
 
     private ViewModelEntityMappingProfile()
@@ -71,6 +70,11 @@ public class ViewModelEntityMappingProfile : Profile
             .As<LearningSpaceViewModel>();
         CreateMap<LearningPathway, ILearningPathWayViewModel>()
             .As<LearningPathwayViewModel>();
+        
+        CreateMap<LearningElementViewModel, ILearningElement>().As<LearningElement>();
+        CreateMap<LearningElementViewModel, LearningElement>()
+            .ForMember(x => x.Parent, opt => opt.Ignore())
+            .IncludeAllDerived();
 
         CreateMap<LearningSpace, IObjectInPathWayViewModel>().As<LearningSpaceViewModel>();
 

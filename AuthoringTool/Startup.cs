@@ -2,6 +2,7 @@ using System.IO.Abstractions;
 using System.Reflection;
 using AuthoringTool.Mapping;
 using AutoMapper;
+using AutoMapper.EquivalencyExpression;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
 using DataAccess.Persistence;
@@ -156,6 +157,7 @@ public class Startup
         {
             ViewModelEntityMappingProfile.Configure(cfg);
             EntityPersistEntityMappingProfile.Configure(cfg);
+            cfg.AddCollectionMappers();
             //FormModelEntityMappingProfile.Configure(cfg);
         });
         

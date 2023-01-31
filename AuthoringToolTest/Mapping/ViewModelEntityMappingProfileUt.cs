@@ -1,5 +1,7 @@
-﻿using AuthoringTool.Mapping;
+﻿using AgileObjects.ReadableExpressions;
+using AuthoringTool.Mapping;
 using AutoMapper;
+using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Entities;
 using NUnit.Framework;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -56,7 +58,11 @@ public class ViewModelEntityMappingProfileUt
     [Test]
     public void Constructor_TestConfigurationIsValid()
     {
-        var mapper = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
+        var mapper = new MapperConfiguration(cfg=>
+        {
+            ViewModelEntityMappingProfile.Configure(cfg);
+            cfg.AddCollectionMappers();
+        });
 
         Assert.That(() => mapper.AssertConfigurationIsValid(), Throws.Nothing);
     }
@@ -360,10 +366,6 @@ public class ViewModelEntityMappingProfileUt
             new LearningElementViewModel("el1", Shortname, new LearningContentViewModel("foo", "bar", Filepath), Url,
                 Authors,
                 Description, Goals, Difficulty);
-        var elementVm2 =
-            new LearningElementViewModel("el2", Shortname, new LearningContentViewModel("foo", "bar", Filepath), Url,
-                Authors,
-                Description, Goals, Difficulty);
 
         var space = new LearningSpaceViewModel("space", Shortname, Authors, Description, Goals, RequiredPoints,
             new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3)
@@ -375,7 +377,7 @@ public class ViewModelEntityMappingProfileUt
         };
         elementVm1.Parent = space;
 
-        var world = new LearningWorldViewModel("world", Shortname, Authors, Language, Description, Goals, true,
+        var worldVm = new LearningWorldViewModel("world", Shortname, Authors, Language, Description, Goals, true,
             new List<ILearningSpaceViewModel> {space})
         {
             SelectedLearningObject = space
@@ -384,21 +386,24 @@ public class ViewModelEntityMappingProfileUt
 
         var systemUnderTest = CreateTestableMapper();
 
-        var entity = systemUnderTest.Map<LearningWorld>(world);
-        world.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().Authors = "foooooooooo";
+        var worldEntity = systemUnderTest.Map<LearningWorld>(worldVm);
+        worldVm.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().Authors = "foooooooooo";
 
 
         //map back into viewmodel - with update syntax
-        systemUnderTest.Map(entity, world);
+        systemUnderTest.Map(worldEntity, worldVm);
 
         //we would expect that the objects are still the same and we retained view specific information
-        Assert.That(world.LearningSpaces.First(), Is.EqualTo(space));
+        Assert.That(worldVm.LearningSpaces.First(), Is.EqualTo(space));
 
         Assert.Multiple(() =>
         {
-            Assert.That(world.LearningSpaces.First().ContainedLearningElements.First(), Is.EqualTo(elementVm1));
-            Assert.That(world.SelectedLearningObject, Is.EqualTo(space));
-            Assert.That(world.LearningSpaces.First().SelectedLearningElement, Is.EqualTo(elementVm1));
+            Assert.That(worldVm.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.Count(), Is.EqualTo(1));
+            Assert.That(worldVm.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().Authors,
+                Is.EqualTo("foooooooooo"));
+            Assert.That(worldVm.LearningSpaces.First().ContainedLearningElements.First(), Is.EqualTo(elementVm1));
+            Assert.That(worldVm.SelectedLearningObject, Is.EqualTo(space));
+            Assert.That(worldVm.LearningSpaces.First().SelectedLearningElement, Is.EqualTo(elementVm1));
         });
     }
 
@@ -771,7 +776,11 @@ public class ViewModelEntityMappingProfileUt
 
     private static IMapper CreateTestableMapper()
     {
-        var mapper = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
+        var mapper = new MapperConfiguration(cfg =>
+        {
+            ViewModelEntityMappingProfile.Configure(cfg);
+            cfg.AddCollectionMappers();
+        });
         var systemUnderTest = mapper.CreateMapper();
         return systemUnderTest;
     }

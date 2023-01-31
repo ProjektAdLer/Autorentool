@@ -1,5 +1,6 @@
 ﻿using AuthoringTool.Mapping;
 using AutoMapper;
+using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Entities;
 using NUnit.Framework;
 using PersistEntities;
@@ -47,7 +48,11 @@ public class EntityPersistEntityMappingProfileUt
     [Test]
     public void Constructor_TestConfigurationIsValid()
     {
-        var mapper = new MapperConfiguration(EntityPersistEntityMappingProfile.Configure);
+        var mapper = new MapperConfiguration(cfg=>
+        {
+            EntityPersistEntityMappingProfile.Configure(cfg);
+            cfg.AddCollectionMappers();
+        });
 
         Assert.That(() => mapper.AssertConfigurationIsValid(), Throws.Nothing);
     }

@@ -1,6 +1,7 @@
 ﻿using AuthoringTool;
 using AuthoringTool.Mapping;
 using AutoMapper;
+using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using Microsoft.Extensions.Logging;
@@ -309,9 +310,11 @@ switch (entity, viewModel)
         spaceViewModel.LearningSpaceLayout.ClearAllElements();
         Assert.That(spaceViewModel.ContainedLearningElements.Count(), Is.EqualTo(0));
         
+        space.ContainedLearningElements.First().Name = "newName";
         systemUnderTest.Map(space, spaceViewModel);
         Assert.Multiple(() =>
         {
+            Assert.That(spaceViewModel.ContainedLearningElements.First().Name, Is.EqualTo("newName"));
             Assert.That(spaceViewModel.ContainedLearningElements.Count(), Is.EqualTo(1));
             Assert.That(spaceViewModel.ContainedLearningElements.First().Id, Is.EqualTo(elementViewModel.Id));
             Assert.That(spaceViewModel.ContainedLearningElements.First().Name, Is.EqualTo(elementViewModel.Name));
@@ -390,7 +393,11 @@ switch (entity, viewModel)
     private static CachingMapper CreateTestableCachingMapper(
         IMapper? mapper = null, ICommandStateManager? commandStateManager = null, ILogger<CachingMapper>? logger = null)
     {
-        var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
+        var config = new MapperConfiguration(cfg=>
+        {
+            ViewModelEntityMappingProfile.Configure(cfg);
+            cfg.AddCollectionMappers();
+        });
         mapper ??= config.CreateMapper();
         commandStateManager ??= Substitute.For<ICommandStateManager>();
         logger ??= Substitute.For<ILogger<CachingMapper>>();
