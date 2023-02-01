@@ -1,5 +1,4 @@
-﻿using AgileObjects.ReadableExpressions;
-using AuthoringTool.Mapping;
+﻿using AuthoringTool.Mapping;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Entities;
