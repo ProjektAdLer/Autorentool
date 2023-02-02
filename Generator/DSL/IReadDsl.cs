@@ -2,12 +2,12 @@
 
 public interface IReadDsl
 {
-    void ReadLearningWorld(string dslPath, DocumentRootJson? rootJsonForTest = null);
-    List<LearningElementJson> GetH5PElementsList();
-    LearningWorldJson GetLearningWorld();
-    List<LearningSpaceJson> GetSectionList();
-    List<LearningElementJson> GetResourceList();
-    List<LearningElementJson> GetLabelsList();
-    List<LearningElementJson> GetUrlList();
-    List<LearningElementJson> GetSpacesAndElementsOrderedList();
+    void ReadWorld(string dslPath, DocumentRootJson? rootJsonForTest = null);
+    List<ElementJson> GetH5PElementsList();
+    WorldJson GetWorld();
+    List<SpaceJson> GetSectionList();
+    List<ElementJson> GetResourceList();
+    List<ElementJson> GetLabelsList();
+    List<ElementJson> GetUrlList();
+    List<ElementJson> GetSpacesAndElementsOrderedList();
 }

@@ -5,5 +5,5 @@ namespace BusinessLogic.API;
 
 public interface IWorldGenerator
 {
-    void ConstructBackup(LearningWorld learningWorld, string filepath);
+    void ConstructBackup(World world, string filepath);
 }

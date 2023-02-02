@@ -4,16 +4,16 @@ using BusinessLogic.Entities;
 using PersistEntities;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.LearningContent;
-using Presentation.PresentationLogic.LearningElement;
-using Presentation.PresentationLogic.LearningElement.ActivationElement;
-using Presentation.PresentationLogic.LearningElement.InteractionElement;
-using Presentation.PresentationLogic.LearningElement.TestElement;
-using Presentation.PresentationLogic.LearningElement.TransferElement;
-using Presentation.PresentationLogic.LearningPathway;
-using Presentation.PresentationLogic.LearningSpace;
-using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
-using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Content;
+using Presentation.PresentationLogic.Element;
+using Presentation.PresentationLogic.Element.ActivationElement;
+using Presentation.PresentationLogic.Element.InteractionElement;
+using Presentation.PresentationLogic.Element.TestElement;
+using Presentation.PresentationLogic.Element.TransferElement;
+using Presentation.PresentationLogic.PathWay;
+using Presentation.PresentationLogic.Space;
+using Presentation.PresentationLogic.Space.SpaceLayout;
+using Presentation.PresentationLogic.World;
 
 namespace AuthoringTool.Mapping;
 
@@ -31,112 +31,112 @@ public class ViewModelEntityMappingProfile : Profile
     {
         DisableConstructorMapping();
         CreateWorkspaceMap();
-        CreateLearningWorldMap();
-        CreateLearningSpaceMap();
-        CreateLearningElementMap();
-        CreateLearningContentMap();
+        CreateWorldMap();
+        CreateSpaceMap();
+        CreateElementMap();
+        CreateContentMap();
         CreatePathwayMaps();
         CreateDerivedElementMaps();
         CreateInterfaceMaps();
-        CreateLearningSpaceLayoutMap();
+        CreateSpaceLayoutMap();
     }
 
-    private void CreateLearningSpaceLayoutMap()
+    private void CreateSpaceLayoutMap()
     {
-        CreateMap<ILearningSpaceLayout, LearningSpaceLayoutViewModel>()
+        CreateMap<ISpaceLayout, SpaceLayoutViewModel>()
             .ForMember(x => x.FloorPlanViewModel, opt => opt.Ignore())
             .ForMember(x => x.UsedIndices, opt => opt.Ignore())
-            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
-        CreateMap<ILearningSpaceLayoutViewModel, LearningSpaceLayout>()
-            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
+            .ForMember(x => x.ContainedElements, opt => opt.Ignore());
+        CreateMap<ISpaceLayoutViewModel, SpaceLayout>()
+            .ForMember(x => x.ContainedElements, opt => opt.Ignore());
 
-        CreateMap<LearningSpaceLayout, LearningSpaceLayoutViewModel>()
-            .IncludeBase<ILearningSpaceLayout, LearningSpaceLayoutViewModel>()
+        CreateMap<SpaceLayout, SpaceLayoutViewModel>()
+            .IncludeBase<ISpaceLayout, SpaceLayoutViewModel>()
             .ReverseMap()
-            .IncludeBase<ILearningSpaceLayoutViewModel, LearningSpaceLayout>();
+            .IncludeBase<ISpaceLayoutViewModel, SpaceLayout>();
     }
 
-    private void CreateLearningContentMap()
+    private void CreateContentMap()
     {
-        CreateMap<LearningContent, LearningContentViewModel>().ReverseMap();
+        CreateMap<Content, ContentViewModel>().ReverseMap();
     }
 
     private void CreateInterfaceMaps()
     {
         //We must tell the automapper what class to use when it has to map from a class to an interface
-        CreateMap<LearningElement, ILearningElementViewModel>()
-            .As<LearningElementViewModel>();
-        CreateMap<LearningSpace, ILearningSpaceViewModel>()
-            .As<LearningSpaceViewModel>();
-        CreateMap<LearningPathway, ILearningPathWayViewModel>()
-            .As<LearningPathwayViewModel>();
+        CreateMap<Element, IElementViewModel>()
+            .As<ElementViewModel>();
+        CreateMap<Space, ISpaceViewModel>()
+            .As<SpaceViewModel>();
+        CreateMap<Pathway, IPathWayViewModel>()
+            .As<PathwayViewModel>();
         
-        CreateMap<LearningElementViewModel, ILearningElement>().As<LearningElement>();
-        CreateMap<LearningElementViewModel, LearningElement>()
+        CreateMap<ElementViewModel, IElement>().As<Element>();
+        CreateMap<ElementViewModel, Element>()
             .ForMember(x => x.Parent, opt => opt.Ignore())
             .IncludeAllDerived();
 
-        CreateMap<LearningSpace, IObjectInPathWayViewModel>().As<LearningSpaceViewModel>();
+        CreateMap<Space, IObjectInPathWayViewModel>().As<SpaceViewModel>();
 
-        CreateMap<H5PActivationElement, ILearningElementViewModel>().As<H5PActivationElementViewModel>();
-        CreateMap<H5PInteractionElement, ILearningElementViewModel>().As<H5PInteractionElementViewModel>();
-        CreateMap<H5PTestElement, ILearningElementViewModel>().As<H5PTestElementViewModel>();
-        CreateMap<ImageTransferElement, ILearningElementViewModel>().As<ImageTransferElementViewModel>();
-        CreateMap<PdfTransferElement, ILearningElementViewModel>().As<PdfTransferElementViewModel>();
-        CreateMap<VideoActivationElement, ILearningElementViewModel>().As<VideoActivationElementViewModel>();
-        CreateMap<VideoTransferElement, ILearningElementViewModel>().As<VideoTransferElementViewModel>();
-        CreateMap<TextTransferElement, ILearningElementViewModel>().As<TextTransferElementViewModel>();
+        CreateMap<H5PActivationElement, IElementViewModel>().As<H5PActivationElementViewModel>();
+        CreateMap<H5PInteractionElement, IElementViewModel>().As<H5PInteractionElementViewModel>();
+        CreateMap<H5PTestElement, IElementViewModel>().As<H5PTestElementViewModel>();
+        CreateMap<ImageTransferElement, IElementViewModel>().As<ImageTransferElementViewModel>();
+        CreateMap<PdfTransferElement, IElementViewModel>().As<PdfTransferElementViewModel>();
+        CreateMap<VideoActivationElement, IElementViewModel>().As<VideoActivationElementViewModel>();
+        CreateMap<VideoTransferElement, IElementViewModel>().As<VideoTransferElementViewModel>();
+        CreateMap<TextTransferElement, IElementViewModel>().As<TextTransferElementViewModel>();
 
-        CreateMap<H5PActivationElementViewModel, ILearningElement>().As<H5PActivationElement>();
-        CreateMap<H5PInteractionElementViewModel, ILearningElement>().As<H5PInteractionElement>();
-        CreateMap<H5PTestElementViewModel, ILearningElement>().As<H5PTestElement>();
-        CreateMap<ImageTransferElementViewModel, ILearningElement>().As<ImageTransferElement>();
-        CreateMap<PdfTransferElementViewModel, ILearningElement>().As<PdfTransferElement>();
-        CreateMap<VideoActivationElementViewModel, ILearningElement>().As<VideoActivationElement>();
-        CreateMap<VideoTransferElementViewModel, ILearningElement>().As<VideoTransferElement>();
-        CreateMap<TextTransferElementViewModel, ILearningElement>().As<TextTransferElement>();
+        CreateMap<H5PActivationElementViewModel, IElement>().As<H5PActivationElement>();
+        CreateMap<H5PInteractionElementViewModel, IElement>().As<H5PInteractionElement>();
+        CreateMap<H5PTestElementViewModel, IElement>().As<H5PTestElement>();
+        CreateMap<ImageTransferElementViewModel, IElement>().As<ImageTransferElement>();
+        CreateMap<PdfTransferElementViewModel, IElement>().As<PdfTransferElement>();
+        CreateMap<VideoActivationElementViewModel, IElement>().As<VideoActivationElement>();
+        CreateMap<VideoTransferElementViewModel, IElement>().As<VideoTransferElement>();
+        CreateMap<TextTransferElementViewModel, IElement>().As<TextTransferElement>();
 
         CreateMap<ISelectableObjectInWorld, ISelectableObjectInWorldViewModel>()
             .ReverseMap();
 
-        CreateMap<LearningSpaceLayout, ILearningSpaceLayoutViewModel>().As<LearningSpaceLayoutViewModel>();
-        CreateMap<LearningSpaceLayoutViewModel, ILearningSpaceLayout>().As<LearningSpaceLayout>();
-        CreateMap<ILearningSpaceLayout, ILearningSpaceLayoutViewModel>().As<LearningSpaceLayoutViewModel>();
-        CreateMap<ILearningSpaceLayoutViewModel, ILearningSpaceLayout>().As<LearningSpaceLayout>();
+        CreateMap<SpaceLayout, ISpaceLayoutViewModel>().As<SpaceLayoutViewModel>();
+        CreateMap<SpaceLayoutViewModel, ISpaceLayout>().As<SpaceLayout>();
+        CreateMap<ISpaceLayout, ISpaceLayoutViewModel>().As<SpaceLayoutViewModel>();
+        CreateMap<ISpaceLayoutViewModel, ISpaceLayout>().As<SpaceLayout>();
     }
 
     private void CreateDerivedElementMaps()
     {
         //Element derived types
         CreateMap<H5PActivationElement, H5PActivationElementViewModel>()
-            .IncludeBase<LearningElement, LearningElementViewModel>()
+            .IncludeBase<Element, ElementViewModel>()
             .ReverseMap();
         CreateMap<H5PInteractionElement, H5PInteractionElementViewModel>()
-            .IncludeBase<LearningElement, LearningElementViewModel>()
+            .IncludeBase<Element, ElementViewModel>()
             .ReverseMap();
         CreateMap<H5PTestElement, H5PTestElementViewModel>()
-            .IncludeBase<LearningElement, LearningElementViewModel>()
+            .IncludeBase<Element, ElementViewModel>()
             .ReverseMap();
         CreateMap<ImageTransferElement, ImageTransferElementViewModel>()
-            .IncludeBase<LearningElement, LearningElementViewModel>()
+            .IncludeBase<Element, ElementViewModel>()
             .ReverseMap();
         CreateMap<PdfTransferElement, PdfTransferElementViewModel>()
-            .IncludeBase<LearningElement, LearningElementViewModel>()
+            .IncludeBase<Element, ElementViewModel>()
             .ReverseMap();
         CreateMap<VideoActivationElement, VideoActivationElementViewModel>()
-            .IncludeBase<LearningElement, LearningElementViewModel>()
+            .IncludeBase<Element, ElementViewModel>()
             .ReverseMap();
         CreateMap<VideoTransferElement, VideoTransferElementViewModel>()
-            .IncludeBase<LearningElement, LearningElementViewModel>()
+            .IncludeBase<Element, ElementViewModel>()
             .ReverseMap();
         CreateMap<TextTransferElement, TextTransferElementViewModel>()
-            .IncludeBase<LearningElement, LearningElementViewModel>()
+            .IncludeBase<Element, ElementViewModel>()
             .ReverseMap();
     }
 
-    private void CreateLearningElementMap()
+    private void CreateElementMap()
     {
-        CreateMap<LearningElement, LearningElementViewModel>()
+        CreateMap<Element, ElementViewModel>()
             .ForMember(x => x.Parent, opt => opt.Ignore())
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ReverseMap()
@@ -144,46 +144,46 @@ public class ViewModelEntityMappingProfile : Profile
             .ForMember(x => x.Parent, opt => opt.Ignore());
     }
 
-    private void CreateLearningSpaceMap()
+    private void CreateSpaceMap()
     {
-        CreateMap<LearningSpace, LearningSpaceViewModel>()
-            .ForMember(x => x.SelectedLearningElement, opt => opt.Ignore())
+        CreateMap<Space, SpaceViewModel>()
+            .ForMember(x => x.SelectedElement, opt => opt.Ignore())
             .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
             .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
-            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .ForMember(x => x.ContainedElements, opt => opt.Ignore())
             .IncludeBase<IObjectInPathWay, IObjectInPathWayViewModel>()
             .EqualityComparison((x, y) => x.Id == y.Id)
             .AfterMap((s, d) =>
             {
-                foreach (var element in d.ContainedLearningElements)
+                foreach (var element in d.ContainedElements)
                 {
                     element.Parent = d;
                 }
 
-                d.SelectedLearningElement =
-                    d.ContainedLearningElements.FirstOrDefault(x => x.Id == s.SelectedLearningElement?.Id);
+                d.SelectedElement =
+                    d.ContainedElements.FirstOrDefault(x => x.Id == s.SelectedElement?.Id);
             })
             .ReverseMap()
             .EqualityComparison((x, y) => x.Id == y.Id)
-            .ForMember(x => x.SelectedLearningElement, opt => opt.Ignore())
+            .ForMember(x => x.SelectedElement, opt => opt.Ignore())
             .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
             .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
-            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .ForMember(x => x.ContainedElements, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
-                foreach (var element in d.ContainedLearningElements)
+                foreach (var element in d.ContainedElements)
                 {
                     element.Parent = d;
                 }
 
-                d.SelectedLearningElement =
-                    d.ContainedLearningElements.FirstOrDefault(x => x.Id == s.SelectedLearningElement?.Id);
+                d.SelectedElement =
+                    d.ContainedElements.FirstOrDefault(x => x.Id == s.SelectedElement?.Id);
             });
     }
 
     private void CreatePathwayMaps()
     {
-        CreateMap<LearningPathwayViewModel, LearningPathway>()
+        CreateMap<PathwayViewModel, Pathway>()
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ReverseMap();
 
@@ -204,23 +204,23 @@ public class ViewModelEntityMappingProfile : Profile
             .ReverseMap();
     }
 
-    private void CreateLearningWorldMap()
+    private void CreateWorldMap()
     {
-        CreateMap<LearningWorld, LearningWorldViewModel>()
+        CreateMap<World, WorldViewModel>()
             .EqualityComparison((x, y) => x.Id == y.Id)
-            .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
+            .ForMember(x => x.SelectedObject, opt => opt.Ignore())
             .ForMember(x => x.OnHoveredObjectInPathWay, opt => opt.Ignore())
-            .ForMember(x => x.ShowingLearningSpaceView, opt => opt.Ignore())
+            .ForMember(x => x.ShowingSpaceView, opt => opt.Ignore())
             .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
             .ForMember(x => x.SelectableWorldObjects, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
-                d.SelectedLearningObject =
-                    d.SelectableWorldObjects.FirstOrDefault(z => z.Id == s.SelectedLearningObject?.Id);
+                d.SelectedObject =
+                    d.SelectableWorldObjects.FirstOrDefault(z => z.Id == s.SelectedObject?.Id);
             })
             .AfterMap((s, d) =>
             {
-                foreach (var pathWay in d.LearningPathWays)
+                foreach (var pathWay in d.PathWays)
                 {
                     pathWay.SourceObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.SourceObject?.Id);
                     pathWay.TargetObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.TargetObject?.Id);
@@ -230,9 +230,9 @@ public class ViewModelEntityMappingProfile : Profile
             {
                 foreach (var pathWayObject in d.ObjectsInPathWays)
                 {
-                    pathWayObject.InBoundObjects = d.LearningPathWays.Where(x => x.TargetObject.Id == pathWayObject.Id)
+                    pathWayObject.InBoundObjects = d.PathWays.Where(x => x.TargetObject.Id == pathWayObject.Id)
                         .Select(x => x.SourceObject).ToList();
-                    pathWayObject.OutBoundObjects = d.LearningPathWays.Where(x => x.SourceObject.Id == pathWayObject.Id)
+                    pathWayObject.OutBoundObjects = d.PathWays.Where(x => x.SourceObject.Id == pathWayObject.Id)
                         .Select(x => x.TargetObject).ToList();
                 }
             })
@@ -240,15 +240,15 @@ public class ViewModelEntityMappingProfile : Profile
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
             .ForMember(x => x.SelectableWorldObjects, opt => opt.Ignore())
-            .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
+            .ForMember(x => x.SelectedObject, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
-                d.SelectedLearningObject =
-                    d.SelectableWorldObjects.FirstOrDefault(z => z.Id == s.SelectedLearningObject?.Id);
+                d.SelectedObject =
+                    d.SelectableWorldObjects.FirstOrDefault(z => z.Id == s.SelectedObject?.Id);
             })
             .AfterMap((s, d) =>
             {
-                foreach (var pathWay in d.LearningPathways)
+                foreach (var pathWay in d.Pathways)
                 {
                     pathWay.SourceObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.SourceObject?.Id);
                     pathWay.TargetObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.TargetObject?.Id);
@@ -258,9 +258,9 @@ public class ViewModelEntityMappingProfile : Profile
             {
                 foreach (var pathWayObject in d.ObjectsInPathWays)
                 {
-                    pathWayObject.InBoundObjects = d.LearningPathways.Where(x => x.TargetObject.Id == pathWayObject.Id)
+                    pathWayObject.InBoundObjects = d.Pathways.Where(x => x.TargetObject.Id == pathWayObject.Id)
                         .Select(x => x.SourceObject).ToList();
-                    pathWayObject.OutBoundObjects = d.LearningPathways.Where(x => x.SourceObject.Id == pathWayObject.Id)
+                    pathWayObject.OutBoundObjects = d.Pathways.Where(x => x.SourceObject.Id == pathWayObject.Id)
                         .Select(x => x.TargetObject).ToList();
                 }
             });
@@ -270,18 +270,18 @@ public class ViewModelEntityMappingProfile : Profile
     {
         CreateMap<AuthoringToolWorkspace, AuthoringToolWorkspaceViewModel>()
             .ForMember(x => x.EditDialogInitialValues, opt => opt.Ignore())
-            .ForMember(x => x.SelectedLearningWorld, opt => opt.Ignore())
+            .ForMember(x => x.SelectedWorld, opt => opt.Ignore())
             .ForMember(x => x.WorldNames, opt => opt.Ignore())
             .ForMember(x => x.WorldShortNames, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
-                d.SelectedLearningWorld = d.LearningWorlds.FirstOrDefault(x => x.Id == s.SelectedLearningWorld?.Id);
+                d.SelectedWorld = d.Worlds.FirstOrDefault(x => x.Id == s.SelectedWorld?.Id);
             })
             .ReverseMap()
-            .ForMember(x => x.SelectedLearningWorld, opt => opt.Ignore())
+            .ForMember(x => x.SelectedWorld, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
-                d.SelectedLearningWorld = d.LearningWorlds.FirstOrDefault(x => x.Id == s.SelectedLearningWorld?.Id);
+                d.SelectedWorld = d.Worlds.FirstOrDefault(x => x.Id == s.SelectedWorld?.Id);
             });
     }
 }

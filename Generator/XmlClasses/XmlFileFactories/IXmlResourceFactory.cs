@@ -26,8 +26,8 @@ public interface IXmlResourceFactory
     IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
     IReadDsl ReadDsl { get; }
     void CreateResourceFactory();
-    //void ReadFileListAndSetParameters(List<LearningElementJson> listDslDocument);
-    void ReadFileListAndSetParametersResource(List<LearningElementJson> listPdfDocument);
+    //void ReadFileListAndSetParameters(List<ElementJson> listDslDocument);
+    void ReadFileListAndSetParametersResource(List<ElementJson> listPdfDocument);
     void ResourceSetParametersFilesXml(string hashCheckSum, string filesize, string mimeType);
     void FileSetParametersActivity();
 

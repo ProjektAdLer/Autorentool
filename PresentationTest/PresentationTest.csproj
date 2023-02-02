@@ -38,13 +38,13 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Compile Remove="PresentationLogic\EntityMapping\LearningSpaceMapperUt.cs" />
-      <Compile Remove="PresentationLogic\EntityMapping\LearningElement\VideoTransferElementMapperUt.cs" />
-      <Compile Remove="PresentationLogic\EntityMapping\LearningElement\VideoActivationElementMapperUt.cs" />
-      <Compile Remove="PresentationLogic\EntityMapping\LearningElement\PdfTransferElementMapperUt.cs" />
-      <Compile Remove="PresentationLogic\EntityMapping\LearningElement\LearningElementMapperUt.cs" />
-      <Compile Remove="PresentationLogic\EntityMapping\LearningElement\LearningContentMapperUt.cs" />
-      <Compile Remove="PresentationLogic\EntityMapping\LearningElement\H5PTestElementMapperUt.cs" />
+      <Compile Remove="PresentationLogic\EntityMapping\SpaceMapperUt.cs" />
+      <Compile Remove="PresentationLogic\EntityMapping\Element\VideoTransferElementMapperUt.cs" />
+      <Compile Remove="PresentationLogic\EntityMapping\Element\VideoActivationElementMapperUt.cs" />
+      <Compile Remove="PresentationLogic\EntityMapping\Element\PdfTransferElementMapperUt.cs" />
+      <Compile Remove="PresentationLogic\EntityMapping\Element\ElementMapperUt.cs" />
+      <Compile Remove="PresentationLogic\EntityMapping\Element\ContentMapperUt.cs" />
+      <Compile Remove="PresentationLogic\EntityMapping\Element\H5PTestElementMapperUt.cs" />
     </ItemGroup>
 
 </Project>

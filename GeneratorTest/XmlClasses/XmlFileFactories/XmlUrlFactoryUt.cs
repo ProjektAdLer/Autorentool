@@ -60,11 +60,11 @@ public class XmlUrlFactoryUt
         var mockFileSystem = new MockFileSystem();
         var systemUnderTest = new XmlUrlFactory(mockReadDsl, mockFileSystem);
 
-        var urlLearningElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Video auf Youtube"),
+        var urlElementJson = new ElementJson(1, new IdentifierJson("Name", "Video auf Youtube"),
             "youtube.de", "video", "Video-Link", 1, 
-            new List<LearningElementValueJson>(){new LearningElementValueJson("Points", "10")}, 
+            new List<ElementValueJson>(){new ElementValueJson("Points", "10")}, 
             "desc", "goal");
-        var urlList = new List<LearningElementJson>(){urlLearningElementJson};
+        var urlList = new List<ElementJson>(){urlElementJson};
 
         mockReadDsl.GetUrlList().Returns(urlList);
         // Act
@@ -100,11 +100,11 @@ public class XmlUrlFactoryUt
             mockGradehistory, mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref, 
             mockInforefInforef);
         
-        var urlLearningElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Video auf Youtube"),
+        var urlElementJson = new ElementJson(1, new IdentifierJson("Name", "Video auf Youtube"),
             "youtube.de", "video", "url", 1, 
-            new List<LearningElementValueJson>(){new LearningElementValueJson("Points", "10")}, 
+            new List<ElementValueJson>(){new ElementValueJson("Points", "10")}, 
             "desc", "goal");
-        var urlList = new List<LearningElementJson>(){urlLearningElementJson};
+        var urlList = new List<ElementJson>(){urlElementJson};
         
         
         // Act

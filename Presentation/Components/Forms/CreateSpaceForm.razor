@@ -4,7 +4,7 @@
 @using System.ComponentModel
 @implements IDisposable
 @implements IAsyncDisposable
-<BaseForm T="LearningSpaceFormModel" @ref="_form" OnValidSubmit="OnValidSubmit" SnackbarMessage="Space created">
+<BaseForm T="SpaceFormModel" @ref="_form" OnValidSubmit="OnValidSubmit" SnackbarMessage="Space created">
     <MudTextField @bind-Value="Model.Name"
                   For="@(() => Model.Name)"
                   Immediate="true"
@@ -44,13 +44,13 @@
     private IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceViewModel { get; set; }
 #pragma warning restore CS8618
 
-    private BaseForm<LearningSpaceFormModel> _form;
-    private LearningSpaceFormModel Model => _form.Model;
+    private BaseForm<SpaceFormModel> _form;
+    private SpaceFormModel Model => _form.Model;
 
-    private void OnValidSubmit(LearningSpaceFormModel model)
+    private void OnValidSubmit(SpaceFormModel model)
     {
-        if (AuthoringToolWorkspaceViewModel.SelectedLearningWorld == null) throw new InvalidOperationException("No learning world selected.");
-        PresentationLogic.CreateLearningSpace(AuthoringToolWorkspaceViewModel.SelectedLearningWorld, Model.Name,
+        if (AuthoringToolWorkspaceViewModel.SelectedWorld == null) throw new InvalidOperationException("No world selected.");
+        PresentationLogic.CreateSpace(AuthoringToolWorkspaceViewModel.SelectedWorld, Model.Name,
             Model.Shortname, Model.Authors, Model.Description,
             //ignore null warning here because validation ensures that RequiredPoints is not null - n.stich
             Model.Goals, (int)Model.RequiredPoints!, 0, 0);
@@ -64,7 +64,7 @@
 
     private async void OnWorkspaceViewModelChange(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)
     {
-        if(propertyChangedEventArgs.PropertyName == nameof(AuthoringToolWorkspaceViewModel.SelectedLearningWorld))
+        if(propertyChangedEventArgs.PropertyName == nameof(AuthoringToolWorkspaceViewModel.SelectedWorld))
             await _form.Validate();
     }
 

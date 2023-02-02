@@ -3,5 +3,5 @@ namespace Generator.DSL;
 
 public interface IDocumentRootJson
 {
-    LearningWorldJson LearningWorld { get; set; }
+    WorldJson World { get; set; }
 }

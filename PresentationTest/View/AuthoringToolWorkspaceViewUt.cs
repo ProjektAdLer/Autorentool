@@ -10,11 +10,11 @@ using NUnit.Framework;
 using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.LearningSpace;
-using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.ModalDialog;
+using Presentation.PresentationLogic.Space;
+using Presentation.PresentationLogic.World;
 using Presentation.View;
-using Presentation.View.LearningWorld;
+using Presentation.View.World;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.View;
@@ -47,7 +47,7 @@ public class AuthoringToolWorkspaceViewUt
         _ctx.Services.AddSingleton(_presentationLogic);
         _ctx.Services.AddSingleton(_mouseService);
         _ctx.Services.AddLogging();
-        _ctx.ComponentFactories.AddStub<LearningWorldView>();
+        _ctx.ComponentFactories.AddStub<WorldView>();
     }
     
     [Test]
@@ -68,12 +68,12 @@ public class AuthoringToolWorkspaceViewUt
     [Test]
     public void Render_RendersTitleCountAndFilePath()
     {
-        var world1 = new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
-        var world2 = new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
+        var world1 = new WorldViewModel("a", "b", "c", "d", "e", "f");
+        var world2 = new WorldViewModel("a", "b", "c", "d", "e", "f");
 
-        var learningWorlds = new List<LearningWorldViewModel> {world1, world2};
+        var worlds = new List<WorldViewModel> {world1, world2};
 
-        _authoringToolWorkspaceViewModel.LearningWorlds.Returns(learningWorlds);
+        _authoringToolWorkspaceViewModel.Worlds.Returns(worlds);
         
         var systemUnderTest = GetWorkspaceViewForTesting();
 
@@ -81,27 +81,27 @@ public class AuthoringToolWorkspaceViewUt
         var worldCountFilePath = systemUnderTest.FindAll("p");
 
         titleHeader.MarkupMatches("<h3>AuthoringTool Workspace</h3>");
-        worldCountFilePath.MarkupMatches("<p role=\"status\">Current count of learning worlds: 2</p> <p role=\"status\" id=\"filepath\">Filepath:</p>");
+        worldCountFilePath.MarkupMatches("<p role=\"status\">Current count of worlds: 2</p> <p role=\"status\" id=\"filepath\">Filepath:</p>");
     }
     
     [Test]
     public void Render_RendersWorldSelection()
     {
-        var world1 = new LearningWorldViewModel("ab", "eb", "ic", "od", "ue", "af");
-        var world2 = new LearningWorldViewModel("aa", "bb", "cc", "dd", "ee", "ff");
-        var world3 = new LearningWorldViewModel("gg", "hh", "ii", "jj", "kk", "ll");
-        var space = Substitute.For<ILearningSpaceViewModel>();
+        var world1 = new WorldViewModel("ab", "eb", "ic", "od", "ue", "af");
+        var world2 = new WorldViewModel("aa", "bb", "cc", "dd", "ee", "ff");
+        var world3 = new WorldViewModel("gg", "hh", "ii", "jj", "kk", "ll");
+        var space = Substitute.For<ISpaceViewModel>();
 
-        _authoringToolWorkspaceViewModel.LearningWorlds.Returns(new List<LearningWorldViewModel>()
+        _authoringToolWorkspaceViewModel.Worlds.Returns(new List<WorldViewModel>()
         {
             world1, world2, world3
         });
 
-        _authoringToolWorkspaceViewModel.SelectedLearningWorld = world1;
+        _authoringToolWorkspaceViewModel.SelectedWorld = world1;
         
-        world1.LearningSpaces.Add(space);
+        world1.Spaces.Add(space);
         
-        Assert.That(_authoringToolWorkspaceViewModel.SelectedLearningWorld, Is.Not.EqualTo(null));
+        Assert.That(_authoringToolWorkspaceViewModel.SelectedWorld, Is.Not.EqualTo(null));
         
         var systemUnderTest = GetWorkspaceViewForTesting();
         
@@ -153,9 +153,9 @@ public class AuthoringToolWorkspaceViewUt
     [Test]
     public void ShowSaveUnsavedWorldsDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
     {
-        var world = new LearningWorldViewModel("a","b","c","d","e","f");
-        var learningWorlds = new List<LearningWorldViewModel> {world};
-        var unsavedWorldQueues = new Queue<LearningWorldViewModel>(learningWorlds);
+        var world = new WorldViewModel("a","b","c","d","e","f");
+        var worlds = new List<WorldViewModel> {world};
+        var unsavedWorldQueues = new Queue<WorldViewModel>(worlds);
 
         _authoringToolWorkspacePresenter.UnsavedWorldsQueue = unsavedWorldQueues;
         _authoringToolWorkspacePresenter.SaveUnsavedChangesDialogOpen = true;
@@ -196,7 +196,7 @@ public class AuthoringToolWorkspaceViewUt
     [Test]
     public void ShowDeleteUnsavedWorldDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
     {
-        var world = new LearningWorldViewModel("a","b","c","d","e","f");
+        var world = new WorldViewModel("a","b","c","d","e","f");
 
         _authoringToolWorkspacePresenter.DeletedUnsavedWorld = world;
 
@@ -234,9 +234,9 @@ public class AuthoringToolWorkspaceViewUt
     }
     
     [Test]
-    public void ShowCreateLearningWorldDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
+    public void ShowCreateWorldDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
     {
-        _authoringToolWorkspacePresenter.CreateLearningWorldDialogOpen.Returns(true);
+        _authoringToolWorkspacePresenter.CreateWorldDialogOpen.Returns(true);
         
         RenderFragment fragment = builder =>
         {
@@ -246,7 +246,7 @@ public class AuthoringToolWorkspaceViewUt
         };
         ModalDialogOnClose? callback = null;
 
-        _modalDialogFactory.GetCreateLearningWorldFragment(Arg.Any<ModalDialogOnClose>())
+        _modalDialogFactory.GetCreateWorldFragment(Arg.Any<ModalDialogOnClose>())
             .Returns(fragment)
             .AndDoes(ci =>
             {
@@ -255,7 +255,7 @@ public class AuthoringToolWorkspaceViewUt
 
         var systemUnderTest = GetWorkspaceViewForTesting();
 
-        _modalDialogFactory.Received().GetCreateLearningWorldFragment(Arg.Any<ModalDialogOnClose>());
+        _modalDialogFactory.Received().GetCreateWorldFragment(Arg.Any<ModalDialogOnClose>());
         var p = systemUnderTest.FindAllOrFail("p").ElementAt(2);
         p.MarkupMatches("<p>bar</p>");
 
@@ -277,10 +277,10 @@ public class AuthoringToolWorkspaceViewUt
     }
     
     [Test]
-    public void ShowEditLearningWorldDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
+    public void ShowEditWorldDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
     {
         _authoringToolWorkspacePresenter.AuthoringToolWorkspaceVm.Returns(_authoringToolWorkspaceViewModel);
-        _authoringToolWorkspacePresenter.EditLearningWorldDialogOpen.Returns(true);
+        _authoringToolWorkspacePresenter.EditWorldDialogOpen.Returns(true);
         var initialValues = new Dictionary<string, string>
         {
             {"baba", "bubu"}
@@ -297,7 +297,7 @@ public class AuthoringToolWorkspaceViewUt
         ModalDialogOnClose? callback = null;
 
         _modalDialogFactory.
-            GetEditLearningWorldFragment(initialValues,Arg.Any<ModalDialogOnClose>())
+            GetEditWorldFragment(initialValues,Arg.Any<ModalDialogOnClose>())
             .Returns(fragment)
             .AndDoes(ci =>
             {
@@ -306,7 +306,7 @@ public class AuthoringToolWorkspaceViewUt
 
         var systemUnderTest = GetWorkspaceViewForTesting();
 
-        _modalDialogFactory.Received().GetEditLearningWorldFragment(initialValues, Arg.Any<ModalDialogOnClose>());
+        _modalDialogFactory.Received().GetEditWorldFragment(initialValues, Arg.Any<ModalDialogOnClose>());
         var p = systemUnderTest.FindAllOrFail("p").ElementAt(2);
         p.MarkupMatches("<p>bar</p>");
 
@@ -328,125 +328,125 @@ public class AuthoringToolWorkspaceViewUt
     }
 
     [Test]
-    public void AddWorldButton_Clicked_CallsAddNewLearningWorld()
+    public void AddWorldButton_Clicked_CallsAddNewWorld()
     {
         var systemUnderTest = GetWorkspaceViewForTesting();
 
-        var addWorldButton = systemUnderTest.FindOrFail("button.btn.btn-primary.add-learning-world");
+        var addWorldButton = systemUnderTest.FindOrFail("button.btn.btn-primary.add-world");
         addWorldButton.Click();
-        _authoringToolWorkspacePresenter.Received().AddNewLearningWorld();
+        _authoringToolWorkspacePresenter.Received().AddNewWorld();
     }
     
     [Test]
-    public void LoadWorldButton_Clicked_CallsLoadLearningWorldAsync()
+    public void LoadWorldButton_Clicked_CallsLoadWorldAsync()
     {
         var systemUnderTest = GetWorkspaceViewForTesting();
 
-        var loadWorldButton = systemUnderTest.FindOrFail("button.btn.btn-primary.load-learning-world");
+        var loadWorldButton = systemUnderTest.FindOrFail("button.btn.btn-primary.load-world");
         loadWorldButton.Click();
-        _authoringToolWorkspacePresenter.Received().LoadLearningWorldAsync();
+        _authoringToolWorkspacePresenter.Received().LoadWorldAsync();
     }
     
     [Test]
     public void LoadWorldButton_Clicked_OperationCancelledExceptionCaught()
     {
-        _authoringToolWorkspacePresenter.LoadLearningWorldAsync().Throws<OperationCanceledException>();
+        _authoringToolWorkspacePresenter.LoadWorldAsync().Throws<OperationCanceledException>();
         
         var systemUnderTest = GetWorkspaceViewForTesting();
         
-        var loadWorldButton = systemUnderTest.FindOrFail("button.btn.btn-primary.load-learning-world");
+        var loadWorldButton = systemUnderTest.FindOrFail("button.btn.btn-primary.load-world");
         Assert.That(() => loadWorldButton.Click(), Throws.Nothing);
-        _authoringToolWorkspacePresenter.Received().LoadLearningWorldAsync();
+        _authoringToolWorkspacePresenter.Received().LoadWorldAsync();
     }
     
     [Test]
     public void LoadWorldButton_Clicked_OtherExceptionsWrappedInErrorState()
     {
-        _authoringToolWorkspacePresenter.LoadLearningWorldAsync().Throws(new Exception("lelele"));
+        _authoringToolWorkspacePresenter.LoadWorldAsync().Throws(new Exception("lelele"));
         
         var systemUnderTest = GetWorkspaceViewForTesting();
         
-        var loadWorldButton = systemUnderTest.FindOrFail("button.btn.btn-primary.load-learning-world");
+        var loadWorldButton = systemUnderTest.FindOrFail("button.btn.btn-primary.load-world");
         Assert.That(() => loadWorldButton.Click(), Throws.Nothing);
-        _authoringToolWorkspacePresenter.Received().LoadLearningWorldAsync();
+        _authoringToolWorkspacePresenter.Received().LoadWorldAsync();
     }
     
     [Test]
-    public void EditWorldButton_Clicked_CallsOpenEditSelectedLearningWorldDialog()
+    public void EditWorldButton_Clicked_CallsOpenEditSelectedWorldDialog()
     {
-        var world = new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
-        _authoringToolWorkspacePresenter.AuthoringToolWorkspaceVm.SelectedLearningWorld.Returns(world);
+        var world = new WorldViewModel("a", "b", "c", "d", "e", "f");
+        _authoringToolWorkspacePresenter.AuthoringToolWorkspaceVm.SelectedWorld.Returns(world);
 
         var systemUnderTest = GetWorkspaceViewForTesting();
 
-        var editWorldButton = systemUnderTest.FindOrFail("button.btn.btn-primary.edit-learning-world");
+        var editWorldButton = systemUnderTest.FindOrFail("button.btn.btn-primary.edit-world");
         editWorldButton.Click();
-        _authoringToolWorkspacePresenter.Received().OpenEditSelectedLearningWorldDialog();
+        _authoringToolWorkspacePresenter.Received().OpenEditSelectedWorldDialog();
     }
     
     [Test]
-    public void DeleteWorldButton_Clicked_CallsDeleteSelectedLearningWorld()
+    public void DeleteWorldButton_Clicked_CallsDeleteSelectedWorld()
     {
-        var world = new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
-        _authoringToolWorkspacePresenter.AuthoringToolWorkspaceVm.SelectedLearningWorld.Returns(world);
+        var world = new WorldViewModel("a", "b", "c", "d", "e", "f");
+        _authoringToolWorkspacePresenter.AuthoringToolWorkspaceVm.SelectedWorld.Returns(world);
         
         var systemUnderTest = GetWorkspaceViewForTesting();
 
-        var deleteWorldButton = systemUnderTest.FindOrFail("button.btn.btn-primary.delete-learning-world");
+        var deleteWorldButton = systemUnderTest.FindOrFail("button.btn.btn-primary.delete-world");
         deleteWorldButton.Click();
-        _authoringToolWorkspacePresenter.Received().DeleteSelectedLearningWorld();
+        _authoringToolWorkspacePresenter.Received().DeleteSelectedWorld();
     }
     
     [Test]
-    public void SaveWorldButton_Clicked_CallsSaveSelectedLearningWorldAsync()
+    public void SaveWorldButton_Clicked_CallsSaveSelectedWorldAsync()
     {
-        var world = new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
-        _authoringToolWorkspacePresenter.AuthoringToolWorkspaceVm.SelectedLearningWorld.Returns(world);
+        var world = new WorldViewModel("a", "b", "c", "d", "e", "f");
+        _authoringToolWorkspacePresenter.AuthoringToolWorkspaceVm.SelectedWorld.Returns(world);
         
         var systemUnderTest = GetWorkspaceViewForTesting();
 
-        var saveWorldButton = systemUnderTest.FindOrFail("button.btn.btn-primary.save-learning-world");
+        var saveWorldButton = systemUnderTest.FindOrFail("button.btn.btn-primary.save-world");
         saveWorldButton.Click();
-        _authoringToolWorkspacePresenter.Received().SaveSelectedLearningWorldAsync();
+        _authoringToolWorkspacePresenter.Received().SaveSelectedWorldAsync();
     }
     
     [Test]
     public void SaveWorldButton_Clicked_OperationCancelledExceptionCaught()
     {
-        _authoringToolWorkspacePresenter.SaveSelectedLearningWorldAsync().Throws<OperationCanceledException>();
+        _authoringToolWorkspacePresenter.SaveSelectedWorldAsync().Throws<OperationCanceledException>();
         
         var systemUnderTest = GetWorkspaceViewForTesting();
         
-        var saveWorldButton = systemUnderTest.FindOrFail("button.btn.btn-primary.save-learning-world");
+        var saveWorldButton = systemUnderTest.FindOrFail("button.btn.btn-primary.save-world");
         Assert.That(() => saveWorldButton.Click(), Throws.Nothing);
-        _authoringToolWorkspacePresenter.Received().SaveSelectedLearningWorldAsync();
+        _authoringToolWorkspacePresenter.Received().SaveSelectedWorldAsync();
     }
     
     [Test]
     public void SaveWorldButton_Clicked_OtherExceptionsWrappedInErrorState()
     {
-        _authoringToolWorkspacePresenter.SaveSelectedLearningWorldAsync().Throws(new Exception("lelele"));
+        _authoringToolWorkspacePresenter.SaveSelectedWorldAsync().Throws(new Exception("lelele"));
         
         var systemUnderTest = GetWorkspaceViewForTesting();
         
-        var saveWorldButton = systemUnderTest.FindOrFail("button.btn.btn-primary.save-learning-world");
+        var saveWorldButton = systemUnderTest.FindOrFail("button.btn.btn-primary.save-world");
         Assert.That(() => saveWorldButton.Click(), Throws.Nothing);
-        _authoringToolWorkspacePresenter.Received().SaveSelectedLearningWorldAsync();
+        _authoringToolWorkspacePresenter.Received().SaveSelectedWorldAsync();
     }
     
     [Test]
-    public void ExportWorldButton_Clicked_CallsExportLearningWorld()
+    public void ExportWorldButton_Clicked_CallsExportWorld()
     {
-        var world = new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
+        var world = new WorldViewModel("a", "b", "c", "d", "e", "f");
         var workSpaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
-        workSpaceVm.SelectedLearningWorld.Returns(world);
-        _authoringToolWorkspaceViewModel.SelectedLearningWorld.Returns(world);
+        workSpaceVm.SelectedWorld.Returns(world);
+        _authoringToolWorkspaceViewModel.SelectedWorld.Returns(world);
 
         var systemUnderTest = GetWorkspaceViewForTesting();
         
-        Assert.That(_authoringToolWorkspaceViewModel.SelectedLearningWorld, Is.Not.EqualTo(null));
+        Assert.That(_authoringToolWorkspaceViewModel.SelectedWorld, Is.Not.EqualTo(null));
 
-        var saveWorldButton = systemUnderTest.FindOrFail("button.btn.btn-primary.export-learning-world");
+        var saveWorldButton = systemUnderTest.FindOrFail("button.btn.btn-primary.export-world");
         saveWorldButton.Click();
         _presentationLogic.Received().ConstructBackupAsync(world);
     }

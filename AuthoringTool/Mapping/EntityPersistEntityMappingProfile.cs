@@ -19,32 +19,32 @@ public class EntityPersistEntityMappingProfile : Profile
     private EntityPersistEntityMappingProfile()
     {
         DisableConstructorMapping();
-        CreateLearningWorldMap();
-        CreateLearningSpaceMap();
-        CreateLearningElementMap();
-        CreateLearningContentMap();
+        CreateWorldMap();
+        CreateSpaceMap();
+        CreateElementMap();
+        CreateContentMap();
         CreatePathwayMaps();
         CreateDerivedElementMaps();
         CreateInterfaceMaps();
         CreateEnumMaps();
-        CreateLearningSpaceLayoutMap();
+        CreateSpaceLayoutMap();
     }
 
-    private void CreateLearningSpaceLayoutMap()
+    private void CreateSpaceLayoutMap()
     {
-        CreateMap<ILearningSpaceLayout, LearningSpaceLayoutPe>()
-            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
-        CreateMap<ILearningSpaceLayoutPe, LearningSpaceLayout>()
-            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
-        CreateMap<LearningSpaceLayout, LearningSpaceLayoutPe>()
-            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+        CreateMap<ISpaceLayout, SpaceLayoutPe>()
+            .ForMember(x => x.ContainedElements, opt => opt.Ignore());
+        CreateMap<ISpaceLayoutPe, SpaceLayout>()
+            .ForMember(x => x.ContainedElements, opt => opt.Ignore());
+        CreateMap<SpaceLayout, SpaceLayoutPe>()
+            .ForMember(x => x.ContainedElements, opt => opt.Ignore())
             .ReverseMap()
-            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
+            .ForMember(x => x.ContainedElements, opt => opt.Ignore());
     }
 
     private void CreateEnumMaps()
     {
-        CreateMap<LearningElementDifficultyEnum, LearningElementDifficultyEnumPe>()
+        CreateMap<ElementDifficultyEnum, ElementDifficultyEnumPe>()
             .ReverseMap();
         CreateMap<ConditionEnum, ConditionEnumPe>()
             .ReverseMap();
@@ -52,7 +52,7 @@ public class EntityPersistEntityMappingProfile : Profile
 
     private void CreatePathwayMaps()
     {
-        CreateMap<LearningPathway, LearningPathwayPe>()
+        CreateMap<Pathway, PathwayPe>()
             .ReverseMap();
         CreateMap<PathWayCondition, PathWayConditionPe>()
             .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
@@ -63,83 +63,83 @@ public class EntityPersistEntityMappingProfile : Profile
             .ForMember(x => x.OutBoundObjects, opt => opt.Ignore());
     }
 
-    private void CreateLearningContentMap()
+    private void CreateContentMap()
     {
-        CreateMap<LearningContent, LearningContentPe>()
+        CreateMap<Content, ContentPe>()
             .ReverseMap();
     }
 
     private void CreateInterfaceMaps()
     {
         CreateMap<PathWayCondition, IObjectInPathWayPe>().As<PathWayConditionPe>();
-        CreateMap<LearningSpace, IObjectInPathWayPe>().As<LearningSpacePe>();
+        CreateMap<Space, IObjectInPathWayPe>().As<SpacePe>();
 
-        CreateMap<H5PActivationElement, ILearningElementPe>().As<H5PActivationElementPe>();
-        CreateMap<H5PInteractionElement, ILearningElementPe>().As<H5PInteractionElementPe>();
-        CreateMap<H5PTestElement, ILearningElementPe>().As<H5PTestElementPe>();
-        CreateMap<ImageTransferElement, ILearningElementPe>().As<ImageTransferElementPe>();
-        CreateMap<PdfTransferElement, ILearningElementPe>().As<PdfTransferElementPe>();
-        CreateMap<VideoActivationElement, ILearningElementPe>().As<VideoActivationElementPe>();
-        CreateMap<VideoTransferElement, ILearningElementPe>().As<VideoTransferElementPe>();
-        CreateMap<TextTransferElement, ILearningElementPe>().As<TextTransferElementPe>();
+        CreateMap<H5PActivationElement, IElementPe>().As<H5PActivationElementPe>();
+        CreateMap<H5PInteractionElement, IElementPe>().As<H5PInteractionElementPe>();
+        CreateMap<H5PTestElement, IElementPe>().As<H5PTestElementPe>();
+        CreateMap<ImageTransferElement, IElementPe>().As<ImageTransferElementPe>();
+        CreateMap<PdfTransferElement, IElementPe>().As<PdfTransferElementPe>();
+        CreateMap<VideoActivationElement, IElementPe>().As<VideoActivationElementPe>();
+        CreateMap<VideoTransferElement, IElementPe>().As<VideoTransferElementPe>();
+        CreateMap<TextTransferElement, IElementPe>().As<TextTransferElementPe>();
 
-        CreateMap<H5PActivationElementPe, ILearningElement>().As<H5PActivationElement>();
-        CreateMap<H5PInteractionElementPe, ILearningElement>().As<H5PInteractionElement>();
-        CreateMap<H5PTestElementPe, ILearningElement>().As<H5PTestElement>();
-        CreateMap<ImageTransferElementPe, ILearningElement>().As<ImageTransferElement>();
-        CreateMap<PdfTransferElementPe, ILearningElement>().As<PdfTransferElement>();
-        CreateMap<VideoActivationElementPe, ILearningElement>().As<VideoActivationElement>();
-        CreateMap<VideoTransferElementPe, ILearningElement>().As<VideoTransferElement>();
-        CreateMap<TextTransferElementPe, ILearningElement>().As<TextTransferElement>();
+        CreateMap<H5PActivationElementPe, IElement>().As<H5PActivationElement>();
+        CreateMap<H5PInteractionElementPe, IElement>().As<H5PInteractionElement>();
+        CreateMap<H5PTestElementPe, IElement>().As<H5PTestElement>();
+        CreateMap<ImageTransferElementPe, IElement>().As<ImageTransferElement>();
+        CreateMap<PdfTransferElementPe, IElement>().As<PdfTransferElement>();
+        CreateMap<VideoActivationElementPe, IElement>().As<VideoActivationElement>();
+        CreateMap<VideoTransferElementPe, IElement>().As<VideoTransferElement>();
+        CreateMap<TextTransferElementPe, IElement>().As<TextTransferElement>();
 
         CreateMap<IObjectInPathWay, IObjectInPathWayPe>()
             .ReverseMap();
 
-        CreateMap<LearningSpaceLayout, ILearningSpaceLayoutPe>().As<LearningSpaceLayoutPe>();
-        CreateMap<LearningSpaceLayoutPe, ILearningSpaceLayout>().As<LearningSpaceLayout>();
-        CreateMap<ILearningSpaceLayout, ILearningSpaceLayoutPe>().As<LearningSpaceLayoutPe>();
-        CreateMap<ILearningSpaceLayoutPe, ILearningSpaceLayout>().As<LearningSpaceLayout>();
+        CreateMap<SpaceLayout, ISpaceLayoutPe>().As<SpaceLayoutPe>();
+        CreateMap<SpaceLayoutPe, ISpaceLayout>().As<SpaceLayout>();
+        CreateMap<ISpaceLayout, ISpaceLayoutPe>().As<SpaceLayoutPe>();
+        CreateMap<ISpaceLayoutPe, ISpaceLayout>().As<SpaceLayout>();
     }
 
     private void CreateDerivedElementMaps()
     {
         CreateMap<H5PActivationElement, H5PActivationElementPe>()
-            .IncludeBase<LearningElement, LearningElementPe>()
+            .IncludeBase<Element, ElementPe>()
             .ReverseMap();
         CreateMap<H5PInteractionElement, H5PInteractionElementPe>()
-            .IncludeBase<LearningElement, LearningElementPe>()
+            .IncludeBase<Element, ElementPe>()
             .ReverseMap();
         CreateMap<H5PTestElement, H5PTestElementPe>()
-            .IncludeBase<LearningElement, LearningElementPe>()
+            .IncludeBase<Element, ElementPe>()
             .ReverseMap();
         CreateMap<ImageTransferElement, ImageTransferElementPe>()
-            .IncludeBase<LearningElement, LearningElementPe>()
+            .IncludeBase<Element, ElementPe>()
             .ReverseMap();
         CreateMap<PdfTransferElement, PdfTransferElementPe>()
-            .IncludeBase<LearningElement, LearningElementPe>()
+            .IncludeBase<Element, ElementPe>()
             .ReverseMap();
         CreateMap<VideoActivationElement, VideoActivationElementPe>()
-            .IncludeBase<LearningElement, LearningElementPe>()
+            .IncludeBase<Element, ElementPe>()
             .ReverseMap();
         CreateMap<VideoTransferElement, VideoTransferElementPe>()
-            .IncludeBase<LearningElement, LearningElementPe>()
+            .IncludeBase<Element, ElementPe>()
             .ReverseMap();
         CreateMap<TextTransferElement, TextTransferElementPe>()
-            .IncludeBase<LearningElement, LearningElementPe>()
+            .IncludeBase<Element, ElementPe>()
             .ReverseMap();
     }
 
-    private void CreateLearningElementMap()
+    private void CreateElementMap()
     {
-        CreateMap<LearningElement, LearningElementPe>()
+        CreateMap<Element, ElementPe>()
             .ReverseMap()
             .ForMember(x => x.Parent, opt => opt.Ignore())
             .ForMember(x => x.Id, opt => opt.Ignore());
     }
 
-    private void CreateLearningSpaceMap()
+    private void CreateSpaceMap()
     {
-        CreateMap<LearningSpace, LearningSpacePe>()
+        CreateMap<Space, SpacePe>()
             .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
             .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
             .IncludeBase<IObjectInPathWay, IObjectInPathWayPe>()
@@ -148,20 +148,20 @@ public class EntityPersistEntityMappingProfile : Profile
             .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
             .AfterMap((_, d) =>
             {
-                foreach (var element in d.ContainedLearningElements)
+                foreach (var element in d.ContainedElements)
                 {
                     element.Parent = d;
                 }
             });
     }
 
-    private void CreateLearningWorldMap()
+    private void CreateWorldMap()
     {
-        CreateMap<LearningWorld, LearningWorldPe>()
+        CreateMap<World, WorldPe>()
             .ForMember(x => x.ObjectsInPathWaysPe, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
-                foreach (var pathWay in d.LearningPathways)
+                foreach (var pathWay in d.Pathways)
                 {
                     pathWay.SourceObject = d.ObjectsInPathWaysPe.First(x => x.Id == pathWay.SourceObject?.Id);
                     pathWay.TargetObject = d.ObjectsInPathWaysPe.First(x => x.Id == pathWay.TargetObject?.Id);
@@ -171,10 +171,10 @@ public class EntityPersistEntityMappingProfile : Profile
             {
                 foreach (var objectInPathWayPe in d.ObjectsInPathWaysPe)
                 {
-                    objectInPathWayPe.InBoundObjects = d.LearningPathways
+                    objectInPathWayPe.InBoundObjects = d.Pathways
                         .Where(x => x.TargetObject.Id == objectInPathWayPe.Id)
                         .Select(x => x.SourceObject).ToList();
-                    objectInPathWayPe.OutBoundObjects = d.LearningPathways
+                    objectInPathWayPe.OutBoundObjects = d.Pathways
                         .Where(x => x.SourceObject.Id == objectInPathWayPe.Id)
                         .Select(x => x.TargetObject).ToList();
                 }
@@ -183,7 +183,7 @@ public class EntityPersistEntityMappingProfile : Profile
             .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
-                foreach (var pathWay in d.LearningPathways)
+                foreach (var pathWay in d.Pathways)
                 {
                     pathWay.SourceObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.SourceObject?.Id);
                     pathWay.TargetObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.TargetObject?.Id);
@@ -193,10 +193,10 @@ public class EntityPersistEntityMappingProfile : Profile
             {
                 foreach (var objectInPathWay in d.ObjectsInPathWays)
                 {
-                    objectInPathWay.InBoundObjects = d.LearningPathways
+                    objectInPathWay.InBoundObjects = d.Pathways
                         .Where(x => x.TargetObject.Id == objectInPathWay.Id)
                         .Select(x => x.SourceObject).ToList();
-                    objectInPathWay.OutBoundObjects = d.LearningPathways
+                    objectInPathWay.OutBoundObjects = d.Pathways
                         .Where(x => x.SourceObject.Id == objectInPathWay.Id)
                         .Select(x => x.TargetObject).ToList();
                 }

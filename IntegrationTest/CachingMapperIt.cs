@@ -30,27 +30,27 @@ public class CachingMapperIt
         var cachingMapper = new CachingMapper(mapper, commandStateManager, logger);
         var systemUnderTest = CreateTestablePresentationLogic(null, businessLogic, mapper, cachingMapper);
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f");
-        Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
-        var worldVm = workspaceVm.LearningWorlds[0];
+        systemUnderTest.CreateWorld(workspaceVm, "a", "b", "c", "d", "e", "f");
+        Assert.That(workspaceVm.Worlds, Has.Count.EqualTo(1));
+        var worldVm = workspaceVm.Worlds[0];
 
-        Assert.That(workspaceVm.SelectedLearningWorld, Is.EqualTo(worldVm));
-        systemUnderTest.EditLearningWorld(workspaceVm.SelectedLearningWorld!, "a1", "b1", "c1", "d1", "e1", "f1");
+        Assert.That(workspaceVm.SelectedWorld, Is.EqualTo(worldVm));
+        systemUnderTest.EditWorld(workspaceVm.SelectedWorld!, "a1", "b1", "c1", "d1", "e1", "f1");
         systemUnderTest.UndoCommand();
-        Assert.That(workspaceVm.SelectedLearningWorld, Is.EqualTo(worldVm));
+        Assert.That(workspaceVm.SelectedWorld, Is.EqualTo(worldVm));
 
         systemUnderTest.UndoCommand();
 
-        Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(0));
+        Assert.That(workspaceVm.Worlds, Has.Count.EqualTo(0));
 
         systemUnderTest.RedoCommand();
 
-        Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
+        Assert.That(workspaceVm.Worlds, Has.Count.EqualTo(1));
         Assert.Multiple(() =>
         {
-            Assert.That(workspaceVm.LearningWorlds[0], Is.EqualTo(worldVm));
-            Assert.That(workspaceVm.LearningWorlds[0].Name, Is.EqualTo(worldVm.Name));
-            Assert.That(workspaceVm.LearningWorlds[0].Description, Is.EqualTo(worldVm.Description));
+            Assert.That(workspaceVm.Worlds[0], Is.EqualTo(worldVm));
+            Assert.That(workspaceVm.Worlds[0].Name, Is.EqualTo(worldVm.Name));
+            Assert.That(workspaceVm.Worlds[0].Description, Is.EqualTo(worldVm.Description));
         });
     }
 
@@ -67,45 +67,45 @@ public class CachingMapperIt
 
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
 
-        systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f");
+        systemUnderTest.CreateWorld(workspaceVm, "a", "b", "c", "d", "e", "f");
 
-        Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
+        Assert.That(workspaceVm.Worlds, Has.Count.EqualTo(1));
 
-        var worldVm = workspaceVm.LearningWorlds[0];
+        var worldVm = workspaceVm.Worlds[0];
 
-        systemUnderTest.CreateLearningSpace(worldVm, "g", "h", "i", "j", "k", 1, 2, 3);
+        systemUnderTest.CreateSpace(worldVm, "g", "h", "i", "j", "k", 1, 2, 3);
 
-        Assert.That(worldVm.LearningSpaces, Has.Count.EqualTo(1));
+        Assert.That(worldVm.Spaces, Has.Count.EqualTo(1));
 
-        var spaceVm = worldVm.LearningSpaces.First();
+        var spaceVm = worldVm.Spaces.First();
 
-        Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
+        Assert.That(workspaceVm.Worlds, Has.Count.EqualTo(1));
         Assert.That(worldVm.Name, Is.EqualTo("a"));
         Assert.That(spaceVm.Name, Is.EqualTo("g"));
 
-        Assert.That(worldVm.LearningSpaces.First(), Is.EqualTo(spaceVm));
+        Assert.That(worldVm.Spaces.First(), Is.EqualTo(spaceVm));
 
-        //Undo Redo CreateLearningSpaceCommand
+        //Undo Redo CreateSpaceCommand
         systemUnderTest.UndoCommand();
         systemUnderTest.RedoCommand();
 
-        Assert.That(worldVm.LearningSpaces.First(), Is.EqualTo(spaceVm));
+        Assert.That(worldVm.Spaces.First(), Is.EqualTo(spaceVm));
 
-        //Undo Redo CreateLearningSpaceCommand and CreateLearningWorldCommand
+        //Undo Redo CreateSpaceCommand and CreateWorldCommand
         systemUnderTest.UndoCommand();
         systemUnderTest.UndoCommand();
         systemUnderTest.RedoCommand();
         systemUnderTest.RedoCommand();
 
-        Assert.That(workspaceVm.LearningWorlds[0], Is.EqualTo(worldVm));
+        Assert.That(workspaceVm.Worlds[0], Is.EqualTo(worldVm));
         Assert.Multiple(() =>
         {
-            Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
-            Assert.That(workspaceVm.LearningWorlds[0], Is.EqualTo(worldVm));
-            Assert.That(workspaceVm.LearningWorlds[0].LearningSpaces, Has.Count.EqualTo(1));
-            Assert.That(workspaceVm.LearningWorlds[0].LearningSpaces.First(), Is.EqualTo(spaceVm));
-            Assert.That(worldVm.LearningSpaces.First(), Is.EqualTo(spaceVm));
-            Assert.That(worldVm.LearningSpaces.First().Name, Is.EqualTo(spaceVm.Name));
+            Assert.That(workspaceVm.Worlds, Has.Count.EqualTo(1));
+            Assert.That(workspaceVm.Worlds[0], Is.EqualTo(worldVm));
+            Assert.That(workspaceVm.Worlds[0].Spaces, Has.Count.EqualTo(1));
+            Assert.That(workspaceVm.Worlds[0].Spaces.First(), Is.EqualTo(spaceVm));
+            Assert.That(worldVm.Spaces.First(), Is.EqualTo(spaceVm));
+            Assert.That(worldVm.Spaces.First().Name, Is.EqualTo(spaceVm.Name));
         });
     }
 
@@ -122,29 +122,29 @@ public class CachingMapperIt
 
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
 
-        systemUnderTest.CreateLearningWorld(workspaceVm, "a", "b", "c", "d", "e", "f");
+        systemUnderTest.CreateWorld(workspaceVm, "a", "b", "c", "d", "e", "f");
 
-        Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
+        Assert.That(workspaceVm.Worlds, Has.Count.EqualTo(1));
 
-        var worldVm = workspaceVm.LearningWorlds[0];
+        var worldVm = workspaceVm.Worlds[0];
 
-        systemUnderTest.CreateLearningSpace(worldVm, "g", "h", "i", "j", "k", 1, 2, 3);
-        systemUnderTest.ChangeLearningSpaceLayout(worldVm.LearningSpaces.First(), FloorPlanEnum.Rectangle2X3);
+        systemUnderTest.CreateSpace(worldVm, "g", "h", "i", "j", "k", 1, 2, 3);
+        systemUnderTest.ChangeSpaceLayout(worldVm.Spaces.First(), FloorPlanEnum.Rectangle2X3);
 
-        Assert.That(worldVm.LearningSpaces, Has.Count.EqualTo(1));
+        Assert.That(worldVm.Spaces, Has.Count.EqualTo(1));
 
-        var spaceVm = worldVm.LearningSpaces.First();
+        var spaceVm = worldVm.Spaces.First();
 
-        systemUnderTest.CreateLearningElement(spaceVm, 0, "l", "m", ElementTypeEnum.Transfer, ContentTypeEnum.PDF,
-            null!, "url", "n", "o", "p", LearningElementDifficultyEnum.Easy, 2, 3);
+        systemUnderTest.CreateElement(spaceVm, 0, "l", "m", ElementTypeEnum.Transfer, ContentTypeEnum.PDF,
+            null!, "url", "n", "o", "p", ElementDifficultyEnum.Easy, 2, 3);
 
-        Assert.That(spaceVm.ContainedLearningElements.Count(), Is.EqualTo(1));
+        Assert.That(spaceVm.ContainedElements.Count(), Is.EqualTo(1));
 
-        var elementVm = spaceVm.ContainedLearningElements.First();
+        var elementVm = spaceVm.ContainedElements.First();
 
         Assert.That(elementVm.Name, Is.EqualTo("l"));
 
-        //Undo Redo CreateLearningElementCommand and ChangeLearningSpaceLayoutCommand and CreateLearningSpaceCommand and CreateLearningWorldCommand
+        //Undo Redo CreateElementCommand and ChangeSpaceLayoutCommand and CreateSpaceCommand and CreateWorldCommand
         systemUnderTest.UndoCommand();
         systemUnderTest.UndoCommand();
         systemUnderTest.UndoCommand();
@@ -154,22 +154,22 @@ public class CachingMapperIt
         systemUnderTest.RedoCommand();
         systemUnderTest.RedoCommand();
 
-        Assert.That(workspaceVm.LearningWorlds[0], Is.EqualTo(worldVm));
+        Assert.That(workspaceVm.Worlds[0], Is.EqualTo(worldVm));
         Assert.Multiple(() =>
         {
-            Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
-            Assert.That(workspaceVm.LearningWorlds[0], Is.EqualTo(worldVm));
+            Assert.That(workspaceVm.Worlds, Has.Count.EqualTo(1));
+            Assert.That(workspaceVm.Worlds[0], Is.EqualTo(worldVm));
         });
         Assert.Multiple(() =>
         {
-            Assert.That(workspaceVm.LearningWorlds[0].LearningSpaces, Has.Count.EqualTo(1));
-            Assert.That(workspaceVm.LearningWorlds[0].LearningSpaces.First(), Is.EqualTo(spaceVm));
+            Assert.That(workspaceVm.Worlds[0].Spaces, Has.Count.EqualTo(1));
+            Assert.That(workspaceVm.Worlds[0].Spaces.First(), Is.EqualTo(spaceVm));
         });
         Assert.Multiple(() =>
         {
-            Assert.That(workspaceVm.LearningWorlds[0].LearningSpaces.First().ContainedLearningElements.Count(),
+            Assert.That(workspaceVm.Worlds[0].Spaces.First().ContainedElements.Count(),
                 Is.EqualTo(1));
-            Assert.That(workspaceVm.LearningWorlds[0].LearningSpaces.First().ContainedLearningElements.First(),
+            Assert.That(workspaceVm.Worlds[0].Spaces.First().ContainedElements.First(),
                 Is.EqualTo(elementVm));
         });
     }

@@ -1,7 +1,7 @@
 using Presentation.PresentationLogic;
-using Presentation.PresentationLogic.LearningElement;
-using Presentation.PresentationLogic.LearningSpace;
-using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Element;
+using Presentation.PresentationLogic.Space;
+using Presentation.PresentationLogic.World;
 
 namespace Presentation.View.Toolbox;
 
@@ -22,14 +22,14 @@ public interface IToolboxResultFilter
     /// Searching for a plain string will return only objects that contain said string in their name, case-insensitively.
     /// Search terms starting with the words 'world', 'space' or 'element' will return only objects of that type.
     /// Appending a colon and another search term will return only objects of that type and whos name contains the secondary search term,
-    /// e.g. <c>space:test</c> will only return <see cref="LearningSpaceViewModel"/> objects that have the substring 'test' in their name.
+    /// e.g. <c>space:test</c> will only return <see cref="SpaceViewModel"/> objects that have the substring 'test' in their name.
     /// Beginning and ending the search term with quotation marks will result in the string being taken literally,
     /// ignoring the above rules and instead searching for the entire <paramref name="searchTerm"/> directly.
     /// </remarks>
     /// <param name="items">The items to be filtered.</param>
     /// <param name="searchTerm">The search term by which <paramref name="items"/> should be filtered, adhering to the rules set forth in the remarks.</param>
-    /// <returns>All <see cref="IDisplayableLearningObject"/> objects in <paramref name="items"/> that are matched by the <paramref name="searchTerm"/>.</returns>
-    IEnumerable<IDisplayableLearningObject> FilterCollection(IEnumerable<IDisplayableLearningObject> items,
+    /// <returns>All <see cref="IDisplayableObject"/> objects in <paramref name="items"/> that are matched by the <paramref name="searchTerm"/>.</returns>
+    IEnumerable<IDisplayableObject> FilterCollection(IEnumerable<IDisplayableObject> items,
         string searchTerm);
     
     /// <summary>
@@ -40,21 +40,21 @@ public interface IToolboxResultFilter
     bool MatchesQuoteRule(string searchTerm);
     
     /// <summary>
-    /// Determines whether or not a given search term triggers the 'world' rule (return only <see cref="LearningWorldViewModel"/> objects).
+    /// Determines whether or not a given search term triggers the 'world' rule (return only <see cref="WorldViewModel"/> objects).
     /// </summary>
     /// <param name="searchTerm">The term to be tested.</param>
     /// <returns>Whether or not the 'world' rule shall be triggered.</returns>
     bool MatchesWorldRule(string searchTerm);
     
     /// <summary>
-    /// Determines whether or not a given search term triggers the 'space' rule (return only <see cref="LearningSpaceViewModel"/> objects).
+    /// Determines whether or not a given search term triggers the 'space' rule (return only <see cref="SpaceViewModel"/> objects).
     /// </summary>
     /// <param name="searchTerm">The term to be tested.</param>
     /// <returns>Whether or not the 'space' rule shall be triggered.</returns>
     bool MatchesSpaceRule(string searchTerm);
     
     /// <summary>
-    /// Determines whether or not a given search term triggers the 'element' rule (return only <see cref="LearningElementViewModel"/> objects).
+    /// Determines whether or not a given search term triggers the 'element' rule (return only <see cref="ElementViewModel"/> objects).
     /// </summary>
     /// <param name="searchTerm">The term to be tested.</param>
     /// <returns>Whether or not the 'element' rule shall be triggered.</returns>

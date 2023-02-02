@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.World;
 
 namespace PresentationTest.PresentationLogic.AuthoringToolWorkspace;
 
@@ -15,38 +15,38 @@ public class AuthoringToolWorkspaceViewModelUt
     {
         IAuthoringToolWorkspaceViewModel systemUnderTest = GetViewModelForTesting();
         
-        Assert.That(systemUnderTest.LearningWorlds, Is.Empty);
+        Assert.That(systemUnderTest.Worlds, Is.Empty);
     }
     
     [Test]
-    public void AuthoringToolWorkspaceViewModel_RemoveLearningWorld_RemovesLearningWorldFromEnumerable()
+    public void AuthoringToolWorkspaceViewModel_RemoveWorld_RemovesWorldFromEnumerable()
     {
-        var viewModel = GetLearningWorldViewModelForTesting();
+        var viewModel = GetWorldViewModelForTesting();
 
         var systemUnderTest = GetViewModelForTesting();
-        systemUnderTest._learningWorlds.Add(viewModel);
+        systemUnderTest._worlds.Add(viewModel);
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.LearningWorlds.Count(), Is.EqualTo(1));
-            Assert.That(systemUnderTest.LearningWorlds, Contains.Item(viewModel));
+            Assert.That(systemUnderTest.Worlds.Count(), Is.EqualTo(1));
+            Assert.That(systemUnderTest.Worlds, Contains.Item(viewModel));
         });
-        systemUnderTest.RemoveLearningWorld(viewModel);
+        systemUnderTest.RemoveWorld(viewModel);
         
-        Assert.That(systemUnderTest.LearningWorlds, Is.Empty);
+        Assert.That(systemUnderTest.Worlds, Is.Empty);
     }
     
     [Test]
-    public void AuthoringToolWorkspaceViewModel_RemoveLearningWorld_RaisesStateChangeEventWithCurrentState()
+    public void AuthoringToolWorkspaceViewModel_RemoveWorld_RaisesStateChangeEventWithCurrentState()
     {
-        var viewModel = GetLearningWorldViewModelForTesting();
+        var viewModel = GetWorldViewModelForTesting();
         var handlerCalled = false;
 
         var systemUnderTest = GetViewModelForTesting();
-        systemUnderTest._learningWorlds.Add(viewModel);
+        systemUnderTest._worlds.Add(viewModel);
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.LearningWorlds.Count(), Is.EqualTo(1));
-            Assert.That(systemUnderTest.LearningWorlds, Contains.Item(viewModel));
+            Assert.That(systemUnderTest.Worlds.Count(), Is.EqualTo(1));
+            Assert.That(systemUnderTest.Worlds, Contains.Item(viewModel));
         });
         
         systemUnderTest.PropertyChanged += (caller, changedEventArgs) => {
@@ -55,50 +55,50 @@ public class AuthoringToolWorkspaceViewModelUt
             Assert.Multiple(() =>
             {
                 Assert.That(caller, Is.EqualTo(systemUnderTest));
-                Assert.That(changedEventArgs.PropertyName, Is.EqualTo(nameof(systemUnderTest.LearningWorlds)));
+                Assert.That(changedEventArgs.PropertyName, Is.EqualTo(nameof(systemUnderTest.Worlds)));
             });
         };
         
-        systemUnderTest.RemoveLearningWorld(viewModel);
+        systemUnderTest.RemoveWorld(viewModel);
         
         Assert.That(handlerCalled, Is.True);
     }
 
     [Test]
-    public void AuthoringToolWorkspaceViewModel_SetSelectedLearningWorld_SetsLearningWorld()
+    public void AuthoringToolWorkspaceViewModel_SetSelectedWorld_SetsWorld()
     {
-        var viewModel = GetLearningWorldViewModelForTesting();
+        var viewModel = GetWorldViewModelForTesting();
 
         var systemUnderTest = GetViewModelForTesting();
-        systemUnderTest._learningWorlds.Add(viewModel);
+        systemUnderTest._worlds.Add(viewModel);
         
-        Assert.That(systemUnderTest.SelectedLearningWorld, Is.Null);
+        Assert.That(systemUnderTest.SelectedWorld, Is.Null);
 
-        systemUnderTest.SelectedLearningWorld = viewModel;
+        systemUnderTest.SelectedWorld = viewModel;
         
-        Assert.That(systemUnderTest.SelectedLearningWorld, Is.EqualTo(viewModel));
+        Assert.That(systemUnderTest.SelectedWorld, Is.EqualTo(viewModel));
     }
 
     [Test]
-    public void AuthoringToolWorkspaceViewModel_SetSelectedLearningWorld_ThrowsExceptionWhenNotInCollection()
+    public void AuthoringToolWorkspaceViewModel_SetSelectedWorld_ThrowsExceptionWhenNotInCollection()
     {
-        var viewModel = GetLearningWorldViewModelForTesting();
+        var viewModel = GetWorldViewModelForTesting();
 
         IAuthoringToolWorkspaceViewModel systemUnderTest = GetViewModelForTesting();
-        Assert.That(systemUnderTest.LearningWorlds, Is.Empty);
+        Assert.That(systemUnderTest.Worlds, Is.Empty);
         
-        var ex = Assert.Throws<ArgumentException>(() => systemUnderTest.SelectedLearningWorld = viewModel);
+        var ex = Assert.Throws<ArgumentException>(() => systemUnderTest.SelectedWorld = viewModel);
         Assert.That(ex!.Message, Is.EqualTo("value isn't contained in collection."));
     }
 
     [Test]
-    public void AuthoringToolWorkspaceViewModel_SetSelectedLearningWorld_RaisesStateChangeEvent()
+    public void AuthoringToolWorkspaceViewModel_SetSelectedWorld_RaisesStateChangeEvent()
     {
-        var viewModel = GetLearningWorldViewModelForTesting();
+        var viewModel = GetWorldViewModelForTesting();
         var handlerCalled = false;
 
         var systemUnderTest = GetViewModelForTesting();
-        systemUnderTest._learningWorlds.Add(viewModel);
+        systemUnderTest._worlds.Add(viewModel);
         
         systemUnderTest.PropertyChanged += (caller, changedEventArgs) => {
             if (handlerCalled) Assert.Fail("handler called twice");
@@ -106,11 +106,11 @@ public class AuthoringToolWorkspaceViewModelUt
             Assert.Multiple(() =>
             {
                 Assert.That(caller, Is.EqualTo(systemUnderTest));
-                Assert.That(changedEventArgs.PropertyName, Is.EqualTo(nameof(systemUnderTest.SelectedLearningWorld)));
+                Assert.That(changedEventArgs.PropertyName, Is.EqualTo(nameof(systemUnderTest.SelectedWorld)));
             });
         };
         
-        systemUnderTest.SelectedLearningWorld = viewModel;
+        systemUnderTest.SelectedWorld = viewModel;
         
         Assert.That(handlerCalled, Is.True);
     }
@@ -156,8 +156,8 @@ public class AuthoringToolWorkspaceViewModelUt
         return new AuthoringToolWorkspaceViewModel();
     }
 
-    private LearningWorldViewModel GetLearningWorldViewModelForTesting()
+    private WorldViewModel GetWorldViewModelForTesting()
     {
-        return new LearningWorldViewModel("foo", "bar", "foo", "bar", "foo", "bar");
+        return new WorldViewModel("foo", "bar", "foo", "bar", "foo", "bar");
     }
 }

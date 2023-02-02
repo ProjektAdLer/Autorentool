@@ -98,7 +98,7 @@ public class XmlResourceFactory : IXmlResourceFactory
         FileManager.SetXmlFilesList(FilesXmlFilesList);
     }
 
-    public void ReadFileListAndSetParametersResource(List<LearningElementJson> resourceList)
+    public void ReadFileListAndSetParametersResource(List<ElementJson> resourceList)
     {
         foreach (var resource in resourceList)
         {
@@ -106,7 +106,7 @@ public class XmlResourceFactory : IXmlResourceFactory
             FileElementType = resource.ElementType;
             FileElementName = resource.Identifier.Value;
             FileElementDesc = resource.Description ?? "";
-            FileElementParentSpaceString = resource.LearningSpaceParentId.ToString();
+            FileElementParentSpaceString = resource.SpaceParentId.ToString();
 
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
                 resource.Identifier.Value + "." + resource.ElementType));

@@ -1,12 +1,12 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.Caching.Memory;
 using Presentation.PresentationLogic;
-using Presentation.PresentationLogic.LearningElement;
-using Presentation.PresentationLogic.LearningSpace;
-using Presentation.PresentationLogic.LearningWorld;
-using Presentation.View.LearningElement;
-using Presentation.View.LearningSpace;
-using Presentation.View.LearningWorld;
+using Presentation.PresentationLogic.Element;
+using Presentation.PresentationLogic.Space;
+using Presentation.PresentationLogic.World;
+using Presentation.View.Element;
+using Presentation.View.Space;
+using Presentation.View.World;
 
 namespace Presentation.View.Toolbox;
 
@@ -22,7 +22,7 @@ public class ToolboxRenderFragmentFactory : IAbstractToolboxRenderFragmentFactor
     private IMemoryCache Cache { get; }
     private ILogger<ToolboxRenderFragmentFactory> Logger { get; }
 
-    public RenderFragment GetRenderFragment(IDisplayableLearningObject obj)
+    public RenderFragment GetRenderFragment(IDisplayableObject obj)
     {
         // ReSharper disable once InvertIf - unnecessary here
         if (!Cache.TryGetValue(obj, out RenderFragment fragment))
@@ -35,26 +35,26 @@ public class ToolboxRenderFragmentFactory : IAbstractToolboxRenderFragmentFactor
 
         return fragment;
     }
-    private RenderFragment GetRenderFragmentInternal(IDisplayableLearningObject obj)
+    private RenderFragment GetRenderFragmentInternal(IDisplayableObject obj)
     {
         return obj switch
         {
-            LearningWorldViewModel learningWorldViewModel => b =>
+            WorldViewModel worldViewModel => b =>
             {
-                b.OpenComponent<LearningWorldRenderFragment>(1);
-                b.AddAttribute(1, "ViewModel", learningWorldViewModel);
+                b.OpenComponent<WorldRenderFragment>(1);
+                b.AddAttribute(1, "ViewModel", worldViewModel);
                 b.CloseComponent();
             },
-            LearningSpaceViewModel learningSpaceViewModel => b =>
+            SpaceViewModel spaceViewModel => b =>
             {
-                b.OpenComponent<LearningSpaceRenderFragment>(1);
-                b.AddAttribute(1, "ViewModel", learningSpaceViewModel);
+                b.OpenComponent<SpaceRenderFragment>(1);
+                b.AddAttribute(1, "ViewModel", spaceViewModel);
                 b.CloseComponent();
             },
-            LearningElementViewModel learningElementViewModel => b =>
+            ElementViewModel elementViewModel => b =>
             {
-                b.OpenComponent<LearningElementRenderFragment>(1);
-                b.AddAttribute(1, "ViewModel", learningElementViewModel);
+                b.OpenComponent<ElementRenderFragment>(1);
+                b.AddAttribute(1, "ViewModel", elementViewModel);
                 b.CloseComponent();
             },
             _ => throw new ArgumentOutOfRangeException(nameof(obj), "Unsupported type passed to GetRenderFragment")

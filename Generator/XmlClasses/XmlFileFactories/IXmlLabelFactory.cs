@@ -26,7 +26,7 @@ public interface IXmlLabelFactory
 
     void CreateLabelFactory();
 
-    void LabelSetParameters(List<LearningElementJson> labelList);
+    void LabelSetParameters(List<ElementJson> labelList);
 
     void LabelSetParametersActivitySpace();
 

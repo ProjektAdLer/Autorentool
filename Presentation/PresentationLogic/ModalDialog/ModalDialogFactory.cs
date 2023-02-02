@@ -1,13 +1,13 @@
 ﻿using Microsoft.AspNetCore.Components;
 using Presentation.Components.ModalDialog;
-using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.Content;
 
 namespace Presentation.PresentationLogic.ModalDialog;
 
-public class ModalDialogFactory : ILearningSpaceViewModalDialogFactory, ILearningWorldViewModalDialogFactory, IAuthoringToolWorkspaceViewModalDialogFactory
+public class ModalDialogFactory : ISpaceViewModalDialogFactory, IWorldViewModalDialogFactory, IAuthoringToolWorkspaceViewModalDialogFactory
 {
-    public ModalDialogFactory(ILearningSpaceViewModalDialogInputFieldsFactory spaceViewInputFieldsFactory,
-        ILearningWorldViewModalDialogInputFieldsFactory worldViewInputFieldsFactory,
+    public ModalDialogFactory(ISpaceViewModalDialogInputFieldsFactory spaceViewInputFieldsFactory,
+        IWorldViewModalDialogInputFieldsFactory worldViewInputFieldsFactory,
         IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory authoringToolWorkspaceViewModalDialogInputFieldsFactory)
     {
         SpaceViewInputFieldsFactory = spaceViewInputFieldsFactory;
@@ -16,26 +16,26 @@ public class ModalDialogFactory : ILearningSpaceViewModalDialogFactory, ILearnin
     }
 
     private IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory AuthoringToolWorkspaceViewModalDialogInputFieldsFactory { get; }
-    private ILearningSpaceViewModalDialogInputFieldsFactory SpaceViewInputFieldsFactory { get; }
-    private ILearningWorldViewModalDialogInputFieldsFactory WorldViewInputFieldsFactory { get; }
+    private ISpaceViewModalDialogInputFieldsFactory SpaceViewInputFieldsFactory { get; }
+    private IWorldViewModalDialogInputFieldsFactory WorldViewInputFieldsFactory { get; }
 
-    /// <inheritdoc cref="ILearningSpaceViewModalDialogFactory.GetCreateLearningElementFragment"/>
-    public RenderFragment GetCreateLearningElementFragment(
-        LearningContentViewModel? dragAndDropLearningContent, ModalDialogOnClose onCloseCallback)
+    /// <inheritdoc cref="ISpaceViewModalDialogFactory.GetCreateElementFragment"/>
+    public RenderFragment GetCreateElementFragment(
+        ContentViewModel? dragAndDropContent, ModalDialogOnClose onCloseCallback)
     {
-        var inputFields = SpaceViewInputFieldsFactory.GetCreateLearningElementInputFields(dragAndDropLearningContent);
-        const string title = "Create new learning element";
-        const string text = "Please enter the required data for the learning element below:";
+        var inputFields = SpaceViewInputFieldsFactory.GetCreateElementInputFields(dragAndDropContent);
+        const string title = "Create new element";
+        const string text = "Please enter the required data for the element below:";
         const ModalDialogType dialogType = ModalDialogType.OkCancel;
         return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType, inputFields);
     }
 
-    /// <inheritdoc cref="ILearningWorldViewModalDialogFactory.GetCreateLearningSpaceFragment"/>
-    public RenderFragment GetCreateLearningSpaceFragment(ModalDialogOnClose onCloseCallback, IDictionary<string, string>? annotations = null)
+    /// <inheritdoc cref="IWorldViewModalDialogFactory.GetCreateSpaceFragment"/>
+    public RenderFragment GetCreateSpaceFragment(ModalDialogOnClose onCloseCallback, IDictionary<string, string>? annotations = null)
     {
-        var inputFields = WorldViewInputFieldsFactory.GetCreateLearningSpaceInputFields();
-        const string title = "Create new learning space";
-        const string text = "Please enter the required data for the learning space below:";
+        var inputFields = WorldViewInputFieldsFactory.GetCreateSpaceInputFields();
+        const string title = "Create new space";
+        const string text = "Please enter the required data for the space below:";
         const ModalDialogType dialogType = ModalDialogType.OkCancel;
         return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType, inputFields, annotations: annotations);
     }
@@ -49,18 +49,18 @@ public class ModalDialogFactory : ILearningSpaceViewModalDialogFactory, ILearnin
         return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType, inputFields);
     }
 
-    /// <inheritdoc cref="ILearningSpaceViewModalDialogFactory.GetEditLearningSpaceFragment"/>
-    public RenderFragment GetEditLearningSpaceFragment(IDictionary<string, string> initialInputValues, ModalDialogOnClose onCloseCallback, IDictionary<string, string>? annotations = null)
+    /// <inheritdoc cref="ISpaceViewModalDialogFactory.GetEditSpaceFragment"/>
+    public RenderFragment GetEditSpaceFragment(IDictionary<string, string> initialInputValues, ModalDialogOnClose onCloseCallback, IDictionary<string, string>? annotations = null)
     {
-        var inputFields = SpaceViewInputFieldsFactory.GetEditLearningSpaceInputFields();
-        const string title = "Edit existing learning space";
-        const string text = "Please enter the required data for the learning space below:";
+        var inputFields = SpaceViewInputFieldsFactory.GetEditSpaceInputFields();
+        const string title = "Edit existing space";
+        const string text = "Please enter the required data for the space below:";
         const ModalDialogType dialogType = ModalDialogType.OkCancel;
         return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType, inputFields,
             initialInputValues, annotations);
     }
 
-    /// <inheritdoc cref="ILearningSpaceViewModalDialogFactory.GetEditLearningSpaceFragment"/>
+    /// <inheritdoc cref="ISpaceViewModalDialogFactory.GetEditSpaceFragment"/>
     public RenderFragment GetEditPathWayConditionFragment(IDictionary<string, string> initialInputValues, ModalDialogOnClose onCloseCallback)
     {
         var inputFields = WorldViewInputFieldsFactory.GetEditPathWayConditionInputFields();
@@ -70,23 +70,23 @@ public class ModalDialogFactory : ILearningSpaceViewModalDialogFactory, ILearnin
         return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType, inputFields, initialInputValues);
     }
 
-    /// <inheritdoc cref="ILearningWorldViewModalDialogFactory.GetEditLearningSpaceFragment"/>
-    RenderFragment ILearningWorldViewModalDialogFactory.GetEditLearningSpaceFragment(IDictionary<string, string> initialInputValues, ModalDialogOnClose onCloseCallback, IDictionary<string, string>? annotations = null)
+    /// <inheritdoc cref="IWorldViewModalDialogFactory.GetEditSpaceFragment"/>
+    RenderFragment IWorldViewModalDialogFactory.GetEditSpaceFragment(IDictionary<string, string> initialInputValues, ModalDialogOnClose onCloseCallback, IDictionary<string, string>? annotations = null)
     {
-        var inputFields = WorldViewInputFieldsFactory.GetEditLearningSpaceInputFields();
-        const string title = "Edit existing learning space";
-        const string text = "Please enter the required data for the learning space below:";
+        var inputFields = WorldViewInputFieldsFactory.GetEditSpaceInputFields();
+        const string title = "Edit existing space";
+        const string text = "Please enter the required data for the space below:";
         const ModalDialogType dialogType = ModalDialogType.OkCancel;
         return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType, inputFields,
             initialInputValues, annotations);
     }
 
-    /// <inheritdoc cref="ILearningSpaceViewModalDialogFactory.GetEditLearningElementFragment"/>
-    public RenderFragment GetEditLearningElementFragment(IDictionary<string, string> initialInputValues, ModalDialogOnClose onCloseCallback)
+    /// <inheritdoc cref="ISpaceViewModalDialogFactory.GetEditElementFragment"/>
+    public RenderFragment GetEditElementFragment(IDictionary<string, string> initialInputValues, ModalDialogOnClose onCloseCallback)
     {
-        var inputFields = SpaceViewInputFieldsFactory.GetEditLearningElementInputFields();
-        const string title = "Edit existing learning element";
-        const string text = "Please enter the required data for the learning element below:";
+        var inputFields = SpaceViewInputFieldsFactory.GetEditElementInputFields();
+        const string title = "Edit existing element";
+        const string text = "Please enter the required data for the element below:";
         const ModalDialogType dialogType = ModalDialogType.OkCancel;
         return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType, inputFields,
             initialInputValues);
@@ -119,23 +119,23 @@ public class ModalDialogFactory : ILearningSpaceViewModalDialogFactory, ILearnin
         return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType);
     }
 
-    /// <inheritdoc cref="IAuthoringToolWorkspaceViewModalDialogFactory.GetCreateLearningWorldFragment"/>
-    public RenderFragment GetCreateLearningWorldFragment(ModalDialogOnClose onCloseCallback)
+    /// <inheritdoc cref="IAuthoringToolWorkspaceViewModalDialogFactory.GetCreateWorldFragment"/>
+    public RenderFragment GetCreateWorldFragment(ModalDialogOnClose onCloseCallback)
     {
-        var inputFields = AuthoringToolWorkspaceViewModalDialogInputFieldsFactory.GetCreateLearningWorldInputFields();
-        const string title = "Create new learning world";
-        const string text = "Please enter the required data for the learning world below:";
+        var inputFields = AuthoringToolWorkspaceViewModalDialogInputFieldsFactory.GetCreateWorldInputFields();
+        const string title = "Create new world";
+        const string text = "Please enter the required data for the world below:";
         const ModalDialogType dialogType = ModalDialogType.OkCancel;
         return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType, inputFields);
     }
 
-    /// <inheritdoc cref="IAuthoringToolWorkspaceViewModalDialogFactory.GetEditLearningWorldFragment"/>
-    public RenderFragment GetEditLearningWorldFragment(IDictionary<string, string> initialInputValues,
+    /// <inheritdoc cref="IAuthoringToolWorkspaceViewModalDialogFactory.GetEditWorldFragment"/>
+    public RenderFragment GetEditWorldFragment(IDictionary<string, string> initialInputValues,
         ModalDialogOnClose onCloseCallback)
     {
-        var inputFields = AuthoringToolWorkspaceViewModalDialogInputFieldsFactory.GetEditLearningWorldInputFields();
-        const string title = "Edit existing learning world";
-        const string text = "Please enter the required data for the learning world below:";
+        var inputFields = AuthoringToolWorkspaceViewModalDialogInputFieldsFactory.GetEditWorldInputFields();
+        const string title = "Edit existing world";
+        const string text = "Please enter the required data for the world below:";
         const ModalDialogType dialogType = ModalDialogType.OkCancel;
         return GetModalDialogFragmentInternal(title, text, onCloseCallback, dialogType, inputFields,
             initialInputValues);

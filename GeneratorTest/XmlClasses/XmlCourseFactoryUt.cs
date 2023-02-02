@@ -48,12 +48,12 @@ public class XmlCourseFactoryUt
         var mockCourseCategory = new CourseCourseXmlCategory();
         var mockCourseCourse = Substitute.For<ICourseCourseXmlCourse>();
         var mockIdentifier = new IdentifierJson("id", "CourseName");
-        var mockLearningWorld = new LearningWorldJson("Uuid", mockIdentifier, new List<int>(),
-            new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>());
-        mockLearningWorld.Identifier = mockIdentifier;
-        mockLearningWorld.Identifier.Value = "CourseName";
+        var mockWorld = new WorldJson("Uuid", mockIdentifier, new List<int>(),
+            new List<TopicJson>(), new List<SpaceJson>(), new List<ElementJson>());
+        mockWorld.Identifier = mockIdentifier;
+        mockWorld.Identifier.Value = "CourseName";
 
-        mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
+        mockReadDsl.GetWorld().Returns(mockWorld);
         
         var mockEnrols = new CourseEnrolmentsXmlEnrols();
         var mockEnrolManual = Substitute.For<ICourseEnrolmentsXmlEnrol>();
@@ -97,12 +97,12 @@ public class XmlCourseFactoryUt
         var mockCourseCategory = new CourseCourseXmlCategory();
         var mockCourseCourse = Substitute.For<ICourseCourseXmlCourse>();
         var mockIdentifier = new IdentifierJson("CourseName", "CourseName");
-        var mockLearningWorld = new LearningWorldJson("Uuid", mockIdentifier, new List<int>(),
-            new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>());
-        mockLearningWorld.Identifier = mockIdentifier;
-        mockLearningWorld.Identifier.Value = "CourseName";
+        var mockWorld = new WorldJson("Uuid", mockIdentifier, new List<int>(),
+            new List<TopicJson>(), new List<SpaceJson>(), new List<ElementJson>());
+        mockWorld.Identifier = mockIdentifier;
+        mockWorld.Identifier.Value = "CourseName";
 
-        mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
+        mockReadDsl.GetWorld().Returns(mockWorld);
 
         var systemUnderTest = new XmlCourseFactory(mockReadDsl, mockCourseCategory, mockCourseCourse);
 
@@ -115,8 +115,8 @@ public class XmlCourseFactoryUt
             Assert.That(mockCourseCategory.Description, Is.EqualTo("$@NULL@$"));
             Assert.That(mockCourseCategory.Id, Is.EqualTo("1"));
             Assert.That(mockCourseCategory.Name, Is.EqualTo("Miscellaneous"));
-            Assert.That(mockCourseCourse.Shortname, Is.EqualTo(mockLearningWorld.Identifier.Value));
-            Assert.That(mockCourseCourse.Fullname, Is.EqualTo(mockLearningWorld.Identifier.Value));
+            Assert.That(mockCourseCourse.Shortname, Is.EqualTo(mockWorld.Identifier.Value));
+            Assert.That(mockCourseCourse.Fullname, Is.EqualTo(mockWorld.Identifier.Value));
             Assert.That(mockCourseCourse.Format, Is.EqualTo("tiles"));
             Assert.That(mockCourseCourse.BaseColour, Is.EqualTo("#009681"));
             Assert.That(mockCourseCourse.CourseUseSubtiles, Is.EqualTo("0"));

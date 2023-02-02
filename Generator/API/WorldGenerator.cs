@@ -29,14 +29,14 @@ public class WorldGenerator : IWorldGenerator
     /// Creates the DSL document, reads it, creates the needed folder structure for the backup, fills the folders with
     /// the needed xml documents and saves it to the desired location as .mbz file. 
     /// </summary>
-    /// <param name="learningWorld"></param> Information about the learningWorld, topics, spaces and elements
+    /// <param name="world"></param> Information about the world, topics, spaces and Elements
     /// <param name="filepath"></param> Desired filepath for the .mbz file. Given by user, when Export Button is pressed.
-    public void ConstructBackup(LearningWorld learningWorld, string filepath)
+    public void ConstructBackup(World world, string filepath)
     {
         try
         {
-            string dslPath = CreateDsl.WriteLearningWorld(Mapper.Map<LearningWorldPe>(learningWorld));
-            ReadDsl.ReadLearningWorld(dslPath);
+            string dslPath = CreateDsl.WriteWorld(Mapper.Map<WorldPe>(world));
+            ReadDsl.ReadWorld(dslPath);
             BackupFile.WriteXmlFiles((ReadDsl as ReadDsl)!);
             BackupFile.WriteBackupFile(filepath);
         }

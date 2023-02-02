@@ -1,8 +1,8 @@
 using System.Text.RegularExpressions;
 using Presentation.PresentationLogic;
-using Presentation.PresentationLogic.LearningElement;
-using Presentation.PresentationLogic.LearningSpace;
-using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Element;
+using Presentation.PresentationLogic.Space;
+using Presentation.PresentationLogic.World;
 
 namespace Presentation.View.Toolbox;
 
@@ -30,7 +30,7 @@ Search terms can be quoted to search them literally, ignoring the above rules.
 ";
 
     /// <inheritdoc cref="IToolboxResultFilter.FilterCollection"/>
-    public IEnumerable<IDisplayableLearningObject> FilterCollection(IEnumerable<IDisplayableLearningObject> items, string searchTerm)
+    public IEnumerable<IDisplayableObject> FilterCollection(IEnumerable<IDisplayableObject> items, string searchTerm)
     {
         Match? match;
         
@@ -40,17 +40,17 @@ Search terms can be quoted to search them literally, ignoring the above rules.
         }
         else if (MatchesWorldRule(searchTerm))
         {
-            items = items.Where(item => item is LearningWorldViewModel);
+            items = items.Where(item => item is WorldViewModel);
             match = worldRegex.Match(searchTerm);
         } 
         else if (MatchesSpaceRule(searchTerm))
         {
-            items = items.Where(item => item is LearningSpaceViewModel);
+            items = items.Where(item => item is SpaceViewModel);
             match = spaceRegex.Match(searchTerm);
         } 
         else if (MatchesElementRule(searchTerm))
         {
-            items = items.Where(item => item is LearningElementViewModel);
+            items = items.Where(item => item is ElementViewModel);
             match = elementRegex.Match(searchTerm);
         }
         else
@@ -68,8 +68,8 @@ Search terms can be quoted to search them literally, ignoring the above rules.
     /// <param name="items">The items to be filtered.</param>
     /// <param name="searchTerm">The string with which to filter.</param>
     /// <returns>All elements that contain the search term in name.</returns>
-    private static IEnumerable<IDisplayableLearningObject> FilterCollectionByString(
-        IEnumerable<IDisplayableLearningObject> items, string searchTerm)
+    private static IEnumerable<IDisplayableObject> FilterCollectionByString(
+        IEnumerable<IDisplayableObject> items, string searchTerm)
     {
         var trimmedSearchTerm = searchTerm.ToLower().Trim();
         return items.Where(item => item.Name.ToLower().Contains(trimmedSearchTerm));

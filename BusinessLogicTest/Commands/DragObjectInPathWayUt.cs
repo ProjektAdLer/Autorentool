@@ -11,13 +11,13 @@ namespace BusinessLogicTest.Commands;
 public class DragObjectInPathWayUt
 {
     [Test]
-    public void Execute_DragsLearningSpace()
+    public void Execute_DragsSpace()
     {
         double oldPositionX = 1;
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var space = new LearningSpace("a", "b", "c", "d", "e", 5, null, newPositionX, newPositionY);
+        var space = new Space("a", "b", "c", "d", "e", 5, null, newPositionX, newPositionY);
         bool actionWasInvoked = false;
         Action<IObjectInPathWay> mappingAction = _ => actionWasInvoked = true;
 
@@ -77,7 +77,7 @@ public class DragObjectInPathWayUt
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var space = new LearningSpace("a", "b", "c", "d", "e", 5, null, newPositionX, newPositionY);
+        var space = new Space("a", "b", "c", "d", "e", 5, null, newPositionX, newPositionY);
         bool actionWasInvoked = false;
         Action<IObjectInPathWay> mappingAction = _ => actionWasInvoked = true;
 
@@ -89,13 +89,13 @@ public class DragObjectInPathWayUt
     }
     
     [Test]
-    public void UndoRedo_UndoesAndRedoesDragLearningSpace()
+    public void UndoRedo_UndoesAndRedoesDragSpace()
     {
         double oldPositionX = 1;
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var space = new LearningSpace("a", "b", "c", "d", "e", 5, null, newPositionX, newPositionY);
+        var space = new Space("a", "b", "c", "d", "e", 5, null, newPositionX, newPositionY);
         bool actionWasInvoked = false;
         Action<IObjectInPathWay> mappingAction = _ => actionWasInvoked = true;
 

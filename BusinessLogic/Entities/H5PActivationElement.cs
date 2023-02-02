@@ -1,9 +1,9 @@
 using JetBrains.Annotations;
-using LearningElementDifficultyEnum = Shared.LearningElementDifficultyEnum;
+using Shared;
 
 namespace BusinessLogic.Entities;
 
-public class H5PActivationElement : LearningElement
+public class H5PActivationElement : Element
 {
     /// <summary>
     /// Private Constructor for AutoMapper
@@ -13,10 +13,10 @@ public class H5PActivationElement : LearningElement
     {
     }
 
-    public H5PActivationElement(string name, string shortname, ILearningSpace? parent,
-        LearningContent learningContent, string url, string authors, string description, string goals,
-        LearningElementDifficultyEnum difficulty, int workload = 0, int points = 0, double positionX = 0,
-        double positionY = 0) : base(name, shortname, learningContent, url, authors, description, goals, 
+    public H5PActivationElement(string name, string shortname, ISpace? parent,
+        Content content, string url, string authors, string description, string goals,
+        ElementDifficultyEnum difficulty, int workload = 0, int points = 0, double positionX = 0,
+        double positionY = 0) : base(name, shortname, content, url, authors, description, goals, 
         difficulty, parent, workload, points, positionX, positionY)
     {
     }

@@ -1,11 +1,11 @@
 ﻿using BusinessLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
-using Presentation.PresentationLogic.LearningContent;
-using Presentation.PresentationLogic.LearningElement;
-using Presentation.PresentationLogic.LearningPathway;
-using Presentation.PresentationLogic.LearningSpace;
-using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Content;
+using Presentation.PresentationLogic.Element;
+using Presentation.PresentationLogic.PathWay;
+using Presentation.PresentationLogic.Space;
+using Presentation.PresentationLogic.World;
 using Shared;
 using Shared.Configuration;
 
@@ -28,10 +28,10 @@ public interface IPresentationLogic
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="learningWorldViewModel"></param>
+    /// <param name="worldViewModel"></param>
     /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
     /// <returns>Filepath to the new backup file</returns>
-    Task<string> ConstructBackupAsync(LearningWorldViewModel learningWorldViewModel);
+    Task<string> ConstructBackupAsync(WorldViewModel worldViewModel);
     
     bool CanUndo { get; }
     bool CanRedo { get; }
@@ -39,78 +39,78 @@ public interface IPresentationLogic
     void RedoCommand();
 
     /// <summary>
-    /// Adds a new learning world in the authoring tool workspace with the corresponding command.
+    /// Adds a new  world in the authoring tool workspace with the corresponding command.
     /// </summary>
-    /// <param name="authoringToolWorkspaceVm">Authoring Tool Workspace View Model to add the learning world in.</param>
-    /// <param name="learningWorldVm">Learning world to add.</param>
-    void AddLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
-        ILearningWorldViewModel learningWorldVm);
+    /// <param name="authoringToolWorkspaceVm">Authoring Tool Workspace View Model to add the  world in.</param>
+    /// <param name="worldVm"> world to add.</param>
+    void AddWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
+        IWorldViewModel worldVm);
     
     /// <summary>
-    /// Creates a new learning world in the authoring tool workspace with the corresponding command.
+    /// Creates a new  world in the authoring tool workspace with the corresponding command.
     /// </summary>
-    /// <param name="authoringToolWorkspaceVm">Authoring Tool Workspace View Model to create the learning world in.</param>
+    /// <param name="authoringToolWorkspaceVm">Authoring Tool Workspace View Model to create the  world in.</param>
     /// <param name="shortname"></param>
     /// <param name="authors"></param>
     /// <param name="language"></param>
     /// <param name="description"></param>
     /// <param name="goals"></param>
     /// <param name="name"></param>
-    void CreateLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string name, string shortname,
+    void CreateWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string name, string shortname,
         string authors, string language, string description, string goals);
     
     /// <summary>
-    /// Edits a given learning world in the authoring tool workspace with the corresponding command.
+    /// Edits a given  world in the authoring tool workspace with the corresponding command.
     /// </summary>
-    /// <param name="learningWorldVm">Learning world to edit.</param>
+    /// <param name="worldVm"> world to edit.</param>
     /// <param name="name"></param>
     /// <param name="shortname"></param>
     /// <param name="authors"></param>
     /// <param name="language"></param>
     /// <param name="description"></param>
     /// <param name="goals"></param>
-    void EditLearningWorld(ILearningWorldViewModel learningWorldVm, string name, string shortname, string authors, 
+    void EditWorld(IWorldViewModel worldVm, string name, string shortname, string authors, 
         string language, string description, string goals);
 
     /// <summary>
-    /// Deletes the given learning world in the authoring tool workspace.
+    /// Deletes the given  world in the authoring tool workspace.
     /// </summary>
     /// <param name="authoringToolWorkspaceVm"></param>
-    /// <param name="worldVm">The learning world to delete.</param>
-    void DeleteLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, LearningWorldViewModel worldVm);
+    /// <param name="worldVm">The  world to delete.</param>
+    void DeleteWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, WorldViewModel worldVm);
     
     /// <summary>
-    /// Asks user for path and saves <see cref="LearningWorldViewModel"/> to disk.
+    /// Asks user for path and saves <see cref="WorldViewModel"/> to disk.
     /// </summary>
-    /// <param name="learningWorldViewModel">The learning world which should be saved.</param>
+    /// <param name="worldViewModel">The  world which should be saved.</param>
     /// <returns>Task indicating completion.</returns>
     /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
     /// <exception cref="NotImplementedException">Thrown when we are not running in Electron.</exception>
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
-    Task SaveLearningWorldAsync(LearningWorldViewModel learningWorldViewModel);
+    Task SaveWorldAsync(WorldViewModel worldViewModel);
     
     /// <summary>
-    /// Asks user for path and loads <see cref="LearningWorldViewModel"/> from disk.
+    /// Asks user for path and loads <see cref="WorldViewModel"/> from disk.
     /// </summary>
     /// <returns>Task containing deserialized object.</returns>
     /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
     /// <exception cref="NotImplementedException">Thrown when we are not running in Electron.</exception>
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
-    Task LoadLearningWorldAsync(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm);
+    Task LoadWorldAsync(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm);
 
     /// <summary>
-    /// Adds a new learning space in the given learning world with the corresponding command.
+    /// Adds a new  space in the given  world with the corresponding command.
     /// </summary>
-    /// <param name="learningWorldVm">Learning world to add the learning space in.</param>
-    /// <param name="learningSpaceVm">Learning space to add.</param>
-    void AddLearningSpace(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel learningSpaceVm);
+    /// <param name="worldVm">World to add the  space in.</param>
+    /// <param name="spaceVm">Space to add.</param>
+    void AddSpace(IWorldViewModel worldVm, ISpaceViewModel spaceVm);
 
     /// <summary>
-    /// Creates a new learning space in the given learning world with the corresponding command.
+    /// Creates a new  space in the given  world with the corresponding command.
     /// </summary>
-    /// <param name="learningWorldVm">Parent learning world of the learning space to create.</param>
+    /// <param name="worldVm">Parent  world of the  space to create.</param>
     /// <param name="name"></param>
     /// <param name="shortname"></param>
     /// <param name="authors"></param>
@@ -119,119 +119,119 @@ public interface IPresentationLogic
     /// <param name="requiredPoints"></param>
     /// <param name="positionX"></param>
     /// <param name="positionY"></param>
-    void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name, string shortname,
+    void CreateSpace(IWorldViewModel worldVm, string name, string shortname,
         string authors, string description, string goals, int requiredPoints, double positionX, double positionY);
 
     /// <summary>
-    /// Edits a given learning space in the given learning world with the corresponding command.
+    /// Edits a given space in the given  world with the corresponding command.
     /// </summary>
-    /// <param name="learningSpaceVm">Learning space to edit.</param>
+    /// <param name="spaceVm">Space to edit.</param>
     /// <param name="name"></param>
     /// <param name="shortname"></param>
     /// <param name="authors"></param>
     /// <param name="description"></param>
     /// <param name="goals"></param>
     /// <param name="requiredPoints"></param>
-    void EditLearningSpace(ILearningSpaceViewModel learningSpaceVm, string name,
+    void EditSpace(ISpaceViewModel spaceVm, string name,
         string shortname, string authors, string description, string goals, int requiredPoints);
 
     /// <summary>
-    /// Changes the layout of the given learning space to the given layout.
+    /// Changes the layout of the given space to the given layout.
     /// </summary>
-    /// <param name="learningSpaceVm">Learning space to edit.</param>
+    /// <param name="spaceVm">Space to edit.</param>
     /// <param name="floorPlanName">Enum of the FloorPlan to change the layout to.</param>
-    void ChangeLearningSpaceLayout(ILearningSpaceViewModel learningSpaceVm, FloorPlanEnum floorPlanName);
+    void ChangeSpaceLayout(ISpaceViewModel spaceVm, FloorPlanEnum floorPlanName);
     
     /// <summary>
-    /// Deletes the given learning space in the given learning world.
+    /// Deletes the given space in the given world.
     /// </summary>
-    /// <param name="learningWorldVm">Parent learning world of the learning space.</param>
-    /// <param name="learningSpaceVm">Learning space to delete.</param>
-    void DeleteLearningSpace(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel learningSpaceVm);
+    /// <param name="worldVm">Parent world of the space.</param>
+    /// <param name="spaceVm">Space to delete.</param>
+    void DeleteSpace(IWorldViewModel worldVm, ISpaceViewModel spaceVm);
     
     /// <summary>
-    /// Asks user for path and saves <see cref="LearningSpaceViewModel"/> to disk.
+    /// Asks user for path and saves <see cref="SpaceViewModel"/> to disk.
     /// </summary>
-    /// <param name="learningSpaceViewModel">The learning space which should be saved.</param>
+    /// <param name="spaceViewModel">The space which should be saved.</param>
     /// <returns>Task indicating completion.</returns>
     /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
     /// <exception cref="NotImplementedException">Thrown when we are not running in Electron.</exception>
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
-    Task SaveLearningSpaceAsync(LearningSpaceViewModel learningSpaceViewModel);
+    Task SaveSpaceAsync(SpaceViewModel spaceViewModel);
     
     /// <summary>
-    /// Asks user for path and loads <see cref="LearningSpaceViewModel"/> from disk.
+    /// Asks user for path and loads <see cref="SpaceViewModel"/> from disk.
     /// </summary>
-    /// <param name="learningWorldVm">Learning world into which the learning space should be loaded.</param>
+    /// <param name="worldVm">World into which the  space should be loaded.</param>
     /// <returns>Task containing deserialized object.</returns>
     /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
     /// <exception cref="NotImplementedException">Thrown when we are not running in Electron.</exception>
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
-    Task LoadLearningSpaceAsync(ILearningWorldViewModel learningWorldVm);
+    Task LoadSpaceAsync(IWorldViewModel worldVm);
     
     /// <summary>
-    /// Creates a new pathway condition in the given learning world with the corresponding command.
+    /// Creates a new pathway condition in the given  world with the corresponding command.
     /// </summary>
-    /// <param name="learningWorldVm">Parent learning world of the condition to create.</param>
+    /// <param name="worldVm">Parent  world of the condition to create.</param>
     /// <param name="condition">Enum that can either be an AND or an OR condition.</param>
     /// <param name="positionX">X-coordinate of the condition to create. </param>
     /// <param name="positionY">Y-coordinate of the condition to create.</param>
-    void CreatePathWayCondition(ILearningWorldViewModel learningWorldVm, ConditionEnum condition, double positionX,
+    void CreatePathWayCondition(IWorldViewModel worldVm, ConditionEnum condition, double positionX,
         double positionY);
 
     /// <summary>
-    /// Creates a new pathway condition between two given objects in the given learning world.
+    /// Creates a new pathway condition between two given objects in the given  world.
     /// </summary>
-    /// <param name="learningWorldVm">Parent learning world of the condition to create.</param>
+    /// <param name="worldVm">Parent  world of the condition to create.</param>
     /// <param name="condition">Enum that can either be an AND or an OR condition.</param>
     /// <param name="sourceObject">Inbound object of the new pathway condition.</param>
     /// <param name="targetObject">Outbound object of the new pathway condition.</param>
-    void CreatePathWayConditionBetweenObjects(ILearningWorldViewModel learningWorldVm, ConditionEnum condition,
-        IObjectInPathWayViewModel sourceObject, ILearningSpaceViewModel targetObject);
+    void CreatePathWayConditionBetweenObjects(IWorldViewModel worldVm, ConditionEnum condition,
+        IObjectInPathWayViewModel sourceObject, ISpaceViewModel targetObject);
 
     /// <summary>
-    /// Edits the given pathway condition in the given learning world with the corresponding command.
+    /// Edits the given pathway condition in the given  world with the corresponding command.
     /// </summary>
     /// <param name="pathWayConditionVm">The path way condition to be edited.</param>
     /// <param name="newCondition">The new condition to be set.</param>
     void EditPathWayCondition(PathWayConditionViewModel pathWayConditionVm, ConditionEnum newCondition);
 
     /// <summary>
-    /// Deletes the given pathway condition in the given learning world.
+    /// Deletes the given pathway condition in the given  world.
     /// </summary>
-    /// <param name="learningWorldVm">Parent learning world.</param>
+    /// <param name="worldVm">Parent  world.</param>
     /// <param name="pathWayConditionVm">Pathway condition to be deleted.</param>
-    void DeletePathWayCondition(ILearningWorldViewModel learningWorldVm, PathWayConditionViewModel pathWayConditionVm);
+    void DeletePathWayCondition(IWorldViewModel worldVm, PathWayConditionViewModel pathWayConditionVm);
 
     /// <summary>
-    /// Adds a new learning pathway between two objects (learning space or pathway condition) in the given learning world.
+    /// Adds a new  pathway between two objects ( space or pathway condition) in the given  world.
     /// </summary>
-    /// <param name="learningWorldVm">Learning world into which the learning pathway gets created.</param>
-    /// <param name="sourceObjectVm">Learning object from which the path starts.</param>
-    /// <param name="targetObjectVm">Learning object where the path ends.</param>
-    void CreateLearningPathWay(ILearningWorldViewModel learningWorldVm, IObjectInPathWayViewModel sourceObjectVm,
+    /// <param name="worldVm">World into which the pathway gets created.</param>
+    /// <param name="sourceObjectVm">Object from which the path starts.</param>
+    /// <param name="targetObjectVm">Object where the path ends.</param>
+    void CreatePathWay(IWorldViewModel worldVm, IObjectInPathWayViewModel sourceObjectVm,
         IObjectInPathWayViewModel targetObjectVm);
 
     /// <summary>
     /// Deletes the last pathway that was created to the targetSpace.
     /// </summary>
-    /// <param name="learningWorldVm">Learning world in which the learning pathway gets deleted.</param>
-    /// <param name="learningPathWayVm">Learning PathWay to delete.</param>
-    void DeleteLearningPathWay(ILearningWorldViewModel learningWorldVm, ILearningPathWayViewModel learningPathWayVm);
+    /// <param name="worldVm">World in which the pathway gets deleted.</param>
+    /// <param name="pathWayVm">PathWay to delete.</param>
+    void DeletePathWay(IWorldViewModel worldVm, IPathWayViewModel pathWayVm);
 
     /// <summary>
-    /// Adds a new learning element to its parent space.
+    /// Adds a new element to its parent space.
     /// </summary>
     /// <param name="parentSpaceVm">Parent space of the element.</param>
     /// <param name="slotIndex">Index of the slot in which the element should be created.</param>
-    /// <param name="learningElementVm">Learning element to add.</param>
-    void AddLearningElement(ILearningSpaceViewModel parentSpaceVm, int slotIndex, ILearningElementViewModel learningElementVm);
+    /// <param name="elementVm">Element to add.</param>
+    void AddElement(ISpaceViewModel parentSpaceVm, int slotIndex, IElementViewModel elementVm);
 
     /// <summary>
-    /// Creates a new learning element and assigns it to the opened learning space in the
-    /// selected learning world.
+    /// Creates a new element and assigns it to the opened space in the
+    /// selected world.
     /// </summary>
     /// <param name="parentSpaceVm">Parent space of the element.</param>
     /// <param name="slotIndex">Index of the slot in which the element should be created.</param>
@@ -239,25 +239,25 @@ public interface IPresentationLogic
     /// <param name="shortname">Shortname of the element.</param>
     /// <param name="elementType">Type of the element.</param>
     /// <param name="contentType">Type of the content that the element contains.</param>
-    /// <param name="learningContentVm">The content of the element.</param>
+    /// <param name="contentVm">The content of the element.</param>
     /// <param name="url"></param>
     /// <param name="authors">A list of authors of the element.</param>
     /// <param name="description">A description of the element.</param>
     /// <param name="goals">The goals of the element.</param>
     /// <param name="difficulty">The difficulty of the element.</param>
-    /// <param name="workload">The time required to complete the learning element.</param>
-    /// <param name="points">The number of points of the learning element.</param>
+    /// <param name="workload">The time required to complete the element.</param>
+    /// <param name="points">The number of points of the element.</param>
     /// <param name="positionX"></param>
     /// <param name="positionY"></param>
-    void CreateLearningElement(ILearningSpaceViewModel parentSpaceVm, int slotIndex, string name, string shortname,
-        ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContentVm,
-        string url, string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points,
+    void CreateElement(ISpaceViewModel parentSpaceVm, int slotIndex, string name, string shortname,
+        ElementTypeEnum elementType, ContentTypeEnum contentType, ContentViewModel contentVm,
+        string url, string authors, string description, string goals, ElementDifficultyEnum difficulty, int workload, int points,
         double positionX = 0, double positionY = 0);
 
     /// <summary>
-    /// Edits a given learning element in the opened learning space with the corresponding command.
+    /// Edits a given element in the opened space with the corresponding command.
     /// </summary>
-    /// <param name="learningElementVm">Element to edit.</param>
+    /// <param name="elementVm">Element to edit.</param>
     /// <param name="parentSpaceVm">Parent space of the element.</param>
     /// <param name="name">Name of the element.</param>
     /// <param name="shortname">Shortname of the element.</param>
@@ -265,113 +265,113 @@ public interface IPresentationLogic
     /// <param name="description">A description of the element.</param>
     /// <param name="goals">The goals of the element.</param>
     /// <param name="difficulty">The difficulty of the element.</param>
-    /// <param name="workload">The time required to complete the learning element.</param>
-    /// <param name="points">The number of points of the learning element.</param>
-    void EditLearningElement(ILearningSpaceViewModel parentSpaceVm,
-        ILearningElementViewModel learningElementVm, string name, string shortname, string url, string authors, string description,
-        string goals, LearningElementDifficultyEnum difficulty, int workload, int points);
+    /// <param name="workload">The time required to complete the element.</param>
+    /// <param name="points">The number of points of the element.</param>
+    void EditElement(ISpaceViewModel parentSpaceVm,
+        IElementViewModel elementVm, string name, string shortname, string url, string authors, string description,
+        string goals, ElementDifficultyEnum difficulty, int workload, int points);
 
     /// <summary>
-    /// Moves the given learning element from unplaced elements to the given slot index in the given learning space.
+    /// Moves the given element from unplaced elements to the given slot index in the given space.
     /// </summary>
-    /// <param name="learningWorldVm">Learning World with the unplaced elements.</param>
-    /// <param name="learningSpaceVm">Learning space to place the learning element in.</param>
-    /// <param name="learningElementVm">Learning element to place.</param>
-    /// <param name="newSlotIndex">Index of the slot in the learning space to place the learning element in.</param>
-    void DragLearningElementFromUnplaced(ILearningWorldViewModel learningWorldVm,
-        ILearningSpaceViewModel learningSpaceVm, ILearningElementViewModel learningElementVm, int newSlotIndex);
+    /// <param name="worldVm">World with the unplaced elements.</param>
+    /// <param name="spaceVm">Space to place the element in.</param>
+    /// <param name="elementVm">Element to place.</param>
+    /// <param name="newSlotIndex">Index of the slot in the space to place the element in.</param>
+    void DragElementFromUnplaced(IWorldViewModel worldVm,
+        ISpaceViewModel spaceVm, IElementViewModel elementVm, int newSlotIndex);
 
     /// <summary>
-    /// Moves the given learning element from the learning space to unplaced elements in the learning world.
+    /// Moves the given element from the space to unplaced elements in the world.
     /// </summary>
-    /// <param name="learningWorldVm">Learning World with the unplaced elements.</param>
-    /// <param name="learningSpaceVm">Learning space from which the element should be removed.</param>
-    /// <param name="learningElementVm">Learning element to remove.</param>
-    void DragLearningElementToUnplaced(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel learningSpaceVm,
-        ILearningElementViewModel learningElementVm);
+    /// <param name="worldVm">World with the unplaced elements.</param>
+    /// <param name="spaceVm">Space from which the element should be removed.</param>
+    /// <param name="elementVm">Element to remove.</param>
+    void DragElementToUnplaced(IWorldViewModel worldVm, ISpaceViewModel spaceVm,
+        IElementViewModel elementVm);
 
     /// <summary>
     /// 
     /// </summary>
-    /// <param name="learningSpaceVm"></param>
-    /// <param name="learningElementVm"></param>
+    /// <param name="spaceVm"></param>
+    /// <param name="elementVm"></param>
     /// <param name="newSlotIndex"></param>
-    void SwitchLearningElementSlot(ILearningSpaceViewModel learningSpaceVm, ILearningElementViewModel learningElementVm,
+    void SwitchElementSlot(ISpaceViewModel spaceVm, IElementViewModel elementVm,
         int newSlotIndex);
 
     /// <summary>
-    /// Deletes the given learning element in the given learning space.
+    /// Deletes the given element in the given space.
     /// </summary>
     /// <param name="parentSpaceVm">Parent space of the element.</param>
-    /// <param name="learningElementVm">Element to delete.</param>
-    void DeleteLearningElement(ILearningSpaceViewModel parentSpaceVm,
-        ILearningElementViewModel learningElementVm);
+    /// <param name="elementVm">Element to delete.</param>
+    void DeleteElement(ISpaceViewModel parentSpaceVm,
+        IElementViewModel elementVm);
     
     /// <summary>
-    /// Asks user for path and saves <see cref="LearningElementViewModel"/> to disk.
+    /// Asks user for path and saves <see cref="ElementViewModel"/> to disk.
     /// </summary>
-    /// <param name="learningElementViewModel">The learning element which should be saved.</param>
+    /// <param name="elementViewModel">The element which should be saved.</param>
     /// <returns>Task indicating completion.</returns>
     /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
     /// <exception cref="NotImplementedException">Thrown when we are not running in Electron.</exception>
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
-    Task SaveLearningElementAsync(LearningElementViewModel learningElementViewModel);
+    Task SaveElementAsync(ElementViewModel elementViewModel);
 
     /// <summary>
-    /// Asks user for path and loads <see cref="LearningElementViewModel"/> from disk.
+    /// Asks user for path and loads <see cref="ElementViewModel"/> from disk.
     /// </summary>
-    /// <param name="parentSpaceVm">Learning space into which the learning element should be loaded.</param>
+    /// <param name="parentSpaceVm">Space into which the element should be loaded.</param>
     /// <param name="slotIndex">Index of the slot in which the element should be loaded..</param>
     /// <returns>Task containing deserialized object.</returns>
     /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
     /// <exception cref="NotImplementedException">Thrown when we are not running in Electron.</exception>
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
-    Task LoadLearningElementAsync(ILearningSpaceViewModel parentSpaceVm, int slotIndex);
+    Task LoadElementAsync(ISpaceViewModel parentSpaceVm, int slotIndex);
     
     /// <summary>
-    /// Open the given content file of the learning element in the desktop's default manner.
+    /// Open the given content file of the element in the desktop's default manner.
     /// </summary>
-    /// <param name="learningElementVm">Element which contains the content file to be opened.</param>
+    /// <param name="elementVm">Element which contains the content file to be opened.</param>
     /// <returns></returns>
-    Task ShowLearningElementContentAsync(LearningElementViewModel learningElementVm);
+    Task ShowElementContentAsync(ElementViewModel elementVm);
     
     /// <summary>
-    /// Asks user for path, loads an image file from disk and returns a <see cref="LearningContentViewModel"/>. 
+    /// Asks user for path, loads an image file from disk and returns a <see cref="ContentViewModel"/>. 
     /// </summary>
     /// <returns></returns>
-    Task<LearningContentViewModel> LoadImageAsync();
+    Task<ContentViewModel> LoadImageAsync();
     
     /// <summary>
-    /// Asks user for path, loads a video file from disk and returns a <see cref="LearningContentViewModel"/>. 
+    /// Asks user for path, loads a video file from disk and returns a <see cref="ContentViewModel"/>. 
     /// </summary>
     /// <returns></returns>
-    Task<LearningContentViewModel> LoadVideoAsync();
+    Task<ContentViewModel> LoadVideoAsync();
     
     /// <summary>
-    /// Asks user for path, loads a h5p file from disk and returns a <see cref="LearningContentViewModel"/>. 
+    /// Asks user for path, loads a h5p file from disk and returns a <see cref="ContentViewModel"/>. 
     /// </summary>
     /// <returns></returns>
-    Task<LearningContentViewModel> LoadH5PAsync();
+    Task<ContentViewModel> LoadH5PAsync();
     
     /// <summary>
-    /// Asks user for path, loads a pdf file from disk and returns a <see cref="LearningContentViewModel"/>. 
+    /// Asks user for path, loads a pdf file from disk and returns a <see cref="ContentViewModel"/>. 
     /// </summary>
     /// <returns></returns>
-    Task<LearningContentViewModel> LoadPdfAsync();
+    Task<ContentViewModel> LoadPdfAsync();
     
     /// <summary>
-    /// Asks user for path, loads a text file from disk and returns a <see cref="LearningContentViewModel"/>. 
+    /// Asks user for path, loads a text file from disk and returns a <see cref="ContentViewModel"/>. 
     /// </summary>
     /// <returns></returns>
-    Task<LearningContentViewModel> LoadTextAsync();
+    Task<ContentViewModel> LoadTextAsync();
 
-    LearningContentViewModel LoadLearningContentViewModel(string name, MemoryStream stream);
-    void LoadLearningWorldViewModel(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, Stream stream);
-    void LoadLearningSpaceViewModel(ILearningWorldViewModel learningWorldVm, Stream stream);
-    void LoadLearningElementViewModel(ILearningSpaceViewModel parentSpaceVm, int slotIndex, Stream stream);
+    ContentViewModel LoadContentViewModel(string name, MemoryStream stream);
+    void LoadWorldViewModel(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, Stream stream);
+    void LoadSpaceViewModel(IWorldViewModel worldVm, Stream stream);
+    void LoadElementViewModel(ISpaceViewModel parentSpaceVm, int slotIndex, Stream stream);
     event Action? OnUndoRedoPerformed;
     void DragObjectInPathWay(IObjectInPathWayViewModel pathWayObjectVm, double oldPositionX, double oldPositionY);
-    void DragLearningElement(ILearningElementViewModel learningElementVm, double oldPositionX, double oldPositionY);
+    void DragElement(IElementViewModel elementVm, double oldPositionX, double oldPositionY);
 }

@@ -1,9 +1,9 @@
 using System.IO.Abstractions;
 using AutoMapper;
 using BusinessLogic.API;
-using Presentation.PresentationLogic.LearningElement;
-using Presentation.PresentationLogic.LearningSpace;
-using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Element;
+using Presentation.PresentationLogic.Space;
+using Presentation.PresentationLogic.World;
 
 namespace Presentation.PresentationLogic.Toolbox;
 
@@ -23,9 +23,9 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
             "AdLerAuthoring", "Toolbox");
         Logger.LogDebug("_toolboxSavePath is {}", _toolboxSavePath);
 
-        _worlds = new List<LearningWorldViewModel>();
-        _spaces = new List<ILearningSpaceViewModel>();
-        _elements = new List<ILearningElementViewModel>();
+        _worlds = new List<WorldViewModel>();
+        _spaces = new List<ISpaceViewModel>();
+        _elements = new List<IElementViewModel>();
         _initialized = false;
         
         //ensure path is created
@@ -39,26 +39,26 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
     internal IMapper Mapper { get; }
     internal IFileSystem FileSystem { get; }
 
-    private List<LearningWorldViewModel> _worlds;
-    private List<ILearningSpaceViewModel> _spaces;
-    private List<ILearningElementViewModel> _elements;
+    private List<WorldViewModel> _worlds;
+    private List<ISpaceViewModel> _spaces;
+    private List<IElementViewModel> _elements;
 
     private bool _initialized;
     //TODO: remove this and instead get path from configuration 
     private string _toolboxSavePath;
 
     /// <inheritdoc cref="IToolboxEntriesProvider.Entries"/>
-    public IEnumerable<IDisplayableLearningObject> Entries
+    public IEnumerable<IDisplayableObject> Entries
     {
         get
         {
             EnsureEntriesPopulated();
-            return ((IEnumerable<IDisplayableLearningObject>)_worlds).Concat(_spaces).Concat(_elements);
+            return ((IEnumerable<IDisplayableObject>)_worlds).Concat(_spaces).Concat(_elements);
         }
     }
 
     /// <inheritdoc cref="IToolboxEntriesProviderModifiable.AddEntry"/>
-    public bool AddEntry(IDisplayableLearningObject obj)
+    public bool AddEntry(IDisplayableObject obj)
     {
         EnsureEntriesPopulated();
         try
@@ -76,23 +76,23 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
         var savePath = FindSuitableSavePath(obj);
         switch (obj)
         {
-                case LearningWorldViewModel learningWorldViewModel:
-                    BusinessLogic.SaveLearningWorld(Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldViewModel), savePath);
-                    _worlds.Add(learningWorldViewModel);
+                case WorldViewModel worldViewModel:
+                    BusinessLogic.SaveWorld(Mapper.Map<BusinessLogic.Entities.World>(worldViewModel), savePath);
+                    _worlds.Add(worldViewModel);
                     break;
-                case LearningSpaceViewModel learningSpaceViewModel:
-                    BusinessLogic.SaveLearningSpace(Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceViewModel), savePath);
-                    _spaces.Add(learningSpaceViewModel);
+                case SpaceViewModel spaceViewModel:
+                    BusinessLogic.SaveSpace(Mapper.Map<BusinessLogic.Entities.Space>(spaceViewModel), savePath);
+                    _spaces.Add(spaceViewModel);
                     break;
-                case LearningElementViewModel learningElementViewModel:
-                    BusinessLogic.SaveLearningElement(Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementViewModel), savePath);
-                    _elements.Add(learningElementViewModel);
+                case ElementViewModel elementViewModel:
+                    BusinessLogic.SaveElement(Mapper.Map<BusinessLogic.Entities.Element>(elementViewModel), savePath);
+                    _elements.Add(elementViewModel);
                     break;
         }
         return true;
     }
     
-    private string FindSuitableSavePath(IDisplayableLearningObject obj)
+    private string FindSuitableSavePath(IDisplayableObject obj)
     {
         return BusinessLogic.FindSuitableNewSavePath(_toolboxSavePath, obj.Name, obj.FileEnding);
     }
@@ -106,14 +106,14 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
     /// <exception cref="ApplicationException">Internal error, either <see cref="_worlds"/> or <see cref="_spaces"/>
     /// or <see cref="_elements"/> was null but shouldn't be.</exception>
     /// <returns>True if it is a duplicate, false otherwise.</returns>
-    private bool IsElementDuplicate(IDisplayableLearningObject obj)
+    private bool IsElementDuplicate(IDisplayableObject obj)
     {
         EnsureEntriesPopulated();
         return obj switch
         {
-            LearningWorldViewModel world => _worlds.Any(w => w.Name == world.Name),
-            LearningSpaceViewModel space => _spaces.Any(s => s.Name == space.Name),
-            LearningElementViewModel element => _elements.Any(e => e.Name == element.Name),
+            WorldViewModel world => _worlds.Any(w => w.Name == world.Name),
+            SpaceViewModel space => _spaces.Any(s => s.Name == space.Name),
+            ElementViewModel element => _elements.Any(e => e.Name == element.Name),
             _ => throw new ArgumentOutOfRangeException(nameof(obj), "object isn't valid for toolbox"),
         };
     }
@@ -137,16 +137,16 @@ public class ToolboxEntriesProvider : IToolboxEntriesProviderModifiable
         Logger.LogInformation("(Re-)Building Toolbox entries from path {}", _toolboxSavePath);
         var files = FileSystem.Directory.EnumerateFiles(_toolboxSavePath).ToArray();
         
-        var worldFiles = files.Where(filepath => filepath.EndsWith(LearningWorldViewModel.fileEnding));
-        var spaceFiles = files.Where(filepath => filepath.EndsWith(LearningSpaceViewModel.fileEnding));
-        var elementFiles = files.Where(filepath => filepath.EndsWith(LearningElementViewModel.fileEnding));
+        var worldFiles = files.Where(filepath => filepath.EndsWith(WorldViewModel.fileEnding));
+        var spaceFiles = files.Where(filepath => filepath.EndsWith(SpaceViewModel.fileEnding));
+        var elementFiles = files.Where(filepath => filepath.EndsWith(ElementViewModel.fileEnding));
         
-        _worlds = worldFiles.Select(filepath => BusinessLogic.LoadLearningWorld(filepath))
-            .Select(entity => Mapper.Map<LearningWorldViewModel>(entity)).ToList();
-        _spaces = spaceFiles.Select(filepath => BusinessLogic.LoadLearningSpace(filepath))
-            .Select(entity => Mapper.Map<LearningSpaceViewModel>(entity)).ToList<ILearningSpaceViewModel>();
-        _elements = elementFiles.Select(filepath => BusinessLogic.LoadLearningElement(filepath))
-            .Select(entity => Mapper.Map<LearningElementViewModel>(entity)).ToList<ILearningElementViewModel>();
+        _worlds = worldFiles.Select(filepath => BusinessLogic.LoadWorld(filepath))
+            .Select(entity => Mapper.Map<WorldViewModel>(entity)).ToList();
+        _spaces = spaceFiles.Select(filepath => BusinessLogic.LoadSpace(filepath))
+            .Select(entity => Mapper.Map<SpaceViewModel>(entity)).ToList<ISpaceViewModel>();
+        _elements = elementFiles.Select(filepath => BusinessLogic.LoadElement(filepath))
+            .Select(entity => Mapper.Map<ElementViewModel>(entity)).ToList<IElementViewModel>();
 
         _initialized = true;
     }

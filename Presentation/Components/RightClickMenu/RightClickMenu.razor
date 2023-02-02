@@ -1,7 +1,7 @@
 ﻿@inject ILogger<RightClickMenu<T>> Logger;
-@using Presentation.PresentationLogic.LearningElement
-@using Presentation.PresentationLogic.LearningPathway
-@using Presentation.PresentationLogic.LearningSpace
+@using Presentation.PresentationLogic.Element
+@using Presentation.PresentationLogic.PathWay
+@using Presentation.PresentationLogic.Space
 @implements IDisposable
 @typeparam T
 
@@ -10,7 +10,7 @@
     @foreach (var (item, position) in MenuEntries.Select((item, position) => (item, position * _heightOfMenuItem)))
     {
         <g transform="translate(0, @position)">
-            <Clickable OnClickedParam="LearningObject" OnClicked="(T? x) => { item.Action.Invoke(); OnClose.InvokeAsync(); }">
+            <Clickable OnClickedParam="ClickableObject" OnClicked="(T? x) => { item.Action.Invoke(); OnClose.InvokeAsync(); }">
                 <rect x="0" y="0" width="@_widthOfMenuItem" height="@_heightOfMenuItem" fill="white" stroke="black"/>
                 <text x="@(_widthOfMenuItem / 2)" y="15" text-anchor="middle" font-size="12" font-family="Verdana" fill="black">@item.DisplayedText</text>
             </Clickable>
@@ -18,7 +18,7 @@
     }
 
     <g transform="translate(0, @(MenuEntries.Count * _heightOfMenuItem))">
-        <Clickable OnClickedParam="LearningObject" OnClicked="(T? x) => OnClose.InvokeAsync()">
+        <Clickable OnClickedParam="ClickableObject" OnClicked="(T? x) => OnClose.InvokeAsync()">
             <rect x="0" y="0" width="@_widthOfMenuItem" height="@_heightOfMenuItem" fill="white" stroke="black"/>
             <text x="@(_widthOfMenuItem / 2)" y="15" text-anchor="middle" font-size="12" font-family="Verdana" fill="black">Close</text>
         </Clickable>
@@ -28,7 +28,7 @@
 @code {
 
     [Parameter, EditorRequired]
-    public T? LearningObject { get; set; }
+    public T? ClickableObject { get; set; }
 
     [Parameter, EditorRequired]
     public List<RightClickMenuEntry> MenuEntries { get; set; } = new List<RightClickMenuEntry>();
@@ -46,17 +46,17 @@
 
     protected override void OnParametersSet()
     {
-        if (LearningObject == null)
+        if (ClickableObject == null)
         {
-            throw new ArgumentNullException(nameof(LearningObject));
+            throw new ArgumentNullException(nameof(ClickableObject));
         }
-        switch (LearningObject)
+        switch (ClickableObject)
         {
-            case ILearningSpaceViewModel ls:
+            case ISpaceViewModel ls:
                 _x = ls.PositionX + 85;
                 _y = ls.PositionY + 3;
                 break;
-            case ILearningElementViewModel le:
+            case IElementViewModel le:
                 _x = le.PositionX + 100;
                 _y = le.PositionY;
                 break;
@@ -65,7 +65,7 @@
                 _y = pc.PositionY;
                 break;
             default:
-                throw new ArgumentException(nameof(LearningObject) + " is not of supported type");
+                throw new ArgumentException(nameof(ClickableObject) + " is not of supported type");
         }
     }
 

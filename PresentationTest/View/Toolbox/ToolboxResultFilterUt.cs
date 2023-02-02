@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 using Presentation.PresentationLogic;
-using Presentation.PresentationLogic.LearningElement;
-using Presentation.PresentationLogic.LearningSpace;
-using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Element;
+using Presentation.PresentationLogic.Space;
+using Presentation.PresentationLogic.World;
 using Presentation.View.Toolbox;
 using Shared;
 
@@ -13,29 +13,29 @@ namespace PresentationTest.View.Toolbox;
 [TestFixture]
 public class ToolboxResultFilterUt
 {
-    private static readonly LearningWorldViewModel World1, World2, World3, World4;
-    private static readonly LearningSpaceViewModel Space1, Space2, Space3, Space4;
-    private static readonly LearningElementViewModel Element1, Element2, Element3;
-    private static readonly IEnumerable<IDisplayableLearningObject> Collection;
+    private static readonly WorldViewModel World1, World2, World3, World4;
+    private static readonly SpaceViewModel Space1, Space2, Space3, Space4;
+    private static readonly ElementViewModel Element1, Element2, Element3;
+    private static readonly IEnumerable<IDisplayableObject> Collection;
 
     static ToolboxResultFilterUt()
     {
-        World1 = new LearningWorldViewModel("metrics", "f", "f", "f", "f", "f");
-        World2 = new LearningWorldViewModel("quality", "f", "f", "f", "f", "f");
-        World3 = new LearningWorldViewModel("testing", "f", "f", "f", "f", "f");
-        World4 = new LearningWorldViewModel("space and time complexity", "f", "f", "f", "f", "f");
-        Space1 = new LearningSpaceViewModel("lines of code metric", "foo", "fa", "ba", "b");
-        Space2 = new LearningSpaceViewModel("unit testing", "f", "ba", "ba", "fa");
-        Space3 = new LearningSpaceViewModel("measures of code quality", "fa", "fa", "ba", "ba");
-        Space4 = new LearningSpaceViewModel("elements of code quality", "fa", "fa", "ba", "ba");
-        //nullability overrides because we don't care about learningContent here
-        Element1 = new LearningElementViewModel("principles of unit testing", "s", null!, "url","s", 
-            "s", "s",LearningElementDifficultyEnum.Easy);
-        Element2 = new LearningElementViewModel("example calculation of lines of code metric", "s", null!, "url","s", "s", "s",LearningElementDifficultyEnum.Easy);
-        Element3 = new LearningElementViewModel("real world example of measurable code quality", "s", null!,"url", "s",
-            "s", "s",LearningElementDifficultyEnum.Easy);
+        World1 = new WorldViewModel("metrics", "f", "f", "f", "f", "f");
+        World2 = new WorldViewModel("quality", "f", "f", "f", "f", "f");
+        World3 = new WorldViewModel("testing", "f", "f", "f", "f", "f");
+        World4 = new WorldViewModel("space and time complexity", "f", "f", "f", "f", "f");
+        Space1 = new SpaceViewModel("lines of code metric", "foo", "fa", "ba", "b");
+        Space2 = new SpaceViewModel("unit testing", "f", "ba", "ba", "fa");
+        Space3 = new SpaceViewModel("measures of code quality", "fa", "fa", "ba", "ba");
+        Space4 = new SpaceViewModel("Elements of code quality", "fa", "fa", "ba", "ba");
+        //nullability overrides because we don't care about content here
+        Element1 = new ElementViewModel("principles of unit testing", "s", null!, "url","s", 
+            "s", "s",ElementDifficultyEnum.Easy);
+        Element2 = new ElementViewModel("example calculation of lines of code metric", "s", null!, "url","s", "s", "s",ElementDifficultyEnum.Easy);
+        Element3 = new ElementViewModel("real world example of measurable code quality", "s", null!,"url", "s",
+            "s", "s",ElementDifficultyEnum.Easy);
         
-        Collection = new List<IDisplayableLearningObject>
+        Collection = new List<IDisplayableObject>
         {
             World1, World2, World3, World4,
             Space1, Space2, Space3, Space4,
@@ -64,20 +64,20 @@ Search terms can be quoted to search them literally, ignoring the above rules.
         public IEnumerator GetEnumerator()
         {
             //shortcuts
-            var worlds = new IDisplayableLearningObject[] { World1, World2, World3, World4 };
-            var spaces = new IDisplayableLearningObject[] { Space1, Space2, Space3, Space4 };
-            var elements = new IDisplayableLearningObject[] { Element1, Element2, Element3 };
+            var worlds = new IDisplayableObject[] { World1, World2, World3, World4 };
+            var spaces = new IDisplayableObject[] { Space1, Space2, Space3, Space4 };
+            var elements = new IDisplayableObject[] { Element1, Element2, Element3 };
             
             //test cases
             //basic cases
-            yield return new object[] { "metric", new IDisplayableLearningObject[] { World1, Space1, Element2 } };
-            yield return new object[] { " metric", new IDisplayableLearningObject[] { World1, Space1, Element2 } };
-            yield return new object[] { "metric ", new IDisplayableLearningObject[] { World1, Space1, Element2 } };
-            yield return new object[] { " metric ", new IDisplayableLearningObject[] { World1, Space1, Element2 } };
-            yield return new object[] { "e", new IDisplayableLearningObject[] { World1, World3, World4, Space1, Space2, Space3, Space4, Element1, Element2, Element3} };
-            yield return new object[] { " e", new IDisplayableLearningObject[] { World1, World3, World4, Space1, Space2, Space3, Space4, Element1, Element2, Element3} };
-            yield return new object[] { "e ", new IDisplayableLearningObject[] { World1, World3, World4, Space1, Space2, Space3, Space4, Element1, Element2, Element3} };
-            yield return new object[] { " e ", new IDisplayableLearningObject[] { World1, World3, World4, Space1, Space2, Space3, Space4, Element1, Element2, Element3} };
+            yield return new object[] { "metric", new IDisplayableObject[] { World1, Space1, Element2 } };
+            yield return new object[] { " metric", new IDisplayableObject[] { World1, Space1, Element2 } };
+            yield return new object[] { "metric ", new IDisplayableObject[] { World1, Space1, Element2 } };
+            yield return new object[] { " metric ", new IDisplayableObject[] { World1, Space1, Element2 } };
+            yield return new object[] { "e", new IDisplayableObject[] { World1, World3, World4, Space1, Space2, Space3, Space4, Element1, Element2, Element3} };
+            yield return new object[] { " e", new IDisplayableObject[] { World1, World3, World4, Space1, Space2, Space3, Space4, Element1, Element2, Element3} };
+            yield return new object[] { "e ", new IDisplayableObject[] { World1, World3, World4, Space1, Space2, Space3, Space4, Element1, Element2, Element3} };
+            yield return new object[] { " e ", new IDisplayableObject[] { World1, World3, World4, Space1, Space2, Space3, Space4, Element1, Element2, Element3} };
             //regex tests
             yield return new object[] { "world", worlds };
             yield return new object[] { "  world     ", worlds };
@@ -91,20 +91,20 @@ Search terms can be quoted to search them literally, ignoring the above rules.
             yield return new object[] { "  element     ", elements };
             yield return new object[] { "  element   foo  ", elements };
             yield return new object[] { "element:", elements };
-            yield return new object[] { "world:metrics", new IDisplayableLearningObject[] { World1 } };
-            yield return new object[] { "world:  metrics", new IDisplayableLearningObject[] { World1 } };
-            yield return new object[] { "       world:metrics   ", new IDisplayableLearningObject[] { World1 } };
-            yield return new object[] { "       world:   metrics   ", new IDisplayableLearningObject[] { World1 } };
-            yield return new object[] { "space:unit", new IDisplayableLearningObject[] { Space2 } };
-            yield return new object[] { "space:  unit", new IDisplayableLearningObject[] { Space2 } };
-            yield return new object[] { "element:ulation", new IDisplayableLearningObject[] { Element2 } };
-            yield return new object[] { "element:   ulation", new IDisplayableLearningObject[] { Element2 } };
-            yield return new object[] { @"""element""", new IDisplayableLearningObject[] { Space4 } };
-            yield return new object[] { @"""space""", new IDisplayableLearningObject[] { World4 } };
-            yield return new object[] { @"""world""", new IDisplayableLearningObject[] { Element3 } };
-            yield return new object[] { @"""   element  """, new IDisplayableLearningObject[] { Space4 } };
-            yield return new object[] { @"""   space    """, new IDisplayableLearningObject[] { World4 } };
-            yield return new object[] { @"""   world         """, new IDisplayableLearningObject[] { Element3 } };
+            yield return new object[] { "world:metrics", new IDisplayableObject[] { World1 } };
+            yield return new object[] { "world:  metrics", new IDisplayableObject[] { World1 } };
+            yield return new object[] { "       world:metrics   ", new IDisplayableObject[] { World1 } };
+            yield return new object[] { "       world:   metrics   ", new IDisplayableObject[] { World1 } };
+            yield return new object[] { "space:unit", new IDisplayableObject[] { Space2 } };
+            yield return new object[] { "space:  unit", new IDisplayableObject[] { Space2 } };
+            yield return new object[] { "element:ulation", new IDisplayableObject[] { Element2 } };
+            yield return new object[] { "element:   ulation", new IDisplayableObject[] { Element2 } };
+            yield return new object[] { @"""element""", new IDisplayableObject[] { Space4 } };
+            yield return new object[] { @"""space""", new IDisplayableObject[] { World4 } };
+            yield return new object[] { @"""world""", new IDisplayableObject[] { Element3 } };
+            yield return new object[] { @"""   element  """, new IDisplayableObject[] { Space4 } };
+            yield return new object[] { @"""   space    """, new IDisplayableObject[] { World4 } };
+            yield return new object[] { @"""   world         """, new IDisplayableObject[] { Element3 } };
 
         }
     }
@@ -112,7 +112,7 @@ Search terms can be quoted to search them literally, ignoring the above rules.
     [Test]
     [TestCaseSource(typeof(FilterCollectionFiltersCorrectlyTestCases))]
     public void ToolboxResultFilter_FilterCollection_FiltersCorrectly(string inputString,
-        IEnumerable<IDisplayableLearningObject> expected)
+        IEnumerable<IDisplayableObject> expected)
     {
         var systemUnderTest = GetToolboxResultFilterForTest();
         

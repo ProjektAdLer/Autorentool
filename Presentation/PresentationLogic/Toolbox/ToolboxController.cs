@@ -1,15 +1,15 @@
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.LearningElement;
-using Presentation.PresentationLogic.LearningSpace;
-using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Element;
+using Presentation.PresentationLogic.Space;
+using Presentation.PresentationLogic.World;
 
 namespace Presentation.PresentationLogic.Toolbox;
 
 public class ToolboxController : IToolboxController
 {
     public ToolboxController(IAuthoringToolWorkspacePresenterToolboxInterface workspacePresenter,
-        ILearningWorldPresenterToolboxInterface worldPresenter,
-        ILearningSpacePresenterToolboxInterface spacePresenter,
+        IWorldPresenterToolboxInterface worldPresenter,
+        ISpacePresenterToolboxInterface spacePresenter,
         ILogger<ToolboxController> logger)
     {
         _workspacePresenter = workspacePresenter;
@@ -19,35 +19,35 @@ public class ToolboxController : IToolboxController
     }
     
     private readonly IAuthoringToolWorkspacePresenterToolboxInterface _workspacePresenter;
-    private readonly ILearningWorldPresenterToolboxInterface _worldPresenter;
-    private readonly ILearningSpacePresenterToolboxInterface _spacePresenter;
+    private readonly IWorldPresenterToolboxInterface _worldPresenter;
+    private readonly ISpacePresenterToolboxInterface _spacePresenter;
     private readonly ILogger<ToolboxController> _logger;
 
     /// <inheritdoc cref="IToolboxController.LoadObjectIntoWorkspace"/>
-    public void LoadObjectIntoWorkspace(IDisplayableLearningObject obj)
+    public void LoadObjectIntoWorkspace(IDisplayableObject obj)
     {
         switch (obj)
         {
-            case LearningWorldViewModel learningWorldViewModel:
-                _workspacePresenter.AddLearningWorld(learningWorldViewModel);
+            case WorldViewModel worldViewModel:
+                _workspacePresenter.AddWorld(worldViewModel);
                 break;
-            case LearningSpaceViewModel learningSpaceViewModel:
+            case SpaceViewModel spaceViewModel:
                 try
                 {
-                    _worldPresenter.AddLearningSpace(learningSpaceViewModel);
+                    _worldPresenter.AddSpace(spaceViewModel);
                 }
                 catch (ApplicationException ex)
                 {
                     _logger.LogError(ex, "Failed to add space to world");
                 }
                 break;
-            case LearningElementViewModel learningElementViewModel:
-                if (_worldPresenter.ShowingLearningSpaceView)
+            case ElementViewModel elementViewModel:
+                if (_worldPresenter.ShowingSpaceView)
                 {
                     try
                     {
                         //TODO: We need to specify the slot to add the element to - AW
-                        _spacePresenter.AddLearningElement(learningElementViewModel, 0);
+                        _spacePresenter.AddElement(elementViewModel, 0);
                     }
                     catch (ApplicationException ex)
                     {

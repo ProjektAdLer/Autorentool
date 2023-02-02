@@ -18,18 +18,18 @@ public class CreateDslUt
         var mockLogger = Substitute.For<ILogger<CreateDsl>>();
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
         
-        var inboundObject1 = new LearningSpacePe("1", "1", "dimi", "", "",
+        var inboundObject1 = new SpacePe("1", "1", "dimi", "", "",
             1, null, 0, 0, null, null);
-        var inboundObject2 = new LearningSpacePe("2", "1", "dimi", "", "",
+        var inboundObject2 = new SpacePe("2", "1", "dimi", "", "",
             1, null, 0, 0, null, null);
-        var inboundObject3 = new LearningSpacePe("3", "1", "dimi", "", "",
+        var inboundObject3 = new SpacePe("3", "1", "dimi", "", "",
             1, null, 0, 0, null, null);
-        var inboundObject4 = new LearningSpacePe("4", "1", "dimi", "", "",
+        var inboundObject4 = new SpacePe("4", "1", "dimi", "", "",
             1, null, 0, 0, null, null);
-        var inboundObject5 = new LearningSpacePe("5", "1", "dimi", "", "",
+        var inboundObject5 = new SpacePe("5", "1", "dimi", "", "",
             1, null, 0, 0, null, null);
        
-        var listLearningSpaces = new List<LearningSpacePe>
+        var listSpaces = new List<SpacePe>
         {
             inboundObject1,
             inboundObject2,
@@ -39,7 +39,7 @@ public class CreateDslUt
         };
 
         int incrementId = 1;
-        foreach (var space in listLearningSpaces)
+        foreach (var space in listSpaces)
         {
             systemUnderTest.IdDictionary.Add(incrementId, space.Id);
             incrementId++;
@@ -91,43 +91,43 @@ public class CreateDslUt
     
 
     [Test]
-    public void CreateDSL_SearchDuplicateLearningElementNames_DuplicatesFoundAndNamesChanged()
+    public void CreateDSL_SearchDuplicateElementNames_DuplicatesFoundAndNamesChanged()
     {
         //Arrange
-        var mockElement1 = new LearningElementPe("Same Name Element", "el", null, "", 
-            "", "", "", PersistEntities.LearningElementDifficultyEnumPe.Easy);
-        var mockElement2 = new LearningElementPe("Another Element", "el", null, "", 
-            "", "", "", PersistEntities.LearningElementDifficultyEnumPe.Easy);
-        var mockElement3 = new LearningElementPe("Same Name Element", "el", null, "", 
-            "", "", "", PersistEntities.LearningElementDifficultyEnumPe.Easy);
-        var mockElement4 = new LearningElementPe("Same Name Element", "el", null, "", 
-            "", "", "", PersistEntities.LearningElementDifficultyEnumPe.Easy);
-        var mockElement5 = new LearningElementPe("Same Name Element", "el", null, "", 
-            "", "", "", PersistEntities.LearningElementDifficultyEnumPe.Easy);
+        var mockElement1 = new ElementPe("Same Name Element", "el", null, "", 
+            "", "", "", PersistEntities.ElementDifficultyEnumPe.Easy);
+        var mockElement2 = new ElementPe("Another Element", "el", null, "", 
+            "", "", "", PersistEntities.ElementDifficultyEnumPe.Easy);
+        var mockElement3 = new ElementPe("Same Name Element", "el", null, "", 
+            "", "", "", PersistEntities.ElementDifficultyEnumPe.Easy);
+        var mockElement4 = new ElementPe("Same Name Element", "el", null, "", 
+            "", "", "", PersistEntities.ElementDifficultyEnumPe.Easy);
+        var mockElement5 = new ElementPe("Same Name Element", "el", null, "", 
+            "", "", "", PersistEntities.ElementDifficultyEnumPe.Easy);
         
-        var mockLearningElements1 = new ILearningElementPe?[] {mockElement1, mockElement2};
-        var mockLearningSpaceLayout1 = new LearningSpaceLayoutPe(mockLearningElements1, FloorPlanEnumPe.Rectangle2X3);
-        var mockLearningElements2 = new ILearningElementPe?[] {mockElement3};
-        var mockLearningSpaceLayout2 = new LearningSpaceLayoutPe(mockLearningElements2, FloorPlanEnumPe.Rectangle2X3);
-        var mockLearningElements3 = new ILearningElementPe?[] {mockElement4, mockElement5};
-        var mockLearningSpaceLayout3 = new LearningSpaceLayoutPe(mockLearningElements3, FloorPlanEnumPe.Rectangle2X3);
+        var mockElements1 = new IElementPe?[] {mockElement1, mockElement2};
+        var mockSpaceLayout1 = new SpaceLayoutPe(mockElements1, FloorPlanEnumPe.Rectangle2X3);
+        var mockElements2 = new IElementPe?[] {mockElement3};
+        var mockSpaceLayout2 = new SpaceLayoutPe(mockElements2, FloorPlanEnumPe.Rectangle2X3);
+        var mockElements3 = new IElementPe?[] {mockElement4, mockElement5};
+        var mockSpaceLayout3 = new SpaceLayoutPe(mockElements3, FloorPlanEnumPe.Rectangle2X3);
 
-        var mockSpace1 = new LearningSpacePe("Space1", "sp", null, "", "", 1,
-            mockLearningSpaceLayout1);
-        var mockSpace2 = new LearningSpacePe("Space2", "sp", null, "", "", 1,
-            mockLearningSpaceLayout2);
-        var mockSpace3 = new LearningSpacePe("Space3", "sp", null, "", "", 1,
-            mockLearningSpaceLayout3);
+        var mockSpace1 = new SpacePe("Space1", "sp", null, "", "", 1,
+            mockSpaceLayout1);
+        var mockSpace2 = new SpacePe("Space2", "sp", null, "", "", 1,
+            mockSpaceLayout2);
+        var mockSpace3 = new SpacePe("Space3", "sp", null, "", "", 1,
+            mockSpaceLayout3);
         
         
-        var mockSpaces = new List<LearningSpacePe> {mockSpace1, mockSpace2, mockSpace3};
+        var mockSpaces = new List<SpacePe> {mockSpace1, mockSpace2, mockSpace3};
         
         var mockFileSystem = new MockFileSystem();
         var mockLogger = Substitute.For<ILogger<CreateDsl>>();
 
         //Act
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
-        var learningSpaceList = systemUnderTest.SearchDuplicateLearningElementNames(mockSpaces);
+        var spaceList = systemUnderTest.SearchDuplicateElementNames(mockSpaces);
 
         //Assert
         Assert.Multiple(()=>{ 
@@ -136,15 +136,15 @@ public class CreateDslUt
             Assert.That(mockElement3.Name, Is.EqualTo("Same Name Element(2)"));
             Assert.That(mockElement4.Name, Is.EqualTo("Same Name Element(3)"));
             Assert.That(mockElement5.Name, Is.EqualTo("Same Name Element(4)"));
-            Assert.That(learningSpaceList.Count, Is.EqualTo(3));
-            Assert.That(learningSpaceList[0].LearningSpaceLayout.ContainedLearningElements.Count, Is.EqualTo(2));
-            Assert.That(learningSpaceList[1].LearningSpaceLayout.ContainedLearningElements.Count, Is.EqualTo(1));
-            Assert.That(learningSpaceList[2].LearningSpaceLayout.ContainedLearningElements.Count, Is.EqualTo(2));
+            Assert.That(spaceList.Count, Is.EqualTo(3));
+            Assert.That(spaceList[0].SpaceLayout.ContainedElements.Count, Is.EqualTo(2));
+            Assert.That(spaceList[1].SpaceLayout.ContainedElements.Count, Is.EqualTo(1));
+            Assert.That(spaceList[2].SpaceLayout.ContainedElements.Count, Is.EqualTo(2));
         });
     }
     
     [Test]
-    public void CreateDSL_WriteLearningWorld_DSLDocumentWritten()
+    public void CreateDSL_WriteWorld_DSLDocumentWritten()
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
@@ -152,7 +152,7 @@ public class CreateDslUt
         mockFileSystem.AddFile("/foo/foo.txt", new MockFileData("foo"));
         var curWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         mockFileSystem.AddDirectory(Path.Join(curWorkDir, "XMLFilesForExport"));
-        mockFileSystem.AddFile(curWorkDir + "\\XMLFilesForExport\\LearningWorld.xml", new MockFileData(""));
+        mockFileSystem.AddFile(curWorkDir + "\\XMLFilesForExport\\World.xml", new MockFileData(""));
         var mockLogger = Substitute.For<ILogger<CreateDsl>>();
         
         const string name = "asdf";
@@ -162,31 +162,31 @@ public class CreateDslUt
         const string description = "very cool element";
         const string goals = "learn very many things";
         
-        var content1 = new LearningContentPe("FileName", "h5p", "/foo/bar.txt");
-        var content2 = new LearningContentPe("FileName", "png", "/foo/bar.txt");
-        var content3 = new LearningContentPe("FileName", "url", "/foo/bar.txt");
-        var content4 = new LearningContentPe("FileName", "txt", "/foo/foo.txt");
-        var content5 = new LearningContentPe("FileName", "pdf", "/foo/foo.txt");
+        var content1 = new ContentPe("FileName", "h5p", "/foo/bar.txt");
+        var content2 = new ContentPe("FileName", "png", "/foo/bar.txt");
+        var content3 = new ContentPe("FileName", "url", "/foo/bar.txt");
+        var content4 = new ContentPe("FileName", "txt", "/foo/foo.txt");
+        var content5 = new ContentPe("FileName", "pdf", "/foo/foo.txt");
 
-        var ele1 = new LearningElementPe("a", "b",content1, "", "pupup", "g","h", 
-            LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
-        var ele2 = new LearningElementPe("b", "b",content2, "", "pupup", "g","h", 
-            LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
-        var ele3 = new LearningElementPe("c", "b", content3, "","pupup", "g","h", 
-            LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
-        var ele4 = new LearningElementPe("d", "b",content4, "","pupup", "g","h", 
-            LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
-        var ele5 = new LearningElementPe("e", "b",content5, "","pupup", "g","h", 
-            LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
+        var ele1 = new ElementPe("a", "b",content1, "", "pupup", "g","h", 
+            ElementDifficultyEnumPe.Easy, 17, 2, 23);
+        var ele2 = new ElementPe("b", "b",content2, "", "pupup", "g","h", 
+            ElementDifficultyEnumPe.Easy, 17, 2, 23);
+        var ele3 = new ElementPe("c", "b", content3, "","pupup", "g","h", 
+            ElementDifficultyEnumPe.Easy, 17, 2, 23);
+        var ele4 = new ElementPe("d", "b",content4, "","pupup", "g","h", 
+            ElementDifficultyEnumPe.Easy, 17, 2, 23);
+        var ele5 = new ElementPe("e", "b",content5, "","pupup", "g","h", 
+            ElementDifficultyEnumPe.Easy, 17, 2, 23);
         
 
-        var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
+        var space1 = new SpacePe("ff", "ff", "ff", "ff", "ff", 5, 
             null, 0, 0, new List<IObjectInPathWayPe>(), 
             new List<IObjectInPathWayPe>());
-        space1.LearningSpaceLayout.LearningElements = new ILearningElementPe[] {ele1, ele2, ele3, ele4, ele5};
-        var space2 = new LearningSpacePe("ff2", "ff", "ff", "ff", "ff", 5, 
+        space1.SpaceLayout.Elements = new IElementPe[] {ele1, ele2, ele3, ele4, ele5};
+        var space2 = new SpacePe("ff2", "ff", "ff", "ff", "ff", 5, 
             null, 0, 0, new List<IObjectInPathWayPe>(), new List<IObjectInPathWayPe>());
-        var space3 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
+        var space3 = new SpacePe("ff", "ff", "ff", "ff", "ff", 5, 
             null, 0, 0, new List<IObjectInPathWayPe>(), new List<IObjectInPathWayPe>());
         var condition1 = new PathWayConditionPe(ConditionEnumPe.And, 0, 0, 
             new List<IObjectInPathWayPe>{space1, space2}, null);
@@ -194,39 +194,39 @@ public class CreateDslUt
         space2.InBoundObjects = new List<IObjectInPathWayPe>() {condition1};
         space2.OutBoundObjects = new List<IObjectInPathWayPe>() {space3};
         space3.InBoundObjects = new List<IObjectInPathWayPe>() {space2};
-        var learningSpaces = new List<LearningSpacePe> { space1, space2, space3 };
+        var spaces = new List<SpacePe> { space1, space2, space3 };
         
 
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals,
-             learningSpaces);
+        var world = new WorldPe(name, shortname, authors, language, description, goals,
+             spaces);
 
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
         
         //Every Element except Content with "url" is added to the comparison list.
-        var learningElementsSpace1 = new List<LearningElementPe> { ele1, ele2, ele4, ele5 };
-        var learningElementsSpace2 = new List<LearningElementPe>();
+        var elementsSpace1 = new List<ElementPe> { ele1, ele2, ele4, ele5 };
+        var elementsSpace2 = new List<ElementPe>();
         
-        var learningElementsForComparison = new List<List<LearningElementPe>> {learningElementsSpace1, learningElementsSpace2};
+        var elementsForComparison = new List<List<ElementPe>> {elementsSpace1, elementsSpace2};
         
 
         //Act
-        systemUnderTest.WriteLearningWorld(learningWorld);
+        systemUnderTest.WriteWorld(world);
         
         //Assert
         var pathXmlFile = Path.Join(curWorkDir, "XMLFilesForExport", "DSL_Document.json");
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Uuid, Is.Not.Null);
-            Assert.That(systemUnderTest.LearningWorldJson, Is.Not.Null);
+            Assert.That(systemUnderTest.WorldJson, Is.Not.Null);
         });
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.LearningWorldJson!.Identifier.Value, Is.EqualTo(name));
-            Assert.That(systemUnderTest.ListLearningElementsWithContents, Is.EquivalentTo(learningElementsSpace1));
-            Assert.That(systemUnderTest.ListLearningSpaces, Is.EquivalentTo(learningSpaces));
-            Assert.That(systemUnderTest.LearningWorldJson.LearningSpaces[0].Requirements,
+            Assert.That(systemUnderTest.WorldJson!.Identifier.Value, Is.EqualTo(name));
+            Assert.That(systemUnderTest.ListElementsWithContents, Is.EquivalentTo(elementsSpace1));
+            Assert.That(systemUnderTest.ListSpaces, Is.EquivalentTo(spaces));
+            Assert.That(systemUnderTest.WorldJson.Spaces[0].Requirements,
                 Is.EqualTo(""));
-            Assert.That(systemUnderTest.LearningWorldJson.LearningSpaces[1].Requirements,
+            Assert.That(systemUnderTest.WorldJson.Spaces[1].Requirements,
                 Is.EqualTo("(1)^(2)"));
         });
         Assert.Multiple(() =>
@@ -236,7 +236,7 @@ public class CreateDslUt
     }
     
     [Test]
-     public void CreateDSL_WriteLearningWorld_UnsupportedTypeExceptionThrown()
+     public void CreateDSL_WriteWorld_UnsupportedTypeExceptionThrown()
     {
         //Arrange
         var mockFileSystem = new MockFileSystem();
@@ -250,32 +250,32 @@ public class CreateDslUt
         const string description = "very cool element";
         const string goals = "learn very many things";
         
-        var content1 = new LearningContentPe("FileName", "mp3", "/foo/bar.txt");
+        var content1 = new ContentPe("FileName", "mp3", "/foo/bar.txt");
 
-        var ele1 = new LearningElementPe("a", "b",content1, "", "pupup", "g","h", 
-            LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
+        var ele1 = new ElementPe("a", "b",content1, "", "pupup", "g","h", 
+            ElementDifficultyEnumPe.Easy, 17, 2, 23);
 
-        var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
+        var space1 = new SpacePe("ff", "ff", "ff", "ff", "ff", 5, 
             null, 0, 0, new List<IObjectInPathWayPe>(), 
             new List<IObjectInPathWayPe>());
-        space1.LearningSpaceLayout.LearningElements = new ILearningElementPe[] {ele1};
-        var learningSpaces = new List<LearningSpacePe> { space1 };
+        space1.SpaceLayout.Elements = new IElementPe[] {ele1};
+        var spaces = new List<SpacePe> { space1 };
 
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals,
-             learningSpaces);
+        var world = new WorldPe(name, shortname, authors, language, description, goals,
+             spaces);
 
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
 
         //Act
         try
         {
-            systemUnderTest.WriteLearningWorld(learningWorld); 
-            Assert.Fail("Learning Content Exception was not thrown");
+            systemUnderTest.WriteWorld(world); 
+            Assert.Fail("Content Exception was not thrown");
         }
         catch (Exception e)
         {
             //Assert
-            Assert.That(e.Message, Is.EqualTo("The given LearningContent Type is not supported - in CreateDsl."));
+            Assert.That(e.Message, Is.EqualTo("The given Content Type is not supported - in CreateDsl."));
         }
 
     }

@@ -13,13 +13,13 @@ public class VideoTransferElementUt
         
         var name = "asdf";
         var shortname = "jkl;";
-        var parent = new LearningSpace("foo", "bar", "", "", "", 100);
-        var content = new LearningContent("a", "b", "");
+        var parent = new Space("foo", "bar", "", "", "", 100);
+        var content = new Content("a", "b", "");
         var url = "url";
         var authors = "ben and jerry";
         var description = "very cool element";
         var goals = "learn very many things";
-        var difficulty = LearningElementDifficultyEnum.Medium;
+        var difficulty = ElementDifficultyEnum.Medium;
         var workload = 5;
         var points = 6;
         var positionX = 5f;
@@ -33,7 +33,7 @@ public class VideoTransferElementUt
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
             Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortname));
             Assert.That(systemUnderTest.Parent, Is.EqualTo(parent));
-            Assert.That(systemUnderTest.LearningContent, Is.EqualTo(content));
+            Assert.That(systemUnderTest.Content, Is.EqualTo(content));
             Assert.That(systemUnderTest.Url, Is.EqualTo(url));
             Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));

@@ -51,7 +51,7 @@ public class ActivitiesLessonXmlPage : IActivitiesLessonXmlPage{
         [XmlElement(ElementName="title")]
         public string Title { get; set; }
         
-        //Content of the current Lesson-Page (Most of the Time its only 1 learning Element)
+        //Content of the current Lesson-Page (Most of the Time its only 1  Element)
         [XmlElement(ElementName="contents")]
         public string Contents { get; set; }
         

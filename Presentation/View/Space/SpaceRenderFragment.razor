@@ -1,0 +1,12 @@
+@using Presentation.View.Toolbox
+@using Presentation.PresentationLogic.Space
+<DisplayableObjectRenderFragmentBase Obj="ViewModel" CssClassSelector="space">
+    <p>@ViewModel.Description</p>
+</DisplayableObjectRenderFragmentBase>
+    
+@code {
+    [Parameter, EditorRequired] 
+#pragma warning disable CS8618 // Parameters provided by framework - n.stich
+        public ISpaceViewModel ViewModel { get; set; }
+#pragma warning restore CS8618
+}

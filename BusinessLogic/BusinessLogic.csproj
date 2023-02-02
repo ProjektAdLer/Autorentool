@@ -10,7 +10,7 @@
       <ProjectReference Include="..\Shared\Shared.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <Compile Remove="Entities\LearningElementDifficultyEnum.cs" />
+      <Compile Remove="Entities\ElementDifficultyEnum.cs" />
     </ItemGroup>
     <ItemGroup>
       <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />

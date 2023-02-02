@@ -1,0 +1,53 @@
+@page "/WorldOverView"
+@using Presentation.Components
+@using Presentation.PresentationLogic.Element
+@using Presentation.PresentationLogic.Element.ActivationElement
+@using Presentation.PresentationLogic.Element.InteractionElement
+@using Presentation.PresentationLogic.Element.TestElement
+@using Presentation.PresentationLogic.Element.TransferElement
+@using Presentation.PresentationLogic.World
+
+@if (WorldP?.WorldVm != null)
+{
+    <MudPaper Width="250px" Class="default-inline-flex py-3" Elevation="0">
+        <MudNavMenu Class="mud-width-full">
+            <MudText Typo="Typo.h6" Class= "px-4">@WorldP.WorldVm.Name</MudText> 
+            <MudDivider Class="my-2" />
+            @if(WorldP.WorldVm.Spaces.Count > 0)
+            {
+                @foreach (var spaceViewModel in WorldP.WorldVm.Spaces)
+                {
+                    <MudNavGroup Title="@spaceViewModel.Name" Icon="@SpaceIcon" Expanded="true">
+                        @foreach (var element in spaceViewModel.ContainedElements)
+                        {
+                            <MudNavLink Icon="@GetElementIcon(element)">@element.Name</MudNavLink>
+                        }
+                    </MudNavGroup>
+                }
+            }
+        </MudNavMenu>
+    </MudPaper>
+}
+
+@code {
+    [Inject]
+    public IWorldPresenterOverviewInterface? WorldP { get; set; }
+
+    private static string SpaceIcon { get; set; } = CustomIcons.SpaceIcon;
+
+    private string GetElementIcon(IElementViewModel element)
+    {
+        return element switch
+        {
+            H5PActivationElementViewModel => CustomIcons.H5PElementIcon,
+            VideoActivationElementViewModel => CustomIcons.VideoElementIcon,
+            H5PInteractionElementViewModel => CustomIcons.H5PElementIcon,
+            H5PTestElementViewModel => CustomIcons.H5PElementIcon,
+            ImageTransferElementViewModel => CustomIcons.ImageElementIcon,
+            PdfTransferElementViewModel => CustomIcons.TextElementIcon,
+            TextTransferElementViewModel => CustomIcons.TextElementIcon,
+            VideoTransferElementViewModel => CustomIcons.VideoElementIcon,
+            _ => throw new ArgumentOutOfRangeException(nameof(element))
+            };
+    }
+}

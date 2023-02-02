@@ -4,45 +4,45 @@ namespace BusinessLogic.Commands.Condition;
 
 public class DeletePathWayCondition : IUndoCommand
 {
-    internal LearningWorld LearningWorld { get; }
+    internal Entities.World World { get; }
     internal PathWayCondition PathWayCondition { get; }
-    private readonly Action<LearningWorld> _mappingAction;
+    private readonly Action<Entities.World> _mappingAction;
     private IMemento? _memento;
 
-    public DeletePathWayCondition(LearningWorld learningWorld, PathWayCondition pathWayCondition,
-        Action<LearningWorld> mappingAction)
+    public DeletePathWayCondition(Entities.World world, PathWayCondition pathWayCondition,
+        Action<Entities.World> mappingAction)
     {
-        LearningWorld = learningWorld;
+        World = world;
         PathWayCondition = pathWayCondition;
         _mappingAction = mappingAction;
     }
 
     public void Execute()
     {
-        _memento = LearningWorld.GetMemento();
+        _memento = World.GetMemento();
 
-        var pathWayCondition = LearningWorld.PathWayConditions.First(x => x.Id == PathWayCondition.Id);
+        var pathWayCondition = World.PathWayConditions.First(x => x.Id == PathWayCondition.Id);
 
         foreach (var inBoundSpace in pathWayCondition.InBoundObjects)
         {
-            LearningWorld.LearningPathways
+            World.Pathways
                 .Where(x => x.SourceObject.Id == inBoundSpace.Id && x.TargetObject.Id == pathWayCondition.Id)
-                .ToList().ForEach(x => LearningWorld.LearningPathways.Remove(x));
+                .ToList().ForEach(x => World.Pathways.Remove(x));
         }
         foreach (var outBoundSpace in pathWayCondition.OutBoundObjects)
         {
-            LearningWorld.LearningPathways
+            World.Pathways
                 .Where(x => x.SourceObject.Id == pathWayCondition.Id && x.TargetObject.Id == outBoundSpace.Id)
-                .ToList().ForEach(x => LearningWorld.LearningPathways.Remove(x));
+                .ToList().ForEach(x => World.Pathways.Remove(x));
         }
-        LearningWorld.PathWayConditions.Remove(pathWayCondition);
+        World.PathWayConditions.Remove(pathWayCondition);
 
-        if (pathWayCondition == LearningWorld.SelectedLearningObject || LearningWorld.SelectedLearningObject == null)
+        if (pathWayCondition == World.SelectedObject || World.SelectedObject == null)
         {
-            LearningWorld.SelectedLearningObject = LearningWorld.SelectableWorldObjects.LastOrDefault();
+            World.SelectedObject = World.SelectableWorldObjects.LastOrDefault();
         }
 
-        _mappingAction.Invoke(LearningWorld);
+        _mappingAction.Invoke(World);
     }
 
     public void Undo()
@@ -52,9 +52,9 @@ public class DeletePathWayCondition : IUndoCommand
             throw new InvalidOperationException("_memento is null");
         }
 
-        LearningWorld.RestoreMemento(_memento);
+        World.RestoreMemento(_memento);
 
-        _mappingAction.Invoke(LearningWorld);
+        _mappingAction.Invoke(World);
     }
 
     public void Redo() => Execute();

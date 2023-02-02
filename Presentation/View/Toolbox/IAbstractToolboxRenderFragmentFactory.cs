@@ -5,5 +5,5 @@ namespace Presentation.View.Toolbox;
 
 public interface IAbstractToolboxRenderFragmentFactory
 {
-    RenderFragment GetRenderFragment(IDisplayableLearningObject obj);
+    RenderFragment GetRenderFragment(IDisplayableObject obj);
 }

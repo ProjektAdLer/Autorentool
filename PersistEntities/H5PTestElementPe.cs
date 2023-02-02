@@ -4,11 +4,11 @@ namespace PersistEntities;
 
 [Serializable]
 [DataContract]
-public class H5PTestElementPe : LearningElementPe
+public class H5PTestElementPe : ElementPe
 {
-    internal H5PTestElementPe(string name, string shortname, LearningContentPe? learningContent, string url,
-        string authors, string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload,
-        int points, double positionX, double positionY) : base(name, shortname,learningContent, url, authors, description, 
+    internal H5PTestElementPe(string name, string shortname, ContentPe? content, string url,
+        string authors, string description, string goals, ElementDifficultyEnumPe difficulty, int workload,
+        int points, double positionX, double positionY) : base(name, shortname,content, url, authors, description, 
         goals, difficulty, workload, points, positionX, positionY)
     {
     }

@@ -7,7 +7,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.Space;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.Components;
@@ -35,16 +35,16 @@ public class ClickableUt
     public void StandardConstructor_AllPropertiesInitialized()
     {
         RenderFragment childContent = builder => builder.AddContent(0, "<text/>");
-        var learningObject = Substitute.For<ILearningSpaceViewModel>();
-        Action<ILearningSpaceViewModel> onClicked = _ => { };
+        var clickableObject = Substitute.For<ISpaceViewModel>();
+        Action<ISpaceViewModel> onClicked = _ => { };
 
         var systemUnderTest =
-            CreateRenderedClickableComponent(childContent, learningObject, onClicked);
+            CreateRenderedClickableComponent(childContent, clickableObject, onClicked);
 
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Instance.ChildContent, Is.EqualTo(childContent));
-            Assert.That(systemUnderTest.Instance.OnClickedParam, Is.EqualTo(learningObject));
+            Assert.That(systemUnderTest.Instance.OnClickedParam, Is.EqualTo(clickableObject));
             Assert.That(
                 systemUnderTest.Instance.OnClicked, Is.EqualTo(EventCallback.Factory.Create(
                     onClicked.Target ?? throw new InvalidOperationException("onClicked.Target is null"), onClicked)));
@@ -54,30 +54,30 @@ public class ClickableUt
     [Test]
     public void ClickAndRelease_OnClickedTriggered()
     {
-        ILearningSpaceViewModel? onClickedEventTriggered = null;
-        var learningObject = Substitute.For<ILearningSpaceViewModel>();
+        ISpaceViewModel? onClickedEventTriggered = null;
+        var clickableObject = Substitute.For<ISpaceViewModel>();
 
-        Action<ILearningSpaceViewModel> onClicked = e => { onClickedEventTriggered = e; };
+        Action<ISpaceViewModel> onClicked = e => { onClickedEventTriggered = e; };
 
         var systemUnderTest =
-            CreateRenderedClickableComponent(null, learningObject, onClicked);
+            CreateRenderedClickableComponent(null, clickableObject, onClicked);
 
         systemUnderTest.WaitForElement("g").MouseDown(new MouseEventArgs());
         _mouseService.OnUp += Raise.EventWith(new MouseEventArgs());
 
-        Assert.That(onClickedEventTriggered, Is.EqualTo(learningObject));
+        Assert.That(onClickedEventTriggered, Is.EqualTo(clickableObject));
     }
 
     [Test]
     public void ClickMoveAndRelease_OnClickedNotTriggered()
     {
-        ILearningSpaceViewModel? onClickedEventTriggered = null;
-        var learningObject = Substitute.For<ILearningSpaceViewModel>();
+        ISpaceViewModel? onClickedEventTriggered = null;
+        var clickableObject = Substitute.For<ISpaceViewModel>();
 
-        Action<ILearningSpaceViewModel> onClicked = e => { onClickedEventTriggered = e; };
+        Action<ISpaceViewModel> onClicked = e => { onClickedEventTriggered = e; };
 
         var systemUnderTest =
-            CreateRenderedClickableComponent(null, learningObject, onClicked);
+            CreateRenderedClickableComponent(null, clickableObject, onClicked);
 
         systemUnderTest.WaitForElement("g").MouseDown(new MouseEventArgs());
         _mouseService.OnMove += Raise.EventWith(new MouseEventArgs());
@@ -86,13 +86,13 @@ public class ClickableUt
         Assert.That(onClickedEventTriggered, Is.EqualTo(null));
     }
 
-    private IRenderedComponent<Clickable<ILearningSpaceViewModel>> CreateRenderedClickableComponent(RenderFragment? childContent = null,
-        ILearningSpaceViewModel? learningObject = null,  Action<ILearningSpaceViewModel>? onClicked = null)
+    private IRenderedComponent<Clickable<ISpaceViewModel>> CreateRenderedClickableComponent(RenderFragment? childContent = null,
+        ISpaceViewModel? clickableObject = null,  Action<ISpaceViewModel>? onClicked = null)
     {
         onClicked ??= _ => { };
-        return _testContext.RenderComponent<Clickable<ILearningSpaceViewModel>>(parameters => parameters
+        return _testContext.RenderComponent<Clickable<ISpaceViewModel>>(parameters => parameters
             .Add(p => p.ChildContent, childContent)
-            .Add(p => p.OnClickedParam, learningObject)
+            .Add(p => p.OnClickedParam, clickableObject)
             .Add(p => p.OnClicked, onClicked)
         );
     }

@@ -1,0 +1,12 @@
+@using Presentation.View.Toolbox
+@using Presentation.PresentationLogic.World
+<DisplayableObjectRenderFragmentBase Obj="ViewModel" CssClassSelector="world">
+    <i class="bi bi-globe"></i>
+</DisplayableObjectRenderFragmentBase>
+
+@code {
+    [Parameter, EditorRequired] 
+#pragma warning disable CS8618 // Parameters provided by framework - n.stich
+        public IWorldViewModel ViewModel { get; set; }
+#pragma warning restore CS8618
+}

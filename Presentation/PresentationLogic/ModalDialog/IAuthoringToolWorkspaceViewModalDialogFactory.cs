@@ -30,19 +30,19 @@ public interface IAuthoringToolWorkspaceViewModalDialogFactory
     RenderFragment GetDeleteUnsavedWorldFragment(ModalDialogOnClose onCloseCallback, string deletedUnsavedWorldName);
 
     /// <summary>
-    /// Dynamically generates a ModalDialog Render Fragment for a "Create new learning world" dialog. 
+    /// Dynamically generates a ModalDialog Render Fragment for a "Create new world" dialog. 
     /// </summary>
     /// <param name="onCloseCallback">The callback that should be called upon closing the dialog.</param>
     /// <returns>A RenderFragment containing the dialog.</returns>
-    RenderFragment GetCreateLearningWorldFragment(ModalDialogOnClose onCloseCallback);
+    RenderFragment GetCreateWorldFragment(ModalDialogOnClose onCloseCallback);
 
     /// <summary>
-    /// Dynamically generates a ModalDialog Render Fragment for a "Edit existing learning world" dialog.
+    /// Dynamically generates a ModalDialog Render Fragment for a "Edit existing  world" dialog.
     /// </summary>
     /// <param name="initialInputValues">The initial values for the input fields.</param>
     /// <param name="onCloseCallback">The callback that should be called upon closing the dialog.</param>
     /// <returns>A RenderFragment containing the dialog.</returns>
-    RenderFragment GetEditLearningWorldFragment(IDictionary<string, string> initialInputValues,
+    RenderFragment GetEditWorldFragment(IDictionary<string, string> initialInputValues,
         ModalDialogOnClose onCloseCallback);
 
     /// <summary>

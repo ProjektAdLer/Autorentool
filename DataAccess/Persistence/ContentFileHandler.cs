@@ -32,7 +32,7 @@ public class ContentFileHandler : IContentFileHandler
     }
 
     /// <inheritdoc cref="IContentFileHandler.LoadContentAsync(string)"/>
-    public async Task<LearningContentPe> LoadContentAsync(string filepath)
+    public async Task<ContentPe> LoadContentAsync(string filepath)
     {
         var (duplicatePath, hash) = await GetFilePathOfExistingCopyAndHashAsync(filepath);
         if (duplicatePath == null)
@@ -47,11 +47,11 @@ public class ContentFileHandler : IContentFileHandler
         _logger.LogInformation("File {FileName} of type {FileType} loaded", fileName, fileType);
         if (duplicatePath == null)
             SaveHashForFileAsync(finalPath, hash);
-        return new LearningContentPe(fileName, fileType, finalPath);
+        return new ContentPe(fileName, fileType, finalPath);
     }
 
     /// <inheritdoc cref="IContentFileHandler.LoadContentAsync(string,System.IO.MemoryStream)"/>
-    public async Task<LearningContentPe> LoadContentAsync(string name, MemoryStream stream)
+    public async Task<ContentPe> LoadContentAsync(string name, MemoryStream stream)
     {
         var (duplicatePath, hash) = await GetFilePathOfExistingCopyAndHashAsync(stream);
         if (duplicatePath == null)
@@ -66,7 +66,7 @@ public class ContentFileHandler : IContentFileHandler
         _logger.LogInformation("File {FileName} of type {FileType} loaded", fileName, fileType);
         if (duplicatePath == null)
             SaveHashForFileAsync(finalPath, hash);
-        return new LearningContentPe(fileName, fileType, finalPath);
+        return new ContentPe(fileName, fileType, finalPath);
     }
 
     /// <summary>

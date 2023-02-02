@@ -9,13 +9,13 @@ namespace Generator.DSL;
 
 public class CreateDsl : ICreateDsl
 {
-    public List<LearningElementPe> ListLearningElementsWithContents;
-    public List<LearningSpacePe> ListLearningSpaces;
-    public LearningWorldJson LearningWorldJson;
+    public List<ElementPe> ListElementsWithContents;
+    public List<SpacePe> ListSpaces;
+    public WorldJson WorldJson;
     public string Uuid;
     public Dictionary<int, Guid> IdDictionary;
-    private List<int> _listLearningSpaceContent;
-    private List<LearningElementPe> _listAllLearningElements;
+    private List<int> _listSpaceContent;
+    private List<ElementPe> _listAllElements;
     private string _booleanAlgebraRequirements;
     private string _currentConditionDirectSpaces;
     private IFileSystem _fileSystem;
@@ -39,43 +39,43 @@ public class CreateDsl : ICreateDsl
 
     private void Initialize()
     {
-        ListLearningElementsWithContents = new List<LearningElementPe>();
-        ListLearningSpaces = new List<LearningSpacePe>();
-        _listLearningSpaceContent = new List<int>();
+        ListElementsWithContents = new List<ElementPe>();
+        ListSpaces = new List<SpacePe>();
+        _listSpaceContent = new List<int>();
         _booleanAlgebraRequirements = "";
         IdDictionary = new Dictionary<int, Guid>();
         Guid guid = Guid.NewGuid();
         Uuid = guid.ToString();
         _currentConditionDirectSpaces = "";
-        _listAllLearningElements = new List<LearningElementPe>();
+        _listAllElements = new List<ElementPe>();
     }
 
-    //Search through all LearningElements and look for duplicates. 
+    //Search through all  Elements and look for duplicates. 
     //If a duplicate is found, the duplicate Values get a incremented Number behind them for example: (1), (2)...
-    public List<LearningSpacePe> SearchDuplicateLearningElementNames(List<LearningSpacePe> listLearningSpace)
+    public List<SpacePe> SearchDuplicateElementNames(List<SpacePe> listSpace)
     {
         var incrementedNamesDictionary = new Dictionary<string,string>();
         
-        //Get All LearningElements
-        foreach (var learningSpace in listLearningSpace)
+        //Get All Elements
+        foreach (var space in listSpace)
         {
-            foreach (var element in learningSpace.LearningSpaceLayout.ContainedLearningElements)
+            foreach (var element in space.SpaceLayout.ContainedElements)
             {
-                _listAllLearningElements.Add(element);
+                _listAllElements.Add(element);
             }
         }
         
         //Search for duplicates
-        var duplicateLearningElements = _listAllLearningElements.GroupBy(x => x.Name).Where(x => x.Count() > 1)
+        var duplicateElements = _listAllElements.GroupBy(x => x.Name).Where(x => x.Count() > 1)
             .Select(x => x).ToList();
 
-        //To avoid duplicate names, we increment the name of the learning element.
+        //To avoid duplicate names, we increment the name of the element.
         //That happens in yet another loop, because we have to respect the Space -> Element hierarchy.
-        foreach (var duplicateElement in duplicateLearningElements)
+        foreach (var duplicateElement in duplicateElements)
         {
-            foreach (var learningSpace in listLearningSpace)
+            foreach (var space in listSpace)
             {
-                foreach (var element in learningSpace.LearningSpaceLayout.ContainedLearningElements)
+                foreach (var element in space.SpaceLayout.ContainedElements)
                 {
                     if(element.Name == duplicateElement.Key)
                     {
@@ -97,41 +97,41 @@ public class CreateDsl : ICreateDsl
                 }
             }
         }
-        return listLearningSpace;
+        return listSpace;
     }
 
     /// <summary>
     /// Takes a Condition and builds a boolean algebra string.
     /// Method searches recursively for all conditions and their inbound Spaces.
     /// </summary>
-    /// <param name="learningCondition"></param>
+    /// <param name="condition"></param>
     /// <returns>A string that describes a boolean algebra expression</returns>
-    public string DefineLogicalExpression(PathWayConditionPe learningCondition)
+    public string DefineLogicalExpression(PathWayConditionPe condition)
     {
-        string condition = learningCondition.Condition.ToString();
-        if(condition == "And")
+        string conditionValue = condition.Condition.ToString();
+        if(conditionValue == "And")
         {
-            condition = "^";
+            conditionValue = "^";
         }
-        else if(condition == "Or")
+        else if(conditionValue == "Or")
         {
-            condition = "v";
+            conditionValue = "v";
         }
         
-        foreach (var learningObject in learningCondition.InBoundObjects)
+        foreach (var pathWayObject in condition.InBoundObjects)
         {
-            if(learningObject is LearningSpacePe)
+            if(pathWayObject is SpacePe)
             {
                 _currentConditionDirectSpaces += "(";
-                string spaceId = IdDictionary.Where(x => x.Value == learningObject.Id)
+                string spaceId = IdDictionary.Where(x => x.Value == pathWayObject.Id)
                     .Select(x => x.Key)
                     .FirstOrDefault().ToString();
-                _currentConditionDirectSpaces += spaceId+")" + condition;
+                _currentConditionDirectSpaces += spaceId+")" + conditionValue;
             }
-            else if (learningObject is PathWayConditionPe pathWayConditionPe)
+            else if (pathWayObject is PathWayConditionPe pathWayConditionPe)
             {
                 //special case for nested conditions (conditions that are in conditions)
-                if (learningObject.InBoundObjects.Count == 1)
+                if (pathWayObject.InBoundObjects.Count == 1)
                 {
                     DefineLogicalExpression(pathWayConditionPe);
                 }
@@ -140,7 +140,7 @@ public class CreateDsl : ICreateDsl
                     _currentConditionDirectSpaces += "("; 
                     DefineLogicalExpression(pathWayConditionPe);
                     _currentConditionDirectSpaces += ")";
-                    _currentConditionDirectSpaces += condition;
+                    _currentConditionDirectSpaces += conditionValue;
                 }
             }
         }
@@ -149,51 +149,51 @@ public class CreateDsl : ICreateDsl
     }
     
     /// <summary>
-    /// Reads the LearningWorld Entity and creates an DSL Document with the given information.
+    /// Reads the World Entity and creates an DSL Document with the given information.
     /// </summary>
-    /// <param name="learningWorld"></param> Information about the learningWorld, topics, spaces and elements
-    public string WriteLearningWorld(LearningWorldPe learningWorld)
+    /// <param name="world"></param> Information about the wworld, topics, spaces and Elements
+    public string WriteWorld(WorldPe world)
     {
         Initialize();
-        //Starting ID for LearningSpaces
-        int learningSpaceIdForDictionary = 1;
+        //Starting ID for Spaces
+        int spaceIdForDictionary = 1;
         
-        // Starting Value for Learning Space Ids & Learning Element Ids in the DSL-Document
-        int learningSpaceId = 1;
-        int learningSpaceElementId = 1;
+        // Starting Value for Space Ids & Element Ids in the DSL-Document
+        int spaceId = 1;
+        int spaceElementId = 1;
         
-        //Initialise learningWorldJson with empty values, will be filled with information later in the method.
-        LearningWorldJson = new LearningWorldJson(Uuid, new IdentifierJson("name", learningWorld.Name), new List<int>(),
-            new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>(), 
-            learningWorld.Description, learningWorld.Goals);
+        //Initialise WorldJson with empty values, will be filled with information later in the method.
+        WorldJson = new WorldJson(Uuid, new IdentifierJson("name", world.Name), new List<int>(),
+            new List<TopicJson>(), new List<SpaceJson>(), new List<ElementJson>(), 
+            world.Description, world.Goals);
 
-        // Create Learning Spaces & fill into Learning World
-        // The learningSpaceId defines what the starting Id for Spaces should be. 
-        // Search for Learning Elements in Spaces and add to listLearningElements
-        ListLearningSpaces.AddRange(learningWorld.LearningSpaces);
+        // CreateSpaces & fill into World
+        // The SpaceId defines what the starting Id for Spaces should be. 
+        // Search for  Elements in Spaces and add to listElements
+        ListSpaces.AddRange(world.Spaces);
         
-        foreach (var space in ListLearningSpaces)
+        foreach (var space in ListSpaces)
         {
-            IdDictionary.Add(learningSpaceIdForDictionary, space.Id);
-            learningSpaceIdForDictionary++;
+            IdDictionary.Add(spaceIdForDictionary, space.Id);
+            spaceIdForDictionary++;
         }
         
-        //Search for duplicate LearningElement Names and increment them.
-        ListLearningSpaces = SearchDuplicateLearningElementNames(ListLearningSpaces);
+        //Search for duplicate Element Names and increment them.
+        ListSpaces = SearchDuplicateElementNames(ListSpaces);
 
-        foreach (var learningSpace in ListLearningSpaces)
+        foreach (var space in ListSpaces)
         {
-            _listLearningSpaceContent = new List<int>();
+            _listSpaceContent = new List<int>();
             _booleanAlgebraRequirements = "";
             _currentConditionDirectSpaces = "";
             
-            IdentifierJson learningSpaceIdentifier = new IdentifierJson("name", learningSpace.Name);
+            IdentifierJson spaceIdentifier = new IdentifierJson("name", space.Name);
             
-            //Searching for Learning Elements in each Space
-            foreach (var element in learningSpace.LearningSpaceLayout.ContainedLearningElements)
+            //Searching for  Elements in each Space
+            foreach (var element in space.SpaceLayout.ContainedElements)
             {
                 string elementCategory;
-                switch (element.LearningContent.Type)
+                switch (element.Content.Type)
                 {
                     case "png" or "jpg" or "bmp" or "webp":
                         elementCategory = "image";
@@ -211,36 +211,36 @@ public class CreateDsl : ICreateDsl
                         elementCategory = "pdf";
                         break;
                     default:
-                        throw new ArgumentException("The given LearningContent Type is not supported - in CreateDsl.");
+                        throw new ArgumentException("The given Content Type is not supported - in CreateDsl.");
                 }
                 
-                IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", element.Name);
-                List<LearningElementValueJson> learningElementValueList = new List<LearningElementValueJson>();
-                LearningElementValueJson learningElementValueJson = new LearningElementValueJson("Points", element.Points.ToString());
-                learningElementValueList.Add(learningElementValueJson);
+                IdentifierJson elementIdentifier = new IdentifierJson("FileName", element.Name);
+                List<ElementValueJson> elementValueList = new List<ElementValueJson>();
+                ElementValueJson elementValueJson = new ElementValueJson("Points", element.Points.ToString());
+                elementValueList.Add(elementValueJson);
 
-                LearningElementJson learningElementJson = new LearningElementJson(learningSpaceElementId,
-                    learningElementIdentifier, element.Url, elementCategory, element.LearningContent.Type, 
-                    learningSpaceId, learningElementValueList, element.Description, element.Goals);
+                ElementJson elementJson = new ElementJson(spaceElementId,
+                    elementIdentifier, element.Url, elementCategory, element.Content.Type, 
+                    spaceId, elementValueList, element.Description, element.Goals);
 
                 // Add Elements that have Content to the List, they will be copied at the end of the method.
-                if (element.LearningContent.Type != "url")
+                if (element.Content.Type != "url")
                 {
-                    ListLearningElementsWithContents.Add(element);
+                    ListElementsWithContents.Add(element);
                 }
                 
-                //int elementIndex = ListLearningElementsWithContents.IndexOf(element) + 1;
-                _listLearningSpaceContent.Add(learningSpaceElementId);
-                learningSpaceElementId++;
-                LearningWorldJson.LearningElements.Add(learningElementJson);
+                //int elementIndex = ListElementsWithContents.IndexOf(element) + 1;
+                _listSpaceContent.Add(spaceElementId);
+                spaceElementId++;
+                WorldJson.Elements.Add(elementJson);
             }
           
-            // Create Learning Space Requirements
-            // If the inbound-type is not a PathWayCondition there can only be 1 LearningSpacePe, so we do not have to construct a boolean algebra expression.
+            // Create  Space Requirements
+            // If the inbound-type is not a PathWayCondition there can only be 1 SpacePe, so we do not have to construct a boolean algebra expression.
             // If the inbound-type is a PathWayCondition, we have to construct a boolean algebra expression.
-            if (learningSpace.InBoundObjects.Count > 0)
+            if (space.InBoundObjects.Count > 0)
             {
-                foreach (var inbound in learningSpace.InBoundObjects)
+                foreach (var inbound in space.InBoundObjects)
                 {
                     if (inbound is PathWayConditionPe curCondition)
                     {
@@ -256,20 +256,20 @@ public class CreateDsl : ICreateDsl
                 }
             }
 
-            // Add the constructed Learning Space to Learning World
-            LearningWorldJson.LearningSpaces.Add(new LearningSpaceJson(learningSpaceId,
-                learningSpaceIdentifier, _listLearningSpaceContent, 
-                learningSpace.RequiredPoints, 
-                learningSpace.LearningSpaceLayout.ContainedLearningElements.Sum(element => element.Points),
-                learningSpace.Description, learningSpace.Goals, requirements:_booleanAlgebraRequirements));
+            // Add the constructed  Space to  World
+            WorldJson.Spaces.Add(new SpaceJson(spaceId,
+                spaceIdentifier, _listSpaceContent, 
+                space.RequiredPoints, 
+                space.SpaceLayout.ContainedElements.Sum(element => element.Points),
+                space.Description, space.Goals, requirements:_booleanAlgebraRequirements));
             
-            learningSpaceId++;
+            spaceId++;
         }
 
         // Create DocumentRoot & JSON Document
-        // And add the learningWorldJson to the DocumentRoot
-        // The structure of the DSL needs DocumentRoot, because the learningWorld has its own tag
-        DocumentRootJson rootJson = new DocumentRootJson(LearningWorldJson);
+        // And add the WorldJson to the DocumentRoot
+        // The structure of the DSL needs DocumentRoot, because the world has its own tag
+        DocumentRootJson rootJson = new DocumentRootJson(WorldJson);
 
         var options = new JsonSerializerOptions { WriteIndented = true,  PropertyNamingPolicy = JsonNamingPolicy.CamelCase};
         var jsonFile = JsonSerializer.Serialize(rootJson,options);
@@ -287,18 +287,18 @@ public class CreateDsl : ICreateDsl
         BackupFileGenerator createFolders = new BackupFileGenerator(_fileSystem);
         createFolders.CreateBackupFolders();
         
-        //All LearningElements are created at the specified location = Easier access to files in further Export-Operations.
+        //All Lelements are created at the specified location = Easier access to files in further Export-Operations.
         //After the files are added to the Backup-Structure, these Files will be deleted.
-        foreach (var learningElement in ListLearningElementsWithContents)
+        foreach (var element in ListElementsWithContents)
         {
             try
             {
-                _fileSystem.File.Copy(learningElement.LearningContent.Filepath,
-                    _fileSystem.Path.Join("XMLFilesForExport", $"{learningElement.Name}.{learningElement.LearningContent.Type}"));
+                _fileSystem.File.Copy(element.Content.Filepath,
+                    _fileSystem.Path.Join("XMLFilesForExport", $"{element.Name}.{element.Content.Type}"));
             }
             catch (Exception)
             {
-                Console.WriteLine("Something went wrong while creating the LearningElements for the Backup-Structure.");
+                Console.WriteLine("Something went wrong while creating the Elements for the Backup-Structure.");
                 throw;
             }
         }

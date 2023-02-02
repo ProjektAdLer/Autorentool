@@ -34,7 +34,7 @@ public class PathWayConditionUt
         
         var systemUnderTest = new PathWayCondition(condition, positionX, positionY);
 
-        var learningSpaceMemento = systemUnderTest.GetMemento();
+        var spaceMemento = systemUnderTest.GetMemento();
         
         var conditionChanged = ConditionEnum.Or;
         var positionXChanged = 10f;
@@ -51,7 +51,7 @@ public class PathWayConditionUt
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionYChanged));
         });
         
-        systemUnderTest.RestoreMemento(learningSpaceMemento);
+        systemUnderTest.RestoreMemento(spaceMemento);
         
         Assert.Multiple(() =>
         {
@@ -62,7 +62,7 @@ public class PathWayConditionUt
     }
 
     [Test]
-    public void RestoreMemento_MementoIsNotLearningSpaceMemento_ThrowsException()
+    public void RestoreMemento_MementoIsNotSpaceMemento_ThrowsException()
     {
         var condition = ConditionEnum.And;
         var positionX = 5f;

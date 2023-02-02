@@ -1,0 +1,64 @@
+﻿@using Shared
+@using Presentation.Components
+@using Presentation.PresentationLogic.Element
+<MudMenu ActivationEvent="MouseEvent.RightClick" PositionAtCursor="true" @onclick="() => OnClicked.InvokeAsync(Element)">
+    <ActivatorContent>
+        <MudCard Class="flex">
+            @{
+                var item = Element;
+                var text = item.Name;
+            }
+            <MudListItem Text="@text"></MudListItem>
+            <MudIcon Icon="@GetDifficultyIcon(Element.Difficulty)"/>
+        </MudCard>
+    </ActivatorContent>
+    <ChildContent>
+        <MudMenuItem OnClick="() => OnShowElementContent.InvokeAsync(Element)">Show</MudMenuItem>
+        <MudMenuItem OnClick="() => OnEditElement.InvokeAsync(Element)">Edit</MudMenuItem>
+        <MudMenuItem OnClick="() => OnDeleteElement.InvokeAsync(Element)">Delete</MudMenuItem>
+    </ChildContent>
+</MudMenu>
+
+@code {
+
+    [Parameter, EditorRequired]
+    public IElementViewModel Element { get; set; } = null!;
+
+    [Parameter, EditorRequired]
+    public EventCallback<IElementViewModel> OnShowElementContent { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<IElementViewModel> OnEditElement { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<IElementViewModel> OnDeleteElement { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<IElementViewModel> OnClicked { get; set; }
+
+    [Parameter]
+    public EventCallback<IElementViewModel> OnDoubleClicked { get; set; }
+
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (Element is null)
+        {
+            throw new ArgumentNullException(nameof(Element));
+        }
+    }
+
+    internal static string GetDifficultyIcon(ElementDifficultyEnum difficulty)
+    {
+        return difficulty switch
+        {
+            ElementDifficultyEnum.Easy => CustomIcons.DifficultyPolygonEasy,
+            ElementDifficultyEnum.Medium => CustomIcons.DifficultyPolygonMedium,
+            ElementDifficultyEnum.Hard => CustomIcons.DifficultyPolygonHard,
+            ElementDifficultyEnum.None => CustomIcons.DifficultyPolygonNone,
+            _ => throw new ArgumentOutOfRangeException(nameof(difficulty))
+            };
+    }
+
+}

@@ -5,14 +5,14 @@ namespace Presentation.PresentationLogic.ModalDialog;
 public interface IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory
 {
     /// <summary>
-    /// Get the input fields for the create learning world modal dialog.
+    /// Get the input fields for the create world modal dialog.
     /// </summary>
     /// <returns>The input fields for the modal dialog.</returns>
-    IEnumerable<ModalDialogInputField> GetCreateLearningWorldInputFields();
+    IEnumerable<ModalDialogInputField> GetCreateWorldInputFields();
     
     /// <summary>
     /// Get the input fields for the edit world modal dialog.
     /// </summary>
     /// <returns>The input fields for the modal dialog.</returns>
-    IEnumerable<ModalDialogInputField> GetEditLearningWorldInputFields();
+    IEnumerable<ModalDialogInputField> GetEditWorldInputFields();
 }

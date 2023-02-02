@@ -6,7 +6,7 @@ using Bunit;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.ModalDialog;
-using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.Content;
 using Presentation.PresentationLogic.ModalDialog;
 using TestContext = Bunit.TestContext;
 
@@ -24,13 +24,13 @@ public class ModalDialogFactoryUt
     }
 
     [Test]
-    public void ILearningSpaceViewModalDialogFactory_GetCreateLearningElementFragment_returnsFragment()
+    public void ISpaceViewModalDialogFactory_GetCreateElementFragment_returnsFragment()
     {
         // Arrange
-        ILearningSpaceViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
+        ISpaceViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
 
         // Act
-        var fragment = systemUnderTest.GetCreateLearningElementFragment(null, _ => { });
+        var fragment = systemUnderTest.GetCreateElementFragment(null, _ => { });
         var renderedFragment = ctx.Render(fragment);
 
         // Assert
@@ -43,161 +43,161 @@ public class ModalDialogFactoryUt
 
 
     [Test]
-    public void ILearningSpaceViewModalDialogFactory_GetCreateLearningElement_CallsModalDialogInputFieldsFactory()
+    public void ISpaceViewModalDialogFactory_GetCreateElement_CallsModalDialogInputFieldsFactory()
     {
         //Arrange
-        var spaceViewInputFieldsFactory = Substitute.For<ILearningSpaceViewModalDialogInputFieldsFactory>();
-        ILearningSpaceViewModalDialogFactory systemUnderTest = CreateFactoryForTesting(spaceViewInputFieldsFactory);
+        var spaceViewInputFieldsFactory = Substitute.For<ISpaceViewModalDialogInputFieldsFactory>();
+        ISpaceViewModalDialogFactory systemUnderTest = CreateFactoryForTesting(spaceViewInputFieldsFactory);
 
         //Act
-        systemUnderTest.GetCreateLearningElementFragment(null, _ => { });
+        systemUnderTest.GetCreateElementFragment(null, _ => { });
 
         //Assert
         spaceViewInputFieldsFactory.Received()
-            .GetCreateLearningElementInputFields(Arg.Any<LearningContentViewModel>());
+            .GetCreateElementInputFields(Arg.Any<ContentViewModel>());
     }
 
     [Test]
-    public void ILearningSpaceViewModalDialogFactory_GetCreateLearningElement_ReturnsFragment()
+    public void ISpaceViewModalDialogFactory_GetCreateElement_ReturnsFragment()
     {
         //Arrange
-        ILearningSpaceViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
+        ISpaceViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
 
         //Act
-        var fragment = systemUnderTest.GetCreateLearningElementFragment(null, _ => { });
+        var fragment = systemUnderTest.GetCreateElementFragment(null, _ => { });
         var renderedFragment = ctx.Render(fragment);
 
         //Assert
-        TestCreateOrEditLearningElementOrSpaceOrConditionModalDialog(renderedFragment, true, ObjectType.LearningElement);
+        TestCreateOrEditElementOrSpaceOrConditionModalDialog(renderedFragment, true, ObjectType.Element);
     }
 
 
     [Test]
-    public void ILearningSpaceViewModalDialogFactory_GetEditLearningElement_CallsModalDialogInputFieldsFactory()
+    public void ISpaceViewModalDialogFactory_GetEditElement_CallsModalDialogInputFieldsFactory()
     {
         //Arrange
-        var spaceViewInputFieldsFactory = Substitute.For<ILearningSpaceViewModalDialogInputFieldsFactory>();
-        ILearningSpaceViewModalDialogFactory systemUnderTest = CreateFactoryForTesting(spaceViewInputFieldsFactory);
+        var spaceViewInputFieldsFactory = Substitute.For<ISpaceViewModalDialogInputFieldsFactory>();
+        ISpaceViewModalDialogFactory systemUnderTest = CreateFactoryForTesting(spaceViewInputFieldsFactory);
 
         //Act
-        systemUnderTest.GetEditLearningElementFragment(new Dictionary<string, string>(), _ => { });
+        systemUnderTest.GetEditElementFragment(new Dictionary<string, string>(), _ => { });
 
         //Assert
-        spaceViewInputFieldsFactory.Received().GetEditLearningElementInputFields();
+        spaceViewInputFieldsFactory.Received().GetEditElementInputFields();
     }
 
     [Test]
-    public void ILearningSpaceViewModalDialogFactory_GetEditLearningElement_ReturnsFragment()
+    public void ISpaceViewModalDialogFactory_GetEditElement_ReturnsFragment()
     {
         //Arrange
-        ILearningSpaceViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
+        ISpaceViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
 
         //Act
         var fragment =
-            systemUnderTest.GetEditLearningElementFragment(new Dictionary<string, string>() {{"UnitTest", "TestValue"}},
+            systemUnderTest.GetEditElementFragment(new Dictionary<string, string>() {{"UnitTest", "TestValue"}},
                 _ => { });
         var renderedFragment = ctx.Render(fragment);
 
         //Assert
-        TestCreateOrEditLearningElementOrSpaceOrConditionModalDialog(renderedFragment, false, ObjectType.LearningElement);
+        TestCreateOrEditElementOrSpaceOrConditionModalDialog(renderedFragment, false, ObjectType.Element);
     }
 
     [Test]
-    public void ILearningSpaceViewModalDialogFactory_GetEditLearningSpace_CallsModalDialogInputFieldsFactory()
+    public void ISpaceViewModalDialogFactory_GetEditSpace_CallsModalDialogInputFieldsFactory()
     {
         //Arrange
-        var spaceViewInputFieldsFactory = Substitute.For<ILearningSpaceViewModalDialogInputFieldsFactory>();
-        ILearningSpaceViewModalDialogFactory systemUnderTest = CreateFactoryForTesting(spaceViewInputFieldsFactory);
+        var spaceViewInputFieldsFactory = Substitute.For<ISpaceViewModalDialogInputFieldsFactory>();
+        ISpaceViewModalDialogFactory systemUnderTest = CreateFactoryForTesting(spaceViewInputFieldsFactory);
 
         //Act
-        systemUnderTest.GetEditLearningSpaceFragment(new Dictionary<string, string>(), _ => { });
+        systemUnderTest.GetEditSpaceFragment(new Dictionary<string, string>(), _ => { });
 
         //Assert
-        spaceViewInputFieldsFactory.Received().GetEditLearningSpaceInputFields();
+        spaceViewInputFieldsFactory.Received().GetEditSpaceInputFields();
     }
 
     [Test]
-    public void ILearningSpaceViewModalDialogFactory_GetEditLearningSpace_ReturnsFragment()
+    public void ISpaceViewModalDialogFactory_GetEditSpace_ReturnsFragment()
     {
         //Arrange
-        ILearningSpaceViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
+        ISpaceViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
 
         //Act
         var fragment =
-            systemUnderTest.GetEditLearningSpaceFragment(new Dictionary<string, string>() {{"UnitTest", "TestValue"}},
+            systemUnderTest.GetEditSpaceFragment(new Dictionary<string, string>() {{"UnitTest", "TestValue"}},
                 _ => { });
         var renderedFragment = ctx.Render(fragment);
 
         //Assert
-        TestCreateOrEditLearningElementOrSpaceOrConditionModalDialog(renderedFragment, false, ObjectType.LearningSpace);
+        TestCreateOrEditElementOrSpaceOrConditionModalDialog(renderedFragment, false, ObjectType.Space);
     }
 
     [Test]
-    public void ILearningWorldViewModalDialogFactory_GetCreateLearningSpace_CallsModalDialogInputFieldsFactory()
+    public void IWorldViewModalDialogFactory_GetCreateSpace_CallsModalDialogInputFieldsFactory()
     {
         //Arrange
-        var worldViewInputFieldsFactory = Substitute.For<ILearningWorldViewModalDialogInputFieldsFactory>();
-        ILearningWorldViewModalDialogFactory systemUnderTest =
+        var worldViewInputFieldsFactory = Substitute.For<IWorldViewModalDialogInputFieldsFactory>();
+        IWorldViewModalDialogFactory systemUnderTest =
             CreateFactoryForTesting(worldViewInputFieldsFactory: worldViewInputFieldsFactory);
 
         //Act
-        systemUnderTest.GetCreateLearningSpaceFragment(_ => { });
+        systemUnderTest.GetCreateSpaceFragment(_ => { });
 
         //Assert
-        worldViewInputFieldsFactory.Received().GetCreateLearningSpaceInputFields();
+        worldViewInputFieldsFactory.Received().GetCreateSpaceInputFields();
     }
 
     [Test]
-    public void ILearningWorldViewModalDialogFactory_GetCreateLearningSpace_ReturnsFragment()
+    public void IWorldViewModalDialogFactory_GetCreateSpace_ReturnsFragment()
     {
         //Arrange
-        ILearningWorldViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
+        IWorldViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
 
         //Act
-        var fragment = systemUnderTest.GetCreateLearningSpaceFragment(_ => { });
+        var fragment = systemUnderTest.GetCreateSpaceFragment(_ => { });
         var renderedFragment = ctx.Render(fragment);
 
         //Assert
-        TestCreateOrEditLearningElementOrSpaceOrConditionModalDialog(renderedFragment, true, ObjectType.LearningSpace);
+        TestCreateOrEditElementOrSpaceOrConditionModalDialog(renderedFragment, true, ObjectType.Space);
     }
 
     [Test]
-    public void ILearningWorldViewModalDialogFactory_GetEditLearningSpace_CallsModalDialogInputFieldsFactory()
+    public void IWorldViewModalDialogFactory_GetEditSpace_CallsModalDialogInputFieldsFactory()
     {
         //Arrange
-        var worldViewInputFieldsFactory = Substitute.For<ILearningWorldViewModalDialogInputFieldsFactory>();
-        ILearningWorldViewModalDialogFactory systemUnderTest =
+        var worldViewInputFieldsFactory = Substitute.For<IWorldViewModalDialogInputFieldsFactory>();
+        IWorldViewModalDialogFactory systemUnderTest =
             CreateFactoryForTesting(worldViewInputFieldsFactory: worldViewInputFieldsFactory);
 
         //Act
-        systemUnderTest.GetEditLearningSpaceFragment(new Dictionary<string, string>(), _ => { });
+        systemUnderTest.GetEditSpaceFragment(new Dictionary<string, string>(), _ => { });
 
         //Assert
-        worldViewInputFieldsFactory.Received().GetEditLearningSpaceInputFields();
+        worldViewInputFieldsFactory.Received().GetEditSpaceInputFields();
     }
 
     [Test]
-    public void ILearningWorldViewModalDialogFactory_GetEditLearningSpace_ReturnsFragment()
+    public void IWorldViewModalDialogFactory_GetEditSpace_ReturnsFragment()
     {
         //Arrange
-        ILearningWorldViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
+        IWorldViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
 
         //Act
         var fragment =
-            systemUnderTest.GetEditLearningSpaceFragment(new Dictionary<string, string>() {{"UnitTest", "TestValue"}},
+            systemUnderTest.GetEditSpaceFragment(new Dictionary<string, string>() {{"UnitTest", "TestValue"}},
                 _ => { });
         var renderedFragment = ctx.Render(fragment);
 
         //Assert
-        TestCreateOrEditLearningElementOrSpaceOrConditionModalDialog(renderedFragment, false, ObjectType.LearningSpace);
+        TestCreateOrEditElementOrSpaceOrConditionModalDialog(renderedFragment, false, ObjectType.Space);
     }
     
     [Test]
-    public void ILearningWorldViewModalDialogFactory_GetCreatePathWayCondition_CallsModalDialogInputFieldsFactory()
+    public void IWorldViewModalDialogFactory_GetCreatePathWayCondition_CallsModalDialogInputFieldsFactory()
     {
         //Arrange
-        var worldViewInputFieldsFactory = Substitute.For<ILearningWorldViewModalDialogInputFieldsFactory>();
-        ILearningWorldViewModalDialogFactory systemUnderTest =
+        var worldViewInputFieldsFactory = Substitute.For<IWorldViewModalDialogInputFieldsFactory>();
+        IWorldViewModalDialogFactory systemUnderTest =
             CreateFactoryForTesting(worldViewInputFieldsFactory: worldViewInputFieldsFactory);
 
         //Act
@@ -208,25 +208,25 @@ public class ModalDialogFactoryUt
     }
 
     [Test]
-    public void ILearningWorldViewModalDialogFactory_GetCreatePathWayCondition_ReturnsFragment()
+    public void IWorldViewModalDialogFactory_GetCreatePathWayCondition_ReturnsFragment()
     {
         //Arrange
-        ILearningWorldViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
+        IWorldViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
 
         //Act
         var fragment = systemUnderTest.GetCreatePathWayConditionFragment(_ => { });
         var renderedFragment = ctx.Render(fragment);
 
         //Assert
-        TestCreateOrEditLearningElementOrSpaceOrConditionModalDialog(renderedFragment, true, ObjectType.PathWayCondition);
+        TestCreateOrEditElementOrSpaceOrConditionModalDialog(renderedFragment, true, ObjectType.PathWayCondition);
     }
 
     [Test]
-    public void ILearningWorldViewModalDialogFactory_GetEditPathWayCondition_CallsModalDialogInputFieldsFactory()
+    public void IWorldViewModalDialogFactory_GetEditPathWayCondition_CallsModalDialogInputFieldsFactory()
     {
         //Arrange
-        var worldViewInputFieldsFactory = Substitute.For<ILearningWorldViewModalDialogInputFieldsFactory>();
-        ILearningWorldViewModalDialogFactory systemUnderTest =
+        var worldViewInputFieldsFactory = Substitute.For<IWorldViewModalDialogInputFieldsFactory>();
+        IWorldViewModalDialogFactory systemUnderTest =
             CreateFactoryForTesting(worldViewInputFieldsFactory: worldViewInputFieldsFactory);
 
         //Act
@@ -237,10 +237,10 @@ public class ModalDialogFactoryUt
     }
 
     [Test]
-    public void ILearningWorldViewModalDialogFactory_GetEditPathWayCondition_ReturnsFragment()
+    public void IWorldViewModalDialogFactory_GetEditPathWayCondition_ReturnsFragment()
     {
         //Arrange
-        ILearningWorldViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
+        IWorldViewModalDialogFactory systemUnderTest = CreateFactoryForTesting();
 
         //Act
         var fragment =
@@ -249,10 +249,10 @@ public class ModalDialogFactoryUt
         var renderedFragment = ctx.Render(fragment);
 
         //Assert
-        TestCreateOrEditLearningElementOrSpaceOrConditionModalDialog(renderedFragment, false, ObjectType.PathWayCondition);
+        TestCreateOrEditElementOrSpaceOrConditionModalDialog(renderedFragment, false, ObjectType.PathWayCondition);
     }
 
-    private static void TestCreateOrEditLearningElementOrSpaceOrConditionModalDialog(IRenderedFragment renderedFragment,
+    private static void TestCreateOrEditElementOrSpaceOrConditionModalDialog(IRenderedFragment renderedFragment,
         bool isCreate, ObjectType objectType)
     {
         Assert.Multiple(() => { Assert.That(renderedFragment, Is.Not.Null); });
@@ -286,7 +286,7 @@ public class ModalDialogFactoryUt
         var objectTypeString = GetObjectTypeString(objectType);
         switch (objectType)
         {
-            case ObjectType.LearningElement or ObjectType.LearningSpace:
+            case ObjectType.Element or ObjectType.Space:
                 TestModalBody(renderedFragment, $"Please enter the required data for the {objectTypeString} below:",
                     true);
                 break;
@@ -303,8 +303,8 @@ public class ModalDialogFactoryUt
     {
         return objectType switch
         {
-            ObjectType.LearningElement => "learning element",
-            ObjectType.LearningSpace => "learning space",
+            ObjectType.Element => "element",
+            ObjectType.Space => "space",
             ObjectType.PathWayCondition => "pathway condition",
             _ => throw new ArgumentOutOfRangeException(nameof(objectType), objectType, null)
         };
@@ -312,8 +312,8 @@ public class ModalDialogFactoryUt
     
     private enum ObjectType
     {
-        LearningElement,
-        LearningSpace,
+        Element,
+        Space,
         PathWayCondition
     }
 
@@ -389,7 +389,7 @@ public class ModalDialogFactoryUt
 
     [Test]
     public void
-        IAuthoringToolWorkspaceViewModalDialogFactory_GetCreateLearningWorldFragment_CallsModalDialogInputFieldsFactory()
+        IAuthoringToolWorkspaceViewModalDialogFactory_GetCreateWorldFragment_CallsModalDialogInputFieldsFactory()
     {
         //Arrange
         var authoringToolWorkspaceViewInputFieldsFactory =
@@ -399,19 +399,19 @@ public class ModalDialogFactoryUt
                 authoringToolWorkspaceViewModalDialogInputFieldsFactory: authoringToolWorkspaceViewInputFieldsFactory);
 
         //Act
-        systemUnderTest.GetCreateLearningWorldFragment(_ => { });
+        systemUnderTest.GetCreateWorldFragment(_ => { });
 
         //Assert
-        authoringToolWorkspaceViewInputFieldsFactory.Received().GetCreateLearningWorldInputFields();
+        authoringToolWorkspaceViewInputFieldsFactory.Received().GetCreateWorldInputFields();
     }
 
     [Test]
-    public void IAuthoringToolWorkspaceViewModalDialogFactory_GetCreateLearningWorldFragment_ReturnsFragment()
+    public void IAuthoringToolWorkspaceViewModalDialogFactory_GetCreateWorldFragment_ReturnsFragment()
     {
         //Arrange
         var authoringToolWorkspaceViewInputFieldsFactory =
             Substitute.For<IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory>();
-        authoringToolWorkspaceViewInputFieldsFactory.GetCreateLearningWorldInputFields().Returns(
+        authoringToolWorkspaceViewInputFieldsFactory.GetCreateWorldInputFields().Returns(
             new ModalDialogInputField[]
                 {new("UnitTest", ModalDialogInputType.Text, true)});
         IAuthoringToolWorkspaceViewModalDialogFactory systemUnderTest =
@@ -419,7 +419,7 @@ public class ModalDialogFactoryUt
                 authoringToolWorkspaceViewModalDialogInputFieldsFactory: authoringToolWorkspaceViewInputFieldsFactory);
 
         //Act
-        var fragment = systemUnderTest.GetCreateLearningWorldFragment(_ => { });
+        var fragment = systemUnderTest.GetCreateWorldFragment(_ => { });
         var renderedFragment = ctx.Render(fragment);
 
         //Assert
@@ -427,15 +427,15 @@ public class ModalDialogFactoryUt
         //{
             Assert.That(renderedFragment, Is.Not.Null);
             TestModalDialogBasicStructure(renderedFragment);
-            TestDialogHeader(renderedFragment, "Create new learning world", true);
-            TestModalBody(renderedFragment, "Please enter the required data for the learning world below:", true);
+            TestDialogHeader(renderedFragment, "Create new world", true);
+            TestModalBody(renderedFragment, "Please enter the required data for the world below:", true);
             TestFooterOkCancel(renderedFragment);
         //});
     }
 
     [Test]
     public void
-        IAuthoringToolWorkspaceViewModalDialogFactory_GetEditLearningWorldFragment_CallsModalDialogInputFieldsFactory()
+        IAuthoringToolWorkspaceViewModalDialogFactory_GetEditWorldFragment_CallsModalDialogInputFieldsFactory()
     {
         //Arrange
         var authoringToolWorkspaceViewInputFieldsFactory =
@@ -445,19 +445,19 @@ public class ModalDialogFactoryUt
                 authoringToolWorkspaceViewModalDialogInputFieldsFactory: authoringToolWorkspaceViewInputFieldsFactory);
 
         //Act
-        systemUnderTest.GetEditLearningWorldFragment(new Dictionary<string, string>(), _ => { });
+        systemUnderTest.GetEditWorldFragment(new Dictionary<string, string>(), _ => { });
 
         //Assert
-        authoringToolWorkspaceViewInputFieldsFactory.Received().GetEditLearningWorldInputFields();
+        authoringToolWorkspaceViewInputFieldsFactory.Received().GetEditWorldInputFields();
     }
 
     [Test]
-    public void IAuthoringToolWorkspaceViewModalDialogFactory_GetEditLearningWorldFragment_ReturnsFragment()
+    public void IAuthoringToolWorkspaceViewModalDialogFactory_GetEditWorldFragment_ReturnsFragment()
     {
         //Arrange
         var authoringToolWorkspaceViewInputFieldsFactory =
             Substitute.For<IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory>();
-        authoringToolWorkspaceViewInputFieldsFactory.GetEditLearningWorldInputFields().Returns(
+        authoringToolWorkspaceViewInputFieldsFactory.GetEditWorldInputFields().Returns(
             new ModalDialogInputField[]
                 {new("UnitTest", ModalDialogInputType.Text, true)});
         IAuthoringToolWorkspaceViewModalDialogFactory systemUnderTest =
@@ -466,7 +466,7 @@ public class ModalDialogFactoryUt
 
         //Act
         var fragment =
-            systemUnderTest.GetEditLearningWorldFragment(new Dictionary<string, string>() {{"UnitTest", "TestValue"}},
+            systemUnderTest.GetEditWorldFragment(new Dictionary<string, string>() {{"UnitTest", "TestValue"}},
                 _ => { });
         var renderedFragment = ctx.Render(fragment);
 
@@ -475,8 +475,8 @@ public class ModalDialogFactoryUt
         {
             Assert.That(renderedFragment, Is.Not.Null);
             TestModalDialogBasicStructure(renderedFragment);
-            TestDialogHeader(renderedFragment, "Edit existing learning world", true);
-            TestModalBody(renderedFragment, "Please enter the required data for the learning world below:", true);
+            TestDialogHeader(renderedFragment, "Edit existing world", true);
+            TestModalBody(renderedFragment, "Please enter the required data for the world below:", true);
             TestFooterOkCancel(renderedFragment);
         });
     }
@@ -633,8 +633,8 @@ public class ModalDialogFactoryUt
     }
 
     private static ModalDialogFactory CreateFactoryForTesting(
-        ILearningSpaceViewModalDialogInputFieldsFactory? spaceViewInputFieldsFactory = null,
-        ILearningWorldViewModalDialogInputFieldsFactory? worldViewInputFieldsFactory = null,
+        ISpaceViewModalDialogInputFieldsFactory? spaceViewInputFieldsFactory = null,
+        IWorldViewModalDialogInputFieldsFactory? worldViewInputFieldsFactory = null,
         IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory?
             authoringToolWorkspaceViewModalDialogInputFieldsFactory = null)
     {
@@ -643,24 +643,24 @@ public class ModalDialogFactoryUt
 
         if (spaceViewInputFieldsFactory == null)
         {
-            spaceViewInputFieldsFactory = Substitute.For<ILearningSpaceViewModalDialogInputFieldsFactory>();
+            spaceViewInputFieldsFactory = Substitute.For<ISpaceViewModalDialogInputFieldsFactory>();
 
             spaceViewInputFieldsFactory
-                .GetCreateLearningElementInputFields(Arg.Any<LearningContentViewModel>())
+                .GetCreateElementInputFields(Arg.Any<ContentViewModel>())
                 .Returns(modalDialogInputFieldReturnValue);
 
-            spaceViewInputFieldsFactory.GetEditLearningElementInputFields().Returns(modalDialogInputFieldReturnValue);
+            spaceViewInputFieldsFactory.GetEditElementInputFields().Returns(modalDialogInputFieldReturnValue);
 
-            spaceViewInputFieldsFactory.GetEditLearningSpaceInputFields().Returns(modalDialogInputFieldReturnValue);
+            spaceViewInputFieldsFactory.GetEditSpaceInputFields().Returns(modalDialogInputFieldReturnValue);
         }
 
         if (worldViewInputFieldsFactory == null)
         {
-            worldViewInputFieldsFactory = Substitute.For<ILearningWorldViewModalDialogInputFieldsFactory>();
+            worldViewInputFieldsFactory = Substitute.For<IWorldViewModalDialogInputFieldsFactory>();
 
-            worldViewInputFieldsFactory.GetCreateLearningSpaceInputFields().Returns(modalDialogInputFieldReturnValue);
+            worldViewInputFieldsFactory.GetCreateSpaceInputFields().Returns(modalDialogInputFieldReturnValue);
 
-            worldViewInputFieldsFactory.GetEditLearningSpaceInputFields().Returns(modalDialogInputFieldReturnValue);
+            worldViewInputFieldsFactory.GetEditSpaceInputFields().Returns(modalDialogInputFieldReturnValue);
 
             worldViewInputFieldsFactory.GetCreatePathWayConditionInputFields()
                 .Returns(modalDialogInputFieldReturnValue);

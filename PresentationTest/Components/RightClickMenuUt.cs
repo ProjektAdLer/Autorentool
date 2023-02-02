@@ -11,8 +11,8 @@ using Presentation.Components;
 using Presentation.Components.RightClickMenu;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.LearningElement;
-using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.Element;
+using Presentation.PresentationLogic.Space;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.Components;
@@ -39,16 +39,16 @@ public class RightClickMenuUt
     [Test]
     public void StandardConstructor_AllPropertiesInitialized()
     {
-        var learningObject = Substitute.For<ILearningElementViewModel>();
+        var elementViewModel = Substitute.For<IElementViewModel>();
         var menuEntries = new List<RightClickMenuEntry>();
         var onClose = () => { };
 
         var systemUnderTest =
-            CreateRenderedDraggableComponent(learningObject, menuEntries, onClose);
+            CreateRenderedDraggableComponent(elementViewModel, menuEntries, onClose);
 
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.Instance.LearningObject, Is.EqualTo(learningObject));
+            Assert.That(systemUnderTest.Instance.ClickableObject, Is.EqualTo(elementViewModel));
             Assert.That(
                 systemUnderTest.Instance.MenuEntries, Is.EqualTo(menuEntries));
             Assert.That(
@@ -58,20 +58,20 @@ public class RightClickMenuUt
     }
     
     [Test]
-    public void OnParametersSet_WithILearningSpaceViewModel_RightClickMenuInitialized(){
-        var learningObject = Substitute.For<ILearningSpaceViewModel>();
+    public void OnParametersSet_WithISpaceViewModel_RightClickMenuInitialized(){
+        var spaceViewModel = Substitute.For<ISpaceViewModel>();
         var menuEntries = new List<RightClickMenuEntry>();
         var onClose = () => { };
 
-        var systemUnderTest = _testContext.RenderComponent<RightClickMenu<ILearningSpaceViewModel>>(parameters => parameters
-            .Add(p => p.LearningObject, learningObject)
+        var systemUnderTest = _testContext.RenderComponent<RightClickMenu<ISpaceViewModel>>(parameters => parameters
+            .Add(p => p.ClickableObject, spaceViewModel)
             .Add(p => p.MenuEntries, menuEntries)
             .Add(p => p.OnClose, onClose)
         );
 
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.Instance.LearningObject, Is.EqualTo(learningObject));
+            Assert.That(systemUnderTest.Instance.ClickableObject, Is.EqualTo(spaceViewModel));
             Assert.That(
                 systemUnderTest.Instance.MenuEntries, Is.EqualTo(menuEntries));
             Assert.That(
@@ -90,11 +90,11 @@ public class RightClickMenuUt
     [Test]
     public void OnParametersSet_WithUnsupportedType_ThrowsException()
     {
-        var learningObject = Substitute.For<IDisplayableLearningObject>();
+        var displayableObject = Substitute.For<IDisplayableObject>();
 
         Assert.Throws<ArgumentException>(() =>
-            _testContext.RenderComponent<RightClickMenu<IDisplayableLearningObject>>(parameters => parameters
-                .Add(p => p.LearningObject, learningObject)
+            _testContext.RenderComponent<RightClickMenu<IDisplayableObject>>(parameters => parameters
+                .Add(p => p.ClickableObject, displayableObject)
                 .Add(p => p.MenuEntries, new List<RightClickMenuEntry>())
                 .Add(p => p.OnClose, () => { })
             ));
@@ -103,13 +103,13 @@ public class RightClickMenuUt
     [Test]
     public void MenuEntryClicked_InvokesCallback()
     {
-        var learningObject = Substitute.For<ILearningElementViewModel>();
+        var elementViewModel = Substitute.For<IElementViewModel>();
         const string onOpenText = "Open";
         var onOpenClicked = Substitute.For<Action>();
         var menuEntries = new List<RightClickMenuEntry>(){new RightClickMenuEntry(onOpenText, onOpenClicked)};
 
         var systemUnderTest =
-            CreateRenderedDraggableComponent(learningObject, menuEntries);
+            CreateRenderedDraggableComponent(elementViewModel, menuEntries);
 
         systemUnderTest.FindAll("g").Last(x => x.InnerHtml.Contains("Open")).MouseDown(new MouseEventArgs());
         systemUnderTest.InvokeAsync(() => _mouseService.OnUp += Raise.EventWith(new MouseEventArgs()));
@@ -120,11 +120,11 @@ public class RightClickMenuUt
     [Test]
     public void OnClose_InvokesCallback()
     {
-        var learningObject = Substitute.For<ILearningElementViewModel>();
+        var elementViewModel = Substitute.For<IElementViewModel>();
         var onClose = Substitute.For<Action>();
 
         var systemUnderTest =
-            CreateRenderedDraggableComponent(learningObject, onClose: onClose);
+            CreateRenderedDraggableComponent(elementViewModel, onClose: onClose);
 
         systemUnderTest.FindAll("g").Last(x => x.InnerHtml.Contains("Close")).MouseDown(new MouseEventArgs());
         systemUnderTest.InvokeAsync(() => _mouseService.OnUp += Raise.EventWith(new MouseEventArgs()));
@@ -133,14 +133,14 @@ public class RightClickMenuUt
     }
 
 
-    private IRenderedComponent<RightClickMenu<ILearningElementViewModel>> CreateRenderedDraggableComponent(
-        ILearningElementViewModel? learningObject = null, List<RightClickMenuEntry>? menuEntries = null, Action? onClose = null)
+    private IRenderedComponent<RightClickMenu<IElementViewModel>> CreateRenderedDraggableComponent(
+        IElementViewModel? elementViewModel = null, List<RightClickMenuEntry>? menuEntries = null, Action? onClose = null)
     {
         menuEntries ??= new List<RightClickMenuEntry>();
         onClose ??= () => { };
 
-        return _testContext.RenderComponent<RightClickMenu<ILearningElementViewModel>>(parameters => parameters
-            .Add(p => p.LearningObject, learningObject)
+        return _testContext.RenderComponent<RightClickMenu<IElementViewModel>>(parameters => parameters
+            .Add(p => p.ClickableObject, elementViewModel)
             .Add(p => p.MenuEntries, menuEntries)
             .Add(p => p.OnClose, onClose)
         );

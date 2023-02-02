@@ -1,0 +1,313 @@
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.PresentationLogic.ModalDialog
+@using Presentation.View.Element
+@using Shared
+@using Presentation.Components.ModalDialog
+@using System.Text
+@using Presentation.PresentationLogic.Element
+@using Presentation.PresentationLogic.Space
+@using Presentation.PresentationLogic.Space.SpaceLayout.FloorPlans
+
+<h2>Space @SpaceP.SpaceVm?.Name</h2>
+<h5>Workload: @SpaceP.SpaceVm?.Workload minutes</h5>
+<h5>Points: @SpaceP.SpaceVm?.Points</h5>
+<button class="btn btn-primary add-element" @onclick="AddNewElement">Add Element</button>
+<button class="btn btn-primary load-element" @onclick="LoadElementAsync">Load Element</button>
+<h1>Anzahl Lernelemente: @SpaceP.SpaceVm?.SpaceLayout.Count</h1>
+@ChildContent
+<br>
+
+<MudDropZone T="IElementViewModel" Identifier="unplacedElements"
+             Class="rounded-lg border-2 border-solid mud-border-lines-default p-6 m-8 w-28 min-h-1 flex justify-center items-center flex-col">
+    <ItemRenderer>
+        @{
+            var item = (IElementViewModel) context;
+            var text = item.Name + " " + item.Parent?.Name;
+        }
+        <MudListItem Text="@text"></MudListItem>
+
+    </ItemRenderer>
+</MudDropZone>
+
+@if (SpaceP.SpaceVm != null)
+{
+@if (SpaceP.SpaceVm?.SelectedElement != null)
+{
+    <label id="element-info">
+        Selected element:
+        @SpaceP.SpaceVm.SelectedElement.Name,
+        Description: @SpaceP.SpaceVm.SelectedElement.Description
+    </label>
+    <br>
+    <button class="btn btn-primary edit-element" @onclick="EditSelectedElement">Edit selected Element</button>
+    <button class="btn btn-primary delete-element" @onclick="DeleteSelectedElement">Delete Element</button>
+    <button class="btn btn-primary save-element" @onclick="SaveSelectedElementAsync">Save selected Element</button>
+    <button class="btn btn-primary show-content" @onclick="ShowSelectedElementContentAsync">Show content of Element</button>
+}
+    <br>
+    <p>Select world:</p>
+    <select @onchange="args => SetSpaceLayout(args.Value!.ToString())"
+            value="@(SpaceP.SpaceVm?.SpaceLayout.FloorPlanName)">
+        @foreach (var floorPlan in Enum.GetValues(typeof(FloorPlanEnum)).Cast<FloorPlanEnum>())
+        {
+            <option value="@floorPlan">@floorPlan.ToString()</option>
+        }
+    </select>
+@if (SpaceP.SpaceVm != null)
+{
+    <div style="width: 600px; height: 400px; border: 2px solid orange;">
+        <div class="layout-shadow">
+            <div class="layout" style="@GetCornerPointsString(SpaceP.SpaceVm.SpaceLayout.FloorPlanViewModel) width: 600px; height: 400px; position: relative;">
+
+                @for (var i = 0; i < SpaceP.SpaceVm.SpaceLayout.Capacity; i++)
+                {
+                    var x = i;
+                    var identifier = SpaceP.SpaceVm.Id.ToString() + x;
+
+                    <MudDropZone T="IElementViewModel" Identifier="@identifier"
+                                 Class="rounded-lg border-2 border-solid mud-border-lines-default p-6 m-8 w-28 h-3 flex justify-center items-center"
+                                 style="@GetSlotPositionString(SpaceP.SpaceVm.SpaceLayout.FloorPlanViewModel, x)"
+                                 @onclick="() => AddNewElement(x)">
+                        <ItemRenderer>
+                            <DragDropElement
+                                Element="@context"
+                                OnShowElementContent="@SpaceP.ShowElementContent"
+                                OnEditElement="@SpaceP.EditElement"
+                                OnDeleteElement="@SpaceP.DeleteElement"
+                                OnClicked="@SpaceP.ClickedElement"/>
+                        </ItemRenderer>
+                    </MudDropZone>
+                }
+
+            </div>
+        </div>
+    </div>
+}
+
+@if (SpaceP.EditSpaceDialogOpen && SpaceP.SpaceVm != null)
+{
+    @ModalDialogFactory.GetEditSpaceFragment(
+        SpaceP.EditSpaceDialogInitialValues
+        ?? throw new InvalidOperationException("SpacePresenter.EditSpaceDialogInitialValues unexpectedly null"),
+        OnEditSpaceDialogClose)
+}
+
+@if (SpaceP.CreateElementDialogOpen)
+{
+    //Override nullability because SpaceVm can't be null at this point. - m.ho, n.stich
+    @ModalDialogFactory.GetCreateElementFragment(SpaceP.DragAndDropContent, OnCreateElementDialogClose)
+}
+
+@if (SpaceP.EditElementDialogOpen && SpaceP.SpaceVm != null)
+{
+    @ModalDialogFactory.GetEditElementFragment(
+        SpaceP.EditElementDialogInitialValues
+        ?? throw new InvalidOperationException("SpacePresenter.EditSpaceDialogInitialValues unexpectedly null"),
+        OnEditElementDialogClose)
+}
+}
+
+
+@code {
+#pragma warning disable CS8618 // injected by framework - n.stich
+    [Inject]
+    public ISpacePresenter SpaceP { get; set; }
+
+    [Inject]
+    public ISpaceViewModalDialogFactory ModalDialogFactory { get; set; }
+#pragma warning restore CS8618
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    //TODO: Instead of setting a value here we need some sort of central service that we can notify about the error to
+    //then display it in the UI - n.stich
+    internal ExceptionWrapper? ErrorState { get; private set; }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        SpaceP.OnUndoRedoPerformed += async () => await InvokeAsync(StateHasChanged);
+        SpaceP.PropertyChanged += (sender, earg) =>
+        {
+            if (earg.PropertyName == nameof(SpaceP.CreateElementDialogOpen)) InvokeAsync(StateHasChanged);
+        };
+    }
+
+    private void AddNewElement(int slotIndex)
+    {
+        if (SpaceP.SpaceVm?.SpaceLayout.GetElement(slotIndex) == null)
+        {
+            SpaceP.AddNewElement(slotIndex);
+        }
+    }
+
+    private void AddNewElement()
+    {
+        SpaceP.AddNewElement();
+    }
+
+    private void DeleteSelectedElement()
+    {
+        SpaceP.DeleteSelectedElement();
+    }
+
+    private async Task LoadElementAsync()
+    {
+    //TODO: Remove parameterless method and use the one with the parameter - AW
+        try
+        {
+            await LoadElementAsync(0);
+        }
+        catch (Exception e)
+        {
+            ErrorState = new ExceptionWrapper("", e);
+        }
+    }
+
+    private async Task LoadElementAsync(int slotIndex)
+    {
+        try
+        {
+            await SpaceP.LoadElementAsync(slotIndex);
+        }
+        catch (OperationCanceledException)
+        {
+    //nothing to do, show notification?
+        }
+        catch (Exception exception)
+        {
+            ErrorState = new ExceptionWrapper("Load element", exception);
+        }
+        finally
+        {
+    //we need to tell blazor explicitly to re-render our component after we added the loaded element
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task SaveSelectedElementAsync()
+    {
+        try
+        {
+            await SpaceP.SaveSelectedElementAsync();
+        }
+        catch (OperationCanceledException)
+        {
+    //nothing to do, show notification?
+        }
+        catch (Exception exception)
+        {
+            ErrorState = new ExceptionWrapper("Save element", exception);
+        }
+        finally
+        {
+    //we need to tell blazor explicitly to re-render our component after we added the loaded element
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private async Task ShowSelectedElementContentAsync()
+    {
+        try
+        {
+            await SpaceP.ShowSelectedElementContentAsync();
+        }
+        catch (OperationCanceledException)
+        {
+        }
+        catch (Exception exception)
+        {
+            ErrorState = new ExceptionWrapper("Show element content", exception);
+        }
+        finally
+        {
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+
+    private void OnCreateElementDialogClose(ModalDialogOnCloseResult closeResult)
+    {
+        SpaceP.OnCreateElementDialogClose(closeResult);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void EditElement(int slotIndex)
+    {
+        SpaceP.EditElement(slotIndex);
+    }
+
+    private void EditSelectedElement()
+    {
+        SpaceP.EditSelectedElement();
+    }
+
+    private void OnEditSpaceDialogClose(ModalDialogOnCloseResult closeResult)
+    {
+        SpaceP.OnEditSpaceDialogClose(closeResult);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void OnEditElementDialogClose(ModalDialogOnCloseResult closeResult)
+    {
+        SpaceP.OnEditElementDialogClose(closeResult);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private void SetSpaceLayout(string floorPlanName)
+    {
+        Enum.TryParse(floorPlanName, out FloorPlanEnum floorPlan);
+        SpaceP.SetSpaceLayout(floorPlan);
+        InvokeAsync(StateHasChanged);
+    }
+
+    private Task RightClickedDropItem(MouseEventArgs mouseEventArgs, IElementViewModel item)
+    {
+        SpaceP.RightClickedElement(item);
+        return Task.CompletedTask;
+    }
+
+    private Task DeleteRightClickedElement(IElementViewModel item)
+    {
+        SpaceP.DeleteElement(item);
+        return Task.CompletedTask;
+    }
+
+    private Task EditRightClickedElement(IElementViewModel item)
+    {
+        SpaceP.EditElement(item);
+        return Task.CompletedTask;
+    }
+
+    private string GetCornerPointsString(IFloorPlanViewModel floorPlan)
+    {
+        var cornerPointsString = new StringBuilder();
+        cornerPointsString.Append("clip-path: polygon(");
+        foreach (var cornerPoint in floorPlan.CornerPoints)
+        {
+            cornerPointsString.Append($"{cornerPoint.X}% {cornerPoint.Y}%, ");
+        }
+        if (floorPlan.CornerPoints.Any())
+        {
+            cornerPointsString.Length -= 2;
+        }
+        else
+        {
+            cornerPointsString.Append("0% 0%");
+        }
+        cornerPointsString.Append(");");
+        return cornerPointsString.ToString();
+    }
+
+    private String GetSlotPositionString(IFloorPlanViewModel floorPlanViewModel, int position)
+    {
+        var slotPosition = floorPlanViewModel.ElementSlotPositions[position];
+        var slotPositionString = new StringBuilder();
+        slotPositionString.Append("position: absolute; ");
+        slotPositionString.Append($"top: {slotPosition.Y}%; ");
+        slotPositionString.Append($"left: {slotPosition.X}%; ");
+        slotPositionString.Append("transform: translate(-50%, -50%);");
+        return slotPositionString.ToString();
+    }
+
+}

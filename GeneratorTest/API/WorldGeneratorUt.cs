@@ -50,15 +50,15 @@ public class WorldGeneratorUt
         var systemUnderTest = new WorldGenerator(mockBackupFileGen, mockCreateDsl, mockReadDsl, mockMapper, mockFileSystem);
 
         // Act
-        systemUnderTest.ConstructBackup(Arg.Any<LearningWorld>(), "DestinationPath");
+        systemUnderTest.ConstructBackup(Arg.Any<World>(), "DestinationPath");
         
         
         
         // Assert
         Assert.Multiple(()=>
         {
-            mockCreateDsl.Received().WriteLearningWorld(Arg.Any<LearningWorldPe>());
-            mockReadDsl.Received().ReadLearningWorld("", Arg.Any<DocumentRootJson?>());
+            mockCreateDsl.Received().WriteWorld(Arg.Any<WorldPe>());
+            mockReadDsl.Received().ReadWorld("", Arg.Any<DocumentRootJson?>());
             mockBackupFileGen.Received().WriteXmlFiles(Arg.Any<IReadDsl>());
             mockBackupFileGen.Received().WriteBackupFile("DestinationPath");
             

@@ -1,7 +1,7 @@
 ﻿namespace Generator.DSL;
 
 /// <summary>
-/// Topics are Sections in moodle. They include spaces and/or elements.
+/// Topics are Sections in moodle. They include spaces and/or Elements.
 /// </summary>
 public class TopicJson : ITopicJson
 {

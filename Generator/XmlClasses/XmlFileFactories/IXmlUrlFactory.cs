@@ -24,7 +24,7 @@ public interface IXmlUrlFactory
     IActivitiesInforefXmlInforef ActivitiesInforefXmlInforef { get; }
     IReadDsl ReadDsl { get; }
     void CreateUrlFactory();
-    void UrlSetParameters(List<LearningElementJson> urlList);
+    void UrlSetParameters(List<ElementJson> urlList);
     void SetParametersActivityUrl();
     void CreateActivityFolder(string moduleId);
 }

@@ -7,7 +7,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.Element;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.Components;
@@ -35,20 +35,20 @@ public class DraggableUt
     public void StandardConstructor_AllPropertiesInitialized()
     {
         RenderFragment childContent = builder => builder.AddContent(0, "<text/>");
-        var learningObject = Substitute.For<ILearningElementViewModel>();
+        var elementViewModel = Substitute.For<IElementViewModel>();
         double x = 10;
         double y = 20;
         Action<double> xChanged = _ => { };
         Action<double> yChanged = _ => { };
-        Action<ILearningElementViewModel> onClicked = _ => { };
+        Action<IElementViewModel> onClicked = _ => { };
 
         var systemUnderTest =
-            CreateRenderedDraggableComponent(childContent, learningObject, x, y, xChanged, yChanged, onClicked);
+            CreateRenderedDraggableComponent(childContent, elementViewModel, x, y, xChanged, yChanged, onClicked);
 
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Instance.ChildContent, Is.EqualTo(childContent));
-            Assert.That(systemUnderTest.Instance.LearningObject, Is.EqualTo(learningObject));
+            Assert.That(systemUnderTest.Instance.DraggableObject, Is.EqualTo(elementViewModel));
             Assert.That(systemUnderTest.Instance.X, Is.EqualTo(x));
             Assert.That(systemUnderTest.Instance.Y, Is.EqualTo(y));
             Assert.That(
@@ -66,30 +66,30 @@ public class DraggableUt
     [Test]
     public void ClickAndRelease_OnClickedTriggered()
     {
-        ILearningElementViewModel? onClickedEventTriggered = null;
-        var learningObject = Substitute.For<ILearningElementViewModel>();
+        IElementViewModel? onClickedEventTriggered = null;
+        var elementViewModel = Substitute.For<IElementViewModel>();
 
-        Action<ILearningElementViewModel> onClicked = e => { onClickedEventTriggered = e; };
+        Action<IElementViewModel> onClicked = e => { onClickedEventTriggered = e; };
 
         var systemUnderTest =
-            CreateRenderedDraggableComponent(null, learningObject, 0, 0, _ => { }, _ => { }, onClicked);
+            CreateRenderedDraggableComponent(null, elementViewModel, 0, 0, _ => { }, _ => { }, onClicked);
 
         systemUnderTest.WaitForElement("g").MouseDown(new MouseEventArgs());
         _mouseService.OnUp += Raise.EventWith(new MouseEventArgs());
 
-        Assert.That(onClickedEventTriggered, Is.EqualTo(learningObject));
+        Assert.That(onClickedEventTriggered, Is.EqualTo(elementViewModel));
     }
 
     [Test]
     public void ClickMoveAndRelease_OnClickedNotTriggered()
     {
-        ILearningElementViewModel? onClickedEventTriggered = null;
-        var learningObject = Substitute.For<ILearningElementViewModel>();
+        IElementViewModel? onClickedEventTriggered = null;
+        var elementViewModel = Substitute.For<IElementViewModel>();
 
-        Action<ILearningElementViewModel> onClicked = e => { onClickedEventTriggered = e; };
+        Action<IElementViewModel> onClicked = e => { onClickedEventTriggered = e; };
 
         var systemUnderTest =
-            CreateRenderedDraggableComponent(null, learningObject, 0, 0, _ => { }, _ => { }, onClicked);
+            CreateRenderedDraggableComponent(null, elementViewModel, 0, 0, _ => { }, _ => { }, onClicked);
 
         systemUnderTest.WaitForElement("g").MouseDown(new MouseEventArgs());
         _mouseService.OnMove += Raise.EventWith(new MouseEventArgs());
@@ -101,14 +101,14 @@ public class DraggableUt
     [Test]
     public void ClickMoveAndRelease_PositionChanged()
     {
-        var learningObject = Substitute.For<ILearningElementViewModel>();
+        var elementViewModel = Substitute.For<IElementViewModel>();
 
         double x = 10;
         double y = 20;
-        Action<ILearningElementViewModel> onClicked = _ => { };
+        Action<IElementViewModel> onClicked = _ => { };
 
         var systemUnderTest =
-            CreateRenderedDraggableComponent(null, learningObject, x, y, _ => { }, _ => { }, onClicked);
+            CreateRenderedDraggableComponent(null, elementViewModel, x, y, _ => { }, _ => { }, onClicked);
 
         systemUnderTest.WaitForElement("g").MouseDown(new MouseEventArgs());
         _mouseService.OnMove +=
@@ -125,20 +125,20 @@ public class DraggableUt
     [Test]
     public void ClickMoveAndRelease_OnDraggedTriggered()
     {
-        var learningObject = Substitute.For<ILearningElementViewModel>();
+        var elementViewModel = Substitute.For<IElementViewModel>();
         var onDraggedEventTriggered = false;
-        DraggedEventArgs<ILearningElementViewModel>? onDraggedEventArgs = null;
+        DraggedEventArgs<IElementViewModel>? onDraggedEventArgs = null;
 
         double x = 10;
         double y = 20;
-        Action<ILearningElementViewModel> onClicked = _ => { };
-        DraggedEventArgs<ILearningElementViewModel>.DraggedEventHandler onDragged = (_, args) => { 
+        Action<IElementViewModel> onClicked = _ => { };
+        DraggedEventArgs<IElementViewModel>.DraggedEventHandler onDragged = (_, args) => { 
             onDraggedEventTriggered = true; 
             onDraggedEventArgs = args; 
         };
 
         var systemUnderTest =
-            CreateRenderedDraggableComponent(null, learningObject, x, y, _ => { }, _ => { }, onClicked, onDragged);
+            CreateRenderedDraggableComponent(null, elementViewModel, x, y, _ => { }, _ => { }, onClicked, onDragged);
 
         systemUnderTest.WaitForElement("g").MouseDown(new MouseEventArgs());
         _mouseService.OnMove +=
@@ -155,7 +155,7 @@ public class DraggableUt
             Assert.That(onDraggedEventArgs, Is.Not.Null);
         Assert.Multiple(() =>
         {
-            Assert.That(onDraggedEventArgs!.LearningObject, Is.EqualTo(learningObject));
+            Assert.That(onDraggedEventArgs!.DraggableObject, Is.EqualTo(elementViewModel));
             Assert.That(onDraggedEventArgs.OldPositionX, Is.EqualTo(10));
             Assert.That(onDraggedEventArgs.OldPositionY, Is.EqualTo(20));
         });
@@ -164,14 +164,14 @@ public class DraggableUt
     [Test]
     public void MoveAndReleaseWithoutPreviousClick_PositionNotChanged()
     {
-        var learningObject = Substitute.For<ILearningElementViewModel>();
+        var elementViewModel = Substitute.For<IElementViewModel>();
 
         double x = 10;
         double y = 20;
-        Action<ILearningElementViewModel> onClicked = _ => { };
+        Action<IElementViewModel> onClicked = _ => { };
 
         var systemUnderTest =
-            CreateRenderedDraggableComponent(null, learningObject, x, y, _ => { }, _ => { }, onClicked);
+            CreateRenderedDraggableComponent(null, elementViewModel, x, y, _ => { }, _ => { }, onClicked);
 
         _mouseService.OnMove +=
             Raise.EventWith(new MouseEventArgs {ClientX = 13, ClientY = 24});
@@ -187,44 +187,44 @@ public class DraggableUt
     [Test]
     public void DoubleClick_OnDoubleClickTriggered()
     {
-        var learningObject = Substitute.For<ILearningElementViewModel>();
-        ILearningElementViewModel? onDoubleClickEventTriggered = null;
+        var elementViewModel = Substitute.For<IElementViewModel>();
+        IElementViewModel? onDoubleClickEventTriggered = null;
         
-        Action<ILearningElementViewModel> onDoubleClick = e => { onDoubleClickEventTriggered = e; };
+        Action<IElementViewModel> onDoubleClick = e => { onDoubleClickEventTriggered = e; };
 
         var systemUnderTest =
-            CreateRenderedDraggableComponent(null, learningObject,  onDoubleClicked: onDoubleClick);
+            CreateRenderedDraggableComponent(null, elementViewModel,  onDoubleClicked: onDoubleClick);
 
         systemUnderTest.WaitForElement("g").MouseDown(new MouseEventArgs());
         _mouseService.OnUp += Raise.EventWith(new MouseEventArgs());
         systemUnderTest.WaitForElement("g").MouseDown(new MouseEventArgs());
         _mouseService.OnUp += Raise.EventWith(new MouseEventArgs());
 
-        Assert.That(onDoubleClickEventTriggered, Is.EqualTo(learningObject));
+        Assert.That(onDoubleClickEventTriggered, Is.EqualTo(elementViewModel));
     }
     
     [Test]
     public void RightClick_OnRightClickedTriggered()
     {
-        var learningObject = Substitute.For<ILearningElementViewModel>();
-        ILearningElementViewModel? onRightClickedEventTriggered = null;
+        var elementViewModel = Substitute.For<IElementViewModel>();
+        IElementViewModel? onRightClickedEventTriggered = null;
         
-        Action<ILearningElementViewModel> onRightClicked = e => { onRightClickedEventTriggered = e; };
+        Action<IElementViewModel> onRightClicked = e => { onRightClickedEventTriggered = e; };
 
         var systemUnderTest =
-            CreateRenderedDraggableComponent(null, learningObject,  onRightClicked: onRightClicked);
+            CreateRenderedDraggableComponent(null, elementViewModel,  onRightClicked: onRightClicked);
 
         systemUnderTest.WaitForElement("g").MouseDown(new MouseEventArgs {Button = 2});
         _mouseService.OnUp += Raise.EventWith(new MouseEventArgs {Button = 2});
 
-        Assert.That(onRightClickedEventTriggered, Is.EqualTo(learningObject));
+        Assert.That(onRightClickedEventTriggered, Is.EqualTo(elementViewModel));
     }
 
-    private IRenderedComponent<Draggable<ILearningElementViewModel>> CreateRenderedDraggableComponent(RenderFragment? childContent = null,
-        ILearningElementViewModel? learningObject = null, double x = 0, double y = 0, Action<double>? xChanged = null,
-        Action<double>? yChanged = null, Action<ILearningElementViewModel>? onClicked = null, 
-        DraggedEventArgs<ILearningElementViewModel>.DraggedEventHandler? onDragged = null, Action<ILearningElementViewModel>? onDoubleClicked = null,
-        Action<ILearningElementViewModel>? onRightClicked = null)
+    private IRenderedComponent<Draggable<IElementViewModel>> CreateRenderedDraggableComponent(RenderFragment? childContent = null,
+        IElementViewModel? elementViewModel = null, double x = 0, double y = 0, Action<double>? xChanged = null,
+        Action<double>? yChanged = null, Action<IElementViewModel>? onClicked = null, 
+        DraggedEventArgs<IElementViewModel>.DraggedEventHandler? onDragged = null, Action<IElementViewModel>? onDoubleClicked = null,
+        Action<IElementViewModel>? onRightClicked = null)
     {
         xChanged ??= _ => { };
         yChanged ??= _ => { };
@@ -232,9 +232,9 @@ public class DraggableUt
         onDragged ??= (_,_) => { };
         onDoubleClicked ??= _ => { };
         onRightClicked ??= _ => { };
-        return _testContext.RenderComponent<Draggable<ILearningElementViewModel>>(parameters => parameters
+        return _testContext.RenderComponent<Draggable<IElementViewModel>>(parameters => parameters
             .Add(p => p.ChildContent, childContent)
-            .Add(p => p.LearningObject, learningObject)
+            .Add(p => p.DraggableObject, elementViewModel)
             .Add(p => p.X, x)
             .Add(p => p.Y, y)
             .Add(p => p.XChanged, xChanged)
