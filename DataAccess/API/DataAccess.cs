@@ -10,8 +10,8 @@ namespace DataAccess.API;
 
 public class DataAccess : IDataAccess
 {
-    public DataAccess(IAuthoringToolConfiguration configuration, IXmlFileHandler<WorldPe> xmlHandlerWorld, 
-        IXmlFileHandler<SpacePe> xmlHandlerSpace, IXmlFileHandler<ElementPe> xmlHandlerElement, 
+    public DataAccess(IAuthoringToolConfiguration configuration, IXmlFileHandler<LearningWorldPe> xmlHandlerWorld, 
+        IXmlFileHandler<LearningSpacePe> xmlHandlerSpace, IXmlFileHandler<LearningElementPe> xmlHandlerElement, 
         IContentFileHandler xmlHandlerContent, IFileSystem fileSystem, IMapper mapper)
     {
         XmlHandlerWorld = xmlHandlerWorld;
@@ -23,9 +23,9 @@ public class DataAccess : IDataAccess
         Mapper = mapper;
     }
 
-    public readonly IXmlFileHandler<WorldPe> XmlHandlerWorld;
-    public readonly IXmlFileHandler<SpacePe> XmlHandlerSpace;
-    public readonly IXmlFileHandler<ElementPe> XmlHandlerElement;
+    public readonly IXmlFileHandler<LearningWorldPe> XmlHandlerWorld;
+    public readonly IXmlFileHandler<LearningSpacePe> XmlHandlerSpace;
+    public readonly IXmlFileHandler<LearningElementPe> XmlHandlerElement;
     public readonly IContentFileHandler XmlHandlerContent;
     public readonly IFileSystem FileSystem;
     public IAuthoringToolConfiguration Configuration { get; }
@@ -33,59 +33,59 @@ public class DataAccess : IDataAccess
     
 
 
-    public void SaveWorldToFile(World world, string filepath)
+    public void SaveLearningWorldToFile(LearningWorld world, string filepath)
     {
-        XmlHandlerWorld.SaveToDisk(Mapper.Map<WorldPe>(world), filepath);
+        XmlHandlerWorld.SaveToDisk(Mapper.Map<LearningWorldPe>(world), filepath);
     }
 
-    public World LoadWorld(string filepath)
+    public LearningWorld LoadLearningWorld(string filepath)
     {
-        return Mapper.Map<World>(XmlHandlerWorld.LoadFromDisk(filepath));
+        return Mapper.Map<LearningWorld>(XmlHandlerWorld.LoadFromDisk(filepath));
     }
 
-    public World LoadWorld(Stream stream)
+    public LearningWorld LoadLearningWorld(Stream stream)
     {
-        return Mapper.Map<World>(XmlHandlerWorld.LoadFromStream(stream));
+        return Mapper.Map<LearningWorld>(XmlHandlerWorld.LoadFromStream(stream));
     }
 
-    public void SaveSpaceToFile(Space space, string filepath)
+    public void SaveLearningSpaceToFile(LearningSpace space, string filepath)
     {
-        XmlHandlerSpace.SaveToDisk(Mapper.Map<SpacePe>(space), filepath);
+        XmlHandlerSpace.SaveToDisk(Mapper.Map<LearningSpacePe>(space), filepath);
     }
 
-    public Space LoadSpace(string filepath)
+    public LearningSpace LoadLearningSpace(string filepath)
     {
-        return Mapper.Map<Space>(XmlHandlerSpace.LoadFromDisk(filepath));
+        return Mapper.Map<LearningSpace>(XmlHandlerSpace.LoadFromDisk(filepath));
     }
 
-    public Space LoadSpace(Stream stream)
+    public LearningSpace LoadLearningSpace(Stream stream)
     {
-        return Mapper.Map<Space>(XmlHandlerSpace.LoadFromStream(stream));
+        return Mapper.Map<LearningSpace>(XmlHandlerSpace.LoadFromStream(stream));
     }
 
-    public void SaveElementToFile(Element element, string filepath)
+    public void SaveLearningElementToFile(LearningElement element, string filepath)
     {
-        XmlHandlerElement.SaveToDisk(Mapper.Map<ElementPe>(element), filepath);
+        XmlHandlerElement.SaveToDisk(Mapper.Map<LearningElementPe>(element), filepath);
     }
 
-    public Element LoadElement(string filepath)
+    public LearningElement LoadLearningElement(string filepath)
     {
-        return Mapper.Map<Element>(XmlHandlerElement.LoadFromDisk(filepath));
+        return Mapper.Map<LearningElement>(XmlHandlerElement.LoadFromDisk(filepath));
     }
 
-    public Element LoadElement(Stream stream)
+    public LearningElement LoadLearningElement(Stream stream)
     {
-        return Mapper.Map<Element>(XmlHandlerElement.LoadFromStream(stream));
+        return Mapper.Map<LearningElement>(XmlHandlerElement.LoadFromStream(stream));
     }
 
-    public Content LoadContent(string filepath)
+    public LearningContent LoadLearningContent(string filepath)
     {
-        return Mapper.Map<Content>(XmlHandlerContent.LoadContentAsync(filepath).Result);
+        return Mapper.Map<LearningContent>(XmlHandlerContent.LoadContentAsync(filepath).Result);
     }
 
-    public Content LoadContent(string name, MemoryStream stream)
+    public LearningContent LoadLearningContent(string name, MemoryStream stream)
     {
-        return Mapper.Map<Content>(XmlHandlerContent.LoadContentAsync(name, stream).Result);
+        return Mapper.Map<LearningContent>(XmlHandlerContent.LoadContentAsync(name, stream).Result);
     }
 
     /// <inheritdoc cref="IDataAccess.FindSuitableNewSavePath"/>

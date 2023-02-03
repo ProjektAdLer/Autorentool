@@ -1,13 +1,13 @@
 @using Presentation.View.Layout
-@using Presentation.View.World
+@using Presentation.View.LearningWorld
 @using Presentation.Components.Forms
 @using Presentation.PresentationLogic.DropZone
-@using Presentation.PresentationLogic.Element
-@using Presentation.View.Space
+@using Presentation.PresentationLogic.LearningElement
+@using Presentation.View.LearningSpace
 @page "/app"
 <div class="flex flex-col h-screen w-screen bg-adlerblue-100 font-sans">
     <HeaderBar/>
-    <MudDropContainer T="IElementViewModel"
+    <MudDropContainer T="ILearningElementViewModel"
                       Items="ElementDropZoneHelper.GetWorldAndSpaceElements()"
                       ItemsSelector="ElementDropZoneHelper.IsItemInDropZone"
                       ItemDropped="ElementDropZoneHelper.ItemUpdated"
@@ -29,7 +29,7 @@
                             <p>Ico2</p>
                         </SidebarContent>
                         <MainContent>
-                            <MudDropZone T="IElementViewModel">
+                            <MudDropZone T="ILearningElementViewModel">
                                 <h2>DropZone1</h2>
                             </MudDropZone>
                         </MainContent>
@@ -39,7 +39,7 @@
             <CenterContainer>
                 <div class="bg-blue-400">
                     Center
-                    <SpaceView></SpaceView>
+                    <LearningSpaceView></LearningSpaceView>
                 </div>
             </CenterContainer>
             <SideContainer Side="Side.Right">
@@ -51,17 +51,17 @@
                             </div>
                         </SidebarContent>
                         <MainContent>
-                            <WorldView></WorldView>
+                            <LearningWorldView></LearningWorldView>
                         </MainContent>
                     </SidebarItem>
                     <SidebarItem>
                         <SidebarContent>
-                            <div title="WorldOverView">
+                            <div title="LearningWorldOverView">
                                 <img class="w-8" src="CustomIcons/hierarchy-nobg.png" alt="blabla">
                             </div>
                         </SidebarContent>
                         <MainContent>
-                            <WorldOverView></WorldOverView>
+                            <LearningWorldOverView></LearningWorldOverView>
                         </MainContent>
                     </SidebarItem>
                     <SidebarItem>
@@ -93,6 +93,6 @@
 @code {
 
     [Inject]
-    public IElementDropZoneHelper ElementDropZoneHelper { get; set; }
+    public ILearningElementDropZoneHelper ElementDropZoneHelper { get; set; }
 
 }

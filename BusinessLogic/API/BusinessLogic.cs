@@ -44,64 +44,64 @@ public class BusinessLogic : IBusinessLogic
         OnUndoRedoPerformed?.Invoke();
     }
 
-    public void ConstructBackup(World world, string filepath)
+    public void ConstructBackup(LearningWorld learningWorld, string filepath)
     {
-        WorldGenerator.ConstructBackup(world, filepath);
+        WorldGenerator.ConstructBackup(learningWorld, filepath);
     }
 
-    public void SaveWorld(World world, string filepath)
+    public void SaveLearningWorld(LearningWorld learningWorld, string filepath)
     {
-        DataAccess.SaveWorldToFile(world, filepath);
+        DataAccess.SaveLearningWorldToFile(learningWorld, filepath);
     }
 
-    public World LoadWorld(string filepath)
+    public LearningWorld LoadLearningWorld(string filepath)
     {
-        return DataAccess.LoadWorld(filepath);
+        return DataAccess.LoadLearningWorld(filepath);
     }
     
-    public void SaveSpace(Space space, string filepath)
+    public void SaveLearningSpace(LearningSpace learningSpace, string filepath)
     {
-        DataAccess.SaveSpaceToFile(space, filepath);
+        DataAccess.SaveLearningSpaceToFile(learningSpace, filepath);
     }
 
-    public Space LoadSpace(string filepath)
+    public LearningSpace LoadLearningSpace(string filepath)
     {
-        return DataAccess.LoadSpace(filepath);
+        return DataAccess.LoadLearningSpace(filepath);
     }
     
-    public void SaveElement(Element element, string filepath)
+    public void SaveLearningElement(LearningElement learningElement, string filepath)
     {
-        DataAccess.SaveElementToFile(element, filepath);
+        DataAccess.SaveLearningElementToFile(learningElement, filepath);
     }
 
-    public Element LoadElement(string filepath)
+    public LearningElement LoadLearningElement(string filepath)
     {
-        return DataAccess.LoadElement(filepath);
+        return DataAccess.LoadLearningElement(filepath);
     }
 
-    public Content LoadContent(string filepath)
+    public LearningContent LoadLearningContent(string filepath)
     {
-        return DataAccess.LoadContent(filepath);
+        return DataAccess.LoadLearningContent(filepath);
     }
 
-    public Content LoadContent(string name, MemoryStream stream)
+    public LearningContent LoadLearningContent(string name, MemoryStream stream)
     {
-        return DataAccess.LoadContent(name, stream);
+        return DataAccess.LoadLearningContent(name, stream);
     }
 
-    public World LoadWorld(Stream stream)
+    public LearningWorld LoadLearningWorld(Stream stream)
     {
-        return DataAccess.LoadWorld(stream);
+        return DataAccess.LoadLearningWorld(stream);
     }
 
-    public Space LoadSpace(Stream stream)
+    public LearningSpace LoadLearningSpace(Stream stream)
     {
-        return DataAccess.LoadSpace(stream);
+        return DataAccess.LoadLearningSpace(stream);
     }
 
-    public Element LoadElement(Stream stream)
+    public LearningElement LoadLearningElement(Stream stream)
     {
-        return DataAccess.LoadElement(stream);
+        return DataAccess.LoadLearningElement(stream);
     }
 
     public string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding)

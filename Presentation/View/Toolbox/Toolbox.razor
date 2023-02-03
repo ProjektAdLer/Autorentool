@@ -24,7 +24,7 @@
     [Inject] internal IToolboxResultFilter ResultFilter { get; private init; }
 #pragma warning restore CS8618
     internal string? SearchTerm { get; private set; }
-    internal IEnumerable<IDisplayableObject> FilteredEntries =>
+    internal IEnumerable<IDisplayableLearningObject> FilteredEntries =>
         string.IsNullOrWhiteSpace(SearchTerm) ?
             EntriesProvider.Entries :
             ResultFilter.FilterCollection(EntriesProvider.Entries, SearchTerm);

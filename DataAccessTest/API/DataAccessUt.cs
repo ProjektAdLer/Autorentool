@@ -20,9 +20,9 @@ public class DataAccessUt
     {
         //Arrange 
         var mockConfiguration = Substitute.For<IAuthoringToolConfiguration>();
-        var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<WorldPe>>();
-        var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<SpacePe>>();
-        var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<ElementPe>>();
+        var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
+        var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<LearningSpacePe>>();
+        var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElementPe>>();
         var mockContentHandler = Substitute.For<IContentFileHandler>();
         var mockFileSystem = new MockFileSystem();
 
@@ -43,137 +43,137 @@ public class DataAccessUt
     }
 
     [Test]
-    public void DataAccess_SaveWorldToFile_CallsFileSaveHandlerWorld()
+    public void DataAccess_SaveLearningWorldToFile_CallsFileSaveHandlerWorld()
     {
-        var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<WorldPe>>();
+        var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerWorld: mockFileSaveHandlerWorld);
 
-        var world = new World("f", "f", "f", "f", "f", "f");
-        systemUnderTest.SaveWorldToFile(
-            world,
+        var learningWorld = new LearningWorld("f", "f", "f", "f", "f", "f");
+        systemUnderTest.SaveLearningWorldToFile(
+            learningWorld,
             "C:/nonsense");
 
-        mockFileSaveHandlerWorld.Received().SaveToDisk(Arg.Any<WorldPe>(), "C:/nonsense");
+        mockFileSaveHandlerWorld.Received().SaveToDisk(Arg.Any<LearningWorldPe>(), "C:/nonsense");
     }
 
     [Test]
-    public void DataAccess_LoadWorldFromFile_CallsFileSaveHandlerWorld()
+    public void DataAccess_LoadLearningWorldFromFile_CallsFileSaveHandlerWorld()
     {
-        var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<WorldPe>>();
+        var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerWorld: mockFileSaveHandlerWorld);
 
-        systemUnderTest.LoadWorld("C:/nonsense");
+        systemUnderTest.LoadLearningWorld("C:/nonsense");
 
         mockFileSaveHandlerWorld.Received().LoadFromDisk("C:/nonsense");
     }
     
     [Test]
-    public void DataAccess_LoadWorldFromStream_CallsFileSaveHandlerWorld()
+    public void DataAccess_LoadLearningWorldFromStream_CallsFileSaveHandlerWorld()
     {
-        var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<WorldPe>>();
+        var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerWorld: mockFileSaveHandlerWorld);
         var stream = Substitute.For<Stream>();
 
-        systemUnderTest.LoadWorld(stream);
+        systemUnderTest.LoadLearningWorld(stream);
 
         mockFileSaveHandlerWorld.Received().LoadFromStream(stream);
     }
 
     [Test]
-    public void DataAccess_SaveSpaceToFile_CallsFileSaveHandlerSpace()
+    public void DataAccess_SaveLearningSpaceToFile_CallsFileSaveHandlerSpace()
     {
-        var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<SpacePe>>();
+        var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<LearningSpacePe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerSpace: mockFileSaveHandlerSpace);
 
-        var space = new Space("f", "f", "f", "f", "f", 5);
-        systemUnderTest.SaveSpaceToFile(
-            space,
+        var learningSpace = new LearningSpace("f", "f", "f", "f", "f", 5);
+        systemUnderTest.SaveLearningSpaceToFile(
+            learningSpace,
             "C:/nonsense");
 
-        mockFileSaveHandlerSpace.Received().SaveToDisk(Arg.Any<SpacePe>(), "C:/nonsense");
+        mockFileSaveHandlerSpace.Received().SaveToDisk(Arg.Any<LearningSpacePe>(), "C:/nonsense");
     }
 
     [Test]
-    public void DataAccess_LoadSpaceFromFile_CallsFileSaveHandlerSpace()
+    public void DataAccess_LoadLearningSpaceFromFile_CallsFileSaveHandlerSpace()
     {
-        var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<SpacePe>>();
+        var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<LearningSpacePe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerSpace: mockFileSaveHandlerSpace);
 
-        systemUnderTest.LoadSpace("C:/nonsense");
+        systemUnderTest.LoadLearningSpace("C:/nonsense");
 
         mockFileSaveHandlerSpace.Received().LoadFromDisk("C:/nonsense");
     }
     
     [Test]
-    public void DataAccess_LoadSpaceFromStream_CallsFileSaveHandlerWorld()
+    public void DataAccess_LoadLearningSpaceFromStream_CallsFileSaveHandlerWorld()
     {
-        var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<SpacePe>>();
+        var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<LearningSpacePe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerSpace: mockFileSaveHandlerSpace);
         var stream = Substitute.For<Stream>();
 
-        systemUnderTest.LoadSpace(stream);
+        systemUnderTest.LoadLearningSpace(stream);
 
         mockFileSaveHandlerSpace.Received().LoadFromStream(stream);
     }
 
     [Test]
-    public void DataAccess_SaveElementToFile_CallsFileSaveHandlerElement()
+    public void DataAccess_SaveLearningElementToFile_CallsFileSaveHandlerElement()
     {
-        var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<ElementPe>>();
+        var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElementPe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerElement: mockFileSaveHandlerElement);
 
-        var content = new Content("a", "b", "");
-        var element = new Element("f","f", content, "url","f",
-            "f", "f", ElementDifficultyEnum.Easy);
-        systemUnderTest.SaveElementToFile(
-            element,
+        var learningContent = new LearningContent("a", "b", "");
+        var learningElement = new LearningElement("f","f", learningContent, "url","f",
+            "f", "f", LearningElementDifficultyEnum.Easy);
+        systemUnderTest.SaveLearningElementToFile(
+            learningElement,
             "C:/nonsense");
 
-        mockFileSaveHandlerElement.Received().SaveToDisk(Arg.Any<ElementPe>(), "C:/nonsense");
+        mockFileSaveHandlerElement.Received().SaveToDisk(Arg.Any<LearningElementPe>(), "C:/nonsense");
     }
 
     [Test]
-    public void DataAccess_LoadElementFromFile_CallsFileSaveHandlerElement()
+    public void DataAccess_LoadLearningElementFromFile_CallsFileSaveHandlerElement()
     {
-        var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<ElementPe>>();
+        var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElementPe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerElement: mockFileSaveHandlerElement);
 
-        systemUnderTest.LoadElement("C:/nonsense");
+        systemUnderTest.LoadLearningElement("C:/nonsense");
 
         mockFileSaveHandlerElement.Received().LoadFromDisk("C:/nonsense");
     }
     
     [Test]
-    public void DataAccess_LoadElementFromStream_CallsFileSaveHandlerElement()
+    public void DataAccess_LoadLearningElementFromStream_CallsFileSaveHandlerElement()
     {
-        var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<ElementPe>>();
+        var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElementPe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerElement: mockFileSaveHandlerElement);
         var stream = Substitute.For<Stream>();
 
-        systemUnderTest.LoadElement(stream);
+        systemUnderTest.LoadLearningElement(stream);
 
         mockFileSaveHandlerElement.Received().LoadFromStream(stream);
     }
     
     [Test]
-    public void DataAccess_LoadContentFromFile_CallsFileSaveHandlerElement()
+    public void DataAccess_LoadLearningContentFromFile_CallsFileSaveHandlerElement()
     {
         var mockContentFileHandler = Substitute.For<IContentFileHandler>();
         var systemUnderTest = CreateTestableDataAccess(contentHandler: mockContentFileHandler);
 
-        systemUnderTest.LoadContent("C:/nonsense");
+        systemUnderTest.LoadLearningContent("C:/nonsense");
 
         mockContentFileHandler.Received().LoadContentAsync("C:/nonsense");
     }
     
     [Test]
-    public void DataAccess_LoadContentFromStream_CallsFileSaveHandlerElement()
+    public void DataAccess_LoadLearningContentFromStream_CallsFileSaveHandlerElement()
     {
         var mockContentFileHandler = Substitute.For<IContentFileHandler>();
         var systemUnderTest = CreateTestableDataAccess(contentHandler: mockContentFileHandler);
         var stream = Substitute.For<MemoryStream>();
 
-        systemUnderTest.LoadContent("filename.extension", stream);
+        systemUnderTest.LoadLearningContent("filename.extension", stream);
 
         mockContentFileHandler.Received().LoadContentAsync("filename.extension", stream);
     }
@@ -258,17 +258,17 @@ public class DataAccessUt
 
     private static DataAccess.API.DataAccess CreateTestableDataAccess(
         IAuthoringToolConfiguration? configuration = null,
-        IXmlFileHandler<WorldPe>? fileSaveHandlerWorld = null,
-        IXmlFileHandler<SpacePe>? fileSaveHandlerSpace = null,
-        IXmlFileHandler<ElementPe>? fileSaveHandlerElement = null,
+        IXmlFileHandler<LearningWorldPe>? fileSaveHandlerWorld = null,
+        IXmlFileHandler<LearningSpacePe>? fileSaveHandlerSpace = null,
+        IXmlFileHandler<LearningElementPe>? fileSaveHandlerElement = null,
         IContentFileHandler? contentHandler = null,
         IFileSystem? fileSystem = null,
         IMapper? mapper = null)
     {
         configuration ??= Substitute.For<IAuthoringToolConfiguration>();
-        fileSaveHandlerWorld ??= Substitute.For<IXmlFileHandler<WorldPe>>();
-        fileSaveHandlerSpace ??= Substitute.For<IXmlFileHandler<SpacePe>>();
-        fileSaveHandlerElement ??= Substitute.For<IXmlFileHandler<ElementPe>>();
+        fileSaveHandlerWorld ??= Substitute.For<IXmlFileHandler<LearningWorldPe>>();
+        fileSaveHandlerSpace ??= Substitute.For<IXmlFileHandler<LearningSpacePe>>();
+        fileSaveHandlerElement ??= Substitute.For<IXmlFileHandler<LearningElementPe>>();
         contentHandler ??= Substitute.For<IContentFileHandler>();
         fileSystem ??= new MockFileSystem();
         mapper ??= Substitute.For<IMapper>();

@@ -6,7 +6,7 @@ namespace Generator.XmlClasses;
 
 public class XmlEntityManager : IXmlEntityManager
 {
-    //both ints are required for the xml files, they need the ids of the previous 2 Elements.
+    //both ints are required for the xml files, they need the ids of the previous 2 elements.
     public static int FileIdBlock1 = 1;
     public static int FileIdBlock2 = 2;
     private IFileSystem _fileSystem;

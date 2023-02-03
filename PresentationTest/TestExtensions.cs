@@ -44,19 +44,19 @@ public static class TestExtensions
     }
     
     /// <summary>
-    /// Will either find all Elements matching the selector on the component, or throw an assert failure
+    /// Will either find all elements matching the selector on the component, or throw an assert failure
     /// </summary>
     /// <param name="component">The component on which the element shall be searched for.</param>
     /// <param name="selector">The selector which shall be found.</param>
     /// <typeparam name="T">The type of component.</typeparam>
-    /// <returns>All Elements found for <paramref name="selector"/> on <paramref name="component"/></returns>
+    /// <returns>All elements found for <paramref name="selector"/> on <paramref name="component"/></returns>
     public static IEnumerable<IElement> FindAllOrFail<T>(this IRenderedComponent<T> component, string selector) where T : IComponent
     {
         IEnumerable<IElement>? elements = null;
         Assert.That(() => elements = component.FindAll(selector), Throws.Nothing);
         if (elements == null)
         {
-            Assert.Fail("Couldn't find Elements with selector: {0}", selector);
+            Assert.Fail("Couldn't find elements with selector: {0}", selector);
         }
         return elements!;
     }

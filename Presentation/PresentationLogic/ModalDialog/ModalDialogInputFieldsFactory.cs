@@ -1,19 +1,19 @@
 ﻿using Presentation.Components.ModalDialog;
-using Presentation.PresentationLogic.Content;
+using Presentation.PresentationLogic.LearningContent;
 using Shared;
 
 namespace Presentation.PresentationLogic.ModalDialog;
 
-public class ModalDialogInputFieldsFactory : ISpaceViewModalDialogInputFieldsFactory, IWorldViewModalDialogInputFieldsFactory, IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory
+public class ModalDialogInputFieldsFactory : ILearningSpaceViewModalDialogInputFieldsFactory, ILearningWorldViewModalDialogInputFieldsFactory, IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory
 {
-    /// <inheritdoc cref="ISpaceViewModalDialogInputFieldsFactory.GetCreateElementInputFields"/>
-    public IEnumerable<ModalDialogInputField> GetCreateElementInputFields(ContentViewModel? dragAndDropContent)
+    /// <inheritdoc cref="ILearningSpaceViewModalDialogInputFieldsFactory.GetCreateLearningElementInputFields"/>
+    public IEnumerable<ModalDialogInputField> GetCreateLearningElementInputFields(LearningContentViewModel? dragAndDropLearningContent)
     {
         ModalDialogDropdownInputField typeField;
         ModalDialogDropdownInputField contentField;
-        if (dragAndDropContent != null)
+        if (dragAndDropLearningContent != null)
         {
-            var contentType = GetContentType(dragAndDropContent);
+            var contentType = GetContentType(dragAndDropLearningContent);
             typeField = GetTypeDropdownInputField(contentType);
             contentField = GetContentDropdownInputField(contentType);
         }
@@ -37,8 +37,8 @@ public class ModalDialogInputFieldsFactory : ISpaceViewModalDialogInputFieldsFac
                 }, true),
         };
 
-    /// <inheritdoc cref="IWorldViewModalDialogInputFieldsFactory.GetCreateSpaceInputFields"/>
-    public IEnumerable<ModalDialogInputField> GetCreateSpaceInputFields() =>
+    /// <inheritdoc cref="ILearningWorldViewModalDialogInputFieldsFactory.GetCreateLearningSpaceInputFields"/>
+    public IEnumerable<ModalDialogInputField> GetCreateLearningSpaceInputFields() =>
         new ModalDialogInputField[]
         {
             new("Name", ModalDialogInputType.Text, true),
@@ -49,14 +49,14 @@ public class ModalDialogInputFieldsFactory : ISpaceViewModalDialogInputFieldsFac
             new("Required Points", ModalDialogInputType.Number)
         };
 
-    /// <inheritdoc cref="IWorldViewModalDialogInputFieldsFactory.GetEditSpaceInputFields"/>
-    public IEnumerable<ModalDialogInputField> GetEditSpaceInputFields() => GetCreateSpaceInputFields();
+    /// <inheritdoc cref="ILearningWorldViewModalDialogInputFieldsFactory.GetEditLearningSpaceInputFields"/>
+    public IEnumerable<ModalDialogInputField> GetEditLearningSpaceInputFields() => GetCreateLearningSpaceInputFields();
 
-    /// <inheritdoc cref="IWorldViewModalDialogInputFieldsFactory.GetEditPathWayConditionInputFields"/>
+    /// <inheritdoc cref="ILearningWorldViewModalDialogInputFieldsFactory.GetEditPathWayConditionInputFields"/>
     public IEnumerable<ModalDialogInputField> GetEditPathWayConditionInputFields() => GetCreatePathWayConditionInputFields();
 
-    /// <inheritdoc cref="ISpaceViewModalDialogInputFieldsFactory.GetEditElementInputFields"/>
-    public IEnumerable<ModalDialogInputField> GetEditElementInputFields() =>
+    /// <inheritdoc cref="ILearningSpaceViewModalDialogInputFieldsFactory.GetEditLearningElementInputFields"/>
+    public IEnumerable<ModalDialogInputField> GetEditLearningElementInputFields() =>
         new ModalDialogInputField[]
         {
             new("Name", ModalDialogInputType.Text, true),
@@ -69,10 +69,10 @@ public class ModalDialogInputFieldsFactory : ISpaceViewModalDialogInputFieldsFac
                 new[]
                 {
                     new ModalDialogDropdownInputFieldChoiceMapping(null,
-                        new[] {ElementDifficultyEnum.Easy.ToString(),
-                            ElementDifficultyEnum.Medium.ToString(),
-                            ElementDifficultyEnum.Hard.ToString(),
-                            ElementDifficultyEnum.None.ToString() })
+                        new[] {LearningElementDifficultyEnum.Easy.ToString(),
+                            LearningElementDifficultyEnum.Medium.ToString(),
+                            LearningElementDifficultyEnum.Hard.ToString(),
+                            LearningElementDifficultyEnum.None.ToString() })
                 }, true),
             new("Workload (min)", ModalDialogInputType.Number),
             new("Points", ModalDialogInputType.Number)
@@ -100,10 +100,10 @@ public class ModalDialogInputFieldsFactory : ISpaceViewModalDialogInputFieldsFac
                 new[]
                 {
                     new ModalDialogDropdownInputFieldChoiceMapping(null,
-                        new[] { ElementDifficultyEnum.None.ToString(),
-                            ElementDifficultyEnum.Easy.ToString(),
-                            ElementDifficultyEnum.Medium.ToString(),
-                            ElementDifficultyEnum.Hard.ToString() })
+                        new[] { LearningElementDifficultyEnum.None.ToString(),
+                            LearningElementDifficultyEnum.Easy.ToString(),
+                            LearningElementDifficultyEnum.Medium.ToString(),
+                            LearningElementDifficultyEnum.Hard.ToString() })
                 }),
             new("Workload (min)", ModalDialogInputType.Number),
             new("Points", ModalDialogInputType.Number)
@@ -113,11 +113,11 @@ public class ModalDialogInputFieldsFactory : ISpaceViewModalDialogInputFieldsFac
     /// <summary>
     /// Gets the content type from the file ending. 
     /// </summary>
-    /// <param name="dragAndDropContent">Drag-and-dropped content.</param>
+    /// <param name="dragAndDropLearningContent">Drag-and-dropped learning content.</param>
     /// <returns>Content type</returns>
     /// <exception cref="Exception">Thrown when the file extension can not be mapped to a content type.</exception>
-    private ContentTypeEnum GetContentType(ContentViewModel dragAndDropContent) =>
-        dragAndDropContent.Type switch
+    private ContentTypeEnum GetContentType(LearningContentViewModel dragAndDropLearningContent) =>
+        dragAndDropLearningContent.Type switch
         {
             "jpg" => ContentTypeEnum.Image,
             "png" => ContentTypeEnum.Image,
@@ -139,13 +139,13 @@ public class ModalDialogInputFieldsFactory : ISpaceViewModalDialogInputFieldsFac
             "h5p" => ContentTypeEnum.H5P,
             "pdf" => ContentTypeEnum.PDF,
             _ => throw new Exception(
-                $"Can not map the file extension '{dragAndDropContent.Type}' to a ContentType ")
+                $"Can not map the file extension '{dragAndDropLearningContent.Type}' to a ContentType ")
         };
 
     /// <summary>
     /// Gets the element type fields from the content type.
     /// </summary>
-    /// <param name="contentType">Content type of the drag-and-dropped content.</param>
+    /// <param name="contentType">Content type of the drag-and-dropped learning content.</param>
     /// <returns>Modal dialog input field.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when content type is unknown.</exception>
     private ModalDialogDropdownInputField GetTypeDropdownInputField(ContentTypeEnum contentType)
@@ -193,7 +193,7 @@ public class ModalDialogInputFieldsFactory : ISpaceViewModalDialogInputFieldsFac
     /// <summary>
     /// Gets the element type dropdown field depending on the content type.
     /// </summary>
-    /// <param name="contentType">Content type of the drag-and-dropped content.</param>
+    /// <param name="contentType">Content type of the drag-and-dropped learning content.</param>
     /// <returns>Modal dialog input field of the element type.</returns>
     /// <exception cref="ArgumentOutOfRangeException">Thrown when content type is unknown.</exception>
     private ModalDialogDropdownInputField GetContentDropdownInputField(ContentTypeEnum contentType)
@@ -290,8 +290,8 @@ public class ModalDialogInputFieldsFactory : ISpaceViewModalDialogInputFieldsFac
                     new[] { ContentTypeEnum.H5P.ToString() })
             }, true);
 
-    /// <inheritdoc cref="IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory.GetCreateWorldInputFields"/>
-    public IEnumerable<ModalDialogInputField> GetCreateWorldInputFields() =>
+    /// <inheritdoc cref="IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory.GetCreateLearningWorldInputFields"/>
+    public IEnumerable<ModalDialogInputField> GetCreateLearningWorldInputFields() =>
         new ModalDialogInputField[]
         {
                 new("Name", ModalDialogInputType.Text, true),
@@ -302,6 +302,6 @@ public class ModalDialogInputFieldsFactory : ISpaceViewModalDialogInputFieldsFac
                 new("Goals", ModalDialogInputType.Text)
         };
 
-    /// <inheritdoc cref="IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory.GetEditWorldInputFields"/>
-    public IEnumerable<ModalDialogInputField> GetEditWorldInputFields() => GetCreateWorldInputFields();
+    /// <inheritdoc cref="IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory.GetEditLearningWorldInputFields"/>
+    public IEnumerable<ModalDialogInputField> GetEditLearningWorldInputFields() => GetCreateLearningWorldInputFields();
 }

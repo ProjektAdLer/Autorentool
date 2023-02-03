@@ -10,9 +10,10 @@ using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.Content;
-using Presentation.PresentationLogic.Space;
-using Presentation.PresentationLogic.World;
+using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningWorld;
 using Shared;
 
 namespace PresentationTest.PresentationLogic.AuthoringToolWorkspace;
@@ -26,30 +27,30 @@ public class AuthoringToolWorkspacePresenterUt
     public void StandardConstructor_AllPropertiesInitialized()
     {
         var workspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
-        var worldPresenter = Substitute.For<IWorldPresenter>();
+        var worldPresenter = Substitute.For<ILearningWorldPresenter>();
         
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, worldPresenter:worldPresenter);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter:worldPresenter);
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.CreateSpaceDialogOpen, Is.EqualTo(false));
-            Assert.That(systemUnderTest.CreateWorldDialogOpen, Is.EqualTo(false));
-            Assert.That(systemUnderTest.EditSpaceDialogOpen, Is.EqualTo(false));
-            Assert.That(systemUnderTest.EditWorldDialogOpen, Is.EqualTo(false));
+            Assert.That(systemUnderTest.CreateLearningSpaceDialogOpen, Is.EqualTo(false));
+            Assert.That(systemUnderTest.CreateLearningWorldDialogOpen, Is.EqualTo(false));
+            Assert.That(systemUnderTest.EditLearningSpaceDialogOpen, Is.EqualTo(false));
+            Assert.That(systemUnderTest.EditLearningWorldDialogOpen, Is.EqualTo(false));
         });
     }
     
-    #region CreateNewWorld
+    #region CreateNewLearningWorld
 
     [Test]
-    public void AddNewWorld_SetsFieldToTrue()
+    public void AddNewLearningWorld_SetsFieldToTrue()
     {
         var systemUnderTest = CreatePresenterForTesting();
         
-        Assert.That(!systemUnderTest.CreateWorldDialogOpen);
+        Assert.That(!systemUnderTest.CreateLearningWorldDialogOpen);
         
-        systemUnderTest.AddNewWorld();
+        systemUnderTest.AddNewLearningWorld();
         
-        Assert.That(systemUnderTest.CreateWorldDialogOpen);
+        Assert.That(systemUnderTest.CreateLearningWorldDialogOpen);
     }
 
     [Test]
@@ -86,13 +87,13 @@ public class AuthoringToolWorkspacePresenterUt
         systemUnderTest.OnCreateWorldDialogClose(returnValueTuple);
 
         presentationLogic.Received()
-            .CreateWorld(authoringToolWorkspaceVm, "n", "sn", "a", "a", "d", "g");
+            .CreateLearningWorld(authoringToolWorkspaceVm, "n", "sn", "a", "a", "d", "g");
     }
 
     [Test]
     public void OnCreateWorldDialogClose_EventHandlerCalled()
     {
-        var worldVm = new WorldViewModel("n", "sn", "a", "l", "d", "g");
+        var learningWorldVm = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         IDictionary<string, string> dictionary = new Dictionary<string, string>();
         dictionary["Name"] = "n";
@@ -104,8 +105,8 @@ public class AuthoringToolWorkspacePresenterUt
         var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var callbackCreateCalled = false;
-        WorldViewModel? callbackCreateArg = null;
-        EventHandler<WorldViewModel?> callbackCreate =
+        LearningWorldViewModel? callbackCreateArg = null;
+        EventHandler<LearningWorldViewModel?> callbackCreate =
             (_, args) =>
             {
                 callbackCreateCalled = true;
@@ -116,34 +117,34 @@ public class AuthoringToolWorkspacePresenterUt
             };
 
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.AddWorld(worldVm);
-        systemUnderTest.SetSelectedWorld(worldVm);
-        systemUnderTest.OnWorldCreate += callbackCreate;
+        systemUnderTest.AddLearningWorld(learningWorldVm);
+        systemUnderTest.SetSelectedLearningWorld(learningWorldVm);
+        systemUnderTest.OnLearningWorldCreate += callbackCreate;
 
         systemUnderTest.OnCreateWorldDialogClose(returnValueTuple);
         
         Assert.Multiple(() =>
         {
             Assert.That(callbackCreateCalled, Is.True);
-            Assert.That(callbackCreateArg, Is.EqualTo(worldVm));
+            Assert.That(callbackCreateArg, Is.EqualTo(learningWorldVm));
         });
     }
 
     #endregion
 
-    #region ChangeSelectedWorld
+    #region ChangeSelectedLearningWorld
 
     [Test]
-    public void ChangeSelectedWorld_EventHandlerCalled()
+    public void ChangeSelectedLearningWorld_EventHandlerCalled()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        workspaceVm._worlds.Add(new WorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo", "Foo"));
-        workspaceVm._worlds.Add(new WorldViewModel("tetete", "f", "bar", "de", "A test", "testing"));
+        workspaceVm._learningWorlds.Add(new LearningWorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo", "Foo"));
+        workspaceVm._learningWorlds.Add(new LearningWorldViewModel("tetete", "f", "bar", "de", "A test", "testing"));
         var firstCallbackCalled = false;
 
         var systemUnderTest = CreatePresenterForTesting(workspaceVm);
 
-        EventHandler<WorldViewModel?> firstCallback = (_, world) =>
+        EventHandler<LearningWorldViewModel?> firstCallback = (_, world) =>
         {
             firstCallbackCalled = true;
             Assert.That(world, Is.Not.Null);
@@ -158,16 +159,16 @@ public class AuthoringToolWorkspacePresenterUt
             });
         };
 
-        systemUnderTest.OnWorldSelect += firstCallback;
+        systemUnderTest.OnLearningWorldSelect += firstCallback;
 
-        systemUnderTest.SetSelectedWorld("tetete");
+        systemUnderTest.SetSelectedLearningWorld("tetete");
 
         Assert.That(firstCallbackCalled, Is.EqualTo(true));
         firstCallbackCalled = false;
-        systemUnderTest.OnWorldSelect -= firstCallback;
+        systemUnderTest.OnLearningWorldSelect -= firstCallback;
 
         var secondCallbackCalled = false;
-        systemUnderTest.OnWorldSelect += (_, world) =>
+        systemUnderTest.OnLearningWorldSelect += (_, world) =>
         {
             secondCallbackCalled = true;
             Assert.That(world, Is.Not.Null);
@@ -179,202 +180,202 @@ public class AuthoringToolWorkspacePresenterUt
                 Assert.That(world.Language, Is.EqualTo("Foo"));
                 Assert.That(world.Description, Is.EqualTo("Foo"));
                 Assert.That(world.Goals, Is.EqualTo("Foo"));
-                Assert.That(systemUnderTest.WorldSelected, Is.True);
+                Assert.That(systemUnderTest.LearningWorldSelected, Is.True);
             });
         };
 
-        systemUnderTest.SetSelectedWorld("Foo");
+        systemUnderTest.SetSelectedLearningWorld("Foo");
         Assert.That(secondCallbackCalled, Is.EqualTo(true));
     }
 
     [Test]
-    public void ChangeSelectedWorld_MutatesSelectionInWorkspaceViewModel()
+    public void ChangeSelectedLearningWorld_MutatesSelectionInWorkspaceViewModel()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        var worldPresenter = CreateWorldPresenter();
-        var world1 = new WorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo",
+        var worldPresenter = CreateLearningWorldPresenter();
+        var world1 = new LearningWorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo",
             "Foo");
-        var world2 = new WorldViewModel("tetete", "f", "bar", "de", "A test",
+        var world2 = new LearningWorldViewModel("tetete", "f", "bar", "de", "A test",
             "testing");
-        workspaceVm._worlds.Add(world1);
-        workspaceVm._worlds.Add(world2);
+        workspaceVm._learningWorlds.Add(world1);
+        workspaceVm._learningWorlds.Add(world2);
         
 
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, worldPresenter:worldPresenter);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter:worldPresenter);
         
-        Assert.That(workspaceVm.SelectedWorld, Is.Null);
+        Assert.That(workspaceVm.SelectedLearningWorld, Is.Null);
         
-        systemUnderTest.SetSelectedWorld("tetete");
-        Assert.That(workspaceVm.SelectedWorld, Is.EqualTo(world2));
+        systemUnderTest.SetSelectedLearningWorld("tetete");
+        Assert.That(workspaceVm.SelectedLearningWorld, Is.EqualTo(world2));
         
-        systemUnderTest.SetSelectedWorld("Foo");
-        Assert.That(workspaceVm.SelectedWorld, Is.EqualTo(world1));
+        systemUnderTest.SetSelectedLearningWorld("Foo");
+        Assert.That(workspaceVm.SelectedLearningWorld, Is.EqualTo(world1));
     }
     
     [Test]
-    public void ChangeSelectedWorld_ThrowsIfNoWorldWithName() 
+    public void ChangeSelectedLearningWorld_ThrowsIfNoLearningWorldWithName() 
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        var worldPresenter = CreateWorldPresenter();
-        Assert.That(workspaceVm.Worlds, Is.Empty);
+        var worldPresenter = CreateLearningWorldPresenter();
+        Assert.That(workspaceVm.LearningWorlds, Is.Empty);
 
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, worldPresenter: worldPresenter);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter: worldPresenter);
 
-        var ex = Assert.Throws<ArgumentException>(() => systemUnderTest.SetSelectedWorld("foo"));
+        var ex = Assert.Throws<ArgumentException>(() => systemUnderTest.SetSelectedLearningWorld("foo"));
         Assert.That(ex!.Message, Is.EqualTo("no world with that name in viewmodel"));
     }
     
     #endregion
 
-    #region DeleteSelectedWorld
+    #region DeleteSelectedLearningWorld
 
     [Test]
-    public void DeleteSelectedWorld_EventHandlerCalled()
+    public void DeleteSelectedLearningWorld_EventHandlerCalled()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        var worldPresenter = CreateWorldPresenter();
-        var world1 = new WorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo",
+        var worldPresenter = CreateLearningWorldPresenter();
+        var world1 = new LearningWorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo",
             "Foo");
-        var world2 = new WorldViewModel("tetete", "f", "bar", "de", "A test",
+        var world2 = new LearningWorldViewModel("tetete", "f", "bar", "de", "A test",
             "testing");
-        workspaceVm._worlds.Add(world1);
-        workspaceVm._worlds.Add(world2);
-        EventHandler<WorldViewModel?> firstCallback = (_, _) =>
+        workspaceVm._learningWorlds.Add(world1);
+        workspaceVm._learningWorlds.Add(world2);
+        EventHandler<LearningWorldViewModel?> firstCallback = (_, _) =>
         {
             Assert.Fail("first callback with null as selected world should not have been called");
         };
         var secondCallbackCalled = false;
-        EventHandler<WorldViewModel?> secondCallback = (_, world) =>
+        EventHandler<LearningWorldViewModel?> secondCallback = (_, world) =>
         {
             secondCallbackCalled = true;
             Assert.That(world, Is.EqualTo(world1));
         };
         var thirdCallbackCalled = false;
-        EventHandler<WorldViewModel?> thirdCallback = (_, world) =>
+        EventHandler<LearningWorldViewModel?> thirdCallback = (_, world) =>
         {
             thirdCallbackCalled = true;
             Assert.That(world, Is.EqualTo(world2));
         };
 
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, worldPresenter: worldPresenter);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter: worldPresenter);
 
-        systemUnderTest.OnWorldDelete += firstCallback;
+        systemUnderTest.OnLearningWorldDelete += firstCallback;
          
-        systemUnderTest.DeleteSelectedWorld();
+        systemUnderTest.DeleteSelectedLearningWorld();
 
-        systemUnderTest.OnWorldDelete -= firstCallback;
-        systemUnderTest.OnWorldDelete += secondCallback;
+        systemUnderTest.OnLearningWorldDelete -= firstCallback;
+        systemUnderTest.OnLearningWorldDelete += secondCallback;
         
-        systemUnderTest.SetSelectedWorld(world1.Name);
-        systemUnderTest.DeleteSelectedWorld();
+        systemUnderTest.SetSelectedLearningWorld(world1.Name);
+        systemUnderTest.DeleteSelectedLearningWorld();
         
         Assert.That(secondCallbackCalled, Is.True);
-        systemUnderTest.OnWorldDelete -= secondCallback;
-        systemUnderTest.OnWorldDelete += thirdCallback;
+        systemUnderTest.OnLearningWorldDelete -= secondCallback;
+        systemUnderTest.OnLearningWorldDelete += thirdCallback;
         
-        systemUnderTest.SetSelectedWorld(world2.Name);
-        systemUnderTest.DeleteSelectedWorld();
+        systemUnderTest.SetSelectedLearningWorld(world2.Name);
+        systemUnderTest.DeleteSelectedLearningWorld();
         
         Assert.That(thirdCallbackCalled, Is.True);
     }
 
     [Test]
-    public void DeleteSelectedWorld_CallsPresentationLogic()
+    public void DeleteSelectedLearningWorld_CallsPresentationLogic()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var world1 = new WorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo",
+        var world1 = new LearningWorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo",
             "Foo");
-        workspaceVm._worlds.Add(world1);
+        workspaceVm._learningWorlds.Add(world1);
         var systemUnderTest = CreatePresenterForTesting(workspaceVm, presentationLogic: presentationLogic);
 
-        systemUnderTest.SetSelectedWorld(world1.Name);
-        systemUnderTest.DeleteSelectedWorld();
+        systemUnderTest.SetSelectedLearningWorld(world1.Name);
+        systemUnderTest.DeleteSelectedLearningWorld();
         
-        presentationLogic.Received().DeleteWorld(workspaceVm, world1);
+        presentationLogic.Received().DeleteLearningWorld(workspaceVm, world1);
     }
 
     [Test]
-    public void DeleteSelectedWorld_SetsDeletedUnsavedWorld()
+    public void DeleteSelectedLearningWorld_SetsDeletedUnsavedWorld()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        var world = new WorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo",
+        var world = new LearningWorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo",
             "Foo")
         {
             UnsavedChanges = true
         };
-        workspaceVm._worlds.Add(world);
+        workspaceVm._learningWorlds.Add(world);
 
         var systemUnderTest = CreatePresenterForTesting(workspaceVm);
-        systemUnderTest.SetSelectedWorld(world);
+        systemUnderTest.SetSelectedLearningWorld(world);
 
-        systemUnderTest.DeleteSelectedWorld();
+        systemUnderTest.DeleteSelectedLearningWorld();
         Assert.That(systemUnderTest.DeletedUnsavedWorld, Is.EqualTo(world));
     }
 
     [Test]
-    public void DeleteSelectedWorld_MutatesSelectionInWorkspaceViewModel()
+    public void DeleteSelectedLearningWorld_MutatesSelectionInWorkspaceViewModel()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        var world1 = new WorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo",
+        var world1 = new LearningWorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo",
             "Foo");
-        var world2 = new WorldViewModel("tetete", "f", "bar", "de", "A test",
+        var world2 = new LearningWorldViewModel("tetete", "f", "bar", "de", "A test",
             "testing");
-        workspaceVm._worlds.Add(world1);
-        workspaceVm._worlds.Add(world2);
+        workspaceVm._learningWorlds.Add(world1);
+        workspaceVm._learningWorlds.Add(world2);
 
         var presentationLogic = Substitute.For<IPresentationLogic>();
         presentationLogic
-            .When(x => x.DeleteWorld(Arg.Any<IAuthoringToolWorkspaceViewModel>(),
-                Arg.Any<WorldViewModel>()))
+            .When(x => x.DeleteLearningWorld(Arg.Any<IAuthoringToolWorkspaceViewModel>(),
+                Arg.Any<LearningWorldViewModel>()))
             .Do(y =>
             {
-                workspaceVm.RemoveWorld(((AuthoringToolWorkspaceViewModel) y.Args()[0]).SelectedWorld!);
-                ((AuthoringToolWorkspaceViewModel) y.Args()[0]).SelectedWorld =
-                    ((AuthoringToolWorkspaceViewModel) y.Args()[0]).Worlds.LastOrDefault();
+                workspaceVm.RemoveLearningWorld(((AuthoringToolWorkspaceViewModel) y.Args()[0]).SelectedLearningWorld!);
+                ((AuthoringToolWorkspaceViewModel) y.Args()[0]).SelectedLearningWorld =
+                    ((AuthoringToolWorkspaceViewModel) y.Args()[0]).LearningWorlds.LastOrDefault();
             });
 
         var systemUnderTest = CreatePresenterForTesting(workspaceVm, presentationLogic: presentationLogic);
 
-        systemUnderTest.SetSelectedWorld(world2.Name);
-        Assert.That(workspaceVm.SelectedWorld, Is.EqualTo(world2));
+        systemUnderTest.SetSelectedLearningWorld(world2.Name);
+        Assert.That(workspaceVm.SelectedLearningWorld, Is.EqualTo(world2));
 
-        systemUnderTest.DeleteSelectedWorld();
+        systemUnderTest.DeleteSelectedLearningWorld();
 
-        Assert.That(workspaceVm.SelectedWorld, Is.EqualTo(world1));
+        Assert.That(workspaceVm.SelectedLearningWorld, Is.EqualTo(world1));
     }
 
     [Test]
-    public void DeleteSelectedWorld_DoesNotThrowWhenSelectedWorldNull()
+    public void DeleteSelectedLearningWorld_DoesNotThrowWhenSelectedWorldNull()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        var worldPresenter = CreateWorldPresenter();
+        var worldPresenter = CreateLearningWorldPresenter();
 
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, worldPresenter: worldPresenter);
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, learningWorldPresenter: worldPresenter);
 
-        Assert.DoesNotThrow(systemUnderTest.DeleteSelectedWorld);
+        Assert.DoesNotThrow(systemUnderTest.DeleteSelectedLearningWorld);
     }
     
     #endregion
     
-    #region EditCurrentWorld
+    #region EditCurrentLearningWorld
 
     [Test]
-    public void OpenEditSelectedWorldDialog_CallsMethod()
+    public void OpenEditSelectedLearningWorldDialog_CallsMethod()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        var world = new WorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo",
+        var world = new LearningWorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo",
             "Foo");
-        workspaceVm._worlds.Add(world);
+        workspaceVm._learningWorlds.Add(world);
         workspaceVm.EditDialogInitialValues = new Dictionary<string, string>();
 
         var systemUnderTest = CreatePresenterForTesting(workspaceVm);
-        systemUnderTest.SetSelectedWorld(world);
+        systemUnderTest.SetSelectedLearningWorld(world);
 
-        systemUnderTest.OpenEditSelectedWorldDialog();
+        systemUnderTest.OpenEditSelectedLearningWorldDialog();
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.EditWorldDialogOpen, Is.True);
+            Assert.That(systemUnderTest.EditLearningWorldDialogOpen, Is.True);
             Assert.That(workspaceVm.EditDialogInitialValues["Name"], Is.EqualTo(world.Name));
             Assert.That(workspaceVm.EditDialogInitialValues["Shortname"], Is.EqualTo(world.Shortname));
             Assert.That(workspaceVm.EditDialogInitialValues["Authors"], Is.EqualTo(world.Authors));
@@ -385,40 +386,40 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     [Test]
-    public void OpenEditSelectedWorldDialog_SelectedWorldIsNull_ThrowsException()
+    public void OpenEditSelectedLearningWorldDialog_SelectedLearningWorldIsNull_ThrowsException()
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        var world = new WorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo",
+        var world = new LearningWorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo",
             "Foo");
-        workspaceVm._worlds.Add(world);
+        workspaceVm._learningWorlds.Add(world);
         workspaceVm.EditDialogInitialValues = new Dictionary<string, string>();
 
         var systemUnderTest = CreatePresenterForTesting(workspaceVm);
         
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OpenEditSelectedWorldDialog());
-        Assert.That(ex!.Message, Is.EqualTo("SelectedWorld is null"));
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OpenEditSelectedLearningWorldDialog());
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
 
     [Test]
     public void OnEditWorldDialogClose_DialogDataAreNull_ThrowsException()
     {
-        var world = new WorldViewModel("foo", "foo", "foo", "foo", "foo",
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
         var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetSelectedWorld(world);
+        systemUnderTest.SetSelectedLearningWorld(world);
         
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditWorldDialogClose(returnValueTuple));
         Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
     }
     
     [Test]
-    public void OnEditWorldDialogClose_SelectedWorldIsNull_ThrowsException()
+    public void OnEditWorldDialogClose_SelectedLearningWorldIsNull_ThrowsException()
     {
-        new WorldViewModel("foo", "foo", "foo", "foo", "foo",
+        new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
@@ -434,14 +435,14 @@ public class AuthoringToolWorkspacePresenterUt
         var systemUnderTest = CreatePresenterForTesting();
         
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditWorldDialogClose(returnValueTuple));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedWorld is null"));
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
 
     [Test]
     public void OnEditWorldDialogClose_CallsPresentationLogic()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var world = new WorldViewModel("foo", "foo", "foo", "foo", "foo",
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
 
         var modalDialogReturnValue = ModalDialogReturnValue.Ok;
@@ -455,16 +456,16 @@ public class AuthoringToolWorkspacePresenterUt
         var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetSelectedWorld(world);
+        systemUnderTest.SetSelectedLearningWorld(world);
 
         systemUnderTest.OnEditWorldDialogClose(returnValueTuple);
 
-        presentationLogic.Received().EditWorld(world, "n", "sn", "a", "a", "d", "g");
+        presentationLogic.Received().EditLearningWorld(world, "n", "sn", "a", "a", "d", "g");
     }
 
     #endregion
 
-    #region Save(Selected)WorldAsync
+    #region Save(Selected)LearningWorldAsync
 
     [Test]
     public void OnSaveWorldDialogClose_UnsavedWorldsQueueIsNull_ThrowsException()
@@ -489,7 +490,7 @@ public class AuthoringToolWorkspacePresenterUt
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SaveUnsavedChangesDialogOpen = true;
-        systemUnderTest.UnsavedWorldsQueue = new Queue<WorldViewModel>();
+        systemUnderTest.UnsavedWorldsQueue = new Queue<LearningWorldViewModel>();
         
         systemUnderTest.OnSaveWorldDialogClose(returnValueTuple);
         Assert.Multiple(() =>
@@ -503,8 +504,8 @@ public class AuthoringToolWorkspacePresenterUt
     public void OnSaveWorldDialogClose_ModalDialogYes_DequeuesAndSavesWorld()
     {
         var viewModel = new AuthoringToolWorkspaceViewModel();
-        var world = new WorldViewModel("f", "f", "f", "f", "f", "f");
-        viewModel._worlds.Add(world);
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        viewModel._learningWorlds.Add(learningWorld);
         
         var modalDialogReturnValue = ModalDialogReturnValue.Yes;
         var returnValueTuple =
@@ -512,9 +513,9 @@ public class AuthoringToolWorkspacePresenterUt
 
         var systemUnderTest = CreatePresenterForTesting(viewModel);
 
-        systemUnderTest.UnsavedWorldsQueue = new Queue<WorldViewModel>(viewModel.Worlds);
+        systemUnderTest.UnsavedWorldsQueue = new Queue<LearningWorldViewModel>(viewModel.LearningWorlds);
 
-        Assert.That(systemUnderTest.UnsavedWorldsQueue, Contains.Item(world));
+        Assert.That(systemUnderTest.UnsavedWorldsQueue, Contains.Item(learningWorld));
         
         systemUnderTest.OnSaveWorldDialogClose(returnValueTuple);
 
@@ -525,8 +526,8 @@ public class AuthoringToolWorkspacePresenterUt
     public void OnSaveWorldDialogClose_ModalDialogNo_DequeueWorldAndDeletesUnsavedChanges()
     {
         var viewModel = new AuthoringToolWorkspaceViewModel();
-        var world = new WorldViewModel("f", "f", "f", "f", "f", "f");
-        viewModel._worlds.Add(world);
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        viewModel._learningWorlds.Add(learningWorld);
         
         var modalDialogReturnValue = ModalDialogReturnValue.No;
         var returnValueTuple =
@@ -534,15 +535,15 @@ public class AuthoringToolWorkspacePresenterUt
 
         var systemUnderTest = CreatePresenterForTesting(viewModel);
 
-        systemUnderTest.UnsavedWorldsQueue = new Queue<WorldViewModel>(viewModel.Worlds);
+        systemUnderTest.UnsavedWorldsQueue = new Queue<LearningWorldViewModel>(viewModel.LearningWorlds);
 
-        Assert.That(systemUnderTest.UnsavedWorldsQueue, Contains.Item(world));
-        Assert.That(world.UnsavedChanges);
+        Assert.That(systemUnderTest.UnsavedWorldsQueue, Contains.Item(learningWorld));
+        Assert.That(learningWorld.UnsavedChanges);
         
         systemUnderTest.OnSaveWorldDialogClose(returnValueTuple);
 
         Assert.That(systemUnderTest.UnsavedWorldsQueue, Is.Null);
-        Assert.That(!world.UnsavedChanges);
+        Assert.That(!learningWorld.UnsavedChanges);
     }
     
     [Test]
@@ -556,7 +557,7 @@ public class AuthoringToolWorkspacePresenterUt
 
         var systemUnderTest = CreatePresenterForTesting(viewModel);
 
-        systemUnderTest.UnsavedWorldsQueue = new Queue<WorldViewModel>(viewModel.Worlds);
+        systemUnderTest.UnsavedWorldsQueue = new Queue<LearningWorldViewModel>(viewModel.LearningWorlds);
 
         var ex = Assert.Throws<ArgumentOutOfRangeException>(() => systemUnderTest.OnSaveWorldDialogClose(returnValueTuple));
         Assert.That(ex!.Message, Is.EqualTo("Unexpected return value of 10 (Parameter 'returnValueTuple')"));
@@ -581,34 +582,34 @@ public class AuthoringToolWorkspacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var viewModel = new AuthoringToolWorkspaceViewModel();
-        var world = new WorldViewModel("f", "f", "f", "f", "f", "f");
-        viewModel._worlds.Add(world);
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        viewModel._learningWorlds.Add(learningWorld);
     
         var modalDialogReturnValue = ModalDialogReturnValue.Yes;
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting(viewModel, presentationLogic : presentationLogic);
-        systemUnderTest.DeletedUnsavedWorld = world;
+        systemUnderTest.DeletedUnsavedWorld = learningWorld;
     
         systemUnderTest.OnSaveDeletedWorldDialogClose(returnValueTuple);
 
-        presentationLogic.Received().SaveWorldAsync(world);
+        presentationLogic.Received().SaveLearningWorldAsync(learningWorld);
     }
     
     [Test]
     public void OnSaveDeletedWorldDialogClose_ModalDialogNo()
     {
         var viewModel = new AuthoringToolWorkspaceViewModel();
-        var world = new WorldViewModel("f", "f", "f", "f", "f", "f");
-        viewModel._worlds.Add(world);
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        viewModel._learningWorlds.Add(learningWorld);
         
         var modalDialogReturnValue = ModalDialogReturnValue.No;
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting(viewModel);
-        systemUnderTest.DeletedUnsavedWorld = world;
+        systemUnderTest.DeletedUnsavedWorld = learningWorld;
         
         systemUnderTest.OnSaveDeletedWorldDialogClose(returnValueTuple);
 
@@ -619,49 +620,49 @@ public class AuthoringToolWorkspacePresenterUt
     public void  OnSaveDeletedWorldDialogClose_SwitchDefaultValue_ThrowsException()
     {
         var viewModel = new AuthoringToolWorkspaceViewModel();
-        var world = new WorldViewModel("f", "f", "f", "f", "f", "f");
-        viewModel._worlds.Add(world);
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        viewModel._learningWorlds.Add(learningWorld);
         
         var modalDialogReturnValue = (ModalDialogReturnValue)10;
         var returnValueTuple =
             new ModalDialogOnCloseResult(modalDialogReturnValue, null!);
 
         var systemUnderTest = CreatePresenterForTesting(viewModel);
-        systemUnderTest.DeletedUnsavedWorld = world;
+        systemUnderTest.DeletedUnsavedWorld = learningWorld;
 
         Assert.Throws<ArgumentOutOfRangeException>(() => systemUnderTest.OnSaveDeletedWorldDialogClose(returnValueTuple));
     }
 
     [Test]
-    public async Task SaveWorldAsync_CallsPresentationLogic()
+    public async Task SaveLearningWorldAsync_CallsPresentationLogic()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var world = new WorldViewModel("fo", "f", "", "f", "", "");
+        var learningWorld = new LearningWorldViewModel("fo", "f", "", "f", "", "");
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
 
-        await systemUnderTest.SaveWorldAsync(world);
-        await presentationLogic.Received().SaveWorldAsync(world);
+        await systemUnderTest.SaveLearningWorldAsync(learningWorld);
+        await presentationLogic.Received().SaveLearningWorldAsync(learningWorld);
     }
 
     [Test]
-    public async Task SaveSelectedWorldAsync_CallsPresentationLogic()
+    public async Task SaveSelectedLearningWorldAsync_CallsPresentationLogic()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var world = new WorldViewModel("fo", "f", "", "f", "", "");
+        var learningWorld = new LearningWorldViewModel("fo", "f", "", "f", "", "");
         var viewModel = new AuthoringToolWorkspaceViewModel();
-        viewModel._worlds.Add(world);
-        viewModel.SelectedWorld = world;
+        viewModel._learningWorlds.Add(learningWorld);
+        viewModel.SelectedLearningWorld = learningWorld;
 
         var systemUnderTest =
             CreatePresenterForTesting(presentationLogic: presentationLogic, authoringToolWorkspaceVm: viewModel);
 
-        await systemUnderTest.SaveSelectedWorldAsync();
-        await presentationLogic.Received().SaveWorldAsync(world);
+        await systemUnderTest.SaveSelectedLearningWorldAsync();
+        await presentationLogic.Received().SaveLearningWorldAsync(learningWorld);
     }
 
     [Test]
-    public void SaveSelectedWorldAsync_ThrowsIfSelectedWorldNull()
+    public void SaveSelectedLearningWorldAsync_ThrowsIfSelectedWorldNull()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var viewModel = new AuthoringToolWorkspaceViewModel();
@@ -669,33 +670,33 @@ public class AuthoringToolWorkspacePresenterUt
         var systemUnderTest =
             CreatePresenterForTesting(presentationLogic: presentationLogic, authoringToolWorkspaceVm: viewModel);
 
-        Assert.ThrowsAsync<ApplicationException>(async () => await systemUnderTest.SaveSelectedWorldAsync());
+        Assert.ThrowsAsync<ApplicationException>(async () => await systemUnderTest.SaveSelectedLearningWorldAsync());
         
     }
     
     #endregion
     
-    #region LoadWorldAsync
+    #region LoadLearningWorldAsync
 
     [Test]
-    public async Task LoadWorldAsync_CallsPresentationLogicAndAddsToViewModel()
+    public async Task LoadLearningWorldAsync_CallsPresentationLogicAndAddsToViewModel()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var world = new WorldViewModel("f", "f", "f", "f", "f", "f");
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
         presentationLogic
-            .When(x => x.LoadWorldAsync(Arg.Any<IAuthoringToolWorkspaceViewModel>()))
+            .When(x => x.LoadLearningWorldAsync(Arg.Any<IAuthoringToolWorkspaceViewModel>()))
             .Do(y =>
             {
-                ((AuthoringToolWorkspaceViewModel)y.Args()[0])._worlds.Add(world);
-                ((AuthoringToolWorkspaceViewModel)y.Args()[0]).SelectedWorld = world;
+                ((AuthoringToolWorkspaceViewModel)y.Args()[0])._learningWorlds.Add(learningWorld);
+                ((AuthoringToolWorkspaceViewModel)y.Args()[0]).SelectedLearningWorld = learningWorld;
             });
         var viewModel = new AuthoringToolWorkspaceViewModel();
 
         var systemUnderTest = CreatePresenterForTesting(viewModel, presentationLogic: presentationLogic);
 
-        await systemUnderTest.LoadWorldAsync();
-        await presentationLogic.Received().LoadWorldAsync(viewModel);
-        Assert.That(viewModel.Worlds, Contains.Item(world));
+        await systemUnderTest.LoadLearningWorldAsync();
+        await presentationLogic.Received().LoadLearningWorldAsync(viewModel);
+        Assert.That(viewModel.LearningWorlds, Contains.Item(learningWorld));
     }
 
     #endregion
@@ -706,8 +707,8 @@ public class AuthoringToolWorkspacePresenterUt
     public void OnBeforeShutdown_CancelsShutdownCreatesQueueAndInvokesViewUpdate()
     {
         var viewModel = new AuthoringToolWorkspaceViewModel();
-        var world = new WorldViewModel("f", "f", "f", "f", "f", "f");
-        viewModel._worlds.Add(world);
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        viewModel._learningWorlds.Add(learningWorld);
         var args = new BeforeShutdownEventArgs();
         var callbackCalled = false;
         var callback = () => { callbackCalled = true; };
@@ -720,7 +721,7 @@ public class AuthoringToolWorkspacePresenterUt
         Assert.Multiple(() =>
         {
             Assert.That(args.CancelShutdownState, Is.True);
-            Assert.That(systemUnderTest.UnsavedWorldsQueue, Contains.Item(world));
+            Assert.That(systemUnderTest.UnsavedWorldsQueue, Contains.Item(learningWorld));
             Assert.That(systemUnderTest.SaveUnsavedChangesDialogOpen, Is.True);
             Assert.That(callbackCalled, Is.True);
         });
@@ -735,7 +736,7 @@ public class AuthoringToolWorkspacePresenterUt
 
         var systemUnderTest = CreatePresenterForTesting(shutdownManager: shutdownManager);
         systemUnderTest.SaveUnsavedChangesDialogOpen = true;
-        systemUnderTest.UnsavedWorldsQueue = new Queue<WorldViewModel>();
+        systemUnderTest.UnsavedWorldsQueue = new Queue<LearningWorldViewModel>();
         
         systemUnderTest.CompletedSaveQueue(cancelled);
         Assert.Multiple(() =>
@@ -765,37 +766,37 @@ public class AuthoringToolWorkspacePresenterUt
         var resultTuple = new Tuple<string, MemoryStream>(fileName, stream);
         var authoringToolWorkspace = new AuthoringToolWorkspaceViewModel();
         
-        var world = new WorldViewModel("n", "sn", "a", "l", "d", "g");
-        var space = new SpaceViewModel("a", "b", "c", "d", "e", 5);
-        world.Spaces.Add(space);
-        world.SelectedObject = space;
-        world.ShowingSpaceView = true;
-        authoringToolWorkspace._worlds.Add(world);
-        authoringToolWorkspace.SelectedWorld = world;
+        var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
+        var space = new LearningSpaceViewModel("a", "b", "c", "d", "e", 5);
+        learningWorld.LearningSpaces.Add(space);
+        learningWorld.SelectedLearningObject = space;
+        learningWorld.ShowingLearningSpaceView = true;
+        authoringToolWorkspace._learningWorlds.Add(learningWorld);
+        authoringToolWorkspace.SelectedLearningWorld = learningWorld;
         
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var content = new ContentViewModel(fileName, ending, "");
-        presentationLogic.LoadContentViewModel(Arg.Any<string>(), Arg.Any<MemoryStream>())
-            .Returns(content);
-        var worldPresenter = Substitute.For<IWorldPresenter>();
-        var spacePresenter = Substitute.For<ISpacePresenter>();
-        spacePresenter.SpaceVm.Returns(space);
+        var learningContent = new LearningContentViewModel(fileName, ending, "");
+        presentationLogic.LoadLearningContentViewModel(Arg.Any<string>(), Arg.Any<MemoryStream>())
+            .Returns(learningContent);
+        var learningWorldPresenter = Substitute.For<ILearningWorldPresenter>();
+        var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
+        learningSpacePresenter.LearningSpaceVm.Returns(space);
         var logger = Substitute.For<ILogger<AuthoringToolWorkspacePresenter>>();
         var systemUnderTest = 
-            CreatePresenterForTesting(authoringToolWorkspace, presentationLogic, worldPresenter, spacePresenter, logger: logger);
+            CreatePresenterForTesting(authoringToolWorkspace, presentationLogic, learningWorldPresenter, learningSpacePresenter, logger: logger);
 
         systemUnderTest.ProcessDragAndDropResult(resultTuple);
 
         switch (ending)
         {
             case "awf":
-                presentationLogic.Received().LoadWorldViewModel(authoringToolWorkspace, stream);
+                presentationLogic.Received().LoadLearningWorldViewModel(authoringToolWorkspace, stream);
                 break;
             case "asf":
-                presentationLogic.Received().LoadSpaceViewModel(world, stream);
+                presentationLogic.Received().LoadLearningSpaceViewModel(learningWorld, stream);
                 break;
             case "aef":
-                presentationLogic.Received().LoadElementViewModel(space, 0, stream);
+                presentationLogic.Received().LoadLearningElementViewModel(space, 0, stream);
                 break;
             case "jpg":
             case "png":
@@ -816,7 +817,7 @@ public class AuthoringToolWorkspacePresenterUt
             case "mp4":
             case "h5p":
             case "pdf":
-                presentationLogic.Received().LoadContentViewModel(fileName, stream);
+                presentationLogic.Received().LoadLearningContentViewModel(fileName, stream);
                 break;
             default:
                 //logger.Received().Log(LogLevel.Information,$"Couldn't load file 'testFile.{ending}', because the file extension '{ending}' is not supported.");
@@ -827,215 +828,215 @@ public class AuthoringToolWorkspacePresenterUt
 
     [Test]
     public void
-        CallCreateElementWithPreloadedContentFromActiveView_NoWorldSelected_DoNothing()
+        CallCreateLearningElementWithPreloadedContentFromActiveView_NoLearningWorldSelected_DoNothing()
     {
-        var content = new ContentViewModel("n", "t", "");
+        var learningContent = new LearningContentViewModel("n", "t", "");
 
         var systemUnderTest = CreatePresenterForTesting();
         
-        systemUnderTest.CallCreateElementWithPreloadedContentFromActiveView(content);
+        systemUnderTest.CallCreateLearningElementWithPreloadedContentFromActiveView(learningContent);
         
         Assert.Pass();
     }
     
     [Test]
-    public void CallCreateElementWithPreloadedContentFromActiveView_ShowingSpaceViewIsFalse_CorrectInformationMessageToShow()
+    public void CallCreateLearningElementWithPreloadedContentFromActiveView_ShowingLearningSpaceViewIsFalse_CorrectInformationMessageToShow()
     {
-        var content = new ContentViewModel("n", "t", "");
-        var world = new WorldViewModel("n", "sn", "a", "l", "d", "g");
-        var space = new SpaceViewModel("n", "sn", "a", "d", "g");
-        world.Spaces.Add(space);
-        world.SelectedObject = space;
-        world.ShowingSpaceView = false;
+        var learningContent = new LearningContentViewModel("n", "t", "");
+        var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
+        var learningSpace = new LearningSpaceViewModel("n", "sn", "a", "d", "g");
+        learningWorld.LearningSpaces.Add(learningSpace);
+        learningWorld.SelectedLearningObject = learningSpace;
+        learningWorld.ShowingLearningSpaceView = false;
         var authoringToolWorkspaceVm = new AuthoringToolWorkspaceViewModel();
-        authoringToolWorkspaceVm._worlds.Add(world);
-        authoringToolWorkspaceVm.SelectedWorld = world;
-        var spacePresenter = Substitute.For<ISpacePresenter>();
-        spacePresenter.SpaceVm.Returns(space);
+        authoringToolWorkspaceVm._learningWorlds.Add(learningWorld);
+        authoringToolWorkspaceVm.SelectedLearningWorld = learningWorld;
+        var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
+        learningSpacePresenter.LearningSpaceVm.Returns(learningSpace);
 
         var systemUnderTest =
-            CreatePresenterForTesting(authoringToolWorkspaceVm, spacePresenter: spacePresenter);
+            CreatePresenterForTesting(authoringToolWorkspaceVm, learningSpacePresenter: learningSpacePresenter);
         
-        systemUnderTest.CallCreateElementWithPreloadedContentFromActiveView(content);
+        systemUnderTest.CallCreateLearningElementWithPreloadedContentFromActiveView(learningContent);
 
-        Assert.That(systemUnderTest.InformationMessageToShow, Is.EqualTo("Elements can only get loaded into spaces."));
+        Assert.That(systemUnderTest.InformationMessageToShow, Is.EqualTo("Learning elements can only get loaded into learning spaces."));
         Assert.Pass();
     }
     
     [Test]
     public void
-        CallCreateElementWithPreloadedContentFromActiveView_SpaceSelected_CallsSpacePresenter()
+        CallCreateLearningElementWithPreloadedContentFromActiveView_LearningSpaceSelected_CallsSpacePresenter()
     {
-        var content = new ContentViewModel("n", "t", "");
-        var world = new WorldViewModel("n", "sn", "a", "l", "d", "g");
-        var space = new SpaceViewModel("n", "sn", "a", "d", "g");
-        world.Spaces.Add(space);
-        world.SelectedObject = space;
-        world.ShowingSpaceView = true;
+        var learningContent = new LearningContentViewModel("n", "t", "");
+        var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
+        var learningSpace = new LearningSpaceViewModel("n", "sn", "a", "d", "g");
+        learningWorld.LearningSpaces.Add(learningSpace);
+        learningWorld.SelectedLearningObject = learningSpace;
+        learningWorld.ShowingLearningSpaceView = true;
         var authoringToolWorkspaceVm = new AuthoringToolWorkspaceViewModel();
-        authoringToolWorkspaceVm._worlds.Add(world);
-        authoringToolWorkspaceVm.SelectedWorld = world;
-        var spacePresenter = Substitute.For<ISpacePresenter>();
-        spacePresenter.SpaceVm.Returns(space);
+        authoringToolWorkspaceVm._learningWorlds.Add(learningWorld);
+        authoringToolWorkspaceVm.SelectedLearningWorld = learningWorld;
+        var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
+        learningSpacePresenter.LearningSpaceVm.Returns(learningSpace);
 
         var systemUnderTest =
-            CreatePresenterForTesting(authoringToolWorkspaceVm, spacePresenter: spacePresenter);
+            CreatePresenterForTesting(authoringToolWorkspaceVm, learningSpacePresenter: learningSpacePresenter);
         
-        systemUnderTest.CallCreateElementWithPreloadedContentFromActiveView(content);
+        systemUnderTest.CallCreateLearningElementWithPreloadedContentFromActiveView(learningContent);
         
-        spacePresenter.Received().CreateElementWithPreloadedContent(content);
+        learningSpacePresenter.Received().CreateLearningElementWithPreloadedContent(learningContent);
     }
     
     [Test]
     public void
-        CallCreateElementWithPreloadedContentFromActiveView_SpaceSelectedButSpaceVmIsNull_DoNothing()
+        CallCreateLearningElementWithPreloadedContentFromActiveView_LearningSpaceSelectedButSpaceVmIsNull_DoNothing()
     {
-        var content = new ContentViewModel("n", "t", "");
-        var world = new WorldViewModel("n", "sn", "a", "l", "d", "g");
-        var space = new SpaceViewModel("n", "sn", "a", "d", "g");
-        world.Spaces.Add(space);
-        world.SelectedObject = space;
-        world.ShowingSpaceView = true;
+        var learningContent = new LearningContentViewModel("n", "t", "");
+        var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
+        var learningSpace = new LearningSpaceViewModel("n", "sn", "a", "d", "g");
+        learningWorld.LearningSpaces.Add(learningSpace);
+        learningWorld.SelectedLearningObject = learningSpace;
+        learningWorld.ShowingLearningSpaceView = true;
         var authoringToolWorkspaceVm = new AuthoringToolWorkspaceViewModel();
-        authoringToolWorkspaceVm._worlds.Add(world);
-        authoringToolWorkspaceVm.SelectedWorld = world;
-        var spacePresenter = Substitute.For<ISpacePresenter>();
-        //spacePresenter.SpaceVm.Returns(space);
+        authoringToolWorkspaceVm._learningWorlds.Add(learningWorld);
+        authoringToolWorkspaceVm.SelectedLearningWorld = learningWorld;
+        var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
+        //learningSpacePresenter.LearningSpaceVm.Returns(learningSpace);
 
         var systemUnderTest =
-            CreatePresenterForTesting(authoringToolWorkspaceVm, spacePresenter: spacePresenter);
+            CreatePresenterForTesting(authoringToolWorkspaceVm, learningSpacePresenter: learningSpacePresenter);
         
-        systemUnderTest.CallCreateElementWithPreloadedContentFromActiveView(content);
+        systemUnderTest.CallCreateLearningElementWithPreloadedContentFromActiveView(learningContent);
         
         Assert.Pass();
     }
 
     [Test]
-    public void LoadWorldFromFileStream_CallsPresentationLogic()
+    public void LoadLearningWorldFromFileStream_CallsPresentationLogic()
     {
         var authoringToolWorkspace = new AuthoringToolWorkspaceViewModel();
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspace, presentationLogic);
         var stream = Substitute.For<Stream>();
 
-        systemUnderTest.LoadWorldFromFileStream(stream);
+        systemUnderTest.LoadLearningWorldFromFileStream(stream);
 
-        presentationLogic.Received().LoadWorldViewModel(authoringToolWorkspace, stream);
+        presentationLogic.Received().LoadLearningWorldViewModel(authoringToolWorkspace, stream);
     }
 
     [Test]
-    public void LoadSpaceFromFileStream_CallsPresentationLogic()
+    public void LoadLearningSpaceFromFileStream_CallsPresentationLogic()
     {
         var authoringToolWorkspace = new AuthoringToolWorkspaceViewModel();
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspace, presentationLogic);
-        var world = new WorldViewModel("f", "f", "f", "f", "f", "f");
-        authoringToolWorkspace.Worlds.Add(world);
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        authoringToolWorkspace.LearningWorlds.Add(learningWorld);
         
-        systemUnderTest.SetSelectedWorld(world);
+        systemUnderTest.SetSelectedLearningWorld(learningWorld);
         var stream = Substitute.For<Stream>();
 
-        systemUnderTest.LoadSpaceFromFileStream(stream);
+        systemUnderTest.LoadLearningSpaceFromFileStream(stream);
 
-        presentationLogic.Received().LoadSpaceViewModel(world, stream);
+        presentationLogic.Received().LoadLearningSpaceViewModel(learningWorld, stream);
     }
 
     [Test]
-    public void LoadSpaceFromFileStream_SelectedWorldIsNull_CorrectInformationMessageToShow()
+    public void LoadLearningSpaceFromFileStream_SelectedLearningWorldIsNull_CorrectInformationMessageToShow()
     {
         var systemUnderTest = CreatePresenterForTesting();
         
         var stream = Substitute.For<Stream>();
         
-        Assert.That(systemUnderTest.InformationMessageToShow, Is.Not.EqualTo("A world must be selected to import a space."));
+        Assert.That(systemUnderTest.InformationMessageToShow, Is.Not.EqualTo("A learning world must be selected to import a learning space."));
 
-        systemUnderTest.LoadSpaceFromFileStream(stream);
+        systemUnderTest.LoadLearningSpaceFromFileStream(stream);
         
-        Assert.That(systemUnderTest.InformationMessageToShow, Is.EqualTo("A world must be selected to import a space."));
+        Assert.That(systemUnderTest.InformationMessageToShow, Is.EqualTo("A learning world must be selected to import a learning space."));
     }
 
     [Test]
-    public void LoadElementFromFileStream_SelectedWorldIsNull_CorrectInformationMessageToShow()
+    public void LoadLearningElementFromFileStream_SelectedLearningWorldIsNull_CorrectInformationMessageToShow()
     {
         var systemUnderTest = CreatePresenterForTesting();
         
         var stream = Substitute.For<Stream>();
         
-        Assert.That(systemUnderTest.InformationMessageToShow, Is.Not.EqualTo("A world must be selected to import a element."));
+        Assert.That(systemUnderTest.InformationMessageToShow, Is.Not.EqualTo("A learning world must be selected to import a learning element."));
 
-        systemUnderTest.LoadElementFromFileStream(stream, 0);
+        systemUnderTest.LoadLearningElementFromFileStream(stream, 0);
         
-        Assert.That(systemUnderTest.InformationMessageToShow, Is.EqualTo("A world must be selected to import a element."));
+        Assert.That(systemUnderTest.InformationMessageToShow, Is.EqualTo("A learning world must be selected to import a learning element."));
     }
     
     [Test]
-    public void LoadElementFromFileStream_ShowingSpaceViewIsFalse_CorrectInformationMessageToShow()
+    public void LoadLearningElementFromFileStream_ShowingLearningSpaceViewIsFalse_CorrectInformationMessageToShow()
     {
         var authoringToolWorkspace = new AuthoringToolWorkspaceViewModel();
-        var world = new WorldViewModel("n", "sn", "a", "l", "d", "g")
+        var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g")
         {
-            ShowingSpaceView = false
+            ShowingLearningSpaceView = false
         };
-        authoringToolWorkspace.Worlds.Add(world);
-        authoringToolWorkspace.SelectedWorld = world;
-        var spacePresenter = Substitute.For<ISpacePresenter>();
-        spacePresenter.SpaceVm.Returns((SpaceViewModel?) null);
+        authoringToolWorkspace.LearningWorlds.Add(learningWorld);
+        authoringToolWorkspace.SelectedLearningWorld = learningWorld;
+        var spacePresenter = Substitute.For<ILearningSpacePresenter>();
+        spacePresenter.LearningSpaceVm.Returns((LearningSpaceViewModel?) null);
         var stream = Substitute.For<Stream>();
         
-        var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspace, spacePresenter: spacePresenter);
+        var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspace, learningSpacePresenter: spacePresenter);
         
-        systemUnderTest.LoadElementFromFileStream(stream, 0);
+        systemUnderTest.LoadLearningElementFromFileStream(stream, 0);
 
-        Assert.That(systemUnderTest.InformationMessageToShow, Is.EqualTo("Elements can only get loaded into spaces."));
+        Assert.That(systemUnderTest.InformationMessageToShow, Is.EqualTo("Learning elements can only get loaded into learning spaces."));
         Assert.Pass();
     }
     
     [Test]
-    public void LoadElementFromFileStream_SpaceVmInSpacePresenterIsNull_ThrowsException()
+    public void LoadLearningElementFromFileStream_LearningSpaceVmInLearningSpacePresenterIsNull_ThrowsException()
     {
         var authoringToolWorkspace = new AuthoringToolWorkspaceViewModel();
-        var world = new WorldViewModel("n", "sn", "a", "l", "d", "g")
+        var learningWorld = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g")
         {
-            ShowingSpaceView = true
+            ShowingLearningSpaceView = true
         };
-        authoringToolWorkspace.Worlds.Add(world);
-        authoringToolWorkspace.SelectedWorld = world;
-        var spacePresenter = Substitute.For<ISpacePresenter>();
-        spacePresenter.SpaceVm.Returns((SpaceViewModel?) null);
+        authoringToolWorkspace.LearningWorlds.Add(learningWorld);
+        authoringToolWorkspace.SelectedLearningWorld = learningWorld;
+        var spacePresenter = Substitute.For<ILearningSpacePresenter>();
+        spacePresenter.LearningSpaceVm.Returns((LearningSpaceViewModel?) null);
         var stream = Substitute.For<Stream>();
         
-        var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspace, spacePresenter: spacePresenter);
+        var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspace, learningSpacePresenter: spacePresenter);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.LoadElementFromFileStream(stream, 0));
-        Assert.That(ex!.Message, Is.EqualTo("ShowingSpaceView for World 'n' is true, but SpaceVm in SpacePresenter is null"));
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.LoadLearningElementFromFileStream(stream, 0));
+        Assert.That(ex!.Message, Is.EqualTo("ShowingLearningSpaceView for LearningWorld 'n' is true, but LearningSpaceVm in LearningSpacePresenter is null"));
     }
     
     [Test]
     [TestCase(true)]
     [TestCase(false)]
-    public void LoadElementFromFileStream_CallsPresentationLogic(bool showingSpaceView)
+    public void LoadLearningElementFromFileStream_CallsPresentationLogic(bool showingLearningSpaceView)
     {
         var authoringToolWorkspace = new AuthoringToolWorkspaceViewModel();
-        var world = new WorldViewModel("f", "f", "f", "f", "f", "f");
-        var existingSpace = Substitute.For<ISpaceViewModel>();
-        var spacePresenter = Substitute.For<ISpacePresenter>();
-        spacePresenter.SpaceVm.Returns(existingSpace);
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        var existingLearningSpace = Substitute.For<ILearningSpaceViewModel>();
+        var spacePresenter = Substitute.For<ILearningSpacePresenter>();
+        spacePresenter.LearningSpaceVm.Returns(existingLearningSpace);
         
-        world.ShowingSpaceView = showingSpaceView;
+        learningWorld.ShowingLearningSpaceView = showingLearningSpaceView;
         
-        authoringToolWorkspace.Worlds.Add(world);
-        authoringToolWorkspace.SelectedWorld = world;
+        authoringToolWorkspace.LearningWorlds.Add(learningWorld);
+        authoringToolWorkspace.SelectedLearningWorld = learningWorld;
         var presentationLogic = Substitute.For<IPresentationLogic>();
 
         var systemUnderTest = CreatePresenterForTesting(authoringToolWorkspace, presentationLogic,
-            spacePresenter: spacePresenter);
+            learningSpacePresenter: spacePresenter);
         var stream = Substitute.For<Stream>();
 
-        systemUnderTest.LoadElementFromFileStream(stream, 0);
+        systemUnderTest.LoadLearningElementFromFileStream(stream, 0);
         
-        if (showingSpaceView)
+        if (showingLearningSpaceView)
         {
-            presentationLogic.Received().LoadElementViewModel(existingSpace, 0, stream);
+            presentationLogic.Received().LoadLearningElementViewModel(existingLearningSpace, 0, stream);
         }
     }
 
@@ -1044,26 +1045,26 @@ public class AuthoringToolWorkspacePresenterUt
 
     private AuthoringToolWorkspacePresenter CreatePresenterForTesting(
         IAuthoringToolWorkspaceViewModel? authoringToolWorkspaceVm = null, IPresentationLogic? presentationLogic = null,
-        IWorldPresenter? worldPresenter = null, ISpacePresenter? spacePresenter = null,
+        ILearningWorldPresenter? learningWorldPresenter = null, ILearningSpacePresenter? learningSpacePresenter = null,
         ILogger<AuthoringToolWorkspacePresenter>? logger = null, IShutdownManager? shutdownManager = null)
     {
         authoringToolWorkspaceVm ??= Substitute.For<IAuthoringToolWorkspaceViewModel>();
         presentationLogic ??= Substitute.For<IPresentationLogic>();
-        worldPresenter ??= Substitute.For<IWorldPresenter>();
-        spacePresenter ??= Substitute.For<ISpacePresenter>();
+        learningWorldPresenter ??= Substitute.For<ILearningWorldPresenter>();
+        learningSpacePresenter ??= Substitute.For<ILearningSpacePresenter>();
         logger ??= Substitute.For<ILogger<AuthoringToolWorkspacePresenter>>();
         shutdownManager ??= Substitute.For<IShutdownManager>();
         return new AuthoringToolWorkspacePresenter(authoringToolWorkspaceVm, presentationLogic,
-            spacePresenter, logger, shutdownManager);
+            learningSpacePresenter, logger, shutdownManager);
     }
 
-    private WorldPresenter CreateWorldPresenter(IPresentationLogic? presentationLogic = null,
-        ISpacePresenter? spacePresenter = null, ILogger<WorldPresenter>? logger = null)
+    private LearningWorldPresenter CreateLearningWorldPresenter(IPresentationLogic? presentationLogic = null,
+        ILearningSpacePresenter? learningSpacePresenter = null, ILogger<LearningWorldPresenter>? logger = null)
     {
         presentationLogic ??= Substitute.For<IPresentationLogic>();
-        spacePresenter ??= Substitute.For<ISpacePresenter>();
-        logger ??= Substitute.For<ILogger<WorldPresenter>>();
+        learningSpacePresenter ??= Substitute.For<ILearningSpacePresenter>();
+        logger ??= Substitute.For<ILogger<LearningWorldPresenter>>();
         _authoringToolWorkspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
-        return new WorldPresenter(presentationLogic, spacePresenter, logger, _authoringToolWorkspaceViewModel);
+        return new LearningWorldPresenter(presentationLogic, learningSpacePresenter, logger, _authoringToolWorkspaceViewModel);
     }
 }

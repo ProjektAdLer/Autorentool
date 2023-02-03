@@ -11,10 +11,10 @@ using Microsoft.Extensions.Primitives;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.PresentationLogic;
-using Presentation.PresentationLogic.Element;
-using Presentation.PresentationLogic.Space;
+using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Toolbox;
-using Presentation.PresentationLogic.World;
 using Presentation.View.Toolbox;
 using Shared;
 using TestContext = Bunit.TestContext;
@@ -39,7 +39,7 @@ public class ToolboxRenderFragmentFactoryUt
     
     [Test]
     [TestCaseSource(typeof(ToolboxRenderFragmentFactoryTestCases))]
-    public void ToolboxRenderFragmentFactory_GetRenderFragment_ReturnsCorrectFragment(IDisplayableObject obj, string expectedMarkup)
+    public void ToolboxRenderFragmentFactory_GetRenderFragment_ReturnsCorrectFragment(IDisplayableLearningObject obj, string expectedMarkup)
     {
         var systemUnderTest = GetTestableToolboxRenderFragmentFactory();
 
@@ -52,7 +52,7 @@ public class ToolboxRenderFragmentFactoryUt
     
     [Test]
     [TestCaseSource(typeof(ToolboxRenderFragmentFactoryTestCases))]
-    public void ToolboxRenderFragmentFactory_GetRenderFragment_CallingTwiceReturnsSameFragment(IDisplayableObject obj, string expectedMarkup)
+    public void ToolboxRenderFragmentFactory_GetRenderFragment_CallingTwiceReturnsSameFragment(IDisplayableLearningObject obj, string expectedMarkup)
     {
         var cache = new ToolboxMemoryCacheMock();
         
@@ -81,7 +81,7 @@ public class ToolboxRenderFragmentFactoryUt
         var systemUnderTest = GetTestableToolboxRenderFragmentFactory();
 
         Assert.Throws<ArgumentOutOfRangeException>(() =>
-            systemUnderTest.GetRenderFragment(Substitute.For<IDisplayableObject>()));
+            systemUnderTest.GetRenderFragment(Substitute.For<IDisplayableLearningObject>()));
     }
 
 
@@ -99,8 +99,8 @@ public class ToolboxRenderFragmentFactoryUt
         {
             yield return new object[]
             {
-                new WorldViewModel("myname", "fa", "fa", "fa", "fa", "fa"),
-                @"<div class=""col-3 element text-center text-wrap world"">
+                new LearningWorldViewModel("myname", "fa", "fa", "fa", "fa", "fa"),
+                @"<div class=""col-3 element text-center text-wrap learning-world"">
 myname
 <br/>
     <i class=""bi bi-globe""></i>
@@ -109,8 +109,8 @@ myname
             
             yield return new object[]
             {
-                new SpaceViewModel("a name", "sn", "authors", "a description", "goals"),
-                @"<div class=""col-3 element text-center text-wrap space"">
+                new LearningSpaceViewModel("a name", "sn", "authors", "a description", "goals"),
+                @"<div class=""col-3 element text-center text-wrap learning-space"">
 a name
 <br/>
     <p>a description</p>
@@ -119,8 +119,8 @@ a name
 
             yield return new object[]
             {
-                new ElementViewModel("another name", "an", null!, "url","authors", "description", "goals",ElementDifficultyEnum.Easy),
-                @"<div class=""col-3 element text-center text-wrap element"">
+                new LearningElementViewModel("another name", "an", null!, "url","authors", "description", "goals",LearningElementDifficultyEnum.Easy),
+                @"<div class=""col-3 element text-center text-wrap learning-element"">
 another name
 <br/>
     <p>I am an element</p>

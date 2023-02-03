@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using Presentation.Components.ModalDialog;
-using Presentation.PresentationLogic.Content;
-using Presentation.PresentationLogic.Element;
+using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.ModalDialog;
-using Presentation.PresentationLogic.Space;
-using Presentation.PresentationLogic.Space.SpaceLayout;
 using Shared;
 
 namespace PresentationTest.PresentationLogic.ModalDialog;
@@ -33,12 +33,12 @@ public class ModalDialogInputFieldsFactoryUt
     [TestCase("css", ContentTypeEnum.Text)]
     [TestCase("h5p", ContentTypeEnum.H5P)]
     [TestCase("pdf", ContentTypeEnum.PDF)]
-    public void GetCreateElementInputFields_ValidDragAndDrop_ReturnsCorrectInputFields_ForCorrectFileExtensionAndCorrectFileType(string 
+    public void GetCreateLearningElementInputFields_ValidDragAndDrop_ReturnsCorrectInputFields_ForCorrectFileExtensionAndCorrectFileType(string 
         correctFileExtensionForTest, ContentTypeEnum correctFileTypeForTest)
     {
         var name = "foo";
-        var dragAndDropContent =
-            new ContentViewModel(
+        var dragAndDropLearningContent =
+            new LearningContentViewModel(
                 name,
                 correctFileExtensionForTest,
                 ""
@@ -49,7 +49,7 @@ public class ModalDialogInputFieldsFactoryUt
 
 
         var modalDialogInputFields =
-            systemUnderTest.GetCreateElementInputFields(dragAndDropContent).ToList();
+            systemUnderTest.GetCreateLearningElementInputFields(dragAndDropLearningContent).ToList();
 
         //Name
         var nameInputField = modalDialogInputFields.ElementAt(0);
@@ -229,10 +229,10 @@ public class ModalDialogInputFieldsFactoryUt
         
         Assert.That(difficultyMapping.RequiredValues, Is.Null);
         Assert.That(difficultyMapping.AvailableChoices.Count(), Is.EqualTo(4));
-        Assert.That(difficultyMapping.AvailableChoices.ElementAt(0), Is.EqualTo(ElementDifficultyEnum.None.ToString()));
-        Assert.That(difficultyMapping.AvailableChoices.ElementAt(1), Is.EqualTo(ElementDifficultyEnum.Easy.ToString()));
-        Assert.That(difficultyMapping.AvailableChoices.ElementAt(2), Is.EqualTo(ElementDifficultyEnum.Medium.ToString()));
-        Assert.That(difficultyMapping.AvailableChoices.ElementAt(3), Is.EqualTo(ElementDifficultyEnum.Hard.ToString()));
+        Assert.That(difficultyMapping.AvailableChoices.ElementAt(0), Is.EqualTo(LearningElementDifficultyEnum.None.ToString()));
+        Assert.That(difficultyMapping.AvailableChoices.ElementAt(1), Is.EqualTo(LearningElementDifficultyEnum.Easy.ToString()));
+        Assert.That(difficultyMapping.AvailableChoices.ElementAt(2), Is.EqualTo(LearningElementDifficultyEnum.Medium.ToString()));
+        Assert.That(difficultyMapping.AvailableChoices.ElementAt(3), Is.EqualTo(LearningElementDifficultyEnum.Hard.ToString()));
 
         Assert.That(modalDialogInputFields.ElementAt(9).Name, Is.EqualTo("Workload (min)"));
         Assert.That(modalDialogInputFields.ElementAt(9).Type, Is.EqualTo(ModalDialogInputType.Number));
@@ -259,7 +259,7 @@ public class ModalDialogInputFieldsFactoryUt
     [TestCase("css", ContentTypeEnum.Text)]
     [TestCase("h5p", ContentTypeEnum.H5P)]
     [TestCase("pdf", ContentTypeEnum.PDF)]
-    public void GetCreateElementInputFields_NoDragAndDrop_ReturnsCorrectInputFields(string 
+    public void GetCreateLearningElementInputFields_NoDragAndDrop_ReturnsCorrectInputFields(string 
         correctFileExtensionForTest, ContentTypeEnum correctFileTypeForTest)
     {
         var systemUnderTest = GetModalDialogInputFieldsFactoryForTesting();
@@ -267,7 +267,7 @@ public class ModalDialogInputFieldsFactoryUt
 
 
         var modalDialogInputFields =
-            systemUnderTest.GetCreateElementInputFields(null).ToList();
+            systemUnderTest.GetCreateLearningElementInputFields(null).ToList();
         
         
             Assert.That(modalDialogInputFields.ElementAt(0).Name, Is.EqualTo("Name"));
@@ -375,10 +375,10 @@ public class ModalDialogInputFieldsFactoryUt
             Assert.That(difficultyValuesToChoiceList.ElementAt(0).RequiredValues, Is.Null);
                 
             Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.Count(), Is.EqualTo(4));
-            Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(0), Is.EqualTo(ElementDifficultyEnum.None.ToString()));
-            Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(1), Is.EqualTo(ElementDifficultyEnum.Easy.ToString()));
-            Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(2), Is.EqualTo(ElementDifficultyEnum.Medium.ToString()));
-            Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(3), Is.EqualTo(ElementDifficultyEnum.Hard.ToString()));
+            Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(0), Is.EqualTo(LearningElementDifficultyEnum.None.ToString()));
+            Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(1), Is.EqualTo(LearningElementDifficultyEnum.Easy.ToString()));
+            Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(2), Is.EqualTo(LearningElementDifficultyEnum.Medium.ToString()));
+            Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(3), Is.EqualTo(LearningElementDifficultyEnum.Hard.ToString()));
             
 
             Assert.That(modalDialogInputFields.ElementAt(9).Name, Is.EqualTo("Workload (min)"));
@@ -391,18 +391,18 @@ public class ModalDialogInputFieldsFactoryUt
     [TestCase("xyz")]
     [TestCase("pqr")]
     [TestCase("baz")]
-    public void GetCreateElementInputFields_ThrowsException_ForWrongFileExtension(string wrongFileExtensionForTest)
+    public void GetCreateLearningElementInputFields_ThrowsException_ForWrongFileExtension(string wrongFileExtensionForTest)
     {
         var name = "foo";
-        var dragAndDropContent =
-            new ContentViewModel(
+        var dragAndDropLearningContent =
+            new LearningContentViewModel(
                 name,
                 wrongFileExtensionForTest,
                 ""
             );
         var spaceName = "skazzle";
         var systemUnderTest = GetModalDialogInputFieldsFactoryForTesting();
-        Assert.Throws<Exception>(()=>systemUnderTest.GetCreateElementInputFields(dragAndDropContent),
+        Assert.Throws<Exception>(()=>systemUnderTest.GetCreateLearningElementInputFields(dragAndDropLearningContent),
             $"Can not map the file extension '{wrongFileExtensionForTest}' to a ContentType ");
     }
 
@@ -424,47 +424,47 @@ public class ModalDialogInputFieldsFactoryUt
     [TestCase("css", ContentTypeEnum.Text)]
     [TestCase("h5p", ContentTypeEnum.H5P)]
     [TestCase("pdf", ContentTypeEnum.PDF)]
-    public void GetCreateElementInputFields_OverloadedFunction_ValidDragAndDrop_ReturnsCorrectInputFields_ForCorrectFileExtensionAndCorrectFileType(
+    public void GetCreateLearningElementInputFields_OverloadedFunction_ValidDragAndDrop_ReturnsCorrectInputFields_ForCorrectFileExtensionAndCorrectFileType(
         string correctFileExtensionForTest, 
         ContentTypeEnum correctFileTypeForTest)
     {
-        string nameContentViewModel = "skazzle";
-            ContentViewModel dragAndDropContent = new ContentViewModel(
-                nameContentViewModel,
+        string nameLearningContentViewModel = "skazzle";
+            LearningContentViewModel dragAndDropLearningContent = new LearningContentViewModel(
+                nameLearningContentViewModel,
                 correctFileExtensionForTest,
                 ""
             );
             
-            string nameSpace = "foo";
-            string shortnameSpace = "baz";
-            string authorsSpace = "boo";
-            string descriptionSpace = "maz";
-            string goalsSpace = "moo";
-            int requiredPointsSpace = 10;
-            IElementViewModel?[] elements = Array.Empty<IElementViewModel?>();
-            var spaceLayoutVm = new SpaceLayoutViewModel(){Elements = elements};
-            double positionXSpace = 1D;
-            double positionYSpace = 2D;
+            string nameLearningSpace = "foo";
+            string shortnameLearningSpace = "baz";
+            string authorsLearningSpace = "boo";
+            string descriptionLearningSpace = "maz";
+            string goalsLearningSpace = "moo";
+            int requiredPointsLearningSpace = 10;
+            ILearningElementViewModel?[] learningElements = Array.Empty<ILearningElementViewModel?>();
+            var learningSpaceLayoutVm = new LearningSpaceLayoutViewModel(){LearningElements = learningElements};
+            double positionXLearningSpace = 1D;
+            double positionYLearningSpace = 2D;
             
-            ISpaceViewModel space = 
-                new SpaceViewModel(
-                    nameSpace,
-                    shortnameSpace,
-                    authorsSpace,
-                    descriptionSpace, 
-                    goalsSpace,
-                    requiredPointsSpace,
-                    spaceLayoutVm,
-                    positionXSpace,
-                    positionYSpace
+            ILearningSpaceViewModel learningSpace = 
+                new LearningSpaceViewModel(
+                    nameLearningSpace,
+                    shortnameLearningSpace,
+                    authorsLearningSpace,
+                    descriptionLearningSpace, 
+                    goalsLearningSpace,
+                    requiredPointsLearningSpace,
+                    learningSpaceLayoutVm,
+                    positionXLearningSpace,
+                    positionYLearningSpace
                 );
-            IEnumerable<ISpaceViewModel> spaces = new[]{space};
+            IEnumerable<ILearningSpaceViewModel> learningSpaces = new[]{learningSpace};
             
         string worldName = "bazzle";
         
         
         var systemUnderTest = GetModalDialogInputFieldsFactoryForTesting();
-        var modalDialogInputFields = systemUnderTest.GetCreateElementInputFields(dragAndDropContent).ToList();
+        var modalDialogInputFields = systemUnderTest.GetCreateLearningElementInputFields(dragAndDropLearningContent).ToList();
         
         //Name
         var nameInputField = modalDialogInputFields.ElementAt(0);
@@ -645,10 +645,10 @@ public class ModalDialogInputFieldsFactoryUt
         
         Assert.That(difficultyMapping.RequiredValues, Is.Null);
         Assert.That(difficultyMapping.AvailableChoices.Count(), Is.EqualTo(4));
-        Assert.That(difficultyMapping.AvailableChoices.ElementAt(0), Is.EqualTo(ElementDifficultyEnum.None.ToString()));
-        Assert.That(difficultyMapping.AvailableChoices.ElementAt(1), Is.EqualTo(ElementDifficultyEnum.Easy.ToString()));
-        Assert.That(difficultyMapping.AvailableChoices.ElementAt(2), Is.EqualTo(ElementDifficultyEnum.Medium.ToString()));
-        Assert.That(difficultyMapping.AvailableChoices.ElementAt(3), Is.EqualTo(ElementDifficultyEnum.Hard.ToString()));
+        Assert.That(difficultyMapping.AvailableChoices.ElementAt(0), Is.EqualTo(LearningElementDifficultyEnum.None.ToString()));
+        Assert.That(difficultyMapping.AvailableChoices.ElementAt(1), Is.EqualTo(LearningElementDifficultyEnum.Easy.ToString()));
+        Assert.That(difficultyMapping.AvailableChoices.ElementAt(2), Is.EqualTo(LearningElementDifficultyEnum.Medium.ToString()));
+        Assert.That(difficultyMapping.AvailableChoices.ElementAt(3), Is.EqualTo(LearningElementDifficultyEnum.Hard.ToString()));
 
         Assert.That(modalDialogInputFields.ElementAt(9).Name, Is.EqualTo("Workload (min)"));
         Assert.That(modalDialogInputFields.ElementAt(9).Type, Is.EqualTo(ModalDialogInputType.Number));
@@ -676,41 +676,41 @@ public class ModalDialogInputFieldsFactoryUt
     [TestCase("mp4", ContentTypeEnum.Video)]
     [TestCase("h5p", ContentTypeEnum.H5P)]
     [TestCase("pdf", ContentTypeEnum.PDF)]
-    public void GetCreateElementInputFields_OverloadedFunction_NoDragAndDrop_ReturnsCorrectInputFields(string correctFileExtensionForTest, 
+    public void GetCreateLearningElementInputFields_OverloadedFunction_NoDragAndDrop_ReturnsCorrectInputFields(string correctFileExtensionForTest, 
         ContentTypeEnum correctFileTypeForTest)
     {
-        ContentViewModel? dragAndDropContent = null;
+        LearningContentViewModel? dragAndDropLearningContent = null;
             
-        string nameSpace = "foo";
-        string shortnameSpace = "baz";
-        string authorsSpace = "boo";
-        string descriptionSpace = "maz";
-        string goalsSpace = "moo";
-        int requiredPointsSpace = 10;
-        IElementViewModel?[] elements = Array.Empty<IElementViewModel?>();
-        var spaceLayoutVm = new SpaceLayoutViewModel(){Elements = elements};
-        double positionXSpace = 1D;
-        double positionYSpace = 2D;
+        string nameLearningSpace = "foo";
+        string shortnameLearningSpace = "baz";
+        string authorsLearningSpace = "boo";
+        string descriptionLearningSpace = "maz";
+        string goalsLearningSpace = "moo";
+        int requiredPointsLearningSpace = 10;
+        ILearningElementViewModel?[] learningElements = Array.Empty<ILearningElementViewModel?>();
+        var learningSpaceLayoutVm = new LearningSpaceLayoutViewModel(){LearningElements = learningElements};
+        double positionXLearningSpace = 1D;
+        double positionYLearningSpace = 2D;
             
-        ISpaceViewModel space = 
-            new SpaceViewModel(
-                nameSpace,
-                shortnameSpace,
-                authorsSpace,
-                descriptionSpace, 
-                goalsSpace,
-                requiredPointsSpace,
-                spaceLayoutVm,
-                positionXSpace,
-                positionYSpace
+        ILearningSpaceViewModel learningSpace = 
+            new LearningSpaceViewModel(
+                nameLearningSpace,
+                shortnameLearningSpace,
+                authorsLearningSpace,
+                descriptionLearningSpace, 
+                goalsLearningSpace,
+                requiredPointsLearningSpace,
+                learningSpaceLayoutVm,
+                positionXLearningSpace,
+                positionYLearningSpace
             );
-        IEnumerable<ISpaceViewModel> spaces = new[]{space};
+        IEnumerable<ILearningSpaceViewModel> learningSpaces = new[]{learningSpace};
             
         string worldName = "bazzle";
         
         
         var systemUnderTest = GetModalDialogInputFieldsFactoryForTesting();
-        var modalDialogInputFields = systemUnderTest.GetCreateElementInputFields(dragAndDropContent).ToList();
+        var modalDialogInputFields = systemUnderTest.GetCreateLearningElementInputFields(dragAndDropLearningContent).ToList();
         
         Assert.That(modalDialogInputFields.ElementAt(0).Name, Is.EqualTo("Name"));
         Assert.That(modalDialogInputFields.ElementAt(0).Type, Is.EqualTo(ModalDialogInputType.Text));
@@ -823,10 +823,10 @@ public class ModalDialogInputFieldsFactoryUt
         Assert.That(difficultyValuesToChoiceList.ElementAt(0).RequiredValues, Is.Null);
                 
         Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.Count(), Is.EqualTo(4));
-        Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(0), Is.EqualTo(ElementDifficultyEnum.None.ToString()));
-        Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(1), Is.EqualTo(ElementDifficultyEnum.Easy.ToString()));
-        Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(2), Is.EqualTo(ElementDifficultyEnum.Medium.ToString()));
-        Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(3), Is.EqualTo(ElementDifficultyEnum.Hard.ToString()));
+        Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(0), Is.EqualTo(LearningElementDifficultyEnum.None.ToString()));
+        Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(1), Is.EqualTo(LearningElementDifficultyEnum.Easy.ToString()));
+        Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(2), Is.EqualTo(LearningElementDifficultyEnum.Medium.ToString()));
+        Assert.That(difficultyValuesToChoiceList.ElementAt(0).AvailableChoices.ElementAt(3), Is.EqualTo(LearningElementDifficultyEnum.Hard.ToString()));
         
 
         Assert.That(modalDialogInputFields.ElementAt(9).Name, Is.EqualTo("Workload (min)"));
@@ -838,48 +838,48 @@ public class ModalDialogInputFieldsFactoryUt
     [TestCase("xyz")]
     [TestCase("pqw")]
     [TestCase("baz")]
-    public void GetCreateElementInputFields_OverloadedFunction_ThrowsException_ForWrongFileExtension(string wrongFileExtensionForTest)
+    public void GetCreateLearningElementInputFields_OverloadedFunction_ThrowsException_ForWrongFileExtension(string wrongFileExtensionForTest)
     {
         var name = "foo";
-        var dragAndDropContent =
-            new ContentViewModel(
+        var dragAndDropLearningContent =
+            new LearningContentViewModel(
                 name,
                 wrongFileExtensionForTest,
                 ""
             );
             
-        string nameSpace = "skazzle";
-        string shortnameSpace = "b";
-        string authorsSpace = "boo";
-        string descriptionSpace = "maz";
-        string goalsSpace = "moo";
-        int requiredPointsSpace = 10;
-        IElementViewModel?[] elements = Array.Empty<IElementViewModel?>();
-        var spaceLayoutVm = new SpaceLayoutViewModel(){Elements = elements};
-        double positionXSpace = 1D;
-        double positionYSpace = 2D;
+        string nameLearningSpace = "skazzle";
+        string shortnameLearningSpace = "b";
+        string authorsLearningSpace = "boo";
+        string descriptionLearningSpace = "maz";
+        string goalsLearningSpace = "moo";
+        int requiredPointsLearningSpace = 10;
+        ILearningElementViewModel?[] learningElements = Array.Empty<ILearningElementViewModel?>();
+        var learningSpaceLayoutVm = new LearningSpaceLayoutViewModel(){LearningElements = learningElements};
+        double positionXLearningSpace = 1D;
+        double positionYLearningSpace = 2D;
             
-        ISpaceViewModel space = 
-            new SpaceViewModel(
-                nameSpace,
-                shortnameSpace,
-                authorsSpace,
-                descriptionSpace, 
-                goalsSpace,
-                requiredPointsSpace,
-                spaceLayoutVm,
-                positionXSpace,
-                positionYSpace
+        ILearningSpaceViewModel learningSpace = 
+            new LearningSpaceViewModel(
+                nameLearningSpace,
+                shortnameLearningSpace,
+                authorsLearningSpace,
+                descriptionLearningSpace, 
+                goalsLearningSpace,
+                requiredPointsLearningSpace,
+                learningSpaceLayoutVm,
+                positionXLearningSpace,
+                positionYLearningSpace
             );
-        IEnumerable<ISpaceViewModel> spaces = new[]{space};
+        IEnumerable<ILearningSpaceViewModel> learningSpaces = new[]{learningSpace};
             
         string worldName = "bazzle";
         var systemUnderTest = GetModalDialogInputFieldsFactoryForTesting();
-        Assert.Throws<Exception>(()=>systemUnderTest.GetCreateElementInputFields(dragAndDropContent), $"Can not map the file extension '{wrongFileExtensionForTest}' to a ContentType ");
+        Assert.Throws<Exception>(()=>systemUnderTest.GetCreateLearningElementInputFields(dragAndDropLearningContent), $"Can not map the file extension '{wrongFileExtensionForTest}' to a ContentType ");
     }
     
     [Test]
-    public void GetEditSpaceInputFields_ReturnsCorrectInputFields()
+    public void GetEditLearningSpaceInputFields_ReturnsCorrectInputFields()
     {
         var systemUnderTest = new ModalDialogInputFieldsFactory();
 
@@ -891,7 +891,7 @@ public class ModalDialogInputFieldsFactoryUt
 
         var modalDialogInputType = ModalDialogInputType.Text;
 
-        var modalDialogInputFields = systemUnderTest.GetEditSpaceInputFields().ToList();
+        var modalDialogInputFields = systemUnderTest.GetEditLearningSpaceInputFields().ToList();
         Assert.Multiple(() =>
         {
             Assert.That(modalDialogInputFields.ElementAt(0).Name, Is.EqualTo(name));
@@ -917,11 +917,11 @@ public class ModalDialogInputFieldsFactoryUt
     }
 
     [Test]
-    public void GetEditElementInputFields_ReturnsCorrectInputFields()
+    public void GetEditLearningElementInputFields_ReturnsCorrectInputFields()
     {
         var systemUnderTest = GetModalDialogInputFieldsFactoryForTesting();
 
-        var modalDialogInputFields = systemUnderTest.GetEditElementInputFields().ToList();
+        var modalDialogInputFields = systemUnderTest.GetEditLearningElementInputFields().ToList();
         
         Assert.That(modalDialogInputFields, Has.Count.EqualTo(9));
         Assert.Multiple(() =>
@@ -959,10 +959,10 @@ public class ModalDialogInputFieldsFactoryUt
 
             var mapping = difficultyDropDownInput.ValuesToChoiceMapping.First();
             Assert.That(mapping.RequiredValues, Is.Null);
-            Assert.That(mapping.AvailableChoices.ElementAt(0), Is.EqualTo(ElementDifficultyEnum.Easy.ToString()));
-            Assert.That(mapping.AvailableChoices.ElementAt(1), Is.EqualTo(ElementDifficultyEnum.Medium.ToString()));
-            Assert.That(mapping.AvailableChoices.ElementAt(2), Is.EqualTo(ElementDifficultyEnum.Hard.ToString()));
-            Assert.That(mapping.AvailableChoices.ElementAt(3), Is.EqualTo(ElementDifficultyEnum.None.ToString()));
+            Assert.That(mapping.AvailableChoices.ElementAt(0), Is.EqualTo(LearningElementDifficultyEnum.Easy.ToString()));
+            Assert.That(mapping.AvailableChoices.ElementAt(1), Is.EqualTo(LearningElementDifficultyEnum.Medium.ToString()));
+            Assert.That(mapping.AvailableChoices.ElementAt(2), Is.EqualTo(LearningElementDifficultyEnum.Hard.ToString()));
+            Assert.That(mapping.AvailableChoices.ElementAt(3), Is.EqualTo(LearningElementDifficultyEnum.None.ToString()));
             
             Assert.That(modalDialogInputFields.ElementAt(7).Name, Is.EqualTo("Workload (min)"));
             Assert.That(modalDialogInputFields.ElementAt(7).Type, Is.EqualTo(ModalDialogInputType.Number));
@@ -999,12 +999,12 @@ public class ModalDialogInputFieldsFactoryUt
     }
     
     [Test]
-    public void GetCreateWorldInputFields_ReturnsCorrectInputFields()
+    public void GetCreateLearningWorldInputFields_ReturnsCorrectInputFields()
     {
         var systemUnderTest = GetModalDialogInputFieldsFactoryForTesting();
-        var modalDialogInputFields = systemUnderTest.GetCreateWorldInputFields().ToList();
+        var modalDialogInputFields = systemUnderTest.GetCreateLearningWorldInputFields().ToList();
         
-        Assert.That(systemUnderTest.GetCreateWorldInputFields(), Is.TypeOf<ModalDialogInputField[]>());
+        Assert.That(systemUnderTest.GetCreateLearningWorldInputFields(), Is.TypeOf<ModalDialogInputField[]>());
         Assert.That(modalDialogInputFields.Count(), Is.EqualTo(6));
         
         Assert.That(modalDialogInputFields.ElementAt(0), Is.TypeOf<ModalDialogInputField>());
@@ -1039,12 +1039,12 @@ public class ModalDialogInputFieldsFactoryUt
     }
 
     [Test]
-    public void GetEditWorldInputFields_ReturnsCorrectInputFields()
+    public void GetEditLearningWorldInputFields_ReturnsCorrectInputFields()
     {
         var systemUnderTest = GetModalDialogInputFieldsFactoryForTesting();
-        var modalDialogInputFields = systemUnderTest.GetEditWorldInputFields().ToList();
+        var modalDialogInputFields = systemUnderTest.GetEditLearningWorldInputFields().ToList();
         
-        Assert.That(systemUnderTest.GetCreateWorldInputFields(), Is.TypeOf<ModalDialogInputField[]>());
+        Assert.That(systemUnderTest.GetCreateLearningWorldInputFields(), Is.TypeOf<ModalDialogInputField[]>());
         Assert.That(modalDialogInputFields.Count(), Is.EqualTo(6));
         
         Assert.That(modalDialogInputFields.ElementAt(0), Is.TypeOf<ModalDialogInputField>());

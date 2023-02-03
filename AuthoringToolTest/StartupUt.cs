@@ -15,10 +15,10 @@ using Presentation.Components.Forms.Validators;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.DropZone;
+using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.ModalDialog;
-using Presentation.PresentationLogic.Space;
 using Presentation.PresentationLogic.Toolbox;
-using Presentation.PresentationLogic.World;
 using Presentation.View.Toolbox;
 using Shared;
 using Shared.Configuration;
@@ -58,8 +58,8 @@ public class StartupUt
     {
         typeof(IAbstractToolboxRenderFragmentFactory), typeof(IToolboxEntriesProviderModifiable),
         typeof(IToolboxEntriesProvider), typeof(IToolboxController), typeof(IToolboxResultFilter),
-        typeof(IAuthoringToolWorkspacePresenterToolboxInterface), typeof(IWorldPresenterToolboxInterface),
-        typeof(ISpacePresenterToolboxInterface)
+        typeof(IAuthoringToolWorkspacePresenterToolboxInterface), typeof(ILearningWorldPresenterToolboxInterface),
+        typeof(ILearningSpacePresenterToolboxInterface)
     };
     [Test]
     [TestCaseSource(nameof(ConfigureToolboxRequiredTypes))]
@@ -83,7 +83,7 @@ public class StartupUt
 
     private static readonly Type[] ConfigureDataAccessRequiredTypes =
     {
-        typeof(IXmlFileHandler<WorldPe>), typeof(IXmlFileHandler<ElementPe>), typeof(IXmlFileHandler<SpacePe>),
+        typeof(IXmlFileHandler<LearningWorldPe>), typeof(IXmlFileHandler<LearningElementPe>), typeof(IXmlFileHandler<LearningSpacePe>),
         typeof(IDataAccess), typeof(IContentFileHandler)
         
     };
@@ -97,12 +97,12 @@ public class StartupUt
 
     private static readonly Type[] ConfigurePresentationLogicRequiredTypes =
     {
-        typeof(IPresentationLogic), typeof(IAuthoringToolWorkspacePresenter), typeof(IWorldPresenter),
-        typeof(ISpacePresenter), typeof(IAuthoringToolWorkspaceViewModel),
-        typeof(ISpaceViewModalDialogFactory), typeof(ISpaceViewModalDialogInputFieldsFactory),
-        typeof(IWorldViewModalDialogFactory), typeof(IWorldViewModalDialogInputFieldsFactory),
+        typeof(IPresentationLogic), typeof(IAuthoringToolWorkspacePresenter), typeof(ILearningWorldPresenter),
+        typeof(ILearningSpacePresenter), typeof(IAuthoringToolWorkspaceViewModel),
+        typeof(ILearningSpaceViewModalDialogFactory), typeof(ILearningSpaceViewModalDialogInputFieldsFactory),
+        typeof(ILearningWorldViewModalDialogFactory), typeof(ILearningWorldViewModalDialogInputFieldsFactory),
         typeof(IAuthoringToolWorkspaceViewModalDialogFactory), typeof(IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory),
-        typeof(IWorldViewModalDialogInputFieldsFactory), typeof(IElementDropZoneHelper)
+        typeof(ILearningWorldViewModalDialogInputFieldsFactory), typeof(ILearningElementDropZoneHelper)
     };
     [Test]
     [TestCaseSource(nameof(ConfigurePresentationLogicRequiredTypes))]
@@ -160,8 +160,8 @@ public class StartupUt
     
     private static readonly Type[] ConfigureValidationRequiredTypes =
     {
-        typeof(WorldValidator), typeof(SpaceValidator),
-        typeof(ISpaceNamesProvider), typeof(IWorldNamesProvider)
+        typeof(LearningWorldValidator), typeof(LearningSpaceValidator),
+        typeof(ILearningSpaceNamesProvider), typeof(ILearningWorldNamesProvider)
     };
     [Test]
     [TestCaseSource(nameof(ConfigureValidationRequiredTypes))]

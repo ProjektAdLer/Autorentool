@@ -110,8 +110,8 @@ public class XmlH5PFactory : IXmlH5PFactory
     /// </summary>
     public void CreateH5PFileFactory()
     {
-        // Get all the H5P Elements that are in the DSL Document
-        List<ElementJson> h5PElementsList = ReadDsl.GetH5PElementsList();
+        // Get all the H5P elements that are in the DSL Document
+        List<LearningElementJson> h5PElementsList = ReadDsl.GetH5PElementsList();
 
         _filesXmlFilesList = new List<FilesXmlFile>();
         _filesXmlFilesList = FileManager.GetXmlFilesList();
@@ -123,7 +123,7 @@ public class XmlH5PFactory : IXmlH5PFactory
         FileManager.SetXmlFilesList(_filesXmlFilesList);
     }
     
-    public void ReadH5PListAndSetParameters(List<ElementJson> h5PElementsList)
+    public void ReadH5PListAndSetParameters(List<LearningElementJson> h5PElementsList)
     {
         // For Each H5P element in the list 
         // (for files.xml) set the H5P element id, name, hash value, copy the File to the needed location in the backup structure
@@ -133,7 +133,7 @@ public class XmlH5PFactory : IXmlH5PFactory
         {
             H5PElementId = h5PElement.Id.ToString();
             H5PElementName = h5PElement.Identifier.Value;
-            H5PElementParentSpaceString = h5PElement.SpaceParentId.ToString();
+            H5PElementParentSpaceString = h5PElement.LearningSpaceParentId.ToString();
             H5PElementType = h5PElement.ElementType;
             H5PElementDesc = h5PElement.Description ?? "";
 

@@ -20,8 +20,8 @@ public class EntityPersistEntityMappingProfileUt
     private const string Goals = "goals";
     private const string Type = "type";
     private static readonly string Filepath = "bar/baz/buz.txt";
-    private const ElementDifficultyEnum Difficulty = ElementDifficultyEnum.Easy;
-    private const ElementDifficultyEnumPe DifficultyPe = ElementDifficultyEnumPe.Easy;
+    private const LearningElementDifficultyEnum Difficulty = LearningElementDifficultyEnum.Easy;
+    private const LearningElementDifficultyEnumPe DifficultyPe = LearningElementDifficultyEnumPe.Easy;
     private const int Workload = 1;
     private const int Points = 2;
     private const int RequiredPoints = 3;
@@ -37,8 +37,8 @@ public class EntityPersistEntityMappingProfileUt
     private const string NewGoals = "newGoals";
     private const string NewType = "newType";
     private static readonly string NewFilepath = "/foo/bar/baz.txt";
-    private const ElementDifficultyEnum NewDifficulty = ElementDifficultyEnum.Medium;
-    private const ElementDifficultyEnumPe NewDifficultyPe = ElementDifficultyEnumPe.Medium;
+    private const LearningElementDifficultyEnum NewDifficulty = LearningElementDifficultyEnum.Medium;
+    private const LearningElementDifficultyEnumPe NewDifficultyPe = LearningElementDifficultyEnumPe.Medium;
     private const int NewWorkload = 2;
     private const int NewPoints = 3;
     private const int NewRequiredPoints = 4;
@@ -58,11 +58,11 @@ public class EntityPersistEntityMappingProfileUt
     }
 
     [Test]
-    public void MapContentAndContentPersistEntity_TestMappingIsValid()
+    public void MapLearningContentAndLearningContentPersistEntity_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new Content(Name, Type, Filepath);
-        var destination = new ContentPe("", "", "");
+        var source = new LearningContent(Name, Type, Filepath);
+        var destination = new LearningContentPe("", "", "");
 
         systemUnderTest.Map(source, destination);
 
@@ -78,15 +78,15 @@ public class EntityPersistEntityMappingProfileUt
     }
 
     [Test]
-    public void MapElementAndElementPersistEntity_TestMappingIsValid()
+    public void MapLearningElementAndLearningElementPersistEntity_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
         var content = GetTestableContent();
-        var source = new Element(Name, Shortname, content, Url, Authors, Description, Goals,
+        var source = new LearningElement(Name, Shortname, content, Url, Authors, Description, Goals,
             Difficulty, null, Workload, Points, PositionX, PositionY);
-        var destination = new ElementPe("", "", new ContentPe("", "", "bar/baz/buz.txt"), "google.com",
+        var destination = new LearningElementPe("", "", new LearningContentPe("", "", "bar/baz/buz.txt"), "google.com",
             "", "", "",
-            ElementDifficultyEnumPe.None);
+            LearningElementDifficultyEnumPe.None);
 
         systemUnderTest.Map(source, destination);
 
@@ -94,7 +94,7 @@ public class EntityPersistEntityMappingProfileUt
 
         destination.Name = NewName;
         destination.Shortname = NewShortname;
-        destination.Content = new ContentPe(NewName, NewType, NewFilepath);
+        destination.LearningContent = new LearningContentPe(NewName, NewType, NewFilepath);
         destination.Url = NewUrl;
         destination.Authors = NewAuthors;
         destination.Description = NewDescription;
@@ -111,17 +111,17 @@ public class EntityPersistEntityMappingProfileUt
     }
 
     [Test]
-    public void MapSpaceAndSpacePersistEntity_WithoutElement_TestMappingIsValid()
+    public void MapLearningSpaceAndLearningSpacePersistEntity_WithoutLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new Space(Name, Shortname, Authors, Description, Goals, RequiredPoints, null,
+        var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints, null,
             PositionX, PositionY, new List<IObjectInPathWay>(), new List<IObjectInPathWay>());
-        var destination = new SpacePe("", "", "", "", "", 0);
+        var destination = new LearningSpacePe("", "", "", "", "", 0);
 
         systemUnderTest.Map(source, destination);
 
         TestSpace(destination, false);
-        Assert.That(destination.SpaceLayout.ContainedElements, Is.Empty);
+        Assert.That(destination.LearningSpaceLayout.ContainedLearningElements, Is.Empty);
 
         destination.Name = NewName;
         destination.Shortname = NewShortname;
@@ -129,7 +129,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.RequiredPoints = NewRequiredPoints;
-        destination.SpaceLayout.Elements = Array.Empty<IElementPe?>();
+        destination.LearningSpaceLayout.LearningElements = Array.Empty<ILearningElementPe?>();
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
         destination.InBoundObjects = new List<IObjectInPathWayPe>();
@@ -138,7 +138,7 @@ public class EntityPersistEntityMappingProfileUt
         systemUnderTest.Map(destination, source);
 
         TestSpace(source, true);
-        Assert.That(source.ContainedElements, Is.Empty);
+        Assert.That(source.ContainedLearningElements, Is.Empty);
     }
 
     [TestCase(ElementType.TextTransfer, typeof(TextTransferElementPe), typeof(TextTransferElement))]
@@ -149,21 +149,21 @@ public class EntityPersistEntityMappingProfileUt
     [TestCase(ElementType.H5PActivation, typeof(H5PActivationElementPe), typeof(H5PActivationElement))]
     [TestCase(ElementType.H5PInteraction, typeof(H5PInteractionElementPe), typeof(H5PInteractionElement))]
     [TestCase(ElementType.H5PTest, typeof(H5PTestElementPe), typeof(H5PTestElement))]
-    public void MapSpaceAndSpacePersistEntity_WithElement_TestMappingIsValid
+    public void MapLearningSpaceAndLearningSpacePersistEntity_WithLearningElement_TestMappingIsValid
         (ElementType elementType, Type expectedElementPeType, Type expectedElementType)
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new Space(Name, Shortname, Authors, Description, Goals, RequiredPoints,
-            new SpaceLayout(new IElement?[6], FloorPlanEnum.Rectangle2X3),
+        var source = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints,
+            new LearningSpaceLayout(new ILearningElement?[6], FloorPlanEnum.Rectangle2X3),
             PositionX, PositionY, new List<IObjectInPathWay>(), new List<IObjectInPathWay>());
-        source.SpaceLayout.Elements[0] = GetTestableElementWithParent(source, elementType);
-        var destination = new SpacePe("", "", "", "", "", 0);
+        source.LearningSpaceLayout.LearningElements[0] = GetTestableElementWithParent(source, elementType);
+        var destination = new LearningSpacePe("", "", "", "", "", 0);
 
         systemUnderTest.Map(source, destination);
 
         TestSpace(destination, false);
-        Assert.That(destination.SpaceLayout.ContainedElements.Count(), Is.EqualTo(1));
-        Assert.That(destination.SpaceLayout.ContainedElements.First(),
+        Assert.That(destination.LearningSpaceLayout.ContainedLearningElements.Count(), Is.EqualTo(1));
+        Assert.That(destination.LearningSpaceLayout.ContainedLearningElements.First(),
             Is.InstanceOf(expectedElementPeType));
 
         destination.Name = NewName;
@@ -172,7 +172,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.RequiredPoints = NewRequiredPoints;
-        destination.SpaceLayout.Elements = new IElementPe[]
+        destination.LearningSpaceLayout.LearningElements = new ILearningElementPe[]
             {GetTestableElementPersistEntity(elementType)};
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
@@ -182,22 +182,22 @@ public class EntityPersistEntityMappingProfileUt
         systemUnderTest.Map(destination, source);
 
         TestSpace(source, true);
-        Assert.That(source.ContainedElements.Count(), Is.EqualTo(1));
-        Assert.That(source.ContainedElements.First(), Is.InstanceOf(expectedElementType));
+        Assert.That(source.ContainedLearningElements.Count(), Is.EqualTo(1));
+        Assert.That(source.ContainedLearningElements.First(), Is.InstanceOf(expectedElementType));
     }
 
     [Test]
-    public void MapWorldAndWorldPersistEntity_WithoutSpaces_TestMappingIsValid()
+    public void MapLearningWorldAndLearningWorldPersistEntity_WithoutLearningSpaces_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new World(Name, Shortname, Authors, Language, Description, Goals,
-            new List<Space>());
-        var destination = new WorldPe("", "", "", "", "", "");
+        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
+            new List<LearningSpace>());
+        var destination = new LearningWorldPe("", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
 
         TestWorld(destination, false);
-        Assert.Multiple(() => { Assert.That(destination.Spaces, Is.Empty); });
+        Assert.Multiple(() => { Assert.That(destination.LearningSpaces, Is.Empty); });
 
         destination.Name = NewName;
         destination.Shortname = NewShortname;
@@ -205,31 +205,31 @@ public class EntityPersistEntityMappingProfileUt
         destination.Language = NewLanguage;
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
-        destination.Spaces = new List<SpacePe>();
+        destination.LearningSpaces = new List<LearningSpacePe>();
 
         systemUnderTest.Map(destination, source);
 
         TestWorld(source, true);
-        Assert.Multiple(() => { Assert.That(source.Spaces, Is.Empty); });
+        Assert.Multiple(() => { Assert.That(source.LearningSpaces, Is.Empty); });
     }
 
     [Test]
-    public void MapWorldAndWorldPersistEntity_WithEmptySpace_TestMappingIsValid()
+    public void MapLearningWorldAndLearningWorldPersistEntity_WithEmptyLearningSpace_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new World(Name, Shortname, Authors, Language, Description, Goals,
-            new List<Space>());
-        source.Spaces.Add(new Space(Name, Shortname, Authors, Description, Goals, RequiredPoints,
+        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
+            new List<LearningSpace>());
+        source.LearningSpaces.Add(new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints,
             null, PositionX, PositionY, new List<IObjectInPathWay>(), new List<IObjectInPathWay>()));
-        var destination = new WorldPe("", "", "", "", "", "");
+        var destination = new LearningWorldPe("", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
 
         TestWorld(destination, false);
         Assert.Multiple(() =>
         {
-            Assert.That(destination.Spaces, Has.Count.EqualTo(1));
-            Assert.That(destination.Spaces[0].SpaceLayout.ContainedElements, Is.Empty);
+            Assert.That(destination.LearningSpaces, Has.Count.EqualTo(1));
+            Assert.That(destination.LearningSpaces[0].LearningSpaceLayout.ContainedLearningElements, Is.Empty);
         });
 
         destination.Name = NewName;
@@ -238,9 +238,9 @@ public class EntityPersistEntityMappingProfileUt
         destination.Language = NewLanguage;
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
-        destination.Spaces = new List<SpacePe>()
+        destination.LearningSpaces = new List<LearningSpacePe>()
         {
-            new SpacePe(NewName, NewShortname, NewAuthors, NewDescription, NewGoals, NewRequiredPoints,
+            new LearningSpacePe(NewName, NewShortname, NewAuthors, NewDescription, NewGoals, NewRequiredPoints,
                 null, NewPositionX, NewPositionY, new List<IObjectInPathWayPe>(), new List<IObjectInPathWayPe>())
         };
 
@@ -249,27 +249,27 @@ public class EntityPersistEntityMappingProfileUt
         TestWorld(source, true);
         Assert.Multiple(() =>
         {
-            Assert.That(source.Spaces, Has.Count.EqualTo(1));
-            Assert.That(source.Spaces[0].ContainedElements, Is.Empty);
+            Assert.That(source.LearningSpaces, Has.Count.EqualTo(1));
+            Assert.That(source.LearningSpaces[0].ContainedLearningElements, Is.Empty);
         });
     }
 
     [Test]
-    public void MapWorldAndWorldPersistEntity_WithSpaceAndPathWay_TestMappingIsValid()
+    public void MapLearningWorldAndLearningWorldPersistEntity_WithLearningSpaceAndLearningPathWay_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new World(Name, Shortname, Authors, Language, Description, Goals,
-            new List<Space>());
+        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
+            new List<LearningSpace>());
         var space1 = GetTestableSpace();
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 3, 2);
         var space2 = GetTestableSpace();
-        source.Spaces.Add(space1);
+        source.LearningSpaces.Add(space1);
         source.PathWayConditions.Add(pathWayCondition);
-        source.Spaces.Add(space2);
-        var destination = new WorldPe("", "", "", "", "", "");
+        source.LearningSpaces.Add(space2);
+        var destination = new LearningWorldPe("", "", "", "", "", "");
 
-        source.Pathways.Add(new Pathway(space1, pathWayCondition));
-        source.Pathways.Add(new Pathway(pathWayCondition, space2));
+        source.LearningPathways.Add(new LearningPathway(space1, pathWayCondition));
+        source.LearningPathways.Add(new LearningPathway(pathWayCondition, space2));
         space1.OutBoundObjects.Add(pathWayCondition);
         pathWayCondition.InBoundObjects.Add(space1);
         pathWayCondition.OutBoundObjects.Add(space2);
@@ -277,21 +277,21 @@ public class EntityPersistEntityMappingProfileUt
 
         systemUnderTest.Map(source, destination);
 
-        var destinationSpace1 = destination.Spaces[0];
+        var destinationSpace1 = destination.LearningSpaces[0];
         var destinationCondition = destination.PathWayConditions[0];
-        var destinationSpace2 = destination.Spaces[1];
+        var destinationSpace2 = destination.LearningSpaces[1];
         TestWorld(destination, false);
         Assert.Multiple(() =>
         {
-            Assert.That(destination.Spaces, Has.Count.EqualTo(2));
+            Assert.That(destination.LearningSpaces, Has.Count.EqualTo(2));
             Assert.That(destination.PathWayConditions, Has.Count.EqualTo(1));
-            Assert.That(destinationSpace1.SpaceLayout.ContainedElements.Count(), Is.EqualTo(1));
+            Assert.That(destinationSpace1.LearningSpaceLayout.ContainedLearningElements.Count(), Is.EqualTo(1));
             Assert.That(destinationSpace1.OutBoundObjects, Does.Contain(destinationCondition));
-            Assert.That(destinationSpace2.SpaceLayout.ContainedElements.Count(), Is.EqualTo(1));
+            Assert.That(destinationSpace2.LearningSpaceLayout.ContainedLearningElements.Count(), Is.EqualTo(1));
             Assert.That(destinationSpace2.InBoundObjects, Does.Contain(destinationCondition));
             Assert.That(destinationCondition.InBoundObjects, Does.Contain(destinationSpace1));
             Assert.That(destinationCondition.OutBoundObjects, Does.Contain(destinationSpace2));
-            Assert.That(destination.Pathways, Has.Count.EqualTo(2));
+            Assert.That(destination.LearningPathways, Has.Count.EqualTo(2));
         });
 
 
@@ -304,9 +304,9 @@ public class EntityPersistEntityMappingProfileUt
         var spacePe1 = GetTestableNewSpacePersistEntity();
         var pathWayConditionPe = new PathWayConditionPe(ConditionEnumPe.And, 2, 1);
         var spacePe2 = GetTestableNewSpacePersistEntity();
-        destination.Spaces = new List<SpacePe>() {spacePe1, spacePe2};
+        destination.LearningSpaces = new List<LearningSpacePe>() {spacePe1, spacePe2};
         destination.PathWayConditions = new List<PathWayConditionPe>() {pathWayConditionPe};
-        destination.Pathways = new List<PathwayPe>
+        destination.LearningPathways = new List<LearningPathwayPe>
             {new(spacePe1, pathWayConditionPe), new(pathWayConditionPe, spacePe2)};
         ;
         spacePe1.OutBoundObjects.Add(pathWayConditionPe);
@@ -316,44 +316,44 @@ public class EntityPersistEntityMappingProfileUt
 
         {
             systemUnderTest.Map(destination, source);
-            var sourceSpace1 = source.Spaces[0];
+            var sourceSpace1 = source.LearningSpaces[0];
             var sourceCondition = source.PathWayConditions[0];
-            var sourceSpace2 = source.Spaces[1];
+            var sourceSpace2 = source.LearningSpaces[1];
 
             TestWorld(source, true);
             Assert.Multiple(() =>
             {
-                Assert.That(source.Spaces, Has.Count.EqualTo(2));
+                Assert.That(source.LearningSpaces, Has.Count.EqualTo(2));
                 Assert.That(source.PathWayConditions, Has.Count.EqualTo(1));
-                Assert.That(sourceSpace1.ContainedElements.Count(), Is.EqualTo(1));
+                Assert.That(sourceSpace1.ContainedLearningElements.Count(), Is.EqualTo(1));
                 Assert.That(sourceSpace1.OutBoundObjects, Does.Contain(sourceCondition));
                 Assert.That(sourceCondition.InBoundObjects, Does.Contain(sourceSpace1));
                 Assert.That(sourceCondition.OutBoundObjects, Does.Contain(sourceSpace2));
-                Assert.That(sourceSpace2.ContainedElements.Count(), Is.EqualTo(1));
+                Assert.That(sourceSpace2.ContainedLearningElements.Count(), Is.EqualTo(1));
                 Assert.That(sourceSpace2.InBoundObjects, Does.Contain(sourceCondition));
-                Assert.That(source.Pathways, Has.Count.EqualTo(2));
+                Assert.That(source.LearningPathways, Has.Count.EqualTo(2));
             });
         }
 
         {
-            var newSource = systemUnderTest.Map<World>(destination);
+            var newSource = systemUnderTest.Map<LearningWorld>(destination);
             systemUnderTest.Map(destination, newSource);
-            var newSourceSpace1 = source.Spaces[0];
+            var newSourceSpace1 = source.LearningSpaces[0];
             var newSourceCondition = source.PathWayConditions[0];
-            var newSourceSpace2 = source.Spaces[1];
+            var newSourceSpace2 = source.LearningSpaces[1];
 
             TestWorld(newSource, true);
             Assert.Multiple(() =>
             {
-                Assert.That(newSource.Spaces, Has.Count.EqualTo(2));
+                Assert.That(newSource.LearningSpaces, Has.Count.EqualTo(2));
                 Assert.That(newSource.PathWayConditions, Has.Count.EqualTo(1));
-                Assert.That(newSourceSpace1.ContainedElements.Count(), Is.EqualTo(1));
+                Assert.That(newSourceSpace1.ContainedLearningElements.Count(), Is.EqualTo(1));
                 Assert.That(newSourceSpace1.OutBoundObjects, Does.Contain(newSourceCondition));
                 Assert.That(newSourceCondition.InBoundObjects, Does.Contain(newSourceSpace1));
                 Assert.That(newSourceCondition.OutBoundObjects, Does.Contain(newSourceSpace2));
-                Assert.That(newSourceSpace2.ContainedElements.Count(), Is.EqualTo(1));
+                Assert.That(newSourceSpace2.ContainedLearningElements.Count(), Is.EqualTo(1));
                 Assert.That(newSourceSpace2.InBoundObjects, Does.Contain(newSourceCondition));
-                Assert.That(newSource.Pathways, Has.Count.EqualTo(2));
+                Assert.That(newSource.LearningPathways, Has.Count.EqualTo(2));
             });
         }
     }
@@ -363,62 +363,62 @@ public class EntityPersistEntityMappingProfileUt
     /// </summary>
     [Test]
     public void
-        MapWorldAndWorldPersistEntity_WithMultipleSpacesAndPathWays_TestMappingIsValid()
+        MapLearningWorldAndLearningWorldPersistEntity_WithMultipleLearningSpacesAndLearningPathWays_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new World(Name, Shortname, Authors, Language, Description, Goals,
-            new List<Space>());
+        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
+            new List<LearningSpace>());
         var space1 = GetTestableSpace();
         space1.Name = "space1";
         var space2 = GetTestableSpace();
         space2.Name = "space2";
         var space3 = GetTestableSpace();
         space3.Name = "space3";
-        source.Spaces.Add(space1);
-        source.Spaces.Add(space2);
-        source.Spaces.Add(space3);
+        source.LearningSpaces.Add(space1);
+        source.LearningSpaces.Add(space2);
+        source.LearningSpaces.Add(space3);
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 2, 1);
         source.PathWayConditions.Add(pathWayCondition);
 
-        source.Pathways.Add(new Pathway(space1, space2));
+        source.LearningPathways.Add(new LearningPathway(space1, space2));
         space1.OutBoundObjects.Add(space2);
         space2.InBoundObjects.Add(space1);
-        source.Pathways.Add(new Pathway(space2, space3));
+        source.LearningPathways.Add(new LearningPathway(space2, space3));
         space1.OutBoundObjects.Add(space3);
         space2.InBoundObjects.Add(space2);
-        source.Pathways.Add(new Pathway(space3, pathWayCondition));
+        source.LearningPathways.Add(new LearningPathway(space3, pathWayCondition));
         space3.OutBoundObjects.Add(pathWayCondition);
         pathWayCondition.InBoundObjects.Add(space3);
 
-        var persistEntity = systemUnderTest.Map<WorldPe>(source);
-        var restored = systemUnderTest.Map<World>(persistEntity);
+        var persistEntity = systemUnderTest.Map<LearningWorldPe>(source);
+        var restored = systemUnderTest.Map<LearningWorld>(persistEntity);
 
-        Assert.That(restored.Pathways, Has.Count.EqualTo(3));
+        Assert.That(restored.LearningPathways, Has.Count.EqualTo(3));
         Assert.Multiple(() =>
         {
-            Assert.That(((Space) restored.Pathways[0].SourceObject).Name, Is.EqualTo("space1"));
-            Assert.That(((Space) restored.Pathways[1].SourceObject).Name, Is.EqualTo("space2"));
-            Assert.That(((Space) restored.Pathways[0].TargetObject).Name, Is.EqualTo("space2"));
-            Assert.That(((Space) restored.Pathways[1].TargetObject).Name, Is.EqualTo("space3"));
-            Assert.That(((Space) restored.Pathways[2].SourceObject).Name, Is.EqualTo("space3"));
-            Assert.That(((PathWayCondition) restored.Pathways[2].TargetObject).Condition,
+            Assert.That(((LearningSpace) restored.LearningPathways[0].SourceObject).Name, Is.EqualTo("space1"));
+            Assert.That(((LearningSpace) restored.LearningPathways[1].SourceObject).Name, Is.EqualTo("space2"));
+            Assert.That(((LearningSpace) restored.LearningPathways[0].TargetObject).Name, Is.EqualTo("space2"));
+            Assert.That(((LearningSpace) restored.LearningPathways[1].TargetObject).Name, Is.EqualTo("space3"));
+            Assert.That(((LearningSpace) restored.LearningPathways[2].SourceObject).Name, Is.EqualTo("space3"));
+            Assert.That(((PathWayCondition) restored.LearningPathways[2].TargetObject).Condition,
                 Is.EqualTo(ConditionEnum.And));
         });
     }
 
     #region testable Content/Element/Space/World
 
-    private static Content GetTestableContent()
+    private static LearningContent GetTestableContent()
     {
-        return new Content(Name, Type, Filepath);
+        return new LearningContent(Name, Type, Filepath);
     }
 
-    private static ContentPe GetTestableNewContentPersistEntity()
+    private static LearningContentPe GetTestableNewContentPersistEntity()
     {
-        return new ContentPe(NewName, NewType, NewFilepath);
+        return new LearningContentPe(NewName, NewType, NewFilepath);
     }
 
-    private static Element GetTestableElementWithParent(Space parent, ElementType elementType)
+    private static LearningElement GetTestableElementWithParent(LearningSpace parent, ElementType elementType)
     {
         return elementType switch
         {
@@ -449,7 +449,7 @@ public class EntityPersistEntityMappingProfileUt
         };
     }
 
-    private static ElementPe GetTestableElementPersistEntity(ElementType elementType)
+    private static LearningElementPe GetTestableElementPersistEntity(ElementType elementType)
     {
         switch (elementType)
         {
@@ -502,20 +502,20 @@ public class EntityPersistEntityMappingProfileUt
         H5PTest
     }
 
-    private static Space GetTestableSpace()
+    private static LearningSpace GetTestableSpace()
     {
-        var space = new Space(Name, Shortname, Authors, Description, Goals, RequiredPoints,
-            new SpaceLayout(new IElement[6], FloorPlanEnum.Rectangle2X3), PositionX, PositionY);
+        var space = new LearningSpace(Name, Shortname, Authors, Description, Goals, RequiredPoints,
+            new LearningSpaceLayout(new ILearningElement[6], FloorPlanEnum.Rectangle2X3), PositionX, PositionY);
         var element = GetTestableElementWithParent(space, ElementType.TextTransfer);
-        space.SpaceLayout.Elements[0] = element;
+        space.LearningSpaceLayout.LearningElements[0] = element;
         return space;
     }
 
-    private static SpacePe GetTestableNewSpacePersistEntity()
+    private static LearningSpacePe GetTestableNewSpacePersistEntity()
     {
-        return new SpacePe(NewName, NewShortname, NewAuthors, NewDescription, NewGoals, NewRequiredPoints,
-            new SpaceLayoutPe(
-                new IElementPe[] {GetTestableElementPersistEntity(ElementType.TextTransfer)},
+        return new LearningSpacePe(NewName, NewShortname, NewAuthors, NewDescription, NewGoals, NewRequiredPoints,
+            new LearningSpaceLayoutPe(
+                new ILearningElementPe[] {GetTestableElementPersistEntity(ElementType.TextTransfer)},
                 FloorPlanEnumPe.Rectangle2X3), NewPositionX, NewPositionY);
     }
 
@@ -527,7 +527,7 @@ public class EntityPersistEntityMappingProfileUt
     {
         switch (destination)
         {
-            case World world:
+            case LearningWorld world:
                 Assert.Multiple(() =>
                 {
                     Assert.That(world.Name, Is.EqualTo(useNewFields ? NewName : Name));
@@ -536,10 +536,10 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(world.Language, Is.EqualTo(useNewFields ? NewLanguage : Language));
                     Assert.That(world.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(world.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
-                    TestSpacesList(world.Spaces, useNewFields);
+                    TestSpacesList(world.LearningSpaces, useNewFields);
                 });
                 break;
-            case WorldPe world:
+            case LearningWorldPe world:
                 Assert.Multiple(() =>
                 {
                     Assert.That(world.Name, Is.EqualTo(useNewFields ? NewName : Name));
@@ -548,42 +548,42 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(world.Language, Is.EqualTo(useNewFields ? NewLanguage : Language));
                     Assert.That(world.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(world.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
-                    TestSpacesList(world.Spaces, useNewFields);
+                    TestSpacesList(world.LearningSpaces, useNewFields);
                 });
                 break;
         }
     }
 
-    private static void TestSpacesList(object worldSpaces, bool useNewFields)
+    private static void TestSpacesList(object worldLearningSpaces, bool useNewFields)
     {
-        switch (worldSpaces)
+        switch (worldLearningSpaces)
         {
-            case List<Space> spaces:
+            case List<LearningSpace> learningSpaces:
                 Assert.Multiple(() =>
                 {
-                    foreach (var space in spaces)
+                    foreach (var learningSpace in learningSpaces)
                     {
-                        TestSpace(space, useNewFields);
+                        TestSpace(learningSpace, useNewFields);
                     }
                 });
                 break;
-            case List<SpacePe> spaces:
+            case List<LearningSpacePe> learningSpaces:
                 Assert.Multiple(() =>
                 {
-                    foreach (var space in spaces)
+                    foreach (var learningSpace in learningSpaces)
                     {
-                        TestSpace(space, useNewFields);
+                        TestSpace(learningSpace, useNewFields);
                     }
                 });
                 break;
         }
     }
 
-    private static void TestSpace(object testSpace, bool useNewFields)
+    private static void TestSpace(object learningSpace, bool useNewFields)
     {
-        switch (testSpace)
+        switch (learningSpace)
         {
-            case Space space:
+            case LearningSpace space:
                 Assert.Multiple(() =>
                 {
                     Assert.That(space.Name, Is.EqualTo(useNewFields ? NewName : Name));
@@ -592,12 +592,12 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(space.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(space.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
                     Assert.That(space.RequiredPoints, Is.EqualTo(useNewFields ? NewRequiredPoints : RequiredPoints));
-                    TestElementsList(space.ContainedElements, space, useNewFields);
+                    TestElementsList(space.ContainedLearningElements, space, useNewFields);
                     Assert.That(space.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
                     Assert.That(space.PositionY, Is.EqualTo(useNewFields ? NewPositionY : PositionY));
                 });
                 break;
-            case SpacePe space:
+            case LearningSpacePe space:
                 Assert.Multiple(() =>
                 {
                     Assert.That(space.Name, Is.EqualTo(useNewFields ? NewName : Name));
@@ -606,7 +606,7 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(space.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(space.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
                     Assert.That(space.RequiredPoints, Is.EqualTo(useNewFields ? NewRequiredPoints : RequiredPoints));
-                    TestElementsList(space.SpaceLayout.ContainedElements, space, useNewFields);
+                    TestElementsList(space.LearningSpaceLayout.ContainedLearningElements, space, useNewFields);
                     Assert.That(space.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));
                     Assert.That(space.PositionY, Is.EqualTo(useNewFields ? NewPositionY : PositionY));
                 });
@@ -614,41 +614,41 @@ public class EntityPersistEntityMappingProfileUt
         }
     }
 
-    private static void TestElementsList(object worldElements, object? parent, bool useNewFields)
+    private static void TestElementsList(object worldLearningElements, object? parent, bool useNewFields)
     {
-        switch (worldElements)
+        switch (worldLearningElements)
         {
-            case List<Element> elements:
+            case List<LearningElement> learningElements:
                 Assert.Multiple(() =>
                 {
-                    foreach (var element in elements)
+                    foreach (var learningElement in learningElements)
                     {
-                        TestElement(element, parent, useNewFields);
+                        TestElement(learningElement, parent, useNewFields);
                     }
                 });
                 break;
-            case List<ElementPe> elements:
+            case List<LearningElementPe> learningElements:
                 Assert.Multiple(() =>
                 {
-                    foreach (var element in elements)
+                    foreach (var learningElement in learningElements)
                     {
-                        TestElement(element, parent, useNewFields);
+                        TestElement(learningElement, parent, useNewFields);
                     }
                 });
                 break;
         }
     }
 
-    private static void TestElement(object testElement, object? parent, bool useNewFields)
+    private static void TestElement(object learningElement, object? parent, bool useNewFields)
     {
-        switch (testElement)
+        switch (learningElement)
         {
-            case Element element:
+            case LearningElement element:
                 Assert.Multiple(() =>
                 {
                     Assert.That(element.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(element.Shortname, Is.EqualTo(useNewFields ? NewShortname : Shortname));
-                    TestContent(element.Content, useNewFields);
+                    TestContent(element.LearningContent, useNewFields);
                     Assert.That(element.Url, Is.EqualTo(useNewFields ? NewUrl : Url));
                     Assert.That(element.Authors, Is.EqualTo(useNewFields ? NewAuthors : Authors));
                     Assert.That(element.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
@@ -661,12 +661,12 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(element.PositionY, Is.EqualTo(useNewFields ? NewPositionY : PositionY));
                 });
                 break;
-            case ElementPe element:
+            case LearningElementPe element:
                 Assert.Multiple(() =>
                 {
                     Assert.That(element.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(element.Shortname, Is.EqualTo(useNewFields ? NewShortname : Shortname));
-                    TestContent(element.Content, useNewFields);
+                    TestContent(element.LearningContent, useNewFields);
                     Assert.That(element.Url, Is.EqualTo(useNewFields ? NewUrl : Url));
                     Assert.That(element.Authors, Is.EqualTo(useNewFields ? NewAuthors : Authors));
                     Assert.That(element.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
@@ -681,11 +681,11 @@ public class EntityPersistEntityMappingProfileUt
         }
     }
 
-    private static void TestContent(object elementContent, bool useNewFields)
+    private static void TestContent(object elementLearningContent, bool useNewFields)
     {
-        switch (elementContent)
+        switch (elementLearningContent)
         {
-            case Content content:
+            case LearningContent content:
                 Assert.Multiple(() =>
                 {
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
@@ -693,7 +693,7 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(content.Filepath, Is.EqualTo(useNewFields ? NewFilepath : Filepath));
                 });
                 break;
-            case ContentPe content:
+            case LearningContentPe content:
                 Assert.Multiple(() =>
                 {
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));

@@ -1,0 +1,53 @@
+@page "/LearningWorldOverView"
+@using Presentation.PresentationLogic.LearningWorld
+@using Presentation.Components
+@using Presentation.PresentationLogic.LearningElement
+@using Presentation.PresentationLogic.LearningElement.ActivationElement
+@using Presentation.PresentationLogic.LearningElement.InteractionElement
+@using Presentation.PresentationLogic.LearningElement.TestElement
+@using Presentation.PresentationLogic.LearningElement.TransferElement
+
+@if (LearningWorldP?.LearningWorldVm != null)
+{
+    <MudPaper Width="250px" Class="default-inline-flex py-3" Elevation="0">
+        <MudNavMenu Class="mud-width-full">
+            <MudText Typo="Typo.h6" Class= "px-4">@LearningWorldP.LearningWorldVm.Name</MudText> 
+            <MudDivider Class="my-2" />
+            @if(LearningWorldP.LearningWorldVm.LearningSpaces.Count > 0)
+            {
+                @foreach (var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
+                {
+                    <MudNavGroup Title="@learningSpace.Name" Icon="@SpaceIcon" Expanded="true">
+                        @foreach (var element in learningSpace.ContainedLearningElements)
+                        {
+                            <MudNavLink Icon="@GetElementIcon(element)">@element.Name</MudNavLink>
+                        }
+                    </MudNavGroup>
+                }
+            }
+        </MudNavMenu>
+    </MudPaper>
+}
+
+@code {
+    [Inject]
+    public ILearningWorldPresenterOverviewInterface? LearningWorldP { get; set; }
+
+    private static string SpaceIcon { get; set; } = CustomIcons.SpaceIcon;
+
+    private string GetElementIcon(ILearningElementViewModel element)
+    {
+        return element switch
+        {
+            H5PActivationElementViewModel => CustomIcons.H5PElementIcon,
+            VideoActivationElementViewModel => CustomIcons.VideoElementIcon,
+            H5PInteractionElementViewModel => CustomIcons.H5PElementIcon,
+            H5PTestElementViewModel => CustomIcons.H5PElementIcon,
+            ImageTransferElementViewModel => CustomIcons.ImageElementIcon,
+            PdfTransferElementViewModel => CustomIcons.TextElementIcon,
+            TextTransferElementViewModel => CustomIcons.TextElementIcon,
+            VideoTransferElementViewModel => CustomIcons.VideoElementIcon,
+            _ => throw new ArgumentOutOfRangeException(nameof(element))
+            };
+    }
+}

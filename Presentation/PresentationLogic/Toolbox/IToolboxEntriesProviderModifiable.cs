@@ -1,7 +1,7 @@
 namespace Presentation.PresentationLogic.Toolbox;
 
 /// <summary>
-/// Provides all <see cref="IDisplayableObject"/> objects that should be presented in the Toolbox.
+/// Provides all <see cref="IDisplayableLearningObject"/> objects that should be presented in the Toolbox.
 /// Also allows to add new Entries.
 /// </summary>
 public interface IToolboxEntriesProviderModifiable : IToolboxEntriesProvider
@@ -13,5 +13,5 @@ public interface IToolboxEntriesProviderModifiable : IToolboxEntriesProvider
     /// <returns>Whether or not adding the entry was successful.</returns>
     /// <remarks>This method will fail when trying to add an object while an object of the same type and name already
     /// is contained in <see cref="IToolboxEntriesProvider.Entries"/></remarks>
-    bool AddEntry(IDisplayableObject obj);
+    bool AddEntry(IDisplayableLearningObject obj);
 }

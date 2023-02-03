@@ -62,22 +62,22 @@ public class XmlResourceFactoryUt
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
         var identifier = new IdentifierJson("FileName", "Document");
-        var evl = new List<ElementValueJson>{new ("Points", "15")};
+        var learningEvl = new List<LearningElementValueJson>{new ("Points", "15")};
         
-        var jsonDocument = new ElementJson(1, identifier, "", "", "json",1, evl);
-        var pngDocument = new ElementJson(2, identifier, "", "", "png",1, evl);
-        var mp4Document = new ElementJson(3, identifier, "", "", "mp4",1, evl);
-        var webpDocument = new ElementJson(4, identifier, "", "", "webp",1, evl);
-        var jsDocument = new ElementJson(5, identifier, "", "", "js",1, evl);
-        var cssDocument = new ElementJson(6, identifier, "", "", "css",1, evl);
-        var htmlDocument = new ElementJson(7, identifier, "", "", "html",1, evl);
-        var csDocument = new ElementJson(8, identifier, "", "", "cs",1, evl);
-        var ccDocument = new ElementJson(9, identifier, "", "", "cc",1, evl);
-        var cPlusPlusDocument = new ElementJson(10, identifier, "", "", "cpp",1, evl);
-        var txtDocument = new ElementJson(11, identifier, "", "", "txt",1, evl);
+        var jsonDocument = new LearningElementJson(1, identifier, "", "", "json",1, learningEvl);
+        var pngDocument = new LearningElementJson(2, identifier, "", "", "png",1, learningEvl);
+        var mp4Document = new LearningElementJson(3, identifier, "", "", "mp4",1, learningEvl);
+        var webpDocument = new LearningElementJson(4, identifier, "", "", "webp",1, learningEvl);
+        var jsDocument = new LearningElementJson(5, identifier, "", "", "js",1, learningEvl);
+        var cssDocument = new LearningElementJson(6, identifier, "", "", "css",1, learningEvl);
+        var htmlDocument = new LearningElementJson(7, identifier, "", "", "html",1, learningEvl);
+        var csDocument = new LearningElementJson(8, identifier, "", "", "cs",1, learningEvl);
+        var ccDocument = new LearningElementJson(9, identifier, "", "", "cc",1, learningEvl);
+        var cPlusPlusDocument = new LearningElementJson(10, identifier, "", "", "cpp",1, learningEvl);
+        var txtDocument = new LearningElementJson(11, identifier, "", "", "txt",1, learningEvl);
 
 
-        var resourceList = new List<ElementJson>()
+        var resourceList = new List<LearningElementJson>()
         {
             jsonDocument,
             pngDocument,
@@ -93,7 +93,7 @@ public class XmlResourceFactoryUt
         };
         
         mockReadDsl.GetResourceList().Returns(resourceList);
-        var space_1 = new SpaceJson(1, new IdentifierJson("space", "spacename"), new List<int>() {1, 2}, 10, 10);
+        var space_1 = new LearningSpaceJson(1, new IdentifierJson("space", "spacename"), new List<int>() {1, 2}, 10, 10);
         var fileString = Path.Join(currWorkDir, "XMLFilesForExport", identifier.Value);
         mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport", identifier.Value), new MockFileData("Hello World"));
 

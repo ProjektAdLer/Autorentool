@@ -10,7 +10,7 @@ namespace BusinessLogicTest.Commands;
 public class EditPathWayConditionUt
 {
     [Test]
-    public void Execute_EditsSpace()
+    public void Execute_EditsLearningSpace()
     {
         var pathWayCondition = new PathWayCondition(ConditionEnum.And,3, 5);
         var condition = ConditionEnum.Or;
@@ -50,7 +50,7 @@ public class EditPathWayConditionUt
     }
     
     [Test]
-    public void UndoRedo_UndoesAndRedoesEditSpace()
+    public void UndoRedo_UndoesAndRedoesEditLearningSpace()
     {
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 2, 5);
         var condition = ConditionEnum.Or;

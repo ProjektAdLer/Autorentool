@@ -1,10 +1,11 @@
 @inject IMouseService MouseService
 @inject ILogger<PullablePath> Logger;
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.LearningSpace
 @using Shared
 @using Direction = Shared.Direction
 @using Presentation.PresentationLogic
-@using Presentation.PresentationLogic.World
 
 <marker
     id="arrow"
@@ -47,9 +48,9 @@
 
     // Overwrite nullability warning below because we check in OnParametersSet -n.stich
     [Parameter, EditorRequired]
-    public IObjectInPathWayViewModel DraggableObject { get; set; } = null!;
+    public IObjectInPathWayViewModel LearningObject { get; set; } = null!;
     
-    // Size of the given DraggableDraggableObject
+    // Size of the given LearningObject
     [Parameter] public double SizeX { get; set; }
     [Parameter] public double SizeY { get; set; }
 
@@ -70,9 +71,9 @@
     {
         _c1X = GetControlPoint(Direction1, X1);
         _c2X = GetControlPoint(Direction2, X2);
-        if (DraggableObject is null)
+        if (LearningObject is null)
         {
-            throw new ArgumentNullException(nameof(DraggableObject));
+            throw new ArgumentNullException(nameof(LearningObject));
         }
     }
 
@@ -99,7 +100,7 @@
         X2 = e.ClientX - _cursorX + X1;
         Y2 = e.ClientY - _cursorY + Y1;
         
-        PositioningSrv.SetOnHoveredObjectInPathWay(DraggableObject,X2, Y2);
+        PositioningSrv.SetOnHoveredObjectInPathWay(LearningObject,X2, Y2);
 
         _hasMoved = true;
     }
@@ -124,7 +125,7 @@
         }
         if (_isDown)
         {
-            PositioningSrv.CreatePathWay(DraggableObject, X2, Y2);
+            PositioningSrv.CreateLearningPathWay(LearningObject, X2, Y2);
         }
         _isDown = false;
     }

@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
-using Presentation.PresentationLogic.World;
+using Presentation.PresentationLogic.LearningWorld;
 
 namespace Presentation.PresentationLogic.AuthoringToolWorkspace;
 
 public class AuthoringToolWorkspaceViewModel : IAuthoringToolWorkspaceViewModel
 {
-    private WorldViewModel? _selectedWorld;
+    private LearningWorldViewModel? selectedLearningWorld;
     private IDictionary<string, string>? editDialogInitialValues;
 
     /// <summary>
@@ -15,38 +15,38 @@ public class AuthoringToolWorkspaceViewModel : IAuthoringToolWorkspaceViewModel
     /// </summary>
     public AuthoringToolWorkspaceViewModel()
     {
-        _worlds = new List<WorldViewModel>();
-        SelectedWorld = null;
+        _learningWorlds = new List<LearningWorldViewModel>();
+        SelectedLearningWorld = null;
         EditDialogInitialValues = null;
     }
 
-    internal List<WorldViewModel> _worlds;
+    internal List<LearningWorldViewModel> _learningWorlds;
     
-    /// <inheritdoc cref="IAuthoringToolWorkspaceViewModel.Worlds"/>
-    public IList<WorldViewModel> Worlds => _worlds;
+    /// <inheritdoc cref="IAuthoringToolWorkspaceViewModel.LearningWorlds"/>
+    public IList<LearningWorldViewModel> LearningWorlds => _learningWorlds;
 
-    /// <inheritdoc cref="IWorldNamesProvider.WorldNames"/>
-    public IEnumerable<string> WorldNames => _worlds.Select(world => world.Name);
+    /// <inheritdoc cref="ILearningWorldNamesProvider.WorldNames"/>
+    public IEnumerable<string> WorldNames => _learningWorlds.Select(world => world.Name);
     
-    /// <inheritdoc cref="IWorldNamesProvider.WorldShortNames"/>
-    public IEnumerable<string> WorldShortNames => _worlds.Select(world => world.Shortname);
+    /// <inheritdoc cref="ILearningWorldNamesProvider.WorldShortNames"/>
+    public IEnumerable<string> WorldShortNames => _learningWorlds.Select(world => world.Shortname);
 
-    /// <inheritdoc cref="IAuthoringToolWorkspaceViewModel.RemoveWorld"/>
-    public void RemoveWorld(WorldViewModel world)
+    /// <inheritdoc cref="IAuthoringToolWorkspaceViewModel.RemoveLearningWorld"/>
+    public void RemoveLearningWorld(LearningWorldViewModel learningWorld)
     {
-        _worlds.Remove(world);
-        OnPropertyChanged(nameof(Worlds));
+        _learningWorlds.Remove(learningWorld);
+        OnPropertyChanged(nameof(LearningWorlds));
     }
     
-    /// <inheritdoc cref="IAuthoringToolWorkspaceViewModel.SelectedWorld"/>
-    public WorldViewModel? SelectedWorld
+    /// <inheritdoc cref="IAuthoringToolWorkspaceViewModel.SelectedLearningWorld"/>
+    public LearningWorldViewModel? SelectedLearningWorld
     {
-        get => _selectedWorld;
+        get => selectedLearningWorld;
         set
         {
-            if (value != null && !Worlds.Contains(value))
+            if (value != null && !LearningWorlds.Contains(value))
                 throw new ArgumentException("value isn't contained in collection.");
-            _selectedWorld = value;
+            selectedLearningWorld = value;
             OnPropertyChanged();
         }
     }

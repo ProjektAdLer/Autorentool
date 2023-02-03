@@ -5,5 +5,5 @@ namespace Generator.DSL;
 
 public interface ICreateDsl
 {
-   string WriteWorld(WorldPe world);
+   string WriteLearningWorld(LearningWorldPe learningWorld);
 }

@@ -18,7 +18,7 @@ public class XmlUrlFactory : IXmlUrlFactory
     public string UrlParentSpaceId;
     public string UrlLink;
     public string UrlDescription;
-    public List<ElementJson> UrlList;
+    public List<LearningElementJson> UrlList;
     public IActivitiesGradesXmlGradeItem ActivitiesGradesXmlGradeItem { get; }
     public IActivitiesGradesXmlGradeItems ActivitiesGradesXmlGradeItems { get; }
     public IActivitiesGradesXmlActivityGradebook ActivitiesGradesXmlActivityGradebook { get; }
@@ -47,7 +47,7 @@ public class XmlUrlFactory : IXmlUrlFactory
         UrlParentSpaceId = "";
         UrlLink = "";
         UrlDescription = "";
-        UrlList = new List<ElementJson>();
+        UrlList = new List<LearningElementJson>();
 
         CurrentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
         _fileSystem = fileSystem?? new FileSystem();
@@ -79,13 +79,13 @@ public class XmlUrlFactory : IXmlUrlFactory
         UrlSetParameters(UrlList);
     }
 
-    public void UrlSetParameters(List<ElementJson> urlList)
+    public void UrlSetParameters(List<LearningElementJson> urlList)
     {
         foreach (var url in urlList)
         {
             UrlId = url.Id.ToString();
             UrlName = url.Identifier.Value;
-            UrlParentSpaceId = url.SpaceParentId.ToString();
+            UrlParentSpaceId = url.LearningSpaceParentId.ToString();
             UrlLink = url.Url;
             UrlDescription = url.Description ?? "";
 

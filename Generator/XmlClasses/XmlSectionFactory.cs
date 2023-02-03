@@ -15,7 +15,7 @@ public class XmlSectionFactory : IXmlSectionFactory
     public IReadDsl ReadDsl;
     public string CurrentTime;
     private IFileSystem _fileSystem;
-    public List<SpaceJson> SpaceJsons;
+    public List<LearningSpaceJson> LearningSpaceJsons;
 
     public XmlSectionFactory(IReadDsl readDsl, IFileSystem? fileSystem = null, ISectionsSectionXmlSection? section = null, ISectionsInforefXmlInforef? inforef = null)
     {
@@ -23,16 +23,16 @@ public class XmlSectionFactory : IXmlSectionFactory
         _fileSystem = fileSystem ?? new FileSystem();
         SectionsSectionXmlSection = section ?? new SectionsSectionXmlSection();
         SectionsInforefXmlInforef = inforef ?? new SectionsInforefXmlInforef();
-        SpaceJsons = new List<SpaceJson>();
+        LearningSpaceJsons = new List<LearningSpaceJson>();
         CurrentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
     }
 
     public void CreateSectionFactory()
     {
-        SpaceJsons = ReadDsl.GetSectionList();
+        LearningSpaceJsons = ReadDsl.GetSectionList();
         
-        //Add A Section for every Space
-        foreach (var space in SpaceJsons)
+        //Add A Section for every LearningSpace
+        foreach (var space in LearningSpaceJsons)
         {
             CreateSectionsFolder(space.SpaceId.ToString());
             CreateSectionInforefXml( space.SpaceId.ToString() );

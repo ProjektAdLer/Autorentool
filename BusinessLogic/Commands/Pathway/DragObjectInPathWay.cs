@@ -4,7 +4,7 @@ namespace BusinessLogic.Commands.Pathway;
 
 public class DragObjectInPathWay : IUndoCommand
 {
-    internal IObjectInPathWay DraggableObject { get; }
+    internal IObjectInPathWay LearningObject { get; }
     private readonly double _oldPositionX;
     private readonly double _oldPositionY;
     private readonly double _newPositionX;
@@ -12,10 +12,10 @@ public class DragObjectInPathWay : IUndoCommand
     private readonly Action<IObjectInPathWay> _mappingAction;
     private IMemento? _memento;
 
-    public DragObjectInPathWay(IObjectInPathWay draggableObject, double oldPositionX, double oldPositionY, 
+    public DragObjectInPathWay(IObjectInPathWay learningObject, double oldPositionX, double oldPositionY, 
         double newPositionX, double newPositionY, Action<IObjectInPathWay> mappingAction)
     {
-        DraggableObject = draggableObject;
+        LearningObject = learningObject;
         _oldPositionX = oldPositionX;
         _oldPositionY = oldPositionY;
         _newPositionX = newPositionX;
@@ -25,14 +25,14 @@ public class DragObjectInPathWay : IUndoCommand
 
     public void Execute()
     {
-        DraggableObject.PositionX = _oldPositionX;
-        DraggableObject.PositionY = _oldPositionY;
-        _memento = DraggableObject.GetMemento();
+        LearningObject.PositionX = _oldPositionX;
+        LearningObject.PositionY = _oldPositionY;
+        _memento = LearningObject.GetMemento();
 
-        DraggableObject.PositionX = _newPositionX;
-        DraggableObject.PositionY = _newPositionY;
+        LearningObject.PositionX = _newPositionX;
+        LearningObject.PositionY = _newPositionY;
         
-        _mappingAction.Invoke(DraggableObject);
+        _mappingAction.Invoke(LearningObject);
     }
 
     public void Undo()
@@ -42,9 +42,9 @@ public class DragObjectInPathWay : IUndoCommand
             throw new InvalidOperationException("_memento is null");
         }
         
-        DraggableObject.RestoreMemento(_memento);
+        LearningObject.RestoreMemento(_memento);
         
-        _mappingAction.Invoke(DraggableObject);
+        _mappingAction.Invoke(LearningObject);
     }
 
     public void Redo() => Execute();

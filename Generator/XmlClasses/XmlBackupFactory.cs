@@ -16,8 +16,8 @@ namespace Generator.XmlClasses;
 public class XmlBackupFactory : IXmlBackupFactory
 {
     private readonly string _currentTime;
-    private readonly WorldJson _world;
-    private readonly List<ElementJson> _element;
+    private readonly LearningWorldJson _learningWorld;
+    private readonly List<LearningElementJson> _learningElement;
     internal IGradebookXmlGradeCategory GradebookXmlGradeCategory;
     internal IGradebookXmlGradeCategories GradebookXmlGradeCategories;
     internal IGradebookXmlGradeItem GradebookXmlGradeItem;
@@ -145,10 +145,10 @@ public class XmlBackupFactory : IXmlBackupFactory
         
         _currentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
         
-        _world = readDsl.GetWorld();
-        _element = readDsl.GetSpacesAndElementsOrderedList();
-        //_element = readDsl.GetResourceList();
-        //_element.AddRange(readDsl.GetH5PElementsList());
+        _learningWorld = readDsl.GetLearningWorld();
+        _learningElement = readDsl.GetSpacesAndElementsOrderedList();
+        //_learningElement = readDsl.GetResourceList();
+        //_learningElement.AddRange(readDsl.GetH5PElementsList());
         MoodleBackupXmlActivityList = new List<MoodleBackupXmlActivity>();
         MoodleBackupXmlSettingList = new List<MoodleBackupXmlSetting>();
         MoodleBackupXmlSectionList = new List<MoodleBackupXmlSection>();
@@ -220,7 +220,7 @@ public class XmlBackupFactory : IXmlBackupFactory
         //set the parameter of the moodle_backup.xml file
         MoodleBackupXmlDetails.Detail = MoodleBackupXmlDetail as MoodleBackupXmlDetail ?? new MoodleBackupXmlDetail();
 
-        MoodleBackupXmlCourse.Title = _world.Identifier.Value;
+        MoodleBackupXmlCourse.Title = _learningWorld.Identifier.Value;
 
         //MoodleBackupXmlSettingSetting are Tags that describe the Moodle Backup Settings.
         //They are the same Options that are displayed, when a backup is created in moodle. 
@@ -273,34 +273,34 @@ public class XmlBackupFactory : IXmlBackupFactory
 
         //Every activity needs the following tags in the moodle_backup.xml file
         //The ElementType is different for some element types
-        foreach (var element in _element)
+        foreach (var element in _learningElement)
         {
-            string elementId = element.Id.ToString();
-            string elementType = element.ElementType;
-            string elementName = element.Identifier.Value;
-            if (elementType == "h5p")
+            string learningElementId = element.Id.ToString();
+            string learningElementType = element.ElementType;
+            string learningElementName = element.Identifier.Value;
+            if (learningElementType == "h5p")
             {
-                elementType = "h5pactivity";
+                learningElementType = "h5pactivity";
             }
-            else if (elementType is "pdf" or "json" or "jpg" or "png" or "bmp" or "webp" or "txt" or "c"
+            else if (learningElementType is "pdf" or "json" or "jpg" or "png" or "bmp" or "webp" or "txt" or "c"
                      or "h" or "cpp" or "cc" or "c++" or "py" or "cs" or "js" or "php" or "html" or "css")
             {
-                elementType = "resource";
+                learningElementType = "resource";
             }
-            else if (elementType is "space")
+            else if (learningElementType is "space")
             {
-                elementType = "label";
+                learningElementType = "label";
             }
 
             if (MoodleBackupXmlActivityList != null)
             {
                 MoodleBackupXmlActivityList.Add(new MoodleBackupXmlActivity
                 {
-                    ModuleId = elementId,
+                    ModuleId = learningElementId,
                     SectionId = 0.ToString(),
-                    ModuleName = elementType,
-                    Title = elementName,
-                    Directory = "activities/" + elementType + "_" + elementId,
+                    ModuleName = learningElementType,
+                    Title = learningElementName,
+                    Directory = "activities/" + learningElementType + "_" + learningElementId,
                 });
 
                 MoodleBackupXmlActivities.Activity = MoodleBackupXmlActivityList;
@@ -309,12 +309,12 @@ public class XmlBackupFactory : IXmlBackupFactory
             if (MoodleBackupXmlSettingList != null)
             {
                 MoodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting("activity",
-                    elementType + "_" + elementId + "_included", "1",
-                    elementType + "_" + elementId, false));
+                    learningElementType + "_" + learningElementId + "_included", "1",
+                    learningElementType + "_" + learningElementId, false));
 
                 MoodleBackupXmlSettingList.Add(new MoodleBackupXmlSetting("activity",
-                    elementType + "_" + elementId + "_userinfo", "0",
-                    elementType + "_" + elementId, false));
+                    learningElementType + "_" + learningElementId + "_userinfo", "0",
+                    learningElementType + "_" + learningElementId, false));
             }
         }
         
@@ -381,10 +381,10 @@ public class XmlBackupFactory : IXmlBackupFactory
         //Base information about the moodle_backup.xml file. The value in originalCourseFullName & 
         //OriginalCourseShortName will be displayed, when the .mbz file is uploaded to moodle.
         //Its important that the parameter "includeFiles" is set to "1".
-        //With the OriginalCourseFormat the future world can be individualised
+        //With the OriginalCourseFormat the future learningWorld can be individualised
         MoodleBackupXmlInformation.BackupDate = _currentTime;
-        MoodleBackupXmlInformation.OriginalCourseFullname = _world.Identifier.Value;
-        MoodleBackupXmlInformation.OriginalCourseShortname = _world.Identifier.Value;
+        MoodleBackupXmlInformation.OriginalCourseFullname = _learningWorld.Identifier.Value;
+        MoodleBackupXmlInformation.OriginalCourseShortname = _learningWorld.Identifier.Value;
         MoodleBackupXmlInformation.OriginalCourseStartDate = _currentTime;
         MoodleBackupXmlInformation.Details = MoodleBackupXmlDetails as MoodleBackupXmlDetails ?? new MoodleBackupXmlDetails();
         MoodleBackupXmlInformation.Contents = MoodleBackupXmlContents as MoodleBackupXmlContents ?? new MoodleBackupXmlContents();

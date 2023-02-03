@@ -3,7 +3,7 @@ namespace Generator.DSL;
 
 /// <summary>
 ///  The Identifier tag has the name and type (needed for the Moodle API, so that the 2D3D Team knows what kind of Type they need to search)
-///  of the world, Topic, Space and element. 
+///  of the learningWorld, Topic, Space and element. 
 /// </summary>
 public class IdentifierJson : IIdentifierJson
 {

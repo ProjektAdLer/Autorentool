@@ -43,14 +43,14 @@ public class XmlSectionFactoryUt
 
         var mockContent = new List<int>();
         mockContent.Add(1);
-        var spaceJson1 = new SpaceJson(1, mockIdentifierJson, mockContent, 0, 0, "");
-        var spaceJson2 = new SpaceJson(2, mockIdentifierJson, mockContent, 0, 0,"");
+        var learningSpaceJson1 = new LearningSpaceJson(1, mockIdentifierJson, mockContent, 0, 0, "");
+        var learningSpaceJson2 = new LearningSpaceJson(2, mockIdentifierJson, mockContent, 0, 0,"");
 
-        var spaceList = new List<SpaceJson>();
-        spaceList.Add(spaceJson1);
-        spaceList.Add(spaceJson2);
+        var learningSpaceList = new List<LearningSpaceJson>();
+        learningSpaceList.Add(learningSpaceJson1);
+        learningSpaceList.Add(learningSpaceJson2);
 
-        mockReadDsl.GetSectionList().Returns(spaceList);
+        mockReadDsl.GetSectionList().Returns(learningSpaceList);
         
         // Act
         var systemUnderTest = new XmlSectionFactory(mockReadDsl, mockFileSystem, mockSection, mockInforef);
@@ -59,18 +59,18 @@ public class XmlSectionFactoryUt
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.SpaceJsons, Is.EqualTo(spaceList));
-            Assert.That(mockFileSystem.Directory.Exists(Path.Join(currWorkDir, "XMLFilesForExport", "sections", "section_"+spaceJson1.SpaceId)), Is.True);
-            Assert.That(mockFileSystem.Directory.Exists(Path.Join(currWorkDir, "XMLFilesForExport", "sections", "section_"+spaceJson2.SpaceId)), Is.True);
-            Assert.That(systemUnderTest.SectionsSectionXmlSection.Id, Is.EqualTo(spaceJson2.SpaceId.ToString()));
-            Assert.That(systemUnderTest.SectionsSectionXmlSection.Number, Is.EqualTo(spaceJson2.SpaceId.ToString()));
-            Assert.That(systemUnderTest.SectionsSectionXmlSection.Name, Is.EqualTo(spaceJson2.Identifier.Value));
+            Assert.That(systemUnderTest.LearningSpaceJsons, Is.EqualTo(learningSpaceList));
+            Assert.That(mockFileSystem.Directory.Exists(Path.Join(currWorkDir, "XMLFilesForExport", "sections", "section_"+learningSpaceJson1.SpaceId)), Is.True);
+            Assert.That(mockFileSystem.Directory.Exists(Path.Join(currWorkDir, "XMLFilesForExport", "sections", "section_"+learningSpaceJson2.SpaceId)), Is.True);
+            Assert.That(systemUnderTest.SectionsSectionXmlSection.Id, Is.EqualTo(learningSpaceJson2.SpaceId.ToString()));
+            Assert.That(systemUnderTest.SectionsSectionXmlSection.Number, Is.EqualTo(learningSpaceJson2.SpaceId.ToString()));
+            Assert.That(systemUnderTest.SectionsSectionXmlSection.Name, Is.EqualTo(learningSpaceJson2.Identifier.Value));
             Assert.That(systemUnderTest.SectionsSectionXmlSection.Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
             
-            mockInforef.Received().Serialize("", spaceJson1.SpaceId.ToString());
-            mockInforef.Received().Serialize("", spaceJson2.SpaceId.ToString());
-            mockSection.Received().Serialize("", spaceJson1.SpaceId.ToString());
-            mockSection.Received().Serialize("", spaceJson2.SpaceId.ToString());
+            mockInforef.Received().Serialize("", learningSpaceJson1.SpaceId.ToString());
+            mockInforef.Received().Serialize("", learningSpaceJson2.SpaceId.ToString());
+            mockSection.Received().Serialize("", learningSpaceJson1.SpaceId.ToString());
+            mockSection.Received().Serialize("", learningSpaceJson2.SpaceId.ToString());
         });
 
     }

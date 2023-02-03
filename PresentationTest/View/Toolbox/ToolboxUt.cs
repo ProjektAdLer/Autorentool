@@ -66,7 +66,7 @@ public class ToolboxUt
 
         entriesProvider.Entries.Received();
 
-        var entries = new IDisplayableObject[] { null!, null!, null! };
+        var entries = new IDisplayableLearningObject[] { null!, null!, null! };
         entriesProvider.Entries.Returns(entries);
         
         const string input = "foobar this is my search term";
@@ -74,7 +74,7 @@ public class ToolboxUt
 
         resultFilter.Received().FilterCollection(entries, input);
         
-        var filteredEntries = new IDisplayableObject[] { null!, null! };
+        var filteredEntries = new IDisplayableLearningObject[] { null!, null! };
         resultFilter.FilterCollection(entries, input).Returns(filteredEntries);
         
         Assert.That(systemUnderTest.Instance.FilteredEntries, Is.EqualTo(filteredEntries));

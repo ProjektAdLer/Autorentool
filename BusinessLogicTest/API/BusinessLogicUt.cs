@@ -132,264 +132,264 @@ public class BusinessLogicUt
     }
 
     [Test]
-    public void SaveWorld_CallsDataAccess()
+    public void SaveLearningWorld_CallsDataAccess()
     {
-        var world = new World("fa", "a", "f", "f", "f", "f");
+        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f");
         var mockDataAccess = Substitute.For<IDataAccess>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.SaveWorld(world, "foobar");
+        systemUnderTest.SaveLearningWorld(learningWorld, "foobar");
 
-        mockDataAccess.Received().SaveWorldToFile(world, "foobar");
+        mockDataAccess.Received().SaveLearningWorldToFile(learningWorld, "foobar");
     }
 
     [Test]
-    public void LoadWorld_CallsDataAccess()
-    {
-        var mockDataAccess = Substitute.For<IDataAccess>();
-
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
-
-        systemUnderTest.LoadWorld("foobar");
-
-        mockDataAccess.Received().LoadWorld("foobar");
-    }
-
-    [Test]
-    public void LoadWorld_ReturnsWorld()
-    {
-        var world = new World("fa", "a", "f", "f", "f", "f");
-        var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadWorld("foobar").Returns(world);
-
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
-
-        var worldActual = systemUnderTest.LoadWorld("foobar");
-
-        Assert.That(worldActual, Is.EqualTo(world));
-    }
-
-    [Test]
-    public void SaveSpace_CallsDataAccess()
-    {
-        var space = new Space("fa", "a", "f", "f", "f", 0);
-        var mockDataAccess = Substitute.For<IDataAccess>();
-
-        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
-
-        systemUnderTest.SaveSpace(space, "foobar");
-
-        mockDataAccess.Received().SaveSpaceToFile(space, "foobar");
-    }
-
-    [Test]
-    public void LoadSpace_CallsDataAccess()
+    public void LoadLearningWorld_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.LoadSpace("foobar");
+        systemUnderTest.LoadLearningWorld("foobar");
 
-        mockDataAccess.Received().LoadSpace("foobar");
+        mockDataAccess.Received().LoadLearningWorld("foobar");
     }
 
     [Test]
-    public void LoadSpace_ReturnsSpace()
+    public void LoadLearningWorld_ReturnsLearningWorld()
     {
-        var space = new Space("fa", "a", "f", "f", "f", 0);
+        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f");
         var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadSpace("foobar").Returns(space);
+        mockDataAccess.LoadLearningWorld("foobar").Returns(learningWorld);
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        var spaceActual = systemUnderTest.LoadSpace("foobar");
+        var learningWorldActual = systemUnderTest.LoadLearningWorld("foobar");
 
-        Assert.That(spaceActual, Is.EqualTo(space));
+        Assert.That(learningWorldActual, Is.EqualTo(learningWorld));
     }
 
     [Test]
-    public void SaveElement_CallsDataAccess()
+    public void SaveLearningSpace_CallsDataAccess()
     {
-        var content = new Content("a", "b", "");
-        var element = new Element("fa", "f", content, "","f",
-            "f", "f", ElementDifficultyEnum.Easy);
+        var learningSpace = new LearningSpace("fa", "a", "f", "f", "f", 0);
         var mockDataAccess = Substitute.For<IDataAccess>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.SaveElement(element, "foobar");
+        systemUnderTest.SaveLearningSpace(learningSpace, "foobar");
 
-        mockDataAccess.Received().SaveElementToFile(element, "foobar");
+        mockDataAccess.Received().SaveLearningSpaceToFile(learningSpace, "foobar");
     }
 
     [Test]
-    public void LoadElement_CallsDataAccess()
+    public void LoadLearningSpace_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.LoadElement("foobar");
+        systemUnderTest.LoadLearningSpace("foobar");
 
-        mockDataAccess.Received().LoadElement("foobar");
+        mockDataAccess.Received().LoadLearningSpace("foobar");
     }
 
     [Test]
-    public void LoadElement_ReturnsElement()
+    public void LoadLearningSpace_ReturnsLearningSpace()
     {
-        var content = new Content("a", "b", "");
-        var element = new Element("fa", "a", content, "", "f", "f",
-            "f", ElementDifficultyEnum.Easy);
+        var learningSpace = new LearningSpace("fa", "a", "f", "f", "f", 0);
         var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadElement("foobar").Returns(element);
+        mockDataAccess.LoadLearningSpace("foobar").Returns(learningSpace);
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        var elementActual = systemUnderTest.LoadElement("foobar");
+        var learningSpaceActual = systemUnderTest.LoadLearningSpace("foobar");
 
-        Assert.That(elementActual, Is.EqualTo(element));
+        Assert.That(learningSpaceActual, Is.EqualTo(learningSpace));
     }
 
     [Test]
-    public void LoadContent_CallsDataAccess()
+    public void SaveLearningElement_CallsDataAccess()
+    {
+        var content = new LearningContent("a", "b", "");
+        var learningElement = new LearningElement("fa", "f", content, "","f",
+            "f", "f", LearningElementDifficultyEnum.Easy);
+        var mockDataAccess = Substitute.For<IDataAccess>();
+
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
+
+        systemUnderTest.SaveLearningElement(learningElement, "foobar");
+
+        mockDataAccess.Received().SaveLearningElementToFile(learningElement, "foobar");
+    }
+
+    [Test]
+    public void LoadLearningElement_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.LoadContent("foobar");
+        systemUnderTest.LoadLearningElement("foobar");
 
-        mockDataAccess.Received().LoadContent("foobar");
+        mockDataAccess.Received().LoadLearningElement("foobar");
     }
 
     [Test]
-    public void LoadContent_ReturnsElement()
+    public void LoadLearningElement_ReturnsLearningElement()
     {
-        var content = new Content("fa", "a", "");
+        var content = new LearningContent("a", "b", "");
+        var learningElement = new LearningElement("fa", "a", content, "", "f", "f",
+            "f", LearningElementDifficultyEnum.Easy);
         var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadContent("foobar").Returns(content);
+        mockDataAccess.LoadLearningElement("foobar").Returns(learningElement);
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        var elementActual = systemUnderTest.LoadContent("foobar");
+        var learningElementActual = systemUnderTest.LoadLearningElement("foobar");
 
-        Assert.That(elementActual, Is.EqualTo(content));
+        Assert.That(learningElementActual, Is.EqualTo(learningElement));
     }
 
     [Test]
-    public void LoadWorldFromStream_CallsDataAccess()
+    public void LoadLearningContent_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
-        var stream = Substitute.For<Stream>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.LoadWorld(stream);
+        systemUnderTest.LoadLearningContent("foobar");
 
-        mockDataAccess.Received().LoadWorld(stream);
+        mockDataAccess.Received().LoadLearningContent("foobar");
     }
 
     [Test]
-    public void LoadWorldFromStream_ReturnsWorld()
+    public void LoadLearningContent_ReturnsLearningElement()
     {
-        var world = new World("fa", "a", "f", "f", "f", "f");
-        var stream = Substitute.For<Stream>();
+        var learningContent = new LearningContent("fa", "a", "");
         var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadWorld(stream).Returns(world);
+        mockDataAccess.LoadLearningContent("foobar").Returns(learningContent);
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        var worldActual = systemUnderTest.LoadWorld(stream);
+        var learningElementActual = systemUnderTest.LoadLearningContent("foobar");
 
-        Assert.That(worldActual, Is.EqualTo(world));
+        Assert.That(learningElementActual, Is.EqualTo(learningContent));
     }
 
     [Test]
-    public void LoadSpaceFromStream_CallsDataAccess()
+    public void LoadLearningWorldFromStream_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var stream = Substitute.For<Stream>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.LoadSpace(stream);
+        systemUnderTest.LoadLearningWorld(stream);
 
-        mockDataAccess.Received().LoadSpace(stream);
+        mockDataAccess.Received().LoadLearningWorld(stream);
     }
 
     [Test]
-    public void LoadSpaceFromStream_ReturnsSpace()
+    public void LoadLearningWorldFromStream_ReturnsLearningWorld()
     {
-        var space = new Space("fa", "a", "f", "f", "f", 0);
+        var learningWorld = new LearningWorld("fa", "a", "f", "f", "f", "f");
         var stream = Substitute.For<Stream>();
         var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadSpace(stream).Returns(space);
+        mockDataAccess.LoadLearningWorld(stream).Returns(learningWorld);
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        var spaceActual = systemUnderTest.LoadSpace(stream);
+        var learningWorldActual = systemUnderTest.LoadLearningWorld(stream);
 
-        Assert.That(spaceActual, Is.EqualTo(space));
+        Assert.That(learningWorldActual, Is.EqualTo(learningWorld));
     }
 
     [Test]
-    public void LoadElementFromStream_CallsDataAccess()
+    public void LoadLearningSpaceFromStream_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var stream = Substitute.For<Stream>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.LoadElement(stream);
+        systemUnderTest.LoadLearningSpace(stream);
 
-        mockDataAccess.Received().LoadElement(stream);
+        mockDataAccess.Received().LoadLearningSpace(stream);
     }
 
     [Test]
-    public void LoadElementFromStream_ReturnsElement()
+    public void LoadLearningSpaceFromStream_ReturnsLearningSpace()
     {
-        var content = new Content("a", "b", "");
-        var element = new Element("fa", "a", content, "","f", "f",
-            "f", ElementDifficultyEnum.Easy);
+        var learningSpace = new LearningSpace("fa", "a", "f", "f", "f", 0);
         var stream = Substitute.For<Stream>();
         var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadElement(stream).Returns(element);
+        mockDataAccess.LoadLearningSpace(stream).Returns(learningSpace);
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        var elementActual = systemUnderTest.LoadElement(stream);
+        var learningSpaceActual = systemUnderTest.LoadLearningSpace(stream);
 
-        Assert.That(elementActual, Is.EqualTo(element));
+        Assert.That(learningSpaceActual, Is.EqualTo(learningSpace));
     }
 
     [Test]
-    public void LoadContentFromStream_CallsDataAccess()
+    public void LoadLearningElementFromStream_CallsDataAccess()
+    {
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        var stream = Substitute.For<Stream>();
+
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
+
+        systemUnderTest.LoadLearningElement(stream);
+
+        mockDataAccess.Received().LoadLearningElement(stream);
+    }
+
+    [Test]
+    public void LoadLearningElementFromStream_ReturnsLearningElement()
+    {
+        var content = new LearningContent("a", "b", "");
+        var learningElement = new LearningElement("fa", "a", content, "","f", "f",
+            "f", LearningElementDifficultyEnum.Easy);
+        var stream = Substitute.For<Stream>();
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        mockDataAccess.LoadLearningElement(stream).Returns(learningElement);
+
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
+
+        var learningElementActual = systemUnderTest.LoadLearningElement(stream);
+
+        Assert.That(learningElementActual, Is.EqualTo(learningElement));
+    }
+
+    [Test]
+    public void LoadLearningContentFromStream_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
         var stream = Substitute.For<MemoryStream>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        systemUnderTest.LoadContent("filename.extension", stream);
+        systemUnderTest.LoadLearningContent("filename.extension", stream);
 
-        mockDataAccess.Received().LoadContent("filename.extension", stream);
+        mockDataAccess.Received().LoadLearningContent("filename.extension", stream);
     }
 
     [Test]
-    public void LoadContentFromStream_ReturnsElement()
+    public void LoadLearningContentFromStream_ReturnsLearningElement()
     {
-        var content = new Content("filename", "extension", "");
+        var learningContent = new LearningContent("filename", "extension", "");
         var stream = Substitute.For<MemoryStream>();
         var mockDataAccess = Substitute.For<IDataAccess>();
-        mockDataAccess.LoadContent("filename.extension", stream).Returns(content);
+        mockDataAccess.LoadLearningContent("filename.extension", stream).Returns(learningContent);
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
 
-        var elementActual = systemUnderTest.LoadContent("filename.extension", stream);
+        var learningElementActual = systemUnderTest.LoadLearningContent("filename.extension", stream);
 
-        Assert.That(elementActual, Is.EqualTo(content));
+        Assert.That(learningElementActual, Is.EqualTo(learningContent));
     }
 
     [Test]

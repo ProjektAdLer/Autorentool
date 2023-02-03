@@ -1,5 +1,5 @@
 ﻿@page "/AuthoringToolWorkspaceView"
-@using Presentation.View.World
+@using Presentation.View.LearningWorld
 @using Presentation.Components
 @using Presentation.Components.ModalDialog
 @using Presentation.PresentationLogic.API
@@ -8,18 +8,18 @@
 
 <h3>AuthoringTool Workspace</h3>
 
-<p role="status">Current count of worlds: @AuthoringToolWorkspaceVm.Worlds.Count()</p>
+<p role="status">Current count of learning worlds: @AuthoringToolWorkspaceVm.LearningWorlds.Count()</p>
 <p role="status" id="filepath">Filepath: @filePath</p>
 <label class="world-select">
-    Select world:
-    <select @onchange="args => SetSelectedWorld((string) args.Value!)"
-            value="@(AuthoringToolWorkspaceVm.SelectedWorld?.Name)">
-        @foreach (var world in AuthoringToolWorkspaceVm.Worlds)
+    Select learning world:
+    <select @onchange="args => SetSelectedLearningWorld((string) args.Value!)"
+            value="@(AuthoringToolWorkspaceVm.SelectedLearningWorld?.Name)">
+        @foreach (var learningWorld in AuthoringToolWorkspaceVm.LearningWorlds)
         {
-            <option value="@world.Name">@world.Name</option>
+            <option value="@learningWorld.Name">@learningWorld.Name</option>
         }
-        @if (!AuthoringToolWorkspaceVm.Worlds.Any() ||
-             AuthoringToolWorkspaceVm.Worlds.Count() == 1 && AuthoringToolWorkspaceVm.SelectedWorld == null)
+        @if (!AuthoringToolWorkspaceVm.LearningWorlds.Any() ||
+             AuthoringToolWorkspaceVm.LearningWorlds.Count() == 1 && AuthoringToolWorkspaceVm.SelectedLearningWorld == null)
         {
             <option value=""></option>
         }
@@ -30,22 +30,22 @@
         <button class="btn btn-primary" @onclick="PresentationLogic.UndoCommand" disabled="@(!PresentationLogic.CanUndo)">Undo</button>
         <button class="btn btn-primary" @onclick="PresentationLogic.RedoCommand" disabled="@(!PresentationLogic.CanRedo)">Redo</button>
     </div>
-    @if (AuthoringToolWorkspaceVm.SelectedWorld != null)
+    @if (AuthoringToolWorkspaceVm.SelectedLearningWorld != null)
     {
         <label class="world-data">
-            Selected world: @AuthoringToolWorkspaceVm.SelectedWorld.Name,
-            Description: @AuthoringToolWorkspaceVm.SelectedWorld.Description,
-            Spaces: @AuthoringToolWorkspaceVm.SelectedWorld.Spaces.Count
+            Selected world: @AuthoringToolWorkspaceVm.SelectedLearningWorld.Name,
+            Description: @AuthoringToolWorkspaceVm.SelectedLearningWorld.Description,
+            Spaces: @AuthoringToolWorkspaceVm.SelectedLearningWorld.LearningSpaces.Count
         </label>
     }
 </div>
 <div>
-    <button class="btn btn-primary add-world" @onclick="AddNewWorld">Add World</button>
-    <button class="btn btn-primary load-world" @onclick="LoadWorldAsync">Load World</button>
-    <button class="btn btn-primary edit-world" @onclick="OpenEditSelectedWorldDialog" disabled="@(!AuthoringToolWorkspaceP.WorldSelected)">Edit World</button>
-    <button class="btn btn-primary delete-world" @onclick="DeleteSelectedWorld" disabled="@(!AuthoringToolWorkspaceP.WorldSelected)">Delete selected World</button>
-    <button class="btn btn-primary save-world" @onclick="SaveSelectedWorldAsync" disabled="@(!AuthoringToolWorkspaceP.WorldSelected)">Save selected World</button>
-    <button class="btn btn-primary export-world" id="btnExport" @onclick="ExportWorld">Create Export-File</button>
+    <button class="btn btn-primary add-learning-world" @onclick="AddNewLearningWorld">Add Learning World</button>
+    <button class="btn btn-primary load-learning-world" @onclick="LoadLearningWorldAsync">Load Learning World</button>
+    <button class="btn btn-primary edit-learning-world" @onclick="OpenEditSelectedLearningWorldDialog" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Edit Learning World</button>
+    <button class="btn btn-primary delete-learning-world" @onclick="DeleteSelectedLearningWorld" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Delete selected Learning World</button>
+    <button class="btn btn-primary save-learning-world" @onclick="SaveSelectedLearningWorldAsync" disabled="@(!AuthoringToolWorkspaceP.LearningWorldSelected)">Save selected Learning World</button>
+    <button class="btn btn-primary export-learning-world" id="btnExport" @onclick="ExportLearningWorld">Create Export-File</button>
 </div>
 <DropZone OnNewStream=OnDragAndDropResult></DropZone>
 
@@ -66,20 +66,20 @@
     @ModalDialogFactory.GetDeleteUnsavedWorldFragment(OnSaveDeletedWorldDialogCloseAsync, AuthoringToolWorkspaceP.DeletedUnsavedWorld.Name)
 }
 
-@if (AuthoringToolWorkspaceP.CreateWorldDialogOpen)
+@if (AuthoringToolWorkspaceP.CreateLearningWorldDialogOpen)
 {
-    @ModalDialogFactory.GetCreateWorldFragment(OnCreateWorldDialogClose)
+    @ModalDialogFactory.GetCreateLearningWorldFragment(OnCreateWorldDialogClose)
 }
-@if (AuthoringToolWorkspaceVm.SelectedWorld != null)
+@if (AuthoringToolWorkspaceVm.SelectedLearningWorld != null)
 {
-    <WorldView>
-        </WorldView>
+    <LearningWorldView>
+        </LearningWorldView>
 }
 
-@if (AuthoringToolWorkspaceP.EditWorldDialogOpen)
+@if (AuthoringToolWorkspaceP.EditLearningWorldDialogOpen)
 {
-    <!-- EditDialogInitialValues is set by presenter before setting EditWorldDialogOpen to true -->
-    @ModalDialogFactory.GetEditWorldFragment(AuthoringToolWorkspaceVm.EditDialogInitialValues!, OnEditWorldDialogClose)
+    <!-- EditDialogInitialValues is set by presenter before setting EditLearningWorldDialogOpen to true -->
+    @ModalDialogFactory.GetEditLearningWorldFragment(AuthoringToolWorkspaceVm.EditDialogInitialValues!, OnEditWorldDialogClose)
 }
 
 @if (ErrorState != null)
@@ -115,26 +115,26 @@
 
     private ExceptionWrapper? ErrorState { get; set; }
 
-    private void AddNewWorld()
+    private void AddNewLearningWorld()
     {
-        AuthoringToolWorkspaceP.AddNewWorld();
+        AuthoringToolWorkspaceP.AddNewLearningWorld();
     }
 
-    private void OpenEditSelectedWorldDialog()
+    private void OpenEditSelectedLearningWorldDialog()
     {
-        AuthoringToolWorkspaceP.OpenEditSelectedWorldDialog();
+        AuthoringToolWorkspaceP.OpenEditSelectedLearningWorldDialog();
     }
 
-    private void DeleteSelectedWorld()
+    private void DeleteSelectedLearningWorld()
     {
-        AuthoringToolWorkspaceP.DeleteSelectedWorld();
+        AuthoringToolWorkspaceP.DeleteSelectedLearningWorld();
     }
 
-    private async void LoadWorldAsync()
+    private async void LoadLearningWorldAsync()
     {
         try
         {
-            await AuthoringToolWorkspaceP.LoadWorldAsync();
+            await AuthoringToolWorkspaceP.LoadLearningWorldAsync();
         }
         catch (OperationCanceledException)
         {
@@ -142,20 +142,20 @@
         }
         catch (Exception exception)
         {
-            ErrorState = new ExceptionWrapper("Loading world", exception);
+            ErrorState = new ExceptionWrapper("Loading learning world", exception);
         }
         finally
         {
-    //we need to tell blazor explicitly to re-render our component after we added the loaded world
+    //we need to tell blazor explicitly to re-render our component after we added the loaded learning world
             await InvokeAsync(StateHasChanged);
         }
     }
 
-    private async Task SaveSelectedWorldAsync()
+    private async Task SaveSelectedLearningWorldAsync()
     {
         try
         {
-            await AuthoringToolWorkspaceP.SaveSelectedWorldAsync();
+            await AuthoringToolWorkspaceP.SaveSelectedLearningWorldAsync();
         }
         catch (OperationCanceledException)
         {
@@ -163,7 +163,7 @@
         }
         catch (Exception exception)
         {
-            ErrorState = new ExceptionWrapper("Saving world", exception);
+            ErrorState = new ExceptionWrapper("Saving learning world", exception);
         }
         finally
         {
@@ -205,19 +205,19 @@
         InvokeAsync(StateHasChanged);
     }
 
-    private void SetSelectedWorld(string argsValue)
+    private void SetSelectedLearningWorld(string argsValue)
     {
-        AuthoringToolWorkspaceP.SetSelectedWorld(argsValue);
+        AuthoringToolWorkspaceP.SetSelectedLearningWorld(argsValue);
         InvokeAsync(StateHasChanged);
     }
 
-    private async void ExportWorld()
+    private async void ExportLearningWorld()
     {
     //Create XMl-files, Overwrite Encoding to UTF-8 and Create Backup-File
-        if (AuthoringToolWorkspaceVm.SelectedWorld == null) return;
+        if (AuthoringToolWorkspaceVm.SelectedLearningWorld == null) return;
         try
         {
-            filePath = await PresentationLogic.ConstructBackupAsync(AuthoringToolWorkspaceVm.SelectedWorld);
+            filePath = await PresentationLogic.ConstructBackupAsync(AuthoringToolWorkspaceVm.SelectedLearningWorld);
         }
         catch (OperationCanceledException)
         {

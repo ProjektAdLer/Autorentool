@@ -7,7 +7,7 @@ namespace PersistEntities;
 [Serializable]
 [DataContract]
 [KnownType(typeof(PathWayConditionPe))]
-[KnownType(typeof(SpacePe))]
+[KnownType(typeof(LearningSpacePe))]
 public class PathWayConditionPe : IObjectInPathWayPe
 {
     /// <summary>

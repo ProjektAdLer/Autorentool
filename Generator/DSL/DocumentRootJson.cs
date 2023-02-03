@@ -1,16 +1,16 @@
 ﻿namespace Generator.DSL;
 
 /// <summary>
-/// The DocumentRoot only needs the world
-/// This class is needed, because the definition of the Dsl-Structure has the World as its own tag. 
+/// The DocumentRoot only needs the learningWorld
+/// This class is needed, because the definition of the Dsl-Structure has the LearningWorld as its own tag. 
 /// </summary>
 public class DocumentRootJson : IDocumentRootJson
 {
-    public DocumentRootJson(WorldJson world)
+    public DocumentRootJson(LearningWorldJson learningWorld)
     {
-        World = world;
+        LearningWorld = learningWorld;
     }
 
-    public WorldJson World { get; set; }
+    public LearningWorldJson LearningWorld { get; set; }
     
 }

@@ -35,7 +35,7 @@ public interface IXmlH5PFactory
     /// </summary>
     void CreateH5PFileFactory();
 
-    void ReadH5PListAndSetParameters(List<ElementJson> h5PElementsList);
+    void ReadH5PListAndSetParameters(List<LearningElementJson> h5PElementsList);
 
     /// <summary>
     /// Setting Parameters for h5p element in files.xml, 

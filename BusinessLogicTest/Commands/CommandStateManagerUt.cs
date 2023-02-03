@@ -182,29 +182,29 @@ public class CommandStateManagerUt
     [Test]
     public void ExecuteCommandAfterRedoingAnCommand_TriggersRemovedCommandsFromStacksWithRemainingCommandsInStacks_AllCommandTypes()
     {
-        var element =
-            new Element("n", "s", null!, "u", "a", "d", "g", ElementDifficultyEnum.Easy);
-        var space = new Space("n", "s", "a", "d", "g", 5, new SpaceLayout(new IElement?[6],FloorPlanEnum.Rectangle2X3));
-        var world = new World("n", "s", "a", "l","d", "g");
-        var workspace = new AuthoringToolWorkspace(null, new List<World>());
-        var createElementCommand = new CreateElement(space, 0, element, _ => { });
-        var createSpaceCommand = new CreateSpace(world, space, _ => { });
-        var createWorldCommand = new CreateWorld(workspace, world, _ => { });
-        var deleteElementCommand = new DeleteElement(element, space, _ => { });
-        var deleteSpaceCommand = new DeleteSpace(world, space, _ => { });
-        var deleteWorldCommand = new DeleteWorld(workspace, world, _ => { });
+        var learningElement =
+            new LearningElement("n", "s", null!, "u", "a", "d", "g", LearningElementDifficultyEnum.Easy);
+        var learningSpace = new LearningSpace("n", "s", "a", "d", "g", 5, new LearningSpaceLayout(new ILearningElement?[6],FloorPlanEnum.Rectangle2X3));
+        var learningWorld = new LearningWorld("n", "s", "a", "l","d", "g");
+        var workspace = new AuthoringToolWorkspace(null, new List<LearningWorld>());
+        var createLearningElementCommand = new CreateLearningElement(learningSpace, 0, learningElement, _ => { });
+        var createLearningSpaceCommand = new CreateLearningSpace(learningWorld, learningSpace, _ => { });
+        var createLearningWorldCommand = new CreateLearningWorld(workspace, learningWorld, _ => { });
+        var deleteLearningElementCommand = new DeleteLearningElement(learningElement, learningSpace, _ => { });
+        var deleteLearningSpaceCommand = new DeleteLearningSpace(learningWorld, learningSpace, _ => { });
+        var deleteLearningWorldCommand = new DeleteLearningWorld(workspace, learningWorld, _ => { });
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.LoadElement(Arg.Any<string>()).Returns(element);
-        mockBusinessLogic.LoadSpace(Arg.Any<string>()).Returns(space);
-        mockBusinessLogic.LoadWorld(Arg.Any<string>()).Returns(world);
-        var loadElementCommand = new LoadElement(space, 0, "e", mockBusinessLogic, _ => { });
-        var loadSpaceCommand = new LoadSpace(world, "s", mockBusinessLogic, _ => { });
-        var loadWorldCommand = new LoadWorld(workspace, "w", mockBusinessLogic, _ => { });
+        mockBusinessLogic.LoadLearningElement(Arg.Any<string>()).Returns(learningElement);
+        mockBusinessLogic.LoadLearningSpace(Arg.Any<string>()).Returns(learningSpace);
+        mockBusinessLogic.LoadLearningWorld(Arg.Any<string>()).Returns(learningWorld);
+        var loadLearningElementCommand = new LoadLearningElement(learningSpace, 0, "e", mockBusinessLogic, _ => { });
+        var loadLearningSpaceCommand = new LoadLearningSpace(learningWorld, "s", mockBusinessLogic, _ => { });
+        var loadLearningWorldCommand = new LoadLearningWorld(workspace, "w", mockBusinessLogic, _ => { });
 
-        var secondWorld = new World("n2", "s2", "a2", "l2","d2", "g2");
-        var thirdWorld = new World("n3", "s3", "a3", "l3","d3", "g3");
-        var createSecondWorldCommand = new CreateWorld(workspace, secondWorld, _ => { });
-        var createThirdWorldCommand = new CreateWorld(workspace, thirdWorld, _ => { });
+        var secondLearningWorld = new LearningWorld("n2", "s2", "a2", "l2","d2", "g2");
+        var thirdLearningWorld = new LearningWorld("n3", "s3", "a3", "l3","d3", "g3");
+        var createSecondLearningWorldCommand = new CreateLearningWorld(workspace, secondLearningWorld, _ => { });
+        var createThirdLearningWorldCommand = new CreateLearningWorld(workspace, thirdLearningWorld, _ => { });
         
         var systemUnderTest = GetCommandStateManagerForTest();
         var wasCalled = false;
@@ -215,19 +215,19 @@ public class CommandStateManagerUt
             eventObjects = args.ObjectsInStacks.ToList();
         };
         
-        systemUnderTest.Execute(createWorldCommand);
-        systemUnderTest.Execute(createSpaceCommand);
-        systemUnderTest.Execute(createElementCommand);
-        systemUnderTest.Execute(deleteElementCommand);
-        systemUnderTest.Execute(deleteSpaceCommand);
-        systemUnderTest.Execute(deleteWorldCommand);
-        systemUnderTest.Execute(loadWorldCommand);
-        systemUnderTest.Execute(loadSpaceCommand);
-        systemUnderTest.Execute(loadElementCommand);
+        systemUnderTest.Execute(createLearningWorldCommand);
+        systemUnderTest.Execute(createLearningSpaceCommand);
+        systemUnderTest.Execute(createLearningElementCommand);
+        systemUnderTest.Execute(deleteLearningElementCommand);
+        systemUnderTest.Execute(deleteLearningSpaceCommand);
+        systemUnderTest.Execute(deleteLearningWorldCommand);
+        systemUnderTest.Execute(loadLearningWorldCommand);
+        systemUnderTest.Execute(loadLearningSpaceCommand);
+        systemUnderTest.Execute(loadLearningElementCommand);
         // command to remove
-        systemUnderTest.Execute(createSecondWorldCommand);
+        systemUnderTest.Execute(createSecondLearningWorldCommand);
         systemUnderTest.Undo();
-        systemUnderTest.Execute(createThirdWorldCommand);
+        systemUnderTest.Execute(createThirdLearningWorldCommand);
         
         Assert.Multiple(() =>
         {
@@ -241,10 +241,10 @@ public class CommandStateManagerUt
         });
         Assert.Multiple(() =>
         {
-        Assert.That(eventObjects, Has.Member(element));
-        Assert.That(eventObjects, Has.Member(space));
-        Assert.That(eventObjects, Has.Member(world));
-        Assert.That(eventObjects, Has.Member(thirdWorld));
+        Assert.That(eventObjects, Has.Member(learningElement));
+        Assert.That(eventObjects, Has.Member(learningSpace));
+        Assert.That(eventObjects, Has.Member(learningWorld));
+        Assert.That(eventObjects, Has.Member(thirdLearningWorld));
         });
     }
 

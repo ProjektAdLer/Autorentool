@@ -1,0 +1,12 @@
+@using Presentation.PresentationLogic.LearningSpace
+@using Presentation.View.Toolbox
+<LearningObjectRenderFragmentBase Obj="ViewModel" CssClassSelector="learning-space">
+    <p>@ViewModel.Description</p>
+</LearningObjectRenderFragmentBase>
+    
+@code {
+    [Parameter, EditorRequired] 
+#pragma warning disable CS8618 // Parameters provided by framework - n.stich
+        public ILearningSpaceViewModel ViewModel { get; set; }
+#pragma warning restore CS8618
+}

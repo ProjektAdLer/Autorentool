@@ -2,13 +2,13 @@
 
 public class DraggedEventArgs<T>
 {
-    public DraggedEventArgs(T draggableObject, double oldPositionX, double oldPositionY)
+    public DraggedEventArgs(T learningObject, double oldPositionX, double oldPositionY)
     {
-        DraggableObject = draggableObject;
+        LearningObject = learningObject;
         OldPositionX = oldPositionX;
         OldPositionY = oldPositionY;
     }
-    public T DraggableObject { get; }
+    public T LearningObject { get; }
     public double OldPositionX { get; }
     public double OldPositionY { get; }
     

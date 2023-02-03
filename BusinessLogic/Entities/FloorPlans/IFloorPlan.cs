@@ -6,7 +6,7 @@
 public interface IFloorPlan
 {
     /// <summary>
-    /// The maximum number of <see cref="IElement"/>s the <see cref="ISpaceLayout"/> can hold.
+    /// The maximum number of <see cref="ILearningElement"/>s the <see cref="ILearningSpaceLayout"/> can hold.
     /// </summary>
     int Capacity { get; }
 }

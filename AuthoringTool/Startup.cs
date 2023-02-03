@@ -18,10 +18,10 @@ using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.DropZone;
 using Presentation.PresentationLogic.ElectronNET;
+using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.ModalDialog;
-using Presentation.PresentationLogic.Space;
 using Presentation.PresentationLogic.Toolbox;
-using Presentation.PresentationLogic.World;
 using Presentation.View.Toolbox;
 using Shared;
 using Shared.Configuration;
@@ -87,10 +87,10 @@ public class Startup
     private void ConfigureValidation(IServiceCollection services)
     {
         services.AddValidatorsFromAssembly(Assembly.Load("Presentation"));
-        services.AddSingleton<IWorldNamesProvider>(p =>
+        services.AddSingleton<ILearningWorldNamesProvider>(p =>
             p.GetService<IAuthoringToolWorkspaceViewModel>() ?? throw new InvalidOperationException());
-        services.AddSingleton<ISpaceNamesProvider>(p =>
-            p.GetService<IWorldPresenter>() ?? throw new InvalidOperationException());
+        services.AddSingleton<ILearningSpaceNamesProvider>(p =>
+            p.GetService<ILearningWorldPresenter>() ?? throw new InvalidOperationException());
     }
 
     private void ConfigureAuthoringTool(IServiceCollection services)
@@ -102,18 +102,18 @@ public class Startup
     {
         services.AddSingleton<IAuthoringToolWorkspacePresenter, AuthoringToolWorkspacePresenter>();
         services.AddSingleton<IPresentationLogic, PresentationLogic>();
-        services.AddSingleton<IWorldPresenter, WorldPresenter>();
+        services.AddSingleton<ILearningWorldPresenter, LearningWorldPresenter>();
         services.AddSingleton(p =>
-            (IWorldPresenterOverviewInterface)p.GetService(typeof(IWorldPresenter))!);
-        services.AddSingleton<ISpacePresenter, SpacePresenter>();
+            (ILearningWorldPresenterOverviewInterface)p.GetService(typeof(ILearningWorldPresenter))!);
+        services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
-        services.AddSingleton<ISpaceViewModalDialogFactory, ModalDialogFactory>();
-        services.AddSingleton<ISpaceViewModalDialogInputFieldsFactory, ModalDialogInputFieldsFactory>();
-        services.AddSingleton<IWorldViewModalDialogFactory, ModalDialogFactory>();
-        services.AddSingleton<IWorldViewModalDialogInputFieldsFactory, ModalDialogInputFieldsFactory>();
+        services.AddSingleton<ILearningSpaceViewModalDialogFactory, ModalDialogFactory>();
+        services.AddSingleton<ILearningSpaceViewModalDialogInputFieldsFactory, ModalDialogInputFieldsFactory>();
+        services.AddSingleton<ILearningWorldViewModalDialogFactory, ModalDialogFactory>();
+        services.AddSingleton<ILearningWorldViewModalDialogInputFieldsFactory, ModalDialogInputFieldsFactory>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory, ModalDialogInputFieldsFactory>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModalDialogFactory, ModalDialogFactory>();
-        services.AddSingleton<IElementDropZoneHelper, ElementDropZoneHelper>();
+        services.AddSingleton<ILearningElementDropZoneHelper, LearningElementDropZoneHelper>();
     }
 
     private void ConfigureBusinessLogic(IServiceCollection services)
@@ -146,9 +146,9 @@ public class Startup
         services.AddSingleton(p =>
             (IAuthoringToolWorkspacePresenterToolboxInterface)p.GetService(typeof(IAuthoringToolWorkspacePresenter))!);
         services.AddSingleton(p =>
-            (IWorldPresenterToolboxInterface)p.GetService(typeof(IWorldPresenter))!);
+            (ILearningWorldPresenterToolboxInterface)p.GetService(typeof(ILearningWorldPresenter))!);
         services.AddSingleton(p =>
-            (ISpacePresenterToolboxInterface)p.GetService(typeof(ISpacePresenter))!);
+            (ILearningSpacePresenterToolboxInterface)p.GetService(typeof(ILearningSpacePresenter))!);
     }
     
     private static void ConfigureAutoMapper(IServiceCollection services)

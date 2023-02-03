@@ -21,7 +21,7 @@
 
 
     [Parameter, EditorRequired]
-    public T? DraggableObject { get; set; }
+    public T? LearningObject { get; set; }
 
     [Parameter]
     public double X { get; set; }
@@ -74,9 +74,9 @@
 
     protected override void OnParametersSet()
     {
-        if (DraggableObject == null)
+        if (LearningObject == null)
         {
-            throw new ArgumentNullException(nameof(DraggableObject));
+            throw new ArgumentNullException(nameof(LearningObject));
         }
     }
 
@@ -101,14 +101,14 @@
                 switch (e.Button)
                 {
                     case 0 when (DateTime.Now - _lastClick).TotalMilliseconds < 300:
-                        OnDoubleClicked.InvokeAsync(DraggableObject);
+                        OnDoubleClicked.InvokeAsync(LearningObject);
                         break;
                     case 0:
                         _lastClick = DateTime.Now;
                         OnClick(sender, e);
                         break;
                     case 2:
-                        OnRightClicked.InvokeAsync(DraggableObject);
+                        OnRightClicked.InvokeAsync(LearningObject);
                         break;
                 }
                 break;
@@ -141,12 +141,12 @@
         Logger.LogDebug("OnClick");
         //override nullability because we check in OnParametersSet - n.stich
         Logger.LogDebug("e.OffsetX:{EOffsetX} e.OffsetY:{EOffsetY}", e.OffsetX, e.OffsetY);
-        return OnClicked.InvokeAsync(DraggableObject);
+        return OnClicked.InvokeAsync(LearningObject);
     }
 
     private void OnDrag(object? sender, MouseEventArgs e)
     {
-        if (DraggableObject != null) OnDragged?.Invoke(DraggableObject, new DraggedEventArgs<T>(DraggableObject, _oldPositionX, _oldPositionY));
+        if (LearningObject != null) OnDragged?.Invoke(LearningObject, new DraggedEventArgs<T>(LearningObject, _oldPositionX, _oldPositionY));
     }
 
     public void Dispose()

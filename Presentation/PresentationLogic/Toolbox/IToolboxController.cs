@@ -11,5 +11,5 @@ public interface IToolboxController
     /// focused worlds or, if applicable, into the currently opened space.
     /// </summary>
     /// <param name="obj">The object to be loaded.</param>
-    void LoadObjectIntoWorkspace(IDisplayableObject obj);
+    void LoadObjectIntoWorkspace(IDisplayableLearningObject obj);
 }

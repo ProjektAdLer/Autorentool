@@ -21,11 +21,9 @@
     <PackageReference Include="System.IO.Abstractions" Version="17.2.3" />
   </ItemGroup>
   <ItemGroup>
-    <Content Update="View\Toolbox\DisplayableObjectRenderFragmentBase.razor.css">
-      <DependentUpon>DisplayableObjectRenderFragmentBase.razor</DependentUpon>
+    <Content Update="View\Toolbox\LearningObjectRenderFragmentBase.razor.css">
+      <DependentUpon>LearningObjectRenderFragmentBase.razor</DependentUpon>
     </Content>
-    <Content Remove="View\LearningPathWay\ConditionToggleSwitch.razor" />
-    <Content Remove="View\LearningPathWay\DraggableObjectInPathWay.razor" />
   </ItemGroup>
   <ItemGroup>
 	<AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
@@ -75,13 +73,9 @@
     <UpToDateCheckInput Remove="Pages\_Layout.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="PresentationLogic\EntityMapping\ElementMapper\VideoActivationElementMapper.cs" />
-    <Compile Remove="PresentationLogic\EntityMapping\ElementMapper\PdfTransferElementMapper.cs" />
-    <Compile Remove="PresentationLogic\EntityMapping\ElementMapper\ElementMapper.cs" />
-    <Compile Remove="PresentationLogic\EntityMapping\ElementMapper\H5PActivationElementMapper.cs" />
-    <Compile Remove="View\LearningPathWay\DraggableObjectInPathWay.razor.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="View\LearningPathWay" />
+    <Compile Remove="PresentationLogic\EntityMapping\LearningElementMapper\VideoActivationElementMapper.cs" />
+    <Compile Remove="PresentationLogic\EntityMapping\LearningElementMapper\PdfTransferElementMapper.cs" />
+    <Compile Remove="PresentationLogic\EntityMapping\LearningElementMapper\LearningElementMapper.cs" />
+    <Compile Remove="PresentationLogic\EntityMapping\LearningElementMapper\H5PActivationElementMapper.cs" />
   </ItemGroup>
 </Project>

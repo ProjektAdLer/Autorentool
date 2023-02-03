@@ -84,14 +84,14 @@ public class XmlLabelFactory : IXmlLabelFactory
         LabelSetParameters(labelList);
     }
 
-    public void LabelSetParameters(List<ElementJson> labelList)
+    public void LabelSetParameters(List<LearningElementJson> labelList)
     {
         foreach (var label in labelList)
         {
             LabelId = label.Id.ToString();
             LabelName = label.Identifier.Value;
             LabelGoal = label.Goals ?? "";
-            LabelParentSpaceId = label.SpaceParentId.ToString();
+            LabelParentSpaceId = label.LearningSpaceParentId.ToString();
             LabelDescription = label.Description ?? "";
             
             //A Space got another Font in his Name.

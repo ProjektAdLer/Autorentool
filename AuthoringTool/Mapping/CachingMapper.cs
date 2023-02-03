@@ -2,10 +2,10 @@
 using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.Element;
-using Presentation.PresentationLogic.PathWay;
-using Presentation.PresentationLogic.Space;
-using Presentation.PresentationLogic.World;
+using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningPathway;
+using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningWorld;
 using Shared;
 
 namespace AuthoringTool.Mapping;
@@ -33,10 +33,10 @@ public class CachingMapper : ICachingMapper
             case (AuthoringToolWorkspace s, IAuthoringToolWorkspaceViewModel d):
                 MapInternal(s, d);
                 break;
-            case (World s, IWorldViewModel d):
+            case (LearningWorld s, ILearningWorldViewModel d):
                 MapInternal(s, d);
                 break;
-            case (Space s, ISpaceViewModel d):
+            case (LearningSpace s, ILearningSpaceViewModel d):
                 MapInternal(s, d);
                 break;
             default:
@@ -64,16 +64,16 @@ public class CachingMapper : ICachingMapper
         Guid key = default;
         switch (viewModel)
         {
-            case WorldViewModel vM:
+            case LearningWorldViewModel vM:
                 key = vM.Id;
                 break;
-            case SpaceViewModel vM:
+            case LearningSpaceViewModel vM:
                 key = vM.Id;
                 break;
             case PathWayConditionViewModel vM:
                 key = vM.Id;
                 break;
-            case ElementViewModel vM:
+            case LearningElementViewModel vM:
                 key = vM.Id;
                 break;
         }
@@ -97,76 +97,76 @@ public class CachingMapper : ICachingMapper
     private void MapInternal(AuthoringToolWorkspace authoringToolWorkspaceEntity,
         IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm)
     {
-        var nWorlds = authoringToolWorkspaceEntity.Worlds
-            .FindAll(p=>authoringToolWorkspaceVm.Worlds.All(l => p.Id != l.Id));
-        foreach (var w in nWorlds)
+        var nLearningWorlds = authoringToolWorkspaceEntity.LearningWorlds
+            .FindAll(p=>authoringToolWorkspaceVm.LearningWorlds.All(l => p.Id != l.Id));
+        foreach (var w in nLearningWorlds)
         {
-            if(_cache.ContainsKey(w.Id)) authoringToolWorkspaceVm.Worlds.Add(Get<WorldViewModel>(w.Id));
+            if(_cache.ContainsKey(w.Id)) authoringToolWorkspaceVm.LearningWorlds.Add(Get<LearningWorldViewModel>(w.Id));
         }
         _mapper.Map(authoringToolWorkspaceEntity, authoringToolWorkspaceVm);
-        foreach (var worldVm in authoringToolWorkspaceVm.Worlds.Where(w =>
+        foreach (var worldVm in authoringToolWorkspaceVm.LearningWorlds.Where(w =>
                      !_cache.ContainsKey(w.Id)))
         {
             Cache(worldVm);
         }
     }
 
-    private void MapInternal(World worldEntity, IWorldViewModel worldVm)
+    private void MapInternal(LearningWorld learningWorldEntity, ILearningWorldViewModel learningWorldVm)
     {
-        worldVm = Cache(worldVm);
-        var newSpacesInEntity = worldEntity.Spaces
-            .FindAll(p => worldVm.Spaces.All(l => p.Id != l.Id));
-        foreach (var s in newSpacesInEntity)
+        learningWorldVm = Cache(learningWorldVm);
+        var newLearningSpacesInEntity = learningWorldEntity.LearningSpaces
+            .FindAll(p => learningWorldVm.LearningSpaces.All(l => p.Id != l.Id));
+        foreach (var s in newLearningSpacesInEntity)
         {
-            if(_cache.ContainsKey(s.Id)) worldVm.Spaces.Add(Get<SpaceViewModel>(s.Id));
+            if(_cache.ContainsKey(s.Id)) learningWorldVm.LearningSpaces.Add(Get<LearningSpaceViewModel>(s.Id));
         }
-        var newPathWayConditionInEntity = worldEntity.PathWayConditions
-            .FindAll(p => worldVm.PathWayConditions.All(l => p.Id != l.Id));
+        var newPathWayConditionInEntity = learningWorldEntity.PathWayConditions
+            .FindAll(p => learningWorldVm.PathWayConditions.All(l => p.Id != l.Id));
         foreach (var s in newPathWayConditionInEntity)
         {
-            if(_cache.ContainsKey(s.Id)) worldVm.PathWayConditions.Add(Get<PathWayConditionViewModel>(s.Id));
+            if(_cache.ContainsKey(s.Id)) learningWorldVm.PathWayConditions.Add(Get<PathWayConditionViewModel>(s.Id));
         }
-        _mapper.Map(worldEntity, worldVm);
-        foreach (var conditionVm in worldVm.PathWayConditions.Where(w =>
+        _mapper.Map(learningWorldEntity, learningWorldVm);
+        foreach (var conditionVm in learningWorldVm.PathWayConditions.Where(w =>
                      !_cache.ContainsKey(w.Id)))
         {
             Cache(conditionVm);
         }
-        foreach (var spaceVm in worldVm.Spaces.Where(w =>
+        foreach (var spaceVm in learningWorldVm.LearningSpaces.Where(w =>
                      !_cache.ContainsKey(w.Id)))
         {
             Cache(spaceVm);
         }
     }
 
-    private void MapInternal(Space spaceEntity, ISpaceViewModel spaceVm)
+    private void MapInternal(LearningSpace learningSpaceEntity, ILearningSpaceViewModel learningSpaceVm)
     {
-        spaceVm = Cache(spaceVm);
-        //var newElementsInEntityO = spaceEntity.SpaceLayout.Elements.Where((p, i) => spaceVm.SpaceLayoutViewModel.Elements.All(l => p?.Id != l?.Id));
+        learningSpaceVm = Cache(learningSpaceVm);
+        //var newLearningElementsInEntityO = learningSpaceEntity.LearningSpaceLayout.LearningElements.Where((p, i) => learningSpaceVm.LearningSpaceLayoutViewModel.LearningElements.All(l => p?.Id != l?.Id));
         //TODO: Check if this works - AW
-        var newElementsInEntity = spaceEntity.SpaceLayout.Elements
+        var newLearningElementsInEntity = learningSpaceEntity.LearningSpaceLayout.LearningElements
             .Select((s,i)=>new {i,s})
             .Where(x => x.s != null)
-            .Where((p, x) => spaceVm.ContainedElements.All(l => p.s!.Id != l.Id)).ToList();
-        if (newElementsInEntity.Any())
+            .Where((p, x) => learningSpaceVm.ContainedLearningElements.All(l => p.s!.Id != l.Id)).ToList();
+        if (newLearningElementsInEntity.Any())
         {
-            var max = newElementsInEntity.Max(x => x.i);
-            if (max >= spaceVm.SpaceLayout.Elements.Length)
+            var max = newLearningElementsInEntity.Max(x => x.i);
+            if (max >= learningSpaceVm.LearningSpaceLayout.LearningElements.Length)
             {
-                var newElementsVm = new IElementViewModel?[max + 1];
-                foreach (var (v, i) in spaceVm.SpaceLayout.Elements.Select((v,i)=>(v,i)))
+                var newLearningElementsVm = new ILearningElementViewModel?[max + 1];
+                foreach (var (v, i) in learningSpaceVm.LearningSpaceLayout.LearningElements.Select((v,i)=>(v,i)))
                 {
-                    newElementsVm[i] = v;
+                    newLearningElementsVm[i] = v;
                 }
-                spaceVm.SpaceLayout.Elements = newElementsVm;
+                learningSpaceVm.LearningSpaceLayout.LearningElements = newLearningElementsVm;
             }
         }
-        foreach (var e in newElementsInEntity)
+        foreach (var e in newLearningElementsInEntity)
         {
-            if (_cache.ContainsKey(e.s!.Id)) spaceVm.SpaceLayout.PutElement(e.i, Get<ElementViewModel>(e.s!.Id));
+            if (_cache.ContainsKey(e.s!.Id)) learningSpaceVm.LearningSpaceLayout.PutElement(e.i, Get<LearningElementViewModel>(e.s!.Id));
         }
-        _mapper.Map(spaceEntity, spaceVm);
-        foreach (var elementVm in spaceVm.ContainedElements.Where(w =>
+        _mapper.Map(learningSpaceEntity, learningSpaceVm);
+        foreach (var elementVm in learningSpaceVm.ContainedLearningElements.Where(w =>
                      !_cache.ContainsKey(w.Id)))
         {
             Cache(elementVm);
@@ -184,10 +184,10 @@ public class CachingMapper : ICachingMapper
         {
             return o switch
             {
-                World e => e.Id,
-                Space e => e.Id,
+                LearningWorld e => e.Id,
+                LearningSpace e => e.Id,
                 PathWayCondition e => e.Id,
-                Element e => e.Id,
+                LearningElement e => e.Id,
                 _ => throw new ArgumentException("Object is neither a World, Space, Condition or an Element")
             };
         });

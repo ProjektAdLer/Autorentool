@@ -17,18 +17,18 @@ public interface IBusinessLogic
     bool CanRedo { get; }
     void UndoCommand();
     void RedoCommand();
-    void ConstructBackup(World world, string filepath);
-    void SaveWorld(World world, string filepath);
-    World LoadWorld(string filepath);
-    World LoadWorld(Stream stream);
-    void SaveSpace(Space space, string filepath);
-    Space LoadSpace(string filepath);
-    Space LoadSpace(Stream stream);
-    void SaveElement(Element element, string filepath);
-    Element LoadElement(string filepath);
-    Element LoadElement(Stream stream);
-    Content LoadContent(string filepath);
-    Content LoadContent(string name, MemoryStream stream);
+    void ConstructBackup(LearningWorld learningWorld, string filepath);
+    void SaveLearningWorld(LearningWorld learningWorld, string filepath);
+    LearningWorld LoadLearningWorld(string filepath);
+    LearningWorld LoadLearningWorld(Stream stream);
+    void SaveLearningSpace(LearningSpace learningSpace, string filepath);
+    LearningSpace LoadLearningSpace(string filepath);
+    LearningSpace LoadLearningSpace(Stream stream);
+    void SaveLearningElement(LearningElement learningElement, string filepath);
+    LearningElement LoadLearningElement(string filepath);
+    LearningElement LoadLearningElement(Stream stream);
+    LearningContent LoadLearningContent(string filepath);
+    LearningContent LoadLearningContent(string name, MemoryStream stream);
     
     /// <inheritdoc cref="IDataAccess.FindSuitableNewSavePath"/>
     string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding);

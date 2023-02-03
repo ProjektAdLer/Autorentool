@@ -4,11 +4,11 @@ namespace PersistEntities;
 
 [Serializable]
 [DataContract]
-public class PdfTransferElementPe : ElementPe
+public class PdfTransferElementPe : LearningElementPe
 {
-    internal PdfTransferElementPe(string name, string shortname, ContentPe? content, string url,
-        string authors, string description, string goals, ElementDifficultyEnumPe difficulty, int workload,
-        int points, double positionX, double positionY) : base(name, shortname, content, url, authors, description,
+    internal PdfTransferElementPe(string name, string shortname, LearningContentPe? learningContent, string url,
+        string authors, string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload,
+        int points, double positionX, double positionY) : base(name, shortname, learningContent, url, authors, description,
         goals, difficulty, workload, points, positionX, positionY)
     {
     }

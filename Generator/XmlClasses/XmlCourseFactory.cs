@@ -13,7 +13,7 @@ namespace Generator.XmlClasses;
 /// </summary>
 public class XmlCourseFactory : IXmlCourseFactory
 {
-    private WorldJson _world;
+    private LearningWorldJson _learningWorld;
     internal ICourseCourseXmlCategory CourseCourseXmlCategory { get; }
     internal ICourseCourseXmlCourse CourseCourseXmlCourse { get; }
     internal ICourseEnrolmentsXmlEnrol CourseEnrolmentsXmlEnrolManual { get; }
@@ -56,7 +56,7 @@ public class XmlCourseFactory : IXmlCourseFactory
         CourseCompletiondefaultXmlCourseCompletionDefaults = courseCourseXmlCompletiondefault?? new CourseCompletiondefaultXmlCourseCompletionDefaults();
         
         ReadDsl = readDsl;
-        _world = ReadDsl.GetWorld();
+        _learningWorld = ReadDsl.GetLearningWorld();
     }
     
     /// <summary>
@@ -85,8 +85,8 @@ public class XmlCourseFactory : IXmlCourseFactory
     {
         //set parameters of the course/course.xml file
 
-        CourseCourseXmlCourse.Shortname = _world.Identifier.Value;
-        CourseCourseXmlCourse.Fullname = _world.Identifier.Value;
+        CourseCourseXmlCourse.Shortname = _learningWorld.Identifier.Value;
+        CourseCourseXmlCourse.Fullname = _learningWorld.Identifier.Value;
         CourseCourseXmlCourse.Format = "tiles";
         CourseCourseXmlCourse.BaseColour = "#009681";
         CourseCourseXmlCourse.CourseUseSubtiles = "0";
@@ -96,7 +96,7 @@ public class XmlCourseFactory : IXmlCourseFactory
         CourseCourseXmlCourse.Theme = "boost";
         CourseCourseXmlCourse.ShowCompletionConditions = "1";
         CourseCourseXmlCourse.EnableCompletion = "1";
-        CourseCourseXmlCourse.IdNumber = _world.IdNumber;
+        CourseCourseXmlCourse.IdNumber = _learningWorld.IdNumber;
         CourseCourseXmlCourse.Category = CourseCourseXmlCategory as CourseCourseXmlCategory ?? new CourseCourseXmlCategory();
 
         //create course/course.xml file

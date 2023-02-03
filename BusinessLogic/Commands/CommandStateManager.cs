@@ -83,15 +83,15 @@ public sealed class CommandStateManager : ICommandStateManager
     {
         return command switch
         {
-            CreateElement c => c.Element,
-            CreateSpace c => c.Space,
-            CreateWorld c => c.World,
-            DeleteElement c => c.Element,
-            DeleteSpace c => c.Space,
-            DeleteWorld c => c.World,
-            LoadElement c => c.Element,
-            LoadSpace c => c.Space,
-            LoadWorld c => c.World,
+            CreateLearningElement c => c.LearningElement,
+            CreateLearningSpace c => c.LearningSpace,
+            CreateLearningWorld c => c.LearningWorld,
+            DeleteLearningElement c => c.LearningElement,
+            DeleteLearningSpace c => c.LearningSpace,
+            DeleteLearningWorld c => c.LearningWorld,
+            LoadLearningElement c => c.LearningElement,
+            LoadLearningSpace c => c.LearningSpace,
+            LoadLearningWorld c => c.LearningWorld,
             _ => null
         };
     }
