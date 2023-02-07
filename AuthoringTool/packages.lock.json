@@ -1307,6 +1307,7 @@
       "businesslogic": {
         "type": "Project",
         "dependencies": {
+          "FluentValidation": "[11.4.0, )",
           "JetBrains.Annotations": "[2022.1.0, )",
           "Shared": "[1.0.0, )"
         }
@@ -1352,7 +1353,6 @@
           "AutoMapper.Extensions.Microsoft.DependencyInjection": "[11.0.0, )",
           "BusinessLogic": "[1.0.0, )",
           "ElectronWrapper": "[1.0.0, )",
-          "FluentValidation": "[11.4.0, )",
           "JetBrains.Annotations": "[2022.1.0, )",
           "Microsoft.Extensions.Caching.Memory": "[6.0.1, )",
           "MudBlazor": "[6.0.17, )",

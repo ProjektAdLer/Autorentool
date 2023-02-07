@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using BusinessLogic.Validation;
 using Presentation.Components;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -114,13 +115,13 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         private set => SetField(ref _createLearningSpaceDialogOpen, value);
     }
 
-    /// <inheritdoc cref="ILearningSpaceNamesProvider.LearningSpaceNames"/>
-    public IEnumerable<string>? LearningSpaceNames =>
-        LearningWorldVm?.LearningSpaces.Select(space => space.Name);
+    /// <inheritdoc cref="ILearningSpaceNamesProvider.SpaceNames"/>
+    public IEnumerable<(Guid, string)>? SpaceNames =>
+        LearningWorldVm?.LearningSpaces.Select(space => (space.Id, space.Name));
 
-    /// <inheritdoc cref="ILearningSpaceNamesProvider.LearningSpaceShortnames"/>
-    public IEnumerable<string>? LearningSpaceShortnames =>
-        LearningWorldVm?.LearningSpaces.Select(space => space.Shortname);
+    /// <inheritdoc cref="ILearningSpaceNamesProvider.SpaceShortnames"/>
+    public IEnumerable<(Guid, string)>? SpaceShortnames =>
+        LearningWorldVm?.LearningSpaces.Select(space => (space.Id, space.Shortname));
 
     public event Action OnUndoRedoPerformed
     {

@@ -21,12 +21,6 @@
           "Microsoft.Extensions.Options": "6.0.0"
         }
       },
-      "FluentValidation": {
-        "type": "Direct",
-        "requested": "[11.4.0, )",
-        "resolved": "11.4.0",
-        "contentHash": "WZJyrNf4suiaI6avVG32W9kmBLC3+V5rDTcLeRJjeU4tDmTyDIOz1459DzCKppXs34YpZg9rCUzDY3M4XxG7Ug=="
-      },
       "JetBrains.Annotations": {
         "type": "Direct",
         "requested": "[2022.1.0, )",
@@ -87,6 +81,11 @@
           "System.Net.Requests": "4.3.0",
           "WebSocket4Net": "0.15.1"
         }
+      },
+      "FluentValidation": {
+        "type": "Transitive",
+        "resolved": "11.4.0",
+        "contentHash": "WZJyrNf4suiaI6avVG32W9kmBLC3+V5rDTcLeRJjeU4tDmTyDIOz1459DzCKppXs34YpZg9rCUzDY3M4XxG7Ug=="
       },
       "Microsoft.AspNetCore.Authorization": {
         "type": "Transitive",
@@ -1255,6 +1254,7 @@
       "businesslogic": {
         "type": "Project",
         "dependencies": {
+          "FluentValidation": "[11.4.0, )",
           "JetBrains.Annotations": "[2022.1.0, )",
           "Shared": "[1.0.0, )"
         }

@@ -5,6 +5,7 @@ using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
+using BusinessLogic.Validation;
 using DataAccess.Persistence;
 using ElectronWrapper;
 using FluentValidation;
@@ -13,6 +14,7 @@ using Generator.DSL;
 using Generator.WorldExport;
 using Microsoft.Extensions.Caching.Memory;
 using MudBlazor.Services;
+using Presentation.Components.Forms;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -86,7 +88,7 @@ public class Startup
 
     private void ConfigureValidation(IServiceCollection services)
     {
-        services.AddValidatorsFromAssembly(Assembly.Load("Presentation"));
+        services.AddValidatorsFromAssembly(Assembly.Load("BusinessLogic"));
         services.AddSingleton<ILearningWorldNamesProvider>(p =>
             p.GetService<IAuthoringToolWorkspaceViewModel>() ?? throw new InvalidOperationException());
         services.AddSingleton<ILearningSpaceNamesProvider>(p =>
@@ -114,6 +116,7 @@ public class Startup
         services.AddSingleton<IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory, ModalDialogInputFieldsFactory>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModalDialogFactory, ModalDialogFactory>();
         services.AddSingleton<ILearningElementDropZoneHelper, LearningElementDropZoneHelper>();
+        services.AddTransient(typeof(IFormDataContainer<,>), typeof(FormDataContainer<,>));
     }
 
     private void ConfigureBusinessLogic(IServiceCollection services)
@@ -157,8 +160,9 @@ public class Startup
         {
             ViewModelEntityMappingProfile.Configure(cfg);
             EntityPersistEntityMappingProfile.Configure(cfg);
+            FormModelEntityMappingProfile.Configure(cfg);
+            ViewModelFormModelMappingProfile.Configure(cfg);
             cfg.AddCollectionMappers();
-            //FormModelEntityMappingProfile.Configure(cfg);
         });
         
         var mapper = config.CreateMapper();

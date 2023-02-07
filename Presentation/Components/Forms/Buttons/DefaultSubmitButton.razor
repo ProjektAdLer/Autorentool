@@ -1,0 +1,6 @@
+<MudButton Variant="Variant.Outlined" Color="Color.Success" OnClick="@(async () => await Form.SubmitAsync())">Submit</MudButton>
+
+@code {
+    [CascadingParameter]
+    public IBaseForm Form { get; set; }
+}

@@ -1,0 +1,96 @@
+@using Presentation.Components.Forms.Buttons
+@using Presentation.Components.Forms.Models
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using System.ComponentModel
+@using AutoMapper
+@using BusinessLogic.Entities
+@using Presentation.PresentationLogic.LearningSpace
+<h1>Edit</h1>
+<BaseForm TForm="LearningSpaceFormModel" TEntity="LearningSpace"
+          OnValidSubmit="OnValidSubmit" SnackbarMessage="Space created" FormDataContainer="FormDataContainer">
+    <Fields>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                      For="@(() => FormModel.Name)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Name)"/>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Shortname"
+                      For="@(() => FormModel.Shortname)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Shortname)"/>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Authors"
+                      For="@(() => FormModel.Authors)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Authors)"/>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                      For="@(() => FormModel.Description)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Description)"/>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
+                      For="@(() => FormModel.Goals)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Goals)"/>
+        <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
+                         For="@(() => FormModel.RequiredPoints)"
+                         Immediate="true"
+                         DebounceInterval="300"
+                         Label="@nameof(FormDataContainer.FormModel.RequiredPoints)"/>
+    </Fields>
+    <Buttons>
+        <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
+        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="async () => await OnNewButtonClicked.InvokeAsync()">New</MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="OnResetAsync">Reset</MudButton>
+    </Buttons>
+</BaseForm>
+@code {
+#pragma warning disable CS8618 - injected by framework - n.stich
+    [Inject]
+    private IPresentationLogic PresentationLogic { get; set; }
+    [Inject]
+    private IMapper Mapper { get; set; }
+    [Inject]
+    private IFormDataContainer<LearningSpaceFormModel, LearningSpace> FormDataContainer { get; set; }
+#pragma warning restore CS8618
+    
+#pragma warning disable CS8618
+    [Parameter, EditorRequired]
+    public ILearningSpaceViewModel SpaceToEdit { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback OnNewButtonClicked { get; set; }
+#pragma warning restore CS8618
+
+    //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
+    //please DO NOT REFACTOR THIS - n.stich
+    private LearningSpaceFormModel FormModel => FormDataContainer.FormModel;
+
+
+    private void OnValidSubmit(LearningSpaceFormModel model)
+    {
+        //we can supress the nullable warning here as validator ensures RequiredPoints isn't null - n.stich
+        PresentationLogic.EditLearningSpace(SpaceToEdit, model.Name, model.Shortname, model.Authors, model.Description,
+            model.Goals, (int)model.RequiredPoints!);
+    }
+    
+    private async Task MapIntoContainer()
+    {
+        Mapper.Map(SpaceToEdit, FormDataContainer.FormModel);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        await MapIntoContainer();
+    }
+
+    private async Task OnResetAsync()
+    {
+        await MapIntoContainer();
+    }
+}

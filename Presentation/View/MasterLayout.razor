@@ -1,6 +1,7 @@
 @using Presentation.View.Layout
 @using Presentation.View.LearningWorld
-@using Presentation.Components.Forms
+@using Presentation.Components.Forms.World
+@using Presentation.Components.Forms.Space
 @using Presentation.PresentationLogic.DropZone
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.View.LearningSpace
@@ -34,6 +35,22 @@
                             </MudDropZone>
                         </MainContent>
                     </SidebarItem>
+                    <SidebarItem>
+                        <SidebarContent>
+                            <MudIcon Icon="@Icons.Material.Filled.PlusOne"></MudIcon>
+                        </SidebarContent>
+                        <MainContent>
+                            <WorldFormContainer/>
+                        </MainContent>
+                    </SidebarItem>
+                    <SidebarItem>
+                        <SidebarContent>
+                            <MudIcon Icon="@Icons.Material.Filled.PlusOne"></MudIcon>
+                        </SidebarContent>
+                        <MainContent>
+                            <SpaceFormContainer/>
+                        </MainContent>
+                    </SidebarItem>
                 </Sidebar>
             </SideContainer>
             <CenterContainer>
@@ -64,28 +81,11 @@
                             <LearningWorldOverView></LearningWorldOverView>
                         </MainContent>
                     </SidebarItem>
-                    <SidebarItem>
-                        <SidebarContent>
-                            <MudIcon Icon="@Icons.Material.Filled.PlusOne"></MudIcon>
-                        </SidebarContent>
-                        <MainContent>
-                            <CreateWorldForm/>
-                        </MainContent>
-                    </SidebarItem>
-                <SidebarItem>
-                    <SidebarContent>
-                        <MudIcon Icon="@Icons.Material.Filled.PlusOne"></MudIcon>
-                    </SidebarContent>
-                    <MainContent>
-                        <CreateSpaceForm/>
-                    </MainContent>
-                </SidebarItem>
             </Sidebar>
             </SideContainer>
         </ChildContent>
         <ItemRenderer>
             <MudListItem Text="@context.Name"></MudListItem>
-
         </ItemRenderer>
     </MudDropContainer>
 </div>

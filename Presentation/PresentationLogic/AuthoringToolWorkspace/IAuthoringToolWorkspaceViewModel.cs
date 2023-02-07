@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using BusinessLogic.Validation;
 using Presentation.PresentationLogic.LearningWorld;
 
 namespace Presentation.PresentationLogic.AuthoringToolWorkspace;

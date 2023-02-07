@@ -1,0 +1,49 @@
+@using Presentation.PresentationLogic.LearningSpace
+@using System.ComponentModel
+
+<MudCard>
+@if (SpacePresenter.LearningSpaceVm == null || _editOverwritten)
+{
+    <CreateSpaceForm/>
+}
+else
+{
+    <EditSpaceForm SpaceToEdit="SpacePresenter.LearningSpaceVm" OnNewButtonClicked="OnForceNew"/>
+}
+</MudCard>
+
+@code {
+#pragma warning disable CS8618 - injected by framework - n.stich 
+    [Inject]
+    public ILearningSpacePresenter SpacePresenter { get; set; }
+#pragma warning restore CS8618
+
+    //indicates if the edit state has been overwritten by either pressing reset in the edit form
+    //or by pressing the "Create new space" button
+    private bool _editOverwritten;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _editOverwritten = false;
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        SpacePresenter.PropertyChanged += SpacePresenterOnPropertyChanged;
+    }
+
+    private async void SpacePresenterOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName != nameof(SpacePresenter.LearningSpaceVm)) return;
+        _editOverwritten = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void OnForceNew()
+    {
+        _editOverwritten = true;
+    }
+
+}

@@ -1,0 +1,94 @@
+@using Presentation.Components.Forms.Models
+@using Presentation.Components.Forms.Buttons
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using BusinessLogic.Entities
+@using Presentation.PresentationLogic.LearningWorld
+@using AutoMapper
+<BaseForm TForm="LearningWorldFormModel" TEntity="LearningWorld" OnValidSubmit="OnValidSubmit"
+          SnackbarMessage="World updated" FormDataContainer="FormDataContainer">
+    <Fields>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                      For="@(() => FormModel.Name)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Name)"/>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Shortname"
+                      For="@(() => FormModel.Shortname)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Shortname)"/>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Authors"
+                      For="@(() => FormModel.Authors)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Authors)"/>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Language"
+                      For="@(() => FormModel.Language)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Language)"/>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                      For="@(() => FormModel.Description)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Description)"/>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
+                      For="@(() => FormModel.Goals)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Goals)"/>
+    </Fields>
+    <Buttons>
+        <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
+        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="async () => await OnNewButtonClicked.InvokeAsync()">New</MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="OnResetAsync">Reset</MudButton>
+    </Buttons>
+</BaseForm>
+@code {
+#pragma warning disable CS8618 - injected by framework - n.stich
+    [Inject]
+    private IPresentationLogic PresentationLogic { get; set; }
+    [Inject]
+    public IMapper Mapper { get; set; }
+    [Inject]
+    private IFormDataContainer<LearningWorldFormModel, LearningWorld> FormDataContainer { get; set; }
+#pragma warning restore CS8618
+
+#pragma warning disable CS8618
+    [Parameter, EditorRequired]
+    public ILearningWorldViewModel WorldToEdit { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback OnNewButtonClicked { get; set; }
+#pragma warning restore CS8618
+
+    //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
+    //please DO NOT REFACTOR THIS - n.stich
+    private LearningWorldFormModel FormModel => FormDataContainer.FormModel;
+
+    private void OnValidSubmit(LearningWorldFormModel model)
+    {
+        PresentationLogic.EditLearningWorld(WorldToEdit, model.Name, model.Shortname,
+            model.Authors, model.Language, model.Description, model.Goals);
+    }
+
+    private async Task MapIntoContainer()
+    {
+        Mapper.Map(WorldToEdit, FormDataContainer.FormModel);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        await MapIntoContainer();
+    }
+
+    private async Task OnResetAsync()
+    {
+        await MapIntoContainer();
+    }
+
+
+}

@@ -1,0 +1,70 @@
+@using Presentation.Components.Forms.Models
+@using Presentation.Components.Forms.Buttons
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using BusinessLogic.Entities
+@using AutoMapper
+<BaseForm TForm="LearningWorldFormModel" TEntity="LearningWorld" OnValidSubmit="OnValidSubmit"
+          SnackbarMessage="World created" FormDataContainer="FormDataContainer">
+    <Fields>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                      For="@(() => FormModel.Name)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Name)"/>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Shortname"
+                      For="@(() => FormModel.Shortname)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Shortname)"/>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Authors"
+                      For="@(() => FormModel.Authors)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Authors)"/>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Language"
+                      For="@(() => FormModel.Language)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Language)"/>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                      For="@(() => FormModel.Description)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Description)"/>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
+                      For="@(() => FormModel.Goals)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Goals)"/>
+    </Fields>
+    <Buttons>
+        <DefaultSubmitButton/>
+        <DefaultResetButton/>
+    </Buttons>
+</BaseForm>
+@code {
+#pragma warning disable CS8618 - injected by framework - n.stich
+    [Inject]
+    private IPresentationLogic PresentationLogic { get; set; }
+    [Inject]
+    private IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceViewModel { get; set; }
+    [Inject]
+    private IFormDataContainer<LearningWorldFormModel, LearningWorld> FormDataContainer { get; set; }
+#pragma warning restore CS8618
+
+    //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
+    //please DO NOT REFACTOR THIS - n.stich
+    private LearningWorldFormModel FormModel => FormDataContainer.FormModel;
+
+    private void OnValidSubmit(LearningWorldFormModel model)
+    {
+        PresentationLogic.CreateLearningWorld(AuthoringToolWorkspaceViewModel, model.Name, model.Shortname,
+            model.Authors, model.Language, model.Description, model.Goals);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+    }
+}

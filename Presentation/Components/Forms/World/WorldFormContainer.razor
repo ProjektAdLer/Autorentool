@@ -1,0 +1,46 @@
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.PresentationLogic.LearningWorld
+@using System.ComponentModel
+<MudCard>
+    @if (WorkspaceViewModel.SelectedLearningWorld == null || _editOverwritten)
+    {
+        <CreateWorldForm/>
+    }
+    else
+    {
+        <EditWorldForm WorldToEdit="WorkspaceViewModel.SelectedLearningWorld" OnNewButtonClicked="OnForceNew"/>
+    }
+</MudCard>
+@code {
+#pragma warning disable CS8618 - injected by framework - n.stich 
+    [Inject]
+    public IAuthoringToolWorkspaceViewModel WorkspaceViewModel { get; set; }
+#pragma warning restore CS8618
+    
+    private bool _editOverwritten = false;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _editOverwritten = false;
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        WorkspaceViewModel.PropertyChanged += WorkspaceViewModelOnPropertyChanged;
+    }
+
+    private async void WorkspaceViewModelOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if(e.PropertyName != nameof(WorkspaceViewModel.SelectedLearningWorld)) return;
+        _editOverwritten = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+
+    private void OnForceNew()
+    {
+        _editOverwritten = true;
+    }
+}

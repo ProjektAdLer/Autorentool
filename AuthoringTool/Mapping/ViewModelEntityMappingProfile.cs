@@ -272,7 +272,7 @@ public class ViewModelEntityMappingProfile : Profile
             .ForMember(x => x.EditDialogInitialValues, opt => opt.Ignore())
             .ForMember(x => x.SelectedLearningWorld, opt => opt.Ignore())
             .ForMember(x => x.WorldNames, opt => opt.Ignore())
-            .ForMember(x => x.WorldShortNames, opt => opt.Ignore())
+            .ForMember(x => x.WorldShortnames, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
                 d.SelectedLearningWorld = d.LearningWorlds.FirstOrDefault(x => x.Id == s.SelectedLearningWorld?.Id);

@@ -1,0 +1,94 @@
+@using Presentation.Components.Forms.Buttons
+@using Presentation.Components.Forms.Models
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using System.ComponentModel
+@using BusinessLogic.Entities
+@implements IDisposable
+@implements IAsyncDisposable
+<BaseForm TForm="LearningSpaceFormModel" TEntity="LearningSpace"
+          OnValidSubmit="OnValidSubmit" SnackbarMessage="Space created" FormDataContainer="FormDataContainer">
+    <Fields>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                      For="@(() => FormModel.Name)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Name)"/>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Shortname"
+                      For="@(() => FormModel.Shortname)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Shortname)"/>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Authors"
+                      For="@(() => FormModel.Authors)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Authors)"/>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                      For="@(() => FormModel.Description)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Description)"/>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
+                      For="@(() => FormModel.Goals)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Goals)"/>
+        <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
+                         For="@(() => FormModel.RequiredPoints)"
+                         Immediate="true"
+                         DebounceInterval="300"
+                         Label="@nameof(FormDataContainer.FormModel.RequiredPoints)"/>
+    </Fields>
+    <Buttons>
+        <DefaultSubmitButton/>
+        <DefaultResetButton/>
+    </Buttons>
+</BaseForm>
+@code {
+#pragma warning disable CS8618 - injected by framework - n.stich
+    [Inject]
+    private IPresentationLogic PresentationLogic { get; set; }
+    [Inject]
+    private IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceViewModel { get; set; }
+    [Inject]
+    private IFormDataContainer<LearningSpaceFormModel, LearningSpace> FormDataContainer { get; set; }
+#pragma warning restore CS8618
+    
+    //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
+    //please DO NOT REFACTOR THIS - n.stich
+    private LearningSpaceFormModel FormModel => FormDataContainer.FormModel;
+
+
+    private void OnValidSubmit(LearningSpaceFormModel model)
+    {
+        if (AuthoringToolWorkspaceViewModel.SelectedLearningWorld == null) throw new InvalidOperationException("No learning world selected.");
+        PresentationLogic.CreateLearningSpace(AuthoringToolWorkspaceViewModel.SelectedLearningWorld, model.Name,
+            model.Shortname, model.Authors, model.Description,
+            //ignore null warning here because validation ensures that RequiredPoints is not null - n.stich
+            model.Goals, (int)model.RequiredPoints!, 0, 0);
+    }
+
+    protected override void OnInitialized()
+    {
+        AuthoringToolWorkspaceViewModel.PropertyChanged += OnWorkspaceViewModelChange;
+        base.OnInitialized();
+    }
+
+    private async void OnWorkspaceViewModelChange(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        Dispose();
+        return ValueTask.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        AuthoringToolWorkspaceViewModel.PropertyChanged -= OnWorkspaceViewModelChange;
+    }
+
+}

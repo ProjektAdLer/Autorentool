@@ -1,45 +1,52 @@
 @using Microsoft.AspNetCore.Components
 @using FluentValidation
 @using Severity = MudBlazor.Severity
-@typeparam T where T : new()
-<MudCard>
-    <MudForm Model="@Model" @ref="@_form" Validation="@ValidateModel">
-        <MudCardContent>
-            @ChildContent
-            @if (SubmitErrorMessage != null)
-            {
-                <div class="mt-2">
-                    <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">@SubmitErrorMessage</MudAlert>
-                </div>
-            }
-        </MudCardContent>
-    </MudForm>
-    <MudCardActions>
-        <MudButton Variant="Variant.Outlined" Color="Color.Primary" OnClick="@(async () => await SubmitAsync())">Create</MudButton>
-        <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="@(Reset)">Reset</MudButton>
-    </MudCardActions>
-</MudCard>
+@using AutoMapper
+@typeparam TForm where TForm : new()
+@typeparam TEntity
+@implements IBaseForm
+<MudForm Model="@FormDataContainer.FormModel" @ref="@_form" Validation="@ValidateModel">
+    <MudCardContent>
+        @Fields
+        @if (SubmitErrorMessage != null)
+        {
+            <div class="mt-2">
+                <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">@SubmitErrorMessage</MudAlert>
+            </div>
+        }
+    </MudCardContent>
+</MudForm>
+<MudCardActions>
+    <MudButtonGroup OverrideStyles="false">
+        <CascadingValue Value="this">
+            @Buttons
+        </CascadingValue>
+    </MudButtonGroup>
+</MudCardActions>
 
 @code {
 #pragma warning disable CS8618 - injected by framework - n.stich
     [Inject]
-    private IValidator<T> Validator { get; set; }
+    private IValidator<TEntity> Validator { get; set; }
     [Inject]
     private ISnackbar Snackbar { get; set; }
 #pragma warning restore CS8618
     
     [Parameter, EditorRequired]
-    public EventCallback<T> OnValidSubmit { get; set; }
+    public EventCallback<TForm> OnValidSubmit { get; set; }
+#pragma warning disable CS8618 - provided by framework - n.stich
     [Parameter, EditorRequired]
     public string SnackbarMessage { get; set; }
-#pragma warning disable CS8618 - provided by framework - n.stich
-    [Parameter]
-    public RenderFragment ChildContent { get; set; }
+    [Parameter, EditorRequired]
+    public IFormDataContainer<TForm, TEntity> FormDataContainer { get; set; }
+    [Parameter, EditorRequired]
+    public RenderFragment Fields { get; set; }
+    [Parameter, EditorRequired]
+    public RenderFragment? Buttons { get; set; }
 #pragma warning restore CS8618
     
 #pragma warning disable CS8618 - set in OnInitialized and by framework via @ref - n.stich
     private MudForm _form;
-    public T Model { get; private set; }
 #pragma warning restore CS8618
     
     private string? SubmitErrorMessage { get; set; }
@@ -52,27 +59,28 @@
     //framework to find this out :) - n.stich
     private Func<object, string, Task<IEnumerable<string>>> ValidateModel => async (model, propertyName) =>
     {
+        var modelEntity = FormDataContainer.GetMappedEntity();
         var result = await Validator.ValidateAsync(
-            ValidationContext<T>.CreateWithOptions((T)model,
+            ValidationContext<TEntity>.CreateWithOptions(modelEntity,
                 x => x.IncludeProperties(propertyName))
             );
         return result.IsValid ? Enumerable.Empty<string>() : result.Errors.Select(e => e.ErrorMessage);
     };
 
-    private void Reset()
+    public void Reset()
     {
-        Model = new T();
+        FormDataContainer.FormModel = new TForm();
         _form.Reset();
     }
-    
-    private async Task SubmitAsync()
+
+    public async Task SubmitAsync()
     {
         await _form.Validate();
         if (_form.IsValid)
         {
             try
             {
-                await OnValidSubmit.InvokeAsync(Model);
+                await OnValidSubmit.InvokeAsync(FormDataContainer.FormModel);
             }
             catch (Exception e)
             {
@@ -91,6 +99,5 @@
     protected override void OnInitialized()
     {
         base.OnInitialized();
-        Model = new T();
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using BusinessLogic.Validation;
 using JetBrains.Annotations;
 using Presentation.PresentationLogic.LearningWorld;
 
@@ -26,10 +27,10 @@ public class AuthoringToolWorkspaceViewModel : IAuthoringToolWorkspaceViewModel
     public IList<LearningWorldViewModel> LearningWorlds => _learningWorlds;
 
     /// <inheritdoc cref="ILearningWorldNamesProvider.WorldNames"/>
-    public IEnumerable<string> WorldNames => _learningWorlds.Select(world => world.Name);
+    public IEnumerable<(Guid, string)> WorldNames => _learningWorlds.Select(world => (world.Id, world.Name));
     
-    /// <inheritdoc cref="ILearningWorldNamesProvider.WorldShortNames"/>
-    public IEnumerable<string> WorldShortNames => _learningWorlds.Select(world => world.Shortname);
+    /// <inheritdoc cref="ILearningWorldNamesProvider.WorldShortnames"/>
+    public IEnumerable<(Guid, string)> WorldShortnames => _learningWorlds.Select(world => (world.Id, world.Shortname));
 
     /// <inheritdoc cref="IAuthoringToolWorkspaceViewModel.RemoveLearningWorld"/>
     public void RemoveLearningWorld(LearningWorldViewModel learningWorld)

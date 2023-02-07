@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using BusinessLogic.Validation;
 using Presentation.Components;
 using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.LearningPathway;

@@ -11,6 +11,7 @@ public class LearningSpaceFormModel
         Goals = "";
         RequiredPoints = null;
     }
+    public Guid Id { get; set; }
     public string Name { get; set; }
     public string Shortname { get; set; }
     public string Authors { get; set; }

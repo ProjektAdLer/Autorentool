@@ -1,0 +1,14 @@
+<MudButton Variant="Variant.Outlined" Color="Color.Success" OnClick="@(async () => await SubmitThenRemapAsync())">Submit</MudButton>
+
+@code {
+    [CascadingParameter]
+    public IBaseForm Form { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback RemapAction { get; set; }
+
+    private async Task SubmitThenRemapAsync()
+    {
+        await Form.SubmitAsync();
+        await RemapAction.InvokeAsync();
+    }
+}

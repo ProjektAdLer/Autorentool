@@ -1,0 +1,6 @@
+<MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="@(Form.Reset)">Reset</MudButton>
+
+@code {
+    [CascadingParameter]
+    public IBaseForm Form { get; set; }
+}
