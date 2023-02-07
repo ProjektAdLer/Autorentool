@@ -8,7 +8,7 @@
 @using Presentation.PresentationLogic.LearningSpace
 <h1>Edit</h1>
 <BaseForm TForm="LearningSpaceFormModel" TEntity="LearningSpace"
-          OnValidSubmit="OnValidSubmit" SnackbarMessage="Space created" FormDataContainer="FormDataContainer">
+          OnValidSubmit="OnValidSubmit" SnackbarMessage="Space updated" FormDataContainer="FormDataContainer">
     <Fields>
         <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                       For="@(() => FormModel.Name)"
