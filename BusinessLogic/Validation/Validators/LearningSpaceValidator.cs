@@ -1,9 +1,12 @@
 using BusinessLogic.Entities;
+using BusinessLogic.Validation.Validators.CustomValidators;
 using FluentValidation;
-using ValidationException = System.ComponentModel.DataAnnotations.ValidationException;
+using JetBrains.Annotations;
+using ValidationException = FluentValidation.ValidationException;
 
 namespace BusinessLogic.Validation.Validators;
 
+[UsedImplicitly]
 public class LearningSpaceValidator : AbstractValidator<LearningSpace>
 {
     private readonly ILearningSpaceNamesProvider _learningSpaceNamesProvider;
@@ -14,6 +17,7 @@ public class LearningSpaceValidator : AbstractValidator<LearningSpace>
         RuleFor(x => x.Name)
             .NotEmpty()
             .Length(4, 100)
+            .IsAlphanumeric()
             .Must((space, name) => IsUniqueNameInWorld(space.Id, name))
             .WithMessage("Already in use.");
         RuleFor(x => x.Shortname)
@@ -25,22 +29,12 @@ public class LearningSpaceValidator : AbstractValidator<LearningSpace>
             .GreaterThanOrEqualTo(0);
     }
 
-    private bool IsUniqueNameInWorld(Guid id, string name)
-    {
-        var allSpacesExceptSelf = _learningSpaceNamesProvider
-            .SpaceNames
-            ?.Where(tup => tup.Item1 != id)
-            .Select(tup => tup.Item2);
-        return !allSpacesExceptSelf?.Contains(name) ?? throw new ValidationException("No learning world selected.");
-    }
-    
-    private bool IsUniqueShortnameInWorld(Guid id, string name)
-    {
-        if (name == "") return true;
-        var allSpacesExceptSelf = _learningSpaceNamesProvider
-            .SpaceShortnames
-            ?.Where(tup => tup.Item1 != id)
-            .Select(tup => tup.Item2);
-        return !allSpacesExceptSelf?.Contains(name) ?? throw new ValidationException("No learning world selected.");
-    }
+    private bool IsUniqueNameInWorld(Guid id, string name) =>
+        UniqueNameHelper.IsUnique(
+            _learningSpaceNamesProvider.SpaceNames ?? throw new ValidationException("No world to get spaces from"),
+            name, id);
+
+    private bool IsUniqueShortnameInWorld(Guid id, string name) => name == "" || UniqueNameHelper.IsUnique(
+        _learningSpaceNamesProvider.SpaceShortnames ?? throw new ValidationException("No world to get spaces from"),
+        name, id);
 }

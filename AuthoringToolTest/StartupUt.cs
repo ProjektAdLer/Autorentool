@@ -161,8 +161,8 @@ public class StartupUt
     
     private static readonly Type[] ConfigureValidationRequiredTypes =
     {
-        typeof(LearningWorldValidator), typeof(LearningSpaceValidator),
-        typeof(ILearningSpaceNamesProvider), typeof(ILearningWorldNamesProvider)
+        typeof(LearningWorldValidator), typeof(LearningSpaceValidator), typeof(LearningElementValidator), typeof(LearningContentValidator),
+        typeof(ILearningSpaceNamesProvider), typeof(ILearningWorldNamesProvider), typeof(ILearningElementNamesProvider)
     };
     [Test]
     [TestCaseSource(nameof(ConfigureValidationRequiredTypes))]

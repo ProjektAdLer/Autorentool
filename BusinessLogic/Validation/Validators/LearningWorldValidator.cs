@@ -1,4 +1,5 @@
 using BusinessLogic.Entities;
+using BusinessLogic.Validation.Validators.CustomValidators;
 using FluentValidation;
 using JetBrains.Annotations;
 
@@ -15,6 +16,7 @@ public class LearningWorldValidator : AbstractValidator<LearningWorld>
         RuleFor(x => x.Name)
             .NotEmpty()
             .Length(4, 100)
+            .IsAlphanumeric()
             .Must((world, name) => IsUniqueName(world.Id, name))
             .WithMessage("Already in use.");
         RuleFor(x => x.Shortname)
@@ -23,22 +25,8 @@ public class LearningWorldValidator : AbstractValidator<LearningWorld>
             .WithMessage("Already in use.");
     }
 
-    private bool IsUniqueName(Guid id, string name)
-    {
-        var allWorldsExceptSelf = _learningWorldNamesProvider
-            .WorldNames
-            .Where(tup => tup.Item1 != id)
-            .Select(tup => tup.Item2); 
-        return !allWorldsExceptSelf.Contains(name);
-    }
+    private bool IsUniqueName(Guid id, string name) =>
+        UniqueNameHelper.IsUnique(_learningWorldNamesProvider.WorldNames, name, id);
 
-    private bool IsUniqueShortname(Guid id, string name)
-    {
-        if (name == "") return true;
-        var allWorldsExceptSelf = _learningWorldNamesProvider
-            .WorldShortnames
-            .Where(tup => tup.Item1 != id)
-            .Select(tup => tup.Item2); 
-        return !allWorldsExceptSelf.Contains(name);
-    }
+    private bool IsUniqueShortname(Guid id, string name) => name == "" || UniqueNameHelper.IsUnique(_learningWorldNamesProvider.WorldShortnames, name, id);
 }
