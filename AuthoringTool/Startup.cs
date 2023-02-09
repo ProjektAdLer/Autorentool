@@ -20,6 +20,7 @@ using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.DropZone;
 using Presentation.PresentationLogic.ElectronNET;
+using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.ModalDialog;
@@ -93,6 +94,7 @@ public class Startup
             p.GetService<IAuthoringToolWorkspaceViewModel>() ?? throw new InvalidOperationException());
         services.AddSingleton<ILearningSpaceNamesProvider>(p =>
             p.GetService<ILearningWorldPresenter>() ?? throw new InvalidOperationException());
+        services.AddSingleton<ILearningElementNamesProvider, LearningElementNamesProvider>();
     }
 
     private void ConfigureAuthoringTool(IServiceCollection services)
