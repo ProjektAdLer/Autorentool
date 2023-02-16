@@ -74,8 +74,7 @@ public class XmlLabelFactory : IXmlLabelFactory
     
     public void CreateLabelFactory()
     {
-        // This step is important to get all spaces included in the world
-        var spaceAndWorldAttributesLabelList = ReadDsl.GetSpacesAndElementsOrderedList();
+        var spaceAndWorldAttributesLabelList = ReadDsl.GetElementsOrderedList();
         var videoLinkLabelList = ReadDsl.GetLabelsList();
 
         var labelList = videoLinkLabelList;
@@ -89,13 +88,13 @@ public class XmlLabelFactory : IXmlLabelFactory
         foreach (var label in labelList)
         {
             LabelId = label.Id.ToString();
-            LabelName = label.Identifier.Value;
-            LabelGoal = label.Goals ?? "";
+            LabelName = label.ElementName;
+            LabelGoal = label.ElementGoals[0];
             LabelParentSpaceId = label.LearningSpaceParentId.ToString();
-            LabelDescription = label.Description ?? "";
+            LabelDescription = label.ElementDescription ?? "";
             
             //A Space got another Font in his Name.
-            if (label.ElementType is "space")
+            if (label.ElementFileType is "space")
             {
                 LabelSetParametersActivitySpace();
             }

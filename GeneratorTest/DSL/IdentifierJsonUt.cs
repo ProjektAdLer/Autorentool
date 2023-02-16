@@ -13,7 +13,7 @@ public class IdentifierJsonUt
         
         
         //Act
-        var ident = new IdentifierJson("type", "value");
+        var ident = new LmsElementIdentifierJson("type", "value");
 
         //Assert
         Assert.That(ident.Type, Is.EqualTo("type"));

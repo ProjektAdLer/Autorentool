@@ -61,20 +61,20 @@ public class XmlResourceFactoryUt
         var mockFileManager = Substitute.For<IXmlFileManager>();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
-        var identifier = new IdentifierJson("FileName", "Document");
-        var learningEvl = new List<LearningElementValueJson>{new ("Points", "15")};
+        var identifier = new LmsElementIdentifierJson("FileName", "Document");
+        var learningEvl = 4;
         
-        var jsonDocument = new LearningElementJson(1, identifier, "", "", "json",1, learningEvl);
-        var pngDocument = new LearningElementJson(2, identifier, "", "", "png",1, learningEvl);
-        var mp4Document = new LearningElementJson(3, identifier, "", "", "mp4",1, learningEvl);
-        var webpDocument = new LearningElementJson(4, identifier, "", "", "webp",1, learningEvl);
-        var jsDocument = new LearningElementJson(5, identifier, "", "", "js",1, learningEvl);
-        var cssDocument = new LearningElementJson(6, identifier, "", "", "css",1, learningEvl);
-        var htmlDocument = new LearningElementJson(7, identifier, "", "", "html",1, learningEvl);
-        var csDocument = new LearningElementJson(8, identifier, "", "", "cs",1, learningEvl);
-        var ccDocument = new LearningElementJson(9, identifier, "", "", "cc",1, learningEvl);
-        var cPlusPlusDocument = new LearningElementJson(10, identifier, "", "", "cpp",1, learningEvl);
-        var txtDocument = new LearningElementJson(11, identifier, "", "", "txt",1, learningEvl);
+        var jsonDocument = new LearningElementJson(1, identifier, "", "","", "json",1, learningEvl);
+        var pngDocument = new LearningElementJson(2, identifier, "", "", "","png",1, learningEvl);
+        var mp4Document = new LearningElementJson(3, identifier, "", "","", "mp4",1, learningEvl);
+        var webpDocument = new LearningElementJson(4, identifier, "", "","", "webp",1, learningEvl);
+        var jsDocument = new LearningElementJson(5, identifier, "", "","", "js",1, learningEvl);
+        var cssDocument = new LearningElementJson(6, identifier, "", "","", "css",1, learningEvl);
+        var htmlDocument = new LearningElementJson(7, identifier, "", "","", "html",1, learningEvl);
+        var csDocument = new LearningElementJson(8, identifier, "", "","", "cs",1, learningEvl);
+        var ccDocument = new LearningElementJson(9, identifier, "", "","", "cc",1, learningEvl);
+        var cPlusPlusDocument = new LearningElementJson(10, identifier, "", "","", "cpp",1, learningEvl);
+        var txtDocument = new LearningElementJson(11, identifier, "", "","", "txt",1, learningEvl);
 
 
         var resourceList = new List<LearningElementJson>()
@@ -93,7 +93,7 @@ public class XmlResourceFactoryUt
         };
         
         mockReadDsl.GetResourceList().Returns(resourceList);
-        var space_1 = new LearningSpaceJson(1, new IdentifierJson("space", "spacename"), new List<int>() {1, 2}, 10, 10);
+        var space_1 = new LearningSpaceJson(1, new LmsElementIdentifierJson("space", "spacename"), "space", new List<int>() {1, 2}, 10);
         var fileString = Path.Join(currWorkDir, "XMLFilesForExport", identifier.Value);
         mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport", identifier.Value), new MockFileData("Hello World"));
 
@@ -109,7 +109,7 @@ public class XmlResourceFactoryUt
         Assert.Multiple(() =>
         {
             systemUnderTest.FileManager.Received().SetXmlFilesList(systemUnderTest.FilesXmlFilesList);
-            systemUnderTest.FileManager.Received().CalculateHashCheckSumAndFileSize(fileString+"."+resourceList.Last().ElementType);
+            systemUnderTest.FileManager.Received().CalculateHashCheckSumAndFileSize(fileString+"."+resourceList.Last().ElementFileType);
             systemUnderTest.FileManager.Received().CreateFolderAndFiles(fileString, systemUnderTest.FileManager.GetHashCheckSum());
             systemUnderTest.FileManager.Received().GetFileSize();
             systemUnderTest.FileManager.Received().GetHashCheckSum();
@@ -203,8 +203,8 @@ public class XmlResourceFactoryUt
             systemUnderTest.ActivitiesRolesXmlRoles.Received().Serialize("resource", systemUnderTest.FileElementId);
             
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.ModuleName, Is.EqualTo("resource"));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionId, Is.EqualTo("0"));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionNumber, Is.EqualTo("0"));
+            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionId, Is.EqualTo(string.Empty));
+            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionNumber, Is.EqualTo(string.Empty));
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Added, Is.EqualTo(systemUnderTest.CurrentTime));
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Id, Is.EqualTo(systemUnderTest.FileElementId));
             systemUnderTest.ActivitiesModuleXmlModule.Received().Serialize("resource", systemUnderTest.FileElementId);

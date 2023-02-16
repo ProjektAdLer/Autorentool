@@ -223,13 +223,13 @@ public class CreateDslUt
         });
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.LearningWorldJson!.Identifier.Value, Is.EqualTo(name));
+            Assert.That(systemUnderTest.LearningWorldJson!.LmsElementIdentifierJson.Value, Is.EqualTo(learningWorld.Id.ToString()));
             Assert.That(systemUnderTest.ListLearningElementsWithContents, Is.EquivalentTo(learningElementsSpace1));
             Assert.That(systemUnderTest.ListLearningSpaces, Is.EquivalentTo(learningSpaces));
             Assert.That(systemUnderTest.ListTopics, Is.EquivalentTo(topics));
-            Assert.That(systemUnderTest.LearningWorldJson.LearningSpaces[0].Requirements,
+            Assert.That(systemUnderTest.LearningWorldJson.Spaces[0].RequiredSpacesToEnter,
                 Is.EqualTo(""));
-            Assert.That(systemUnderTest.LearningWorldJson.LearningSpaces[1].Requirements,
+            Assert.That(systemUnderTest.LearningWorldJson.Spaces[1].RequiredSpacesToEnter,
                 Is.EqualTo("(1)^(2)"));
         });
         Assert.Multiple(() =>

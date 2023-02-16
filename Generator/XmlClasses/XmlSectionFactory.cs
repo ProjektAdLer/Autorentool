@@ -36,7 +36,7 @@ public class XmlSectionFactory : IXmlSectionFactory
         {
             CreateSectionsFolder(space.SpaceId.ToString());
             CreateSectionInforefXml( space.SpaceId.ToString() );
-            CreateSectionSectionXml( space.SpaceId.ToString(),  space.Identifier.Value, "");
+            CreateSectionSectionXml( space.SpaceId.ToString(),  space.SpaceName, space.SpaceDescription, space.SpaceContent, space.SpaceId);
         }
 
     }
@@ -46,13 +46,14 @@ public class XmlSectionFactory : IXmlSectionFactory
         SectionsInforefXmlInforef.Serialize("", sectionid);
     }
 
-    private void CreateSectionSectionXml(string sectionId, string sectionName, string? sectionSummary)
+    private void CreateSectionSectionXml(string sectionId, string sectionName, string? sectionSummary, List<int> sectionSequence, int spaceId)
     {
         //write section.xml file
         SectionsSectionXmlSection.Id = sectionId;
         SectionsSectionXmlSection.Number = sectionId;
         SectionsSectionXmlSection.Name = sectionName;
         SectionsSectionXmlSection.Summary = sectionSummary ?? "";
+        SectionsSectionXmlSection.Sequence = string.Join(",", sectionSequence);
         SectionsSectionXmlSection.Timemodified = CurrentTime;
 
         SectionsSectionXmlSection.Serialize("",sectionId);

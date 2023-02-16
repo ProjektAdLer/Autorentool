@@ -132,15 +132,15 @@ public class XmlH5PFactory : IXmlH5PFactory
         foreach (var h5PElement in h5PElementsList)
         {
             H5PElementId = h5PElement.Id.ToString();
-            H5PElementName = h5PElement.Identifier.Value;
+            H5PElementName = h5PElement.LmsElementIdentifierJson.Value;
             H5PElementParentSpaceString = h5PElement.LearningSpaceParentId.ToString();
-            H5PElementType = h5PElement.ElementType;
-            H5PElementDesc = h5PElement.Description ?? "";
+            H5PElementType = h5PElement.ElementFileType;
+            H5PElementDesc = h5PElement.ElementDescription ?? "";
 
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
-                h5PElement.Identifier.Value+"."+h5PElement.ElementType));
+                h5PElement.LmsElementIdentifierJson.Value+"."+h5PElement.ElementFileType));
             FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath, 
-                h5PElement.Identifier.Value+"."+h5PElement.ElementType), 
+                h5PElement.LmsElementIdentifierJson.Value+"."+h5PElement.ElementFileType), 
             FileManager.GetHashCheckSum());
             H5PSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize());
             H5PSetParametersActivity();
@@ -220,8 +220,8 @@ public class XmlH5PFactory : IXmlH5PFactory
         
         //file activities/h5p.../module.xml
         ActivitiesModuleXmlModule.ModuleName = "h5pactivity";
-        ActivitiesModuleXmlModule.SectionId = "0";
-        ActivitiesModuleXmlModule.SectionNumber = "0";
+        ActivitiesModuleXmlModule.SectionId = H5PElementParentSpaceString;
+        ActivitiesModuleXmlModule.SectionNumber = H5PElementParentSpaceString;
         ActivitiesModuleXmlModule.IdNumber = "";
         ActivitiesModuleXmlModule.Indent = "1";
         ActivitiesModuleXmlModule.Added = CurrentTime;

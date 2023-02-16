@@ -19,6 +19,8 @@ public class CreateDsl : ICreateDsl
     private List<LearningElementPe> _listAllLearningElements;
     private string _booleanAlgebraRequirements;
     private string _currentConditionSpace;
+    private string _author;
+    private string _language;
     private IFileSystem _fileSystem;
     private string _dslPath;
     private string _xmlFilesForExportPath;
@@ -158,6 +160,11 @@ public class CreateDsl : ICreateDsl
     public string WriteLearningWorld(LearningWorldPe learningWorld)
     {
         Initialize();
+
+        //Setting Authors and Language for DSL Root
+        _author = learningWorld.Authors;
+        _language = learningWorld.Language;
+
         //Starting ID for LearningSpaces
         int learningSpaceIdForDictionary = 1;
         
@@ -167,9 +174,9 @@ public class CreateDsl : ICreateDsl
         int topicId = 1;
         
         //Initialise learningWorldJson with empty values, will be filled with information later in the method.
-        LearningWorldJson = new LearningWorldJson(Uuid, new IdentifierJson("name", learningWorld.Name), new List<int>(),
-            new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>(), 
-            learningWorld.Description, learningWorld.Goals);
+        LearningWorldJson = new LearningWorldJson(new LmsElementIdentifierJson("idNumber", learningWorld.Id.ToString()),
+            learningWorld.Name, new List<TopicJson>(), new List<LearningSpaceJson>(),
+            new List<LearningElementJson>(), learningWorld.Description, new []{learningWorld.Goals});
 
         // Create Learning Spaces & fill into Learning World
         // The learningSpaceId defines what the starting Id for Spaces should be. 
@@ -189,7 +196,7 @@ public class CreateDsl : ICreateDsl
         
         foreach (var topic in ListTopics)
         {
-            LearningWorldJson.Topics.Add(new TopicJson(topicId, topic.Name, new IdentifierJson("Topic", topic.Name), new List<int>()));
+            LearningWorldJson.Topics.Add(new TopicJson(topicId, topic.Name, new List<int>()));
             topicId++;
         }
         
@@ -199,19 +206,12 @@ public class CreateDsl : ICreateDsl
             _booleanAlgebraRequirements = "";
             _currentConditionSpace = "";
             
-            IdentifierJson learningSpaceIdentifier = new IdentifierJson("name", space.Name);
-            
-            
-            var assignedTopicId = 0;
+            LmsElementIdentifierJson learningSpaceLmsElementIdentifierJson = new LmsElementIdentifierJson("idNumber", space.Id.ToString());
             
             if (space.AssignedTopic != null)
             {
-                var assignedTopic = LearningWorldJson.Topics.Find(topic => topic.Name == space.AssignedTopic.Name);
-                if(assignedTopic != null)
-                {
-                    assignedTopicId = assignedTopic.TopicId;
-                    assignedTopic.TopicContent.Add(learningSpaceId);
-                }
+                var assignedTopic = LearningWorldJson.Topics.Find(topic => topic.TopicName == space.AssignedTopic.Name);
+                assignedTopic?.TopicContent.Add(learningSpaceId);
             }
             //Searching for Learning Elements in each Space
             foreach (var element in space.LearningElements)
@@ -238,14 +238,12 @@ public class CreateDsl : ICreateDsl
                         throw new ArgumentException("The given LearningContent Type is not supported - in CreateDsl.");
                 }
                 
-                IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", element.Name);
-                List<LearningElementValueJson> learningElementValueList = new List<LearningElementValueJson>();
-                LearningElementValueJson learningElementValue = new LearningElementValueJson("Points", element.Points.ToString());
-                learningElementValueList.Add(learningElementValue);
+                LmsElementIdentifierJson learningElementLmsElementIdentifierJson = new LmsElementIdentifierJson("moduleName", element.Name);
+                
 
                 LearningElementJson learningElementJson = new LearningElementJson(learningSpaceElementId,
-                    learningElementIdentifier, element.Url, elementCategory, element.LearningContent.Type, 
-                    learningSpaceId, learningElementValueList, element.Description, element.Goals);
+                    learningElementLmsElementIdentifierJson, element.Name, element.Url, elementCategory, element.LearningContent.Type, 
+                    learningSpaceId, element.Points, element.Description, new []{element.Goals});
 
                 // Add Elements that have Content to the List, they will be copied at the end of the method.
                 // Every Element without Content will be added to the LearningSpaceJson.
@@ -256,7 +254,7 @@ public class CreateDsl : ICreateDsl
                 
                 _listLearningSpaceElements.Add(learningSpaceElementId);
                 learningSpaceElementId++;
-                LearningWorldJson.LearningElements.Add(learningElementJson);
+                LearningWorldJson.Elements.Add(learningElementJson);
             }
           
             // Create Learning Space Requirements
@@ -283,10 +281,9 @@ public class CreateDsl : ICreateDsl
             }
 
             // Add the constructed Learning Space to Learning World
-            LearningWorldJson.LearningSpaces.Add(new LearningSpaceJson(learningSpaceId,
-                learningSpaceIdentifier, _listLearningSpaceElements, space.RequiredPoints, 
-                space.LearningElements.Sum(element => element.Points),
-                space.Description, space.Goals, requirements:_booleanAlgebraRequirements));
+            LearningWorldJson.Spaces.Add(new LearningSpaceJson(learningSpaceId,
+                learningSpaceLmsElementIdentifierJson, space.Name, _listLearningSpaceElements, space.RequiredPoints,
+                space.Description, new []{space.Goals}, _booleanAlgebraRequirements));
             
             learningSpaceId++;
         }
@@ -294,7 +291,7 @@ public class CreateDsl : ICreateDsl
         // Create DocumentRoot & JSON Document
         // And add the learningWorldJson to the DocumentRoot
         // The structure of the DSL needs DocumentRoot, because the learningWorld has its own tag
-        DocumentRootJson rootJson = new DocumentRootJson(LearningWorldJson);
+        DocumentRootJson rootJson = new DocumentRootJson("0.3", "0.3.2", _author, _language, LearningWorldJson);
 
         var options = new JsonSerializerOptions { WriteIndented = true,  PropertyNamingPolicy = JsonNamingPolicy.CamelCase};
         var jsonFile = JsonSerializer.Serialize(rootJson,options);

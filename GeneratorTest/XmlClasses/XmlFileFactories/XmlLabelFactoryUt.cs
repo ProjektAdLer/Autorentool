@@ -83,20 +83,18 @@ public class XmlLabelFactoryUt
         var mockInforefGradeItem = Substitute.For<ActivitiesInforefXmlGradeItem>();
         var mockInforefGradeItemref = Substitute.For<IActivitiesInforefXmlGradeItemref>();
         var mockInforefInforef = Substitute.For<IActivitiesInforefXmlInforef>();
-        
-        var mockElementValueList = new List<LearningElementValueJson>{new ("points","0")};
 
         var systemUnderTest = new XmlLabelFactory(mockReadDsl, mockFileSystem, mockGradeItem, mockGradeItems, mockGradebook, 
             mockLabel, mockLabelActivity, mockRoles, mockModule, mockGradeHistory, 
             mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref, mockInforefInforef);
 
-        var mockSpaceElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Space_1"), "", "", "space", 0, mockElementValueList);
-        var mockLabelsElementJson = new LearningElementJson(2, new IdentifierJson("Name", "Labels_1"), "", "", "mp4", 1, mockElementValueList);
+        var mockElementJson = new LearningElementJson(1, new LmsElementIdentifierJson("Name", "Labels_1"), "element1","", "", "h5p", 1, 2);
+        var mockLabelsElementJson = new LearningElementJson(2, new LmsElementIdentifierJson("Name", "Labels_1"), "element2", "", "mp4","mp4", 1, 2);
         
-        var spaceJsonList = new List<LearningElementJson> {mockSpaceElementJson};
+        var elementJsonList = new List<LearningElementJson> {mockElementJson};
         var labelJsonList = new List<LearningElementJson> {mockLabelsElementJson};
 
-        mockReadDsl.GetSpacesAndElementsOrderedList().Returns(spaceJsonList);
+        mockReadDsl.GetElementsOrderedList().Returns(elementJsonList);
         mockReadDsl.GetLabelsList().Returns(labelJsonList);
 
         // Act
@@ -105,10 +103,10 @@ public class XmlLabelFactoryUt
         // Assert
         Assert.Multiple(() =>
         {
-            mockReadDsl.Received().GetSpacesAndElementsOrderedList();
+            mockReadDsl.Received().GetElementsOrderedList();
             Assert.That(systemUnderTest.LabelId, Is.EqualTo("1"));
-            Assert.That(systemUnderTest.LabelName, Is.EqualTo("Space_1"));
-            Assert.That(systemUnderTest.LabelParentSpaceId, Is.EqualTo("0"));
+            Assert.That(systemUnderTest.LabelName, Is.EqualTo("element1"));
+            Assert.That(systemUnderTest.LabelParentSpaceId, Is.EqualTo("1"));
         });
     }
 
@@ -135,17 +133,16 @@ public class XmlLabelFactoryUt
             mockLabel, mockLabelActivity, mockRoles, mockModule, mockGradeHistory, 
             mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref, mockInforefInforef);
         
-        var mockElementValueList = new List<LearningElementValueJson>{new ("points","0")};
+        var mockLabelsElementJson = new LearningElementJson(2, new LmsElementIdentifierJson("Name", "World Description"), "",
+            "","World Attributes", "World Attributes", 1, 0, "World Description", new []{"World Goals"});
 
-        var mockSpaceElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Space_1"), "", 
-            "", "space", 0, mockElementValueList);
-        var mockLabelsElementJson = new LearningElementJson(2, new IdentifierJson("Name", "World Description"), "",
-            "World Attributes", "World Attributes", 1, mockElementValueList, "World Description", "World Goals");
-        
-        var spaceJsonList = new List<LearningElementJson> {mockSpaceElementJson};
+        var mockElementJson = new LearningElementJson(1, new LmsElementIdentifierJson("Name", "id"), "", 
+            "", "", "h5p", 0, 7);
+
+        var spaceJsonList = new List<LearningElementJson> {mockElementJson};
         var labelJsonList = new List<LearningElementJson> {mockLabelsElementJson};
 
-        mockReadDsl.GetSpacesAndElementsOrderedList().Returns(spaceJsonList);
+        mockReadDsl.GetElementsOrderedList().Returns(spaceJsonList);
         mockReadDsl.GetLabelsList().Returns(labelJsonList);
 
         // Act
@@ -157,38 +154,38 @@ public class XmlLabelFactoryUt
             Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItem, Is.EqualTo(mockGradeItem));
             Assert.That(systemUnderTest.ActivitiesGradesXmlGradeItems, Is.EqualTo(mockGradeItems));
             Assert.That(systemUnderTest.ActivitiesGradesXmlActivityGradebook, Is.EqualTo(mockGradebook));
-            systemUnderTest.ActivitiesGradesXmlActivityGradebook.Received().Serialize("label", "1");
+            systemUnderTest.ActivitiesGradesXmlActivityGradebook.Received().Serialize("label", "2");
             
             Assert.That(systemUnderTest.ActivitiesLabelXmlLabel, Is.EqualTo(mockLabel));
-            Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Name, Is.EqualTo("<h4>Space_1</h4><p>&nbsp; &nbsp; &nbsp; </p>"));
-            Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Id, Is.EqualTo("1"));
-            Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Intro, Is.EqualTo("<h4>Space_1</h4><p>&nbsp; &nbsp; &nbsp; </p>"));
+            Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Name, Is.EqualTo("<h5>Description:</h5> <p>World Description</p><h5>Goals:</h5> <p>World Goals</p>"));
+            Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Id, Is.EqualTo("2"));
+            Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Intro, Is.EqualTo("<h5>Description:</h5> <p>World Description</p><h5>Goals:</h5> <p>World Goals</p>"));
             Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
-            Assert.That(systemUnderTest.ActivitiesLabelXmlActivity.Id, Is.EqualTo("1"));
-            Assert.That(systemUnderTest.ActivitiesLabelXmlActivity.ModuleId, Is.EqualTo("1"));
-            Assert.That(systemUnderTest.ActivitiesLabelXmlActivity.ContextId, Is.EqualTo("1"));
+            Assert.That(systemUnderTest.ActivitiesLabelXmlActivity.Id, Is.EqualTo("2"));
+            Assert.That(systemUnderTest.ActivitiesLabelXmlActivity.ModuleId, Is.EqualTo("2"));
+            Assert.That(systemUnderTest.ActivitiesLabelXmlActivity.ContextId, Is.EqualTo("2"));
             Assert.That(systemUnderTest.ActivitiesLabelXmlActivity, Is.EqualTo(mockLabelActivity));
-            systemUnderTest.ActivitiesLabelXmlActivity.Received().Serialize("label", "1");
+            systemUnderTest.ActivitiesLabelXmlActivity.Received().Serialize("label", "2");
             
             Assert.That(systemUnderTest.ActivitiesRolesXmlRoles, Is.EqualTo(mockRoles));
-            systemUnderTest.ActivitiesRolesXmlRoles.Received().Serialize("label", "1");
+            systemUnderTest.ActivitiesRolesXmlRoles.Received().Serialize("label", "2");
             
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule, Is.EqualTo(mockModule));
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.ModuleName, Is.EqualTo("label"));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionId, Is.EqualTo("0"));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionNumber, Is.EqualTo("0"));
+            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionId, Is.EqualTo("1"));
+            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.SectionNumber, Is.EqualTo("1"));
             Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Added, Is.EqualTo(systemUnderTest.CurrentTime));
-            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Id, Is.EqualTo("1"));
-            systemUnderTest.ActivitiesModuleXmlModule.Received().Serialize("label","1");
+            Assert.That(systemUnderTest.ActivitiesModuleXmlModule.Id, Is.EqualTo("2"));
+            systemUnderTest.ActivitiesModuleXmlModule.Received().Serialize("label","2");
             
             Assert.That(systemUnderTest.ActivitiesGradeHistoryXmlGradeHistory, Is.EqualTo(mockGradeHistory));
-            systemUnderTest.ActivitiesGradeHistoryXmlGradeHistory.Received().Serialize("label", "1");
+            systemUnderTest.ActivitiesGradeHistoryXmlGradeHistory.Received().Serialize("label", "2");
             
             Assert.That(systemUnderTest.ActivitiesInforefXmlFileref, Is.EqualTo(mockInforefFileref));
             Assert.That(systemUnderTest.ActivitiesInforefXmlGradeItem, Is.EqualTo(mockInforefGradeItem));
             Assert.That(systemUnderTest.ActivitiesInforefXmlGradeItemref, Is.EqualTo(mockInforefGradeItemref));
             Assert.That(systemUnderTest.ActivitiesInforefXmlInforef, Is.EqualTo(mockInforefInforef));
-            systemUnderTest.ActivitiesInforefXmlInforef.Received().Serialize("label", "1");
+            systemUnderTest.ActivitiesInforefXmlInforef.Received().Serialize("label", "2");
         });
         
         

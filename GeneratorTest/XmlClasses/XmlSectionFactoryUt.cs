@@ -39,12 +39,12 @@ public class XmlSectionFactoryUt
         var mockInforef = Substitute.For<ISectionsInforefXmlInforef>();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
 
-        var mockIdentifierJson = new IdentifierJson("TestValue", "TestType");
+        var mockIdentifierJson = new LmsElementIdentifierJson("TestValue", "TestType");
 
         var mockContent = new List<int>();
         mockContent.Add(1);
-        var learningSpaceJson1 = new LearningSpaceJson(1, mockIdentifierJson, mockContent, 0, 0, "");
-        var learningSpaceJson2 = new LearningSpaceJson(2, mockIdentifierJson, mockContent, 0, 0,"");
+        var learningSpaceJson1 = new LearningSpaceJson(1, mockIdentifierJson,"s", mockContent, 0);
+        var learningSpaceJson2 = new LearningSpaceJson(2, mockIdentifierJson,"s", mockContent, 0);
 
         var learningSpaceList = new List<LearningSpaceJson>();
         learningSpaceList.Add(learningSpaceJson1);
@@ -64,7 +64,7 @@ public class XmlSectionFactoryUt
             Assert.That(mockFileSystem.Directory.Exists(Path.Join(currWorkDir, "XMLFilesForExport", "sections", "section_"+learningSpaceJson2.SpaceId)), Is.True);
             Assert.That(systemUnderTest.SectionsSectionXmlSection.Id, Is.EqualTo(learningSpaceJson2.SpaceId.ToString()));
             Assert.That(systemUnderTest.SectionsSectionXmlSection.Number, Is.EqualTo(learningSpaceJson2.SpaceId.ToString()));
-            Assert.That(systemUnderTest.SectionsSectionXmlSection.Name, Is.EqualTo(learningSpaceJson2.Identifier.Value));
+            Assert.That(systemUnderTest.SectionsSectionXmlSection.Name, Is.EqualTo(learningSpaceJson2.SpaceName));
             Assert.That(systemUnderTest.SectionsSectionXmlSection.Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
             
             mockInforef.Received().Serialize("", learningSpaceJson1.SpaceId.ToString());

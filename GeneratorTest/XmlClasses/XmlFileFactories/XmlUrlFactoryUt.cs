@@ -60,10 +60,10 @@ public class XmlUrlFactoryUt
         var mockFileSystem = new MockFileSystem();
         var systemUnderTest = new XmlUrlFactory(mockReadDsl, mockFileSystem);
 
-        var urlLearningElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Video auf Youtube"),
-            "youtube.de", "video", "Video-Link", 1, 
-            new List<LearningElementValueJson>(){new LearningElementValueJson("Points", "10")}, 
-            "desc", "goal");
+        var urlLearningElementJson = new LearningElementJson(1, new LmsElementIdentifierJson("Name", "Video auf Youtube"),
+            "", "youtube.de", "video", "Video-Link", 1, 
+            2, 
+            "desc", new [] {"goal"});
         var urlList = new List<LearningElementJson>(){urlLearningElementJson};
 
         mockReadDsl.GetUrlList().Returns(urlList);
@@ -100,10 +100,10 @@ public class XmlUrlFactoryUt
             mockGradehistory, mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref, 
             mockInforefInforef);
         
-        var urlLearningElementJson = new LearningElementJson(1, new IdentifierJson("Name", "Video auf Youtube"),
-            "youtube.de", "video", "url", 1, 
-            new List<LearningElementValueJson>(){new LearningElementValueJson("Points", "10")}, 
-            "desc", "goal");
+        var urlLearningElementJson = new LearningElementJson(1, new LmsElementIdentifierJson("Name", "Video auf Youtube"),
+            "","youtube.de", "video", "url", 1, 
+            2, 
+            "desc", new []{"goal"});
         var urlList = new List<LearningElementJson>(){urlLearningElementJson};
         
         

@@ -1,15 +1,11 @@
 ﻿namespace Generator.DSL;
 
-/// <summary>
-/// Topics are Sections in moodle. They include spaces and/or elements.
-/// </summary>
 public class TopicJson : ITopicJson
 {
-    public TopicJson(int topicId, string name, IdentifierJson identifier, List<int> topicContent)
+    public TopicJson(int topicId, string topicName, List<int> topicContent)
     {
         TopicId = topicId;
-        Name = name;
-        Identifier = identifier;
+        TopicName = topicName;
         TopicContent = topicContent;
     }
     
@@ -17,10 +13,7 @@ public class TopicJson : ITopicJson
     public int TopicId { get; set; }
     
     // the name of the topic
-    public string Name { get; set; }
-    
-    // the identifier has the name of the element, this information is needed for the API calls from the 2D3D Team.
-    public IdentifierJson Identifier {get; set; }
+    public string TopicName { get; set; }
     
     // Which spaces are in a topic
     public List<int> TopicContent { get; set; }

@@ -103,41 +103,41 @@ public class XmlResourceFactory : IXmlResourceFactory
         foreach (var resource in resourceList)
         {
             FileElementId = resource.Id.ToString();
-            FileElementType = resource.ElementType;
-            FileElementName = resource.Identifier.Value;
-            FileElementDesc = resource.Description ?? "";
+            FileElementType = resource.ElementFileType;
+            FileElementName = resource.LmsElementIdentifierJson.Value;
+            FileElementDesc = resource.ElementDescription ?? "";
             FileElementParentSpaceString = resource.LearningSpaceParentId.ToString();
 
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
-                resource.Identifier.Value + "." + resource.ElementType));
+                resource.LmsElementIdentifierJson.Value + "." + resource.ElementFileType));
             FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
-                resource.Identifier.Value + "." + resource.ElementType), FileManager.GetHashCheckSum());
+                resource.LmsElementIdentifierJson.Value + "." + resource.ElementFileType), FileManager.GetHashCheckSum());
 
-            if (resource.ElementType is "pdf" or "json")
+            if (resource.ElementFileType is "pdf" or "json")
             {
                 ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "application/"+FileElementType);
             }
-            else if (resource.ElementType is "js")
+            else if (resource.ElementFileType is "js")
             {
                 ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "application/x-javascript");
             }
-            else if (resource.ElementType is "cs")
+            else if (resource.ElementFileType is "cs")
             {
                 ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "application/x-csh");
             }
-            else if (resource.ElementType is "jpg" or "png" or "bmp")
+            else if (resource.ElementFileType is "jpg" or "png" or "bmp")
             {
                 ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "image/"+FileElementType);
             }
-            else if (resource.ElementType is "webp" or "cc" or "c++" )
+            else if (resource.ElementFileType is "webp" or "cc" or "c++" )
             {
                 ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "document/unknown");
             }
-            else if (resource.ElementType is "txt" or "c" or "h" or "py" or "cpp" or "php")
+            else if (resource.ElementFileType is "txt" or "c" or "h" or "py" or "cpp" or "php")
             {
                 ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "text/plain");
             }
-            else if (resource.ElementType is "css" or "html")
+            else if (resource.ElementFileType is "css" or "html")
             {
                 ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "text/"+FileElementType);
             }
@@ -201,8 +201,8 @@ public class XmlResourceFactory : IXmlResourceFactory
         
         //file activities/resource.../module.xml
         ActivitiesModuleXmlModule.ModuleName = "resource";
-        ActivitiesModuleXmlModule.SectionId = "0";
-        ActivitiesModuleXmlModule.SectionNumber = "0";
+        ActivitiesModuleXmlModule.SectionId = FileElementParentSpaceString;
+        ActivitiesModuleXmlModule.SectionNumber = FileElementParentSpaceString;
         ActivitiesModuleXmlModule.Indent = "1";
         ActivitiesModuleXmlModule.Added = CurrentTime;
         ActivitiesModuleXmlModule.Id = FileElementId;

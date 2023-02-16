@@ -10,7 +10,7 @@ public class ReadDsl : IReadDsl
     private List<LearningElementJson> _listResourceElements;
     private List<LearningElementJson> _listLabelElements;
     private List<LearningElementJson> _listUrlElements;
-    private List<LearningElementJson> _listAllSpacesAndElementsOrdered;
+    private List<LearningElementJson> _listAllElementsOrdered;
     private LearningWorldJson _learningWorldJson;
     private IFileSystem _fileSystem;
     private DocumentRootJson _rootJson;
@@ -26,15 +26,15 @@ public class ReadDsl : IReadDsl
 
     private void Initialize()
     {
-        _learningWorldJson = new LearningWorldJson("Uuid",new IdentifierJson("LearningWorld", "Value"), 
-            new List<int>(), new List<TopicJson>(), 
+        _learningWorldJson = new LearningWorldJson(new LmsElementIdentifierJson("idNumber", "Value"),
+            "", new List<TopicJson>(), 
             new List<LearningSpaceJson>(), new List<LearningElementJson>());
-        _rootJson = new DocumentRootJson(_learningWorldJson);
+        _rootJson = new DocumentRootJson("0.3", "0.3.2","","",_learningWorldJson);
         _listH5PElements = new List<LearningElementJson>();
         _listResourceElements = new List<LearningElementJson>();
         _listLabelElements = new List<LearningElementJson>();
         _listUrlElements = new List<LearningElementJson>();
-        _listAllSpacesAndElementsOrdered = new List<LearningElementJson>();
+        _listAllElementsOrdered = new List<LearningElementJson>();
     }
 
     public void ReadLearningWorld(string dslPath, DocumentRootJson? rootJsonForTest = null)
@@ -58,13 +58,13 @@ public class ReadDsl : IReadDsl
         GetLabelElements(_rootJson);
         GetWorldAttributes(_rootJson);
         GetUrlElements(_rootJson);
-        GetSpacesAndElementsOrdered(_rootJson);
+        GetElementsOrdered(_rootJson);
         SetLearningWorld(_rootJson);
     }
 
     private void SetLearningWorld(DocumentRootJson? documentRootJson)
     {
-        if (documentRootJson != null) _learningWorldJson = documentRootJson.LearningWorld;
+        if (documentRootJson != null) _learningWorldJson = documentRootJson.World;
     }
 
     public LearningWorldJson GetLearningWorld()
@@ -74,9 +74,9 @@ public class ReadDsl : IReadDsl
     
     private void GetH5PElements(DocumentRootJson documentRootJson)
     {
-        foreach (var element in documentRootJson.LearningWorld.LearningElements)
+        foreach (var element in documentRootJson.World.Elements)
         {
-            if (element.ElementType == "h5p")
+            if (element.ElementFileType == "h5p")
             {
                 _listH5PElements.Add(element);
             }
@@ -85,9 +85,9 @@ public class ReadDsl : IReadDsl
 
     private void GetResourceElements(DocumentRootJson documentRootJson)
     {
-        foreach (var resource in documentRootJson.LearningWorld.LearningElements)
+        foreach (var resource in documentRootJson.World.Elements)
         {
-            if (resource.ElementType is "pdf" or "json" or "jpg" or "png" or "webp" or "bmp" or "txt" or "c"
+            if (resource.ElementFileType is "pdf" or "json" or "jpg" or "png" or "webp" or "bmp" or "txt" or "c"
                 or "h" or "cpp" or "cc" or "c++" or "py" or "cs" or "js" or "php" or "html" or "css")
             {
                 _listResourceElements.Add(resource);
@@ -97,9 +97,9 @@ public class ReadDsl : IReadDsl
     
     private void GetLabelElements(DocumentRootJson documentRootJson)
     {
-        foreach (var label in documentRootJson.LearningWorld.LearningElements)
+        foreach (var label in documentRootJson.World.Elements)
         {
-            if (label.ElementType is "label")
+            if (label.ElementFileType is "label")
             {
                 _listLabelElements.Add(label);
             }
@@ -109,45 +109,39 @@ public class ReadDsl : IReadDsl
     private void GetWorldAttributes(DocumentRootJson documentRootJson)
     {
         // World Attributes like Description & Goals are added to the label-list, as they are represented as Labels in Moodle
-        if(documentRootJson.LearningWorld.Description == "" && documentRootJson.LearningWorld.Goals == "") return;
+        if(documentRootJson.World.WorldDescription == "" && documentRootJson.World.WorldGoals[0] == "") return;
 
-        var lastId = documentRootJson.LearningWorld.LearningElements.Count+1;
+        var lastId = documentRootJson.World.Elements.Count+1;
 
         var worldAttributes = new LearningElementJson(lastId, 
-            new IdentifierJson("Description",documentRootJson.LearningWorld.Description), "", 
-            "World Attributes", "label", 1, 
-            new List<LearningElementValueJson>(), documentRootJson.LearningWorld.Description,
-            documentRootJson.LearningWorld.Goals);
+            new LmsElementIdentifierJson("Description",documentRootJson.World.WorldDescription),"", "", 
+            "World Attributes", "label", 0,
+            0, documentRootJson.World.WorldDescription,
+            documentRootJson.World.WorldGoals);
         
-        _listAllSpacesAndElementsOrdered.Add(worldAttributes);
+        _listAllElementsOrdered.Add(worldAttributes);
     }
 
     private void GetUrlElements(DocumentRootJson documentRootJson)
     {
-        foreach (var url in documentRootJson.LearningWorld.LearningElements)
+        foreach (var url in documentRootJson.World.Elements)
         {
-            if (url.ElementType is "url")
+            if (url.ElementFileType is "url")
             {
                 _listUrlElements.Add(url);
             }
         }
     }
 
-    //Because spaces are represented as labels in Moodle, they are added as a LearningElementJson to the List.
-    //If the User can somehow create more than 10000 LearningElements, this will break. (But that´s unlikely)
-    //Spaces are also added as "LearningElements", because we need a list containing both spaces and elements.
-    private void GetSpacesAndElementsOrdered(DocumentRootJson? documentRootJson)
+    private void GetElementsOrdered(DocumentRootJson? documentRootJson)
     {
         if (documentRootJson != null)
         {
-            foreach (var space in documentRootJson.LearningWorld.LearningSpaces)
+            foreach (var space in documentRootJson.World.Spaces)
             {
-                List<LearningElementValueJson> values = new List<LearningElementValueJson>{new("", "0")};
-                _listAllSpacesAndElementsOrdered.Add(new LearningElementJson(space.SpaceId+10000, space.Identifier, "", "space","space", 0, values, space.Description));
-                
-                foreach (int elementInSpace in space.LearningSpaceContent)
+                foreach (int elementInSpace in space.SpaceContent)
                 {
-                    _listAllSpacesAndElementsOrdered.Add(documentRootJson.LearningWorld.LearningElements[elementInSpace-1]);
+                    _listAllElementsOrdered.Add(documentRootJson.World.Elements[elementInSpace-1]);
                 }
             }
         }
@@ -158,13 +152,12 @@ public class ReadDsl : IReadDsl
         return _listH5PElements;
     }
 
-    //because sections are not supported in the authoringTool yet, a dummy section is created
-    //right now this dummy is just a space, but it will be a section in the future
     public List<LearningSpaceJson> GetSectionList()
     {
-        var space = new LearningSpaceJson(0, new IdentifierJson("identifier", "Topic 0"), 
-            new List<int>(), 0 ,0 );
+        var space = new LearningSpaceJson(0, new LmsElementIdentifierJson("identifier", "Topic 0"), 
+            "",new List<int>(), 0 );
         var spaceList = new List<LearningSpaceJson> {space};
+        spaceList.AddRange(_rootJson.World.Spaces);
         return spaceList;
     }
 
@@ -183,12 +176,10 @@ public class ReadDsl : IReadDsl
         return _listUrlElements;
     }
     
-    //A List that contains all Spaces and Elements in the correct order. 
-    //First comes a Spaces followed by all his Elements until another Space appears.
-    //The Spaces where transformed to LearningElementJson, so they can be used in the same List.
-    public List<LearningElementJson> GetSpacesAndElementsOrderedList()
+    //A List that contains all Elements in the correct order. 
+    public List<LearningElementJson> GetElementsOrderedList()
     {
-        return _listAllSpacesAndElementsOrdered;
+        return _listAllElementsOrdered;
     }
     
 }
