@@ -2,10 +2,10 @@
 
 public interface ILearningElementJson
 {
-    int Id { get; set; }
+    int ElementId { get; set; }
     
     // the lmsElementIdentifierJson has the name of the element
-    LmsElementIdentifierJson LmsElementIdentifierJson { get; set; }
+    LmsElementIdentifierJson LmsElementIdentifier { get; set; }
     
     string? ElementDescription { get; set; }
     

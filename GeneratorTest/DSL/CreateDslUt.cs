@@ -223,7 +223,7 @@ public class CreateDslUt
         });
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.LearningWorldJson!.LmsElementIdentifierJson.Value, Is.EqualTo(learningWorld.Id.ToString()));
+            Assert.That(systemUnderTest.LearningWorldJson!.LmsElementIdentifier.Value, Is.EqualTo(learningWorld.Name));
             Assert.That(systemUnderTest.ListLearningElementsWithContents, Is.EquivalentTo(learningElementsSpace1));
             Assert.That(systemUnderTest.ListLearningSpaces, Is.EquivalentTo(learningSpaces));
             Assert.That(systemUnderTest.ListTopics, Is.EquivalentTo(topics));

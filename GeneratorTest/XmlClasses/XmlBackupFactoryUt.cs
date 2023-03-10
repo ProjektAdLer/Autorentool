@@ -59,14 +59,14 @@ public class XmlBackupFactoryUt
         var mockLearningWorld = new LearningWorldJson(mockIdentifier,"world", 
             new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>());
         
-        mockLearningWorld.LmsElementIdentifierJson = mockIdentifier;
+        mockLearningWorld.LmsElementIdentifier = mockIdentifier;
 
         var mockLearningElement = new LearningElementJson(1, mockIdentifier,"", "", "", "h5p",0, 2);
         List<LearningElementJson> learningElementJsons = new List<LearningElementJson>();
         learningElementJsons.Add(mockLearningElement);
         
         var mockLearningSpaceContent = new List<int>();
-        mockLearningSpaceContent.Add(mockLearningElement.Id);
+        mockLearningSpaceContent.Add(mockLearningElement.ElementId);
         var mockLearningSpace = new LearningSpaceJson(1, mockIdentifier,"", mockLearningSpaceContent, 0);
         List<LearningSpaceJson> learningSpacesJsons = new List<LearningSpaceJson>();
         learningSpacesJsons.Add(mockLearningSpace);
@@ -293,7 +293,7 @@ public class XmlBackupFactoryUt
         learningElementJsons.Add(mockLearningElement2);
         
         var mockLearningSpaceContent = new List<int>();
-        mockLearningSpaceContent.Add(mockLearningElement1.Id);
+        mockLearningSpaceContent.Add(mockLearningElement1.ElementId);
         var mockLearningSpace = new LearningSpaceJson(1, mockIdentifier,"", mockLearningSpaceContent, 0);
         List<LearningSpaceJson> learningSpacesJsons = new List<LearningSpaceJson>();
         learningSpacesJsons.Add(mockLearningSpace);
@@ -326,13 +326,13 @@ public class XmlBackupFactoryUt
             Assert.That(systemUnderTest.MoodleBackupXmlSettingLegacyfiles.Name, Is.EqualTo("legacyfiles"));
             Assert.That(systemUnderTest.MoodleBackupXmlSettingFiles.Value, Is.EqualTo("1"));
             Assert.That(systemUnderTest.MoodleBackupXmlActivityList[0].ModuleName, Is.EqualTo("h5pactivity"));
-            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[1].ModuleId, Is.EqualTo(mockLearningElement2.Id.ToString()));
+            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[1].ModuleId, Is.EqualTo(mockLearningElement2.ElementId.ToString()));
             Assert.That(systemUnderTest.MoodleBackupXmlActivityList[1].ModuleName, Is.EqualTo("url"));
             Assert.That(systemUnderTest.MoodleBackupXmlActivityList[1].Title, Is.EqualTo(mockIdentifier.Value));
-            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[1].Directory, Is.EqualTo("activities/url_" + mockDslDocumentJson.Id.ToString()));
+            Assert.That(systemUnderTest.MoodleBackupXmlActivityList[1].Directory, Is.EqualTo("activities/url_" + mockDslDocumentJson.ElementId.ToString()));
             
             Assert.That(systemUnderTest.MoodleBackupXmlSettingList[2].Level, Is.EqualTo("activity"));
-            Assert.That(systemUnderTest.MoodleBackupXmlSettingList[2].Name, Is.EqualTo("url_" + mockDslDocumentJson.Id.ToString() + "_included"));
+            Assert.That(systemUnderTest.MoodleBackupXmlSettingList[2].Name, Is.EqualTo("url_" + mockDslDocumentJson.ElementId.ToString() + "_included"));
             Assert.That(systemUnderTest.MoodleBackupXmlSettingList[2].Value, Is.EqualTo("1"));
             
             Assert.That(systemUnderTest.MoodleBackupXmlSettingList[7].Section, Is.EqualTo("section_" + mockLearningSpace.SpaceId.ToString()));

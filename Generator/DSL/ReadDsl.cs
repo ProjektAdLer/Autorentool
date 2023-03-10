@@ -139,7 +139,7 @@ public class ReadDsl : IReadDsl
         {
             foreach (var space in documentRootJson.World.Spaces)
             {
-                foreach (int elementInSpace in space.SpaceContent)
+                foreach (int elementInSpace in space.SpaceContents)
                 {
                     _listAllElementsOrdered.Add(documentRootJson.World.Elements[elementInSpace-1]);
                 }

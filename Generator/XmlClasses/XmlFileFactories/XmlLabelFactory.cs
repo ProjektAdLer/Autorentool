@@ -87,7 +87,7 @@ public class XmlLabelFactory : IXmlLabelFactory
     {
         foreach (var label in labelList)
         {
-            LabelId = label.Id.ToString();
+            LabelId = label.ElementId.ToString();
             LabelName = label.ElementName;
             LabelGoal = label.ElementGoals[0];
             LabelParentSpaceId = label.LearningSpaceParentId.ToString();

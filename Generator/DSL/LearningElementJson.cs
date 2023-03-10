@@ -6,12 +6,12 @@
 public class LearningElementJson : ILearningElementJson
 {
     // incremented ID for every element, it will also be used as moduleid, sectionid, contextid ...
-    public LearningElementJson(int id, LmsElementIdentifierJson lmsElementIdentifierJson, string elementName,
+    public LearningElementJson(int elementId, LmsElementIdentifierJson lmsElementIdentifier, string elementName,
         string url, string elementCategory, string elementFileType, int learningSpaceParentId,
         int elementMaxScore, string? elementDescription=null, string[]? elementGoals = null)
     {
-        Id = id;
-        LmsElementIdentifierJson = lmsElementIdentifierJson;
+        ElementId = elementId;
+        LmsElementIdentifier = lmsElementIdentifier;
         ElementName = elementName;
         Url = url;
         ElementDescription = elementDescription ?? "";
@@ -22,10 +22,10 @@ public class LearningElementJson : ILearningElementJson
         ElementMaxScore = elementMaxScore;
     }
 
-    public int Id { get; set; }
+    public int ElementId { get; set; }
     
-    // the lmsElementIdentifierJson has the name of the element
-    public LmsElementIdentifierJson LmsElementIdentifierJson { get; set; }
+    // the lmsElementIdentifier has the name of the element
+    public LmsElementIdentifierJson LmsElementIdentifier { get; set; }
     
     public string ElementName { get; set; }
     

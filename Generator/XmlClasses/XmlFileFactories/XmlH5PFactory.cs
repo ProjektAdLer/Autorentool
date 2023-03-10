@@ -131,16 +131,16 @@ public class XmlH5PFactory : IXmlH5PFactory
         // Create folder activities
         foreach (var h5PElement in h5PElementsList)
         {
-            H5PElementId = h5PElement.Id.ToString();
-            H5PElementName = h5PElement.LmsElementIdentifierJson.Value;
+            H5PElementId = h5PElement.ElementId.ToString();
+            H5PElementName = h5PElement.LmsElementIdentifier.Value;
             H5PElementParentSpaceString = h5PElement.LearningSpaceParentId.ToString();
             H5PElementType = h5PElement.ElementFileType;
             H5PElementDesc = h5PElement.ElementDescription ?? "";
 
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
-                h5PElement.LmsElementIdentifierJson.Value+"."+h5PElement.ElementFileType));
+                h5PElement.LmsElementIdentifier.Value+"."+h5PElement.ElementFileType));
             FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath, 
-                h5PElement.LmsElementIdentifierJson.Value+"."+h5PElement.ElementFileType), 
+                h5PElement.LmsElementIdentifier.Value+"."+h5PElement.ElementFileType), 
             FileManager.GetHashCheckSum());
             H5PSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize());
             H5PSetParametersActivity();

@@ -85,8 +85,8 @@ public class XmlCourseFactory : IXmlCourseFactory
     {
         //set parameters of the course/course.xml file
 
-        CourseCourseXmlCourse.Shortname = _learningWorld.LmsElementIdentifierJson.Value;
-        CourseCourseXmlCourse.Fullname = _learningWorld.LmsElementIdentifierJson.Value;
+        CourseCourseXmlCourse.Shortname = _learningWorld.LmsElementIdentifier.Value;
+        CourseCourseXmlCourse.Fullname = _learningWorld.LmsElementIdentifier.Value;
         CourseCourseXmlCourse.Format = "tiles";
         CourseCourseXmlCourse.BaseColour = "#009681";
         CourseCourseXmlCourse.CourseUseSubtiles = "0";
@@ -96,7 +96,7 @@ public class XmlCourseFactory : IXmlCourseFactory
         CourseCourseXmlCourse.Theme = "boost";
         CourseCourseXmlCourse.ShowCompletionConditions = "1";
         CourseCourseXmlCourse.EnableCompletion = "1";
-        CourseCourseXmlCourse.IdNumber = _learningWorld.LmsElementIdentifierJson.Value;
+        CourseCourseXmlCourse.IdNumber = _learningWorld.LmsElementIdentifier.Value;
         CourseCourseXmlCourse.Category = CourseCourseXmlCategory as CourseCourseXmlCategory ?? new CourseCourseXmlCategory();
 
         //create course/course.xml file

@@ -6,24 +6,24 @@
 public class LearningSpaceJson : ILearningSpaceJson
 {
     // the id is incremented and is set for every Space
-    public LearningSpaceJson(int spaceId, LmsElementIdentifierJson lmsElementIdentifierJson, string spaceName,
-        List<int> spaceContent, int requiredPointsToComplete, string? spaceDescription=null, string[]? spaceGoals = null,
+    public LearningSpaceJson(int spaceId, LmsElementIdentifierJson lmsElementIdentifier, string spaceName,
+        List<int> spaceContents, int requiredPointsToComplete, string? spaceDescription=null, string[]? spaceGoals = null,
         string? requiredSpacesToEnter = null)
     {
         SpaceId = spaceId;
-        LmsElementIdentifierJson = lmsElementIdentifierJson;
+        LmsElementIdentifier = lmsElementIdentifier;
         SpaceName = spaceName;
         SpaceDescription = spaceDescription ?? "";
         SpaceGoals = spaceGoals ?? new []{""};
-        SpaceContent = spaceContent;
+        SpaceContents = spaceContents;
         RequiredPointsToComplete = requiredPointsToComplete;
         RequiredSpacesToEnter = requiredSpacesToEnter;
     }
 
     public int SpaceId { get; set; }
 
-    // the lmsElementIdentifierJson has the name of the element, this information is needed for the API calls from the 2D3D Team.
-    public LmsElementIdentifierJson LmsElementIdentifierJson { get; set; }
+    // the lmsElementIdentifier has the name of the element, this information is needed for the API calls from the 2D3D Team.
+    public LmsElementIdentifierJson LmsElementIdentifier { get; set; }
     
     //A Name for the Learning Space
     public string SpaceName { get; set; }
@@ -34,7 +34,7 @@ public class LearningSpaceJson : ILearningSpaceJson
     public string[] SpaceGoals { get; set; }
     
     // A list that has all the id´s of the included elements of a space. 
-    public List<int> SpaceContent { get; set; }
+    public List<int> SpaceContents { get; set; }
     
     // Maximum Points and Points that are needed to complete the Space
     public int RequiredPointsToComplete { get; set; }

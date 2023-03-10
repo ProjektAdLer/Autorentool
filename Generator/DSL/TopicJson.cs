@@ -2,11 +2,11 @@
 
 public class TopicJson : ITopicJson
 {
-    public TopicJson(int topicId, string topicName, List<int> topicContent)
+    public TopicJson(int topicId, string topicName, List<int> topicContents)
     {
         TopicId = topicId;
         TopicName = topicName;
-        TopicContent = topicContent;
+        TopicContents = topicContents;
     }
     
     // incremented id for all topics
@@ -16,5 +16,5 @@ public class TopicJson : ITopicJson
     public string TopicName { get; set; }
     
     // Which spaces are in a topic
-    public List<int> TopicContent { get; set; }
+    public List<int> TopicContents { get; set; }
 }

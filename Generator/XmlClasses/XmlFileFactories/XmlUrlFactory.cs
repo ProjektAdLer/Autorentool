@@ -83,8 +83,8 @@ public class XmlUrlFactory : IXmlUrlFactory
     {
         foreach (var url in urlList)
         {
-            UrlId = url.Id.ToString();
-            UrlName = url.LmsElementIdentifierJson.Value;
+            UrlId = url.ElementId.ToString();
+            UrlName = url.LmsElementIdentifier.Value;
             UrlParentSpaceId = url.LearningSpaceParentId.ToString();
             UrlLink = url.Url;
             UrlDescription = url.ElementDescription ?? "";

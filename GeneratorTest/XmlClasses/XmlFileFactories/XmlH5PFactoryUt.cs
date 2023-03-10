@@ -144,10 +144,10 @@ public class XmlH5PFactoryUt
         {
             //Every File has 2 FilesXmlFile Id´s thats why the Count has to be 2*FileCount
             Assert.That(systemUnderTest.FilesXmlFiles.File, Has.Count.EqualTo(4));
-            Assert.That(systemUnderTest.FilesXmlFiles.File[0].ContextId , Is.EqualTo(h5PElement1.Id.ToString()));
+            Assert.That(systemUnderTest.FilesXmlFiles.File[0].ContextId , Is.EqualTo(h5PElement1.ElementId.ToString()));
             Assert.That(systemUnderTest.FilesXmlFiles.File[0].Filename , Is.EqualTo(identifier1.Value));
             Assert.That(systemUnderTest.FilesXmlFiles.File[0].Source , Is.EqualTo(identifier1.Value+ "." + h5PElement1.ElementFileType));
-            Assert.That(systemUnderTest.FilesXmlFiles.File[2].ContextId , Is.EqualTo(h5PElement2.Id.ToString()));
+            Assert.That(systemUnderTest.FilesXmlFiles.File[2].ContextId , Is.EqualTo(h5PElement2.ElementId.ToString()));
             Assert.That(systemUnderTest.FilesXmlFiles.File[2].Filename , Is.EqualTo(identifier2.Value));
             Assert.That(systemUnderTest.FilesXmlFiles.File[2].Source , Is.EqualTo(identifier2.Value+ "." + h5PElement2.ElementFileType));
             Assert.That(systemUnderTest.FilesXmlFiles.File[2].Id , Is.EqualTo((int.Parse(systemUnderTest.FilesXmlFiles.File[0].Id)+2).ToString()));

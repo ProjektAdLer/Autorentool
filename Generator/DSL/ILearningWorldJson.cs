@@ -3,7 +3,7 @@
 public interface ILearningWorldJson
 {
 
-    LmsElementIdentifierJson LmsElementIdentifierJson { get; set; }
+    LmsElementIdentifierJson LmsElementIdentifier { get; set; }
     
     string WorldDescription { get; set; }
     

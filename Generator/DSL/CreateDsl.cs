@@ -174,7 +174,7 @@ public class CreateDsl : ICreateDsl
         int topicId = 1;
         
         //Initialise learningWorldJson with empty values, will be filled with information later in the method.
-        LearningWorldJson = new LearningWorldJson(new LmsElementIdentifierJson("idNumber", learningWorld.Id.ToString()),
+        LearningWorldJson = new LearningWorldJson(new LmsElementIdentifierJson("moduleName", learningWorld.Name),
             learningWorld.Name, new List<TopicJson>(), new List<LearningSpaceJson>(),
             new List<LearningElementJson>(), learningWorld.Description, new []{learningWorld.Goals});
 
@@ -206,12 +206,12 @@ public class CreateDsl : ICreateDsl
             _booleanAlgebraRequirements = "";
             _currentConditionSpace = "";
             
-            LmsElementIdentifierJson learningSpaceLmsElementIdentifierJson = new LmsElementIdentifierJson("idNumber", space.Id.ToString());
+            LmsElementIdentifierJson learningSpaceLmsElementIdentifier = new LmsElementIdentifierJson("moduleName", space.Name);
             
             if (space.AssignedTopic != null)
             {
                 var assignedTopic = LearningWorldJson.Topics.Find(topic => topic.TopicName == space.AssignedTopic.Name);
-                assignedTopic?.TopicContent.Add(learningSpaceId);
+                assignedTopic?.TopicContents.Add(learningSpaceId);
             }
             //Searching for Learning Elements in each Space
             foreach (var element in space.LearningElements)
@@ -238,11 +238,11 @@ public class CreateDsl : ICreateDsl
                         throw new ArgumentException("The given LearningContent Type is not supported - in CreateDsl.");
                 }
                 
-                LmsElementIdentifierJson learningElementLmsElementIdentifierJson = new LmsElementIdentifierJson("moduleName", element.Name);
+                LmsElementIdentifierJson learningElementLmsElementIdentifier = new LmsElementIdentifierJson("moduleName", element.Name);
                 
 
                 LearningElementJson learningElementJson = new LearningElementJson(learningSpaceElementId,
-                    learningElementLmsElementIdentifierJson, element.Name, element.Url, elementCategory, element.LearningContent.Type, 
+                    learningElementLmsElementIdentifier, element.Name, element.Url, elementCategory, element.LearningContent.Type, 
                     learningSpaceId, element.Points, element.Description, new []{element.Goals});
 
                 // Add Elements that have Content to the List, they will be copied at the end of the method.
@@ -282,7 +282,7 @@ public class CreateDsl : ICreateDsl
 
             // Add the constructed Learning Space to Learning World
             LearningWorldJson.Spaces.Add(new LearningSpaceJson(learningSpaceId,
-                learningSpaceLmsElementIdentifierJson, space.Name, _listLearningSpaceElements, space.RequiredPoints,
+                learningSpaceLmsElementIdentifier, space.Name, _listLearningSpaceElements, space.RequiredPoints,
                 space.Description, new []{space.Goals}, _booleanAlgebraRequirements));
             
             learningSpaceId++;

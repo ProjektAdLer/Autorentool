@@ -50,8 +50,8 @@ public class XmlCourseFactoryUt
         var mockIdentifier = new LmsElementIdentifierJson("id", "CourseName");
         var mockLearningWorld = new LearningWorldJson( mockIdentifier,"world", 
             new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>());
-        mockLearningWorld.LmsElementIdentifierJson = mockIdentifier;
-        mockLearningWorld.LmsElementIdentifierJson.Value = "CourseName";
+        mockLearningWorld.LmsElementIdentifier = mockIdentifier;
+        mockLearningWorld.LmsElementIdentifier.Value = "CourseName";
 
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
         
@@ -99,8 +99,8 @@ public class XmlCourseFactoryUt
         var mockIdentifier = new LmsElementIdentifierJson("CourseName", "CourseName");
         var mockLearningWorld = new LearningWorldJson(mockIdentifier, "world",
             new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>());
-        mockLearningWorld.LmsElementIdentifierJson = mockIdentifier;
-        mockLearningWorld.LmsElementIdentifierJson.Value = "CourseName";
+        mockLearningWorld.LmsElementIdentifier = mockIdentifier;
+        mockLearningWorld.LmsElementIdentifier.Value = "CourseName";
 
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
 
@@ -115,8 +115,8 @@ public class XmlCourseFactoryUt
             Assert.That(mockCourseCategory.Description, Is.EqualTo("$@NULL@$"));
             Assert.That(mockCourseCategory.Id, Is.EqualTo("1"));
             Assert.That(mockCourseCategory.Name, Is.EqualTo("Miscellaneous"));
-            Assert.That(mockCourseCourse.Shortname, Is.EqualTo(mockLearningWorld.LmsElementIdentifierJson.Value));
-            Assert.That(mockCourseCourse.Fullname, Is.EqualTo(mockLearningWorld.LmsElementIdentifierJson.Value));
+            Assert.That(mockCourseCourse.Shortname, Is.EqualTo(mockLearningWorld.LmsElementIdentifier.Value));
+            Assert.That(mockCourseCourse.Fullname, Is.EqualTo(mockLearningWorld.LmsElementIdentifier.Value));
             Assert.That(mockCourseCourse.Format, Is.EqualTo("tiles"));
             Assert.That(mockCourseCourse.BaseColour, Is.EqualTo("#009681"));
             Assert.That(mockCourseCourse.CourseUseSubtiles, Is.EqualTo("0"));

@@ -102,16 +102,16 @@ public class XmlResourceFactory : IXmlResourceFactory
     {
         foreach (var resource in resourceList)
         {
-            FileElementId = resource.Id.ToString();
+            FileElementId = resource.ElementId.ToString();
             FileElementType = resource.ElementFileType;
-            FileElementName = resource.LmsElementIdentifierJson.Value;
+            FileElementName = resource.LmsElementIdentifier.Value;
             FileElementDesc = resource.ElementDescription ?? "";
             FileElementParentSpaceString = resource.LearningSpaceParentId.ToString();
 
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
-                resource.LmsElementIdentifierJson.Value + "." + resource.ElementFileType));
+                resource.LmsElementIdentifier.Value + "." + resource.ElementFileType));
             FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
-                resource.LmsElementIdentifierJson.Value + "." + resource.ElementFileType), FileManager.GetHashCheckSum());
+                resource.LmsElementIdentifier.Value + "." + resource.ElementFileType), FileManager.GetHashCheckSum());
 
             if (resource.ElementFileType is "pdf" or "json")
             {

@@ -2,7 +2,7 @@
 namespace Generator.DSL;
 
 /// <summary>
-///  The LmsElementIdentifierJson tag has the name and type (needed for the Moodle API, so that the 2D3D Team knows what kind of Type they need to search)
+///  The LmsElementIdentifier tag has the name and type (needed for the Moodle API, so that the 2D3D Team knows what kind of Type they need to search)
 ///  of the learningWorld, Space and element. 
 /// </summary>
 public class LmsElementIdentifierJson : ILmsElementIdentifierJson

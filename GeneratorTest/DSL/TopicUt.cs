@@ -19,7 +19,7 @@ public class TopicUt
 
         //Assert
         Assert.That(topic.TopicName, Is.EqualTo(name));
-        Assert.That(topic.TopicContent, Is.EqualTo(contentList));
+        Assert.That(topic.TopicContents, Is.EqualTo(contentList));
         Assert.That(topic.TopicId, Is.EqualTo(1));
     }
 }
