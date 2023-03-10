@@ -163,7 +163,7 @@ public class CreateDsl : ICreateDsl
 
         //Setting Authors and Language for DSL Root
         _author = learningWorld.Authors;
-        _language = learningWorld.Language;
+        _language = "de";
 
         //Starting ID for LearningSpaces
         int learningSpaceIdForDictionary = 1;
