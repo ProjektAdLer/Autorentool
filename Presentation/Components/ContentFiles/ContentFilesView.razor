@@ -1,5 +1,6 @@
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.LearningContent
+@using Presentation.Components.Dialogues
 <MudTable Items="Items" Class="w-full grow shrink h-full flex flex-col flex-nowrap"
           Dense="true" Virtualize="true" Filter="Filter" >
     <ToolBarContent>
@@ -36,7 +37,9 @@
                 <span>Link</span>
             }
         </MudTd>
-        <MudTd Class="px-1.5"><MudIconButton Icon="@Icons.Material.Filled.Preview" OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"/></MudTd>
+        <MudTd Class="px-1.5">
+            <MudIconButton Icon="@Icons.Material.Filled.Preview" OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"/>
+        </MudTd>
         @if (_showFilepath)
         {
             <MudTd DataLabel="Filepath/Link" Class="px-1.5">
@@ -64,6 +67,8 @@
 #pragma warning disable CS8618 - injected by framework - n.stich
     [Inject]
     private IPresentationLogic PresentationLogic { get; set; }
+    [Inject]
+    private IDialogService DialogService { get; set; }
 #pragma warning restore CS8618
     private IEnumerable<LearningContentViewModel> Items => PresentationLogic.GetAllContent();
     
@@ -82,10 +87,26 @@
         return $"{element.Name}.{elementType}".Contains(searchString);
     }
 
-    private void Delete(LearningContentViewModel item)
+    private async Task Delete(LearningContentViewModel item)
     {
         //TODO: dialog asking for confirmation
-        PresentationLogic.RemoveContent(item);
+        var parameters = new DialogParameters
+        {
+            { "SubmitButtonText", "Delete" },
+            { "SubmitButtonColor", Color.Error },
+            { "DialogText", $"Do you really want to delete content entry {item.Name}?" },
+        };
+        var options = new DialogOptions 
+        {
+            CloseButton = true,
+            CloseOnEscapeKey = true,
+            DisableBackdropClick = true,
+        
+        };
+        var dialog = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>("Delete content", parameters, options);
+        var result = await dialog.Result;
+        if (!result.Canceled)
+            PresentationLogic.RemoveContent(item);
     }
 
     public async Task RerenderAsync()
