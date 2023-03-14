@@ -1,11 +1,9 @@
 ﻿@page "/LearningWorldViewRedesign"
 @using Presentation.PresentationLogic.LearningWorld
-@using Presentation.PresentationLogic.ModalDialog
 @using Presentation.View.LearningSpace
 @using Presentation.View.LearningPathWay
 @using Size = MudBlazor.Size
 @using Color = MudBlazor.Color
-@using Presentation.Components.ModalDialog
 @using System.ComponentModel
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningPathway
@@ -62,7 +60,7 @@
                                     OnDraggedDraggable="@LearningWorldP.DragObjectInPathWay"
                                     OnClickedDeletePath="@LearningWorldP.DeleteLearningPathWay"
                                     OnClickedDeleteObject="@LearningWorldP.DeleteLearningObject"
-                                    OnDoubleClickedDraggable="@LearningWorldP.DoubleClickOnLearningSpaceInWorld"
+                                    OnDoubleClickedDraggable="@LearningWorldP.DoubleClickOnObjectInPathway"
                                     OnRightClickedDraggable="@LearningWorldP.RightClickOnObjectInPathWay"
                                     ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject"
                                     OnOpenLearningSpace="@LearningWorldP.ShowSelectedLearningSpaceView"
@@ -86,37 +84,6 @@
     <!--<use xlink:href="#rightClickMenu" />-->
 </svg>
 
-@if (LearningWorldP.CreateLearningSpaceDialogOpen)
-    {
-        //create space modal
-        @ModalDialogFactory.GetCreateLearningSpaceFragment(OnCreateSpaceDialogClose)
-    }
-
-    @if (LearningWorldP.CreatePathWayConditionDialogOpen)
-    {
-        //create pathway condition modal
-        @ModalDialogFactory.GetCreatePathWayConditionFragment(OnCreatePathWayConditionDialogClose)
-    }
-
-    @if (LearningWorldP.EditLearningSpaceDialogOpen && LearningWorldP.LearningWorldVm != null)
-    {
-        //edit space modal
-        <!-- EditSpaceDialogInitialValues is set by presenter before setting EditLearningSpaceDialogOpen to true -->
-        @ModalDialogFactory.GetEditLearningSpaceFragment(LearningWorldP.EditSpaceDialogInitialValues!, OnEditSpaceDialogClose, LearningWorldP.EditSpaceDialogAnnotations)
-    }
-
-    @if (LearningWorldP.EditPathWayConditionDialogOpen && LearningWorldP.LearningWorldVm != null)
-    {
-        //edit pathway condition modal
-        <!-- EditConditionDialogInitialValues is set by presenter before setting EditPathWayConditionDialogOpen to true -->
-        @ModalDialogFactory.GetEditPathWayConditionFragment(LearningWorldP.EditConditionDialogInitialValues!, OnEditPathWayConditionDialogClose)
-    }
-
-    @if (ErrorState != null)
-    {
-        <ModalDialog Title="Exception encountered" Text=@ErrorState.ToString()
-                     OnClose="@ErrorDialogOnClose" DialogType=@ModalDialogType.Ok/>
-    }
 
 @code {
     [Parameter]
@@ -128,9 +95,6 @@
     
     [Inject]
     public ILearningWorldPresenter LearningWorldP { get; set; }
-    
-    [Inject]
-    public ILearningWorldViewModalDialogFactory ModalDialogFactory { get; set; }
 #pragma warning restore CS8618
     
     private ExceptionWrapper? ErrorState { get; set; }
@@ -143,14 +107,14 @@
         LearningWorldP.OnUndoRedoPerformed += async () => await InvokeAsync(StateHasChanged);
     }
 
-    private void AddNewLearningSpace()
+    internal void AddNewLearningSpace()
     {
-        LearningWorldP.AddNewLearningSpace();
+        throw new NotImplementedException("Open correct view component in sidebar (needs view model controlling state)");
     }
     
     private void AddNewPathWayCondition()
     {
-        LearningWorldP.AddNewPathWayCondition();
+        LearningWorldP.CreatePathWayCondition();
     }
 
     private void DeleteSelectedLearningObject()
@@ -200,46 +164,11 @@
         }
     }
 
-    private void OnCreateSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        LearningWorldP.OnCreateSpaceDialogClose(returnValueTuple);
-        InvokeAsync(StateHasChanged);
-    }
-    
-    private void OnCreatePathWayConditionDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        LearningWorldP.OnCreatePathWayConditionDialogClose(returnValueTuple);
-        InvokeAsync(StateHasChanged);
-    }
-
-    private void EditLearningObject()
-    {
-        LearningWorldP.OpenEditSelectedObjectDialog();
-    }
-    
-    private void OnEditPathWayConditionDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        LearningWorldP.OnEditPathWayConditionDialogClose(returnValueTuple);
-        InvokeAsync(StateHasChanged);
-    }
-
-    private void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        LearningWorldP.OnEditSpaceDialogClose(returnValueTuple);
-        InvokeAsync(StateHasChanged);
-    }
-
     public void TriggerStateHasChanged()
     {
         InvokeAsync(StateHasChanged);
     }
 
-    private void ErrorDialogOnClose(ModalDialogOnCloseResult _)
-    {
-        ErrorState = null;
-        TriggerStateHasChanged();
-    }
-    
     private void OnLearningWorldViewModelPropertyChanged(object? sender, PropertyChangedEventArgs args)
     {
         TriggerStateHasChanged();
@@ -261,4 +190,10 @@
             LearningWorldP.LearningWorldVm.PropertyChanged -= OnLearningWorldViewModelPropertyChanged;
         }
     }
+
+    private void EditLearningObject()
+    {
+        throw new NotImplementedException();
+    }
+
 }

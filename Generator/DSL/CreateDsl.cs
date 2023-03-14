@@ -3,13 +3,14 @@ using System.Text.Json;
 using Generator.WorldExport;
 using Microsoft.Extensions.Logging;
 using PersistEntities;
+using PersistEntities.LearningContent;
 using Shared.Extensions;
 
 namespace Generator.DSL;
 
 public class CreateDsl : ICreateDsl
 {
-    public List<LearningElementPe> ListLearningElementsWithContents;
+    public List<LearningElementPe> ElementsWithFileContent;
     public List<LearningSpacePe> ListLearningSpaces;
     public LearningWorldJson LearningWorldJson;
     public string Uuid;
@@ -39,7 +40,7 @@ public class CreateDsl : ICreateDsl
 
     private void Initialize()
     {
-        ListLearningElementsWithContents = new List<LearningElementPe>();
+        ElementsWithFileContent = new List<LearningElementPe>();
         ListLearningSpaces = new List<LearningSpacePe>();
         _listLearningSpaceContent = new List<int>();
         _booleanAlgebraRequirements = "";
@@ -147,20 +148,22 @@ public class CreateDsl : ICreateDsl
         _currentConditionDirectSpaces = _currentConditionDirectSpaces.Substring(0, _currentConditionDirectSpaces.LastIndexOf(")", StringComparison.Ordinal)+1);
         return _currentConditionDirectSpaces;
     }
-    
+
     /// <summary>
     /// Reads the LearningWorld Entity and creates an DSL Document with the given information.
     /// </summary>
-    /// <param name="learningWorld"></param> Information about the learningWorld, topics, spaces and elements
+    /// <param name="learningWorld">The learning world to be written to the DSL document</param>
+    /// <exception cref="ArgumentOutOfRangeException">The world contains an element whos content type is not supported.</exception>
+    /// Information about the learningWorld, topics, spaces and elements
     public string WriteLearningWorld(LearningWorldPe learningWorld)
     {
         Initialize();
         //Starting ID for LearningSpaces
-        int learningSpaceIdForDictionary = 1;
+        var learningSpaceIdForDictionary = 1;
         
         // Starting Value for Learning Space Ids & Learning Element Ids in the DSL-Document
-        int learningSpaceId = 1;
-        int learningSpaceElementId = 1;
+        var learningSpaceId = 1;
+        var learningSpaceElementId = 1;
         
         //Initialise learningWorldJson with empty values, will be filled with information later in the method.
         LearningWorldJson = new LearningWorldJson(Uuid, new IdentifierJson("name", learningWorld.Name), new List<int>(),
@@ -187,46 +190,46 @@ public class CreateDsl : ICreateDsl
             _booleanAlgebraRequirements = "";
             _currentConditionDirectSpaces = "";
             
-            IdentifierJson learningSpaceIdentifier = new IdentifierJson("name", learningSpace.Name);
+            var learningSpaceIdentifier = new IdentifierJson("name", learningSpace.Name);
             
             //Searching for Learning Elements in each Space
             foreach (var element in learningSpace.LearningSpaceLayout.ContainedLearningElements)
             {
-                string elementCategory;
-                switch (element.LearningContent.Type)
+                var elementType = element.LearningContent switch
                 {
-                    case "png" or "jpg" or "bmp" or "webp":
-                        elementCategory = "image";
-                        break;
-                    case "url":
-                        elementCategory = "video";
-                        break;
-                    case "txt" or "c" or "h" or "cpp" or "cc" or "c++" or "py" or "js" or "php" or "html" or "css":
-                        elementCategory = "text";
-                        break;
-                    case "h5p":
-                        elementCategory = "h5p";
-                        break;
-                    case "pdf":
-                        elementCategory = "pdf";
-                        break;
-                    default:
-                        throw new ArgumentException("The given LearningContent Type is not supported - in CreateDsl.");
-                }
+                    FileContentPe fileContent => fileContent.Type,
+                    LinkContentPe => "link",
+                    _ => throw new ArgumentOutOfRangeException()
+                };
+                var elementCategory = element.LearningContent switch
+                {
+                    FileContentPe { Type: "png" or "jpg" or "bmp" or "webp" } => "image",
+                    FileContentPe
+                    {
+                        Type: "txt" or "c" or "h" or "cpp" or "cc" or "c++" or "py" or
+                        "js" or "php" or "html" or "css"
+                    } => "text",
+                    FileContentPe { Type: "h5p" } => "h5p",
+                    FileContentPe { Type: "pdf" } => "pdf",
+                    LinkContentPe => "video",
+                    _ => throw new ArgumentException("The given LearningContent Type is not supported - in CreateDsl."),
+                };
+                var url = element.LearningContent is LinkContentPe link ? link.Link : "";
                 
-                IdentifierJson learningElementIdentifier = new IdentifierJson("FileName", element.Name);
+                
+                var learningElementIdentifier = new IdentifierJson("FileName", element.Name);
                 List<LearningElementValueJson> learningElementValueList = new List<LearningElementValueJson>();
-                LearningElementValueJson learningElementValueJson = new LearningElementValueJson("Points", element.Points.ToString());
+                var learningElementValueJson = new LearningElementValueJson("Points", element.Points.ToString());
                 learningElementValueList.Add(learningElementValueJson);
 
-                LearningElementJson learningElementJson = new LearningElementJson(learningSpaceElementId,
-                    learningElementIdentifier, element.Url, elementCategory, element.LearningContent.Type, 
+                var learningElementJson = new LearningElementJson(learningSpaceElementId,
+                    learningElementIdentifier, url, elementCategory, elementType, 
                     learningSpaceId, learningElementValueList, element.Description, element.Goals);
 
                 // Add Elements that have Content to the List, they will be copied at the end of the method.
-                if (element.LearningContent.Type != "url")
+                if (element.LearningContent is not LinkContentPe)
                 {
-                    ListLearningElementsWithContents.Add(element);
+                    ElementsWithFileContent.Add(element);
                 }
                 
                 //int elementIndex = ListLearningElementsWithContents.IndexOf(element) + 1;
@@ -269,7 +272,7 @@ public class CreateDsl : ICreateDsl
         // Create DocumentRoot & JSON Document
         // And add the learningWorldJson to the DocumentRoot
         // The structure of the DSL needs DocumentRoot, because the learningWorld has its own tag
-        DocumentRootJson rootJson = new DocumentRootJson(LearningWorldJson);
+        var rootJson = new DocumentRootJson(LearningWorldJson);
 
         var options = new JsonSerializerOptions { WriteIndented = true,  PropertyNamingPolicy = JsonNamingPolicy.CamelCase};
         var jsonFile = JsonSerializer.Serialize(rootJson,options);
@@ -284,17 +287,19 @@ public class CreateDsl : ICreateDsl
             _fileSystem.Directory.Delete(_xmlFilesForExportPath, true);
         }
         
-        BackupFileGenerator createFolders = new BackupFileGenerator(_fileSystem);
+        var createFolders = new BackupFileGenerator(_fileSystem);
         createFolders.CreateBackupFolders();
         
         //All LearningElements are created at the specified location = Easier access to files in further Export-Operations.
         //After the files are added to the Backup-Structure, these Files will be deleted.
-        foreach (var learningElement in ListLearningElementsWithContents)
+        foreach (var learningElement in ElementsWithFileContent)
         {
             try
             {
-                _fileSystem.File.Copy(learningElement.LearningContent.Filepath,
-                    _fileSystem.Path.Join("XMLFilesForExport", $"{learningElement.Name}.{learningElement.LearningContent.Type}"));
+                //we know that all elements in this list have a FileContent, so we can safely cast it. - n.stich
+                var castedFileContent = (FileContentPe)learningElement.LearningContent;
+                _fileSystem.File.Copy(castedFileContent.Filepath,
+                    _fileSystem.Path.Join("XMLFilesForExport", $"{learningElement.Name}.{castedFileContent.Type}"));
             }
             catch (Exception)
             {

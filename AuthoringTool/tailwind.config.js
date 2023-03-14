@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 const colors = require("tailwindcss/colors");
 module.exports = {
+    important: true,
     content: ["../**/*.razor", "../**/*.cshtml", "../**/*.html"],
     theme: {
         extend: {

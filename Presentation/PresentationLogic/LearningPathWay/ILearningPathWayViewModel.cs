@@ -1,5 +1,3 @@
-using Presentation.PresentationLogic.LearningSpace;
-
 namespace Presentation.PresentationLogic.LearningPathway;
 
 public interface ILearningPathWayViewModel : ISelectableObjectInWorldViewModel

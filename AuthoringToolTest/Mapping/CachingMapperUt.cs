@@ -4,6 +4,7 @@ using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Commands;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
@@ -208,7 +209,7 @@ switch (entity, viewModel)
         MapLearningSpaceEntityToViewModel_ChangedLayoutWithElementWithIndexBiggerThanTheOldLearningElementsArray_MapsCorrectly()
     {
         var spaceEntity = new LearningSpace("n", "s", "a", "d", "g", 5, new LearningSpaceLayout(new ILearningElement?[4], FloorPlanEnum.Rectangle2X2));
-        var elementEntity = new LearningElement("n", "s", new LearningContent("n", "t", "f"), "u", "a", "d", "g", LearningElementDifficultyEnum.Easy, spaceEntity);
+        var elementEntity = new LearningElement("n", "s", new FileContent("n", "t", "f"), "a", "d", "g", LearningElementDifficultyEnum.Easy, spaceEntity);
         spaceEntity.LearningSpaceLayout.LearningElements[3] = elementEntity;
         
         var systemUnderTest = CreateTestableCachingMapper();
@@ -267,7 +268,7 @@ switch (entity, viewModel)
     {
         var space = new LearningSpace("n", "s", "a", "d", "g", 5, new LearningSpaceLayout(new ILearningElement[6], FloorPlanEnum.Rectangle2X3));
         var spaceViewModel = new LearningSpaceViewModel("x","x","x","x","x",5);
-        var elementEntity = new LearningElement("n", "s", null!,"u","a", "d", "g", LearningElementDifficultyEnum.Easy);
+        var elementEntity = new LearningElement("n", "s", null!,"a", "d", "g", LearningElementDifficultyEnum.Easy);
         space.LearningSpaceLayout.LearningElements[0] = elementEntity;
         
         var systemUnderTest = CreateTestableCachingMapper();
@@ -280,7 +281,6 @@ switch (entity, viewModel)
             Assert.That(spaceViewModel.ContainedLearningElements.First().Id, Is.EqualTo(elementEntity.Id));
             Assert.That(spaceViewModel.ContainedLearningElements.First().Name, Is.EqualTo(elementEntity.Name));
             Assert.That(spaceViewModel.ContainedLearningElements.First().Shortname, Is.EqualTo(elementEntity.Shortname));
-            Assert.That(spaceViewModel.ContainedLearningElements.First().Url, Is.EqualTo(elementEntity.Url));
             Assert.That(spaceViewModel.ContainedLearningElements.First().Authors, Is.EqualTo(elementEntity.Authors));
             Assert.That(spaceViewModel.ContainedLearningElements.First().Description, Is.EqualTo(elementEntity.Description));
             Assert.That(spaceViewModel.ContainedLearningElements.First().Goals, Is.EqualTo(elementEntity.Goals));
@@ -296,7 +296,7 @@ switch (entity, viewModel)
         var spaceViewModel = new LearningSpaceViewModel("x", "x", "x", "x", "x", 5,
             new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         var elementEntity =
-            new LearningElement("n", "s", null!, "u", "a", "d", "g", LearningElementDifficultyEnum.Easy);
+            new LearningElement("n", "s", null!, "a", "d", "g", LearningElementDifficultyEnum.Easy);
         space.LearningSpaceLayout.LearningElements[0] = elementEntity;
         
         var systemUnderTest = CreateTestableCachingMapper();
@@ -331,8 +331,8 @@ switch (entity, viewModel)
         var workspace = new AuthoringToolWorkspace(worldEntity, new List<LearningWorld>(){worldEntity});
         var workspaceViewModel = new AuthoringToolWorkspaceViewModel();
         var spaceEntity = new LearningSpace("n", "s", "a", "d", "g", 5, new LearningSpaceLayout(new ILearningElement?[6], FloorPlanEnum.Rectangle2X3));
-        var elementEntity = new LearningElement("n", "s", null!,"u","a", "d", "g", LearningElementDifficultyEnum.Easy);
-        var secondElementEntity = new LearningElement("n2", "s2", null!,"u2","a2", "d2", "g2", LearningElementDifficultyEnum.Easy);
+        var elementEntity = new LearningElement("n", "s", null!,"a", "d", "g", LearningElementDifficultyEnum.Easy);
+        var secondElementEntity = new LearningElement("n2", "s2", null!,"a2", "d2", "g2", LearningElementDifficultyEnum.Easy);
         
         var mockCommandStateManager = Substitute.For<ICommandStateManager>();
         var systemUnderTest = CreateTestableCachingMapper(commandStateManager: mockCommandStateManager);
@@ -369,8 +369,8 @@ switch (entity, viewModel)
     [Test]
     public void MapSomethingOtherThanWorkspaceOrWorldOrSpace_DoesNotCache()
     {
-        var elementEntity = new LearningElement("n", "s", null!,"u","a", "d", "g", LearningElementDifficultyEnum.Easy);
-        var elementViewModel = new LearningElementViewModel("x","x",null!,"x","x","x","x",LearningElementDifficultyEnum.Easy);
+        var elementEntity = new LearningElement("n", "s", null!,"a", "d", "g", LearningElementDifficultyEnum.Easy);
+        var elementViewModel = new LearningElementViewModel("x","x",null!,"x","x","x",LearningElementDifficultyEnum.Easy);
         
         var systemUnderTest = CreateTestableCachingMapper();
 
@@ -381,8 +381,8 @@ switch (entity, viewModel)
     
     [Test]
     public void MapSomethingOtherThanWorkspaceOrWorldOrSpace_CallsMapper(){
-        var elementEntity = new LearningElement("n", "s", null!,"u","a", "d", "g", LearningElementDifficultyEnum.Easy);
-        var elementViewModel = new LearningElementViewModel("x","x",null!,"x","x","x","x",LearningElementDifficultyEnum.Easy);
+        var elementEntity = new LearningElement("n", "s", null!,"a", "d", "g", LearningElementDifficultyEnum.Easy);
+        var elementViewModel = new LearningElementViewModel("x","x",null!,"x","x","x",LearningElementDifficultyEnum.Easy);
         var mapper = Substitute.For<IMapper>();
         var systemUnderTest = CreateTestableCachingMapper(mapper);
 

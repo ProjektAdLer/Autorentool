@@ -4,8 +4,6 @@ using JetBrains.Annotations;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
-using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
-using Shared;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 

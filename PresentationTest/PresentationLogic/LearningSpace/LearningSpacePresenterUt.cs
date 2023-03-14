@@ -5,7 +5,6 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components;
-using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
@@ -46,70 +45,6 @@ public class LearningSpacePresenterUt
 
     #endregion
 
-    #region OnEditSpaceDialogClose
-
-    [Test]
-    public void OnEditSpaceDialogClose_CallsPresentationLogic()
-    {
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        IDictionary<string, string> dictionary = new Dictionary<string, string>();
-        dictionary["Name"] = "a";
-        dictionary["Shortname"] = "b";
-        dictionary["Authors"] = "e";
-        dictionary["Description"] = "f";
-        dictionary["Goals"] = "g";
-        dictionary["Required Points"] = "5";
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningSpace(space);
-        
-        systemUnderTest.OnEditSpaceDialogClose(returnValueTuple);
-        
-        presentationLogic.Received().EditLearningSpace(space, "a","b","e","f","g", 5);
-    }
-    
-    [Test]
-    public void OnEditSpaceDialogClose_ThrowsWhenDialogDataAreNull()
-    {
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue);
-
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(space);
-
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditSpaceDialogClose(returnValueTuple));
-        Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
-    }
-    
-    [Test]
-    public void OnEditSpaceDialogClose_ThrowsWhenSpaceIsNull()
-    {
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        IDictionary<string, string> dictionary = new Dictionary<string, string>();
-        dictionary["Name"] = "a";
-        dictionary["Shortname"] = "b";
-        dictionary["Authors"] = "e";
-        dictionary["Description"] = "f";
-        dictionary["Goals"] = "g";
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
-
-        var systemUnderTest = CreatePresenterForTesting();
-
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditSpaceDialogClose(returnValueTuple));
-        Assert.That(ex!.Message, Is.EqualTo("LearningSpaceVm is null"));
-    }
-
-    #endregion
-
     #endregion
 
     #region LearningElement
@@ -117,7 +52,7 @@ public class LearningSpacePresenterUt
     [Test]
     public void AddLearningElement_SelectedLearningSpaceIsNull_ThrowsException()
     {
-        var element = new LearningElementViewModel("foo", "bar", null!, "url","foo",
+        var element = new LearningElementViewModel("foo", "bar", null!,"foo",
             "wa", "bar", LearningElementDifficultyEnum.Hard);
 
         var systemUnderTest = CreatePresenterForTesting();
@@ -130,8 +65,8 @@ public class LearningSpacePresenterUt
     public void AddLearningElement_CallsPresentationLogic()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var content = new LearningContentViewModel("bar", "foo", "");
-        var element = new LearningElementViewModel("f", "f", content, "url","f", "f", "f", LearningElementDifficultyEnum.Easy, space);
+        var content = new FileContentViewModel("bar", "foo", "");
+        var element = new LearningElementViewModel("f", "f", content,"f", "f", "f", LearningElementDifficultyEnum.Easy, space);
         space.LearningSpaceLayout.PutElement(0, element);
         space.SelectedLearningElement = element;
 
@@ -148,7 +83,7 @@ public class LearningSpacePresenterUt
     [Test]
     public void DragLearningElement_CallsPresentationLogic()
     {
-        var element = new LearningElementViewModel("g", "g", null!, "g", "g", "g", "g", LearningElementDifficultyEnum.Easy);
+        var element = new LearningElementViewModel("g", "g", null!, "g", "g", "g", LearningElementDifficultyEnum.Easy);
         double oldPositionX = 5;
         double oldPositionY = 7;
         var presentationLogic = Substitute.For<IPresentationLogic>();
@@ -159,652 +94,17 @@ public class LearningSpacePresenterUt
         presentationLogic.Received().DragLearningElement(element, oldPositionX, oldPositionY);
     }
 
-    #region CreateNewLearningElement
-
-    [Test]
-    public void AddNewLearningElement_SetsFieldToTrue()
-    {
-        var systemUnderTest = CreatePresenterForTesting();
-        
-        Assert.That(!systemUnderTest.CreateLearningElementDialogOpen);
-        
-        systemUnderTest.AddNewLearningElement();
-        
-        Assert.That(systemUnderTest.CreateLearningElementDialogOpen);
-    }
     
     [Test]
     public void SetSelectedLearningElement_SelectedLearningSpaceIsNull_ThrowsException()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        var element = new LearningElementViewModel("foo", "bar", null!, "url","bar", "foo", "bar", LearningElementDifficultyEnum.Easy, null, 6);
+        var element = new LearningElementViewModel("foo", "bar", null!,"bar", "foo", "bar", LearningElementDifficultyEnum.Easy, null, 6);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetSelectedLearningElement(element));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
     }
 
-    [Test]
-    public void CreateLearningElementWithPreloadedContent_SetsFieldToTrue()
-    {
-        var learningContent = new LearningContentViewModel("n", "t", "");
-        var systemUnderTest = CreatePresenterForTesting();
-        
-        Assert.That(systemUnderTest.CreateLearningElementDialogOpen, Is.False);
-        
-        systemUnderTest.CreateLearningElementWithPreloadedContent(learningContent);
-        
-        Assert.That(systemUnderTest.CreateLearningElementDialogOpen, Is.True);
-        
-    }
-
-    #endregion
-
-    #region OnCreateElementDialogClose
-
-    [Test]
-    public void OnCreateElementDialogClose_ThrowsWhenDialogDataAreNull()
-    {
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue);
-
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(space);
-
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnCreateElementDialogClose(returnValueTuple));
-        Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
-    }
-    
-    [Test]
-    public void OnCreateElementDialogClose_ThrowsWhenSelectedSpaceNull()
-    {
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        IDictionary<string, string> dictionary = new Dictionary<string, string>();
-        dictionary["Name"] = "a";
-        dictionary["Shortname"] = "b";
-        dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
-        dictionary["Content"] = ContentTypeEnum.Image.ToString();
-        dictionary["Authors"] = "e";
-        dictionary["Description"] = "f";
-        dictionary["Goals"] = "g";
-        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
-        dictionary["Workload (min)"] = "3";
-        dictionary["Points"] = "4";
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
-
-        var systemUnderTest = CreatePresenterForTesting();
-
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnCreateElementDialogClose(returnValueTuple));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
-    }
-    
-    [Test]
-    public void OnCreateElementDialogClose_CallsPresentationLogic_WithImage()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var element = new LearningElementViewModel("a", "b", null!, "url","c", "d", "e", LearningElementDifficultyEnum.Easy);
-        space.LearningSpaceLayout.PutElement(0, element);
-
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        IDictionary<string, string> dictionary = new Dictionary<string, string>();
-        dictionary["Name"] = "a";
-        dictionary["Shortname"] = "b";
-        dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
-        dictionary["Content"] = ContentTypeEnum.Image.ToString();
-        dictionary["Url"] = "url";
-        dictionary["Authors"] = "e";
-        dictionary["Description"] = "f";
-        dictionary["Goals"] = "g";
-        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
-        dictionary["Workload (min)"] = "3";
-        dictionary["Points"] = "4";
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningSpace(space);
-        systemUnderTest.AddNewLearningElement(1);
-
-        systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
-
-        presentationLogic.Received().CreateLearningElement(space,1, "a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Image, null!, "url", "e", "f", "g", LearningElementDifficultyEnum.Easy,3,4, Arg.Any<double>(), Arg.Any<double>());
-    }
-    
-    [Test]
-    public void OnCreateElementDialogClose_CallsPresentationLogic_WithPdf()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var element = new LearningElementViewModel("a", "b", null!, "url","c", "d", "e", LearningElementDifficultyEnum.Easy);
-        space.LearningSpaceLayout.PutElement(0, element);
-
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        IDictionary<string, string> dictionary = new Dictionary<string, string>();
-        dictionary["Name"] = "a";
-        dictionary["Shortname"] = "b";
-        dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
-        dictionary["Content"] = ContentTypeEnum.PDF.ToString();
-        dictionary["Url"] = "url";
-        dictionary["Authors"] = "e";
-        dictionary["Description"] = "f";
-        dictionary["Goals"] = "g";
-        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
-        dictionary["Workload (min)"] = "3";
-        dictionary["Points"] = "4";
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningSpace(space);
-        systemUnderTest.AddNewLearningElement(1);
-
-        systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
-
-        presentationLogic.Received().CreateLearningElement(space,1, "a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.PDF, null!, "url", "e", "f", "g", LearningElementDifficultyEnum.Easy,3,4, Arg.Any<double>(), Arg.Any<double>());
-    }
-    
-    [Test]
-    public void OnCreateElementDialogClose_CallsPresentationLogic_DragAndDropContent()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var content = new LearningContentViewModel("a", "b", "");
-        var element = new LearningElementViewModel("a", "b", null!, "url","c", "d", "e", LearningElementDifficultyEnum.Easy);
-        space.LearningSpaceLayout.PutElement(0, element);
-
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        IDictionary<string, string> dictionary = new Dictionary<string, string>();
-        dictionary["Name"] = "a";
-        dictionary["Shortname"] = "b";
-        dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
-        dictionary["Content"] = ContentTypeEnum.PDF.ToString();
-        dictionary["Url"] = "url";
-        dictionary["Authors"] = "d";
-        dictionary["Description"] = "e";
-        dictionary["Goals"] = "f";
-        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
-        dictionary["Workload (min)"] = "2";
-        dictionary["Points"] = "4";
-        var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningSpace(space);
-        systemUnderTest.CreateLearningElementWithPreloadedContent(content);
-        systemUnderTest.AddNewLearningElement(1);
-
-        systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
-
-        presentationLogic.Received().CreateLearningElement(space, 1, "a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.PDF, content, "url","d", "e", "f",LearningElementDifficultyEnum.Easy,2,4, Arg.Any<double>(), Arg.Any<double>());
-    }
-
-    [Test]
-    public void OnCreateElementDialogClose_ThrowsCouldntParseElementType()
-    {
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        IDictionary<string, string> dictionary = new Dictionary<string, string>();
-        dictionary["Name"] = "a";
-        dictionary["Shortname"] = "b";
-        dictionary["Type"] = "Transfers";
-        dictionary["Content"] = ContentTypeEnum.Image.ToString();
-        dictionary["Authors"] = "e";
-        dictionary["Description"] = "f";
-        dictionary["Goals"] = "g";
-        dictionary["Difficulty"] = LearningElementDifficultyEnum.Medium.ToString();
-        dictionary["Workload (min)"] = "7";
-        dictionary["Points"] = "4";
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
-
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(space);
-        
-        var ex = Assert.Throws<ApplicationException>(() =>
-            systemUnderTest.OnCreateElementDialogClose(returnValueTuple));
-        Assert.That(ex!.Message, Is.EqualTo("Couldn't parse returned element type"));
-    }
-    
-    [Test]
-    public void OnCreateElementDialogClose_ThrowsCouldntParseContentType()
-    {
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        IDictionary<string, string> dictionary = new Dictionary<string, string>();
-        dictionary["Name"] = "a";
-        dictionary["Shortname"] = "b";
-        dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
-        dictionary["Content"] = "Images";
-        dictionary["Authors"] = "e";
-        dictionary["Description"] = "f";
-        dictionary["Goals"] = "g";
-        dictionary["Difficulty"] = LearningElementDifficultyEnum.Medium.ToString();
-        dictionary["Workload (min)"] = "7";
-        dictionary["Points"] = "4";
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
-
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(space);
-        
-        var ex = Assert.Throws<ApplicationException>(() =>
-            systemUnderTest.OnCreateElementDialogClose(returnValueTuple));
-        Assert.That(ex!.Message, Is.EqualTo("Couldn't parse returned content type"));
-    }
-    
-    [Test]
-    public void OnCreateElementDialogClose_NoDifficultySpecified_SetsDifficultyToNone()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-        
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        IDictionary<string, string> dictionary = new Dictionary<string, string>();
-        dictionary["Name"] = "a";
-        dictionary["Shortname"] = "b";
-        dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
-        dictionary["Content"] = ContentTypeEnum.Image.ToString();
-        dictionary["Url"] = "url";
-        dictionary["Authors"] = "e";
-        dictionary["Description"] = "f";
-        dictionary["Goals"] = "g";
-        dictionary["Difficulty"] = "";
-        dictionary["Workload (min)"] = "7";
-        dictionary["Points"] = "4";
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningSpace(space);
-        systemUnderTest.AddNewLearningElement(1);
-        
-        systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
-        presentationLogic.Received().CreateLearningElement(space, 1, "a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Image, null!, "url","e", "f", "g",LearningElementDifficultyEnum.None,7,4);
-
-    }
-    
-    [Test]
-    public void OnCreateElementDialogClose_CouldntParseWorkloadToInt()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var element = new LearningElementViewModel("a", "b", null!, "url","c", "d", "e", LearningElementDifficultyEnum.Easy);
-        space.LearningSpaceLayout.PutElement(0, element);
-
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        IDictionary<string, string> dictionary = new Dictionary<string, string>();
-        dictionary["Name"] = "a";
-        dictionary["Shortname"] = "b";
-        dictionary["Type"] = ElementTypeEnum.Test.ToString();
-        dictionary["Content"] = ContentTypeEnum.H5P.ToString();
-        dictionary["Url"] = "url";
-        dictionary["Authors"] = "d";
-        dictionary["Description"] = "e";
-        dictionary["Goals"] = "f";
-        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
-        dictionary["Workload (min)"] = "seven";
-        dictionary["Points"] = "4";
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningSpace(space);
-        systemUnderTest.AddNewLearningElement(1);
-
-        systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
-
-        presentationLogic.Received().CreateLearningElement(space, 1, "a", "b", ElementTypeEnum.Test, ContentTypeEnum.H5P, null!, "url","d", "e", "f",LearningElementDifficultyEnum.Easy,0,4, Arg.Any<double>(), Arg.Any<double>());
-    }
-    
-    [Test]
-    public void OnCreateElementDialogClose_NegativeWorkloadToZero()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var element = new LearningElementViewModel("a", "b", null!, "url","c", "d", "e", LearningElementDifficultyEnum.Easy);
-        space.LearningSpaceLayout.PutElement(0, element);
-
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        IDictionary<string, string> dictionary = new Dictionary<string, string>();
-        dictionary["Name"] = "a";
-        dictionary["Shortname"] = "b";
-        dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
-        dictionary["Content"] = ContentTypeEnum.Text.ToString();
-        dictionary["Url"] = "url";
-        dictionary["Authors"] = "d";
-        dictionary["Description"] = "e";
-        dictionary["Goals"] = "f";
-        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
-        dictionary["Workload (min)"] = "-4";
-        dictionary["Points"] = "4";
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningSpace(space);
-        systemUnderTest.AddNewLearningElement(1);
-
-        systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
-
-        presentationLogic.Received().CreateLearningElement(space, 1, "a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.Text, null!, "url","d", "e", "f",LearningElementDifficultyEnum.Easy,0,4, Arg.Any<double>(), Arg.Any<double>());
-    }
-    
-    [Test]
-    public void OnCreateElementDialogClose_CouldntParsePointsToInt()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var element = new LearningElementViewModel("a", "b", null!, "url","c", "d", "e", LearningElementDifficultyEnum.Easy);
-        space.LearningSpaceLayout.PutElement(0, element);
-
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        IDictionary<string, string> dictionary = new Dictionary<string, string>();
-        dictionary["Name"] = "a";
-        dictionary["Shortname"] = "b";
-        dictionary["Type"] = ElementTypeEnum.Test.ToString();
-        dictionary["Content"] = ContentTypeEnum.H5P.ToString();
-        dictionary["Url"] = "url";
-        dictionary["Authors"] = "d";
-        dictionary["Description"] = "e";
-        dictionary["Goals"] = "f";
-        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
-        dictionary["Workload (min)"] = "7";
-        dictionary["Points"] = "four";
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningSpace(space);
-        systemUnderTest.AddNewLearningElement(1);
-
-        systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
-
-        presentationLogic.Received().CreateLearningElement(space, 1, "a", "b", ElementTypeEnum.Test, ContentTypeEnum.H5P, null!, "url","d", "e", "f",LearningElementDifficultyEnum.Easy,7,0, Arg.Any<double>(), Arg.Any<double>());
-    }
-    
-    [Test]
-    public void OnCreateElementDialogClose_NegativePointsToZero()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var element = new LearningElementViewModel("a", "b", null!, "url","c", "d", "e", LearningElementDifficultyEnum.Easy);
-        space.LearningSpaceLayout.PutElement(0, element);
-
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        IDictionary<string, string> dictionary = new Dictionary<string, string>();
-        dictionary["Name"] = "a";
-        dictionary["Shortname"] = "b";
-        dictionary["Type"] = ElementTypeEnum.Transfer.ToString();
-        dictionary["Content"] = ContentTypeEnum.H5P.ToString();
-        dictionary["Url"] = "url";
-        dictionary["Authors"] = "d";
-        dictionary["Description"] = "e";
-        dictionary["Goals"] = "f";
-        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
-        dictionary["Workload (min)"] = "4";
-        dictionary["Points"] = "-4";
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningSpace(space);
-        systemUnderTest.AddNewLearningElement(1);
-
-        systemUnderTest.OnCreateElementDialogClose(returnValueTuple);
-
-        presentationLogic.Received().CreateLearningElement(space, 1, "a", "b", ElementTypeEnum.Transfer, ContentTypeEnum.H5P, null!, "url","d", "e", "f",LearningElementDifficultyEnum.Easy,4,0, Arg.Any<double>(), Arg.Any<double>());
-    }
-
-    #endregion
-
-    #region OnEditElementDialogClose
-    
-    [Test]
-    public void OnEditElementDialogClose_ThrowsWhenDialogDataAreNull()
-    {
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var element = new LearningElementViewModel("foo", "bar", null!, "url","foo",
-            "wa", "bar", LearningElementDifficultyEnum.Hard);
-        space.LearningSpaceLayout.PutElement(0, element);
-
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue);
-
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(space);
-        systemUnderTest.SetSelectedLearningElement(element);
-
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.OnEditElementDialogClose(returnValueTuple));
-        Assert.That(ex!.Message, Is.EqualTo("dialog data unexpectedly null after Ok return value"));
-    }
-    
-    [Test]
-    public void OnEditElementDialogClose_CallsPresentationLogic()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var element = new LearningElementViewModel("foo", "bar", null!,"url","bar",
-            "foo", "bar", LearningElementDifficultyEnum.Easy);
-        space.LearningSpaceLayout.PutElement(0, element);
-
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        IDictionary<string, string> dictionary = new Dictionary<string, string>();
-        dictionary["Name"] = "a";
-        dictionary["Shortname"] = "b";
-        dictionary["Type"] = "c";
-        dictionary["Content"] = "d";
-        dictionary["Url"] = "Google.com";
-        dictionary["Authors"] = "e";
-        dictionary["Description"] = "f";
-        dictionary["Goals"] = "g";
-        dictionary["Difficulty"] = "Medium";
-        dictionary["Workload (min)"] = "5";
-        dictionary["Points"] = "4";
-        
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningSpace(space);
-        space.SelectedLearningElement = element;
-
-        systemUnderTest.OnEditElementDialogClose(returnValueTuple);
-
-        presentationLogic.Received().EditLearningElement(space, element, "a", "b",  "Google.com", "e", 
-            "f", "g", LearningElementDifficultyEnum.Medium, 5,4);
-    }
-
-    [Test]
-    public void OnEditElementDialogClose_TNoDifficultySpecified_SetsDifficultyToNone()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var element = new LearningElementViewModel("foo", "bar", null!, "url","foo",
-            "wa", "bar", LearningElementDifficultyEnum.Hard);
-        space.LearningSpaceLayout.PutElement(0, element);
-
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        IDictionary<string, string> dictionary = new Dictionary<string, string>();
-        dictionary["Name"] = "a";
-        dictionary["Shortname"] = "b";
-        dictionary["Url"] = "Google.com";
-        dictionary["Authors"] = "e";
-        dictionary["Description"] = "f";
-        dictionary["Goals"] = "g";
-        dictionary["Difficulty"] = "mediums";
-        dictionary["Workload (min)"] = "4";
-        dictionary["Points"] = "4";
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningSpace(space);
-        space.SelectedLearningElement = element;
-        
-        systemUnderTest.OnEditElementDialogClose(returnValueTuple);
-        presentationLogic.Received().EditLearningElement(space, element, "a", "b", "Google.com", "e", "f", "g", LearningElementDifficultyEnum.None, 4,4);
-    }
-    
-    [Test]
-    public void OnEditElementDialogClose_CouldntParseWorkloadToInt()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var element = new LearningElementViewModel("foo", "bar", null!, "url","foo",
-            "wa", "bar", LearningElementDifficultyEnum.Hard);
-        space.LearningSpaceLayout.PutElement(0, element);
-
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        IDictionary<string, string> dictionary = new Dictionary<string, string>();
-        dictionary["Name"] = "a";
-        dictionary["Shortname"] = "b";
-        dictionary["Url"] = "Google.com";
-        dictionary["Authors"] = "e";
-        dictionary["Description"] = "f";
-        dictionary["Goals"] = "g";
-        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
-        dictionary["Workload (min)"] = "five";
-        dictionary["Points"] = "4";
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningSpace(space);
-        space.SelectedLearningElement = element;
-
-        systemUnderTest.OnEditElementDialogClose(returnValueTuple);
-
-        presentationLogic.Received().EditLearningElement(space, element, "a", "b",  "Google.com", 
-            "e", "f", "g",LearningElementDifficultyEnum.Easy,0,4);
-    }
-    
-    [Test]
-    public void OnEditElementDialogClose_NegativeWorkloadToZero()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var element = new LearningElementViewModel("foo", "bar", null!, "url","foo",
-            "wa", "bar", LearningElementDifficultyEnum.Hard);
-        space.LearningSpaceLayout.PutElement(0, element);
-
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        IDictionary<string, string> dictionary = new Dictionary<string, string>();
-        dictionary["Name"] = "a";
-        dictionary["Shortname"] = "b";
-        dictionary["Url"] = "Google.com";
-        dictionary["Authors"] = "e";
-        dictionary["Description"] = "f";
-        dictionary["Goals"] = "g";
-        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
-        dictionary["Workload (min)"] = "-5";
-        dictionary["Points"] = "4";
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningSpace(space);
-        space.SelectedLearningElement = element;
-
-        systemUnderTest.OnEditElementDialogClose(returnValueTuple);
-
-        presentationLogic.Received().EditLearningElement(space, element, "a", "b",  "Google.com", "e", 
-            "f", "g",LearningElementDifficultyEnum.Easy,0,4);
-    }
-    
-    [Test]
-    public void OnEditElementDialogClose_CouldntParsePointsToInt()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var element = new LearningElementViewModel("foo", "bar", null!, "url","foo",
-            "wa", "bar", LearningElementDifficultyEnum.Hard, space);
-        space.LearningSpaceLayout.PutElement(0, element);
-
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        IDictionary<string, string> dictionary = new Dictionary<string, string>();
-        dictionary["Name"] = "a";
-        dictionary["Shortname"] = "b";
-        dictionary["Url"] = "Google.com";
-        dictionary["Authors"] = "e";
-        dictionary["Description"] = "f";
-        dictionary["Goals"] = "g";
-        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
-        dictionary["Workload (min)"] = "5";
-        dictionary["Points"] = "four";
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningSpace(space);
-        space.SelectedLearningElement = element;
-
-        systemUnderTest.OnEditElementDialogClose(returnValueTuple);
-
-        presentationLogic.Received().EditLearningElement(space, element, "a", "b",  "Google.com", "e", 
-            "f", "g",LearningElementDifficultyEnum.Easy,5,0);
-    }
-    
-    [Test]
-    public void OnEditElementDialogClose_NegativePointsToZero()
-    {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var element = new LearningElementViewModel("foo", "bar", null!, "url","foo",
-            "wa", "bar", LearningElementDifficultyEnum.Hard, space);
-        space.LearningSpaceLayout.PutElement(0, element);
-
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        IDictionary<string, string> dictionary = new Dictionary<string, string>();
-        dictionary["Name"] = "a";
-        dictionary["Shortname"] = "b";
-        dictionary["Url"] = "Google.com";
-        dictionary["Authors"] = "e";
-        dictionary["Description"] = "f";
-        dictionary["Goals"] = "g";
-        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
-        dictionary["Workload (min)"] = "5";
-        dictionary["Points"] = "-4";
-        var returnValueTuple =
-            new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
-
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.SetLearningSpace(space);
-        space.SelectedLearningElement = element;
-
-        systemUnderTest.OnEditElementDialogClose(returnValueTuple);
-
-        presentationLogic.Received().EditLearningElement(space, element, "a", "b",  "Google.com", "e", 
-            "f", "g",LearningElementDifficultyEnum.Easy,5,0);
-    }
-
-    [Test]
-    public void OnEditElementDialogClose_ElementParentIsNull_ThrowsException()
-    {
-        var modalDialogReturnValue = ModalDialogReturnValue.Ok;
-        IDictionary<string, string> dictionary = new Dictionary<string, string>();
-        dictionary["Name"] = "a";
-        dictionary["Shortname"] = "b";
-        dictionary["Authors"] = "e";
-        dictionary["Description"] = "f";
-        dictionary["Goals"] = "g";
-        dictionary["Difficulty"] = LearningElementDifficultyEnum.Easy.ToString();
-        dictionary["Workload (min)"] = "-5";
-        dictionary["Points"] = "-4";
-        var returnValueTuple = new ModalDialogOnCloseResult(modalDialogReturnValue, dictionary);
-
-        var systemUnderTest = CreatePresenterForTesting();
-        
-        var ex = Assert.Throws<Exception>(() => systemUnderTest.OnEditElementDialogClose(returnValueTuple));
-        Assert.That(ex!.Message, Is.EqualTo("Parent element is null"));
-    }
-
-    #endregion
 
     #region DeleteSelectedLearningElement
     
@@ -839,8 +139,8 @@ public class LearningSpacePresenterUt
     public void DeleteSelectedLearningElement_CallsPresentationLogic_WithElement()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var content = new LearningContentViewModel("bar", "foo", "");
-        var element = new LearningElementViewModel("f", "f", content, "url","f", "f", "f", LearningElementDifficultyEnum.Easy, space);
+        var content = new FileContentViewModel("bar", "foo", "");
+        var element = new LearningElementViewModel("f", "f", content,"f", "f", "f", LearningElementDifficultyEnum.Easy, space);
         space.LearningSpaceLayout.PutElement(0, element);
         space.SelectedLearningElement = element;
 
@@ -852,85 +152,6 @@ public class LearningSpacePresenterUt
         systemUnderTest.DeleteSelectedLearningElement();
 
         mockPresentationLogic.Received().DeleteLearningElement(space,element);
-    }
-
-    #endregion
-
-    #region OpenEditSelectedLearningElementDialog
-
-    [Test]
-    public void OpenEditSelectedLearningElementDialog_ThrowsWhenSelectedWorldNull()
-    {
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(null!);
-
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditSelectedLearningElement());
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
-    }
-
-    [Test]
-    public void OpenEditSelectedLearningElementDialog_DoesNotThrowWhenSelectedObjectNull()
-    {
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
-
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(space);
-
-        systemUnderTest.EditSelectedLearningElement();
-        Assert.Multiple(() =>
-        {
-            Assert.That(systemUnderTest.LearningSpaceVm,Is.Not.Null);
-            Assert.That(systemUnderTest.LearningSpaceVm?.SelectedLearningElement, Is.EqualTo(null));
-            Assert.That(systemUnderTest.LearningSpaceVm?.ContainedLearningElements, Is.Empty);
-            Assert.DoesNotThrow(() => systemUnderTest.DeleteSelectedLearningElement());
-        });
-    }
-
-    [Test]
-    public void OpenEditSelectedLearningElementDialog_CallsMethod_WithElement()
-    {
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var content = new LearningContentViewModel("bar", "foo", "");
-        var element = new LearningElementViewModel("n", "sn", content,"url","a", "d", "g", LearningElementDifficultyEnum.Easy,space, 3);
-        space.LearningSpaceLayout.PutElement(0, element);
-        space.SelectedLearningElement = element;
-        
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(space);
-        
-        systemUnderTest.EditSelectedLearningElement();
-        
-        Assert.Multiple(() =>
-        {
-            Assert.That(systemUnderTest.EditLearningElementDialogOpen, Is.True);
-            Assert.That(systemUnderTest.EditLearningElementDialogInitialValues, Is.Not.Null);
-        });
-        Assert.Multiple(() =>
-        {
-            Assert.That(systemUnderTest.EditLearningElementDialogInitialValues!["Name"], Is.EqualTo(element.Name));
-            Assert.That(systemUnderTest.EditLearningElementDialogInitialValues["Shortname"], Is.EqualTo(element.Shortname));
-            Assert.That(systemUnderTest.EditLearningElementDialogInitialValues["Authors"], Is.EqualTo(element.Authors));
-            Assert.That(systemUnderTest.EditLearningElementDialogInitialValues["Description"], Is.EqualTo(element.Description));
-            Assert.That(systemUnderTest.EditLearningElementDialogInitialValues["Goals"], Is.EqualTo(element.Goals));
-            Assert.That(systemUnderTest.EditLearningElementDialogInitialValues["Difficulty"], Is.EqualTo(element.Difficulty.ToString()));
-            Assert.That(systemUnderTest.EditLearningElementDialogInitialValues["Workload (min)"], Is.EqualTo(element.Workload.ToString()));
-        });
-    }
-    
-    [Test]
-    public void OpenEditSelectedLearningElementDialog_ElementParentIsNull_ThrowsException()
-    {
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var element = new LearningElementViewModel("n", "sn", null!, "url","a", "d", "g", LearningElementDifficultyEnum.Easy);
-        space.LearningSpaceLayout.PutElement(0, element);
-        space.SelectedLearningElement = element;
-
-        var systemUnderTest = CreatePresenterForTesting();
-        systemUnderTest.SetLearningSpace(space);
-        
-        var ex = Assert.Throws<Exception>(() => systemUnderTest.EditSelectedLearningElement());
-        Assert.That(ex!.Message, Is.EqualTo("Element Parent is null"));
-        
     }
 
     #endregion
@@ -964,8 +185,8 @@ public class LearningSpacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var content = new LearningContentViewModel("bar", "foo", "");
-        var element = new LearningElementViewModel("f", "f", content,"url","f",
+        var content = new FileContentViewModel("bar", "foo", "");
+        var element = new LearningElementViewModel("f", "f", content,"f",
             "f", "f", LearningElementDifficultyEnum.Easy, space);
         space.LearningSpaceLayout.PutElement(0, element);
         space.SelectedLearningElement = element;
@@ -1008,8 +229,8 @@ public class LearningSpacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var content = new LearningContentViewModel("bar", "foo", "");
-        var element = new LearningElementViewModel("f", "f", content,"url","f",
+        var content = new FileContentViewModel("bar", "foo", "");
+        var element = new LearningElementViewModel("f", "f", content,"f",
             "f", "f", LearningElementDifficultyEnum.Easy, space);
         space.LearningSpaceLayout.PutElement(0, element);
         space.SelectedLearningElement = element;
@@ -1041,7 +262,7 @@ public class LearningSpacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var element = new LearningElementViewModel("a", "b", null!, "url","d", "e", "f", LearningElementDifficultyEnum.Medium, space);
+        var element = new LearningElementViewModel("a", "b", null!,"d", "e", "f", LearningElementDifficultyEnum.Medium, space);
         space.LearningSpaceLayout.PutElement(0, element);
         
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);

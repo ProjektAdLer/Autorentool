@@ -1,4 +1,3 @@
-using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.LearningWorld;
 
 namespace Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -6,9 +5,6 @@ namespace Presentation.PresentationLogic.AuthoringToolWorkspace;
 public interface IAuthoringToolWorkspacePresenter
 {
     IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get; }
-    bool CreateLearningWorldDialogOpen { get; set; }
-    bool EditLearningWorldDialogOpen { get; set; }
-    bool SaveUnsavedChangesDialogOpen { get; set; }
     bool LearningWorldSelected { get; }
     LearningWorldViewModel? DeletedUnsavedWorld { get; set; }
     string? InformationMessageToShow { get; set; }
@@ -16,7 +12,6 @@ public interface IAuthoringToolWorkspacePresenter
 
     event Action? OnForceViewUpdate;
 
-    void AddNewLearningWorld();
     /// <summary>
     /// Sets the selected <see cref="LearningWorldViewModel"/> in the view model.
     /// </summary>
@@ -29,12 +24,6 @@ public interface IAuthoringToolWorkspacePresenter
     /// collection, if any remain.
     /// </summary>
     void DeleteSelectedLearningWorld();
-    void OpenEditSelectedLearningWorldDialog();
     Task LoadLearningWorldAsync();
     Task SaveSelectedLearningWorldAsync();
-    void OnCreateWorldDialogClose(ModalDialogOnCloseResult returnValueTuple);
-    void OnEditWorldDialogClose(ModalDialogOnCloseResult returnValueTuple);
-    Task ProcessDragAndDropResult(Tuple<string, MemoryStream> result);
-    void OnSaveWorldDialogClose(ModalDialogOnCloseResult returnValueTuple);
-    void OnSaveDeletedWorldDialogClose(ModalDialogOnCloseResult returnValueTuple);
 }

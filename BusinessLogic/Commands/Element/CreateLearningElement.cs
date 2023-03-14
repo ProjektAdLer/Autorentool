@@ -1,4 +1,5 @@
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using ElementTypeEnum = Shared.ElementTypeEnum;
 using ContentTypeEnum = Shared.ContentTypeEnum;
 using LearningElementDifficultyEnum = Shared.LearningElementDifficultyEnum;
@@ -15,20 +16,20 @@ public class CreateLearningElement : IUndoCommand
     private IMemento? _mementoSpaceLayout;
 
     public CreateLearningElement(LearningSpace parentSpace, int slotIndex, string name, string shortName,
-        ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContent learningContent, string url, 
+        ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContent learningContent, 
         string authors, string description, string goals, LearningElementDifficultyEnum difficulty, int workload, 
         int points, double positionX, double positionY, Action<LearningSpace> mappingAction)
     {
         LearningElement = elementType switch
         {
             ElementTypeEnum.Transfer => CreateNewTransferElement(name, shortName, parentSpace, contentType,
-                learningContent, url, authors, description, goals, difficulty, workload, points, positionX, positionY),
+                learningContent, authors, description, goals, difficulty, workload, points, positionX, positionY),
             ElementTypeEnum.Activation => CreateNewActivationElement(name, shortName, parentSpace, contentType,
-                learningContent, url, authors, description, goals, difficulty, workload, points, positionX, positionY),
+                learningContent, authors, description, goals, difficulty, workload, points, positionX, positionY),
             ElementTypeEnum.Interaction => CreateNewInteractionElement(name, shortName, parentSpace, contentType,
-                learningContent, url, authors, description, goals, difficulty, workload, points, positionX, positionY),
+                learningContent, authors, description, goals, difficulty, workload, points, positionX, positionY),
             ElementTypeEnum.Test => CreateNewTestElement(name, shortName, parentSpace, contentType,
-                learningContent, url, authors, description, goals, difficulty, workload, points, positionX, positionY),
+                learningContent, authors, description, goals, difficulty, workload, points, positionX, positionY),
             _ => throw new ApplicationException("no valid ElementType assigned")
         };
         ParentSpace = parentSpace;
@@ -57,18 +58,18 @@ public class CreateLearningElement : IUndoCommand
     }
 
     private LearningElement CreateNewTransferElement(string name, string shortname, LearningSpace parentSpace,
-        ContentTypeEnum contentType, LearningContent learningContent, string url, string authors, string description, string goals,
+        ContentTypeEnum contentType, LearningContent learningContent, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double posx = 0f, double posy = 0f)
     {
         LearningElement element = contentType switch
         {
-            ContentTypeEnum.Image => new ImageTransferElement(name, shortname, parentSpace, learningContent, url,
+            ContentTypeEnum.Image => new ImageTransferElement(name, shortname, parentSpace, learningContent,
                 authors, description, goals, difficulty, workload, points, posx, posy),
-            ContentTypeEnum.Video => new VideoTransferElement(name, shortname, parentSpace, learningContent, url,
+            ContentTypeEnum.Video => new VideoTransferElement(name, shortname, parentSpace, learningContent,
                 authors, description, goals, difficulty, workload, points, posx, posy),
-            ContentTypeEnum.PDF => new PdfTransferElement(name, shortname, parentSpace, learningContent, url, authors,
+            ContentTypeEnum.PDF => new PdfTransferElement(name, shortname, parentSpace, learningContent, authors,
                 description, goals, difficulty, workload, points, posx, posy),
-            ContentTypeEnum.Text => new TextTransferElement(name, shortname, parentSpace, learningContent, url, authors,
+            ContentTypeEnum.Text => new TextTransferElement(name, shortname, parentSpace, learningContent, authors,
             description, goals, difficulty, workload, points, posx, posy),
             _ => throw new ApplicationException("No Valid ContentType assigned")
         };
@@ -76,14 +77,14 @@ public class CreateLearningElement : IUndoCommand
     }
     
     private LearningElement CreateNewActivationElement(string name, string shortname, LearningSpace parentSpace,
-        ContentTypeEnum contentType, LearningContent learningContent, string url, string authors, string description, string goals,
+        ContentTypeEnum contentType, LearningContent learningContent, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double posx = 0f, double posy = 0f)
     {
         LearningElement element = contentType switch
         {
-            ContentTypeEnum.Video => new VideoActivationElement(name, shortname, parentSpace, learningContent, url,
+            ContentTypeEnum.Video => new VideoActivationElement(name, shortname, parentSpace, learningContent,
                 authors, description, goals, difficulty, workload, points, posx, posy),
-            ContentTypeEnum.H5P => new H5PActivationElement(name, shortname, parentSpace, learningContent, url, authors,
+            ContentTypeEnum.H5P => new H5PActivationElement(name, shortname, parentSpace, learningContent, authors,
                 description, goals, difficulty, workload, points, posx, posy),
             _ => throw new ApplicationException("No Valid ContentType assigned")
         };
@@ -91,12 +92,12 @@ public class CreateLearningElement : IUndoCommand
     }
     
     private LearningElement CreateNewInteractionElement(string name, string shortname, LearningSpace parentSpace,
-        ContentTypeEnum contentType, LearningContent learningContent, string url, string authors, string description, string goals,
+        ContentTypeEnum contentType, LearningContent learningContent, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double posx = 0f, double posy = 0f)
     {
         LearningElement element = contentType switch
         {
-            ContentTypeEnum.H5P => new H5PInteractionElement(name, shortname, parentSpace, learningContent, url, authors,
+            ContentTypeEnum.H5P => new H5PInteractionElement(name, shortname, parentSpace, learningContent, authors,
                 description, goals, difficulty, workload, points, posx, posy),
             _ => throw new ApplicationException("No Valid ContentType assigned")
         };
@@ -104,12 +105,12 @@ public class CreateLearningElement : IUndoCommand
     }
     
     private LearningElement CreateNewTestElement(string name, string shortname, LearningSpace parentSpace,
-        ContentTypeEnum contentType, LearningContent learningContent, string url, string authors, string description, string goals,
+        ContentTypeEnum contentType, LearningContent learningContent, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double posx = 0f, double posy = 0f)
     {
         LearningElement element = contentType switch
         {
-            ContentTypeEnum.H5P => new H5PTestElement(name, shortname, parentSpace, learningContent, url, authors,
+            ContentTypeEnum.H5P => new H5PTestElement(name, shortname, parentSpace, learningContent, authors,
                 description, goals, difficulty, workload, points, posx, posy),
             _ => throw new ApplicationException("No Valid ContentType assigned")
         };

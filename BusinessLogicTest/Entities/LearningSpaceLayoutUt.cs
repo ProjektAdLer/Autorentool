@@ -1,4 +1,5 @@
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using NUnit.Framework;
 using Shared;
 
@@ -10,11 +11,11 @@ public class LearningSpaceLayoutUt
     [Test]
     public void Constructor_InitializesAllProperties()
     {
-        var content1 = new LearningContent("a", "b", "");
-        var content2 = new LearningContent("w", "e", "");
-        var ele1 = new LearningElement("a", "b", content1, "url", "pupup", "g", "h", LearningElementDifficultyEnum.Easy,
+        var content1 = new FileContent("a", "b", "");
+        var content2 = new FileContent("w", "e", "");
+        var ele1 = new LearningElement("a", "b", content1, "pupup", "g", "h", LearningElementDifficultyEnum.Easy,
             null, 17, 6, 23);
-        var ele2 = new LearningElement("z", "zz", content2, "url", "baba", "z", "zz",
+        var ele2 = new LearningElement("z", "zz", content2, "baba", "z", "zz",
             LearningElementDifficultyEnum.Medium, null, 444, 9, double.MaxValue);
         var learningElements = new ILearningElement?[] {ele1, ele2, null, null, null, null};
         var floorPlanName = FloorPlanEnum.Rectangle2X3;
@@ -36,11 +37,11 @@ public class LearningSpaceLayoutUt
     [Test]
     public void GetRestoreMemento_RestoresCorrectMemento()
     {
-        var content1 = new LearningContent("a", "b", "");
-        var content2 = new LearningContent("w", "e", "");
-        var ele1 = new LearningElement("a", "b", content1, "url", "pupup", "g", "h", LearningElementDifficultyEnum.Easy,
+        var content1 = new FileContent("a", "b", "");
+        var content2 = new FileContent("w", "e", "");
+        var ele1 = new LearningElement("a", "b", content1, "pupup", "g", "h", LearningElementDifficultyEnum.Easy,
             null, 17, 6, 23);
-        var ele2 = new LearningElement("z", "zz", content2, "url", "baba", "z", "zz",
+        var ele2 = new LearningElement("z", "zz", content2, "baba", "z", "zz",
             LearningElementDifficultyEnum.Medium, null, 444, 9, double.MaxValue);
         var learningElements = new ILearningElement?[] {ele1, ele2, null, null, null, null};
         var floorPlanName = FloorPlanEnum.Rectangle2X3;
@@ -49,11 +50,11 @@ public class LearningSpaceLayoutUt
 
         var learningSpaceLayoutMemento = systemUnderTest.GetMemento();
 
-        var content1Changed = new LearningContent("c", "d", "");
-        var content2Changed = new LearningContent("e", "f", "");
-        var ele1Changed = new LearningElement("ab", "bc", content1Changed, "url", "pupuper", "ffg", "hgg",
+        var content1Changed = new FileContent("c", "d", "");
+        var content2Changed = new FileContent("e", "f", "");
+        var ele1Changed = new LearningElement("ab", "bc", content1Changed, "pupuper", "ffg", "hgg",
             LearningElementDifficultyEnum.Medium, null, 20, 50, 33);
-        var ele2Changed = new LearningElement("uu", "iii", content2Changed, "url", "lll", "kkk", "fff",
+        var ele2Changed = new LearningElement("uu", "iii", content2Changed, "lll", "kkk", "fff",
             LearningElementDifficultyEnum.Hard, null, 77, 40, 66);
         var learningElementsChanged = new ILearningElement?[] {null, ele1Changed, ele2Changed, null, null};
         var floorPlanNameChanged = FloorPlanEnum.LShape3L2;
@@ -89,11 +90,11 @@ public class LearningSpaceLayoutUt
     [Test]
     public void RestoreMemento_MementoIsNotLearningSpaceLayoutMemento_ThrowsException()
     {
-        var content1 = new LearningContent("a", "b", "");
-        var content2 = new LearningContent("w", "e", "");
-        var ele1 = new LearningElement("a", "b", content1, "url", "pupup", "g", "h", LearningElementDifficultyEnum.Easy,
+        var content1 = new FileContent("a", "b", "");
+        var content2 = new FileContent("w", "e", "");
+        var ele1 = new LearningElement("a", "b", content1, "pupup", "g", "h", LearningElementDifficultyEnum.Easy,
             null, 17, 6, 23);
-        var ele2 = new LearningElement("z", "zz", content2, "url", "baba", "z", "zz",
+        var ele2 = new LearningElement("z", "zz", content2, "baba", "z", "zz",
             LearningElementDifficultyEnum.Medium, null, 444, 9, double.MaxValue);
         var learningElements = new ILearningElement?[] {ele1, ele2, null, null, null, null};
         var floorPlanName = FloorPlanEnum.Rectangle2X3;

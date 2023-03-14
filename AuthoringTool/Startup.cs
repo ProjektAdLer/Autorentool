@@ -23,9 +23,6 @@ using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
-using Presentation.PresentationLogic.ModalDialog;
-using Presentation.PresentationLogic.Toolbox;
-using Presentation.View.Toolbox;
 using Shared;
 using Shared.Configuration;
 using Tailwind;
@@ -111,12 +108,6 @@ public class Startup
             (ILearningWorldPresenterOverviewInterface)p.GetService(typeof(ILearningWorldPresenter))!);
         services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
-        services.AddSingleton<ILearningSpaceViewModalDialogFactory, ModalDialogFactory>();
-        services.AddSingleton<ILearningSpaceViewModalDialogInputFieldsFactory, ModalDialogInputFieldsFactory>();
-        services.AddSingleton<ILearningWorldViewModalDialogFactory, ModalDialogFactory>();
-        services.AddSingleton<ILearningWorldViewModalDialogInputFieldsFactory, ModalDialogInputFieldsFactory>();
-        services.AddSingleton<IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory, ModalDialogInputFieldsFactory>();
-        services.AddSingleton<IAuthoringToolWorkspaceViewModalDialogFactory, ModalDialogFactory>();
         services.AddSingleton<ILearningElementDropZoneHelper, LearningElementDropZoneHelper>();
         services.AddTransient(typeof(IFormDataContainer<,>), typeof(FormDataContainer<,>));
     }
@@ -143,11 +134,6 @@ public class Startup
 
     private static void ConfigureToolbox(IServiceCollection services)
     {
-        services.AddSingleton<IAbstractToolboxRenderFragmentFactory, ToolboxRenderFragmentFactory>();
-        services.AddSingleton<IToolboxEntriesProviderModifiable, ToolboxEntriesProvider>();
-        services.AddSingleton(p => (IToolboxEntriesProvider)p.GetService(typeof(IToolboxEntriesProviderModifiable))!);
-        services.AddSingleton<IToolboxController, ToolboxController>();
-        services.AddSingleton<IToolboxResultFilter, ToolboxResultFilter>();
         services.AddSingleton(p =>
             (IAuthoringToolWorkspacePresenterToolboxInterface)p.GetService(typeof(IAuthoringToolWorkspacePresenter))!);
         services.AddSingleton(p =>

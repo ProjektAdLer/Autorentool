@@ -3,6 +3,7 @@ using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using AutoMapper;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using DataAccess.Persistence;
 using NSubstitute;
 using NUnit.Framework;
@@ -37,7 +38,7 @@ public class DataAccessUt
             Assert.That(systemUnderTest.XmlHandlerWorld, Is.EqualTo(mockFileSaveHandlerWorld));
             Assert.That(systemUnderTest.XmlHandlerSpace, Is.EqualTo(mockFileSaveHandlerSpace));
             Assert.That(systemUnderTest.XmlHandlerElement, Is.EqualTo(mockFileSaveHandlerElement));
-            Assert.That(systemUnderTest.XmlHandlerContent, Is.EqualTo(mockContentHandler));
+            Assert.That(systemUnderTest.ContentFileHandler, Is.EqualTo(mockContentHandler));
             Assert.That(systemUnderTest.FileSystem, Is.EqualTo(mockFileSystem));
         });
     }
@@ -122,8 +123,8 @@ public class DataAccessUt
         var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElementPe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerElement: mockFileSaveHandlerElement);
 
-        var learningContent = new LearningContent("a", "b", "");
-        var learningElement = new LearningElement("f","f", learningContent, "url","f",
+        var learningContent = new FileContent("a", "b", "");
+        var learningElement = new LearningElement("f","f", learningContent,"f",
             "f", "f", LearningElementDifficultyEnum.Easy);
         systemUnderTest.SaveLearningElementToFile(
             learningElement,

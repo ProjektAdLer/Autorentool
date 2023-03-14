@@ -1,7 +1,7 @@
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Entities;
-using PersistEntities;
+using BusinessLogic.Entities.LearningContent;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
@@ -58,7 +58,14 @@ public class ViewModelEntityMappingProfile : Profile
 
     private void CreateLearningContentMap()
     {
-        CreateMap<LearningContent, LearningContentViewModel>().ReverseMap();
+        CreateMap<LearningContent, LearningContentViewModel>()
+            .Include<FileContent, FileContentViewModel>()
+            .Include<LinkContent, LinkContentViewModel>()
+            .ReverseMap();
+        CreateMap<FileContent, FileContentViewModel>()
+            .ReverseMap();
+        CreateMap<LinkContent, LinkContentViewModel>()
+            .ReverseMap();
     }
 
     private void CreateInterfaceMaps()

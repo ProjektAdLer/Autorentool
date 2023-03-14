@@ -23,7 +23,7 @@ public class PathWayConditionViewModelUt
 
         var systemUnderTest =
             new PathWayConditionViewModel(condition, positionX, positionY, inBoundObjects, outBoundObjects);
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Condition, Is.EqualTo(condition));
@@ -31,11 +31,15 @@ public class PathWayConditionViewModelUt
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
             Assert.That(systemUnderTest.InBoundObjects, Is.EqualTo(inBoundObjects));
             Assert.That(systemUnderTest.OutBoundObjects, Is.EqualTo(outBoundObjects));
-            Assert.That(systemUnderTest.InputConnectionX, Is.EqualTo(positionX));
-            Assert.That(systemUnderTest.InputConnectionY, Is.EqualTo(positionY - 26));
-            Assert.That(systemUnderTest.OutputConnectionX, Is.EqualTo(positionX));
-            Assert.That(systemUnderTest.OutputConnectionY, Is.EqualTo(positionY + 26));
+            Assert.That(systemUnderTest.InputConnectionX,
+                Is.EqualTo(positionX + PathWayConditionViewModel.InputConnectionXOffset));
+            Assert.That(systemUnderTest.InputConnectionY,
+                Is.EqualTo(positionY + PathWayConditionViewModel.InputConnectionYOffset));
+            Assert.That(systemUnderTest.OutputConnectionX,
+                Is.EqualTo(positionX + PathWayConditionViewModel.OutputConnectionXOffset));
+            Assert.That(systemUnderTest.OutputConnectionY,
+                Is.EqualTo(positionY + PathWayConditionViewModel.OutputConnectionYOffset));
         });
-        
+
     }
 }

@@ -7,8 +7,6 @@ using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Shared;
-using ModalDialogOnCloseResult = Presentation.Components.ModalDialog.ModalDialogOnCloseResult;
-using ModalDialogReturnValue = Presentation.Components.ModalDialog.ModalDialogReturnValue;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
@@ -34,13 +32,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     private ILearningWorldViewModel? _learningWorldVm;
     private IObjectInPathWayViewModel? _newConditionSourceObject;
     private LearningSpaceViewModel? _newConditionTargetSpace;
-    private bool _editLearningSpaceDialogOpen;
-    private bool _editPathWayConditionDialogOpen;
-    private Dictionary<string, string>? _editSpaceDialogInitialValues;
-    private Dictionary<string, string>? _editConditionDialogInitialValues;
-    private Dictionary<string, string>? _editSpaceDialogAnnotations;
-    private bool _createLearningSpaceDialogOpen;
-    private bool _createPathWayConditionDialogOpen;
     private int _spaceCreationCounter = 0;
     private int _conditionCreationCounter = 0;
 
@@ -72,49 +63,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         }
     }
 
-
-    public bool CreatePathWayConditionDialogOpen
-    {
-        get => _createPathWayConditionDialogOpen;
-        private set => SetField(ref _createPathWayConditionDialogOpen, value);
-    }
-    
-    public bool EditLearningSpaceDialogOpen
-    {
-        get => _editLearningSpaceDialogOpen;
-        private set => SetField(ref _editLearningSpaceDialogOpen, value);
-    }
-
-    public bool EditPathWayConditionDialogOpen 
-    {
-        get => _editPathWayConditionDialogOpen;
-        private set => SetField(ref _editPathWayConditionDialogOpen, value);
-    }
-
-    public Dictionary<string, string>? EditSpaceDialogInitialValues
-    {
-        get => _editSpaceDialogInitialValues;
-        private set => SetField(ref _editSpaceDialogInitialValues, value);
-    }
-    
-    public Dictionary<string, string>? EditConditionDialogInitialValues
-    {
-        get => _editConditionDialogInitialValues;
-        private set => SetField(ref _editConditionDialogInitialValues, value);
-    }
-    
-    public Dictionary<string, string>? EditSpaceDialogAnnotations
-    {
-        get => _editSpaceDialogAnnotations;
-        private set => SetField(ref _editSpaceDialogAnnotations, value);
-    }
-
-    public bool CreateLearningSpaceDialogOpen
-    {
-        get => _createLearningSpaceDialogOpen;
-        private set => SetField(ref _createLearningSpaceDialogOpen, value);
-    }
-
     /// <inheritdoc cref="ILearningSpaceNamesProvider.SpaceNames"/>
     public IEnumerable<(Guid, string)>? SpaceNames =>
         LearningWorldVm?.LearningSpaces.Select(space => (space.Id, space.Name));
@@ -143,7 +91,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     public void EditObjectInPathWay(IObjectInPathWayViewModel obj)
     {
         SetSelectedLearningObject(obj);
-        OpenEditSelectedObjectDialog();
+        throw new NotImplementedException("Open the correct view component from sidebar (needs a view model controlling state)");
     }
 
     public void DeleteLearningSpace(ILearningSpaceViewModel obj)
@@ -180,9 +128,11 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         SetSelectedLearningObject(obj);
     }
 
-    public void DoubleClickOnLearningSpaceInWorld(IObjectInPathWayViewModel obj)
+    public void DoubleClickOnObjectInPathway(IObjectInPathWayViewModel obj)
     {
         SetSelectedLearningObject(obj);
+        if (obj is PathWayConditionViewModel pathwayCondition)
+            SwitchPathWayCondition(pathwayCondition);
         ShowSelectedLearningSpaceView();
     }
     
@@ -194,11 +144,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     public void HideRightClickMenu()
     {
         RightClickedLearningObject = null;
-    }
-
-    public void AddNewLearningSpace()
-    {
-        CreateLearningSpaceDialogOpen = true;
     }
 
     public void OnWorkspacePropertyChanged(object? caller, PropertyChangedEventArgs e)
@@ -221,27 +166,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     public void CloseLearningSpaceView()
     {
         if (LearningWorldVm != null) LearningWorldVm.ShowingLearningSpaceView = false;
-    }
-    public void OpenEditSelectedObjectDialog()
-    {
-        if (_learningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-
-        switch (_learningWorldVm.SelectedLearningObject)
-        {
-            case null:
-                return;
-            case LearningPathwayViewModel:
-                return;
-            case PathWayConditionViewModel:
-                OpenEditSelectedPathWayConditionDialog();
-                break;
-            case LearningSpaceViewModel:
-                OpenEditSelectedLearningSpaceDialog();
-                break;
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
     }
 
     #region LearningSpace
@@ -267,28 +191,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         //TODO: Return error in the command in case of failure
     }
 
-    /// <summary>
-    /// Sets the initial values for the <see cref="ModalDialog"/> with the current values from the selected LearningSpace.
-    /// </summary>
-    private void OpenEditSelectedLearningSpaceDialog()
-    {
-        var space = (LearningSpaceViewModel) LearningWorldVm?.SelectedLearningObject!;
-        //prepare dictionary property to pass to dialog
-        EditSpaceDialogInitialValues = new Dictionary<string, string>
-        {
-            {"Name", space.Name},
-            {"Shortname", space.Shortname},
-            {"Authors", space.Authors},
-            {"Description", space.Description},
-            {"Goals", space.Goals},
-            {"Required Points", space.RequiredPoints.ToString()},
-        };
-        EditSpaceDialogAnnotations = new Dictionary<string, string>
-        {
-            {"Required Points", "/" + space.Points.ToString()},
-        };
-        EditLearningSpaceDialogOpen = true;
-    }
     
     /// <inheritdoc cref="ILearningWorldPresenterToolboxInterface.AddLearningSpace"/>
     public void AddLearningSpace(ILearningSpaceViewModel learningSpace)
@@ -307,72 +209,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         await _presentationLogic.LoadLearningSpaceAsync(LearningWorldVm);
-    }
-
-    /// <summary>
-    /// Creates a learning space viewmodel with return values from the dialog.
-    /// </summary>
-    /// <param name="returnValueTuple">Return values from the dialog</param>
-    /// <returns></returns>
-    /// <exception cref="ApplicationException">Thrown if the dictionary in return values of dialog null while return value is ok</exception>
-    public void OnCreateSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
-        CreateLearningSpaceDialogOpen = false;
-
-        if (response == ModalDialogReturnValue.Cancel) return;
-        if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
-
-        foreach (var pair in data)
-        {
-            Console.Write($"{pair.Key}:{pair.Value}\n");
-        }
-
-        //required arguments
-        var name = data["Name"];
-        //optional arguments
-        var shortname = data.ContainsKey("Shortname") ? data["Shortname"] : "";
-        var description = data.ContainsKey("Description") ? data["Description"] : "";
-        var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
-        var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
-        var requiredPoints = data.ContainsKey("Required Points") && data["Required Points"] != "" && !data["Required Points"].StartsWith("e") ? int.Parse(data["Required Points"]) : 0;
-        var offset = 15 * _spaceCreationCounter;
-        _spaceCreationCounter = (_spaceCreationCounter + 1) % 10;
-        CreateNewLearningSpace(name, shortname, authors, description, goals, requiredPoints, offset, offset);
-    }
-
-    /// <summary>
-    /// Changes property values of learning space viewmodel with return values from the dialog.
-    /// </summary>
-    /// <param name="returnValueTuple">Return values from the dialog</param>
-    /// <returns></returns>
-    /// <exception cref="ApplicationException">Thrown if the dictionary in return values of dialog null while return value is ok
-    /// or if the selected learning object not a learning space</exception>
-    public void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
-        EditLearningSpaceDialogOpen = false;
-
-        if (response == ModalDialogReturnValue.Cancel) return;
-        if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
-
-        foreach (var (key, value) in data)
-        {
-            _logger.LogTrace("{Key}:{Value}\\n", key, value);
-        }
-
-        //required arguments
-        var name = data["Name"];
-        //optional arguments
-        var shortname = data.ContainsKey("Shortname") ? data["Shortname"] : "";
-        var description = data.ContainsKey("Description") ? data["Description"] : "";
-        var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
-        var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
-        var requiredPoints = data.ContainsKey("Required Points") && data["Required Points"] != "" && !data["Required Points"].StartsWith("e") ? int.Parse(data["Required Points"]) : 0;
-
-        if (LearningWorldVm == null)
-            throw new ApplicationException("LearningWorld is null");
-        _learningSpacePresenter.EditLearningSpace(name, shortname, authors, description, goals, requiredPoints);
     }
 
     /// <summary>
@@ -438,98 +274,12 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
 
     #region LearningPathWay
 
-    public void AddNewPathWayCondition()
-    {
-        CreatePathWayConditionDialogOpen = true;
-    }
-    
-    /// <summary>
-    /// Creates a pathway condition viewmodel with return values from the dialog.
-    /// </summary>
-    /// <param name="returnValueTuple">Return values from the dialog</param>
-    /// <returns></returns>
-    /// <exception cref="ApplicationException">Thrown if the dictionary in return values of dialog null while return value is ok</exception>
-    public void OnCreatePathWayConditionDialogClose(ModalDialogOnCloseResult returnValueTuple)
+    public void CreatePathWayCondition(ConditionEnum condition = ConditionEnum.Or)
     {
         if (LearningWorldVm == null)
-            throw new ApplicationException("LearningWorld is null");
-        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
-        CreatePathWayConditionDialogOpen = false;
-
-        if (response == ModalDialogReturnValue.Cancel)
-        {
-            _newConditionSourceObject = null;
-            _newConditionTargetSpace = null;
-            return;
-        }
-        if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
-
-        foreach (var pair in data)
-        {
-            Console.Write($"{pair.Key}:{pair.Value}\n");
-        }
-
-        //required arguments
-        if (Enum.TryParse(data["Condition"], out ConditionEnum condition) == false)
-            throw new ApplicationException("Condition is not a valid enum value");
-
-        if (_newConditionSourceObject != null && _newConditionTargetSpace != null)
-        {
-            _presentationLogic.CreatePathWayConditionBetweenObjects(LearningWorldVm, condition, _newConditionSourceObject, _newConditionTargetSpace);
-            _newConditionSourceObject = null;
-            _newConditionTargetSpace = null;
-            return;
-        }
-        
-        var offset = 15 * _conditionCreationCounter;
-        _conditionCreationCounter = (_conditionCreationCounter + 1) % 10;
-        _presentationLogic.CreatePathWayCondition(LearningWorldVm, condition, offset+20, offset+100);
+            throw new ApplicationException("SelectedLearningWorld is null");
+        _presentationLogic.CreatePathWayCondition(LearningWorldVm, condition, 0, 0);
     }
-
-    /// <summary>
-    /// Sets the initial values for the <see cref="ModalDialog"/> with the current values from the selected condition.
-    /// </summary>
-    private void OpenEditSelectedPathWayConditionDialog()
-    {
-        var condition = (PathWayConditionViewModel) LearningWorldVm?.SelectedLearningObject!;
-        //prepare dictionary property to pass to dialog
-        EditConditionDialogInitialValues = new Dictionary<string, string>
-        {
-            {"Condition", condition.Condition.ToString()},
-        };
-        EditPathWayConditionDialogOpen = true;
-    }
-    
-    /// <summary>
-    /// Changes property condition of pathway condition viewmodel with return value from the dialog.
-    /// </summary>
-    /// <param name="returnValueTuple">Return values from the dialog.</param>
-    /// <returns></returns>
-    /// <exception cref="ApplicationException">Thrown if the dictionary in return values of dialog null while return value is ok
-    /// or if the selected learning object not a learning space.</exception>
-    public void OnEditPathWayConditionDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("LearningWorld is null");
-        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
-        EditPathWayConditionDialogOpen = false;
-
-        if (response == ModalDialogReturnValue.Cancel) return;
-        if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
-
-        foreach (var (key, value) in data)
-        {
-            _logger.LogTrace("{Key}:{Value}\\n", key, value);
-        }
-
-        //required arguments
-        if (Enum.TryParse(data["Condition"], out ConditionEnum condition) == false)
-            throw new ApplicationException("Condition is not a valid enum value");
-        if (LearningWorldVm.SelectedLearningObject is not PathWayConditionViewModel pathWayCondition)
-            throw new ApplicationException("LearningObject is not a pathWayCondition");
-        _presentationLogic.EditPathWayCondition(pathWayCondition, condition);
-    }
-
     public void DeletePathWayCondition(PathWayConditionViewModel pathWayCondition)
     {
         if (LearningWorldVm == null)
@@ -596,7 +346,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         {
             _newConditionSourceObject = sourceObject;
             _newConditionTargetSpace = space;
-            _createPathWayConditionDialogOpen = true;
             return;
         }
         _presentationLogic.CreateLearningPathWay(LearningWorldVm, sourceObject, targetObject);

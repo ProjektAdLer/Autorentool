@@ -23,8 +23,8 @@ public class LearningSpaceViewModelUt
         var requiredPoints = 10;
         var positionX = 20;
         var positionY = 30;
-        var ele1 = new LearningElementViewModel("a", "b",  null!, "url","g", "h","i", LearningElementDifficultyEnum.Easy, null, 17,11, 23);
-        var ele2 = new LearningElementViewModel("z", "zz",  null!, "url","z","zz","zzz", LearningElementDifficultyEnum.Hard, null, 444,12, double.MaxValue);
+        var ele1 = new LearningElementViewModel("a", "b",  null!,"g", "h","i", LearningElementDifficultyEnum.Easy, null, 17,11, 23);
+        var ele2 = new LearningElementViewModel("z", "zz",  null!,"z","zz","zzz", LearningElementDifficultyEnum.Hard, null, 444,12, double.MaxValue);
         var inBoundCondition = new PathWayConditionViewModel(ConditionEnum.And, 2, 3);
         var outBoundSpace = new LearningSpaceViewModel("a", "z", "d", "b", "t", 3);
         var inBoundObjects = new List<IObjectInPathWayViewModel> { inBoundCondition };
@@ -71,9 +71,9 @@ public class LearningSpaceViewModelUt
     {
 
         var systemUnderTest = new LearningSpaceViewModel("a", "b", "c", "d", "e", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var element1 = new LearningElementViewModel("a", "b", null!, "url","c", "d", "e",
+        var element1 = new LearningElementViewModel("a", "b", null!,"c", "d", "e",
             LearningElementDifficultyEnum.Easy, systemUnderTest, 6);
-        var element2 = new LearningElementViewModel("abc", "b", null!, "url","c", "d", "e",
+        var element2 = new LearningElementViewModel("abc", "b", null!,"c", "d", "e",
             LearningElementDifficultyEnum.Easy, systemUnderTest, 14);
         
         Assert.That(systemUnderTest.Workload, Is.EqualTo(0));
@@ -93,9 +93,9 @@ public class LearningSpaceViewModelUt
     {
 
         var systemUnderTest = new LearningSpaceViewModel("a", "b", "c", "d", "e", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var element1 = new LearningElementViewModel("a", "b", null!, "url","c", "d", "e",
+        var element1 = new LearningElementViewModel("a", "b", null!,"c", "d", "e",
             LearningElementDifficultyEnum.Easy, systemUnderTest, 6,7);
-        var element2 = new LearningElementViewModel("abc", "b", null!, "url","c", "d", "e",
+        var element2 = new LearningElementViewModel("abc", "b", null!,"c", "d", "e",
             LearningElementDifficultyEnum.Easy, systemUnderTest, 14,15);
         
         Assert.That(systemUnderTest.Points, Is.EqualTo(0));

@@ -17,7 +17,7 @@ public class PathWayConditionViewModel : IObjectInPathWayViewModel
         OutBoundObjects = new Collection<IObjectInPathWayViewModel>();
         PositionX = 0;
         PositionY = 0;
-        Condition = ConditionEnum.None;
+        Condition = ConditionEnum.Or;
     }
     
     public PathWayConditionViewModel(ConditionEnum condition, double positionX = 0, double positionY = 0,
@@ -35,10 +35,14 @@ public class PathWayConditionViewModel : IObjectInPathWayViewModel
     public Guid Id { get; private set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
-    public double InputConnectionX => PositionX + 38;
-    public double InputConnectionY => PositionY - 10;
-    public double OutputConnectionX => PositionX + 38;
-    public double OutputConnectionY => PositionY + 45;
+    public const int InputConnectionXOffset = 38;
+    public const int InputConnectionYOffset = -10;
+    public const int OutputConnectionXOffset = 38;
+    public const int OutputConnectionYOffset = 45;
+    public double InputConnectionX => PositionX + InputConnectionXOffset;
+    public double InputConnectionY => PositionY + InputConnectionYOffset;
+    public double OutputConnectionX => PositionX + OutputConnectionXOffset;
+    public double OutputConnectionY => PositionY + OutputConnectionYOffset;
     public ICollection<IObjectInPathWayViewModel> InBoundObjects { get; set; }
     public ICollection<IObjectInPathWayViewModel> OutBoundObjects { get; set; }
     public ConditionEnum Condition { get; set; }

@@ -18,7 +18,7 @@ public class LoadLearningElementUt
         var testParameter = new TestParameter();
         var space = testParameter.SpaceParent;
         var element =
-            new ImageTransferElement("a", "b", space, null!, "url","a", "b",
+            new ImageTransferElement("a", "b", space, null!,"a", "b",
                 "c", LearningElementDifficultyEnum.Easy, 1, 9, 2,3);
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         const string filepath = "c:\\temp\\test";
@@ -48,7 +48,7 @@ public class LoadLearningElementUt
         var testParameter = new TestParameter();
         var space = testParameter.SpaceParent;
         var element =
-            new VideoTransferElement("a", "b", space, null!, "url","a", "b",
+            new VideoTransferElement("a", "b", space, null!,"a", "b",
                 "c", LearningElementDifficultyEnum.Easy, 1, 9,2,3);
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         const string filepath = "c:\\temp\\test";
@@ -78,7 +78,7 @@ public class LoadLearningElementUt
         var testParameter = new TestParameter();
         var space = testParameter.SpaceParent;
         var element =
-            new PdfTransferElement("a", "b", space, null!, "url","a", "b",
+            new PdfTransferElement("a", "b", space, null!,"a", "b",
                 "c", LearningElementDifficultyEnum.Easy, 1, 9, 2,3);
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         const string filepath = "c:\\temp\\test";
@@ -108,7 +108,7 @@ public class LoadLearningElementUt
         var testParameter = new TestParameter();
         var space = testParameter.SpaceParent;
         var element =
-            new TextTransferElement("a", "b", space, null!, "url","a", "b",
+            new TextTransferElement("a", "b", space, null!,"a", "b",
                 "c", LearningElementDifficultyEnum.Easy, 1, 9, 2,3);
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         const string filepath = "c:\\temp\\test";
@@ -138,7 +138,7 @@ public class LoadLearningElementUt
         var testParameter = new TestParameter();
         var space = testParameter.SpaceParent;
         var element =
-            new VideoActivationElement("a", "b", space, null!, "url","a", "b",
+            new VideoActivationElement("a", "b", space, null!,"a", "b",
                 "c", LearningElementDifficultyEnum.Easy, 1, 9, 2, 3);
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         const string filepath = "c:\\temp\\test";
@@ -168,7 +168,7 @@ public class LoadLearningElementUt
         var testParameter = new TestParameter();
         var space = testParameter.SpaceParent;
         var element =
-            new H5PActivationElement("a", "b", space, null!, "url","a", "b",
+            new H5PActivationElement("a", "b", space, null!,"a", "b",
                 "c", LearningElementDifficultyEnum.Easy, 1, 9,2,3);
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         const string filepath = "c:\\temp\\test";
@@ -198,7 +198,7 @@ public class LoadLearningElementUt
         var testParameter = new TestParameter();
         var space = testParameter.SpaceParent;
         var element =
-            new H5PInteractionElement("a", "b", space, null!, "url","a", "b",
+            new H5PInteractionElement("a", "b", space, null!,"a", "b",
                 "c", LearningElementDifficultyEnum.Easy, 1, 9, 2,3);
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         const string filepath = "c:\\temp\\test";
@@ -228,7 +228,7 @@ public class LoadLearningElementUt
         var testParameter = new TestParameter();
         var space = testParameter.SpaceParent;
         var element =
-            new H5PTestElement("a", "b", space, null!, "url","a", "b",
+            new H5PTestElement("a", "b", space, null!,"a", "b",
                 "c", LearningElementDifficultyEnum.Easy, 1, 9,2,3);
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         const string filepath = "c:\\temp\\test";
@@ -277,9 +277,9 @@ public class LoadLearningElementUt
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
         var element =
-            new LearningElement("a", "b", null!, "url","a", "b",
+            new LearningElement("a", "b", null!,"a", "b",
                 "c", LearningElementDifficultyEnum.Easy, space, 1, 9, 2,3);
-        var element2 = new LearningElement("f", "g", null!, "url","h", "i", "j",
+        var element2 = new LearningElement("f", "g", null!,"h", "i", "j",
             LearningElementDifficultyEnum.Easy, space, 5, 2, 1,5);
         mockBusinessLogic.LoadLearningElement(Arg.Any<string>()).Returns(element);
         space.LearningSpaceLayout.LearningElements = new ILearningElement?[] {element2, null, null, null, null, null};

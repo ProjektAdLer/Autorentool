@@ -4,6 +4,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using PersistEntities;
+using PersistEntities.LearningContent;
 
 namespace GeneratorTest.DSL;
 
@@ -95,15 +96,15 @@ public class CreateDslUt
     {
         //Arrange
         var mockElement1 = new LearningElementPe("Same Name Element", "el", null, "", 
-            "", "", "", PersistEntities.LearningElementDifficultyEnumPe.Easy);
+            "", "",  LearningElementDifficultyEnumPe.Easy);
         var mockElement2 = new LearningElementPe("Another Element", "el", null, "", 
-            "", "", "", PersistEntities.LearningElementDifficultyEnumPe.Easy);
+            "", "",  LearningElementDifficultyEnumPe.Easy);
         var mockElement3 = new LearningElementPe("Same Name Element", "el", null, "", 
-            "", "", "", PersistEntities.LearningElementDifficultyEnumPe.Easy);
+            "", "",  LearningElementDifficultyEnumPe.Easy);
         var mockElement4 = new LearningElementPe("Same Name Element", "el", null, "", 
-            "", "", "", PersistEntities.LearningElementDifficultyEnumPe.Easy);
+            "", "",  LearningElementDifficultyEnumPe.Easy);
         var mockElement5 = new LearningElementPe("Same Name Element", "el", null, "", 
-            "", "", "", PersistEntities.LearningElementDifficultyEnumPe.Easy);
+            "", "",  LearningElementDifficultyEnumPe.Easy);
         
         var mockLearningElements1 = new ILearningElementPe?[] {mockElement1, mockElement2};
         var mockLearningSpaceLayout1 = new LearningSpaceLayoutPe(mockLearningElements1, FloorPlanEnumPe.Rectangle2X3);
@@ -162,28 +163,33 @@ public class CreateDslUt
         const string description = "very cool element";
         const string goals = "learn very many things";
         
-        var content1 = new LearningContentPe("FileName", "h5p", "/foo/bar.txt");
-        var content2 = new LearningContentPe("FileName", "png", "/foo/bar.txt");
-        var content3 = new LearningContentPe("FileName", "url", "/foo/bar.txt");
-        var content4 = new LearningContentPe("FileName", "txt", "/foo/foo.txt");
-        var content5 = new LearningContentPe("FileName", "pdf", "/foo/foo.txt");
+        var content1 = new FileContentPe("FileName", "h5p", "/foo/bar.txt");
+        var content2 = new FileContentPe("FileName", "png", "/foo/bar.txt");
+        var content3 = new LinkContentPe("LinkName", "http://www.google.com");
+        var content4 = new FileContentPe("FileName", "txt", "/foo/foo.txt");
+        var content5 = new FileContentPe("FileName", "pdf", "/foo/foo.txt");
 
-        var ele1 = new LearningElementPe("a", "b",content1, "", "pupup", "g","h", 
+        var ele1 = new LearningElementPe("a", "b",content1, "", "pupup", "g", 
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
-        var ele2 = new LearningElementPe("b", "b",content2, "", "pupup", "g","h", 
+        var ele2 = new LearningElementPe("b", "b",content2, "", "pupup", "g", 
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
-        var ele3 = new LearningElementPe("c", "b", content3, "","pupup", "g","h", 
+        var ele3 = new LearningElementPe("c", "b", content3, "","pupup", "g", 
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
-        var ele4 = new LearningElementPe("d", "b",content4, "","pupup", "g","h", 
+        var ele4 = new LearningElementPe("d", "b",content4, "","pupup", "g", 
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
-        var ele5 = new LearningElementPe("e", "b",content5, "","pupup", "g","h", 
+        var ele5 = new LearningElementPe("e", "b",content5, "","pupup", "g", 
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
         
 
         var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
             null, 0, 0, new List<IObjectInPathWayPe>(), 
-            new List<IObjectInPathWayPe>());
-        space1.LearningSpaceLayout.LearningElements = new ILearningElementPe[] {ele1, ele2, ele3, ele4, ele5};
+            new List<IObjectInPathWayPe>())
+        {
+            LearningSpaceLayout =
+            {
+                LearningElements = new ILearningElementPe[] {ele1, ele2, ele3, ele4, ele5}
+            }
+        };
         var space2 = new LearningSpacePe("ff2", "ff", "ff", "ff", "ff", 5, 
             null, 0, 0, new List<IObjectInPathWayPe>(), new List<IObjectInPathWayPe>());
         var space3 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
@@ -206,9 +212,6 @@ public class CreateDslUt
         var learningElementsSpace1 = new List<LearningElementPe> { ele1, ele2, ele4, ele5 };
         var learningElementsSpace2 = new List<LearningElementPe>();
         
-        var learningElementsForComparison = new List<List<LearningElementPe>> {learningElementsSpace1, learningElementsSpace2};
-        
-
         //Act
         systemUnderTest.WriteLearningWorld(learningWorld);
         
@@ -222,7 +225,7 @@ public class CreateDslUt
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.LearningWorldJson!.Identifier.Value, Is.EqualTo(name));
-            Assert.That(systemUnderTest.ListLearningElementsWithContents, Is.EquivalentTo(learningElementsSpace1));
+            Assert.That(systemUnderTest.ElementsWithFileContent, Is.EquivalentTo(learningElementsSpace1));
             Assert.That(systemUnderTest.ListLearningSpaces, Is.EquivalentTo(learningSpaces));
             Assert.That(systemUnderTest.LearningWorldJson.LearningSpaces[0].Requirements,
                 Is.EqualTo(""));
@@ -250,15 +253,20 @@ public class CreateDslUt
         const string description = "very cool element";
         const string goals = "learn very many things";
         
-        var content1 = new LearningContentPe("FileName", "mp3", "/foo/bar.txt");
+        var content1 = new FileContentPe("FileName", "mp3", "/foo/bar.txt");
 
-        var ele1 = new LearningElementPe("a", "b",content1, "", "pupup", "g","h", 
+        var ele1 = new LearningElementPe("a", "b", content1, "", "pupup", "g",
             LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
 
         var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
             null, 0, 0, new List<IObjectInPathWayPe>(), 
-            new List<IObjectInPathWayPe>());
-        space1.LearningSpaceLayout.LearningElements = new ILearningElementPe[] {ele1};
+            new List<IObjectInPathWayPe>())
+        {
+            LearningSpaceLayout =
+            {
+                LearningElements = new ILearningElementPe[] {ele1}
+            }
+        };
         var learningSpaces = new List<LearningSpacePe> { space1 };
 
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals,

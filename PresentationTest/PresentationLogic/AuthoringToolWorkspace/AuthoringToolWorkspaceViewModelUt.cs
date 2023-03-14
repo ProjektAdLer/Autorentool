@@ -115,42 +115,6 @@ public class AuthoringToolWorkspaceViewModelUt
         Assert.That(handlerCalled, Is.True);
     }
     
-    [Test]
-    public void AuthoringToolWorkspaceViewModel_SetEditDialogInitialValues_SetsDictionary()
-    {
-        var dictionary = new Dictionary<string, string> { { "foo", "bar" }, { "bar", "baz" } };
-
-        IAuthoringToolWorkspaceViewModel systemUnderTest = GetViewModelForTesting();
-        Assert.That(systemUnderTest.EditDialogInitialValues, Is.Null);
-        
-        systemUnderTest.EditDialogInitialValues = dictionary;
-        
-        Assert.That(systemUnderTest.EditDialogInitialValues, Is.EqualTo(dictionary));
-    }
-
-    [Test]
-    public void AuthoringToolWorkspaceViewModel_SetEditDialogInitialValues_RaisesStateChangeEvent()
-    {
-        var dictionary = new Dictionary<string, string> { { "foo", "bar" }, { "bar", "baz" } };
-        var handlerCalled = false;
-
-        IAuthoringToolWorkspaceViewModel systemUnderTest = GetViewModelForTesting();
-
-        systemUnderTest.PropertyChanged += (caller, changedEventArgs) => {
-            if (handlerCalled) Assert.Fail("handler called twice");
-            handlerCalled = true;
-            Assert.Multiple(() =>
-            {
-                Assert.That(caller, Is.EqualTo(systemUnderTest));
-                Assert.That(changedEventArgs.PropertyName, Is.EqualTo(nameof(systemUnderTest.EditDialogInitialValues)));
-            });
-        };
-
-        systemUnderTest.EditDialogInitialValues = dictionary;
-        
-        Assert.That(handlerCalled, Is.True);
-    }
-    
     private AuthoringToolWorkspaceViewModel GetViewModelForTesting()
     {
         return new AuthoringToolWorkspaceViewModel();

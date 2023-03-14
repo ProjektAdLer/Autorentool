@@ -1,12 +1,12 @@
 using AutoMapper;
 using BusinessLogic.API;
-using BusinessLogic.Commands;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
 using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.World;
+using BusinessLogic.Entities.LearningContent;
 using ElectronWrapper;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
@@ -138,7 +138,7 @@ public class PresentationLogic : IPresentationLogic
     /// <inheritdoc cref="IPresentationLogic.SaveLearningWorldAsync"/>
     public async Task SaveLearningWorldAsync(LearningWorldViewModel learningWorldViewModel)
     {
-        SaveOrLoadElectronCheck();
+        ElectronCheck();
         var filepath = await GetSaveFilepathAsync("Save Learning World", WorldFileEnding, WorldFileFormatDescriptor);
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldViewModel);
         var command = new SaveLearningWorld(BusinessLogic, worldEntity, filepath);
@@ -149,7 +149,7 @@ public class PresentationLogic : IPresentationLogic
     /// <inheritdoc cref="IPresentationLogic.LoadLearningWorldAsync"/>
     public async Task LoadLearningWorldAsync(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm)
     {
-        SaveOrLoadElectronCheck();
+        ElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load Learning World", WorldFileEnding, WorldFileFormatDescriptor);
         var workspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
         var command = new LoadLearningWorld(workspaceEntity, filepath, BusinessLogic,
@@ -222,7 +222,7 @@ public class PresentationLogic : IPresentationLogic
     /// <inheritdoc cref="IPresentationLogic.SaveLearningSpaceAsync"/>
     public async Task SaveLearningSpaceAsync(LearningSpaceViewModel learningSpaceViewModel)
     {
-        SaveOrLoadElectronCheck();
+        ElectronCheck();
         var filepath = await GetSaveFilepathAsync("Save Learning Space", SpaceFileEnding, SpaceFileFormatDescriptor);
         var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceViewModel);
         var command = new SaveLearningSpace(BusinessLogic, spaceEntity, filepath);
@@ -232,7 +232,7 @@ public class PresentationLogic : IPresentationLogic
     /// <inheritdoc cref="IPresentationLogic.LoadLearningSpaceAsync"/>
     public async Task LoadLearningSpaceAsync(ILearningWorldViewModel learningWorldVm)
     {
-        SaveOrLoadElectronCheck();
+        ElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load Learning Space", SpaceFileEnding, SpaceFileFormatDescriptor);
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
         var command = new LoadLearningSpace(worldEntity, filepath, BusinessLogic, 
@@ -327,13 +327,12 @@ public class PresentationLogic : IPresentationLogic
         int workload, int points, double positionX = 0, double positionY = 0)
     {
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
-        var contentEntity = Mapper.Map<BusinessLogic.Entities.LearningContent>(learningContentVm);
+        var contentEntity = Mapper.Map<BusinessLogic.Entities.LearningContent.LearningContent>(learningContentVm);
         
         //TODO: temporary testing code
         
 
-        var command = new CreateLearningElement(parentSpaceEntity, slotIndex, name, shortname, elementType, contentType, contentEntity,
-            url, authors, description, goals, difficulty, workload, points, positionX, positionY, 
+        var command = new CreateLearningElement(parentSpaceEntity, slotIndex, name, shortname, elementType, contentType, contentEntity, authors, description, goals, difficulty, workload, points, positionX, positionY, 
             parent => CMapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
     } 
@@ -346,7 +345,7 @@ public class PresentationLogic : IPresentationLogic
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
 
-        var command = new EditLearningElement(elementEntity, parentSpaceEntity, name, shortname, url, authors, description,
+        var command = new EditLearningElement(elementEntity, parentSpaceEntity, name, shortname, authors, description,
             goals, difficulty, workload, points, element => CMapper.Map(element, learningElementVm));
         BusinessLogic.ExecuteCommand(command);
     }
@@ -410,7 +409,7 @@ public class PresentationLogic : IPresentationLogic
     /// <inheritdoc cref="IPresentationLogic.SaveLearningElementAsync"/>
     public async Task SaveLearningElementAsync(LearningElementViewModel learningElementViewModel)
     {
-        SaveOrLoadElectronCheck();
+        ElectronCheck();
         var filepath =
             await GetSaveFilepathAsync("Save Learning Element", ElementFileEnding, ElementFileFormatDescriptor);
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementViewModel);
@@ -421,7 +420,7 @@ public class PresentationLogic : IPresentationLogic
     /// <inheritdoc cref="IPresentationLogic.LoadLearningElementAsync"/>
     public async Task LoadLearningElementAsync(ILearningSpaceViewModel parentSpaceVm, int slotIndex)
     {
-        SaveOrLoadElectronCheck();
+        ElectronCheck();
         var filepath =
             await GetLoadFilepathAsync("Load Learning Element", ElementFileEnding, ElementFileFormatDescriptor);
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
@@ -430,23 +429,44 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     /// <inheritdoc cref="IPresentationLogic.ShowLearningElementContentAsync"/>
-    public Task ShowLearningElementContentAsync(LearningElementViewModel learningElementVm)
+    public async Task ShowLearningElementContentAsync(LearningElementViewModel learningElementVm)
     {
-        SaveOrLoadElectronCheck();
-        var filepath = learningElementVm.LearningContent.Filepath;
-        var error = ShellWrapper.OpenPathAsync(filepath).Result;
+        ElectronCheck();
+        try
+        {
+            await ShowLearningContentAsync(learningElementVm.LearningContent);
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            throw new ArgumentOutOfRangeException(nameof(learningElementVm),
+                "LearningElementViewModel.LearningContent is not of type FileContentViewModel or LinkContentViewModel");
+        }
+    }
+
+    public async Task ShowLearningContentAsync(LearningContentViewModel content)
+    {
+        ElectronCheck();
+        var error =
+            await (content switch
+            {
+                FileContentViewModel fileContentVm => ShellWrapper.OpenPathAsync(fileContentVm.Filepath),
+                LinkContentViewModel linkContentVm => ShellWrapper.OpenExternalAsync(linkContentVm.Link),
+                _ => throw new ArgumentOutOfRangeException(nameof(content),
+                    "LearningContent is not of type FileContentViewModel or LinkContentViewModel")
+            });
+        
         if (error != "")
         {
-            _logger.LogError(error);
+            _logger.LogError("Could not open file in OS viewer: {Error}", error);
         }
-        return Task.CompletedTask;
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadImageAsync"/>
     public async Task<LearningContentViewModel> LoadImageAsync()
     {
-        SaveOrLoadElectronCheck();
+        ElectronCheck();
         var fileFilter = new FileFilterProxy[] {new(" ", _imageFileEnding)};
         var filepath = await GetLoadFilepathAsync("Load image", fileFilter);
         var entity = BusinessLogic.LoadLearningContent(filepath);
@@ -456,7 +476,7 @@ public class PresentationLogic : IPresentationLogic
     /// <inheritdoc cref="IPresentationLogic.LoadVideoAsync"/>
     public async Task<LearningContentViewModel> LoadVideoAsync()
     {
-        SaveOrLoadElectronCheck();
+        ElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load video", VideoFileEnding, " ");
         var entity = BusinessLogic.LoadLearningContent(filepath);
         return Mapper.Map<LearningContentViewModel>(entity);
@@ -465,7 +485,7 @@ public class PresentationLogic : IPresentationLogic
     /// <inheritdoc cref="IPresentationLogic.LoadH5PAsync"/>
     public async Task<LearningContentViewModel> LoadH5PAsync()
     {
-        SaveOrLoadElectronCheck();
+        ElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load h5p",H5PFileEnding, " ");
         var entity = BusinessLogic.LoadLearningContent(filepath);
         return Mapper.Map<LearningContentViewModel>(entity);
@@ -474,7 +494,7 @@ public class PresentationLogic : IPresentationLogic
     /// <inheritdoc cref="IPresentationLogic.LoadPdfAsync"/>
     public async Task<LearningContentViewModel> LoadPdfAsync()
     {
-        SaveOrLoadElectronCheck();
+        ElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load pdf",PdfFileEnding, " ");
         var entity = BusinessLogic.LoadLearningContent(filepath);
         return Mapper.Map<LearningContentViewModel>(entity);
@@ -483,12 +503,24 @@ public class PresentationLogic : IPresentationLogic
     /// <inheritdoc cref="IPresentationLogic.LoadTextAsync"/>
     public async Task<LearningContentViewModel> LoadTextAsync()
     {
-        SaveOrLoadElectronCheck();
+        ElectronCheck();
         var fileFilter = new FileFilterProxy[] {new(" ", _textFileEnding)};
         var filepath = await GetLoadFilepathAsync("Load text", fileFilter);
         var entity = BusinessLogic.LoadLearningContent(filepath);
         return Mapper.Map<LearningContentViewModel>(entity);
     }
+
+    /// <inheritdoc cref="IPresentationLogic.GetAllContent"/>
+    public IEnumerable<LearningContentViewModel> GetAllContent() =>
+        BusinessLogic.GetAllContent().Select(Mapper.Map<LearningContentViewModel>);
+
+    /// <inheritdoc cref="IPresentationLogic.RemoveContent"/>
+    public void RemoveContent(LearningContentViewModel content) =>
+        BusinessLogic.RemoveContent(Mapper.Map<BusinessLogic.Entities.LearningContent.LearningContent>(content));
+
+    /// <inheritdoc cref="IPresentationLogic.SaveLink"/>
+    public void SaveLink(LinkContentViewModel linkContentVm) =>
+        BusinessLogic.SaveLink(Mapper.Map<LinkContent>(linkContentVm));
 
     public void LoadLearningWorldViewModel(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, Stream stream)
     {
@@ -516,7 +548,7 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
     
-    public LearningContentViewModel LoadLearningContentViewModel(string name, MemoryStream stream)
+    public LearningContentViewModel LoadLearningContentViewModel(string name, Stream stream)
     {
         var entity = BusinessLogic.LoadLearningContent(name, stream);
         return Mapper.Map<LearningContentViewModel>(entity);
@@ -592,7 +624,7 @@ public class PresentationLogic : IPresentationLogic
     /// <exception cref="NotImplementedException">Thrown when we are not running in Electron.</exception>
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
-    private void SaveOrLoadElectronCheck()
+    private void ElectronCheck()
     {
         if (!RunningElectron)
             throw new NotImplementedException("Browser upload/download not yet implemented");

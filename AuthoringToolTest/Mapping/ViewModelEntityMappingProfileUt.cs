@@ -2,6 +2,7 @@
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using NUnit.Framework;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
@@ -25,7 +26,6 @@ public class ViewModelEntityMappingProfileUt
     private const string Shortname = "shortname";
     private const string Authors = "authors";
     private const string Language = "language";
-    private const string Url = "google";
     private const string Description = "description";
     private const string Goals = "goals";
     private const string Type = "type";
@@ -39,7 +39,6 @@ public class ViewModelEntityMappingProfileUt
 
     private const string NewName = "newName";
     private const string NewShortname = "newShortname";
-    private const string NewUrl = "newgoogle";
     private const string NewAuthors = "newAuthors";
     private const string NewLanguage = "newLanguage";
     private const string NewDescription = "newDescription";
@@ -70,8 +69,8 @@ public class ViewModelEntityMappingProfileUt
     public void MapLearningContentAndLearningContentViewModel_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningContent(Name, Type, Filepath);
-        var destination = new LearningContentViewModel("", "", "bar/baz/buz.txt");
+        var source = new FileContent(Name, Type, Filepath);
+        var destination = new FileContentViewModel("", "", "bar/baz/buz.txt");
 
         systemUnderTest.Map(source, destination);
 
@@ -91,10 +90,10 @@ public class ViewModelEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var content = GetTestableContent();
-        var source = new LearningElement(Name, Shortname, content, Url, Authors, Description, Goals,
+        var source = new LearningElement(Name, Shortname, content, Authors, Description, Goals,
             Difficulty, null, Workload, Points, PositionX, PositionY);
         var destination = new LearningElementViewModel("", "",
-            new LearningContentViewModel("", "", Filepath), Url, "", "", "", LearningElementDifficultyEnum.None);
+            new FileContentViewModel("", "", Filepath), "", "", "", LearningElementDifficultyEnum.None);
 
         systemUnderTest.Map(source, destination);
 
@@ -103,8 +102,7 @@ public class ViewModelEntityMappingProfileUt
 
         destination.Name = NewName;
         destination.Shortname = NewShortname;
-        destination.LearningContent = new LearningContentViewModel(NewName, NewType, NewFilepath);
-        destination.Url = NewUrl;
+        destination.LearningContent = new FileContentViewModel(NewName, NewType, NewFilepath);
         destination.Authors = NewAuthors;
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
@@ -362,7 +360,7 @@ public class ViewModelEntityMappingProfileUt
     public void MapLearningWorldAndLearningWorldViewModel_WithSpaces_ObjectsStayEqual()
     {
         var elementVm1 =
-            new LearningElementViewModel("el1", Shortname, new LearningContentViewModel("foo", "bar", Filepath), Url,
+            new LearningElementViewModel("el1", Shortname, new FileContentViewModel("foo", "bar", Filepath),
                 Authors,
                 Description, Goals, Difficulty);
 
@@ -470,14 +468,14 @@ public class ViewModelEntityMappingProfileUt
 
     #region testable Content/Element/Space/World
 
-    private static LearningContent GetTestableContent()
+    private static FileContent GetTestableContent()
     {
-        return new LearningContent(Name, Type, Filepath);
+        return new FileContent(Name, Type, Filepath);
     }
 
-    private static LearningContentViewModel GetTestableNewContentViewModel()
+    private static FileContentViewModel GetTestableNewContentViewModel()
     {
-        return new LearningContentViewModel(NewName, NewType, NewFilepath);
+        return new FileContentViewModel(NewName, NewType, NewFilepath);
     }
 
     private static LearningElement GetTestableElementWithParent(LearningSpace parent, ElementType elementType)
@@ -485,27 +483,27 @@ public class ViewModelEntityMappingProfileUt
         return elementType switch
         {
             ElementType.TextTransfer => new TextTransferElement(Name, Shortname, parent,
-                GetTestableContent(), Url, Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
+                GetTestableContent(), Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
                 PositionY),
             ElementType.ImageTransfer => new ImageTransferElement(Name, Shortname, parent,
-                GetTestableContent(), Url, Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
+                GetTestableContent(), Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
                 PositionY),
             ElementType.VideoTransfer => new VideoTransferElement(Name, Shortname, parent,
-                GetTestableContent(), Url, Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
+                GetTestableContent(), Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
                 PositionY),
             ElementType.PdfTransfer => new PdfTransferElement(Name, Shortname, parent,
-                GetTestableContent(), Url, Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
+                GetTestableContent(), Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
                 PositionY),
             ElementType.VideoActivation => new VideoActivationElement(Name, Shortname, parent,
-                GetTestableContent(), Url, Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
+                GetTestableContent(), Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
                 PositionY),
             ElementType.H5PActivation => new H5PActivationElement(Name, Shortname, parent,
-                GetTestableContent(), Url, Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
+                GetTestableContent(), Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
                 PositionY),
             ElementType.H5PInteraction => new H5PInteractionElement(Name, Shortname, parent,
-                GetTestableContent(), Url, Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
+                GetTestableContent(), Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
                 PositionY),
-            ElementType.H5PTest => new H5PTestElement(Name, Shortname, parent, GetTestableContent(), Url,
+            ElementType.H5PTest => new H5PTestElement(Name, Shortname, parent, GetTestableContent(),
                 Authors, Description, Goals, Difficulty, Workload, Points, PositionX, PositionY),
             _ => throw new ArgumentOutOfRangeException(nameof(elementType), elementType, null)
         };
@@ -518,35 +516,35 @@ public class ViewModelEntityMappingProfileUt
         {
             case ElementType.TextTransfer:
                 return new TextTransferElementViewModel(NewName, NewShortname, parent,
-                    GetTestableNewContentViewModel(), NewUrl, NewAuthors, NewDescription, NewGoals, NewDifficulty,
+                    GetTestableNewContentViewModel(), NewAuthors, NewDescription, NewGoals, NewDifficulty,
                     NewWorkload, NewPoints, NewPositionX, NewPositionY);
             case ElementType.ImageTransfer:
                 return new ImageTransferElementViewModel(NewName, NewShortname, parent,
-                    GetTestableNewContentViewModel(), NewUrl, NewAuthors, NewDescription, NewGoals, NewDifficulty,
+                    GetTestableNewContentViewModel(), NewAuthors, NewDescription, NewGoals, NewDifficulty,
                     NewWorkload, NewPoints, NewPositionX, NewPositionY);
             case ElementType.VideoTransfer:
                 return new VideoTransferElementViewModel(NewName, NewShortname, parent,
-                    GetTestableNewContentViewModel(), NewUrl, NewAuthors, NewDescription, NewGoals, NewDifficulty,
+                    GetTestableNewContentViewModel(), NewAuthors, NewDescription, NewGoals, NewDifficulty,
                     NewWorkload, NewPoints, NewPositionX, NewPositionY);
             case ElementType.PdfTransfer:
                 return new PdfTransferElementViewModel(NewName, NewShortname, parent,
-                    GetTestableNewContentViewModel(), NewUrl, NewAuthors, NewDescription, NewGoals, NewDifficulty,
+                    GetTestableNewContentViewModel(), NewAuthors, NewDescription, NewGoals, NewDifficulty,
                     NewWorkload, NewPoints, NewPositionX, NewPositionY);
             case ElementType.VideoActivation:
                 return new VideoActivationElementViewModel(NewName, NewShortname, parent,
-                    GetTestableNewContentViewModel(), NewUrl, NewAuthors, NewDescription, NewGoals, NewDifficulty,
+                    GetTestableNewContentViewModel(), NewAuthors, NewDescription, NewGoals, NewDifficulty,
                     NewWorkload, NewPoints, NewPositionX, NewPositionY);
             case ElementType.H5PActivation:
                 return new H5PActivationElementViewModel(NewName, NewShortname, parent,
-                    GetTestableNewContentViewModel(), NewUrl, NewAuthors, NewDescription, NewGoals, NewDifficulty,
+                    GetTestableNewContentViewModel(), NewAuthors, NewDescription, NewGoals, NewDifficulty,
                     NewWorkload, NewPoints, NewPositionX, NewPositionY);
             case ElementType.H5PInteraction:
                 return new H5PInteractionElementViewModel(NewName, NewShortname, parent,
-                    GetTestableNewContentViewModel(), NewUrl, NewAuthors, NewDescription, NewGoals, NewDifficulty,
+                    GetTestableNewContentViewModel(), NewAuthors, NewDescription, NewGoals, NewDifficulty,
                     NewWorkload, NewPoints, NewPositionX, NewPositionY);
             case ElementType.H5PTest:
                 return new H5PTestElementViewModel(NewName, NewShortname, parent,
-                    GetTestableNewContentViewModel(), NewUrl, NewAuthors, NewDescription, NewGoals, NewDifficulty,
+                    GetTestableNewContentViewModel(), NewAuthors, NewDescription, NewGoals, NewDifficulty,
                     NewWorkload, NewPoints, NewPositionX, NewPositionY);
             default:
                 throw new ArgumentOutOfRangeException(nameof(elementType), elementType, null);
@@ -715,7 +713,6 @@ public class ViewModelEntityMappingProfileUt
                     Assert.That(element.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(element.Shortname, Is.EqualTo(useNewFields ? NewShortname : Shortname));
                     TestContent(element.LearningContent, useNewFields);
-                    Assert.That(element.Url, Is.EqualTo(useNewFields ? NewUrl : Url));
                     Assert.That(element.Authors, Is.EqualTo(useNewFields ? NewAuthors : Authors));
                     Assert.That(element.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(element.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
@@ -733,7 +730,6 @@ public class ViewModelEntityMappingProfileUt
                     Assert.That(element.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(element.Shortname, Is.EqualTo(useNewFields ? NewShortname : Shortname));
                     TestContent(element.LearningContent, useNewFields);
-                    Assert.That(element.Url, Is.EqualTo(useNewFields ? NewUrl : Url));
                     Assert.That(element.Authors, Is.EqualTo(useNewFields ? NewAuthors : Authors));
                     Assert.That(element.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(element.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
@@ -752,7 +748,7 @@ public class ViewModelEntityMappingProfileUt
     {
         switch (elementLearningContent)
         {
-            case LearningContentViewModel content:
+            case FileContentViewModel content:
                 Assert.Multiple(() =>
                 {
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
@@ -760,7 +756,7 @@ public class ViewModelEntityMappingProfileUt
                     Assert.That(content.Filepath, Is.EqualTo(useNewFields ? NewFilepath : Filepath));
                 });
                 break;
-            case LearningContent content:
+            case FileContent content:
                 Assert.Multiple(() =>
                 {
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
@@ -768,6 +764,8 @@ public class ViewModelEntityMappingProfileUt
                     Assert.That(content.Filepath, Is.EqualTo(useNewFields ? NewFilepath : Filepath));
                 });
                 break;
+            default:
+                throw new NotImplementedException();
         }
     }
 

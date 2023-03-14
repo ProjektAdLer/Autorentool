@@ -16,7 +16,7 @@ public class PathWayCondition : IObjectInPathWay
         PositionY = 0;
         InBoundObjects = new List<IObjectInPathWay>();
         OutBoundObjects = new List<IObjectInPathWay>();
-        Condition = ConditionEnum.None;
+        Condition = ConditionEnum.Or;
     }
     
     

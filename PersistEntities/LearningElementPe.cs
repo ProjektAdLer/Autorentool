@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using PersistEntities.LearningContent;
 
 namespace PersistEntities;
 
@@ -14,15 +15,14 @@ namespace PersistEntities;
 [KnownType(typeof(VideoTransferElementPe))]
 public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
 {
-    public LearningElementPe(string name, string shortname, LearningContentPe? learningContent, string url,
+    public LearningElementPe(string name, string shortname, LearningContentPe? learningContent,
         string authors, string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload = 0,
         int points = 0, double positionX = 0, double positionY = 0)
     {
         Id = Guid.NewGuid();
         Name = name;
         Shortname = shortname;
-        LearningContent = learningContent ?? new LearningContentPe();
-        Url = url ?? "";
+        LearningContent = learningContent;
         Authors = authors;
         Description = description;
         Goals = goals;
@@ -35,13 +35,13 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
     /// <summary>
     /// Constructor for serialization. DO NOT USE FOR NORMAL INITIALIZATION.
     /// </summary>
-    internal LearningElementPe()
+    protected LearningElementPe()
     {
         Id = Guid.Empty;
         Name = "";
         Shortname = "";
-        LearningContent = new LearningContentPe();
-        Url = "";
+        // Overridden because private automapper/serialization constructor - n.stich
+        LearningContent = null!;
         Authors = "";
         Description = "";
         Goals = "";
@@ -59,8 +59,6 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
     public string Shortname { get; set; }
     [DataMember]
     public LearningContentPe LearningContent { get; set; }
-    [DataMember]
-    public string Url { get; set; }
     [DataMember]
     public string Authors { get; set; }
     [DataMember]

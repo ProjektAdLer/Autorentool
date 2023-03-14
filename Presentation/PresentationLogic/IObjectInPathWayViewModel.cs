@@ -1,5 +1,3 @@
-using Shared;
-
 namespace Presentation.PresentationLogic;
 
 public interface IObjectInPathWayViewModel : ISelectableObjectInWorldViewModel

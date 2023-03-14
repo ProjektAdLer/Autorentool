@@ -17,7 +17,7 @@ public class DragLearningElementUt
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var element = new LearningElement("a", "b", null!,"c", "d", "e", 
+        var element = new LearningElement("a", "b", null!, "d", "e", 
             "f", LearningElementDifficultyEnum.Easy, null, 5, 5, newPositionX, newPositionY);
         bool actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
@@ -48,7 +48,7 @@ public class DragLearningElementUt
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var element = new LearningElement("a", "b", null!,"c", "d", "e", 
+        var element = new LearningElement("a", "b", null!, "d", "e", 
             "f", LearningElementDifficultyEnum.Easy, null, 5, 5, newPositionX, newPositionY);
         bool actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
@@ -67,7 +67,7 @@ public class DragLearningElementUt
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var element = new LearningElement("a", "b", null!,"c", "d", "e", 
+        var element = new LearningElement("a", "b", null!, "d", "e", 
             "f", LearningElementDifficultyEnum.Easy, null, 5, 5, newPositionX, newPositionY);        
         bool actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;

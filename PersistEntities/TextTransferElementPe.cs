@@ -1,4 +1,5 @@
 using System.Runtime.Serialization;
+using PersistEntities.LearningContent;
 
 namespace PersistEntities;
 
@@ -6,9 +7,9 @@ namespace PersistEntities;
 [DataContract]
 public class TextTransferElementPe : LearningElementPe
 {
-    internal TextTransferElementPe(string name, string shortname, LearningContentPe? learningContent, string url,
+    internal TextTransferElementPe(string name, string shortname, LearningContentPe? learningContent,
         string authors, string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload,
-        int points, double positionX, double positionY) : base(name, shortname,learningContent, url, authors, description, 
+        int points, double positionX, double positionY) : base(name, shortname, learningContent, authors, description, 
         goals, difficulty, workload, points, positionX,positionY)
     {
     }

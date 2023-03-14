@@ -113,34 +113,26 @@ public class XmlResourceFactory : IXmlResourceFactory
             FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
                 resource.Identifier.Value + "." + resource.ElementType), FileManager.GetHashCheckSum());
 
-            if (resource.ElementType is "pdf" or "json")
+            var mimeType = resource.ElementType switch
             {
-                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "application/"+FileElementType);
-            }
-            else if (resource.ElementType is "js")
-            {
-                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "application/x-javascript");
-            }
-            else if (resource.ElementType is "cs")
-            {
-                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "application/x-csh");
-            }
-            else if (resource.ElementType is "jpg" or "png" or "bmp")
-            {
-                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "image/"+FileElementType);
-            }
-            else if (resource.ElementType is "webp" or "cc" or "c++" )
-            {
-                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "document/unknown");
-            }
-            else if (resource.ElementType is "txt" or "c" or "h" or "py" or "cpp" or "php")
-            {
-                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "text/plain");
-            }
-            else if (resource.ElementType is "css" or "html")
-            {
-                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "text/"+FileElementType);
-            }
+                "pdf" or "json" =>
+                    "application/" + FileElementType,
+                "js" =>
+                    "application/x-javascript",
+                "cs" =>
+                    "application/x-csh",
+                "jpg" or "png" or "bmp" =>
+                    "image/" + FileElementType,
+                "webp" or "cc" or "c++" =>
+                    "document/unknown",
+                "txt" or "c" or "h" or "py" or "cpp" or "php" =>
+                    "text/plain",
+                "css" or "html" =>
+                    "text/" + FileElementType,
+                _ => null
+            };
+            if(mimeType != null)
+                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), mimeType);
 
             FileSetParametersActivity();
             

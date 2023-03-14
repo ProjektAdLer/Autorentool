@@ -1,5 +1,6 @@
 using AutoMapper;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using Presentation.Components.Forms.Models;
 
 namespace AuthoringTool.Mapping;
@@ -16,6 +17,12 @@ public class FormModelEntityMappingProfile : Profile
         DisableConstructorMapping();
         CreateWorldMap();
         CreateSpaceMap();
+        CreateContentMap();
+    }
+
+    private void CreateContentMap()
+    {
+        CreateMap<LinkContentFormModel, LinkContent>();
     }
 
     private void CreateSpaceMap()

@@ -66,6 +66,14 @@ public class XmlFileHandlerUt
     }
     
     [Test]
+    public void XmlFileHandler_Constructor_DoesNotThrowForListOfSerializableType()
+    {
+        //Disable warning for test
+        // ReSharper disable once ObjectCreationAsStatement
+        Assert.DoesNotThrow(() => { new XmlFileHandler<List<TestSerializable>>(null!); });
+    }
+    
+    [Test]
     public void XmlFileHandler_SaveToDisk_CreatesCorrectFile()
     {
         var obj = new TestSerializable("foo", 123);

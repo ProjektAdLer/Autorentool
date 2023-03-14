@@ -2,16 +2,13 @@
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans
-@using Presentation.PresentationLogic.ModalDialog
 @using Presentation.View.LearningElement
 @using Shared
-@using Presentation.Components.ModalDialog
 @using System.Text
 
 <h2>LearningSpace @LearningSpaceP.LearningSpaceVm?.Name</h2>
 <h5>Workload: @LearningSpaceP.LearningSpaceVm?.Workload minutes</h5>
 <h5>Points: @LearningSpaceP.LearningSpaceVm?.Points</h5>
-<button class="btn btn-primary add-learning-element" @onclick="AddNewLearningElement">Add Learning Element</button>
 <button class="btn btn-primary load-learning-element" @onclick="LoadLearningElementAsync">Load Learning Element</button>
 <h1>Anzahl Lernelemente: @LearningSpaceP.LearningSpaceVm?.LearningSpaceLayout.Count</h1>
 @ChildContent
@@ -21,7 +18,7 @@
              Class="rounded-lg border-2 border-solid mud-border-lines-default p-6 m-8 w-28 min-h-1 flex justify-center items-center flex-col">
     <ItemRenderer>
         @{
-            var item = (ILearningElementViewModel) context;
+            var item = context;
             var text = item.Name + " " + item.Parent?.Name;
         }
         <MudListItem Text="@text"></MudListItem>
@@ -31,90 +28,63 @@
 
 @if (LearningSpaceP.LearningSpaceVm != null)
 {
-@if (LearningSpaceP.LearningSpaceVm?.SelectedLearningElement != null)
-{
-    <label id="learning-element-info">
-        Selected element:
-        @LearningSpaceP.LearningSpaceVm.SelectedLearningElement.Name,
-        Description: @LearningSpaceP.LearningSpaceVm.SelectedLearningElement.Description
-    </label>
-    <br>
-    <button class="btn btn-primary edit-learning-element" @onclick="EditSelectedLearningElement">Edit selected Learning Element</button>
-    <button class="btn btn-primary delete-learning-element" @onclick="DeleteSelectedLearningElement">Delete Learning Element</button>
-    <button class="btn btn-primary save-learning-element" @onclick="SaveSelectedLearningElementAsync">Save selected Learning Element</button>
-    <button class="btn btn-primary show-element-content" @onclick="ShowSelectedElementContentAsync">Show content of Learning Element</button>
-}
-    <br>
-    <p>Select learning world:</p>
-    <select @onchange="args => SetLearningSpaceLayout(args.Value!.ToString())"
-            value="@(LearningSpaceP.LearningSpaceVm?.LearningSpaceLayout.FloorPlanName)">
-        @foreach (var floorPlan in Enum.GetValues(typeof(FloorPlanEnum)).Cast<FloorPlanEnum>())
-        {
-            <option value="@floorPlan">@floorPlan.ToString()</option>
-        }
-    </select>
-@if (LearningSpaceP.LearningSpaceVm != null)
-{
-    <div style="width: 600px; height: 400px; border: 2px solid orange;">
-        <div class="layout-shadow">
-            <div class="layout" style="@GetCornerPointsString(LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.FloorPlanViewModel) width: 600px; height: 400px; position: relative;">
+    @if (LearningSpaceP.LearningSpaceVm?.SelectedLearningElement != null)
+    {
+        <label id="learning-element-info">
+            Selected element:
+            @LearningSpaceP.LearningSpaceVm.SelectedLearningElement.Name,
+            Description: @LearningSpaceP.LearningSpaceVm.SelectedLearningElement.Description
+        </label>
+        <br>
+        <button class="btn btn-primary delete-learning-element" @onclick="DeleteSelectedLearningElement">Delete Learning Element</button>
+        <button class="btn btn-primary save-learning-element" @onclick="SaveSelectedLearningElementAsync">Save selected Learning Element</button>
+        <button class="btn btn-primary show-element-content" @onclick="ShowSelectedElementContentAsync">Show content of Learning Element</button>
+    }
+        <br>
+        <p>Select learning world:</p>
+        <select @onchange="args => SetLearningSpaceLayout(args.Value!.ToString())"
+                value="@(LearningSpaceP.LearningSpaceVm?.LearningSpaceLayout.FloorPlanName)">
+            @foreach (var floorPlan in Enum.GetValues(typeof(FloorPlanEnum)).Cast<FloorPlanEnum>())
+            {
+                <option value="@floorPlan">@floorPlan.ToString()</option>
+            }
+        </select>
+    @if (LearningSpaceP.LearningSpaceVm != null)
+    {
+        <div style="width: 600px; height: 400px; border: 2px solid orange;">
+            <div class="layout-shadow">
+                <div class="layout" style="@GetCornerPointsString(LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.FloorPlanViewModel) width: 600px; height: 400px; position: relative;">
 
-                @for (var i = 0; i < LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.Capacity; i++)
-                {
-                    var x = i;
-                    var identifier = LearningSpaceP.LearningSpaceVm.Id.ToString() + x;
+                    @for (var i = 0; i < LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.Capacity; i++)
+                    {
+                        var x = i;
+                        var identifier = LearningSpaceP.LearningSpaceVm.Id.ToString() + x;
 
-                    <MudDropZone T="ILearningElementViewModel" Identifier="@identifier"
-                                 Class="rounded-lg border-2 border-solid mud-border-lines-default p-6 m-8 w-28 h-3 flex justify-center items-center"
-                                 style="@GetSlotPositionString(LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.FloorPlanViewModel, x)"
-                                 @onclick="() => AddNewLearningElement(x)">
-                        <ItemRenderer>
-                            <DragDropLearningElement
-                                LearningElement="@context"
-                                OnShowLearningElementContent="@LearningSpaceP.ShowElementContent"
-                                OnEditLearningElement="@LearningSpaceP.EditLearningElement"
-                                OnDeleteLearningElement="@LearningSpaceP.DeleteLearningElement"
-                                OnClicked="@LearningSpaceP.ClickedLearningElement"/>
-                        </ItemRenderer>
-                    </MudDropZone>
-                }
+                        <MudDropZone T="ILearningElementViewModel" Identifier="@identifier"
+                                     Class="rounded-lg border-2 border-solid mud-border-lines-default p-6 m-8 w-28 h-3 flex justify-center items-center"
+                                     style="@GetSlotPositionString(LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.FloorPlanViewModel, x)"
+                                     @onclick="() => AddNewLearningElement(x)">
+                            <ItemRenderer>
+                                <DragDropLearningElement
+                                    LearningElement="@context"
+                                    OnShowLearningElementContent="@LearningSpaceP.ShowElementContent"
+                                    OnEditLearningElement="@LearningSpaceP.EditLearningElement"
+                                    OnDeleteLearningElement="@LearningSpaceP.DeleteLearningElement"
+                                    OnClicked="@LearningSpaceP.ClickedLearningElement"/>
+                            </ItemRenderer>
+                        </MudDropZone>
+                    }
 
+                </div>
             </div>
         </div>
-    </div>
+    }
 }
-
-@if (LearningSpaceP.EditLearningSpaceDialogOpen && LearningSpaceP.LearningSpaceVm != null)
-{
-    @ModalDialogFactory.GetEditLearningSpaceFragment(
-        LearningSpaceP.EditLearningSpaceDialogInitialValues
-        ?? throw new InvalidOperationException("LearningSpacePresenter.EditLearningSpaceDialogInitialValues unexpectedly null"),
-        OnEditSpaceDialogClose)
-}
-
-@if (LearningSpaceP.CreateLearningElementDialogOpen)
-{
-    //Override nullability because LearningSpaceVm can't be null at this point. - m.ho, n.stich
-    @ModalDialogFactory.GetCreateLearningElementFragment(LearningSpaceP.DragAndDropLearningContent, OnCreateElementDialogClose)
-}
-
-@if (LearningSpaceP.EditLearningElementDialogOpen && LearningSpaceP.LearningSpaceVm != null)
-{
-    @ModalDialogFactory.GetEditLearningElementFragment(
-        LearningSpaceP.EditLearningElementDialogInitialValues
-        ?? throw new InvalidOperationException("LearningSpacePresenter.EditLearningSpaceDialogInitialValues unexpectedly null"),
-        OnEditElementDialogClose)
-}
-}
-
 
 @code {
 #pragma warning disable CS8618 // injected by framework - n.stich
     [Inject]
     public ILearningSpacePresenter LearningSpaceP { get; set; }
-
-    [Inject]
-    public ILearningSpaceViewModalDialogFactory ModalDialogFactory { get; set; }
 #pragma warning restore CS8618
 
     [Parameter]
@@ -128,23 +98,6 @@
     {
         base.OnParametersSet();
         LearningSpaceP.OnUndoRedoPerformed += async () => await InvokeAsync(StateHasChanged);
-        LearningSpaceP.PropertyChanged += (sender, earg) =>
-        {
-            if (earg.PropertyName == nameof(LearningSpaceP.CreateLearningElementDialogOpen)) InvokeAsync(StateHasChanged);
-        };
-    }
-
-    private void AddNewLearningElement(int slotIndex)
-    {
-        if (LearningSpaceP.LearningSpaceVm?.LearningSpaceLayout.GetElement(slotIndex) == null)
-        {
-            LearningSpaceP.AddNewLearningElement(slotIndex);
-        }
-    }
-
-    private void AddNewLearningElement()
-    {
-        LearningSpaceP.AddNewLearningElement();
     }
 
     private void DeleteSelectedLearningElement()
@@ -226,32 +179,9 @@
         }
     }
 
-    private void OnCreateElementDialogClose(ModalDialogOnCloseResult closeResult)
-    {
-        LearningSpaceP.OnCreateElementDialogClose(closeResult);
-        InvokeAsync(StateHasChanged);
-    }
-
     private void EditLearningElement(int slotIndex)
     {
         LearningSpaceP.EditLearningElement(slotIndex);
-    }
-
-    private void EditSelectedLearningElement()
-    {
-        LearningSpaceP.EditSelectedLearningElement();
-    }
-
-    private void OnEditSpaceDialogClose(ModalDialogOnCloseResult closeResult)
-    {
-        LearningSpaceP.OnEditSpaceDialogClose(closeResult);
-        InvokeAsync(StateHasChanged);
-    }
-
-    private void OnEditElementDialogClose(ModalDialogOnCloseResult closeResult)
-    {
-        LearningSpaceP.OnEditElementDialogClose(closeResult);
-        InvokeAsync(StateHasChanged);
     }
 
     private void SetLearningSpaceLayout(string floorPlanName)
@@ -308,6 +238,11 @@
         slotPositionString.Append($"left: {slotPosition.X}%; ");
         slotPositionString.Append("transform: translate(-50%, -50%);");
         return slotPositionString.ToString();
+    }
+
+    private Task AddNewLearningElement(int i)
+    {
+        throw new NotImplementedException("NYI - implement after learning element dialog is implemented - n.stich");
     }
 
 }

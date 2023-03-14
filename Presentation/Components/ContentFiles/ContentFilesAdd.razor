@@ -1,0 +1,57 @@
+@using Presentation.Components.Forms.Content
+@using Presentation.PresentationLogic.API
+<MudStack Class="w-full">
+    <MudFileUpload T="IBrowserFile" OnFilesChanged="OnFilesChanged" Hidden="false"
+                   InputClass="absolute w-full h-full opacity-0 z-10"
+                   @ondragenter="SetDragClass" @ondragleave="ClearDragClass"
+                   @ondragend="ClearDragClass">
+        <ButtonTemplate>
+            <MudPaper Class="@PaperClasses" Outlined="true">
+                <MudText Typo="Typo.body1">Drag and drop files here or click to add them.</MudText>
+            </MudPaper>
+        </ButtonTemplate>
+    </MudFileUpload>
+    <AddLinkForm/>
+</MudStack>
+@code {
+    [Inject]
+    private IPresentationLogic PresentationLogic { get; set; }
+    [Inject]
+    private ILogger<ContentFilesAdd> Logger { get; set; }
+    
+    [CascadingParameter]
+    public ContentFilesContainer ContentFilesContainer { get; set; }
+
+    private string DragClass { get; set; } = "";
+    private string PaperClasses => $"h-32 flex items-center justify-center {DragClass}";
+
+    private void OnFilesChanged(InputFileChangeEventArgs obj)
+    {
+        Task.Run(async () =>
+        {
+            Logger.LogTrace("Entered OnFilesChanged in ContentFilesAdd");
+            Logger.LogTrace("Opening stream for file {Filename}", obj.File.Name);
+            Logger.LogDebug("Filesize is {}", obj.File.Size);
+            await using var stream = obj.File.OpenReadStream(1_000_000_000);
+            Logger.LogTrace("BrowserFileStream opened");
+            Logger.LogTrace("Copying BrowserFileStream to MemoryStream");
+            using var memoryStream = new MemoryStream();
+            await stream.CopyToAsync(memoryStream);
+            Logger.LogTrace("Calling LoadLearningContentViewModel");
+            PresentationLogic.LoadLearningContentViewModel(obj.File.Name, memoryStream);
+            Logger.LogTrace("LoadLearningContentViewModel returned");
+            Logger.LogTrace("Rerendering ContentFilesContainer");
+            await ContentFilesContainer.RerenderAsync();
+        });
+    }
+
+    private void SetDragClass()
+    {
+        DragClass = "mud-border-dashed mud-border-primary";
+    }
+
+    private void ClearDragClass()
+    {
+        DragClass = "";
+    }
+}

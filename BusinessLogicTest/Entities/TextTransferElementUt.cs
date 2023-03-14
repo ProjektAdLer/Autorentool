@@ -1,4 +1,5 @@
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using NUnit.Framework;
 using Shared;
 
@@ -15,8 +16,7 @@ public class TextTransferElementUt
         var name = "asdf";
         var shortname = "jkl;";
         var parent = new LearningSpace("foo", "bar", "", "", "", 3);
-        var content = new LearningContent("a", "b", "");
-        var url = "url";
+        var content = new FileContent("a", "b", "");
         var authors = "ben and jerry";
         var description = "very cool element";
         var goals = "learn very many things";
@@ -26,7 +26,7 @@ public class TextTransferElementUt
         var positionX = 5f;
         var positionY = 21f;
 
-        var systemUnderTest = new TextTransferElement(name, shortname, parent, content, url,authors, description, goals,
+        var systemUnderTest = new TextTransferElement(name, shortname, parent, content,authors, description, goals,
             difficulty, workload, points, positionX, positionY);
         
         Assert.Multiple(() =>
@@ -35,7 +35,6 @@ public class TextTransferElementUt
             Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortname));
             Assert.That(systemUnderTest.Parent, Is.EqualTo(parent));
             Assert.That(systemUnderTest.LearningContent, Is.EqualTo(content));
-            Assert.That(systemUnderTest.Url, Is.EqualTo(url));
             Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));

@@ -1,5 +1,7 @@
 ﻿
 
+using PersistEntities.LearningContent;
+
 namespace PersistEntities;
 
 public interface ILearningElementPe

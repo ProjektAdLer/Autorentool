@@ -5,6 +5,7 @@ using DataAccess.Persistence;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
+using PersistEntities.LearningContent;
 
 namespace DataAccessTest.Persistence;
 
@@ -27,11 +28,13 @@ public class ContentFileHandlerUt
         var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
 
         var objActual = await systemUnderTest.LoadContentAsync(filepath);
+        Assert.That(objActual, Is.TypeOf<FileContentPe>());
+        var objActualAsFileContentPe = (FileContentPe) objActual;
         Assert.Multiple(() =>
         {
             Assert.That(objActual.Name, Is.EqualTo("foobar.png"));
-            Assert.That(objActual.Type, Is.EqualTo("png"));
-            Assert.That(objActual.Filepath, Is.EqualTo(Path.Join(ContentFilesFolderPath, "foobar.png")));
+            Assert.That(objActualAsFileContentPe.Type, Is.EqualTo("png"));
+            Assert.That(objActualAsFileContentPe.Filepath, Is.EqualTo(Path.Join(ContentFilesFolderPath, "foobar.png")));
             Assert.That(fileSystem.File.Exists(Path.Join(ContentFilesFolderPath, "foobar.png")), Is.True);
             Assert.That(fileSystem.File.Exists(Path.Join(ContentFilesFolderPath, "foobar.png.hash")), Is.True);
         });
@@ -50,11 +53,13 @@ public class ContentFileHandlerUt
         var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
 
         var objActual = await systemUnderTest.LoadContentAsync(filepath);
+        Assert.That(objActual, Is.TypeOf<FileContentPe>());
+        var objActualAsFileContentPe = (FileContentPe) objActual;
         Assert.Multiple(() =>
         {
             Assert.That(objActual.Name, Is.EqualTo("a.png"));
-            Assert.That(objActual.Type, Is.EqualTo("png"));
-            Assert.That(objActual.Filepath, Is.EqualTo(Path.Join(ContentFilesFolderPath, "a.png")));
+            Assert.That(objActualAsFileContentPe.Type, Is.EqualTo("png"));
+            Assert.That(objActualAsFileContentPe.Filepath, Is.EqualTo(Path.Join(ContentFilesFolderPath, "a.png")));
             Assert.That(fileSystem.File.Exists(Path.Join(ContentFilesFolderPath, "foobar.png")), Is.False);
             //two files: the content itself and its hash file
             Assert.That(fileSystem.Directory.EnumerateFiles(ContentFilesFolderPath).Count(), Is.EqualTo(2));
@@ -74,11 +79,13 @@ public class ContentFileHandlerUt
         var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
 
         var objActual = await systemUnderTest.LoadContentAsync(filepath);
+        Assert.That(objActual, Is.TypeOf<FileContentPe>());
+        var objActualAsFileContentPe = (FileContentPe) objActual;
         Assert.Multiple(() =>
         {
             Assert.That(objActual.Name, Is.EqualTo("foobar(1).png"));
-            Assert.That(objActual.Type, Is.EqualTo("png"));
-            Assert.That(objActual.Filepath, Is.EqualTo(Path.Join(ContentFilesFolderPath, "foobar(1).png")));
+            Assert.That(objActualAsFileContentPe.Type, Is.EqualTo("png"));
+            Assert.That(objActualAsFileContentPe.Filepath, Is.EqualTo(Path.Join(ContentFilesFolderPath, "foobar(1).png")));
             Assert.That(fileSystem.File.Exists(Path.Join(ContentFilesFolderPath, "foobar(1).png")), Is.True);
             Assert.That(fileSystem.Directory.EnumerateFiles(ContentFilesFolderPath).Count(), Is.EqualTo(4));
         });
@@ -116,11 +123,13 @@ public class ContentFileHandlerUt
         var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
 
         var objActual = await systemUnderTest.LoadContentAsync(filepath, stream);
+        Assert.That(objActual, Is.TypeOf<FileContentPe>());
+        var objActualAsFileContentPe = (FileContentPe) objActual;
         Assert.Multiple(() =>
         {
             Assert.That(objActual.Name, Is.EqualTo("foobar.png"));
-            Assert.That(objActual.Type, Is.EqualTo("png"));
-            Assert.That(objActual.Filepath, Is.EqualTo(Path.Join(ContentFilesFolderPath, "foobar.png")));
+            Assert.That(objActualAsFileContentPe.Type, Is.EqualTo("png"));
+            Assert.That(objActualAsFileContentPe.Filepath, Is.EqualTo(Path.Join(ContentFilesFolderPath, "foobar.png")));
             Assert.That(fileSystem.File.Exists(Path.Join(ContentFilesFolderPath, "foobar.png")), Is.True);
         });
     }
@@ -136,11 +145,13 @@ public class ContentFileHandlerUt
         var systemUnderTest = CreateTestableContentFileHandler(fileSystem: fileSystem);
 
         var objActual = await systemUnderTest.LoadContentAsync(filepath, stream);
+        Assert.That(objActual, Is.TypeOf<FileContentPe>());
+        var objActualAsFileContentPe = (FileContentPe) objActual;
         Assert.Multiple(() =>
         {
             Assert.That(objActual.Name, Is.EqualTo("foobar.png"));
-            Assert.That(objActual.Type, Is.EqualTo("png"));
-            Assert.That(objActual.Filepath, Is.EqualTo(Path.Join(ContentFilesFolderPath, "a.txt")));
+            Assert.That(objActualAsFileContentPe.Type, Is.EqualTo("png"));
+            Assert.That(objActualAsFileContentPe.Filepath, Is.EqualTo(Path.Join(ContentFilesFolderPath, "a.txt")));
             Assert.That(fileSystem.File.Exists(Path.Join(ContentFilesFolderPath, "foobar.png")), Is.False);
             //two files: the content itself and its hash file
             Assert.That(fileSystem.Directory.EnumerateFiles(ContentFilesFolderPath).Count(), Is.EqualTo(2));
@@ -294,10 +305,11 @@ public class ContentFileHandlerUt
     }
 
     private ContentFileHandler CreateTestableContentFileHandler(ILogger<ContentFileHandler>? logger = null,
-        IFileSystem? fileSystem = null)
+        IFileSystem? fileSystem = null, IXmlFileHandler<List<LinkContentPe>>? xmlFileHandler = null)
     {
         logger ??= Substitute.For<ILogger<ContentFileHandler>>();
         fileSystem ??= new MockFileSystem();
-        return new ContentFileHandler(logger, fileSystem);
+        xmlFileHandler ??= Substitute.For<IXmlFileHandler<List<LinkContentPe>>>();
+        return new ContentFileHandler(logger, fileSystem, xmlFileHandler);
     }
 }

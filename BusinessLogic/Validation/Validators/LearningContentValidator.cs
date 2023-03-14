@@ -1,4 +1,4 @@
-using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using FluentValidation;
 using JetBrains.Annotations;
 
@@ -9,11 +9,7 @@ public class LearningContentValidator : AbstractValidator<LearningContent>
 {
     public LearningContentValidator()
     {
-        RuleFor(x => x.Filepath)
-            .NotEmpty();
         RuleFor(x => x.Name)
-            .NotEmpty();
-        RuleFor(x => x.Type)
             .NotEmpty();
     }
 }

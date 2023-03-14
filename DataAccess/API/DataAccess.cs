@@ -2,8 +2,10 @@
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using DataAccess.Persistence;
 using PersistEntities;
+using PersistEntities.LearningContent;
 using Shared.Configuration;
 
 namespace DataAccess.API;
@@ -12,12 +14,12 @@ public class DataAccess : IDataAccess
 {
     public DataAccess(IAuthoringToolConfiguration configuration, IXmlFileHandler<LearningWorldPe> xmlHandlerWorld, 
         IXmlFileHandler<LearningSpacePe> xmlHandlerSpace, IXmlFileHandler<LearningElementPe> xmlHandlerElement, 
-        IContentFileHandler xmlHandlerContent, IFileSystem fileSystem, IMapper mapper)
+        IContentFileHandler contentFileHandler, IFileSystem fileSystem, IMapper mapper)
     {
         XmlHandlerWorld = xmlHandlerWorld;
         XmlHandlerSpace = xmlHandlerSpace;
         XmlHandlerElement = xmlHandlerElement;
-        XmlHandlerContent = xmlHandlerContent;
+        ContentFileHandler = contentFileHandler;
         FileSystem = fileSystem;
         Configuration = configuration;
         Mapper = mapper;
@@ -26,7 +28,7 @@ public class DataAccess : IDataAccess
     public readonly IXmlFileHandler<LearningWorldPe> XmlHandlerWorld;
     public readonly IXmlFileHandler<LearningSpacePe> XmlHandlerSpace;
     public readonly IXmlFileHandler<LearningElementPe> XmlHandlerElement;
-    public readonly IContentFileHandler XmlHandlerContent;
+    public readonly IContentFileHandler ContentFileHandler;
     public readonly IFileSystem FileSystem;
     public IAuthoringToolConfiguration Configuration { get; }
     public IMapper Mapper { get; }
@@ -80,13 +82,27 @@ public class DataAccess : IDataAccess
 
     public LearningContent LoadLearningContent(string filepath)
     {
-        return Mapper.Map<LearningContent>(XmlHandlerContent.LoadContentAsync(filepath).Result);
+        return Mapper.Map<LearningContent>(ContentFileHandler.LoadContentAsync(filepath).Result);
     }
 
-    public LearningContent LoadLearningContent(string name, MemoryStream stream)
+    public LearningContent LoadLearningContent(string name, Stream stream)
     {
-        return Mapper.Map<LearningContent>(XmlHandlerContent.LoadContentAsync(name, stream).Result);
+        return Mapper.Map<LearningContent>(ContentFileHandler.LoadContentAsync(name, stream).Result);
     }
+    
+    /// <inheritdoc cref="IDataAccess.GetAllContent"/>
+    public IEnumerable<LearningContent> GetAllContent()
+    {
+        return ContentFileHandler.GetAllContent().Select(Mapper.Map<LearningContent>);
+    }
+
+    /// <inheritdoc cref="IDataAccess.RemoveContent"/>
+    public void RemoveContent(LearningContent content) =>
+        ContentFileHandler.RemoveContent(Mapper.Map<LearningContentPe>(content));
+
+    /// <inheritdoc cref="IDataAccess.SaveLink"/>
+    public void SaveLink(LinkContent linkContent) =>
+        ContentFileHandler.SaveLink(Mapper.Map<LinkContentPe>(linkContent));
 
     /// <inheritdoc cref="IDataAccess.FindSuitableNewSavePath"/>
     public string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding)

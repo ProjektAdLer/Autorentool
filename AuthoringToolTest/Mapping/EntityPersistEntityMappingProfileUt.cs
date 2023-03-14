@@ -2,8 +2,10 @@
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using NUnit.Framework;
 using PersistEntities;
+using PersistEntities.LearningContent;
 using Shared;
 
 namespace AuthoringToolTest.Mapping;
@@ -61,8 +63,8 @@ public class EntityPersistEntityMappingProfileUt
     public void MapLearningContentAndLearningContentPersistEntity_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningContent(Name, Type, Filepath);
-        var destination = new LearningContentPe("", "", "");
+        var source = new FileContent(Name, Type, Filepath);
+        var destination = new FileContentPe("", "", "");
 
         systemUnderTest.Map(source, destination);
 
@@ -82,9 +84,9 @@ public class EntityPersistEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var content = GetTestableContent();
-        var source = new LearningElement(Name, Shortname, content, Url, Authors, Description, Goals,
+        var source = new LearningElement(Name, Shortname, content, Authors, Description, Goals,
             Difficulty, null, Workload, Points, PositionX, PositionY);
-        var destination = new LearningElementPe("", "", new LearningContentPe("", "", "bar/baz/buz.txt"), "google.com",
+        var destination = new LearningElementPe("", "", new FileContentPe("", "", "bar/baz/buz.txt"), 
             "", "", "",
             LearningElementDifficultyEnumPe.None);
 
@@ -94,8 +96,7 @@ public class EntityPersistEntityMappingProfileUt
 
         destination.Name = NewName;
         destination.Shortname = NewShortname;
-        destination.LearningContent = new LearningContentPe(NewName, NewType, NewFilepath);
-        destination.Url = NewUrl;
+        destination.LearningContent = new FileContentPe(NewName, NewType, NewFilepath);
         destination.Authors = NewAuthors;
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
@@ -408,14 +409,14 @@ public class EntityPersistEntityMappingProfileUt
 
     #region testable Content/Element/Space/World
 
-    private static LearningContent GetTestableContent()
+    private static FileContent GetTestableContent()
     {
-        return new LearningContent(Name, Type, Filepath);
+        return new FileContent(Name, Type, Filepath);
     }
 
-    private static LearningContentPe GetTestableNewContentPersistEntity()
+    private static FileContentPe GetTestableNewContentPersistEntity()
     {
-        return new LearningContentPe(NewName, NewType, NewFilepath);
+        return new FileContentPe(NewName, NewType, NewFilepath);
     }
 
     private static LearningElement GetTestableElementWithParent(LearningSpace parent, ElementType elementType)
@@ -423,27 +424,27 @@ public class EntityPersistEntityMappingProfileUt
         return elementType switch
         {
             ElementType.TextTransfer => new TextTransferElement(Name, Shortname, parent,
-                GetTestableContent(), Url, Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
+                GetTestableContent(), Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
                 PositionY),
             ElementType.ImageTransfer => new ImageTransferElement(Name, Shortname, parent,
-                GetTestableContent(), Url, Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
+                GetTestableContent(), Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
                 PositionY),
             ElementType.VideoTransfer => new VideoTransferElement(Name, Shortname, parent,
-                GetTestableContent(), Url, Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
+                GetTestableContent(), Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
                 PositionY),
             ElementType.PdfTransfer => new PdfTransferElement(Name, Shortname, parent,
-                GetTestableContent(), Url, Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
+                GetTestableContent(), Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
                 PositionY),
             ElementType.VideoActivation => new VideoActivationElement(Name, Shortname, parent,
-                GetTestableContent(), Url, Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
+                GetTestableContent(), Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
                 PositionY),
             ElementType.H5PActivation => new H5PActivationElement(Name, Shortname, parent,
-                GetTestableContent(), Url, Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
+                GetTestableContent(), Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
                 PositionY),
             ElementType.H5PInteraction => new H5PInteractionElement(Name, Shortname, parent,
-                GetTestableContent(), Url, Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
+                GetTestableContent(), Authors, Description, Goals, Difficulty, Workload, Points, PositionX,
                 PositionY),
-            ElementType.H5PTest => new H5PTestElement(Name, Shortname, parent, GetTestableContent(), Url,
+            ElementType.H5PTest => new H5PTestElement(Name, Shortname, parent, GetTestableContent(),
                 Authors, Description, Goals, Difficulty, Workload, Points, PositionX, PositionY),
             _ => throw new ArgumentOutOfRangeException(nameof(elementType), elementType, null)
         };
@@ -454,35 +455,35 @@ public class EntityPersistEntityMappingProfileUt
         switch (elementType)
         {
             case ElementType.TextTransfer:
-                return new TextTransferElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(), NewUrl,
+                return new TextTransferElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(),
                     NewAuthors, NewDescription, NewGoals, NewDifficultyPe, NewWorkload, NewPoints, NewPositionX,
                     NewPositionY);
             case ElementType.ImageTransfer:
-                return new ImageTransferElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(), NewUrl,
+                return new ImageTransferElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(),
                     NewAuthors, NewDescription, NewGoals, NewDifficultyPe, NewWorkload, NewPoints, NewPositionX,
                     NewPositionY);
             case ElementType.VideoTransfer:
-                return new VideoTransferElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(), NewUrl,
+                return new VideoTransferElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(),
                     NewAuthors, NewDescription, NewGoals, NewDifficultyPe, NewWorkload, NewPoints, NewPositionX,
                     NewPositionY);
             case ElementType.PdfTransfer:
-                return new PdfTransferElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(), NewUrl,
+                return new PdfTransferElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(),
                     NewAuthors, NewDescription, NewGoals, NewDifficultyPe, NewWorkload, NewPoints, NewPositionX,
                     NewPositionY);
             case ElementType.VideoActivation:
-                return new VideoActivationElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(), NewUrl,
+                return new VideoActivationElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(),
                     NewAuthors, NewDescription, NewGoals, NewDifficultyPe, NewWorkload, NewPoints, NewPositionX,
                     NewPositionY);
             case ElementType.H5PActivation:
-                return new H5PActivationElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(), NewUrl,
+                return new H5PActivationElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(),
                     NewAuthors, NewDescription, NewGoals, NewDifficultyPe, NewWorkload, NewPoints, NewPositionX,
                     NewPositionY);
             case ElementType.H5PInteraction:
-                return new H5PInteractionElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(), NewUrl,
+                return new H5PInteractionElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(),
                     NewAuthors, NewDescription, NewGoals, NewDifficultyPe, NewWorkload, NewPoints, NewPositionX,
                     NewPositionY);
             case ElementType.H5PTest:
-                return new H5PTestElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(), NewUrl,
+                return new H5PTestElementPe(NewName, NewShortname, GetTestableNewContentPersistEntity(),
                     NewAuthors, NewDescription, NewGoals, NewDifficultyPe, NewWorkload, NewPoints, NewPositionX,
                     NewPositionY);
             default:
@@ -649,7 +650,6 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(element.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(element.Shortname, Is.EqualTo(useNewFields ? NewShortname : Shortname));
                     TestContent(element.LearningContent, useNewFields);
-                    Assert.That(element.Url, Is.EqualTo(useNewFields ? NewUrl : Url));
                     Assert.That(element.Authors, Is.EqualTo(useNewFields ? NewAuthors : Authors));
                     Assert.That(element.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(element.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
@@ -667,7 +667,6 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(element.Name, Is.EqualTo(useNewFields ? NewName : Name));
                     Assert.That(element.Shortname, Is.EqualTo(useNewFields ? NewShortname : Shortname));
                     TestContent(element.LearningContent, useNewFields);
-                    Assert.That(element.Url, Is.EqualTo(useNewFields ? NewUrl : Url));
                     Assert.That(element.Authors, Is.EqualTo(useNewFields ? NewAuthors : Authors));
                     Assert.That(element.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(element.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
@@ -685,7 +684,7 @@ public class EntityPersistEntityMappingProfileUt
     {
         switch (elementLearningContent)
         {
-            case LearningContent content:
+            case FileContent content:
                 Assert.Multiple(() =>
                 {
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
@@ -693,7 +692,7 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(content.Filepath, Is.EqualTo(useNewFields ? NewFilepath : Filepath));
                 });
                 break;
-            case LearningContentPe content:
+            case FileContentPe content:
                 Assert.Multiple(() =>
                 {
                     Assert.That(content.Name, Is.EqualTo(useNewFields ? NewName : Name));
@@ -701,6 +700,8 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(content.Filepath, Is.EqualTo(useNewFields ? NewFilepath : Filepath));
                 });
                 break;
+            default:
+                throw new NotImplementedException();
         }
     }
 

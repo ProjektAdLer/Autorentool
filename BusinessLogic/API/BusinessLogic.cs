@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.Commands;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using Shared.Configuration;
 
 namespace BusinessLogic.API;
@@ -84,10 +85,16 @@ public class BusinessLogic : IBusinessLogic
         return DataAccess.LoadLearningContent(filepath);
     }
 
-    public LearningContent LoadLearningContent(string name, MemoryStream stream)
+    public LearningContent LoadLearningContent(string name, Stream stream)
     {
         return DataAccess.LoadLearningContent(name, stream);
     }
+    /// <inheritdoc cref="IBusinessLogic.GetAllContent"/>
+    public IEnumerable<LearningContent> GetAllContent() => DataAccess.GetAllContent();
+    /// <inheritdoc cref="IBusinessLogic.RemoveContent"/>
+    public void RemoveContent(LearningContent content) => DataAccess.RemoveContent(content);
+    /// <inheritdoc cref="IBusinessLogic.SaveLink"/>
+    public void SaveLink(LinkContent linkContent) => DataAccess.SaveLink(linkContent);
 
     public LearningWorld LoadLearningWorld(Stream stream)
     {

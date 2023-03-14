@@ -1,4 +1,5 @@
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using NUnit.Framework;
 using Shared;
 
@@ -65,7 +66,9 @@ public class LearningWorldUt
         var languageChanged = "english";
         var descriptionChanged = "changed description";
         var goalsChanged = "new goals";
-        var newContent2 = new LearningContent("w", "e", "");
+        var newContent2 = new FileContent("w", "e", "");
+        var newElement = new LearningElement("foo", "bar", newContent2, "nstich", "asdf", "qwer",
+            LearningElementDifficultyEnum.Easy);
         var space2 = new LearningSpace("gg", "gg", "gg", "gg", "gg", 5);
 
         
@@ -76,6 +79,7 @@ public class LearningWorldUt
         systemUnderTest.Description = descriptionChanged;
         systemUnderTest.Goals = goalsChanged;
         systemUnderTest.LearningSpaces.Add(space2);
+        systemUnderTest.UnplacedLearningElements.Add(newElement);
         
 
         Assert.Multiple(() =>

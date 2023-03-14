@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using AngleSharp.Dom;
 using Bunit;
@@ -88,6 +89,30 @@ public static class TestExtensions
         return components!;
 
     }
+
+    /// <summary>
+    /// Will either find a component of type <typeparamref name="T"/> on the fragment, which contains the provided <paramref name="markup"/>,
+    /// or throw an assert failure.
+    /// </summary>
+    /// <param name="fragment">The fragment on which the component shall be searched for.</param>
+    /// <param name="markup">The markup that must be matched.</param>
+    /// <typeparam name="T">The type of component being searched for.</typeparam>
+    /// <returns>A component of type <typeparamref name="T"/> in <paramref name="fragment"/> which contains the provided <paramref name="markup"/></returns>
+    public static IRenderedComponent<T> FindComponentWithMarkup<T>(this IRenderedFragment fragment, string markup)
+        where T : IComponent =>
+        fragment.FindComponentsWithMarkup<T>(markup).First();
+    
+    /// <summary>
+    /// Will either find all components of type <typeparamref name="T"/> on the fragment, which contain the provided <paramref name="markup"/>,
+    /// or throw an assert failure.
+    /// </summary>
+    /// <param name="fragment">The fragment on which the component shall be searched for.</param>
+    /// <param name="markup">The markup that must be matched.</param>
+    /// <typeparam name="T">The type of component being searched for.</typeparam>
+    /// <returns>A components of type <typeparamref name="T"/> in <paramref name="fragment"/> which contain the provided <paramref name="markup"/></returns>
+    public static IEnumerable<IRenderedComponent<T>> FindComponentsWithMarkup<T>(this IRenderedFragment fragment, string markup)
+        where T : IComponent =>
+        fragment.FindComponentsOrFail<T>().Where(cmp => cmp.Markup.Contains(markup));
 
     /// <summary>
     /// Raises the <c>@onmouseleave</c> event on <paramref name="element"/>, passing the provided <paramref name="eventArgs"/>

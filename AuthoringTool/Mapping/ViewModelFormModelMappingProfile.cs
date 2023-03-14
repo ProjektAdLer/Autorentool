@@ -1,5 +1,6 @@
 using AutoMapper;
 using Presentation.Components.Forms.Models;
+using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 
@@ -16,15 +17,24 @@ public class ViewModelFormModelMappingProfile : Profile
     {
         CreateWorldMap();
         CreateSpaceMap();
+        CreateLinkContentMap();
+    }
+
+    private void CreateLinkContentMap()
+    {
+        CreateMap<LinkContentViewModel, LinkContentFormModel>()
+            .ReverseMap();
     }
 
     private void CreateSpaceMap()
     {
-        CreateMap<LearningSpaceViewModel, LearningSpaceFormModel>();
+        CreateMap<LearningSpaceViewModel, LearningSpaceFormModel>()
+            .ReverseMap();
     }
 
     private void CreateWorldMap()
     {
-        CreateMap<LearningWorldViewModel, LearningWorldFormModel>();
+        CreateMap<LearningWorldViewModel, LearningWorldFormModel>()
+            .ReverseMap();
     }
 }

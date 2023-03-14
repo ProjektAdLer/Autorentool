@@ -16,8 +16,7 @@ public class PdfTransferElementViewModelUt
         var name = "zzz";
         var shortname = "aaa";
         var parent = new LearningSpaceViewModel("abb", "bbc", "ccc", "", "", 2);
-        var content = new LearningContentViewModel("ddd", "dee", "");
-        var url = "url";
+        var content = new FileContentViewModel("ddd", "dee", "");
         var authors = "eef";
         var description = "fff";
         var goals = "ggg";
@@ -27,7 +26,7 @@ public class PdfTransferElementViewModelUt
         var positionX = 5f;
         var positionY = 21f;
 
-        var systemUnderTest = new PdfTransferElementViewModel(name, shortname, parent, content, url, authors,
+        var systemUnderTest = new PdfTransferElementViewModel(name, shortname, parent, content, authors,
             description, goals, difficulty, workload, points, positionX, positionY);
 
         Assert.Multiple(() =>
@@ -36,7 +35,6 @@ public class PdfTransferElementViewModelUt
             Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortname));
             Assert.That(systemUnderTest.Parent, Is.EqualTo(parent));
             Assert.That(systemUnderTest.LearningContent, Is.EqualTo(content));
-            Assert.That(systemUnderTest.Url, Is.EqualTo(url));
             Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));

@@ -2,6 +2,7 @@
 @using Presentation.View.LearningWorld
 @using Presentation.Components.Forms.World
 @using Presentation.Components.Forms.Space
+@using Presentation.Components.ContentFiles
 @using Presentation.PresentationLogic.DropZone
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.View.LearningSpace
@@ -37,7 +38,7 @@
                     </SidebarItem>
                     <SidebarItem>
                         <SidebarContent>
-                            <MudIcon Icon="@Icons.Material.Filled.PlusOne"></MudIcon>
+                            <MudIcon Icon="@Icons.Material.Filled.PlusOne"/>
                         </SidebarContent>
                         <MainContent>
                             <WorldFormContainer/>
@@ -45,10 +46,18 @@
                     </SidebarItem>
                     <SidebarItem>
                         <SidebarContent>
-                            <MudIcon Icon="@Icons.Material.Filled.PlusOne"></MudIcon>
+                            <MudIcon Icon="@Icons.Material.Filled.PlusOne"/>
                         </SidebarContent>
                         <MainContent>
                             <SpaceFormContainer/>
+                        </MainContent>
+                    </SidebarItem>
+                    <SidebarItem>
+                        <SidebarContent>
+                            <MudIcon Icon="@Icons.Material.Filled.FilePresent"/>
+                        </SidebarContent>
+                        <MainContent>
+                            <ContentFilesContainer/>
                         </MainContent>
                     </SidebarItem>
                 </Sidebar>

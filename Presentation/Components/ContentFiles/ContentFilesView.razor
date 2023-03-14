@@ -1,0 +1,96 @@
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.LearningContent
+<MudTable Items="Items" Class="w-full grow shrink h-full flex flex-col flex-nowrap"
+          Dense="true" Virtualize="true" Filter="Filter" >
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">All element content files</MudText>
+        <MudSpacer/>
+        <MudTextField @bind-Value="_searchString" Immediate="true" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Outlined.Search"/>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh>Delete</MudTh>
+        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<LearningContentViewModel,object>(x => x.Name)">@nameof(LearningContentViewModel.Name)</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortBy="new Func<LearningContentViewModel,object>(TypeSortBy)">@nameof(FileContentViewModel.Type)</MudTableSortLabel></MudTh>
+        <MudTh>Preview</MudTh>
+        @if (_showFilepath)
+        {
+            <MudTh>@nameof(FileContentViewModel.Filepath)/@nameof(LinkContentViewModel.Link)</MudTh>
+        }
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Delete" Class="px-1.5">
+            <MudIconButton Icon="@Icons.Material.Filled.Delete" OnClick="() => Delete(context)"/>
+        </MudTd>
+        <MudTd DataLabel="Name" Class="px-1.5">
+            <MudTooltip Text="@context.Name" Arrow="true" Placement="Placement.Right">
+                <p class="w-fit max-w-[10rem] text-ellipsis overflow-hidden">@context.Name</p>
+            </MudTooltip>
+        </MudTd>
+        <MudTd DataLabel="Type" Class="px-1.5">
+            @if (context is FileContentViewModel fileContentContext)
+            {
+                @fileContentContext.Type
+            }
+            else
+            {
+                <span>Link</span>
+            }
+        </MudTd>
+        <MudTd Class="px-1.5"><MudIconButton Icon="@Icons.Material.Filled.Preview" OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"/></MudTd>
+        @if (_showFilepath)
+        {
+            <MudTd DataLabel="Filepath/Link" Class="px-1.5">
+                @switch (context)
+                {
+                    case FileContentViewModel fileContentContext:
+                        @fileContentContext.Filepath
+                        break;
+                    case LinkContentViewModel linkContentContext:
+                        @linkContentContext.Link
+                        break;
+                }
+            </MudTd>
+        }
+    </RowTemplate>
+    <PagerContent>
+        <div class="max-h-40% min-h-fit shrink grow">
+            <MudTablePager HideRowsPerPage="true" HorizontalAlignment="HorizontalAlignment.Center"/>
+            <MudSwitch Class="pl-4" @bind-Checked="_showFilepath" Color="Color.Primary">Show filepath</MudSwitch>
+        </div>
+    </PagerContent>
+</MudTable>
+@code {
+
+#pragma warning disable CS8618 - injected by framework - n.stich
+    [Inject]
+    private IPresentationLogic PresentationLogic { get; set; }
+#pragma warning restore CS8618
+    private IEnumerable<LearningContentViewModel> Items => PresentationLogic.GetAllContent();
+    
+    private string? _searchString;
+    private bool _showFilepath;
+
+    private object TypeSortBy(LearningContentViewModel content) => content is FileContentViewModel fc ? fc.Type : "Link";
+
+    private bool Filter(LearningContentViewModel element) => FilterInternal(element, _searchString);
+
+    private bool FilterInternal(LearningContentViewModel element, string? searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString)) return true;
+        var elementType = element is FileContentViewModel fileContent ? fileContent.Type : "Link";
+        if (element.Name.Contains(searchString) || elementType.Contains(searchString)) return true;
+        return $"{element.Name}.{elementType}".Contains(searchString);
+    }
+
+    private void Delete(LearningContentViewModel item)
+    {
+        //TODO: dialog asking for confirmation
+        PresentationLogic.RemoveContent(item);
+    }
+
+    public async Task RerenderAsync()
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+
+}

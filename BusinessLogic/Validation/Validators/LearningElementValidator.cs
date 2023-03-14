@@ -1,4 +1,5 @@
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using BusinessLogic.Validation.Validators.CustomValidators;
 using FluentValidation;
 using JetBrains.Annotations;

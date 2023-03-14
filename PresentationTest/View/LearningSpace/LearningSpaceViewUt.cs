@@ -7,11 +7,9 @@ using MudBlazor.Services;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
-using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
-using Presentation.PresentationLogic.ModalDialog;
 using Presentation.View.LearningSpace;
 using TestContext = Bunit.TestContext;
 
@@ -23,7 +21,6 @@ public class LearningSpaceViewUt
 #pragma warning disable CS8618 // set in setup - n.stich
     private TestContext _ctx;
     private ILearningSpacePresenter _learningSpacePresenter;
-    private ILearningSpaceViewModalDialogFactory _modalDialogFactory;
 #pragma warning restore CS8618
 
     [SetUp]
@@ -33,9 +30,7 @@ public class LearningSpaceViewUt
         _ctx.Services.AddMudServices();
         _ctx.JSInterop.SetupVoid("mudDragAndDrop.initDropZone", _ => true);
         _learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
-        _modalDialogFactory = Substitute.For<ILearningSpaceViewModalDialogFactory>();
         _ctx.Services.AddSingleton(_learningSpacePresenter);
-        _ctx.Services.AddSingleton(_modalDialogFactory);
         _ctx.Services.AddLogging();
     }
 
@@ -47,7 +42,6 @@ public class LearningSpaceViewUt
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Instance.LearningSpaceP, Is.EqualTo(_learningSpacePresenter));
-            Assert.That(systemUnderTest.Instance.ModalDialogFactory, Is.EqualTo(_modalDialogFactory));
         });
     }
 
@@ -99,12 +93,10 @@ public class LearningSpaceViewUt
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
         var label = systemUnderTest.FindOrFail("label");
-        var editButton = systemUnderTest.FindOrFail("button.btn.btn-primary.edit-learning-element");
         var deleteButton = systemUnderTest.FindOrFail("button.btn.btn-primary.delete-learning-element");
         var saveButton = systemUnderTest.FindOrFail("button.btn.btn-primary.save-learning-element");
         
         label.MarkupMatches(@"<label id=""learning-element-info"">Selected element: my secret name, Description: a super long description</label>");
-        editButton.MarkupMatches(@"<button class=""btn btn-primary edit-learning-element"">Edit selected Learning Element</button>");
         deleteButton.MarkupMatches(@"<button class=""btn btn-primary delete-learning-element"">Delete Learning Element</button>");
         saveButton.MarkupMatches(@"<button class=""btn btn-primary save-learning-element"">Save selected Learning Element</button>");
     }
@@ -126,185 +118,6 @@ public class LearningSpaceViewUt
             Assert.That(() => systemUnderTest.Find("button.btn.btn-primary.save-learning-object"),
                 Throws.TypeOf<ElementNotFoundException>());
         });
-    }
-
-    [Test]
-    public void EditLearningSpaceDialog_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
-    {
-        //prepare presenter return values
-        var learningSpace = Substitute.For<ILearningSpaceViewModel>();
-        _learningSpacePresenter.EditLearningSpaceDialogOpen.Returns(true);
-        _learningSpacePresenter.LearningSpaceVm.Returns(learningSpace);
-        var initialValues = new Dictionary<string, string>
-        {
-            { "foo", "bar" }
-        };
-        _learningSpacePresenter.EditLearningSpaceDialogInitialValues.Returns(initialValues);
-
-        RenderFragment fragment = builder =>
-        {
-            builder.OpenElement(0, "p");
-            builder.AddContent(1, "foobar");
-            builder.CloseElement();
-        };
-        //prepare dialog factory return value and capture passed callback
-        ModalDialogOnClose? callback = null;
-        _modalDialogFactory
-            .GetEditLearningSpaceFragment(initialValues, Arg.Any<ModalDialogOnClose>())
-            .Returns(fragment)
-            .AndDoes(ci =>
-            {
-                callback = ci.Arg<ModalDialogOnClose>();
-            });
-
-        //create system under test which will immediately render, therefore execute
-        var systemUnderTest = GetLearningSpaceViewForTesting();
-
-        //assert dialogFactory was called and that our dialog fragment was rendered
-        _modalDialogFactory.Received().GetEditLearningSpaceFragment(initialValues, Arg.Any<ModalDialogOnClose>());
-        var p = systemUnderTest.FindOrFail("p");
-        p.MarkupMatches("<p>foobar</p>");
-
-        if (callback == null)
-        {
-            Assert.Fail("Didn't get a callback from call to modal dialog factory");
-        }
-
-        var returnDictionary = new Dictionary<string, string>
-        {
-            { "foo", "baz" },
-            { "bar", "baz" }
-        };
-        var returnValue = new ModalDialogOnCloseResult(ModalDialogReturnValue.Ok, returnDictionary);
-
-        //call the callback with the return value
-        callback!.Invoke(returnValue);
-
-        //assert that the delegate we called executed presenter
-        _learningSpacePresenter.Received().OnEditSpaceDialogClose(returnValue);
-    }
-
-    [Test]
-    public void CreateLearningElementDialogOpen_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
-    {
-        _learningSpacePresenter.CreateLearningElementDialogOpen.Returns(true);
-        var contentMock = new LearningContentViewModel("foo", "bla", "");
-        _learningSpacePresenter.DragAndDropLearningContent.Returns(contentMock);
-        var space = Substitute.For<ILearningSpaceViewModel>();
-        space.Name = "spacename";
-        _learningSpacePresenter.LearningSpaceVm.Returns(space);
-
-        RenderFragment fragment = builder =>
-        {
-            builder.OpenElement(0, "p");
-            builder.AddContent(1, "foobar");
-            builder.CloseElement();
-        };
-
-        ModalDialogOnClose? callback = null;
-        _modalDialogFactory
-            .GetCreateLearningElementFragment(contentMock, Arg.Any<ModalDialogOnClose>())
-            .Returns(fragment)
-            .AndDoes(ci =>
-            {
-                callback = ci.Arg<ModalDialogOnClose>();
-            });
-
-        var systemUnderTest = GetLearningSpaceViewForTesting();
-
-        _modalDialogFactory.Received().GetCreateLearningElementFragment(contentMock, Arg.Any<ModalDialogOnClose>());
-        var p = systemUnderTest.FindOrFail("p");
-        p.MarkupMatches("<p>foobar</p>");
-
-        if (callback == null)
-        {
-            Assert.Fail("Didn't get a callback from call to modal dialog factory");
-        }
-
-        var returnValue = new ModalDialogOnCloseResult(ModalDialogReturnValue.Ok);
-
-        callback!.Invoke(returnValue);
-
-        _learningSpacePresenter.Received().OnCreateElementDialogClose(returnValue);
-    }
-
-    [Test]
-    public void EditLearningElementDialogOpen_FlagSet_CallsFactory_RendersRenderFragment_CallsPresenterOnDialogClose()
-    {
-        //prepare presenter return values
-        var learningSpace = Substitute.For<ILearningSpaceViewModel>();
-        _learningSpacePresenter.EditLearningElementDialogOpen.Returns(true);
-        _learningSpacePresenter.LearningSpaceVm.Returns(learningSpace);
-        var initialValues = new Dictionary<string, string>
-        {
-            { "foo", "bar" }
-        };
-        _learningSpacePresenter.EditLearningElementDialogInitialValues.Returns(initialValues);
-
-        RenderFragment fragment = builder =>
-        {
-            builder.OpenElement(0, "p");
-            builder.AddContent(1, "foobar");
-            builder.CloseElement();
-        };
-        //prepare dialog factory return value and capture passed callback
-        ModalDialogOnClose? callback = null;
-        _modalDialogFactory
-            .GetEditLearningElementFragment(initialValues, Arg.Any<ModalDialogOnClose>())
-            .Returns(fragment)
-            .AndDoes(ci =>
-            {
-                callback = ci.Arg<ModalDialogOnClose>();
-            });
-        
-        //create system under test which will immediately render, therefore execute
-        var systemUnderTest = GetLearningSpaceViewForTesting();
-
-        //assert dialogFactory was called and that our dialog fragment was rendered
-        _modalDialogFactory.Received().GetEditLearningElementFragment(initialValues, Arg.Any<ModalDialogOnClose>());
-        var p = systemUnderTest.FindOrFail("p");
-        p.MarkupMatches("<p>foobar</p>");
-
-        if (callback == null)
-        {
-            Assert.Fail("Didn't get a callback from call to modal dialog factory");
-        }
-
-        var returnDictionary = new Dictionary<string, string>
-        {
-            { "foo", "baz" },
-            { "bar", "baz" }
-        };
-        var returnValue = new ModalDialogOnCloseResult(ModalDialogReturnValue.Ok, returnDictionary);
-
-        //call the callback with the return value
-        callback!.Invoke(returnValue);
-
-        //assert that the delegate we called executed presenter
-        _learningSpacePresenter.Received().OnEditElementDialogClose(returnValue);
-    }
-
-    [Test]
-    public void AddElementButton_Clicked_CallsAddNewLearningElement()
-    {
-        var systemUnderTest = GetLearningSpaceViewForTesting();
-
-        var button = systemUnderTest.FindOrFail("button.btn.btn-primary.add-learning-element");
-        button.Click();
-        _learningSpacePresenter.Received().AddNewLearningElement();
-    }
-
-    [Test]
-    public void EditObjectButton_Clicked_CallsEditSelectedLearningObject()
-    {
-        var space = Substitute.For<ILearningSpaceViewModel>();
-        space.SelectedLearningElement.Returns(Substitute.For<ILearningElementViewModel>());
-        _learningSpacePresenter.LearningSpaceVm.Returns(space);
-        var systemUnderTest = GetLearningSpaceViewForTesting();
-
-        var button = systemUnderTest.FindOrFail("button.btn.btn-primary.edit-learning-element");
-        button.Click();
-        _learningSpacePresenter.Received().EditSelectedLearningElement();
     }
 
     [Test]

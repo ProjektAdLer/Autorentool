@@ -367,11 +367,26 @@ public interface IPresentationLogic
     /// <returns></returns>
     Task<LearningContentViewModel> LoadTextAsync();
 
-    LearningContentViewModel LoadLearningContentViewModel(string name, MemoryStream stream);
+    LearningContentViewModel LoadLearningContentViewModel(string name, Stream stream);
+    
+    /// <summary>
+    /// Gets all content files in the appdata folder.
+    /// </summary>
+    /// <returns>An enumerable of content files.</returns>
+    IEnumerable<LearningContentViewModel> GetAllContent();
+
+    /// <summary>
+    /// Deletes the file referenced by the given content object.
+    /// </summary>
+    /// <param name="content">The content whos file shall be deleted.</param>
+    /// <exception cref="FileNotFoundException">The file corresponding to <paramref name="content"/> wasn't found.</exception>
+    public void RemoveContent(LearningContentViewModel content);
     void LoadLearningWorldViewModel(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, Stream stream);
     void LoadLearningSpaceViewModel(ILearningWorldViewModel learningWorldVm, Stream stream);
     void LoadLearningElementViewModel(ILearningSpaceViewModel parentSpaceVm, int slotIndex, Stream stream);
     event Action? OnUndoRedoPerformed;
     void DragObjectInPathWay(IObjectInPathWayViewModel pathWayObjectVm, double oldPositionX, double oldPositionY);
     void DragLearningElement(ILearningElementViewModel learningElementVm, double oldPositionX, double oldPositionY);
+    Task ShowLearningContentAsync(LearningContentViewModel content);
+    void SaveLink(LinkContentViewModel linkContentVm);
 }

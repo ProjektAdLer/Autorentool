@@ -26,9 +26,4 @@ public interface IAuthoringToolWorkspaceViewModel : INotifyPropertyChanged, ILea
     /// </summary>
     /// <exception cref="ArgumentException">The world to be set isn't contained in the collection.</exception>
     LearningWorldViewModel? SelectedLearningWorld { get; set; }
-    
-    /// <summary>
-    /// A dictionary containing the initial values for fields in the 'Edit World' dialog.
-    /// </summary>
-    IDictionary<string, string>? EditDialogInitialValues { get; set; }
 }

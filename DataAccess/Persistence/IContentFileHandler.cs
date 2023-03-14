@@ -1,4 +1,4 @@
-using PersistEntities;
+using PersistEntities.LearningContent;
 
 namespace DataAccess.Persistence;
 
@@ -14,6 +14,7 @@ public interface IContentFileHandler
     /// <remarks>If a file of identical length and SHA256 hash already exists in the appdata folder,
     /// we don't copy the file and use the existing one instead.</remarks>
     public Task<LearningContentPe> LoadContentAsync(string filepath);
+
     /// <summary>
     /// Writes the content of the given stream into an application data folder and returns a <see cref="LearningContentPe"/> object referencing it.
     /// </summary>
@@ -23,5 +24,21 @@ public interface IContentFileHandler
     /// <exception cref="IOException">The stream has a length of 0 and is empty.</exception>
     /// <remarks>If a file of identical length and SHA256 hash already exists in the appdata folder,
     /// we don't copy the stream and use the existing one instead.</remarks>
-    public Task<LearningContentPe> LoadContentAsync(string name, MemoryStream stream);
+    public Task<LearningContentPe> LoadContentAsync(string name, Stream stream);
+    /// <summary>
+    /// Gets all content files in the appdata folder.
+    /// </summary>
+    /// <returns>An enumerable of content files.</returns>
+    public IEnumerable<LearningContentPe> GetAllContent();
+    /// <summary>
+    /// Deletes the file referenced by the given content object.
+    /// </summary>
+    /// <param name="content">The content whos file shall be deleted.</param>
+    /// <exception cref="FileNotFoundException">The file corresponding to <paramref name="content"/> wasn't found.</exception>
+    void RemoveContent(LearningContentPe content);
+    /// <summary>
+    /// Adds the given <see cref="LinkContentPe"/> to the link file.
+    /// </summary>
+    /// <param name="linkContent">The link to add.</param>
+    void SaveLink(LinkContentPe linkContent);
 }

@@ -1,6 +1,7 @@
 using BusinessLogic.Commands;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using NUnit.Framework;
 using Shared;
 
@@ -14,8 +15,8 @@ public class EditLearningElementUt
     public void Execute_EditsLearningElement()
     {
         var parent = new LearningSpace("l", "k", "j", "j", "j", 5);
-        var content = new LearningContent("bar", "foo", "");
-        var element = new LearningElement("a", "b", content, "url",
+        var content = new FileContent("bar", "foo", "");
+        var element = new LearningElement("a", "b", content,
             "e", "f", "g", LearningElementDifficultyEnum.Medium, parent, 8, 9, 17f, 29f);
         parent.LearningSpaceLayout.LearningElements = new ILearningElement[]{element};
 
@@ -31,7 +32,7 @@ public class EditLearningElementUt
         bool actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new EditLearningElement(element, parent, name, shortname, url, authors, description, goals, difficulty,
+        var command = new EditLearningElement(element, parent, name, shortname, authors, description, goals, difficulty,
             workload, points, mappingAction);
         
         Assert.Multiple(() =>
@@ -77,7 +78,7 @@ public class EditLearningElementUt
     public void Undo_MementoIsNull_ThrowsException()
     {
         var parent = new LearningSpace("l", "k", "j", "j", "j", 5);
-        var element = new LearningElement("a", "b", null!, "url","c", "d", "e", LearningElementDifficultyEnum.Easy);
+        var element = new LearningElement("a", "b", null!,"c", "d", "e", LearningElementDifficultyEnum.Easy);
         var name = "new element";
         var shortname = "ne";
         var url = "google.com";
@@ -90,7 +91,7 @@ public class EditLearningElementUt
         bool actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new EditLearningElement(element, parent, name, shortname, url ,authors, description, goals, difficulty, workload, points, mappingAction);
+        var command = new EditLearningElement(element, parent, name, shortname,authors, description, goals, difficulty, workload, points, mappingAction);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -102,8 +103,8 @@ public class EditLearningElementUt
     public void UndoRedo_UndoesAndRedoesEditLearningElement()
     {
         var parent = new LearningSpace("l", "k", "j", "j", "j", 5);
-        var content = new LearningContent("bar", "foo", "");
-        var element = new LearningElement("a", "b", content, "url",
+        var content = new FileContent("bar", "foo", "");
+        var element = new LearningElement("a", "b", content,
             "e", "f","g", LearningElementDifficultyEnum.Medium, parent, 8, 9, 17f, 29f);
         parent.LearningSpaceLayout.LearningElements = new ILearningElement[] {element};
         
@@ -119,7 +120,7 @@ public class EditLearningElementUt
         bool actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new EditLearningElement(element, parent, name, shortname, url, authors, description, goals, difficulty,
+        var command = new EditLearningElement(element, parent, name, shortname, authors, description, goals, difficulty,
             workload, points, mappingAction);
         
         Assert.Multiple(() =>

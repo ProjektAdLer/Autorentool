@@ -183,7 +183,7 @@ public class CommandStateManagerUt
     public void ExecuteCommandAfterRedoingAnCommand_TriggersRemovedCommandsFromStacksWithRemainingCommandsInStacks_AllCommandTypes()
     {
         var learningElement =
-            new LearningElement("n", "s", null!, "u", "a", "d", "g", LearningElementDifficultyEnum.Easy);
+            new LearningElement("n", "s", null!, "a", "d", "g", LearningElementDifficultyEnum.Easy);
         var learningSpace = new LearningSpace("n", "s", "a", "d", "g", 5, new LearningSpaceLayout(new ILearningElement?[6],FloorPlanEnum.Rectangle2X3));
         var learningWorld = new LearningWorld("n", "s", "a", "l","d", "g");
         var workspace = new AuthoringToolWorkspace(null, new List<LearningWorld>());

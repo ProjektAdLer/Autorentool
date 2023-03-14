@@ -18,9 +18,6 @@ using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.DropZone;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
-using Presentation.PresentationLogic.ModalDialog;
-using Presentation.PresentationLogic.Toolbox;
-using Presentation.View.Toolbox;
 using Shared;
 using Shared.Configuration;
 
@@ -57,8 +54,6 @@ public class StartupUt
     
     private static readonly Type[] ConfigureToolboxRequiredTypes =
     {
-        typeof(IAbstractToolboxRenderFragmentFactory), typeof(IToolboxEntriesProviderModifiable),
-        typeof(IToolboxEntriesProvider), typeof(IToolboxController), typeof(IToolboxResultFilter),
         typeof(IAuthoringToolWorkspacePresenterToolboxInterface), typeof(ILearningWorldPresenterToolboxInterface),
         typeof(ILearningSpacePresenterToolboxInterface)
     };
@@ -99,11 +94,7 @@ public class StartupUt
     private static readonly Type[] ConfigurePresentationLogicRequiredTypes =
     {
         typeof(IPresentationLogic), typeof(IAuthoringToolWorkspacePresenter), typeof(ILearningWorldPresenter),
-        typeof(ILearningSpacePresenter), typeof(IAuthoringToolWorkspaceViewModel),
-        typeof(ILearningSpaceViewModalDialogFactory), typeof(ILearningSpaceViewModalDialogInputFieldsFactory),
-        typeof(ILearningWorldViewModalDialogFactory), typeof(ILearningWorldViewModalDialogInputFieldsFactory),
-        typeof(IAuthoringToolWorkspaceViewModalDialogFactory), typeof(IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory),
-        typeof(ILearningWorldViewModalDialogInputFieldsFactory), typeof(ILearningElementDropZoneHelper)
+        typeof(ILearningSpacePresenter), typeof(IAuthoringToolWorkspaceViewModel), typeof(ILearningElementDropZoneHelper)
     };
     [Test]
     [TestCaseSource(nameof(ConfigurePresentationLogicRequiredTypes))]

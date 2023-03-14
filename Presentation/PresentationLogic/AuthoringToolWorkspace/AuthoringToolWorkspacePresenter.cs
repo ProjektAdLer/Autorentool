@@ -1,5 +1,4 @@
-﻿using Presentation.Components.ModalDialog;
-using Presentation.PresentationLogic.API;
+﻿using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
@@ -20,10 +19,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         _presentationLogic = presentationLogic;
         _logger = logger;
         _shutdownManager = shutdownManager;
-        CreateLearningWorldDialogOpen = false;
-        EditLearningWorldDialogOpen = false;
-        CreateLearningSpaceDialogOpen = false;
-        EditLearningSpaceDialogOpen = false;
         DeletedUnsavedWorld = null;
         InformationMessageToShow = null;
         if (presentationLogic.RunningElectron) 
@@ -38,14 +33,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     private readonly ILearningSpacePresenter _learningSpacePresenter;
     private readonly ILogger<AuthoringToolWorkspacePresenter> _logger;
     private readonly IShutdownManager _shutdownManager;
-
-    public bool CreateLearningWorldDialogOpen { get; set; }
-    public bool EditLearningWorldDialogOpen { get; set; }
-
-    internal bool CreateLearningSpaceDialogOpen { get; set; }
-    internal bool EditLearningSpaceDialogOpen { get; set; }
-
-    public bool SaveUnsavedChangesDialogOpen { get; set; }
 
     public bool LearningWorldSelected => AuthoringToolWorkspaceVm.SelectedLearningWorld != null;
 
@@ -75,11 +62,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
 
 
     #region LearningWorld
-
-    public void AddNewLearningWorld()
-    {
-        CreateLearningWorldDialogOpen = true;
-    }
 
     /// <summary>
     /// Sets the selected <see cref="LearningWorldViewModel"/> in the view model.
@@ -117,26 +99,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         OnLearningWorldDelete?.Invoke(this, learningWorld);
     }
 
-    public void OpenEditSelectedLearningWorldDialog()
-    {
-        if (AuthoringToolWorkspaceVm.SelectedLearningWorld == null)
-        {
-            throw new ApplicationException("SelectedLearningWorld is null");
-        }
-
-        //prepare dictionary property to pass to dialog
-        AuthoringToolWorkspaceVm.EditDialogInitialValues = new Dictionary<string, string>
-        {
-            {"Name", AuthoringToolWorkspaceVm.SelectedLearningWorld.Name},
-            {"Shortname", AuthoringToolWorkspaceVm.SelectedLearningWorld.Shortname},
-            {"Authors", AuthoringToolWorkspaceVm.SelectedLearningWorld.Authors},
-            {"Language", AuthoringToolWorkspaceVm.SelectedLearningWorld.Language},
-            {"Description", AuthoringToolWorkspaceVm.SelectedLearningWorld.Description},
-            {"Goals", AuthoringToolWorkspaceVm.SelectedLearningWorld.Goals},
-        };
-        EditLearningWorldDialogOpen = true;
-    }
-    
     public void AddLearningWorld(LearningWorldViewModel learningWorld)
     {
         _presentationLogic.AddLearningWorld(AuthoringToolWorkspaceVm, learningWorld);
@@ -159,252 +121,13 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         await SaveLearningWorldAsync(AuthoringToolWorkspaceVm.SelectedLearningWorld);
     }
 
-    public void OnCreateWorldDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        var (response, data) = returnValueTuple;
-        CreateLearningWorldDialogOpen = false;
-
-        if (response == ModalDialogReturnValue.Cancel) return;
-        if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
-
-        foreach (var pair in data)
-        {
-            _logger.LogTrace("{PairKey}:{PairValue}\\n", pair.Key, pair.Value);
-        }
-
-        //required arguments
-        var name = data["Name"];
-        //optional arguments
-        var shortname = data.ContainsKey("Shortname") ? data["Shortname"] : "";
-        var language = data.ContainsKey("Language") ? data["Language"] : "";
-        var description = data.ContainsKey("Description") ? data["Description"] : "";
-        var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
-        var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
-        _presentationLogic.CreateLearningWorld(AuthoringToolWorkspaceVm, name, shortname, authors, language, description, goals);
-        OnLearningWorldCreate?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
-    }
-
-    public void OnEditWorldDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        var (response, data) = returnValueTuple;
-        EditLearningWorldDialogOpen = false;
-
-        if (response == ModalDialogReturnValue.Cancel) return;
-        if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
-
-        foreach (var pair in data)
-        {
-            _logger.LogTrace("{PairKey}:{PairValue}\\n", pair.Key, pair.Value);
-        }
-
-        //required arguments
-        var name = data["Name"];
-        var shortname = data["Shortname"];
-        var language = data["Language"];
-        var description = data["Description"];
-        //optional arguments
-        var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
-        var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
-        
-        if (AuthoringToolWorkspaceVm.SelectedLearningWorld == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        _presentationLogic.EditLearningWorld(AuthoringToolWorkspaceVm.SelectedLearningWorld, name, shortname, authors, language, description, goals);
-    }
 
     internal void OnBeforeShutdown(object? _, BeforeShutdownEventArgs args)
     {
-        if (SaveUnsavedChangesDialogOpen)
-        {
-            args.CancelShutdown();
-            return;
-        }
-
-        if (!AuthoringToolWorkspaceVm.LearningWorlds.Any(lw => lw.UnsavedChanges)) return;
-        args.CancelShutdown();
-        UnsavedWorldsQueue =
-            new Queue<LearningWorldViewModel>(
-                AuthoringToolWorkspaceVm.LearningWorlds.Where(lw => lw.UnsavedChanges));
-        SaveUnsavedChangesDialogOpen = true;
-
-        OnForceViewUpdate?.Invoke();
+        throw new NotImplementedException("Need to redo the dialog and save queue");
     }
 
-    internal void CompletedSaveQueue(bool cancelled = false)
-    {
-        UnsavedWorldsQueue = null;
-        SaveUnsavedChangesDialogOpen = false;
-        if (!cancelled)
-            _shutdownManager.BeginShutdown();
-    }
 
     #endregion
 
-    #region DragAndDrop
-
-    public Task ProcessDragAndDropResult(Tuple<string, MemoryStream> result)
-    {
-        var (name, stream) = result;
-        var ending = name.Split(".").Last().ToLower();
-        switch (ending)
-        {
-            case "awf":
-                LoadLearningWorldFromFileStream(stream);
-                break;
-            case "asf":
-                LoadLearningSpaceFromFileStream(stream);
-                break;
-            case "aef":
-                //TODO: LearningElements should be dropped into specific Slot. At the moment they are loaded into Slot 0. - AW
-                LoadLearningElementFromFileStream(stream, 0);
-                break;
-            case "jpg":
-            case "png":
-            case "webp":
-            case "bmp":
-            case "txt":
-            case "c":
-            case "h":
-            case "cpp":
-            case "cc":
-            case "c++":
-            case "py":
-            case "cs":
-            case "js":
-            case "php":
-            case "html":
-            case "css":
-            case "mp4":
-            case "h5p":
-            case "pdf":
-                var learningContent = _presentationLogic.LoadLearningContentViewModel(name, stream);
-                CallCreateLearningElementWithPreloadedContentFromActiveView(learningContent);
-                break;
-            default:
-                _logger.LogInformation("Couldn\'t load file {Name} because the file extension {Ending} is not supported", name, ending);
-                InformationMessageToShow =
-                    $"Couldn't load file '{name}', because the file extension '{ending}' is not supported.";
-                break;
-        }
-
-        return Task.CompletedTask;
-    }
-
-    internal void CallCreateLearningElementWithPreloadedContentFromActiveView(LearningContentViewModel learningContent)
-    {
-        if (AuthoringToolWorkspaceVm.SelectedLearningWorld is not { } world) return;
-        if (world.ShowingLearningSpaceView)
-        {
-            if (_learningSpacePresenter.LearningSpaceVm is not { }) return;
-            _learningSpacePresenter.CreateLearningElementWithPreloadedContent(learningContent);
-        }
-        else
-        {
-            InformationMessageToShow = "Learning elements can only get loaded into learning spaces.";
-        }
-    }
-
-    internal void LoadLearningWorldFromFileStream(Stream stream)
-    {
-        _presentationLogic.LoadLearningWorldViewModel(AuthoringToolWorkspaceVm, stream);
-    }
-
-    internal void LoadLearningSpaceFromFileStream(Stream stream)
-    {
-        if (AuthoringToolWorkspaceVm.SelectedLearningWorld == null)
-        {
-            InformationMessageToShow = "A learning world must be selected to import a learning space.";
-            return;
-        }
-        _presentationLogic.LoadLearningSpaceViewModel(AuthoringToolWorkspaceVm.SelectedLearningWorld, stream);
-    }
-
-    internal void LoadLearningElementFromFileStream(Stream stream, int slotIndex)
-    {
-        if (AuthoringToolWorkspaceVm.SelectedLearningWorld is not { } world)
-        {
-            InformationMessageToShow = "A learning world must be selected to import a learning element.";
-            return;
-        }
-        if (world.ShowingLearningSpaceView)
-        {
-            if (_learningSpacePresenter.LearningSpaceVm is not { } space)
-            {
-                throw new ApplicationException(
-                    $"ShowingLearningSpaceView for LearningWorld '{world.Name}' is true, but LearningSpaceVm in LearningSpacePresenter is null");
-            }
-
-            _presentationLogic.LoadLearningElementViewModel(space, slotIndex, stream);
-        }
-        else
-        {
-            InformationMessageToShow = "Learning elements can only get loaded into learning spaces.";
-        }
-    }
-    
-    #endregion
-
-    public void OnSaveWorldDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        if (UnsavedWorldsQueue == null)
-            throw new ApplicationException("SaveUnsavedChanges modal returned value despite UnsavedWorldsQueue being null");
-        var returnValue = returnValueTuple.ReturnValue;
-        switch (returnValue)
-        {
-            case ModalDialogReturnValue.Cancel: //we want to cancel closing the application entirely
-                CompletedSaveQueue(true);
-                return;
-            case ModalDialogReturnValue.Yes: //we want to save the world and iterate the queue
-            {
-                var world = UnsavedWorldsQueue.Dequeue();
-                try
-                {
-                    SaveLearningWorldAsync(world).Wait();
-                }
-                catch (OperationCanceledException)
-                {
-                    CompletedSaveQueue(true);
-                }
-                break;
-            }
-            case ModalDialogReturnValue.No: //we do not want to save the world but iterate the queue anyway
-            {
-                var world = UnsavedWorldsQueue.Dequeue();
-                world.UnsavedChanges = false;
-                break;
-            }
-            case ModalDialogReturnValue.Ok:
-            case ModalDialogReturnValue.Delete:
-            default:
-                throw new ArgumentOutOfRangeException(nameof(returnValueTuple), $"Unexpected return value of {returnValue}");
-        }
-        if (!UnsavedWorldsQueue.Any())
-        {
-            CompletedSaveQueue();
-        }
-    }
-
-    public void OnSaveDeletedWorldDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        var returnValue = returnValueTuple.ReturnValue;
-        if (DeletedUnsavedWorld == null)
-            throw new ApplicationException("SaveDeletedWorld modal returned value despite DeleteUnsavedWorld being null");
-        switch (returnValue)
-        {
-            case ModalDialogReturnValue.Yes:
-            {
-                SaveLearningWorldAsync(DeletedUnsavedWorld).Wait();
-                break;
-            }
-            case ModalDialogReturnValue.No:
-            {
-                break;
-            }
-            case ModalDialogReturnValue.Ok:
-            case ModalDialogReturnValue.Cancel:
-            case ModalDialogReturnValue.Delete:
-            default:
-                throw new ArgumentOutOfRangeException();
-        }
-        DeletedUnsavedWorld = null;
-    }
 }

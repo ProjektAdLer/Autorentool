@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using NUnit.Framework;
 using PersistEntities;
+using PersistEntities.LearningContent;
 
 namespace DataAccessTest.Persistence;
 
@@ -31,8 +32,9 @@ public class PersistenceCt
         var initialCondition1Id = condition1.Id;
         var condition2 = new PathWayConditionPe(ConditionEnumPe.And, 5, 6);
         var initialCondition2Id = condition2.Id;
-        var content = new LearningContentPe("a", "b", "");
-        var element = new LearningElementPe("le", "la", content, "url","lll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
+        var content = new FileContentPe("a", "b", "");
+        var element = new LearningElementPe("le", "la", content, "lll", "llll", "lllll",
+            LearningElementDifficultyEnumPe.Easy);
         var initialElementId = element.Id;
         space1.LearningSpaceLayout.LearningElements[0] = element;
         world.LearningSpaces.Add(space1);
@@ -97,8 +99,9 @@ public class PersistenceCt
     {
         var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5, new LearningSpaceLayoutPe(new ILearningElementPe[6], FloorPlanEnumPe.Rectangle2X3));
         var initialSpaceId = space.Id;
-        var content = new LearningContentPe("a", "b", "");
-        var element = new LearningElementPe("le", "la", content,"url","ll", "l" ,"lll", LearningElementDifficultyEnumPe.Easy);
+        var content = new FileContentPe("a", "b", "");
+        var element =
+            new LearningElementPe("le", "la", content, "ll", "l", "lll", LearningElementDifficultyEnumPe.Easy);
         var initialElementId = element.Id;
         space.LearningSpaceLayout.LearningElements[0] = element;
         
@@ -118,8 +121,8 @@ public class PersistenceCt
     [Test]
     public void Persistence_SaveAndLoadElement_Stream_ObjectsAreEquivalent()
     {
-        var content = new LearningContentPe("a", "b", "");
-        var element = new LearningElementPe("le", "la", content, "url","ll", "ll", "lll", LearningElementDifficultyEnumPe.Easy);
+        var content = new FileContentPe("a", "b", "");
+        var element = new LearningElementPe("le", "la", content, "ll", "ll", "lll", LearningElementDifficultyEnumPe.Easy);
         var initialElementId = element.Id;
         
         using var stream = new MemoryStream();
@@ -147,8 +150,9 @@ public class PersistenceCt
         var initialCondition1Id = condition1.Id;
         var condition2 = new PathWayConditionPe(ConditionEnumPe.And, 5, 6);
         var initialCondition2Id = condition2.Id;
-        var content = new LearningContentPe("a", "b", "");
-        var element = new LearningElementPe("le", "la", content, "url","lll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
+        var content = new FileContentPe("a", "b", "");
+        var element = new LearningElementPe("le", "la", content, "lll", "llll", "lllll",
+            LearningElementDifficultyEnumPe.Easy);
         var initialElementId = element.Id;
         space1.LearningSpaceLayout.LearningElements[0] = element;
         world.LearningSpaces.Add(space1);
@@ -212,8 +216,9 @@ public class PersistenceCt
     {
         var space = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5, new LearningSpaceLayoutPe(new ILearningElementPe?[6], FloorPlanEnumPe.Rectangle2X3));
         var initialSpaceId = space.Id;
-        var content = new LearningContentPe("a", "b", "");
-        var element = new LearningElementPe("le", "la", content, "url","ll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
+        var content = new FileContentPe("a", "b", "");
+        var element = new LearningElementPe("le", "la", content, "ll", "llll", "lllll",
+            LearningElementDifficultyEnumPe.Easy);
         var initialElementId = element.Id;
         space.LearningSpaceLayout.LearningElements[0] = element;
         var mockFileSystem = new MockFileSystem();
@@ -247,8 +252,8 @@ public class PersistenceCt
     [Test]
     public void Persistence_SaveAndLoadElement_File_ObjectsAreEquivalent()
     {
-        var content = new LearningContentPe("a", "b", "");
-        var element = new LearningElementPe("le", "la", content, "url","ll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
+        var content = new FileContentPe("a", "b", "");
+        var element = new LearningElementPe("le", "la", content, "ll", "llll","lllll", LearningElementDifficultyEnumPe.Easy);
         var initialElementId = element.Id;
         var mockFileSystem = new MockFileSystem();
 
@@ -275,24 +280,25 @@ public class PersistenceCt
 
     static ILearningElementPe?[] GetAllLearningElementTypes()
     {
-        var content = new LearningContentPe("a", "b", "");
+        var fileContent = new FileContentPe("a", "b", "");
+        var linkContent = new LinkContentPe("foo", "https://www.google.com");
         return new ILearningElementPe[]
         {
-            new H5PActivationElementPe("h5pAct", "asdf", content, "", "me :)", "description", "a goal",
+            new H5PActivationElementPe("h5pAct", "asdf", fileContent, "me :)", "description", "a goal",
                 LearningElementDifficultyEnumPe.Easy, 123, 42, 0, 0),
-            new H5PInteractionElementPe("h5pInt", "blabla", content, "", "me :)", "description", "a goal",
+            new H5PInteractionElementPe("h5pInt", "blabla", fileContent, "me :)", "description", "a goal",
                 LearningElementDifficultyEnumPe.Medium, 123, 42, 0, 0),
-            new H5PTestElementPe("h5pTest", "bababubu", content, "", "me :)", "description", "a goal",
+            new H5PTestElementPe("h5pTest", "bababubu", fileContent, "me :)", "description", "a goal",
                 LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0),
-            new ImageTransferElementPe("imgTrans", "bababubu", content, "", "me :)", "description", "a goal",
+            new ImageTransferElementPe("imgTrans", "bababubu", fileContent, "me :)", "description", "a goal",
                 LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0),
-            new PdfTransferElementPe("pdfTrans", "bababubu", content, "", "me :)", "description", "a goal",
+            new PdfTransferElementPe("pdfTrans", "bababubu", fileContent, "me :)", "description", "a goal",
                 LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0),
-            new TextTransferElementPe("txtTrans", "bababubu", content, "", "me :)", "description", "a goal",
+            new TextTransferElementPe("txtTrans", "bababubu", fileContent, "me :)", "description", "a goal",
                 LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0),
-            new VideoActivationElementPe("vidAct", "bababubu", content, "", "me :)", "description", "a goal",
+            new VideoActivationElementPe("vidAct", "bababubu", linkContent, "me :)", "description", "a goal",
                 LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0),
-            new VideoTransferElementPe("vidTrans", "bababubu", content, "", "me :)", "description", "a goal",
+            new VideoTransferElementPe("vidTrans", "bababubu", linkContent, "me :)", "description", "a goal",
                 LearningElementDifficultyEnumPe.Hard, 123, 42, 0, 0),
         };
     }
@@ -300,8 +306,8 @@ public class PersistenceCt
     [Test]
     public void SaveAndLoadWorld_WithExactSameElementInTwoSpaces_ElementIsEqualObject()
     {
-        var content = new LearningContentPe("a", "b", "");
-        var element = new LearningElementPe("le", "la", content,"",  "ll", "llll", "lllll",
+        var content = new FileContentPe("a", "b", "");
+        var element = new LearningElementPe("le", "la", content, "ll", "llll", "lllll",
             LearningElementDifficultyEnumPe.Easy);
         var space1 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5,
             new LearningSpaceLayoutPe(new ILearningElementPe?[] {element}, FloorPlanEnumPe.Rectangle2X3));
@@ -325,10 +331,10 @@ public class PersistenceCt
     [Test]
     public void SaveAndLoadWorld_WithTwoEquivalentElementsInTwoSpaces_ElementIsNotEqualObject()
     {
-        var content = new LearningContentPe("a", "b", "");
-        var element1 = new LearningElementPe("le", "la", content, "", "ll", "llll", "lllll",
+        var content = new FileContentPe("a", "b", "");
+        var element1 = new LearningElementPe("le", "la", content, "ll", "llll", "lllll",
             LearningElementDifficultyEnumPe.Easy);
-        var element2 = new LearningElementPe("le", "la", content, "","ll", "llll", "lllll",
+        var element2 = new LearningElementPe("le", "la", content, "ll", "llll", "lllll",
             LearningElementDifficultyEnumPe.Easy);
         var space1 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5,
             new LearningSpaceLayoutPe(new ILearningElementPe?[] {element1}, FloorPlanEnumPe.Rectangle2X3));

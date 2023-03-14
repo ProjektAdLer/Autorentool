@@ -39,6 +39,10 @@ public class XmlFileHandler<T> : IXmlFileHandler<T> where T : class //new() cons
         };
         //Check if type T is serializable in the first place
         var typeT = typeof(T);
+        if (typeT.IsGenericType && typeT.GetInterface("IEnumerable") != null)
+        {
+            typeT = typeT.GetGenericArguments()[0];
+        }
         if (typeT.GetCustomAttributesData().All(ca => ca.AttributeType != typeof(DataContractAttribute)))
         {
             throw new InvalidOperationException($"Type {typeT.Name} is not serializable.");

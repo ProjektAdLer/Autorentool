@@ -1,0 +1,6 @@
+.mud-table-container {
+    flex-shrink: 1;
+    flex-grow: 1;
+    height: 10rem;
+    max-height: fit-content;
+}

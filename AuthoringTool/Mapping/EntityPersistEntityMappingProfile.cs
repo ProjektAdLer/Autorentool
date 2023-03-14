@@ -1,7 +1,8 @@
 using AutoMapper;
-using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using PersistEntities;
+using PersistEntities.LearningContent;
 using Shared;
 
 namespace AuthoringTool.Mapping;
@@ -66,6 +67,12 @@ public class EntityPersistEntityMappingProfile : Profile
     private void CreateLearningContentMap()
     {
         CreateMap<LearningContent, LearningContentPe>()
+            .Include<FileContent, FileContentPe>()
+            .Include<LinkContent, LinkContentPe>()
+            .ReverseMap();
+        CreateMap<FileContent, FileContentPe>()
+            .ReverseMap();
+        CreateMap<LinkContent, LinkContentPe>()
             .ReverseMap();
     }
 

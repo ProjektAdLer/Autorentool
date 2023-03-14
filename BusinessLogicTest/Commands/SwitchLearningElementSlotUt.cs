@@ -1,6 +1,7 @@
 using BusinessLogic.Commands;
 using BusinessLogic.Commands.Layout;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using NUnit.Framework;
 using Shared;
 
@@ -14,8 +15,8 @@ public class SwitchLearningElementSlotUt
     {
         var parent = new LearningSpace("sn", "ssn", "sa", "sd", "sg", 5,
             new LearningSpaceLayout(new ILearningElement[4], FloorPlanEnum.Rectangle2X2));
-        var content = new LearningContent("cn", "ct", "cf");
-        var element = new LearningElement("en", "esn", content, "url",
+        var content = new FileContent("cn", "ct", "cf");
+        var element = new LearningElement("en", "esn", content,
             "ea", "ed", "eg", LearningElementDifficultyEnum.Medium, parent, 8, 9, 17f, 29f);
         parent.LearningSpaceLayout.LearningElements[0] = element;
 
@@ -47,10 +48,10 @@ public class SwitchLearningElementSlotUt
     {
         var parent = new LearningSpace("sn", "ssn", "sa", "sd", "sg", 5,
             new LearningSpaceLayout(new ILearningElement[4], FloorPlanEnum.Rectangle2X2));
-        var content = new LearningContent("cn", "ct", "cf");
-        var element = new LearningElement("en", "esn", content, "url",
+        var content = new FileContent("cn", "ct", "cf");
+        var element = new LearningElement("en", "esn", content,
             "ea", "ed", "eg", LearningElementDifficultyEnum.Medium, parent, 8, 9, 17f, 29f);
-        var element2 = new LearningElement("en2", "esn2", content, "url2",
+        var element2 = new LearningElement("en2", "esn2", content,
             "ea2", "ed2", "eg2", LearningElementDifficultyEnum.Medium, parent, 8, 9, 17f, 29f);
         parent.LearningSpaceLayout.LearningElements[0] = element;
         parent.LearningSpaceLayout.LearningElements[2] = element2;
@@ -85,8 +86,8 @@ public class SwitchLearningElementSlotUt
     {
         var parent = new LearningSpace("sn", "ssn", "sa", "sd", "sg", 5,
             new LearningSpaceLayout(new ILearningElement[4], FloorPlanEnum.Rectangle2X2));
-        var content = new LearningContent("cn", "ct", "cf");
-        var element = new LearningElement("en", "esn", content, "url",
+        var content = new FileContent("cn", "ct", "cf");
+        var element = new LearningElement("en", "esn", content,
             "ea", "ed", "eg", LearningElementDifficultyEnum.Medium, parent, 8, 9, 17f, 29f);
         parent.LearningSpaceLayout.LearningElements[0] = element;
 
@@ -109,8 +110,8 @@ public class SwitchLearningElementSlotUt
     {
         var parent = new LearningSpace("sn", "ssn", "sa", "sd", "sg", 5,
             new LearningSpaceLayout(new ILearningElement[4], FloorPlanEnum.Rectangle2X2));
-        var content = new LearningContent("cn", "ct", "cf");
-        var element = new LearningElement("en", "esn", content, "url",
+        var content = new FileContent("cn", "ct", "cf");
+        var element = new LearningElement("en", "esn", content,
             "ea", "ed", "eg", LearningElementDifficultyEnum.Medium, parent, 8, 9, 17f, 29f);
         parent.LearningSpaceLayout.LearningElements[0] = element;
 
@@ -162,10 +163,10 @@ public class SwitchLearningElementSlotUt
     {
         var parent = new LearningSpace("sn", "ssn", "sa", "sd", "sg", 5,
             new LearningSpaceLayout(new ILearningElement[4], FloorPlanEnum.Rectangle2X2));
-        var content = new LearningContent("cn", "ct", "cf");
-        var element = new LearningElement("en", "esn", content, "url",
+        var content = new FileContent("cn", "ct", "cf");
+        var element = new LearningElement("en", "esn", content,
             "ea", "ed", "eg", LearningElementDifficultyEnum.Medium, parent, 8, 9, 17f, 29f);
-        var element2 = new LearningElement("en2", "esn2", content, "url2",
+        var element2 = new LearningElement("en2", "esn2", content,
             "ea2", "ed2", "eg2", LearningElementDifficultyEnum.Medium, parent, 8, 9, 17f, 29f);
         parent.LearningSpaceLayout.LearningElements[0] = element;
         parent.LearningSpaceLayout.LearningElements[2] = element2;

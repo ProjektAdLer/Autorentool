@@ -66,6 +66,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <None Include="wwwroot\css\Presentation.global.css" />
       <None Include="wwwroot\CustomIcons\world-icon-nobg.png" />
     </ItemGroup>
 

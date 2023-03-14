@@ -1,6 +1,6 @@
 ﻿@using AuthoringTool.View.Shared
 @using Presentation.View
-<Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new []{typeof(AuthoringToolWorkspaceView).Assembly}">
+<Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new []{typeof(MasterLayout).Assembly}">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
         <FocusOnNavigate RouteData="@routeData" Selector="h1" />
