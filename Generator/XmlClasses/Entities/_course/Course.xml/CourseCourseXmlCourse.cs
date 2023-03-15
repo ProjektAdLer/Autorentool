@@ -45,6 +45,7 @@ namespace Generator.XmlClasses.Entities._course.Course.xml;
 			CompletionNotify = "0";
 			HiddenSections = "0";
 			CourseDisplay = "0";
+			PluginLocalAdlerCourse = new CourseCourseXmlPluginLocalAdlerCourse();
 			Category = new CourseCourseXmlCategory();
 			Tags = "";
 			CustomFields = "";
@@ -166,6 +167,9 @@ namespace Generator.XmlClasses.Entities._course.Course.xml;
 		
 		[XmlElement(ElementName="coursedisplay")]
 		public string CourseDisplay { get; set; }
+		
+		[XmlElement(ElementName = "plugin_local_adler_course")]
+		public CourseCourseXmlPluginLocalAdlerCourse PluginLocalAdlerCourse { get; set; }
 		
 		[XmlElement(ElementName="category")]
 		public CourseCourseXmlCategory Category { get; set; }

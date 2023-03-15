@@ -43,4 +43,5 @@ public interface IActivitiesModuleXmlModule : IXmlSerializablePath
     string Id { get; set; }
     
     string Version { get; set; }
+    ActivitiesModuleXmlPluginLocalAdlerModule PluginLocalAdlerModule { get; set; }
 }

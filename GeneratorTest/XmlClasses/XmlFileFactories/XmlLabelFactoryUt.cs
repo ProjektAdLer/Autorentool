@@ -123,6 +123,7 @@ public class XmlLabelFactoryUt
         var mockLabelActivity = Substitute.For<IActivitiesLabelXmlActivity>();
         var mockRoles = Substitute.For<IActivitiesRolesXmlRoles>();
         var mockModule = Substitute.For<IActivitiesModuleXmlModule>();
+        mockModule.PluginLocalAdlerModule = Substitute.For<ActivitiesModuleXmlPluginLocalAdlerModule>();
         var mockGradeHistory = Substitute.For<IActivitiesGradeHistoryXmlGradeHistory>();
         var mockInforefFileref = Substitute.For<IActivitiesInforefXmlFileref>();
         var mockInforefGradeItem = Substitute.For<ActivitiesInforefXmlGradeItem>();

@@ -89,6 +89,7 @@ public class XmlUrlFactoryUt
         var mockUrlActivity = Substitute.For<IActivitiesUrlXmlActivity>();
         var mockRoles = Substitute.For<IActivitiesRolesXmlRoles>();
         var mockModule = Substitute.For<IActivitiesModuleXmlModule>();
+        mockModule.PluginLocalAdlerModule = Substitute.For<ActivitiesModuleXmlPluginLocalAdlerModule>();
         var mockGradehistory = Substitute.For<IActivitiesGradeHistoryXmlGradeHistory>();
         var mockInforefFileref = new ActivitiesInforefXmlFileref();
         var mockInforefGradeItem = new ActivitiesInforefXmlGradeItem();

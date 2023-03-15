@@ -170,6 +170,7 @@ public class XmlResourceFactoryUt
         var mockFileResourceActivity = Substitute.For<IActivitiesResourceXmlActivity>();
         var mockRoles = Substitute.For<IActivitiesRolesXmlRoles>();
         var mockModule = Substitute.For<IActivitiesModuleXmlModule>();
+        mockModule.PluginLocalAdlerModule = Substitute.For<ActivitiesModuleXmlPluginLocalAdlerModule>();
         var mockGradehistory = Substitute.For<IActivitiesGradeHistoryXmlGradeHistory>();
         var mockInforefFile = new ActivitiesInforefXmlFile();
         var mockInforefFileref = new ActivitiesInforefXmlFileref();

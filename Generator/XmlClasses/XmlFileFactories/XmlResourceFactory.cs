@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions;
+﻿using System.Globalization;
+using System.IO.Abstractions;
 using Generator.DSL;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 using Generator.XmlClasses.Entities._activities.Grades.xml;
@@ -23,6 +24,7 @@ public class XmlResourceFactory : IXmlResourceFactory
     public string FileElementParentSpaceString;
     public string FileElementType;
     public string FileElementDesc;
+    public float FileElementPoints;
 
     public readonly IXmlFileManager FileManager;
     public IActivitiesGradesXmlGradeItem ActivitiesGradesXmlGradeItem { get; }
@@ -59,6 +61,7 @@ public class XmlResourceFactory : IXmlResourceFactory
         FileElementParentSpaceString = "";
         FileElementType = "";
         FileElementDesc = "";
+        FileElementPoints = 0;
         
         CurrentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
         _fileSystem = fileSystem?? new FileSystem();
@@ -106,6 +109,7 @@ public class XmlResourceFactory : IXmlResourceFactory
             FileElementType = resource.ElementFileType;
             FileElementName = resource.LmsElementIdentifier.Value;
             FileElementDesc = resource.ElementDescription ?? "";
+            FileElementPoints = resource.ElementMaxScore;
             FileElementParentSpaceString = resource.LearningSpaceParentId.ToString();
 
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
@@ -207,6 +211,8 @@ public class XmlResourceFactory : IXmlResourceFactory
         ActivitiesModuleXmlModule.Added = CurrentTime;
         ActivitiesModuleXmlModule.Id = FileElementId;
         ActivitiesModuleXmlModule.ShowDescription = "1";
+        //AdlerScore can not be null at this point because it is set in the constructor
+        ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerScore!.ScoreMax = FileElementPoints.ToString("F5", CultureInfo.InvariantCulture);
         
         ActivitiesModuleXmlModule.Serialize("resource", FileElementId);
         

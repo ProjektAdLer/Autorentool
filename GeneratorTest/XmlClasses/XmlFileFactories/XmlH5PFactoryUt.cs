@@ -169,6 +169,7 @@ public class XmlH5PFactoryUt
         var mockH5PActivity = Substitute.For<IActivitiesH5PActivityXmlActivity>();
         var mockRoles = Substitute.For<IActivitiesRolesXmlRoles>();
         var mockModule = Substitute.For<IActivitiesModuleXmlModule>();
+        mockModule.PluginLocalAdlerModule = Substitute.For<ActivitiesModuleXmlPluginLocalAdlerModule>();
         var mockGradeHistory = Substitute.For<IActivitiesGradeHistoryXmlGradeHistory>();
 
         var mockInforefFile = Substitute.For<IActivitiesInforefXmlFile>();
@@ -188,6 +189,7 @@ public class XmlH5PFactoryUt
         systemUnderTest.H5PElementId = "100";
         systemUnderTest.H5PElementName = "h5pName";
         systemUnderTest.CurrentTime = "1284511";
+        systemUnderTest.H5PElementPoints = 10;
         
         systemUnderTest.H5PSetParametersActivity();
 
