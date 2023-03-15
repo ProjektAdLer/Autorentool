@@ -32,15 +32,22 @@
             Logger.LogTrace("Entered OnFilesChanged in ContentFilesAdd");
             Logger.LogTrace("Opening stream for file {Filename}", obj.File.Name);
             Logger.LogDebug("Filesize is {}", obj.File.Size);
+            
             await using var stream = obj.File.OpenReadStream(1_000_000_000);
+            
             Logger.LogTrace("BrowserFileStream opened");
             Logger.LogTrace("Copying BrowserFileStream to MemoryStream");
+            
             using var memoryStream = new MemoryStream();
             await stream.CopyToAsync(memoryStream);
+            
             Logger.LogTrace("Calling LoadLearningContentViewModel");
+            
             PresentationLogic.LoadLearningContentViewModel(obj.File.Name, memoryStream);
+            
             Logger.LogTrace("LoadLearningContentViewModel returned");
             Logger.LogTrace("Rerendering ContentFilesContainer");
+            
             await ContentFilesContainer.RerenderAsync();
         });
     }

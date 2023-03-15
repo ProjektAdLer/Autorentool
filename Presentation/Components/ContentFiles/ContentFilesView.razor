@@ -6,12 +6,22 @@
     <ToolBarContent>
         <MudText Typo="Typo.h6">All element content files</MudText>
         <MudSpacer/>
-        <MudTextField @bind-Value="_searchString" Immediate="true" Placeholder="Search" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Outlined.Search"/>
+        <MudTextField @bind-Value="_searchString" Immediate="true" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Outlined.Search"/>
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Delete</MudTh>
-        <MudTh><MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<LearningContentViewModel,object>(x => x.Name)">@nameof(LearningContentViewModel.Name)</MudTableSortLabel></MudTh>
-        <MudTh><MudTableSortLabel SortBy="new Func<LearningContentViewModel,object>(TypeSortBy)">@nameof(FileContentViewModel.Type)</MudTableSortLabel></MudTh>
+        <MudTh>
+            <MudTableSortLabel InitialDirection="SortDirection.Ascending"
+                               SortBy="new Func<LearningContentViewModel, object>(x => x.Name)">
+                @nameof(LearningContentViewModel.Name)
+            </MudTableSortLabel>
+        </MudTh>
+        <MudTh>
+            <MudTableSortLabel SortBy="new Func<LearningContentViewModel, object>(TypeSortBy)">
+                @nameof(FileContentViewModel.Type)
+            </MudTableSortLabel>
+        </MudTh>
         <MudTh>Preview</MudTh>
         @if (_showFilepath)
         {
@@ -38,7 +48,8 @@
             }
         </MudTd>
         <MudTd Class="px-1.5">
-            <MudIconButton Icon="@Icons.Material.Filled.Preview" OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"/>
+            <MudIconButton Icon="@Icons.Material.Filled.Preview"
+                           OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"/>
         </MudTd>
         @if (_showFilepath)
         {
