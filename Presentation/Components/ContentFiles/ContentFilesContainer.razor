@@ -15,6 +15,7 @@
 @code {
     private ContentFilesView ContentFilesView { get; set; }
 
+    /// <summary>Rerenders this component as well as the <see cref="ContentFilesView"/> inside of it.</summary>
     internal async Task RerenderAsync()
     {
         await InvokeAsync(StateHasChanged);

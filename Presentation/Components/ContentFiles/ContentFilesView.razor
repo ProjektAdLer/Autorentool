@@ -86,9 +86,11 @@
     private string? _searchString;
     private bool _showFilepath;
 
-    private object TypeSortBy(LearningContentViewModel content) => content is FileContentViewModel fc ? fc.Type : "Link";
+    private object TypeSortBy(LearningContentViewModel content) =>
+        content is FileContentViewModel fc ? fc.Type : "Link";
 
-    private bool Filter(LearningContentViewModel element) => FilterInternal(element, _searchString);
+    private bool Filter(LearningContentViewModel element) =>
+        FilterInternal(element, _searchString);
 
     private bool FilterInternal(LearningContentViewModel element, string? searchString)
     {
@@ -100,7 +102,7 @@
 
     private async Task Delete(LearningContentViewModel item)
     {
-        //TODO: dialog asking for confirmation
+        //present "Delete/Cancel" dialog
         var parameters = new DialogParameters
         {
             { "SubmitButtonText", "Delete" },
@@ -116,6 +118,8 @@
         };
         var dialog = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>("Delete content", parameters, options);
         var result = await dialog.Result;
+        
+        //if not cancelled, delete content
         if (!result.Canceled)
             PresentationLogic.RemoveContent(item);
     }

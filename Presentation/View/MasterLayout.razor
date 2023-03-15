@@ -19,25 +19,6 @@
                 <Sidebar SidebarSide="Side.Left">
                     <SidebarItem>
                         <SidebarContent>
-                            <p class="text-center">Ico</p>
-                        </SidebarContent>
-                        <MainContent>
-                            <p class="text-center">Some elaborate content</p>
-                            <AuthoringToolWorkspaceView></AuthoringToolWorkspaceView>
-                        </MainContent>
-                    </SidebarItem>
-                    <SidebarItem>
-                        <SidebarContent>
-                            <p>Ico2</p>
-                        </SidebarContent>
-                        <MainContent>
-                            <MudDropZone T="ILearningElementViewModel">
-                                <h2>DropZone1</h2>
-                            </MudDropZone>
-                        </MainContent>
-                    </SidebarItem>
-                    <SidebarItem>
-                        <SidebarContent>
                             <MudIcon Icon="@Icons.Material.Filled.PlusOne"/>
                         </SidebarContent>
                         <MainContent>
@@ -65,19 +46,19 @@
             <CenterContainer>
                 <div class="bg-blue-400">
                     Center
-                    <LearningSpaceView></LearningSpaceView>
+                    <LearningSpaceView/>
                 </div>
             </CenterContainer>
             <SideContainer Side="Side.Right">
                 <Sidebar SidebarSide="Side.Right">
                     <SidebarItem>
                         <SidebarContent>
-                            <div title="LerarningPathWays">
+                            <div title="LearningPathWays">
                                 <img class="w-8" src="CustomIcons/world-icon-nobg.png" alt="blabla">
                             </div>
                         </SidebarContent>
                         <MainContent>
-                            <LearningWorldView></LearningWorldView>
+                            <LearningWorldView/>
                         </MainContent>
                     </SidebarItem>
                     <SidebarItem>
@@ -87,14 +68,14 @@
                             </div>
                         </SidebarContent>
                         <MainContent>
-                            <LearningWorldOverView></LearningWorldOverView>
+                            <LearningWorldOverView/>
                         </MainContent>
                     </SidebarItem>
             </Sidebar>
             </SideContainer>
         </ChildContent>
         <ItemRenderer>
-            <MudListItem Text="@context.Name"></MudListItem>
+            <MudListItem Text="@context.Name"/>
         </ItemRenderer>
     </MudDropContainer>
 </div>
