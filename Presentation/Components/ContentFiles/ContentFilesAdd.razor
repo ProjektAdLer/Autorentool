@@ -1,16 +1,25 @@
 @using Presentation.Components.Forms.Content
 @using Presentation.PresentationLogic.API
 <MudStack Class="w-full">
-    <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnFilesChanged" Hidden="false"
-                   InputClass="absolute w-full h-full opacity-0 z-10"
-                   @ondragenter="SetDragClass" @ondragleave="ClearDragClass"
-                   @ondragend="ClearDragClass">
-        <ButtonTemplate>
-            <MudPaper Class="@PaperClasses" Outlined="true">
-                <MudText Typo="Typo.body1">Drag and drop files here or click to add them.</MudText>
-            </MudPaper>
-        </ButtonTemplate>
-    </MudFileUpload>
+    <div class="relative">
+        @if (Working)
+        {
+            <div class="absolute w-full h-full bg-adlergrey-100 bg-opacity-25 z-40">
+            </div>
+            <MudProgressCircular Indeterminate="true" Class="absolute left-0 right-0 top-0 bottom-0 z-50 m-auto"
+                                 Color="Color.Primary" Size="Size.Large"/>
+        }
+        <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnFilesChanged" Hidden="false"
+                       InputClass="absolute w-full h-full opacity-0 z-10"
+                       @ondragenter="SetDragClass" @ondragleave="ClearDragClass"
+                       @ondragend="ClearDragClass">
+            <ButtonTemplate>
+                <MudPaper Class="@PaperClasses" Outlined="true">
+                    <MudText Typo="Typo.body1">Drag and drop files here or click to add them.</MudText>
+                </MudPaper>
+            </ButtonTemplate>
+        </MudFileUpload>
+    </div>
     <AddLinkForm/>
 </MudStack>
 @code {
@@ -23,12 +32,16 @@
     public ContentFilesContainer ContentFilesContainer { get; set; }
 
     private string DragClass { get; set; } = "";
-    private string PaperClasses => $"h-32 flex items-center justify-center {DragClass}";
+    private string PaperClasses => $"h-32 flex items-center justify-center relative {DragClass}";
+    private bool Working { get; set; } = false;
 
+    //iterates all files, copies them into a new stream and passes said stream to presentation logic
     private void OnFilesChanged(InputFileChangeEventArgs obj)
     {
         Task.Run(async () =>
         {
+            Logger.LogTrace("Entered OnFilesChanged in ContentFilesAdd");
+            ToggleSpinner();
             Logger.LogTrace("Entered OnFilesChanged in ContentFilesAdd");
             Logger.LogTrace("Getting up to 10 files from InputFileChangeEventArgs");
             
@@ -53,7 +66,14 @@
             
             Logger.LogTrace("Rerendering ContentFilesContainer");
             await ContentFilesContainer.RerenderAsync();
+            ToggleSpinner();
         });
+    }
+
+    private void ToggleSpinner()
+    {
+        Working = !Working;
+        InvokeAsync(StateHasChanged);
     }
 
     private void SetDragClass()
