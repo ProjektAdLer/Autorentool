@@ -1,7 +1,7 @@
 @using Presentation.Components.Forms.Content
 @using Presentation.PresentationLogic.API
 <MudStack Class="w-full">
-    <MudFileUpload T="IBrowserFile" OnFilesChanged="OnFilesChanged" Hidden="false"
+    <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnFilesChanged" Hidden="false"
                    InputClass="absolute w-full h-full opacity-0 z-10"
                    @ondragenter="SetDragClass" @ondragleave="ClearDragClass"
                    @ondragend="ClearDragClass">
@@ -30,24 +30,28 @@
         Task.Run(async () =>
         {
             Logger.LogTrace("Entered OnFilesChanged in ContentFilesAdd");
-            Logger.LogTrace("Opening stream for file {Filename}", obj.File.Name);
-            Logger.LogDebug("Filesize is {}", obj.File.Size);
+            Logger.LogTrace("Getting up to 10 files from InputFileChangeEventArgs");
             
-            await using var stream = obj.File.OpenReadStream(1_000_000_000);
+            var files = obj.GetMultipleFiles(10);
+            Logger.LogDebug("Got {FileCount} files from InputFileChangeEventArgs", files.Count);
+
+            foreach (var file in files)
+            {
+                Logger.LogTrace("Opening stream for file {FileName}, Filesize is {FileSize}", file.Name, file.Size);
+                await using var stream = file.OpenReadStream(1_000_000_000);
+                Logger.LogTrace("BrowserFileStream opened");
+                
+                Logger.LogTrace("Copying BrowserFileStream to MemoryStream");
+                using var memoryStream = new MemoryStream();
+                await stream.CopyToAsync(memoryStream);
+                
+                Logger.LogTrace("Calling LoadLearningContentViewModel");
+                //TODO: report when a file with same content already exists
+                PresentationLogic.LoadLearningContentViewModel(file.Name, memoryStream);
+                Logger.LogTrace("LoadLearningContentViewModel returned");
+            }
             
-            Logger.LogTrace("BrowserFileStream opened");
-            Logger.LogTrace("Copying BrowserFileStream to MemoryStream");
-            
-            using var memoryStream = new MemoryStream();
-            await stream.CopyToAsync(memoryStream);
-            
-            Logger.LogTrace("Calling LoadLearningContentViewModel");
-            
-            PresentationLogic.LoadLearningContentViewModel(obj.File.Name, memoryStream);
-            
-            Logger.LogTrace("LoadLearningContentViewModel returned");
             Logger.LogTrace("Rerendering ContentFilesContainer");
-            
             await ContentFilesContainer.RerenderAsync();
         });
     }
