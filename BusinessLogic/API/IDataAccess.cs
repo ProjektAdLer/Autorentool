@@ -50,4 +50,6 @@ public interface IDataAccess
     /// </summary>
     /// <param name="linkContent">The link to add.</param>
     void SaveLink(LinkContent linkContent);
+
+    string GetContentFilesFolderPath();
 }

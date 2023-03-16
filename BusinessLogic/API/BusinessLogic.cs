@@ -23,15 +23,22 @@ public class BusinessLogic : IBusinessLogic
     internal IWorldGenerator WorldGenerator { get; }
     internal ICommandStateManager CommandStateManager { get; }
     internal IDataAccess DataAccess { get;  }
+    public IAuthoringToolConfiguration Configuration { get; }
     public event Action? OnUndoRedoPerformed;
+    public bool CanUndo => CommandStateManager.CanUndo;
+    public bool CanRedo => CommandStateManager.CanRedo;
+    /// <inheritdoc cref="IBusinessLogic.GetAllContent"/>
+    public IEnumerable<LearningContent> GetAllContent() => DataAccess.GetAllContent();
+    /// <inheritdoc cref="IBusinessLogic.RemoveContent"/>
+    public void RemoveContent(LearningContent content) => DataAccess.RemoveContent(content);
+    /// <inheritdoc cref="IBusinessLogic.SaveLink"/>
+    public void SaveLink(LinkContent linkContent) => DataAccess.SaveLink(linkContent);
 
     public void ExecuteCommand(ICommand command)
     {
         CommandStateManager.Execute(command);
         OnUndoRedoPerformed?.Invoke();
     }
-    public bool CanUndo => CommandStateManager.CanUndo;
-    public bool CanRedo => CommandStateManager.CanRedo;
     
     public void UndoCommand()
     {
@@ -89,12 +96,6 @@ public class BusinessLogic : IBusinessLogic
     {
         return DataAccess.LoadLearningContent(name, stream);
     }
-    /// <inheritdoc cref="IBusinessLogic.GetAllContent"/>
-    public IEnumerable<LearningContent> GetAllContent() => DataAccess.GetAllContent();
-    /// <inheritdoc cref="IBusinessLogic.RemoveContent"/>
-    public void RemoveContent(LearningContent content) => DataAccess.RemoveContent(content);
-    /// <inheritdoc cref="IBusinessLogic.SaveLink"/>
-    public void SaveLink(LinkContent linkContent) => DataAccess.SaveLink(linkContent);
 
     public LearningWorld LoadLearningWorld(Stream stream)
     {
@@ -115,6 +116,7 @@ public class BusinessLogic : IBusinessLogic
     {
         return DataAccess.FindSuitableNewSavePath(targetFolder, fileName, fileEnding);
     }
-    public IAuthoringToolConfiguration Configuration { get; }
-  
+
+    public string GetContentFilesFolderPath() => DataAccess.GetContentFilesFolderPath();
+
 }

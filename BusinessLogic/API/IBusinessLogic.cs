@@ -53,4 +53,5 @@ public interface IBusinessLogic
     string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding);
 
     event Action? OnUndoRedoPerformed;
+    string GetContentFilesFolderPath();
 }

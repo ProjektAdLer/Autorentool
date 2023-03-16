@@ -522,6 +522,13 @@ public class PresentationLogic : IPresentationLogic
     public void SaveLink(LinkContentViewModel linkContentVm) =>
         BusinessLogic.SaveLink(Mapper.Map<LinkContent>(linkContentVm));
 
+    public void OpenContentFilesFolder()
+    {
+        ElectronCheck();
+        var path = BusinessLogic.GetContentFilesFolderPath();
+        ShellWrapper.OpenPathAsync(path);
+    }
+
     public void LoadLearningWorldViewModel(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, Stream stream)
     {
         var workspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);

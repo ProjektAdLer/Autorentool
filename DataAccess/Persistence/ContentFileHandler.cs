@@ -14,7 +14,7 @@ public class ContentFileHandler : IContentFileHandler
 
     private const string LinkFile = ".linkstore";
 
-    private string ContentFilesFolderPath => Path.Join(
+    public string ContentFilesFolderPath => Path.Join(
         Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
         "AdLerAuthoring", "ContentFiles");
 

@@ -133,4 +133,6 @@ public class DataAccess : IDataAccess
 
         return $"{savePath}.{fileEnding}";
     }
+
+    public string GetContentFilesFolderPath() => ContentFileHandler.ContentFilesFolderPath;
 }

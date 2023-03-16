@@ -41,4 +41,8 @@ public interface IContentFileHandler
     /// </summary>
     /// <param name="linkContent">The link to add.</param>
     void SaveLink(LinkContentPe linkContent);
+    /// <summary>
+    /// The file path to the folder containing all content files.
+    /// </summary>
+    string ContentFilesFolderPath { get; }
 }
