@@ -85,7 +85,8 @@ public sealed class CommandStateManager : ICommandStateManager
     {
         return command switch
         {
-            CreateLearningElement c => c.LearningElement,
+            CreateLearningElementInSlot c => c.LearningElement,
+            CreateUnplacedLearningElement c => c.LearningElement,
             CreateLearningSpace c => c.LearningSpace,
             CreateLearningWorld c => c.LearningWorld,
             DeleteLearningElement c => c.LearningElement,

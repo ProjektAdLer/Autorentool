@@ -26,7 +26,8 @@ public class LearningElementValidator : AbstractValidator<LearningElement>
             .Must((element, name) => IsUniqueShortname(element.Id, name))
             .WithMessage("Already in use.");
         RuleFor(x => x.LearningContent)
-            .SetValidator(learningContentValidator);
+            .SetValidator(learningContentValidator)
+            .NotEmpty();
     }
 
     private bool IsUniqueName(Guid id, string name) => UniqueNameHelper.IsUnique(

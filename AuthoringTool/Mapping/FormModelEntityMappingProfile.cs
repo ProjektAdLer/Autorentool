@@ -17,12 +17,18 @@ public class FormModelEntityMappingProfile : Profile
         DisableConstructorMapping();
         CreateWorldMap();
         CreateSpaceMap();
+        CreateElementMap();
         CreateContentMap();
     }
 
     private void CreateContentMap()
     {
         CreateMap<LinkContentFormModel, LinkContent>();
+    }
+
+    private void CreateElementMap()
+    {
+        CreateMap<LearningElementFormModel, LearningElement>();
     }
 
     private void CreateSpaceMap()

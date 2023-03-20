@@ -80,7 +80,4 @@
     <Compile Remove="PresentationLogic\EntityMapping\LearningElementMapper\LearningElementMapper.cs" />
     <Compile Remove="PresentationLogic\EntityMapping\LearningElementMapper\H5PActivationElementMapper.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Components\Forms\Element" />
-  </ItemGroup>
 </Project>

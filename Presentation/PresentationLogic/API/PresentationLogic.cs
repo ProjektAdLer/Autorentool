@@ -360,16 +360,27 @@ public class PresentationLogic : IPresentationLogic
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
 
-        var command = new CreateLearningElement(parentSpaceEntity, slotIndex, elementEntity, 
+        var command = new CreateLearningElementInSlot(parentSpaceEntity, slotIndex, elementEntity, 
             parent => CMapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
     }
+
+    public void CreateUnplacedLearningElement(ILearningWorldViewModel learningWorldVm, string name, string shortname,
+        LearningContentViewModel learningContentVm, string authors, string description, string goals,
+        LearningElementDifficultyEnum difficulty, int workload, int points, double positionX = 0, double positionY = 0)
+    {
+        var learningWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var contentEntity = Mapper.Map<BusinessLogic.Entities.LearningContent.LearningContent>(learningContentVm);
+        
+        var command = new CreateUnplacedLearningElement(learningWorldEntity, name, shortname, contentEntity, authors, description, goals, difficulty, workload, points, positionX, positionY, 
+            world => CMapper.Map(world, learningWorldVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
     
-    /// <inheritdoc cref="IPresentationLogic.CreateLearningElement"/>
-    public void CreateLearningElement(ILearningSpaceViewModel parentSpaceVm, int slotIndex, string name, string shortname,
-        ElementTypeEnum elementType, ContentTypeEnum contentType, LearningContentViewModel learningContentVm,
-        string url, string authors, string description, string goals, LearningElementDifficultyEnum difficulty,
-        int workload, int points, double positionX = 0, double positionY = 0)
+    /// <inheritdoc cref="IPresentationLogic.CreateLearningElementInSlot"/>
+    public void CreateLearningElementInSlot(ILearningSpaceViewModel parentSpaceVm, int slotIndex, string name, string shortname,
+        LearningContentViewModel learningContentVm, string authors, string description, string goals,
+        LearningElementDifficultyEnum difficulty, int workload, int points, double positionX = 0, double positionY = 0)
     {
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
         var contentEntity = Mapper.Map<BusinessLogic.Entities.LearningContent.LearningContent>(learningContentVm);
@@ -377,7 +388,7 @@ public class PresentationLogic : IPresentationLogic
         //TODO: temporary testing code
         
 
-        var command = new CreateLearningElement(parentSpaceEntity, slotIndex, name, shortname, elementType, contentType, contentEntity, authors, description, goals, difficulty, workload, points, positionX, positionY, 
+        var command = new CreateLearningElementInSlot(parentSpaceEntity, slotIndex, name, shortname, contentEntity, authors, description, goals, difficulty, workload, points, positionX, positionY, 
             parent => CMapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
     } 

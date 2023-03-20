@@ -1,0 +1,113 @@
+@using Presentation.Components.Forms.Buttons
+@using Presentation.Components.Forms.Models
+@using BusinessLogic.Entities
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using System.ComponentModel
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.LearningSpace
+@using Presentation.PresentationLogic.LearningWorld
+@using Shared
+@implements IDisposable
+@implements IAsyncDisposable
+<h3>CreateElementForm</h3>
+
+<BaseForm TForm="LearningElementFormModel" TEntity="LearningElement"
+          OnValidSubmit="OnValidSubmit" SnackbarMessage="Element created" FormDataContainer="FormDataContainer">
+    <Fields>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                      For="@(() => FormModel.Name)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Name)"/>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                      For="@(() => FormModel.Description)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Description)"/>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
+                      For="@(() => FormModel.Goals)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Goals)"/>
+        <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
+                   Label="@nameof(FormDataContainer.FormModel.Difficulty)"
+                   For="@(() => FormModel.Difficulty)">
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)"> Easy </MudSelectItem>
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)"> Medium </MudSelectItem>
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)"> Hard </MudSelectItem>
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.None)"> None </MudSelectItem>
+        </MudSelect>
+        <MudSelect @bind-Value="FormDataContainer.FormModel.LearningContent"
+                   Label="@nameof(FormDataContainer.FormModel.LearningContent)"
+                   Text="@FormDataContainer.FormModel.LearningContent?.Name"
+                   For="@(() => FormModel.LearningContent)">
+                    @foreach(var learningContent in PresentationLogic.GetAllContent())
+                    {
+                        <MudSelectItem Value="@(learningContent)">@learningContent.Name</MudSelectItem>
+                    }
+        </MudSelect>
+        <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
+                         For="@(() => FormModel.Workload)"
+                         Immediate="true"
+                         DebounceInterval="300"
+                         Label="Workload (min)"/>
+        <MudNumericField @bind-Value="FormDataContainer.FormModel.Points"
+                         For="@(() => FormModel.Points)"
+                         Immediate="true"
+                         DebounceInterval="300"
+                         Label="@nameof(FormDataContainer.FormModel.Points)"/>
+        
+    </Fields>
+    <Buttons>
+        <DefaultSubmitButton/>
+        <DefaultResetButton/>
+    </Buttons>
+</BaseForm>
+
+@code {
+    [Inject]
+    private IPresentationLogic PresentationLogic { get; set; }
+    [Inject]
+    private IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceViewModel { get; set; }
+    [Inject]
+    private IFormDataContainer<LearningElementFormModel, LearningElement> FormDataContainer { get; set; }
+    
+    private LearningElementFormModel FormModel => FormDataContainer.FormModel;
+
+    private void OnValidSubmit(LearningElementFormModel model)
+    {
+        if (AuthoringToolWorkspaceViewModel.SelectedLearningWorld == null) 
+            throw new InvalidOperationException("No learning world selected.");
+        if (AuthoringToolWorkspaceViewModel.SelectedLearningWorld.SelectedLearningObject == null) 
+            throw new InvalidOperationException("No object selected.");
+        if(AuthoringToolWorkspaceViewModel.SelectedLearningWorld.SelectedLearningObject is not LearningSpaceViewModel spaceViewModel) 
+            throw new InvalidOperationException("Selected object is not a learning space.");
+
+        PresentationLogic.CreateUnplacedLearningElement(AuthoringToolWorkspaceViewModel.SelectedLearningWorld,
+            //ignore null warning here because validation ensures that LearningContent is not null - m.ho
+            model.Name, "", model.LearningContent!, "", model.Description, model.Goals, model.Difficulty,
+            model.Workload, model.Points);
+    }
+    
+    protected override void OnInitialized()
+    {
+        AuthoringToolWorkspaceViewModel.PropertyChanged += OnLearningWorldViewModelChange;
+        base.OnInitialized();
+    }
+    
+    private async void OnLearningWorldViewModelChange(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+    
+    public ValueTask DisposeAsync()
+    {
+        Dispose();
+        return ValueTask.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        AuthoringToolWorkspaceViewModel.PropertyChanged -= OnLearningWorldViewModelChange;
+    }
+}

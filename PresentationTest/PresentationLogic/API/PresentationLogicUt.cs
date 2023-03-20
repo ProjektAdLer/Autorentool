@@ -393,9 +393,9 @@ public class PresentationLogicUt
     public void AddLearningElement_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        CreateLearningElement? command = null;
+        CreateLearningElementInSlot? command = null;
         mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as CreateLearningElement);
+            Do(sub => command = sub.Arg<ICommand>() as CreateLearningElementInSlot);
         var learningSpaceVm = new LearningSpaceViewModel("f", "f", "f", "f", "f", 4);
         var learningElementVm = new LearningElementViewModel("a", "b", null!,"c", "d", "e",
             LearningElementDifficultyEnum.Easy, learningSpaceVm);
@@ -425,9 +425,9 @@ public class PresentationLogicUt
     public void CreateLearningElement_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        CreateLearningElement? command = null;
+        CreateLearningElementInSlot? command = null;
         mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as CreateLearningElement);
+            Do(sub => command = sub.Arg<ICommand>() as CreateLearningElementInSlot);
         var learningSpaceVm = new LearningSpaceViewModel("f", "f", "f", "f", "f", 4);
         var mockMapper = Substitute.For<IMapper>();
         var learningSpaceEntity = new BusinessLogic.Entities.LearningSpace("f", "f", "f", "f", "f", 5);
@@ -436,8 +436,7 @@ public class PresentationLogicUt
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
 
-        systemUnderTest.CreateLearningElement(learningSpaceVm, 0, "a", "b", ElementTypeEnum.Activation,
-            ContentTypeEnum.H5P, null!, "url", "c", "d", "e", LearningElementDifficultyEnum.Easy, 1, 2, 3, 4);
+        systemUnderTest.CreateLearningElementInSlot(learningSpaceVm, 0, "a", "b", null!, "c", "d", "e", LearningElementDifficultyEnum.Easy, 1, 2, positionX: 3, positionY: 4);
 
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
         Assert.That(command, Is.Not.Null);
