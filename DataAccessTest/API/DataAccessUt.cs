@@ -25,11 +25,12 @@ public class DataAccessUt
         var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<LearningSpacePe>>();
         var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElementPe>>();
         var mockContentHandler = Substitute.For<IContentFileHandler>();
+        var mockWorldSavePathsHandler = Substitute.For<ILearningWorldSavePathsHandler>();
         var mockFileSystem = new MockFileSystem();
 
         //Act 
         var systemUnderTest = CreateTestableDataAccess(mockConfiguration, mockFileSaveHandlerWorld,
-            mockFileSaveHandlerSpace, mockFileSaveHandlerElement, mockContentHandler, mockFileSystem);
+            mockFileSaveHandlerSpace, mockFileSaveHandlerElement, mockContentHandler, mockWorldSavePathsHandler, mockFileSystem);
 
         //Assert
         Assert.Multiple(() =>
@@ -39,6 +40,7 @@ public class DataAccessUt
             Assert.That(systemUnderTest.XmlHandlerSpace, Is.EqualTo(mockFileSaveHandlerSpace));
             Assert.That(systemUnderTest.XmlHandlerElement, Is.EqualTo(mockFileSaveHandlerElement));
             Assert.That(systemUnderTest.ContentFileHandler, Is.EqualTo(mockContentHandler));
+            Assert.That(systemUnderTest.WorldSavePathsHandler, Is.EqualTo(mockWorldSavePathsHandler));
             Assert.That(systemUnderTest.FileSystem, Is.EqualTo(mockFileSystem));
         });
     }
@@ -263,6 +265,7 @@ public class DataAccessUt
         IXmlFileHandler<LearningSpacePe>? fileSaveHandlerSpace = null,
         IXmlFileHandler<LearningElementPe>? fileSaveHandlerElement = null,
         IContentFileHandler? contentHandler = null,
+        ILearningWorldSavePathsHandler? worldSavePathsHandler = null,
         IFileSystem? fileSystem = null,
         IMapper? mapper = null)
     {
@@ -271,9 +274,10 @@ public class DataAccessUt
         fileSaveHandlerSpace ??= Substitute.For<IXmlFileHandler<LearningSpacePe>>();
         fileSaveHandlerElement ??= Substitute.For<IXmlFileHandler<LearningElementPe>>();
         contentHandler ??= Substitute.For<IContentFileHandler>();
+        worldSavePathsHandler ??= Substitute.For<ILearningWorldSavePathsHandler>();
         fileSystem ??= new MockFileSystem();
         mapper ??= Substitute.For<IMapper>();
         return new DataAccess.API.DataAccess(configuration, fileSaveHandlerWorld,
-            fileSaveHandlerSpace, fileSaveHandlerElement, contentHandler, fileSystem, mapper);
+            fileSaveHandlerSpace, fileSaveHandlerElement, contentHandler, worldSavePathsHandler, fileSystem, mapper);
     }
 }

@@ -5,6 +5,7 @@ namespace BusinessLogic.Commands.Space;
 
 public class LoadLearningSpace : IUndoCommand
 {
+    public string Name => nameof(LoadLearningSpace);
     private readonly IBusinessLogic _businessLogic;
     
     internal LearningWorld LearningWorld { get; }

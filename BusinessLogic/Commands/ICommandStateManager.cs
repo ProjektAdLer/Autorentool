@@ -24,12 +24,13 @@ public interface ICommandStateManager : INotifyPropertyChanged
     /// <summary>
     /// Undoes the last command and saves it to the redo stack, if any commands are available.
     /// </summary>
+    /// <returns>Command </returns>
     /// <exception cref="InvalidOperationException"><see cref="CanUndo"/> is false.</exception>
-    public void Undo();
+    public ICommand Undo();
     /// <summary>
     /// Redoes the last command and saves it to the undo stack, if any commands are available.
     /// </summary>
     /// <exception cref="InvalidOperationException"><see cref="CanRedo"/> is false.</exception>
-    public void Redo();
+    public ICommand Redo();
     event CommandStateManager.RemovedCommandsFromStacksHandler RemovedCommandsFromStacks;
 }

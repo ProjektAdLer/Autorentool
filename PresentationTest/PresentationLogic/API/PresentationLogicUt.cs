@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -25,7 +26,9 @@ using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.MyLearningWorlds;
 using Shared;
+using Shared.Command;
 using Shared.Configuration;
 
 namespace PresentationTest.PresentationLogic.API;
@@ -137,12 +140,29 @@ public class PresentationLogicUt
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
         var wasCalled = false;
-        systemUnderTest.OnUndoRedoPerformed += () => wasCalled = true;
-        mockBusinessLogic.OnUndoRedoPerformed += Raise.Event<Action>();
-
-        Assert.That(wasCalled, Is.True);
+        object? sender = null;
+        CommandUndoRedoOrExecuteArgs? args = null;
+        systemUnderTest.OnCommandUndoRedoOrExecute += (s, e) =>
+        {
+            wasCalled = true;
+            sender = s;
+            args = e;
+        };
+        mockBusinessLogic.OnCommandUndoRedoOrExecute += Raise.Event<EventHandler<CommandUndoRedoOrExecuteArgs>>(systemUnderTest, new CommandUndoRedoOrExecuteArgs("testCommand", CommandExecutionState.Executed));
+        Assert.Multiple(() =>
+        {
+            Assert.That(wasCalled, Is.True);
+            Assert.That(sender, Is.Not.Null);
+            Assert.That(args, Is.Not.Null);
+        });
+        Assert.Multiple(() =>
+        {
+            Assert.That(sender, Is.EqualTo(systemUnderTest));
+            Assert.That(args?.CommandName, Is.EqualTo("testCommand"));
+            Assert.That(args?.ExecutionState, Is.EqualTo(CommandExecutionState.Executed));
+        });
     }
-    
+
     [Test]
     public void CallUndoCommand_CallsBusinessLogic()
     {
@@ -787,7 +807,44 @@ public class PresentationLogicUt
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
         mockLogger.Received().LogInformation("Save as dialog cancelled by user");
     }
-    
+
+    [Test]
+    public async Task SaveLearningWorldAsync_CallsSavedLearningWorldsManager()
+    {
+        var resultId = Guid.Empty;
+        var resultName = string.Empty;
+        var resultPath = string.Empty;
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        mockBusinessLogic.When(sub => sub.AddSavedLearningWorldPath(Arg.Any<SavedLearningWorldPath>())).
+            Do(sub => {resultId = sub.Arg<SavedLearningWorldPath>().Id; resultName = sub.Arg<SavedLearningWorldPath>().Name; resultPath = sub.Arg<SavedLearningWorldPath>().Path;});
+        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
+        mockHybridSupport.IsElectronActive.Returns(true);
+        var mockMapper = Substitute.For<IMapper>();
+        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        var entity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
+        mockMapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorld).Returns(entity);
+        const string filepath = "foobar.awf";
+        var mockDialogManger = Substitute.For<IElectronDialogManager>();
+        mockDialogManger
+            .ShowSaveAsDialogAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<IEnumerable<FileFilterProxy>?>())
+            .Returns(filepath);
+        var mockServiceProvider = Substitute.For<IServiceProvider>();
+        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManger);
+
+        var systemUnderTest = CreateTestablePresentationLogic(mapper: mockMapper,
+            hybridSupportWrapper: mockHybridSupport, serviceProvider: mockServiceProvider, businessLogic: mockBusinessLogic);
+
+        await systemUnderTest.SaveLearningWorldAsync(learningWorld);
+
+        mockBusinessLogic.Received().AddSavedLearningWorldPath(Arg.Any<SavedLearningWorldPath>());
+        Assert.Multiple(() =>
+        {
+            Assert.That(resultId, Is.EqualTo(entity.Id));
+            Assert.That(resultName, Is.EqualTo(entity.Name));
+            Assert.That(resultPath, Is.EqualTo(filepath));
+        });
+    }
+
     [Test]
     public void SaveLearningSpaceAsync_ThrowsNYIExceptionWhenNotRunningInElectron()
     {
@@ -1835,10 +1892,11 @@ public class PresentationLogicUt
         
         mockShellWrapper.Received().OpenPathAsync("pathpath");
     }
+
     private static Presentation.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(
-        IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null, 
-        ICachingMapper? cachingMapper = null, IServiceProvider? serviceProvider = null, 
-        ILogger<Presentation.PresentationLogic.API.PresentationLogic>? logger = null, 
+        IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null,
+        ICachingMapper? cachingMapper = null, IServiceProvider? serviceProvider = null,
+        ILogger<Presentation.PresentationLogic.API.PresentationLogic>? logger = null,
         IHybridSupportWrapper? hybridSupportWrapper = null, IShellWrapper? shellWrapper = null)
     {
         configuration ??= Substitute.For<IAuthoringToolConfiguration>();
@@ -1850,7 +1908,7 @@ public class PresentationLogicUt
         hybridSupportWrapper ??= Substitute.For<IHybridSupportWrapper>();
         shellWrapper ??= Substitute.For<IShellWrapper>();
 
-        return new Presentation.PresentationLogic.API.PresentationLogic(configuration, businessLogic, mapper, cachingMapper,
-            serviceProvider, logger, hybridSupportWrapper,shellWrapper);
+        return new Presentation.PresentationLogic.API.PresentationLogic(configuration, businessLogic, mapper,
+            cachingMapper, serviceProvider, logger, hybridSupportWrapper, shellWrapper);
     }
 }

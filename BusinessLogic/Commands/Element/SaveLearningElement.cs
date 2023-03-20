@@ -5,6 +5,7 @@ namespace BusinessLogic.Commands.Element;
 
 public class SaveLearningElement : ICommand
 {
+    public string Name => nameof(SaveLearningElement);
     private readonly IBusinessLogic _businessLogic;
     private readonly LearningElement _learningElement;
     private readonly string _filepath;

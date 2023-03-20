@@ -1,8 +1,11 @@
 using System.ComponentModel;
+using MudBlazor;
 using Presentation.Components;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningWorld;
 using Shared;
+using Shared.Command;
 
 namespace Presentation.PresentationLogic.LearningSpace;
 
@@ -19,7 +22,7 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     LearningContentViewModel? DragAndDropLearningContent { get; }
     IDisplayableLearningObject? RightClickedLearningObject { get; }
     void OnWorldPropertyChanged(object? caller, PropertyChangedEventArgs e);
-    event Action OnUndoRedoPerformed;
+    event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
     void DragLearningElement(object sender, DraggedEventArgs<ILearningElementViewModel> draggedEventArgs);
     void ClickedLearningElement(ILearningElementViewModel obj);
     void RightClickedLearningElement(ILearningElementViewModel obj);
@@ -29,4 +32,7 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     void HideRightClickMenu();
     void ShowElementContent(ILearningElementViewModel obj);
     void SetLearningSpaceLayout(FloorPlanEnum floorPlanName);
+    void OpenReplaceLearningElementDialog(ILearningWorldViewModel learningWorldVm, ILearningElementViewModel dropItem, int slotId);
+    bool ReplaceLearningElementDialogOpen { get; set; }
+    void OnReplaceLearningElementDialogClose(DialogResult closeResult);
 }

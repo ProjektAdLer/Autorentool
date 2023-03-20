@@ -1,0 +1,67 @@
+@page "/MyLearningWorldsOverview"
+@using Presentation.PresentationLogic.MyLearningWorlds
+@using Shared
+@using Presentation.PresentationLogic.API
+@using Presentation.Components.Forms.World
+<h3>MyLearningWorldsOverview</h3>
+<br/>
+<MudGrid Spacing="1">
+    @foreach (var myLearningWorld in MyLearningWorldsProvider.GetLoadedLearningWorlds())
+    {
+        <LearningWorldCard LearningWorldPath="@myLearningWorld" OnOpenLearningWorld="OpenLearningWorld" IsLoaded="true"/>
+    }
+    @foreach (var myLearningWorld in MyLearningWorldsProvider.GetSavedLearningWorlds())
+    {
+        <LearningWorldCard LearningWorldPath="@myLearningWorld" OnOpenLearningWorld="OpenLearningWorld" OnDeleteFromSaved="MyLearningWorldsProvider.DeletePathFromSavedLearningWorlds" IsLoaded="false"/>
+    }
+    <LearningWorldCard OnLoadLearningWorldPath="LoadLearningWorldAsync"/>
+    <LearningWorldCard OnCreateLearningWorld="CreateLearningWorld"/>
+
+</MudGrid>
+<MudDrawer @bind-Open="_createLearningWorldDialogOpen" Variant="@DrawerVariant.Temporary" Position="DrawerPosition.Left">
+    <MudDrawerContent>
+        <CreateWorldForm OnSubmitted="() => _createLearningWorldDialogOpen = false"/>
+    </MudDrawerContent>
+</MudDrawer>
+
+<br/>
+<MudButton @onclick="OnClickMyLearningWorldsOverview">xxxx</MudButton>
+
+@code {
+
+#pragma warning disable CS8618
+    [Inject]
+    internal IMyLearningWorldsProvider MyLearningWorldsProvider { get; private init; }
+
+    [Inject]
+    internal NavigationManager NavManager { get; private init; }
+#pragma warning restore CS8618
+
+    private bool _createLearningWorldDialogOpen = false;
+
+    private void OnClickMyLearningWorldsOverview()
+    {
+        NavManager.NavigateTo("/app");
+    }
+
+    private async void LoadLearningWorldAsync()
+    {
+        var retVal = await MyLearningWorldsProvider.LoadSavedLearningWorld();
+        if (retVal)
+        {
+            OnClickMyLearningWorldsOverview();
+        }
+    }
+
+    private void CreateLearningWorld()
+    {
+        _createLearningWorldDialogOpen = true;
+    }
+
+    private void OpenLearningWorld(SavedLearningWorldPath savedLearningWorldPath)
+    {
+        MyLearningWorldsProvider.OpenLearningWorld(savedLearningWorldPath);
+        OnClickMyLearningWorldsOverview();
+    }
+
+}

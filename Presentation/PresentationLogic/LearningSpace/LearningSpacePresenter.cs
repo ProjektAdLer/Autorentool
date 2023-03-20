@@ -1,11 +1,13 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using MudBlazor;
 using Presentation.Components;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
+using Shared.Command;
 
 namespace Presentation.PresentationLogic.LearningSpace;
 
@@ -23,6 +25,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     private int _creationCounter = 0;
     private int _activeSlot = -1;
     private ILearningSpaceViewModel? _learningSpaceVm;
+    private ReplaceLearningElementData _replaceLearningElementData = new();
 
     public ILearningSpaceViewModel? LearningSpaceVm
     {
@@ -33,24 +36,51 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     public LearningContentViewModel? DragAndDropLearningContent { get; private set; }
     public IDisplayableLearningObject? RightClickedLearningObject { get; private set; }
 
-    public void EditLearningSpace(string name, string shortname, string authors, string description, string goals, int requiredPoints)
+    public void EditLearningSpace(string name, string shortname, string authors, string description, string goals,
+        int requiredPoints)
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("LearningSpaceVm is null");
-        _presentationLogic.EditLearningSpace(LearningSpaceVm, name, shortname, authors, description, goals, requiredPoints);
+        _presentationLogic.EditLearningSpace(LearningSpaceVm, name, shortname, authors, description, goals,
+            requiredPoints);
     }
 
-    public event Action OnUndoRedoPerformed
+    public bool ReplaceLearningElementDialogOpen { get; set; } = false;
+
+    public event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute
     {
-        add => _presentationLogic.OnUndoRedoPerformed += value;
-        remove => _presentationLogic.OnUndoRedoPerformed -= value;
+        add => _presentationLogic.OnCommandUndoRedoOrExecute += value;
+        remove => _presentationLogic.OnCommandUndoRedoOrExecute -= value;
     }
-    
+
     public void SetLearningSpaceLayout(FloorPlanEnum floorPlanName)
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("LearningSpaceVm is null");
         _presentationLogic.ChangeLearningSpaceLayout(LearningSpaceVm, floorPlanName);
+    }
+
+    public void OpenReplaceLearningElementDialog(ILearningWorldViewModel learningWorldVm,
+        ILearningElementViewModel dropItem, int slotId)
+    {
+        _replaceLearningElementData = new ReplaceLearningElementData
+        {
+            LearningWorldVm = learningWorldVm,
+            DropItem = dropItem,
+            SlotId = slotId
+        };
+        ReplaceLearningElementDialogOpen = true;
+    }
+
+    public void OnReplaceLearningElementDialogClose(DialogResult closeResult)
+    {
+        ReplaceLearningElementDialogOpen = false;
+        if (LearningSpaceVm == null) throw new ApplicationException("LearningSpaceVm is null");
+
+        if (closeResult.Canceled) return;
+
+        _presentationLogic.DragLearningElementFromUnplaced(_replaceLearningElementData.LearningWorldVm, LearningSpaceVm,
+            _replaceLearningElementData.DropItem, _replaceLearningElementData.SlotId);
     }
 
     public void DragLearningElement(object sender, DraggedEventArgs<ILearningElementViewModel> args)
@@ -105,14 +135,15 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     {
         LearningSpaceVm = space;
     }
+
     public void OnWorldPropertyChanged(object? caller, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(LearningWorldViewModel.SelectedLearningObject))
         {
             if (caller is not ILearningWorldViewModel worldVm)
                 throw new ArgumentException("Caller must be of type ILearningWorldViewModel");
-        
-            if(worldVm.SelectedLearningObject is LearningSpaceViewModel space)
+
+            if (worldVm.SelectedLearningObject is LearningSpaceViewModel space)
                 LearningSpaceVm = space;
         }
     }
@@ -137,7 +168,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
             throw new ApplicationException("SelectedLearningSpace is null");
         _presentationLogic.AddLearningElement(LearningSpaceVm, slotIndex, element);
     }
-    
+
     /// <summary>
     /// Calls a load method in <see cref="_presentationLogic"/> depending on the content type and returns a
     /// LearningContentViewModel.
@@ -196,7 +227,8 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
             throw new ApplicationException("SelectedLearningSpace is null");
         if (LearningSpaceVm.SelectedLearningElement == null)
             return;
-        _presentationLogic.DeleteLearningElement(LearningSpaceVm, (LearningElementViewModel)LearningSpaceVm.SelectedLearningElement);
+        _presentationLogic.DeleteLearningElement(LearningSpaceVm,
+            (LearningElementViewModel) LearningSpaceVm.SelectedLearningElement);
     }
 
     /// <summary>
@@ -216,7 +248,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
                 break;
         }
     }
-    
+
     /// <summary>
     /// Calls the the show learning element content method for the selected learning element.
     /// </summary>
@@ -252,4 +284,11 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         OnPropertyChanged(propertyName);
         return true;
     }
+}
+
+internal class ReplaceLearningElementData
+{
+    internal ILearningWorldViewModel LearningWorldVm { get; init; }
+    public ILearningElementViewModel DropItem { get; init; }
+    public int SlotId { get; init; }
 }

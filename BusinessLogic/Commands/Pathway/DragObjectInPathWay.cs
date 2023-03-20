@@ -4,6 +4,7 @@ namespace BusinessLogic.Commands.Pathway;
 
 public class DragObjectInPathWay : IUndoCommand
 {
+    public string Name => nameof(DragObjectInPathWay);
     internal IObjectInPathWay LearningObject { get; }
     private readonly double _oldPositionX;
     private readonly double _oldPositionY;

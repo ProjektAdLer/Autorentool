@@ -5,6 +5,7 @@ namespace BusinessLogic.Commands.World;
 
 public class CreateLearningWorld : IUndoCommand
 {
+    public string Name => nameof(CreateLearningWorld);
     internal AuthoringToolWorkspace AuthoringToolWorkspace { get; }
     private readonly Action<AuthoringToolWorkspace> _mappingAction;
 

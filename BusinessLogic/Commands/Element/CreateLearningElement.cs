@@ -8,6 +8,7 @@ namespace BusinessLogic.Commands.Element;
 
 public class CreateLearningElement : IUndoCommand
 {
+    public string Name => nameof(CreateLearningElement);
     internal LearningSpace ParentSpace { get; }
     internal int SlotIndex { get; }
     internal LearningElement LearningElement { get; }

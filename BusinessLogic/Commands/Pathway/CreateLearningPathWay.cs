@@ -4,6 +4,7 @@ namespace BusinessLogic.Commands.Pathway;
 
 public class CreateLearningPathWay : IUndoCommand, ICommandWithError
 {
+    public string Name => nameof(CreateLearningPathWay);
     public bool HasError { get; private set; }
     internal LearningWorld LearningWorld { get; }
     internal LearningPathway LearningPathway { get; }

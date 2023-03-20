@@ -1,5 +1,6 @@
 ﻿using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using Shared;
 using Shared.Configuration;
 
 namespace BusinessLogic.API;
@@ -24,6 +25,11 @@ public interface IDataAccess
     /// </summary>
     /// <returns>An enumerable of content files.</returns>
     IEnumerable<LearningContent> GetAllContent();
+    IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths();
+    void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
+    SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path);
+    void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id);
+    void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
     
     /// <summary>
     /// Finds a save path in <paramref name="targetFolder"/> containing <paramref name="fileName"/> and ending with <paramref name="fileEnding"/>,

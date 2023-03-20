@@ -4,6 +4,7 @@ namespace BusinessLogic.Commands.World;
 
 public class DeleteLearningWorld : IUndoCommand
 {
+    public string Name => nameof(DeleteLearningWorld);
     internal AuthoringToolWorkspace AuthoringToolWorkspace { get; }
     internal LearningWorld LearningWorld { get; }
     private Action<AuthoringToolWorkspace> MappingAction { get; }

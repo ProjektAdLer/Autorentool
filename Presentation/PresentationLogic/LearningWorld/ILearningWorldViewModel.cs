@@ -7,6 +7,7 @@ namespace Presentation.PresentationLogic.LearningWorld;
 
 public interface ILearningWorldViewModel : ISerializableViewModel, IDisplayableLearningObject, INotifyPropertyChanged
 {
+    Guid Id { get; }
     new string FileEnding { get; }
     int Workload { get; }
     int Points { get; }

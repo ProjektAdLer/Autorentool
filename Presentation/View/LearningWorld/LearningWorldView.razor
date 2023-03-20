@@ -17,9 +17,10 @@
     <h5>Points: @LearningWorldP.LearningWorldVm?.Points </h5>
 </div>
 <div class="p-2">
-    <MudButton Variant="Variant.Filled" Color="Color.Tertiary" @onclick="AddNewLearningSpace">New Space</MudButton>
-    <MudButton Variant="Variant.Filled" Color="Color.Tertiary" @onclick="AddNewPathWayCondition">New Condition</MudButton>
-    <MudButton Variant="Variant.Filled" Color="Color.Tertiary" @onclick="LoadLearningSpaceAsync">Load Space</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Tertiary" @onclick="AddNewLearningSpace" Disabled="LearningWorldP.LearningWorldVm == null">New Space</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Tertiary" @onclick="AddNewPathWayCondition" Disabled="LearningWorldP.LearningWorldVm == null">New Condition</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Tertiary" @onclick="LoadLearningSpaceAsync" Disabled="LearningWorldP.LearningWorldVm == null">Load Space</MudButton>
+    <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="SaveLearningWorldAsync" Disabled="LearningWorldP.LearningWorldVm == null">Save World</MudButton>
 </div>
 <div class="p-2">
     <MudFab Size="Size.Small" Color="Color.Primary" StartIcon="@Icons.Material.Rounded.Edit" Disabled="@(LearningWorldP.LearningWorldVm?.SelectedLearningObject == null || LearningWorldP.LearningWorldVm.SelectedLearningObject is ILearningPathWayViewModel)" @onclick="EditLearningObject"></MudFab>
@@ -104,7 +105,7 @@
         base.OnParametersSet();
         LearningWorldP.PropertyChanging += OnLearningWorldPresenterPropertyChanging;
         LearningWorldP.PropertyChanged += OnLearningWorldPresenterPropertyChanged;
-        LearningWorldP.OnUndoRedoPerformed += async () => await InvokeAsync(StateHasChanged);
+        LearningWorldP.OnCommandUndoRedoOrExecute += async (_, _) => await InvokeAsync(StateHasChanged);
     }
 
     internal void AddNewLearningSpace()
@@ -135,6 +136,27 @@
         catch (Exception exception)
         {
             ErrorState = new ExceptionWrapper("Load learning space", exception);
+        }
+        finally
+        {
+    //we need to tell blazor explicitly to re-render our component after we added the loaded learning space
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+    
+    private async Task SaveLearningWorldAsync()
+    {
+        try
+        {
+            await LearningWorldP.SaveLearningWorldAsync();
+        }
+        catch (OperationCanceledException)
+        {
+    //nothing to do, show notification?
+        }
+        catch (Exception exception)
+        {
+            ErrorState = new ExceptionWrapper("Save learning world", exception);
         }
         finally
         {

@@ -7,6 +7,7 @@ using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
+using Shared.Command;
 using Shared.Configuration;
 
 namespace Presentation.PresentationLogic.API;
@@ -99,6 +100,14 @@ public interface IPresentationLogic
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
     Task LoadLearningWorldAsync(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm);
+    
+    /// <summary>
+    /// Loads <see cref="LearningWorldViewModel"/> from given path.
+    /// </summary>
+    /// <param name="authoringToolWorkspaceVm">The Workspace ViewModel.</param>
+    /// <param name="path">The Path, the Learning World should loaded from.</param>
+    /// <returns></returns>
+    void LoadLearningWorldFromPath(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string path);
 
     /// <summary>
     /// Adds a new learning space in the given learning world with the corresponding command.
@@ -384,7 +393,7 @@ public interface IPresentationLogic
     void LoadLearningWorldViewModel(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, Stream stream);
     void LoadLearningSpaceViewModel(ILearningWorldViewModel learningWorldVm, Stream stream);
     void LoadLearningElementViewModel(ILearningSpaceViewModel parentSpaceVm, int slotIndex, Stream stream);
-    event Action? OnUndoRedoPerformed;
+    event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
     void DragObjectInPathWay(IObjectInPathWayViewModel pathWayObjectVm, double oldPositionX, double oldPositionY);
     void DragLearningElement(ILearningElementViewModel learningElementVm, double oldPositionX, double oldPositionY);
     Task ShowLearningContentAsync(LearningContentViewModel content);
@@ -393,4 +402,10 @@ public interface IPresentationLogic
     /// Opens the folder containing all content files in the desktop's default manner.
     /// </summary>
     void OpenContentFilesFolder();
+    Task<string> GetWorldSavePath();
+    IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths();
+    void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
+    SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path);
+    void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id);
+    void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
 }

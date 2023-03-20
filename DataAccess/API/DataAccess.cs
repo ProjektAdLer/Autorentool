@@ -6,6 +6,7 @@ using BusinessLogic.Entities.LearningContent;
 using DataAccess.Persistence;
 using PersistEntities;
 using PersistEntities.LearningContent;
+using Shared;
 using Shared.Configuration;
 
 namespace DataAccess.API;
@@ -14,12 +15,13 @@ public class DataAccess : IDataAccess
 {
     public DataAccess(IAuthoringToolConfiguration configuration, IXmlFileHandler<LearningWorldPe> xmlHandlerWorld, 
         IXmlFileHandler<LearningSpacePe> xmlHandlerSpace, IXmlFileHandler<LearningElementPe> xmlHandlerElement, 
-        IContentFileHandler contentFileHandler, IFileSystem fileSystem, IMapper mapper)
+        IContentFileHandler contentFileHandler, ILearningWorldSavePathsHandler worldSavePathsHandler, IFileSystem fileSystem, IMapper mapper)
     {
         XmlHandlerWorld = xmlHandlerWorld;
         XmlHandlerSpace = xmlHandlerSpace;
         XmlHandlerElement = xmlHandlerElement;
         ContentFileHandler = contentFileHandler;
+        WorldSavePathsHandler = worldSavePathsHandler;
         FileSystem = fileSystem;
         Configuration = configuration;
         Mapper = mapper;
@@ -29,6 +31,7 @@ public class DataAccess : IDataAccess
     public readonly IXmlFileHandler<LearningSpacePe> XmlHandlerSpace;
     public readonly IXmlFileHandler<LearningElementPe> XmlHandlerElement;
     public readonly IContentFileHandler ContentFileHandler;
+    public readonly ILearningWorldSavePathsHandler WorldSavePathsHandler;
     public readonly IFileSystem FileSystem;
     public IAuthoringToolConfiguration Configuration { get; }
     public IMapper Mapper { get; }
@@ -103,6 +106,31 @@ public class DataAccess : IDataAccess
     /// <inheritdoc cref="IDataAccess.SaveLink"/>
     public void SaveLink(LinkContent linkContent) =>
         ContentFileHandler.SaveLink(Mapper.Map<LinkContentPe>(linkContent));
+
+    public IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths()
+    {
+        return WorldSavePathsHandler.GetSavedLearningWorldPaths();
+    }
+
+    public void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
+    {
+        WorldSavePathsHandler.AddSavedLearningWorldPath(savedLearningWorldPath);
+    }
+
+    public SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path)
+    {
+        return WorldSavePathsHandler.AddSavedLearningWorldPathByPathOnly(path);
+    }
+    
+    public void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id)
+    {
+        WorldSavePathsHandler.UpdateIdOfSavedLearningWorldPath(savedLearningWorldPath, id);
+    }
+
+    public void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
+    {
+        WorldSavePathsHandler.RemoveSavedLearningWorldPath(savedLearningWorldPath);
+    }
 
     /// <inheritdoc cref="IDataAccess.FindSuitableNewSavePath"/>
     public string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding)

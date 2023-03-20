@@ -4,6 +4,7 @@ namespace BusinessLogic.Commands.Element;
 
 public class DragLearningElement : IUndoCommand
 {
+    public string Name => nameof(DragLearningElement);
     internal LearningElement LearningElement { get; }
     private readonly double _oldPositionX;
     private readonly double _oldPositionY;

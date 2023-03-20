@@ -5,6 +5,7 @@ namespace BusinessLogic.Commands.World;
 
 public class LoadLearningWorld : IUndoCommand
 {
+    public string Name => nameof(LoadLearningWorld);
     private readonly IBusinessLogic _businessLogic;
     
     private readonly AuthoringToolWorkspace _workspace;

@@ -1,15 +1,22 @@
 ﻿@using Presentation.PresentationLogic.LearningElement
 @using Shared
 @using Presentation.Components
+@using Presentation.PresentationLogic.LearningElement.ActivationElement
+@using Presentation.PresentationLogic.LearningElement.InteractionElement
+@using Presentation.PresentationLogic.LearningElement.TestElement
+@using Presentation.PresentationLogic.LearningElement.TransferElement
 <MudMenu ActivationEvent="MouseEvent.RightClick" PositionAtCursor="true" @onclick="() => OnClicked.InvokeAsync(LearningElement)">
     <ActivatorContent>
         <MudCard Class="flex">
-            @{
-                var item = LearningElement;
-                var text = item.Name;
-            }
-            <MudListItem Text="@text"></MudListItem>
-            <MudIcon Icon="@GetDifficultyIcon(LearningElement.Difficulty)"/>
+                <MudIcon Icon="@GetElementIcon()" Size="Size.Large"></MudIcon>
+            <MudCardContent>
+                @{
+                    var item = LearningElement;
+                    var text = item.Name;
+                }
+                <MudListItem Text="@text"></MudListItem>
+                <MudIcon Icon="@GetDifficultyIcon(LearningElement.Difficulty)"/>
+            </MudCardContent>
         </MudCard>
     </ActivatorContent>
     <ChildContent>
@@ -58,6 +65,22 @@
             LearningElementDifficultyEnum.Hard => CustomIcons.DifficultyPolygonHard,
             LearningElementDifficultyEnum.None => CustomIcons.DifficultyPolygonNone,
             _ => throw new ArgumentOutOfRangeException(nameof(difficulty))
+            };
+    }
+    
+    private string GetElementIcon()
+    {
+        return LearningElement switch
+        {
+            H5PActivationElementViewModel => CustomIcons.H5PElementIcon,
+            VideoActivationElementViewModel => CustomIcons.VideoElementIcon,
+            H5PInteractionElementViewModel => CustomIcons.H5PElementIcon,
+            H5PTestElementViewModel => CustomIcons.H5PElementIcon,
+            ImageTransferElementViewModel => CustomIcons.ImageElementIcon,
+            PdfTransferElementViewModel => CustomIcons.TextElementIcon,
+            TextTransferElementViewModel => CustomIcons.TextElementIcon,
+            VideoTransferElementViewModel => CustomIcons.VideoElementIcon,
+            _ => throw new ArgumentOutOfRangeException(nameof(LearningElement))
             };
     }
 

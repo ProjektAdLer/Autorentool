@@ -1,30 +1,36 @@
-@using Presentation.PresentationLogic.AuthoringToolWorkspace
-@using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans
 @using Presentation.View.LearningElement
 @using Shared
+@using Shared.Command
+@using Presentation.PresentationLogic.LearningElement
 @using System.Text
+<MudButton @onclick="OnClickMyLearningWorldsOverview">MyLearningWorldsOverview</MudButton>
 
-<h2>LearningSpace @LearningSpaceP.LearningSpaceVm?.Name</h2>
-<h5>Workload: @LearningSpaceP.LearningSpaceVm?.Workload minutes</h5>
-<h5>Points: @LearningSpaceP.LearningSpaceVm?.Points</h5>
-<button class="btn btn-primary load-learning-element" @onclick="LoadLearningElementAsync">Load Learning Element</button>
-<h1>Anzahl Lernelemente: @LearningSpaceP.LearningSpaceVm?.LearningSpaceLayout.Count</h1>
-@ChildContent
-<br>
+<MudText Typo="Typo.h4">LearningSpace @LearningSpaceP.LearningSpaceVm?.Name</MudText>
+<div class="flex">
+    <div>
+        <MudText Typo="Typo.h6">Workload: @LearningSpaceP.LearningSpaceVm?.Workload minutes</MudText>
+        <MudText Typo="Typo.h6">Points: @LearningSpaceP.LearningSpaceVm?.Points</MudText>
+        <button class="btn btn-primary load-learning-element" @onclick="LoadLearningElementAsync">Load Learning Element</button>
+        <h1>Anzahl Lernelemente: @LearningSpaceP.LearningSpaceVm?.LearningSpaceLayout.Count</h1>
+        @ChildContent
+        <br>
+    </div>
+    <div>
+        <MudDropZone T="ILearningElementViewModel" Identifier="unplacedElements"
+                     Class="rounded-lg border-2 border-solid mud-border-lines-default p-6 m-8 w-28 min-h-1 flex justify-center items-center flex-col">
+            <ItemRenderer>
+                @{
+                    var item = context;
+                    var text = item.Name + " " + item.Parent?.Name;
+                }
+                <MudListItem Text="@text"></MudListItem>
 
-<MudDropZone T="ILearningElementViewModel" Identifier="unplacedElements"
-             Class="rounded-lg border-2 border-solid mud-border-lines-default p-6 m-8 w-28 min-h-1 flex justify-center items-center flex-col">
-    <ItemRenderer>
-        @{
-            var item = context;
-            var text = item.Name + " " + item.Parent?.Name;
-        }
-        <MudListItem Text="@text"></MudListItem>
-
-    </ItemRenderer>
-</MudDropZone>
+            </ItemRenderer>
+        </MudDropZone>
+    </div>
+</div>
 
 @if (LearningSpaceP.LearningSpaceVm != null)
 {
@@ -40,20 +46,20 @@
         <button class="btn btn-primary save-learning-element" @onclick="SaveSelectedLearningElementAsync">Save selected Learning Element</button>
         <button class="btn btn-primary show-element-content" @onclick="ShowSelectedElementContentAsync">Show content of Learning Element</button>
     }
-        <br>
-        <p>Select learning world:</p>
-        <select @onchange="args => SetLearningSpaceLayout(args.Value!.ToString())"
-                value="@(LearningSpaceP.LearningSpaceVm?.LearningSpaceLayout.FloorPlanName)">
-            @foreach (var floorPlan in Enum.GetValues(typeof(FloorPlanEnum)).Cast<FloorPlanEnum>())
-            {
-                <option value="@floorPlan">@floorPlan.ToString()</option>
-            }
-        </select>
+    <br>
+    <p>Select learning world:</p>
+    <select @onchange="args => SetLearningSpaceLayout(args.Value!.ToString())"
+            value="@(LearningSpaceP.LearningSpaceVm?.LearningSpaceLayout.FloorPlanName)">
+        @foreach (var floorPlan in Enum.GetValues(typeof(FloorPlanEnum)).Cast<FloorPlanEnum>())
+        {
+            <option value="@floorPlan">@floorPlan.ToString()</option>
+        }
+    </select>
     @if (LearningSpaceP.LearningSpaceVm != null)
     {
-        <div style="width: 600px; height: 400px; border: 2px solid orange;">
+        <div style="width: 90%; height: 400px; border: 2px solid orange;">
             <div class="layout-shadow">
-                <div class="layout" style="@GetCornerPointsString(LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.FloorPlanViewModel) width: 600px; height: 400px; position: relative;">
+                <div class="layout" style="@GetCornerPointsString(LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.FloorPlanViewModel) width: 98%; height:382px; position: relative; transform: translate(1%,7px)">
 
                     @for (var i = 0; i < LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.Capacity; i++)
                     {
@@ -80,15 +86,29 @@
         </div>
     }
 }
+@if (LearningSpaceP.ReplaceLearningElementDialogOpen && _showingReplaceLearningElementDialog == false)
+{
+    @ShowReplaceLearningElementDialog()
+}
+
 
 @code {
 #pragma warning disable CS8618 // injected by framework - n.stich
     [Inject]
     public ILearningSpacePresenter LearningSpaceP { get; set; }
+
+    [Inject]
+    internal NavigationManager NavManager { get; private init; }
+
+    [Inject]
+    IDialogService DialogService { get; set; }
 #pragma warning restore CS8618
 
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
+
+    [CascadingParameter(Name = "TriggerMasterLayoutStateHasChanged")]
+    private Action TriggerMasterLayoutStateHasChanged { get; set; }
 
     //TODO: Instead of setting a value here we need some sort of central service that we can notify about the error to
     //then display it in the UI - n.stich
@@ -97,8 +117,28 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        LearningSpaceP.OnUndoRedoPerformed += async () => await InvokeAsync(StateHasChanged);
+        LearningSpaceP.OnCommandUndoRedoOrExecute += async (_, args) =>
+        {
+            await InvokeAsync(StateHasChanged);
+            if (args.CommandName is "CreateLearningElement" or "LoadLearningElement" or 
+                "PlaceLearningElementInLayoutFromUnplaced" or "ChangeLearningSpaceLayout")
+            {
+                await InvokeAsync(TriggerMasterLayoutStateHasChanged);
+            }
+        };
+        LearningSpaceP.PropertyChanged += (sender, earg) =>
+        {
+            if (earg.PropertyName == nameof(LearningSpaceP.LearningSpaceVm)) InvokeAsync(TriggerMasterLayoutStateHasChanged);
+        };
     }
+
+    private void OnClickMyLearningWorldsOverview()
+    {
+        NavManager.NavigateTo("/MyLearningWorldsOverview");
+    }
+
+    private bool _showingReplaceLearningElementDialog = false;
+
 
     private void DeleteSelectedLearningElement()
     {
@@ -184,6 +224,12 @@
         LearningSpaceP.EditLearningElement(slotIndex);
     }
 
+    private void OnReplaceElementDialogClose(DialogResult closeResult)
+    {
+        LearningSpaceP.OnReplaceLearningElementDialogClose(closeResult);
+        InvokeAsync(StateHasChanged);
+    }
+
     private void SetLearningSpaceLayout(string floorPlanName)
     {
         Enum.TryParse(floorPlanName, out FloorPlanEnum floorPlan);
@@ -229,20 +275,29 @@
         return cornerPointsString.ToString();
     }
 
-    private String GetSlotPositionString(IFloorPlanViewModel floorPlanViewModel, int position)
+    private string GetSlotPositionString(IFloorPlanViewModel floorPlanViewModel, int position)
     {
         var slotPosition = floorPlanViewModel.ElementSlotPositions[position];
         var slotPositionString = new StringBuilder();
         slotPositionString.Append("position: absolute; ");
         slotPositionString.Append($"top: {slotPosition.Y}%; ");
         slotPositionString.Append($"left: {slotPosition.X}%; ");
-        slotPositionString.Append("transform: translate(-50%, -50%);");
+        slotPositionString.Append("transform: translate(-80%, -110%);");
         return slotPositionString.ToString();
     }
 
     private Task AddNewLearningElement(int i)
     {
         throw new NotImplementedException("NYI - implement after learning element dialog is implemented - n.stich");
+    }
+
+    private async Task ShowReplaceLearningElementDialog()
+    {
+        _showingReplaceLearningElementDialog = true;
+        var dialog = await DialogService.ShowAsync<ReplaceLearningElementDialog>("Replace Learning Element");
+        var result = await dialog.Result;
+        LearningSpaceP.OnReplaceLearningElementDialogClose(result);
+        _showingReplaceLearningElementDialog = false;
     }
 
 }

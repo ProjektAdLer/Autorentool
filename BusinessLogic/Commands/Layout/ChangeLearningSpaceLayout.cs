@@ -6,6 +6,7 @@ namespace BusinessLogic.Commands.Layout;
 
 public class ChangeLearningSpaceLayout : IUndoCommand
 {
+    public string Name => nameof(ChangeLearningSpaceLayout);
     internal LearningSpace LearningSpace { get; }
     internal FloorPlanEnum FloorPlanName { get; }
     private readonly Action<LearningSpace> _mappingAction;

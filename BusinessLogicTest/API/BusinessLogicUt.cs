@@ -5,6 +5,7 @@ using BusinessLogic.Entities.LearningContent;
 using NSubstitute;
 using NUnit.Framework;
 using Shared;
+using Shared.Command;
 using Shared.Configuration;
 
 namespace BusinessLogicTest.API;
@@ -56,14 +57,14 @@ public class BusinessLogicUt
     public void ExecuteCommand_InvokesOnUndoRedoPerformed(){
         var mockCommandStateManager = Substitute.For<ICommandStateManager>();
         var mockCommand = Substitute.For<ICommand>();
-        var mockOnUndoRedoPerformed = Substitute.For<Action>();
+        var mockOnUndoRedoOrExecutePerformed = Substitute.For<EventHandler<CommandUndoRedoOrExecuteArgs>>();
         
         var systemUnderTest = CreateStandardBusinessLogic(commandStateManager: mockCommandStateManager);
         
-        systemUnderTest.OnUndoRedoPerformed += mockOnUndoRedoPerformed;
+        systemUnderTest.OnCommandUndoRedoOrExecute += mockOnUndoRedoOrExecutePerformed;
         systemUnderTest.ExecuteCommand(mockCommand);
         
-        mockOnUndoRedoPerformed.Received().Invoke();
+        mockOnUndoRedoOrExecutePerformed.Received().Invoke(systemUnderTest, Arg.Any<CommandUndoRedoOrExecuteArgs>());
     }
     
     [Test]
@@ -98,14 +99,14 @@ public class BusinessLogicUt
     [Test]
     public void CallUndoCommand_InvokesOnUndoRedoPerformed(){
         var mockCommandStateManager = Substitute.For<ICommandStateManager>();
-        var mockOnUndoRedoPerformed = Substitute.For<Action>();
+        var mockOnUndoRedoOrExecutePerformed = Substitute.For<EventHandler<CommandUndoRedoOrExecuteArgs>>();
         
         var systemUnderTest = CreateStandardBusinessLogic(commandStateManager: mockCommandStateManager);
         
-        systemUnderTest.OnUndoRedoPerformed += mockOnUndoRedoPerformed;
+        systemUnderTest.OnCommandUndoRedoOrExecute += mockOnUndoRedoOrExecutePerformed;
         systemUnderTest.UndoCommand();
         
-        mockOnUndoRedoPerformed.Received().Invoke();
+        mockOnUndoRedoOrExecutePerformed.Received().Invoke(systemUnderTest, Arg.Any<CommandUndoRedoOrExecuteArgs>());
     }
     
     [Test]
@@ -122,14 +123,14 @@ public class BusinessLogicUt
     [Test]
     public void CallRedoCommand_InvokesOnUndoRedoPerformed(){
         var mockCommandStateManager = Substitute.For<ICommandStateManager>();
-        var mockOnUndoRedoPerformed = Substitute.For<Action>();
+        var mockOnUndoRedoOrExecutePerformed = Substitute.For<EventHandler<CommandUndoRedoOrExecuteArgs>>();
         
         var systemUnderTest = CreateStandardBusinessLogic(commandStateManager: mockCommandStateManager);
         
-        systemUnderTest.OnUndoRedoPerformed += mockOnUndoRedoPerformed;
+        systemUnderTest.OnCommandUndoRedoOrExecute += mockOnUndoRedoOrExecutePerformed;
         systemUnderTest.RedoCommand();
         
-        mockOnUndoRedoPerformed.Received().Invoke();
+        mockOnUndoRedoOrExecutePerformed.Received().Invoke(systemUnderTest, Arg.Any<CommandUndoRedoOrExecuteArgs>());
     }
 
     [Test]

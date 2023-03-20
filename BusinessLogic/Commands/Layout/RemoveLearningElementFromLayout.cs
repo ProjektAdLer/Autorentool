@@ -4,6 +4,7 @@ namespace BusinessLogic.Commands.Layout;
 
 public class RemoveLearningElementFromLayout : IUndoCommand
 {
+    public string Name => nameof(RemoveLearningElementFromLayout);
     internal LearningWorld LearningWorld { get; }
     internal LearningSpace LearningSpace { get; }
     internal ILearningElement LearningElement { get; }

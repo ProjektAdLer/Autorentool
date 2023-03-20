@@ -11,6 +11,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.MyLearningWorlds;
 using Shared;
 using Shared.Configuration;
 
@@ -177,8 +178,8 @@ public class CachingMapperIt
     private static PresentationLogic CreateTestablePresentationLogic(
         IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null,
         ICachingMapper? cachingMapper = null, IServiceProvider? serviceProvider = null,
-        ILogger<PresentationLogic>? logger = null,
-        IHybridSupportWrapper? hybridSupportWrapper = null, IShellWrapper? shellWrapper = null)
+        ILogger<PresentationLogic>? logger = null, IHybridSupportWrapper? hybridSupportWrapper = null,
+        IShellWrapper? shellWrapper = null)
     {
         configuration ??= Substitute.For<IAuthoringToolConfiguration>();
         businessLogic ??= Substitute.For<IBusinessLogic>();
@@ -189,8 +190,7 @@ public class CachingMapperIt
         hybridSupportWrapper ??= Substitute.For<IHybridSupportWrapper>();
         shellWrapper ??= Substitute.For<IShellWrapper>();
 
-        return new PresentationLogic(configuration, businessLogic, mapper,
-            cachingMapper,
-            serviceProvider, logger, hybridSupportWrapper, shellWrapper);
+        return new PresentationLogic(configuration, businessLogic, mapper, cachingMapper, serviceProvider, logger,
+            hybridSupportWrapper, shellWrapper);
     }
 }

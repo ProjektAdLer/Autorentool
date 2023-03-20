@@ -1,6 +1,8 @@
 ﻿using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using Shared;
+using Shared.Command;
 using Shared.Configuration;
 
 namespace BusinessLogic.API;
@@ -48,10 +50,15 @@ public interface IBusinessLogic
     /// </summary>
     /// <param name="linkContent">The link to add.</param>
     void SaveLink(LinkContent linkContent);
+    IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths();
+    void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
+    SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path);
+    void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id);
+    void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
     
     /// <inheritdoc cref="IDataAccess.FindSuitableNewSavePath"/>
     string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding);
 
-    event Action? OnUndoRedoPerformed;
+    event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
     string GetContentFilesFolderPath();
 }

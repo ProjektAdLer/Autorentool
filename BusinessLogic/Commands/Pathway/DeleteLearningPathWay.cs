@@ -4,6 +4,7 @@ namespace BusinessLogic.Commands.Pathway;
 
 public class DeleteLearningPathWay : IUndoCommand
 {
+    public string Name => nameof(DeleteLearningPathWay);
     internal LearningWorld LearningWorld { get; }
     internal LearningPathway LearningPathway { get; }
     private readonly Action<LearningWorld> _mappingAction;

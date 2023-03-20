@@ -5,6 +5,7 @@ namespace BusinessLogic.Commands.Element;
 
 public class LoadLearningElement : IUndoCommand
 {
+    public string Name => nameof(LoadLearningElement);
     private readonly IBusinessLogic _businessLogic;
     
     internal LearningSpace ParentSpace { get; }

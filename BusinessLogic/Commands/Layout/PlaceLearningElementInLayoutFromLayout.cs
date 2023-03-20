@@ -7,6 +7,7 @@ namespace BusinessLogic.Commands.Layout;
 /// </summary>
 public class PlaceLearningElementInLayoutFromLayout : IUndoCommand
 {
+    public string Name => nameof(PlaceLearningElementInLayoutFromLayout);
     internal LearningSpace ParentSpace { get; }
     internal int NewSlotIndex { get; }
     internal ILearningElement LearningElement { get; }

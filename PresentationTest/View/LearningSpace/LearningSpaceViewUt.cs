@@ -72,12 +72,12 @@ public class LearningSpaceViewUt
 
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
-        var nameHeader = systemUnderTest.FindOrFail("h2");
-        var workloadPointsHeader = systemUnderTest.FindAll("h5");
+        var nameHeader = systemUnderTest.FindOrFail("h4");
+        var workloadPointsHeader = systemUnderTest.FindAll("h6");
 
-        nameHeader.MarkupMatches("<h2>LearningSpace foobar</h2>");
-        workloadPointsHeader[0].MarkupMatches("<h5>Workload: 42 minutes</h5>");
-        workloadPointsHeader[1].MarkupMatches("<h5>Points: 8</h5>");
+        nameHeader.MarkupMatches("<h4 class=\"mud-typography mud-typography-h4\">LearningSpace foobar</h4>");
+        workloadPointsHeader[0].MarkupMatches("<h6 class=\"mud-typography mud-typography-h6\">Workload: 42 minutes</h6>");
+        workloadPointsHeader[1].MarkupMatches("<h6 class=\"mud-typography mud-typography-h6\">Points: 8</h6>");
     }
 
     [Test]

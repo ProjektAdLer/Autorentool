@@ -23,6 +23,7 @@ using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.MyLearningWorlds;
 using Shared;
 using Shared.Configuration;
 using Tailwind;
@@ -56,6 +57,7 @@ public class Startup
         ConfigureGenerator(services);
         ConfigureDataAccess(services);
         ConfigureToolbox(services);
+        ConfigureMyLearningWorlds(services);
         ConfigureUtilities(services);
         ConfigureAutoMapper(services);
         ConfigureCommands(services);
@@ -140,6 +142,12 @@ public class Startup
             (ILearningWorldPresenterToolboxInterface)p.GetService(typeof(ILearningWorldPresenter))!);
         services.AddSingleton(p =>
             (ILearningSpacePresenterToolboxInterface)p.GetService(typeof(ILearningSpacePresenter))!);
+    }
+    
+    private static void ConfigureMyLearningWorlds(IServiceCollection services)
+    {
+        services.AddSingleton<IMyLearningWorldsProvider, MyLearningWorldsProvider>();
+        services.AddSingleton<ILearningWorldSavePathsHandler, LearningWorldSavePathsHandler>();
     }
     
     private static void ConfigureAutoMapper(IServiceCollection services)

@@ -4,6 +4,7 @@ namespace BusinessLogic.Commands.World;
 
 public class EditLearningWorld : IUndoCommand
 {
+    public string Name => nameof(EditLearningWorld);
     internal LearningWorld LearningWorld { get; }
     private readonly string _name;
     private readonly string _shortname;

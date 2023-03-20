@@ -8,6 +8,10 @@ namespace BusinessLogic.Commands;
 public interface ICommand
 {
     /// <summary>
+    /// Returns the name of the command.
+    /// </summary>
+    public string Name { get; }
+    /// <summary>
     /// Executes the command.
     /// </summary>
     public void Execute();

@@ -5,6 +5,7 @@ namespace BusinessLogic.Commands.Condition;
 
 public class EditPathWayCondition : IUndoCommand
 {
+    public string Name => nameof(EditPathWayCondition);
     internal PathWayCondition PathWayCondition { get; }
     private readonly ConditionEnum _condition;
     private readonly Action<PathWayCondition> _mappingAction;

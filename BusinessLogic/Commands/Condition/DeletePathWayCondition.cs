@@ -4,6 +4,7 @@ namespace BusinessLogic.Commands.Condition;
 
 public class DeletePathWayCondition : IUndoCommand
 {
+    public string Name => nameof(DeletePathWayCondition);
     internal LearningWorld LearningWorld { get; }
     internal PathWayCondition PathWayCondition { get; }
     private readonly Action<LearningWorld> _mappingAction;

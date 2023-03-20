@@ -5,6 +5,7 @@ namespace BusinessLogic.Commands.Condition;
 
 public class CreatePathWayCondition : IUndoCommand
 {
+    public string Name => nameof(CreatePathWayCondition);
     internal LearningWorld LearningWorld { get; }
     internal PathWayCondition PathWayCondition { get; }
     internal IObjectInPathWay? SourceObject { get; }

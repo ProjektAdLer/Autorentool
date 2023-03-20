@@ -1,6 +1,8 @@
 ﻿using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using Shared;
+using Shared.Command;
 using Shared.Configuration;
 
 namespace BusinessLogic.API;
@@ -24,7 +26,7 @@ public class BusinessLogic : IBusinessLogic
     internal ICommandStateManager CommandStateManager { get; }
     internal IDataAccess DataAccess { get;  }
     public IAuthoringToolConfiguration Configuration { get; }
-    public event Action? OnUndoRedoPerformed;
+    public event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
     public bool CanUndo => CommandStateManager.CanUndo;
     public bool CanRedo => CommandStateManager.CanRedo;
     /// <inheritdoc cref="IBusinessLogic.GetAllContent"/>
@@ -37,19 +39,19 @@ public class BusinessLogic : IBusinessLogic
     public void ExecuteCommand(ICommand command)
     {
         CommandStateManager.Execute(command);
-        OnUndoRedoPerformed?.Invoke();
+        OnCommandUndoRedoOrExecute?.Invoke(this, new CommandUndoRedoOrExecuteArgs(command.Name, CommandExecutionState.Executed));
     }
     
     public void UndoCommand()
     {
-        CommandStateManager.Undo();
-        OnUndoRedoPerformed?.Invoke();
+        var command = CommandStateManager.Undo();
+        OnCommandUndoRedoOrExecute?.Invoke(this, new CommandUndoRedoOrExecuteArgs(command.Name, CommandExecutionState.Undone));
     }
     
     public void RedoCommand()
     {
-        CommandStateManager.Redo();
-        OnUndoRedoPerformed?.Invoke();
+        var command = CommandStateManager.Redo();
+        OnCommandUndoRedoOrExecute?.Invoke(this, new CommandUndoRedoOrExecuteArgs(command.Name, CommandExecutionState.Redone));
     }
 
     public void ConstructBackup(LearningWorld learningWorld, string filepath)
@@ -95,6 +97,31 @@ public class BusinessLogic : IBusinessLogic
     public LearningContent LoadLearningContent(string name, Stream stream)
     {
         return DataAccess.LoadLearningContent(name, stream);
+    }
+
+    public IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths()
+    {
+        return DataAccess.GetSavedLearningWorldPaths();
+    }
+
+    public void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
+    {
+        DataAccess.AddSavedLearningWorldPath(savedLearningWorldPath);
+    }
+
+    public SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path)
+    {
+        return DataAccess.AddSavedLearningWorldPathByPathOnly(path);
+    }
+    
+    public void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id)
+    {
+        DataAccess.UpdateIdOfSavedLearningWorldPath(savedLearningWorldPath, id);
+    }
+
+    public void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
+    {
+        DataAccess.RemoveSavedLearningWorldPath(savedLearningWorldPath);
     }
 
     public LearningWorld LoadLearningWorld(Stream stream)

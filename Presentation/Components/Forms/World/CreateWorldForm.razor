@@ -52,6 +52,8 @@
     [Inject]
     private IFormDataContainer<LearningWorldFormModel, LearningWorld> FormDataContainer { get; set; }
 #pragma warning restore CS8618
+    [Parameter]
+    public EventCallback OnSubmitted { get; set; }
 
     //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
     //please DO NOT REFACTOR THIS - n.stich
@@ -61,6 +63,7 @@
     {
         PresentationLogic.CreateLearningWorld(AuthoringToolWorkspaceViewModel, model.Name, model.Shortname,
             model.Authors, model.Language, model.Description, model.Goals);
+        OnSubmitted.InvokeAsync();
     }
 
     protected override async Task OnParametersSetAsync()

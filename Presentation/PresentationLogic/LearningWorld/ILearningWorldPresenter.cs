@@ -4,6 +4,7 @@ using Presentation.Components;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Shared;
+using Shared.Command;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
@@ -14,12 +15,13 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     bool ShowingLearningSpaceView { get; }
     void DeleteSelectedLearningObject();
     Task LoadLearningSpaceAsync();
+    Task SaveLearningWorldAsync();
     Task SaveSelectedLearningSpaceAsync();
     void ShowSelectedLearningSpaceView();
     void CloseLearningSpaceView();
     void DeletePathWayCondition(PathWayConditionViewModel pathWayCondition);
     void OnWorkspacePropertyChanged(object? caller, PropertyChangedEventArgs e);
-    event Action OnUndoRedoPerformed;
+    event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
     void DragObjectInPathWay(object sender, DraggedEventArgs<IObjectInPathWayViewModel> draggedEventArgs);
     void RightClickOnObjectInPathWay(IObjectInPathWayViewModel objectInPathWay);
     void ClickOnObjectInWorld(ISelectableObjectInWorldViewModel obj);

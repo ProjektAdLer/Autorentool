@@ -7,6 +7,7 @@ using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Shared;
+using Shared.Command;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
@@ -71,10 +72,10 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     public IEnumerable<(Guid, string)>? SpaceShortnames =>
         LearningWorldVm?.LearningSpaces.Select(space => (space.Id, space.Shortname));
 
-    public event Action OnUndoRedoPerformed
+    public event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute
     {
-        add => _presentationLogic.OnUndoRedoPerformed += value;
-        remove => _presentationLogic.OnUndoRedoPerformed -= value;
+        add => _presentationLogic.OnCommandUndoRedoOrExecute += value;
+        remove => _presentationLogic.OnCommandUndoRedoOrExecute -= value;
     }
 
     public void DragObjectInPathWay(object sender, DraggedEventArgs<IObjectInPathWayViewModel> args)
@@ -168,6 +169,19 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (LearningWorldVm != null) LearningWorldVm.ShowingLearningSpaceView = false;
     }
 
+    /// <summary>
+    /// Calls the respective Save methode for Learning Space or Learning Element depending on which learning object is selected
+    /// </summary>
+    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
+    /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
+    public async Task SaveLearningWorldAsync()
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+            
+        await _presentationLogic.SaveLearningWorldAsync((LearningWorldViewModel)LearningWorldVm);
+    }
+    
     #region LearningSpace
 
     /// <summary>

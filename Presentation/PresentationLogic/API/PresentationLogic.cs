@@ -16,6 +16,7 @@ using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
+using Shared.Command;
 using Shared.Configuration;
 
 namespace Presentation.PresentationLogic.API;
@@ -67,10 +68,10 @@ public class PresentationLogic : IPresentationLogic
     private IShellWrapper ShellWrapper { get; }
     public bool CanUndo => BusinessLogic.CanUndo;
     public bool CanRedo => BusinessLogic.CanRedo;
-    public event Action? OnUndoRedoPerformed
+    public event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute
     {
-        add => BusinessLogic.OnUndoRedoPerformed += value;
-        remove => BusinessLogic.OnUndoRedoPerformed -= value;
+        add => BusinessLogic.OnCommandUndoRedoOrExecute += value;
+        remove => BusinessLogic.OnCommandUndoRedoOrExecute -= value;
     }
 
     public async Task<string> ConstructBackupAsync(LearningWorldViewModel learningWorldViewModel)
@@ -144,6 +145,8 @@ public class PresentationLogic : IPresentationLogic
         var command = new SaveLearningWorld(BusinessLogic, worldEntity, filepath);
         BusinessLogic.ExecuteCommand(command);
         learningWorldViewModel.UnsavedChanges = false;
+        AddSavedLearningWorldPath(new SavedLearningWorldPath()
+            {Id = worldEntity.Id, Name = worldEntity.Name, Path = filepath});
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadLearningWorldAsync"/>
@@ -155,6 +158,48 @@ public class PresentationLogic : IPresentationLogic
         var command = new LoadLearningWorld(workspaceEntity, filepath, BusinessLogic,
             workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
         BusinessLogic.ExecuteCommand(command);
+    }
+
+    public async Task<string> GetWorldSavePath()
+    {
+        ElectronCheck();
+        var filepath = await GetLoadFilepathAsync("Load Learning World", WorldFileEnding, WorldFileFormatDescriptor);
+        return filepath;
+    }
+    
+    /// <inheritdoc cref="IPresentationLogic.LoadLearningWorldFromPath"/>
+    public void LoadLearningWorldFromPath(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string path)
+    {
+        ElectronCheck();
+        var workspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
+        var command = new LoadLearningWorld(workspaceEntity, path, BusinessLogic,
+            workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+
+    public IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths()
+    {
+        return BusinessLogic.GetSavedLearningWorldPaths();
+    }
+
+    public void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
+    {
+        BusinessLogic.AddSavedLearningWorldPath(savedLearningWorldPath);
+    }
+
+    public SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path)
+    {
+        return BusinessLogic.AddSavedLearningWorldPathByPathOnly(path);
+    }
+
+    public void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id)
+    {
+        BusinessLogic.UpdateIdOfSavedLearningWorldPath(savedLearningWorldPath, id);
+    }
+
+    public void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
+    {
+        BusinessLogic.RemoveSavedLearningWorldPath(savedLearningWorldPath);
     }
 
     public void AddLearningSpace(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel learningSpaceVm)

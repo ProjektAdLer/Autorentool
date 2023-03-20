@@ -59,8 +59,15 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
             else
             {
                 if (WorldP.LearningWorldVm == null) throw new ApplicationException("LearningWorldVm is null");
-                PresentationL.DragLearningElementFromUnplaced(WorldP.LearningWorldVm, SpaceP.LearningSpaceVm,
-                    dropItem.Item, slotId);
+                if (SpaceP.LearningSpaceVm.LearningSpaceLayout.LearningElements[slotId] != null)
+                {
+                    SpaceP.OpenReplaceLearningElementDialog(WorldP.LearningWorldVm, dropItem.Item, slotId);
+                }
+                else
+                {
+                    PresentationL.DragLearningElementFromUnplaced(WorldP.LearningWorldVm, SpaceP.LearningSpaceVm,
+                        dropItem.Item, slotId);
+                }
             }
         }
     }

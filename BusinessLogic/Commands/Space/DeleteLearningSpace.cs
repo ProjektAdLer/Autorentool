@@ -4,6 +4,7 @@ namespace BusinessLogic.Commands.Space;
 
 public class DeleteLearningSpace : IUndoCommand
 {
+    public string Name => nameof(DeleteLearningSpace);
     internal LearningWorld LearningWorld { get; }
     internal LearningSpace LearningSpace { get; }
     private readonly Action<LearningWorld> _mappingAction;

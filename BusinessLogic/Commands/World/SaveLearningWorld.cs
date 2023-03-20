@@ -5,6 +5,7 @@ namespace BusinessLogic.Commands.World;
 
 public class SaveLearningWorld : ICommand
 {
+    public string Name => nameof(SaveLearningWorld);
     private readonly IBusinessLogic _businessLogic;
     private readonly LearningWorld _learningWorld;
     private readonly string _filepath;

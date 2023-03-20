@@ -4,6 +4,7 @@ namespace BusinessLogic.Commands.Space;
 
 public class EditLearningSpace : IUndoCommand
 {
+    public string Name => nameof(EditLearningSpace);
     internal LearningSpace LearningSpace { get; }
     private readonly string _name;
     private readonly string _shortname;
