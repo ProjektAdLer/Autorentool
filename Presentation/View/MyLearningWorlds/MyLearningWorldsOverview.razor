@@ -3,29 +3,30 @@
 @using Shared
 @using Presentation.PresentationLogic.API
 @using Presentation.Components.Forms.World
-<h3>MyLearningWorldsOverview</h3>
-<br/>
-<MudGrid Spacing="1">
-    @foreach (var myLearningWorld in MyLearningWorldsProvider.GetLoadedLearningWorlds())
-    {
-        <LearningWorldCard LearningWorldPath="@myLearningWorld" OnOpenLearningWorld="OpenLearningWorld" IsLoaded="true"/>
-    }
-    @foreach (var myLearningWorld in MyLearningWorldsProvider.GetSavedLearningWorlds())
-    {
-        <LearningWorldCard LearningWorldPath="@myLearningWorld" OnOpenLearningWorld="OpenLearningWorld" OnDeleteFromSaved="MyLearningWorldsProvider.DeletePathFromSavedLearningWorlds" IsLoaded="false"/>
-    }
-    <LearningWorldCard OnLoadLearningWorldPath="LoadLearningWorldAsync"/>
-    <LearningWorldCard OnCreateLearningWorld="CreateLearningWorld"/>
+<main class="flex flex-col justify-center items-center h-screen p-2 w-screen bg-gradient-to-br m-0 from-adlerbggradientfrom to-adlerbggradientto">
+    <section class="flex flex-col m-auto gap-8">
+        <h3 class="font-bold text-xl text-center text-adlerdarkblue">MyLearningWorldsOverview</h3>
+        <MudGrid Spacing="1">
+            @foreach (var myLearningWorld in MyLearningWorldsProvider.GetLoadedLearningWorlds())
+            {
+                <LearningWorldCard LearningWorldPath="@myLearningWorld" OnOpenLearningWorld="OpenLearningWorld" IsLoaded="true"/>
+            }
+            @foreach (var myLearningWorld in MyLearningWorldsProvider.GetSavedLearningWorlds())
+            {
+                <LearningWorldCard LearningWorldPath="@myLearningWorld" OnOpenLearningWorld="OpenLearningWorld" OnDeleteFromSaved="MyLearningWorldsProvider.DeletePathFromSavedLearningWorlds" IsLoaded="false"/>
+            }
+            <LearningWorldCard OnLoadLearningWorldPath="LoadLearningWorldAsync"/>
+            <LearningWorldCard OnCreateLearningWorld="CreateLearningWorld"/>
 
-</MudGrid>
-<MudDrawer @bind-Open="_createLearningWorldDialogOpen" Variant="@DrawerVariant.Temporary" Position="DrawerPosition.Left">
-    <MudDrawerContent>
-        <CreateWorldForm OnSubmitted="() => _createLearningWorldDialogOpen = false"/>
-    </MudDrawerContent>
-</MudDrawer>
-
-<br/>
-<MudButton @onclick="OnClickMyLearningWorldsOverview">xxxx</MudButton>
+        </MudGrid>
+        <MudDrawer @bind-Open="_createLearningWorldDialogOpen" Variant="@DrawerVariant.Temporary" Position="DrawerPosition.Left">
+            <MudDrawerContent>
+                <CreateWorldForm OnSubmitted="() => _createLearningWorldDialogOpen = false"/>
+            </MudDrawerContent>
+        </MudDrawer>
+    </section>
+    <MudButton Class="btn-standard normal-case" @onclick="OnClickMyLearningWorldsOverview">Gehe zur Lernwelt</MudButton>
+</main>
 
 @code {
 

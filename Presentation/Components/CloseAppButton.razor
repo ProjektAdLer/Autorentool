@@ -2,5 +2,5 @@
 @inherits ComponentBase
 @inject IShutdownManager ShutdownManager
 <div class="absolute top-0 right-0">
-    <button class="btn btn-danger" @onclick="() => ShutdownManager.BeginShutdown()">Close application</button>
+    <button class="btn-standard" @onclick="() => ShutdownManager.BeginShutdown()">Close application</button>
 </div>

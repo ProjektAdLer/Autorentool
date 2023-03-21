@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer components {
+    .btn-standard {
+        @apply h-8 w-fit text-adlerdarkblue bg-buttonbgblue p-4 rounded-lg drop-shadow active:drop-shadow-none hover:bg-adlerdarkblue hover:text-buttonbgblue m-2;
+    }
+}

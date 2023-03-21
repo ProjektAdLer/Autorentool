@@ -83,9 +83,16 @@ module.exports = {
                     900: "rgb(26,26,26)", // dunkel
                 },
                 adlergray: colors.adlergrey,
-                buttonpressedblue: "rgb(0,120,229)",
-                adlertextgrey: "#111111",
                 adlerdeactivated: "#e9e9e9",
+                buttonbgblue: "#e9f2fa",
+                buttonpressedblue: "#ace8fc",
+                adlertextgrey: "#111111",
+                adlerbuttonlocked: "#b9bfc6",
+                adlerdeactivatedtext: "#e9e9e9",
+                adlerbggradientfrom: "#a1c8e5",
+                adlerbggradientto: "#e2eaf2",
+                nodehandlecolor: "#e9d6b3",
+                
             },
             fontFamily: {
                 'sans': ['Roboto']
