@@ -62,6 +62,7 @@ public class Startup
         ConfigureAutoMapper(services);
         ConfigureCommands(services);
         ConfigureValidation(services);
+        ConfigureApiAccess(services);
 
         
         //Electron Wrapper layer
@@ -132,6 +133,11 @@ public class Startup
         services.AddSingleton<IBackupFileGenerator, BackupFileGenerator>();
         services.AddSingleton<ICreateDsl, CreateDsl>();
         services.AddSingleton<IReadDsl, ReadDsl>();
+    }
+    
+    private void ConfigureApiAccess(IServiceCollection services)
+    {
+        services.AddSingleton<IApiAccess, ApiAccess.API.ApiAccess>();
     }
 
     private static void ConfigureToolbox(IServiceCollection services)

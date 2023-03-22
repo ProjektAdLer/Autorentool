@@ -90,6 +90,17 @@ public class StartupUt
         ConfigureServicesCoreTest(requiredType);
     }
 
+    private static readonly Type[] ConfigureApiAccessRequiredTypes =
+    {
+        typeof(IApiAccess)
+        
+    };
+    [Test]
+    [TestCaseSource(nameof(ConfigureApiAccessRequiredTypes))]
+    public void Startup_ConfigureServices_CanResolveAllApiAccessServices(Type requiredType)
+    {
+        ConfigureServicesCoreTest(requiredType);
+    }
 
     private static readonly Type[] ConfigurePresentationLogicRequiredTypes =
     {
@@ -125,8 +136,7 @@ public class StartupUt
     {
         ConfigureServicesCoreTest(requiredType);
     }
-    
-    
+
     private static readonly Type[] ConfigureAutoMapperRequiredTypes =
     {
         typeof(IMapper), typeof(ICachingMapper)

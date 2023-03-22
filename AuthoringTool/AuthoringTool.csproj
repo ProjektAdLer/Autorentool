@@ -14,6 +14,7 @@
       <ProjectReference Include="..\Generator\Generator.csproj" />
       <ProjectReference Include="..\PersistEntities\PersistEntities.csproj" />
       <ProjectReference Include="..\Presentation\Presentation.csproj" />
+      <ProjectReference Include="..\ApiAccess\ApiAccess.csproj" />
     </ItemGroup>
 
     <ItemGroup>

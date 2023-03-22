@@ -1611,9 +1611,16 @@
           "System.Threading.Timer": "4.3.0"
         }
       },
+      "apiaccess": {
+        "type": "Project",
+        "dependencies": {
+          "BusinessLogic": "[1.0.0, )"
+        }
+      },
       "authoringtool": {
         "type": "Project",
         "dependencies": {
+          "ApiAccess": "[1.0.0, )",
           "AutoMapper.Collection": "[8.0.0, )",
           "BusinessLogic": "[1.0.0, )",
           "DataAccess": "[1.0.0, )",

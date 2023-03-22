@@ -1304,6 +1304,12 @@
           "System.Threading.Timer": "4.3.0"
         }
       },
+      "apiaccess": {
+        "type": "Project",
+        "dependencies": {
+          "BusinessLogic": "[1.0.0, )"
+        }
+      },
       "businesslogic": {
         "type": "Project",
         "dependencies": {
