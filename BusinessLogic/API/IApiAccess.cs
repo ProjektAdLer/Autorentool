@@ -1,6 +1,8 @@
-﻿namespace BusinessLogic.API;
+﻿using BusinessLogic.Entities.ApiElements;
 
-public class IApiAccess
+namespace BusinessLogic.API;
+
+public interface IApiAccess
 {
-    
+    public Task<UserToken> GetUserTokenAsync(string username, string password);
 }

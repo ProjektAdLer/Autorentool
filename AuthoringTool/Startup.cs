@@ -1,5 +1,6 @@
 using System.IO.Abstractions;
 using System.Reflection;
+using ApiAccess.WebApi;
 using AuthoringTool.Mapping;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
@@ -138,6 +139,7 @@ public class Startup
     private void ConfigureApiAccess(IServiceCollection services)
     {
         services.AddSingleton<IApiAccess, ApiAccess.API.ApiAccess>();
+        services.AddSingleton<IUserWebApiServices, UserWebApiServices>();
     }
 
     private static void ConfigureToolbox(IServiceCollection services)

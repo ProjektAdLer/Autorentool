@@ -1614,6 +1614,7 @@
       "apiaccess": {
         "type": "Project",
         "dependencies": {
+          "AutoMapper": "[11.0.1, )",
           "BusinessLogic": "[1.0.0, )"
         }
       },
