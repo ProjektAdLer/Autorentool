@@ -412,4 +412,8 @@ public interface IPresentationLogic
     SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path);
     void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id);
     void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
+    /// <summary>
+    /// Debug method for Philipp.
+    /// </summary>
+    void CallExport();
 }

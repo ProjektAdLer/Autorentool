@@ -694,4 +694,9 @@ public class PresentationLogic : IPresentationLogic
         if (_dialogManager == null)
             throw new InvalidOperationException("dialogManager received from DI unexpectedly null");
     }
+
+    public void CallExport()
+    {
+        BusinessLogic.CallExport();
+    }
 }

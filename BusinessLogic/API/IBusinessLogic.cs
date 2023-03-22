@@ -61,4 +61,8 @@ public interface IBusinessLogic
 
     event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
     string GetContentFilesFolderPath();
+    /// <summary>
+    /// Debug method for Philipp.
+    /// </summary>
+    void CallExport();
 }

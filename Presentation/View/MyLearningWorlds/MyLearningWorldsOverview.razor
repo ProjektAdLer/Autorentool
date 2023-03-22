@@ -3,6 +3,7 @@
 @using Shared
 @using Presentation.PresentationLogic.API
 @using Presentation.Components.Forms.World
+@using Presentation.Components
 <main class="flex flex-col justify-center items-center h-screen p-2 w-screen bg-gradient-to-br m-0 from-adlerbggradientfrom to-adlerbggradientto">
     <section class="flex flex-col m-auto gap-8">
         <h3 class="font-bold text-xl text-center text-adlerdarkblue">MyLearningWorldsOverview</h3>
@@ -26,6 +27,7 @@
         </MudDrawer>
     </section>
     <MudButton Class="btn-standard normal-case" @onclick="OnClickMyLearningWorldsOverview">Gehe zur Lernwelt</MudButton>
+    <ExportButton/>
 </main>
 
 @code {
