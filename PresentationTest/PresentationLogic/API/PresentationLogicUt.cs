@@ -453,19 +453,23 @@ public class PresentationLogicUt
         var learningSpaceVm = new LearningSpaceViewModel("f", "f", "f", "f", "f", 5);
         var learningElementVm = new LearningElementViewModel("a", "b", null!,"c", "d", "e",
             LearningElementDifficultyEnum.Easy, learningSpaceVm);
+        var learningContentVm = new FileContentViewModel("a", "h5p", "/user/marvin/learningcontent.h5p");
         var mockMapper = Substitute.For<IMapper>();
         var learningSpaceEntity = new BusinessLogic.Entities.LearningSpace("f", "f", "f", "f", "f", 5);
         var learningElementEntity = new BusinessLogic.Entities.LearningElement("a", "b", null!,"c", "d", "e",
             LearningElementDifficultyEnum.Easy, learningSpaceEntity);
+        var learningContentEntity = new BusinessLogic.Entities.LearningContent.FileContent("a", "h5p", "/user/marvin/learningcontent.h5p");
         mockMapper.Map<BusinessLogic.Entities.LearningSpace>(Arg.Any<LearningSpaceViewModel>())
             .Returns(learningSpaceEntity);
         mockMapper.Map<BusinessLogic.Entities.LearningElement>(Arg.Any<LearningElementViewModel>())
             .Returns(learningElementEntity);
+        mockMapper.Map<BusinessLogic.Entities.LearningContent.FileContent>(Arg.Any<FileContentViewModel>())
+            .Returns(learningContentEntity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
         
-        systemUnderTest.EditLearningElement(learningSpaceVm, learningElementVm, "a","b","c", "Google.com", "d",
-            "e",LearningElementDifficultyEnum.Easy,1,2);
+        systemUnderTest.EditLearningElement(learningSpaceVm, learningElementVm, "a","b", "Google.com", "d",
+            "e",LearningElementDifficultyEnum.Easy,1,2, learningContentVm);
 
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
         Assert.That(command, Is.Not.Null);
@@ -473,6 +477,7 @@ public class PresentationLogicUt
         {
             Assert.That(command!.ParentSpace, Is.EqualTo(learningSpaceEntity));
             Assert.That(command!.LearningElement, Is.EqualTo(learningElementEntity));
+            Assert.That(command!.LearningContent, Is.EqualTo(learningContentEntity));
         });
     }
     

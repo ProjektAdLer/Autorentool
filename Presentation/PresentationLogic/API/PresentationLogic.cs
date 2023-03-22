@@ -394,15 +394,22 @@ public class PresentationLogic : IPresentationLogic
     } 
     
     /// <inheritdoc cref="IPresentationLogic.EditLearningElement"/>
-    public void EditLearningElement(ILearningSpaceViewModel parentSpaceVm,
-        ILearningElementViewModel learningElementVm, string name, string shortname, string url, string authors,
-        string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points)
+    public void EditLearningElement(ILearningSpaceViewModel? parentSpaceVm,
+        ILearningElementViewModel learningElementVm, string name, string shortname, string authors, string description,
+        string goals, LearningElementDifficultyEnum difficulty, int workload, int points, 
+        LearningContentViewModel learningContentViewModel)
     {
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
-        var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
+        var contentEntity = Mapper.Map<BusinessLogic.Entities.LearningContent.LearningContent>(learningContentViewModel);
+        
+        BusinessLogic.Entities.LearningSpace? parentSpaceEntity = null;
+        if(parentSpaceEntity != null)
+        {
+            parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
+        }
 
         var command = new EditLearningElement(elementEntity, parentSpaceEntity, name, shortname, authors, description,
-            goals, difficulty, workload, points, element => CMapper.Map(element, learningElementVm));
+            goals, difficulty, workload, points, contentEntity, element => CMapper.Map(element, learningElementVm));
         BusinessLogic.ExecuteCommand(command);
     }
 

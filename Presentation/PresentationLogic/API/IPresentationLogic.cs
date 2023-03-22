@@ -265,8 +265,8 @@ public interface IPresentationLogic
     /// <summary>
     /// Edits a given learning element in the opened learning space with the corresponding command.
     /// </summary>
-    /// <param name="learningElementVm">Element to edit.</param>
     /// <param name="parentSpaceVm">Parent space of the element.</param>
+    /// <param name="learningElementVm">Element to edit.</param>
     /// <param name="name">Name of the element.</param>
     /// <param name="shortname">Shortname of the element.</param>
     /// <param name="authors">A list of authors of the element.</param>
@@ -275,9 +275,12 @@ public interface IPresentationLogic
     /// <param name="difficulty">The difficulty of the element.</param>
     /// <param name="workload">The time required to complete the learning element.</param>
     /// <param name="points">The number of points of the learning element.</param>
-    void EditLearningElement(ILearningSpaceViewModel parentSpaceVm,
-        ILearningElementViewModel learningElementVm, string name, string shortname, string url, string authors, string description,
-        string goals, LearningElementDifficultyEnum difficulty, int workload, int points);
+    /// <param name="learningContentViewModel"></param>
+    void EditLearningElement(ILearningSpaceViewModel? parentSpaceVm,
+        ILearningElementViewModel learningElementVm, string name, string shortname, string authors,
+        string description,
+        string goals, LearningElementDifficultyEnum difficulty, int workload, int points,
+        LearningContentViewModel learningContentViewModel);
 
     /// <summary>
     /// Moves the given learning element from unplaced elements to the given slot index in the given learning space.

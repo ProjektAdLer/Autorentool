@@ -29,11 +29,12 @@ public class EditLearningElementUt
         var workload = 7;
         var points = 8;
         var difficulty = LearningElementDifficultyEnum.Easy;
+        var newContent = new FileContent("foo", "bar", "foobar");
         bool actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
         var command = new EditLearningElement(element, parent, name, shortname, authors, description, goals, difficulty,
-            workload, points, mappingAction);
+            workload, points, newContent, mappingAction);
         
         Assert.Multiple(() =>
         {
@@ -61,7 +62,7 @@ public class EditLearningElementUt
             Assert.That(element.Name, Is.EqualTo(name));
             Assert.That(element.Shortname, Is.EqualTo(shortname));
             Assert.That(element.Parent, Is.EqualTo(parent));
-            Assert.That(element.LearningContent, Is.EqualTo(content));
+            Assert.That(element.LearningContent, Is.EqualTo(newContent));
             Assert.That(element.Authors, Is.EqualTo(authors));
             Assert.That(element.Description, Is.EqualTo(description));
             Assert.That(element.Goals, Is.EqualTo(goals));
@@ -88,10 +89,11 @@ public class EditLearningElementUt
         var workload = 7;
         var points = 8;
         var difficulty = LearningElementDifficultyEnum.Easy;
+        var content = new FileContent("bar", "foo", "");
         bool actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new EditLearningElement(element, parent, name, shortname,authors, description, goals, difficulty, workload, points, mappingAction);
+        var command = new EditLearningElement(element, parent, name, shortname,authors, description, goals, difficulty, workload, points, content, mappingAction);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -117,11 +119,12 @@ public class EditLearningElementUt
         var workload = 7;
         var points = 8;
         var difficulty = LearningElementDifficultyEnum.Easy;
+        var newContent = new FileContent("foo", "bar", "foobar");
         bool actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
         var command = new EditLearningElement(element, parent, name, shortname, authors, description, goals, difficulty,
-            workload, points, mappingAction);
+            workload, points, newContent, mappingAction);
         
         Assert.Multiple(() =>
         {
@@ -149,7 +152,7 @@ public class EditLearningElementUt
             Assert.That(element.Name, Is.EqualTo(name));
             Assert.That(element.Shortname, Is.EqualTo(shortname));
             Assert.That(element.Parent, Is.EqualTo(parent));
-            Assert.That(element.LearningContent, Is.EqualTo(content));
+            Assert.That(element.LearningContent, Is.EqualTo(newContent));
             Assert.That(element.Authors, Is.EqualTo(authors));
             Assert.That(element.Description, Is.EqualTo(description));
             Assert.That(element.Goals, Is.EqualTo(goals));
@@ -191,7 +194,7 @@ public class EditLearningElementUt
             Assert.That(element.Name, Is.EqualTo(name));
             Assert.That(element.Shortname, Is.EqualTo(shortname));
             Assert.That(element.Parent, Is.EqualTo(parent));
-            Assert.That(element.LearningContent, Is.EqualTo(content));
+            Assert.That(element.LearningContent, Is.EqualTo(newContent));
             Assert.That(element.Authors, Is.EqualTo(authors));
             Assert.That(element.Description, Is.EqualTo(description));
             Assert.That(element.Goals, Is.EqualTo(goals));
