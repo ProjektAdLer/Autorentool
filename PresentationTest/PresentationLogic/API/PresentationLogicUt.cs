@@ -453,19 +453,23 @@ public class PresentationLogicUt
         var learningSpaceVm = new LearningSpaceViewModel("f", "f", "f", "f", "f", 5);
         var learningElementVm = new LearningElementViewModel("a", "b", null!,"c", "d", "e",
             LearningElementDifficultyEnum.Easy, learningSpaceVm);
+        var learningContentVm = new FileContentViewModel("a", "h5p", "/user/marvin/learningcontent.h5p");
         var mockMapper = Substitute.For<IMapper>();
         var learningSpaceEntity = new BusinessLogic.Entities.LearningSpace("f", "f", "f", "f", "f", 5);
         var learningElementEntity = new BusinessLogic.Entities.LearningElement("a", "b", null!,"c", "d", "e",
             LearningElementDifficultyEnum.Easy, learningSpaceEntity);
+        var learningContentEntity = new BusinessLogic.Entities.LearningContent.FileContent("a", "h5p", "/user/marvin/learningcontent.h5p");
         mockMapper.Map<BusinessLogic.Entities.LearningSpace>(Arg.Any<LearningSpaceViewModel>())
             .Returns(learningSpaceEntity);
         mockMapper.Map<BusinessLogic.Entities.LearningElement>(Arg.Any<LearningElementViewModel>())
             .Returns(learningElementEntity);
+        mockMapper.Map<BusinessLogic.Entities.LearningContent.FileContent>(Arg.Any<FileContentViewModel>())
+            .Returns(learningContentEntity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
         
-        systemUnderTest.EditLearningElement(learningSpaceVm, learningElementVm, "a","b","c", "Google.com", "d",
-            "e",LearningElementDifficultyEnum.Easy,1,2);
+        systemUnderTest.EditLearningElement(learningSpaceVm, learningElementVm, "a","b", "Google.com", "d",
+            "e",LearningElementDifficultyEnum.Easy,1,2, learningContentVm);
 
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
         Assert.That(command, Is.Not.Null);
@@ -473,6 +477,7 @@ public class PresentationLogicUt
         {
             Assert.That(command!.ParentSpace, Is.EqualTo(learningSpaceEntity));
             Assert.That(command!.LearningElement, Is.EqualTo(learningElementEntity));
+            Assert.That(command!.LearningContent, Is.EqualTo(learningContentEntity));
         });
     }
     
@@ -1328,7 +1333,7 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var learningContent = new FileContentViewModel("f", ".png", "");
         var entity = new FileContent("f", ".png", "");
-        mockMapper.Map<LearningContentViewModel>(Arg.Any<LearningContent>()).Returns(learningContent);
+        mockMapper.Map<ILearningContentViewModel>(Arg.Any<ILearningContent>()).Returns(learningContent);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
         mockDialogManger
@@ -1346,7 +1351,7 @@ public class PresentationLogicUt
         await mockDialogManger.Received()
             .ShowOpenFileDialogAsync("Load image", null, Arg.Any<IEnumerable<FileFilterProxy>?>());
         mockBusinessLogic.Received().LoadLearningContent(filepath);
-        mockMapper.Received().Map<LearningContentViewModel>(entity);
+        mockMapper.Received().Map<ILearningContentViewModel>(entity);
         
         Assert.That(loadedContent, Is.EqualTo(learningContent));
     }
@@ -1415,7 +1420,7 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var learningContent = new FileContentViewModel("f", ".mp4", "");
         var entity = new FileContent("f", ".mp4", "");
-        mockMapper.Map<LearningContentViewModel>(Arg.Any<LearningContent>()).Returns(learningContent);
+        mockMapper.Map<ILearningContentViewModel>(Arg.Any<ILearningContent>()).Returns(learningContent);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
         mockDialogManger
@@ -1433,7 +1438,7 @@ public class PresentationLogicUt
         await mockDialogManger.Received()
             .ShowOpenFileDialogAsync("Load video", null, Arg.Any<IEnumerable<FileFilterProxy>?>());
         mockBusinessLogic.Received().LoadLearningContent(filepath + ".mp4");
-        mockMapper.Received().Map<LearningContentViewModel>(entity);
+        mockMapper.Received().Map<ILearningContentViewModel>(entity);
         
         Assert.That(loadedContent, Is.EqualTo(learningContent));
     }
@@ -1503,7 +1508,7 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var learningContent = new FileContentViewModel("f", ".h5p", "");
         var entity = new FileContent("f", ".h5p", "");
-        mockMapper.Map<LearningContentViewModel>(Arg.Any<LearningContent>()).Returns(learningContent);
+        mockMapper.Map<ILearningContentViewModel>(Arg.Any<ILearningContent>()).Returns(learningContent);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
         mockDialogManger
@@ -1521,7 +1526,7 @@ public class PresentationLogicUt
         await mockDialogManger.Received()
             .ShowOpenFileDialogAsync("Load h5p", null, Arg.Any<IEnumerable<FileFilterProxy>?>());
         mockBusinessLogic.Received().LoadLearningContent(filepath + ".h5p");
-        mockMapper.Received().Map<LearningContentViewModel>(entity);
+        mockMapper.Received().Map<ILearningContentViewModel>(entity);
         
         Assert.That(loadedContent, Is.EqualTo(learningContent));
     }
@@ -1590,7 +1595,7 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var learningContent = new FileContentViewModel("f", ".pdf", "");
         var entity = new FileContent("f", ".pdf", "");
-        mockMapper.Map<LearningContentViewModel>(Arg.Any<LearningContent>()).Returns(learningContent);
+        mockMapper.Map<ILearningContentViewModel>(Arg.Any<ILearningContent>()).Returns(learningContent);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
         mockDialogManger
@@ -1608,7 +1613,7 @@ public class PresentationLogicUt
         await mockDialogManger.Received()
             .ShowOpenFileDialogAsync("Load pdf", null, Arg.Any<IEnumerable<FileFilterProxy>?>());
         mockBusinessLogic.Received().LoadLearningContent(filepath + ".pdf");
-        mockMapper.Received().Map<LearningContentViewModel>(entity);
+        mockMapper.Received().Map<ILearningContentViewModel>(entity);
         
         Assert.That(loadedContent, Is.EqualTo(learningContent));
     }
@@ -1676,7 +1681,7 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var learningContent = new FileContentViewModel("f", ".txt", "");
         var entity = new FileContent("f", ".txt", "");
-        mockMapper.Map<LearningContentViewModel>(Arg.Any<LearningContent>()).Returns(learningContent);
+        mockMapper.Map<ILearningContentViewModel>(Arg.Any<ILearningContent>()).Returns(learningContent);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
         mockDialogManger
@@ -1694,7 +1699,7 @@ public class PresentationLogicUt
         await mockDialogManger.Received()
             .ShowOpenFileDialogAsync("Load text", null, Arg.Any<IEnumerable<FileFilterProxy>?>());
         mockBusinessLogic.Received().LoadLearningContent(filepath);
-        mockMapper.Received().Map<LearningContentViewModel>(entity);
+        mockMapper.Received().Map<ILearningContentViewModel>(entity);
         
         Assert.That(loadedContent, Is.EqualTo(learningContent));
     }
@@ -1840,7 +1845,7 @@ public class PresentationLogicUt
         mockBusinessLogic.LoadLearningContent(Arg.Any<string>(), Arg.Any<MemoryStream>()).Returns(mockLearningContent);
         var mockLearningContentViewModel = new FileContentViewModel("n", "t", "");
         var mockMapper = Substitute.For<IMapper>();
-        mockMapper.Map<LearningContentViewModel>(Arg.Any<LearningContent>())
+        mockMapper.Map<ILearningContentViewModel>(Arg.Any<ILearningContent>())
             .Returns(mockLearningContentViewModel);
         const string filename = "test.png";
         var stream = Substitute.For<MemoryStream>();
@@ -1851,7 +1856,7 @@ public class PresentationLogicUt
         var result = systemUnderTest.LoadLearningContentViewModel(filename, stream);
 
         mockBusinessLogic.Received().LoadLearningContent(filename, stream);
-        mockMapper.Received().Map<LearningContentViewModel>(mockLearningContent);
+        mockMapper.Received().Map<ILearningContentViewModel>(mockLearningContent);
         Assert.That(result, Is.EqualTo(mockLearningContentViewModel));
     }
 

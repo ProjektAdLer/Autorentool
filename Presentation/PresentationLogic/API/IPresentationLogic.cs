@@ -257,7 +257,7 @@ public interface IPresentationLogic
     /// <param name="positionY"></param>
     void CreateLearningElementInSlot(ILearningSpaceViewModel parentSpaceVm, int slotIndex, string name,
         string shortname,
-        LearningContentViewModel learningContentVm,
+        ILearningContentViewModel learningContentVm,
         string authors, string description, string goals, LearningElementDifficultyEnum difficulty,
         int workload, int points,
         double positionX = 0D, double positionY = 0D);
@@ -265,8 +265,8 @@ public interface IPresentationLogic
     /// <summary>
     /// Edits a given learning element in the opened learning space with the corresponding command.
     /// </summary>
-    /// <param name="learningElementVm">Element to edit.</param>
     /// <param name="parentSpaceVm">Parent space of the element.</param>
+    /// <param name="learningElementVm">Element to edit.</param>
     /// <param name="name">Name of the element.</param>
     /// <param name="shortname">Shortname of the element.</param>
     /// <param name="authors">A list of authors of the element.</param>
@@ -275,9 +275,12 @@ public interface IPresentationLogic
     /// <param name="difficulty">The difficulty of the element.</param>
     /// <param name="workload">The time required to complete the learning element.</param>
     /// <param name="points">The number of points of the learning element.</param>
-    void EditLearningElement(ILearningSpaceViewModel parentSpaceVm,
-        ILearningElementViewModel learningElementVm, string name, string shortname, string url, string authors, string description,
-        string goals, LearningElementDifficultyEnum difficulty, int workload, int points);
+    /// <param name="learningContentViewModel"></param>
+    void EditLearningElement(ILearningSpaceViewModel? parentSpaceVm,
+        ILearningElementViewModel learningElementVm, string name, string shortname, string authors,
+        string description,
+        string goals, LearningElementDifficultyEnum difficulty, int workload, int points,
+        ILearningContentViewModel learningContentViewModel);
 
     /// <summary>
     /// Moves the given learning element from unplaced elements to the given slot index in the given learning space.
@@ -349,46 +352,46 @@ public interface IPresentationLogic
     /// Asks user for path, loads an image file from disk and returns a <see cref="LearningContentViewModel"/>. 
     /// </summary>
     /// <returns></returns>
-    Task<LearningContentViewModel> LoadImageAsync();
+    Task<ILearningContentViewModel> LoadImageAsync();
     
     /// <summary>
-    /// Asks user for path, loads a video file from disk and returns a <see cref="LearningContentViewModel"/>. 
+    /// Asks user for path, loads a video file from disk and returns a <see cref="ILearningContentViewModel"/>. 
     /// </summary>
     /// <returns></returns>
-    Task<LearningContentViewModel> LoadVideoAsync();
+    Task<ILearningContentViewModel> LoadVideoAsync();
     
     /// <summary>
-    /// Asks user for path, loads a h5p file from disk and returns a <see cref="LearningContentViewModel"/>. 
+    /// Asks user for path, loads a h5p file from disk and returns a <see cref="ILearningContentViewModel"/>. 
     /// </summary>
     /// <returns></returns>
-    Task<LearningContentViewModel> LoadH5PAsync();
+    Task<ILearningContentViewModel> LoadH5PAsync();
     
     /// <summary>
-    /// Asks user for path, loads a pdf file from disk and returns a <see cref="LearningContentViewModel"/>. 
+    /// Asks user for path, loads a pdf file from disk and returns a <see cref="ILearningContentViewModel"/>. 
     /// </summary>
     /// <returns></returns>
-    Task<LearningContentViewModel> LoadPdfAsync();
+    Task<ILearningContentViewModel> LoadPdfAsync();
     
     /// <summary>
-    /// Asks user for path, loads a text file from disk and returns a <see cref="LearningContentViewModel"/>. 
+    /// Asks user for path, loads a text file from disk and returns a <see cref="ILearningContentViewModel"/>. 
     /// </summary>
     /// <returns></returns>
-    Task<LearningContentViewModel> LoadTextAsync();
+    Task<ILearningContentViewModel> LoadTextAsync();
 
-    LearningContentViewModel LoadLearningContentViewModel(string name, Stream stream);
+    ILearningContentViewModel LoadLearningContentViewModel(string name, Stream stream);
     
     /// <summary>
     /// Gets all content files in the appdata folder.
     /// </summary>
     /// <returns>An enumerable of content files.</returns>
-    IEnumerable<LearningContentViewModel> GetAllContent();
+    IEnumerable<ILearningContentViewModel> GetAllContent();
 
     /// <summary>
     /// Deletes the file referenced by the given content object.
     /// </summary>
     /// <param name="content">The content whos file shall be deleted.</param>
     /// <exception cref="FileNotFoundException">The file corresponding to <paramref name="content"/> wasn't found.</exception>
-    public void RemoveContent(LearningContentViewModel content);
+    public void RemoveContent(ILearningContentViewModel content);
     void LoadLearningWorldViewModel(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, Stream stream);
     void LoadLearningSpaceViewModel(ILearningWorldViewModel learningWorldVm, Stream stream);
     void LoadLearningElementViewModel(ILearningSpaceViewModel parentSpaceVm, int slotIndex, Stream stream);
@@ -403,7 +406,7 @@ public interface IPresentationLogic
     void OpenContentFilesFolder();
 
     void CreateUnplacedLearningElement(ILearningWorldViewModel learningWorldVm, string name, string shortname,
-        LearningContentViewModel learningContentVm, string authors, string description, string goals,
+        ILearningContentViewModel learningContentVm, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double positionX = 0D,
         double positionY = 0D);
     Task<string> GetWorldSavePath();

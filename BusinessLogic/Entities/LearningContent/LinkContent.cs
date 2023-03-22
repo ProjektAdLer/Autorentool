@@ -2,9 +2,9 @@ using JetBrains.Annotations;
 
 namespace BusinessLogic.Entities.LearningContent;
 
-public class LinkContent : LearningContent, ILinkContent
+public class LinkContent : ILinkContent
 {
-    public LinkContent(string name, string link) : base(name)
+    public LinkContent(string name, string link)
     {
         Link = link;
     }
@@ -18,5 +18,6 @@ public class LinkContent : LearningContent, ILinkContent
         Link = "";
     }
 
+    public string Name { get; set; }
     public string Link { get; set; }
 }

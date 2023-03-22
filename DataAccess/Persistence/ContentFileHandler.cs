@@ -38,7 +38,7 @@ public class ContentFileHandler : IContentFileHandler
     }
 
     /// <inheritdoc cref="IContentFileHandler.LoadContentAsync(string)"/>
-    public async Task<LearningContentPe> LoadContentAsync(string filepath)
+    public async Task<ILearningContentPe> LoadContentAsync(string filepath)
     {
         var (duplicatePath, hash) = await GetFilePathOfExistingCopyAndHashAsync(filepath);
         if (duplicatePath == null)
@@ -57,7 +57,7 @@ public class ContentFileHandler : IContentFileHandler
     }
 
     /// <inheritdoc cref="IContentFileHandler.LoadContentAsync(string,System.IO.Stream)"/>
-    public async Task<LearningContentPe> LoadContentAsync(string name, Stream stream)
+    public async Task<ILearningContentPe> LoadContentAsync(string name, Stream stream)
     {
         var (duplicatePath, hash) = await GetFilePathOfExistingCopyAndHashAsync(stream);
         if (duplicatePath == null)
@@ -106,7 +106,7 @@ public class ContentFileHandler : IContentFileHandler
     }
 
     /// <inheritdoc cref="IContentFileHandler.GetAllContent"/>
-    public IEnumerable<LearningContentPe> GetAllContent()
+    public IEnumerable<ILearningContentPe> GetAllContent()
     {
         var fileContent = _fileSystem.Directory
             .EnumerateFiles(ContentFilesFolderPath)
@@ -120,7 +120,7 @@ public class ContentFileHandler : IContentFileHandler
     /// </summary>
     /// <param name="arg">The content that should be filtered.</param>
     /// <returns>True if it should be shown, false if not.</returns>
-    private static bool FilterContent(LearningContentPe arg)
+    private static bool FilterContent(ILearningContentPe arg)
     {
         if (arg is FileContentPe { Type: "hash" or "ds_store" }) return false;
         return !arg.Name.StartsWith(".");
@@ -131,7 +131,7 @@ public class ContentFileHandler : IContentFileHandler
     /// </summary>
     /// <param name="filePath">The path of the file that should be parsed.</param>
     /// <returns>The parsed <see cref="LearningContentPe"/> object.</returns>
-    private LearningContentPe ParseFileName(string filePath)
+    private ILearningContentPe ParseFileName(string filePath)
     {
         var fileType = _fileSystem.Path.GetExtension(filePath).Trim('.').ToLower();
         var fileName = _fileSystem.Path.GetFileName(filePath);
@@ -139,7 +139,7 @@ public class ContentFileHandler : IContentFileHandler
     }
 
     /// <inheritdoc cref="IContentFileHandler.RemoveContent"/>
-    public void RemoveContent(LearningContentPe content)
+    public void RemoveContent(ILearningContentPe content)
     {
         switch (content)
         {

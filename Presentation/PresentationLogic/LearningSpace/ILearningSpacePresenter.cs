@@ -19,7 +19,7 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     Task SaveSelectedLearningElementAsync();
     Task ShowSelectedElementContentAsync();
     void SetLearningSpace(ILearningSpaceViewModel space);
-    LearningContentViewModel? DragAndDropLearningContent { get; }
+    ILearningContentViewModel? DragAndDropLearningContent { get; }
     IDisplayableLearningObject? RightClickedLearningObject { get; }
     void OnWorldPropertyChanged(object? caller, PropertyChangedEventArgs e);
     event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;

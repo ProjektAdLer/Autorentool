@@ -8,7 +8,7 @@ public interface ILearningElementPe
 {
     string Name { get; set; }
     string Shortname { get; set; }
-    LearningContentPe LearningContent { get; set; }
+    ILearningContentPe LearningContent { get; set; }
     string Authors { get; set; }
     string Description { get; set; }
     string Goals { get; set; }

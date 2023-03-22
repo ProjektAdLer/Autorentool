@@ -420,7 +420,8 @@ public class BusinessLogicUt
         worldGenerator ??= Substitute.For<IWorldGenerator>();
         commandStateManager ??= Substitute.For<ICommandStateManager>();
         apiAccess ??= Substitute.For<IApiAccess>();
-
+        
+        
         return new BusinessLogic.API.BusinessLogic(fakeConfiguration, fakeDataAccess, worldGenerator,
             commandStateManager, apiAccess);
     }

@@ -44,7 +44,7 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
     /// <param name="positionX">x-position of the learning element in the workspace.</param>
     /// <param name="positionY">y-position of the learning element in the workspace.</param>
     public LearningElementViewModel(string name, string shortname,
-        LearningContentViewModel learningContent, string authors, string description, string goals,
+        ILearningContentViewModel learningContent, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, ILearningSpaceViewModel? parent = null,
         int workload = 0, int points = 0, double positionX = 0, double positionY = 0)
     {

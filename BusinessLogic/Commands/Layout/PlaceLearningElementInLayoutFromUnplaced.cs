@@ -46,6 +46,7 @@ public class PlaceLearningElementInLayoutFromUnplaced : IUndoCommand
         }
 
         LearningSpace.LearningSpaceLayout.LearningElements[NewSlotIndex] = LearningElement;
+        LearningSpace.SelectedLearningElement = LearningElement;
 
         _mappingAction.Invoke(LearningWorld);
     }

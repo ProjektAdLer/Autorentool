@@ -8,7 +8,7 @@ namespace BusinessLogic.Validation.Validators;
 [UsedImplicitly]
 public class LinkContentValidator : AbstractValidator<LinkContent>
 {
-    public LinkContentValidator(IValidator<LearningContent> baseValidator)
+    public LinkContentValidator(IValidator<ILearningContent> baseValidator)
     {
         Include(baseValidator);
         RuleFor(x => x.Link)

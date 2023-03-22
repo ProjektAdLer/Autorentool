@@ -1,4 +1,5 @@
-﻿using LearningElementDifficultyEnum = Shared.LearningElementDifficultyEnum;
+﻿using BusinessLogic.Entities.LearningContent;
+using LearningElementDifficultyEnum = Shared.LearningElementDifficultyEnum;
 
 namespace BusinessLogic.Entities;
 
@@ -8,7 +9,7 @@ public interface ILearningElement
     string Name { get; set; }
     string Shortname { get; set; }
     public ILearningSpace? Parent { get; set; }
-    LearningContent.LearningContent LearningContent { get; set; }
+    ILearningContent LearningContent { get; set; }
     string Authors { get; set; }
     string Description { get; set; }
     string Goals { get; set; }

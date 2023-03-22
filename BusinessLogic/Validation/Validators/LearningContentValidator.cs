@@ -5,7 +5,7 @@ using JetBrains.Annotations;
 namespace BusinessLogic.Validation.Validators;
 
 [UsedImplicitly]
-public class LearningContentValidator : AbstractValidator<LearningContent>
+public class LearningContentValidator : AbstractValidator<ILearningContent>
 {
     public LearningContentValidator()
     {

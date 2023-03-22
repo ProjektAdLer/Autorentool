@@ -33,7 +33,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         private set => SetField(ref _learningSpaceVm, value);
     }
 
-    public LearningContentViewModel? DragAndDropLearningContent { get; private set; }
+    public ILearningContentViewModel? DragAndDropLearningContent { get; private set; }
     public IDisplayableLearningObject? RightClickedLearningObject { get; private set; }
 
     public void EditLearningSpace(string name, string shortname, string authors, string description, string goals,
@@ -175,7 +175,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     /// </summary>
     /// <param name="contentType">The type of the content that can either be an image, a video, a pdf or a h5p.</param>
     /// <exception cref="ApplicationException">Thrown if there is no valid ContentType assigned.</exception>
-    private async Task<LearningContentViewModel> LoadLearningContent(ContentTypeEnum contentType)
+    private async Task<ILearningContentViewModel> LoadLearningContent(ContentTypeEnum contentType)
     {
         return contentType switch
         {
