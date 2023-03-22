@@ -280,7 +280,7 @@ public interface IPresentationLogic
         ILearningElementViewModel learningElementVm, string name, string shortname, string authors,
         string description,
         string goals, LearningElementDifficultyEnum difficulty, int workload, int points,
-        LearningContentViewModel learningContentViewModel);
+        ILearningContentViewModel learningContentViewModel);
 
     /// <summary>
     /// Moves the given learning element from unplaced elements to the given slot index in the given learning space.

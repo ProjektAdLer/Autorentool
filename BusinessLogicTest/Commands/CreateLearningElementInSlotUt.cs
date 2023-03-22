@@ -133,7 +133,7 @@ public class TestParameter
     public readonly LearningWorld WorldParent;
     public readonly string Name;
     public readonly string ShortName;
-    public readonly LearningContent Content;
+    public readonly ILearningContent Content;
     public readonly string Authors;
     public readonly string Description;
     public readonly string Goals;

@@ -17,13 +17,13 @@ public class EditLearningElement : IUndoCommand
     private readonly LearningElementDifficultyEnum _difficulty;
     private readonly int _workload;
     private readonly int _points;
-    internal LearningContent LearningContent { get; }
+    internal ILearningContent LearningContent { get; }
     private readonly Action<LearningElement> _mappingAction;
     private IMemento? _memento;
     
     public EditLearningElement(LearningElement learningElement, LearningSpace? parentSpace, string name,
         string shortName, string authors, string description, string goals, LearningElementDifficultyEnum difficulty,
-        int workload, int points, LearningContent learningContent, Action<LearningElement> mappingAction)
+        int workload, int points, ILearningContent learningContent, Action<LearningElement> mappingAction)
     {
         LearningElement = learningElement;
         ParentSpace = parentSpace;

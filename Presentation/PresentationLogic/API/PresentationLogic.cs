@@ -397,10 +397,10 @@ public class PresentationLogic : IPresentationLogic
     public void EditLearningElement(ILearningSpaceViewModel? parentSpaceVm,
         ILearningElementViewModel learningElementVm, string name, string shortname, string authors, string description,
         string goals, LearningElementDifficultyEnum difficulty, int workload, int points, 
-        LearningContentViewModel learningContentViewModel)
+        ILearningContentViewModel learningContentViewModel)
     {
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
-        var contentEntity = Mapper.Map<BusinessLogic.Entities.LearningContent.LearningContent>(learningContentViewModel);
+        var contentEntity = Mapper.Map<ILearningContent>(learningContentViewModel);
         
         BusinessLogic.Entities.LearningSpace? parentSpaceEntity = null;
         if(parentSpaceEntity != null)
