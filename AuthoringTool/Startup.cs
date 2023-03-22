@@ -140,6 +140,8 @@ public class Startup
     {
         services.AddSingleton<IApiAccess, ApiAccess.API.ApiAccess>();
         services.AddSingleton<IUserWebApiServices, UserWebApiServices>();
+        // Add Http Client
+        services.AddHttpClient();
     }
 
     private static void ConfigureToolbox(IServiceCollection services)

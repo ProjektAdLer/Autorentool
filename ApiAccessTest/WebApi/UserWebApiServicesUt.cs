@@ -1,6 +1,7 @@
 ﻿using ApiAccess.WebApi;
 using NSubstitute;
 using NUnit.Framework;
+using RichardSzalay.MockHttp;
 using Shared.Configuration;
 
 namespace ApiAccessTest.WebApi;
@@ -16,7 +17,7 @@ public class UserWebApiServicesUt
         _authoringToolConfiguration = Substitute.For<IAuthoringToolConfiguration>();
 
         // Act
-        var userWebApiServices = new UserWebApiServices(_authoringToolConfiguration);
+        var userWebApiServices = CreateTestableUserWebApiServices(_authoringToolConfiguration);
 
         // Assert
         Assert.Multiple(
@@ -25,16 +26,26 @@ public class UserWebApiServicesUt
     }
 
     [Test]
-    public async Task GetUserTokenAsync_CorrentInput_ReturnsTokenFromAPI()
+    public async Task GetUserTokenAsync_CorrectInput_ReturnsTokenFromAPI()
     {
         // Arrange
-        _authoringToolConfiguration = Substitute.For<IAuthoringToolConfiguration>();
-        var userWebApiServices = new UserWebApiServices(_authoringToolConfiguration);
+        var userWebApiServices = CreateTestableUserWebApiServices(_authoringToolConfiguration);
 
         // Act
         var result = await userWebApiServices.GetUserTokenAsync("username", "password");
 
         // Assert
-        Assert.That(result.Token, Is.EqualTo("token"));
+        Assert.That(result.LmsToken, Is.EqualTo("token"));
+    }
+
+    private static UserWebApiServices CreateTestableUserWebApiServices(
+        IAuthoringToolConfiguration? configuration = null,
+        HttpClient? httpClient = null
+    )
+    {
+        configuration ??= Substitute.For<IAuthoringToolConfiguration>();
+        httpClient ??= new MockHttpMessageHandler().ToHttpClient();
+
+        return new UserWebApiServices(configuration, httpClient);
     }
 }

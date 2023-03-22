@@ -10,6 +10,6 @@ public class UserTokenWebApiResponseUt
     {
         var token = "asdf";
         var systemUnderTest = new UserTokenWebApiResponse(token);
-        Assert.That(systemUnderTest.Token, Is.EqualTo(token));
+        Assert.That(systemUnderTest.LmsToken, Is.EqualTo(token));
     }
 }

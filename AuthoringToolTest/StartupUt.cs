@@ -1,4 +1,5 @@
 using System.IO.Abstractions;
+using ApiAccess.WebApi;
 using AuthoringTool;
 using AutoMapper;
 using BusinessLogic.API;
@@ -33,30 +34,31 @@ public class StartupUt
         configuration["foo"] = "bar";
 
         var systemUnderTest = new Startup(configuration);
-        
+
         Assert.That(systemUnderTest.Configuration, Is.SameAs(configuration));
         Assert.That(systemUnderTest.Configuration["foo"], Is.EqualTo("bar"));
     }
-    
-    
-    
+
+
     private static readonly Type[] ConfigureAuthoringToolRequiredTypes =
     {
         typeof(IAuthoringToolConfiguration)
     };
+
     [Test]
     [TestCaseSource(nameof(ConfigureAuthoringToolRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllAuthoringToolServices(Type requiredType)
     {
         ConfigureServicesCoreTest(requiredType);
     }
-    
-    
+
+
     private static readonly Type[] ConfigureToolboxRequiredTypes =
     {
         typeof(IAuthoringToolWorkspacePresenterToolboxInterface), typeof(ILearningWorldPresenterToolboxInterface),
         typeof(ILearningSpacePresenterToolboxInterface)
     };
+
     [Test]
     [TestCaseSource(nameof(ConfigureToolboxRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllToolboxServices(Type requiredType)
@@ -69,20 +71,22 @@ public class StartupUt
     {
         typeof(IMemoryCache), typeof(IMouseService), typeof(IFileSystem)
     };
+
     [Test]
     [TestCaseSource(nameof(ConfigureUtilitiesRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllUtilitiesServices(Type requiredType)
     {
         ConfigureServicesCoreTest(requiredType);
     }
-    
+
 
     private static readonly Type[] ConfigureDataAccessRequiredTypes =
     {
-        typeof(IXmlFileHandler<LearningWorldPe>), typeof(IXmlFileHandler<LearningElementPe>), typeof(IXmlFileHandler<LearningSpacePe>),
+        typeof(IXmlFileHandler<LearningWorldPe>), typeof(IXmlFileHandler<LearningElementPe>),
+        typeof(IXmlFileHandler<LearningSpacePe>),
         typeof(IDataAccess), typeof(IContentFileHandler)
-        
     };
+
     [Test]
     [TestCaseSource(nameof(ConfigureDataAccessRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllDataAccessServices(Type requiredType)
@@ -92,9 +96,9 @@ public class StartupUt
 
     private static readonly Type[] ConfigureApiAccessRequiredTypes =
     {
-        typeof(IApiAccess)
-        
+        typeof(IApiAccess), typeof(HttpClient), typeof(IUserWebApiServices)
     };
+
     [Test]
     [TestCaseSource(nameof(ConfigureApiAccessRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllApiAccessServices(Type requiredType)
@@ -105,31 +109,35 @@ public class StartupUt
     private static readonly Type[] ConfigurePresentationLogicRequiredTypes =
     {
         typeof(IPresentationLogic), typeof(IAuthoringToolWorkspacePresenter), typeof(ILearningWorldPresenter),
-        typeof(ILearningSpacePresenter), typeof(IAuthoringToolWorkspaceViewModel), typeof(ILearningElementDropZoneHelper)
+        typeof(ILearningSpacePresenter), typeof(IAuthoringToolWorkspaceViewModel),
+        typeof(ILearningElementDropZoneHelper)
     };
+
     [Test]
     [TestCaseSource(nameof(ConfigurePresentationLogicRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllPresentationLogicServices(Type requiredType)
     {
         ConfigureServicesCoreTest(requiredType);
     }
-    
- 
+
+
     private static readonly Type[] ConfigureBusinessLogicRequiredTypes =
     {
         typeof(IBusinessLogic)
     };
+
     [Test]
     [TestCaseSource(nameof(ConfigureBusinessLogicRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllBusinessLogicServices(Type requiredType)
     {
         ConfigureServicesCoreTest(requiredType);
     }
-    
+
     private static readonly Type[] ConfigureGeneratorRequiredTypes =
     {
         typeof(IWorldGenerator), typeof(IBackupFileGenerator), typeof(ICreateDsl), typeof(IReadDsl)
     };
+
     [Test]
     [TestCaseSource(nameof(ConfigureGeneratorRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllGeneratorServices(Type requiredType)
@@ -141,46 +149,48 @@ public class StartupUt
     {
         typeof(IMapper), typeof(ICachingMapper)
     };
+
     [Test]
     [TestCaseSource(nameof(ConfigureAutoMapperRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllAutoMapperServices(Type requiredType)
     {
         ConfigureServicesCoreTest(requiredType);
     }
-    
+
 
     private static readonly Type[] ConfigureCommandRequiredTypes =
     {
         typeof(ICommandStateManager)
     };
+
     [Test]
     [TestCaseSource(nameof(ConfigureCommandRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllCommandServices(Type requiredType)
     {
         ConfigureServicesCoreTest(requiredType);
     }
-    
+
     private static readonly Type[] ConfigureValidationRequiredTypes =
     {
-        typeof(LearningWorldValidator), typeof(LearningSpaceValidator), typeof(LearningElementValidator), typeof(LearningContentValidator),
+        typeof(LearningWorldValidator), typeof(LearningSpaceValidator), typeof(LearningElementValidator),
+        typeof(LearningContentValidator),
         typeof(ILearningSpaceNamesProvider), typeof(ILearningWorldNamesProvider), typeof(ILearningElementNamesProvider)
     };
+
     [Test]
     [TestCaseSource(nameof(ConfigureValidationRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllValidationServices(Type requiredType)
     {
         ConfigureServicesCoreTest(requiredType);
     }
-    
-    
+
+
     private Startup GetStartupForTesting(IConfiguration? configuration = null)
     {
         configuration ??= new ConfigurationManager();
         return new Startup(configuration);
     }
 
-    //Internal methods, you should not need to touch these to add, modify or fix a test
-    #region internal
     private void ConfigureServicesCoreTest(Type requiredType)
     {
         var systemUnderTest = GetStartupForTesting();
@@ -197,5 +207,5 @@ public class StartupUt
         return serviceCollection.BuildServiceProvider();
     }
 
-    #endregion
+    //Internal methods, you should not need to touch these to add, modify or fix a test
 }
