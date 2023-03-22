@@ -7,7 +7,7 @@ namespace BusinessLogic.Validation.Validators;
 [UsedImplicitly]
 public class FileContentValidator : AbstractValidator<FileContent>
 {
-    public FileContentValidator(IValidator<LearningContent> baseValidator)
+    public FileContentValidator(IValidator<ILearningContent> baseValidator)
     {
         Include(baseValidator);
         RuleFor(x => x.Filepath)

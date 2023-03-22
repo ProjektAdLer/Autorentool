@@ -13,12 +13,12 @@
         <MudTh>Delete</MudTh>
         <MudTh>
             <MudTableSortLabel InitialDirection="SortDirection.Ascending"
-                               SortBy="new Func<LearningContentViewModel, object>(x => x.Name)">
-                @nameof(LearningContentViewModel.Name)
+                               SortBy="new Func<ILearningContentViewModel, object>(x => x.Name)">
+                @nameof(ILearningContentViewModel.Name)
             </MudTableSortLabel>
         </MudTh>
         <MudTh>
-            <MudTableSortLabel SortBy="new Func<LearningContentViewModel, object>(TypeSortBy)">
+            <MudTableSortLabel SortBy="new Func<ILearningContentViewModel, object>(TypeSortBy)">
                 @nameof(FileContentViewModel.Type)
             </MudTableSortLabel>
         </MudTh>
@@ -83,18 +83,18 @@
     [Inject]
     private IDialogService DialogService { get; set; }
 #pragma warning restore CS8618
-    private IEnumerable<LearningContentViewModel> Items => PresentationLogic.GetAllContent();
+    private IEnumerable<ILearningContentViewModel> Items => PresentationLogic.GetAllContent();
     
     private string? _searchString;
     private bool _showFilepath;
 
-    private object TypeSortBy(LearningContentViewModel content) =>
+    private object TypeSortBy(ILearningContentViewModel content) =>
         content is FileContentViewModel fc ? fc.Type : "Link";
 
-    private bool Filter(LearningContentViewModel element) =>
+    private bool Filter(ILearningContentViewModel element) =>
         FilterInternal(element, _searchString);
 
-    private bool FilterInternal(LearningContentViewModel element, string? searchString)
+    private bool FilterInternal(ILearningContentViewModel element, string? searchString)
     {
         if (string.IsNullOrWhiteSpace(searchString)) return true;
         var elementType = element is FileContentViewModel fileContent ? fileContent.Type : "Link";
@@ -102,7 +102,7 @@
         return $"{element.Name}.{elementType}".Contains(searchString);
     }
 
-    private async Task Delete(LearningContentViewModel item)
+    private async Task Delete(ILearningContentViewModel item)
     {
         //present "Delete/Cancel" dialog
         var parameters = new DialogParameters

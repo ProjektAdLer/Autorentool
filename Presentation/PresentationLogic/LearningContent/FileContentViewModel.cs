@@ -2,10 +2,11 @@ using JetBrains.Annotations;
 
 namespace Presentation.PresentationLogic.LearningContent;
 
-public class FileContentViewModel : LearningContentViewModel, IFileContentViewModel
+public class FileContentViewModel : IFileContentViewModel
 {
-    public FileContentViewModel(string name, string type, string filepath) : base(name)
+    public FileContentViewModel(string name, string type, string filepath)
     {
+        Name = name;
         Type = type;
         Filepath = filepath;
     }
@@ -14,12 +15,14 @@ public class FileContentViewModel : LearningContentViewModel, IFileContentViewMo
     /// Private Constructor for AutoMapper
     /// </summary>
     [UsedImplicitly]
-    private FileContentViewModel() : base()
+    private FileContentViewModel()
     {
+        Name = "";
         Type = "";
         Filepath = "";
     }
     
+    public string Name { get; set; }
     public string Type { get; set; }
     public string Filepath { get; set; }
 

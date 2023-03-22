@@ -12,7 +12,7 @@ public class LearningElementValidator : AbstractValidator<LearningElement>
 {
     private readonly ILearningElementNamesProvider _learningElementNamesProvider;
 
-    public LearningElementValidator(ILearningElementNamesProvider learningElementNamesProvider, IValidator<LearningContent> learningContentValidator)
+    public LearningElementValidator(ILearningElementNamesProvider learningElementNamesProvider, IValidator<ILearningContent> learningContentValidator)
     {
         _learningElementNamesProvider = learningElementNamesProvider;
         RuleFor(x => x.Name)

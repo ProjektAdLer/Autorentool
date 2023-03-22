@@ -137,7 +137,7 @@ public class DragDropLearningElementUt
     public void RenderMudCardContent_ContentNull_ThrowsArgumentOutOfRangeException()
     {
         var element = Substitute.For<ILearningElementViewModel>();
-        element.LearningContent.Returns((LearningContentViewModel)null!);
+        element.LearningContent.Returns((ILearningContentViewModel)null!);
         var systemUnderTest = GetRenderedDragDropLearningElement(element);
         var activatorContent = _ctx.Render((RenderFragment)systemUnderTest.FindComponent<Stub<MudMenu>>().Instance
             .Parameters["ActivatorContent"]);

@@ -79,5 +79,6 @@
     <Compile Remove="PresentationLogic\EntityMapping\LearningElementMapper\PdfTransferElementMapper.cs" />
     <Compile Remove="PresentationLogic\EntityMapping\LearningElementMapper\LearningElementMapper.cs" />
     <Compile Remove="PresentationLogic\EntityMapping\LearningElementMapper\H5PActivationElementMapper.cs" />
+    <Compile Remove="PresentationLogic\LearningContent\LearningContentViewModel.cs" />
   </ItemGroup>
 </Project>

@@ -33,9 +33,9 @@ public class BusinessLogic : IBusinessLogic
     public bool CanUndo => CommandStateManager.CanUndo;
     public bool CanRedo => CommandStateManager.CanRedo;
     /// <inheritdoc cref="IBusinessLogic.GetAllContent"/>
-    public IEnumerable<LearningContent> GetAllContent() => DataAccess.GetAllContent();
+    public IEnumerable<ILearningContent> GetAllContent() => DataAccess.GetAllContent();
     /// <inheritdoc cref="IBusinessLogic.RemoveContent"/>
-    public void RemoveContent(LearningContent content) => DataAccess.RemoveContent(content);
+    public void RemoveContent(ILearningContent content) => DataAccess.RemoveContent(content);
     /// <inheritdoc cref="IBusinessLogic.SaveLink"/>
     public void SaveLink(LinkContent linkContent) => DataAccess.SaveLink(linkContent);
 
@@ -92,12 +92,12 @@ public class BusinessLogic : IBusinessLogic
         return DataAccess.LoadLearningElement(filepath);
     }
 
-    public LearningContent LoadLearningContent(string filepath)
+    public ILearningContent LoadLearningContent(string filepath)
     {
         return DataAccess.LoadLearningContent(filepath);
     }
 
-    public LearningContent LoadLearningContent(string name, Stream stream)
+    public ILearningContent LoadLearningContent(string name, Stream stream)
     {
         return DataAccess.LoadLearningContent(name, stream);
     }

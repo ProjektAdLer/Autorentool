@@ -66,14 +66,22 @@ public class EntityPersistEntityMappingProfile : Profile
 
     private void CreateLearningContentMap()
     {
-        CreateMap<LearningContent, LearningContentPe>()
-            .Include<FileContent, FileContentPe>()
-            .Include<LinkContent, LinkContentPe>()
-            .ReverseMap();
         CreateMap<FileContent, FileContentPe>()
             .ReverseMap();
         CreateMap<LinkContent, LinkContentPe>()
             .ReverseMap();
+        CreateMap<FileContent, ILearningContentPe>()
+            .As<FileContentPe>();
+        CreateMap<LinkContent, ILearningContentPe>()
+            .As<LinkContentPe>();
+        CreateMap<FileContentPe, ILearningContent>()
+            .As<FileContent>();
+        CreateMap<LinkContentPe, ILearningContent>()
+            .As<LinkContent>();
+        CreateMap<ILearningContent, ILearningContentPe>()
+            .IncludeAllDerived()
+            .ReverseMap()
+            .IncludeAllDerived();
     }
 
     private void CreateInterfaceMaps()

@@ -83,25 +83,25 @@ public class DataAccess : IDataAccess
         return Mapper.Map<LearningElement>(XmlHandlerElement.LoadFromStream(stream));
     }
 
-    public LearningContent LoadLearningContent(string filepath)
+    public ILearningContent LoadLearningContent(string filepath)
     {
-        return Mapper.Map<LearningContent>(ContentFileHandler.LoadContentAsync(filepath).Result);
+        return Mapper.Map<ILearningContent>(ContentFileHandler.LoadContentAsync(filepath).Result);
     }
 
-    public LearningContent LoadLearningContent(string name, Stream stream)
+    public ILearningContent LoadLearningContent(string name, Stream stream)
     {
-        return Mapper.Map<LearningContent>(ContentFileHandler.LoadContentAsync(name, stream).Result);
+        return Mapper.Map<ILearningContent>(ContentFileHandler.LoadContentAsync(name, stream).Result);
     }
     
     /// <inheritdoc cref="IDataAccess.GetAllContent"/>
-    public IEnumerable<LearningContent> GetAllContent()
+    public IEnumerable<ILearningContent> GetAllContent()
     {
-        return ContentFileHandler.GetAllContent().Select(Mapper.Map<LearningContent>);
+        return ContentFileHandler.GetAllContent().Select(Mapper.Map<ILearningContent>);
     }
 
     /// <inheritdoc cref="IDataAccess.RemoveContent"/>
-    public void RemoveContent(LearningContent content) =>
-        ContentFileHandler.RemoveContent(Mapper.Map<LearningContentPe>(content));
+    public void RemoveContent(ILearningContent content) =>
+        ContentFileHandler.RemoveContent(Mapper.Map<ILearningContentPe>(content));
 
     /// <inheritdoc cref="IDataAccess.SaveLink"/>
     public void SaveLink(LinkContent linkContent) =>

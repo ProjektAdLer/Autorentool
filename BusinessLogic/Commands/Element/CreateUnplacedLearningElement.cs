@@ -13,7 +13,7 @@ public class CreateUnplacedLearningElement : IUndoCommand
     private IMemento? _memento;
     
     public CreateUnplacedLearningElement(LearningWorld learningWorld, string name, string shortName,
-        LearningContent learningContent, string authors, string description, string goals,
+        ILearningContent learningContent, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double positionX, double positionY,
         Action<LearningWorld> mappingAction)
     {

@@ -366,11 +366,11 @@ public class PresentationLogic : IPresentationLogic
     }
 
     public void CreateUnplacedLearningElement(ILearningWorldViewModel learningWorldVm, string name, string shortname,
-        LearningContentViewModel learningContentVm, string authors, string description, string goals,
+        ILearningContentViewModel learningContentVm, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double positionX = 0, double positionY = 0)
     {
         var learningWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
-        var contentEntity = Mapper.Map<BusinessLogic.Entities.LearningContent.LearningContent>(learningContentVm);
+        var contentEntity = Mapper.Map<BusinessLogic.Entities.LearningContent.ILearningContent>(learningContentVm);
         
         var command = new CreateUnplacedLearningElement(learningWorldEntity, name, shortname, contentEntity, authors, description, goals, difficulty, workload, points, positionX, positionY, 
             world => CMapper.Map(world, learningWorldVm));
@@ -379,11 +379,11 @@ public class PresentationLogic : IPresentationLogic
     
     /// <inheritdoc cref="IPresentationLogic.CreateLearningElementInSlot"/>
     public void CreateLearningElementInSlot(ILearningSpaceViewModel parentSpaceVm, int slotIndex, string name, string shortname,
-        LearningContentViewModel learningContentVm, string authors, string description, string goals,
+        ILearningContentViewModel learningContentVm, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double positionX = 0, double positionY = 0)
     {
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
-        var contentEntity = Mapper.Map<BusinessLogic.Entities.LearningContent.LearningContent>(learningContentVm);
+        var contentEntity = Mapper.Map<ILearningContent>(learningContentVm);
         
         //TODO: temporary testing code
         
@@ -527,59 +527,59 @@ public class PresentationLogic : IPresentationLogic
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadImageAsync"/>
-    public async Task<LearningContentViewModel> LoadImageAsync()
+    public async Task<ILearningContentViewModel> LoadImageAsync()
     {
         ElectronCheck();
         var fileFilter = new FileFilterProxy[] {new(" ", _imageFileEnding)};
         var filepath = await GetLoadFilepathAsync("Load image", fileFilter);
         var entity = BusinessLogic.LoadLearningContent(filepath);
-        return Mapper.Map<LearningContentViewModel>(entity);
+        return Mapper.Map<ILearningContentViewModel>(entity);
     }
         
     /// <inheritdoc cref="IPresentationLogic.LoadVideoAsync"/>
-    public async Task<LearningContentViewModel> LoadVideoAsync()
+    public async Task<ILearningContentViewModel> LoadVideoAsync()
     {
         ElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load video", VideoFileEnding, " ");
         var entity = BusinessLogic.LoadLearningContent(filepath);
-        return Mapper.Map<LearningContentViewModel>(entity);
+        return Mapper.Map<ILearningContentViewModel>(entity);
     }
         
     /// <inheritdoc cref="IPresentationLogic.LoadH5PAsync"/>
-    public async Task<LearningContentViewModel> LoadH5PAsync()
+    public async Task<ILearningContentViewModel> LoadH5PAsync()
     {
         ElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load h5p",H5PFileEnding, " ");
         var entity = BusinessLogic.LoadLearningContent(filepath);
-        return Mapper.Map<LearningContentViewModel>(entity);
+        return Mapper.Map<ILearningContentViewModel>(entity);
     }
         
     /// <inheritdoc cref="IPresentationLogic.LoadPdfAsync"/>
-    public async Task<LearningContentViewModel> LoadPdfAsync()
+    public async Task<ILearningContentViewModel> LoadPdfAsync()
     {
         ElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load pdf",PdfFileEnding, " ");
         var entity = BusinessLogic.LoadLearningContent(filepath);
-        return Mapper.Map<LearningContentViewModel>(entity);
+        return Mapper.Map<ILearningContentViewModel>(entity);
     }
     
     /// <inheritdoc cref="IPresentationLogic.LoadTextAsync"/>
-    public async Task<LearningContentViewModel> LoadTextAsync()
+    public async Task<ILearningContentViewModel> LoadTextAsync()
     {
         ElectronCheck();
         var fileFilter = new FileFilterProxy[] {new(" ", _textFileEnding)};
         var filepath = await GetLoadFilepathAsync("Load text", fileFilter);
         var entity = BusinessLogic.LoadLearningContent(filepath);
-        return Mapper.Map<LearningContentViewModel>(entity);
+        return Mapper.Map<ILearningContentViewModel>(entity);
     }
 
     /// <inheritdoc cref="IPresentationLogic.GetAllContent"/>
-    public IEnumerable<LearningContentViewModel> GetAllContent() =>
-        BusinessLogic.GetAllContent().Select(Mapper.Map<LearningContentViewModel>);
+    public IEnumerable<ILearningContentViewModel> GetAllContent() =>
+        BusinessLogic.GetAllContent().Select(Mapper.Map<ILearningContentViewModel>);
 
     /// <inheritdoc cref="IPresentationLogic.RemoveContent"/>
-    public void RemoveContent(LearningContentViewModel content) =>
-        BusinessLogic.RemoveContent(Mapper.Map<BusinessLogic.Entities.LearningContent.LearningContent>(content));
+    public void RemoveContent(ILearningContentViewModel content) =>
+        BusinessLogic.RemoveContent(Mapper.Map<ILearningContent>(content));
 
     /// <inheritdoc cref="IPresentationLogic.SaveLink"/>
     public void SaveLink(LinkContentViewModel linkContentVm) =>
@@ -618,10 +618,10 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
     
-    public LearningContentViewModel LoadLearningContentViewModel(string name, Stream stream)
+    public ILearningContentViewModel LoadLearningContentViewModel(string name, Stream stream)
     {
         var entity = BusinessLogic.LoadLearningContent(name, stream);
-        return Mapper.Map<LearningContentViewModel>(entity);
+        return Mapper.Map<ILearningContentViewModel>(entity);
     }
 
     /// <summary>

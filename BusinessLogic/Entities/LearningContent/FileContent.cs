@@ -2,10 +2,11 @@ using JetBrains.Annotations;
 
 namespace BusinessLogic.Entities.LearningContent;
 
-public class FileContent : LearningContent, IFileContent
+public class FileContent : IFileContent
 {
-    public FileContent(string name, string type, string filepath) : base(name)
+    public FileContent(string name, string type, string filepath)
     {
+        Name = name;
         Type = type;
         Filepath = filepath;
     }
@@ -14,12 +15,14 @@ public class FileContent : LearningContent, IFileContent
     /// Constructor for Automapper. DO NOT USE.
     /// </summary>
     [UsedImplicitly]
-    private FileContent() : base()
+    private FileContent()
     {
+        Name = "";
         Type = "";
         Filepath = "";
     }
 
+    public string Name { get; set; }
     public string Type { get; set; }
     public string Filepath { get; set; }
 }

@@ -7,7 +7,7 @@ namespace PersistEntities;
 [DataContract]
 public class H5PActivationElementPe : LearningElementPe
 {
-    internal H5PActivationElementPe(string name, string shortname, LearningContentPe? learningContent,
+    internal H5PActivationElementPe(string name, string shortname, ILearningContentPe? learningContent,
         string authors, string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload,
         int points, double positionX, double positionY) : base(name, shortname, learningContent, authors, description, 
         goals, difficulty, workload, points, positionX, positionY)

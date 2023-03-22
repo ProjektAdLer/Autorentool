@@ -25,5 +25,5 @@ public class LearningElementFormModel
     public int Workload { get; set; }
     public int Points { get; set; }
     
-    public LearningContentViewModel? LearningContent { get; set; }
+    public ILearningContentViewModel? LearningContent { get; set; }
 }

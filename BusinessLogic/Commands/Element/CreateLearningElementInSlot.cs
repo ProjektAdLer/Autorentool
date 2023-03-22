@@ -15,7 +15,7 @@ public class CreateLearningElementInSlot : IUndoCommand
     private IMemento? _mementoSpaceLayout;
 
     public CreateLearningElementInSlot(LearningSpace parentSpace, int slotIndex, string name, string shortName,
-        LearningContent learningContent, string authors, string description, string goals,
+        ILearningContent learningContent, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double positionX, double positionY,
         Action<LearningSpace> mappingAction)
     {

@@ -2,10 +2,11 @@ using JetBrains.Annotations;
 
 namespace Presentation.PresentationLogic.LearningContent;
 
-public class LinkContentViewModel : LearningContentViewModel, ILinkContentViewModel
+public class LinkContentViewModel : ILinkContentViewModel
 {
-    public LinkContentViewModel(string name, string link) : base(name)
+    public LinkContentViewModel(string name, string link)
     {
+        Name = name;
         Link = link;
     }
     
@@ -13,10 +14,12 @@ public class LinkContentViewModel : LearningContentViewModel, ILinkContentViewMo
     /// Private Constructor for AutoMapper
     /// </summary>
     [UsedImplicitly]
-    private LinkContentViewModel() : base()
+    private LinkContentViewModel()
     {
+        Name = "";
         Link = "";
     }
     
+    public string Name { get; set; }
     public string Link { get; set; }
 }

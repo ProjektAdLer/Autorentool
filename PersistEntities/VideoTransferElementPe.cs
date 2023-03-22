@@ -7,7 +7,7 @@ namespace PersistEntities;
 [DataContract]
 public class VideoTransferElementPe : LearningElementPe
 {
-    internal VideoTransferElementPe(string name, string shortname, LearningContentPe? learningContent,
+    internal VideoTransferElementPe(string name, string shortname, ILearningContentPe? learningContent,
         string authors, string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload,
         int points, double positionX, double positionY) : base(name, shortname, learningContent, authors, description, 
         goals, difficulty, workload, points, positionX,positionY)

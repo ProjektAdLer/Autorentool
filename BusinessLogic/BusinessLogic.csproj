@@ -11,6 +11,7 @@
     </ItemGroup>
     <ItemGroup>
       <Compile Remove="Entities\LearningElementDifficultyEnum.cs" />
+      <Compile Remove="Entities\LearningContent\LearningContent.cs" />
     </ItemGroup>
     <ItemGroup>
       <PackageReference Include="FluentValidation" Version="11.4.0" />

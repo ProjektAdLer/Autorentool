@@ -58,14 +58,22 @@ public class ViewModelEntityMappingProfile : Profile
 
     private void CreateLearningContentMap()
     {
-        CreateMap<LearningContent, LearningContentViewModel>()
-            .Include<FileContent, FileContentViewModel>()
-            .Include<LinkContent, LinkContentViewModel>()
-            .ReverseMap();
         CreateMap<FileContent, FileContentViewModel>()
             .ReverseMap();
         CreateMap<LinkContent, LinkContentViewModel>()
             .ReverseMap();
+        CreateMap<FileContent, ILearningContentViewModel>()
+            .As<FileContentViewModel>();
+        CreateMap<LinkContent, ILearningContentViewModel>()
+            .As<LinkContentViewModel>();
+        CreateMap<FileContentViewModel, ILearningContent>()
+            .As<FileContent>();
+        CreateMap<LinkContentViewModel, ILearningContent>()
+            .As<LinkContent>();
+        CreateMap<ILearningContent, ILearningContentViewModel>()
+            .IncludeAllDerived()
+            .ReverseMap()
+            .IncludeAllDerived();
     }
 
     private void CreateInterfaceMaps()

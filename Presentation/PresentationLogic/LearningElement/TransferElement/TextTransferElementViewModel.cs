@@ -19,7 +19,7 @@ public class TextTransferElementViewModel : TransferElementViewModel
     /// Initializes a new instance of the <see cref="TextTransferElementViewModel"/> class.
     /// </summary>
     internal TextTransferElementViewModel(string name, string shortname, ILearningSpaceViewModel? parent,
-        LearningContentViewModel learningContent, string authors, string description, string goals,
+        ILearningContentViewModel learningContent, string authors, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double positionX, double positionY) : base(
         name, shortname, parent, learningContent, authors, description, goals, difficulty, workload, points, positionX,
         positionY)

@@ -18,13 +18,13 @@ public interface IDataAccess
     void SaveLearningElementToFile(LearningElement element, string filepath);
     LearningElement LoadLearningElement(string filepath);
     LearningElement LoadLearningElement(Stream stream);
-    LearningContent LoadLearningContent(string filepath);
-    LearningContent LoadLearningContent(string name, Stream stream);
+    ILearningContent LoadLearningContent(string filepath);
+    ILearningContent LoadLearningContent(string name, Stream stream);
     /// <summary>
     /// Gets all content files in the appdata folder.
     /// </summary>
     /// <returns>An enumerable of content files.</returns>
-    IEnumerable<LearningContent> GetAllContent();
+    IEnumerable<ILearningContent> GetAllContent();
     IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths();
     void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
     SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path);
@@ -49,7 +49,7 @@ public interface IDataAccess
     /// </summary>
     /// <param name="content">The content whos file shall be deleted.</param>
     /// <exception cref="FileNotFoundException">The file corresponding to <paramref name="content"/> wasn't found.</exception>
-    void RemoveContent(LearningContent content);
+    void RemoveContent(ILearningContent content);
 
     /// <summary>
     /// Adds the given <see cref="LinkContent"/> to the link file.
