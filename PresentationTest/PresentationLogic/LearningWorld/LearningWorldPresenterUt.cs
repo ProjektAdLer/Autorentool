@@ -191,7 +191,7 @@ public class LearningWorldPresenterUt
         systemUnderTest.LearningWorldVm = world;
         systemUnderTest.LearningWorldVm?.LearningSpaces.Add(space);
 
-        systemUnderTest.CreateNewLearningSpace("foo", "bar", "foo", "bar", "foo", 5);
+        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", "bar", "foo", 5);
 
         presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(),
             Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int>(), Arg.Any<double>(), Arg.Any<double>());
@@ -201,7 +201,7 @@ public class LearningWorldPresenterUt
     public void CreateNewLearningSpace_SelectedLearningWorldIsNull_ThrowsException()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.CreateNewLearningSpace("foo", "bar", "foo", "bar", "foo", 5));
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.CreateLearningSpace("foo", "bar", "foo", "bar", "foo", 5));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
 

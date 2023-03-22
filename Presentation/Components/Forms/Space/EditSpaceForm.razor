@@ -50,7 +50,7 @@
 @code {
 #pragma warning disable CS8618 - injected by framework - n.stich
     [Inject]
-    private IPresentationLogic PresentationLogic { get; set; }
+    private ILearningSpacePresenter LearningSpacePresenter { get; set; }
     [Inject]
     private IMapper Mapper { get; set; }
     [Inject]
@@ -73,7 +73,7 @@
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
         //we can supress the nullable warning here as validator ensures RequiredPoints isn't null - n.stich
-        PresentationLogic.EditLearningSpace(SpaceToEdit, model.Name, model.Shortname, model.Authors, model.Description,
+        LearningSpacePresenter.EditLearningSpace(model.Name, model.Shortname, model.Authors, model.Description,
             model.Goals, (int)model.RequiredPoints!);
     }
     
