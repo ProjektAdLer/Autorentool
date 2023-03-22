@@ -1,18 +1,7 @@
-﻿using JetBrains.Annotations;
-
-namespace ApiAccess.ApiResponses;
+﻿namespace ApiAccess.ApiResponses;
 
 public class UserTokenWebApiResponse
 {
-    /// <summary>
-    ///     Private Constructor for AutoMapper
-    /// </summary>
-    [UsedImplicitly]
-    private UserTokenWebApiResponse()
-    {
-        // Frage an Niklas: WTF? Plz explain. Vor allem wegen Testabdeckung
-    }
-
     public UserTokenWebApiResponse(string token)
     {
         Token = token;

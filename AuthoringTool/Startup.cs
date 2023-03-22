@@ -33,23 +33,23 @@ namespace AuthoringTool;
 
 public class Startup
 {
-    public IConfiguration Configuration { get; }
-
     public Startup(IConfiguration configuration)
     {
         Configuration = configuration;
     }
+
+    public IConfiguration Configuration { get; }
 
     public void ConfigureServices(IServiceCollection services)
     {
         //Blazor and Electron (framework)
         services.AddRazorPages();
         services.AddServerSideBlazor();
-        
+
         //MudBlazor
         services.AddMudServices();
-        
-        
+
+
         //AuthoringToolLib
         //PLEASE add any services you add dependencies to to the unit tests in StartupUt!!!
         ConfigureAuthoringTool(services);
@@ -65,7 +65,7 @@ public class Startup
         ConfigureValidation(services);
         ConfigureApiAccess(services);
 
-        
+
         //Electron Wrapper layer
         services.AddElectronInternals();
         services.AddElectronWrappers();
@@ -75,7 +75,7 @@ public class Startup
         //Wrapper around Shell
         var shellWrapper = new ShellWrapper();
         services.AddSingleton<IShellWrapper, ShellWrapper>(_ => shellWrapper);
-        
+
         //Insert electron dependant services as required
         if (hybridSupportWrapper.IsElectronActive)
         {
@@ -109,7 +109,7 @@ public class Startup
         services.AddSingleton<IPresentationLogic, PresentationLogic>();
         services.AddSingleton<ILearningWorldPresenter, LearningWorldPresenter>();
         services.AddSingleton(p =>
-            (ILearningWorldPresenterOverviewInterface)p.GetService(typeof(ILearningWorldPresenter))!);
+            (ILearningWorldPresenterOverviewInterface) p.GetService(typeof(ILearningWorldPresenter))!);
         services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
         services.AddSingleton<ILearningElementDropZoneHelper, LearningElementDropZoneHelper>();
@@ -135,7 +135,7 @@ public class Startup
         services.AddSingleton<ICreateDsl, CreateDsl>();
         services.AddSingleton<IReadDsl, ReadDsl>();
     }
-    
+
     private void ConfigureApiAccess(IServiceCollection services)
     {
         services.AddSingleton<IApiAccess, ApiAccess.API.ApiAccess>();
@@ -145,19 +145,19 @@ public class Startup
     private static void ConfigureToolbox(IServiceCollection services)
     {
         services.AddSingleton(p =>
-            (IAuthoringToolWorkspacePresenterToolboxInterface)p.GetService(typeof(IAuthoringToolWorkspacePresenter))!);
+            (IAuthoringToolWorkspacePresenterToolboxInterface) p.GetService(typeof(IAuthoringToolWorkspacePresenter))!);
         services.AddSingleton(p =>
-            (ILearningWorldPresenterToolboxInterface)p.GetService(typeof(ILearningWorldPresenter))!);
+            (ILearningWorldPresenterToolboxInterface) p.GetService(typeof(ILearningWorldPresenter))!);
         services.AddSingleton(p =>
-            (ILearningSpacePresenterToolboxInterface)p.GetService(typeof(ILearningSpacePresenter))!);
+            (ILearningSpacePresenterToolboxInterface) p.GetService(typeof(ILearningSpacePresenter))!);
     }
-    
+
     private static void ConfigureMyLearningWorlds(IServiceCollection services)
     {
         services.AddSingleton<IMyLearningWorldsProvider, MyLearningWorldsProvider>();
         services.AddSingleton<ILearningWorldSavePathsHandler, LearningWorldSavePathsHandler>();
     }
-    
+
     private static void ConfigureAutoMapper(IServiceCollection services)
     {
         var config = new MapperConfiguration(cfg =>
@@ -166,9 +166,10 @@ public class Startup
             EntityPersistEntityMappingProfile.Configure(cfg);
             FormModelEntityMappingProfile.Configure(cfg);
             ViewModelFormModelMappingProfile.Configure(cfg);
+            ApiResponseEntityMappingProfile.Configure(cfg);
             cfg.AddCollectionMappers();
         });
-        
+
         var mapper = config.CreateMapper();
         services.AddSingleton(mapper);
         services.AddSingleton<ICachingMapper, CachingMapper>();

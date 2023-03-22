@@ -2,7 +2,6 @@
 using AutoMapper;
 using NSubstitute;
 using NUnit.Framework;
-using Shared.Configuration;
 
 namespace ApiAccessTest.API;
 
@@ -13,37 +12,35 @@ public class ApiAccessUt
     private IUserWebApiServices _userWebApiServices;
 
     [Test]
-    public void  ApiAccess_DefaultConstructor_AllParametersSet()
+    public void ApiAccess_DefaultConstructor_AllParametersSet()
     {
         //Arrange
         _mapper = Substitute.For<IMapper>();
         _userWebApiServices = Substitute.For<IUserWebApiServices>();
-        
+
         // Act
-        var apiAccess = new ApiAccess.API.ApiAccess( _mapper, _userWebApiServices);
-        
+        var apiAccess = new ApiAccess.API.ApiAccess(_mapper, _userWebApiServices);
+
         // Assert
-        Assert.Multiple(()=>
+        Assert.Multiple(() =>
         {
             Assert.That(apiAccess.Mapper, Is.EqualTo(_mapper));
             Assert.That(apiAccess.UserWebApiServices, Is.EqualTo(_userWebApiServices));
         });
     }
-    
+
     [Test]
     public void ApiAccess_GetUserTokenAsync_CallsMethod()
     {
         // Arrange
         _mapper = Substitute.For<IMapper>();
         _userWebApiServices = Substitute.For<IUserWebApiServices>();
-        var apiAccess = new ApiAccess.API.ApiAccess( _mapper, _userWebApiServices);
-        
+        var apiAccess = new ApiAccess.API.ApiAccess(_mapper, _userWebApiServices);
+
         // Act
         var userToken = apiAccess.GetUserTokenAsync("username", "password");
-        
+
         // Assert
         _userWebApiServices.Received().GetUserTokenAsync("username", "password");
-        
-        // Frage an Niklas: Testen wir den Mapper also nicht?
     }
 }

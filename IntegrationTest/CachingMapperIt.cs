@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using AuthoringTool;
 using AuthoringTool.Mapping;
 using AutoMapper;
 using BusinessLogic.API;
@@ -11,7 +10,6 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.MyLearningWorlds;
 using Shared;
 using Shared.Configuration;
 
@@ -24,7 +22,7 @@ public class CachingMapperIt
     public void CreateWorldThenUndoAndRedo_ViewModelShouldStayTheSame()
     {
         var commandStateManager = new CommandStateManager();
-        var businessLogic = new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager);
+        var businessLogic = new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!);
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
         var logger = Substitute.For<ILogger<CachingMapper>>();
@@ -59,7 +57,7 @@ public class CachingMapperIt
     public void CreateWorldAndSpaceThenUndoAndRedo_CheckIfWorldViewModelStaysTheSame()
     {
         var commandStateManager = new CommandStateManager();
-        var businessLogic = new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager);
+        var businessLogic = new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!);
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
         var logger = Substitute.For<ILogger<CachingMapper>>();
@@ -114,7 +112,7 @@ public class CachingMapperIt
     public void CreateWorldAndSpaceAndElementThenUndoAndRedo_CheckIfAllViewModelsStayTheSame()
     {
         var commandStateManager = new CommandStateManager();
-        var businessLogic = new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager);
+        var businessLogic = new BusinessLogic.API.BusinessLogic(null!, null!, null!, commandStateManager, null!);
         var config = new MapperConfiguration(ViewModelEntityMappingProfile.Configure);
         var mapper = config.CreateMapper();
         var logger = Substitute.For<ILogger<CachingMapper>>();
