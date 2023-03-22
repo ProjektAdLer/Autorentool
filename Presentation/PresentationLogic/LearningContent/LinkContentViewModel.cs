@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 
 namespace Presentation.PresentationLogic.LearningContent;
 
-public class LinkContentViewModel : LearningContentViewModel
+public class LinkContentViewModel : LearningContentViewModel, ILinkContentViewModel
 {
     public LinkContentViewModel(string name, string link) : base(name)
     {

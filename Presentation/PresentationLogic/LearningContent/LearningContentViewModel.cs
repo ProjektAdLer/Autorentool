@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 
 namespace Presentation.PresentationLogic.LearningContent;
 
-public abstract class LearningContentViewModel
+public abstract class LearningContentViewModel : ILearningContentViewModel
 {
     /// <summary>
     /// Private Constructor for AutoMapper

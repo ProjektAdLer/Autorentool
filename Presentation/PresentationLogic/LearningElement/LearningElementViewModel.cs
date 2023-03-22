@@ -70,7 +70,7 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
     public string Name { get; set; }
     public string Shortname { get; set; }
     public ILearningSpaceViewModel? Parent { get; set; }
-    public LearningContentViewModel LearningContent { get; set; }
+    public ILearningContentViewModel LearningContent { get; set; }
     public string Authors { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }

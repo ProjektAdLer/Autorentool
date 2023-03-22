@@ -395,7 +395,7 @@ public interface IPresentationLogic
     event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
     void DragObjectInPathWay(IObjectInPathWayViewModel pathWayObjectVm, double oldPositionX, double oldPositionY);
     void DragLearningElement(ILearningElementViewModel learningElementVm, double oldPositionX, double oldPositionY);
-    Task ShowLearningContentAsync(LearningContentViewModel content);
+    Task ShowLearningContentAsync(ILearningContentViewModel content);
     void SaveLink(LinkContentViewModel linkContentVm);
     /// <summary>
     /// Opens the folder containing all content files in the desktop's default manner.

@@ -10,14 +10,14 @@
 <MudMenu ActivationEvent="MouseEvent.RightClick" PositionAtCursor="true" @onclick="() => OnClicked.InvokeAsync(LearningElement)">
     <ActivatorContent>
         <MudCard Class="flex">
-                <MudIcon Icon="@GetElementIcon()" Size="Size.Large"></MudIcon>
             <MudCardContent>
+                <MudIcon Icon="@GetElementIcon()" Size="Size.Large" Class="element-icon"/>
                 @{
                     var item = LearningElement;
                     var text = item.Name;
                 }
                 <MudListItem Text="@text"></MudListItem>
-                <MudIcon Icon="@GetDifficultyIcon(LearningElement.Difficulty)"/>
+                <MudIcon Icon="@GetDifficultyIcon(LearningElement.Difficulty)" Class="difficulty-icon"/>
             </MudCardContent>
         </MudCard>
     </ActivatorContent>
@@ -58,7 +58,7 @@
         }
     }
 
-    internal static string GetDifficultyIcon(LearningElementDifficultyEnum difficulty)
+    private static string GetDifficultyIcon(LearningElementDifficultyEnum difficulty)
     {
         return difficulty switch
         {
@@ -74,15 +74,15 @@
     {
         return LearningElement.LearningContent switch
         {
-            LinkContentViewModel => CustomIcons.VideoElementIcon,
-            FileContentViewModel { Type: "png" or "jpg" or "bmp" or "webp" } => CustomIcons.ImageElementIcon,
-            FileContentViewModel
+            ILinkContentViewModel => CustomIcons.VideoElementIcon,
+            IFileContentViewModel { Type: "png" or "jpg" or "bmp" or "webp" } => CustomIcons.ImageElementIcon,
+            IFileContentViewModel
             {
                 Type: "txt" or "c" or "h" or "cpp" or "cc" or "c++" or "py" or
                     "js" or "php" or "html" or "css"
                 } => CustomIcons.TextElementIcon,
-            FileContentViewModel { Type: "h5p" } => CustomIcons.H5PElementIcon,
-            FileContentViewModel { Type: "pdf" } => CustomIcons.TextElementIcon,
+            IFileContentViewModel { Type: "h5p" } => CustomIcons.H5PElementIcon,
+            IFileContentViewModel { Type: "pdf" } => CustomIcons.TextElementIcon,
             _ => throw new ArgumentOutOfRangeException(nameof(LearningElement))
             };
     }

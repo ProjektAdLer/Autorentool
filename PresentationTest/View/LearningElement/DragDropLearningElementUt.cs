@@ -1,10 +1,15 @@
 ﻿using System;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Bunit;
+using Bunit.TestDoubles;
 using Microsoft.AspNetCore.Components;
+using MudBlazor;
 using MudBlazor.Services;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.Components;
+using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.View.LearningElement;
 using Shared;
@@ -24,6 +29,11 @@ public class DragDropLearningElementUt
     {
         _ctx = new TestContext();
         _ctx.Services.AddMudServices();
+        _ctx.ComponentFactories.AddStub<MudMenu>();
+        _ctx.ComponentFactories.AddStub<MudCard>();
+        _ctx.ComponentFactories.AddStub<MudIcon>();
+        _ctx.ComponentFactories.AddStub<MudListItem>();
+        _ctx.ComponentFactories.AddStub<MudMenuItem>();
         _ctx.JSInterop.SetupVoid("mudPopover.connect", _ => true);
     }
 
@@ -31,6 +41,8 @@ public class DragDropLearningElementUt
     public void Constructor_SetsParametersCorrectly()
     {
         var learningElement = Substitute.For<ILearningElementViewModel>();
+        var content = Substitute.For<ILinkContentViewModel>();
+        learningElement.LearningContent = content;
         var onClicked = new Action<ILearningElementViewModel>(_ => { });
         var onDoubleClicked = new Action<ILearningElementViewModel>(_ => { });
         var onEditLearningElement = new Action<ILearningElementViewModel>(_ => { });
@@ -59,11 +71,14 @@ public class DragDropLearningElementUt
     }
 
     [Test]
-    public void Constructor_PassesCorrectValuesToDragDropElement()
+    public void Constructor_RendersCorrectlyAndPassesCorrectParametersToChildComponents()
     {
         var learningElement = Substitute.For<ILearningElementViewModel>();
         learningElement.Difficulty.Returns(LearningElementDifficultyEnum.Medium);
         learningElement.Name.Returns("foo bar super cool name");
+        var content = Substitute.For<ILinkContentViewModel>();
+        learningElement.LearningContent = content;
+        
         var onClicked = new Action<ILearningElementViewModel>(_ => { });
         var onDoubleClicked = new Action<ILearningElementViewModel>(_ => { });
         var onEditLearningElement = new Action<ILearningElementViewModel>(_ => { });
@@ -73,42 +88,40 @@ public class DragDropLearningElementUt
             GetRenderedDragDropLearningElement(learningElement, onClicked, onDoubleClicked, onEditLearningElement,
                 onDeleteLearningElement, onShowLearningElementContent);
 
+        var menu = systemUnderTest.FindComponentOrFail<Stub<MudMenu>>();
+        var activatorContent = _ctx.Render((RenderFragment)menu.Instance.Parameters["ActivatorContent"]);
+        var card = activatorContent.FindComponentOrFail<Stub<MudCard>>();
+        var mudCardContent = _ctx.Render((RenderFragment)card.Instance.Parameters["ChildContent"]);
+        var listItem = mudCardContent.FindComponentOrFail<Stub<MudListItem>>();
+        var icons = mudCardContent.FindComponentsOrFail<Stub<MudIcon>>().ToList();
+        var menuChildContent = _ctx.Render((RenderFragment)menu.Instance.Parameters["ChildContent"]);
+        var menuItems = menuChildContent.FindComponentsOrFail<Stub<MudMenuItem>>();
+        
+        Assert.That(menu.Instance.Parameters["ActivationEvent"], Is.EqualTo(MouseEvent.RightClick));
+        Assert.That(menu.Instance.Parameters["PositionAtCursor"], Is.EqualTo(true));
+
+        var elementIcon = icons.First(icon => (string)icon.Instance.Parameters["Class"] == "element-icon");
+        var difficultyIcon = icons.First(icon => (string)icon.Instance.Parameters["Class"] == "difficulty-icon");
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.Instance.LearningElement, Is.EqualTo(learningElement));
-            Assert.That(systemUnderTest.Instance.OnClicked,
-                Is.EqualTo(EventCallback.Factory.Create(onClicked.Target!, onClicked)));
-            Assert.That(systemUnderTest.Instance.OnDoubleClicked,
-                Is.EqualTo(EventCallback.Factory.Create(onDoubleClicked.Target!, onDoubleClicked)));
-            Assert.That(systemUnderTest.Instance.OnEditLearningElement,
-                Is.EqualTo(EventCallback.Factory.Create(onEditLearningElement.Target!, onEditLearningElement)));
-            Assert.That(systemUnderTest.Instance.OnDeleteLearningElement,
-                Is.EqualTo(EventCallback.Factory.Create(onDeleteLearningElement.Target!, onDeleteLearningElement)));
-            Assert.That(systemUnderTest.Instance.OnShowLearningElementContent,
-                Is.EqualTo(EventCallback.Factory.Create(onShowLearningElementContent.Target!,
-                    onShowLearningElementContent)));
+            Assert.That(elementIcon.Instance.Parameters["Icon"], Is.EqualTo(CustomIcons.VideoElementIcon));
+            Assert.That(difficultyIcon.Instance.Parameters["Icon"], Is.EqualTo(CustomIcons.DifficultyPolygonMedium));
         });
-
-        var id = Regex.Match(systemUnderTest.Markup, @"id=""(?<id>[a-z0-9-]*)""").Groups["id"].Value;
-        systemUnderTest.Markup.MarkupMatches(
-            Regex.Replace(
-                @"<div class=""mud-menu"">" +
-                @"<div class=""mud-menu-activator"">" +
-                @"<div class=""mud-paper mud-elevation-1 mud-card flex"" style="""">" +
-                @"<div tabindex=""0"" class=""mud-list-item mud-list-item-gutters"">" +
-                @"<div class=""mud-list-item-text"">" +
-                @$"<span class=""mud-typography mud-typography-inherit"">{systemUnderTest.Instance.LearningElement.Name}</span>" +
-                @"</div>" +
-                @"</div>" +
-                @"<svg class=""mud-icon-root mud-svg-icon mud-icon-size-medium"" focusable=""false"" viewBox=""0 0 24 24"" aria-hidden=""true"">" +
-                @"<svg>" +
-                @"<polygon fill=""yellow"" points=""13 1 5 25 24 10 2 10 21 25""></polygon>" +
-                @"</svg>" +
-                @"</svg>" +
-                @"</div>" +
-                @"</div>" +
-                @"<div id=""popover-RANDOM_ID"" class=""mud-popover-cascading-value""></div>" +
-                @"</div>", "id=\"popover-RANDOM_ID\"", $"id=\"{id}\""));
+    }
+    
+    [Test]
+    public void RenderMudCardContent_DifficultyOutOfRange_ThrowsException()
+    {
+        var element = Substitute.For<ILearningElementViewModel>();
+        var content = Substitute.For<ILinkContentViewModel>();
+        element.LearningContent.Returns(content);
+        element.Difficulty.Returns((LearningElementDifficultyEnum)123);
+        var systemUnderTest = GetRenderedDragDropLearningElement(element);
+        var activatorContent = _ctx.Render((RenderFragment)systemUnderTest.FindComponent<Stub<MudMenu>>().Instance
+            .Parameters["ActivatorContent"]);
+        Assert.That(() => _ctx.Render((RenderFragment)activatorContent.FindComponent<Stub<MudCard>>().Instance
+                .Parameters["ChildContent"]),
+            Throws.TypeOf<ArgumentOutOfRangeException>());
     }
 
     [Test]
@@ -121,39 +134,52 @@ public class DragDropLearningElementUt
     }
 
     [Test]
-    public void GetDifficultyPolygon_InputOutOfRange_ThrowsException()
+    public void RenderMudCardContent_ContentNull_ThrowsArgumentOutOfRangeException()
     {
-        Assert.That(() => DragDropLearningElement.GetDifficultyIcon((LearningElementDifficultyEnum) 123),
-            Throws.TypeOf<ArgumentOutOfRangeException>());
+        var element = Substitute.For<ILearningElementViewModel>();
+        element.LearningContent.Returns((LearningContentViewModel)null!);
+        var systemUnderTest = GetRenderedDragDropLearningElement(element);
+        var activatorContent = _ctx.Render((RenderFragment)systemUnderTest.FindComponent<Stub<MudMenu>>().Instance
+            .Parameters["ActivatorContent"]);
+        Assert.That(() => _ctx.Render((RenderFragment)activatorContent.FindComponent<Stub<MudCard>>().Instance
+            .Parameters["ChildContent"]), Throws.TypeOf<ArgumentOutOfRangeException>());
     }
 
     [Test]
-    [TestCase(LearningElementDifficultyEnum.Easy, "13 1 10 10 2 13 10 16 13 25 16 16 24 13 16 10", "green")]
-    [TestCase(LearningElementDifficultyEnum.Medium, "13 1 5 25 24 10 2 10 21 25", "yellow")]
-    [TestCase(LearningElementDifficultyEnum.Hard,
-        "13 1 10 8 2 7 8 13 2 19 10 18 13 25 16 18 24 19 19 13 24 7 16 8 13 1", "red")]
-    [TestCase(LearningElementDifficultyEnum.None, "0", "lightblue")]
-    public void GetDifficultyPolygon_ValidInput_ReturnsCorrectPolygon(LearningElementDifficultyEnum difficulty,
-        string expectedPoints, string expectedColor)
+    [TestCase(LearningElementDifficultyEnum.Easy, CustomIcons.DifficultyPolygonEasy)]
+    [TestCase(LearningElementDifficultyEnum.Medium, CustomIcons.DifficultyPolygonMedium)]
+    [TestCase(LearningElementDifficultyEnum.Hard, CustomIcons.DifficultyPolygonHard)]
+    [TestCase(LearningElementDifficultyEnum.None, CustomIcons.DifficultyPolygonNone)]
+    public void GetDifficultyPolygon_ValidInput_ReturnsCorrectPolygon(LearningElementDifficultyEnum difficulty, string expectedIconString)
     {
-        var svg = DragDropLearningElement.GetDifficultyIcon(difficulty);
-        var pattern = new Regex(@"<polygon fill=""(?<color>.*)"" points=""(?<points>.*)""></polygon>");
-        Match match = pattern.Match(svg);
-        var actualPoints = match.Groups["points"].Value;
-        var actualColor = match.Groups["color"].Value;
-        Assert.Multiple(() =>
-        {
-            Assert.That(actualPoints, Is.EqualTo(expectedPoints));
-            Assert.That(actualColor, Is.EqualTo(expectedColor));
-        });
+        var element = Substitute.For<ILearningElementViewModel>();
+        var content = Substitute.For<ILinkContentViewModel>();
+        element.LearningContent.Returns(content);
+        element.Difficulty.Returns(difficulty);
+        var systemUnderTest = GetRenderedDragDropLearningElement(element);
+        var menu = systemUnderTest.FindComponentOrFail<Stub<MudMenu>>();
+        var activatorContent = _ctx.Render((RenderFragment)menu.Instance.Parameters["ActivatorContent"]);
+        var card = activatorContent.FindComponentOrFail<Stub<MudCard>>();
+        var mudCardContent = _ctx.Render((RenderFragment)card.Instance.Parameters["ChildContent"]);
+        var difficultyIcon = mudCardContent.FindComponentsOrFail<Stub<MudIcon>>()
+            .First(icon => (string)icon.Instance.Parameters["Class"] == "difficulty-icon");
+        Assert.That(difficultyIcon.Instance.Parameters["Icon"], Is.EqualTo(expectedIconString));
     }
 
     private IRenderedComponent<DragDropLearningElement> GetRenderedDragDropLearningElement(
-        ILearningElementViewModel objectViewmodel, Action<ILearningElementViewModel> onClicked,
-        Action<ILearningElementViewModel> onDoubleClicked, Action<ILearningElementViewModel> onEditLearningElement,
-        Action<ILearningElementViewModel> onDeleteLearningElement,
-        Action<ILearningElementViewModel> onShowLearningElementContent)
+        ILearningElementViewModel objectViewmodel,
+        Action<ILearningElementViewModel>? onClicked = null,
+        Action<ILearningElementViewModel>? onDoubleClicked = null,
+        Action<ILearningElementViewModel>? onEditLearningElement = null,
+        Action<ILearningElementViewModel>? onDeleteLearningElement = null,
+        Action<ILearningElementViewModel>? onShowLearningElementContent = null)
     {
+        onClicked ??= _ => { };
+        onDoubleClicked ??= _ => { };
+        onEditLearningElement ??= _ => { };
+        onDeleteLearningElement ??= _ => { };
+        onShowLearningElementContent ??= _ => { };
+        
         return _ctx.RenderComponent<DragDropLearningElement>(parameters => parameters
             .Add(p => p.LearningElement, objectViewmodel)
             .Add(p => p.OnClicked, onClicked)

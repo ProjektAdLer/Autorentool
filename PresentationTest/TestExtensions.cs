@@ -84,10 +84,13 @@ public static class TestExtensions
     public static IEnumerable<IRenderedComponent<T>> FindComponentsOrFail<T>(this IRenderedFragment fragment)
         where T : IComponent
     {
-        IEnumerable<IRenderedComponent<T>>? components = null;
-        Assert.That(() => components = fragment.FindComponents<T>(), Throws.Nothing);
+        IList<IRenderedComponent<T>>? components = null;
+        Assert.Multiple(() =>
+        {
+            Assert.That(() => components = fragment.FindComponents<T>().ToList(), Throws.Nothing);
+            Assert.That(components, Is.Not.Empty);
+        });
         return components!;
-
     }
 
     /// <summary>

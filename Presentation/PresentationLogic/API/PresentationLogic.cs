@@ -501,7 +501,7 @@ public class PresentationLogic : IPresentationLogic
         }
     }
 
-    public async Task ShowLearningContentAsync(LearningContentViewModel content)
+    public async Task ShowLearningContentAsync(ILearningContentViewModel content)
     {
         ElectronCheck();
         var error =

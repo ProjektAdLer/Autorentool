@@ -2,7 +2,7 @@ using JetBrains.Annotations;
 
 namespace Presentation.PresentationLogic.LearningContent;
 
-public class FileContentViewModel : LearningContentViewModel
+public class FileContentViewModel : LearningContentViewModel, IFileContentViewModel
 {
     public FileContentViewModel(string name, string type, string filepath) : base(name)
     {
