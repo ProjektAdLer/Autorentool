@@ -32,6 +32,7 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
         int requiredPoints, double positionX = 0, double positionY = 0);
 
     Task LoadLearningSpaceAsync();
+    void EditLearningWorld(string name, string shortname, string authors, string language, string description, string goals);
     Task SaveLearningWorldAsync();
     Task SaveSelectedLearningSpaceAsync();
     void ShowSelectedLearningSpaceView();

@@ -43,10 +43,11 @@
         <DefaultResetButton/>
     </Buttons>
 </BaseForm>
+
 @code {
 #pragma warning disable CS8618 - injected by framework - n.stich
     [Inject]
-    private IPresentationLogic PresentationLogic { get; set; }
+    private IAuthoringToolWorkspacePresenter AuthoringToolWorkspacePresenter { get; set; }
     [Inject]
     private IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceViewModel { get; set; }
     [Inject]
@@ -61,8 +62,7 @@
 
     private void OnValidSubmit(LearningWorldFormModel model)
     {
-        PresentationLogic.CreateLearningWorld(AuthoringToolWorkspaceViewModel, model.Name, model.Shortname,
-            model.Authors, model.Language, model.Description, model.Goals);
+        AuthoringToolWorkspacePresenter.CreateLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.Goals);
         OnSubmitted.InvokeAsync();
     }
 
@@ -70,4 +70,5 @@
     {
         await base.OnParametersSetAsync();
     }
+
 }

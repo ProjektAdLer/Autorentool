@@ -8,7 +8,8 @@ namespace Presentation.PresentationLogic.AuthoringToolWorkspace;
 /// <summary>
 /// The AuthoringToolWorkspacePresenter is the central component that controls changes to the <see cref="AuthoringToolWorkspaceViewModel"/>.
 /// </summary>
-public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter, IAuthoringToolWorkspacePresenterToolboxInterface
+public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
+    IAuthoringToolWorkspacePresenterToolboxInterface
 {
     public AuthoringToolWorkspacePresenter(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
         IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter,
@@ -21,14 +22,14 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         _shutdownManager = shutdownManager;
         DeletedUnsavedWorld = null;
         InformationMessageToShow = null;
-        if (presentationLogic.RunningElectron) 
+        if (presentationLogic.RunningElectron)
             //register callback so we can check for unsaved data on quit
             //TODO: register to our own quit button
             shutdownManager.BeforeShutdown += OnBeforeShutdown;
     }
 
-    public IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get;}
-    
+    public IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get; }
+
     private readonly IPresentationLogic _presentationLogic;
     private readonly ILearningSpacePresenter _learningSpacePresenter;
     private readonly ILogger<AuthoringToolWorkspacePresenter> _logger;
@@ -62,6 +63,13 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
 
 
     #region LearningWorld
+
+    public void CreateLearningWorld(string name, string shortname, string authors, string language, string description,
+        string goals)
+    {
+        _presentationLogic.CreateLearningWorld(AuthoringToolWorkspaceVm, name, shortname, authors, language, description, goals);
+        OnLearningWorldCreate?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
+    }
 
     /// <summary>
     /// Sets the selected <see cref="LearningWorldViewModel"/> in the view model.
@@ -124,10 +132,8 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
 
     internal void OnBeforeShutdown(object? _, BeforeShutdownEventArgs args)
     {
-        throw new NotImplementedException("Need to redo the dialog and save queue");
+        //TODO: Need to redo the dialog and save queue
     }
 
-
     #endregion
-
 }

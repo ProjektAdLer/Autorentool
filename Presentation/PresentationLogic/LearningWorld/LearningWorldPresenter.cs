@@ -172,6 +172,15 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (LearningWorldVm != null) LearningWorldVm.ShowingLearningSpaceView = false;
     }
 
+    public void EditLearningWorld(string name, string shortname, string authors, string language, string description,
+        string goals)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+    
+        _presentationLogic.EditLearningWorld(LearningWorldVm, name, shortname, authors, language, description, goals);
+    }
+
     /// <summary>
     /// Calls the respective Save methode for Learning Space or Learning Element depending on which learning object is selected
     /// </summary>

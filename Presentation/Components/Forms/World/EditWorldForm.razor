@@ -1,10 +1,8 @@
-@using Presentation.Components.Forms.Models
-@using Presentation.Components.Forms.Buttons
-@using Presentation.PresentationLogic.API
-@using Presentation.PresentationLogic.AuthoringToolWorkspace
-@using BusinessLogic.Entities
 @using Presentation.PresentationLogic.LearningWorld
 @using AutoMapper
+@using BusinessLogic.Entities
+@using Presentation.Components.Forms.Models
+@using Presentation.Components.Forms.Buttons
 <BaseForm TForm="LearningWorldFormModel" TEntity="LearningWorld" OnValidSubmit="OnValidSubmit"
           SnackbarMessage="World updated" FormDataContainer="FormDataContainer">
     <Fields>
@@ -45,10 +43,11 @@
         <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="OnResetAsync">Reset</MudButton>
     </Buttons>
 </BaseForm>
+
 @code {
 #pragma warning disable CS8618 - injected by framework - n.stich
     [Inject]
-    private IPresentationLogic PresentationLogic { get; set; }
+    private ILearningWorldPresenter LearningWorldPresenter { get; set; }
     [Inject]
     public IMapper Mapper { get; set; }
     [Inject]
@@ -69,8 +68,7 @@
 
     private void OnValidSubmit(LearningWorldFormModel model)
     {
-        PresentationLogic.EditLearningWorld(WorldToEdit, model.Name, model.Shortname,
-            model.Authors, model.Language, model.Description, model.Goals);
+        LearningWorldPresenter.EditLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.Goals);
     }
 
     private async Task MapIntoContainer()

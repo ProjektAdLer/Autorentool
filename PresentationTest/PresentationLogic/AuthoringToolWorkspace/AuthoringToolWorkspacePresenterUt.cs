@@ -30,6 +30,48 @@ public class AuthoringToolWorkspacePresenterUt
         });
     }
 
+    #region CreateLearningWorld
+
+    [Test]
+    public void CreateLearningWorld_CallsCreateLearningWorldOnPresentationLogic()
+    {
+        var workspaceVm = new AuthoringToolWorkspaceViewModel();
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, presentationLogic: presentationLogic);
+
+        systemUnderTest.CreateLearningWorld("n", "s", "a", "l", "d", "g");
+
+        presentationLogic.Received(1).CreateLearningWorld(workspaceVm, "n", "s", "a", "l", "d", "g");
+    }
+    
+    [Test]
+    public void CreateLearningWorld_EventHandlerCalled()
+    {
+        var workspaceVm = new AuthoringToolWorkspaceViewModel();
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var worldVm = new LearningWorldViewModel("n", "s", "a", "l", "d", "g");
+        presentationLogic.When(x => x.CreateLearningWorld(workspaceVm, Arg.Any<string>(), Arg.Any<string>(),
+                Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>()))
+            .Do(x =>
+            {
+                workspaceVm._learningWorlds.Add(worldVm);
+                workspaceVm.SelectedLearningWorld = worldVm;
+            });
+        var systemUnderTest = CreatePresenterForTesting(workspaceVm, presentationLogic: presentationLogic);
+        var callbackCalled = false;
+        systemUnderTest.OnLearningWorldCreate += (_, world) =>
+        {
+            callbackCalled = true;
+            Assert.That(world, Is.EqualTo(worldVm));
+        };
+
+        systemUnderTest.CreateLearningWorld("n", "s", "a", "l", "d", "g");
+
+        Assert.That(callbackCalled, Is.EqualTo(true));
+    }
+
+    #endregion
+
     #region ChangeSelectedLearningWorld
 
     [Test]
