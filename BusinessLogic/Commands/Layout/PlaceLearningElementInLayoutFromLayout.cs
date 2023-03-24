@@ -14,12 +14,12 @@ public class PlaceLearningElementInLayoutFromLayout : IUndoCommand
     private readonly Action<LearningSpace> _mappingAction;
     private IMemento? _memento;
 
-    public PlaceLearningElementInLayoutFromLayout(LearningSpace parentSpace, ILearningElement learningElement, int newNewSlotIndex,
+    public PlaceLearningElementInLayoutFromLayout(LearningSpace parentSpace, ILearningElement learningElement, int newSlotIndex,
         Action<LearningSpace> mappingAction)
     {
         ParentSpace = parentSpace;
         LearningElement = ParentSpace.ContainedLearningElements.First(x => x.Id == learningElement.Id);
-        NewSlotIndex = newNewSlotIndex;
+        NewSlotIndex = newSlotIndex;
         _mappingAction = mappingAction;
     }
 
@@ -27,10 +27,17 @@ public class PlaceLearningElementInLayoutFromLayout : IUndoCommand
     {
         _memento = ParentSpace.LearningSpaceLayout.GetMemento();
 
-        var oldSlotIndex = Array.IndexOf(ParentSpace.LearningSpaceLayout.LearningElements, LearningElement);
-        var replacedLearningElement = ParentSpace.LearningSpaceLayout.LearningElements[NewSlotIndex];
+        var kvP = ParentSpace.LearningSpaceLayout.LearningElements
+            .First(kvP => kvP.Value.Equals(LearningElement));
+        var oldSlotIndex = kvP.Key;
+        var replacedLearningElement = ParentSpace.LearningSpaceLayout.LearningElements.ContainsKey(NewSlotIndex)
+            ? ParentSpace.LearningSpaceLayout.LearningElements[NewSlotIndex]
+            : null;
         ParentSpace.LearningSpaceLayout.LearningElements[NewSlotIndex] = LearningElement;
-        ParentSpace.LearningSpaceLayout.LearningElements[oldSlotIndex] = replacedLearningElement;
+        if (replacedLearningElement != null)
+            ParentSpace.LearningSpaceLayout.LearningElements[oldSlotIndex] = replacedLearningElement;
+        else 
+            ParentSpace.LearningSpaceLayout.LearningElements.Remove(oldSlotIndex);
 
         _mappingAction.Invoke(ParentSpace);
     }

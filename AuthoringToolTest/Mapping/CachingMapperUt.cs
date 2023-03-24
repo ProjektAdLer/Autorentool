@@ -20,27 +20,6 @@ namespace AuthoringToolTest.Mapping;
 [TestFixture]
 public class CachingMapperUt
 {
-    /*
-switch (entity, viewModel)
-{
-    case (AuthoringToolWorkspace s, IAuthoringToolWorkspaceViewModel d):
-        Map(s, d);
-        break;
-    case (LearningWorld s, ILearningWorldViewModel d):
-        Map(s, d);
-        break;
-    case (LearningSpace s, ILearningSpaceViewModel d):
-        Map(s, d);
-        break;
-    case (LearningElement s, ILearningElementViewModel d):
-        Map(s, d);
-        break;
-    default:
-        _mapper.Map(entity, viewModel);
-        break;
-}
-*/
-
     
     [Test]
     public void MapAuthoringToolWorkspaceEntityToViewModel_MapperReceivedCallWithCorrectParameters()
@@ -208,8 +187,10 @@ switch (entity, viewModel)
     public void
         MapLearningSpaceEntityToViewModel_ChangedLayoutWithElementWithIndexBiggerThanTheOldLearningElementsArray_MapsCorrectly()
     {
-        var spaceEntity = new LearningSpace("n", "s", "a", "d", "g", 5, new LearningSpaceLayout(new ILearningElement?[4], FloorPlanEnum.Rectangle2X2));
-        var elementEntity = new LearningElement("n", new FileContent("n", "t", "f"), "d", "g", LearningElementDifficultyEnum.Easy, spaceEntity);
+        var spaceEntity = new LearningSpace("n", "s", "a", "d", "g", 5,
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2));
+        var elementEntity = new LearningElement("n", new FileContent("n", "t", "f"), "d", "g",
+            LearningElementDifficultyEnum.Easy, spaceEntity);
         spaceEntity.LearningSpaceLayout.LearningElements[3] = elementEntity;
         
         var systemUnderTest = CreateTestableCachingMapper();
@@ -218,7 +199,7 @@ switch (entity, viewModel)
         
         systemUnderTest.Map<LearningSpace, LearningSpaceViewModel>(spaceEntity, spaceViewModel);
         
-        Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements, Has.Length.EqualTo(4));
+        Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements, Has.Count.EqualTo(4));
         Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[3], Is.Not.Null);
         Assert.Multiple(() =>
         {
@@ -231,12 +212,12 @@ switch (entity, viewModel)
             Assert.That(spaceViewModel.RequiredPoints, Is.EqualTo(spaceEntity.RequiredPoints));
         });
 
-        spaceEntity.LearningSpaceLayout = new LearningSpaceLayout(new ILearningElement[6], FloorPlanEnum.Rectangle2X3);
+        spaceEntity.LearningSpaceLayout = new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X3);
         spaceEntity.LearningSpaceLayout.LearningElements[5] = elementEntity;
 
         systemUnderTest.Map<LearningSpace, LearningSpaceViewModel>(spaceEntity, spaceViewModel);
         
-        Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements, Has.Length.EqualTo(6));
+        Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements, Has.Count.EqualTo(6));
         Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[5], Is.Not.Null);
         Assert.Multiple(() =>
         {
@@ -266,7 +247,8 @@ switch (entity, viewModel)
     [Test]
     public void MapLearningSpaceEntityToViewModel_MapsLearningElementToViewModel()
     {
-        var space = new LearningSpace("n", "s", "a", "d", "g", 5, new LearningSpaceLayout(new ILearningElement[6], FloorPlanEnum.Rectangle2X3));
+        var space = new LearningSpace("n", "s", "a", "d", "g", 5,
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X3));
         var spaceViewModel = new LearningSpaceViewModel("x","x","x","x","x",5);
         var elementEntity = new LearningElement("n", null!, "d", "g", LearningElementDifficultyEnum.Easy);
         space.LearningSpaceLayout.LearningElements[0] = elementEntity;
@@ -289,46 +271,58 @@ switch (entity, viewModel)
     [Test]
     public void MapLearningSpaceEntityToViewModel_MapsElementToTheSameViewModelAfterFirstCall()
     {
+        //create space entity containing one element
         var space = new LearningSpace("n", "s", "a", "d", "g", 5,
-            new LearningSpaceLayout(new ILearningElement[6], FloorPlanEnum.Rectangle2X3));
-        var spaceViewModel = new LearningSpaceViewModel("x", "x", "x", "x", "x", 5,
-            new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X3));
         var elementEntity =
             new LearningElement("n", null!, "d", "g", LearningElementDifficultyEnum.Easy);
         space.LearningSpaceLayout.LearningElements[0] = elementEntity;
+        //create empty view model
+        var spaceViewModel = new LearningSpaceViewModel("x", "x", "x", "x", "x", 5,
+            new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         
         var systemUnderTest = CreateTestableCachingMapper();
 
+        //map entity into empty view model
         systemUnderTest.Map(space, spaceViewModel);
-
-        Assert.That(spaceViewModel.ContainedLearningElements.Count(), Is.EqualTo(1));
-        Assert.That(spaceViewModel.ContainedLearningElements.First().Id, Is.EqualTo(elementEntity.Id));
         
+        Assert.Multiple(() =>
+        {
+            //view model now contains one element, the one from the entity
+            Assert.That(spaceViewModel.ContainedLearningElements.Count(), Is.EqualTo(1));
+            Assert.That(spaceViewModel.ContainedLearningElements.First().Id, Is.EqualTo(elementEntity.Id));
+        });
+
+        //get this element and clear the layout of the view model
         var elementViewModel = spaceViewModel.ContainedLearningElements.First();
         spaceViewModel.LearningSpaceLayout.ClearAllElements();
         Assert.That(spaceViewModel.ContainedLearningElements.Count(), Is.EqualTo(0));
         
+        //change name of the element in the entity and map entity into viewmodel again
         space.ContainedLearningElements.First().Name = "newName";
         systemUnderTest.Map(space, spaceViewModel);
         Assert.Multiple(() =>
         {
+            //element name should be the new one, but at the same time equal to the name of the old element view model
+            //(they should be the same exact object)
             Assert.That(spaceViewModel.ContainedLearningElements.First().Name, Is.EqualTo("newName"));
-            Assert.That(spaceViewModel.ContainedLearningElements.Count(), Is.EqualTo(1));
-            Assert.That(spaceViewModel.ContainedLearningElements.First().Id, Is.EqualTo(elementViewModel.Id));
             Assert.That(spaceViewModel.ContainedLearningElements.First().Name, Is.EqualTo(elementViewModel.Name));
+            Assert.That(spaceViewModel.ContainedLearningElements.First().Id, Is.EqualTo(elementViewModel.Id));
+            Assert.That(spaceViewModel.ContainedLearningElements.Count(), Is.EqualTo(1));
             Assert.That(spaceViewModel.ContainedLearningElements.First(), Is.EqualTo(elementViewModel));
             Assert.That(spaceViewModel.ContainedLearningElements.First(), Is.EqualTo(systemUnderTest.ReadOnlyCache[elementEntity.Id]));
             Assert.That(elementViewModel, Is.EqualTo(systemUnderTest.ReadOnlyCache[elementEntity.Id]));
         });
     }
-    
+
     [Test]
     public void OnRemovedCommandsFromStacksInvoked_UnusedViewModelsAreRemoved()
     {
         var worldEntity = new LearningWorld("n","s","a","l","d","g");
         var workspace = new AuthoringToolWorkspace(worldEntity, new List<LearningWorld>(){worldEntity});
         var workspaceViewModel = new AuthoringToolWorkspaceViewModel();
-        var spaceEntity = new LearningSpace("n", "s", "a", "d", "g", 5, new LearningSpaceLayout(new ILearningElement?[6], FloorPlanEnum.Rectangle2X3));
+        var spaceEntity = new LearningSpace("n", "s", "a", "d", "g", 5,
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X3));
         var elementEntity = new LearningElement("n", null!, "d", "g", LearningElementDifficultyEnum.Easy);
         var secondElementEntity = new LearningElement("n2", null!, "d2", "g2", LearningElementDifficultyEnum.Easy);
         

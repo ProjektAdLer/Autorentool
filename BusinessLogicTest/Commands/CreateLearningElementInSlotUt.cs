@@ -77,7 +77,12 @@ public class CreateLearningElementInSlotUt
             testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY,
             mappingAction);
         var element2 = new LearningElement("x", null!, "x", "x", LearningElementDifficultyEnum.Easy);
-        spaceParent.LearningSpaceLayout.LearningElements = new ILearningElement?[]{element2, null, null, null, null, null};
+        spaceParent.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>
+        {
+            {
+                0, element2
+            }
+        };
         spaceParent.SelectedLearningElement = element2;
         
 
@@ -137,7 +142,8 @@ public class TestParameter
 
     internal TestParameter()
     {
-        SpaceParent = new LearningSpace("l", "m", "n", "o", "p", 0, new LearningSpaceLayout(new ILearningElement?[6], FloorPlanEnum.Rectangle2X3));
+        SpaceParent = new LearningSpace("l", "m", "n", "o", "p", 0,
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X3));
         WorldParent = new LearningWorld("q", "r", "s", "t", "u","o");
         Name = "a";
         Content = new FileContent("bar", "foo", "");

@@ -18,14 +18,15 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
         Description = "";
         Goals = "";
         RequiredPoints = 0;
-        LearningSpaceLayout = new LearningSpaceLayout();
+        //null warning override okay here as automapper must set this value after construction - n.stich
+        LearningSpaceLayout = null!;
         InBoundObjects = new List<IObjectInPathWay>();
         OutBoundObjects = new List<IObjectInPathWay>();
         PositionX = 0;
         PositionY = 0;
     }
     public LearningSpace(string name, string shortname, string authors, string description,
-        string goals, int requiredPoints, LearningSpaceLayout? learningSpaceLayout = null ,double positionX = 0,
+        string goals, int requiredPoints, LearningSpaceLayout? learningSpaceLayout = null, double positionX = 0,
         double positionY = 0, List<IObjectInPathWay>? inBoundSpaces = null, List<IObjectInPathWay>? outBoundSpaces = null)
     {
         Id = Guid.NewGuid();
@@ -35,7 +36,8 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
         Description = description;
         Goals = goals;
         RequiredPoints = requiredPoints;
-        LearningSpaceLayout = learningSpaceLayout ?? new LearningSpaceLayout(Array.Empty<ILearningElement>(), FloorPlanEnum.NoFloorPlan);
+        LearningSpaceLayout = learningSpaceLayout
+            ?? new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2);
         InBoundObjects = inBoundSpaces ?? new List<IObjectInPathWay>();
         OutBoundObjects = outBoundSpaces ?? new List<IObjectInPathWay>();
         PositionX = positionX;

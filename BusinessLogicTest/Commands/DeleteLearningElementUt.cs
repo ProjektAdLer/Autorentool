@@ -15,7 +15,7 @@ public class DeleteLearningElementUt
     {
         var space = new LearningSpace("a", "b", "c","d", "e", 5);
         var element = new LearningElement("g", null!, "j", "k", LearningElementDifficultyEnum.Easy, space);
-        space.LearningSpaceLayout.LearningElements = new ILearningElement?[] {element};
+        space.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>() { { 0, element } };
         space.SelectedLearningElement = element;
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
@@ -38,9 +38,17 @@ public class DeleteLearningElementUt
         var space = new LearningSpace("a", "b", "c","d", "e", 5);
         var element = new LearningElement("g", null!, "j", "k", LearningElementDifficultyEnum.Easy, space);
         var element2 = new LearningElement("l", null!, "o", "p", LearningElementDifficultyEnum.Easy, space);
-        space.LearningSpaceLayout.LearningElements = new ILearningElement?[] {element, element2};
+        space.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>
+        {
+            {
+                0, element
+            },
+            {
+                1, element2
+            }
+        };
         space.SelectedLearningElement = element;
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new DeleteLearningElement(element, space, mappingAction);
@@ -79,9 +87,17 @@ public class DeleteLearningElementUt
         var space = new LearningSpace("a", "b", "c","d", "e", 5);
         var element = new LearningElement("g", null!, "j", "k", LearningElementDifficultyEnum.Easy, space);
         var element2 = new LearningElement("l", null!, "o", "p", LearningElementDifficultyEnum.Easy, space);
-        space.LearningSpaceLayout.LearningElements = new ILearningElement?[] {element, element2};
+        space.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>
+        {
+            {
+                0, element
+            },
+            {
+                1, element2
+            }
+        };
         space.SelectedLearningElement = element;
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
         var command = new DeleteLearningElement(element, space, mappingAction);

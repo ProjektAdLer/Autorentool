@@ -41,25 +41,19 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
         }
         else
         {
-            var oldSlot = -1;
-            if (dropItem.Item.Parent != null && dropItem.Item.Parent.ContainedLearningElements.Contains(dropItem.Item))
-            {
-                oldSlot = Array.IndexOf(dropItem.Item.Parent.LearningSpaceLayout.LearningElements, dropItem.Item);
-            }
-
             var spaceId = dropItem.DropzoneIdentifier.Substring(0, Guid.Empty.ToString().Length);
             var spaceVm = WorldP.LearningWorldVm?.LearningSpaces.First(x => x.Id.ToString() == spaceId);
             if (spaceVm != SpaceP.LearningSpaceVm) throw new ApplicationException("SpaceVm is not the same");
             var slotId = int.Parse(dropItem.DropzoneIdentifier.Substring(Guid.Empty.ToString().Length));
-
-            if (oldSlot >= 0)
+            
+            if (dropItem.Item.Parent != null && dropItem.Item.Parent.ContainedLearningElements.Contains(dropItem.Item))
             {
                 PresentationL.SwitchLearningElementSlot(SpaceP.LearningSpaceVm, dropItem.Item, slotId);
             }
             else
             {
                 if (WorldP.LearningWorldVm == null) throw new ApplicationException("LearningWorldVm is null");
-                if (SpaceP.LearningSpaceVm.LearningSpaceLayout.LearningElements[slotId] != null)
+                if (SpaceP.LearningSpaceVm.LearningSpaceLayout.LearningElements.ContainsKey(slotId))
                 {
                     SpaceP.OpenReplaceLearningElementDialog(WorldP.LearningWorldVm, dropItem.Item, slotId);
                 }
@@ -74,22 +68,15 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
 
     public bool IsItemInDropZone(ILearningElementViewModel item, string dropzoneIdentifier)
     {
-        var isInDropZone = false;
         if (item.Parent != null)
         {
-            isInDropZone =
+           return 
                 item.Parent.Id.ToString() +
-                Array.IndexOf(item.Parent.LearningSpaceLayout.LearningElements, item).ToString() == dropzoneIdentifier;
+                item.Parent.LearningSpaceLayout.LearningElements.First(kvP => kvP.Value.Equals(item))
+                == dropzoneIdentifier;
         }
 
-        if (dropzoneIdentifier == "unplacedElements")
-        {
-            if (WorldP.LearningWorldVm != null)
-            {
-                isInDropZone = WorldP.LearningWorldVm.UnplacedLearningElements.Contains(item);
-            }
-        }
-
-        return isInDropZone;
+        if (dropzoneIdentifier != "unplacedElements") return false;
+        return WorldP.LearningWorldVm != null && WorldP.LearningWorldVm.UnplacedLearningElements.Contains(item);
     }
 }

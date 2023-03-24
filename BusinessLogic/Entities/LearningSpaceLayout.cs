@@ -9,21 +9,21 @@ public class LearningSpaceLayout : ILearningSpaceLayout, IOriginator
     /// Constructor for Automapper. DO NOT USE.
     /// </summary>
     [UsedImplicitly]
-    internal LearningSpaceLayout()
+    private LearningSpaceLayout()
     {
-        LearningElements = Array.Empty<ILearningElement>();
+        LearningElements = new Dictionary<int, ILearningElement>();
         FloorPlanName = FloorPlanEnum.NoFloorPlan;
     }
     
-    public LearningSpaceLayout(ILearningElement?[] learningElements, FloorPlanEnum floorPlanName)
+    public LearningSpaceLayout(IDictionary<int, ILearningElement> learningElements, FloorPlanEnum floorPlanName)
     {
         LearningElements = learningElements;
         FloorPlanName = floorPlanName;
     }
     
-    public ILearningElement?[] LearningElements { get; set; }
+    public IDictionary<int, ILearningElement> LearningElements { get; set; }
     public FloorPlanEnum FloorPlanName { get; set; }
-    public IEnumerable<ILearningElement> ContainedLearningElements => LearningElements.Where(e => e != null)!;
+    public IEnumerable<ILearningElement> ContainedLearningElements => LearningElements.Values;
 
 
     public IMemento GetMemento()
@@ -43,13 +43,14 @@ public class LearningSpaceLayout : ILearningSpaceLayout, IOriginator
 
     private record LearningSpaceLayoutMemento : IMemento
     {
-        internal LearningSpaceLayoutMemento(ILearningElement?[] learningElements, FloorPlanEnum floorPlanName)
+        internal LearningSpaceLayoutMemento(IDictionary<int, ILearningElement> learningElements, FloorPlanEnum floorPlanName)
         {
-            LearningElements = learningElements.ToArray();
+            //shallow copy dictionary
+            LearningElements = new Dictionary<int, ILearningElement>(learningElements);
             FloorPlanName = floorPlanName;
         }
         
-        internal ILearningElement?[] LearningElements { get; }
+        internal IDictionary<int, ILearningElement> LearningElements { get; }
         internal FloorPlanEnum FloorPlanName { get; }
     }
 }

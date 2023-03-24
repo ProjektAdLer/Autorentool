@@ -9,7 +9,7 @@ namespace Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 /// </summary>
 public interface ILearningSpaceLayoutViewModel
 {
-    ILearningElementViewModel?[] LearningElements { get; set; }
+    IDictionary<int, ILearningElementViewModel> LearningElements { get; set; }
     FloorPlanEnum FloorPlanName { get; set; }
     /// <summary>
     /// Floor plan of the current <see cref="ILearningSpaceLayoutViewModel"/>.

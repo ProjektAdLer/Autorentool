@@ -21,14 +21,29 @@ public class ChangeLearningSpaceLayout : IUndoCommand
 
     public void Execute()
     {
+        //TODO: save both space and containing world memento
         _memento = LearningSpace.LearningSpaceLayout.GetMemento();
-
-        var newLearningElementArray = new ILearningElement?[FloorPlanProvider.GetFloorPlan(FloorPlanName).Capacity];
-        for (int i = 0; i < Math.Min(LearningSpace.LearningSpaceLayout.LearningElements.Length, newLearningElementArray.Length); i++)
+        var capacity = FloorPlanProvider.GetFloorPlan(FloorPlanName).Capacity;
+        IEnumerable<KeyValuePair<int, ILearningElement>> newLearningElementDictionary =
+            LearningSpace.LearningSpaceLayout.LearningElements
+                .OrderBy(kvP => kvP.Key)
+                .Take(capacity)
+                .ToList();
+        //elements that won't fit on the new floor plan
+        //TODO: put these in the world
+        var remainingElements = LearningSpace.LearningSpaceLayout.LearningElements
+            .OrderBy(kvP => kvP.Key)
+            .Skip(capacity);
+        //compress the element indices if necessary
+        if (newLearningElementDictionary.Max(kvP => kvP.Key) >= capacity)
         {
-            newLearningElementArray[i] = LearningSpace.LearningSpaceLayout.LearningElements[i];
+            newLearningElementDictionary =
+                newLearningElementDictionary
+                    .Select((kvP, i) => new KeyValuePair<int, ILearningElement>(i, kvP.Value));
         }
-        LearningSpace.LearningSpaceLayout.LearningElements = newLearningElementArray;
+
+        LearningSpace.LearningSpaceLayout.LearningElements =
+            newLearningElementDictionary.ToDictionary(kvP => kvP.Key, kvP => kvP.Value);
         LearningSpace.LearningSpaceLayout.FloorPlanName = FloorPlanName;
         
         _mappingAction.Invoke(LearningSpace);

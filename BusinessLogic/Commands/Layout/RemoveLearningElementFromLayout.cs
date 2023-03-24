@@ -26,12 +26,10 @@ public class RemoveLearningElementFromLayout : IUndoCommand
         _mementoWorld = LearningWorld.GetMemento();
         _mementoSpaceLayout = LearningSpace.LearningSpaceLayout.GetMemento();
 
-        var oldSlot = Array.IndexOf(LearningSpace.LearningSpaceLayout.LearningElements, LearningElement);
+        var oldSlot =
+            LearningSpace.LearningSpaceLayout.LearningElements.First(kvP => kvP.Value.Equals(LearningElement)).Key;
 
-        if (oldSlot >= 0)
-        {
-            LearningSpace.LearningSpaceLayout.LearningElements[oldSlot] = null;
-        }
+        LearningSpace.LearningSpaceLayout.LearningElements.Remove(oldSlot);
 
         if (LearningWorld.UnplacedLearningElements.Contains(LearningElement) == false)
         {

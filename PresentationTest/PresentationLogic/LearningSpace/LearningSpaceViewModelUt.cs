@@ -29,7 +29,15 @@ public class LearningSpaceViewModelUt
         var outBoundSpace = new LearningSpaceViewModel("a", "z", "d", "b", "t", 3);
         var inBoundObjects = new List<IObjectInPathWayViewModel> { inBoundCondition };
         var outBoundObjects = new List<IObjectInPathWayViewModel> { outBoundSpace };
-        var learningElements = new ILearningElementViewModel?[] { ele1, ele2 };
+        var learningElements = new Dictionary<int, ILearningElementViewModel>()
+        {
+            {
+                0, ele1
+            },
+            {
+                1, ele2
+            }
+        };
         var learningSpaceLayoutVm = new LearningSpaceLayoutViewModel
         {
             LearningElements = learningElements

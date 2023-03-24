@@ -15,7 +15,7 @@ public class DragLearningElementFromUnplacedUt
     {
         var world = new LearningWorld("wn", "wsn", "wa", "wl", "wd", "wg");
         var space = new LearningSpace("sn", "ssn", "sa", "sd", "sg", 5,
-            new LearningSpaceLayout(new ILearningElement[4], FloorPlanEnum.Rectangle2X2));
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2));
         world.LearningSpaces.Add(space);
         var content = new FileContent("cn", "ct", "cf");
         var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, null, workload: 8, points: 9, positionX: 17f, positionY: 29f);
@@ -51,7 +51,7 @@ public class DragLearningElementFromUnplacedUt
     {
         var world = new LearningWorld("wn", "wsn", "wa", "wl", "wd", "wg");
         var space = new LearningSpace("sn", "ssn", "sa", "sd", "sg", 5,
-            new LearningSpaceLayout(new ILearningElement[4], FloorPlanEnum.Rectangle2X2));
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2));
         world.LearningSpaces.Add(space);
         var content = new FileContent("cn", "ct", "cf");
         var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, null, workload: 8, points: 9, positionX: 17f, positionY: 29f);
@@ -91,7 +91,7 @@ public class DragLearningElementFromUnplacedUt
     {
         var world = new LearningWorld("wn", "wsn", "wa", "wl", "wd", "wg");
         var space = new LearningSpace("sn", "ssn", "sa", "sd", "sg", 5,
-            new LearningSpaceLayout(new ILearningElement[4], FloorPlanEnum.Rectangle2X2));
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2));
         world.LearningSpaces.Add(space);
         var content = new FileContent("cn", "ct", "cf");
         var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, null, workload: 8, points: 9, positionX: 17f, positionY: 29f);
@@ -116,7 +116,7 @@ public class DragLearningElementFromUnplacedUt
     {
         var world = new LearningWorld("wn", "wsn", "wa", "wl", "wd", "wg");
         var space = new LearningSpace("sn", "ssn", "sa", "sd", "sg", 5,
-            new LearningSpaceLayout(new ILearningElement[4], FloorPlanEnum.Rectangle2X2));
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2));
         world.LearningSpaces.Add(space);
         var content = new FileContent("cn", "ct", "cf");
         var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, null, workload: 8, points: 9, positionX: 17f, positionY: 29f);
@@ -174,7 +174,7 @@ public class DragLearningElementFromUnplacedUt
     {
         var world = new LearningWorld("wn", "wsn", "wa", "wl", "wd", "wg");
         var space = new LearningSpace("sn", "ssn", "sa", "sd", "sg", 5,
-            new LearningSpaceLayout(new ILearningElement[4], FloorPlanEnum.Rectangle2X2));
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2));
         world.LearningSpaces.Add(space);
         var content = new FileContent("cn", "ct", "cf");
         var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, null, workload: 8, points: 9, positionX: 17f, positionY: 29f);

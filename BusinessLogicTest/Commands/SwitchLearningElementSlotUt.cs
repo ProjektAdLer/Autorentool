@@ -14,7 +14,7 @@ public class SwitchLearningElementSlotUt
     public void MoveLearningElementToEmptySlot_Execute_MovesLearningElement()
     {
         var parent = new LearningSpace("sn", "ssn", "sa", "sd", "sg", 5,
-            new LearningSpaceLayout(new ILearningElement[4], FloorPlanEnum.Rectangle2X2));
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2));
         var content = new FileContent("cn", "ct", "cf");
         var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, parent, workload: 8, points: 9, positionX: 17f, positionY: 29f);
         parent.LearningSpaceLayout.LearningElements[0] = element;
@@ -46,7 +46,7 @@ public class SwitchLearningElementSlotUt
     public void MoveLearningElementToAssignedSlot_Execute_SwitchesLearningElements()
     {
         var parent = new LearningSpace("sn", "ssn", "sa", "sd", "sg", 5,
-            new LearningSpaceLayout(new ILearningElement[4], FloorPlanEnum.Rectangle2X2));
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2));
         var content = new FileContent("cn", "ct", "cf");
         var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, parent, workload: 8, points: 9, positionX: 17f, positionY: 29f);
         var element2 = new LearningElement("en2", content, "ed2", "eg2", LearningElementDifficultyEnum.Medium, parent, workload: 8, points: 9, positionX: 17f, positionY: 29f);
@@ -82,7 +82,7 @@ public class SwitchLearningElementSlotUt
     public void Undo_MementoIsNull_ThrowsException()
     {
         var parent = new LearningSpace("sn", "ssn", "sa", "sd", "sg", 5,
-            new LearningSpaceLayout(new ILearningElement[4], FloorPlanEnum.Rectangle2X2));
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2));
         var content = new FileContent("cn", "ct", "cf");
         var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, parent, workload: 8, points: 9, positionX: 17f, positionY: 29f);
         parent.LearningSpaceLayout.LearningElements[0] = element;
@@ -105,7 +105,7 @@ public class SwitchLearningElementSlotUt
     public void UndoRedo_UndoesAndRedoesMovingLearningElement()
     {
         var parent = new LearningSpace("sn", "ssn", "sa", "sd", "sg", 5,
-            new LearningSpaceLayout(new ILearningElement[4], FloorPlanEnum.Rectangle2X2));
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2));
         var content = new FileContent("cn", "ct", "cf");
         var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, parent, workload: 8, points: 9, positionX: 17f, positionY: 29f);
         parent.LearningSpaceLayout.LearningElements[0] = element;
@@ -157,7 +157,7 @@ public class SwitchLearningElementSlotUt
     public void UndoRedo_UndoesAndRedoesSwitchingLearningElements()
     {
         var parent = new LearningSpace("sn", "ssn", "sa", "sd", "sg", 5,
-            new LearningSpaceLayout(new ILearningElement[4], FloorPlanEnum.Rectangle2X2));
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2));
         var content = new FileContent("cn", "ct", "cf");
         var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, parent, workload: 8, points: 9, positionX: 17f, positionY: 29f);
         var element2 = new LearningElement("en2", content, "ed2", "eg2", LearningElementDifficultyEnum.Medium, parent, workload: 8, points: 9, positionX: 17f, positionY: 29f);

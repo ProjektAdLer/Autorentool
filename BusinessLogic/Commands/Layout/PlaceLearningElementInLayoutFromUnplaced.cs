@@ -36,7 +36,9 @@ public class PlaceLearningElementInLayoutFromUnplaced : IUndoCommand
             LearningWorld.UnplacedLearningElements.Remove(LearningElement);
         }
 
-        var oldElement = LearningSpace.LearningSpaceLayout.LearningElements[NewSlotIndex];
+        var oldElement = LearningSpace.LearningSpaceLayout.LearningElements.ContainsKey(NewSlotIndex)
+            ? LearningSpace.LearningSpaceLayout.LearningElements[NewSlotIndex]
+            : null;
         if (oldElement != null)
         {
             if (LearningWorld.UnplacedLearningElements.Contains(oldElement) == false)

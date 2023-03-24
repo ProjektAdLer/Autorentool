@@ -17,7 +17,15 @@ public class LearningSpaceLayoutUt
             null, workload: 17, points: 6, positionX: 23);
         var ele2 = new LearningElement("z", content2, "z", "zz",
             LearningElementDifficultyEnum.Medium, null, workload: 444, points: 9, positionX: double.MaxValue);
-        var learningElements = new ILearningElement?[] {ele1, ele2, null, null, null, null};
+        var learningElements = new Dictionary<int, ILearningElement>()
+        {
+            {
+                0, ele1
+            },
+            {
+                1, ele2
+            }
+        };
         var floorPlanName = FloorPlanEnum.Rectangle2X3;
 
         var systemUnderTest = new LearningSpaceLayout(learningElements, floorPlanName);
@@ -43,7 +51,15 @@ public class LearningSpaceLayoutUt
             null, workload: 17, points: 6, positionX: 23);
         var ele2 = new LearningElement("z", content2, "z", "zz",
             LearningElementDifficultyEnum.Medium, null, workload: 444, points: 9, positionX: double.MaxValue);
-        var learningElements = new ILearningElement?[] {ele1, ele2, null, null, null, null};
+        var learningElements = new Dictionary<int, ILearningElement>()
+        {
+            {
+                0, ele1
+            },
+            {
+                1, ele2
+            }
+        };
         var floorPlanName = FloorPlanEnum.Rectangle2X3;
 
         var systemUnderTest = new LearningSpaceLayout(learningElements, floorPlanName);
@@ -56,7 +72,15 @@ public class LearningSpaceLayoutUt
             LearningElementDifficultyEnum.Medium, null, workload: 20, points: 50, positionX: 33);
         var ele2Changed = new LearningElement("uu", content2Changed, "kkk", "fff",
             LearningElementDifficultyEnum.Hard, null, workload: 77, points: 40, positionX: 66);
-        var learningElementsChanged = new ILearningElement?[] {null, ele1Changed, ele2Changed, null, null};
+        var learningElementsChanged = new Dictionary<int, ILearningElement>()
+        {
+            {
+                1, ele1Changed
+            },
+            {
+                2, ele2Changed
+            }
+        };
         var floorPlanNameChanged = FloorPlanEnum.LShape3L2;
 
         systemUnderTest.FloorPlanName = floorPlanNameChanged;
@@ -96,7 +120,15 @@ public class LearningSpaceLayoutUt
             null, workload: 17, points: 6, positionX: 23);
         var ele2 = new LearningElement("z", content2, "z", "zz",
             LearningElementDifficultyEnum.Medium, null, workload: 444, points: 9, positionX: double.MaxValue);
-        var learningElements = new ILearningElement?[] {ele1, ele2, null, null, null, null};
+        var learningElements = new Dictionary<int, ILearningElement>()
+        {
+            {
+                0, ele1
+            },
+            {
+                1, ele2
+            }
+        };
         var floorPlanName = FloorPlanEnum.Rectangle2X3;
 
         var systemUnderTest = new LearningSpaceLayout(learningElements, floorPlanName);

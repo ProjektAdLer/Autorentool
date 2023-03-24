@@ -17,7 +17,12 @@ public class EditLearningElementUt
         var parent = new LearningSpace("l", "k", "j", "j", "j", 5);
         var content = new FileContent("bar", "foo", "");
         var element = new LearningElement("a", content, "f", "g", LearningElementDifficultyEnum.Medium, parent, workload: 8, points: 9, positionX: 17f, positionY: 29f);
-        parent.LearningSpaceLayout.LearningElements = new ILearningElement[]{element};
+        parent.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>
+        {
+            {
+                0, element
+            }
+        };
 
     var name = "new element";
         var url = "google.com";
@@ -98,7 +103,12 @@ public class EditLearningElementUt
         var parent = new LearningSpace("l", "k", "j", "j", "j", 5);
         var content = new FileContent("bar", "foo", "");
         var element = new LearningElement("a", content, "f","g", LearningElementDifficultyEnum.Medium, parent, workload: 8, points: 9, positionX: 17f, positionY: 29f);
-        parent.LearningSpaceLayout.LearningElements = new ILearningElement[] {element};
+        parent.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>
+        {
+            {
+                0, element
+            }
+        };
         
         var name = "new element";
         var url = "google.com";

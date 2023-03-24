@@ -1,5 +1,4 @@
 ﻿using Presentation.PresentationLogic.API;
-using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 

@@ -139,33 +139,26 @@ public class CachingMapper : ICachingMapper
         }
     }
 
+    /// <summary>
+    /// Maps from space entity to space view model.
+    /// </summary>
+    /// <param name="learningSpaceEntity">The entity from which we should map.</param>
+    /// <param name="learningSpaceVm">The view model we should map into.</param>
     private void MapInternal(LearningSpace learningSpaceEntity, ILearningSpaceViewModel learningSpaceVm)
     {
         learningSpaceVm = Cache(learningSpaceVm);
-        //var newLearningElementsInEntityO = learningSpaceEntity.LearningSpaceLayout.LearningElements.Where((p, i) => learningSpaceVm.LearningSpaceLayoutViewModel.LearningElements.All(l => p?.Id != l?.Id));
-        //TODO: Check if this works - AW
+        //get all elements in entity that are not in view model
         var newLearningElementsInEntity = learningSpaceEntity.LearningSpaceLayout.LearningElements
-            .Select((s,i)=>new {i,s})
-            .Where(x => x.s != null)
-            .Where((p, x) => learningSpaceVm.ContainedLearningElements.All(l => p.s!.Id != l.Id)).ToList();
-        if (newLearningElementsInEntity.Any())
+            .Where(kvP =>
+                learningSpaceVm.ContainedLearningElements.All(l => kvP.Value.Id != l.Id));
+        //for all elements in entity that are not in view model, check cache and insert to view model
+        foreach (var e in newLearningElementsInEntity.Where(e => _cache.ContainsKey(e.Value!.Id)))
         {
-            var max = newLearningElementsInEntity.Max(x => x.i);
-            if (max >= learningSpaceVm.LearningSpaceLayout.LearningElements.Length)
-            {
-                var newLearningElementsVm = new ILearningElementViewModel?[max + 1];
-                foreach (var (v, i) in learningSpaceVm.LearningSpaceLayout.LearningElements.Select((v,i)=>(v,i)))
-                {
-                    newLearningElementsVm[i] = v;
-                }
-                learningSpaceVm.LearningSpaceLayout.LearningElements = newLearningElementsVm;
-            }
+            learningSpaceVm.LearningSpaceLayout.PutElement(e.Key, Get<LearningElementViewModel>(e.Value!.Id));
         }
-        foreach (var e in newLearningElementsInEntity)
-        {
-            if (_cache.ContainsKey(e.s!.Id)) learningSpaceVm.LearningSpaceLayout.PutElement(e.i, Get<LearningElementViewModel>(e.s!.Id));
-        }
+        //call automapper
         _mapper.Map(learningSpaceEntity, learningSpaceVm);
+        //cache all elements who were not previously cached and newly created by automapper
         foreach (var elementVm in learningSpaceVm.ContainedLearningElements.Where(w =>
                      !_cache.ContainsKey(w.Id)))
         {

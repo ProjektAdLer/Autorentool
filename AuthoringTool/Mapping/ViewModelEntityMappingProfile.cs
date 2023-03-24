@@ -41,7 +41,8 @@ public class ViewModelEntityMappingProfile : Profile
         CreateMap<ILearningSpaceLayout, LearningSpaceLayoutViewModel>()
             .ForMember(x => x.FloorPlanViewModel, opt => opt.Ignore())
             .ForMember(x => x.UsedIndices, opt => opt.Ignore())
-            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .ForMember(x => x.LearningElements, opt => opt.UseDestinationValue());
         CreateMap<ILearningSpaceLayoutViewModel, LearningSpaceLayout>()
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
 

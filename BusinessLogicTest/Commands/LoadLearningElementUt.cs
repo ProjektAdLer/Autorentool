@@ -71,7 +71,12 @@ public class LoadLearningElementUt
         var element2 = new LearningElement("f", null!, "i", "j",
             LearningElementDifficultyEnum.Easy, space, workload: 5, points: 2, positionX: 1, positionY: 5);
         mockBusinessLogic.LoadLearningElement(Arg.Any<string>()).Returns(element);
-        space.LearningSpaceLayout.LearningElements = new ILearningElement?[] { element2, null, null, null, null, null };
+        space.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>
+        {
+            {
+                0, element2
+            }
+        };
         space.SelectedLearningElement = element2;
         var command = new LoadLearningElement(space, 1, "element", mockBusinessLogic, mappingAction);
 

@@ -24,14 +24,13 @@ public class DeleteLearningElement : IUndoCommand
         _memento = ParentSpace.GetMemento();
         _mementoSpaceLayout = ParentSpace.LearningSpaceLayout.GetMemento();
 
-        var element = ParentSpace.LearningSpaceLayout.LearningElements.First(x => x?.Id == LearningElement.Id);
-        var elementIndex = Array.IndexOf(ParentSpace.LearningSpaceLayout.LearningElements, element);
+        var kvP = ParentSpace.LearningSpaceLayout.LearningElements.First(x => x.Value.Id == LearningElement.Id);
+        
+        ParentSpace.LearningSpaceLayout.LearningElements.Remove(kvP.Key);
 
-        ParentSpace.LearningSpaceLayout.LearningElements[elementIndex] = null;
-
-        if (element == ParentSpace.SelectedLearningElement || ParentSpace.SelectedLearningElement == null)
+        if (kvP.Value == ParentSpace.SelectedLearningElement || ParentSpace.SelectedLearningElement == null)
         {
-            ParentSpace.SelectedLearningElement = ParentSpace.LearningSpaceLayout.LearningElements.LastOrDefault();
+            ParentSpace.SelectedLearningElement = ParentSpace.LearningSpaceLayout.LearningElements.Values.LastOrDefault();
         }
 
         _mappingAction.Invoke(ParentSpace);
