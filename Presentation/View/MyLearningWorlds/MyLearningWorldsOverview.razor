@@ -4,30 +4,36 @@
 @using Presentation.PresentationLogic.API
 @using Presentation.Components.Forms.World
 @using Presentation.Components
-<main class="flex flex-col justify-center items-center h-screen p-2 w-screen bg-gradient-to-br m-0 from-adlerbggradientfrom to-adlerbggradientto">
-    <section class="flex flex-col m-auto gap-8">
-        <h3 class="font-bold text-xl text-center text-adlerdarkblue">MyLearningWorldsOverview</h3>
-        <MudGrid Spacing="1">
-            @foreach (var myLearningWorld in MyLearningWorldsProvider.GetLoadedLearningWorlds())
-            {
-                <LearningWorldCard LearningWorldPath="@myLearningWorld" OnOpenLearningWorld="OpenLearningWorld" IsLoaded="true"/>
-            }
-            @foreach (var myLearningWorld in MyLearningWorldsProvider.GetSavedLearningWorlds())
-            {
-                <LearningWorldCard LearningWorldPath="@myLearningWorld" OnOpenLearningWorld="OpenLearningWorld" OnDeleteFromSaved="MyLearningWorldsProvider.DeletePathFromSavedLearningWorlds" IsLoaded="false"/>
-            }
-            <LearningWorldCard OnLoadLearningWorldPath="LoadLearningWorldAsync"/>
-            <LearningWorldCard OnCreateLearningWorld="CreateLearningWorld"/>
+<main class="overflow-hidden relative min-h-screen h-screen w-screen bg-gradient-to-br m-0 from-adlerbggradientfrom to-adlerbggradientto">
+    <HeaderBar/>
+    <article class="p-2 flex flex-col items-center gap-10 overflow-hidden">
+        <section class="w-1/3 h-12 flex rounded-lg items-center justify-center">
+            <h3 class="font-bold text-2xl text-center text-adlerdarkblue">MyLearningWorldsOverview</h3>
+        </section>
+        <section class="flex flex-col m-auto gap-8">
+            <MudGrid Spacing="2">
+                @foreach (var myLearningWorld in MyLearningWorldsProvider.GetLoadedLearningWorlds())
+                {
+                    <LearningWorldCard LearningWorldPath="@myLearningWorld" OnOpenLearningWorld="OpenLearningWorld" IsLoaded="true"/>
+                }
+                @foreach (var myLearningWorld in MyLearningWorldsProvider.GetSavedLearningWorlds())
+                {
+                    <LearningWorldCard LearningWorldPath="@myLearningWorld" OnOpenLearningWorld="OpenLearningWorld" OnDeleteFromSaved="MyLearningWorldsProvider.DeletePathFromSavedLearningWorlds" IsLoaded="false"/>
+                }
+                <LearningWorldCard OnLoadLearningWorldPath="LoadLearningWorldAsync"/>
+                <LearningWorldCard OnCreateLearningWorld="CreateLearningWorld"/>
 
-        </MudGrid>
-        <MudDrawer @bind-Open="_createLearningWorldDialogOpen" Variant="@DrawerVariant.Temporary" Position="DrawerPosition.Left">
-            <MudDrawerContent>
-                <CreateWorldForm OnSubmitted="() => _createLearningWorldDialogOpen = false"/>
-            </MudDrawerContent>
-        </MudDrawer>
-    </section>
-    <MudButton Class="btn-standard normal-case" @onclick="OnClickMyLearningWorldsOverview">Gehe zur Lernwelt</MudButton>
-    <ExportButton/>
+            </MudGrid>
+            <MudDrawer @bind-Open="_createLearningWorldDialogOpen" Variant="@DrawerVariant.Temporary" Position="DrawerPosition.Left">
+                <MudDrawerContent>
+                    <CreateWorldForm OnSubmitted="() => _createLearningWorldDialogOpen = false"/>
+                </MudDrawerContent>
+            </MudDrawer>
+        </section>
+        <MudButton Class="btn-standard normal-case" @onclick="OnClickMyLearningWorldsOverview">Gehe zur Lernwelt</MudButton>
+        <ExportButton/>
+    </article>
+    <img class="w-3/5 opacity-10 absolute -bottom-1/4 -right-64" src="/CustomIcons/world-icon-nobg.png"/>
 </main>
 
 @code {

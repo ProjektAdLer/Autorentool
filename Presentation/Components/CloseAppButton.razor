@@ -1,6 +1,4 @@
 @using Presentation.PresentationLogic
 @inherits ComponentBase
 @inject IShutdownManager ShutdownManager
-<div class="absolute top-0 right-0">
-    <button class="btn-standard" @onclick="() => ShutdownManager.BeginShutdown()">Close application</button>
-</div>
+<button class="btn-standard w-8 bg-red-400 text-2xl font-bold" @onclick="() => ShutdownManager.BeginShutdown()">X</button>
