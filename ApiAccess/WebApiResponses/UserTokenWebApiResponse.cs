@@ -2,10 +2,5 @@
 
 public class UserTokenWebApiResponse
 {
-    public UserTokenWebApiResponse(string lmsToken)
-    {
-        LmsToken = lmsToken;
-    }
-
-    public string LmsToken { get; }
+    public string LmsToken { get; init; }
 }

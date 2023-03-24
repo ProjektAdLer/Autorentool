@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Json;
+﻿using System.Text.Json;
 using ApiAccess.ApiResponses;
 using Shared.Configuration;
 
@@ -19,12 +19,52 @@ public class UserWebApiServices : IUserWebApiServices
 
     public async Task<UserTokenWebApiResponse> GetUserTokenAsync(string username, string password)
     {
-        var apiResp = await _client.GetAsync($"/api/Users/Login?username={username}&password={password}");
+        var apiResp = await _client.GetAsync($"/api/Users/Login?username={username}x&password={password}");
 
-        // TODO: Error handling. Aber erst, wenn es ein Konzept dafür von Tobi gibt.
+        // This will throw if the response is not successful.
+        await HandleErrorMessage(apiResp);
+
+        return TryRead<UserTokenWebApiResponse>(await apiResp.Content.ReadAsStringAsync());
+    }
+
+    /**
+     * This method is used to handle errors that are returned by the API.
+     * It will be more refined, once we have a concept for error handling.
+     * 
+     * @throws HttpRequestException with meaningfully message if the response is not successful.
+     */
+    private async Task HandleErrorMessage(HttpResponseMessage apiResp)
+    {
         if (!apiResp.IsSuccessStatusCode)
-            throw new ArgumentException("Fehler beim Login (Vermutlich falscher Username oder Passwort))");
+        {
+            var error = await apiResp.Content.ReadAsStringAsync();
 
-        return await apiResp.Content.ReadFromJsonAsync<UserTokenWebApiResponse>();
+            var problemDetails = TryRead<ErrorWebApiResponse>(error);
+            throw new HttpRequestException(problemDetails.Detail);
+        }
+    }
+
+    /**
+     * This method is used to deserialize the response from the API.
+     * It will deserialize the response in case-insensitive mode.
+     * It will throw an exception if the response could not be deserialized.
+     * 
+     * @throws HttpRequestException if the response could not be deserialized.
+     */
+    private static TResponse TryRead<TResponse>(string responseString)
+    {
+        try
+        {
+            var options = new JsonSerializerOptions
+            {
+                PropertyNameCaseInsensitive = true
+            };
+
+            return JsonSerializer.Deserialize<TResponse>(responseString, options)!;
+        }
+        catch (Exception e)
+        {
+            throw new HttpRequestException("Das Ergebnis der Backend Api konnte nicht gelesen werden", e);
+        }
     }
 }
