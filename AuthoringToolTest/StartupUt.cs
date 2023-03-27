@@ -96,7 +96,7 @@ public class StartupUt
 
     private static readonly Type[] ConfigureApiAccessRequiredTypes =
     {
-        typeof(IApiAccess), typeof(HttpClient), typeof(IUserWebApiServices)
+        typeof(IBackendAccess), typeof(HttpClient), typeof(IUserWebApiServices)
     };
 
     [Test]

@@ -32,9 +32,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharedTest", "SharedTest\Sh
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IntegrationTest", "IntegrationTest\IntegrationTest.csproj", "{A43DD6E0-27A3-4706-9425-1333B0C4B44A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiAccess", "ApiAccess\ApiAccess.csproj", "{F376791D-6A0E-4F4C-8D15-9850268DBF8C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackendAccess", "BackendAccess\BackendAccess.csproj", "{F376791D-6A0E-4F4C-8D15-9850268DBF8C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ApiAccessTest", "ApiAccessTest\ApiAccessTest.csproj", "{5D24BF89-A162-4045-8D3C-F233E7FBC44E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackendAccessTest", "BackendAccessTest\BackendAccessTest.csproj", "{5D24BF89-A162-4045-8D3C-F233E7FBC44E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

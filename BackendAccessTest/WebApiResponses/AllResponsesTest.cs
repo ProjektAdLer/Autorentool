@@ -1,10 +1,10 @@
-﻿using ApiAccess.ApiResponses;
+﻿using ApiAccess.BackendEntities;
 using AutoBogus;
 using FluentAssertions;
 using Force.DeepCloner;
 using NUnit.Framework;
 
-namespace ApiAccessTest.WebApiResponses;
+namespace BackendAccessTest.WebApiResponses;
 
 public class AllResponsesTest
 {
@@ -24,7 +24,7 @@ public class AllResponsesTest
 
     private static IEnumerable<TestCaseData> GetTestCases()
     {
-        yield return new TestCaseData(new ErrorWebApiResponse());
-        yield return new TestCaseData(new UserTokenWebApiResponse());
+        yield return new TestCaseData(new ErrorWebApiBE());
+        yield return new TestCaseData(new UserTokenWebApiBE());
     }
 }

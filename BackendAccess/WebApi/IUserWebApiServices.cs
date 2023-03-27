@@ -1,4 +1,4 @@
-﻿using ApiAccess.ApiResponses;
+﻿using ApiAccess.BackendEntities;
 
 namespace ApiAccess.WebApi;
 
@@ -14,5 +14,5 @@ public interface IUserWebApiServices
      * 
      * @return The token of the user in a DTO.
      */
-    public Task<UserTokenWebApiResponse> GetUserTokenAsync(string username, string password);
+    public Task<UserTokenWebApiBE> GetUserTokenAsync(string username, string password);
 }

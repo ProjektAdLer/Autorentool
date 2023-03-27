@@ -1,19 +1,20 @@
 ﻿using System.Net;
 using ApiAccess.WebApi;
+using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using NSubstitute;
 using NUnit.Framework;
 using RichardSzalay.MockHttp;
 using Shared.Configuration;
 
-namespace ApiAccessTest.WebApi;
+namespace BackendAccessTest.WebApi;
 
 public class UserWebApiServicesUt
 {
     private IAuthoringToolConfiguration _authoringToolConfiguration;
 
     [Test]
-    public void ApiAccess_Standard_AllPropertiesInitialized()
+    public void BackendAccess_Standard_AllPropertiesInitialized()
     {
         // Arrange
         _authoringToolConfiguration = Substitute.For<IAuthoringToolConfiguration>();
@@ -95,12 +96,14 @@ public class UserWebApiServicesUt
 
     private static UserWebApiServices CreateTestableUserWebApiServices(
         IAuthoringToolConfiguration? configuration = null,
-        HttpClient? httpClient = null
+        HttpClient? httpClient = null,
+        ILogger<UserWebApiServices>? logger = null
     )
     {
         configuration ??= Substitute.For<IAuthoringToolConfiguration>();
         httpClient ??= new MockHttpMessageHandler().ToHttpClient();
+        logger ??= Substitute.For<ILogger<UserWebApiServices>>();
 
-        return new UserWebApiServices(configuration, httpClient);
+        return new UserWebApiServices(configuration, httpClient, logger);
     }
 }

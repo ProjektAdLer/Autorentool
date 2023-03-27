@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
-using ApiAccess.ApiResponses;
+using ApiAccess.BackendEntities;
+using Microsoft.Extensions.Logging;
 using Shared.Configuration;
 
 namespace ApiAccess.WebApi;
@@ -7,24 +8,27 @@ namespace ApiAccess.WebApi;
 public class UserWebApiServices : IUserWebApiServices
 {
     private readonly HttpClient _client;
+    private readonly ILogger<UserWebApiServices> _logger;
 
-    public UserWebApiServices(IAuthoringToolConfiguration configuration, HttpClient client)
+    public UserWebApiServices(IAuthoringToolConfiguration configuration, HttpClient client,
+        ILogger<UserWebApiServices> logger)
     {
         Configuration = configuration;
         _client = client;
+        _logger = logger;
         _client.BaseAddress = new Uri("https://api.cluuub.xyz/api");
     }
 
     public IAuthoringToolConfiguration Configuration { get; }
 
-    public async Task<UserTokenWebApiResponse> GetUserTokenAsync(string username, string password)
+    public async Task<UserTokenWebApiBE> GetUserTokenAsync(string username, string password)
     {
         var apiResp = await _client.GetAsync($"/api/Users/Login?username={username}x&password={password}");
 
         // This will throw if the response is not successful.
         await HandleErrorMessage(apiResp);
 
-        return TryRead<UserTokenWebApiResponse>(await apiResp.Content.ReadAsStringAsync());
+        return TryRead<UserTokenWebApiBE>(await apiResp.Content.ReadAsStringAsync());
     }
 
     /**
@@ -39,7 +43,7 @@ public class UserWebApiServices : IUserWebApiServices
         {
             var error = await apiResp.Content.ReadAsStringAsync();
 
-            var problemDetails = TryRead<ErrorWebApiResponse>(error);
+            var problemDetails = TryRead<ErrorWebApiBE>(error);
             throw new HttpRequestException(problemDetails.Detail);
         }
     }

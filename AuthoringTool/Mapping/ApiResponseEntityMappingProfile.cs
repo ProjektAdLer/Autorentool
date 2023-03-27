@@ -1,4 +1,4 @@
-﻿using ApiAccess.ApiResponses;
+﻿using ApiAccess.BackendEntities;
 using AutoMapper;
 using BusinessLogic.Entities.ApiElements;
 
@@ -8,7 +8,7 @@ public class ApiResponseEntityMappingProfile : Profile
 {
     private ApiResponseEntityMappingProfile()
     {
-        CreateMap<UserTokenWebApiResponse, UserToken>();
+        CreateMap<UserTokenWebApiBE, UserToken>();
     }
 
     public static Action<IMapperConfigurationExpression> Configure => cfg =>

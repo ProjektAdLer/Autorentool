@@ -1,9 +1,10 @@
-﻿using ApiAccess.WebApi;
+﻿using ApiAccess.API;
+using ApiAccess.WebApi;
 using AutoMapper;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace ApiAccessTest.API;
+namespace BackendAccessTest.API;
 
 [TestFixture]
 public class ApiAccessUt
@@ -19,7 +20,7 @@ public class ApiAccessUt
         _userWebApiServices = Substitute.For<IUserWebApiServices>();
 
         // Act
-        var apiAccess = new ApiAccess.API.ApiAccess(_mapper, _userWebApiServices);
+        var apiAccess = new BackendAccess(_mapper, _userWebApiServices);
 
         // Assert
         Assert.Multiple(() =>
@@ -35,7 +36,7 @@ public class ApiAccessUt
         // Arrange
         _mapper = Substitute.For<IMapper>();
         _userWebApiServices = Substitute.For<IUserWebApiServices>();
-        var apiAccess = new ApiAccess.API.ApiAccess(_mapper, _userWebApiServices);
+        var apiAccess = new BackendAccess(_mapper, _userWebApiServices);
 
         // Act
         var userToken = apiAccess.GetUserTokenAsync("username", "password");

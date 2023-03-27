@@ -5,10 +5,10 @@ using BusinessLogic.Entities.ApiElements;
 
 namespace ApiAccess.API;
 
-public class ApiAccess : IApiAccess
+public class BackendAccess : IBackendAccess
 
 {
-    public ApiAccess(IMapper mapper, IUserWebApiServices userWebApiServices)
+    public BackendAccess(IMapper mapper, IUserWebApiServices userWebApiServices)
     {
         Mapper = mapper;
         UserWebApiServices = userWebApiServices;

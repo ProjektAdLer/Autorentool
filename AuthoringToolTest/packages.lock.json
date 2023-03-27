@@ -1611,18 +1611,11 @@
           "System.Threading.Timer": "4.3.0"
         }
       },
-      "apiaccess": {
-        "type": "Project",
-        "dependencies": {
-          "AutoMapper": "[11.0.1, )",
-          "BusinessLogic": "[1.0.0, )"
-        }
-      },
       "authoringtool": {
         "type": "Project",
         "dependencies": {
-          "ApiAccess": "[1.0.0, )",
           "AutoMapper.Collection": "[8.0.0, )",
+          "BackendAccess": "[1.0.0, )",
           "BusinessLogic": "[1.0.0, )",
           "DataAccess": "[1.0.0, )",
           "ElectronWrapper": "[1.0.0, )",
@@ -1632,6 +1625,13 @@
           "PersistEntities": "[1.0.0, )",
           "Presentation": "[1.0.0, )",
           "Tailwind.Extensions.AspNetCore": "[1.0.0-beta3, )"
+        }
+      },
+      "backendaccess": {
+        "type": "Project",
+        "dependencies": {
+          "AutoMapper": "[11.0.1, )",
+          "BusinessLogic": "[1.0.0, )"
         }
       },
       "businesslogic": {

@@ -1,6 +1,6 @@
-﻿namespace ApiAccess.ApiResponses;
+﻿namespace ApiAccess.BackendEntities;
 
-public class ErrorWebApiResponse
+public class ErrorWebApiBE
 {
     public string Title { get; init; }
     public string Detail { get; init; }

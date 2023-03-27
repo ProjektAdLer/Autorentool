@@ -1,5 +1,6 @@
 using System.IO.Abstractions;
 using System.Reflection;
+using ApiAccess.API;
 using ApiAccess.WebApi;
 using AuthoringTool.Mapping;
 using AutoMapper;
@@ -138,7 +139,7 @@ public class Startup
 
     private void ConfigureApiAccess(IServiceCollection services)
     {
-        services.AddSingleton<IApiAccess, ApiAccess.API.ApiAccess>();
+        services.AddSingleton<IBackendAccess, BackendAccess>();
         services.AddSingleton<IUserWebApiServices, UserWebApiServices>();
         // Add Http Client
         services.AddHttpClient();

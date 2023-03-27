@@ -2,7 +2,7 @@
 
 namespace BusinessLogic.API;
 
-public interface IApiAccess
+public interface IBackendAccess
 {
     public Task<UserToken> GetUserTokenAsync(string username, string password);
 }

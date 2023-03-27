@@ -14,19 +14,19 @@ public class BusinessLogic : IBusinessLogic
         IDataAccess dataAccess,
         IWorldGenerator worldGenerator,
         ICommandStateManager commandStateManager,
-        IApiAccess apiAccess)
+        IBackendAccess backendAccess)
     {
         Configuration = configuration;
         DataAccess = dataAccess;
         WorldGenerator = worldGenerator;
         CommandStateManager = commandStateManager;
-        ApiAccess = apiAccess;
+        BackendAccess = backendAccess;
     }
     
     
     internal IWorldGenerator WorldGenerator { get; }
     internal ICommandStateManager CommandStateManager { get; }
-    public IApiAccess ApiAccess { get; }
+    public IBackendAccess BackendAccess { get; }
     internal IDataAccess DataAccess { get;  }
     public IAuthoringToolConfiguration Configuration { get; }
     public event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
@@ -150,6 +150,6 @@ public class BusinessLogic : IBusinessLogic
     public string GetContentFilesFolderPath() => DataAccess.GetContentFilesFolderPath();
     public void CallExport()
     {
-        ApiAccess.GetUserTokenAsync("foo", "bar");
+        BackendAccess.GetUserTokenAsync("foo", "bar");
     }
 }

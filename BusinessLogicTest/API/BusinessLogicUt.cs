@@ -413,13 +413,13 @@ public class BusinessLogicUt
         IDataAccess? fakeDataAccess = null,
         IWorldGenerator? worldGenerator = null,
         ICommandStateManager? commandStateManager = null,
-        IApiAccess? apiAccess = null)
+        IBackendAccess? apiAccess = null)
     {
         fakeConfiguration ??= Substitute.For<IAuthoringToolConfiguration>();
         fakeDataAccess ??= Substitute.For<IDataAccess>();
         worldGenerator ??= Substitute.For<IWorldGenerator>();
         commandStateManager ??= Substitute.For<ICommandStateManager>();
-        apiAccess ??= Substitute.For<IApiAccess>();
+        apiAccess ??= Substitute.For<IBackendAccess>();
         
         
         return new BusinessLogic.API.BusinessLogic(fakeConfiguration, fakeDataAccess, worldGenerator,

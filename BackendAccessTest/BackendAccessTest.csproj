@@ -4,6 +4,7 @@
         <TargetFramework>net6.0</TargetFramework>
         <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <RootNamespace>ApiAccessTest</RootNamespace>
     </PropertyGroup>
 
 
@@ -20,7 +21,7 @@
     </ItemGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\ApiAccess\ApiAccess.csproj" />
+        <ProjectReference Include="..\BackendAccess\BackendAccess.csproj" />
     </ItemGroup>
 
 </Project>
