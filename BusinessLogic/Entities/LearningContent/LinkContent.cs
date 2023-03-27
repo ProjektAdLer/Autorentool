@@ -6,6 +6,7 @@ public class LinkContent : ILinkContent
 {
     public LinkContent(string name, string link)
     {
+        Name = name;
         Link = link;
     }
     
@@ -13,8 +14,9 @@ public class LinkContent : ILinkContent
     /// Constructor for Automapper. DO NOT USE.
     /// </summary>
     [UsedImplicitly]
-    private LinkContent() : base()
+    private LinkContent()
     {
+        Name = "";
         Link = "";
     }
 
