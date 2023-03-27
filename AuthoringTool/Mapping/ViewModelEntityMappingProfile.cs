@@ -42,7 +42,8 @@ public class ViewModelEntityMappingProfile : Profile
             .ForMember(x => x.FloorPlanViewModel, opt => opt.Ignore())
             .ForMember(x => x.UsedIndices, opt => opt.Ignore())
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
-            .ForMember(x => x.LearningElements, opt => opt.UseDestinationValue());
+            .ForMember(x => x.LearningElements, opt => opt.Ignore())
+            .AfterMap(SpaceLayoutAfterMap);
         CreateMap<ILearningSpaceLayoutViewModel, LearningSpaceLayout>()
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
 
@@ -50,6 +51,48 @@ public class ViewModelEntityMappingProfile : Profile
             .IncludeBase<ILearningSpaceLayout, LearningSpaceLayoutViewModel>()
             .ReverseMap()
             .IncludeBase<ILearningSpaceLayoutViewModel, LearningSpaceLayout>();
+        /*
+        CreateMap<KeyValuePair<int, ILearningElement>, KeyValuePair<int, ILearningElementViewModel>>()
+            .ConstructUsing((x, ctx) =>
+                new KeyValuePair<int, ILearningElementViewModel>(x.Key,
+                    ctx.Mapper.Map<ILearningElementViewModel>(x.Value)))
+        .EqualityComparison((source, destination) =>
+          source.Key.Equals(destination.Key) && source.Value.Id.Equals(destination.Value.Id));
+        */
+
+    }
+
+    private void SpaceLayoutAfterMap(ILearningSpaceLayout source, LearningSpaceLayoutViewModel destination, ResolutionContext ctx)
+    {
+        //gather view models for all elements that are in source but not in destination
+        var sourceNewElementsViewModels = source.LearningElements
+            .Where(x => !AnyLambda(destination, x))
+            .Select(tup =>
+            new KeyValuePair<int, ILearningElementViewModel>(tup.Key,
+                ctx.Mapper.Map<LearningElementViewModel>(tup.Value)));
+        
+        //remove all elements from destination that are not in source
+        foreach (var (key, _) in destination.LearningElements.Where(x =>
+                     !source.LearningElements.Any(y => y.Key == x.Key && y.Value.Id == x.Value.Id)))
+        {
+            destination.LearningElements.Remove(key);
+        }
+        
+        //map all elements that are in source and destination already into the respective destination element
+        foreach (var (key, value) in destination.LearningElements)
+        {
+            var entity = source.LearningElements.First(x => x.Key == key && x.Value.Id == value.Id);
+            ctx.Mapper.Map(entity.Value, value);
+        }
+
+        destination.LearningElements = sourceNewElementsViewModels
+            .Union(destination.LearningElements)
+            .ToDictionary(tup => tup.Key, tup => tup.Value);
+    }
+
+    private static bool AnyLambda(ILearningSpaceLayoutViewModel destination, KeyValuePair<int, ILearningElement> x)
+    {
+        return destination.LearningElements.Any(y => y.Key == x.Key && y.Value.Id == x.Value.Id);
     }
 
     private void CreateLearningContentMap()

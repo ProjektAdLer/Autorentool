@@ -2,6 +2,15 @@
   "version": 1,
   "dependencies": {
     "net6.0": {
+      "AgileObjects.ReadableExpressions": {
+        "type": "Direct",
+        "requested": "[4.0.0, )",
+        "resolved": "4.0.0",
+        "contentHash": "qMVNzglgn5hg44DZAMKr+YQAcs/WBYSQZRi7fMVh8DrdlIrz0t6wucOg7Fhqw2XJei6fyMJ/xA/0EaZKAvamCw==",
+        "dependencies": {
+          "AgileObjects.NetStandardPolyfills": "1.6.0"
+        }
+      },
       "AutoMapper": {
         "type": "Direct",
         "requested": "[11.0.1, )",
@@ -103,6 +112,11 @@
         "dependencies": {
           "System.IO.Abstractions": "17.2.3"
         }
+      },
+      "AgileObjects.NetStandardPolyfills": {
+        "type": "Transitive",
+        "resolved": "1.6.0",
+        "contentHash": "Izh9O0nQ9YIEJH9hBf4NeIDsSFR9c7olaI7ZPloKpotjcxXbV6wPQcG18FZ1CF3L9sKS/u9NR7mZDH9T1785mA=="
       },
       "AngleSharp": {
         "type": "Transitive",

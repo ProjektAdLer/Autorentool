@@ -195,11 +195,12 @@ public class CachingMapperUt
         
         var systemUnderTest = CreateTestableCachingMapper();
         
-        var spaceViewModel = new LearningSpaceViewModel("", "", "", "", "", 0, new LearningSpaceLayoutViewModel());
+        var spaceViewModel = new LearningSpaceViewModel("", "", "", "", "", 0, new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X2));
         
         systemUnderTest.Map<LearningSpace, LearningSpaceViewModel>(spaceEntity, spaceViewModel);
         
-        Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements, Has.Count.EqualTo(4));
+        Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements, Has.Count.EqualTo(1));
+        Assert.That(spaceViewModel.LearningSpaceLayout.Capacity, Is.EqualTo(4));
         Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[3], Is.Not.Null);
         Assert.Multiple(() =>
         {
@@ -217,7 +218,7 @@ public class CachingMapperUt
 
         systemUnderTest.Map<LearningSpace, LearningSpaceViewModel>(spaceEntity, spaceViewModel);
         
-        Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements, Has.Count.EqualTo(6));
+        Assert.That(spaceViewModel.LearningSpaceLayout.Capacity, Is.EqualTo(6));
         Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[5], Is.Not.Null);
         Assert.Multiple(() =>
         {

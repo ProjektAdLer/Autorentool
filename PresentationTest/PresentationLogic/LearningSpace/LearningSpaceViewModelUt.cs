@@ -38,7 +38,7 @@ public class LearningSpaceViewModelUt
                 1, ele2
             }
         };
-        var learningSpaceLayoutVm = new LearningSpaceLayoutViewModel
+        var learningSpaceLayoutVm = new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X2)
         {
             LearningElements = learningElements
         };

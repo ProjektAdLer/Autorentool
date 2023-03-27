@@ -2,6 +2,7 @@ using System.Collections.ObjectModel;
 using JetBrains.Annotations;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
+using Shared;
 
 namespace Presentation.PresentationLogic.LearningSpace;
 
@@ -20,7 +21,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         Description = "";
         Goals = "";
         RequiredPoints = 0;
-        LearningSpaceLayout = new LearningSpaceLayoutViewModel();
+        LearningSpaceLayout = new LearningSpaceLayoutViewModel(FloorPlanEnum.NoFloorPlan);
         InBoundObjects = new Collection<IObjectInPathWayViewModel>();
         OutBoundObjects = new Collection<IObjectInPathWayViewModel>();
         PositionX = 0;
@@ -54,7 +55,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         Description = description;
         Goals = goals;
         RequiredPoints = requiredPoints;
-        LearningSpaceLayout = layoutViewModel ?? new LearningSpaceLayoutViewModel();
+        LearningSpaceLayout = layoutViewModel ?? new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X2);
         InBoundObjects = inBoundObjects ?? new Collection<IObjectInPathWayViewModel>();
         OutBoundObjects = outBoundObjects ?? new Collection<IObjectInPathWayViewModel>();
         PositionX = positionX;

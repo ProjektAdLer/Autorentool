@@ -11,7 +11,7 @@ public class LearningSpaceLayoutViewModel : ILearningSpaceLayoutViewModel
     /// Private Constructor for AutoMapper
     /// </summary>
     [UsedImplicitly]
-    internal LearningSpaceLayoutViewModel()
+    private LearningSpaceLayoutViewModel()
     {
         FloorPlanViewModel = FloorPlanViewModelProvider.GetFloorPlan(FloorPlanEnum.NoFloorPlan);
         _floorPlanName = FloorPlanEnum.NoFloorPlan;

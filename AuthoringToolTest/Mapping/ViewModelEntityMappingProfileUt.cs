@@ -1,4 +1,5 @@
-﻿using AuthoringTool.Mapping;
+﻿using AgileObjects.ReadableExpressions;
+using AuthoringTool.Mapping;
 using AutoMapper;
 using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Entities;
@@ -47,6 +48,39 @@ public class ViewModelEntityMappingProfileUt
     private const int NewRequiredPoints = 4;
     private const double NewPositionX = 3.0;
     private const double NewPositionY = 4.0;
+
+    [Test]
+    public void Debug()
+    {
+        var mapper = new MapperConfiguration(cfg=>
+        {
+            ViewModelEntityMappingProfile.Configure(cfg);
+            cfg.AddCollectionMappers();
+        });
+        var plan = mapper
+            .BuildExecutionPlan(typeof(LearningSpaceLayout), typeof(LearningSpaceLayoutViewModel))
+            .ToReadableString();
+
+        var source = new LearningSpaceLayout(new Dictionary<int, ILearningElement>
+        {
+            {
+                1,
+                new LearningElement("foo", "bar", null, "foo", "bar", "bar", LearningElementDifficultyEnum.Easy)
+            }
+        }, FloorPlanEnum.Rectangle2X2);
+        var systemUnderTest = mapper.CreateMapper();
+        var destination =
+            systemUnderTest.Map<LearningSpaceLayout, LearningSpaceLayoutViewModel>(source);
+        var oldViewModel = destination.LearningElements[1];
+        
+        oldViewModel.Name = "newName";
+        systemUnderTest.Map(source, destination);
+        var newViewModel = destination.LearningElements[1];
+        Assert.That(newViewModel, Is.EqualTo(oldViewModel));
+        var destination2 = new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X2);
+        systemUnderTest.Map(source, destination2);
+        Assert.That(destination2.LearningElements[1], Is.Not.Null);
+    }
 
 
     [Test]
@@ -378,7 +412,7 @@ public class ViewModelEntityMappingProfileUt
         var systemUnderTest = CreateTestableMapper();
 
         var worldEntity = systemUnderTest.Map<LearningWorld>(worldVm);
-        worldVm.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().Name = "foooooooooo";
+        worldEntity.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().Name = "foooooooooo";
 
 
         //map back into viewmodel - with update syntax
@@ -392,7 +426,7 @@ public class ViewModelEntityMappingProfileUt
             Assert.That(worldVm.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.Count(),
                 Is.EqualTo(1));
             Assert.That(worldVm.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().Name,
-                Is.EqualTo("foooooooooo"));
+                Is.EqualTo(worldEntity.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().Authors));
             Assert.That(worldVm.LearningSpaces.First().ContainedLearningElements.First(), Is.EqualTo(elementVm1));
             Assert.That(worldVm.SelectedLearningObjectInPathWay, Is.EqualTo(space));
             Assert.That(worldVm.LearningSpaces.First().SelectedLearningElement, Is.EqualTo(elementVm1));
