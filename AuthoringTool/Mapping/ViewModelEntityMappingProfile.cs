@@ -223,15 +223,16 @@ public class ViewModelEntityMappingProfile : Profile
     {
         CreateMap<LearningWorld, LearningWorldViewModel>()
             .EqualityComparison((x, y) => x.Id == y.Id)
-            .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
+            .ForMember(x => x.SelectedLearningObjectInPathWay, opt => opt.Ignore())
+            .ForMember(x => x.SelectedLearningElement, opt => opt.Ignore())
             .ForMember(x => x.OnHoveredObjectInPathWay, opt => opt.Ignore())
             .ForMember(x => x.ShowingLearningSpaceView, opt => opt.Ignore())
             .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
             .ForMember(x => x.SelectableWorldObjects, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
-                d.SelectedLearningObject =
-                    d.SelectableWorldObjects.FirstOrDefault(z => z.Id == s.SelectedLearningObject?.Id);
+                d.SelectedLearningObjectInPathWay =
+                    d.SelectableWorldObjects.FirstOrDefault(z => z.Id == s.SelectedLearningObjectInPathWay?.Id);
             })
             .AfterMap((s, d) =>
             {
@@ -251,15 +252,20 @@ public class ViewModelEntityMappingProfile : Profile
                         .Select(x => x.TargetObject).ToList();
                 }
             })
+            .AfterMap((s, d) =>
+            {
+                d.SelectedLearningElement = d.UnplacedLearningElements.FirstOrDefault(x => x.Id == s.SelectedLearningElement?.Id);
+            })
             .ReverseMap()
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
             .ForMember(x => x.SelectableWorldObjects, opt => opt.Ignore())
-            .ForMember(x => x.SelectedLearningObject, opt => opt.Ignore())
+            .ForMember(x => x.SelectedLearningObjectInPathWay, opt => opt.Ignore())
+            .ForMember(x => x.SelectedLearningElement, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
-                d.SelectedLearningObject =
-                    d.SelectableWorldObjects.FirstOrDefault(z => z.Id == s.SelectedLearningObject?.Id);
+                d.SelectedLearningObjectInPathWay =
+                    d.SelectableWorldObjects.FirstOrDefault(z => z.Id == s.SelectedLearningObjectInPathWay?.Id);
             })
             .AfterMap((s, d) =>
             {
@@ -278,6 +284,10 @@ public class ViewModelEntityMappingProfile : Profile
                     pathWayObject.OutBoundObjects = d.LearningPathways.Where(x => x.SourceObject.Id == pathWayObject.Id)
                         .Select(x => x.TargetObject).ToList();
                 }
+            })
+            .AfterMap((s, d) =>
+            {
+                d.SelectedLearningElement = d.UnplacedLearningElements.FirstOrDefault(x => x.Id == s.SelectedLearningElement?.Id);
             });
     }
 

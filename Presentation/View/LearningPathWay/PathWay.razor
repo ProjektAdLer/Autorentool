@@ -35,7 +35,7 @@
     [Parameter, EditorRequired]
     public ILearningWorldPresenter PositioningService { get; set; } = null!;
     
-    private double StrokeWidth => PositioningService.LearningWorldVm?.SelectedLearningObject == LearningPathWay ? 3 : 2;
+    private double StrokeWidth => PositioningService.LearningWorldVm?.SelectedLearningObjectInPathWay == LearningPathWay ? 3 : 2;
 
     // The following coordinates are used as control points for the Bezier curve
     private double C1X => X1;

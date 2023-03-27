@@ -252,7 +252,7 @@ public class LearningWorldViewUt
         var space = Substitute.For<ILearningSpaceViewModel>();
         var worldVm = Substitute.For<ILearningWorldViewModel>();
         worldVm.LearningSpaces.Returns(new List<ILearningSpaceViewModel> { space });
-        worldVm.SelectedLearningObject.Returns(space);
+        worldVm.SelectedLearningObjectInPathWay.Returns(space);
         _worldPresenter.LearningWorldVm.Returns(worldVm);
 
         var systemUnderTest = GetLearningWorldViewForTesting();
@@ -269,7 +269,7 @@ public class LearningWorldViewUt
         var space = Substitute.For<ILearningSpaceViewModel>();
         var worldVm = Substitute.For<ILearningWorldViewModel>();
         worldVm.LearningSpaces.Returns(new List<ILearningSpaceViewModel> { space });
-        worldVm.SelectedLearningObject.Returns(space);
+        worldVm.SelectedLearningObjectInPathWay.Returns(space);
         _worldPresenter.LearningWorldVm.Returns(worldVm);
 
         var systemUnderTest = GetLearningWorldViewForTesting();

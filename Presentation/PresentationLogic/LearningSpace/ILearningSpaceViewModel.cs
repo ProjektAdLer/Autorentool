@@ -16,4 +16,5 @@ public interface ILearningSpaceViewModel : IDisplayableLearningObject, IObjectIn
     string Authors { get; set; }
     string Goals { get; set; }
     ILearningElementViewModel? SelectedLearningElement { get; set; }
+    event EventHandler<EventArgs>? SelectedElementChanged;
 }

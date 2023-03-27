@@ -1,6 +1,8 @@
 using System.ComponentModel;
 using BusinessLogic.Validation;
 using Presentation.Components;
+using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Shared;
@@ -51,4 +53,12 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     void DeleteLearningSpace(ILearningSpaceViewModel obj);
     void DeleteLearningObject(IObjectInPathWayViewModel obj);
     void CreatePathWayCondition(ConditionEnum condition = ConditionEnum.Or);
+    void SetSelectedLearningElement(ILearningElementViewModel learningElement);
+
+    void EditLearningElement(ILearningSpaceViewModel? elementParent, ILearningElementViewModel learningElement,
+        string name, string shortname, string authors, string description, string goals, LearningElementDifficultyEnum difficulty,
+        int workload, int points, ILearningContentViewModel learningContent);
+
+    IEnumerable<ILearningContentViewModel> GetAllContent();
+    void CreateUnplacedLearningElement(LearningWorldViewModel selectedLearningWorld, string modelName, string empty, ILearningContentViewModel modelLearningContent, string s, string modelDescription, string modelGoals, LearningElementDifficultyEnum modelDifficulty, int modelWorkload, int modelPoints);
 }

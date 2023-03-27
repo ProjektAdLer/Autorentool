@@ -19,7 +19,7 @@ public class DeletePathWayConditionUt
         world.PathWayConditions.Add(pathWayCondition);
         world.PathWayConditions.Add(pathWayCondition1);
         world.PathWayConditions.Add(pathWayCondition2);
-        world.SelectedLearningObject = pathWayCondition1;
+        world.SelectedLearningObjectInPathWay = pathWayCondition1;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         
@@ -34,13 +34,13 @@ public class DeletePathWayConditionUt
         
         Assert.That(world.PathWayConditions, Does.Contain(pathWayCondition1));
         Assert.IsFalse(actionWasInvoked);
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(pathWayCondition1));
+        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(pathWayCondition1));
         
         command.Execute();
         
         Assert.That(world.PathWayConditions, Has.Count.EqualTo(2));
         Assert.IsTrue(actionWasInvoked);
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(pathWayCondition2));
+        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(pathWayCondition2));
         Assert.That(world.LearningPathways, Has.Count.EqualTo(0));
     }
 
@@ -68,32 +68,32 @@ public class DeletePathWayConditionUt
         var pathWayCondition1 = new PathWayCondition(ConditionEnum.Or, 2 ,7);
         world.PathWayConditions.Add(pathWayCondition);
         world.PathWayConditions.Add(pathWayCondition1);
-        world.SelectedLearningObject = pathWayCondition;
+        world.SelectedLearningObjectInPathWay = pathWayCondition;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         
         var command = new DeletePathWayCondition(world, pathWayCondition, mappingAction);
         
         Assert.That(world.PathWayConditions, Has.Count.EqualTo(2));
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(pathWayCondition));
+        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(pathWayCondition));
         Assert.IsFalse(actionWasInvoked);
         
         command.Execute();
         
         Assert.That(world.PathWayConditions, Has.Count.EqualTo(1));
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(pathWayCondition1));
+        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(pathWayCondition1));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Undo();
         
         Assert.That(world.PathWayConditions, Has.Count.EqualTo(2));
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(pathWayCondition));
+        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(pathWayCondition));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Redo();
         
         Assert.That(world.PathWayConditions, Has.Count.EqualTo(1));
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(pathWayCondition1));
+        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(pathWayCondition1));
         Assert.IsTrue(actionWasInvoked);
     }
 }

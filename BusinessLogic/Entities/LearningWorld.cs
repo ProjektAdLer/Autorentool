@@ -55,14 +55,16 @@ public class LearningWorld : ILearningWorld, IOriginator
     public string Description { get; set; }
     public string Goals { get; set; }
     public ICollection<ILearningElement> UnplacedLearningElements { get; set; } 
-    public ISelectableObjectInWorld? SelectedLearningObject { get; set; }
+    public ISelectableObjectInWorld? SelectedLearningObjectInPathWay { get; set; }
+    public ILearningElement? SelectedLearningElement { get; set; }
 
     public bool UnsavedChanges { get; set; }
 
     public IMemento GetMemento()
     {
         return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, LearningSpaces,
-            PathWayConditions, LearningPathways, UnplacedLearningElements, SelectedLearningObject);
+            PathWayConditions, LearningPathways, UnplacedLearningElements, SelectedLearningObjectInPathWay,
+            SelectedLearningElement);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -81,14 +83,16 @@ public class LearningWorld : ILearningWorld, IOriginator
         PathWayConditions = learningWorldMemento.PathWayConditions;
         LearningPathways = learningWorldMemento.LearningPathways;
         UnplacedLearningElements = learningWorldMemento.UnplacedLearningElements;
-        SelectedLearningObject = learningWorldMemento.SelectedLearningSpace;
+        SelectedLearningObjectInPathWay = learningWorldMemento.SelectedLearningObjectInPathWay;
+        SelectedLearningElement = learningWorldMemento.SelectedLearningElement;
     }
 
     private record LearningWorldMemento : IMemento
     {
         internal LearningWorldMemento(string name, string shortname, string authors, string language,
             string description, string goals, List<LearningSpace> learningSpaces, List<PathWayCondition> pathWayConditions,
-            List<LearningPathway> learningPathways, IEnumerable<ILearningElement> unplacedLearningElements, ISelectableObjectInWorld? selectedLearningSpace = null)
+            List<LearningPathway> learningPathways, IEnumerable<ILearningElement> unplacedLearningElements,
+            ISelectableObjectInWorld? selectedLearningObjectInPathWay = null, ILearningElement? selectedLearningElement = null)
         {
             Name = name;
             Shortname = shortname;
@@ -100,7 +104,8 @@ public class LearningWorld : ILearningWorld, IOriginator
             PathWayConditions = pathWayConditions.ToList();
             LearningPathways = learningPathways.ToList();
             UnplacedLearningElements = unplacedLearningElements.ToList();
-            SelectedLearningSpace = selectedLearningSpace;
+            SelectedLearningObjectInPathWay = selectedLearningObjectInPathWay;
+            SelectedLearningElement = selectedLearningElement;
         }
 
         internal List<LearningSpace> LearningSpaces { get;  }
@@ -113,6 +118,7 @@ public class LearningWorld : ILearningWorld, IOriginator
         internal string Description { get; }
         internal string Goals { get; }
         internal List<ILearningElement> UnplacedLearningElements { get; }
-        internal ISelectableObjectInWorld? SelectedLearningSpace { get; }
+        internal ISelectableObjectInWorld? SelectedLearningObjectInPathWay { get; }
+        internal ILearningElement? SelectedLearningElement { get; }
     }
 }

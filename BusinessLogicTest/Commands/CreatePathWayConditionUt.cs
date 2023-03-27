@@ -35,7 +35,7 @@ public class CreatePathWayConditionUt
             Assert.That(pathWayCondition.Condition, Is.EqualTo(ConditionEnum.And));
             Assert.That(pathWayCondition.PositionX, Is.EqualTo(1));
             Assert.That(pathWayCondition.PositionY, Is.EqualTo(2));
-            Assert.That(world.SelectedLearningObject, Is.EqualTo(pathWayCondition));
+            Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(pathWayCondition));
         });
     }
     
@@ -74,7 +74,7 @@ public class CreatePathWayConditionUt
             Assert.That(pathWayCondition.Condition, Is.EqualTo(ConditionEnum.And));
             Assert.That(pathWayCondition.PositionX, Is.EqualTo(242));
             Assert.That(pathWayCondition.PositionY, Is.EqualTo(140));
-            Assert.That(world.SelectedLearningObject, Is.EqualTo(pathWayCondition));
+            Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(pathWayCondition));
         });
         
         command.Undo();
@@ -96,7 +96,7 @@ public class CreatePathWayConditionUt
             Assert.That(pathWayConditionRedo.Condition, Is.EqualTo(ConditionEnum.And));
             Assert.That(pathWayConditionRedo.PositionX, Is.EqualTo(242));
             Assert.That(pathWayConditionRedo.PositionY, Is.EqualTo(140));
-            Assert.That(world.SelectedLearningObject, Is.EqualTo(pathWayConditionRedo));
+            Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(pathWayConditionRedo));
         });
     }
 
@@ -169,7 +169,7 @@ public class CreatePathWayConditionUt
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 1, 2);
         world.PathWayConditions.Add(pathWayCondition);
-        world.SelectedLearningObject = pathWayCondition;
+        world.SelectedLearningObjectInPathWay = pathWayCondition;
         ConditionEnum condition = ConditionEnum.Or;
         var positionX = 4;
         var positionY = 5;
@@ -179,25 +179,25 @@ public class CreatePathWayConditionUt
         var command = new CreatePathWayCondition(world, condition, positionX, positionY, mappingAction);
         
         Assert.That(world.PathWayConditions, Has.Count.EqualTo(1));
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(pathWayCondition));
+        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(pathWayCondition));
         Assert.IsFalse(actionWasInvoked);
         
         command.Execute();
         
         Assert.That(world.PathWayConditions, Has.Count.EqualTo(2));
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(command.PathWayCondition));
+        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(command.PathWayCondition));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Undo();
         
         Assert.That(world.PathWayConditions, Has.Count.EqualTo(1));
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(pathWayCondition));
+        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(pathWayCondition));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Redo();
         
         Assert.That(world.PathWayConditions, Has.Count.EqualTo(2));
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(command.PathWayCondition));
+        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(command.PathWayCondition));
         Assert.IsTrue(actionWasInvoked);
     }
 }

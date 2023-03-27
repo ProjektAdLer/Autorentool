@@ -74,7 +74,7 @@
     
     protected abstract string ObjectStyleWhenNotSelected { get; }
     
-    private string ObjectStyle => PositioningService.LearningWorldVm?.SelectedLearningObject == ObjectInPathWay ? ObjectStyleWhenSelected : ObjectStyleWhenNotSelected;
+    private string ObjectStyle => PositioningService.LearningWorldVm?.SelectedLearningObjectInPathWay == ObjectInPathWay ? ObjectStyleWhenSelected : ObjectStyleWhenNotSelected;
 
     protected abstract string DeletePathButtonShape { get;}
     

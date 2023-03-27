@@ -38,9 +38,9 @@ public class DeletePathWayCondition : IUndoCommand
         }
         LearningWorld.PathWayConditions.Remove(pathWayCondition);
 
-        if (pathWayCondition == LearningWorld.SelectedLearningObject || LearningWorld.SelectedLearningObject == null)
+        if (pathWayCondition == LearningWorld.SelectedLearningObjectInPathWay || LearningWorld.SelectedLearningObjectInPathWay == null)
         {
-            LearningWorld.SelectedLearningObject = LearningWorld.SelectableWorldObjects.LastOrDefault();
+            LearningWorld.SelectedLearningObjectInPathWay = LearningWorld.SelectableWorldObjects.LastOrDefault();
         }
 
         _mappingAction.Invoke(LearningWorld);

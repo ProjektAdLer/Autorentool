@@ -4,6 +4,8 @@ using BusinessLogic.Validation;
 using Presentation.Components;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Shared;
@@ -37,7 +39,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     private int _conditionCreationCounter = 0;
 
     public bool SelectedLearningObjectIsSpace =>
-        LearningWorldVm?.SelectedLearningObject?.GetType() == typeof(LearningSpaceViewModel);
+        LearningWorldVm?.SelectedLearningObjectInPathWay?.GetType() == typeof(LearningSpaceViewModel);
 
     public bool ShowingLearningSpaceView => LearningWorldVm is {ShowingLearningSpaceView: true};
 
@@ -206,6 +208,8 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         _presentationLogic.CreateLearningSpace(LearningWorldVm, name, shortname, authors, description, goals,
             requiredPoints, positionX, positionY);
         //TODO: Return error in the command in case of failure
+        if(LearningWorldVm.SelectedLearningObjectInPathWay is LearningSpaceViewModel learningSpace)
+            learningSpace.SelectedElementChanged += OnSelectedElementChanged;
     }
 
     /// <inheritdoc cref="ILearningWorldPresenterToolboxInterface.AddLearningSpace"/>
@@ -236,7 +240,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        switch (LearningWorldVm.SelectedLearningObject)
+        switch (LearningWorldVm.SelectedLearningObjectInPathWay)
         {
             case null:
                 return;
@@ -261,11 +265,11 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        if (LearningWorldVm.SelectedLearningObject == null)
+        if (LearningWorldVm.SelectedLearningObjectInPathWay == null)
             throw new ApplicationException("SelectedLearningSpace is null");
 
         await _presentationLogic.SaveLearningSpaceAsync(
-            (LearningSpaceViewModel) LearningWorldVm.SelectedLearningObject);
+            (LearningSpaceViewModel) LearningWorldVm.SelectedLearningObjectInPathWay);
     }
 
     /// <summary>
@@ -277,12 +281,12 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        LearningWorldVm.SelectedLearningObject = pathWayObject;
+        LearningWorldVm.SelectedLearningObjectInPathWay = pathWayObject;
         if (SelectedLearningObjectIsSpace)
-            _learningSpacePresenter.SetLearningSpace((LearningSpaceViewModel) LearningWorldVm.SelectedLearningObject);
+            _learningSpacePresenter.SetLearningSpace((LearningSpaceViewModel) LearningWorldVm.SelectedLearningObjectInPathWay);
         else
         {
-            LearningWorldVm.SelectedLearningObject = pathWayObject;
+            LearningWorldVm.SelectedLearningObjectInPathWay = pathWayObject;
         }
 
         HideRightClickMenu();
@@ -386,6 +390,48 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
 
     #endregion
 
+    #region LearningElement
+    
+    public void SetSelectedLearningElement(ILearningElementViewModel learningElement)
+    {
+        if(LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        LearningWorldVm.SelectedLearningElement = learningElement;
+    }
+    
+    public void EditLearningElement(ILearningSpaceViewModel? elementParent, ILearningElementViewModel learningElement,
+        string name, string shortname, string authors, string description, string goals, LearningElementDifficultyEnum difficulty,
+        int workload, int points, ILearningContentViewModel learningContent)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        LearningWorldVm.SelectedLearningElement = learningElement;
+        if (LearningWorldVm.UnplacedLearningElements.Contains(learningElement) && elementParent == null)
+            _presentationLogic.EditLearningElement(elementParent, learningElement, name, shortname, authors,
+                description,
+                goals, difficulty, workload, points, learningContent);
+        else if (LearningWorldVm.SelectedLearningObjectInPathWay is LearningSpaceViewModel learningSpaceViewModel &&
+                 learningSpaceViewModel.ContainedLearningElements.Contains(learningElement) &&
+                 learningSpaceViewModel == elementParent &&
+                 learningSpaceViewModel.SelectedLearningElement == learningElement)
+            _learningSpacePresenter.EditLearningElement(learningElement, name, shortname, authors, description,
+                goals, difficulty, workload, points, learningContent);
+    }
+    
+    public IEnumerable<ILearningContentViewModel> GetAllContent() => _presentationLogic.GetAllContent();
+
+    public void CreateUnplacedLearningElement(LearningWorldViewModel selectedLearningWorld, string name, string shortname,
+        ILearningContentViewModel learningContent, string authors, string description, string goals,
+        LearningElementDifficultyEnum difficulty, int workload, int points)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        _presentationLogic.CreateUnplacedLearningElement(LearningWorldVm, name, shortname, learningContent, authors,
+            description, goals, difficulty, workload, points);
+    }
+
+    #endregion
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
@@ -412,5 +458,12 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (EqualityComparer<T>.Default.Equals(field, value)) return false;
         OnPropertyChanging(propertyName);
         return true;
+    }
+
+    private void OnSelectedElementChanged(object? sender, EventArgs e) {
+        if (sender is LearningSpaceViewModel { SelectedLearningElement: { } } space && LearningWorldVm != null)
+        {
+            LearningWorldVm.SelectedLearningElement = space.SelectedLearningElement;
+        }
     }
 }

@@ -98,9 +98,13 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         RightClickedLearningObject = obj;
     }
 
-    public void EditLearningElement(ILearningElementViewModel obj)
+    public void EditLearningElement(ILearningElementViewModel learningElement,
+        string name, string shortname, string authors, string description, string goals, LearningElementDifficultyEnum difficulty,
+        int workload, int points, ILearningContentViewModel learningContent)
     {
-        SetSelectedLearningElement(obj);
+        SetSelectedLearningElement(learningElement);
+        _presentationLogic.EditLearningElement(LearningSpaceVm, learningElement, name, shortname, authors, description,
+            goals, difficulty, workload, points, learningContent);
     }
 
     public void EditLearningElement(int slotIndex)
@@ -138,12 +142,12 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 
     public void OnWorldPropertyChanged(object? caller, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(LearningWorldViewModel.SelectedLearningObject))
+        if (e.PropertyName == nameof(LearningWorldViewModel.SelectedLearningObjectInPathWay))
         {
             if (caller is not ILearningWorldViewModel worldVm)
                 throw new ArgumentException("Caller must be of type ILearningWorldViewModel");
 
-            if (worldVm.SelectedLearningObject is LearningSpaceViewModel space)
+            if (worldVm.SelectedLearningObjectInPathWay is LearningSpaceViewModel space)
                 LearningSpaceVm = space;
         }
     }

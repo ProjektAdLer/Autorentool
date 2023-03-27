@@ -9,7 +9,6 @@
 @using Shared
 @implements IDisposable
 @implements IAsyncDisposable
-<h3>CreateElementForm</h3>
 
 <BaseForm TForm="LearningElementFormModel" TEntity="LearningElement"
           OnValidSubmit="OnValidSubmit" SnackbarMessage="Element created" FormDataContainer="FormDataContainer">
@@ -41,7 +40,7 @@
                    Label="@nameof(FormDataContainer.FormModel.LearningContent)"
                    Text="@FormDataContainer.FormModel.LearningContent?.Name"
                    For="@(() => FormModel.LearningContent)">
-                    @foreach(var learningContent in PresentationLogic.GetAllContent())
+                    @foreach(var learningContent in WorldPresenter.GetAllContent())
                     {
                         <MudSelectItem Value="@(learningContent)">@learningContent.Name</MudSelectItem>
                     }
@@ -65,28 +64,32 @@
 </BaseForm>
 
 @code {
+#pragma warning disable CS8618 - injected by framework
     [Inject]
-    private IPresentationLogic PresentationLogic { get; set; }
+    private ILearningWorldPresenter WorldPresenter { get; set; }
     [Inject]
     private IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceViewModel { get; set; }
     [Inject]
     private IFormDataContainer<LearningElementFormModel, LearningElement> FormDataContainer { get; set; }
-    
+    [Parameter]
+#pragma warning restore CS8618
+    public EventCallback OnSubmitted { get; set; }
     private LearningElementFormModel FormModel => FormDataContainer.FormModel;
 
     private void OnValidSubmit(LearningElementFormModel model)
     {
         if (AuthoringToolWorkspaceViewModel.SelectedLearningWorld == null) 
             throw new InvalidOperationException("No learning world selected.");
-        if (AuthoringToolWorkspaceViewModel.SelectedLearningWorld.SelectedLearningObject == null) 
+        if (AuthoringToolWorkspaceViewModel.SelectedLearningWorld.SelectedLearningObjectInPathWay == null) 
             throw new InvalidOperationException("No object selected.");
-        if(AuthoringToolWorkspaceViewModel.SelectedLearningWorld.SelectedLearningObject is not LearningSpaceViewModel spaceViewModel) 
+        if(AuthoringToolWorkspaceViewModel.SelectedLearningWorld.SelectedLearningObjectInPathWay is not LearningSpaceViewModel) 
             throw new InvalidOperationException("Selected object is not a learning space.");
 
-        PresentationLogic.CreateUnplacedLearningElement(AuthoringToolWorkspaceViewModel.SelectedLearningWorld,
+        WorldPresenter.CreateUnplacedLearningElement(AuthoringToolWorkspaceViewModel.SelectedLearningWorld,
             //ignore null warning here because validation ensures that LearningContent is not null - m.ho
             model.Name, "", model.LearningContent!, "", model.Description, model.Goals, model.Difficulty,
             model.Workload, model.Points);
+        OnSubmitted.InvokeAsync();
     }
     
     protected override void OnInitialized()

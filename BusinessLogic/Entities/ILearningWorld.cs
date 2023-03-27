@@ -13,4 +13,5 @@ public interface ILearningWorld
     string Language { get; set; }
     string Goals { get; set; }
     ICollection<ILearningElement> UnplacedLearningElements { get; set; }
+    ILearningElement? SelectedLearningElement { get; set; }
 }

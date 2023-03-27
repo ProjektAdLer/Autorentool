@@ -41,9 +41,11 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     /// <param name="outBoundObjects">A list of objects that this space have a learning path to.</param>
     /// <param name="positionX">x-position of the learning space in the workspace.</param>
     /// <param name="positionY">y-position of the learning space in the workspace.</param>
-    public LearningSpaceViewModel(string name, string shortname, string authors, string description, string goals, int requiredPoints = 0,
+    public LearningSpaceViewModel(string name, string shortname, string authors, string description, string goals,
+        int requiredPoints = 0,
         ILearningSpaceLayoutViewModel? layoutViewModel = null, double positionX = 0, double positionY = 0,
-        ICollection<IObjectInPathWayViewModel>? inBoundObjects = null, ICollection<IObjectInPathWayViewModel>? outBoundObjects = null)
+        ICollection<IObjectInPathWayViewModel>? inBoundObjects = null,
+        ICollection<IObjectInPathWayViewModel>? outBoundObjects = null)
     {
         Id = Guid.NewGuid();
         Name = name;
@@ -78,8 +80,23 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     public double PositionY { get; set; }
     public double InputConnectionX => PositionX + 42;
     public double InputConnectionY => PositionY - 7;
-    public double OutputConnectionX => PositionX + 42; 
+    public double OutputConnectionX => PositionX + 42;
     public double OutputConnectionY => PositionY + 82;
-    public ILearningElementViewModel? SelectedLearningElement { get; set; }
-    public IEnumerable<ILearningElementViewModel> ContainedLearningElements => LearningSpaceLayout.ContainedLearningElements;
+
+    private ILearningElementViewModel? _selectedLearningElement;
+    public event EventHandler<EventArgs>? SelectedElementChanged;
+
+    public ILearningElementViewModel? SelectedLearningElement
+    {
+        get { return _selectedLearningElement; }
+        set { _selectedLearningElement = value; OnSelectedElementChanged();}
+    }
+
+    public IEnumerable<ILearningElementViewModel> ContainedLearningElements =>
+        LearningSpaceLayout.ContainedLearningElements;
+
+    protected virtual void OnSelectedElementChanged()
+    {
+        SelectedElementChanged?.Invoke(this, EventArgs.Empty);
+    }
 }

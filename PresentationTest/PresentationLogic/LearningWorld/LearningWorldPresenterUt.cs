@@ -96,7 +96,7 @@ public class LearningWorldPresenterUt
         systemUnderTest.LearningWorldVm = world;
         systemUnderTest.EditObjectInPathWay(space);
 
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(space));
+        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(space));
     }
 
     [Test]
@@ -158,7 +158,7 @@ public class LearningWorldPresenterUt
         systemUnderTest.LearningWorldVm = world;
         systemUnderTest.ClickOnObjectInWorld(space);
 
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(space));
+        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(space));
     }
 
     [Test]
@@ -171,7 +171,7 @@ public class LearningWorldPresenterUt
         systemUnderTest.LearningWorldVm = world;
         systemUnderTest.DoubleClickOnObjectInPathway(space);
 
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(space));
+        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(space));
         Assert.That(systemUnderTest.ShowingLearningSpaceView, Is.True);
         Assert.That(systemUnderTest.RightClickedLearningObject, Is.Null);
     }
@@ -259,7 +259,7 @@ public class LearningWorldPresenterUt
         {
             Assert.That(systemUnderTest.LearningWorldVm, Is.Not.Null);
             //nullability overridden because of assert - n.stich
-            Assert.That(systemUnderTest.LearningWorldVm!.SelectedLearningObject, Is.Null);
+            Assert.That(systemUnderTest.LearningWorldVm!.SelectedLearningObjectInPathWay, Is.Null);
             Assert.That(systemUnderTest.LearningWorldVm.LearningSpaces, Is.Empty);
             Assert.DoesNotThrow(() => systemUnderTest.DeleteSelectedLearningObject());
         });
@@ -272,7 +272,7 @@ public class LearningWorldPresenterUt
             "foo");
         var space = new LearningSpaceViewModel("f", "f", "f", "f", "f");
         world.LearningSpaces.Add(space);
-        world.SelectedLearningObject = space;
+        world.SelectedLearningObjectInPathWay = space;
         var presentationLogic = Substitute.For<IPresentationLogic>();
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
@@ -290,7 +290,7 @@ public class LearningWorldPresenterUt
             "foo");
         var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
         world.PathWayConditions.Add(condition);
-        world.SelectedLearningObject = condition;
+        world.SelectedLearningObjectInPathWay = condition;
         var presentationLogic = Substitute.For<IPresentationLogic>();
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
@@ -310,7 +310,7 @@ public class LearningWorldPresenterUt
         var space = new LearningSpaceViewModel("f", "f", "f,", "f", "f");
         var pathWay = new LearningPathwayViewModel(space, condition);
         world.LearningPathWays.Add(pathWay);
-        world.SelectedLearningObject = pathWay;
+        world.SelectedLearningObjectInPathWay = pathWay;
         var presentationLogic = Substitute.For<IPresentationLogic>();
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
@@ -358,7 +358,7 @@ public class LearningWorldPresenterUt
             "foo");
         var space = new LearningSpaceViewModel("f", "f", "f", "f", "f");
         world.LearningSpaces.Add(space);
-        world.SelectedLearningObject = space;
+        world.SelectedLearningObjectInPathWay = space;
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
         systemUnderTest.LearningWorldVm = world;
@@ -408,7 +408,7 @@ public class LearningWorldPresenterUt
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var learningSpace = new LearningSpaceViewModel("a", "b", "c", "d", "e");
-        world.SelectedLearningObject = learningSpace;
+        world.SelectedLearningObjectInPathWay = learningSpace;
 
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.LearningWorldVm = world;
@@ -443,7 +443,7 @@ public class LearningWorldPresenterUt
         systemUnderTest.LearningWorldVm = world;
         systemUnderTest.SetSelectedLearningObject(pathWay);
 
-        Assert.That(systemUnderTest.LearningWorldVm.SelectedLearningObject, Is.EqualTo(pathWay));
+        Assert.That(systemUnderTest.LearningWorldVm.SelectedLearningObjectInPathWay, Is.EqualTo(pathWay));
     }
 
     #region PathWayCondition
@@ -459,7 +459,7 @@ public class LearningWorldPresenterUt
         systemUnderTest.LearningWorldVm = world;
         systemUnderTest.SetSelectedLearningObject(condition);
 
-        Assert.That(systemUnderTest.LearningWorldVm.SelectedLearningObject, Is.EqualTo(condition));
+        Assert.That(systemUnderTest.LearningWorldVm.SelectedLearningObjectInPathWay, Is.EqualTo(condition));
     }
 
     [Test]
@@ -469,7 +469,7 @@ public class LearningWorldPresenterUt
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
-        world.SelectedLearningObject = condition;
+        world.SelectedLearningObjectInPathWay = condition;
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
         systemUnderTest.LearningWorldVm = world;
@@ -523,7 +523,7 @@ public class LearningWorldPresenterUt
         systemUnderTest.LearningWorldVm = world;
         systemUnderTest.ClickOnObjectInWorld(conditionViewModel);
 
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(conditionViewModel));
+        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(conditionViewModel));
     }
 
     [Test]

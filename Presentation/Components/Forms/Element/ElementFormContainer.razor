@@ -1,7 +1,69 @@
+@using Presentation.PresentationLogic.LearningSpace
+@using System.ComponentModel
+@using Presentation.PresentationLogic.LearningElement
+@using Presentation.PresentationLogic.LearningWorld
+@using Presentation.View.LearningElement
 <MudCard>
-    <CreateElementForm/>
+    @if (WorldPresenter.LearningWorldVm?.SelectedLearningElement == null || _editOverwritten)
+    {
+        <CreateElementForm OnSubmitted="() => InvokeAsync(TriggerMasterLayoutStateHasChanged)"/>
+    }
+    else
+    {
+        <EditElementForm ElementToEdit="WorldPresenter.LearningWorldVm.SelectedLearningElement" OnNewButtonClicked="OnForceNew">
+
+        </EditElementForm>
+    }
+
 </MudCard>
+<div>
+    <MudDropZone T="ILearningElementViewModel" Identifier="unplacedElements"
+                 Class="rounded-lg border-2 border-solid mud-border-lines-default p-6 m-8 w-28 min-h-1 flex justify-center items-center flex-col">
+        <ItemRenderer>
+            <DragDropLearningElement
+                LearningElement="@context"
+                OnShowLearningElementContent="() => { }"
+                OnEditLearningElement="() => { }"
+                OnDeleteLearningElement="() => { }"
+                OnClicked="@WorldPresenter.SetSelectedLearningElement"/>
+        </ItemRenderer>
+    </MudDropZone>
+</div>
 
 @code {
+#pragma warning disable CS8618
+    [Inject]
+    public ILearningWorldPresenter WorldPresenter { get; set; }
+
+    [CascadingParameter(Name = "TriggerMasterLayoutStateHasChanged")]
+    private Action TriggerMasterLayoutStateHasChanged { get; set; }
+#pragma warning restore CS8618
+
+
+    //indicates if the edit state has been overwritten by either pressing reset in the edit form
+    //or by pressing the "Create new space" buttoni
+    private bool _editOverwritten;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _editOverwritten = false;
+    }
     
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (WorldPresenter.LearningWorldVm != null) WorldPresenter.LearningWorldVm.PropertyChanged += WorldVmOnPropertyChanged;
+    }
+
+    private async void WorldVmOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        _editOverwritten = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+    private void OnForceNew()
+    {
+        _editOverwritten = true;
+    }
 }

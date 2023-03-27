@@ -36,7 +36,7 @@ public class CreatePathWayCondition : IUndoCommand
         _memento = LearningWorld.GetMemento();
 
         LearningWorld.PathWayConditions.Add(PathWayCondition);
-        LearningWorld.SelectedLearningObject = PathWayCondition;
+        LearningWorld.SelectedLearningObjectInPathWay = PathWayCondition;
         
         if (SourceObject != null && TargetObject != null)
         {

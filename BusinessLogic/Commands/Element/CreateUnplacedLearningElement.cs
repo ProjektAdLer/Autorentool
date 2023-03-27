@@ -28,6 +28,7 @@ public class CreateUnplacedLearningElement : IUndoCommand
         _memento = LearningWorld.GetMemento();
         
         LearningWorld.UnplacedLearningElements.Add(LearningElement);
+        LearningWorld.SelectedLearningElement = LearningElement;
         
         _mappingAction.Invoke(LearningWorld);
     }

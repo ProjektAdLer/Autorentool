@@ -23,9 +23,9 @@
     <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="SaveLearningWorldAsync" Disabled="LearningWorldP.LearningWorldVm == null">Save World</MudButton>
 </div>
 <div class="p-2">
-    <MudFab Size="Size.Small" Color="Color.Primary" StartIcon="@Icons.Material.Rounded.Edit" Disabled="@(LearningWorldP.LearningWorldVm?.SelectedLearningObject == null || LearningWorldP.LearningWorldVm.SelectedLearningObject is ILearningPathWayViewModel)" @onclick="EditLearningObject"></MudFab>
-    <MudFab Size="Size.Small" Color="Color.Secondary" StartIcon="@Icons.Material.Rounded.Delete" Disabled="@(LearningWorldP.LearningWorldVm?.SelectedLearningObject == null)" @onclick="DeleteSelectedLearningObject"></MudFab>
-    <MudFab Size="Size.Small" Color="Color.Primary" StartIcon="@Icons.Material.Rounded.Save" Disabled="@(LearningWorldP.LearningWorldVm?.SelectedLearningObject == null || LearningWorldP.LearningWorldVm.SelectedLearningObject is not ILearningSpaceViewModel)" @onclick="SaveSelectedLearningSpaceAsync"></MudFab>
+    <MudFab Size="Size.Small" Color="Color.Primary" StartIcon="@Icons.Material.Rounded.Edit" Disabled="@(LearningWorldP.LearningWorldVm?.SelectedLearningObjectInPathWay == null || LearningWorldP.LearningWorldVm.SelectedLearningObjectInPathWay is ILearningPathWayViewModel)" @onclick="EditLearningObject"></MudFab>
+    <MudFab Size="Size.Small" Color="Color.Secondary" StartIcon="@Icons.Material.Rounded.Delete" Disabled="@(LearningWorldP.LearningWorldVm?.SelectedLearningObjectInPathWay == null)" @onclick="DeleteSelectedLearningObject"></MudFab>
+    <MudFab Size="Size.Small" Color="Color.Primary" StartIcon="@Icons.Material.Rounded.Save" Disabled="@(LearningWorldP.LearningWorldVm?.SelectedLearningObjectInPathWay == null || LearningWorldP.LearningWorldVm.SelectedLearningObjectInPathWay is not ILearningSpaceViewModel)" @onclick="SaveSelectedLearningSpaceAsync"></MudFab>
 </div>
 
 <!-- <svg style="width: 400px; height: 600px; border:3px black; background-color: white" -->

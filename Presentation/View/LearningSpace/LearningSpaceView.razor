@@ -17,19 +17,6 @@
         @ChildContent
         <br>
     </div>
-    <div>
-        <MudDropZone T="ILearningElementViewModel" Identifier="unplacedElements"
-                     Class="rounded-lg border-2 border-solid mud-border-lines-default p-6 m-8 w-28 min-h-1 flex justify-center items-center flex-col">
-            <ItemRenderer>
-                @{
-                    var item = context;
-                    var text = item.Name + " " + item.Parent?.Name;
-                }
-                <MudListItem Text="@text"></MudListItem>
-
-            </ItemRenderer>
-        </MudDropZone>
-    </div>
 </div>
 
 @if (LearningSpaceP.LearningSpaceVm != null)
@@ -74,7 +61,7 @@
                                 <DragDropLearningElement
                                     LearningElement="@context"
                                     OnShowLearningElementContent="@LearningSpaceP.ShowElementContent"
-                                    OnEditLearningElement="@LearningSpaceP.EditLearningElement"
+                                    OnEditLearningElement="@LearningSpaceP.ClickedLearningElement"
                                     OnDeleteLearningElement="@LearningSpaceP.DeleteLearningElement"
                                     OnClicked="@LearningSpaceP.ClickedLearningElement"/>
                             </ItemRenderer>
@@ -251,7 +238,7 @@
 
     private Task EditRightClickedLearningElement(ILearningElementViewModel item)
     {
-        LearningSpaceP.EditLearningElement(item);
+        LearningSpaceP.ClickedLearningElement(item);
         return Task.CompletedTask;
     }
 
@@ -288,7 +275,8 @@
 
     private Task AddNewLearningElement(int i)
     {
-        throw new NotImplementedException("NYI - implement after learning element dialog is implemented - n.stich");
+        //TODO  open create element dialog in sidebar with given slot index
+        return Task.CompletedTask;
     }
 
     private async Task ShowReplaceLearningElementDialog()

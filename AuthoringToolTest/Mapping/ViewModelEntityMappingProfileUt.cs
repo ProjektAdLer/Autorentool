@@ -377,7 +377,7 @@ public class ViewModelEntityMappingProfileUt
         var worldVm = new LearningWorldViewModel("world", Shortname, Authors, Language, Description, Goals, true,
             new List<ILearningSpaceViewModel> {space})
         {
-            SelectedLearningObject = space
+            SelectedLearningObjectInPathWay = space
         };
 
 
@@ -399,7 +399,7 @@ public class ViewModelEntityMappingProfileUt
             Assert.That(worldVm.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().Authors,
                 Is.EqualTo("foooooooooo"));
             Assert.That(worldVm.LearningSpaces.First().ContainedLearningElements.First(), Is.EqualTo(elementVm1));
-            Assert.That(worldVm.SelectedLearningObject, Is.EqualTo(space));
+            Assert.That(worldVm.SelectedLearningObjectInPathWay, Is.EqualTo(space));
             Assert.That(worldVm.LearningSpaces.First().SelectedLearningElement, Is.EqualTo(elementVm1));
         });
     }

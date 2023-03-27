@@ -76,7 +76,8 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     private string _description;
     private string _goals;
     private bool _unsavedChanges;
-    private ISelectableObjectInWorldViewModel? _selectedLearningObject;
+    private ISelectableObjectInWorldViewModel? _selectedLearningObjectInPathWay;
+    private ILearningElementViewModel? _selectedLearningElement;
     private IObjectInPathWayViewModel? _onHoveredLearningObject;
     private bool _showingLearningSpaceView;
 
@@ -163,10 +164,26 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         set => SetField(ref _unsavedChanges, value);
     }
 
-    public ISelectableObjectInWorldViewModel? SelectedLearningObject
+    public ISelectableObjectInWorldViewModel? SelectedLearningObjectInPathWay
     {
-        get => _selectedLearningObject;
-        set => SetField(ref _selectedLearningObject, value);
+        get => _selectedLearningObjectInPathWay;
+        set => SetField(ref _selectedLearningObjectInPathWay, value);
+    }
+    
+    public ILearningElementViewModel? SelectedLearningElement
+    {
+        get => _selectedLearningElement;
+        set
+        {
+            _selectedLearningElement = value;
+            if (_selectedLearningObjectInPathWay != null &&
+                _selectedLearningObjectInPathWay is ILearningSpaceViewModel space)
+            {
+                if(value != null && UnplacedLearningElements.Contains(value))
+                    space.SelectedLearningElement = null;
+                OnPropertyChanged();
+            }
+        }
     }
     
     public IObjectInPathWayViewModel? OnHoveredObjectInPathWay
@@ -196,5 +213,11 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         field = value;
         OnPropertyChanged(propertyName);
         return true;
+    }
+    
+    public void OnSelectedElementChanged(object sender, EventArgs e) {
+        if (sender is LearningSpaceViewModel space && space.SelectedLearningElement != null) {
+            SelectedLearningElement = space.SelectedLearningElement;
+        }
     }
 }

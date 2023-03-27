@@ -20,7 +20,7 @@ public class DeleteLearningSpaceUt
         world.LearningSpaces.Add(space0);
         world.LearningSpaces.Add(space);
         world.LearningSpaces.Add(space1);
-        world.SelectedLearningObject = space;
+        world.SelectedLearningObjectInPathWay = space;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         
@@ -35,13 +35,13 @@ public class DeleteLearningSpaceUt
         
         Assert.That(world.LearningSpaces, Does.Contain(space));
         Assert.IsFalse(actionWasInvoked);
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(space));
+        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(space));
         
         command.Execute();
         
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(2));
         Assert.IsTrue(actionWasInvoked);
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(space1));
+        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(space1));
         Assert.That(world.LearningPathways, Has.Count.EqualTo(0));
     }
 
@@ -69,32 +69,32 @@ public class DeleteLearningSpaceUt
         var space2 = new LearningSpace("l", "m", "n", "o", "p", 7);
         world.LearningSpaces.Add(space);
         world.LearningSpaces.Add(space2);
-        world.SelectedLearningObject = space;
+        world.SelectedLearningObjectInPathWay = space;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         
         var command = new DeleteLearningSpace(world, space, mappingAction);
         
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(2));
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(space));
+        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(space));
         Assert.IsFalse(actionWasInvoked);
         
         command.Execute();
         
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(space2));
+        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(space2));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Undo();
         
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(2));
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(space));
+        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(space));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Redo();
         
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
-        Assert.That(world.SelectedLearningObject, Is.EqualTo(space2));
+        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(space2));
         Assert.IsTrue(actionWasInvoked);
     }
 }

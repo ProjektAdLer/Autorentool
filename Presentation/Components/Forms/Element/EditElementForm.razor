@@ -1,5 +1,104 @@
-<h3>EditElementForm</h3>
-
+@using Presentation.Components.Forms.Models
+@using Presentation.PresentationLogic.LearningElement
+@using BusinessLogic.Entities
+@using Presentation.PresentationLogic.API
+@using Presentation.Components.Forms.Buttons
+@using System.ComponentModel
+@using Shared
+@using AutoMapper
+@using Presentation.PresentationLogic.LearningWorld
+<BaseForm TForm="LearningElementFormModel" TEntity="LearningElement"
+          OnValidSubmit="OnValidSubmit" SnackbarMessage="Element updated" FormDataContainer="FormDataContainer">
+    <Fields>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                      For="@(() => FormModel.Name)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Name)"/>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                      For="@(() => FormModel.Description)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Description)"/>
+        <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
+                      For="@(() => FormModel.Goals)"
+                      Immediate="true"
+                      DebounceInterval="300"
+                      Label="@nameof(FormDataContainer.FormModel.Goals)"/>
+        <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
+                   Label="@nameof(FormDataContainer.FormModel.Difficulty)"
+                   For="@(() => FormModel.Difficulty)">
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)"> Easy </MudSelectItem>
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)"> Medium </MudSelectItem>
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)"> Hard </MudSelectItem>
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.None)"> None </MudSelectItem>
+        </MudSelect>
+        <MudSelect @bind-Value="FormDataContainer.FormModel.LearningContent"
+                   Label="@nameof(FormDataContainer.FormModel.LearningContent)"
+                   Text="@FormDataContainer.FormModel.LearningContent?.Name"
+                   For="@(() => FormModel.LearningContent)">
+                    @foreach(var learningContent in WorldPresenter.GetAllContent())
+                    {
+                        <MudSelectItem Value="@(learningContent)">@learningContent.Name</MudSelectItem>
+                    }
+        </MudSelect>
+        <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
+                         For="@(() => FormModel.Workload)"
+                         Immediate="true"
+                         DebounceInterval="300"
+                         Label="Workload (min)"/>
+        <MudNumericField @bind-Value="FormDataContainer.FormModel.Points"
+                         For="@(() => FormModel.Points)"
+                         Immediate="true"
+                         DebounceInterval="300"
+                         Label="@nameof(FormDataContainer.FormModel.Points)"/>
+    </Fields>
+    <Buttons>
+        <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
+        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="async () => await OnNewButtonClicked.InvokeAsync()">New</MudButton>
+        <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="OnResetAsync">Reset</MudButton>
+        </Buttons>
+</BaseForm>
 @code {
+#pragma warning disable CS8618
+    [Inject]
+    private ILearningWorldPresenter WorldPresenter { get; set; }
+    [Inject]
+    private IMapper Mapper { get; set; }
+    [Inject]
+    
+    private IFormDataContainer<LearningElementFormModel, LearningElement> FormDataContainer { get; set; }
+    [Parameter, EditorRequired]
+    public ILearningElementViewModel ElementToEdit { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback OnNewButtonClicked { get; set; }
+#pragma warning restore CS8618
+    
+    private LearningElementFormModel FormModel => FormDataContainer.FormModel;
+
+    private void OnValidSubmit(LearningElementFormModel model)
+    {
+        WorldPresenter.EditLearningElement(ElementToEdit.Parent, ElementToEdit, model.Name, "", "" , model.Description,
+            //ignore null warning here because validation ensures that LearningContent is not null - m.ho
+            model.Goals, model.Difficulty, model.Workload, model.Points, model.LearningContent!);
+    }
+    
+    private async Task MapIntoContainer()
+    {
+        Mapper.Map(ElementToEdit, FormDataContainer.FormModel);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        await MapIntoContainer();
+    }
+
+    private async Task OnResetAsync()
+    {
+        await MapIntoContainer();
+    }
     
 }
