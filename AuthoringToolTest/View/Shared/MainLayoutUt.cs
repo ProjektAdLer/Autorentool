@@ -7,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.Components;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using TestContext = Bunit.TestContext;
@@ -56,23 +57,6 @@ public class MainLayoutUt
             Assert.That(() => systemUnderTest.FindComponent<Stub<MudSnackbarProvider>>(), Throws.Nothing);
         });
     }
-
-    [Test]
-    public void Render_RunningElectron_DoesDisplayCloseAppButton()
-    {
-        _presentationLogic.RunningElectron.Returns(true);
-        var systemUnderTest = GetFragmentForTesting();
-        
-        IElement? buttonDiv = null;
-        Assert.That(() => buttonDiv = systemUnderTest.Find("div.absolute.top-0.right-0"), Throws.Nothing);
-        if (buttonDiv is null)
-            Assert.Fail("Could not find close app button div");
-
-        buttonDiv!.MarkupMatches(
-            @"<div class=""absolute top-0 right-0""><button class=""btn btn-danger"">Close application</button></div>");
-    }
-    
-    
 
     private IRenderedComponent<MainLayout> GetFragmentForTesting(RenderFragment? body = null)
     {
