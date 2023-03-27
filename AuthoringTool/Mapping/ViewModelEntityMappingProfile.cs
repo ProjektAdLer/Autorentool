@@ -51,14 +51,6 @@ public class ViewModelEntityMappingProfile : Profile
             .IncludeBase<ILearningSpaceLayout, LearningSpaceLayoutViewModel>()
             .ReverseMap()
             .IncludeBase<ILearningSpaceLayoutViewModel, LearningSpaceLayout>();
-        /*
-        CreateMap<KeyValuePair<int, ILearningElement>, KeyValuePair<int, ILearningElementViewModel>>()
-            .ConstructUsing((x, ctx) =>
-                new KeyValuePair<int, ILearningElementViewModel>(x.Key,
-                    ctx.Mapper.Map<ILearningElementViewModel>(x.Value)))
-        .EqualityComparison((source, destination) =>
-          source.Key.Equals(destination.Key) && source.Value.Id.Equals(destination.Value.Id));
-        */
 
     }
 
