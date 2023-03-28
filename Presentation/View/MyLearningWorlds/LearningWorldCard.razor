@@ -1,7 +1,7 @@
 @using Shared
 <MudItem>
     <MudCard Outlined="true" Elevation="1" Class="w-60">
-        <MudCardHeader>
+        <MudCardHeader Class="flex justify-center">
             <CardHeaderAvatar>
                 @switch (_cardType)
                 {
@@ -23,7 +23,7 @@
                 {
                     case CardType.IsLoaded:
                     {
-                        <MudText Style="max-width: 130px; overflow-wrap: break-word;">
+                        <MudText Style="overflow-wrap: break-word;">
                             @LearningWorldPath!.Name
                         </MudText>
                         break;
@@ -31,17 +31,17 @@
                 
                     case CardType.IsSaved:
                     {
-                        <MudText Style="max-width: 100px; overflow-wrap: break-word;">
+                        <MudText Style="overflow-wrap: break-word;">
                             @LearningWorldPath!.Name
                         </MudText>
                         break;
                     }
                 
                     case CardType.Load:
-                        <MudText>Load Learning World</MudText>
+                        <MudText Class="text-center">Load Learning World</MudText>
                         break;
                     case CardType.Create:
-                        <MudText>Create Learning World</MudText>
+                        <MudText Class="text-center">Create Learning World</MudText>
                         break;
                     default:
                         throw new ArgumentOutOfRangeException();
@@ -88,7 +88,7 @@
             @*         throw new ArgumentOutOfRangeException(); *@
             @* } *@
         </MudCardHeader>
-        <MudCardContent>
+        <MudCardContent Class="flex justify-center">
             @switch (_cardType)
             {
                 case CardType.IsLoaded or CardType.IsSaved:
