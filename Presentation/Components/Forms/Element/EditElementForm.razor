@@ -79,7 +79,7 @@
 
     private void OnValidSubmit(LearningElementFormModel model)
     {
-        WorldPresenter.EditLearningElement(ElementToEdit.Parent, ElementToEdit, model.Name, "", "" , model.Description,
+        WorldPresenter.EditLearningElement(ElementToEdit.Parent, ElementToEdit, model.Name, model.Description,
             //ignore null warning here because validation ensures that LearningContent is not null - m.ho
             model.Goals, model.Difficulty, model.Workload, model.Points, model.LearningContent!);
     }

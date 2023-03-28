@@ -99,11 +99,11 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     }
 
     public void EditLearningElement(ILearningElementViewModel learningElement,
-        string name, string shortname, string authors, string description, string goals, LearningElementDifficultyEnum difficulty,
+        string name, string description, string goals, LearningElementDifficultyEnum difficulty,
         int workload, int points, ILearningContentViewModel learningContent)
     {
         SetSelectedLearningElement(learningElement);
-        _presentationLogic.EditLearningElement(LearningSpaceVm, learningElement, name, shortname, authors, description,
+        _presentationLogic.EditLearningElement(LearningSpaceVm, learningElement, name, description,
             goals, difficulty, workload, points, learningContent);
     }
 

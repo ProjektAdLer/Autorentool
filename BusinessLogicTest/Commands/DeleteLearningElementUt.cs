@@ -14,7 +14,7 @@ public class DeleteLearningElementUt
     public void Execute_DeletesLearningElement()
     {
         var space = new LearningSpace("a", "b", "c","d", "e", 5);
-        var element = new LearningElement("g", "h", null!,"i", "j", "k", LearningElementDifficultyEnum.Easy, space);
+        var element = new LearningElement("g", null!, "j", "k", LearningElementDifficultyEnum.Easy, space);
         space.LearningSpaceLayout.LearningElements = new ILearningElement?[] {element};
         space.SelectedLearningElement = element;
         bool actionWasInvoked = false;
@@ -36,8 +36,8 @@ public class DeleteLearningElementUt
     public void Execute_DeletesLearningElementAndSetsAnotherElementSelectedLearningElement()
     {
         var space = new LearningSpace("a", "b", "c","d", "e", 5);
-        var element = new LearningElement("g", "h", null!,"i", "j", "k", LearningElementDifficultyEnum.Easy, space);
-        var element2 = new LearningElement("l", "m", null!,"n", "o", "p", LearningElementDifficultyEnum.Easy, space);
+        var element = new LearningElement("g", null!, "j", "k", LearningElementDifficultyEnum.Easy, space);
+        var element2 = new LearningElement("l", null!, "o", "p", LearningElementDifficultyEnum.Easy, space);
         space.LearningSpaceLayout.LearningElements = new ILearningElement?[] {element, element2};
         space.SelectedLearningElement = element;
         bool actionWasInvoked = false;
@@ -61,7 +61,7 @@ public class DeleteLearningElementUt
     public void Undo_MementoIsNull_ThrowsException()
     {
         var space = new LearningSpace("a", "b", "c","d", "e", 5);
-        var element = new LearningElement("g", "h", null!,"i", "j", "k", LearningElementDifficultyEnum.Easy, space);
+        var element = new LearningElement("g", null!, "j", "k", LearningElementDifficultyEnum.Easy, space);
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
@@ -77,8 +77,8 @@ public class DeleteLearningElementUt
     public void UndoRedo_UndoesRedoesDeleteLearningElement()
     {
         var space = new LearningSpace("a", "b", "c","d", "e", 5);
-        var element = new LearningElement("g", "h", null!,"i", "j", "k", LearningElementDifficultyEnum.Easy, space);
-        var element2 = new LearningElement("l", "m", null!,"n", "o", "p", LearningElementDifficultyEnum.Easy, space);
+        var element = new LearningElement("g", null!, "j", "k", LearningElementDifficultyEnum.Easy, space);
+        var element2 = new LearningElement("l", null!, "o", "p", LearningElementDifficultyEnum.Easy, space);
         space.LearningSpaceLayout.LearningElements = new ILearningElement?[] {element, element2};
         space.SelectedLearningElement = element;
         bool actionWasInvoked = false;

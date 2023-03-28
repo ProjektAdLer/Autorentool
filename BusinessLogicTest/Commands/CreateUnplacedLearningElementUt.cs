@@ -14,8 +14,8 @@ public class CreateUnplacedLearningElementUt
         var testParameter = new TestParameter();
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateUnplacedLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.ShortName, testParameter.Content,
-            testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
+        var command = new CreateUnplacedLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.Content,
+            testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points, testParameter.PositionX,testParameter.PositionY, mappingAction);
 
         Assert.IsEmpty(testParameter.WorldParent.UnplacedLearningElements);
@@ -29,9 +29,7 @@ public class CreateUnplacedLearningElementUt
         Assert.Multiple(() =>
         {
             Assert.That(element.Name, Is.EqualTo(testParameter.Name));
-            Assert.That(element.Shortname, Is.EqualTo(testParameter.ShortName));
             Assert.That(element.LearningContent, Is.EqualTo(testParameter.Content));
-            Assert.That(element.Authors, Is.EqualTo(testParameter.Authors));
             Assert.That(element.Description, Is.EqualTo(testParameter.Description));
             Assert.That(element.Goals, Is.EqualTo(testParameter.Goals));
             Assert.That(element.Workload, Is.EqualTo(testParameter.Workload));
@@ -47,8 +45,8 @@ public class CreateUnplacedLearningElementUt
         var worldParent = testParameter.WorldParent;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateUnplacedLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.ShortName, testParameter.Content,
-            testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
+        var command = new CreateUnplacedLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.Content,
+            testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points, testParameter.PositionX,testParameter.PositionY, mappingAction);
 
 
@@ -78,8 +76,7 @@ public class CreateUnplacedLearningElementUt
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateUnplacedLearningElement(testParameter.WorldParent, testParameter.Name,
-            testParameter.ShortName, testParameter.Content,
-            testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
+            testParameter.Content, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY,
             mappingAction);
             

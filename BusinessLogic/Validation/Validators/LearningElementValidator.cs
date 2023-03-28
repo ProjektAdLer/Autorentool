@@ -21,20 +21,12 @@ public class LearningElementValidator : AbstractValidator<LearningElement>
             .IsAlphanumeric()
             .Must((element, name) => IsUniqueName(element.Id, name))
             .WithMessage("Already in use.");
-        RuleFor(x => x.Shortname)
-            .MaximumLength(30)
-            .Must((element, name) => IsUniqueShortname(element.Id, name))
-            .WithMessage("Already in use.");
         RuleFor(x => x.LearningContent)
             .SetValidator(learningContentValidator)
             .NotEmpty();
     }
 
     private bool IsUniqueName(Guid id, string name) => UniqueNameHelper.IsUnique(
-        _learningElementNamesProvider.ElementNames ?? throw new ValidationException("No space to get elements from"),
-        name, id);
-
-    private bool IsUniqueShortname(Guid id, string name) => name == "" || UniqueNameHelper.IsUnique(
         _learningElementNamesProvider.ElementNames ?? throw new ValidationException("No space to get elements from"),
         name, id);
 }

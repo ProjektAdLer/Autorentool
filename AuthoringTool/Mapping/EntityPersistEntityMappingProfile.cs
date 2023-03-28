@@ -25,7 +25,6 @@ public class EntityPersistEntityMappingProfile : Profile
         CreateLearningElementMap();
         CreateLearningContentMap();
         CreatePathwayMaps();
-        CreateDerivedElementMaps();
         CreateInterfaceMaps();
         CreateEnumMaps();
         CreateLearningSpaceLayoutMap();
@@ -89,23 +88,8 @@ public class EntityPersistEntityMappingProfile : Profile
         CreateMap<PathWayCondition, IObjectInPathWayPe>().As<PathWayConditionPe>();
         CreateMap<LearningSpace, IObjectInPathWayPe>().As<LearningSpacePe>();
 
-        CreateMap<H5PActivationElement, ILearningElementPe>().As<H5PActivationElementPe>();
-        CreateMap<H5PInteractionElement, ILearningElementPe>().As<H5PInteractionElementPe>();
-        CreateMap<H5PTestElement, ILearningElementPe>().As<H5PTestElementPe>();
-        CreateMap<ImageTransferElement, ILearningElementPe>().As<ImageTransferElementPe>();
-        CreateMap<PdfTransferElement, ILearningElementPe>().As<PdfTransferElementPe>();
-        CreateMap<VideoActivationElement, ILearningElementPe>().As<VideoActivationElementPe>();
-        CreateMap<VideoTransferElement, ILearningElementPe>().As<VideoTransferElementPe>();
-        CreateMap<TextTransferElement, ILearningElementPe>().As<TextTransferElementPe>();
-
-        CreateMap<H5PActivationElementPe, ILearningElement>().As<H5PActivationElement>();
-        CreateMap<H5PInteractionElementPe, ILearningElement>().As<H5PInteractionElement>();
-        CreateMap<H5PTestElementPe, ILearningElement>().As<H5PTestElement>();
-        CreateMap<ImageTransferElementPe, ILearningElement>().As<ImageTransferElement>();
-        CreateMap<PdfTransferElementPe, ILearningElement>().As<PdfTransferElement>();
-        CreateMap<VideoActivationElementPe, ILearningElement>().As<VideoActivationElement>();
-        CreateMap<VideoTransferElementPe, ILearningElement>().As<VideoTransferElement>();
-        CreateMap<TextTransferElementPe, ILearningElement>().As<TextTransferElement>();
+        CreateMap<LearningElement, ILearningElementPe>().As<LearningElementPe>();
+        CreateMap<LearningElementPe, ILearningElement>().As<LearningElement>();
 
         CreateMap<IObjectInPathWay, IObjectInPathWayPe>()
             .ReverseMap();
@@ -114,34 +98,6 @@ public class EntityPersistEntityMappingProfile : Profile
         CreateMap<LearningSpaceLayoutPe, ILearningSpaceLayout>().As<LearningSpaceLayout>();
         CreateMap<ILearningSpaceLayout, ILearningSpaceLayoutPe>().As<LearningSpaceLayoutPe>();
         CreateMap<ILearningSpaceLayoutPe, ILearningSpaceLayout>().As<LearningSpaceLayout>();
-    }
-
-    private void CreateDerivedElementMaps()
-    {
-        CreateMap<H5PActivationElement, H5PActivationElementPe>()
-            .IncludeBase<LearningElement, LearningElementPe>()
-            .ReverseMap();
-        CreateMap<H5PInteractionElement, H5PInteractionElementPe>()
-            .IncludeBase<LearningElement, LearningElementPe>()
-            .ReverseMap();
-        CreateMap<H5PTestElement, H5PTestElementPe>()
-            .IncludeBase<LearningElement, LearningElementPe>()
-            .ReverseMap();
-        CreateMap<ImageTransferElement, ImageTransferElementPe>()
-            .IncludeBase<LearningElement, LearningElementPe>()
-            .ReverseMap();
-        CreateMap<PdfTransferElement, PdfTransferElementPe>()
-            .IncludeBase<LearningElement, LearningElementPe>()
-            .ReverseMap();
-        CreateMap<VideoActivationElement, VideoActivationElementPe>()
-            .IncludeBase<LearningElement, LearningElementPe>()
-            .ReverseMap();
-        CreateMap<VideoTransferElement, VideoTransferElementPe>()
-            .IncludeBase<LearningElement, LearningElementPe>()
-            .ReverseMap();
-        CreateMap<TextTransferElement, TextTransferElementPe>()
-            .IncludeBase<LearningElement, LearningElementPe>()
-            .ReverseMap();
     }
 
     private void CreateLearningElementMap()

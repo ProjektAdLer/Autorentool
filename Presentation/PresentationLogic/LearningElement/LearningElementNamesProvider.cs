@@ -33,5 +33,4 @@ public class LearningElementNamesProvider : ILearningElementNamesProvider
     }
 
     public IEnumerable<(Guid, string)> ElementNames => GetLearningElements().Select(el => (el.Id, el.Name));
-    public IEnumerable<(Guid, string)>?ElementShortnames => GetLearningElements().Select(el => (el.Id, el.Shortname));
 }

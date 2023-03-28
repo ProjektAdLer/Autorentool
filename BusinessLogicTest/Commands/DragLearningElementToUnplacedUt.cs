@@ -18,8 +18,7 @@ public class DragLearningElementToUnplacedUt
             new LearningSpaceLayout(new ILearningElement[4], FloorPlanEnum.Rectangle2X2));
         world.LearningSpaces.Add(space);
         var content = new FileContent("cn", "ct", "cf");
-        var element = new LearningElement("en", "esn", content,
-            "ea", "ed", "eg", LearningElementDifficultyEnum.Medium, null, 8, 9, 17f, 29f);
+        var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, null, workload: 8, points: 9, positionX: 17f, positionY: 29f);
         space.LearningSpaceLayout.LearningElements[2] = element;
 
 
@@ -55,8 +54,7 @@ public class DragLearningElementToUnplacedUt
             new LearningSpaceLayout(new ILearningElement[4], FloorPlanEnum.Rectangle2X2));
         world.LearningSpaces.Add(space);
         var content = new FileContent("cn", "ct", "cf");
-        var element = new LearningElement("en", "esn", content,
-            "ea", "ed", "eg", LearningElementDifficultyEnum.Medium, null, 8, 9, 17f, 29f);
+        var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, null, workload: 8, points: 9, positionX: 17f, positionY: 29f);
         space.LearningSpaceLayout.LearningElements[2] = element;
 
 
@@ -81,8 +79,7 @@ public class DragLearningElementToUnplacedUt
             new LearningSpaceLayout(new ILearningElement[4], FloorPlanEnum.Rectangle2X2));
         world.LearningSpaces.Add(space);
         var content = new FileContent("cn", "ct", "cf");
-        var element = new LearningElement("en", "esn", content,
-            "ea", "ed", "eg", LearningElementDifficultyEnum.Medium, null, 8, 9, 17f, 29f);
+        var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, null, workload: 8, points: 9, positionX: 17f, positionY: 29f);
         space.LearningSpaceLayout.LearningElements[2] = element;
 
 

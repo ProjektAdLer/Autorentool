@@ -56,9 +56,11 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     void SetSelectedLearningElement(ILearningElementViewModel learningElement);
 
     void EditLearningElement(ILearningSpaceViewModel? elementParent, ILearningElementViewModel learningElement,
-        string name, string shortname, string authors, string description, string goals, LearningElementDifficultyEnum difficulty,
+        string name,string description, string goals, LearningElementDifficultyEnum difficulty,
         int workload, int points, ILearningContentViewModel learningContent);
 
     IEnumerable<ILearningContentViewModel> GetAllContent();
-    void CreateUnplacedLearningElement(LearningWorldViewModel selectedLearningWorld, string modelName, string empty, ILearningContentViewModel modelLearningContent, string s, string modelDescription, string modelGoals, LearningElementDifficultyEnum modelDifficulty, int modelWorkload, int modelPoints);
+
+    void CreateUnplacedLearningElement(string name, ILearningContentViewModel learningContent, string description,
+        string goals, LearningElementDifficultyEnum difficulty, int workload, int points);
 }

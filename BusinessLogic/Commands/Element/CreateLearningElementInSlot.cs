@@ -14,13 +14,13 @@ public class CreateLearningElementInSlot : IUndoCommand
     private IMemento? _memento;
     private IMemento? _mementoSpaceLayout;
 
-    public CreateLearningElementInSlot(LearningSpace parentSpace, int slotIndex, string name, string shortName,
-        ILearningContent learningContent, string authors, string description, string goals,
+    public CreateLearningElementInSlot(LearningSpace parentSpace, int slotIndex, string name, 
+        ILearningContent learningContent, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double positionX, double positionY,
         Action<LearningSpace> mappingAction)
     {
-        LearningElement = new LearningElement(name, shortName, learningContent, authors, description, goals,
-            difficulty, parentSpace, workload, points, positionX, positionY);
+        LearningElement = new LearningElement(name, learningContent, description, goals,
+            difficulty, parentSpace, workload: workload, points: points, positionX: positionX, positionY: positionY);
         ParentSpace = parentSpace;
         SlotIndex = slotIndex;
         _mappingAction = mappingAction;

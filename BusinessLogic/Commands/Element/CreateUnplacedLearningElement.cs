@@ -11,13 +11,13 @@ public class CreateUnplacedLearningElement : IUndoCommand
     internal LearningElement LearningElement { get; }
     private readonly Action<LearningWorld> _mappingAction;
     private IMemento? _memento;
-    
-    public CreateUnplacedLearningElement(LearningWorld learningWorld, string name, string shortName,
-        ILearningContent learningContent, string authors, string description, string goals,
+
+    public CreateUnplacedLearningElement(LearningWorld learningWorld, string name,
+        ILearningContent learningContent, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double positionX, double positionY,
         Action<LearningWorld> mappingAction)
     {
-        LearningElement = new LearningElement(name, shortName, learningContent, authors, description, goals,
+        LearningElement = new LearningElement(name,  learningContent, description, goals,
             difficulty, null, workload, points, positionX, positionY);
         LearningWorld = learningWorld;
         _mappingAction = mappingAction;

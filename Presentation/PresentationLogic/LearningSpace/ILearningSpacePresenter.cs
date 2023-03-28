@@ -26,7 +26,7 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     void DragLearningElement(object sender, DraggedEventArgs<ILearningElementViewModel> draggedEventArgs);
     void ClickedLearningElement(ILearningElementViewModel obj);
     void RightClickedLearningElement(ILearningElementViewModel obj);
-    void EditLearningElement(ILearningElementViewModel learningElement, string name, string shortname, string authors,
+    void EditLearningElement(ILearningElementViewModel learningElement, string name,
         string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points,
         ILearningContentViewModel learningContent);
     void EditLearningElement(int slotIndex);

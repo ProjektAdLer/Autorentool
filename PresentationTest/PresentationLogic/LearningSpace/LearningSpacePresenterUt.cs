@@ -52,7 +52,7 @@ public class LearningSpacePresenterUt
     [Test]
     public void AddLearningElement_SelectedLearningSpaceIsNull_ThrowsException()
     {
-        var element = new LearningElementViewModel("foo", "bar", null!,"foo",
+        var element = new LearningElementViewModel("foo",  null!,
             "wa", "bar", LearningElementDifficultyEnum.Hard);
 
         var systemUnderTest = CreatePresenterForTesting();
@@ -66,7 +66,7 @@ public class LearningSpacePresenterUt
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         var content = new FileContentViewModel("bar", "foo", "");
-        var element = new LearningElementViewModel("f", "f", content,"f", "f", "f", LearningElementDifficultyEnum.Easy, space);
+        var element = new LearningElementViewModel("f",  content, "f", "f", LearningElementDifficultyEnum.Easy, space);
         space.LearningSpaceLayout.PutElement(0, element);
         space.SelectedLearningElement = element;
 
@@ -83,7 +83,7 @@ public class LearningSpacePresenterUt
     [Test]
     public void DragLearningElement_CallsPresentationLogic()
     {
-        var element = new LearningElementViewModel("g", "g", null!, "g", "g", "g", LearningElementDifficultyEnum.Easy);
+        var element = new LearningElementViewModel("g",  null!, "g", "g", LearningElementDifficultyEnum.Easy);
         double oldPositionX = 5;
         double oldPositionY = 7;
         var presentationLogic = Substitute.For<IPresentationLogic>();
@@ -99,7 +99,7 @@ public class LearningSpacePresenterUt
     public void SetSelectedLearningElement_SelectedLearningSpaceIsNull_ThrowsException()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        var element = new LearningElementViewModel("foo", "bar", null!,"bar", "foo", "bar", LearningElementDifficultyEnum.Easy, null, 6);
+        var element = new LearningElementViewModel("foo", null!, "foo", "bar", LearningElementDifficultyEnum.Easy, null, 6);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetSelectedLearningElement(element));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
@@ -140,7 +140,7 @@ public class LearningSpacePresenterUt
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         var content = new FileContentViewModel("bar", "foo", "");
-        var element = new LearningElementViewModel("f", "f", content,"f", "f", "f", LearningElementDifficultyEnum.Easy, space);
+        var element = new LearningElementViewModel("f", content, "f", "f", LearningElementDifficultyEnum.Easy, space);
         space.LearningSpaceLayout.PutElement(0, element);
         space.SelectedLearningElement = element;
 
@@ -186,7 +186,7 @@ public class LearningSpacePresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         var content = new FileContentViewModel("bar", "foo", "");
-        var element = new LearningElementViewModel("f", "f", content,"f",
+        var element = new LearningElementViewModel("f",content,
             "f", "f", LearningElementDifficultyEnum.Easy, space);
         space.LearningSpaceLayout.PutElement(0, element);
         space.SelectedLearningElement = element;
@@ -230,7 +230,7 @@ public class LearningSpacePresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         var content = new FileContentViewModel("bar", "foo", "");
-        var element = new LearningElementViewModel("f", "f", content,"f",
+        var element = new LearningElementViewModel("f",  content,
             "f", "f", LearningElementDifficultyEnum.Easy, space);
         space.LearningSpaceLayout.PutElement(0, element);
         space.SelectedLearningElement = element;
@@ -262,7 +262,7 @@ public class LearningSpacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
-        var element = new LearningElementViewModel("a", "b", null!,"d", "e", "f", LearningElementDifficultyEnum.Medium, space);
+        var element = new LearningElementViewModel("a", null!, "e", "f", LearningElementDifficultyEnum.Medium, space);
         space.LearningSpaceLayout.PutElement(0, element);
         
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);

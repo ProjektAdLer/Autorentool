@@ -365,21 +365,23 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
-    public void CreateUnplacedLearningElement(ILearningWorldViewModel learningWorldVm, string name, string shortname,
-        ILearningContentViewModel learningContentVm, string authors, string description, string goals,
-        LearningElementDifficultyEnum difficulty, int workload, int points, double positionX = 0, double positionY = 0)
+    public void CreateUnplacedLearningElement(ILearningWorldViewModel learningWorldVm, string name,
+        ILearningContentViewModel learningContentVm, string description, string goals,
+        LearningElementDifficultyEnum difficulty, int workload, int points, double positionX = 0D,
+        double positionY = 0D)
     {
         var learningWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
         var contentEntity = Mapper.Map<BusinessLogic.Entities.LearningContent.ILearningContent>(learningContentVm);
-        
-        var command = new CreateUnplacedLearningElement(learningWorldEntity, name, shortname, contentEntity, authors, description, goals, difficulty, workload, points, positionX, positionY, 
+
+        var command = new CreateUnplacedLearningElement(learningWorldEntity, name, contentEntity, description, goals,
+            difficulty, workload, points, positionX, positionY,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
     }
     
     /// <inheritdoc cref="IPresentationLogic.CreateLearningElementInSlot"/>
-    public void CreateLearningElementInSlot(ILearningSpaceViewModel parentSpaceVm, int slotIndex, string name, string shortname,
-        ILearningContentViewModel learningContentVm, string authors, string description, string goals,
+    public void CreateLearningElementInSlot(ILearningSpaceViewModel parentSpaceVm, int slotIndex, string name, 
+        ILearningContentViewModel learningContentVm, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double positionX = 0, double positionY = 0)
     {
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
@@ -388,15 +390,15 @@ public class PresentationLogic : IPresentationLogic
         //TODO: temporary testing code
         
 
-        var command = new CreateLearningElementInSlot(parentSpaceEntity, slotIndex, name, shortname, contentEntity, authors, description, goals, difficulty, workload, points, positionX, positionY, 
+        var command = new CreateLearningElementInSlot(parentSpaceEntity, slotIndex, name, contentEntity, description, goals, difficulty, workload, points, positionX, positionY, 
             parent => CMapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
     } 
     
     /// <inheritdoc cref="IPresentationLogic.EditLearningElement"/>
     public void EditLearningElement(ILearningSpaceViewModel? parentSpaceVm,
-        ILearningElementViewModel learningElementVm, string name, string shortname, string authors, string description,
-        string goals, LearningElementDifficultyEnum difficulty, int workload, int points, 
+        ILearningElementViewModel learningElementVm, string name, string description,
+        string goals, LearningElementDifficultyEnum difficulty, int workload, int points,
         ILearningContentViewModel learningContentViewModel)
     {
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
@@ -408,7 +410,7 @@ public class PresentationLogic : IPresentationLogic
             parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
         }
 
-        var command = new EditLearningElement(elementEntity, parentSpaceEntity, name, shortname, authors, description,
+        var command = new EditLearningElement(elementEntity, parentSpaceEntity, name, description,
             goals, difficulty, workload, points, contentEntity, element => CMapper.Map(element, learningElementVm));
         BusinessLogic.ExecuteCommand(command);
     }

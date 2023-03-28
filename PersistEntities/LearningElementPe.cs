@@ -5,27 +5,17 @@ namespace PersistEntities;
 
 [Serializable]
 [DataContract]
-[KnownType(typeof(H5PActivationElementPe))]
-[KnownType(typeof(H5PInteractionElementPe))]
-[KnownType(typeof(H5PTestElementPe))]
-[KnownType(typeof(ImageTransferElementPe))]
-[KnownType(typeof(PdfTransferElementPe))]
-[KnownType(typeof(TextTransferElementPe))]
-[KnownType(typeof(VideoActivationElementPe))]
-[KnownType(typeof(VideoTransferElementPe))]
 [KnownType(typeof(FileContentPe))]
 [KnownType(typeof(LinkContentPe))]
 public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
 {
-    public LearningElementPe(string name, string shortname, ILearningContentPe? learningContent,
-        string authors, string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload = 0,
+    public LearningElementPe(string name, ILearningContentPe? learningContent,
+        string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload = 0,
         int points = 0, double positionX = 0, double positionY = 0)
     {
         Id = Guid.NewGuid();
         Name = name;
-        Shortname = shortname;
         LearningContent = learningContent;
-        Authors = authors;
         Description = description;
         Goals = goals;
         Difficulty = difficulty;
@@ -41,10 +31,8 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
     {
         Id = Guid.Empty;
         Name = "";
-        Shortname = "";
         // Overridden because private automapper/serialization constructor - n.stich
         LearningContent = null!;
-        Authors = "";
         Description = "";
         Goals = "";
         Difficulty = LearningElementDifficultyEnumPe.Medium;
@@ -58,11 +46,7 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
     [DataMember]
     public string Name { get; set; }
     [DataMember]
-    public string Shortname { get; set; }
-    [DataMember]
     public ILearningContentPe LearningContent { get; set; }
-    [DataMember]
-    public string Authors { get; set; }
     [DataMember]
     public string Description { get; set; }
     [DataMember]

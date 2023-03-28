@@ -67,7 +67,7 @@ public class LearningWorldUt
         var descriptionChanged = "changed description";
         var goalsChanged = "new goals";
         var newContent2 = new FileContent("w", "e", "");
-        var newElement = new LearningElement("foo", "bar", newContent2, "nstich", "asdf", "qwer",
+        var newElement = new LearningElement("foo", newContent2, "asdf", "qwer",
             LearningElementDifficultyEnum.Easy);
         var space2 = new LearningSpace("gg", "gg", "gg", "gg", "gg", 5);
 

@@ -400,33 +400,33 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     }
     
     public void EditLearningElement(ILearningSpaceViewModel? elementParent, ILearningElementViewModel learningElement,
-        string name, string shortname, string authors, string description, string goals, LearningElementDifficultyEnum difficulty,
+        string name, string description, string goals, LearningElementDifficultyEnum difficulty,
         int workload, int points, ILearningContentViewModel learningContent)
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         LearningWorldVm.SelectedLearningElement = learningElement;
         if (LearningWorldVm.UnplacedLearningElements.Contains(learningElement) && elementParent == null)
-            _presentationLogic.EditLearningElement(elementParent, learningElement, name, shortname, authors,
+            _presentationLogic.EditLearningElement(elementParent, learningElement, name,
                 description,
                 goals, difficulty, workload, points, learningContent);
         else if (LearningWorldVm.SelectedLearningObjectInPathWay is LearningSpaceViewModel learningSpaceViewModel &&
                  learningSpaceViewModel.ContainedLearningElements.Contains(learningElement) &&
                  learningSpaceViewModel == elementParent &&
                  learningSpaceViewModel.SelectedLearningElement == learningElement)
-            _learningSpacePresenter.EditLearningElement(learningElement, name, shortname, authors, description,
+            _learningSpacePresenter.EditLearningElement(learningElement, name, description,
                 goals, difficulty, workload, points, learningContent);
     }
     
     public IEnumerable<ILearningContentViewModel> GetAllContent() => _presentationLogic.GetAllContent();
 
-    public void CreateUnplacedLearningElement(LearningWorldViewModel selectedLearningWorld, string name, string shortname,
-        ILearningContentViewModel learningContent, string authors, string description, string goals,
+    public void CreateUnplacedLearningElement(string name,
+        ILearningContentViewModel learningContent, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points)
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        _presentationLogic.CreateUnplacedLearningElement(LearningWorldVm, name, shortname, learningContent, authors,
+        _presentationLogic.CreateUnplacedLearningElement(LearningWorldVm, name, learningContent,
             description, goals, difficulty, workload, points);
     }
 

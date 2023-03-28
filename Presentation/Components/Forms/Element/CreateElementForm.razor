@@ -85,9 +85,9 @@
         if(AuthoringToolWorkspaceViewModel.SelectedLearningWorld.SelectedLearningObjectInPathWay is not LearningSpaceViewModel) 
             throw new InvalidOperationException("Selected object is not a learning space.");
 
-        WorldPresenter.CreateUnplacedLearningElement(AuthoringToolWorkspaceViewModel.SelectedLearningWorld,
-            //ignore null warning here because validation ensures that LearningContent is not null - m.ho
-            model.Name, "", model.LearningContent!, "", model.Description, model.Goals, model.Difficulty,
+        WorldPresenter.CreateUnplacedLearningElement(
+    //ignore null warning here because validation ensures that LearningContent is not null - m.ho
+            model.Name, model.LearningContent!, model.Description, model.Goals, model.Difficulty,
             model.Workload, model.Points);
         OnSubmitted.InvokeAsync();
     }

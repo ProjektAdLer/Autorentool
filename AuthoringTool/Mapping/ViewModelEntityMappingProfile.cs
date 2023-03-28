@@ -6,10 +6,6 @@ using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
-using Presentation.PresentationLogic.LearningElement.ActivationElement;
-using Presentation.PresentationLogic.LearningElement.InteractionElement;
-using Presentation.PresentationLogic.LearningElement.TestElement;
-using Presentation.PresentationLogic.LearningElement.TransferElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
@@ -36,7 +32,6 @@ public class ViewModelEntityMappingProfile : Profile
         CreateLearningElementMap();
         CreateLearningContentMap();
         CreatePathwayMaps();
-        CreateDerivedElementMaps();
         CreateInterfaceMaps();
         CreateLearningSpaceLayoutMap();
     }
@@ -93,24 +88,6 @@ public class ViewModelEntityMappingProfile : Profile
 
         CreateMap<LearningSpace, IObjectInPathWayViewModel>().As<LearningSpaceViewModel>();
 
-        CreateMap<H5PActivationElement, ILearningElementViewModel>().As<H5PActivationElementViewModel>();
-        CreateMap<H5PInteractionElement, ILearningElementViewModel>().As<H5PInteractionElementViewModel>();
-        CreateMap<H5PTestElement, ILearningElementViewModel>().As<H5PTestElementViewModel>();
-        CreateMap<ImageTransferElement, ILearningElementViewModel>().As<ImageTransferElementViewModel>();
-        CreateMap<PdfTransferElement, ILearningElementViewModel>().As<PdfTransferElementViewModel>();
-        CreateMap<VideoActivationElement, ILearningElementViewModel>().As<VideoActivationElementViewModel>();
-        CreateMap<VideoTransferElement, ILearningElementViewModel>().As<VideoTransferElementViewModel>();
-        CreateMap<TextTransferElement, ILearningElementViewModel>().As<TextTransferElementViewModel>();
-
-        CreateMap<H5PActivationElementViewModel, ILearningElement>().As<H5PActivationElement>();
-        CreateMap<H5PInteractionElementViewModel, ILearningElement>().As<H5PInteractionElement>();
-        CreateMap<H5PTestElementViewModel, ILearningElement>().As<H5PTestElement>();
-        CreateMap<ImageTransferElementViewModel, ILearningElement>().As<ImageTransferElement>();
-        CreateMap<PdfTransferElementViewModel, ILearningElement>().As<PdfTransferElement>();
-        CreateMap<VideoActivationElementViewModel, ILearningElement>().As<VideoActivationElement>();
-        CreateMap<VideoTransferElementViewModel, ILearningElement>().As<VideoTransferElement>();
-        CreateMap<TextTransferElementViewModel, ILearningElement>().As<TextTransferElement>();
-
         CreateMap<ISelectableObjectInWorld, ISelectableObjectInWorldViewModel>()
             .ReverseMap();
 
@@ -118,35 +95,6 @@ public class ViewModelEntityMappingProfile : Profile
         CreateMap<LearningSpaceLayoutViewModel, ILearningSpaceLayout>().As<LearningSpaceLayout>();
         CreateMap<ILearningSpaceLayout, ILearningSpaceLayoutViewModel>().As<LearningSpaceLayoutViewModel>();
         CreateMap<ILearningSpaceLayoutViewModel, ILearningSpaceLayout>().As<LearningSpaceLayout>();
-    }
-
-    private void CreateDerivedElementMaps()
-    {
-        //Element derived types
-        CreateMap<H5PActivationElement, H5PActivationElementViewModel>()
-            .IncludeBase<LearningElement, LearningElementViewModel>()
-            .ReverseMap();
-        CreateMap<H5PInteractionElement, H5PInteractionElementViewModel>()
-            .IncludeBase<LearningElement, LearningElementViewModel>()
-            .ReverseMap();
-        CreateMap<H5PTestElement, H5PTestElementViewModel>()
-            .IncludeBase<LearningElement, LearningElementViewModel>()
-            .ReverseMap();
-        CreateMap<ImageTransferElement, ImageTransferElementViewModel>()
-            .IncludeBase<LearningElement, LearningElementViewModel>()
-            .ReverseMap();
-        CreateMap<PdfTransferElement, PdfTransferElementViewModel>()
-            .IncludeBase<LearningElement, LearningElementViewModel>()
-            .ReverseMap();
-        CreateMap<VideoActivationElement, VideoActivationElementViewModel>()
-            .IncludeBase<LearningElement, LearningElementViewModel>()
-            .ReverseMap();
-        CreateMap<VideoTransferElement, VideoTransferElementViewModel>()
-            .IncludeBase<LearningElement, LearningElementViewModel>()
-            .ReverseMap();
-        CreateMap<TextTransferElement, TextTransferElementViewModel>()
-            .IncludeBase<LearningElement, LearningElementViewModel>()
-            .ReverseMap();
     }
 
     private void CreateLearningElementMap()

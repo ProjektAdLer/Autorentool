@@ -1,11 +1,8 @@
 @page "/LearningWorldOverView"
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.Components
+@using Presentation.PresentationLogic.LearningContent
 @using Presentation.PresentationLogic.LearningElement
-@using Presentation.PresentationLogic.LearningElement.ActivationElement
-@using Presentation.PresentationLogic.LearningElement.InteractionElement
-@using Presentation.PresentationLogic.LearningElement.TestElement
-@using Presentation.PresentationLogic.LearningElement.TransferElement
 
 @if (LearningWorldP?.LearningWorldVm != null)
 {
@@ -37,17 +34,18 @@
 
     private string GetElementIcon(ILearningElementViewModel element)
     {
-        return element switch
+        return element.LearningContent switch
         {
-            H5PActivationElementViewModel => CustomIcons.H5PElementIcon,
-            VideoActivationElementViewModel => CustomIcons.VideoElementIcon,
-            H5PInteractionElementViewModel => CustomIcons.H5PElementIcon,
-            H5PTestElementViewModel => CustomIcons.H5PElementIcon,
-            ImageTransferElementViewModel => CustomIcons.ImageElementIcon,
-            PdfTransferElementViewModel => CustomIcons.TextElementIcon,
-            TextTransferElementViewModel => CustomIcons.TextElementIcon,
-            VideoTransferElementViewModel => CustomIcons.VideoElementIcon,
-            _ => throw new ArgumentOutOfRangeException(nameof(element))
+            ILinkContentViewModel => CustomIcons.VideoElementIcon,
+            IFileContentViewModel { Type: "png" or "jpg" or "bmp" or "webp" } => CustomIcons.ImageElementIcon,
+            IFileContentViewModel
+            {
+                Type: "txt" or "c" or "h" or "cpp" or "cc" or "c++" or "py" or
+                    "js" or "php" or "html" or "css"
+                } => CustomIcons.TextElementIcon,
+            IFileContentViewModel { Type: "h5p" } => CustomIcons.H5PElementIcon,
+            IFileContentViewModel { Type: "pdf" } => CustomIcons.TextElementIcon,
+            _ => throw new ArgumentOutOfRangeException(nameof(LearningElement))
             };
     }
 }

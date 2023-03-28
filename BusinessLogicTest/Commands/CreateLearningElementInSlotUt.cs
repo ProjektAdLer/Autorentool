@@ -16,8 +16,7 @@ public class CreateLearningElementInSlotUt
         var testParameter = new TestParameter();
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateLearningElementInSlot(testParameter.SpaceParent, 0, testParameter.Name, testParameter.ShortName, testParameter.Content,
-            testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
+        var command = new CreateLearningElementInSlot(testParameter.SpaceParent, 0, testParameter.Name, testParameter.Content, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points, testParameter.PositionX,testParameter.PositionY, mappingAction);
 
         Assert.IsEmpty(testParameter.SpaceParent.ContainedLearningElements);
@@ -31,10 +30,8 @@ public class CreateLearningElementInSlotUt
         Assert.Multiple(() =>
         {
             Assert.That(element.Name, Is.EqualTo(testParameter.Name));
-            Assert.That(element.Shortname, Is.EqualTo(testParameter.ShortName));
             Assert.That(element.Parent, Is.EqualTo(testParameter.SpaceParent));
             Assert.That(element.LearningContent, Is.EqualTo(testParameter.Content));
-            Assert.That(element.Authors, Is.EqualTo(testParameter.Authors));
             Assert.That(element.Description, Is.EqualTo(testParameter.Description));
             Assert.That(element.Goals, Is.EqualTo(testParameter.Goals));
             Assert.That(element.Workload, Is.EqualTo(testParameter.Workload));
@@ -49,9 +46,8 @@ public class CreateLearningElementInSlotUt
         var testParameter = new TestParameter();
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
-        var element = new LearningElement(testParameter.Name, testParameter.ShortName, testParameter.Content,
-            testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty, testParameter.SpaceParent,
-            testParameter.Workload, testParameter.Points,1,2);
+        var element = new LearningElement(testParameter.Name, testParameter.Content, testParameter.Description, testParameter.Goals, testParameter.Difficulty, testParameter.SpaceParent,
+            workload: testParameter.Workload, points: testParameter.Points,positionX: 1,positionY: 2);
         
         var command = new CreateLearningElementInSlot(testParameter.SpaceParent, 0, element, mappingAction);
 
@@ -77,11 +73,10 @@ public class CreateLearningElementInSlotUt
         var spaceParent = testParameter.SpaceParent;
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateLearningElementInSlot(spaceParent, 1, testParameter.Name, testParameter.ShortName, testParameter.Content,
-            testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
+        var command = new CreateLearningElementInSlot(spaceParent, 1, testParameter.Name, testParameter.Content, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY,
             mappingAction);
-        var element2 = new LearningElement("x", "x", null!, "x", "x", "x", LearningElementDifficultyEnum.Easy);
+        var element2 = new LearningElement("x", null!, "x", "x", LearningElementDifficultyEnum.Easy);
         spaceParent.LearningSpaceLayout.LearningElements = new ILearningElement?[]{element2, null, null, null, null, null};
         spaceParent.SelectedLearningElement = element2;
         
@@ -117,8 +112,7 @@ public class CreateLearningElementInSlotUt
         var testParameter = new TestParameter();
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateLearningElementInSlot(testParameter.SpaceParent, 0, testParameter.Name, testParameter.ShortName, testParameter.Content,
-            testParameter.Authors, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
+        var command = new CreateLearningElementInSlot(testParameter.SpaceParent, 0, testParameter.Name, testParameter.Content, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY, mappingAction);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
@@ -132,9 +126,7 @@ public class TestParameter
     public readonly LearningSpace SpaceParent;
     public readonly LearningWorld WorldParent;
     public readonly string Name;
-    public readonly string ShortName;
     public readonly ILearningContent Content;
-    public readonly string Authors;
     public readonly string Description;
     public readonly string Goals;
     public readonly LearningElementDifficultyEnum Difficulty;
@@ -148,9 +140,7 @@ public class TestParameter
         SpaceParent = new LearningSpace("l", "m", "n", "o", "p", 0, new LearningSpaceLayout(new ILearningElement?[6], FloorPlanEnum.Rectangle2X3));
         WorldParent = new LearningWorld("q", "r", "s", "t", "u","o");
         Name = "a";
-        ShortName = "b";
         Content = new FileContent("bar", "foo", "");
-        Authors = "d";
         Description = "e";
         Goals = "f";
         Difficulty = LearningElementDifficultyEnum.Easy;

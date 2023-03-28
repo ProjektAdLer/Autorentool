@@ -95,15 +95,15 @@ public class CreateDslUt
     public void CreateDSL_SearchDuplicateLearningElementNames_DuplicatesFoundAndNamesChanged()
     {
         //Arrange
-        var mockElement1 = new LearningElementPe("Same Name Element", "el", null, "", 
+        var mockElement1 = new LearningElementPe("Same Name Element", null, 
             "", "",  LearningElementDifficultyEnumPe.Easy);
-        var mockElement2 = new LearningElementPe("Another Element", "el", null, "", 
+        var mockElement2 = new LearningElementPe("Another Element", null, 
             "", "",  LearningElementDifficultyEnumPe.Easy);
-        var mockElement3 = new LearningElementPe("Same Name Element", "el", null, "", 
+        var mockElement3 = new LearningElementPe("Same Name Element", null, 
             "", "",  LearningElementDifficultyEnumPe.Easy);
-        var mockElement4 = new LearningElementPe("Same Name Element", "el", null, "", 
+        var mockElement4 = new LearningElementPe("Same Name Element", null, 
             "", "",  LearningElementDifficultyEnumPe.Easy);
-        var mockElement5 = new LearningElementPe("Same Name Element", "el", null, "", 
+        var mockElement5 = new LearningElementPe("Same Name Element", null, 
             "", "",  LearningElementDifficultyEnumPe.Easy);
         
         var mockLearningElements1 = new ILearningElementPe?[] {mockElement1, mockElement2};
@@ -169,16 +169,16 @@ public class CreateDslUt
         var content4 = new FileContentPe("FileName", "txt", "/foo/foo.txt");
         var content5 = new FileContentPe("FileName", "pdf", "/foo/foo.txt");
 
-        var ele1 = new LearningElementPe("a", "b",content1, "", "pupup", "g", 
-            LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
-        var ele2 = new LearningElementPe("b", "b",content2, "", "pupup", "g", 
-            LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
-        var ele3 = new LearningElementPe("c", "b", content3, "","pupup", "g", 
-            LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
-        var ele4 = new LearningElementPe("d", "b",content4, "","pupup", "g", 
-            LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
-        var ele5 = new LearningElementPe("e", "b",content5, "","pupup", "g", 
-            LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
+        var ele1 = new LearningElementPe("a",content1, "pupup", "g", 
+            LearningElementDifficultyEnumPe.Easy, workload: 17, points: 2, positionX: 23);
+        var ele2 = new LearningElementPe("b",content2, "pupup", "g", 
+            LearningElementDifficultyEnumPe.Easy, workload: 17, points: 2, positionX: 23);
+        var ele3 = new LearningElementPe("c", content3,"pupup", "g", 
+            LearningElementDifficultyEnumPe.Easy, workload: 17, points: 2, positionX: 23);
+        var ele4 = new LearningElementPe("d",content4,"pupup", "g", 
+            LearningElementDifficultyEnumPe.Easy, workload: 17, points: 2, positionX: 23);
+        var ele5 = new LearningElementPe("e",content5,"pupup", "g", 
+            LearningElementDifficultyEnumPe.Easy, workload: 17, points: 2, positionX: 23);
         
 
         var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
@@ -255,8 +255,8 @@ public class CreateDslUt
         
         var content1 = new FileContentPe("FileName", "mp3", "/foo/bar.txt");
 
-        var ele1 = new LearningElementPe("a", "b", content1, "", "pupup", "g",
-            LearningElementDifficultyEnumPe.Easy, 17, 2, 23);
+        var ele1 = new LearningElementPe("a", content1, "pupup", "g",
+            LearningElementDifficultyEnumPe.Easy, workload: 17, points: 2, positionX: 23);
 
         var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
             null, 0, 0, new List<IObjectInPathWayPe>(), 

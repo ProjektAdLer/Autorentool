@@ -14,11 +14,9 @@ public class LearningElement : ILearningElement, IOriginator
     {
         Id = Guid.NewGuid();
         Name = "";
-        Shortname = "";
         //We override nullability here because constructor is protected, only called by AutoMapper and field immediately
         //set by AutoMapper afterwards - n.stich
         LearningContent = null!;
-        Authors = "";
         Description = "";
         Goals = "";
         Difficulty = LearningElementDifficultyEnum.None;
@@ -29,16 +27,14 @@ public class LearningElement : ILearningElement, IOriginator
         Parent = null;
     }
 
-    public LearningElement(string name, string shortname, ILearningContent learningContent,
-        string authors, string description, string goals, LearningElementDifficultyEnum difficulty,
+    public LearningElement(string name, ILearningContent learningContent,
+        string description, string goals, LearningElementDifficultyEnum difficulty,
         ILearningSpace? parent = null, int workload = 0, int points = 0,
         double positionX = 0, double positionY = 0)
     {
         Id = Guid.NewGuid();
         Name = name;
-        Shortname = shortname;
         LearningContent = learningContent;
-        Authors = authors;
         Description = description;
         Goals = goals;
         Difficulty = difficulty;
@@ -52,10 +48,8 @@ public class LearningElement : ILearningElement, IOriginator
     // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local - required for automapper n.stich
     public Guid Id { get; private set; }
     public string Name { get; set; }
-    public string Shortname { get; set; }
     public ILearningSpace? Parent { get; set; }
     public ILearningContent LearningContent { get; set; }
-    public string Authors { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
     public int Workload { get; set; }
@@ -66,7 +60,7 @@ public class LearningElement : ILearningElement, IOriginator
 
     public IMemento GetMemento()
     {
-        return new LearningElementMemento(Name, Shortname, LearningContent, Authors, Description, Goals, Workload,
+        return new LearningElementMemento(Name, LearningContent, Description, Goals, Workload,
             Points, Difficulty, Parent, PositionX, PositionY);
     }
 
@@ -77,9 +71,7 @@ public class LearningElement : ILearningElement, IOriginator
             throw new ArgumentException("Incorrect IMemento implementation", nameof(memento));
         }
         Name = learningElementMemento.Name;
-        Shortname = learningElementMemento.Shortname;
         LearningContent = learningElementMemento.Content;
-        Authors = learningElementMemento.Authors;
         Description = learningElementMemento.Description;
         Goals = learningElementMemento.Goals;
         Workload = learningElementMemento.Workload;
@@ -92,14 +84,12 @@ public class LearningElement : ILearningElement, IOriginator
 
     private record LearningElementMemento : IMemento
     {
-        internal LearningElementMemento(string name, string shortname, ILearningContent content, string authors,
-            string description, string goals, int workload, int points, LearningElementDifficultyEnum difficulty,
-            ILearningSpace? parent, double positionX = 0, double positionY = 0)
+        internal LearningElementMemento(string name,ILearningContent content, string description, string goals,
+            int workload, int points, LearningElementDifficultyEnum difficulty, ILearningSpace? parent, 
+            double positionX = 0, double positionY = 0)
         {
             Name = name;
-            Shortname = shortname;
             Content = content;
-            Authors = authors;
             Description = description;
             Goals = goals;
             Workload = workload;
@@ -111,10 +101,8 @@ public class LearningElement : ILearningElement, IOriginator
         }
         
         internal string Name { get; }
-        internal string Shortname { get; }
         internal ILearningSpace? Parent { get; }
         internal ILearningContent Content { get; }
-        internal string Authors { get; }
         internal string Description { get; }
         internal string Goals { get; }
         internal int Workload { get; }

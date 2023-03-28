@@ -10,8 +10,6 @@ public class EditLearningElement : IUndoCommand
     internal LearningElement LearningElement { get; }
     internal LearningSpace? ParentSpace { get; }
     private readonly string _name;
-    private readonly string _shortName;
-    private readonly string _authors;
     private readonly string _description;
     private readonly string _goals;
     private readonly LearningElementDifficultyEnum _difficulty;
@@ -22,14 +20,12 @@ public class EditLearningElement : IUndoCommand
     private IMemento? _memento;
     
     public EditLearningElement(LearningElement learningElement, LearningSpace? parentSpace, string name,
-        string shortName, string authors, string description, string goals, LearningElementDifficultyEnum difficulty,
+        string description, string goals, LearningElementDifficultyEnum difficulty,
         int workload, int points, ILearningContent learningContent, Action<LearningElement> mappingAction)
     {
         LearningElement = learningElement;
         ParentSpace = parentSpace;
         _name = name;
-        _shortName = shortName;
-        _authors = authors;
         _description = description;
         _goals = goals;
         _difficulty = difficulty;
@@ -44,9 +40,7 @@ public class EditLearningElement : IUndoCommand
         _memento = LearningElement.GetMemento();
 
         LearningElement.Name = _name;
-        LearningElement.Shortname = _shortName;
         LearningElement.Parent = ParentSpace;
-        LearningElement.Authors = _authors;
         LearningElement.Description = _description;
         LearningElement.Goals = _goals;
         LearningElement.Difficulty = _difficulty;
