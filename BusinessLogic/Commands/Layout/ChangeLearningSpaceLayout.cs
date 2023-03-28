@@ -35,7 +35,7 @@ public class ChangeLearningSpaceLayout : IUndoCommand
             .OrderBy(kvP => kvP.Key)
             .Skip(capacity);
         //compress the element indices if necessary
-        if (newLearningElementDictionary.Max(kvP => kvP.Key) >= capacity)
+        if (newLearningElementDictionary.Any() && newLearningElementDictionary.Max(kvP => kvP.Key) >= capacity)
         {
             newLearningElementDictionary =
                 newLearningElementDictionary
