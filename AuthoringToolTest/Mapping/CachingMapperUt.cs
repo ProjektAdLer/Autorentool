@@ -389,7 +389,7 @@ public class CachingMapperUt
         var config = new MapperConfiguration(cfg=>
         {
             ViewModelEntityMappingProfile.Configure(cfg);
-            cfg.AddCollectionMappers();
+            cfg.AddCollectionMappersOnce();
         });
         mapper ??= config.CreateMapper();
         commandStateManager ??= Substitute.For<ICommandStateManager>();

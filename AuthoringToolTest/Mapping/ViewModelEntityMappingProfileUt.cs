@@ -55,7 +55,7 @@ public class ViewModelEntityMappingProfileUt
         var mapper = new MapperConfiguration(cfg=>
         {
             ViewModelEntityMappingProfile.Configure(cfg);
-            cfg.AddCollectionMappers();
+            cfg.AddCollectionMappersOnce();
         });
         var plan = mapper
             .BuildExecutionPlan(typeof(LearningSpaceLayout), typeof(LearningSpaceLayoutViewModel))
@@ -89,7 +89,7 @@ public class ViewModelEntityMappingProfileUt
         var mapper = new MapperConfiguration(cfg =>
         {
             ViewModelEntityMappingProfile.Configure(cfg);
-            cfg.AddCollectionMappers();
+            cfg.AddCollectionMappersOnce();
         });
 
         Assert.That(() => mapper.AssertConfigurationIsValid(), Throws.Nothing);
@@ -730,7 +730,7 @@ public class ViewModelEntityMappingProfileUt
         var mapper = new MapperConfiguration(cfg =>
         {
             ViewModelEntityMappingProfile.Configure(cfg);
-            cfg.AddCollectionMappers();
+            cfg.AddCollectionMappersOnce();
         });
         var systemUnderTest = mapper.CreateMapper();
         return systemUnderTest;

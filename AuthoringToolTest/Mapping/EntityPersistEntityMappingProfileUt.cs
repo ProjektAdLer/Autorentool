@@ -53,7 +53,7 @@ public class EntityPersistEntityMappingProfileUt
         var mapper = new MapperConfiguration(cfg=>
         {
             EntityPersistEntityMappingProfile.Configure(cfg);
-            cfg.AddCollectionMappers();
+            cfg.AddCollectionMappersOnce();
         });
 
         Assert.That(() => mapper.AssertConfigurationIsValid(), Throws.Nothing);

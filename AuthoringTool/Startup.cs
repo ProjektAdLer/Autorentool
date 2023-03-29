@@ -170,7 +170,7 @@ public class Startup
             FormModelEntityMappingProfile.Configure(cfg);
             ViewModelFormModelMappingProfile.Configure(cfg);
             ApiResponseEntityMappingProfile.Configure(cfg);
-            cfg.AddCollectionMappers();
+            cfg.AddCollectionMappersOnce();
         });
 
         var mapper = config.CreateMapper();

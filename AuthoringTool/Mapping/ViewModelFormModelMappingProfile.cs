@@ -12,6 +12,7 @@ public class ViewModelFormModelMappingProfile : Profile
     public static Action<IMapperConfigurationExpression> Configure => cfg =>
     {
         cfg.AddProfile(new ViewModelFormModelMappingProfile());
+        cfg.AddCollectionMappersOnce();
     };
     
     private ViewModelFormModelMappingProfile()

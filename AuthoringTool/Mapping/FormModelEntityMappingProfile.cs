@@ -10,6 +10,7 @@ public class FormModelEntityMappingProfile : Profile
     public static Action<IMapperConfigurationExpression> Configure => cfg =>
     {
         cfg.AddProfile(new FormModelEntityMappingProfile());
+        cfg.AddCollectionMappersOnce();
     };
 
     private FormModelEntityMappingProfile()

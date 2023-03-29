@@ -15,6 +15,7 @@ public class EntityPersistEntityMappingProfile : Profile
     public static Action<IMapperConfigurationExpression> Configure => cfg =>
     {
         cfg.AddProfile(new EntityPersistEntityMappingProfile());
+        cfg.AddCollectionMappersOnce();
     };
 
     private EntityPersistEntityMappingProfile()

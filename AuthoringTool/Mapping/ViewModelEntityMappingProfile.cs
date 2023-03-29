@@ -21,6 +21,7 @@ public class ViewModelEntityMappingProfile : Profile
     public static Action<IMapperConfigurationExpression> Configure => cfg =>
     {
         cfg.AddProfile(new ViewModelEntityMappingProfile());
+        cfg.AddCollectionMappersOnce();
     };
 
     private ViewModelEntityMappingProfile()
