@@ -11,7 +11,7 @@
             <h3 class="font-bold text-2xl text-center text-adlerdarkblue">MyLearningWorldsOverview</h3>
         </section>
         <section class="flex flex-col m-auto gap-8">
-            <MudGrid Spacing="2">
+            <MudGrid Class="flex justify-center" Spacing="2">
                 @foreach (var myLearningWorld in MyLearningWorldsProvider.GetLoadedLearningWorlds())
                 {
                     <LearningWorldCard LearningWorldPath="@myLearningWorld" OnOpenLearningWorld="OpenLearningWorld" IsLoaded="true"/>
