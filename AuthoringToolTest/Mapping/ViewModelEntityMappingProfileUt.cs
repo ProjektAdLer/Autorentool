@@ -65,7 +65,7 @@ public class ViewModelEntityMappingProfileUt
         {
             {
                 1,
-                new LearningElement("foo", "bar", null, "foo", "bar", "bar", LearningElementDifficultyEnum.Easy)
+                new LearningElement("foo", null!, "bar",  "foo", LearningElementDifficultyEnum.Easy)
             }
         }, FloorPlanEnum.Rectangle2X2);
         var systemUnderTest = mapper.CreateMapper();
@@ -426,7 +426,7 @@ public class ViewModelEntityMappingProfileUt
             Assert.That(worldVm.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.Count(),
                 Is.EqualTo(1));
             Assert.That(worldVm.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().Name,
-                Is.EqualTo(worldEntity.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().Authors));
+                Is.EqualTo(worldEntity.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().Name));
             Assert.That(worldVm.LearningSpaces.First().ContainedLearningElements.First(), Is.EqualTo(elementVm1));
             Assert.That(worldVm.SelectedLearningObjectInPathWay, Is.EqualTo(space));
             Assert.That(worldVm.LearningSpaces.First().SelectedLearningElement, Is.EqualTo(elementVm1));
