@@ -56,6 +56,7 @@ public class MyLearningWorldsProvider : IMyLearningWorldsProvider
         else
         {
             Logger.LogDebug("Learning world {} is not loaded and not saved", savedLearningWorldPath.Name);
+            throw new ArgumentException("Learning world is not loaded and not saved");
         }
     }
 
