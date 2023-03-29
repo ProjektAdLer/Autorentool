@@ -284,6 +284,86 @@ public class BusinessLogicUt
     }
 
     [Test]
+    public void GetSavedLearningWorldPaths_CallsDataAccess()
+    {
+        var mockDataAccess = Substitute.For<IDataAccess>();
+
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
+
+        systemUnderTest.GetSavedLearningWorldPaths();
+
+        mockDataAccess.Received().GetSavedLearningWorldPaths();
+    }
+    
+    [Test]
+    public void AddSavedLearningWorldPath_CallsDataAccess()
+    {
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        var savedLearningWorldPath = new SavedLearningWorldPath();
+
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
+
+        systemUnderTest.AddSavedLearningWorldPath(savedLearningWorldPath);
+
+        mockDataAccess.Received().AddSavedLearningWorldPath(savedLearningWorldPath);
+    }
+    
+    [Test]
+    public void AddSavedLearningWorldPathByPathOnly_CallsDataAccess()
+    {
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        var path = "path";
+
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
+
+        systemUnderTest.AddSavedLearningWorldPathByPathOnly(path);
+
+        mockDataAccess.Received().AddSavedLearningWorldPathByPathOnly(path);
+    }
+    
+    [Test]
+    public void AddSavedLearningWorldPathByPathOnly_ReturnsSavedLearningWorldPath()
+    {
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        var path = "path";
+        var savedLearningWorldPath = new SavedLearningWorldPath();
+        mockDataAccess.AddSavedLearningWorldPathByPathOnly(path).Returns(savedLearningWorldPath);
+
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
+
+        var savedLearningWorldPathActual = systemUnderTest.AddSavedLearningWorldPathByPathOnly(path);
+
+        Assert.That(savedLearningWorldPathActual, Is.EqualTo(savedLearningWorldPath));
+    }
+    
+    [Test]
+    public void UpdateIdOfSavedLearningWorldPath_CallsDataAccess()
+    {
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        var savedLearningWorldPath = new SavedLearningWorldPath();
+        var changedId = Guid.NewGuid();
+
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
+
+        systemUnderTest.UpdateIdOfSavedLearningWorldPath(savedLearningWorldPath, changedId);
+
+        mockDataAccess.Received().UpdateIdOfSavedLearningWorldPath(savedLearningWorldPath, changedId);
+    }
+    
+    [Test]
+    public void RemoveSavedLearningWorldPath_CallsDataAccess()
+    {
+        var mockDataAccess = Substitute.For<IDataAccess>();
+        var savedLearningWorldPath = new SavedLearningWorldPath();
+
+        var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
+
+        systemUnderTest.RemoveSavedLearningWorldPath(savedLearningWorldPath);
+
+        mockDataAccess.Received().RemoveSavedLearningWorldPath(savedLearningWorldPath);
+    }
+    
+    [Test]
     public void LoadLearningWorldFromStream_CallsDataAccess()
     {
         var mockDataAccess = Substitute.For<IDataAccess>();
