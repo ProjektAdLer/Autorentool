@@ -5,6 +5,13 @@
 @typeparam TForm where TForm : new()
 @typeparam TEntity
 @implements IBaseForm
+<MudCardActions>
+    <MudButtonGroup OverrideStyles="false">
+        <CascadingValue Value="this">
+            @HeaderButtons
+        </CascadingValue>
+    </MudButtonGroup>
+</MudCardActions>
 <MudForm Model="@FormDataContainer.FormModel" @ref="@_form" Validation="@ValidateModel">
     <MudCardContent>
         @Fields
@@ -19,7 +26,7 @@
 <MudCardActions>
     <MudButtonGroup OverrideStyles="false">
         <CascadingValue Value="this">
-            @Buttons
+            @FooterButtons
         </CascadingValue>
     </MudButtonGroup>
 </MudCardActions>
@@ -41,8 +48,10 @@
     public IFormDataContainer<TForm, TEntity> FormDataContainer { get; set; }
     [Parameter, EditorRequired]
     public RenderFragment Fields { get; set; }
+    [Parameter]
+    public RenderFragment? HeaderButtons { get; set; }
     [Parameter, EditorRequired]
-    public RenderFragment? Buttons { get; set; }
+    public RenderFragment? FooterButtons { get; set; }
 #pragma warning restore CS8618
     
 #pragma warning disable CS8618 - set in OnInitialized and by framework via @ref - n.stich

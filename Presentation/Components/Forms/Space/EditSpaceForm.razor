@@ -41,11 +41,11 @@
                          DebounceInterval="300"
                          Label="@nameof(FormDataContainer.FormModel.RequiredPoints)"/>
     </Fields>
-    <Buttons>
+    <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
         <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="async () => await OnNewButtonClicked.InvokeAsync()">New</MudButton>
         <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="OnResetAsync">Reset</MudButton>
-    </Buttons>
+    </FooterButtons>
 </BaseForm>
 @code {
 #pragma warning disable CS8618 - injected by framework - n.stich
