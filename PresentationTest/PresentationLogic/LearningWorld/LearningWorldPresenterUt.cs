@@ -7,6 +7,8 @@ using Presentation.Components;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
@@ -763,6 +765,183 @@ public class LearningWorldPresenterUt
     }
 
     #endregion
+
+    #endregion
+
+    #region LearningElement
+
+    [Test]
+    public void SetSelectedLearningElement_SelectedLearningWorldIsNull_ThrowsException()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        var element = new LearningElementViewModel("a", null!, "d", "f", LearningElementDifficultyEnum.Easy);
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetSelectedLearningElement(element));
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+    }
+    
+    [Test]
+    public void SetSelectedLearningElement_SetsSelectedLearningElement()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var systemUnderTest = CreatePresenterForTesting();
+        var element = new LearningElementViewModel("a", null!, "d", "f", LearningElementDifficultyEnum.Easy);
+
+        systemUnderTest.LearningWorldVm = world;
+        systemUnderTest.SetSelectedLearningElement(element);
+        
+        Assert.That(world.SelectedLearningElement, Is.EqualTo(element));
+    }
+
+    [Test]
+    public void EditLearningElement_SelectedLearningWorldIsNull_ThrowsException()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        var element = new LearningElementViewModel("a", null!, "d", "f", LearningElementDifficultyEnum.Easy);
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditLearningElement(null, element, "a", "b", "c", LearningElementDifficultyEnum.Easy, 0, 0, null!));
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+    }
+    
+    [Test]
+    public void EditLearningElement_UnplacedDoesNotContainElement_ThrowsException()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var systemUnderTest = CreatePresenterForTesting();
+        var content = new LinkContentViewModel("a", "link");
+        var element = new LearningElementViewModel("a", content, "d", "f", LearningElementDifficultyEnum.Easy);
+
+        systemUnderTest.LearningWorldVm = world;
+        
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditLearningElement(null, element, "a", "b", "c", LearningElementDifficultyEnum.Easy, 0, 0, null!));
+        
+        Assert.That(ex!.Message, Is.EqualTo("LearningElement is not unplaced"));
+    }
+    
+    [Test]
+    public void EditLearningElement_ElementParentIsNotNull_ThrowsException()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var systemUnderTest = CreatePresenterForTesting();
+        var content = new LinkContentViewModel("a", "link");
+        var element = new LearningElementViewModel("a", content, "d", "f", LearningElementDifficultyEnum.Easy);
+        var space = new LearningSpaceViewModel("a", "b","c", "d", "e");
+
+        systemUnderTest.LearningWorldVm = world;
+        world.UnplacedLearningElements.Add(element);
+        
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditLearningElement(space, element, "a", "b", "c", LearningElementDifficultyEnum.Easy, 0, 0, null!));
+        
+        Assert.That(ex!.Message, Is.EqualTo("LearningElement is not unplaced"));
+    }
+    
+    [Test]
+    public void EditLearningElement_CallsPresentationLogic()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        var content = new LinkContentViewModel("a", "link");
+        var element = new LearningElementViewModel("a", content, "d", "f", LearningElementDifficultyEnum.Easy);
+        
+        systemUnderTest.LearningWorldVm = world;
+        world.UnplacedLearningElements.Add(element);
+        systemUnderTest.EditLearningElement(null, element, "a", "b", "c", LearningElementDifficultyEnum.Easy, 0, 0, content);
+        presentationLogic.Received().EditLearningElement(null, element, "a", "b", "c", LearningElementDifficultyEnum.Easy, 0, 0, content);
+    }
+    
+    [Test]
+    public void ShowSelectedElementContentAsync_SelectedLearningWorldIsNull_ThrowsException()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        var element = new LearningElementViewModel("a", null!, "d", "f", LearningElementDifficultyEnum.Easy);
+
+        var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
+            await systemUnderTest.ShowSelectedElementContentAsync(element));
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+    }
+    
+    [Test]
+    public async Task ShowSelectedElementContentAsync_CallsPresentationLogic()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        var content = new LinkContentViewModel("a", "link");
+        var element = new LearningElementViewModel("a", content, "d", "f", LearningElementDifficultyEnum.Easy);
+        
+        systemUnderTest.LearningWorldVm = world;
+        world.UnplacedLearningElements.Add(element);
+        await systemUnderTest.ShowSelectedElementContentAsync(element);
+        await presentationLogic.Received().ShowLearningElementContentAsync(element);
+        Assert.That(world.SelectedLearningElement, Is.EqualTo(element));
+    }
+    
+    [Test]
+    public void DeleteLearningElement_SelectedLearningWorldIsNull_ThrowsException()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        var element = new LearningElementViewModel("a", null!, "d", "f", LearningElementDifficultyEnum.Easy);
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteLearningElement(element));
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+    }
+    
+    [Test]
+    public void DeleteLearningElement_CallsPresentationLogic()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        var content = new LinkContentViewModel("a", "link");
+        var element = new LearningElementViewModel("a", content, "d", "f", LearningElementDifficultyEnum.Easy);
+        
+        systemUnderTest.LearningWorldVm = world;
+        world.UnplacedLearningElements.Add(element);
+        systemUnderTest.DeleteLearningElement(element);
+        presentationLogic.Received().DeleteLearningElementInWorld(world, element);
+    }
+    
+    [Test]
+    public void GetAllContent_CallsPresentationLogic()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        
+        systemUnderTest.GetAllContent();
+        presentationLogic.Received().GetAllContent();
+    }
+    
+    [Test]
+    public void CreateUnplacedLearningElement_SelectedLearningWorldIsNull_ThrowsException()
+    {
+        var systemUnderTest = CreatePresenterForTesting();
+        var element = new LearningElementViewModel("a", null!, "d", "f", LearningElementDifficultyEnum.Easy);
+
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.CreateUnplacedLearningElement("a", null!,  "c","d", LearningElementDifficultyEnum.Easy, 0, 0));
+        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+    }
+    
+    [Test]
+    public void CreateUnplacedLearningElement_CallsPresentationLogic()
+    {
+        var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
+            "foo");
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        var content = new LinkContentViewModel("a", "link");
+
+        systemUnderTest.LearningWorldVm = world;
+        
+        systemUnderTest.CreateUnplacedLearningElement("abc", content, "a", "b", LearningElementDifficultyEnum.Easy, 0, 0);
+        presentationLogic.Received().CreateUnplacedLearningElement(world,"abc", content, "a", "b", LearningElementDifficultyEnum.Easy, 0, 0);
+    }
 
     #endregion
 

@@ -121,7 +121,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
-        _presentationLogic.DeleteLearningElement(LearningSpaceVm, obj);
+        _presentationLogic.DeleteLearningElementInSpace(LearningSpaceVm, obj);
     }
 
     public void HideRightClickMenu()
@@ -231,7 +231,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
             throw new ApplicationException("SelectedLearningSpace is null");
         if (LearningSpaceVm.SelectedLearningElement == null)
             return;
-        _presentationLogic.DeleteLearningElement(LearningSpaceVm,
+        _presentationLogic.DeleteLearningElementInSpace(LearningSpaceVm,
             (LearningElementViewModel) LearningSpaceVm.SelectedLearningElement);
     }
 

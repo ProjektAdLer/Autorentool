@@ -8,7 +8,7 @@ namespace BusinessLogicTest.Commands;
 
 [TestFixture]
 
-public class DeleteLearningElementUt
+public class DeleteLearningElementInSpaceUt
 {
     [Test]
     public void Execute_DeletesLearningElement()
@@ -20,7 +20,7 @@ public class DeleteLearningElementUt
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new DeleteLearningElement(element, space, mappingAction);
+        var command = new DeleteLearningElementInSpace(element, space, mappingAction);
         
         Assert.That(space.ContainedLearningElements, Does.Contain(element));
         Assert.IsFalse(actionWasInvoked);
@@ -51,7 +51,7 @@ public class DeleteLearningElementUt
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new DeleteLearningElement(element, space, mappingAction);
+        var command = new DeleteLearningElementInSpace(element, space, mappingAction);
         
         Assert.That(space.ContainedLearningElements, Does.Contain(element));
         Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(2));
@@ -73,7 +73,7 @@ public class DeleteLearningElementUt
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new DeleteLearningElement(element, space, mappingAction);
+        var command = new DeleteLearningElementInSpace(element, space, mappingAction);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -100,7 +100,7 @@ public class DeleteLearningElementUt
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new DeleteLearningElement(element, space, mappingAction);
+        var command = new DeleteLearningElementInSpace(element, space, mappingAction);
         
         Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(2));
         Assert.That(space.ContainedLearningElements, Does.Contain(element));

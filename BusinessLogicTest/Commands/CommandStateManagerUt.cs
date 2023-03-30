@@ -191,7 +191,7 @@ public class CommandStateManagerUt
         var createLearningElementCommand = new CreateLearningElementInSlot(learningSpace, 0, learningElement, _ => { });
         var createLearningSpaceCommand = new CreateLearningSpace(learningWorld, learningSpace, _ => { });
         var createLearningWorldCommand = new CreateLearningWorld(workspace, learningWorld, _ => { });
-        var deleteLearningElementCommand = new DeleteLearningElement(learningElement, learningSpace, _ => { });
+        var deleteLearningElementCommand = new DeleteLearningElementInSpace(learningElement, learningSpace, _ => { });
         var deleteLearningSpaceCommand = new DeleteLearningSpace(learningWorld, learningSpace, _ => { });
         var deleteLearningWorldCommand = new DeleteLearningWorld(workspace, learningWorld, _ => { });
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();

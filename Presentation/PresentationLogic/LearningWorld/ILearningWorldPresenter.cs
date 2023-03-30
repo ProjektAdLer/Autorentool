@@ -63,4 +63,7 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
 
     void CreateUnplacedLearningElement(string name, ILearningContentViewModel learningContent, string description,
         string goals, LearningElementDifficultyEnum difficulty, int workload, int points);
+    Task ShowSelectedElementContentAsync(ILearningElementViewModel learningElement);
+
+    void DeleteLearningElement(ILearningElementViewModel learningElement);
 }

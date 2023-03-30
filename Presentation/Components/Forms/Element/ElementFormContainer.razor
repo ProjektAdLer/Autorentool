@@ -22,9 +22,9 @@
         <ItemRenderer>
             <DragDropLearningElement
                 LearningElement="@context"
-                OnShowLearningElementContent="() => { }"
-                OnEditLearningElement="() => { }"
-                OnDeleteLearningElement="() => { }"
+                OnShowLearningElementContent="@WorldPresenter.ShowSelectedElementContentAsync"
+                OnEditLearningElement="@WorldPresenter.SetSelectedLearningElement"
+                OnDeleteLearningElement="@WorldPresenter.DeleteLearningElement"
                 OnClicked="@WorldPresenter.SetSelectedLearningElement"/>
         </ItemRenderer>
     </MudDropZone>

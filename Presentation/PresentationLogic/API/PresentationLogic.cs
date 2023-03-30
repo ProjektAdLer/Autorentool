@@ -465,15 +465,27 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
-    /// <inheritdoc cref="IPresentationLogic.DeleteLearningElement"/>
-    public void DeleteLearningElement(ILearningSpaceViewModel parentSpaceVm,
+    /// <inheritdoc cref="IPresentationLogic.DeleteLearningElementInSpace"/>
+    public void DeleteLearningElementInSpace(ILearningSpaceViewModel parentSpaceVm,
         ILearningElementViewModel learningElementVm)
     {
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
 
-        var command = new DeleteLearningElement(elementEntity, parentSpaceEntity, 
+        var command = new DeleteLearningElementInSpace(elementEntity, parentSpaceEntity, 
             parent => CMapper.Map(parent, parentSpaceVm));
+        BusinessLogic.ExecuteCommand(command);
+    }
+    
+    /// <inheritdoc cref="IPresentationLogic.DeleteLearningElementInWorld"/>
+    public void DeleteLearningElementInWorld(ILearningWorldViewModel learningWorldVm,
+        ILearningElementViewModel learningElementVm)
+    {
+        var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
+        var parentWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+
+        var command = new DeleteLearningElementInWorld(elementEntity, parentWorldEntity, 
+            parent => CMapper.Map(parent, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
     }
 

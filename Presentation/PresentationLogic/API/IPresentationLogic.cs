@@ -310,7 +310,15 @@ public interface IPresentationLogic
     /// </summary>
     /// <param name="parentSpaceVm">Parent space of the element.</param>
     /// <param name="learningElementVm">Element to delete.</param>
-    void DeleteLearningElement(ILearningSpaceViewModel parentSpaceVm,
+    void DeleteLearningElementInSpace(ILearningSpaceViewModel parentSpaceVm,
+        ILearningElementViewModel learningElementVm);
+    
+    /// <summary>
+    /// Deletes the given learning element in the given learning world.
+    /// </summary>
+    /// <param name="learningWorldVm">Parent world of the element.</param>
+    /// <param name="learningElementVm">Element to delete.</param>
+    void DeleteLearningElementInWorld(ILearningWorldViewModel learningWorldVm,
         ILearningElementViewModel learningElementVm);
     
     /// <summary>

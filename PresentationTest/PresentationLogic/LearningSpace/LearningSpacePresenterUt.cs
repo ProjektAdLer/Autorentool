@@ -151,7 +151,7 @@ public class LearningSpacePresenterUt
 
         systemUnderTest.DeleteSelectedLearningElement();
 
-        mockPresentationLogic.Received().DeleteLearningElement(space,element);
+        mockPresentationLogic.Received().DeleteLearningElementInSpace(space,element);
     }
 
     #endregion

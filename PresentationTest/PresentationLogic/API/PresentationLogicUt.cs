@@ -11,7 +11,6 @@ using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.World;
-using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using ElectronWrapper;
 using Microsoft.Extensions.DependencyInjection;
@@ -505,12 +504,12 @@ public class PresentationLogicUt
     }
 
     [Test]
-    public void DeleteLearningElement_CallsBusinessLogic()
+    public void DeleteLearningElementInSpace_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        DeleteLearningElement? command = null;
+        DeleteLearningElementInSpace? command = null;
         mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as DeleteLearningElement);
+            Do(sub => command = sub.Arg<ICommand>() as DeleteLearningElementInSpace);
         var learningSpaceVm = new LearningSpaceViewModel("f", "f", "f", "f", "f", 4);
         var learningElementVm = new LearningElementViewModel("a", null!, "d", "e",
             LearningElementDifficultyEnum.Easy, learningSpaceVm);
@@ -525,13 +524,45 @@ public class PresentationLogicUt
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
 
-        systemUnderTest.DeleteLearningElement(learningSpaceVm, learningElementVm);
+        systemUnderTest.DeleteLearningElementInSpace(learningSpaceVm, learningElementVm);
 
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
         Assert.That(command, Is.Not.Null);
         Assert.Multiple(() =>
         {
             Assert.That(command!.ParentSpace, Is.EqualTo(learningSpaceEntity));
+            Assert.That(command!.LearningElement, Is.EqualTo(learningElementEntity));
+        });
+    }
+    
+    [Test]
+    public void DeleteLearningElementInWorld_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        DeleteLearningElementInWorld? command = null;
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
+            Do(sub => command = sub.Arg<ICommand>() as DeleteLearningElementInWorld);
+        var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f","t");
+        var learningElementVm = new LearningElementViewModel("a", null!, "d", "e",
+            LearningElementDifficultyEnum.Easy);
+        var mockMapper = Substitute.For<IMapper>();
+        var learningWorldEntity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "g");
+        var learningElementEntity = new BusinessLogic.Entities.LearningElement("a", null!, "d", "e",
+            LearningElementDifficultyEnum.Easy);
+        mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
+            .Returns(learningWorldEntity);
+        mockMapper.Map<BusinessLogic.Entities.LearningElement>(Arg.Any<LearningElementViewModel>())
+            .Returns(learningElementEntity);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+
+        systemUnderTest.DeleteLearningElementInWorld(learningWorldVm, learningElementVm);
+
+        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
+        Assert.That(command, Is.Not.Null);
+        Assert.Multiple(() =>
+        {
+            Assert.That(command!.ParentWorld, Is.EqualTo(learningWorldEntity));
             Assert.That(command!.LearningElement, Is.EqualTo(learningElementEntity));
         });
     }

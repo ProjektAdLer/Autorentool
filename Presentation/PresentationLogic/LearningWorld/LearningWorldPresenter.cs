@@ -392,6 +392,11 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
 
     #region LearningElement
     
+    /// <summary>
+    /// Sets the selected learning element of the learning world to the given learning element.
+    /// </summary>
+    /// <param name="learningElement">The learning element to set.</param>
+    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
     public void SetSelectedLearningElement(ILearningElementViewModel learningElement)
     {
         if(LearningWorldVm == null)
@@ -399,6 +404,20 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         LearningWorldVm.SelectedLearningElement = learningElement;
     }
     
+    /// <summary>
+    /// Edits a given learning element.
+    /// </summary>
+    /// <param name="elementParent">The parent of the learning element which is either a learning space or null.</param>
+    /// <param name="learningElement">The learning element to edit.</param>
+    /// <param name="name">The new name of the element.</param>
+    /// <param name="description">The new description of the element.</param>
+    /// <param name="goals">The new goals of the element.</param>
+    /// <param name="difficulty">The new difficulty of the element.</param>
+    /// <param name="workload">The new workload of the element.</param>
+    /// <param name="points">The new points of the element.</param>
+    /// <param name="learningContent">The new learning content of the element.</param>
+    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected or the learning
+    /// element to edit is not a unplaced element in the learning world.</exception>
     public void EditLearningElement(ILearningSpaceViewModel? elementParent, ILearningElementViewModel learningElement,
         string name, string description, string goals, LearningElementDifficultyEnum difficulty,
         int workload, int points, ILearningContentViewModel learningContent)
@@ -410,12 +429,34 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
             _presentationLogic.EditLearningElement(elementParent, learningElement, name,
                 description,
                 goals, difficulty, workload, points, learningContent);
-        else if (LearningWorldVm.SelectedLearningObjectInPathWay is LearningSpaceViewModel learningSpaceViewModel &&
-                 learningSpaceViewModel.ContainedLearningElements.Contains(learningElement) &&
-                 learningSpaceViewModel == elementParent &&
-                 learningSpaceViewModel.SelectedLearningElement == learningElement)
-            _learningSpacePresenter.EditLearningElement(learningElement, name, description,
-                goals, difficulty, workload, points, learningContent);
+        else
+            throw new ApplicationException("LearningElement is not unplaced");
+    }
+
+    /// <summary>
+    /// Calls the the show learning element content method for the selected learning element.
+    /// </summary>
+    /// <param name="learningElement"></param>
+    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected or no learning element
+    /// is selected in the learning world.</exception>
+    public async Task ShowSelectedElementContentAsync(ILearningElementViewModel learningElement)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        SetSelectedLearningElement(learningElement);
+        await _presentationLogic.ShowLearningElementContentAsync((LearningElementViewModel)learningElement);
+    }
+    
+    /// <summary>
+    /// Deletes the given learning element.
+    /// </summary>
+    /// <param name="learningElement">Learning element to delete.</param>
+    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
+    public void DeleteLearningElement(ILearningElementViewModel learningElement)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        _presentationLogic.DeleteLearningElementInWorld(LearningWorldVm, learningElement);
     }
     
     public IEnumerable<ILearningContentViewModel> GetAllContent() => _presentationLogic.GetAllContent();

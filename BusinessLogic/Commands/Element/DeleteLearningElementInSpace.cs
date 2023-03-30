@@ -2,16 +2,16 @@
 
 namespace BusinessLogic.Commands.Element;
 
-public class DeleteLearningElement : IUndoCommand
+public class DeleteLearningElementInSpace : IUndoCommand
 {
-    public string Name => nameof(DeleteLearningElement);
+    public string Name => nameof(DeleteLearningElementInSpace);
     internal LearningElement LearningElement { get; }
     internal LearningSpace ParentSpace { get; }
     private readonly Action<LearningSpace> _mappingAction;
     private IMemento? _memento;
     private IMemento? _mementoSpaceLayout;
 
-    public DeleteLearningElement(LearningElement learningElement, LearningSpace parentSpace,
+    public DeleteLearningElementInSpace(LearningElement learningElement, LearningSpace parentSpace,
         Action<LearningSpace> mappingAction)
     {
         LearningElement = learningElement;
