@@ -13,56 +13,55 @@
         <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="async () => await OnNewButtonClicked.InvokeAsync()">New Learning Element</MudButton>
     </HeaderButtons>
     <Fields>
-        <MudExpansionPanels MultiExpansion="true">
-            <MudExpansionPanel Text="General" IsInitiallyExpanded="true">
-                <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
-                              For="@(() => FormModel.Name)"
-                              Immediate="true"
-                              DebounceInterval="300"
-                              Label="@nameof(FormDataContainer.FormModel.Name)"/>
-                <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
-                                 For="@(() => FormModel.Workload)"
-                                 Immediate="true"
-                                 DebounceInterval="300"
-                                 Label="Workload (min)"/>
-                <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
-                           Label="@nameof(FormDataContainer.FormModel.Difficulty)"
-                           For="@(() => FormModel.Difficulty)">
-                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)"> Easy </MudSelectItem>
-                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)"> Medium </MudSelectItem>
-                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)"> Hard </MudSelectItem>
-                    <MudSelectItem Value="@(LearningElementDifficultyEnum.None)"> None </MudSelectItem>
-                </MudSelect>
-                <MudNumericField @bind-Value="FormDataContainer.FormModel.Points"
-                                 For="@(() => FormModel.Points)"
-                                 Immediate="true"
-                                 DebounceInterval="300"
-                                 Label="@nameof(FormDataContainer.FormModel.Points)"/>
-            </MudExpansionPanel>
-            <MudExpansionPanel Text="Learning Content" IsInitiallyExpanded="true">
-                <MudSelect @bind-Value="FormDataContainer.FormModel.LearningContent"
-                           Label="@nameof(FormDataContainer.FormModel.LearningContent)"
-                           Text="@FormDataContainer.FormModel.LearningContent?.Name"
-                           For="@(() => FormModel.LearningContent)">
-                    @foreach (var learningContent in WorldPresenter.GetAllContent())
-                    {
-                        <MudSelectItem Value="@(learningContent)">@learningContent.Name</MudSelectItem>
-                    }
-                </MudSelect>
-            </MudExpansionPanel>
-            <MudExpansionPanel Text="Goals">
-                <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
-                              For="@(() => FormModel.Goals)"
-                              Immediate="true"
-                              DebounceInterval="300"
-                              Label="@nameof(FormDataContainer.FormModel.Goals)"/>
-                <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
-                              For="@(() => FormModel.Description)"
-                              Immediate="true"
-                              DebounceInterval="300"
-                              Label="@nameof(FormDataContainer.FormModel.Description)"/>
-            </MudExpansionPanel>
-        </MudExpansionPanels>
+        <Collapsable Title="General" Collapsed="false">
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                          For="@(() => FormModel.Name)"
+                          Immediate="true"
+                          DebounceInterval="300"
+                          Label="@nameof(FormDataContainer.FormModel.Name)"/>
+            <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
+                             For="@(() => FormModel.Workload)"
+                             Immediate="true"
+                             DebounceInterval="300"
+                             Label="Workload (min)"/>
+            <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
+                       Label="@nameof(FormDataContainer.FormModel.Difficulty)"
+                       For="@(() => FormModel.Difficulty)">
+                <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)"> Easy </MudSelectItem>
+                <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)"> Medium </MudSelectItem>
+                <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)"> Hard </MudSelectItem>
+                <MudSelectItem Value="@(LearningElementDifficultyEnum.None)"> None </MudSelectItem>
+            </MudSelect>
+            <MudNumericField @bind-Value="FormDataContainer.FormModel.Points"
+                             For="@(() => FormModel.Points)"
+                             Immediate="true"
+                             DebounceInterval="300"
+                             Label="@nameof(FormDataContainer.FormModel.Points)"/>
+        </Collapsable>
+
+        <Collapsable Title="Learning Content" Collapsed="false">
+            <MudSelect @bind-Value="FormDataContainer.FormModel.LearningContent"
+                       Label="@nameof(FormDataContainer.FormModel.LearningContent)"
+                       Text="@FormDataContainer.FormModel.LearningContent?.Name"
+                       For="@(() => FormModel.LearningContent)">
+                @foreach (var learningContent in WorldPresenter.GetAllContent())
+                {
+                    <MudSelectItem Value="@(learningContent)">@learningContent.Name</MudSelectItem>
+                }
+            </MudSelect>
+        </Collapsable>
+        <Collapsable Title="Goals" Collapsed="true">
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
+                          For="@(() => FormModel.Goals)"
+                          Immediate="true"
+                          DebounceInterval="300"
+                          Label="@nameof(FormDataContainer.FormModel.Goals)"/>
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                          For="@(() => FormModel.Description)"
+                          Immediate="true"
+                          DebounceInterval="300"
+                          Label="@nameof(FormDataContainer.FormModel.Description)"/>
+        </Collapsable>
     </Fields>
     <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>

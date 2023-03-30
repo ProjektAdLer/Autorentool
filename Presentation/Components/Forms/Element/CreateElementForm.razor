@@ -13,56 +13,56 @@
 <BaseForm TForm="LearningElementFormModel" TEntity="LearningElement"
           OnValidSubmit="OnValidSubmit" SnackbarMessage="Element created" FormDataContainer="FormDataContainer">
     <Fields>
-        <MudExpansionPanels MultiExpansion="true">
-            <MudExpansionPanel Text="General" IsInitiallyExpanded="true">
-                <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
-                              For="@(() => FormModel.Name)"
-                              Immediate="true"
-                              DebounceInterval="300"
-                              Label="@nameof(FormDataContainer.FormModel.Name)"/>
-                <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
-                                 For="@(() => FormModel.Workload)"
-                                 Immediate="true"
-                                 DebounceInterval="300"
-                                 Label="Workload (min)"/>
-                <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
-                           Label="@nameof(FormDataContainer.FormModel.Difficulty)"
-                           For="@(() => FormModel.Difficulty)">
-                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)"> Easy </MudSelectItem>
-                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)"> Medium </MudSelectItem>
-                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)"> Hard </MudSelectItem>
-                    <MudSelectItem Value="@(LearningElementDifficultyEnum.None)"> None </MudSelectItem>
-                </MudSelect>
-                <MudNumericField @bind-Value="FormDataContainer.FormModel.Points"
-                                 For="@(() => FormModel.Points)"
-                                 Immediate="true"
-                                 DebounceInterval="300"
-                                 Label="@nameof(FormDataContainer.FormModel.Points)"/>
-            </MudExpansionPanel>
-            <MudExpansionPanel Text="Learning Content" IsInitiallyExpanded="true">
-                <MudSelect @bind-Value="FormDataContainer.FormModel.LearningContent"
-                           Label="@nameof(FormDataContainer.FormModel.LearningContent)"
-                           Text="@FormDataContainer.FormModel.LearningContent?.Name"
-                           For="@(() => FormModel.LearningContent)">
-                    @foreach (var learningContent in WorldPresenter.GetAllContent())
-                    {
-                        <MudSelectItem Value="@(learningContent)">@learningContent.Name</MudSelectItem>
-                    }
-                </MudSelect>
-            </MudExpansionPanel>
-            <MudExpansionPanel Text="Goals">
-                <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
-                              For="@(() => FormModel.Goals)"
-                              Immediate="true"
-                              DebounceInterval="300"
-                              Label="@nameof(FormDataContainer.FormModel.Goals)"/>
-                <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
-                              For="@(() => FormModel.Description)"
-                              Immediate="true"
-                              DebounceInterval="300"
-                              Label="@nameof(FormDataContainer.FormModel.Description)"/>
-            </MudExpansionPanel>
-        </MudExpansionPanels>
+        <Collapsable Title="General" Collapsed="false">
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                          For="@(() => FormModel.Name)"
+                          Immediate="true"
+                          DebounceInterval="300"
+                          Label="@nameof(FormDataContainer.FormModel.Name)"/>
+            <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
+                             For="@(() => FormModel.Workload)"
+                             Immediate="true"
+                             DebounceInterval="300"
+                             Label="Workload (min)"/>
+            <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
+                       Label="@nameof(FormDataContainer.FormModel.Difficulty)"
+                       For="@(() => FormModel.Difficulty)">
+                <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)"> Easy </MudSelectItem>
+                <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)"> Medium </MudSelectItem>
+                <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)"> Hard </MudSelectItem>
+                <MudSelectItem Value="@(LearningElementDifficultyEnum.None)"> None </MudSelectItem>
+            </MudSelect>
+            <MudNumericField @bind-Value="FormDataContainer.FormModel.Points"
+                             For="@(() => FormModel.Points)"
+                             Immediate="true"
+                             DebounceInterval="300"
+                             Label="@nameof(FormDataContainer.FormModel.Points)"/>
+        </Collapsable>
+
+        <Collapsable Title="Learning Content" Collapsed="false">
+            <MudSelect @bind-Value="FormDataContainer.FormModel.LearningContent"
+                       Label="@nameof(FormDataContainer.FormModel.LearningContent)"
+                       Text="@FormDataContainer.FormModel.LearningContent?.Name"
+                       For="@(() => FormModel.LearningContent)">
+                @foreach (var learningContent in WorldPresenter.GetAllContent())
+                {
+                    <MudSelectItem Value="@(learningContent)">@learningContent.Name</MudSelectItem>
+                }
+            </MudSelect>
+        </Collapsable>
+        
+        <Collapsable Title="Goals" Collapsed="true">
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
+                          For="@(() => FormModel.Goals)"
+                          Immediate="true"
+                          DebounceInterval="300"
+                          Label="@nameof(FormDataContainer.FormModel.Goals)"/>
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                          For="@(() => FormModel.Description)"
+                          Immediate="true"
+                          DebounceInterval="300"
+                          Label="@nameof(FormDataContainer.FormModel.Description)"/>
+        </Collapsable>
     </Fields>
     <FooterButtons>
         <DefaultSubmitButton/>
@@ -74,22 +74,26 @@
 #pragma warning disable CS8618 - injected by framework
     [Inject]
     private ILearningWorldPresenter WorldPresenter { get; set; }
+
     [Inject]
     private IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceViewModel { get; set; }
+
     [Inject]
     private IFormDataContainer<LearningElementFormModel, LearningElement> FormDataContainer { get; set; }
+
     [Parameter]
 #pragma warning restore CS8618
-    public EventCallback OnSubmitted { get; set; }
+        public EventCallback OnSubmitted { get; set; }
+
     private LearningElementFormModel FormModel => FormDataContainer.FormModel;
 
     private void OnValidSubmit(LearningElementFormModel model)
     {
-        if (AuthoringToolWorkspaceViewModel.SelectedLearningWorld == null) 
+        if (AuthoringToolWorkspaceViewModel.SelectedLearningWorld == null)
             throw new InvalidOperationException("No learning world selected.");
-        if (AuthoringToolWorkspaceViewModel.SelectedLearningWorld.SelectedLearningObjectInPathWay == null) 
+        if (AuthoringToolWorkspaceViewModel.SelectedLearningWorld.SelectedLearningObjectInPathWay == null)
             throw new InvalidOperationException("No object selected.");
-        if(AuthoringToolWorkspaceViewModel.SelectedLearningWorld.SelectedLearningObjectInPathWay is not LearningSpaceViewModel) 
+        if (AuthoringToolWorkspaceViewModel.SelectedLearningWorld.SelectedLearningObjectInPathWay is not LearningSpaceViewModel)
             throw new InvalidOperationException("Selected object is not a learning space.");
 
         WorldPresenter.CreateUnplacedLearningElement(
@@ -98,18 +102,18 @@
             model.Workload, model.Points);
         OnSubmitted.InvokeAsync();
     }
-    
+
     protected override void OnInitialized()
     {
         AuthoringToolWorkspaceViewModel.PropertyChanged += OnLearningWorldViewModelChange;
         base.OnInitialized();
     }
-    
+
     private async void OnLearningWorldViewModelChange(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)
     {
         await InvokeAsync(StateHasChanged);
     }
-    
+
     public ValueTask DisposeAsync()
     {
         Dispose();
@@ -120,4 +124,5 @@
     {
         AuthoringToolWorkspaceViewModel.PropertyChanged -= OnLearningWorldViewModelChange;
     }
+
 }
