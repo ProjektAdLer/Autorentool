@@ -72,7 +72,7 @@ public class LearningElementDropZoneHelper : ILearningElementDropZoneHelper
         {
            return 
                 item.Parent.Id.ToString() +
-                item.Parent.LearningSpaceLayout.LearningElements.First(kvP => kvP.Value.Equals(item))
+                item.Parent.LearningSpaceLayout.LearningElements.First(kvP => kvP.Value.Equals(item)).Key
                 == dropzoneIdentifier;
         }
 
