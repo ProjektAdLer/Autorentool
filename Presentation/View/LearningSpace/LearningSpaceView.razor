@@ -5,20 +5,22 @@
 @using Shared.Command
 @using Presentation.PresentationLogic.LearningElement
 @using System.Text
-<MudButton @onclick="OnClickMyLearningWorldsOverview">MyLearningWorldsOverview</MudButton>
-
-<MudText Typo="Typo.h4">LearningSpace @LearningSpaceP.LearningSpaceVm?.Name</MudText>
-<div class="flex">
-    <div>
-        <MudText Typo="Typo.h6">Workload: @LearningSpaceP.LearningSpaceVm?.Workload minutes</MudText>
-        <MudText Typo="Typo.h6">Points: @LearningSpaceP.LearningSpaceVm?.Points</MudText>
-        <button class="btn btn-primary load-learning-element" @onclick="LoadLearningElementAsync">Load Learning Element</button>
-        <h1>Anzahl Lernelemente: @LearningSpaceP.LearningSpaceVm?.LearningSpaceLayout.Count</h1>
-        @ChildContent
-        <br>
+<div class="w-25 pb-2 mx-2 bg-adlerdeactivated">
+<MudButton Class="btn-standard" @onclick="OnClickMyLearningWorldsOverview">MyLearningWorldsOverview</MudButton>
+<div class="flex flex-col h-800 w-1000">
+    <MudText Class="text-center text-adlergrey-500" Typo="Typo.h4">Learning Space Editor @LearningSpaceP.LearningSpaceVm?.Name</MudText>
+    <div class="text-adlergrey p-3 absolute bottom-0 right-15">
+        <div>
+            <MudText Typo="Typo.h6">Workload: @LearningSpaceP.LearningSpaceVm?.Workload minutes</MudText>
+            <MudText Typo="Typo.h6">Points: @LearningSpaceP.LearningSpaceVm?.Points</MudText>
+            <button class="btn btn-primary load-learning-element" @onclick="LoadLearningElementAsync">Load Learning Element</button>
+            <h1>Anzahl Lernelemente: @LearningSpaceP.LearningSpaceVm?.LearningSpaceLayout.Count</h1>
+            @ChildContent
+            <br>
+        </div>
     </div>
 </div>
-
+</div>
 @if (LearningSpaceP.LearningSpaceVm != null)
 {
     @if (LearningSpaceP.LearningSpaceVm?.SelectedLearningElement != null)

@@ -11,86 +11,97 @@
 
 <div class="flex flex-col h-screen w-screen bg-adlerblue-100 font-sans">
     <HeaderBar/>
-    <MudDropContainer T="ILearningElementViewModel"
-                      Items="ElementDropZoneHelper.GetWorldAndSpaceElements()"
-                      ItemsSelector="ElementDropZoneHelper.IsItemInDropZone"
-                      ItemDropped="ElementDropZoneHelper.ItemUpdated"
-                      class="columns-3 flex-1 flex flex-row justify-between items-center">
-        <ChildContent>
-            <CascadingValue Value="@TriggerStateHasChanged" Name="TriggerMasterLayoutStateHasChanged">
-                <SideContainer Side="Side.Left">
-                    <Sidebar SidebarSide="Side.Left">
-                        <SidebarItem>
-                            <SidebarContent>
-                                <MudIcon Icon="@Icons.Material.Filled.PlusOne"/>
-                            </SidebarContent>
-                            <MainContent>
-                                <WorldFormContainer/>
-                            </MainContent>
-                        </SidebarItem>
-                        <SidebarItem>
-                            <SidebarContent>
-                                <MudIcon Icon="@Icons.Material.Filled.PlusOne"/>
-                            </SidebarContent>
-                            <MainContent>
-                                <SpaceFormContainer/>
-                            </MainContent>
-                        </SidebarItem>
-                        <SidebarItem>
-                            <SidebarContent>
-                                <MudIcon Icon="@Icons.Material.Filled.PlusOne"/>
-                        </SidebarContent>
-                        <MainContent>
-                            <ElementFormContainer/>
-                        </MainContent>
-                    </SidebarItem>
-                    <SidebarItem>
-                        <SidebarContent>
-                            <MudIcon Icon="@Icons.Material.Filled.FilePresent"/>
-                            </SidebarContent>
-                            <MainContent>
-                                <ContentFilesContainer/>
-                            </MainContent>
-                        </SidebarItem>
-                    </Sidebar>
-                </SideContainer>
-                <CenterContainer>
-                    <div class="bg-blue-400">
-                        Center
-                        <LearningSpaceView/>
-                    </div>
-                </CenterContainer>
-                <SideContainer Side="Side.Right">
-                    <Sidebar SidebarSide="Side.Right">
-                        <SidebarItem>
-                            <SidebarContent>
-                                <div title="LearningPathWays">
-                                    <img class="w-8" src="CustomIcons/world-icon-nobg.png" alt="blabla">
-                                </div>
-                            </SidebarContent>
-                            <MainContent>
-                                <LearningWorldView/>
-                            </MainContent>
-                        </SidebarItem>
-                        <SidebarItem>
-                            <SidebarContent>
-                                <div title="LearningWorldOverView">
-                                    <img class="w-8" src="CustomIcons/hierarchy-nobg.png" alt="blabla">
-                                </div>
-                            </SidebarContent>
-                            <MainContent>
-                                <LearningWorldOverView/>
-                            </MainContent>
-                        </SidebarItem>
-                    </Sidebar>
-                </SideContainer>
-            </CascadingValue>
-        </ChildContent>
-        <ItemRenderer>
-            <MudListItem Text="@context.Name"/>
-        </ItemRenderer>
-    </MudDropContainer>
-</div>
+
+        <MudDropContainer T="ILearningElementViewModel"
+                          Items="ElementDropZoneHelper.GetWorldAndSpaceElements()"
+                          ItemsSelector="ElementDropZoneHelper.IsItemInDropZone"
+                          ItemDropped="ElementDropZoneHelper.ItemUpdated"
+                          class="columns-3 flex-1 flex flex-row justify-between items-center">
+            <ChildContent>
+                <CascadingValue Value="@TriggerStateHasChanged" Name="TriggerMasterLayoutStateHasChanged">
+                    <SideContainer Side="Side.Left">
+                        <Sidebar SidebarSide="Side.Left">
+                            <SidebarItem>
+                                <SidebarContent>
+                                    <div title="LearningWorldMetadata">
+                                       <img class="w-8" src="CustomIcons/worldmenu-icon_metadata-nobg.png" alt="learningworld-metadata">
+                                    </div>
+                                </SidebarContent>
+                                <MainContent>
+                                    <WorldFormContainer/>
+                                </MainContent>
+                            </SidebarItem>
+                            <SidebarItem>
+                                <SidebarContent>
+                                    <div title="LearningSpaceMetadata">
+                                      <img class="w-8" src="CustomIcons/spacemenu-icon_metadata-nobg.png" alt="learningspace-metadata">
+                                    </div>
+                                </SidebarContent>
+                                <MainContent>
+                                    <SpaceFormContainer/>
+                                </MainContent>
+                            </SidebarItem>
+                            <SidebarItem>
+                                <SidebarContent>
+                                    <div title="LearningelementMetadata">
+                                        <img class="w-8" src="CustomIcons/learningelements-icon_metadata-nobg.png" alt="learningelement-metadata">
+                                    </div>
+                                </SidebarContent>
+                                <MainContent>
+                                    <ElementFormContainer/>
+                                </MainContent>
+                            </SidebarItem>
+                            <SidebarItem>
+                                <SidebarContent>
+                                    <div title="AllFiles">
+                                        <img class="w-8" src="CustomIcons/all-data-icon-nobg.png" alt="all-files">
+                                    </div>
+                                </SidebarContent>
+                                <MainContent>
+                                    <ContentFilesContainer/>
+                                </MainContent>
+                            </SidebarItem>
+                        </Sidebar>
+                    </SideContainer>
+                    <CenterContainer>
+
+                        <div class="mx-2 w-25 rounded-b bg-adlerdeactivated"> 
+                            <LearningSpaceView/>
+                        </div>
+                    
+                    </CenterContainer>
+                    <SideContainer Side="Side.Right">
+                        <Sidebar SidebarSide="Side.Right">
+                            <SidebarItem>
+                                <SidebarContent>
+                                    <div title="LearningPathWays">
+                                        <img class="w-8" src="CustomIcons/world-icon-nobg.png" alt="learning pathways">
+                                    </div>
+                                </SidebarContent>
+                                <MainContent>
+                                    <LearningWorldView/>
+                                </MainContent>
+                            </SidebarItem>
+                            <SidebarItem>
+                                <SidebarContent>
+                                    <div title="LearningWorldOverView">
+                                        <img class="w-8" src="CustomIcons/hierarchy-nobg.png" alt="learning world overview">
+                                    </div>
+                                </SidebarContent>
+                                <MainContent>
+                                    <LearningWorldOverView/>
+                                </MainContent>
+                            </SidebarItem>
+                        </Sidebar>
+                    </SideContainer>
+                </CascadingValue>
+            </ChildContent>
+            <ItemRenderer>
+                <MudListItem Text="@context.Name"/>
+            </ItemRenderer>
+        </MudDropContainer>
+    </div>
+
 
 @code {
 
