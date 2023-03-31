@@ -6,7 +6,12 @@
 @using AutoMapper
 @using BusinessLogic.Entities
 @using Presentation.PresentationLogic.LearningSpace
-<h1>Edit</h1>
+@*<h1>Edit</h1>*@
+<header class="flex flex-col justify-between h-12 w-full m-auto bg-buttonbgblue rounded items-center">
+    <div class="ml-1 flex items-center gap-2">
+        <h1 class="font-bold text-lg ml-1">Metadata for learning space</h1>
+    </div>
+</header>
 <BaseForm TForm="LearningSpaceFormModel" TEntity="LearningSpace"
           OnValidSubmit="OnValidSubmit" SnackbarMessage="Space updated" FormDataContainer="FormDataContainer">
     <Fields>

@@ -5,22 +5,29 @@
 @using Shared.Command
 @using Presentation.PresentationLogic.LearningElement
 @using System.Text
-<div class="w-25 pb-2 mx-2 bg-adlerdeactivated">
+<div class="w-25 pb-2 mx-2 bg-adlerdeactivated rounded-b">
 <MudButton Class="btn-standard" @onclick="OnClickMyLearningWorldsOverview">MyLearningWorldsOverview</MudButton>
-<div class="flex flex-col h-800 w-1000">
-    <MudText Class="text-center text-adlergrey-500" Typo="Typo.h4">Learning Space Editor @LearningSpaceP.LearningSpaceVm?.Name</MudText>
-    <div class="text-adlergrey p-3 absolute bottom-0 right-15">
-        <div>
-            <MudText Typo="Typo.h6">Workload: @LearningSpaceP.LearningSpaceVm?.Workload minutes</MudText>
-            <MudText Typo="Typo.h6">Points: @LearningSpaceP.LearningSpaceVm?.Points</MudText>
-            <button class="btn btn-primary load-learning-element" @onclick="LoadLearningElementAsync">Load Learning Element</button>
-            <h1>Anzahl Lernelemente: @LearningSpaceP.LearningSpaceVm?.LearningSpaceLayout.Count</h1>
-            @ChildContent
-            <br>
-        </div>
+    <div class="flex flex-col h-800 w-1000">
+        <h1 class="text-2xl text-center text-adlergrey-500 mx-2 w-25 bg-adlerdeactivated">Learning Space Editor</h1>
     </div>
-</div>
-</div>
+    </div>
+        <div class="p-2 flex justify-start space-x-2">
+          <img class="w-8" src="CustomIcons/space-icon_nobg.png" alt="learningspace">
+          <MudText Class="text-adlerbggradientfrom" Typo="Typo.h6">@LearningSpaceP.LearningSpaceVm?.Name</MudText>
+          @*<MudText Class="text-center text-adlergrey-500" Typo="Typo.h4">Learning Space Editor @LearningSpaceP.LearningSpaceVm?.Name</MudText>*@
+          </div>
+        <div class="text-adlergrey p-3 absolute bottom-0 right-15">
+            <div>
+                <MudText Typo="Typo.h6">Learning space @LearningSpaceP.LearningSpaceVm?.Name:</MudText>
+                <MudText Typo="Typo.subtitle1">Workload: @LearningSpaceP.LearningSpaceVm?.Workload minutes</MudText>
+                <MudText Typo="Typo.subtitle1">Points: @LearningSpaceP.LearningSpaceVm?.Points</MudText>
+                <button class="btn btn-primary load-learning-element" @onclick="LoadLearningElementAsync">Load Learning Element</button>
+                <h1>Anzahl Lernelemente: @LearningSpaceP.LearningSpaceVm?.LearningSpaceLayout.Count</h1>
+                @ChildContent
+                <br>
+            </div>
+        </div>
+
 @if (LearningSpaceP.LearningSpaceVm != null)
 {
     @if (LearningSpaceP.LearningSpaceVm?.SelectedLearningElement != null)
@@ -36,7 +43,7 @@
         <button class="btn btn-primary show-element-content" @onclick="ShowSelectedElementContentAsync">Show content of Learning Element</button>
     }
     <br>
-    <p>Select learning world:</p>
+    <p>Select floor plan for your learning space:</p>
     <select @onchange="args => SetLearningSpaceLayout(args.Value!.ToString())"
             value="@(LearningSpaceP.LearningSpaceVm?.LearningSpaceLayout.FloorPlanName)">
         @foreach (var floorPlan in Enum.GetValues(typeof(FloorPlanEnum)).Cast<FloorPlanEnum>())
@@ -46,7 +53,7 @@
     </select>
     @if (LearningSpaceP.LearningSpaceVm != null)
     {
-        <div style="width: 90%; height: 400px; border: 2px solid orange;">
+        <div class="w-10/12 min-h-[400px] border-2 border-b-adlerdeactivated"> @*style="width: 90%; height: 400px; border: 2px solid;"*@
             <div class="layout-shadow">
                 <div class="layout" style="@GetCornerPointsString(LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.FloorPlanViewModel) width: 98%; height:382px; position: relative; transform: translate(1%,7px)">
 
