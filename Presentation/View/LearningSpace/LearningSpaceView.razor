@@ -5,10 +5,9 @@
 @using Shared.Command
 @using Presentation.PresentationLogic.LearningElement
 @using System.Text
-<div class="w-25 pb-2 mx-2 bg-adlerdeactivated rounded-b">
-<MudButton Class="btn-standard" @onclick="OnClickMyLearningWorldsOverview">MyLearningWorldsOverview</MudButton>
-    <div class="flex flex-col h-800 w-1000">
-        <h1 class="text-2xl text-center text-adlergrey-500 mx-2 w-25 bg-adlerdeactivated">Learning Space Editor</h1>
+<div class="w-25 mx-2 bg-adlerdeactivated rounded-lg">
+    <div class="flex justify-center p-2">
+        <h2 class="text-2xl text-center font-bold text-adlergrey-500 mx-2 w-25 bg-adlerdeactivated">Learning Space Editor</h2>
     </div>
     </div>
         <div class="p-2 flex justify-start space-x-2">
@@ -94,9 +93,6 @@
     public ILearningSpacePresenter LearningSpaceP { get; set; }
 
     [Inject]
-    internal NavigationManager NavManager { get; private init; }
-
-    [Inject]
     IDialogService DialogService { get; set; }
 #pragma warning restore CS8618
 
@@ -126,11 +122,6 @@
         {
             if (earg.PropertyName == nameof(LearningSpaceP.LearningSpaceVm)) InvokeAsync(TriggerMasterLayoutStateHasChanged);
         };
-    }
-
-    private void OnClickMyLearningWorldsOverview()
-    {
-        NavManager.NavigateTo("/MyLearningWorldsOverview");
     }
 
     private bool _showingReplaceLearningElementDialog = false;

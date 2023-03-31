@@ -1,8 +1,8 @@
 @using Shared
 <MudItem>
     <MudCard Outlined="true" Elevation="1" Class="w-60 h-40">
-        <MudCardHeader Class="flex justify-center">
-            <CardHeaderAvatar>
+        <MudCardHeader Class="flex justify-center items-center">
+            @*<CardHeaderAvatar>
                 @switch (_cardType)
                 {
                     case CardType.IsLoaded:
@@ -17,7 +17,7 @@
                         break;
                     }
                 }
-            </CardHeaderAvatar>
+            </CardHeaderAvatar>*@
             <CardHeaderContent>
                 @switch (_cardType)
                 {
@@ -92,18 +92,18 @@
             @switch (_cardType)
             {
                 case CardType.IsLoaded or CardType.IsSaved:
-                    <MudButton @onclick="@(() => OnOpenLearningWorld.InvokeAsync(LearningWorldPath))">
+                    <MudButton Size="Size.Large" @onclick="@(() => OnOpenLearningWorld.InvokeAsync(LearningWorldPath))">
                         Open
                     </MudButton>
                     break;
                 case CardType.Load:
                     <MudButton @onclick="@(() => OnLoadLearningWorldPath.InvokeAsync())">
-                        <MudIcon Icon="@Icons.Material.Filled.Add"></MudIcon>
+                        <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.Add"></MudIcon>
                     </MudButton>
                     break;
                 case CardType.Create:
                     <MudButton @onclick="@(() => OnCreateLearningWorld.InvokeAsync())">
-                        <MudIcon Icon="@Icons.Material.Filled.Add"></MudIcon>
+                        <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.Add"></MudIcon>
                     </MudButton>
                     break;
             }

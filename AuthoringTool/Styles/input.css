@@ -4,6 +4,15 @@
 
 @layer components {
     .btn-standard {
-        @apply h-8 w-fit text-adlerdarkblue bg-buttonbgblue p-4 rounded-lg drop-shadow transform ease-in-out duration-75 active:translate-x-1 active:translate-y-1 active:drop-shadow-none hover:bg-adlerdarkblue hover:text-buttonbgblue m-2;
+        @apply h-8 text-adlerdarkblue bg-buttonbgblue p-4 rounded-lg drop-shadow transform ease-in-out duration-75 active:translate-x-1 active:translate-y-1 active:drop-shadow-none hover:bg-adlerdarkblue hover:text-buttonbgblue m-2;
+    }
+    
+    .unselectable {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
     }
 }

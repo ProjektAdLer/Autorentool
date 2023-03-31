@@ -1,4 +1,4 @@
-<div class="h-full flex">
+<div class="h-full flex justify-center">
     <div class="h-full py-3 @SidebarOrder()">
         <aside class="min-w-[50px] h-full gap-2 flex flex-col rounded-lg">
             <CascadingValue Value="this">
@@ -8,7 +8,7 @@
     </div>
     @if (CurrentItem is not null)
     {
-        <div class="flex flex-wrap w-fit max-w-md h-full max-h-full bg-adlergrey-300 @ContentOrder() rounded-lg p-3">
+        <div class="flex w-80 flex-wrap w-fit max-w-md h-full max-h-full bg-adlergrey-300 @ContentOrder() rounded-lg p-3">
             @CurrentItem.MainContent
         </div>
     }

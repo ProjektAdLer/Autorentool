@@ -11,29 +11,34 @@
 @using Direction = Shared.Direction
 @ChildContent
 
-<div>
-    <h2>World: @LearningWorldP.LearningWorldVm?.Name</h2>
-    <h5>Workload: @LearningWorldP.LearningWorldVm?.Workload minutes</h5>
-    <h5>Points: @LearningWorldP.LearningWorldVm?.Points </h5>
-</div>
-<div class="p-2">
-    <MudButton Variant="Variant.Filled" Color="Color.Tertiary" @onclick="AddNewLearningSpace" Disabled="LearningWorldP.LearningWorldVm == null">New Space</MudButton>
-    <MudButton Variant="Variant.Filled" Color="Color.Tertiary" @onclick="AddNewPathWayCondition" Disabled="LearningWorldP.LearningWorldVm == null">New Condition</MudButton>
-    <MudButton Variant="Variant.Filled" Color="Color.Tertiary" @onclick="LoadLearningSpaceAsync" Disabled="LearningWorldP.LearningWorldVm == null">Load Space</MudButton>
-    <MudButton Variant="Variant.Filled" Color="Color.Tertiary" OnClick="SaveLearningWorldAsync" Disabled="LearningWorldP.LearningWorldVm == null">Save World</MudButton>
-</div>
-<div class="p-2">
-    <MudFab Size="Size.Small" Color="Color.Primary" StartIcon="@Icons.Material.Rounded.Edit" Disabled="@(LearningWorldP.LearningWorldVm?.SelectedLearningObjectInPathWay == null || LearningWorldP.LearningWorldVm.SelectedLearningObjectInPathWay is ILearningPathWayViewModel)" @onclick="EditLearningObject"></MudFab>
-    <MudFab Size="Size.Small" Color="Color.Secondary" StartIcon="@Icons.Material.Rounded.Delete" Disabled="@(LearningWorldP.LearningWorldVm?.SelectedLearningObjectInPathWay == null)" @onclick="DeleteSelectedLearningObject"></MudFab>
-    <MudFab Size="Size.Small" Color="Color.Primary" StartIcon="@Icons.Material.Rounded.Save" Disabled="@(LearningWorldP.LearningWorldVm?.SelectedLearningObjectInPathWay == null || LearningWorldP.LearningWorldVm.SelectedLearningObjectInPathWay is not ILearningSpaceViewModel)" @onclick="SaveSelectedLearningSpaceAsync"></MudFab>
-</div>
-
+<article class="flex flex-col justify-content w-60 h-full grow">
+    <section class="bg-white rounded-lg p-2">
+        <h3 class="font-bold text-lg">World: @LearningWorldP.LearningWorldVm?.Name</h3>
+        <h3 class="font-bold text-lg">Workload: @LearningWorldP.LearningWorldVm?.Workload m</h3>
+        <h3 class="font-bold text-lg">Points: @LearningWorldP.LearningWorldVm?.Points </h3>
+    </section>
+    <section class="flex flex-col gap-1 justify-center">
+        <div class="flex grow justify-between">
+            <MudButton Class="btn-standard" @onclick="AddNewLearningSpace" Disabled="LearningWorldP.LearningWorldVm == null">New Space</MudButton>
+            <MudButton Class="btn-standard" @onclick="AddNewPathWayCondition" Disabled="LearningWorldP.LearningWorldVm == null">New Condition</MudButton>
+        </div>    
+        <div class="flex grow justify-between">    
+            <MudButton Class="btn-standard" @onclick="LoadLearningSpaceAsync" Disabled="LearningWorldP.LearningWorldVm == null">Load Space</MudButton>
+            <MudButton Class="btn-standard" OnClick="SaveLearningWorldAsync" Disabled="LearningWorldP.LearningWorldVm == null">Save World</MudButton>
+        </div>
+    </section>
+    <section class="p-2 flex justify-between">
+        <MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Edit" Disabled="@(LearningWorldP.LearningWorldVm?.SelectedLearningObjectInPathWay == null || LearningWorldP.LearningWorldVm.SelectedLearningObjectInPathWay is ILearningPathWayViewModel)" @onclick="EditLearningObject"></MudFab>
+        <MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Delete" Disabled="@(LearningWorldP.LearningWorldVm?.SelectedLearningObjectInPathWay == null)" @onclick="DeleteSelectedLearningObject"></MudFab>
+        <MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Save" Disabled="@(LearningWorldP.LearningWorldVm?.SelectedLearningObjectInPathWay == null || LearningWorldP.LearningWorldVm.SelectedLearningObjectInPathWay is not ILearningSpaceViewModel)" @onclick="SaveSelectedLearningSpaceAsync"></MudFab>
+    </section>
 <!-- <svg style="width: 400px; height: 600px; border:3px black; background-color: white" -->
-<svg style="width: 600px; height: 800px; border:3px black; background-color: white"
+<svg class="flex-none bg-white w-full grow rounded-lg"
      xmlns="http://www.w3.org/2000/svg"
      @onmousemove=@(e => MouseService.FireMove(this, e))
              @onmouseup=@(e => MouseService.FireUp(this, e))
              @onmouseleave=@(e => MouseService.FireOut(this, e))>
+
     @if (LearningWorldP.LearningWorldVm != null)
     {
         @foreach (var pathWayCondition in LearningWorldP.LearningWorldVm.PathWayConditions)
@@ -50,11 +55,11 @@
                                        OnCloseRightClickMenu="@LearningWorldP.HideRightClickMenu"
                                        PositioningService="@LearningWorldP">
                 <ConditionToggleSwitch ObjectInPathWay="pathWayCondition"
-                                            OnSwitchPathWayCondition="@LearningWorldP.SwitchPathWayCondition"/>
+                                       OnSwitchPathWayCondition="@LearningWorldP.SwitchPathWayCondition"/>
             </DraggablePathWayCondition>
         }
-        
-        @foreach(var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
+
+        @foreach (var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
         {
             <DraggableLearningSpace ObjectInPathWay="learningSpace"
                                     OnClickedDraggable="@LearningWorldP.ClickOnObjectInWorld"
@@ -84,7 +89,7 @@
     This line brings the RightClickMenu back to top, but the clickable buttons do not work anymore. -->
     <!--<use xlink:href="#rightClickMenu" />-->
 </svg>
-
+</article>
 
 @code {
     [Parameter]
