@@ -18,7 +18,9 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
         Description = description;
         Goals = goals;
         RequiredPoints = requiredPoints;
-        LearningSpaceLayout = learningSpaceLayout ?? new LearningSpaceLayoutPe(null, null);
+        LearningSpaceLayout = learningSpaceLayout ??
+                              new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(),
+                                  FloorPlanEnumPe.Rectangle2X2);
         InBoundObjects = inBoundObjects ?? new List<IObjectInPathWayPe>();
         OutBoundObjects = outBoundObjects ?? new List<IObjectInPathWayPe>();
         PositionX = positionX;
@@ -35,7 +37,8 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
         Description = "";
         Goals = "";
         RequiredPoints = 0;
-        LearningSpaceLayout = new LearningSpaceLayoutPe(null, null);
+        //overriding nullability as serializer must set value
+        LearningSpaceLayout = null!;
         InBoundObjects = new List<IObjectInPathWayPe>();
         OutBoundObjects = new List<IObjectInPathWayPe>();
         PositionX = 0;

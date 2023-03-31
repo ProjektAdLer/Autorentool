@@ -3,6 +3,6 @@
 public interface ILearningSpaceLayoutPe
 {
     FloorPlanEnumPe FloorPlanName { get; set; }
-    ILearningElementPe?[] LearningElements { get; set; }
-    IEnumerable<LearningElementPe> ContainedLearningElements { get; }
+    IDictionary<int, ILearningElementPe> LearningElements { get; set; }
+    IEnumerable<ILearningElementPe> ContainedLearningElements { get; }
 }

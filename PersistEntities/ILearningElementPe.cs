@@ -6,6 +6,7 @@ namespace PersistEntities;
 
 public interface ILearningElementPe
 {
+    Guid Id { get; set; }
     string Name { get; set; }
     ILearningContentPe LearningContent { get; set; }
     string Description { get; set; }

@@ -39,9 +39,72 @@ public class EntityPersistEntityMappingProfile : Profile
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
         CreateMap<LearningSpaceLayout, LearningSpaceLayoutPe>()
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .ForMember(x => x.LearningElements, opt => opt.Ignore())
+            .AfterMap(MapSpaceLayoutElements)
             .ReverseMap()
-            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .ForMember(x => x.LearningElements, opt => opt.Ignore())
+            .AfterMap(MapSpaceLayoutElements);
     }
+
+    private void MapSpaceLayoutElements(LearningSpaceLayout source, LearningSpaceLayoutPe destination, ResolutionContext ctx)
+    {
+        var sourceNewElements = source.LearningElements
+            .Where(x => !SameIdAtSameIndex(destination, x))
+            .Select(tup =>
+                new KeyValuePair<int, ILearningElementPe>(tup.Key,
+                    ctx.Mapper.Map<LearningElementPe>(tup.Value)));
+        foreach (var (key, _) in destination.LearningElements
+                     .Where(x => !SameIdAtSameIndex(source, x)))
+        {
+            destination.LearningElements.Remove(key);
+        }
+
+        foreach (var (key, value) in destination.LearningElements)
+        {
+            var sourceElement = source.LearningElements
+                .First(x => x.Key == key && x.Value.Id == value.Id);
+            ctx.Mapper.Map(sourceElement.Value, value);
+        }
+        
+        destination.LearningElements = sourceNewElements
+            .Union(destination.LearningElements)
+            .ToDictionary(tup => tup.Key, tup => tup.Value);
+    }
+
+    private void MapSpaceLayoutElements(LearningSpaceLayoutPe source, LearningSpaceLayout destination, ResolutionContext ctx)
+    {
+        var sourceNewElements = source.LearningElements
+            .Where(x => !SameIdAtSameIndex(destination, x))
+            .Select(tup =>
+                new KeyValuePair<int, ILearningElement>(tup.Key,
+                    ctx.Mapper.Map<LearningElement>(tup.Value)));
+        foreach (var (key, _) in destination.LearningElements
+                     .Where(x => !SameIdAtSameIndex(source, x)))
+        {
+            destination.LearningElements.Remove(key);
+        }
+
+        foreach (var (key, value) in destination.LearningElements)
+        {
+            var sourceElement = source.LearningElements
+                .First(x => x.Key == key && x.Value.Id == value.Id);
+            ctx.Mapper.Map(sourceElement.Value, value);
+        }
+        
+        destination.LearningElements = sourceNewElements
+            .Union(destination.LearningElements)
+            .ToDictionary(tup => tup.Key, tup => tup.Value);
+    }
+
+    private static bool
+        SameIdAtSameIndex(ILearningSpaceLayoutPe destination, KeyValuePair<int, ILearningElement> kvp) =>
+        destination.LearningElements.Any(y => y.Key == kvp.Key && y.Value.Id == kvp.Value.Id);
+
+    private static bool 
+        SameIdAtSameIndex(ILearningSpaceLayout destination, KeyValuePair<int, ILearningElementPe> kvp) =>
+        destination.LearningElements.Any(y => y.Key == kvp.Key && y.Value.Id == kvp.Value.Id);
+
 
     private void CreateEnumMaps()
     {

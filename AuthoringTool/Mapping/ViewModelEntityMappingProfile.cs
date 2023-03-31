@@ -44,7 +44,7 @@ public class ViewModelEntityMappingProfile : Profile
             .ForMember(x => x.UsedIndices, opt => opt.Ignore())
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
             .ForMember(x => x.LearningElements, opt => opt.Ignore())
-            .AfterMap(SpaceLayoutAfterMap);
+            .AfterMap(MapSpaceLayoutElements);
         CreateMap<ILearningSpaceLayoutViewModel, LearningSpaceLayout>()
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
 
@@ -55,14 +55,14 @@ public class ViewModelEntityMappingProfile : Profile
 
     }
 
-    private void SpaceLayoutAfterMap(ILearningSpaceLayout source, LearningSpaceLayoutViewModel destination, ResolutionContext ctx)
+    private static void MapSpaceLayoutElements(ILearningSpaceLayout source, LearningSpaceLayoutViewModel destination, ResolutionContext ctx)
     {
         //gather view models for all elements that are in source but not in destination
         var sourceNewElementsViewModels = source.LearningElements
-            .Where(x => !AnyLambda(destination, x))
+            .Where(x => !SameIdAtSameIndex(destination, x))
             .Select(tup =>
-            new KeyValuePair<int, ILearningElementViewModel>(tup.Key,
-                ctx.Mapper.Map<LearningElementViewModel>(tup.Value)));
+                new KeyValuePair<int, ILearningElementViewModel>(tup.Key,
+                    ctx.Mapper.Map<LearningElementViewModel>(tup.Value)));
         
         //remove all elements from destination that are not in source
         foreach (var (key, _) in destination.LearningElements.Where(x =>
@@ -74,7 +74,8 @@ public class ViewModelEntityMappingProfile : Profile
         //map all elements that are in source and destination already into the respective destination element
         foreach (var (key, value) in destination.LearningElements)
         {
-            var entity = source.LearningElements.First(x => x.Key == key && x.Value.Id == value.Id);
+            var entity = source.LearningElements
+                .First(x => x.Key == key && x.Value.Id == value.Id);
             ctx.Mapper.Map(entity.Value, value);
         }
 
@@ -83,10 +84,9 @@ public class ViewModelEntityMappingProfile : Profile
             .ToDictionary(tup => tup.Key, tup => tup.Value);
     }
 
-    private static bool AnyLambda(ILearningSpaceLayoutViewModel destination, KeyValuePair<int, ILearningElement> x)
-    {
-        return destination.LearningElements.Any(y => y.Key == x.Key && y.Value.Id == x.Value.Id);
-    }
+    private static bool SameIdAtSameIndex(ILearningSpaceLayoutViewModel destination,
+        KeyValuePair<int, ILearningElement> kvp) =>
+        destination.LearningElements.Any(y => y.Key == kvp.Key && y.Value.Id == kvp.Value.Id);
 
     private void CreateLearningContentMap()
     {

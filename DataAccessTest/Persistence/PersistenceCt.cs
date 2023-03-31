@@ -24,9 +24,11 @@ public class PersistenceCt
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
             "Description", "Goals");
         var initialWorldId = world.Id;
-        var space1 = new LearningSpacePe("Name", "Description", "Goals", 5, new LearningSpaceLayoutPe(new ILearningElementPe[6], FloorPlanEnumPe.Rectangle2X3));
+        var space1 = new LearningSpacePe("Name", "Description", "Goals", 5,
+            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(), FloorPlanEnumPe.Rectangle2X3));
         var initialSpace1Id = space1.Id;
-        var space2 = new LearningSpacePe("Name", "Description", "Goals", 5, new LearningSpaceLayoutPe(new ILearningElementPe[6], FloorPlanEnumPe.Rectangle2X3));
+        var space2 = new LearningSpacePe("Name", "Description", "Goals", 5,
+            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(), FloorPlanEnumPe.Rectangle2X3));
         var initialSpace2Id = space2.Id;
         var condition1 = new PathWayConditionPe(ConditionEnumPe.Or, 2, 1);
         var initialCondition1Id = condition1.Id;
@@ -97,7 +99,7 @@ public class PersistenceCt
     [Test]
     public void Persistence_SaveAndLoadSpace_Stream_ObjectsAreEquivalent()
     {
-        var space = new LearningSpacePe("Name", "Description", "Goals", 5, new LearningSpaceLayoutPe(new ILearningElementPe[6], FloorPlanEnumPe.Rectangle2X3));
+        var space = new LearningSpacePe("Name", "Description", "Goals", 5, new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(), FloorPlanEnumPe.Rectangle2X3));
         var initialSpaceId = space.Id;
         var content = new FileContentPe("a", "b", "");
         var element =
@@ -142,9 +144,11 @@ public class PersistenceCt
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
             "Description", "Goals");
         var initialWorldId = world.Id;
-        var space1 = new LearningSpacePe("Name", "Description", "Goals", 5, new LearningSpaceLayoutPe(new ILearningElementPe[6], FloorPlanEnumPe.Rectangle2X3));
+        var space1 = new LearningSpacePe("Name", "Description", "Goals", 5,
+            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(), FloorPlanEnumPe.Rectangle2X3));
         var initialSpace1Id = space1.Id;
-        var space2 = new LearningSpacePe("Name", "Description", "Goals", 5, new LearningSpaceLayoutPe(new ILearningElementPe[6], FloorPlanEnumPe.Rectangle2X3));
+        var space2 = new LearningSpacePe("Name", "Description", "Goals", 5,
+            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(), FloorPlanEnumPe.Rectangle2X3));
         var initialSpace2Id = space2.Id;
         var condition1 = new PathWayConditionPe(ConditionEnumPe.Or, 2, 1);
         var initialCondition1Id = condition1.Id;
@@ -214,7 +218,8 @@ public class PersistenceCt
     [Test]
     public void Persistence_SaveAndLoadSpace_File_ObjectsAreEquivalent()
     {
-        var space = new LearningSpacePe("Name", "Description", "Goals", 5, new LearningSpaceLayoutPe(new ILearningElementPe?[6], FloorPlanEnumPe.Rectangle2X3));
+        var space = new LearningSpacePe("Name", "Description", "Goals", 5,
+            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(), FloorPlanEnumPe.Rectangle2X3));
         var initialSpaceId = space.Id;
         var content = new FileContentPe("a", "b", "");
         var element = new LearningElementPe("le", content, "llll", "lllll",
@@ -278,7 +283,7 @@ public class PersistenceCt
         restoredLep.Should().BeEquivalentTo(lep, options => options.Excluding(obj => obj.Id));
     }
 
-    static ILearningElementPe?[] GetAllLearningElementTypes()
+    static Dictionary<int, ILearningElementPe> GetAllLearningElementTypes()
     {
         var fileContent = new FileContentPe("a", "b", "");
         var linkContent = new LinkContentPe("foo", "https://www.google.com");
@@ -288,7 +293,9 @@ public class PersistenceCt
                 LearningElementDifficultyEnumPe.Easy, 123, 42, 0, 0),
             new LearningElementPe("h5pInt", linkContent, "description", "a goal",
                 LearningElementDifficultyEnumPe.Medium, 123, 42, 0, 0),
-        };
+        }
+            .Select((element, i) => new KeyValuePair<int, ILearningElementPe>(i, element))
+            .ToDictionary(pair => pair.Key, pair => pair.Value);
     }
 
     [Test]
@@ -298,9 +305,21 @@ public class PersistenceCt
         var element = new LearningElementPe("le", content, "llll", "lllll",
             LearningElementDifficultyEnumPe.Easy);
         var space1 = new LearningSpacePe("Name", "Description", "Goals", 5,
-            new LearningSpaceLayoutPe(new ILearningElementPe?[] {element}, FloorPlanEnumPe.Rectangle2X3));
+            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>()
+            {
+                {
+                    0,
+                    element
+                }
+            },  FloorPlanEnumPe.Rectangle2X3));
         var space2 = new LearningSpacePe("Name", "Description", "Goals", 5,
-            new LearningSpaceLayoutPe(new ILearningElementPe?[] {element}, FloorPlanEnumPe.Rectangle2X3));
+            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>()
+            {
+                {
+                    0,
+                    element
+                }
+            }, FloorPlanEnumPe.Rectangle2X3));
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
             "Description", "Goals", learningSpaces: new List<LearningSpacePe> { space1, space2 });
         
@@ -325,9 +344,21 @@ public class PersistenceCt
         var element2 = new LearningElementPe("le", content, "llll", "lllll",
             LearningElementDifficultyEnumPe.Easy);
         var space1 = new LearningSpacePe("Name", "Description", "Goals", 5,
-            new LearningSpaceLayoutPe(new ILearningElementPe?[] {element1}, FloorPlanEnumPe.Rectangle2X3));
+            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>()
+            {
+                {
+                    0,
+                    element1
+                }
+            }, FloorPlanEnumPe.Rectangle2X3));
         var space2 = new LearningSpacePe("Name", "Description", "Goals", 5,
-            new LearningSpaceLayoutPe(new ILearningElementPe[] {element2}, FloorPlanEnumPe.Rectangle2X3));
+            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>()
+            {
+                {
+                    0,
+                    element2
+                }
+            }, FloorPlanEnumPe.Rectangle2X3));
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
             "Description", "Goals", learningSpaces: new List<LearningSpacePe> { space1, space2 });
         

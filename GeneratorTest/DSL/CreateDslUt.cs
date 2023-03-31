@@ -105,12 +105,38 @@ public class CreateDslUt
             "", "",  LearningElementDifficultyEnumPe.Easy);
         var mockElement5 = new LearningElementPe("Same Name Element", null, 
             "", "",  LearningElementDifficultyEnumPe.Easy);
-        
-        var mockLearningElements1 = new ILearningElementPe?[] {mockElement1, mockElement2};
+
+        var mockLearningElements1 = new Dictionary<int, ILearningElementPe>()
+        {
+            {
+                0,
+                mockElement1
+            },
+            {
+                1,
+                mockElement2
+            }
+        };
         var mockLearningSpaceLayout1 = new LearningSpaceLayoutPe(mockLearningElements1, FloorPlanEnumPe.Rectangle2X3);
-        var mockLearningElements2 = new ILearningElementPe?[] {mockElement3};
+        var mockLearningElements2 = new Dictionary<int, ILearningElementPe>()
+        {
+            {
+                0,
+                mockElement3
+            }
+        };
         var mockLearningSpaceLayout2 = new LearningSpaceLayoutPe(mockLearningElements2, FloorPlanEnumPe.Rectangle2X3);
-        var mockLearningElements3 = new ILearningElementPe?[] {mockElement4, mockElement5};
+        var mockLearningElements3 = new Dictionary<int, ILearningElementPe>()
+        {
+            {
+                0,
+                mockElement4
+            },
+            {
+                1,
+                mockElement5
+            }
+        };
         var mockLearningSpaceLayout3 = new LearningSpaceLayoutPe(mockLearningElements3, FloorPlanEnumPe.Rectangle2X3);
 
         var mockSpace1 = new LearningSpacePe("Space1", "", "", 1,
@@ -179,15 +205,37 @@ public class CreateDslUt
             LearningElementDifficultyEnumPe.Easy, workload: 17, points: 2, positionX: 23);
         var ele5 = new LearningElementPe("e",content5,"pupup", "g", 
             LearningElementDifficultyEnumPe.Easy, workload: 17, points: 2, positionX: 23);
-        
 
-        var space1 = new LearningSpacePe("ff", "ff", "ff", 5, 
-            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(), 
+
+        var space1 = new LearningSpacePe("ff", "ff", "ff", 5,
+            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>())
         {
             LearningSpaceLayout =
             {
-                LearningElements = new ILearningElementPe[] {ele1, ele2, ele3, ele4, ele5}
+                LearningElements = new Dictionary<int, ILearningElementPe>()
+                {
+                    {
+                        0,
+                        ele1
+                    },
+                    {
+                        1,
+                        ele2
+                    },
+                    {
+                        2,
+                        ele3
+                    },
+                    {
+                        3,
+                        ele4
+                    },
+                    {
+                        4,
+                        ele5
+                    }
+                }
             }
         };
         var space2 = new LearningSpacePe("ff2", "ff", "ff", 5, 
@@ -258,13 +306,19 @@ public class CreateDslUt
         var ele1 = new LearningElementPe("a", content1, "pupup", "g",
             LearningElementDifficultyEnumPe.Easy, workload: 17, points: 2, positionX: 23);
 
-        var space1 = new LearningSpacePe("ff", "ff", "ff", 5, 
-            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(), 
+        var space1 = new LearningSpacePe("ff", "ff", "ff", 5,
+            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>())
         {
             LearningSpaceLayout =
             {
-                LearningElements = new ILearningElementPe[] {ele1}
+                LearningElements = new Dictionary<int, ILearningElementPe>
+                {
+                    {
+                        0,
+                        ele1
+                    }
+                }
             }
         };
         var learningSpaces = new List<LearningSpacePe> { space1 };

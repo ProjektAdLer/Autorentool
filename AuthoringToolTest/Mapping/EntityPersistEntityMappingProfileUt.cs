@@ -123,7 +123,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.RequiredPoints = NewRequiredPoints;
-        destination.LearningSpaceLayout.LearningElements = Array.Empty<ILearningElementPe?>();
+        destination.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElementPe>();
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
         destination.InBoundObjects = new List<IObjectInPathWayPe>();
@@ -154,8 +154,13 @@ public class EntityPersistEntityMappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.RequiredPoints = NewRequiredPoints;
-        destination.LearningSpaceLayout.LearningElements = new ILearningElementPe[]
-            {GetTestableElementPersistEntity()};
+        destination.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElementPe>
+        {
+            {
+                0,
+                GetTestableElementPersistEntity()
+            }
+        };
         destination.PositionX = NewPositionX;
         destination.PositionY = NewPositionY;
         destination.InBoundObjects = new List<IObjectInPathWayPe>();
@@ -426,7 +431,13 @@ public class EntityPersistEntityMappingProfileUt
     {
         return new LearningSpacePe(NewName, NewDescription, NewGoals, NewRequiredPoints,
             new LearningSpaceLayoutPe(
-                new ILearningElementPe[] {GetTestableElementPersistEntity()},
+                new Dictionary<int, ILearningElementPe>()
+                {
+                    {
+                        0,
+                        GetTestableElementPersistEntity()
+                    }
+                },
                 FloorPlanEnumPe.Rectangle2X3), positionX: NewPositionX, positionY: NewPositionY);
     }
 

@@ -8,10 +8,10 @@ namespace PersistEntities;
 [KnownType(typeof(LearningElementPe))]
 public class LearningSpaceLayoutPe :  ILearningSpaceLayoutPe, IExtensibleDataObject
 {
-    public LearningSpaceLayoutPe(ILearningElementPe?[]? learningElements, FloorPlanEnumPe? floorPlanName)
+    public LearningSpaceLayoutPe(IDictionary<int, ILearningElementPe> learningElements, FloorPlanEnumPe floorPlanName)
     {
-        LearningElements = learningElements ?? Array.Empty<ILearningElementPe?>();
-        FloorPlanName = floorPlanName ?? FloorPlanEnumPe.NoFloorPlan;
+        LearningElements = learningElements;
+        FloorPlanName = floorPlanName;
     }
 
     /// <summary>
@@ -19,16 +19,16 @@ public class LearningSpaceLayoutPe :  ILearningSpaceLayoutPe, IExtensibleDataObj
     /// </summary>
     private LearningSpaceLayoutPe()
     {
-        LearningElements = Array.Empty<ILearningElementPe>();
+        LearningElements = new Dictionary<int, ILearningElementPe>();
         FloorPlanName = FloorPlanEnumPe.NoFloorPlan;
     }
     
     [DataMember]
     public FloorPlanEnumPe FloorPlanName { get; set; }
     [DataMember]
-    public ILearningElementPe?[] LearningElements { get; set; }
+    public IDictionary<int, ILearningElementPe> LearningElements { get; set; }
 
-    public IEnumerable<LearningElementPe> ContainedLearningElements => LearningElements.Where(x => x != null).Cast<LearningElementPe>()!;
+    public IEnumerable<ILearningElementPe> ContainedLearningElements => LearningElements.Values;
     
 
     ExtensionDataObject? IExtensibleDataObject.ExtensionData { get; set; }

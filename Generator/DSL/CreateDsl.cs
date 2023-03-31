@@ -10,13 +10,13 @@ namespace Generator.DSL;
 
 public class CreateDsl : ICreateDsl
 {
-    public List<LearningElementPe> ElementsWithFileContent;
+    public List<ILearningElementPe> ElementsWithFileContent;
     public List<LearningSpacePe> ListLearningSpaces;
     public LearningWorldJson LearningWorldJson;
     public string Uuid;
     public Dictionary<int, Guid> IdDictionary;
     private List<int> _listLearningSpaceContent;
-    private List<LearningElementPe> _listAllLearningElements;
+    private List<ILearningElementPe> _listAllLearningElements;
     private string _booleanAlgebraRequirements;
     private string _currentConditionDirectSpaces;
     private IFileSystem _fileSystem;
@@ -40,7 +40,7 @@ public class CreateDsl : ICreateDsl
 
     private void Initialize()
     {
-        ElementsWithFileContent = new List<LearningElementPe>();
+        ElementsWithFileContent = new List<ILearningElementPe>();
         ListLearningSpaces = new List<LearningSpacePe>();
         _listLearningSpaceContent = new List<int>();
         _booleanAlgebraRequirements = "";
@@ -48,7 +48,7 @@ public class CreateDsl : ICreateDsl
         Guid guid = Guid.NewGuid();
         Uuid = guid.ToString();
         _currentConditionDirectSpaces = "";
-        _listAllLearningElements = new List<LearningElementPe>();
+        _listAllLearningElements = new List<ILearningElementPe>();
     }
 
     //Search through all LearningElements and look for duplicates. 
