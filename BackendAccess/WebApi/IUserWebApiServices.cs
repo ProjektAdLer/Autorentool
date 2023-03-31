@@ -4,15 +4,19 @@ namespace ApiAccess.WebApi;
 
 public interface IUserWebApiServices
 {
-    /**
-     * This method is used to get a token from the API.
-     * It will throw an exception if the response is not successful.
-     * 
-     * @throws HttpRequestException if the response is not successful.
-     * @param username The username of the user.
-     * @param password The password of the user.
-     * 
-     * @return The token of the user in a DTO.
-     */
-    public Task<UserTokenWebApiBE> GetUserTokenAsync(string username, string password);
+    /// <summary>
+    ///     This method is used to get the user token from the API.
+    /// </summary>
+    /// <param name="username">The Username used to log into the LMS</param>
+    /// <param name="password">The Password used to log into the LMS</param>
+    /// <returns>A Token to pass to all other LMS Functions</returns>
+    public Task<UserTokenBE> GetUserTokenAsync(string username, string password);
+
+
+    /// <summary>
+    ///     This method is used to get the user information from the API.
+    /// </summary>
+    /// <param name="token">Token to authenticate the user</param>
+    /// <returns>User Information</returns>
+    public Task<UserInformationBE> GetUserInformationAsync(string token);
 }

@@ -1,6 +1,6 @@
 ﻿namespace ApiAccess.BackendEntities;
 
-public class UserTokenWebApiBE
+public class UserTokenBE
 {
     public string LmsToken { get; init; }
 }

@@ -22,39 +22,54 @@ public class BusinessLogic : IBusinessLogic
         CommandStateManager = commandStateManager;
         BackendAccess = backendAccess;
     }
-    
-    
+
+
     internal IWorldGenerator WorldGenerator { get; }
     internal ICommandStateManager CommandStateManager { get; }
     public IBackendAccess BackendAccess { get; }
-    internal IDataAccess DataAccess { get;  }
+    internal IDataAccess DataAccess { get; }
     public IAuthoringToolConfiguration Configuration { get; }
     public event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
     public bool CanUndo => CommandStateManager.CanUndo;
     public bool CanRedo => CommandStateManager.CanRedo;
-    /// <inheritdoc cref="IBusinessLogic.GetAllContent"/>
-    public IEnumerable<ILearningContent> GetAllContent() => DataAccess.GetAllContent();
-    /// <inheritdoc cref="IBusinessLogic.RemoveContent"/>
-    public void RemoveContent(ILearningContent content) => DataAccess.RemoveContent(content);
-    /// <inheritdoc cref="IBusinessLogic.SaveLink"/>
-    public void SaveLink(LinkContent linkContent) => DataAccess.SaveLink(linkContent);
+
+    /// <inheritdoc cref="IBusinessLogic.GetAllContent" />
+    public IEnumerable<ILearningContent> GetAllContent()
+    {
+        return DataAccess.GetAllContent();
+    }
+
+    /// <inheritdoc cref="IBusinessLogic.RemoveContent" />
+    public void RemoveContent(ILearningContent content)
+    {
+        DataAccess.RemoveContent(content);
+    }
+
+    /// <inheritdoc cref="IBusinessLogic.SaveLink" />
+    public void SaveLink(LinkContent linkContent)
+    {
+        DataAccess.SaveLink(linkContent);
+    }
 
     public void ExecuteCommand(ICommand command)
     {
         CommandStateManager.Execute(command);
-        OnCommandUndoRedoOrExecute?.Invoke(this, new CommandUndoRedoOrExecuteArgs(command.Name, CommandExecutionState.Executed));
+        OnCommandUndoRedoOrExecute?.Invoke(this,
+            new CommandUndoRedoOrExecuteArgs(command.Name, CommandExecutionState.Executed));
     }
-    
+
     public void UndoCommand()
     {
         var command = CommandStateManager.Undo();
-        OnCommandUndoRedoOrExecute?.Invoke(this, new CommandUndoRedoOrExecuteArgs(command.Name, CommandExecutionState.Undone));
+        OnCommandUndoRedoOrExecute?.Invoke(this,
+            new CommandUndoRedoOrExecuteArgs(command.Name, CommandExecutionState.Undone));
     }
-    
+
     public void RedoCommand()
     {
         var command = CommandStateManager.Redo();
-        OnCommandUndoRedoOrExecute?.Invoke(this, new CommandUndoRedoOrExecuteArgs(command.Name, CommandExecutionState.Redone));
+        OnCommandUndoRedoOrExecute?.Invoke(this,
+            new CommandUndoRedoOrExecuteArgs(command.Name, CommandExecutionState.Redone));
     }
 
     public void ConstructBackup(LearningWorld learningWorld, string filepath)
@@ -71,7 +86,7 @@ public class BusinessLogic : IBusinessLogic
     {
         return DataAccess.LoadLearningWorld(filepath);
     }
-    
+
     public void SaveLearningSpace(LearningSpace learningSpace, string filepath)
     {
         DataAccess.SaveLearningSpaceToFile(learningSpace, filepath);
@@ -81,7 +96,7 @@ public class BusinessLogic : IBusinessLogic
     {
         return DataAccess.LoadLearningSpace(filepath);
     }
-    
+
     public void SaveLearningElement(LearningElement learningElement, string filepath)
     {
         DataAccess.SaveLearningElementToFile(learningElement, filepath);
@@ -116,7 +131,7 @@ public class BusinessLogic : IBusinessLogic
     {
         return DataAccess.AddSavedLearningWorldPathByPathOnly(path);
     }
-    
+
     public void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id)
     {
         DataAccess.UpdateIdOfSavedLearningWorldPath(savedLearningWorldPath, id);
@@ -147,9 +162,20 @@ public class BusinessLogic : IBusinessLogic
         return DataAccess.FindSuitableNewSavePath(targetFolder, fileName, fileEnding);
     }
 
-    public string GetContentFilesFolderPath() => DataAccess.GetContentFilesFolderPath();
-    public void CallExport()
+    public string GetContentFilesFolderPath()
     {
-        BackendAccess.GetUserTokenAsync("foo", "bar");
+        return DataAccess.GetContentFilesFolderPath();
+    }
+
+    public async Task CallExport()
+    {
+        // First get the User Token
+        var usertoken = await BackendAccess.GetUserTokenAsync("user", "bitnami");
+
+        // Then we can get User Information by using the token
+        var userInformation = await BackendAccess.GetUserInformationAsync(usertoken.Token);
+
+        // Then we can use the user information to call the export
+        Console.WriteLine(userInformation);
     }
 }

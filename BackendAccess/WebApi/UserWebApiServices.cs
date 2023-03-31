@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using System.Web;
 using ApiAccess.BackendEntities;
 using Microsoft.Extensions.Logging;
 using Shared.Configuration;
@@ -16,19 +17,50 @@ public class UserWebApiServices : IUserWebApiServices
         Configuration = configuration;
         _client = client;
         _logger = logger;
-        _client.BaseAddress = new Uri("https://api.cluuub.xyz/api");
     }
 
     public IAuthoringToolConfiguration Configuration { get; }
 
-    public async Task<UserTokenWebApiBE> GetUserTokenAsync(string username, string password)
+    public async Task<UserTokenBE> GetUserTokenAsync(string username, string password)
     {
-        var apiResp = await _client.GetAsync($"/api/Users/Login?username={username}x&password={password}");
+        var parameters = new Dictionary<string, string>
+        {
+            {"username", username},
+            {"password", password}
+        };
+
+        return await SendHttpGetRequestAsync<UserTokenBE>("/Users/Login", parameters);
+    }
+
+    public async Task<UserInformationBE> GetUserInformationAsync(string token)
+    {
+        var parameters = new Dictionary<string, string>
+        {
+            {"WebServiceToken", token}
+        };
+
+        return await SendHttpGetRequestAsync<UserInformationBE>("/Users/UserData",
+            parameters);
+    }
+
+    private async Task<TResponse> SendHttpGetRequestAsync<TResponse>(string url, IDictionary<string, string> parameters)
+    {
+        // Build the query string from url and parameters.
+        var queryString = HttpUtility.ParseQueryString(string.Empty);
+        foreach (var (key, value) in parameters) queryString[key] = value;
+
+        // Set the Base URL of the API.
+        // TODO: This should be set in the configuration.
+        url = new Uri("https://localhost:3001/api") + url;
+
+        url += "?" + queryString;
+
+        var apiResp = await _client.GetAsync(url);
 
         // This will throw if the response is not successful.
         await HandleErrorMessage(apiResp);
 
-        return TryRead<UserTokenWebApiBE>(await apiResp.Content.ReadAsStringAsync());
+        return TryRead<TResponse>(await apiResp.Content.ReadAsStringAsync());
     }
 
     /**
@@ -43,7 +75,7 @@ public class UserWebApiServices : IUserWebApiServices
         {
             var error = await apiResp.Content.ReadAsStringAsync();
 
-            var problemDetails = TryRead<ErrorWebApiBE>(error);
+            var problemDetails = TryRead<ErrorBE>(error);
             throw new HttpRequestException(problemDetails.Detail);
         }
     }

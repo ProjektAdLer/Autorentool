@@ -24,7 +24,7 @@ public class AllResponsesTest
 
     private static IEnumerable<TestCaseData> GetTestCases()
     {
-        yield return new TestCaseData(new ErrorWebApiBE());
-        yield return new TestCaseData(new UserTokenWebApiBE());
+        yield return new TestCaseData(new ErrorBE());
+        yield return new TestCaseData(new UserTokenBE());
     }
 }

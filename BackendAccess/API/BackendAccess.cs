@@ -25,4 +25,11 @@ public class BackendAccess : IBackendAccess
 
         return retVal;
     }
+
+    public async Task<UserInformation> GetUserInformationAsync(string token)
+    {
+        var receivedUserInformation = await UserWebApiServices.GetUserInformationAsync(token);
+
+        return Mapper.Map<UserInformation>(receivedUserInformation);
+    }
 }

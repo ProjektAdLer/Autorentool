@@ -1,6 +1,6 @@
 ﻿namespace ApiAccess.BackendEntities;
 
-public class ErrorWebApiBE
+public class ErrorBE
 {
     public string Title { get; init; }
     public string Detail { get; init; }
