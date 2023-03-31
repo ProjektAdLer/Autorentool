@@ -14,6 +14,9 @@
 </header>
 <BaseForm TForm="LearningSpaceFormModel" TEntity="LearningSpace"
           OnValidSubmit="OnValidSubmit" SnackbarMessage="Space updated" FormDataContainer="FormDataContainer">
+    <HeaderButtons>
+        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="async () => await OnNewButtonClicked.InvokeAsync()">New Learning Space</MudButton>
+    </HeaderButtons>
     <Fields>
         <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                       For="@(() => FormModel.Name)"
@@ -48,7 +51,6 @@
     </Fields>
     <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
-        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="async () => await OnNewButtonClicked.InvokeAsync()">New</MudButton>
         <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="OnResetAsync">Reset</MudButton>
     </FooterButtons>
 </BaseForm>

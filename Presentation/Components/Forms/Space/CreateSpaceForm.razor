@@ -71,10 +71,10 @@
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
         if (AuthoringToolWorkspaceViewModel.SelectedLearningWorld == null) throw new InvalidOperationException("No learning world selected.");
+        model.RequiredPoints ??= 0;
         LearningWorldPresenter.CreateLearningSpace(model.Name,
             model.Shortname, model.Authors, model.Description,
-            //ignore null warning here because validation ensures that RequiredPoints is not null - n.stich
-            model.Goals, (int)model.RequiredPoints!, 0, 0);
+            model.Goals, (int)model.RequiredPoints, 0, 0);
     }
 
     protected override void OnInitialized()

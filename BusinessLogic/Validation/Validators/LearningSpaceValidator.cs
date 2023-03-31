@@ -25,7 +25,6 @@ public class LearningSpaceValidator : AbstractValidator<LearningSpace>
             .Must((space, shortName) => IsUniqueShortnameInWorld(space.Id, shortName))
             .WithMessage("Already in use.");
         RuleFor(x => x.RequiredPoints)
-            .NotEmpty()
             .GreaterThanOrEqualTo(0);
     }
 
