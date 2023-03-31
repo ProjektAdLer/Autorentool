@@ -18,42 +18,53 @@
         <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="async () => await OnNewButtonClicked.InvokeAsync()">New Learning Space</MudButton>
     </HeaderButtons>
     <Fields>
-        <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
-                      For="@(() => FormModel.Name)"
-                      Immediate="true"
-                      DebounceInterval="300"
-                      Label="@nameof(FormDataContainer.FormModel.Name)"/>
-        <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
-                      For="@(() => FormModel.Description)"
-                      Immediate="true"
-                      DebounceInterval="300"
-                      Label="@nameof(FormDataContainer.FormModel.Description)"/>
-        <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
-                      For="@(() => FormModel.Goals)"
-                      Immediate="true"
-                      DebounceInterval="300"
-                      Label="@nameof(FormDataContainer.FormModel.Goals)"/>
-        <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
-                         For="@(() => FormModel.RequiredPoints)"
-                         Immediate="true"
-                         DebounceInterval="300"
-                         Label="@nameof(FormDataContainer.FormModel.RequiredPoints)"/>
+        <Collapsable Title="General" Collapsed="false">
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                          For="@(() => FormModel.Name)"
+                          Immediate="true"
+                          DebounceInterval="300"
+                          Label="@nameof(FormDataContainer.FormModel.Name)"/>
+        </Collapsable>
+
+        <Collapsable Title="Goals" Collapsed="true">
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
+                          For="@(() => FormModel.Goals)"
+                          Immediate="true"
+                          DebounceInterval="300"
+                          Label="@nameof(FormDataContainer.FormModel.Goals)"/>
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                          For="@(() => FormModel.Description)"
+                          Immediate="true"
+                          DebounceInterval="300"
+                          Label="@nameof(FormDataContainer.FormModel.Description)"/>
+        </Collapsable>
+
+        <Collapsable Title="Completion conditions" Collapsed="true">
+            <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
+                             For="@(() => FormModel.RequiredPoints)"
+                             Immediate="true"
+                             DebounceInterval="300"
+                             Label="@nameof(FormDataContainer.FormModel.RequiredPoints)"/>
+        </Collapsable>
     </Fields>
     <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
         <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="OnResetAsync">Reset</MudButton>
     </FooterButtons>
 </BaseForm>
+
 @code {
 #pragma warning disable CS8618 - injected by framework - n.stich
     [Inject]
     private ILearningSpacePresenter LearningSpacePresenter { get; set; }
+
     [Inject]
     private IMapper Mapper { get; set; }
+
     [Inject]
     private IFormDataContainer<LearningSpaceFormModel, LearningSpace> FormDataContainer { get; set; }
 #pragma warning restore CS8618
-    
+
 #pragma warning disable CS8618
     [Parameter, EditorRequired]
     public ILearningSpaceViewModel SpaceToEdit { get; set; }
@@ -69,11 +80,11 @@
 
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
-        //we can supress the nullable warning here as validator ensures RequiredPoints isn't null - n.stich
+    //we can supress the nullable warning here as validator ensures RequiredPoints isn't null - n.stich
         LearningSpacePresenter.EditLearningSpace(model.Name, model.Description,
             model.Goals, (int)model.RequiredPoints!);
     }
-    
+
     private async Task MapIntoContainer()
     {
         Mapper.Map(SpaceToEdit, FormDataContainer.FormModel);
@@ -90,4 +101,5 @@
     {
         await MapIntoContainer();
     }
+
 }

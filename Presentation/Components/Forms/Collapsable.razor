@@ -2,12 +2,12 @@
     <div class="flex flex-row" @onclick="@Toggle">
         @if (Collapsed)
         {
-            <MudIcon Icon="@Icons.Material.Filled.ArrowDropDown" />
+            <MudIcon Icon="@Icons.Material.Filled.ArrowRight" />
             <h3 class="font-bold text-lg"> @Title </h3>
         }
         else
         {
-            <MudIcon Icon="@Icons.Material.Filled.ArrowDropUp" />
+            <MudIcon Icon="@Icons.Material.Filled.ArrowDropDown" />
             <h3 class="font-bold text-lg"> @Title </h3>
         }
     </div>
