@@ -11,36 +11,41 @@
 <BaseForm TForm="LearningWorldFormModel" TEntity="LearningWorld" OnValidSubmit="OnValidSubmit"
           SnackbarMessage="World updated" FormDataContainer="FormDataContainer">
     <Fields>
-        <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
-                      For="@(() => FormModel.Name)"
-                      Immediate="true"
-                      DebounceInterval="300"
-                      Label="@nameof(FormDataContainer.FormModel.Name)"/>
-        <MudTextField @bind-Value="FormDataContainer.FormModel.Shortname"
-                      For="@(() => FormModel.Shortname)"
-                      Immediate="true"
-                      DebounceInterval="300"
-                      Label="@nameof(FormDataContainer.FormModel.Shortname)"/>
-        <MudTextField @bind-Value="FormDataContainer.FormModel.Authors"
-                      For="@(() => FormModel.Authors)"
-                      Immediate="true"
-                      DebounceInterval="300"
-                      Label="@nameof(FormDataContainer.FormModel.Authors)"/>
-        <MudTextField @bind-Value="FormDataContainer.FormModel.Language"
-                      For="@(() => FormModel.Language)"
-                      Immediate="true"
-                      DebounceInterval="300"
-                      Label="@nameof(FormDataContainer.FormModel.Language)"/>
-        <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
-                      For="@(() => FormModel.Description)"
-                      Immediate="true"
-                      DebounceInterval="300"
-                      Label="@nameof(FormDataContainer.FormModel.Description)"/>
-        <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
-                      For="@(() => FormModel.Goals)"
-                      Immediate="true"
-                      DebounceInterval="300"
-                      Label="@nameof(FormDataContainer.FormModel.Goals)"/>
+        <Collapsable Title="General" Collapsed="false">
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                          For="@(() => FormModel.Name)"
+                          Immediate="true"
+                          DebounceInterval="300"
+                          Label="@nameof(FormDataContainer.FormModel.Name)"/>
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Shortname"
+                          For="@(() => FormModel.Shortname)"
+                          Immediate="true"
+                          DebounceInterval="300"
+                          Label="@nameof(FormDataContainer.FormModel.Shortname)"/>
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Authors"
+                          For="@(() => FormModel.Authors)"
+                          Immediate="true"
+                          DebounceInterval="300"
+                          Label="@nameof(FormDataContainer.FormModel.Authors)"/>
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Language"
+                          For="@(() => FormModel.Language)"
+                          Immediate="true"
+                          DebounceInterval="300"
+                          Label="@nameof(FormDataContainer.FormModel.Language)"/>
+        </Collapsable>
+
+        <Collapsable Title="Goals" Collapsed="true">
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                          For="@(() => FormModel.Description)"
+                          Immediate="true"
+                          DebounceInterval="300"
+                          Label="@nameof(FormDataContainer.FormModel.Description)"/>
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
+                          For="@(() => FormModel.Goals)"
+                          Immediate="true"
+                          DebounceInterval="300"
+                          Label="@nameof(FormDataContainer.FormModel.Goals)"/>
+        </Collapsable>
     </Fields>
     <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
@@ -53,8 +58,10 @@
 #pragma warning disable CS8618 - injected by framework - n.stich
     [Inject]
     private ILearningWorldPresenter LearningWorldPresenter { get; set; }
+
     [Inject]
     public IMapper Mapper { get; set; }
+
     [Inject]
     private IFormDataContainer<LearningWorldFormModel, LearningWorld> FormDataContainer { get; set; }
 #pragma warning restore CS8618
