@@ -142,7 +142,7 @@ public class TestParameter
 
     internal TestParameter()
     {
-        SpaceParent = new LearningSpace("l", "m", "n", "o", "p", 0,
+        SpaceParent = new LearningSpace("l", "o", "p", 0,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X3));
         WorldParent = new LearningWorld("q", "r", "s", "t", "u","o");
         Name = "a";

@@ -13,8 +13,6 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
     {
         Id = Guid.NewGuid();
         Name = "";
-        Shortname = "";
-        Authors = "";
         Description = "";
         Goals = "";
         RequiredPoints = 0;
@@ -25,14 +23,12 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
         PositionX = 0;
         PositionY = 0;
     }
-    public LearningSpace(string name, string shortname, string authors, string description,
+    public LearningSpace(string name, string description,
         string goals, int requiredPoints, LearningSpaceLayout? learningSpaceLayout = null, double positionX = 0,
         double positionY = 0, List<IObjectInPathWay>? inBoundSpaces = null, List<IObjectInPathWay>? outBoundSpaces = null)
     {
         Id = Guid.NewGuid();
         Name = name;
-        Shortname = shortname;
-        Authors = authors;
         Description = description;
         Goals = goals;
         RequiredPoints = requiredPoints;
@@ -47,8 +43,6 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
     // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local - required for automapper n.stich
     public Guid Id { get; set; }
     public string Name { get; set; }
-    public string Shortname { get; set; }
-    public string Authors { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
     public int RequiredPoints { get; set; }
@@ -62,7 +56,7 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
 
     public IMemento GetMemento()
     {
-        return new LearningSpaceMemento(Name, Shortname, Authors, Description, Goals, LearningSpaceLayout, InBoundObjects, 
+        return new LearningSpaceMemento(Name, Description, Goals, LearningSpaceLayout, InBoundObjects, 
             OutBoundObjects, positionX: PositionX, positionY: PositionY, selectedLearningElement: SelectedLearningElement);
     }
 
@@ -73,8 +67,6 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
             throw new ArgumentException("Incorrect IMemento implementation", nameof(memento));
         }
         Name = learningSpaceMemento.Name;
-        Shortname = learningSpaceMemento.Shortname;
-        Authors = learningSpaceMemento.Authors;
         Description = learningSpaceMemento.Description;
         Goals = learningSpaceMemento.Goals;
         LearningSpaceLayout = learningSpaceMemento.LearningSpaceLayout;
@@ -87,14 +79,12 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
 
     private record LearningSpaceMemento : IMemento
     {
-        internal LearningSpaceMemento(string name, string shortname, string authors, string description,
+        internal LearningSpaceMemento(string name, string description,
             string goals, ILearningSpaceLayout learningSpaceLayout, List<IObjectInPathWay> inBoundSpaces,
             List<IObjectInPathWay> outBoundSpaces, double positionX = 0, double positionY = 0,
             ILearningElement? selectedLearningElement = null)
         {
             Name = name;
-            Shortname = shortname;
-            Authors = authors;
             Description = description;
             Goals = goals;
             LearningSpaceLayout = learningSpaceLayout;
@@ -106,8 +96,6 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
         }
         
         internal string Name { get; }
-        internal string Shortname { get; }
-        internal string Authors { get; }
         internal string Description { get; }
         internal string Goals { get; }
         internal ILearningSpaceLayout LearningSpaceLayout { get; }

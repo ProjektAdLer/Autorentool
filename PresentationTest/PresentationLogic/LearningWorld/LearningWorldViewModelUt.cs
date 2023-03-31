@@ -22,7 +22,7 @@ public class LearningWorldViewModelUt
         var language = "german";
         var description = "very cool element";
         var goals = "learn very many things";
-        var space1 = new LearningSpaceViewModel("ff", "ff", "ff", "ff", "ff");
+        var space1 = new LearningSpaceViewModel("ff", "ff", "ff");
         var learningSpaces = new List<ILearningSpaceViewModel> { space1 };
         var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
         var pathWayConditions = new List<PathWayConditionViewModel> { condition };
@@ -60,7 +60,7 @@ public class LearningWorldViewModelUt
     public void Workload_ReturnsCorrectWorkload()
     {
         var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo");
-        var space = new LearningSpaceViewModel("a", "b", "c", "d", "e", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+        var space = new LearningSpaceViewModel("a", "d", "e", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         var spaceElement = new LearningElementViewModel("a", null!, "d", "e",
             LearningElementDifficultyEnum.Easy, space, 6);
         
@@ -74,10 +74,10 @@ public class LearningWorldViewModelUt
     public void Points_ReturnsCorrectSum()
     {
         var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo");
-        var space = new LearningSpaceViewModel("a", "b", "c", "d", "e", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+        var space = new LearningSpaceViewModel("a", "d", "e", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         var spaceElement = new LearningElementViewModel("a",  null!, "d", "e",
             LearningElementDifficultyEnum.Easy, space, 6,7);
-        var space2 = new LearningSpaceViewModel("a", "b", "c", "d", "e", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+        var space2 = new LearningSpaceViewModel("a", "d", "e", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         var spaceElement2 = new LearningElementViewModel("a", null!, "d", "e",
             LearningElementDifficultyEnum.Easy, space, 4,5);
         

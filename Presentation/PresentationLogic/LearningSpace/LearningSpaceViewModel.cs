@@ -16,8 +16,6 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     {
         Id = Guid.Empty;
         Name = "";
-        Shortname = "";
-        Authors = "";
         Description = "";
         Goals = "";
         RequiredPoints = 0;
@@ -32,17 +30,15 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     /// Initializes a new instance of the <see cref="LearningSpaceViewModel"/> class.
     /// </summary>
     /// <param name="name">The name of the learning space.</param>
-    /// <param name="shortname">The short name (abbreviation) of the learning world.(Maybe not relevant)</param>
-    /// <param name="authors">The string containing the names of all the authors working on the learning space.</param>
     /// <param name="description">A description of the learning space and its contents.</param>
     /// <param name="goals">A description of the goals this learning space is supposed to achieve.</param>
     /// <param name="requiredPoints">Points required to complete the learning space.</param>
     /// <param name="layoutViewModel">Layout of the learning space</param>
-    /// <param name="inBoundObjects">A List of objects that have learning path to the space.</param>
-    /// <param name="outBoundObjects">A list of objects that this space have a learning path to.</param>
     /// <param name="positionX">x-position of the learning space in the workspace.</param>
     /// <param name="positionY">y-position of the learning space in the workspace.</param>
-    public LearningSpaceViewModel(string name, string shortname, string authors, string description, string goals,
+    /// <param name="inBoundObjects">A List of objects that have learning path to the space.</param>
+    /// <param name="outBoundObjects">A list of objects that this space have a learning path to.</param>
+    public LearningSpaceViewModel(string name, string description, string goals,
         int requiredPoints = 0,
         ILearningSpaceLayoutViewModel? layoutViewModel = null, double positionX = 0, double positionY = 0,
         ICollection<IObjectInPathWayViewModel>? inBoundObjects = null,
@@ -50,8 +46,6 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     {
         Id = Guid.NewGuid();
         Name = name;
-        Shortname = shortname;
-        Authors = authors;
         Description = description;
         Goals = goals;
         RequiredPoints = requiredPoints;
@@ -72,8 +66,6 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     public int Points => ContainedLearningElements.Sum(element => element.Points);
     public Guid Id { get; private set; }
     public string Name { get; set; }
-    public string Shortname { get; set; }
-    public string Authors { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
     public int RequiredPoints { get; set; }

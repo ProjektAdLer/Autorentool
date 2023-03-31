@@ -104,7 +104,7 @@ public class CachingMapperUt
     {
         var world = new LearningWorld("n","s","a","l","d","g");
         var worldViewModel = new LearningWorldViewModel("x","x","x","x","x","x");
-        var spaceEntity = new LearningSpace("n", "s", "a", "d", "g", 5);
+        var spaceEntity = new LearningSpace("n", "d", "g", 5);
         var conditionEntity = new PathWayCondition(ConditionEnum.And, 2, 1);
         var pathWayEntity = new LearningPathway(spaceEntity,conditionEntity);
         world.LearningSpaces.Add(spaceEntity);
@@ -122,8 +122,6 @@ public class CachingMapperUt
         {
             Assert.That(worldViewModel.LearningSpaces.First().Id, Is.EqualTo(spaceEntity.Id));
             Assert.That(worldViewModel.LearningSpaces.First().Name, Is.EqualTo(spaceEntity.Name));
-            Assert.That(worldViewModel.LearningSpaces.First().Shortname, Is.EqualTo(spaceEntity.Shortname));
-            Assert.That(worldViewModel.LearningSpaces.First().Authors, Is.EqualTo(spaceEntity.Authors));
             Assert.That(worldViewModel.LearningSpaces.First().Description, Is.EqualTo(spaceEntity.Description));
             Assert.That(worldViewModel.LearningSpaces.First().Goals, Is.EqualTo(spaceEntity.Goals));
             Assert.That(worldViewModel.LearningSpaces.First().RequiredPoints, Is.EqualTo(spaceEntity.RequiredPoints));
@@ -146,7 +144,7 @@ public class CachingMapperUt
     {
         var world = new LearningWorld("n","s","a","l","d","g");
         var worldViewModel = new LearningWorldViewModel("x","x","x","x","x","x");
-        var spaceEntity = new LearningSpace("n", "s", "a", "d", "g", 5);
+        var spaceEntity = new LearningSpace("n", "d", "g", 5);
         var conditionEntity = new PathWayCondition(ConditionEnum.And, 2, 1);
         var pathWayEntity = new LearningPathway(spaceEntity,conditionEntity);
         world.LearningSpaces.Add(spaceEntity);
@@ -187,7 +185,7 @@ public class CachingMapperUt
     public void
         MapLearningSpaceEntityToViewModel_ChangedLayoutWithElementWithIndexBiggerThanTheOldLearningElementsArray_MapsCorrectly()
     {
-        var spaceEntity = new LearningSpace("n", "s", "a", "d", "g", 5,
+        var spaceEntity = new LearningSpace("n", "d", "g", 5,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2));
         var elementEntity = new LearningElement("n", new FileContent("n", "t", "f"), "d", "g",
             LearningElementDifficultyEnum.Easy, spaceEntity);
@@ -195,7 +193,7 @@ public class CachingMapperUt
         
         var systemUnderTest = CreateTestableCachingMapper();
         
-        var spaceViewModel = new LearningSpaceViewModel("", "", "", "", "", 0, new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X2));
+        var spaceViewModel = new LearningSpaceViewModel("", "", "", 0, new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X2));
         
         systemUnderTest.Map<LearningSpace, LearningSpaceViewModel>(spaceEntity, spaceViewModel);
         
@@ -206,8 +204,6 @@ public class CachingMapperUt
         {
             Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[3]!.Id, Is.EqualTo(elementEntity.Id));
             Assert.That(spaceViewModel.Name, Is.EqualTo(spaceEntity.Name));
-            Assert.That(spaceViewModel.Shortname, Is.EqualTo(spaceEntity.Shortname));
-            Assert.That(spaceViewModel.Authors, Is.EqualTo(spaceEntity.Authors));
             Assert.That(spaceViewModel.Description, Is.EqualTo(spaceEntity.Description));
             Assert.That(spaceViewModel.Goals, Is.EqualTo(spaceEntity.Goals));
             Assert.That(spaceViewModel.RequiredPoints, Is.EqualTo(spaceEntity.RequiredPoints));
@@ -224,8 +220,6 @@ public class CachingMapperUt
         {
             Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[5]!.Id, Is.EqualTo(elementEntity.Id));
             Assert.That(spaceViewModel.Name, Is.EqualTo(spaceEntity.Name));
-            Assert.That(spaceViewModel.Shortname, Is.EqualTo(spaceEntity.Shortname));
-            Assert.That(spaceViewModel.Authors, Is.EqualTo(spaceEntity.Authors));
             Assert.That(spaceViewModel.Description, Is.EqualTo(spaceEntity.Description));
             Assert.That(spaceViewModel.Goals, Is.EqualTo(spaceEntity.Goals));
             Assert.That(spaceViewModel.RequiredPoints, Is.EqualTo(spaceEntity.RequiredPoints));
@@ -235,8 +229,8 @@ public class CachingMapperUt
     [Test]
     public void MapLearningSpaceEntityToViewModel_MapperReceivedCallWithCorrectParameters()
     {
-        var entity = new LearningSpace("n", "s", "a", "d", "g", 5);
-        var viewModel = new LearningSpaceViewModel("x","x","x","x","x",5);
+        var entity = new LearningSpace("n", "d", "g", 5);
+        var viewModel = new LearningSpaceViewModel("x","x","x",5);
         var mapper = Substitute.For<IMapper>();
         var systemUnderTest = CreateTestableCachingMapper(mapper);
 
@@ -248,9 +242,9 @@ public class CachingMapperUt
     [Test]
     public void MapLearningSpaceEntityToViewModel_MapsLearningElementToViewModel()
     {
-        var space = new LearningSpace("n", "s", "a", "d", "g", 5,
+        var space = new LearningSpace("n", "d", "g", 5,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X3));
-        var spaceViewModel = new LearningSpaceViewModel("x","x","x","x","x",5);
+        var spaceViewModel = new LearningSpaceViewModel("x","x","x",5);
         var elementEntity = new LearningElement("n", null!, "d", "g", LearningElementDifficultyEnum.Easy);
         space.LearningSpaceLayout.LearningElements[0] = elementEntity;
         
@@ -273,13 +267,13 @@ public class CachingMapperUt
     public void MapLearningSpaceEntityToViewModel_MapsElementToTheSameViewModelAfterFirstCall()
     {
         //create space entity containing one element
-        var space = new LearningSpace("n", "s", "a", "d", "g", 5,
+        var space = new LearningSpace("n", "d", "g", 5,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X3));
         var elementEntity =
             new LearningElement("n", null!, "d", "g", LearningElementDifficultyEnum.Easy);
         space.LearningSpaceLayout.LearningElements[0] = elementEntity;
         //create empty view model
-        var spaceViewModel = new LearningSpaceViewModel("x", "x", "x", "x", "x", 5,
+        var spaceViewModel = new LearningSpaceViewModel("x", "x", "x", 5,
             new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         
         var systemUnderTest = CreateTestableCachingMapper();
@@ -322,7 +316,7 @@ public class CachingMapperUt
         var worldEntity = new LearningWorld("n","s","a","l","d","g");
         var workspace = new AuthoringToolWorkspace(worldEntity, new List<LearningWorld>(){worldEntity});
         var workspaceViewModel = new AuthoringToolWorkspaceViewModel();
-        var spaceEntity = new LearningSpace("n", "s", "a", "d", "g", 5,
+        var spaceEntity = new LearningSpace("n", "d", "g", 5,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X3));
         var elementEntity = new LearningElement("n", null!, "d", "g", LearningElementDifficultyEnum.Easy);
         var secondElementEntity = new LearningElement("n2", null!, "d2", "g2", LearningElementDifficultyEnum.Easy);

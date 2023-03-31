@@ -70,10 +70,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     public IEnumerable<(Guid, string)>? SpaceNames =>
         LearningWorldVm?.LearningSpaces.Select(space => (space.Id, space.Name));
 
-    /// <inheritdoc cref="ILearningSpaceNamesProvider.SpaceShortnames"/>
-    public IEnumerable<(Guid, string)>? SpaceShortnames =>
-        LearningWorldVm?.LearningSpaces.Select(space => (space.Id, space.Shortname));
-
     public event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute
     {
         add => _presentationLogic.OnCommandUndoRedoOrExecute += value;
@@ -199,13 +195,13 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     #region LearningSpace
 
     /// <inheritdoc cref="ILearningWorldPresenter.CreateLearningSpace"/>
-    public void CreateLearningSpace(string name, string shortname,
-        string authors, string description, string goals, int requiredPoints, double positionX = 0,
-        double positionY = 0)
+    public void CreateLearningSpace(string name, string description, string goals, int requiredPoints,
+        double positionX = 0D,
+        double positionY = 0D)
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        _presentationLogic.CreateLearningSpace(LearningWorldVm, name, shortname, authors, description, goals,
+        _presentationLogic.CreateLearningSpace(LearningWorldVm, name, description, goals,
             requiredPoints, positionX, positionY);
         //TODO: Return error in the command in case of failure
         if(LearningWorldVm.SelectedLearningObjectInPathWay is LearningSpaceViewModel learningSpace)

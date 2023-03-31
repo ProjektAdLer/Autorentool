@@ -13,7 +13,7 @@ public class LearningElementViewModelUt
     public void Constructor_InitializesAllProperties()
     {
         var name = "asdf";
-        var parent = new LearningSpaceViewModel("foo", "bar", "baz", "", "", 2);
+        var parent = new LearningSpaceViewModel("foo", "", "", 2);
         var content = new FileContentViewModel("bar", "foo", "");
         var description = "very cool element";
         var goals = "learn very many things";

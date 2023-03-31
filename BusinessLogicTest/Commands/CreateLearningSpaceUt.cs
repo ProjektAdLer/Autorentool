@@ -15,8 +15,6 @@ public class CreateLearningSpaceUt
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         var name = "space1";
-        var shortname = "sp1";
-        var authors = "marvin";
         var description = "space for learning";
         var goals = "learning";
         var requiredPoints = 10;
@@ -25,7 +23,7 @@ public class CreateLearningSpaceUt
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateLearningSpace(world, name, shortname, authors, description, goals, requiredPoints, positionX, positionY, mappingAction);
+        var command = new CreateLearningSpace(world, name, description, goals, requiredPoints, positionX, positionY, mappingAction);
         
         Assert.IsEmpty(world.LearningSpaces);
         Assert.IsFalse(actionWasInvoked);
@@ -38,8 +36,6 @@ public class CreateLearningSpaceUt
         Assert.Multiple(() =>
         {
             Assert.That(space.Name, Is.EqualTo("space1"));
-            Assert.That(space.Shortname, Is.EqualTo("sp1"));
-            Assert.That(space.Authors, Is.EqualTo("marvin"));
             Assert.That(space.Description, Is.EqualTo("space for learning"));
             Assert.That(space.Goals, Is.EqualTo("learning"));
         });
@@ -49,7 +45,7 @@ public class CreateLearningSpaceUt
     public void Execute_AddsLearningSpaceAndSetAsSelectedLearningObject()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space = new LearningSpace("z","y","x","w","v", 5);
+        var space = new LearningSpace("z","w","v", 5);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
@@ -72,8 +68,6 @@ public class CreateLearningSpaceUt
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         var name = "space1";
-        var shortname = "sp1";
-        var authors = "marvin";
         var description = "space for learning";
         var goals = "learning";
         var requiredPoints = 10;
@@ -82,7 +76,7 @@ public class CreateLearningSpaceUt
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateLearningSpace(world, name, shortname, authors, description, goals, requiredPoints, positionX, positionY, mappingAction);
+        var command = new CreateLearningSpace(world, name, description, goals, requiredPoints, positionX, positionY, mappingAction);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -95,12 +89,10 @@ public class CreateLearningSpaceUt
     public void UndoRedo_UndoesAndRedoesCreateLearningSpace()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space = new LearningSpace("g", "h", "i", "j", "k", 5);
+        var space = new LearningSpace("g", "j", "k", 5);
         world.LearningSpaces.Add(space);
         world.SelectedLearningObjectInPathWay = space;
         var name = "space1";
-        var shortname = "sp1";
-        var authors = "marvin";
         var description = "space for learning";
         var goals = "learning";
         var requiredPoints = 10;
@@ -109,7 +101,7 @@ public class CreateLearningSpaceUt
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         
-        var command = new CreateLearningSpace(world, name, shortname, authors, description, goals, requiredPoints, positionX, positionY, mappingAction);
+        var command = new CreateLearningSpace(world, name, description, goals, requiredPoints, positionX, positionY, mappingAction);
         
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
         Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(space));

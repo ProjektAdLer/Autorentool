@@ -16,8 +16,6 @@ public class LearningSpaceViewModelUt
     public void Constructor_InitializesAllProperties()
     {
         var name = "asdf";
-        var shortname = "jkl;";
-        var authors = "ben and jerry";
         var description = "very cool element";
         var goals = "learn very many things";
         var requiredPoints = 10;
@@ -26,7 +24,7 @@ public class LearningSpaceViewModelUt
         var ele1 = new LearningElementViewModel("a",  null!,"h","i", LearningElementDifficultyEnum.Easy, null, 17,11, 23);
         var ele2 = new LearningElementViewModel("z",   null!,"zz","zzz", LearningElementDifficultyEnum.Hard, null, 444,12, double.MaxValue);
         var inBoundCondition = new PathWayConditionViewModel(ConditionEnum.And, 2, 3);
-        var outBoundSpace = new LearningSpaceViewModel("a", "z", "d", "b", "t", 3);
+        var outBoundSpace = new LearningSpaceViewModel("a", "b", "t", 3);
         var inBoundObjects = new List<IObjectInPathWayViewModel> { inBoundCondition };
         var outBoundObjects = new List<IObjectInPathWayViewModel> { outBoundSpace };
         var learningElements = new Dictionary<int, ILearningElementViewModel>()
@@ -43,14 +41,12 @@ public class LearningSpaceViewModelUt
             LearningElements = learningElements
         };
 
-        var systemUnderTest = new LearningSpaceViewModel(name, shortname, authors, description, goals, requiredPoints, 
-            learningSpaceLayoutVm, positionX, positionY, inBoundObjects, outBoundObjects);
+        var systemUnderTest = new LearningSpaceViewModel(name, description, goals, requiredPoints, 
+            learningSpaceLayoutVm, positionX: positionX, positionY: positionY, inBoundObjects: inBoundObjects, outBoundObjects: outBoundObjects);
         
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
-            Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortname));
-            Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.ContainedLearningElements, Is.EqualTo(learningElements));
@@ -70,7 +66,7 @@ public class LearningSpaceViewModelUt
     public void FileEnding_ReturnsCorrectEnding()
     {
         const string expectedFileEnding = "asf";
-        var systemUnderTest = new LearningSpaceViewModel("foo", "foo", "foo", "foo", "foo");
+        var systemUnderTest = new LearningSpaceViewModel("foo", "foo", "foo");
         Assert.That(systemUnderTest.FileEnding, Is.EqualTo(expectedFileEnding));
     }
     
@@ -78,7 +74,7 @@ public class LearningSpaceViewModelUt
     public void Workload_ReturnsCorrectWorkload()
     {
 
-        var systemUnderTest = new LearningSpaceViewModel("a", "b", "c", "d", "e", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+        var systemUnderTest = new LearningSpaceViewModel("a", "d", "e", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         var element1 = new LearningElementViewModel("a", null!, "d", "e",
             LearningElementDifficultyEnum.Easy, systemUnderTest, 6);
         var element2 = new LearningElementViewModel("abc", null!,"d", "e",
@@ -100,7 +96,7 @@ public class LearningSpaceViewModelUt
     public void Points_ReturnsCorrectSum()
     {
 
-        var systemUnderTest = new LearningSpaceViewModel("a", "b", "c", "d", "e", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+        var systemUnderTest = new LearningSpaceViewModel("a", "d", "e", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         var element1 = new LearningElementViewModel("a", null!, "d", "e",
             LearningElementDifficultyEnum.Easy, systemUnderTest, 6,7);
         var element2 = new LearningElementViewModel("abc", null!,"d", "e",

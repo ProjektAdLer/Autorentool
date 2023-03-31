@@ -21,16 +21,6 @@
                       Immediate="true"
                       DebounceInterval="300"
                       Label="@nameof(FormDataContainer.FormModel.Name)"/>
-        <MudTextField @bind-Value="FormDataContainer.FormModel.Shortname"
-                      For="@(() => FormModel.Shortname)"
-                      Immediate="true"
-                      DebounceInterval="300"
-                      Label="@nameof(FormDataContainer.FormModel.Shortname)"/>
-        <MudTextField @bind-Value="FormDataContainer.FormModel.Authors"
-                      For="@(() => FormModel.Authors)"
-                      Immediate="true"
-                      DebounceInterval="300"
-                      Label="@nameof(FormDataContainer.FormModel.Authors)"/>
         <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
                       For="@(() => FormModel.Description)"
                       Immediate="true"
@@ -72,9 +62,8 @@
     {
         if (AuthoringToolWorkspaceViewModel.SelectedLearningWorld == null) throw new InvalidOperationException("No learning world selected.");
         model.RequiredPoints ??= 0;
-        LearningWorldPresenter.CreateLearningSpace(model.Name,
-            model.Shortname, model.Authors, model.Description,
-            model.Goals, (int)model.RequiredPoints, 0, 0);
+        LearningWorldPresenter.CreateLearningSpace(model.Name, model.Description,
+            model.Goals, (int)model.RequiredPoints, positionX: 0, positionY: 0);
     }
 
     protected override void OnInitialized()

@@ -14,7 +14,7 @@ public class DragLearningElementToUnplacedUt
     public void DragLearningElementFromSlotToUnplaced_Execute_MovesLearningElementToUnplaced()
     {
         var world = new LearningWorld("wn", "wsn", "wa", "wl", "wd", "wg");
-        var space = new LearningSpace("sn", "ssn", "sa", "sd", "sg", 5,
+        var space = new LearningSpace("sn", "sd", "sg", 5,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2));
         world.LearningSpaces.Add(space);
         var content = new FileContent("cn", "ct", "cf");
@@ -50,7 +50,7 @@ public class DragLearningElementToUnplacedUt
     public void Undo_MementoIsNull_ThrowsException()
     {
         var world = new LearningWorld("wn", "wsn", "wa", "wl", "wd", "wg");
-        var space = new LearningSpace("sn", "ssn", "sa", "sd", "sg", 5,
+        var space = new LearningSpace("sn", "sd", "sg", 5,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2));
         world.LearningSpaces.Add(space);
         var content = new FileContent("cn", "ct", "cf");
@@ -75,7 +75,7 @@ public class DragLearningElementToUnplacedUt
     public void UndoRedo_UndoesAndRedoesMovingLearningElement()
     {
         var world = new LearningWorld("wn", "wsn", "wa", "wl", "wd", "wg");
-        var space = new LearningSpace("sn", "ssn", "sa", "sd", "sg", 5,
+        var space = new LearningSpace("sn", "sd", "sg", 5,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2));
         world.LearningSpaces.Add(space);
         var content = new FileContent("cn", "ct", "cf");

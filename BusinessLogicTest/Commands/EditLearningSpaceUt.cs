@@ -12,24 +12,20 @@ public class EditLearningSpaceUt
     [Test]
     public void Execute_EditsLearningSpace()
     {
-        var space = new LearningSpace("a", "b", "c", "d", "e", 5);
+        var space = new LearningSpace("a", "d", "e", 5);
         var name = "space1";
-        var shortname = "sp1";
-        var authors = "marvin";
         var description = "space for learning";
         var goals = "learning";
         var requiredPoints = 10;
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new EditLearningSpace(space, name, shortname, authors, description, goals, requiredPoints, mappingAction);
+        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, mappingAction);
         
         Assert.Multiple(() =>
         {
             Assert.IsFalse(actionWasInvoked);
             Assert.That(space.Name, Is.EqualTo("a"));
-            Assert.That(space.Shortname, Is.EqualTo("b"));
-            Assert.That(space.Authors, Is.EqualTo("c"));
             Assert.That(space.Description, Is.EqualTo("d"));
             Assert.That(space.Goals, Is.EqualTo("e"));
         });
@@ -40,8 +36,6 @@ public class EditLearningSpaceUt
         {
             Assert.IsTrue(actionWasInvoked);
             Assert.That(space.Name, Is.EqualTo("space1"));
-            Assert.That(space.Shortname, Is.EqualTo("sp1"));
-            Assert.That(space.Authors, Is.EqualTo("marvin"));
             Assert.That(space.Description, Is.EqualTo("space for learning"));
             Assert.That(space.Goals, Is.EqualTo("learning"));
         });
@@ -50,17 +44,15 @@ public class EditLearningSpaceUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var space = new LearningSpace("a", "b", "c", "d", "e", 5);
+        var space = new LearningSpace("a", "d", "e", 5);
         var name = "space1";
-        var shortname = "sp1";
-        var authors = "marvin";
         var description = "space for learning";
         var goals = "learning";
         var requiredPoints = 10;
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new EditLearningSpace(space, name, shortname, authors, description, goals, requiredPoints, mappingAction);
+        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, mappingAction);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -70,24 +62,20 @@ public class EditLearningSpaceUt
     [Test]
     public void UndoRedo_UndoesAndRedoesEditLearningSpace()
     {
-        var space = new LearningSpace("g", "h", "i", "j", "k", 5);
+        var space = new LearningSpace("g", "j", "k", 5);
         var name = "space1";
-        var shortname = "sp1";
-        var authors = "marvin";
         var description = "space for learning";
         var goals = "learning";
         var requiredPoints = 10;
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
         
-        var command = new EditLearningSpace(space, name, shortname, authors, description, goals, requiredPoints, mappingAction);
+        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, mappingAction);
         
         Assert.Multiple(() =>
         {
             Assert.IsFalse(actionWasInvoked);
             Assert.That(space.Name, Is.EqualTo("g"));
-            Assert.That(space.Shortname, Is.EqualTo("h"));
-            Assert.That(space.Authors, Is.EqualTo("i"));
             Assert.That(space.Description, Is.EqualTo("j"));
             Assert.That(space.Goals, Is.EqualTo("k"));
         });
@@ -98,8 +86,6 @@ public class EditLearningSpaceUt
         {
             Assert.IsTrue(actionWasInvoked);
             Assert.That(space.Name, Is.EqualTo("space1"));
-            Assert.That(space.Shortname, Is.EqualTo("sp1"));
-            Assert.That(space.Authors, Is.EqualTo("marvin"));
             Assert.That(space.Description, Is.EqualTo("space for learning"));
             Assert.That(space.Goals, Is.EqualTo("learning"));
         });
@@ -111,8 +97,6 @@ public class EditLearningSpaceUt
         {
             Assert.IsTrue(actionWasInvoked);
             Assert.That(space.Name, Is.EqualTo("g"));
-            Assert.That(space.Shortname, Is.EqualTo("h"));
-            Assert.That(space.Authors, Is.EqualTo("i"));
             Assert.That(space.Description, Is.EqualTo("j"));
             Assert.That(space.Goals, Is.EqualTo("k"));
         });
@@ -124,8 +108,6 @@ public class EditLearningSpaceUt
         {
             Assert.IsTrue(actionWasInvoked);
             Assert.That(space.Name, Is.EqualTo("space1"));
-            Assert.That(space.Shortname, Is.EqualTo("sp1"));
-            Assert.That(space.Authors, Is.EqualTo("marvin"));
             Assert.That(space.Description, Is.EqualTo("space for learning"));
             Assert.That(space.Goals, Is.EqualTo("learning"));
         });

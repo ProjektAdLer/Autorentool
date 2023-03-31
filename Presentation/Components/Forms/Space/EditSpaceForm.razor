@@ -23,16 +23,6 @@
                       Immediate="true"
                       DebounceInterval="300"
                       Label="@nameof(FormDataContainer.FormModel.Name)"/>
-        <MudTextField @bind-Value="FormDataContainer.FormModel.Shortname"
-                      For="@(() => FormModel.Shortname)"
-                      Immediate="true"
-                      DebounceInterval="300"
-                      Label="@nameof(FormDataContainer.FormModel.Shortname)"/>
-        <MudTextField @bind-Value="FormDataContainer.FormModel.Authors"
-                      For="@(() => FormModel.Authors)"
-                      Immediate="true"
-                      DebounceInterval="300"
-                      Label="@nameof(FormDataContainer.FormModel.Authors)"/>
         <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
                       For="@(() => FormModel.Description)"
                       Immediate="true"
@@ -80,7 +70,7 @@
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
         //we can supress the nullable warning here as validator ensures RequiredPoints isn't null - n.stich
-        LearningSpacePresenter.EditLearningSpace(model.Name, model.Shortname, model.Authors, model.Description,
+        LearningSpacePresenter.EditLearningSpace(model.Name, model.Description,
             model.Goals, (int)model.RequiredPoints!);
     }
     

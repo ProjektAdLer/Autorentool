@@ -22,15 +22,13 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     /// Creates a new learning space in the currently selected learning world.
     /// </summary>
     /// <param name="name"></param>
-    /// <param name="shortname"></param>
-    /// <param name="authors"></param>
     /// <param name="description"></param>
     /// <param name="goals"></param>
     /// <param name="requiredPoints"></param>
     /// <param name="positionX"></param>
     /// <param name="positionY"></param>
     /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
-    void CreateLearningSpace(string name, string shortname, string authors, string description, string goals,
+    void CreateLearningSpace(string name, string description, string goals,
         int requiredPoints, double positionX = 0, double positionY = 0);
 
     Task LoadLearningSpaceAsync();

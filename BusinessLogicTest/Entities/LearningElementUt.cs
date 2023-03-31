@@ -42,7 +42,7 @@ public class LearningElementUt
     public void NormalConstructor_InitializesAllProperties()
     {
         var name = "asdf";
-        var parent = new LearningSpace("foo", "bar", "", "", "", 3);
+        var parent = new LearningSpace("foo", "", "", 3);
         var content = new FileContent("a", "b", "");
         var description = "very cool element";
         var goals = "learn very many things";
@@ -74,7 +74,7 @@ public class LearningElementUt
     public void GetRestoreMemento_RestoresCorrectMemento()
     {
         var name = "asdf";
-        var parent = new LearningSpace("foo", "bar", "", "", "", 4);
+        var parent = new LearningSpace("foo", "", "", 4);
         var content = new FileContent("a", "b", "");
         var description = "very cool element";
         var goals = "learn very many things";
@@ -142,7 +142,7 @@ public class LearningElementUt
     public void RestoreMemento_MementoIsNotLearningElementMemento_ThrowsException()
     {
         var name = "asdf";
-        var parent = new LearningSpace("foo", "bar", "", "", "", 4);
+        var parent = new LearningSpace("foo", "", "", 4);
         var content = new FileContent("a", "b", "");
         var description = "very cool element";
         var goals = "learn very many things";

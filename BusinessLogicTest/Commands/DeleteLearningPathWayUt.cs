@@ -13,10 +13,10 @@ public class DeleteLearningPathWayUt
     public void Execute_DeletesLearningPathWay()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space1 = new LearningSpace("z", "y", "x", "w", "v", 5);
-        var space2 = new LearningSpace("l", "m", "n", "o", "p", 3);
-        var space3 = new LearningSpace("l", "m", "n", "o", "p", 3);
-        var space4 = new LearningSpace("l", "m", "n", "o", "p", 3);
+        var space1 = new LearningSpace("z", "w", "v", 5);
+        var space2 = new LearningSpace("l", "o", "p", 3);
+        var space3 = new LearningSpace("l", "o", "p", 3);
+        var space4 = new LearningSpace("l", "o", "p", 3);
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
         world.LearningSpaces.Add(space3);
@@ -50,8 +50,8 @@ public class DeleteLearningPathWayUt
     public void Undo_MementoIsNull_ThrowsException()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space1 = new LearningSpace("z", "y", "x", "w", "v", 5);
-        var space2 = new LearningSpace("l", "m", "n", "o", "p", 3);
+        var space1 = new LearningSpace("z", "w", "v", 5);
+        var space2 = new LearningSpace("l", "o", "p", 3);
         var pathWay = new LearningPathway(space1, space2);
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
@@ -71,8 +71,8 @@ public class DeleteLearningPathWayUt
     public void UndoRedo_UndoesAndRedoesCreateLearningPathWay()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space1 = new LearningSpace("z", "y", "x", "w", "v", 5);
-        var space2 = new LearningSpace("l", "m", "n", "o", "p", 3);
+        var space1 = new LearningSpace("z", "w", "v", 5);
+        var space2 = new LearningSpace("l", "o", "p", 3);
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
         bool actionWasInvoked = false;

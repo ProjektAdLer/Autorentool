@@ -14,7 +14,7 @@ public class EditLearningElementUt
     [Test]
     public void Execute_EditsLearningElement()
     {
-        var parent = new LearningSpace("l", "k", "j", "j", "j", 5);
+        var parent = new LearningSpace("l", "j", "j", 5);
         var content = new FileContent("bar", "foo", "");
         var element = new LearningElement("a", content, "f", "g", LearningElementDifficultyEnum.Medium, parent, workload: 8, points: 9, positionX: 17f, positionY: 29f);
         parent.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>
@@ -76,7 +76,7 @@ public class EditLearningElementUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var parent = new LearningSpace("l", "k", "j", "j", "j", 5);
+        var parent = new LearningSpace("l", "j", "j", 5);
         var element = new LearningElement("a", null!, "d", "e", LearningElementDifficultyEnum.Easy);
         var name = "new element";
         var url = "google.com";
@@ -100,7 +100,7 @@ public class EditLearningElementUt
     [Test]
     public void UndoRedo_UndoesAndRedoesEditLearningElement()
     {
-        var parent = new LearningSpace("l", "k", "j", "j", "j", 5);
+        var parent = new LearningSpace("l", "j", "j", 5);
         var content = new FileContent("bar", "foo", "");
         var element = new LearningElement("a", content, "f","g", LearningElementDifficultyEnum.Medium, parent, workload: 8, points: 9, positionX: 17f, positionY: 29f);
         parent.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>

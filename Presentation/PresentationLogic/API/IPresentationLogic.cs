@@ -121,28 +121,24 @@ public interface IPresentationLogic
     /// </summary>
     /// <param name="learningWorldVm">Parent learning world of the learning space to create.</param>
     /// <param name="name"></param>
-    /// <param name="shortname"></param>
-    /// <param name="authors"></param>
     /// <param name="description"></param>
     /// <param name="goals"></param>
     /// <param name="requiredPoints"></param>
     /// <param name="positionX"></param>
     /// <param name="positionY"></param>
-    void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name, string shortname,
-        string authors, string description, string goals, int requiredPoints, double positionX, double positionY);
+    void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name,
+        string description, string goals, int requiredPoints, double positionX, double positionY);
 
     /// <summary>
     /// Edits a given learning space in the given learning world with the corresponding command.
     /// </summary>
     /// <param name="learningSpaceVm">Learning space to edit.</param>
     /// <param name="name"></param>
-    /// <param name="shortname"></param>
-    /// <param name="authors"></param>
     /// <param name="description"></param>
     /// <param name="goals"></param>
     /// <param name="requiredPoints"></param>
     void EditLearningSpace(ILearningSpaceViewModel learningSpaceVm, string name,
-        string shortname, string authors, string description, string goals, int requiredPoints);
+        string description, string goals, int requiredPoints);
 
     /// <summary>
     /// Changes the layout of the given learning space to the given layout.

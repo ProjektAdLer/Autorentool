@@ -12,9 +12,6 @@ public class LearningSpaceUt
     public void Constructor_InitializesAllProperties()
     {
         var name = "asdf";
-        var shortname = "jkl;";
-        var authors = "ben and jerry";
-        var url = "url";
         var description = "very cool element";
         var goals = "learn very many things";
         var requiredPoints = 10;
@@ -35,14 +32,12 @@ public class LearningSpaceUt
         };
         var learningSpaceLayout = new LearningSpaceLayout(learningElements, FloorPlanEnum.Rectangle2X2);
         
-        var systemUnderTest = new LearningSpace(name, shortname, authors, description, goals, requiredPoints, 
-            learningSpaceLayout, positionX, positionY);
+        var systemUnderTest = new LearningSpace(name, description, goals, requiredPoints, 
+            learningSpaceLayout, positionX: positionX, positionY: positionY);
         
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
-            Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortname));
-            Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.ContainedLearningElements, Is.EqualTo(learningElements.Values));
@@ -55,8 +50,6 @@ public class LearningSpaceUt
     public void GetRestoreMemento_RestoresCorrectMemento()
     {
         var name = "asdf";
-        var shortname = "jkl;";
-        var authors = "ben and jerry";
         var description = "very cool element";
         var goals = "learn very many things";
         var requiredPoints = 10;
@@ -77,15 +70,13 @@ public class LearningSpaceUt
         };
         var learningSpaceLayout = new LearningSpaceLayout(learningElements, FloorPlanEnum.Rectangle2X2);
         
-        var systemUnderTest = new LearningSpace(name, shortname, authors, description, goals, requiredPoints, 
-            learningSpaceLayout, positionX, positionY);
+        var systemUnderTest = new LearningSpace(name, description, goals, requiredPoints, 
+            learningSpaceLayout, positionX: positionX, positionY: positionY);
 
         var learningSpaceMemento = systemUnderTest.GetMemento();
         var learningSpaceLayoutMemento = systemUnderTest.LearningSpaceLayout.GetMemento();
         
         var nameChanged = "qwertz";
-        var shortnameChanged = "uiop";
-        var authorsChanged = "sdfg";
         var descriptionChanged = "changed description";
         var goalsChanged = "new goals";
         var positionXChanged = 10f;
@@ -105,8 +96,6 @@ public class LearningSpaceUt
         };
 
         systemUnderTest.Name = nameChanged;
-        systemUnderTest.Shortname = shortnameChanged;
-        systemUnderTest.Authors = authorsChanged;
         systemUnderTest.Description = descriptionChanged;
         systemUnderTest.Goals = goalsChanged;
         systemUnderTest.PositionX = positionXChanged;
@@ -116,8 +105,6 @@ public class LearningSpaceUt
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(nameChanged));
-            Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortnameChanged));
-            Assert.That(systemUnderTest.Authors, Is.EqualTo(authorsChanged));
             Assert.That(systemUnderTest.Description, Is.EqualTo(descriptionChanged));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goalsChanged));
             Assert.That(systemUnderTest.ContainedLearningElements, Contains.Item(ele1Changed));
@@ -132,8 +119,6 @@ public class LearningSpaceUt
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
-            Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortname));
-            Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.ContainedLearningElements, Does.Not.Contain(ele1Changed));
@@ -147,8 +132,6 @@ public class LearningSpaceUt
     public void RestoreMemento_MementoIsNotLearningSpaceMemento_ThrowsException()
     {
         var name = "asdf";
-        var shortname = "jkl;";
-        var authors = "ben and jerry";
         var description = "very cool element";
         var goals = "learn very many things";
         var requiredPoints = 10;
@@ -169,8 +152,8 @@ public class LearningSpaceUt
         };
         var learningSpaceLayout = new LearningSpaceLayout(learningElements, FloorPlanEnum.Rectangle2X2);
         
-        var systemUnderTest = new LearningSpace(name, shortname, authors, description, goals, requiredPoints, 
-            learningSpaceLayout, positionX, positionY);
+        var systemUnderTest = new LearningSpace(name, description, goals, requiredPoints, 
+            learningSpaceLayout, positionX: positionX, positionY: positionY);
 
         var mementoMock = new MementoMock();
         

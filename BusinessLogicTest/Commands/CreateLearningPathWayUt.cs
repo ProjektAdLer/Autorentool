@@ -14,10 +14,10 @@ public class CreateLearningPathWayUt
     public void Execute_CreateLearningPathWay()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space1 = new LearningSpace("z", "y", "x", "w", "v", 5);
+        var space1 = new LearningSpace("z", "w", "v", 5);
         var pathWayCondition = new PathWayCondition(ConditionEnum.And,3, 3);
-        var space3 = new LearningSpace("l", "m", "n", "o", "p", 3);
-        var space4 = new LearningSpace("l", "m", "n", "o", "p", 3);
+        var space3 = new LearningSpace("l", "o", "p", 3);
+        var space4 = new LearningSpace("l", "o", "p", 3);
         world.LearningSpaces.Add(space1);
         world.PathWayConditions.Add(pathWayCondition);
         world.LearningSpaces.Add(space3);
@@ -55,8 +55,8 @@ public class CreateLearningPathWayUt
     public void Execute_LearningPathWayAlreadyExists_HasErrorIsTrue()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space1 = new LearningSpace("z", "y", "x", "w", "v", 5);
-        var space2 = new LearningSpace("l", "m", "n", "o", "p", 3);
+        var space1 = new LearningSpace("z", "w", "v", 5);
+        var space2 = new LearningSpace("l", "o", "p", 3);
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
         bool actionWasInvoked = false;
@@ -78,7 +78,7 @@ public class CreateLearningPathWayUt
     public void Execute_SourceSpaceIsTargetSpace_HasErrorIsTrue()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space = new LearningSpace("z", "y", "x", "w", "v", 5);
+        var space = new LearningSpace("z", "w", "v", 5);
         world.LearningSpaces.Add(space);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
@@ -96,9 +96,9 @@ public class CreateLearningPathWayUt
     public void Execute_TargetSpaceAlreadyHasInboundSpace_HasErrorIsTrue()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space0 = new LearningSpace("z", "y", "x", "w", "v", 5);
-        var space1 = new LearningSpace("z", "y", "x", "w", "v", 5);
-        var space2 = new LearningSpace("z", "y", "x", "w", "v", 5);
+        var space0 = new LearningSpace("z", "w", "v", 5);
+        var space1 = new LearningSpace("z", "w", "v", 5);
+        var space2 = new LearningSpace("z", "w", "v", 5);
         world.LearningSpaces.Add(space0);
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
@@ -120,10 +120,10 @@ public class CreateLearningPathWayUt
     public void Execute_PathWayIsCircular_HasErrorIsTrue()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space1 = new LearningSpace("z", "y", "x", "w", "v", 5);
-        var space2 = new LearningSpace("l", "m", "n", "o", "p", 3);
-        var space3 = new LearningSpace("n", "q", "w", "e", "r", 6);
-        var space4 = new LearningSpace("t", "i", "o", "l", "p", 6);
+        var space1 = new LearningSpace("z", "w", "v", 5);
+        var space2 = new LearningSpace("l", "o", "p", 3);
+        var space3 = new LearningSpace("n", "e", "r", 6);
+        var space4 = new LearningSpace("t", "l", "p", 6);
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
         world.LearningSpaces.Add(space3);
@@ -158,8 +158,8 @@ public class CreateLearningPathWayUt
     public void Undo_MementoIsNull_ThrowsException()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space1 = new LearningSpace("z", "y", "x", "w", "v", 5);
-        var space2 = new LearningSpace("l", "m", "n", "o", "p", 3);
+        var space1 = new LearningSpace("z", "w", "v", 5);
+        var space2 = new LearningSpace("l", "o", "p", 3);
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
         bool actionWasInvoked = false;
@@ -177,8 +177,8 @@ public class CreateLearningPathWayUt
     public void UndoRedo_UndoesAndRedoesCreateLearningPathWay()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space1 = new LearningSpace("z", "y", "x", "w", "v", 5);
-        var space2 = new LearningSpace("l", "m", "n", "o", "p", 3);
+        var space1 = new LearningSpace("z", "w", "v", 5);
+        var space2 = new LearningSpace("l", "o", "p", 3);
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
         bool actionWasInvoked = false;

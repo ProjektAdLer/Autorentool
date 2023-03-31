@@ -14,9 +14,9 @@ public class DeleteLearningSpaceUt
     public void Execute_DeletesLearningSpace()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space0 = new LearningSpace("a", "b", "c", "d", "e", 4);
-        var space = new LearningSpace("g", "h", "i", "j", "k", 5);
-        var space1 = new LearningSpace("g", "h", "i", "j", "k", 5);
+        var space0 = new LearningSpace("a", "d", "e", 4);
+        var space = new LearningSpace("g", "j", "k", 5);
+        var space1 = new LearningSpace("g", "j", "k", 5);
         world.LearningSpaces.Add(space0);
         world.LearningSpaces.Add(space);
         world.LearningSpaces.Add(space1);
@@ -49,7 +49,7 @@ public class DeleteLearningSpaceUt
     public void Undo_MementoIsNull_ThrowsException()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space = new LearningSpace("g", "h", "i", "j", "k", 5);
+        var space = new LearningSpace("g", "j", "k", 5);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
@@ -65,8 +65,8 @@ public class DeleteLearningSpaceUt
     public void UndoRedo_UndoesAndRedoesDeleteLearningSpace()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space = new LearningSpace("g", "h", "i", "j", "k", 5);
-        var space2 = new LearningSpace("l", "m", "n", "o", "p", 7);
+        var space = new LearningSpace("g", "j", "k", 5);
+        var space2 = new LearningSpace("l", "o", "p", 7);
         world.LearningSpaces.Add(space);
         world.LearningSpaces.Add(space2);
         world.SelectedLearningObjectInPathWay = space;

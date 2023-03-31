@@ -88,7 +88,7 @@ public class DataAccessUt
         var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<LearningSpacePe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerSpace: mockFileSaveHandlerSpace);
 
-        var learningSpace = new LearningSpace("f", "f", "f", "f", "f", 5);
+        var learningSpace = new LearningSpace("f", "f", "f", 5);
         systemUnderTest.SaveLearningSpaceToFile(
             learningSpace,
             "C:/nonsense");

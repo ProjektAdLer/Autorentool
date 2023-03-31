@@ -17,7 +17,7 @@ public class LearningWorldUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
-        var space1 = new LearningSpace("ff", "ff", "ff", "ff", "ff", 5);
+        var space1 = new LearningSpace("ff", "ff", "ff", 5);
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 2, 3);
         var pathWay = new LearningPathway(space1, pathWayCondition);
         var learningSpaces = new List<LearningSpace> { space1 };
@@ -53,7 +53,7 @@ public class LearningWorldUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
-        var space1 = new LearningSpace("ff", "ff", "ff", "ff", "ff", 5);
+        var space1 = new LearningSpace("ff", "ff", "ff", 5);
         var learningSpaces = new List<LearningSpace> { space1 };
         
         var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, learningSpaces);
@@ -69,7 +69,7 @@ public class LearningWorldUt
         var newContent2 = new FileContent("w", "e", "");
         var newElement = new LearningElement("foo", newContent2, "asdf", "qwer",
             LearningElementDifficultyEnum.Easy);
-        var space2 = new LearningSpace("gg", "gg", "gg", "gg", "gg", 5);
+        var space2 = new LearningSpace("gg", "gg", "gg", 5);
 
         
         systemUnderTest.Name = nameChanged;
@@ -119,7 +119,7 @@ public class LearningWorldUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
-        var space1 = new LearningSpace("ff", "ff", "ff", "ff", "ff", 5);
+        var space1 = new LearningSpace("ff", "ff", "ff", 5);
         var learningSpaces = new List<LearningSpace> { space1 };
         
         var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, learningSpaces);

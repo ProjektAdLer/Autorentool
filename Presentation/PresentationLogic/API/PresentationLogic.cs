@@ -219,23 +219,23 @@ public class PresentationLogic : IPresentationLogic
     }
 
     /// <inheritdoc cref="IPresentationLogic.CreateLearningSpace"/>
-    public void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name, string shortname,
-        string authors, string description, string goals, int requiredPoints, double positionX, double positionY)
+    public void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name, string description,
+        string goals, int requiredPoints, double positionX, double positionY)
     {
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
 
-        var command = new CreateLearningSpace(worldEntity, name, shortname, authors, description, goals, requiredPoints, 
+        var command = new CreateLearningSpace(worldEntity, name, description, goals, requiredPoints, 
             positionX, positionY, world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.EditLearningSpace"/>
     public void EditLearningSpace(ILearningSpaceViewModel learningSpaceVm, string name,
-        string shortname, string authors, string description, string goals, int requiredPoints)
+        string description, string goals, int requiredPoints)
     {
         var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
 
-        var command = new EditLearningSpace(spaceEntity, name, shortname, authors, description, goals, requiredPoints,
+        var command = new EditLearningSpace(spaceEntity, name, description, goals, requiredPoints,
             space => CMapper.Map(space, learningSpaceVm));
         BusinessLogic.ExecuteCommand(command);
     }

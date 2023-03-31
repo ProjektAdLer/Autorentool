@@ -20,10 +20,6 @@ public class LearningSpaceValidator : AbstractValidator<LearningSpace>
             .IsAlphanumeric()
             .Must((space, name) => IsUniqueNameInWorld(space.Id, name))
             .WithMessage("Already in use.");
-        RuleFor(x => x.Shortname)
-            .MaximumLength(30)
-            .Must((space, shortName) => IsUniqueShortnameInWorld(space.Id, shortName))
-            .WithMessage("Already in use.");
         RuleFor(x => x.RequiredPoints)
             .GreaterThanOrEqualTo(0);
     }
@@ -32,8 +28,4 @@ public class LearningSpaceValidator : AbstractValidator<LearningSpace>
         UniqueNameHelper.IsUnique(
             _learningSpaceNamesProvider.SpaceNames ?? throw new ValidationException("No world to get spaces from"),
             name, id);
-
-    private bool IsUniqueShortnameInWorld(Guid id, string name) => name == "" || UniqueNameHelper.IsUnique(
-        _learningSpaceNamesProvider.SpaceShortnames ?? throw new ValidationException("No world to get spaces from"),
-        name, id);
 }

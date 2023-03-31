@@ -9,14 +9,12 @@ namespace PersistEntities;
 [KnownType(typeof(LearningSpaceLayoutPe))]
 public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
 {
-    public LearningSpacePe(string name, string shortname, string authors, string description, string goals,
+    public LearningSpacePe(string name, string description, string goals,
         int requiredPoints, ILearningSpaceLayoutPe? learningSpaceLayout = null, double positionX = 0, double positionY = 0,
         List<IObjectInPathWayPe>? inBoundObjects = null, List<IObjectInPathWayPe>? outBoundObjects = null)
     {
         Id = Guid.NewGuid();
         Name = name;
-        Shortname = shortname;
-        Authors = authors;
         Description = description;
         Goals = goals;
         RequiredPoints = requiredPoints;
@@ -34,8 +32,6 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
     {
         Id = Guid.Empty;
         Name = "";
-        Shortname = "";
-        Authors = "";
         Description = "";
         Goals = "";
         RequiredPoints = 0;
@@ -52,10 +48,6 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
     public string Name { get; set; }
     [DataMember]
     public string Description { get; set; }
-    [DataMember]
-    public string Shortname { get; set; }
-    [DataMember]
-    public string Authors { get; set; }
     [DataMember]
     public string Goals { get; set; }
     [DataMember]

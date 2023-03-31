@@ -10,10 +10,10 @@ public class CreateLearningSpace : IUndoCommand
     private readonly Action<LearningWorld> _mappingAction;
     private IMemento? _memento;
 
-    public CreateLearningSpace(LearningWorld learningWorld, string name, string shortname, string authors,
+    public CreateLearningSpace(LearningWorld learningWorld, string name, 
         string description, string goals, int requiredPoints, double positionX, double positionY, Action<LearningWorld> mappingAction)
     {
-        LearningSpace = new LearningSpace(name, shortname, authors, description, goals, requiredPoints, null, positionX, positionY);
+        LearningSpace = new LearningSpace(name, description, goals, requiredPoints, null, positionX: positionX, positionY: positionY);
         LearningWorld = learningWorld;
         _mappingAction = mappingAction;
     }

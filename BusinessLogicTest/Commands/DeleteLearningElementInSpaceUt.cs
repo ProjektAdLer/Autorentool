@@ -13,7 +13,7 @@ public class DeleteLearningElementInSpaceUt
     [Test]
     public void Execute_DeletesLearningElement()
     {
-        var space = new LearningSpace("a", "b", "c","d", "e", 5);
+        var space = new LearningSpace("a","d", "e", 5);
         var element = new LearningElement("g", null!, "j", "k", LearningElementDifficultyEnum.Easy, space);
         space.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>() { { 0, element } };
         space.SelectedLearningElement = element;
@@ -35,7 +35,7 @@ public class DeleteLearningElementInSpaceUt
     [Test]
     public void Execute_DeletesLearningElementAndSetsAnotherElementSelectedLearningElement()
     {
-        var space = new LearningSpace("a", "b", "c","d", "e", 5);
+        var space = new LearningSpace("a","d", "e", 5);
         var element = new LearningElement("g", null!, "j", "k", LearningElementDifficultyEnum.Easy, space);
         var element2 = new LearningElement("l", null!, "o", "p", LearningElementDifficultyEnum.Easy, space);
         space.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>
@@ -68,7 +68,7 @@ public class DeleteLearningElementInSpaceUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var space = new LearningSpace("a", "b", "c","d", "e", 5);
+        var space = new LearningSpace("a","d", "e", 5);
         var element = new LearningElement("g", null!, "j", "k", LearningElementDifficultyEnum.Easy, space);
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
@@ -84,7 +84,7 @@ public class DeleteLearningElementInSpaceUt
     [Test]
     public void UndoRedo_UndoesRedoesDeleteLearningElement()
     {
-        var space = new LearningSpace("a", "b", "c","d", "e", 5);
+        var space = new LearningSpace("a","d", "e", 5);
         var element = new LearningElement("g", null!, "j", "k", LearningElementDifficultyEnum.Easy, space);
         var element2 = new LearningElement("l", null!, "o", "p", LearningElementDifficultyEnum.Easy, space);
         space.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>

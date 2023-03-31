@@ -36,12 +36,12 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     public ILearningContentViewModel? DragAndDropLearningContent { get; private set; }
     public IDisplayableLearningObject? RightClickedLearningObject { get; private set; }
 
-    public void EditLearningSpace(string name, string shortname, string authors, string description, string goals,
+    public void EditLearningSpace(string name, string description, string goals,
         int requiredPoints)
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("LearningSpaceVm is null");
-        _presentationLogic.EditLearningSpace(LearningSpaceVm, name, shortname, authors, description, goals,
+        _presentationLogic.EditLearningSpace(LearningSpaceVm, name, description, goals,
             requiredPoints);
     }
 

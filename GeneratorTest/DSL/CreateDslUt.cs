@@ -19,16 +19,16 @@ public class CreateDslUt
         var mockLogger = Substitute.For<ILogger<CreateDsl>>();
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
         
-        var inboundObject1 = new LearningSpacePe("1", "1", "dimi", "", "",
-            1, null, 0, 0, null, null);
-        var inboundObject2 = new LearningSpacePe("2", "1", "dimi", "", "",
-            1, null, 0, 0, null, null);
-        var inboundObject3 = new LearningSpacePe("3", "1", "dimi", "", "",
-            1, null, 0, 0, null, null);
-        var inboundObject4 = new LearningSpacePe("4", "1", "dimi", "", "",
-            1, null, 0, 0, null, null);
-        var inboundObject5 = new LearningSpacePe("5", "1", "dimi", "", "",
-            1, null, 0, 0, null, null);
+        var inboundObject1 = new LearningSpacePe("1", "", "",
+            1, null, positionX: 0, positionY: 0, inBoundObjects: null, outBoundObjects: null);
+        var inboundObject2 = new LearningSpacePe("2", "", "",
+            1, null, positionX: 0, positionY: 0, inBoundObjects: null, outBoundObjects: null);
+        var inboundObject3 = new LearningSpacePe("3", "", "",
+            1, null, positionX: 0, positionY: 0, inBoundObjects: null, outBoundObjects: null);
+        var inboundObject4 = new LearningSpacePe("4", "", "",
+            1, null, positionX: 0, positionY: 0, inBoundObjects: null, outBoundObjects: null);
+        var inboundObject5 = new LearningSpacePe("5", "", "",
+            1, null, positionX: 0, positionY: 0, inBoundObjects: null, outBoundObjects: null);
        
         var listLearningSpaces = new List<LearningSpacePe>
         {
@@ -113,11 +113,11 @@ public class CreateDslUt
         var mockLearningElements3 = new ILearningElementPe?[] {mockElement4, mockElement5};
         var mockLearningSpaceLayout3 = new LearningSpaceLayoutPe(mockLearningElements3, FloorPlanEnumPe.Rectangle2X3);
 
-        var mockSpace1 = new LearningSpacePe("Space1", "sp", null, "", "", 1,
+        var mockSpace1 = new LearningSpacePe("Space1", "", "", 1,
             mockLearningSpaceLayout1);
-        var mockSpace2 = new LearningSpacePe("Space2", "sp", null, "", "", 1,
+        var mockSpace2 = new LearningSpacePe("Space2", "", "", 1,
             mockLearningSpaceLayout2);
-        var mockSpace3 = new LearningSpacePe("Space3", "sp", null, "", "", 1,
+        var mockSpace3 = new LearningSpacePe("Space3", "", "", 1,
             mockLearningSpaceLayout3);
         
         
@@ -181,19 +181,19 @@ public class CreateDslUt
             LearningElementDifficultyEnumPe.Easy, workload: 17, points: 2, positionX: 23);
         
 
-        var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
-            null, 0, 0, new List<IObjectInPathWayPe>(), 
-            new List<IObjectInPathWayPe>())
+        var space1 = new LearningSpacePe("ff", "ff", "ff", 5, 
+            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(), 
+            outBoundObjects: new List<IObjectInPathWayPe>())
         {
             LearningSpaceLayout =
             {
                 LearningElements = new ILearningElementPe[] {ele1, ele2, ele3, ele4, ele5}
             }
         };
-        var space2 = new LearningSpacePe("ff2", "ff", "ff", "ff", "ff", 5, 
-            null, 0, 0, new List<IObjectInPathWayPe>(), new List<IObjectInPathWayPe>());
-        var space3 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
-            null, 0, 0, new List<IObjectInPathWayPe>(), new List<IObjectInPathWayPe>());
+        var space2 = new LearningSpacePe("ff2", "ff", "ff", 5, 
+            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(), outBoundObjects: new List<IObjectInPathWayPe>());
+        var space3 = new LearningSpacePe("ff", "ff", "ff", 5, 
+            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(), outBoundObjects: new List<IObjectInPathWayPe>());
         var condition1 = new PathWayConditionPe(ConditionEnumPe.And, 0, 0, 
             new List<IObjectInPathWayPe>{space1, space2}, null);
         space1.OutBoundObjects = new List<IObjectInPathWayPe>() {condition1};
@@ -258,9 +258,9 @@ public class CreateDslUt
         var ele1 = new LearningElementPe("a", content1, "pupup", "g",
             LearningElementDifficultyEnumPe.Easy, workload: 17, points: 2, positionX: 23);
 
-        var space1 = new LearningSpacePe("ff", "ff", "ff", "ff", "ff", 5, 
-            null, 0, 0, new List<IObjectInPathWayPe>(), 
-            new List<IObjectInPathWayPe>())
+        var space1 = new LearningSpacePe("ff", "ff", "ff", 5, 
+            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(), 
+            outBoundObjects: new List<IObjectInPathWayPe>())
         {
             LearningSpaceLayout =
             {
