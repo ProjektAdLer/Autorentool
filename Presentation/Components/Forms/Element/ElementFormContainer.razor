@@ -3,22 +3,27 @@
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.View.LearningElement
-<MudCard>
-    @if (WorldPresenter.LearningWorldVm?.SelectedLearningElement == null || _editOverwritten)
-    {
-        <CreateElementForm OnSubmitted="() => InvokeAsync(TriggerMasterLayoutStateHasChanged)"/>
-    }
-    else
-    {
-        <EditElementForm ElementToEdit="WorldPresenter.LearningWorldVm.SelectedLearningElement" OnNewButtonClicked="OnForceNew">
 
-        </EditElementForm>
-    }
+    <MudCard>
+        @if (WorldPresenter.LearningWorldVm?.SelectedLearningElement == null || _editOverwritten)
+        {
+            <CreateElementForm OnSubmitted="() => InvokeAsync(TriggerMasterLayoutStateHasChanged)"/>
+        }
+        else
+        {
+            <EditElementForm ElementToEdit="WorldPresenter.LearningWorldVm.SelectedLearningElement" OnNewButtonClicked="OnForceNew">
 
-</MudCard>
+            </EditElementForm>
+        }
+
+    </MudCard>
+
 <div>
+    <div class="relative w-32 h-full bg-adlerdeactivated rounded-lg">
+        <MudText Class="mx-1 py-2 text-adlergrey-500 font-bold" Typo="Typo.subtitle2" Align="Align.Center">List of all learning elements</MudText>
+        @*<MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>*@
     <MudDropZone T="ILearningElementViewModel" Identifier="unplacedElements"
-                 Class="rounded-lg border-2 border-solid mud-border-lines-default p-6 m-8 w-28 min-h-1 flex justify-center items-center flex-col">
+                 Class="absolute inset-px top-12 rounded-lg border-2 border-solid mud-border-lines-default p-2 m-[3px] min-h-1 flex justify-center items-center flex-col bg-white">
         <ItemRenderer>
             <DragDropLearningElement
                 LearningElement="@context"
@@ -29,7 +34,7 @@
         </ItemRenderer>
     </MudDropZone>
 </div>
-
+</div>
 @code {
 #pragma warning disable CS8618
     [Inject]

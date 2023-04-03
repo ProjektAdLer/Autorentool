@@ -5,15 +5,15 @@
 @using Presentation.PresentationLogic.LearningContent
 <MudMenu ActivationEvent="MouseEvent.RightClick" PositionAtCursor="true" @onclick="() => OnClicked.InvokeAsync(LearningElement)">
     <ActivatorContent>
-        <MudCard Class="flex">
+        <MudCard Outlined="true" Class="flex bg-adlerbggradientto m-[-1px]">
             <MudCardContent>
-                <MudIcon Icon="@GetElementIcon()" Size="Size.Large" Class="element-icon"/>
+                <MudIcon Icon="@GetDifficultyIcon(LearningElement.Difficulty)" Class="difficulty-icon m-0 top-0 right-0"/>
+                <MudIcon Icon="@GetElementIcon()" Size="Size.Large" Class="element-icon opacity-50 flex justify-center items-center m-0"/>
                 @{
                     var item = LearningElement;
                     var text = item.Name;
                 }
                 <MudListItem Text="@text"></MudListItem>
-                <MudIcon Icon="@GetDifficultyIcon(LearningElement.Difficulty)" Class="difficulty-icon"/>
             </MudCardContent>
         </MudCard>
     </ActivatorContent>

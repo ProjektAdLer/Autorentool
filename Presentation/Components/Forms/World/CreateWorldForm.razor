@@ -2,16 +2,16 @@
 @using Presentation.Components.Forms.Models
 @using BusinessLogic.Entities
 @using Presentation.Components.Forms.Buttons
-<header class="flex flex-col justify-between h-12 w-full m-auto bg-buttonbgblue rounded items-center">
-    <div class="ml-1 flex items-center gap-2">
-        @*<img class="w-8 drop-shadow" src="/CustomIcons/worldmenu-icon_metadata-nobg.png" alt="icon-learning world"/>*@
-        <h1 class="font-bold text-lg ml-1">Metadata for learning world</h1>
+<header class="m-2 rounded-lg">
+    <div class="flex justify-center p-2">
+        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Learning world metadata</h2>
     </div>
 </header>
 <BaseForm TForm="LearningWorldFormModel" TEntity="LearningWorld" OnValidSubmit="OnValidSubmit"
           SnackbarMessage="World created" FormDataContainer="FormDataContainer">
     <Fields>
         <Collapsable Title="General" @bind-Collapsed="_collapsedGeneral">
+            <div class="rounded-lg w-4/4 px-4 pb-2">
             <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                           For="@(() => FormModel.Name)"
                           Immediate="true"
@@ -32,9 +32,11 @@
                           Immediate="true"
                           DebounceInterval="300"
                           Label="@nameof(FormDataContainer.FormModel.Language)"/>
+            </div>
         </Collapsable>
 
         <Collapsable Title="Goals" @bind-Collapsed="_collapsedGoals">
+            <div class="rounded-lg w-4/4 px-4 pb-4">
             <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
                           For="@(() => FormModel.Description)"
                           Immediate="true"
@@ -45,7 +47,8 @@
                           Immediate="true"
                           DebounceInterval="300"
                           Label="@nameof(FormDataContainer.FormModel.Goals)"/>
-        </Collapsable>
+        </div>
+            </Collapsable>
     </Fields>
     <FooterButtons>
         <DefaultSubmitButton/>

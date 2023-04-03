@@ -5,9 +5,9 @@
 @using Shared.Command
 @using Presentation.PresentationLogic.LearningElement
 @using System.Text
-<div class="w-25 mx-2 bg-adlerdeactivated rounded-lg">
+<div class="mx-2 bg-adlerdeactivated rounded-lg">
     <div class="flex justify-center p-2">
-        <h2 class="text-2xl text-center font-bold text-adlergrey-500 mx-2 w-25 bg-adlerdeactivated">Learning Space Editor</h2>
+        <h2 class="text-2xl text-center font-bold text-adlergrey-500 mx-2 bg-adlerdeactivated">Learning Space Editor</h2>
     </div>
 </div>
 <div class="p-2 flex justify-start space-x-2">
@@ -15,27 +15,28 @@
   <MudText Class="text-adlerbggradientfrom" Typo="Typo.h6">@LearningSpaceP.LearningSpaceVm?.Name</MudText>
   @*<MudText Class="text-center text-adlergrey-500" Typo="Typo.h4">Learning Space Editor @LearningSpaceP.LearningSpaceVm?.Name</MudText>*@
   </div>
-<div class="text-adlergrey p-3 absolute bottom-0 right-15">
-    <div>
-        <MudText Typo="Typo.h6">Learning space @LearningSpaceP.LearningSpaceVm?.Name:</MudText>
-        <MudText Typo="Typo.subtitle1">Workload: @LearningSpaceP.LearningSpaceVm?.Workload minutes</MudText>
-        <MudText Typo="Typo.subtitle1">Points: @LearningSpaceP.LearningSpaceVm?.Points</MudText>
-        <button class="btn btn-primary load-learning-element" @onclick="LoadLearningElementAsync">Load Learning Element</button>
-        <h1>Anzahl Lernelemente: @LearningSpaceP.LearningSpaceVm?.LearningSpaceLayout.Count</h1>
-        @ChildContent
-        <br>
-    </div>
-</div>
 
 @if (LearningSpaceP.LearningSpaceVm != null)
 {
     @if (LearningSpaceP.LearningSpaceVm?.SelectedLearningElement != null)
     {
         <section class="p-2 gap-1 flex flex-col justify-start">
+            <div class="flex justify-between items-start">
             <label id="learning-element-info" class="font-medium text-lg flex flex-col">
-                <p>Selected element: @LearningSpaceP.LearningSpaceVm.SelectedLearningElement.Name</p>
-                <p>Description: @LearningSpaceP.LearningSpaceVm.SelectedLearningElement.Description</p>
+                <MudText Typo="Typo.subtitle1">Selected learning element: @LearningSpaceP.LearningSpaceVm.SelectedLearningElement.Name</MudText>
+                <MudText Typo="Typo.subtitle1">Description: @LearningSpaceP.LearningSpaceVm.SelectedLearningElement.Description</MudText>
             </label>
+            <div class="text-adlergrey">
+                <div>
+                    @*<MudText Typo="Typo.h6">Learning space @LearningSpaceP.LearningSpaceVm?.Name:</MudText>*@
+                    <MudText Typo="Typo.subtitle1">Workload: @LearningSpaceP.LearningSpaceVm?.Workload min.</MudText>
+                    <MudText Typo="Typo.subtitle1">Points: @LearningSpaceP.LearningSpaceVm?.Points</MudText>
+                    @*<button class="btn btn-primary load-learning-element" @onclick="LoadLearningElementAsync">Load Learning Element</button>
+                    <h1>Anzahl Lernelemente: @LearningSpaceP.LearningSpaceVm?.LearningSpaceLayout.Count</h1>*@
+                    @ChildContent
+                </div>
+            </div>
+            </div>
             <div class="flex justify-start">
                 <button class="btn-standard" @onclick="DeleteSelectedLearningElement">Delete Learning Element</button>
                 <button class="btn-standard" @onclick="SaveSelectedLearningElementAsync">Save selected Learning Element</button>
@@ -88,7 +89,6 @@
 {
     @ShowReplaceLearningElementDialog()
 }
-
 
 @code {
 #pragma warning disable CS8618 // injected by framework - n.stich

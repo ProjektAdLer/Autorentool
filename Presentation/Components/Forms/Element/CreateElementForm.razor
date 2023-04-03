@@ -8,42 +8,47 @@
 @using System.ComponentModel
 @using Presentation.Components.Forms.Buttons
 @implements IAsyncDisposable
-<header class="flex flex-col justify-between h-12 w-full m-auto bg-buttonbgblue rounded items-center">
-    <div class="ml-1 flex items-center gap-2">
-        <h1 class="font-bold text-lg ml-1">Metadata for learning element</h1>
+<header class="m-2 rounded-lg">
+    <div class="flex justify-center p-2">
+        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Learning element metadata</h2>
     </div>
 </header>
 
 <BaseForm TForm="LearningElementFormModel" TEntity="LearningElement"
           OnValidSubmit="OnValidSubmit" SnackbarMessage="Element created" FormDataContainer="FormDataContainer">
     <Fields>
+        
         <Collapsable Title="General" @bind-Collapsed="_collapsedGeneral">
-            <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
-                          For="@(() => FormModel.Name)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label="@nameof(FormDataContainer.FormModel.Name)"/>
-            <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
-                             For="@(() => FormModel.Workload)"
-                             Immediate="true"
-                             DebounceInterval="300"
-                             Label="Workload (min)"/>
-            <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
-                       Label="@nameof(FormDataContainer.FormModel.Difficulty)"
-                       For="@(() => FormModel.Difficulty)">
-                <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)"> Easy </MudSelectItem>
-                <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)"> Medium </MudSelectItem>
-                <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)"> Hard </MudSelectItem>
-                <MudSelectItem Value="@(LearningElementDifficultyEnum.None)"> None </MudSelectItem>
-            </MudSelect>
-            <MudNumericField @bind-Value="FormDataContainer.FormModel.Points"
-                             For="@(() => FormModel.Points)"
-                             Immediate="true"
-                             DebounceInterval="300"
-                             Label="@nameof(FormDataContainer.FormModel.Points)"/>
-        </Collapsable>
+            <div class="rounded-lg w-4/4 px-4 pb-2">
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                              For="@(() => FormModel.Name)"
+                              Immediate="true"
+                              DebounceInterval="300"
+                              Label="@nameof(FormDataContainer.FormModel.Name)"/>
 
+                <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
+                                 For="@(() => FormModel.Workload)"
+                                 Immediate="true"
+                                 DebounceInterval="300"
+                                 Label="Workload (min)"/>
+                <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
+                           Label="@nameof(FormDataContainer.FormModel.Difficulty)"
+                           For="@(() => FormModel.Difficulty)">
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)"> Easy </MudSelectItem>
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)"> Medium </MudSelectItem>
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)"> Hard </MudSelectItem>
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.None)"> None </MudSelectItem>
+                </MudSelect>
+                <MudNumericField @bind-Value="FormDataContainer.FormModel.Points"
+                                 For="@(() => FormModel.Points)"
+                                 Immediate="true"
+                                 DebounceInterval="300"
+                                 Label="@nameof(FormDataContainer.FormModel.Points)"/>
+            </div>
+            </Collapsable>
+        
         <Collapsable Title="Learning Content" @bind-Collapsed="_collapsedContent">
+            <div class="rounded-lg max-w-2xl px-4 pb-2">
             <MudSelect @bind-Value="FormDataContainer.FormModel.LearningContent"
                        Label="@nameof(FormDataContainer.FormModel.LearningContent)"
                        Text="@FormDataContainer.FormModel.LearningContent?.Name"
@@ -53,9 +58,11 @@
                     <MudSelectItem Value="@(learningContent)">@learningContent.Name</MudSelectItem>
                 }
             </MudSelect>
+            </div>
         </Collapsable>
 
         <Collapsable Title="Goals" @bind-Collapsed="_collapsedGoals">
+            <div class="bg-adlerbgbright rounded-sm max-w-2xl px-4 pb-4">
             <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                           For="@(() => FormModel.Goals)"
                           Immediate="true"
@@ -66,7 +73,9 @@
                           Immediate="true"
                           DebounceInterval="300"
                           Label="@nameof(FormDataContainer.FormModel.Description)"/>
+        </div>
         </Collapsable>
+        
     </Fields>
     <FooterButtons>
         <DefaultSubmitButton/>

@@ -9,14 +9,14 @@
 @using Presentation.Components.Forms.Element
 @using Presentation.Components.ContentFiles
 
-<div class="flex flex-col h-screen w-screen bg-buttonbgblue font-sans">
+<div class="flex flex-col h-screen max-h-screen overflow-hidden w-screen bg-buttonbgblue font-sans">
     <HeaderBar/>
 
         <MudDropContainer T="ILearningElementViewModel"
                           Items="ElementDropZoneHelper.GetWorldAndSpaceElements()"
                           ItemsSelector="ElementDropZoneHelper.IsItemInDropZone"
                           ItemDropped="ElementDropZoneHelper.ItemUpdated"
-                          class="columns-3 flex-1 flex flex-row justify-between items-center">
+                          class="flex-1 flex flex-row justify-between items-start">
             <ChildContent>
                 <CascadingValue Value="@TriggerStateHasChanged" Name="TriggerMasterLayoutStateHasChanged">
                     <SideContainer Side="Side.Left">

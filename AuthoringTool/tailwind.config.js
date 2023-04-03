@@ -93,6 +93,8 @@ module.exports = {
                 adlerbggradientto: "#e2eaf2",
                 nodehandlecolor: "#e9d6b3",
                 
+                //neue Farben
+                adlerbgbright: "#f6f6f6",
             },
             fontFamily: {
                 'sans': ['Roboto']

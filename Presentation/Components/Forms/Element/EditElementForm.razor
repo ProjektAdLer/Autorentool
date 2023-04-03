@@ -5,9 +5,9 @@
 @using Presentation.Components.Forms.Models
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.Components.Forms.Buttons
-<header class="flex justify-between h-12 w-full bg-buttonbgblue items-center">
-    <div class="ml-1 flex items-center gap-2">
-        <h1 class="font-bold text-lg ml-1">Metadata for learning elements</h1>
+<header class="m-2 rounded-lg">
+    <div class="flex justify-center p-2">
+        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Learning element metadata</h2>
     </div>
 </header>
 <BaseForm TForm="LearningElementFormModel" TEntity="LearningElement"
@@ -17,6 +17,7 @@
     </HeaderButtons>
     <Fields>
         <Collapsable Title="General" @bind-Collapsed="_collapsedGeneral">
+            <div class="rounded-lg w-4/4 px-4 pb-2">
             <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                           For="@(() => FormModel.Name)"
                           Immediate="true"
@@ -40,20 +41,25 @@
                              Immediate="true"
                              DebounceInterval="300"
                              Label="@nameof(FormDataContainer.FormModel.Points)"/>
+            </div>
         </Collapsable>
 
         <Collapsable Title="Learning Content" @bind-Collapsed="_collapsedContent">
-            <MudSelect @bind-Value="FormDataContainer.FormModel.LearningContent"
-                       Label="@nameof(FormDataContainer.FormModel.LearningContent)"
-                       Text="@FormDataContainer.FormModel.LearningContent?.Name"
-                       For="@(() => FormModel.LearningContent)">
-                @foreach (var learningContent in WorldPresenter.GetAllContent())
-                {
-                    <MudSelectItem Value="@(learningContent)">@learningContent.Name</MudSelectItem>
-                }
-            </MudSelect>
+            <div class="rounded-lg w-4/4 px-4 pb-2">
+                <MudSelect @bind-Value="FormDataContainer.FormModel.LearningContent"
+                           Label="@nameof(FormDataContainer.FormModel.LearningContent)"
+                           Text="@FormDataContainer.FormModel.LearningContent?.Name"
+                           For="@(() => FormModel.LearningContent)">
+                    @foreach (var learningContent in WorldPresenter.GetAllContent())
+                    {
+                        <MudSelectItem Value="@(learningContent)">@learningContent.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </div>
         </Collapsable>
+        
         <Collapsable Title="Goals" @bind-Collapsed="_collapsedGoals">
+            <div class="rounded-lg w-4/4 px-4 pb-4">
             <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                           For="@(() => FormModel.Goals)"
                           Immediate="true"
@@ -64,6 +70,7 @@
                           Immediate="true"
                           DebounceInterval="300"
                           Label="@nameof(FormDataContainer.FormModel.Description)"/>
+            </div>
         </Collapsable>
     </Fields>
     <FooterButtons>
