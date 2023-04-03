@@ -1,13 +1,12 @@
-@using Presentation.Components.Forms.Buttons
-@using Presentation.Components.Forms.Models
-@using BusinessLogic.Entities
-@using Presentation.PresentationLogic.AuthoringToolWorkspace
-@using System.ComponentModel
-@using Presentation.PresentationLogic.API
-@using Presentation.PresentationLogic.LearningSpace
+@implements IDisposable
 @using Presentation.PresentationLogic.LearningWorld
 @using Shared
-@implements IDisposable
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.PresentationLogic.LearningSpace
+@using Presentation.Components.Forms.Models
+@using BusinessLogic.Entities
+@using System.ComponentModel
+@using Presentation.Components.Forms.Buttons
 @implements IAsyncDisposable
 <header class="flex flex-col justify-between h-12 w-full m-auto bg-buttonbgblue rounded items-center">
     <div class="ml-1 flex items-center gap-2">
@@ -18,7 +17,7 @@
 <BaseForm TForm="LearningElementFormModel" TEntity="LearningElement"
           OnValidSubmit="OnValidSubmit" SnackbarMessage="Element created" FormDataContainer="FormDataContainer">
     <Fields>
-        <Collapsable Title="General" Collapsed="false">
+        <Collapsable Title="General" @bind-Collapsed="_collapsedGeneral">
             <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                           For="@(() => FormModel.Name)"
                           Immediate="true"
@@ -44,7 +43,7 @@
                              Label="@nameof(FormDataContainer.FormModel.Points)"/>
         </Collapsable>
 
-        <Collapsable Title="Learning Content" Collapsed="false">
+        <Collapsable Title="Learning Content" @bind-Collapsed="_collapsedContent">
             <MudSelect @bind-Value="FormDataContainer.FormModel.LearningContent"
                        Label="@nameof(FormDataContainer.FormModel.LearningContent)"
                        Text="@FormDataContainer.FormModel.LearningContent?.Name"
@@ -55,8 +54,8 @@
                 }
             </MudSelect>
         </Collapsable>
-        
-        <Collapsable Title="Goals" Collapsed="true">
+
+        <Collapsable Title="Goals" @bind-Collapsed="_collapsedGoals">
             <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                           For="@(() => FormModel.Goals)"
                           Immediate="true"
@@ -91,6 +90,10 @@
         public EventCallback OnSubmitted { get; set; }
 
     private LearningElementFormModel FormModel => FormDataContainer.FormModel;
+
+    private bool _collapsedGeneral = false;
+    private bool _collapsedContent = false;
+    private bool _collapsedGoals = true;
 
     private void OnValidSubmit(LearningElementFormModel model)
     {

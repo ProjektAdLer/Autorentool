@@ -1,11 +1,10 @@
-@using Presentation.Components.Forms.Buttons
-@using Presentation.Components.Forms.Models
-@using Presentation.PresentationLogic.API
-@using Presentation.PresentationLogic.AuthoringToolWorkspace
-@using System.ComponentModel
-@using BusinessLogic.Entities
-@using Presentation.PresentationLogic.LearningWorld
 @implements IDisposable
+@using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.Components.Forms.Models
+@using BusinessLogic.Entities
+@using System.ComponentModel
+@using Presentation.Components.Forms.Buttons
 @implements IAsyncDisposable
 <header class="flex flex-col justify-between h-12 w-full m-auto bg-buttonbgblue rounded items-center">
     <div class="ml-1 flex items-center gap-2">
@@ -16,7 +15,7 @@
 <BaseForm TForm="LearningSpaceFormModel" TEntity="LearningSpace"
           OnValidSubmit="OnValidSubmit" SnackbarMessage="Space created" FormDataContainer="FormDataContainer">
     <Fields>
-        <Collapsable Title="General" Collapsed="false">
+        <Collapsable Title="General" @bind-Collapsed="_collapsedGeneral">
             <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                           For="@(() => FormModel.Name)"
                           Immediate="true"
@@ -24,7 +23,7 @@
                           Label="@nameof(FormDataContainer.FormModel.Name)"/>
         </Collapsable>
 
-        <Collapsable Title="Goals" Collapsed="true">
+        <Collapsable Title="Goals" @bind-Collapsed="_collapsedGoals">
             <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                           For="@(() => FormModel.Goals)"
                           Immediate="true"
@@ -37,7 +36,7 @@
                           Label="@nameof(FormDataContainer.FormModel.Description)"/>
         </Collapsable>
 
-        <Collapsable Title="Completion conditions" Collapsed="true">
+        <Collapsable Title="Completion conditions" @bind-Collapsed="_collapsedConditions">
             <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
                              For="@(() => FormModel.RequiredPoints)"
                              Immediate="true"
@@ -67,13 +66,17 @@
     //please DO NOT REFACTOR THIS - n.stich
     private LearningSpaceFormModel FormModel => FormDataContainer.FormModel;
 
+    private bool _collapsedGeneral = false;
+    private bool _collapsedGoals = true;
+    private bool _collapsedConditions = true;
+
 
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
         if (AuthoringToolWorkspaceViewModel.SelectedLearningWorld == null) throw new InvalidOperationException("No learning world selected.");
         model.RequiredPoints ??= 0;
         LearningWorldPresenter.CreateLearningSpace(model.Name, model.Description,
-            model.Goals, (int)model.RequiredPoints, positionX: 0, positionY: 0);
+            model.Goals, (int) model.RequiredPoints, positionX: 0, positionY: 0);
     }
 
     protected override void OnInitialized()

@@ -2,16 +2,16 @@
     <div class="flex flex-row" @onclick="@Toggle">
         @if (Collapsed)
         {
-            <MudIcon Icon="@Icons.Material.Filled.ArrowRight" />
+            <MudIcon Icon="@Icons.Material.Filled.ArrowRight"/>
             <h3 class="font-bold text-lg"> @Title </h3>
         }
         else
         {
-            <MudIcon Icon="@Icons.Material.Filled.ArrowDropDown" />
+            <MudIcon Icon="@Icons.Material.Filled.ArrowDropDown"/>
             <h3 class="font-bold text-lg"> @Title </h3>
         }
     </div>
-    
+
     @if (!Collapsed)
     {
         <div class="border-1 border-adlergrey-200 p-4 bg-white overflow-hidden">
@@ -21,12 +21,23 @@
 </div>
 
 @code {
-    [Parameter] public RenderFragment? ChildContent { get; set; }
-    [Parameter] public bool Collapsed { get; set; }
-    [Parameter] public string? Title { get; set; }
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public bool Collapsed { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> CollapsedChanged { get; set; }
+
+    [Parameter]
+    public string? Title { get; set; }
 
     void Toggle()
     {
         Collapsed = !Collapsed;
+        CollapsedChanged.InvokeAsync(Collapsed);
     }
+
 }

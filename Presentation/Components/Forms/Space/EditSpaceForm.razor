@@ -1,11 +1,9 @@
-@using Presentation.Components.Forms.Buttons
-@using Presentation.Components.Forms.Models
-@using Presentation.PresentationLogic.API
-@using Presentation.PresentationLogic.AuthoringToolWorkspace
-@using System.ComponentModel
+@using Presentation.PresentationLogic.LearningSpace
 @using AutoMapper
 @using BusinessLogic.Entities
-@using Presentation.PresentationLogic.LearningSpace
+@using Presentation.Components.Forms.Models
+@using System.ComponentModel
+@using Presentation.Components.Forms.Buttons
 @*<h1>Edit</h1>*@
 <header class="flex flex-col justify-between h-12 w-full m-auto bg-buttonbgblue rounded items-center">
     <div class="ml-1 flex items-center gap-2">
@@ -18,7 +16,7 @@
         <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="async () => await OnNewButtonClicked.InvokeAsync()">New Learning Space</MudButton>
     </HeaderButtons>
     <Fields>
-        <Collapsable Title="General" Collapsed="false">
+        <Collapsable Title="General" @bind-Collapsed="_collapsedGeneral">
             <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                           For="@(() => FormModel.Name)"
                           Immediate="true"
@@ -26,7 +24,7 @@
                           Label="@nameof(FormDataContainer.FormModel.Name)"/>
         </Collapsable>
 
-        <Collapsable Title="Goals" Collapsed="true">
+        <Collapsable Title="Goals" @bind-Collapsed="_collapsedGoals">
             <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                           For="@(() => FormModel.Goals)"
                           Immediate="true"
@@ -39,7 +37,7 @@
                           Label="@nameof(FormDataContainer.FormModel.Description)"/>
         </Collapsable>
 
-        <Collapsable Title="Completion conditions" Collapsed="true">
+        <Collapsable Title="Completion conditions" @bind-Collapsed="_collapsedConditions">
             <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
                              For="@(() => FormModel.RequiredPoints)"
                              Immediate="true"
@@ -77,12 +75,15 @@
     //please DO NOT REFACTOR THIS - n.stich
     private LearningSpaceFormModel FormModel => FormDataContainer.FormModel;
 
+    private bool _collapsedGeneral = false;
+    private bool _collapsedGoals = true;
+    private bool _collapsedConditions = true;
 
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
     //we can supress the nullable warning here as validator ensures RequiredPoints isn't null - n.stich
         LearningSpacePresenter.EditLearningSpace(model.Name, model.Description,
-            model.Goals, (int)model.RequiredPoints!);
+            model.Goals, (int) model.RequiredPoints!);
     }
 
     private async Task MapIntoContainer()

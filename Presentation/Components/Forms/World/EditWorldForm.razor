@@ -2,6 +2,7 @@
 @using AutoMapper
 @using BusinessLogic.Entities
 @using Presentation.Components.Forms.Models
+@using System.ComponentModel
 @using Presentation.Components.Forms.Buttons
 <header class="flex flex-col justify-between h-12 w-full m-auto bg-buttonbgblue rounded items-center">
     <div class="ml-1 flex items-center gap-2">
@@ -11,7 +12,7 @@
 <BaseForm TForm="LearningWorldFormModel" TEntity="LearningWorld" OnValidSubmit="OnValidSubmit"
           SnackbarMessage="World updated" FormDataContainer="FormDataContainer">
     <Fields>
-        <Collapsable Title="General" Collapsed="false">
+        <Collapsable Title="General" @bind-Collapsed="_collapsedGeneral">
             <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                           For="@(() => FormModel.Name)"
                           Immediate="true"
@@ -34,7 +35,7 @@
                           Label="@nameof(FormDataContainer.FormModel.Language)"/>
         </Collapsable>
 
-        <Collapsable Title="Goals" Collapsed="true">
+        <Collapsable Title="Goals" @bind-Collapsed="_collapsedGoals">
             <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
                           For="@(() => FormModel.Description)"
                           Immediate="true"
@@ -77,6 +78,9 @@
     //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
     //please DO NOT REFACTOR THIS - n.stich
     private LearningWorldFormModel FormModel => FormDataContainer.FormModel;
+
+    private bool _collapsedGeneral = false;
+    private bool _collapsedGoals = true;
 
     private void OnValidSubmit(LearningWorldFormModel model)
     {
