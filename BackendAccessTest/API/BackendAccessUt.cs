@@ -44,4 +44,19 @@ public class ApiAccessUt
         // Assert
         _userWebApiServices.Received().GetUserTokenAsync("username", "password");
     }
+
+    [Test]
+    public void ApiAccess_GetUserInformationAsync_CallsMethod()
+    {
+        // Arrange
+        _mapper = Substitute.For<IMapper>();
+        _userWebApiServices = Substitute.For<IUserWebApiServices>();
+        var apiAccess = new BackendAccess(_mapper, _userWebApiServices);
+
+        // Act
+        var userToken = apiAccess.GetUserInformationAsync("token");
+
+        // Assert
+        _userWebApiServices.Received().GetUserInformationAsync("token");
+    }
 }

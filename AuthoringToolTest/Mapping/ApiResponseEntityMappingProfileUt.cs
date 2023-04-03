@@ -9,10 +9,9 @@ namespace AuthoringToolTest.Mapping;
 public class ApiResponseEntityMappingProfileUt
 {
     [Test]
-    public void TestMapping()
+    public void Map_UserInformationBE_UserInformation()
     {
-        var config = new MapperConfiguration(cfg => { ApiResponseEntityMappingProfile.Configure(cfg); });
-        var mapper = config.CreateMapper();
+        var systemUnderTest = CreateTestableMapper();
 
         var source = new UserInformationBE
         {
@@ -22,11 +21,33 @@ public class ApiResponseEntityMappingProfileUt
             UserEmail = "UserEmail"
         };
 
-        var dest = mapper.Map<UserInformation>(source);
+        var dest = systemUnderTest.Map<UserInformation>(source);
 
         Assert.AreEqual(source.LmsUserName, dest.LmsUsername);
         Assert.AreEqual(source.IsAdmin, dest.IsLmsAdmin);
         Assert.AreEqual(source.UserId, dest.LmsId);
         Assert.AreEqual(source.UserEmail, dest.LmsEmail);
+    }
+
+    // Test for UserTokenBE to UserToken
+    [Test]
+    public void Map_UserTokenBE_UserToken()
+    {
+        var systemUnderTest = CreateTestableMapper();
+
+        var source = new UserTokenBE
+        {
+            LmsToken = "testToken"
+        };
+
+        var dest = systemUnderTest.Map<UserToken>(source);
+
+        Assert.AreEqual(source.LmsToken, dest.Token);
+    }
+
+    private static IMapper CreateTestableMapper()
+    {
+        var config = new MapperConfiguration(cfg => { ApiResponseEntityMappingProfile.Configure(cfg); });
+        return config.CreateMapper();
     }
 }

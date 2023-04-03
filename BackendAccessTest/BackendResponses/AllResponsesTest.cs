@@ -26,5 +26,6 @@ public class AllResponsesTest
     {
         yield return new TestCaseData(new ErrorBE());
         yield return new TestCaseData(new UserTokenBE());
+        yield return new TestCaseData(new UserInformationBE());
     }
 }

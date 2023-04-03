@@ -9,7 +9,7 @@ using Shared.Configuration;
 
 namespace BackendAccessTest.WebApi;
 
-public class UserWebApiServicesUt
+public class UserBackendServicesUt
 {
     private IAuthoringToolConfiguration _authoringToolConfiguration;
 
@@ -74,6 +74,37 @@ public class UserWebApiServicesUt
     }
 
     [Test]
+    public async Task GetUserInformationAsync_ValidInput_Returns()
+    {
+        var mockedHttp = new MockHttpMessageHandler();
+
+        var responseContent = JsonConvert.SerializeObject(new Dictionary<string, object>
+        {
+            {"lmsUserName", "expectedUsername"},
+            {"userEmail", "expectedEmail"},
+            {"userId", 1},
+            {"isAdmin", true}
+        });
+
+        var response = new HttpResponseMessage(HttpStatusCode.OK);
+        response.Content = new StringContent(responseContent);
+        mockedHttp.When("*")
+            .Respond(response);
+
+        var userWebApiServices = CreateTestableUserWebApiServices(null, mockedHttp.ToHttpClient());
+
+        var result = await userWebApiServices.GetUserInformationAsync("token");
+
+        Assert.Multiple(() =>
+        {
+            Assert.That(result.LmsUserName, Is.EqualTo("expectedUsername"));
+            Assert.That(result.UserEmail, Is.EqualTo("expectedEmail"));
+            Assert.That(result.UserId, Is.EqualTo(1));
+            Assert.That(result.IsAdmin, Is.EqualTo(true));
+        });
+    }
+
+    [Test]
     public void General_InvalidResponse_ThrowsException()
     {
         // Arrange
@@ -93,6 +124,7 @@ public class UserWebApiServicesUt
                 await userWebApiServices.GetUserTokenAsync("username", "password"),
             "Das Ergebnis der Backend Api konnte nicht gelesen werden");
     }
+
 
     private static UserWebApiServices CreateTestableUserWebApiServices(
         IAuthoringToolConfiguration? configuration = null,
