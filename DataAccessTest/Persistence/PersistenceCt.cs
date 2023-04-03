@@ -72,7 +72,9 @@ public class PersistenceCt
             .For(obj => obj.ObjectsInPathWaysPe).Exclude(obj => obj.InBoundObjects)
             .For(obj => obj.ObjectsInPathWaysPe).Exclude(obj => obj.OutBoundObjects)
             .For(obj => obj.LearningSpaces).For(obj => obj.LearningSpaceLayout.ContainedLearningElements).Exclude(obj => obj.Id)
-            .Excluding(obj => obj.LearningPathways));
+            .Excluding(obj => obj.LearningPathways)
+            .Excluding(obj => obj.LearningSpaces[0].LearningSpaceLayout.LearningElements[0].Id)
+        );
 
         Assert.That(restoredWorld.LearningSpaces[0].OutBoundObjects, Does.Contain(restoredWorld.PathWayConditions[0]));
         Assert.That(restoredWorld.PathWayConditions[0].InBoundObjects, Does.Contain(restoredWorld.LearningSpaces[0]));
@@ -114,8 +116,12 @@ public class PersistenceCt
         stream.Position = 0;
         var restoredSpace = systemUnderTest.LoadFromStream(stream);
         
-        restoredSpace.Should().BeEquivalentTo(space, options => options.Excluding(obj => obj.Id)
-            .For(obj => obj.LearningSpaceLayout.ContainedLearningElements).Exclude(obj => obj.Id));
+        restoredSpace.Should().BeEquivalentTo(space, options => options
+            .Excluding(obj => obj.Id)
+            .For(obj => obj.LearningSpaceLayout.ContainedLearningElements)
+            .Exclude(obj => obj.Id)
+            .Excluding(obj => obj.LearningSpaceLayout.LearningElements[0].Id)
+        );
         Assert.That(initialSpaceId, Is.Not.EqualTo(restoredSpace.Id));
         Assert.That(initialElementId, Is.Not.EqualTo(restoredSpace.LearningSpaceLayout.ContainedLearningElements.First().Id));
     }
@@ -179,7 +185,8 @@ public class PersistenceCt
         systemUnderTest.SaveToDisk(world, FilePath);
         var restoredWorld = systemUnderTest.LoadFromDisk(FilePath);
 
-        restoredWorld.Should().BeEquivalentTo(world, options => options.IgnoringCyclicReferences()
+        restoredWorld.Should().BeEquivalentTo(world, options => options
+            .IgnoringCyclicReferences()
             .Excluding(obj => obj.Id)
             .For(obj => obj.LearningSpaces).Exclude(obj => obj.Id)
             .For(obj => obj.LearningSpaces).Exclude(obj => obj.InBoundObjects)
@@ -192,7 +199,9 @@ public class PersistenceCt
             .For(obj => obj.ObjectsInPathWaysPe).Exclude(obj => obj.OutBoundObjects)
             .For(obj => obj.LearningSpaces).For(obj => obj.LearningSpaceLayout.ContainedLearningElements)
             .Exclude(obj => obj.Id)
-            .Excluding(obj => obj.LearningPathways));
+            .Excluding(obj => obj.LearningPathways)
+            .Excluding(obj => obj.LearningSpaces[0].LearningSpaceLayout.LearningElements[0].Id)
+        );
         Assert.That(restoredWorld.LearningSpaces[0].OutBoundObjects, Does.Contain(restoredWorld.PathWayConditions[0]));
         Assert.That(restoredWorld.PathWayConditions[0].InBoundObjects, Does.Contain(restoredWorld.LearningSpaces[0]));
         Assert.That(restoredWorld.PathWayConditions[0].OutBoundObjects, Does.Contain(restoredWorld.LearningSpaces[1]));
@@ -234,7 +243,10 @@ public class PersistenceCt
         var restoredSpace = systemUnderTest.LoadFromDisk(FilePath);
         
         restoredSpace.Should().BeEquivalentTo(space, options => options.Excluding(obj => obj.Id)
-            .For(obj => obj.LearningSpaceLayout.ContainedLearningElements).Exclude(obj => obj.Id));
+            .For(obj => obj.LearningSpaceLayout.ContainedLearningElements)
+            .Exclude(obj => obj.Id)
+            .Excluding(obj => obj.LearningSpaceLayout.LearningElements[0].Id)
+            .WithTracing());
         Assert.That(initialSpaceId, Is.Not.EqualTo(restoredSpace.Id));
         Assert.That(initialElementId, Is.Not.EqualTo(restoredSpace.LearningSpaceLayout.ContainedLearningElements.First().Id));
     }
@@ -247,7 +259,7 @@ public class PersistenceCt
             LearningSpaceLayout =
             {
                 LearningElements = GetAllLearningElementTypes()
-                    .Select((e, i) => new KeyValuePair<int, ILearningElementPe>())
+                    .Select((e, i) => new KeyValuePair<int, ILearningElementPe>(i, e))
                     .ToDictionary(kvp => kvp.Key, kvp => kvp.Value)
             }
         };
@@ -257,8 +269,13 @@ public class PersistenceCt
         systemUnderTest.SaveToDisk(space, FilePath);
         var restoredSpace = systemUnderTest.LoadFromDisk(FilePath);
 
-        restoredSpace.Should().BeEquivalentTo(space, options => options.Excluding(obj => obj.Id)
-            .For(obj => obj.LearningSpaceLayout.ContainedLearningElements).Exclude(obj => obj.Id));
+        restoredSpace.Should().BeEquivalentTo(space, options => options
+            .Excluding(obj => obj.Id)
+            .For(obj => obj.LearningSpaceLayout.ContainedLearningElements)
+            .Exclude(obj => obj.Id)
+            .Excluding(obj => obj.LearningSpaceLayout.LearningElements[0].Id)
+            .Excluding(obj => obj.LearningSpaceLayout.LearningElements[1].Id)
+        );
     }
     
     [Test]
