@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System.IO.Abstractions;
+using System.IO.Abstractions.TestingHelpers;
+using System.Net;
 using ApiAccess.WebApi;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
@@ -125,17 +127,73 @@ public class UserBackendServicesUt
             "Das Ergebnis der Backend Api konnte nicht gelesen werden");
     }
 
+    [Test]
+    public async Task UploadLearningWorldAsync_Valid_CallsHttpClient()
+    {
+        var mockedHttp = new MockHttpMessageHandler();
+
+        mockedHttp.When("*")
+            .Respond("application/json", "true");
+
+        var mockfileSystem = new MockFileSystem();
+        mockfileSystem.AddFile("test.mbz", new MockFileData("testmbz"));
+        mockfileSystem.AddFile("testawt.json", new MockFileData("testawt"));
+
+        var userWebApiServices =
+            CreateTestableUserWebApiServices(null, mockedHttp.ToHttpClient(), null, mockfileSystem);
+
+        // Act
+        var output = await userWebApiServices.UploadLearningWorldAsync("testToken", "test.mbz", "testawt.json");
+
+        // Assert
+        Assert.That(output, Is.EqualTo(true));
+    }
+
+    [Test]
+    public async Task UploadLearningWorldAsync_InvalidATFPath_ThrowsArgumentException()
+    {
+        var mockfileSystem = new MockFileSystem();
+        mockfileSystem.AddFile("test.mbz", new MockFileData("testmbz"));
+        //mockfileSystem.AddFile("testawt.json", new MockFileData("testawt"));
+
+        var userWebApiServices =
+            CreateTestableUserWebApiServices(null, null, null, mockfileSystem);
+
+        // Act
+        // Assert
+        Assert.ThrowsAsync<ArgumentException>(async () =>
+            await userWebApiServices.UploadLearningWorldAsync("testToken", "test.mbz", "testawt.json"));
+    }
+
+    [Test]
+    public async Task UploadLearningWorldAsync_InvalidMBZPath_ThrowsArgumentException()
+    {
+        var mockfileSystem = new MockFileSystem();
+        //mockfileSystem.AddFile("test.mbz", new MockFileData("testmbz"));
+        mockfileSystem.AddFile("testawt.json", new MockFileData("testawt"));
+
+        var userWebApiServices =
+            CreateTestableUserWebApiServices(null, null, null, mockfileSystem);
+
+        // Act
+        // Assert
+        Assert.ThrowsAsync<ArgumentException>(async () =>
+            await userWebApiServices.UploadLearningWorldAsync("testToken", "test.mbz", "testawt.json"));
+    }
+
 
     private static UserWebApiServices CreateTestableUserWebApiServices(
         IAuthoringToolConfiguration? configuration = null,
         HttpClient? httpClient = null,
-        ILogger<UserWebApiServices>? logger = null
+        ILogger<UserWebApiServices>? logger = null,
+        IFileSystem? fileSystem = null!
     )
     {
         configuration ??= Substitute.For<IAuthoringToolConfiguration>();
         httpClient ??= new MockHttpMessageHandler().ToHttpClient();
         logger ??= Substitute.For<ILogger<UserWebApiServices>>();
+        fileSystem ??= Substitute.For<IFileSystem>();
 
-        return new UserWebApiServices(configuration, httpClient, logger);
+        return new UserWebApiServices(configuration, httpClient, logger, fileSystem);
     }
 }

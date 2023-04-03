@@ -19,4 +19,6 @@ public interface IUserWebApiServices
     /// <param name="token">Token to authenticate the user</param>
     /// <returns>User Information</returns>
     public Task<UserInformationBE> GetUserInformationAsync(string token);
+
+    public Task<bool> UploadLearningWorldAsync(string token, string backupPath, string awtPath);
 }

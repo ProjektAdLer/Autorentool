@@ -6,4 +6,5 @@ public interface IBackendAccess
 {
     public Task<UserToken> GetUserTokenAsync(string username, string password);
     public Task<UserInformation> GetUserInformationAsync(string token);
+    public Task<bool> UploadLearningWorldAsync(string token, string backupPath, string awtPath);
 }

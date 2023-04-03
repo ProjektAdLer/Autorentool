@@ -32,4 +32,11 @@ public class BackendAccess : IBackendAccess
 
         return Mapper.Map<UserInformation>(receivedUserInformation);
     }
+
+    public async Task<bool> UploadLearningWorldAsync(string token, string backupPath, string awtPath)
+    {
+        var isSuccessful = await UserWebApiServices.UploadLearningWorldAsync(token, backupPath, awtPath);
+
+        return isSuccessful;
+    }
 }

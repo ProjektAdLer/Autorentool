@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.IO.Abstractions;
+using System.Text.Json;
 using System.Web;
 using ApiAccess.BackendEntities;
 using Microsoft.Extensions.Logging;
@@ -9,14 +10,16 @@ namespace ApiAccess.WebApi;
 public class UserWebApiServices : IUserWebApiServices
 {
     private readonly HttpClient _client;
+    private readonly IFileSystem _fileSystem;
     private readonly ILogger<UserWebApiServices> _logger;
 
     public UserWebApiServices(IAuthoringToolConfiguration configuration, HttpClient client,
-        ILogger<UserWebApiServices> logger)
+        ILogger<UserWebApiServices> logger, IFileSystem fileSystem)
     {
         Configuration = configuration;
         _client = client;
         _logger = logger;
+        _fileSystem = fileSystem;
     }
 
     public IAuthoringToolConfiguration Configuration { get; }
@@ -41,6 +44,46 @@ public class UserWebApiServices : IUserWebApiServices
 
         return await SendHttpGetRequestAsync<UserInformationBE>("/Users/UserData",
             parameters);
+    }
+
+
+    public async Task<bool> UploadLearningWorldAsync(string token, string backupPath, string awtPath)
+    {
+        // Validate that the paths are valid.
+        if (!_fileSystem.File.Exists(backupPath)) throw new ArgumentException("The backup path is not valid.");
+        if (!_fileSystem.File.Exists(awtPath)) throw new ArgumentException("The awt path is not valid.");
+
+        var headers = new Dictionary<string, string>
+        {
+            {"token", token},
+            {"Accept", "text/plain"}
+        };
+        var content = new MultipartFormDataContent();
+        content.Add(new StreamContent(_fileSystem.File.OpenRead(backupPath)),
+            "backupFile", backupPath);
+        content.Add(new StreamContent(_fileSystem.File.OpenRead(awtPath)),
+            "atfFile", awtPath);
+
+        return await SendHttpPostRequestAsync<bool>("/Worlds", headers, content);
+    }
+
+    private async Task<TResponse> SendHttpPostRequestAsync<TResponse>(string url, IDictionary<string, string> headers,
+        MultipartFormDataContent content)
+    {
+        // Set the Base URL of the API.
+        // TODO: This should be set in the configuration.
+        url = new Uri("https://localhost:3001/api") + url;
+
+        var request = new HttpRequestMessage(HttpMethod.Post, url);
+        foreach (var (key, value) in headers) request.Headers.Add(key, value);
+        request.Content = content;
+
+        var apiResp = await _client.SendAsync(request);
+
+        // This will throw if the response is not successful.
+        await HandleErrorMessage(apiResp);
+
+        return TryRead<TResponse>(await apiResp.Content.ReadAsStringAsync());
     }
 
     private async Task<TResponse> SendHttpGetRequestAsync<TResponse>(string url, IDictionary<string, string> parameters)

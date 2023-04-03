@@ -1631,7 +1631,8 @@
         "type": "Project",
         "dependencies": {
           "AutoMapper": "[11.0.1, )",
-          "BusinessLogic": "[1.0.0, )"
+          "BusinessLogic": "[1.0.0, )",
+          "System.IO.Abstractions": "[17.2.3, )"
         }
       },
       "businesslogic": {
