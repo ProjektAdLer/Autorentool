@@ -9,7 +9,8 @@ namespace PersistEntities;
 public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
 {
     public LearningWorldPe(string name, string shortname, string authors, string language, string description,
-        string goals, List<LearningSpacePe>? learningSpaces = null, List<PathWayConditionPe>? pathWayConditions = null, List<LearningPathwayPe>? learningPathWays = null)
+        string goals, List<LearningSpacePe>? learningSpaces = null, List<PathWayConditionPe>? pathWayConditions = null,
+        List<LearningPathwayPe>? learningPathWays = null)
     {
         Id = Guid.NewGuid();
         Name = name;
@@ -21,6 +22,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         LearningSpaces = learningSpaces ?? new List<LearningSpacePe>();
         PathWayConditions = pathWayConditions ?? new List<PathWayConditionPe>();
         LearningPathways = learningPathWays ?? new List<LearningPathwayPe>();
+        UnplacedLearningElements = new List<ILearningElementPe>();
     }
 
     /// <summary>
@@ -38,6 +40,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         LearningSpaces = new List<LearningSpacePe>();
         PathWayConditions = new List<PathWayConditionPe>();
         LearningPathways = new List<LearningPathwayPe>();
+        UnplacedLearningElements = new List<ILearningElementPe>();
     }
     
     [IgnoreDataMember]
@@ -50,7 +53,9 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
     [DataMember]
     public List<PathWayConditionPe> PathWayConditions { get; set; }
     [IgnoreDataMember]
-    public List<IObjectInPathWayPe> ObjectsInPathWaysPe => new List<IObjectInPathWayPe>(LearningSpaces).Concat(PathWayConditions).ToList();
+    public List<IObjectInPathWayPe> ObjectsInPathWaysPe =>
+        new List<IObjectInPathWayPe>(LearningSpaces).Concat(PathWayConditions).ToList();
+
     [DataMember]
     public string Name { get; set; }
     [DataMember]
@@ -63,6 +68,8 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
     public string Description { get; set; }
     [DataMember]
     public string Goals { get; set; }
+    [DataMember]
+    public ICollection<ILearningElementPe> UnplacedLearningElements { get; set; }
     ExtensionDataObject? IExtensibleDataObject.ExtensionData { get; set; }
 
     [OnDeserialized]
@@ -76,5 +83,4 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
             learningPathwayPe.TargetObject.InBoundObjects.Add(learningPathwayPe.SourceObject);
         }
     }
-    
 }
