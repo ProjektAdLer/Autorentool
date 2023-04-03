@@ -242,9 +242,16 @@ public class PersistenceCt
     [Test]
     public void Persistence_SaveAndLoadSpace_File_WithAllElementTypes_ObjectsAreEquivalent()
     {
-        var space = new LearningSpacePe("Name", "Description", "Goals", 5);
-        space.LearningSpaceLayout.LearningElements = GetAllLearningElementTypes();
-        
+        var space = new LearningSpacePe("Name", "Description", "Goals", 5)
+        {
+            LearningSpaceLayout =
+            {
+                LearningElements = GetAllLearningElementTypes()
+                    .Select((e, i) => new KeyValuePair<int, ILearningElementPe>())
+                    .ToDictionary(kvp => kvp.Key, kvp => kvp.Value)
+            }
+        };
+
         var systemUnderTest = CreateTestableFileSaveHandler<LearningSpacePe>();
         
         systemUnderTest.SaveToDisk(space, FilePath);
@@ -283,7 +290,7 @@ public class PersistenceCt
         restoredLep.Should().BeEquivalentTo(lep, options => options.Excluding(obj => obj.Id));
     }
 
-    static Dictionary<int, ILearningElementPe> GetAllLearningElementTypes()
+    static ILearningElementPe[] GetAllLearningElementTypes()
     {
         var fileContent = new FileContentPe("a", "b", "");
         var linkContent = new LinkContentPe("foo", "https://www.google.com");
@@ -293,9 +300,7 @@ public class PersistenceCt
                 LearningElementDifficultyEnumPe.Easy, 123, 42, 0, 0),
             new LearningElementPe("h5pInt", linkContent, "description", "a goal",
                 LearningElementDifficultyEnumPe.Medium, 123, 42, 0, 0),
-        }
-            .Select((element, i) => new KeyValuePair<int, ILearningElementPe>(i, element))
-            .ToDictionary(pair => pair.Key, pair => pair.Value);
+        };
     }
 
     [Test]
