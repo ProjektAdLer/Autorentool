@@ -1,11 +1,12 @@
 @using Presentation.PresentationLogic.API
 @using Presentation.Components
-
 <header class="mb-1 flex justify-between h-12 w-full bg-buttonbgblue items-center">
     <div class="ml-1 flex items-center gap-2">
         <img class="w-10 drop-shadow" src="/CustomIcons/autorentool-logo.png"/>
         <h1 class="font-bold text-lg">Autorentool v0.3.1</h1>
     </div>
+    <MudIconButton Icon="@Icons.Material.Filled.Undo" Disabled="!CanUndo" Title="Undo" OnClick="OnClickUndo"></MudIconButton>
+    <MudIconButton Icon="@Icons.Material.Filled.Redo" Disabled="!CanRedo" Title="Redo" OnClick="OnClickRedo"></MudIconButton>
     <MudButton Class="btn-standard" @onclick="OnClickMyLearningWorldsOverview">MyLearningWorldsOverview</MudButton>
     @if (PresentationLogic?.RunningElectron == true)
     {
@@ -14,13 +15,35 @@
 </header>
 
 @code {
+
     [Inject]
-    public IPresentationLogic? PresentationLogic { get; set; }
+    public IPresentationLogic PresentationLogic { get; set; }
+
     [Inject]
     internal NavigationManager NavManager { get; private init; }
-    
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        PresentationLogic.OnCommandUndoRedoOrExecute += async (_, args) => await InvokeAsync(StateHasChanged);
+    }
+
     private void OnClickMyLearningWorldsOverview()
     {
         NavManager.NavigateTo("/MyLearningWorldsOverview");
     }
+
+    private bool CanUndo => PresentationLogic.CanUndo;
+    private bool CanRedo => PresentationLogic.CanRedo;
+
+    private void OnClickUndo()
+    {
+        PresentationLogic.UndoCommand();
+    }
+
+    private void OnClickRedo()
+    {
+        PresentationLogic.RedoCommand();
+    }
+
 }

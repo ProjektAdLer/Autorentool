@@ -149,6 +149,8 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 
             if (worldVm.SelectedLearningObjectInPathWay is LearningSpaceViewModel space)
                 LearningSpaceVm = space;
+            else if (worldVm.SelectedLearningObjectInPathWay is null)
+                LearningSpaceVm = null;
         }
     }
 

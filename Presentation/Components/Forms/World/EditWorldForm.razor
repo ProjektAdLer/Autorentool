@@ -97,6 +97,20 @@
     {
         await base.OnParametersSetAsync();
         await MapIntoContainer();
+        if (LearningWorldPresenter.LearningWorldVm == null)
+            throw new ApplicationException("LearningWorldVm is null");
+        LearningWorldPresenter.LearningWorldVm.PropertyChanged += LearningWorldPropertyChanged;
+    }
+
+    private void LearningWorldPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(LearningWorldViewModel.Name) or nameof(LearningWorldViewModel.Shortname) 
+            or nameof(LearningWorldViewModel.Authors) or nameof(LearningWorldViewModel.Language)
+            or nameof(LearningWorldViewModel.Description) or nameof(LearningWorldViewModel.Goals)
+            )
+        {
+            InvokeAsync(MapIntoContainer);
+        }
     }
 
     private async Task OnResetAsync()

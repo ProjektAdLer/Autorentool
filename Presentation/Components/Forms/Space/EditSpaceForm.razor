@@ -96,6 +96,19 @@
     {
         await base.OnParametersSetAsync();
         await MapIntoContainer();
+        if (LearningSpacePresenter.LearningSpaceVm == null)
+            throw new ApplicationException("LearningWorldVm is null");
+        LearningSpacePresenter.LearningSpaceVm.PropertyChanged += LearningSpacePropertyChanged;
+    }
+
+    private void LearningSpacePropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(LearningSpaceViewModel.Name) or nameof(LearningSpaceViewModel.Description) 
+            or nameof(LearningSpaceViewModel.Goals) or nameof(LearningSpaceViewModel.RequiredPoints)
+            )
+        {
+            InvokeAsync(MapIntoContainer);
+        }
     }
 
     private async Task OnResetAsync()

@@ -1,4 +1,6 @@
 using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
@@ -62,13 +64,36 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     public ICollection<IObjectInPathWayViewModel> InBoundObjects { get; set; }
     public ICollection<IObjectInPathWayViewModel> OutBoundObjects { get; set; }
     public int Workload => ContainedLearningElements.Sum(element => element.Workload);
+
     // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local - required for automapper n.stich
     public int Points => ContainedLearningElements.Sum(element => element.Points);
+    
     public Guid Id { get; private set; }
-    public string Name { get; set; }
-    public string Description { get; set; }
-    public string Goals { get; set; }
-    public int RequiredPoints { get; set; }
+
+    public string Name
+    {
+        get => _name;
+        set => SetField(ref _name, value);
+    }
+
+    public string Description
+    {
+        get => _description;
+        set => SetField(ref _description, value);
+    }
+
+    public string Goals
+    {
+        get => _goals;
+        set => SetField(ref _goals, value);
+    }
+
+    public int RequiredPoints
+    {
+        get => _requiredPoints;
+        set => SetField(ref _requiredPoints, value);
+    }
+
     public double PositionX { get; set; }
     public double PositionY { get; set; }
     public double InputConnectionX => PositionX + 42;
@@ -77,12 +102,21 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     public double OutputConnectionY => PositionY + 82;
 
     private ILearningElementViewModel? _selectedLearningElement;
+
+    private string _name;
+    private string _description;
+    private string _goals;
+    private int _requiredPoints;
     public event EventHandler<EventArgs>? SelectedElementChanged;
 
     public ILearningElementViewModel? SelectedLearningElement
     {
         get { return _selectedLearningElement; }
-        set { _selectedLearningElement = value; OnSelectedElementChanged();}
+        set
+        {
+            _selectedLearningElement = value;
+            OnSelectedElementChanged();
+        }
     }
 
     public IEnumerable<ILearningElementViewModel> ContainedLearningElements =>
@@ -91,5 +125,20 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     protected virtual void OnSelectedElementChanged()
     {
         SelectedElementChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    public event PropertyChangedEventHandler? PropertyChanged;
+
+    protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+    {
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+    }
+
+    protected bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+    {
+        if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+        field = value;
+        OnPropertyChanged(propertyName);
+        return true;
     }
 }

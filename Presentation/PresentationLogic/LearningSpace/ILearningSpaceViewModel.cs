@@ -1,9 +1,10 @@
-﻿using Presentation.PresentationLogic.LearningElement;
+﻿using System.ComponentModel;
+using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 
 namespace Presentation.PresentationLogic.LearningSpace;
 
-public interface ILearningSpaceViewModel : IDisplayableLearningObject, IObjectInPathWayViewModel
+public interface ILearningSpaceViewModel : IDisplayableLearningObject, IObjectInPathWayViewModel, INotifyPropertyChanged
 {
     IEnumerable<ILearningElementViewModel> ContainedLearningElements => LearningSpaceLayout.ContainedLearningElements;
     ILearningSpaceLayoutViewModel LearningSpaceLayout { get; set; }
