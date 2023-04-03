@@ -100,8 +100,8 @@ public class DragDropLearningElementUt
         Assert.That(menu.Instance.Parameters["ActivationEvent"], Is.EqualTo(MouseEvent.RightClick));
         Assert.That(menu.Instance.Parameters["PositionAtCursor"], Is.EqualTo(true));
 
-        var elementIcon = icons.First(icon => (string)icon.Instance.Parameters["Class"] == "element-icon");
-        var difficultyIcon = icons.First(icon => (string)icon.Instance.Parameters["Class"] == "difficulty-icon");
+        var elementIcon = icons.First(icon => ((string)icon.Instance.Parameters["Class"]).Contains("element-icon"));
+        var difficultyIcon = icons.First(icon => ((string)icon.Instance.Parameters["Class"]).Contains("difficulty-icon"));
         Assert.Multiple(() =>
         {
             Assert.That(elementIcon.Instance.Parameters["Icon"], Is.EqualTo(CustomIcons.VideoElementIcon));
@@ -162,7 +162,7 @@ public class DragDropLearningElementUt
         var card = activatorContent.FindComponentOrFail<Stub<MudCard>>();
         var mudCardContent = _ctx.Render((RenderFragment)card.Instance.Parameters["ChildContent"]);
         var difficultyIcon = mudCardContent.FindComponentsOrFail<Stub<MudIcon>>()
-            .First(icon => (string)icon.Instance.Parameters["Class"] == "difficulty-icon");
+            .First(icon => ((string)icon.Instance.Parameters["Class"]).Contains("difficulty-icon"));
         Assert.That(difficultyIcon.Instance.Parameters["Icon"], Is.EqualTo(expectedIconString));
     }
 
