@@ -49,7 +49,7 @@ public class LearningSpaceViewModelUt
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
-            Assert.That(systemUnderTest.ContainedLearningElements, Is.EqualTo(learningElements));
+            Assert.That(systemUnderTest.ContainedLearningElements, Is.EqualTo(learningElements.Values));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
             Assert.That(systemUnderTest.InBoundObjects, Is.EqualTo(inBoundObjects));

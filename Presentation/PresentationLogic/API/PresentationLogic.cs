@@ -410,12 +410,9 @@ public class PresentationLogic : IPresentationLogic
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
         var contentEntity = Mapper.Map<ILearningContent>(learningContentViewModel);
 
-        BusinessLogic.Entities.LearningSpace? parentSpaceEntity = null;
-        if(parentSpaceEntity != null)
-        {
-            parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
-        }
-
+        var parentSpaceEntity = parentSpaceVm != null
+            ? Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm)
+            : null;
         var command = new EditLearningElement(elementEntity, parentSpaceEntity, name, description,
             goals, difficulty, workload, points, contentEntity, element => CMapper.Map(element, learningElementVm));
         BusinessLogic.ExecuteCommand(command);

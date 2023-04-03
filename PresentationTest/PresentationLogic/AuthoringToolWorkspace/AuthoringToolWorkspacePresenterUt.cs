@@ -374,6 +374,7 @@ public class AuthoringToolWorkspacePresenterUt
     [Test]
     public void OnBeforeShutdown_CancelsShutdownCreatesQueueAndInvokesViewUpdate()
     {
+        Assert.Fail("OnShutdown must be re-implemented first");
         var viewModel = new AuthoringToolWorkspaceViewModel();
         var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
         viewModel._learningWorlds.Add(learningWorld);

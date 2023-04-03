@@ -456,12 +456,12 @@ public class PresentationLogicUt
         var learningSpaceEntity = new BusinessLogic.Entities.LearningSpace("f", "f", "f", 5);
         var learningElementEntity = new BusinessLogic.Entities.LearningElement("a", null!, "d", "e",
             LearningElementDifficultyEnum.Easy, learningSpaceEntity);
-        var learningContentEntity = new BusinessLogic.Entities.LearningContent.FileContent("a", "h5p", "/user/marvin/learningcontent.h5p");
+        var learningContentEntity = new FileContent("a", "h5p", "/user/marvin/learningcontent.h5p");
         mockMapper.Map<BusinessLogic.Entities.LearningSpace>(Arg.Any<LearningSpaceViewModel>())
             .Returns(learningSpaceEntity);
         mockMapper.Map<BusinessLogic.Entities.LearningElement>(Arg.Any<LearningElementViewModel>())
             .Returns(learningElementEntity);
-        mockMapper.Map<BusinessLogic.Entities.LearningContent.FileContent>(Arg.Any<FileContentViewModel>())
+        mockMapper.Map<ILearningContent>(Arg.Any<FileContentViewModel>())
             .Returns(learningContentEntity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
