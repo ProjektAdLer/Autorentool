@@ -11,8 +11,7 @@
 
 <div class="flex flex-col h-screen max-h-screen overflow-hidden w-screen bg-buttonbgblue font-sans">
     <HeaderBar/>
-
-        <MudDropContainer T="ILearningElementViewModel"
+    <MudDropContainer T="ILearningElementViewModel"
                           Items="ElementDropZoneHelper.GetWorldAndSpaceElements()"
                           ItemsSelector="ElementDropZoneHelper.IsItemInDropZone"
                           ItemDropped="ElementDropZoneHelper.ItemUpdated"
