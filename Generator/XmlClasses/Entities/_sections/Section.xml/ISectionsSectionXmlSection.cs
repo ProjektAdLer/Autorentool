@@ -19,4 +19,5 @@ public interface ISectionsSectionXmlSection : IXmlSerializablePath
     string Timemodified { get; set; }
         
     string Id { get; set; }
+    SectionsSectionXmlPluginLocalAdlerSection PluginLocalAdlerSection { get; set; }
 }

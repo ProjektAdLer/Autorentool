@@ -155,7 +155,7 @@ public class ReadDsl : IReadDsl
     public List<LearningSpaceJson> GetSectionList()
     {
         var space = new LearningSpaceJson(0, new LmsElementIdentifierJson("identifier", "Topic 0"), 
-            "",new List<int>(), 0 );
+            "",new List<int>(), -1 );
         var spaceList = new List<LearningSpaceJson> {space};
         spaceList.AddRange(_rootJson.World.Spaces);
         return spaceList;

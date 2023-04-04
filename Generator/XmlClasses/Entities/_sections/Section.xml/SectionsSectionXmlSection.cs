@@ -17,6 +17,7 @@ public class SectionsSectionXmlSection : ISectionsSectionXmlSection{
         AvailabilityJson = "$@NULL@$";
         Timemodified = "";
         Id = "";
+        PluginLocalAdlerSection = new SectionsSectionXmlPluginLocalAdlerSection();
     }
     
     
@@ -53,4 +54,7 @@ public class SectionsSectionXmlSection : ISectionsSectionXmlSection{
         
     [XmlAttribute(AttributeName="id")]
     public string Id { get; set; }
+    
+    [XmlElement(ElementName = "plugin_local_adler_section")]
+    public SectionsSectionXmlPluginLocalAdlerSection PluginLocalAdlerSection { get; set; }
 }
