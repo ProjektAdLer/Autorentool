@@ -4,7 +4,7 @@
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.View.LearningElement
 
-    <MudCard>
+    <MudCard Class="overflow-auto">
         @if (WorldPresenter.LearningWorldVm?.SelectedLearningElement == null || _editOverwritten)
         {
             <CreateElementForm OnSubmitted="() => InvokeAsync(TriggerMasterLayoutStateHasChanged)"/>

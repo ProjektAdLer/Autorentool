@@ -1,7 +1,7 @@
 @using Presentation.PresentationLogic.LearningSpace
 @using System.ComponentModel
 
-<MudCard>
+<MudCard Class="overflow-auto">
 @if (SpacePresenter.LearningSpaceVm == null || _editOverwritten)
 {
     <CreateSpaceForm/>
