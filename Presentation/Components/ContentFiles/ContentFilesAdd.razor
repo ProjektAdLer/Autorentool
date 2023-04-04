@@ -1,16 +1,21 @@
 @using Presentation.Components.Forms.Content
 @using Presentation.PresentationLogic.API
 <MudStack Class="w-full">
-    <div class="relative">
+    <div class="flex flex-col">
+        <header class="m-2 rounded-lg">
+            <div class="flex justify-center p-2">
+                <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Import of all files</h2>
+            </div>
+        </header>
         @if (Working)
         {
-            <div class="absolute w-full h-full bg-adlergrey-100 bg-opacity-25 z-40">
+            <div class="w-full h-full bg-adlergrey-100 bg-opacity-25 z-40">
             </div>
-            <MudProgressCircular Indeterminate="true" Class="absolute left-0 right-0 top-0 bottom-0 z-50 m-auto"
+            <MudProgressCircular Indeterminate="true" Class="z-50 m-auto"
                                  Color="Color.Primary" Size="Size.Large"/>
         }
         <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnFilesChanged" Hidden="false"
-                       InputClass="absolute w-full h-full opacity-0 z-10"
+                       InputClass="opacity-0 z-10"
                        @ondragenter="SetDragClass" @ondragleave="ClearDragClass"
                        @ondragend="ClearDragClass">
             <ButtonTemplate>
