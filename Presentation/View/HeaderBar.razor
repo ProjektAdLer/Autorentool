@@ -5,9 +5,11 @@
         <img class="w-10 drop-shadow" src="/CustomIcons/autorentool-logo.png"/>
         <h1 class="font-bold text-lg">Autorentool v0.3.1</h1>
     </div>
-    <MudIconButton Icon="@Icons.Material.Filled.Undo" Disabled="!CanUndo" Title="Undo" OnClick="OnClickUndo"></MudIconButton>
-    <MudIconButton Icon="@Icons.Material.Filled.Redo" Disabled="!CanRedo" Title="Redo" OnClick="OnClickRedo"></MudIconButton>
-    <MudButton Class="btn-standard" @onclick="OnClickMyLearningWorldsOverview">MyLearningWorldsOverview</MudButton>
+    <div>
+    <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Undo" Disabled="!CanUndo" Title="Undo" OnClick="OnClickUndo"></MudIconButton>
+    <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Redo" Disabled="!CanRedo" Title="Redo" OnClick="OnClickRedo"></MudIconButton>
+    </div>
+    <MudButton Class="btn-standard" @onclick="OnClickMyLearningWorldsOverview">My Learning Worlds</MudButton>
     @if (PresentationLogic?.RunningElectron == true)
     {
         <CloseAppButton/>
