@@ -10,14 +10,14 @@
         <h2 class="text-2xl text-center font-bold text-adlergrey-500 mx-2 bg-adlerdeactivated">Learning Space Editor</h2>
     </div>
 </div>
-<div class="p-2 flex justify-start space-x-2">
-  <img class="w-8" src="CustomIcons/space-icon_nobg.png" alt="learningspace">
-  <MudText Class="text-adlerbggradientfrom" Typo="Typo.h6">@LearningSpaceP.LearningSpaceVm?.Name</MudText>
-  @*<MudText Class="text-center text-adlergrey-500" Typo="Typo.h4">Learning Space Editor @LearningSpaceP.LearningSpaceVm?.Name</MudText>*@
-  </div>
 
 @if (LearningSpaceP.LearningSpaceVm != null)
 {
+    <div class="p-2 flex justify-start space-x-2">
+      <img class="w-8" src="CustomIcons/space-icon_nobg.png" alt="learningspace">
+      <MudText Class="text-adlerbggradientfrom" Typo="Typo.h6">@LearningSpaceP.LearningSpaceVm.Name</MudText>
+      @*<MudText Class="text-center text-adlergrey-500" Typo="Typo.h4">Learning Space Editor @LearningSpaceP.LearningSpaceVm?.Name</MudText>*@
+      </div>
     @if (LearningSpaceP.LearningSpaceVm?.SelectedLearningElement != null)
     {
         <section class="p-2 gap-1 flex flex-col justify-start">

@@ -28,7 +28,7 @@
                         </MudText>
                         break;
                     }
-                
+
                     case CardType.IsSaved:
                     {
                         <MudText Style="overflow-wrap: break-word;">
@@ -36,13 +36,6 @@
                         </MudText>
                         break;
                     }
-                
-                    case CardType.Load:
-                        <MudText Class="text-center">Load Learning World</MudText>
-                        break;
-                    case CardType.Create:
-                        <MudText Class="text-center">Create Learning World</MudText>
-                        break;
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -78,36 +71,14 @@
             @*         break; *@
             @*     } *@
             @* *@
-            @*     case CardType.Load: *@
-            @*         <MudText>Load Learning World</MudText> *@
-            @*         break; *@
-            @*     case CardType.Create: *@
-            @*         <MudText>Create Learning World</MudText> *@
-            @*         break; *@
             @*     default: *@
             @*         throw new ArgumentOutOfRangeException(); *@
             @* } *@
         </MudCardHeader>
         <MudCardContent Class="flex justify-center">
-            @switch (_cardType)
-            {
-                case CardType.IsLoaded or CardType.IsSaved:
-                    <MudButton Size="Size.Large" @onclick="@(() => OnOpenLearningWorld.InvokeAsync(LearningWorldPath))">
-                        Open
-                    </MudButton>
-                    break;
-                case CardType.Load:
-                    <MudButton @onclick="@(() => OnLoadLearningWorldPath.InvokeAsync())">
-                        <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.Add"></MudIcon>
-                    </MudButton>
-                    break;
-                case CardType.Create:
-                    <MudButton @onclick="@(() => OnCreateLearningWorld.InvokeAsync())">
-                        <MudIcon Size="Size.Large" Icon="@Icons.Material.Filled.Add"></MudIcon>
-                    </MudButton>
-                    break;
-            }
-
+            <MudButton Size="Size.Large" @onclick="@(() => OnOpenLearningWorld.InvokeAsync(LearningWorldPath))">
+                Open
+            </MudButton>
         </MudCardContent>
     </MudCard>
 </MudItem>
@@ -124,12 +95,6 @@
     public bool IsLoaded { get; set; }
 
     [Parameter]
-    public EventCallback OnCreateLearningWorld { get; set; }
-
-    [Parameter]
-    public EventCallback OnLoadLearningWorldPath { get; set; }
-
-    [Parameter]
     public EventCallback<SavedLearningWorldPath> OnDeleteFromSaved { get; set; }
 
     private CardType _cardType;
@@ -137,15 +102,7 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        if (OnCreateLearningWorld.HasDelegate)
-        {
-            _cardType = CardType.Create;
-        }
-        else if (OnLoadLearningWorldPath.HasDelegate)
-        {
-            _cardType = CardType.Load;
-        }
-        else if (IsLoaded)
+        if (IsLoaded)
         {
             if (!OnOpenLearningWorld.HasDelegate) throw new ApplicationException("OnOpenLearningWorld must be set.");
             if (LearningWorldPath == null) throw new ApplicationException("LearningWorldPath must be set.");
@@ -164,8 +121,6 @@
 
     private enum CardType
     {
-        Create,
-        Load,
         IsLoaded,
         IsSaved
     }

@@ -1,7 +1,6 @@
 @page "/MyLearningWorldsOverview"
 @using Presentation.PresentationLogic.MyLearningWorlds
 @using Shared
-@using Presentation.PresentationLogic.API
 @using Presentation.Components.Forms.World
 @using Presentation.Components
 <main class="overflow-hidden relative min-h-screen h-screen w-screen bg-gradient-to-br m-0 from-adlerbggradientfrom to-adlerbggradientto">
@@ -20,8 +19,8 @@
                 {
                     <LearningWorldCard LearningWorldPath="@myLearningWorld" OnOpenLearningWorld="OpenLearningWorld" OnDeleteFromSaved="MyLearningWorldsProvider.DeletePathFromSavedLearningWorlds" IsLoaded="false"/>
                 }
-                <LearningWorldCard OnLoadLearningWorldPath="LoadLearningWorldAsync"/>
-                <LearningWorldCard OnCreateLearningWorld="CreateLearningWorld"/>
+                <MudIconButton Icon="@Icons.Material.Filled.UploadFile" Class="w-30 h-40" Size="Size.Large" OnClick="LoadLearningWorldAsync"/>
+                <MudIconButton Icon="@Icons.Material.Filled.Add" Class="w-30 h-40" Size="Size.Large" OnClick="CreateLearningWorld"/>
 
             </MudGrid>
         </section>
