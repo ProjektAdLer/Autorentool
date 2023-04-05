@@ -1,0 +1,50 @@
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Shared
+
+<MudButton OnClick="CreateDebugWorld" Class="btn-standard normal-case">Create Debug World</MudButton>
+
+@code {
+
+    [Inject]
+    internal NavigationManager NavManager { get; private init; }
+    
+    [Inject]
+    public IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceViewModel { get; set; }
+
+    [Inject]
+    public IPresentationLogic PresentationLogic { get; set; }
+
+    private void CreateDebugWorld()
+    {
+        PresentationLogic.CreateLearningWorld(AuthoringToolWorkspaceViewModel, "world1", "w1", "debugAuthor", "de", "w1description", "w1goals");
+        var world1 = AuthoringToolWorkspaceViewModel.LearningWorlds.First();
+        AuthoringToolWorkspaceViewModel.SelectedLearningWorld = world1;
+        
+        NavManager.NavigateTo("/app");
+        
+        PresentationLogic.CreateLearningSpace(world1, "space1", "sdescription", "s1goals", 0, 0,0);
+        var space1 = world1.LearningSpaces.First();
+        PresentationLogic.ChangeLearningSpaceLayout(space1, FloorPlanEnum.Rectangle2X2);
+
+        PresentationLogic.CreateLearningSpace(world1, "space2", "sdescription", "s1goals", 0, 50,50);
+        var space2 = world1.LearningSpaces.Last();
+        PresentationLogic.ChangeLearningSpaceLayout(space2, FloorPlanEnum.Rectangle2X3);
+        
+        PresentationLogic.CreateLearningSpace(world1, "space3", "sdescription", "s1goals", 0, 100,100);
+        var space3 = world1.LearningSpaces.Last();
+        PresentationLogic.ChangeLearningSpaceLayout(space3, FloorPlanEnum.LShape3L2);
+
+        var content = PresentationLogic.GetAllContent();
+
+        var learningContentViewModels = content.ToList();
+        if (!learningContentViewModels.Any()) return;
+        PresentationLogic.CreateUnplacedLearningElement(world1, "element1", learningContentViewModels.First(), "e1goals", "e1goals", LearningElementDifficultyEnum.Easy, 0, 1);
+        PresentationLogic.CreateUnplacedLearningElement(world1, "element2", learningContentViewModels.First(), "e2goals", "e2goals", LearningElementDifficultyEnum.Easy, 0, 1);
+        PresentationLogic.CreateUnplacedLearningElement(world1, "element3", learningContentViewModels.First(), "e3goals", "e3goals", LearningElementDifficultyEnum.Easy, 0, 1);
+        
+        PresentationLogic.CreateLearningElementInSlot(space1, 1, "ele4", learningContentViewModels.First(), "e4goals", "e4goals", LearningElementDifficultyEnum.Easy, 0, 1);
+        PresentationLogic.CreateLearningElementInSlot(space2, 1, "ele5", learningContentViewModels.First(), "e5goals", "e5goals", LearningElementDifficultyEnum.Easy, 0, 1);
+        PresentationLogic.CreateLearningElementInSlot(space3, 1, "ele6", learningContentViewModels.First(), "e5goals", "e6goals", LearningElementDifficultyEnum.Easy, 0, 1);
+    }
+}

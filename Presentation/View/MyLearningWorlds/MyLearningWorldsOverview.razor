@@ -26,6 +26,7 @@
         </section>
         <MudButton Class="btn-standard normal-case" @onclick="OnClickMyLearningWorldsOverview">Gehe zur Lernwelt</MudButton>
         <ExportButton/>
+        <DebugButton></DebugButton>
         <MudDrawer Width="26%" Height="100%" @bind-Open="_createLearningWorldDialogOpen" Variant="@DrawerVariant.Temporary" Position="DrawerPosition.Left">
             <MudDrawerContent>
                 <CreateWorldForm OnSubmitted="() => _createLearningWorldDialogOpen = false"/>
