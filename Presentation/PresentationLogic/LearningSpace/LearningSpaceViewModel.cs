@@ -21,7 +21,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         Description = "";
         Goals = "";
         RequiredPoints = 0;
-        LearningSpaceLayout = new LearningSpaceLayoutViewModel(FloorPlanEnum.NoFloorPlan);
+        LearningSpaceLayout = new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3);
         InBoundObjects = new Collection<IObjectInPathWayViewModel>();
         OutBoundObjects = new Collection<IObjectInPathWayViewModel>();
         PositionX = 0;

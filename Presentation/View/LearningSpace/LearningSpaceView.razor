@@ -2,7 +2,6 @@
 @using Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans
 @using Presentation.View.LearningElement
 @using Shared
-@using Shared.Command
 @using Presentation.PresentationLogic.LearningElement
 @using System.Text
 <div class="mx-2 bg-adlerdeactivated rounded-lg">
@@ -42,21 +41,12 @@
                 <button class="btn-standard" @onclick="SaveSelectedLearningElementAsync">Save selected Learning Element</button>
                 <button class="btn-standard" @onclick="ShowSelectedElementContentAsync">Show content of Learning Element</button>
             </div>
-            <div class="flex items-center">
-                <p class="font-medium text-lg">Select floor plan for your learning space:</p>
-                <select class="font-medium text-md text-adlerdarkblue hover:bg-adlerdarkblue hover:text-buttonbgblue ml-2 bg-buttonbgblue rounded-lg p-2" @onchange="args => SetLearningSpaceLayout(args.Value!.ToString())"
-                        value="@(LearningSpaceP.LearningSpaceVm?.LearningSpaceLayout.FloorPlanName)">
-                    @foreach (var floorPlan in Enum.GetValues(typeof(FloorPlanEnum)).Cast<FloorPlanEnum>())
-                    {
-                        <option class="font-medium text-md text-adlerdarkblue bg-buttonbgblue" value="@floorPlan">@floorPlan.ToString()</option>
-                    }
-                </select>
-            </div>
         </section>
     }
     @if (LearningSpaceP.LearningSpaceVm != null)
     {
-        <div class="w-full min-h-[400px] border-2 border-b-adlerdeactivated"> @*style="width: 90%; height: 400px; border: 2px solid;"*@
+        <div class="w-full min-h-[400px] border-2 border-b-adlerdeactivated">
+            @*style="width: 90%; height: 400px; border: 2px solid;"*@
             <div class="layout-shadow w-full h-full">
                 <div class="layout bg-buttonbgblue w-[98%] h-[500px]" style="@GetCornerPointsString(LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.FloorPlanViewModel)">
 
@@ -116,7 +106,8 @@
         {
             await InvokeAsync(StateHasChanged);
             if (args.CommandName is "CreateLearningElement" or "LoadLearningElement" or 
-                "PlaceLearningElementInLayoutFromUnplaced" or "ChangeLearningSpaceLayout")
+                "PlaceLearningElementInLayoutFromUnplaced" or "ChangeLearningSpaceLayout" or 
+                "PlaceLearningElementInLayoutFromLayout" or "CreateLearningSpace" or "RemoveLearningElementFromLayout")
             {
                 await InvokeAsync(TriggerMasterLayoutStateHasChanged);
             }

@@ -1,0 +1,48 @@
+@using Presentation.PresentationLogic.LearningSpace
+@using Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans
+@using Shared
+@foreach (FloorPlanEnum floorPlan in Enum.GetValues(typeof(FloorPlanEnum)))
+{
+    <MudIconButton OnClick="(args) => OnFloorPlanButtonSelected(floorPlan, args)" Color="IsFloorPlanActive(floorPlan) ? Color.Success : Color.Error" Icon="@GetIcon(floorPlan)">@floorPlan.ToString()</MudIconButton>
+}
+<MudText>Selected Option: @SelectedFloorPlan.ToString()</MudText>
+
+@code {
+
+    // LearningSpacePresenter is injected and LearningSpaceViewModel is required to be set by the parent component
+#pragma warning disable CS8618
+    [Inject]
+    public ILearningSpacePresenter LearningSpacePresenter { get; set; }
+
+    [Parameter, EditorRequired]
+    public ILearningSpaceViewModel LearningSpaceViewModel { get; set; }
+#pragma warning restore CS8618
+
+
+    private FloorPlanEnum SelectedFloorPlan => LearningSpaceViewModel.LearningSpaceLayout.FloorPlanName;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (LearningSpaceViewModel == null || LearningSpacePresenter.LearningSpaceVm != LearningSpaceViewModel)
+            throw new ArgumentException("LearningSpaceViewModel does not match LearningSpacePresenter.LearningSpaceVm");
+    }
+
+    private void OnFloorPlanButtonSelected(FloorPlanEnum floorPlan, MouseEventArgs args)
+    {
+        LearningSpacePresenter.SetLearningSpaceLayout(floorPlan);
+    }
+
+    private bool IsFloorPlanActive(FloorPlanEnum floorPlan)
+    {
+        return floorPlan == SelectedFloorPlan;
+    }
+
+    private string GetIcon(FloorPlanEnum floorPlan)
+    {
+        return IsFloorPlanActive(floorPlan) ?
+            FloorPlanViewModelProvider.GetFloorPlan(floorPlan).GetIconActive
+            : FloorPlanViewModelProvider.GetFloorPlan(floorPlan).GetIconInactive;
+    }
+
+}

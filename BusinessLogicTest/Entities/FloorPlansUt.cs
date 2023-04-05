@@ -8,7 +8,6 @@ namespace BusinessLogicTest.Entities;
 public class FloorPlansUt
 {
     [Test]
-    [TestCase(FloorPlanEnum.NoFloorPlan, typeof(NoFloorPlan), 0)]
     [TestCase(FloorPlanEnum.Rectangle2X2, typeof(Rectangle2X2), 4)]
     [TestCase(FloorPlanEnum.LShape3L2, typeof(LShape3L2), 5)]
     [TestCase(FloorPlanEnum.Rectangle2X3, typeof(Rectangle2X3), 6)]

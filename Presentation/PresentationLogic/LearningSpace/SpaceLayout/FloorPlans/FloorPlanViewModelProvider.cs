@@ -8,7 +8,6 @@ public static class FloorPlanViewModelProvider
     {
         return floorPlanName switch
         {
-            FloorPlanEnum.NoFloorPlan => new NoFloorPlanViewModel(),
             FloorPlanEnum.LShape3L2 => new LShape3L2ViewModel(),
             FloorPlanEnum.Rectangle2X2 => new Rectangle2X2ViewModel(),
             FloorPlanEnum.Rectangle2X3 => new Rectangle2X3ViewModel(),
