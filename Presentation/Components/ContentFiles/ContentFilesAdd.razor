@@ -1,4 +1,5 @@
 @using Presentation.Components.Forms.Content
+@using Presentation.Components.Forms
 @using Presentation.PresentationLogic.API
 <MudStack Class="w-full">
     <div class="flex flex-col">
@@ -25,14 +26,20 @@
             </ButtonTemplate>
         </MudFileUpload>
     </div>
-    <AddLinkForm/>
+    <Collapsable Title="Add Link" Collapsed="true">
+        <AddLinkForm/>
+    </Collapsable>
+
 </MudStack>
+
 @code {
+
     [Inject]
     private IPresentationLogic PresentationLogic { get; set; }
+
     [Inject]
     private ILogger<ContentFilesAdd> Logger { get; set; }
-    
+
     [CascadingParameter]
     public ContentFilesContainer ContentFilesContainer { get; set; }
 
@@ -49,7 +56,7 @@
             ToggleSpinner();
             Logger.LogTrace("Entered OnFilesChanged in ContentFilesAdd");
             Logger.LogTrace("Getting up to 10 files from InputFileChangeEventArgs");
-            
+
             var files = obj.GetMultipleFiles(10);
             Logger.LogDebug("Got {FileCount} files from InputFileChangeEventArgs", files.Count);
 
@@ -58,17 +65,17 @@
                 Logger.LogTrace("Opening stream for file {FileName}, Filesize is {FileSize}", file.Name, file.Size);
                 await using var stream = file.OpenReadStream(1_000_000_000);
                 Logger.LogTrace("BrowserFileStream opened");
-                
+
                 Logger.LogTrace("Copying BrowserFileStream to MemoryStream");
                 using var memoryStream = new MemoryStream();
                 await stream.CopyToAsync(memoryStream);
-                
+
                 Logger.LogTrace("Calling LoadLearningContentViewModel");
-                //TODO: report when a file with same content already exists
+    //TODO: report when a file with same content already exists
                 PresentationLogic.LoadLearningContentViewModel(file.Name, memoryStream);
                 Logger.LogTrace("LoadLearningContentViewModel returned");
             }
-            
+
             Logger.LogTrace("Rerendering ContentFilesContainer");
             await ContentFilesContainer.RerenderAsync();
             ToggleSpinner();
@@ -90,4 +97,5 @@
     {
         DragClass = "";
     }
+
 }

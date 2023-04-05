@@ -8,7 +8,6 @@
 <BaseForm TForm="LinkContentFormModel" TEntity="LinkContent" OnValidSubmit="OnValidSubmit"
           SnackbarMessage="Link added" FormDataContainer="FormDataContainer">
     <Fields>
-        <MudText Align="Align.Left" Typo="Typo.h6">Add link</MudText>
         <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                       For="@(() => FormModel.Name)"
                       Immediate="true"
