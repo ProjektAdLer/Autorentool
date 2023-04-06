@@ -18,7 +18,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
 {
     public LearningWorldPresenter(
         IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter,
-        ILogger<LearningWorldPresenter> logger, IAuthoringToolWorkspaceViewModel authoringToolWorkspaceViewModel)
+        ILogger<LearningWorldPresenter> logger, IAuthoringToolWorkspaceViewModel authoringToolWorkspaceViewModel, IErrorService errorService)
     {
         _learningSpacePresenter = learningSpacePresenter;
         _presentationLogic = presentationLogic;
@@ -26,11 +26,13 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         authoringToolWorkspaceViewModel.PropertyChanged += OnWorkspacePropertyChanged;
         //first-time update in case a learning world was selected before we were instantiated 
         LearningWorldVm = authoringToolWorkspaceViewModel.SelectedLearningWorld;
+        _errorService = errorService;
     }
 
     private readonly IPresentationLogic _presentationLogic;
     private readonly ILearningSpacePresenter _learningSpacePresenter;
     private readonly ILogger<LearningWorldPresenter> _logger;
+    private readonly IErrorService _errorService;
 
     private ILearningWorldViewModel? _learningWorldVm;
     private IObjectInPathWayViewModel? _newConditionSourceObject;
@@ -200,7 +202,11 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         double positionY = 0D)
     {
         if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
+        {
+            _errorService.SetError("Error while creating learning space; No Learning World selected");
+            return;
+        }
+            
         _presentationLogic.CreateLearningSpace(LearningWorldVm, name, description, goals,
             requiredPoints, positionX, positionY);
         //TODO: Return error in the command in case of failure

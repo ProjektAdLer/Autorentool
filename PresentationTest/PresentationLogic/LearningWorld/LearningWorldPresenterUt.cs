@@ -225,12 +225,14 @@ public class LearningWorldPresenterUt
     }
 
     [Test]
-    public void CreateNewLearningSpace_SelectedLearningWorldIsNull_ThrowsException()
+    public void CreateNewLearningSpace_SelectedLearningWorldIsNull_CallsErrorService()
     {
-        var systemUnderTest = CreatePresenterForTesting();
-        var ex = Assert.Throws<ApplicationException>(() =>
-            systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5));
-        Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
+        var errorService = Substitute.For<IErrorService>();
+        var systemUnderTest = CreatePresenterForTesting(errorService:errorService);
+
+        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5);
+        
+        errorService.Received().SetError("Error while creating learning space; No Learning World selected");
     }
 
     #endregion
@@ -946,13 +948,14 @@ public class LearningWorldPresenterUt
 
     private LearningWorldPresenter CreatePresenterForTesting(IPresentationLogic? presentationLogic = null,
         ILearningSpacePresenter? learningSpacePresenter = null,
-        ILogger<LearningWorldPresenter>? logger = null)
+        ILogger<LearningWorldPresenter>? logger = null, IErrorService? errorService = null)
     {
         presentationLogic ??= Substitute.For<IPresentationLogic>();
         learningSpacePresenter ??= Substitute.For<ILearningSpacePresenter>();
         logger ??= Substitute.For<ILogger<LearningWorldPresenter>>();
+        errorService ??= Substitute.For<IErrorService>();
         _authoringToolWorkspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         return new LearningWorldPresenter(presentationLogic, learningSpacePresenter, logger,
-            _authoringToolWorkspaceViewModel);
+            _authoringToolWorkspaceViewModel, errorService);
     }
 }

@@ -413,12 +413,13 @@ public class AuthoringToolWorkspacePresenterUt
     }
 
     private LearningWorldPresenter CreateLearningWorldPresenter(IPresentationLogic? presentationLogic = null,
-        ILearningSpacePresenter? learningSpacePresenter = null, ILogger<LearningWorldPresenter>? logger = null)
+        ILearningSpacePresenter? learningSpacePresenter = null, ILogger<LearningWorldPresenter>? logger = null, IErrorService? errorService = null)
     {
         presentationLogic ??= Substitute.For<IPresentationLogic>();
         learningSpacePresenter ??= Substitute.For<ILearningSpacePresenter>();
         logger ??= Substitute.For<ILogger<LearningWorldPresenter>>();
+        errorService ??= Substitute.For<IErrorService>();
         _authoringToolWorkspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
-        return new LearningWorldPresenter(presentationLogic, learningSpacePresenter, logger, _authoringToolWorkspaceViewModel);
+        return new LearningWorldPresenter(presentationLogic, learningSpacePresenter, logger, _authoringToolWorkspaceViewModel, errorService);
     }
 }

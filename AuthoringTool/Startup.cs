@@ -113,6 +113,7 @@ public class Startup
             (ILearningWorldPresenterOverviewInterface) p.GetService(typeof(ILearningWorldPresenter))!);
         services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
+        services.AddSingleton<IErrorService, ErrorService>();
         services.AddSingleton<ILearningElementDropZoneHelper, LearningElementDropZoneHelper>();
         services.AddTransient(typeof(IFormDataContainer<,>), typeof(FormDataContainer<,>));
     }
