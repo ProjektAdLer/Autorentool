@@ -5,9 +5,11 @@
 @using Presentation.Components
 <main class="overflow-hidden relative min-h-screen h-screen w-screen bg-gradient-to-br m-0 from-adlerbggradientfrom to-adlerbggradientto">
     <HeaderBar/>
-    <article class="p-2 flex flex-col items-center gap-10 overflow-hidden">
-        <section class="w-1/3 h-12 flex rounded-lg items-center justify-center">
-            <h3 class="font-bold text-2xl text-center text-adlerdarkblue">My Learning Worlds</h3>
+    <article class="p-2 flex flex-col items-center gap-6 overflow-hidden">
+        <h3 class="font-bold text-2xl text-center text-adlerdarkblue">My Learning Worlds</h3>
+        <section class="flex h-12 flex rounded-lg items-center justify-center">
+            <MudButton StartIcon="@Icons.Material.Filled.UploadFile" Class="btn-standard p-6" Size="Size.Large" OnClick="LoadLearningWorldAsync">Import Learning World</MudButton>
+            <MudButton StartIcon="@Icons.Material.Filled.Add" Class="btn-standard p-6" Size="Size.Large" OnClick="CreateLearningWorld">New Learning World</MudButton>
         </section>
         <section class="flex flex-col m-auto gap-8">
             <MudGrid Class="flex justify-center" Spacing="2">
@@ -19,14 +21,13 @@
                 {
                     <LearningWorldCard LearningWorldPath="@myLearningWorld" OnOpenLearningWorld="OpenLearningWorld" OnDeleteFromSaved="MyLearningWorldsProvider.DeletePathFromSavedLearningWorlds" IsLoaded="false"/>
                 }
-                <MudIconButton Icon="@Icons.Material.Filled.UploadFile" Class="w-30 h-40" Size="Size.Large" OnClick="LoadLearningWorldAsync"/>
-                <MudIconButton Icon="@Icons.Material.Filled.Add" Class="w-30 h-40" Size="Size.Large" OnClick="CreateLearningWorld"/>
-
             </MudGrid>
         </section>
         <MudButton Class="btn-standard normal-case" @onclick="OnClickMyLearningWorldsOverview">Gehe zur Lernwelt</MudButton>
-        <ExportButton/>
-        <DebugButton></DebugButton>
+        <section class="flex justify-self-end justify-center items-center">
+            <ExportButton/>
+            <DebugButton/>
+        </section>
         <MudDrawer Width="26%" Height="100%" @bind-Open="_createLearningWorldDialogOpen" Variant="@DrawerVariant.Temporary" Position="DrawerPosition.Left">
             <MudDrawerContent>
                 <CreateWorldForm OnSubmitted="() => _createLearningWorldDialogOpen = false"/>
