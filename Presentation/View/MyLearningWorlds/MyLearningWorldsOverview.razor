@@ -3,7 +3,7 @@
 @using Shared
 @using Presentation.Components.Forms.World
 @using Presentation.Components
-<main class="overflow-hidden relative min-h-screen h-screen w-screen bg-gradient-to-br m-0 from-adlerbggradientfrom to-adlerbggradientto">
+<main class="overflow-hidden relative min-h-screen max-h-screen h-screen w-screen bg-gradient-to-br m-0 from-adlerbggradientfrom to-adlerbggradientto">
     <HeaderBar/>
     <article class="p-2 flex flex-col items-center gap-6 overflow-hidden">
         <h3 class="font-bold text-2xl text-center text-adlerdarkblue">My Learning Worlds</h3>
@@ -11,8 +11,8 @@
             <MudButton StartIcon="@Icons.Material.Filled.UploadFile" Class="btn-standard p-6" Size="Size.Large" OnClick="LoadLearningWorldAsync">Import Learning World</MudButton>
             <MudButton StartIcon="@Icons.Material.Filled.Add" Class="btn-standard p-6" Size="Size.Large" OnClick="CreateLearningWorld">New Learning World</MudButton>
         </section>
-        <section class="flex flex-col m-auto gap-8">
-            <MudGrid Class="flex justify-center" Spacing="2">
+        <section class="flex flex-col w-5/6 m-auto bg-blacktrans-200 p-2 rounded-lg">
+            <MudGrid Class="flex justify-center overflow-auto h-96 shrink" Spacing="2">
                 @foreach (var myLearningWorld in MyLearningWorldsProvider.GetLoadedLearningWorlds())
                 {
                     <LearningWorldCard LearningWorldPath="@myLearningWorld" OnOpenLearningWorld="OpenLearningWorld" IsLoaded="true"/>

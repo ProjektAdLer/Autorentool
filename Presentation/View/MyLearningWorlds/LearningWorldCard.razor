@@ -1,7 +1,7 @@
 @using Shared
 <MudItem>
     <MudCard Outlined="true" Elevation="1" Class="w-60 h-40">
-        <MudCardHeader Class="flex justify-center items-center">
+        <MudCardHeader Class="flex justify-center items-center break-word w-full">
             @*<CardHeaderAvatar>
                 @switch (_cardType)
                 {
@@ -23,7 +23,7 @@
                 {
                     case CardType.IsLoaded:
                     {
-                        <MudText Style="overflow-wrap: break-word;">
+                        <MudText Class="break-all">
                             @LearningWorldPath!.Name
                         </MudText>
                         break;
@@ -31,7 +31,7 @@
 
                     case CardType.IsSaved:
                     {
-                        <MudText Style="overflow-wrap: break-word;">
+                        <MudText Class="break-all">
                             @LearningWorldPath!.Name
                         </MudText>
                         break;
