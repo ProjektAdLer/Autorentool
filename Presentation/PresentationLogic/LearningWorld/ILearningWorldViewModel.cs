@@ -27,5 +27,4 @@ public interface ILearningWorldViewModel : ISerializableViewModel, IDisplayableL
     bool ShowingLearningSpaceView { get; set; }
     ICollection<ILearningElementViewModel> UnplacedLearningElements { get; set; }
     ILearningElementViewModel? SelectedLearningElement { get; set; }
-    void OnSelectedElementChanged(object sender, EventArgs e);
 }

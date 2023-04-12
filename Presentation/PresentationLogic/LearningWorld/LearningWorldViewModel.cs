@@ -214,10 +214,4 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         OnPropertyChanged(propertyName);
         return true;
     }
-    
-    public void OnSelectedElementChanged(object sender, EventArgs e) {
-        if (sender is LearningSpaceViewModel space && space.SelectedLearningElement != null) {
-            SelectedLearningElement = space.SelectedLearningElement;
-        }
-    }
 }
