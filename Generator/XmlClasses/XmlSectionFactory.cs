@@ -57,7 +57,7 @@ public class XmlSectionFactory : IXmlSectionFactory
         if (!string.IsNullOrEmpty(requiredSpacesToEnter))
         {
             SectionsSectionXmlSection.AvailabilityJson =
-                "{\"op\":\"&amp;\",\"c\":[{\"type\":\"adler\",\"condition\":\""+requiredSpacesToEnter+"\"}],\"showc\":[true]}";
+                "{\"op\":\"&\",\"c\":[{\"type\":\"adler\",\"condition\":\""+requiredSpacesToEnter+"\"}],\"showc\":[true]}";
         }
         if(requiredPointsToComplete >= 0)
         {
