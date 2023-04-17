@@ -4,6 +4,7 @@ using Presentation.Components;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Topic;
 using Shared;
 using Shared.Command;
 
@@ -11,7 +12,7 @@ namespace Presentation.PresentationLogic.LearningSpace;
 
 public interface ILearningSpacePresenter : INotifyPropertyChanged
 {
-    void EditLearningSpace(string name, string description, string goals, int requiredPoints);
+    void EditLearningSpace(string name, string description, string goals, int requiredPoints, ITopicViewModel? topic);
     ILearningSpaceViewModel? LearningSpaceVm { get; }
     void SetSelectedLearningElement(ILearningElementViewModel learningElement);
     void DeleteSelectedLearningElement();

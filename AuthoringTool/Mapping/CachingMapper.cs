@@ -6,6 +6,7 @@ using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Topic;
 using Shared;
 
 namespace AuthoringTool.Mapping;
@@ -38,6 +39,9 @@ public class CachingMapper : ICachingMapper
                 break;
             case (LearningSpace s, ILearningSpaceViewModel d):
                 MapInternal(s, d);
+                break;
+            case (Topic s, TopicViewModel d):
+                MapInternal(s,d);
                 break;
             default:
                 _mapper.Map(entity, viewModel);
@@ -74,6 +78,9 @@ public class CachingMapper : ICachingMapper
                 key = vM.Id;
                 break;
             case LearningElementViewModel vM:
+                key = vM.Id;
+                break;
+            case TopicViewModel vM:
                 key = vM.Id;
                 break;
         }
@@ -120,11 +127,18 @@ public class CachingMapper : ICachingMapper
         {
             if(_cache.ContainsKey(s.Id)) learningWorldVm.LearningSpaces.Add(Get<LearningSpaceViewModel>(s.Id));
         }
-        var newPathWayConditionInEntity = learningWorldEntity.PathWayConditions
+        var newPathWayConditionsInEntity = learningWorldEntity.PathWayConditions
             .FindAll(p => learningWorldVm.PathWayConditions.All(l => p.Id != l.Id));
-        foreach (var s in newPathWayConditionInEntity)
+        foreach (var s in newPathWayConditionsInEntity)
         {
             if(_cache.ContainsKey(s.Id)) learningWorldVm.PathWayConditions.Add(Get<PathWayConditionViewModel>(s.Id));
+        }
+
+        var newTopicsInEntity = learningWorldEntity.Topics
+            .FindAll(p => learningWorldVm.Topics.All(l => p.Id != l.Id));
+        foreach (var s in newTopicsInEntity)
+        {
+            if(_cache.ContainsKey(s.Id)) learningWorldVm.Topics.Add(Get<TopicViewModel>(s.Id));
         }
         _mapper.Map(learningWorldEntity, learningWorldVm);
         foreach (var conditionVm in learningWorldVm.PathWayConditions.Where(w =>
@@ -136,6 +150,24 @@ public class CachingMapper : ICachingMapper
                      !_cache.ContainsKey(w.Id)))
         {
             Cache(spaceVm);
+        }
+
+        var newLearningSpacesInViewModel = from space in newLearningSpacesInEntity
+            from spaceVm in learningWorldVm.LearningSpaces
+            where space.Id == spaceVm.Id
+            select spaceVm;
+
+        foreach (var matchingSpace in newLearningSpacesInViewModel)
+        {
+            if (matchingSpace.AssignedTopic != null && _cache.ContainsKey(matchingSpace.AssignedTopic.Id))
+            {
+                matchingSpace.AssignedTopic = Get<TopicViewModel>(matchingSpace.AssignedTopic.Id);
+            }
+        }
+
+        foreach (var topicVm in learningWorldVm.Topics.Where(t => !_cache.ContainsKey(t.Id)))
+        {
+            Cache(topicVm);
         }
     }
 
@@ -164,6 +196,14 @@ public class CachingMapper : ICachingMapper
         {
             Cache(elementVm);
         }
+        if(learningSpaceVm.AssignedTopic != null && _cache.ContainsKey(learningSpaceVm.AssignedTopic.Id))
+            learningSpaceVm.AssignedTopic = Get<TopicViewModel>(learningSpaceVm.AssignedTopic.Id);
+    }
+
+    private void MapInternal(Topic topic, TopicViewModel topicVm)
+    {
+        topicVm = Cache(topicVm);
+        _mapper.Map(topic, topicVm);
     }
 
     private void OnRemovedCommandsFromStacks(object sender, RemoveCommandsFromStacksEventArgs removeCommandsFromStacksEventArgs)

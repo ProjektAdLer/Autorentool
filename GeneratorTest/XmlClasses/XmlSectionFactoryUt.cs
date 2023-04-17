@@ -18,7 +18,7 @@ public class XmlSectionFactoryUt
         var mockReadDsl = Substitute.For<IReadDsl>();
         var mockSection = Substitute.For<ISectionsSectionXmlSection>();
         var mockInforef = Substitute.For<ISectionsInforefXmlInforef>();
-        
+
         // Act
         var systemUnderTest = new XmlSectionFactory(mockReadDsl, null, mockSection, mockInforef);
 
@@ -37,21 +37,27 @@ public class XmlSectionFactoryUt
         var mockFileSystem = new MockFileSystem();
         var mockSection = Substitute.For<ISectionsSectionXmlSection>();
         var mockInforef = Substitute.For<ISectionsInforefXmlInforef>();
+        mockSection.PluginLocalAdlerSection = Substitute.For<SectionsSectionXmlPluginLocalAdlerSection>();
+        mockSection.PluginLocalAdlerSection.AdlerSection = Substitute.For<SectionsSectionXmlAdlerSection>();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
 
-        var mockIdentifierJson = new IdentifierJson("TestValue", "TestType");
+        var mockIdentifierJson = new LmsElementIdentifierJson("TestValue", "TestType");
 
         var mockContent = new List<int>();
         mockContent.Add(1);
-        var learningSpaceJson1 = new LearningSpaceJson(1, mockIdentifierJson, mockContent, 0, 0, "");
-        var learningSpaceJson2 = new LearningSpaceJson(2, mockIdentifierJson, mockContent, 0, 0,"");
+        var worldData = new LearningSpaceJson(0, mockIdentifierJson, "", new List<int>(), -1);
+        var learningSpaceJson1 =
+            new LearningSpaceJson(1, mockIdentifierJson, "s", mockContent, 0, requiredSpacesToEnter: "1");
+        var learningSpaceJson2 =
+            new LearningSpaceJson(2, mockIdentifierJson, "s", mockContent, 0, requiredSpacesToEnter: "2");
 
         var learningSpaceList = new List<LearningSpaceJson>();
+        learningSpaceList.Add(worldData);
         learningSpaceList.Add(learningSpaceJson1);
         learningSpaceList.Add(learningSpaceJson2);
 
         mockReadDsl.GetSectionList().Returns(learningSpaceList);
-        
+
         // Act
         var systemUnderTest = new XmlSectionFactory(mockReadDsl, mockFileSystem, mockSection, mockInforef);
         systemUnderTest.CreateSectionFactory();
@@ -60,19 +66,29 @@ public class XmlSectionFactoryUt
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.LearningSpaceJsons, Is.EqualTo(learningSpaceList));
-            Assert.That(mockFileSystem.Directory.Exists(Path.Join(currWorkDir, "XMLFilesForExport", "sections", "section_"+learningSpaceJson1.SpaceId)), Is.True);
-            Assert.That(mockFileSystem.Directory.Exists(Path.Join(currWorkDir, "XMLFilesForExport", "sections", "section_"+learningSpaceJson2.SpaceId)), Is.True);
-            Assert.That(systemUnderTest.SectionsSectionXmlSection.Id, Is.EqualTo(learningSpaceJson2.SpaceId.ToString()));
-            Assert.That(systemUnderTest.SectionsSectionXmlSection.Number, Is.EqualTo(learningSpaceJson2.SpaceId.ToString()));
-            Assert.That(systemUnderTest.SectionsSectionXmlSection.Name, Is.EqualTo(learningSpaceJson2.Identifier.Value));
-            Assert.That(systemUnderTest.SectionsSectionXmlSection.Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
-            
+            Assert.That(
+                mockFileSystem.Directory.Exists(Path.Join(currWorkDir, "XMLFilesForExport", "sections",
+                    "section_" + worldData.SpaceId)), Is.True);
+            Assert.That(
+                mockFileSystem.Directory.Exists(Path.Join(currWorkDir, "XMLFilesForExport", "sections",
+                    "section_" + learningSpaceJson1.SpaceId)), Is.True);
+            Assert.That(
+                mockFileSystem.Directory.Exists(Path.Join(currWorkDir, "XMLFilesForExport", "sections",
+                    "section_" + learningSpaceJson2.SpaceId)), Is.True);
+            Assert.That(systemUnderTest.SectionsSectionXmlSection.Id,
+                Is.EqualTo(learningSpaceJson2.SpaceId.ToString()));
+            Assert.That(systemUnderTest.SectionsSectionXmlSection.Number,
+                Is.EqualTo(learningSpaceJson2.SpaceId.ToString()));
+            Assert.That(systemUnderTest.SectionsSectionXmlSection.Name, Is.EqualTo(learningSpaceJson2.SpaceName));
+            Assert.That(systemUnderTest.SectionsSectionXmlSection.Timemodified,
+                Is.EqualTo(systemUnderTest.CurrentTime));
+
+            mockInforef.Received().Serialize("", worldData.SpaceId.ToString());
             mockInforef.Received().Serialize("", learningSpaceJson1.SpaceId.ToString());
             mockInforef.Received().Serialize("", learningSpaceJson2.SpaceId.ToString());
+            mockSection.Received().Serialize("", worldData.SpaceId.ToString());
             mockSection.Received().Serialize("", learningSpaceJson1.SpaceId.ToString());
             mockSection.Received().Serialize("", learningSpaceJson2.SpaceId.ToString());
         });
-
     }
-    
 }

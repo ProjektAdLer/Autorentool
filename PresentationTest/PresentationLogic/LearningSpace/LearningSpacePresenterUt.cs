@@ -10,6 +10,7 @@ using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
+using Presentation.PresentationLogic.Topic;
 using Shared;
 
 namespace PresentationTest.PresentationLogic.LearningSpace;
@@ -26,7 +27,7 @@ public class LearningSpacePresenterUt
     {
         var systemUnderTest = CreatePresenterForTesting();
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditLearningSpace("a","d","e", 5));
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditLearningSpace("a","d","e", 5, null));
         Assert.That(ex!.Message, Is.EqualTo("LearningSpaceVm is null"));
     }
 
@@ -34,13 +35,14 @@ public class LearningSpacePresenterUt
     public void EditLearningSpace_CallsPresentationLogic()
     {
         var space = new LearningSpaceViewModel("a", "d", "e");
+        var topic = new TopicViewModel("abc");
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         
         systemUnderTest.SetLearningSpace(space);
-        systemUnderTest.EditLearningSpace("space","d","e", 5);
+        systemUnderTest.EditLearningSpace("space","d","e", 5, topic);
         
-        presentationLogic.Received().EditLearningSpace(space, "space","d","e", 5);
+        presentationLogic.Received().EditLearningSpace(space, "space","d","e", 5, topic);
     }
 
     #endregion

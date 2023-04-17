@@ -13,6 +13,7 @@ using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Topic;
 using Shared;
 
 namespace AuthoringToolTest.Mapping;
@@ -147,10 +148,11 @@ public class CachingMapperUt
         var spaceEntity = new LearningSpace("n", "d", "g", 5);
         var conditionEntity = new PathWayCondition(ConditionEnum.And, 2, 1);
         var pathWayEntity = new LearningPathway(spaceEntity,conditionEntity);
+        var topicEntity = new Topic("a");
         world.LearningSpaces.Add(spaceEntity);
         world.PathWayConditions.Add(conditionEntity);
         world.LearningPathways.Add(pathWayEntity);
-        
+        world.Topics.Add(topicEntity);
         var systemUnderTest = CreateTestableCachingMapper();
 
         systemUnderTest.Map(world, worldViewModel);
@@ -161,16 +163,19 @@ public class CachingMapperUt
         Assert.That(worldViewModel.LearningSpaces.First().Id, Is.EqualTo(spaceEntity.Id));
         Assert.That(worldViewModel.PathWayConditions.First().Id, Is.EqualTo(conditionEntity.Id));
         Assert.That(worldViewModel.LearningPathWays.First().Id, Is.EqualTo(pathWayEntity.Id));
+        Assert.That(worldViewModel.Topics.First().Id, Is.EqualTo(topicEntity.Id));
         
         var spaceViewModel = worldViewModel.LearningSpaces.First();
         var conditionViewModel = worldViewModel.PathWayConditions.First();
-        var pathWayViewModel = worldViewModel.LearningPathWays.First();
+        var topicViewModel = worldViewModel.Topics.First();
         worldViewModel.LearningSpaces.Clear();
         worldViewModel.PathWayConditions.Clear();
         worldViewModel.LearningPathWays.Clear();
+        worldViewModel.Topics.Clear();
         Assert.That(worldViewModel.LearningSpaces, Has.Count.EqualTo(0));
         Assert.That(worldViewModel.PathWayConditions, Has.Count.EqualTo(0));
         Assert.That(worldViewModel.LearningPathWays, Has.Count.EqualTo(0));
+        Assert.That(worldViewModel.Topics, Has.Count.EqualTo(0));
         
         systemUnderTest.Map(world, worldViewModel);
         
@@ -179,6 +184,32 @@ public class CachingMapperUt
         Assert.That(worldViewModel.LearningPathWays, Has.Count.EqualTo(1));
         Assert.That(worldViewModel.LearningSpaces.First(), Is.EqualTo(spaceViewModel));
         Assert.That(worldViewModel.PathWayConditions.First(), Is.EqualTo(conditionViewModel));
+        Assert.That(worldViewModel.Topics.First(), Is.EqualTo(topicViewModel));
+    }
+
+    [Test]
+    public void MapLearningWorldEntityToViewModel_NewSpaceWithTopic_UsingCachedTopicVm()
+    {
+        var world = new LearningWorld("n","s","a","l","d","g");
+        var worldViewModel = new LearningWorldViewModel("x","x","x","x","x","x");
+        var spaceEntity = new LearningSpace("n", "s", "a", "d", "g", 5);
+        var topicEntity = new Topic("a");
+        spaceEntity.AssignedTopic = topicEntity;
+        world.Topics.Add(topicEntity);
+        
+        var config = new MapperConfiguration(MappingProfile.Configure);
+        var mapper = config.CreateMapper();
+        var systemUnderTest = CreateTestableCachingMapper(mapper);
+        
+        systemUnderTest.Map(world, worldViewModel);
+        
+        world.LearningSpaces.Add(spaceEntity);
+        
+        systemUnderTest.Map(world, worldViewModel);
+        
+        Assert.That(worldViewModel.Topics, Has.Count.EqualTo(1));
+        Assert.That(worldViewModel.LearningSpaces, Has.Count.EqualTo(1));
+        Assert.That(worldViewModel.LearningSpaces.First().AssignedTopic, Is.EqualTo(worldViewModel.Topics.First()));
     }
 
     [Test]
@@ -245,13 +276,16 @@ public class CachingMapperUt
         var space = new LearningSpace("n", "d", "g", 5,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X3));
         var spaceViewModel = new LearningSpaceViewModel("x","x","x",5);
+        var topicEntity = new Topic("abc");
         var elementEntity = new LearningElement("n", null!, "d", "g", LearningElementDifficultyEnum.Easy);
+        space.AssignedTopic = topicEntity;
         space.LearningSpaceLayout.LearningElements[0] = elementEntity;
         
         var systemUnderTest = CreateTestableCachingMapper();
 
         systemUnderTest.Map(space, spaceViewModel);
 
+        Assert.That(spaceViewModel.AssignedTopic?.Id, Is.EqualTo(topicEntity.Id));
         Assert.That(spaceViewModel.ContainedLearningElements.Count(), Is.EqualTo(1));
         Assert.Multiple(() =>
         {
@@ -269,15 +303,20 @@ public class CachingMapperUt
         //create space entity containing one element
         var space = new LearningSpace("n", "d", "g", 5,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X3));
+        var topicViewModel = new TopicViewModel("x");
+        var topicEntity = new Topic("x");
         var elementEntity =
             new LearningElement("n", null!, "d", "g", LearningElementDifficultyEnum.Easy);
         space.LearningSpaceLayout.LearningElements[0] = elementEntity;
+        space.AssignedTopic = topicEntity;
         //create empty view model
         var spaceViewModel = new LearningSpaceViewModel("x", "x", "x", 5,
             new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         
         var systemUnderTest = CreateTestableCachingMapper();
 
+        systemUnderTest.Map(topicViewModel, topicEntity);
+        systemUnderTest.Map(topicEntity, topicViewModel);
         //map entity into empty view model
         systemUnderTest.Map(space, spaceViewModel);
         
@@ -285,12 +324,14 @@ public class CachingMapperUt
         {
             //view model now contains one element, the one from the entity
             Assert.That(spaceViewModel.ContainedLearningElements.Count(), Is.EqualTo(1));
-            Assert.That(spaceViewModel.ContainedLearningElements.First().Id, Is.EqualTo(elementEntity.Id));
+            Assert.That(spaceViewModel.AssignedTopic?.Id, Is.EqualTo(topicEntity.Id));
+        Assert.That(spaceViewModel.ContainedLearningElements.First().Id, Is.EqualTo(elementEntity.Id));
         });
 
         //get this element and clear the layout of the view model
         var elementViewModel = spaceViewModel.ContainedLearningElements.First();
         spaceViewModel.LearningSpaceLayout.ClearAllElements();
+        spaceViewModel.AssignedTopic = null;
         Assert.That(spaceViewModel.ContainedLearningElements.Count(), Is.EqualTo(0));
         
         //change name of the element in the entity and map entity into viewmodel again
@@ -306,6 +347,7 @@ public class CachingMapperUt
             Assert.That(spaceViewModel.ContainedLearningElements.Count(), Is.EqualTo(1));
             Assert.That(spaceViewModel.ContainedLearningElements.First(), Is.EqualTo(elementViewModel));
             Assert.That(spaceViewModel.ContainedLearningElements.First(), Is.EqualTo(systemUnderTest.ReadOnlyCache[elementEntity.Id]));
+            Assert.That(spaceViewModel.AssignedTopic, Is.EqualTo(topicViewModel));
             Assert.That(elementViewModel, Is.EqualTo(systemUnderTest.ReadOnlyCache[elementEntity.Id]));
         });
     }

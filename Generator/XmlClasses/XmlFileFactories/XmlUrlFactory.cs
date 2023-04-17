@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions;
+﻿using System.Globalization;
+using System.IO.Abstractions;
 using Generator.DSL;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 using Generator.XmlClasses.Entities._activities.Grades.xml;
@@ -18,6 +19,7 @@ public class XmlUrlFactory : IXmlUrlFactory
     public string UrlParentSpaceId;
     public string UrlLink;
     public string UrlDescription;
+    public float UrlPoints;
     public List<LearningElementJson> UrlList;
     public IActivitiesGradesXmlGradeItem ActivitiesGradesXmlGradeItem { get; }
     public IActivitiesGradesXmlGradeItems ActivitiesGradesXmlGradeItems { get; }
@@ -47,6 +49,7 @@ public class XmlUrlFactory : IXmlUrlFactory
         UrlParentSpaceId = "";
         UrlLink = "";
         UrlDescription = "";
+        UrlPoints = 0;
         UrlList = new List<LearningElementJson>();
 
         CurrentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
@@ -83,11 +86,12 @@ public class XmlUrlFactory : IXmlUrlFactory
     {
         foreach (var url in urlList)
         {
-            UrlId = url.Id.ToString();
-            UrlName = url.Identifier.Value;
+            UrlId = url.ElementId.ToString();
+            UrlName = url.LmsElementIdentifier.Value;
             UrlParentSpaceId = url.LearningSpaceParentId.ToString();
             UrlLink = url.Url;
-            UrlDescription = url.Description ?? "";
+            UrlDescription = url.ElementDescription ?? "";
+            UrlPoints = url.ElementMaxScore;
 
             SetParametersActivityUrl();
         }
@@ -128,6 +132,8 @@ public class XmlUrlFactory : IXmlUrlFactory
         ActivitiesModuleXmlModule.Added = CurrentTime;
         ActivitiesModuleXmlModule.Id = UrlId;
         ActivitiesModuleXmlModule.Completion = "1";
+        //AdlerScore can not be null at this point because it is set in the constructor
+        ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerScore!.ScoreMax = UrlPoints.ToString("F5", CultureInfo.InvariantCulture);
 
         ActivitiesModuleXmlModule.Serialize("url", UrlId);
         

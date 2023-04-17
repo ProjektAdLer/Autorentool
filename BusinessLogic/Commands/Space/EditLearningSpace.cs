@@ -9,17 +9,19 @@ public class EditLearningSpace : IUndoCommand
     private readonly string _name;
     private readonly string _description;
     private readonly string _goals;
+    private readonly Topic? _topic;
     private readonly int _requiredPoints;
     private readonly Action<LearningSpace> _mappingAction;
     private IMemento? _memento;
 
     public EditLearningSpace(LearningSpace learningSpace, string name,
-        string description, string goals, int requiredPoints, Action<LearningSpace> mappingAction)
+        string description, string goals, int requiredPoints, Topic? topic, Action<LearningSpace> mappingAction)
     {
         LearningSpace = learningSpace;
         _name = name;
         _description = description;
         _goals = goals;
+        _topic = topic;
         _requiredPoints = requiredPoints;
         _mappingAction = mappingAction;
     }
@@ -31,6 +33,7 @@ public class EditLearningSpace : IUndoCommand
         LearningSpace.Name = _name;
         LearningSpace.Description = _description;
         LearningSpace.Goals = _goals;
+        LearningSpace.AssignedTopic = _topic;
         LearningSpace.RequiredPoints = _requiredPoints;
         
         _mappingAction.Invoke(LearningSpace);

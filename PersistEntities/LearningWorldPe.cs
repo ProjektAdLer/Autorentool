@@ -10,7 +10,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
 {
     public LearningWorldPe(string name, string shortname, string authors, string language, string description,
         string goals, List<LearningSpacePe>? learningSpaces = null, List<PathWayConditionPe>? pathWayConditions = null,
-        List<LearningPathwayPe>? learningPathWays = null)
+        List<LearningPathwayPe>? learningPathWays = null, List<TopicPe>? topics = null)
     {
         Id = Guid.NewGuid();
         Name = name;
@@ -23,6 +23,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         PathWayConditions = pathWayConditions ?? new List<PathWayConditionPe>();
         LearningPathways = learningPathWays ?? new List<LearningPathwayPe>();
         UnplacedLearningElements = new List<ILearningElementPe>();
+        Topics = topics ?? new List<TopicPe>();
     }
 
     /// <summary>
@@ -41,6 +42,7 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
         PathWayConditions = new List<PathWayConditionPe>();
         LearningPathways = new List<LearningPathwayPe>();
         UnplacedLearningElements = new List<ILearningElementPe>();
+        Topics = new List<TopicPe>();
     }
     
     [IgnoreDataMember]
@@ -55,7 +57,8 @@ public class LearningWorldPe : ILearningWorldPe, IExtensibleDataObject
     [IgnoreDataMember]
     public List<IObjectInPathWayPe> ObjectsInPathWaysPe =>
         new List<IObjectInPathWayPe>(LearningSpaces).Concat(PathWayConditions).ToList();
-
+[DataMember]
+    public List<TopicPe> Topics { get; set; }
     [DataMember]
     public string Name { get; set; }
     [DataMember]

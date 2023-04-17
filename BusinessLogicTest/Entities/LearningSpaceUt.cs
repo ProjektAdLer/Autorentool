@@ -31,9 +31,10 @@ public class LearningSpaceUt
             }
         };
         var learningSpaceLayout = new LearningSpaceLayout(learningElements, FloorPlanEnum.Rectangle2X2);
+        var assignedTopic = new Topic("topic1");
         
         var systemUnderTest = new LearningSpace(name, description, goals, requiredPoints, 
-            learningSpaceLayout, positionX: positionX, positionY: positionY);
+            learningSpaceLayout, positionX: positionX, positionY: positionY, assignedTopic:assignedTopic);
         
         Assert.Multiple(() =>
         {
@@ -41,6 +42,7 @@ public class LearningSpaceUt
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.ContainedLearningElements, Is.EqualTo(learningElements.Values));
+            Assert.That(systemUnderTest.AssignedTopic, Is.EqualTo(assignedTopic));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
         });
@@ -69,9 +71,10 @@ public class LearningSpaceUt
             }
         };
         var learningSpaceLayout = new LearningSpaceLayout(learningElements, FloorPlanEnum.Rectangle2X2);
+        var assignedTopic = new Topic("topic1");
         
         var systemUnderTest = new LearningSpace(name, description, goals, requiredPoints, 
-            learningSpaceLayout, positionX: positionX, positionY: positionY);
+            learningSpaceLayout, positionX: positionX, positionY: positionY, assignedTopic:assignedTopic);
 
         var learningSpaceMemento = systemUnderTest.GetMemento();
         var learningSpaceLayoutMemento = systemUnderTest.LearningSpaceLayout.GetMemento();
@@ -94,12 +97,14 @@ public class LearningSpaceUt
                 1, ele2Changed
             }
         };
+        var topicChanged = new Topic("topic2");
 
         systemUnderTest.Name = nameChanged;
         systemUnderTest.Description = descriptionChanged;
         systemUnderTest.Goals = goalsChanged;
         systemUnderTest.PositionX = positionXChanged;
         systemUnderTest.PositionY = positionYChanged;
+        systemUnderTest.AssignedTopic = topicChanged;
         systemUnderTest.LearningSpaceLayout.LearningElements = learningElements;
 
         Assert.Multiple(() =>
@@ -111,6 +116,7 @@ public class LearningSpaceUt
             Assert.That(systemUnderTest.ContainedLearningElements, Contains.Item(ele2Changed));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionXChanged));
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionYChanged));
+            Assert.That(systemUnderTest.AssignedTopic, Is.EqualTo(topicChanged));
         });
         
         systemUnderTest.RestoreMemento(learningSpaceMemento);
@@ -125,6 +131,7 @@ public class LearningSpaceUt
             Assert.That(systemUnderTest.ContainedLearningElements, Does.Not.Contain(ele2Changed));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
+            Assert.That(systemUnderTest.AssignedTopic, Is.EqualTo(assignedTopic));
         });
     }
 

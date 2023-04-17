@@ -9,5 +9,5 @@ public interface IReadDsl
     List<LearningElementJson> GetResourceList();
     List<LearningElementJson> GetLabelsList();
     List<LearningElementJson> GetUrlList();
-    List<LearningElementJson> GetSpacesAndElementsOrderedList();
+    List<LearningElementJson> GetElementsOrderedList();
 }

@@ -42,7 +42,7 @@ public class CreateDslUt
         int incrementId = 1;
         foreach (var space in listLearningSpaces)
         {
-            systemUnderTest.IdDictionary.Add(incrementId, space.Id);
+            systemUnderTest.DictionarySpaceIdToGuid.Add(incrementId, space.Id);
             incrementId++;
         }
         
@@ -205,11 +205,12 @@ public class CreateDslUt
             LearningElementDifficultyEnumPe.Easy, workload: 17, points: 2, positionX: 23);
         var ele5 = new LearningElementPe("e",content5,"pupup", "g", 
             LearningElementDifficultyEnumPe.Easy, workload: 17, points: 2, positionX: 23);
-
+var topic1 = new TopicPe("topic1");
+        var topic2 = new TopicPe("topic2");
 
         var space1 = new LearningSpacePe("ff", "ff", "ff", 5,
             null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
-            outBoundObjects: new List<IObjectInPathWayPe>())
+            outBoundObjects: new List<IObjectInPathWayPe>(), topic1)
         {
             LearningSpaceLayout =
             {
@@ -239,9 +240,9 @@ public class CreateDslUt
             }
         };
         var space2 = new LearningSpacePe("ff2", "ff", "ff", 5, 
-            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(), outBoundObjects: new List<IObjectInPathWayPe>());
+            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(), outBoundObjects: new List<IObjectInPathWayPe>(), topic1);
         var space3 = new LearningSpacePe("ff", "ff", "ff", 5, 
-            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(), outBoundObjects: new List<IObjectInPathWayPe>());
+            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(), outBoundObjects: new List<IObjectInPathWayPe>(), topic2);
         var condition1 = new PathWayConditionPe(ConditionEnumPe.And, 0, 0, 
             new List<IObjectInPathWayPe>{space1, space2}, null);
         space1.OutBoundObjects = new List<IObjectInPathWayPe>() {condition1};
@@ -249,10 +250,11 @@ public class CreateDslUt
         space2.OutBoundObjects = new List<IObjectInPathWayPe>() {space3};
         space3.InBoundObjects = new List<IObjectInPathWayPe>() {space2};
         var learningSpaces = new List<LearningSpacePe> { space1, space2, space3 };
+        var topics = new List<TopicPe>() {topic1, topic2};
         
 
         var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals,
-             learningSpaces);
+             learningSpaces, topics:topics);
 
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
         
@@ -272,12 +274,13 @@ public class CreateDslUt
         });
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.LearningWorldJson!.Identifier.Value, Is.EqualTo(name));
+            Assert.That(systemUnderTest.LearningWorldJson!.LmsElementIdentifier.Value, Is.EqualTo(learningWorld.Name));
             Assert.That(systemUnderTest.ElementsWithFileContent, Is.EquivalentTo(learningElementsSpace1));
             Assert.That(systemUnderTest.ListLearningSpaces, Is.EquivalentTo(learningSpaces));
-            Assert.That(systemUnderTest.LearningWorldJson.LearningSpaces[0].Requirements,
+            Assert.That(systemUnderTest.ListTopics, Is.EquivalentTo(topics));
+            Assert.That(systemUnderTest.LearningWorldJson.Spaces[0].RequiredSpacesToEnter,
                 Is.EqualTo(""));
-            Assert.That(systemUnderTest.LearningWorldJson.LearningSpaces[1].Requirements,
+            Assert.That(systemUnderTest.LearningWorldJson.Spaces[1].RequiredSpacesToEnter,
                 Is.EqualTo("(1)^(2)"));
         });
         Assert.Multiple(() =>
@@ -323,8 +326,7 @@ public class CreateDslUt
         };
         var learningSpaces = new List<LearningSpacePe> { space1 };
 
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals,
-             learningSpaces);
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, learningSpaces);
 
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
 

@@ -146,7 +146,7 @@ public class XmlBackupFactory : IXmlBackupFactory
         _currentTime = DateTimeOffset.Now.ToUnixTimeSeconds().ToString();
         
         _learningWorld = readDsl.GetLearningWorld();
-        _learningElement = readDsl.GetSpacesAndElementsOrderedList();
+        _learningElement = readDsl.GetElementsOrderedList();
         //_learningElement = readDsl.GetResourceList();
         //_learningElement.AddRange(readDsl.GetH5PElementsList());
         MoodleBackupXmlActivityList = new List<MoodleBackupXmlActivity>();
@@ -220,7 +220,7 @@ public class XmlBackupFactory : IXmlBackupFactory
         //set the parameter of the moodle_backup.xml file
         MoodleBackupXmlDetails.Detail = MoodleBackupXmlDetail as MoodleBackupXmlDetail ?? new MoodleBackupXmlDetail();
 
-        MoodleBackupXmlCourse.Title = _learningWorld.Identifier.Value;
+        MoodleBackupXmlCourse.Title = _learningWorld.LmsElementIdentifier.Value;
 
         //MoodleBackupXmlSettingSetting are Tags that describe the Moodle Backup Settings.
         //They are the same Options that are displayed, when a backup is created in moodle. 
@@ -275,9 +275,10 @@ public class XmlBackupFactory : IXmlBackupFactory
         //The ElementType is different for some element types
         foreach (var element in _learningElement)
         {
-            string learningElementId = element.Id.ToString();
-            string learningElementType = element.ElementType;
-            string learningElementName = element.Identifier.Value;
+            string learningElementId = element.ElementId.ToString();
+            string learningElementType = element.ElementFileType;
+            string learningElementName = element.LmsElementIdentifier.Value;
+            string learningElementSectionId = element.LearningSpaceParentId.ToString();
             if (learningElementType == "h5p")
             {
                 learningElementType = "h5pactivity";
@@ -287,17 +288,13 @@ public class XmlBackupFactory : IXmlBackupFactory
             {
                 learningElementType = "resource";
             }
-            else if (learningElementType is "space")
-            {
-                learningElementType = "label";
-            }
 
             if (MoodleBackupXmlActivityList != null)
             {
                 MoodleBackupXmlActivityList.Add(new MoodleBackupXmlActivity
                 {
                     ModuleId = learningElementId,
-                    SectionId = 0.ToString(),
+                    SectionId = learningElementSectionId,
                     ModuleName = learningElementType,
                     Title = learningElementName,
                     Directory = "activities/" + learningElementType + "_" + learningElementId,
@@ -321,7 +318,7 @@ public class XmlBackupFactory : IXmlBackupFactory
         foreach (var section in ReadDsl.GetSectionList())
         {
             var sectionId = section.SpaceId.ToString();
-            var sectionName = section.Identifier.Value;
+            var sectionName = section.SpaceName;
 
             if (MoodleBackupXmlSectionList != null)
             {
@@ -383,8 +380,8 @@ public class XmlBackupFactory : IXmlBackupFactory
         //Its important that the parameter "includeFiles" is set to "1".
         //With the OriginalCourseFormat the future learningWorld can be individualised
         MoodleBackupXmlInformation.BackupDate = _currentTime;
-        MoodleBackupXmlInformation.OriginalCourseFullname = _learningWorld.Identifier.Value;
-        MoodleBackupXmlInformation.OriginalCourseShortname = _learningWorld.Identifier.Value;
+        MoodleBackupXmlInformation.OriginalCourseFullname = _learningWorld.WorldName;
+        MoodleBackupXmlInformation.OriginalCourseShortname = _learningWorld.WorldName;
         MoodleBackupXmlInformation.OriginalCourseStartDate = _currentTime;
         MoodleBackupXmlInformation.Details = MoodleBackupXmlDetails as MoodleBackupXmlDetails ?? new MoodleBackupXmlDetails();
         MoodleBackupXmlInformation.Contents = MoodleBackupXmlContents as MoodleBackupXmlContents ?? new MoodleBackupXmlContents();

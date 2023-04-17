@@ -6,41 +6,44 @@
 public class LearningElementJson : ILearningElementJson
 {
     // incremented ID for every element, it will also be used as moduleid, sectionid, contextid ...
-    public LearningElementJson(int id, IdentifierJson identifier, string url, string elementCategory, 
-        string elementType, int learningSpaceParentId, List<LearningElementValueJson> learningElementValueList, 
-        string? description=null, string? goals = null)
+    public LearningElementJson(int elementId, LmsElementIdentifierJson lmsElementIdentifier, string elementName,
+        string url, string elementCategory, string elementFileType, int learningSpaceParentId,
+        int elementMaxScore, string? elementDescription=null, string[]? elementGoals = null)
     {
-        Id = id;
-        Identifier = identifier;
+        ElementId = elementId;
+        LmsElementIdentifier = lmsElementIdentifier;
+        ElementName = elementName;
         Url = url;
-        Description = description ?? "";
-        Goals = goals ?? "";
+        ElementDescription = elementDescription ?? "";
+        ElementGoals = elementGoals ?? new []{""};
         ElementCategory = elementCategory;
-        ElementType = elementType;
+        ElementFileType = elementFileType;
         LearningSpaceParentId = learningSpaceParentId;
-        LearningElementValueList = learningElementValueList;
+        ElementMaxScore = elementMaxScore;
     }
 
-    public int Id { get; set; }
+    public int ElementId { get; set; }
     
-    // the identifier has the name of the element
-    public IdentifierJson Identifier { get; set; }
+    // the lmsElementIdentifier has the name of the element
+    public LmsElementIdentifierJson LmsElementIdentifier { get; set; }
+    
+    public string ElementName { get; set; }
     
     public string Url { get; set; }
     
     //A Description for the Learning Element
-    public string? Description { get; set; }
+    public string? ElementDescription { get; set; }
     
     //A Goal for the Learning Element
-    public string? Goals { get; set; }
+    public string[] ElementGoals { get; set; }
     
     public string ElementCategory { get; set; }
     
-    // the elementType describes the Filetype of the element. (H5P, Picture, Video, PDF)
-    public string ElementType { get; set; }
+    // the elementFileType describes the Filetype of the element. (H5P, Picture, Video, PDF)
+    public string ElementFileType { get; set; }
     
     // learningElementValue describes the Points or Badge the element gives
-    public List<LearningElementValueJson> LearningElementValueList { get; set; }
+    public int ElementMaxScore { get; set; }
     
     // The LearningSpaceParentId describes the Space the current Learning Element is in.
     public int LearningSpaceParentId { get; set; }

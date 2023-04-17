@@ -11,7 +11,8 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
 {
     public LearningSpacePe(string name, string description, string goals,
         int requiredPoints, ILearningSpaceLayoutPe? learningSpaceLayout = null, double positionX = 0, double positionY = 0,
-        List<IObjectInPathWayPe>? inBoundObjects = null, List<IObjectInPathWayPe>? outBoundObjects = null)
+        List<IObjectInPathWayPe>? inBoundObjects = null, List<IObjectInPathWayPe>? outBoundObjects = null,
+        TopicPe? assignedTopic = null)
     {
         Id = Guid.NewGuid();
         Name = name;
@@ -23,6 +24,7 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
                                   FloorPlanEnumPe.Rectangle2X2);
         InBoundObjects = inBoundObjects ?? new List<IObjectInPathWayPe>();
         OutBoundObjects = outBoundObjects ?? new List<IObjectInPathWayPe>();
+        AssignedTopic = assignedTopic;
         PositionX = positionX;
         PositionY = positionY;
     }
@@ -41,6 +43,7 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
         LearningSpaceLayout = null!;
         InBoundObjects = new List<IObjectInPathWayPe>();
         OutBoundObjects = new List<IObjectInPathWayPe>();
+        AssignedTopic = null;
         PositionX = 0;
         PositionY = 0;
     }
@@ -61,6 +64,8 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
     public List<IObjectInPathWayPe> InBoundObjects { get; set; }
     [IgnoreDataMember]
     public List<IObjectInPathWayPe> OutBoundObjects { get; set; }
+    [DataMember]
+    public TopicPe? AssignedTopic { get; set; }
     [DataMember]
     public double PositionX { get; set; }
     [DataMember]

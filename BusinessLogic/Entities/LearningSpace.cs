@@ -1,5 +1,4 @@
 ﻿using JetBrains.Annotations;
-using Shared;
 
 namespace BusinessLogic.Entities;
 
@@ -20,12 +19,14 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
         LearningSpaceLayout = null!;
         InBoundObjects = new List<IObjectInPathWay>();
         OutBoundObjects = new List<IObjectInPathWay>();
+        AssignedTopic = null;
         PositionX = 0;
         PositionY = 0;
     }
     public LearningSpace(string name, string description,
         string goals, int requiredPoints, LearningSpaceLayout? learningSpaceLayout = null, double positionX = 0,
-        double positionY = 0, List<IObjectInPathWay>? inBoundSpaces = null, List<IObjectInPathWay>? outBoundSpaces = null)
+        double positionY = 0, List<IObjectInPathWay>? inBoundSpaces = null, List<IObjectInPathWay>? outBoundSpaces = null,
+        Topic? assignedTopic = null)
     {
         Id = Guid.NewGuid();
         Name = name;
@@ -36,6 +37,7 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
             ?? new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2);
         InBoundObjects = inBoundSpaces ?? new List<IObjectInPathWay>();
         OutBoundObjects = outBoundSpaces ?? new List<IObjectInPathWay>();
+        AssignedTopic = assignedTopic;
         PositionX = positionX;
         PositionY = positionY;
     }
@@ -49,6 +51,7 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
     public ILearningSpaceLayout LearningSpaceLayout { get; set; }
     public List<IObjectInPathWay> InBoundObjects { get; set; }
     public List<IObjectInPathWay> OutBoundObjects { get; set; }
+    public Topic? AssignedTopic { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
     public ILearningElement? SelectedLearningElement { get; set; }
@@ -57,7 +60,7 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
     public IMemento GetMemento()
     {
         return new LearningSpaceMemento(Name, Description, Goals, LearningSpaceLayout, InBoundObjects, 
-            OutBoundObjects, positionX: PositionX, positionY: PositionY, selectedLearningElement: SelectedLearningElement);
+            OutBoundObjects, assignedTopic: AssignedTopic, positionX: PositionX, positionY: PositionY, selectedLearningElement: SelectedLearningElement);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -69,9 +72,11 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
         Name = learningSpaceMemento.Name;
         Description = learningSpaceMemento.Description;
         Goals = learningSpaceMemento.Goals;
+        RequiredPoints = learningSpaceMemento.RequiredPoints;
         LearningSpaceLayout = learningSpaceMemento.LearningSpaceLayout;
         InBoundObjects = learningSpaceMemento.InBoundObjects;
         OutBoundObjects = learningSpaceMemento.OutBoundObjects;
+        AssignedTopic = learningSpaceMemento.AssignedTopic;
         PositionX = learningSpaceMemento.PositionX;
         PositionY = learningSpaceMemento.PositionY;
         SelectedLearningElement = learningSpaceMemento.SelectedLearningElement;
@@ -80,16 +85,18 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
     private record LearningSpaceMemento : IMemento
     {
         internal LearningSpaceMemento(string name, string description,
-            string goals, ILearningSpaceLayout learningSpaceLayout, List<IObjectInPathWay> inBoundSpaces,
-            List<IObjectInPathWay> outBoundSpaces, double positionX = 0, double positionY = 0,
+            string goals, int requiredPoints,  ILearningSpaceLayout learningSpaceLayout, List<IObjectInPathWay> inBoundSpaces,
+            List<IObjectInPathWay> outBoundSpaces, Topic? assignedTopic, double positionX = 0, double positionY = 0,
             ILearningElement? selectedLearningElement = null)
         {
             Name = name;
             Description = description;
             Goals = goals;
+            RequiredPoints = requiredPoints;
             LearningSpaceLayout = learningSpaceLayout;
             InBoundObjects = inBoundSpaces.ToList();
             OutBoundObjects = outBoundSpaces.ToList();
+            AssignedTopic = assignedTopic;
             PositionX = positionX;
             PositionY = positionY;
             SelectedLearningElement = selectedLearningElement;
@@ -98,11 +105,13 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
         internal string Name { get; }
         internal string Description { get; }
         internal string Goals { get; }
+        internal int RequiredPoints { get; }
         internal ILearningSpaceLayout LearningSpaceLayout { get; }
         internal double PositionX { get; }
         internal double PositionY { get; }
         internal ILearningElement? SelectedLearningElement { get; }
         public List<IObjectInPathWay> InBoundObjects { get; set; }
         public List<IObjectInPathWay> OutBoundObjects { get; set; }
+        public Topic? AssignedTopic { get; set; }
     }
 }

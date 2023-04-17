@@ -12,7 +12,7 @@
         <g transform="translate(0, @position)">
             <Clickable OnClickedParam="LearningObject" OnClicked="(T? x) => { item.Action.Invoke(); OnClose.InvokeAsync(); }">
                 <rect x="0" y="0" width="@_widthOfMenuItem" height="@_heightOfMenuItem" fill="white" stroke="black"/>
-                <text x="@(_widthOfMenuItem / 2)" y="15" text-anchor="middle" font-size="12" font-family="Verdana" fill="black">@item.DisplayedText</text>
+                <text x="@(_widthOfMenuItem / 2)" y="15" text-anchor="middle" font-size="10" font-family="Verdana" fill="black">@item.DisplayedText</text>
             </Clickable>
         </g>
     }
@@ -20,7 +20,7 @@
     <g transform="translate(0, @(MenuEntries.Count * _heightOfMenuItem))">
         <Clickable OnClickedParam="LearningObject" OnClicked="(T? x) => OnClose.InvokeAsync()">
             <rect x="0" y="0" width="@_widthOfMenuItem" height="@_heightOfMenuItem" fill="white" stroke="black"/>
-            <text x="@(_widthOfMenuItem / 2)" y="15" text-anchor="middle" font-size="12" font-family="Verdana" fill="black">Close</text>
+            <text x="@(_widthOfMenuItem / 2)" y="15" text-anchor="middle" font-size="10" font-family="Verdana" fill="black">Close</text>
         </Clickable>
     </g>
 </g>
@@ -42,7 +42,7 @@
     private string _cursor = "grab";
 
     private readonly int _heightOfMenuItem = 20;
-    private readonly int _widthOfMenuItem = 70;
+    private readonly int _widthOfMenuItem = 73;
 
     protected override void OnParametersSet()
     {

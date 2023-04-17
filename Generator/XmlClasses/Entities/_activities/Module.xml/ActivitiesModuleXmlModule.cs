@@ -27,6 +27,7 @@ public class ActivitiesModuleXmlModule : IActivitiesModuleXmlModule{
         Completionexpected = "0";
         Availability = "$@NULL@$";
         ShowDescription = "0";
+        PluginLocalAdlerModule = new ActivitiesModuleXmlPluginLocalAdlerModule();
         Tags = "";
         Id = "";
         Version = "2021051700";
@@ -94,6 +95,9 @@ public class ActivitiesModuleXmlModule : IActivitiesModuleXmlModule{
     [XmlElement(ElementName="showdescription")]
     public string ShowDescription { get; set; }
     
+    [XmlElement(ElementName = "plugin_local_adler_module")]
+    public ActivitiesModuleXmlPluginLocalAdlerModule PluginLocalAdlerModule { get; set; }
+
     [XmlElement(ElementName="tags")]
     public string Tags { get; set; }
     

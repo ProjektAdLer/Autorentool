@@ -1,0 +1,48 @@
+@using System.Globalization
+@using Microsoft.Extensions.Localization
+@using MudBlazor
+@inject NavigationManager Navigation
+@inject IStringLocalizer<CultureSelector> Localizer
+
+<p>
+    <label>
+        <MudRadioGroup @bind-SelectedOption="Culture">
+            <MudRadio Option="supportedCultures[0]">@Localizer["German"]</MudRadio>
+            <MudRadio Option="supportedCultures[1]">@Localizer["English"]</MudRadio>
+        </MudRadioGroup>
+    </label>
+</p>
+
+@code
+{
+    private CultureInfo[] supportedCultures = 
+    {
+        new("de-DE"),
+        new("en-DE")
+    };
+
+    protected override void OnInitialized()
+    {
+        Culture = CultureInfo.CurrentCulture;
+    }
+
+    /// <summary>
+    /// Gets or sets the current culture of the application.
+    /// </summary>
+    private CultureInfo Culture
+    {
+        get => CultureInfo.CurrentCulture;
+        set
+        {
+            if (Equals(CultureInfo.CurrentCulture, value)) return;
+            var uri = new Uri(Navigation.Uri)
+                .GetComponents(UriComponents.PathAndQuery, UriFormat.Unescaped);
+            var cultureEscaped = Uri.EscapeDataString(value.Name);
+            var uriEscaped = Uri.EscapeDataString(uri);
+
+            Navigation.NavigateTo(
+                $"Culture/Set?culture={cultureEscaped}&redirectUri={uriEscaped}",
+                forceLoad: true);
+        }
+    }
+}

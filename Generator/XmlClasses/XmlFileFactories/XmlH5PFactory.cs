@@ -1,4 +1,5 @@
-﻿using System.IO.Abstractions;
+﻿using System.Globalization;
+using System.IO.Abstractions;
 using Generator.DSL;
 using Generator.XmlClasses.Entities._activities.GradeHistory.xml;
 using Generator.XmlClasses.Entities._activities.Grades.xml;
@@ -22,6 +23,7 @@ public class XmlH5PFactory : IXmlH5PFactory
     public string H5PElementParentSpaceString;
     public string H5PElementType;
     public string H5PElementDesc;
+    public float H5PElementPoints;
     public string CurrentTime;
     private List<FilesXmlFile> _filesXmlFilesList;
     private List<ActivitiesInforefXmlFile> _activitiesInforefXmlFileList;
@@ -68,6 +70,7 @@ public class XmlH5PFactory : IXmlH5PFactory
         H5PElementParentSpaceString = "";
         H5PElementType = "";
         H5PElementDesc = "";
+        H5PElementPoints = 0;
         _filesXmlFilesList = new List<FilesXmlFile>();
         _activitiesInforefXmlFileList = new List<ActivitiesInforefXmlFile>();
         _fileSystem = fileSystem?? new FileSystem();
@@ -131,16 +134,17 @@ public class XmlH5PFactory : IXmlH5PFactory
         // Create folder activities
         foreach (var h5PElement in h5PElementsList)
         {
-            H5PElementId = h5PElement.Id.ToString();
-            H5PElementName = h5PElement.Identifier.Value;
+            H5PElementId = h5PElement.ElementId.ToString();
+            H5PElementName = h5PElement.LmsElementIdentifier.Value;
             H5PElementParentSpaceString = h5PElement.LearningSpaceParentId.ToString();
-            H5PElementType = h5PElement.ElementType;
-            H5PElementDesc = h5PElement.Description ?? "";
+            H5PElementType = h5PElement.ElementFileType;
+            H5PElementDesc = h5PElement.ElementDescription ?? "";
+            H5PElementPoints = (float)h5PElement.ElementMaxScore;
 
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
-                h5PElement.Identifier.Value+"."+h5PElement.ElementType));
+                h5PElement.LmsElementIdentifier.Value+"."+h5PElement.ElementFileType));
             FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath, 
-                h5PElement.Identifier.Value+"."+h5PElement.ElementType), 
+                h5PElement.LmsElementIdentifier.Value+"."+h5PElement.ElementFileType), 
             FileManager.GetHashCheckSum());
             H5PSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize());
             H5PSetParametersActivity();
@@ -220,14 +224,16 @@ public class XmlH5PFactory : IXmlH5PFactory
         
         //file activities/h5p.../module.xml
         ActivitiesModuleXmlModule.ModuleName = "h5pactivity";
-        ActivitiesModuleXmlModule.SectionId = "0";
-        ActivitiesModuleXmlModule.SectionNumber = "0";
+        ActivitiesModuleXmlModule.SectionId = H5PElementParentSpaceString;
+        ActivitiesModuleXmlModule.SectionNumber = H5PElementParentSpaceString;
         ActivitiesModuleXmlModule.IdNumber = "";
         ActivitiesModuleXmlModule.Indent = "1";
         ActivitiesModuleXmlModule.Added = CurrentTime;
         ActivitiesModuleXmlModule.ShowDescription = "0";
         ActivitiesModuleXmlModule.Id = H5PElementId;
         ActivitiesModuleXmlModule.ShowDescription = "1";
+        //AdlerScore can not be null at this point because it is set in the constructor
+        ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerScore!.ScoreMax = H5PElementPoints.ToString("F5", CultureInfo.InvariantCulture);
 
         ActivitiesModuleXmlModule.Serialize("h5pactivity", H5PElementId);
         

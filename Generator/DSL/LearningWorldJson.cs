@@ -3,40 +3,35 @@ namespace Generator.DSL;
 
 public class LearningWorldJson : ILearningWorldJson
 {
-    // the identifier has the name of the element, this information is needed for the API calls from the 2D3D Team.
-    public LearningWorldJson(string idNumber, IdentifierJson identifier, List<int> learningWorldContent, List<TopicJson> topics, 
-        List<LearningSpaceJson> learningSpaces, List<LearningElementJson> learningElements, string? description = null, 
-        string? goals = null)
+    // the lmsElementIdentifier has the name of the element, this information is needed for the API calls from the 2D3D Team.
+    public LearningWorldJson(LmsElementIdentifierJson lmsElementIdentifier, string worldName, List<TopicJson> topics, 
+        List<LearningSpaceJson> spaces, List<LearningElementJson> elements, string? worldDescription = null, 
+        string[]? worldGoals = null)
     {
-        IdNumber = idNumber;
-        Identifier = identifier;
-        Description = description ?? "";
-        Goals = goals ?? "";
-        LearningWorldContent = learningWorldContent;
+        LmsElementIdentifier = lmsElementIdentifier;
+        WorldName = worldName;
+        WorldDescription = worldDescription ?? "";
+        WorldGoals = worldGoals ?? new []{""};
         Topics = topics;
-        LearningSpaces = learningSpaces;
-        LearningElements = learningElements;
+        Spaces = spaces;
+        Elements = elements;
     }
+    public LmsElementIdentifierJson LmsElementIdentifier { get; set; }
     
-    public string IdNumber { get; set; }
+    public string WorldName { get; set; }
     
-    public IdentifierJson Identifier { get; set; }
+    public string WorldDescription { get; set; }
     
-    public string Description { get; set; }
-    
-    public string Goals { get; set; }
-    
-    // A list that has all the id´s of the included Topics of a learningWorld. 
-    public List<int> LearningWorldContent { get; set; }
+    public string[] WorldGoals { get; set; }
     
     // for the correct structure the topics are added to the learning World
     public List<TopicJson> Topics { get; set; }
     
     // for the correct structure the Spaces are added to the learning World
-    public List<LearningSpaceJson> LearningSpaces { get; set; }
+    public List<LearningSpaceJson> Spaces { get; set; }
     
     // for the correct structure the elements are added to the learning World
-    public List<LearningElementJson> LearningElements { get; set; }
+    public List<LearningElementJson> Elements { get; set; }
     
 
 }

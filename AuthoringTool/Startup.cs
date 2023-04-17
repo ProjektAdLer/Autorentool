@@ -14,6 +14,7 @@ using FluentValidation;
 using Generator.API;
 using Generator.DSL;
 using Generator.WorldExport;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Caching.Memory;
 using MudBlazor.Services;
 using Presentation.Components.Forms;
@@ -46,11 +47,21 @@ public class Startup
         //Blazor and Electron (framework)
         services.AddRazorPages();
         services.AddServerSideBlazor();
-
+        
         //MudBlazor
         services.AddMudServices();
+        
+        //localization
+        services.AddLocalization(options => options.ResourcesPath = "Resources");
 
-
+        services.AddLogging(builder =>
+        {
+            builder.ClearProviders();
+            builder.AddConsole();
+            builder.SetMinimumLevel(LogLevel.Trace);
+        });
+        
+        
         //AuthoringToolLib
         //PLEASE add any services you add dependencies to to the unit tests in StartupUt!!!
         ConfigureAuthoringTool(services);
@@ -207,11 +218,24 @@ public class Startup
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
+        
+        // Add localization cultures
+        var supportedCultures = new[] { "de-DE", "en-DE" };
+        var localizationOptions = new RequestLocalizationOptions()
+            .SetDefaultCulture(supportedCultures[0])
+            .AddSupportedCultures(supportedCultures)
+            .AddSupportedUICultures(supportedCultures);
+        // Clear all other providers and register the cookie provider as the only one
+        localizationOptions.RequestCultureProviders.Clear();
+        localizationOptions.AddInitialRequestCultureProvider(new CookieRequestCultureProvider());
+        // Require request localization (this applies the requested culture to the actual application)
+        app.UseRequestLocalization(localizationOptions);
 
         app.UseRouting();
 
         app.UseEndpoints(endpoints =>
         {
+            endpoints.MapControllers();
             endpoints.MapBlazorHub();
             endpoints.MapFallbackToPage("/_Host");
         });

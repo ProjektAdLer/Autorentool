@@ -36,7 +36,7 @@ public class XmlSectionFactory : IXmlSectionFactory
         {
             CreateSectionsFolder(space.SpaceId.ToString());
             CreateSectionInforefXml( space.SpaceId.ToString() );
-            CreateSectionSectionXml( space.SpaceId.ToString(),  space.Identifier.Value, "");
+            CreateSectionSectionXml( space.SpaceId.ToString(),  space.SpaceName, space.SpaceDescription, space.SpaceContents, space.SpaceId, space.RequiredSpacesToEnter, space.RequiredPointsToComplete);
         }
 
     }
@@ -46,16 +46,33 @@ public class XmlSectionFactory : IXmlSectionFactory
         SectionsInforefXmlInforef.Serialize("", sectionid);
     }
 
-    private void CreateSectionSectionXml(string sectionId, string sectionName, string? sectionSummary)
+    private void CreateSectionSectionXml(string sectionId, string sectionName, string? sectionSummary, List<int> sectionSequence, int spaceId, string? requiredSpacesToEnter, int requiredPointsToComplete)
     {
         //write section.xml file
         SectionsSectionXmlSection.Id = sectionId;
         SectionsSectionXmlSection.Number = sectionId;
         SectionsSectionXmlSection.Name = sectionName;
         SectionsSectionXmlSection.Summary = sectionSummary ?? "";
+        SectionsSectionXmlSection.Sequence = string.Join(",", sectionSequence);
+        if (!string.IsNullOrEmpty(requiredSpacesToEnter))
+        {
+            SectionsSectionXmlSection.AvailabilityJson =
+                "{\"op\":\"&\",\"c\":[{\"type\":\"adler\",\"condition\":\""+requiredSpacesToEnter+"\"}],\"showc\":[true]}";
+        }
+        if(requiredPointsToComplete >= 0)
+        {
+            //AdlerSection can not be null at this point because it is set in the constructor
+            SectionsSectionXmlSection.PluginLocalAdlerSection.AdlerSection!.RequiredPointsToComplete = requiredPointsToComplete.ToString();
+        }
+        else
+        {
+            SectionsSectionXmlSection.PluginLocalAdlerSection.AdlerSection = null;
+        }
         SectionsSectionXmlSection.Timemodified = CurrentTime;
 
         SectionsSectionXmlSection.Serialize("",sectionId);
+
+        SectionsSectionXmlSection.PluginLocalAdlerSection.AdlerSection = new SectionsSectionXmlAdlerSection();
     }
     
     /// <summary>

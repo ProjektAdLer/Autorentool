@@ -20,10 +20,12 @@ public class CreateLearningSpaceUt
         var requiredPoints = 10;
         var positionX = 1;
         var positionY = 2;
+        var topic = new Topic("topic1");
+        world.Topics.Add(topic);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateLearningSpace(world, name, description, goals, requiredPoints, positionX, positionY, mappingAction);
+        var command = new CreateLearningSpace(world, name, description, goals, requiredPoints, positionX, positionY, topic, mappingAction);
         
         Assert.IsEmpty(world.LearningSpaces);
         Assert.IsFalse(actionWasInvoked);
@@ -38,6 +40,10 @@ public class CreateLearningSpaceUt
             Assert.That(space.Name, Is.EqualTo("space1"));
             Assert.That(space.Description, Is.EqualTo("space for learning"));
             Assert.That(space.Goals, Is.EqualTo("learning"));
+            Assert.That(space.RequiredPoints, Is.EqualTo(10));
+            Assert.That(space.PositionX, Is.EqualTo(1));
+            Assert.That(space.PositionY, Is.EqualTo(2));
+            Assert.That(space.AssignedTopic, Is.EqualTo(topic));
         });
     }
     
@@ -70,13 +76,14 @@ public class CreateLearningSpaceUt
         var name = "space1";
         var description = "space for learning";
         var goals = "learning";
+        var topic = new Topic("abc");
         var requiredPoints = 10;
         var positionX = 1;
         var positionY = 2;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new CreateLearningSpace(world, name, description, goals, requiredPoints, positionX, positionY, mappingAction);
+        var command = new CreateLearningSpace(world, name, description, goals, requiredPoints, positionX, positionY, topic, mappingAction);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -95,13 +102,14 @@ public class CreateLearningSpaceUt
         var name = "space1";
         var description = "space for learning";
         var goals = "learning";
+        var topic = new Topic("abc");
         var requiredPoints = 10;
         var positionX = 1;
         var positionY = 2;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         
-        var command = new CreateLearningSpace(world, name, description, goals, requiredPoints, positionX, positionY, mappingAction);
+        var command = new CreateLearningSpace(world, name, description, goals, requiredPoints, positionX, positionY, topic, mappingAction);
         
         Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
         Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(space));

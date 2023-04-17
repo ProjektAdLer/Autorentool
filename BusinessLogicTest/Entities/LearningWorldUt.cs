@@ -23,11 +23,15 @@ public class LearningWorldUt
         var learningSpaces = new List<LearningSpace> { space1 };
         var pathWayConditions = new List<PathWayCondition> { pathWayCondition };
         var pathWays = new List<LearningPathway> { pathWay };
+        var topic1 = new Topic("topic1");
+        var topic2 = new Topic("topic2");
+        var topic3 = new Topic("topic3");
+        var topics = new List<Topic> { topic1, topic2, topic3 };
         
         var selectableObjects = new List<ISelectableObjectInWorld> { space1, pathWayCondition, pathWay };
 
         var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals,
-            learningSpaces, pathWayConditions, pathWays);
+            learningSpaces, pathWayConditions, pathWays, topics);
         
         Assert.Multiple(() =>
         {
@@ -40,6 +44,7 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.LearningSpaces, Is.EqualTo(learningSpaces));
             Assert.That(systemUnderTest.PathWayConditions, Is.EqualTo(pathWayConditions));
             Assert.That(systemUnderTest.LearningPathways, Is.EqualTo(pathWays));
+            Assert.That(systemUnderTest.Topics, Is.EqualTo(topics));
             Assert.That(systemUnderTest.SelectableWorldObjects, Is.EqualTo(selectableObjects));
         });
     }
@@ -54,9 +59,15 @@ public class LearningWorldUt
         const string description = "very cool element";
         const string goals = "learn very many things";
         var space1 = new LearningSpace("ff", "ff", "ff", 5);
+        var pathWayCondition = new PathWayCondition(ConditionEnum.And, 2, 3);
+        var pathWayConditions = new List<PathWayCondition>{ pathWayCondition };
         var learningSpaces = new List<LearningSpace> { space1 };
-        
-        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, learningSpaces);
+        var pathWay = new LearningPathway(space1, pathWayCondition);
+        var pathWays = new List<LearningPathway> { pathWay };
+        var topic1 = new Topic("topic1");
+        var topics = new List<Topic>{topic1};
+
+        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, learningSpaces, pathWayConditions, pathWays, topics);
 
         var learningWorldMemento = systemUnderTest.GetMemento();
         
@@ -70,6 +81,9 @@ public class LearningWorldUt
         var newElement = new LearningElement("foo", newContent2, "asdf", "qwer",
             LearningElementDifficultyEnum.Easy);
         var space2 = new LearningSpace("gg", "gg", "gg", 5);
+        var condition2 = new PathWayCondition(ConditionEnum.Or, 2, 1);
+        var pathWay2 = new LearningPathway(space2, condition2);
+        var topic2 = new Topic("topic2");
 
         
         systemUnderTest.Name = nameChanged;
@@ -79,6 +93,9 @@ public class LearningWorldUt
         systemUnderTest.Description = descriptionChanged;
         systemUnderTest.Goals = goalsChanged;
         systemUnderTest.LearningSpaces.Add(space2);
+        systemUnderTest.PathWayConditions.Add(condition2);
+        systemUnderTest.LearningPathways.Add(pathWay2);
+        systemUnderTest.Topics.Add(topic2);
         systemUnderTest.UnplacedLearningElements.Add(newElement);
         
 
@@ -93,6 +110,15 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.LearningSpaces, Has.Count.EqualTo(2));
             Assert.That(systemUnderTest.LearningSpaces[0], Is.EqualTo(space1));
             Assert.That(systemUnderTest.LearningSpaces[1], Is.EqualTo(space2));
+            Assert.That(systemUnderTest.PathWayConditions, Has.Count.EqualTo(2));
+            Assert.That(systemUnderTest.PathWayConditions[0], Is.EqualTo(pathWayCondition));
+            Assert.That(systemUnderTest.PathWayConditions[1], Is.EqualTo(condition2));
+            Assert.That(systemUnderTest.LearningPathways, Has.Count.EqualTo(2));
+            Assert.That(systemUnderTest.LearningPathways[0], Is.EqualTo(pathWay));
+            Assert.That(systemUnderTest.LearningPathways[1], Is.EqualTo(pathWay2));
+            Assert.That(systemUnderTest.Topics, Has.Count.EqualTo(2));
+            Assert.That(systemUnderTest.Topics[0], Is.EqualTo(topic1));
+            Assert.That(systemUnderTest.Topics[1], Is.EqualTo(topic2));
         });
         
         systemUnderTest.RestoreMemento(learningWorldMemento);
@@ -107,6 +133,12 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.LearningSpaces, Has.Count.EqualTo(1));
             Assert.That(systemUnderTest.LearningSpaces[0], Is.EqualTo(space1));
+            Assert.That(systemUnderTest.PathWayConditions, Has.Count.EqualTo(1));
+            Assert.That(systemUnderTest.PathWayConditions[0], Is.EqualTo(pathWayCondition));
+            Assert.That(systemUnderTest.LearningPathways, Has.Count.EqualTo(1));
+            Assert.That(systemUnderTest.LearningPathways[0], Is.EqualTo(pathWay));
+            Assert.That(systemUnderTest.Topics, Has.Count.EqualTo(1));
+            Assert.That(systemUnderTest.Topics[0], Is.EqualTo(topic1));
         });
     }
 

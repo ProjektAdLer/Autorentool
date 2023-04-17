@@ -5,6 +5,7 @@ using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Topic;
 using Shared;
 
 namespace PresentationTest.PresentationLogic.LearningWorld;
@@ -22,6 +23,9 @@ public class LearningWorldViewModelUt
         var language = "german";
         var description = "very cool element";
         var goals = "learn very many things";
+        var topic1 = new TopicViewModel("topic1");
+        var topic2 = new TopicViewModel("topic2");
+        var topics = new List<TopicViewModel> {topic1, topic2};
         var space1 = new LearningSpaceViewModel("ff", "ff", "ff");
         var learningSpaces = new List<ILearningSpaceViewModel> { space1 };
         var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
@@ -31,7 +35,7 @@ public class LearningWorldViewModelUt
 
         var systemUnderTest = new LearningWorldViewModel(name, shortname, authors, language, description, goals, 
             unsavedChanges: false, learningSpaces: learningSpaces, pathWayConditions: pathWayConditions,
-            learningPathWays: learningPathways);
+            learningPathWays: learningPathways, topics: topics);
         
         Assert.Multiple(() =>
         {
@@ -45,6 +49,7 @@ public class LearningWorldViewModelUt
             Assert.That(systemUnderTest.LearningSpaces, Is.EqualTo(learningSpaces));
             Assert.That(systemUnderTest.PathWayConditions, Is.EqualTo(pathWayConditions));
             Assert.That(systemUnderTest.LearningPathWays, Is.EqualTo(learningPathways));
+            Assert.That(systemUnderTest.Topics, Is.EqualTo(topics));
         });
     }
 

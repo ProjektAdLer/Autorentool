@@ -4,6 +4,7 @@ using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
+using Presentation.PresentationLogic.Topic;
 using Shared;
 
 namespace Presentation.PresentationLogic.LearningSpace;
@@ -40,11 +41,13 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     /// <param name="positionY">y-position of the learning space in the workspace.</param>
     /// <param name="inBoundObjects">A List of objects that have learning path to the space.</param>
     /// <param name="outBoundObjects">A list of objects that this space have a learning path to.</param>
+    /// <param name="assignedTopic">Topic to which the learning space is assigned.</param>
     public LearningSpaceViewModel(string name, string description, string goals,
         int requiredPoints = 0,
         ILearningSpaceLayoutViewModel? layoutViewModel = null, double positionX = 0, double positionY = 0,
         ICollection<IObjectInPathWayViewModel>? inBoundObjects = null,
-        ICollection<IObjectInPathWayViewModel>? outBoundObjects = null)
+        ICollection<IObjectInPathWayViewModel>? outBoundObjects = null,
+        TopicViewModel? assignedTopic = null)
     {
         Id = Guid.NewGuid();
         Name = name;
@@ -54,6 +57,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         LearningSpaceLayout = layoutViewModel ?? new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X2);
         InBoundObjects = inBoundObjects ?? new Collection<IObjectInPathWayViewModel>();
         OutBoundObjects = outBoundObjects ?? new Collection<IObjectInPathWayViewModel>();
+        AssignedTopic = assignedTopic;
         PositionX = positionX;
         PositionY = positionY;
     }
@@ -63,8 +67,8 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     public ILearningSpaceLayoutViewModel LearningSpaceLayout { get; set; }
     public ICollection<IObjectInPathWayViewModel> InBoundObjects { get; set; }
     public ICollection<IObjectInPathWayViewModel> OutBoundObjects { get; set; }
+    public TopicViewModel? AssignedTopic { get; set; }
     public int Workload => ContainedLearningElements.Sum(element => element.Workload);
-
     // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local - required for automapper n.stich
     public int Points => ContainedLearningElements.Sum(element => element.Points);
     

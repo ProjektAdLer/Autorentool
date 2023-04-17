@@ -15,6 +15,8 @@ using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Topic;
+using Presentation.View.LearningElement;
 using Presentation.View.LearningPathWay;
 using Presentation.View.LearningSpace;
 using Presentation.View.LearningWorld;
@@ -223,6 +225,16 @@ public class LearningWorldViewUt
         addConditionButton.Find("*").Click();
         _worldPresenter.Received().CreatePathWayCondition(ConditionEnum.Or);
     }
+    
+    [Test]
+    public void AddTopicButton_Clicked_CallsAddNewTopic()
+    {
+        var systemUnderTest = GetLearningWorldViewForTesting();
+
+        var addConditionButton = systemUnderTest.FindOrFail("button.btn.btn-primary.add-topic");
+        addConditionButton.Click();
+        _worldPresenter.Received().AddNewTopic();
+    }
 
     [Test]
     public void LoadSpaceButton_Clicked_CallsLoadLearningSpaceAsync()
@@ -262,6 +274,21 @@ public class LearningWorldViewUt
         var editSpaceButton = systemUnderTest.FindOrFail("button.btn.btn-primary.edit-learning-object");
         editSpaceButton.Click();
     }
+    
+    [Test]
+    public void EditTopicButton_Clicked_CallsOpenEditTopicDialog()
+    {
+        var topic = Substitute.For<TopicViewModel>();
+        var worldVm = Substitute.For<ILearningWorldViewModel>();
+        worldVm.Topics.Returns(new List<TopicViewModel> { topic });
+        _worldPresenter.LearningWorldVm.Returns(worldVm);
+
+        var systemUnderTest = GetLearningWorldViewForTesting();
+        
+        var editTopicButton = systemUnderTest.FindOrFail("button.btn.btn-primary.edit-topic");
+        editTopicButton.Click();
+        _worldPresenter.Received().OpenEditTopicDialog();
+    }
 
     [Test]
     public void DeleteSpaceButton_Clicked_CallsDeleteSelectedLearningSpace()
@@ -279,6 +306,21 @@ public class LearningWorldViewUt
         var editSpaceButton = systemUnderTest.FindOrFail("button.btn.btn-primary.delete-learning-object");
         editSpaceButton.Click();
         _worldPresenter.Received().DeleteSelectedLearningObject();
+    }
+    
+    [Test]
+    public void DeleteTopicButton_Clicked_CallsOpenDeleteTopicDialog()
+    {
+        var topic = Substitute.For<TopicViewModel>();
+        var worldVm = Substitute.For<ILearningWorldViewModel>();
+        worldVm.Topics.Returns(new List<TopicViewModel> { topic });
+        _worldPresenter.LearningWorldVm.Returns(worldVm);
+
+        var systemUnderTest = GetLearningWorldViewForTesting();
+        
+        var deleteTopicButton = systemUnderTest.FindOrFail("button.btn.btn-primary.delete-topic");
+        deleteTopicButton.Click();
+        _worldPresenter.Received().OpenDeleteTopicDialog();
     }
     
     [Test]

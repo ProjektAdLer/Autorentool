@@ -6,6 +6,7 @@ using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Topic;
 using Shared;
 using Shared.Command;
 using Shared.Configuration;
@@ -126,8 +127,9 @@ public interface IPresentationLogic
     /// <param name="requiredPoints"></param>
     /// <param name="positionX"></param>
     /// <param name="positionY"></param>
+    /// <param name="topicVm"></param>
     void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name,
-        string description, string goals, int requiredPoints, double positionX, double positionY);
+        string description, string goals, int requiredPoints, double positionX, double positionY, ITopicViewModel? topicVm);
 
     /// <summary>
     /// Edits a given learning space in the given learning world with the corresponding command.
@@ -137,8 +139,9 @@ public interface IPresentationLogic
     /// <param name="description"></param>
     /// <param name="goals"></param>
     /// <param name="requiredPoints"></param>
+    /// <param name="topicVm"></param>
     void EditLearningSpace(ILearningSpaceViewModel learningSpaceVm, string name,
-        string description, string goals, int requiredPoints);
+        string description, string goals, int requiredPoints, ITopicViewModel? topicVm);
 
     /// <summary>
     /// Changes the layout of the given learning space to the given layout.
@@ -209,6 +212,27 @@ public interface IPresentationLogic
     /// <param name="learningWorldVm">Parent learning world.</param>
     /// <param name="pathWayConditionVm">Pathway condition to be deleted.</param>
     void DeletePathWayCondition(ILearningWorldViewModel learningWorldVm, PathWayConditionViewModel pathWayConditionVm);
+
+    /// <summary>
+    /// Creates a topic in the given learning world.
+    /// </summary>
+    /// <param name="learningWorldVm">Parent learning world of the condition to create.</param>
+    /// <param name="name">Name of the Topic</param>
+    void CreateTopic(ILearningWorldViewModel learningWorldVm, string name);
+
+    /// <summary>
+    /// Edits the topic in the given learning world with the corresponding command.
+    /// </summary>
+    /// <param name="topicVm">The topic to be edited.</param>
+    /// <param name="newName">The new name set for the topic</param>
+    void EditTopic(ITopicViewModel topicVm, string newName);
+
+    /// <summary>
+    /// Deletes the given topic in the given learning world.
+    /// </summary>
+    /// <param name="learningWorldVm">Parent learning world.</param>
+    /// <param name="topicVm">Topic to be deleted.</param>
+    void DeleteTopic(ILearningWorldViewModel learningWorldVm, ITopicViewModel topicVm);
 
     /// <summary>
     /// Adds a new learning pathway between two objects (learning space or pathway condition) in the given learning world.

@@ -6,6 +6,7 @@ using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Topic;
 using Shared;
 using Shared.Command;
 
@@ -37,7 +38,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     public IDisplayableLearningObject? RightClickedLearningObject { get; private set; }
 
     public void EditLearningSpace(string name, string description, string goals,
-        int requiredPoints)
+        int requiredPoints, ITopicViewModel? topic)
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("LearningSpaceVm is null");

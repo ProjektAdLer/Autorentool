@@ -12,13 +12,16 @@ public class CreateDsl : ICreateDsl
 {
     public List<ILearningElementPe> ElementsWithFileContent;
     public List<LearningSpacePe> ListLearningSpaces;
+    public List<TopicPe> ListTopics;
     public LearningWorldJson LearningWorldJson;
     public string Uuid;
-    public Dictionary<int, Guid> IdDictionary;
-    private List<int> _listLearningSpaceContent;
+    public Dictionary<int, Guid> DictionarySpaceIdToGuid;
+    private List<int> _listLearningSpaceElements;
     private List<ILearningElementPe> _listAllLearningElements;
     private string _booleanAlgebraRequirements;
-    private string _currentConditionDirectSpaces;
+    private string _currentConditionSpace;
+    private string _author;
+    private string _language;
     private IFileSystem _fileSystem;
     private string _dslPath;
     private string _xmlFilesForExportPath;
@@ -42,12 +45,13 @@ public class CreateDsl : ICreateDsl
     {
         ElementsWithFileContent = new List<ILearningElementPe>();
         ListLearningSpaces = new List<LearningSpacePe>();
-        _listLearningSpaceContent = new List<int>();
+        ListTopics = new List<TopicPe>();
+        _listLearningSpaceElements = new List<int>();
         _booleanAlgebraRequirements = "";
-        IdDictionary = new Dictionary<int, Guid>();
+        DictionarySpaceIdToGuid = new Dictionary<int, Guid>();
         Guid guid = Guid.NewGuid();
         Uuid = guid.ToString();
-        _currentConditionDirectSpaces = "";
+        _currentConditionSpace = "";
         _listAllLearningElements = new List<ILearningElementPe>();
     }
 
@@ -55,12 +59,12 @@ public class CreateDsl : ICreateDsl
     //If a duplicate is found, the duplicate Values get a incremented Number behind them for example: (1), (2)...
     public List<LearningSpacePe> SearchDuplicateLearningElementNames(List<LearningSpacePe> listLearningSpace)
     {
-        var incrementedNamesDictionary = new Dictionary<string,string>();
+        var dictionaryIncrementedElementNames = new Dictionary<string,string>();
         
         //Get All LearningElements
-        foreach (var learningSpace in listLearningSpace)
+        foreach (var space in listLearningSpace)
         {
-            foreach (var element in learningSpace.LearningSpaceLayout.ContainedLearningElements)
+            foreach (var element in space.LearningSpaceLayout.ContainedLearningElements)
             {
                 _listAllLearningElements.Add(element);
             }
@@ -81,16 +85,17 @@ public class CreateDsl : ICreateDsl
                     if(element.Name == duplicateElement.Key)
                     {
                         string incrementedElementName;
-                        
-                        if (incrementedNamesDictionary.ContainsKey(element.Name))
+                        //Increment LearningElement names, if they are already in the dictionary
+                        if (dictionaryIncrementedElementNames.ContainsKey(element.Name))
                         {
-                            incrementedElementName = StringHelper.IncrementName(incrementedNamesDictionary[element.Name]);
-                            incrementedNamesDictionary[element.Name] = incrementedElementName;
+                            incrementedElementName = StringHelper.IncrementName(dictionaryIncrementedElementNames[element.Name]);
+                            dictionaryIncrementedElementNames[element.Name] = incrementedElementName;
                         }
+                        //If LearningElement ist not in the dictionary, increment the name and add it to the dictionary.
                         else
                         {
                             incrementedElementName = StringHelper.IncrementName(element.Name);
-                            incrementedNamesDictionary.Add(element.Name, incrementedElementName);
+                            dictionaryIncrementedElementNames.Add(element.Name, incrementedElementName);
                         }
                         
                         element.Name = incrementedElementName;
@@ -123,11 +128,11 @@ public class CreateDsl : ICreateDsl
         {
             if(learningObject is LearningSpacePe)
             {
-                _currentConditionDirectSpaces += "(";
-                string spaceId = IdDictionary.Where(x => x.Value == learningObject.Id)
+                _currentConditionSpace += "(";
+                string spaceId = DictionarySpaceIdToGuid.Where(x => x.Value == learningObject.Id)
                     .Select(x => x.Key)
                     .FirstOrDefault().ToString();
-                _currentConditionDirectSpaces += spaceId+")" + condition;
+                _currentConditionSpace += spaceId+")" + condition;
             }
             else if (learningObject is PathWayConditionPe pathWayConditionPe)
             {
@@ -138,15 +143,15 @@ public class CreateDsl : ICreateDsl
                 }
                 else
                 {
-                    _currentConditionDirectSpaces += "("; 
+                    _currentConditionSpace += "("; 
                     DefineLogicalExpression(pathWayConditionPe);
-                    _currentConditionDirectSpaces += ")";
-                    _currentConditionDirectSpaces += condition;
+                    _currentConditionSpace += ")";
+                    _currentConditionSpace += condition;
                 }
             }
         }
-        _currentConditionDirectSpaces = _currentConditionDirectSpaces.Substring(0, _currentConditionDirectSpaces.LastIndexOf(")", StringComparison.Ordinal)+1);
-        return _currentConditionDirectSpaces;
+        _currentConditionSpace = _currentConditionSpace.Substring(0, _currentConditionSpace.LastIndexOf(")", StringComparison.Ordinal)+1);
+        return _currentConditionSpace;
     }
 
     /// <summary>
@@ -158,17 +163,23 @@ public class CreateDsl : ICreateDsl
     public string WriteLearningWorld(LearningWorldPe learningWorld)
     {
         Initialize();
+
+        //Setting Authors and Language for DSL Root
+        _author = learningWorld.Authors;
+        _language = "de";
+
         //Starting ID for LearningSpaces
         var learningSpaceIdForDictionary = 1;
         
-        // Starting Value for Learning Space Ids & Learning Element Ids in the DSL-Document
+        // Starting Value for Learning Space Ids, Learning Element Ids & Topic Ids in the DSL-Document
         var learningSpaceId = 1;
         var learningSpaceElementId = 1;
+        int topicId = 1;
         
         //Initialise learningWorldJson with empty values, will be filled with information later in the method.
-        LearningWorldJson = new LearningWorldJson(Uuid, new IdentifierJson("name", learningWorld.Name), new List<int>(),
-            new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>(), 
-            learningWorld.Description, learningWorld.Goals);
+        LearningWorldJson = new LearningWorldJson(new LmsElementIdentifierJson("moduleName", learningWorld.Name),
+            learningWorld.Name, new List<TopicJson>(), new List<LearningSpaceJson>(),
+            new List<LearningElementJson>(), learningWorld.Description, new []{learningWorld.Goals});
 
         // Create Learning Spaces & fill into Learning World
         // The learningSpaceId defines what the starting Id for Spaces should be. 
@@ -177,23 +188,36 @@ public class CreateDsl : ICreateDsl
         
         foreach (var space in ListLearningSpaces)
         {
-            IdDictionary.Add(learningSpaceIdForDictionary, space.Id);
+            DictionarySpaceIdToGuid.Add(learningSpaceIdForDictionary, space.Id);
             learningSpaceIdForDictionary++;
         }
         
         //Search for duplicate LearningElement Names and increment them.
         ListLearningSpaces = SearchDuplicateLearningElementNames(ListLearningSpaces);
 
-        foreach (var learningSpace in ListLearningSpaces)
+        ListTopics.AddRange(learningWorld.Topics);
+        
+        foreach (var topic in ListTopics)
         {
-            _listLearningSpaceContent = new List<int>();
+            LearningWorldJson.Topics.Add(new TopicJson(topicId, topic.Name, new List<int>()));
+            topicId++;
+        }
+        
+        foreach (var space in ListLearningSpaces)
+        {
+            _listLearningSpaceElements = new List<int>();
             _booleanAlgebraRequirements = "";
-            _currentConditionDirectSpaces = "";
+            _currentConditionSpace = "";
             
-            var learningSpaceIdentifier = new IdentifierJson("name", learningSpace.Name);
+            var learningSpaceIdentifier = new IdentifierJson("name", space.Name);
             
+            if (space.AssignedTopic != null)
+            {
+                var assignedTopic = LearningWorldJson.Topics.Find(topic => topic.TopicName == space.AssignedTopic.Name);
+                assignedTopic?.TopicContents.Add(learningSpaceId);
+            }
             //Searching for Learning Elements in each Space
-            foreach (var element in learningSpace.LearningSpaceLayout.ContainedLearningElements)
+            foreach (var element in space.LearningSpaceLayout.ContainedLearningElements)
             {
                 var elementType = element.LearningContent switch
                 {
@@ -223,27 +247,29 @@ public class CreateDsl : ICreateDsl
                 learningElementValueList.Add(learningElementValueJson);
 
                 var learningElementJson = new LearningElementJson(learningSpaceElementId,
-                    learningElementIdentifier, url, elementCategory, elementType, 
-                    learningSpaceId, learningElementValueList, element.Description, element.Goals);
+                    learningElementLmsElementIdentifier, element.Name, url, elementCategory, elementType, 
+                    learningSpaceId, element.Points, element.Description, new []{element.Goals});
 
                 // Add Elements that have Content to the List, they will be copied at the end of the method.
+                // Every Element without Content will be added to the LearningSpaceJson.
                 if (element.LearningContent is not LinkContentPe)
                 {
                     ElementsWithFileContent.Add(element);
                 }
                 
-                //int elementIndex = ListLearningElementsWithContents.IndexOf(element) + 1;
-                _listLearningSpaceContent.Add(learningSpaceElementId);
+                _listLearningSpaceElements.Add(learningSpaceElementId);
                 learningSpaceElementId++;
-                LearningWorldJson.LearningElements.Add(learningElementJson);
+                LearningWorldJson.Elements.Add(learningElementJson);
             }
           
             // Create Learning Space Requirements
-            // If the inbound-type is not a PathWayCondition there can only be 1 LearningSpacePe, so we do not have to construct a boolean algebra expression.
-            // If the inbound-type is a PathWayCondition, we have to construct a boolean algebra expression.
-            if (learningSpace.InBoundObjects.Count > 0)
+            // If the inbound-type is not a PathWayCondition there can only be 1 LearningSpacePe,
+            // so we do not have to construct a boolean algebra expression.
+            // The only other thing the inbound-type can be is a PathWayCondition,
+            // we have to construct a boolean algebra expression.
+            if (space.InBoundObjects.Count > 0)
             {
-                foreach (var inbound in learningSpace.InBoundObjects)
+                foreach (var inbound in space.InBoundObjects)
                 {
                     if (inbound is PathWayConditionPe curCondition)
                     {
@@ -252,7 +278,7 @@ public class CreateDsl : ICreateDsl
                     //It can only be 1 Space that does not have a condition with it.
                     else
                     {
-                        _booleanAlgebraRequirements = (IdDictionary.Where(x => x.Value == inbound.Id)
+                        _booleanAlgebraRequirements = (DictionarySpaceIdToGuid.Where(x => x.Value == inbound.Id)
                             .Select(x => x.Key)
                             .FirstOrDefault().ToString());
                     }
@@ -272,7 +298,7 @@ public class CreateDsl : ICreateDsl
         // Create DocumentRoot & JSON Document
         // And add the learningWorldJson to the DocumentRoot
         // The structure of the DSL needs DocumentRoot, because the learningWorld has its own tag
-        var rootJson = new DocumentRootJson(LearningWorldJson);
+        var rootJson = new DocumentRootJson("0.3", "0.3.2", _author, _language, LearningWorldJson);
 
         var options = new JsonSerializerOptions { WriteIndented = true,  PropertyNamingPolicy = JsonNamingPolicy.CamelCase};
         var jsonFile = JsonSerializer.Serialize(rootJson,options);
