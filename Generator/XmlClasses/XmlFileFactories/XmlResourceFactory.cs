@@ -117,7 +117,7 @@ public class XmlResourceFactory : IXmlResourceFactory
             FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
                 resource.LmsElementIdentifier.Value + "." + resource.ElementFileType), FileManager.GetHashCheckSum());
 
-            var mimeType = resource.ElementType switch
+            var mimeType = resource.ElementFileType switch
             {
                 "pdf" or "json" =>
                     "application/" + FileElementType,

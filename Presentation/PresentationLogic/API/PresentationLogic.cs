@@ -1,5 +1,6 @@
 using AutoMapper;
 using BusinessLogic.API;
+using BusinessLogic.Commands;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Layout;
@@ -237,8 +238,9 @@ public class PresentationLogic : IPresentationLogic
         string description, string goals, int requiredPoints, ITopicViewModel? topicVm = null)
     {
         var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+        var topicEntity = Mapper.Map<BusinessLogic.Entities.Topic>(topicVm);
 
-        var command = new EditLearningSpace(spaceEntity, name, description, goals, requiredPoints,
+        var command = new EditLearningSpace(spaceEntity, name, description, goals, requiredPoints, topicEntity,
             space => CMapper.Map(space, learningSpaceVm));
         BusinessLogic.ExecuteCommand(command);
     }
@@ -247,10 +249,9 @@ public class PresentationLogic : IPresentationLogic
     public void ChangeLearningSpaceLayout(ILearningSpaceViewModel learningSpaceVm, FloorPlanEnum floorPlanName)
     {
         var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
-        var topicEntity = topicVm != null ? Mapper.Map<BusinessLogic.Entities.Topic>(topicVm) : null;
 
         learningSpaceVm.AssignedTopic = null;
-        var command = new ChangeLearningSpaceLayout(spaceEntity, floorPlanName, topicEntity,
+        var command = new ChangeLearningSpaceLayout(spaceEntity, floorPlanName,
             space => CMapper.Map(space, learningSpaceVm));
         BusinessLogic.ExecuteCommand(command);
     }
@@ -370,7 +371,7 @@ public class PresentationLogic : IPresentationLogic
         foreach (var spaceEntity in learningWorldEntity.LearningSpaces.Where(x => x.AssignedTopic?.Id == topicEntity.Id))
         {
             var spaceVm = Mapper.Map<LearningSpaceViewModel>(spaceEntity);
-            listOfCommands.Add(new EditLearningSpace(spaceEntity, spaceEntity.Name, spaceEntity.Shortname, spaceEntity.Authors,
+            listOfCommands.Add(new EditLearningSpace(spaceEntity, spaceEntity.Name, 
                 spaceEntity.Description, spaceEntity.Goals, spaceEntity.RequiredPoints, null,
                 space => CMapper.Map(space, spaceVm)));
         }

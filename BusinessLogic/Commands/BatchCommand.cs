@@ -2,6 +2,7 @@ namespace BusinessLogic.Commands;
 
 public class BatchCommand : IUndoCommand
 {
+    public string Name => nameof(BatchCommand);
     internal IEnumerable<IUndoCommand> Commands { get; }
     
     public BatchCommand(IEnumerable<IUndoCommand> commands)

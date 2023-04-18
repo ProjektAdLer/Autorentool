@@ -66,8 +66,7 @@ public class LearningWorld : ILearningWorld, IOriginator
     public IMemento GetMemento()
     {
         return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, LearningSpaces,
-            PathWayConditions, LearningPathways, Topics, UnplacedLearningElements, SelectedLearningObjectInPathWay, 
-            );
+            PathWayConditions, LearningPathways, Topics, UnplacedLearningElements, SelectedLearningObjectInPathWay);
     }
 
     public void RestoreMemento(IMemento memento)

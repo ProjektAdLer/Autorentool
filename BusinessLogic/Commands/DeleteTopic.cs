@@ -4,6 +4,7 @@ namespace BusinessLogic.Commands;
 
 public class DeleteTopic : IUndoCommand
 {
+    public string Name => nameof(DeleteTopic);
     internal LearningWorld LearningWorld { get; }
     internal Topic Topic { get; }
     private readonly Action<LearningWorld> _mappingAction;

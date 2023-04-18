@@ -179,7 +179,7 @@ public class CreateDsl : ICreateDsl
         //Initialise learningWorldJson with empty values, will be filled with information later in the method.
         LearningWorldJson = new LearningWorldJson(new LmsElementIdentifierJson("moduleName", learningWorld.Name),
             learningWorld.Name, new List<TopicJson>(), new List<LearningSpaceJson>(),
-            new List<LearningElementJson>(), learningWorld.Description, new []{learningWorld.Goals});
+            new List<LearningElementJson>(), learningWorld.Description, learningWorld.Goals);
 
         // Create Learning Spaces & fill into Learning World
         // The learningSpaceId defines what the starting Id for Spaces should be. 
@@ -209,7 +209,7 @@ public class CreateDsl : ICreateDsl
             _booleanAlgebraRequirements = "";
             _currentConditionSpace = "";
             
-            var learningSpaceIdentifier = new IdentifierJson("name", space.Name);
+            var learningSpaceIdentifier = new LmsElementIdentifierJson("name", space.Name);
             
             if (space.AssignedTopic != null)
             {
@@ -241,14 +241,11 @@ public class CreateDsl : ICreateDsl
                 var url = element.LearningContent is LinkContentPe link ? link.Link : "";
                 
                 
-                var learningElementIdentifier = new IdentifierJson("FileName", element.Name);
-                List<LearningElementValueJson> learningElementValueList = new List<LearningElementValueJson>();
-                var learningElementValueJson = new LearningElementValueJson("Points", element.Points.ToString());
-                learningElementValueList.Add(learningElementValueJson);
+                var learningElementIdentifier = new LmsElementIdentifierJson("moduleName", element.Name);
 
                 var learningElementJson = new LearningElementJson(learningSpaceElementId,
-                    learningElementLmsElementIdentifier, element.Name, url, elementCategory, elementType, 
-                    learningSpaceId, element.Points, element.Description, new []{element.Goals});
+                    learningElementIdentifier, element.Name, url, elementCategory, elementType, 
+                    learningSpaceId, element.Points, element.Description, element.Goals);
 
                 // Add Elements that have Content to the List, they will be copied at the end of the method.
                 // Every Element without Content will be added to the LearningSpaceJson.
@@ -286,11 +283,10 @@ public class CreateDsl : ICreateDsl
             }
 
             // Add the constructed Learning Space to Learning World
-            LearningWorldJson.LearningSpaces.Add(new LearningSpaceJson(learningSpaceId,
-                learningSpaceIdentifier, _listLearningSpaceContent, 
-                learningSpace.RequiredPoints, 
-                learningSpace.LearningSpaceLayout.ContainedLearningElements.Sum(element => element.Points),
-                learningSpace.Description, learningSpace.Goals, requirements:_booleanAlgebraRequirements));
+            LearningWorldJson.Spaces.Add(new LearningSpaceJson(learningSpaceId,
+                learningSpaceIdentifier, space.Name, _listLearningSpaceElements, 
+                space.RequiredPoints, 
+                space.Description, space.Goals, _booleanAlgebraRequirements));
             
             learningSpaceId++;
         }

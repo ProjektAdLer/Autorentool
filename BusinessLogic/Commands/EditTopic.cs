@@ -4,6 +4,7 @@ namespace BusinessLogic.Commands;
 
 public class EditTopic : IUndoCommand
 {
+    public string Name => nameof(EditTopic);
     internal Topic Topic { get; }
     private readonly string _name;
     private readonly Action<Topic> _mappingAction;

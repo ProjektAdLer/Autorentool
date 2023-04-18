@@ -820,9 +820,9 @@ public class PresentationLogicUt
             Do(sub => command = sub.Arg<ICommand>() as BatchCommand);
         var learningWorldVm = new LearningWorldViewModel("a","b","c","d","e","f");
         var topicVm = new TopicViewModel("a");
-        var spaceVm1 = new LearningSpaceViewModel("a", "b", "c", "d", "e", 2, assignedTopic: topicVm);
-        var spaceVm2 = new LearningSpaceViewModel("a", "b", "c", "d", "e", 2, assignedTopic: topicVm);
-        var spaceVm3 = new LearningSpaceViewModel("a", "b", "c", "d", "e", 2, assignedTopic: topicVm);
+        var spaceVm1 = new LearningSpaceViewModel("a", "b", "c", 2, assignedTopic: topicVm);
+        var spaceVm2 = new LearningSpaceViewModel("a", "b", "c", 2, assignedTopic: topicVm);
+        var spaceVm3 = new LearningSpaceViewModel("a", "b", "c", 2, assignedTopic: topicVm);
         learningWorldVm.LearningSpaces.Add(spaceVm1);
         learningWorldVm.LearningSpaces.Add(spaceVm2);
         learningWorldVm.LearningSpaces.Add(spaceVm3);
@@ -830,9 +830,9 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var learningWorldEntity = new BusinessLogic.Entities.LearningWorld("a","b","c","d","e","f");
         var topicEntity = new BusinessLogic.Entities.Topic("a");
-        var spaceEntity1 = new BusinessLogic.Entities.LearningSpace("a", "b", "c", "d", "e", 2, assignedTopic: topicEntity);
-        var spaceEntity2 = new BusinessLogic.Entities.LearningSpace("a", "b", "c", "d", "e", 2, assignedTopic: topicEntity);
-        var spaceEntity3 = new BusinessLogic.Entities.LearningSpace("a", "b", "c", "d", "e", 2, assignedTopic: topicEntity);
+        var spaceEntity1 = new BusinessLogic.Entities.LearningSpace("a", "b", "c", 2, assignedTopic: topicEntity);
+        var spaceEntity2 = new BusinessLogic.Entities.LearningSpace("a", "b", "c", 2, assignedTopic: topicEntity);
+        var spaceEntity3 = new BusinessLogic.Entities.LearningSpace("a", "b", "c", 2, assignedTopic: topicEntity);
         learningWorldEntity.LearningSpaces.Add(spaceEntity1);
         learningWorldEntity.LearningSpaces.Add(spaceEntity2);
         learningWorldEntity.LearningSpaces.Add(spaceEntity3);

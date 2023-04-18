@@ -1,4 +1,5 @@
 ﻿using JetBrains.Annotations;
+using Shared;
 
 namespace BusinessLogic.Entities;
 
@@ -59,7 +60,7 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
 
     public IMemento GetMemento()
     {
-        return new LearningSpaceMemento(Name, Description, Goals, LearningSpaceLayout, InBoundObjects, 
+        return new LearningSpaceMemento(Name, Description, Goals, RequiredPoints, LearningSpaceLayout, InBoundObjects, 
             OutBoundObjects, assignedTopic: AssignedTopic, positionX: PositionX, positionY: PositionY, selectedLearningElement: SelectedLearningElement);
     }
 

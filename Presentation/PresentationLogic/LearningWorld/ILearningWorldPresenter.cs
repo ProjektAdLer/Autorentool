@@ -5,6 +5,7 @@ using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.Topic;
 using Shared;
 using Shared.Command;
 
@@ -27,9 +28,10 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     /// <param name="requiredPoints"></param>
     /// <param name="positionX"></param>
     /// <param name="positionY"></param>
+    /// <param name="topic"></param>
     /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
     void CreateLearningSpace(string name, string description, string goals,
-        int requiredPoints, double positionX = 0, double positionY = 0);
+        int requiredPoints, double positionX = 0, double positionY = 0, TopicViewModel? topic = null);
 
     Task LoadLearningSpaceAsync();
     void EditLearningWorld(string name, string shortname, string authors, string language, string description, string goals);
@@ -38,8 +40,6 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     void ShowSelectedLearningSpaceView();
     void CloseLearningSpaceView();
     void DeletePathWayCondition(PathWayConditionViewModel pathWayCondition);
-    void OpenDeleteTopicDialog();
-    void OnDeleteTopicDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void OnWorkspacePropertyChanged(object? caller, PropertyChangedEventArgs e);
     event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
     void DragObjectInPathWay(object sender, DraggedEventArgs<IObjectInPathWayViewModel> draggedEventArgs);
@@ -50,7 +50,6 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     void HideRightClickMenu();
     IObjectInPathWayViewModel? RightClickedLearningObject { get; }
     void EditObjectInPathWay(IObjectInPathWayViewModel obj);
-    void RemoveLearningSpaceFromTopic(ILearningSpaceViewModel learningSpace);
     void DeleteLearningSpace(ILearningSpaceViewModel obj);
     void DeleteLearningObject(IObjectInPathWayViewModel obj);
     void CreatePathWayCondition(ConditionEnum condition = ConditionEnum.Or);

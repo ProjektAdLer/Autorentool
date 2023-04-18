@@ -8,6 +8,7 @@ using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.Topic;
 using Shared;
 using Shared.Command;
 
@@ -199,7 +200,8 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     /// <inheritdoc cref="ILearningWorldPresenter.CreateLearningSpace"/>
     public void CreateLearningSpace(string name, string description, string goals, int requiredPoints,
         double positionX = 0D,
-        double positionY = 0D)
+        double positionY = 0D,
+        TopicViewModel? topic = null)
     {
         if (LearningWorldVm == null)
         {
@@ -208,7 +210,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         }
             
         _presentationLogic.CreateLearningSpace(LearningWorldVm, name, description, goals,
-            requiredPoints, positionX, positionY);
+            requiredPoints, positionX, positionY, topic);
         //TODO: Return error in the command in case of failure
         if(LearningWorldVm.SelectedLearningObjectInPathWay is LearningSpaceViewModel learningSpace)
             learningSpace.SelectedElementChanged += OnSelectedElementChanged;

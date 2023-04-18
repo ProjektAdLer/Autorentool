@@ -192,14 +192,12 @@ public class CachingMapperUt
     {
         var world = new LearningWorld("n","s","a","l","d","g");
         var worldViewModel = new LearningWorldViewModel("x","x","x","x","x","x");
-        var spaceEntity = new LearningSpace("n", "s", "a", "d", "g", 5);
+        var spaceEntity = new LearningSpace("n", "s", "a", 5);
         var topicEntity = new Topic("a");
         spaceEntity.AssignedTopic = topicEntity;
         world.Topics.Add(topicEntity);
         
-        var config = new MapperConfiguration(MappingProfile.Configure);
-        var mapper = config.CreateMapper();
-        var systemUnderTest = CreateTestableCachingMapper(mapper);
+        var systemUnderTest = CreateTestableCachingMapper();
         
         systemUnderTest.Map(world, worldViewModel);
         
