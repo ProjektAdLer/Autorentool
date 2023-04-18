@@ -10,6 +10,7 @@ using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Topic;
 
 namespace AuthoringTool.Mapping;
 
@@ -35,6 +36,14 @@ public class ViewModelEntityMappingProfile : Profile
         CreatePathwayMaps();
         CreateInterfaceMaps();
         CreateLearningSpaceLayoutMap();
+        CreateTopicMap();
+    }
+
+    private void CreateTopicMap()
+    {
+        CreateMap<Topic, TopicViewModel>()
+            .EqualityComparison((entity, vm) => entity.Id == vm.Id)
+            .ReverseMap();
     }
 
     private void CreateLearningSpaceLayoutMap()

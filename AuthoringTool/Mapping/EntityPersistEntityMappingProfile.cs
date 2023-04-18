@@ -1,4 +1,5 @@
 using AutoMapper;
+using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using PersistEntities;
@@ -29,6 +30,14 @@ public class EntityPersistEntityMappingProfile : Profile
         CreateInterfaceMaps();
         CreateEnumMaps();
         CreateLearningSpaceLayoutMap();
+        CreateTopicMap();
+    }
+
+    private void CreateTopicMap()
+    {
+        CreateMap<Topic, TopicPe>()
+            .EqualityComparison((entity, pe) => entity.Id == pe.Id)
+            .ReverseMap();
     }
 
     private void CreateLearningSpaceLayoutMap()
