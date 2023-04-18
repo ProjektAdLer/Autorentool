@@ -66,7 +66,8 @@ public class LearningWorld : ILearningWorld, IOriginator
     public IMemento GetMemento()
     {
         return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, LearningSpaces,
-            PathWayConditions, LearningPathways, Topics, UnplacedLearningElements, SelectedLearningObjectInPathWay);
+            PathWayConditions, LearningPathways, Topics, UnplacedLearningElements, SelectedLearningObjectInPathWay,
+            SelectedLearningElement);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -95,7 +96,7 @@ public class LearningWorld : ILearningWorld, IOriginator
         internal LearningWorldMemento(string name, string shortname, string authors, string language,
             string description, string goals, List<LearningSpace> learningSpaces, List<PathWayCondition> pathWayConditions,
             List<LearningPathway> learningPathways, List<Topic> topics, IEnumerable<ILearningElement> unplacedLearningElements,
-            ISelectableObjectInWorld? selectedLearningObjectInPathWay = null, ILearningElement? selectedLearningElement = null)
+            ISelectableObjectInWorld? selectedLearningObjectInPathWay, ILearningElement? selectedLearningElement)
         {
             Name = name;
             Shortname = shortname;

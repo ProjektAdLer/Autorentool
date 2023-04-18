@@ -55,7 +55,15 @@ public class PersistenceCt
         world.LearningPathways.Add(new LearningPathwayPe(space1, condition1));
         world.LearningPathways.Add(new LearningPathwayPe(condition1, space2));
         world.LearningPathways.Add(new LearningPathwayPe(space2, condition2));
-
+        space1.AssignedTopic = topic;
+        space2.AssignedTopic = topic;
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.LearningSpaces[0].AssignedTopic, Is.EqualTo(world.Topics[0]));
+            Assert.That(world.LearningSpaces[1].AssignedTopic, Is.EqualTo(world.Topics[0]));
+        });
+        
         using var stream = new MemoryStream();
         var systemUnderTest = CreateTestableFileSaveHandler<LearningWorldPe>();
 
