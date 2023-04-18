@@ -117,7 +117,7 @@ public class ReadDsl : IReadDsl
             new LmsElementIdentifierJson("Description",documentRootJson.World.WorldDescription),"", "", 
             "World Attributes", "label", 0,
             0, documentRootJson.World.WorldDescription,
-            documentRootJson.World.WorldGoals);
+            string.Join("\n", documentRootJson.World.WorldGoals));
         
         _listAllElementsOrdered.Add(worldAttributes);
     }

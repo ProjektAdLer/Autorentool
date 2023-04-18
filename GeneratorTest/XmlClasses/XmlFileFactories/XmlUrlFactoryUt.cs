@@ -63,7 +63,7 @@ public class XmlUrlFactoryUt
         var urlLearningElementJson = new LearningElementJson(1, new LmsElementIdentifierJson("Name", "Video auf Youtube"),
             "", "youtube.de", "video", "Video-Link", 1, 
             2, 
-            "desc", new [] {"goal"});
+            "desc", "goal");
         var urlList = new List<LearningElementJson>(){urlLearningElementJson};
 
         mockReadDsl.GetUrlList().Returns(urlList);
@@ -104,7 +104,7 @@ public class XmlUrlFactoryUt
         var urlLearningElementJson = new LearningElementJson(1, new LmsElementIdentifierJson("Name", "Video auf Youtube"),
             "","youtube.de", "video", "url", 1, 
             2, 
-            "desc", new []{"goal"});
+            "desc", "goal");
         var urlList = new List<LearningElementJson>(){urlLearningElementJson};
         
         

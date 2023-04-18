@@ -135,7 +135,7 @@ public class XmlLabelFactoryUt
             mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref, mockInforefInforef);
         
         var mockLabelsElementJson = new LearningElementJson(2, new LmsElementIdentifierJson("Name", "World Description"), "",
-            "","World Attributes", "World Attributes", 1, 0, "World Description", new []{"World Goals"});
+            "","World Attributes", "World Attributes", 1, 0, "World Description", "World Goals");
 
         var mockElementJson = new LearningElementJson(1, new LmsElementIdentifierJson("Name", "id"), "", 
             "", "", "h5p", 0, 7);

@@ -160,15 +160,15 @@ public class PersistenceCt
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
             "Description", "Goals");
         var initialWorldId = world.Id;
-        var space1 = new LearningSpacePe("Name", "Description", "Goals", 5,
-            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(), FloorPlanEnumPe.Rectangle2X3));
         var topic = new TopicPe("Topic");
+        var space1 = new LearningSpacePe("Name", "Description", "Goals", 5,
+            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(), FloorPlanEnumPe.Rectangle2X3),
+            assignedTopic: topic);
         var initialTopicId = topic.Id;
-        var space1 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5, assignedTopic:topic);
         var initialSpace1Id = space1.Id;
         var space2 = new LearningSpacePe("Name", "Description", "Goals", 5,
-            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(), FloorPlanEnumPe.Rectangle2X3));
-        var space2 = new LearningSpacePe("Name", "Shortname", "Authors", "Description", "Goals", 5, assignedTopic:topic);
+            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(), FloorPlanEnumPe.Rectangle2X3),
+            assignedTopic: topic);
         var initialSpace2Id = space2.Id;
         var condition1 = new PathWayConditionPe(ConditionEnumPe.Or, 2, 1);
         var initialCondition1Id = condition1.Id;

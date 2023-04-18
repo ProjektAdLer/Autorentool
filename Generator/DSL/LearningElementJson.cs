@@ -8,14 +8,14 @@ public class LearningElementJson : ILearningElementJson
     // incremented ID for every element, it will also be used as moduleid, sectionid, contextid ...
     public LearningElementJson(int elementId, LmsElementIdentifierJson lmsElementIdentifier, string elementName,
         string url, string elementCategory, string elementFileType, int learningSpaceParentId,
-        int elementMaxScore, string? elementDescription=null, string[]? elementGoals = null)
+        int elementMaxScore, string? elementDescription=null, string? elementGoals = null)
     {
         ElementId = elementId;
         LmsElementIdentifier = lmsElementIdentifier;
         ElementName = elementName;
         Url = url;
         ElementDescription = elementDescription ?? "";
-        ElementGoals = elementGoals ?? new []{""};
+        ElementGoals = elementGoals?.Split("\n") ?? new []{""};
         ElementCategory = elementCategory;
         ElementFileType = elementFileType;
         LearningSpaceParentId = learningSpaceParentId;
