@@ -27,19 +27,16 @@
             </label>
             <div class="text-adlergrey">
                 <div>
-                    @*<MudText Typo="Typo.h6">Learning space @LearningSpaceP.LearningSpaceVm?.Name:</MudText>*@
                     <MudText Typo="Typo.subtitle1">Workload: @LearningSpaceP.LearningSpaceVm?.Workload min.</MudText>
                     <MudText Typo="Typo.subtitle1">Points: @LearningSpaceP.LearningSpaceVm?.Points</MudText>
-                    @*<button class="btn btn-primary load-learning-element" @onclick="LoadLearningElementAsync">Load Learning Element</button>
-                    <h1>Anzahl Lernelemente: @LearningSpaceP.LearningSpaceVm?.LearningSpaceLayout.Count</h1>*@
                     @ChildContent
                 </div>
             </div>
             </div>
             <div class="flex justify-start">
-                <button class="btn-standard" @onclick="DeleteSelectedLearningElement">Delete Learning Element</button>
-                <button class="btn-standard" @onclick="SaveSelectedLearningElementAsync">Save selected Learning Element</button>
-                <button class="btn-standard" @onclick="ShowSelectedElementContentAsync">Show content of Learning Element</button>
+                <button class="btn-standard delete-learning-element" @onclick="DeleteSelectedLearningElement">Delete Learning Element</button>
+                <button class="btn-standard save-learning-element" @onclick="SaveSelectedLearningElementAsync">Save selected Learning Element</button>
+                <button class="btn-standard show-learning-element-content" @onclick="ShowSelectedElementContentAsync">Show content of Learning Element</button>
             </div>
         </section>
     }

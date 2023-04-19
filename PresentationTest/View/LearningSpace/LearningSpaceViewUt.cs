@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Bunit;
+using Bunit.TestDoubles;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using MudBlazor;
 using MudBlazor.Services;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -29,6 +32,7 @@ public class LearningSpaceViewUt
         _ctx = new TestContext();
         _ctx.Services.AddMudServices();
         _ctx.JSInterop.SetupVoid("mudDragAndDrop.initDropZone", _ => true);
+        _ctx.ComponentFactories.AddStub<MudText>();
         _learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
         _ctx.Services.AddSingleton(_learningSpacePresenter);
         _ctx.Services.AddLogging();
@@ -72,12 +76,12 @@ public class LearningSpaceViewUt
 
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
-        var nameHeader = systemUnderTest.FindOrFail("h4");
-        var workloadPointsHeader = systemUnderTest.FindAll("h6");
-
-        nameHeader.MarkupMatches("<h4 class=\"mud-typography mud-typography-h4\">LearningSpace foobar</h4>");
-        workloadPointsHeader[0].MarkupMatches("<h6 class=\"mud-typography mud-typography-h6\">Workload: 42 minutes</h6>");
-        workloadPointsHeader[1].MarkupMatches("<h6 class=\"mud-typography mud-typography-h6\">Points: 8</h6>");
+        var mudTextStubs = systemUnderTest.FindComponents<Stub<MudText>>()
+            .Select(stub => stub.Instance.Parameters["ChildContent"])
+            .Cast<RenderFragment>()
+            .Select(o => _ctx.Render(o)).ToList();
+        Assert.That(mudTextStubs.Any(stub => stub.Markup.Contains("Workload: 42 min.")));
+        Assert.That(mudTextStubs.Any(stub => stub.Markup.Contains("Points: 8")));
     }
 
     [Test]
@@ -92,13 +96,15 @@ public class LearningSpaceViewUt
 
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
-        var label = systemUnderTest.FindOrFail("label");
-        var deleteButton = systemUnderTest.FindOrFail("button.btn.btn-primary.delete-learning-element");
-        var saveButton = systemUnderTest.FindOrFail("button.btn.btn-primary.save-learning-element");
-        
-        label.MarkupMatches(@"<label id=""learning-element-info"">Selected element: my secret name, Description: a super long description</label>");
-        deleteButton.MarkupMatches(@"<button class=""btn btn-primary delete-learning-element"">Delete Learning Element</button>");
-        saveButton.MarkupMatches(@"<button class=""btn btn-primary save-learning-element"">Save selected Learning Element</button>");
+        var mudTextStubs = systemUnderTest.FindComponents<Stub<MudText>>()
+            .Select(stub => stub.Instance.Parameters["ChildContent"])
+            .Cast<RenderFragment>()
+            .Select(o => _ctx.Render(o)).ToList();
+
+        Assert.That(mudTextStubs.Any(stub =>
+            stub.Markup.Contains("Selected learning element: my secret name")));
+        Assert.That(mudTextStubs.Any(stub =>
+            stub.Markup.Contains("Description: a super long description")));
     }
 
     [Test]
@@ -128,61 +134,18 @@ public class LearningSpaceViewUt
         _learningSpacePresenter.LearningSpaceVm.Returns(space);
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
-        var button = systemUnderTest.FindOrFail("button.btn.btn-primary.delete-learning-element");
+        var button = systemUnderTest.FindOrFail("button.delete-learning-element");
         button.Click();
         _learningSpacePresenter.Received().DeleteSelectedLearningElement();
     }
 
-    [Test]
-    public void LoadElementButton_Clicked_CallsLoadLearningElementAsync()
-    {
-        var systemUnderTest = GetLearningSpaceViewForTesting();
-
-        var button = systemUnderTest.Find("button.btn.btn-primary.load-learning-element");
-        button.Click();
-        _learningSpacePresenter.Received().LoadLearningElementAsync(0);
-    }
-
-    [Test]
-    public void LoadElementButton_Clicked_OperationCanceledExceptionCaught()
-    {
-        _learningSpacePresenter.LoadLearningElementAsync(0).Throws(new OperationCanceledException());
-
-        var systemUnderTest = GetLearningSpaceViewForTesting();
-
-        var button = systemUnderTest.Find("button.btn.btn-primary.load-learning-element");
-        Assert.That(() => button.Click(), Throws.Nothing);
-        _learningSpacePresenter.Received().LoadLearningElementAsync(0);
-    }
-
-    [Test]
-    public void LoadElementButton_Clicked_OtherExceptionsWrappedInErrorState()
-    {
-        var ex = new Exception();
-        _learningSpacePresenter.LoadLearningElementAsync(0).Throws(ex);
-
-        var systemUnderTest = GetLearningSpaceViewForTesting();
-
-        var button = systemUnderTest.Find("button.btn.btn-primary.load-learning-element");
-        Assert.Multiple(() =>
-        {
-            Assert.That(() => button.Click(), Throws.Nothing);
-            Assert.That(systemUnderTest.Instance.ErrorState, Is.Not.Null);
-        });
-        Assert.Multiple(() =>
-        {
-            Assert.That(systemUnderTest.Instance.ErrorState!.CallSite, Is.EqualTo("Load learning element"));
-            Assert.That(systemUnderTest.Instance.ErrorState!.Exception, Is.EqualTo(ex));
-        });
-        _learningSpacePresenter.Received().LoadLearningElementAsync(0);
-    }
 
     [Test]
     public void SaveObjectButton_Clicked_CallsSaveSelectedLearningObjectAsync()
     {
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
-        var button = systemUnderTest.Find("button.btn.btn-primary.save-learning-element");
+        var button = systemUnderTest.Find("button.save-learning-element");
         button.Click();
         _learningSpacePresenter.Received().SaveSelectedLearningElementAsync();
     }
@@ -194,7 +157,7 @@ public class LearningSpaceViewUt
 
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
-        var button = systemUnderTest.Find("button.btn.btn-primary.save-learning-element");
+        var button = systemUnderTest.Find("button.save-learning-element");
         Assert.That(() => button.Click(), Throws.Nothing);
         _learningSpacePresenter.Received().SaveSelectedLearningElementAsync();
     }
@@ -207,7 +170,7 @@ public class LearningSpaceViewUt
 
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
-        var button = systemUnderTest.Find("button.btn.btn-primary.save-learning-element");
+        var button = systemUnderTest.Find("button.save-learning-element");
         Assert.Multiple(() =>
         {
             Assert.That(() => button.Click(), Throws.Nothing);
@@ -226,7 +189,7 @@ public class LearningSpaceViewUt
     {
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
-        var button = systemUnderTest.Find("button.btn.btn-primary.show-element-content");
+        var button = systemUnderTest.Find("button.show-learning-element-content");
         button.Click();
         _learningSpacePresenter.Received().ShowSelectedElementContentAsync();
     }
@@ -238,7 +201,7 @@ public class LearningSpaceViewUt
 
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
-        var button = systemUnderTest.Find("button.btn.btn-primary.show-element-content");
+        var button = systemUnderTest.Find("button.show-learning-element-content");
         Assert.That(() => button.Click(), Throws.Nothing);
         _learningSpacePresenter.Received().ShowSelectedElementContentAsync();
     }
@@ -251,7 +214,7 @@ public class LearningSpaceViewUt
 
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
-        var button = systemUnderTest.Find("button.btn.btn-primary.show-element-content");
+        var button = systemUnderTest.Find("button.show-learning-element-content");
         Assert.Multiple(() =>
         {
             Assert.That(() => button.Click(), Throws.Nothing);
