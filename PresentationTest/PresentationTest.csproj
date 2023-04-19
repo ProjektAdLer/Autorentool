@@ -5,7 +5,6 @@
         <Nullable>enable</Nullable>
 
         <IsPackable>false</IsPackable>
-        <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
         <AssemblyName>PresentationTest</AssemblyName>
         <RootNamespace>PresentationTest</RootNamespace>
     </PropertyGroup>

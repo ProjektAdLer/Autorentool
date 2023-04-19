@@ -6,7 +6,6 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Presentation</RootNamespace>
-    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <OutputType>Library</OutputType>
     <AssemblyName>Presentation</AssemblyName>
   </PropertyGroup>
