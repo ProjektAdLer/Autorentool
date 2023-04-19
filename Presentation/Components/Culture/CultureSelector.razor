@@ -1,17 +1,12 @@
 @using System.Globalization
 @using Microsoft.Extensions.Localization
-@using MudBlazor
 @inject NavigationManager Navigation
 @inject IStringLocalizer<CultureSelector> Localizer
 
-<p>
-    <label>
-        <MudRadioGroup @bind-SelectedOption="Culture">
-            <MudRadio Option="supportedCultures[0]">@Localizer["German"]</MudRadio>
-            <MudRadio Option="supportedCultures[1]">@Localizer["English"]</MudRadio>
-        </MudRadioGroup>
-    </label>
-</p>
+<div class="flex flex-row rounded-md border-4 border-solid border-black">
+    <button @onclick="() => SetCulture(supportedCultures[0])" class="my-2 mx-4 @(Equals(Culture, supportedCultures[0]) ? "bg-gray-800" : "")">🇩🇪</button>
+    <button @onclick="() => SetCulture(supportedCultures[1])" class="my-2 mx-4 @(Equals(Culture, supportedCultures[1]) ? "bg-gray-800" : "")">🇬🇧</button>
+</div>
 
 @code
 {
@@ -44,5 +39,10 @@
                 $"Culture/Set?culture={cultureEscaped}&redirectUri={uriEscaped}",
                 forceLoad: true);
         }
+    }
+
+    private void SetCulture(CultureInfo culture)
+    {
+        Culture = culture;
     }
 }

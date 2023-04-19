@@ -88,5 +88,13 @@
     <EmbeddedResource Update="Resources\Components\Culture\CultureSelector.de.resx">
       <LastGenOutput>CultureSelector.de.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\View\HeaderBar.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>View.HeaderBar.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\View\HeaderBar.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>View.HeaderBar.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>
