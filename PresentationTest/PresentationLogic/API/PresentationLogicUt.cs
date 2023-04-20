@@ -334,7 +334,7 @@ public class PresentationLogicUt
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
 
-        systemUnderTest.EditLearningSpace(learningSpaceVm, "z", "z", "z", 5);
+        systemUnderTest.EditLearningSpace(learningSpaceVm, "z", "z", "z", 5, null);
 
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
         Assert.That(command, Is.Not.Null);

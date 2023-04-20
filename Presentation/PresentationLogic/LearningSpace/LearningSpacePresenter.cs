@@ -43,7 +43,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         if (LearningSpaceVm == null)
             throw new ApplicationException("LearningSpaceVm is null");
         _presentationLogic.EditLearningSpace(LearningSpaceVm, name, description, goals,
-            requiredPoints);
+            requiredPoints, topic);
     }
 
     public bool ReplaceLearningElementDialogOpen { get; set; } = false;

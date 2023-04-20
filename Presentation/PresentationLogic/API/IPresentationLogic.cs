@@ -142,7 +142,7 @@ public interface IPresentationLogic
     /// <param name="requiredPoints"></param>
     /// <param name="topicVm"></param>
     void EditLearningSpace(ILearningSpaceViewModel learningSpaceVm, string name,
-        string description, string goals, int requiredPoints, ITopicViewModel? topicVm = null);
+        string description, string goals, int requiredPoints, ITopicViewModel? topicVm);
 
     /// <summary>
     /// Changes the layout of the given learning space to the given layout.
