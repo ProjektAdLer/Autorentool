@@ -23,8 +23,8 @@
             <MudButton Class="btn-standard" @onclick="AddNewPathWayCondition" Disabled="LearningWorldP.LearningWorldVm == null">New Condition</MudButton>
         </div>    
         <div class="flex grow justify-between">    
-            <MudButton Class="btn-standard" @onclick="LoadLearningSpaceAsync" Disabled="LearningWorldP.LearningWorldVm == null">Load Space</MudButton>
-            <MudButton Class="btn-standard" OnClick="SaveLearningWorldAsync" Disabled="LearningWorldP.LearningWorldVm == null">Save World</MudButton>
+            <MudButton Class="btn-standard load-learning-space" @onclick="LoadLearningSpaceAsync" Disabled="LearningWorldP.LearningWorldVm == null">Load Space</MudButton>
+            <MudButton Class="btn-standard save-learning-world" OnClick="SaveLearningWorldAsync" Disabled="LearningWorldP.LearningWorldVm == null">Save World</MudButton>
         </div>
     </section>
     <section class="p-2 flex justify-between">

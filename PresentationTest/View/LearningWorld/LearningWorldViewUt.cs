@@ -43,6 +43,7 @@ public class LearningWorldViewUt
         _ctx.ComponentFactories.AddStub<LearningSpaceView>();
         _ctx.ComponentFactories.AddStub<DraggableObjectInPathWay>();
         _ctx.ComponentFactories.AddStub<PathWay>();
+        _ctx.ComponentFactories.AddStub<MudIcon>();
         _ctx.Services.AddSingleton(_mouseService);
         _ctx.Services.AddSingleton(_worldPresenter);
     }
@@ -76,47 +77,6 @@ public class LearningWorldViewUt
     }
 
     [Test]
-    public void Render_ShowingLearningSpaceFalse_DoesNotRenderLearningSpaceView()
-    {
-        _worldPresenter.ShowingLearningSpaceView.Returns(false);
-        
-        var systemUnderTest = GetLearningWorldViewForTesting();
-
-        Assert.That(systemUnderTest.FindComponent<Stub<LearningSpaceView>>,
-            Throws.TypeOf<ComponentNotFoundException>());
-    }
-
-    [Test]
-    public void Render_ShowingLearningSpaceTrue_DoesRenderLearningSpaceViewWithButton()
-    {
-        _worldPresenter.ShowingLearningSpaceView.Returns(true);
-        
-        var systemUnderTest = GetLearningWorldViewForTesting();
-
-        var spaceView = systemUnderTest.FindComponentOrFail<Stub<LearningSpaceView>>();
-        var childContent = (RenderFragment)spaceView.Instance.Parameters[nameof(LearningSpaceView.ChildContent)];
-        Assert.That(childContent, Is.Not.Null);
-        var childContentRendered = _ctx.Render(childContent);
-        childContentRendered.MarkupMatches(
-            @"<button class=""btn btn-primary"">Close Learning Space View</button>");
-    }
-
-    [Test]
-    public void Render_ShowLearningSpaceTrue_ChildContentOnClickCallsCloseLearningSpaceView()
-    {
-        _worldPresenter.ShowingLearningSpaceView.Returns(true);
-        
-        var systemUnderTest = GetLearningWorldViewForTesting();
-
-        var spaceView = systemUnderTest.FindComponentOrFail<Stub<LearningSpaceView>>();
-        var childContent = (RenderFragment)spaceView.Instance.Parameters[nameof(LearningSpaceView.ChildContent)];
-        Assert.That(childContent, Is.Not.Null);
-        var childContentRendered = _ctx.Render(childContent);
-        childContentRendered.FindOrFail("button.btn.btn-primary").Click();
-        _worldPresenter.Received(1).CloseLearningSpaceView();
-    }
-
-    [Test]
     public void Render_LearningWorldSet_RendersNameWorkloadAndPoints()
     {
         var learningWorld = Substitute.For<ILearningWorldViewModel>();
@@ -127,11 +87,10 @@ public class LearningWorldViewUt
         
         var systemUnderTest = GetLearningWorldViewForTesting();
 
-        var h2 = systemUnderTest.FindOrFail("h2");
-        h2.MarkupMatches(@"<h2>World: my insanely sophisticated name</h2>");
-        var h5 = systemUnderTest.FindAll("h5");
-        h5[0].MarkupMatches(@"<h5>Workload: 42 minutes</h5>");
-        h5[1].MarkupMatches(@"<h5>Points: 9</h5>");
+        var h3 = systemUnderTest.FindAllOrFail("h3").ToList();
+        h3[0].MarkupMatches(@"<h3 class=""font-bold text-lg"">World: my insanely sophisticated name</h3>");
+        h3[1].MarkupMatches(@"<h3 class=""font-bold text-lg"">Workload: 42 m</h3>");
+        h3[2].MarkupMatches(@"<h3 class=""font-bold text-lg"">Points: 9</h3>");
     }
     
     [Test]
@@ -281,53 +240,6 @@ public class LearningWorldViewUt
         var editSpaceButton = systemUnderTest.FindOrFail("button.btn.btn-primary.delete-learning-object");
         editSpaceButton.Click();
         _worldPresenter.Received().DeleteSelectedLearningObject();
-    }
-    
-    [Test]
-    public void SaveSpaceButton_Clicked_CallsSaveSelectedLearningSpaceAsync()
-    {
-        var systemUnderTest = GetLearningWorldViewForTesting();
-        
-        var loadElementButton = systemUnderTest.FindOrFail("button.btn.btn-primary.save-learning-space");
-        loadElementButton.Click();
-        _worldPresenter.Received().SaveSelectedLearningSpaceAsync();
-    }
-    
-    [Test]
-    public void SaveSpaceButton_Clicked_OperationCancelledExceptionCaught()
-    {
-        _worldPresenter.SaveSelectedLearningSpaceAsync().Throws<OperationCanceledException>();
-        
-        var systemUnderTest = GetLearningWorldViewForTesting();
-        
-        var loadElementButton = systemUnderTest.FindOrFail("button.btn.btn-primary.save-learning-space");
-        Assert.That(() => loadElementButton.Click(), Throws.Nothing);
-        _worldPresenter.Received().SaveSelectedLearningSpaceAsync();
-    }
-    
-    [Test]
-    public void SaveSpaceButton_Clicked_OtherExceptionsWrappedInErrorState()
-    {
-        _worldPresenter.SaveSelectedLearningSpaceAsync().Throws(new Exception("saatana"));
-        
-        var systemUnderTest = GetLearningWorldViewForTesting();
-        
-        var loadElementButton = systemUnderTest.FindOrFail("button.btn.btn-primary.save-learning-space");
-        Assert.That(() => loadElementButton.Click(), Throws.Nothing);
-        _worldPresenter.Received().SaveSelectedLearningSpaceAsync();
-    }
-    
-    [Test]
-    public void ShowSelectedSpace_Called_CallsShowSelectedLearningSpaceView()
-    {
-        var worldVm = Substitute.For<ILearningWorldViewModel>();
-        _worldPresenter.LearningWorldVm.Returns(worldVm);
-
-        var systemUnderTest = GetLearningWorldViewForTesting();
-        
-        var editSpaceButton = systemUnderTest.FindOrFail("button.btn.btn-primary.show-learning-space");
-        editSpaceButton.Click();
-        _worldPresenter.Received().ShowSelectedLearningSpaceView();
     }
     
     private IRenderedComponent<LearningWorldView> GetLearningWorldViewForTesting(RenderFragment? childContent = null)
