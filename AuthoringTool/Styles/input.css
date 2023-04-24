@@ -4,7 +4,7 @@
 
 @layer components {
     .btn-standard {
-        @apply h-8 text-adlerdarkblue bg-buttonbgblue p-4 rounded-lg drop-shadow transform ease-in-out duration-75 active:drop-shadow-none hover:bg-adlerdarkblue hover:text-buttonbgblue m-2;
+        @apply h-8 truncate text-adlerdarkblue bg-buttonbgblue p-4 rounded-lg drop-shadow transform ease-in-out duration-75 active:drop-shadow-none hover:bg-adlerdarkblue hover:text-buttonbgblue m-2;
     }
     
     .unselectable {
