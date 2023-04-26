@@ -10,10 +10,12 @@
         <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Learning element metadata</h2>
     </div>
 </header>
+<MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
+
 <BaseForm TForm="LearningElementFormModel" TEntity="LearningElement"
           OnValidSubmit="OnValidSubmit" SnackbarMessage="Element updated" FormDataContainer="FormDataContainer">
     <HeaderButtons>
-        <MudButton Variant="Variant.Outlined" Color="Color.Secondary" OnClick="async () => await OnNewButtonClicked.InvokeAsync()">New Learning Element</MudButton>
+        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Class="btn-standard" OnClick="async () => await OnNewButtonClicked.InvokeAsync()">New</MudButton>
     </HeaderButtons>
     <Fields>
         <Collapsable Title="General" @bind-Collapsed="_collapsedGeneral">
@@ -75,7 +77,7 @@
     </Fields>
     <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
-        <MudButton Variant="Variant.Outlined" Color="Color.Error" OnClick="OnResetAsync">Reset</MudButton>
+        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Autorenew" Class="btn-standard text-adlergrey rounded bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue" OnClick="OnResetAsync"></MudIconButton>
     </FooterButtons>
 </BaseForm>
 

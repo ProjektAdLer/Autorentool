@@ -1,13 +1,15 @@
 @using Presentation.Components.Forms.Content
 @using Presentation.Components.Forms
 @using Presentation.PresentationLogic.API
-<MudStack Class="w-full">
-    <div class="flex flex-col">
-        <header class="m-2 rounded-lg">
+<header class="m-2 rounded-lg">
             <div class="flex justify-center p-2">
                 <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Import of all files</h2>
             </div>
         </header>
+        <MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
+<MudStack Class="w-full">
+    <div class="flex flex-col">
+        
         @if (Working)
         {
             <div class="w-full h-full bg-adlergrey-100 bg-opacity-25 z-40">

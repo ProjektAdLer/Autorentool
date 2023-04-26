@@ -5,7 +5,8 @@
 @typeparam TForm where TForm : new()
 @typeparam TEntity
 @implements IBaseForm
-<MudCardActions>
+
+<MudCardActions Class="flex flex-col justify-center items-center">
     <MudButtonGroup OverrideStyles="false">
         <CascadingValue Value="this">
             @HeaderButtons
@@ -23,13 +24,17 @@
         }
     </MudCardContent>
 </MudForm>
-<MudCardActions>
-    <MudButtonGroup OverrideStyles="false">
-        <CascadingValue Value="this">
-            @FooterButtons
-        </CascadingValue>
-    </MudButtonGroup>
-</MudCardActions>
+
+    <MudCardActions Class="flex justify-end">
+   
+        <MudButtonGroup OverrideStyles="false">
+            <CascadingValue Value="this">
+                @FooterButtons
+            </CascadingValue>
+        </MudButtonGroup>
+        
+    </MudCardActions>
+
 
 @code {
 #pragma warning disable CS8618 - injected by framework - n.stich
