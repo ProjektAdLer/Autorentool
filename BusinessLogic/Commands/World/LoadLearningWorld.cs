@@ -41,6 +41,7 @@ public class LoadLearningWorld : IUndoCommand
         
         _workspace.LearningWorlds.Add(LearningWorld);
         _workspace.SelectedLearningWorld = LearningWorld;
+        LearningWorld.SavePath = _filepath;
         
         _mappingAction.Invoke(_workspace);
     }

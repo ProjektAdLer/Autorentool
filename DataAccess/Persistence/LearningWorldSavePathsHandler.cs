@@ -10,7 +10,7 @@ public class LearningWorldSavePathsHandler : ILearningWorldSavePathsHandler
 {
     private readonly ILogger<LearningWorldSavePathsHandler> _logger;
     private readonly IFileSystem _fileSystem;
-    private List<SavedLearningWorldPath> _savedLearningWorldPaths;
+    private readonly List<SavedLearningWorldPath> _savedLearningWorldPaths;
     private readonly XmlSerializer _serializer;
 
     private string LearningWorldSavePathsFolderPath => Path.Join(
@@ -62,7 +62,15 @@ public class LearningWorldSavePathsHandler : ILearningWorldSavePathsHandler
         using var stream = _fileSystem.File.OpenRead(SavedWorldPathsFilePath);
         if (CanDeserializeStream(stream))
         {
-            _savedLearningWorldPaths = (List<SavedLearningWorldPath>) _serializer.Deserialize(stream)!;
+            var savedPaths = (List<SavedLearningWorldPath>) _serializer.Deserialize(stream)!;
+            foreach (var loadedPath in _savedLearningWorldPaths.Where(loadedPath => savedPaths.All(x => x.Path != loadedPath.Path && x.Name != loadedPath.Name)))
+            {
+                _savedLearningWorldPaths.Remove(loadedPath);
+            }
+            foreach (var savedPath in savedPaths.Where(savedPath => _savedLearningWorldPaths.All(x => x.Path != savedPath.Path && x.Name != savedPath.Name)))
+            {
+                _savedLearningWorldPaths.Add(savedPath);
+            }
         }
         else
         {
@@ -114,9 +122,10 @@ public class LearningWorldSavePathsHandler : ILearningWorldSavePathsHandler
     /// <inheritdoc cref="ILearningWorldSavePathsHandler.UpdateIdOfSavedLearningWorldPath"/>
     public void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id)
     {
-        _savedLearningWorldPaths.RemoveAll(x=> x.Id == savedLearningWorldPath.Id);
-        savedLearningWorldPath.Id = id;
-        _savedLearningWorldPaths.Add(savedLearningWorldPath);
+        if (_savedLearningWorldPaths.Contains(savedLearningWorldPath))
+        {
+            _savedLearningWorldPaths.Find(x => x == savedLearningWorldPath)!.Id = id;
+        }
         SaveSavedLearningWorldPaths();
     }
     
@@ -129,7 +138,7 @@ public class LearningWorldSavePathsHandler : ILearningWorldSavePathsHandler
     /// <inheritdoc cref="ILearningWorldSavePathsHandler.RemoveSavedLearningWorldPath"/>
     public void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
     {
-        _savedLearningWorldPaths.RemoveAll(x => x.Id == savedLearningWorldPath.Id);
+        _savedLearningWorldPaths.Remove(savedLearningWorldPath);
         SaveSavedLearningWorldPaths();
     }
 }

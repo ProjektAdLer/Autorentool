@@ -25,6 +25,7 @@ public class ViewModelEntityMappingProfileUt
     private const string Language = "language";
     private const string Description = "description";
     private const string Goals = "goals";
+    private const string SavePath = "foo/bar/baz.txt";
     private const string Type = "type";
     private static readonly string Filepath = "bar/baz/buz.txt";
     private const LearningElementDifficultyEnum Difficulty = LearningElementDifficultyEnum.Easy;
@@ -40,6 +41,7 @@ public class ViewModelEntityMappingProfileUt
     private const string NewLanguage = "newLanguage";
     private const string NewDescription = "newDescription";
     private const string NewGoals = "newGoals";
+    private const string NewSavePath = "faa/bur/buz.txt";
     private const string NewType = "newType";
     private static readonly string NewFilepath = "/foo/bar/baz.txt";
     private const LearningElementDifficultyEnum NewDifficulty = LearningElementDifficultyEnum.Medium;
@@ -214,7 +216,7 @@ public class ViewModelEntityMappingProfileUt
     public void MapLearningWorldAndLearningWorldViewModel_WithoutLearningSpaces_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
+        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, SavePath,
             new List<LearningSpace>());
         var destination = new LearningWorldViewModel("", "", "", "", "", "");
 
@@ -229,6 +231,7 @@ public class ViewModelEntityMappingProfileUt
         destination.Language = NewLanguage;
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
+        destination.SavePath = NewSavePath;
         destination.LearningSpaces = new List<ILearningSpaceViewModel>();
 
         systemUnderTest.Map(destination, source);
@@ -241,7 +244,7 @@ public class ViewModelEntityMappingProfileUt
     public void MapLearningWorldAndLearningWorldViewModel_WithEmptyLearningSpace_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
+        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, SavePath,
             new List<LearningSpace>());
         source.LearningSpaces.Add(new LearningSpace(Name, Description, Goals, RequiredPoints, null,
             positionX: PositionX,
@@ -263,6 +266,7 @@ public class ViewModelEntityMappingProfileUt
         destination.Language = NewLanguage;
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
+        destination.SavePath = NewSavePath;
         destination.LearningSpaces = new List<ILearningSpaceViewModel>()
         {
             new LearningSpaceViewModel(NewName, NewDescription, NewGoals, NewRequiredPoints,
@@ -283,7 +287,7 @@ public class ViewModelEntityMappingProfileUt
     public void MapLearningWorldAndLearningWorldViewModel_WithLearningSpace_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
+        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, SavePath,
             new List<LearningSpace>());
         source.LearningSpaces.Add(GetTestableSpace());
         var destination = new LearningWorldViewModel("", "", "", "", "", "");
@@ -303,6 +307,7 @@ public class ViewModelEntityMappingProfileUt
         destination.Language = NewLanguage;
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
+        destination.SavePath = NewSavePath;
         destination.LearningSpaces = new List<ILearningSpaceViewModel>() { GetTestableNewSpaceViewModel() };
 
         systemUnderTest.Map(destination, source);
@@ -319,7 +324,7 @@ public class ViewModelEntityMappingProfileUt
     public void MapLearningWorldAndLearningWorldViewModel_WithLearningSpacesAndLearningPathWay_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals,
+        var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, SavePath,
             new List<LearningSpace>());
         var space1 = GetTestableSpace();
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 3, 2);
@@ -349,6 +354,7 @@ public class ViewModelEntityMappingProfileUt
         destination.Language = NewLanguage;
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
+        destination.SavePath = NewSavePath;
 
         var spaceVm1 = GetTestableNewSpaceViewModel();
         var pathWayConditionVm = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
@@ -398,7 +404,7 @@ public class ViewModelEntityMappingProfileUt
         };
         elementVm1.Parent = space;
 
-        var worldVm = new LearningWorldViewModel("world", Shortname, Authors, Language, Description, Goals, true,
+        var worldVm = new LearningWorldViewModel("world", Shortname, Authors, Language, Description, Goals, SavePath, true,
             new List<ILearningSpaceViewModel> { space })
         {
             SelectedLearningObjectInPathWay = space
@@ -553,6 +559,7 @@ public class ViewModelEntityMappingProfileUt
                     Assert.That(world.Language, Is.EqualTo(useNewFields ? NewLanguage : Language));
                     Assert.That(world.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(world.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
+                    Assert.That(world.SavePath, Is.EqualTo(useNewFields ? NewSavePath : SavePath));
                     TestSpacesList(world.LearningSpaces, useNewFields);
                 });
                 break;
@@ -566,6 +573,7 @@ public class ViewModelEntityMappingProfileUt
                     Assert.That(world.Language, Is.EqualTo(useNewFields ? NewLanguage : Language));
                     Assert.That(world.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(world.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
+                    Assert.That(world.SavePath, Is.EqualTo(useNewFields ? NewSavePath : SavePath));
                     TestSpacesList(world.LearningSpaces, useNewFields);
                 });
                 break;

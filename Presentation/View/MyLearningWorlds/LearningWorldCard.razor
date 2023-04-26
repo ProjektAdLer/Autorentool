@@ -102,18 +102,14 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
+        if (!OnOpenLearningWorld.HasDelegate) throw new ApplicationException("OnOpenLearningWorld must be set.");
+        if (LearningWorldPath == null) throw new ApplicationException("LearningWorldPath must be set.");
         if (IsLoaded)
         {
-            if (!OnOpenLearningWorld.HasDelegate) throw new ApplicationException("OnOpenLearningWorld must be set.");
-            if (LearningWorldPath == null) throw new ApplicationException("LearningWorldPath must be set.");
-
-
             _cardType = CardType.IsLoaded;
         }
         else
         {
-            if (!OnOpenLearningWorld.HasDelegate) throw new ApplicationException("OnOpenLearningWorld must be set.");
-            if (LearningWorldPath == null) throw new ApplicationException("LearningWorldPath must be set.");
             if (!OnDeleteFromSaved.HasDelegate) throw new ApplicationException("OnDeleteFromSaved must be set.");
             _cardType = CardType.IsSaved;
         }

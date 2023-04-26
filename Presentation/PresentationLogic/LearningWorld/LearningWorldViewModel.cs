@@ -23,6 +23,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _language = "";
         _description = "";
         _goals = "";
+        _savePath = "";
         _unsavedChanges = false;
         _learningSpaces = new List<ILearningSpaceViewModel>();
         _pathWayConditions = new List<PathWayConditionViewModel>();
@@ -39,6 +40,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     /// <param name="language">The primary language used in this learning world.</param>
     /// <param name="description">A description of the learning world and its contents.</param>
     /// <param name="goals">A description of the goals this learning world is supposed to achieve.</param>
+    /// <param name="savePath">The save path of the learning world.</param>
     /// <param name="unsavedChanges">Whether or not the object contains changes that are yet to be saved to disk.</param>
     /// <param name="learningSpaces">Optional collection of learning spaces contained in the learning world.
     /// Should be used when loading a saved learnign world into the application.</param>
@@ -47,7 +49,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     /// <param name="unplacedLearningElements">All learning elements in the learning world that are not placed in any learning space</param>
     /// <param name="topics">Optional collection of topics in the learning world.</param>
     public LearningWorldViewModel(string name, string shortname, string authors, string language, string description,
-        string goals, bool unsavedChanges = true, List<ILearningSpaceViewModel>? learningSpaces = null,
+        string goals, string savePath = "",  bool unsavedChanges = true, List<ILearningSpaceViewModel>? learningSpaces = null,
         List<PathWayConditionViewModel>? pathWayConditions = null, List<ILearningPathWayViewModel>? learningPathWays = null,
         List<ILearningElementViewModel>? unplacedLearningElements = null,
         List<TopicViewModel>? topics = null)
@@ -59,6 +61,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _language = language;
         _description = description;
         _goals = goals;
+        _savePath = savePath;
         _unsavedChanges = unsavedChanges;
         _learningSpaces = learningSpaces ?? new List<ILearningSpaceViewModel>();
         _pathWayConditions = pathWayConditions ?? new List<PathWayConditionViewModel>();
@@ -81,6 +84,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     private string _language;
     private string _description;
     private string _goals;
+    private string _savePath;
     private bool _unsavedChanges;
     private ISelectableObjectInWorldViewModel? _selectedLearningObjectInPathWay;
     private ILearningElementViewModel? _selectedLearningElement;
@@ -168,6 +172,12 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     {
         get => _goals;
         set => SetField(ref _goals, value);
+    }
+
+    public string SavePath
+    {
+        get => _savePath;
+        set => SetField(ref _savePath, value);
     }
 
     public bool UnsavedChanges

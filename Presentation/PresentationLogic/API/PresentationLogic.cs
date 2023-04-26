@@ -148,6 +148,7 @@ public class PresentationLogic : IPresentationLogic
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldViewModel);
         var command = new SaveLearningWorld(BusinessLogic, worldEntity, filepath);
         BusinessLogic.ExecuteCommand(command);
+        learningWorldViewModel.SavePath = filepath;
         learningWorldViewModel.UnsavedChanges = false;
         AddSavedLearningWorldPath(new SavedLearningWorldPath()
             {Id = worldEntity.Id, Name = worldEntity.Name, Path = filepath});

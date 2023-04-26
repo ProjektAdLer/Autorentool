@@ -188,6 +188,7 @@ public class CreateDslUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
+        const string savePath = "C:\\foo\\bar";
         
         var content1 = new FileContentPe("FileName", "h5p", "/foo/bar.txt");
         var content2 = new FileContentPe("FileName", "png", "/foo/bar.txt");
@@ -253,7 +254,7 @@ var topic1 = new TopicPe("topic1");
         var topics = new List<TopicPe>() {topic1, topic2};
         
 
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals,
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, savePath,
              learningSpaces, topics:topics);
 
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
@@ -303,6 +304,7 @@ var topic1 = new TopicPe("topic1");
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
+        const string savePath = "C:\\Users\\Ben\\Desktop\\test";
         
         var content1 = new FileContentPe("FileName", "mp3", "/foo/bar.txt");
 
@@ -326,7 +328,7 @@ var topic1 = new TopicPe("topic1");
         };
         var learningSpaces = new List<LearningSpacePe> { space1 };
 
-        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, learningSpaces);
+        var learningWorld = new LearningWorldPe(name, shortname, authors, language, description, goals, savePath, learningSpaces);
 
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
 

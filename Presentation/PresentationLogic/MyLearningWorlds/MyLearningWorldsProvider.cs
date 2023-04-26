@@ -33,14 +33,14 @@ public class MyLearningWorldsProvider : IMyLearningWorldsProvider
         {
             Id = x.Id,
             Name = x.Name,
-            Path = ""
+            Path = x.SavePath
         });
     }
 
     public IEnumerable<SavedLearningWorldPath> GetSavedLearningWorlds()
     {
         return PresentationLogic.GetSavedLearningWorldPaths()
-            .ExceptBy(GetLoadedLearningWorlds().Select(x => x.Id), x => x.Id);
+            .Where(world => GetLoadedLearningWorlds().All(x => x.Id != world.Id));
     }
 
     public void OpenLearningWorld(SavedLearningWorldPath savedLearningWorldPath)
@@ -49,7 +49,7 @@ public class MyLearningWorldsProvider : IMyLearningWorldsProvider
         {
             OpenLoadedLearningWorld(savedLearningWorldPath);
         }
-        else if (PresentationLogic.GetSavedLearningWorldPaths().Any(x => x.Id == savedLearningWorldPath.Id))
+        else if (PresentationLogic.GetSavedLearningWorldPaths().Contains(savedLearningWorldPath))
         {
             LoadLearningWorldFromSaved(savedLearningWorldPath);
         }

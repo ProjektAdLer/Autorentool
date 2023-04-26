@@ -17,6 +17,7 @@ public class LearningWorldUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
+        const string savePath = "C:\\Users\\Ben\\Documents\\test";
         var space1 = new LearningSpace("ff", "ff", "ff", 5);
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 2, 3);
         var pathWay = new LearningPathway(space1, pathWayCondition);
@@ -30,7 +31,7 @@ public class LearningWorldUt
         
         var selectableObjects = new List<ISelectableObjectInWorld> { space1, pathWayCondition, pathWay };
 
-        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals,
+        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, savePath,
             learningSpaces, pathWayConditions, pathWays, topics);
         
         Assert.Multiple(() =>
@@ -58,6 +59,7 @@ public class LearningWorldUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
+        const string savePath = "C:\\Users\\Ben\\Documents\\test";
         var space1 = new LearningSpace("ff", "ff", "ff", 5);
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 2, 3);
         var pathWayConditions = new List<PathWayCondition>{ pathWayCondition };
@@ -67,7 +69,7 @@ public class LearningWorldUt
         var topic1 = new Topic("topic1");
         var topics = new List<Topic>{topic1};
 
-        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, learningSpaces, pathWayConditions, pathWays, topics);
+        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, savePath, learningSpaces, pathWayConditions, pathWays, topics);
 
         var learningWorldMemento = systemUnderTest.GetMemento();
         
@@ -77,6 +79,7 @@ public class LearningWorldUt
         var languageChanged = "english";
         var descriptionChanged = "changed description";
         var goalsChanged = "new goals";
+        var savePathChanged = "C:\\Users\\Ben\\Documents\\test2";
         var newContent2 = new FileContent("w", "e", "");
         var newElement = new LearningElement("foo", newContent2, "asdf", "qwer",
             LearningElementDifficultyEnum.Easy);
@@ -92,6 +95,7 @@ public class LearningWorldUt
         systemUnderTest.Language = languageChanged;
         systemUnderTest.Description = descriptionChanged;
         systemUnderTest.Goals = goalsChanged;
+        systemUnderTest.SavePath = savePathChanged;
         systemUnderTest.LearningSpaces.Add(space2);
         systemUnderTest.PathWayConditions.Add(condition2);
         systemUnderTest.LearningPathways.Add(pathWay2);
@@ -107,6 +111,7 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.Language, Is.EqualTo(languageChanged));
             Assert.That(systemUnderTest.Description, Is.EqualTo(descriptionChanged));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goalsChanged));
+            Assert.That(systemUnderTest.SavePath, Is.EqualTo(savePathChanged));
             Assert.That(systemUnderTest.LearningSpaces, Has.Count.EqualTo(2));
             Assert.That(systemUnderTest.LearningSpaces[0], Is.EqualTo(space1));
             Assert.That(systemUnderTest.LearningSpaces[1], Is.EqualTo(space2));
@@ -131,6 +136,7 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.Language, Is.EqualTo(language));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
+            Assert.That(systemUnderTest.SavePath, Is.EqualTo(savePath));
             Assert.That(systemUnderTest.LearningSpaces, Has.Count.EqualTo(1));
             Assert.That(systemUnderTest.LearningSpaces[0], Is.EqualTo(space1));
             Assert.That(systemUnderTest.PathWayConditions, Has.Count.EqualTo(1));
@@ -151,10 +157,11 @@ public class LearningWorldUt
         const string language = "german";
         const string description = "very cool element";
         const string goals = "learn very many things";
+        const string savePath = "C:\\Users\\Ben\\Documents\\test";
         var space1 = new LearningSpace("ff", "ff", "ff", 5);
         var learningSpaces = new List<LearningSpace> { space1 };
         
-        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, learningSpaces);
+        var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, savePath, learningSpaces);
 
 
         var mementoMock = new MementoMock();

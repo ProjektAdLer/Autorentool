@@ -23,6 +23,7 @@ public interface ILearningWorldViewModel : ISerializableViewModel, IDisplayableL
     string Language { get; set; }
     string Description { get; set; }
     string Goals { get; set; }
+    string SavePath { get; set; }
     bool UnsavedChanges { get; set; }
     ISelectableObjectInWorldViewModel? SelectedLearningObjectInPathWay { get; set; }
     IObjectInPathWayViewModel? OnHoveredObjectInPathWay { get; set; }

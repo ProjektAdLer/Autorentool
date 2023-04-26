@@ -22,7 +22,7 @@ public class PersistenceCt
     public void Persistence_SaveAndLoadWorld_Stream_ObjectsAreEquivalent()
     {
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
-            "Description", "Goals");
+            "Description", "Goals", "SavePath");
         var initialWorldId = world.Id;
         var topic = new TopicPe("Topic");
         var initialTopicId = topic.Id;
@@ -166,7 +166,7 @@ public class PersistenceCt
     public void Persistence_SaveAndLoadWorld_File_ObjectsAreEquivalent()
     {
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
-            "Description", "Goals");
+            "Description", "Goals", "SavePath");
         var initialWorldId = world.Id;
         var topic = new TopicPe("Topic");
         var space1 = new LearningSpacePe("Name", "Description", "Goals", 5,
@@ -378,7 +378,7 @@ public class PersistenceCt
                 }
             }, FloorPlanEnumPe.Rectangle2X3));
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
-            "Description", "Goals", learningSpaces: new List<LearningSpacePe> {space1, space2});
+            "Description", "Goals", "SavePath", learningSpaces: new List<LearningSpacePe> {space1, space2});
 
         var mockFileSystem = new MockFileSystem();
 
@@ -417,7 +417,7 @@ public class PersistenceCt
                 }
             }, FloorPlanEnumPe.Rectangle2X3));
         var world = new LearningWorldPe("Name", "Shortname", "Authors", "Language",
-            "Description", "Goals", learningSpaces: new List<LearningSpacePe> {space1, space2});
+            "Description", "Goals", "SavePath", learningSpaces: new List<LearningSpacePe> {space1, space2});
 
         var mockFileSystem = new MockFileSystem();
 
