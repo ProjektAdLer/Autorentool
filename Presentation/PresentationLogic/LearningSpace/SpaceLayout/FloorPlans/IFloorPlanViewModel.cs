@@ -22,7 +22,5 @@ public interface IFloorPlanViewModel
     /// </summary>
     IList<Point> ElementSlotPositions { get; }
 
-    string GetIconActive { get; }
-
-    string GetIconInactive { get; }
+    string GetIcon { get; }
 }

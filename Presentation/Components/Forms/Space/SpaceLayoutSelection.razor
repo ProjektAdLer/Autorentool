@@ -3,7 +3,12 @@
 @using Shared
 @foreach (FloorPlanEnum floorPlan in Enum.GetValues(typeof(FloorPlanEnum)))
 {
-    <MudIconButton OnClick="(args) => OnFloorPlanButtonSelected(floorPlan, args)" Color="IsFloorPlanActive(floorPlan) ? Color.Success : Color.Error" Icon="@GetIcon(floorPlan)">@floorPlan.ToString()</MudIconButton>
+    <MudIconButton OnClick="(args) => OnFloorPlanButtonSelected(floorPlan, args)"
+                   Color="IsFloorPlanActive(floorPlan) ? Color.Success : Color.Error"
+                   Icon="@FloorPlanViewModelProvider.GetFloorPlan(floorPlan).GetIcon"
+                   Style="@GetStyle(floorPlan)">
+        @floorPlan.ToString()
+    </MudIconButton>
 }
 <MudText>Selected Option: @SelectedFloorPlan.ToString()</MudText>
 
@@ -38,11 +43,11 @@
         return floorPlan == SelectedFloorPlan;
     }
 
-    private string GetIcon(FloorPlanEnum floorPlan)
+    private string GetStyle(FloorPlanEnum floorPlan)
     {
         return IsFloorPlanActive(floorPlan) ?
-            FloorPlanViewModelProvider.GetFloorPlan(floorPlan).GetIconActive
-            : FloorPlanViewModelProvider.GetFloorPlan(floorPlan).GetIconInactive;
+            "filter: grayscale(0%); -webkit-filter: grayscale(0%); drop-shadow(0 0 5px green); -webkit-filter: drop-shadow(0 0 5px green);" :
+            "filter: grayscale(70%); -webkit-filter: grayscale(70%);";
     }
 
 }
