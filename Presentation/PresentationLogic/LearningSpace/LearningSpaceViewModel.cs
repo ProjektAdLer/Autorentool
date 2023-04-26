@@ -100,10 +100,10 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
 
     public double PositionX { get; set; }
     public double PositionY { get; set; }
-    public double InputConnectionX => PositionX + 42;
+    public double InputConnectionX => PositionX + 25;
     public double InputConnectionY => PositionY - 7;
-    public double OutputConnectionX => PositionX + 42;
-    public double OutputConnectionY => PositionY + 82;
+    public double OutputConnectionX => PositionX + 25;
+    public double OutputConnectionY => PositionY + 48;
 
     private ILearningElementViewModel? _selectedLearningElement;
 
