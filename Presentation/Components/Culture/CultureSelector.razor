@@ -3,12 +3,12 @@
 @inject NavigationManager Navigation
 @inject IStringLocalizer<CultureSelector> Localizer
 
-<div class="flex flex-row justify-center">
+<div class="flex flex-row pr-2 justify-center">
     <button @onclick="() => SetCulture(supportedCultures[0])" class="my-2 mx-4 @(Equals(Culture, supportedCultures[0]) ? "hidden" : "")">
-        <img class="w-12 rounded-lg" src="CustomIcons/german-flag-long.png" alt="german">
+        <img class="w-12 rounded-lg" src="CustomIcons/great-britain-flag.png" alt="english">
     </button>
     <button @onclick="() => SetCulture(supportedCultures[1])" class="my-2 mx-4 @(Equals(Culture, supportedCultures[1]) ? "hidden" : "")">
-        <img class="w-12 rounded-lg" src="CustomIcons/great-britain-flag.png" alt="english">
+        <img class="w-12 rounded-lg" src="CustomIcons/german-flag-long.png" alt="german">
     </button>
 </div>
 

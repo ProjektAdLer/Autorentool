@@ -6,17 +6,20 @@
     <div class="ml-1 flex items-center gap-2">
         <img class="w-10 drop-shadow" src="/CustomIcons/autorentool-logo.png" alt="authoringtool-logo"/>
         <h1 class="font-bold text-lg">@Localizer["AuthoringTool.Text"] @Localizer["AuthoringTool.Version"]</h1>
+        <div>
+            <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Undo" Disabled="!CanUndo" Title="Undo" OnClick="OnClickUndo"></MudIconButton>
+            <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Redo" Disabled="!CanRedo" Title="Redo" OnClick="OnClickRedo"></MudIconButton>
+        </div>
+        <MudButton Class="btn-standard" @onclick="OnClickMyLearningWorldsOverview">My Learning Worlds</MudButton>
     </div>
-    <div>
-    <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Undo" Disabled="!CanUndo" Title="Undo" OnClick="OnClickUndo"></MudIconButton>
-    <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Redo" Disabled="!CanRedo" Title="Redo" OnClick="OnClickRedo"></MudIconButton>
+
+    <div class="flex">
+        <CultureSelector/>
+        @if (PresentationLogic?.RunningElectron == true)
+        {
+            <CloseAppButton/>
+        }
     </div>
-    <MudButton Class="btn-standard" @onclick="OnClickMyLearningWorldsOverview">My Learning Worlds</MudButton>
-    <CultureSelector/>
-    @if (PresentationLogic?.RunningElectron == true)
-    {
-        <CloseAppButton/>
-    }
 </header>
 
 @code {

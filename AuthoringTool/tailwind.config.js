@@ -4,6 +4,11 @@ module.exports = {
     important: true,
     content: ["../**/*.razor", "../**/*.cshtml", "../**/*.html"],
     theme: {
+        screens: {
+            '3xl': '1750px',
+            '4xl': '2000px',
+            '5xl': '2250px',
+        },
         extend: {
             colors: {
                 //Bei Custom Farben geben die Zahlenwerte die Saturation Prozentwerte wieder (700 = 70%)

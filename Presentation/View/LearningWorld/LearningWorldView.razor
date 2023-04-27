@@ -32,8 +32,8 @@
         <MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Delete" Disabled="@(LearningWorldP.LearningWorldVm?.SelectedLearningObjectInPathWay == null)" @onclick="DeleteSelectedLearningObject"></MudFab>
         <MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Save" Disabled="@(LearningWorldP.LearningWorldVm?.SelectedLearningObjectInPathWay == null || LearningWorldP.LearningWorldVm.SelectedLearningObjectInPathWay is not ILearningSpaceViewModel)" @onclick="SaveSelectedLearningSpaceAsync"></MudFab>
     </section>
-<!-- <svg style="width: 400px; height: 600px; border:3px black; background-color: white" -->
-<svg class="flex-none bg-white w-full grow rounded-lg"
+    <!-- <svg style="width: 400px; height: 600px; border:3px black; background-color: white" -->
+    <svg class="bg-white w-full grow rounded-lg"
      xmlns="http://www.w3.org/2000/svg"
      @onmousemove=@(e => MouseService.FireMove(this, e))
              @onmouseup=@(e => MouseService.FireUp(this, e))
