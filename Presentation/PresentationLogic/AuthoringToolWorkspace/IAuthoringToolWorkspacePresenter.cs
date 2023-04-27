@@ -7,8 +7,6 @@ public interface IAuthoringToolWorkspacePresenter
     IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get; }
     bool LearningWorldSelected { get; }
     LearningWorldViewModel? DeletedUnsavedWorld { get; set; }
-    string? InformationMessageToShow { get; set; }
-    Queue<LearningWorldViewModel>? UnsavedWorldsQueue { get; set; }
 
     event Action? OnForceViewUpdate;
 

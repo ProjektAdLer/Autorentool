@@ -8,17 +8,24 @@ using Shared;
 namespace BusinessLogicTest.Commands;
 
 [TestFixture]
-public class DragLearningElementToUnplacedUt
+public class RemoveLearningElementFromLayoutUt
 {
     [Test]
     public void DragLearningElementFromSlotToUnplaced_Execute_MovesLearningElementToUnplaced()
     {
         var world = new LearningWorld("wn", "wsn", "wa", "wl", "wd", "wg");
         var space = new LearningSpace("sn", "sd", "sg", 5,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2));
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2))
+        {
+            UnsavedChanges = false
+        };
         world.LearningSpaces.Add(space);
         var content = new FileContent("cn", "ct", "cf");
-        var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, null, workload: 8, points: 9, positionX: 17f, positionY: 29f);
+        var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, null,
+            workload: 8, points: 9, positionX: 17f, positionY: 29f)
+        {
+            UnsavedChanges = false
+        };
         space.LearningSpaceLayout.LearningElements[2] = element;
 
 
@@ -33,6 +40,7 @@ public class DragLearningElementToUnplacedUt
             Assert.That(world.UnplacedLearningElements, Has.Count.EqualTo(0));
             Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(1));
             Assert.That(space.LearningSpaceLayout.LearningElements[2], Is.EqualTo(element));
+            Assert.That(space.UnsavedChanges, Is.False);
         });
 
         command.Execute();
@@ -43,6 +51,7 @@ public class DragLearningElementToUnplacedUt
             Assert.That(world.UnplacedLearningElements, Has.Count.EqualTo(1));
             Assert.That(world.UnplacedLearningElements.Contains(element), Is.True);
             Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(0));
+            Assert.That(space.UnsavedChanges, Is.True);
         });
     }
 
@@ -66,7 +75,7 @@ public class DragLearningElementToUnplacedUt
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.Multiple(() =>
         {
-            Assert.That(ex!.Message, Is.EqualTo("_mementoWorld or _mementoSpaceLayout is null"));
+            Assert.That(ex!.Message, Is.EqualTo("_mementoWorld is null"));
             Assert.That(actionWasInvoked, Is.False);
         });
     }
@@ -76,10 +85,17 @@ public class DragLearningElementToUnplacedUt
     {
         var world = new LearningWorld("wn", "wsn", "wa", "wl", "wd", "wg");
         var space = new LearningSpace("sn", "sd", "sg", 5,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2));
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2))
+        {
+            UnsavedChanges = false
+        };
         world.LearningSpaces.Add(space);
         var content = new FileContent("cn", "ct", "cf");
-        var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, null, workload: 8, points: 9, positionX: 17f, positionY: 29f);
+        var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, null,
+            workload: 8, points: 9, positionX: 17f, positionY: 29f)
+        {
+            UnsavedChanges = false
+        };
         space.LearningSpaceLayout.LearningElements[2] = element;
 
 
@@ -94,6 +110,7 @@ public class DragLearningElementToUnplacedUt
             Assert.That(world.UnplacedLearningElements, Has.Count.EqualTo(0));
             Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(1));
             Assert.That(space.LearningSpaceLayout.LearningElements[2], Is.EqualTo(element));
+            Assert.That(space.UnsavedChanges, Is.False);
         });
 
         command.Execute();
@@ -104,6 +121,7 @@ public class DragLearningElementToUnplacedUt
             Assert.That(world.UnplacedLearningElements, Has.Count.EqualTo(1));
             Assert.That(world.UnplacedLearningElements.Contains(element), Is.True);
             Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(0));
+            Assert.That(space.UnsavedChanges, Is.True);
         });
         actionWasInvoked = false;
 
@@ -115,6 +133,7 @@ public class DragLearningElementToUnplacedUt
             Assert.That(world.UnplacedLearningElements, Has.Count.EqualTo(0));
             Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(1));
             Assert.That(space.LearningSpaceLayout.LearningElements[2], Is.EqualTo(element));
+            Assert.That(space.UnsavedChanges, Is.False);
         });
         actionWasInvoked = false;
 
@@ -126,6 +145,7 @@ public class DragLearningElementToUnplacedUt
             Assert.That(world.UnplacedLearningElements, Has.Count.EqualTo(1));
             Assert.That(world.UnplacedLearningElements.Contains(element), Is.True);
             Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(0));
+            Assert.That(space.UnsavedChanges, Is.True);
         });
     }
 }

@@ -30,11 +30,16 @@ public class DragLearningElement : IUndoCommand
         LearningElement.PositionY = _oldPositionY;
         _memento = LearningElement.GetMemento();
 
+        if (AnyChange()) LearningElement.UnsavedChanges = true;
         LearningElement.PositionX = _newPositionX;
         LearningElement.PositionY = _newPositionY;
         
         _mappingAction.Invoke(LearningElement);
     }
+    
+    private bool AnyChange() => 
+        Math.Abs(LearningElement.PositionX - _newPositionX) > 0.01 ||
+        Math.Abs(LearningElement.PositionY - _newPositionY) > 0.01;
 
     public void Undo()
     {

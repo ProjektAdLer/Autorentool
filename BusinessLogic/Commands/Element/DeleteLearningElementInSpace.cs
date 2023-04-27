@@ -24,6 +24,7 @@ public class DeleteLearningElementInSpace : IUndoCommand
         _memento = ParentSpace.GetMemento();
         _mementoSpaceLayout = ParentSpace.LearningSpaceLayout.GetMemento();
 
+        ParentSpace.UnsavedChanges = true;
         var kvP = ParentSpace.LearningSpaceLayout.LearningElements.First(x => x.Value.Id == LearningElement.Id);
         
         ParentSpace.LearningSpaceLayout.LearningElements.Remove(kvP.Key);

@@ -97,6 +97,13 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         get => _requiredPoints;
         set => SetField(ref _requiredPoints, value);
     }
+    
+    public bool UnsavedChanges
+    {
+        get => _unsavedChanges ||
+               ContainedLearningElements.Any(element => element.UnsavedChanges);
+        set => _unsavedChanges = value;
+    }
 
     public double PositionX { get; set; }
     public double PositionY { get; set; }
@@ -109,6 +116,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     private string _description;
     private string _goals;
     private int _requiredPoints;
+    private bool _unsavedChanges;
 
     public IEnumerable<ILearningElementViewModel> ContainedLearningElements =>
         LearningSpaceLayout.ContainedLearningElements;

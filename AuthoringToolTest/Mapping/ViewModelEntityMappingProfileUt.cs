@@ -357,7 +357,7 @@ public class ViewModelEntityMappingProfileUt
         destination.SavePath = NewSavePath;
 
         var spaceVm1 = GetTestableNewSpaceViewModel();
-        var pathWayConditionVm = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        var pathWayConditionVm = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
         destination.LearningSpaces = new List<ILearningSpaceViewModel>() { spaceVm1 };
         destination.PathWayConditions = new List<PathWayConditionViewModel>() { pathWayConditionVm };
         destination.LearningPathWays = new List<ILearningPathWayViewModel>();

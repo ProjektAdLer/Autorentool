@@ -69,6 +69,7 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
     public LearningElementDifficultyEnum Difficulty { get; set; }
     public int Workload { get; set; }
     public int Points { get; set; }
+    public bool UnsavedChanges { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
 }

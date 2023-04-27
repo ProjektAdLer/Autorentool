@@ -20,7 +20,9 @@ public class SaveLearningWorldUt
         
         var command = new SaveLearningWorld(mockBusinessLogic, world, filepath);
         
+        Assert.That(world.UnsavedChanges);
         command.Execute();
+        Assert.That(world.UnsavedChanges, Is.False);
         
         mockBusinessLogic.Received().SaveLearningWorld(world, filepath);
     }

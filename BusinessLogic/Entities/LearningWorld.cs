@@ -41,9 +41,11 @@ public class LearningWorld : ILearningWorld, IOriginator
         PathWayConditions = pathWayConditions ?? new List<PathWayCondition>();
         LearningPathways = learningPathways ?? new List<LearningPathway>();
         Topics = topics ?? new List<Topic>();
-        UnsavedChanges = false;
+        UnsavedChanges = true;
         UnplacedLearningElements = new List<ILearningElement>();
     }
+    
+    private bool _unsavedChanges;
 
     public Guid Id { get; private set; }
     public List<LearningSpace> LearningSpaces { get; set; }
@@ -62,12 +64,20 @@ public class LearningWorld : ILearningWorld, IOriginator
     public ICollection<ILearningElement> UnplacedLearningElements { get; set; } 
     public string SavePath { get; set; }
 
-    public bool UnsavedChanges { get; set; }
+    public bool UnsavedChanges
+    {
+        get => _unsavedChanges ||
+               LearningSpaces.Any(space => space.UnsavedChanges) ||
+               UnplacedLearningElements.Any(element => element.UnsavedChanges) ||
+               PathWayConditions.Any(condition => condition.UnsavedChanges) ||
+               Topics.Any(topic => topic.UnsavedChanges);
+        set => _unsavedChanges = value;
+    }
 
     public IMemento GetMemento()
     {
         return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, SavePath, LearningSpaces,
-            PathWayConditions, LearningPathways, Topics, UnplacedLearningElements);
+            PathWayConditions, LearningPathways, Topics, _unsavedChanges, UnplacedLearningElements);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -87,6 +97,7 @@ public class LearningWorld : ILearningWorld, IOriginator
         PathWayConditions = learningWorldMemento.PathWayConditions;
         LearningPathways = learningWorldMemento.LearningPathways;
         Topics = learningWorldMemento.Topics;
+        UnsavedChanges = learningWorldMemento.UnsavedChanges;
         UnplacedLearningElements = learningWorldMemento.UnplacedLearningElements;
     }
 
@@ -94,7 +105,7 @@ public class LearningWorld : ILearningWorld, IOriginator
     {
         internal LearningWorldMemento(string name, string shortname, string authors, string language,
             string description, string goals, string savePath, List<LearningSpace> learningSpaces, List<PathWayCondition> pathWayConditions,
-            List<LearningPathway> learningPathways, List<Topic> topics, IEnumerable<ILearningElement> unplacedLearningElements)
+            List<LearningPathway> learningPathways, List<Topic> topics, bool unsavedChanges, IEnumerable<ILearningElement> unplacedLearningElements)
         {
             Name = name;
             Shortname = shortname;
@@ -103,6 +114,7 @@ public class LearningWorld : ILearningWorld, IOriginator
             Description = description;
             Goals = goals;
             SavePath = savePath;
+            UnsavedChanges = unsavedChanges;
             LearningSpaces = learningSpaces.ToList();
             PathWayConditions = pathWayConditions.ToList();
             LearningPathways = learningPathways.ToList();
@@ -121,6 +133,7 @@ public class LearningWorld : ILearningWorld, IOriginator
         internal string Description { get; }
         internal string Goals { get; }
         internal string SavePath { get; }
+        public bool UnsavedChanges { get; }
         internal List<ILearningElement> UnplacedLearningElements { get; }
     }
 }

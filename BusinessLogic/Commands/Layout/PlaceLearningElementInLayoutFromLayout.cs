@@ -12,7 +12,8 @@ public class PlaceLearningElementInLayoutFromLayout : IUndoCommand
     internal int NewSlotIndex { get; }
     internal ILearningElement LearningElement { get; }
     private readonly Action<LearningSpace> _mappingAction;
-    private IMemento? _memento;
+    private IMemento? _mementoLayout;
+    private IMemento? _mementoSpace;
 
     public PlaceLearningElementInLayoutFromLayout(LearningSpace parentSpace, ILearningElement learningElement, int newSlotIndex,
         Action<LearningSpace> mappingAction)
@@ -25,7 +26,10 @@ public class PlaceLearningElementInLayoutFromLayout : IUndoCommand
 
     public void Execute()
     {
-        _memento = ParentSpace.LearningSpaceLayout.GetMemento();
+        _mementoLayout = ParentSpace.LearningSpaceLayout.GetMemento();
+        _mementoSpace = ParentSpace.GetMemento();
+
+        ParentSpace.UnsavedChanges = true;
 
         var kvP = ParentSpace.LearningSpaceLayout.LearningElements
             .First(kvP => kvP.Value.Equals(LearningElement));
@@ -44,12 +48,18 @@ public class PlaceLearningElementInLayoutFromLayout : IUndoCommand
 
     public void Undo()
     {
-        if (_memento == null)
+        if (_mementoLayout == null)
         {
-            throw new InvalidOperationException("_memento is null");
+            throw new InvalidOperationException("_mementoLayout is null");
         }
 
-        ParentSpace.LearningSpaceLayout.RestoreMemento(_memento);
+        if (_mementoSpace == null)
+        {
+            throw new InvalidOperationException("_mementoSpace is null");
+        }
+
+        ParentSpace.LearningSpaceLayout.RestoreMemento(_mementoLayout);
+        ParentSpace.RestoreMemento(_mementoSpace);
 
         _mappingAction.Invoke(ParentSpace);
     }

@@ -299,7 +299,7 @@ public class CachingMapperUt
         //create space entity containing one element
         var space = new LearningSpace("n", "d", "g", 5,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X3));
-        var topicViewModel = new TopicViewModel("x");
+        var topicViewModel = new TopicViewModel("x", false);
         var topicEntity = new Topic("x");
         var elementEntity =
             new LearningElement("n", null!, "d", "g", LearningElementDifficultyEnum.Easy);

@@ -2,8 +2,10 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
+using Presentation.Components.Dialogues;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -377,27 +379,84 @@ public class AuthoringToolWorkspacePresenterUt
     #region Shutdown
 
     [Test]
-    public void OnBeforeShutdown_CancelsShutdownCreatesQueueAndInvokesViewUpdate()
+    public async Task OnBeforeShutdown_CallsDialogService_ForEveryUnsavedWorld_AndCallsSaveOnYesResponse()
     {
-        Assert.Fail("OnShutdown must be re-implemented first");
         var viewModel = new AuthoringToolWorkspaceViewModel();
-        var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
-        viewModel._learningWorlds.Add(learningWorld);
+        var unsavedWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f")
+        {
+            UnsavedChanges = true
+        };
+        var savedWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f")
+        {
+            UnsavedChanges = false
+        };
+        viewModel._learningWorlds.Add(unsavedWorld);
+        viewModel._learningWorlds.Add(savedWorld);
         var args = new BeforeShutdownEventArgs();
-        var callbackCalled = false;
-        var callback = () => { callbackCalled = true; };
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var dialogReference = Substitute.For<IDialogReference>();
+        dialogReference.Result.Returns(DialogResult.Ok(true));
+        var dialogService = Substitute.For<IDialogService>();
+        var wasCalled = false;
+        dialogService.ShowAsync<UnsavedWorldDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>())
+            .Returns(dialogReference)
+            .AndDoes(callinfo => {
+                var parameters = (DialogParameters)callinfo[1];
+                var options = (DialogOptions)callinfo[2];
+                Assert.Multiple(() =>
+                {
+                    Assert.That(callinfo[0], Is.EqualTo("Unsaved changes!"));
+                    Assert.That(parameters[nameof(UnsavedWorldDialog.WorldName)], Is.EqualTo(unsavedWorld.Name));
+                    Assert.That(options.CloseButton, Is.True);
+                    Assert.That(options.CloseOnEscapeKey, Is.True);
+                    Assert.That(options.DisableBackdropClick, Is.True);
+                });
+                wasCalled = true;
+            });
 
-        var systemUnderTest = CreatePresenterForTesting(viewModel);
-        systemUnderTest.OnForceViewUpdate += callback;
+        var systemUnderTest = CreatePresenterForTesting(viewModel, presentationLogic: presentationLogic,
+            dialogService: dialogService);
 
-        systemUnderTest.OnBeforeShutdown(null, args);
-        Assert.That(systemUnderTest.UnsavedWorldsQueue, Is.Not.Null);
+        await systemUnderTest.OnBeforeShutdownAsync(null, args);
         Assert.Multiple(() =>
         {
-            Assert.That(args.CancelShutdownState, Is.True);
-            Assert.That(systemUnderTest.UnsavedWorldsQueue, Contains.Item(learningWorld));
-            Assert.That(callbackCalled, Is.True);
+            presentationLogic.Received().SaveLearningWorldAsync(unsavedWorld);
+            Assert.That(wasCalled);
         });
+    }
+
+    [Test]
+    public async Task OnBeforeShutdown_CallsDialogService_CancelsShutdownOnCancelReturnValue()
+    {
+        var viewModel = new AuthoringToolWorkspaceViewModel();
+        var unsavedWorld = new LearningWorldViewModel("unsaved", "f", "f", "f", "f", "f")
+        {
+            UnsavedChanges = true
+        };
+        viewModel._learningWorlds.Add(unsavedWorld);
+        var args = new BeforeShutdownEventArgs();
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var dialogReference = Substitute.For<IDialogReference>();
+        dialogReference.Result.Returns(DialogResult.Cancel());
+        var dialogService = Substitute.For<IDialogService>();
+        var wasCalled = false;
+        dialogService.ShowAsync<UnsavedWorldDialog>(Arg.Any<string>(), Arg.Any<DialogParameters>(), Arg.Any<DialogOptions>())
+            .Returns(dialogReference)
+            .AndDoes(_ => {
+                wasCalled = true;
+            });
+
+        var systemUnderTest = CreatePresenterForTesting(viewModel, presentationLogic: presentationLogic,
+            dialogService: dialogService);
+        
+        await systemUnderTest.OnBeforeShutdownAsync(null, args);
+        Assert.Multiple(() =>
+        {
+            presentationLogic.DidNotReceive().SaveLearningWorldAsync(unsavedWorld);
+            Assert.That(wasCalled);
+            Assert.That(args.CancelShutdownState);
+        });
+        
     }
 
     #endregion
@@ -406,7 +465,8 @@ public class AuthoringToolWorkspacePresenterUt
         IAuthoringToolWorkspaceViewModel? authoringToolWorkspaceVm = null, IPresentationLogic? presentationLogic = null,
         ILearningWorldPresenter? learningWorldPresenter = null, ILearningSpacePresenter? learningSpacePresenter = null,
         ILogger<AuthoringToolWorkspacePresenter>? logger = null, IMediator? mediator = null,
-        IShutdownManager? shutdownManager = null)
+        IShutdownManager? shutdownManager = null,
+        IDialogService? dialogService = null)
     {
         authoringToolWorkspaceVm ??= Substitute.For<IAuthoringToolWorkspaceViewModel>();
         presentationLogic ??= Substitute.For<IPresentationLogic>();
@@ -415,8 +475,9 @@ public class AuthoringToolWorkspacePresenterUt
         logger ??= Substitute.For<ILogger<AuthoringToolWorkspacePresenter>>();
         mediator ??= Substitute.For<IMediator>();
         shutdownManager ??= Substitute.For<IShutdownManager>();
+        dialogService ??= Substitute.For<IDialogService>();
         return new AuthoringToolWorkspacePresenter(authoringToolWorkspaceVm, presentationLogic,
-            learningSpacePresenter, logger, mediator, shutdownManager);
+            learningSpacePresenter, logger, mediator, shutdownManager, dialogService);
     }
 
     private LearningWorldPresenter CreateLearningWorldPresenter(IPresentationLogic? presentationLogic = null,

@@ -21,7 +21,8 @@ public class DeleteLearningElementInWorld : IUndoCommand
     public void Execute()
     {
         _memento = ParentWorld.GetMemento();
-        
+
+        ParentWorld.UnsavedChanges = true;
         var element = ParentWorld.UnplacedLearningElements.First(x => x.Id == LearningElement.Id);
         ParentWorld.UnplacedLearningElements.Remove(element);
 

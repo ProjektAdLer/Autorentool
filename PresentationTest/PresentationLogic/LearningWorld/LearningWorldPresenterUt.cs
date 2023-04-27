@@ -301,7 +301,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        var condition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
         var mediator = Substitute.For<IMediator>();
         world.PathWayConditions.Add(condition);
         mediator.SelectedLearningObjectInPathWay = condition;
@@ -321,7 +321,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        var condition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
         var space = new LearningSpaceViewModel("f", "f", "f");
         var pathWay = new LearningPathwayViewModel(space, condition);
         var mediator = Substitute.For<IMediator>();
@@ -457,7 +457,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        var condition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
         var space = new LearningSpaceViewModel("f", "f", "f");
         var pathWay = new LearningPathwayViewModel(condition, space);
         var mediator = Substitute.For<IMediator>();
@@ -476,7 +476,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        var condition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
         var mediator = Substitute.For<IMediator>();
 
         var systemUnderTest = CreatePresenterForTesting(mediator: mediator);
@@ -492,7 +492,7 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        var condition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
         var mediator = Substitute.For<IMediator>();
         mediator.SelectedLearningObjectInPathWay = condition;
 
@@ -507,7 +507,7 @@ public class LearningWorldPresenterUt
     [Test]
     public void DeletePathWayCondition_ThrowsWhenWorldIsNull()
     {
-        var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        var condition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
 
         var systemUnderTest = CreatePresenterForTesting();
 
@@ -518,7 +518,7 @@ public class LearningWorldPresenterUt
     [Test]
     public void RightClickedPathWayCondition_SetsRightClickedLearningObjectToSpace()
     {
-        var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        var condition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.RightClickOnObjectInPathWay(condition);
 
@@ -528,7 +528,7 @@ public class LearningWorldPresenterUt
     [Test]
     public void HideRightClickMenuFromCondition_SetsRightClickedLearningObjectToNull()
     {
-        var conditionViewModel = new PathWayConditionViewModel(ConditionEnum.Or, 2, 1);
+        var conditionViewModel = new PathWayConditionViewModel(ConditionEnum.Or, false, 2, 1);
         var systemUnderTest = CreatePresenterForTesting();
 
         systemUnderTest.RightClickOnObjectInPathWay(conditionViewModel);
@@ -544,7 +544,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var conditionViewModel = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        var conditionViewModel = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
         var mediator = Substitute.For<IMediator>();
         var systemUnderTest = CreatePresenterForTesting(mediator: mediator);
         systemUnderTest.LearningWorldVm = world;
@@ -559,7 +559,7 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        var condition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
         systemUnderTest.LearningWorldVm = world;
 
@@ -617,7 +617,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var sourceCondition = new PathWayConditionViewModel(ConditionEnum.And,
+        var sourceCondition = new PathWayConditionViewModel(ConditionEnum.And, false,
             positionX: 25, positionY: 25);
         world.PathWayConditions.Add(sourceCondition);
 
@@ -751,7 +751,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        var condition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
         var space = new LearningSpaceViewModel("a", "g", "f", 2);
         var learningPathWay = new LearningPathwayViewModel(condition, space);
         world.LearningPathWays.Add(learningPathWay);

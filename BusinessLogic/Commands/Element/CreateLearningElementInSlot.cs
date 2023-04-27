@@ -40,6 +40,7 @@ public class CreateLearningElementInSlot : IUndoCommand
         _memento = ParentSpace.GetMemento();
         _mementoSpaceLayout = ParentSpace.LearningSpaceLayout.GetMemento();
 
+        ParentSpace.UnsavedChanges = true;
         ParentSpace.LearningSpaceLayout.LearningElements[SlotIndex] = LearningElement;
         
         _mappingAction.Invoke(ParentSpace);

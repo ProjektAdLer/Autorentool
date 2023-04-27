@@ -11,7 +11,10 @@ public class EditLearningWorldUt
     [Test]
     public void Execute_EditsLearningSpace()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f")
+        {
+            UnsavedChanges = false
+        };
         var name = "n";
         var shortname = "sn";
         var authors = "a";
@@ -26,13 +29,14 @@ public class EditLearningWorldUt
 
         Assert.Multiple(() =>
         {
-            Assert.IsFalse(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.False);
             Assert.That(world.Name, Is.EqualTo("a"));
             Assert.That(world.Shortname, Is.EqualTo("b"));
             Assert.That(world.Authors, Is.EqualTo("c"));
             Assert.That(world.Language, Is.EqualTo("d"));
             Assert.That(world.Description, Is.EqualTo("e"));
             Assert.That(world.Goals, Is.EqualTo("f"));
+            Assert.That(world.UnsavedChanges, Is.False);
         });
 
         command.Execute();
@@ -46,6 +50,7 @@ public class EditLearningWorldUt
             Assert.That(world.Language, Is.EqualTo("l"));
             Assert.That(world.Description, Is.EqualTo("d"));
             Assert.That(world.Goals, Is.EqualTo("g"));
+            Assert.That(world.UnsavedChanges, Is.True);
         });
     }
 
@@ -74,7 +79,10 @@ public class EditLearningWorldUt
     [Test]
     public void UndoRedo_UndoesAndRedoesEditLearningSpace()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f")
+        {
+            UnsavedChanges = false
+        };
         var name = "n";
         var shortname = "sn";
         var authors = "a";
@@ -89,26 +97,28 @@ public class EditLearningWorldUt
 
         Assert.Multiple(() =>
         {
-            Assert.IsFalse(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.False);
             Assert.That(world.Name, Is.EqualTo("a"));
             Assert.That(world.Shortname, Is.EqualTo("b"));
             Assert.That(world.Authors, Is.EqualTo("c"));
             Assert.That(world.Language, Is.EqualTo("d"));
             Assert.That(world.Description, Is.EqualTo("e"));
             Assert.That(world.Goals, Is.EqualTo("f"));
+            Assert.That(world.UnsavedChanges, Is.False);
         });
 
         command.Execute();
 
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(world.Name, Is.EqualTo("n"));
             Assert.That(world.Shortname, Is.EqualTo("sn"));
             Assert.That(world.Authors, Is.EqualTo("a"));
             Assert.That(world.Language, Is.EqualTo("l"));
             Assert.That(world.Description, Is.EqualTo("d"));
             Assert.That(world.Goals, Is.EqualTo("g"));
+            Assert.That(world.UnsavedChanges, Is.True);
         });
         actionWasInvoked = false;
 
@@ -116,13 +126,14 @@ public class EditLearningWorldUt
 
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(world.Name, Is.EqualTo("a"));
             Assert.That(world.Shortname, Is.EqualTo("b"));
             Assert.That(world.Authors, Is.EqualTo("c"));
             Assert.That(world.Language, Is.EqualTo("d"));
             Assert.That(world.Description, Is.EqualTo("e"));
             Assert.That(world.Goals, Is.EqualTo("f"));
+            Assert.That(world.UnsavedChanges, Is.False);
         });
         actionWasInvoked = false;
 
@@ -130,13 +141,14 @@ public class EditLearningWorldUt
 
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(world.Name, Is.EqualTo("n"));
             Assert.That(world.Shortname, Is.EqualTo("sn"));
             Assert.That(world.Authors, Is.EqualTo("a"));
             Assert.That(world.Language, Is.EqualTo("l"));
             Assert.That(world.Description, Is.EqualTo("d"));
             Assert.That(world.Goals, Is.EqualTo("g"));
+            Assert.That(world.UnsavedChanges, Is.True);
         });
     }
 }

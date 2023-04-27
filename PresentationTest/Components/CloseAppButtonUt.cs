@@ -32,7 +32,7 @@ public class CloseAppButtonUt
             var button = systemUnderTest.Find(".btn-standard");
             button.Click();
 
-            _shutdownManager.Received().BeginShutdown();
+            _shutdownManager.Received().RequestShutdownAsync();
         }
     }
 

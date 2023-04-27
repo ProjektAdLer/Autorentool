@@ -30,11 +30,16 @@ public class DragObjectInPathWay : IUndoCommand
         LearningObject.PositionY = _oldPositionY;
         _memento = LearningObject.GetMemento();
 
+        if(AnyChanges()) LearningObject.UnsavedChanges = true;
         LearningObject.PositionX = _newPositionX;
         LearningObject.PositionY = _newPositionY;
         
         _mappingAction.Invoke(LearningObject);
     }
+
+    private bool AnyChanges() =>
+        Math.Abs(LearningObject.PositionX - _newPositionX) > 0.01 ||
+        Math.Abs(LearningObject.PositionY - _newPositionY) > 0.01;
 
     public void Undo()
     {

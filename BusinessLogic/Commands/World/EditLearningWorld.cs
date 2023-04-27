@@ -32,6 +32,7 @@ public class EditLearningWorld : IUndoCommand
     {
         _memento ??= LearningWorld.GetMemento();
 
+        if (AnyChanges()) LearningWorld.UnsavedChanges = true;
         LearningWorld.Name = _name;
         LearningWorld.Shortname = _shortname;
         LearningWorld.Authors = _authors;
@@ -41,6 +42,15 @@ public class EditLearningWorld : IUndoCommand
 
         _mappingAction.Invoke(LearningWorld);
     }
+
+    private bool AnyChanges() =>
+        LearningWorld.Name != _name ||
+        LearningWorld.Shortname != _shortname ||
+        LearningWorld.Authors != _authors ||
+        LearningWorld.Language != _language ||
+        LearningWorld.Description != _description ||
+        LearningWorld.Goals != _goals;
+    
 
     public void Undo()
     {

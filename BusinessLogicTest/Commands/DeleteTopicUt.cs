@@ -11,30 +11,39 @@ public class DeleteTopicUt
     [Test]
     public void Execute_Undo_Redo_DeletesTopic()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var topic = new Topic("Topic1");
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f")
+        {
+            UnsavedChanges = false
+        };
+        var topic = new Topic("Topic1")
+        {
+            UnsavedChanges = false
+        };
         world.Topics.Add(topic);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
-        
         var command = new DeleteTopic(world, topic, mappingAction);
         
         Assert.That(world.Topics, Does.Contain(topic));
         Assert.IsFalse(actionWasInvoked);
+        Assert.That(world.UnsavedChanges, Is.False);
         
         command.Execute();
         
         Assert.That(world.Topics, Is.Empty);
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
+        Assert.That(world.UnsavedChanges, Is.True);
         
         command.Undo();
         
         Assert.That(world.Topics, Does.Contain(topic));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
+        Assert.That(world.UnsavedChanges, Is.False);
         
         command.Redo();
         Assert.That(world.Topics, Is.Empty);
         Assert.IsTrue(actionWasInvoked);
+        Assert.That(world.UnsavedChanges, Is.True);
     }
     
     [Test]

@@ -300,7 +300,7 @@ public class PresentationLogicUt
         mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
             Do(sub => command = sub.Arg<ICommand>() as CreateLearningSpace);
         var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
-        var topicVm = new TopicViewModel("topic1");
+        var topicVm = new TopicViewModel("topic1", false);
         var mockMapper = Substitute.For<IMapper>();
         var learningWorldEntity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
         var topicEntity = new BusinessLogic.Entities.Topic("topic1");
@@ -714,7 +714,7 @@ public class PresentationLogicUt
         EditPathWayCondition? command = null;
         mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
             Do(sub => command = sub.Arg<ICommand>() as EditPathWayCondition);
-        var pathWayConditionVm = new PathWayConditionViewModel(ConditionEnum.And,2,1);
+        var pathWayConditionVm = new PathWayConditionViewModel(ConditionEnum.And,false, 2,1);
         var mockMapper = Substitute.For<IMapper>();
         var pathWayConditionEntity = new BusinessLogic.Entities.PathWayCondition(ConditionEnum.And,2,1);
         mockMapper.Map<BusinessLogic.Entities.PathWayCondition>(Arg.Any<PathWayConditionViewModel>())
@@ -737,7 +737,7 @@ public class PresentationLogicUt
         mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
             Do(sub => command = sub.Arg<ICommand>() as DeletePathWayCondition);
         var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
-        var pathWayConditionVm = new PathWayConditionViewModel(ConditionEnum.And,2,1);
+        var pathWayConditionVm = new PathWayConditionViewModel(ConditionEnum.And,false, 2,1);
         var mockMapper = Substitute.For<IMapper>();
         var learningWorldEntity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
         var pathWayConditionEntity = new BusinessLogic.Entities.PathWayCondition(ConditionEnum.And,2,1);
@@ -793,7 +793,7 @@ public class PresentationLogicUt
         EditTopic? command = null;
         mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
             Do(sub => command = sub.Arg<ICommand>() as EditTopic);
-        var topicVm = new TopicViewModel("f");
+        var topicVm = new TopicViewModel("f", false);
         var mockMapper = Substitute.For<IMapper>();
         var topicEntity = new BusinessLogic.Entities.Topic("f");
         mockMapper.Map<BusinessLogic.Entities.Topic>(Arg.Any<TopicViewModel>())
@@ -819,7 +819,7 @@ public class PresentationLogicUt
         mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
             Do(sub => command = sub.Arg<ICommand>() as BatchCommand);
         var learningWorldVm = new LearningWorldViewModel("a","b","c","d","e","f");
-        var topicVm = new TopicViewModel("a");
+        var topicVm = new TopicViewModel("a", false);
         var spaceVm1 = new LearningSpaceViewModel("a", "b", "c", 2, assignedTopic: topicVm);
         var spaceVm2 = new LearningSpaceViewModel("a", "b", "c", 2, assignedTopic: topicVm);
         var spaceVm3 = new LearningSpaceViewModel("a", "b", "c", 2, assignedTopic: topicVm);

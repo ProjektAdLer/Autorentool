@@ -1,4 +1,6 @@
-﻿using Presentation.PresentationLogic.API;
+﻿using MudBlazor;
+using Presentation.Components.Dialogues;
+using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.View;
@@ -13,20 +15,21 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
 {
     public AuthoringToolWorkspacePresenter(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
         IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter,
-        ILogger<AuthoringToolWorkspacePresenter> logger, IMediator mediator, IShutdownManager shutdownManager)
+        ILogger<AuthoringToolWorkspacePresenter> logger, IMediator mediator, IShutdownManager shutdownManager,
+        IDialogService dialogService)
     {
         _learningSpacePresenter = learningSpacePresenter;
         AuthoringToolWorkspaceVm = authoringToolWorkspaceVm;
         _presentationLogic = presentationLogic;
         _logger = logger;
         _shutdownManager = shutdownManager;
+        _dialogService = dialogService;
         DeletedUnsavedWorld = null;
-        InformationMessageToShow = null;
         _mediator = mediator;
         if (presentationLogic.RunningElectron)
             //register callback so we can check for unsaved data on quit
             //TODO: register to our own quit button
-            shutdownManager.BeforeShutdown += OnBeforeShutdown;
+            shutdownManager.BeforeShutdown += OnBeforeShutdownAsync;
     }
 
     public IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get; }
@@ -36,12 +39,11 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     private readonly ILogger<AuthoringToolWorkspacePresenter> _logger;
     private readonly IMediator _mediator;
     private readonly IShutdownManager _shutdownManager;
+    private readonly IDialogService _dialogService;
 
     public bool LearningWorldSelected => _mediator.SelectedLearningWorld != null;
 
-    public Queue<LearningWorldViewModel>? UnsavedWorldsQueue { get; set; }
     public LearningWorldViewModel? DeletedUnsavedWorld { get; set; }
-    public string? InformationMessageToShow { get; set; }
 
     /// <summary>
     /// This event is fired when a new <see cref="LearningWorldViewModel"/> is created and the newly created
@@ -133,9 +135,40 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     }
 
 
-    internal void OnBeforeShutdown(object? _, BeforeShutdownEventArgs args)
+    internal async Task OnBeforeShutdownAsync(object? sender, BeforeShutdownEventArgs args)
     {
-        //TODO: Need to redo the dialog and save queue
+        var unsavedWorlds = AuthoringToolWorkspaceVm.LearningWorlds.Where(WorldHasUnsavedChanges).ToList();
+        _logger.LogInformation("Found {UnsavedWorldsCount} unsaved worlds", unsavedWorlds.Count);
+        foreach (var world in unsavedWorlds)
+        {
+            _logger.LogInformation("Asking user ");
+            //show mudblazor dialog asking if user wants to save unsaved worlds
+            var parameters = new DialogParameters
+            {
+                { nameof(UnsavedWorldDialog.WorldName), world.Name }
+            };
+            var options = new DialogOptions
+            {
+                CloseButton = true,
+                CloseOnEscapeKey = true,
+                DisableBackdropClick = true
+            };
+            var dialog = await _dialogService.ShowAsync<UnsavedWorldDialog>("Unsaved changes!", parameters, options);
+            var result = await dialog.Result;
+            if (result.Canceled)
+            {
+                args.CancelShutdown();
+                return;
+            }
+
+            if (result.Data is not bool) throw new ApplicationException("Unexpected dialog result type");
+            if(result.Data is true) await SaveLearningWorldAsync(world);
+        }
+    }
+
+    private static bool WorldHasUnsavedChanges(LearningWorldViewModel world)
+    {
+        return world.UnsavedChanges;
     }
 
     #endregion

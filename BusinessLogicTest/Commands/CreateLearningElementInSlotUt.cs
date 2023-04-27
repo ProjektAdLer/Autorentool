@@ -14,21 +14,26 @@ public class CreateLearningElementInSlotUt
     public void Execute_CreatesLearningElement()
     {
         var testParameter = new TestParameter();
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElementInSlot(testParameter.SpaceParent, 0, testParameter.Name, testParameter.Content, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points, testParameter.PositionX,testParameter.PositionY, mappingAction);
-
-        Assert.IsEmpty(testParameter.SpaceParent.ContainedLearningElements);
-        Assert.IsFalse(actionWasInvoked);
-
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(testParameter.SpaceParent.ContainedLearningElements, Is.Empty);
+            Assert.That(actionWasInvoked, Is.False);
+            Assert.That(testParameter.WorldParent.UnsavedChanges, Is.False);
+            Assert.That(testParameter.SpaceParent.UnsavedChanges, Is.False);
+        });
+        
         command.Execute();
 
-        Assert.That(testParameter.SpaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked);
         var element = testParameter.SpaceParent.ContainedLearningElements.First();
         Assert.Multiple(() =>
         {
+            Assert.That(testParameter.SpaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(element.Name, Is.EqualTo(testParameter.Name));
             Assert.That(element.Parent, Is.EqualTo(testParameter.SpaceParent));
             Assert.That(element.LearningContent, Is.EqualTo(testParameter.Content));
@@ -37,6 +42,8 @@ public class CreateLearningElementInSlotUt
             Assert.That(element.Workload, Is.EqualTo(testParameter.Workload));
             Assert.That(element.Points, Is.EqualTo(testParameter.Points));
             Assert.That(element.Difficulty, Is.EqualTo(testParameter.Difficulty));
+            Assert.That(testParameter.WorldParent.UnsavedChanges, Is.True);
+            Assert.That(testParameter.SpaceParent.UnsavedChanges, Is.True);
         });
     }
 
@@ -70,45 +77,75 @@ public class CreateLearningElementInSlotUt
     {
         var testParameter = new TestParameter();
         var spaceParent = testParameter.SpaceParent;
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElementInSlot(spaceParent, 1, testParameter.Name, testParameter.Content, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY,
             mappingAction);
-        var element2 = new LearningElement("x", null!, "x", "x", LearningElementDifficultyEnum.Easy);
+        var element2 = new LearningElement("x", null!, "x", "x", LearningElementDifficultyEnum.Easy)
+        {
+            UnsavedChanges = false
+        };
         spaceParent.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>
         {
             {
                 0, element2
             }
         };
-
-        Assert.That(spaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
-        Assert.That(spaceParent.ContainedLearningElements.First(), Is.EqualTo(element2));
-        Assert.IsFalse(actionWasInvoked);
-
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(spaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
+            Assert.That(spaceParent.ContainedLearningElements.First(), Is.EqualTo(element2));
+            Assert.That(actionWasInvoked, Is.False);
+            Assert.That(testParameter.WorldParent.UnsavedChanges, Is.False);
+            Assert.That(testParameter.SpaceParent.UnsavedChanges, Is.False);
+        });
+        
         command.Execute();
-
-        Assert.That(spaceParent.ContainedLearningElements.Count(), Is.EqualTo(2));
-        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(spaceParent.ContainedLearningElements.Count(), Is.EqualTo(2));
+            
+            Assert.That(actionWasInvoked, Is.True);
+            Assert.That(testParameter.WorldParent.UnsavedChanges, Is.True);
+            Assert.That(testParameter.SpaceParent.UnsavedChanges, Is.True);
+        });
+        
+        actionWasInvoked = false;
         
         command.Undo();
         
-        Assert.That(spaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
-        Assert.That(spaceParent.ContainedLearningElements.First(), Is.EqualTo(element2));
-        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
+        Assert.Multiple(() =>
+        {
+            Assert.That(spaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
+            Assert.That(spaceParent.ContainedLearningElements.First(), Is.EqualTo(element2));
+            
+            Assert.That(actionWasInvoked, Is.True);
+            Assert.That(testParameter.WorldParent.UnsavedChanges, Is.False);
+            Assert.That(testParameter.SpaceParent.UnsavedChanges, Is.False);
+        });
+        
+        actionWasInvoked = false;
         
         command.Redo();
         
-        Assert.That(spaceParent.ContainedLearningElements.Count(), Is.EqualTo(2));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(spaceParent.ContainedLearningElements.Count(), Is.EqualTo(2));
+            
+            Assert.That(actionWasInvoked, Is.True);
+            Assert.That(testParameter.WorldParent.UnsavedChanges, Is.True);
+            Assert.That(testParameter.SpaceParent.UnsavedChanges, Is.True);
+        });
     }
 
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
         var testParameter = new TestParameter();
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateLearningElementInSlot(testParameter.SpaceParent, 0, testParameter.Name, testParameter.Content, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY, mappingAction);
@@ -136,8 +173,18 @@ public class TestParameter
     internal TestParameter()
     {
         SpaceParent = new LearningSpace("l", "o", "p", 0,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X3));
-        WorldParent = new LearningWorld("q", "r", "s", "t", "u","o");
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X3))
+        {
+            UnsavedChanges = false
+        };
+        WorldParent = new LearningWorld("q", "r", "s", "t", "u", "o")
+        {
+            UnsavedChanges = false,
+            LearningSpaces = new List<LearningSpace>
+            {
+                SpaceParent
+            }
+        };
         Name = "a";
         Content = new FileContent("bar", "foo", "");
         Description = "e";

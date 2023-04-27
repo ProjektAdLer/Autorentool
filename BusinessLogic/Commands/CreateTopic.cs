@@ -22,6 +22,7 @@ public class CreateTopic : IUndoCommand
     {
         _memento = LearningWorld.GetMemento();
 
+        LearningWorld.UnsavedChanges = true;
         if (LearningWorld.Topics.Any(t => t.Name == Topic.Name))
         {
             Topic.Name = StringHelper.GetUniqueName(LearningWorld.Topics.Select(t => t.Name), Topic.Name);

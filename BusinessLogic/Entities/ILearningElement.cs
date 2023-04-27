@@ -13,5 +13,6 @@ public interface ILearningElement
     string Goals { get; set; }
     int Workload { get; set; }
     int Points { get; set; }
+    bool UnsavedChanges { get; set; }
     LearningElementDifficultyEnum Difficulty { get; set; }
 }

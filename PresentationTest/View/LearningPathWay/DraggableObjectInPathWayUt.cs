@@ -78,7 +78,7 @@ public class DraggableObjectInPathWay
     [Test]
     public void Constructor_SetsParametersCorrectly_PathWayCondition()
     {
-        var pathWayCondition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        var pathWayCondition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
         var onClicked = new Action<IObjectInPathWayViewModel>(_ => { });
         var onDragged = new DraggedEventArgs<IObjectInPathWayViewModel>.DraggedEventHandler((_,_) => { });
         var onDoubleClicked = new Action<IObjectInPathWayViewModel>(_ => { });
@@ -205,7 +205,7 @@ public class DraggableObjectInPathWay
     [Test]
     public void Constructor_PassesCorrectValuesToDraggable_PathWayCondition()
     {
-        var pathWayCondition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        var pathWayCondition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
         var onClicked = new Action<IObjectInPathWayViewModel>(_ => { });
         var onDragged = new DraggedEventArgs<IObjectInPathWayViewModel>.DraggedEventHandler((_,_) => { });
         var onDoubleClicked = new Action<IObjectInPathWayViewModel>(_ => { });

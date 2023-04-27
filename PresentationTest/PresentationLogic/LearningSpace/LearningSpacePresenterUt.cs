@@ -35,7 +35,7 @@ public class LearningSpacePresenterUt
     public void EditLearningSpace_CallsPresentationLogic()
     {
         var space = new LearningSpaceViewModel("a", "d", "e");
-        var topic = new TopicViewModel("abc");
+        var topic = new TopicViewModel("abc", false);
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
 

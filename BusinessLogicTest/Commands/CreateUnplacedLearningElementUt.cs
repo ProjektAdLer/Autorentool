@@ -17,17 +17,21 @@ public class CreateUnplacedLearningElementUt
         var command = new CreateUnplacedLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.Content,
             testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points, testParameter.PositionX,testParameter.PositionY, mappingAction);
-
-        Assert.IsEmpty(testParameter.WorldParent.UnplacedLearningElements);
-        Assert.IsFalse(actionWasInvoked);
-
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(testParameter.WorldParent.UnplacedLearningElements, Is.Empty);
+            Assert.That(actionWasInvoked, Is.False);
+            Assert.That(testParameter.WorldParent.UnsavedChanges, Is.False);
+        });
+        
         command.Execute();
 
-        Assert.That(testParameter.WorldParent.UnplacedLearningElements.Count(), Is.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked);
         var element = testParameter.WorldParent.UnplacedLearningElements.First();
         Assert.Multiple(() =>
         {
+            Assert.That(testParameter.WorldParent.UnplacedLearningElements.Count, Is.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(element.Name, Is.EqualTo(testParameter.Name));
             Assert.That(element.LearningContent, Is.EqualTo(testParameter.Content));
             Assert.That(element.Description, Is.EqualTo(testParameter.Description));
@@ -35,9 +39,10 @@ public class CreateUnplacedLearningElementUt
             Assert.That(element.Workload, Is.EqualTo(testParameter.Workload));
             Assert.That(element.Points, Is.EqualTo(testParameter.Points));
             Assert.That(element.Difficulty, Is.EqualTo(testParameter.Difficulty));
+            Assert.That(testParameter.WorldParent.UnsavedChanges, Is.True);
         });
     }
-    
+
     [Test]
     public void UndoRedo_UndoesRedoesCreateLearningElement()
     {
@@ -48,25 +53,44 @@ public class CreateUnplacedLearningElementUt
         var command = new CreateUnplacedLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.Content,
             testParameter.Description, testParameter.Goals, testParameter.Difficulty,
             testParameter.Workload, testParameter.Points, testParameter.PositionX,testParameter.PositionY, mappingAction);
-
-
-        Assert.That(worldParent.UnplacedLearningElements.Count(), Is.EqualTo(0));
-        Assert.IsFalse(actionWasInvoked);
-
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(worldParent.UnplacedLearningElements, Is.Empty);
+            Assert.That(actionWasInvoked, Is.False);
+            Assert.That(worldParent.UnsavedChanges, Is.False);
+        });
+        
         command.Execute();
-
-        Assert.That(worldParent.UnplacedLearningElements.Count(), Is.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(worldParent.UnplacedLearningElements, Has.Count.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.True);
+            Assert.That(worldParent.UnsavedChanges, Is.True);
+        });
+        
+        actionWasInvoked = false;
         
         command.Undo();
         
-        Assert.That(worldParent.UnplacedLearningElements.Count(), Is.EqualTo(0));
-        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
+        Assert.Multiple(() =>
+        {
+            Assert.That(worldParent.UnplacedLearningElements, Is.Empty);
+            Assert.That(actionWasInvoked, Is.True);
+            Assert.That(worldParent.UnsavedChanges, Is.False);
+        });
+        
+        actionWasInvoked = false;
         
         command.Redo();
         
-        Assert.That(worldParent.UnplacedLearningElements.Count(), Is.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(worldParent.UnplacedLearningElements, Has.Count.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.True);
+            Assert.That(worldParent.UnsavedChanges, Is.True);
+        });
     }
 
     [Test]

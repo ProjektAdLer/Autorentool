@@ -11,7 +11,10 @@ public class EditTopicUt
     [Test]
     public void Execute_Undo_Redo_EditsTopic()
     {
-        var topic = new Topic("Topic 1");
+        var topic = new Topic("Topic 1")
+        {
+            UnsavedChanges = false
+        };
         var name = "NewTopic1";
         bool actionWasInvoked = false;
         Action<Topic> mappingAction = _ => actionWasInvoked = true;
@@ -22,6 +25,7 @@ public class EditTopicUt
         {
             Assert.IsFalse(actionWasInvoked);
             Assert.That(topic.Name, Is.EqualTo("Topic 1"));
+            Assert.That(topic.UnsavedChanges, Is.False);
         });
         
         command.Execute();
@@ -30,6 +34,7 @@ public class EditTopicUt
         {
             Assert.IsTrue(actionWasInvoked);
             Assert.That(topic.Name, Is.EqualTo(name));
+            Assert.That(topic.UnsavedChanges, Is.True);
         });
         
         actionWasInvoked = false;

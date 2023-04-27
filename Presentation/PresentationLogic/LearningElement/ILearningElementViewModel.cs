@@ -17,4 +17,5 @@ public interface ILearningElementViewModel : IDisplayableLearningObject
     int Points { get; set; }
     double PositionX { get; set; }
     double PositionY { get; set; }
+    bool UnsavedChanges { get; set; }
 }

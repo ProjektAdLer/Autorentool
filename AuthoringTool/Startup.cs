@@ -119,7 +119,7 @@ public class Startup
 
     private void ConfigurePresentationLogic(IServiceCollection services)
     {
-        services.AddSingleton<IAuthoringToolWorkspacePresenter, AuthoringToolWorkspacePresenter>();
+        services.AddScoped<IAuthoringToolWorkspacePresenter, AuthoringToolWorkspacePresenter>();
         services.AddSingleton<IPresentationLogic, PresentationLogic>();
         services.AddSingleton<ILearningWorldPresenter, LearningWorldPresenter>();
         services.AddSingleton(p =>

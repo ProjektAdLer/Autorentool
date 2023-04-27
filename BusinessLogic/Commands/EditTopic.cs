@@ -21,6 +21,7 @@ public class EditTopic : IUndoCommand
     {
         _memento = Topic.GetMemento();
         
+        if (Topic.Name != _name) Topic.UnsavedChanges = true;
         Topic.Name = _name;
         
         _mappingAction.Invoke(Topic);

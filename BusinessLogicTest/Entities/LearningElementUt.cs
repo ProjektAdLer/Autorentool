@@ -35,6 +35,7 @@ public class LearningElementUt
             Assert.That(systemUnderTest.Points, Is.EqualTo(points));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
+            Assert.That(systemUnderTest.UnsavedChanges);
         });
     }
     

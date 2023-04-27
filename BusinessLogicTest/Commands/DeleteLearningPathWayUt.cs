@@ -12,16 +12,31 @@ public class DeleteLearningPathWayUt
     [Test]
     public void Execute_DeletesLearningPathWay()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space1 = new LearningSpace("z", "w", "v", 5);
-        var space2 = new LearningSpace("l", "o", "p", 3);
-        var space3 = new LearningSpace("l", "o", "p", 3);
-        var space4 = new LearningSpace("l", "o", "p", 3);
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f")
+        {
+            UnsavedChanges = false
+        };
+        var space1 = new LearningSpace("z", "w", "v", 5)
+        {
+            UnsavedChanges = false
+        };
+        var space2 = new LearningSpace("l", "o", "p", 3)
+        {
+            UnsavedChanges = false
+        };
+        var space3 = new LearningSpace("l", "o", "p", 3)
+        {
+            UnsavedChanges = false
+        };
+        var space4 = new LearningSpace("l", "o", "p", 3)
+        {
+            UnsavedChanges = false
+        };
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
         world.LearningSpaces.Add(space3);
         world.LearningSpaces.Add(space4);
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         
         var pathway1 = new LearningPathway(space1, space2);
@@ -36,14 +51,22 @@ public class DeleteLearningPathWayUt
 
         var command = new DeleteLearningPathWay(world, pathway2, mappingAction);
         
-        Assert.That(world.LearningPathways, Has.Count.EqualTo(2));
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.LearningPathways, Has.Count.EqualTo(2));
+            Assert.That(actionWasInvoked, Is.False);
+            Assert.That(world.UnsavedChanges, Is.False);
+        });
         
         command.Execute();
         
         Assert.That(world.LearningPathways, Has.Count.EqualTo(1));
-        Assert.That(world.LearningPathways, Does.Not.Contain(pathway2));
-        Assert.That(actionWasInvoked, Is.True);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.LearningPathways, Does.Not.Contain(pathway2));
+            Assert.That(actionWasInvoked, Is.True);
+            Assert.That(world.UnsavedChanges, Is.True);
+        });
     }
     
     [Test]
@@ -70,12 +93,21 @@ public class DeleteLearningPathWayUt
     [Test]
     public void UndoRedo_UndoesAndRedoesCreateLearningPathWay()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space1 = new LearningSpace("z", "w", "v", 5);
-        var space2 = new LearningSpace("l", "o", "p", 3);
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f")
+        {
+            UnsavedChanges = false
+        };
+        var space1 = new LearningSpace("z", "w", "v", 5)
+        {
+            UnsavedChanges = false
+        };
+        var space2 = new LearningSpace("l", "o", "p", 3)
+        {
+            UnsavedChanges = false
+        };
         world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         
         var pathway = new LearningPathway(space1, space2);
@@ -84,26 +116,40 @@ public class DeleteLearningPathWayUt
         
         var command = new DeleteLearningPathWay(world, pathway, mappingAction);
         
-        Assert.That(world.LearningPathways, Has.Count.EqualTo(1));
-        Assert.IsFalse(actionWasInvoked);
-
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.LearningPathways, Has.Count.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.False);
+            Assert.That(world.UnsavedChanges, Is.False);
+        });
+        
         command.Execute();
+        
         Assert.Multiple(() =>
         {
             Assert.That(actionWasInvoked, Is.True); actionWasInvoked = false;
             Assert.That(world.LearningPathways, Has.Count.EqualTo(0));
+            Assert.That(world.UnsavedChanges, Is.True);
         });
         
         command.Undo();
         
-        Assert.That(world.LearningPathways, Has.Count.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
-        
-        command.Redo();
         Assert.Multiple(() =>
         {
-            Assert.That(actionWasInvoked, Is.True); actionWasInvoked = false;
+            Assert.That(world.LearningPathways, Has.Count.EqualTo(1));
+            Assert.That(actionWasInvoked, Is.True);
+            Assert.That(world.UnsavedChanges, Is.False);
+        });
+        
+        actionWasInvoked = false;
+        
+        command.Redo();
+        
+        Assert.Multiple(() =>
+        {
+            Assert.That(actionWasInvoked, Is.True); 
             Assert.That(world.LearningPathways, Has.Count.EqualTo(0));
+            Assert.That(world.UnsavedChanges, Is.True);
         });
     }
 }

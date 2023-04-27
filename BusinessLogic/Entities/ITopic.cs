@@ -4,4 +4,5 @@ public interface ITopic
 {
     Guid Id { get; set; }
     string Name { get; set; }
+    bool UnsavedChanges { get; set; }
 }

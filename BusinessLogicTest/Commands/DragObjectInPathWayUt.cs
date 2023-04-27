@@ -17,7 +17,10 @@ public class DragObjectInPathWayUt
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var space = new LearningSpace("a", "d", "e", 5, null, positionX: newPositionX, positionY: newPositionY);
+        var space = new LearningSpace("a", "d", "e", 5, null, positionX: newPositionX, positionY: newPositionY)
+        {
+            UnsavedChanges = false
+        };
         bool actionWasInvoked = false;
         Action<IObjectInPathWay> mappingAction = _ => actionWasInvoked = true;
 
@@ -25,18 +28,20 @@ public class DragObjectInPathWayUt
         
         Assert.Multiple(() =>
         {
-            Assert.IsFalse(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.False);
             Assert.That(space.PositionX, Is.EqualTo(newPositionX));
             Assert.That(space.PositionY, Is.EqualTo(newPositionY));
+            Assert.That(space.UnsavedChanges, Is.False);
         });
         
         command.Execute();
         
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(space.PositionX, Is.EqualTo(newPositionX));
             Assert.That(space.PositionY, Is.EqualTo(newPositionY));
+            Assert.That(space.UnsavedChanges, Is.True);
         });
     }
     
@@ -47,26 +52,31 @@ public class DragObjectInPathWayUt
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var pathWayCondition = new PathWayCondition(ConditionEnum.And, newPositionX, newPositionY);
-        bool actionWasInvoked = false;
+        var pathWayCondition = new PathWayCondition(ConditionEnum.And, newPositionX, newPositionY)
+        {
+            UnsavedChanges = false
+        };
+        var actionWasInvoked = false;
         Action<IObjectInPathWay> mappingAction = _ => actionWasInvoked = true;
 
         var command = new DragObjectInPathWay(pathWayCondition, oldPositionX, oldPositionY, newPositionX, newPositionY, mappingAction);
         
         Assert.Multiple(() =>
         {
-            Assert.IsFalse(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.False);
             Assert.That(pathWayCondition.PositionX, Is.EqualTo(newPositionX));
             Assert.That(pathWayCondition.PositionY, Is.EqualTo(newPositionY));
+            Assert.That(pathWayCondition.UnsavedChanges, Is.False);
         });
         
         command.Execute();
         
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(pathWayCondition.PositionX, Is.EqualTo(newPositionX));
             Assert.That(pathWayCondition.PositionY, Is.EqualTo(newPositionY));
+            Assert.That(pathWayCondition.UnsavedChanges, Is.True);
         });
     }
     
@@ -95,26 +105,31 @@ public class DragObjectInPathWayUt
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var space = new LearningSpace("a", "d", "e", 5, null, positionX: newPositionX, positionY: newPositionY);
-        bool actionWasInvoked = false;
+        var space = new LearningSpace("a", "d", "e", 5, null, positionX: newPositionX, positionY: newPositionY)
+        {
+            UnsavedChanges = false
+        };
+        var actionWasInvoked = false;
         Action<IObjectInPathWay> mappingAction = _ => actionWasInvoked = true;
 
         var command = new DragObjectInPathWay(space, oldPositionX, oldPositionY, newPositionX, newPositionY, mappingAction);
         
         Assert.Multiple(() =>
         {
-            Assert.IsFalse(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.False);
             Assert.That(space.PositionX, Is.EqualTo(newPositionX));
             Assert.That(space.PositionY, Is.EqualTo(newPositionY));
+            Assert.That(space.UnsavedChanges, Is.False);
         });
         
         command.Execute();
         
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(space.PositionX, Is.EqualTo(newPositionX));
             Assert.That(space.PositionY, Is.EqualTo(newPositionY));
+            Assert.That(space.UnsavedChanges, Is.True);
         });
         actionWasInvoked = false;
         
@@ -122,9 +137,10 @@ public class DragObjectInPathWayUt
         
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(space.PositionX, Is.EqualTo(oldPositionX));
             Assert.That(space.PositionY, Is.EqualTo(oldPositionY));
+            Assert.That(space.UnsavedChanges, Is.False);
         });
         actionWasInvoked = false;
         
@@ -132,9 +148,10 @@ public class DragObjectInPathWayUt
         
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(space.PositionX, Is.EqualTo(newPositionX));
             Assert.That(space.PositionY, Is.EqualTo(newPositionY));
+            Assert.That(space.UnsavedChanges, Is.True);
         });
     }
 }

@@ -23,12 +23,12 @@ public class LearningWorldViewModelUt
         var language = "german";
         var description = "very cool element";
         var goals = "learn very many things";
-        var topic1 = new TopicViewModel("topic1");
-        var topic2 = new TopicViewModel("topic2");
+        var topic1 = new TopicViewModel("topic1", false);
+        var topic2 = new TopicViewModel("topic2", false);
         var topics = new List<TopicViewModel> {topic1, topic2};
         var space1 = new LearningSpaceViewModel("ff", "ff", "ff");
         var learningSpaces = new List<ILearningSpaceViewModel> { space1 };
-        var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        var condition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
         var pathWayConditions = new List<PathWayConditionViewModel> { condition };
         var pathWay = new LearningPathwayViewModel(space1, condition);
         var learningPathways = new List<ILearningPathWayViewModel> { pathWay };

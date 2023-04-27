@@ -23,6 +23,8 @@ public class ChangeLearningSpaceLayout : IUndoCommand
     {
         //TODO: save both space and containing world memento
         _memento = LearningSpace.LearningSpaceLayout.GetMemento();
+
+        LearningSpace.UnsavedChanges = true;
         var capacity = FloorPlanProvider.GetFloorPlan(FloorPlanName).Capacity;
         IEnumerable<KeyValuePair<int, ILearningElement>> newLearningElementDictionary =
             LearningSpace.LearningSpaceLayout.LearningElements

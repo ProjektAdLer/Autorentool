@@ -47,6 +47,7 @@ public class LearningWorldUt
             Assert.That(systemUnderTest.LearningPathways, Is.EqualTo(pathWays));
             Assert.That(systemUnderTest.Topics, Is.EqualTo(topics));
             Assert.That(systemUnderTest.SelectableWorldObjects, Is.EqualTo(selectableObjects));
+            Assert.That(systemUnderTest.UnsavedChanges);
         });
     }
     

@@ -33,6 +33,7 @@ public class CreateLearningPathWay : IUndoCommand, ICommandWithError
             
         _memento = LearningWorld.GetMemento();
         
+        LearningWorld.UnsavedChanges = true;
         LearningWorld.LearningPathways.Add(LearningPathway); 
         
         _mappingAction.Invoke(LearningWorld);

@@ -17,18 +17,23 @@ public class DragLearningElementUt
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var element = new LearningElement("a", null!, "e", 
-            "f", LearningElementDifficultyEnum.Easy, null, workload: 5, points: 5, positionX: newPositionX, positionY: newPositionY);
-        bool actionWasInvoked = false;
+        var element = new LearningElement("a", null!, "e",
+            "f", LearningElementDifficultyEnum.Easy, null, workload: 5, points: 5, positionX: newPositionX,
+            positionY: newPositionY)
+        {
+            UnsavedChanges = false
+        };
+        var actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
         var command = new DragLearningElement(element, oldPositionX, oldPositionY, newPositionX, newPositionY, mappingAction);
         
         Assert.Multiple(() =>
         {
-            Assert.IsFalse(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.False);
             Assert.That(element.PositionX, Is.EqualTo(newPositionX));
             Assert.That(element.PositionY, Is.EqualTo(newPositionY));
+            Assert.That(element.UnsavedChanges, Is.False);
         });
         
         command.Execute();
@@ -38,6 +43,7 @@ public class DragLearningElementUt
             Assert.IsTrue(actionWasInvoked);
             Assert.That(element.PositionX, Is.EqualTo(newPositionX));
             Assert.That(element.PositionY, Is.EqualTo(newPositionY));
+            Assert.That(element.UnsavedChanges, Is.True);
         });
     }
     
@@ -50,7 +56,7 @@ public class DragLearningElementUt
         double newPositionY = 4;
         var element = new LearningElement("a", null!, "e", 
             "f", LearningElementDifficultyEnum.Easy, null, workload: 5, points: 5, positionX: newPositionX, positionY: newPositionY);
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
         var command = new DragLearningElement(element, oldPositionX, oldPositionY, newPositionX, newPositionY, mappingAction);
@@ -67,27 +73,33 @@ public class DragLearningElementUt
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var element = new LearningElement("a", null!, "e", 
-            "f", LearningElementDifficultyEnum.Easy, null, workload: 5, points: 5, positionX: newPositionX, positionY: newPositionY);        
-        bool actionWasInvoked = false;
+        var element = new LearningElement("a", null!, "e",
+            "f", LearningElementDifficultyEnum.Easy, null, workload: 5, points: 5, positionX: newPositionX,
+            positionY: newPositionY)
+        {
+            UnsavedChanges = false
+        };
+        var actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
         var command = new DragLearningElement(element, oldPositionX, oldPositionY, newPositionX, newPositionY, mappingAction);
         
         Assert.Multiple(() =>
         {
-            Assert.IsFalse(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.False);
             Assert.That(element.PositionX, Is.EqualTo(newPositionX));
             Assert.That(element.PositionY, Is.EqualTo(newPositionY));
+            Assert.That(element.UnsavedChanges, Is.False);
         });
         
         command.Execute();
         
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(element.PositionX, Is.EqualTo(newPositionX));
             Assert.That(element.PositionY, Is.EqualTo(newPositionY));
+            Assert.That(element.UnsavedChanges, Is.True);
         });
         actionWasInvoked = false;
         
@@ -95,9 +107,10 @@ public class DragLearningElementUt
         
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(element.PositionX, Is.EqualTo(oldPositionX));
             Assert.That(element.PositionY, Is.EqualTo(oldPositionY));
+            Assert.That(element.UnsavedChanges, Is.False);
         });
         actionWasInvoked = false;
         
@@ -105,9 +118,10 @@ public class DragLearningElementUt
         
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(element.PositionX, Is.EqualTo(newPositionX));
             Assert.That(element.PositionY, Is.EqualTo(newPositionY));
+            Assert.That(element.UnsavedChanges, Is.True);
         });
     }
 }

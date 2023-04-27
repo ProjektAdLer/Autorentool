@@ -26,7 +26,8 @@ public class CreateUnplacedLearningElement : IUndoCommand
     public void Execute()
     {
         _memento = LearningWorld.GetMemento();
-        
+
+        LearningWorld.UnsavedChanges = true;
         LearningWorld.UnplacedLearningElements.Add(LearningElement);
 
         _mappingAction.Invoke(LearningWorld);

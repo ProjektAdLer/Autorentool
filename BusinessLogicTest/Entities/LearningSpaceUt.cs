@@ -45,6 +45,7 @@ public class LearningSpaceUt
             Assert.That(systemUnderTest.AssignedTopic, Is.EqualTo(assignedTopic));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
+            Assert.That(systemUnderTest.UnsavedChanges);
         });
     }
 

@@ -14,6 +14,7 @@ public class PlaceLearningElementInLayoutFromUnplaced : IUndoCommand
     internal ILearningElement LearningElement { get; }
     private readonly Action<LearningWorld> _mappingAction;
     private IMemento? _mementoWorld;
+    private IMemento? _mementoSpace;
     private IMemento? _mementoSpaceLayout;
 
     public PlaceLearningElementInLayoutFromUnplaced(LearningWorld learningWorld, LearningSpace learningSpace,
@@ -29,7 +30,11 @@ public class PlaceLearningElementInLayoutFromUnplaced : IUndoCommand
     public void Execute()
     {
         _mementoWorld = LearningWorld.GetMemento();
+        _mementoSpace = LearningSpace.GetMemento();
         _mementoSpaceLayout = LearningSpace.LearningSpaceLayout.GetMemento();
+        
+        LearningSpace.UnsavedChanges = true;
+        LearningWorld.UnsavedChanges = true;
 
         if (LearningWorld.UnplacedLearningElements.Contains(LearningElement))
         {
@@ -54,12 +59,21 @@ public class PlaceLearningElementInLayoutFromUnplaced : IUndoCommand
 
     public void Undo()
     {
-        if (_mementoWorld == null || _mementoSpaceLayout == null)
+        if (_mementoWorld == null)
         {
-            throw new InvalidOperationException("_mementoWorld or _mementoSpaceLayout is null");
+            throw new InvalidOperationException("_mementoWorld is null");
+        }
+        if(_mementoSpace == null)
+        {
+            throw new InvalidOperationException("_mementoSpace is null");
+        }
+        if (_mementoSpaceLayout == null)
+        {
+            throw new InvalidOperationException("_mementoSpaceLayout is null");
         }
 
         LearningWorld.RestoreMemento(_mementoWorld);
+        LearningSpace.RestoreMemento(_mementoSpace);
         LearningSpace.LearningSpaceLayout.RestoreMemento(_mementoSpaceLayout);
 
         _mappingAction.Invoke(LearningWorld);

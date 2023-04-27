@@ -16,7 +16,11 @@ public class EditLearningElementUt
     {
         var parent = new LearningSpace("l", "j", "j", 5);
         var content = new FileContent("bar", "foo", "");
-        var element = new LearningElement("a", content, "f", "g", LearningElementDifficultyEnum.Medium, parent, workload: 8, points: 9, positionX: 17f, positionY: 29f);
+        var element = new LearningElement("a", content, "f", "g", LearningElementDifficultyEnum.Medium, parent,
+            workload: 8, points: 9, positionX: 17f, positionY: 29f)
+        {
+            UnsavedChanges = false
+        };
         parent.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>
         {
             {
@@ -24,7 +28,7 @@ public class EditLearningElementUt
             }
         };
 
-    var name = "new element";
+        var name = "new element";
         var url = "google.com";
         var description = "video of learning stuff";
         var goals = "learn";
@@ -32,7 +36,7 @@ public class EditLearningElementUt
         var points = 8;
         var difficulty = LearningElementDifficultyEnum.Easy;
         var newContent = new FileContent("foo", "bar", "foobar");
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
         var command = new EditLearningElement(element, parent, name, description, goals, difficulty,
@@ -40,7 +44,7 @@ public class EditLearningElementUt
         
         Assert.Multiple(() =>
         {
-            Assert.IsFalse(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.False);
             Assert.That(element.Name, Is.EqualTo("a"));
             Assert.That(element.Parent, Is.EqualTo(parent));
             Assert.That(element.LearningContent, Is.EqualTo(content));
@@ -51,6 +55,7 @@ public class EditLearningElementUt
             Assert.That(element.Difficulty, Is.EqualTo(LearningElementDifficultyEnum.Medium));
             Assert.That(element.PositionX, Is.EqualTo(17f));
             Assert.That(element.PositionY, Is.EqualTo(29f));
+            Assert.That(element.UnsavedChanges, Is.False);
             Assert.That(parent.ContainedLearningElements.Count(), Is.EqualTo(1));
         });
         
@@ -69,6 +74,7 @@ public class EditLearningElementUt
             Assert.That(element.Difficulty, Is.EqualTo(difficulty));
             Assert.That(element.PositionX, Is.EqualTo(17f));
             Assert.That(element.PositionY, Is.EqualTo(29f));
+            Assert.That(element.UnsavedChanges, Is.True);
             Assert.That(parent.ContainedLearningElements.Count(), Is.EqualTo(1));
         });
     }
@@ -86,7 +92,7 @@ public class EditLearningElementUt
         var points = 8;
         var difficulty = LearningElementDifficultyEnum.Easy;
         var content = new FileContent("bar", "foo", "");
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
         var command = new EditLearningElement(element, parent, name, description, goals, difficulty, workload, points, content, mappingAction);
@@ -102,7 +108,11 @@ public class EditLearningElementUt
     {
         var parent = new LearningSpace("l", "j", "j", 5);
         var content = new FileContent("bar", "foo", "");
-        var element = new LearningElement("a", content, "f","g", LearningElementDifficultyEnum.Medium, parent, workload: 8, points: 9, positionX: 17f, positionY: 29f);
+        var element = new LearningElement("a", content, "f", "g", LearningElementDifficultyEnum.Medium, parent,
+            workload: 8, points: 9, positionX: 17f, positionY: 29f)
+        {
+            UnsavedChanges = false
+        };
         parent.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>
         {
             {
@@ -118,7 +128,7 @@ public class EditLearningElementUt
         var points = 8;
         var difficulty = LearningElementDifficultyEnum.Easy;
         var newContent = new FileContent("foo", "bar", "foobar");
-        bool actionWasInvoked = false;
+        var actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
         var command = new EditLearningElement(element, parent, name, description, goals, difficulty,
@@ -126,7 +136,7 @@ public class EditLearningElementUt
         
         Assert.Multiple(() =>
         {
-            Assert.IsFalse(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.False);
             Assert.That(element.Name, Is.EqualTo("a"));
             Assert.That(element.Parent, Is.EqualTo(parent));
             Assert.That(element.LearningContent, Is.EqualTo(content));
@@ -137,6 +147,7 @@ public class EditLearningElementUt
             Assert.That(element.Difficulty, Is.EqualTo(LearningElementDifficultyEnum.Medium));
             Assert.That(element.PositionX, Is.EqualTo(17f));
             Assert.That(element.PositionY, Is.EqualTo(29f));
+            Assert.That(element.UnsavedChanges, Is.False);
             Assert.That(parent.ContainedLearningElements.Count(), Is.EqualTo(1));
         });
         
@@ -144,7 +155,7 @@ public class EditLearningElementUt
         
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(element.Name, Is.EqualTo(name));
             Assert.That(element.Parent, Is.EqualTo(parent));
             Assert.That(element.LearningContent, Is.EqualTo(newContent));
@@ -155,6 +166,7 @@ public class EditLearningElementUt
             Assert.That(element.Difficulty, Is.EqualTo(difficulty));
             Assert.That(element.PositionX, Is.EqualTo(17f));
             Assert.That(element.PositionY, Is.EqualTo(29f));
+            Assert.That(element.UnsavedChanges, Is.True);
             Assert.That(parent.ContainedLearningElements.Count(), Is.EqualTo(1));
         });
         actionWasInvoked = false;
@@ -163,7 +175,7 @@ public class EditLearningElementUt
         
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(element.Name, Is.EqualTo("a"));
             Assert.That(element.Parent, Is.EqualTo(parent));
             Assert.That(element.LearningContent, Is.EqualTo(content));
@@ -174,6 +186,7 @@ public class EditLearningElementUt
             Assert.That(element.Difficulty, Is.EqualTo(LearningElementDifficultyEnum.Medium));
             Assert.That(element.PositionX, Is.EqualTo(17f));
             Assert.That(element.PositionY, Is.EqualTo(29f));
+            Assert.That(element.UnsavedChanges, Is.False);
             Assert.That(parent.ContainedLearningElements.Count(), Is.EqualTo(1));
         });
         actionWasInvoked = false;
@@ -182,7 +195,7 @@ public class EditLearningElementUt
         
         Assert.Multiple(() =>
         {
-            Assert.IsTrue(actionWasInvoked);
+            Assert.That(actionWasInvoked, Is.True);
             Assert.That(element.Name, Is.EqualTo(name));
             Assert.That(element.Parent, Is.EqualTo(parent));
             Assert.That(element.LearningContent, Is.EqualTo(newContent));
@@ -193,6 +206,7 @@ public class EditLearningElementUt
             Assert.That(element.Difficulty, Is.EqualTo(difficulty));
             Assert.That(element.PositionX, Is.EqualTo(17f));
             Assert.That(element.PositionY, Is.EqualTo(29f));
+            Assert.That(element.UnsavedChanges, Is.True);
             Assert.That(parent.ContainedLearningElements.Count(), Is.EqualTo(1));
         });
     }

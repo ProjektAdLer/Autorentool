@@ -2,6 +2,7 @@
 using AutoMapper;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using FluentAssertions;
 using NUnit.Framework;
 using PersistEntities;
 using PersistEntities.LearningContent;
@@ -339,11 +340,10 @@ public class EntityPersistEntityMappingProfileUt
         var spacePe1 = GetTestableNewSpacePersistEntity();
         var pathWayConditionPe = new PathWayConditionPe(ConditionEnumPe.And, 2, 1);
         var spacePe2 = GetTestableNewSpacePersistEntity();
-        destination.LearningSpaces = new List<LearningSpacePe>() {spacePe1, spacePe2};
-        destination.PathWayConditions = new List<PathWayConditionPe>() {pathWayConditionPe};
+        destination.LearningSpaces = new List<LearningSpacePe>() { spacePe1, spacePe2 };
+        destination.PathWayConditions = new List<PathWayConditionPe>() { pathWayConditionPe };
         destination.LearningPathways = new List<LearningPathwayPe>
-            {new(spacePe1, pathWayConditionPe), new(pathWayConditionPe, spacePe2)};
-        ;
+            { new(spacePe1, pathWayConditionPe), new(pathWayConditionPe, spacePe2) };
         spacePe1.OutBoundObjects.Add(pathWayConditionPe);
         pathWayConditionPe.InBoundObjects.Add(spacePe1);
         pathWayConditionPe.OutBoundObjects.Add(spacePe2);
@@ -431,14 +431,32 @@ public class EntityPersistEntityMappingProfileUt
         Assert.That(restored.LearningPathways, Has.Count.EqualTo(3));
         Assert.Multiple(() =>
         {
-            Assert.That(((LearningSpace) restored.LearningPathways[0].SourceObject).Name, Is.EqualTo("space1"));
-            Assert.That(((LearningSpace) restored.LearningPathways[1].SourceObject).Name, Is.EqualTo("space2"));
-            Assert.That(((LearningSpace) restored.LearningPathways[0].TargetObject).Name, Is.EqualTo("space2"));
-            Assert.That(((LearningSpace) restored.LearningPathways[1].TargetObject).Name, Is.EqualTo("space3"));
-            Assert.That(((LearningSpace) restored.LearningPathways[2].SourceObject).Name, Is.EqualTo("space3"));
-            Assert.That(((PathWayCondition) restored.LearningPathways[2].TargetObject).Condition,
+            Assert.That(((LearningSpace)restored.LearningPathways[0].SourceObject).Name, Is.EqualTo("space1"));
+            Assert.That(((LearningSpace)restored.LearningPathways[1].SourceObject).Name, Is.EqualTo("space2"));
+            Assert.That(((LearningSpace)restored.LearningPathways[0].TargetObject).Name, Is.EqualTo("space2"));
+            Assert.That(((LearningSpace)restored.LearningPathways[1].TargetObject).Name, Is.EqualTo("space3"));
+            Assert.That(((LearningSpace)restored.LearningPathways[2].SourceObject).Name, Is.EqualTo("space3"));
+            Assert.That(((PathWayCondition)restored.LearningPathways[2].TargetObject).Condition,
                 Is.EqualTo(ConditionEnum.And));
         });
+    }
+
+    [Test]
+    public void MapLearningWorldToPeAndBack_EquivalentObjectsExceptUnsavedChangesFalse()
+    {
+        var world = new LearningWorld("saveme", "", "", "", "", "");
+        Assert.That(world.UnsavedChanges);
+
+        var systemUnderTest = CreateTestableMapper();
+
+        var pe = systemUnderTest.Map<LearningWorldPe>(world);
+        var restoredWorld = systemUnderTest.Map<LearningWorld>(pe);
+
+        restoredWorld.Should().BeEquivalentTo(world, opt => opt.IgnoringCyclicReferences()
+            .Excluding(obj => obj.Id)
+            .Excluding(obj => obj.UnsavedChanges)
+        );
+        Assert.That(restoredWorld.UnsavedChanges, Is.False);
     }
 
     #region testable Content/Element/Space/World

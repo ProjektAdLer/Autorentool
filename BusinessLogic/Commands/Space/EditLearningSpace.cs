@@ -30,6 +30,7 @@ public class EditLearningSpace : IUndoCommand
     {
         _memento = LearningSpace.GetMemento();
 
+        if(AnyChanges()) LearningSpace.UnsavedChanges = true;
         LearningSpace.Name = _name;
         LearningSpace.Description = _description;
         LearningSpace.Goals = _goals;
@@ -38,6 +39,13 @@ public class EditLearningSpace : IUndoCommand
         
         _mappingAction.Invoke(LearningSpace);
     }
+    
+    private bool AnyChanges() =>
+        LearningSpace.Name != _name ||
+        LearningSpace.Description != _description ||
+        LearningSpace.Goals != _goals ||
+        LearningSpace.AssignedTopic != _topic ||
+        LearningSpace.RequiredPoints != _requiredPoints;
 
     public void Undo()
     {

@@ -20,6 +20,7 @@ public class DeleteLearningPathWay : IUndoCommand
     {
         _memento = LearningWorld.GetMemento();
         
+        LearningWorld.UnsavedChanges = true;
         LearningWorld.LearningPathways.Remove(LearningPathway);
         
         _mappingAction.Invoke(LearningWorld);

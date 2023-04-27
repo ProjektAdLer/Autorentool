@@ -4,4 +4,5 @@ public interface ITopicViewModel
 {
     string Name { get; set; }
     Guid Id { get; }
+    bool UnsavedChanges { get; set; }
 }

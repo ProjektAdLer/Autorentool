@@ -13,33 +13,53 @@ public class DeleteLearningSpaceUt
     [Test]
     public void Execute_DeletesLearningSpace()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space0 = new LearningSpace("a", "d", "e", 4);
-        var space = new LearningSpace("g", "j", "k", 5);
-        var space1 = new LearningSpace("g", "j", "k", 5);
-        world.LearningSpaces.Add(space0);
-        world.LearningSpaces.Add(space);
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f")
+        {
+            UnsavedChanges = false
+        };
+        var space1 = new LearningSpace("a", "d", "e", 4)
+        {
+            UnsavedChanges = false
+        };
+        var space2 = new LearningSpace("g", "j", "k", 5)
+        {
+            UnsavedChanges = false
+        };
+        var space3 = new LearningSpace("g", "j", "k", 5)
+        {
+            UnsavedChanges = false
+        };
         world.LearningSpaces.Add(space1);
+        world.LearningSpaces.Add(space2);
+        world.LearningSpaces.Add(space3);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         
-        world.LearningPathways.Add(new LearningPathway(space0, space));
-        space0.OutBoundObjects.Add(space);
-        space.InBoundObjects.Add(space0);
-        world.LearningPathways.Add(new LearningPathway(space, space1));
-        space.OutBoundObjects.Add(space1);
-        space1.InBoundObjects.Add(space);
+        world.LearningPathways.Add(new LearningPathway(space1, space2));
+        space1.OutBoundObjects.Add(space2);
+        space2.InBoundObjects.Add(space1);
+        world.LearningPathways.Add(new LearningPathway(space2, space3));
+        space2.OutBoundObjects.Add(space3);
+        space3.InBoundObjects.Add(space2);
 
-        var command = new DeleteLearningSpace(world, space, mappingAction);
+        var command = new DeleteLearningSpace(world, space2, mappingAction);
         
-        Assert.That(world.LearningSpaces, Does.Contain(space));
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.LearningSpaces, Does.Contain(space2));
+            Assert.That(actionWasInvoked, Is.False);
+            Assert.That(world.UnsavedChanges, Is.False);
+        });
         
         command.Execute();
         
-        Assert.That(world.LearningSpaces, Has.Count.EqualTo(2));
-        Assert.IsTrue(actionWasInvoked);
-        Assert.That(world.LearningPathways, Has.Count.EqualTo(0));
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.LearningSpaces, Has.Count.EqualTo(2));
+            Assert.That(actionWasInvoked, Is.True);
+            Assert.That(world.LearningPathways, Has.Count.EqualTo(0));
+            Assert.That(world.UnsavedChanges, Is.True);
+        });
     }
 
     [Test]
@@ -53,40 +73,74 @@ public class DeleteLearningSpaceUt
         var command = new DeleteLearningSpace(world,space, mappingAction);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
-        Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
         
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
+            Assert.That(actionWasInvoked, Is.False);
+        });
     }
-    
+
     [Test]
     public void UndoRedo_UndoesAndRedoesDeleteLearningSpace()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space = new LearningSpace("g", "j", "k", 5);
-        var space2 = new LearningSpace("l", "o", "p", 7);
-        world.LearningSpaces.Add(space);
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f")
+        {
+            UnsavedChanges = false
+        };
+        var space1 = new LearningSpace("g", "j", "k", 5)
+        {
+            UnsavedChanges = false
+        };
+        var space2 = new LearningSpace("l", "o", "p", 7)
+        {
+            UnsavedChanges = false
+        };
+        world.LearningSpaces.Add(space1);
         world.LearningSpaces.Add(space2);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         
-        var command = new DeleteLearningSpace(world, space, mappingAction);
+        var command = new DeleteLearningSpace(world, space1, mappingAction);
         
-        Assert.That(world.LearningSpaces, Has.Count.EqualTo(2));
-        Assert.IsFalse(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.LearningSpaces, Has.Count.EqualTo(2));
+            Assert.That(actionWasInvoked, Is.False);
+            Assert.That(world.UnsavedChanges, Is.False);
+        });
         
         command.Execute();
         
-        Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
+            
+            Assert.That(actionWasInvoked);
+            Assert.That(world.UnsavedChanges, Is.True);
+        });
+        
+        actionWasInvoked = false;
         
         command.Undo();
         
-        Assert.That(world.LearningSpaces, Has.Count.EqualTo(2));
-        Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.LearningSpaces, Has.Count.EqualTo(2));
+            Assert.That(actionWasInvoked, Is.True);
+            Assert.That(world.UnsavedChanges, Is.False);
+        });
+        
+        actionWasInvoked = false;
         
         command.Redo();
         
-        Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
-        Assert.IsTrue(actionWasInvoked);
+        Assert.Multiple(() =>
+        {
+            Assert.That(world.LearningSpaces, Has.Count.EqualTo(1));
+            
+            Assert.That(actionWasInvoked, Is.True);
+            Assert.That(world.UnsavedChanges, Is.True);
+        });
     }
 }

@@ -20,6 +20,8 @@ public class DeleteTopic : IUndoCommand
     public void Execute()
     {
         _memento = LearningWorld.GetMemento();
+        
+        LearningWorld.UnsavedChanges = true;
         LearningWorld.Topics.Remove(Topic);
 
         _mappingAction.Invoke(LearningWorld);

@@ -180,10 +180,15 @@ public class LearningWorldViewModel : ILearningWorldViewModel
 
     public bool UnsavedChanges
     {
-        get => _unsavedChanges;
-        set => SetField(ref _unsavedChanges, value);
+        get => _unsavedChanges ||
+               LearningSpaces.Any(space => space.UnsavedChanges) ||
+               UnplacedLearningElements.Any(element => element.UnsavedChanges) ||
+               PathWayConditions.Any(condition => condition.UnsavedChanges) ||
+               Topics.Any(topic => topic.UnsavedChanges);
+        set => _unsavedChanges = value;
     }
-
+    
+    
     
     public IObjectInPathWayViewModel? OnHoveredObjectInPathWay
     {

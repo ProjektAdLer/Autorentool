@@ -16,4 +16,5 @@ public interface ILearningSpaceViewModel : IDisplayableLearningObject, Presentat
     new string Name { get; set; }
     string Description { get; set; }
     string Goals { get; set; }
+    bool UnsavedChanges { get; set; }
 }

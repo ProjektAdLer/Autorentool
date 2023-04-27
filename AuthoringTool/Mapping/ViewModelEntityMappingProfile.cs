@@ -159,6 +159,7 @@ public class ViewModelEntityMappingProfile : Profile
             .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
             .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
             .IncludeBase<IObjectInPathWay, IObjectInPathWayViewModel>()
             .EqualityComparison((x, y) => x.Id == y.Id)
             .AfterMap((s, d) =>
@@ -214,6 +215,7 @@ public class ViewModelEntityMappingProfile : Profile
             .ForMember(x => x.ShowingLearningSpaceView, opt => opt.Ignore())
             .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
             .ForMember(x => x.SelectableWorldObjects, opt => opt.Ignore())
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
                 foreach (var pathWay in d.LearningPathWays)

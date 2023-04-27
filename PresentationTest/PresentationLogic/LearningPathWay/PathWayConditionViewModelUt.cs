@@ -16,13 +16,13 @@ public class PathWayConditionViewModelUt
         var positionX = 20;
         var positionY = 30;
         var condition = ConditionEnum.And;
-        var inBoundCondition = new PathWayConditionViewModel(ConditionEnum.And, 2, 3);
+        var inBoundCondition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 3);
         var outBoundSpace = new LearningSpaceViewModel("a", "b", "t", 3);
         var inBoundObjects = new List<IObjectInPathWayViewModel> { inBoundCondition };
         var outBoundObjects = new List<IObjectInPathWayViewModel> { outBoundSpace };
 
         var systemUnderTest =
-            new PathWayConditionViewModel(condition, positionX, positionY, inBoundObjects, outBoundObjects);
+            new PathWayConditionViewModel(condition, false, positionX, positionY, inBoundObjects, outBoundObjects);
 
         Assert.Multiple(() =>
         {

@@ -39,6 +39,7 @@ public class EditLearningElement : IUndoCommand
     {
         _memento = LearningElement.GetMemento();
 
+        if(AnyChange()) LearningElement.UnsavedChanges = true;
         LearningElement.Name = _name;
         LearningElement.Parent = ParentSpace;
         LearningElement.Description = _description;
@@ -50,6 +51,16 @@ public class EditLearningElement : IUndoCommand
         
         _mappingAction.Invoke(LearningElement);
     }
+
+    private bool AnyChange() => 
+        LearningElement.Name != _name ||
+        LearningElement.Parent != ParentSpace ||
+        LearningElement.Description != _description ||
+        LearningElement.Goals != _goals ||
+        LearningElement.Difficulty != _difficulty ||
+        LearningElement.Workload != _workload ||
+        LearningElement.Points != _points ||
+        LearningElement.LearningContent != LearningContent;
 
     public void Undo()
     {

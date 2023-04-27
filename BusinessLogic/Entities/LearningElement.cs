@@ -22,6 +22,7 @@ public class LearningElement : ILearningElement, IOriginator
         Difficulty = LearningElementDifficultyEnum.None;
         Workload = 0;
         Points = 0;
+        UnsavedChanges = false;
         PositionX = 0;
         PositionY = 0;
         Parent = null;
@@ -40,6 +41,7 @@ public class LearningElement : ILearningElement, IOriginator
         Difficulty = difficulty;
         Workload = workload;
         Points = points;
+        UnsavedChanges = true;
         PositionX = positionX;
         PositionY = positionY;
         Parent = parent;
@@ -54,6 +56,7 @@ public class LearningElement : ILearningElement, IOriginator
     public string Goals { get; set; }
     public int Workload { get; set; }
     public int Points { get; set; }
+    public bool UnsavedChanges { get; set; }
     public LearningElementDifficultyEnum Difficulty { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
@@ -61,7 +64,7 @@ public class LearningElement : ILearningElement, IOriginator
     public IMemento GetMemento()
     {
         return new LearningElementMemento(Name, LearningContent, Description, Goals, Workload,
-            Points, Difficulty, Parent, PositionX, PositionY);
+            Points, Difficulty, Parent, PositionX, PositionY, UnsavedChanges);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -80,13 +83,14 @@ public class LearningElement : ILearningElement, IOriginator
         Parent = learningElementMemento.Parent;
         PositionX = learningElementMemento.PositionX;
         PositionY = learningElementMemento.PositionY;
+        UnsavedChanges = learningElementMemento.UnsavedChanges;
     }
 
     private record LearningElementMemento : IMemento
     {
-        internal LearningElementMemento(string name,ILearningContent content, string description, string goals,
-            int workload, int points, LearningElementDifficultyEnum difficulty, ILearningSpace? parent, 
-            double positionX = 0, double positionY = 0)
+        internal LearningElementMemento(string name, ILearningContent content, string description, string goals,
+            int workload, int points, LearningElementDifficultyEnum difficulty, ILearningSpace? parent,
+            double positionX, double positionY, bool unsavedChanges)
         {
             Name = name;
             Content = content;
@@ -98,6 +102,7 @@ public class LearningElement : ILearningElement, IOriginator
             Parent = parent;
             PositionX = positionX;
             PositionY = positionY;
+            UnsavedChanges = unsavedChanges;
         }
         
         internal string Name { get; }
@@ -110,6 +115,7 @@ public class LearningElement : ILearningElement, IOriginator
         internal LearningElementDifficultyEnum Difficulty { get; }
         internal double PositionX { get; }
         internal double PositionY { get; }
+        public bool UnsavedChanges { get; }
     }
 }
 

@@ -22,6 +22,7 @@ public class DeleteLearningSpace : IUndoCommand
     {
         _memento = LearningWorld.GetMemento();
 
+        LearningWorld.UnsavedChanges = true;
         var space = LearningWorld.LearningSpaces.First(x => x.Id == LearningSpace.Id);
 
         foreach (var inBoundSpace in space.InBoundObjects)

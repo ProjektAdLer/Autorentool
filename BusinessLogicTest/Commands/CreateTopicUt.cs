@@ -11,7 +11,10 @@ public class CreateTopicUt
     [Test]
     public void Execute_CreatesTopic()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f");
+        var world = new LearningWorld("a", "b", "c", "d", "e", "f")
+        {
+            UnsavedChanges = false
+        };
         var name = "topic1";
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
@@ -20,11 +23,13 @@ public class CreateTopicUt
         
         Assert.IsEmpty(world.Topics);
         Assert.IsFalse(actionWasInvoked);
+        Assert.IsFalse(world.UnsavedChanges);
 
         command.Execute();
         
         Assert.That(world.Topics, Has.Count.EqualTo(1));
         Assert.IsTrue(actionWasInvoked);
+        Assert.IsTrue(world.UnsavedChanges);
         var topic = world.Topics.First();
         Assert.That(topic.Name, Is.EqualTo("topic1"));
     }

@@ -102,7 +102,7 @@ public class LearningWorldViewUt
     {
         var space1 = Substitute.For<ILearningSpaceViewModel>();
         var space2 = Substitute.For<ILearningSpaceViewModel>();
-        var pathWayCondition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        var pathWayCondition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
         var pathWayConditions = new List<PathWayConditionViewModel> { pathWayCondition };
         var learningSpaces = new List<ILearningSpaceViewModel> { space1, space2 };
         var learningPathWay = new LearningPathwayViewModel(space1, space2);
