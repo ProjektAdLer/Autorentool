@@ -40,16 +40,16 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     void ShowSelectedLearningSpaceView();
     void CloseLearningSpaceView();
     void DeletePathWayCondition(PathWayConditionViewModel pathWayCondition);
-    void OnWorkspacePropertyChanged(object? caller, PropertyChangedEventArgs e);
+    void OnMediatorPropertyChanged(object? caller, PropertyChangedEventArgs e);
     event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
     void DragObjectInPathWay(object sender, DraggedEventArgs<IObjectInPathWayViewModel> draggedEventArgs);
-    void RightClickOnObjectInPathWay(IObjectInPathWayViewModel objectInPathWay);
+    void RightClickOnObjectInPathWay(IObjectInPathWayViewModel learningSpace);
     void ClickOnObjectInWorld(ISelectableObjectInWorldViewModel obj);
     void DoubleClickOnObjectInPathway(IObjectInPathWayViewModel obj);
     void SwitchPathWayCondition(PathWayConditionViewModel pathWayCondition);
     void HideRightClickMenu();
     IObjectInPathWayViewModel? RightClickedLearningObject { get; }
-    void EditObjectInPathWay(IObjectInPathWayViewModel obj);
+    void SetSelectedLearningSpace(IObjectInPathWayViewModel obj);
     void DeleteLearningSpace(ILearningSpaceViewModel obj);
     void DeleteLearningObject(IObjectInPathWayViewModel obj);
     void CreatePathWayCondition(ConditionEnum condition = ConditionEnum.Or);
@@ -66,4 +66,6 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     Task ShowSelectedElementContentAsync(ILearningElementViewModel learningElement);
 
     void DeleteLearningElement(ILearningElementViewModel learningElement);
+    void AddNewLearningSpace();
+    void EditSelectedLearningSpace();
 }

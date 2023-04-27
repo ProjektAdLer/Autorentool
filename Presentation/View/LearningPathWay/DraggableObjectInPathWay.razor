@@ -61,6 +61,8 @@
     // Overwrite nullability warning below because service may never be null -n.stich
     [Parameter, EditorRequired]
     public ILearningWorldPresenter PositioningService { get; set; } = null!;
+    [Inject]
+    public IMediator? Mediator { get; set; }
 
     protected abstract string Text { get; }
     
@@ -74,7 +76,7 @@
     
     protected abstract string ObjectStyleWhenNotSelected { get; }
     
-    private string ObjectStyle => PositioningService.LearningWorldVm?.SelectedLearningObjectInPathWay == ObjectInPathWay ? ObjectStyleWhenSelected : ObjectStyleWhenNotSelected;
+    private string ObjectStyle => Mediator?.SelectedLearningObjectInPathWay == ObjectInPathWay ? ObjectStyleWhenSelected : ObjectStyleWhenNotSelected;
 
     protected abstract string DeletePathButtonShape { get;}
     

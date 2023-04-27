@@ -30,8 +30,7 @@ public class CreateLearningSpace : IUndoCommand
         _memento = LearningWorld.GetMemento();
 
         LearningWorld.LearningSpaces.Add(LearningSpace);
-        LearningWorld.SelectedLearningObjectInPathWay = LearningSpace;
-        
+
         _mappingAction.Invoke(LearningWorld);
     }
 

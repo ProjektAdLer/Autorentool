@@ -13,6 +13,7 @@ using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
+using Presentation.View;
 using Shared;
 
 namespace PresentationTest.PresentationLogic.LearningWorld;
@@ -95,11 +96,12 @@ public class LearningWorldPresenterUt
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var space = new LearningSpaceViewModel("g", "g", "g");
-        var systemUnderTest = CreatePresenterForTesting();
+        var mediator = Substitute.For<IMediator>();
+        var systemUnderTest = CreatePresenterForTesting(mediator: mediator);
         systemUnderTest.LearningWorldVm = world;
-        systemUnderTest.EditObjectInPathWay(space);
+        systemUnderTest.SetSelectedLearningSpace(space);
 
-        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(space));
+        Assert.That(mediator.SelectedLearningObjectInPathWay, Is.EqualTo(space));
     }
 
     [Test]
@@ -157,11 +159,12 @@ public class LearningWorldPresenterUt
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var space = new LearningSpaceViewModel("g", "g", "g");
-        var systemUnderTest = CreatePresenterForTesting();
+        var mediator = Substitute.For<IMediator>();
+        var systemUnderTest = CreatePresenterForTesting(mediator: mediator);
         systemUnderTest.LearningWorldVm = world;
         systemUnderTest.ClickOnObjectInWorld(space);
 
-        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(space));
+        Assert.That(mediator.SelectedLearningObjectInPathWay, Is.EqualTo(space));
     }
 
     [Test]
@@ -170,11 +173,12 @@ public class LearningWorldPresenterUt
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var space = new LearningSpaceViewModel("g", "g", "g");
-        var systemUnderTest = CreatePresenterForTesting();
+        var mediator = Substitute.For<IMediator>();
+        var systemUnderTest = CreatePresenterForTesting(mediator: mediator);
         systemUnderTest.LearningWorldVm = world;
         systemUnderTest.DoubleClickOnObjectInPathway(space);
 
-        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(space));
+        Assert.That(mediator.SelectedLearningObjectInPathWay, Is.EqualTo(space));
         Assert.That(systemUnderTest.ShowingLearningSpaceView, Is.True);
         Assert.That(systemUnderTest.RightClickedLearningObject, Is.Null);
     }
@@ -221,7 +225,8 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5);
 
-        presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<int>(), Arg.Any<double>(),
+        presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
+            Arg.Any<int>(), Arg.Any<double>(),
             Arg.Any<double>(), Arg.Any<TopicViewModel>());
     }
 
@@ -229,10 +234,10 @@ public class LearningWorldPresenterUt
     public void CreateNewLearningSpace_SelectedLearningWorldIsNull_CallsErrorService()
     {
         var errorService = Substitute.For<IErrorService>();
-        var systemUnderTest = CreatePresenterForTesting(errorService:errorService);
+        var systemUnderTest = CreatePresenterForTesting(errorService: errorService);
 
         systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5);
-        
+
         errorService.Received().SetError("Error while creating learning space; No Learning World selected");
     }
 
@@ -255,15 +260,17 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
+        var mediator = Substitute.For<IMediator>();
 
-        var systemUnderTest = CreatePresenterForTesting();
+        var systemUnderTest = CreatePresenterForTesting(mediator: mediator);
         systemUnderTest.LearningWorldVm = world;
+        mediator.SelectedLearningObjectInPathWay = null;
 
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.LearningWorldVm, Is.Not.Null);
             //nullability overridden because of assert - n.stich
-            Assert.That(systemUnderTest.LearningWorldVm!.SelectedLearningObjectInPathWay, Is.Null);
+            Assert.That(mediator.SelectedLearningObjectInPathWay, Is.Null);
             Assert.That(systemUnderTest.LearningWorldVm.LearningSpaces, Is.Empty);
             Assert.DoesNotThrow(() => systemUnderTest.DeleteSelectedLearningObject());
         });
@@ -275,11 +282,13 @@ public class LearningWorldPresenterUt
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var space = new LearningSpaceViewModel("f", "f", "f");
+        var mediator = Substitute.For<IMediator>();
         world.LearningSpaces.Add(space);
-        world.SelectedLearningObjectInPathWay = space;
+        mediator.SelectedLearningObjectInPathWay = space;
         var presentationLogic = Substitute.For<IPresentationLogic>();
 
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic,
+            mediator: mediator);
         systemUnderTest.LearningWorldVm = world;
 
         systemUnderTest.DeleteSelectedLearningObject();
@@ -293,11 +302,13 @@ public class LearningWorldPresenterUt
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        var mediator = Substitute.For<IMediator>();
         world.PathWayConditions.Add(condition);
-        world.SelectedLearningObjectInPathWay = condition;
+        mediator.SelectedLearningObjectInPathWay = condition;
         var presentationLogic = Substitute.For<IPresentationLogic>();
 
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic,
+            mediator: mediator);
         systemUnderTest.LearningWorldVm = world;
 
         systemUnderTest.DeleteSelectedLearningObject();
@@ -313,11 +324,13 @@ public class LearningWorldPresenterUt
         var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
         var space = new LearningSpaceViewModel("f", "f", "f");
         var pathWay = new LearningPathwayViewModel(space, condition);
+        var mediator = Substitute.For<IMediator>();
         world.LearningPathWays.Add(pathWay);
-        world.SelectedLearningObjectInPathWay = pathWay;
+        mediator.SelectedLearningObjectInPathWay = pathWay;
         var presentationLogic = Substitute.For<IPresentationLogic>();
 
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic,
+            mediator: mediator);
         systemUnderTest.LearningWorldVm = world;
 
         systemUnderTest.DeleteSelectedLearningObject();
@@ -345,9 +358,11 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
+        var mediator = Substitute.For<IMediator>();
 
-        var systemUnderTest = CreatePresenterForTesting();
+        var systemUnderTest = CreatePresenterForTesting(mediator: mediator);
         systemUnderTest.LearningWorldVm = world;
+        mediator.SelectedLearningObjectInPathWay = null;
 
         var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
             await systemUnderTest.SaveSelectedLearningSpaceAsync());
@@ -361,10 +376,12 @@ public class LearningWorldPresenterUt
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var space = new LearningSpaceViewModel("f", "f", "f");
+        var mediator = Substitute.For<IMediator>();
         world.LearningSpaces.Add(space);
-        world.SelectedLearningObjectInPathWay = space;
+        mediator.SelectedLearningObjectInPathWay = space;
 
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
+        var systemUnderTest =
+            CreatePresenterForTesting(presentationLogic, mediator: mediator);
         systemUnderTest.LearningWorldVm = world;
         await systemUnderTest.SaveSelectedLearningSpaceAsync();
 
@@ -412,9 +429,10 @@ public class LearningWorldPresenterUt
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var learningSpace = new LearningSpaceViewModel("a", "d", "e");
-        world.SelectedLearningObjectInPathWay = learningSpace;
+        var mediator = Substitute.For<IMediator>();
+        mediator.SelectedLearningObjectInPathWay = learningSpace;
 
-        var systemUnderTest = CreatePresenterForTesting();
+        var systemUnderTest = CreatePresenterForTesting(mediator: mediator);
         systemUnderTest.LearningWorldVm = world;
 
         Assert.That(systemUnderTest.ShowingLearningSpaceView, Is.False);
@@ -442,12 +460,13 @@ public class LearningWorldPresenterUt
         var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
         var space = new LearningSpaceViewModel("f", "f", "f");
         var pathWay = new LearningPathwayViewModel(condition, space);
+        var mediator = Substitute.For<IMediator>();
 
-        var systemUnderTest = CreatePresenterForTesting();
+        var systemUnderTest = CreatePresenterForTesting(mediator: mediator);
         systemUnderTest.LearningWorldVm = world;
         systemUnderTest.SetSelectedLearningObject(pathWay);
 
-        Assert.That(systemUnderTest.LearningWorldVm.SelectedLearningObjectInPathWay, Is.EqualTo(pathWay));
+        Assert.That(mediator.SelectedLearningObjectInPathWay, Is.EqualTo(pathWay));
     }
 
     #region PathWayCondition
@@ -458,12 +477,13 @@ public class LearningWorldPresenterUt
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
+        var mediator = Substitute.For<IMediator>();
 
-        var systemUnderTest = CreatePresenterForTesting();
+        var systemUnderTest = CreatePresenterForTesting(mediator: mediator);
         systemUnderTest.LearningWorldVm = world;
         systemUnderTest.SetSelectedLearningObject(condition);
 
-        Assert.That(systemUnderTest.LearningWorldVm.SelectedLearningObjectInPathWay, Is.EqualTo(condition));
+        Assert.That(mediator.SelectedLearningObjectInPathWay, Is.EqualTo(condition));
     }
 
     [Test]
@@ -473,9 +493,11 @@ public class LearningWorldPresenterUt
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var condition = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
-        world.SelectedLearningObjectInPathWay = condition;
+        var mediator = Substitute.For<IMediator>();
+        mediator.SelectedLearningObjectInPathWay = condition;
 
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
+        var systemUnderTest =
+            CreatePresenterForTesting(presentationLogic, mediator: mediator);
         systemUnderTest.LearningWorldVm = world;
         systemUnderTest.DeletePathWayCondition(condition);
 
@@ -523,11 +545,12 @@ public class LearningWorldPresenterUt
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var conditionViewModel = new PathWayConditionViewModel(ConditionEnum.And, 2, 1);
-        var systemUnderTest = CreatePresenterForTesting();
+        var mediator = Substitute.For<IMediator>();
+        var systemUnderTest = CreatePresenterForTesting(mediator: mediator);
         systemUnderTest.LearningWorldVm = world;
         systemUnderTest.ClickOnObjectInWorld(conditionViewModel);
 
-        Assert.That(world.SelectedLearningObjectInPathWay, Is.EqualTo(conditionViewModel));
+        Assert.That(mediator.SelectedLearningObjectInPathWay, Is.EqualTo(conditionViewModel));
     }
 
     [Test]
@@ -765,10 +788,11 @@ public class LearningWorldPresenterUt
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteLearningPathWay(null!));
         Assert.That(ex!.Message, Is.EqualTo("LearningPathWay is null"));
     }
-#endregion
 
     #endregion
-    
+
+    #endregion
+
     #region LearningElement
 
     [Test]
@@ -780,19 +804,20 @@ public class LearningWorldPresenterUt
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetSelectedLearningElement(element));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
-    
+
     [Test]
     public void SetSelectedLearningElement_SetsSelectedLearningElement()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var systemUnderTest = CreatePresenterForTesting();
+        var mediator = Substitute.For<IMediator>();
+        var systemUnderTest = CreatePresenterForTesting(mediator: mediator);
         var element = new LearningElementViewModel("a", null!, "d", "f", LearningElementDifficultyEnum.Easy);
 
         systemUnderTest.LearningWorldVm = world;
         systemUnderTest.SetSelectedLearningElement(element);
-        
-        Assert.That(world.SelectedLearningElement, Is.EqualTo(element));
+
+        Assert.That(mediator.SelectedLearningElement, Is.EqualTo(element));
     }
 
     [Test]
@@ -801,10 +826,12 @@ public class LearningWorldPresenterUt
         var systemUnderTest = CreatePresenterForTesting();
         var element = new LearningElementViewModel("a", null!, "d", "f", LearningElementDifficultyEnum.Easy);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditLearningElement(null, element, "a", "b", "c", LearningElementDifficultyEnum.Easy, 0, 0, null!));
+        var ex = Assert.Throws<ApplicationException>(() =>
+            systemUnderTest.EditLearningElement(null, element, "a", "b", "c", LearningElementDifficultyEnum.Easy, 0, 0,
+                null!));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
-    
+
     [Test]
     public void EditLearningElement_UnplacedDoesNotContainElement_ThrowsException()
     {
@@ -815,12 +842,14 @@ public class LearningWorldPresenterUt
         var element = new LearningElementViewModel("a", content, "d", "f", LearningElementDifficultyEnum.Easy);
 
         systemUnderTest.LearningWorldVm = world;
-        
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditLearningElement(null, element, "a", "b", "c", LearningElementDifficultyEnum.Easy, 0, 0, null!));
-        
+
+        var ex = Assert.Throws<ApplicationException>(() =>
+            systemUnderTest.EditLearningElement(null, element, "a", "b", "c", LearningElementDifficultyEnum.Easy, 0, 0,
+                null!));
+
         Assert.That(ex!.Message, Is.EqualTo("LearningElement is not unplaced"));
     }
-    
+
     [Test]
     public void EditLearningElement_ElementParentIsNotNull_ThrowsException()
     {
@@ -833,12 +862,14 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.LearningWorldVm = world;
         world.UnplacedLearningElements.Add(element);
-        
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditLearningElement(space, element, "a", "b", "c", LearningElementDifficultyEnum.Easy, 0, 0, null!));
-        
+
+        var ex = Assert.Throws<ApplicationException>(() =>
+            systemUnderTest.EditLearningElement(space, element, "a", "b", "c", LearningElementDifficultyEnum.Easy, 0, 0,
+                null!));
+
         Assert.That(ex!.Message, Is.EqualTo("LearningElement is not unplaced"));
     }
-    
+
     [Test]
     public void EditLearningElement_CallsPresentationLogic()
     {
@@ -848,13 +879,15 @@ public class LearningWorldPresenterUt
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         var content = new LinkContentViewModel("a", "link");
         var element = new LearningElementViewModel("a", content, "d", "f", LearningElementDifficultyEnum.Easy);
-        
+
         systemUnderTest.LearningWorldVm = world;
         world.UnplacedLearningElements.Add(element);
-        systemUnderTest.EditLearningElement(null, element, "a", "b", "c", LearningElementDifficultyEnum.Easy, 0, 0, content);
-        presentationLogic.Received().EditLearningElement(null, element, "a", "b", "c", LearningElementDifficultyEnum.Easy, 0, 0, content);
+        systemUnderTest.EditLearningElement(null, element, "a", "b", "c", LearningElementDifficultyEnum.Easy, 0, 0,
+            content);
+        presentationLogic.Received().EditLearningElement(null, element, "a", "b", "c",
+            LearningElementDifficultyEnum.Easy, 0, 0, content);
     }
-    
+
     [Test]
     public void ShowSelectedElementContentAsync_SelectedLearningWorldIsNull_ThrowsException()
     {
@@ -865,24 +898,25 @@ public class LearningWorldPresenterUt
             await systemUnderTest.ShowSelectedElementContentAsync(element));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
-    
+
     [Test]
     public async Task ShowSelectedElementContentAsync_CallsPresentationLogic()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
+        var mediator = Substitute.For<IMediator>();
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic, mediator: mediator);
         var content = new LinkContentViewModel("a", "link");
         var element = new LearningElementViewModel("a", content, "d", "f", LearningElementDifficultyEnum.Easy);
-        
+
         systemUnderTest.LearningWorldVm = world;
         world.UnplacedLearningElements.Add(element);
         await systemUnderTest.ShowSelectedElementContentAsync(element);
         await presentationLogic.Received().ShowLearningElementContentAsync(element);
-        Assert.That(world.SelectedLearningElement, Is.EqualTo(element));
+        Assert.That(mediator.SelectedLearningElement, Is.EqualTo(element));
     }
-    
+
     [Test]
     public void DeleteLearningElement_SelectedLearningWorldIsNull_ThrowsException()
     {
@@ -892,7 +926,7 @@ public class LearningWorldPresenterUt
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteLearningElement(element));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
-    
+
     [Test]
     public void DeleteLearningElement_CallsPresentationLogic()
     {
@@ -902,33 +936,35 @@ public class LearningWorldPresenterUt
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         var content = new LinkContentViewModel("a", "link");
         var element = new LearningElementViewModel("a", content, "d", "f", LearningElementDifficultyEnum.Easy);
-        
+
         systemUnderTest.LearningWorldVm = world;
         world.UnplacedLearningElements.Add(element);
         systemUnderTest.DeleteLearningElement(element);
         presentationLogic.Received().DeleteLearningElementInWorld(world, element);
     }
-    
+
     [Test]
     public void GetAllContent_CallsPresentationLogic()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        
+
         systemUnderTest.GetAllContent();
         presentationLogic.Received().GetAllContent();
     }
-    
+
     [Test]
     public void CreateUnplacedLearningElement_SelectedLearningWorldIsNull_ThrowsException()
     {
         var systemUnderTest = CreatePresenterForTesting();
         var element = new LearningElementViewModel("a", null!, "d", "f", LearningElementDifficultyEnum.Easy);
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.CreateUnplacedLearningElement("a", null!,  "c","d", LearningElementDifficultyEnum.Easy, 0, 0));
+        var ex = Assert.Throws<ApplicationException>(() =>
+            systemUnderTest.CreateUnplacedLearningElement("a", null!, "c", "d", LearningElementDifficultyEnum.Easy, 0,
+                0));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
-    
+
     [Test]
     public void CreateUnplacedLearningElement_CallsPresentationLogic()
     {
@@ -939,23 +975,26 @@ public class LearningWorldPresenterUt
         var content = new LinkContentViewModel("a", "link");
 
         systemUnderTest.LearningWorldVm = world;
-        
-        systemUnderTest.CreateUnplacedLearningElement("abc", content, "a", "b", LearningElementDifficultyEnum.Easy, 0, 0);
-        presentationLogic.Received().CreateUnplacedLearningElement(world,"abc", content, "a", "b", LearningElementDifficultyEnum.Easy, 0, 0);
+
+        systemUnderTest.CreateUnplacedLearningElement("abc", content, "a", "b", LearningElementDifficultyEnum.Easy, 0,
+            0);
+        presentationLogic.Received()
+            .CreateUnplacedLearningElement(world, "abc", content, "a", "b", LearningElementDifficultyEnum.Easy, 0, 0);
     }
 
     #endregion
 
     private LearningWorldPresenter CreatePresenterForTesting(IPresentationLogic? presentationLogic = null,
         ILearningSpacePresenter? learningSpacePresenter = null,
-        ILogger<LearningWorldPresenter>? logger = null, IErrorService? errorService = null)
+        ILogger<LearningWorldPresenter>? logger = null, IMediator? mediator = null,
+        IErrorService? errorService = null)
     {
         presentationLogic ??= Substitute.For<IPresentationLogic>();
         learningSpacePresenter ??= Substitute.For<ILearningSpacePresenter>();
         logger ??= Substitute.For<ILogger<LearningWorldPresenter>>();
+        mediator ??= Substitute.For<IMediator>();
         errorService ??= Substitute.For<IErrorService>();
-        _authoringToolWorkspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         return new LearningWorldPresenter(presentationLogic, learningSpacePresenter, logger,
-            _authoringToolWorkspaceViewModel, errorService);
+            mediator, errorService);
     }
 }

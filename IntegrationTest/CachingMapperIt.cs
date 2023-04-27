@@ -33,10 +33,8 @@ public class CachingMapperIt
         Assert.That(workspaceVm.LearningWorlds, Has.Count.EqualTo(1));
         var worldVm = workspaceVm.LearningWorlds[0];
 
-        Assert.That(workspaceVm.SelectedLearningWorld, Is.EqualTo(worldVm));
-        systemUnderTest.EditLearningWorld(workspaceVm.SelectedLearningWorld!, "a1", "b1", "c1", "d1", "e1", "f1");
+        systemUnderTest.EditLearningWorld(worldVm, "a1", "b1", "c1", "d1", "e1", "f1");
         systemUnderTest.UndoCommand();
-        Assert.That(workspaceVm.SelectedLearningWorld, Is.EqualTo(worldVm));
 
         systemUnderTest.UndoCommand();
 

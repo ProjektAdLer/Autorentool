@@ -5,6 +5,7 @@
 @using BusinessLogic.Entities
 @using System.ComponentModel
 @using Presentation.Components.Forms.Buttons
+@using Presentation.View
 @implements IAsyncDisposable
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
@@ -62,7 +63,7 @@
     private ILearningWorldPresenter LearningWorldPresenter { get; set; }
 
     [Inject]
-    private IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceViewModel { get; set; }
+    private IMediator Mediator { get; set; }
 
     [Inject]
     private IFormDataContainer<LearningSpaceFormModel, LearningSpace> FormDataContainer { get; set; }
@@ -79,7 +80,7 @@
 
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
-        if (AuthoringToolWorkspaceViewModel.SelectedLearningWorld == null) throw new InvalidOperationException("No learning world selected.");
+        if (Mediator.SelectedLearningWorld == null) throw new InvalidOperationException("No learning world selected.");
         model.RequiredPoints ??= 0;
         LearningWorldPresenter.CreateLearningSpace(model.Name, model.Description,
             model.Goals, (int) model.RequiredPoints, positionX: 0, positionY: 0);
@@ -87,11 +88,11 @@
 
     protected override void OnInitialized()
     {
-        AuthoringToolWorkspaceViewModel.PropertyChanged += OnWorkspaceViewModelChange;
+        Mediator.PropertyChanged += MediatorOnPropertyChanged;
         base.OnInitialized();
     }
 
-    private async void OnWorkspaceViewModelChange(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)
+    private async void MediatorOnPropertyChanged(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)
     {
         await InvokeAsync(StateHasChanged);
     }
@@ -104,7 +105,7 @@
 
     public void Dispose()
     {
-        AuthoringToolWorkspaceViewModel.PropertyChanged -= OnWorkspaceViewModelChange;
+        Mediator.PropertyChanged -= MediatorOnPropertyChanged;
     }
 
 }

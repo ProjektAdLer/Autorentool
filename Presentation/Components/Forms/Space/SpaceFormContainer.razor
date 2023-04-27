@@ -1,5 +1,6 @@
 @using Presentation.PresentationLogic.LearningSpace
 @using System.ComponentModel
+@using Presentation.View
 
 <MudCard Class="overflow-auto">
 @if (SpacePresenter.LearningSpaceVm == null || _editOverwritten)
@@ -16,6 +17,8 @@ else
 #pragma warning disable CS8618 - injected by framework - n.stich 
     [Inject]
     public ILearningSpacePresenter SpacePresenter { get; set; }
+    [Inject]
+    private IMediator Mediator { get; set; }
 #pragma warning restore CS8618
 
     //indicates if the edit state has been overwritten by either pressing reset in the edit form
@@ -44,6 +47,7 @@ else
     private void OnForceNew()
     {
         _editOverwritten = true;
+        Mediator.SelectedLearningObjectInPathWay = null;
     }
 
 }

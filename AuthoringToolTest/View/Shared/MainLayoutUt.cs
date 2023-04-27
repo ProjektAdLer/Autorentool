@@ -1,4 +1,3 @@
-using AngleSharp.Dom;
 using AuthoringTool.View.Shared;
 using Bunit;
 using Bunit.TestDoubles;
@@ -10,10 +9,10 @@ using Microsoft.Extensions.Options;
 using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
-using Presentation.Components;
 using Presentation.Components.Culture;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
+using Presentation.View;
 using TestContext = Bunit.TestContext;
 
 namespace AuthoringToolTest.View.Shared;
@@ -26,6 +25,7 @@ public class MainLayoutUt
     private IPresentationLogic _presentationLogic;
     private IShutdownManager _shutdownManager;
     private IStringLocalizer<CultureSelector> _stringLocalizer;
+    private IMediator _mediator;
 #pragma warning restore CS8618
     
     [SetUp]
@@ -35,12 +35,14 @@ public class MainLayoutUt
         _presentationLogic = Substitute.For<IPresentationLogic>();
         _shutdownManager = Substitute.For<IShutdownManager>();
         _stringLocalizer = Substitute.For<IStringLocalizer<CultureSelector>>();
+        _mediator = Substitute.For<IMediator>();
         _stringLocalizer[Arg.Any<string>()]
             .Returns(cinfo => new LocalizedString(cinfo.Arg<string>(), cinfo.Arg<string>()));
         
         _ctx.Services.AddSingleton(_presentationLogic);
         _ctx.Services.AddSingleton(_shutdownManager);
         _ctx.Services.AddSingleton(_stringLocalizer);
+        _ctx.Services.AddSingleton(_mediator);
         _ctx.Services.AddLogging();
 
         _ctx.ComponentFactories.AddStub<MudThemeProvider>();

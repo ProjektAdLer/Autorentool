@@ -14,6 +14,8 @@
     }
 </div>
 @code {
+    private SidebarItem? _currentItem;
+    
     [Parameter]
 #pragma warning disable CS8618 - injected by framework n.stich
     public RenderFragment ChildContent { get; set; }
@@ -21,12 +23,26 @@
     public Side SidebarSide { get; set; }
 #pragma warning restore CS8618
 
-    internal SidebarItem? CurrentItem { get; private set; }
+    internal SidebarItem? CurrentItem
+    {
+        get => _currentItem;
+        private set
+        {
+            if(_currentItem == value) return;
+            _currentItem = value;
+            InvokeAsync(StateHasChanged);
+        }
+    }
 
     public void SetSidebarItem(SidebarItem item)
     {
-        CurrentItem = CurrentItem != item ? item : null;
-        InvokeAsync(StateHasChanged);
+        ClearSidebarItem();
+        CurrentItem = item;
+    }
+
+    internal void ClearSidebarItem()
+    {
+        CurrentItem = null;
     }
 
     private string SidebarOrder() => SidebarSide switch

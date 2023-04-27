@@ -11,6 +11,7 @@ using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
+using Presentation.View;
 using Presentation.View.LearningPathWay;
 using Shared;
 using TestContext = Bunit.TestContext;
@@ -23,6 +24,7 @@ public class DraggableObjectInPathWay
 #pragma warning disable CS8618 //set in setup - n.stich
     private TestContext _ctx;
     private IMouseService _mouseService;
+    private IMediator _mediator;
 #pragma warning restore CS8618
 
     [SetUp]
@@ -31,7 +33,9 @@ public class DraggableObjectInPathWay
         _ctx = new TestContext();
         _ctx.ComponentFactories.AddStub<Draggable<IObjectInPathWayViewModel>>();
         _mouseService = Substitute.For<IMouseService>();
+        _mediator = Substitute.For<IMediator>();
         _ctx.Services.AddSingleton(_mouseService);
+        _ctx.Services.AddSingleton(_mediator);
     }
     
     [Test]
@@ -96,7 +100,6 @@ public class DraggableObjectInPathWay
             Assert.That(systemUnderTest.Instance.OnDoubleClickedDraggable, Is.EqualTo(EventCallback.Factory.Create(onDoubleClicked.Target!, onDoubleClicked)));
             Assert.That(systemUnderTest.Instance.OnRightClickedDraggable, Is.EqualTo(EventCallback.Factory.Create(onRightClicked.Target!, onRightClicked)));
             Assert.That(systemUnderTest.Instance.ShowingRightClickMenu, Is.EqualTo(showingRightClickMenu));
-            Assert.That(systemUnderTest.Instance.OnEditPathWayCondition, Is.EqualTo(EventCallback.Factory.Create(onEditPathWayCondition.Target!, onEditPathWayCondition)));
             Assert.That(systemUnderTest.Instance.OnDeletePathWayCondition, Is.EqualTo(EventCallback.Factory.Create(onDeletePathWayCondition.Target!, onDeletePathWayCondition)));
             Assert.That(systemUnderTest.Instance.OnCloseRightClickMenu, Is.EqualTo(EventCallback.Factory.Create(onCloseRightClickMenu.Target!, onCloseRightClickMenu)));
             Assert.That(systemUnderTest.Instance.PositioningService, Is.EqualTo(positioningService));
@@ -195,7 +198,7 @@ public class DraggableObjectInPathWay
             </svg>
             <g  ></g>
             <g>
-              <text font-size=""12"" transform=""translate(72,14)"" fill=""gray"" style=""user-select:none; cursor: pointer"">X</text>
+              <text font-size=""12"" transform=""translate(38,14)"" fill=""gray"" style=""user-select:none; cursor: pointer"">X</text>
             </g>");
     }
     
@@ -290,7 +293,6 @@ public class DraggableObjectInPathWay
             .Add(p=>p.OnDoubleClickedDraggable, onDoubleClicked)
             .Add(p=>p.OnRightClickedDraggable, onRightClicked)
             .Add(p=>p.ShowingRightClickMenu, showingRightClickMenu)
-            .Add(p=>p.OnEditPathWayCondition, onEditPathWayCondition)
             .Add(p=>p.OnDeletePathWayCondition, onDeletePathWayCondition)
             .Add(p=>p.OnCloseRightClickMenu, onCloseRightClickMenu)
             .Add(p=>p.PositioningService, positioningService)

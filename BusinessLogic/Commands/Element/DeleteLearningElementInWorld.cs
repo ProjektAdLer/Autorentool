@@ -24,8 +24,7 @@ public class DeleteLearningElementInWorld : IUndoCommand
         
         var element = ParentWorld.UnplacedLearningElements.First(x => x.Id == LearningElement.Id);
         ParentWorld.UnplacedLearningElements.Remove(element);
-        ParentWorld.SelectedLearningElement = null;
-        
+
         _mappingAction.Invoke(ParentWorld);
     }
 

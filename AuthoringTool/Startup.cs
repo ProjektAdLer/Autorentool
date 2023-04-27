@@ -27,6 +27,7 @@ using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.MyLearningWorlds;
+using Presentation.View;
 using Shared;
 using Shared.Configuration;
 using Tailwind;
@@ -76,6 +77,7 @@ public class Startup
         ConfigureCommands(services);
         ConfigureValidation(services);
         ConfigureApiAccess(services);
+        ConfigureMediator(services);
 
 
         //Electron Wrapper layer
@@ -155,6 +157,11 @@ public class Startup
         services.AddSingleton<IUserWebApiServices, UserWebApiServices>();
         // Add Http Client
         services.AddHttpClient();
+    }
+    
+    private void ConfigureMediator(IServiceCollection services)
+    {
+        services.AddSingleton<IMediator, Mediator>();
     }
 
     private static void ConfigureToolbox(IServiceCollection services)

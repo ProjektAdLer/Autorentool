@@ -5,7 +5,7 @@ using Presentation.PresentationLogic.Topic;
 
 namespace Presentation.PresentationLogic.LearningSpace;
 
-public interface ILearningSpaceViewModel : IDisplayableLearningObject, IObjectInPathWayViewModel, INotifyPropertyChanged
+public interface ILearningSpaceViewModel : IDisplayableLearningObject, PresentationLogic.IObjectInPathWayViewModel, INotifyPropertyChanged
 {
     IEnumerable<ILearningElementViewModel> ContainedLearningElements => LearningSpaceLayout.ContainedLearningElements;
     ILearningSpaceLayoutViewModel LearningSpaceLayout { get; set; }
@@ -16,6 +16,4 @@ public interface ILearningSpaceViewModel : IDisplayableLearningObject, IObjectIn
     new string Name { get; set; }
     string Description { get; set; }
     string Goals { get; set; }
-    ILearningElementViewModel? SelectedLearningElement { get; set; }
-    event EventHandler<EventArgs>? SelectedElementChanged;
 }

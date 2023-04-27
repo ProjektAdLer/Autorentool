@@ -7,6 +7,7 @@
 @using BusinessLogic.Entities
 @using System.ComponentModel
 @using Presentation.Components.Forms.Buttons
+@using Presentation.View
 @implements IAsyncDisposable
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
@@ -89,7 +90,7 @@
     private ILearningWorldPresenter WorldPresenter { get; set; }
 
     [Inject]
-    private IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceViewModel { get; set; }
+    private IMediator Mediator { get; set; }
 
     [Inject]
     private IFormDataContainer<LearningElementFormModel, LearningElement> FormDataContainer { get; set; }
@@ -106,11 +107,11 @@
 
     private void OnValidSubmit(LearningElementFormModel model)
     {
-        if (AuthoringToolWorkspaceViewModel.SelectedLearningWorld == null)
+        if (Mediator.SelectedLearningWorld == null)
             throw new InvalidOperationException("No learning world selected.");
-        if (AuthoringToolWorkspaceViewModel.SelectedLearningWorld.SelectedLearningObjectInPathWay == null)
+        if (Mediator.SelectedLearningObjectInPathWay == null)
             throw new InvalidOperationException("No object selected.");
-        if (AuthoringToolWorkspaceViewModel.SelectedLearningWorld.SelectedLearningObjectInPathWay is not LearningSpaceViewModel)
+        if (Mediator.SelectedLearningObjectInPathWay is not LearningSpaceViewModel)
             throw new InvalidOperationException("Selected object is not a learning space.");
 
         WorldPresenter.CreateUnplacedLearningElement(
@@ -122,11 +123,11 @@
 
     protected override void OnInitialized()
     {
-        AuthoringToolWorkspaceViewModel.PropertyChanged += OnLearningWorldViewModelChange;
+        Mediator.PropertyChanged += MediatorOnPropertyChanged;
         base.OnInitialized();
     }
 
-    private async void OnLearningWorldViewModelChange(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)
+    private async void MediatorOnPropertyChanged(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)
     {
         await InvokeAsync(StateHasChanged);
     }
@@ -139,7 +140,7 @@
 
     public void Dispose()
     {
-        AuthoringToolWorkspaceViewModel.PropertyChanged -= OnLearningWorldViewModelChange;
+        Mediator.PropertyChanged -= MediatorOnPropertyChanged;
     }
 
 }

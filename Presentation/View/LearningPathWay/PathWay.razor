@@ -34,8 +34,11 @@
     // Overwrite nullability warning below because service may never be null -m.ho
     [Parameter, EditorRequired]
     public ILearningWorldPresenter PositioningService { get; set; } = null!;
-    
-    private double StrokeWidth => PositioningService.LearningWorldVm?.SelectedLearningObjectInPathWay == LearningPathWay ? 3 : 2;
+
+    [Inject]
+    public IMediator? Mediator { get; set; }
+
+    private double StrokeWidth => Mediator?.SelectedLearningObjectInPathWay == LearningPathWay ? 3 : 2;
 
     // The following coordinates are used as control points for the Bezier curve
     private double C1X => X1;

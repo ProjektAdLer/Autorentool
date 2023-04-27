@@ -1,5 +1,5 @@
 ﻿@using Presentation.PresentationLogic.API
-@using Presentation.Components
+@using Presentation.View
 @inherits LayoutComponentBase
 
 <PageTitle>AuthoringTool</PageTitle>
@@ -7,11 +7,16 @@
 <MudThemeProvider/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
-@Body
+<CascadingValue Value="Mediator">
+   @Body 
+</CascadingValue>
 
 
 @code {
     [Inject]
     public IPresentationLogic? PresentationLogic { get; set; }
+    
+    [Inject]
+    public IMediator Mediator { get; set; }
 
 }

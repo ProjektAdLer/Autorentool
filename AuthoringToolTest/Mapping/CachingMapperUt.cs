@@ -1,7 +1,5 @@
-﻿using AuthoringTool;
-using AuthoringTool.Mapping;
+﻿using AuthoringTool.Mapping;
 using AutoMapper;
-using AutoMapper.EquivalencyExpression;
 using BusinessLogic.Commands;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
@@ -25,7 +23,7 @@ public class CachingMapperUt
     [Test]
     public void MapAuthoringToolWorkspaceEntityToViewModel_MapperReceivedCallWithCorrectParameters()
     {
-        var entity = new AuthoringToolWorkspace(null, new List<LearningWorld>());
+        var entity = new AuthoringToolWorkspace(new List<LearningWorld>());
         var mockViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         var mapper = Substitute.For<IMapper>();
         var logger = Substitute.For<ILogger<CachingMapper>>();
@@ -40,7 +38,7 @@ public class CachingMapperUt
     [Test]
     public void MapAuthoringToolWorkspaceEntityToViewModel_MapsLearningWorldToViewModel()
     {
-        var workspace = new AuthoringToolWorkspace(null, new List<LearningWorld>());
+        var workspace = new AuthoringToolWorkspace(new List<LearningWorld>());
         var workspaceViewModel = new AuthoringToolWorkspaceViewModel();
         var worldEntity = new LearningWorld("n", "s", "a", "l", "d", "g");
         workspace.LearningWorlds.Add(worldEntity);
@@ -65,7 +63,7 @@ public class CachingMapperUt
     [Test]
     public void MapAuthoringToolWorkspaceEntityToViewModel_MapsWorldToTheSameViewModelAfterFirstCall()
     {
-        var workspace = new AuthoringToolWorkspace(null, new List<LearningWorld>());
+        var workspace = new AuthoringToolWorkspace(new List<LearningWorld>());
         var workspaceViewModel = new AuthoringToolWorkspaceViewModel();
         var worldEntity = new LearningWorld("n", "s", "a", "l", "d", "g");
         workspace.LearningWorlds.Add(worldEntity);
@@ -354,7 +352,7 @@ public class CachingMapperUt
     public void OnRemovedCommandsFromStacksInvoked_UnusedViewModelsAreRemoved()
     {
         var worldEntity = new LearningWorld("n","s","a","l","d","g");
-        var workspace = new AuthoringToolWorkspace(worldEntity, new List<LearningWorld>(){worldEntity});
+        var workspace = new AuthoringToolWorkspace(new List<LearningWorld>(){worldEntity});
         var workspaceViewModel = new AuthoringToolWorkspaceViewModel();
         var spaceEntity = new LearningSpace("n", "d", "g", 5,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X3));

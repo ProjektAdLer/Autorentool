@@ -16,7 +16,6 @@ public class DeleteLearningElementInSpaceUt
         var space = new LearningSpace("a","d", "e", 5);
         var element = new LearningElement("g", null!, "j", "k", LearningElementDifficultyEnum.Easy, space);
         space.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>() { { 0, element } };
-        space.SelectedLearningElement = element;
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
@@ -29,7 +28,6 @@ public class DeleteLearningElementInSpaceUt
         
         Assert.That(space.ContainedLearningElements, Is.Empty);
         Assert.IsTrue(actionWasInvoked);
-        Assert.That(space.SelectedLearningElement, Is.Null);
     }
 
     [Test]
@@ -47,7 +45,6 @@ public class DeleteLearningElementInSpaceUt
                 1, element2
             }
         };
-        space.SelectedLearningElement = element;
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
@@ -62,7 +59,6 @@ public class DeleteLearningElementInSpaceUt
         Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(1));
         Assert.That(space.ContainedLearningElements, Does.Not.Contain(element));
         Assert.IsTrue(actionWasInvoked);
-        Assert.That(space.SelectedLearningElement, Is.EqualTo(element2));
     }
 
     [Test]
@@ -96,7 +92,6 @@ public class DeleteLearningElementInSpaceUt
                 1, element2
             }
         };
-        space.SelectedLearningElement = element;
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
@@ -104,26 +99,22 @@ public class DeleteLearningElementInSpaceUt
         
         Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(2));
         Assert.That(space.ContainedLearningElements, Does.Contain(element));
-        Assert.That(space.SelectedLearningElement, Is.EqualTo(element));
         Assert.IsFalse(actionWasInvoked);
         
         command.Execute();
         
         Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(1));
-        Assert.That(space.SelectedLearningElement, Is.EqualTo(element2));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Undo();
         
         Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(2));
         Assert.That(space.ContainedLearningElements, Does.Contain(element));
-        Assert.That(space.SelectedLearningElement, Is.EqualTo(element));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Redo();
         
         Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(1));
-        Assert.That(space.SelectedLearningElement, Is.EqualTo(element2));
         Assert.IsTrue(actionWasInvoked);
     }
 }

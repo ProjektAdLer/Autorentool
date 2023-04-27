@@ -44,8 +44,7 @@ public class LoadLearningElement : IUndoCommand
         LearningElement ??= _businessLogic.LoadLearningElement(_filepath);
         LearningElement.Parent = ParentSpace;
         ParentSpace.LearningSpaceLayout.LearningElements[SlotIndex] = LearningElement;
-        ParentSpace.SelectedLearningElement = LearningElement;
-        
+
         _mappingAction.Invoke(ParentSpace);
     }
 

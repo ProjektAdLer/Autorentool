@@ -28,11 +28,6 @@ public class DeleteLearningElementInSpace : IUndoCommand
         
         ParentSpace.LearningSpaceLayout.LearningElements.Remove(kvP.Key);
 
-        if (kvP.Value == ParentSpace.SelectedLearningElement || ParentSpace.SelectedLearningElement == null)
-        {
-            ParentSpace.SelectedLearningElement = ParentSpace.LearningSpaceLayout.LearningElements.Values.LastOrDefault();
-        }
-
         _mappingAction.Invoke(ParentSpace);
     }
 

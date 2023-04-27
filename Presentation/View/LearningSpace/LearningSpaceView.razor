@@ -17,13 +17,13 @@
       <MudText Class="text-adlerbggradientfrom" Typo="Typo.h6">@LearningSpaceP.LearningSpaceVm.Name</MudText>
       @*<MudText Class="text-center text-adlergrey-500" Typo="Typo.h4">Learning Space Editor @LearningSpaceP.LearningSpaceVm?.Name</MudText>*@
       </div>
-    @if (LearningSpaceP.LearningSpaceVm?.SelectedLearningElement != null)
+    @if (Mediator.SelectedLearningElement != null)
     {
         <section class="p-2 gap-1 flex flex-col justify-start">
             <div class="flex justify-between items-start">
             <label id="learning-element-info" class="font-medium text-lg flex flex-col">
-                <MudText Typo="Typo.subtitle1">Selected learning element: @LearningSpaceP.LearningSpaceVm.SelectedLearningElement.Name</MudText>
-                <MudText Typo="Typo.subtitle1">Description: @LearningSpaceP.LearningSpaceVm.SelectedLearningElement.Description</MudText>
+                <MudText Typo="Typo.subtitle1">Selected learning element: @Mediator.SelectedLearningElement.Name</MudText>
+                <MudText Typo="Typo.subtitle1">Description: @Mediator.SelectedLearningElement.Description</MudText>
             </label>
             <div class="text-adlergrey">
                 <div>
@@ -91,6 +91,9 @@
 
     [CascadingParameter(Name = "TriggerMasterLayoutStateHasChanged")]
     private Action TriggerMasterLayoutStateHasChanged { get; set; }
+    
+    [Inject]
+    public IMediator? Mediator { get; set; }
 
     //TODO: Instead of setting a value here we need some sort of central service that we can notify about the error to
     //then display it in the UI - n.stich

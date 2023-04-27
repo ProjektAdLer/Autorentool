@@ -64,57 +64,6 @@ public class AuthoringToolWorkspaceViewModelUt
         Assert.That(handlerCalled, Is.True);
     }
 
-    [Test]
-    public void AuthoringToolWorkspaceViewModel_SetSelectedLearningWorld_SetsLearningWorld()
-    {
-        var viewModel = GetLearningWorldViewModelForTesting();
-
-        var systemUnderTest = GetViewModelForTesting();
-        systemUnderTest._learningWorlds.Add(viewModel);
-        
-        Assert.That(systemUnderTest.SelectedLearningWorld, Is.Null);
-
-        systemUnderTest.SelectedLearningWorld = viewModel;
-        
-        Assert.That(systemUnderTest.SelectedLearningWorld, Is.EqualTo(viewModel));
-    }
-
-    [Test]
-    public void AuthoringToolWorkspaceViewModel_SetSelectedLearningWorld_ThrowsExceptionWhenNotInCollection()
-    {
-        var viewModel = GetLearningWorldViewModelForTesting();
-
-        IAuthoringToolWorkspaceViewModel systemUnderTest = GetViewModelForTesting();
-        Assert.That(systemUnderTest.LearningWorlds, Is.Empty);
-        
-        var ex = Assert.Throws<ArgumentException>(() => systemUnderTest.SelectedLearningWorld = viewModel);
-        Assert.That(ex!.Message, Is.EqualTo("value isn't contained in collection."));
-    }
-
-    [Test]
-    public void AuthoringToolWorkspaceViewModel_SetSelectedLearningWorld_RaisesStateChangeEvent()
-    {
-        var viewModel = GetLearningWorldViewModelForTesting();
-        var handlerCalled = false;
-
-        var systemUnderTest = GetViewModelForTesting();
-        systemUnderTest._learningWorlds.Add(viewModel);
-        
-        systemUnderTest.PropertyChanged += (caller, changedEventArgs) => {
-            if (handlerCalled) Assert.Fail("handler called twice");
-            handlerCalled = true;
-            Assert.Multiple(() =>
-            {
-                Assert.That(caller, Is.EqualTo(systemUnderTest));
-                Assert.That(changedEventArgs.PropertyName, Is.EqualTo(nameof(systemUnderTest.SelectedLearningWorld)));
-            });
-        };
-        
-        systemUnderTest.SelectedLearningWorld = viewModel;
-        
-        Assert.That(handlerCalled, Is.True);
-    }
-    
     private AuthoringToolWorkspaceViewModel GetViewModelForTesting()
     {
         return new AuthoringToolWorkspaceViewModel();

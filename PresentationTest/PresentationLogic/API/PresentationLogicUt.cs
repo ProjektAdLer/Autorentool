@@ -94,7 +94,7 @@ public class PresentationLogicUt
         var worldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
         var mockMapper = Substitute.For<IMapper>();
         var worldEntity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
-        var workspaceEntity = new BusinessLogic.Entities.AuthoringToolWorkspace(null,
+        var workspaceEntity = new BusinessLogic.Entities.AuthoringToolWorkspace(
             new List<BusinessLogic.Entities.LearningWorld>{worldEntity});
         mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<AuthoringToolWorkspaceViewModel>())
             .Returns(workspaceEntity);
@@ -194,7 +194,7 @@ public class PresentationLogicUt
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var mockMapper = Substitute.For<IMapper>();
         var worldEntity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
-        var workspaceEntity = new BusinessLogic.Entities.AuthoringToolWorkspace(null,
+        var workspaceEntity = new BusinessLogic.Entities.AuthoringToolWorkspace(
             new List<BusinessLogic.Entities.LearningWorld>{worldEntity});
         mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<AuthoringToolWorkspaceViewModel>())
             .Returns(workspaceEntity);
@@ -242,7 +242,7 @@ public class PresentationLogicUt
         workspaceVm._learningWorlds.Add(worldVm);
         var mockMapper = Substitute.For<IMapper>();
         var worldEntity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
-        var workspaceEntity = new BusinessLogic.Entities.AuthoringToolWorkspace(null,
+        var workspaceEntity = new BusinessLogic.Entities.AuthoringToolWorkspace(
             new List<BusinessLogic.Entities.LearningWorld>{worldEntity});
         mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<AuthoringToolWorkspaceViewModel>())
             .Returns(workspaceEntity);
@@ -1200,7 +1200,7 @@ public class PresentationLogicUt
         mockHybridSupport.IsElectronActive.Returns(true);
         var mockMapper = Substitute.For<IMapper>();
         
-        var workspaceEntity = new BusinessLogic.Entities.AuthoringToolWorkspace(null, new List<BusinessLogic.Entities.LearningWorld>());
+        var workspaceEntity = new BusinessLogic.Entities.AuthoringToolWorkspace(new List<BusinessLogic.Entities.LearningWorld>());
         mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<LearningWorldViewModel>()).Returns(workspaceEntity);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
@@ -1343,7 +1343,7 @@ public class PresentationLogicUt
         mockHybridSupport.IsElectronActive.Returns(true);
         var mockMapper = Substitute.For<IMapper>();
         var workspaceEntity =
-            new BusinessLogic.Entities.AuthoringToolWorkspace(null, new List<BusinessLogic.Entities.LearningWorld>());
+            new BusinessLogic.Entities.AuthoringToolWorkspace(new List<BusinessLogic.Entities.LearningWorld>());
         mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<LearningWorldViewModel>())
             .Returns(workspaceEntity);
         var mockServiceProvider = Substitute.For<IServiceProvider>();
@@ -1366,7 +1366,7 @@ public class PresentationLogicUt
         mockHybridSupport.IsElectronActive.Returns(true);
         var mockMapper = Substitute.For<IMapper>();
         var workspaceEntity =
-            new BusinessLogic.Entities.AuthoringToolWorkspace(null, new List<BusinessLogic.Entities.LearningWorld>());
+            new BusinessLogic.Entities.AuthoringToolWorkspace(new List<BusinessLogic.Entities.LearningWorld>());
         mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<LearningWorldViewModel>())
             .Returns(workspaceEntity);
         var mockServiceProvider = Substitute.For<IServiceProvider>();

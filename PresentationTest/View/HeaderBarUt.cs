@@ -18,6 +18,7 @@ public class HeaderBarUt
 {
     private TestContext _testContext;
     private IPresentationLogic _presentationLogic;
+    private IMediator _mediator;
     private IStringLocalizer<HeaderBar> _stringLocalizer;
 
     [SetUp]
@@ -27,9 +28,11 @@ public class HeaderBarUt
         _testContext.ComponentFactories.AddStub<CloseAppButton>();
         _testContext.ComponentFactories.AddStub<CultureSelector>();
         _presentationLogic = Substitute.For<IPresentationLogic>();
+        _mediator = Substitute.For<IMediator>();
         _stringLocalizer = Substitute.For<IStringLocalizer<HeaderBar>>();
         _testContext.Services.AddSingleton(_presentationLogic);
         _testContext.Services.AddSingleton(_stringLocalizer);
+        _testContext.Services.AddSingleton(_mediator);
     }
 
     [Test]

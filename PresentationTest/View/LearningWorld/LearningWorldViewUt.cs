@@ -16,6 +16,7 @@ using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
+using Presentation.View;
 using Presentation.View.LearningElement;
 using Presentation.View.LearningPathWay;
 using Presentation.View.LearningSpace;
@@ -32,6 +33,7 @@ public class LearningWorldViewUt
     private TestContext _ctx;
     private IMouseService _mouseService;
     private ILearningWorldPresenter _worldPresenter;
+    private IMediator _mediator;
 #pragma warning restore CS8618
     
     [SetUp]
@@ -40,12 +42,14 @@ public class LearningWorldViewUt
         _ctx = new TestContext();
         _mouseService = Substitute.For<IMouseService>();
         _worldPresenter = Substitute.For<ILearningWorldPresenter>();
+        _mediator = Substitute.For<IMediator>();
         _ctx.ComponentFactories.AddStub<LearningSpaceView>();
         _ctx.ComponentFactories.AddStub<DraggableObjectInPathWay>();
         _ctx.ComponentFactories.AddStub<PathWay>();
         _ctx.ComponentFactories.AddStub<MudIcon>();
         _ctx.Services.AddSingleton(_mouseService);
         _ctx.Services.AddSingleton(_worldPresenter);
+        _ctx.Services.AddSingleton(_mediator);
     }
 
     [Test]
@@ -171,7 +175,7 @@ public class LearningWorldViewUt
 
         var addSpaceButton = systemUnderTest.FindComponentWithMarkup<MudButton>("New Space");
         addSpaceButton.Find("*").Click();
-        Assert.Fail("NYI");
+        _worldPresenter.Received().AddNewLearningSpace();
     }
     
     [Test]
@@ -207,41 +211,6 @@ public class LearningWorldViewUt
         _worldPresenter.Received().LoadLearningSpaceAsync();
     }
 
-    [Test]
-    public void EditSpaceButton_Clicked_CallsOpenEditSelectedLearningSpaceDialog()
-    {
-        var space = Substitute.For<ILearningSpaceViewModel>();
-        var worldVm = Substitute.For<ILearningWorldViewModel>();
-        worldVm.LearningSpaces.Returns(new List<ILearningSpaceViewModel> { space });
-        worldVm.SelectedLearningObjectInPathWay.Returns(space);
-        _worldPresenter.LearningWorldVm.Returns(worldVm);
-
-        var systemUnderTest = GetLearningWorldViewForTesting();
-        
-        //TODO: fix? - n.stich
-        Assert.Fail("NYI");
-        var editSpaceButton = systemUnderTest.FindOrFail("button.btn.btn-primary.edit-learning-object");
-        editSpaceButton.Click();
-    }
-    
-    [Test]
-    public void DeleteSpaceButton_Clicked_CallsDeleteSelectedLearningSpace()
-    {
-        var space = Substitute.For<ILearningSpaceViewModel>();
-        var worldVm = Substitute.For<ILearningWorldViewModel>();
-        worldVm.LearningSpaces.Returns(new List<ILearningSpaceViewModel> { space });
-        worldVm.SelectedLearningObjectInPathWay.Returns(space);
-        _worldPresenter.LearningWorldVm.Returns(worldVm);
-
-        var systemUnderTest = GetLearningWorldViewForTesting();
-        
-        //TODO: fix? - n.stich
-        Assert.Fail("NYI");
-        var editSpaceButton = systemUnderTest.FindOrFail("button.btn.btn-primary.delete-learning-object");
-        editSpaceButton.Click();
-        _worldPresenter.Received().DeleteSelectedLearningObject();
-    }
-    
     private IRenderedComponent<LearningWorldView> GetLearningWorldViewForTesting(RenderFragment? childContent = null)
     {
         return _ctx.RenderComponent<LearningWorldView>(parameters => parameters

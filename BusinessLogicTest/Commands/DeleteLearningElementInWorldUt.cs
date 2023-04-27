@@ -15,7 +15,6 @@ public class DeleteLearningElementInWorldUt
         var world = new LearningWorld("a", "b", "c","d", "e","f");
         var element = new LearningElement("g", null!, "j", "k", LearningElementDifficultyEnum.Easy);
         world.UnplacedLearningElements = new List<ILearningElement>() { element } ;
-        world.SelectedLearningElement = element;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
@@ -27,18 +26,15 @@ public class DeleteLearningElementInWorldUt
         command.Execute();
         
         Assert.That(world.UnplacedLearningElements, Is.Empty);
-        Assert.That(world.SelectedLearningElement, Is.Null);
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Undo();
         
         Assert.That(world.UnplacedLearningElements, Does.Contain(element));
-        Assert.That(world.SelectedLearningElement, Is.EqualTo(element));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Redo();
         Assert.That(world.UnplacedLearningElements, Is.Empty);
-        Assert.That(world.SelectedLearningElement, Is.Null);
         Assert.IsTrue(actionWasInvoked);
     }
     
@@ -48,7 +44,6 @@ public class DeleteLearningElementInWorldUt
         var world = new LearningWorld("a", "b", "c","d", "e","f");
         var element = new LearningElement("g", null!, "j", "k", LearningElementDifficultyEnum.Easy);
         world.UnplacedLearningElements = new List<ILearningElement>() { element } ;
-        world.SelectedLearningElement = element;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 

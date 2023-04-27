@@ -10,9 +10,9 @@ using MudBlazor.Services;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
-using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.View;
 using Presentation.View.LearningSpace;
 using TestContext = Bunit.TestContext;
 
@@ -24,6 +24,7 @@ public class LearningSpaceViewUt
 #pragma warning disable CS8618 // set in setup - n.stich
     private TestContext _ctx;
     private ILearningSpacePresenter _learningSpacePresenter;
+    private IMediator _mediator;
 #pragma warning restore CS8618
 
     [SetUp]
@@ -34,7 +35,9 @@ public class LearningSpaceViewUt
         _ctx.JSInterop.SetupVoid("mudDragAndDrop.initDropZone", _ => true);
         _ctx.ComponentFactories.AddStub<MudText>();
         _learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
+        _mediator = Substitute.For<IMediator>();
         _ctx.Services.AddSingleton(_learningSpacePresenter);
+        _ctx.Services.AddSingleton(_mediator);
         _ctx.Services.AddLogging();
     }
 
@@ -89,10 +92,10 @@ public class LearningSpaceViewUt
     {
         var learningSpace = Substitute.For<ILearningSpaceViewModel>();
         var learningObject = Substitute.For<ILearningElementViewModel>();
-        learningSpace.SelectedLearningElement.Returns(learningObject);
         learningObject.Name.Returns("my secret name");
         learningObject.Description.Returns("a super long description");
         _learningSpacePresenter.LearningSpaceVm.Returns(learningSpace);
+        _mediator.SelectedLearningElement.Returns(learningObject);
 
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
@@ -130,7 +133,6 @@ public class LearningSpaceViewUt
     public void DeleteObjectButton_Clicked_CallsDeleteSelectedLearningObject()
     {
         var space = Substitute.For<ILearningSpaceViewModel>();
-        space.SelectedLearningElement.Returns(Substitute.For<ILearningElementViewModel>());
         _learningSpacePresenter.LearningSpaceVm.Returns(space);
         var systemUnderTest = GetLearningSpaceViewForTesting();
 

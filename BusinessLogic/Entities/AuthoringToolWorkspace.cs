@@ -12,12 +12,10 @@ public class AuthoringToolWorkspace : IOriginator
     {
         LearningWorlds = new List<LearningWorld>();
     }
-    public AuthoringToolWorkspace(LearningWorld? selectedLearningWorld, List<LearningWorld> learningWorlds)
+    public AuthoringToolWorkspace(List<LearningWorld> learningWorlds)
     {
-        SelectedLearningWorld = selectedLearningWorld;
         LearningWorlds = learningWorlds;
     }
-    public LearningWorld? SelectedLearningWorld { get; set; }
     public List<LearningWorld> LearningWorlds { get; set; }
     
     public IMemento GetMemento()
@@ -29,7 +27,6 @@ public class AuthoringToolWorkspace : IOriginator
     {
         if (memento is not AuthoringToolWorkspaceMemento workspaceMemento)
             throw new ArgumentException("incorrect IMemento implementation", nameof(memento));
-        SelectedLearningWorld = workspaceMemento.SelectedLearningWorld;
         LearningWorlds = workspaceMemento.LearningWorlds;
     }
 
@@ -37,11 +34,8 @@ public class AuthoringToolWorkspace : IOriginator
     {
         internal AuthoringToolWorkspaceMemento(AuthoringToolWorkspace workspace)
         {
-            SelectedLearningWorld = workspace.SelectedLearningWorld;
             LearningWorlds = workspace.LearningWorlds.ToList();
         }
-
-        internal LearningWorld? SelectedLearningWorld { get; }
         internal List<LearningWorld> LearningWorlds { get; }
     }
 }

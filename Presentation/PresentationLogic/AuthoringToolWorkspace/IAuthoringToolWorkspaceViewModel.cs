@@ -20,10 +20,4 @@ public interface IAuthoringToolWorkspaceViewModel : INotifyPropertyChanged, ILea
     /// </summary>
     /// <param name="learningWorld">The learning world that shall be removed.</param>
     void RemoveLearningWorld(LearningWorldViewModel learningWorld);
-    
-    /// <summary>
-    /// The currently selected learning world.
-    /// </summary>
-    /// <exception cref="ArgumentException">The world to be set isn't contained in the collection.</exception>
-    LearningWorldViewModel? SelectedLearningWorld { get; set; }
 }

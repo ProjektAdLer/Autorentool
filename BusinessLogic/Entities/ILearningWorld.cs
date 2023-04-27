@@ -15,5 +15,4 @@ public interface ILearningWorld
     string Goals { get; set; }
     string SavePath { get; set; }
     ICollection<ILearningElement> UnplacedLearningElements { get; set; }
-    ILearningElement? SelectedLearningElement { get; set; }
 }

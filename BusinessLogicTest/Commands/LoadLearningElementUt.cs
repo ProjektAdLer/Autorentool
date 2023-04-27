@@ -29,7 +29,6 @@ public class LoadLearningElementUt
 
         Assert.That(space.ContainedLearningElements, Is.Empty);
         Assert.IsFalse(actionWasInvoked);
-        Assert.That(space.SelectedLearningElement, Is.Null);
 
         command.Execute();
 
@@ -38,7 +37,6 @@ public class LoadLearningElementUt
         Assert.That(space.ContainedLearningElements.First(), Is.EqualTo(element));
         Assert.That(space.ContainedLearningElements.First(), Is.InstanceOf(typeof(LearningElement)));
         Assert.IsTrue(actionWasInvoked);
-        Assert.That(space.SelectedLearningElement, Is.EqualTo(element));
     }
 
     [Test]
@@ -77,19 +75,16 @@ public class LoadLearningElementUt
                 0, element2
             }
         };
-        space.SelectedLearningElement = element2;
         var command = new LoadLearningElement(space, 1, "element", mockBusinessLogic, mappingAction);
 
         Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(1));
         Assert.That(space.ContainedLearningElements.First(), Is.EqualTo(element2));
-        Assert.That(space.SelectedLearningElement, Is.EqualTo(element2));
 
         command.Execute();
 
         Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(2));
         Assert.That(space.ContainedLearningElements.First(), Is.EqualTo(element2));
         Assert.That(space.ContainedLearningElements.Skip(1).First(), Is.EqualTo(element));
-        Assert.That(space.SelectedLearningElement, Is.EqualTo(element));
         Assert.IsTrue(actionWasInvoked);
         actionWasInvoked = false;
 
@@ -97,8 +92,6 @@ public class LoadLearningElementUt
 
         Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(1));
         Assert.That(space.ContainedLearningElements.First(), Is.EqualTo(element2));
-        Assert.That(space.SelectedLearningElement.Name, Is.EqualTo(element2.Name));
-        Assert.That(space.SelectedLearningElement, Is.EqualTo(element2));
         Assert.IsTrue(actionWasInvoked);
         actionWasInvoked = false;
 
@@ -107,7 +100,6 @@ public class LoadLearningElementUt
         Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(2));
         Assert.That(space.ContainedLearningElements.First(), Is.EqualTo(element2));
         Assert.That(space.ContainedLearningElements.Skip(1).First(), Is.EqualTo(element));
-        Assert.That(space.SelectedLearningElement, Is.EqualTo(element));
         Assert.IsTrue(actionWasInvoked);
         actionWasInvoked = false;
 
@@ -115,7 +107,6 @@ public class LoadLearningElementUt
 
         Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(1));
         Assert.That(space.ContainedLearningElements.First(), Is.EqualTo(element2));
-        Assert.That(space.SelectedLearningElement, Is.EqualTo(element2));
         Assert.IsTrue(actionWasInvoked);
         actionWasInvoked = false;
 
@@ -124,7 +115,6 @@ public class LoadLearningElementUt
         Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(2));
         Assert.That(space.ContainedLearningElements.First(), Is.EqualTo(element2));
         Assert.That(space.ContainedLearningElements.Skip(1).First(), Is.EqualTo(element));
-        Assert.That(space.SelectedLearningElement, Is.EqualTo(element));
         Assert.IsTrue(actionWasInvoked);
         actionWasInvoked = false;
     }

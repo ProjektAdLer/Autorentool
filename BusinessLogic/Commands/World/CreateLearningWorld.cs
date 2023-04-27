@@ -40,8 +40,6 @@ public class CreateLearningWorld : IUndoCommand
         }
         AuthoringToolWorkspace.LearningWorlds.Add(LearningWorld);
 
-        AuthoringToolWorkspace.SelectedLearningWorld = LearningWorld;
-
         _mappingAction.Invoke(AuthoringToolWorkspace);
     }
 

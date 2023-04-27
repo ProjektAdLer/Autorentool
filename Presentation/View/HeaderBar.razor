@@ -32,6 +32,9 @@
     
     [Inject]
     private IStringLocalizer<HeaderBar> Localizer { get; set; }
+    
+    [Inject]
+    private IMediator Mediator { get; set; }
 
     protected override void OnParametersSet()
     {
@@ -41,6 +44,10 @@
 
     private void OnClickMyLearningWorldsOverview()
     {
+        Mediator.SelectedLearningWorld = null;
+        Mediator.SelectedLearningObjectInPathWay = null;
+        Mediator.SelectedLearningElement = null;
+        Mediator.CloseBothSides();
         NavManager.NavigateTo("/MyLearningWorldsOverview");
     }
 

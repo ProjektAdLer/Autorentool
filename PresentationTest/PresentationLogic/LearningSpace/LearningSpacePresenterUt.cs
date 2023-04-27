@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
@@ -11,6 +10,7 @@ using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.Topic;
+using Presentation.View;
 using Shared;
 
 namespace PresentationTest.PresentationLogic.LearningSpace;
@@ -27,7 +27,7 @@ public class LearningSpacePresenterUt
     {
         var systemUnderTest = CreatePresenterForTesting();
 
-        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditLearningSpace("a","d","e", 5, null));
+        var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditLearningSpace("a", "d", "e", 5, null));
         Assert.That(ex!.Message, Is.EqualTo("LearningSpaceVm is null"));
     }
 
@@ -38,11 +38,11 @@ public class LearningSpacePresenterUt
         var topic = new TopicViewModel("abc");
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        
+
         systemUnderTest.SetLearningSpace(space);
-        systemUnderTest.EditLearningSpace("space","d","e", 5, topic);
-        
-        presentationLogic.Received().EditLearningSpace(space, "space","d","e", 5, topic);
+        systemUnderTest.EditLearningSpace("space", "d", "e", 5, topic);
+
+        presentationLogic.Received().EditLearningSpace(space, "space", "d", "e", 5, topic);
     }
 
     #endregion
@@ -54,7 +54,7 @@ public class LearningSpacePresenterUt
     [Test]
     public void AddLearningElement_SelectedLearningSpaceIsNull_ThrowsException()
     {
-        var element = new LearningElementViewModel("foo",  null!,
+        var element = new LearningElementViewModel("foo", null!,
             "wa", "bar", LearningElementDifficultyEnum.Hard);
 
         var systemUnderTest = CreatePresenterForTesting();
@@ -62,46 +62,50 @@ public class LearningSpacePresenterUt
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.AddLearningElement(element, 0));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
     }
-    
+
     [Test]
     public void AddLearningElement_CallsPresentationLogic()
     {
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+        var space = new LearningSpaceViewModel("foo", "foo", "foo",
+            layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         var content = new FileContentViewModel("bar", "foo", "");
-        var element = new LearningElementViewModel("f",  content, "f", "f", LearningElementDifficultyEnum.Easy, space);
+        var element = new LearningElementViewModel("f", content, "f", "f", LearningElementDifficultyEnum.Easy, space);
+        var mediator = Substitute.For<IMediator>();
         space.LearningSpaceLayout.PutElement(0, element);
-        space.SelectedLearningElement = element;
+        mediator.SelectedLearningElement = element;
 
         var mockPresentationLogic = Substitute.For<IPresentationLogic>();
 
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic:mockPresentationLogic);
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: mockPresentationLogic, mediator: mediator);
         systemUnderTest.SetLearningSpace(space);
 
         systemUnderTest.AddLearningElement(element, 1);
 
         mockPresentationLogic.Received().AddLearningElement(space, 1, element);
     }
-    
+
     [Test]
     public void DragLearningElement_CallsPresentationLogic()
     {
-        var element = new LearningElementViewModel("g",  null!, "g", "g", LearningElementDifficultyEnum.Easy);
+        var element = new LearningElementViewModel("g", null!, "g", "g", LearningElementDifficultyEnum.Easy);
         double oldPositionX = 5;
         double oldPositionY = 7;
         var presentationLogic = Substitute.For<IPresentationLogic>();
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
-        systemUnderTest.DragLearningElement(element, new DraggedEventArgs<ILearningElementViewModel>(element, oldPositionX, oldPositionY));
+        systemUnderTest.DragLearningElement(element,
+            new DraggedEventArgs<ILearningElementViewModel>(element, oldPositionX, oldPositionY));
 
         presentationLogic.Received().DragLearningElement(element, oldPositionX, oldPositionY);
     }
 
-    
+
     [Test]
     public void SetSelectedLearningElement_SelectedLearningSpaceIsNull_ThrowsException()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        var element = new LearningElementViewModel("foo", null!, "foo", "bar", LearningElementDifficultyEnum.Easy, null, 6);
+        var element =
+            new LearningElementViewModel("foo", null!, "foo", "bar", LearningElementDifficultyEnum.Easy, null, 6);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetSelectedLearningElement(element));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
@@ -109,7 +113,7 @@ public class LearningSpacePresenterUt
 
 
     #region DeleteSelectedLearningElement
-    
+
     [Test]
     public void DeleteSelectedLearningElement_ThrowsWhenSelectedSpaceNull()
     {
@@ -124,14 +128,16 @@ public class LearningSpacePresenterUt
     public void DeleteSelectedLearningElement_DoesNotThrowWhenSelectedObjectNull()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo");
-
-        var systemUnderTest = CreatePresenterForTesting();
+        var mediator = Substitute.For<IMediator>();
+        mediator.SelectedLearningElement = null;
+        
+        var systemUnderTest = CreatePresenterForTesting(mediator: mediator);
         systemUnderTest.SetLearningSpace(space);
 
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.LearningSpaceVm,Is.Not.Null);
-            Assert.That(systemUnderTest.LearningSpaceVm?.SelectedLearningElement, Is.Null);
+            Assert.That(mediator.SelectedLearningElement, Is.Null);
             Assert.That(systemUnderTest.LearningSpaceVm?.ContainedLearningElements, Is.Empty);
             Assert.DoesNotThrow(() => systemUnderTest.DeleteSelectedLearningElement());
         });
@@ -140,20 +146,22 @@ public class LearningSpacePresenterUt
     [Test]
     public void DeleteSelectedLearningElement_CallsPresentationLogic_WithElement()
     {
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+        var space = new LearningSpaceViewModel("foo", "foo", "foo",
+            layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         var content = new FileContentViewModel("bar", "foo", "");
         var element = new LearningElementViewModel("f", content, "f", "f", LearningElementDifficultyEnum.Easy, space);
+        var mediator = Substitute.For<IMediator>();
         space.LearningSpaceLayout.PutElement(0, element);
-        space.SelectedLearningElement = element;
+        mediator.SelectedLearningElement = element;
 
         var mockPresentationLogic = Substitute.For<IPresentationLogic>();
 
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic:mockPresentationLogic);
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic: mockPresentationLogic, mediator: mediator);
         systemUnderTest.SetLearningSpace(space);
 
         systemUnderTest.DeleteSelectedLearningElement();
 
-        mockPresentationLogic.Received().DeleteLearningElementInSpace(space,element);
+        mockPresentationLogic.Received().DeleteLearningElementInSpace(space, element);
     }
 
     #endregion
@@ -166,19 +174,23 @@ public class LearningSpacePresenterUt
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(null!);
 
-        var ex = Assert.ThrowsAsync<ApplicationException>(async () => await systemUnderTest.SaveSelectedLearningElementAsync());
+        var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
+            await systemUnderTest.SaveSelectedLearningElementAsync());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
     }
 
     [Test]
     public void SaveSelectedLearningElementAsync_DoesNotThrowWhenSelectedObjectNull()
     {
+        var mediator = Substitute.For<IMediator>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo");
 
-        var systemUnderTest = CreatePresenterForTesting();
+        var systemUnderTest = CreatePresenterForTesting(mediator: mediator);
         systemUnderTest.SetLearningSpace(space);
+        mediator.SelectedLearningElement = null;
 
-        var ex = Assert.ThrowsAsync<ApplicationException>(async () => await systemUnderTest.SaveSelectedLearningElementAsync());
+        var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
+            await systemUnderTest.SaveSelectedLearningElementAsync());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningElement is null"));
     }
 
@@ -186,14 +198,16 @@ public class LearningSpacePresenterUt
     public async Task SaveSelectedLearningElement_CallsPresentationLogic_WithElement()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+        var space = new LearningSpaceViewModel("foo", "foo", "foo",
+            layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         var content = new FileContentViewModel("bar", "foo", "");
-        var element = new LearningElementViewModel("f",content,
+        var element = new LearningElementViewModel("f", content,
             "f", "f", LearningElementDifficultyEnum.Easy, space);
+        var mediator = Substitute.For<IMediator>();
         space.LearningSpaceLayout.PutElement(0, element);
-        space.SelectedLearningElement = element;
+        mediator.SelectedLearningElement = element;
 
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic, mediator: mediator);
         systemUnderTest.SetLearningSpace(space);
         await systemUnderTest.SaveSelectedLearningElementAsync();
 
@@ -201,7 +215,7 @@ public class LearningSpacePresenterUt
     }
 
     #endregion
-    
+
     #region ShowSelectedElementContent
 
     [Test]
@@ -210,19 +224,23 @@ public class LearningSpacePresenterUt
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.SetLearningSpace(null!);
 
-        var ex = Assert.ThrowsAsync<ApplicationException>(async () => await systemUnderTest.ShowSelectedElementContentAsync());
+        var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
+            await systemUnderTest.ShowSelectedElementContentAsync());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningSpace is null"));
     }
 
     [Test]
     public void ShowSelectedElementContent_DoesNotThrowWhenSelectedObjectNull()
     {
+        var mediator = Substitute.For<IMediator>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo");
 
-        var systemUnderTest = CreatePresenterForTesting();
+        var systemUnderTest = CreatePresenterForTesting(mediator: mediator);
         systemUnderTest.SetLearningSpace(space);
+        mediator.SelectedLearningElement = null;
 
-        var ex = Assert.ThrowsAsync<ApplicationException>(async () => await systemUnderTest.ShowSelectedElementContentAsync());
+        var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
+            await systemUnderTest.ShowSelectedElementContentAsync());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningElement is null"));
     }
 
@@ -230,22 +248,24 @@ public class LearningSpacePresenterUt
     public async Task ShowSelectedElementContent_CallsPresentationLogic_WithElement()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+        var space = new LearningSpaceViewModel("foo", "foo", "foo",
+            layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         var content = new FileContentViewModel("bar", "foo", "");
-        var element = new LearningElementViewModel("f",  content,
+        var element = new LearningElementViewModel("f", content,
             "f", "f", LearningElementDifficultyEnum.Easy, space);
+        var mediator = Substitute.For<IMediator>();
         space.LearningSpaceLayout.PutElement(0, element);
-        space.SelectedLearningElement = element;
+        mediator.SelectedLearningElement = element;
 
-        var systemUnderTest = CreatePresenterForTesting(presentationLogic);
+        var systemUnderTest = CreatePresenterForTesting(presentationLogic, mediator: mediator);
         systemUnderTest.SetLearningSpace(space);
         await systemUnderTest.ShowSelectedElementContentAsync();
 
         await presentationLogic.Received().ShowLearningElementContentAsync(element);
     }
-    
+
     #endregion
-    
+
     #region LoadLearningElement
 
     [Test]
@@ -266,7 +286,7 @@ public class LearningSpacePresenterUt
         var space = new LearningSpaceViewModel("foo", "foo", "foo", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         var element = new LearningElementViewModel("a", null!, "e", "f", LearningElementDifficultyEnum.Medium, space);
         space.LearningSpaceLayout.PutElement(0, element);
-        
+
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
         systemUnderTest.SetLearningSpace(space);
         await systemUnderTest.LoadLearningElementAsync(1);
@@ -275,15 +295,17 @@ public class LearningSpacePresenterUt
     }
 
     #endregion
-    
+
     #endregion
 
 
     private LearningSpacePresenter CreatePresenterForTesting(IPresentationLogic? presentationLogic = null,
+        IMediator? mediator = null,
         ILogger<LearningSpacePresenter>? logger = null)
     {
         presentationLogic ??= Substitute.For<IPresentationLogic>();
         logger ??= Substitute.For<ILogger<LearningSpacePresenter>>();
-        return new LearningSpacePresenter(presentationLogic, logger);
+        mediator ??= Substitute.For<IMediator>();
+        return new LearningSpacePresenter(presentationLogic, mediator, logger);
     }
 }

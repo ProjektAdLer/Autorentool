@@ -14,7 +14,7 @@ public class LoadLearningWorldUt
     [Test]
     public void Execute_LoadsLearningWorld()
     {
-        var authoringToolWorkspace = new AuthoringToolWorkspace(null, new List<LearningWorld>());
+        var authoringToolWorkspace = new AuthoringToolWorkspace(new List<LearningWorld>());
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var world = new LearningWorld("a", "b", "b", "b", "b", "b");
         const string filepath = "c:\\temp\\test";
@@ -26,7 +26,6 @@ public class LoadLearningWorldUt
         Assert.Multiple(() =>
         {
             Assert.That(authoringToolWorkspace.LearningWorlds, Is.Empty);
-            Assert.That(authoringToolWorkspace.SelectedLearningWorld, Is.Null);
             Assert.That(actionWasInvoked, Is.False);
         });
         
@@ -38,14 +37,13 @@ public class LoadLearningWorldUt
         {
             Assert.That(authoringToolWorkspace.LearningWorlds[0], Is.EqualTo(world));
             Assert.That(actionWasInvoked, Is.True);
-            Assert.That(authoringToolWorkspace.SelectedLearningWorld, Is.EqualTo(world));
         });
     }
     
     [Test]
     public void Execute_LoadsLearningWorld_WithStream()
     {
-        var authoringToolWorkspace = new AuthoringToolWorkspace(null, new List<LearningWorld>());
+        var authoringToolWorkspace = new AuthoringToolWorkspace(new List<LearningWorld>());
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var world = new LearningWorld("a", "b", "b", "b", "b", "b");
         var stream = Substitute.For<Stream>();
@@ -57,7 +55,6 @@ public class LoadLearningWorldUt
         Assert.Multiple(() =>
         {
             Assert.That(authoringToolWorkspace.LearningWorlds, Is.Empty);
-            Assert.That(authoringToolWorkspace.SelectedLearningWorld, Is.Null);
             Assert.That(actionWasInvoked, Is.False);
         });
         command.Execute();
@@ -68,7 +65,6 @@ public class LoadLearningWorldUt
         {
             Assert.That(authoringToolWorkspace.LearningWorlds[0], Is.EqualTo(world));
             Assert.That(actionWasInvoked, Is.True);
-            Assert.That(authoringToolWorkspace.SelectedLearningWorld, Is.EqualTo(world));
         });
     }
 
@@ -76,7 +72,7 @@ public class LoadLearningWorldUt
     public void Undo_MementoIsNull_ThrowsException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var authoringToolWorkspace = new AuthoringToolWorkspace(null, new List<LearningWorld>());
+        var authoringToolWorkspace = new AuthoringToolWorkspace(new List<LearningWorld>());
         bool actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
@@ -94,18 +90,16 @@ public class LoadLearningWorldUt
     public void UndoRedo_UndoesAndRedoesLoadLearningWorld()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var authoringToolWorkspace = new AuthoringToolWorkspace(null, new List<LearningWorld>());
+        var authoringToolWorkspace = new AuthoringToolWorkspace(new List<LearningWorld>());
         bool actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");        
         mockBusinessLogic.LoadLearningWorld(Arg.Any<string>()).Returns(world);
         var world2 = new LearningWorld("g", "h", "i", "j", "k", "l");
         authoringToolWorkspace.LearningWorlds.Add(world2);
-        authoringToolWorkspace.SelectedLearningWorld = world2;
         var command = new LoadLearningWorld(authoringToolWorkspace, "space", mockBusinessLogic, mappingAction);
         
         Assert.That(authoringToolWorkspace.LearningWorlds, Has.Count.EqualTo(1));
-        Assert.That(authoringToolWorkspace.SelectedLearningWorld, Is.EqualTo(world2));
         
         command.Execute();
         
@@ -113,7 +107,6 @@ public class LoadLearningWorldUt
         Assert.Multiple(() =>
         {
             Assert.That(authoringToolWorkspace.LearningWorlds[1], Is.EqualTo(world));
-            Assert.That(authoringToolWorkspace.SelectedLearningWorld, Is.EqualTo(world));
             Assert.That(actionWasInvoked, Is.True);
         });
         
@@ -124,7 +117,6 @@ public class LoadLearningWorldUt
         Assert.Multiple(() =>
         {
             Assert.That(authoringToolWorkspace.LearningWorlds, Has.Count.EqualTo(1));
-            Assert.That(authoringToolWorkspace.SelectedLearningWorld, Is.EqualTo(world2));
             Assert.That(actionWasInvoked, Is.True);
         });
         
@@ -136,7 +128,6 @@ public class LoadLearningWorldUt
         Assert.Multiple(() =>
         {
             Assert.That(authoringToolWorkspace.LearningWorlds[1], Is.EqualTo(world));
-            Assert.That(authoringToolWorkspace.SelectedLearningWorld, Is.EqualTo(world));
             Assert.That(actionWasInvoked, Is.True);
         });
         
@@ -145,7 +136,6 @@ public class LoadLearningWorldUt
         Assert.Multiple(() =>
         {
             Assert.That(authoringToolWorkspace.LearningWorlds, Has.Count.EqualTo(1));
-            Assert.That(authoringToolWorkspace.SelectedLearningWorld, Is.EqualTo(world2));
             Assert.That(actionWasInvoked, Is.True);
         });
         
@@ -157,7 +147,6 @@ public class LoadLearningWorldUt
         Assert.Multiple(() =>
         {
             Assert.That(authoringToolWorkspace.LearningWorlds[1], Is.EqualTo(world));
-            Assert.That(authoringToolWorkspace.SelectedLearningWorld, Is.EqualTo(world));
             Assert.That(actionWasInvoked, Is.True);
         });
     }

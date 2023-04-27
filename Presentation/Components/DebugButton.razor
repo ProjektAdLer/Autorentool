@@ -1,5 +1,6 @@
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.View
 @using Shared
 
 <MudButton OnClick="CreateDebugWorld" Class="btn-standard normal-case">Create Debug World</MudButton>
@@ -8,6 +9,9 @@
 
     [Inject]
     internal NavigationManager NavManager { get; private init; }
+    
+    [Inject]
+    internal IMediator Mediator { get; private init; }
 
     [Inject]
     public IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceViewModel { get; set; }
@@ -19,7 +23,7 @@
     {
         PresentationLogic.CreateLearningWorld(AuthoringToolWorkspaceViewModel, "world1", "w1", "debugAuthor", "de", "w1description", "w1goals");
         var world1 = AuthoringToolWorkspaceViewModel.LearningWorlds.First();
-        AuthoringToolWorkspaceViewModel.SelectedLearningWorld = world1;
+        Mediator.SelectedLearningWorld = world1;
 
         NavManager.NavigateTo("/app");
 
@@ -47,7 +51,7 @@
         PresentationLogic.CreateLearningElementInSlot(space2, 1, "ele5", learningContentViewModels.First(), "e5goals", "e5goals", LearningElementDifficultyEnum.Easy, 0, 1);
         PresentationLogic.CreateLearningElementInSlot(space3, 1, "ele6", learningContentViewModels.First(), "e5goals", "e6goals", LearningElementDifficultyEnum.Easy, 0, 1);
 
-        world1.SelectedLearningObjectInPathWay = space1;
+        Mediator.SelectedLearningObjectInPathWay = space1;
     }
 
 }

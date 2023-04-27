@@ -55,13 +55,12 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
     public Topic? AssignedTopic { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
-    public ILearningElement? SelectedLearningElement { get; set; }
     public IEnumerable<ILearningElement> ContainedLearningElements => LearningSpaceLayout.ContainedLearningElements;
 
     public IMemento GetMemento()
     {
         return new LearningSpaceMemento(Name, Description, Goals, RequiredPoints, LearningSpaceLayout, InBoundObjects, 
-            OutBoundObjects, assignedTopic: AssignedTopic, positionX: PositionX, positionY: PositionY, selectedLearningElement: SelectedLearningElement);
+            OutBoundObjects, assignedTopic: AssignedTopic, positionX: PositionX, positionY: PositionY);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -80,15 +79,13 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
         AssignedTopic = learningSpaceMemento.AssignedTopic;
         PositionX = learningSpaceMemento.PositionX;
         PositionY = learningSpaceMemento.PositionY;
-        SelectedLearningElement = learningSpaceMemento.SelectedLearningElement;
     }
 
     private record LearningSpaceMemento : IMemento
     {
         internal LearningSpaceMemento(string name, string description,
             string goals, int requiredPoints,  ILearningSpaceLayout learningSpaceLayout, List<IObjectInPathWay> inBoundSpaces,
-            List<IObjectInPathWay> outBoundSpaces, Topic? assignedTopic, double positionX = 0, double positionY = 0,
-            ILearningElement? selectedLearningElement = null)
+            List<IObjectInPathWay> outBoundSpaces, Topic? assignedTopic, double positionX = 0, double positionY = 0)
         {
             Name = name;
             Description = description;
@@ -100,7 +97,6 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
             AssignedTopic = assignedTopic;
             PositionX = positionX;
             PositionY = positionY;
-            SelectedLearningElement = selectedLearningElement;
         }
         
         internal string Name { get; }
@@ -110,7 +106,6 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
         internal ILearningSpaceLayout LearningSpaceLayout { get; }
         internal double PositionX { get; }
         internal double PositionY { get; }
-        internal ILearningElement? SelectedLearningElement { get; }
         public List<IObjectInPathWay> InBoundObjects { get; set; }
         public List<IObjectInPathWay> OutBoundObjects { get; set; }
         public Topic? AssignedTopic { get; set; }

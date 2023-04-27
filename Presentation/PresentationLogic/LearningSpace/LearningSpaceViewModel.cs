@@ -105,31 +105,14 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     public double OutputConnectionX => PositionX + 25;
     public double OutputConnectionY => PositionY + 48;
 
-    private ILearningElementViewModel? _selectedLearningElement;
-
     private string _name;
     private string _description;
     private string _goals;
     private int _requiredPoints;
-    public event EventHandler<EventArgs>? SelectedElementChanged;
-
-    public ILearningElementViewModel? SelectedLearningElement
-    {
-        get { return _selectedLearningElement; }
-        set
-        {
-            _selectedLearningElement = value;
-            OnSelectedElementChanged();
-        }
-    }
 
     public IEnumerable<ILearningElementViewModel> ContainedLearningElements =>
         LearningSpaceLayout.ContainedLearningElements;
 
-    protected virtual void OnSelectedElementChanged()
-    {
-        SelectedElementChanged?.Invoke(this, EventArgs.Empty);
-    }
 
     public event PropertyChangedEventHandler? PropertyChanged;
 

@@ -40,7 +40,7 @@ public class LoadLearningWorld : IUndoCommand
         LearningWorld ??= _businessLogic.LoadLearningWorld(_filepath);
         
         _workspace.LearningWorlds.Add(LearningWorld);
-        _workspace.SelectedLearningWorld = LearningWorld;
+
         LearningWorld.SavePath = _filepath;
         
         _mappingAction.Invoke(_workspace);

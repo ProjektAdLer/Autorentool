@@ -399,16 +399,11 @@ public class ViewModelEntityMappingProfileUt
                     }
                 }
             })
-        {
-            SelectedLearningElement = elementVm1
-        };
+            ;
         elementVm1.Parent = space;
 
         var worldVm = new LearningWorldViewModel("world", Shortname, Authors, Language, Description, Goals, SavePath, true,
-            new List<ILearningSpaceViewModel> { space })
-        {
-            SelectedLearningObjectInPathWay = space
-        };
+            new List<ILearningSpaceViewModel> { space });
 
 
         var systemUnderTest = CreateTestableMapper();
@@ -430,8 +425,6 @@ public class ViewModelEntityMappingProfileUt
             Assert.That(worldVm.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().Name,
                 Is.EqualTo(worldEntity.LearningSpaces.First().LearningSpaceLayout.ContainedLearningElements.First().Name));
             Assert.That(worldVm.LearningSpaces.First().ContainedLearningElements.First(), Is.EqualTo(elementVm1));
-            Assert.That(worldVm.SelectedLearningObjectInPathWay, Is.EqualTo(space));
-            Assert.That(worldVm.LearningSpaces.First().SelectedLearningElement, Is.EqualTo(elementVm1));
         });
     }
 
@@ -441,7 +434,7 @@ public class ViewModelEntityMappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var world1 = new LearningWorld("world1", Shortname, Authors, Language, Description, Goals);
         var world2 = new LearningWorld("world2", Shortname, Authors, Language, Description, Goals);
-        var source = new AuthoringToolWorkspace(world2, new List<LearningWorld> { world1, world2 });
+        var source = new AuthoringToolWorkspace(new List<LearningWorld> { world1, world2 });
         var destination = new AuthoringToolWorkspaceViewModel();
 
         systemUnderTest.Map(source, destination);
@@ -452,14 +445,7 @@ public class ViewModelEntityMappingProfileUt
         {
             Assert.That(destination.LearningWorlds.First().Name, Is.EqualTo("world1"));
             Assert.That(destination.LearningWorlds.Last().Name, Is.EqualTo("world2"));
-            Assert.That(destination.SelectedLearningWorld, Is.Not.Null);
         });
-        Assert.Multiple(() =>
-        {
-            Assert.That(destination.SelectedLearningWorld!.Name, Is.EqualTo("world2"));
-            Assert.That(destination.SelectedLearningWorld, Is.EqualTo(destination.LearningWorlds.Last()));
-        });
-        destination.SelectedLearningWorld = destination.LearningWorlds.First();
 
         systemUnderTest.Map(destination, source);
 
@@ -471,12 +457,6 @@ public class ViewModelEntityMappingProfileUt
             Assert.That(source.LearningWorlds.Last(), Is.EqualTo(world2));
             Assert.That(source.LearningWorlds.First().Name, Is.EqualTo("world1"));
             Assert.That(source.LearningWorlds.Last().Name, Is.EqualTo("world2"));
-            Assert.That(source.SelectedLearningWorld, Is.Not.Null);
-        });
-        Assert.Multiple(() =>
-        {
-            Assert.That(source.SelectedLearningWorld!.Name, Is.EqualTo("world1"));
-            Assert.That(source.SelectedLearningWorld, Is.EqualTo(source.LearningWorlds.First()));
         });
 
         // Test the private constructor from AuthoringToolWorkspace
@@ -488,12 +468,6 @@ public class ViewModelEntityMappingProfileUt
         {
             Assert.That(source2.LearningWorlds.First().Name, Is.EqualTo("world1"));
             Assert.That(source2.LearningWorlds.Last().Name, Is.EqualTo("world2"));
-            Assert.That(source2.SelectedLearningWorld, Is.Not.Null);
-        });
-        Assert.Multiple(() =>
-        {
-            Assert.That(source2.SelectedLearningWorld!.Name, Is.EqualTo("world1"));
-            Assert.That(source2.SelectedLearningWorld, Is.EqualTo(source2.LearningWorlds.First()));
         });
     }
 

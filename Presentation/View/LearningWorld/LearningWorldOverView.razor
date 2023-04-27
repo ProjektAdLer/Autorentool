@@ -1,6 +1,7 @@
 @page "/LearningWorldOverView"
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.Components
+@using Presentation.PresentationLogic
 @using Presentation.PresentationLogic.LearningContent
 @using Presentation.PresentationLogic.LearningElement
 
@@ -14,10 +15,10 @@
             {
                 @foreach (var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
                 {
-                    <MudNavGroup Title="@learningSpace.Name" Icon="@SpaceIcon" Expanded="true">
+                    <MudNavGroup Title="@learningSpace.Name" Icon="@SpaceIcon">
                         @foreach (var element in learningSpace.ContainedLearningElements)
                         {
-                            <MudNavLink Icon="@GetElementIcon(element)">@element.Name</MudNavLink>
+                            <MudNavLink Icon="@GetElementIcon(element)" OnClick="() => OnElementClicked(element)">@element.Name</MudNavLink>
                         }
                     </MudNavGroup>
                 }
@@ -47,5 +48,10 @@
             IFileContentViewModel { Type: "pdf" } => CustomIcons.TextElementIcon,
             _ => throw new ArgumentOutOfRangeException(nameof(LearningElement))
             };
+    }
+    
+    private void OnElementClicked(ILearningElementViewModel element)
+    {
+        LearningWorldP?.SetSelectedLearningElement(element);
     }
 }

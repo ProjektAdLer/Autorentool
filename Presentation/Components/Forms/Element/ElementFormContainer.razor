@@ -2,16 +2,17 @@
 @using System.ComponentModel
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningWorld
+@using Presentation.View
 @using Presentation.View.LearningElement
 
 <MudCard Class="overflow-auto">
-    @if (WorldPresenter.LearningWorldVm?.SelectedLearningElement == null || _editOverwritten)
+    @if (Mediator.SelectedLearningElement == null || _editOverwritten)
     {
         <CreateElementForm OnSubmitted="() => InvokeAsync(TriggerMasterLayoutStateHasChanged)"/>
     }
     else
     {
-        <EditElementForm ElementToEdit="WorldPresenter.LearningWorldVm.SelectedLearningElement" OnNewButtonClicked="OnForceNew">
+        <EditElementForm ElementToEdit="Mediator.SelectedLearningElement" OnNewButtonClicked="OnForceNew">
 
         </EditElementForm>
     }
@@ -37,6 +38,9 @@
 #pragma warning disable CS8618
     [Inject]
     public ILearningWorldPresenter WorldPresenter { get; set; }
+    
+    [Inject]
+    public IMediator Mediator { get; set; }
 
     [CascadingParameter(Name = "TriggerMasterLayoutStateHasChanged")]
     private Action TriggerMasterLayoutStateHasChanged { get; set; }
@@ -56,10 +60,10 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        if (WorldPresenter.LearningWorldVm != null) WorldPresenter.LearningWorldVm.PropertyChanged += WorldVmOnPropertyChanged;
+        if (Mediator.SelectedLearningWorld != null) Mediator.PropertyChanged += MediatorOnPropertyChanged;
     }
 
-    private async void WorldVmOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private async void MediatorOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         _editOverwritten = false;
         await InvokeAsync(StateHasChanged);
@@ -68,5 +72,6 @@
     private void OnForceNew()
     {
         _editOverwritten = true;
+        Mediator.SelectedLearningElement = null;
     }
 }

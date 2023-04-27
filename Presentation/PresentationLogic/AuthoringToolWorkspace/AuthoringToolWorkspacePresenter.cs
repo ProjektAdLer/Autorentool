@@ -1,6 +1,7 @@
 ﻿using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
+using Presentation.View;
 
 namespace Presentation.PresentationLogic.AuthoringToolWorkspace;
 
@@ -12,7 +13,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
 {
     public AuthoringToolWorkspacePresenter(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
         IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter,
-        ILogger<AuthoringToolWorkspacePresenter> logger, IShutdownManager shutdownManager)
+        ILogger<AuthoringToolWorkspacePresenter> logger, IMediator mediator, IShutdownManager shutdownManager)
     {
         _learningSpacePresenter = learningSpacePresenter;
         AuthoringToolWorkspaceVm = authoringToolWorkspaceVm;
@@ -21,6 +22,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         _shutdownManager = shutdownManager;
         DeletedUnsavedWorld = null;
         InformationMessageToShow = null;
+        _mediator = mediator;
         if (presentationLogic.RunningElectron)
             //register callback so we can check for unsaved data on quit
             //TODO: register to our own quit button
@@ -32,9 +34,10 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     private readonly IPresentationLogic _presentationLogic;
     private readonly ILearningSpacePresenter _learningSpacePresenter;
     private readonly ILogger<AuthoringToolWorkspacePresenter> _logger;
+    private readonly IMediator _mediator;
     private readonly IShutdownManager _shutdownManager;
 
-    public bool LearningWorldSelected => AuthoringToolWorkspaceVm.SelectedLearningWorld != null;
+    public bool LearningWorldSelected => _mediator.SelectedLearningWorld != null;
 
     public Queue<LearningWorldViewModel>? UnsavedWorldsQueue { get; set; }
     public LearningWorldViewModel? DeletedUnsavedWorld { get; set; }
@@ -67,7 +70,8 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         string goals)
     {
         _presentationLogic.CreateLearningWorld(AuthoringToolWorkspaceVm, name, shortname, authors, language, description, goals);
-        OnLearningWorldCreate?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
+        _mediator.SelectedLearningWorld = AuthoringToolWorkspaceVm.LearningWorlds.Last();
+        OnLearningWorldCreate?.Invoke(this, _mediator.SelectedLearningWorld);
     }
 
     /// <summary>
@@ -79,8 +83,8 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     {
         var world = AuthoringToolWorkspaceVm.LearningWorlds.FirstOrDefault(world => world.Name == worldName);
         if (world == null) throw new ArgumentException("no world with that name in viewmodel");
-        AuthoringToolWorkspaceVm.SelectedLearningWorld = world;
-        OnLearningWorldSelect?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
+        _mediator.SelectedLearningWorld = world;
+        OnLearningWorldSelect?.Invoke(this, _mediator.SelectedLearningWorld);
     }
 
     /// <summary>
@@ -89,8 +93,8 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     /// <param name="learningWorld">The learning world that should be set as selected</param>
     internal void SetSelectedLearningWorld(LearningWorldViewModel? learningWorld)
     {
-        AuthoringToolWorkspaceVm.SelectedLearningWorld = learningWorld;
-        OnLearningWorldSelect?.Invoke(this, AuthoringToolWorkspaceVm.SelectedLearningWorld);
+        _mediator.SelectedLearningWorld = learningWorld;
+        OnLearningWorldSelect?.Invoke(this, _mediator.SelectedLearningWorld);
     }
 
     /// <summary>
@@ -99,7 +103,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     /// </summary>
     public void DeleteSelectedLearningWorld()
     {
-        var learningWorld = AuthoringToolWorkspaceVm.SelectedLearningWorld;
+        var learningWorld = _mediator.SelectedLearningWorld;
         if (learningWorld == null) return;
         _presentationLogic.DeleteLearningWorld(AuthoringToolWorkspaceVm, learningWorld);
         if (learningWorld.UnsavedChanges) DeletedUnsavedWorld = learningWorld;
@@ -123,9 +127,9 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
 
     public async Task SaveSelectedLearningWorldAsync()
     {
-        if (AuthoringToolWorkspaceVm.SelectedLearningWorld == null)
+        if (_mediator.SelectedLearningWorld == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        await SaveLearningWorldAsync(AuthoringToolWorkspaceVm.SelectedLearningWorld);
+        await SaveLearningWorldAsync(_mediator.SelectedLearningWorld);
     }
 
 

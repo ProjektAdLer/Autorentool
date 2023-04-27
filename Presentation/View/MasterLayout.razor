@@ -9,6 +9,7 @@
 @using Presentation.Components.Forms.Element
 @using Presentation.Components.ContentFiles
 @using Presentation.Components.Dialogues
+@using System.ComponentModel
 
 <div class="flex flex-col h-screen max-h-screen overflow-hidden w-screen bg-buttonbgblue font-sans">
     <HeaderBar/>
@@ -21,7 +22,9 @@
             <CascadingValue Value="@TriggerStateHasChanged" Name="TriggerMasterLayoutStateHasChanged">
                 <SideContainer Side="Side.Left">
                     <Sidebar SidebarSide="Side.Left">
-                        <SidebarItem>
+                        <SidebarItem 
+                            IsActive="Mediator.WorldDialogOpen" 
+                            RequestIsActiveToggle="Mediator.RequestToggleWorldDialog">
                             <SidebarContent>
                                 <div class="w-12 p-1" title="LearningWorldMetadata">
                                     <img class="w-full" src="CustomIcons/worldmenu-icon_metadata-nobg.png" alt="learningworld-metadata">
@@ -31,7 +34,9 @@
                                 <WorldFormContainer/>
                             </MainContent>
                         </SidebarItem>
-                        <SidebarItem>
+                        <SidebarItem
+                            IsActive="Mediator.SpaceDialogOpen"
+                            RequestIsActiveToggle="Mediator.RequestToggleSpaceDialog">
                             <SidebarContent>
                                 <div class="w-12 p-1" title="LearningSpaceMetadata">
                                     <img class="w-full" src="CustomIcons/spacemenu-icon_metadata-nobg.png" alt="learningspace-metadata">
@@ -41,7 +46,9 @@
                                 <SpaceFormContainer/>
                             </MainContent>
                         </SidebarItem>
-                        <SidebarItem>
+                        <SidebarItem
+                            IsActive="Mediator.ElementDialogOpen"
+                            RequestIsActiveToggle="Mediator.RequestToggleElementDialog">
                             <SidebarContent>
                                 <div class="w-12 p-1" title="LearningElementMetadata">
                                     <img class="w-full" src="CustomIcons/learningelements-icon_metadata.png" alt="learningelement-metadata">
@@ -51,7 +58,9 @@
                                 <ElementFormContainer/>
                             </MainContent>
                         </SidebarItem>
-                        <SidebarItem>
+                        <SidebarItem
+                            IsActive="Mediator.ContentDialogOpen"
+                            RequestIsActiveToggle="Mediator.RequestToggleContentDialog">
                             <SidebarContent>
                                 <div class="w-12 p-1" title="AllFiles">
                                     <img class="w-full" src="CustomIcons/all-data-icon-nobg.png" alt="all-files">
@@ -68,7 +77,9 @@
                 </CenterContainer>
                 <SideContainer Side="Side.Right">
                     <Sidebar SidebarSide="Side.Right">
-                        <SidebarItem>
+                        <SidebarItem
+                            IsActive="Mediator.WorldViewOpen"
+                            RequestIsActiveToggle="Mediator.RequestToggleWorldView">
                             <SidebarContent>
                                 <div class="w-12 p-1" title="LearningPathWays">
                                     <img class="w-full" src="CustomIcons/path-icon-nobg.png" alt="learning pathways">
@@ -78,7 +89,9 @@
                                 <LearningWorldView/>
                             </MainContent>
                         </SidebarItem>
-                        <SidebarItem>
+                        <SidebarItem
+                            IsActive="Mediator.WorldOverviewOpen"
+                            RequestIsActiveToggle="Mediator.RequestToggleWorldOverview">
                             <SidebarContent>
                                 <div class="w-12 p-1" title="LearningWorldOverView">
                                     <img class="w-full" src="CustomIcons/overview-world-icon-nobg.png" alt="learning world overview">
@@ -100,9 +113,24 @@
 </div>
 
 @code {
+    
+    [CascadingParameter]
+    public IMediator Mediator { get; set; }
 
     [Inject]
     public ILearningElementDropZoneHelper ElementDropZoneHelper { get; set; }
+    
+    
+    protected override void OnInitialized()
+    {
+        Mediator.PropertyChanged += MediatorOnPropertyChanged;
+    }
+    
+    private void MediatorOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        InvokeAsync(StateHasChanged);
+    }
+
 
     private void TriggerStateHasChanged()
     {

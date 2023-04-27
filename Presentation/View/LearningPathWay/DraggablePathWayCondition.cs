@@ -43,15 +43,12 @@ public class DraggablePathWayCondition : DraggableObjectInPathWay
     protected override string DeleteObjectButtonShape => @"<text font-size=""12"" transform=""translate(65,12)"" fill=""gray"" style=""user-select:none; cursor: pointer"">X</text>";
 
     [Parameter, EditorRequired]
-    public EventCallback<PathWayConditionViewModel> OnEditPathWayCondition { get; set; }
-    [Parameter, EditorRequired]
     public EventCallback<PathWayConditionViewModel> OnDeletePathWayCondition { get; set; }
 
     protected override List<RightClickMenuEntry> GetRightClickMenuEntries()
     {
         return new List<RightClickMenuEntry>()
         {
-            new("Edit", () => OnEditPathWayCondition.InvokeAsync((PathWayConditionViewModel)ObjectInPathWay)),
             new("Delete", () => OnDeletePathWayCondition.InvokeAsync((PathWayConditionViewModel)ObjectInPathWay)),
         };
     }

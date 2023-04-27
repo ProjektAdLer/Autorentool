@@ -28,9 +28,9 @@
         </div>
     </section>
     <section class="p-2 flex justify-between">
-        <MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Edit" Disabled="@(LearningWorldP.LearningWorldVm?.SelectedLearningObjectInPathWay == null || LearningWorldP.LearningWorldVm.SelectedLearningObjectInPathWay is ILearningPathWayViewModel)" @onclick="EditLearningObject"></MudFab>
-        <MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Delete" Disabled="@(LearningWorldP.LearningWorldVm?.SelectedLearningObjectInPathWay == null)" @onclick="DeleteSelectedLearningObject"></MudFab>
-        <MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Save" Disabled="@(LearningWorldP.LearningWorldVm?.SelectedLearningObjectInPathWay == null || LearningWorldP.LearningWorldVm.SelectedLearningObjectInPathWay is not ILearningSpaceViewModel)" @onclick="SaveSelectedLearningSpaceAsync"></MudFab>
+        <MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Edit" Disabled="@(Mediator.SelectedLearningObjectInPathWay == null || Mediator.SelectedLearningObjectInPathWay is ILearningPathWayViewModel || Mediator.SelectedLearningObjectInPathWay is PathWayConditionViewModel)" @onclick="EditSelectedLearningSpace"></MudFab>
+        <MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Delete" Disabled="@(Mediator.SelectedLearningObjectInPathWay == null)" @onclick="DeleteSelectedLearningObject"></MudFab>
+        <MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Save" Disabled="@(Mediator.SelectedLearningObjectInPathWay == null || Mediator.SelectedLearningObjectInPathWay is not ILearningSpaceViewModel)" @onclick="SaveSelectedLearningSpaceAsync"></MudFab>
     </section>
     <!-- <svg style="width: 400px; height: 600px; border:3px black; background-color: white" -->
     <svg class="bg-white w-full grow rounded-lg"
@@ -50,11 +50,10 @@
                                        OnClickedDeleteObject="@LearningWorldP.DeleteLearningObject"
                                        OnRightClickedDraggable="@LearningWorldP.RightClickOnObjectInPathWay"
                                        ShowingRightClickMenu="pathWayCondition == LearningWorldP.RightClickedLearningObject"
-                                       OnEditPathWayCondition="@LearningWorldP.EditObjectInPathWay"
                                        OnDeletePathWayCondition="@LearningWorldP.DeletePathWayCondition"
                                        OnCloseRightClickMenu="@LearningWorldP.HideRightClickMenu"
                                        PositioningService="@LearningWorldP">
-                <ConditionToggleSwitch ObjectInPathWay="pathWayCondition"
+                <ConditionToggleSwitch LearningSpace="pathWayCondition"
                                        OnSwitchPathWayCondition="@LearningWorldP.SwitchPathWayCondition"/>
             </DraggablePathWayCondition>
         }
@@ -62,7 +61,7 @@
         @foreach (var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
         {
             <DraggableLearningSpace ObjectInPathWay="learningSpace"
-                                    OnClickedDraggable="@LearningWorldP.ClickOnObjectInWorld"
+                                    OnClickedDraggable="@LearningWorldP.SetSelectedLearningSpace"
                                     OnDraggedDraggable="@LearningWorldP.DragObjectInPathWay"
                                     OnClickedDeletePath="@LearningWorldP.DeleteLearningPathWay"
                                     OnClickedDeleteObject="@LearningWorldP.DeleteLearningObject"
@@ -70,7 +69,7 @@
                                     OnRightClickedDraggable="@LearningWorldP.RightClickOnObjectInPathWay"
                                     ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject"
                                     OnOpenLearningSpace="@LearningWorldP.ShowSelectedLearningSpaceView"
-                                    OnEditLearningSpace="@LearningWorldP.EditObjectInPathWay"
+                                    OnEditLearningSpace="@LearningWorldP.SetSelectedLearningSpace"
                                     OnDeleteLearningSpace="@LearningWorldP.DeleteLearningSpace"
                                     OnCloseRightClickMenu="@LearningWorldP.HideRightClickMenu"
                                     PositioningService="@LearningWorldP"/>
@@ -101,6 +100,9 @@
     
     [Inject]
     public ILearningWorldPresenter LearningWorldP { get; set; }
+    
+    [Inject]
+    public IMediator Mediator { get; set; }
 #pragma warning restore CS8618
     
     private ExceptionWrapper? ErrorState { get; set; }
@@ -113,9 +115,9 @@
         LearningWorldP.OnCommandUndoRedoOrExecute += async (_, _) => await InvokeAsync(StateHasChanged);
     }
 
-    internal void AddNewLearningSpace()
+    private void AddNewLearningSpace()
     {
-        throw new NotImplementedException("Open correct view component in sidebar (needs view model controlling state)");
+        LearningWorldP.AddNewLearningSpace();
     }
     
     private void AddNewPathWayCondition()
@@ -218,9 +220,9 @@
         }
     }
 
-    private void EditLearningObject()
+    private void EditSelectedLearningSpace()
     {
-        throw new NotImplementedException();
+        LearningWorldP.EditSelectedLearningSpace();
     }
 
 }

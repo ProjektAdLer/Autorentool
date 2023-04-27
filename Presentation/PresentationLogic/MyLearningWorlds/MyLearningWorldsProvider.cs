@@ -10,12 +10,13 @@ public class MyLearningWorldsProvider : IMyLearningWorldsProvider
 {
     public MyLearningWorldsProvider(IPresentationLogic presentationLogic,
         IAuthoringToolWorkspaceViewModel workspaceViewModel, IFileSystem fileSystem,
-        ILogger<MyLearningWorldsProvider> logger)
+        ILogger<MyLearningWorldsProvider> logger, IMediator mediator)
     {
         PresentationLogic = presentationLogic;
         WorkspaceVm = workspaceViewModel;
         FileSystem = fileSystem;
         Logger = logger;
+        Mediator = mediator;
     }
 
     internal ILogger<MyLearningWorldsProvider> Logger { get; }
@@ -23,6 +24,8 @@ public class MyLearningWorldsProvider : IMyLearningWorldsProvider
 
     internal IAuthoringToolWorkspaceViewModel WorkspaceVm { get; }
     internal IFileSystem FileSystem { get; }
+    
+    internal IMediator Mediator { get; }
 
 
     private ExceptionWrapper? ErrorState { get; set; }
@@ -80,7 +83,7 @@ public class MyLearningWorldsProvider : IMyLearningWorldsProvider
     private void OpenLoadedLearningWorld(SavedLearningWorldPath savedLearningWorldPath)
     {
         Logger.LogDebug("Learning world with id {} is already loaded", savedLearningWorldPath.Id);
-        WorkspaceVm.SelectedLearningWorld = WorkspaceVm.LearningWorlds.First(x => x.Id == savedLearningWorldPath.Id);
+        Mediator.SelectedLearningWorld = WorkspaceVm.LearningWorlds.First(x => x.Id == savedLearningWorldPath.Id);
     }
 
     public void DeletePathFromSavedLearningWorlds(SavedLearningWorldPath savedLearningWorldPath)

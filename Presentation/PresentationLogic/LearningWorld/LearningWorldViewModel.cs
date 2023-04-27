@@ -86,8 +86,6 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     private string _goals;
     private string _savePath;
     private bool _unsavedChanges;
-    private ISelectableObjectInWorldViewModel? _selectedLearningObjectInPathWay;
-    private ILearningElementViewModel? _selectedLearningElement;
     private IObjectInPathWayViewModel? _onHoveredLearningObject;
     private bool _showingLearningSpaceView;
 
@@ -186,27 +184,6 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         set => SetField(ref _unsavedChanges, value);
     }
 
-    public ISelectableObjectInWorldViewModel? SelectedLearningObjectInPathWay
-    {
-        get => _selectedLearningObjectInPathWay;
-        set => SetField(ref _selectedLearningObjectInPathWay, value);
-    }
-    
-    public ILearningElementViewModel? SelectedLearningElement
-    {
-        get => _selectedLearningElement;
-        set
-        {
-            _selectedLearningElement = value;
-            if (_selectedLearningObjectInPathWay != null &&
-                _selectedLearningObjectInPathWay is ILearningSpaceViewModel space)
-            {
-                if(value != null && UnplacedLearningElements.Contains(value))
-                    space.SelectedLearningElement = null;
-                OnPropertyChanged();
-            }
-        }
-    }
     
     public IObjectInPathWayViewModel? OnHoveredObjectInPathWay
     {

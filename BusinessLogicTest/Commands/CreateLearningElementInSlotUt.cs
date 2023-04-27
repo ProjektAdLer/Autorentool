@@ -62,7 +62,6 @@ public class CreateLearningElementInSlotUt
         Assert.Multiple(() =>
         {
             Assert.That(testParameter.SpaceParent.ContainedLearningElements.First(), Is.EqualTo(element));
-            Assert.That(testParameter.SpaceParent.SelectedLearningElement, Is.EqualTo(element));
         });
     }
 
@@ -83,31 +82,25 @@ public class CreateLearningElementInSlotUt
                 0, element2
             }
         };
-        spaceParent.SelectedLearningElement = element2;
-        
 
         Assert.That(spaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
         Assert.That(spaceParent.ContainedLearningElements.First(), Is.EqualTo(element2));
-        Assert.That(spaceParent.SelectedLearningElement, Is.EqualTo(element2));
         Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
 
         Assert.That(spaceParent.ContainedLearningElements.Count(), Is.EqualTo(2));
-        Assert.That(spaceParent.SelectedLearningElement, Is.EqualTo(spaceParent.ContainedLearningElements.Last()));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Undo();
         
         Assert.That(spaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
         Assert.That(spaceParent.ContainedLearningElements.First(), Is.EqualTo(element2));
-        Assert.That(spaceParent.SelectedLearningElement, Is.EqualTo(element2));
         Assert.IsTrue(actionWasInvoked); actionWasInvoked = false;
         
         command.Redo();
         
         Assert.That(spaceParent.ContainedLearningElements.Count(), Is.EqualTo(2));
-        Assert.That(spaceParent.SelectedLearningElement, Is.EqualTo(spaceParent.ContainedLearningElements.Last()));
         Assert.IsTrue(actionWasInvoked);
     }
 
