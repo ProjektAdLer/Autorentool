@@ -2,18 +2,22 @@
 @using Presentation.Components
 @using Presentation.Components.Culture
 @using Microsoft.Extensions.Localization
-<header class="mb-1 flex justify-between w-full bg-buttonbgblue items-center">
-    <div class="ml-1 flex items-center gap-2">
-        <img class="w-10 drop-shadow" src="/CustomIcons/autorentool-logo.png" alt="authoringtool-logo"/>
-        <h1 class="font-bold text-lg">@Localizer["AuthoringTool.Text"] @Localizer["AuthoringTool.Version"]</h1>
+<header class="mb-1 grid grid-cols-3 grid-rows-1 w-full bg-buttonbgblue items-center">
+    <div class="ml-1 flex justify-start items-center gap-2">
+        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title="My Learning Worlds" @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
+        <MudDivider Vertical="true" FlexItem="true"/>
+        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" Title="Save Learning World"></MudIconButton>
+        <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Upload" Title="Upload Learning World"></MudIconButton>
         <div>
             <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Undo" Disabled="!CanUndo" Title="Undo" OnClick="OnClickUndo"></MudIconButton>
             <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Redo" Disabled="!CanRedo" Title="Redo" OnClick="OnClickRedo"></MudIconButton>
         </div>
-        <MudButton Class="btn-standard" @onclick="OnClickMyLearningWorldsOverview">My Learning Worlds</MudButton>
     </div>
-
-    <div class="flex">
+    <div class="flex justify-center items-center gap-2">
+            <img class="w-10 drop-shadow" src="/CustomIcons/autorentool-logo.png" alt="authoringtool-logo"/>
+            <h1 class="font-bold text-lg">@Localizer["AuthoringTool.Text"] @Localizer["AuthoringTool.Version"]</h1>
+    </div>
+    <div class="flex justify-end">
         <CultureSelector/>
         @if (PresentationLogic?.RunningElectron == true)
         {
