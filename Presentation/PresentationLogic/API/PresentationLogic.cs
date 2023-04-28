@@ -247,13 +247,18 @@ public class PresentationLogic : IPresentationLogic
     }
 
     /// <inheritdoc cref="IPresentationLogic.ChangeLearningSpaceLayout"/>
-    public void ChangeLearningSpaceLayout(ILearningSpaceViewModel learningSpaceVm, FloorPlanEnum floorPlanName)
+    public void ChangeLearningSpaceLayout(ILearningSpaceViewModel learningSpaceVm,
+        ILearningWorldViewModel learningWorldVm, FloorPlanEnum floorPlanName)
     {
-        var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
+        var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
+        var spaceEntity = worldEntity.LearningSpaces.First(s => s.Id == learningSpaceVm.Id);
 
         learningSpaceVm.AssignedTopic = null;
-        var command = new ChangeLearningSpaceLayout(spaceEntity, floorPlanName,
-            space => CMapper.Map(space, learningSpaceVm));
+        var command = new ChangeLearningSpaceLayout(spaceEntity, worldEntity, floorPlanName,
+            world =>
+            {
+                CMapper.Map(world, learningWorldVm);
+            });
         BusinessLogic.ExecuteCommand(command);
     }
     

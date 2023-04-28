@@ -57,14 +57,9 @@ public class LearningSpaceLayoutViewModel : ILearningSpaceLayoutViewModel
 
     public void ChangeFloorPlan(FloorPlanEnum floorPlanName)
     {
-        if (Count <= FloorPlanViewModelProvider.GetFloorPlan(floorPlanName).Capacity)
-        {
-            _learningElements = AdaptLearningElementsToNewFloorPlan(_learningElements, _floorPlanName, floorPlanName);
-            FloorPlanViewModel = FloorPlanViewModelProvider.GetFloorPlan(floorPlanName);
-            _floorPlanName = floorPlanName;
-        }
-        else
-            throw new ArgumentException("The new floor plan is too small for the current learning elements.");
+        _learningElements = AdaptLearningElementsToNewFloorPlan(_learningElements, _floorPlanName, floorPlanName);
+        FloorPlanViewModel = FloorPlanViewModelProvider.GetFloorPlan(floorPlanName);
+        _floorPlanName = floorPlanName;
     }
 
     public ILearningElementViewModel GetElement(int index)

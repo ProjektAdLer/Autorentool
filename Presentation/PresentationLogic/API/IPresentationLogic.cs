@@ -148,8 +148,10 @@ public interface IPresentationLogic
     /// Changes the layout of the given learning space to the given layout.
     /// </summary>
     /// <param name="learningSpaceVm">Learning space to edit.</param>
+    /// <param name="learningWorldVm"></param>
     /// <param name="floorPlanName">Enum of the FloorPlan to change the layout to.</param>
-    void ChangeLearningSpaceLayout(ILearningSpaceViewModel learningSpaceVm, FloorPlanEnum floorPlanName);
+    void ChangeLearningSpaceLayout(ILearningSpaceViewModel learningSpaceVm, ILearningWorldViewModel learningWorldVm,
+        FloorPlanEnum floorPlanName);
     
     /// <summary>
     /// Deletes the given learning space in the given learning world.

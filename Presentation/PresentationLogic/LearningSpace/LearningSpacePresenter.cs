@@ -62,7 +62,9 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("LearningSpaceVm is null");
-        _presentationLogic.ChangeLearningSpaceLayout(LearningSpaceVm, floorPlanName);
+        if (_mediator.SelectedLearningWorld == null)
+            throw new ApplicationException("LearningWorld is null");
+        _presentationLogic.ChangeLearningSpaceLayout(LearningSpaceVm, _mediator.SelectedLearningWorld, floorPlanName);
     }
 
     public void OpenReplaceLearningElementDialog(ILearningWorldViewModel learningWorldVm,
