@@ -1,8 +1,9 @@
 @page "/MyLearningWorldsOverview"
 @using Presentation.PresentationLogic.MyLearningWorlds
 @using Shared
-@using Presentation.Components.Forms.World
+@using Presentation.PresentationLogic.API
 @using Presentation.Components
+@using Presentation.Components.Forms.World
 <main class="overflow-hidden relative min-h-screen max-h-screen h-screen w-screen bg-gradient-to-br m-0 from-adlerbggradientfrom to-adlerbggradientto">
     <HeaderBar/>
     <article class="p-2 flex flex-col items-center gap-6 overflow-hidden">
@@ -45,9 +46,25 @@
 
     [Inject]
     internal NavigationManager NavManager { get; private init; }
+
+    [Inject]
+    internal IPresentationLogic PresentationLogic { get; private init; }
 #pragma warning restore CS8618
 
     private bool _createLearningWorldDialogOpen = false;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        PresentationLogic.OnCommandUndoRedoOrExecute += async (_, args) =>
+        {
+            if (args.CommandName is "CreateLearningWorld" or "DeleteLearningWorld" 
+                or "EditLearningWorld" or "LoadLearningWorld")
+            {
+                await InvokeAsync(StateHasChanged);
+            }
+        };
+    }
 
     private void OnClickMyLearningWorldsOverview()
     {
