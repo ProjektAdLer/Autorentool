@@ -53,10 +53,10 @@ jobs:
 
       #this has to be the last test since it merges into the already merged reports and after that creates the file format we need to post to coveralls
       - name: Run Shared automated unit and integration test
-        run: dotnet test SharedTest/SharedTest.csproj --configuration Release /p:CollectCoverage=true /p:MergeWith=../TestResults/coverage.json /p:CoverletOutput=../TestResults/coverlet.info /p:CoverletOutputFormat=lcov --% /p:Include=${{ env.includeMask }} /p:Exclude=${{ env.excludeMask }}
+        run: dotnet test SharedTest/SharedTest.csproj --configuration Release /p:CollectCoverage=true /p:MergeWith=../TestResults/coverage.json /p:CoverletOutput=D:/temp/TestResults/coverlet.info /p:CoverletOutputFormat=lcov --% /p:Include=${{ env.includeMask }} /p:Exclude=${{ env.excludeMask }}
       
       - name: Publish coverage report to coveralls.io
         uses: coverallsapp/github-action@v2
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: ${{ github.workspace }}\TestResults\coverlet.info
+          path-to-lcov: D:/temp/TestResults/coverlet.info
