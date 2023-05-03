@@ -455,6 +455,7 @@ public class EntityPersistEntityMappingProfileUt
         restoredWorld.Should().BeEquivalentTo(world, opt => opt.IgnoringCyclicReferences()
             .Excluding(obj => obj.Id)
             .Excluding(obj => obj.UnsavedChanges)
+            .Excluding(obj => obj.InternalUnsavedChanges)
         );
         Assert.That(restoredWorld.UnsavedChanges, Is.False);
     }
