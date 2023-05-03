@@ -100,9 +100,9 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     
     public bool UnsavedChanges
     {
-        get => _unsavedChanges ||
+        get => InternalUnsavedChanges ||
                ContainedLearningElements.Any(element => element.UnsavedChanges);
-        set => _unsavedChanges = value;
+        set => InternalUnsavedChanges = value;
     }
 
     public double PositionX { get; set; }
@@ -116,10 +116,12 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     private string _description;
     private string _goals;
     private int _requiredPoints;
-    private bool _unsavedChanges;
 
     public IEnumerable<ILearningElementViewModel> ContainedLearningElements =>
         LearningSpaceLayout.ContainedLearningElements;
+
+    // ReSharper disable once MemberCanBePrivate.Global - disabled because we need a public property so automapper will map it
+    public bool InternalUnsavedChanges { get; private set; }
 
 
     public event PropertyChangedEventHandler? PropertyChanged;

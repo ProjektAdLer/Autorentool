@@ -44,8 +44,6 @@ public class LearningWorld : ILearningWorld, IOriginator
         UnsavedChanges = true;
         UnplacedLearningElements = new List<ILearningElement>();
     }
-    
-    private bool _unsavedChanges;
 
     public Guid Id { get; private set; }
     public List<LearningSpace> LearningSpaces { get; set; }
@@ -66,18 +64,21 @@ public class LearningWorld : ILearningWorld, IOriginator
 
     public bool UnsavedChanges
     {
-        get => _unsavedChanges ||
+        get => InternalUnsavedChanges ||
                LearningSpaces.Any(space => space.UnsavedChanges) ||
                UnplacedLearningElements.Any(element => element.UnsavedChanges) ||
                PathWayConditions.Any(condition => condition.UnsavedChanges) ||
                Topics.Any(topic => topic.UnsavedChanges);
-        set => _unsavedChanges = value;
+        set => InternalUnsavedChanges = value;
     }
+
+    // ReSharper disable once MemberCanBePrivate.Global - disabled because we need a public property so automapper will map it
+    public bool InternalUnsavedChanges { get; private set; }
 
     public IMemento GetMemento()
     {
         return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, SavePath, LearningSpaces,
-            PathWayConditions, LearningPathways, Topics, _unsavedChanges, UnplacedLearningElements);
+            PathWayConditions, LearningPathways, Topics, InternalUnsavedChanges, UnplacedLearningElements);
     }
 
     public void RestoreMemento(IMemento memento)

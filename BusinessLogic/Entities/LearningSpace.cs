@@ -44,8 +44,6 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
         PositionX = positionX;
         PositionY = positionY;
     }
-    
-    private bool _unsavedChanges;
 
     // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local - required for automapper n.stich
     public Guid Id { get; set; }
@@ -56,9 +54,9 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
 
     public bool UnsavedChanges
     {
-        get => _unsavedChanges ||
+        get => InternalUnsavedChanges ||
                ContainedLearningElements.Any(element => element.UnsavedChanges);
-        set => _unsavedChanges = value;
+        set => InternalUnsavedChanges = value;
     }
 
     public ILearningSpaceLayout LearningSpaceLayout { get; set; }
@@ -69,10 +67,13 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
     public double PositionY { get; set; }
     public IEnumerable<ILearningElement> ContainedLearningElements => LearningSpaceLayout.ContainedLearningElements;
 
+    // ReSharper disable once MemberCanBePrivate.Global - disabled because we need a public property so automapper will map it
+    public bool InternalUnsavedChanges { get; private set; }
+
     public IMemento GetMemento()
     {
         return new LearningSpaceMemento(Name, Description, Goals, RequiredPoints, LearningSpaceLayout, InBoundObjects, 
-            OutBoundObjects, AssignedTopic, PositionX, PositionY, _unsavedChanges);
+            OutBoundObjects, AssignedTopic, PositionX, PositionY, InternalUnsavedChanges);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -91,7 +92,7 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
         AssignedTopic = learningSpaceMemento.AssignedTopic;
         PositionX = learningSpaceMemento.PositionX;
         PositionY = learningSpaceMemento.PositionY;
-        _unsavedChanges = learningSpaceMemento.UnsavedChanges;
+        InternalUnsavedChanges = learningSpaceMemento.UnsavedChanges;
     }
 
     private record LearningSpaceMemento : IMemento

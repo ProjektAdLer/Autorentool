@@ -24,7 +24,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _description = "";
         _goals = "";
         _savePath = "";
-        _unsavedChanges = false;
+        InternalUnsavedChanges = false;
         _learningSpaces = new List<ILearningSpaceViewModel>();
         _pathWayConditions = new List<PathWayConditionViewModel>();
         _learningPathWays = new List<ILearningPathWayViewModel>();
@@ -62,7 +62,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _description = description;
         _goals = goals;
         _savePath = savePath;
-        _unsavedChanges = unsavedChanges;
+        InternalUnsavedChanges = unsavedChanges;
         _learningSpaces = learningSpaces ?? new List<ILearningSpaceViewModel>();
         _pathWayConditions = pathWayConditions ?? new List<PathWayConditionViewModel>();
         _learningPathWays = learningPathWays ?? new List<ILearningPathWayViewModel>();
@@ -85,7 +85,6 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     private string _description;
     private string _goals;
     private string _savePath;
-    private bool _unsavedChanges;
     private IObjectInPathWayViewModel? _onHoveredLearningObject;
     private bool _showingLearningSpaceView;
 
@@ -180,12 +179,12 @@ public class LearningWorldViewModel : ILearningWorldViewModel
 
     public bool UnsavedChanges
     {
-        get => _unsavedChanges ||
+        get => InternalUnsavedChanges ||
                LearningSpaces.Any(space => space.UnsavedChanges) ||
                UnplacedLearningElements.Any(element => element.UnsavedChanges) ||
                PathWayConditions.Any(condition => condition.UnsavedChanges) ||
                Topics.Any(topic => topic.UnsavedChanges);
-        set => _unsavedChanges = value;
+        set => InternalUnsavedChanges = value;
     }
     
     
@@ -202,7 +201,10 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         //TODO: Throw exception if ShowingLearningSpaceView is set to true but LearningSpaceViewModel in LearningSpacePresenter is null
         set => SetField(ref _showingLearningSpaceView, value);
     }
-    
+
+    // ReSharper disable once MemberCanBePrivate.Global - disabled because we need a public property so automapper will map it
+    public bool InternalUnsavedChanges { get; private set; }
+
 
     public event PropertyChangedEventHandler? PropertyChanged;
 
