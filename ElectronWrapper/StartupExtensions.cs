@@ -31,27 +31,27 @@ public static class StartupExtensions
     public static IApplicationBuilder ConfigureElectronWindow(this IApplicationBuilder appBuilder, out BrowserWindow? window)
     {
         window = null;
-        if (HybridSupport.IsElectronActive)
-            window = new BrowserWindow(Task.Run(async () =>
+        if (!HybridSupport.IsElectronActive) return appBuilder;
+        window = new BrowserWindow(Task.Run(async () =>
+        {
+            var options = new BrowserWindowOptions
             {
-                var options = new BrowserWindowOptions
-                {
-                    Fullscreenable = true,
-                    //Setting closable will only prevent clicking the close button on Windows and macOS, not on Linux.
-                    //This is an Electron limitation, and we need to instead warn users about the fact that they should NOT
-                    //close the window using the close button and instead use our applications close button.
-                    Closable = false,
-                    Height = 800,
-                    MinHeight = 800,
-                    Width = 1200,
-                    MinWidth = 1200,
-                    Icon = Path.Join("wwwroot", "favicon.ico")
-                };
-                return await Electron.WindowManager.CreateWindowAsync(options);
-            }).Result);
-        
+                Fullscreenable = true,
+                //Setting closable will only prevent clicking the close button on Windows and macOS, not on Linux.
+                //This is an Electron limitation, and we need to instead warn users about the fact that they should NOT
+                //close the window using the close button and instead use our applications close button.
+                Closable = false,
+                Height = 800,
+                MinHeight = 800,
+                Width = 1200,
+                MinWidth = 1200,
+                Icon = Path.Join("wwwroot", "favicon.ico")
+            };
+            return await Electron.WindowManager.CreateWindowAsync(options);
+        }).Result);
         //exit app on all windows closed
         Electron.App.WindowAllClosed += () => Electron.App.Quit();
+
         return appBuilder;
     }
 
