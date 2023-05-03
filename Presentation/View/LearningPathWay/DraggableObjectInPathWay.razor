@@ -2,6 +2,7 @@
 @using Presentation.Components
 @using Presentation.Components.RightClickMenu
 @using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.SelectedViewModels
 
 <Draggable LearningObject="ObjectInPathWay" OnClicked="@OnClickedDraggable" OnDoubleClicked="@OnDoubleClickedDraggable" 
            OnRightClicked="@OnRightClickedDraggable" OnDragged="@OnDraggedDraggable"
@@ -62,7 +63,7 @@
     [Parameter, EditorRequired]
     public ILearningWorldPresenter PositioningService { get; set; } = null!;
     [Inject]
-    public IMediator? Mediator { get; set; }
+    public ISelectedViewModelsProvider? SelectedObjectsService { get; set; }
 
     protected abstract string Text { get; }
     
@@ -76,7 +77,7 @@
     
     protected abstract string ObjectStyleWhenNotSelected { get; }
     
-    private string ObjectStyle => Mediator?.SelectedLearningObjectInPathWay == ObjectInPathWay ? ObjectStyleWhenSelected : ObjectStyleWhenNotSelected;
+    private string ObjectStyle => SelectedObjectsService?.LearningObjectInPathWay == ObjectInPathWay ? ObjectStyleWhenSelected : ObjectStyleWhenNotSelected;
 
     protected abstract string DeletePathButtonShape { get;}
     

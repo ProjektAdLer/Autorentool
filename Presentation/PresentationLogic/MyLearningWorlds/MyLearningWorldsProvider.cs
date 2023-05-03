@@ -1,6 +1,7 @@
 using System.IO.Abstractions;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.View;
 using Shared;
 
@@ -10,13 +11,13 @@ public class MyLearningWorldsProvider : IMyLearningWorldsProvider
 {
     public MyLearningWorldsProvider(IPresentationLogic presentationLogic,
         IAuthoringToolWorkspaceViewModel workspaceViewModel, IFileSystem fileSystem,
-        ILogger<MyLearningWorldsProvider> logger, IMediator mediator)
+        ILogger<MyLearningWorldsProvider> logger, ISelectedViewModelsProvider selectedViewModelsProvider)
     {
         PresentationLogic = presentationLogic;
         WorkspaceVm = workspaceViewModel;
         FileSystem = fileSystem;
         Logger = logger;
-        Mediator = mediator;
+        SelectedViewModelsProvider = selectedViewModelsProvider;
     }
 
     internal ILogger<MyLearningWorldsProvider> Logger { get; }
@@ -25,7 +26,7 @@ public class MyLearningWorldsProvider : IMyLearningWorldsProvider
     internal IAuthoringToolWorkspaceViewModel WorkspaceVm { get; }
     internal IFileSystem FileSystem { get; }
     
-    internal IMediator Mediator { get; }
+    internal ISelectedViewModelsProvider SelectedViewModelsProvider { get; }
 
 
     private ExceptionWrapper? ErrorState { get; set; }
@@ -83,7 +84,7 @@ public class MyLearningWorldsProvider : IMyLearningWorldsProvider
     private void OpenLoadedLearningWorld(SavedLearningWorldPath savedLearningWorldPath)
     {
         Logger.LogDebug("Learning world with id {} is already loaded", savedLearningWorldPath.Id);
-        Mediator.SelectedLearningWorld = WorkspaceVm.LearningWorlds.First(x => x.Id == savedLearningWorldPath.Id);
+        SelectedViewModelsProvider.SetLearningWorld(WorkspaceVm.LearningWorlds.First(x => x.Id == savedLearningWorldPath.Id), null);
     }
 
     public void DeletePathFromSavedLearningWorlds(SavedLearningWorldPath savedLearningWorldPath)

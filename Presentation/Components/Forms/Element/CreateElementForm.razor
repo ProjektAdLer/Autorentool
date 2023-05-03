@@ -7,6 +7,7 @@
 @using BusinessLogic.Entities
 @using System.ComponentModel
 @using Presentation.Components.Forms.Buttons
+@using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View
 @implements IAsyncDisposable
 <header class="m-2 rounded-lg">
@@ -90,7 +91,7 @@
     private ILearningWorldPresenter WorldPresenter { get; set; }
 
     [Inject]
-    private IMediator Mediator { get; set; }
+    private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 
     [Inject]
     private IFormDataContainer<LearningElementFormModel, LearningElement> FormDataContainer { get; set; }
@@ -107,11 +108,11 @@
 
     private void OnValidSubmit(LearningElementFormModel model)
     {
-        if (Mediator.SelectedLearningWorld == null)
+        if (SelectedViewModelsProvider.LearningWorld == null)
             throw new InvalidOperationException("No learning world selected.");
-        if (Mediator.SelectedLearningObjectInPathWay == null)
+        if (SelectedViewModelsProvider.LearningObjectInPathWay == null)
             throw new InvalidOperationException("No object selected.");
-        if (Mediator.SelectedLearningObjectInPathWay is not LearningSpaceViewModel)
+        if (SelectedViewModelsProvider.LearningObjectInPathWay is not LearningSpaceViewModel)
             throw new InvalidOperationException("Selected object is not a learning space.");
 
         WorldPresenter.CreateUnplacedLearningElement(
@@ -123,7 +124,7 @@
 
     protected override void OnInitialized()
     {
-        Mediator.PropertyChanged += MediatorOnPropertyChanged;
+        SelectedViewModelsProvider.PropertyChanged += MediatorOnPropertyChanged;
         base.OnInitialized();
     }
 
@@ -140,7 +141,7 @@
 
     public void Dispose()
     {
-        Mediator.PropertyChanged -= MediatorOnPropertyChanged;
+        SelectedViewModelsProvider.PropertyChanged -= MediatorOnPropertyChanged;
     }
 
 }

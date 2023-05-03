@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Bunit;
-using Bunit.Rendering;
 using Bunit.TestDoubles;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
@@ -15,9 +14,7 @@ using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
-using Presentation.PresentationLogic.Topic;
-using Presentation.View;
-using Presentation.View.LearningElement;
+using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.View.LearningPathWay;
 using Presentation.View.LearningSpace;
 using Presentation.View.LearningWorld;
@@ -33,7 +30,7 @@ public class LearningWorldViewUt
     private TestContext _ctx;
     private IMouseService _mouseService;
     private ILearningWorldPresenter _worldPresenter;
-    private IMediator _mediator;
+    private ISelectedViewModelsProvider _selectedViewModelsProvider;
 #pragma warning restore CS8618
     
     [SetUp]
@@ -42,14 +39,14 @@ public class LearningWorldViewUt
         _ctx = new TestContext();
         _mouseService = Substitute.For<IMouseService>();
         _worldPresenter = Substitute.For<ILearningWorldPresenter>();
-        _mediator = Substitute.For<IMediator>();
+        _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         _ctx.ComponentFactories.AddStub<LearningSpaceView>();
         _ctx.ComponentFactories.AddStub<DraggableObjectInPathWay>();
         _ctx.ComponentFactories.AddStub<PathWay>();
         _ctx.ComponentFactories.AddStub<MudIcon>();
         _ctx.Services.AddSingleton(_mouseService);
         _ctx.Services.AddSingleton(_worldPresenter);
-        _ctx.Services.AddSingleton(_mediator);
+        _ctx.Services.AddSingleton(_selectedViewModelsProvider);
     }
 
     [Test]

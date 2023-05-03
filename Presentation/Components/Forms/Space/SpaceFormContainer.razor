@@ -1,5 +1,6 @@
 @using Presentation.PresentationLogic.LearningSpace
 @using System.ComponentModel
+@using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View
 
 <MudCard Class="overflow-auto">
@@ -18,7 +19,7 @@ else
     [Inject]
     public ILearningSpacePresenter SpacePresenter { get; set; }
     [Inject]
-    private IMediator Mediator { get; set; }
+    private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 #pragma warning restore CS8618
 
     //indicates if the edit state has been overwritten by either pressing reset in the edit form
@@ -47,7 +48,7 @@ else
     private void OnForceNew()
     {
         _editOverwritten = true;
-        Mediator.SelectedLearningObjectInPathWay = null;
+        SelectedViewModelsProvider.SetLearningObjectInPathWay(null, null);
     }
 
 }

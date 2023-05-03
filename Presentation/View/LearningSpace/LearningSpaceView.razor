@@ -4,6 +4,7 @@
 @using Shared
 @using Presentation.PresentationLogic.LearningElement
 @using System.Text
+@using Presentation.PresentationLogic.SelectedViewModels
 <div class="mx-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-2xl text-center font-bold text-adlergrey-500 mx-2">Learning Space Editor</h2>
@@ -17,13 +18,13 @@
       <MudText Class="text-adlerbggradientfrom" Typo="Typo.h6">@LearningSpaceP.LearningSpaceVm.Name</MudText>
       @*<MudText Class="text-center text-adlergrey-500" Typo="Typo.h4">Learning Space Editor @LearningSpaceP.LearningSpaceVm?.Name</MudText>*@
       </div>
-    @if (Mediator.SelectedLearningElement != null)
+    @if (SelectedViewModelsProvider?.LearningElement != null)
     {
         <section class="p-2 gap-1 flex flex-col justify-start">
             <div class="flex justify-between items-start">
             <label id="learning-element-info" class="font-medium text-lg flex flex-col">
-                <MudText Typo="Typo.subtitle1">Selected learning element: @Mediator.SelectedLearningElement.Name</MudText>
-                <MudText Typo="Typo.subtitle1">Description: @Mediator.SelectedLearningElement.Description</MudText>
+                <MudText Typo="Typo.subtitle1">Selected learning element: @SelectedViewModelsProvider.LearningElement.Name</MudText>
+                <MudText Typo="Typo.subtitle1">Description: @SelectedViewModelsProvider.LearningElement.Description</MudText>
             </label>
             <div class="text-adlergrey">
                 <div>
@@ -93,7 +94,7 @@
     private Action TriggerMasterLayoutStateHasChanged { get; set; }
     
     [Inject]
-    public IMediator? Mediator { get; set; }
+    public ISelectedViewModelsProvider? SelectedViewModelsProvider { get; set; }
 
     //TODO: Instead of setting a value here we need some sort of central service that we can notify about the error to
     //then display it in the UI - n.stich

@@ -10,6 +10,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.SelectedViewModels;
 using Shared;
 using Shared.Configuration;
 
@@ -172,7 +173,7 @@ public class CachingMapperIt
 
     private static PresentationLogic CreateTestablePresentationLogic(
         IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null,
-        ICachingMapper? cachingMapper = null, IServiceProvider? serviceProvider = null,
+        ICachingMapper? cachingMapper = null, ISelectedViewModelsProvider? selectedViewModelsProvider = null, IServiceProvider? serviceProvider = null,
         ILogger<PresentationLogic>? logger = null, IHybridSupportWrapper? hybridSupportWrapper = null,
         IShellWrapper? shellWrapper = null)
     {
@@ -180,12 +181,13 @@ public class CachingMapperIt
         businessLogic ??= Substitute.For<IBusinessLogic>();
         mapper ??= Substitute.For<IMapper>();
         cachingMapper ??= Substitute.For<ICachingMapper>();
+        selectedViewModelsProvider ??= Substitute.For<ISelectedViewModelsProvider>();
         serviceProvider ??= Substitute.For<IServiceProvider>();
         logger ??= Substitute.For<ILogger<PresentationLogic>>();
         hybridSupportWrapper ??= Substitute.For<IHybridSupportWrapper>();
         shellWrapper ??= Substitute.For<IShellWrapper>();
 
-        return new PresentationLogic(configuration, businessLogic, mapper, cachingMapper, serviceProvider, logger,
+        return new PresentationLogic(configuration, businessLogic, mapper, cachingMapper, selectedViewModelsProvider, serviceProvider, logger,
             hybridSupportWrapper, shellWrapper);
     }
 }

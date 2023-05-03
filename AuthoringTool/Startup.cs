@@ -4,7 +4,6 @@ using ApiAccess.API;
 using ApiAccess.WebApi;
 using AuthoringTool.Mapping;
 using AutoMapper;
-using AutoMapper.EquivalencyExpression;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
 using BusinessLogic.Validation;
@@ -26,8 +25,9 @@ using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Mediator;
 using Presentation.PresentationLogic.MyLearningWorlds;
-using Presentation.View;
+using Presentation.PresentationLogic.SelectedViewModels;
 using Shared;
 using Shared.Configuration;
 using Tailwind;
@@ -78,6 +78,7 @@ public class Startup
         ConfigureValidation(services);
         ConfigureApiAccess(services);
         ConfigureMediator(services);
+        ConfigureSelectedViewModelsProvider(services);
 
 
         //Electron Wrapper layer
@@ -163,6 +164,11 @@ public class Startup
     {
         services.AddSingleton<IMediator, Mediator>();
     }
+    
+    private void ConfigureSelectedViewModelsProvider(IServiceCollection services)
+    {
+        services.AddSingleton<ISelectedViewModelsProvider, SelectedViewModelsProvider>();
+    }
 
     private static void ConfigureToolbox(IServiceCollection services)
     {
@@ -207,6 +213,7 @@ public class Startup
     private void ConfigureCommands(IServiceCollection services)
     {
         services.AddSingleton<ICommandStateManager, CommandStateManager>();
+        services.AddSingleton<IOnUndoRedo>( p =>(CommandStateManager)p.GetService<ICommandStateManager>()!);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)

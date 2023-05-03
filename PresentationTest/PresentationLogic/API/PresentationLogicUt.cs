@@ -25,6 +25,7 @@ using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.PresentationLogic.Topic;
 using Shared;
 using Shared.Command;
@@ -43,11 +44,12 @@ public class PresentationLogicUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockMapper = Substitute.For<IMapper>();
         var mockCachingMapper = Substitute.For<ICachingMapper>();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         var mockLogger = Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
 
         //Act
-        var systemUnderTest = CreateTestablePresentationLogic(mockConfiguration, mockBusinessLogic, mockMapper, mockCachingMapper, mockServiceProvider, mockLogger);
+        var systemUnderTest = CreateTestablePresentationLogic(mockConfiguration, mockBusinessLogic, mockMapper, mockCachingMapper, mockSelectedViewModelsProvider, mockServiceProvider, mockLogger);
         Assert.Multiple(() =>
         {
             //Assert
@@ -198,8 +200,11 @@ public class PresentationLogicUt
             new List<BusinessLogic.Entities.LearningWorld>{worldEntity});
         mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<AuthoringToolWorkspaceViewModel>())
             .Returns(workspaceEntity);
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var mockWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
+        workspaceVm.LearningWorlds.Add(mockWorldVm);
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper, selectedViewModelsProvider: selectedViewModelsProvider);
 
         systemUnderTest.CreateLearningWorld(workspaceVm, "f", "f", "f", "f", "f", "f");
 
@@ -308,8 +313,12 @@ public class PresentationLogicUt
             .Returns(learningWorldEntity);
         mockMapper.Map<BusinessLogic.Entities.Topic>(Arg.Any<TopicViewModel>())
             .Returns(topicEntity);
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var mockSpaceVm = new LearningSpaceViewModel("z", "z", "z");
+        learningWorldVm.LearningSpaces.Add(mockSpaceVm);
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
+            selectedViewModelsProvider: selectedViewModelsProvider);
 
         systemUnderTest.CreateLearningSpace(learningWorldVm, "z", "z", "z", 5, 6, 7, topicVm);
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
@@ -658,8 +667,11 @@ public class PresentationLogicUt
         var learningWorldEntity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
         mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
             .Returns(learningWorldEntity);
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var mockCondition = new PathWayConditionViewModel(ConditionEnum.And,false,1,2);
+        learningWorldVm.PathWayConditions.Add(mockCondition);
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,selectedViewModelsProvider: selectedViewModelsProvider);
 
         systemUnderTest.CreatePathWayCondition(learningWorldVm, ConditionEnum.And, 6, 7);
 
@@ -1629,9 +1641,12 @@ public class PresentationLogicUt
         mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManger);
         mockMapper.Map<BusinessLogic.Entities.LearningSpace>(Arg.Any<LearningSpaceViewModel>())
             .Returns(mockLearningSpaceEntity);
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var mockLearningElementViewModel = new LearningElementViewModel("n", null!, "d", "t", LearningElementDifficultyEnum.Easy, null, 3);
+        mockLearningSpaceViewModel.LearningSpaceLayout.LearningElements.Add(0, mockLearningElementViewModel);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport, mapper: mockMapper);
+            serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport, mapper: mockMapper, selectedViewModelsProvider: selectedViewModelsProvider);
 
         await systemUnderTest.LoadLearningElementAsync(mockLearningSpaceViewModel, 0);
 
@@ -2108,11 +2123,14 @@ public class PresentationLogicUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockLearningWorld = new BusinessLogic.Entities.LearningWorld("n", "sn", "a", "l", "d", "g");
         mockBusinessLogic.LoadLearningWorld(Arg.Any<Stream>()).Returns(mockLearningWorld);
-        var workspace = Substitute.For<IAuthoringToolWorkspaceViewModel>();
+        var workspace = new AuthoringToolWorkspaceViewModel();
         var stream = Substitute.For<Stream>();
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var mockLearningWorldVm = new LearningWorldViewModel("n", "sn", "a", "l", "d", "g");
+        workspace.LearningWorlds.Add(mockLearningWorldVm);
 
         var systemUnderTest =
-            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, selectedViewModelsProvider: selectedViewModelsProvider);
 
         systemUnderTest.LoadLearningWorldViewModel(workspace, stream);
 
@@ -2271,20 +2289,21 @@ public class PresentationLogicUt
 
     private static Presentation.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(
         IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null,
-        ICachingMapper? cachingMapper = null, IServiceProvider? serviceProvider = null,
-        ILogger<Presentation.PresentationLogic.API.PresentationLogic>? logger = null,
+        ICachingMapper? cachingMapper = null, ISelectedViewModelsProvider? selectedViewModelsProvider = null, IServiceProvider? serviceProvider = null,
+        ILogger<Presentation.PresentationLogic.API.PresentationLogic>? logger = null, 
         IHybridSupportWrapper? hybridSupportWrapper = null, IShellWrapper? shellWrapper = null)
     {
         configuration ??= Substitute.For<IAuthoringToolConfiguration>();
         businessLogic ??= Substitute.For<IBusinessLogic>();
         mapper ??= Substitute.For<IMapper>();
         cachingMapper ??= Substitute.For<ICachingMapper>();
+        selectedViewModelsProvider ??= Substitute.For<ISelectedViewModelsProvider>();
         serviceProvider ??= Substitute.For<IServiceProvider>();
         logger ??= Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
         hybridSupportWrapper ??= Substitute.For<IHybridSupportWrapper>();
         shellWrapper ??= Substitute.For<IShellWrapper>();
 
         return new Presentation.PresentationLogic.API.PresentationLogic(configuration, businessLogic, mapper,
-            cachingMapper, serviceProvider, logger, hybridSupportWrapper, shellWrapper);
+            cachingMapper, selectedViewModelsProvider, serviceProvider, logger, hybridSupportWrapper, shellWrapper);
     }
 }

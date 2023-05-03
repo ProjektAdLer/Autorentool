@@ -8,8 +8,9 @@ using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.Mediator;
+using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.PresentationLogic.Topic;
-using Presentation.View;
 using Shared;
 using Shared.Command;
 
@@ -20,15 +21,16 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
 {
     public LearningWorldPresenter(
         IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter,
-        ILogger<LearningWorldPresenter> logger, IMediator mediator, IErrorService errorService)
+        ILogger<LearningWorldPresenter> logger, IMediator mediator, ISelectedViewModelsProvider selectedViewModelsProvider, IErrorService errorService)
     {
         _learningSpacePresenter = learningSpacePresenter;
         _presentationLogic = presentationLogic;
         _logger = logger;
         _mediator = mediator;
-        mediator.PropertyChanged += OnMediatorPropertyChanged;
+        _selectedViewModelsProvider = selectedViewModelsProvider;
+        _selectedViewModelsProvider.PropertyChanged += OnSelectedViewModelsProviderOnPropertyChanged;
         //first-time update in case a learning world was selected before we were instantiated 
-        LearningWorldVm = mediator.SelectedLearningWorld;
+        LearningWorldVm = selectedViewModelsProvider.LearningWorld;
         _errorService = errorService;
     }
 
@@ -36,6 +38,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     private readonly ILearningSpacePresenter _learningSpacePresenter;
     private readonly ILogger<LearningWorldPresenter> _logger;
     private readonly IMediator _mediator;
+    private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
     private readonly IErrorService _errorService;
 
     private ILearningWorldViewModel? _learningWorldVm;
@@ -45,7 +48,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     private int _conditionCreationCounter = 0;
 
     public bool SelectedLearningObjectIsSpace =>
-        _mediator.SelectedLearningObjectInPathWay?.GetType() == typeof(LearningSpaceViewModel);
+        _selectedViewModelsProvider.LearningObjectInPathWay?.GetType() == typeof(LearningSpaceViewModel);
 
     public bool ShowingLearningSpaceView => LearningWorldVm is {ShowingLearningSpaceView: true};
 
@@ -151,14 +154,14 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         RightClickedLearningObject = null;
     }
 
-    public void OnMediatorPropertyChanged(object? caller, PropertyChangedEventArgs e)
+    public void OnSelectedViewModelsProviderOnPropertyChanged(object? caller, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(_mediator.SelectedLearningWorld))
+        if (e.PropertyName == nameof(_selectedViewModelsProvider.LearningWorld))
         {
-            if (caller is not IMediator)
-                throw new ArgumentException("Caller must be of type IMediator");
+            if (caller is not ISelectedViewModelsProvider)
+                throw new ArgumentException("Caller must be of type ISelectedViewModelsProvider");
 
-            LearningWorldVm = _mediator.SelectedLearningWorld;
+            LearningWorldVm = _selectedViewModelsProvider.LearningWorld;
         }
     }
 
@@ -212,7 +215,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         _presentationLogic.CreateLearningSpace(LearningWorldVm, name, description, goals,
             requiredPoints, positionX, positionY, topic);
         //TODO: Return error in the command in case of failure
-        _mediator.SelectedLearningObjectInPathWay = LearningWorldVm.LearningSpaces.Last();
     }
 
     /// <inheritdoc cref="ILearningWorldPresenterToolboxInterface.AddLearningSpace"/>
@@ -227,7 +229,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         if(LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        _mediator.SelectedLearningObjectInPathWay = null;
+        _selectedViewModelsProvider.SetLearningObjectInPathWay(null, null);
         _mediator.RequestOpenSpaceDialog();
     }
 
@@ -235,7 +237,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         if(LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        if(_mediator.SelectedLearningObjectInPathWay is not LearningSpaceViewModel)
+        if(_selectedViewModelsProvider.LearningObjectInPathWay is not LearningSpaceViewModel)
             throw new ApplicationException("SelectedLearningObjectInPathWay is not LearningSpaceViewModel");
         _mediator.RequestOpenSpaceDialog();
     }
@@ -249,7 +251,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         await _presentationLogic.LoadLearningSpaceAsync(LearningWorldVm);
-        _mediator.SelectedLearningObjectInPathWay = LearningWorldVm.LearningSpaces.Last();
     }
 
     /// <summary>
@@ -261,7 +262,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        switch (_mediator.SelectedLearningObjectInPathWay)
+        switch (_selectedViewModelsProvider.LearningObjectInPathWay)
         {
             case null:
                 return;
@@ -275,8 +276,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
                 _presentationLogic.DeletePathWayCondition(LearningWorldVm, condition);
                 break;
         }
-
-        _mediator.SelectedLearningObjectInPathWay = null;
     }
 
     /// <summary>
@@ -288,11 +287,11 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        if (_mediator.SelectedLearningObjectInPathWay == null)
+        if (_selectedViewModelsProvider.LearningObjectInPathWay == null)
             throw new ApplicationException("SelectedLearningSpace is null");
 
         await _presentationLogic.SaveLearningSpaceAsync(
-            (LearningSpaceViewModel) _mediator.SelectedLearningObjectInPathWay);
+            (LearningSpaceViewModel) _selectedViewModelsProvider.LearningObjectInPathWay);
     }
 
     /// <summary>
@@ -304,12 +303,14 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        _mediator.SelectedLearningObjectInPathWay = pathWayObject;
         if (SelectedLearningObjectIsSpace)
-            _learningSpacePresenter.SetLearningSpace((LearningSpaceViewModel) _mediator.SelectedLearningObjectInPathWay);
+        {
+            _learningSpacePresenter.SetLearningSpace((LearningSpaceViewModel) _selectedViewModelsProvider.LearningObjectInPathWay!);
+            _selectedViewModelsProvider.SetLearningObjectInPathWay(pathWayObject, null);
+        }
         else
         {
-            _mediator.SelectedLearningObjectInPathWay = pathWayObject;
+            _selectedViewModelsProvider.SetLearningObjectInPathWay(pathWayObject, null);
         }
 
         HideRightClickMenu();
@@ -324,7 +325,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         _presentationLogic.CreatePathWayCondition(LearningWorldVm, condition, 0, 0);
-        _mediator.SelectedLearningObjectInPathWay = LearningWorldVm.PathWayConditions.Last();
     }
 
     public void DeletePathWayCondition(PathWayConditionViewModel pathWayCondition)
@@ -332,7 +332,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         _presentationLogic.DeletePathWayCondition(LearningWorldVm, pathWayCondition);
-        _mediator.SelectedLearningObjectInPathWay = null;
     }
 
     /// <summary>
@@ -427,8 +426,8 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if(LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         if(learningElement.Parent != null)
-            _mediator.SelectedLearningObjectInPathWay = learningElement.Parent;
-        _mediator.SelectedLearningElement = learningElement;
+            _selectedViewModelsProvider.SetLearningObjectInPathWay(learningElement.Parent, null);
+        _selectedViewModelsProvider.SetLearningElement(learningElement, null);
         _mediator.RequestOpenElementDialog();
     }
     
@@ -452,7 +451,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        _mediator.SelectedLearningElement = learningElement;
         if (LearningWorldVm.UnplacedLearningElements.Contains(learningElement) && elementParent == null)
             _presentationLogic.EditLearningElement(elementParent, learningElement, name,
                 description,
@@ -485,7 +483,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         _presentationLogic.DeleteLearningElementInWorld(LearningWorldVm, learningElement);
-        _mediator.SelectedLearningElement = null;
     }
     
     public IEnumerable<ILearningContentViewModel> GetAllContent() => _presentationLogic.GetAllContent();

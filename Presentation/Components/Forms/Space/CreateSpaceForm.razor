@@ -5,6 +5,7 @@
 @using BusinessLogic.Entities
 @using System.ComponentModel
 @using Presentation.Components.Forms.Buttons
+@using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View
 @implements IAsyncDisposable
 <header class="m-2 rounded-lg">
@@ -63,7 +64,7 @@
     private ILearningWorldPresenter LearningWorldPresenter { get; set; }
 
     [Inject]
-    private IMediator Mediator { get; set; }
+    private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 
     [Inject]
     private IFormDataContainer<LearningSpaceFormModel, LearningSpace> FormDataContainer { get; set; }
@@ -80,7 +81,7 @@
 
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
-        if (Mediator.SelectedLearningWorld == null) throw new InvalidOperationException("No learning world selected.");
+        if (SelectedViewModelsProvider.LearningWorld == null) throw new InvalidOperationException("No learning world selected.");
         model.RequiredPoints ??= 0;
         LearningWorldPresenter.CreateLearningSpace(model.Name, model.Description,
             model.Goals, (int) model.RequiredPoints, positionX: 0, positionY: 0);
@@ -88,7 +89,7 @@
 
     protected override void OnInitialized()
     {
-        Mediator.PropertyChanged += MediatorOnPropertyChanged;
+        SelectedViewModelsProvider.PropertyChanged += MediatorOnPropertyChanged;
         base.OnInitialized();
     }
 
@@ -105,7 +106,7 @@
 
     public void Dispose()
     {
-        Mediator.PropertyChanged -= MediatorOnPropertyChanged;
+        SelectedViewModelsProvider.PropertyChanged -= MediatorOnPropertyChanged;
     }
 
 }

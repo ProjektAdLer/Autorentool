@@ -9,7 +9,7 @@ using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.MyLearningWorlds;
-using Presentation.View;
+using Presentation.PresentationLogic.SelectedViewModels;
 using Shared;
 
 namespace PresentationTest.PresentationLogic.MyLearningWorlds;
@@ -24,16 +24,16 @@ public class MyLearningWorldsProviderUt
         var workspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         var fileSystem = Substitute.For<IFileSystem>();
         var logger = Substitute.For<ILogger<MyLearningWorldsProvider>>();
-        var mediator = Substitute.For<IMediator>();
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
 
-        var systemUnderTest = new MyLearningWorldsProvider(presentationLogic, workspaceViewModel, fileSystem, logger, mediator);
+        var systemUnderTest = new MyLearningWorldsProvider(presentationLogic, workspaceViewModel, fileSystem, logger, selectedViewModelsProvider);
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.PresentationLogic, Is.EqualTo(presentationLogic));
             Assert.That(systemUnderTest.WorkspaceVm, Is.EqualTo(workspaceViewModel));
             Assert.That(systemUnderTest.FileSystem, Is.EqualTo(fileSystem));
             Assert.That(systemUnderTest.Logger, Is.EqualTo(logger));
-            Assert.That(systemUnderTest.Mediator, Is.EqualTo(mediator));
+            Assert.That(systemUnderTest.SelectedViewModelsProvider, Is.EqualTo(selectedViewModelsProvider));
         });
     }
 
@@ -137,15 +137,15 @@ public class MyLearningWorldsProviderUt
     {
         var learningWorld1 = new LearningWorldViewModel("w1", "s", "a", "l", "d", "g");
         var workspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
-        var mediator = Substitute.For<IMediator>();
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         workspaceViewModel.LearningWorlds.Returns(new List<LearningWorldViewModel>()
             {learningWorld1});
-        var systemUnderTest = CreateProviderForTesting(workspaceViewModel: workspaceViewModel, mediator: mediator);
+        var systemUnderTest = CreateProviderForTesting(workspaceViewModel: workspaceViewModel, selectedViewModelsProvider: selectedViewModelsProvider);
 
         var savedPaths = systemUnderTest.GetLoadedLearningWorlds();
         systemUnderTest.OpenLearningWorld(savedPaths.First());
 
-        mediator.Received(1).SelectedLearningWorld = learningWorld1;
+        selectedViewModelsProvider.Received(1).SetLearningWorld(learningWorld1, null);
     }
 
     [Test]
@@ -203,13 +203,13 @@ public class MyLearningWorldsProviderUt
 
     private MyLearningWorldsProvider CreateProviderForTesting(IPresentationLogic? presentationLogic = null,
         IAuthoringToolWorkspaceViewModel? workspaceViewModel = null, IFileSystem? fileSystem = null,
-        IMediator? mediator = null, ILogger<MyLearningWorldsProvider>? logger = null)
+        ISelectedViewModelsProvider? selectedViewModelsProvider = null, ILogger<MyLearningWorldsProvider>? logger = null)
     {
         presentationLogic ??= Substitute.For<IPresentationLogic>();
         workspaceViewModel ??= Substitute.For<IAuthoringToolWorkspaceViewModel>();
         fileSystem ??= Substitute.For<IFileSystem>();
         logger ??= Substitute.For<ILogger<MyLearningWorldsProvider>>();
-        mediator ??= Substitute.For<IMediator>();
-        return new MyLearningWorldsProvider(presentationLogic, workspaceViewModel, fileSystem, logger, mediator);
+        selectedViewModelsProvider ??= Substitute.For<ISelectedViewModelsProvider>();
+        return new MyLearningWorldsProvider(presentationLogic, workspaceViewModel, fileSystem, logger, selectedViewModelsProvider);
     }
 }

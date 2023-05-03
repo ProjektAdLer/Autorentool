@@ -11,7 +11,7 @@ using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
-using Presentation.View;
+using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.View.LearningPathWay;
 using Shared;
 using TestContext = Bunit.TestContext;
@@ -24,7 +24,7 @@ public class DraggableObjectInPathWay
 #pragma warning disable CS8618 //set in setup - n.stich
     private TestContext _ctx;
     private IMouseService _mouseService;
-    private IMediator _mediator;
+    private ISelectedViewModelsProvider _selectedViewModelsProvider;
 #pragma warning restore CS8618
 
     [SetUp]
@@ -33,9 +33,9 @@ public class DraggableObjectInPathWay
         _ctx = new TestContext();
         _ctx.ComponentFactories.AddStub<Draggable<IObjectInPathWayViewModel>>();
         _mouseService = Substitute.For<IMouseService>();
-        _mediator = Substitute.For<IMediator>();
+        _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         _ctx.Services.AddSingleton(_mouseService);
-        _ctx.Services.AddSingleton(_mediator);
+        _ctx.Services.AddSingleton(_selectedViewModelsProvider);
     }
     
     [Test]

@@ -8,6 +8,7 @@
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningPathway
 @using Presentation.PresentationLogic.LearningSpace
+@using Presentation.PresentationLogic.SelectedViewModels
 @using Direction = Shared.Direction
 @ChildContent
 
@@ -28,9 +29,9 @@
         </div>
     </section>
     <section class="p-2 flex justify-between">
-        <MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Edit" Disabled="@(Mediator.SelectedLearningObjectInPathWay == null || Mediator.SelectedLearningObjectInPathWay is ILearningPathWayViewModel || Mediator.SelectedLearningObjectInPathWay is PathWayConditionViewModel)" @onclick="EditSelectedLearningSpace"></MudFab>
-        <MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Delete" Disabled="@(Mediator.SelectedLearningObjectInPathWay == null)" @onclick="DeleteSelectedLearningObject"></MudFab>
-        <MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Save" Disabled="@(Mediator.SelectedLearningObjectInPathWay == null || Mediator.SelectedLearningObjectInPathWay is not ILearningSpaceViewModel)" @onclick="SaveSelectedLearningSpaceAsync"></MudFab>
+        <MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Edit" Disabled="@(SelectedViewModelsProvider.LearningObjectInPathWay == null || SelectedViewModelsProvider.LearningObjectInPathWay is ILearningPathWayViewModel || SelectedViewModelsProvider.LearningObjectInPathWay is PathWayConditionViewModel)" @onclick="EditSelectedLearningSpace"></MudFab>
+        <MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Delete" Disabled="@(SelectedViewModelsProvider.LearningObjectInPathWay == null)" @onclick="DeleteSelectedLearningObject"></MudFab>
+        <MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Save" Disabled="@(SelectedViewModelsProvider.LearningObjectInPathWay == null || SelectedViewModelsProvider.LearningObjectInPathWay is not ILearningSpaceViewModel)" @onclick="SaveSelectedLearningSpaceAsync"></MudFab>
     </section>
     <!-- <svg style="width: 400px; height: 600px; border:3px black; background-color: white" -->
     <svg class="bg-white w-full grow rounded-lg"
@@ -102,7 +103,7 @@
     public ILearningWorldPresenter LearningWorldP { get; set; }
     
     [Inject]
-    public IMediator Mediator { get; set; }
+    public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 #pragma warning restore CS8618
     
     private ExceptionWrapper? ErrorState { get; set; }

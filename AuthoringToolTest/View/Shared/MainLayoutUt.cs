@@ -12,7 +12,7 @@ using NUnit.Framework;
 using Presentation.Components.Culture;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
-using Presentation.View;
+using Presentation.PresentationLogic.Mediator;
 using TestContext = Bunit.TestContext;
 
 namespace AuthoringToolTest.View.Shared;

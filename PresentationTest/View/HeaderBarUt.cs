@@ -8,6 +8,8 @@ using NUnit.Framework;
 using Presentation.Components;
 using Presentation.Components.Culture;
 using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.Mediator;
+using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.View;
 using TestContext = Bunit.TestContext;
 
@@ -18,6 +20,7 @@ public class HeaderBarUt
 {
     private TestContext _testContext;
     private IPresentationLogic _presentationLogic;
+    private ISelectedViewModelsProvider _selectedViewModelsProvider;
     private IMediator _mediator;
     private IStringLocalizer<HeaderBar> _stringLocalizer;
 
@@ -28,10 +31,12 @@ public class HeaderBarUt
         _testContext.ComponentFactories.AddStub<CloseAppButton>();
         _testContext.ComponentFactories.AddStub<CultureSelector>();
         _presentationLogic = Substitute.For<IPresentationLogic>();
+        _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         _mediator = Substitute.For<IMediator>();
         _stringLocalizer = Substitute.For<IStringLocalizer<HeaderBar>>();
         _testContext.Services.AddSingleton(_presentationLogic);
         _testContext.Services.AddSingleton(_stringLocalizer);
+        _testContext.Services.AddSingleton(_selectedViewModelsProvider);
         _testContext.Services.AddSingleton(_mediator);
     }
 

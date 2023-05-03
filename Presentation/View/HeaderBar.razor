@@ -2,6 +2,8 @@
 @using Presentation.Components
 @using Presentation.Components.Culture
 @using Microsoft.Extensions.Localization
+@using Presentation.PresentationLogic.Mediator
+@using Presentation.PresentationLogic.SelectedViewModels
 <header class="mb-1 grid grid-cols-3 grid-rows-1 w-full bg-buttonbgblue items-center">
     <div class="ml-1 flex justify-start items-center gap-2">
         <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title="My Learning Worlds" @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
@@ -38,6 +40,9 @@
     private IStringLocalizer<HeaderBar> Localizer { get; set; }
     
     [Inject]
+    private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
+    
+    [Inject]
     private IMediator Mediator { get; set; }
 
     protected override void OnParametersSet()
@@ -48,9 +53,9 @@
 
     private void OnClickMyLearningWorldsOverview()
     {
-        Mediator.SelectedLearningWorld = null;
-        Mediator.SelectedLearningObjectInPathWay = null;
-        Mediator.SelectedLearningElement = null;
+        SelectedViewModelsProvider.SetLearningWorld(null, null);
+        SelectedViewModelsProvider.SetLearningObjectInPathWay(null, null);
+        SelectedViewModelsProvider.SetLearningElement(null, null);
         Mediator.CloseBothSides();
         NavManager.NavigateTo("/MyLearningWorldsOverview");
     }
@@ -70,8 +75,8 @@
 
     private async Task TrySaveAsync()
     {
-        if (Mediator.SelectedLearningWorld is null) return;
-        await PresentationLogic.SaveLearningWorldAsync(Mediator.SelectedLearningWorld);
+        if (SelectedViewModelsProvider.LearningWorld is null) return;
+        await PresentationLogic.SaveLearningWorldAsync(SelectedViewModelsProvider.LearningWorld);
     }
 
 }

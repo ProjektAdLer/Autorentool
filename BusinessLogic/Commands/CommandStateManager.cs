@@ -6,7 +6,7 @@ using BusinessLogic.Commands.World;
 
 namespace BusinessLogic.Commands;
 
-public sealed class CommandStateManager : ICommandStateManager
+public sealed class CommandStateManager : ICommandStateManager, IOnUndoRedo
 {
     private readonly Stack<IUndoCommand> _undo;
     private readonly Stack<IUndoCommand> _redo;
@@ -56,6 +56,7 @@ public sealed class CommandStateManager : ICommandStateManager
         if (!CanUndo) throw new InvalidOperationException("no command to undo");
         var command = PopUndo();
         command.Undo();
+        OnUndo?.Invoke(command);
         PushRedo(command);
         return command;
     }
@@ -66,6 +67,7 @@ public sealed class CommandStateManager : ICommandStateManager
         if (!CanRedo) throw new InvalidOperationException("no command to redo");
         var command = PopRedo();
         command.Redo();
+        OnRedo?.Invoke(command);
         PushUndo(command);
         return command;
     }
@@ -150,6 +152,9 @@ public sealed class CommandStateManager : ICommandStateManager
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
+    
+    public event Action<ICommand>? OnRedo;
+    public event Action<ICommand>? OnUndo;
 }
 
 public class RemoveCommandsFromStacksEventArgs

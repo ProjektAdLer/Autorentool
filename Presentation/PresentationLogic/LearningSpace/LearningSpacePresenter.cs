@@ -6,8 +6,9 @@ using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningWorld;
+using Presentation.PresentationLogic.Mediator;
+using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.PresentationLogic.Topic;
-using Presentation.View;
 using Shared;
 using Shared.Command;
 
@@ -16,16 +17,18 @@ namespace Presentation.PresentationLogic.LearningSpace;
 public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePresenterToolboxInterface
 {
     public LearningSpacePresenter(
-        IPresentationLogic presentationLogic, IMediator mediator, ILogger<LearningSpacePresenter> logger)
+        IPresentationLogic presentationLogic, IMediator mediator, ISelectedViewModelsProvider selectedViewModelsProvider, ILogger<LearningSpacePresenter> logger)
     {
         _presentationLogic = presentationLogic;
         _mediator = mediator;
-        _mediator.PropertyChanged += MediatorOnPropertyChanged;
+        _selectedViewModelsProvider = selectedViewModelsProvider;
+        _selectedViewModelsProvider.PropertyChanged += SelectedViewModelsProviderOnPropertyChanged;
         _logger = logger;
     }
 
     private readonly IPresentationLogic _presentationLogic;
     private readonly IMediator _mediator;
+    private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
     private readonly ILogger<LearningSpacePresenter> _logger;
     private int _creationCounter = 0;
     private int _activeSlot = -1;
@@ -62,9 +65,9 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("LearningSpaceVm is null");
-        if (_mediator.SelectedLearningWorld == null)
+        if (_selectedViewModelsProvider.LearningWorld == null)
             throw new ApplicationException("LearningWorld is null");
-        _presentationLogic.ChangeLearningSpaceLayout(LearningSpaceVm, _mediator.SelectedLearningWorld, floorPlanName);
+        _presentationLogic.ChangeLearningSpaceLayout(LearningSpaceVm, _selectedViewModelsProvider.LearningWorld, floorPlanName);
     }
 
     public void OpenReplaceLearningElementDialog(ILearningWorldViewModel learningWorldVm,
@@ -88,7 +91,6 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 
         _presentationLogic.DragLearningElementFromUnplaced(_replaceLearningElementData.LearningWorldVm, LearningSpaceVm,
             _replaceLearningElementData.DropItem, _replaceLearningElementData.SlotId);
-        _mediator.SelectedLearningElement = _replaceLearningElementData.DropItem;
     }
 
     public void DragLearningElement(object sender, DraggedEventArgs<ILearningElementViewModel> args)
@@ -98,6 +100,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 
     public void ClickedLearningElement(ILearningElementViewModel obj)
     {
+        _mediator.RequestOpenElementDialog();
         SetSelectedLearningElement(obj);
     }
 
@@ -130,7 +133,6 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
         _presentationLogic.DeleteLearningElementInSpace(LearningSpaceVm, obj);
-        _mediator.SelectedLearningElement = null;
     }
 
     public void HideRightClickMenu()
@@ -149,16 +151,16 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         LearningSpaceVm = space;
     }
 
-    private void MediatorOnPropertyChanged(object? caller, PropertyChangedEventArgs e)
+    private void SelectedViewModelsProviderOnPropertyChanged(object? caller, PropertyChangedEventArgs e)
     {
-        if (e.PropertyName == nameof(_mediator.SelectedLearningObjectInPathWay))
+        if (e.PropertyName == nameof(_selectedViewModelsProvider.LearningObjectInPathWay))
         {
-            if (caller is not IMediator)
-                throw new ArgumentException("Caller must be of type IMediator");
+            if (caller is not ISelectedViewModelsProvider)
+                throw new ArgumentException("Caller must be of type ISelectedViewModelsProvider");
 
-            if (_mediator.SelectedLearningObjectInPathWay is LearningSpaceViewModel space)
+            if (_selectedViewModelsProvider.LearningObjectInPathWay is LearningSpaceViewModel space)
                 LearningSpaceVm = space;
-            else if (_mediator.SelectedLearningObjectInPathWay is null)
+            else if (_selectedViewModelsProvider.LearningObjectInPathWay is null)
                 LearningSpaceVm = null;
         }
     }
@@ -228,7 +230,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
-        _mediator.SelectedLearningElement = learningElement;
+        _selectedViewModelsProvider.SetLearningElement(learningElement, null);
         HideRightClickMenu();
     }
 
@@ -240,10 +242,10 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
-        if (_mediator.SelectedLearningElement == null)
+        if (_selectedViewModelsProvider.LearningElement == null)
             return;
         _presentationLogic.DeleteLearningElementInSpace(LearningSpaceVm,
-            (LearningElementViewModel) _mediator.SelectedLearningElement);
+            _selectedViewModelsProvider.LearningElement);
     }
 
     /// <summary>
@@ -254,7 +256,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
-        switch (_mediator.SelectedLearningElement)
+        switch (_selectedViewModelsProvider.LearningElement)
         {
             case null:
                 throw new ApplicationException("SelectedLearningElement is null");
@@ -273,7 +275,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
-        switch (_mediator.SelectedLearningElement)
+        switch (_selectedViewModelsProvider.LearningElement)
         {
             case null:
                 throw new ApplicationException("SelectedLearningElement is null");

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using Bunit;
 using Bunit.TestDoubles;
@@ -12,7 +11,7 @@ using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
-using Presentation.View;
+using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.View.LearningSpace;
 using TestContext = Bunit.TestContext;
 
@@ -24,7 +23,7 @@ public class LearningSpaceViewUt
 #pragma warning disable CS8618 // set in setup - n.stich
     private TestContext _ctx;
     private ILearningSpacePresenter _learningSpacePresenter;
-    private IMediator _mediator;
+    private ISelectedViewModelsProvider _mediator;
 #pragma warning restore CS8618
 
     [SetUp]
@@ -35,7 +34,7 @@ public class LearningSpaceViewUt
         _ctx.JSInterop.SetupVoid("mudDragAndDrop.initDropZone", _ => true);
         _ctx.ComponentFactories.AddStub<MudText>();
         _learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
-        _mediator = Substitute.For<IMediator>();
+        _mediator = Substitute.For<ISelectedViewModelsProvider>();
         _ctx.Services.AddSingleton(_learningSpacePresenter);
         _ctx.Services.AddSingleton(_mediator);
         _ctx.Services.AddLogging();
@@ -95,7 +94,7 @@ public class LearningSpaceViewUt
         learningObject.Name.Returns("my secret name");
         learningObject.Description.Returns("a super long description");
         _learningSpacePresenter.LearningSpaceVm.Returns(learningSpace);
-        _mediator.SelectedLearningElement.Returns(learningObject);
+        _mediator.LearningElement.Returns(learningObject);
 
         var systemUnderTest = GetLearningSpaceViewForTesting();
 

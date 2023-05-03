@@ -3,6 +3,7 @@
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningPathway
 @using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.SelectedViewModels
 @inject ILogger<PathWay> Logger;
 @using Shared
 @using Direction = Shared.Direction
@@ -36,9 +37,9 @@
     public ILearningWorldPresenter PositioningService { get; set; } = null!;
 
     [Inject]
-    public IMediator? Mediator { get; set; }
+    public ISelectedViewModelsProvider? SelectedObjectsService { get; set; }
 
-    private double StrokeWidth => Mediator?.SelectedLearningObjectInPathWay == LearningPathWay ? 3 : 2;
+    private double StrokeWidth => SelectedObjectsService?.LearningObjectInPathWay == LearningPathWay ? 3 : 2;
 
     // The following coordinates are used as control points for the Bezier curve
     private double C1X => X1;

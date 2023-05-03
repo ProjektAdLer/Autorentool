@@ -40,7 +40,7 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     void ShowSelectedLearningSpaceView();
     void CloseLearningSpaceView();
     void DeletePathWayCondition(PathWayConditionViewModel pathWayCondition);
-    void OnMediatorPropertyChanged(object? caller, PropertyChangedEventArgs e);
+    void OnSelectedViewModelsProviderOnPropertyChanged(object? caller, PropertyChangedEventArgs e);
     event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
     void DragObjectInPathWay(object sender, DraggedEventArgs<IObjectInPathWayViewModel> draggedEventArgs);
     void RightClickOnObjectInPathWay(IObjectInPathWayViewModel learningSpace);

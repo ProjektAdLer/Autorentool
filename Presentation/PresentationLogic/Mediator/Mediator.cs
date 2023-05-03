@@ -1,10 +1,9 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningWorld;
 
-namespace Presentation.View;
+namespace Presentation.PresentationLogic.Mediator;
 
 public class Mediator : IMediator
 {
@@ -204,29 +203,6 @@ public class Mediator : IMediator
         CloseAllRightSide();
     }
 
-    #region SelectedObjects
-
-    public LearningWorldViewModel? SelectedLearningWorld
-    {
-        get => _selectedLearningWorld;
-        set => SetField(ref _selectedLearningWorld, value);
-    }
-
-    public ISelectableObjectInWorldViewModel? SelectedLearningObjectInPathWay
-    {
-        get => _selectedLearningObjectInPathWay;
-        set => SetField(ref _selectedLearningObjectInPathWay, value);
-    }
-
-    public ILearningElementViewModel? SelectedLearningElement
-    {
-        get => _selectedLearningElement;
-        set => SetField(ref _selectedLearningElement, value);
-    }
-
-    #endregion
-    
-    
 
     #region INotifyPropertyChanged
     

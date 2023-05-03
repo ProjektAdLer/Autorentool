@@ -1,9 +1,6 @@
 using System.ComponentModel;
-using Presentation.PresentationLogic;
-using Presentation.PresentationLogic.LearningElement;
-using Presentation.PresentationLogic.LearningWorld;
 
-namespace Presentation.View;
+namespace Presentation.PresentationLogic.Mediator;
 
 public interface IMediator : INotifyPropertyChanged
 {
@@ -31,21 +28,6 @@ public interface IMediator : INotifyPropertyChanged
     /// Indicates whether the world overview is open.
     /// </summary>
     bool WorldOverviewOpen { get; }
-
-    /// <summary>
-    /// The currently selected LearningWorldViewModel.
-    /// </summary>
-    LearningWorldViewModel? SelectedLearningWorld { get; set; }
-    
-    /// <summary>
-    /// The currently selected ObjectInPathway in LearningWorldView.
-    /// </summary>
-    ISelectableObjectInWorldViewModel? SelectedLearningObjectInPathWay { get; set; }
-    
-    /// <summary>
-    /// The currently selected learning element which can be either in the learning world or in a learning space.
-    /// </summary>
-    ILearningElementViewModel? SelectedLearningElement { get; set; }
 
     /// <summary>
     /// Requests the opening of the world dialog.

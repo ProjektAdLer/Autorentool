@@ -2,17 +2,18 @@
 @using System.ComponentModel
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View
 @using Presentation.View.LearningElement
 
 <MudCard Class="overflow-auto">
-    @if (Mediator.SelectedLearningElement == null || _editOverwritten)
+    @if (SelectedViewModelsProvider.LearningElement == null || _editOverwritten)
     {
         <CreateElementForm OnSubmitted="() => InvokeAsync(TriggerMasterLayoutStateHasChanged)"/>
     }
     else
     {
-        <EditElementForm ElementToEdit="Mediator.SelectedLearningElement" OnNewButtonClicked="OnForceNew">
+        <EditElementForm ElementToEdit="SelectedViewModelsProvider.LearningElement" OnNewButtonClicked="OnForceNew">
 
         </EditElementForm>
     }
@@ -40,7 +41,7 @@
     public ILearningWorldPresenter WorldPresenter { get; set; }
     
     [Inject]
-    public IMediator Mediator { get; set; }
+    public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 
     [CascadingParameter(Name = "TriggerMasterLayoutStateHasChanged")]
     private Action TriggerMasterLayoutStateHasChanged { get; set; }
@@ -60,7 +61,7 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        if (Mediator.SelectedLearningWorld != null) Mediator.PropertyChanged += MediatorOnPropertyChanged;
+        if (SelectedViewModelsProvider.LearningWorld != null) SelectedViewModelsProvider.PropertyChanged += MediatorOnPropertyChanged;
     }
 
     private async void MediatorOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
@@ -72,6 +73,6 @@
     private void OnForceNew()
     {
         _editOverwritten = true;
-        Mediator.SelectedLearningElement = null;
+        SelectedViewModelsProvider.SetLearningElement(null, null);
     }
 }

@@ -11,7 +11,6 @@ using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
-
 namespace AuthoringTool.Mapping;
 
 /// <summary>
@@ -122,7 +121,7 @@ public class ViewModelEntityMappingProfile : Profile
         //We must tell the automapper what class to use when it has to map from a class to an interface
         CreateMap<LearningElement, ILearningElementViewModel>()
             .As<LearningElementViewModel>();
-        CreateMap<LearningSpace, Presentation.PresentationLogic.LearningSpace.ILearningSpaceViewModel>()
+        CreateMap<LearningSpace, ILearningSpaceViewModel>()
             .As<LearningSpaceViewModel>();
         CreateMap<LearningPathway, ILearningPathWayViewModel>()
             .As<LearningPathwayViewModel>();

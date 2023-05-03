@@ -6,7 +6,7 @@ using NUnit.Framework;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningWorld;
-using Presentation.View;
+using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.View.LearningPathWay;
 using Shared;
 using TestContext = Bunit.TestContext;
@@ -20,7 +20,7 @@ public class PathWayUt
     private TestContext _ctx;
     private IMouseService _mouseService;
     private ILearningWorldPresenter _positioningService;
-    private IMediator _mediator;
+    private ISelectedViewModelsProvider _selectedViewModelsProvider;
 #pragma warning restore CS8618
     
     [SetUp]
@@ -29,9 +29,9 @@ public class PathWayUt
         _ctx = new TestContext();
         _mouseService = Substitute.For<IMouseService>();
         _positioningService = Substitute.For<ILearningWorldPresenter>();
-        _mediator = Substitute.For<IMediator>();
+        _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         _ctx.Services.AddSingleton(_mouseService);
-        _ctx.Services.AddSingleton(_mediator);
+        _ctx.Services.AddSingleton(_selectedViewModelsProvider);
     }
     
     [Test]
