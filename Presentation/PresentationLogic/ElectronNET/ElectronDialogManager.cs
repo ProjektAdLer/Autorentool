@@ -10,7 +10,8 @@ public class ElectronDialogManager : IElectronDialogManager
         DialogWrapper = dialogWrapper;
     }
     
-    private BrowserWindow? BrowserWindow => WindowManager.BrowserWindows.FirstOrDefault();
+    private BrowserWindow? BrowserWindow => WindowManager.BrowserWindows.FirstOrDefault() ?? BackupBrowserWindow;
+    public static BrowserWindow? BackupBrowserWindow { get; set; }
     internal IWindowManagerWrapper WindowManager { get; }
     internal IDialogWrapper DialogWrapper { get; }
     

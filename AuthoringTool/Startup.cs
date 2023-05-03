@@ -246,6 +246,7 @@ public class Startup
             endpoints.MapBlazorHub();
             endpoints.MapFallbackToPage("/_Host");
         });
-        app.ConfigureElectronWindow();
+        app.ConfigureElectronWindow(out var window);
+        ElectronDialogManager.BackupBrowserWindow = window;
     }
 }

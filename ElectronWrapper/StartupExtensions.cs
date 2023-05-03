@@ -28,10 +28,11 @@ public static class StartupExtensions
         return services;
     }
 
-    public static IApplicationBuilder ConfigureElectronWindow(this IApplicationBuilder appBuilder)
+    public static IApplicationBuilder ConfigureElectronWindow(this IApplicationBuilder appBuilder, out BrowserWindow? window)
     {
+        window = null;
         if (HybridSupport.IsElectronActive)
-            Task.Run(async () =>
+            window = new BrowserWindow(Task.Run(async () =>
             {
                 var options = new BrowserWindowOptions
                 {
@@ -47,7 +48,7 @@ public static class StartupExtensions
                     Icon = Path.Join("wwwroot", "favicon.ico")
                 };
                 return await Electron.WindowManager.CreateWindowAsync(options);
-            });
+            }).Result);
         
         //exit app on all windows closed
         Electron.App.WindowAllClosed += () => Electron.App.Quit();
