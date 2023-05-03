@@ -224,7 +224,8 @@ public class ContentFileHandler : IContentFileHandler
             //pre-filter all hash files where length of actual file is not equal to length of stream
             .Where(hashPath => RealFileHasSameLength(stream, hashPath))
             .FirstOrDefault(path => streamHash.SequenceEqual(_fileSystem.File.ReadAllBytes(path)));
-        _logger.LogInformation("Found matching hash at {Match}", match);
+        if(match != null)
+            _logger.LogInformation("Found matching hash at {Match}", match);
         return match == null
             ? (null, streamHash)
             : (Path.Join(ContentFilesFolderPath, Path.GetFileNameWithoutExtension(match)), streamHash);

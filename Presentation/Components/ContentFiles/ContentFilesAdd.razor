@@ -1,6 +1,8 @@
 @using Presentation.Components.Forms.Content
 @using Presentation.Components.Forms
 @using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.ElectronNET
+@using Presentation.Components.Dialogues
 <header class="m-2 rounded-lg">
             <div class="flex justify-center p-2">
                 <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Import of all files</h2>
@@ -18,7 +20,7 @@
                                  Color="Color.Primary" Size="Size.Large"/>
         }
         <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnFilesChanged" Hidden="false"
-                       InputClass="opacity-0 z-10"
+                       InputClass="absolute w-full h-full opacity-0 z-10"
                        @ondragenter="SetDragClass" @ondragleave="ClearDragClass"
                        @ondragend="ClearDragClass">
             <ButtonTemplate>
@@ -35,6 +37,8 @@
 </MudStack>
 
 @code {
+    [Inject]
+    private IDialogService DialogService { get; set; }
 
     [Inject]
     private IPresentationLogic PresentationLogic { get; set; }
@@ -52,11 +56,12 @@
     //iterates all files, copies them into a new stream and passes said stream to presentation logic
     private void OnFilesChanged(InputFileChangeEventArgs obj)
     {
+        //PLEASE leave this as a Task.Run, otherwise copying the streams over will block the UI thread
+        //indefinitely for no apparent reason
         Task.Run(async () =>
         {
             Logger.LogTrace("Entered OnFilesChanged in ContentFilesAdd");
             ToggleSpinner();
-            Logger.LogTrace("Entered OnFilesChanged in ContentFilesAdd");
             Logger.LogTrace("Getting up to 10 files from InputFileChangeEventArgs");
 
             var files = obj.GetMultipleFiles(10);
@@ -64,24 +69,39 @@
 
             foreach (var file in files)
             {
-                Logger.LogTrace("Opening stream for file {FileName}, Filesize is {FileSize}", file.Name, file.Size);
-                await using var stream = file.OpenReadStream(1_000_000_000);
-                Logger.LogTrace("BrowserFileStream opened");
-
-                Logger.LogTrace("Copying BrowserFileStream to MemoryStream");
-                using var memoryStream = new MemoryStream();
-                await stream.CopyToAsync(memoryStream);
-
-                Logger.LogTrace("Calling LoadLearningContentViewModel");
-    //TODO: report when a file with same content already exists
-                PresentationLogic.LoadLearningContentViewModel(file.Name, memoryStream);
-                Logger.LogTrace("LoadLearningContentViewModel returned");
+                await HandleFileAsync(file);
             }
 
             Logger.LogTrace("Rerendering ContentFilesContainer");
             await ContentFilesContainer.RerenderAsync();
             ToggleSpinner();
         });
+    }
+
+    private async Task HandleFileAsync(IBrowserFile file)
+    {
+        if (file.Size == 0)
+        {
+            Logger.LogTrace("File size is 0, skipping file {FileName}", file.Name);
+            //we must run this on the UI thread, as it is a UI component
+            await InvokeAsync(() =>
+                DialogService.ShowMessageBox("File empty", $"The file {file.Name} was empty, skipping it")
+            );
+            return;
+        }
+
+        Logger.LogTrace("Opening stream for file {FileName}, Filesize is {FileSize}", file.Name, file.Size);
+        await using var stream = file.OpenReadStream(1_000_000_000);
+        Logger.LogTrace("BrowserFileStream opened");
+
+        Logger.LogTrace("Copying BrowserFileStream to MemoryStream");
+        using var memoryStream = new MemoryStream();
+        await stream.CopyToAsync(memoryStream);
+
+        Logger.LogTrace("Calling LoadLearningContentViewModel");
+    //TODO: report when a file with same content already exists
+        PresentationLogic.LoadLearningContentViewModel(file.Name, memoryStream);
+        Logger.LogTrace("LoadLearningContentViewModel returned");
     }
 
     private void ToggleSpinner()
