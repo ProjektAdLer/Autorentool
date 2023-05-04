@@ -451,12 +451,25 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        if (LearningWorldVm.UnplacedLearningElements.Contains(learningElement) && elementParent == null)
-            _presentationLogic.EditLearningElement(elementParent, learningElement, name,
-                description,
-                goals, difficulty, workload, points, learningContent);
+        if (LearningWorldVm.UnplacedLearningElements.Contains(learningElement))
+            if(learningElement.Parent == null)
+                _presentationLogic.EditLearningElement(elementParent, learningElement, name,
+                    description,
+                    goals, difficulty, workload, points, learningContent);
+            else
+            {
+                throw new ApplicationException("LearningElement is unplaced but has a space parent");
+            }
         else
-            throw new ApplicationException("LearningElement is not unplaced");
+        {
+            if(learningElement.Parent == _selectedViewModelsProvider.LearningObjectInPathWay)
+                _learningSpacePresenter.EditLearningElement(learningElement, name, description, goals, difficulty,
+                    workload, points, learningContent);
+            else
+            {
+                throw new ApplicationException("LearningElement is placed but has a different or null parent");
+            }
+        }
     }
 
     /// <summary>

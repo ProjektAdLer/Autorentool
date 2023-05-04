@@ -1,7 +1,5 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
-using Presentation.PresentationLogic.LearningElement;
-using Presentation.PresentationLogic.LearningWorld;
 
 namespace Presentation.PresentationLogic.Mediator;
 
@@ -13,9 +11,6 @@ public class Mediator : IMediator
     private bool _contentDialogOpen;
     private bool _worldViewOpen;
     private bool _worldOverViewOpen;
-    private LearningWorldViewModel? _selectedLearningWorld;
-    private ISelectableObjectInWorldViewModel? _selectedLearningObjectInPathWay;
-    private ILearningElementViewModel? _selectedLearningElement;
 
     #region left side
     

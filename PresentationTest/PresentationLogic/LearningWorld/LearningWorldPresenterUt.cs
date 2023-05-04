@@ -2,7 +2,6 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
-using NSubstitute.ReceivedExtensions;
 using NUnit.Framework;
 using Presentation.Components;
 using Presentation.PresentationLogic;
@@ -855,27 +854,30 @@ public class LearningWorldPresenterUt
             systemUnderTest.EditLearningElement(null, element, "a", "b", "c", LearningElementDifficultyEnum.Easy, 0, 0,
                 null!));
 
-        Assert.That(ex!.Message, Is.EqualTo("LearningElement is not unplaced"));
+        Assert.That(ex!.Message, Is.EqualTo("LearningElement is placed but has a different or null parent"));
     }
 
     [Test]
-    public void EditLearningElement_ElementParentIsNotNull_ThrowsException()
+    public void EditLearningElement_ElementParentIsNotNull_CallsSpacePresenter()
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var systemUnderTest = CreatePresenterForTesting();
+        var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
+        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var systemUnderTest = CreatePresenterForTesting(learningSpacePresenter: learningSpacePresenter, selectedViewModelsProvider: selectedViewModelsProvider);
         var content = new LinkContentViewModel("a", "link");
         var element = new LearningElementViewModel("a", content, "d", "f", LearningElementDifficultyEnum.Easy);
         var space = new LearningSpaceViewModel("a", "d", "e");
+        element.Parent = space;
+        selectedViewModelsProvider.LearningObjectInPathWay.Returns(space);
 
         systemUnderTest.LearningWorldVm = world;
-        world.UnplacedLearningElements.Add(element);
 
-        var ex = Assert.Throws<ApplicationException>(() =>
-            systemUnderTest.EditLearningElement(space, element, "a", "b", "c", LearningElementDifficultyEnum.Easy, 0, 0,
-                null!));
+        systemUnderTest.EditLearningElement(space, element, "a", "b", "c", LearningElementDifficultyEnum.Easy, 0, 0,
+                null!);
 
-        Assert.That(ex!.Message, Is.EqualTo("LearningElement is not unplaced"));
+        learningSpacePresenter.Received(1).EditLearningElement(element, "a", "b", "c",
+            LearningElementDifficultyEnum.Easy, 0, 0, null!);
     }
 
     [Test]
