@@ -192,6 +192,8 @@ public class PresentationLogic : IPresentationLogic
         var command = new LoadLearningWorld(workspaceEntity, path, BusinessLogic,
             workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
         BusinessLogic.ExecuteCommand(command);
+        var viewmodel = authoringToolWorkspaceVm.LearningWorlds.First(lw => lw.Id == command.LearningWorld!.Id);
+        SelectedViewModelsProvider.SetLearningWorld(viewmodel, command);
     }
 
     public IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths()

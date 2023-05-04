@@ -9,7 +9,7 @@ public class LoadLearningWorld : IUndoCommand
     private readonly IBusinessLogic _businessLogic;
     
     private readonly AuthoringToolWorkspace _workspace;
-    internal LearningWorld? LearningWorld;
+    public LearningWorld? LearningWorld { get; private set; }
     private readonly string _filepath;
     private readonly Action<AuthoringToolWorkspace> _mappingAction;
     private IMemento? _memento;
