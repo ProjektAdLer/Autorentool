@@ -54,10 +54,11 @@ public class PresentationLogic : IPresentationLogic
     private const string WorldFileEnding = "awf";
     private const string SpaceFileEnding = "asf";
     private const string ElementFileEnding = "aef";
-    private readonly string[] _imageFileEnding = {"jpg", "png", "webp", "bmp"};
+    private readonly string[] _imageFileEnding = { "jpg", "png", "webp", "bmp" };
 
     private readonly string[] _textFileEnding =
         { "txt", "c", "h", "cpp", "cc", "c++", "py", "cs", "js", "php", "html", "css" };
+
     private const string VideoFileEnding = "mp4";
     private const string H5PFileEnding = "h5p";
     private const string PdfFileEnding = "pdf";
@@ -103,7 +104,8 @@ public class PresentationLogic : IPresentationLogic
     public void AddLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
         ILearningWorldViewModel learningWorldVm)
     {
-        var authoringToolWorkspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
+        var authoringToolWorkspaceEntity =
+            Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
 
         var command = new CreateLearningWorld(authoringToolWorkspaceEntity, worldEntity,
@@ -115,12 +117,14 @@ public class PresentationLogic : IPresentationLogic
     public void CreateLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string name,
         string shortname, string authors, string language, string description, string goals)
     {
-        var authoringToolWorkspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
+        var authoringToolWorkspaceEntity =
+            Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
 
-        var command = new CreateLearningWorld(authoringToolWorkspaceEntity, name, shortname, authors, language, description, goals,
+        var command = new CreateLearningWorld(authoringToolWorkspaceEntity, name, shortname, authors, language,
+            description, goals,
             workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
         BusinessLogic.ExecuteCommand(command);
-        
+
         SelectedViewModelsProvider.SetLearningWorld(authoringToolWorkspaceVm.LearningWorlds.Last(), command);
     }
 
@@ -136,15 +140,17 @@ public class PresentationLogic : IPresentationLogic
     }
 
     /// <inheritdoc cref="IPresentationLogic.DeleteLearningWorld"/>
-    public void DeleteLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, LearningWorldViewModel worldVm)
+    public void DeleteLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
+        LearningWorldViewModel worldVm)
     {
-        var authoringToolWorkspaceEntity = Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
+        var authoringToolWorkspaceEntity =
+            Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(worldVm);
 
         var command = new DeleteLearningWorld(authoringToolWorkspaceEntity, worldEntity,
             workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
         BusinessLogic.ExecuteCommand(command);
-        
+
         SelectedViewModelsProvider.SetLearningWorld(authoringToolWorkspaceVm.LearningWorlds.LastOrDefault(), command);
     }
 
@@ -159,7 +165,7 @@ public class PresentationLogic : IPresentationLogic
         learningWorldViewModel.SavePath = filepath;
         learningWorldViewModel.UnsavedChanges = false;
         AddSavedLearningWorldPath(new SavedLearningWorldPath()
-            {Id = worldEntity.Id, Name = worldEntity.Name, Path = filepath});
+            { Id = worldEntity.Id, Name = worldEntity.Name, Path = filepath });
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadLearningWorldAsync"/>
@@ -171,7 +177,7 @@ public class PresentationLogic : IPresentationLogic
         var command = new LoadLearningWorld(workspaceEntity, filepath, BusinessLogic,
             workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
         BusinessLogic.ExecuteCommand(command);
-        
+
         SelectedViewModelsProvider.SetLearningWorld(authoringToolWorkspaceVm.LearningWorlds.LastOrDefault(), command);
     }
 
@@ -228,10 +234,10 @@ public class PresentationLogic : IPresentationLogic
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
         var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
 
-        var command = new CreateLearningSpace(worldEntity, spaceEntity, 
+        var command = new CreateLearningSpace(worldEntity, spaceEntity,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
-        
+
         SelectedViewModelsProvider.SetLearningObjectInPathWay(learningSpaceVm, command);
     }
 
@@ -243,10 +249,10 @@ public class PresentationLogic : IPresentationLogic
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
         var topicEntity = Mapper.Map<BusinessLogic.Entities.Topic>(topicVm);
 
-        var command = new CreateLearningSpace(worldEntity, name, description, goals, requiredPoints, 
+        var command = new CreateLearningSpace(worldEntity, name, description, goals, requiredPoints,
             positionX, positionY, topicEntity, world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
-        
+
         SelectedViewModelsProvider.SetLearningObjectInPathWay(learningWorldVm.ObjectsInPathWays.Last(), command);
     }
 
@@ -271,18 +277,17 @@ public class PresentationLogic : IPresentationLogic
 
         learningSpaceVm.AssignedTopic = null;
         var command = new ChangeLearningSpaceLayout(spaceEntity, worldEntity, floorPlanName,
-            world =>
-            {
-                CMapper.Map(world, learningWorldVm);
-            });
+            world => { CMapper.Map(world, learningWorldVm); });
         BusinessLogic.ExecuteCommand(command);
     }
-    
-    public void DragObjectInPathWay(IObjectInPathWayViewModel objectInPathWayVm , double oldPositionX, double oldPositionY)
+
+    public void DragObjectInPathWay(IObjectInPathWayViewModel objectInPathWayVm, double oldPositionX,
+        double oldPositionY)
     {
         var objectInPathWayEntity = Mapper.Map<BusinessLogic.Entities.IObjectInPathWay>(objectInPathWayVm);
-        
-        var command = new DragObjectInPathWay(objectInPathWayEntity, oldPositionX, oldPositionY, objectInPathWayEntity.PositionX,
+
+        var command = new DragObjectInPathWay(objectInPathWayEntity, oldPositionX, oldPositionY,
+            objectInPathWayEntity.PositionX,
             objectInPathWayEntity.PositionY, space => CMapper.Map(space, objectInPathWayVm));
         BusinessLogic.ExecuteCommand(command);
     }
@@ -296,9 +301,11 @@ public class PresentationLogic : IPresentationLogic
         var command = new DeleteLearningSpace(worldEntity, spaceEntity,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
-        
-        if(learningSpaceVm == SelectedViewModelsProvider.LearningObjectInPathWay || SelectedViewModelsProvider.LearningObjectInPathWay == null)
-            SelectedViewModelsProvider.SetLearningObjectInPathWay(learningWorldVm.ObjectsInPathWays.LastOrDefault(), command);
+
+        if (learningSpaceVm == SelectedViewModelsProvider.LearningObjectInPathWay ||
+            SelectedViewModelsProvider.LearningObjectInPathWay == null)
+            SelectedViewModelsProvider.SetLearningObjectInPathWay(learningWorldVm.ObjectsInPathWays.LastOrDefault(),
+                command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.SaveLearningSpaceAsync"/>
@@ -317,22 +324,24 @@ public class PresentationLogic : IPresentationLogic
         ElectronCheck();
         var filepath = await GetLoadFilepathAsync("Load Learning Space", SpaceFileEnding, SpaceFileFormatDescriptor);
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
-        var command = new LoadLearningSpace(worldEntity, filepath, BusinessLogic, 
+        var command = new LoadLearningSpace(worldEntity, filepath, BusinessLogic,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
-        
-        SelectedViewModelsProvider.SetLearningObjectInPathWay(learningWorldVm.ObjectsInPathWays.LastOrDefault(), command);
+
+        SelectedViewModelsProvider.SetLearningObjectInPathWay(learningWorldVm.ObjectsInPathWays.LastOrDefault(),
+            command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.CreatePathWayCondition"/>
-    public void CreatePathWayCondition(ILearningWorldViewModel learningWorldVm, ConditionEnum condition, double positionX, double positionY)
+    public void CreatePathWayCondition(ILearningWorldViewModel learningWorldVm, ConditionEnum condition,
+        double positionX, double positionY)
     {
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
-        
-        var command = new CreatePathWayCondition(worldEntity, condition, positionX, positionY, 
+
+        var command = new CreatePathWayCondition(worldEntity, condition, positionX, positionY,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
-        
+
         SelectedViewModelsProvider.SetLearningObjectInPathWay(learningWorldVm.PathWayConditions.Last(), command);
     }
 
@@ -343,8 +352,8 @@ public class PresentationLogic : IPresentationLogic
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
         var sourceObjectEntity = Mapper.Map<BusinessLogic.Entities.IObjectInPathWay>(sourceObject);
         var targetObjectEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(targetObject);
-        
-        var command = new CreatePathWayCondition(worldEntity, condition, sourceObjectEntity, targetObjectEntity, 
+
+        var command = new CreatePathWayCondition(worldEntity, condition, sourceObjectEntity, targetObjectEntity,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
     }
@@ -353,8 +362,8 @@ public class PresentationLogic : IPresentationLogic
     public void EditPathWayCondition(PathWayConditionViewModel pathWayConditionVm, ConditionEnum newCondition)
     {
         var pathWayConditionEntity = Mapper.Map<BusinessLogic.Entities.PathWayCondition>(pathWayConditionVm);
-        
-        var command = new EditPathWayCondition(pathWayConditionEntity, newCondition, 
+
+        var command = new EditPathWayCondition(pathWayConditionEntity, newCondition,
             condition => CMapper.Map(condition, pathWayConditionVm));
         BusinessLogic.ExecuteCommand(command);
     }
@@ -369,10 +378,12 @@ public class PresentationLogic : IPresentationLogic
         var command = new DeletePathWayCondition(worldEntity, pathWayConditionEntity,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
-        
-        SelectedViewModelsProvider.SetLearningObjectInPathWay(learningWorldVm.ObjectsInPathWays.LastOrDefault(), command);
+
+        SelectedViewModelsProvider.SetLearningObjectInPathWay(learningWorldVm.ObjectsInPathWays.LastOrDefault(),
+            command);
     }
-/// <inheritdoc cref="IPresentationLogic.CreateTopic"/>
+
+    /// <inheritdoc cref="IPresentationLogic.CreateTopic"/>
     public void CreateTopic(ILearningWorldViewModel learningWorldVm, string name)
     {
         var learningWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
@@ -398,16 +409,18 @@ public class PresentationLogic : IPresentationLogic
         var topicEntity = Mapper.Map<BusinessLogic.Entities.Topic>(topicVm);
 
         var listOfCommands = new List<IUndoCommand>();
-        
-        foreach (var spaceEntity in learningWorldEntity.LearningSpaces.Where(x => x.AssignedTopic?.Id == topicEntity.Id))
+
+        foreach (var spaceEntity in
+                 learningWorldEntity.LearningSpaces.Where(x => x.AssignedTopic?.Id == topicEntity.Id))
         {
             var spaceVm = Mapper.Map<LearningSpaceViewModel>(spaceEntity);
-            listOfCommands.Add(new EditLearningSpace(spaceEntity, spaceEntity.Name, 
+            listOfCommands.Add(new EditLearningSpace(spaceEntity, spaceEntity.Name,
                 spaceEntity.Description, spaceEntity.Goals, spaceEntity.RequiredPoints, null,
                 space => CMapper.Map(space, spaceVm)));
         }
 
-        var deleteTopic = new DeleteTopic(learningWorldEntity, topicEntity, world => CMapper.Map(world, learningWorldVm));
+        var deleteTopic =
+            new DeleteTopic(learningWorldEntity, topicEntity, world => CMapper.Map(world, learningWorldVm));
 
         listOfCommands.Add(deleteTopic);
 
@@ -415,6 +428,7 @@ public class PresentationLogic : IPresentationLogic
 
         BusinessLogic.ExecuteCommand(batchCommand);
     }
+
     /// <inheritdoc cref="IPresentationLogic.CreateLearningPathWay"/>
     public void CreateLearningPathWay(ILearningWorldViewModel learningWorldVm, IObjectInPathWayViewModel sourceObjectVm,
         IObjectInPathWayViewModel targetObjectVm)
@@ -429,7 +443,8 @@ public class PresentationLogic : IPresentationLogic
     }
 
     /// <inheritdoc cref="IPresentationLogic.DeleteLearningPathWay"/>
-    public void DeleteLearningPathWay(ILearningWorldViewModel learningWorldVm, ILearningPathWayViewModel learningPathWayVm)
+    public void DeleteLearningPathWay(ILearningWorldViewModel learningWorldVm,
+        ILearningPathWayViewModel learningPathWayVm)
     {
         var learningWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
         var learningPathWayEntity = Mapper.Map<BusinessLogic.Entities.LearningPathway>(learningPathWayVm);
@@ -440,15 +455,16 @@ public class PresentationLogic : IPresentationLogic
     }
 
     /// <inheritdoc cref="IPresentationLogic.AddLearningElement"/>
-    public void AddLearningElement(ILearningSpaceViewModel parentSpaceVm, int slotIndex, ILearningElementViewModel learningElementVm)
+    public void AddLearningElement(ILearningSpaceViewModel parentSpaceVm, int slotIndex,
+        ILearningElementViewModel learningElementVm)
     {
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
 
-        var command = new CreateLearningElementInSlot(parentSpaceEntity, slotIndex, elementEntity, 
+        var command = new CreateLearningElementInSlot(parentSpaceEntity, slotIndex, elementEntity,
             parent => CMapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
-        
+
         SelectedViewModelsProvider.SetLearningElement(learningElementVm, command);
     }
 
@@ -464,12 +480,12 @@ public class PresentationLogic : IPresentationLogic
             difficulty, workload, points, positionX, positionY,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
-        
+
         SelectedViewModelsProvider.SetLearningElement(learningWorldVm.UnplacedLearningElements.Last(), command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.CreateLearningElementInSlot"/>
-    public void CreateLearningElementInSlot(ILearningSpaceViewModel parentSpaceVm, int slotIndex, string name, 
+    public void CreateLearningElementInSlot(ILearningSpaceViewModel parentSpaceVm, int slotIndex, string name,
         ILearningContentViewModel learningContentVm, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double positionX = 0, double positionY = 0)
     {
@@ -479,7 +495,8 @@ public class PresentationLogic : IPresentationLogic
         //TODO: temporary testing code
 
 
-        var command = new CreateLearningElementInSlot(parentSpaceEntity, slotIndex, name, contentEntity, description, goals, difficulty, workload, points, positionX, positionY, 
+        var command = new CreateLearningElementInSlot(parentSpaceEntity, slotIndex, name, contentEntity, description,
+            goals, difficulty, workload, points, positionX, positionY,
             parent => CMapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
     }
@@ -508,11 +525,14 @@ public class PresentationLogic : IPresentationLogic
         var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
 
-        var command = new PlaceLearningElementInLayoutFromUnplaced(worldEntity, spaceEntity, elementEntity, newSlotIndex,
+        var command = new PlaceLearningElementInLayoutFromUnplaced(worldEntity, spaceEntity, elementEntity,
+            newSlotIndex,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
-        
-        SelectedViewModelsProvider.SetLearningElement(learningElementVm, command);
+
+        SelectedViewModelsProvider.SetLearningElement(
+            learningWorldVm.LearningSpaces.First(x => x.Id == learningSpaceVm.Id).ContainedLearningElements
+                .First(x => x.Id == learningElementVm.Id), command);
     }
 
     public void DragLearningElementToUnplaced(ILearningWorldViewModel learningWorldVm,
@@ -525,6 +545,9 @@ public class PresentationLogic : IPresentationLogic
         var command = new RemoveLearningElementFromLayout(worldEntity, spaceEntity, elementEntity,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
+        
+        SelectedViewModelsProvider.SetLearningElement(
+            learningWorldVm.UnplacedLearningElements.First(x => x.Id == learningElementVm.Id), command);
     }
 
     public void SwitchLearningElementSlot(ILearningSpaceViewModel learningSpaceVm,
@@ -538,7 +561,8 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
     }
 
-    public void DragLearningElement(ILearningElementViewModel learningElementVm, double oldPositionX, double oldPositionY)
+    public void DragLearningElement(ILearningElementViewModel learningElementVm, double oldPositionX,
+        double oldPositionY)
     {
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
 
@@ -554,13 +578,13 @@ public class PresentationLogic : IPresentationLogic
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
 
-        var command = new DeleteLearningElementInSpace(elementEntity, parentSpaceEntity, 
+        var command = new DeleteLearningElementInSpace(elementEntity, parentSpaceEntity,
             parent => CMapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
-        
+
         SelectedViewModelsProvider.SetLearningElement(null, command);
     }
-    
+
     /// <inheritdoc cref="IPresentationLogic.DeleteLearningElementInWorld"/>
     public void DeleteLearningElementInWorld(ILearningWorldViewModel learningWorldVm,
         ILearningElementViewModel learningElementVm)
@@ -568,10 +592,10 @@ public class PresentationLogic : IPresentationLogic
         var elementEntity = Mapper.Map<BusinessLogic.Entities.LearningElement>(learningElementVm);
         var parentWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
 
-        var command = new DeleteLearningElementInWorld(elementEntity, parentWorldEntity, 
+        var command = new DeleteLearningElementInWorld(elementEntity, parentWorldEntity,
             parent => CMapper.Map(parent, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
-        
+
         SelectedViewModelsProvider.SetLearningElement(null, command);
     }
 
@@ -596,7 +620,7 @@ public class PresentationLogic : IPresentationLogic
         var command = new LoadLearningElement(parentSpaceEntity, slotIndex, filepath, BusinessLogic,
             parent => CMapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
-        
+
         SelectedViewModelsProvider.SetLearningElement(parentSpaceVm.ContainedLearningElements.Last(), command);
     }
 
@@ -638,7 +662,7 @@ public class PresentationLogic : IPresentationLogic
     public async Task<ILearningContentViewModel> LoadImageAsync()
     {
         ElectronCheck();
-        var fileFilter = new FileFilterProxy[] {new(" ", _imageFileEnding)};
+        var fileFilter = new FileFilterProxy[] { new(" ", _imageFileEnding) };
         var filepath = await GetLoadFilepathAsync("Load image", fileFilter);
         var entity = BusinessLogic.LoadLearningContent(filepath);
         return Mapper.Map<ILearningContentViewModel>(entity);
@@ -657,7 +681,7 @@ public class PresentationLogic : IPresentationLogic
     public async Task<ILearningContentViewModel> LoadH5PAsync()
     {
         ElectronCheck();
-        var filepath = await GetLoadFilepathAsync("Load h5p",H5PFileEnding, " ");
+        var filepath = await GetLoadFilepathAsync("Load h5p", H5PFileEnding, " ");
         var entity = BusinessLogic.LoadLearningContent(filepath);
         return Mapper.Map<ILearningContentViewModel>(entity);
     }
@@ -666,7 +690,7 @@ public class PresentationLogic : IPresentationLogic
     public async Task<ILearningContentViewModel> LoadPdfAsync()
     {
         ElectronCheck();
-        var filepath = await GetLoadFilepathAsync("Load pdf",PdfFileEnding, " ");
+        var filepath = await GetLoadFilepathAsync("Load pdf", PdfFileEnding, " ");
         var entity = BusinessLogic.LoadLearningContent(filepath);
         return Mapper.Map<ILearningContentViewModel>(entity);
     }
@@ -675,7 +699,7 @@ public class PresentationLogic : IPresentationLogic
     public async Task<ILearningContentViewModel> LoadTextAsync()
     {
         ElectronCheck();
-        var fileFilter = new FileFilterProxy[] {new(" ", _textFileEnding)};
+        var fileFilter = new FileFilterProxy[] { new(" ", _textFileEnding) };
         var filepath = await GetLoadFilepathAsync("Load text", fileFilter);
         var entity = BusinessLogic.LoadLearningContent(filepath);
         return Mapper.Map<ILearningContentViewModel>(entity);
@@ -706,7 +730,7 @@ public class PresentationLogic : IPresentationLogic
         var command = new LoadLearningWorld(workspaceEntity, stream, BusinessLogic,
             workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
         BusinessLogic.ExecuteCommand(command);
-        
+
         SelectedViewModelsProvider.SetLearningWorld(authoringToolWorkspaceVm.LearningWorlds.Last(), command);
     }
 
@@ -746,7 +770,7 @@ public class PresentationLogic : IPresentationLogic
     {
         var filepath = await GetSaveFilepathAsync(title, new FileFilterProxy[]
         {
-            new(fileFormatDescriptor, new[] {fileEnding})
+            new(fileFormatDescriptor, new[] { fileEnding })
         });
         if (!filepath.EndsWith($".{fileEnding}")) filepath += $".{fileEnding}";
         return filepath;
@@ -778,7 +802,7 @@ public class PresentationLogic : IPresentationLogic
     {
         var filepath = await GetLoadFilepathAsync(title, new FileFilterProxy[]
         {
-            new(fileFormatDescriptor, new[] {fileEnding})
+            new(fileFormatDescriptor, new[] { fileEnding })
         });
         if (!filepath.EndsWith($".{fileEnding}")) filepath += $".{fileEnding}";
         return filepath;

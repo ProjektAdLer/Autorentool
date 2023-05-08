@@ -97,6 +97,9 @@
 
     [Parameter, EditorRequired]
     public EventCallback OnNewButtonClicked { get; set; }
+    
+    [CascadingParameter(Name = "TriggerMasterLayoutStateHasChanged")]
+    private Action TriggerMasterLayoutStateHasChanged { get; set; }
 #pragma warning restore CS8618
 
     private LearningElementFormModel FormModel => FormDataContainer.FormModel;
@@ -110,6 +113,7 @@
         WorldPresenter.EditLearningElement(ElementToEdit.Parent, ElementToEdit, model.Name, model.Description,
     //ignore null warning here because validation ensures that LearningContent is not null - m.ho
             model.Goals, model.Difficulty, model.Workload, model.Points, model.LearningContent!);
+        TriggerMasterLayoutStateHasChanged();
     }
 
     private async Task MapIntoContainer()
