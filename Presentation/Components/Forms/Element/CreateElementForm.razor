@@ -110,10 +110,6 @@
     {
         if (SelectedViewModelsProvider.LearningWorld == null)
             throw new InvalidOperationException("No learning world selected.");
-        if (SelectedViewModelsProvider.LearningObjectInPathWay == null)
-            throw new InvalidOperationException("No object selected.");
-        if (SelectedViewModelsProvider.LearningObjectInPathWay is not LearningSpaceViewModel)
-            throw new InvalidOperationException("Selected object is not a learning space.");
 
         WorldPresenter.CreateUnplacedLearningElement(
     //ignore null warning here because validation ensures that LearningContent is not null - m.ho
