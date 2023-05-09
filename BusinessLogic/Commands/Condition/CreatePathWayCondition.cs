@@ -22,7 +22,7 @@ public class CreatePathWayCondition : ICreatePathWayCondition
     }
 
     public CreatePathWayCondition(LearningWorld learningWorld, ConditionEnum condition, IObjectInPathWay sourceObject,
-        LearningSpace targetObject, Action<LearningWorld> mappingAction)
+        ISelectableObjectInWorld targetObject, Action<LearningWorld> mappingAction)
     {
         LearningWorld = learningWorld;
         SourceObject = LearningWorld.ObjectsInPathWays.First(x => x.Id == sourceObject.Id);

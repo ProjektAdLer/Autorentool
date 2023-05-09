@@ -26,7 +26,6 @@ public class ChangeLearningSpaceLayout : IChangeLearningSpaceLayout
 
     public void Execute()
     {
-        //TODO: save both space and containing world memento
         _mementoSpaceLayout = LearningSpace.LearningSpaceLayout.GetMemento();
         _mementoSpace = LearningSpace.GetMemento();
         _mementoWorld = LearningWorld.GetMemento();

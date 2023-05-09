@@ -13,14 +13,13 @@ public class CreateLearningWorld : ICreateLearningWorld
     internal LearningWorld LearningWorld { get; }
 
     public CreateLearningWorld(AuthoringToolWorkspace authoringToolWorkspace, string name, string shortname,
-        string authors,
-        string language, string description, string goals, Action<AuthoringToolWorkspace> mappingAction)
+        string authors, string language, string description, string goals, Action<AuthoringToolWorkspace> mappingAction)
     {
         LearningWorld = new LearningWorld(name, shortname, authors, language, description, goals);
         AuthoringToolWorkspace = authoringToolWorkspace;
         _mappingAction = mappingAction;
     }
-    
+
     public CreateLearningWorld(AuthoringToolWorkspace authoringToolWorkspace, LearningWorld learningWorld,
         Action<AuthoringToolWorkspace> mappingAction)
     {
@@ -38,6 +37,7 @@ public class CreateLearningWorld : ICreateLearningWorld
             LearningWorld.Name = StringHelper.GetUniqueName(AuthoringToolWorkspace.LearningWorlds.Select(lw => lw.Name),
                 LearningWorld.Name);
         }
+
         AuthoringToolWorkspace.LearningWorlds.Add(LearningWorld);
 
         _mappingAction.Invoke(AuthoringToolWorkspace);
