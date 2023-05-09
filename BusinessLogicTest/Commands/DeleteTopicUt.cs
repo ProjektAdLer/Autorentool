@@ -1,4 +1,5 @@
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Topic;
 using BusinessLogic.Entities;
 using NUnit.Framework;
 

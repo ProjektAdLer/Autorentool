@@ -1,20 +1,20 @@
 using BusinessLogic.Entities;
 using Shared.Extensions;
 
-namespace BusinessLogic.Commands;
+namespace BusinessLogic.Commands.Topic;
 
-public class CreateTopic : IUndoCommand
+public class CreateTopic : ICreateTopic
 {
     public string Name => nameof(CreateTopic);
     internal LearningWorld LearningWorld { get; } 
-    internal Topic Topic { get; }
+    internal Entities.Topic Topic { get; }
     private readonly Action<LearningWorld> _mappingAction;
     private IMemento? _memento;
     
     public CreateTopic(LearningWorld learningWorld, string name, Action<LearningWorld> mappingAction)
     {
         LearningWorld = learningWorld;
-        Topic = new Topic(name);
+        Topic = new Entities.Topic(name);
         _mappingAction = mappingAction;
     }
 

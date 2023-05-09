@@ -2,7 +2,7 @@ using BusinessLogic.Entities;
 
 namespace BusinessLogic.Commands.Layout;
 
-public class RemoveLearningElementFromLayout : IUndoCommand
+public class RemoveLearningElementFromLayout : IRemoveLearningElementFromLayout
 {
     public string Name => nameof(RemoveLearningElementFromLayout);
     internal LearningWorld LearningWorld { get; }

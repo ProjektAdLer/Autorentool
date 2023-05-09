@@ -4,7 +4,7 @@ using LearningElementDifficultyEnum = Shared.LearningElementDifficultyEnum;
 
 namespace BusinessLogic.Commands.Element;
 
-public class CreateLearningElementInSlot : IUndoCommand
+public class CreateLearningElementInSlot : ICreateLearningElementInSlot
 {
     public string Name => nameof(CreateLearningElementInSlot);
     internal LearningSpace ParentSpace { get; }

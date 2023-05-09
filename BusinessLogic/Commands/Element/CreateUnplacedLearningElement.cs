@@ -4,7 +4,7 @@ using Shared;
 
 namespace BusinessLogic.Commands.Element;
 
-public class CreateUnplacedLearningElement : IUndoCommand
+public class CreateUnplacedLearningElement : ICreateUnplacedLearningElement
 {
     public string Name => nameof(CreateUnplacedLearningElement);
     internal LearningWorld LearningWorld { get; }

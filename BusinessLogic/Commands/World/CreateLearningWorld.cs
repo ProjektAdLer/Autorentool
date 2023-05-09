@@ -3,7 +3,7 @@ using Shared.Extensions;
 
 namespace BusinessLogic.Commands.World;
 
-public class CreateLearningWorld : IUndoCommand
+public class CreateLearningWorld : ICreateLearningWorld
 {
     public string Name => nameof(CreateLearningWorld);
     internal AuthoringToolWorkspace AuthoringToolWorkspace { get; }

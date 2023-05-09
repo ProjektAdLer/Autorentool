@@ -3,7 +3,7 @@ using BusinessLogic.Entities;
 
 namespace BusinessLogic.Commands.World;
 
-public class SaveLearningWorld : ICommand
+public class SaveLearningWorld : ISaveLearningWorld
 {
     public string Name => nameof(SaveLearningWorld);
     private readonly IBusinessLogic _businessLogic;

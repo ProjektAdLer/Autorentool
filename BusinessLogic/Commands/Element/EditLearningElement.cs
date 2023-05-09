@@ -4,7 +4,7 @@ using LearningElementDifficultyEnum = Shared.LearningElementDifficultyEnum;
 
 namespace BusinessLogic.Commands.Element;
 
-public class EditLearningElement : IUndoCommand
+public class EditLearningElement : IEditLearningElement
 {
     public string Name => nameof(EditLearningElement);
     internal LearningElement LearningElement { get; }

@@ -3,7 +3,7 @@ using Shared;
 
 namespace BusinessLogic.Commands.Condition;
 
-public class CreatePathWayCondition : IUndoCommand
+public class CreatePathWayCondition : ICreatePathWayCondition
 {
     public string Name => nameof(CreatePathWayCondition);
     internal LearningWorld LearningWorld { get; }

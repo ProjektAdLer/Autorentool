@@ -1,16 +1,16 @@
 using BusinessLogic.Entities;
 
-namespace BusinessLogic.Commands;
+namespace BusinessLogic.Commands.Topic;
 
-public class DeleteTopic : IUndoCommand
+public class DeleteTopic : IDeleteTopic
 {
     public string Name => nameof(DeleteTopic);
     internal LearningWorld LearningWorld { get; }
-    internal Topic Topic { get; }
+    internal Entities.Topic Topic { get; }
     private readonly Action<LearningWorld> _mappingAction;
     private IMemento? _memento;
 
-    public DeleteTopic(LearningWorld learningWorld, Topic topic, Action<LearningWorld> mappingAction)
+    public DeleteTopic(LearningWorld learningWorld, ITopic topic, Action<LearningWorld> mappingAction)
     {
         LearningWorld = learningWorld;
         Topic = LearningWorld.Topics.First(t => t.Id == topic.Id);

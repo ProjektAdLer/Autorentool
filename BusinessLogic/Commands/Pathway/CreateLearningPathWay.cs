@@ -2,7 +2,7 @@ using BusinessLogic.Entities;
 
 namespace BusinessLogic.Commands.Pathway;
 
-public class CreateLearningPathWay : IUndoCommand, ICommandWithError
+public class CreateLearningPathWay : ICreateLearningPathWay
 {
     public string Name => nameof(CreateLearningPathWay);
     public bool HasError { get; private set; }

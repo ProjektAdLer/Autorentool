@@ -2,7 +2,7 @@ using BusinessLogic.Entities;
 
 namespace BusinessLogic.Commands.World;
 
-public class EditLearningWorld : IUndoCommand
+public class EditLearningWorld : IEditLearningWorld
 {
     public string Name => nameof(EditLearningWorld);
     internal LearningWorld LearningWorld { get; }

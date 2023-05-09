@@ -1,16 +1,16 @@
 using BusinessLogic.Entities;
 
-namespace BusinessLogic.Commands;
+namespace BusinessLogic.Commands.Topic;
 
-public class EditTopic : IUndoCommand
+public class EditTopic : IEditTopic
 {
     public string Name => nameof(EditTopic);
-    internal Topic Topic { get; }
+    internal Entities.Topic Topic { get; }
     private readonly string _name;
-    private readonly Action<Topic> _mappingAction;
+    private readonly Action<Entities.Topic> _mappingAction;
     private IMemento? _memento;
     
-    public EditTopic(Topic topic, string name, Action<Topic> mappingAction)
+    public EditTopic(Entities.Topic topic, string name, Action<Entities.Topic> mappingAction)
     {
         Topic = topic;
         _name = name;

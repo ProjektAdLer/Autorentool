@@ -2,7 +2,7 @@
 
 namespace BusinessLogic.Commands.Pathway;
 
-public class DragObjectInPathWay : IUndoCommand
+public class DragObjectInPathWay : IDragObjectInPathWay
 {
     public string Name => nameof(DragObjectInPathWay);
     internal IObjectInPathWay LearningObject { get; }

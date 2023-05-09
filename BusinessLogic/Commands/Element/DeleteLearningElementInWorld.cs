@@ -2,7 +2,7 @@ using BusinessLogic.Entities;
 
 namespace BusinessLogic.Commands.Element;
 
-public class DeleteLearningElementInWorld : IUndoCommand
+public class DeleteLearningElementInWorld : IDeleteLearningElementInWorld
 {
     public string Name => nameof(DeleteLearningElementInWorld);
     internal LearningElement LearningElement { get; }

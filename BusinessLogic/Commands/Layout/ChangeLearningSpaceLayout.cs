@@ -4,7 +4,7 @@ using Shared;
 
 namespace BusinessLogic.Commands.Layout;
 
-public class ChangeLearningSpaceLayout : IUndoCommand
+public class ChangeLearningSpaceLayout : IChangeLearningSpaceLayout
 {
     public string Name => nameof(ChangeLearningSpaceLayout);
     internal LearningSpace LearningSpace { get; }

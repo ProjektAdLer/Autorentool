@@ -5,7 +5,7 @@ namespace BusinessLogic.Commands.Layout;
 /// <summary>
 /// Places a learning element that is already contained in the layout into a different slot in that layout.
 /// </summary>
-public class PlaceLearningElementInLayoutFromLayout : IUndoCommand
+public class PlaceLearningElementInLayoutFromLayout : IPlaceLearningElementInLayoutFromLayout
 {
     public string Name => nameof(PlaceLearningElementInLayoutFromLayout);
     internal LearningSpace ParentSpace { get; }

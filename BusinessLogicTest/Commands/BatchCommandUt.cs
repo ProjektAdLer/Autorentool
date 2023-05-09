@@ -1,6 +1,7 @@
 using BusinessLogic.Commands;
 using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Space;
+using BusinessLogic.Commands.Topic;
 using BusinessLogic.Entities;
 using NUnit.Framework;
 using Shared;

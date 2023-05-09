@@ -3,7 +3,7 @@ using BusinessLogic.Entities;
 
 namespace BusinessLogic.Commands.Space;
 
-public class SaveLearningSpace : ICommand
+public class SaveLearningSpace : ISaveLearningSpace
 {
     public string Name => nameof(SaveLearningSpace);
     private readonly IBusinessLogic _businessLogic;

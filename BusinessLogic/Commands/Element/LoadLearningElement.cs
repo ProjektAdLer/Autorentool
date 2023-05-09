@@ -3,7 +3,7 @@ using BusinessLogic.Entities;
 
 namespace BusinessLogic.Commands.Element;
 
-public class LoadLearningElement : IUndoCommand
+public class LoadLearningElement : ILoadLearningElement
 {
     public string Name => nameof(LoadLearningElement);
     private readonly IBusinessLogic _businessLogic;

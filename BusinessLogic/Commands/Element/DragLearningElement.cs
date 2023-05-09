@@ -2,7 +2,7 @@
 
 namespace BusinessLogic.Commands.Element;
 
-public class DragLearningElement : IUndoCommand
+public class DragLearningElement : IDragLearningElement
 {
     public string Name => nameof(DragLearningElement);
     internal LearningElement LearningElement { get; }

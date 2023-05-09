@@ -2,7 +2,7 @@
 
 namespace BusinessLogic.Commands.Element;
 
-public class DeleteLearningElementInSpace : IUndoCommand
+public class DeleteLearningElementInSpace : IDeleteLearningElementInSpace
 {
     public string Name => nameof(DeleteLearningElementInSpace);
     internal LearningElement LearningElement { get; }

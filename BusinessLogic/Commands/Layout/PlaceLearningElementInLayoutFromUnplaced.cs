@@ -5,7 +5,7 @@ namespace BusinessLogic.Commands.Layout;
 /// <summary>
 /// Places an unplaced learning element in a slot in a layout.
 /// </summary>
-public class PlaceLearningElementInLayoutFromUnplaced : IUndoCommand
+public class PlaceLearningElementInLayoutFromUnplaced : IPlaceLearningElementInLayoutFromUnplaced
 {
     public string Name => nameof(PlaceLearningElementInLayoutFromUnplaced);
     internal LearningWorld LearningWorld { get; }

@@ -2,7 +2,7 @@ using BusinessLogic.Entities;
 
 namespace BusinessLogic.Commands.Condition;
 
-public class DeletePathWayCondition : IUndoCommand
+public class DeletePathWayCondition : IDeletePathWayCondition
 {
     public string Name => nameof(DeletePathWayCondition);
     internal LearningWorld LearningWorld { get; }

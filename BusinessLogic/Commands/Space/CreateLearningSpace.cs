@@ -2,7 +2,7 @@ using BusinessLogic.Entities;
 
 namespace BusinessLogic.Commands.Space;
 
-public class CreateLearningSpace : IUndoCommand
+public class CreateLearningSpace : ICreateLearningSpace
 {
     public string Name => nameof(CreateLearningSpace);
     internal LearningWorld LearningWorld { get; }
@@ -11,7 +11,7 @@ public class CreateLearningSpace : IUndoCommand
     private IMemento? _memento;
 
     public CreateLearningSpace(LearningWorld learningWorld, string name, 
-        string description, string goals, int requiredPoints, double positionX, double positionY, Topic? topic, Action<LearningWorld> mappingAction)
+        string description, string goals, int requiredPoints, double positionX, double positionY, Entities.Topic? topic, Action<LearningWorld> mappingAction)
     {
         LearningSpace = new LearningSpace(name, description, goals, requiredPoints, null, positionX: positionX, positionY: positionY, assignedTopic:topic);
         LearningWorld = learningWorld;

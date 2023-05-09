@@ -3,7 +3,7 @@ using BusinessLogic.Entities;
 
 namespace BusinessLogic.Commands.Space;
 
-public class LoadLearningSpace : IUndoCommand
+public class LoadLearningSpace : ILoadLearningSpace
 {
     public string Name => nameof(LoadLearningSpace);
     private readonly IBusinessLogic _businessLogic;

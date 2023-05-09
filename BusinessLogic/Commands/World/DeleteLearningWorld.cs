@@ -2,7 +2,7 @@ using BusinessLogic.Entities;
 
 namespace BusinessLogic.Commands.World;
 
-public class DeleteLearningWorld : IUndoCommand
+public class DeleteLearningWorld : IDeleteLearningWorld
 {
     public string Name => nameof(DeleteLearningWorld);
     internal AuthoringToolWorkspace AuthoringToolWorkspace { get; }

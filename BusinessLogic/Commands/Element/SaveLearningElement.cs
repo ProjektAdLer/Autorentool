@@ -3,7 +3,7 @@ using BusinessLogic.Entities;
 
 namespace BusinessLogic.Commands.Element;
 
-public class SaveLearningElement : ICommand
+public class SaveLearningElement : ISaveLearningElement
 {
     public string Name => nameof(SaveLearningElement);
     private readonly IBusinessLogic _businessLogic;

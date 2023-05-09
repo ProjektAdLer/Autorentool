@@ -2,7 +2,7 @@ using BusinessLogic.Entities;
 
 namespace BusinessLogic.Commands.Space;
 
-public class DeleteLearningSpace : IUndoCommand
+public class DeleteLearningSpace : IDeleteLearningSpace
 {
     public string Name => nameof(DeleteLearningSpace);
     internal LearningWorld LearningWorld { get; }

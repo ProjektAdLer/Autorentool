@@ -2,20 +2,20 @@ using BusinessLogic.Entities;
 
 namespace BusinessLogic.Commands.Space;
 
-public class EditLearningSpace : IUndoCommand
+public class EditLearningSpace : IEditLearningSpace
 {
     public string Name => nameof(EditLearningSpace);
     internal LearningSpace LearningSpace { get; }
     private readonly string _name;
     private readonly string _description;
     private readonly string _goals;
-    private readonly Topic? _topic;
+    private readonly Entities.Topic? _topic;
     private readonly int _requiredPoints;
     private readonly Action<LearningSpace> _mappingAction;
     private IMemento? _memento;
 
     public EditLearningSpace(LearningSpace learningSpace, string name,
-        string description, string goals, int requiredPoints, Topic? topic, Action<LearningSpace> mappingAction)
+        string description, string goals, int requiredPoints, Entities.Topic? topic, Action<LearningSpace> mappingAction)
     {
         LearningSpace = learningSpace;
         _name = name;

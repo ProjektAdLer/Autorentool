@@ -3,7 +3,7 @@ using Shared;
 
 namespace BusinessLogic.Commands.Condition;
 
-public class EditPathWayCondition : IUndoCommand
+public class EditPathWayCondition : IEditPathWayCondition
 {
     public string Name => nameof(EditPathWayCondition);
     internal PathWayCondition PathWayCondition { get; }

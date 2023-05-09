@@ -2,7 +2,7 @@ using BusinessLogic.Entities;
 
 namespace BusinessLogic.Commands.Pathway;
 
-public class DeleteLearningPathWay : IUndoCommand
+public class DeleteLearningPathWay : IDeleteLearningPathWay
 {
     public string Name => nameof(DeleteLearningPathWay);
     internal LearningWorld LearningWorld { get; }

@@ -10,6 +10,7 @@ using BusinessLogic.Commands.Condition;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Commands.Space;
+using BusinessLogic.Commands.Topic;
 using BusinessLogic.Commands.World;
 using BusinessLogic.Entities.LearningContent;
 using ElectronWrapper;
