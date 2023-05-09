@@ -375,7 +375,7 @@ public interface IPresentationLogic
     Task ShowLearningElementContentAsync(LearningElementViewModel learningElementVm);
     
     /// <summary>
-    /// Asks user for path, loads an image file from disk and returns a <see cref="LearningContentViewModel"/>. 
+    /// Asks user for path, loads an image file from disk and returns a <see cref="ILearningContentViewModel"/>. 
     /// </summary>
     /// <returns></returns>
     Task<ILearningContentViewModel> LoadImageAsync();

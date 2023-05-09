@@ -43,6 +43,11 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 
     public ILearningContentViewModel? DragAndDropLearningContent { get; private set; }
     public IDisplayableLearningObject? RightClickedLearningObject { get; private set; }
+    
+    public void SetLearningSpace(ILearningSpaceViewModel space)
+    {
+        LearningSpaceVm = space;
+    }
 
     public void EditLearningSpace(string name, string description, string goals,
         int requiredPoints, ITopicViewModel? topic)
@@ -69,6 +74,8 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
             throw new ApplicationException("LearningWorld is null");
         _presentationLogic.ChangeLearningSpaceLayout(LearningSpaceVm, _selectedViewModelsProvider.LearningWorld, floorPlanName);
     }
+    
+    #region LearningElement
 
     public void OpenReplaceLearningElementDialog(ILearningWorldViewModel learningWorldVm,
         ILearningElementViewModel dropItem, int slotId)
@@ -146,11 +153,6 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         await ShowSelectedElementContentAsync();
     }
 
-    public void SetLearningSpace(ILearningSpaceViewModel space)
-    {
-        LearningSpaceVm = space;
-    }
-
     private void SelectedViewModelsProviderOnPropertyChanged(object? caller, PropertyChangedEventArgs e)
     {
         if (e.PropertyName == nameof(_selectedViewModelsProvider.LearningObjectInPathWay))
@@ -164,8 +166,6 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
                 LearningSpaceVm = null;
         }
     }
-
-    #region LearningElement
 
     /// <summary>
     /// Calls the LoadLearningElementAsync method in <see cref="_presentationLogic"/> and adds the returned
@@ -203,22 +203,6 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
             ContentTypeEnum.Text => await _presentationLogic.LoadTextAsync(),
             _ => throw new ApplicationException("No valid ContentType assigned")
         };
-    }
-
-    /// <summary>
-    /// Returns the parent of the learning element which is the selected learning space.
-    /// </summary>
-    /// <exception cref="Exception">Thrown if parent element is null.</exception>
-    private ILearningSpaceViewModel GetLearningElementParent()
-    {
-        ILearningSpaceViewModel? parentElement = LearningSpaceVm;
-
-        if (parentElement == null)
-        {
-            throw new Exception("Parent element is null");
-        }
-
-        return parentElement;
     }
 
     /// <summary>
