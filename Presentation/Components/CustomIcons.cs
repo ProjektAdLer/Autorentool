@@ -201,7 +201,7 @@ public static class CustomIcons
         </svg>";
 
     public const string DifficultyPolygonMedium = @"<svg>
-            <polygon fill=""yellow"" points=""13 1 5 25 24 10 2 10 21 25""></polygon>
+            <polygon fill=""orange"" points=""13 1 5 25 24 10 2 10 21 25""></polygon>
         </svg>";
 
     public const string DifficultyPolygonHard = @"<svg>
