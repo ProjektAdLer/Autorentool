@@ -9,14 +9,14 @@ public class EditLearningElement : IEditLearningElement
     public string Name => nameof(EditLearningElement);
     internal LearningElement LearningElement { get; }
     internal LearningSpace? ParentSpace { get; }
-    private readonly string _name;
-    private readonly string _description;
-    private readonly string _goals;
-    private readonly LearningElementDifficultyEnum _difficulty;
-    private readonly int _workload;
-    private readonly int _points;
+    internal string ElementName { get; }
+    internal string Description { get; }
+    internal string Goals { get; }
+    internal LearningElementDifficultyEnum Difficulty { get; }
+    internal int Workload { get; }
+    internal int Points { get; }
     internal ILearningContent LearningContent { get; }
-    private readonly Action<LearningElement> _mappingAction;
+    internal Action<LearningElement> MappingAction { get; }
     private IMemento? _memento;
     
     public EditLearningElement(LearningElement learningElement, LearningSpace? parentSpace, string name,
@@ -25,14 +25,14 @@ public class EditLearningElement : IEditLearningElement
     {
         LearningElement = learningElement;
         ParentSpace = parentSpace;
-        _name = name;
-        _description = description;
-        _goals = goals;
-        _difficulty = difficulty;
-        _workload = workload;
-        _points = points;
+        ElementName = name;
+        Description = description;
+        Goals = goals;
+        Difficulty = difficulty;
+        Workload = workload;
+        Points = points;
         LearningContent = learningContent;
-        _mappingAction = mappingAction;
+        MappingAction = mappingAction;
     }
 
     public void Execute()
@@ -40,26 +40,26 @@ public class EditLearningElement : IEditLearningElement
         _memento = LearningElement.GetMemento();
 
         if(AnyChange()) LearningElement.UnsavedChanges = true;
-        LearningElement.Name = _name;
+        LearningElement.Name = ElementName;
         LearningElement.Parent = ParentSpace;
-        LearningElement.Description = _description;
-        LearningElement.Goals = _goals;
-        LearningElement.Difficulty = _difficulty;
-        LearningElement.Workload = _workload;
-        LearningElement.Points = _points;
+        LearningElement.Description = Description;
+        LearningElement.Goals = Goals;
+        LearningElement.Difficulty = Difficulty;
+        LearningElement.Workload = Workload;
+        LearningElement.Points = Points;
         LearningElement.LearningContent = LearningContent;
         
-        _mappingAction.Invoke(LearningElement);
+        MappingAction.Invoke(LearningElement);
     }
 
     private bool AnyChange() => 
-        LearningElement.Name != _name ||
+        LearningElement.Name != ElementName ||
         LearningElement.Parent != ParentSpace ||
-        LearningElement.Description != _description ||
-        LearningElement.Goals != _goals ||
-        LearningElement.Difficulty != _difficulty ||
-        LearningElement.Workload != _workload ||
-        LearningElement.Points != _points ||
+        LearningElement.Description != Description ||
+        LearningElement.Goals != Goals ||
+        LearningElement.Difficulty != Difficulty ||
+        LearningElement.Workload != Workload ||
+        LearningElement.Points != Points ||
         LearningElement.LearningContent != LearningContent;
 
     public void Undo()
@@ -71,7 +71,7 @@ public class EditLearningElement : IEditLearningElement
         
         LearningElement.RestoreMemento(_memento);
 
-        _mappingAction.Invoke(LearningElement);
+        MappingAction.Invoke(LearningElement);
     }
 
     public void Redo() => Execute();

@@ -1,4 +1,5 @@
 ﻿using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using Shared;
 
 namespace TestHelpers;
@@ -23,6 +24,16 @@ public static class EntityProvider
     public static PathWayCondition GetPathWayCondition()
     {
         return new PathWayCondition(ConditionEnum.And);
+    }
+
+    public static LinkContent GetLinkContent()
+    {
+        return new LinkContent("a name", "a link");
+    }
+
+    public static FileContent GetFileContent()
+    {
+        return new FileContent("a name", "a type", "a filepath");
     }
 
     public static LearningWorld GetLearningWorldWithSpace()

@@ -10,7 +10,7 @@ public class CreateLearningElementInSlot : ICreateLearningElementInSlot
     internal LearningSpace ParentSpace { get; }
     internal int SlotIndex { get; }
     internal LearningElement LearningElement { get; }
-    private readonly Action<LearningSpace> _mappingAction;
+    internal Action<LearningSpace> MappingAction { get; }
     private IMemento? _memento;
     private IMemento? _mementoSpaceLayout;
 
@@ -23,7 +23,7 @@ public class CreateLearningElementInSlot : ICreateLearningElementInSlot
             difficulty, parentSpace, workload: workload, points: points, positionX: positionX, positionY: positionY);
         ParentSpace = parentSpace;
         SlotIndex = slotIndex;
-        _mappingAction = mappingAction;
+        MappingAction = mappingAction;
     }
     
     public CreateLearningElementInSlot(LearningSpace parentSpace, int slotIndex, LearningElement learningElement,
@@ -32,7 +32,7 @@ public class CreateLearningElementInSlot : ICreateLearningElementInSlot
         LearningElement = learningElement;
         ParentSpace = parentSpace;
         SlotIndex = slotIndex;
-        _mappingAction = mappingAction;
+        MappingAction = mappingAction;
     }
 
     public void Execute()
@@ -43,7 +43,7 @@ public class CreateLearningElementInSlot : ICreateLearningElementInSlot
         ParentSpace.UnsavedChanges = true;
         ParentSpace.LearningSpaceLayout.LearningElements[SlotIndex] = LearningElement;
         
-        _mappingAction.Invoke(ParentSpace);
+        MappingAction.Invoke(ParentSpace);
     }
 
     public void Undo()
@@ -60,7 +60,7 @@ public class CreateLearningElementInSlot : ICreateLearningElementInSlot
         ParentSpace.RestoreMemento(_memento);
         ParentSpace.LearningSpaceLayout.RestoreMemento(_mementoSpaceLayout);
         
-        _mappingAction.Invoke(ParentSpace);
+        MappingAction.Invoke(ParentSpace);
     }
 
     public void Redo() => Execute();

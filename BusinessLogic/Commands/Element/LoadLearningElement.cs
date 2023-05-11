@@ -6,13 +6,13 @@ namespace BusinessLogic.Commands.Element;
 public class LoadLearningElement : ILoadLearningElement
 {
     public string Name => nameof(LoadLearningElement);
-    private readonly IBusinessLogic _businessLogic;
+    internal IBusinessLogic BusinessLogic { get; }
     
     internal LearningSpace ParentSpace { get; }
     internal int SlotIndex { get; }
-    internal LearningElement? LearningElement;
-    private readonly string _filepath;
-    private readonly Action<LearningSpace> _mappingAction;
+    internal LearningElement? LearningElement { get; private set; }
+    internal string Filepath { get; }
+    internal Action<LearningSpace> MappingAction { get; }
     private IMemento? _memento;
     private IMemento? _mementoSpaceLayout;
 
@@ -21,9 +21,9 @@ public class LoadLearningElement : ILoadLearningElement
     {
         ParentSpace = parentSpace;
         SlotIndex = slotIndex;
-        _filepath = filepath;
-        _businessLogic = businessLogic;
-        _mappingAction = mappingAction;
+        Filepath = filepath;
+        BusinessLogic = businessLogic;
+        MappingAction = mappingAction;
     }
     
     public LoadLearningElement(LearningSpace parentSpace, int slotIndex, Stream stream, IBusinessLogic businessLogic,
@@ -31,21 +31,21 @@ public class LoadLearningElement : ILoadLearningElement
     {
         ParentSpace = parentSpace;
         SlotIndex = slotIndex;
-        _filepath = "";
-        _businessLogic = businessLogic;
-        LearningElement = _businessLogic.LoadLearningElement(stream);
-        _mappingAction = mappingAction;
+        Filepath = "";
+        BusinessLogic = businessLogic;
+        LearningElement = BusinessLogic.LoadLearningElement(stream);
+        MappingAction = mappingAction;
     }
     public void Execute()
     {
         _memento = ParentSpace.GetMemento();
         _mementoSpaceLayout = ParentSpace.LearningSpaceLayout.GetMemento();
         
-        LearningElement ??= _businessLogic.LoadLearningElement(_filepath);
+        LearningElement ??= BusinessLogic.LoadLearningElement(Filepath);
         LearningElement.Parent = ParentSpace;
         ParentSpace.LearningSpaceLayout.LearningElements[SlotIndex] = LearningElement;
 
-        _mappingAction.Invoke(ParentSpace);
+        MappingAction.Invoke(ParentSpace);
     }
 
     public void Undo()
@@ -62,7 +62,7 @@ public class LoadLearningElement : ILoadLearningElement
         ParentSpace.RestoreMemento(_memento);
         ParentSpace.LearningSpaceLayout.RestoreMemento(_mementoSpaceLayout);
         
-        _mappingAction.Invoke(ParentSpace);
+        MappingAction.Invoke(ParentSpace);
     }
 
     public void Redo() => Execute();

@@ -9,7 +9,7 @@ public class CreateUnplacedLearningElement : ICreateUnplacedLearningElement
     public string Name => nameof(CreateUnplacedLearningElement);
     internal LearningWorld LearningWorld { get; }
     internal LearningElement LearningElement { get; }
-    private readonly Action<LearningWorld> _mappingAction;
+    internal Action<LearningWorld> MappingAction { get; }
     private IMemento? _memento;
 
     public CreateUnplacedLearningElement(LearningWorld learningWorld, string name,
@@ -20,7 +20,7 @@ public class CreateUnplacedLearningElement : ICreateUnplacedLearningElement
         LearningElement = new LearningElement(name,  learningContent, description, goals,
             difficulty, null, workload, points, positionX, positionY);
         LearningWorld = learningWorld;
-        _mappingAction = mappingAction;
+        MappingAction = mappingAction;
     }
     
     public void Execute()
@@ -30,7 +30,7 @@ public class CreateUnplacedLearningElement : ICreateUnplacedLearningElement
         LearningWorld.UnsavedChanges = true;
         LearningWorld.UnplacedLearningElements.Add(LearningElement);
 
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Undo()
@@ -42,7 +42,7 @@ public class CreateUnplacedLearningElement : ICreateUnplacedLearningElement
         
         LearningWorld.RestoreMemento(_memento);
         
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Redo() => Execute();

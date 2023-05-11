@@ -7,8 +7,8 @@ public class EditPathWayCondition : IEditPathWayCondition
 {
     public string Name => nameof(EditPathWayCondition);
     internal PathWayCondition PathWayCondition { get; }
-    internal readonly ConditionEnum Condition;
-    internal readonly Action<PathWayCondition> MappingAction;
+    internal ConditionEnum Condition { get; }
+    internal Action<PathWayCondition> MappingAction { get; }
     private IMemento? _memento;
 
     public EditPathWayCondition(PathWayCondition pathWayCondition, ConditionEnum condition, Action<PathWayCondition> mappingAction)

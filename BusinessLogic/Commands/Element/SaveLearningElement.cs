@@ -6,19 +6,19 @@ namespace BusinessLogic.Commands.Element;
 public class SaveLearningElement : ISaveLearningElement
 {
     public string Name => nameof(SaveLearningElement);
-    private readonly IBusinessLogic _businessLogic;
-    private readonly LearningElement _learningElement;
-    private readonly string _filepath;
+    internal IBusinessLogic BusinessLogic { get; }
+    internal LearningElement LearningElement { get; }
+    internal string Filepath { get; }
     
     public SaveLearningElement(IBusinessLogic businessLogic, LearningElement learningElement, string filepath)
     {
-        _businessLogic = businessLogic;
-        _learningElement = learningElement;
-        _filepath = filepath;
+        BusinessLogic = businessLogic;
+        LearningElement = learningElement;
+        Filepath = filepath;
     }
     
     public void Execute()
     {
-        _businessLogic.SaveLearningElement(_learningElement, _filepath);
+        BusinessLogic.SaveLearningElement(LearningElement, Filepath);
     }
 }

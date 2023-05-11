@@ -7,7 +7,7 @@ public class DeleteLearningElementInSpace : IDeleteLearningElementInSpace
     public string Name => nameof(DeleteLearningElementInSpace);
     internal LearningElement LearningElement { get; }
     internal LearningSpace ParentSpace { get; }
-    private readonly Action<LearningSpace> _mappingAction;
+    internal Action<LearningSpace> MappingAction { get; }
     private IMemento? _memento;
     private IMemento? _mementoSpaceLayout;
 
@@ -16,7 +16,7 @@ public class DeleteLearningElementInSpace : IDeleteLearningElementInSpace
     {
         LearningElement = learningElement;
         ParentSpace = parentSpace;
-        _mappingAction = mappingAction;
+        MappingAction = mappingAction;
     }
 
     public void Execute()
@@ -29,7 +29,7 @@ public class DeleteLearningElementInSpace : IDeleteLearningElementInSpace
         
         ParentSpace.LearningSpaceLayout.LearningElements.Remove(kvP.Key);
 
-        _mappingAction.Invoke(ParentSpace);
+        MappingAction.Invoke(ParentSpace);
     }
 
     public void Undo()
@@ -47,7 +47,7 @@ public class DeleteLearningElementInSpace : IDeleteLearningElementInSpace
         ParentSpace.RestoreMemento(_memento);
         ParentSpace.LearningSpaceLayout.RestoreMemento(_mementoSpaceLayout);
 
-        _mappingAction.Invoke(ParentSpace);
+        MappingAction.Invoke(ParentSpace);
     }
 
     public void Redo() => Execute();

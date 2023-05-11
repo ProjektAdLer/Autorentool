@@ -7,7 +7,7 @@ public class DeleteLearningElementInWorld : IDeleteLearningElementInWorld
     public string Name => nameof(DeleteLearningElementInWorld);
     internal LearningElement LearningElement { get; }
     internal LearningWorld ParentWorld { get; }
-    private readonly Action<LearningWorld> _mappingAction;
+    internal Action<LearningWorld> MappingAction { get; }
     private IMemento? _memento;
     
     public DeleteLearningElementInWorld(LearningElement learningElement, LearningWorld parentWorld,
@@ -15,7 +15,7 @@ public class DeleteLearningElementInWorld : IDeleteLearningElementInWorld
     {
         LearningElement = learningElement;
         ParentWorld = parentWorld;
-        _mappingAction = mappingAction;
+        MappingAction = mappingAction;
     }
     
     public void Execute()
@@ -26,7 +26,7 @@ public class DeleteLearningElementInWorld : IDeleteLearningElementInWorld
         var element = ParentWorld.UnplacedLearningElements.First(x => x.Id == LearningElement.Id);
         ParentWorld.UnplacedLearningElements.Remove(element);
 
-        _mappingAction.Invoke(ParentWorld);
+        MappingAction.Invoke(ParentWorld);
     }
 
     public void Undo()
@@ -38,7 +38,7 @@ public class DeleteLearningElementInWorld : IDeleteLearningElementInWorld
 
         ParentWorld.RestoreMemento(_memento);
 
-        _mappingAction.Invoke(ParentWorld);
+        MappingAction.Invoke(ParentWorld);
     }
 
     public void Redo() => Execute();

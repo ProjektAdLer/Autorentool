@@ -7,7 +7,7 @@ public class DeletePathWayCondition : IDeletePathWayCondition
     public string Name => nameof(DeletePathWayCondition);
     internal LearningWorld LearningWorld { get; }
     internal PathWayCondition PathWayCondition { get; }
-    internal readonly Action<LearningWorld> MappingAction;
+    internal Action<LearningWorld> MappingAction { get; }
     private IMemento? _memento;
 
     public DeletePathWayCondition(LearningWorld learningWorld, PathWayCondition pathWayCondition,

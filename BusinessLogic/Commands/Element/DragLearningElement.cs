@@ -6,40 +6,40 @@ public class DragLearningElement : IDragLearningElement
 {
     public string Name => nameof(DragLearningElement);
     internal LearningElement LearningElement { get; }
-    private readonly double _oldPositionX;
-    private readonly double _oldPositionY;
-    private readonly double _newPositionX;
-    private readonly double _newPositionY;
-    private readonly Action<LearningElement> _mappingAction;
+    internal double OldPositionX { get; }
+    internal double OldPositionY { get; }
+    internal double NewPositionX { get; }
+    internal double NewPositionY { get; }
+    internal readonly Action<LearningElement> MappingAction;
     private IMemento? _memento;
 
     public DragLearningElement(LearningElement learningElement, double oldPositionX, double oldPositionY, 
         double newPositionX, double newPositionY, Action<LearningElement> mappingAction)
     {
         LearningElement = learningElement;
-        _oldPositionX = oldPositionX;
-        _oldPositionY = oldPositionY;
-        _newPositionX = newPositionX;
-        _newPositionY = newPositionY;
-        _mappingAction = mappingAction;
+        OldPositionX = oldPositionX;
+        OldPositionY = oldPositionY;
+        NewPositionX = newPositionX;
+        NewPositionY = newPositionY;
+        MappingAction = mappingAction;
     }
 
     public void Execute()
     {
-        LearningElement.PositionX = _oldPositionX;
-        LearningElement.PositionY = _oldPositionY;
+        LearningElement.PositionX = OldPositionX;
+        LearningElement.PositionY = OldPositionY;
         _memento = LearningElement.GetMemento();
 
         if (AnyChange()) LearningElement.UnsavedChanges = true;
-        LearningElement.PositionX = _newPositionX;
-        LearningElement.PositionY = _newPositionY;
+        LearningElement.PositionX = NewPositionX;
+        LearningElement.PositionY = NewPositionY;
         
-        _mappingAction.Invoke(LearningElement);
+        MappingAction.Invoke(LearningElement);
     }
     
     private bool AnyChange() => 
-        Math.Abs(LearningElement.PositionX - _newPositionX) > 0.01 ||
-        Math.Abs(LearningElement.PositionY - _newPositionY) > 0.01;
+        Math.Abs(LearningElement.PositionX - NewPositionX) > 0.01 ||
+        Math.Abs(LearningElement.PositionY - NewPositionY) > 0.01;
 
     public void Undo()
     {
@@ -50,7 +50,7 @@ public class DragLearningElement : IDragLearningElement
         
         LearningElement.RestoreMemento(_memento);
         
-        _mappingAction.Invoke(LearningElement);
+        MappingAction.Invoke(LearningElement);
     }
 
     public void Redo() => Execute();
