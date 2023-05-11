@@ -4,7 +4,7 @@ using FluentAssertions;
 using Force.DeepCloner;
 using NUnit.Framework;
 
-namespace BackendAccessTest.WebApiResponses;
+namespace BackendAccessTest.BackendResponses;
 
 public class AllResponsesTest
 {

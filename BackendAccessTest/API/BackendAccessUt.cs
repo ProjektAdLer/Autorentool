@@ -9,8 +9,8 @@ namespace BackendAccessTest.API;
 [TestFixture]
 public class ApiAccessUt
 {
-    private IMapper _mapper;
-    private IUserWebApiServices _userWebApiServices;
+    private IMapper _mapper = null!;
+    private IUserWebApiServices _userWebApiServices = null!;
 
     [Test]
     public void BackendAccess_DefaultConstructor_AllParametersSet()
@@ -31,7 +31,7 @@ public class ApiAccessUt
     }
 
     [Test]
-    public void BackendAccess_GetUserTokenAsync_CallsMethod()
+    public async Task BackendAccess_GetUserTokenAsync_CallsMethod()
     {
         // Arrange
         _mapper = Substitute.For<IMapper>();
@@ -39,14 +39,14 @@ public class ApiAccessUt
         var systemUnderTest = new BackendAccess(_mapper, _userWebApiServices);
 
         // Act
-        var userToken = systemUnderTest.GetUserTokenAsync("username", "password");
+        await systemUnderTest.GetUserTokenAsync("username", "password");
 
         // Assert
-        _userWebApiServices.Received().GetUserTokenAsync("username", "password");
+        await _userWebApiServices.Received().GetUserTokenAsync("username", "password");
     }
 
     [Test]
-    public void BackendAccess_GetUserInformationAsync_CallsMethod()
+    public async Task BackendAccess_GetUserInformationAsync_CallsMethod()
     {
         // Arrange
         _mapper = Substitute.For<IMapper>();
@@ -54,10 +54,10 @@ public class ApiAccessUt
         var systemUnderTest = new BackendAccess(_mapper, _userWebApiServices);
 
         // Act
-        var userToken = systemUnderTest.GetUserInformationAsync("token");
+        await systemUnderTest.GetUserInformationAsync("token");
 
         // Assert
-        _userWebApiServices.Received().GetUserInformationAsync("token");
+        await _userWebApiServices.Received().GetUserInformationAsync("token");
     }
 
     [Test]
@@ -69,10 +69,9 @@ public class ApiAccessUt
         var systemUnderTest = new BackendAccess(_mapper, _userWebApiServices);
 
         // Act
-        var response =
-            await systemUnderTest.UploadLearningWorldAsync("testToken", "testWorldName", "testWorldDescription");
+        await systemUnderTest.UploadLearningWorldAsync("testToken", "testWorldName", "testWorldDescription");
 
         // Assert
-        _userWebApiServices.Received().UploadLearningWorldAsync("testToken", "testWorldName", "testWorldDescription");
+        await _userWebApiServices.Received().UploadLearningWorldAsync("testToken", "testWorldName", "testWorldDescription");
     }
 }

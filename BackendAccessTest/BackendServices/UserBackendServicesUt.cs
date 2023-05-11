@@ -9,7 +9,7 @@ using NUnit.Framework;
 using RichardSzalay.MockHttp;
 using Shared.Configuration;
 
-namespace BackendAccessTest.WebApi;
+namespace BackendAccessTest.BackendServices;
 
 public class UserBackendServicesUt
 {
