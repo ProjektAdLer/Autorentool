@@ -12,7 +12,7 @@ public class PlaceLearningElementInLayoutFromUnplaced : IPlaceLearningElementInL
     internal LearningSpace LearningSpace { get; }
     internal int NewSlotIndex { get; }
     internal ILearningElement LearningElement { get; }
-    private readonly Action<LearningWorld> _mappingAction;
+    internal Action<LearningWorld> MappingAction { get; }
     private IMemento? _mementoWorld;
     private IMemento? _mementoSpace;
     private IMemento? _mementoSpaceLayout;
@@ -24,7 +24,7 @@ public class PlaceLearningElementInLayoutFromUnplaced : IPlaceLearningElementInL
         LearningSpace = LearningWorld.LearningSpaces.First(x => x.Id == learningSpace.Id);
         LearningElement = LearningWorld.UnplacedLearningElements.First(x => x.Id == learningElement.Id);
         NewSlotIndex = newSlotIndex;
-        _mappingAction = mappingAction;
+        MappingAction = mappingAction;
     }
 
     public void Execute()
@@ -54,7 +54,7 @@ public class PlaceLearningElementInLayoutFromUnplaced : IPlaceLearningElementInL
 
         LearningSpace.LearningSpaceLayout.LearningElements[NewSlotIndex] = LearningElement;
 
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Undo()
@@ -76,7 +76,7 @@ public class PlaceLearningElementInLayoutFromUnplaced : IPlaceLearningElementInL
         LearningSpace.RestoreMemento(_mementoSpace);
         LearningSpace.LearningSpaceLayout.RestoreMemento(_mementoSpaceLayout);
 
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Redo() => Execute();

@@ -8,7 +8,7 @@ public class RemoveLearningElementFromLayout : IRemoveLearningElementFromLayout
     internal LearningWorld LearningWorld { get; }
     internal LearningSpace LearningSpace { get; }
     internal ILearningElement LearningElement { get; }
-    private readonly Action<LearningWorld> _mappingAction;
+    internal Action<LearningWorld> MappingAction { get; }
     private IMemento? _mementoWorld;
     private IMemento? _mementoSpace;
     private IMemento? _mementoSpaceLayout;
@@ -19,7 +19,7 @@ public class RemoveLearningElementFromLayout : IRemoveLearningElementFromLayout
         LearningWorld = learningWorld;
         LearningSpace = LearningWorld.LearningSpaces.First(x => x.Id == learningSpace.Id);
         LearningElement = LearningSpace.ContainedLearningElements.First(x => x.Id == learningElement.Id);
-        _mappingAction = mappingAction;
+        MappingAction = mappingAction;
     }
 
     public void Execute()
@@ -40,7 +40,7 @@ public class RemoveLearningElementFromLayout : IRemoveLearningElementFromLayout
             LearningWorld.UnplacedLearningElements.Add(LearningElement);
         }
 
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Undo()
@@ -64,7 +64,7 @@ public class RemoveLearningElementFromLayout : IRemoveLearningElementFromLayout
         LearningSpace.RestoreMemento(_mementoSpace);
         LearningSpace.LearningSpaceLayout.RestoreMemento(_mementoSpaceLayout);
 
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Redo() => Execute();

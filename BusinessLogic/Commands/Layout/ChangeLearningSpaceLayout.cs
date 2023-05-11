@@ -10,7 +10,7 @@ public class ChangeLearningSpaceLayout : IChangeLearningSpaceLayout
     internal LearningSpace LearningSpace { get; }
     public LearningWorld LearningWorld { get; }
     internal FloorPlanEnum FloorPlanName { get; }
-    private readonly Action<LearningWorld> _mappingAction;
+    internal Action<LearningWorld> MappingAction { get; }
     private IMemento? _mementoSpaceLayout;
     private IMemento? _mementoSpace;
     private IMemento? _mementoWorld;
@@ -21,7 +21,7 @@ public class ChangeLearningSpaceLayout : IChangeLearningSpaceLayout
         LearningSpace = learningSpace;
         LearningWorld = learningWorld;
         FloorPlanName = floorPlanName;
-        _mappingAction = mappingAction;
+        MappingAction = mappingAction;
     }
 
     public void Execute()
@@ -60,7 +60,7 @@ public class ChangeLearningSpaceLayout : IChangeLearningSpaceLayout
             newLearningElementDictionary.ToDictionary(kvP => kvP.Key, kvP => kvP.Value);
         LearningSpace.LearningSpaceLayout.FloorPlanName = FloorPlanName;
         
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Undo()
@@ -84,7 +84,7 @@ public class ChangeLearningSpaceLayout : IChangeLearningSpaceLayout
         LearningSpace.RestoreMemento(_mementoSpace);
         LearningWorld.RestoreMemento(_mementoWorld);
         
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Redo() => Execute();
