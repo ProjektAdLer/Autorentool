@@ -7,24 +7,24 @@ public class EditPathWayCondition : IEditPathWayCondition
 {
     public string Name => nameof(EditPathWayCondition);
     internal PathWayCondition PathWayCondition { get; }
-    private readonly ConditionEnum _condition;
-    private readonly Action<PathWayCondition> _mappingAction;
+    internal readonly ConditionEnum Condition;
+    internal readonly Action<PathWayCondition> MappingAction;
     private IMemento? _memento;
 
     public EditPathWayCondition(PathWayCondition pathWayCondition, ConditionEnum condition, Action<PathWayCondition> mappingAction)
     {
         PathWayCondition = pathWayCondition;
-        _condition = condition;
-        _mappingAction = mappingAction;
+        Condition = condition;
+        MappingAction = mappingAction;
     }
 
     public void Execute()
     {
         _memento = PathWayCondition.GetMemento();
 
-        PathWayCondition.Condition = _condition;
+        PathWayCondition.Condition = Condition;
         
-        _mappingAction.Invoke(PathWayCondition);
+        MappingAction.Invoke(PathWayCondition);
     }
 
     public void Undo()
@@ -36,7 +36,7 @@ public class EditPathWayCondition : IEditPathWayCondition
         
         PathWayCondition.RestoreMemento(_memento);
         
-        _mappingAction.Invoke(PathWayCondition);
+        MappingAction.Invoke(PathWayCondition);
     }
 
     public void Redo() => Execute();

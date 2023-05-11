@@ -7,7 +7,7 @@ public class DeletePathWayCondition : IDeletePathWayCondition
     public string Name => nameof(DeletePathWayCondition);
     internal LearningWorld LearningWorld { get; }
     internal PathWayCondition PathWayCondition { get; }
-    private readonly Action<LearningWorld> _mappingAction;
+    internal readonly Action<LearningWorld> MappingAction;
     private IMemento? _memento;
 
     public DeletePathWayCondition(LearningWorld learningWorld, PathWayCondition pathWayCondition,
@@ -15,7 +15,7 @@ public class DeletePathWayCondition : IDeletePathWayCondition
     {
         LearningWorld = learningWorld;
         PathWayCondition = pathWayCondition;
-        _mappingAction = mappingAction;
+        MappingAction = mappingAction;
     }
 
     public void Execute()
@@ -38,7 +38,7 @@ public class DeletePathWayCondition : IDeletePathWayCondition
         }
         LearningWorld.PathWayConditions.Remove(pathWayCondition);
 
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Undo()
@@ -50,7 +50,7 @@ public class DeletePathWayCondition : IDeletePathWayCondition
 
         LearningWorld.RestoreMemento(_memento);
 
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Redo() => Execute();

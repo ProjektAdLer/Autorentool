@@ -32,6 +32,7 @@
     <ItemGroup>
       <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
       <ProjectReference Include="..\PersistEntities\PersistEntities.csproj" />
+      <ProjectReference Include="..\TestHelpers\TestHelpers.csproj" />
     </ItemGroup>
 
 </Project>

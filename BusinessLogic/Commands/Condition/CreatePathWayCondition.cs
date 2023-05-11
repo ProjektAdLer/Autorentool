@@ -10,7 +10,7 @@ public class CreatePathWayCondition : ICreatePathWayCondition
     internal PathWayCondition PathWayCondition { get; }
     internal IObjectInPathWay? SourceObject { get; }
     internal LearningSpace? TargetObject { get; }
-    private readonly Action<LearningWorld> _mappingAction;
+    internal readonly Action<LearningWorld> MappingAction;
     private IMemento? _memento;
 
     public CreatePathWayCondition(LearningWorld learningWorld, ConditionEnum condition, double positionX,
@@ -18,7 +18,7 @@ public class CreatePathWayCondition : ICreatePathWayCondition
     {
         PathWayCondition = new PathWayCondition(condition, positionX, positionY);
         LearningWorld = learningWorld;
-        _mappingAction = mappingAction;
+        MappingAction = mappingAction;
     }
 
     public CreatePathWayCondition(LearningWorld learningWorld, ConditionEnum condition, IObjectInPathWay sourceObject,
@@ -28,7 +28,7 @@ public class CreatePathWayCondition : ICreatePathWayCondition
         SourceObject = LearningWorld.ObjectsInPathWays.First(x => x.Id == sourceObject.Id);
         TargetObject = LearningWorld.LearningSpaces.First(x => x.Id == targetObject.Id);
         PathWayCondition = new PathWayCondition(condition, TargetObject.PositionX +42, TargetObject.PositionY - 60);
-        _mappingAction = mappingAction;
+        MappingAction = mappingAction;
     }
 
     public void Execute()
@@ -53,7 +53,7 @@ public class CreatePathWayCondition : ICreatePathWayCondition
             LearningWorld.LearningPathways.Add(new LearningPathway(PathWayCondition, TargetObject));
         }
 
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Undo()
@@ -65,7 +65,7 @@ public class CreatePathWayCondition : ICreatePathWayCondition
         
         LearningWorld.RestoreMemento(_memento);
         
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Redo() => Execute();
