@@ -7,14 +7,14 @@ public class DeleteLearningPathWay : IDeleteLearningPathWay
     public string Name => nameof(DeleteLearningPathWay);
     internal LearningWorld LearningWorld { get; }
     internal LearningPathway LearningPathway { get; }
-    private readonly Action<LearningWorld> _mappingAction;
+    internal Action<LearningWorld> MappingAction { get; }
     private IMemento? _memento;
     public DeleteLearningPathWay(LearningWorld learningWorld, LearningPathway learningPathway,
         Action<LearningWorld> mappingAction)
     {
         LearningWorld = learningWorld;
         LearningPathway = learningWorld.LearningPathways.Single(x => x.Id == learningPathway.Id);
-        _mappingAction = mappingAction;
+        MappingAction = mappingAction;
     }
     public void Execute()
     {
@@ -23,7 +23,7 @@ public class DeleteLearningPathWay : IDeleteLearningPathWay
         LearningWorld.UnsavedChanges = true;
         LearningWorld.LearningPathways.Remove(LearningPathway);
         
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Undo()
@@ -35,7 +35,7 @@ public class DeleteLearningPathWay : IDeleteLearningPathWay
         
         LearningWorld.RestoreMemento(_memento);
         
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Redo() => Execute();

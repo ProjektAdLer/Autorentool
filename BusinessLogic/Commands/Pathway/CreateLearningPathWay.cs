@@ -8,7 +8,7 @@ public class CreateLearningPathWay : ICreateLearningPathWay
     public bool HasError { get; private set; }
     internal LearningWorld LearningWorld { get; }
     internal LearningPathway LearningPathway { get; }
-    private readonly Action<LearningWorld> _mappingAction;
+    internal Action<LearningWorld> MappingAction { get; }
     private IMemento? _memento;
 
     public CreateLearningPathWay(LearningWorld learningWorld, IObjectInPathWay sourceObject, IObjectInPathWay targetObject,
@@ -16,7 +16,7 @@ public class CreateLearningPathWay : ICreateLearningPathWay
     {
         LearningPathway = new LearningPathway(sourceObject, targetObject);
         LearningWorld = learningWorld;
-        _mappingAction = mappingAction;
+        MappingAction = mappingAction;
     }
 
     
@@ -36,7 +36,7 @@ public class CreateLearningPathWay : ICreateLearningPathWay
         LearningWorld.UnsavedChanges = true;
         LearningWorld.LearningPathways.Add(LearningPathway); 
         
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
     
     private bool IsCircular(LearningPathway learningPathway)
@@ -81,7 +81,7 @@ public class CreateLearningPathWay : ICreateLearningPathWay
         
         LearningWorld.RestoreMemento(_memento);
         
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Redo() => Execute();

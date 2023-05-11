@@ -26,6 +26,11 @@ public static class EntityProvider
         return new PathWayCondition(ConditionEnum.And);
     }
 
+    public static LearningPathway GetLearningPathway()
+    {
+        return new LearningPathway(GetPathWayCondition(), GetPathWayCondition());
+    }
+
     public static LinkContent GetLinkContent()
     {
         return new LinkContent("a name", "a link");
