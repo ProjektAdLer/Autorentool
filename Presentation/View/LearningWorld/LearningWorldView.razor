@@ -34,61 +34,62 @@
         <MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Save" Disabled="@(SelectedViewModelsProvider.LearningObjectInPathWay == null || SelectedViewModelsProvider.LearningObjectInPathWay is not ILearningSpaceViewModel)" @onclick="SaveSelectedLearningSpaceAsync"></MudFab>
     </section>
     <!-- <svg style="width: 400px; height: 600px; border:3px black; background-color: white" -->
-    <svg class="bg-white w-full grow rounded-lg"
-     xmlns="http://www.w3.org/2000/svg"
-     @onmousemove=@(e => MouseService.FireMove(this, e))
-             @onmouseup=@(e => MouseService.FireUp(this, e))
-             @onmouseleave=@(e => MouseService.FireOut(this, e))>
+    <div class="bg-white rounded-lg w-full grow overflow-scroll">
+        <svg xmlns="http://www.w3.org/2000/svg" height="500" width="500"
+             @onmousemove=@(e => MouseService.FireMove(this, e))
+                 @onmouseup=@(e => MouseService.FireUp(this, e))
+                 @onmouseleave=@(e => MouseService.FireOut(this, e))>
 
-    @if (LearningWorldP.LearningWorldVm != null)
-    {
-        @foreach (var pathWayCondition in LearningWorldP.LearningWorldVm.PathWayConditions)
-        {
-            <DraggablePathWayCondition ObjectInPathWay="pathWayCondition"
-                                       OnClickedDraggable="@LearningWorldP.ClickOnObjectInWorld"
-                                       OnDraggedDraggable="@LearningWorldP.DragObjectInPathWay"
-                                       OnClickedDeletePath="@LearningWorldP.DeleteLearningPathWay"
-                                       OnClickedDeleteObject="@LearningWorldP.DeleteLearningObject"
-                                       OnRightClickedDraggable="@LearningWorldP.RightClickOnObjectInPathWay"
-                                       ShowingRightClickMenu="pathWayCondition == LearningWorldP.RightClickedLearningObject"
-                                       OnDeletePathWayCondition="@LearningWorldP.DeletePathWayCondition"
-                                       OnCloseRightClickMenu="@LearningWorldP.HideRightClickMenu"
-                                       PositioningService="@LearningWorldP">
-                <ConditionToggleSwitch ObjectInPathWay="pathWayCondition"
-                                       OnSwitchPathWayCondition="@LearningWorldP.SwitchPathWayCondition"/>
-            </DraggablePathWayCondition>
-        }
+            @if (LearningWorldP.LearningWorldVm != null)
+            {
+                @foreach (var pathWayCondition in LearningWorldP.LearningWorldVm.PathWayConditions)
+                {
+                    <DraggablePathWayCondition ObjectInPathWay="pathWayCondition"
+                                               OnClickedDraggable="@LearningWorldP.ClickOnObjectInWorld"
+                                               OnDraggedDraggable="@LearningWorldP.DragObjectInPathWay"
+                                               OnClickedDeletePath="@LearningWorldP.DeleteLearningPathWay"
+                                               OnClickedDeleteObject="@LearningWorldP.DeleteLearningObject"
+                                               OnRightClickedDraggable="@LearningWorldP.RightClickOnObjectInPathWay"
+                                               ShowingRightClickMenu="pathWayCondition == LearningWorldP.RightClickedLearningObject"
+                                               OnDeletePathWayCondition="@LearningWorldP.DeletePathWayCondition"
+                                               OnCloseRightClickMenu="@LearningWorldP.HideRightClickMenu"
+                                               PositioningService="@LearningWorldP">
+                        <ConditionToggleSwitch ObjectInPathWay="pathWayCondition"
+                                               OnSwitchPathWayCondition="@LearningWorldP.SwitchPathWayCondition"/>
+                    </DraggablePathWayCondition>
+                }
 
-        @foreach (var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
-        {
-            <DraggableLearningSpace ObjectInPathWay="learningSpace"
-                                    OnClickedDraggable="@LearningWorldP.SetSelectedLearningSpace"
-                                    OnDraggedDraggable="@LearningWorldP.DragObjectInPathWay"
-                                    OnClickedDeletePath="@LearningWorldP.DeleteLearningPathWay"
-                                    OnClickedDeleteObject="@LearningWorldP.DeleteLearningObject"
-                                    OnDoubleClickedDraggable="@LearningWorldP.DoubleClickOnObjectInPathway"
-                                    OnRightClickedDraggable="@LearningWorldP.RightClickOnObjectInPathWay"
-                                    ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject"
-                                    OnOpenLearningSpace="@LearningWorldP.ShowSelectedLearningSpaceView"
-                                    OnEditLearningSpace="@LearningWorldP.SetSelectedLearningSpace"
-                                    OnDeleteLearningSpace="@LearningWorldP.DeleteLearningSpace"
-                                    OnCloseRightClickMenu="@LearningWorldP.HideRightClickMenu"
-                                    PositioningService="@LearningWorldP"/>
-        }
+                @foreach (var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
+                {
+                    <DraggableLearningSpace ObjectInPathWay="learningSpace"
+                                            OnClickedDraggable="@LearningWorldP.SetSelectedLearningSpace"
+                                            OnDraggedDraggable="@LearningWorldP.DragObjectInPathWay"
+                                            OnClickedDeletePath="@LearningWorldP.DeleteLearningPathWay"
+                                            OnClickedDeleteObject="@LearningWorldP.DeleteLearningObject"
+                                            OnDoubleClickedDraggable="@LearningWorldP.DoubleClickOnObjectInPathway"
+                                            OnRightClickedDraggable="@LearningWorldP.RightClickOnObjectInPathWay"
+                                            ShowingRightClickMenu="learningSpace == LearningWorldP.RightClickedLearningObject"
+                                            OnOpenLearningSpace="@LearningWorldP.ShowSelectedLearningSpaceView"
+                                            OnEditLearningSpace="@LearningWorldP.SetSelectedLearningSpace"
+                                            OnDeleteLearningSpace="@LearningWorldP.DeleteLearningSpace"
+                                            OnCloseRightClickMenu="@LearningWorldP.HideRightClickMenu"
+                                            PositioningService="@LearningWorldP"/>
+                }
 
-        @foreach (var learningPathWay in LearningWorldP.LearningWorldVm.LearningPathWays)
-        {
-            <PathWay X1=@(learningPathWay.SourceObject.OutputConnectionX) Y1=@(learningPathWay.SourceObject.OutputConnectionY + 6)
-                     Direction1=Direction.Right X2=@(learningPathWay.TargetObject.InputConnectionX)
-                     Y2=@(learningPathWay.TargetObject.InputConnectionY) Direction2=Direction.Left
-                     LearningPathWay="learningPathWay" OnClickedClickable="@LearningWorldP.ClickOnObjectInWorld"
-                     PositioningService="LearningWorldP"/>
-        }
-    }
-    <!-- The RightClickMenu might lies behind other spaces. 
-    This line brings the RightClickMenu back to top, but the clickable buttons do not work anymore. -->
-    <!--<use xlink:href="#rightClickMenu" />-->
-</svg>
+                @foreach (var learningPathWay in LearningWorldP.LearningWorldVm.LearningPathWays)
+                {
+                    <PathWay X1=@(learningPathWay.SourceObject.OutputConnectionX) Y1=@(learningPathWay.SourceObject.OutputConnectionY + 6)
+                             Direction1=Direction.Right X2=@(learningPathWay.TargetObject.InputConnectionX)
+                             Y2=@(learningPathWay.TargetObject.InputConnectionY) Direction2=Direction.Left
+                             LearningPathWay="learningPathWay" OnClickedClickable="@LearningWorldP.ClickOnObjectInWorld"
+                             PositioningService="LearningWorldP"/>
+                }
+            }
+            <!-- The RightClickMenu might lies behind other spaces. 
+            This line brings the RightClickMenu back to top, but the clickable buttons do not work anymore. -->
+            <!--<use xlink:href="#rightClickMenu" />-->
+        </svg>
+    </div>
 </article>
 
 @code {
