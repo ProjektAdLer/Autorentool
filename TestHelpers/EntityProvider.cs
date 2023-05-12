@@ -41,6 +41,11 @@ public static class EntityProvider
         return new FileContent("a name", "a type", "a filepath");
     }
 
+    public static Topic GetTopic()
+    {
+        return new Topic("a topic");
+    }
+
     public static LearningWorld GetLearningWorldWithSpace()
     {
         var world = GetLearningWorld();

@@ -8,14 +8,14 @@ public class CreateTopic : ICreateTopic
     public string Name => nameof(CreateTopic);
     internal LearningWorld LearningWorld { get; } 
     internal Entities.Topic Topic { get; }
-    private readonly Action<LearningWorld> _mappingAction;
+    internal Action<LearningWorld> MappingAction { get; }
     private IMemento? _memento;
     
     public CreateTopic(LearningWorld learningWorld, string name, Action<LearningWorld> mappingAction)
     {
         LearningWorld = learningWorld;
         Topic = new Entities.Topic(name);
-        _mappingAction = mappingAction;
+        MappingAction = mappingAction;
     }
 
     public void Execute()
@@ -30,7 +30,7 @@ public class CreateTopic : ICreateTopic
 
         LearningWorld.Topics.Add(Topic);
         
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Undo()
@@ -42,7 +42,7 @@ public class CreateTopic : ICreateTopic
         
         LearningWorld.RestoreMemento(_memento);
         
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Redo() => Execute();

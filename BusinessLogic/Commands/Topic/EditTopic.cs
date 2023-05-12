@@ -6,25 +6,25 @@ public class EditTopic : IEditTopic
 {
     public string Name => nameof(EditTopic);
     internal Entities.Topic Topic { get; }
-    private readonly string _name;
-    private readonly Action<Entities.Topic> _mappingAction;
+    internal string TopicName { get; }
+    internal Action<Entities.Topic> MappingAction { get; }
     private IMemento? _memento;
     
     public EditTopic(Entities.Topic topic, string name, Action<Entities.Topic> mappingAction)
     {
         Topic = topic;
-        _name = name;
-        _mappingAction = mappingAction;
+        TopicName = name;
+        MappingAction = mappingAction;
     }
 
     public void Execute()
     {
         _memento = Topic.GetMemento();
         
-        if (Topic.Name != _name) Topic.UnsavedChanges = true;
-        Topic.Name = _name;
+        if (Topic.Name != TopicName) Topic.UnsavedChanges = true;
+        Topic.Name = TopicName;
         
-        _mappingAction.Invoke(Topic);
+        MappingAction.Invoke(Topic);
     }
 
     public void Undo()
@@ -36,7 +36,7 @@ public class EditTopic : IEditTopic
         
         Topic.RestoreMemento(_memento);
         
-        _mappingAction.Invoke(Topic);
+        MappingAction.Invoke(Topic);
     }
 
     public void Redo() => Execute();

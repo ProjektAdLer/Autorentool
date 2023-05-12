@@ -7,14 +7,14 @@ public class DeleteTopic : IDeleteTopic
     public string Name => nameof(DeleteTopic);
     internal LearningWorld LearningWorld { get; }
     internal Entities.Topic Topic { get; }
-    private readonly Action<LearningWorld> _mappingAction;
+    internal Action<LearningWorld> MappingAction { get; }
     private IMemento? _memento;
 
     public DeleteTopic(LearningWorld learningWorld, ITopic topic, Action<LearningWorld> mappingAction)
     {
         LearningWorld = learningWorld;
         Topic = LearningWorld.Topics.First(t => t.Id == topic.Id);
-        _mappingAction = mappingAction;
+        MappingAction = mappingAction;
     }
 
     public void Execute()
@@ -24,7 +24,7 @@ public class DeleteTopic : IDeleteTopic
         LearningWorld.UnsavedChanges = true;
         LearningWorld.Topics.Remove(Topic);
 
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Undo()
@@ -36,7 +36,7 @@ public class DeleteTopic : IDeleteTopic
 
         LearningWorld.RestoreMemento(_memento);
 
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Redo() => Execute();
