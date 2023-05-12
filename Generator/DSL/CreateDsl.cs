@@ -222,7 +222,7 @@ public class CreateDsl : ICreateDsl
                 var elementType = element.LearningContent switch
                 {
                     FileContentPe fileContent => fileContent.Type,
-                    LinkContentPe => "link",
+                    LinkContentPe => "url",
                     _ => throw new ArgumentOutOfRangeException()
                 };
                 var elementCategory = element.LearningContent switch
