@@ -9,15 +9,15 @@
         <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title="My Learning Worlds" @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
         <MudDivider Vertical="true" FlexItem="true"/>
         <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" Title="Save Learning World" OnClick="TrySaveAsync"></MudIconButton>
-        <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Upload" Title="Upload Learning World"></MudIconButton>
+        <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Upload" Title="Export Learning World" OnClick="ExportLearningWorld"></MudIconButton>
         <div>
             <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Undo" Disabled="!CanUndo" Title="Undo" OnClick="OnClickUndo"></MudIconButton>
             <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Redo" Disabled="!CanRedo" Title="Redo" OnClick="OnClickRedo"></MudIconButton>
         </div>
     </div>
     <div class="flex justify-center items-center gap-2">
-            <img class="w-10 drop-shadow" src="/CustomIcons/autorentool-logo.png" alt="authoringtool-logo"/>
-            <h1 class="font-bold text-lg">@Localizer["AuthoringTool.Text"] @Localizer["AuthoringTool.Version"]</h1>
+        <img class="w-10 drop-shadow" src="/CustomIcons/autorentool-logo.png" alt="authoringtool-logo"/>
+        <h1 class="font-bold text-lg">@Localizer["AuthoringTool.Text"] @Localizer["AuthoringTool.Version"]</h1>
     </div>
     <div class="flex justify-end">
         <CultureSelector/>
@@ -35,13 +35,13 @@
 
     [Inject]
     internal NavigationManager NavManager { get; private init; }
-    
+
     [Inject]
     private IStringLocalizer<HeaderBar> Localizer { get; set; }
-    
+
     [Inject]
     private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
-    
+
     [Inject]
     private IMediator Mediator { get; set; }
 
@@ -66,6 +66,21 @@
     private void OnClickUndo()
     {
         PresentationLogic.UndoCommand();
+    }
+
+    private async void ExportLearningWorld()
+    {
+    //Create XMl-files, Overwrite Encoding to UTF-8 and Create Backup-File
+        if (SelectedViewModelsProvider.LearningWorld == null) return;
+        try
+        {
+            await PresentationLogic.ConstructBackupAsync(SelectedViewModelsProvider.LearningWorld);
+        }
+        catch (OperationCanceledException)
+        {
+            //do nothing
+        }
+     StateHasChanged();
     }
 
     private void OnClickRedo()

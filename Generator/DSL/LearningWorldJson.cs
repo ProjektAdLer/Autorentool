@@ -6,12 +6,12 @@ public class LearningWorldJson : ILearningWorldJson
     // the lmsElementIdentifier has the name of the element, this information is needed for the API calls from the 2D3D Team.
     public LearningWorldJson(LmsElementIdentifierJson lmsElementIdentifier, string worldName, List<TopicJson> topics, 
         List<LearningSpaceJson> spaces, List<LearningElementJson> elements, string? worldDescription = null, 
-        string? worldGoals = null)
+        string[]? worldGoals = null)
     {
         LmsElementIdentifier = lmsElementIdentifier;
         WorldName = worldName;
         WorldDescription = worldDescription ?? "";
-        WorldGoals = worldGoals?.Split("\n") ?? new []{""};
+        WorldGoals = worldGoals ?? new []{""};
         Topics = topics;
         Spaces = spaces;
         Elements = elements;

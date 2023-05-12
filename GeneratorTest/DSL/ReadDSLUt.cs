@@ -28,10 +28,10 @@ public class ReadDslUt
         var topicsList = new List<TopicJson>() { topicsJson };
 
         var learningSpacesJson1 = new LearningSpaceJson(1, identifierLearningSpaceJson1,
-            "space1", new List<int> { 1, 2 }, 0, "spacedescription1", "spacegoals1");
+            "space1", new List<int> { 1, 2 }, 0, "spacedescription1", new []{"spacegoals1"});
 
         var learningSpacesJson2 = new LearningSpaceJson(2, identifierLearningSpaceJson2, "space2",
-            new List<int>(), 0, "spacedescription2", "spacegoals2");
+            new List<int>(), 0, "spacedescription2", new []{"spacegoals2"});
 
         var learningSpacesList = new List<LearningSpaceJson>() { learningSpacesJson1, learningSpacesJson2 };
 
@@ -51,7 +51,7 @@ public class ReadDslUt
             { learningElementJson1, learningElementJson2, learningElementJson3, learningElementJson4 };
 
         var learningWorldJson = new LearningWorldJson(identifierLearningWorldJson, "world",
-            topicsList, learningSpacesList, learningElementList, "World Description", "World Goals");
+            topicsList, learningSpacesList, learningElementList, "World Description", new []{"World Goals"});
 
         var rootJson = new DocumentRootJson("0.3","0.3.2", "marvin", "de", learningWorldJson);
         
@@ -106,7 +106,7 @@ public class ReadDslUt
      
         var learningWorldJson = new LearningWorldJson( identifierLearningWorldJson, "world",
             topicsList, new List<LearningSpaceJson>(), 
-            new List<LearningElementJson>(), "", "");
+            new List<LearningElementJson>(), "", new []{""});
 
         var rootJson = new DocumentRootJson("0.3","0.3.2", "marvin", "de",learningWorldJson);
         

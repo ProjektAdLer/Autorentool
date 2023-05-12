@@ -179,7 +179,7 @@ public class CreateDsl : ICreateDsl
         //Initialise learningWorldJson with empty values, will be filled with information later in the method.
         LearningWorldJson = new LearningWorldJson(new LmsElementIdentifierJson("moduleName", learningWorld.Name),
             learningWorld.Name, new List<TopicJson>(), new List<LearningSpaceJson>(),
-            new List<LearningElementJson>(), learningWorld.Description, learningWorld.Goals);
+            new List<LearningElementJson>(), learningWorld.Description, learningWorld.Goals.Split("\n"));
 
         // Create Learning Spaces & fill into Learning World
         // The learningSpaceId defines what the starting Id for Spaces should be. 
@@ -245,7 +245,7 @@ public class CreateDsl : ICreateDsl
 
                 var learningElementJson = new LearningElementJson(learningSpaceElementId,
                     learningElementIdentifier, element.Name, url, elementCategory, elementType, 
-                    learningSpaceId, element.Points, element.Description, element.Goals);
+                    learningSpaceId, element.Points, element.Description, element.Goals.Split("\n"));
 
                 // Add Elements that have Content to the List, they will be copied at the end of the method.
                 // Every Element without Content will be added to the LearningSpaceJson.
@@ -286,7 +286,7 @@ public class CreateDsl : ICreateDsl
             LearningWorldJson.Spaces.Add(new LearningSpaceJson(learningSpaceId,
                 learningSpaceIdentifier, space.Name, _listLearningSpaceElements, 
                 space.RequiredPoints, 
-                space.Description, space.Goals, _booleanAlgebraRequirements));
+                space.Description, space.Goals.Split("\n"), _booleanAlgebraRequirements));
             
             learningSpaceId++;
         }

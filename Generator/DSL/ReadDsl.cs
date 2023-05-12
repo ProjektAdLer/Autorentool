@@ -12,7 +12,7 @@ public class ReadDsl : IReadDsl
     private List<LearningElementJson> _listUrlElements;
     private List<LearningElementJson> _listAllElementsOrdered;
     private LearningWorldJson _learningWorldJson;
-    private IFileSystem _fileSystem;
+    private readonly IFileSystem _fileSystem;
     private DocumentRootJson _rootJson;
     
 
@@ -47,7 +47,7 @@ public class ReadDsl : IReadDsl
         {
             _rootJson = rootJsonForTest;
         }
-        else if (rootJsonForTest == null)
+        else
         {
              var jsonString = _fileSystem.File.ReadAllText(filepathDsl);
              var options = new JsonSerializerOptions { WriteIndented = true, PropertyNameCaseInsensitive = true};
@@ -117,7 +117,7 @@ public class ReadDsl : IReadDsl
             new LmsElementIdentifierJson("Description",documentRootJson.World.WorldDescription),"", "", 
             "World Attributes", "label", 0,
             0, documentRootJson.World.WorldDescription,
-            string.Join("\n", documentRootJson.World.WorldGoals));
+            documentRootJson.World.WorldGoals);
         
         _listAllElementsOrdered.Add(worldAttributes);
     }

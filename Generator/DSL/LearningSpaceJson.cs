@@ -7,14 +7,14 @@ public class LearningSpaceJson : ILearningSpaceJson
 {
     // the id is incremented and is set for every Space
     public LearningSpaceJson(int spaceId, LmsElementIdentifierJson lmsElementIdentifier, string spaceName,
-        List<int> spaceContents, int requiredPointsToComplete, string? spaceDescription=null, string? spaceGoals = null,
+        List<int> spaceContents, int requiredPointsToComplete, string? spaceDescription=null, string[]? spaceGoals = null,
         string? requiredSpacesToEnter = null)
     {
         SpaceId = spaceId;
         LmsElementIdentifier = lmsElementIdentifier;
         SpaceName = spaceName;
         SpaceDescription = spaceDescription ?? "";
-        SpaceGoals = spaceGoals?.Split("\n") ?? new []{""};
+        SpaceGoals = spaceGoals ?? new []{""};
         SpaceContents = spaceContents;
         RequiredPointsToComplete = requiredPointsToComplete;
         RequiredSpacesToEnter = requiredSpacesToEnter;
