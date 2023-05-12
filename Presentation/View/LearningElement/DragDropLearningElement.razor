@@ -3,21 +3,30 @@
 @using Presentation.Components
 @using BusinessLogic.Entities.LearningContent
 @using Presentation.PresentationLogic.LearningContent
+@using System.Drawing
+@using Size = System.Drawing.Size
 <MudMenu ActivationEvent="MouseEvent.RightClick" PositionAtCursor="true" @onclick="() => OnClicked.InvokeAsync(LearningElement)">
     <ActivatorContent>
-        <MudCard Outlined="true" Class="flex rounded-lg bg-adlerbggradientto m-[-1px]">
-            <MudCardContent Class="flex flex-col justify-start p-0">
-                <div class="relative w-24 h-1.5 flex flex-col justify-center m-0.5 gap-0.5">
-                    <MudIcon Icon="@GetElementIcon()" Size="Size.Large" Class="element-icon opacity-60 absolute top-0.5 right-1.5 m-2"/>
-                    <MudIcon Icon="@GetDifficultyIcon(LearningElement.Difficulty)" Class="difficulty-icon absolute top-2 right-2 m-0"/>
-                </div>
-                @{
-                    var item = LearningElement;
-                    var text = item.Name;
-                }
-                <MudListItem Class="text-md font-bold text-adlertextgrey uppercase" Text="@text"></MudListItem>
-            </MudCardContent>
+        <MudCard Outlined="true" Class="relative flex rounded-lg bg-adlerbggradientto m-[-1px]">
+            <section class="gap-1 flex flex-col justify-start">
+                <MudCardContent Class="relative flex w-24 h-12 p-0">
+                    <MudIcon Icon="@GetElementIcon()" Style="font-size: 3rem;" Class="absolute flex opacity-20 rounded-lg p-1"/>
+                    @*<MudIcon Icon="@GetElementIcon()" Style="font-size: 1.25rem;" Class="absolute flex right-0.5 bottom-0.5 opacity-20 rounded-lg"/>*@
+                    <div class="flex justify-end absolute w-3.5 h-1.5 top-0.5 right-0.5 m-0.5">
+                        <MudIcon Icon="@GetDifficultyIcon(LearningElement.Difficulty)" Class="difficulty-icon absolute h-3.5 w-3.5"/>
+                    </div>
+
+                    @{
+                        var item = LearningElement;
+                        var text = item.Name;
+                    }
+                    <MudListItem Class="text-md font-bold text-adlertextgrey break-words text-center leading-none pl-1" Text="@text"></MudListItem>
+
+                </MudCardContent>
+            </section>
+            
         </MudCard>
+       
     </ActivatorContent>
     <ChildContent>
         <MudMenuItem OnClick="() => OnShowLearningElementContent.InvokeAsync(LearningElement)">Show</MudMenuItem>

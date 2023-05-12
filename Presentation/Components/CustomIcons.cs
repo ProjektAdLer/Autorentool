@@ -2,7 +2,8 @@ namespace Presentation.Components;
 
 public static class CustomIcons
 {
-    public const string SpaceIcon = @"<svg width=""100%"" height=""100%"" viewBox=""-100 -100 2200 2000"" preserveAspectRatio=""xMinYMin"" version=""1.1"" xmlns=""http://www.w3.org/2000/svg"" xml:space=""preserve"" style=""fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;"">
+    public const string SpaceIcon =
+        @"<svg width=""100%"" height=""100%"" viewBox=""-100 -100 2200 2000"" preserveAspectRatio=""xMinYMin"" version=""1.1"" xmlns=""http://www.w3.org/2000/svg"" xml:space=""preserve"" style=""fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;"">
             <g transform=""matrix(1.12299,-0.648358,1.29672,0.74866,-322.238,-121.233)"">
                 <rect x=""-1024"" y=""1191.65"" width=""825.427"" height=""714.841"" style=""fill:rgb(185,190,198);""/>
                 <path d=""M-183.732,1185.22C-183.732,1181.25 -186.56,1178.8 -191.152,1178.8L-1016.58,1178.8C-1021.17,1178.8 -1026.83,1181.25 -1031.42,1185.22C-1036.01,1189.2 -1038.84,1194.1 -1038.84,1198.08L-1038.84,1912.92C-1038.84,1916.89 -1036.01,1919.34 -1031.42,1919.34L-205.994,1919.34C-201.402,1919.34 -195.744,1916.89 -191.152,1912.92C-186.56,1908.94 -183.732,1904.04 -183.732,1900.07L-183.732,1185.22ZM-213.414,1204.5L-213.414,1893.64C-213.414,1893.64 -1009.16,1893.64 -1009.16,1893.64C-1009.16,1893.64 -1009.16,1204.5 -1009.16,1204.5C-1009.16,1204.5 -213.414,1204.5 -213.414,1204.5L-213.414,1204.5Z"" style=""fill:rgb(23,45,77);""/>
@@ -56,7 +57,8 @@ public static class CustomIcons
             </g>
         </svg>";
 
-    public const string ImageElementIcon = @"<svg width=""100%"" height=""100%"" viewBox=""0 0 2000 2000"" version=""1.1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" xml:space=""preserve"" xmlns:serif=""http://www.serif.com/"" style=""fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"">
+    public const string ImageElementIcon =
+        @"<svg width=""100%"" height=""100%"" viewBox=""0 0 2000 2000"" version=""1.1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" xml:space=""preserve"" xmlns:serif=""http://www.serif.com/"" style=""fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"">
         <g transform=""matrix(2.36128,0,0,1.7452,-1303.42,-719.023)"">
             <path d=""M1399,457.84C1399,432.54 1383.82,412 1365.12,412L585.88,412C567.181,412 552,432.54 552,457.84L552,1512.16C552,1537.46 567.181,1558 585.88,1558L1365.12,1558C1383.82,1558 1399,1537.46 1399,1512.16L1399,457.84Z"" style=""fill:rgb(230,230,230);""/>
         <clipPath id=""_clip1"">
@@ -108,7 +110,8 @@ public static class CustomIcons
         </g>
         </svg>";
 
-    public const string H5PElementIcon = @"<svg width=""100%"" height=""100%"" viewBox=""0 0 2000 2000"" version=""1.1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" xml:space=""preserve"" xmlns:serif=""http://www.serif.com/"" style=""fill-rule:evenodd;clip-rule:evenodd;"">
+    public const string H5PElementIcon =
+        @"<svg width=""100%"" height=""100%"" viewBox=""0 0 2000 2000"" version=""1.1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" xml:space=""preserve"" xmlns:serif=""http://www.serif.com/"" style=""fill-rule:evenodd;clip-rule:evenodd;"">
             <rect id=""h5p_icon"" x=""0"" y=""0"" width=""2000"" height=""2000"" style=""fill:none;""/>
             <g id=""h5p_icon1"" serif:id=""h5p_icon"">
                 <g transform=""matrix(2.36128,0,0,1.7452,-1303.42,-719.023)"">
@@ -132,40 +135,20 @@ public static class CustomIcons
             </g>
         </svg>";
 
-    public const string TextElementIcon = @"<svg id=""Ebene_1"" data-name=""Ebene 1"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
-              <defs>
-                <style>
-                  .cls-1 {
-                    fill: #fff;
-                  }
-
-                  .cls-2 {
-                    fill: #45a0e5;
-                  }
-
-                  .cls-2, .cls-3 {
-                    fill-rule: evenodd;
-                  }
-
-                  .cls-3 {
-                    fill: #e6e6e6;
-                  }
-                </style>
-              </defs>
-              <path id=""BackgroundGrey"" class=""cls-3"" d=""M2000,80c0-44.15-35.84-80-80-80H80C35.85,0,0,35.85,0,80V1920c0,44.15,35.85,80,80,80H1920c44.16,0,80-35.85,80-80V80Z""/>
-              <path class=""cls-2"" d=""M69.28,99.45s237.61-15.51,241.5,248.53c3.89,264.04-1.76,1347.76-1.76,1347.76,0,0,19.47,193.12,336.68,204.98H1930.73c-322.51-17.54-334.92-203.56-334.92-203.56,0,0,3.9-1085.14,0-1349.18-3.9-264.04-241.5-248.53-241.5-248.53l-1285.04-.17""/>
-              <path class=""cls-1"" d=""M1930.73,1918.94H645.69c-.23,0-.45,0-.68-.01-74.59-2.79-139.48-15.73-192.89-38.47-43.56-18.55-79.66-43.62-107.31-74.52-47.92-53.57-53.71-106.15-53.93-108.36-.06-.64-.1-1.28-.09-1.92,.06-10.84,5.61-1086.56,1.76-1347.4-1.14-77.25-23.3-136.43-65.86-175.88-64.34-59.63-155.35-54.8-156.27-54.74-9.73,.59-18.16-6.56-19.24-16.14-.09-.73-.13-1.47-.13-2.22,0-10.06,8.16-18.22,18.22-18.22h5.02c1.6-.02,3.48-.03,5.61,0l1273.88,.17c9.88-.53,108.64-3.95,182.38,64.12,50.36,46.49,76.56,114.57,77.85,202.36,3.81,257.95,.13,1312.09,0,1348.63,.55,4.91,6.11,44.81,43.66,85.86,53.8,58.81,148.56,93.51,274.02,100.33,9.86,.54,17.49,8.82,17.22,18.69-.27,9.87-8.34,17.72-18.21,17.72Zm-1284.69-36.44H1745.47c-3.48-1.37-6.92-2.79-10.3-4.24-43.63-18.67-79.44-43.49-106.44-73.78-47.04-52.76-50.96-103.96-51.1-106.11-.03-.43-.04-.85-.04-1.28,.04-10.85,3.85-1087.99,0-1348.85-1.14-77.25-23.3-136.43-65.87-175.88-64.34-59.63-155.35-54.8-156.26-54.74-.37,.02-.78,.04-1.15,.04l-1140.6-.15c12.81,7.6,25.46,16.78,37.44,27.84,50.36,46.49,76.55,114.57,77.84,202.36,3.79,257.27-1.54,1305.03-1.75,1346.92,.87,5.87,8.2,47.1,46.37,88.82,55.04,60.14,149.24,94.39,272.43,99.06Z""/>
-              <path class=""cls-1"" d=""M1368.46,1026.53H533.08c-12.43,0-22.5-10.07-22.5-22.5s10.07-22.5,22.5-22.5h835.38c12.43,0,22.5,10.07,22.5,22.5s-10.07,22.5-22.5,22.5Z""/>
-              <path class=""cls-1"" d=""M1368.46,877.25H533.08c-12.43,0-22.5-10.07-22.5-22.5s10.07-22.5,22.5-22.5h835.38c12.43,0,22.5,10.07,22.5,22.5s-10.07,22.5-22.5,22.5Z""/>
-              <path class=""cls-1"" d=""M1368.46,727.97H533.08c-12.43,0-22.5-10.07-22.5-22.5s10.07-22.5,22.5-22.5h835.38c12.43,0,22.5,10.07,22.5,22.5s-10.07,22.5-22.5,22.5Z""/>
-              <path class=""cls-1"" d=""M1368.46,578.7H533.08c-12.43,0-22.5-10.07-22.5-22.5s10.07-22.5,22.5-22.5h835.38c12.43,0,22.5,10.07,22.5,22.5s-10.07,22.5-22.5,22.5Z""/>
-              <path class=""cls-1"" d=""M1368.46,429.42H533.08c-12.43,0-22.5-10.07-22.5-22.5s10.07-22.5,22.5-22.5h835.38c12.43,0,22.5,10.07,22.5,22.5s-10.07,22.5-22.5,22.5Z""/>
-              <path class=""cls-1"" d=""M1368.46,1175.8H533.08c-12.43,0-22.5-10.07-22.5-22.5s10.07-22.5,22.5-22.5h835.38c12.43,0,22.5,10.07,22.5,22.5s-10.07,22.5-22.5,22.5Z""/>
-              <path class=""cls-1"" d=""M1368.46,1325.08H533.08c-12.43,0-22.5-10.07-22.5-22.5s10.07-22.5,22.5-22.5h835.38c12.43,0,22.5,10.07,22.5,22.5s-10.07,22.5-22.5,22.5Z""/>
-              <path class=""cls-1"" d=""M1368.46,1474.35H533.08c-12.43,0-22.5-10.07-22.5-22.5s10.07-22.5,22.5-22.5h835.38c12.43,0,22.5,10.07,22.5,22.5s-10.07,22.5-22.5,22.5Z""/>
-        </svg>";
-
-    public const string VideoElementIcon = @"<svg width=""100%"" height=""100%"" viewBox=""0 0 2000 2000"" version=""1.1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" xml:space=""preserve"" xmlns:serif=""http://www.serif.com/"" style=""fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"">
+    public const string TextElementIcon =
+        @"<svg id=""Ebene_1"" data-name=""Ebene 1"" xmlns=""http://www.w3.org/2000/svg"" viewBox=""0 0 2000 2000"">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #172d4d;
+      }
+    </style>
+  </defs>
+  <path class=""cls-1"" d=""m1973.73,1963.06c-56.23-20.47-102.38-47.69-137.17-80.9-60.62-57.85-65.67-114-65.85-116.36-.04-.47-.05-.93-.05-1.4.05-11.9,4.96-1193.05,0-1479.1-1.47-84.71-30.03-149.6-84.89-192.86-82.92-65.39-200.2-60.09-201.37-60.03-.48.02-1.01.04-1.48.04l-1469.91-.16c16.51,8.33,32.81,18.4,48.25,30.53,64.9,50.98,98.65,125.63,100.31,221.9,4.88,282.11-1.98,1431.05-2.26,1476.99,1.12,6.44,10.57,51.65,59.76,97.4,70.93,65.95,192.33,103.51,351.08,108.63h0s1416.85-.01,1416.85-.01c-4.48-1.5-8.92-3.06-13.27-4.65Zm-443.59-794.97c0,13.63-12.98,24.67-29,24.67H424.58c-16.02,0-29-11.04-29-24.67s12.98-24.67,29-24.67h1076.57c16.02,0,29,11.04,29,24.67ZM395.58,840.72c0-13.63,12.98-24.67,29-24.67h1076.57c16.02,0,29,11.04,29,24.67s-12.98,24.67-29,24.67H424.58c-16.02,0-29-11.04-29-24.67Zm0-327.38c0-13.63,12.98-24.67,29-24.67h1076.57c16.02,0,29,11.04,29,24.67s-12.98,24.67-29,24.67H424.58c-16.02,0-29-11.04-29-24.67Zm1105.56,1006.81H424.58c-16.02,0-29-11.04-29-24.67s12.98-24.67,29-24.67h1076.57c16.02,0,29,11.04,29,24.67s-12.98,24.67-29,24.67Z""/>
+</svg>";
+    
+    public const string VideoElementIcon =
+        @"<svg width=""100%"" height=""100%"" viewBox=""0 0 2000 2000"" version=""1.1"" xmlns=""http://www.w3.org/2000/svg"" xmlns:xlink=""http://www.w3.org/1999/xlink"" xml:space=""preserve"" xmlns:serif=""http://www.serif.com/"" style=""fill-rule:evenodd;clip-rule:evenodd;stroke-linejoin:round;stroke-miterlimit:2;"">
             <g transform=""matrix(1,0,0,1,-2208,0)"">
                 <g id=""screen_button-icon"" transform=""matrix(1,0,0,1,-0.333333,0)"">
                     <rect x=""2208.33"" y=""0"" width=""2000"" height=""2000"" style=""fill:none;""/>
