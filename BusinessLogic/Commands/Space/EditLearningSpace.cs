@@ -12,7 +12,7 @@ public class EditLearningSpace : IEditLearningSpace
     internal string Goals { get; }
     internal Entities.Topic? Topic { get; }
     internal int RequiredPoints { get; }
-    internal Theme _theme { get; }
+    internal Theme Theme { get; }
     internal Action<LearningSpace> MappingAction { get; }
     private IMemento? _memento;
 
@@ -25,7 +25,7 @@ public class EditLearningSpace : IEditLearningSpace
         Goals = goals;
         Topic = topic;
         RequiredPoints = requiredPoints;
-        _theme = theme;
+        Theme = theme;
         MappingAction = mappingAction;
     }
 
@@ -39,7 +39,7 @@ public class EditLearningSpace : IEditLearningSpace
         LearningSpace.Goals = Goals;
         LearningSpace.AssignedTopic = Topic;
         LearningSpace.RequiredPoints = RequiredPoints;
-        LearningSpace.Theme = _theme;
+        LearningSpace.Theme = Theme;
         
         MappingAction.Invoke(LearningSpace);
     }

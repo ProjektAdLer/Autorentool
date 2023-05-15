@@ -3,6 +3,7 @@ using BusinessLogic.Commands.Space;
 using BusinessLogic.Entities;
 using NSubstitute;
 using NUnit.Framework;
+using Shared;
 using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Space;
@@ -29,11 +30,12 @@ public class SpaceCommandFactoryUt
         var positionX = 1.5;
         var positionY = 2.5;
         var topic = EntityProvider.GetTopic();
+        var theme = Theme.Campus;
         Action<LearningWorld> mappingAction = world => { };
 
         // Act
-        var result = _factory.GetCreateCommand(learningWorld, name, description, goals, requiredPoints, positionX,
-            positionY, topic, mappingAction);
+        var result = _factory.GetCreateCommand(learningWorld, name, description, goals, requiredPoints, theme,
+            positionX, positionY, topic, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateLearningSpace>());
@@ -106,11 +108,12 @@ public class SpaceCommandFactoryUt
         var goals = "Updated goals";
         var requiredPoints = 5;
         var topic = EntityProvider.GetTopic();
+        var theme = Theme.Campus;
         Action<LearningSpace> mappingAction = space => { };
 
         // Act
-        var result = _factory.GetEditCommand(learningSpace, name, description, goals, requiredPoints, topic,
-            mappingAction);
+        var result = _factory.GetEditCommand(learningSpace, name, description, goals, requiredPoints, theme,
+            topic, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<EditLearningSpace>());
