@@ -3,6 +3,7 @@ using Bunit.Rendering;
 using Bunit.TestDoubles;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
+using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components;
@@ -23,6 +24,7 @@ public class HeaderBarUt
     private ISelectedViewModelsProvider _selectedViewModelsProvider;
     private IMediator _mediator;
     private IStringLocalizer<HeaderBar> _stringLocalizer;
+    private ISnackbar _snackbar;
 
     [SetUp]
     public void Setup()
@@ -34,10 +36,12 @@ public class HeaderBarUt
         _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         _mediator = Substitute.For<IMediator>();
         _stringLocalizer = Substitute.For<IStringLocalizer<HeaderBar>>();
+        _snackbar = Substitute.For<ISnackbar>();
         _testContext.Services.AddSingleton(_presentationLogic);
         _testContext.Services.AddSingleton(_stringLocalizer);
         _testContext.Services.AddSingleton(_selectedViewModelsProvider);
         _testContext.Services.AddSingleton(_mediator);
+        _testContext.Services.AddSingleton(_snackbar);
     }
 
     [Test]
