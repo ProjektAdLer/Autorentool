@@ -1,6 +1,7 @@
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Entities;
 using NUnit.Framework;
+using Shared;
 
 namespace BusinessLogicTest.Commands.Space;
 
@@ -11,7 +12,7 @@ public class EditLearningSpaceUt
     [Test]
     public void Execute_EditsLearningSpace()
     {
-        var space = new LearningSpace("a", "d", "e", 5)
+        var space = new LearningSpace("a", "d", "e", 5, Theme.Campus)
         {
             UnsavedChanges = false
         };
@@ -20,10 +21,11 @@ public class EditLearningSpaceUt
         var goals = "learning";
         var topic = new BusinessLogic.Entities.Topic("abc");
         var requiredPoints = 10;
+        var theme = Theme.Campus;
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, topic, mappingAction);
+        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, theme, topic, mappingAction);
         
         Assert.Multiple(() =>
         {
@@ -53,16 +55,17 @@ public class EditLearningSpaceUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var space = new LearningSpace("a", "d", "e", 5);
+        var space = new LearningSpace("a", "d", "e", 5, Theme.Campus);
         var name = "space1";
         var description = "space for learning";
         var goals = "learning";
         var requiredPoints = 10;
+        var theme = Theme.Campus;
         var topic = new BusinessLogic.Entities.Topic("abc");
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
-        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, topic, mappingAction);
+        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, theme, topic, mappingAction);
         
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
@@ -72,7 +75,7 @@ public class EditLearningSpaceUt
     [Test]
     public void UndoRedo_UndoesAndRedoesEditLearningSpace()
     {
-        var space = new LearningSpace("g", "j", "k", 5)
+        var space = new LearningSpace("g", "j", "k", 5, Theme.Campus)
         {
             UnsavedChanges = false
         };
@@ -80,11 +83,12 @@ public class EditLearningSpaceUt
         var description = "space for learning";
         var goals = "learning";
         var requiredPoints = 10;
+        var theme = Theme.Campus;
         var topic = new BusinessLogic.Entities.Topic("abc");
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
         
-        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, topic, mappingAction);
+        var command = new EditLearningSpace(space, name, description, goals, requiredPoints, theme, topic, mappingAction);
         
         Assert.Multiple(() =>
         {

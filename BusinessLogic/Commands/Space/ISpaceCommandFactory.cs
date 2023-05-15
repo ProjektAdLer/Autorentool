@@ -1,5 +1,6 @@
 using BusinessLogic.API;
 using BusinessLogic.Entities;
+using Shared;
 
 namespace BusinessLogic.Commands.Space;
 
@@ -12,8 +13,8 @@ public interface ISpaceCommandFactory
     /// Creates a command to create a learning space.
     /// </summary>
     ICreateLearningSpace GetCreateCommand(LearningWorld learningWorld, string name,
-        string description, string goals, int requiredPoints, double positionX, double positionY, Entities.Topic? topic,
-        Action<LearningWorld> mappingAction);
+        string description, string goals, int requiredPoints, Theme theme, double positionX, double positionY,
+        Entities.Topic? topic, Action<LearningWorld> mappingAction);
 
     /// <summary>
     /// Creates a command to create a learning space.
@@ -31,7 +32,7 @@ public interface ISpaceCommandFactory
     /// Creates a command to edit a learning space.
     /// </summary>
     IEditLearningSpace GetEditCommand(LearningSpace learningSpace, string name,
-        string description, string goals, int requiredPoints, Entities.Topic? topic,
+        string description, string goals, int requiredPoints, Theme theme, Entities.Topic? topic,
         Action<LearningSpace> mappingAction);
 
     /// <summary>

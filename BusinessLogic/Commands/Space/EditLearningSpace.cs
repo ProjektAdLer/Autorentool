@@ -1,4 +1,5 @@
 using BusinessLogic.Entities;
+using Shared;
 
 namespace BusinessLogic.Commands.Space;
 
@@ -11,11 +12,12 @@ public class EditLearningSpace : IEditLearningSpace
     private readonly string _goals;
     private readonly Entities.Topic? _topic;
     private readonly int _requiredPoints;
+    private readonly Theme _theme;
     private readonly Action<LearningSpace> _mappingAction;
     private IMemento? _memento;
 
-    public EditLearningSpace(LearningSpace learningSpace, string name,
-        string description, string goals, int requiredPoints, Entities.Topic? topic, Action<LearningSpace> mappingAction)
+    public EditLearningSpace(LearningSpace learningSpace, string name, string description, string goals,
+        int requiredPoints, Theme theme, Entities.Topic? topic, Action<LearningSpace> mappingAction)
     {
         LearningSpace = learningSpace;
         _name = name;
@@ -23,6 +25,7 @@ public class EditLearningSpace : IEditLearningSpace
         _goals = goals;
         _topic = topic;
         _requiredPoints = requiredPoints;
+        _theme = theme;
         _mappingAction = mappingAction;
     }
 
@@ -36,6 +39,7 @@ public class EditLearningSpace : IEditLearningSpace
         LearningSpace.Goals = _goals;
         LearningSpace.AssignedTopic = _topic;
         LearningSpace.RequiredPoints = _requiredPoints;
+        LearningSpace.Theme = _theme;
         
         _mappingAction.Invoke(LearningSpace);
     }

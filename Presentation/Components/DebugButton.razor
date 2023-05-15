@@ -28,15 +28,15 @@
 
         NavManager.NavigateTo("/app");
 
-        PresentationLogic.CreateLearningSpace(world1, "space1", "sdescription", "s1goals", 0, 0, 0);
+        PresentationLogic.CreateLearningSpace(world1, "space1", "sdescription", "s1goals", 0, Theme.Campus, 0, 0);
         var space1 = world1.LearningSpaces.First();
         PresentationLogic.ChangeLearningSpaceLayout(space1, world1, FloorPlanEnum.Rectangle2X2);
 
-        PresentationLogic.CreateLearningSpace(world1, "space2", "sdescription", "s1goals", 0, 50, 50);
+        PresentationLogic.CreateLearningSpace(world1, "space2", "sdescription", "s1goals", 0, Theme.Campus, 50, 50);
         var space2 = world1.LearningSpaces.Last();
         PresentationLogic.ChangeLearningSpaceLayout(space2, world1, FloorPlanEnum.Rectangle2X3);
 
-        PresentationLogic.CreateLearningSpace(world1, "space3", "sdescription", "s1goals", 0, 100, 100);
+        PresentationLogic.CreateLearningSpace(world1, "space3", "sdescription", "s1goals", 0, Theme.Campus, 100, 100);
         var space3 = world1.LearningSpaces.Last();
         PresentationLogic.ChangeLearningSpaceLayout(space3, world1, FloorPlanEnum.LShape3L2);
 

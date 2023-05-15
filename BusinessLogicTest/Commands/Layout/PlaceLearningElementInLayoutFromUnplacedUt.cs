@@ -16,7 +16,7 @@ public class PlaceLearningElementInLayoutFromUnplacedUt
         {
             UnsavedChanges = false
         };
-        var space = new LearningSpace("sn", "sd", "sg", 5,
+        var space = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2))
         {
             UnsavedChanges = false
@@ -66,7 +66,7 @@ public class PlaceLearningElementInLayoutFromUnplacedUt
         {
             UnsavedChanges = false
         };
-        var space = new LearningSpace("sn", "sd", "sg", 5,
+        var space = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2))
         {
             UnsavedChanges = false
@@ -121,7 +121,7 @@ public class PlaceLearningElementInLayoutFromUnplacedUt
     public void Undo_MementoIsNull_ThrowsException()
     {
         var world = new LearningWorld("wn", "wsn", "wa", "wl", "wd", "wg");
-        var space = new LearningSpace("sn", "sd", "sg", 5,
+        var space = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2));
         world.LearningSpaces.Add(space);
         var content = new FileContent("cn", "ct", "cf");
@@ -149,7 +149,7 @@ public class PlaceLearningElementInLayoutFromUnplacedUt
         {
             UnsavedChanges = false
         };
-        var space = new LearningSpace("sn", "sd", "sg", 5,
+        var space = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2))
         {
             UnsavedChanges = false
@@ -225,7 +225,7 @@ public class PlaceLearningElementInLayoutFromUnplacedUt
         {
             UnsavedChanges = false
         };
-        var space = new LearningSpace("sn", "sd", "sg", 5,
+        var space = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2))
         {
             UnsavedChanges = false

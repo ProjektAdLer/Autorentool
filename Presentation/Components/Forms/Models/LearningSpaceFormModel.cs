@@ -1,3 +1,5 @@
+using Shared;
+
 namespace Presentation.Components.Forms.Models;
 
 public class LearningSpaceFormModel
@@ -14,4 +16,5 @@ public class LearningSpaceFormModel
     public string Description { get; set; }
     public string Goals { get; set; }
     public int? RequiredPoints { get; set; }
+    public Theme Theme { get; set; }
 }

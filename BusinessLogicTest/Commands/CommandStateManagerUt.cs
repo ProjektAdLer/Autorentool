@@ -184,7 +184,7 @@ public class CommandStateManagerUt
     {
         var learningElement =
             new LearningElement("n", null!, "d", "g", LearningElementDifficultyEnum.Easy);
-        var learningSpace = new LearningSpace("n", "d", "g", 5,
+        var learningSpace = new LearningSpace("n", "d", "g", 5, Theme.Campus,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X3));
         var learningWorld = new LearningWorld("n", "s", "a", "l","d", "g");
         var workspace = new AuthoringToolWorkspace(new List<LearningWorld>());

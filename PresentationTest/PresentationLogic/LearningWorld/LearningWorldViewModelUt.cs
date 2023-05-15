@@ -26,7 +26,7 @@ public class LearningWorldViewModelUt
         var topic1 = new TopicViewModel("topic1", false);
         var topic2 = new TopicViewModel("topic2", false);
         var topics = new List<TopicViewModel> {topic1, topic2};
-        var space1 = new LearningSpaceViewModel("ff", "ff", "ff");
+        var space1 = new LearningSpaceViewModel("ff", "ff", "ff", Theme.Campus);
         var learningSpaces = new List<ILearningSpaceViewModel> { space1 };
         var condition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
         var pathWayConditions = new List<PathWayConditionViewModel> { condition };
@@ -65,7 +65,7 @@ public class LearningWorldViewModelUt
     public void Workload_ReturnsCorrectWorkload()
     {
         var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo");
-        var space = new LearningSpaceViewModel("a", "d", "e", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+        var space = new LearningSpaceViewModel("a", "d", "e", Theme.Campus, layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         var spaceElement = new LearningElementViewModel("a", null!, "d", "e",
             LearningElementDifficultyEnum.Easy, space, 6);
         
@@ -79,10 +79,10 @@ public class LearningWorldViewModelUt
     public void Points_ReturnsCorrectSum()
     {
         var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo");
-        var space = new LearningSpaceViewModel("a", "d", "e", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+        var space = new LearningSpaceViewModel("a", "d", "e", Theme.Campus, layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         var spaceElement = new LearningElementViewModel("a",  null!, "d", "e",
             LearningElementDifficultyEnum.Easy, space, 6,7);
-        var space2 = new LearningSpaceViewModel("a", "d", "e", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+        var space2 = new LearningSpaceViewModel("a", "d", "e", Theme.Campus, layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         var spaceElement2 = new LearningElementViewModel("a", null!, "d", "e",
             LearningElementDifficultyEnum.Easy, space, 4,5);
         

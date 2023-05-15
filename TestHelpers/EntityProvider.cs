@@ -13,7 +13,7 @@ public static class EntityProvider
 
     public static LearningSpace GetLearningSpace()
     {
-        return new LearningSpace("a", "d", "e", 4);
+        return new LearningSpace("a", "d", "e", 4, Theme.Campus);
     }
 
     public static LearningElement GetLearningElement()

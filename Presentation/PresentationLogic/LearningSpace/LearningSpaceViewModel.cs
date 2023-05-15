@@ -35,6 +35,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     /// <param name="name">The name of the learning space.</param>
     /// <param name="description">A description of the learning space and its contents.</param>
     /// <param name="goals">A description of the goals this learning space is supposed to achieve.</param>
+    /// <param name="theme">The theme of the learning space.</param>
     /// <param name="requiredPoints">Points required to complete the learning space.</param>
     /// <param name="layoutViewModel">Layout of the learning space</param>
     /// <param name="positionX">x-position of the learning space in the workspace.</param>
@@ -42,7 +43,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     /// <param name="inBoundObjects">A List of objects that have learning path to the space.</param>
     /// <param name="outBoundObjects">A list of objects that this space have a learning path to.</param>
     /// <param name="assignedTopic">Topic to which the learning space is assigned.</param>
-    public LearningSpaceViewModel(string name, string description, string goals,
+    public LearningSpaceViewModel(string name, string description, string goals, Theme theme,
         int requiredPoints = 0,
         ILearningSpaceLayoutViewModel? layoutViewModel = null, double positionX = 0, double positionY = 0,
         ICollection<IObjectInPathWayViewModel>? inBoundObjects = null,
@@ -53,6 +54,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         Name = name;
         Description = description;
         Goals = goals;
+        Theme = theme;
         RequiredPoints = requiredPoints;
         LearningSpaceLayout = layoutViewModel ?? new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X2);
         InBoundObjects = inBoundObjects ?? new Collection<IObjectInPathWayViewModel>();
@@ -98,6 +100,12 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         set => SetField(ref _requiredPoints, value);
     }
     
+    public Theme Theme
+    {
+        get => _theme;
+        set => SetField(ref _theme, value);
+    }
+    
     public bool UnsavedChanges
     {
         get => InternalUnsavedChanges ||
@@ -116,6 +124,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     private string _description;
     private string _goals;
     private int _requiredPoints;
+    private Theme _theme;
 
     public IEnumerable<ILearningElementViewModel> ContainedLearningElements =>
         LearningSpaceLayout.ContainedLearningElements;

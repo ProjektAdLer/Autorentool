@@ -4,6 +4,7 @@
 @using Presentation.Components.Forms.Models
 @using System.ComponentModel
 @using Presentation.Components.Forms.Buttons
+@using Shared
 
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
@@ -53,6 +54,20 @@
             </div>
         </Collapsable>
         <SpaceLayoutSelection LearningSpaceViewModel="SpaceToEdit"></SpaceLayoutSelection>
+        
+        <Collapsable Title="Theme" @bind-Collapsed="_collapsedTheme">
+                    <div class="rounded-lg w-4/4 px-4 pb-4">
+                        <MudSelect @bind-Value="FormDataContainer.FormModel.Theme" AnchorOrigin="Origin.BottomCenter"
+                                   Label="@nameof(FormDataContainer.FormModel.Theme)"
+                                   Text="@FormDataContainer.FormModel.Theme.ToString()"
+                                   For="@(() => FormModel.Theme)">
+                                    @foreach (var theme in _themes)
+                                    {
+                                        <MudSelectItem Value="@(theme)">@theme</MudSelectItem>
+                                    }
+                        </MudSelect>
+                    </div>
+                </Collapsable>
     </Fields>
     <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
@@ -87,12 +102,14 @@
     private bool _collapsedGeneral = false;
     private bool _collapsedGoals = true;
     private bool _collapsedConditions = true;
+    private bool _collapsedTheme = true;
+    private Theme[] _themes = (Theme[])Enum.GetValues(typeof(Theme));
 
     private void OnValidSubmit(LearningSpaceFormModel model)
     {
     //we can supress the nullable warning here as validator ensures RequiredPoints isn't null - n.stich
         LearningSpacePresenter.EditLearningSpace(model.Name, model.Description,
-            model.Goals, (int) model.RequiredPoints!);
+            model.Goals, (int) model.RequiredPoints!, model.Theme);
     }
 
     private async Task MapIntoContainer()

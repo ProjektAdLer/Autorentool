@@ -12,7 +12,7 @@ public class DeleteLearningElementInSpaceUt
     [Test]
     public void Execute_DeletesLearningElement()
     {
-        var space = new LearningSpace("a","d", "e", 5)
+        var space = new LearningSpace("a","d", "e", 5, Theme.Campus)
         {
             UnsavedChanges = false
         };
@@ -46,7 +46,7 @@ public class DeleteLearningElementInSpaceUt
     [Test]
     public void Execute_DeletesLearningElementAndSetsAnotherElementSelectedLearningElement()
     {
-        var space = new LearningSpace("a","d", "e", 5)
+        var space = new LearningSpace("a","d", "e", 5, Theme.Campus)
         {
             UnsavedChanges = false
         };
@@ -94,7 +94,7 @@ public class DeleteLearningElementInSpaceUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var space = new LearningSpace("a","d", "e", 5);
+        var space = new LearningSpace("a","d", "e", 5, Theme.Campus);
         var element = new LearningElement("g", null!, "j", "k", LearningElementDifficultyEnum.Easy, space);
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
@@ -110,7 +110,7 @@ public class DeleteLearningElementInSpaceUt
     [Test]
     public void UndoRedo_UndoesRedoesDeleteLearningElement()
     {
-        var space = new LearningSpace("a","d", "e", 5)
+        var space = new LearningSpace("a","d", "e", 5, Theme.Campus)
         {
             UnsavedChanges = false
         };

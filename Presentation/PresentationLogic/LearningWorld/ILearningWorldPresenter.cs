@@ -26,12 +26,13 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     /// <param name="description"></param>
     /// <param name="goals"></param>
     /// <param name="requiredPoints"></param>
+    /// <param name="theme"></param>
     /// <param name="positionX"></param>
     /// <param name="positionY"></param>
     /// <param name="topic"></param>
     /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
     void CreateLearningSpace(string name, string description, string goals,
-        int requiredPoints, double positionX = 0, double positionY = 0, TopicViewModel? topic = null);
+        int requiredPoints, Theme theme, double positionX = 0, double positionY = 0, TopicViewModel? topic = null);
 
     Task LoadLearningSpaceAsync();
     void EditLearningWorld(string name, string shortname, string authors, string language, string description, string goals);

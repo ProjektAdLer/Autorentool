@@ -55,7 +55,7 @@ public class LearningWorldPresenterUt
     public void SetSelectedLearningObject_SelectedLearningWorldIsNull_ThrowsException()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        var space = new LearningSpaceViewModel("a", "f", "f", 4);
+        var space = new LearningSpaceViewModel("a", "f", "f", Theme.Campus, 4);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetSelectedLearningObject(space));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
@@ -66,7 +66,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var space = new LearningSpaceViewModel("g", "g", "g");
+        var space = new LearningSpaceViewModel("g", "g", "g", Theme.Campus);
         var learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
 
@@ -81,7 +81,7 @@ public class LearningWorldPresenterUt
     [Test]
     public void DragObjectInPathWay_CallsPresentationLogic()
     {
-        var space = new LearningSpaceViewModel("g", "g", "g");
+        var space = new LearningSpaceViewModel("g", "g", "g", Theme.Campus);
         double oldPositionX = 5;
         double oldPositionY = 7;
         var presentationLogic = Substitute.For<IPresentationLogic>();
@@ -98,7 +98,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var space = new LearningSpaceViewModel("g", "g", "g");
+        var space = new LearningSpaceViewModel("g", "g", "g", Theme.Campus);
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var mediator = Substitute.For<IMediator>();
         var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider, mediator: mediator);
@@ -139,7 +139,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var space = new LearningSpaceViewModel("a", "b", "d");
+        var space = new LearningSpaceViewModel("a", "b", "d", Theme.Campus);
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var mediator = Substitute.For<IMediator>();
         var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider, mediator: mediator);
@@ -155,7 +155,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var space = new LearningSpaceViewModel("g", "g", "g");
+        var space = new LearningSpaceViewModel("g", "g", "g", Theme.Campus);
         var presentationLogic = Substitute.For<IPresentationLogic>();
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
@@ -168,7 +168,7 @@ public class LearningWorldPresenterUt
     [Test]
     public void DeleteLearningSpace_SelectedLearningWorldIsNull_ThrowsException()
     {
-        var space = new LearningSpaceViewModel("g", "g", "g");
+        var space = new LearningSpaceViewModel("g", "g", "g", Theme.Campus);
 
         var systemUnderTest = CreatePresenterForTesting();
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteLearningSpace(space));
@@ -178,7 +178,7 @@ public class LearningWorldPresenterUt
     [Test]
     public void RightClickedLearningSpace_SetsRightClickedLearningObjectToSpace()
     {
-        var space = new LearningSpaceViewModel("g", "g", "g");
+        var space = new LearningSpaceViewModel("g", "g", "g", Theme.Campus);
         var systemUnderTest = CreatePresenterForTesting();
         systemUnderTest.RightClickOnObjectInPathWay(space);
 
@@ -188,7 +188,7 @@ public class LearningWorldPresenterUt
     [Test]
     public void HideRightClickMenu_SetsRightClickedLearningObjectToNull()
     {
-        var space = new LearningSpaceViewModel("g", "g", "g");
+        var space = new LearningSpaceViewModel("g", "g", "g", Theme.Campus);
         var systemUnderTest = CreatePresenterForTesting();
 
         systemUnderTest.RightClickOnObjectInPathWay(space);
@@ -204,7 +204,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var space = new LearningSpaceViewModel("g", "g", "g");
+        var space = new LearningSpaceViewModel("g", "g", "g", Theme.Campus);
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider);
         systemUnderTest.LearningWorldVm = world;
@@ -219,7 +219,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var space = new LearningSpaceViewModel("g", "g", "g");
+        var space = new LearningSpaceViewModel("g", "g", "g", Theme.Campus);
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider);
         systemUnderTest.LearningWorldVm = world;
@@ -238,7 +238,7 @@ public class LearningWorldPresenterUt
     public void AddLearningSpace_LearningWorldIsNull_ThrowsException()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        var space = new LearningSpaceViewModel("a", "f", "f", 4);
+        var space = new LearningSpaceViewModel("a", "f", "f", Theme.Campus, 4);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.AddLearningSpace(space));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
@@ -249,7 +249,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var space = new LearningSpaceViewModel("g", "g", "g");
+        var space = new LearningSpaceViewModel("g", "g", "g", Theme.Campus);
         var presentationLogic = Substitute.For<IPresentationLogic>();
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
@@ -289,17 +289,17 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var space = new LearningSpaceViewModel("g", "g", "g");
+        var space = new LearningSpaceViewModel("g", "g", "g", Theme.Campus);
         var presentationLogic = Substitute.For<IPresentationLogic>();
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         systemUnderTest.LearningWorldVm = world;
         systemUnderTest.LearningWorldVm?.LearningSpaces.Add(space);
 
-        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5);
+        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.Campus);
 
         presentationLogic.Received().CreateLearningSpace(world, Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(),
-            Arg.Any<int>(), Arg.Any<double>(),
+            Arg.Any<int>(), Arg.Any<Theme>(), Arg.Any<double>(),
             Arg.Any<double>(), Arg.Any<TopicViewModel>());
     }
 
@@ -309,7 +309,7 @@ public class LearningWorldPresenterUt
         var errorService = Substitute.For<IErrorService>();
         var systemUnderTest = CreatePresenterForTesting(errorService: errorService);
 
-        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5);
+        systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.Campus);
 
         errorService.Received().SetError("Error while creating learning space; No Learning World selected");
     }
@@ -355,7 +355,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var space = new LearningSpaceViewModel("f", "f", "f");
+        var space = new LearningSpaceViewModel("f", "f", "f", Theme.Campus);
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         world.LearningSpaces.Add(space);
         selectedViewModelsProvider.SetLearningObjectInPathWay(space, null);
@@ -397,7 +397,7 @@ public class LearningWorldPresenterUt
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var condition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
-        var space = new LearningSpaceViewModel("f", "f", "f");
+        var space = new LearningSpaceViewModel("f", "f", "f", Theme.Campus);
         var pathWay = new LearningPathwayViewModel(space, condition);
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         world.LearningPathWays.Add(pathWay);
@@ -450,7 +450,7 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var space = new LearningSpaceViewModel("f", "f", "f");
+        var space = new LearningSpaceViewModel("f", "f", "f", Theme.Campus);
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         world.LearningSpaces.Add(space);
         selectedViewModelsProvider.LearningObjectInPathWay.Returns(space);
@@ -484,7 +484,7 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var space = new LearningSpaceViewModel("a", "d", "e");
+        var space = new LearningSpaceViewModel("a", "d", "e", Theme.Campus);
         world.LearningSpaces.Add(space);
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic);
@@ -503,7 +503,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var learningSpace = new LearningSpaceViewModel("a", "d", "e");
+        var learningSpace = new LearningSpaceViewModel("a", "d", "e", Theme.Campus);
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
 
         var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider);
@@ -532,7 +532,7 @@ public class LearningWorldPresenterUt
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var condition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
-        var space = new LearningSpaceViewModel("f", "f", "f");
+        var space = new LearningSpaceViewModel("f", "f", "f", Theme.Campus);
         var pathWay = new LearningPathwayViewModel(condition, space);
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
 
@@ -577,7 +577,7 @@ public class LearningWorldPresenterUt
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var space = new LearningSpaceViewModel("a", "b", "d");
+        var space = new LearningSpaceViewModel("a", "b", "d", Theme.Campus);
 
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
         systemUnderTest.LearningWorldVm = world;
@@ -719,9 +719,9 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var sourceSpace = new LearningSpaceViewModel("g", "g", "g",
+        var sourceSpace = new LearningSpaceViewModel("g", "g", "g", Theme.Campus,
             positionX: 25, positionY: 25);
-        var targetSpace = new LearningSpaceViewModel("u", "u", "u",
+        var targetSpace = new LearningSpaceViewModel("u", "u", "u", Theme.Campus,
             positionX: 250, positionY: 250);
         world.LearningSpaces.Add(sourceSpace);
         world.LearningSpaces.Add(targetSpace);
@@ -742,7 +742,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var sourceSpace = new LearningSpaceViewModel("g", "g", "g",
+        var sourceSpace = new LearningSpaceViewModel("g", "g", "g", Theme.Campus,
             positionX: 25, positionY: 25);
         world.LearningSpaces.Add(sourceSpace);
 
@@ -776,11 +776,11 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var sourceSpace = new LearningSpaceViewModel("g", "g", "g",
+        var sourceSpace = new LearningSpaceViewModel("g", "g", "g", Theme.Campus,
             positionX: 25, positionY: 25);
-        var targetSpace1 = new LearningSpaceViewModel("u", "u", "u",
+        var targetSpace1 = new LearningSpaceViewModel("u", "u", "u", Theme.Campus,
             positionX: 250, positionY: 250);
-        var targetSpace2 = new LearningSpaceViewModel("u", "u", "u",
+        var targetSpace2 = new LearningSpaceViewModel("u", "u", "u", Theme.Campus,
             positionX: 500, positionY: 500);
         world.LearningSpaces.Add(sourceSpace);
         world.LearningSpaces.Add(targetSpace1);
@@ -801,7 +801,7 @@ public class LearningWorldPresenterUt
     public void SetOnHoveredObjectInPathWay_SelectedLearningWorldIsNull_ThrowsException()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        var space = new LearningSpaceViewModel("a", "f", "f", 4);
+        var space = new LearningSpaceViewModel("a", "f", "f", Theme.Campus, 4);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetOnHoveredObjectInPathWay(space, 3, 3));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
@@ -816,9 +816,9 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var sourceSpace = new LearningSpaceViewModel("g", "g", "g",
+        var sourceSpace = new LearningSpaceViewModel("g", "g", "g", Theme.Campus,
             positionX: 25, positionY: 25);
-        var targetSpace = new LearningSpaceViewModel("u", "u", "u",
+        var targetSpace = new LearningSpaceViewModel("u", "u", "u", Theme.Campus,
             positionX: 50, positionY: 50);
         world.LearningSpaces.Add(sourceSpace);
         world.LearningSpaces.Add(targetSpace);
@@ -837,9 +837,9 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var sourceSpace = new LearningSpaceViewModel("g", "g", "g",
+        var sourceSpace = new LearningSpaceViewModel("g", "g", "g", Theme.Campus,
             positionX: 25, positionY: 25);
-        var targetSpace = new LearningSpaceViewModel("u", "u", "u",
+        var targetSpace = new LearningSpaceViewModel("u", "u", "u", Theme.Campus,
             positionX: 50, positionY: 50);
         world.LearningSpaces.Add(sourceSpace);
         world.LearningSpaces.Add(targetSpace);
@@ -858,9 +858,9 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var sourceSpace = new LearningSpaceViewModel("g", "g", "g",
+        var sourceSpace = new LearningSpaceViewModel("g", "g", "g", Theme.Campus,
             positionX: 25, positionY: 25);
-        var targetSpace = new LearningSpaceViewModel("u", "u", "u",
+        var targetSpace = new LearningSpaceViewModel("u", "u", "u", Theme.Campus,
             positionX: 250, positionY: 250);
         world.LearningSpaces.Add(sourceSpace);
         world.LearningSpaces.Add(targetSpace);
@@ -878,7 +878,7 @@ public class LearningWorldPresenterUt
     public void CreateLearningPathWay_SelectedLearningWorldIsNull_ThrowsException()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        var space = new LearningSpaceViewModel("a", "f", "f", 4);
+        var space = new LearningSpaceViewModel("a", "f", "f", Theme.Campus, 4);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.CreateLearningPathWay(space, 3, 3));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
@@ -894,7 +894,7 @@ public class LearningWorldPresenterUt
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
         var condition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
-        var space = new LearningSpaceViewModel("a", "g", "f", 2);
+        var space = new LearningSpaceViewModel("a", "g", "f", Theme.Campus, 2);
         var learningPathWay = new LearningPathwayViewModel(condition, space);
         world.LearningPathWays.Add(learningPathWay);
         var presentationLogic = Substitute.For<IPresentationLogic>();
@@ -911,7 +911,7 @@ public class LearningWorldPresenterUt
     public void DeleteLearningPathWay_SelectedLearningWorldIsNull_ThrowsException()
     {
         var systemUnderTest = CreatePresenterForTesting();
-        var space = new LearningSpaceViewModel("a", "f", "f", 4);
+        var space = new LearningSpaceViewModel("a", "f", "f", Theme.Campus, 4);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteLearningPathWay(space));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
@@ -981,7 +981,7 @@ public class LearningWorldPresenterUt
     {
         var world = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo",
             "foo");
-        var space = new LearningSpaceViewModel("a", "d", "r");
+        var space = new LearningSpaceViewModel("a", "d", "r", Theme.Campus);
         var systemUnderTest = CreatePresenterForTesting();
         var content = new LinkContentViewModel("a", "link");
         var element = new LearningElementViewModel("a", content, "d", "f", LearningElementDifficultyEnum.Easy, space);
@@ -1024,7 +1024,7 @@ public class LearningWorldPresenterUt
         var systemUnderTest = CreatePresenterForTesting(learningSpacePresenter: learningSpacePresenter, selectedViewModelsProvider: selectedViewModelsProvider);
         var content = new LinkContentViewModel("a", "link");
         var element = new LearningElementViewModel("a", content, "d", "f", LearningElementDifficultyEnum.Easy);
-        var space = new LearningSpaceViewModel("a", "d", "e");
+        var space = new LearningSpaceViewModel("a", "d", "e", Theme.Campus);
         element.Parent = space;
         selectedViewModelsProvider.LearningObjectInPathWay.Returns(space);
 

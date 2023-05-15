@@ -125,11 +125,12 @@ public interface IPresentationLogic
     /// <param name="description"></param>
     /// <param name="goals"></param>
     /// <param name="requiredPoints"></param>
+    /// <param name="theme"></param>
     /// <param name="positionX"></param>
     /// <param name="positionY"></param>
     /// <param name="topicVm"></param>
     void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name,
-        string description, string goals, int requiredPoints, double positionX, double positionY,
+        string description, string goals, int requiredPoints, Theme theme, double positionX, double positionY,
         ITopicViewModel? topicVm = null);
 
     /// <summary>
@@ -140,9 +141,10 @@ public interface IPresentationLogic
     /// <param name="description"></param>
     /// <param name="goals"></param>
     /// <param name="requiredPoints"></param>
+    /// <param name="theme"></param>
     /// <param name="topicVm"></param>
     void EditLearningSpace(ILearningSpaceViewModel learningSpaceVm, string name,
-        string description, string goals, int requiredPoints, ITopicViewModel? topicVm);
+        string description, string goals, int requiredPoints, Theme theme, ITopicViewModel? topicVm);
 
     /// <summary>
     /// Changes the layout of the given learning space to the given layout.

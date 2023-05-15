@@ -44,7 +44,7 @@ public class ChangeLearningSpaceLayoutUt
             {4, element5},
             
         }, FloorPlanEnum.LShape3L2);
-        var space = new LearningSpace("", "", "", 0, layout)
+        var space = new LearningSpace("", "", "", 0, Theme.Campus, layout)
         {
             UnsavedChanges = false
         };
@@ -115,7 +115,7 @@ public class ChangeLearningSpaceLayoutUt
             {4, element5},
             
         }, FloorPlanEnum.LShape3L2);
-        var space = new LearningSpace("", "", "", 0, layout)
+        var space = new LearningSpace("", "", "", 0, Theme.Campus, layout)
         {
             UnsavedChanges = false
         };

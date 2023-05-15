@@ -1,5 +1,6 @@
 using BusinessLogic.API;
 using BusinessLogic.Entities;
+using Shared;
 
 namespace BusinessLogic.Commands.Space;
 
@@ -7,9 +8,9 @@ public class SpaceCommandFactory : ISpaceCommandFactory
 {
     public ICreateLearningSpace GetCreateCommand(LearningWorld learningWorld, string name, string description,
         string goals,
-        int requiredPoints, double positionX, double positionY, Entities.Topic? topic,
+        int requiredPoints, Theme theme, double positionX, double positionY, Entities.Topic? topic,
         Action<LearningWorld> mappingAction) =>
-        new CreateLearningSpace(learningWorld, name, description, goals, requiredPoints, positionX, positionY,
+        new CreateLearningSpace(learningWorld, name, description, goals, requiredPoints, theme, positionX, positionY,
             topic, mappingAction);
 
     public ICreateLearningSpace GetCreateCommand(LearningWorld learningWorld, LearningSpace learningSpace,
@@ -19,8 +20,8 @@ public class SpaceCommandFactory : ISpaceCommandFactory
         Action<LearningWorld> mappingAction) => new DeleteLearningSpace(learningWorld, learningSpace, mappingAction);
 
     public IEditLearningSpace GetEditCommand(LearningSpace learningSpace, string name, string description, string goals,
-        int requiredPoints, Entities.Topic? topic, Action<LearningSpace> mappingAction) =>
-        new EditLearningSpace(learningSpace, name, description, goals, requiredPoints, topic, mappingAction);
+        int requiredPoints, Theme theme, Entities.Topic? topic, Action<LearningSpace> mappingAction) =>
+        new EditLearningSpace(learningSpace, name, description, goals, requiredPoints, theme, topic, mappingAction);
 
     public ILoadLearningSpace GetLoadCommand(LearningWorld learningWorld, string filepath, IBusinessLogic businessLogic,
         Action<LearningWorld> mappingAction) =>

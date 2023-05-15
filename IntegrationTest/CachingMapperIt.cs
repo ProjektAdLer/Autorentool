@@ -71,7 +71,7 @@ public class CachingMapperIt
 
         var worldVm = workspaceVm.LearningWorlds[0];
 
-        systemUnderTest.CreateLearningSpace(worldVm, "g", "j", "k", 1, 2, 3, null!);
+        systemUnderTest.CreateLearningSpace(worldVm, "g", "j", "k", 1, Theme.Campus, 2, 3, null!);
         Assert.That(worldVm.LearningSpaces, Has.Count.EqualTo(1));
 
         var spaceVm = worldVm.LearningSpaces.First();
@@ -125,7 +125,7 @@ public class CachingMapperIt
 
         var worldVm = workspaceVm.LearningWorlds[0];
 
-        systemUnderTest.CreateLearningSpace(worldVm, "g", "j", "k", 1, 2, 3, null!);
+        systemUnderTest.CreateLearningSpace(worldVm, "g", "j", "k", 1, Theme.Campus, 2, 3, null!);
         systemUnderTest.ChangeLearningSpaceLayout(worldVm.LearningSpaces.First(), worldVm, FloorPlanEnum.Rectangle2X3);
 
         Assert.That(worldVm.LearningSpaces, Has.Count.EqualTo(1));

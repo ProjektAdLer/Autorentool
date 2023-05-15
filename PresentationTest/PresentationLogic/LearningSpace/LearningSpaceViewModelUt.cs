@@ -25,7 +25,7 @@ public class LearningSpaceViewModelUt
         var ele1 = new LearningElementViewModel("a",  null!,"h","i", LearningElementDifficultyEnum.Easy, null, 17,11, 23);
         var ele2 = new LearningElementViewModel("z",   null!,"zz","zzz", LearningElementDifficultyEnum.Hard, null, 444,12, double.MaxValue);
         var inBoundCondition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 3);
-        var outBoundSpace = new LearningSpaceViewModel("a", "b", "t", 3);
+        var outBoundSpace = new LearningSpaceViewModel("a", "b", "t", Theme.Campus, 3);
         var inBoundObjects = new List<IObjectInPathWayViewModel> { inBoundCondition };
         var outBoundObjects = new List<IObjectInPathWayViewModel> { outBoundSpace };
         var learningElements = new Dictionary<int, ILearningElementViewModel>()
@@ -42,8 +42,8 @@ public class LearningSpaceViewModelUt
             LearningElements = learningElements
         };
 
-        var systemUnderTest = new LearningSpaceViewModel(name, description, goals, requiredPoints, 
-            learningSpaceLayoutVm, positionX: positionX, positionY: positionY, inBoundObjects: inBoundObjects, outBoundObjects: outBoundObjects, topic);
+        var systemUnderTest = new LearningSpaceViewModel(name, description, goals, Theme.Campus, requiredPoints, 
+            learningSpaceLayoutVm, positionX: positionX, positionY: positionY, inBoundObjects: inBoundObjects, outBoundObjects: outBoundObjects, assignedTopic: topic);
         
         Assert.Multiple(() =>
         {
@@ -68,7 +68,7 @@ public class LearningSpaceViewModelUt
     public void FileEnding_ReturnsCorrectEnding()
     {
         const string expectedFileEnding = "asf";
-        var systemUnderTest = new LearningSpaceViewModel("foo", "foo", "foo");
+        var systemUnderTest = new LearningSpaceViewModel("foo", "foo", "foo", Theme.Campus);
         Assert.That(systemUnderTest.FileEnding, Is.EqualTo(expectedFileEnding));
     }
     
@@ -76,7 +76,7 @@ public class LearningSpaceViewModelUt
     public void Workload_ReturnsCorrectWorkload()
     {
 
-        var systemUnderTest = new LearningSpaceViewModel("a", "d", "e", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+        var systemUnderTest = new LearningSpaceViewModel("a", "d", "e", Theme.Campus, layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         var element1 = new LearningElementViewModel("a", null!, "d", "e",
             LearningElementDifficultyEnum.Easy, systemUnderTest, 6);
         var element2 = new LearningElementViewModel("abc", null!,"d", "e",
@@ -98,7 +98,7 @@ public class LearningSpaceViewModelUt
     public void Points_ReturnsCorrectSum()
     {
 
-        var systemUnderTest = new LearningSpaceViewModel("a", "d", "e", layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+        var systemUnderTest = new LearningSpaceViewModel("a", "d", "e", Theme.Campus, layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
         var element1 = new LearningElementViewModel("a", null!, "d", "e",
             LearningElementDifficultyEnum.Easy, systemUnderTest, 6,7);
         var element2 = new LearningElementViewModel("abc", null!,"d", "e",

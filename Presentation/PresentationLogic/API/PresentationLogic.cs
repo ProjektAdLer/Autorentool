@@ -244,13 +244,13 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.CreateLearningSpace"/>
     public void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name, string description,
-        string goals, int requiredPoints, double positionX, double positionY,
+        string goals, int requiredPoints, Theme theme, double positionX, double positionY,
         ITopicViewModel? topicVm)
     {
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
         var topicEntity = Mapper.Map<BusinessLogic.Entities.Topic>(topicVm);
 
-        var command = new CreateLearningSpace(worldEntity, name, description, goals, requiredPoints,
+        var command = new CreateLearningSpace(worldEntity, name, description, goals, requiredPoints, theme,
             positionX, positionY, topicEntity, world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
 
@@ -259,12 +259,12 @@ public class PresentationLogic : IPresentationLogic
 
     /// <inheritdoc cref="IPresentationLogic.EditLearningSpace"/>
     public void EditLearningSpace(ILearningSpaceViewModel learningSpaceVm, string name,
-        string description, string goals, int requiredPoints, ITopicViewModel? topicVm)
+        string description, string goals, int requiredPoints, Theme theme, ITopicViewModel? topicVm)
     {
         var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
         var topicEntity = Mapper.Map<BusinessLogic.Entities.Topic>(topicVm);
 
-        var command = new EditLearningSpace(spaceEntity, name, description, goals, requiredPoints, topicEntity,
+        var command = new EditLearningSpace(spaceEntity, name, description, goals, requiredPoints, theme, topicEntity,
             space => CMapper.Map(space, learningSpaceVm));
         BusinessLogic.ExecuteCommand(command);
     }
@@ -416,7 +416,7 @@ public class PresentationLogic : IPresentationLogic
         {
             var spaceVm = Mapper.Map<LearningSpaceViewModel>(spaceEntity);
             listOfCommands.Add(new EditLearningSpace(spaceEntity, spaceEntity.Name,
-                spaceEntity.Description, spaceEntity.Goals, spaceEntity.RequiredPoints, null,
+                spaceEntity.Description, spaceEntity.Goals, spaceEntity.RequiredPoints, spaceEntity.Theme, null,
                 space => CMapper.Map(space, spaceVm)));
         }
 

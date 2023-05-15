@@ -1,4 +1,5 @@
 using BusinessLogic.Entities;
+using Shared;
 
 namespace BusinessLogic.Commands.Space;
 
@@ -10,10 +11,11 @@ public class CreateLearningSpace : ICreateLearningSpace
     private readonly Action<LearningWorld> _mappingAction;
     private IMemento? _memento;
 
-    public CreateLearningSpace(LearningWorld learningWorld, string name, 
-        string description, string goals, int requiredPoints, double positionX, double positionY, Entities.Topic? topic, Action<LearningWorld> mappingAction)
+    public CreateLearningSpace(LearningWorld learningWorld, string name, string description, string goals, 
+        int requiredPoints, Theme theme, double positionX, double positionY, Entities.Topic? topic,
+        Action<LearningWorld> mappingAction)
     {
-        LearningSpace = new LearningSpace(name, description, goals, requiredPoints, null, positionX: positionX, positionY: positionY, assignedTopic:topic);
+        LearningSpace = new LearningSpace(name, description, goals, requiredPoints, theme, null, positionX: positionX, positionY: positionY, assignedTopic: topic);
         LearningWorld = learningWorld;
         _mappingAction = mappingAction;
     }

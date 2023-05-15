@@ -1,6 +1,7 @@
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Entities;
 using NUnit.Framework;
+using Shared;
 
 namespace BusinessLogicTest.Commands.Space;
 
@@ -15,15 +16,15 @@ public class DeleteLearningSpaceUt
         {
             UnsavedChanges = false
         };
-        var space1 = new LearningSpace("a", "d", "e", 4)
+        var space1 = new LearningSpace("a", "d", "e", 4, Theme.Campus)
         {
             UnsavedChanges = false
         };
-        var space2 = new LearningSpace("g", "j", "k", 5)
+        var space2 = new LearningSpace("g", "j", "k", 5, Theme.Campus)
         {
             UnsavedChanges = false
         };
-        var space3 = new LearningSpace("g", "j", "k", 5)
+        var space3 = new LearningSpace("g", "j", "k", 5, Theme.Campus)
         {
             UnsavedChanges = false
         };
@@ -64,7 +65,7 @@ public class DeleteLearningSpaceUt
     public void Undo_MementoIsNull_ThrowsException()
     {
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
-        var space = new LearningSpace("g", "j", "k", 5);
+        var space = new LearningSpace("g", "j", "k", 5, Theme.Campus);
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
 
@@ -86,11 +87,11 @@ public class DeleteLearningSpaceUt
         {
             UnsavedChanges = false
         };
-        var space1 = new LearningSpace("g", "j", "k", 5)
+        var space1 = new LearningSpace("g", "j", "k", 5, Theme.Campus)
         {
             UnsavedChanges = false
         };
-        var space2 = new LearningSpace("l", "o", "p", 7)
+        var space2 = new LearningSpace("l", "o", "p", 7, Theme.Campus)
         {
             UnsavedChanges = false
         };

@@ -12,7 +12,7 @@ public class PlaceLearningElementInLayoutFromLayoutUt
     [Test]
     public void MoveLearningElementToEmptySlot_Execute_MovesLearningElement()
     {
-        var parent = new LearningSpace("sn", "sd", "sg", 5,
+        var parent = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2))
         {
             UnsavedChanges = false
@@ -53,7 +53,7 @@ public class PlaceLearningElementInLayoutFromLayoutUt
     [Test]
     public void MoveLearningElementToAssignedSlot_Execute_SwitchesLearningElements()
     {
-        var parent = new LearningSpace("sn", "sd", "sg", 5,
+        var parent = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2))
         {
             UnsavedChanges = false
@@ -102,7 +102,7 @@ public class PlaceLearningElementInLayoutFromLayoutUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var parent = new LearningSpace("sn", "sd", "sg", 5,
+        var parent = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2));
         var content = new FileContent("cn", "ct", "cf");
         var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, parent, workload: 8, points: 9, positionX: 17f, positionY: 29f);
@@ -125,7 +125,7 @@ public class PlaceLearningElementInLayoutFromLayoutUt
     [Test]
     public void UndoRedo_UndoesAndRedoesMovingLearningElement()
     {
-        var parent = new LearningSpace("sn", "sd", "sg", 5,
+        var parent = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2))
         {
             UnsavedChanges = false
@@ -188,7 +188,7 @@ public class PlaceLearningElementInLayoutFromLayoutUt
     [Test]
     public void UndoRedo_UndoesAndRedoesSwitchingLearningElements()
     {
-        var parent = new LearningSpace("sn", "sd", "sg", 5,
+        var parent = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2))
         {
             UnsavedChanges = false

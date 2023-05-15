@@ -30,7 +30,7 @@ public class SelectedViewModelsProviderUt
     {
         var onUndoRedo = Substitute.For<IOnUndoRedo>();
         var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo);
-        var learningObjectInPathWay = new LearningSpaceViewModel("a", "b", "d");
+        var learningObjectInPathWay = new LearningSpaceViewModel("a", "b", "d", Theme.Campus);
         
         systemUnderTest.SetLearningObjectInPathWay(learningObjectInPathWay, null);
         

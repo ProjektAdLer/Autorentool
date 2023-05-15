@@ -50,12 +50,12 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     }
 
     public void EditLearningSpace(string name, string description, string goals,
-        int requiredPoints, ITopicViewModel? topic)
+        int requiredPoints, Theme theme, ITopicViewModel? topic)
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("LearningSpaceVm is null");
         _presentationLogic.EditLearningSpace(LearningSpaceVm, name, description, goals,
-            requiredPoints, topic);
+            requiredPoints, theme, topic);
     }
 
     public bool ReplaceLearningElementDialogOpen { get; set; } = false;

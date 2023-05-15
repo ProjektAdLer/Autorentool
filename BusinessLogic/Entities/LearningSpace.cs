@@ -26,7 +26,7 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
         PositionY = 0;
     }
     public LearningSpace(string name, string description,
-        string goals, int requiredPoints, LearningSpaceLayout? learningSpaceLayout = null, double positionX = 0,
+        string goals, int requiredPoints, Theme theme, LearningSpaceLayout? learningSpaceLayout = null, double positionX = 0,
         double positionY = 0, List<IObjectInPathWay>? inBoundSpaces = null, List<IObjectInPathWay>? outBoundSpaces = null,
         Topic? assignedTopic = null)
     {
@@ -35,6 +35,7 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
         Description = description;
         Goals = goals;
         RequiredPoints = requiredPoints;
+        Theme = theme;
         UnsavedChanges = true;
         LearningSpaceLayout = learningSpaceLayout
             ?? new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2);
@@ -51,6 +52,8 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
     public string Description { get; set; }
     public string Goals { get; set; }
     public int RequiredPoints { get; set; }
+    
+    public Theme Theme { get; set; }
 
     public bool UnsavedChanges
     {
@@ -72,7 +75,7 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
 
     public IMemento GetMemento()
     {
-        return new LearningSpaceMemento(Name, Description, Goals, RequiredPoints, LearningSpaceLayout, InBoundObjects, 
+        return new LearningSpaceMemento(Name, Description, Goals, RequiredPoints, Theme, LearningSpaceLayout, InBoundObjects, 
             OutBoundObjects, AssignedTopic, PositionX, PositionY, InternalUnsavedChanges);
     }
 
@@ -98,7 +101,7 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
     private record LearningSpaceMemento : IMemento
     {
         internal LearningSpaceMemento(string name, string description,
-            string goals, int requiredPoints, ILearningSpaceLayout learningSpaceLayout,
+            string goals, int requiredPoints, Theme theme, ILearningSpaceLayout learningSpaceLayout,
             List<IObjectInPathWay> inBoundSpaces,
             List<IObjectInPathWay> outBoundSpaces, Topic? assignedTopic, double positionX, double positionY,
             bool unsavedChanges)
@@ -107,6 +110,7 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
             Description = description;
             Goals = goals;
             RequiredPoints = requiredPoints;
+            Theme = theme;
             LearningSpaceLayout = learningSpaceLayout;
             InBoundObjects = inBoundSpaces.ToList();
             OutBoundObjects = outBoundSpaces.ToList();
@@ -120,6 +124,7 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
         internal string Description { get; }
         internal string Goals { get; }
         internal int RequiredPoints { get; }
+        internal Theme Theme { get; }
         internal ILearningSpaceLayout LearningSpaceLayout { get; }
         internal double PositionX { get; }
         internal double PositionY { get; }
