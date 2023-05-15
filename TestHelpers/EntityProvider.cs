@@ -6,6 +6,10 @@ namespace TestHelpers;
 
 public static class EntityProvider
 {
+    public static AuthoringToolWorkspace GetAuthoringToolWorkspace()
+    {
+        return new AuthoringToolWorkspace(new List<LearningWorld>());
+    }
     public static LearningWorld GetLearningWorld()
     {
         return new LearningWorld("a", "b", "c", "d", "e", "f");

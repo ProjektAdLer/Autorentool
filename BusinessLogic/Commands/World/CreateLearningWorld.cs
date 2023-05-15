@@ -7,7 +7,7 @@ public class CreateLearningWorld : ICreateLearningWorld
 {
     public string Name => nameof(CreateLearningWorld);
     internal AuthoringToolWorkspace AuthoringToolWorkspace { get; }
-    private readonly Action<AuthoringToolWorkspace> _mappingAction;
+    internal Action<AuthoringToolWorkspace> MappingAction { get; }
 
     private IMemento? _memento;
     internal LearningWorld LearningWorld { get; }
@@ -17,7 +17,7 @@ public class CreateLearningWorld : ICreateLearningWorld
     {
         LearningWorld = new LearningWorld(name, shortname, authors, language, description, goals);
         AuthoringToolWorkspace = authoringToolWorkspace;
-        _mappingAction = mappingAction;
+        MappingAction = mappingAction;
     }
 
     public CreateLearningWorld(AuthoringToolWorkspace authoringToolWorkspace, LearningWorld learningWorld,
@@ -25,7 +25,7 @@ public class CreateLearningWorld : ICreateLearningWorld
     {
         LearningWorld = learningWorld;
         AuthoringToolWorkspace = authoringToolWorkspace;
-        _mappingAction = mappingAction;
+        MappingAction = mappingAction;
     }
 
     public void Execute()
@@ -40,7 +40,7 @@ public class CreateLearningWorld : ICreateLearningWorld
 
         AuthoringToolWorkspace.LearningWorlds.Add(LearningWorld);
 
-        _mappingAction.Invoke(AuthoringToolWorkspace);
+        MappingAction.Invoke(AuthoringToolWorkspace);
     }
 
     public void Undo()
@@ -52,7 +52,7 @@ public class CreateLearningWorld : ICreateLearningWorld
 
         AuthoringToolWorkspace.RestoreMemento(_memento);
 
-        _mappingAction.Invoke(AuthoringToolWorkspace);
+        MappingAction.Invoke(AuthoringToolWorkspace);
     }
 
     public void Redo() => Execute();
