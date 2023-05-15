@@ -4,6 +4,13 @@ using AuthoringTool;
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Condition;
+using BusinessLogic.Commands.Element;
+using BusinessLogic.Commands.Layout;
+using BusinessLogic.Commands.Pathway;
+using BusinessLogic.Commands.Space;
+using BusinessLogic.Commands.Topic;
+using BusinessLogic.Commands.World;
 using BusinessLogic.Validation;
 using BusinessLogic.Validation.Validators;
 using DataAccess.Persistence;
@@ -166,6 +173,18 @@ public class StartupUt
     [Test]
     [TestCaseSource(nameof(ConfigureCommandRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllCommandServices(Type requiredType)
+    {
+        ConfigureServicesCoreTest(requiredType);
+    }
+    private static readonly Type[] ConfigureCommandFactoriesRequiredTypes =
+    {
+        typeof(IConditionCommandFactory), typeof(IElementCommandFactory), typeof(ILayoutCommandFactory),
+        typeof(IPathwayCommandFactory), typeof(ISpaceCommandFactory), typeof(ITopicCommandFactory), typeof(IWorldCommandFactory)
+    };
+
+    [Test]
+    [TestCaseSource(nameof(ConfigureCommandFactoriesRequiredTypes))]
+    public void Startup_ConfigureServices_CanResolveAllCommandFactoriesServices(Type requiredType)
     {
         ConfigureServicesCoreTest(requiredType);
     }

@@ -6,6 +6,13 @@ using AuthoringTool.Mapping;
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Condition;
+using BusinessLogic.Commands.Element;
+using BusinessLogic.Commands.Layout;
+using BusinessLogic.Commands.Pathway;
+using BusinessLogic.Commands.Space;
+using BusinessLogic.Commands.Topic;
+using BusinessLogic.Commands.World;
 using BusinessLogic.Validation;
 using DataAccess.Persistence;
 using ElectronWrapper;
@@ -75,6 +82,7 @@ public class Startup
         ConfigureUtilities(services);
         ConfigureAutoMapper(services);
         ConfigureCommands(services);
+        ConfigureCommandFactories(services);
         ConfigureValidation(services);
         ConfigureApiAccess(services);
         ConfigureMediator(services);
@@ -214,6 +222,17 @@ public class Startup
     {
         services.AddSingleton<ICommandStateManager, CommandStateManager>();
         services.AddSingleton<IOnUndoRedo>(p => (CommandStateManager) p.GetService<ICommandStateManager>()!);
+    }
+
+    private void ConfigureCommandFactories(IServiceCollection services)
+    {
+        services.AddSingleton<IConditionCommandFactory, ConditionCommandFactory>();
+        services.AddSingleton<IElementCommandFactory, ElementCommandFactory>();
+        services.AddSingleton<ILayoutCommandFactory, LayoutCommandFactory>();
+        services.AddSingleton<IPathwayCommandFactory, PathwayCommandFactory>();
+        services.AddSingleton<ISpaceCommandFactory, SpaceCommandFactory>();
+        services.AddSingleton<ITopicCommandFactory, TopicCommandFactory>();
+        services.AddSingleton<IWorldCommandFactory, WorldCommandFactory>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
