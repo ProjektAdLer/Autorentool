@@ -7,10 +7,17 @@
 
 @if (LearningWorldP?.LearningWorldVm != null)
 {
-    <MudPaper Width="250px" Class="default-inline-flex bg-white" Elevation="0">
+    <MudPaper Width="250px" Class="default-inline-flex rounded-lg bg-white" Elevation="0">
         <MudNavMenu Class="mud-width-full">
-            <MudText Typo="Typo.h6" Class= "px-4">@LearningWorldP.LearningWorldVm.Name</MudText> 
-            <MudDivider Class="my-2" />
+            <section class="bg-white rounded-lg p-2">
+                <div class="flex justify-start items-center space-x-2 py-1">
+                    <img src="CustomIcons/world-icon-nobg.png" alt="world" class="opacity-50 w-7 h-7"> 
+                    <p class="text-lg text-adlerblue-600 truncate hover:text-clip"> @LearningWorldP.LearningWorldVm?.Name</p>
+                </div>
+                <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">Workload: </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> min.</span></h3>
+                <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">Points: </span> @LearningWorldP.LearningWorldVm?.Points</h3>
+            </section>
+            <MudDivider Class="my-1" />
             @if(LearningWorldP.LearningWorldVm.LearningSpaces.Count > 0)
             {
                 @foreach (var learningSpace in LearningWorldP.LearningWorldVm.LearningSpaces)
