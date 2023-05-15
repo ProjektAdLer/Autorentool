@@ -8,7 +8,7 @@ public static class EntityProvider
 {
     public static LearningWorld GetLearningWorld()
     {
-        return new LearningWorld("a", "b", "c", "d", "e", "f") { };
+        return new LearningWorld("a", "b", "c", "d", "e", "f");
     }
 
     public static LearningSpace GetLearningSpace()

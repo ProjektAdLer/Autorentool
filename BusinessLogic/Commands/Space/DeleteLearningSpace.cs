@@ -7,7 +7,7 @@ public class DeleteLearningSpace : IDeleteLearningSpace
     public string Name => nameof(DeleteLearningSpace);
     internal LearningWorld LearningWorld { get; }
     internal LearningSpace LearningSpace { get; }
-    private readonly Action<LearningWorld> _mappingAction;
+    internal Action<LearningWorld> MappingAction { get; }
     private IMemento? _memento;
 
     public DeleteLearningSpace(LearningWorld learningWorld, LearningSpace learningSpace,
@@ -15,7 +15,7 @@ public class DeleteLearningSpace : IDeleteLearningSpace
     {
         LearningWorld = learningWorld;
         LearningSpace = learningSpace;
-        _mappingAction = mappingAction;
+        MappingAction = mappingAction;
     }
 
     public void Execute()
@@ -39,7 +39,7 @@ public class DeleteLearningSpace : IDeleteLearningSpace
         }
         LearningWorld.LearningSpaces.Remove(space);
 
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Undo()
@@ -51,7 +51,7 @@ public class DeleteLearningSpace : IDeleteLearningSpace
 
         LearningWorld.RestoreMemento(_memento);
 
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Redo() => Execute();

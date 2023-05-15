@@ -8,7 +8,7 @@ public class CreateLearningSpace : ICreateLearningSpace
     public string Name => nameof(CreateLearningSpace);
     internal LearningWorld LearningWorld { get; }
     internal LearningSpace LearningSpace { get; }
-    private readonly Action<LearningWorld> _mappingAction;
+    internal Action<LearningWorld> MappingAction { get; }
     private IMemento? _memento;
 
     public CreateLearningSpace(LearningWorld learningWorld, string name, string description, string goals, 
@@ -17,14 +17,14 @@ public class CreateLearningSpace : ICreateLearningSpace
     {
         LearningSpace = new LearningSpace(name, description, goals, requiredPoints, theme, null, positionX: positionX, positionY: positionY, assignedTopic: topic);
         LearningWorld = learningWorld;
-        _mappingAction = mappingAction;
+        MappingAction = mappingAction;
     }
 
     public CreateLearningSpace(LearningWorld learningWorld, LearningSpace learningSpace, Action<LearningWorld> mappingAction)
     {
         LearningSpace = learningSpace;
         LearningWorld = learningWorld;
-        _mappingAction = mappingAction;
+        MappingAction = mappingAction;
     }
 
     public void Execute()
@@ -33,7 +33,7 @@ public class CreateLearningSpace : ICreateLearningSpace
 
         LearningWorld.LearningSpaces.Add(LearningSpace);
 
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Undo()
@@ -45,7 +45,7 @@ public class CreateLearningSpace : ICreateLearningSpace
         
         LearningWorld.RestoreMemento(_memento);
         
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Redo() => Execute();

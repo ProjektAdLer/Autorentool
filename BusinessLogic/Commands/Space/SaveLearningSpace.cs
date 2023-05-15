@@ -6,19 +6,19 @@ namespace BusinessLogic.Commands.Space;
 public class SaveLearningSpace : ISaveLearningSpace
 {
     public string Name => nameof(SaveLearningSpace);
-    private readonly IBusinessLogic _businessLogic;
-    private readonly LearningSpace _learningSpace;
-    private readonly string _filepath;
+    internal IBusinessLogic BusinessLogic { get; }
+    internal LearningSpace LearningSpace { get; }
+    internal string Filepath { get; }
     
     public SaveLearningSpace(IBusinessLogic businessLogic, LearningSpace learningSpace, string filepath)
     {
-        _businessLogic = businessLogic;
-        _learningSpace = learningSpace;
-        _filepath = filepath;
+        BusinessLogic = businessLogic;
+        LearningSpace = learningSpace;
+        Filepath = filepath;
     }
     
     public void Execute()
     {
-        _businessLogic.SaveLearningSpace(_learningSpace, _filepath);
+        BusinessLogic.SaveLearningSpace(LearningSpace, Filepath);
     }
 }
