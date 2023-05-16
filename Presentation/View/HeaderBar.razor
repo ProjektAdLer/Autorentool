@@ -20,7 +20,16 @@
         <img class="w-10 drop-shadow" src="/CustomIcons/autorentool-logo.png" alt="authoringtool-logo"/>
         <h1 class="font-bold text-lg">@Localizer["AuthoringTool.Text"] @Localizer["AuthoringTool.Version"]</h1>
     </div>
-    <div class="flex justify-end">
+    <div class="flex justify-end items-center gap-2 border-solid ">
+        <div class="flex flex-col justify-center">
+            <p class="text-xs font-bold text-center">
+                Feedback
+            </p>
+            <div class="flex flex-row justify-around">
+                <a href="https://bugreport.projekt-adler.eu" target="_blank" title="Bugreport - Öffnet neue Webseite"><button class="btn-standard m-0 p-1 h-5"><img class="w-4 h-4 drop-shadow" src="/CustomIcons/bug-icon-nobg.png" alt="debug-icon"/></button></a>
+                <a href="https://userfeedback.projekt-adler.eu" target="_blank" title="Nutzerfeedback - Öffnet neue Webseite"><button class="btn-standard m-0 p-1 h-5"><img class="w-4 h-4 drop-shadow" src="/CustomIcons/feedback-icon-without-typo-nobg.png" alt="feedback-icon"/></button></a>
+            </div>
+        </div>
         <CultureSelector/>
         @if (PresentationLogic?.RunningElectron == true)
         {
