@@ -53,21 +53,27 @@
                              Label="@nameof(FormDataContainer.FormModel.RequiredPoints)"/>
             </div>
         </Collapsable>
-        <SpaceLayoutSelection LearningSpaceViewModel="SpaceToEdit"></SpaceLayoutSelection>
+
+        <Collapsable Title="Floor Plan" @bind-Collapsed="_collapsedFloorplan">
+            <div class="flex rounded-lg w-4/4 px-1 pb-1">
+                <SpaceLayoutSelection LearningSpaceViewModel="SpaceToEdit"></SpaceLayoutSelection>
+            </div>
+        </Collapsable>
         
         <Collapsable Title="Theme" @bind-Collapsed="_collapsedTheme">
-                    <div class="rounded-lg w-4/4 px-4 pb-4">
-                        <MudSelect @bind-Value="FormDataContainer.FormModel.Theme" AnchorOrigin="Origin.BottomCenter"
-                                   Label="@nameof(FormDataContainer.FormModel.Theme)"
-                                   Text="@FormDataContainer.FormModel.Theme.ToString()"
-                                   For="@(() => FormModel.Theme)">
-                                    @foreach (var theme in _themes)
-                                    {
-                                        <MudSelectItem Value="@(theme)">@theme</MudSelectItem>
-                                    }
-                        </MudSelect>
-                    </div>
-                </Collapsable>
+            <div class="rounded-lg w-4/4 px-4 pb-4">
+                <MudSelect @bind-Value="FormDataContainer.FormModel.Theme" AnchorOrigin="Origin.BottomCenter"
+                           Label="@nameof(FormDataContainer.FormModel.Theme)"
+                           Text="@FormDataContainer.FormModel.Theme.ToString()"
+                           For="@(() => FormModel.Theme)">
+                    @foreach (var theme in _themes)
+                    {
+                        <MudSelectItem Value="@(theme)">@theme</MudSelectItem>
+                    }
+                </MudSelect>
+            </div>
+        </Collapsable>
+        
     </Fields>
     <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
@@ -103,6 +109,7 @@
     private bool _collapsedGoals = true;
     private bool _collapsedConditions = true;
     private bool _collapsedTheme = true;
+    private bool _collapsedFloorplan = false;
     private Theme[] _themes = (Theme[])Enum.GetValues(typeof(Theme));
 
     private void OnValidSubmit(LearningSpaceFormModel model)

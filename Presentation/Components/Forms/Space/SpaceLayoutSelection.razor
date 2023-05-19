@@ -1,16 +1,23 @@
 @using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans
 @using Shared
-@foreach (FloorPlanEnum floorPlan in Enum.GetValues(typeof(FloorPlanEnum)))
-{
-    <MudIconButton OnClick="(args) => OnFloorPlanButtonSelected(floorPlan, args)"
-                   Color="IsFloorPlanActive(floorPlan) ? Color.Success : Color.Error"
-                   Icon="@FloorPlanViewModelProvider.GetFloorPlan(floorPlan).GetIcon"
-                   Style="@GetStyle(floorPlan)">
-        @floorPlan.ToString()
-    </MudIconButton>
-}
-<MudText>Selected Option: @SelectedFloorPlan.ToString()</MudText>
+
+<div class="flex flex-col justify-center pb-2 w-full rounded-lg bg-adlergrey-100">
+    <div class="flex flex-row justify-evenly">
+        @foreach (FloorPlanEnum floorPlan in Enum.GetValues(typeof(FloorPlanEnum)))
+        {
+            <MudIconButton OnClick="(args) => OnFloorPlanButtonSelected(floorPlan, args)"
+                           Color="IsFloorPlanActive(floorPlan) ? Color.Info : Color.Error"
+                           Icon="@FloorPlanViewModelProvider.GetFloorPlan(floorPlan).GetIcon"
+                           Style="@GetStyle(floorPlan)"
+                           Size="Size.Large">
+                @floorPlan.ToString()
+            </MudIconButton>
+        }
+    </div>
+    <p class="text-adlergrey-600 my-0 px-2">Selected: <span class="text-adlerblue-600"> @SelectedFloorPlan.ToString()</span></p>
+</div>
+
 
 @code {
 
@@ -46,7 +53,7 @@
     private string GetStyle(FloorPlanEnum floorPlan)
     {
         return IsFloorPlanActive(floorPlan) ?
-            "filter: grayscale(0%); -webkit-filter: grayscale(0%); drop-shadow(0 0 5px green); -webkit-filter: drop-shadow(0 0 5px green);" :
+            "filter: grayscale(0%); -webkit-filter: grayscale(0%); drop-shadow(0 0 5px); -webkit-filter: drop-shadow(0 0 5px);" :
             "filter: grayscale(70%); -webkit-filter: grayscale(70%);";
     }
 
