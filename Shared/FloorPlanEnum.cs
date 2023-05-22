@@ -3,7 +3,7 @@ namespace Shared;
 
 public enum FloorPlanEnum
 {
-    Rectangle2X2, 
-    Rectangle2X3,
-    LShape3L2 
+    R20X206L, 
+    R20X308L,
+    L32X3110L 
 }

@@ -43,12 +43,14 @@ public class EntityPersistEntityMappingProfile : Profile
     private void CreateLearningSpaceLayoutMap()
     {
         CreateMap<ILearningSpaceLayout, LearningSpaceLayoutPe>()
-            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .ForMember(x => x.Capacity, opt => opt.Ignore());
         CreateMap<ILearningSpaceLayoutPe, LearningSpaceLayout>()
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore());
         CreateMap<LearningSpaceLayout, LearningSpaceLayoutPe>()
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
             .ForMember(x => x.LearningElements, opt => opt.Ignore())
+            .ForMember(x => x.Capacity, opt => opt.Ignore())
             .AfterMap(MapSpaceLayoutElements)
             .ReverseMap()
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())

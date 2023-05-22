@@ -214,23 +214,23 @@ public class CachingMapperUt
         MapLearningSpaceEntityToViewModel_ChangedLayoutWithElementWithIndexBiggerThanTheOldLearningElementsArray_MapsCorrectly()
     {
         var spaceEntity = new LearningSpace("n", "d", "g", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2));
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L));
         var elementEntity = new LearningElement("n", new FileContent("n", "t", "f"), "d", "g",
             LearningElementDifficultyEnum.Easy, spaceEntity);
-        spaceEntity.LearningSpaceLayout.LearningElements[3] = elementEntity;
+        spaceEntity.LearningSpaceLayout.LearningElements[5] = elementEntity;
         
         var systemUnderTest = CreateTestableCachingMapper();
         
-        var spaceViewModel = new LearningSpaceViewModel("", "", "", Theme.Campus, 0, new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X2));
+        var spaceViewModel = new LearningSpaceViewModel("", "", "", Theme.Campus, 0, new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X206L));
         
         systemUnderTest.Map<LearningSpace, LearningSpaceViewModel>(spaceEntity, spaceViewModel);
         
         Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements, Has.Count.EqualTo(1));
-        Assert.That(spaceViewModel.LearningSpaceLayout.Capacity, Is.EqualTo(4));
-        Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[3], Is.Not.Null);
+        Assert.That(spaceViewModel.LearningSpaceLayout.Capacity, Is.EqualTo(6));
+        Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[5], Is.Not.Null);
         Assert.Multiple(() =>
         {
-            Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[3]!.Id, Is.EqualTo(elementEntity.Id));
+            Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[5]!.Id, Is.EqualTo(elementEntity.Id));
             Assert.That(spaceViewModel.Name, Is.EqualTo(spaceEntity.Name));
             Assert.That(spaceViewModel.Description, Is.EqualTo(spaceEntity.Description));
             Assert.That(spaceViewModel.Goals, Is.EqualTo(spaceEntity.Goals));
@@ -238,16 +238,16 @@ public class CachingMapperUt
             Assert.That(spaceViewModel.Theme, Is.EqualTo(spaceEntity.Theme));
         });
 
-        spaceEntity.LearningSpaceLayout = new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X3);
-        spaceEntity.LearningSpaceLayout.LearningElements[5] = elementEntity;
+        spaceEntity.LearningSpaceLayout = new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X308L);
+        spaceEntity.LearningSpaceLayout.LearningElements[7] = elementEntity;
 
         systemUnderTest.Map<LearningSpace, LearningSpaceViewModel>(spaceEntity, spaceViewModel);
         
-        Assert.That(spaceViewModel.LearningSpaceLayout.Capacity, Is.EqualTo(6));
-        Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[5], Is.Not.Null);
+        Assert.That(spaceViewModel.LearningSpaceLayout.Capacity, Is.EqualTo(8));
+        Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[7], Is.Not.Null);
         Assert.Multiple(() =>
         {
-            Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[5]!.Id, Is.EqualTo(elementEntity.Id));
+            Assert.That(spaceViewModel.LearningSpaceLayout.LearningElements[7]!.Id, Is.EqualTo(elementEntity.Id));
             Assert.That(spaceViewModel.Name, Is.EqualTo(spaceEntity.Name));
             Assert.That(spaceViewModel.Description, Is.EqualTo(spaceEntity.Description));
             Assert.That(spaceViewModel.Goals, Is.EqualTo(spaceEntity.Goals));
@@ -272,7 +272,7 @@ public class CachingMapperUt
     public void MapLearningSpaceEntityToViewModel_MapsLearningElementToViewModel()
     {
         var space = new LearningSpace("n", "d", "g", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X3));
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X308L));
         var spaceViewModel = new LearningSpaceViewModel("x","x","x", Theme.Campus,5);
         var topicEntity = new Topic("abc");
         var elementEntity = new LearningElement("n", null!, "d", "g", LearningElementDifficultyEnum.Easy);
@@ -300,7 +300,7 @@ public class CachingMapperUt
     {
         //create space entity containing one element
         var space = new LearningSpace("n", "d", "g", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X3));
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X308L));
         var topicViewModel = new TopicViewModel("x", false);
         var topicEntity = new Topic("x");
         var elementEntity =
@@ -309,7 +309,7 @@ public class CachingMapperUt
         space.AssignedTopic = topicEntity;
         //create empty view model
         var spaceViewModel = new LearningSpaceViewModel("x", "x", "x", Theme.Campus, 5,
-            new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+            new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X308L));
         
         var systemUnderTest = CreateTestableCachingMapper();
 
@@ -357,7 +357,7 @@ public class CachingMapperUt
         var workspace = new AuthoringToolWorkspace(new List<LearningWorld>(){worldEntity});
         var workspaceViewModel = new AuthoringToolWorkspaceViewModel();
         var spaceEntity = new LearningSpace("n", "d", "g", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X3));
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X308L));
         var elementEntity = new LearningElement("n", null!, "d", "g", LearningElementDifficultyEnum.Easy);
         var secondElementEntity = new LearningElement("n2", null!, "d2", "g2", LearningElementDifficultyEnum.Easy);
         

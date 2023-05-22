@@ -13,8 +13,8 @@ public class LearningSpaceLayoutViewModel : ILearningSpaceLayoutViewModel
     [UsedImplicitly]
     private LearningSpaceLayoutViewModel()
     {
-        FloorPlanViewModel = FloorPlanViewModelProvider.GetFloorPlan(FloorPlanEnum.Rectangle2X3);
-        _floorPlanName = FloorPlanEnum.Rectangle2X3;
+        FloorPlanViewModel = FloorPlanViewModelProvider.GetFloorPlan(FloorPlanEnum.R20X308L);
+        _floorPlanName = FloorPlanEnum.R20X308L;
         _learningElements = new Dictionary<int, ILearningElementViewModel>();
     }
     

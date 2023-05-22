@@ -22,7 +22,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         Description = "";
         Goals = "";
         RequiredPoints = 0;
-        LearningSpaceLayout = new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3);
+        LearningSpaceLayout = new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X308L);
         InBoundObjects = new Collection<IObjectInPathWayViewModel>();
         OutBoundObjects = new Collection<IObjectInPathWayViewModel>();
         PositionX = 0;
@@ -56,7 +56,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         Goals = goals;
         Theme = theme;
         RequiredPoints = requiredPoints;
-        LearningSpaceLayout = layoutViewModel ?? new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X2);
+        LearningSpaceLayout = layoutViewModel ?? new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X206L);
         InBoundObjects = inBoundObjects ?? new Collection<IObjectInPathWayViewModel>();
         OutBoundObjects = outBoundObjects ?? new Collection<IObjectInPathWayViewModel>();
         AssignedTopic = assignedTopic;

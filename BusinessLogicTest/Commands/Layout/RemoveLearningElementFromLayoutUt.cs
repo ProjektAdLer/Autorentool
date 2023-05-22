@@ -14,7 +14,7 @@ public class RemoveLearningElementFromLayoutUt
     {
         var world = new LearningWorld("wn", "wsn", "wa", "wl", "wd", "wg");
         var space = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2))
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L))
         {
             UnsavedChanges = false
         };
@@ -59,7 +59,7 @@ public class RemoveLearningElementFromLayoutUt
     {
         var world = new LearningWorld("wn", "wsn", "wa", "wl", "wd", "wg");
         var space = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2));
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L));
         world.LearningSpaces.Add(space);
         var content = new FileContent("cn", "ct", "cf");
         var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, null, workload: 8, points: 9, positionX: 17f, positionY: 29f);
@@ -84,7 +84,7 @@ public class RemoveLearningElementFromLayoutUt
     {
         var world = new LearningWorld("wn", "wsn", "wa", "wl", "wd", "wg");
         var space = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2))
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L))
         {
             UnsavedChanges = false
         };

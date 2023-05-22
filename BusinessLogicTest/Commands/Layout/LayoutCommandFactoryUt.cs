@@ -22,7 +22,7 @@ public class LayoutCommandFactoryTests
         // Arrange
         var learningSpace = EntityProvider.GetLearningSpace();
         var learningWorld = EntityProvider.GetLearningWorld();
-        var floorPlanName = FloorPlanEnum.Rectangle2X2;
+        var floorPlanName = FloorPlanEnum.R20X206L;
         Action<LearningWorld> mappingAction = world => { };
 
         // Act

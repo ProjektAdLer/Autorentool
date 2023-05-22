@@ -12,7 +12,7 @@ public class LearningSpaceLayout : ILearningSpaceLayout, IOriginator
     private LearningSpaceLayout()
     {
         LearningElements = new Dictionary<int, ILearningElement>();
-        FloorPlanName = FloorPlanEnum.Rectangle2X3;
+        FloorPlanName = FloorPlanEnum.R20X308L;
     }
     
     public LearningSpaceLayout(IDictionary<int, ILearningElement> learningElements, FloorPlanEnum floorPlanName)

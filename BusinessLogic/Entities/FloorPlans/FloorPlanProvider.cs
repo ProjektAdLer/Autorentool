@@ -8,9 +8,9 @@ public static class FloorPlanProvider
     {
         return floorPlanName switch
         {
-            FloorPlanEnum.LShape3L2 => new LShape3L2(),
-            FloorPlanEnum.Rectangle2X2 => new Rectangle2X2(),
-            FloorPlanEnum.Rectangle2X3 => new Rectangle2X3(),
+            FloorPlanEnum.L32X3110L => new L32X3110L(),
+            FloorPlanEnum.R20X206L => new R20X206L(),
+            FloorPlanEnum.R20X308L => new R20X308L(),
             _ => throw new ArgumentOutOfRangeException(nameof(floorPlanName), floorPlanName, null)
         };
     }

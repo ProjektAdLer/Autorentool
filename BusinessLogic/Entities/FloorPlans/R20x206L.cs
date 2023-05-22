@@ -1,6 +1,6 @@
 ﻿namespace BusinessLogic.Entities.FloorPlans;
 
-public class Rectangle2X3 : IFloorPlan
+public class R20X206L : IFloorPlan
 {
     public int Capacity => 6;
 }

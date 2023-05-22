@@ -35,6 +35,18 @@ public class ChangeLearningSpaceLayoutUt
         {
             UnsavedChanges = false
         };
+        var element6 = new LearningElement("", null!, "", "", LearningElementDifficultyEnum.None)
+        {
+            UnsavedChanges = false
+        };
+        var element7 = new LearningElement("", null!, "", "", LearningElementDifficultyEnum.None)
+        {
+            UnsavedChanges = false
+        };
+        var element8 = new LearningElement("", null!, "", "", LearningElementDifficultyEnum.None)
+        {
+            UnsavedChanges = false
+        };
         var layout = new LearningSpaceLayout(new Dictionary<int, ILearningElement>
         {
             {0, element1},
@@ -42,19 +54,22 @@ public class ChangeLearningSpaceLayoutUt
             {2, element3},
             {3, element4},
             {4, element5},
+            {5, element6},
+            {6, element7},
+            {7, element8},
             
-        }, FloorPlanEnum.LShape3L2);
+        }, FloorPlanEnum.R20X308L);
         var space = new LearningSpace("", "", "", 0, Theme.Campus, layout)
         {
             UnsavedChanges = false
         };
         world.LearningSpaces.Add(space);
         
-        var systemUnderTest = new ChangeLearningSpaceLayout(space, world, FloorPlanEnum.Rectangle2X2, _ => { });
+        var systemUnderTest = new ChangeLearningSpaceLayout(space, world, FloorPlanEnum.R20X206L, _ => { });
         
         Assert.Multiple(() =>
         {
-            Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(5));
+            Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(8));
             Assert.That(world.UnplacedLearningElements, Is.Empty);
             Assert.That(world.UnsavedChanges, Is.False);
             Assert.That(space.UnsavedChanges, Is.False);
@@ -70,11 +85,14 @@ public class ChangeLearningSpaceLayoutUt
                 { 1, element2 },
                 { 2, element3 },
                 { 3, element4 },
+                { 4, element5 },
+                { 5, element6 },
             };
-            Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(4));
+            Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(6));
             Assert.That(space.LearningSpaceLayout.LearningElements, Is.EquivalentTo(expectedDict));
-            Assert.That(world.UnplacedLearningElements, Has.Count.EqualTo(1));
-            Assert.That(world.UnplacedLearningElements, Has.Exactly(1).EqualTo(element5));
+            Assert.That(world.UnplacedLearningElements, Has.Count.EqualTo(2));
+            Assert.That(world.UnplacedLearningElements, Has.Exactly(1).EqualTo(element7));
+            Assert.That(world.UnplacedLearningElements, Has.Exactly(1).EqualTo(element8));
             Assert.That(world.UnsavedChanges, Is.True);
             Assert.That(space.UnsavedChanges, Is.True);
         });
@@ -106,6 +124,18 @@ public class ChangeLearningSpaceLayoutUt
         {
             UnsavedChanges = false
         };
+        var element6 = new LearningElement("", null!, "", "", LearningElementDifficultyEnum.None)
+        {
+            UnsavedChanges = false
+        };
+        var element7 = new LearningElement("", null!, "", "", LearningElementDifficultyEnum.None)
+        {
+            UnsavedChanges = false
+        };
+        var element8 = new LearningElement("", null!, "", "", LearningElementDifficultyEnum.None)
+        {
+            UnsavedChanges = false
+        };
         var layout = new LearningSpaceLayout(new Dictionary<int, ILearningElement>
         {
             {0, element1},
@@ -113,19 +143,22 @@ public class ChangeLearningSpaceLayoutUt
             {2, element3},
             {3, element4},
             {4, element5},
+            {5, element6},
+            {6, element7},
+            {7, element8},
             
-        }, FloorPlanEnum.LShape3L2);
+        }, FloorPlanEnum.R20X308L);
         var space = new LearningSpace("", "", "", 0, Theme.Campus, layout)
         {
             UnsavedChanges = false
         };
         world.LearningSpaces.Add(space);
         
-        var systemUnderTest = new ChangeLearningSpaceLayout(space, world, FloorPlanEnum.Rectangle2X2, _ => { });
+        var systemUnderTest = new ChangeLearningSpaceLayout(space, world, FloorPlanEnum.R20X206L, _ => { });
         
         Assert.Multiple(() =>
         {
-            Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(5));
+            Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(8));
             Assert.That(world.UnplacedLearningElements, Is.Empty);
             Assert.That(world.UnsavedChanges, Is.False);
             Assert.That(space.UnsavedChanges, Is.False);
@@ -141,11 +174,14 @@ public class ChangeLearningSpaceLayoutUt
                 { 1, element2 },
                 { 2, element3 },
                 { 3, element4 },
+                { 4, element5 },
+                { 5, element6 },
             };
-            Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(4));
+            Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(6));
             Assert.That(space.LearningSpaceLayout.LearningElements, Is.EquivalentTo(expectedDict));
-            Assert.That(world.UnplacedLearningElements, Has.Count.EqualTo(1));
-            Assert.That(world.UnplacedLearningElements, Has.Exactly(1).EqualTo(element5));
+            Assert.That(world.UnplacedLearningElements, Has.Count.EqualTo(2));
+            Assert.That(world.UnplacedLearningElements, Has.Exactly(1).EqualTo(element7));
+            Assert.That(world.UnplacedLearningElements, Has.Exactly(1).EqualTo(element8));
             Assert.That(world.UnsavedChanges, Is.True);
             Assert.That(space.UnsavedChanges, Is.True);
         });
@@ -154,7 +190,7 @@ public class ChangeLearningSpaceLayoutUt
         
         Assert.Multiple(() =>
         {
-            Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(5));
+            Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(8));
             Assert.That(world.UnplacedLearningElements, Is.Empty);
             Assert.That(world.UnsavedChanges, Is.False);
             Assert.That(space.UnsavedChanges, Is.False);
@@ -170,11 +206,14 @@ public class ChangeLearningSpaceLayoutUt
                 { 1, element2 },
                 { 2, element3 },
                 { 3, element4 },
+                { 4, element5 },
+                { 5, element6 },
             };
-            Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(4));
+            Assert.That(space.ContainedLearningElements.Count(), Is.EqualTo(6));
             Assert.That(space.LearningSpaceLayout.LearningElements, Is.EquivalentTo(expectedDict));
-            Assert.That(world.UnplacedLearningElements, Has.Count.EqualTo(1));
-            Assert.That(world.UnplacedLearningElements, Has.Exactly(1).EqualTo(element5));
+            Assert.That(world.UnplacedLearningElements, Has.Count.EqualTo(2));
+            Assert.That(world.UnplacedLearningElements, Has.Exactly(1).EqualTo(element7));
+            Assert.That(world.UnplacedLearningElements, Has.Exactly(1).EqualTo(element8));
             Assert.That(world.UnsavedChanges, Is.True);
             Assert.That(space.UnsavedChanges, Is.True);
         });

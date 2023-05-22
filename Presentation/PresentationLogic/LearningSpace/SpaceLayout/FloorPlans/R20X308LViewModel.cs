@@ -1,25 +1,27 @@
 ﻿namespace Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans;
 
-public class Rectangle2X3ViewModel : IFloorPlanViewModel
+public class R20X308LViewModel : IFloorPlanViewModel
 {
-    public int Capacity => 6;
+    public int Capacity => 8;
 
     public IList<Point> CornerPoints { get; } = new List<Point>
     {
         new() {X = 0, Y = 0},
-        new() {X = 0, Y = 50},
-        new() {X = 75, Y = 50},
-        new() {X = 75, Y = 0}
+        new() {X = 0, Y = 60},
+        new() {X = 90, Y = 60},
+        new() {X = 90, Y = 0}
     };
 
     public IList<Point> ElementSlotPositions { get; } = new List<Point>
     {
-        new() {X = 10, Y = 10},
-        new() {X = 37, Y = 10},
-        new() {X = 65, Y = 10},
-        new() {X = 10, Y = 40},
-        new() {X = 37, Y = 40},
-        new() {X = 65, Y = 40}
+        new() {X = 12, Y = 15},
+        new() {X = 36, Y = 15},
+        new() {X = 60, Y = 15},
+        new() {X = 84, Y = 15},
+        new() {X = 84, Y = 45},
+        new() {X = 60, Y = 45},
+        new() {X = 36, Y = 45},
+        new() {X = 12, Y = 45}
     };
 
     public string GetIcon => Icon;

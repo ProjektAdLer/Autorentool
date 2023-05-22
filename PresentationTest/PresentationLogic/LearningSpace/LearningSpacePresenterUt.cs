@@ -69,7 +69,7 @@ public class LearningSpacePresenterUt
     public void AddLearningElement_CallsPresentationLogic()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", Theme.Campus,
-            layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+            layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X308L));
         var content = new FileContentViewModel("bar", "foo", "");
         var element = new LearningElementViewModel("f", content, "f", "f", LearningElementDifficultyEnum.Easy, space);
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
@@ -105,7 +105,7 @@ public class LearningSpacePresenterUt
     public void SetSelectedLearningElement_CallsSelectedViewModelsProvider()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", Theme.Campus,
-            layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+            layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X308L));
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var element = new LearningElementViewModel("g", null!, "g", "g", LearningElementDifficultyEnum.Easy);
 
@@ -132,7 +132,7 @@ public class LearningSpacePresenterUt
     public void ClickedLearningElement_CallsMediatorAndSelectedViewModelsProvider()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", Theme.Campus,
-            layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+            layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X308L));
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var mediator = Substitute.For<IMediator>();
         var element = new LearningElementViewModel("g", null!, "g", "g", LearningElementDifficultyEnum.Easy);
@@ -164,7 +164,7 @@ public class LearningSpacePresenterUt
     public void EditLearningElement_CallsPresentationLogic()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", Theme.Campus,
-            layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+            layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X308L));
         var content = new FileContentViewModel("bar", "foo", "/barbar");
         var element = new LearningElementViewModel("g", content, "g", "g", LearningElementDifficultyEnum.Easy);
         var presentationLogic = Substitute.For<IPresentationLogic>();
@@ -185,7 +185,7 @@ public class LearningSpacePresenterUt
     public void DeleteLearningElement_CallsPresentationLogic()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", Theme.Campus,
-            layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+            layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X308L));
         var element = new LearningElementViewModel("g", null!, "g", "g", LearningElementDifficultyEnum.Easy);
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var systemUnderTest = CreatePresenterForTesting(presentationLogic: presentationLogic);
@@ -239,7 +239,7 @@ public class LearningSpacePresenterUt
     public void DeleteSelectedLearningElement_CallsPresentationLogic_WithElement()
     {
         var space = new LearningSpaceViewModel("foo", "foo", "foo", Theme.Campus,
-            layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+            layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X308L));
         var content = new FileContentViewModel("bar", "foo", "");
         var element = new LearningElementViewModel("f", content, "f", "f", LearningElementDifficultyEnum.Easy, space);
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
@@ -294,7 +294,7 @@ public class LearningSpacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", Theme.Campus,
-            layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+            layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X308L));
         var content = new FileContentViewModel("bar", "foo", "");
         var element = new LearningElementViewModel("f", content,
             "f", "f", LearningElementDifficultyEnum.Easy, space);
@@ -348,7 +348,7 @@ public class LearningSpacePresenterUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var space = new LearningSpaceViewModel("foo", "foo", "foo", Theme.Campus,
-            layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+            layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X308L));
         var content = new FileContentViewModel("bar", "foo", "");
         var element = new LearningElementViewModel("f", content,
             "f", "f", LearningElementDifficultyEnum.Easy, space);
@@ -384,7 +384,7 @@ public class LearningSpacePresenterUt
     public async Task LoadLearningElementAsync_CallsPresentationLogic()
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
-        var space = new LearningSpaceViewModel("foo", "foo", "foo", Theme.Campus, layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+        var space = new LearningSpaceViewModel("foo", "foo", "foo", Theme.Campus, layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X308L));
         var element = new LearningElementViewModel("a", null!, "e", "f", LearningElementDifficultyEnum.Medium, space);
         space.LearningSpaceLayout.PutElement(0, element);
 

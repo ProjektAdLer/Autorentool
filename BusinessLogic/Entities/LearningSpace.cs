@@ -38,7 +38,7 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
         Theme = theme;
         UnsavedChanges = true;
         LearningSpaceLayout = learningSpaceLayout
-            ?? new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.Rectangle2X2);
+            ?? new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L);
         InBoundObjects = inBoundSpaces ?? new List<IObjectInPathWay>();
         OutBoundObjects = outBoundSpaces ?? new List<IObjectInPathWay>();
         AssignedTopic = assignedTopic;

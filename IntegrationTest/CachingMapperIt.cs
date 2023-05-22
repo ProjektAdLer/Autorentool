@@ -126,7 +126,7 @@ public class CachingMapperIt
         var worldVm = workspaceVm.LearningWorlds[0];
 
         systemUnderTest.CreateLearningSpace(worldVm, "g", "j", "k", 1, Theme.Campus, 2, 3, null!);
-        systemUnderTest.ChangeLearningSpaceLayout(worldVm.LearningSpaces.First(), worldVm, FloorPlanEnum.Rectangle2X3);
+        systemUnderTest.ChangeLearningSpaceLayout(worldVm.LearningSpaces.First(), worldVm, FloorPlanEnum.R20X308L);
 
         Assert.That(worldVm.LearningSpaces, Has.Count.EqualTo(1));
 

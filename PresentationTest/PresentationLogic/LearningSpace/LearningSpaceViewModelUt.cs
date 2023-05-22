@@ -37,7 +37,7 @@ public class LearningSpaceViewModelUt
                 1, ele2
             }
         };
-        var learningSpaceLayoutVm = new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X2)
+        var learningSpaceLayoutVm = new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X206L)
         {
             LearningElements = learningElements
         };
@@ -76,7 +76,7 @@ public class LearningSpaceViewModelUt
     public void Workload_ReturnsCorrectWorkload()
     {
 
-        var systemUnderTest = new LearningSpaceViewModel("a", "d", "e", Theme.Campus, layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+        var systemUnderTest = new LearningSpaceViewModel("a", "d", "e", Theme.Campus, layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X308L));
         var element1 = new LearningElementViewModel("a", null!, "d", "e",
             LearningElementDifficultyEnum.Easy, systemUnderTest, 6);
         var element2 = new LearningElementViewModel("abc", null!,"d", "e",
@@ -98,7 +98,7 @@ public class LearningSpaceViewModelUt
     public void Points_ReturnsCorrectSum()
     {
 
-        var systemUnderTest = new LearningSpaceViewModel("a", "d", "e", Theme.Campus, layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.Rectangle2X3));
+        var systemUnderTest = new LearningSpaceViewModel("a", "d", "e", Theme.Campus, layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X308L));
         var element1 = new LearningElementViewModel("a", null!, "d", "e",
             LearningElementDifficultyEnum.Easy, systemUnderTest, 6,7);
         var element2 = new LearningElementViewModel("abc", null!,"d", "e",
