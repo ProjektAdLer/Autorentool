@@ -1,6 +1,8 @@
 ﻿using BusinessLogic.Commands;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
+using BusinessLogic.ErrorManagement.BackendAccess;
 using Shared;
 using Shared.Command;
 using Shared.Configuration;
@@ -174,12 +176,66 @@ public class BusinessLogic : IBusinessLogic
         var userToken = await BackendAccess.GetUserTokenAsync("user", "bitnami");
 
         // Then we can get User Information by using the token
-        var userInformation = await BackendAccess.GetUserInformationAsync(userToken.Token);
+        var userInformation = await BackendAccess.GetUserInformationAsync(userToken);
 
         // Then we can use the user information to call the export
-        var uploadSuccess = await BackendAccess.UploadLearningWorldAsync(userToken.Token,
+        var uploadSuccess = await BackendAccess.UploadLearningWorldAsync(userToken,
             "./ATF3_2_3.mbz", "./DSL_Document.json");
 
         Console.WriteLine(uploadSuccess);
     }
+
+    #region BackendAccess
+
+    //TODO: Move this away from here
+    internal UserToken UserToken = new UserToken("");
+    private UserInformation _userInformation = new("", false, 0, "");
+
+    public async Task<bool> IsLmsConnected()
+    {
+        await UpdateUserInformation();
+        return _userInformation.LmsUsername != "";
+    }
+
+    public string LoginName => _userInformation.LmsUsername;
+
+    private async Task UpdateUserInformation()
+    {
+        if (UserToken.Token != "")
+        {
+            _userInformation = await BackendAccess.GetUserInformationAsync(UserToken);
+        }
+        else
+        {
+            Logout();
+        }
+    }
+
+    public async Task<bool> Login(string username, string password)
+    {
+        try
+        {
+            UserToken = await BackendAccess.GetUserTokenAsync(username, password);
+        }
+        catch (BackendInvalidLoginException e)
+        {
+            Console.WriteLine(e);
+            Logout();
+            return false;
+        }
+
+        await UpdateUserInformation();
+        return true;
+    }
+
+    public void Logout()
+    {
+        UserToken = new UserToken();
+        _userInformation.LmsUsername = "";
+        _userInformation.IsLmsAdmin = false;
+        _userInformation.LmsId = 0;
+        _userInformation.LmsEmail = "";
+    }
+
+    #endregion
 }

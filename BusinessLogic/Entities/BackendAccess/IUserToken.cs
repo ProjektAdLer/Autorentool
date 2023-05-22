@@ -1,6 +1,6 @@
-﻿namespace BusinessLogic.Entities.ApiElements;
+﻿namespace BusinessLogic.Entities.BackendAccess;
 
 public interface IUserToken
 {
-    string Token { get; set; }
+    string Token { get; }
 }

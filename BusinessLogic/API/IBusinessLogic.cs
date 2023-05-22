@@ -69,4 +69,13 @@ public interface IBusinessLogic
     ///     Debug method for Philipp.
     /// </summary>
     Task CallExport();
+
+    #region BackendAccess
+
+    Task<bool> IsLmsConnected();
+    string LoginName { get; }
+    Task<bool> Login(string username, string password);
+    void Logout();
+
+    #endregion
 }

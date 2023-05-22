@@ -25,6 +25,7 @@ public class HeaderBarUt
     private IMediator _mediator;
     private IStringLocalizer<HeaderBar> _stringLocalizer;
     private ISnackbar _snackbar;
+    private IDialogService _dialogService;
 
     [SetUp]
     public void Setup()
@@ -32,25 +33,28 @@ public class HeaderBarUt
         _testContext = new TestContext();
         _testContext.ComponentFactories.AddStub<CloseAppButton>();
         _testContext.ComponentFactories.AddStub<CultureSelector>();
+        _testContext.ComponentFactories.AddStub<LmsLoginButton>();
         _presentationLogic = Substitute.For<IPresentationLogic>();
         _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         _mediator = Substitute.For<IMediator>();
         _stringLocalizer = Substitute.For<IStringLocalizer<HeaderBar>>();
         _snackbar = Substitute.For<ISnackbar>();
+        _dialogService = Substitute.For<IDialogService>();
         _testContext.Services.AddSingleton(_presentationLogic);
         _testContext.Services.AddSingleton(_stringLocalizer);
         _testContext.Services.AddSingleton(_selectedViewModelsProvider);
         _testContext.Services.AddSingleton(_mediator);
         _testContext.Services.AddSingleton(_snackbar);
+        _testContext.Services.AddSingleton(_dialogService);
     }
 
     [Test]
     public void Render_RunningElectronTrue_ContainsCloseAppButtonStub()
     {
         _presentationLogic.RunningElectron.Returns(true);
-        
+
         var systemUnderTest = GetRenderedComponent();
-        
+
         Assert.That(() => systemUnderTest.FindComponentOrFail<Stub<CloseAppButton>>(), Throws.Nothing);
     }
 
@@ -58,7 +62,7 @@ public class HeaderBarUt
     public void Render_RunningElectronFalse_ContainsNoCloseAppButtonStub()
     {
         _presentationLogic.RunningElectron.Returns(false);
-        
+
         var systemUnderTest = GetRenderedComponent();
 
         Assert.That(() => systemUnderTest.FindComponent<Stub<CloseAppButton>>(),
@@ -73,9 +77,16 @@ public class HeaderBarUt
         Assert.That(() => systemUnderTest.FindComponent<Stub<CultureSelector>>(), Throws.Nothing);
     }
 
+    [Test]
+    public void Render_ContainsLmsLoginButtonStub()
+    {
+        var systemUnderTest = GetRenderedComponent();
+
+        Assert.That(() => systemUnderTest.FindComponent<Stub<LmsLoginButton>>(), Throws.Nothing);
+    }
+
     private IRenderedComponent<HeaderBar> GetRenderedComponent()
     {
         return _testContext.RenderComponent<HeaderBar>();
-
     }
 }

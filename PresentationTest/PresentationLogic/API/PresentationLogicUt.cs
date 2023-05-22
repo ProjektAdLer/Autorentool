@@ -12,6 +12,7 @@ using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.Topic;
 using BusinessLogic.Commands.World;
+using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using ElectronWrapper;
 using Microsoft.Extensions.DependencyInjection;
@@ -50,7 +51,8 @@ public class PresentationLogicUt
         var mockLogger = Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
 
         //Act
-        var systemUnderTest = CreateTestablePresentationLogic(mockConfiguration, mockBusinessLogic, mockMapper, mockCachingMapper, mockSelectedViewModelsProvider, mockServiceProvider, mockLogger);
+        var systemUnderTest = CreateTestablePresentationLogic(mockConfiguration, mockBusinessLogic, mockMapper,
+            mockCachingMapper, mockSelectedViewModelsProvider, mockServiceProvider, mockLogger);
         Assert.Multiple(() =>
         {
             //Assert
@@ -98,7 +100,7 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var worldEntity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
         var workspaceEntity = new BusinessLogic.Entities.AuthoringToolWorkspace(
-            new List<BusinessLogic.Entities.LearningWorld>{worldEntity});
+            new List<BusinessLogic.Entities.LearningWorld> {worldEntity});
         mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<AuthoringToolWorkspaceViewModel>())
             .Returns(workspaceEntity);
         mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
@@ -150,7 +152,8 @@ public class PresentationLogicUt
             sender = s;
             args = e;
         };
-        mockBusinessLogic.OnCommandUndoRedoOrExecute += Raise.Event<EventHandler<CommandUndoRedoOrExecuteArgs>>(systemUnderTest, new CommandUndoRedoOrExecuteArgs("testCommand", CommandExecutionState.Executed));
+        mockBusinessLogic.OnCommandUndoRedoOrExecute += Raise.Event<EventHandler<CommandUndoRedoOrExecuteArgs>>(
+            systemUnderTest, new CommandUndoRedoOrExecuteArgs("testCommand", CommandExecutionState.Executed));
         Assert.Multiple(() =>
         {
             Assert.That(wasCalled, Is.True);
@@ -198,14 +201,15 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var worldEntity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
         var workspaceEntity = new BusinessLogic.Entities.AuthoringToolWorkspace(
-            new List<BusinessLogic.Entities.LearningWorld>{worldEntity});
+            new List<BusinessLogic.Entities.LearningWorld> {worldEntity});
         mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<AuthoringToolWorkspaceViewModel>())
             .Returns(workspaceEntity);
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var mockWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
         workspaceVm.LearningWorlds.Add(mockWorldVm);
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper, selectedViewModelsProvider: selectedViewModelsProvider);
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
+            selectedViewModelsProvider: selectedViewModelsProvider);
 
         systemUnderTest.CreateLearningWorld(workspaceVm, "f", "f", "f", "f", "f", "f");
 
@@ -249,7 +253,7 @@ public class PresentationLogicUt
         var mockMapper = Substitute.For<IMapper>();
         var worldEntity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
         var workspaceEntity = new BusinessLogic.Entities.AuthoringToolWorkspace(
-            new List<BusinessLogic.Entities.LearningWorld>{worldEntity});
+            new List<BusinessLogic.Entities.LearningWorld> {worldEntity});
         mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<AuthoringToolWorkspaceViewModel>())
             .Returns(workspaceEntity);
         mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
@@ -273,8 +277,8 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         CreateLearningSpace? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as CreateLearningSpace);
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as CreateLearningSpace);
         var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
         var learningSpaceVm = new LearningSpaceViewModel("z", "z", "z", Theme.Campus);
         var mockMapper = Substitute.For<IMapper>();
@@ -303,8 +307,8 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         CreateLearningSpace? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as CreateLearningSpace);
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as CreateLearningSpace);
         var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
         var topicVm = new TopicViewModel("topic1", false);
         var mockMapper = Substitute.For<IMapper>();
@@ -334,11 +338,11 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         EditLearningSpace? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as EditLearningSpace);
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as EditLearningSpace);
         var learningSpaceVm = new LearningSpaceViewModel("z", "z", "z", Theme.Campus);
         var mockMapper = Substitute.For<IMapper>();
-        var learningSpaceEntity = new BusinessLogic.Entities.LearningSpace("a", "d", "e" , 5, Theme.Campus);
+        var learningSpaceEntity = new BusinessLogic.Entities.LearningSpace("a", "d", "e", 5, Theme.Campus);
         mockMapper.Map<BusinessLogic.Entities.LearningSpace>(Arg.Any<LearningSpaceViewModel>())
             .Returns(learningSpaceEntity);
 
@@ -356,12 +360,12 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         DragObjectInPathWay? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as DragObjectInPathWay);
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as DragObjectInPathWay);
         var learningSpaceVm = new LearningSpaceViewModel("z", "z", "z", Theme.Campus);
         var mockMapper = Substitute.For<IMapper>();
-        var learningSpaceEntity = new BusinessLogic.Entities.LearningSpace("a", "d", "e" , 5, Theme.Campus);
-        mockMapper.Map<BusinessLogic.Entities.IObjectInPathWay>(Arg.Any<LearningSpaceViewModel>())
+        var learningSpaceEntity = new BusinessLogic.Entities.LearningSpace("a", "d", "e", 5, Theme.Campus);
+        mockMapper.Map<IObjectInPathWay>(Arg.Any<LearningSpaceViewModel>())
             .Returns(learningSpaceEntity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
@@ -378,8 +382,8 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         DeleteLearningSpace? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as DeleteLearningSpace);
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as DeleteLearningSpace);
         var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
         var learningSpaceVm = new LearningSpaceViewModel("z", "z", "z", Theme.Campus);
         var mockMapper = Substitute.For<IMapper>();
@@ -408,10 +412,10 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         CreateLearningElementInSlot? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as CreateLearningElementInSlot);
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as CreateLearningElementInSlot);
         var learningSpaceVm = new LearningSpaceViewModel("f", "f", "f", Theme.Campus, 4);
-        var learningElementVm = new LearningElementViewModel("a",  null!, "d", "e",
+        var learningElementVm = new LearningElementViewModel("a", null!, "d", "e",
             LearningElementDifficultyEnum.Easy, learningSpaceVm);
         var mockMapper = Substitute.For<IMapper>();
         var learningSpaceEntity = new BusinessLogic.Entities.LearningSpace("f", "f", "f", 4, Theme.Campus);
@@ -440,8 +444,8 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         CreateLearningElementInSlot? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as CreateLearningElementInSlot);
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as CreateLearningElementInSlot);
         var learningSpaceVm = new LearningSpaceViewModel("f", "f", "f", Theme.Campus, 4);
         var mockMapper = Substitute.For<IMapper>();
         var learningSpaceEntity = new BusinessLogic.Entities.LearningSpace("f", "f", "f", 5, Theme.Campus);
@@ -450,7 +454,8 @@ public class PresentationLogicUt
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
 
-        systemUnderTest.CreateLearningElementInSlot(learningSpaceVm, 0, "a", null!, "d", "e", LearningElementDifficultyEnum.Easy, 1, 2, positionX: 3, positionY: 4);
+        systemUnderTest.CreateLearningElementInSlot(learningSpaceVm, 0, "a", null!, "d", "e",
+            LearningElementDifficultyEnum.Easy, 1, 2, positionX: 3, positionY: 4);
 
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
         Assert.That(command, Is.Not.Null);
@@ -462,10 +467,10 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         EditLearningElement? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as EditLearningElement);
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as EditLearningElement);
         var learningSpaceVm = new LearningSpaceViewModel("f", "f", "f", Theme.Campus, 5);
-        var learningElementVm = new LearningElementViewModel("a",  null!, "d", "e",
+        var learningElementVm = new LearningElementViewModel("a", null!, "d", "e",
             LearningElementDifficultyEnum.Easy, learningSpaceVm);
         var learningContentVm = new FileContentViewModel("a", "h5p", "/user/marvin/learningcontent.h5p");
         var mockMapper = Substitute.For<IMapper>();
@@ -483,7 +488,7 @@ public class PresentationLogicUt
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
 
         systemUnderTest.EditLearningElement(learningSpaceVm, learningElementVm, "a", "d",
-            "e",LearningElementDifficultyEnum.Easy,1,2, learningContentVm);
+            "e", LearningElementDifficultyEnum.Easy, 1, 2, learningContentVm);
 
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
         Assert.That(command, Is.Not.Null);
@@ -500,9 +505,9 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         DragLearningElement? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as DragLearningElement);
-        var learningElementVm = new LearningElementViewModel("a",  null!, "d", "e",
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as DragLearningElement);
+        var learningElementVm = new LearningElementViewModel("a", null!, "d", "e",
             LearningElementDifficultyEnum.Easy);
         var mockMapper = Substitute.For<IMapper>();
         var learningElementEntity = new BusinessLogic.Entities.LearningElement("a", null!, "d", "e",
@@ -524,8 +529,8 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         DeleteLearningElementInSpace? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as DeleteLearningElementInSpace);
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as DeleteLearningElementInSpace);
         var learningSpaceVm = new LearningSpaceViewModel("f", "f", "f", Theme.Campus, 4);
         var learningElementVm = new LearningElementViewModel("a", null!, "d", "e",
             LearningElementDifficultyEnum.Easy, learningSpaceVm);
@@ -550,15 +555,15 @@ public class PresentationLogicUt
             Assert.That(command!.LearningElement, Is.EqualTo(learningElementEntity));
         });
     }
-    
+
     [Test]
     public void DeleteLearningElementInWorld_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         DeleteLearningElementInWorld? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as DeleteLearningElementInWorld);
-        var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f","t");
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as DeleteLearningElementInWorld);
+        var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "t");
         var learningElementVm = new LearningElementViewModel("a", null!, "d", "e",
             LearningElementDifficultyEnum.Easy);
         var mockMapper = Substitute.For<IMapper>();
@@ -588,8 +593,8 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         CreateLearningPathWay? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as CreateLearningPathWay);
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as CreateLearningPathWay);
         var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
         var sourceSpaceVm = new LearningSpaceViewModel("f", "f", "f", Theme.Campus, 4);
         var targetSpaceVm = new LearningSpaceViewModel("f", "f", "f", Theme.Campus, 4);
@@ -600,9 +605,9 @@ public class PresentationLogicUt
 
         mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
             .Returns(learningWorldEntity);
-        mockMapper.Map<BusinessLogic.Entities.IObjectInPathWay>(sourceSpaceVm)
+        mockMapper.Map<IObjectInPathWay>(sourceSpaceVm)
             .Returns(sourceSpaceEntity);
-        mockMapper.Map<BusinessLogic.Entities.IObjectInPathWay>(targetSpaceVm)
+        mockMapper.Map<IObjectInPathWay>(targetSpaceVm)
             .Returns(targetSpaceEntity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
@@ -624,23 +629,23 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         DeleteLearningPathWay? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as DeleteLearningPathWay);
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as DeleteLearningPathWay);
         var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
         var sourceSpaceVm = new LearningSpaceViewModel("f", "f", "f", Theme.Campus, 4);
         var targetSpaceVm = new LearningSpaceViewModel("z", "z", "z", Theme.Campus);
         var pathWayVm = new LearningPathwayViewModel(sourceSpaceVm, targetSpaceVm);
         var mockMapper = Substitute.For<IMapper>();
         var learningWorldEntity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
-        var pathWayEntity = new BusinessLogic.Entities.LearningPathway(
+        var pathWayEntity = new LearningPathway(
             new BusinessLogic.Entities.LearningSpace("f", "f", "f", 3, Theme.Campus),
-            new BusinessLogic.Entities.LearningSpace("z", "z", "z",5, Theme.Campus));
+            new BusinessLogic.Entities.LearningSpace("z", "z", "z", 5, Theme.Campus));
         learningWorldEntity.LearningPathways.Add(pathWayEntity);
 
 
         mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
             .Returns(learningWorldEntity);
-        mockMapper.Map<BusinessLogic.Entities.LearningPathway>(Arg.Any<LearningPathwayViewModel>())
+        mockMapper.Map<LearningPathway>(Arg.Any<LearningPathwayViewModel>())
             .Returns(pathWayEntity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
@@ -661,18 +666,19 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         CreatePathWayCondition? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as CreatePathWayCondition);
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as CreatePathWayCondition);
         var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
         var mockMapper = Substitute.For<IMapper>();
         var learningWorldEntity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
         mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
             .Returns(learningWorldEntity);
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        var mockCondition = new PathWayConditionViewModel(ConditionEnum.And,false,1,2);
+        var mockCondition = new PathWayConditionViewModel(ConditionEnum.And, false, 1, 2);
         learningWorldVm.PathWayConditions.Add(mockCondition);
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,selectedViewModelsProvider: selectedViewModelsProvider);
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
+            selectedViewModelsProvider: selectedViewModelsProvider);
 
         systemUnderTest.CreatePathWayCondition(learningWorldVm, ConditionEnum.And, 6, 7);
 
@@ -686,8 +692,8 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         CreatePathWayCondition? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as CreatePathWayCondition);
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as CreatePathWayCondition);
         var condition = ConditionEnum.And;
         var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
         var sourceSpaceVm = new LearningSpaceViewModel("f", "f", "f", Theme.Campus, 4);
@@ -701,7 +707,7 @@ public class PresentationLogicUt
 
         mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
             .Returns(learningWorldEntity);
-        mockMapper.Map<BusinessLogic.Entities.IObjectInPathWay>(sourceSpaceVm)
+        mockMapper.Map<IObjectInPathWay>(sourceSpaceVm)
             .Returns(sourceSpaceEntity);
         mockMapper.Map<BusinessLogic.Entities.LearningSpace>(targetSpaceVm)
             .Returns(targetSpaceEntity);
@@ -725,12 +731,12 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         EditPathWayCondition? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as EditPathWayCondition);
-        var pathWayConditionVm = new PathWayConditionViewModel(ConditionEnum.And,false, 2,1);
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as EditPathWayCondition);
+        var pathWayConditionVm = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
         var mockMapper = Substitute.For<IMapper>();
-        var pathWayConditionEntity = new BusinessLogic.Entities.PathWayCondition(ConditionEnum.And,2,1);
-        mockMapper.Map<BusinessLogic.Entities.PathWayCondition>(Arg.Any<PathWayConditionViewModel>())
+        var pathWayConditionEntity = new PathWayCondition(ConditionEnum.And, 2, 1);
+        mockMapper.Map<PathWayCondition>(Arg.Any<PathWayConditionViewModel>())
             .Returns(pathWayConditionEntity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
@@ -747,16 +753,16 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         DeletePathWayCondition? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as DeletePathWayCondition);
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as DeletePathWayCondition);
         var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
-        var pathWayConditionVm = new PathWayConditionViewModel(ConditionEnum.And,false, 2,1);
+        var pathWayConditionVm = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
         var mockMapper = Substitute.For<IMapper>();
         var learningWorldEntity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
-        var pathWayConditionEntity = new BusinessLogic.Entities.PathWayCondition(ConditionEnum.And,2,1);
+        var pathWayConditionEntity = new PathWayCondition(ConditionEnum.And, 2, 1);
         mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
             .Returns(learningWorldEntity);
-        mockMapper.Map<BusinessLogic.Entities.PathWayCondition>(Arg.Any<PathWayConditionViewModel>())
+        mockMapper.Map<PathWayCondition>(Arg.Any<PathWayConditionViewModel>())
             .Returns(pathWayConditionEntity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
@@ -777,18 +783,18 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         CreateTopic? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as CreateTopic);
-        var learningWorldVm = new LearningWorldViewModel("a","b","c","d","e","f");
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as CreateTopic);
+        var learningWorldVm = new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
         var mockMapper = Substitute.For<IMapper>();
-        var learningWorldEntity = new BusinessLogic.Entities.LearningWorld("a","b","c","d","e","f");
+        var learningWorldEntity = new BusinessLogic.Entities.LearningWorld("a", "b", "c", "d", "e", "f");
         mockMapper.Map<BusinessLogic.Entities.LearningWorld>(Arg.Any<LearningWorldViewModel>())
             .Returns(learningWorldEntity);
-        
+
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
-        
+
         systemUnderTest.CreateTopic(learningWorldVm, "f");
-        
+
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
         Assert.That(command, Is.Not.Null);
         Assert.Multiple(() =>
@@ -804,18 +810,18 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         EditTopic? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as EditTopic);
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as EditTopic);
         var topicVm = new TopicViewModel("f", false);
         var mockMapper = Substitute.For<IMapper>();
         var topicEntity = new BusinessLogic.Entities.Topic("f");
         mockMapper.Map<BusinessLogic.Entities.Topic>(Arg.Any<TopicViewModel>())
             .Returns(topicEntity);
-        
+
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
-        
+
         systemUnderTest.EditTopic(topicVm, "g");
-        
+
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
         Assert.Multiple(() =>
         {
@@ -823,15 +829,15 @@ public class PresentationLogicUt
             Assert.That(command!.Topic, Is.EqualTo(topicEntity));
         });
     }
-    
+
     [Test]
     public void DeleteTopic_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         BatchCommand? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as BatchCommand);
-        var learningWorldVm = new LearningWorldViewModel("a","b","c","d","e","f");
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as BatchCommand);
+        var learningWorldVm = new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
         var topicVm = new TopicViewModel("a", false);
         var spaceVm1 = new LearningSpaceViewModel("a", "b", "c", Theme.Campus, 2, assignedTopic: topicVm);
         var spaceVm2 = new LearningSpaceViewModel("a", "b", "c", Theme.Campus, 2, assignedTopic: topicVm);
@@ -841,11 +847,14 @@ public class PresentationLogicUt
         learningWorldVm.LearningSpaces.Add(spaceVm3);
         learningWorldVm.Topics.Add(topicVm);
         var mockMapper = Substitute.For<IMapper>();
-        var learningWorldEntity = new BusinessLogic.Entities.LearningWorld("a","b","c","d","e","f");
+        var learningWorldEntity = new BusinessLogic.Entities.LearningWorld("a", "b", "c", "d", "e", "f");
         var topicEntity = new BusinessLogic.Entities.Topic("a");
-        var spaceEntity1 = new BusinessLogic.Entities.LearningSpace("a", "b", "c", 2, Theme.Campus, assignedTopic: topicEntity);
-        var spaceEntity2 = new BusinessLogic.Entities.LearningSpace("a", "b", "c", 2, Theme.Campus, assignedTopic: topicEntity);
-        var spaceEntity3 = new BusinessLogic.Entities.LearningSpace("a", "b", "c", 2, Theme.Campus, assignedTopic: topicEntity);
+        var spaceEntity1 =
+            new BusinessLogic.Entities.LearningSpace("a", "b", "c", 2, Theme.Campus, assignedTopic: topicEntity);
+        var spaceEntity2 =
+            new BusinessLogic.Entities.LearningSpace("a", "b", "c", 2, Theme.Campus, assignedTopic: topicEntity);
+        var spaceEntity3 =
+            new BusinessLogic.Entities.LearningSpace("a", "b", "c", 2, Theme.Campus, assignedTopic: topicEntity);
         learningWorldEntity.LearningSpaces.Add(spaceEntity1);
         learningWorldEntity.LearningSpaces.Add(spaceEntity2);
         learningWorldEntity.LearningSpaces.Add(spaceEntity3);
@@ -863,9 +872,9 @@ public class PresentationLogicUt
             .Returns(spaceEntity3);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper);
-        
+
         systemUnderTest.DeleteTopic(learningWorldVm, topicVm);
-        
+
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<BatchCommand>());
         Assert.Multiple(() =>
         {
@@ -884,7 +893,8 @@ public class PresentationLogicUt
         mockHybridSupport.IsElectronActive.Returns(false);
         var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
+        var systemUnderTest =
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
             await systemUnderTest.SaveLearningWorldAsync(learningWorld));
@@ -899,7 +909,8 @@ public class PresentationLogicUt
         mockHybridSupport.IsElectronActive.Returns(true);
         var learningWorld = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
+        var systemUnderTest =
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
             await systemUnderTest.SaveLearningWorldAsync(learningWorld));
@@ -911,8 +922,8 @@ public class PresentationLogicUt
     {
         SaveLearningWorld? command = null;
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as SaveLearningWorld);
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as SaveLearningWorld);
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(true);
         var mockMapper = Substitute.For<IMapper>();
@@ -932,7 +943,8 @@ public class PresentationLogicUt
 
         await systemUnderTest.SaveLearningWorldAsync(learningWorld);
 
-        await mockDialogManger.Received().ShowSaveAsDialogAsync("Save Learning World", null, Arg.Any<IEnumerable<FileFilterProxy>>());
+        await mockDialogManger.Received()
+            .ShowSaveAsDialogAsync("Save Learning World", null, Arg.Any<IEnumerable<FileFilterProxy>>());
         mockMapper.Received().Map<BusinessLogic.Entities.LearningWorld>(learningWorld);
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
         Assert.That(command, Is.Not.Null);
@@ -957,7 +969,8 @@ public class PresentationLogicUt
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
             serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
-        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.SaveLearningWorldAsync(learningWorld));
+        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () =>
+            await systemUnderTest.SaveLearningWorldAsync(learningWorld));
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
         mockLogger.Received().LogInformation("Save as dialog cancelled by user");
     }
@@ -969,8 +982,12 @@ public class PresentationLogicUt
         var resultName = string.Empty;
         var resultPath = string.Empty;
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.When(sub => sub.AddSavedLearningWorldPath(Arg.Any<SavedLearningWorldPath>())).
-            Do(sub => {resultId = sub.Arg<SavedLearningWorldPath>().Id; resultName = sub.Arg<SavedLearningWorldPath>().Name; resultPath = sub.Arg<SavedLearningWorldPath>().Path;});
+        mockBusinessLogic.When(sub => sub.AddSavedLearningWorldPath(Arg.Any<SavedLearningWorldPath>())).Do(sub =>
+        {
+            resultId = sub.Arg<SavedLearningWorldPath>().Id;
+            resultName = sub.Arg<SavedLearningWorldPath>().Name;
+            resultPath = sub.Arg<SavedLearningWorldPath>().Path;
+        });
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(true);
         var mockMapper = Substitute.For<IMapper>();
@@ -986,7 +1003,8 @@ public class PresentationLogicUt
         mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManger);
 
         var systemUnderTest = CreateTestablePresentationLogic(mapper: mockMapper,
-            hybridSupportWrapper: mockHybridSupport, serviceProvider: mockServiceProvider, businessLogic: mockBusinessLogic);
+            hybridSupportWrapper: mockHybridSupport, serviceProvider: mockServiceProvider,
+            businessLogic: mockBusinessLogic);
 
         await systemUnderTest.SaveLearningWorldAsync(learningWorld);
 
@@ -1023,7 +1041,8 @@ public class PresentationLogicUt
         mockHybridSupport.IsElectronActive.Returns(true);
         var learningSpace = new LearningSpaceViewModel("f", "f", "f", Theme.Campus);
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
+        var systemUnderTest =
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
             await systemUnderTest.SaveLearningSpaceAsync(learningSpace));
@@ -1035,8 +1054,8 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         SaveLearningSpace? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as SaveLearningSpace);
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as SaveLearningSpace);
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(true);
         var mockMapper = Substitute.For<IMapper>();
@@ -1056,7 +1075,8 @@ public class PresentationLogicUt
 
         await systemUnderTest.SaveLearningSpaceAsync(learningSpace);
 
-        await mockDialogManger.Received().ShowSaveAsDialogAsync("Save Learning Space", null, Arg.Any<IEnumerable<FileFilterProxy>>());
+        await mockDialogManger.Received()
+            .ShowSaveAsDialogAsync("Save Learning Space", null, Arg.Any<IEnumerable<FileFilterProxy>>());
         mockMapper.Received().Map<BusinessLogic.Entities.LearningSpace>(learningSpace);
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
         Assert.That(command, Is.Not.Null);
@@ -1081,7 +1101,8 @@ public class PresentationLogicUt
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
             serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
-        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.SaveLearningSpaceAsync(learningSpace));
+        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () =>
+            await systemUnderTest.SaveLearningSpaceAsync(learningSpace));
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
         mockLogger.Received().LogInformation("Save as dialog cancelled by user");
     }
@@ -1092,9 +1113,10 @@ public class PresentationLogicUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(false);
-        var learningElement = new LearningElementViewModel("f",  null!, "f", "f",LearningElementDifficultyEnum.Easy);
+        var learningElement = new LearningElementViewModel("f", null!, "f", "f", LearningElementDifficultyEnum.Easy);
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
+        var systemUnderTest =
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
             await systemUnderTest.SaveLearningElementAsync(learningElement));
@@ -1107,7 +1129,7 @@ public class PresentationLogicUt
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(true);
-        var learningElement = new LearningElementViewModel("f",  null!, "f", "f",LearningElementDifficultyEnum.Easy);
+        var learningElement = new LearningElementViewModel("f", null!, "f", "f", LearningElementDifficultyEnum.Easy);
 
         var systemUnderTest =
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
@@ -1122,13 +1144,14 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         SaveLearningElement? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as SaveLearningElement);
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as SaveLearningElement);
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(true);
         var mockMapper = Substitute.For<IMapper>();
-        var learningElement = new LearningElementViewModel("f",   null!, "f", "f",LearningElementDifficultyEnum.Easy);
-        var entity = new BusinessLogic.Entities.LearningElement("f", null!, "f", "f", LearningElementDifficultyEnum.Easy);
+        var learningElement = new LearningElementViewModel("f", null!, "f", "f", LearningElementDifficultyEnum.Easy);
+        var entity =
+            new BusinessLogic.Entities.LearningElement("f", null!, "f", "f", LearningElementDifficultyEnum.Easy);
         mockMapper.Map<BusinessLogic.Entities.LearningElement>(Arg.Any<LearningElementViewModel>()).Returns(entity);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
@@ -1143,7 +1166,8 @@ public class PresentationLogicUt
 
         await systemUnderTest.SaveLearningElementAsync(learningElement);
 
-        await mockDialogManger.Received().ShowSaveAsDialogAsync("Save Learning Element", null, Arg.Any<IEnumerable<FileFilterProxy>>());
+        await mockDialogManger.Received()
+            .ShowSaveAsDialogAsync("Save Learning Element", null, Arg.Any<IEnumerable<FileFilterProxy>>());
         mockMapper.Received().Map<BusinessLogic.Entities.LearningElement>(learningElement);
         mockBusinessLogic.Received().ExecuteCommand(Arg.Any<ICommand>());
         Assert.That(command, Is.Not.Null);
@@ -1163,12 +1187,13 @@ public class PresentationLogicUt
             .Throws(new OperationCanceledException("bububaba"));
         mockServiceProvider.GetService(typeof(IElectronDialogManager))
             .Returns(mockElectronDialogManager);
-        var learningElement = new LearningElementViewModel("f",  null!,  "f", "f",LearningElementDifficultyEnum.Easy);
+        var learningElement = new LearningElementViewModel("f", null!, "f", "f", LearningElementDifficultyEnum.Easy);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
             serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
-        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.SaveLearningElementAsync(learningElement));
+        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () =>
+            await systemUnderTest.SaveLearningElementAsync(learningElement));
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
         mockLogger.Received().LogInformation("Save as dialog cancelled by user");
     }
@@ -1181,7 +1206,8 @@ public class PresentationLogicUt
         mockHybridSupport.IsElectronActive.Returns(false);
         var authoringToolWorkspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
+        var systemUnderTest =
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
             await systemUnderTest.LoadLearningWorldAsync(authoringToolWorkspaceVm));
@@ -1202,7 +1228,8 @@ public class PresentationLogicUt
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider,
                 hybridSupportWrapper: mockHybridSupport);
 
-        var ex =Assert.ThrowsAsync<InvalidOperationException>(async () => await systemUnderTest.LoadLearningWorldAsync(authoringToolWorkspaceVm));
+        var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            await systemUnderTest.LoadLearningWorldAsync(authoringToolWorkspaceVm));
         Assert.That(ex!.Message, Is.EqualTo("dialogManager received from DI unexpectedly null"));
     }
 
@@ -1212,9 +1239,11 @@ public class PresentationLogicUt
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(true);
         var mockMapper = Substitute.For<IMapper>();
-        
-        var workspaceEntity = new BusinessLogic.Entities.AuthoringToolWorkspace(new List<BusinessLogic.Entities.LearningWorld>());
-        mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<LearningWorldViewModel>()).Returns(workspaceEntity);
+
+        var workspaceEntity =
+            new BusinessLogic.Entities.AuthoringToolWorkspace(new List<BusinessLogic.Entities.LearningWorld>());
+        mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<LearningWorldViewModel>())
+            .Returns(workspaceEntity);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
         mockDialogManger
@@ -1224,7 +1253,8 @@ public class PresentationLogicUt
         mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManger);
         var authoringToolWorkspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
 
-        var systemUnderTest = CreateTestablePresentationLogic(mapper: mockMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
+        var systemUnderTest = CreateTestablePresentationLogic(mapper: mockMapper, serviceProvider: mockServiceProvider,
+            hybridSupportWrapper: mockHybridSupport);
 
         await systemUnderTest.LoadLearningWorldAsync(authoringToolWorkspaceVm);
 
@@ -1252,7 +1282,8 @@ public class PresentationLogicUt
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
             serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
-        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.LoadLearningWorldAsync(authoringToolWorkspaceVm));
+        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () =>
+            await systemUnderTest.LoadLearningWorldAsync(authoringToolWorkspaceVm));
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
         mockLogger.Received().LogInformation("Load dialog cancelled by user");
     }
@@ -1526,7 +1557,8 @@ public class PresentationLogicUt
             CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider,
                 hybridSupportWrapper: mockHybridSupport);
 
-        var ex = Assert.ThrowsAsync<InvalidOperationException>(async () => await systemUnderTest.LoadLearningSpaceAsync(mockLearningWorldViewModel));
+        var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            await systemUnderTest.LoadLearningSpaceAsync(mockLearningWorldViewModel));
         Assert.That(ex!.Message, Is.EqualTo("dialogManager received from DI unexpectedly null"));
     }
 
@@ -1535,8 +1567,8 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         LoadLearningSpace? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as LoadLearningSpace);
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as LoadLearningSpace);
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(true);
         const string filepath = "foobar";
@@ -1583,7 +1615,8 @@ public class PresentationLogicUt
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
             serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
-        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.LoadLearningSpaceAsync(mockLearningWorldViewModel));
+        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () =>
+            await systemUnderTest.LoadLearningSpaceAsync(mockLearningWorldViewModel));
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
         mockLogger.Received().LogInformation("Load dialog cancelled by user");
     }
@@ -1615,9 +1648,11 @@ public class PresentationLogicUt
         mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(null);
 
         var systemUnderTest =
-            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, serviceProvider: mockServiceProvider,
+                hybridSupportWrapper: mockHybridSupport);
 
-        var ex = Assert.ThrowsAsync<InvalidOperationException>(async () => await systemUnderTest.LoadLearningElementAsync(mockLearningSpaceViewModel, 0));
+        var ex = Assert.ThrowsAsync<InvalidOperationException>(async () =>
+            await systemUnderTest.LoadLearningElementAsync(mockLearningSpaceViewModel, 0));
         Assert.That(ex!.Message, Is.EqualTo("dialogManager received from DI unexpectedly null"));
     }
 
@@ -1626,14 +1661,14 @@ public class PresentationLogicUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         LoadLearningElement? command = null;
-        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>())).
-            Do(sub => command = sub.Arg<ICommand>() as LoadLearningElement);
+        mockBusinessLogic.When(sub => sub.ExecuteCommand(Arg.Any<ICommand>()))
+            .Do(sub => command = sub.Arg<ICommand>() as LoadLearningElement);
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(true);
         const string filepath = "foobar";
         var mockDialogManger = Substitute.For<IElectronDialogManager>();
         var mockMapper = Substitute.For<IMapper>();
-        var mockLearningSpaceViewModel = new LearningSpaceViewModel("a", "g","h", Theme.Campus, 1);
+        var mockLearningSpaceViewModel = new LearningSpaceViewModel("a", "g", "h", Theme.Campus, 1);
         var mockLearningSpaceEntity = new BusinessLogic.Entities.LearningSpace("f", "f", "f", 1, Theme.Campus);
         mockDialogManger
             .ShowOpenFileDialogAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<IEnumerable<FileFilterProxy>?>())
@@ -1643,11 +1678,13 @@ public class PresentationLogicUt
         mockMapper.Map<BusinessLogic.Entities.LearningSpace>(Arg.Any<LearningSpaceViewModel>())
             .Returns(mockLearningSpaceEntity);
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        var mockLearningElementViewModel = new LearningElementViewModel("n", null!, "d", "t", LearningElementDifficultyEnum.Easy, null, 3);
+        var mockLearningElementViewModel =
+            new LearningElementViewModel("n", null!, "d", "t", LearningElementDifficultyEnum.Easy, null, 3);
         mockLearningSpaceViewModel.LearningSpaceLayout.LearningElements.Add(0, mockLearningElementViewModel);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport, mapper: mockMapper, selectedViewModelsProvider: selectedViewModelsProvider);
+            serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport, mapper: mockMapper,
+            selectedViewModelsProvider: selectedViewModelsProvider);
 
         await systemUnderTest.LoadLearningElementAsync(mockLearningSpaceViewModel, 0);
 
@@ -1677,7 +1714,8 @@ public class PresentationLogicUt
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, logger: mockLogger,
             serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
-        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () => await systemUnderTest.LoadLearningElementAsync(mockLearningSpaceViewModel, 0));
+        var ex = Assert.ThrowsAsync<OperationCanceledException>(async () =>
+            await systemUnderTest.LoadLearningElementAsync(mockLearningSpaceViewModel, 0));
         Assert.That(ex!.Message, Is.EqualTo("bububaba"));
         mockLogger.Received().LogInformation("Load dialog cancelled by user");
     }
@@ -1689,7 +1727,8 @@ public class PresentationLogicUt
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(false);
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
+        var systemUnderTest =
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
             await systemUnderTest.LoadImageAsync());
@@ -1776,7 +1815,8 @@ public class PresentationLogicUt
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(false);
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
+        var systemUnderTest =
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
             await systemUnderTest.LoadVideoAsync());
@@ -1820,7 +1860,7 @@ public class PresentationLogicUt
         mockBusinessLogic.LoadLearningContent(filepath + ".mp4").Returns(entity);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            mapper: mockMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper:mockHybridSupport);
+            mapper: mockMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
 
         var loadedContent = await systemUnderTest.LoadVideoAsync();
 
@@ -2035,7 +2075,8 @@ public class PresentationLogicUt
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
         mockHybridSupport.IsElectronActive.Returns(false);
 
-        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
+        var systemUnderTest =
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, hybridSupportWrapper: mockHybridSupport);
 
         var ex = Assert.ThrowsAsync<NotImplementedException>(async () =>
             await systemUnderTest.LoadTextAsync());
@@ -2131,7 +2172,8 @@ public class PresentationLogicUt
         workspace.LearningWorlds.Add(mockLearningWorldVm);
 
         var systemUnderTest =
-            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, selectedViewModelsProvider: selectedViewModelsProvider);
+            CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
+                selectedViewModelsProvider: selectedViewModelsProvider);
 
         systemUnderTest.LoadLearningWorldViewModel(workspace, stream);
 
@@ -2194,10 +2236,12 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadLearningElementViewModel_ReturnsLearningElement()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var mockLearningElement = new BusinessLogic.Entities.LearningElement("n",null!, "d", "g", LearningElementDifficultyEnum.Easy);
+        var mockLearningElement =
+            new BusinessLogic.Entities.LearningElement("n", null!, "d", "g", LearningElementDifficultyEnum.Easy);
         mockBusinessLogic.LoadLearningElement(Arg.Any<Stream>()).Returns(mockLearningElement);
         var mockLearningContent = new FileContentViewModel("n", "t", "");
-        var mockLearningElementViewModel = new LearningElementViewModel("n",  mockLearningContent, "d", "g",LearningElementDifficultyEnum.Easy);
+        var mockLearningElementViewModel =
+            new LearningElementViewModel("n", mockLearningContent, "d", "g", LearningElementDifficultyEnum.Easy);
         var mockMapper = Substitute.For<IMapper>();
         mockMapper.Map<LearningElementViewModel>(Arg.Any<BusinessLogic.Entities.LearningElement>())
             .Returns(mockLearningElementViewModel);
@@ -2223,7 +2267,8 @@ public class PresentationLogicUt
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
-        var ex = Assert.Throws<Exception>(() => systemUnderTest.LoadLearningElementViewModel(learningSpaceVm, 0, stream));
+        var ex = Assert.Throws<Exception>(
+            () => systemUnderTest.LoadLearningElementViewModel(learningSpaceVm, 0, stream));
         Assert.That(ex, Is.Not.Null);
         Assert.That(ex?.Message, Is.EqualTo("Exception"));
     }
@@ -2255,7 +2300,8 @@ public class PresentationLogicUt
     public void PresentationLogic_LoadLearningContentViewModel_CatchesException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        mockBusinessLogic.LoadLearningContent(Arg.Any<string>(), Arg.Any<MemoryStream>()).Throws(new Exception("Exception"));
+        mockBusinessLogic.LoadLearningContent(Arg.Any<string>(), Arg.Any<MemoryStream>())
+            .Throws(new Exception("Exception"));
         const string filename = "test.png";
         var stream = Substitute.For<MemoryStream>();
 
@@ -2276,22 +2322,109 @@ public class PresentationLogicUt
         var mockShellWrapper = Substitute.For<IShellWrapper>();
         mockShellWrapper.OpenPathAsync(Arg.Any<string>()).Returns("");
         var mockContent = new FileContentViewModel("a", "r", "pathpath");
-        var mockLearningElement = new LearningElementViewModel("n", mockContent, "d", "g", LearningElementDifficultyEnum.Easy);
+        var mockLearningElement =
+            new LearningElementViewModel("n", mockContent, "d", "g", LearningElementDifficultyEnum.Easy);
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         var mockDialogManager = Substitute.For<IElectronDialogManager>();
         mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockDialogManager);
 
-        var systemUnderTest = CreateTestablePresentationLogic(shellWrapper:mockShellWrapper, hybridSupportWrapper: mockHybridSupport, serviceProvider: mockServiceProvider);
+        var systemUnderTest = CreateTestablePresentationLogic(shellWrapper: mockShellWrapper,
+            hybridSupportWrapper: mockHybridSupport, serviceProvider: mockServiceProvider);
 
         systemUnderTest.ShowLearningElementContentAsync(mockLearningElement);
 
         mockShellWrapper.Received().OpenPathAsync("pathpath");
     }
 
+    #region BackendAccess
+
+    [Test]
+    public void IsLmsConnected_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+
+        var result = systemUnderTest.IsLmsConnected();
+
+        mockBusinessLogic.Received().IsLmsConnected();
+    }
+
+    [Test]
+    public void IsLmsConnected_ReturnsTask()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var expectedResult = new Task<bool>(() => true);
+        mockBusinessLogic.IsLmsConnected().Returns(expectedResult);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+
+        var result = systemUnderTest.IsLmsConnected();
+
+        Assert.That(result, Is.EqualTo(expectedResult));
+    }
+
+    [Test]
+    public void LoginName_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+
+        _ = systemUnderTest.LoginName;
+
+        _ = mockBusinessLogic.Received().LoginName;
+    }
+
+    [Test]
+    public void Login_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var username = "username";
+        var password = "password";
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+
+        systemUnderTest.Login(username, password);
+
+        mockBusinessLogic.Received().Login(username, password);
+    }
+
+    [Test]
+    public void Login_ReturnsTask()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var username = "username";
+        var password = "password";
+        var expectedResult = new Task<bool>(() => true);
+        mockBusinessLogic.Login(username, password).Returns(expectedResult);
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+
+        var result = systemUnderTest.Login(username, password);
+
+        Assert.That(result, Is.EqualTo(expectedResult));
+    }
+
+    [Test]
+    public void Logout_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+
+        systemUnderTest.Logout();
+
+        mockBusinessLogic.Received().Logout();
+    }
+
+    #endregion
+
     private static Presentation.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(
         IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null,
-        ICachingMapper? cachingMapper = null, ISelectedViewModelsProvider? selectedViewModelsProvider = null, IServiceProvider? serviceProvider = null,
-        ILogger<Presentation.PresentationLogic.API.PresentationLogic>? logger = null, 
+        ICachingMapper? cachingMapper = null, ISelectedViewModelsProvider? selectedViewModelsProvider = null,
+        IServiceProvider? serviceProvider = null,
+        ILogger<Presentation.PresentationLogic.API.PresentationLogic>? logger = null,
         IHybridSupportWrapper? hybridSupportWrapper = null, IShellWrapper? shellWrapper = null)
     {
         configuration ??= Substitute.For<IAuthoringToolConfiguration>();

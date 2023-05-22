@@ -1,7 +1,7 @@
-﻿using ApiAccess.WebApi;
+﻿using ApiAccess.BackendServices;
 using AutoMapper;
 using BusinessLogic.API;
-using BusinessLogic.Entities.ApiElements;
+using BusinessLogic.Entities.BackendAccess;
 
 namespace ApiAccess.API;
 
@@ -17,6 +17,7 @@ public class BackendAccess : IBackendAccess
     public IUserWebApiServices UserWebApiServices { get; }
     public IMapper Mapper { get; }
 
+    /// <inheritdoc cref="IBackendAccess.GetUserTokenAsync"/>
     public async Task<UserToken> GetUserTokenAsync(string username, string password)
     {
         var receivedToken = await UserWebApiServices.GetUserTokenAsync(username, password);
@@ -26,16 +27,16 @@ public class BackendAccess : IBackendAccess
         return retVal;
     }
 
-    public async Task<UserInformation> GetUserInformationAsync(string token)
+    public async Task<UserInformation> GetUserInformationAsync(UserToken token)
     {
-        var receivedUserInformation = await UserWebApiServices.GetUserInformationAsync(token);
+        var receivedUserInformation = await UserWebApiServices.GetUserInformationAsync(token.Token);
 
         return Mapper.Map<UserInformation>(receivedUserInformation);
     }
 
-    public async Task<bool> UploadLearningWorldAsync(string token, string backupPath, string awtPath)
+    public async Task<bool> UploadLearningWorldAsync(UserToken token, string backupPath, string awtPath)
     {
-        var isSuccessful = await UserWebApiServices.UploadLearningWorldAsync(token, backupPath, awtPath);
+        var isSuccessful = await UserWebApiServices.UploadLearningWorldAsync(token.Token, backupPath, awtPath);
 
         return isSuccessful;
     }

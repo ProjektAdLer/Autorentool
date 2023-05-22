@@ -1,11 +1,13 @@
 ﻿using System.IO.Abstractions;
+using System.Net;
 using System.Text.Json;
 using System.Web;
 using ApiAccess.BackendEntities;
+using BusinessLogic.ErrorManagement.BackendAccess;
 using Microsoft.Extensions.Logging;
 using Shared.Configuration;
 
-namespace ApiAccess.WebApi;
+namespace ApiAccess.BackendServices;
 
 public class UserWebApiServices : IUserWebApiServices
 {
@@ -24,6 +26,7 @@ public class UserWebApiServices : IUserWebApiServices
 
     public IAuthoringToolConfiguration Configuration { get; }
 
+    /// <inheritdoc cref="IUserWebApiServices.GetUserTokenAsync"/>
     public async Task<UserTokenBE> GetUserTokenAsync(string username, string password)
     {
         var parameters = new Dictionary<string, string>
@@ -32,7 +35,22 @@ public class UserWebApiServices : IUserWebApiServices
             {"password", password}
         };
 
-        return await SendHttpGetRequestAsync<UserTokenBE>("/Users/Login", parameters);
+        try
+        {
+            return await SendHttpGetRequestAsync<UserTokenBE>("/Users/Login", parameters);
+        }
+        catch (HttpRequestException e)
+        {
+            Console.WriteLine(e);
+            if (e.StatusCode == HttpStatusCode.Unauthorized)
+            {
+                throw new BackendInvalidLoginException("Invalid Login Credentials.");
+            }
+            else
+            {
+                throw;
+            }
+        }
     }
 
     public async Task<UserInformationBE> GetUserInformationAsync(string token)
@@ -72,7 +90,7 @@ public class UserWebApiServices : IUserWebApiServices
     {
         // Set the Base URL of the API.
         // TODO: This should be set in the configuration.
-        url = new Uri("https://localhost:3001/api") + url;
+        url = new Uri("https://demo.api.projekt-adler.eu/api") + url;
 
         var request = new HttpRequestMessage(HttpMethod.Post, url);
         foreach (var (key, value) in headers) request.Headers.Add(key, value);
@@ -94,7 +112,7 @@ public class UserWebApiServices : IUserWebApiServices
 
         // Set the Base URL of the API.
         // TODO: This should be set in the configuration.
-        url = new Uri("https://localhost:3001/api") + url;
+        url = new Uri("https://demo.api.projekt-adler.eu/api") + url;
 
         url += "?" + queryString;
 
@@ -119,7 +137,7 @@ public class UserWebApiServices : IUserWebApiServices
             var error = await apiResp.Content.ReadAsStringAsync();
 
             var problemDetails = TryRead<ErrorBE>(error);
-            throw new HttpRequestException(problemDetails.Detail);
+            throw new HttpRequestException(problemDetails.Detail, null, apiResp.StatusCode);
         }
     }
 

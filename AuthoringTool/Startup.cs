@@ -1,7 +1,7 @@
 using System.IO.Abstractions;
 using System.Reflection;
 using ApiAccess.API;
-using ApiAccess.WebApi;
+using ApiAccess.BackendServices;
 using AuthoringTool.Mapping;
 using AutoMapper;
 using BusinessLogic.API;
@@ -48,10 +48,10 @@ public class Startup
         //Blazor and Electron (framework)
         services.AddRazorPages();
         services.AddServerSideBlazor();
-        
+
         //MudBlazor
         services.AddMudServices();
-        
+
         //localization
         services.AddLocalization(options => options.ResourcesPath = "Resources");
 
@@ -61,8 +61,8 @@ public class Startup
             builder.AddConsole();
             builder.SetMinimumLevel(LogLevel.Trace);
         });
-        
-        
+
+
         //AuthoringToolLib
         //PLEASE add any services you add dependencies to to the unit tests in StartupUt!!!
         ConfigureAuthoringTool(services);
@@ -159,12 +159,12 @@ public class Startup
         // Add Http Client
         services.AddHttpClient();
     }
-    
+
     private void ConfigureMediator(IServiceCollection services)
     {
         services.AddSingleton<IMediator, Mediator>();
     }
-    
+
     private void ConfigureSelectedViewModelsProvider(IServiceCollection services)
     {
         services.AddSingleton<ISelectedViewModelsProvider, SelectedViewModelsProvider>();
@@ -213,7 +213,7 @@ public class Startup
     private void ConfigureCommands(IServiceCollection services)
     {
         services.AddSingleton<ICommandStateManager, CommandStateManager>();
-        services.AddSingleton<IOnUndoRedo>( p =>(CommandStateManager)p.GetService<ICommandStateManager>()!);
+        services.AddSingleton<IOnUndoRedo>(p => (CommandStateManager) p.GetService<ICommandStateManager>()!);
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
@@ -232,9 +232,9 @@ public class Startup
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
-        
+
         // Add localization cultures
-        var supportedCultures = new[] { "de-DE", "en-DE" };
+        var supportedCultures = new[] {"de-DE", "en-DE"};
         var localizationOptions = new RequestLocalizationOptions()
             .SetDefaultCulture(supportedCultures[0])
             .AddSupportedCultures(supportedCultures)

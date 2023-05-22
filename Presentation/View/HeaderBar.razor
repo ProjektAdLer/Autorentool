@@ -1,12 +1,13 @@
 @using Presentation.PresentationLogic.API
-@using Presentation.Components
-@using Presentation.Components.Culture
-@using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.Mediator
 @using Presentation.PresentationLogic.SelectedViewModels
+@using Microsoft.Extensions.Localization
+@using Presentation.Components
+@using Presentation.Components.Culture
 @inject ISnackbar Snackbar
 <header class="mb-1 grid grid-cols-3 grid-rows-1 w-full bg-buttonbgblue items-center">
     <div class="ml-1 flex justify-start items-center gap-2">
+        <LmsLoginButton/>
         <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title="My Learning Worlds" @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
         <MudDivider Vertical="true" FlexItem="true"/>
         <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" Title="Save Learning World" OnClick="TrySaveAsync"></MudIconButton>
@@ -26,8 +27,16 @@
                 Feedback
             </p>
             <div class="flex flex-row justify-around">
-                <a href="https://bugreport.projekt-adler.eu" target="_blank" title="Bugreport - Öffnet neue Webseite"><button class="btn-standard m-0 p-1 h-5"><img class="w-4 h-4 drop-shadow" src="/CustomIcons/bug-icon-nobg.png" alt="debug-icon"/></button></a>
-                <a href="https://userfeedback.projekt-adler.eu" target="_blank" title="Nutzerfeedback - Öffnet neue Webseite"><button class="btn-standard m-0 p-1 h-5"><img class="w-4 h-4 drop-shadow" src="/CustomIcons/feedback-icon-without-typo-nobg.png" alt="feedback-icon"/></button></a>
+                <a href="https://bugreport.projekt-adler.eu" target="_blank" title="Bugreport - Öffnet neue Webseite">
+                    <button class="btn-standard m-0 p-1 h-5">
+                        <img class="w-4 h-4 drop-shadow" src="/CustomIcons/bug-icon-nobg.png" alt="debug-icon"/>
+                    </button>
+                </a>
+                <a href="https://userfeedback.projekt-adler.eu" target="_blank" title="Nutzerfeedback - Öffnet neue Webseite">
+                    <button class="btn-standard m-0 p-1 h-5">
+                        <img class="w-4 h-4 drop-shadow" src="/CustomIcons/feedback-icon-without-typo-nobg.png" alt="feedback-icon"/>
+                    </button>
+                </a>
             </div>
         </div>
         <CultureSelector/>
@@ -92,8 +101,8 @@
         {
             Snackbar.Add("Exporting LearningWorld was canceled", Severity.Warning);
         }
-     StateHasChanged();
-     Snackbar.Add("LearningWorld exported to " + _filepath, Severity.Success);
+        StateHasChanged();
+        Snackbar.Add("LearningWorld exported to " + _filepath, Severity.Success);
     }
 
     private void OnClickRedo()

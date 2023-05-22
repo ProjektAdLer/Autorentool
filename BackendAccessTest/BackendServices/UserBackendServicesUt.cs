@@ -1,7 +1,8 @@
 ﻿using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.Net;
-using ApiAccess.WebApi;
+using ApiAccess.BackendServices;
+using BusinessLogic.ErrorManagement.BackendAccess;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using NSubstitute;
@@ -59,20 +60,21 @@ public class UserBackendServicesUt
 
         var responseContent = JsonConvert.SerializeObject(new Dictionary<string, string>
         {
-            {"detail", "exoected Error Message"}
+            {"detail", "Error Message"}
         });
-        var response = new HttpResponseMessage(HttpStatusCode.Forbidden);
+        var response = new HttpResponseMessage(HttpStatusCode.Unauthorized);
+        response.StatusCode = HttpStatusCode.Unauthorized;
 
         response.Content = new StringContent(responseContent);
         mockedHttp.When("*")
-            .Respond(response);
+            .Respond(req => response);
 
         var userWebApiServices = CreateTestableUserWebApiServices(null, mockedHttp.ToHttpClient());
 
         // Act
         // Assert
-        Assert.ThrowsAsync<HttpRequestException>(async () =>
-            await userWebApiServices.GetUserTokenAsync("username", "password"), "exoected Error Message");
+        Assert.ThrowsAsync<BackendInvalidLoginException>(async () =>
+            await userWebApiServices.GetUserTokenAsync("username", "password"), "Invalid Login Credentials.");
     }
 
     [Test]
@@ -112,7 +114,7 @@ public class UserBackendServicesUt
         // Arrange
         var mockedHttp = new MockHttpMessageHandler();
 
-        var response = new HttpResponseMessage(HttpStatusCode.Forbidden);
+        var response = new HttpResponseMessage(HttpStatusCode.Conflict);
 
         response.Content = new StringContent("invalid response");
         mockedHttp.When("*")

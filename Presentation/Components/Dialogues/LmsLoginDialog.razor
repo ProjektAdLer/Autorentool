@@ -1,0 +1,96 @@
+@using Presentation.PresentationLogic.API
+@if (_isLmsConnected)
+{
+    <h3>Logout</h3>
+}
+else
+{
+    <h3>Login</h3>
+}
+
+<MudDialog Options="new DialogOptions() {CloseOnEscapeKey = true}">
+    <DialogContent>
+        @if (_isLmsConnected)
+        {
+            <MudText>Logged in as @PresentationLogic.LoginName</MudText>
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Logout">Logout</MudButton>
+        }
+        else
+        {
+            <MudForm>
+                <MudTextField @bind-Value="_username" Label="Username"/>
+                <MudTextField @bind-Value="_password" Label="Password" InputType="InputType.Password"/>
+                @if (_showError)
+                {
+                    <MudText>Wrong Username or Password</MudText>
+                }
+                <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="SubmitForm">Login</MudButton>
+            </MudForm>
+        }
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Secondary" Variant="Variant.Outlined" OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+
+</MudDialog>
+
+@code {
+
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+
+    [Inject]
+    public IPresentationLogic PresentationLogic { get; set; }
+
+    private string _username = "";
+    private string _password = "";
+    private bool _showError = false;
+    private bool _isLmsConnected = false;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        _username = "";
+        _password = "";
+        _showError = false;
+        _isLmsConnected = false;
+        CheckIfLmsIsConnected();
+    }
+
+    private async void CheckIfLmsIsConnected()
+    {
+        _isLmsConnected = await PresentationLogic.IsLmsConnected();
+        StateHasChanged();
+    }
+
+    private async void SubmitForm()
+    {
+        if (_username == "" || _password == "") return;
+        var success = await PresentationLogic.Login(_username, _password);
+        if (success)
+        {
+            _showError = false;
+            CheckIfLmsIsConnected();
+        }
+        else
+        {
+            _showError = true;
+            _password = "";
+            StateHasChanged();
+        }
+    }
+
+    private void Logout()
+    {
+        PresentationLogic.Logout();
+        CheckIfLmsIsConnected();
+    }
+
+    void Cancel()
+    {
+        _isLmsConnected = false;
+        MudDialog.Cancel();
+    }
+
+}

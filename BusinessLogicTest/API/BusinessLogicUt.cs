@@ -1,6 +1,7 @@
 ﻿using BusinessLogic.API;
 using BusinessLogic.Commands;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.BackendAccess;
 using BusinessLogic.Entities.LearningContent;
 using NSubstitute;
 using NUnit.Framework;
@@ -294,7 +295,7 @@ public class BusinessLogicUt
 
         mockDataAccess.Received().GetSavedLearningWorldPaths();
     }
-    
+
     [Test]
     public void AddSavedLearningWorldPath_CallsDataAccess()
     {
@@ -307,7 +308,7 @@ public class BusinessLogicUt
 
         mockDataAccess.Received().AddSavedLearningWorldPath(savedLearningWorldPath);
     }
-    
+
     [Test]
     public void AddSavedLearningWorldPathByPathOnly_CallsDataAccess()
     {
@@ -320,7 +321,7 @@ public class BusinessLogicUt
 
         mockDataAccess.Received().AddSavedLearningWorldPathByPathOnly(path);
     }
-    
+
     [Test]
     public void AddSavedLearningWorldPathByPathOnly_ReturnsSavedLearningWorldPath()
     {
@@ -335,7 +336,7 @@ public class BusinessLogicUt
 
         Assert.That(savedLearningWorldPathActual, Is.EqualTo(savedLearningWorldPath));
     }
-    
+
     [Test]
     public void UpdateIdOfSavedLearningWorldPath_CallsDataAccess()
     {
@@ -349,7 +350,7 @@ public class BusinessLogicUt
 
         mockDataAccess.Received().UpdateIdOfSavedLearningWorldPath(savedLearningWorldPath, changedId);
     }
-    
+
     [Test]
     public void RemoveSavedLearningWorldPath_CallsDataAccess()
     {
@@ -362,7 +363,7 @@ public class BusinessLogicUt
 
         mockDataAccess.Received().RemoveSavedLearningWorldPath(savedLearningWorldPath);
     }
-    
+
     [Test]
     public void LoadLearningWorldFromStream_CallsDataAccess()
     {
@@ -488,6 +489,41 @@ public class BusinessLogicUt
         dataAccess.Received().FindSuitableNewSavePath("foo", "bar", "baz");
     }
 
+    #region BackendAccess
+
+    [Test]
+    public async Task Login_CallsBackendAccess()
+    {
+        var backendAccess = Substitute.For<IBackendAccess>();
+        const string username = "username";
+        const string password = "password";
+        var token = new UserToken("token");
+        backendAccess.GetUserTokenAsync(username, password).Returns(Task.FromResult(token));
+        var systemUnderTest = CreateStandardBusinessLogic(apiAccess: backendAccess);
+
+        await systemUnderTest.Login(username, password);
+
+        await backendAccess.Received().GetUserTokenAsync(username, password);
+    }
+
+    [Test]
+    public async Task Login_IfLoginSuccess_CallsBackendForUserInformation() //This is not a unit test
+    {
+        var backendAccess = Substitute.For<IBackendAccess>();
+        const string username = "username";
+        const string password = "password";
+        var token = new UserToken("token");
+        backendAccess.GetUserTokenAsync(username, password).Returns(Task.FromResult(token));
+
+        var systemUnderTest = CreateStandardBusinessLogic(apiAccess: backendAccess);
+
+        await systemUnderTest.Login(username, password);
+
+        await backendAccess.Received().GetUserInformationAsync(token);
+    }
+
+    #endregion
+
     private BusinessLogic.API.BusinessLogic CreateStandardBusinessLogic(
         IAuthoringToolConfiguration? fakeConfiguration = null,
         IDataAccess? fakeDataAccess = null,
@@ -500,8 +536,8 @@ public class BusinessLogicUt
         worldGenerator ??= Substitute.For<IWorldGenerator>();
         commandStateManager ??= Substitute.For<ICommandStateManager>();
         apiAccess ??= Substitute.For<IBackendAccess>();
-        
-        
+
+
         return new BusinessLogic.API.BusinessLogic(fakeConfiguration, fakeDataAccess, worldGenerator,
             commandStateManager, apiAccess);
     }

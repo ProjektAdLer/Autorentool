@@ -1,4 +1,4 @@
-﻿using BusinessLogic.Entities.ApiElements;
+﻿using BusinessLogic.Entities.BackendAccess;
 using NUnit.Framework;
 
 namespace BusinessLogicTest.Entities.ApiAccess;

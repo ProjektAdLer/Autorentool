@@ -1,6 +1,6 @@
 ﻿using ApiAccess.BackendEntities;
 using AutoMapper;
-using BusinessLogic.Entities.ApiElements;
+using BusinessLogic.Entities.BackendAccess;
 
 namespace AuthoringTool.Mapping;
 

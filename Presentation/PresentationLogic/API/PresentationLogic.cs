@@ -8,6 +8,7 @@ using BusinessLogic.Commands.Pathway;
 using BusinessLogic.Commands.Space;
 using BusinessLogic.Commands.Topic;
 using BusinessLogic.Commands.World;
+using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using ElectronWrapper;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -55,10 +56,10 @@ public class PresentationLogic : IPresentationLogic
     private const string WorldFileEnding = "awf";
     private const string SpaceFileEnding = "asf";
     private const string ElementFileEnding = "aef";
-    private readonly string[] _imageFileEnding = { "jpg", "png", "webp", "bmp" };
+    private readonly string[] _imageFileEnding = {"jpg", "png", "webp", "bmp"};
 
     private readonly string[] _textFileEnding =
-        { "txt", "c", "h", "cpp", "cc", "c++", "py", "cs", "js", "php", "html", "css" };
+        {"txt", "c", "h", "cpp", "cc", "c++", "py", "cs", "js", "php", "html", "css"};
 
     private const string VideoFileEnding = "mp4";
     private const string H5PFileEnding = "h5p";
@@ -166,7 +167,7 @@ public class PresentationLogic : IPresentationLogic
         learningWorldViewModel.SavePath = filepath;
         learningWorldViewModel.UnsavedChanges = false;
         AddSavedLearningWorldPath(new SavedLearningWorldPath()
-            { Id = worldEntity.Id, Name = worldEntity.Name, Path = filepath });
+            {Id = worldEntity.Id, Name = worldEntity.Name, Path = filepath});
     }
 
     /// <inheritdoc cref="IPresentationLogic.LoadLearningWorldAsync"/>
@@ -285,7 +286,7 @@ public class PresentationLogic : IPresentationLogic
     public void DragObjectInPathWay(IObjectInPathWayViewModel objectInPathWayVm, double oldPositionX,
         double oldPositionY)
     {
-        var objectInPathWayEntity = Mapper.Map<BusinessLogic.Entities.IObjectInPathWay>(objectInPathWayVm);
+        var objectInPathWayEntity = Mapper.Map<IObjectInPathWay>(objectInPathWayVm);
 
         var command = new DragObjectInPathWay(objectInPathWayEntity, oldPositionX, oldPositionY,
             objectInPathWayEntity.PositionX,
@@ -351,7 +352,7 @@ public class PresentationLogic : IPresentationLogic
         IObjectInPathWayViewModel sourceObject, ILearningSpaceViewModel targetObject)
     {
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
-        var sourceObjectEntity = Mapper.Map<BusinessLogic.Entities.IObjectInPathWay>(sourceObject);
+        var sourceObjectEntity = Mapper.Map<IObjectInPathWay>(sourceObject);
         var targetObjectEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(targetObject);
 
         var command = new CreatePathWayCondition(worldEntity, condition, sourceObjectEntity, targetObjectEntity,
@@ -362,7 +363,7 @@ public class PresentationLogic : IPresentationLogic
     /// <inheritdoc cref="IPresentationLogic.EditPathWayCondition"/>
     public void EditPathWayCondition(PathWayConditionViewModel pathWayConditionVm, ConditionEnum newCondition)
     {
-        var pathWayConditionEntity = Mapper.Map<BusinessLogic.Entities.PathWayCondition>(pathWayConditionVm);
+        var pathWayConditionEntity = Mapper.Map<PathWayCondition>(pathWayConditionVm);
 
         var command = new EditPathWayCondition(pathWayConditionEntity, newCondition,
             condition => CMapper.Map(condition, pathWayConditionVm));
@@ -374,7 +375,7 @@ public class PresentationLogic : IPresentationLogic
         PathWayConditionViewModel pathWayConditionVm)
     {
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
-        var pathWayConditionEntity = Mapper.Map<BusinessLogic.Entities.PathWayCondition>(pathWayConditionVm);
+        var pathWayConditionEntity = Mapper.Map<PathWayCondition>(pathWayConditionVm);
 
         var command = new DeletePathWayCondition(worldEntity, pathWayConditionEntity,
             world => CMapper.Map(world, learningWorldVm));
@@ -435,8 +436,8 @@ public class PresentationLogic : IPresentationLogic
         IObjectInPathWayViewModel targetObjectVm)
     {
         var learningWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
-        var sourceObjectEntity = Mapper.Map<BusinessLogic.Entities.IObjectInPathWay>(sourceObjectVm);
-        var targetObjectEntity = Mapper.Map<BusinessLogic.Entities.IObjectInPathWay>(targetObjectVm);
+        var sourceObjectEntity = Mapper.Map<IObjectInPathWay>(sourceObjectVm);
+        var targetObjectEntity = Mapper.Map<IObjectInPathWay>(targetObjectVm);
 
         var command = new CreateLearningPathWay(learningWorldEntity, sourceObjectEntity, targetObjectEntity,
             world => CMapper.Map(world, learningWorldVm));
@@ -475,7 +476,7 @@ public class PresentationLogic : IPresentationLogic
         double positionY = 0D)
     {
         var learningWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
-        var contentEntity = Mapper.Map<BusinessLogic.Entities.LearningContent.ILearningContent>(learningContentVm);
+        var contentEntity = Mapper.Map<ILearningContent>(learningContentVm);
 
         var command = new CreateUnplacedLearningElement(learningWorldEntity, name, contentEntity, description, goals,
             difficulty, workload, points, positionX, positionY,
@@ -546,7 +547,7 @@ public class PresentationLogic : IPresentationLogic
         var command = new RemoveLearningElementFromLayout(worldEntity, spaceEntity, elementEntity,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
-        
+
         SelectedViewModelsProvider.SetLearningElement(
             learningWorldVm.UnplacedLearningElements.First(x => x.Id == learningElementVm.Id), command);
     }
@@ -663,7 +664,7 @@ public class PresentationLogic : IPresentationLogic
     public async Task<ILearningContentViewModel> LoadImageAsync()
     {
         ElectronCheck();
-        var fileFilter = new FileFilterProxy[] { new(" ", _imageFileEnding) };
+        var fileFilter = new FileFilterProxy[] {new(" ", _imageFileEnding)};
         var filepath = await GetLoadFilepathAsync("Load image", fileFilter);
         var entity = BusinessLogic.LoadLearningContent(filepath);
         return Mapper.Map<ILearningContentViewModel>(entity);
@@ -700,7 +701,7 @@ public class PresentationLogic : IPresentationLogic
     public async Task<ILearningContentViewModel> LoadTextAsync()
     {
         ElectronCheck();
-        var fileFilter = new FileFilterProxy[] { new(" ", _textFileEnding) };
+        var fileFilter = new FileFilterProxy[] {new(" ", _textFileEnding)};
         var filepath = await GetLoadFilepathAsync("Load text", fileFilter);
         var entity = BusinessLogic.LoadLearningContent(filepath);
         return Mapper.Map<ILearningContentViewModel>(entity);
@@ -771,7 +772,7 @@ public class PresentationLogic : IPresentationLogic
     {
         var filepath = await GetSaveFilepathAsync(title, new FileFilterProxy[]
         {
-            new(fileFormatDescriptor, new[] { fileEnding })
+            new(fileFormatDescriptor, new[] {fileEnding})
         });
         if (!filepath.EndsWith($".{fileEnding}")) filepath += $".{fileEnding}";
         return filepath;
@@ -803,7 +804,7 @@ public class PresentationLogic : IPresentationLogic
     {
         var filepath = await GetLoadFilepathAsync(title, new FileFilterProxy[]
         {
-            new(fileFormatDescriptor, new[] { fileEnding })
+            new(fileFormatDescriptor, new[] {fileEnding})
         });
         if (!filepath.EndsWith($".{fileEnding}")) filepath += $".{fileEnding}";
         return filepath;
@@ -841,4 +842,25 @@ public class PresentationLogic : IPresentationLogic
     {
         BusinessLogic.CallExport();
     }
+
+    #region BackendAccess
+
+    public Task<bool> IsLmsConnected()
+    {
+        return BusinessLogic.IsLmsConnected();
+    }
+
+    public string LoginName => BusinessLogic.LoginName;
+
+    public Task<bool> Login(string username, string password)
+    {
+        return BusinessLogic.Login(username, password);
+    }
+
+    public void Logout()
+    {
+        BusinessLogic.Logout();
+    }
+
+    #endregion
 }

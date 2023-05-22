@@ -1,0 +1,17 @@
+@using Presentation.Components.Dialogues
+<MudButton OnClick="OpenLmsDialog" Class="btn-standard normal-case">
+    Login to Lms
+</MudButton>
+
+@code {
+
+    [Inject]
+    public IDialogService DialogService { get; set; }
+
+    private void OpenLmsDialog()
+    {
+        DialogService.ShowAsync<LmsLoginDialog>();
+        InvokeAsync(StateHasChanged);
+    }
+
+}

@@ -1,6 +1,7 @@
 ﻿using ApiAccess.API;
-using ApiAccess.WebApi;
+using ApiAccess.BackendServices;
 using AutoMapper;
+using BusinessLogic.Entities.BackendAccess;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -51,13 +52,14 @@ public class ApiAccessUt
         // Arrange
         _mapper = Substitute.For<IMapper>();
         _userWebApiServices = Substitute.For<IUserWebApiServices>();
+        var token = new UserToken("testToken");
         var systemUnderTest = new BackendAccess(_mapper, _userWebApiServices);
 
         // Act
-        await systemUnderTest.GetUserInformationAsync("token");
+        await systemUnderTest.GetUserInformationAsync(token);
 
         // Assert
-        await _userWebApiServices.Received().GetUserInformationAsync("token");
+        await _userWebApiServices.Received().GetUserInformationAsync(token.Token);
     }
 
     [Test]
@@ -66,12 +68,14 @@ public class ApiAccessUt
         // Arrange
         _mapper = Substitute.For<IMapper>();
         _userWebApiServices = Substitute.For<IUserWebApiServices>();
+        var token = new UserToken("testToken");
         var systemUnderTest = new BackendAccess(_mapper, _userWebApiServices);
 
         // Act
-        await systemUnderTest.UploadLearningWorldAsync("testToken", "testWorldName", "testWorldDescription");
+        await systemUnderTest.UploadLearningWorldAsync(token, "testWorldName", "testWorldDescription");
 
         // Assert
-        await _userWebApiServices.Received().UploadLearningWorldAsync("testToken", "testWorldName", "testWorldDescription");
+        await _userWebApiServices.Received()
+            .UploadLearningWorldAsync(token.Token, "testWorldName", "testWorldDescription");
     }
 }

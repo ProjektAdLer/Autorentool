@@ -19,14 +19,14 @@ public interface IPresentationLogic
     /// AuthoringTool configuration object
     /// </summary>
     IAuthoringToolConfiguration Configuration { get; }
-    
+
     /// <summary>
     /// BusinessLogic dependency
     /// </summary>
     IBusinessLogic BusinessLogic { get; }
-    
+
     bool RunningElectron { get; }
-    
+
     /// <summary>
     /// 
     /// </summary>
@@ -34,7 +34,7 @@ public interface IPresentationLogic
     /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
     /// <returns>Filepath to the new backup file</returns>
     Task<string> ConstructBackupAsync(LearningWorldViewModel learningWorldViewModel);
-    
+
     bool CanUndo { get; }
     bool CanRedo { get; }
     void UndoCommand();
@@ -47,7 +47,7 @@ public interface IPresentationLogic
     /// <param name="learningWorldVm">Learning world to add.</param>
     void AddLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
         ILearningWorldViewModel learningWorldVm);
-    
+
     /// <summary>
     /// Creates a new learning world in the authoring tool workspace with the corresponding command.
     /// </summary>
@@ -60,7 +60,7 @@ public interface IPresentationLogic
     /// <param name="name"></param>
     void CreateLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, string name, string shortname,
         string authors, string language, string description, string goals);
-    
+
     /// <summary>
     /// Edits a given learning world in the authoring tool workspace with the corresponding command.
     /// </summary>
@@ -71,7 +71,7 @@ public interface IPresentationLogic
     /// <param name="language"></param>
     /// <param name="description"></param>
     /// <param name="goals"></param>
-    void EditLearningWorld(ILearningWorldViewModel learningWorldVm, string name, string shortname, string authors, 
+    void EditLearningWorld(ILearningWorldViewModel learningWorldVm, string name, string shortname, string authors,
         string language, string description, string goals);
 
     /// <summary>
@@ -80,7 +80,7 @@ public interface IPresentationLogic
     /// <param name="authoringToolWorkspaceVm"></param>
     /// <param name="worldVm">The learning world to delete.</param>
     void DeleteLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, LearningWorldViewModel worldVm);
-    
+
     /// <summary>
     /// Asks user for path and saves <see cref="LearningWorldViewModel"/> to disk.
     /// </summary>
@@ -91,7 +91,7 @@ public interface IPresentationLogic
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
     Task SaveLearningWorldAsync(LearningWorldViewModel learningWorldViewModel);
-    
+
     /// <summary>
     /// Asks user for path and loads <see cref="LearningWorldViewModel"/> from disk.
     /// </summary>
@@ -101,7 +101,7 @@ public interface IPresentationLogic
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
     Task LoadLearningWorldAsync(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm);
-    
+
     /// <summary>
     /// Loads <see cref="LearningWorldViewModel"/> from given path.
     /// </summary>
@@ -154,14 +154,14 @@ public interface IPresentationLogic
     /// <param name="floorPlanName">Enum of the FloorPlan to change the layout to.</param>
     void ChangeLearningSpaceLayout(ILearningSpaceViewModel learningSpaceVm, ILearningWorldViewModel learningWorldVm,
         FloorPlanEnum floorPlanName);
-    
+
     /// <summary>
     /// Deletes the given learning space in the given learning world.
     /// </summary>
     /// <param name="learningWorldVm">Parent learning world of the learning space.</param>
     /// <param name="learningSpaceVm">Learning space to delete.</param>
     void DeleteLearningSpace(ILearningWorldViewModel learningWorldVm, ILearningSpaceViewModel learningSpaceVm);
-    
+
     /// <summary>
     /// Asks user for path and saves <see cref="LearningSpaceViewModel"/> to disk.
     /// </summary>
@@ -172,7 +172,7 @@ public interface IPresentationLogic
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
     Task SaveLearningSpaceAsync(LearningSpaceViewModel learningSpaceViewModel);
-    
+
     /// <summary>
     /// Asks user for path and loads <see cref="LearningSpaceViewModel"/> from disk.
     /// </summary>
@@ -183,7 +183,7 @@ public interface IPresentationLogic
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
     Task LoadLearningSpaceAsync(ILearningWorldViewModel learningWorldVm);
-    
+
     /// <summary>
     /// Creates a new pathway condition in the given learning world with the corresponding command.
     /// </summary>
@@ -261,7 +261,8 @@ public interface IPresentationLogic
     /// <param name="parentSpaceVm">Parent space of the element.</param>
     /// <param name="slotIndex">Index of the slot in which the element should be created.</param>
     /// <param name="learningElementVm">Learning element to add.</param>
-    void AddLearningElement(ILearningSpaceViewModel parentSpaceVm, int slotIndex, ILearningElementViewModel learningElementVm);
+    void AddLearningElement(ILearningSpaceViewModel parentSpaceVm, int slotIndex,
+        ILearningElementViewModel learningElementVm);
 
     /// <summary>
     /// Creates a new learning element and assigns it to the opened learning space in the
@@ -337,7 +338,7 @@ public interface IPresentationLogic
     /// <param name="learningElementVm">Element to delete.</param>
     void DeleteLearningElementInSpace(ILearningSpaceViewModel parentSpaceVm,
         ILearningElementViewModel learningElementVm);
-    
+
     /// <summary>
     /// Deletes the given learning element in the given learning world.
     /// </summary>
@@ -345,7 +346,7 @@ public interface IPresentationLogic
     /// <param name="learningElementVm">Element to delete.</param>
     void DeleteLearningElementInWorld(ILearningWorldViewModel learningWorldVm,
         ILearningElementViewModel learningElementVm);
-    
+
     /// <summary>
     /// Asks user for path and saves <see cref="LearningElementViewModel"/> to disk.
     /// </summary>
@@ -368,38 +369,38 @@ public interface IPresentationLogic
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
     Task LoadLearningElementAsync(ILearningSpaceViewModel parentSpaceVm, int slotIndex);
-    
+
     /// <summary>
     /// Open the given content file of the learning element in the desktop's default manner.
     /// </summary>
     /// <param name="learningElementVm">Element which contains the content file to be opened.</param>
     /// <returns></returns>
     Task ShowLearningElementContentAsync(LearningElementViewModel learningElementVm);
-    
+
     /// <summary>
     /// Asks user for path, loads an image file from disk and returns a <see cref="ILearningContentViewModel"/>. 
     /// </summary>
     /// <returns></returns>
     Task<ILearningContentViewModel> LoadImageAsync();
-    
+
     /// <summary>
     /// Asks user for path, loads a video file from disk and returns a <see cref="ILearningContentViewModel"/>. 
     /// </summary>
     /// <returns></returns>
     Task<ILearningContentViewModel> LoadVideoAsync();
-    
+
     /// <summary>
     /// Asks user for path, loads a h5p file from disk and returns a <see cref="ILearningContentViewModel"/>. 
     /// </summary>
     /// <returns></returns>
     Task<ILearningContentViewModel> LoadH5PAsync();
-    
+
     /// <summary>
     /// Asks user for path, loads a pdf file from disk and returns a <see cref="ILearningContentViewModel"/>. 
     /// </summary>
     /// <returns></returns>
     Task<ILearningContentViewModel> LoadPdfAsync();
-    
+
     /// <summary>
     /// Asks user for path, loads a text file from disk and returns a <see cref="ILearningContentViewModel"/>. 
     /// </summary>
@@ -407,7 +408,7 @@ public interface IPresentationLogic
     Task<ILearningContentViewModel> LoadTextAsync();
 
     ILearningContentViewModel LoadLearningContentViewModel(string name, Stream stream);
-    
+
     /// <summary>
     /// Gets all content files in the appdata folder.
     /// </summary>
@@ -420,6 +421,7 @@ public interface IPresentationLogic
     /// <param name="content">The content whos file shall be deleted.</param>
     /// <exception cref="FileNotFoundException">The file corresponding to <paramref name="content"/> wasn't found.</exception>
     public void RemoveContent(ILearningContentViewModel content);
+
     void LoadLearningWorldViewModel(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, Stream stream);
     void LoadLearningSpaceViewModel(ILearningWorldViewModel learningWorldVm, Stream stream);
     void LoadLearningElementViewModel(ILearningSpaceViewModel parentSpaceVm, int slotIndex, Stream stream);
@@ -428,22 +430,35 @@ public interface IPresentationLogic
     void DragLearningElement(ILearningElementViewModel learningElementVm, double oldPositionX, double oldPositionY);
     Task ShowLearningContentAsync(ILearningContentViewModel content);
     void SaveLink(LinkContentViewModel linkContentVm);
+
     /// <summary>
     /// Opens the folder containing all content files in the desktop's default manner.
     /// </summary>
     void OpenContentFilesFolder();
+
     void CreateUnplacedLearningElement(ILearningWorldViewModel learningWorldVm, string name,
         ILearningContentViewModel learningContentVm, string description, string goals,
         LearningElementDifficultyEnum difficulty, int workload, int points, double positionX = 0D,
         double positionY = 0D);
+
     Task<string> GetWorldSavePath();
     IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths();
     void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
     SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path);
     void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id);
     void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
+
     /// <summary>
     /// Debug method for Philipp.
     /// </summary>
     void CallExport();
+
+    #region BackendAccess
+
+    Task<bool> IsLmsConnected();
+    string LoginName { get; }
+    Task<bool> Login(string username, string password);
+    void Logout();
+
+    #endregion
 }

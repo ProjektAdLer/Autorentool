@@ -1,7 +1,7 @@
 ﻿using ApiAccess.BackendEntities;
 using AuthoringTool.Mapping;
 using AutoMapper;
-using BusinessLogic.Entities.ApiElements;
+using BusinessLogic.Entities.BackendAccess;
 using NUnit.Framework;
 
 namespace AuthoringToolTest.Mapping;

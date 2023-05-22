@@ -30,6 +30,8 @@ public class LearningSpaceLayoutPe :  ILearningSpaceLayoutPe, IExtensibleDataObj
 
     public IEnumerable<ILearningElementPe> ContainedLearningElements => LearningElements.Values;
     
+    public int Capacity { get; set; }
+    
 
     ExtensionDataObject? IExtensibleDataObject.ExtensionData { get; set; }
 

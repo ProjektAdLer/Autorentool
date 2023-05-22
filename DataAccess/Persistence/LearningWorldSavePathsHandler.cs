@@ -100,6 +100,7 @@ public class LearningWorldSavePathsHandler : ILearningWorldSavePathsHandler
     public void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
     {
         _savedLearningWorldPaths.RemoveAll(x => x.Path == savedLearningWorldPath.Path);
+        _savedLearningWorldPaths.FindAll(x => x.Id == savedLearningWorldPath.Id).ForEach(x => x.Id = Guid.Empty);
         _savedLearningWorldPaths.Add(savedLearningWorldPath);
         SaveSavedLearningWorldPaths();
     }
@@ -107,11 +108,9 @@ public class LearningWorldSavePathsHandler : ILearningWorldSavePathsHandler
     /// <inheritdoc cref="ILearningWorldSavePathsHandler.AddSavedLearningWorldPathByPathOnly"/>
     public SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path)
     {
-        var id = Guid.NewGuid();
         var worldName = Path.GetFileNameWithoutExtension(path);
         var savedLearningWorldPath = new SavedLearningWorldPath
         {
-            Id = id,
             Name = worldName,
             Path = path
         };

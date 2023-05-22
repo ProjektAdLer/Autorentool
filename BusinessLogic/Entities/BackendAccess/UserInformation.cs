@@ -1,6 +1,6 @@
 ﻿using JetBrains.Annotations;
 
-namespace BusinessLogic.Entities.ApiElements;
+namespace BusinessLogic.Entities.BackendAccess;
 
 public class UserInformation
 {

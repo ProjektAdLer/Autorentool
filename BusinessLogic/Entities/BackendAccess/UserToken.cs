@@ -1,4 +1,4 @@
-﻿namespace BusinessLogic.Entities.ApiElements;
+﻿namespace BusinessLogic.Entities.BackendAccess;
 
 public class UserToken : IUserToken
 {
@@ -7,5 +7,5 @@ public class UserToken : IUserToken
         Token = userToken;
     }
 
-    public string Token { get; set; }
+    public string Token { get; private set; } // private set is needed for AutoMapper
 }

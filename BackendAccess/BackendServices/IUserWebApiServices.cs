@@ -1,6 +1,6 @@
 ﻿using ApiAccess.BackendEntities;
 
-namespace ApiAccess.WebApi;
+namespace ApiAccess.BackendServices;
 
 public interface IUserWebApiServices
 {
@@ -10,6 +10,9 @@ public interface IUserWebApiServices
     /// <param name="username">The Username used to log into the LMS</param>
     /// <param name="password">The Password used to log into the LMS</param>
     /// <returns>A Token to pass to all other LMS Functions</returns>
+    /// <exception cref="BusinessLogic.ErrorManagement.BackendAccess.BackendInvalidLoginException">
+    /// Thrown when the login credentials are invalid.
+    /// </exception>
     public Task<UserTokenBE> GetUserTokenAsync(string username, string password);
 
 
