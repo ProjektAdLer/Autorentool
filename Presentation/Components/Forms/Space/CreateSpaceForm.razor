@@ -20,36 +20,40 @@
     <Fields>
         <Collapsable Title="General" @bind-Collapsed="_collapsedGeneral">
             <div class="rounded-lg w-4/4 px-4 pb-2">
-            <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
-                          For="@(() => FormModel.Name)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label="@nameof(FormDataContainer.FormModel.Name)"/>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                              For="@(() => FormModel.Name)"
+                              Immediate="true"
+                              DebounceInterval="300"
+                              Label="@nameof(FormDataContainer.FormModel.Name)"/>
             </div>
-            </Collapsable>
+        </Collapsable>
 
         <Collapsable Title="Goals" @bind-Collapsed="_collapsedGoals">
             <div class="rounded-lg w-4/4 px-4 pb-2">
-            <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
-                          For="@(() => FormModel.Goals)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label="@nameof(FormDataContainer.FormModel.Goals)"/>
-            <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
-                          For="@(() => FormModel.Description)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label="@nameof(FormDataContainer.FormModel.Description)"/>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                              For="@(() => FormModel.Description)"
+                              Immediate="true"
+                              Lines="3"
+                              Variant="Variant.Outlined"
+                              DebounceInterval="300"
+                              Label="@nameof(FormDataContainer.FormModel.Description)"/>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
+                              For="@(() => FormModel.Goals)"
+                              Immediate="true"
+                              Lines="3"
+                              Variant="Variant.Outlined"
+                              DebounceInterval="300"
+                              Label="@nameof(FormDataContainer.FormModel.Goals)"/>
             </div>
         </Collapsable>
 
         <Collapsable Title="Completion conditions" @bind-Collapsed="_collapsedConditions">
             <div class="rounded-lg w-4/4 px-4 pb-4">
-            <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
-                             For="@(() => FormModel.RequiredPoints)"
-                             Immediate="true"
-                             DebounceInterval="300"
-                             Label="@nameof(FormDataContainer.FormModel.RequiredPoints)"/>
+                <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
+                                 For="@(() => FormModel.RequiredPoints)"
+                                 Immediate="true"
+                                 DebounceInterval="300"
+                                 Label="@nameof(FormDataContainer.FormModel.RequiredPoints)"/>
             </div>
         </Collapsable>
         
@@ -59,10 +63,10 @@
                            Label="@nameof(FormDataContainer.FormModel.Theme)"
                            Text="@FormDataContainer.FormModel.Theme.ToString()"
                            For="@(() => FormModel.Theme)">
-                            @foreach (var theme in _themes)
-                            {
-                                <MudSelectItem Value="@(theme)">@theme</MudSelectItem>
-                            }
+                    @foreach (var theme in _themes)
+                    {
+                        <MudSelectItem Value="@(theme)">@theme</MudSelectItem>
+                    }
                 </MudSelect>
             </div>
         </Collapsable>
