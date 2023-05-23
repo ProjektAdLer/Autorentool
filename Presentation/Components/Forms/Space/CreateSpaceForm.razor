@@ -18,6 +18,12 @@
 <BaseForm TForm="LearningSpaceFormModel" TEntity="LearningSpace"
           OnValidSubmit="OnValidSubmit" SnackbarMessage="Space created" FormDataContainer="FormDataContainer">
     <Fields>
+        <MudSwitch Title="Advanced Mode"
+                   @bind-Checked="_advancedChecked" 
+                   Color="Color.Secondary" 
+                   Label="Advanced Mode" 
+                   LabelPosition="LabelPosition.Start">
+        </MudSwitch>
         <Collapsable Title="General" @bind-Collapsed="_collapsedGeneral">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
@@ -56,7 +62,7 @@
                                  Label="@nameof(FormDataContainer.FormModel.RequiredPoints)"/>
             </div>
         </Collapsable>
-        
+
         <Collapsable Title="Theme" @bind-Collapsed="_collapsedTheme">
             <div class="rounded-lg w-4/4 px-4 pb-4">
                 <MudSelect @bind-Value="FormDataContainer.FormModel.Theme" AnchorOrigin="Origin.BottomCenter"
@@ -93,6 +99,7 @@
     //please DO NOT REFACTOR THIS - n.stich
     private LearningSpaceFormModel FormModel => FormDataContainer.FormModel;
 
+    private bool _advancedChecked = false;
     private bool _collapsedGeneral = false;
     private bool _collapsedGoals = true;
     private bool _collapsedConditions = true;
@@ -105,7 +112,7 @@
         if (SelectedViewModelsProvider.LearningWorld == null) throw new InvalidOperationException("No learning world selected.");
         model.RequiredPoints ??= 0;
         LearningWorldPresenter.CreateLearningSpace(model.Name, model.Description,
-            model.Goals, (int) model.RequiredPoints, model.Theme, positionX: 0, positionY: 0);
+            model.Goals, (int)model.RequiredPoints, model.Theme, positionX: 0, positionY: 0);
     }
 
     protected override void OnInitialized()

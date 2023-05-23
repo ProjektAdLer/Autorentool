@@ -16,41 +16,47 @@
 <BaseForm TForm="LearningSpaceFormModel" TEntity="LearningSpace"
           OnValidSubmit="OnValidSubmit" SnackbarMessage="Space updated" FormDataContainer="FormDataContainer">
     <HeaderButtons>
-            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Class="btn-standard" OnClick="async () => await OnNewButtonClicked.InvokeAsync()">New</MudButton>
-        </HeaderButtons>
+        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Class="btn-standard" OnClick="async () => await OnNewButtonClicked.InvokeAsync()">New</MudButton>
+    </HeaderButtons>
     <Fields>
+        <MudSwitch Title="Advanced Mode"
+                   @bind-Checked="_advancedChecked"
+                   Color="Color.Secondary"
+                   Label="Advanced Mode"
+                   LabelPosition="LabelPosition.Start">
+        </MudSwitch>
         <Collapsable Title="General" @bind-Collapsed="_collapsedGeneral">
             <div class="rounded-lg w-4/4 px-4 pb-2">
-            <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
-                          For="@(() => FormModel.Name)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label="@nameof(FormDataContainer.FormModel.Name)"/>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                              For="@(() => FormModel.Name)"
+                              Immediate="true"
+                              DebounceInterval="300"
+                              Label="@nameof(FormDataContainer.FormModel.Name)"/>
             </div>
         </Collapsable>
 
         <Collapsable Title="Goals" @bind-Collapsed="_collapsedGoals">
             <div class="rounded-lg w-4/4 px-4 pb-2">
-            <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
-                          For="@(() => FormModel.Goals)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label="@nameof(FormDataContainer.FormModel.Goals)"/>
-            <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
-                          For="@(() => FormModel.Description)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label="@nameof(FormDataContainer.FormModel.Description)"/>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
+                              For="@(() => FormModel.Goals)"
+                              Immediate="true"
+                              DebounceInterval="300"
+                              Label="@nameof(FormDataContainer.FormModel.Goals)"/>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                              For="@(() => FormModel.Description)"
+                              Immediate="true"
+                              DebounceInterval="300"
+                              Label="@nameof(FormDataContainer.FormModel.Description)"/>
             </div>
         </Collapsable>
 
         <Collapsable Title="Completion conditions" @bind-Collapsed="_collapsedConditions">
             <div class="rounded-lg w-4/4 px-4 pb-4">
-            <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
-                             For="@(() => FormModel.RequiredPoints)"
-                             Immediate="true"
-                             DebounceInterval="300"
-                             Label="@nameof(FormDataContainer.FormModel.RequiredPoints)"/>
+                <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
+                                 For="@(() => FormModel.RequiredPoints)"
+                                 Immediate="true"
+                                 DebounceInterval="300"
+                                 Label="@nameof(FormDataContainer.FormModel.RequiredPoints)"/>
             </div>
         </Collapsable>
 
@@ -59,7 +65,7 @@
                 <SpaceLayoutSelection LearningSpaceViewModel="SpaceToEdit"></SpaceLayoutSelection>
             </div>
         </Collapsable>
-        
+
         <Collapsable Title="Theme" @bind-Collapsed="_collapsedTheme">
             <div class="rounded-lg w-4/4 px-4 pb-4">
                 <MudSelect @bind-Value="FormDataContainer.FormModel.Theme" AnchorOrigin="Origin.BottomCenter"
@@ -73,7 +79,7 @@
                 </MudSelect>
             </div>
         </Collapsable>
-        
+
     </Fields>
     <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
@@ -105,6 +111,7 @@
     //please DO NOT REFACTOR THIS - n.stich
     private LearningSpaceFormModel FormModel => FormDataContainer.FormModel;
 
+    private bool _advancedChecked = false;
     private bool _collapsedGeneral = false;
     private bool _collapsedGoals = true;
     private bool _collapsedConditions = true;
@@ -116,7 +123,7 @@
     {
     //we can supress the nullable warning here as validator ensures RequiredPoints isn't null - n.stich
         LearningSpacePresenter.EditLearningSpace(model.Name, model.Description,
-            model.Goals, (int) model.RequiredPoints!, model.Theme);
+            model.Goals, (int)model.RequiredPoints!, model.Theme);
     }
 
     private async Task MapIntoContainer()
