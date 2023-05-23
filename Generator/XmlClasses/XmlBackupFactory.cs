@@ -220,7 +220,7 @@ public class XmlBackupFactory : IXmlBackupFactory
         //set the parameter of the moodle_backup.xml file
         MoodleBackupXmlDetails.Detail = MoodleBackupXmlDetail as MoodleBackupXmlDetail ?? new MoodleBackupXmlDetail();
 
-        MoodleBackupXmlCourse.Title = _learningWorld.LmsElementIdentifier.Value;
+        MoodleBackupXmlCourse.Title = _learningWorld.WorldName;
 
         //MoodleBackupXmlSettingSetting are Tags that describe the Moodle Backup Settings.
         //They are the same Options that are displayed, when a backup is created in moodle. 
@@ -277,7 +277,7 @@ public class XmlBackupFactory : IXmlBackupFactory
         {
             string learningElementId = element.ElementId.ToString();
             string learningElementType = element.ElementFileType;
-            string learningElementName = element.LmsElementIdentifier.Value;
+            string learningElementName = element.ElementName;
             string learningElementSectionId = element.LearningSpaceParentId.ToString();
             if (learningElementType == "h5p")
             {

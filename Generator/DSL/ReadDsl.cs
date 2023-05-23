@@ -26,7 +26,7 @@ public class ReadDsl : IReadDsl
 
     private void Initialize()
     {
-        _learningWorldJson = new LearningWorldJson(new LmsElementIdentifierJson("idNumber", "Value"),
+        _learningWorldJson = new LearningWorldJson("Value",
             "", new List<TopicJson>(), 
             new List<LearningSpaceJson>(), new List<LearningElementJson>());
         _rootJson = new DocumentRootJson("0.3", "0.3.2","","",_learningWorldJson);
@@ -113,10 +113,10 @@ public class ReadDsl : IReadDsl
 
         var lastId = documentRootJson.World.Elements.Count+1;
 
-        var worldAttributes = new LearningElementJson(lastId, 
-            new LmsElementIdentifierJson("Description",documentRootJson.World.WorldDescription),"", "", 
+        var worldAttributes = new LearningElementJson(lastId, "",
+            documentRootJson.World.WorldDescription,"", 
             "World Attributes", "label", 0,
-            0, documentRootJson.World.WorldDescription,
+            0, "", documentRootJson.World.WorldDescription,
             documentRootJson.World.WorldGoals);
         
         _listAllElementsOrdered.Add(worldAttributes);
@@ -139,9 +139,10 @@ public class ReadDsl : IReadDsl
         {
             foreach (var space in documentRootJson.World.Spaces)
             {
-                foreach (int elementInSpace in space.SpaceContents)
+                foreach (var elementInSpace in space.SpaceSlotContents)
                 {
-                    _listAllElementsOrdered.Add(documentRootJson.World.Elements[elementInSpace-1]);
+                    if(elementInSpace != null)
+                        _listAllElementsOrdered.Add(documentRootJson.World.Elements[(int)elementInSpace-1]);
                 }
             }
         }
@@ -154,8 +155,8 @@ public class ReadDsl : IReadDsl
 
     public List<LearningSpaceJson> GetSectionList()
     {
-        var space = new LearningSpaceJson(0, new LmsElementIdentifierJson("identifier", "Topic 0"), 
-            "",new List<int>(), -1 );
+        var space = new LearningSpaceJson(0, "", "", 
+            new List<int?>(), -1, "","" );
         var spaceList = new List<LearningSpaceJson> {space};
         spaceList.AddRange(_rootJson.World.Spaces);
         return spaceList;

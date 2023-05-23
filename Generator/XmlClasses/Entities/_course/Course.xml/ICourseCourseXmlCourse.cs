@@ -83,4 +83,5 @@ public interface ICourseCourseXmlCourse : IXmlSerializable
 		string Id { get; set; }
 		
 		string ContextId { get; set; }
+		CourseCourseXmlPluginLocalAdlerCourse PluginLocalAdlerCourse { get; set; }
 }

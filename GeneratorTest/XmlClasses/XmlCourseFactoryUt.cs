@@ -47,11 +47,10 @@ public class XmlCourseFactoryUt
         
         var mockCourseCategory = new CourseCourseXmlCategory();
         var mockCourseCourse = Substitute.For<ICourseCourseXmlCourse>();
-        var mockIdentifier = new LmsElementIdentifierJson("id", "CourseName");
-        var mockLearningWorld = new LearningWorldJson( mockIdentifier,"world", 
+        var mockPluginLocalAdlerCourse = Substitute.For<CourseCourseXmlPluginLocalAdlerCourse>();
+        mockCourseCourse.PluginLocalAdlerCourse = mockPluginLocalAdlerCourse;
+        var mockLearningWorld = new LearningWorldJson( "world", "12345",
             new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>());
-        mockLearningWorld.LmsElementIdentifier = mockIdentifier;
-        mockLearningWorld.LmsElementIdentifier.Value = "CourseName";
 
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
         
@@ -96,11 +95,10 @@ public class XmlCourseFactoryUt
         var mockReadDsl = Substitute.For<IReadDsl>();
         var mockCourseCategory = new CourseCourseXmlCategory();
         var mockCourseCourse = Substitute.For<ICourseCourseXmlCourse>();
-        var mockIdentifier = new LmsElementIdentifierJson("CourseName", "CourseName");
-        var mockLearningWorld = new LearningWorldJson(mockIdentifier, "world",
+        var mockPluginLocalAdlerCourse = Substitute.For<CourseCourseXmlPluginLocalAdlerCourse>();
+        mockCourseCourse.PluginLocalAdlerCourse = mockPluginLocalAdlerCourse;
+        var mockLearningWorld = new LearningWorldJson( "world", "12345",
             new List<TopicJson>(), new List<LearningSpaceJson>(), new List<LearningElementJson>());
-        mockLearningWorld.LmsElementIdentifier = mockIdentifier;
-        mockLearningWorld.LmsElementIdentifier.Value = "CourseName";
 
         mockReadDsl.GetLearningWorld().Returns(mockLearningWorld);
 
@@ -115,8 +113,6 @@ public class XmlCourseFactoryUt
             Assert.That(mockCourseCategory.Description, Is.EqualTo("$@NULL@$"));
             Assert.That(mockCourseCategory.Id, Is.EqualTo("1"));
             Assert.That(mockCourseCategory.Name, Is.EqualTo("Miscellaneous"));
-            Assert.That(mockCourseCourse.Shortname, Is.EqualTo(mockLearningWorld.LmsElementIdentifier.Value));
-            Assert.That(mockCourseCourse.Fullname, Is.EqualTo(mockLearningWorld.LmsElementIdentifier.Value));
             Assert.That(mockCourseCourse.Format, Is.EqualTo("tiles"));
             Assert.That(mockCourseCourse.BaseColour, Is.EqualTo("#009681"));
             Assert.That(mockCourseCourse.CourseUseSubtiles, Is.EqualTo("0"));
@@ -127,6 +123,8 @@ public class XmlCourseFactoryUt
             Assert.That(mockCourseCourse.ShowCompletionConditions, Is.EqualTo("1"));
             Assert.That(mockCourseCourse.EnableCompletion, Is.EqualTo("1"));
             Assert.That(mockCourseCourse.Category, Is.EqualTo(mockCourseCategory));
+            Assert.That(mockCourseCourse.PluginLocalAdlerCourse, Is.EqualTo(mockPluginLocalAdlerCourse));
+            Assert.That(mockCourseCourse.PluginLocalAdlerCourse.AdlerCourse.Uuid, Is.EqualTo("12345"));
             mockCourseCourse.Received().Serialize();
         });
     }

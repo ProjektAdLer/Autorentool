@@ -6,9 +6,9 @@ public class ActivitiesModuleXmlPluginLocalAdlerModule : IActivitiesModuleXmlPlu
 {
     public ActivitiesModuleXmlPluginLocalAdlerModule()
     {
-        AdlerScore = new ActivitiesModuleXmlAdlerScore();
+        AdlerModule = new ActivitiesModuleXmlAdlerModule();
     }
 
-    [XmlElement(ElementName = "adler_score")]
-    public ActivitiesModuleXmlAdlerScore? AdlerScore { get; set; }
+    [XmlElement(ElementName = "adler_module")]
+    public ActivitiesModuleXmlAdlerModule? AdlerModule { get; set; }
 }

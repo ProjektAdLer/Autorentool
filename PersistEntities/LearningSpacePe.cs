@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using Shared;
 
 namespace PersistEntities;
 
@@ -10,7 +11,7 @@ namespace PersistEntities;
 public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
 {
     public LearningSpacePe(string name, string description, string goals,
-        int requiredPoints, ILearningSpaceLayoutPe? learningSpaceLayout = null, double positionX = 0, double positionY = 0,
+        int requiredPoints, Theme theme, ILearningSpaceLayoutPe? learningSpaceLayout = null, double positionX = 0, double positionY = 0,
         List<IObjectInPathWayPe>? inBoundObjects = null, List<IObjectInPathWayPe>? outBoundObjects = null,
         TopicPe? assignedTopic = null)
     {
@@ -19,9 +20,10 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
         Description = description;
         Goals = goals;
         RequiredPoints = requiredPoints;
+        Theme = theme;
         LearningSpaceLayout = learningSpaceLayout ??
                               new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(),
-                                  FloorPlanEnumPe.Rectangle2X2);
+                                  FloorPlanEnum.R20X206L);
         InBoundObjects = inBoundObjects ?? new List<IObjectInPathWayPe>();
         OutBoundObjects = outBoundObjects ?? new List<IObjectInPathWayPe>();
         AssignedTopic = assignedTopic;
@@ -58,6 +60,8 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
     public string Goals { get; set; }
     [DataMember]
     public int RequiredPoints { get; set; }
+    [DataMember]
+    public Theme Theme { get; set; }
     [DataMember]
     public ILearningSpaceLayoutPe LearningSpaceLayout { get; set; }
     [IgnoreDataMember]

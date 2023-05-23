@@ -19,6 +19,7 @@ public class XmlH5PFactory : IXmlH5PFactory
     private readonly string _currWorkDir;
     private readonly string _hardcodedPath = "XMLFilesForExport";
     public string H5PElementId;
+    public string H5PElementUuid;
     public string H5PElementName;
     public string H5PElementParentSpaceString;
     public string H5PElementType;
@@ -66,6 +67,7 @@ public class XmlH5PFactory : IXmlH5PFactory
         IActivitiesInforefXmlInforef? inforefXmlInforef = null)
     {
         H5PElementId = "";
+        H5PElementUuid = "";
         H5PElementName = "";
         H5PElementParentSpaceString = "";
         H5PElementType = "";
@@ -135,16 +137,17 @@ public class XmlH5PFactory : IXmlH5PFactory
         foreach (var h5PElement in h5PElementsList)
         {
             H5PElementId = h5PElement.ElementId.ToString();
-            H5PElementName = h5PElement.LmsElementIdentifier.Value;
+            H5PElementUuid = h5PElement.ElementUUID;
+            H5PElementName = h5PElement.ElementName;
             H5PElementParentSpaceString = h5PElement.LearningSpaceParentId.ToString();
             H5PElementType = h5PElement.ElementFileType;
             H5PElementDesc = h5PElement.ElementDescription ?? "";
             H5PElementPoints = (float)h5PElement.ElementMaxScore;
 
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
-                h5PElement.LmsElementIdentifier.Value+"."+h5PElement.ElementFileType));
+                h5PElement.ElementName+"."+h5PElement.ElementFileType));
             FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath, 
-                h5PElement.LmsElementIdentifier.Value+"."+h5PElement.ElementFileType), 
+                h5PElement.ElementName+"."+h5PElement.ElementFileType), 
             FileManager.GetHashCheckSum());
             H5PSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize());
             H5PSetParametersActivity();
@@ -233,7 +236,8 @@ public class XmlH5PFactory : IXmlH5PFactory
         ActivitiesModuleXmlModule.Id = H5PElementId;
         ActivitiesModuleXmlModule.ShowDescription = "1";
         //AdlerScore can not be null at this point because it is set in the constructor
-        ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerScore!.ScoreMax = H5PElementPoints.ToString("F5", CultureInfo.InvariantCulture);
+        ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerModule!.ScoreMax = H5PElementPoints.ToString("F5", CultureInfo.InvariantCulture);
+        ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerModule!.Uuid = H5PElementUuid;
 
         ActivitiesModuleXmlModule.Serialize("h5pactivity", H5PElementId);
         

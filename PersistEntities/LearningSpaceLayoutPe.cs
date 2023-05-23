@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using Shared;
 
 namespace PersistEntities;
 
@@ -8,7 +9,7 @@ namespace PersistEntities;
 [KnownType(typeof(LearningElementPe))]
 public class LearningSpaceLayoutPe :  ILearningSpaceLayoutPe, IExtensibleDataObject
 {
-    public LearningSpaceLayoutPe(IDictionary<int, ILearningElementPe> learningElements, FloorPlanEnumPe floorPlanName)
+    public LearningSpaceLayoutPe(IDictionary<int, ILearningElementPe> learningElements, FloorPlanEnum floorPlanName)
     {
         LearningElements = learningElements;
         FloorPlanName = floorPlanName;
@@ -20,11 +21,10 @@ public class LearningSpaceLayoutPe :  ILearningSpaceLayoutPe, IExtensibleDataObj
     private LearningSpaceLayoutPe()
     {
         LearningElements = new Dictionary<int, ILearningElementPe>();
-        FloorPlanName = FloorPlanEnumPe.NoFloorPlan;
     }
     
     [DataMember]
-    public FloorPlanEnumPe FloorPlanName { get; set; }
+    public FloorPlanEnum FloorPlanName { get; set; }
     [DataMember]
     public IDictionary<int, ILearningElementPe> LearningElements { get; set; }
 

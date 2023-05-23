@@ -64,11 +64,9 @@ public class XmlH5PFactoryUt
         var mockFiles = Substitute.For<IFilesXmlFiles>();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
-        var identifier = new LmsElementIdentifierJson( "FileName", "Element_1");
+        var h5PElement1 = new LearningElementJson(1, "", "element1", "", "h5p","h5p",1, 2,"");
 
-        var h5PElement1 = new LearningElementJson(1, identifier, "element1", "", "h5p","h5p",1, 2);
-
-        var h5PElement2 = new LearningElementJson(2, identifier, "element2", "", "h5p","h5p",1, 3);
+        var h5PElement2 = new LearningElementJson(2, "", "element2", "", "h5p","h5p",1, 3,"");
 
         var h5PList = new List<LearningElementJson>()
         {
@@ -76,14 +74,14 @@ public class XmlH5PFactoryUt
         };
         
         mockReadDsl.GetH5PElementsList().Returns(h5PList);
-        mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport", identifier.Value), new MockFileData("Hello World"));
+        mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport", "element1"), new MockFileData("Hello World"));
         
         var systemUnderTest = new XmlH5PFactory(mockReadDsl, xmlFileManager: mockFileManager, fileSystem: mockFileSystem, filesXmlFile: mockFile, filesXmlFiles: mockFiles);
         
         //Act
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
         mockFileManager.GetXmlFilesList().Returns(new List<FilesXmlFile>());
-        var space_1 = new LearningSpaceJson(1, new LmsElementIdentifierJson("space", "spacename"),"space1", new List<int>() {1, 2}, 10, "space");
+        var space_1 = new LearningSpaceJson(1, "","space1", new List<int?>() {1, 2}, 10, "space","","");
         mockReadDsl.GetH5PElementsList().Returns(h5PList);
         systemUnderTest.CreateH5PFileFactory();
 
@@ -93,7 +91,7 @@ public class XmlH5PFactoryUt
             
             Assert.That(systemUnderTest.FilesXmlFiles, Is.EqualTo(mockFiles));
             systemUnderTest.FileManager.Received().GetXmlFilesList();
-            systemUnderTest.FileManager.Received().CalculateHashCheckSumAndFileSize(Path.Join(currWorkDir, "XMLFilesForExport",identifier.Value +"."+h5PElement2.ElementFileType));
+            systemUnderTest.FileManager.Received().CalculateHashCheckSumAndFileSize(Path.Join(currWorkDir, "XMLFilesForExport","element2" +"."+h5PElement2.ElementFileType));
             systemUnderTest.FileManager.Received().GetHashCheckSum();
             systemUnderTest.FileManager.Received().GetFileSize();
             systemUnderTest.FileManager.Received().CreateFolderAndFiles(Arg.Any<string>(), Arg.Any<string>());
@@ -112,14 +110,9 @@ public class XmlH5PFactoryUt
         var mockFiles = Substitute.For<IFilesXmlFiles>();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
-        var identifier1 = new LmsElementIdentifierJson("FileName", "Element_1");
-        
-        var identifier2 = new LmsElementIdentifierJson( "FileName", "Element_2");
+        var h5PElement1 = new LearningElementJson(1,  "", "element1", "", "h5p","h5p",1, 1,"");
 
-
-        var h5PElement1 = new LearningElementJson(1,  identifier1, "element1", "", "h5p","h5p",1, 1);
-
-        var h5PElement2 = new LearningElementJson(2, identifier2, "", "", "h5p","h5p",1, 1);
+        var h5PElement2 = new LearningElementJson(2, "", "element2", "", "h5p","h5p",1, 1,"");
 
         var h5PList = new List<LearningElementJson>()
         {
@@ -127,9 +120,9 @@ public class XmlH5PFactoryUt
         };
 
         var space_1 =
-            new LearningSpaceJson(1, new LmsElementIdentifierJson("space", "spacename"), "space",new List<int>() {1, 2}, 10, "space");
+            new LearningSpaceJson(1,"", "space",new List<int?>() {1, 2}, 10, "space","","");
         mockReadDsl.GetH5PElementsList().Returns(h5PList);
-        mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport", identifier1.Value), new MockFileData("Hello World"));
+        mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport", "space"), new MockFileData("Hello World"));
         
         var systemUnderTest = new XmlH5PFactory(mockReadDsl, xmlFileManager: mockFileManager, fileSystem: mockFileSystem, filesXmlFile: mockFile, filesXmlFiles: mockFiles);
         XmlSerializeFileSystemProvider.FileSystem = mockFileSystem;
@@ -145,11 +138,11 @@ public class XmlH5PFactoryUt
             //Every File has 2 FilesXmlFile Id´s thats why the Count has to be 2*FileCount
             Assert.That(systemUnderTest.FilesXmlFiles.File, Has.Count.EqualTo(4));
             Assert.That(systemUnderTest.FilesXmlFiles.File[0].ContextId , Is.EqualTo(h5PElement1.ElementId.ToString()));
-            Assert.That(systemUnderTest.FilesXmlFiles.File[0].Filename , Is.EqualTo(identifier1.Value));
-            Assert.That(systemUnderTest.FilesXmlFiles.File[0].Source , Is.EqualTo(identifier1.Value+ "." + h5PElement1.ElementFileType));
+            Assert.That(systemUnderTest.FilesXmlFiles.File[0].Filename , Is.EqualTo("element1"));
+            Assert.That(systemUnderTest.FilesXmlFiles.File[0].Source , Is.EqualTo("element1"+ "." + h5PElement1.ElementFileType));
             Assert.That(systemUnderTest.FilesXmlFiles.File[2].ContextId , Is.EqualTo(h5PElement2.ElementId.ToString()));
-            Assert.That(systemUnderTest.FilesXmlFiles.File[2].Filename , Is.EqualTo(identifier2.Value));
-            Assert.That(systemUnderTest.FilesXmlFiles.File[2].Source , Is.EqualTo(identifier2.Value+ "." + h5PElement2.ElementFileType));
+            Assert.That(systemUnderTest.FilesXmlFiles.File[2].Filename , Is.EqualTo("element2"));
+            Assert.That(systemUnderTest.FilesXmlFiles.File[2].Source , Is.EqualTo("element2"+ "." + h5PElement2.ElementFileType));
             Assert.That(systemUnderTest.FilesXmlFiles.File[2].Id , Is.EqualTo((int.Parse(systemUnderTest.FilesXmlFiles.File[0].Id)+2).ToString()));
         });
     }

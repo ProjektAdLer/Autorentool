@@ -15,6 +15,7 @@ public class XmlUrlFactory : IXmlUrlFactory
     public readonly string CurrentTime;
     private readonly IFileSystem _fileSystem;
     public string UrlId;
+    public string UrlUuid;
     public string UrlName;
     public string UrlParentSpaceId;
     public string UrlLink;
@@ -45,6 +46,7 @@ public class XmlUrlFactory : IXmlUrlFactory
     {        
         ReadDsl = readDsl;
         UrlId = "";
+        UrlUuid = "";
         UrlName = "";
         UrlParentSpaceId = "";
         UrlLink = "";
@@ -87,7 +89,8 @@ public class XmlUrlFactory : IXmlUrlFactory
         foreach (var url in urlList)
         {
             UrlId = url.ElementId.ToString();
-            UrlName = url.LmsElementIdentifier.Value;
+            UrlUuid = url.ElementUUID;
+            UrlName = url.ElementName;
             UrlParentSpaceId = url.LearningSpaceParentId.ToString();
             UrlLink = url.Url;
             UrlDescription = url.ElementDescription ?? "";
@@ -133,7 +136,8 @@ public class XmlUrlFactory : IXmlUrlFactory
         ActivitiesModuleXmlModule.Id = UrlId;
         ActivitiesModuleXmlModule.Completion = "1";
         //AdlerScore can not be null at this point because it is set in the constructor
-        ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerScore!.ScoreMax = UrlPoints.ToString("F5", CultureInfo.InvariantCulture);
+        ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerModule!.ScoreMax = UrlPoints.ToString("F5", CultureInfo.InvariantCulture);
+        ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerModule!.Uuid = UrlUuid;
 
         ActivitiesModuleXmlModule.Serialize("url", UrlId);
         

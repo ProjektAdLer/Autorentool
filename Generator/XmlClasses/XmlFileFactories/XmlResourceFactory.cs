@@ -20,6 +20,7 @@ public class XmlResourceFactory : IXmlResourceFactory
     public readonly string CurrentTime;
     private readonly IFileSystem _fileSystem;
     public string FileElementId;
+    public string FileElementUuid;
     public string FileElementName;
     public string FileElementParentSpaceString;
     public string FileElementType;
@@ -57,6 +58,7 @@ public class XmlResourceFactory : IXmlResourceFactory
     {        
         ReadDsl = readDsl;
         FileElementId = "";
+        FileElementUuid = "";
         FileElementName = "";
         FileElementParentSpaceString = "";
         FileElementType = "";
@@ -106,16 +108,17 @@ public class XmlResourceFactory : IXmlResourceFactory
         foreach (var resource in resourceList)
         {
             FileElementId = resource.ElementId.ToString();
+            FileElementUuid = resource.ElementUUID;
             FileElementType = resource.ElementFileType;
-            FileElementName = resource.LmsElementIdentifier.Value;
+            FileElementName = resource.ElementName;
             FileElementDesc = resource.ElementDescription ?? "";
             FileElementPoints = resource.ElementMaxScore;
             FileElementParentSpaceString = resource.LearningSpaceParentId.ToString();
 
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
-                resource.LmsElementIdentifier.Value + "." + resource.ElementFileType));
+                resource.ElementName + "." + resource.ElementFileType));
             FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
-                resource.LmsElementIdentifier.Value + "." + resource.ElementFileType), FileManager.GetHashCheckSum());
+                resource.ElementName + "." + resource.ElementFileType), FileManager.GetHashCheckSum());
 
             var mimeType = resource.ElementFileType switch
             {
@@ -204,7 +207,8 @@ public class XmlResourceFactory : IXmlResourceFactory
         ActivitiesModuleXmlModule.Id = FileElementId;
         ActivitiesModuleXmlModule.ShowDescription = "1";
         //AdlerScore can not be null at this point because it is set in the constructor
-        ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerScore!.ScoreMax = FileElementPoints.ToString("F5", CultureInfo.InvariantCulture);
+        ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerModule!.ScoreMax = FileElementPoints.ToString("F5", CultureInfo.InvariantCulture);
+        ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerModule!.Uuid = FileElementUuid;
         
         ActivitiesModuleXmlModule.Serialize("resource", FileElementId);
         

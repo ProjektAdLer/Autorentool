@@ -85,8 +85,8 @@ public class XmlCourseFactory : IXmlCourseFactory
     {
         //set parameters of the course/course.xml file
 
-        CourseCourseXmlCourse.Shortname = _learningWorld.LmsElementIdentifier.Value;
-        CourseCourseXmlCourse.Fullname = _learningWorld.LmsElementIdentifier.Value;
+        CourseCourseXmlCourse.Shortname = _learningWorld.WorldName;
+        CourseCourseXmlCourse.Fullname = _learningWorld.WorldName;
         CourseCourseXmlCourse.Format = "tiles";
         CourseCourseXmlCourse.BaseColour = "#009681";
         CourseCourseXmlCourse.CourseUseSubtiles = "0";
@@ -96,9 +96,10 @@ public class XmlCourseFactory : IXmlCourseFactory
         CourseCourseXmlCourse.Theme = "boost";
         CourseCourseXmlCourse.ShowCompletionConditions = "1";
         CourseCourseXmlCourse.EnableCompletion = "1";
-        CourseCourseXmlCourse.IdNumber = _learningWorld.LmsElementIdentifier.Value;
+        CourseCourseXmlCourse.IdNumber = _learningWorld.WorldName;
         CourseCourseXmlCourse.Category = CourseCourseXmlCategory as CourseCourseXmlCategory ?? new CourseCourseXmlCategory();
-
+        CourseCourseXmlCourse.PluginLocalAdlerCourse.AdlerCourse.Uuid = _learningWorld.WorldUUID;
+        
         //create course/course.xml file
         CourseCourseXmlCourse.Serialize(); 
     }

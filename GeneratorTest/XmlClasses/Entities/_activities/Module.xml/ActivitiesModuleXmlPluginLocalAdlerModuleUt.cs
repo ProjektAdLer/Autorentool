@@ -16,8 +16,8 @@ public class ActivitiesModuleXmlPluginLocalAdlerModuleUt
         // Assert
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.AdlerScore, Is.Not.Null);
-            Assert.That(systemUnderTest.AdlerScore?.ScoreMax, Is.EqualTo("0"));
+            Assert.That(systemUnderTest.AdlerModule, Is.Not.Null);
+            Assert.That(systemUnderTest.AdlerModule?.ScoreMax, Is.EqualTo("0"));
         });
     }
 }

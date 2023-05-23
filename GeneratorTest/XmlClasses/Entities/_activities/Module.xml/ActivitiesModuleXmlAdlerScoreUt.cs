@@ -11,13 +11,13 @@ public class ActivitiesModuleXmlAdlerScoreUt
     public void Constructor_AllParametersSet()
     {
         // Arrange
-        var systemUnderTest = new ActivitiesModuleXmlAdlerScore();
+        var systemUnderTest = new ActivitiesModuleXmlAdlerModule();
 
         // Assert
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.ScoreMax, Is.EqualTo("0"));
-            Assert.That(systemUnderTest.Timecreated, Is.EqualTo("0"));
+            Assert.That(systemUnderTest.TimeCreated, Is.EqualTo("0"));
             Assert.That(systemUnderTest.TimeModified, Is.EqualTo("0"));
         });
     }

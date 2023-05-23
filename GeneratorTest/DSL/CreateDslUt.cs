@@ -5,6 +5,7 @@ using NSubstitute;
 using NUnit.Framework;
 using PersistEntities;
 using PersistEntities.LearningContent;
+using Shared;
 
 namespace GeneratorTest.DSL;
 
@@ -20,15 +21,15 @@ public class CreateDslUt
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
         
         var inboundObject1 = new LearningSpacePe("1", "", "",
-            1, null, positionX: 0, positionY: 0, inBoundObjects: null, outBoundObjects: null);
+            1, Theme.Campus, null, positionX: 0, positionY: 0, inBoundObjects: null, outBoundObjects: null);
         var inboundObject2 = new LearningSpacePe("2", "", "",
-            1, null, positionX: 0, positionY: 0, inBoundObjects: null, outBoundObjects: null);
+            1, Theme.Campus, null, positionX: 0, positionY: 0, inBoundObjects: null, outBoundObjects: null);
         var inboundObject3 = new LearningSpacePe("3", "", "",
-            1, null, positionX: 0, positionY: 0, inBoundObjects: null, outBoundObjects: null);
+            1, Theme.Campus, null, positionX: 0, positionY: 0, inBoundObjects: null, outBoundObjects: null);
         var inboundObject4 = new LearningSpacePe("4", "", "",
-            1, null, positionX: 0, positionY: 0, inBoundObjects: null, outBoundObjects: null);
+            1, Theme.Campus, null, positionX: 0, positionY: 0, inBoundObjects: null, outBoundObjects: null);
         var inboundObject5 = new LearningSpacePe("5", "", "",
-            1, null, positionX: 0, positionY: 0, inBoundObjects: null, outBoundObjects: null);
+            1, Theme.Campus, null, positionX: 0, positionY: 0, inBoundObjects: null, outBoundObjects: null);
        
         var listLearningSpaces = new List<LearningSpacePe>
         {
@@ -117,7 +118,7 @@ public class CreateDslUt
                 mockElement2
             }
         };
-        var mockLearningSpaceLayout1 = new LearningSpaceLayoutPe(mockLearningElements1, FloorPlanEnumPe.Rectangle2X3);
+        var mockLearningSpaceLayout1 = new LearningSpaceLayoutPe(mockLearningElements1, FloorPlanEnum.R20X308L);
         var mockLearningElements2 = new Dictionary<int, ILearningElementPe>()
         {
             {
@@ -125,7 +126,7 @@ public class CreateDslUt
                 mockElement3
             }
         };
-        var mockLearningSpaceLayout2 = new LearningSpaceLayoutPe(mockLearningElements2, FloorPlanEnumPe.Rectangle2X3);
+        var mockLearningSpaceLayout2 = new LearningSpaceLayoutPe(mockLearningElements2, FloorPlanEnum.R20X308L);
         var mockLearningElements3 = new Dictionary<int, ILearningElementPe>()
         {
             {
@@ -137,13 +138,13 @@ public class CreateDslUt
                 mockElement5
             }
         };
-        var mockLearningSpaceLayout3 = new LearningSpaceLayoutPe(mockLearningElements3, FloorPlanEnumPe.Rectangle2X3);
+        var mockLearningSpaceLayout3 = new LearningSpaceLayoutPe(mockLearningElements3, FloorPlanEnum.R20X308L);
 
-        var mockSpace1 = new LearningSpacePe("Space1", "", "", 1,
+        var mockSpace1 = new LearningSpacePe("Space1", "", "", 1, Theme.Campus,
             mockLearningSpaceLayout1);
-        var mockSpace2 = new LearningSpacePe("Space2", "", "", 1,
+        var mockSpace2 = new LearningSpacePe("Space2", "", "", 1, Theme.Campus,
             mockLearningSpaceLayout2);
-        var mockSpace3 = new LearningSpacePe("Space3", "", "", 1,
+        var mockSpace3 = new LearningSpacePe("Space3", "", "", 1, Theme.Campus,
             mockLearningSpaceLayout3);
         
         
@@ -209,7 +210,7 @@ public class CreateDslUt
 var topic1 = new TopicPe("topic1");
         var topic2 = new TopicPe("topic2");
 
-        var space1 = new LearningSpacePe("ff", "ff", "ff", 5,
+        var space1 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus,
             null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>(), topic1)
         {
@@ -240,9 +241,9 @@ var topic1 = new TopicPe("topic1");
                 }
             }
         };
-        var space2 = new LearningSpacePe("ff2", "ff", "ff", 5, 
+        var space2 = new LearningSpacePe("ff2", "ff", "ff", 5, Theme.Campus,
             null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(), outBoundObjects: new List<IObjectInPathWayPe>(), topic1);
-        var space3 = new LearningSpacePe("ff", "ff", "ff", 5, 
+        var space3 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus,
             null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(), outBoundObjects: new List<IObjectInPathWayPe>(), topic2);
         var condition1 = new PathWayConditionPe(ConditionEnumPe.And, 0, 0, 
             new List<IObjectInPathWayPe>{space1, space2}, null);
@@ -275,7 +276,7 @@ var topic1 = new TopicPe("topic1");
         });
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.LearningWorldJson!.LmsElementIdentifier.Value, Is.EqualTo(learningWorld.Name));
+            Assert.That(systemUnderTest.LearningWorldJson!.WorldName, Is.EqualTo(learningWorld.Name));
             Assert.That(systemUnderTest.ElementsWithFileContent, Is.EquivalentTo(learningElementsSpace1));
             Assert.That(systemUnderTest.ListLearningSpaces, Is.EquivalentTo(learningSpaces));
             Assert.That(systemUnderTest.ListTopics, Is.EquivalentTo(topics));
@@ -311,7 +312,7 @@ var topic1 = new TopicPe("topic1");
         var ele1 = new LearningElementPe("a", content1, "pupup", "g",
             LearningElementDifficultyEnumPe.Easy, workload: 17, points: 2, positionX: 23);
 
-        var space1 = new LearningSpacePe("ff", "ff", "ff", 5,
+        var space1 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus,
             null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),
             outBoundObjects: new List<IObjectInPathWayPe>())
         {

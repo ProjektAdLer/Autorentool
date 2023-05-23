@@ -115,7 +115,7 @@ public class EntityPersistEntityMappingProfileUt
         var source = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus, null,
             positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
             outBoundSpaces: new List<IObjectInPathWay>());
-        var destination = new LearningSpacePe("", "", "", 0);
+        var destination = new LearningSpacePe("", "", "", 0, Theme.Campus);
 
         systemUnderTest.Map(source, destination);
 
@@ -147,7 +147,7 @@ public class EntityPersistEntityMappingProfileUt
             positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
             outBoundSpaces: new List<IObjectInPathWay>());
         source.LearningSpaceLayout.LearningElements[0] = GetTestableElementWithParent(source);
-        var destination = new LearningSpacePe("", "", "", 0);
+        var destination = new LearningSpacePe("", "", "", 0, Theme.Campus);
 
         systemUnderTest.Map(source, destination);
 
@@ -274,7 +274,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.SavePath = NewSavePath;
         destination.LearningSpaces = new List<LearningSpacePe>()
         {
-            new LearningSpacePe(NewName, NewDescription, NewGoals, NewRequiredPoints,
+            new LearningSpacePe(NewName, NewDescription, NewGoals, NewRequiredPoints, Theme.Campus,
                 null, positionX: NewPositionX, positionY: NewPositionY, inBoundObjects: new List<IObjectInPathWayPe>(),
                 outBoundObjects: new List<IObjectInPathWayPe>())
         };
@@ -498,7 +498,7 @@ public class EntityPersistEntityMappingProfileUt
 
     private static LearningSpacePe GetTestableNewSpacePersistEntity()
     {
-        return new LearningSpacePe(NewName, NewDescription, NewGoals, NewRequiredPoints,
+        return new LearningSpacePe(NewName, NewDescription, NewGoals, NewRequiredPoints, Theme.Campus,
             new LearningSpaceLayoutPe(
                 new Dictionary<int, ILearningElementPe>()
                 {
@@ -507,7 +507,7 @@ public class EntityPersistEntityMappingProfileUt
                         GetTestableElementPersistEntity()
                     }
                 },
-                FloorPlanEnumPe.Rectangle2X3), positionX: NewPositionX, positionY: NewPositionY);
+                FloorPlanEnum.R20X308L), positionX: NewPositionX, positionY: NewPositionY);
     }
 
     #endregion

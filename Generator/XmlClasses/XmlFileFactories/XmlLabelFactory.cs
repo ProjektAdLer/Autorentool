@@ -188,7 +188,7 @@ public class XmlLabelFactory : IXmlLabelFactory
         ActivitiesModuleXmlModule.SectionNumber = LabelParentSpaceId;
         ActivitiesModuleXmlModule.Added = CurrentTime;
         ActivitiesModuleXmlModule.Id = LabelId;
-        ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerScore = null;
+        ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerModule = null;
         //Activity Completion is not needed on labels
         ActivitiesModuleXmlModule.Completion = "0";
 

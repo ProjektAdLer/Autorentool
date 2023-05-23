@@ -1,8 +1,8 @@
 namespace Generator.XmlClasses.Entities._activities.Module.xml;
 
-public interface IActivitiesModuleXmlAdlerScore
+public interface IActivitiesModuleXmlAdlerModule
 {
     string ScoreMax { get; set; }
-    string Timecreated { get; set; }
+    string TimeCreated { get; set; }
     string TimeModified { get; set; }
 }

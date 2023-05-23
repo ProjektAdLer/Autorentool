@@ -4,8 +4,7 @@ public interface ILearningElementJson
 {
     int ElementId { get; set; }
     
-    // the lmsElementIdentifierJson has the name of the element
-    LmsElementIdentifierJson LmsElementIdentifier { get; set; }
+    string ElementUUID { get; set; }
     
     string? ElementDescription { get; set; }
     
@@ -14,6 +13,8 @@ public interface ILearningElementJson
     
     // learningElementValue describes the Points or Badge the elem gives
     int ElementMaxScore { get; set; }
+    
+    string ElementModel { get; set; }
     
     // The LearningSpaceParentId deszribes the Space the current Learning Element is in.
     int LearningSpaceParentId { get; set; }
