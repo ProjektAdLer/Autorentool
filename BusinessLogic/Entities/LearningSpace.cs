@@ -3,7 +3,7 @@ using Shared;
 
 namespace BusinessLogic.Entities;
 
-public class LearningSpace : ILearningSpace,IObjectInPathWay
+public class LearningSpace : ILearningSpace
 {
     /// <summary>
     /// Constructor for Automapper. DO NOT USE.

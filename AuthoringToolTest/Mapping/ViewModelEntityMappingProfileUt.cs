@@ -217,7 +217,7 @@ public class ViewModelEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, SavePath,
-            new List<LearningSpace>());
+            new List<ILearningSpace>());
         var destination = new LearningWorldViewModel("", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
@@ -245,7 +245,7 @@ public class ViewModelEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, SavePath,
-            new List<LearningSpace>());
+            new List<ILearningSpace>());
         source.LearningSpaces.Add(new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus, null,
             positionX: PositionX,
             positionY: PositionY));
@@ -288,7 +288,7 @@ public class ViewModelEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, SavePath,
-            new List<LearningSpace>());
+            new List<ILearningSpace>());
         source.LearningSpaces.Add(GetTestableSpace());
         var destination = new LearningWorldViewModel("", "", "", "", "", "");
 
@@ -325,7 +325,7 @@ public class ViewModelEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, SavePath,
-            new List<LearningSpace>());
+            new List<ILearningSpace>());
         var space1 = GetTestableSpace();
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 3, 2);
         source.LearningSpaces.Add(space1);
@@ -434,7 +434,7 @@ public class ViewModelEntityMappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var world1 = new LearningWorld("world1", Shortname, Authors, Language, Description, Goals);
         var world2 = new LearningWorld("world2", Shortname, Authors, Language, Description, Goals);
-        var source = new AuthoringToolWorkspace(new List<LearningWorld> { world1, world2 });
+        var source = new AuthoringToolWorkspace(new List<ILearningWorld> { world1, world2 });
         var destination = new AuthoringToolWorkspaceViewModel();
 
         systemUnderTest.Map(source, destination);

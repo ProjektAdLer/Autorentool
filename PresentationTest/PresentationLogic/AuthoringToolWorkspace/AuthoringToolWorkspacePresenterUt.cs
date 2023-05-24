@@ -57,6 +57,7 @@ public class AuthoringToolWorkspacePresenterUt
     {
         var workspaceVm = new AuthoringToolWorkspaceViewModel();
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        selectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
         var worldPresenter = CreateLearningWorldPresenter(selectedViewModelsProvider: selectedViewModelsProvider);
         var world1 = new LearningWorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo",
             "Foo");
@@ -116,26 +117,6 @@ public class AuthoringToolWorkspacePresenterUt
         presentationLogic.Received().DeleteLearningWorld(workspaceVm, world1);
     }
 
-    [Test]
-    public void DeleteSelectedLearningWorld_SetsDeletedUnsavedWorld()
-    {
-        var workspaceVm = new AuthoringToolWorkspaceViewModel();
-        var world = new LearningWorldViewModel("Foo", "Foo", "Foo", "Foo", "Foo",
-            "Foo")
-        {
-            UnsavedChanges = true
-        };
-        workspaceVm._learningWorlds.Add(world);
-        
-        var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        var systemUnderTest = CreatePresenterForTesting(workspaceVm, selectedViewModelsProvider: selectedViewModelsProvider);
-        systemUnderTest.SetSelectedLearningWorld(world);
-        selectedViewModelsProvider.Received(1).SetLearningWorld(world, null);
-        selectedViewModelsProvider.LearningWorld.Returns(world);
-
-        systemUnderTest.DeleteSelectedLearningWorld();
-        Assert.That(systemUnderTest.DeletedUnsavedWorld, Is.EqualTo(world));
-    }
 
     [Test]
     public void DeleteSelectedLearningWorld_MutatesSelectionInWorkspaceViewModel()
@@ -155,7 +136,8 @@ public class AuthoringToolWorkspacePresenterUt
                 Arg.Any<LearningWorldViewModel>()))
             .Do(y =>
             {
-                workspaceVm.RemoveLearningWorld(selectedViewModelsProvider.LearningWorld!);
+                workspaceVm.LearningWorlds.Remove(selectedViewModelsProvider.LearningWorld!);
+                //workspaceVm.RemoveLearningWorld(selectedViewModelsProvider.LearningWorld!);
                 selectedViewModelsProvider.SetLearningWorld(((AuthoringToolWorkspaceViewModel)y.Args()[0]).LearningWorlds.LastOrDefault(), null);
                 selectedViewModelsProvider.LearningWorld.Returns(((AuthoringToolWorkspaceViewModel)y.Args()[0])
                     .LearningWorlds.LastOrDefault());
@@ -222,11 +204,14 @@ public class AuthoringToolWorkspacePresenterUt
     [Test]
     public void SaveSelectedLearningWorldAsync_ThrowsIfSelectedWorldNull()
     {
-        var presentationLogic = Substitute.For<IPresentationLogic>();
         var viewModel = new AuthoringToolWorkspaceViewModel();
+        var mockPresentationLogic = Substitute.For<IPresentationLogic>();
+        var mockSelectedViewModelProvider = Substitute.For<ISelectedViewModelsProvider>();
+        mockSelectedViewModelProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
 
         var systemUnderTest =
-            CreatePresenterForTesting(presentationLogic: presentationLogic, authoringToolWorkspaceVm: viewModel);
+            CreatePresenterForTesting(presentationLogic: mockPresentationLogic, authoringToolWorkspaceVm: viewModel,
+                selectedViewModelsProvider: mockSelectedViewModelProvider);
 
         Assert.ThrowsAsync<ApplicationException>(async () => await systemUnderTest.SaveSelectedLearningWorldAsync());
     }

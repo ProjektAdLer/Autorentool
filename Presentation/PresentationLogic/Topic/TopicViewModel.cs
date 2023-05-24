@@ -9,7 +9,7 @@ public class TopicViewModel : ITopicViewModel
         Name = string.Empty;
     }
 
-    public TopicViewModel(string name, bool unsavedChanges)
+    public TopicViewModel(string name, bool unsavedChanges = false)
     {
         Id = Guid.NewGuid();
         UnsavedChanges = unsavedChanges;

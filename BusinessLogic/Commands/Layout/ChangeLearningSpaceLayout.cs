@@ -7,7 +7,7 @@ namespace BusinessLogic.Commands.Layout;
 public class ChangeLearningSpaceLayout : IChangeLearningSpaceLayout
 {
     public string Name => nameof(ChangeLearningSpaceLayout);
-    internal LearningSpace LearningSpace { get; }
+    internal ILearningSpace LearningSpace { get; }
     public LearningWorld LearningWorld { get; }
     internal FloorPlanEnum FloorPlanName { get; }
     internal Action<LearningWorld> MappingAction { get; }
@@ -15,7 +15,7 @@ public class ChangeLearningSpaceLayout : IChangeLearningSpaceLayout
     private IMemento? _mementoSpace;
     private IMemento? _mementoWorld;
 
-    public ChangeLearningSpaceLayout(LearningSpace learningSpace, LearningWorld learningWorld,
+    public ChangeLearningSpaceLayout(ILearningSpace learningSpace, LearningWorld learningWorld,
         FloorPlanEnum floorPlanName, Action<LearningWorld> mappingAction)
     {
         LearningSpace = learningSpace;

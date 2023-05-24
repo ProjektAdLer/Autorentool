@@ -21,7 +21,7 @@ public class LearningWorldUt
         var space1 = new LearningSpace("ff", "ff", "ff", 5, Theme.Campus);
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 2, 3);
         var pathWay = new LearningPathway(space1, pathWayCondition);
-        var learningSpaces = new List<LearningSpace> { space1 };
+        var learningSpaces = new List<ILearningSpace> { space1 };
         var pathWayConditions = new List<PathWayCondition> { pathWayCondition };
         var pathWays = new List<LearningPathway> { pathWay };
         var topic1 = new Topic("topic1");
@@ -64,7 +64,7 @@ public class LearningWorldUt
         var space1 = new LearningSpace("ff", "ff", "ff", 5, Theme.Campus);
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 2, 3);
         var pathWayConditions = new List<PathWayCondition>{ pathWayCondition };
-        var learningSpaces = new List<LearningSpace> { space1 };
+        var learningSpaces = new List<ILearningSpace> { space1 };
         var pathWay = new LearningPathway(space1, pathWayCondition);
         var pathWays = new List<LearningPathway> { pathWay };
         var topic1 = new Topic("topic1");
@@ -160,7 +160,7 @@ public class LearningWorldUt
         const string goals = "learn very many things";
         const string savePath = "C:\\Users\\Ben\\Documents\\test";
         var space1 = new LearningSpace("ff", "ff", "ff", 5, Theme.Campus);
-        var learningSpaces = new List<LearningSpace> { space1 };
+        var learningSpaces = new List<ILearningSpace> { space1 };
         
         var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, savePath, learningSpaces);
 

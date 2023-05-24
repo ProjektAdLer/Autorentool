@@ -9,7 +9,7 @@ public class PlaceLearningElementInLayoutFromUnplaced : IPlaceLearningElementInL
 {
     public string Name => nameof(PlaceLearningElementInLayoutFromUnplaced);
     internal LearningWorld LearningWorld { get; }
-    internal LearningSpace LearningSpace { get; }
+    internal ILearningSpace LearningSpace { get; }
     internal int NewSlotIndex { get; }
     internal ILearningElement LearningElement { get; }
     internal Action<LearningWorld> MappingAction { get; }

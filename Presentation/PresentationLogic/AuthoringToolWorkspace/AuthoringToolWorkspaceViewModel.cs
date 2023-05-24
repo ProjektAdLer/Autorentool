@@ -15,14 +15,14 @@ public class AuthoringToolWorkspaceViewModel : IAuthoringToolWorkspaceViewModel
     /// </summary>
     public AuthoringToolWorkspaceViewModel()
     {
-        _learningWorlds = new List<LearningWorldViewModel>();
+        _learningWorlds = new List<ILearningWorldViewModel>();
         EditDialogInitialValues = null;
     }
 
-    internal List<LearningWorldViewModel> _learningWorlds;
+    internal List<ILearningWorldViewModel> _learningWorlds;
     
     /// <inheritdoc cref="IAuthoringToolWorkspaceViewModel.LearningWorlds"/>
-    public IList<LearningWorldViewModel> LearningWorlds => _learningWorlds;
+    public IList<ILearningWorldViewModel> LearningWorlds => _learningWorlds;
 
     /// <inheritdoc cref="ILearningWorldNamesProvider.WorldNames"/>
     public IEnumerable<(Guid, string)> WorldNames => _learningWorlds.Select(world => (world.Id, world.Name));

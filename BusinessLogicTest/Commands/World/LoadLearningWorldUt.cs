@@ -13,7 +13,7 @@ public class LoadLearningWorldUt
     [Test]
     public void Execute_LoadsLearningWorld()
     {
-        var authoringToolWorkspace = new AuthoringToolWorkspace(new List<LearningWorld>());
+        var authoringToolWorkspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var world = new LearningWorld("a", "b", "b", "b", "b", "b");
         const string filepath = "c:\\temp\\test";
@@ -42,7 +42,7 @@ public class LoadLearningWorldUt
     [Test]
     public void Execute_LoadsLearningWorld_WithStream()
     {
-        var authoringToolWorkspace = new AuthoringToolWorkspace(new List<LearningWorld>());
+        var authoringToolWorkspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var world = new LearningWorld("a", "b", "b", "b", "b", "b");
         var stream = Substitute.For<Stream>();
@@ -71,7 +71,7 @@ public class LoadLearningWorldUt
     public void Undo_MementoIsNull_ThrowsException()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var authoringToolWorkspace = new AuthoringToolWorkspace(new List<LearningWorld>());
+        var authoringToolWorkspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
         bool actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
 
@@ -89,7 +89,7 @@ public class LoadLearningWorldUt
     public void UndoRedo_UndoesAndRedoesLoadLearningWorld()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
-        var authoringToolWorkspace = new AuthoringToolWorkspace(new List<LearningWorld>());
+        var authoringToolWorkspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
         bool actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");        

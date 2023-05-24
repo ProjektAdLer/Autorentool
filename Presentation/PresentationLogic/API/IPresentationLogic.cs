@@ -33,8 +33,7 @@ public interface IPresentationLogic
     /// <param name="learningWorldViewModel"></param>
     /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
     /// <returns>Filepath to the new backup file</returns>
-    Task<string> ConstructBackupAsync(LearningWorldViewModel learningWorldViewModel);
-
+    Task<string> ConstructBackupAsync(ILearningWorldViewModel learningWorldViewModel);
     bool CanUndo { get; }
     bool CanRedo { get; }
     void UndoCommand();
@@ -79,8 +78,7 @@ public interface IPresentationLogic
     /// </summary>
     /// <param name="authoringToolWorkspaceVm"></param>
     /// <param name="worldVm">The learning world to delete.</param>
-    void DeleteLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, LearningWorldViewModel worldVm);
-
+    void DeleteLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, ILearningWorldViewModel worldVm);
     /// <summary>
     /// Asks user for path and saves <see cref="LearningWorldViewModel"/> to disk.
     /// </summary>
@@ -90,8 +88,7 @@ public interface IPresentationLogic
     /// <exception cref="NotImplementedException">Thrown when we are not running in Electron.</exception>
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
-    Task SaveLearningWorldAsync(LearningWorldViewModel learningWorldViewModel);
-
+    Task SaveLearningWorldAsync(ILearningWorldViewModel learningWorldViewModel);
     /// <summary>
     /// Asks user for path and loads <see cref="LearningWorldViewModel"/> from disk.
     /// </summary>

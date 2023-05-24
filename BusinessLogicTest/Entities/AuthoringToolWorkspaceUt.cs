@@ -12,7 +12,7 @@ public class AuthoringToolWorkspaceUt
     {
         var world1 = new LearningWorld("foo", "", "f", "", "", "");
         var world2 = new LearningWorld("bar", "", "f", "", "", "");
-        var learningWorlds = new List<LearningWorld>
+        var learningWorlds = new List<ILearningWorld>
         {
             world1, world2
         };
@@ -31,7 +31,7 @@ public class AuthoringToolWorkspaceUt
     {
         var world1 = new LearningWorld("foo", "", "f", "", "", "");
         var world2 = new LearningWorld("bar", "", "f", "", "", "");
-        var learningWorlds = new List<LearningWorld>
+        var learningWorlds = new List<ILearningWorld>
         {
             world1, world2
         };
@@ -65,7 +65,7 @@ public class AuthoringToolWorkspaceUt
     {
         var fakeMemento = Substitute.For<IMemento>();
         
-        var systemUnderTest = new AuthoringToolWorkspace(new List<LearningWorld>());
+        var systemUnderTest = new AuthoringToolWorkspace(new List<ILearningWorld>());
         
         Assert.That(() => systemUnderTest.RestoreMemento(fakeMemento), Throws.ArgumentException);
     }

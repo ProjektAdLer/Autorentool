@@ -9,7 +9,7 @@ public class CreatePathWayCondition : ICreatePathWayCondition
     internal LearningWorld LearningWorld { get; }
     internal PathWayCondition PathWayCondition { get; }
     internal IObjectInPathWay? SourceObject { get; }
-    internal LearningSpace? TargetObject { get; }
+    internal ILearningSpace? TargetObject { get; }
     internal readonly Action<LearningWorld> MappingAction;
     private IMemento? _memento;
 

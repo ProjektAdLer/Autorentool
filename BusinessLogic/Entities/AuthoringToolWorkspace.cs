@@ -10,13 +10,13 @@ public class AuthoringToolWorkspace : IOriginator
     [UsedImplicitly]
     private AuthoringToolWorkspace()
     {
-        LearningWorlds = new List<LearningWorld>();
+        LearningWorlds = new List<ILearningWorld>();
     }
-    public AuthoringToolWorkspace(List<LearningWorld> learningWorlds)
+    public AuthoringToolWorkspace(List<ILearningWorld> learningWorlds)
     {
         LearningWorlds = learningWorlds;
     }
-    public List<LearningWorld> LearningWorlds { get; set; }
+    public List<ILearningWorld> LearningWorlds { get; set; }
     
     public IMemento GetMemento()
     {
@@ -36,6 +36,6 @@ public class AuthoringToolWorkspace : IOriginator
         {
             LearningWorlds = workspace.LearningWorlds.ToList();
         }
-        internal List<LearningWorld> LearningWorlds { get; }
+        internal List<ILearningWorld> LearningWorlds { get; }
     }
 }

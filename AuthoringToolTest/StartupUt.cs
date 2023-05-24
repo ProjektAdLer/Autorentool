@@ -176,10 +176,12 @@ public class StartupUt
     {
         ConfigureServicesCoreTest(requiredType);
     }
+    
     private static readonly Type[] ConfigureCommandFactoriesRequiredTypes =
     {
         typeof(IConditionCommandFactory), typeof(IElementCommandFactory), typeof(ILayoutCommandFactory),
-        typeof(IPathwayCommandFactory), typeof(ISpaceCommandFactory), typeof(ITopicCommandFactory), typeof(IWorldCommandFactory)
+        typeof(IPathwayCommandFactory), typeof(ISpaceCommandFactory), typeof(ITopicCommandFactory),
+        typeof(IWorldCommandFactory), typeof(IBatchCommandFactory)
     };
 
     [Test]

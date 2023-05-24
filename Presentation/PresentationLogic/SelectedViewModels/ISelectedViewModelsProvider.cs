@@ -7,11 +7,11 @@ namespace Presentation.PresentationLogic.SelectedViewModels;
 
 public interface ISelectedViewModelsProvider : INotifyPropertyChanged
 {
-    LearningWorldViewModel? LearningWorld { get; }
+    ILearningWorldViewModel? LearningWorld { get; }
     ISelectableObjectInWorldViewModel? LearningObjectInPathWay { get; }
     ILearningElementViewModel? LearningElement { get; }
     
-    void SetLearningWorld(LearningWorldViewModel? learningWorld, ICommand? command);
+    void SetLearningWorld(ILearningWorldViewModel? learningWorld, ICommand? command);
     void SetLearningObjectInPathWay(ISelectableObjectInWorldViewModel? learningObjectInPathWay, ICommand? command);
     void SetLearningElement(ILearningElementViewModel? learningElement, ICommand? command);
 }

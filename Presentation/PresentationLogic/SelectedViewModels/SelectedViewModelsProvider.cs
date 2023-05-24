@@ -9,7 +9,7 @@ namespace Presentation.PresentationLogic.SelectedViewModels;
 public class SelectedViewModelsProvider : ISelectedViewModelsProvider
 {
     private readonly IOnUndoRedo _onUndoRedo;
-    private LearningWorldViewModel? _learningWorld;
+    private ILearningWorldViewModel? _learningWorld;
     private ISelectableObjectInWorldViewModel? _learningObjectInPathWay;
     private ILearningElementViewModel? _learningElement;
 
@@ -65,7 +65,7 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
         }
     }
 
-    public LearningWorldViewModel? LearningWorld
+    public ILearningWorldViewModel? LearningWorld
     {
         get => _learningWorld;
         set => SetField(ref _learningWorld, value);
@@ -83,7 +83,7 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
         set => SetField(ref _learningElement, value);
     }
 
-    public void SetLearningWorld(LearningWorldViewModel? learningWorld, ICommand? command)
+    public void SetLearningWorld(ILearningWorldViewModel? learningWorld, ICommand? command)
     {
         if (command is not null)
             _undoStack.Push(

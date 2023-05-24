@@ -6,7 +6,7 @@ public class RemoveLearningElementFromLayout : IRemoveLearningElementFromLayout
 {
     public string Name => nameof(RemoveLearningElementFromLayout);
     internal LearningWorld LearningWorld { get; }
-    internal LearningSpace LearningSpace { get; }
+    internal ILearningSpace LearningSpace { get; }
     internal ILearningElement LearningElement { get; }
     internal Action<LearningWorld> MappingAction { get; }
     private IMemento? _mementoWorld;

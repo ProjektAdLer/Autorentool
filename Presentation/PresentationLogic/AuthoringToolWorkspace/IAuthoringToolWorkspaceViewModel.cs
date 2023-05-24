@@ -12,7 +12,7 @@ public interface IAuthoringToolWorkspaceViewModel : INotifyPropertyChanged, ILea
     /// <summary>
     /// Read-only list of the LearningWorlds contained in the Workspace ViewModel.
     /// </summary>
-    IList<LearningWorldViewModel> LearningWorlds { get; }
+    IList<ILearningWorldViewModel> LearningWorlds { get; }
 
     
     /// <summary>

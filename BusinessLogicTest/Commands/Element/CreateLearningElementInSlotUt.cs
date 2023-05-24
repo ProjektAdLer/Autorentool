@@ -180,7 +180,7 @@ public class TestParameter
         WorldParent = new LearningWorld("q", "r", "s", "t", "u", "o")
         {
             UnsavedChanges = false,
-            LearningSpaces = new List<LearningSpace>
+            LearningSpaces = new List<ILearningSpace>
             {
                 SpaceParent
             }

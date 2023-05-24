@@ -31,9 +31,9 @@ public interface ISpaceCommandFactory
     /// <summary>
     /// Creates a command to edit a learning space.
     /// </summary>
-    IEditLearningSpace GetEditCommand(LearningSpace learningSpace, string name,
+    IEditLearningSpace GetEditCommand(ILearningSpace learningSpace, string name,
         string description, string goals, int requiredPoints, Theme theme, Entities.Topic? topic,
-        Action<LearningSpace> mappingAction);
+        Action<ILearningSpace> mappingAction);
 
     /// <summary>
     /// Creates a command to load a learning space.

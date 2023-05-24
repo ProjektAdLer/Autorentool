@@ -8,7 +8,7 @@ public static class EntityProvider
 {
     public static AuthoringToolWorkspace GetAuthoringToolWorkspace()
     {
-        return new AuthoringToolWorkspace(new List<LearningWorld>());
+        return new AuthoringToolWorkspace(new List<ILearningWorld>());
     }
     public static LearningWorld GetLearningWorld()
     {

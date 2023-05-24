@@ -5,7 +5,7 @@ namespace BusinessLogic.Commands.Layout;
 
 public class LayoutCommandFactory : ILayoutCommandFactory
 {
-    public IChangeLearningSpaceLayout GetChangeCommand(LearningSpace learningSpace, LearningWorld learningWorld,
+    public IChangeLearningSpaceLayout GetChangeCommand(ILearningSpace learningSpace, LearningWorld learningWorld,
         FloorPlanEnum floorPlanName, Action<LearningWorld> mappingAction) =>
         new ChangeLearningSpaceLayout(learningSpace, learningWorld, floorPlanName, mappingAction);
 

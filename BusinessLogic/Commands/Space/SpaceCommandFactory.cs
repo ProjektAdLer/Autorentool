@@ -19,8 +19,9 @@ public class SpaceCommandFactory : ISpaceCommandFactory
     public IDeleteLearningSpace GetDeleteCommand(LearningWorld learningWorld, LearningSpace learningSpace,
         Action<LearningWorld> mappingAction) => new DeleteLearningSpace(learningWorld, learningSpace, mappingAction);
 
-    public IEditLearningSpace GetEditCommand(LearningSpace learningSpace, string name, string description, string goals,
-        int requiredPoints, Theme theme, Entities.Topic? topic, Action<LearningSpace> mappingAction) =>
+    public IEditLearningSpace GetEditCommand(ILearningSpace learningSpace, string name, string description,
+        string goals,
+        int requiredPoints, Theme theme, Entities.Topic? topic, Action<ILearningSpace> mappingAction) =>
         new EditLearningSpace(learningSpace, name, description, goals, requiredPoints, theme, topic, mappingAction);
 
     public ILoadLearningSpace GetLoadCommand(LearningWorld learningWorld, string filepath, IBusinessLogic businessLogic,

@@ -28,4 +28,5 @@ public interface ILearningWorldViewModel : ISerializableViewModel, IDisplayableL
     IObjectInPathWayViewModel? OnHoveredObjectInPathWay { get; set; }
     bool ShowingLearningSpaceView { get; set; }
     ICollection<ILearningElementViewModel> UnplacedLearningElements { get; set; }
+    bool InternalUnsavedChanges { get; }
 }

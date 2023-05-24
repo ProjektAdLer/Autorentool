@@ -126,6 +126,29 @@ public class ViewModelEntityMappingProfile : Profile
         CreateMap<LearningPathway, ILearningPathWayViewModel>()
             .As<LearningPathwayViewModel>();
         
+        CreateMap<LearningSpaceViewModel, ILearningSpace>()
+            .EqualityComparison((vm, intf) => vm.Id.Equals(intf.Id))
+            .As<LearningSpace>();
+        CreateMap<ILearningElementViewModel, ILearningElement>()
+            .EqualityComparison((vm, intf) => vm.Id.Equals(intf.Id))
+            .As<LearningElement>();
+        CreateMap<ILearningSpaceViewModel, ILearningSpace>()
+            .EqualityComparison((vm, intf) => vm.Id.Equals(intf.Id))
+            .As<LearningSpace>();
+        CreateMap<ILearningSpace, ILearningSpaceViewModel>()
+            .As<LearningSpaceViewModel>();
+        
+        CreateMap<LearningWorld, ILearningWorldViewModel>()
+            .EqualityComparison((e, intf) => e.Id.Equals(intf.Id))
+            .As<LearningWorldViewModel>();
+        CreateMap<LearningWorldViewModel, ILearningWorld>()
+            .EqualityComparison((vm, intf) => vm.Id.Equals(intf.Id))
+            .As<LearningWorld>();
+        CreateMap<ILearningWorld, ILearningWorldViewModel>()
+            .As<LearningWorldViewModel>();
+        CreateMap<ILearningWorldViewModel, ILearningWorld>()
+            .As<LearningWorld>();
+        
         CreateMap<LearningElementViewModel, ILearningElement>().As<LearningElement>();
         CreateMap<LearningElementViewModel, LearningElement>()
             .ForMember(x => x.Parent, opt => opt.Ignore())
@@ -150,6 +173,12 @@ public class ViewModelEntityMappingProfile : Profile
             .ReverseMap()
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ForMember(x => x.Parent, opt => opt.Ignore());
+        CreateMap<ILearningElementViewModel, LearningElement>()
+            .EqualityComparison((x, y) => x.Id == y.Id)
+            .ForMember(x => x.Parent, opt => opt.Ignore())
+            .ReverseMap()
+            .EqualityComparison((x, y) => x.Id == y.Id)
+            .ForMember(x => x.Parent, opt => opt.Ignore());
     }
 
     private void CreateLearningSpaceMap()
@@ -160,6 +189,7 @@ public class ViewModelEntityMappingProfile : Profile
             .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
             .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
             .IncludeBase<IObjectInPathWay, IObjectInPathWayViewModel>()
+            .IncludeBase<ILearningSpace, ILearningSpaceViewModel>()
             .EqualityComparison((x, y) => x.Id == y.Id)
             .AfterMap((s, d) =>
             {
@@ -181,6 +211,36 @@ public class ViewModelEntityMappingProfile : Profile
                 }
 
             });
+       CreateMap<ILearningSpaceViewModel, LearningSpace>() 
+            .IncludeBase<IObjectInPathWayViewModel, IObjectInPathWay>()
+            .IncludeBase<ILearningSpaceViewModel, ILearningSpace>()
+            .EqualityComparison((x, y) => x.Id == y.Id)
+            .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+            .AfterMap((s, d) =>
+            {
+                foreach (var element in d.ContainedLearningElements)
+                {
+                    element.Parent = d;
+                }
+
+            });
+       CreateMap<ILearningSpace, LearningSpaceViewModel>()
+           .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
+           .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
+           .ForMember(x => x.ContainedLearningElements, opt => opt.Ignore())
+           .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
+           .IncludeBase<IObjectInPathWay, IObjectInPathWayViewModel>()
+           .IncludeBase<ILearningSpace, ILearningSpaceViewModel>()
+           .EqualityComparison((x, y) => x.Id == y.Id)
+           .AfterMap((s, d) =>
+           {
+               foreach (var element in d.ContainedLearningElements)
+               {
+                   element.Parent = d;
+               }
+           });
     }
 
     private void CreatePathwayMaps()
@@ -233,7 +293,58 @@ public class ViewModelEntityMappingProfile : Profile
                         .Select(x => x.TargetObject).ToList();
                 }
             })
+            .IncludeBase<ILearningWorld, ILearningWorldViewModel>()
             .ReverseMap()
+            .IncludeBase<ILearningWorldViewModel, ILearningWorld>()
+            .EqualityComparison((x, y) => x.Id == y.Id)
+            .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
+            .ForMember(x => x.SelectableWorldObjects, opt => opt.Ignore())
+            .AfterMap((s, d) =>
+            {
+                foreach (var pathWay in d.LearningPathways)
+                {
+                    pathWay.SourceObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.SourceObject?.Id);
+                    pathWay.TargetObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.TargetObject?.Id);
+                }
+            })
+            .AfterMap((s, d) =>
+            {
+                foreach (var pathWayObject in d.ObjectsInPathWays)
+                {
+                    pathWayObject.InBoundObjects = d.LearningPathways.Where(x => x.TargetObject.Id == pathWayObject.Id)
+                        .Select(x => x.SourceObject).ToList();
+                    pathWayObject.OutBoundObjects = d.LearningPathways.Where(x => x.SourceObject.Id == pathWayObject.Id)
+                        .Select(x => x.TargetObject).ToList();
+                }
+            });
+        
+        CreateMap<ILearningWorld, LearningWorldViewModel>()
+            .EqualityComparison((x, y) => x.Id == y.Id)
+            .ForMember(x => x.OnHoveredObjectInPathWay, opt => opt.Ignore())
+            .ForMember(x => x.ShowingLearningSpaceView, opt => opt.Ignore())
+            .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
+            .ForMember(x => x.SelectableWorldObjects, opt => opt.Ignore())
+            .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
+            .AfterMap((s, d) =>
+            {
+                foreach (var pathWay in d.LearningPathWays)
+                {
+                    pathWay.SourceObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.SourceObject?.Id);
+                    pathWay.TargetObject = d.ObjectsInPathWays.First(x => x.Id == pathWay.TargetObject?.Id);
+                }
+            })
+            .AfterMap((s, d) =>
+            {
+                foreach (var pathWayObject in d.ObjectsInPathWays)
+                {
+                    pathWayObject.InBoundObjects = d.LearningPathWays.Where(x => x.TargetObject.Id == pathWayObject.Id)
+                        .Select(x => x.SourceObject).ToList();
+                    pathWayObject.OutBoundObjects = d.LearningPathWays.Where(x => x.SourceObject.Id == pathWayObject.Id)
+                        .Select(x => x.TargetObject).ToList();
+                }
+            });
+
+        CreateMap<ILearningWorldViewModel, LearningWorld>()
             .EqualityComparison((x, y) => x.Id == y.Id)
             .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
             .ForMember(x => x.SelectableWorldObjects, opt => opt.Ignore())

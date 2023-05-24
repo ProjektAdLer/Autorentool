@@ -11,7 +11,7 @@ public interface ILayoutCommandFactory
     /// <summary>
     /// Creates a command to change the layout of a learning space.
     /// </summary>
-    IChangeLearningSpaceLayout GetChangeCommand(LearningSpace learningSpace, LearningWorld learningWorld,
+    IChangeLearningSpaceLayout GetChangeCommand(ILearningSpace learningSpace, LearningWorld learningWorld,
         FloorPlanEnum floorPlanName, Action<LearningWorld> mappingAction);
 
     /// <summary>

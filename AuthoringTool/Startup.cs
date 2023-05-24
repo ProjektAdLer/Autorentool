@@ -233,6 +233,7 @@ public class Startup
         services.AddSingleton<ISpaceCommandFactory, SpaceCommandFactory>();
         services.AddSingleton<ITopicCommandFactory, TopicCommandFactory>();
         services.AddSingleton<IWorldCommandFactory, WorldCommandFactory>();
+        services.AddSingleton<IBatchCommandFactory, BatchCommandFactory>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)

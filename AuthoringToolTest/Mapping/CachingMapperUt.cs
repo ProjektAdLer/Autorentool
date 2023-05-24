@@ -23,7 +23,7 @@ public class CachingMapperUt
     [Test]
     public void MapAuthoringToolWorkspaceEntityToViewModel_MapperReceivedCallWithCorrectParameters()
     {
-        var entity = new AuthoringToolWorkspace(new List<LearningWorld>());
+        var entity = new AuthoringToolWorkspace(new List<ILearningWorld>());
         var mockViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         var mapper = Substitute.For<IMapper>();
         var logger = Substitute.For<ILogger<CachingMapper>>();
@@ -38,7 +38,7 @@ public class CachingMapperUt
     [Test]
     public void MapAuthoringToolWorkspaceEntityToViewModel_MapsLearningWorldToViewModel()
     {
-        var workspace = new AuthoringToolWorkspace(new List<LearningWorld>());
+        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
         var workspaceViewModel = new AuthoringToolWorkspaceViewModel();
         var worldEntity = new LearningWorld("n", "s", "a", "l", "d", "g");
         workspace.LearningWorlds.Add(worldEntity);
@@ -63,7 +63,7 @@ public class CachingMapperUt
     [Test]
     public void MapAuthoringToolWorkspaceEntityToViewModel_MapsWorldToTheSameViewModelAfterFirstCall()
     {
-        var workspace = new AuthoringToolWorkspace(new List<LearningWorld>());
+        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
         var workspaceViewModel = new AuthoringToolWorkspaceViewModel();
         var worldEntity = new LearningWorld("n", "s", "a", "l", "d", "g");
         workspace.LearningWorlds.Add(worldEntity);
@@ -354,7 +354,7 @@ public class CachingMapperUt
     public void OnRemovedCommandsFromStacksInvoked_UnusedViewModelsAreRemoved()
     {
         var worldEntity = new LearningWorld("n","s","a","l","d","g");
-        var workspace = new AuthoringToolWorkspace(new List<LearningWorld>(){worldEntity});
+        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld> {worldEntity});
         var workspaceViewModel = new AuthoringToolWorkspaceViewModel();
         var spaceEntity = new LearningSpace("n", "d", "g", 5, Theme.Campus,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X308L));

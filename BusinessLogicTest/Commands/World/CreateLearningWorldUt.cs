@@ -10,7 +10,7 @@ public class CreateLearningWorldUt
     [Test]
     public void Execute_CreatesLearningWorld()
     {
-        var workspace = new AuthoringToolWorkspace(new List<LearningWorld>());
+        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
         var name = "n";
         var shortname = "sn";
         var authors = "a";
@@ -47,7 +47,7 @@ public class CreateLearningWorldUt
     {
         var world1 = new LearningWorld("Foo", "", "", "", "", "");
         var world2 = new LearningWorld("Foo(1)", "", "", "", "", "");
-        var workspace = new AuthoringToolWorkspace(new List<LearningWorld> { world1, world2 });
+        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld> { world1, world2 });
 
         var systemUnderTest = new CreateLearningWorld(workspace, "Foo", "", "", "", "", "", _ => { });
         
@@ -58,7 +58,7 @@ public class CreateLearningWorldUt
     [Test]
     public void Execute_AddsLearningWorld()
     {
-        var workspace = new AuthoringToolWorkspace(new List<LearningWorld>());
+        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
         var world = new LearningWorld("n", "sn", "a", "l", "d", "g");
         bool actionWasInvoked = false;
         Action<AuthoringToolWorkspace> mappingAction = _ => actionWasInvoked = true;
@@ -78,7 +78,7 @@ public class CreateLearningWorldUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var workspace = new AuthoringToolWorkspace(new List<LearningWorld>());
+        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
         var name = "n";
         var shortname = "sn";
         var authors = "a";
@@ -100,7 +100,7 @@ public class CreateLearningWorldUt
     [Test]
     public void UndoRedo_UndoesAndRedoesCreateLearningSpace()
     {
-        var workspace = new AuthoringToolWorkspace(new List<LearningWorld>());
+        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         workspace.LearningWorlds.Add(world);
         var name = "n";

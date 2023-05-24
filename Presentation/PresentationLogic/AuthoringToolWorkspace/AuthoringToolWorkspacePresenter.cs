@@ -24,7 +24,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         _logger = logger;
         _shutdownManager = shutdownManager;
         _dialogService = dialogService;
-        DeletedUnsavedWorld = null;
         _selectedViewModelsProvider = selectedViewModelsProvider;
         if (presentationLogic.RunningElectron)
             //register callback so we can check for unsaved data on quit
@@ -42,8 +41,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     private readonly IDialogService _dialogService;
 
     public bool LearningWorldSelected => _selectedViewModelsProvider.LearningWorld != null;
-
-    public LearningWorldViewModel? DeletedUnsavedWorld { get; set; }
 
     public event Action? OnForceViewUpdate;
 
@@ -86,7 +83,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         var learningWorld = _selectedViewModelsProvider.LearningWorld;
         if (learningWorld == null) return;
         _presentationLogic.DeleteLearningWorld(AuthoringToolWorkspaceVm, learningWorld);
-        if (learningWorld.UnsavedChanges) DeletedUnsavedWorld = learningWorld;
     }
 
     public void AddLearningWorld(LearningWorldViewModel learningWorld)
@@ -99,7 +95,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         await _presentationLogic.LoadLearningWorldAsync(AuthoringToolWorkspaceVm);
     }
 
-    internal async Task SaveLearningWorldAsync(LearningWorldViewModel world)
+    internal async Task SaveLearningWorldAsync(ILearningWorldViewModel world)
     {
         await _presentationLogic.SaveLearningWorldAsync(world);
     }
@@ -143,7 +139,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         }
     }
 
-    private static bool WorldHasUnsavedChanges(LearningWorldViewModel world)
+    private static bool WorldHasUnsavedChanges(ILearningWorldViewModel world)
     {
         return world.UnsavedChanges;
     }

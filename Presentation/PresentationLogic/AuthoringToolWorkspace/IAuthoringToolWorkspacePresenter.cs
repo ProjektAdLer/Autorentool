@@ -6,7 +6,6 @@ public interface IAuthoringToolWorkspacePresenter
 {
     IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get; }
     bool LearningWorldSelected { get; }
-    LearningWorldViewModel? DeletedUnsavedWorld { get; set; }
 
     event Action? OnForceViewUpdate;
 

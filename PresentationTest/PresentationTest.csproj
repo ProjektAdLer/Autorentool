@@ -37,6 +37,7 @@
     <ItemGroup>
       <ProjectReference Include="..\AuthoringTool\AuthoringTool.csproj" />
       <ProjectReference Include="..\Presentation\Presentation.csproj" />
+      <ProjectReference Include="..\TestHelpers\TestHelpers.csproj" />
     </ItemGroup>
 
     <ItemGroup>

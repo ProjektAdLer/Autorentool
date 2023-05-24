@@ -29,7 +29,9 @@ public class LearningWorldPresenterUt
     [Test]
     public void EditLearningWorld_ThrowsExceptionIfLearningWorldIsNull()
     {
-        var systemUnderTest = CreatePresenterForTesting();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
         var ex = Assert.Throws<ApplicationException>(() =>
             systemUnderTest.EditLearningWorld("n", "s", "a", "l", "d", "g"));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
@@ -54,7 +56,9 @@ public class LearningWorldPresenterUt
     [Test]
     public void SetSelectedLearningObject_SelectedLearningWorldIsNull_ThrowsException()
     {
-        var systemUnderTest = CreatePresenterForTesting();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
         var space = new LearningSpaceViewModel("a", "f", "f", Theme.Campus, 4);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetSelectedLearningObject(space));
@@ -113,7 +117,9 @@ public class LearningWorldPresenterUt
     [Test]
     public void EditSelectedLearningSpace_SelectedLearningWorldIsNull_ThrowsException()
     {
-        var systemUnderTest = CreatePresenterForTesting();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.EditSelectedLearningSpace());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
@@ -170,7 +176,9 @@ public class LearningWorldPresenterUt
     {
         var space = new LearningSpaceViewModel("g", "g", "g", Theme.Campus);
 
-        var systemUnderTest = CreatePresenterForTesting();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteLearningSpace(space));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
@@ -237,7 +245,9 @@ public class LearningWorldPresenterUt
     [Test]
     public void AddLearningSpace_LearningWorldIsNull_ThrowsException()
     {
-        var systemUnderTest = CreatePresenterForTesting();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
         var space = new LearningSpaceViewModel("a", "f", "f", Theme.Campus, 4);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.AddLearningSpace(space));
@@ -262,7 +272,9 @@ public class LearningWorldPresenterUt
     [Test]
     public void AddNewLearningSpace_ThrowsWhenWorldIsNull()
     {
-        var systemUnderTest = CreatePresenterForTesting();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.AddNewLearningSpace());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
@@ -307,7 +319,10 @@ public class LearningWorldPresenterUt
     public void CreateNewLearningSpace_SelectedLearningWorldIsNull_CallsErrorService()
     {
         var errorService = Substitute.For<IErrorService>();
-        var systemUnderTest = CreatePresenterForTesting(errorService: errorService);
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(errorService: errorService,
+            selectedViewModelsProvider: mockSelectedViewModelsProvider);
 
         systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.Campus);
 
@@ -548,7 +563,9 @@ public class LearningWorldPresenterUt
     {
         var condition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
 
-        var systemUnderTest = CreatePresenterForTesting();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteLearningObject(condition));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
@@ -608,7 +625,9 @@ public class LearningWorldPresenterUt
     [Test]
     public void CreatePathWayCondition_ThrowsWhenWorldIsNull()
     {
-        var systemUnderTest = CreatePresenterForTesting();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.CreatePathWayCondition());
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
@@ -652,7 +671,9 @@ public class LearningWorldPresenterUt
     {
         var condition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
 
-        var systemUnderTest = CreatePresenterForTesting();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeletePathWayCondition(condition));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
@@ -800,7 +821,9 @@ public class LearningWorldPresenterUt
     [Test]
     public void SetOnHoveredObjectInPathWay_SelectedLearningWorldIsNull_ThrowsException()
     {
-        var systemUnderTest = CreatePresenterForTesting();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
         var space = new LearningSpaceViewModel("a", "f", "f", Theme.Campus, 4);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetOnHoveredObjectInPathWay(space, 3, 3));
@@ -877,7 +900,9 @@ public class LearningWorldPresenterUt
     [Test]
     public void CreateLearningPathWay_SelectedLearningWorldIsNull_ThrowsException()
     {
-        var systemUnderTest = CreatePresenterForTesting();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
         var space = new LearningSpaceViewModel("a", "f", "f", Theme.Campus, 4);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.CreateLearningPathWay(space, 3, 3));
@@ -910,7 +935,9 @@ public class LearningWorldPresenterUt
     [Test]
     public void DeleteLearningPathWay_SelectedLearningWorldIsNull_ThrowsException()
     {
-        var systemUnderTest = CreatePresenterForTesting();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
         var space = new LearningSpaceViewModel("a", "f", "f", Theme.Campus, 4);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteLearningPathWay(space));
@@ -940,7 +967,9 @@ public class LearningWorldPresenterUt
     [Test]
     public void SetSelectedLearningElement_SelectedLearningWorldIsNull_ThrowsException()
     {
-        var systemUnderTest = CreatePresenterForTesting();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
         var element = new LearningElementViewModel("a", null!, "d", "f", LearningElementDifficultyEnum.Easy);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.SetSelectedLearningElement(element));
@@ -967,7 +996,9 @@ public class LearningWorldPresenterUt
     [Test]
     public void EditLearningElement_SelectedLearningWorldIsNull_ThrowsException()
     {
-        var systemUnderTest = CreatePresenterForTesting();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
         var element = new LearningElementViewModel("a", null!, "d", "f", LearningElementDifficultyEnum.Easy);
 
         var ex = Assert.Throws<ApplicationException>(() =>
@@ -1058,7 +1089,9 @@ public class LearningWorldPresenterUt
     [Test]
     public void ShowSelectedElementContentAsync_SelectedLearningWorldIsNull_ThrowsException()
     {
-        var systemUnderTest = CreatePresenterForTesting();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
         var element = new LearningElementViewModel("a", null!, "d", "f", LearningElementDifficultyEnum.Easy);
 
         var ex = Assert.ThrowsAsync<ApplicationException>(async () =>
@@ -1087,7 +1120,9 @@ public class LearningWorldPresenterUt
     [Test]
     public void DeleteLearningElement_SelectedLearningWorldIsNull_ThrowsException()
     {
-        var systemUnderTest = CreatePresenterForTesting();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
         var element = new LearningElementViewModel("a", null!, "d", "f", LearningElementDifficultyEnum.Easy);
 
         var ex = Assert.Throws<ApplicationException>(() => systemUnderTest.DeleteLearningElement(element));
@@ -1123,7 +1158,9 @@ public class LearningWorldPresenterUt
     [Test]
     public void CreateUnplacedLearningElement_SelectedLearningWorldIsNull_ThrowsException()
     {
-        var systemUnderTest = CreatePresenterForTesting();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        mockSelectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?)null);
+        var systemUnderTest = CreatePresenterForTesting(selectedViewModelsProvider: mockSelectedViewModelsProvider);
         var element = new LearningElementViewModel("a", null!, "d", "f", LearningElementDifficultyEnum.Easy);
 
         var ex = Assert.Throws<ApplicationException>(() =>

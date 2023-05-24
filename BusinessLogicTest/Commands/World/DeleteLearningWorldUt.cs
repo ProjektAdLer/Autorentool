@@ -10,7 +10,7 @@ public class DeleteLearningWorldUt
     [Test]
     public void Execute_DeletesLearningWorld()
     {
-        var workspace = new AuthoringToolWorkspace(new List<LearningWorld>());
+        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         workspace.LearningWorlds.Add(world);
         bool actionWasInvoked = false;
@@ -30,7 +30,7 @@ public class DeleteLearningWorldUt
     [Test]
     public void Execute_DeletesLearningWorldAndSetsAnotherLearningWorldAsSelected()
     {
-        var workspace = new AuthoringToolWorkspace(new List<LearningWorld>());
+        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         var world2 = new LearningWorld("g", "h", "i", "j", "k", "l");
         workspace.LearningWorlds.Add(world);
@@ -55,7 +55,7 @@ public class DeleteLearningWorldUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var workspace = new AuthoringToolWorkspace(new List<LearningWorld>());
+        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         workspace.LearningWorlds.Add(world);
         bool actionWasInvoked = false;
@@ -72,7 +72,7 @@ public class DeleteLearningWorldUt
     [Test]
     public void UndoRedo_UndoesAndRedoesCreateLearningWorld()
     {
-        var workspace = new AuthoringToolWorkspace(new List<LearningWorld>());
+        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
         var world = new LearningWorld("a", "b", "c", "d", "e", "f");
         var world2 = new LearningWorld("g", "h", "i", "j", "k", "l");
         workspace.LearningWorlds.Add(world);
