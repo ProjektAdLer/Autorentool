@@ -64,17 +64,23 @@
         </Collapsable>
 
         <Collapsable Title="Goals" @bind-Collapsed="_collapsedGoals">
-            <div class="bg-adlerbgbright rounded-sm max-w-2xl px-4 pb-4">
-            <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
-                          For="@(() => FormModel.Goals)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label="@nameof(FormDataContainer.FormModel.Goals)"/>
-            <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
-                          For="@(() => FormModel.Description)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label="@nameof(FormDataContainer.FormModel.Description)"/>
+            <div class="rounded-lg w-4/4 px-4">
+                <MudText Typo="Typo.caption">Description</MudText>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                              For="@(() => FormModel.Description)"
+                              Immediate="true"
+                              Lines="3"
+                              Variant="Variant.Outlined"
+                              DebounceInterval="300"
+                              Class="pb-2 mt-0"/>
+                <MudText Typo="Typo.caption">Goals</MudText>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
+                              For="@(() => FormModel.Goals)"
+                              Immediate="true"
+                              Lines="3"
+                              Variant="Variant.Outlined"
+                              DebounceInterval="300"
+                              Class="pb-2 mt-0"/>
         </div>
         </Collapsable>
         
