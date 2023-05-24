@@ -22,12 +22,12 @@
         <section class="p-2 gap-1 flex flex-col justify-start">
             <div class="flex justify-between items-start">
             <label id="learning-element-info" class="font-medium text-lg flex flex-col">
-                <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">Selected learning element: </span> @SelectedViewModelsProvider.LearningElement.Name</h3>
-                <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">Description: </span>@SelectedViewModelsProvider.LearningElement.Description</h3>
+                <h3 class="text-base text-adlerblue-600 element-name"><span class="text-adlergrey-600">Selected learning element: </span> @SelectedViewModelsProvider.LearningElement.Name</h3>
+                <h3 class="text-base text-adlerblue-600 element-description"><span class="text-adlergrey-600">Description: </span> @SelectedViewModelsProvider.LearningElement.Description</h3>
             </label>
                 <div>
-                    <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">Workload: </span> @LearningSpaceP.LearningSpaceVm?.Workload<span class="text-adlergrey-600"> min.</span></h3>
-                    <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">Points: </span> @LearningSpaceP.LearningSpaceVm?.Points</h3>
+                    <h3 class="text-base text-adlerblue-600 space-workload"><span class="text-adlergrey-600">Workload: </span> @LearningSpaceP.LearningSpaceVm?.Workload<span class="text-adlergrey-600"> min.</span></h3>
+                    <h3 class="text-base text-adlerblue-600 space-points"><span class="text-adlergrey-600">Points: </span> @LearningSpaceP.LearningSpaceVm?.Points</h3>
                     @ChildContent
                 </div>
             </div>

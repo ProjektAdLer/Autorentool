@@ -78,12 +78,12 @@ public class LearningSpaceViewUt
 
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
-        var mudTextStubs = systemUnderTest.FindComponents<Stub<MudText>>()
-            .Select(stub => stub.Instance.Parameters["ChildContent"])
-            .Cast<RenderFragment>()
-            .Select(o => _ctx.Render(o)).ToList();
-        Assert.That(mudTextStubs.Any(stub => stub.Markup.Contains("Workload: 42 min.")));
-        Assert.That(mudTextStubs.Any(stub => stub.Markup.Contains("Points: 8")));
+        var spaceWorkload = systemUnderTest.Find("h3.space-workload");
+        spaceWorkload.MarkupMatches(
+            @"<h3 class=""text-base text-adlerblue-600 space-workload""><span class=""text-adlergrey-600"">Workload: </span> 42<span class=""text-adlergrey-600""> min.</span></h3>");
+        var spacePoints = systemUnderTest.Find("h3.space-points");
+        spacePoints.MarkupMatches(
+            @"<h3 class=""text-base text-adlerblue-600 space-points""><span class=""text-adlergrey-600"">Points: </span> 8</h3>");
     }
 
     [Test]
@@ -98,15 +98,11 @@ public class LearningSpaceViewUt
 
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
-        var mudTextStubs = systemUnderTest.FindComponents<Stub<MudText>>()
-            .Select(stub => stub.Instance.Parameters["ChildContent"])
-            .Cast<RenderFragment>()
-            .Select(o => _ctx.Render(o)).ToList();
-
-        Assert.That(mudTextStubs.Any(stub =>
-            stub.Markup.Contains("Selected learning element: my secret name")));
-        Assert.That(mudTextStubs.Any(stub =>
-            stub.Markup.Contains("Description: a super long description")));
+        var elementName = systemUnderTest.Find("h3.element-name");
+        elementName.MarkupMatches(@"<h3 class=""text-base text-adlerblue-600 element-name""><span class=""text-adlergrey-600"">Selected learning element: </span> my secret name</h3>");
+        var elementDescription = systemUnderTest.Find("h3.element-description");
+        elementDescription.MarkupMatches(
+            @"<h3 class=""text-base text-adlerblue-600 element-description""><span class=""text-adlergrey-600"">Description: </span> a super long description</h3>");
     }
 
     [Test]
