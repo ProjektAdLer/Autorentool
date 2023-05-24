@@ -392,7 +392,7 @@ public class PresentationLogicUt
         var learningSpaceEntity = new BusinessLogic.Entities.LearningSpace("a", "d", "e" , 5, Theme.Campus);
         var learningWorldVm = new LearningWorldViewModel("f", "f", "f", "f", "f", "f");
         var learningWorldEntity = new BusinessLogic.Entities.LearningWorld("f", "f", "f", "f", "f", "f");
-        const FloorPlanEnum floorPlan = FloorPlanEnum.Rectangle2X2;
+        const FloorPlanEnum floorPlan = FloorPlanEnum.R20X206L;
         learningWorldEntity.LearningSpaces.Add(learningSpaceEntity);
         mockMapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm).Returns(learningWorldEntity);
         mockLayoutCommandFactory

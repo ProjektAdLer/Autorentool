@@ -17,7 +17,7 @@ public class LearningWorldSavePathsHandlerUt
     private static string SavedWorldPathsFilePath => Path.Join(LearningWorldSavePathsFolderPath, "SavedWorlds.xml");
 
     private static string XmlContentStart =>
-        "<?xml version=\"1.0\" encoding=\"utf-8\"?><ArrayOfSavedLearningWorldPath " +
+        "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<ArrayOfSavedLearningWorldPath " +
         "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " +
         "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">";
 
