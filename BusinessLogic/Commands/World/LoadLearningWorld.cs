@@ -9,7 +9,7 @@ public class LoadLearningWorld : ILoadLearningWorld
     internal IBusinessLogic BusinessLogic { get; }
 
     internal AuthoringToolWorkspace Workspace { get; }
-    public LearningWorld? LearningWorld { get; private set; }
+    public ILearningWorld? LearningWorld { get; private set; }
     internal string Filepath { get; }
     internal Action<AuthoringToolWorkspace> MappingAction { get; }
     private IMemento? _memento;

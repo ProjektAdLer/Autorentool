@@ -1619,29 +1619,6 @@ mockTopicCommandFactory
     }
 
     [Test]
-    public void LoadLearningWorldFromPath_CallsMapper()
-    {
-        var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
-        mockHybridSupport.IsElectronActive.Returns(true);
-        var mockMapper = Substitute.For<IMapper>();
-        var workspaceEntity =
-            new BusinessLogic.Entities.AuthoringToolWorkspace(new List<ILearningWorld>());
-        mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<LearningWorldViewModel>())
-            .Returns(workspaceEntity);
-        var mockServiceProvider = Substitute.For<IServiceProvider>();
-        var mockElectronDialogManager = Substitute.For<IElectronDialogManager>();
-        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockElectronDialogManager);
-        var authoringToolWorkspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
-
-        var systemUnderTest = CreateTestablePresentationLogic(mapper: mockMapper, serviceProvider: mockServiceProvider,
-            hybridSupportWrapper: mockHybridSupport);
-
-        systemUnderTest.LoadLearningWorldFromPath(authoringToolWorkspaceVm, "foobar");
-
-        mockMapper.Received().Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
-    }
-
-    [Test]
     public void LoadLearningWorldFromPath_CallsBusinessLogic()
     {
         var mockHybridSupport = Substitute.For<IHybridSupportWrapper>();
@@ -1649,20 +1626,42 @@ mockTopicCommandFactory
         var mockMapper = Substitute.For<IMapper>();
         var workspaceEntity =
             new BusinessLogic.Entities.AuthoringToolWorkspace(new List<ILearningWorld>());
-        mockMapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(Arg.Any<LearningWorldViewModel>())
-            .Returns(workspaceEntity);
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         var mockElectronDialogManager = Substitute.For<IElectronDialogManager>();
-        mockServiceProvider.GetService(typeof(IElectronDialogManager)).Returns(mockElectronDialogManager);
+        mockServiceProvider
+            .GetService(typeof(IElectronDialogManager))
+            .Returns(mockElectronDialogManager);
         var authoringToolWorkspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockWorldCommandFactory = Substitute.For<IWorldCommandFactory>();
+        var mockSelectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        var mockCommand = Substitute.For<ILoadLearningWorld>();
+        mockWorldCommandFactory
+            .GetLoadCommand(workspaceEntity, "foobar", mockBusinessLogic,
+            Arg.Any<Action<BusinessLogic.Entities.AuthoringToolWorkspace>>())
+            .Returns(mockCommand);
+        mockMapper
+            .Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm)
+            .Returns(workspaceEntity);
+        var guid = new Guid();
+        mockCommand.LearningWorld.Id.Returns(guid);
+        var learningWorldViewModel = Substitute.For<ILearningWorldViewModel>();
+        learningWorldViewModel.Id.Returns(guid);
+        authoringToolWorkspaceVm.LearningWorlds
+            .Returns(new List<ILearningWorldViewModel> { learningWorldViewModel });
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic,
-            mapper: mockMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport);
+            mapper: mockMapper, serviceProvider: mockServiceProvider, hybridSupportWrapper: mockHybridSupport,
+            worldCommandFactory: mockWorldCommandFactory, selectedViewModelsProvider: mockSelectedViewModelsProvider);
 
         systemUnderTest.LoadLearningWorldFromPath(authoringToolWorkspaceVm, "foobar");
 
-        mockBusinessLogic.Received().ExecuteCommand(Arg.Any<LoadLearningWorld>());
+        mockWorldCommandFactory
+            .Received()
+            .GetLoadCommand(workspaceEntity, "foobar", mockBusinessLogic,
+                Arg.Any<Action<BusinessLogic.Entities.AuthoringToolWorkspace>>());
+        mockBusinessLogic.Received().ExecuteCommand(mockCommand);
+        mockSelectedViewModelsProvider.Received().SetLearningWorld(learningWorldViewModel, mockCommand);
     }
 
     [Test]
