@@ -113,7 +113,7 @@ public class XmlCourseFactoryUt
             Assert.That(mockCourseCategory.Description, Is.EqualTo("$@NULL@$"));
             Assert.That(mockCourseCategory.Id, Is.EqualTo("1"));
             Assert.That(mockCourseCategory.Name, Is.EqualTo("Miscellaneous"));
-            Assert.That(mockCourseCourse.Format, Is.EqualTo("tiles"));
+            Assert.That(mockCourseCourse.Format, Is.EqualTo(""));
             Assert.That(mockCourseCourse.BaseColour, Is.EqualTo("#009681"));
             Assert.That(mockCourseCourse.CourseUseSubtiles, Is.EqualTo("0"));
             Assert.That(mockCourseCourse.CourseShowTileProgress, Is.EqualTo("2"));

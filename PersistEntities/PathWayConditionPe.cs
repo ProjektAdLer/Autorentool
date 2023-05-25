@@ -21,7 +21,6 @@ public class PathWayConditionPe : IObjectInPathWayPe
         PositionY = 0;
         InBoundObjects = new List<IObjectInPathWayPe>();
         OutBoundObjects = new List<IObjectInPathWayPe>();
-        Condition = ConditionEnumPe.None;
     }
     
     
