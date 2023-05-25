@@ -11,6 +11,7 @@ using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using ElectronWrapper;
+using FluentValidation;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
@@ -72,14 +73,6 @@ public class PresentationLogic : IPresentationLogic
     private const string WorldFileEnding = "awf";
     private const string SpaceFileEnding = "asf";
     private const string ElementFileEnding = "aef";
-    private readonly string[] _imageFileEnding = {"jpg", "png", "webp", "bmp"};
-
-    private readonly string[] _textFileEnding =
-        {"txt", "c", "h", "cpp", "cc", "c++", "py", "cs", "js", "php", "html", "css"};
-
-    private const string VideoFileEnding = "mp4";
-    private const string H5PFileEnding = "h5p";
-    private const string PdfFileEnding = "pdf";
     private const string WorldFileFormatDescriptor = "AdLer World File";
     private const string SpaceFileFormatDescriptor = "AdLer Space File";
     private const string ElementFileFormatDescriptor = "AdLer Element File";
@@ -680,52 +673,6 @@ public class PresentationLogic : IPresentationLogic
         }
     }
 
-    /// <inheritdoc cref="IPresentationLogic.LoadImageAsync"/>
-    public async Task<ILearningContentViewModel> LoadImageAsync()
-    {
-        ElectronCheck();
-        var fileFilter = new FileFilterProxy[] {new(" ", _imageFileEnding)};
-        var filepath = await GetLoadFilepathAsync("Load image", fileFilter);
-        var entity = BusinessLogic.LoadLearningContent(filepath);
-        return Mapper.Map<ILearningContentViewModel>(entity);
-    }
-
-    /// <inheritdoc cref="IPresentationLogic.LoadVideoAsync"/>
-    public async Task<ILearningContentViewModel> LoadVideoAsync()
-    {
-        ElectronCheck();
-        var filepath = await GetLoadFilepathAsync("Load video", VideoFileEnding, " ");
-        var entity = BusinessLogic.LoadLearningContent(filepath);
-        return Mapper.Map<ILearningContentViewModel>(entity);
-    }
-
-    /// <inheritdoc cref="IPresentationLogic.LoadH5PAsync"/>
-    public async Task<ILearningContentViewModel> LoadH5PAsync()
-    {
-        ElectronCheck();
-        var filepath = await GetLoadFilepathAsync("Load h5p", H5PFileEnding, " ");
-        var entity = BusinessLogic.LoadLearningContent(filepath);
-        return Mapper.Map<ILearningContentViewModel>(entity);
-    }
-
-    /// <inheritdoc cref="IPresentationLogic.LoadPdfAsync"/>
-    public async Task<ILearningContentViewModel> LoadPdfAsync()
-    {
-        ElectronCheck();
-        var filepath = await GetLoadFilepathAsync("Load pdf", PdfFileEnding, " ");
-        var entity = BusinessLogic.LoadLearningContent(filepath);
-        return Mapper.Map<ILearningContentViewModel>(entity);
-    }
-
-    /// <inheritdoc cref="IPresentationLogic.LoadTextAsync"/>
-    public async Task<ILearningContentViewModel> LoadTextAsync()
-    {
-        ElectronCheck();
-        var fileFilter = new FileFilterProxy[] {new(" ", _textFileEnding)};
-        var filepath = await GetLoadFilepathAsync("Load text", fileFilter);
-        var entity = BusinessLogic.LoadLearningContent(filepath);
-        return Mapper.Map<ILearningContentViewModel>(entity);
-    }
 
     /// <inheritdoc cref="IPresentationLogic.GetAllContent"/>
     public IEnumerable<ILearningContentViewModel> GetAllContent() =>
@@ -776,6 +723,7 @@ public class PresentationLogic : IPresentationLogic
     public ILearningContentViewModel LoadLearningContentViewModel(string name, Stream stream)
     {
         var entity = BusinessLogic.LoadLearningContent(name, stream);
+        
         return Mapper.Map<ILearningContentViewModel>(entity);
     }
 

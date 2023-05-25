@@ -187,25 +187,6 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     }
 
     /// <summary>
-    /// Calls a load method in <see cref="_presentationLogic"/> depending on the content type and returns a
-    /// LearningContentViewModel.
-    /// </summary>
-    /// <param name="contentType">The type of the content that can either be an image, a video, a pdf or a h5p.</param>
-    /// <exception cref="ApplicationException">Thrown if there is no valid ContentType assigned.</exception>
-    private async Task<ILearningContentViewModel> LoadLearningContent(ContentTypeEnum contentType)
-    {
-        return contentType switch
-        {
-            ContentTypeEnum.Image => await _presentationLogic.LoadImageAsync(),
-            ContentTypeEnum.Video => await _presentationLogic.LoadVideoAsync(),
-            ContentTypeEnum.PDF => await _presentationLogic.LoadPdfAsync(),
-            ContentTypeEnum.H5P => await _presentationLogic.LoadH5PAsync(),
-            ContentTypeEnum.Text => await _presentationLogic.LoadTextAsync(),
-            _ => throw new ApplicationException("No valid ContentType assigned")
-        };
-    }
-
-    /// <summary>
     /// Changes the selected <see cref="ILearningElementViewModel"/> in the currently selected learning space.
     /// </summary>
     /// <param name="learningElement">The learning element that should be set as selected</param>
