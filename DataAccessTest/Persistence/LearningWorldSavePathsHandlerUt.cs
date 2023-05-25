@@ -17,7 +17,7 @@ public class LearningWorldSavePathsHandlerUt
     private static string SavedWorldPathsFilePath => Path.Join(LearningWorldSavePathsFolderPath, "SavedWorlds.xml");
 
     private static string XmlContentStart =>
-        "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n<ArrayOfSavedLearningWorldPath " +
+        "<?xml version=\"1.0\" encoding=\"utf-8\"?><ArrayOfSavedLearningWorldPath " +
         "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" " +
         "xmlns:xsd=\"http://www.w3.org/2001/XMLSchema\">";
 
@@ -38,7 +38,10 @@ public class LearningWorldSavePathsHandlerUt
         });
         var reader = new StreamReader(fileSystem.File.OpenRead(SavedWorldPathsFilePath));
         var content = reader.ReadToEnd();
-        Assert.That(content, Is.EqualTo(XmlContentStart.Remove(XmlContentStart.Length - 1) + " />"));
+        //fix for newlines suddenly showing up in empty file
+        content = content.Replace(Environment.NewLine, string.Empty);
+        var expected = XmlContentStart.Remove(XmlContentStart.Length - 1) + " />";
+        Assert.That(content, Is.EqualTo(expected));
     }
 
     [Test]
