@@ -28,7 +28,6 @@ public class EntityPersistEntityMappingProfile : Profile
         CreateLearningContentMap();
         CreatePathwayMaps();
         CreateInterfaceMaps();
-        CreateEnumMaps();
         CreateLearningSpaceLayoutMap();
         CreateTopicMap();
     }
@@ -115,15 +114,6 @@ public class EntityPersistEntityMappingProfile : Profile
     private static bool 
         SameIdAtSameIndex(ILearningSpaceLayout destination, KeyValuePair<int, ILearningElementPe> kvp) =>
         destination.LearningElements.Any(y => y.Key == kvp.Key && y.Value.Id == kvp.Value.Id);
-
-
-    private void CreateEnumMaps()
-    {
-        CreateMap<LearningElementDifficultyEnum, LearningElementDifficultyEnumPe>()
-            .ReverseMap();
-        CreateMap<ConditionEnum, ConditionEnumPe>()
-            .ReverseMap();
-    }
 
     private void CreatePathwayMaps()
     {

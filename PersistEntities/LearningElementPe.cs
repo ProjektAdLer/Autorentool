@@ -1,5 +1,6 @@
 ﻿using System.Runtime.Serialization;
 using PersistEntities.LearningContent;
+using Shared;
 
 namespace PersistEntities;
 
@@ -10,7 +11,7 @@ namespace PersistEntities;
 public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
 {
     public LearningElementPe(string name, ILearningContentPe? learningContent,
-        string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload = 0,
+        string description, string goals, LearningElementDifficultyEnum difficulty, int workload = 0,
         int points = 0, double positionX = 0, double positionY = 0)
     {
         Id = Guid.NewGuid();
@@ -35,7 +36,7 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
         LearningContent = null!;
         Description = "";
         Goals = "";
-        Difficulty = LearningElementDifficultyEnumPe.Medium;
+        Difficulty = LearningElementDifficultyEnum.Medium;
         Workload = 0;
         Points = 0;
         PositionX = 0;
@@ -56,7 +57,7 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
     [DataMember]
     public int Points { get; set; }
     [DataMember]
-    public LearningElementDifficultyEnumPe Difficulty { get; set; }
+    public LearningElementDifficultyEnum Difficulty { get; set; }
     [DataMember]
     public double PositionX { get; set; }
     [DataMember]

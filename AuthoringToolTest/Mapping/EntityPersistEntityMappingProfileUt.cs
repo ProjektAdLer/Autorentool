@@ -23,7 +23,6 @@ public class EntityPersistEntityMappingProfileUt
     private const string Type = "type";
     private static readonly string Filepath = "bar/baz/buz.txt";
     private const LearningElementDifficultyEnum Difficulty = LearningElementDifficultyEnum.Easy;
-    private const LearningElementDifficultyEnumPe DifficultyPe = LearningElementDifficultyEnumPe.Easy;
     private const int Workload = 1;
     private const int Points = 2;
     private const int RequiredPoints = 3;
@@ -40,7 +39,6 @@ public class EntityPersistEntityMappingProfileUt
     private const string NewType = "newType";
     private static readonly string NewFilepath = "/foo/bar/baz.txt";
     private const LearningElementDifficultyEnum NewDifficulty = LearningElementDifficultyEnum.Medium;
-    private const LearningElementDifficultyEnumPe NewDifficultyPe = LearningElementDifficultyEnumPe.Medium;
     private const int NewWorkload = 2;
     private const int NewPoints = 3;
     private const int NewRequiredPoints = 4;
@@ -87,7 +85,7 @@ public class EntityPersistEntityMappingProfileUt
         var source = new LearningElement(Name, content, Description, Goals,
             Difficulty, null, workload: Workload, points: Points, positionX: PositionX, positionY: PositionY);
         var destination = new LearningElementPe("", new FileContentPe("", "", "bar/baz/buz.txt"), "", "",
-            LearningElementDifficultyEnumPe.None);
+            LearningElementDifficultyEnum.Easy);
 
         systemUnderTest.Map(source, destination);
 
@@ -97,7 +95,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.LearningContent = new FileContentPe(NewName, NewType, NewFilepath);
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
-        destination.Difficulty = NewDifficultyPe;
+        destination.Difficulty = NewDifficulty;
         destination.Workload = NewWorkload;
         destination.Points = NewPoints;
         destination.PositionX = NewPositionX;
@@ -232,7 +230,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.UnplacedLearningElements = new List<ILearningElementPe>()
         {
             new LearningElementPe(NewName, GetTestableNewContentPersistEntity(), NewDescription, NewGoals,
-                NewDifficultyPe, NewWorkload, NewPoints)
+                NewDifficulty, NewWorkload, NewPoints)
         };
 
         systemUnderTest.Map(destination, source);
@@ -338,7 +336,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.Goals = NewGoals;
         destination.SavePath = NewSavePath;
         var spacePe1 = GetTestableNewSpacePersistEntity();
-        var pathWayConditionPe = new PathWayConditionPe(ConditionEnumPe.And, 2, 1);
+        var pathWayConditionPe = new PathWayConditionPe(ConditionEnum.And, 2, 1);
         var spacePe2 = GetTestableNewSpacePersistEntity();
         destination.LearningSpaces = new List<LearningSpacePe>() { spacePe1, spacePe2 };
         destination.PathWayConditions = new List<PathWayConditionPe>() { pathWayConditionPe };
@@ -482,7 +480,7 @@ public class EntityPersistEntityMappingProfileUt
     private static LearningElementPe GetTestableElementPersistEntity()
     {
         return new LearningElementPe(NewName, GetTestableNewContentPersistEntity(),
-            NewDescription, NewGoals, NewDifficultyPe, NewWorkload, NewPoints, NewPositionX,
+            NewDescription, NewGoals, NewDifficulty, NewWorkload, NewPoints, NewPositionX,
             NewPositionY);
     }
 
@@ -656,7 +654,7 @@ public class EntityPersistEntityMappingProfileUt
                     TestContent(element.LearningContent, useNewFields);
                     Assert.That(element.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(element.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
-                    Assert.That(element.Difficulty, Is.EqualTo(useNewFields ? NewDifficultyPe : DifficultyPe));
+                    Assert.That(element.Difficulty, Is.EqualTo(useNewFields ? NewDifficulty : Difficulty));
                     Assert.That(element.Workload, Is.EqualTo(useNewFields ? NewWorkload : Workload));
                     Assert.That(element.Points, Is.EqualTo(useNewFields ? NewPoints : Points));
                     Assert.That(element.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));

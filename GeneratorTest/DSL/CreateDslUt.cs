@@ -52,14 +52,14 @@ public class CreateDslUt
             inboundObject3,
             inboundObject4
         };
-        var inboundObject6 = new PathWayConditionPe(ConditionEnumPe.And, 0, 0, inboundObjectList1, 
+        var inboundObject6 = new PathWayConditionPe(ConditionEnum.And, 0, 0, inboundObjectList1, 
             null);
         
         var inboundObjectList2 = new List<IObjectInPathWayPe>
         {
             inboundObject5
         };
-        var inboundObject7 = new PathWayConditionPe(ConditionEnumPe.Or, 0, 0, inboundObjectList2, 
+        var inboundObject7 = new PathWayConditionPe(ConditionEnum.Or, 0, 0, inboundObjectList2, 
             null);
         
         
@@ -78,7 +78,7 @@ public class CreateDslUt
             inboundObject7
         };
         
-        var pathwayConditionPe = new PathWayConditionPe(ConditionEnumPe.Or, 0, 0, inboundObjects, null);
+        var pathwayConditionPe = new PathWayConditionPe(ConditionEnum.Or, 0, 0, inboundObjects, null);
         
         //Act
         var stringUnderTest = systemUnderTest.DefineLogicalExpression(pathwayConditionPe);
@@ -97,15 +97,15 @@ public class CreateDslUt
     {
         //Arrange
         var mockElement1 = new LearningElementPe("Same Name Element", null, 
-            "", "",  LearningElementDifficultyEnumPe.Easy);
+            "", "",  LearningElementDifficultyEnum.Easy);
         var mockElement2 = new LearningElementPe("Another Element", null, 
-            "", "",  LearningElementDifficultyEnumPe.Easy);
+            "", "",  LearningElementDifficultyEnum.Easy);
         var mockElement3 = new LearningElementPe("Same Name Element", null, 
-            "", "",  LearningElementDifficultyEnumPe.Easy);
+            "", "",  LearningElementDifficultyEnum.Easy);
         var mockElement4 = new LearningElementPe("Same Name Element", null, 
-            "", "",  LearningElementDifficultyEnumPe.Easy);
+            "", "",  LearningElementDifficultyEnum.Easy);
         var mockElement5 = new LearningElementPe("Same Name Element", null, 
-            "", "",  LearningElementDifficultyEnumPe.Easy);
+            "", "",  LearningElementDifficultyEnum.Easy);
 
         var mockLearningElements1 = new Dictionary<int, ILearningElementPe>()
         {
@@ -198,15 +198,15 @@ public class CreateDslUt
         var content5 = new FileContentPe("FileName", "pdf", "/foo/foo.txt");
 
         var ele1 = new LearningElementPe("a",content1, "pupup", "g", 
-            LearningElementDifficultyEnumPe.Easy, workload: 17, points: 2, positionX: 23);
+            LearningElementDifficultyEnum.Easy, workload: 17, points: 2, positionX: 23);
         var ele2 = new LearningElementPe("b",content2, "pupup", "g", 
-            LearningElementDifficultyEnumPe.Easy, workload: 17, points: 2, positionX: 23);
+            LearningElementDifficultyEnum.Easy, workload: 17, points: 2, positionX: 23);
         var ele3 = new LearningElementPe("c", content3,"pupup", "g", 
-            LearningElementDifficultyEnumPe.Easy, workload: 17, points: 2, positionX: 23);
+            LearningElementDifficultyEnum.Easy, workload: 17, points: 2, positionX: 23);
         var ele4 = new LearningElementPe("d",content4,"pupup", "g", 
-            LearningElementDifficultyEnumPe.Easy, workload: 17, points: 2, positionX: 23);
+            LearningElementDifficultyEnum.Easy, workload: 17, points: 2, positionX: 23);
         var ele5 = new LearningElementPe("e",content5,"pupup", "g", 
-            LearningElementDifficultyEnumPe.Easy, workload: 17, points: 2, positionX: 23);
+            LearningElementDifficultyEnum.Easy, workload: 17, points: 2, positionX: 23);
 var topic1 = new TopicPe("topic1");
         var topic2 = new TopicPe("topic2");
 
@@ -245,7 +245,7 @@ var topic1 = new TopicPe("topic1");
             null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(), outBoundObjects: new List<IObjectInPathWayPe>(), topic1);
         var space3 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus,
             null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(), outBoundObjects: new List<IObjectInPathWayPe>(), topic2);
-        var condition1 = new PathWayConditionPe(ConditionEnumPe.And, 0, 0, 
+        var condition1 = new PathWayConditionPe(ConditionEnum.And, 0, 0, 
             new List<IObjectInPathWayPe>{space1, space2}, null);
         space1.OutBoundObjects = new List<IObjectInPathWayPe>() {condition1};
         space2.InBoundObjects = new List<IObjectInPathWayPe>() {condition1};
@@ -310,7 +310,7 @@ var topic1 = new TopicPe("topic1");
         var content1 = new FileContentPe("FileName", "mp3", "/foo/bar.txt");
 
         var ele1 = new LearningElementPe("a", content1, "pupup", "g",
-            LearningElementDifficultyEnumPe.Easy, workload: 17, points: 2, positionX: 23);
+            LearningElementDifficultyEnum.Easy, workload: 17, points: 2, positionX: 23);
 
         var space1 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus,
             null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(),

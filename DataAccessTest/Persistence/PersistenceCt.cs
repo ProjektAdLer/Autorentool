@@ -33,13 +33,13 @@ public class PersistenceCt
         var space2 = new LearningSpacePe("Name", "Description", "Goals", 5, Theme.Campus,
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(), FloorPlanEnum.R20X308L));
         var initialSpace2Id = space2.Id;
-        var condition1 = new PathWayConditionPe(ConditionEnumPe.Or, 2, 1);
+        var condition1 = new PathWayConditionPe(ConditionEnum.Or, 2, 1);
         var initialCondition1Id = condition1.Id;
-        var condition2 = new PathWayConditionPe(ConditionEnumPe.And, 5, 6);
+        var condition2 = new PathWayConditionPe(ConditionEnum.And, 5, 6);
         var initialCondition2Id = condition2.Id;
         var content = new FileContentPe("a", "b", "");
         var element = new LearningElementPe("le", content, "llll", "lllll",
-            LearningElementDifficultyEnumPe.Easy);
+            LearningElementDifficultyEnum.Easy);
         var initialElementId = element.Id;
         space1.LearningSpaceLayout.LearningElements[0] = element;
         world.LearningSpaces.Add(space1);
@@ -124,7 +124,7 @@ public class PersistenceCt
         var initialSpaceId = space.Id;
         var content = new FileContentPe("a", "b", "");
         var element =
-            new LearningElementPe("le", content, "l", "lll", LearningElementDifficultyEnumPe.Easy);
+            new LearningElementPe("le", content, "l", "lll", LearningElementDifficultyEnum.Easy);
         var initialElementId = element.Id;
         space.LearningSpaceLayout.LearningElements[0] = element;
 
@@ -149,7 +149,7 @@ public class PersistenceCt
     public void Persistence_SaveAndLoadElement_Stream_ObjectsAreEquivalent()
     {
         var content = new FileContentPe("a", "b", "");
-        var element = new LearningElementPe("le", content, "ll", "lll", LearningElementDifficultyEnumPe.Easy);
+        var element = new LearningElementPe("le", content, "ll", "lll", LearningElementDifficultyEnum.Easy);
         var initialElementId = element.Id;
 
         using var stream = new MemoryStream();
@@ -179,17 +179,17 @@ public class PersistenceCt
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(), FloorPlanEnum.R20X308L),
             assignedTopic: topic);
         var initialSpace2Id = space2.Id;
-        var condition1 = new PathWayConditionPe(ConditionEnumPe.Or, 2, 1);
+        var condition1 = new PathWayConditionPe(ConditionEnum.Or, 2, 1);
         var initialCondition1Id = condition1.Id;
-        var condition2 = new PathWayConditionPe(ConditionEnumPe.And, 5, 6);
+        var condition2 = new PathWayConditionPe(ConditionEnum.And, 5, 6);
         var initialCondition2Id = condition2.Id;
         var content = new FileContentPe("a", "b", "");
         var element = new LearningElementPe("le", content, "llll", "lllll",
-            LearningElementDifficultyEnumPe.Easy);
+            LearningElementDifficultyEnum.Easy);
         var initialElementId = element.Id;
         var unplacedContent = new FileContentPe("c", "d", "");
         var unplacedElement = new LearningElementPe("ule", unplacedContent, "ullll", "ulllll",
-            LearningElementDifficultyEnumPe.Medium);
+            LearningElementDifficultyEnum.Medium);
         var initialUnplacedElementId = unplacedElement.Id;
         space1.LearningSpaceLayout.LearningElements[0] = element;
         world.LearningSpaces.Add(space1);
@@ -268,7 +268,7 @@ public class PersistenceCt
         var initialSpaceId = space.Id;
         var content = new FileContentPe("a", "b", "");
         var element = new LearningElementPe("le", content, "llll", "lllll",
-            LearningElementDifficultyEnumPe.Easy);
+            LearningElementDifficultyEnum.Easy);
         var initialElementId = element.Id;
         space.LearningSpaceLayout.LearningElements[0] = element;
         var mockFileSystem = new MockFileSystem();
@@ -318,7 +318,7 @@ public class PersistenceCt
     public void Persistence_SaveAndLoadElement_File_ObjectsAreEquivalent()
     {
         var content = new FileContentPe("a", "b", "");
-        var element = new LearningElementPe("le", content, "llll", "lllll", LearningElementDifficultyEnumPe.Easy);
+        var element = new LearningElementPe("le", content, "llll", "lllll", LearningElementDifficultyEnum.Easy);
         var initialElementId = element.Id;
         var mockFileSystem = new MockFileSystem();
 
@@ -350,9 +350,9 @@ public class PersistenceCt
         return new ILearningElementPe[]
         {
             new LearningElementPe("h5pAct", fileContent, "description", "a goal",
-                LearningElementDifficultyEnumPe.Easy, 123, 42, 0, 0),
+                LearningElementDifficultyEnum.Easy, 123, 42, 0, 0),
             new LearningElementPe("h5pInt", linkContent, "description", "a goal",
-                LearningElementDifficultyEnumPe.Medium, 123, 42, 0, 0),
+                LearningElementDifficultyEnum.Medium, 123, 42, 0, 0),
         };
     }
 
@@ -361,7 +361,7 @@ public class PersistenceCt
     {
         var content = new FileContentPe("a", "b", "");
         var element = new LearningElementPe("le", content, "llll", "lllll",
-            LearningElementDifficultyEnumPe.Easy);
+            LearningElementDifficultyEnum.Easy);
         var space1 = new LearningSpacePe("Name", "Description", "Goals", 5, Theme.Campus,
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>()
             {
@@ -398,9 +398,9 @@ public class PersistenceCt
     {
         var content = new FileContentPe("a", "b", "");
         var element1 = new LearningElementPe("le", content, "llll", "lllll",
-            LearningElementDifficultyEnumPe.Easy);
+            LearningElementDifficultyEnum.Easy);
         var element2 = new LearningElementPe("le", content, "llll", "lllll",
-            LearningElementDifficultyEnumPe.Easy);
+            LearningElementDifficultyEnum.Easy);
         var space1 = new LearningSpacePe("Name", "Description", "Goals", 5, Theme.Campus,
             new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>()
             {

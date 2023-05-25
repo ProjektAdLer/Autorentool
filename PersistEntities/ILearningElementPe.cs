@@ -1,6 +1,7 @@
 ﻿
 
 using PersistEntities.LearningContent;
+using Shared;
 
 namespace PersistEntities;
 
@@ -13,7 +14,7 @@ public interface ILearningElementPe
     string Goals { get; set; }
     int Workload { get; set; }
     int Points { get; set; }
-    LearningElementDifficultyEnumPe Difficulty { get; set; }
+    LearningElementDifficultyEnum Difficulty { get; set; }
     double PositionX { get; set; }
     double PositionY { get; set; }
 }

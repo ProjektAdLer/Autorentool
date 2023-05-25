@@ -1,5 +1,6 @@
 using System.Runtime.Serialization;
 using JetBrains.Annotations;
+using Shared;
 
 namespace PersistEntities;
 
@@ -24,7 +25,7 @@ public class PathWayConditionPe : IObjectInPathWayPe
     }
     
     
-    public PathWayConditionPe(ConditionEnumPe condition, double positionX = 0, double positionY = 0,
+    public PathWayConditionPe(ConditionEnum condition, double positionX = 0, double positionY = 0,
         List<IObjectInPathWayPe>? inBoundObjects = null, List<IObjectInPathWayPe>? outBoundObjects = null)
     {
         Id = Guid.NewGuid();
@@ -46,7 +47,7 @@ public class PathWayConditionPe : IObjectInPathWayPe
     [IgnoreDataMember]
     public List<IObjectInPathWayPe> OutBoundObjects { get; set; }
     [DataMember]
-    public ConditionEnumPe Condition { get; set; }
+    public ConditionEnum Condition { get; set; }
     
     [OnDeserializing]
     private void OnDeserializing(StreamingContext context)
