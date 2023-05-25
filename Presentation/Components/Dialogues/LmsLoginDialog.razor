@@ -1,14 +1,8 @@
 @using Presentation.PresentationLogic.API
-@if (_isLmsConnected)
-{
-    <h3>Logout</h3>
-}
-else
-{
-    <h3>Login</h3>
-}
-
-<MudDialog Options="new DialogOptions() {CloseOnEscapeKey = true}">
+<MudDialog>
+    <TitleContent>
+        <MudText Typo="Typo.h6"> Lms Connection</MudText>
+    </TitleContent>
     <DialogContent>
         @if (_isLmsConnected)
         {
@@ -19,19 +13,22 @@ else
         {
             <MudForm>
                 <MudTextField @bind-Value="_username" Label="Username"/>
-                <MudTextField @bind-Value="_password" Label="Password" InputType="InputType.Password"/>
+                <MudTextField @bind-Value="_password" Label="Password" OnKeyPress="OnKeyPress"
+                              InputType=@PasswordInputType Adornment="Adornment.End" AdornmentIcon=@ShowPasswordIcon
+                              OnAdornmentClick="() => _isPasswordVisible = !_isPasswordVisible"
+                              AdornmentAriaLabel="Show Password"/>
                 @if (_showError)
                 {
                     <MudText>Wrong Username or Password</MudText>
                 }
+                <!--TODO: Should be set in the config-->
+                <a href="https://demo.moodle.projekt-adler.eu/login/forgot_password.php" target="_blank" title="Lost password?">
+                    Forgot Password?
+                </a>
                 <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="SubmitForm">Login</MudButton>
             </MudForm>
         }
     </DialogContent>
-    <DialogActions>
-        <MudButton Color="Color.Secondary" Variant="Variant.Outlined" OnClick="Cancel">Cancel</MudButton>
-    </DialogActions>
-
 </MudDialog>
 
 @code {
@@ -48,6 +45,12 @@ else
     private bool _showError = false;
     private bool _isLmsConnected = false;
 
+    private bool _isPasswordVisible = false;
+    private InputType PasswordInputType => _isPasswordVisible ? InputType.Text : InputType.Password;
+    private string ShowPasswordIcon => _isPasswordVisible ? Icons.Material.Filled.Visibility : Icons.Material.Filled.VisibilityOff;
+
+    private static DialogOptions Options => new DialogOptions() {CloseOnEscapeKey = true, CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true};
+
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
@@ -56,6 +59,7 @@ else
         _showError = false;
         _isLmsConnected = false;
         CheckIfLmsIsConnected();
+        MudDialog.SetOptions(Options);
     }
 
     private async void CheckIfLmsIsConnected()
@@ -91,6 +95,14 @@ else
     {
         _isLmsConnected = false;
         MudDialog.Cancel();
+    }
+
+    private void OnKeyPress(KeyboardEventArgs eventArgs)
+    {
+        if (eventArgs.Key == "Enter")
+        {
+            SubmitForm();
+        }
     }
 
 }
