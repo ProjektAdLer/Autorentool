@@ -13,7 +13,7 @@
           <IncludeTestAssembly>false</IncludeTestAssembly>
           <SkipAutoProps>false</SkipAutoProps>
           <DeterministicReport>false</DeterministicReport>
-          <ExcludeAssembliesWithoutSources>MissingAny</ExcludeAssembliesWithoutSources>
+          <ExcludeAssembliesWithoutSources>MissingAll</ExcludeAssembliesWithoutSources>
         </Configuration>
       </DataCollector>
     </DataCollectors>
