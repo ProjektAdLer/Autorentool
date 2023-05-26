@@ -2,12 +2,13 @@
 @using System.ComponentModel
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.Mediator
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View
 @using Presentation.View.LearningElement
 
 <MudCard Class="overflow-auto">
-    @if (SelectedViewModelsProvider.LearningElement == null || _editOverwritten)
+    @if (SelectedViewModelsProvider.LearningElement == null || Mediator.OverwriteElementEdit)
     {
         <CreateElementForm OnSubmitted="() => InvokeAsync(TriggerMasterLayoutStateHasChanged)"/>
     }
@@ -42,37 +43,31 @@
     
     [Inject]
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
+    
+    [Inject]
+    public IMediator Mediator { get; set; }
 
     [CascadingParameter(Name = "TriggerMasterLayoutStateHasChanged")]
     private Action TriggerMasterLayoutStateHasChanged { get; set; }
 #pragma warning restore CS8618
 
 
-    //indicates if the edit state has been overwritten by either pressing reset in the edit form
-    //or by pressing the "Create new space" buttoni
-    private bool _editOverwritten;
-
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
-        _editOverwritten = false;
-    }
-    
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        if (SelectedViewModelsProvider.LearningWorld != null) SelectedViewModelsProvider.PropertyChanged += MediatorOnPropertyChanged;
+        if (SelectedViewModelsProvider.LearningWorld != null) SelectedViewModelsProvider.PropertyChanged += SelectedViewModelsProviderOnPropertyChanged;
     }
 
-    private async void MediatorOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    private async void SelectedViewModelsProviderOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
-        _editOverwritten = false;
+        if(e.PropertyName == nameof(SelectedViewModelsProvider.LearningElement))
+            Mediator.OverwriteElementEdit = false;
         await InvokeAsync(StateHasChanged);
     }
 
     private void OnForceNew()
     {
-        _editOverwritten = true;
+        Mediator.OverwriteElementEdit = true;
         SelectedViewModelsProvider.SetLearningElement(null, null);
     }
 }

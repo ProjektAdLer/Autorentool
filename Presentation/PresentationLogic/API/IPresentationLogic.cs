@@ -428,4 +428,6 @@ public interface IPresentationLogic
     void Logout();
 
     #endregion
+
+    void SetSelectedLearningContentViewModel(ILearningContentViewModel content);
 }

@@ -830,4 +830,9 @@ public class PresentationLogic : IPresentationLogic
     }
 
     #endregion
+
+    public void SetSelectedLearningContentViewModel(ILearningContentViewModel content)
+    {
+        SelectedViewModelsProvider.SetLearningContent(content, null);
+    }
 }
