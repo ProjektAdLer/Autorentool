@@ -12,7 +12,6 @@ jobs:
       dotNetVersion: net6.0
       dotNetConfiguration: Release
       runtimeTarget: win-x86
-      excludeMask: "[ElectronWrapper*]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest*]*,[TestHelpers*]*,[PresentationTest*]*"
     strategy:
       matrix:
         test_project:
@@ -42,7 +41,7 @@ jobs:
         
       # run test with coverage collection
       - name: Run ${{ matrix.test_project }} tests
-        run: dotnet test ${{ matrix.test_project }} --collect:"XPlat Code Coverage;Exclude=${{ env.excludeMask }}"
+        run: dotnet test ${{ matrix.test_project }} --collect:"XPlat Code Coverage" --settings coverlet.runsettings
 
       # submit result from parallel to coveralls
       - name: Coveralls Parallel

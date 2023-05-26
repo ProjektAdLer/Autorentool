@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="XPlat code coverage">
+        <Configuration>
+          <Format>cobertura</Format>          
+          <Exclude>[ElectronWrapper*]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest*]*,[TestHelpers*]*,[PresentationTest*]*</Exclude> <!-- [Assembly-Filter]Type-Filter -->
+          <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
+          <ExcludeByFile>**/dir1/class1.cs,**/dir2/*.cs,**/dir3/**/*.cs,</ExcludeByFile> <!-- Globbing filter -->
+          <SingleHit>false</SingleHit>
+          <UseSourceLink>false</UseSourceLink>
+          <IncludeTestAssembly>false</IncludeTestAssembly>
+          <SkipAutoProps>false</SkipAutoProps>
+          <DeterministicReport>false</DeterministicReport>
+          <ExcludeAssembliesWithoutSources>MissingAny</ExcludeAssembliesWithoutSources>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>
