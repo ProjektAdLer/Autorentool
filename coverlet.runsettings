@@ -6,8 +6,8 @@
         <Configuration>
           <Format>cobertura</Format>          
           <Exclude>[ElectronWrapper*]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest*]*,[TestHelpers*]*,[PresentationTest*]*</Exclude> <!-- [Assembly-Filter]Type-Filter -->
+          <Include>[AuthoringTool*]*,[BackendAccess*]*,[BusinessLogic*]*,[DataAccess*]*,[Generator*]*,[PersistEntities*]*,[Presentation*]*,[Shared*]*</Include> <!-- [Assembly-Filter]Type-Filter -->
           <ExcludeByAttribute>Obsolete,GeneratedCodeAttribute,CompilerGeneratedAttribute</ExcludeByAttribute>
-          <ExcludeByFile>**/dir1/class1.cs,**/dir2/*.cs,**/dir3/**/*.cs,</ExcludeByFile> <!-- Globbing filter -->
           <SingleHit>false</SingleHit>
           <UseSourceLink>false</UseSourceLink>
           <IncludeTestAssembly>false</IncludeTestAssembly>
