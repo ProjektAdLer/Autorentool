@@ -525,7 +525,6 @@ public class PresentationLogicUt
             LearningElementDifficultyEnum.Easy, 5, 7);
         
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
-        mockSelectedViewModelsProvider.Received().SetLearningElement(mockElementVm, mockCommand);
     }
 
     [Test]

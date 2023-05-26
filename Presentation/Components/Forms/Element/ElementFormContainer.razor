@@ -69,5 +69,6 @@
     {
         Mediator.OverwriteElementEdit = true;
         SelectedViewModelsProvider.SetLearningElement(null, null);
+        InvokeAsync(TriggerMasterLayoutStateHasChanged);
     }
 }

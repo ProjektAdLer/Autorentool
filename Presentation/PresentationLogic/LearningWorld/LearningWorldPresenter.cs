@@ -228,6 +228,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     public void SetSelectedLearningSpace(IObjectInPathWayViewModel obj)
     {
         SetSelectedLearningObject(obj);
+        _selectedViewModelsProvider.SetLearningElement(null, null);
         _mediator.RequestOpenSpaceDialog();
     }
 

@@ -96,6 +96,9 @@
 #pragma warning disable CS8618 - injected by framework
     [Inject]
     private ILearningWorldPresenter WorldPresenter { get; set; }
+    
+    [Inject]
+    private ILearningSpacePresenter SpacePresenter { get; set; }
 
     [Inject]
     private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
@@ -117,11 +120,19 @@
     {
         if (SelectedViewModelsProvider.LearningWorld == null)
             throw new InvalidOperationException("No learning world selected.");
-
-        WorldPresenter.CreateUnplacedLearningElement(
-    //ignore null warning here because validation ensures that LearningContent is not null - m.ho
-            model.Name, model.LearningContent!, model.Description, model.Goals, model.Difficulty,
-            model.Workload, model.Points);
+        
+        if(SpacePresenter.ActiveSlot == -1)
+            WorldPresenter.CreateUnplacedLearningElement(
+                //ignore null warning here because validation ensures that LearningContent is not null - m.ho
+                model.Name, model.LearningContent!, model.Description, model.Goals, model.Difficulty,
+                model.Workload, model.Points);
+        else
+        {
+            SpacePresenter.CreateLearningElementInSlot(
+                //ignore null warning here because validation ensures that LearningContent is not null - m.ho
+                model.Name, model.LearningContent!, model.Description, model.Goals, model.Difficulty,
+                model.Workload, model.Points);
+        }
         OnSubmitted.InvokeAsync();
     }
 
