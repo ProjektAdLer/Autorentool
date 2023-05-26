@@ -1,4 +1,4 @@
-﻿namespace ApiAccess.BackendEntities;
+﻿namespace BackendAccess.BackendEntities;
 
 public class ErrorBE
 {

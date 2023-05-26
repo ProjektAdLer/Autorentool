@@ -1,5 +1,5 @@
-﻿using ApiAccess.BackendEntities;
-using AutoMapper;
+﻿using AutoMapper;
+using BackendAccess.BackendEntities;
 using BusinessLogic.Entities.BackendAccess;
 
 namespace AuthoringTool.Mapping;

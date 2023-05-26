@@ -1,9 +1,8 @@
 using System.IO.Abstractions;
 using System.Reflection;
-using ApiAccess.API;
-using ApiAccess.BackendServices;
 using AuthoringTool.Mapping;
 using AutoMapper;
+using BackendAccess.BackendServices;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
 using BusinessLogic.Commands.Condition;
@@ -162,7 +161,7 @@ public class Startup
 
     private void ConfigureApiAccess(IServiceCollection services)
     {
-        services.AddSingleton<IBackendAccess, BackendAccess>();
+        services.AddSingleton<IBackendAccess, BackendAccess.API.BackendAccess>();
         services.AddSingleton<IUserWebApiServices, UserWebApiServices>();
         // Add Http Client
         services.AddHttpClient();

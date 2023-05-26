@@ -1,6 +1,5 @@
-﻿using ApiAccess.API;
-using ApiAccess.BackendServices;
-using AutoMapper;
+﻿using AutoMapper;
+using BackendAccess.BackendServices;
 using BusinessLogic.Entities.BackendAccess;
 using NSubstitute;
 using NUnit.Framework;
@@ -21,7 +20,7 @@ public class ApiAccessUt
         _userWebApiServices = Substitute.For<IUserWebApiServices>();
 
         // Act
-        var systemUnderTest = new BackendAccess(_mapper, _userWebApiServices);
+        var systemUnderTest = new BackendAccess.API.BackendAccess(_mapper, _userWebApiServices);
 
         // Assert
         Assert.Multiple(() =>
@@ -37,7 +36,7 @@ public class ApiAccessUt
         // Arrange
         _mapper = Substitute.For<IMapper>();
         _userWebApiServices = Substitute.For<IUserWebApiServices>();
-        var systemUnderTest = new BackendAccess(_mapper, _userWebApiServices);
+        var systemUnderTest = new BackendAccess.API.BackendAccess(_mapper, _userWebApiServices);
 
         // Act
         await systemUnderTest.GetUserTokenAsync("username", "password");
@@ -53,7 +52,7 @@ public class ApiAccessUt
         _mapper = Substitute.For<IMapper>();
         _userWebApiServices = Substitute.For<IUserWebApiServices>();
         var token = new UserToken("testToken");
-        var systemUnderTest = new BackendAccess(_mapper, _userWebApiServices);
+        var systemUnderTest = new BackendAccess.API.BackendAccess(_mapper, _userWebApiServices);
 
         // Act
         await systemUnderTest.GetUserInformationAsync(token);
@@ -69,7 +68,7 @@ public class ApiAccessUt
         _mapper = Substitute.For<IMapper>();
         _userWebApiServices = Substitute.For<IUserWebApiServices>();
         var token = new UserToken("testToken");
-        var systemUnderTest = new BackendAccess(_mapper, _userWebApiServices);
+        var systemUnderTest = new BackendAccess.API.BackendAccess(_mapper, _userWebApiServices);
 
         // Act
         await systemUnderTest.UploadLearningWorldAsync(token, "testWorldName", "testWorldDescription");
