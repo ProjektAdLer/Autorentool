@@ -15,36 +15,25 @@
             <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Undo" Disabled="!CanUndo" Title="Undo" OnClick="OnClickUndo"></MudIconButton>
             <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Redo" Disabled="!CanRedo" Title="Redo" OnClick="OnClickRedo"></MudIconButton>
         </div>
-        <Button @onclick="@ExportLearningWorld" class="btn-standard p-2 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto" title="Generate Learning World to Moodle and 3D Learning Environment" disabled="@(SelectedViewModelsProvider.LearningWorld==null)">
+        <Button @onclick="@ExportLearningWorld" class="btn-standard p-2 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto" title="Generate Learning World to Moodle and 3D Learning Environment" disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
             <MudIcon Icon="@Icons.Material.Filled._3dRotation"></MudIcon>
             <p class="pl-1 font-bold">Generate 3D-World</p>
         </Button>
-        
-        <MudPopover Open="@_isOpen" Fixed="false" Class="left-0 rounded-none overflow-hidden min-h-screen max-h-screen h-screen w-screen bg-blacktrans-700"></MudPopover>
-        
-        <MudPopover Open="@_isOpen" Fixed="false" Class="mt-12 ml-20 w-96 bg-adlerblue-600 bg-opacity-80">  
-             <div class="flex flex-row"> 
-                     <p class="text-center text-lg pl-6 pt-6 text-white">In order to further develop and optimize the authoring tool, we would appreciate if you could take a few minutes to give us feedback on the current status of the authoring tool.</p> 
-                     <Button class="flex-none w-5 h-5 text-adlergrey-200 font-bold text-lg hover:text-white" @onclick="ToggleOpen" Icon="@Icons.Material.Filled.Close" title="Close">X</Button> 
-             </div> 
-                 <div class="flex justify-center items-center pb-6 pt-1"> 
-                     <a href="https://www.soscisurvey.de/autorentoolevaluation_gesamt" target="_blank" title="Final feedback - Opens new web page" class="w-7/12 btn-standard flex flex-row gap-2 justify-center items-center">
-                         <img class="w-6 h-6 drop-shadow" src="/CustomIcons/feedback-icon-without-typo-nobg.png" alt="feedback-icon"/> 
-                         <p class="font-bold text-base">To the final feedback</p>
-                     </a> 
-                 </div>
-        </MudPopover> 
 
-        @code{ 
-             public bool _isOpen; 
-             public void ToggleOpen() 
-             { 
-                 if (_isOpen) 
-                     _isOpen = false; 
-                 else 
-                     _isOpen = true; 
-             } 
-         }
+        <MudPopover Open="@_popoverOpen" Fixed="false" Class="left-0 rounded-none overflow-hidden min-h-screen max-h-screen h-screen w-screen bg-blacktrans-700"></MudPopover>
+
+        <MudPopover Open="@_popoverOpen" Fixed="false" Class="mt-12 ml-20 w-96 bg-adlerblue-600 bg-opacity-80">
+            <div class="flex flex-row">
+                <p class="text-center text-lg pl-6 pt-6 text-white">In order to further develop and optimize the authoring tool, we would appreciate if you could take a few minutes to give us feedback on the current status of the authoring tool.</p>
+                <Button class="flex-none w-5 h-5 text-adlergrey-200 font-bold text-lg hover:text-white" @onclick="TogglePopover" Icon="@Icons.Material.Filled.Close" title="Close">X</Button>
+            </div>
+            <div class="flex justify-center items-center pb-6 pt-1">
+                <a href="https://www.soscisurvey.de/autorentoolevaluation_gesamt" target="_blank" title="Final feedback - Opens new web page" class="w-7/12 btn-standard flex flex-row gap-2 justify-center items-center">
+                    <img class="w-6 h-6 drop-shadow" src="/CustomIcons/feedback-icon-without-typo-nobg.png" alt="feedback-icon"/>
+                    <p class="font-bold text-base">To the final feedback</p>
+                </a>
+            </div>
+        </MudPopover>
 
     </div>
     <div class="flex justify-center items-center gap-2">
@@ -97,16 +86,25 @@
 
     private string _filepath = "";
 
+    private bool _popoverOpen;
+
+    private void TogglePopover()
+    {
+        _popoverOpen = !_popoverOpen;
+    }
+
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
         PresentationLogic.OnCommandUndoRedoOrExecute += async (_, args) => await InvokeAsync(StateHasChanged);
         SelectedViewModelsProvider.PropertyChanged += OnSelectedViewModelsProviderPropertyChanged;
     }
+
     private void OnSelectedViewModelsProviderPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         InvokeAsync(StateHasChanged);
     }
+
     private void OnClickMyLearningWorldsOverview()
     {
         SelectedViewModelsProvider.SetLearningWorld(null, null);
@@ -132,14 +130,13 @@
         {
             _filepath = await PresentationLogic.ConstructBackupAsync(SelectedViewModelsProvider.LearningWorld);
             Snackbar.Add("LearningWorld exported to " + _filepath, Severity.Success);
-            _isOpen = true;
+            _popoverOpen = true;
         }
         catch (OperationCanceledException)
         {
             Snackbar.Add("Exporting LearningWorld was canceled", Severity.Warning);
         }
         StateHasChanged();
-        
     }
 
     private void OnClickRedo()
