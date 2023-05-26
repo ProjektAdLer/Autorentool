@@ -12,7 +12,7 @@ jobs:
       dotNetVersion: net6.0
       dotNetConfiguration: Release
       runtimeTarget: win-x86
-      excludeMask: "[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]"
+      excludeMask: "[ElectronWrapper*]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest*]*,[TestHelpers*]*,[PresentationTest*]*"
     strategy:
       matrix:
         test_project:
