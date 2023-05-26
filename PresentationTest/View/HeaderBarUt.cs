@@ -85,6 +85,18 @@ public class HeaderBarUt
         Assert.That(() => systemUnderTest.FindComponent<Stub<LmsLoginButton>>(), Throws.Nothing);
     }
 
+    [Test]
+    public void Render_ShowsLocalizedAuthoringToolName()
+    {
+        _stringLocalizer["AuthoringTool.Text"].Returns(new LocalizedString("AuthoringTool.Text", "TestName"));
+        _stringLocalizer["AuthoringTool.Version"].Returns(new LocalizedString("AuthoringTool.Version", "v3"));
+        
+        var systemUnderTest = GetRenderedComponent();
+        
+        var element = systemUnderTest.Find("header div h1");
+        element.MarkupMatches(@"<h1 class=""font-bold text-lg"">TestName v3</h1>");
+    }
+
     private IRenderedComponent<HeaderBar> GetRenderedComponent()
     {
         return _testContext.RenderComponent<HeaderBar>();
