@@ -15,7 +15,7 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     void EditLearningSpace(string name, string description, string goals, int requiredPoints, Theme theme,
         ITopicViewModel? topic = null);
     ILearningSpaceViewModel? LearningSpaceVm { get; }
-    void SetSelectedLearningElement(ILearningElementViewModel learningElement);
+    void SetSelectedLearningElement(ILearningElementViewModel? learningElement);
     void DeleteSelectedLearningElement();
     Task LoadLearningElementAsync(int slotIndex);
     Task SaveSelectedLearningElementAsync();
@@ -37,5 +37,9 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     void SetLearningSpaceLayout(FloorPlanEnum floorPlanName);
     void OpenReplaceLearningElementDialog(ILearningWorldViewModel learningWorldVm, ILearningElementViewModel dropItem, int slotId);
     bool ReplaceLearningElementDialogOpen { get; set; }
+    int ActiveSlot { get; }
     void OnReplaceLearningElementDialogClose(DialogResult closeResult);
+    void AddNewLearningElement(int i);
+    void CreateLearningElementInSlot(string name, ILearningContentViewModel learningContent,
+        string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points);
 }

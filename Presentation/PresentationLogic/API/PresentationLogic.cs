@@ -500,8 +500,6 @@ public class PresentationLogic : IPresentationLogic
             difficulty, workload, points, positionX, positionY,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
-
-        SelectedViewModelsProvider.SetLearningElement(learningWorldVm.UnplacedLearningElements.Last(), command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.CreateLearningElementInSlot"/>
@@ -830,4 +828,9 @@ public class PresentationLogic : IPresentationLogic
     }
 
     #endregion
+
+    public void SetSelectedLearningContentViewModel(ILearningContentViewModel content)
+    {
+        SelectedViewModelsProvider.SetLearningContent(content, null);
+    }
 }

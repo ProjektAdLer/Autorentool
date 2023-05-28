@@ -41,11 +41,18 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         private set => SetField(ref _learningSpaceVm, value);
     }
 
+    public int ActiveSlot
+    {
+        get => _activeSlot;
+        private set => SetField(ref _activeSlot, value);
+    }
+
     public ILearningContentViewModel? DragAndDropLearningContent { get; private set; }
     public IDisplayableLearningObject? RightClickedLearningObject { get; private set; }
     
     public void SetLearningSpace(ILearningSpaceViewModel space)
     {
+        ActiveSlot = -1;
         LearningSpaceVm = space;
     }
 
@@ -73,6 +80,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         if (_selectedViewModelsProvider.LearningWorld == null)
             throw new ApplicationException("LearningWorld is null");
         _presentationLogic.ChangeLearningSpaceLayout(LearningSpaceVm, _selectedViewModelsProvider.LearningWorld, floorPlanName);
+        ActiveSlot = -1;
     }
     
     #region LearningElement
@@ -100,6 +108,25 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
             _replaceLearningElementData.DropItem, _replaceLearningElementData.SlotId);
     }
 
+    public void AddNewLearningElement(int i)
+    {
+        if (LearningSpaceVm?.LearningSpaceLayout.LearningElements.ContainsKey(i) ?? false)
+            return;
+        SetSelectedLearningElement(null);
+        _activeSlot = i;
+        _mediator.RequestOpenElementDialog();
+    }
+
+    public void CreateLearningElementInSlot(string name, ILearningContentViewModel learningContent,
+        string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points)
+    {
+        if(LearningSpaceVm == null)
+            throw new ApplicationException("LearningSpaceVm is null");
+        _presentationLogic.CreateLearningElementInSlot(LearningSpaceVm, _activeSlot, name, learningContent, description,
+            goals, difficulty, workload, points);
+        ActiveSlot = -1;
+    }
+
     public void DragLearningElement(object sender, DraggedEventArgs<ILearningElementViewModel> args)
     {
         _presentationLogic.DragLearningElement(args.LearningObject, args.OldPositionX, args.OldPositionY);
@@ -108,6 +135,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     public void ClickedLearningElement(ILearningElementViewModel obj)
     {
         _mediator.RequestOpenElementDialog();
+        ActiveSlot = -1;
         SetSelectedLearningElement(obj);
     }
 
@@ -191,7 +219,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     /// </summary>
     /// <param name="learningElement">The learning element that should be set as selected</param>
     /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
-    public void SetSelectedLearningElement(ILearningElementViewModel learningElement)
+    public void SetSelectedLearningElement(ILearningElementViewModel? learningElement)
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");

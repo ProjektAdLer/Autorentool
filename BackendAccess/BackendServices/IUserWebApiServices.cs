@@ -1,6 +1,6 @@
-﻿using ApiAccess.BackendEntities;
+﻿using BackendAccess.BackendEntities;
 
-namespace ApiAccess.BackendServices;
+namespace BackendAccess.BackendServices;
 
 public interface IUserWebApiServices
 {

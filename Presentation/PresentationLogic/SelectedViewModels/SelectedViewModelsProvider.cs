@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using BusinessLogic.Commands;
+using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningWorld;
 
@@ -12,6 +13,7 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
     private ILearningWorldViewModel? _learningWorld;
     private ISelectableObjectInWorldViewModel? _learningObjectInPathWay;
     private ILearningElementViewModel? _learningElement;
+    private ILearningContentViewModel? _learningContent;
 
     private readonly Stack<ISelectedViewModelStackEntry> _undoStack = new();
     private readonly Stack<ISelectedViewModelStackEntry> _redoStack = new();
@@ -68,19 +70,25 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
     public ILearningWorldViewModel? LearningWorld
     {
         get => _learningWorld;
-        set => SetField(ref _learningWorld, value);
+        private set => SetField(ref _learningWorld, value);
     }
 
     public ISelectableObjectInWorldViewModel? LearningObjectInPathWay
     {
         get => _learningObjectInPathWay;
-        set => SetField(ref _learningObjectInPathWay, value);
+        private set => SetField(ref _learningObjectInPathWay, value);
     }
 
     public ILearningElementViewModel? LearningElement
     {
         get => _learningElement;
-        set => SetField(ref _learningElement, value);
+        private set => SetField(ref _learningElement, value);
+    }
+
+    public ILearningContentViewModel? LearningContent
+    {
+        get => _learningContent;
+        private set => SetField(ref _learningContent, value);
     }
 
     public void SetLearningWorld(ILearningWorldViewModel? learningWorld, ICommand? command)
@@ -108,6 +116,15 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
             _undoStack.Push(
                 new SelectedLearningElementViewModelStackEntry(command, LearningElement, le => LearningElement = le));
         LearningElement = learningElement;
+        _redoStack.Clear();
+    }
+
+    public void SetLearningContent(ILearningContentViewModel? content, ICommand? command)
+    {
+        if (command is not null)
+            _undoStack.Push(
+                new SelectedLearningContentViewModelStackEntry(command, LearningContent, lc => LearningContent = lc));
+        LearningContent = content;
         _redoStack.Clear();
     }
 

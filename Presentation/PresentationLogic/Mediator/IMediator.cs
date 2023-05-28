@@ -29,6 +29,8 @@ public interface IMediator : INotifyPropertyChanged
     /// </summary>
     bool WorldOverviewOpen { get; }
 
+    bool OverwriteElementEdit { get; set; }
+
     /// <summary>
     /// Requests the opening of the world dialog.
     /// </summary>
@@ -41,6 +43,10 @@ public interface IMediator : INotifyPropertyChanged
     /// Requests the opening of the element dialog.
     /// </summary>
     void RequestOpenElementDialog();
+    /// <summary>
+    /// Requests the opening of the element dialog with the new element dialog being forced.
+    /// </summary>
+    void RequestOpenNewElementDialog();
     /// <summary>
     /// Requests the opening of the content dialog.
     /// </summary>

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Linq;
-using System.Text.RegularExpressions;
 using Bunit;
 using Bunit.TestDoubles;
 using Microsoft.AspNetCore.Components;
+using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
 using MudBlazor.Services;
 using NSubstitute;
@@ -11,6 +11,7 @@ using NUnit.Framework;
 using Presentation.Components;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.View.LearningElement;
 using Shared;
 using TestContext = Bunit.TestContext;
@@ -22,6 +23,7 @@ public class DragDropLearningElementUt
 {
 #pragma warning disable CS8618 //set in setup - n.stich
     private TestContext _ctx;
+    private ISelectedViewModelsProvider _selectedViewModelsProvider;
 #pragma warning restore CS8618
 
     [SetUp]
@@ -36,6 +38,8 @@ public class DragDropLearningElementUt
         _ctx.ComponentFactories.AddStub<MudListItem>();
         _ctx.ComponentFactories.AddStub<MudMenuItem>();
         _ctx.JSInterop.SetupVoid("mudPopover.connect", _ => true);
+        _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        _ctx.Services.AddSingleton(_selectedViewModelsProvider);
     }
 
     [Test]

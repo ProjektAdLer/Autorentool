@@ -2,12 +2,12 @@
 using System.Net;
 using System.Text.Json;
 using System.Web;
-using ApiAccess.BackendEntities;
+using BackendAccess.BackendEntities;
 using BusinessLogic.ErrorManagement.BackendAccess;
 using Microsoft.Extensions.Logging;
 using Shared.Configuration;
 
-namespace ApiAccess.BackendServices;
+namespace BackendAccess.BackendServices;
 
 public class UserWebApiServices : IUserWebApiServices
 {

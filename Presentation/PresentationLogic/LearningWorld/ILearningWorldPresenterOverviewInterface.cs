@@ -12,4 +12,6 @@ public interface ILearningWorldPresenterOverviewInterface
     /// <param name="learningElement">The learning element to set.</param>
     /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
     void SetSelectedLearningElement(ILearningElementViewModel learningElement);
+
+    void SetSelectedLearningSpace(IObjectInPathWayViewModel obj);
 }

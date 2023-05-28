@@ -1,4 +1,5 @@
 @implements IDisposable
+@implements IAsyncDisposable
 @using Presentation.PresentationLogic.LearningWorld
 @using Shared
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
@@ -9,7 +10,7 @@
 @using Presentation.Components.Forms.Buttons
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View
-@implements IAsyncDisposable
+
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Learning element metadata</h2>
@@ -95,6 +96,9 @@
 #pragma warning disable CS8618 - injected by framework
     [Inject]
     private ILearningWorldPresenter WorldPresenter { get; set; }
+    
+    [Inject]
+    private ILearningSpacePresenter SpacePresenter { get; set; }
 
     [Inject]
     private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
@@ -116,11 +120,19 @@
     {
         if (SelectedViewModelsProvider.LearningWorld == null)
             throw new InvalidOperationException("No learning world selected.");
-
-        WorldPresenter.CreateUnplacedLearningElement(
-    //ignore null warning here because validation ensures that LearningContent is not null - m.ho
-            model.Name, model.LearningContent!, model.Description, model.Goals, model.Difficulty,
-            model.Workload, model.Points);
+        
+        if(SpacePresenter.ActiveSlot == -1)
+            WorldPresenter.CreateUnplacedLearningElement(
+                //ignore null warning here because validation ensures that LearningContent is not null - m.ho
+                model.Name, model.LearningContent!, model.Description, model.Goals, model.Difficulty,
+                model.Workload, model.Points);
+        else
+        {
+            SpacePresenter.CreateLearningElementInSlot(
+                //ignore null warning here because validation ensures that LearningContent is not null - m.ho
+                model.Name, model.LearningContent!, model.Description, model.Goals, model.Difficulty,
+                model.Workload, model.Points);
+        }
         OnSubmitted.InvokeAsync();
     }
 
@@ -128,6 +140,9 @@
     {
         SelectedViewModelsProvider.PropertyChanged += MediatorOnPropertyChanged;
         base.OnInitialized();
+        if (SelectedViewModelsProvider.LearningContent == null) return;
+        FormDataContainer.FormModel.LearningContent = SelectedViewModelsProvider.LearningContent;
+        SelectedViewModelsProvider.SetLearningContent(null, null);
     }
 
     private async void MediatorOnPropertyChanged(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)

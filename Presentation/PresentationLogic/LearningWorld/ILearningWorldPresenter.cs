@@ -50,7 +50,7 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     void SwitchPathWayCondition(PathWayConditionViewModel pathWayCondition);
     void HideRightClickMenu();
     IObjectInPathWayViewModel? RightClickedLearningObject { get; }
-    void SetSelectedLearningSpace(IObjectInPathWayViewModel obj);
+    public void SetSelectedLearningSpace(IObjectInPathWayViewModel obj);
     void DeleteLearningSpace(ILearningSpaceViewModel obj);
     void DeleteLearningObject(IObjectInPathWayViewModel obj);
     void CreatePathWayCondition(ConditionEnum condition = ConditionEnum.Or);

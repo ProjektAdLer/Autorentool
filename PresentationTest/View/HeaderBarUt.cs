@@ -34,6 +34,9 @@ public class HeaderBarUt
         _testContext.ComponentFactories.AddStub<CloseAppButton>();
         _testContext.ComponentFactories.AddStub<CultureSelector>();
         _testContext.ComponentFactories.AddStub<LmsLoginButton>();
+        _testContext.ComponentFactories.AddStub<MudPopover>();
+        _testContext.ComponentFactories.AddStub<MudIconButton>();
+        _testContext.ComponentFactories.AddStub<MudDivider>();
         _presentationLogic = Substitute.For<IPresentationLogic>();
         _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         _mediator = Substitute.For<IMediator>();
@@ -83,6 +86,18 @@ public class HeaderBarUt
         var systemUnderTest = GetRenderedComponent();
 
         Assert.That(() => systemUnderTest.FindComponent<Stub<LmsLoginButton>>(), Throws.Nothing);
+    }
+
+    [Test]
+    public void Render_ShowsLocalizedAuthoringToolName()
+    {
+        _stringLocalizer["AuthoringTool.Text"].Returns(new LocalizedString("AuthoringTool.Text", "TestName"));
+        _stringLocalizer["AuthoringTool.Version"].Returns(new LocalizedString("AuthoringTool.Version", "v3"));
+        
+        var systemUnderTest = GetRenderedComponent();
+        
+        var element = systemUnderTest.Find("header div h1");
+        element.MarkupMatches(@"<h1 class=""font-bold text-lg"">TestName v3</h1>");
     }
 
     private IRenderedComponent<HeaderBar> GetRenderedComponent()
