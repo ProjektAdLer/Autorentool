@@ -24,4 +24,25 @@
     <data name="AuthoringTool.Version" xml:space="preserve">
         <value>v0.3.1</value>
     </data>
+    <data name="3DWorld.Generate.Text" xml:space="preserve">
+        <value>Generate 3D-World</value>
+    </data>
+    <data name="3DWorld.Generate.Hover" xml:space="preserve">
+        <value>Generate Learning World to Moodle and 3D Learning Environment</value>
+    </data>
+    <data name="LearningWorld.Home.Hover" xml:space="preserve">
+        <value>My Learning Worlds</value>
+    </data>
+    <data name="LearningWorld.Save.Hover" xml:space="preserve">
+        <value>Save Learning World</value>
+    </data>
+    <data name="Feedback.Text" xml:space="preserve">
+        <value>Feedback</value>
+    </data>
+    <data name="Feedback.Button.Technical.Hover" xml:space="preserve">
+        <value>Technical feedback - Opens new web page</value>
+    </data>
+    <data name="Feedback.Button.UX.Hover" xml:space="preserve">
+        <value>User experience feedback - Opens new web page</value>
+    </data>
 </root>

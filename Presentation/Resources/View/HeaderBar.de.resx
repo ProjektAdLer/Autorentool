@@ -24,4 +24,16 @@
     <data name="AuthoringTool.Version" xml:space="preserve">
         <value>v0.3.1</value>
     </data>
+    <data name="3DWorld.Generate.Text" xml:space="preserve">
+        <value>Generiere 3D-Welt</value>
+    </data>
+    <data name="3DWorld.Generate.Hover" xml:space="preserve">
+        <value>[3DWorld Placeholder]</value>
+    </data>
+    <data name="LearningWorld.Home.Hover" xml:space="preserve">
+        <value />
+    </data>
+    <data name="Feedback.Text" xml:space="preserve">
+        <value>Feedback</value>
+    </data>
 </root>

@@ -8,16 +8,16 @@
 @inject ISnackbar Snackbar
 <header class="mb-1 grid grid-cols-3 grid-rows-1 w-full bg-buttonbgblue items-center">
     <div class="ml-1 flex justify-start items-center gap-2">
-        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title="My Learning Worlds" @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
+        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title=@Localizer["LearningWorld.Home.Hover"] @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
         <MudDivider Vertical="true" FlexItem="true"/>
-        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" Title="Save Learning World" OnClick="TrySaveAsync"></MudIconButton>
+        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" Title=@Localizer["LearningWorld.Save.Hover"] OnClick="TrySaveAsync"></MudIconButton>
         <div>
             <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Undo" Disabled="!CanUndo" Title="Undo" OnClick="OnClickUndo"></MudIconButton>
             <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Redo" Disabled="!CanRedo" Title="Redo" OnClick="OnClickRedo"></MudIconButton>
         </div>
-        <Button @onclick="@ExportLearningWorld" class="btn-standard p-2 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto" title="Generate Learning World to Moodle and 3D Learning Environment" disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
+        <Button @onclick="@ExportLearningWorld" class="btn-standard p-2 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto" title=@Localizer["3DWorld.Generate.Hover"] disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
             <MudIcon Icon="@Icons.Material.Filled._3dRotation"></MudIcon>
-            <p class="pl-1 font-bold">Generate 3D-World</p>
+            <p class="pl-1 font-bold">@Localizer["3DWorld.Generate.Text"]</p>
         </Button>
 
         <MudPopover Open="@_popoverOpen" Fixed="false" Class="left-0 rounded-none overflow-hidden min-h-screen max-h-screen h-screen w-screen bg-blacktrans-700"></MudPopover>
@@ -43,15 +43,15 @@
     <div class="flex justify-end items-center gap-2 border-solid">
         <div class="flex flex-col justify-center px-1">
             <p class="text-xs font-bold text-center">
-                Feedback
+                @Localizer["Feedback.Text"]
             </p>
             <div class="flex flex-row justify-around">
-                <a href="https://bugreport.projekt-adler.eu" target="_blank" title="Technical feedback - Opens new web page">
+                <a href="https://bugreport.projekt-adler.eu" target="_blank" title=@Localizer["Feedback.Button.Technical.Hover"]>
                     <button class="btn-standard m-0 p-1 h-5">
                         <img class="w-4 h-4 drop-shadow" src="/CustomIcons/bug-icon-nobg.png" alt="debug-icon"/>
                     </button>
                 </a>
-                <a href="https://www.soscisurvey.de/autorentoolevaluation/" target="_blank" title="User experience feedback - Opens new web page">
+                <a href="https://www.soscisurvey.de/autorentoolevaluation/" target="_blank" title=@Localizer["Feedback.Button.UX.Hover"]>
                     <button class="btn-standard m-0 p-1 h-5">
                         <img class="w-4 h-4 drop-shadow" src="/CustomIcons/feedback-icon-without-typo-nobg.png" alt="feedback-icon"/>
                     </button>
