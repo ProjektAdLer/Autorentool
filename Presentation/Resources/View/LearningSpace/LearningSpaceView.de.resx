@@ -18,22 +18,7 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="German" xml:space="preserve">
-        <value>delete</value>
-    </data>
-    <data name="English" xml:space="preserve">
-        <value>delete</value>
-    </data>
-    <data name="Localizer.German.Short.Text" xml:space="preserve">
-        <value>DE</value>
-    </data>
-    <data name="Localizer.English.Short.Text" xml:space="preserve">
-        <value>EN</value>
-    </data>
-    <data name="Localizer.German.Short.Text.Hover" xml:space="preserve">
-        <value>Deutsch</value>
-    </data>
-    <data name="Localizer.English.Short.Text.Hover" xml:space="preserve">
-        <value>Englisch</value>
+    <data name="LearningSpace.Title.Text" xml:space="preserve">
+        <value>Lernraum Editor</value>
     </data>
 </root>

@@ -3,10 +3,14 @@
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View
 @using Shared
+@using Microsoft.Extensions.Localization
+@using Presentation.View.MyLearningWorlds
 
-<MudButton OnClick="CreateDebugWorld" Class="btn-standard normal-case">Create Debug World</MudButton>
+<MudButton OnClick="CreateDebugWorld" Class="btn-standard normal-case">@Localizer["Page.LearningWorld.Button.GOTO.CreateDebugWorld.Text"]</MudButton>
 
 @code {
+    [Inject]
+    private IStringLocalizer<MyLearningWorldsOverview> Localizer{ get; set; }
 
     [Inject]
     internal NavigationManager NavManager { get; private init; }

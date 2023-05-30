@@ -4,10 +4,11 @@
 @using Shared
 @using Presentation.PresentationLogic.LearningElement
 @using System.Text
+@using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.SelectedViewModels
 <div class="mx-2 rounded-lg">
     <div class="flex justify-center p-2">
-        <h2 class="text-2xl text-center font-bold text-adlergrey-500 mx-2">Learning Space Editor</h2>
+        <h2 class="text-2xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["LearningSpace.Title.Text"]</h2>
     </div>
 </div>
 
@@ -21,10 +22,10 @@
     {
         <section class="p-2 gap-1 flex flex-col justify-start">
             <div class="flex justify-between items-start">
-            <label id="learning-element-info" class="font-medium text-lg flex flex-col">
-                <h3 class="text-base text-adlerblue-600 element-name"><span class="text-adlergrey-600">Selected learning element: </span> @SelectedViewModelsProvider.LearningElement.Name</h3>
-                <h3 class="text-base text-adlerblue-600 element-description"><span class="text-adlergrey-600">Description: </span> @SelectedViewModelsProvider.LearningElement.Description</h3>
-            </label>
+                <label id="learning-element-info" class="font-medium text-lg flex flex-col">
+                    <h3 class="text-base text-adlerblue-600 element-name"><span class="text-adlergrey-600">Selected learning element: </span> @SelectedViewModelsProvider.LearningElement.Name</h3>
+                    <h3 class="text-base text-adlerblue-600 element-description"><span class="text-adlergrey-600">Description: </span> @SelectedViewModelsProvider.LearningElement.Description</h3>
+                </label>
                 <div>
                     <h3 class="text-base text-adlerblue-600 space-workload"><span class="text-adlergrey-600">Workload: </span> @LearningSpaceP.LearningSpaceVm?.Workload<span class="text-adlergrey-600"> min.</span></h3>
                     <h3 class="text-base text-adlerblue-600 space-points"><span class="text-adlergrey-600">Points: </span> @LearningSpaceP.LearningSpaceVm?.Points</h3>
@@ -91,6 +92,9 @@
 
     [Inject]
     IDialogService DialogService { get; set; }
+    
+    [Inject]
+    private IStringLocalizer<LearningSpaceView> Localizer { get; set; }
 #pragma warning restore CS8618
 
     [Parameter]

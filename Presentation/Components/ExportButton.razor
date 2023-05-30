@@ -1,7 +1,13 @@
 @using Presentation.PresentationLogic.API
-<MudButton OnClick="CallExport" Class="btn-standard normal-case">Debug for Philipp</MudButton>
+@using Microsoft.Extensions.Localization
+@using Presentation.View.MyLearningWorlds
+
+<MudButton OnClick="CallExport" Class="btn-standard normal-case">@Localizer["Page.LearningWorld.Button.GOTO.DebugPhilipp.Text"]</MudButton>
 
 @code {
+    [Inject]
+    private IStringLocalizer<MyLearningWorldsOverview> Localizer { get; set; }
+    
     [Inject]
     public IPresentationLogic PresentationLogic { get; set; }
 
