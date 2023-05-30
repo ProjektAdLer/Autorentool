@@ -5,6 +5,7 @@ using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
 using Shared;
@@ -191,8 +192,7 @@ public class CachingMapper : ICachingMapper
         learningSpaceVm = Cache(learningSpaceVm);
         //get all elements in entity that are not in view model
         var newLearningElementsInEntity = learningSpaceEntity.LearningSpaceLayout.LearningElements
-            .Where(kvP =>
-                learningSpaceVm.ContainedLearningElements.All(l => kvP.Value.Id != l.Id));
+            .Where(kvP => !SameIdAtSameIndex(learningSpaceVm.LearningSpaceLayout, kvP));
         //for all elements in entity that are not in view model, check cache and insert to view model
         foreach (var e in newLearningElementsInEntity.Where(e => _cache.ContainsKey(e.Value!.Id)))
         {
@@ -213,6 +213,10 @@ public class CachingMapper : ICachingMapper
         topicVm = Cache(topicVm);
         _mapper.Map(topic, topicVm);
     }
+    
+    private static bool SameIdAtSameIndex(ILearningSpaceLayoutViewModel destination,
+        KeyValuePair<int, ILearningElement> kvp) =>
+        destination.LearningElements.Any(y => y.Key == kvp.Key && y.Value.Id == kvp.Value.Id);
 
     private void CacheAuthoringToolWorkspaceContent(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm)
     {
