@@ -6,6 +6,7 @@ using NUnit.Framework;
 using PersistEntities;
 using PersistEntities.LearningContent;
 using Shared;
+using TestHelpers;
 
 namespace GeneratorTest.DSL;
 
@@ -20,16 +21,11 @@ public class CreateDslUt
         var mockLogger = Substitute.For<ILogger<CreateDsl>>();
         var systemUnderTest = new CreateDsl(mockFileSystem, mockLogger);
         
-        var inboundObject1 = new LearningSpacePe("1", "", "",
-            1, Theme.Campus, null, positionX: 0, positionY: 0, inBoundObjects: null, outBoundObjects: null);
-        var inboundObject2 = new LearningSpacePe("2", "", "",
-            1, Theme.Campus, null, positionX: 0, positionY: 0, inBoundObjects: null, outBoundObjects: null);
-        var inboundObject3 = new LearningSpacePe("3", "", "",
-            1, Theme.Campus, null, positionX: 0, positionY: 0, inBoundObjects: null, outBoundObjects: null);
-        var inboundObject4 = new LearningSpacePe("4", "", "",
-            1, Theme.Campus, null, positionX: 0, positionY: 0, inBoundObjects: null, outBoundObjects: null);
-        var inboundObject5 = new LearningSpacePe("5", "", "",
-            1, Theme.Campus, null, positionX: 0, positionY: 0, inBoundObjects: null, outBoundObjects: null);
+        var inboundObject1 = PersistEntityProvider.GetLearningSpace("1");
+        var inboundObject2 = PersistEntityProvider.GetLearningSpace("2");
+        var inboundObject3 = PersistEntityProvider.GetLearningSpace("3");
+        var inboundObject4 = PersistEntityProvider.GetLearningSpace("4");
+        var inboundObject5 = PersistEntityProvider.GetLearningSpace("5");
        
         var listLearningSpaces = new List<LearningSpacePe>
         {
@@ -118,7 +114,7 @@ public class CreateDslUt
                 mockElement2
             }
         };
-        var mockLearningSpaceLayout1 = new LearningSpaceLayoutPe(mockLearningElements1, FloorPlanEnum.R20X308L);
+        var mockLearningSpaceLayout1 = new LearningSpaceLayoutPe(mockLearningElements1, FloorPlanEnum.R_20X30_8L);
         var mockLearningElements2 = new Dictionary<int, ILearningElementPe>()
         {
             {
@@ -126,7 +122,7 @@ public class CreateDslUt
                 mockElement3
             }
         };
-        var mockLearningSpaceLayout2 = new LearningSpaceLayoutPe(mockLearningElements2, FloorPlanEnum.R20X308L);
+        var mockLearningSpaceLayout2 = new LearningSpaceLayoutPe(mockLearningElements2, FloorPlanEnum.R_20X30_8L);
         var mockLearningElements3 = new Dictionary<int, ILearningElementPe>()
         {
             {
@@ -138,7 +134,7 @@ public class CreateDslUt
                 mockElement5
             }
         };
-        var mockLearningSpaceLayout3 = new LearningSpaceLayoutPe(mockLearningElements3, FloorPlanEnum.R20X308L);
+        var mockLearningSpaceLayout3 = new LearningSpaceLayoutPe(mockLearningElements3, FloorPlanEnum.R_20X30_8L);
 
         var mockSpace1 = new LearningSpacePe("Space1", "", "", 1, Theme.Campus,
             mockLearningSpaceLayout1);

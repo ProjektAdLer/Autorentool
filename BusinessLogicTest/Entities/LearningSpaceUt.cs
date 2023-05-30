@@ -30,7 +30,7 @@ public class LearningSpaceUt
                 1, ele2
             }
         };
-        var learningSpaceLayout = new LearningSpaceLayout(learningElements, FloorPlanEnum.R20X206L);
+        var learningSpaceLayout = new LearningSpaceLayout(learningElements, FloorPlanEnum.R_20X20_6L);
         var assignedTopic = new Topic("topic1");
         
         var systemUnderTest = new LearningSpace(name, description, goals, requiredPoints, Theme.Campus, 
@@ -71,7 +71,7 @@ public class LearningSpaceUt
                 1, ele2
             }
         };
-        var learningSpaceLayout = new LearningSpaceLayout(learningElements, FloorPlanEnum.R20X206L);
+        var learningSpaceLayout = new LearningSpaceLayout(learningElements, FloorPlanEnum.R_20X20_6L);
         var assignedTopic = new Topic("topic1");
         
         var systemUnderTest = new LearningSpace(name, description, goals, requiredPoints, Theme.Campus, 
@@ -158,7 +158,7 @@ public class LearningSpaceUt
                 1, ele2
             }
         };
-        var learningSpaceLayout = new LearningSpaceLayout(learningElements, FloorPlanEnum.R20X206L);
+        var learningSpaceLayout = new LearningSpaceLayout(learningElements, FloorPlanEnum.R_20X20_6L);
         
         var systemUnderTest = new LearningSpace(name, description, goals, requiredPoints, Theme.Campus, 
             learningSpaceLayout, positionX: positionX, positionY: positionY);

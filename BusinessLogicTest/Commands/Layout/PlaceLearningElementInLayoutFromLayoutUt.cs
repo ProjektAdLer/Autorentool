@@ -13,7 +13,7 @@ public class PlaceLearningElementInLayoutFromLayoutUt
     public void MoveLearningElementToEmptySlot_Execute_MovesLearningElement()
     {
         var parent = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L))
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X20_6L))
         {
             UnsavedChanges = false
         };
@@ -54,7 +54,7 @@ public class PlaceLearningElementInLayoutFromLayoutUt
     public void MoveLearningElementToAssignedSlot_Execute_SwitchesLearningElements()
     {
         var parent = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L))
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X20_6L))
         {
             UnsavedChanges = false
         };
@@ -103,7 +103,7 @@ public class PlaceLearningElementInLayoutFromLayoutUt
     public void Undo_MementoIsNull_ThrowsException()
     {
         var parent = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L));
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X20_6L));
         var content = new FileContent("cn", "ct", "cf");
         var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, parent, workload: 8, points: 9, positionX: 17f, positionY: 29f);
         parent.LearningSpaceLayout.LearningElements[0] = element;
@@ -126,7 +126,7 @@ public class PlaceLearningElementInLayoutFromLayoutUt
     public void UndoRedo_UndoesAndRedoesMovingLearningElement()
     {
         var parent = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L))
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X20_6L))
         {
             UnsavedChanges = false
         };
@@ -189,7 +189,7 @@ public class PlaceLearningElementInLayoutFromLayoutUt
     public void UndoRedo_UndoesAndRedoesSwitchingLearningElements()
     {
         var parent = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L))
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X20_6L))
         {
             UnsavedChanges = false
         };

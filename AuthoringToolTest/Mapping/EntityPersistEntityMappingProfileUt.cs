@@ -141,7 +141,7 @@ public class EntityPersistEntityMappingProfileUt
     {
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X308L),
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X30_8L),
             positionX: PositionX, positionY: PositionY, inBoundSpaces: new List<IObjectInPathWay>(),
             outBoundSpaces: new List<IObjectInPathWay>());
         source.LearningSpaceLayout.LearningElements[0] = GetTestableElementWithParent(source);
@@ -487,7 +487,7 @@ public class EntityPersistEntityMappingProfileUt
     private static LearningSpace GetTestableSpace()
     {
         var space = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X308L),
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X30_8L),
             positionX: PositionX, positionY: PositionY);
         var element = GetTestableElementWithParent(space);
         space.LearningSpaceLayout.LearningElements[0] = element;
@@ -505,7 +505,7 @@ public class EntityPersistEntityMappingProfileUt
                         GetTestableElementPersistEntity()
                     }
                 },
-                FloorPlanEnum.R20X308L), positionX: NewPositionX, positionY: NewPositionY);
+                FloorPlanEnum.R_20X30_8L), positionX: NewPositionX, positionY: NewPositionY);
     }
 
     #endregion
