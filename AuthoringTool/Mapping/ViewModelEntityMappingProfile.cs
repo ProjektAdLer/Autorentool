@@ -275,6 +275,7 @@ public class ViewModelEntityMappingProfile : Profile
             .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
             .ForMember(x => x.SelectableWorldObjects, opt => opt.Ignore())
             .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
+            .ForMember(x => x.UnplacedLearningElements, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
                 foreach (var pathWay in d.LearningPathWays)
@@ -293,6 +294,7 @@ public class ViewModelEntityMappingProfile : Profile
                         .Select(x => x.TargetObject).ToList();
                 }
             })
+            .AfterMap(MapUnplacedElements)
             .IncludeBase<ILearningWorld, ILearningWorldViewModel>()
             .ReverseMap()
             .IncludeBase<ILearningWorldViewModel, ILearningWorld>()
@@ -325,6 +327,7 @@ public class ViewModelEntityMappingProfile : Profile
             .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
             .ForMember(x => x.SelectableWorldObjects, opt => opt.Ignore())
             .ForMember(x => x.UnsavedChanges, opt => opt.Ignore())
+            .ForMember(x => x.UnplacedLearningElements, opt => opt.Ignore())
             .AfterMap((s, d) =>
             {
                 foreach (var pathWay in d.LearningPathWays)
@@ -342,7 +345,8 @@ public class ViewModelEntityMappingProfile : Profile
                     pathWayObject.OutBoundObjects = d.LearningPathWays.Where(x => x.SourceObject.Id == pathWayObject.Id)
                         .Select(x => x.TargetObject).ToList();
                 }
-            });
+            })
+            .AfterMap(MapUnplacedElements);
 
         CreateMap<ILearningWorldViewModel, LearningWorld>()
             .EqualityComparison((x, y) => x.Id == y.Id)
@@ -366,6 +370,33 @@ public class ViewModelEntityMappingProfile : Profile
                         .Select(x => x.TargetObject).ToList();
                 }
             });
+    }
+    
+    private static void MapUnplacedElements(ILearningWorld source, LearningWorldViewModel destination, ResolutionContext ctx)
+    {
+        //gather view models for all elements that are in source but not in destination
+        var sourceNewElementsViewModels = source.UnplacedLearningElements.ToList()
+            .FindAll(x => destination.UnplacedLearningElements.All(v => v.Id != x.Id))
+            .Select(ele => ctx.Mapper.Map<LearningElementViewModel>(ele));
+        
+        //remove all elements from destination that are not in source
+        foreach (var ele in destination.UnplacedLearningElements.ToList().Where(x => 
+                     source.UnplacedLearningElements.All(y => y.Id != x.Id)))
+        {
+            destination.UnplacedLearningElements.Remove(ele);
+        }
+        
+        //map all elements that are in source and destination already into the respective destination element
+        foreach (var ele in destination.UnplacedLearningElements)
+        {
+            var entity = source.UnplacedLearningElements.First(x => x.Id == ele.Id);
+            ctx.Mapper.Map(entity, ele);
+        }
+
+        foreach (var ele in sourceNewElementsViewModels)
+        {
+            destination.UnplacedLearningElements.Add(ele);
+        }
     }
 
     private void CreateWorkspaceMap()
