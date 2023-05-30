@@ -144,11 +144,23 @@ public class CachingMapper : ICachingMapper
             learningWorldVm.PathWayConditions.Add(Get<PathWayConditionViewModel>(s.Id));
         }
 
-        var newLearningElementsInEntity = learningWorldEntity.UnplacedLearningElements.ToList()
+        var newUnplacedLearningElementsInEntity = learningWorldEntity.UnplacedLearningElements.ToList()
             .FindAll(p => learningWorldVm.UnplacedLearningElements.All(l => p.Id != l.Id));
-        foreach (var s in newLearningElementsInEntity.Where(s => _cache.ContainsKey(s.Id)))
+        foreach (var s in newUnplacedLearningElementsInEntity.Where(s => _cache.ContainsKey(s.Id)))
         {
             learningWorldVm.UnplacedLearningElements.Add(Get<LearningElementViewModel>(s.Id));
+        }
+
+        foreach (var learningSpaceEntity in learningWorldEntity.LearningSpaces)
+        {
+            var newLearningElementsInSpaceEntity = learningSpaceEntity.LearningSpaceLayout.LearningElements
+                .Where(kvP =>
+                    learningWorldVm.LearningSpaces.First(s => s.Id == learningSpaceEntity.Id).ContainedLearningElements.All(l => kvP.Value.Id != l.Id));
+            //for all elements in entity that are not in view model, check cache and insert to view model
+            foreach (var e in newLearningElementsInSpaceEntity.Where(e => _cache.ContainsKey(e.Value.Id)))
+            {
+                learningWorldVm.LearningSpaces.First(s => s.Id == learningSpaceEntity.Id).LearningSpaceLayout.PutElement(e.Key, Get<LearningElementViewModel>(e.Value.Id));
+            }
         }
 
         _mapper.Map(learningWorldEntity, learningWorldVm);
