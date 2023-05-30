@@ -1,4 +1,6 @@
+using System.ComponentModel;
 using Presentation.PresentationLogic.LearningElement;
+using Shared.Command;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
@@ -14,4 +16,7 @@ public interface ILearningWorldPresenterOverviewInterface
     void SetSelectedLearningElement(ILearningElementViewModel learningElement);
 
     void SetSelectedLearningSpace(IObjectInPathWayViewModel obj);
+    event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
+    event PropertyChangedEventHandler? PropertyChanged;
+    event PropertyChangingEventHandler? PropertyChanging;
 }
