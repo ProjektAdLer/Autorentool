@@ -149,7 +149,7 @@ public class XmlH5PFactory : IXmlH5PFactory
             FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath, 
                 h5PElement.ElementName+"."+h5PElement.ElementFileType), 
             FileManager.GetHashCheckSum());
-            H5PSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize());
+            H5PSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), H5PElementUuid);
             H5PSetParametersActivity();
 
             // These ints are needed for the activities/inforef.xml file. 
@@ -160,9 +160,12 @@ public class XmlH5PFactory : IXmlH5PFactory
     /// <summary>
     /// Setting Parameters for h5p element in files.xml, 
     /// </summary>
-    /// <param name="hashCheckSum"></param> SHA1 Hash value for the file
-    /// <param name="filesize"></param> Byte Filesize for the file
-    public void H5PSetParametersFilesXml(string hashCheckSum, string filesize)
+    /// <param name="hashCheckSum"></param>
+    /// <param name="filesize"></param>
+    /// <param name="uuid"></param>
+    /// SHA1 Hash value for the file
+    /// Byte Filesize for the file
+    public void H5PSetParametersFilesXml(string hashCheckSum, string filesize, string uuid)
     {
         var file1 = new FilesXmlFile()
         {
@@ -177,6 +180,7 @@ public class XmlH5PFactory : IXmlH5PFactory
             Mimetype = "application/zip.h5p",
             Timecreated = CurrentTime,
             Timemodified = CurrentTime,
+            ElementUuid = uuid
         };
 
         FilesXmlFile file2 = (FilesXmlFile) file1.Clone();

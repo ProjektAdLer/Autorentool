@@ -63,4 +63,5 @@ public interface IFilesXmlFile
     
 
     string Id { get; set; }
+    string ElementUuid { get; set; }
 }
