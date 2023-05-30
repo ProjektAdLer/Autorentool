@@ -40,9 +40,12 @@ public interface IXmlH5PFactory
     /// <summary>
     /// Setting Parameters for h5p element in files.xml, 
     /// </summary>
-    /// <param name="hashCheckSum"></param> SHA1 Hash value for the file
-    /// <param name="filesize"></param> Byte Filesize for the file
-    void H5PSetParametersFilesXml(string hashCheckSum, string filesize);
+    /// <param name="hashCheckSum"></param>
+    /// <param name="filesize"></param>
+    /// <param name="uuid"></param>
+    /// SHA1 Hash value for the file
+    /// Byte Filesize for the file
+    void H5PSetParametersFilesXml(string hashCheckSum, string filesize, string uuid);
 
     /// <summary>
     /// Create Folder Activity and the needed Activity Files
