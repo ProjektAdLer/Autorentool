@@ -26,7 +26,7 @@ public class LearningSpaceLayoutUt
                 1, ele2
             }
         };
-        var floorPlanName = FloorPlanEnum.R20X308L;
+        var floorPlanName = FloorPlanEnum.R_20X30_8L;
 
         var systemUnderTest = new LearningSpaceLayout(learningElements, floorPlanName);
 
@@ -60,7 +60,7 @@ public class LearningSpaceLayoutUt
                 1, ele2
             }
         };
-        var floorPlanName = FloorPlanEnum.R20X308L;
+        var floorPlanName = FloorPlanEnum.R_20X30_8L;
 
         var systemUnderTest = new LearningSpaceLayout(learningElements, floorPlanName);
 
@@ -81,7 +81,7 @@ public class LearningSpaceLayoutUt
                 2, ele2Changed
             }
         };
-        var floorPlanNameChanged = FloorPlanEnum.L32X3110L;
+        var floorPlanNameChanged = FloorPlanEnum.L_32X31_10L;
 
         systemUnderTest.FloorPlanName = floorPlanNameChanged;
         systemUnderTest.LearningElements = learningElementsChanged;
@@ -129,7 +129,7 @@ public class LearningSpaceLayoutUt
                 1, ele2
             }
         };
-        var floorPlanName = FloorPlanEnum.R20X308L;
+        var floorPlanName = FloorPlanEnum.R_20X30_8L;
 
         var systemUnderTest = new LearningSpaceLayout(learningElements, floorPlanName);
 

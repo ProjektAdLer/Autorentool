@@ -34,15 +34,15 @@
 
         PresentationLogic.CreateLearningSpace(world1, "space1", "sdescription", "s1goals", 0, Theme.Campus, 0, 0);
         var space1 = world1.LearningSpaces.First();
-        PresentationLogic.ChangeLearningSpaceLayout(space1, world1, FloorPlanEnum.R20X206L);
+        PresentationLogic.ChangeLearningSpaceLayout(space1, world1, FloorPlanEnum.R_20X20_6L);
 
         PresentationLogic.CreateLearningSpace(world1, "space2", "sdescription", "s1goals", 0, Theme.Campus, 50, 50);
         var space2 = world1.LearningSpaces.Last();
-        PresentationLogic.ChangeLearningSpaceLayout(space2, world1, FloorPlanEnum.R20X308L);
+        PresentationLogic.ChangeLearningSpaceLayout(space2, world1, FloorPlanEnum.R_20X30_8L);
 
         PresentationLogic.CreateLearningSpace(world1, "space3", "sdescription", "s1goals", 0, Theme.Campus, 100, 100);
         var space3 = world1.LearningSpaces.Last();
-        PresentationLogic.ChangeLearningSpaceLayout(space3, world1, FloorPlanEnum.L32X3110L);
+        PresentationLogic.ChangeLearningSpaceLayout(space3, world1, FloorPlanEnum.L_32X31_10L);
 
         var content = PresentationLogic.GetAllContent();
 

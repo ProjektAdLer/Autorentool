@@ -1,8 +1,8 @@
 using BusinessLogic.Commands.Layout;
 using BusinessLogic.Entities;
-using BusinessLogic.Entities.LearningContent;
 using NUnit.Framework;
 using Shared;
+using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Layout;
 
@@ -12,19 +12,11 @@ public class RemoveLearningElementFromLayoutUt
     [Test]
     public void DragLearningElementFromSlotToUnplaced_Execute_MovesLearningElementToUnplaced()
     {
-        var world = new LearningWorld("wn", "wsn", "wa", "wl", "wd", "wg");
-        var space = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L))
-        {
-            UnsavedChanges = false
-        };
+        var world = EntityProvider.GetLearningWorld();
+        var space = EntityProvider.GetLearningSpace(false);
         world.LearningSpaces.Add(space);
-        var content = new FileContent("cn", "ct", "cf");
-        var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, null,
-            workload: 8, points: 9, positionX: 17f, positionY: 29f)
-        {
-            UnsavedChanges = false
-        };
+        var content = EntityProvider.GetFileContent();
+        var element = EntityProvider.GetLearningElement(false);
         space.LearningSpaceLayout.LearningElements[2] = element;
 
 
@@ -57,12 +49,11 @@ public class RemoveLearningElementFromLayoutUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var world = new LearningWorld("wn", "wsn", "wa", "wl", "wd", "wg");
-        var space = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L));
+        var world = EntityProvider.GetLearningWorld();
+        var space = EntityProvider.GetLearningSpace(floorPlan: FloorPlanEnum.R_20X20_6L);
         world.LearningSpaces.Add(space);
-        var content = new FileContent("cn", "ct", "cf");
-        var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, null, workload: 8, points: 9, positionX: 17f, positionY: 29f);
+        var content = EntityProvider.GetFileContent();
+        var element = EntityProvider.GetLearningElement();
         space.LearningSpaceLayout.LearningElements[2] = element;
 
 
@@ -82,19 +73,11 @@ public class RemoveLearningElementFromLayoutUt
     [Test]
     public void UndoRedo_UndoesAndRedoesMovingLearningElement()
     {
-        var world = new LearningWorld("wn", "wsn", "wa", "wl", "wd", "wg");
-        var space = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L))
-        {
-            UnsavedChanges = false
-        };
+        var world = EntityProvider.GetLearningWorld();
+        var space = EntityProvider.GetLearningSpace(false, floorPlan: FloorPlanEnum.R_20X20_6L);
         world.LearningSpaces.Add(space);
-        var content = new FileContent("cn", "ct", "cf");
-        var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, null,
-            workload: 8, points: 9, positionX: 17f, positionY: 29f)
-        {
-            UnsavedChanges = false
-        };
+        var content = EntityProvider.GetFileContent();
+        var element = EntityProvider.GetLearningElement(false);
         space.LearningSpaceLayout.LearningElements[2] = element;
 
 

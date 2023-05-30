@@ -10,21 +10,31 @@ public static class EntityProvider
     {
         return new AuthoringToolWorkspace(new List<ILearningWorld>());
     }
-    public static LearningWorld GetLearningWorld()
+
+    public static LearningWorld GetLearningWorld(bool unsavedChanges = false, string append = "")
     {
-        return new LearningWorld("a", "b", "c", "d", "e", "f");
+        return new LearningWorld("a" + append, "b" + append, "c" + append, "d" + append, "e" + append, "f" + append)
+            {UnsavedChanges = unsavedChanges};
     }
 
-    public static LearningSpace GetLearningSpace()
+    public static LearningSpace GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null)
     {
-        return new LearningSpace("a", "d", "e", 4, Theme.Campus);
+        return new LearningSpace("a", "d", "e", 4, Theme.Campus,
+                floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum) floorPlan))
+            {UnsavedChanges = unsavedChanges};
     }
 
-    public static LearningElement GetLearningElement()
+    public static LearningSpaceLayout GetLearningSpaceLayout(FloorPlanEnum floorPlan = FloorPlanEnum.R_20X20_6L)
     {
-        return new LearningElement("a", null!, "d", "e", LearningElementDifficultyEnum.Easy);
+        return new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), floorPlan);
     }
-    
+
+    public static LearningElement GetLearningElement(bool unsavedChanges = false, string append = "")
+    {
+        return new LearningElement("a" + append, null!, "d" + append, "e" + append,
+            LearningElementDifficultyEnum.Easy) {UnsavedChanges = unsavedChanges};
+    }
+
     public static PathWayCondition GetPathWayCondition()
     {
         return new PathWayCondition(ConditionEnum.And);

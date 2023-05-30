@@ -5,6 +5,7 @@ using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
 using Shared;
@@ -19,17 +20,24 @@ public static class ViewModelProvider
     }
     public static LearningWorldViewModel GetLearningWorld()
     {
-        return new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
+        return new LearningWorldViewModel("LWVMn", "LWVMsn", "LWVMa", "LWVMl", "LWVMd", "LWVMg");
     }
 
-    public static LearningSpaceViewModel GetLearningSpace()
+    public static LearningSpaceViewModel GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null)
     {
-        return new LearningSpaceViewModel("a", "d", "e", Theme.Campus);
+        return new LearningSpaceViewModel("LSVMn", "LSVMd", "LSVMg", Theme.Campus,4,
+                floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum) floorPlan))
+            {UnsavedChanges = unsavedChanges};
     }
 
+    public static LearningSpaceLayoutViewModel GetLearningSpaceLayout(FloorPlanEnum floorPlan = FloorPlanEnum.R_20X20_6L)
+    {
+        return new LearningSpaceLayoutViewModel(floorPlan);
+    }
+    
     public static LearningElementViewModel GetLearningElement()
     {
-        return new LearningElementViewModel("a", null!, "d", "e", LearningElementDifficultyEnum.Easy);
+        return new LearningElementViewModel("LEVMn", null!, "LEVMd", "LEVMg", LearningElementDifficultyEnum.Easy);
     }
     
     public static PathWayConditionViewModel GetPathWayCondition()
@@ -44,17 +52,17 @@ public static class ViewModelProvider
 
     public static LinkContentViewModel GetLinkContent()
     {
-        return new LinkContentViewModel("a name", "a link");
+        return new LinkContentViewModel("LCVMn a name", "LCVMl a link");
     }
 
     public static FileContentViewModel GetFileContent()
     {
-        return new FileContentViewModel("a name", "a type", "a filepath");
+        return new FileContentViewModel("FCVMn a name", "FCVMt a type", "FCVMf a filepath");
     }
 
     public static TopicViewModel GetTopic()
     {
-        return new TopicViewModel("a topic");
+        return new TopicViewModel("TVMn a topic");
     }
 
     public static LearningWorldViewModel GetLearningWorldWithSpace()

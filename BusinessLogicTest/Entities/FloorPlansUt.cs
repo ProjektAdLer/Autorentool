@@ -8,9 +8,9 @@ namespace BusinessLogicTest.Entities;
 public class FloorPlansUt
 {
     [Test]
-    [TestCase(FloorPlanEnum.R20X206L, typeof(R20X206L), 6)]
-    [TestCase(FloorPlanEnum.R20X308L, typeof(R20X308L), 8)]
-    [TestCase(FloorPlanEnum.L32X3110L, typeof(L32X3110L), 10)]
+    [TestCase(FloorPlanEnum.R_20X20_6L, typeof(R20X206L), 6)]
+    [TestCase(FloorPlanEnum.R_20X30_8L, typeof(R20X308L), 8)]
+    [TestCase(FloorPlanEnum.L_32X31_10L, typeof(L32X3110L), 10)]
     public void FloorPlanProvider_GetFloorPlan_ReturnsCorrectFloorPlanWithCorrectCapacity(FloorPlanEnum floorPlanName,
         Type floorPlanType, int floorPlanCapacity)
     {

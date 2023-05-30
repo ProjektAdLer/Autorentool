@@ -223,9 +223,9 @@ public class CreateDsl : ICreateDsl
 
             var maxSlotNumber = space.LearningSpaceLayout.FloorPlanName switch
             {
-                FloorPlanEnum.R20X206L => 5,
-                FloorPlanEnum.R20X308L => 7,
-                FloorPlanEnum.L32X3110L => 9,
+                FloorPlanEnum.R_20X20_6L => 5,
+                FloorPlanEnum.R_20X30_8L => 7,
+                FloorPlanEnum.L_32X31_10L => 9,
                 _ => 0
             };
 

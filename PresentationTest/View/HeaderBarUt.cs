@@ -9,6 +9,7 @@ using NUnit.Framework;
 using Presentation.Components;
 using Presentation.Components.Culture;
 using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Mediator;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Presentation.View;
@@ -93,6 +94,7 @@ public class HeaderBarUt
     {
         _stringLocalizer["AuthoringTool.Text"].Returns(new LocalizedString("AuthoringTool.Text", "TestName"));
         _stringLocalizer["AuthoringTool.Version"].Returns(new LocalizedString("AuthoringTool.Version", "v3"));
+        _selectedViewModelsProvider.LearningWorld.Returns((ILearningWorldViewModel?) null);
         
         var systemUnderTest = GetRenderedComponent();
         

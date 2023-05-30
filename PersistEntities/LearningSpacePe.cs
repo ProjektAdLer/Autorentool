@@ -23,7 +23,7 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
         Theme = theme;
         LearningSpaceLayout = learningSpaceLayout ??
                               new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(),
-                                  FloorPlanEnum.R20X206L);
+                                  FloorPlanEnum.R_20X20_6L);
         InBoundObjects = inBoundObjects ?? new List<IObjectInPathWayPe>();
         OutBoundObjects = outBoundObjects ?? new List<IObjectInPathWayPe>();
         AssignedTopic = assignedTopic;
