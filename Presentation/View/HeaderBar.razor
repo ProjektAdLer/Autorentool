@@ -36,27 +36,38 @@
         </MudPopover>
 
     </div>
-    <div class="flex justify-center items-center gap-2">
-        <img class="w-10 drop-shadow" src="/CustomIcons/autorentool-logo.png" alt="authoringtool-logo"/>
-        <h1 class="font-bold text-lg">@Localizer["AuthoringTool.Text"] @Localizer["AuthoringTool.Version"]</h1>
-    </div>
+    @if (SelectedViewModelsProvider?.LearningWorld?.Name == null)
+        {
+            <div class="flex justify-center items-center gap-2">
+                <img class="w-10 drop-shadow" src="/CustomIcons/autorentool-logo.png" alt="authoringtool-logo"/>
+                <h1 class="font-bold text-lg">@Localizer["AuthoringTool.Text"] @Localizer["AuthoringTool.Version"]</h1>
+            </div>
+        }
+    @if (SelectedViewModelsProvider?.LearningWorld?.Name != null)
+    {
+        <div class="flex justify-center items-center gap-2">
+            <img class="w-8 drop-shadow opacity-50" src="CustomIcons/world-icon-nobg.png" alt="learningworld">
+            <p class="font-bold text-lg truncate hover:text-clip"> @SelectedViewModelsProvider.LearningWorld?.Name </p>
+        </div>
+    }
+    
     <div class="flex justify-end items-center gap-2 border-solid">
         <div class="flex flex-col justify-center px-1">
-            <p class="text-xs font-bold text-center">
-                Feedback
-            </p>
-            <div class="flex flex-row justify-around">
-                <a href="https://bugreport.projekt-adler.eu" target="_blank" title="Technical feedback - Opens new web page">
-                    <button class="btn-standard m-0 p-1 h-5">
-                        <img class="w-4 h-4 drop-shadow" src="/CustomIcons/bug-icon-nobg.png" alt="debug-icon"/>
-                    </button>
-                </a>
-                <a href="https://www.soscisurvey.de/autorentoolevaluation/" target="_blank" title="User experience feedback - Opens new web page">
-                    <button class="btn-standard m-0 p-1 h-5">
-                        <img class="w-4 h-4 drop-shadow" src="/CustomIcons/feedback-icon-without-typo-nobg.png" alt="feedback-icon"/>
-                    </button>
-                </a>
-            </div>
+             <p class="text-xs font-bold text-center">
+                        Feedback
+             </p>
+           <div class="flex flex-row justify-around">
+             <a href="https://bugreport.projekt-adler.eu" target="_blank" title="Technical feedback - Opens new web page">
+                <button class="btn-standard m-0 p-1 h-5">
+                   <img class="w-4 h-4 drop-shadow" src="/CustomIcons/bug-icon-nobg.png" alt="debug-icon"/>
+                </button>
+             </a>
+             <a href="https://www.soscisurvey.de/autorentoolevaluation/" target="_blank" title="User experience feedback - Opens new web page">
+                <button class="btn-standard m-0 p-1 h-5">
+                   <img class="w-4 h-4 drop-shadow" src="/CustomIcons/feedback-icon-without-typo-nobg.png" alt="feedback-icon"/>
+                </button>
+             </a>
+           </div>
         </div>
         <CultureSelector/>
         <LmsLoginButton/>
