@@ -100,7 +100,7 @@
     private Action TriggerMasterLayoutStateHasChanged { get; set; }
     
     [Inject]
-    public ISelectedViewModelsProvider? SelectedViewModelsProvider { get; set; }
+    public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 
     //TODO: Instead of setting a value here we need some sort of central service that we can notify about the error to
     //then display it in the UI - n.stich
@@ -281,7 +281,7 @@
         var matchingElement = LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.LearningElements
             .FirstOrDefault(id => id.Key == position);
 
-        if(LearningSpaceP.ActiveSlot == position || 
+        if(SelectedViewModelsProvider.ActiveSlot == position || 
            (!matchingElement.Equals(default(KeyValuePair<int, ILearningElementViewModel>)) && 
             matchingElement.Value.Equals(SelectedViewModelsProvider?.LearningElement)))
 

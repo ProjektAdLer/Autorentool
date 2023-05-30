@@ -37,7 +37,6 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     void SetLearningSpaceLayout(FloorPlanEnum floorPlanName);
     void OpenReplaceLearningElementDialog(ILearningWorldViewModel learningWorldVm, ILearningElementViewModel dropItem, int slotId);
     bool ReplaceLearningElementDialogOpen { get; set; }
-    int ActiveSlot { get; }
     void OnReplaceLearningElementDialogClose(DialogResult closeResult);
     void AddNewLearningElement(int i);
     void CreateLearningElementInSlot(string name, ILearningContentViewModel learningContent,

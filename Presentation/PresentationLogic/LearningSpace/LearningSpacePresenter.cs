@@ -31,7 +31,6 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
     private readonly ILogger<LearningSpacePresenter> _logger;
     private int _creationCounter = 0;
-    private int _activeSlot = -1;
     private ILearningSpaceViewModel? _learningSpaceVm;
     private ReplaceLearningElementData _replaceLearningElementData = new();
 
@@ -41,18 +40,11 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         private set => SetField(ref _learningSpaceVm, value);
     }
 
-    public int ActiveSlot
-    {
-        get => _activeSlot;
-        private set => SetField(ref _activeSlot, value);
-    }
-
     public ILearningContentViewModel? DragAndDropLearningContent { get; private set; }
     public IDisplayableLearningObject? RightClickedLearningObject { get; private set; }
     
     public void SetLearningSpace(ILearningSpaceViewModel space)
     {
-        ActiveSlot = -1;
         LearningSpaceVm = space;
     }
 
@@ -80,7 +72,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         if (_selectedViewModelsProvider.LearningWorld == null)
             throw new ApplicationException("LearningWorld is null");
         _presentationLogic.ChangeLearningSpaceLayout(LearningSpaceVm, _selectedViewModelsProvider.LearningWorld, floorPlanName);
-        ActiveSlot = -1;
+        _selectedViewModelsProvider.SetActiveSlot(-1);
     }
     
     #region LearningElement
@@ -113,7 +105,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         if (LearningSpaceVm?.LearningSpaceLayout.LearningElements.ContainsKey(i) ?? false)
             return;
         SetSelectedLearningElement(null);
-        _activeSlot = i;
+        _selectedViewModelsProvider.SetActiveSlot(i);
         _mediator.RequestOpenElementDialog();
     }
 
@@ -122,9 +114,9 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     {
         if(LearningSpaceVm == null)
             throw new ApplicationException("LearningSpaceVm is null");
-        _presentationLogic.CreateLearningElementInSlot(LearningSpaceVm, _activeSlot, name, learningContent, description,
+        _presentationLogic.CreateLearningElementInSlot(LearningSpaceVm, _selectedViewModelsProvider.ActiveSlot, name, learningContent, description,
             goals, difficulty, workload, points);
-        ActiveSlot = -1;
+        _selectedViewModelsProvider.SetActiveSlot(-1);
     }
 
     public void DragLearningElement(object sender, DraggedEventArgs<ILearningElementViewModel> args)
@@ -135,7 +127,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     public void ClickedLearningElement(ILearningElementViewModel obj)
     {
         _mediator.RequestOpenElementDialog();
-        ActiveSlot = -1;
+        _selectedViewModelsProvider.SetActiveSlot(-1);
         SetSelectedLearningElement(obj);
     }
 

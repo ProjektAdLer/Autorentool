@@ -397,6 +397,11 @@ public class ViewModelEntityMappingProfile : Profile
         {
             destination.UnplacedLearningElements.Add(ele);
         }
+
+        foreach (var ele in destination.UnplacedLearningElements)
+        {
+            ele.Parent = null;
+        }
     }
 
     private void CreateWorkspaceMap()

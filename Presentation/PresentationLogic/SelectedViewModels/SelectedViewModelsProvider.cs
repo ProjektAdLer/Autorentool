@@ -14,6 +14,7 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
     private ISelectableObjectInWorldViewModel? _learningObjectInPathWay;
     private ILearningElementViewModel? _learningElement;
     private ILearningContentViewModel? _learningContent;
+    private int _activeSlot;
 
     private readonly Stack<ISelectedViewModelStackEntry> _undoStack = new();
     private readonly Stack<ISelectedViewModelStackEntry> _redoStack = new();
@@ -90,6 +91,17 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
         get => _learningContent;
         private set => SetField(ref _learningContent, value);
     }
+    
+    public int ActiveSlot
+    {
+        get => _activeSlot;
+        private set => SetField(ref _activeSlot, value);
+    }
+    
+    public void SetActiveSlot(int slot)
+    {
+        ActiveSlot = slot;
+    }
 
     public void SetLearningWorld(ILearningWorldViewModel? learningWorld, ICommand? command)
     {
@@ -97,6 +109,7 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
             _undoStack.Push(
                 new SelectedLearningWorldViewModelStackEntry(command, LearningWorld, lw => LearningWorld = lw));
         LearningWorld = learningWorld;
+        ActiveSlot = -1;
         _redoStack.Clear();
     }
 
@@ -107,6 +120,7 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
             _undoStack.Push(new SelectedLearningObjectInPathWayViewModelStackEntry(command, LearningObjectInPathWay,
                 obj => LearningObjectInPathWay = obj));
         LearningObjectInPathWay = learningObjectInPathWay;
+        ActiveSlot = -1;
         _redoStack.Clear();
     }
 

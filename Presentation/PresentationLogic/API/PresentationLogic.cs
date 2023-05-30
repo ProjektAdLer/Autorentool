@@ -11,7 +11,6 @@ using BusinessLogic.Commands.World;
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using ElectronWrapper;
-using FluentValidation;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.ElectronNET;
 using Presentation.PresentationLogic.LearningContent;
@@ -546,6 +545,7 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
 
         SelectedViewModelsProvider.SetLearningElement(learningElementVm, command);
+        SelectedViewModelsProvider.SetActiveSlot(newSlotIndex);
     }
 
     public void DragLearningElementToUnplaced(ILearningWorldViewModel learningWorldVm,
@@ -560,6 +560,7 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.ExecuteCommand(command);
 
         SelectedViewModelsProvider.SetLearningElement(learningElementVm, command);
+        SelectedViewModelsProvider.SetActiveSlot(-1);
     }
 
     public void SwitchLearningElementSlot(ILearningSpaceViewModel learningSpaceVm,
@@ -571,6 +572,8 @@ public class PresentationLogic : IPresentationLogic
         var command = LayoutCommandFactory.GetPlaceFromLayoutCommand(spaceEntity, elementEntity, newSlotIndex,
             space => CMapper.Map(space, learningSpaceVm));
         BusinessLogic.ExecuteCommand(command);
+        
+        SelectedViewModelsProvider.SetActiveSlot(newSlotIndex);
     }
 
     public void DragLearningElement(ILearningElementViewModel learningElementVm, double oldPositionX,
