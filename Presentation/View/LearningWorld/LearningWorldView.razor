@@ -107,7 +107,7 @@
     
     [Inject]
     public ILearningWorldPresenter LearningWorldP { get; set; }
-    
+
     [Inject]
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 #pragma warning restore CS8618
@@ -119,9 +119,10 @@
         base.OnParametersSet();
         LearningWorldP.PropertyChanging += OnLearningWorldPresenterPropertyChanging;
         LearningWorldP.PropertyChanged += OnLearningWorldPresenterPropertyChanged;
+        SelectedViewModelsProvider.PropertyChanged += OnSelectedViewModelsProviderPropertyChanged;
         LearningWorldP.OnCommandUndoRedoOrExecute += async (_, _) => await InvokeAsync(StateHasChanged);
     }
-
+    
     private void AddNewLearningSpace()
     {
         LearningWorldP.AddNewLearningSpace();
@@ -225,6 +226,12 @@
         {
             LearningWorldP.LearningWorldVm.PropertyChanged -= OnLearningWorldViewModelPropertyChanged;
         }
+        TriggerStateHasChanged();
+    }
+    
+    private void OnSelectedViewModelsProviderPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        TriggerStateHasChanged();
     }
 
     private void EditSelectedLearningSpace()
