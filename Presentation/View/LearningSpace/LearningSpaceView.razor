@@ -52,38 +52,37 @@
     }
     @if (LearningSpaceP.LearningSpaceVm != null)
     {
-        <div class="w-full min-h-[400px] border-2 border-b-adlerdeactivated">
+        <div class="w-full min-h-[400px] bg-adlerbgbright border-2 border-b-adlerdeactivated">
             @*style="width: 90%; height: 400px; border: 2px solid;"*@
             <div class="layout-shadow w-full h-full">
-                <div class="layout bg-buttonbgblue w-[98%] h-[500px]" style="@GetCornerPointsString(LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.FloorPlanViewModel)">
+                    <div class="mt-15 layout border-4 border-adlerdarkblue w-[98%] h-[500px]" style="@GetCornerPointsString(LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.FloorPlanViewModel)">
 
-                    @for (var i = 0; i < LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.Capacity; i++)
-                    {
-                        var x = i;
-                        var identifier = LearningSpaceP.LearningSpaceVm.Id.ToString() + x;
+                        @for (var i = 0; i < LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.Capacity; i++)
+                        {
+                            var x = i;
+                            var identifier = LearningSpaceP.LearningSpaceVm.Id.ToString() + x;
 
-                        <MudDropZone T="ILearningElementViewModel" Identifier="@identifier"
-                                     Class="@GetSlotStyleString(x)"
-                                     style="@GetSlotPositionString(LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.FloorPlanViewModel, x)"
-                                     @onclick="() => ClickOnSlot(x)">
-                            <ItemRenderer>
-                                <DragDropLearningElement
-                                    LearningElement="@context"
-                                    OnShowLearningElementContent="@LearningSpaceP.ShowElementContent"
-                                    OnEditLearningElement="@LearningSpaceP.ClickedLearningElement"
-                                    OnDeleteLearningElement="@LearningSpaceP.DeleteLearningElement"
-                                    OnClicked="@LearningSpaceP.ClickedLearningElement"/>
-                            </ItemRenderer>
-                            <ChildContent>
-                            @if (!LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.LearningElements.ContainsKey(x))
-                            {
-                                <MudIcon Icon="@Icons.Material.Filled.Add" Class="text-adlerblue-900"></MudIcon>
-                            }
-                            </ChildContent>  
-                        </MudDropZone>
-                    }
-
-                </div>
+                            <MudDropZone T="ILearningElementViewModel" Identifier="@identifier"
+                                         Class="@GetSlotStyleString(x)"
+                                         style="@GetSlotPositionString(LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.FloorPlanViewModel, x)"
+                                         @onclick="() => ClickOnSlot(x)">
+                                <ItemRenderer>
+                                    <DragDropLearningElement
+                                        LearningElement="@context"
+                                        OnShowLearningElementContent="@LearningSpaceP.ShowElementContent"
+                                        OnEditLearningElement="@LearningSpaceP.ClickedLearningElement"
+                                        OnDeleteLearningElement="@LearningSpaceP.DeleteLearningElement"
+                                        OnClicked="@LearningSpaceP.ClickedLearningElement"/>
+                                </ItemRenderer>
+                                <ChildContent>
+                                    @if (!LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.LearningElements.ContainsKey(x))
+                                    {
+                                        <MudIcon Icon="@Icons.Material.Filled.Add" Class="text-adlerblue-900"></MudIcon>
+                                    }
+                                </ChildContent>  
+                            </MudDropZone>
+                        }
+                    </div>
             </div>
         </div>
     }
