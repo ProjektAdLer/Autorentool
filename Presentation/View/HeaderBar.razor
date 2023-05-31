@@ -52,21 +52,34 @@
     }
     
     <div class="flex justify-end items-center gap-2 border-solid">
-        <div class="flex flex-col justify-center px-1">
+        <div class="flex flex-col justify-center px-1 py-1 border-2 border-white bg-adlerblue-600 text-white rounded-lg mt-0.5">
              <p class="text-xs font-bold text-center">
                         @Localizer["Feedback.Text"]
              </p>
            <div class="flex flex-row justify-around">
-             <a href="https://bugreport.projekt-adler.eu" target="_blank" title=@Localizer["Feedback.Button.Technical.Hover"]>
-                <button class="btn-standard m-0 p-1 h-5">
+           <a href="https://bugreport.projekt-adler.eu" target="_blank" title=@Localizer["Feedback.Button.Technical.Hover"]>
+               <button class="btn-standard m-0 p-1 h-5">
                    <img class="w-4 h-4 drop-shadow" src="/CustomIcons/bug-icon-nobg.png" alt="debug-icon"/>
-                </button>
-             </a>
-             <a href="https://www.soscisurvey.de/autorentoolevaluation/" target="_blank" title=@Localizer["Feedback.Button.UX.Hover"]>
-                <button class="btn-standard m-0 p-1 h-5">
-                   <img class="w-4 h-4 drop-shadow" src="/CustomIcons/feedback-icon-without-typo-nobg.png" alt="feedback-icon"/>
-                </button>
-             </a>
+               </button>
+           </a>
+           
+               @if (SelectedViewModelsProvider?.LearningWorld?.Name == null)
+               {
+                   <a href="https://www.soscisurvey.de/autorentoolevaluationlernwelt/" target="_blank" title="User experience feedback - Opens new web page">
+                       <button class="btn-standard m-0 p-1 h-5">
+                           <img class="w-4 h-4 drop-shadow" src="/CustomIcons/feedback-icon-without-typo-nobg.png" alt="feedback-icon"/>
+                       </button>
+                   </a>
+               }
+               
+               else
+               {
+                   <a href="https://www.soscisurvey.de/autorentoolevaluationlernraum/" target="_blank" title=@Localizer["Feedback.Button.UX.Hover"]>
+                       <button class="btn-standard m-0 p-1 h-5">
+                           <img class="w-4 h-4 drop-shadow" src="/CustomIcons/feedback-icon-without-typo-nobg.png" alt="feedback-icon"/>
+                       </button>
+                   </a>
+                }
            </div>
         </div>
         <CultureSelector/>
