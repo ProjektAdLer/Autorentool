@@ -10,15 +10,19 @@
     <article class="p-2 flex flex-col items-center gap-6 overflow-hidden">
         <h3 class="font-bold text-2xl text-center text-adlerdarkblue">@Localizer["Page.LearningWorld.Heading"]</h3>
         <section class="flex flex-row gap-2 justify-center bg-blacktrans-200 p-1 rounded-lg">
-            <div class="btn-standard w-28 flex justify-center items-center">
+            <div class="btn-standard w-28 flex justify-center items-center" title="New learning world">
                 <button class="gap-2" @onclick="CreateLearningWorld">
+                    <MudIcon Icon="@Icons.Material.Filled.Add" Class="z-20 add-learning-world"></MudIcon>
+                    <p class="z-10 uppercase">New</p>
                     <MudIcon Icon="@Icons.Material.Filled.Add" Title=@Localizer["Page.LearningWorld.Button.New.Hover"] Class="z-20 add-learning-world"></MudIcon>
                     <p class="z-10 uppercase">@Localizer["Page.LearningWorld.Button.New.Text"]</p>
                 </button>
                 <img src="CustomIcons/world-icon-nobg.png" class="z-0 pointer-events-none opacity-20 absolute w-8 h-8">
             </div>
-            <div class="btn-standard w-28 flex justify-center items-center" @onclick="LoadLearningWorldAsync">
+            <div class="btn-standard w-28 flex justify-center items-center" @onclick="LoadLearningWorldAsync" title="Import learning world">
                 <button class="gap-2">
+                    <MudIcon Icon="@Icons.Material.Filled.Download" Class="z-10 load-learning-world"></MudIcon>
+                    <p class="z-10 uppercase">Import</p>
                     <MudIcon Icon="@Icons.Material.Filled.Download" Title=@Localizer["Page.LearningWorld.Button.Import.Hover"] Class="z-10 load-learning-world"></MudIcon>
                     <p class="z-10 uppercase">@Localizer["Page.LearningWorld.Button.Import.Text"]</p>
                 </button>
