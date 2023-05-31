@@ -203,7 +203,7 @@ public class CreateDslUt
             LearningElementDifficultyEnum.Easy, workload: 17, points: 2, positionX: 23);
         var ele5 = new LearningElementPe("e",content5,"pupup", "g", 
             LearningElementDifficultyEnum.Easy, workload: 17, points: 2, positionX: 23);
-var topic1 = new TopicPe("topic1");
+        var topic1 = new TopicPe("topic1");
         var topic2 = new TopicPe("topic2");
 
         var space1 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus,
@@ -240,14 +240,19 @@ var topic1 = new TopicPe("topic1");
         var space2 = new LearningSpacePe("ff2", "ff", "ff", 5, Theme.Campus,
             null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(), outBoundObjects: new List<IObjectInPathWayPe>(), topic1);
         var space3 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus,
-            null, positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(), outBoundObjects: new List<IObjectInPathWayPe>(), topic2);
+            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(),
+                FloorPlanEnum.R_20X30_8L), positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(), outBoundObjects: new List<IObjectInPathWayPe>(), topic2);
+        var space4 = new LearningSpacePe("ff", "ff", "ff", 5, Theme.Campus,
+            new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(),
+                FloorPlanEnum.L_32X31_10L), positionX: 0, positionY: 0, inBoundObjects: new List<IObjectInPathWayPe>(), outBoundObjects: new List<IObjectInPathWayPe>(), topic2);
+
         var condition1 = new PathWayConditionPe(ConditionEnum.And, 0, 0, 
             new List<IObjectInPathWayPe>{space1, space2}, null);
         space1.OutBoundObjects = new List<IObjectInPathWayPe>() {condition1};
         space2.InBoundObjects = new List<IObjectInPathWayPe>() {condition1};
         space2.OutBoundObjects = new List<IObjectInPathWayPe>() {space3};
         space3.InBoundObjects = new List<IObjectInPathWayPe>() {space2};
-        var learningSpaces = new List<LearningSpacePe> { space1, space2, space3 };
+        var learningSpaces = new List<LearningSpacePe> { space1, space2, space3, space4 };
         var topics = new List<TopicPe>() {topic1, topic2};
         
 
