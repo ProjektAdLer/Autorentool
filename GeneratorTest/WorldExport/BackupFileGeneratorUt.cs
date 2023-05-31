@@ -3,6 +3,8 @@ using System.Text;
 using Generator.DSL;
 using Generator.WorldExport;
 using Generator.XmlClasses;
+using ICSharpCode.SharpZipLib.GZip;
+using ICSharpCode.SharpZipLib.Tar;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -229,6 +231,26 @@ public class BackupFileGeneratorUt
             if (Directory.Exists(directory))
                 Directory.Delete(directory, recursive: true);
         }
+    }
+    
+    [Test]
+    public void ExtractAtfFromBackup_ThrowsException_WhenBackupFileDoesNotExist()
+    {
+        //Arrange
+        var mockFileSystem = new MockFileSystem();
+        var systemUnderTest = new BackupFileGenerator(mockFileSystem);
+        
+        //Act
+        TestDelegate testDelegate = () => systemUnderTest.ExtractAtfFromBackup("backupFile");
+        
+        //Assert
+        Assert.That(testDelegate, Throws.TypeOf<FileNotFoundException>());
+    }
+    
+    [Test]
+    public void ExtractAtfFromBackup_CopiesTheAtfToATempDirectory()
+    {
+        //TODO implement
     }
     
 }

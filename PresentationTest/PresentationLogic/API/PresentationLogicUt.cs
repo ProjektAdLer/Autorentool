@@ -2195,6 +2195,19 @@ mockTopicCommandFactory
 
         mockBusinessLogic.Received().Logout();
     }
+    
+    [Test]
+    public void UploadLearningWorldToBackend_CallsBusinessLogic()
+    {
+        var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        const string filepath = "filepath";
+
+        var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
+
+        systemUnderTest.UploadLearningWorldToBackend(filepath);
+
+        mockBusinessLogic.Received().UploadLearningWorldToBackend(filepath);
+    }
 
     #endregion
 

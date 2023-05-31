@@ -40,4 +40,11 @@ public interface IBackupFileGenerator
     /// <param name="source"></param>
     /// <param name="recursive"></param>
     void SaveDirectoryToTar(TarArchive tar, string source, bool recursive);
+    
+    /// <summary>
+    /// Extracts the .atf file from the .mbz file and returns the path to the .atf file
+    /// </summary>
+    /// <param name="filepath">Path of the .mbz file.</param>
+    /// <returns>Path to the extracted .atf file</returns>
+    string ExtractAtfFromBackup(string filepath);
 }

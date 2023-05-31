@@ -13,11 +13,10 @@ namespace Generator.WorldExport;
 /// </summary>
 public class BackupFileGenerator : IBackupFileGenerator
 {
-    
     private readonly IFileSystem _fileSystem;
     public readonly IXmlEntityManager XmlEntityManager;
 
-    
+
     // Constructor for tests. fileSystem makes it possible to test various System methods that write files on disk.
     public BackupFileGenerator(IFileSystem? fileSystem = null, IXmlEntityManager? entityManager = null)
     {
@@ -41,7 +40,7 @@ public class BackupFileGenerator : IBackupFileGenerator
     {
         XmlEntityManager.GetFactories(readDsl);
     }
-    
+
     // Get all files from source Folder "XMLFilesForExport" and pack all files and folders into a tar-file 
     // Afterwards pack the tar-file into a gzip file and rename the file to match the Moodle Backup format .mbz
     /// <inheritdoc cref="IBackupFileGenerator.WriteBackupFile"/>
@@ -76,7 +75,7 @@ public class BackupFileGenerator : IBackupFileGenerator
             {
                 _fileSystem.File.Delete(tarName);
             }
-            
+
             //move file
             _fileSystem.File.Move(tarPath, filepath, true);
         }
@@ -98,7 +97,7 @@ public class BackupFileGenerator : IBackupFileGenerator
         _fileSystem.Directory.CreateDirectory(tempDir);
         return tempDir;
     }
-    
+
 
     /// <summary>
     /// Copies an entire directories contents into a target.
@@ -113,6 +112,7 @@ public class BackupFileGenerator : IBackupFileGenerator
             var relativeDirectoryPath = _fileSystem.Path.GetRelativePath(source, directory);
             _fileSystem.Directory.CreateDirectory(_fileSystem.Path.Combine(targetPrefix, relativeDirectoryPath));
         }
+
         var files = _fileSystem.Directory.EnumerateFiles(source, "*", SearchOption.AllDirectories);
         foreach (var file in files)
         {
@@ -120,7 +120,7 @@ public class BackupFileGenerator : IBackupFileGenerator
             _fileSystem.File.Copy(file, _fileSystem.Path.Combine(targetPrefix, relativeFilepath));
         }
     }
-    
+
     /// <summary>
     /// Saves a directory and its contents (recursively) into a given tar archive.
     /// </summary>
@@ -137,6 +137,7 @@ public class BackupFileGenerator : IBackupFileGenerator
             tarEntry = TarEntry.CreateEntryFromFile(filename);
             tar.WriteEntry(tarEntry, false);
         }
+
         if (recursive)
         {
             string[] directories = _fileSystem.Directory.GetDirectories(source);
@@ -144,5 +145,32 @@ public class BackupFileGenerator : IBackupFileGenerator
                 SaveDirectoryToTar(tar, directory, recursive);
         }
     }
-}
 
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="filepath"></param>
+    /// <returns></returns>
+    /// <exception cref="ApplicationException"></exception>
+    /// <exception cref="FileNotFoundException"></exception>
+    public string ExtractAtfFromBackup(string filepath)
+    {
+        using var inStream = _fileSystem.File.OpenRead(filepath);
+        using var gziStream = new GZipInputStream(inStream);
+        using var tarStream = new TarInputStream(gziStream, null);
+        while (tarStream.GetNextEntry() is { } entry)
+        {
+            if (entry.IsDirectory) continue;
+            if (!entry.Name.EndsWith(".json")) continue;
+                
+            var tempDir = GetTempDir();
+            var tempPath = _fileSystem.Path.Combine(tempDir, entry.Name);
+            using var outStream = _fileSystem.File.Create(tempPath);
+            tarStream.CopyEntryContents(outStream);
+
+            return tempPath;
+        }
+
+        throw new ApplicationException("No .atf file found in backup.");
+    }
+}

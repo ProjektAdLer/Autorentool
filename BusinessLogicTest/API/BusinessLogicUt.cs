@@ -521,6 +521,35 @@ public class BusinessLogicUt
 
         await backendAccess.Received().GetUserInformationAsync(token);
     }
+    
+    [Test]
+    public void UploadLearningWorldToBackend_CallsWorldGenerator()
+    {
+        var worldGenerator = Substitute.For<IWorldGenerator>();
+        const string filepath = "filepath";
+        var systemUnderTest = CreateStandardBusinessLogic(worldGenerator: worldGenerator);
+
+        systemUnderTest.UploadLearningWorldToBackend(filepath);
+
+        worldGenerator.Received().ExtractAtfFromBackup(filepath);
+    }
+    
+    [Test]
+    public void UploadLearningWorldToBackend_CallsBackendAccess()
+    {
+        const string filepath = "filepath";
+        const string atfPath = "atfPath";
+        var token = new UserToken("token");
+        var worldGenerator = Substitute.For<IWorldGenerator>();
+        worldGenerator.ExtractAtfFromBackup(filepath).Returns(atfPath);
+        var backendAccess = Substitute.For<IBackendAccess>();
+        var systemUnderTest = CreateStandardBusinessLogic(apiAccess: backendAccess, worldGenerator: worldGenerator);
+        systemUnderTest.UserToken = token;
+
+        systemUnderTest.UploadLearningWorldToBackend(filepath);
+
+        backendAccess.Received().UploadLearningWorldAsync(token, filepath, atfPath);
+    }
 
     #endregion
 
