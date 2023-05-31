@@ -447,6 +447,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
             _selectedViewModelsProvider.SetLearningObjectInPathWay(learningElement.Parent, null);
         _selectedViewModelsProvider.SetLearningElement(learningElement, null);
         _mediator.RequestOpenElementDialog();
+        _selectedViewModelsProvider.SetActiveSlot(-1);
     }
 
     /// <summary>

@@ -543,9 +543,6 @@ public class PresentationLogic : IPresentationLogic
             newSlotIndex,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
-
-        SelectedViewModelsProvider.SetLearningElement(learningElementVm, command);
-        SelectedViewModelsProvider.SetActiveSlot(newSlotIndex);
     }
 
     public void DragLearningElementToUnplaced(ILearningWorldViewModel learningWorldVm,
@@ -559,8 +556,6 @@ public class PresentationLogic : IPresentationLogic
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
 
-        SelectedViewModelsProvider.SetLearningElement(learningElementVm, command);
-        SelectedViewModelsProvider.SetActiveSlot(-1);
     }
 
     public void SwitchLearningElementSlot(ILearningSpaceViewModel learningSpaceVm,
@@ -572,8 +567,12 @@ public class PresentationLogic : IPresentationLogic
         var command = LayoutCommandFactory.GetPlaceFromLayoutCommand(spaceEntity, elementEntity, newSlotIndex,
             space => CMapper.Map(space, learningSpaceVm));
         BusinessLogic.ExecuteCommand(command);
-        
-        SelectedViewModelsProvider.SetActiveSlot(newSlotIndex);
+
+        if (SelectedViewModelsProvider.ActiveSlot == newSlotIndex)
+        {
+            SelectedViewModelsProvider.SetActiveSlot(-1);
+        }
+            
     }
 
     public void DragLearningElement(ILearningElementViewModel learningElementVm, double oldPositionX,

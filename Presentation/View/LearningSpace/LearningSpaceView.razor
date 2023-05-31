@@ -63,7 +63,7 @@
                         <MudDropZone T="ILearningElementViewModel" Identifier="@identifier"
                                      Class="@GetSlotStyleString(x)"
                                      style="@GetSlotPositionString(LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.FloorPlanViewModel, x)"
-                                     @onclick="() => AddNewLearningElement(x)">
+                                     @onclick="() => ClickOnSlot(x)">
                             <ItemRenderer>
                                 <DragDropLearningElement
                                     LearningElement="@context"
@@ -282,22 +282,16 @@
     {
         if(LearningSpaceP.LearningSpaceVm == null) return "";
         
-        var matchingElement = LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.LearningElements
-            .FirstOrDefault(id => id.Key == position);
-
-        if(SelectedViewModelsProvider.ActiveSlot == position || 
-           (!matchingElement.Equals(default(KeyValuePair<int, ILearningElementViewModel>)) && 
-            matchingElement.Value.Equals(SelectedViewModelsProvider?.LearningElement)))
-
+        if(SelectedViewModelsProvider.ActiveSlot == position)
         {
             return "rounded-lg border-2 border-solid border-adlergreen bg-adlerdeactivatedtext mud-border-lines-default p-6 m-8 w-28 h-3 flex justify-center items-center";
         }
         return "rounded-lg border-2 border-solid border-adlerblue bg-adlerdeactivatedtext mud-border-lines-default p-6 m-8 w-28 h-3 flex justify-center items-center";
     }
 
-    private void AddNewLearningElement(int i)
+    private void ClickOnSlot(int i)
     {
-        LearningSpaceP.AddNewLearningElement(i);
+        LearningSpaceP.ClickOnSlot(i);
     }
 
     private async Task ShowReplaceLearningElementDialog()

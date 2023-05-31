@@ -623,9 +623,6 @@ public class PresentationLogicUt
         mockBusinessLogic
             .Received()
             .ExecuteCommand(mockCommand);
-        mockSelectedViewModelsProvider
-            .Received()
-            .SetLearningElement(learningElementVm, mockCommand);
     }
 
     [Test]
@@ -664,10 +661,6 @@ public class PresentationLogicUt
         mockBusinessLogic
             .Received()
             .ExecuteCommand(mockCommand);
-        mockSelectedViewModelsProvider
-            .Received()
-            .SetLearningElement(learningElementVm, mockCommand);
-        
     }
 
     [Test]

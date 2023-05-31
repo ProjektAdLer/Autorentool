@@ -100,10 +100,16 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
             _replaceLearningElementData.DropItem, _replaceLearningElementData.SlotId);
     }
 
-    public void AddNewLearningElement(int i)
+    public void ClickOnSlot(int i)
     {
         if (LearningSpaceVm?.LearningSpaceLayout.LearningElements.ContainsKey(i) ?? false)
             return;
+        if (_selectedViewModelsProvider.ActiveSlot == i)
+        {
+            _selectedViewModelsProvider.SetActiveSlot(-1);
+            return;
+        }
+        
         SetSelectedLearningElement(null);
         _selectedViewModelsProvider.SetActiveSlot(i);
         _mediator.RequestOpenElementDialog();
