@@ -4,6 +4,7 @@
 @using Shared
 @using Presentation.PresentationLogic.LearningElement
 @using System.Text
+@using Microsoft.AspNetCore.SignalR
 @using Presentation.PresentationLogic.SelectedViewModels
 <div class="mx-2 rounded-lg">
     <div class="flex justify-center p-2">
@@ -73,6 +74,9 @@
                                     OnDeleteLearningElement="@LearningSpaceP.DeleteLearningElement"
                                     OnClicked="@LearningSpaceP.ClickedLearningElement"/>
                             </ItemRenderer>
+                            <ChildContent>
+                               <MudIcon Icon="@Icons.Material.Filled.Add" Class="text-adlerblue-900"></MudIcon>
+                            </ChildContent>
                         </MudDropZone>
                     }
 
@@ -282,9 +286,10 @@
         
         if(SelectedViewModelsProvider.ActiveSlot == position)
         {
-            return "rounded-lg border-2 border-solid border-adlergreen bg-adlerdeactivatedtext mud-border-lines-default p-6 m-8 w-28 h-3 flex justify-center items-center";
+            return "rounded-lg border-2 border-solid border-adlergreen bg-adlergreen bg-opacity-30 mud-border-lines-default p-6 m-8 w-28 h-3 flex justify-center items-center";
         }
         return "rounded-lg border-2 border-solid border-adlerblue bg-adlerdeactivatedtext mud-border-lines-default p-6 m-8 w-28 h-3 flex justify-center items-center";
+
     }
 
     private void ClickOnSlot(int i)
