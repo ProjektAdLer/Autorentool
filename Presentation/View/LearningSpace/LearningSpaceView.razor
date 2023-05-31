@@ -7,42 +7,44 @@
 @using Presentation.PresentationLogic.SelectedViewModels
 <div class="mx-2 rounded-lg">
     <div class="flex justify-center p-2">
-        <h2 class="text-2xl text-center font-bold text-adlergrey-500 mx-2">Learning Space Editor</h2>
+        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Learning Space Editor</h2>
     </div>
 </div>
 
 @if (LearningSpaceP.LearningSpaceVm != null)
 {
+    
     <div class="p-2 flex justify-start space-x-2">
       <img class="w-8" src="CustomIcons/space-icon_nobg.png" alt="learningspace">
-      <MudText Class="text-lg text-adlerblue-600">@LearningSpaceP.LearningSpaceVm.Name</MudText>
+      <p class="text-lg text-adlerblue-600 truncate hover:text-clip">@LearningSpaceP.LearningSpaceVm.Name</p>
     </div>
-    @if (SelectedViewModelsProvider?.LearningElement != null)
+    @if (SelectedViewModelsProvider?.LearningObjectInPathWay != null)
     {
         <section class="p-2 gap-1 flex flex-col justify-start">
-            <div class="flex justify-between items-start">
-            <label id="learning-element-info" class="font-medium text-lg flex flex-col">
-                <h3 class="text-base text-adlerblue-600 element-name"><span class="text-adlergrey-600">Selected learning element: </span> @SelectedViewModelsProvider.LearningElement.Name</h3>
-                <h3 class="text-base text-adlerblue-600 element-description"><span class="text-adlergrey-600">Description: </span> @SelectedViewModelsProvider.LearningElement.Description</h3>
-            </label>
-                <div>
-                    <h3 class="text-base text-adlerblue-600 space-workload"><span class="text-adlergrey-600">Workload: </span> @LearningSpaceP.LearningSpaceVm?.Workload<span class="text-adlergrey-600"> min.</span></h3>
-                    <h3 class="text-base text-adlerblue-600 space-points"><span class="text-adlergrey-600">Points: </span> @LearningSpaceP.LearningSpaceVm?.Points</h3>
-                    @ChildContent
-                </div>
+            <div class="gap-8 flex justify-between items-start">
+                <label id="learning-element-info" class="font-medium text-lg flex flex-col justify-stretch">
+                    <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">Theme: </span>@LearningSpaceP.LearningSpaceVm?.Theme</h3>
+                    @*<h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">Selected learning element: </span> @SelectedViewModelsProvider.LearningElement.Name</h3>*@
+                    <h3 class="text-base text-adlerblue-600 flex-initial break-all"><span class="text-adlergrey-600">Goals: </span>@LearningSpaceP.LearningSpaceVm?.Goals</h3>
+                </label>
+                    <div class="min-w-max">
+                        <h3 class="text-base text-adlerblue-600 space-workload"><span class="text-adlergrey-600">Workload: </span> @LearningSpaceP.LearningSpaceVm?.Workload<span class="text-adlergrey-600"> min.</span></h3>
+                        <h3 class="text-base text-adlerblue-600 space-points"><span class="text-adlergrey-600">Points: </span> @LearningSpaceP.LearningSpaceVm?.Points</h3>
+                        @ChildContent
+                    </div>
             </div>
             <div class="flex justify-start">
-                <button class="relative btn-standard delete-learning-element w-14" @onclick="DeleteSelectedLearningElement">
+                <button class="relative btn-standard delete-learning-element w-14" @onclick="DeleteSelectedLearningElement" title="Delete learning element">
                     <img src="CustomIcons/learningelements-icon-nobg.png" alt="Delete learning element" class="absolute opacity-50 w-8 h-8">
-                    <MudIcon Icon="@Icons.Material.Filled.Delete" Title="Delete learning element" Class="absolute"></MudIcon>
+                    <MudIcon Icon="@Icons.Material.Filled.Delete" Class="absolute"></MudIcon>
                 </button>
-                <button class="relative btn-standard save-learning-element w-14" @onclick="SaveSelectedLearningElementAsync">
+                <button class="relative btn-standard save-learning-element w-14" @onclick="SaveSelectedLearningElementAsync" title="Save learning element">
                     <img src="CustomIcons/learningelements-icon-nobg.png" alt="Save learning element" class="absolute opacity-50 w-8 h-8">
-                    <MudIcon Icon="@Icons.Material.Filled.Save" Title="Save learning element" Class="absolute"></MudIcon>
+                    <MudIcon Icon="@Icons.Material.Filled.Save" Class="absolute"></MudIcon>
                 </button>
-                <button class="relative btn-standard show-learning-element-content w-14" @onclick="ShowSelectedElementContentAsync">
+                <button class="relative btn-standard show-learning-element-content w-14" @onclick="ShowSelectedElementContentAsync" title="Show learning element">
                     <img src="CustomIcons/learningelements-icon-nobg.png" alt="Show learning element" class="absolute opacity-50 w-8 h-8">
-                    <MudIcon Icon="@Icons.Material.Filled.RemoveRedEye" Title="Show learning element" Class="absolute"></MudIcon>
+                    <MudIcon Icon="@Icons.Material.Filled.RemoveRedEye" Class="absolute"></MudIcon>
                 </button>
             </div>
         </section>
