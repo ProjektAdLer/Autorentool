@@ -75,8 +75,11 @@
                                     OnClicked="@LearningSpaceP.ClickedLearningElement"/>
                             </ItemRenderer>
                             <ChildContent>
-                               <MudIcon Icon="@Icons.Material.Filled.Add" Class="text-adlerblue-900"></MudIcon>
-                            </ChildContent>
+                            @if (!LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.LearningElements.ContainsKey(x))
+                            {
+                                <MudIcon Icon="@Icons.Material.Filled.Add" Class="text-adlerblue-900"></MudIcon>
+                            }
+                            </ChildContent>  
                         </MudDropZone>
                     }
 
@@ -290,6 +293,17 @@
         }
         return "rounded-lg border-2 border-solid border-adlerblue bg-adlerdeactivatedtext mud-border-lines-default p-6 m-8 w-28 h-3 flex justify-center items-center";
 
+    }
+    
+    private string GetSlotIconString(int position)
+    {
+        if(LearningSpaceP.LearningSpaceVm == null) return "";
+        
+        if(LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.LearningElements.ContainsKey(position))
+        {
+            return "";
+        }
+        return "@Icons.Material.Filled.Add";
     }
 
     private void ClickOnSlot(int i)
