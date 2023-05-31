@@ -38,7 +38,7 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     void OpenReplaceLearningElementDialog(ILearningWorldViewModel learningWorldVm, ILearningElementViewModel dropItem, int slotId);
     bool ReplaceLearningElementDialogOpen { get; set; }
     void OnReplaceLearningElementDialogClose(DialogResult closeResult);
-    void AddNewLearningElement(int i);
+    void ClickOnSlot(int i);
     void CreateLearningElementInSlot(string name, ILearningContentViewModel learningContent,
         string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points);
 }
