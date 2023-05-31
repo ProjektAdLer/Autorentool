@@ -1,4 +1,3 @@
-
 using System.IO.Abstractions.TestingHelpers;
 using AutoMapper;
 using BusinessLogic.Entities;
@@ -25,10 +24,11 @@ public class WorldGeneratorUt
         var mockFileSystem = new MockFileSystem();
 
         // Act
-        var systemUnderTest = new WorldGenerator(mockBackupFileGen, mockCreateDsl, mockReadDsl,  mockMapper, mockFileSystem);
+        var systemUnderTest =
+            new WorldGenerator(mockBackupFileGen, mockCreateDsl, mockReadDsl, mockMapper, mockFileSystem);
 
         // Assert
-        Assert.Multiple(()=>
+        Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.BackupFile, Is.EqualTo(mockBackupFileGen));
             Assert.That(systemUnderTest.CreateDsl, Is.EqualTo(mockCreateDsl));
@@ -46,22 +46,68 @@ public class WorldGeneratorUt
         var mockReadDsl = Substitute.For<IReadDsl>();
         var mockMapper = Substitute.For<IMapper>();
         var mockFileSystem = new MockFileSystem();
-        
-        var systemUnderTest = new WorldGenerator(mockBackupFileGen, mockCreateDsl, mockReadDsl, mockMapper, mockFileSystem);
+
+        var systemUnderTest =
+            new WorldGenerator(mockBackupFileGen, mockCreateDsl, mockReadDsl, mockMapper, mockFileSystem);
 
         // Act
         systemUnderTest.ConstructBackup(Arg.Any<LearningWorld>(), "DestinationPath");
-        
-        
-        
+
+
         // Assert
-        Assert.Multiple(()=>
+        Assert.Multiple(() =>
         {
             mockCreateDsl.Received().WriteLearningWorld(Arg.Any<LearningWorldPe>());
             mockReadDsl.Received().ReadLearningWorld("", Arg.Any<DocumentRootJson?>());
             mockBackupFileGen.Received().WriteXmlFiles(Arg.Any<IReadDsl>());
             mockBackupFileGen.Received().WriteBackupFile("DestinationPath");
-            
         });
+    }
+
+    [Test]
+    public void ExtractAtfFromBackup_CallsBackupFileGen()
+    {
+        // Arrange
+        var mockBackupFileGen = Substitute.For<IBackupFileGenerator>();
+        var mockCreateDsl = Substitute.For<ICreateDsl>();
+        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockMapper = Substitute.For<IMapper>();
+        var mockFileSystem = new MockFileSystem();
+
+        var systemUnderTest =
+            new WorldGenerator(mockBackupFileGen, mockCreateDsl, mockReadDsl, mockMapper, mockFileSystem);
+
+        // Act
+        systemUnderTest.ExtractAtfFromBackup("DestinationPath");
+
+        // Assert
+        mockBackupFileGen.Received().ExtractAtfFromBackup("DestinationPath");
+    }
+
+    [Test]
+    public void ExtractAtfFromBackup_ReturnsPath()
+    {
+        // Arrange
+        var mockBackupFileGen = Substitute.For<IBackupFileGenerator>();
+        mockBackupFileGen.ExtractAtfFromBackup("DestinationPath").Returns("PathToAtf");
+        var mockCreateDsl = Substitute.For<ICreateDsl>();
+        var mockReadDsl = Substitute.For<IReadDsl>();
+        var mockMapper = Substitute.For<IMapper>();
+        var mockFileSystem = new MockFileSystem();
+
+        var systemUnderTest =
+            new WorldGenerator(mockBackupFileGen, mockCreateDsl, mockReadDsl, mockMapper, mockFileSystem);
+
+        // Act
+        var result = systemUnderTest.ExtractAtfFromBackup("DestinationPath");
+
+        // Assert
+        Assert.That(result, Is.EqualTo("PathToAtf"));
+    }
+
+    [Test]
+    public void ExtractAtfFromBackup()
+    {
+        //TODO: Implement
     }
 }

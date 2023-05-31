@@ -138,7 +138,8 @@ public class PresentationLogic : IPresentationLogic
         var authoringToolWorkspaceEntity =
             Mapper.Map<BusinessLogic.Entities.AuthoringToolWorkspace>(authoringToolWorkspaceVm);
 
-        var command = WorldCommandFactory.GetCreateCommand(authoringToolWorkspaceEntity, name, shortname, authors, language,
+        var command = WorldCommandFactory.GetCreateCommand(authoringToolWorkspaceEntity, name, shortname, authors,
+            language,
             description, goals,
             workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
         BusinessLogic.ExecuteCommand(command);
@@ -152,7 +153,8 @@ public class PresentationLogic : IPresentationLogic
     {
         var worldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
 
-        var command = WorldCommandFactory.GetEditCommand(worldEntity, name, shortname, authors, language, description, goals,
+        var command = WorldCommandFactory.GetEditCommand(worldEntity, name, shortname, authors, language, description,
+            goals,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
     }
@@ -281,7 +283,8 @@ public class PresentationLogic : IPresentationLogic
         var spaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(learningSpaceVm);
         var topicEntity = Mapper.Map<BusinessLogic.Entities.Topic>(topicVm);
 
-        var command = SpaceCommandFactory.GetEditCommand(spaceEntity, name, description, goals, requiredPoints, theme, topicEntity,
+        var command = SpaceCommandFactory.GetEditCommand(spaceEntity, name, description, goals, requiredPoints, theme,
+            topicEntity,
             space => CMapper.Map(space, learningSpaceVm));
         BusinessLogic.ExecuteCommand(command);
     }
@@ -366,7 +369,8 @@ public class PresentationLogic : IPresentationLogic
         var sourceObjectEntity = Mapper.Map<IObjectInPathWay>(sourceObject);
         var targetObjectEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(targetObject);
 
-        var command = ConditionCommandFactory.GetCreateCommand(worldEntity, condition, sourceObjectEntity, targetObjectEntity,
+        var command = ConditionCommandFactory.GetCreateCommand(worldEntity, condition, sourceObjectEntity,
+            targetObjectEntity,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
     }
@@ -400,7 +404,9 @@ public class PresentationLogic : IPresentationLogic
     {
         var learningWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
 
-        var command = TopicCommandFactory.GetCreateCommand(learningWorldEntity, name, world => CMapper.Map(world, learningWorldVm));
+        var command =
+            TopicCommandFactory.GetCreateCommand(learningWorldEntity, name,
+                world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
     }
 
@@ -423,7 +429,7 @@ public class PresentationLogic : IPresentationLogic
         var listOfCommands =
             learningWorldEntity.LearningSpaces
                 .Where(x => x.AssignedTopic?.Id == topicEntity.Id)
-                .Select(spaceEntity => new { spaceEntity, spaceVm = Mapper.Map<LearningSpaceViewModel>(spaceEntity) })
+                .Select(spaceEntity => new {spaceEntity, spaceVm = Mapper.Map<LearningSpaceViewModel>(spaceEntity)})
                 .Select(t => SpaceCommandFactory.GetEditCommand(t.spaceEntity, t.spaceEntity.Name,
                     t.spaceEntity.Description, t.spaceEntity.Goals, t.spaceEntity.RequiredPoints,
                     t.spaceEntity.Theme, null,
@@ -450,7 +456,8 @@ public class PresentationLogic : IPresentationLogic
         var sourceObjectEntity = Mapper.Map<IObjectInPathWay>(sourceObjectVm);
         var targetObjectEntity = Mapper.Map<IObjectInPathWay>(targetObjectVm);
 
-        var command = PathwayCommandFactory.GetCreateCommand(learningWorldEntity, sourceObjectEntity, targetObjectEntity,
+        var command = PathwayCommandFactory.GetCreateCommand(learningWorldEntity, sourceObjectEntity,
+            targetObjectEntity,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
     }
@@ -489,7 +496,8 @@ public class PresentationLogic : IPresentationLogic
         var learningWorldEntity = Mapper.Map<BusinessLogic.Entities.LearningWorld>(learningWorldVm);
         var contentEntity = Mapper.Map<ILearningContent>(learningContentVm);
 
-        var command = ElementCommandFactory.GetCreateUnplacedCommand(learningWorldEntity, name, contentEntity, description, goals,
+        var command = ElementCommandFactory.GetCreateUnplacedCommand(learningWorldEntity, name, contentEntity,
+            description, goals,
             difficulty, workload, points, positionX, positionY,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
@@ -503,7 +511,8 @@ public class PresentationLogic : IPresentationLogic
         var parentSpaceEntity = Mapper.Map<BusinessLogic.Entities.LearningSpace>(parentSpaceVm);
         var contentEntity = Mapper.Map<ILearningContent>(learningContentVm);
 
-        var command = ElementCommandFactory.GetCreateInSlotCommand(parentSpaceEntity, slotIndex, name, contentEntity, description,
+        var command = ElementCommandFactory.GetCreateInSlotCommand(parentSpaceEntity, slotIndex, name, contentEntity,
+            description,
             goals, difficulty, workload, points, positionX, positionY,
             parent => CMapper.Map(parent, parentSpaceVm));
         BusinessLogic.ExecuteCommand(command);
@@ -717,7 +726,7 @@ public class PresentationLogic : IPresentationLogic
     public ILearningContentViewModel LoadLearningContentViewModel(string name, Stream stream)
     {
         var entity = BusinessLogic.LoadLearningContent(name, stream);
-        
+
         return Mapper.Map<ILearningContentViewModel>(entity);
     }
 
@@ -821,6 +830,11 @@ public class PresentationLogic : IPresentationLogic
     public void Logout()
     {
         BusinessLogic.Logout();
+    }
+
+    public void UploadLearningWorldToBackend(string filepath)
+    {
+        BusinessLogic.UploadLearningWorldToBackend(filepath);
     }
 
     #endregion

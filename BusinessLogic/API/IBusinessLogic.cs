@@ -76,6 +76,7 @@ public interface IBusinessLogic
     string LoginName { get; }
     Task<bool> Login(string username, string password);
     void Logout();
+    void UploadLearningWorldToBackend(string filepath);
 
     #endregion
 }

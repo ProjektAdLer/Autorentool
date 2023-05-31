@@ -1,0 +1,20 @@
+<MudDialog>
+    <DialogContent>
+        <MudText>@DialogText</MudText>
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="OkButtonColor" OnClick="Ok">@OkButtonText</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    public MudDialogInstance MudDialog { get; set; }
+    [Parameter, EditorRequired]
+    public string DialogText { get; set; }
+    [Parameter]
+    public string OkButtonText { get; set; } = "Ok";
+    [Parameter]
+    public Color OkButtonColor { get; set; } = Color.Default;
+    
+    private void Ok() => MudDialog.Cancel();
+}

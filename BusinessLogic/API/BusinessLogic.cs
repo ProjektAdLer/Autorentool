@@ -237,5 +237,11 @@ public class BusinessLogic : IBusinessLogic
         _userInformation.LmsEmail = "";
     }
 
+    public void UploadLearningWorldToBackend(string filepath)
+    {
+        var atfPath = WorldGenerator.ExtractAtfFromBackup(filepath);
+        BackendAccess.UploadLearningWorldAsync(UserToken, filepath, atfPath);
+    }
+
     #endregion
 }
