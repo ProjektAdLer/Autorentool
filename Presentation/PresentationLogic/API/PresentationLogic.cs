@@ -169,7 +169,7 @@ public class PresentationLogic : IPresentationLogic
             workspace => CMapper.Map(workspace, authoringToolWorkspaceVm));
         BusinessLogic.ExecuteCommand(command);
 
-        SelectedViewModelsProvider.SetLearningWorld(authoringToolWorkspaceVm.LearningWorlds.LastOrDefault(), command);
+        SelectedViewModelsProvider.SetLearningWorld(null, command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.SaveLearningWorldAsync"/>
@@ -320,10 +320,7 @@ public class PresentationLogic : IPresentationLogic
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
 
-        if (learningSpaceVm == SelectedViewModelsProvider.LearningObjectInPathWay ||
-            SelectedViewModelsProvider.LearningObjectInPathWay == null)
-            SelectedViewModelsProvider.SetLearningObjectInPathWay(learningWorldVm.ObjectsInPathWays.LastOrDefault(),
-                command);
+        SelectedViewModelsProvider.SetLearningObjectInPathWay(null, command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.SaveLearningSpaceAsync"/>
@@ -359,8 +356,6 @@ public class PresentationLogic : IPresentationLogic
         var command = ConditionCommandFactory.GetCreateCommand(worldEntity, condition, positionX, positionY,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
-
-        SelectedViewModelsProvider.SetLearningObjectInPathWay(learningWorldVm.PathWayConditions.Last(), command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.CreatePathWayConditionBetweenObjects"/>
@@ -397,8 +392,7 @@ public class PresentationLogic : IPresentationLogic
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
 
-        SelectedViewModelsProvider.SetLearningObjectInPathWay(learningWorldVm.ObjectsInPathWays.LastOrDefault(),
-            command);
+        SelectedViewModelsProvider.SetLearningObjectInPathWay(null, command);
     }
 
     /// <inheritdoc cref="IPresentationLogic.CreateTopic"/>
