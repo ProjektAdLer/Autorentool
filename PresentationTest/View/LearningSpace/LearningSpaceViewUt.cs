@@ -89,18 +89,16 @@ public class LearningSpaceViewUt
     {
         var learningSpace = Substitute.For<ILearningSpaceViewModel>();
         var learningObject = Substitute.For<ILearningElementViewModel>();
-        learningObject.Name.Returns("my secret name");
-        learningObject.Description.Returns("a super long description");
         _learningSpacePresenter.LearningSpaceVm.Returns(learningSpace);
         _mediator.LearningElement.Returns(learningObject);
 
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
-        var elementName = systemUnderTest.Find("h3.element-name");
-        elementName.MarkupMatches(@"<h3 class=""text-base text-adlerblue-600 element-name""><span class=""text-adlergrey-600"">Selected learning element: </span> my secret name</h3>");
-        var elementDescription = systemUnderTest.Find("h3.element-description");
+        var elementName = systemUnderTest.Find("h3.space-theme");
+        elementName.MarkupMatches(@"<h3 class=""text-base text-adlerblue-600 space-theme"" ><span class=""text-adlergrey-600"" >Theme:</span>Campus</h3>");
+        var elementDescription = systemUnderTest.Find("h3.space-goals");
         elementDescription.MarkupMatches(
-            @"<h3 class=""text-base text-adlerblue-600 element-description""><span class=""text-adlergrey-600"">Description: </span> a super long description</h3>");
+            @"<h3 class=""text-base text-adlerblue-600 flex-initial break-all space-goals"" ><span class=""text-adlergrey-600"" >Goals:</span></h3>");
     }
 
     [Test]
