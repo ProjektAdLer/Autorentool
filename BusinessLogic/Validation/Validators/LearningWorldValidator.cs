@@ -15,7 +15,7 @@ public class LearningWorldValidator : AbstractValidator<LearningWorld>
         _learningWorldNamesProvider = learningWorldNamesProvider;
         RuleFor(x => x.Name)
             .NotEmpty()
-            .Length(4, 100)
+            .Length(1, 60)
             .IsAlphanumeric()
             .Must((world, name) => IsUniqueName(world.Id, name))
             .WithMessage("Already in use.");
