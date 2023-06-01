@@ -21,7 +21,7 @@ public class LearningElement : ILearningElement, IOriginator
         Goals = "";
         Difficulty = LearningElementDifficultyEnum.None;
         Workload = 0;
-        Points = 0;
+        Points = 1;
         UnsavedChanges = false;
         PositionX = 0;
         PositionY = 0;
