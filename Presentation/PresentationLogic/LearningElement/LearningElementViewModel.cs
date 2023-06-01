@@ -20,6 +20,7 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
         Description = "";
         Goals = "";
         Difficulty = LearningElementDifficultyEnum.None;
+        ElementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
         Workload = 0;
         Points = 1;
         PositionX = 0;
@@ -34,6 +35,7 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
     /// <param name="description">A description of the learning element and its contents.</param>
     /// <param name="goals">A description of the goals this learning element is supposed to achieve.</param>
     /// <param name="difficulty">Difficulty of the learning element.</param>
+    /// <param name="elementModel">Theme of the learning element</param>
     /// <param name="parent">Decides whether the learning element belongs to a learning world or a learning space.</param>
     /// <param name="workload">The time required to complete the learning element.</param>
     /// <param name="points">The number of points of the learning element.</param>
@@ -41,7 +43,7 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
     /// <param name="positionY">y-position of the learning element in the workspace.</param>
     public LearningElementViewModel(string name, 
         ILearningContentViewModel learningContent, string description, string goals,
-        LearningElementDifficultyEnum difficulty, ILearningSpaceViewModel? parent = null,
+        LearningElementDifficultyEnum difficulty, ElementModel elementModel, ILearningSpaceViewModel? parent = null,
         int workload = 0, int points = 0, double positionX = 0, double positionY = 0)
     {
         Id = Guid.NewGuid();
@@ -51,6 +53,7 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
         Description = description;
         Goals = goals;
         Difficulty = difficulty;
+        ElementModel = elementModel;
         Workload = workload;
         Points = points;
         PositionX = positionX;
@@ -67,6 +70,7 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
     public string Description { get; set; }
     public string Goals { get; set; }
     public LearningElementDifficultyEnum Difficulty { get; set; }
+    public ElementModel ElementModel { get; set; }
     public int Workload { get; set; }
     public int Points { get; set; }
     public bool UnsavedChanges { get; set; }

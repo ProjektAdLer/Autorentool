@@ -11,7 +11,7 @@ namespace PersistEntities;
 public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
 {
     public LearningElementPe(string name, ILearningContentPe? learningContent,
-        string description, string goals, LearningElementDifficultyEnum difficulty, int workload = 0,
+        string description, string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload = 0,
         int points = 1, double positionX = 0, double positionY = 0)
     {
         Id = Guid.NewGuid();
@@ -20,6 +20,7 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
         Description = description;
         Goals = goals;
         Difficulty = difficulty;
+        ElementModel = elementModel;
         Workload = workload;
         Points = points;
         PositionX = positionX;
@@ -37,6 +38,7 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
         Description = "";
         Goals = "";
         Difficulty = LearningElementDifficultyEnum.Medium;
+        ElementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
         Workload = 0;
         Points = 1;
         PositionX = 0;
@@ -58,6 +60,8 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
     public int Points { get; set; }
     [DataMember]
     public LearningElementDifficultyEnum Difficulty { get; set; }
+    [DataMember]
+    public ElementModel ElementModel { get; set; }
     [DataMember]
     public double PositionX { get; set; }
     [DataMember]

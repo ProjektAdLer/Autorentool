@@ -1,5 +1,6 @@
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using Shared;
 using LearningElementDifficultyEnum = Shared.LearningElementDifficultyEnum;
 
 namespace BusinessLogic.Commands.Element;
@@ -13,6 +14,7 @@ public class EditLearningElement : IEditLearningElement
     internal string Description { get; }
     internal string Goals { get; }
     internal LearningElementDifficultyEnum Difficulty { get; }
+    internal ElementModel ElementModel { get; }
     internal int Workload { get; }
     internal int Points { get; }
     internal ILearningContent LearningContent { get; }
@@ -20,7 +22,7 @@ public class EditLearningElement : IEditLearningElement
     private IMemento? _memento;
     
     public EditLearningElement(LearningElement learningElement, LearningSpace? parentSpace, string name,
-        string description, string goals, LearningElementDifficultyEnum difficulty,
+        string description, string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel,
         int workload, int points, ILearningContent learningContent, Action<LearningElement> mappingAction)
     {
         LearningElement = learningElement;
@@ -29,6 +31,7 @@ public class EditLearningElement : IEditLearningElement
         Description = description;
         Goals = goals;
         Difficulty = difficulty;
+        ElementModel = elementModel;
         Workload = workload;
         Points = points;
         LearningContent = learningContent;
@@ -45,6 +48,7 @@ public class EditLearningElement : IEditLearningElement
         LearningElement.Description = Description;
         LearningElement.Goals = Goals;
         LearningElement.Difficulty = Difficulty;
+        LearningElement.ElementModel = ElementModel;
         LearningElement.Workload = Workload;
         LearningElement.Points = Points;
         LearningElement.LearningContent = LearningContent;
@@ -58,6 +62,7 @@ public class EditLearningElement : IEditLearningElement
         LearningElement.Description != Description ||
         LearningElement.Goals != Goals ||
         LearningElement.Difficulty != Difficulty ||
+        LearningElement.ElementModel != ElementModel ||
         LearningElement.Workload != Workload ||
         LearningElement.Points != Points ||
         LearningElement.LearningContent != LearningContent;

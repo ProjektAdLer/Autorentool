@@ -15,6 +15,7 @@ public interface ILearningElementPe
     int Workload { get; set; }
     int Points { get; set; }
     LearningElementDifficultyEnum Difficulty { get; set; }
+    ElementModel ElementModel { get; set; }
     double PositionX { get; set; }
     double PositionY { get; set; }
 }

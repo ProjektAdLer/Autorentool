@@ -8,6 +8,7 @@
 @using BusinessLogic.Entities
 @using System.ComponentModel
 @using Presentation.Components.Forms.Buttons
+@using Presentation.PresentationLogic.LearningContent
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View
 
@@ -20,7 +21,7 @@
 <BaseForm TForm="LearningElementFormModel" TEntity="LearningElement"
           OnValidSubmit="OnValidSubmit" SnackbarMessage="Element created" FormDataContainer="FormDataContainer">
     <Fields>
-        
+
         <Collapsable Title="General" @bind-Collapsed="_collapsedGeneral">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
@@ -29,7 +30,7 @@
                               DebounceInterval="300"
                               Label="@nameof(FormDataContainer.FormModel.Name)"
                               Class="pb-4"/>
-                            
+
                 <MudText Typo="Typo.caption">Points</MudText>
                 <MudNumericField @bind-Value="FormDataContainer.FormModel.Points"
                                  Min="1"
@@ -40,7 +41,7 @@
                                  Variant="Variant.Outlined"
                                  Margin="Margin.Dense"
                                  Class="pb-4"/>
-                
+
                 <MudText Typo="Typo.caption">Workload (min)</MudText>
                 <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
                                  Min="0"
@@ -60,21 +61,21 @@
                     <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)"> Hard </MudSelectItem>
                     <MudSelectItem Value="@(LearningElementDifficultyEnum.None)"> None </MudSelectItem>
                 </MudSelect>
-                
+
             </div>
-            </Collapsable>
-        
+        </Collapsable>
+
         <Collapsable Title="Imported files" @bind-Collapsed="_collapsedContent">
             <div class="rounded-lg max-w-2xl px-4 pb-2">
-            <MudSelect @bind-Value="FormDataContainer.FormModel.LearningContent" AnchorOrigin="Origin.BottomCenter"
-                       Label="All imported files"
-                       Text="@FormDataContainer.FormModel.LearningContent?.Name"
-                       For="@(() => FormModel.LearningContent)">
-                @foreach (var learningContent in WorldPresenter.GetAllContent())
-                {
-                    <MudSelectItem Value="@(learningContent)">@learningContent.Name</MudSelectItem>
-                }
-            </MudSelect>
+                <MudSelect @bind-Value="FormDataContainer.FormModel.LearningContent" AnchorOrigin="Origin.BottomCenter"
+                           Label="All imported files"
+                           Text="@FormDataContainer.FormModel.LearningContent?.Name"
+                           For="@(() => FormModel.LearningContent)" SelectedValuesChanged="OnSelectedContentChanged()">
+                    @foreach (var learningContent in WorldPresenter.GetAllContent())
+                    {
+                        <MudSelectItem Value="@(learningContent)">@learningContent.Name</MudSelectItem>
+                    }
+                </MudSelect>
             </div>
         </Collapsable>
 
@@ -96,9 +97,25 @@
                               Variant="Variant.Outlined"
                               DebounceInterval="300"
                               Class="pb-2 mt-0"/>
-        </div>
+            </div>
         </Collapsable>
-        
+        <Collapsable Title="ElementModel" @bind-Collapsed="_collapsedElementModel">
+            <div class="rounded-lg w-4/4 px-4 pb-4">
+                <MudSelect @bind-Value="FormDataContainer.FormModel.ElementModel" AnchorOrigin="Origin.BottomCenter"
+                           Label="@nameof(FormDataContainer.FormModel.ElementModel)"
+                           Text="@FormDataContainer.FormModel.ElementModel.ToString()"
+                           For="@(() => FormModel.ElementModel)"
+                           Variant="Variant.Outlined">
+                    @foreach (var theme in _elementModels)
+                    {
+                        <MudSelectItem Value="@(theme)" Style="white-space: nowrap">
+                            <img src="@ElementModelHandler.GetIconForElementModel(theme)" alt="" width="32" class="mr-1"/>@theme
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+            </div>
+        </Collapsable>
+
     </Fields>
     <FooterButtons>
         <DefaultSubmitButton/>
@@ -110,7 +127,7 @@
 #pragma warning disable CS8618 - injected by framework
     [Inject]
     private ILearningWorldPresenter WorldPresenter { get; set; }
-    
+
     [Inject]
     private ILearningSpacePresenter SpacePresenter { get; set; }
 
@@ -119,6 +136,9 @@
 
     [Inject]
     private IFormDataContainer<LearningElementFormModel, LearningElement> FormDataContainer { get; set; }
+
+    [Inject]
+    private IElementModelHandler ElementModelHandler { get; set; }
 
     [Parameter]
 #pragma warning restore CS8618
@@ -129,22 +149,24 @@
     private bool _collapsedGeneral = false;
     private bool _collapsedContent = false;
     private bool _collapsedGoals = true;
+    private bool _collapsedElementModel = true;
+    private IEnumerable<ElementModel> _elementModels;
 
     private void OnValidSubmit(LearningElementFormModel model)
     {
         if (SelectedViewModelsProvider.LearningWorld == null)
             throw new InvalidOperationException("No learning world selected.");
-        
-        if(SelectedViewModelsProvider.ActiveSlot == -1)
+
+        if (SelectedViewModelsProvider.ActiveSlot == -1)
             WorldPresenter.CreateUnplacedLearningElement(
-                //ignore null warning here because validation ensures that LearningContent is not null - m.ho
-                model.Name, model.LearningContent!, model.Description, model.Goals, model.Difficulty,
+    //ignore null warning here because validation ensures that LearningContent is not null - m.ho
+                model.Name, model.LearningContent!, model.Description, model.Goals, model.Difficulty, model.ElementModel,
                 model.Workload, model.Points);
         else
         {
             SpacePresenter.CreateLearningElementInSlot(
-                //ignore null warning here because validation ensures that LearningContent is not null - m.ho
-                model.Name, model.LearningContent!, model.Description, model.Goals, model.Difficulty,
+    //ignore null warning here because validation ensures that LearningContent is not null - m.ho
+                model.Name, model.LearningContent!, model.Description, model.Goals, model.Difficulty, model.ElementModel,
                 model.Workload, model.Points);
         }
         OnSubmitted.InvokeAsync();
@@ -157,6 +179,12 @@
         if (SelectedViewModelsProvider.LearningContent == null) return;
         FormDataContainer.FormModel.LearningContent = SelectedViewModelsProvider.LearningContent;
         SelectedViewModelsProvider.SetLearningContent(null, null);
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        _elementModels = ElementModelHandler.GetElementModels();
     }
 
     private async void MediatorOnPropertyChanged(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)
@@ -173,6 +201,13 @@
     public void Dispose()
     {
         SelectedViewModelsProvider.PropertyChanged -= MediatorOnPropertyChanged;
+    }
+
+    private EventCallback<IEnumerable<ILearningContentViewModel>> OnSelectedContentChanged()
+    {
+        _elementModels = ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent);
+        FormDataContainer.FormModel.ElementModel = _elementModels.First();
+        return EventCallback<IEnumerable<ILearningContentViewModel>>.Empty;
     }
 
 }

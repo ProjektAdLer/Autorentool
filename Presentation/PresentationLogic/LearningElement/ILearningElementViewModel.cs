@@ -13,6 +13,7 @@ public interface ILearningElementViewModel : IDisplayableLearningObject
     ILearningContentViewModel LearningContent { get; set; }
     string Goals { get; set; }
     LearningElementDifficultyEnum Difficulty { get; set; }
+    ElementModel ElementModel { get; set; }
     int Workload { get; set; }
     int Points { get; set; }
     double PositionX { get; set; }

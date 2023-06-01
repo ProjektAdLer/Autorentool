@@ -23,6 +23,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Caching.Memory;
 using MudBlazor.Services;
 using Presentation.Components.Forms;
+using Presentation.Components.Forms.Element;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -137,6 +138,7 @@ public class Startup
         services.AddSingleton<IErrorService, ErrorService>();
         services.AddSingleton<ILearningElementDropZoneHelper, LearningElementDropZoneHelper>();
         services.AddTransient(typeof(IFormDataContainer<,>), typeof(FormDataContainer<,>));
+        services.AddSingleton<IElementModelHandler, ElementModelHandler>();
     }
 
     private void ConfigureBusinessLogic(IServiceCollection services)

@@ -259,7 +259,7 @@ public class CreateDsl : ICreateDsl
     
                     var learningElementJson = new LearningElementJson(learningElementId,
                         element.Id.ToString(), element.Name, url, elementCategory, elementType,
-                        learningSpaceId, element.Points, "", element.Description, element.Goals.Split("\n"));
+                        learningSpaceId, element.Points, element.ElementModel.ToString(), element.Description, element.Goals.Split("\n"));
     
                     if (element.LearningContent is not LinkContentPe)
                     {

@@ -23,6 +23,7 @@ public class EntityPersistEntityMappingProfileUt
     private const string Type = "type";
     private static readonly string Filepath = "bar/baz/buz.txt";
     private const LearningElementDifficultyEnum Difficulty = LearningElementDifficultyEnum.Easy;
+    private const ElementModel SelectedElementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
     private const int Workload = 1;
     private const int Points = 2;
     private const int RequiredPoints = 3;
@@ -39,6 +40,7 @@ public class EntityPersistEntityMappingProfileUt
     private const string NewType = "newType";
     private static readonly string NewFilepath = "/foo/bar/baz.txt";
     private const LearningElementDifficultyEnum NewDifficulty = LearningElementDifficultyEnum.Medium;
+    private const ElementModel NewSelectedElementModel = ElementModel.L_H5P_TAFEL_1;
     private const int NewWorkload = 2;
     private const int NewPoints = 3;
     private const int NewRequiredPoints = 4;
@@ -83,9 +85,9 @@ public class EntityPersistEntityMappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var content = GetTestableContent();
         var source = new LearningElement(Name, content, Description, Goals,
-            Difficulty, null, workload: Workload, points: Points, positionX: PositionX, positionY: PositionY);
+            Difficulty, SelectedElementModel, null, workload: Workload, points: Points, positionX: PositionX, positionY: PositionY);
         var destination = new LearningElementPe("", new FileContentPe("", "", "bar/baz/buz.txt"), "", "",
-            LearningElementDifficultyEnum.Easy);
+            LearningElementDifficultyEnum.Easy, ElementModel.L_TEXT_BUECHERREGAL_1);
 
         systemUnderTest.Map(source, destination);
 
@@ -96,6 +98,8 @@ public class EntityPersistEntityMappingProfileUt
         destination.Description = NewDescription;
         destination.Goals = NewGoals;
         destination.Difficulty = NewDifficulty;
+        destination.ElementModel = NewSelectedElementModel;
+        destination.ElementModel = NewSelectedElementModel;
         destination.Workload = NewWorkload;
         destination.Points = NewPoints;
         destination.PositionX = NewPositionX;
@@ -208,7 +212,7 @@ public class EntityPersistEntityMappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, SavePath);
         source.UnplacedLearningElements.Add(new LearningElement(Name, GetTestableContent(), Description, Goals,
-            Difficulty, null, Workload, Points));
+            Difficulty, SelectedElementModel, null, Workload, Points));
         var destination = new LearningWorldPe("", "", "", "", "", "", "");
 
         systemUnderTest.Map(source, destination);
@@ -230,7 +234,7 @@ public class EntityPersistEntityMappingProfileUt
         destination.UnplacedLearningElements = new List<ILearningElementPe>()
         {
             new LearningElementPe(NewName, GetTestableNewContentPersistEntity(), NewDescription, NewGoals,
-                NewDifficulty, NewWorkload, NewPoints)
+                NewDifficulty, NewSelectedElementModel, NewWorkload, NewPoints)
         };
 
         systemUnderTest.Map(destination, source);
@@ -472,7 +476,7 @@ public class EntityPersistEntityMappingProfileUt
 
     private static LearningElement GetTestableElementWithParent(LearningSpace parent)
     {
-        return new LearningElement(Name, GetTestableContent(), Description, Goals, Difficulty, parent, Workload,
+        return new LearningElement(Name, GetTestableContent(), Description, Goals, Difficulty, SelectedElementModel, parent, Workload,
             Points, PositionX,
             PositionY);
     }
@@ -480,7 +484,7 @@ public class EntityPersistEntityMappingProfileUt
     private static LearningElementPe GetTestableElementPersistEntity()
     {
         return new LearningElementPe(NewName, GetTestableNewContentPersistEntity(),
-            NewDescription, NewGoals, NewDifficulty, NewWorkload, NewPoints, NewPositionX,
+            NewDescription, NewGoals, NewDifficulty, NewSelectedElementModel, NewWorkload, NewPoints, NewPositionX,
             NewPositionY);
     }
 
@@ -640,6 +644,7 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(element.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(element.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
                     Assert.That(element.Difficulty, Is.EqualTo(useNewFields ? NewDifficulty : Difficulty));
+                    Assert.That(element.ElementModel, Is.EqualTo(useNewFields ? NewSelectedElementModel : SelectedElementModel));
                     Assert.That(element.Parent, Is.EqualTo(parent));
                     Assert.That(element.Workload, Is.EqualTo(useNewFields ? NewWorkload : Workload));
                     Assert.That(element.Points, Is.EqualTo(useNewFields ? NewPoints : Points));
@@ -655,6 +660,7 @@ public class EntityPersistEntityMappingProfileUt
                     Assert.That(element.Description, Is.EqualTo(useNewFields ? NewDescription : Description));
                     Assert.That(element.Goals, Is.EqualTo(useNewFields ? NewGoals : Goals));
                     Assert.That(element.Difficulty, Is.EqualTo(useNewFields ? NewDifficulty : Difficulty));
+                    Assert.That(element.ElementModel, Is.EqualTo(useNewFields ? NewSelectedElementModel : SelectedElementModel));
                     Assert.That(element.Workload, Is.EqualTo(useNewFields ? NewWorkload : Workload));
                     Assert.That(element.Points, Is.EqualTo(useNewFields ? NewPoints : Points));
                     Assert.That(element.PositionX, Is.EqualTo(useNewFields ? NewPositionX : PositionX));

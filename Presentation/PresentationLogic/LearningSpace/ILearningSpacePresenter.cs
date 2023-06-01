@@ -14,6 +14,7 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
 {
     void EditLearningSpace(string name, string description, string goals, int requiredPoints, Theme theme,
         ITopicViewModel? topic = null);
+
     ILearningSpaceViewModel? LearningSpaceVm { get; }
     void SetSelectedLearningElement(ILearningElementViewModel? learningElement);
     void DeleteSelectedLearningElement();
@@ -27,18 +28,24 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     void DragLearningElement(object sender, DraggedEventArgs<ILearningElementViewModel> draggedEventArgs);
     void ClickedLearningElement(ILearningElementViewModel obj);
     void RightClickedLearningElement(ILearningElementViewModel obj);
-    void EditLearningElement(ILearningElementViewModel learningElement, string name,
-        string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points,
+
+    void EditLearningElement(ILearningElementViewModel learningElement, string name, string description, string goals,
+        LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points,
         ILearningContentViewModel learningContent);
+
     void EditLearningElement(int slotIndex);
     void DeleteLearningElement(ILearningElementViewModel obj);
     void HideRightClickMenu();
     void ShowElementContent(ILearningElementViewModel obj);
     void SetLearningSpaceLayout(FloorPlanEnum floorPlanName);
-    void OpenReplaceLearningElementDialog(ILearningWorldViewModel learningWorldVm, ILearningElementViewModel dropItem, int slotId);
+
+    void OpenReplaceLearningElementDialog(ILearningWorldViewModel learningWorldVm, ILearningElementViewModel dropItem,
+        int slotId);
+
     bool ReplaceLearningElementDialogOpen { get; set; }
     void OnReplaceLearningElementDialogClose(DialogResult closeResult);
     void ClickOnSlot(int i);
-    void CreateLearningElementInSlot(string name, ILearningContentViewModel learningContent,
-        string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points);
+
+    void CreateLearningElementInSlot(string name, ILearningContentViewModel learningContent, string description,
+        string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points);
 }

@@ -22,6 +22,7 @@ public class LearningElementFormModel
     public string Description { get; set; }
     public string Goals { get; set; }
     public LearningElementDifficultyEnum Difficulty { get; set; }
+    public ElementModel ElementModel { get; set; }
     public int Workload { get; set; }
     public int Points { get; set; }
     

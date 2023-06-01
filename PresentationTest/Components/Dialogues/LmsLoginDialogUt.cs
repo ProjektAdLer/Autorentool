@@ -33,6 +33,10 @@ public class LmsLoginDialogUt
         _context.ComponentFactories.AddStub<MudText>();
         _context.ComponentFactories.AddStub<MudButton>();
         _context.ComponentFactories.AddStub<MudTextField<string>>();
+        _context.ComponentFactories.AddStub<MudDialog>();
+        // DialogContent belongs to MudDialog
+        _context.ComponentFactories.AddStub<MudText>();
+        _context.ComponentFactories.AddStub<MudButton>();
     }
 
     [Test]
