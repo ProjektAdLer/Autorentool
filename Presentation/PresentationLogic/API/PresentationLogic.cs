@@ -546,6 +546,11 @@ public class PresentationLogic : IPresentationLogic
             newSlotIndex,
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
+        
+        if (SelectedViewModelsProvider.ActiveSlot == newSlotIndex)
+        {
+            SelectedViewModelsProvider.SetActiveSlot(-1);
+        }
     }
 
     public void DragLearningElementToUnplaced(ILearningWorldViewModel learningWorldVm,
@@ -575,7 +580,6 @@ public class PresentationLogic : IPresentationLogic
         {
             SelectedViewModelsProvider.SetActiveSlot(-1);
         }
-            
     }
 
     public void DragLearningElement(ILearningElementViewModel learningElementVm, double oldPositionX,
