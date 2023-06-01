@@ -29,17 +29,20 @@
         </Collapsable>
         
         <Collapsable Title="Completion conditions" @bind-Collapsed="_collapsedConditions">
-            <div class="rounded-lg w-4/4 px-4 pb-4">
+            <div class="rounded-lg w-4/4 px-4 pb-2">
+                <MudText Typo="Typo.caption">Required points</MudText>
                 <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
+                                 Min="1"
                                  For="@(() => FormModel.RequiredPoints)"
                                  Immediate="true"
                                  DebounceInterval="300"
-                                 Label="@nameof(FormDataContainer.FormModel.RequiredPoints)"/>
+                                 Variant="Variant.Outlined"
+                                 Margin="Margin.Dense"/>
             </div>
         </Collapsable>
         
         <Collapsable Title="Theme" @bind-Collapsed="_collapsedTheme">
-            <div class="rounded-lg w-4/4 px-4 pb-4">
+            <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudSelect @bind-Value="FormDataContainer.FormModel.Theme" AnchorOrigin="Origin.BottomCenter"
                            Label="@nameof(FormDataContainer.FormModel.Theme)"
                            Text="@FormDataContainer.FormModel.Theme.ToString()"
@@ -61,7 +64,7 @@
                               Lines="3"
                               Variant="Variant.Outlined"
                               DebounceInterval="300"
-                              Class="pb-2 mt-0"/>
+                              Class="pb-4 mt-0"/>
                 <MudText Typo="Typo.caption">Goals</MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                               For="@(() => FormModel.Goals)"
