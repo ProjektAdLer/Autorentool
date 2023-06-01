@@ -12,7 +12,7 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
 {
     public LearningElementPe(string name, ILearningContentPe? learningContent,
         string description, string goals, LearningElementDifficultyEnum difficulty, int workload = 0,
-        int points = 0, double positionX = 0, double positionY = 0)
+        int points = 1, double positionX = 0, double positionY = 0)
     {
         Id = Guid.NewGuid();
         Name = name;
@@ -38,7 +38,7 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
         Goals = "";
         Difficulty = LearningElementDifficultyEnum.Medium;
         Workload = 0;
-        Points = 0;
+        Points = 1;
         PositionX = 0;
         PositionY = 0;
     }
