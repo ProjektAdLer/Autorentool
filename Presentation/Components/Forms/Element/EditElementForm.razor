@@ -49,7 +49,7 @@
         <Collapsable Title="Imported files" @bind-Collapsed="_collapsedContent">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudSelect @bind-Value="FormDataContainer.FormModel.LearningContent"
-                           Label="@nameof(FormDataContainer.FormModel.LearningContent)"
+                           Label="All imported files"
                            Text="@FormDataContainer.FormModel.LearningContent?.Name"
                            For="@(() => FormModel.LearningContent)">
                     @foreach (var learningContent in WorldPresenter.GetAllContent())
