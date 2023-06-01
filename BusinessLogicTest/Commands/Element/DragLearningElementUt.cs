@@ -2,6 +2,7 @@ using BusinessLogic.Commands.Element;
 using BusinessLogic.Entities;
 using NUnit.Framework;
 using Shared;
+using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Element;
 
@@ -16,12 +17,7 @@ public class DragLearningElementUt
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var element = new LearningElement("a", null!, "e",
-            "f", LearningElementDifficultyEnum.Easy, null, workload: 5, points: 5, positionX: newPositionX,
-            positionY: newPositionY)
-        {
-            UnsavedChanges = false
-        };
+        var element = EntityProvider.GetLearningElement(unsavedChanges: false, positionX: newPositionX, positionY: newPositionY);
         var actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
@@ -53,8 +49,7 @@ public class DragLearningElementUt
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var element = new LearningElement("a", null!, "e", 
-            "f", LearningElementDifficultyEnum.Easy, null, workload: 5, points: 5, positionX: newPositionX, positionY: newPositionY);
+        var element = EntityProvider.GetLearningElement(positionX: newPositionX, positionY: newPositionY);
         var actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
@@ -72,12 +67,7 @@ public class DragLearningElementUt
         double oldPositionY = 2;
         double newPositionX = 3;
         double newPositionY = 4;
-        var element = new LearningElement("a", null!, "e",
-            "f", LearningElementDifficultyEnum.Easy, null, workload: 5, points: 5, positionX: newPositionX,
-            positionY: newPositionY)
-        {
-            UnsavedChanges = false
-        };
+        var element = EntityProvider.GetLearningElement(unsavedChanges: false, positionX: newPositionX, positionY: newPositionY);
         var actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 

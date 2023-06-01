@@ -18,7 +18,7 @@
         <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Class="btn-standard" OnClick="async () => await OnNewButtonClicked.InvokeAsync()">New</MudButton>
     </HeaderButtons>
     <Fields>
-        
+
         <Collapsable Title="General" @bind-Collapsed="_collapsedGeneral">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
@@ -27,29 +27,29 @@
                               DebounceInterval="300"
                               Label="@nameof(FormDataContainer.FormModel.Name)"
                               Class="pb-4"/>
-                
+
                 <MudText Typo="Typo.caption">Points</MudText>
                 <MudNumericField @bind-Value="FormDataContainer.FormModel.Points"
-                              Min="0"
-                              Max="1000"
-                              For="@(() => FormModel.Points)"
-                              Immediate="true"
-                              DebounceInterval="300"
-                              Variant="Variant.Outlined"
-                              Margin="Margin.Dense"
-                              Class="pb-4"/>
-                
+                                 Min="0"
+                                 Max="1000"
+                                 For="@(() => FormModel.Points)"
+                                 Immediate="true"
+                                 DebounceInterval="300"
+                                 Variant="Variant.Outlined"
+                                 Margin="Margin.Dense"
+                                 Class="pb-4"/>
+
                 <MudText Typo="Typo.caption">Workload (min)</MudText>
                 <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
-                              Min="0"
-                              Max="1000"   
-                              For="@(() => FormModel.Workload)"
-                              Immediate="true"
-                              DebounceInterval="300"
-                              Variant="Variant.Outlined"
-                              Margin="Margin.Dense"
-                              Class="pb-4"/>
-                
+                                 Min="0"
+                                 Max="1000"
+                                 For="@(() => FormModel.Workload)"
+                                 Immediate="true"
+                                 DebounceInterval="300"
+                                 Variant="Variant.Outlined"
+                                 Margin="Margin.Dense"
+                                 Class="pb-4"/>
+
                 <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
                            Label="@nameof(FormDataContainer.FormModel.Difficulty)"
                            For="@(() => FormModel.Difficulty)">
@@ -58,8 +58,8 @@
                     <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)"> Hard </MudSelectItem>
                     <MudSelectItem Value="@(LearningElementDifficultyEnum.None)"> None </MudSelectItem>
                 </MudSelect>
-                
- 
+
+
             </div>
         </Collapsable>
 
@@ -97,6 +97,23 @@
                               Class="pb-2 mt-0"/>
             </div>
         </Collapsable>
+        <Collapsable Title="ElementModel" @bind-Collapsed="_collapsedElementModel">
+            <div class="rounded-lg w-4/4 px-4 pb-4">
+                <MudSelect @bind-Value="FormDataContainer.FormModel.ElementModel" AnchorOrigin="Origin.BottomCenter"
+                           Label="@nameof(FormDataContainer.FormModel.ElementModel)"
+                           Text="@FormDataContainer.FormModel.ElementModel.ToString()"
+                           For="@(() => FormModel.ElementModel)"
+                           Variant="Variant.Outlined">
+                    @foreach (var theme in _elementModels)
+                    {
+                        <MudSelectItem Value="@(theme)" Style="white-space: nowrap">
+                            <img src="@ElementModelHandler.GetIconForElementModel(theme)" alt="" width="32" class="mr-1"/>@theme
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+            </div>
+        </Collapsable>
+
     </Fields>
     <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
@@ -115,12 +132,15 @@
     [Inject]
     private IFormDataContainer<LearningElementFormModel, LearningElement> FormDataContainer { get; set; }
 
+    [Inject]
+    private IElementModelHandler ElementModelHandler { get; set; }
+
     [Parameter, EditorRequired]
     public ILearningElementViewModel ElementToEdit { get; set; }
 
     [Parameter, EditorRequired]
     public EventCallback OnNewButtonClicked { get; set; }
-    
+
     [CascadingParameter(Name = "TriggerMasterLayoutStateHasChanged")]
     private Action TriggerMasterLayoutStateHasChanged { get; set; }
 #pragma warning restore CS8618
@@ -130,18 +150,21 @@
     private bool _collapsedGeneral = false;
     private bool _collapsedContent = false;
     private bool _collapsedGoals = true;
+    private bool _collapsedElementModel = true;
+    private IEnumerable<ElementModel> _elementModels;
 
     private void OnValidSubmit(LearningElementFormModel model)
     {
         WorldPresenter.EditLearningElement(ElementToEdit.Parent, ElementToEdit, model.Name, model.Description,
     //ignore null warning here because validation ensures that LearningContent is not null - m.ho
-            model.Goals, model.Difficulty, model.Workload, model.Points, model.LearningContent!);
+            model.Goals, model.Difficulty, model.ElementModel, model.Workload, model.Points, model.LearningContent!);
         TriggerMasterLayoutStateHasChanged();
     }
 
     private async Task MapIntoContainer()
     {
         Mapper.Map(ElementToEdit, FormDataContainer.FormModel);
+        _elementModels = ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent);
         await InvokeAsync(StateHasChanged);
     }
 

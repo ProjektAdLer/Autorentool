@@ -51,7 +51,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     public bool SelectedLearningObjectIsSpace =>
         _selectedViewModelsProvider.LearningObjectInPathWay?.GetType() == typeof(LearningSpaceViewModel);
 
-    public bool ShowingLearningSpaceView => LearningWorldVm is { ShowingLearningSpaceView: true };
+    public bool ShowingLearningSpaceView => LearningWorldVm is {ShowingLearningSpaceView: true};
 
     /// <summary>
     /// The currently selected LearningWorldViewModel.
@@ -122,7 +122,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
 
-        await _presentationLogic.SaveLearningWorldAsync((LearningWorldViewModel)LearningWorldVm);
+        await _presentationLogic.SaveLearningWorldAsync((LearningWorldViewModel) LearningWorldVm);
     }
 
     #endregion
@@ -141,7 +141,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (SelectedLearningObjectIsSpace)
         {
             _learningSpacePresenter.SetLearningSpace(
-                (LearningSpaceViewModel)_selectedViewModelsProvider.LearningObjectInPathWay!);
+                (LearningSpaceViewModel) _selectedViewModelsProvider.LearningObjectInPathWay!);
             _selectedViewModelsProvider.SetLearningObjectInPathWay(pathWayObject, null);
         }
         else
@@ -301,7 +301,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
             throw new ApplicationException("SelectedLearningSpace is null");
 
         await _presentationLogic.SaveLearningSpaceAsync(
-            (LearningSpaceViewModel)_selectedViewModelsProvider.LearningObjectInPathWay);
+            (LearningSpaceViewModel) _selectedViewModelsProvider.LearningObjectInPathWay);
     }
 
     public void EditSelectedLearningSpace()
@@ -383,7 +383,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         var objectAtPosition = LearningWorldVm?.LearningSpaces.FirstOrDefault(ls =>
                                    ls.PositionX <= x && ls.PositionX + 84 >= x && ls.PositionY <= y &&
                                    ls.PositionY + 84 >= y) ??
-                               (IObjectInPathWayViewModel?)LearningWorldVm?.PathWayConditions.FirstOrDefault(lc =>
+                               (IObjectInPathWayViewModel?) LearningWorldVm?.PathWayConditions.FirstOrDefault(lc =>
                                    lc.PositionX <= x && lc.PositionX + 76 >= x && lc.PositionY <= y &&
                                    lc.PositionY + 43 >= y);
         return objectAtPosition;
@@ -459,6 +459,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     /// <param name="description">The new description of the element.</param>
     /// <param name="goals">The new goals of the element.</param>
     /// <param name="difficulty">The new difficulty of the element.</param>
+    /// <param name="elementModel">The Theme of the element.</param>
     /// <param name="workload">The new workload of the element.</param>
     /// <param name="points">The new points of the element.</param>
     /// <param name="learningContent">The new learning content of the element.</param>
@@ -466,6 +467,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     /// element to edit is not a unplaced element in the learning world.</exception>
     public void EditLearningElement(ILearningSpaceViewModel? elementParent, ILearningElementViewModel learningElement,
         string name, string description, string goals, LearningElementDifficultyEnum difficulty,
+        ElementModel elementModel,
         int workload, int points, ILearningContentViewModel learningContent)
     {
         if (LearningWorldVm == null)
@@ -473,8 +475,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (LearningWorldVm.UnplacedLearningElements.Contains(learningElement))
             if (learningElement.Parent == null)
                 _presentationLogic.EditLearningElement(elementParent, learningElement, name,
-                    description,
-                    goals, difficulty, workload, points, learningContent);
+                    description, goals, difficulty, elementModel, workload, points, learningContent);
             else
             {
                 throw new ApplicationException("LearningElement is unplaced but has a space parent");
@@ -483,7 +484,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         {
             if (learningElement.Parent == _selectedViewModelsProvider.LearningObjectInPathWay)
                 _learningSpacePresenter.EditLearningElement(learningElement, name, description, goals, difficulty,
-                    workload, points, learningContent);
+                    elementModel, workload, points, learningContent);
             else
             {
                 throw new ApplicationException("LearningElement is placed but has a different or null parent");
@@ -502,7 +503,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         SetSelectedLearningElement(learningElement);
-        await _presentationLogic.ShowLearningElementContentAsync((LearningElementViewModel)learningElement);
+        await _presentationLogic.ShowLearningElementContentAsync((LearningElementViewModel) learningElement);
     }
 
     /// <summary>
@@ -521,12 +522,12 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
 
     public void CreateUnplacedLearningElement(string name,
         ILearningContentViewModel learningContent, string description, string goals,
-        LearningElementDifficultyEnum difficulty, int workload, int points)
+        LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points)
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         _presentationLogic.CreateUnplacedLearningElement(LearningWorldVm, name, learningContent,
-            description, goals, difficulty, workload, points);
+            description, goals, difficulty, elementModel, workload, points);
     }
 
     #endregion

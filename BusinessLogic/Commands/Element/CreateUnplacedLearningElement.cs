@@ -14,11 +14,11 @@ public class CreateUnplacedLearningElement : ICreateUnplacedLearningElement
 
     public CreateUnplacedLearningElement(LearningWorld learningWorld, string name,
         ILearningContent learningContent, string description, string goals,
-        LearningElementDifficultyEnum difficulty, int workload, int points, double positionX, double positionY,
+        LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points, double positionX, double positionY,
         Action<LearningWorld> mappingAction)
     {
         LearningElement = new LearningElement(name,  learningContent, description, goals,
-            difficulty, null, workload, points, positionX, positionY);
+            difficulty, elementModel, null, workload, points, positionX, positionY);
         LearningWorld = learningWorld;
         MappingAction = mappingAction;
     }

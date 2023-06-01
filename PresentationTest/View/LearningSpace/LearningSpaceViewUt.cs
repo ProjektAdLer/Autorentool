@@ -76,6 +76,7 @@ public class LearningSpaceViewUt
 
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
+        //TODO Use this for LmsLoginDialogUt
         var spaceWorkload = systemUnderTest.Find("h3.space-workload");
         spaceWorkload.MarkupMatches(
             @"<h3 class=""text-base text-adlerblue-600 space-workload""><span class=""text-adlergrey-600"">Workload: </span> 42<span class=""text-adlergrey-600""> min.</span></h3>");

@@ -128,7 +128,7 @@ public class DataAccessUt
 
         var learningContent = new FileContent("a", "b", "");
         var learningElement = new LearningElement("f", learningContent,
-            "f", "f", LearningElementDifficultyEnum.Easy);
+            "f", "f", LearningElementDifficultyEnum.Easy, ElementModel.L_H5P_SPIELAUTOMAT_1);
         systemUnderTest.SaveLearningElementToFile(
             learningElement,
             "C:/nonsense");

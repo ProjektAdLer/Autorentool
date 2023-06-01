@@ -14,8 +14,8 @@ public interface IElementCommandFactory
     /// Creates a command to create a learning element in a slot.
     /// </summary>
     ICreateLearningElementInSlot GetCreateInSlotCommand(LearningSpace parentSpace, int slotIndex, string name,
-        ILearningContent learningContent, string description, string goals,
-        LearningElementDifficultyEnum difficulty, int workload, int points, double positionX, double positionY,
+        ILearningContent learningContent, string description, string goals, LearningElementDifficultyEnum difficulty,
+        ElementModel elementModel, int workload, int points, double positionX, double positionY,
         Action<LearningSpace> mappingAction);
 
     /// <summary>
@@ -29,8 +29,8 @@ public interface IElementCommandFactory
     /// Creates a command to create a learning element unplaced in a world.
     /// </summary>
     ICreateUnplacedLearningElement GetCreateUnplacedCommand(LearningWorld learningWorld, string name,
-        ILearningContent learningContent, string description, string goals,
-        LearningElementDifficultyEnum difficulty, int workload, int points, double positionX, double positionY,
+        ILearningContent learningContent, string description, string goals, LearningElementDifficultyEnum difficulty,
+        ElementModel elementModel, int workload, int points, double positionX, double positionY,
         Action<LearningWorld> mappingAction);
 
     /// <summary>
@@ -55,7 +55,7 @@ public interface IElementCommandFactory
     /// Creates a command to edit a learning element.
     /// </summary>
     IEditLearningElement GetEditCommand(LearningElement learningElement, LearningSpace? parentSpace, string name,
-        string description, string goals, LearningElementDifficultyEnum difficulty,
+        string description, string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel,
         int workload, int points, ILearningContent learningContent, Action<LearningElement> mappingAction);
 
     /// <summary>

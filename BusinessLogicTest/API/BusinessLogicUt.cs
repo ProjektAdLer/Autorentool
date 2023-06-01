@@ -8,6 +8,7 @@ using NUnit.Framework;
 using Shared;
 using Shared.Command;
 using Shared.Configuration;
+using TestHelpers;
 
 namespace BusinessLogicTest.API;
 
@@ -218,9 +219,7 @@ public class BusinessLogicUt
     [Test]
     public void SaveLearningElement_CallsDataAccess()
     {
-        var content = new FileContent("a", "b", "");
-        var learningElement = new LearningElement("fa", content,
-            "f", "f", LearningElementDifficultyEnum.Easy);
+        var learningElement = EntityProvider.GetLearningElement();
         var mockDataAccess = Substitute.For<IDataAccess>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
@@ -245,9 +244,7 @@ public class BusinessLogicUt
     [Test]
     public void LoadLearningElement_ReturnsLearningElement()
     {
-        var content = new FileContent("a", "b", "");
-        var learningElement = new LearningElement("fa", content, "f",
-            "f", LearningElementDifficultyEnum.Easy);
+        var learningElement = EntityProvider.GetLearningElement();
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningElement("foobar").Returns(learningElement);
 
@@ -436,9 +433,7 @@ public class BusinessLogicUt
     [Test]
     public void LoadLearningElementFromStream_ReturnsLearningElement()
     {
-        var content = new FileContent("a", "b", "");
-        var learningElement = new LearningElement("fa", content, "f",
-            "f", LearningElementDifficultyEnum.Easy);
+        var learningElement = EntityProvider.GetLearningElement();
         var stream = Substitute.For<Stream>();
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningElement(stream).Returns(learningElement);

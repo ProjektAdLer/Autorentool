@@ -35,9 +35,9 @@ public class CachingMapperUt
     [Test]
     public void MapAuthoringToolWorkspaceEntityToViewModel_MapsLearningWorldToViewModel()
     {
-        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
-        var workspaceViewModel = new AuthoringToolWorkspaceViewModel();
-        var worldEntity = new LearningWorld("n", "s", "a", "l", "d", "g");
+        var workspace = EntityProvider.GetAuthoringToolWorkspace();
+        var workspaceViewModel = ViewModelProvider.GetAuthoringToolWorkspace();
+        var worldEntity = EntityProvider.GetLearningWorld();
         workspace.LearningWorlds.Add(worldEntity);
 
         var systemUnderTest = CreateTestableCachingMapper();
@@ -60,9 +60,9 @@ public class CachingMapperUt
     [Test]
     public void MapAuthoringToolWorkspaceEntityToViewModel_MapsWorldToTheSameViewModelAfterFirstCall()
     {
-        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld>());
-        var workspaceViewModel = new AuthoringToolWorkspaceViewModel();
-        var worldEntity = new LearningWorld("n", "s", "a", "l", "d", "g");
+        var workspace = EntityProvider.GetAuthoringToolWorkspace();
+        var workspaceViewModel = ViewModelProvider.GetAuthoringToolWorkspace();
+        var worldEntity = EntityProvider.GetLearningWorld();
         workspace.LearningWorlds.Add(worldEntity);
 
         var systemUnderTest = CreateTestableCachingMapper();
@@ -85,7 +85,7 @@ public class CachingMapperUt
     [Test]
     public void MapLearningWorldEntityToViewModel_MapperReceivedCallWithCorrectParameters()
     {
-        var entity = new LearningWorld("n", "s", "a", "l", "d", "g");
+        var entity = EntityProvider.GetLearningWorld();
         var viewModel = ViewModelProvider.GetLearningWorld();
         var mapper = Substitute.For<IMapper>();
         var systemUnderTest = CreateTestableCachingMapper(mapper);
@@ -98,11 +98,11 @@ public class CachingMapperUt
     [Test]
     public void MapLearningWorldEntityToViewModel_MapsLearningSpaceConditionAndPathWayToViewModel()
     {
-        var world = new LearningWorld("n", "s", "a", "l", "d", "g");
+        var world = EntityProvider.GetLearningWorld();
         var worldViewModel = ViewModelProvider.GetLearningWorld();
-        var spaceEntity = new LearningSpace("n", "d", "g", 5, Theme.Campus);
-        var conditionEntity = new PathWayCondition(ConditionEnum.And, 2, 1);
-        var pathWayEntity = new LearningPathway(spaceEntity, conditionEntity);
+        var spaceEntity = EntityProvider.GetLearningSpace();
+        var conditionEntity = EntityProvider.GetPathWayCondition();
+        var pathWayEntity = EntityProvider.GetLearningPathway(source: spaceEntity, target: conditionEntity);
         world.LearningSpaces.Add(spaceEntity);
         world.PathWayConditions.Add(conditionEntity);
         world.LearningPathways.Add(pathWayEntity);
@@ -139,12 +139,12 @@ public class CachingMapperUt
     [Test]
     public void MapLearningWorldEntityToViewModel_MapsSpaceConditionAndPathWayToTheSameViewModelAfterFirstCall()
     {
-        var world = new LearningWorld("n", "s", "a", "l", "d", "g");
+        var world = EntityProvider.GetLearningWorld();
         var worldViewModel = ViewModelProvider.GetLearningWorld();
-        var spaceEntity = new LearningSpace("n", "d", "g", 5, Theme.Campus);
-        var conditionEntity = new PathWayCondition(ConditionEnum.And, 2, 1);
-        var pathWayEntity = new LearningPathway(spaceEntity, conditionEntity);
-        var topicEntity = new Topic("a");
+        var spaceEntity = EntityProvider.GetLearningSpace();
+        var conditionEntity = EntityProvider.GetPathWayCondition();
+        var pathWayEntity = EntityProvider.GetLearningPathway(source: spaceEntity, target: conditionEntity);
+        var topicEntity = EntityProvider.GetTopic();
         world.LearningSpaces.Add(spaceEntity);
         world.PathWayConditions.Add(conditionEntity);
         world.LearningPathways.Add(pathWayEntity);
@@ -186,10 +186,10 @@ public class CachingMapperUt
     [Test]
     public void MapLearningWorldEntityToViewModel_NewSpaceWithTopic_UsingCachedTopicVm()
     {
-        var world = new LearningWorld("n", "s", "a", "l", "d", "g");
+        var world = EntityProvider.GetLearningWorld();
         var worldViewModel = ViewModelProvider.GetLearningWorld();
-        var spaceEntity = new LearningSpace("n", "s", "a", 5, Theme.Campus);
-        var topicEntity = new Topic("a");
+        var spaceEntity = EntityProvider.GetLearningSpace();
+        var topicEntity = EntityProvider.GetTopic();
         spaceEntity.AssignedTopic = topicEntity;
         world.Topics.Add(topicEntity);
 
@@ -209,16 +209,16 @@ public class CachingMapperUt
     [Test]
     public void MapLearningWorldEntityToViewModel_MoveElementFromSpaceToUnplaced()
     {
-        var worldViewModel = new LearningWorldViewModel("n", "s", "a", "l", "d", "g");
-        var spaceViewModel = new LearningSpaceViewModel("n", "d", "g", Theme.Campus, 5);
-        var elementViewModel = new LearningElementViewModel("n", null!, "d", "g", LearningElementDifficultyEnum.Easy);
+        var worldViewModel = ViewModelProvider.GetLearningWorld();
+        var spaceViewModel = ViewModelProvider.GetLearningSpace();
+        var elementViewModel = ViewModelProvider.GetLearningElement();
         spaceViewModel.LearningSpaceLayout.LearningElements[0] = elementViewModel;
         elementViewModel.Parent = spaceViewModel;
         worldViewModel.LearningSpaces.Add(spaceViewModel);
 
         var systemUnderTest = CreateTestableCachingMapper();
 
-        var worldEntity = new LearningWorld("x", "x", "x", "x", "x", "x");
+        var worldEntity = EntityProvider.GetLearningWorld();
 
         systemUnderTest.Map(worldViewModel, worldEntity);
 
@@ -245,15 +245,15 @@ public class CachingMapperUt
     [Test]
     public void MapLearningWorldEntityToViewModel_MoveElementFromUnplacedToSpace()
     {
-        var worldViewModel = new LearningWorldViewModel("n", "s", "a", "l", "d", "g");
-        var spaceViewModel = new LearningSpaceViewModel("n", "d", "g", Theme.Campus, 5);
-        var elementViewModel = new LearningElementViewModel("n", null!, "d", "g", LearningElementDifficultyEnum.Easy);
+        var worldViewModel = ViewModelProvider.GetLearningWorld();
+        var spaceViewModel = ViewModelProvider.GetLearningSpace();
+        var elementViewModel = ViewModelProvider.GetLearningElement();
         worldViewModel.UnplacedLearningElements.Add(elementViewModel);
         worldViewModel.LearningSpaces.Add(spaceViewModel);
 
         var systemUnderTest = CreateTestableCachingMapper();
 
-        var worldEntity = new LearningWorld("x", "x", "x", "x", "x", "x");
+        var worldEntity = EntityProvider.GetLearningWorld();
 
         systemUnderTest.Map(worldViewModel, worldEntity);
 
@@ -419,8 +419,8 @@ public class CachingMapperUt
     public void OnRemovedCommandsFromStacksInvoked_UnusedViewModelsAreRemoved()
     {
         var worldEntity = EntityProvider.GetLearningWorld();
-        var workspace = new AuthoringToolWorkspace(new List<ILearningWorld> {worldEntity});
-        var workspaceViewModel = new AuthoringToolWorkspaceViewModel();
+        var workspace = EntityProvider.GetAuthoringToolWorkspace(worlds: new List<ILearningWorld> {worldEntity});
+        var workspaceViewModel = ViewModelProvider.GetAuthoringToolWorkspace();
         var spaceEntity = EntityProvider.GetLearningSpace(floorPlan: FloorPlanEnum.R_20X30_8L);
         var elementEntity = EntityProvider.GetLearningElement();
         var secondElementEntity = EntityProvider.GetLearningElement(append: "2");

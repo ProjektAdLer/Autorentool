@@ -16,12 +16,13 @@ public class LearningElementUt
         var description = "very cool element";
         var goals = "learn very many things";
         var difficulty = LearningElementDifficultyEnum.Medium;
+        var elementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
         var workload = 5;
         var points = 6;
         var positionX = 5f;
         var positionY = 21f;
 
-        var systemUnderTest = new LearningElement(name, content, description, goals, difficulty, null, workload: workload, points: points, positionX: positionX, positionY: positionY);
+        var systemUnderTest = new LearningElement(name, content, description, goals, difficulty, elementModel, null, workload: workload, points: points, positionX: positionX, positionY: positionY);
         
         Assert.Multiple(() =>
         {
@@ -31,6 +32,7 @@ public class LearningElementUt
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(systemUnderTest.ElementModel, Is.EqualTo(elementModel));
             Assert.That(systemUnderTest.Workload, Is.EqualTo(workload));
             Assert.That(systemUnderTest.Points, Is.EqualTo(points));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
@@ -48,13 +50,14 @@ public class LearningElementUt
         var description = "very cool element";
         var goals = "learn very many things";
         var difficulty = LearningElementDifficultyEnum.Medium;
+        var elementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
         var workload = 5;
         var points = 6;
         var positionX = 5f;
         var positionY = 21f;
 
         var systemUnderTest = new LearningElement(name, content, description, goals,
-             difficulty, parent, workload: workload, points: points, positionX: positionX, positionY: positionY);
+             difficulty, elementModel, parent, workload: workload, points: points, positionX: positionX, positionY: positionY);
         
         Assert.Multiple(() =>
         {
@@ -64,6 +67,7 @@ public class LearningElementUt
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(systemUnderTest.ElementModel, Is.EqualTo(elementModel));
             Assert.That(systemUnderTest.Workload, Is.EqualTo(workload));
             Assert.That(systemUnderTest.Points, Is.EqualTo(points));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
@@ -80,13 +84,14 @@ public class LearningElementUt
         var description = "very cool element";
         var goals = "learn very many things";
         var difficulty = LearningElementDifficultyEnum.Medium;
+        var elementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
         var workload = 5;
         var points = 6;
         var positionX = 5f;
         var positionY = 21f;
 
         var systemUnderTest = new LearningElement(name, content, description, goals,
-            difficulty, parent, workload: workload, points: points, positionX: positionX, positionY: positionY);
+            difficulty, elementModel, parent, workload: workload, points: points, positionX: positionX, positionY: positionY);
 
         var learningElementMemento = systemUnderTest.GetMemento();
         
@@ -95,6 +100,7 @@ public class LearningElementUt
         var descriptionChanged = "changed description";
         var goalsChanged = "new goals";
         var difficultyChanged = LearningElementDifficultyEnum.Easy;
+        var elementModelChanged = ElementModel.L_H5P_TAFEL_1;
         var workloadChanged = 10;
         var pointsChanged = 20;
         var positionXChanged = 10f;
@@ -105,6 +111,7 @@ public class LearningElementUt
         systemUnderTest.Description = descriptionChanged;
         systemUnderTest.Goals = goalsChanged;
         systemUnderTest.Difficulty = difficultyChanged;
+        systemUnderTest.ElementModel = elementModelChanged;
         systemUnderTest.Workload = workloadChanged;
         systemUnderTest.Points = pointsChanged;
         systemUnderTest.PositionX = positionXChanged;
@@ -117,6 +124,7 @@ public class LearningElementUt
             Assert.That(systemUnderTest.Description, Is.EqualTo(descriptionChanged));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goalsChanged));
             Assert.That(systemUnderTest.Difficulty, Is.EqualTo(difficultyChanged));
+            Assert.That(systemUnderTest.ElementModel, Is.EqualTo(elementModelChanged));
             Assert.That(systemUnderTest.Workload, Is.EqualTo(workloadChanged));
             Assert.That(systemUnderTest.Points, Is.EqualTo(pointsChanged));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionXChanged));
@@ -132,6 +140,7 @@ public class LearningElementUt
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(systemUnderTest.ElementModel, Is.EqualTo(elementModel));
             Assert.That(systemUnderTest.Workload, Is.EqualTo(workload));
             Assert.That(systemUnderTest.Points, Is.EqualTo(points));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
@@ -148,13 +157,14 @@ public class LearningElementUt
         var description = "very cool element";
         var goals = "learn very many things";
         var difficulty = LearningElementDifficultyEnum.Medium;
+        var elementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
         var workload = 5;
         var points = 6;
         var positionX = 5f;
         var positionY = 21f;
 
         var systemUnderTest = new LearningElement(name, content, description, goals,
-            difficulty, parent, workload: workload, points: points, positionX: positionX, positionY: positionY);
+            difficulty, elementModel, parent, workload: workload, points: points, positionX: positionX, positionY: positionY);
 
         var mementoMock = new MementoMock();
         

@@ -6,9 +6,9 @@ namespace TestHelpers;
 
 public static class EntityProvider
 {
-    public static AuthoringToolWorkspace GetAuthoringToolWorkspace()
+    public static AuthoringToolWorkspace GetAuthoringToolWorkspace(List<ILearningWorld>? worlds = null)
     {
-        return new AuthoringToolWorkspace(new List<ILearningWorld>());
+        return new AuthoringToolWorkspace(worlds ?? new List<ILearningWorld>());
     }
 
     public static LearningWorld GetLearningWorld(bool unsavedChanges = false, string append = "")
@@ -17,11 +17,12 @@ public static class EntityProvider
             {UnsavedChanges = unsavedChanges};
     }
 
-    public static LearningSpace GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null)
+    public static LearningSpace GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null,
+        Topic? assignedTopic = null)
     {
         return new LearningSpace("a", "d", "e", 4, Theme.Campus,
                 floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum) floorPlan))
-            {UnsavedChanges = unsavedChanges};
+            {UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic};
     }
 
     public static LearningSpaceLayout GetLearningSpaceLayout(FloorPlanEnum floorPlan = FloorPlanEnum.R_20X20_6L)
@@ -29,10 +30,18 @@ public static class EntityProvider
         return new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), floorPlan);
     }
 
-    public static LearningElement GetLearningElement(bool unsavedChanges = false, string append = "")
+    public static LearningSpaceLayout GetLearningSpaceLayoutWithElement()
+    {
+        return new LearningSpaceLayout(new Dictionary<int, ILearningElement> {{1, GetLearningElement()}},
+            FloorPlanEnum.R_20X20_6L);
+    }
+
+    public static LearningElement GetLearningElement(bool unsavedChanges = false, string append = "",
+        ILearningSpace? parent = null, double positionX = 0, double positionY = 0)
     {
         return new LearningElement("a" + append, null!, "d" + append, "e" + append,
-            LearningElementDifficultyEnum.Easy) {UnsavedChanges = unsavedChanges};
+            LearningElementDifficultyEnum.Easy, ElementModel.L_H5P_SPIELAUTOMAT_1, parent: parent, positionX: positionX,
+            positionY: positionY) {UnsavedChanges = unsavedChanges};
     }
 
     public static PathWayCondition GetPathWayCondition()
@@ -40,9 +49,9 @@ public static class EntityProvider
         return new PathWayCondition(ConditionEnum.And);
     }
 
-    public static LearningPathway GetLearningPathway()
+    public static LearningPathway GetLearningPathway(IObjectInPathWay? source = null, IObjectInPathWay? target = null)
     {
-        return new LearningPathway(GetPathWayCondition(), GetPathWayCondition());
+        return new LearningPathway(source ?? GetPathWayCondition(), target ?? GetPathWayCondition());
     }
 
     public static LinkContent GetLinkContent()
@@ -58,6 +67,12 @@ public static class EntityProvider
     public static Topic GetTopic()
     {
         return new Topic("a topic");
+    }
+
+    public static SavedLearningWorldPath GetSavedLearningWorldPath()
+    {
+        return new SavedLearningWorldPath()
+            {Id = Guid.ParseExact("00000000-0000-0000-0000-000000000001", "D"), Name = "n1", Path = "p1"};
     }
 
     public static LearningWorld GetLearningWorldWithSpace()

@@ -4,6 +4,7 @@ using BusinessLogic.Entities;
 using NSubstitute;
 using NUnit.Framework;
 using Shared;
+using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Element;
 
@@ -16,7 +17,7 @@ public class SaveLearningElementUt
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var parent  = new LearningSpace("a","d","e",4, Theme.Campus);
-        var element = new LearningElement("a", null!, "d", "e", LearningElementDifficultyEnum.Easy,parent);
+        var element = EntityProvider.GetLearningElement(parent: parent);
         const string filepath = "c:\\temp\\test";
         
         var command = new SaveLearningElement(mockBusinessLogic, element, filepath);

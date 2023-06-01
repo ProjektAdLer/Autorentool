@@ -17,7 +17,8 @@ namespace Presentation.PresentationLogic.LearningSpace;
 public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePresenterToolboxInterface
 {
     public LearningSpacePresenter(
-        IPresentationLogic presentationLogic, IMediator mediator, ISelectedViewModelsProvider selectedViewModelsProvider, ILogger<LearningSpacePresenter> logger)
+        IPresentationLogic presentationLogic, IMediator mediator,
+        ISelectedViewModelsProvider selectedViewModelsProvider, ILogger<LearningSpacePresenter> logger)
     {
         _presentationLogic = presentationLogic;
         _mediator = mediator;
@@ -42,7 +43,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 
     public ILearningContentViewModel? DragAndDropLearningContent { get; private set; }
     public IDisplayableLearningObject? RightClickedLearningObject { get; private set; }
-    
+
     public void SetLearningSpace(ILearningSpaceViewModel space)
     {
         LearningSpaceVm = space;
@@ -71,10 +72,11 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
             throw new ApplicationException("LearningSpaceVm is null");
         if (_selectedViewModelsProvider.LearningWorld == null)
             throw new ApplicationException("LearningWorld is null");
-        _presentationLogic.ChangeLearningSpaceLayout(LearningSpaceVm, _selectedViewModelsProvider.LearningWorld, floorPlanName);
+        _presentationLogic.ChangeLearningSpaceLayout(LearningSpaceVm, _selectedViewModelsProvider.LearningWorld,
+            floorPlanName);
         _selectedViewModelsProvider.SetActiveSlot(-1);
     }
-    
+
     #region LearningElement
 
     public void OpenReplaceLearningElementDialog(ILearningWorldViewModel learningWorldVm,
@@ -116,12 +118,12 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     }
 
     public void CreateLearningElementInSlot(string name, ILearningContentViewModel learningContent,
-        string description, string goals, LearningElementDifficultyEnum difficulty, int workload, int points)
+        string description, string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points)
     {
         if(LearningSpaceVm == null)
             throw new ApplicationException("LearningSpaceVm is null");
         _presentationLogic.CreateLearningElementInSlot(LearningSpaceVm, _selectedViewModelsProvider.ActiveSlot, name, learningContent, description,
-            goals, difficulty, workload, points);
+            goals, difficulty, elementModel, workload, points);
         _selectedViewModelsProvider.SetActiveSlot(-1);
     }
 
@@ -142,13 +144,13 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         RightClickedLearningObject = obj;
     }
 
-    public void EditLearningElement(ILearningElementViewModel learningElement,
-        string name, string description, string goals, LearningElementDifficultyEnum difficulty,
-        int workload, int points, ILearningContentViewModel learningContent)
+    public void EditLearningElement(ILearningElementViewModel learningElement, string name, string description,
+        string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points,
+        ILearningContentViewModel learningContent)
     {
         SetSelectedLearningElement(learningElement);
-        _presentationLogic.EditLearningElement(LearningSpaceVm, learningElement, name, description,
-            goals, difficulty, workload, points, learningContent);
+        _presentationLogic.EditLearningElement(LearningSpaceVm, learningElement, name, description, goals, difficulty,
+            elementModel, workload, points, learningContent);
     }
 
     public void EditLearningElement(int slotIndex)
