@@ -13,7 +13,7 @@
     <Fields>
         <Collapsable Title="General" @bind-Collapsed="_collapsedGeneral">
             <div class="rounded-lg w-4/4 px-4 pb-2">
-            <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                           For="@(() => FormModel.Name)"
                           Immediate="true"
                           DebounceInterval="300"
@@ -45,7 +45,7 @@
                           Lines="3"
                           Variant="Variant.Outlined"
                           DebounceInterval="300"
-                          Class="pb-2 mt-0"/>
+                          Class="pb-4 mt-0"/>
                 <MudText Typo="Typo.caption">Goals</MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                           For="@(() => FormModel.Goals)"
