@@ -1,35 +1,52 @@
 @using Presentation.PresentationLogic.API
-<MudDialog>
+<MudDialog Class="relative flex rounded-lg bg-gradient-to-br from-adlerbggradientfrom to-adlerbggradientto w-[360px] h-[330px]">
     <TitleContent>
-        <MudText Typo="Typo.h6"> Lms Connection</MudText>
+        <div class="flex flex-row gap-3 justify-center items-center">
+            <img class="w-14 h-14" src="CustomIcons/moodle-icon-darkblue-nobg.png" alt="moodle-icon"/>
+            <p class="text-xl flex justify-center font-bold text-adlerdarkblue"> Login to moodle</p>
+        </div>
     </TitleContent>
     <DialogContent>
         @if (_isLmsConnected)
         {
-            <MudText>Logged in as @PresentationLogic.LoginName</MudText>
-            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Logout">Logout</MudButton>
+            <div class="flex flex-col justify-center py-7">
+                <p class="pb-4 flex justify-center font-bold text-2xl text-adlerdarkblue-200 opacity-50">This was successful!</p>
+                <div class="flex flex-row gap-1.5 pb-8 flex justify-center">
+                    <p class="text-lg text-adlergrey-700">Logged in as</p>
+                    <p class="text-lg text-adlerblue-700">@PresentationLogic.LoginName</p>
+                </div>
+                <MudButton Variant="Variant.Filled" Class="btn-standard mx-28 place-items-center" title="Logout from moodle" OnClick="Logout">Logout</MudButton>
+            </div>
         }
         else
         {
-            <MudForm>
-                <MudTextField @bind-Value="_username" Label="Username"/>
-                <MudTextField @bind-Value="_password" Label="Password" OnKeyPress="OnKeyPress"
-                              InputType=@PasswordInputType Adornment="Adornment.End" AdornmentIcon=@ShowPasswordIcon
-                              OnAdornmentClick="() => _isPasswordVisible = !_isPasswordVisible"
-                              AdornmentAriaLabel="Show Password"/>
-                @if (_showError)
-                {
-                    <MudText>Wrong Username or Password</MudText>
-                }
-                <!--TODO: Should be set in the config-->
-                <a href="https://demo.moodle.projekt-adler.eu/login/forgot_password.php" target="_blank" title="Lost password?">
-                    Forgot Password?
-                </a>
-                <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="SubmitForm">Login</MudButton>
-            </MudForm>
+            <div class="flex flex-col pb-3.5">
+                <MudForm>
+                    <div class="flex flex-col">
+                        <MudTextField @bind-Value="_username" Label="Username"/>
+                        <MudTextField @bind-Value="_password" Label="Password" OnKeyPress="OnKeyPress"
+                                      InputType=@PasswordInputType Adornment="Adornment.End" AdornmentIcon=@ShowPasswordIcon
+                                      OnAdornmentClick="() => _isPasswordVisible = !_isPasswordVisible"
+                                      AdornmentAriaLabel="Show password"/>
+                        @if (_showError)
+                        {
+                            <MudText Color="Color.Error" Typo="Typo.subtitle2">Wrong username or password</MudText>
+                        }
+                    </div>
+                    <div class="flex flex-col">
+                        <a href="https://demo.moodle.projekt-adler.eu/login/forgot_password.php" target="_blank" title="Lost password?" class="pb-2">
+                            Forgot password?
+                        </a>
+                        <MudButton Variant="Variant.Filled" Class="btn-standard mx-28" OnClick="SubmitForm" title="Login in moodle">Login</MudButton>
+                    </div>
+                        
+                </MudForm>
+            </div>
         }
     </DialogContent>
 </MudDialog>
+
+<!--TODO: Should be set in the config-->
 
 @code {
 
