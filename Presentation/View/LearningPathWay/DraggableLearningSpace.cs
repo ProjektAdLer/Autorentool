@@ -9,7 +9,7 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
 {
     protected override string ObjectName => ((ILearningSpaceViewModel)ObjectInPathWay).Name + Topic;
     protected override string Text => "";
-    protected override string ObjectStyleWhenSelected => @"fill:rgba(226,234,242,255);opacity:80%;stroke:rgba(69,160,229,255);stroke-width:50";
+    protected override string ObjectStyleWhenSelected => @"fill:rgba(226,234,242,255);opacity:80%;stroke:rgba(69,160,229,255);stroke-width:100";
     protected override string ObjectStyleWhenNotSelected => @"fill:rgba(226,234,242,255);opacity:80%;stroke:rgba(61,200,229,255);stroke-width:25";
     protected override string OnHoveredObjectShape =>  
     @"<rect transform=""translate(0,0)"" height=""3rem"" width=""3rem"" rx=5 style=""fill:rgb(229,189,115)""></rect>
