@@ -62,12 +62,13 @@ public class LmsLoginDialogUt
 
             var dialogContent = _context.Render((RenderFragment) systemUnderTest.FindComponent<Stub<MudDialog>>()
                 .Instance.Parameters["DialogContent"]);
-            var mudTextStub = _context.Render((RenderFragment) dialogContent.FindComponent<Stub<MudText>>().Instance
-                .Parameters["ChildContent"]);
+            var dialogText = dialogContent.Find("div div");
             var mudButtonStub = _context.Render((RenderFragment) dialogContent.FindComponent<Stub<MudButton>>().Instance
                 .Parameters["ChildContent"]);
+            
+            Assert.That(dialogText.ToMarkup(), Contains.Substring("Logged in as"));
+            Assert.That(dialogText.ToMarkup(), Contains.Substring("Test"));
 
-            Assert.That(mudTextStub.Markup, Is.EqualTo("Logged in as Test"));
             Assert.That(mudButtonStub.Markup, Is.EqualTo("Logout"));
         }
     }
