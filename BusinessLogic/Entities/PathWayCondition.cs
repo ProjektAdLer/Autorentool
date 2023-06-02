@@ -16,7 +16,7 @@ public class PathWayCondition : IObjectInPathWay
         PositionY = 0;
         InBoundObjects = new List<IObjectInPathWay>();
         OutBoundObjects = new List<IObjectInPathWay>();
-        Condition = ConditionEnum.None;
+        Condition = ConditionEnum.Or;
     }
     
     
@@ -29,17 +29,19 @@ public class PathWayCondition : IObjectInPathWay
         OutBoundObjects = outBoundObjects ?? new List<IObjectInPathWay>();
         PositionX = positionX;
         PositionY = positionY;
+        UnsavedChanges = true;
     }
     
     public Guid Id { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
+    public bool UnsavedChanges { get; set; }
     public List<IObjectInPathWay> InBoundObjects { get; set; }
     public List<IObjectInPathWay> OutBoundObjects { get; set; }
     public ConditionEnum Condition { get; set; }
     public IMemento GetMemento()
     {
-        return new PathWayConditionMemento(Condition, InBoundObjects, OutBoundObjects, PositionX, PositionY);
+        return new PathWayConditionMemento(Condition, InBoundObjects, OutBoundObjects, unsavedChanges: UnsavedChanges, positionX: PositionX, positionY: PositionY);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -54,21 +56,24 @@ public class PathWayCondition : IObjectInPathWay
         OutBoundObjects = pathWayConditionMemento.OutBoundObjects;
         PositionX = pathWayConditionMemento.PositionX;
         PositionY = pathWayConditionMemento.PositionY;
+        UnsavedChanges = pathWayConditionMemento.UnsavedChanges;
     }
     
     private record PathWayConditionMemento : IMemento
     {
         internal PathWayConditionMemento(ConditionEnum condition, List<IObjectInPathWay> inBoundObjects,
-            List<IObjectInPathWay> outBoundObjects, double positionX = 0, double positionY = 0)
+            List<IObjectInPathWay> outBoundObjects, bool unsavedChanges, double positionX = 0, double positionY = 0)
         {
             Condition = condition;
             InBoundObjects = inBoundObjects;
             OutBoundObjects = outBoundObjects;
             PositionX = positionX;
             PositionY = positionY;
+            UnsavedChanges = unsavedChanges;
         }
         public double PositionX { get; }
         public double PositionY { get; }
+        public bool UnsavedChanges { get; }
         public List<IObjectInPathWay> InBoundObjects { get; }
         public List<IObjectInPathWay> OutBoundObjects { get; }
         public ConditionEnum Condition { get; }

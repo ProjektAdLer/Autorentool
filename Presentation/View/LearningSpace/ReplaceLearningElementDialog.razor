@@ -1,0 +1,26 @@
+<MudDialog>
+    <DialogContent>
+        Do you want to replace the learning element?
+        This will move the current learning element to the unplaced learning elements in the world.
+    </DialogContent>
+    <DialogActions>
+        <MudButton Color="Color.Primary" Variant="Variant.Outlined" OnClick="ReplaceElement">Replace</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Outlined" OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+
+    [CascadingParameter]
+    MudDialogInstance MudDialog { get; set; }
+
+    void ReplaceElement()
+    {
+        MudDialog.Close(DialogResult.Ok(true));
+    }
+    
+    void Cancel() 
+    {
+        MudDialog.Close(DialogResult.Cancel());
+    }
+}

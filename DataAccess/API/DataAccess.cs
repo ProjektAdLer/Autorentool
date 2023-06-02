@@ -2,8 +2,11 @@
 using AutoMapper;
 using BusinessLogic.API;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
 using DataAccess.Persistence;
 using PersistEntities;
+using PersistEntities.LearningContent;
+using Shared;
 using Shared.Configuration;
 
 namespace DataAccess.API;
@@ -12,12 +15,13 @@ public class DataAccess : IDataAccess
 {
     public DataAccess(IAuthoringToolConfiguration configuration, IXmlFileHandler<LearningWorldPe> xmlHandlerWorld, 
         IXmlFileHandler<LearningSpacePe> xmlHandlerSpace, IXmlFileHandler<LearningElementPe> xmlHandlerElement, 
-        IContentFileHandler xmlHandlerContent, IFileSystem fileSystem, IMapper mapper)
+        IContentFileHandler contentFileHandler, ILearningWorldSavePathsHandler worldSavePathsHandler, IFileSystem fileSystem, IMapper mapper)
     {
         XmlHandlerWorld = xmlHandlerWorld;
         XmlHandlerSpace = xmlHandlerSpace;
         XmlHandlerElement = xmlHandlerElement;
-        XmlHandlerContent = xmlHandlerContent;
+        ContentFileHandler = contentFileHandler;
+        WorldSavePathsHandler = worldSavePathsHandler;
         FileSystem = fileSystem;
         Configuration = configuration;
         Mapper = mapper;
@@ -26,7 +30,8 @@ public class DataAccess : IDataAccess
     public readonly IXmlFileHandler<LearningWorldPe> XmlHandlerWorld;
     public readonly IXmlFileHandler<LearningSpacePe> XmlHandlerSpace;
     public readonly IXmlFileHandler<LearningElementPe> XmlHandlerElement;
-    public readonly IContentFileHandler XmlHandlerContent;
+    public readonly IContentFileHandler ContentFileHandler;
+    public readonly ILearningWorldSavePathsHandler WorldSavePathsHandler;
     public readonly IFileSystem FileSystem;
     public IAuthoringToolConfiguration Configuration { get; }
     public IMapper Mapper { get; }
@@ -78,14 +83,53 @@ public class DataAccess : IDataAccess
         return Mapper.Map<LearningElement>(XmlHandlerElement.LoadFromStream(stream));
     }
 
-    public LearningContent LoadLearningContent(string filepath)
+    public ILearningContent LoadLearningContent(string filepath)
     {
-        return Mapper.Map<LearningContent>(XmlHandlerContent.LoadContentAsync(filepath).Result);
+        return Mapper.Map<ILearningContent>(ContentFileHandler.LoadContentAsync(filepath).Result);
     }
 
-    public LearningContent LoadLearningContent(string name, MemoryStream stream)
+    public ILearningContent LoadLearningContent(string name, Stream stream)
     {
-        return Mapper.Map<LearningContent>(XmlHandlerContent.LoadContentAsync(name, stream).Result);
+        return Mapper.Map<ILearningContent>(ContentFileHandler.LoadContentAsync(name, stream).Result);
+    }
+    
+    /// <inheritdoc cref="IDataAccess.GetAllContent"/>
+    public IEnumerable<ILearningContent> GetAllContent()
+    {
+        return ContentFileHandler.GetAllContent().Select(Mapper.Map<ILearningContent>);
+    }
+
+    /// <inheritdoc cref="IDataAccess.RemoveContent"/>
+    public void RemoveContent(ILearningContent content) =>
+        ContentFileHandler.RemoveContent(Mapper.Map<ILearningContentPe>(content));
+
+    /// <inheritdoc cref="IDataAccess.SaveLink"/>
+    public void SaveLink(LinkContent linkContent) =>
+        ContentFileHandler.SaveLink(Mapper.Map<LinkContentPe>(linkContent));
+
+    public IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths()
+    {
+        return WorldSavePathsHandler.GetSavedLearningWorldPaths();
+    }
+
+    public void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
+    {
+        WorldSavePathsHandler.AddSavedLearningWorldPath(savedLearningWorldPath);
+    }
+
+    public SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path)
+    {
+        return WorldSavePathsHandler.AddSavedLearningWorldPathByPathOnly(path);
+    }
+    
+    public void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id)
+    {
+        WorldSavePathsHandler.UpdateIdOfSavedLearningWorldPath(savedLearningWorldPath, id);
+    }
+
+    public void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath)
+    {
+        WorldSavePathsHandler.RemoveSavedLearningWorldPath(savedLearningWorldPath);
     }
 
     /// <inheritdoc cref="IDataAccess.FindSuitableNewSavePath"/>
@@ -117,4 +161,6 @@ public class DataAccess : IDataAccess
 
         return $"{savePath}.{fileEnding}";
     }
+
+    public string GetContentFilesFolderPath() => ContentFileHandler.ContentFilesFolderPath;
 }

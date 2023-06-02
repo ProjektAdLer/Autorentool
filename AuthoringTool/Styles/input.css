@@ -1,0 +1,18 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+    .btn-standard {
+        @apply h-8 truncate text-adlerdarkblue bg-adlerblue-200 p-4 rounded-lg font-bold drop-shadow transform ease-in-out duration-75 active:drop-shadow-none hover:bg-adlerdarkblue hover:text-buttonbgblue m-2;
+    }
+    
+    .unselectable {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+}

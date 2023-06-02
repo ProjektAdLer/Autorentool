@@ -1,18 +1,21 @@
 ﻿
 
+using PersistEntities.LearningContent;
+using Shared;
+
 namespace PersistEntities;
 
 public interface ILearningElementPe
 {
+    Guid Id { get; set; }
     string Name { get; set; }
-    string Shortname { get; set; }
-    LearningContentPe LearningContent { get; set; }
-    string Authors { get; set; }
+    ILearningContentPe LearningContent { get; set; }
     string Description { get; set; }
     string Goals { get; set; }
     int Workload { get; set; }
     int Points { get; set; }
-    LearningElementDifficultyEnumPe Difficulty { get; set; }
+    LearningElementDifficultyEnum Difficulty { get; set; }
+    ElementModel ElementModel { get; set; }
     double PositionX { get; set; }
     double PositionY { get; set; }
 }

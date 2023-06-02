@@ -20,6 +20,7 @@ public class XmlResourceFactory : IXmlResourceFactory
     public readonly string CurrentTime;
     private readonly IFileSystem _fileSystem;
     public string FileElementId;
+    public string FileElementUuid;
     public string FileElementName;
     public string FileElementParentSpaceString;
     public string FileElementType;
@@ -57,6 +58,7 @@ public class XmlResourceFactory : IXmlResourceFactory
     {        
         ReadDsl = readDsl;
         FileElementId = "";
+        FileElementUuid = "";
         FileElementName = "";
         FileElementParentSpaceString = "";
         FileElementType = "";
@@ -106,45 +108,38 @@ public class XmlResourceFactory : IXmlResourceFactory
         foreach (var resource in resourceList)
         {
             FileElementId = resource.ElementId.ToString();
+            FileElementUuid = resource.ElementUUID;
             FileElementType = resource.ElementFileType;
-            FileElementName = resource.LmsElementIdentifier.Value;
+            FileElementName = resource.ElementName;
             FileElementDesc = resource.ElementDescription ?? "";
             FileElementPoints = resource.ElementMaxScore;
             FileElementParentSpaceString = resource.LearningSpaceParentId.ToString();
 
             FileManager.CalculateHashCheckSumAndFileSize(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
-                resource.LmsElementIdentifier.Value + "." + resource.ElementFileType));
+                resource.ElementName + "." + resource.ElementFileType));
             FileManager.CreateFolderAndFiles(_fileSystem.Path.Join(_currWorkDir, _hardcodedPath,
-                resource.LmsElementIdentifier.Value + "." + resource.ElementFileType), FileManager.GetHashCheckSum());
+                resource.ElementName + "." + resource.ElementFileType), FileManager.GetHashCheckSum());
 
-            if (resource.ElementFileType is "pdf" or "json")
+            var mimeType = resource.ElementFileType switch
             {
-                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "application/"+FileElementType);
-            }
-            else if (resource.ElementFileType is "js")
-            {
-                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "application/x-javascript");
-            }
-            else if (resource.ElementFileType is "cs")
-            {
-                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "application/x-csh");
-            }
-            else if (resource.ElementFileType is "jpg" or "png" or "bmp")
-            {
-                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "image/"+FileElementType);
-            }
-            else if (resource.ElementFileType is "webp" or "cc" or "c++" )
-            {
-                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "document/unknown");
-            }
-            else if (resource.ElementFileType is "txt" or "c" or "h" or "py" or "cpp" or "php")
-            {
-                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "text/plain");
-            }
-            else if (resource.ElementFileType is "css" or "html")
-            {
-                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), "text/"+FileElementType);
-            }
+                "pdf" or "json" =>
+                    "application/" + FileElementType,
+                "js" =>
+                    "application/x-javascript",
+                "cs" =>
+                    "application/x-csh",
+                "jpg" or "png" or "bmp" =>
+                    "image/" + FileElementType,
+                "webp" or "cc" or "c++" =>
+                    "document/unknown",
+                "txt" or "c" or "h" or "py" or "cpp" or "php" =>
+                    "text/plain",
+                "css" or "html" =>
+                    "text/" + FileElementType,
+                _ => null
+            };
+            if(mimeType != null)
+                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), mimeType, FileElementUuid);
 
             FileSetParametersActivity();
             
@@ -154,7 +149,7 @@ public class XmlResourceFactory : IXmlResourceFactory
     }
     
     //Every resource has to be put into files.xml file
-    public void ResourceSetParametersFilesXml(string hashCheckSum, string filesize, string mimeType)
+    public void ResourceSetParametersFilesXml(string hashCheckSum, string filesize, string mimeType, string uuid)
     {
         var file1 = new FilesXmlFile
         {
@@ -167,6 +162,7 @@ public class XmlResourceFactory : IXmlResourceFactory
             Filesize = filesize,
             Timecreated = CurrentTime,
             Timemodified = CurrentTime,
+            ElementUuid = uuid
         };
         var file2 = (FilesXmlFile)file1.Clone();
         file2.Id = XmlEntityManager.GetFileIdBlock2().ToString();
@@ -212,7 +208,8 @@ public class XmlResourceFactory : IXmlResourceFactory
         ActivitiesModuleXmlModule.Id = FileElementId;
         ActivitiesModuleXmlModule.ShowDescription = "1";
         //AdlerScore can not be null at this point because it is set in the constructor
-        ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerScore!.ScoreMax = FileElementPoints.ToString("F5", CultureInfo.InvariantCulture);
+        ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerModule!.ScoreMax = FileElementPoints.ToString("F5", CultureInfo.InvariantCulture);
+        ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerModule!.Uuid = FileElementUuid;
         
         ActivitiesModuleXmlModule.Serialize("resource", FileElementId);
         

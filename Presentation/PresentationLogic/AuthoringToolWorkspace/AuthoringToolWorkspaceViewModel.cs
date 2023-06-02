@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using BusinessLogic.Validation;
 using JetBrains.Annotations;
 using Presentation.PresentationLogic.LearningWorld;
 
@@ -7,7 +8,6 @@ namespace Presentation.PresentationLogic.AuthoringToolWorkspace;
 
 public class AuthoringToolWorkspaceViewModel : IAuthoringToolWorkspaceViewModel
 {
-    private LearningWorldViewModel? selectedLearningWorld;
     private IDictionary<string, string>? editDialogInitialValues;
 
     /// <summary>
@@ -15,15 +15,20 @@ public class AuthoringToolWorkspaceViewModel : IAuthoringToolWorkspaceViewModel
     /// </summary>
     public AuthoringToolWorkspaceViewModel()
     {
-        _learningWorlds = new List<LearningWorldViewModel>();
-        SelectedLearningWorld = null;
+        _learningWorlds = new List<ILearningWorldViewModel>();
         EditDialogInitialValues = null;
     }
 
-    internal List<LearningWorldViewModel> _learningWorlds;
+    internal List<ILearningWorldViewModel> _learningWorlds;
     
     /// <inheritdoc cref="IAuthoringToolWorkspaceViewModel.LearningWorlds"/>
-    public IList<LearningWorldViewModel> LearningWorlds => _learningWorlds;
+    public IList<ILearningWorldViewModel> LearningWorlds => _learningWorlds;
+
+    /// <inheritdoc cref="ILearningWorldNamesProvider.WorldNames"/>
+    public IEnumerable<(Guid, string)> WorldNames => _learningWorlds.Select(world => (world.Id, world.Name));
+    
+    /// <inheritdoc cref="ILearningWorldNamesProvider.WorldShortnames"/>
+    public IEnumerable<(Guid, string)> WorldShortnames => _learningWorlds.Select(world => (world.Id, world.Shortname));
 
     /// <inheritdoc cref="IAuthoringToolWorkspaceViewModel.RemoveLearningWorld"/>
     public void RemoveLearningWorld(LearningWorldViewModel learningWorld)
@@ -31,20 +36,6 @@ public class AuthoringToolWorkspaceViewModel : IAuthoringToolWorkspaceViewModel
         _learningWorlds.Remove(learningWorld);
         OnPropertyChanged(nameof(LearningWorlds));
     }
-    
-    /// <inheritdoc cref="IAuthoringToolWorkspaceViewModel.SelectedLearningWorld"/>
-    public LearningWorldViewModel? SelectedLearningWorld
-    {
-        get => selectedLearningWorld;
-        set
-        {
-            if (value != null && !LearningWorlds.Contains(value))
-                throw new ArgumentException("value isn't contained in collection.");
-            selectedLearningWorld = value;
-            OnPropertyChanged();
-        }
-    }
-    
     
     public IDictionary<string, string>? EditDialogInitialValues
     {

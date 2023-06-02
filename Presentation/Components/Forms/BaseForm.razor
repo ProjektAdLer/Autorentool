@@ -1,0 +1,117 @@
+@using Microsoft.AspNetCore.Components
+@using FluentValidation
+@using Severity = MudBlazor.Severity
+@using AutoMapper
+@typeparam TForm where TForm : new()
+@typeparam TEntity
+@implements IBaseForm
+
+<MudCardActions Class="flex flex-col justify-center items-center">
+    <MudButtonGroup OverrideStyles="false">
+        <CascadingValue Value="this">
+            @HeaderButtons
+        </CascadingValue>
+    </MudButtonGroup>
+</MudCardActions>
+<MudForm Model="@FormDataContainer.FormModel" @ref="@_form" Validation="@ValidateModel">
+    <MudCardContent>
+        @Fields
+        @if (SubmitErrorMessage != null)
+        {
+            <div class="mt-2">
+                <MudAlert Severity="Severity.Error" Variant="Variant.Outlined">@SubmitErrorMessage</MudAlert>
+            </div>
+        }
+    </MudCardContent>
+</MudForm>
+
+    <MudCardActions Class="flex justify-end">
+   
+        <MudButtonGroup OverrideStyles="false">
+            <CascadingValue Value="this">
+                @FooterButtons
+            </CascadingValue>
+        </MudButtonGroup>
+        
+    </MudCardActions>
+
+
+@code {
+#pragma warning disable CS8618 - injected by framework - n.stich
+    [Inject]
+    private IValidator<TEntity> Validator { get; set; }
+    [Inject]
+    private ISnackbar Snackbar { get; set; }
+#pragma warning restore CS8618
+    
+    [Parameter, EditorRequired]
+    public EventCallback<TForm> OnValidSubmit { get; set; }
+#pragma warning disable CS8618 - provided by framework - n.stich
+    [Parameter, EditorRequired]
+    public string SnackbarMessage { get; set; }
+    [Parameter, EditorRequired]
+    public IFormDataContainer<TForm, TEntity> FormDataContainer { get; set; }
+    [Parameter, EditorRequired]
+    public RenderFragment Fields { get; set; }
+    [Parameter]
+    public RenderFragment? HeaderButtons { get; set; }
+    [Parameter, EditorRequired]
+    public RenderFragment? FooterButtons { get; set; }
+#pragma warning restore CS8618
+    
+#pragma warning disable CS8618 - set in OnInitialized and by framework via @ref - n.stich
+    private MudForm _form;
+#pragma warning restore CS8618
+    
+    private string? SubmitErrorMessage { get; set; }
+
+    //Wrapper function around ValidateAsync to only validate a given property
+    //We must use object here and cast to T later because MudBlazor field validation expects a Func<obj, str, Task<...>>
+    //If we want to do Func<T, Task<IEnumerable<string>> then we have to handle every type of field separately, 
+    //for example for T=string for text inputs, T=int for number inputs etc.
+    //By the way, this information is not written anywhere in the documentation and I had to dive pretty deep into the
+    //framework to find this out :) - n.stich
+    private Func<object, string, Task<IEnumerable<string>>> ValidateModel => async (model, propertyName) =>
+    {
+        var modelEntity = FormDataContainer.GetMappedEntity();
+        var result = await Validator.ValidateAsync(
+            ValidationContext<TEntity>.CreateWithOptions(modelEntity,
+                x => x.IncludeProperties(propertyName))
+            );
+        return result.IsValid ? Enumerable.Empty<string>() : result.Errors.Select(e => e.ErrorMessage);
+    };
+
+    public void Reset()
+    {
+        FormDataContainer.FormModel = new TForm();
+        _form.Reset();
+    }
+
+    public async Task SubmitAsync()
+    {
+        await _form.Validate();
+        if (_form.IsValid)
+        {
+            try
+            {
+                await OnValidSubmit.InvokeAsync(FormDataContainer.FormModel);
+            }
+            catch (Exception e)
+            {
+                SubmitErrorMessage = $"An error has occured trying to submit the form: {e.Message}";
+            }
+            Snackbar.Add(SnackbarMessage);
+            Reset();
+        }
+    }
+
+    internal async Task Validate()
+    {
+        await _form.Validate();
+    }
+    
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+    }
+}

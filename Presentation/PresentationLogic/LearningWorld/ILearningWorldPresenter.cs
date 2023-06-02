@@ -1,56 +1,76 @@
 using System.ComponentModel;
+using BusinessLogic.Validation;
 using Presentation.Components;
-using Presentation.Components.ModalDialog;
+using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.Topic;
+using Shared;
+using Shared.Command;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
-public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyPropertyChanging, IPositioningService
+public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyPropertyChanging, IPositioningService,
+    ILearningSpaceNamesProvider
 {
-    bool CreateLearningSpaceDialogOpen { get; }
-    bool CreatePathWayConditionDialogOpen { get; }
-    bool CreateTopicDialogOpen { get; }
-    bool EditLearningSpaceDialogOpen { get; }
-    bool EditPathWayConditionDialogOpen { get; }
-    bool EditTopicDialogOpen { get; }
-    bool DeleteTopicDialogOpen { get; }
-    Dictionary<string, string>? EditSpaceDialogInitialValues { get; }
-    Dictionary<string, string>? EditConditionDialogInitialValues { get; }
-    List<string>? EditTopicDialogInitialValues { get; }
-    List<string>? DeleteTopicDialogInitialValues { get; }
-    Dictionary<string, string>? EditSpaceDialogAnnotations { get; }
     ILearningWorldViewModel? LearningWorldVm { get; }
     bool SelectedLearningObjectIsSpace { get; }
     bool ShowingLearningSpaceView { get; }
     void DeleteSelectedLearningObject();
+
+    /// <summary>
+    /// Creates a new learning space in the currently selected learning world.
+    /// </summary>
+    /// <param name="name"></param>
+    /// <param name="description"></param>
+    /// <param name="goals"></param>
+    /// <param name="requiredPoints"></param>
+    /// <param name="theme"></param>
+    /// <param name="positionX"></param>
+    /// <param name="positionY"></param>
+    /// <param name="topic"></param>
+    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
+    void CreateLearningSpace(string name, string description, string goals,
+        int requiredPoints, Theme theme, double positionX = 0, double positionY = 0, TopicViewModel? topic = null);
+
     Task LoadLearningSpaceAsync();
+
+    void EditLearningWorld(string name, string shortname, string authors, string language, string description,
+        string goals);
+
+    Task SaveLearningWorldAsync();
     Task SaveSelectedLearningSpaceAsync();
-    void OnCreateSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple);
-    void OnCreatePathWayConditionDialogClose(ModalDialogOnCloseResult returnValueTuple);
-    void OnCreateTopicDialogClose(ModalDialogOnCloseResult returnValueTuple);
-    void OpenEditSelectedObjectDialog();
-    void OpenEditTopicDialog();
-    void OnEditPathWayConditionDialogClose(ModalDialogOnCloseResult returnValueTuple);
-    void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple);
-    void OnEditTopicDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void ShowSelectedLearningSpaceView();
     void CloseLearningSpaceView();
-    void AddNewLearningSpace();
-    void AddNewPathWayCondition();
-    void AddNewTopic();
     void DeletePathWayCondition(PathWayConditionViewModel pathWayCondition);
-    void OpenDeleteTopicDialog();
-    void OnDeleteTopicDialogClose(ModalDialogOnCloseResult returnValueTuple);
-    void OnWorkspacePropertyChanged(object? caller, PropertyChangedEventArgs e);
-    event Action OnUndoRedoPerformed;
+    void OnSelectedViewModelsProviderOnPropertyChanged(object? caller, PropertyChangedEventArgs e);
+    event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
     void DragObjectInPathWay(object sender, DraggedEventArgs<IObjectInPathWayViewModel> draggedEventArgs);
-    void RightClickOnObjectInPathWay(IObjectInPathWayViewModel objectInPathWay);
+    void RightClickOnObjectInPathWay(IObjectInPathWayViewModel learningSpace);
     void ClickOnObjectInWorld(ISelectableObjectInWorldViewModel obj);
-    void DoubleClickOnObjectInWorld(IObjectInPathWayViewModel obj);
+    void DoubleClickOnObjectInPathway(IObjectInPathWayViewModel obj);
+    void SwitchPathWayCondition(PathWayConditionViewModel pathWayCondition);
     void HideRightClickMenu();
     IObjectInPathWayViewModel? RightClickedLearningObject { get; }
-    void EditObjectInPathWay(IObjectInPathWayViewModel obj);
-    void RemoveLearningSpaceFromTopic(ILearningSpaceViewModel learningSpace);
+    public void SetSelectedLearningSpace(IObjectInPathWayViewModel obj);
     void DeleteLearningSpace(ILearningSpaceViewModel obj);
+    void DeleteLearningObject(IObjectInPathWayViewModel obj);
+    void CreatePathWayCondition(ConditionEnum condition = ConditionEnum.Or);
+    void SetSelectedLearningElement(ILearningElementViewModel learningElement);
+
+    void EditLearningElement(ILearningSpaceViewModel? elementParent, ILearningElementViewModel learningElement,
+        string name, string description, string goals, LearningElementDifficultyEnum difficulty,
+        ElementModel elementModel, int workload, int points, ILearningContentViewModel learningContent);
+
+    IEnumerable<ILearningContentViewModel> GetAllContent();
+
+    void CreateUnplacedLearningElement(string name, ILearningContentViewModel learningContent, string description,
+        string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points);
+
+    Task ShowSelectedElementContentAsync(ILearningElementViewModel learningElement);
+
+    void DeleteLearningElement(ILearningElementViewModel learningElement);
+    void AddNewLearningSpace();
+    void EditSelectedLearningSpace();
 }

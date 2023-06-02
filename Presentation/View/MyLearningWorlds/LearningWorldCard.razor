@@ -1,0 +1,124 @@
+@using Shared
+<MudItem>
+    <MudCard Outlined="true" Elevation="1" Class="w-60 h-40">
+        <MudCardHeader Class="flex justify-center items-center break-word w-full">
+            @*<CardHeaderAvatar>
+                @switch (_cardType)
+                {
+                    case CardType.IsLoaded:
+                    {
+                        <MudAvatar Color="@Color.Secondary">L</MudAvatar>
+                        break;
+                    }
+            
+                    case CardType.IsSaved:
+                    {
+                        <MudAvatar Color="@Color.Primary">S</MudAvatar>
+                        break;
+                    }
+                }
+            </CardHeaderAvatar>*@
+            <CardHeaderContent>
+                @switch (_cardType)
+                {
+                    case CardType.IsLoaded:
+                    {
+                        <MudText Class="break-all">
+                            @LearningWorldPath!.Name
+                        </MudText>
+                        break;
+                    }
+
+                    case CardType.IsSaved:
+                    {
+                        <MudText Class="break-all">
+                            @LearningWorldPath!.Name
+                        </MudText>
+                        break;
+                    }
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+            </CardHeaderContent>
+            <CardHeaderActions>
+                @if (_cardType is CardType.IsSaved)
+                {
+                    <MudButton @onclick="() => OnDeleteFromSaved.InvokeAsync(LearningWorldPath)">
+                        <MudIcon Icon="@Icons.Material.Filled.Close"></MudIcon>
+                    </MudButton>
+                }
+            </CardHeaderActions>
+            @* @switch (_cardType) *@
+            @* { *@
+            @*     case CardType.IsLoaded: *@
+            @*     { *@
+            @*         <MudAvatar Color="@Color.Secondary">L</MudAvatar> *@
+            @*         <MudText> *@
+            @*             @LearningWorldPath!.Name *@
+            @*         </MudText> *@
+            @*         break; *@
+            @*     } *@
+            @* *@
+            @*     case CardType.IsSaved: *@
+            @*     { *@
+            @*         <MudAvatar Color="@Color.Primary">S</MudAvatar> *@
+            @*         <MudText> *@
+            @*             @LearningWorldPath!.Name *@
+            @*         </MudText> *@
+            @*         <MudButton @onclick="() => OnDeleteFromSaved.InvokeAsync(LearningWorldPath)"> *@
+            @*             <MudIcon Icon="@Icons.Material.Filled.Close"></MudIcon> *@
+            @*         </MudButton> *@
+            @*         break; *@
+            @*     } *@
+            @* *@
+            @*     default: *@
+            @*         throw new ArgumentOutOfRangeException(); *@
+            @* } *@
+        </MudCardHeader>
+        <MudCardContent Class="flex justify-center">
+            <MudButton Size="Size.Large" @onclick="@(() => OnOpenLearningWorld.InvokeAsync(LearningWorldPath))">
+                Open
+            </MudButton>
+        </MudCardContent>
+    </MudCard>
+</MudItem>
+
+@code {
+
+    [Parameter]
+    public SavedLearningWorldPath? LearningWorldPath { get; set; }
+
+    [Parameter]
+    public EventCallback<SavedLearningWorldPath> OnOpenLearningWorld { get; set; }
+
+    [Parameter]
+    public bool IsLoaded { get; set; }
+
+    [Parameter]
+    public EventCallback<SavedLearningWorldPath> OnDeleteFromSaved { get; set; }
+
+    private CardType _cardType;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (!OnOpenLearningWorld.HasDelegate) throw new ApplicationException("OnOpenLearningWorld must be set.");
+        if (LearningWorldPath == null) throw new ApplicationException("LearningWorldPath must be set.");
+        if (IsLoaded)
+        {
+            _cardType = CardType.IsLoaded;
+        }
+        else
+        {
+            if (!OnDeleteFromSaved.HasDelegate) throw new ApplicationException("OnDeleteFromSaved must be set.");
+            _cardType = CardType.IsSaved;
+        }
+    }
+
+    private enum CardType
+    {
+        IsLoaded,
+        IsSaved
+    }
+
+}

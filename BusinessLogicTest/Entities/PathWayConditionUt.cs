@@ -22,6 +22,7 @@ public class PathWayConditionUt
             Assert.That(systemUnderTest.Condition, Is.EqualTo(condition));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
+            Assert.That(systemUnderTest.UnsavedChanges);
         });
     }
 

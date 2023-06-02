@@ -17,14 +17,16 @@ public class LearningWorld : ILearningWorld, IOriginator
         Language = "";
         Description = "";
         Goals = "";
-        LearningSpaces = new List<LearningSpace>();
+        SavePath = "";
+        LearningSpaces = new List<ILearningSpace>();
         PathWayConditions = new List<PathWayCondition>();
         LearningPathways = new List<LearningPathway>();
         Topics = new List<Topic>();
         UnsavedChanges = false;
+        UnplacedLearningElements = new List<ILearningElement>();
     }
     public LearningWorld(string name, string shortname, string authors, string language, string description,
-        string goals, List<LearningSpace>? learningSpaces = null, List<PathWayCondition>? pathWayConditions = null,
+        string goals, string savePath = "", List<ILearningSpace> learningSpaces = null, List<PathWayCondition>? pathWayConditions = null,
         List<LearningPathway>? learningPathways = null, List<Topic>? topics = null)
     {
         Id = Guid.NewGuid();
@@ -34,15 +36,17 @@ public class LearningWorld : ILearningWorld, IOriginator
         Language = language;
         Description = description;
         Goals = goals;
-        LearningSpaces = learningSpaces ?? new List<LearningSpace>();
+        SavePath = savePath;
+        LearningSpaces = learningSpaces ?? new List<ILearningSpace>();
         PathWayConditions = pathWayConditions ?? new List<PathWayCondition>();
         LearningPathways = learningPathways ?? new List<LearningPathway>();
         Topics = topics ?? new List<Topic>();
-        UnsavedChanges = false;
+        UnsavedChanges = true;
+        UnplacedLearningElements = new List<ILearningElement>();
     }
 
     public Guid Id { get; private set; }
-    public List<LearningSpace> LearningSpaces { get; set; }
+    public List<ILearningSpace> LearningSpaces { get; set; }
     public List<PathWayCondition> PathWayConditions { get; set; }
     public List<IObjectInPathWay> ObjectsInPathWays => new List<IObjectInPathWay>(LearningSpaces).Concat(PathWayConditions).ToList();
     public List<ISelectableObjectInWorld> SelectableWorldObjects => new List<ISelectableObjectInWorld>(LearningSpaces).
@@ -55,14 +59,26 @@ public class LearningWorld : ILearningWorld, IOriginator
     public string Language { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
-    public ISelectableObjectInWorld? SelectedLearningObject { get; set; }
+    public ICollection<ILearningElement> UnplacedLearningElements { get; set; } 
+    public string SavePath { get; set; }
 
-    public bool UnsavedChanges { get; set; }
+    public bool UnsavedChanges
+    {
+        get => InternalUnsavedChanges ||
+               LearningSpaces.Any(space => space.UnsavedChanges) ||
+               UnplacedLearningElements.Any(element => element.UnsavedChanges) ||
+               PathWayConditions.Any(condition => condition.UnsavedChanges) ||
+               Topics.Any(topic => topic.UnsavedChanges);
+        set => InternalUnsavedChanges = value;
+    }
+
+    // ReSharper disable once MemberCanBePrivate.Global - disabled because we need a public property so automapper will map it
+    public bool InternalUnsavedChanges { get; private set; }
 
     public IMemento GetMemento()
     {
-        return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, LearningSpaces,
-            PathWayConditions, LearningPathways, Topics, SelectedLearningObject);
+        return new LearningWorldMemento(Name, Shortname, Authors, Language, Description, Goals, SavePath, LearningSpaces,
+            PathWayConditions, LearningPathways, Topics, InternalUnsavedChanges, UnplacedLearningElements);
     }
 
     public void RestoreMemento(IMemento memento)
@@ -77,18 +93,20 @@ public class LearningWorld : ILearningWorld, IOriginator
         Language = learningWorldMemento.Language;
         Description = learningWorldMemento.Description;
         Goals = learningWorldMemento.Goals;
+        SavePath = learningWorldMemento.SavePath;
         LearningSpaces = learningWorldMemento.LearningSpaces;
         PathWayConditions = learningWorldMemento.PathWayConditions;
         LearningPathways = learningWorldMemento.LearningPathways;
         Topics = learningWorldMemento.Topics;
-        SelectedLearningObject = learningWorldMemento.SelectedLearningSpace;
+        UnsavedChanges = learningWorldMemento.UnsavedChanges;
+        UnplacedLearningElements = learningWorldMemento.UnplacedLearningElements;
     }
 
     private record LearningWorldMemento : IMemento
     {
         internal LearningWorldMemento(string name, string shortname, string authors, string language,
-            string description, string goals, List<LearningSpace> learningSpaces, List<PathWayCondition> pathWayConditions,
-            List<LearningPathway> learningPathways, List<Topic> topics, ISelectableObjectInWorld? selectedLearningSpace = null)
+            string description, string goals, string savePath, List<ILearningSpace> learningSpaces, List<PathWayCondition> pathWayConditions,
+            List<LearningPathway> learningPathways, List<Topic> topics, bool unsavedChanges, IEnumerable<ILearningElement> unplacedLearningElements)
         {
             Name = name;
             Shortname = shortname;
@@ -96,14 +114,16 @@ public class LearningWorld : ILearningWorld, IOriginator
             Language = language;
             Description = description;
             Goals = goals;
+            SavePath = savePath;
+            UnsavedChanges = unsavedChanges;
             LearningSpaces = learningSpaces.ToList();
             PathWayConditions = pathWayConditions.ToList();
             LearningPathways = learningPathways.ToList();
             Topics = topics.ToList();
-            SelectedLearningSpace = selectedLearningSpace;
+            UnplacedLearningElements = unplacedLearningElements.ToList();
         }
 
-        internal List<LearningSpace> LearningSpaces { get;  }
+        internal List<ILearningSpace> LearningSpaces { get;  }
         internal List<PathWayCondition> PathWayConditions { get;  }
         internal List<LearningPathway> LearningPathways { get;  }
         internal List<Topic> Topics { get;  }
@@ -113,6 +133,8 @@ public class LearningWorld : ILearningWorld, IOriginator
         internal string Language { get; }
         internal string Description { get; }
         internal string Goals { get; }
-        internal ISelectableObjectInWorld? SelectedLearningSpace { get; }
+        internal string SavePath { get; }
+        public bool UnsavedChanges { get; }
+        internal List<ILearningElement> UnplacedLearningElements { get; }
     }
 }

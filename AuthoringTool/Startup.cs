@@ -1,47 +1,64 @@
 using System.IO.Abstractions;
+using System.Reflection;
+using AuthoringTool.Mapping;
 using AutoMapper;
+using BackendAccess.BackendServices;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Condition;
+using BusinessLogic.Commands.Element;
+using BusinessLogic.Commands.Layout;
+using BusinessLogic.Commands.Pathway;
+using BusinessLogic.Commands.Space;
+using BusinessLogic.Commands.Topic;
+using BusinessLogic.Commands.World;
+using BusinessLogic.Validation;
 using DataAccess.Persistence;
 using ElectronWrapper;
+using FluentValidation;
 using Generator.API;
 using Generator.DSL;
 using Generator.WorldExport;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Caching.Memory;
 using MudBlazor.Services;
+using Presentation.Components.Forms;
+using Presentation.Components.Forms.Element;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.DropZone;
 using Presentation.PresentationLogic.ElectronNET;
+using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
-using Presentation.PresentationLogic.ModalDialog;
-using Presentation.PresentationLogic.Toolbox;
-using Presentation.View.Toolbox;
+using Presentation.PresentationLogic.Mediator;
+using Presentation.PresentationLogic.MyLearningWorlds;
+using Presentation.PresentationLogic.SelectedViewModels;
 using Shared;
 using Shared.Configuration;
+using Tailwind;
 
 namespace AuthoringTool;
 
 public class Startup
 {
-    public IConfiguration Configuration { get; }
-
     public Startup(IConfiguration configuration)
     {
         Configuration = configuration;
     }
+
+    public IConfiguration Configuration { get; }
 
     public void ConfigureServices(IServiceCollection services)
     {
         //Blazor and Electron (framework)
         services.AddRazorPages();
         services.AddServerSideBlazor();
-        
+
         //MudBlazor
         services.AddMudServices();
-        
+
         //localization
         services.AddLocalization(options => options.ResourcesPath = "Resources");
 
@@ -51,8 +68,8 @@ public class Startup
             builder.AddConsole();
             builder.SetMinimumLevel(LogLevel.Trace);
         });
-        
-        
+
+
         //AuthoringToolLib
         //PLEASE add any services you add dependencies to to the unit tests in StartupUt!!!
         ConfigureAuthoringTool(services);
@@ -61,11 +78,17 @@ public class Startup
         ConfigureGenerator(services);
         ConfigureDataAccess(services);
         ConfigureToolbox(services);
+        ConfigureMyLearningWorlds(services);
         ConfigureUtilities(services);
         ConfigureAutoMapper(services);
         ConfigureCommands(services);
+        ConfigureCommandFactories(services);
+        ConfigureValidation(services);
+        ConfigureApiAccess(services);
+        ConfigureMediator(services);
+        ConfigureSelectedViewModelsProvider(services);
 
-        
+
         //Electron Wrapper layer
         services.AddElectronInternals();
         services.AddElectronWrappers();
@@ -75,7 +98,7 @@ public class Startup
         //Wrapper around Shell
         var shellWrapper = new ShellWrapper();
         services.AddSingleton<IShellWrapper, ShellWrapper>(_ => shellWrapper);
-        
+
         //Insert electron dependant services as required
         if (hybridSupportWrapper.IsElectronActive)
         {
@@ -88,6 +111,16 @@ public class Startup
         }
     }
 
+    private void ConfigureValidation(IServiceCollection services)
+    {
+        services.AddValidatorsFromAssembly(Assembly.Load("BusinessLogic"));
+        services.AddSingleton<ILearningWorldNamesProvider>(p =>
+            p.GetService<IAuthoringToolWorkspaceViewModel>() ?? throw new InvalidOperationException());
+        services.AddSingleton<ILearningSpaceNamesProvider>(p =>
+            p.GetService<ILearningWorldPresenter>() ?? throw new InvalidOperationException());
+        services.AddSingleton<ILearningElementNamesProvider, LearningElementNamesProvider>();
+    }
+
     private void ConfigureAuthoringTool(IServiceCollection services)
     {
         services.AddSingleton<IAuthoringToolConfiguration, AuthoringToolConfiguration>();
@@ -95,17 +128,17 @@ public class Startup
 
     private void ConfigurePresentationLogic(IServiceCollection services)
     {
-        services.AddSingleton<IAuthoringToolWorkspacePresenter, AuthoringToolWorkspacePresenter>();
+        services.AddScoped<IAuthoringToolWorkspacePresenter, AuthoringToolWorkspacePresenter>();
         services.AddSingleton<IPresentationLogic, PresentationLogic>();
         services.AddSingleton<ILearningWorldPresenter, LearningWorldPresenter>();
+        services.AddSingleton(p =>
+            (ILearningWorldPresenterOverviewInterface) p.GetService(typeof(ILearningWorldPresenter))!);
         services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
-        services.AddSingleton<ILearningSpaceViewModalDialogFactory, ModalDialogFactory>();
-        services.AddSingleton<ILearningSpaceViewModalDialogInputFieldsFactory, ModalDialogInputFieldsFactory>();
-        services.AddSingleton<ILearningWorldViewModalDialogFactory, ModalDialogFactory>();
-        services.AddSingleton<ILearningWorldViewModalDialogInputFieldsFactory, ModalDialogInputFieldsFactory>();
-        services.AddSingleton<IAuthoringToolWorkspaceViewModalDialogInputFieldsFactory, ModalDialogInputFieldsFactory>();
-        services.AddSingleton<IAuthoringToolWorkspaceViewModalDialogFactory, ModalDialogFactory>();
+        services.AddSingleton<IErrorService, ErrorService>();
+        services.AddSingleton<ILearningElementDropZoneHelper, LearningElementDropZoneHelper>();
+        services.AddTransient(typeof(IFormDataContainer<,>), typeof(FormDataContainer<,>));
+        services.AddSingleton<IElementModelHandler, ElementModelHandler>();
     }
 
     private void ConfigureBusinessLogic(IServiceCollection services)
@@ -128,25 +161,52 @@ public class Startup
         services.AddSingleton<IReadDsl, ReadDsl>();
     }
 
+    private void ConfigureApiAccess(IServiceCollection services)
+    {
+        services.AddSingleton<IBackendAccess, BackendAccess.API.BackendAccess>();
+        services.AddSingleton<IUserWebApiServices, UserWebApiServices>();
+        // Add Http Client
+        services.AddHttpClient();
+    }
+
+    private void ConfigureMediator(IServiceCollection services)
+    {
+        services.AddSingleton<IMediator, Mediator>();
+    }
+
+    private void ConfigureSelectedViewModelsProvider(IServiceCollection services)
+    {
+        services.AddSingleton<ISelectedViewModelsProvider, SelectedViewModelsProvider>();
+    }
+
     private static void ConfigureToolbox(IServiceCollection services)
     {
-        services.AddSingleton<IAbstractToolboxRenderFragmentFactory, ToolboxRenderFragmentFactory>();
-        services.AddSingleton<IToolboxEntriesProviderModifiable, ToolboxEntriesProvider>();
-        services.AddSingleton(p => (IToolboxEntriesProvider)p.GetService(typeof(IToolboxEntriesProviderModifiable))!);
-        services.AddSingleton<IToolboxController, ToolboxController>();
-        services.AddSingleton<IToolboxResultFilter, ToolboxResultFilter>();
         services.AddSingleton(p =>
-            (IAuthoringToolWorkspacePresenterToolboxInterface)p.GetService(typeof(IAuthoringToolWorkspacePresenter))!);
+            (IAuthoringToolWorkspacePresenterToolboxInterface) p.GetService(typeof(IAuthoringToolWorkspacePresenter))!);
         services.AddSingleton(p =>
-            (ILearningWorldPresenterToolboxInterface)p.GetService(typeof(ILearningWorldPresenter))!);
+            (ILearningWorldPresenterToolboxInterface) p.GetService(typeof(ILearningWorldPresenter))!);
         services.AddSingleton(p =>
-            (ILearningSpacePresenterToolboxInterface)p.GetService(typeof(ILearningSpacePresenter))!);
+            (ILearningSpacePresenterToolboxInterface) p.GetService(typeof(ILearningSpacePresenter))!);
     }
-    
+
+    private static void ConfigureMyLearningWorlds(IServiceCollection services)
+    {
+        services.AddSingleton<IMyLearningWorldsProvider, MyLearningWorldsProvider>();
+        services.AddSingleton<ILearningWorldSavePathsHandler, LearningWorldSavePathsHandler>();
+    }
+
     private static void ConfigureAutoMapper(IServiceCollection services)
     {
-        var config = new MapperConfiguration(MappingProfile.Configure);
-        
+        var config = new MapperConfiguration(cfg =>
+        {
+            ViewModelEntityMappingProfile.Configure(cfg);
+            EntityPersistEntityMappingProfile.Configure(cfg);
+            FormModelEntityMappingProfile.Configure(cfg);
+            ViewModelFormModelMappingProfile.Configure(cfg);
+            ApiResponseEntityMappingProfile.Configure(cfg);
+            cfg.AddCollectionMappersOnce();
+        });
+
         var mapper = config.CreateMapper();
         services.AddSingleton(mapper);
         services.AddSingleton<ICachingMapper, CachingMapper>();
@@ -162,6 +222,19 @@ public class Startup
     private void ConfigureCommands(IServiceCollection services)
     {
         services.AddSingleton<ICommandStateManager, CommandStateManager>();
+        services.AddSingleton<IOnUndoRedo>(p => (CommandStateManager) p.GetService<ICommandStateManager>()!);
+    }
+
+    private void ConfigureCommandFactories(IServiceCollection services)
+    {
+        services.AddSingleton<IConditionCommandFactory, ConditionCommandFactory>();
+        services.AddSingleton<IElementCommandFactory, ElementCommandFactory>();
+        services.AddSingleton<ILayoutCommandFactory, LayoutCommandFactory>();
+        services.AddSingleton<IPathwayCommandFactory, PathwayCommandFactory>();
+        services.AddSingleton<ISpaceCommandFactory, SpaceCommandFactory>();
+        services.AddSingleton<ITopicCommandFactory, TopicCommandFactory>();
+        services.AddSingleton<IWorldCommandFactory, WorldCommandFactory>();
+        services.AddSingleton<IBatchCommandFactory, BatchCommandFactory>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)
@@ -169,6 +242,7 @@ public class Startup
         if (env.IsDevelopment())
         {
             app.UseDeveloperExceptionPage();
+            app.RunTailwind("tailwind");
         }
         else
         {
@@ -179,9 +253,9 @@ public class Startup
 
         app.UseHttpsRedirection();
         app.UseStaticFiles();
-        
+
         // Add localization cultures
-        var supportedCultures = new[] { "de-DE", "en-DE" };
+        var supportedCultures = new[] {"de-DE", "en-DE"};
         var localizationOptions = new RequestLocalizationOptions()
             .SetDefaultCulture(supportedCultures[0])
             .AddSupportedCultures(supportedCultures)
@@ -200,6 +274,7 @@ public class Startup
             endpoints.MapBlazorHub();
             endpoints.MapFallbackToPage("/_Host");
         });
-        app.ConfigureElectronWindow();
+        app.ConfigureElectronWindow(out var window);
+        ElectronDialogManager.BackupBrowserWindow = window;
     }
 }

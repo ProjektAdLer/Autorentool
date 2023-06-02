@@ -1,4 +1,3 @@
-using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.LearningWorld;
 
 namespace Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -6,17 +5,22 @@ namespace Presentation.PresentationLogic.AuthoringToolWorkspace;
 public interface IAuthoringToolWorkspacePresenter
 {
     IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceVm { get; }
-    bool CreateLearningWorldDialogOpen { get; set; }
-    bool EditLearningWorldDialogOpen { get; set; }
-    bool SaveUnsavedChangesDialogOpen { get; set; }
     bool LearningWorldSelected { get; }
-    LearningWorldViewModel? DeletedUnsavedWorld { get; set; }
-    string? InformationMessageToShow { get; set; }
-    Queue<LearningWorldViewModel>? UnsavedWorldsQueue { get; set; }
 
     event Action? OnForceViewUpdate;
 
-    void AddNewLearningWorld();
+    /// <summary>
+    /// Creates a new <see cref="LearningWorldViewModel"/> in the <see cref="AuthoringToolWorkspaceViewModel"/>
+    /// </summary>
+    /// <param name="name">Name of the new learning world</param>
+    /// <param name="shortname">Shortname of the new learning world</param>
+    /// <param name="authors">Authors of the new learning world</param>
+    /// <param name="language">Language of the new learning world</param>
+    /// <param name="description">Description of the new learning world</param>
+    /// <param name="goals">Goals of the new learning world</param>
+    void CreateLearningWorld(string name, string shortname, string authors, string language, string description,
+        string goals);
+
     /// <summary>
     /// Sets the selected <see cref="LearningWorldViewModel"/> in the view model.
     /// </summary>
@@ -29,12 +33,6 @@ public interface IAuthoringToolWorkspacePresenter
     /// collection, if any remain.
     /// </summary>
     void DeleteSelectedLearningWorld();
-    void OpenEditSelectedLearningWorldDialog();
     Task LoadLearningWorldAsync();
     Task SaveSelectedLearningWorldAsync();
-    void OnCreateWorldDialogClose(ModalDialogOnCloseResult returnValueTuple);
-    void OnEditWorldDialogClose(ModalDialogOnCloseResult returnValueTuple);
-    Task ProcessDragAndDropResult(Tuple<string, MemoryStream> result);
-    void OnSaveWorldDialogClose(ModalDialogOnCloseResult returnValueTuple);
-    void OnSaveDeletedWorldDialogClose(ModalDialogOnCloseResult returnValueTuple);
 }

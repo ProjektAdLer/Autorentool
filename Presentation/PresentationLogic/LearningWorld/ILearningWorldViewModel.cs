@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.Topic;
@@ -7,6 +8,7 @@ namespace Presentation.PresentationLogic.LearningWorld;
 
 public interface ILearningWorldViewModel : ISerializableViewModel, IDisplayableLearningObject, INotifyPropertyChanged
 {
+    Guid Id { get; }
     new string FileEnding { get; }
     int Workload { get; }
     int Points { get; }
@@ -21,8 +23,10 @@ public interface ILearningWorldViewModel : ISerializableViewModel, IDisplayableL
     string Language { get; set; }
     string Description { get; set; }
     string Goals { get; set; }
+    string SavePath { get; set; }
     bool UnsavedChanges { get; set; }
-    ISelectableObjectInWorldViewModel? SelectedLearningObject { get; set; }
     IObjectInPathWayViewModel? OnHoveredObjectInPathWay { get; set; }
     bool ShowingLearningSpaceView { get; set; }
+    ICollection<ILearningElementViewModel> UnplacedLearningElements { get; set; }
+    bool InternalUnsavedChanges { get; }
 }

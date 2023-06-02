@@ -1,0 +1,25 @@
+<MudPaper Class="w-full h-full max-h-[43rem] flex px-3 overflow-auto">
+    <CascadingValue Value="this">
+        <div class="flex flex-col w-full grow">
+            <div>
+                <ContentFilesAdd/>
+            </div>
+            <MudDivider Class="max-h-[10px]"/>
+            <div class="w-full flex flex-col">
+                <ContentFilesView @ref="ContentFilesView"/>
+            </div>
+        </div>
+    </CascadingValue>
+</MudPaper>
+
+@code {
+    private ContentFilesView ContentFilesView { get; set; }
+
+    /// <summary>Rerenders this component as well as the <see cref="ContentFilesView"/> inside of it.</summary>
+    internal async Task RerenderAsync()
+    {
+        await InvokeAsync(StateHasChanged);
+        await ContentFilesView.RerenderAsync();
+    }
+
+}

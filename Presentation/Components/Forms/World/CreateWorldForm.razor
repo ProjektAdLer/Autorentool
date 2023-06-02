@@ -1,0 +1,98 @@
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.Components.Forms.Models
+@using BusinessLogic.Entities
+@using Presentation.Components.Forms.Buttons
+<header class="m-2 rounded-lg">
+    <div class="flex justify-center p-2">
+        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Learning world metadata</h2>
+    </div>
+</header>
+<MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
+<BaseForm TForm="LearningWorldFormModel" TEntity="LearningWorld" OnValidSubmit="OnValidSubmit"
+          SnackbarMessage="World created" FormDataContainer="FormDataContainer">
+    <Fields>
+        <Collapsable Title="General" @bind-Collapsed="_collapsedGeneral">
+            <div class="rounded-lg w-4/4 px-4 pb-2">
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                          For="@(() => FormModel.Name)"
+                          Immediate="true"
+                          DebounceInterval="300"
+                          Label="@nameof(FormDataContainer.FormModel.Name)"/>
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Shortname"
+                          For="@(() => FormModel.Shortname)"
+                          Immediate="true"
+                          DebounceInterval="300"
+                          Label="@nameof(FormDataContainer.FormModel.Shortname)"/>
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Authors"
+                          For="@(() => FormModel.Authors)"
+                          Immediate="true"
+                          DebounceInterval="300"
+                          Label="@nameof(FormDataContainer.FormModel.Authors)"/>
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Language"
+                          For="@(() => FormModel.Language)"
+                          Immediate="true"
+                          DebounceInterval="300"
+                          Label="@nameof(FormDataContainer.FormModel.Language)"/>
+            </div>
+        </Collapsable>
+
+        <Collapsable Title="Goals" @bind-Collapsed="_collapsedGoals">
+            <div class="rounded-lg w-4/4 px-4">
+                <MudText Typo="Typo.caption">Description</MudText>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                          For="@(() => FormModel.Description)"
+                          Immediate="true"
+                          Lines="3"
+                          Variant="Variant.Outlined"
+                          DebounceInterval="300"
+                          Class="pb-4 mt-0"/>
+                <MudText Typo="Typo.caption">Goals</MudText>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
+                          For="@(() => FormModel.Goals)"
+                          Immediate="true"
+                          Lines="3"
+                          Variant="Variant.Outlined"
+                          DebounceInterval="300"
+                          Class="pb-2 mt-0"/>
+        </div>
+            </Collapsable>
+    </Fields>
+    <FooterButtons>
+        <DefaultSubmitButton/>
+        <DefaultResetButton/>
+    </FooterButtons>
+</BaseForm>
+
+@code {
+#pragma warning disable CS8618 - injected by framework - n.stich
+    [Inject]
+    private IAuthoringToolWorkspacePresenter AuthoringToolWorkspacePresenter { get; set; }
+
+    [Inject]
+    private IAuthoringToolWorkspaceViewModel AuthoringToolWorkspaceViewModel { get; set; }
+
+    [Inject]
+    private IFormDataContainer<LearningWorldFormModel, LearningWorld> FormDataContainer { get; set; }
+#pragma warning restore CS8618
+    [Parameter]
+    public EventCallback OnSubmitted { get; set; }
+
+    //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
+    //please DO NOT REFACTOR THIS - n.stich
+    private LearningWorldFormModel FormModel => FormDataContainer.FormModel;
+
+    private bool _collapsedGeneral = false;
+    private bool _collapsedGoals = true;
+
+    private void OnValidSubmit(LearningWorldFormModel model)
+    {
+        AuthoringToolWorkspacePresenter.CreateLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.Goals);
+        OnSubmitted.InvokeAsync();
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+    }
+
+}

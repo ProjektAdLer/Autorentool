@@ -1,9 +1,12 @@
 using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using BusinessLogic.Commands.Element;
+using BusinessLogic.Commands.Space;
+using BusinessLogic.Commands.World;
 
 namespace BusinessLogic.Commands;
 
-public sealed class CommandStateManager : ICommandStateManager
+public sealed class CommandStateManager : ICommandStateManager, IOnUndoRedo
 {
     private readonly Stack<IUndoCommand> _undo;
     private readonly Stack<IUndoCommand> _redo;
@@ -48,21 +51,25 @@ public sealed class CommandStateManager : ICommandStateManager
     }
 
     /// <inheritdoc cref="ICommandStateManager.Undo"/>
-    public void Undo()
+    public ICommand Undo()
     {
         if (!CanUndo) throw new InvalidOperationException("no command to undo");
         var command = PopUndo();
         command.Undo();
+        OnUndo?.Invoke(command);
         PushRedo(command);
+        return command;
     }
 
     /// <inheritdoc cref="ICommandStateManager.Redo"/>
-    public void Redo()
+    public ICommand Redo()
     {
         if (!CanRedo) throw new InvalidOperationException("no command to redo");
         var command = PopRedo();
         command.Redo();
+        OnRedo?.Invoke(command);
         PushUndo(command);
+        return command;
     }
     
     private IEnumerable<object> GetObjects()
@@ -80,10 +87,12 @@ public sealed class CommandStateManager : ICommandStateManager
     {
         return command switch
         {
-            CreateLearningElement c => c.LearningElement,
+            CreateLearningElementInSlot c => c.LearningElement,
+            CreateUnplacedLearningElement c => c.LearningElement,
             CreateLearningSpace c => c.LearningSpace,
             CreateLearningWorld c => c.LearningWorld,
-            DeleteLearningElement c => c.LearningElement,
+            DeleteLearningElementInSpace c => c.LearningElement,
+            DeleteLearningElementInWorld c => c.LearningElement,
             DeleteLearningSpace c => c.LearningSpace,
             DeleteLearningWorld c => c.LearningWorld,
             LoadLearningElement c => c.LearningElement,
@@ -143,6 +152,9 @@ public sealed class CommandStateManager : ICommandStateManager
     {
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
     }
+    
+    public event Action<ICommand>? OnRedo;
+    public event Action<ICommand>? OnUndo;
 }
 
 public class RemoveCommandsFromStacksEventArgs

@@ -3,8 +3,10 @@
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningPathway
 @using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.SelectedViewModels
 @inject ILogger<PathWay> Logger;
 @using Shared
+@using Direction = Shared.Direction
 <Clickable OnClickedParam="LearningPathWay" OnClicked="@OnClickedClickable">
     <path d="M @X1 @Y1 C @C1X @_c1Y, @C2X @_c2Y, @X2 @Y2" stroke="rgb(108, 117, 125)" stroke-width="@StrokeWidth" fill="transparent" marker-end="url(#arrow)"/>
     <path d="M @X1 @Y1 C @C1X @_c1Y, @C2X @_c2Y, @X2 @Y2" stroke="transparent" stroke-width="30" fill="transparent"/>
@@ -33,8 +35,11 @@
     // Overwrite nullability warning below because service may never be null -m.ho
     [Parameter, EditorRequired]
     public ILearningWorldPresenter PositioningService { get; set; } = null!;
-    
-    private double StrokeWidth => PositioningService.LearningWorldVm?.SelectedLearningObject == LearningPathWay ? 3 : 2;
+
+    [Inject]
+    public ISelectedViewModelsProvider? SelectedObjectsService { get; set; }
+
+    private double StrokeWidth => SelectedObjectsService?.LearningObjectInPathWay == LearningPathWay ? 3 : 2;
 
     // The following coordinates are used as control points for the Bezier curve
     private double C1X => X1;

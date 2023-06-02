@@ -1,42 +1,22 @@
 ﻿@using Presentation.PresentationLogic.API
-@using Presentation.Components
-@using Presentation.View.Toolbox
-@using Presentation.Components.Culture
+@using Presentation.PresentationLogic.Mediator
 @inherits LayoutComponentBase
 
 <PageTitle>AuthoringTool</PageTitle>
 
-<div class="page">
-    <div class="sidebar">
-        <main>
-            <CultureSelector/>
-            <NavMenu/>
-        </main>
-        <footer>
-            <Toolbox/>
-        </footer>
-    </div>
-
-    <main>
-        <div class="top-row px-4">
-            @if (PresentationLogic?.RunningElectron == true)
-            {
-                <CloseAppButton/>
-            }
-        </div>
-
-        <article class="content px-4">
-            @Body
-        </article>
-    </main>
-</div>
-
 <MudThemeProvider/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
+<CascadingValue Value="Mediator">
+   @Body 
+</CascadingValue>
+
 
 @code {
     [Inject]
     public IPresentationLogic? PresentationLogic { get; set; }
+    
+    [Inject]
+    public IMediator Mediator { get; set; }
 
 }

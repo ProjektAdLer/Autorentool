@@ -13,18 +13,16 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
     {
         Id = Guid.Empty;
         Name = "";
-        Shortname = "";
         Parent = null;
         //We override nullability here because constructor is protected, only called by AutoMapper and field immediately
         //set by AutoMapper afterwards - n.stich
         LearningContent = null!;
-        Url = "";
-        Authors = "";
         Description = "";
         Goals = "";
         Difficulty = LearningElementDifficultyEnum.None;
+        ElementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
         Workload = 0;
-        Points = 0;
+        Points = 1;
         PositionX = 0;
         PositionY = 0;
     }
@@ -33,33 +31,29 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
     /// Initializes a new instance of the <see cref="LearningElementViewModel"/> class.
     /// </summary>
     /// <param name="name">The name of the learning element.</param>
-    /// <param name="shortname">The short name (abbreviation) of the learning element (Maybe not relevant).</param>
     /// <param name="learningContent">Represents the loaded content of the learning element.</param>
-    /// <param name="url"></param>
-    /// <param name="authors">The string containing the names of all the authors working on the learning element.</param>
     /// <param name="description">A description of the learning element and its contents.</param>
     /// <param name="goals">A description of the goals this learning element is supposed to achieve.</param>
     /// <param name="difficulty">Difficulty of the learning element.</param>
+    /// <param name="elementModel">Theme of the learning element</param>
     /// <param name="parent">Decides whether the learning element belongs to a learning world or a learning space.</param>
     /// <param name="workload">The time required to complete the learning element.</param>
     /// <param name="points">The number of points of the learning element.</param>
     /// <param name="positionX">x-position of the learning element in the workspace.</param>
     /// <param name="positionY">y-position of the learning element in the workspace.</param>
-    public LearningElementViewModel(string name, string shortname,
-        LearningContentViewModel learningContent, string url, string authors, string description, string goals,
-        LearningElementDifficultyEnum difficulty, ILearningSpaceViewModel? parent = null,
+    public LearningElementViewModel(string name, 
+        ILearningContentViewModel learningContent, string description, string goals,
+        LearningElementDifficultyEnum difficulty, ElementModel elementModel, ILearningSpaceViewModel? parent = null,
         int workload = 0, int points = 0, double positionX = 0, double positionY = 0)
     {
         Id = Guid.NewGuid();
         Name = name;
-        Shortname = shortname;
         Parent = parent;
         LearningContent = learningContent;
-        Url = url ?? "";
-        Authors = authors;
         Description = description;
         Goals = goals;
         Difficulty = difficulty;
+        ElementModel = elementModel;
         Workload = workload;
         Points = points;
         PositionX = positionX;
@@ -71,16 +65,15 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
     // ReSharper disable once AutoPropertyCanBeMadeGetOnly.Local - required for automapper n.stich
     public Guid Id { get; private set; }
     public string Name { get; set; }
-    public string Shortname { get; set; }
     public ILearningSpaceViewModel? Parent { get; set; }
-    public LearningContentViewModel LearningContent { get; set; }
-    public string Url { get; set; }
-    public string Authors { get; set; }
+    public ILearningContentViewModel LearningContent { get; set; }
     public string Description { get; set; }
     public string Goals { get; set; }
     public LearningElementDifficultyEnum Difficulty { get; set; }
+    public ElementModel ElementModel { get; set; }
     public int Workload { get; set; }
     public int Points { get; set; }
+    public bool UnsavedChanges { get; set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
 }

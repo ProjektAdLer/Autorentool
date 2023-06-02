@@ -7,28 +7,18 @@ namespace Presentation.PresentationLogic;
 public interface IShutdownManager
 {
     /// <summary>
-    /// Delegate for <see cref="IShutdownManager.BeforeShutdown"/>
+    /// Fires when <see cref="RequestShutdownAsync"/> is first called. Shutdown can be cancelled by calling <see cref="BeforeShutdownEventArgs.CancelShutdownState"/>.
     /// </summary>
-    public delegate void BeforeShutdownEventHandler(object sender, BeforeShutdownEventArgs e);
-    
-    /// <summary>
-    /// Delegate for <see cref="IShutdownManager.OnShutdown"/>.
-    /// </summary>
-    public delegate void OnShutdownEventHandler(object sender);
-    
-    /// <summary>
-    /// Fires when <see cref="BeginShutdown"/> is first called. Shutdown can be cancelled by calling <see cref="BeforeShutdownEventArgs.CancelShutdownState"/>.
-    /// </summary>
-    event BeforeShutdownEventHandler BeforeShutdown;
+    event AsyncEventHandler<BeforeShutdownEventArgs> BeforeShutdown;
     
     /// <summary>
     /// Fires after <see cref="BeforeShutdown"/> finishes and shutdown wasn't cancelled.
     /// </summary>
-    event OnShutdownEventHandler OnShutdown;
+    event AsyncEventHandler OnShutdown;
     
     /// <summary>
     /// Tries to shut down the application.
     /// </summary>
     /// <returns>Whether or not the shutdown was cancelled.</returns>
-    bool BeginShutdown();
+    Task<bool> RequestShutdownAsync();
 }

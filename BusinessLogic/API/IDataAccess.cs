@@ -1,4 +1,6 @@
 ﻿using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
+using Shared;
 using Shared.Configuration;
 
 namespace BusinessLogic.API;
@@ -16,8 +18,18 @@ public interface IDataAccess
     void SaveLearningElementToFile(LearningElement element, string filepath);
     LearningElement LoadLearningElement(string filepath);
     LearningElement LoadLearningElement(Stream stream);
-    LearningContent LoadLearningContent(string filepath);
-    LearningContent LoadLearningContent(string name, MemoryStream stream);
+    ILearningContent LoadLearningContent(string filepath);
+    ILearningContent LoadLearningContent(string name, Stream stream);
+    /// <summary>
+    /// Gets all content files in the appdata folder.
+    /// </summary>
+    /// <returns>An enumerable of content files.</returns>
+    IEnumerable<ILearningContent> GetAllContent();
+    IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths();
+    void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
+    SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path);
+    void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id);
+    void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
     
     /// <summary>
     /// Finds a save path in <paramref name="targetFolder"/> containing <paramref name="fileName"/> and ending with <paramref name="fileEnding"/>,
@@ -31,4 +43,19 @@ public interface IDataAccess
     /// <returns>A save path of form <code>[targetFolder]/[fileName]_n.[fileEnding]</code> that does not yet exist,
     /// where n is an integer which is incremented until the path does not yet exist.</returns>
     string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding);
+
+    /// <summary>
+    /// Deletes the file referenced by the given content object.
+    /// </summary>
+    /// <param name="content">The content whos file shall be deleted.</param>
+    /// <exception cref="FileNotFoundException">The file corresponding to <paramref name="content"/> wasn't found.</exception>
+    void RemoveContent(ILearningContent content);
+
+    /// <summary>
+    /// Adds the given <see cref="LinkContent"/> to the link file.
+    /// </summary>
+    /// <param name="linkContent">The link to add.</param>
+    void SaveLink(LinkContent linkContent);
+
+    string GetContentFilesFolderPath();
 }

@@ -1,0 +1,103 @@
+﻿@using Presentation.PresentationLogic.LearningElement
+@using Shared
+@using Presentation.Components
+@using BusinessLogic.Entities.LearningContent
+@using Presentation.PresentationLogic.LearningContent
+@using Presentation.PresentationLogic.SelectedViewModels
+<MudMenu ActivationEvent="MouseEvent.RightClick" PositionAtCursor="true">
+    <ActivatorContent>
+        <MudCard Outlined="true" Class="@GetElementStyleString()">
+            <section class="gap-1 flex flex-col justify-start">
+                <MudCardContent Class="relative flex w-24 h-12 p-0">
+                    <MudIcon Icon="@GetElementIcon()" Style="font-size: 3rem;" Class="absolute flex opacity-20 rounded-lg p-1 element-icon"/>
+                    <div class="flex justify-end absolute w-3.5 h-1.5 top-0.5 right-0.5 m-0.5">
+                        <MudIcon Icon="@GetDifficultyIcon(LearningElement.Difficulty)" Class="difficulty-icon absolute h-3.5 w-3.5"/>
+                    </div>
+
+                    @{
+                        var item = LearningElement;
+                        var text = item.Name;
+                    }
+                    <MudListItem Class="text-md font-bold text-adlertextgrey break-words text-center leading-none pl-1" Text="@text"></MudListItem>
+
+                </MudCardContent>
+            </section>
+        <MudButton Style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; background-color: transparent;" 
+                       OnClick="() => OnClicked.InvokeAsync(LearningElement)" />
+        </MudCard>
+    </ActivatorContent>
+    <ChildContent>
+        <MudMenuItem OnClick="() => OnShowLearningElementContent.InvokeAsync(LearningElement)">Show</MudMenuItem>
+        <MudMenuItem OnClick="() => OnEditLearningElement.InvokeAsync(LearningElement)">Edit</MudMenuItem>
+        <MudMenuItem OnClick="() => OnDeleteLearningElement.InvokeAsync(LearningElement)">Delete</MudMenuItem>
+    </ChildContent>
+</MudMenu>
+
+@code {
+    
+    [Inject]
+    public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; } = null!;
+
+    [Parameter, EditorRequired]
+    public ILearningElementViewModel LearningElement { get; set; } = null!;
+
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningElementViewModel> OnShowLearningElementContent { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningElementViewModel> OnEditLearningElement { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningElementViewModel> OnDeleteLearningElement { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback<ILearningElementViewModel> OnClicked { get; set; }
+
+    [Parameter]
+    public EventCallback<ILearningElementViewModel> OnDoubleClicked { get; set; }
+
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        if (LearningElement is null)
+        {
+            throw new ArgumentNullException(nameof(LearningElement));
+        }
+    }
+
+    private static string GetDifficultyIcon(LearningElementDifficultyEnum difficulty)
+    {
+        return difficulty switch
+        {
+            LearningElementDifficultyEnum.Easy => CustomIcons.DifficultyPolygonEasy,
+            LearningElementDifficultyEnum.Medium => CustomIcons.DifficultyPolygonMedium,
+            LearningElementDifficultyEnum.Hard => CustomIcons.DifficultyPolygonHard,
+            LearningElementDifficultyEnum.None => CustomIcons.DifficultyPolygonNone,
+            _ => throw new ArgumentOutOfRangeException(nameof(difficulty))
+            };
+    }
+    
+    private string GetElementIcon()
+    {
+        return LearningElement.LearningContent switch
+        {
+            ILinkContentViewModel => CustomIcons.VideoElementIcon,
+            IFileContentViewModel { Type: "png" or "jpg" or "bmp" or "webp" } => CustomIcons.ImageElementIcon,
+            IFileContentViewModel
+            {
+                Type: "txt" or "c" or "h" or "cpp" or "cc" or "c++" or "py" or
+                    "js" or "php" or "html" or "css"
+                } => CustomIcons.TextElementIcon,
+            IFileContentViewModel { Type: "h5p" } => CustomIcons.H5PElementIcon,
+            IFileContentViewModel { Type: "pdf" } => CustomIcons.TextElementIcon,
+            _ => throw new ArgumentOutOfRangeException(nameof(LearningElement))
+            };
+    }
+
+    private string GetElementStyleString()
+    {
+        return LearningElement == SelectedViewModelsProvider.LearningElement ? "border-2 border-solid bg-adlergreen bg-opacity-30 relative flex rounded-lg m-[-1px] hover:bg-adlerblue-300" : "relative flex rounded-lg bg-adlerbggradientto m-[-1px] hover:bg-adlerblue-300";
+    }
+
+}

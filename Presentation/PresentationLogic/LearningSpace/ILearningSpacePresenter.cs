@@ -1,41 +1,51 @@
 using System.ComponentModel;
+using MudBlazor;
 using Presentation.Components;
-using Presentation.Components.ModalDialog;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
+using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
+using Shared;
+using Shared.Command;
 
 namespace Presentation.PresentationLogic.LearningSpace;
 
 public interface ILearningSpacePresenter : INotifyPropertyChanged
 {
-    void EditLearningSpace(string name, string shortname, string authors, string description, string goals, int requiredPoints, ITopicViewModel? topic);
-    bool EditLearningSpaceDialogOpen { get; set; }
-    IDictionary<string, string>? EditLearningSpaceDialogInitialValues { get; }
-    bool EditLearningElementDialogOpen { get; set; }
-    IDictionary<string, string>? EditLearningElementDialogInitialValues { get; }
-    bool CreateLearningElementDialogOpen { get; set; }
+    void EditLearningSpace(string name, string description, string goals, int requiredPoints, Theme theme,
+        ITopicViewModel? topic = null);
+
     ILearningSpaceViewModel? LearningSpaceVm { get; }
-    void SetSelectedLearningElement(ILearningElementViewModel learningElement);
+    void SetSelectedLearningElement(ILearningElementViewModel? learningElement);
     void DeleteSelectedLearningElement();
-    void AddNewLearningElement();
-    Task LoadLearningElementAsync();
+    Task LoadLearningElementAsync(int slotIndex);
     Task SaveSelectedLearningElementAsync();
     Task ShowSelectedElementContentAsync();
-    void OnCreateElementDialogClose(ModalDialogOnCloseResult returnValueTuple);
-    void EditSelectedLearningElement();
-    void OnEditElementDialogClose(ModalDialogOnCloseResult returnValueTuple);
     void SetLearningSpace(ILearningSpaceViewModel space);
-    void CreateLearningElementWithPreloadedContent(LearningContentViewModel learningContent);
-    LearningContentViewModel? DragAndDropLearningContent { get; }
+    ILearningContentViewModel? DragAndDropLearningContent { get; }
     IDisplayableLearningObject? RightClickedLearningObject { get; }
-    void OnWorldPropertyChanged(object? caller, PropertyChangedEventArgs e);
-    event Action OnUndoRedoPerformed;
+    event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
     void DragLearningElement(object sender, DraggedEventArgs<ILearningElementViewModel> draggedEventArgs);
     void ClickedLearningElement(ILearningElementViewModel obj);
     void RightClickedLearningElement(ILearningElementViewModel obj);
-    void EditLearningElement(ILearningElementViewModel obj);
+
+    void EditLearningElement(ILearningElementViewModel learningElement, string name, string description, string goals,
+        LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points,
+        ILearningContentViewModel learningContent);
+
+    void EditLearningElement(int slotIndex);
     void DeleteLearningElement(ILearningElementViewModel obj);
     void HideRightClickMenu();
     void ShowElementContent(ILearningElementViewModel obj);
+    void SetLearningSpaceLayout(FloorPlanEnum floorPlanName);
+
+    void OpenReplaceLearningElementDialog(ILearningWorldViewModel learningWorldVm, ILearningElementViewModel dropItem,
+        int slotId);
+
+    bool ReplaceLearningElementDialogOpen { get; set; }
+    void OnReplaceLearningElementDialogClose(DialogResult closeResult);
+    void ClickOnSlot(int i);
+
+    void CreateLearningElementInSlot(string name, ILearningContentViewModel learningContent, string description,
+        string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points);
 }

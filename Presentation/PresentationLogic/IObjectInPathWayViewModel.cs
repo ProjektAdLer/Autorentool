@@ -1,5 +1,3 @@
-using Shared;
-
 namespace Presentation.PresentationLogic;
 
 public interface IObjectInPathWayViewModel : ISelectableObjectInWorldViewModel
@@ -12,4 +10,5 @@ public interface IObjectInPathWayViewModel : ISelectableObjectInWorldViewModel
     double OutputConnectionY { get; }
     ICollection<IObjectInPathWayViewModel> InBoundObjects { get; set; }
     ICollection<IObjectInPathWayViewModel> OutBoundObjects { get; set; }
+    bool UnsavedChanges { get; }
 }

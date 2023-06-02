@@ -1,0 +1,139 @@
+@implements IDisposable
+@using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.Components.Forms.Models
+@using BusinessLogic.Entities
+@using System.ComponentModel
+@using Presentation.Components.Forms.Buttons
+@using Presentation.PresentationLogic.SelectedViewModels
+@using Presentation.View
+@using Shared
+@implements IAsyncDisposable
+<header class="m-2 rounded-lg">
+    <div class="flex justify-center p-2">
+        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Learning space metadata</h2>
+    </div>
+</header>
+<MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
+<BaseForm TForm="LearningSpaceFormModel" TEntity="LearningSpace"
+          OnValidSubmit="OnValidSubmit" SnackbarMessage="Space created" FormDataContainer="FormDataContainer">
+    <Fields>
+        <Collapsable Title="General" @bind-Collapsed="_collapsedGeneral">
+            <div class="rounded-lg w-4/4 px-4 pb-2">
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                              For="@(() => FormModel.Name)"
+                              Immediate="true"
+                              DebounceInterval="300"
+                              Label="@nameof(FormDataContainer.FormModel.Name)"/>
+            </div>
+        </Collapsable>
+        
+        <Collapsable Title="Completion conditions" @bind-Collapsed="_collapsedConditions">
+            <div class="rounded-lg w-4/4 px-4 pb-2">
+                <MudText Typo="Typo.caption">Required points</MudText>
+                <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
+                                 Min="1"
+                                 For="@(() => FormModel.RequiredPoints)"
+                                 Immediate="true"
+                                 DebounceInterval="300"
+                                 Variant="Variant.Outlined"
+                                 Margin="Margin.Dense"/>
+            </div>
+        </Collapsable>
+        
+        <Collapsable Title="Theme" @bind-Collapsed="_collapsedTheme">
+            <div class="rounded-lg w-4/4 px-4 pb-2">
+                <MudSelect @bind-Value="FormDataContainer.FormModel.Theme" AnchorOrigin="Origin.BottomCenter"
+                           Label="@nameof(FormDataContainer.FormModel.Theme)"
+                           Text="@FormDataContainer.FormModel.Theme.ToString()"
+                           For="@(() => FormModel.Theme)">
+                    @foreach (var theme in _themes)
+                    {
+                        <MudSelectItem Value="@(theme)">@theme</MudSelectItem>
+                    }
+                </MudSelect>
+            </div>
+        </Collapsable>
+        
+        <Collapsable Title="Goals" @bind-Collapsed="_collapsedGoals">
+            <div class="rounded-lg w-4/4 px-4">
+                <MudText Typo="Typo.caption">Description</MudText>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                              For="@(() => FormModel.Description)"
+                              Immediate="true"
+                              Lines="3"
+                              Variant="Variant.Outlined"
+                              DebounceInterval="300"
+                              Class="pb-4 mt-0"/>
+                <MudText Typo="Typo.caption">Goals</MudText>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
+                              For="@(() => FormModel.Goals)"
+                              Immediate="true"
+                              Lines="3"
+                              Variant="Variant.Outlined"
+                              DebounceInterval="300"
+                              Class="pb-2 mt-0"/>
+            </div>
+        </Collapsable>
+        
+    </Fields>
+    <FooterButtons>
+        <DefaultSubmitButton/>
+        <DefaultResetButton/>
+    </FooterButtons>
+</BaseForm>
+
+@code {
+#pragma warning disable CS8618 - injected by framework - n.stich
+    [Inject]
+    private ILearningWorldPresenter LearningWorldPresenter { get; set; }
+
+    [Inject]
+    private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
+
+    [Inject]
+    private IFormDataContainer<LearningSpaceFormModel, LearningSpace> FormDataContainer { get; set; }
+#pragma warning restore CS8618
+
+    //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
+    //please DO NOT REFACTOR THIS - n.stich
+    private LearningSpaceFormModel FormModel => FormDataContainer.FormModel;
+
+    private bool _collapsedGeneral = false;
+    private bool _collapsedGoals = true;
+    private bool _collapsedConditions = true;
+    private bool _collapsedTheme = true;
+    private Theme[] _themes = (Theme[])Enum.GetValues(typeof(Theme));
+
+
+    private void OnValidSubmit(LearningSpaceFormModel model)
+    {
+        if (SelectedViewModelsProvider.LearningWorld == null) throw new InvalidOperationException("No learning world selected.");
+        model.RequiredPoints ??= 0;
+        LearningWorldPresenter.CreateLearningSpace(model.Name, model.Description,
+            model.Goals, (int) model.RequiredPoints, model.Theme, positionX: 0, positionY: 0);
+    }
+
+    protected override void OnInitialized()
+    {
+        SelectedViewModelsProvider.PropertyChanged += MediatorOnPropertyChanged;
+        base.OnInitialized();
+    }
+
+    private async void MediatorOnPropertyChanged(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)
+    {
+        await InvokeAsync(StateHasChanged);
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        Dispose();
+        return ValueTask.CompletedTask;
+    }
+
+    public void Dispose()
+    {
+        SelectedViewModelsProvider.PropertyChanged -= MediatorOnPropertyChanged;
+    }
+
+}

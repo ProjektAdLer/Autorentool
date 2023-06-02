@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using ElectronWrapper;
 using NSubstitute;
 using NUnit.Framework;
@@ -21,15 +22,17 @@ public class ElectronShutdownManagerUt
             if (OnCallbackCalled) Assert.Fail("OnShutdown callback called before BeforeShutdown callback");
             if (BeforeCallbackCalled) Assert.Fail("BeforeShutdown callback called twice");
             BeforeCallbackCalled = true;
+            return Task.CompletedTask;
         };
         systemUnderTest.OnShutdown += _ =>
         {
             if (!BeforeCallbackCalled) Assert.Fail("BeforeShutdown callback not called before OnShutdown callback");
             if (OnCallbackCalled) Assert.Fail("OnShutdown callback called twice");
             OnCallbackCalled = true;
+            return Task.CompletedTask;
         };
 
-        systemUnderTest.BeginShutdown();
+        systemUnderTest.RequestShutdownAsync();
         
         Assert.Multiple(() =>
         {
@@ -49,13 +52,15 @@ public class ElectronShutdownManagerUt
         {
             BeforeCallbackCalled = true;
             args.CancelShutdown();
+            return Task.CompletedTask;
         };
         systemUnderTest.OnShutdown += _ =>
         {
             Assert.Fail("OnShutdown called despite cancelling shutdown");
+            return Task.CompletedTask;
         };
 
-        systemUnderTest.BeginShutdown();
+        systemUnderTest.RequestShutdownAsync();
 
         Assert.That(BeforeCallbackCalled, Is.True);
         appWrapper.Received().DidNotReceive().Quit();
@@ -68,7 +73,7 @@ public class ElectronShutdownManagerUt
 
         var systemUnderTest = CreateElectronShutdownManagerForTest(appWrapper);
 
-        systemUnderTest.BeginShutdown();
+        systemUnderTest.RequestShutdownAsync();
         appWrapper.Received().Exit();
     }
 

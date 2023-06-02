@@ -1,0 +1,32 @@
+@using Presentation.PresentationLogic
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@inject IErrorService ErrorService
+
+<MudMessageBox @ref="mbox" Title="Error">
+    <MessageContent>
+        @if (!string.IsNullOrEmpty(ErrorService.ErrorMessage))
+        {
+            <div>@ErrorService.ErrorMessage</div>
+        }
+    </MessageContent>
+</MudMessageBox>
+
+@code {
+    MudMessageBox mbox { get; set; }
+
+    protected override void OnInitialized()
+    {
+        ErrorService.OnError += OnErrorChanged;
+    }
+
+    private async void OnErrorChanged()
+    {
+        await ShowMessageBox();
+        StateHasChanged();
+    }
+
+    private async Task ShowMessageBox()
+    {
+        await mbox.Show();
+    }
+}

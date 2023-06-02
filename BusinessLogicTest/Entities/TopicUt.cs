@@ -14,7 +14,11 @@ public class TopicUt
         
         var systemUnderTest = new Topic(name);
         
-        Assert.That(systemUnderTest.Name, Is.EqualTo(name));
+        Assert.Multiple(() =>
+        {
+            Assert.That(systemUnderTest.Name, Is.EqualTo(name));
+            Assert.That(systemUnderTest.UnsavedChanges);
+        });
     }
     
     [Test]

@@ -1,5 +1,5 @@
 ﻿**/TestResults/
-
+**/AuthoringTool.sln.DotSettings
 
 **/.idea/
 **/bin/
@@ -39,3 +39,4 @@
 Thumbs.db
 Desktop.ini
 .DS_Store
+**/node_modules

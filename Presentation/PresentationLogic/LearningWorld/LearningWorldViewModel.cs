@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
 using JetBrains.Annotations;
+using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.Topic;
@@ -22,13 +23,15 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _language = "";
         _description = "";
         _goals = "";
-        _unsavedChanges = false;
+        _savePath = "";
+        InternalUnsavedChanges = false;
         _learningSpaces = new List<ILearningSpaceViewModel>();
         _pathWayConditions = new List<PathWayConditionViewModel>();
         _learningPathWays = new List<ILearningPathWayViewModel>();
+        _unplacedLearningElements = new List<ILearningElementViewModel>();
         _topics = new List<TopicViewModel>();
     }
-    
+
     /// <summary>
     /// Initializes a new instance of the <see cref="LearningWorldViewModel"/> class.
     /// </summary>
@@ -38,15 +41,18 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     /// <param name="language">The primary language used in this learning world.</param>
     /// <param name="description">A description of the learning world and its contents.</param>
     /// <param name="goals">A description of the goals this learning world is supposed to achieve.</param>
+    /// <param name="savePath">The save path of the learning world.</param>
     /// <param name="unsavedChanges">Whether or not the object contains changes that are yet to be saved to disk.</param>
     /// <param name="learningSpaces">Optional collection of learning spaces contained in the learning world.
     /// Should be used when loading a saved learnign world into the application.</param>
     /// <param name="pathWayConditions">Conditions within learning pathways.</param>
     /// <param name="learningPathWays">Optional collection of learning pathways in the learning world.</param>
+    /// <param name="unplacedLearningElements">All learning elements in the learning world that are not placed in any learning space</param>
     /// <param name="topics">Optional collection of topics in the learning world.</param>
     public LearningWorldViewModel(string name, string shortname, string authors, string language, string description,
-        string goals, bool unsavedChanges = true, List<ILearningSpaceViewModel>? learningSpaces = null,
+        string goals, string savePath = "",  bool unsavedChanges = true, List<ILearningSpaceViewModel>? learningSpaces = null,
         List<PathWayConditionViewModel>? pathWayConditions = null, List<ILearningPathWayViewModel>? learningPathWays = null,
+        List<ILearningElementViewModel>? unplacedLearningElements = null,
         List<TopicViewModel>? topics = null)
     {
         Id = Guid.NewGuid();
@@ -56,10 +62,12 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _language = language;
         _description = description;
         _goals = goals;
-        _unsavedChanges = unsavedChanges;
+        _savePath = savePath;
+        InternalUnsavedChanges = unsavedChanges;
         _learningSpaces = learningSpaces ?? new List<ILearningSpaceViewModel>();
         _pathWayConditions = pathWayConditions ?? new List<PathWayConditionViewModel>();
         _learningPathWays = learningPathWays ?? new List<ILearningPathWayViewModel>();
+        _unplacedLearningElements = unplacedLearningElements ?? new List<ILearningElementViewModel>();
         _topics = topics ?? new List<TopicViewModel>();
     }
     
@@ -69,6 +77,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     private ICollection<ILearningSpaceViewModel> _learningSpaces;
     private ICollection<PathWayConditionViewModel> _pathWayConditions;
     private ICollection<ILearningPathWayViewModel> _learningPathWays;
+    private ICollection<ILearningElementViewModel> _unplacedLearningElements;
     private ICollection<TopicViewModel> _topics;
     private string _name;
     private string _shortname;
@@ -76,8 +85,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     private string _language;
     private string _description;
     private string _goals;
-    private bool _unsavedChanges;
-    private ISelectableObjectInWorldViewModel? _selectedLearningObject;
+    private string _savePath;
     private IObjectInPathWayViewModel? _onHoveredLearningObject;
     private bool _showingLearningSpaceView;
 
@@ -104,6 +112,12 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         get => _learningPathWays;
         set => SetField(ref _learningPathWays, value);
     }
+    
+    public ICollection<ILearningElementViewModel> UnplacedLearningElements
+    {
+        get => _unplacedLearningElements;
+        set => SetField(ref _unplacedLearningElements, value);
+    } 
 
     public ICollection<TopicViewModel> Topics
     {
@@ -158,17 +172,23 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         set => SetField(ref _goals, value);
     }
 
-    public bool UnsavedChanges
+    public string SavePath
     {
-        get => _unsavedChanges;
-        set => SetField(ref _unsavedChanges, value);
+        get => _savePath;
+        set => SetField(ref _savePath, value);
     }
 
-    public ISelectableObjectInWorldViewModel? SelectedLearningObject
+    public bool UnsavedChanges
     {
-        get => _selectedLearningObject;
-        set => SetField(ref _selectedLearningObject, value);
+        get => InternalUnsavedChanges ||
+               LearningSpaces.Any(space => space.UnsavedChanges) ||
+               UnplacedLearningElements.Any(element => element.UnsavedChanges) ||
+               PathWayConditions.Any(condition => condition.UnsavedChanges) ||
+               Topics.Any(topic => topic.UnsavedChanges);
+        set => InternalUnsavedChanges = value;
     }
+    
+    
     
     public IObjectInPathWayViewModel? OnHoveredObjectInPathWay
     {
@@ -182,7 +202,10 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         //TODO: Throw exception if ShowingLearningSpaceView is set to true but LearningSpaceViewModel in LearningSpacePresenter is null
         set => SetField(ref _showingLearningSpaceView, value);
     }
-    
+
+    // ReSharper disable once MemberCanBePrivate.Global - disabled because we need a public property so automapper will map it
+    public bool InternalUnsavedChanges { get; private set; }
+
 
     public event PropertyChangedEventHandler? PropertyChanged;
 

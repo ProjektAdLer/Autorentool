@@ -1,0 +1,18 @@
+@using Presentation.Components.Dialogues
+<MudIconButton OnClick="OpenLmsDialog" Icon="@Icons.Material.Filled.Person"
+               Title="Login to moodle" Size="Size.Large"
+               Class="text-adlerdarkblue p-0 normal-case">
+</MudIconButton>
+
+@code {
+
+    [Inject]
+    public IDialogService DialogService { get; set; }
+
+    private void OpenLmsDialog()
+    {
+        DialogService.ShowAsync<LmsLoginDialog>();
+        InvokeAsync(StateHasChanged);
+    }
+
+}

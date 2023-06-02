@@ -1,0 +1,182 @@
+@using Presentation.PresentationLogic.LearningWorld
+@using Shared
+@using AutoMapper
+@using BusinessLogic.Entities
+@using Presentation.Components.Forms.Models
+@using Presentation.PresentationLogic.LearningElement
+@using Presentation.Components.Forms.Buttons
+<header class="m-2 rounded-lg">
+    <div class="flex justify-center p-2">
+        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Learning element metadata</h2>
+    </div>
+</header>
+<MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
+
+<BaseForm TForm="LearningElementFormModel" TEntity="LearningElement"
+          OnValidSubmit="OnValidSubmit" SnackbarMessage="Element updated" FormDataContainer="FormDataContainer">
+    <HeaderButtons>
+        <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Class="btn-standard" OnClick="async () => await OnNewButtonClicked.InvokeAsync()">New</MudButton>
+    </HeaderButtons>
+    <Fields>
+
+        <Collapsable Title="General" @bind-Collapsed="_collapsedGeneral">
+            <div class="rounded-lg w-4/4 px-4 pb-2">
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                              For="@(() => FormModel.Name)"
+                              Immediate="true"
+                              DebounceInterval="300"
+                              Label="@nameof(FormDataContainer.FormModel.Name)"
+                              Class="pb-4"/>
+
+                <MudText Typo="Typo.caption">Points</MudText>
+                <MudNumericField @bind-Value="FormDataContainer.FormModel.Points"
+                                 Min="0"
+                                 Max="1000"
+                                 For="@(() => FormModel.Points)"
+                                 Immediate="true"
+                                 DebounceInterval="300"
+                                 Variant="Variant.Outlined"
+                                 Margin="Margin.Dense"
+                                 Class="pb-4"/>
+
+                <MudText Typo="Typo.caption">Workload (min)</MudText>
+                <MudNumericField @bind-Value="FormDataContainer.FormModel.Workload"
+                                 Min="0"
+                                 Max="1000"
+                                 For="@(() => FormModel.Workload)"
+                                 Immediate="true"
+                                 DebounceInterval="300"
+                                 Variant="Variant.Outlined"
+                                 Margin="Margin.Dense"
+                                 Class="pb-4"/>
+
+                <MudSelect @bind-Value="FormDataContainer.FormModel.Difficulty"
+                           Label="@nameof(FormDataContainer.FormModel.Difficulty)"
+                           For="@(() => FormModel.Difficulty)">
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Easy)"> Easy </MudSelectItem>
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Medium)"> Medium </MudSelectItem>
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.Hard)"> Hard </MudSelectItem>
+                    <MudSelectItem Value="@(LearningElementDifficultyEnum.None)"> None </MudSelectItem>
+                </MudSelect>
+
+
+            </div>
+        </Collapsable>
+
+        <Collapsable Title="Imported files" @bind-Collapsed="_collapsedContent">
+            <div class="rounded-lg w-4/4 px-4 pb-2">
+                <MudSelect @bind-Value="FormDataContainer.FormModel.LearningContent"
+                           Label="All imported files"
+                           Text="@FormDataContainer.FormModel.LearningContent?.Name"
+                           For="@(() => FormModel.LearningContent)">
+                    @foreach (var learningContent in WorldPresenter.GetAllContent())
+                    {
+                        <MudSelectItem Value="@(learningContent)">@learningContent.Name</MudSelectItem>
+                    }
+                </MudSelect>
+            </div>
+        </Collapsable>
+
+        <Collapsable Title="Goals" @bind-Collapsed="_collapsedGoals">
+            <div class="rounded-lg w-4/4 px-4">
+                <MudText Typo="Typo.caption">Description</MudText>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                              For="@(() => FormModel.Description)"
+                              Immediate="true"
+                              Lines="3"
+                              Variant="Variant.Outlined"
+                              DebounceInterval="300"
+                              Class="pb-4 mt-0"/>
+                <MudText Typo="Typo.caption">Goals</MudText>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
+                              For="@(() => FormModel.Goals)"
+                              Immediate="true"
+                              Lines="3"
+                              Variant="Variant.Outlined"
+                              DebounceInterval="300"
+                              Class="pb-2 mt-0"/>
+            </div>
+        </Collapsable>
+        <Collapsable Title="ElementModel" @bind-Collapsed="_collapsedElementModel">
+            <div class="rounded-lg w-4/4 px-4 pb-4">
+                <MudSelect @bind-Value="FormDataContainer.FormModel.ElementModel" AnchorOrigin="Origin.BottomCenter"
+                           Label="@nameof(FormDataContainer.FormModel.ElementModel)"
+                           Text="@FormDataContainer.FormModel.ElementModel.ToString()"
+                           For="@(() => FormModel.ElementModel)"
+                           Variant="Variant.Outlined">
+                    @foreach (var theme in _elementModels)
+                    {
+                        <MudSelectItem Value="@(theme)" Style="white-space: nowrap">
+                            <img src="@ElementModelHandler.GetIconForElementModel(theme)" alt="" width="32" class="mr-1"/>@theme
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+            </div>
+        </Collapsable>
+
+    </Fields>
+    <FooterButtons>
+        <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
+        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Autorenew" Class="btn-standard text-adlergrey rounded bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue" OnClick="OnResetAsync"></MudIconButton>
+    </FooterButtons>
+</BaseForm>
+
+@code {
+#pragma warning disable CS8618
+    [Inject]
+    private ILearningWorldPresenter WorldPresenter { get; set; }
+
+    [Inject]
+    private IMapper Mapper { get; set; }
+
+    [Inject]
+    private IFormDataContainer<LearningElementFormModel, LearningElement> FormDataContainer { get; set; }
+
+    [Inject]
+    private IElementModelHandler ElementModelHandler { get; set; }
+
+    [Parameter, EditorRequired]
+    public ILearningElementViewModel ElementToEdit { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback OnNewButtonClicked { get; set; }
+
+    [CascadingParameter(Name = "TriggerMasterLayoutStateHasChanged")]
+    private Action TriggerMasterLayoutStateHasChanged { get; set; }
+#pragma warning restore CS8618
+
+    private LearningElementFormModel FormModel => FormDataContainer.FormModel;
+
+    private bool _collapsedGeneral = false;
+    private bool _collapsedContent = false;
+    private bool _collapsedGoals = true;
+    private bool _collapsedElementModel = true;
+    private IEnumerable<ElementModel> _elementModels;
+
+    private void OnValidSubmit(LearningElementFormModel model)
+    {
+        WorldPresenter.EditLearningElement(ElementToEdit.Parent, ElementToEdit, model.Name, model.Description,
+    //ignore null warning here because validation ensures that LearningContent is not null - m.ho
+            model.Goals, model.Difficulty, model.ElementModel, model.Workload, model.Points, model.LearningContent!);
+        TriggerMasterLayoutStateHasChanged();
+    }
+
+    private async Task MapIntoContainer()
+    {
+        Mapper.Map(ElementToEdit, FormDataContainer.FormModel);
+        _elementModels = ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        await MapIntoContainer();
+    }
+
+    private async Task OnResetAsync()
+    {
+        await MapIntoContainer();
+    }
+
+}

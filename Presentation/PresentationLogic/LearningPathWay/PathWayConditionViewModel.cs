@@ -17,15 +17,18 @@ public class PathWayConditionViewModel : IObjectInPathWayViewModel
         OutBoundObjects = new Collection<IObjectInPathWayViewModel>();
         PositionX = 0;
         PositionY = 0;
-        Condition = ConditionEnum.None;
+        Condition = ConditionEnum.Or;
+        UnsavedChanges = false;
     }
     
-    public PathWayConditionViewModel(ConditionEnum condition, double positionX = 0, double positionY = 0,
+    public PathWayConditionViewModel(ConditionEnum condition, bool unsavedChanges,
+        double positionX = 0, double positionY = 0,
         ICollection<IObjectInPathWayViewModel>? inBoundObjects = null, 
         ICollection<IObjectInPathWayViewModel>? outBoundObjects = null)
     {
         Id = Guid.NewGuid();
         Condition = condition;
+        UnsavedChanges = unsavedChanges;
         InBoundObjects = inBoundObjects ?? new Collection<IObjectInPathWayViewModel>();
         OutBoundObjects = outBoundObjects ?? new Collection<IObjectInPathWayViewModel>();
         PositionX = positionX;
@@ -35,10 +38,15 @@ public class PathWayConditionViewModel : IObjectInPathWayViewModel
     public Guid Id { get; private set; }
     public double PositionX { get; set; }
     public double PositionY { get; set; }
-    public double InputConnectionX => PositionX;
-    public double InputConnectionY => PositionY - 26;
-    public double OutputConnectionX => PositionX;
-    public double OutputConnectionY => PositionY + 26;
+    public const int InputConnectionXOffset = 38;
+    public const int InputConnectionYOffset = -10;
+    public const int OutputConnectionXOffset = 38;
+    public const int OutputConnectionYOffset = 45;
+    public double InputConnectionX => PositionX + InputConnectionXOffset;
+    public double InputConnectionY => PositionY + InputConnectionYOffset;
+    public double OutputConnectionX => PositionX + OutputConnectionXOffset;
+    public double OutputConnectionY => PositionY + OutputConnectionYOffset;
+    public bool UnsavedChanges { get; }
     public ICollection<IObjectInPathWayViewModel> InBoundObjects { get; set; }
     public ICollection<IObjectInPathWayViewModel> OutBoundObjects { get; set; }
     public ConditionEnum Condition { get; set; }

@@ -35,26 +35,21 @@ public class XmlEntityManagerUt
         
         mockReadDsl.GetH5PElementsList().Returns(new List<LearningElementJson>());
         
-        var identifierLearningWorldJson = new LmsElementIdentifierJson("name", "World");
-        var identifierLearningSpaceJson1 = new LmsElementIdentifierJson("name", "Space_1");
-        var identifierLearningSpaceJson2 = new LmsElementIdentifierJson("name", "Space_2");
-        var identifierLearningElementJson1 = new LmsElementIdentifierJson("name", "Element_1");
-        var identifierLearningElementJson2 = new LmsElementIdentifierJson("name", "DSL Dokument");
         var topicsJson = new TopicJson(1, "Topic",  new List<int>(){1});
         var topicsList = new List<TopicJson>(){topicsJson};
-        var learningSpacesJson1 = new LearningSpaceJson(1, identifierLearningSpaceJson1, "space1",
-            new List<int>() {1, 2}, 0);
-        var learningSpacesJson2 = new LearningSpaceJson(1, identifierLearningSpaceJson2, "space2",
-            new List<int>() {3, 4}, 0);
+        var learningSpacesJson1 = new LearningSpaceJson(1, "", "space1",
+            new List<int?>() {1, 2}, 0, "","");
+        var learningSpacesJson2 = new LearningSpaceJson(1, "", "space2",
+            new List<int?>() {3, 4}, 0, "","");
         var learningSpacesList = new List<LearningSpaceJson>(){learningSpacesJson1, learningSpacesJson2};
         var learningElementJson1 = new LearningElementJson(1,
-            identifierLearningElementJson1,"", "", "", "h5p", 0, 2);
+            "","", "", "", "h5p", 0, 2, "");
         var learningElementJson2 = new LearningElementJson(2,
-            identifierLearningElementJson2, "", "", "", "json", 0, 3);
+            "", "", "", "", "json", 0, 3, "");
         var learningElementList = new List<LearningElementJson>(){learningElementJson1, learningElementJson2};
-        var learningWorldJson = new LearningWorldJson(identifierLearningWorldJson, "world", topicsList, learningSpacesList, learningElementList);
+        var learningWorldJson = new LearningWorldJson( "world", "", topicsList, learningSpacesList, learningElementList);
         
-        var mockLabelsElementJson = new LearningElementJson(2, new LmsElementIdentifierJson("Name", "Labels_1"),"", "", "", "mp4", 1, 2);
+        var mockLabelsElementJson = new LearningElementJson(2, "","", "", "", "mp4", 1, 2, "");
         
         var labelJsonList = new List<LearningElementJson> {mockLabelsElementJson};
         

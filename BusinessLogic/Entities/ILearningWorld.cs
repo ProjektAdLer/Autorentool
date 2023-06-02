@@ -3,7 +3,7 @@
 public interface ILearningWorld
 {
     
-    List<LearningSpace> LearningSpaces { get; set; }
+    List<ILearningSpace> LearningSpaces { get; set; }
     List<PathWayCondition> PathWayConditions { get; set; }
     List<IObjectInPathWay> ObjectsInPathWays { get; }
     List<LearningPathway> LearningPathways { get; set; }
@@ -13,4 +13,10 @@ public interface ILearningWorld
     string Authors { get; set; }
     string Language { get; set; }
     string Goals { get; set; }
+    string SavePath { get; set; }
+    ICollection<ILearningElement> UnplacedLearningElements { get; set; }
+    bool UnsavedChanges { get; set; }
+    Guid Id { get; }
+    string Name { get; set; }
+    bool InternalUnsavedChanges { get; }
 }

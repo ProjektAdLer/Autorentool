@@ -29,10 +29,10 @@ public class CloseAppButtonUt
         {
             var systemUnderTest = CreateTestableCloseAppButtonComponent();
 
-            var button = systemUnderTest.Find(".btn");
+            var button = systemUnderTest.Find(".btn-standard");
             button.Click();
 
-            _shutdownManager.Received().BeginShutdown();
+            _shutdownManager.Received().RequestShutdownAsync();
         }
     }
 

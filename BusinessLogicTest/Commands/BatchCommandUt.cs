@@ -1,4 +1,7 @@
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Condition;
+using BusinessLogic.Commands.Space;
+using BusinessLogic.Commands.Topic;
 using BusinessLogic.Entities;
 using NUnit.Framework;
 using Shared;
@@ -21,7 +24,8 @@ public class BatchCommandUt
         Action<LearningWorld> mappingAction2 = _ => actionWasInvoked2 = true;
         Action<LearningWorld> mappingAction3 = _ => actionWasInvoked3 = true;
 
-        var command1 = new CreateLearningSpace(world, "a","b","c","d","e",2,0,0,null, mappingAction:mappingAction1);
+        var command1 = new CreateLearningSpace(world, "a", "b", "c", 2, Theme.Campus,
+            0, 0, null, mappingAction: mappingAction1);
         var command2 = new CreateTopic(world, name, mappingAction2);
         var command3 = new CreatePathWayCondition(world, ConditionEnum.And, 3, 2, mappingAction3);
         

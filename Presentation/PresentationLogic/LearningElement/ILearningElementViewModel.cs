@@ -9,15 +9,14 @@ public interface ILearningElementViewModel : IDisplayableLearningObject
     Guid Id { get; }
     new string Name { get; set; }
     string Description { get; set; }
-    string Shortname { get; set; }
     ILearningSpaceViewModel? Parent { get; set; }
-    LearningContentViewModel LearningContent { get; set; }
-    string Url { get; set; }
-    string Authors { get; set; }
+    ILearningContentViewModel LearningContent { get; set; }
     string Goals { get; set; }
     LearningElementDifficultyEnum Difficulty { get; set; }
+    ElementModel ElementModel { get; set; }
     int Workload { get; set; }
     int Points { get; set; }
     double PositionX { get; set; }
     double PositionY { get; set; }
+    bool UnsavedChanges { get; set; }
 }

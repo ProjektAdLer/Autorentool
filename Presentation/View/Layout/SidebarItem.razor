@@ -1,0 +1,62 @@
+@using System.ComponentModel
+<button onclick="@SetAsCurrentItem" class="@BackgroundColour() min-h-[50px] cursor-pointer flex justify-center items-center @Rounded()">
+    @SidebarContent
+</button>
+
+@code {
+#pragma warning disable CS8618 - injected by framework n.stich
+    [CascadingParameter]
+    public Sidebar? Sidebar { get; set; }
+
+    [Parameter]
+    public RenderFragment SidebarContent { get; set; }
+
+    [Parameter]
+    public RenderFragment MainContent { get; set; }
+
+    [Parameter]
+    public bool IsActive
+    {
+        get => _isActive;
+        set
+        {
+            if(_isActive == value) return;
+            _isActive = value;
+            NotifySidebar();
+        }
+    }
+
+    /// <summary>
+    /// Sets this as current item in sidebar when IsActive is true,
+    /// and clears current item on false if current item is this.
+    /// </summary>
+    private void NotifySidebar()
+    {
+        if (Sidebar == null) return;
+        if(IsActive) Sidebar.SetSidebarItem(this);
+        else if (Sidebar.CurrentItem == this) Sidebar.ClearSidebarItem();
+    }
+
+    [Parameter]
+    public EventCallback<bool> RequestIsActiveToggle { get; set; }
+
+#pragma warning restore CS8618
+
+    private void SetAsCurrentItem()
+    {
+        RequestIsActiveToggle.InvokeAsync(!IsActive);
+    }
+
+    private bool IsCurrentItem() => Sidebar?.CurrentItem == this;
+    private string BackgroundColour() => IsCurrentItem() ? "bg-adlergrey-300" : "bg-adlergrey-100";
+    private string Rounded() => IsCurrentItem() ? RoundedInFocus() : "rounded-lg";
+
+    private string RoundedInFocus() => Sidebar?.SidebarSide switch
+    {
+        Side.Left => "rounded-l-lg",
+        Side.Right => "rounded-r-lg",
+        _ => throw new ArgumentOutOfRangeException()
+        };
+
+    private bool _isActive;
+}

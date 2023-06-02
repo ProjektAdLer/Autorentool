@@ -14,6 +14,7 @@
       <ProjectReference Include="..\Generator\Generator.csproj" />
       <ProjectReference Include="..\PersistEntities\PersistEntities.csproj" />
       <ProjectReference Include="..\Presentation\Presentation.csproj" />
+      <ProjectReference Include="..\BackendAccess\BackendAccess.csproj" />
     </ItemGroup>
 
     <ItemGroup>
@@ -55,21 +56,29 @@
 
     <ItemGroup>
       <Folder Include="View" />
+      <Folder Include="wwwroot\fonts" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="AutoMapper.Collection" Version="8.0.0" />
+      <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.4.0" />
       <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
-      <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.0" />
+      <PackageReference Include="Tailwind.Extensions.AspNetCore" Version="1.0.0-beta3" />
+        <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.0" />
     </ItemGroup>
 
     <ItemGroup>
-      <EmbeddedResource Update="Resources\Pages\Index.de.resx">
-        <LastGenOutput>Index.de.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Resources\Pages\Index.en.resx">
-        <LastGenOutput>Index.en.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
+      <None Include="wwwroot\css\Presentation.global.css" />
+      <None Include="wwwroot\CustomIcons\world-icon-nobg.png" />
+    </ItemGroup>
+    
+    <ItemGroup>
+        <EmbeddedResource Update="Resources\Pages\Index.de.resx">
+            <LastGenOutput>Index.de.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Resources\Pages\Index.en.resx">
+            <LastGenOutput>Index.en.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
     </ItemGroup>
 
 </Project>

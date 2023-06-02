@@ -6,7 +6,6 @@
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Presentation</RootNamespace>
-    <RestorePackagesWithLockFile>true</RestorePackagesWithLockFile>
     <OutputType>Library</OutputType>
     <AssemblyName>Presentation</AssemblyName>
   </PropertyGroup>
@@ -15,7 +14,7 @@
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="11.0.0" />
     <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="6.0.1" />
-    <PackageReference Include="MudBlazor" Version="6.1.4" />
+    <PackageReference Include="MudBlazor" Version="6.1.9" />
     <PackageReference Include="SharpZipLib" Version="1.3.3" />
     <PackageReference Include="System.IO.Abstractions" Version="17.2.3" />
   </ItemGroup>
@@ -60,6 +59,9 @@
     <_ContentIncludedByDefault Remove="wwwroot\favicon.png" />
     <_ContentIncludedByDefault Remove="wwwroot\favicon2.ico" />
     <_ContentIncludedByDefault Remove="wwwroot\favicon_highres.ico" />
+    <_ContentIncludedByDefault Remove="Components\ModalDialog\ModalDialog.razor" />
+    <_ContentIncludedByDefault Remove="View\Toolbox\LearningObjectRenderFragmentBase.razor" />
+    <_ContentIncludedByDefault Remove="View\Toolbox\Toolbox.razor" />
   </ItemGroup>
   <ItemGroup>
     <UpToDateCheckInput Remove="Pages\Index.razor" />
@@ -76,6 +78,7 @@
     <Compile Remove="PresentationLogic\EntityMapping\LearningElementMapper\PdfTransferElementMapper.cs" />
     <Compile Remove="PresentationLogic\EntityMapping\LearningElementMapper\LearningElementMapper.cs" />
     <Compile Remove="PresentationLogic\EntityMapping\LearningElementMapper\H5PActivationElementMapper.cs" />
+    <Compile Remove="PresentationLogic\LearningContent\LearningContentViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Update="Resources\Components\Culture\CultureSelector.en.resx">
@@ -83,6 +86,14 @@
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Components\Culture\CultureSelector.de.resx">
       <LastGenOutput>CultureSelector.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\View\HeaderBar.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>View.HeaderBar.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\View\HeaderBar.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>View.HeaderBar.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
   </ItemGroup>
 </Project>

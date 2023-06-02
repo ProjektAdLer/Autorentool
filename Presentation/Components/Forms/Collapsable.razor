@@ -1,0 +1,43 @@
+    <div class="m-0 gap-2 p-1 bg-adlerbgbright">
+        <div class="flex flex-row" @onclick="@Toggle">
+            @if (Collapsed)
+            {
+                <MudIcon Icon="@Icons.Material.Filled.ArrowRight" />
+                <h3 class="font-bold text-lg"> @Title </h3>
+            }
+            else
+            {
+                <MudIcon Class="" Icon="@Icons.Material.Filled.ArrowDropDown" />
+                <h3 class="font-bold text-lg"> @Title </h3>
+            }
+        </div>
+    
+        @if (!Collapsed)
+        {
+            <div class="mt-0 pb-1">
+                @ChildContent
+            </div>
+        }
+    </div>
+
+@code {
+
+    [Parameter]
+    public RenderFragment? ChildContent { get; set; }
+
+    [Parameter]
+    public bool Collapsed { get; set; }
+
+    [Parameter]
+    public EventCallback<bool> CollapsedChanged { get; set; }
+
+    [Parameter]
+    public string? Title { get; set; }
+
+    void Toggle()
+    {
+        Collapsed = !Collapsed;
+        CollapsedChanged.InvokeAsync(Collapsed);
+    }
+
+}

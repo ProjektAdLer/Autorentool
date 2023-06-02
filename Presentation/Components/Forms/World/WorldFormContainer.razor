@@ -1,0 +1,46 @@
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.PresentationLogic.LearningWorld
+@using System.ComponentModel
+<MudCard Class="overflow-auto">
+    @if (WorldPresenter.LearningWorldVm == null || _editOverwritten)
+    {
+        <CreateWorldForm/>
+    }
+    else
+    {
+        <EditWorldForm WorldToEdit="WorldPresenter.LearningWorldVm" OnNewButtonClicked="OnForceNew"/>
+    }
+</MudCard>
+@code {
+#pragma warning disable CS8618 - injected by framework - n.stich 
+    [Inject]
+    public ILearningWorldPresenter WorldPresenter { get; set; }
+#pragma warning restore CS8618
+    
+    private bool _editOverwritten = false;
+
+    protected override void OnInitialized()
+    {
+        base.OnInitialized();
+        _editOverwritten = false;
+    }
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        WorldPresenter.PropertyChanged += MediatorOnPropertyChanged;
+    }
+
+    private async void MediatorOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if(e.PropertyName != nameof(WorldPresenter.LearningWorldVm)) return;
+        _editOverwritten = false;
+        await InvokeAsync(StateHasChanged);
+    }
+
+
+    private void OnForceNew()
+    {
+        _editOverwritten = true;
+    }
+}

@@ -3,6 +3,7 @@ using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Shared;
+using TestHelpers;
 
 namespace PresentationTest.PresentationLogic.LearningElement;
 
@@ -13,35 +14,31 @@ public class LearningElementViewModelUt
     public void Constructor_InitializesAllProperties()
     {
         var name = "asdf";
-        var shortname = "jkl;";
-        var parent = new LearningSpaceViewModel("foo", "bar", "baz", "", "", 2);
-        var content = new LearningContentViewModel("bar", "foo", "");
-        var url = "url";
-        var authors = "ben and jerry";
+        var parent = new LearningSpaceViewModel("foo", "", "", Theme.Campus, 2);
+        var content = new FileContentViewModel("bar", "foo", "");
         var description = "very cool element";
         var goals = "learn very many things";
         var workload = 5;
         var points = 6;
         var difficulty = LearningElementDifficultyEnum.Easy;
+        var elementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
         var positionX = 5f;
         var positionY = 21f;
 
-        var systemUnderTest = new LearningElementViewModel(name, shortname, content, url, authors,
-            description, goals, difficulty, parent, workload, points, positionX, positionY);
+        var systemUnderTest = new LearningElementViewModel(name, content,
+            description, goals, difficulty, elementModel, parent, workload, points, positionX, positionY);
         
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
-            Assert.That(systemUnderTest.Shortname, Is.EqualTo(shortname));
             Assert.That(systemUnderTest.Parent, Is.EqualTo(parent));
             Assert.That(systemUnderTest.LearningContent, Is.EqualTo(content));
-            Assert.That(systemUnderTest.Url, Is.EqualTo(url));
-            Assert.That(systemUnderTest.Authors, Is.EqualTo(authors));
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.Workload, Is.EqualTo(workload));
             Assert.That(systemUnderTest.Points, Is.EqualTo(points));
             Assert.That(systemUnderTest.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(systemUnderTest.ElementModel, Is.EqualTo(elementModel));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
         });
@@ -52,8 +49,7 @@ public class LearningElementViewModelUt
     public void FileEnding_ReturnsCorrectEnding()
     {
         const string expectedFileEnding = "aef";
-        var systemUnderTest = new LearningElementViewModel("foo", "foo", null!,
-            "url","foo",  "foo", "foo", LearningElementDifficultyEnum.Medium);
+        var systemUnderTest = ViewModelProvider.GetLearningElement();
         Assert.That(systemUnderTest.FileEnding, Is.EqualTo(expectedFileEnding));
     }
 }

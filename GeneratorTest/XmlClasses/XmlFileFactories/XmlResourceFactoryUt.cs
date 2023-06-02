@@ -61,20 +61,19 @@ public class XmlResourceFactoryUt
         var mockFileManager = Substitute.For<IXmlFileManager>();
         var currWorkDir = mockFileSystem.Directory.GetCurrentDirectory();
         
-        var identifier = new LmsElementIdentifierJson("FileName", "Document");
         var learningEvl = 4;
         
-        var jsonDocument = new LearningElementJson(1, identifier, "", "","", "json",1, learningEvl);
-        var pngDocument = new LearningElementJson(2, identifier, "", "", "","png",1, learningEvl);
-        var mp4Document = new LearningElementJson(3, identifier, "", "","", "mp4",1, learningEvl);
-        var webpDocument = new LearningElementJson(4, identifier, "", "","", "webp",1, learningEvl);
-        var jsDocument = new LearningElementJson(5, identifier, "", "","", "js",1, learningEvl);
-        var cssDocument = new LearningElementJson(6, identifier, "", "","", "css",1, learningEvl);
-        var htmlDocument = new LearningElementJson(7, identifier, "", "","", "html",1, learningEvl);
-        var csDocument = new LearningElementJson(8, identifier, "", "","", "cs",1, learningEvl);
-        var ccDocument = new LearningElementJson(9, identifier, "", "","", "cc",1, learningEvl);
-        var cPlusPlusDocument = new LearningElementJson(10, identifier, "", "","", "cpp",1, learningEvl);
-        var txtDocument = new LearningElementJson(11, identifier, "", "","", "txt",1, learningEvl);
+        var jsonDocument = new LearningElementJson(1, "", "Document", "","", "json",1, learningEvl,"");
+        var pngDocument = new LearningElementJson(2, "", "Document", "", "","png",1, learningEvl, "");
+        var mp4Document = new LearningElementJson(3, "", "Document", "","", "mp4",1, learningEvl, "");
+        var webpDocument = new LearningElementJson(4, "", "Document", "","", "webp",1, learningEvl, "");
+        var jsDocument = new LearningElementJson(5, "", "Document", "","", "js",1, learningEvl, "");
+        var cssDocument = new LearningElementJson(6, "", "Document", "","", "css",1, learningEvl, "");
+        var htmlDocument = new LearningElementJson(7, "", "Document", "","", "html",1, learningEvl, "");
+        var csDocument = new LearningElementJson(8, "", "Document", "","", "cs",1, learningEvl, "");
+        var ccDocument = new LearningElementJson(9, "", "Document", "","", "cc",1, learningEvl, "");
+        var cPlusPlusDocument = new LearningElementJson(10, "", "Document", "","", "cpp",1, learningEvl, "");
+        var txtDocument = new LearningElementJson(11, "", "Document", "","", "txt",1, learningEvl, "");
 
 
         var resourceList = new List<LearningElementJson>()
@@ -93,9 +92,9 @@ public class XmlResourceFactoryUt
         };
         
         mockReadDsl.GetResourceList().Returns(resourceList);
-        var space_1 = new LearningSpaceJson(1, new LmsElementIdentifierJson("space", "spacename"), "space", new List<int>() {1, 2}, 10);
-        var fileString = Path.Join(currWorkDir, "XMLFilesForExport", identifier.Value);
-        mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport", identifier.Value), new MockFileData("Hello World"));
+        var space_1 = new LearningSpaceJson(1, "", "space", new List<int?>() {1, 2}, 10,"","");
+        var fileString = Path.Join(currWorkDir, "XMLFilesForExport", "Document");
+        mockFileSystem.AddFile(Path.Join(currWorkDir, "XMLFilesForExport", "Document"), new MockFileData("Hello World"));
 
         
         // Act
@@ -131,7 +130,7 @@ public class XmlResourceFactoryUt
         systemUnderTest.FilesXmlFilesList = new List<FilesXmlFile>();
         systemUnderTest.FileElementId = "1";
         systemUnderTest.FileElementName = "FileName";
-        systemUnderTest.ResourceSetParametersFilesXml("1234", "456789", "something");
+        systemUnderTest.ResourceSetParametersFilesXml("1234", "456789", "something","2404");
         
         // Assert
         Assert.Multiple(() =>
@@ -150,6 +149,7 @@ public class XmlResourceFactoryUt
             Assert.That(systemUnderTest.FilesXmlFilesList[1].Source, Is.EqualTo(systemUnderTest.FileElementName + "."));
             Assert.That(systemUnderTest.FilesXmlFilesList[1].Timecreated, Is.EqualTo(systemUnderTest.CurrentTime));
             Assert.That(systemUnderTest.FilesXmlFilesList[1].Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
+            Assert.That(systemUnderTest.FilesXmlFilesList[0].ElementUuid, Is.EqualTo("2404"));
             Assert.That(systemUnderTest.FilesXmlFilesList, Has.Count.EqualTo(2));
         });
     }

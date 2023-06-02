@@ -1,12 +1,14 @@
 ﻿@page "/"
-@using System.Globalization
-@using Microsoft.Extensions.Localization
-@inject IStringLocalizer<Index> Localizer
+@inject NavigationManager NavManager
 
 <PageTitle>Start</PageTitle>
 
-<h1>@Localizer["Heading"]</h1>
-<p>@Localizer["CurrentCulture"]: @CultureInfo.CurrentCulture</p>
-<p>@Localizer["CurrentUICulture"]: @CultureInfo.CurrentUICulture</p>
+@code {
 
-@Localizer["Explanation"]
+    protected override void OnInitialized()
+    {
+        //NavManager.NavigateTo("/app");
+        NavManager.NavigateTo("/MyLearningWorldsOverview");
+    }
+
+}

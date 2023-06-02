@@ -92,12 +92,6 @@ public class XmlLabelFactory : IXmlLabelFactory
             LabelGoal = label.ElementGoals[0];
             LabelParentSpaceId = label.LearningSpaceParentId.ToString();
             LabelDescription = label.ElementDescription ?? "";
-            
-            //A Space got another Font in his Name.
-            if (label.ElementFileType is "space")
-            {
-                LabelSetParametersActivitySpace();
-            }
 
             if (label.ElementCategory is "World Attributes")
             {
@@ -106,54 +100,6 @@ public class XmlLabelFactory : IXmlLabelFactory
         }
     }
 
-    public void LabelSetParametersActivitySpace()
-    {
-        CreateActivityFolder(LabelId);
-        
-        //file activities/label.../grades.xml
-        ActivitiesGradesXmlGradeItems.GradeItem = ActivitiesGradesXmlGradeItem as ActivitiesGradesXmlGradeItem ?? new ActivitiesGradesXmlGradeItem();
-        ActivitiesGradesXmlActivityGradebook.GradeItems = ActivitiesGradesXmlGradeItems as ActivitiesGradesXmlGradeItems ?? new ActivitiesGradesXmlGradeItems();
-
-        ActivitiesGradesXmlActivityGradebook.Serialize("label", LabelId);
-        
-        //file activities/label.../label.xml
-        ActivitiesLabelXmlLabel.Name = "<h4>"+LabelName+"</h4>"+"<p>&nbsp; &nbsp; &nbsp; "+LabelDescription+"</p>";
-        ActivitiesLabelXmlLabel.Id = LabelId;
-        ActivitiesLabelXmlLabel.Intro = "<h4>"+LabelName+"</h4>"+"<p>&nbsp; &nbsp; &nbsp; "+LabelDescription+"</p>";
-        ActivitiesLabelXmlLabel.Timemodified = CurrentTime;
-
-        ActivitiesLabelXmlActivity.Label = ActivitiesLabelXmlLabel as ActivitiesLabelXmlLabel ?? new ActivitiesLabelXmlLabel();
-        ActivitiesLabelXmlActivity.Id = LabelId;
-        ActivitiesLabelXmlActivity.ModuleId = LabelId;
-        ActivitiesLabelXmlActivity.ContextId = LabelId;
-
-        ActivitiesLabelXmlActivity.Serialize("label", LabelId);
-
-        //file activities/label.../roles.xml
-        ActivitiesRolesXmlRoles.Serialize("label", LabelId);
-        
-        //file activities/label.../module.xml
-        ActivitiesModuleXmlModule.ModuleName = "label";
-        ActivitiesModuleXmlModule.SectionId = LabelParentSpaceId;
-        ActivitiesModuleXmlModule.SectionNumber = LabelParentSpaceId;
-        ActivitiesModuleXmlModule.Added = CurrentTime;
-        ActivitiesModuleXmlModule.Id = LabelId;
-        //Activity Completion is not needed on labels
-        ActivitiesModuleXmlModule.Completion = "0";
-
-        ActivitiesModuleXmlModule.Serialize("label", LabelId);
-        
-        //file activities/label.../grade_history.xml
-        ActivitiesGradeHistoryXmlGradeHistory.Serialize("label", LabelId);
-        
-        //file activities/label.../inforef.xml
-        ActivitiesInforefXmlGradeItemref.GradeItem = ActivitiesInforefXmlGradeItem as ActivitiesInforefXmlGradeItem ?? new ActivitiesInforefXmlGradeItem();
-        ActivitiesInforefXmlInforef.Fileref = ActivitiesInforefXmlFileref as ActivitiesInforefXmlFileref ?? new ActivitiesInforefXmlFileref(); 
-        ActivitiesInforefXmlInforef.GradeItemref = ActivitiesInforefXmlGradeItemref as ActivitiesInforefXmlGradeItemref ?? new ActivitiesInforefXmlGradeItemref();
-        
-        ActivitiesInforefXmlInforef.Serialize("label", LabelId);
-    }
-    
     public void LabelSetParametersWorldAttributes()
     {
         CreateActivityFolder(LabelId);
@@ -188,7 +134,7 @@ public class XmlLabelFactory : IXmlLabelFactory
         ActivitiesModuleXmlModule.SectionNumber = LabelParentSpaceId;
         ActivitiesModuleXmlModule.Added = CurrentTime;
         ActivitiesModuleXmlModule.Id = LabelId;
-        ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerScore = null;
+        ActivitiesModuleXmlModule.PluginLocalAdlerModule.AdlerModule = null;
         //Activity Completion is not needed on labels
         ActivitiesModuleXmlModule.Completion = "0";
 

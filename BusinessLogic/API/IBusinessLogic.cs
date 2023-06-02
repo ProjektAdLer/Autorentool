@@ -1,5 +1,8 @@
 ﻿using BusinessLogic.Commands;
 using BusinessLogic.Entities;
+using BusinessLogic.Entities.LearningContent;
+using Shared;
+using Shared.Command;
 using Shared.Configuration;
 
 namespace BusinessLogic.API;
@@ -7,14 +10,15 @@ namespace BusinessLogic.API;
 public interface IBusinessLogic
 {
     IAuthoringToolConfiguration Configuration { get; }
-    
+    bool CanUndo { get; }
+    bool CanRedo { get; }
+
     /// <summary>
-    /// Executes a given command.
+    ///     Executes a given command.
     /// </summary>
     /// <param name="command">Command to be executed.</param>
     void ExecuteCommand(ICommand command);
-    bool CanUndo { get; }
-    bool CanRedo { get; }
+
     void UndoCommand();
     void RedoCommand();
     void ConstructBackup(LearningWorld learningWorld, string filepath);
@@ -27,11 +31,52 @@ public interface IBusinessLogic
     void SaveLearningElement(LearningElement learningElement, string filepath);
     LearningElement LoadLearningElement(string filepath);
     LearningElement LoadLearningElement(Stream stream);
-    LearningContent LoadLearningContent(string filepath);
-    LearningContent LoadLearningContent(string name, MemoryStream stream);
-    
-    /// <inheritdoc cref="IDataAccess.FindSuitableNewSavePath"/>
+    ILearningContent LoadLearningContent(string filepath);
+    ILearningContent LoadLearningContent(string name, Stream stream);
+
+    /// <summary>
+    ///     Gets all content files in the appdata folder.
+    /// </summary>
+    /// <returns>An enumerable of content files.</returns>
+    IEnumerable<ILearningContent> GetAllContent();
+
+    /// <summary>
+    ///     Deletes the file referenced by the given content object.
+    /// </summary>
+    /// <param name="content">The content whos file shall be deleted.</param>
+    /// <exception cref="FileNotFoundException">The file corresponding to <paramref name="content" /> wasn't found.</exception>
+    void RemoveContent(ILearningContent content);
+
+    /// <summary>
+    ///     Adds the given <see cref="LinkContent" /> to the link file.
+    /// </summary>
+    /// <param name="linkContent">The link to add.</param>
+    void SaveLink(LinkContent linkContent);
+
+    IEnumerable<SavedLearningWorldPath> GetSavedLearningWorldPaths();
+    void AddSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
+    SavedLearningWorldPath AddSavedLearningWorldPathByPathOnly(string path);
+    void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id);
+    void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
+
+    /// <inheritdoc cref="IDataAccess.FindSuitableNewSavePath" />
     string FindSuitableNewSavePath(string targetFolder, string fileName, string fileEnding);
 
-    event Action? OnUndoRedoPerformed;
+    event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
+    string GetContentFilesFolderPath();
+
+    /// <summary>
+    ///     Debug method for Philipp.
+    /// </summary>
+    Task CallExport();
+
+    #region BackendAccess
+
+    Task<bool> IsLmsConnected();
+    string LoginName { get; }
+    Task<bool> Login(string username, string password);
+    void Logout();
+    void UploadLearningWorldToBackend(string filepath);
+
+    #endregion
 }

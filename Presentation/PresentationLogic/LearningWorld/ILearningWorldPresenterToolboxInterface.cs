@@ -1,4 +1,3 @@
-using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 
 namespace Presentation.PresentationLogic.LearningWorld;

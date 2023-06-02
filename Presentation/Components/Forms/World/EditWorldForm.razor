@@ -1,0 +1,132 @@
+@using Presentation.PresentationLogic.LearningWorld
+@using AutoMapper
+@using BusinessLogic.Entities
+@using Presentation.Components.Forms.Models
+@using System.ComponentModel
+@using Presentation.Components.Forms.Buttons
+<header class="m-2 rounded-lg">
+    <div class="flex justify-center p-2">
+        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Learning world metadata</h2>
+    </div>
+</header>
+<MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
+<BaseForm TForm="LearningWorldFormModel" TEntity="LearningWorld" OnValidSubmit="OnValidSubmit"
+          SnackbarMessage="World updated" FormDataContainer="FormDataContainer">
+    <Fields>
+        <Collapsable Title="General" @bind-Collapsed="_collapsedGeneral">
+            <div class="rounded-lg w-4/4 px-4 pb-2">
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
+                          For="@(() => FormModel.Name)"
+                          Immediate="true"
+                          DebounceInterval="300"
+                          Label="@nameof(FormDataContainer.FormModel.Name)"/>
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Shortname"
+                          For="@(() => FormModel.Shortname)"
+                          Immediate="true"
+                          DebounceInterval="300"
+                          Label="@nameof(FormDataContainer.FormModel.Shortname)"/>
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Authors"
+                          For="@(() => FormModel.Authors)"
+                          Immediate="true"
+                          DebounceInterval="300"
+                          Label="@nameof(FormDataContainer.FormModel.Authors)"/>
+            <MudTextField @bind-Value="FormDataContainer.FormModel.Language"
+                          For="@(() => FormModel.Language)"
+                          Immediate="true"
+                          DebounceInterval="300"
+                          Label="@nameof(FormDataContainer.FormModel.Language)"/>
+            </div>
+            </Collapsable>
+
+        <Collapsable Title="Goals" @bind-Collapsed="_collapsedGoals">
+            <div class="rounded-lg w-4/4 px-4">
+                <MudText Typo="Typo.caption">Description</MudText>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+                          For="@(() => FormModel.Description)"
+                          Immediate="true"
+                          Lines="3"
+                          Variant="Variant.Outlined"
+                          DebounceInterval="300"
+                          Class="pb-4 mt-0"/>
+                <MudText Typo="Typo.caption">Goals</MudText>
+                <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
+                          For="@(() => FormModel.Goals)"
+                          Immediate="true"
+                          Lines="3"
+                          Variant="Variant.Outlined"
+                          DebounceInterval="300"
+                          Class="pb-2 mt-0"/>
+            </div>
+        </Collapsable>
+    </Fields>
+    <FooterButtons>
+        <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
+        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Autorenew" Class="btn-standard text-adlergrey rounded bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue" OnClick="OnResetAsync"></MudIconButton>
+    </FooterButtons>
+</BaseForm>
+
+@code {
+#pragma warning disable CS8618 - injected by framework - n.stich
+    [Inject]
+    private ILearningWorldPresenter LearningWorldPresenter { get; set; }
+
+    [Inject]
+    public IMapper Mapper { get; set; }
+
+    [Inject]
+    private IFormDataContainer<LearningWorldFormModel, LearningWorld> FormDataContainer { get; set; }
+#pragma warning restore CS8618
+
+#pragma warning disable CS8618
+    [Parameter, EditorRequired]
+    public ILearningWorldViewModel WorldToEdit { get; set; }
+
+    [Parameter, EditorRequired]
+    public EventCallback OnNewButtonClicked { get; set; }
+#pragma warning restore CS8618
+
+    //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form
+    //please DO NOT REFACTOR THIS - n.stich
+    private LearningWorldFormModel FormModel => FormDataContainer.FormModel;
+
+    private bool _collapsedGeneral = false;
+    private bool _collapsedGoals = true;
+
+    private void OnValidSubmit(LearningWorldFormModel model)
+    {
+        LearningWorldPresenter.EditLearningWorld(model.Name, model.Shortname, model.Authors, model.Language, model.Description, model.Goals);
+    }
+
+    private async Task MapIntoContainer()
+    {
+        Mapper.Map(WorldToEdit, FormDataContainer.FormModel);
+        await InvokeAsync(StateHasChanged);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        await base.OnParametersSetAsync();
+        await MapIntoContainer();
+        if (LearningWorldPresenter.LearningWorldVm == null)
+            throw new ApplicationException("LearningWorldVm is null");
+        LearningWorldPresenter.LearningWorldVm.PropertyChanged += LearningWorldPropertyChanged;
+    }
+
+    private void LearningWorldPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(LearningWorldViewModel.Name) or nameof(LearningWorldViewModel.Shortname) 
+            or nameof(LearningWorldViewModel.Authors) or nameof(LearningWorldViewModel.Language)
+            or nameof(LearningWorldViewModel.Description) or nameof(LearningWorldViewModel.Goals)
+            )
+        {
+            InvokeAsync(MapIntoContainer);
+        }
+    }
+
+    private async Task OnResetAsync()
+    {
+        await MapIntoContainer();
+    }
+
+
+}

@@ -6,25 +6,26 @@
 public class LearningSpaceJson : ILearningSpaceJson
 {
     // the id is incremented and is set for every Space
-    public LearningSpaceJson(int spaceId, LmsElementIdentifierJson lmsElementIdentifier, string spaceName,
-        List<int> spaceContents, int requiredPointsToComplete, string? spaceDescription=null, string[]? spaceGoals = null,
-        string? requiredSpacesToEnter = null)
+    public LearningSpaceJson(int spaceId, string spaceUuid, string spaceName,
+        List<int?> spaceSlotContents, int requiredPointsToComplete, string spaceTemplate, string spaceTemplateStyle,
+        string? spaceDescription=null, string[]? spaceGoals = null, string? requiredSpacesToEnter = null)
     {
         SpaceId = spaceId;
-        LmsElementIdentifier = lmsElementIdentifier;
+        SpaceUUID = spaceUuid;
         SpaceName = spaceName;
         SpaceDescription = spaceDescription ?? "";
         SpaceGoals = spaceGoals ?? new []{""};
-        SpaceContents = spaceContents;
+        SpaceSlotContents = spaceSlotContents;
         RequiredPointsToComplete = requiredPointsToComplete;
         RequiredSpacesToEnter = requiredSpacesToEnter;
+        SpaceTemplate = spaceTemplate;
+        SpaceTemplateStyle = spaceTemplateStyle;
     }
 
     public int SpaceId { get; set; }
-
-    // the lmsElementIdentifier has the name of the element, this information is needed for the API calls from the 2D3D Team.
-    public LmsElementIdentifierJson LmsElementIdentifier { get; set; }
     
+    public string SpaceUUID { get; set; }
+
     //A Name for the Learning Space
     public string SpaceName { get; set; }
     
@@ -34,7 +35,7 @@ public class LearningSpaceJson : ILearningSpaceJson
     public string[] SpaceGoals { get; set; }
     
     // A list that has all the id´s of the included elements of a space. 
-    public List<int> SpaceContents { get; set; }
+    public List<int?> SpaceSlotContents { get; set; }
     
     // Maximum Points and Points that are needed to complete the Space
     public int RequiredPointsToComplete { get; set; }
@@ -42,4 +43,8 @@ public class LearningSpaceJson : ILearningSpaceJson
     // requirements are needed to describe the Path of the Spaces. 
     // It is a boolean algebra string, that describes which spaces are needed to complete the space.
     public string? RequiredSpacesToEnter { get; set; }
+    
+    public string SpaceTemplate { get; set; }
+    
+    public string SpaceTemplateStyle { get; set; }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using Shared;
 
 namespace PersistEntities;
 
@@ -6,21 +7,23 @@ namespace PersistEntities;
 [DataContract]
 [KnownType(typeof(PathWayConditionPe))]
 [KnownType(typeof(LearningSpacePe))]
+[KnownType(typeof(LearningSpaceLayoutPe))]
 public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
 {
-    public LearningSpacePe(string name, string shortname, string authors, string description, string goals,
-        int requiredPoints, List<LearningElementPe>? learningElements = null, double positionX = 0, double positionY = 0,
+    public LearningSpacePe(string name, string description, string goals,
+        int requiredPoints, Theme theme, ILearningSpaceLayoutPe? learningSpaceLayout = null, double positionX = 0, double positionY = 0,
         List<IObjectInPathWayPe>? inBoundObjects = null, List<IObjectInPathWayPe>? outBoundObjects = null,
         TopicPe? assignedTopic = null)
     {
         Id = Guid.NewGuid();
         Name = name;
-        Shortname = shortname;
-        Authors = authors;
         Description = description;
         Goals = goals;
         RequiredPoints = requiredPoints;
-        LearningElements = learningElements ?? new List<LearningElementPe>();
+        Theme = theme;
+        LearningSpaceLayout = learningSpaceLayout ??
+                              new LearningSpaceLayoutPe(new Dictionary<int, ILearningElementPe>(),
+                                  FloorPlanEnum.R_20X20_6L);
         InBoundObjects = inBoundObjects ?? new List<IObjectInPathWayPe>();
         OutBoundObjects = outBoundObjects ?? new List<IObjectInPathWayPe>();
         AssignedTopic = assignedTopic;
@@ -35,12 +38,11 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
     {
         Id = Guid.Empty;
         Name = "";
-        Shortname = "";
-        Authors = "";
         Description = "";
         Goals = "";
         RequiredPoints = 0;
-        LearningElements = new List<LearningElementPe>();
+        //overriding nullability as serializer must set value
+        LearningSpaceLayout = null!;
         InBoundObjects = new List<IObjectInPathWayPe>();
         OutBoundObjects = new List<IObjectInPathWayPe>();
         AssignedTopic = null;
@@ -55,15 +57,13 @@ public class LearningSpacePe : ILearningSpacePe, IExtensibleDataObject
     [DataMember]
     public string Description { get; set; }
     [DataMember]
-    public string Shortname { get; set; }
-    [DataMember]
-    public string Authors { get; set; }
-    [DataMember]
     public string Goals { get; set; }
     [DataMember]
     public int RequiredPoints { get; set; }
     [DataMember]
-    public List<LearningElementPe> LearningElements { get; set; }
+    public Theme Theme { get; set; }
+    [DataMember]
+    public ILearningSpaceLayoutPe LearningSpaceLayout { get; set; }
     [IgnoreDataMember]
     public List<IObjectInPathWayPe> InBoundObjects { get; set; }
     [IgnoreDataMember]

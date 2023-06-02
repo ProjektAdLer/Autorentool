@@ -1,0 +1,62 @@
+<div class="h-[41rem] 2xl:h-[57rem] 3xl:h-[65rem] flex">
+    <div class="py-3 @SidebarOrder()">
+        <aside class="min-w-[50px] gap-2 flex flex-col rounded-lg">
+            <CascadingValue Value="this">
+                @ChildContent
+            </CascadingValue>
+        </aside>
+    </div>
+    @if (CurrentItem is not null)
+    {
+        <div class="flex flex-row w-fit bg-adlergrey-300 @ContentOrder() rounded-lg gap-1 p-2">
+            @CurrentItem.MainContent
+        </div>
+    }
+</div>
+@code {
+    private SidebarItem? _currentItem;
+    
+    [Parameter]
+#pragma warning disable CS8618 - injected by framework n.stich
+    public RenderFragment ChildContent { get; set; }
+    [Parameter, EditorRequired]
+    public Side SidebarSide { get; set; }
+#pragma warning restore CS8618
+
+    internal SidebarItem? CurrentItem
+    {
+        get => _currentItem;
+        private set
+        {
+            if(_currentItem == value) return;
+            _currentItem = value;
+            InvokeAsync(StateHasChanged);
+        }
+    }
+
+    public void SetSidebarItem(SidebarItem item)
+    {
+        ClearSidebarItem();
+        CurrentItem = item;
+    }
+
+    internal void ClearSidebarItem()
+    {
+        CurrentItem = null;
+    }
+
+    private string SidebarOrder() => SidebarSide switch
+    {
+        Side.Left => "order-1",
+        Side.Right => "order-2",
+        _ => throw new ArgumentOutOfRangeException()
+    };
+
+    private string ContentOrder() => SidebarSide switch
+    {
+        Side.Left => "order-2",
+        Side.Right => "order-1",
+        _ => throw new ArgumentOutOfRangeException()
+    };
+    
+}

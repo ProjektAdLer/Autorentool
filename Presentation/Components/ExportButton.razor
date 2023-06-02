@@ -1,0 +1,13 @@
+@using Presentation.PresentationLogic.API
+<MudButton OnClick="CallExport" Class="btn-standard normal-case">Debug for Philipp</MudButton>
+
+@code {
+    [Inject]
+    public IPresentationLogic PresentationLogic { get; set; }
+
+    private void CallExport()
+    {
+        PresentationLogic.CallExport();
+    }
+
+}

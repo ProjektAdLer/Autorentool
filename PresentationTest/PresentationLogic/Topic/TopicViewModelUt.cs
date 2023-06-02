@@ -13,8 +13,9 @@ public class TopicViewModelUt
     {
         var name ="topic name";
         
-        var systemUnderTest = new TopicViewModel(name);
+        var systemUnderTest = new TopicViewModel(name, false);
         
         Assert.That(systemUnderTest.Name, Is.EqualTo(name));
+        Assert.IsFalse(systemUnderTest.UnsavedChanges);
     }
 }

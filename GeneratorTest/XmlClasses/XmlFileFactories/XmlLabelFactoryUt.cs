@@ -88,8 +88,8 @@ public class XmlLabelFactoryUt
             mockLabel, mockLabelActivity, mockRoles, mockModule, mockGradeHistory, 
             mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref, mockInforefInforef);
 
-        var mockElementJson = new LearningElementJson(1, new LmsElementIdentifierJson("Name", "Labels_1"), "element1","", "", "h5p", 1, 2);
-        var mockLabelsElementJson = new LearningElementJson(2, new LmsElementIdentifierJson("Name", "Labels_1"), "element2", "", "mp4","mp4", 1, 2);
+        var mockElementJson = new LearningElementJson(1, "", "element1","", "", "h5p", 1, 2,"");
+        var mockLabelsElementJson = new LearningElementJson(2, "", "element2", "", "mp4","mp4", 1, 2,"");
         
         var elementJsonList = new List<LearningElementJson> {mockElementJson};
         var labelJsonList = new List<LearningElementJson> {mockLabelsElementJson};
@@ -134,11 +134,11 @@ public class XmlLabelFactoryUt
             mockLabel, mockLabelActivity, mockRoles, mockModule, mockGradeHistory, 
             mockInforefFileref, mockInforefGradeItem, mockInforefGradeItemref, mockInforefInforef);
         
-        var mockLabelsElementJson = new LearningElementJson(2, new LmsElementIdentifierJson("Name", "World Description"), "",
-            "","World Attributes", "World Attributes", 1, 0, "World Description", new []{"World Goals"});
+        var mockLabelsElementJson = new LearningElementJson(2, "", "",
+            "","World Attributes", "World Attributes", 1, 0, "", "World Description",  new []{"World Goals"});
 
-        var mockElementJson = new LearningElementJson(1, new LmsElementIdentifierJson("Name", "id"), "", 
-            "", "", "h5p", 0, 7);
+        var mockElementJson = new LearningElementJson(1, "", "", 
+            "", "", "h5p", 0, 7,"");
 
         var spaceJsonList = new List<LearningElementJson> {mockElementJson};
         var labelJsonList = new List<LearningElementJson> {mockLabelsElementJson};

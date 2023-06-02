@@ -12,16 +12,16 @@ public class AuthoringToolWorkspaceUt
     {
         var world1 = new LearningWorld("foo", "", "f", "", "", "");
         var world2 = new LearningWorld("bar", "", "f", "", "", "");
-        var learningWorlds = new List<LearningWorld>
+        var learningWorlds = new List<ILearningWorld>
         {
             world1, world2
         };
+        
 
-        var systemUnderTest = new AuthoringToolWorkspace(world1, learningWorlds);
+        var systemUnderTest = new AuthoringToolWorkspace(learningWorlds);
         
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.SelectedLearningWorld, Is.EqualTo(world1));
             Assert.That(systemUnderTest.LearningWorlds, Is.EqualTo(learningWorlds));
         });
     }
@@ -31,22 +31,20 @@ public class AuthoringToolWorkspaceUt
     {
         var world1 = new LearningWorld("foo", "", "f", "", "", "");
         var world2 = new LearningWorld("bar", "", "f", "", "", "");
-        var learningWorlds = new List<LearningWorld>
+        var learningWorlds = new List<ILearningWorld>
         {
             world1, world2
         };
 
-        var systemUnderTest = new AuthoringToolWorkspace(world1, learningWorlds);
+        var systemUnderTest = new AuthoringToolWorkspace(learningWorlds);
         
         var memento = systemUnderTest.GetMemento();
 
-        systemUnderTest.SelectedLearningWorld = world2;
         systemUnderTest.LearningWorlds.Remove(world1);
         systemUnderTest.LearningWorlds.Add(new LearningWorld("f", "f", "f", "f", "f", "f"));
         
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.SelectedLearningWorld, Is.EqualTo(world2));
             Assert.That(systemUnderTest.LearningWorlds, Has.Count.EqualTo(2));
         });
         Assert.That(systemUnderTest.LearningWorlds, Contains.Item(world2));
@@ -56,7 +54,6 @@ public class AuthoringToolWorkspaceUt
         
         Assert.Multiple(() =>
         {
-            Assert.That(systemUnderTest.SelectedLearningWorld, Is.EqualTo(world1));
             Assert.That(systemUnderTest.LearningWorlds, Has.Count.EqualTo(2));
         });
         Assert.That(systemUnderTest.LearningWorlds, Contains.Item(world1));
@@ -68,7 +65,7 @@ public class AuthoringToolWorkspaceUt
     {
         var fakeMemento = Substitute.For<IMemento>();
         
-        var systemUnderTest = new AuthoringToolWorkspace(null, new List<LearningWorld>());
+        var systemUnderTest = new AuthoringToolWorkspace(new List<ILearningWorld>());
         
         Assert.That(() => systemUnderTest.RestoreMemento(fakeMemento), Throws.ArgumentException);
     }

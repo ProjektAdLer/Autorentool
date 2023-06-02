@@ -1,0 +1,20 @@
+<MudDialog>
+    <DialogContent>
+        The world @WorldName has unsaved changes. All unsaved changes will be lost upon closing the program. Do you want to save the world before closing?
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Yes">Yes</MudButton>
+        <MudButton OnClick="No">No</MudButton>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    public MudDialogInstance MudDialog { get; set; }
+    [Parameter, EditorRequired]
+    public string WorldName { get; set; }
+    
+    private void Yes() => MudDialog.Close(DialogResult.Ok(true));
+    private void No() => MudDialog.Close(DialogResult.Ok(false));
+    private void Cancel() => MudDialog.Cancel();
+}

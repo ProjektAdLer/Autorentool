@@ -1,55 +1,58 @@
 ﻿using System.ComponentModel;
 using System.Runtime.CompilerServices;
+using BusinessLogic.Validation;
 using Presentation.Components;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
+using Presentation.PresentationLogic.LearningContent;
+using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.Mediator;
+using Presentation.PresentationLogic.SelectedViewModels;
+using Presentation.PresentationLogic.Topic;
 using Shared;
-using ModalDialogOnCloseResult = Presentation.Components.ModalDialog.ModalDialogOnCloseResult;
-using ModalDialogReturnValue = Presentation.Components.ModalDialog.ModalDialogReturnValue;
+using Shared.Command;
 
 namespace Presentation.PresentationLogic.LearningWorld;
 
-public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPresenterToolboxInterface
+public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPresenterToolboxInterface,
+    ILearningWorldPresenterOverviewInterface
 {
     public LearningWorldPresenter(
         IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter,
-        ILogger<LearningWorldPresenter> logger)
+        ILogger<LearningWorldPresenter> logger, IMediator mediator,
+        ISelectedViewModelsProvider selectedViewModelsProvider, IErrorService errorService)
     {
         _learningSpacePresenter = learningSpacePresenter;
         _presentationLogic = presentationLogic;
         _logger = logger;
+        _mediator = mediator;
+        _selectedViewModelsProvider = selectedViewModelsProvider;
+        _selectedViewModelsProvider.PropertyChanged += OnSelectedViewModelsProviderOnPropertyChanged;
+        //first-time update in case a learning world was selected before we were instantiated 
+        LearningWorldVm = selectedViewModelsProvider.LearningWorld;
+        _errorService = errorService;
     }
 
     private readonly IPresentationLogic _presentationLogic;
     private readonly ILearningSpacePresenter _learningSpacePresenter;
     private readonly ILogger<LearningWorldPresenter> _logger;
-    
-    
+    private readonly IMediator _mediator;
+    private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
+    private readonly IErrorService _errorService;
+
     private ILearningWorldViewModel? _learningWorldVm;
     private IObjectInPathWayViewModel? _newConditionSourceObject;
     private LearningSpaceViewModel? _newConditionTargetSpace;
-    private bool _editLearningSpaceDialogOpen;
-    private bool _editPathWayConditionDialogOpen;
-    private bool _editTopicDialogOpen;
-    private Dictionary<string, string>? _editSpaceDialogInitialValues;
-    private Dictionary<string, string>? _editConditionDialogInitialValues;
-    private List<string>? _editTopicDialogInitialValues;
-    private List<string>? _deleteTopicDialogInitialValues;
-    private Dictionary<string, string>? _editSpaceDialogAnnotations;
-    private bool _createLearningSpaceDialogOpen;
-    private bool _createPathWayConditionDialogOpen;
-    private bool _createTopicDialogOpen;
-    private bool _deleteTopicDialogOpen;
     private int _spaceCreationCounter = 0;
     private int _conditionCreationCounter = 0;
 
     public bool SelectedLearningObjectIsSpace =>
-        LearningWorldVm?.SelectedLearningObject?.GetType() == typeof(LearningSpaceViewModel);
+        _selectedViewModelsProvider.LearningObjectInPathWay?.GetType() == typeof(LearningSpaceViewModel);
 
-    public bool ShowingLearningSpaceView => LearningWorldVm is { ShowingLearningSpaceView: true };
-    
+    public bool ShowingLearningSpaceView => LearningWorldVm is {ShowingLearningSpaceView: true};
+
     /// <summary>
     /// The currently selected LearningWorldViewModel.
     /// </summary>
@@ -63,8 +66,6 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
             if (!BeforeSetField(_learningWorldVm, value))
                 return;
             SetField(ref _learningWorldVm, value);
-            if (_learningWorldVm != null)
-                _learningWorldVm.PropertyChanged += _learningSpacePresenter.OnWorldPropertyChanged;
             if (SelectedLearningObjectIsSpace != selectedLearningObjectIsSpaceBefore)
                 OnPropertyChanged(nameof(SelectedLearningObjectIsSpace));
             if (ShowingLearningSpaceView != showingLearningSpaceViewBefore)
@@ -73,83 +74,82 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         }
     }
 
+    /// <inheritdoc cref="ILearningSpaceNamesProvider.SpaceNames"/>
+    public IEnumerable<(Guid, string)>? SpaceNames =>
+        LearningWorldVm?.LearningSpaces.Select(space => (space.Id, space.Name));
 
-    public bool CreatePathWayConditionDialogOpen
+    public event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute
     {
-        get => _createPathWayConditionDialogOpen;
-        private set => SetField(ref _createPathWayConditionDialogOpen, value);
-    }
-    
-    public bool CreateTopicDialogOpen
-    {
-        get => _createTopicDialogOpen;
-        private set => SetField(ref _createTopicDialogOpen, value);
+        add => _presentationLogic.OnCommandUndoRedoOrExecute += value;
+        remove => _presentationLogic.OnCommandUndoRedoOrExecute -= value;
     }
 
-    public bool EditLearningSpaceDialogOpen
+    /// <summary>
+    /// If any object in the LearningWorld has an active RightClickMenu, this object is set in this variable.
+    /// Otherwise, it is null.
+    /// </summary>
+    public IObjectInPathWayViewModel? RightClickedLearningObject { get; private set; }
+
+    public void OnSelectedViewModelsProviderOnPropertyChanged(object? caller, PropertyChangedEventArgs e)
     {
-        get => _editLearningSpaceDialogOpen;
-        private set => SetField(ref _editLearningSpaceDialogOpen, value);
+        if (e.PropertyName == nameof(_selectedViewModelsProvider.LearningWorld))
+        {
+            if (caller is not ISelectedViewModelsProvider)
+                throw new ArgumentException("Caller must be of type ISelectedViewModelsProvider");
+
+            LearningWorldVm = _selectedViewModelsProvider.LearningWorld;
+        }
     }
 
-    public bool EditPathWayConditionDialogOpen 
+    #region LearningWorld
+
+    public void EditLearningWorld(string name, string shortname, string authors, string language, string description,
+        string goals)
     {
-        get => _editPathWayConditionDialogOpen;
-        private set => SetField(ref _editPathWayConditionDialogOpen, value);
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+
+        _presentationLogic.EditLearningWorld(LearningWorldVm, name, shortname, authors, language, description, goals);
     }
 
-    public bool EditTopicDialogOpen
+    /// <summary>
+    /// Calls the respective Save methode for Learning Space or Learning Element depending on which learning object is selected
+    /// </summary>
+    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
+    /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
+    public async Task SaveLearningWorldAsync()
     {
-        get => _editTopicDialogOpen;
-        private set => SetField(ref _editTopicDialogOpen, value);
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+
+        await _presentationLogic.SaveLearningWorldAsync((LearningWorldViewModel) LearningWorldVm);
     }
 
-    public bool DeleteTopicDialogOpen
-    {
-        get => _deleteTopicDialogOpen;
-        private set => SetField(ref _deleteTopicDialogOpen, value);
-    }
+    #endregion
 
-    public Dictionary<string, string>? EditSpaceDialogInitialValues
-    {
-        get => _editSpaceDialogInitialValues;
-        private set => SetField(ref _editSpaceDialogInitialValues, value);
-    }
-    
-    public Dictionary<string, string>? EditConditionDialogInitialValues
-    {
-        get => _editConditionDialogInitialValues;
-        private set => SetField(ref _editConditionDialogInitialValues, value);
-    }
-    
-    public List<string>? EditTopicDialogInitialValues
-    {
-        get => _editTopicDialogInitialValues;
-        private set => SetField(ref _editTopicDialogInitialValues, value);
-    }
-    
-    public List<string>? DeleteTopicDialogInitialValues
-    {
-        get => _deleteTopicDialogInitialValues;
-        private set => SetField(ref _deleteTopicDialogInitialValues, value);
-    }
+    #region ObjectInPathWay
 
-    public Dictionary<string, string>? EditSpaceDialogAnnotations
+    /// <summary>
+    /// Changes the selected <see cref="IObjectInPathWayViewModel"/> in the currently selected learning world.
+    /// </summary>
+    /// <param name="pathWayObject">The pathway object that should be set as selected</param>
+    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
+    internal void SetSelectedLearningObject(ISelectableObjectInWorldViewModel pathWayObject)
     {
-        get => _editSpaceDialogAnnotations;
-        private set => SetField(ref _editSpaceDialogAnnotations, value);
-    }
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        if (SelectedLearningObjectIsSpace)
+        {
+            _learningSpacePresenter.SetLearningSpace(
+                (LearningSpaceViewModel) _selectedViewModelsProvider.LearningObjectInPathWay!);
+            _selectedViewModelsProvider.SetLearningObjectInPathWay(pathWayObject, null);
+        }
+        else
+        {
+            _selectedViewModelsProvider.SetLearningObjectInPathWay(pathWayObject, null);
+        }
 
-    public bool CreateLearningSpaceDialogOpen
-    {
-        get => _createLearningSpaceDialogOpen;
-        private set => SetField(ref _createLearningSpaceDialogOpen, value);
-    }
-
-    public event Action OnUndoRedoPerformed
-    {
-        add => _presentationLogic.OnUndoRedoPerformed += value;
-        remove => _presentationLogic.OnUndoRedoPerformed -= value;
+        HideRightClickMenu();
     }
 
     public void DragObjectInPathWay(object sender, DraggedEventArgs<IObjectInPathWayViewModel> args)
@@ -158,47 +158,9 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         HideRightClickMenu();
     }
 
-    /// <summary>
-    /// If any object in the LearningWorld has an active RightClickMenu, this object is set in this variable.
-    /// Otherwise, it is null.
-    /// </summary>
-    public IObjectInPathWayViewModel? RightClickedLearningObject { get; private set; }
-    public void EditObjectInPathWay(IObjectInPathWayViewModel obj)
-    {
-        SetSelectedLearningObject(obj);
-        OpenEditSelectedObjectDialog();
-    }
-
-    public void DeleteLearningSpace(ILearningSpaceViewModel obj)
-    {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        _presentationLogic.DeleteLearningSpace(LearningWorldVm, obj);
-    }
-
     public void RightClickOnObjectInPathWay(IObjectInPathWayViewModel obj)
     {
         RightClickedLearningObject = obj;
-    }
-
-    public void ClickOnObjectInWorld(ISelectableObjectInWorldViewModel obj)
-    {
-        SetSelectedLearningObject(obj);
-    }
-
-    public void DoubleClickOnObjectInWorld(IObjectInPathWayViewModel obj)
-    {
-        switch (obj)
-        {
-            case PathWayConditionViewModel pathWayConditionViewModel:
-                _presentationLogic.EditPathWayCondition(pathWayConditionViewModel,
-                    pathWayConditionViewModel.Condition == ConditionEnum.And ? ConditionEnum.Or : ConditionEnum.And);
-                break;
-            case LearningSpaceViewModel learningSpaceViewModel:
-                SetSelectedLearningObject(learningSpaceViewModel);
-                ShowSelectedLearningSpaceView();
-                break;
-        }
     }
 
     public void HideRightClickMenu()
@@ -206,275 +168,34 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         RightClickedLearningObject = null;
     }
 
-    public void AddNewLearningSpace()
+    public void ClickOnObjectInWorld(ISelectableObjectInWorldViewModel obj)
     {
-        CreateLearningSpaceDialogOpen = true;
+        SetSelectedLearningObject(obj);
     }
 
-    public void OnWorkspacePropertyChanged(object? caller, PropertyChangedEventArgs e)
+    public void DoubleClickOnObjectInPathway(IObjectInPathWayViewModel obj)
     {
-        if (e.PropertyName == nameof(AuthoringToolWorkspaceViewModel.SelectedLearningWorld))
-        {
-            if (caller is not IAuthoringToolWorkspaceViewModel workspaceVm)
-                throw new ArgumentException("Caller must be of type IAuthoringToolWorkspaceViewModel");
-        
-            LearningWorldVm = workspaceVm.SelectedLearningWorld;
-        }
+        SetSelectedLearningObject(obj);
+        if (obj is PathWayConditionViewModel pathwayCondition)
+            SwitchPathWayCondition(pathwayCondition);
+        ShowSelectedLearningSpaceView();
     }
 
-    public void ShowSelectedLearningSpaceView()
+    public void DeleteLearningObject(IObjectInPathWayViewModel obj)
     {
-        if (LearningWorldVm != null) LearningWorldVm.ShowingLearningSpaceView = true;
-        HideRightClickMenu();
-    }
-
-    public void CloseLearningSpaceView()
-    {
-        if (LearningWorldVm != null) LearningWorldVm.ShowingLearningSpaceView = false;
-    }
-    public void OpenEditSelectedObjectDialog()
-    {
-        if (_learningWorldVm == null)
+        if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-
-        switch (_learningWorldVm.SelectedLearningObject)
+        switch (obj)
         {
-            case null:
-                return;
-            case LearningPathwayViewModel:
-                return;
-            case PathWayConditionViewModel:
-                OpenEditSelectedPathWayConditionDialog();
+            case PathWayConditionViewModel pathWayConditionViewModel:
+                _presentationLogic.DeletePathWayCondition(LearningWorldVm, pathWayConditionViewModel);
                 break;
-            case LearningSpaceViewModel:
-                OpenEditSelectedLearningSpaceDialog();
+            case LearningSpaceViewModel learningSpaceViewModel:
+                _presentationLogic.DeleteLearningSpace(LearningWorldVm, learningSpaceViewModel);
                 break;
             default:
-                throw new ArgumentOutOfRangeException();
+                throw new ArgumentOutOfRangeException(nameof(obj));
         }
-    }
-
-    #region Topic
-    
-    public void AddNewTopic()
-    {
-        CreateTopicDialogOpen = true;
-    }
-    
-    public void OnCreateTopicDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        if(LearningWorldVm == null) throw new ApplicationException("LearningWorld is null");
-        
-        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
-        CreateTopicDialogOpen = false;
-
-        if (response == ModalDialogReturnValue.Cancel) return;
-        if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
-
-        foreach (var pair in data)
-        {
-            Console.Write($"{pair.Key}:{pair.Value}\n");
-        }
-
-        //required argument
-        var name = data["Name"];
-        
-        _presentationLogic.CreateTopic(LearningWorldVm, name);
-    }
-    
-    public void OpenEditTopicDialog()
-    {
-        if(LearningWorldVm == null) throw new ApplicationException("LearningWorld is null");
-        if(!LearningWorldVm.Topics.Any()) return;
-
-        EditTopicDialogInitialValues = LearningWorldVm.Topics.Select(topic => topic.Name).ToList();
-        EditTopicDialogOpen = true;
-    }
-
-    public void OnEditTopicDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        if (LearningWorldVm == null) throw new ApplicationException("LearningWorld is null");
-        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
-        EditTopicDialogOpen = false;
-
-        if (response == ModalDialogReturnValue.Cancel) return;
-        if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
-
-        foreach (var (key, value) in data)
-        {
-            _logger.LogTrace("{Key}:{Value}\\n", key, value);
-        }
-
-        //required argument
-        var topicName = data["Topics"];
-        var newName = data["New Name"];
-        var topic = LearningWorldVm.Topics.First(topic => topic.Name == topicName);
-        
-        _presentationLogic.EditTopic(topic, newName);
-    }
-    
-    public void OpenDeleteTopicDialog()
-    {
-        if(LearningWorldVm == null) throw new ApplicationException("LearningWorld is null");
-        if(!LearningWorldVm.Topics.Any()) return;
-        
-        DeleteTopicDialogInitialValues = LearningWorldVm.Topics.Select(topic => topic.Name).ToList();
-        DeleteTopicDialogOpen = true;
-    }
-
-    public void OnDeleteTopicDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        if (LearningWorldVm == null) throw new ApplicationException("LearningWorld is null");
-        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
-        DeleteTopicDialogOpen = false;
-
-        if (response == ModalDialogReturnValue.Cancel) return;
-        if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
-
-        foreach (var (key, value) in data)
-        {
-            _logger.LogTrace("{Key}:{Value}\\n", key, value);
-        }
-
-        //required argument
-        var topicName = data["Topics"];
-        var topic = LearningWorldVm.Topics.First(topic => topic.Name == topicName);
-        
-        _presentationLogic.DeleteTopic(LearningWorldVm, topic);
-    }
-    
-    public void RemoveLearningSpaceFromTopic(ILearningSpaceViewModel learningSpace)
-    {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("LearningWorld is null");
-        if(learningSpace.AssignedTopic == null) return;
-        _presentationLogic.EditLearningSpace(learningSpace, learningSpace.Name, learningSpace.Shortname, 
-            learningSpace.Authors, learningSpace.Description, learningSpace.Goals, learningSpace.RequiredPoints,null);
-    }
-
-    #endregion
-
-    #region LearningSpace
-
-    /// <summary>
-    /// Sets the initial values for the <see cref="ModalDialog"/> with the current values from the selected LearningSpace.
-    /// </summary>
-    private void OpenEditSelectedLearningSpaceDialog()
-    {
-        var space = (LearningSpaceViewModel) LearningWorldVm?.SelectedLearningObject!;
-        //prepare dictionary property to pass to dialog
-        EditSpaceDialogInitialValues = new Dictionary<string, string>
-        {
-            {"Name", space.Name},
-            {"Shortname", space.Shortname},
-            {"Authors", space.Authors},
-            {"Description", space.Description},
-            {"Goals", space.Goals},
-            {"Topic", space.AssignedTopic != null ? space.AssignedTopic.Name : ""},
-            {"Required Points", space.RequiredPoints.ToString()}
-        };
-        EditSpaceDialogAnnotations = new Dictionary<string, string>
-        {
-            {"Required Points", "/" + space.Points.ToString()},
-        };
-        EditLearningSpaceDialogOpen = true;
-    }
-    
-    /// <inheritdoc cref="ILearningWorldPresenterToolboxInterface.AddLearningSpace"/>
-    public void AddLearningSpace(ILearningSpaceViewModel learningSpace)
-    {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        _presentationLogic.AddLearningSpace(LearningWorldVm, learningSpace);
-    }
-
-    /// <summary>
-    /// Calls the LoadLearningSpaceAsync methode in <see cref="_presentationLogic"/> and adds the returned learning space to the current learning world.
-    /// </summary>
-    /// <exception cref="ApplicationException">Thrown if <see cref="LearningWorldVm"/> is null</exception>
-    public async Task LoadLearningSpaceAsync()
-    {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("SelectedLearningWorld is null");
-        await _presentationLogic.LoadLearningSpaceAsync(LearningWorldVm);
-    }
-
-    /// <summary>
-    /// Creates a learning space viewmodel with return values from the dialog.
-    /// </summary>
-    /// <param name="returnValueTuple">Return values from the dialog</param>
-    /// <returns></returns>
-    /// <exception cref="ApplicationException">Thrown if the dictionary in return values of dialog null while return value is ok</exception>
-    public void OnCreateSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        if(LearningWorldVm == null) throw new ApplicationException("SelectedLearningWorld is null");
-        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
-        CreateLearningSpaceDialogOpen = false;
-
-        if (response == ModalDialogReturnValue.Cancel) return;
-        if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
-
-        foreach (var pair in data)
-        {
-            Console.Write($"{pair.Key}:{pair.Value}\n");
-        }
-
-        //required arguments
-        var name = data["Name"];
-        //optional arguments
-        var shortname = data.ContainsKey("Shortname") ? data["Shortname"] : "";
-        var description = data.ContainsKey("Description") ? data["Description"] : "";
-        var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
-        var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
-        var topicName = data.ContainsKey("Topic") ? data["Topic"] : "";
-        var requiredPoints = data.ContainsKey("Required Points") && data["Required Points"] != "" && !data["Required Points"].StartsWith("e") ? int.Parse(data["Required Points"]) : 0;
-        var offset = 15 * _spaceCreationCounter;
-        _spaceCreationCounter = (_spaceCreationCounter + 1) % 10;
-        
-        var topic = LearningWorldVm.Topics.FirstOrDefault(topic => topic.Name == topicName);
-        _presentationLogic.CreateLearningSpace(LearningWorldVm, name, shortname, authors, description, goals, requiredPoints, offset, offset, topic);
-
-    }
-
-    /// <summary>
-    /// Changes property values of learning space viewmodel with return values from the dialog.
-    /// </summary>
-    /// <param name="returnValueTuple">Return values from the dialog</param>
-    /// <returns></returns>
-    /// <exception cref="ApplicationException">Thrown if the dictionary in return values of dialog null while return value is ok
-    /// or if the selected learning object not a learning space</exception>
-    public void OnEditSpaceDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
-        EditLearningSpaceDialogOpen = false;
-
-        if (response == ModalDialogReturnValue.Cancel) return;
-        if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
-
-        foreach (var (key, value) in data)
-        {
-            _logger.LogTrace("{Key}:{Value}\\n", key, value);
-        }
-
-        //required arguments
-        var name = data["Name"];
-        //optional arguments
-        var shortname = data.ContainsKey("Shortname") ? data["Shortname"] : "";
-        var description = data.ContainsKey("Description") ? data["Description"] : "";
-        var authors = data.ContainsKey("Authors") ? data["Authors"] : "";
-        var goals = data.ContainsKey("Goals") ? data["Goals"] : "";
-        var topicName = data.ContainsKey("Topic") ? data["Topic"] : "";
-        var requiredPoints =
-            data.ContainsKey("Required Points") && data["Required Points"] != "" &&
-            !data["Required Points"].StartsWith("e")
-                ? int.Parse(data["Required Points"])
-                : 0;
-
-        if (LearningWorldVm == null)
-            throw new ApplicationException("LearningWorld is null");
-
-        var topic = LearningWorldVm.Topics.FirstOrDefault(topic => topic.Name == topicName);
-        _learningSpacePresenter.EditLearningSpace(name, shortname, authors, description, goals, requiredPoints, topic);
     }
 
     /// <summary>
@@ -486,7 +207,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        switch (LearningWorldVm.SelectedLearningObject)
+        switch (_selectedViewModelsProvider.LearningObjectInPathWay)
         {
             case null:
                 return;
@@ -502,6 +223,71 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         }
     }
 
+    #region LearningSpace
+
+    public void SetSelectedLearningSpace(IObjectInPathWayViewModel obj)
+    {
+        SetSelectedLearningObject(obj);
+        _selectedViewModelsProvider.SetLearningElement(null, null);
+        _mediator.RequestOpenSpaceDialog();
+    }
+
+    public void ShowSelectedLearningSpaceView()
+    {
+        if (LearningWorldVm != null) LearningWorldVm.ShowingLearningSpaceView = true;
+        HideRightClickMenu();
+    }
+
+    public void CloseLearningSpaceView()
+    {
+        if (LearningWorldVm != null) LearningWorldVm.ShowingLearningSpaceView = false;
+    }
+
+    /// <inheritdoc cref="ILearningWorldPresenter.CreateLearningSpace"/>
+    public void CreateLearningSpace(string name, string description, string goals, int requiredPoints,
+        Theme theme,
+        double positionX = 0D,
+        double positionY = 0D,
+        TopicViewModel? topic = null)
+    {
+        if (LearningWorldVm == null)
+        {
+            _errorService.SetError("Error while creating learning space; No Learning World selected");
+            return;
+        }
+
+        _presentationLogic.CreateLearningSpace(LearningWorldVm, name, description, goals,
+            requiredPoints, theme, positionX, positionY, topic);
+        //TODO: Return error in the command in case of failure
+    }
+
+    /// <inheritdoc cref="ILearningWorldPresenterToolboxInterface.AddLearningSpace"/>
+    public void AddLearningSpace(ILearningSpaceViewModel learningSpace)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        _presentationLogic.AddLearningSpace(LearningWorldVm, learningSpace);
+    }
+
+    public void AddNewLearningSpace()
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        _selectedViewModelsProvider.SetLearningObjectInPathWay(null, null);
+        _mediator.RequestOpenSpaceDialog();
+    }
+
+    /// <summary>
+    /// Calls the LoadLearningSpaceAsync methode in <see cref="_presentationLogic"/> and adds the returned learning space to the current learning world.
+    /// </summary>
+    /// <exception cref="ApplicationException">Thrown if <see cref="LearningWorldVm"/> is null</exception>
+    public async Task LoadLearningSpaceAsync()
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        await _presentationLogic.LoadLearningSpaceAsync(LearningWorldVm);
+    }
+
     /// <summary>
     /// Calls the respective Save methode for Learning Space or Learning Element depending on which learning object is selected
     /// </summary>
@@ -511,125 +297,44 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        if (LearningWorldVm.SelectedLearningObject == null)
-                throw new ApplicationException("SelectedLearningSpace is null");
-            
-        await _presentationLogic.SaveLearningSpaceAsync((LearningSpaceViewModel)LearningWorldVm.SelectedLearningObject);
+        if (_selectedViewModelsProvider.LearningObjectInPathWay == null)
+            throw new ApplicationException("SelectedLearningSpace is null");
+
+        await _presentationLogic.SaveLearningSpaceAsync(
+            (LearningSpaceViewModel) _selectedViewModelsProvider.LearningObjectInPathWay);
     }
 
-    /// <summary>
-    /// Changes the selected <see cref="IObjectInPathWayViewModel"/> in the currently selected learning world.
-    /// </summary>
-    /// <param name="pathWayObject">The pathway object that should be set as selected</param>
-    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
-    internal void SetSelectedLearningObject(ISelectableObjectInWorldViewModel pathWayObject)
+    public void EditSelectedLearningSpace()
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        LearningWorldVm.SelectedLearningObject = pathWayObject;
-        if (SelectedLearningObjectIsSpace)
-            _learningSpacePresenter.SetLearningSpace((LearningSpaceViewModel)LearningWorldVm.SelectedLearningObject);
-        else
-        {
-            LearningWorldVm.SelectedLearningObject = pathWayObject;
-        }
-        HideRightClickMenu();
+        if (_selectedViewModelsProvider.LearningObjectInPathWay is not LearningSpaceViewModel)
+            throw new ApplicationException("SelectedLearningObjectInPathWay is not LearningSpaceViewModel");
+        _mediator.RequestOpenSpaceDialog();
+    }
+
+    public void DeleteLearningSpace(ILearningSpaceViewModel obj)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        _presentationLogic.DeleteLearningSpace(LearningWorldVm, obj);
     }
 
     #endregion
 
-    #region LearningPathWay
+    #region PathWayCondition
 
-    public void AddNewPathWayCondition()
-    {
-        CreatePathWayConditionDialogOpen = true;
-    }
-    
-    /// <summary>
-    /// Creates a pathway condition viewmodel with return values from the dialog.
-    /// </summary>
-    /// <param name="returnValueTuple">Return values from the dialog</param>
-    /// <returns></returns>
-    /// <exception cref="ApplicationException">Thrown if the dictionary in return values of dialog null while return value is ok</exception>
-    public void OnCreatePathWayConditionDialogClose(ModalDialogOnCloseResult returnValueTuple)
+    public void CreatePathWayCondition(ConditionEnum condition = ConditionEnum.Or)
     {
         if (LearningWorldVm == null)
-            throw new ApplicationException("LearningWorld is null");
-        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
-        CreatePathWayConditionDialogOpen = false;
-
-        if (response == ModalDialogReturnValue.Cancel)
-        {
-            _newConditionSourceObject = null;
-            _newConditionTargetSpace = null;
-            return;
-        }
-        if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
-
-        foreach (var pair in data)
-        {
-            Console.Write($"{pair.Key}:{pair.Value}\n");
-        }
-
-        //required arguments
-        if (Enum.TryParse(data["Condition"], out ConditionEnum condition) == false)
-            throw new ApplicationException("Condition is not a valid enum value");
-
-        if (_newConditionSourceObject != null && _newConditionTargetSpace != null)
-        {
-            _presentationLogic.CreatePathWayConditionBetweenObjects(LearningWorldVm, condition, _newConditionSourceObject, _newConditionTargetSpace);
-            _newConditionSourceObject = null;
-            _newConditionTargetSpace = null;
-            return;
-        }
-        
-        var offset = 15 * _conditionCreationCounter;
-        _conditionCreationCounter = (_conditionCreationCounter + 1) % 10;
-        _presentationLogic.CreatePathWayCondition(LearningWorldVm, condition, offset+20, offset+100);
+            throw new ApplicationException("SelectedLearningWorld is null");
+        _presentationLogic.CreatePathWayCondition(LearningWorldVm, condition, 0, 0);
     }
 
-    /// <summary>
-    /// Sets the initial values for the <see cref="ModalDialog"/> with the current values from the selected condition.
-    /// </summary>
-    private void OpenEditSelectedPathWayConditionDialog()
+    public void SwitchPathWayCondition(PathWayConditionViewModel pathWayCondition)
     {
-        var condition = (PathWayConditionViewModel) LearningWorldVm?.SelectedLearningObject!;
-        //prepare dictionary property to pass to dialog
-        EditConditionDialogInitialValues = new Dictionary<string, string>
-        {
-            {"Condition", condition.Condition.ToString()},
-        };
-        EditPathWayConditionDialogOpen = true;
-    }
-    
-    /// <summary>
-    /// Changes property condition of pathway condition viewmodel with return value from the dialog.
-    /// </summary>
-    /// <param name="returnValueTuple">Return values from the dialog.</param>
-    /// <returns></returns>
-    /// <exception cref="ApplicationException">Thrown if the dictionary in return values of dialog null while return value is ok
-    /// or if the selected learning object not a learning space.</exception>
-    public void OnEditPathWayConditionDialogClose(ModalDialogOnCloseResult returnValueTuple)
-    {
-        if (LearningWorldVm == null)
-            throw new ApplicationException("LearningWorld is null");
-        var (response, data) = (returnValueTuple.ReturnValue, returnValueTuple.InputFieldValues);
-        EditPathWayConditionDialogOpen = false;
-
-        if (response == ModalDialogReturnValue.Cancel) return;
-        if (data == null) throw new ApplicationException("dialog data unexpectedly null after Ok return value");
-
-        foreach (var (key, value) in data)
-        {
-            _logger.LogTrace("{Key}:{Value}\\n", key, value);
-        }
-
-        //required arguments
-        if (Enum.TryParse(data["Condition"], out ConditionEnum condition) == false)
-            throw new ApplicationException("Condition is not a valid enum value");
-        if (LearningWorldVm.SelectedLearningObject is not PathWayConditionViewModel pathWayCondition)
-            throw new ApplicationException("LearningObject is not a pathWayCondition");
-        _presentationLogic.EditPathWayCondition(pathWayCondition, condition);
+        _presentationLogic.EditPathWayCondition(pathWayCondition,
+            pathWayCondition.Condition == ConditionEnum.And ? ConditionEnum.Or : ConditionEnum.And);
     }
 
     public void DeletePathWayCondition(PathWayConditionViewModel pathWayCondition)
@@ -638,6 +343,10 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
             throw new ApplicationException("SelectedLearningWorld is null");
         _presentationLogic.DeletePathWayCondition(LearningWorldVm, pathWayCondition);
     }
+
+    #endregion
+
+    #region LearningPathWay
 
     /// <summary>
     /// Sets the on hovered learning object of the learning world to the target object on the given position.
@@ -656,13 +365,12 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
             LearningWorldVm.OnHoveredObjectInPathWay = null;
         }
         else
-        
         {
             LearningWorldVm.OnHoveredObjectInPathWay = objectAtPosition;
             _logger.LogDebug("ObjectAtPosition: {0} ", sourceObject.Id);
         }
     }
-    
+
     /// <summary>
     /// Localizes and returns the learning object at the given position in the currently selected learning world.
     /// </summary>
@@ -673,12 +381,14 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         //LearningWorldVm can not be null because it is checked before call. -m.ho
         var objectAtPosition = LearningWorldVm?.LearningSpaces.FirstOrDefault(ls =>
-                                   ls.PositionX <= x && ls.PositionX + 100 >= x && ls.PositionY <= y && ls.PositionY + 50 >= y) ??
-                               (IObjectInPathWayViewModel?)LearningWorldVm?.PathWayConditions.FirstOrDefault(lc =>
-                                   Math.Pow(x - lc.PositionX, 2) + Math.Pow(y - lc.PositionY, 2) <= 400);
+                                   ls.PositionX <= x && ls.PositionX + 84 >= x && ls.PositionY <= y &&
+                                   ls.PositionY + 84 >= y) ??
+                               (IObjectInPathWayViewModel?) LearningWorldVm?.PathWayConditions.FirstOrDefault(lc =>
+                                   lc.PositionX <= x && lc.PositionX + 76 >= x && lc.PositionY <= y &&
+                                   lc.PositionY + 43 >= y);
         return objectAtPosition;
     }
-    
+
     /// <summary>
     /// Creates a learning pathway from the given source space to the target space on the given position.
     /// Does nothing when there is no learning space on the given position.
@@ -690,7 +400,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
-        var targetObject = GetObjectAtPosition( x, y);
+        var targetObject = GetObjectAtPosition(x, y);
         if (targetObject == null || targetObject == sourceObject)
             return;
         LearningWorldVm.OnHoveredObjectInPathWay = null;
@@ -698,9 +408,9 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         {
             _newConditionSourceObject = sourceObject;
             _newConditionTargetSpace = space;
-            _createPathWayConditionDialogOpen = true;
             return;
         }
+
         _presentationLogic.CreateLearningPathWay(LearningWorldVm, sourceObject, targetObject);
     }
 
@@ -720,6 +430,108 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
 
     #endregion
 
+    #endregion
+
+    #region LearningElement
+
+    /// <summary>
+    /// Sets the selected learning element of the learning world to the given learning element.
+    /// </summary>
+    /// <param name="learningElement">The learning element to set.</param>
+    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
+    public void SetSelectedLearningElement(ILearningElementViewModel learningElement)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        if (learningElement.Parent != null)
+            _selectedViewModelsProvider.SetLearningObjectInPathWay(learningElement.Parent, null);
+        _selectedViewModelsProvider.SetLearningElement(learningElement, null);
+        _mediator.RequestOpenElementDialog();
+        _selectedViewModelsProvider.SetActiveSlot(-1);
+    }
+
+    /// <summary>
+    /// Edits a given learning element.
+    /// </summary>
+    /// <param name="elementParent">The parent of the learning element which is either a learning space or null.</param>
+    /// <param name="learningElement">The learning element to edit.</param>
+    /// <param name="name">The new name of the element.</param>
+    /// <param name="description">The new description of the element.</param>
+    /// <param name="goals">The new goals of the element.</param>
+    /// <param name="difficulty">The new difficulty of the element.</param>
+    /// <param name="elementModel">The Theme of the element.</param>
+    /// <param name="workload">The new workload of the element.</param>
+    /// <param name="points">The new points of the element.</param>
+    /// <param name="learningContent">The new learning content of the element.</param>
+    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected or the learning
+    /// element to edit is not a unplaced element in the learning world.</exception>
+    public void EditLearningElement(ILearningSpaceViewModel? elementParent, ILearningElementViewModel learningElement,
+        string name, string description, string goals, LearningElementDifficultyEnum difficulty,
+        ElementModel elementModel,
+        int workload, int points, ILearningContentViewModel learningContent)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        if (LearningWorldVm.UnplacedLearningElements.Contains(learningElement))
+            if (learningElement.Parent == null)
+                _presentationLogic.EditLearningElement(elementParent, learningElement, name,
+                    description, goals, difficulty, elementModel, workload, points, learningContent);
+            else
+            {
+                throw new ApplicationException("LearningElement is unplaced but has a space parent");
+            }
+        else
+        {
+            if (learningElement.Parent == _selectedViewModelsProvider.LearningObjectInPathWay)
+                _learningSpacePresenter.EditLearningElement(learningElement, name, description, goals, difficulty,
+                    elementModel, workload, points, learningContent);
+            else
+            {
+                throw new ApplicationException("LearningElement is placed but has a different or null parent");
+            }
+        }
+    }
+
+    /// <summary>
+    /// Calls the the show learning element content method for the selected learning element.
+    /// </summary>
+    /// <param name="learningElement"></param>
+    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected or no learning element
+    /// is selected in the learning world.</exception>
+    public async Task ShowSelectedElementContentAsync(ILearningElementViewModel learningElement)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        SetSelectedLearningElement(learningElement);
+        await _presentationLogic.ShowLearningElementContentAsync((LearningElementViewModel) learningElement);
+    }
+
+    /// <summary>
+    /// Deletes the given learning element.
+    /// </summary>
+    /// <param name="learningElement">Learning element to delete.</param>
+    /// <exception cref="ApplicationException">Thrown if no learning world is currently selected.</exception>
+    public void DeleteLearningElement(ILearningElementViewModel learningElement)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        _presentationLogic.DeleteLearningElementInWorld(LearningWorldVm, learningElement);
+    }
+
+    public IEnumerable<ILearningContentViewModel> GetAllContent() => _presentationLogic.GetAllContent();
+
+    public void CreateUnplacedLearningElement(string name,
+        ILearningContentViewModel learningContent, string description, string goals,
+        LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points)
+    {
+        if (LearningWorldVm == null)
+            throw new ApplicationException("SelectedLearningWorld is null");
+        _presentationLogic.CreateUnplacedLearningElement(LearningWorldVm, name, learningContent,
+            description, goals, difficulty, elementModel, workload, points);
+    }
+
+    #endregion
+
     public event PropertyChangedEventHandler? PropertyChanged;
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)
@@ -735,12 +547,12 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     }
 
     public event PropertyChangingEventHandler? PropertyChanging;
-    
+
     protected virtual void OnPropertyChanging([CallerMemberName] string? propertyName = null)
     {
         PropertyChanging?.Invoke(this, new PropertyChangingEventArgs(propertyName));
     }
-    
+
     private bool BeforeSetField<T>(T field, T value, [CallerMemberName] string? propertyName = null)
     {
         if (EqualityComparer<T>.Default.Equals(field, value)) return false;

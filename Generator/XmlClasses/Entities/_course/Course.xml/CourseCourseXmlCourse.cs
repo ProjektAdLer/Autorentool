@@ -14,7 +14,7 @@ namespace Generator.XmlClasses.Entities._course.Course.xml;
 			IdNumber = "";
 			Summary = "";
 			SummaryFormat = "1";
-			Format = "tiles";
+			Format = "";
 			DefaultTileIcon = "pie-chart";
 			BaseColour = "#009681";
 			CourseUseSubtiles = "0";
