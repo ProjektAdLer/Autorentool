@@ -9,14 +9,14 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
 {
     protected override string ObjectName => ((ILearningSpaceViewModel)ObjectInPathWay).Name + Topic;
     protected override string Text => "";
-    protected override string ObjectStyleWhenSelected => @"fill:rgba(226,234,242,255);opacity:80%;stroke:rgba(69,160,229,255);stroke-width:100";
+    protected override string ObjectStyleWhenSelected => @"fill:rgba(226,234,242,255);opacity:80%;stroke:rgba(69,160,229,0.6);stroke-width:100";
     protected override string ObjectStyleWhenNotSelected => @"fill:rgba(226,234,242,255);opacity:80%;stroke:rgba(61,200,229,255);stroke-width:25";
     protected override string OnHoveredObjectShape =>  
-    @"<rect transform=""translate(0,0)"" height=""3rem"" width=""3rem"" rx=5 style=""fill:rgb(229,189,115)""></rect>
+    @"<rect transform=""translate(0,0)"" height=""4rem"" width=""4rem"" rx=5 style=""fill:rgb(229,189,115);stroke:rgba(229,189,115,0.5);stroke-width:5""></rect>
         "; 
 
     protected override string ObjectShape =>  
-        @"<svg width=""3rem"" height=""3rem"" viewBox=""-100 -100 2200 2000"" preserveAspectRatio=""xMinYMin"" version=""1.1"" xmlns=""http://www.w3.org/2000/svg"" xml:space=""preserve"" style=""fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;"">
+        @"<svg width=""4rem"" height=""4rem"" viewBox=""-100 -100 2200 2000"" preserveAspectRatio=""xMinYMin"" version=""1.1"" xmlns=""http://www.w3.org/2000/svg"" xml:space=""preserve"" style=""fill-rule:evenodd;clip-rule:evenodd;stroke-linecap:round;stroke-linejoin:round;stroke-miterlimit:1.5;"">
             <g transform=""matrix(1.12299,-0.648358,1.29672,0.74866,-322.238,-121.233)"">
                 <rect x=""-1024"" y=""1191.65"" width=""825.427"" height=""714.841"" style=""fill:rgb(185,190,198);""/>
                 <path d=""M-183.732,1185.22C-183.732,1181.25 -186.56,1178.8 -191.152,1178.8L-1016.58,1178.8C-1021.17,1178.8 -1026.83,1181.25 -1031.42,1185.22C-1036.01,1189.2 -1038.84,1194.1 -1038.84,1198.08L-1038.84,1912.92C-1038.84,1916.89 -1036.01,1919.34 -1031.42,1919.34L-205.994,1919.34C-201.402,1919.34 -195.744,1916.89 -191.152,1912.92C-186.56,1908.94 -183.732,1904.04 -183.732,1900.07L-183.732,1185.22ZM-213.414,1204.5L-213.414,1893.64C-213.414,1893.64 -1009.16,1893.64 -1009.16,1893.64C-1009.16,1893.64 -1009.16,1204.5 -1009.16,1204.5C-1009.16,1204.5 -213.414,1204.5 -213.414,1204.5L-213.414,1204.5Z"" style=""fill:rgb(23,45,77);""/>
@@ -74,11 +74,11 @@ public class DraggableLearningSpace : DraggableObjectInPathWay
             </foreignObject>
         </svg>";
 
-    protected override string DeletePathButtonShape => @"<circle r=""7"" transform=""translate(25,0)"" fill=""red"" stroke=""red""/>
-                                    <polyline points=""0,0 4,0 -4,0 4,0 -4,0"" transform=""translate(25,0)"" 
+    protected override string DeletePathButtonShape => @"<circle r=""7"" transform=""translate(33,0)"" fill=""red"" stroke=""red""/>
+                                    <polyline points=""0,0 4,0 -4,0 4,0 -4,0"" transform=""translate(33,0)"" 
                                     style=""fill:none;stroke:white;stroke-width:1""/>";
     
-    protected override string DeleteObjectButtonShape => @"<text font-size=""12"" transform=""translate(38,14)"" fill=""gray"" style=""user-select:none; cursor: pointer"">X</text>";
+    protected override string DeleteObjectButtonShape => @"<text font-size=""12"" transform=""translate(52,14)"" fill=""gray"" style=""user-select:none; cursor: pointer"">X</text>";
     
     private string Topic => ((ILearningSpaceViewModel)ObjectInPathWay).AssignedTopic == null ? "" : "(" + ((ILearningSpaceViewModel)ObjectInPathWay).AssignedTopic!.Name + ")";
 
