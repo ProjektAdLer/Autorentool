@@ -78,6 +78,23 @@
                 </MudSelect>
             </div>
         </Collapsable>
+        
+        <Collapsable Title="Representation in 3D" @bind-Collapsed="_collapsedElementModel">
+            <div class="rounded-lg w-4/4 px-4 pb-4">
+                <MudText Typo="Typo.caption">Style of the learning element in the 3D world</MudText>
+                <MudSelect @bind-Value="FormDataContainer.FormModel.ElementModel" AnchorOrigin="Origin.BottomCenter"
+                           Text="@FormDataContainer.FormModel.ElementModel.ToString()"
+                           For="@(() => FormModel.ElementModel)"
+                           Variant="Variant.Outlined">
+                    @foreach (var theme in _elementModels)
+                    {
+                        <MudSelectItem Value="@(theme)" Style="white-space: nowrap">
+                            <img src="@ElementModelHandler.GetIconForElementModel(theme)" alt="" width="38" class="mr-1"/>@*@theme*@
+                        </MudSelectItem>
+                    }
+                </MudSelect>
+            </div>
+        </Collapsable>
 
         <Collapsable Title="Goals" @bind-Collapsed="_collapsedGoals">
             <div class="rounded-lg w-4/4 px-4">
@@ -97,22 +114,6 @@
                               Variant="Variant.Outlined"
                               DebounceInterval="300"
                               Class="pb-2 mt-0"/>
-            </div>
-        </Collapsable>
-        <Collapsable Title="ElementModel" @bind-Collapsed="_collapsedElementModel">
-            <div class="rounded-lg w-4/4 px-4 pb-4">
-                <MudSelect @bind-Value="FormDataContainer.FormModel.ElementModel" AnchorOrigin="Origin.BottomCenter"
-                           Label="@nameof(FormDataContainer.FormModel.ElementModel)"
-                           Text="@FormDataContainer.FormModel.ElementModel.ToString()"
-                           For="@(() => FormModel.ElementModel)"
-                           Variant="Variant.Outlined">
-                    @foreach (var theme in _elementModels)
-                    {
-                        <MudSelectItem Value="@(theme)" Style="white-space: nowrap">
-                            <img src="@ElementModelHandler.GetIconForElementModel(theme)" alt="" width="32" class="mr-1"/>@theme
-                        </MudSelectItem>
-                    }
-                </MudSelect>
             </div>
         </Collapsable>
 
