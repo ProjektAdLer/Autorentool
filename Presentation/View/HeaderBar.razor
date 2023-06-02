@@ -18,24 +18,22 @@
         </div>
         <Button @onclick="@ExportLearningWorld" class="btn-standard p-2 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto" title="Generate learning world to moodle and 3D learning environment" disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
             <MudIcon Icon="@Icons.Material.Filled._3dRotation"></MudIcon>
-            <p class="pl-1 font-bold">Generate 3D world</p>
+            <p class="pl-1 font-bold uppercase">Generate 3D world</p>
         </Button>
-
-        <MudPopover Open="@_popoverOpen" Fixed="false" Class="left-0 rounded-none overflow-hidden min-h-screen max-h-screen h-screen w-screen bg-blacktrans-700"></MudPopover>
-
-        <MudPopover Open="@_popoverOpen" Fixed="false" Class="mt-12 ml-20 w-96 bg-adlerblue-600 bg-opacity-80">
+        
+        <MudPopover Open="@_popoverOpen" Fixed="false" Class="mt-12 ml-20 w-96 bg-adlerblue-600">
             <div class="flex flex-row">
                 <p class="text-center text-lg pl-6 pt-6 text-white">In order to further develop and optimize the authoring tool, we would appreciate if you could take a few minutes to give us feedback on the current status of the authoring tool.</p>
                 <Button class="flex-none w-5 h-5 text-adlergrey-200 font-bold text-lg hover:text-white" @onclick="TogglePopover" Icon="@Icons.Material.Filled.Close" title="Close">X</Button>
             </div>
             <div class="flex justify-center items-center pb-6 pt-1">
                 <a href="https://www.soscisurvey.de/autorentoolevaluation_gesamt" target="_blank" title="Final feedback - Opens new web page" class="w-7/12 btn-standard flex flex-row gap-2 justify-center items-center">
-                    <img class="w-6 h-6 drop-shadow" src="/CustomIcons/feedback-icon-without-typo-nobg.png" alt="feedback-icon"/>
-                    <p class="font-bold text-base">To the final feedback</p>
+                    <img class="w-7 h-7 drop-shadow" src="/CustomIcons/final-feedback-icon-nobg.png" alt="final-feedback-icon"/>
+                    <p class="uppercase">To final feedback</p>
                 </a>
             </div>
         </MudPopover>
-
+        
     </div>
     @if (SelectedViewModelsProvider?.LearningWorld?.Name == null)
     {
@@ -53,33 +51,53 @@
     }
 
     <div class="flex justify-end items-center gap-2 border-solid">
-        <div class="flex flex-col justify-center px-1 py-1 border-2 border-white bg-adlerblue-600 text-white rounded-lg mt-0.5">
-            <p class="text-xs font-bold text-center">
-                Feedback
-            </p>
-            <div class="flex flex-row justify-around">
+       
+        <MudMenu ActivationEvent="MouseEvent.MouseOver" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter">
+            <ActivatorContent>
+                <MudButton Class="btn-standard bg-adlerblue-600 test-base text-white font-semibold">Feedback</MudButton>
+            </ActivatorContent>
+            <ChildContent>
+            <div class="w-64">
+
+                @if (SelectedViewModelsProvider?.LearningWorld?.Name == null)
+                {
+                    <a href="https://www.soscisurvey.de/autorentoolevaluationlernwelt/" target="_blank" title="User experience feedback - Opens new web page">
+                        <div class="flex flex-row items-center gap-4">
+                            <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/final-feedback-icon-nobg.png" alt="feedback-icon"/>
+                            <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">User experience feedback</MudMenuItem>
+                        </div>
+                    </a>
+
+                }
+                else
+                {
+                    <a href="https://www.soscisurvey.de/autorentoolevaluationlernraum/" target="_blank" title="User experience feedback - Opens new web page">
+                        <div class="flex flex-row items-center gap-4">
+                            <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/feedback-icon-without-typo-nobg-adlerdarkblue.png" alt="feedback-icon"/>
+                            <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">User experience feedback</MudMenuItem>
+                        </div>
+                    </a>
+                }
+
                 <a href="https://bugreport.projekt-adler.eu" target="_blank" title="Technical feedback - Opens new web page">
-                    <button class="btn-standard m-0 p-1 h-5">
-                        <img class="w-4 h-4 drop-shadow" src="/CustomIcons/bug-icon-nobg.png" alt="debug-icon"/>
-                    </button>
-                </a>@if (SelectedViewModelsProvider?.LearningWorld?.Name == null)
-               {
-                   <a href="https://www.soscisurvey.de/autorentoolevaluationlernwelt/" target="_blank" title="User experience feedback - Opens new web page">
-                       <button class="btn-standard m-0 p-1 h-5">
-                           <img class="w-4 h-4 drop-shadow" src="/CustomIcons/feedback-icon-without-typo-nobg.png" alt="feedback-icon"/>
-                       </button>
-                   </a>
-               }
-               
-               else
-               {
-                <a href="https://www.soscisurvey.de/autorentoolevaluationlernraum/" target="_blank" title="User experience feedback - Opens new web page">
-                    <button class="btn-standard m-0 p-1 h-5">
-                        <img class="w-4 h-4 drop-shadow" src="/CustomIcons/feedback-icon-without-typo-nobg.png" alt="feedback-icon"/>
-                    </button>
-                </a>}
+                    <div class="flex flex-row justify-start items-center gap-4">
+                        <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/bug-icon-nobg-adlerdarkblue.png" alt="debug-icon"/>
+                        <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">Technical feedback</MudMenuItem>
+                    </div>
+                </a>
+
+                @*<MudDivider></MudDivider>
+
+                <a href="https://www.soscisurvey.de/autorentoolevaluation_gesamt" target="_blank" title="Final feedback - Opens new web page">
+                    <div class="flex flex-row justify-start items-center gap-4">
+                        <img class="opacity-60 w-9 h-7 drop-shadow pl-2" src="/CustomIcons/final-feedback-icon-adlerdarkblue-nobg.png" alt="final-feedback-icon"/>
+                        <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">Final feedback</MudMenuItem>
+                    </div>
+                </a>*@
             </div>
-        </div>
+            </ChildContent>
+        </MudMenu>
+
         <CultureSelector/>
         <LmsLoginButton/>
         @if (PresentationLogic?.RunningElectron == true)
