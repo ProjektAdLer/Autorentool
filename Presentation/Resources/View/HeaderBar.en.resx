@@ -54,4 +54,16 @@
     <data name="Functionality.Button.Redo.Hover" xml:space="preserve">
         <value>Redo</value>
     </data>
+    <data name="MudPopover.Functionality.Button.Close.Hover" xml:space="preserve">
+        <value>Close</value>
+    </data>
+    <data name="MudPopover.Feedback.Final.Hover" xml:space="preserve">
+        <value>Final feedback - Opens new web page</value>
+    </data>
+    <data name="MudPopover.Feedback.Final.Text" xml:space="preserve">
+        <value>To the final feedback</value>
+    </data>
+    <data name="MudPopover.Feedback.Survey.Text" xml:space="preserve">
+        <value>In order to further develop and optimize the authoring tool, we would appreciate if you could take a few minutes to give us feedback on the current status of the authoring tool.</value>
+    </data>
 </root>

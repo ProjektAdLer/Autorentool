@@ -1,0 +1,69 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <data name="Alert.Error.Text1" xml:space="preserve">
+        <value>Error.</value>
+    </data>
+    <data name="Alert.Error.Text2" xml:space="preserve">
+        <value>An error occurred while processing your request.</value>
+    </data>
+    <data name="Alert.Error.RequestID.Text" xml:space="preserve">
+        <value>Request ID:</value>
+    </data>
+    <data name="Alert.Error.Development.Header.Text" xml:space="preserve">
+        <value>Development Mode</value>
+    </data>
+    <data name="Alert.Error.Development.p1.Text.Normal1" xml:space="preserve">
+        <value>Swapping to the</value>
+    </data>
+    <data name="Alert.Error.Development.p1.Text.Strong" xml:space="preserve">
+        <value>Development</value>
+    </data>
+    <data name="Alert.Error.Development.p1.Text.Normal2" xml:space="preserve">
+        <value>environment displays detailed information about the error that occurred.</value>
+    </data>
+    <data name="Alert.Error.Development.p2.Text.Strong1" xml:space="preserve">
+        <value>The Development environment shouldn't be enabled for deployed applications.</value>
+    </data>
+    <data name="Alert.Error.Development.p2.Text.Strong2" xml:space="preserve">
+        <value>Development</value>
+    </data>
+    <data name="Alert.Error.Development.p2.Text.Strong3" xml:space="preserve">
+        <value>ASPNETCORE_ENVIRONMENT</value>
+    </data>
+    <data name="Alert.Error.Development.p2.Text.Strong4" xml:space="preserve">
+        <value>Development</value>
+    </data>
+    <data name="Alert.Error.Development.p2.Text.Normal1" xml:space="preserve">
+        <value>It can result in displaying sensitive information from exceptions to end users.</value>
+    </data>
+    <data name="Alert.Error.Development.p2.Text.Normal2" xml:space="preserve">
+        <value>For local debugging, enable the</value>
+    </data>
+    <data name="Alert.Error.Development.p2.Text.Normal3" xml:space="preserve">
+        <value>environment by setting the</value>
+    </data>
+    <data name="Alert.Error.Development.p2.Text.Normal4" xml:space="preserve">
+        <value>environment variable to</value>
+    </data>
+    <data name="Alert.Error.Development.p2.Text.Normal5" xml:space="preserve">
+        <value>and restarting the app.</value>
+    </data>
+    <data name="Alert.Error.Header.Title" xml:space="preserve">
+        <value>Error</value>
+    </data>
+</root>

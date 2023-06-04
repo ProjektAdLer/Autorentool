@@ -2,9 +2,9 @@
 @using Presentation.PresentationLogic.Mediator
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Microsoft.Extensions.Localization
-@using Presentation.Components
-@using Presentation.Components.Culture
 @using System.ComponentModel
+@using Presentation.Components.Culture
+@using Presentation.Components
 @inject ISnackbar Snackbar
 <header class="mb-1 grid grid-cols-3 grid-rows-1 w-full bg-buttonbgblue items-center">
     <div class="ml-1 flex justify-start items-center gap-2">
@@ -24,13 +24,13 @@
 
         <MudPopover Open="@_popoverOpen" Fixed="false" Class="mt-12 ml-20 w-96 bg-adlerblue-600 bg-opacity-80">
             <div class="flex flex-row">
-                <p class="text-center text-lg pl-6 pt-6 text-white">In order to further develop and optimize the authoring tool, we would appreciate if you could take a few minutes to give us feedback on the current status of the authoring tool.</p>
-                <Button class="flex-none w-5 h-5 text-adlergrey-200 font-bold text-lg hover:text-white" @onclick="TogglePopover" Icon="@Icons.Material.Filled.Close" title="Close">X</Button>
+                <p class="text-center text-lg pl-6 pt-6 text-white">@Localizer["MudPopover.Feedback.Survey.Text"]</p>
+                <Button class="flex-none w-5 h-5 text-adlergrey-200 font-bold text-lg hover:text-white" @onclick="TogglePopover" Icon="@Icons.Material.Filled.Close" title=@Localizer["Functionality.Button.Close.Hover"]>X</Button>
             </div>
             <div class="flex justify-center items-center pb-6 pt-1">
-                <a href="https://www.soscisurvey.de/autorentoolevaluation_gesamt" target="_blank" title="Final feedback - Opens new web page" class="w-7/12 btn-standard flex flex-row gap-2 justify-center items-center">
+                <a href="https://www.soscisurvey.de/autorentoolevaluation_gesamt" target="_blank" title=@Localizer["MudPopover.Feedback.Final.Hover"] class="w-7/12 btn-standard flex flex-row gap-2 justify-center items-center">
                     <img class="w-6 h-6 drop-shadow" src="/CustomIcons/feedback-icon-without-typo-nobg.png" alt="feedback-icon"/>
-                    <p class="font-bold text-base">To the final feedback</p>
+                    <p class="font-bold text-base">@Localizer["MudPopover.Feedback.Final.Text"]</p>
                 </a>
             </div>
         </MudPopover>
@@ -70,19 +70,39 @@
 @code {
 
     [Inject]
-    public IPresentationLogic PresentationLogic { get; set; }
+    public IPresentationLogic PresentationLogic
+    {
+        get;
+        set;
+    }
 
     [Inject]
-    internal NavigationManager NavManager { get; private init; }
+    internal NavigationManager NavManager
+    {
+        get;
+        private init;
+    }
 
     [Inject]
-    private IStringLocalizer<HeaderBar> Localizer { get; set; }
+    private IStringLocalizer<HeaderBar> Localizer
+    {
+        get;
+        set;
+    }
 
     [Inject]
-    private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
+    private ISelectedViewModelsProvider SelectedViewModelsProvider
+    {
+        get;
+        set;
+    }
 
     [Inject]
-    private IMediator Mediator { get; set; }
+    private IMediator Mediator
+    {
+        get;
+        set;
+    }
 
     private string _filepath = "";
 

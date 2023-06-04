@@ -1,14 +1,25 @@
-﻿@using AuthoringTool.View.Shared
+﻿@using Microsoft.Extensions.Localization
 @using Presentation.View
-<Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new []{typeof(MasterLayout).Assembly}">
+@using AuthoringTool.View.Shared
+<Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new[] {typeof(MasterLayout).Assembly}">
     <Found Context="routeData">
-        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
-        <FocusOnNavigate RouteData="@routeData" Selector="h1" />
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
+        <FocusOnNavigate RouteData="@routeData" Selector="h1"/>
     </Found>
     <NotFound>
-        <PageTitle>Not found</PageTitle>
+        <PageTitle>@Localizer["PageTitle"]</PageTitle>
         <LayoutView Layout="@typeof(MainLayout)">
-            <p role="alert">Sorry, there's nothing at this address.</p>
+            <p role="alert">@Localizer["Alert"]</p>
         </LayoutView>
     </NotFound>
 </Router>
+
+@code
+{
+    [Inject]
+    private StringLocalizer<App> Localizer
+    {
+        get;
+        set;
+    }
+}

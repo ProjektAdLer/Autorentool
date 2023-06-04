@@ -54,4 +54,16 @@
     <data name="Functionality.Button.Undo.Hover" xml:space="preserve">
         <value>Zurück</value>
     </data>
+    <data name="MudPopover.Functionality.Button.Close.Hover" xml:space="preserve">
+        <value>Schließen</value>
+    </data>
+    <data name="MudPopover.Feedback.Survey.Text" xml:space="preserve">
+        <value>Um das Autorentool weiter zu entwickeln und zu optimieren, würden wir es schätzen wenn Sie sich ein paar Minuten Ihrer Zeit erübrigen würden um uns Ihr Feedback über das aktuelle Autorentool mitzuteilen.</value>
+    </data>
+    <data name="MudPopover.Feedback.Final.Text" xml:space="preserve">
+        <value>Zum finalen Feedback</value>
+    </data>
+    <data name="MudPopover.Feedback.Final.Hover" xml:space="preserve">
+        <value>Finales Feedback - Öffnet eine neue Seite</value>
+    </data>
 </root>

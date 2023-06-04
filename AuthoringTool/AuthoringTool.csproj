@@ -73,27 +73,49 @@
     </ItemGroup>
     
     <ItemGroup>
-        <EmbeddedResource Update="Resources\Pages\Index\Index.de.resx">
-          <LastGenOutput>Index.de.Designer.cs</LastGenOutput>
-        </EmbeddedResource>
-        <EmbeddedResource Update="Resources\Pages\Index\Index.en.resx">
-          <LastGenOutput>Index.en.Designer.cs</LastGenOutput>
-        </EmbeddedResource>
         <EmbeddedResource Update="Resources\Pages\MyLearningWorld\MyLearningWorld.de.resx">
           <Generator>ResXFileCodeGenerator</Generator>
           <LastGenOutput>MyLearningWorld.Designer.cs</LastGenOutput>
         </EmbeddedResource>
         <EmbeddedResource Update="Resources\Pages\MyLearningWorld\MyLearningWorld.en.resx">
-          <Generator>ResXFileCodeGenerator</Generator>
-          <LastGenOutput>MyLearningWorld.en.Designer.cs</LastGenOutput>
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>MyLearningWorld.en.Designer.cs</LastGenOutput>
         </EmbeddedResource>
         <EmbeddedResource Update="Resources\Pages\MyLearningWorlds\MyLearningWorldsOverview.de.resx">
-          <Generator>ResXFileCodeGenerator</Generator>
-          <LastGenOutput>MyLearningWorld.Designer.cs</LastGenOutput>
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>MyLearningWorld.Designer.cs</LastGenOutput>
         </EmbeddedResource>
         <EmbeddedResource Update="Resources\Pages\MyLearningWorlds\MyLearningWorldsOverview.en.resx">
-          <Generator>ResXFileCodeGenerator</Generator>
-          <LastGenOutput>MyLearningWorldsOverview.en.Designer.cs</LastGenOutput>
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>MyLearningWorldsOverview.en.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Resources\Pages\Error\Error.de.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Error.de.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Resources\Pages\Pages.de.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Pages.de.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Resources\AuthoringToolPages\ErrorModel\ErrorModel.de.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>Pages.de.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Resources\Pages\LayoutModel.de.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>LayoutModel.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Resources\View\Shared\MainLayout.de.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>MainLayout.de.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Resources\View\Shared\NavMenu.de.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>NavMenu.de.Designer.cs</LastGenOutput>
+        </EmbeddedResource>
+        <EmbeddedResource Update="Resources\App.de.resx">
+            <Generator>ResXFileCodeGenerator</Generator>
+            <LastGenOutput>App.de.Designer.cs</LastGenOutput>
         </EmbeddedResource>
     </ItemGroup>
     
