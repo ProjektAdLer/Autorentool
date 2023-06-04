@@ -2,6 +2,7 @@ using BusinessLogic.Commands.Element;
 using BusinessLogic.Entities;
 using NUnit.Framework;
 using Shared;
+using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Element;
 
@@ -12,14 +13,8 @@ public class DeleteLearningElementInWorldUt
     [Test]
     public void Execute_Undo_Redo_DeletesLearningElement()
     {
-        var world = new LearningWorld("a", "b", "c", "d", "e", "f")
-        {
-            UnsavedChanges = false
-        };
-        var element = new LearningElement("g", null!, "j", "k", LearningElementDifficultyEnum.Easy)
-        {
-            UnsavedChanges = false
-        };
+        var world = EntityProvider.GetLearningWorld(unsavedChanges: false);
+        var element = EntityProvider.GetLearningElement(unsavedChanges: false);
         world.UnplacedLearningElements = new List<ILearningElement>() { element } ;
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
@@ -71,8 +66,8 @@ public class DeleteLearningElementInWorldUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var world = new LearningWorld("a", "b", "c","d", "e","f");
-        var element = new LearningElement("g", null!, "j", "k", LearningElementDifficultyEnum.Easy);
+        var world = EntityProvider.GetLearningWorld();
+        var element = EntityProvider.GetLearningElement();
         world.UnplacedLearningElements = new List<ILearningElement>() { element } ;
         var actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;

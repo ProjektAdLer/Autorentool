@@ -17,7 +17,8 @@ namespace Presentation.PresentationLogic.LearningSpace;
 public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePresenterToolboxInterface
 {
     public LearningSpacePresenter(
-        IPresentationLogic presentationLogic, IMediator mediator, ISelectedViewModelsProvider selectedViewModelsProvider, ILogger<LearningSpacePresenter> logger)
+        IPresentationLogic presentationLogic, IMediator mediator,
+        ISelectedViewModelsProvider selectedViewModelsProvider, ILogger<LearningSpacePresenter> logger)
     {
         _presentationLogic = presentationLogic;
         _mediator = mediator;
@@ -31,7 +32,6 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     private readonly ISelectedViewModelsProvider _selectedViewModelsProvider;
     private readonly ILogger<LearningSpacePresenter> _logger;
     private int _creationCounter = 0;
-    private int _activeSlot = -1;
     private ILearningSpaceViewModel? _learningSpaceVm;
     private ReplaceLearningElementData _replaceLearningElementData = new();
 
@@ -43,7 +43,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
 
     public ILearningContentViewModel? DragAndDropLearningContent { get; private set; }
     public IDisplayableLearningObject? RightClickedLearningObject { get; private set; }
-    
+
     public void SetLearningSpace(ILearningSpaceViewModel space)
     {
         LearningSpaceVm = space;
@@ -72,9 +72,11 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
             throw new ApplicationException("LearningSpaceVm is null");
         if (_selectedViewModelsProvider.LearningWorld == null)
             throw new ApplicationException("LearningWorld is null");
-        _presentationLogic.ChangeLearningSpaceLayout(LearningSpaceVm, _selectedViewModelsProvider.LearningWorld, floorPlanName);
+        _presentationLogic.ChangeLearningSpaceLayout(LearningSpaceVm, _selectedViewModelsProvider.LearningWorld,
+            floorPlanName);
+        _selectedViewModelsProvider.SetActiveSlot(-1);
     }
-    
+
     #region LearningElement
 
     public void OpenReplaceLearningElementDialog(ILearningWorldViewModel learningWorldVm,
@@ -100,6 +102,31 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
             _replaceLearningElementData.DropItem, _replaceLearningElementData.SlotId);
     }
 
+    public void ClickOnSlot(int i)
+    {
+        if (LearningSpaceVm?.LearningSpaceLayout.LearningElements.ContainsKey(i) ?? false)
+            return;
+        if (_selectedViewModelsProvider.ActiveSlot == i)
+        {
+            _selectedViewModelsProvider.SetActiveSlot(-1);
+            return;
+        }
+        
+        SetSelectedLearningElement(null);
+        _selectedViewModelsProvider.SetActiveSlot(i);
+        _mediator.RequestOpenElementDialog();
+    }
+
+    public void CreateLearningElementInSlot(string name, ILearningContentViewModel learningContent,
+        string description, string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points)
+    {
+        if(LearningSpaceVm == null)
+            throw new ApplicationException("LearningSpaceVm is null");
+        _presentationLogic.CreateLearningElementInSlot(LearningSpaceVm, _selectedViewModelsProvider.ActiveSlot, name, learningContent, description,
+            goals, difficulty, elementModel, workload, points);
+        _selectedViewModelsProvider.SetActiveSlot(-1);
+    }
+
     public void DragLearningElement(object sender, DraggedEventArgs<ILearningElementViewModel> args)
     {
         _presentationLogic.DragLearningElement(args.LearningObject, args.OldPositionX, args.OldPositionY);
@@ -108,6 +135,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     public void ClickedLearningElement(ILearningElementViewModel obj)
     {
         _mediator.RequestOpenElementDialog();
+        _selectedViewModelsProvider.SetActiveSlot(-1);
         SetSelectedLearningElement(obj);
     }
 
@@ -116,13 +144,13 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         RightClickedLearningObject = obj;
     }
 
-    public void EditLearningElement(ILearningElementViewModel learningElement,
-        string name, string description, string goals, LearningElementDifficultyEnum difficulty,
-        int workload, int points, ILearningContentViewModel learningContent)
+    public void EditLearningElement(ILearningElementViewModel learningElement, string name, string description,
+        string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points,
+        ILearningContentViewModel learningContent)
     {
         SetSelectedLearningElement(learningElement);
-        _presentationLogic.EditLearningElement(LearningSpaceVm, learningElement, name, description,
-            goals, difficulty, workload, points, learningContent);
+        _presentationLogic.EditLearningElement(LearningSpaceVm, learningElement, name, description, goals, difficulty,
+            elementModel, workload, points, learningContent);
     }
 
     public void EditLearningElement(int slotIndex)
@@ -187,30 +215,11 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     }
 
     /// <summary>
-    /// Calls a load method in <see cref="_presentationLogic"/> depending on the content type and returns a
-    /// LearningContentViewModel.
-    /// </summary>
-    /// <param name="contentType">The type of the content that can either be an image, a video, a pdf or a h5p.</param>
-    /// <exception cref="ApplicationException">Thrown if there is no valid ContentType assigned.</exception>
-    private async Task<ILearningContentViewModel> LoadLearningContent(ContentTypeEnum contentType)
-    {
-        return contentType switch
-        {
-            ContentTypeEnum.Image => await _presentationLogic.LoadImageAsync(),
-            ContentTypeEnum.Video => await _presentationLogic.LoadVideoAsync(),
-            ContentTypeEnum.PDF => await _presentationLogic.LoadPdfAsync(),
-            ContentTypeEnum.H5P => await _presentationLogic.LoadH5PAsync(),
-            ContentTypeEnum.Text => await _presentationLogic.LoadTextAsync(),
-            _ => throw new ApplicationException("No valid ContentType assigned")
-        };
-    }
-
-    /// <summary>
     /// Changes the selected <see cref="ILearningElementViewModel"/> in the currently selected learning space.
     /// </summary>
     /// <param name="learningElement">The learning element that should be set as selected</param>
     /// <exception cref="ApplicationException">Thrown if no learning space is currently selected.</exception>
-    public void SetSelectedLearningElement(ILearningElementViewModel learningElement)
+    public void SetSelectedLearningElement(ILearningElementViewModel? learningElement)
     {
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");

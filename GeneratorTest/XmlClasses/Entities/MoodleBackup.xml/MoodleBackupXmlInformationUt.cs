@@ -54,7 +54,7 @@ public class MoodleBackupXmlInformationUt
             Assert.That(systemUnderTest.OriginalWwwRoot, Is.EqualTo("https://moodle.cluuub.xyz"));
             Assert.That(systemUnderTest.OriginalSiteIdentifierHash, Is.EqualTo("c9629ccd3c092478330b78bdf4dcdb18"));
             Assert.That(systemUnderTest.OriginalCourseId, Is.EqualTo("1"));
-            Assert.That(systemUnderTest.OriginalCourseFormat, Is.EqualTo("tiles"));
+            Assert.That(systemUnderTest.OriginalCourseFormat, Is.EqualTo(""));
             Assert.That(systemUnderTest.OriginalCourseFullname, Is.EqualTo(""));
             Assert.That(systemUnderTest.OriginalCourseShortname, Is.EqualTo(""));
             Assert.That(systemUnderTest.OriginalCourseStartDate, Is.EqualTo(""));

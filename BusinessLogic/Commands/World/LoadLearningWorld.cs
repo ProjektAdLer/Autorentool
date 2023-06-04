@@ -6,44 +6,44 @@ namespace BusinessLogic.Commands.World;
 public class LoadLearningWorld : ILoadLearningWorld
 {
     public string Name => nameof(LoadLearningWorld);
-    private readonly IBusinessLogic _businessLogic;
-    
-    private readonly AuthoringToolWorkspace _workspace;
-    public LearningWorld? LearningWorld { get; private set; }
-    private readonly string _filepath;
-    private readonly Action<AuthoringToolWorkspace> _mappingAction;
+    internal IBusinessLogic BusinessLogic { get; }
+
+    internal AuthoringToolWorkspace Workspace { get; }
+    public ILearningWorld? LearningWorld { get; private set; }
+    internal string Filepath { get; }
+    internal Action<AuthoringToolWorkspace> MappingAction { get; }
     private IMemento? _memento;
 
     public LoadLearningWorld(AuthoringToolWorkspace workspace, string filepath, IBusinessLogic businessLogic,
         Action<AuthoringToolWorkspace> mappingAction)
     {
-        _workspace = workspace;
-        _filepath = filepath;
-        _businessLogic = businessLogic;
-        _mappingAction = mappingAction;
+        Workspace = workspace;
+        Filepath = filepath;
+        BusinessLogic = businessLogic;
+        MappingAction = mappingAction;
     }
     
     public LoadLearningWorld(AuthoringToolWorkspace workspace, Stream stream, IBusinessLogic businessLogic,
         Action<AuthoringToolWorkspace> mappingAction)
     {
-        _filepath = "";
-        _workspace = workspace;
-        _businessLogic = businessLogic;
-        LearningWorld = _businessLogic.LoadLearningWorld(stream);
-        _mappingAction = mappingAction;
+        Filepath = "";
+        Workspace = workspace;
+        BusinessLogic = businessLogic;
+        LearningWorld = BusinessLogic.LoadLearningWorld(stream);
+        MappingAction = mappingAction;
     }
     
     public void Execute()
     {
-        _memento = _workspace.GetMemento();
+        _memento = Workspace.GetMemento();
         
-        LearningWorld ??= _businessLogic.LoadLearningWorld(_filepath);
+        LearningWorld ??= BusinessLogic.LoadLearningWorld(Filepath);
         
-        _workspace.LearningWorlds.Add(LearningWorld);
+        Workspace.LearningWorlds.Add(LearningWorld);
 
-        LearningWorld.SavePath = _filepath;
+        LearningWorld.SavePath = Filepath;
         
-        _mappingAction.Invoke(_workspace);
+        MappingAction.Invoke(Workspace);
     }
 
     public void Undo()
@@ -53,9 +53,9 @@ public class LoadLearningWorld : ILoadLearningWorld
             throw new InvalidOperationException("_memento is null");
         }
         
-        _workspace.RestoreMemento(_memento);
+        Workspace.RestoreMemento(_memento);
         
-        _mappingAction.Invoke(_workspace);
+        MappingAction.Invoke(Workspace);
     }
 
     public void Redo() => Execute();

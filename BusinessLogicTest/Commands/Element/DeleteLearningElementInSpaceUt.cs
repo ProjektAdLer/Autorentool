@@ -2,6 +2,7 @@
 using BusinessLogic.Entities;
 using NUnit.Framework;
 using Shared;
+using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Element;
 
@@ -12,14 +13,9 @@ public class DeleteLearningElementInSpaceUt
     [Test]
     public void Execute_DeletesLearningElement()
     {
-        var space = new LearningSpace("a","d", "e", 5, Theme.Campus)
-        {
-            UnsavedChanges = false
-        };
-        var element = new LearningElement("g", null!, "j", "k", LearningElementDifficultyEnum.Easy, space)
-        {
-            UnsavedChanges = false
-        };
+        var space = EntityProvider.GetLearningSpace(unsavedChanges: false);
+        var element = EntityProvider.GetLearningElement(parent: space, unsavedChanges: false);
+        
         space.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>() { { 0, element } };
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
@@ -46,18 +42,9 @@ public class DeleteLearningElementInSpaceUt
     [Test]
     public void Execute_DeletesLearningElementAndSetsAnotherElementSelectedLearningElement()
     {
-        var space = new LearningSpace("a","d", "e", 5, Theme.Campus)
-        {
-            UnsavedChanges = false
-        };
-        var element1 = new LearningElement("g", null!, "j", "k", LearningElementDifficultyEnum.Easy, space)
-        {
-            UnsavedChanges = false
-        };
-        var element2 = new LearningElement("l", null!, "o", "p", LearningElementDifficultyEnum.Easy, space)
-        {
-            UnsavedChanges = false
-        };
+        var space = EntityProvider.GetLearningSpace(unsavedChanges: false);
+        var element1 = EntityProvider.GetLearningElement(parent: space, unsavedChanges: false);
+        var element2 = EntityProvider.GetLearningElement(parent: space, unsavedChanges: false, append: "2");
         space.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>
         {
             {
@@ -94,8 +81,8 @@ public class DeleteLearningElementInSpaceUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var space = new LearningSpace("a","d", "e", 5, Theme.Campus);
-        var element = new LearningElement("g", null!, "j", "k", LearningElementDifficultyEnum.Easy, space);
+        var space = EntityProvider.GetLearningSpace();
+        var element = EntityProvider.GetLearningElement(parent: space);
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
 
@@ -110,18 +97,9 @@ public class DeleteLearningElementInSpaceUt
     [Test]
     public void UndoRedo_UndoesRedoesDeleteLearningElement()
     {
-        var space = new LearningSpace("a","d", "e", 5, Theme.Campus)
-        {
-            UnsavedChanges = false
-        };
-        var element1 = new LearningElement("g", null!, "j", "k", LearningElementDifficultyEnum.Easy, space)
-        {
-            UnsavedChanges = false
-        };
-        var element2 = new LearningElement("l", null!, "o", "p", LearningElementDifficultyEnum.Easy, space)
-        {
-            UnsavedChanges = false
-        };
+        var space = EntityProvider.GetLearningSpace(unsavedChanges: false);
+        var element1 = EntityProvider.GetLearningElement(parent: space, unsavedChanges: false);
+        var element2 = EntityProvider.GetLearningElement(parent: space, unsavedChanges: false, append: "2");
         space.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>
         {
             {

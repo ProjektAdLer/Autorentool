@@ -28,7 +28,7 @@ public interface IXmlResourceFactory
     void CreateResourceFactory();
     //void ReadFileListAndSetParameters(List<LearningElementJson> listDslDocument);
     void ReadFileListAndSetParametersResource(List<LearningElementJson> listPdfDocument);
-    void ResourceSetParametersFilesXml(string hashCheckSum, string filesize, string mimeType);
+    void ResourceSetParametersFilesXml(string hashCheckSum, string filesize, string mimeType, string uuid);
     void FileSetParametersActivity();
 
     /// <summary>

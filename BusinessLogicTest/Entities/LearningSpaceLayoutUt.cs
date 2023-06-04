@@ -14,9 +14,9 @@ public class LearningSpaceLayoutUt
         var content1 = new FileContent("a", "b", "");
         var content2 = new FileContent("w", "e", "");
         var ele1 = new LearningElement("a", content1, "g", "h", LearningElementDifficultyEnum.Easy,
-            null, workload: 17, points: 6, positionX: 23);
+            ElementModel.L_H5P_SPIELAUTOMAT_1, null, workload: 17, points: 6, positionX: 23);
         var ele2 = new LearningElement("z", content2, "z", "zz",
-            LearningElementDifficultyEnum.Medium, null, workload: 444, points: 9, positionX: double.MaxValue);
+            LearningElementDifficultyEnum.Medium, ElementModel.L_H5P_TAFEL_1, null, workload: 444, points: 9, positionX: double.MaxValue);
         var learningElements = new Dictionary<int, ILearningElement>()
         {
             {
@@ -26,7 +26,7 @@ public class LearningSpaceLayoutUt
                 1, ele2
             }
         };
-        var floorPlanName = FloorPlanEnum.R20X308L;
+        var floorPlanName = FloorPlanEnum.R_20X30_8L;
 
         var systemUnderTest = new LearningSpaceLayout(learningElements, floorPlanName);
 
@@ -48,9 +48,9 @@ public class LearningSpaceLayoutUt
         var content1 = new FileContent("a", "b", "");
         var content2 = new FileContent("w", "e", "");
         var ele1 = new LearningElement("a", content1, "g", "h", LearningElementDifficultyEnum.Easy,
-            null, workload: 17, points: 6, positionX: 23);
+            ElementModel.L_H5P_SPIELAUTOMAT_1, null, workload: 17, points: 6, positionX: 23);
         var ele2 = new LearningElement("z", content2, "z", "zz",
-            LearningElementDifficultyEnum.Medium, null, workload: 444, points: 9, positionX: double.MaxValue);
+            LearningElementDifficultyEnum.Medium, ElementModel.L_H5P_TAFEL_1, null, workload: 444, points: 9, positionX: double.MaxValue);
         var learningElements = new Dictionary<int, ILearningElement>()
         {
             {
@@ -60,7 +60,7 @@ public class LearningSpaceLayoutUt
                 1, ele2
             }
         };
-        var floorPlanName = FloorPlanEnum.R20X308L;
+        var floorPlanName = FloorPlanEnum.R_20X30_8L;
 
         var systemUnderTest = new LearningSpaceLayout(learningElements, floorPlanName);
 
@@ -69,9 +69,9 @@ public class LearningSpaceLayoutUt
         var content1Changed = new FileContent("c", "d", "");
         var content2Changed = new FileContent("e", "f", "");
         var ele1Changed = new LearningElement("ab", content1Changed, "ffg", "hgg",
-            LearningElementDifficultyEnum.Medium, null, workload: 20, points: 50, positionX: 33);
+            LearningElementDifficultyEnum.Medium, ElementModel.L_H5P_SPIELAUTOMAT_1, null, workload: 20, points: 50, positionX: 33);
         var ele2Changed = new LearningElement("uu", content2Changed, "kkk", "fff",
-            LearningElementDifficultyEnum.Hard, null, workload: 77, points: 40, positionX: 66);
+            LearningElementDifficultyEnum.Hard, ElementModel.L_H5P_TAFEL_1, null, workload: 77, points: 40, positionX: 66);
         var learningElementsChanged = new Dictionary<int, ILearningElement>()
         {
             {
@@ -81,7 +81,7 @@ public class LearningSpaceLayoutUt
                 2, ele2Changed
             }
         };
-        var floorPlanNameChanged = FloorPlanEnum.L32X3110L;
+        var floorPlanNameChanged = FloorPlanEnum.L_32X31_10L;
 
         systemUnderTest.FloorPlanName = floorPlanNameChanged;
         systemUnderTest.LearningElements = learningElementsChanged;
@@ -117,9 +117,9 @@ public class LearningSpaceLayoutUt
         var content1 = new FileContent("a", "b", "");
         var content2 = new FileContent("w", "e", "");
         var ele1 = new LearningElement("a", content1, "g", "h", LearningElementDifficultyEnum.Easy,
-            null, workload: 17, points: 6, positionX: 23);
+            ElementModel.L_H5P_SPIELAUTOMAT_1, null, workload: 17, points: 6, positionX: 23);
         var ele2 = new LearningElement("z", content2, "z", "zz",
-            LearningElementDifficultyEnum.Medium, null, workload: 444, points: 9, positionX: double.MaxValue);
+            LearningElementDifficultyEnum.Medium, ElementModel.L_H5P_TAFEL_1, null, workload: 444, points: 9, positionX: double.MaxValue);
         var learningElements = new Dictionary<int, ILearningElement>()
         {
             {
@@ -129,7 +129,7 @@ public class LearningSpaceLayoutUt
                 1, ele2
             }
         };
-        var floorPlanName = FloorPlanEnum.R20X308L;
+        var floorPlanName = FloorPlanEnum.R_20X30_8L;
 
         var systemUnderTest = new LearningSpaceLayout(learningElements, floorPlanName);
 

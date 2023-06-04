@@ -6,32 +6,32 @@ namespace BusinessLogic.Commands.World;
 public class SaveLearningWorld : ISaveLearningWorld
 {
     public string Name => nameof(SaveLearningWorld);
-    private readonly IBusinessLogic _businessLogic;
-    private readonly LearningWorld _learningWorld;
-    private readonly string _filepath;
+    internal IBusinessLogic BusinessLogic { get; }
+    internal LearningWorld LearningWorld { get; }
+    internal string Filepath { get; }
     
     public SaveLearningWorld(IBusinessLogic businessLogic, LearningWorld learningWorld, string filepath)
     {
-        _businessLogic = businessLogic;
-        _learningWorld = learningWorld;
-        _filepath = filepath;
+        BusinessLogic = businessLogic;
+        LearningWorld = learningWorld;
+        Filepath = filepath;
     }
     
     public void Execute()
     {
-        _businessLogic.SaveLearningWorld(_learningWorld, _filepath);
+        BusinessLogic.SaveLearningWorld(LearningWorld, Filepath);
         ResetWorldUnsavedChangesState();
     }
 
     private void ResetWorldUnsavedChangesState()
     {
-        _learningWorld.UnsavedChanges = false;
-        foreach (var element in _learningWorld.UnplacedLearningElements)
+        LearningWorld.UnsavedChanges = false;
+        foreach (var element in LearningWorld.UnplacedLearningElements)
         {
             element.UnsavedChanges = false;
         }
 
-        foreach (var space in _learningWorld.LearningSpaces)
+        foreach (var space in LearningWorld.LearningSpaces)
         {
             space.UnsavedChanges = false;
             foreach (var element in space.ContainedLearningElements)
@@ -40,12 +40,12 @@ public class SaveLearningWorld : ISaveLearningWorld
             }
         }
 
-        foreach (var condition in _learningWorld.PathWayConditions)
+        foreach (var condition in LearningWorld.PathWayConditions)
         {
             condition.UnsavedChanges = false;
         }
 
-        foreach (var topic in _learningWorld.Topics)
+        foreach (var topic in LearningWorld.Topics)
         {
             topic.UnsavedChanges = false;
         }

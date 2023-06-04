@@ -5,25 +5,25 @@
 @implements IDisposable
 @typeparam T
 
-<g transform="translate(@_x, @_y)" cursor="@_cursor" id="rightClickMenu">
-
-    @foreach (var (item, position) in MenuEntries.Select((item, position) => (item, position * _heightOfMenuItem)))
-    {
-        <g transform="translate(0, @position)">
-            <Clickable OnClickedParam="LearningObject" OnClicked="(T? x) => { item.Action.Invoke(); OnClose.InvokeAsync(); }">
-                <rect x="0" y="0" width="@_widthOfMenuItem" height="@_heightOfMenuItem" fill="white" stroke="black"/>
-                <text x="@(_widthOfMenuItem / 2)" y="15" text-anchor="middle" font-size="10" font-family="Verdana" fill="black">@item.DisplayedText</text>
-            </Clickable>
-        </g>
-    }
+    <g transform="translate(@_x, @_y)" cursor="@_cursor" id="rightClickMenu">
+        @foreach (var (item, position) in MenuEntries.Select((item, position) => (item, position * _heightOfMenuItem)))
+        {
+            <g transform="translate(0, @position)">
+                <Clickable OnClickedParam="LearningObject" OnClicked="(T? x) => { item.Action.Invoke(); OnClose.InvokeAsync(); }">
+                    <rect x="0" y="0" width="@_widthOfMenuItem" height="@_heightOfMenuItem" style="fill:rgba(233,233,233,0.5)"/>
+                    <text x="@(_widthOfMenuItem / 2)" y="15" text-anchor="middle" font-size="10" style="fill:rgb(23,45,76)" font-family="Roboto, Verdana" >@item.DisplayedText</text>
+                </Clickable>
+            </g>
+        }
 
     <g transform="translate(0, @(MenuEntries.Count * _heightOfMenuItem))">
         <Clickable OnClickedParam="LearningObject" OnClicked="(T? x) => OnClose.InvokeAsync()">
-            <rect x="0" y="0" width="@_widthOfMenuItem" height="@_heightOfMenuItem" fill="white" stroke="black"/>
-            <text x="@(_widthOfMenuItem / 2)" y="15" text-anchor="middle" font-size="10" font-family="Verdana" fill="black">Close</text>
+            <rect x="0" y="0" width="@_widthOfMenuItem" height="@_heightOfMenuItem" style="fill:rgba(233,233,233,0.5)"/>
+            <text x="@(_widthOfMenuItem / 2)" y="15" text-anchor="middle" font-size="10" font-family="Roboto, Verdana" style="fill:rgb(23,45,76)">Close</text>
         </Clickable>
     </g>
-</g>
+    </g>
+
 
 @code {
 
@@ -53,7 +53,7 @@
         switch (LearningObject)
         {
             case ILearningSpaceViewModel ls:
-                _x = ls.PositionX + 85;
+                _x = ls.PositionX + 65;
                 _y = ls.PositionY + 3;
                 break;
             case ILearningElementViewModel le:

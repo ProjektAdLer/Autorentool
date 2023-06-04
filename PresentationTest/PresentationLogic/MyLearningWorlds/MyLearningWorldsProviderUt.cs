@@ -43,7 +43,7 @@ public class MyLearningWorldsProviderUt
         var learningWorld1 = new LearningWorldViewModel("w1", "s", "a", "l", "d", "g");
         var learningWorld2 = new LearningWorldViewModel("w2", "s", "a", "l", "d", "g");
         var workspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
-        workspaceViewModel.LearningWorlds.Returns(new List<LearningWorldViewModel>()
+        workspaceViewModel.LearningWorlds.Returns(new List<ILearningWorldViewModel>()
             {learningWorld1, learningWorld2});
         var systemUnderTest = CreateProviderForTesting(workspaceViewModel: workspaceViewModel);
 
@@ -107,7 +107,7 @@ public class MyLearningWorldsProviderUt
     {
         var learningWorld1 = new LearningWorldViewModel("w1", "s", "a", "l", "d", "g");
         var workspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
-        workspaceViewModel.LearningWorlds.Returns(new List<LearningWorldViewModel>()
+        workspaceViewModel.LearningWorlds.Returns(new List<ILearningWorldViewModel>()
             {learningWorld1});
         var savedLearningWorld1 = new SavedLearningWorldPath()
             {Id = learningWorld1.Id, Name = "w1", Path = "p1"};
@@ -138,7 +138,7 @@ public class MyLearningWorldsProviderUt
         var learningWorld1 = new LearningWorldViewModel("w1", "s", "a", "l", "d", "g");
         var workspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
-        workspaceViewModel.LearningWorlds.Returns(new List<LearningWorldViewModel>()
+        workspaceViewModel.LearningWorlds.Returns(new List<ILearningWorldViewModel>()
             {learningWorld1});
         var systemUnderTest = CreateProviderForTesting(workspaceViewModel: workspaceViewModel, selectedViewModelsProvider: selectedViewModelsProvider);
 
@@ -153,7 +153,7 @@ public class MyLearningWorldsProviderUt
     {
         var workspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         var worldInWorkspace = new LearningWorldViewModel("n", "s", "a", "l", "d", "g");
-        workspaceVm.LearningWorlds.Returns(new List<LearningWorldViewModel>() {worldInWorkspace});
+        workspaceVm.LearningWorlds.Returns(new List<ILearningWorldViewModel>() {worldInWorkspace});
         var savedLearningWorld1 = new SavedLearningWorldPath()
             {Id = Guid.ParseExact("00000000-0000-0000-0000-000000000001", "D"), Name = "w1", Path = "p1"};
         var presentationLogic = Substitute.For<IPresentationLogic>();

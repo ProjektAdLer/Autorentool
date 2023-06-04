@@ -2,12 +2,12 @@
 using System.Net;
 using System.Text.Json;
 using System.Web;
-using ApiAccess.BackendEntities;
+using BackendAccess.BackendEntities;
 using BusinessLogic.ErrorManagement.BackendAccess;
 using Microsoft.Extensions.Logging;
 using Shared.Configuration;
 
-namespace ApiAccess.BackendServices;
+namespace BackendAccess.BackendServices;
 
 public class UserWebApiServices : IUserWebApiServices
 {
@@ -77,10 +77,12 @@ public class UserWebApiServices : IUserWebApiServices
             {"Accept", "text/plain"}
         };
         var content = new MultipartFormDataContent();
-        content.Add(new StreamContent(_fileSystem.File.OpenRead(backupPath)),
-            "backupFile", backupPath);
-        content.Add(new StreamContent(_fileSystem.File.OpenRead(awtPath)),
-            "atfFile", awtPath);
+        await using (var backupStream = _fileSystem.File.OpenRead(backupPath))
+            content.Add(new StreamContent(backupStream),
+                "backupFile", backupPath);
+        await using (var atfStream = _fileSystem.File.OpenRead(awtPath))
+            content.Add(new StreamContent(atfStream),
+                "atfFile", awtPath);
 
         return await SendHttpPostRequestAsync<bool>("/Worlds", headers, content);
     }

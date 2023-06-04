@@ -11,6 +11,7 @@ public class Mediator : IMediator
     private bool _contentDialogOpen;
     private bool _worldViewOpen;
     private bool _worldOverViewOpen;
+    private bool _overwriteElementEdit;
 
     #region left side
     
@@ -30,6 +31,12 @@ public class Mediator : IMediator
     {
         get => _elementDialogOpen;
         private set => SetField(ref _elementDialogOpen, value);
+    }
+
+    public bool OverwriteElementEdit
+    {
+        get => _overwriteElementEdit;
+        set => SetField(ref _overwriteElementEdit, value);
     }
     
     public bool ContentDialogOpen
@@ -76,6 +83,13 @@ public class Mediator : IMediator
         ElementDialogOpen = true;
     }
     
+    public void RequestOpenNewElementDialog()
+    {
+        CloseAllLeftSide();
+        ElementDialogOpen = true;
+        OverwriteElementEdit = true;
+    }
+
     public void RequestOpenContentDialog()
     {
         CloseAllLeftSide();

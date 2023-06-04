@@ -19,4 +19,5 @@ public interface ILearningSpaceViewModel : IDisplayableLearningObject, IObjectIn
     string Description { get; set; }
     string Goals { get; set; }
     bool UnsavedChanges { get; set; }
+    bool InternalUnsavedChanges { get; }
 }

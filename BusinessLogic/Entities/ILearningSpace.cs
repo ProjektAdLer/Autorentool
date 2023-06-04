@@ -2,7 +2,7 @@
 
 namespace BusinessLogic.Entities;
 
-public interface ILearningSpace
+public interface ILearningSpace : IObjectInPathWay
 {
     Guid Id { get; }
     string Name { get; set; }
@@ -13,4 +13,6 @@ public interface ILearningSpace
     bool UnsavedChanges { get; set; }
     ILearningSpaceLayout LearningSpaceLayout { get; set; }
     IEnumerable<ILearningElement> ContainedLearningElements => LearningSpaceLayout.ContainedLearningElements;
+    Topic? AssignedTopic { get; set; }
+    bool InternalUnsavedChanges { get; }
 }

@@ -28,6 +28,7 @@ public class LearningWorldViewModel : ILearningWorldViewModel
         _learningSpaces = new List<ILearningSpaceViewModel>();
         _pathWayConditions = new List<PathWayConditionViewModel>();
         _learningPathWays = new List<ILearningPathWayViewModel>();
+        _unplacedLearningElements = new List<ILearningElementViewModel>();
         _topics = new List<TopicViewModel>();
     }
 

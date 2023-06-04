@@ -4,42 +4,102 @@
 @using Microsoft.Extensions.Localization
 @using Presentation.Components
 @using Presentation.Components.Culture
+@using System.ComponentModel
+@using Presentation.Components.Dialogues
 @inject ISnackbar Snackbar
 <header class="mb-1 grid grid-cols-3 grid-rows-1 w-full bg-buttonbgblue items-center">
     <div class="ml-1 flex justify-start items-center gap-2">
-        <LmsLoginButton/>
-        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title="My Learning Worlds" @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
+        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title="My learning worlds" @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
         <MudDivider Vertical="true" FlexItem="true"/>
-        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" Title="Save Learning World" OnClick="TrySaveAsync"></MudIconButton>
-        <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Upload" Title="Export Learning World" OnClick="ExportLearningWorld"></MudIconButton>
+        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" Title="Save learning world" OnClick="TrySaveAsync"></MudIconButton>
         <div>
             <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Undo" Disabled="!CanUndo" Title="Undo" OnClick="OnClickUndo"></MudIconButton>
             <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Redo" Disabled="!CanRedo" Title="Redo" OnClick="OnClickRedo"></MudIconButton>
         </div>
-    </div>
-    <div class="flex justify-center items-center gap-2">
-        <img class="w-10 drop-shadow" src="/CustomIcons/autorentool-logo.png" alt="authoringtool-logo"/>
-        <h1 class="font-bold text-lg">@Localizer["AuthoringTool.Text"] @Localizer["AuthoringTool.Version"]</h1>
-    </div>
-    <div class="flex justify-end items-center gap-2 border-solid ">
-        <div class="flex flex-col justify-center">
-            <p class="text-xs font-bold text-center">
-                Feedback
-            </p>
-            <div class="flex flex-row justify-around">
-                <a href="https://bugreport.projekt-adler.eu" target="_blank" title="Bugreport - Öffnet neue Webseite">
-                    <button class="btn-standard m-0 p-1 h-5">
-                        <img class="w-4 h-4 drop-shadow" src="/CustomIcons/bug-icon-nobg.png" alt="debug-icon"/>
-                    </button>
-                </a>
-                <a href="https://userfeedback.projekt-adler.eu" target="_blank" title="Nutzerfeedback - Öffnet neue Webseite">
-                    <button class="btn-standard m-0 p-1 h-5">
-                        <img class="w-4 h-4 drop-shadow" src="/CustomIcons/feedback-icon-without-typo-nobg.png" alt="feedback-icon"/>
-                    </button>
+        <Button @onclick="@ExportLearningWorld" class="btn-standard p-2 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto" title="Generate learning world to moodle and 3D learning environment" disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
+            <MudIcon Icon="@Icons.Material.Filled._3dRotation"></MudIcon>
+            <p class="pl-1 font-bold uppercase">Generate 3D world</p>
+        </Button>
+        
+        <MudPopover Open="@_popoverOpen" Fixed="false" Class="mt-12 ml-20 w-96 bg-adlerblue-600">
+            <div class="flex flex-row">
+                <p class="text-center text-lg pl-6 pt-6 text-white">In order to further develop and optimize the authoring tool, we would appreciate if you could take a few minutes to give us feedback on the current status of the authoring tool.</p>
+                <Button class="flex-none w-5 h-5 text-adlergrey-200 font-bold text-lg hover:text-white" @onclick="TogglePopover" Icon="@Icons.Material.Filled.Close" title="Close">X</Button>
+            </div>
+            <div class="flex justify-center items-center pb-6 pt-1">
+                <a href="https://www.soscisurvey.de/autorentoolevaluation_gesamt" target="_blank" title="Final feedback - Opens new web page" class="w-7/12 btn-standard flex flex-row gap-2 justify-center items-center">
+                    <img class="w-7 h-7 drop-shadow" src="/CustomIcons/final-feedback-icon-nobg.png" alt="final-feedback-icon"/>
+                    <p class="uppercase">To final feedback</p>
                 </a>
             </div>
+        </MudPopover>
+        
+    </div>
+    @if (SelectedViewModelsProvider?.LearningWorld?.Name == null)
+    {
+        <div class="flex justify-center items-center gap-2">
+            <img class="w-10 drop-shadow" src="/CustomIcons/autorentool-logo.png" alt="authoringtool-logo"/>
+            <h1 class="font-bold text-lg">@Localizer["AuthoringTool.Text"] @Localizer["AuthoringTool.Version"]</h1>
         </div>
+    }
+    @if (SelectedViewModelsProvider?.LearningWorld?.Name != null)
+    {
+        <div class="flex justify-center items-center gap-2">
+            <img class="w-8 drop-shadow opacity-50" src="CustomIcons/world-icon-nobg.png" alt="learningworld">
+            <p class="font-bold text-lg truncate hover:text-clip"> @SelectedViewModelsProvider.LearningWorld?.Name </p>
+        </div>
+    }
+
+    <div class="flex justify-end items-center gap-2 border-solid">
+       
+        <MudMenu ActivationEvent="MouseEvent.MouseOver" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter">
+            <ActivatorContent>
+                <MudButton Class="btn-standard bg-adlerblue-600 test-base text-white font-semibold">Feedback</MudButton>
+            </ActivatorContent>
+            <ChildContent>
+            <div class="w-64">
+
+                @if (SelectedViewModelsProvider?.LearningWorld?.Name == null)
+                {
+                    <a href="https://www.soscisurvey.de/autorentoolevaluationlernwelt/" target="_blank" title="User experience feedback - Opens new web page">
+                        <div class="flex flex-row items-center gap-4">
+                            <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/final-feedback-icon-nobg.png" alt="feedback-icon"/>
+                            <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">User experience feedback</MudMenuItem>
+                        </div>
+                    </a>
+
+                }
+                else
+                {
+                    <a href="https://www.soscisurvey.de/autorentoolevaluationlernraum/" target="_blank" title="User experience feedback - Opens new web page">
+                        <div class="flex flex-row items-center gap-4">
+                            <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/feedback-icon-without-typo-nobg-adlerdarkblue.png" alt="feedback-icon"/>
+                            <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">User experience feedback</MudMenuItem>
+                        </div>
+                    </a>
+                }
+
+                <a href="https://bugreport.projekt-adler.eu" target="_blank" title="Technical feedback - Opens new web page">
+                    <div class="flex flex-row justify-start items-center gap-4">
+                        <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/bug-icon-nobg-adlerdarkblue.png" alt="debug-icon"/>
+                        <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">Technical feedback</MudMenuItem>
+                    </div>
+                </a>
+
+                @*<MudDivider></MudDivider>
+
+                <a href="https://www.soscisurvey.de/autorentoolevaluation_gesamt" target="_blank" title="Final feedback - Opens new web page">
+                    <div class="flex flex-row justify-start items-center gap-4">
+                        <img class="opacity-60 w-9 h-7 drop-shadow pl-2" src="/CustomIcons/final-feedback-icon-adlerdarkblue-nobg.png" alt="final-feedback-icon"/>
+                        <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">Final feedback</MudMenuItem>
+                    </div>
+                </a>*@
+            </div>
+            </ChildContent>
+        </MudMenu>
+
         <CultureSelector/>
+        <LmsLoginButton/>
         @if (PresentationLogic?.RunningElectron == true)
         {
             <CloseAppButton/>
@@ -64,12 +124,28 @@
     [Inject]
     private IMediator Mediator { get; set; }
 
+    [Inject]
+    IDialogService DialogService { get; set; }
+
     private string _filepath = "";
+
+    private bool _popoverOpen;
+
+    private void TogglePopover()
+    {
+        _popoverOpen = !_popoverOpen;
+    }
 
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
         PresentationLogic.OnCommandUndoRedoOrExecute += async (_, args) => await InvokeAsync(StateHasChanged);
+        SelectedViewModelsProvider.PropertyChanged += OnSelectedViewModelsProviderPropertyChanged;
+    }
+
+    private void OnSelectedViewModelsProviderPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        InvokeAsync(StateHasChanged);
     }
 
     private void OnClickMyLearningWorldsOverview()
@@ -96,13 +172,75 @@
         try
         {
             _filepath = await PresentationLogic.ConstructBackupAsync(SelectedViewModelsProvider.LearningWorld);
+            Snackbar.Add("LearningWorld exported to " + _filepath, Severity.Success);
+
+            if (await PresentationLogic.IsLmsConnected())
+            {
+                await UploadLearningWorld();
+            }
+            else
+            {
+                await ShowNotLoggedInDialog();
+            }
+
+            _popoverOpen = true;
         }
         catch (OperationCanceledException)
         {
             Snackbar.Add("Exporting LearningWorld was canceled", Severity.Warning);
         }
         StateHasChanged();
-        Snackbar.Add("LearningWorld exported to " + _filepath, Severity.Success);
+    }
+
+    private async Task ShowNotLoggedInDialog()
+    {
+    //present Info dialog
+        var parameters = new DialogParameters
+        {
+            {"OkButtonText", "Ok"},
+            {"OkButtonColor", Color.Primary},
+            {
+                "DialogText",
+                "You are not connected to a LMS. Please login to upload LearningWorlds to the Backend."
+            },
+        };
+        var options = new DialogOptions
+        {
+            CloseButton = true,
+            CloseOnEscapeKey = true,
+            DisableBackdropClick = false,
+        };
+        await DialogService.ShowAsync<GenericInfoDialog>("You are not logged in", parameters, options);
+    }
+
+    private async Task UploadLearningWorld()
+    {
+        if (SelectedViewModelsProvider.LearningWorld == null) return;
+    //present "Upload/Cancel" dialog
+        var parameters = new DialogParameters
+        {
+            {"SubmitButtonText", "Upload"},
+            {"SubmitButtonColor", Color.Success},
+            {
+                "DialogText",
+                $"Do you want to upload the LearningWorld {SelectedViewModelsProvider.LearningWorld.Name} from {_filepath} to the Backend?"
+            },
+        };
+        var options = new DialogOptions
+        {
+            CloseButton = true,
+            CloseOnEscapeKey = true,
+            DisableBackdropClick = true,
+        };
+        var dialog =
+            await DialogService.ShowAsync<GenericCancellationConfirmationDialog>("Upload LearningWorld", parameters,
+                options);
+        var result = await dialog.Result;
+
+    //if not cancelled, upload LearningWorld
+        if (!result.Canceled)
+            //await and show progress?
+            PresentationLogic.UploadLearningWorldToBackend(_filepath);
     }
 
     private void OnClickRedo()

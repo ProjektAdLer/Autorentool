@@ -6,26 +6,26 @@ public class EditLearningWorld : IEditLearningWorld
 {
     public string Name => nameof(EditLearningWorld);
     internal LearningWorld LearningWorld { get; }
-    private readonly string _name;
-    private readonly string _shortname;
-    private readonly string _authors;
-    private readonly string _language;
-    private readonly string _description;
-    private readonly string _goals;
-    private readonly Action<LearningWorld> _mappingAction;
+    internal string WorldName { get; }
+    internal string Shortname { get; }
+    internal string Authors { get; }
+    internal string Language { get; }
+    internal string Description { get; }
+    internal string Goals { get; }
+    internal Action<LearningWorld> MappingAction { get; }
     private IMemento? _memento;
 
     public EditLearningWorld(LearningWorld learningWorld, string name, string shortname,
         string authors, string language, string description, string goals, Action<LearningWorld> mappingAction)
     {
         LearningWorld = learningWorld;
-        _name = name;
-        _shortname = shortname;
-        _authors = authors;
-        _language = language;
-        _description = description;
-        _goals = goals;
-        _mappingAction = mappingAction;
+        WorldName = name;
+        Shortname = shortname;
+        Authors = authors;
+        Language = language;
+        Description = description;
+        Goals = goals;
+        MappingAction = mappingAction;
     }
 
     public void Execute()
@@ -33,23 +33,23 @@ public class EditLearningWorld : IEditLearningWorld
         _memento ??= LearningWorld.GetMemento();
 
         if (AnyChanges()) LearningWorld.UnsavedChanges = true;
-        LearningWorld.Name = _name;
-        LearningWorld.Shortname = _shortname;
-        LearningWorld.Authors = _authors;
-        LearningWorld.Language = _language;
-        LearningWorld.Description = _description;
-        LearningWorld.Goals = _goals;
+        LearningWorld.Name = WorldName;
+        LearningWorld.Shortname = Shortname;
+        LearningWorld.Authors = Authors;
+        LearningWorld.Language = Language;
+        LearningWorld.Description = Description;
+        LearningWorld.Goals = Goals;
 
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     private bool AnyChanges() =>
-        LearningWorld.Name != _name ||
-        LearningWorld.Shortname != _shortname ||
-        LearningWorld.Authors != _authors ||
-        LearningWorld.Language != _language ||
-        LearningWorld.Description != _description ||
-        LearningWorld.Goals != _goals;
+        LearningWorld.Name != WorldName ||
+        LearningWorld.Shortname != Shortname ||
+        LearningWorld.Authors != Authors ||
+        LearningWorld.Language != Language ||
+        LearningWorld.Description != Description ||
+        LearningWorld.Goals != Goals;
     
 
     public void Undo()
@@ -61,7 +61,7 @@ public class EditLearningWorld : IEditLearningWorld
 
         LearningWorld.RestoreMemento(_memento);
 
-        _mappingAction.Invoke(LearningWorld);
+        MappingAction.Invoke(LearningWorld);
     }
 
     public void Redo() => Execute();

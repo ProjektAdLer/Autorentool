@@ -5,7 +5,7 @@ namespace Presentation.PresentationLogic.SelectedViewModels;
 
 public class SelectedLearningWorldViewModelStackEntry : ISelectedViewModelStackEntry
 {
-    public SelectedLearningWorldViewModelStackEntry(ICommand command, LearningWorldViewModel? learningWorld, Action<LearningWorldViewModel?> action)
+    public SelectedLearningWorldViewModelStackEntry(ICommand command, ILearningWorldViewModel? learningWorld, Action<ILearningWorldViewModel?> action)
     {
         Command = command;
         LearningWorld = learningWorld;
@@ -18,6 +18,6 @@ public class SelectedLearningWorldViewModelStackEntry : ISelectedViewModelStackE
         Action(LearningWorld);
     }
 
-    private LearningWorldViewModel? LearningWorld { get; }
-    private Action<LearningWorldViewModel?> Action { get; }
+    private ILearningWorldViewModel? LearningWorld { get; }
+    private Action<ILearningWorldViewModel?> Action { get; }
 }

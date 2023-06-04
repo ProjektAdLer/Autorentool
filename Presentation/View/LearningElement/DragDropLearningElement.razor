@@ -3,13 +3,13 @@
 @using Presentation.Components
 @using BusinessLogic.Entities.LearningContent
 @using Presentation.PresentationLogic.LearningContent
+@using Presentation.PresentationLogic.SelectedViewModels
 <MudMenu ActivationEvent="MouseEvent.RightClick" PositionAtCursor="true">
     <ActivatorContent>
-        <MudCard Outlined="true" Class="relative flex rounded-lg bg-adlerbggradientto m-[-1px] hover:bg-adlerblue-300">
+        <MudCard Outlined="true" Class="@GetElementStyleString()">
             <section class="gap-1 flex flex-col justify-start">
                 <MudCardContent Class="relative flex w-24 h-12 p-0">
-                    <MudIcon Icon="@GetElementIcon()" Style="font-size: 3rem;" Class="absolute flex opacity-20 rounded-lg p-1"/>
-                    @*<MudIcon Icon="@GetElementIcon()" Style="font-size: 1.25rem;" Class="absolute flex right-0.5 bottom-0.5 opacity-20 rounded-lg"/>*@
+                    <MudIcon Icon="@GetElementIcon()" Style="font-size: 3rem;" Class="absolute flex opacity-20 rounded-lg p-1 element-icon"/>
                     <div class="flex justify-end absolute w-3.5 h-1.5 top-0.5 right-0.5 m-0.5">
                         <MudIcon Icon="@GetDifficultyIcon(LearningElement.Difficulty)" Class="difficulty-icon absolute h-3.5 w-3.5"/>
                     </div>
@@ -34,6 +34,9 @@
 </MudMenu>
 
 @code {
+    
+    [Inject]
+    public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; } = null!;
 
     [Parameter, EditorRequired]
     public ILearningElementViewModel LearningElement { get; set; } = null!;
@@ -90,6 +93,11 @@
             IFileContentViewModel { Type: "pdf" } => CustomIcons.TextElementIcon,
             _ => throw new ArgumentOutOfRangeException(nameof(LearningElement))
             };
+    }
+
+    private string GetElementStyleString()
+    {
+        return LearningElement == SelectedViewModelsProvider.LearningElement ? "border-2 border-solid bg-adlergreen bg-opacity-30 relative flex rounded-lg m-[-1px] hover:bg-adlerblue-300" : "relative flex rounded-lg bg-adlerbggradientto m-[-1px] hover:bg-adlerblue-300";
     }
 
 }

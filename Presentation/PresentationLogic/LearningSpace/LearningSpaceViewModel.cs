@@ -22,7 +22,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         Description = "";
         Goals = "";
         RequiredPoints = 0;
-        LearningSpaceLayout = new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X308L);
+        LearningSpaceLayout = new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L);
         InBoundObjects = new Collection<IObjectInPathWayViewModel>();
         OutBoundObjects = new Collection<IObjectInPathWayViewModel>();
         PositionX = 0;
@@ -56,7 +56,7 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         Goals = goals;
         Theme = theme;
         RequiredPoints = requiredPoints;
-        LearningSpaceLayout = layoutViewModel ?? new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X206L);
+        LearningSpaceLayout = layoutViewModel ?? new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X20_6L);
         InBoundObjects = inBoundObjects ?? new Collection<IObjectInPathWayViewModel>();
         OutBoundObjects = outBoundObjects ?? new Collection<IObjectInPathWayViewModel>();
         AssignedTopic = assignedTopic;
@@ -115,10 +115,10 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
 
     public double PositionX { get; set; }
     public double PositionY { get; set; }
-    public double InputConnectionX => PositionX + 25;
+    public double InputConnectionX => PositionX + 33;
     public double InputConnectionY => PositionY - 7;
-    public double OutputConnectionX => PositionX + 25;
-    public double OutputConnectionY => PositionY + 48;
+    public double OutputConnectionX => PositionX + 32;
+    public double OutputConnectionY => PositionY + 62;
 
     private string _name;
     private string _description;

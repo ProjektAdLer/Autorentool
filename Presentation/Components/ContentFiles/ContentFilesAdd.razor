@@ -3,9 +3,10 @@
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.ElectronNET
 @using Presentation.Components.Dialogues
+@using BusinessLogic.Entities.LearningContent
 <header class="m-2 rounded-lg">
             <div class="flex justify-center p-2">
-                <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Import of all files</h2>
+                <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Import files</h2>
             </div>
         </header>
         <MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
@@ -20,6 +21,7 @@
                                  Color="Color.Primary" Size="Size.Large"/>
         }
         <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnFilesChanged" Hidden="false"
+                       Accept="@AllowedFileEndings.EndingsCommaSeparated"
                        InputClass="absolute w-full h-full opacity-0 z-10"
                        @ondragenter="SetDragClass" @ondragleave="ClearDragClass"
                        @ondragend="ClearDragClass">
@@ -69,12 +71,18 @@
 
             foreach (var file in files)
             {
+                if (!AllowedFileEndings.Endings.Contains(file.Name.Split(".").Select(s => "." + s).LastOrDefault()))
+                {
+                    await InvokeAsync(async () => await DialogService.ShowMessageBox("Unsupported file ending", $"The supplied file {file.Name} is not supported."));
+                    continue;
+                }
                 await HandleFileAsync(file);
             }
 
             Logger.LogTrace("Rerendering ContentFilesContainer");
             await ContentFilesContainer.RerenderAsync();
             ToggleSpinner();
+            ClearDragClass();
         });
     }
 

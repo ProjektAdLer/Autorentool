@@ -1,6 +1,9 @@
 using Bunit;
+using Bunit.TestDoubles;
+using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
+using MudBlazor.Services;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.Dialogues;
@@ -24,6 +27,16 @@ public class LmsLoginDialogUt
         _dialogService = Substitute.For<IDialogService>();
         _context.Services.AddSingleton(_presentationLogic);
         _context.Services.AddSingleton(_dialogService);
+        _context.Services.AddMudServices();
+        _context.ComponentFactories.AddStub<MudDialog>();
+        _context.ComponentFactories.AddStub<MudForm>();
+        _context.ComponentFactories.AddStub<MudText>();
+        _context.ComponentFactories.AddStub<MudButton>();
+        _context.ComponentFactories.AddStub<MudTextField<string>>();
+        _context.ComponentFactories.AddStub<MudDialog>();
+        // DialogContent belongs to MudDialog
+        _context.ComponentFactories.AddStub<MudText>();
+        _context.ComponentFactories.AddStub<MudButton>();
     }
 
     [Test]
@@ -47,9 +60,16 @@ public class LmsLoginDialogUt
 
             var systemUnderTest = CreateTestableLmsLoginDialogComponent();
 
-            //TODO Test does not render the MudDialog. Should search for the Logout button
-            var text = systemUnderTest.Find("h3");
-            Assert.That(text.TextContent, Is.EqualTo("Logout"));
+            var dialogContent = _context.Render((RenderFragment) systemUnderTest.FindComponent<Stub<MudDialog>>()
+                .Instance.Parameters["DialogContent"]);
+            var dialogText = dialogContent.Find("div div");
+            var mudButtonStub = _context.Render((RenderFragment) dialogContent.FindComponent<Stub<MudButton>>().Instance
+                .Parameters["ChildContent"]);
+            
+            Assert.That(dialogText.ToMarkup(), Contains.Substring("Logged in as"));
+            Assert.That(dialogText.ToMarkup(), Contains.Substring("Test"));
+
+            Assert.That(mudButtonStub.Markup, Is.EqualTo("Logout"));
         }
     }
 
@@ -61,15 +81,21 @@ public class LmsLoginDialogUt
             _presentationLogic.IsLmsConnected().Returns(false);
 
             var systemUnderTest = CreateTestableLmsLoginDialogComponent();
-            
-            //TODO Test does not render the MudDialog. Should search for the Login button
-            var text = systemUnderTest.Find("h3");
-            Assert.That(text.TextContent, Is.EqualTo("Login"));
+
+            var dialogContent = _context.Render((RenderFragment) systemUnderTest.FindComponent<Stub<MudDialog>>()
+                .Instance.Parameters["DialogContent"]);
+            var mudFormStub = _context.Render((RenderFragment) dialogContent.FindComponent<Stub<MudForm>>().Instance
+                .Parameters["ChildContent"]);
+            var mudButtonStub = _context.Render((RenderFragment) mudFormStub.FindComponent<Stub<MudButton>>().Instance
+                .Parameters["ChildContent"]);
+
+            Assert.That(mudButtonStub.Markup, Is.EqualTo("Login"));
         }
     }
 
     private IRenderedComponent<LmsLoginDialog> CreateTestableLmsLoginDialogComponent()
     {
-        return _context.RenderComponent<LmsLoginDialog>();
+        return _context.RenderComponent<LmsLoginDialog>(p => p
+            .AddCascadingValue(_context.RenderComponent<MudDialogInstance>().Instance));
     }
 }

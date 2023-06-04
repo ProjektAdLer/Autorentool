@@ -1,4 +1,7 @@
 using Bunit;
+using Bunit.TestDoubles;
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
 using NSubstitute;
@@ -19,6 +22,7 @@ public class LmsLoginButtonUt
     public void Setup()
     {
         _context = new TestContext();
+        _context.ComponentFactories.AddStub<MudIconButton>();
         _dialogService = Substitute.For<IDialogService>();
         _context.Services.AddSingleton(_dialogService);
     }
@@ -30,8 +34,9 @@ public class LmsLoginButtonUt
         {
             var systemUnderTest = CreateTestableLmsLoginButtonComponent();
 
-            var button = systemUnderTest.Find(".btn-standard");
-            button.Click();
+            var button = systemUnderTest.FindComponent<Stub<MudIconButton>>();
+            systemUnderTest.InvokeAsync(() =>
+                ((EventCallback<MouseEventArgs>)button.Instance.Parameters["OnClick"]).InvokeAsync(null));
 
             _dialogService.Received().ShowAsync<LmsLoginDialog>();
         }

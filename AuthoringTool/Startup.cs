@@ -1,11 +1,17 @@
 using System.IO.Abstractions;
 using System.Reflection;
-using ApiAccess.API;
-using ApiAccess.BackendServices;
 using AuthoringTool.Mapping;
 using AutoMapper;
+using BackendAccess.BackendServices;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Condition;
+using BusinessLogic.Commands.Element;
+using BusinessLogic.Commands.Layout;
+using BusinessLogic.Commands.Pathway;
+using BusinessLogic.Commands.Space;
+using BusinessLogic.Commands.Topic;
+using BusinessLogic.Commands.World;
 using BusinessLogic.Validation;
 using DataAccess.Persistence;
 using ElectronWrapper;
@@ -17,6 +23,7 @@ using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Caching.Memory;
 using MudBlazor.Services;
 using Presentation.Components.Forms;
+using Presentation.Components.Forms.Element;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -75,6 +82,7 @@ public class Startup
         ConfigureUtilities(services);
         ConfigureAutoMapper(services);
         ConfigureCommands(services);
+        ConfigureCommandFactories(services);
         ConfigureValidation(services);
         ConfigureApiAccess(services);
         ConfigureMediator(services);
@@ -130,6 +138,7 @@ public class Startup
         services.AddSingleton<IErrorService, ErrorService>();
         services.AddSingleton<ILearningElementDropZoneHelper, LearningElementDropZoneHelper>();
         services.AddTransient(typeof(IFormDataContainer<,>), typeof(FormDataContainer<,>));
+        services.AddSingleton<IElementModelHandler, ElementModelHandler>();
     }
 
     private void ConfigureBusinessLogic(IServiceCollection services)
@@ -154,7 +163,7 @@ public class Startup
 
     private void ConfigureApiAccess(IServiceCollection services)
     {
-        services.AddSingleton<IBackendAccess, BackendAccess>();
+        services.AddSingleton<IBackendAccess, BackendAccess.API.BackendAccess>();
         services.AddSingleton<IUserWebApiServices, UserWebApiServices>();
         // Add Http Client
         services.AddHttpClient();
@@ -214,6 +223,18 @@ public class Startup
     {
         services.AddSingleton<ICommandStateManager, CommandStateManager>();
         services.AddSingleton<IOnUndoRedo>(p => (CommandStateManager) p.GetService<ICommandStateManager>()!);
+    }
+
+    private void ConfigureCommandFactories(IServiceCollection services)
+    {
+        services.AddSingleton<IConditionCommandFactory, ConditionCommandFactory>();
+        services.AddSingleton<IElementCommandFactory, ElementCommandFactory>();
+        services.AddSingleton<ILayoutCommandFactory, LayoutCommandFactory>();
+        services.AddSingleton<IPathwayCommandFactory, PathwayCommandFactory>();
+        services.AddSingleton<ISpaceCommandFactory, SpaceCommandFactory>();
+        services.AddSingleton<ITopicCommandFactory, TopicCommandFactory>();
+        services.AddSingleton<IWorldCommandFactory, WorldCommandFactory>();
+        services.AddSingleton<IBatchCommandFactory, BatchCommandFactory>();
     }
 
     public void Configure(IApplicationBuilder app, IWebHostEnvironment env, ILoggerFactory loggerFactory)

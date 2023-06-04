@@ -1,6 +1,6 @@
-﻿using ApiAccess.BackendEntities;
-using AuthoringTool.Mapping;
+﻿using AuthoringTool.Mapping;
 using AutoMapper;
+using BackendAccess.BackendEntities;
 using BusinessLogic.Entities.BackendAccess;
 using NUnit.Framework;
 

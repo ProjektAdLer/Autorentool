@@ -29,6 +29,7 @@ public class FilesXmlFile : IFilesXmlFile, ICloneable
         RepositoryType = "$@NULL@$";
         RepositoryId = "$@NULL@$";
         Reference = "$@NULL@$";
+        ElementUuid = "";
     }
     
     [XmlElement(ElementName="contenthash")]
@@ -91,6 +92,9 @@ public class FilesXmlFile : IFilesXmlFile, ICloneable
 
     [XmlElement(ElementName = "reference")]
     public string Reference { get; set; }
+    
+    [XmlElement(ElementName="elementUUID")]
+    public string ElementUuid { get; set; }
     
     [XmlAttribute(AttributeName="id")]
     public string Id { get; set; }

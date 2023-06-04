@@ -27,7 +27,7 @@ public class CourseCourseXmlCourseUt
                 Assert.That(systemUnderTest.IdNumber, Is.EqualTo(""));
                 Assert.That(systemUnderTest.Summary, Is.EqualTo(""));
                 Assert.That(systemUnderTest.SummaryFormat, Is.EqualTo("1"));
-                Assert.That(systemUnderTest.Format, Is.EqualTo("tiles"));
+                Assert.That(systemUnderTest.Format, Is.EqualTo(""));
                 Assert.That(systemUnderTest.DefaultTileIcon, Is.EqualTo("pie-chart"));
                 Assert.That(systemUnderTest.BaseColour, Is.EqualTo("#009681"));
                 Assert.That(systemUnderTest.CourseUseSubtiles, Is.EqualTo("0"));

@@ -3,6 +3,7 @@ using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using NUnit.Framework;
 using Shared;
+using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Layout;
 
@@ -12,22 +13,10 @@ public class PlaceLearningElementInLayoutFromUnplacedUt
     [Test]
     public void DragLearningElementFromUnplacedToFree_Execute_MovesLearningElementToSlot()
     {
-        var world = new LearningWorld("wn", "wsn", "wa", "wl", "wd", "wg")
-        {
-            UnsavedChanges = false
-        };
-        var space = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L))
-        {
-            UnsavedChanges = false
-        };
+        var world = EntityProvider.GetLearningWorld(unsavedChanges: false);
+        var space = EntityProvider.GetLearningSpace(floorPlan: FloorPlanEnum.R_20X20_6L, unsavedChanges: false);
         world.LearningSpaces.Add(space);
-        var content = new FileContent("cn", "ct", "cf");
-        var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, null,
-            workload: 8, points: 9, positionX: 17f, positionY: 29f)
-        {
-            UnsavedChanges = false
-        };
+        var element = EntityProvider.GetLearningElement(unsavedChanges: false);
         world.UnplacedLearningElements.Add(element);
 
 
@@ -62,26 +51,10 @@ public class PlaceLearningElementInLayoutFromUnplacedUt
     [Test]
     public void DragLearningElementToAssignedSlot_Execute_SwitchesLearningElements()
     {
-        var world = new LearningWorld("wn", "wsn", "wa", "wl", "wd", "wg")
-        {
-            UnsavedChanges = false
-        };
-        var space = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L))
-        {
-            UnsavedChanges = false
-        };
-        var content = new FileContent("cn", "ct", "cf");
-        var element1 = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, null,
-            workload: 8, points: 9, positionX: 17f, positionY: 29f)
-        {
-            UnsavedChanges = false
-        };
-        var element2 = new LearningElement("en2", content, "ed2", "eg2", LearningElementDifficultyEnum.Medium, space,
-            workload: 8, points: 9, positionX: 17f, positionY: 29f)
-        {
-            UnsavedChanges = false
-        };
+        var world = EntityProvider.GetLearningWorld(unsavedChanges: false);
+        var space = EntityProvider.GetLearningSpace(floorPlan: FloorPlanEnum.R_20X20_6L, unsavedChanges: false);
+        var element1 = EntityProvider.GetLearningElement(parent: null, unsavedChanges: false);
+        var element2 = EntityProvider.GetLearningElement(parent: space, unsavedChanges: false);
         world.LearningSpaces.Add(space);
         world.UnplacedLearningElements.Add(element1);
         space.LearningSpaceLayout.LearningElements[2] = element2;
@@ -120,12 +93,10 @@ public class PlaceLearningElementInLayoutFromUnplacedUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var world = new LearningWorld("wn", "wsn", "wa", "wl", "wd", "wg");
-        var space = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L));
+        var world = EntityProvider.GetLearningWorld();
+        var space = EntityProvider.GetLearningSpace();
         world.LearningSpaces.Add(space);
-        var content = new FileContent("cn", "ct", "cf");
-        var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, null, workload: 8, points: 9, positionX: 17f, positionY: 29f);
+        var element = EntityProvider.GetLearningElement(parent: null);
         world.UnplacedLearningElements.Add(element);
 
 
@@ -145,21 +116,9 @@ public class PlaceLearningElementInLayoutFromUnplacedUt
     [Test]
     public void UndoRedo_UndoesAndRedoesMovingLearningElement()
     {
-        var world = new LearningWorld("wn", "wsn", "wa", "wl", "wd", "wg")
-        {
-            UnsavedChanges = false
-        };
-        var space = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L))
-        {
-            UnsavedChanges = false
-        };
-        var content = new FileContent("cn", "ct", "cf");
-        var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, null,
-            workload: 8, points: 9, positionX: 17f, positionY: 29f)
-        {
-            UnsavedChanges = false
-        };
+        var world = EntityProvider.GetLearningWorld(unsavedChanges: false);
+        var space = EntityProvider.GetLearningSpace(floorPlan: FloorPlanEnum.R_20X20_6L, unsavedChanges: false);
+        var element = EntityProvider.GetLearningElement(parent: null, unsavedChanges: false);
         world.LearningSpaces.Add(space);
         world.UnplacedLearningElements.Add(element);
 
@@ -221,26 +180,10 @@ public class PlaceLearningElementInLayoutFromUnplacedUt
     [Test]
     public void UndoRedo_UndoesAndRedoesSwitchingLearningElements()
     {
-        var world = new LearningWorld("wn", "wsn", "wa", "wl", "wd", "wg")
-        {
-            UnsavedChanges = false
-        };
-        var space = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L))
-        {
-            UnsavedChanges = false
-        };
-        var content = new FileContent("cn", "ct", "cf");
-        var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, null,
-            workload: 8, points: 9, positionX: 17f, positionY: 29f)
-        {
-            UnsavedChanges = false
-        };
-        var element2 = new LearningElement("en2", content, "ed2", "eg2", LearningElementDifficultyEnum.Medium, space,
-            workload: 8, points: 9, positionX: 17f, positionY: 29f)
-        {
-            UnsavedChanges = false
-        };
+        var world = EntityProvider.GetLearningWorld(unsavedChanges: false);
+        var space = EntityProvider.GetLearningSpace(floorPlan: FloorPlanEnum.R_20X20_6L, unsavedChanges: false);
+        var element = EntityProvider.GetLearningElement(parent: null, unsavedChanges: false);
+        var element2 = EntityProvider.GetLearningElement(parent: space, unsavedChanges: false, append: "2");
         world.LearningSpaces.Add(space);
         world.UnplacedLearningElements.Add(element);
         space.LearningSpaceLayout.LearningElements[2] = element2;

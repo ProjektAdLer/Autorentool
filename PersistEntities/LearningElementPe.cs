@@ -1,5 +1,6 @@
 ﻿using System.Runtime.Serialization;
 using PersistEntities.LearningContent;
+using Shared;
 
 namespace PersistEntities;
 
@@ -10,8 +11,8 @@ namespace PersistEntities;
 public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
 {
     public LearningElementPe(string name, ILearningContentPe? learningContent,
-        string description, string goals, LearningElementDifficultyEnumPe difficulty, int workload = 0,
-        int points = 0, double positionX = 0, double positionY = 0)
+        string description, string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload = 0,
+        int points = 1, double positionX = 0, double positionY = 0)
     {
         Id = Guid.NewGuid();
         Name = name;
@@ -19,6 +20,7 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
         Description = description;
         Goals = goals;
         Difficulty = difficulty;
+        ElementModel = elementModel;
         Workload = workload;
         Points = points;
         PositionX = positionX;
@@ -35,9 +37,10 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
         LearningContent = null!;
         Description = "";
         Goals = "";
-        Difficulty = LearningElementDifficultyEnumPe.Medium;
+        Difficulty = LearningElementDifficultyEnum.Medium;
+        ElementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
         Workload = 0;
-        Points = 0;
+        Points = 1;
         PositionX = 0;
         PositionY = 0;
     }
@@ -56,7 +59,9 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
     [DataMember]
     public int Points { get; set; }
     [DataMember]
-    public LearningElementDifficultyEnumPe Difficulty { get; set; }
+    public LearningElementDifficultyEnum Difficulty { get; set; }
+    [DataMember]
+    public ElementModel ElementModel { get; set; }
     [DataMember]
     public double PositionX { get; set; }
     [DataMember]

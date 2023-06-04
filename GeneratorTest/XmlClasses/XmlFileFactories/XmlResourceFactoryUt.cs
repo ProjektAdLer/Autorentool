@@ -130,7 +130,7 @@ public class XmlResourceFactoryUt
         systemUnderTest.FilesXmlFilesList = new List<FilesXmlFile>();
         systemUnderTest.FileElementId = "1";
         systemUnderTest.FileElementName = "FileName";
-        systemUnderTest.ResourceSetParametersFilesXml("1234", "456789", "something");
+        systemUnderTest.ResourceSetParametersFilesXml("1234", "456789", "something","2404");
         
         // Assert
         Assert.Multiple(() =>
@@ -149,6 +149,7 @@ public class XmlResourceFactoryUt
             Assert.That(systemUnderTest.FilesXmlFilesList[1].Source, Is.EqualTo(systemUnderTest.FileElementName + "."));
             Assert.That(systemUnderTest.FilesXmlFilesList[1].Timecreated, Is.EqualTo(systemUnderTest.CurrentTime));
             Assert.That(systemUnderTest.FilesXmlFilesList[1].Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
+            Assert.That(systemUnderTest.FilesXmlFilesList[0].ElementUuid, Is.EqualTo("2404"));
             Assert.That(systemUnderTest.FilesXmlFilesList, Has.Count.EqualTo(2));
         });
     }

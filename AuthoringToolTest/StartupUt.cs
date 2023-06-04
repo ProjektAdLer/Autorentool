@@ -1,9 +1,16 @@
 using System.IO.Abstractions;
-using ApiAccess.BackendServices;
 using AuthoringTool;
 using AutoMapper;
+using BackendAccess.BackendServices;
 using BusinessLogic.API;
 using BusinessLogic.Commands;
+using BusinessLogic.Commands.Condition;
+using BusinessLogic.Commands.Element;
+using BusinessLogic.Commands.Layout;
+using BusinessLogic.Commands.Pathway;
+using BusinessLogic.Commands.Space;
+using BusinessLogic.Commands.Topic;
+using BusinessLogic.Commands.World;
 using BusinessLogic.Validation;
 using BusinessLogic.Validation.Validators;
 using DataAccess.Persistence;
@@ -14,6 +21,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using PersistEntities;
+using Presentation.Components.Forms.Element;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.DropZone;
@@ -110,7 +118,7 @@ public class StartupUt
     {
         typeof(IPresentationLogic), typeof(IAuthoringToolWorkspacePresenter), typeof(ILearningWorldPresenter),
         typeof(ILearningSpacePresenter), typeof(IAuthoringToolWorkspaceViewModel),
-        typeof(ILearningElementDropZoneHelper)
+        typeof(ILearningElementDropZoneHelper), typeof(IElementModelHandler)
     };
 
     [Test]
@@ -166,6 +174,20 @@ public class StartupUt
     [Test]
     [TestCaseSource(nameof(ConfigureCommandRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllCommandServices(Type requiredType)
+    {
+        ConfigureServicesCoreTest(requiredType);
+    }
+    
+    private static readonly Type[] ConfigureCommandFactoriesRequiredTypes =
+    {
+        typeof(IConditionCommandFactory), typeof(IElementCommandFactory), typeof(ILayoutCommandFactory),
+        typeof(IPathwayCommandFactory), typeof(ISpaceCommandFactory), typeof(ITopicCommandFactory),
+        typeof(IWorldCommandFactory), typeof(IBatchCommandFactory)
+    };
+
+    [Test]
+    [TestCaseSource(nameof(ConfigureCommandFactoriesRequiredTypes))]
+    public void Startup_ConfigureServices_CanResolveAllCommandFactoriesServices(Type requiredType)
     {
         ConfigureServicesCoreTest(requiredType);
     }

@@ -7,6 +7,7 @@ using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
 using Shared;
+using TestHelpers;
 
 namespace PresentationTest.PresentationLogic.LearningWorld;
 
@@ -65,9 +66,8 @@ public class LearningWorldViewModelUt
     public void Workload_ReturnsCorrectWorkload()
     {
         var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo");
-        var space = new LearningSpaceViewModel("a", "d", "e", Theme.Campus, layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X308L));
-        var spaceElement = new LearningElementViewModel("a", null!, "d", "e",
-            LearningElementDifficultyEnum.Easy, space, 6);
+        var space = new LearningSpaceViewModel("a", "d", "e", Theme.Campus, layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L));
+        var spaceElement = ViewModelProvider.GetLearningElement(workload:6);
         
         space.LearningSpaceLayout.PutElement(0, spaceElement);
         systemUnderTest.LearningSpaces.Add(space);
@@ -78,13 +78,11 @@ public class LearningWorldViewModelUt
     [Test]
     public void Points_ReturnsCorrectSum()
     {
-        var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo");
-        var space = new LearningSpaceViewModel("a", "d", "e", Theme.Campus, layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X308L));
-        var spaceElement = new LearningElementViewModel("a",  null!, "d", "e",
-            LearningElementDifficultyEnum.Easy, space, 6,7);
-        var space2 = new LearningSpaceViewModel("a", "d", "e", Theme.Campus, layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X308L));
-        var spaceElement2 = new LearningElementViewModel("a", null!, "d", "e",
-            LearningElementDifficultyEnum.Easy, space, 4,5);
+        var systemUnderTest = ViewModelProvider.GetLearningWorld();
+        var space = ViewModelProvider.GetLearningSpace();
+        var spaceElement = ViewModelProvider.GetLearningElement(points: 7);
+        var space2 = ViewModelProvider.GetLearningSpace();
+        var spaceElement2 = ViewModelProvider.GetLearningElement("2", points: 5);
         
         space.LearningSpaceLayout.PutElement(0, spaceElement);
         space2.LearningSpaceLayout.PutElement(0, spaceElement2);

@@ -19,7 +19,7 @@ namespace Generator.XmlClasses.Entities.MoodleBackup.xml;
 			OriginalWwwRoot = "https://moodle.cluuub.xyz";
 			OriginalSiteIdentifierHash = "c9629ccd3c092478330b78bdf4dcdb18";
 			OriginalCourseId = "1";
-			OriginalCourseFormat = "tiles";
+			OriginalCourseFormat = "";
 			OriginalCourseFullname = "";
 			OriginalCourseShortname = "";
 			OriginalCourseStartDate = "";

@@ -1,8 +1,9 @@
 name: Coveralls Code Coverage
 on:
   push:
+    branches:
+      - main
   pull_request:
-
 
 jobs:
   build:
@@ -11,52 +12,53 @@ jobs:
       dotNetVersion: net6.0
       dotNetConfiguration: Release
       runtimeTarget: win-x86
-      includeMask: \"[AuthoringTool]*,[BusinessLogic]*,[DataAccess]*,[Generator]*,[PersistEntities]*,[Presentation]*,[Shared]*\"
-      excludeMask: \"[ElectronWrapper]*,[ElectronWrapper.*]*,[AuthoringToolTest.*]*,[AuthoringToolTest]*,[GeneratorTest]*,[AuthoringToolLibTest]\"
+    strategy:
+      matrix:
+        test_project:
+          - AuthoringToolTest
+          - BackendAccessTest
+          - BusinessLogicTest
+          - DataAccessTest
+          - GeneratorTest
+          - IntegrationTest
+          - PresentationTest
+          - SharedTest
     steps:
       # checkout the repo
       - uses: actions/checkout@v2
         with:
           submodules: 'true'
       
-      # install dependencies, build, and test
+      # install runtime
       - name: Setup Dotnet for use with actions
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: '6.x'
-          
-      - name: Cache Nuget Packages
-        uses: actions/cache@v2
-        with:
-          path: ~/.nuget/packages
-          # Look to see if there is a cache hit for the corresponding requirements file
-          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
-          restore-keys: |
-            ${{ runner.os }}-nuget
-            
-      #This has to be the first Test run since it appends the first file and doesnt contain a merge
-      - name: Run AuthoringTool automated unit and integration test
-        run: dotnet test AuthoringToolTest/AuthoringToolTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=../TestResults/ --% /p:Include=${{ env.includeMask }} /p:Exclude=${{ env.excludeMask }}
-
-      #this is a typical test for the middle which merges into the the file created in first test
-      - name: Run BusinessLogic automated unit and integration test
-        run: dotnet test BusinessLogicTest/BusinessLogicTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=../TestResults/ /p:MergeWith=../TestResults/coverage.json --% /p:Include=${{ env.includeMask }} /p:Exclude=${{ env.excludeMask }}
-
-      - name: Run DataAccess automated unit and integration test
-        run: dotnet test DataAccessTest/DataAccessTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=../TestResults/ /p:MergeWith=../TestResults/coverage.json --% /p:Include=${{ env.includeMask }} /p:Exclude=${{ env.excludeMask }}
-
-      - name: Run Generator automated unit and integration test
-        run: dotnet test GeneratorTest/GeneratorTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=../TestResults/ /p:MergeWith=../TestResults/coverage.json --% /p:Include=${{ env.includeMask }} /p:Exclude=${{ env.excludeMask }}
-
-      - name: Run Presentation automated unit and integration test
-        run: dotnet test PresentationTest/PresentationTest.csproj --configuration Release /p:CollectCoverage=true /p:CoverletOutput=../TestResults/ /p:MergeWith=../TestResults/coverage.json --% /p:Include=${{ env.includeMask }} /p:Exclude=${{ env.excludeMask }}
-
-      #this has to be the last test since it merges into the already merged reports and after that creates the file format we need to post to coveralls
-      - name: Run Shared automated unit and integration test
-        run: dotnet test SharedTest/SharedTest.csproj --configuration Release /p:CollectCoverage=true /p:MergeWith=../TestResults/coverage.json /p:CoverletOutput=../TestResults/coverlet.info /p:CoverletOutputFormat=lcov --% /p:Include=${{ env.includeMask }} /p:Exclude=${{ env.excludeMask }}
       
-      - name: Publish coverage report to coveralls.io
-        uses: coverallsapp/github-action@master
+      # build only the specific test project we are testing   
+      - name: Build test project
+        run: dotnet build ${{ matrix.test_project }}
+        
+      # run test with coverage collection
+      - name: Run ${{ matrix.test_project }} tests
+        run: dotnet test ${{ matrix.test_project }} --collect:"XPlat Code Coverage" --settings coverlet.runsettings
+
+      # submit result from parallel to coveralls
+      - name: Coveralls Parallel
+        uses: coverallsapp/github-action@v2
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: ${{ github.workspace }}/TestResults/coverlet.info
+          flag-name: run-${{ join(matrix.*, '-') }}
+          parallel: true
+          file: ${{ matrix.test_project }}/TestResults/*/coverage.cobertura.xml
+
+  finish:
+    needs: build
+    if: ${{ always() }}
+    runs-on: windows-latest
+    steps:
+      # tell coveralls we are done with this run
+      - name: Coveralls Finished
+        uses: coverallsapp/github-action@v2
+        with:
+          parallel-finished: true
+          carryforward: "run-AuthoringToolTest,run-BackendAccessTest,run-BusinessLogicTest,run-DataAccessTest,run-GeneratorTest,run-IntegrationTest,run-PresentationTest,run-SharedTest"

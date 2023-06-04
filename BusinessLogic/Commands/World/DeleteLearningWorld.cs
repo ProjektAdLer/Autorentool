@@ -7,7 +7,7 @@ public class DeleteLearningWorld : IDeleteLearningWorld
     public string Name => nameof(DeleteLearningWorld);
     internal AuthoringToolWorkspace AuthoringToolWorkspace { get; }
     internal LearningWorld LearningWorld { get; }
-    private Action<AuthoringToolWorkspace> MappingAction { get; }
+    internal Action<AuthoringToolWorkspace> MappingAction { get; }
     private IMemento? Memento { get; set; }
 
     public DeleteLearningWorld(AuthoringToolWorkspace authoringToolWorkspace, LearningWorld learningWorld,

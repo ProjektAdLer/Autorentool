@@ -10,6 +10,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.ContentFiles;
 using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.Mediator;
 using TestContext = Bunit.TestContext;
 #pragma warning disable CS8618
 
@@ -22,6 +23,7 @@ public class ContentFilesContainerUt
     private IPresentationLogic _presentationLogic;
     private IDialogService _dialogService;
     private ContentFilesView _contentFilesViewSubstitute;
+    private IMediator _mediator;
 
     [SetUp]
     public void Setup()
@@ -29,9 +31,11 @@ public class ContentFilesContainerUt
         _testContext = new TestContext();
         _presentationLogic = Substitute.For<IPresentationLogic>();
         _dialogService = Substitute.For<IDialogService>();
+        _mediator = Substitute.For<IMediator>();
         
         _testContext.Services.AddSingleton(_presentationLogic);
         _testContext.Services.AddSingleton(_dialogService);
+        _testContext.Services.AddSingleton(_mediator);
         
         _testContext.ComponentFactories.AddStub<ContentFilesAdd>();
         _contentFilesViewSubstitute = Substitute.For<ContentFilesView>();

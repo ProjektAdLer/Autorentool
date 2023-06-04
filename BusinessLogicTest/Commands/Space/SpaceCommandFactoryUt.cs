@@ -109,7 +109,7 @@ public class SpaceCommandFactoryUt
         var requiredPoints = 5;
         var topic = EntityProvider.GetTopic();
         var theme = Theme.Campus;
-        Action<LearningSpace> mappingAction = space => { };
+        Action<ILearningSpace> mappingAction = space => { };
 
         // Act
         var result = _factory.GetEditCommand(learningSpace, name, description, goals, requiredPoints, theme,

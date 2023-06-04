@@ -3,6 +3,7 @@ using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using NUnit.Framework;
 using Shared;
+using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Layout;
 
@@ -13,16 +14,11 @@ public class PlaceLearningElementInLayoutFromLayoutUt
     public void MoveLearningElementToEmptySlot_Execute_MovesLearningElement()
     {
         var parent = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L))
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X20_6L))
         {
             UnsavedChanges = false
         };
-        var content = new FileContent("cn", "ct", "cf");
-        var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, parent,
-            workload: 8, points: 9, positionX: 17f, positionY: 29f)
-        {
-            UnsavedChanges = false
-        };
+        var element = EntityProvider.GetLearningElement(parent: parent, unsavedChanges: false);
         parent.LearningSpaceLayout.LearningElements[0] = element;
 
 
@@ -53,22 +49,9 @@ public class PlaceLearningElementInLayoutFromLayoutUt
     [Test]
     public void MoveLearningElementToAssignedSlot_Execute_SwitchesLearningElements()
     {
-        var parent = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L))
-        {
-            UnsavedChanges = false
-        };
-        var content = new FileContent("cn", "ct", "cf");
-        var element1 = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, parent,
-            workload: 8, points: 9, positionX: 17f, positionY: 29f)
-        {
-            UnsavedChanges = false
-        };
-        var element2 = new LearningElement("en2", content, "ed2", "eg2", LearningElementDifficultyEnum.Medium, parent,
-            workload: 8, points: 9, positionX: 17f, positionY: 29f)
-        {
-            UnsavedChanges = false
-        };
+        var parent = EntityProvider.GetLearningSpace(floorPlan: FloorPlanEnum.R_20X20_6L, unsavedChanges: false);
+        var element1 = EntityProvider.GetLearningElement(parent: parent, unsavedChanges: false);
+        var element2 = EntityProvider.GetLearningElement(parent: parent, unsavedChanges: false, append: "2");
         parent.LearningSpaceLayout.LearningElements[0] = element1;
         parent.LearningSpaceLayout.LearningElements[2] = element2;
 
@@ -102,10 +85,8 @@ public class PlaceLearningElementInLayoutFromLayoutUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var parent = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L));
-        var content = new FileContent("cn", "ct", "cf");
-        var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, parent, workload: 8, points: 9, positionX: 17f, positionY: 29f);
+        var parent = EntityProvider.GetLearningSpace(floorPlan: FloorPlanEnum.R_20X20_6L);
+        var element = EntityProvider.GetLearningElement(parent: parent);
         parent.LearningSpaceLayout.LearningElements[0] = element;
 
 
@@ -125,17 +106,8 @@ public class PlaceLearningElementInLayoutFromLayoutUt
     [Test]
     public void UndoRedo_UndoesAndRedoesMovingLearningElement()
     {
-        var parent = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L))
-        {
-            UnsavedChanges = false
-        };
-        var content = new FileContent("cn", "ct", "cf");
-        var element = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, parent,
-            workload: 8, points: 9, positionX: 17f, positionY: 29f)
-        {
-            UnsavedChanges = false
-        };
+        var parent = EntityProvider.GetLearningSpace(floorPlan: FloorPlanEnum.R_20X20_6L, unsavedChanges: false);
+        var element = EntityProvider.GetLearningElement(parent: parent, unsavedChanges: false);
         parent.LearningSpaceLayout.LearningElements[0] = element;
 
 
@@ -188,22 +160,9 @@ public class PlaceLearningElementInLayoutFromLayoutUt
     [Test]
     public void UndoRedo_UndoesAndRedoesSwitchingLearningElements()
     {
-        var parent = new LearningSpace("sn", "sd", "sg", 5, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L))
-        {
-            UnsavedChanges = false
-        };
-        var content = new FileContent("cn", "ct", "cf");
-        var element1 = new LearningElement("en", content, "ed", "eg", LearningElementDifficultyEnum.Medium, parent,
-            workload: 8, points: 9, positionX: 17f, positionY: 29f)
-        {
-            UnsavedChanges = false
-        };
-        var element2 = new LearningElement("en2", content, "ed2", "eg2", LearningElementDifficultyEnum.Medium, parent,
-            workload: 8, points: 9, positionX: 17f, positionY: 29f)
-        {
-            UnsavedChanges = false
-        };
+        var parent = EntityProvider.GetLearningSpace(floorPlan: FloorPlanEnum.R_20X20_6L, unsavedChanges: false);
+        var element1 = EntityProvider.GetLearningElement(parent: parent, unsavedChanges: false);
+        var element2 = EntityProvider.GetLearningElement(parent: parent, unsavedChanges: false, append: "2");
         parent.LearningSpaceLayout.LearningElements[0] = element1;
         parent.LearningSpaceLayout.LearningElements[2] = element2;
 

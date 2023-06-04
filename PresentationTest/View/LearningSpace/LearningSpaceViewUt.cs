@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Linq;
 using Bunit;
-using Bunit.TestDoubles;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
@@ -78,12 +76,13 @@ public class LearningSpaceViewUt
 
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
-        var mudTextStubs = systemUnderTest.FindComponents<Stub<MudText>>()
-            .Select(stub => stub.Instance.Parameters["ChildContent"])
-            .Cast<RenderFragment>()
-            .Select(o => _ctx.Render(o)).ToList();
-        Assert.That(mudTextStubs.Any(stub => stub.Markup.Contains("Workload: 42 min.")));
-        Assert.That(mudTextStubs.Any(stub => stub.Markup.Contains("Points: 8")));
+        //TODO Use this for LmsLoginDialogUt
+        var spaceWorkload = systemUnderTest.Find("h3.space-workload");
+        spaceWorkload.MarkupMatches(
+            @"<h3 class=""text-base text-adlerblue-600 space-workload""><span class=""text-adlergrey-600"">Workload: </span> 42<span class=""text-adlergrey-600""> min.</span></h3>");
+        var spacePoints = systemUnderTest.Find("h3.space-points");
+        spacePoints.MarkupMatches(
+            @"<h3 class=""text-base text-adlerblue-600 space-points""><span class=""text-adlergrey-600"">Points: </span> 8</h3>");
     }
 
     [Test]
@@ -91,22 +90,16 @@ public class LearningSpaceViewUt
     {
         var learningSpace = Substitute.For<ILearningSpaceViewModel>();
         var learningObject = Substitute.For<ILearningElementViewModel>();
-        learningObject.Name.Returns("my secret name");
-        learningObject.Description.Returns("a super long description");
         _learningSpacePresenter.LearningSpaceVm.Returns(learningSpace);
         _mediator.LearningElement.Returns(learningObject);
 
         var systemUnderTest = GetLearningSpaceViewForTesting();
 
-        var mudTextStubs = systemUnderTest.FindComponents<Stub<MudText>>()
-            .Select(stub => stub.Instance.Parameters["ChildContent"])
-            .Cast<RenderFragment>()
-            .Select(o => _ctx.Render(o)).ToList();
-
-        Assert.That(mudTextStubs.Any(stub =>
-            stub.Markup.Contains("Selected learning element: my secret name")));
-        Assert.That(mudTextStubs.Any(stub =>
-            stub.Markup.Contains("Description: a super long description")));
+        var elementName = systemUnderTest.Find("h3.space-theme");
+        elementName.MarkupMatches(@"<h3 class=""text-base text-adlerblue-600 space-theme"" ><span class=""text-adlergrey-600"" >Theme:</span>Campus</h3>");
+        var elementDescription = systemUnderTest.Find("h3.space-goals");
+        elementDescription.MarkupMatches(
+            @"<h3 class=""text-base text-adlerblue-600 flex-initial break-all space-goals"" ><span class=""text-adlergrey-600"" >Goals:</span></h3>");
     }
 
     [Test]

@@ -3,6 +3,7 @@ using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningSpace;
 using Shared;
+using TestHelpers;
 
 namespace PresentationTest.PresentationLogic.LearningElement;
 
@@ -20,11 +21,12 @@ public class LearningElementViewModelUt
         var workload = 5;
         var points = 6;
         var difficulty = LearningElementDifficultyEnum.Easy;
+        var elementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
         var positionX = 5f;
         var positionY = 21f;
 
         var systemUnderTest = new LearningElementViewModel(name, content,
-            description, goals, difficulty, parent, workload, points, positionX, positionY);
+            description, goals, difficulty, elementModel, parent, workload, points, positionX, positionY);
         
         Assert.Multiple(() =>
         {
@@ -36,6 +38,7 @@ public class LearningElementViewModelUt
             Assert.That(systemUnderTest.Workload, Is.EqualTo(workload));
             Assert.That(systemUnderTest.Points, Is.EqualTo(points));
             Assert.That(systemUnderTest.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(systemUnderTest.ElementModel, Is.EqualTo(elementModel));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionY));
         });
@@ -46,7 +49,7 @@ public class LearningElementViewModelUt
     public void FileEnding_ReturnsCorrectEnding()
     {
         const string expectedFileEnding = "aef";
-        var systemUnderTest = new LearningElementViewModel("foo", null!,  "foo", "foo", LearningElementDifficultyEnum.Medium);
+        var systemUnderTest = ViewModelProvider.GetLearningElement();
         Assert.That(systemUnderTest.FileEnding, Is.EqualTo(expectedFileEnding));
     }
 }

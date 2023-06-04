@@ -38,7 +38,10 @@ public class LearningWorldSavePathsHandlerUt
         });
         var reader = new StreamReader(fileSystem.File.OpenRead(SavedWorldPathsFilePath));
         var content = reader.ReadToEnd();
-        Assert.That(content, Is.EqualTo(XmlContentStart.Remove(XmlContentStart.Length - 1) + " />"));
+        //fix for newlines suddenly showing up in empty file
+        content = content.Replace(Environment.NewLine, string.Empty);
+        var expected = XmlContentStart.Remove(XmlContentStart.Length - 1) + " />";
+        Assert.That(content, Is.EqualTo(expected));
     }
 
     [Test]

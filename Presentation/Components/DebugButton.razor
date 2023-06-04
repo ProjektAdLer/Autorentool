@@ -30,27 +30,27 @@
 
         PresentationLogic.CreateLearningSpace(world1, "space1", "sdescription", "s1goals", 0, Theme.Campus, 0, 0);
         var space1 = world1.LearningSpaces.First();
-        PresentationLogic.ChangeLearningSpaceLayout(space1, world1, FloorPlanEnum.R20X206L);
+        PresentationLogic.ChangeLearningSpaceLayout(space1, world1, FloorPlanEnum.R_20X20_6L);
 
         PresentationLogic.CreateLearningSpace(world1, "space2", "sdescription", "s1goals", 0, Theme.Campus, 50, 50);
         var space2 = world1.LearningSpaces.Last();
-        PresentationLogic.ChangeLearningSpaceLayout(space2, world1, FloorPlanEnum.R20X308L);
+        PresentationLogic.ChangeLearningSpaceLayout(space2, world1, FloorPlanEnum.R_20X30_8L);
 
         PresentationLogic.CreateLearningSpace(world1, "space3", "sdescription", "s1goals", 0, Theme.Campus, 100, 100);
         var space3 = world1.LearningSpaces.Last();
-        PresentationLogic.ChangeLearningSpaceLayout(space3, world1, FloorPlanEnum.L32X3110L);
+        PresentationLogic.ChangeLearningSpaceLayout(space3, world1, FloorPlanEnum.L_32X31_10L);
 
         var content = PresentationLogic.GetAllContent();
 
         var learningContentViewModels = content.ToList();
         if (!learningContentViewModels.Any()) return;
-        PresentationLogic.CreateUnplacedLearningElement(world1, "element1", learningContentViewModels.First(), "e1goals", "e1goals", LearningElementDifficultyEnum.Easy, 0, 1);
-        PresentationLogic.CreateUnplacedLearningElement(world1, "element2", learningContentViewModels.First(), "e2goals", "e2goals", LearningElementDifficultyEnum.Easy, 0, 1);
-        PresentationLogic.CreateUnplacedLearningElement(world1, "element3", learningContentViewModels.First(), "e3goals", "e3goals", LearningElementDifficultyEnum.Easy, 0, 1);
+        PresentationLogic.CreateUnplacedLearningElement(world1, "element1", learningContentViewModels.First(), "e1goals", "e1goals", LearningElementDifficultyEnum.Easy, ElementModel.L_H5P_SPIELAUTOMAT_1, 0, 1);
+        PresentationLogic.CreateUnplacedLearningElement(world1, "element2", learningContentViewModels.First(), "e2goals", "e2goals", LearningElementDifficultyEnum.Easy, ElementModel.L_H5P_SPIELAUTOMAT_1, 0, 1);
+        PresentationLogic.CreateUnplacedLearningElement(world1, "element3", learningContentViewModels.First(), "e3goals", "e3goals", LearningElementDifficultyEnum.Easy, ElementModel.L_H5P_SPIELAUTOMAT_1, 0, 1);
 
-        PresentationLogic.CreateLearningElementInSlot(space1, 1, "ele4", learningContentViewModels.First(), "e4goals", "e4goals", LearningElementDifficultyEnum.Easy, 0, 1);
-        PresentationLogic.CreateLearningElementInSlot(space2, 1, "ele5", learningContentViewModels.First(), "e5goals", "e5goals", LearningElementDifficultyEnum.Easy, 0, 1);
-        PresentationLogic.CreateLearningElementInSlot(space3, 1, "ele6", learningContentViewModels.First(), "e5goals", "e6goals", LearningElementDifficultyEnum.Easy, 0, 1);
+        PresentationLogic.CreateLearningElementInSlot(space1, 1, "ele4", learningContentViewModels.First(), "e4goals", "e4goals", LearningElementDifficultyEnum.Easy, ElementModel.L_H5P_SPIELAUTOMAT_1, 0, 1);
+        PresentationLogic.CreateLearningElementInSlot(space2, 1, "ele5", learningContentViewModels.First(), "e5goals", "e5goals", LearningElementDifficultyEnum.Easy, ElementModel.L_H5P_SPIELAUTOMAT_1, 0, 1);
+        PresentationLogic.CreateLearningElementInSlot(space3, 1, "ele6", learningContentViewModels.First(), "e5goals", "e6goals", LearningElementDifficultyEnum.Easy, ElementModel.L_H5P_SPIELAUTOMAT_1, 0, 1);
 
         SelectedViewModelsProvider.SetLearningObjectInPathWay(space1, null);
     }

@@ -1,9 +1,9 @@
-﻿using ApiAccess.BackendServices;
-using AutoMapper;
+﻿using AutoMapper;
+using BackendAccess.BackendServices;
 using BusinessLogic.API;
 using BusinessLogic.Entities.BackendAccess;
 
-namespace ApiAccess.API;
+namespace BackendAccess.API;
 
 public class BackendAccess : IBackendAccess
 

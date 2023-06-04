@@ -1,5 +1,6 @@
 using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
+using Shared;
 using LearningElementDifficultyEnum = Shared.LearningElementDifficultyEnum;
 
 namespace BusinessLogic.Commands.Element;
@@ -16,11 +17,11 @@ public class CreateLearningElementInSlot : ICreateLearningElementInSlot
 
     public CreateLearningElementInSlot(LearningSpace parentSpace, int slotIndex, string name, 
         ILearningContent learningContent, string description, string goals,
-        LearningElementDifficultyEnum difficulty, int workload, int points, double positionX, double positionY,
+        LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points, double positionX, double positionY,
         Action<LearningSpace> mappingAction)
     {
         LearningElement = new LearningElement(name, learningContent, description, goals,
-            difficulty, parentSpace, workload: workload, points: points, positionX: positionX, positionY: positionY);
+            difficulty, elementModel, parentSpace, workload: workload, points: points, positionX: positionX, positionY: positionY);
         ParentSpace = parentSpace;
         SlotIndex = slotIndex;
         MappingAction = mappingAction;

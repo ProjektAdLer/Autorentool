@@ -3,7 +3,7 @@ using Shared;
 
 namespace BusinessLogic.Entities;
 
-public class LearningSpace : ILearningSpace,IObjectInPathWay
+public class LearningSpace : ILearningSpace
 {
     /// <summary>
     /// Constructor for Automapper. DO NOT USE.
@@ -38,7 +38,7 @@ public class LearningSpace : ILearningSpace,IObjectInPathWay
         Theme = theme;
         UnsavedChanges = true;
         LearningSpaceLayout = learningSpaceLayout
-            ?? new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X206L);
+            ?? new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X20_6L);
         InBoundObjects = inBoundSpaces ?? new List<IObjectInPathWay>();
         OutBoundObjects = outBoundSpaces ?? new List<IObjectInPathWay>();
         AssignedTopic = assignedTopic;
