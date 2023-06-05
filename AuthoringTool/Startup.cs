@@ -133,7 +133,7 @@ public class Startup
         services.AddSingleton<IPresentationLogic, PresentationLogic>();
         services.AddSingleton<ILearningWorldPresenter, LearningWorldPresenter>();
         services.AddSingleton(p =>
-            (ILearningWorldPresenterOverviewInterface)p.GetService(typeof(ILearningWorldPresenter))!);
+            (ILearningWorldPresenterOverviewInterface) p.GetService(typeof(ILearningWorldPresenter))!);
         services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
         services.AddSingleton<IErrorService, ErrorService>();
@@ -182,11 +182,11 @@ public class Startup
     private static void ConfigureToolbox(IServiceCollection services)
     {
         services.AddSingleton(p =>
-            (IAuthoringToolWorkspacePresenterToolboxInterface)p.GetService(typeof(IAuthoringToolWorkspacePresenter))!);
+            (IAuthoringToolWorkspacePresenterToolboxInterface) p.GetService(typeof(IAuthoringToolWorkspacePresenter))!);
         services.AddSingleton(p =>
-            (ILearningWorldPresenterToolboxInterface)p.GetService(typeof(ILearningWorldPresenter))!);
+            (ILearningWorldPresenterToolboxInterface) p.GetService(typeof(ILearningWorldPresenter))!);
         services.AddSingleton(p =>
-            (ILearningSpacePresenterToolboxInterface)p.GetService(typeof(ILearningSpacePresenter))!);
+            (ILearningSpacePresenterToolboxInterface) p.GetService(typeof(ILearningSpacePresenter))!);
     }
 
     private static void ConfigureMyLearningWorlds(IServiceCollection services)
@@ -222,7 +222,7 @@ public class Startup
     private void ConfigureCommands(IServiceCollection services)
     {
         services.AddSingleton<ICommandStateManager, CommandStateManager>();
-        services.AddSingleton<IOnUndoRedo>(p => (CommandStateManager)p.GetService<ICommandStateManager>()!);
+        services.AddSingleton<IOnUndoRedo>(p => (CommandStateManager) p.GetService<ICommandStateManager>()!);
     }
 
     private void ConfigureCommandFactories(IServiceCollection services)
