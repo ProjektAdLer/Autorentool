@@ -1,6 +1,4 @@
-﻿@using Presentation.PresentationLogic.API
-@using Presentation.PresentationLogic.Mediator
-@using Microsoft.Extensions.Localization
+﻿@using Microsoft.Extensions.Localization
 @inherits LayoutComponentBase
 
 <PageTitle>@Localizer["PageTitle"]</PageTitle>
@@ -8,31 +6,9 @@
 <MudThemeProvider/>
 <MudDialogProvider/>
 <MudSnackbarProvider/>
-<CascadingValue Value="Mediator">
-    @Body
-</CascadingValue>
-
+@Body 
 
 @code {
     [Inject]
-    public IPresentationLogic? PresentationLogic
-    {
-        get;
-        set;
-    }
-
-    [Inject]
-    public IMediator Mediator
-    {
-        get;
-        set;
-    }
-
-    [Inject]
-    private StringLocalizer<MainLayout> Localizer
-    {
-        get;
-        set;
-    }
-
+    private StringLocalizer<MainLayout> Localizer { get; set; }
 }
