@@ -125,9 +125,9 @@ public class LearningWorldViewUt
             Assert.That(draggableLearningSpaces, Has.Count.EqualTo(learningSpaces.Count));
             Assert.That(draggablePathWayConditions, Has.Count.EqualTo(pathWayConditions.Count));
             //TODO: This Test fails on the CI (macos), but not locally. I have no idea why.
-            // Assert.That(learningSpaces.All(le =>
-            //     draggableLearningSpaces.Any(dle =>
-            //         dle.Instance.Parameters[nameof(DraggableObjectInPathWay.ObjectInPathWay)] == le)));
+            Assert.That(learningSpaces.All(le =>
+                draggableLearningSpaces.Any(dle =>
+                    dle.Instance.Parameters[nameof(DraggableObjectInPathWay.ObjectInPathWay)] == le)));
             Assert.That(pathWays, Has.Count.EqualTo(learningPathWays.Count));
         });
     }
