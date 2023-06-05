@@ -23,4 +23,31 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
+    <data name="Header.Logout.Text" xml:space="preserve">
+        <value>Abmelden</value>
+    </data>
+    <data name="Header.Login.Text" xml:space="preserve">
+        <value>Anmelden</value>
+    </data>
+    <data name="DialogContent.LoggedIn.Message" xml:space="preserve">
+        <value>Angemeldet als {0}</value>
+    </data>
+    <data name="DialogContent.Button.Logout" xml:space="preserve">
+        <value>Abmelden</value>
+    </data>
+    <data name="DialogContent.Error.WrongUserORPassword" xml:space="preserve">
+        <value>Falscher Benutzername oder Passwort</value>
+    </data>
+    <data name="DialogContent.Field.Username" xml:space="preserve">
+        <value>Benutzername</value>
+    </data>
+    <data name="DialogContent.Field.Password" xml:space="preserve">
+        <value>Passwort</value>
+    </data>
+    <data name="DialogContent.Button.Login" xml:space="preserve">
+        <value>Anmelden</value>
+    </data>
+    <data name="DialogContent.Button.Cancel" xml:space="preserve">
+        <value>Abbrechen</value>
+    </data>
 </root>

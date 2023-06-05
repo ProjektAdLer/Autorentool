@@ -125,7 +125,6 @@
       </EmbeddedResource>
   </ItemGroup>
     <ItemGroup>
-        <Folder Include="Resources\Components\Dialogues\"/>
-        <Folder Include="Resources\Components\RightClickMenu\"/>
+        <Folder Include="Resources\Components\RightClickMenu\" />
     </ItemGroup>
 </Project>

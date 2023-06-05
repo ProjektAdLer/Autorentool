@@ -8,14 +8,12 @@
     <ToolBarContent>
         <MudText Typo="Typo.h6">@Localizer["Header"]</MudText>
         <MudSpacer/>
-        <MudTextField @bind-Value="                        _searchString" Immediate="true" Placeholder=@Localizer["MudTextField.Search.Placeholder"] Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Outlined.Search"/>
+        <MudTextField @bind-Value="_searchString" Immediate="true" Placeholder=@Localizer["MudTextField.Search.Placeholder"] Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Outlined.Search"/>
     </ToolBarContent>
     <HeaderContent>
         <MudTh>Delete</MudTh>
         <MudTh>
-            <MudTableSortLabel InitialDirection="SortDirection.Ascending"
-                               SortBy="new Func<ILearningContentViewModel, object>(x => x.Name)">
+            <MudTableSortLabel InitialDirection="SortDirection.Ascending" SortBy="new Func<ILearningContentViewModel, object>(x => x.Name)">
                 @nameof(ILearningContentViewModel.Name)
             </MudTableSortLabel>
         </MudTh>
@@ -51,12 +49,10 @@
             }
         </MudTd>
         <MudTd Class="px-1.5">
-            <MudIconButton Icon="@Icons.Material.Filled.Create"
-                           OnClick="() => NewElementWithContent(context)"/>
+            <MudIconButton Icon="@Icons.Material.Filled.Create" OnClick="() => NewElementWithContent(context)"/>
         </MudTd>
         <MudTd Class="px-1.5">
-            <MudIconButton Icon="@Icons.Material.Filled.Preview"
-                           OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"/>
+            <MudIconButton Icon="@Icons.Material.Filled.Preview" OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"/>
         </MudTd>
         @if (_showFilepath)
         {
@@ -76,7 +72,7 @@
     <PagerContent>
         <MudTablePager HideRowsPerPage="true" HorizontalAlignment="HorizontalAlignment.Center"/>
         <div class="max-h-40% min-h-fit shrink grow flex flex-row m-1">
-            <MudSwitch Class="pl-4" @bind-Checked="                        _showFilepath" Color="Color.Primary">Show filepath</MudSwitch>
+            <MudSwitch Class="pl-4" @bind-Checked="_showFilepath" Color="Color.Primary">Show filepath</MudSwitch>
             <MudSpacer/>
             <MudButton OnClick="OpenContentFilesFolder" Variant="Variant.Filled" Class="btn-standard ">Open folder</MudButton>
         </div>
@@ -119,13 +115,9 @@
     {
     //present "Delete/Cancel" dialog
         var parameters = new DialogParameters {
-            {
-                "SubmitButtonText", @Localizer["Dialog.Delete.Button.Text"]
-            }, {
-                "SubmitButtonColor", Color.Error
-            }, {
-                "DialogText", @Localizer["Dialog.Delete.Text", item.Name]
-            },
+            {"SubmitButtonText", @Localizer["Dialog.Delete.Button.Text"]},
+            {"SubmitButtonColor", Color.Error},
+            {"DialogText", @Localizer["Dialog.Delete.Text", item.Name]},
         };
         var options = new DialogOptions {
             CloseButton = true,

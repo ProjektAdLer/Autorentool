@@ -1,35 +1,36 @@
 @using Presentation.PresentationLogic.API
+@using Microsoft.Extensions.Localization
 @if (_isLmsConnected)
 {
-    <h3>Logout</h3>
+    <h3>@Localizer["Header.Logout.Text"]</h3>
 }
 else
 {
-    <h3>Login</h3>
+    <h3>@Localizer["Header.Login.Text"]</h3>
 }
 
 <MudDialog Options="new DialogOptions() {CloseOnEscapeKey = true}">
     <DialogContent>
         @if (_isLmsConnected)
         {
-            <MudText>Logged in as @PresentationLogic.LoginName</MudText>
-            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Logout">Logout</MudButton>
+            <MudText>@Localizer["DialogContent.LoggedIn.Message", PresentationLogic.LoginName]</MudText>
+            <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="Logout">@Localizer["DialogContent.Button.Logout"]</MudButton>
         }
         else
         {
             <MudForm>
-                <MudTextField @bind-Value="_username" Label="Username"/>
-                <MudTextField @bind-Value="_password" Label="Password" InputType="InputType.Password"/>
+                <MudTextField @bind-Value="_username" Label=@Localizer["DialogContent.Field.Username"]/>
+                <MudTextField @bind-Value="_password" Label=@Localizer["DialogContent.Field.Password"] InputType="InputType.Password"/>
                 @if (_showError)
                 {
-                    <MudText>Wrong Username or Password</MudText>
+                    <MudText>@Localizer["DialogContent.Error.WrongUserORPassword"]</MudText>
                 }
-                <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="SubmitForm">Login</MudButton>
+                <MudButton Color="Color.Primary" Variant="Variant.Filled" OnClick="SubmitForm">@Localizer["DialogContent.Button.Login"]</MudButton>
             </MudForm>
         }
     </DialogContent>
     <DialogActions>
-        <MudButton Color="Color.Secondary" Variant="Variant.Outlined" OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Secondary" Variant="Variant.Outlined" OnClick="Cancel">@Localizer["DialogContent.Button.Cancel"]</MudButton>
     </DialogActions>
 
 </MudDialog>
@@ -38,10 +39,12 @@ else
 
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; }
-
+    
 
     [Inject]
     public IPresentationLogic PresentationLogic { get; set; }
+    [Inject]
+    private StringLocalizer<LmsLoginDialog> Localizer { get; set; }
 
     private string _username = "";
     private string _password = "";
