@@ -10,7 +10,9 @@
 @using Presentation.Components.ContentFiles
 @using Presentation.Components.Dialogues
 @using System.ComponentModel
+@using BusinessLogic.Commands
 @using Presentation.PresentationLogic.Mediator
+@implements IDisposable
 
 <div class="flex flex-col h-screen max-h-screen overflow-hidden w-screen bg-buttonbgblue font-sans">
     <HeaderBar/>
@@ -23,8 +25,8 @@
             <CascadingValue Value="@TriggerStateHasChanged" Name="TriggerMasterLayoutStateHasChanged">
                 <SideContainer Side="Side.Left">
                     <Sidebar SidebarSide="Side.Left">
-                        <SidebarItem 
-                            IsActive="Mediator.WorldDialogOpen" 
+                        <SidebarItem
+                            IsActive="Mediator.WorldDialogOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleWorldDialog">
                             <SidebarContent>
                                 <div class="w-12 p-1" title="Learning world metadata">
@@ -114,28 +116,44 @@
 </div>
 
 @code {
-    
-    [CascadingParameter]
+
+    [Inject]
     public IMediator Mediator { get; set; }
 
     [Inject]
     public ILearningElementDropZoneHelper ElementDropZoneHelper { get; set; }
-    
-    
+
+    [Inject]
+    public IOnUndoRedo OnUndoRedoEventSource { get; set; }
+
+
     protected override void OnInitialized()
     {
         Mediator.PropertyChanged += MediatorOnPropertyChanged;
+        OnUndoRedoEventSource.OnRedo += OnUndoRedo;
+        OnUndoRedoEventSource.OnUndo += OnUndoRedo;
     }
-    
+
     private void MediatorOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        TriggerStateHasChanged();
+    }
+
+    private void OnUndoRedo(ICommand command)
+    {
+        TriggerStateHasChanged();
+    }
+
+    private void TriggerStateHasChanged()
     {
         InvokeAsync(StateHasChanged);
     }
 
-
-    private void TriggerStateHasChanged()
+    public void Dispose()
     {
-        StateHasChanged();
+        Mediator.PropertyChanged -= MediatorOnPropertyChanged;
+        OnUndoRedoEventSource.OnRedo -= OnUndoRedo;
+        OnUndoRedoEventSource.OnUndo -= OnUndoRedo;
     }
 
 }
