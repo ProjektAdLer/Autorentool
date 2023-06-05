@@ -7,9 +7,6 @@ using Presentation.Components;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.LearningContent;
-using Presentation.PresentationLogic.LearningElement;
-using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Mediator;
@@ -959,7 +956,7 @@ public class LearningWorldPresenterUt
 
         var ex = Assert.Throws<ApplicationException>(() =>
             systemUnderTest.EditLearningElement(null, element, "a", "b", "c", LearningElementDifficultyEnum.Easy,
-                ElementModel.L_H5P_SPIELAUTOMAT_1, 0, 0, null!));
+                ElementModel.l_h5p_slotmachine_1, 0, 0, null!));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
 
@@ -977,7 +974,7 @@ public class LearningWorldPresenterUt
 
         var ex = Assert.Throws<ApplicationException>(() =>
             systemUnderTest.EditLearningElement(null, element, "a", "b", "c", LearningElementDifficultyEnum.Easy,
-                ElementModel.L_H5P_SPIELAUTOMAT_1, 0, 0, null!));
+                ElementModel.l_h5p_slotmachine_1, 0, 0, null!));
 
         Assert.That(ex!.Message, Is.EqualTo("LearningElement is unplaced but has a space parent"));
     }
@@ -994,7 +991,7 @@ public class LearningWorldPresenterUt
 
         var ex = Assert.Throws<ApplicationException>(() =>
             systemUnderTest.EditLearningElement(null, element, "a", "b", "c", LearningElementDifficultyEnum.Easy,
-                ElementModel.L_H5P_SPIELAUTOMAT_1, 0, 0, null!));
+                ElementModel.l_h5p_slotmachine_1, 0, 0, null!));
 
         Assert.That(ex!.Message, Is.EqualTo("LearningElement is placed but has a different or null parent"));
     }
@@ -1016,10 +1013,10 @@ public class LearningWorldPresenterUt
         systemUnderTest.LearningWorldVm = world;
 
         systemUnderTest.EditLearningElement(space, element, "a", "b", "c", LearningElementDifficultyEnum.Easy,
-            ElementModel.L_H5P_SPIELAUTOMAT_1, 0, 0, null!);
+            ElementModel.l_h5p_slotmachine_1, 0, 0, null!);
 
         learningSpacePresenter.Received(1).EditLearningElement(element, "a", "b", "c",
-            LearningElementDifficultyEnum.Easy, ElementModel.L_H5P_SPIELAUTOMAT_1, 0, 0, null!);
+            LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, 0, 0, null!);
     }
 
     [Test]
@@ -1034,9 +1031,9 @@ public class LearningWorldPresenterUt
         systemUnderTest.LearningWorldVm = world;
         world.UnplacedLearningElements.Add(element);
         systemUnderTest.EditLearningElement(null, element, "a", "b", "c", LearningElementDifficultyEnum.Easy,
-            ElementModel.L_H5P_SPIELAUTOMAT_1, 0, 0, content);
+            ElementModel.l_h5p_slotmachine_1, 0, 0, content);
         presentationLogic.Received().EditLearningElement(null, element, "a", "b", "c",
-            LearningElementDifficultyEnum.Easy, ElementModel.L_H5P_SPIELAUTOMAT_1, 0, 0, content);
+            LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, 0, 0, content);
     }
 
     [Test]
@@ -1117,7 +1114,7 @@ public class LearningWorldPresenterUt
 
         var ex = Assert.Throws<ApplicationException>(() =>
             systemUnderTest.CreateUnplacedLearningElement("a", null!, "c", "d", LearningElementDifficultyEnum.Easy,
-                ElementModel.L_H5P_SPIELAUTOMAT_1, 0, 0));
+                ElementModel.l_h5p_slotmachine_1, 0, 0));
         Assert.That(ex!.Message, Is.EqualTo("SelectedLearningWorld is null"));
     }
 
@@ -1132,9 +1129,9 @@ public class LearningWorldPresenterUt
         systemUnderTest.LearningWorldVm = world;
 
         systemUnderTest.CreateUnplacedLearningElement("abc", content, "a", "b", LearningElementDifficultyEnum.Easy,
-            ElementModel.L_H5P_SPIELAUTOMAT_1, 0, 0);
+            ElementModel.l_h5p_slotmachine_1, 0, 0);
         presentationLogic.Received().CreateUnplacedLearningElement(world, "abc", content, "a", "b",
-            LearningElementDifficultyEnum.Easy, ElementModel.L_H5P_SPIELAUTOMAT_1, 0, 0);
+            LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, 0, 0);
     }
 
     #endregion

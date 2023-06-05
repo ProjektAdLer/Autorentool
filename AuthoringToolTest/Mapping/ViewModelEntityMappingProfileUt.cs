@@ -29,7 +29,7 @@ public class ViewModelEntityMappingProfileUt
     private const string Type = "type";
     private static readonly string Filepath = "bar/baz/buz.txt";
     private const LearningElementDifficultyEnum Difficulty = LearningElementDifficultyEnum.Easy;
-    private const ElementModel SelectedElementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
+    private const ElementModel SelectedElementModel = ElementModel.l_h5p_slotmachine_1;
     private const int Workload = 1;
     private const int Points = 2;
     private const int RequiredPoints = 3;
@@ -46,7 +46,7 @@ public class ViewModelEntityMappingProfileUt
     private const string NewType = "newType";
     private static readonly string NewFilepath = "/foo/bar/baz.txt";
     private const LearningElementDifficultyEnum NewDifficulty = LearningElementDifficultyEnum.Medium;
-    private const ElementModel NewSelectedElementModel = ElementModel.L_H5P_TAFEL_1;
+    private const ElementModel NewSelectedElementModel = ElementModel.l_h5p_blackboard_1;
     private const int NewWorkload = 2;
     private const int NewPoints = 3;
     private const int NewRequiredPoints = 4;
@@ -75,7 +75,7 @@ public class ViewModelEntityMappingProfileUt
         systemUnderTest.Map(source, destination);
         var newViewModel = destination.LearningElements[1];
         Assert.That(newViewModel, Is.EqualTo(oldViewModel));
-        var destination2 = new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X20_6L);
+        var destination2 = ViewModelProvider.GetLearningSpaceLayout(floorPlan: FloorPlanEnum.R_20X20_6L);
         systemUnderTest.Map(source, destination2);
         Assert.That(destination2.LearningElements[1], Is.Not.Null);
     }
@@ -119,11 +119,11 @@ public class ViewModelEntityMappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var content = GetTestableContent();
         var source = new LearningElement(Name, content, Description, Goals,
-            Difficulty, ElementModel.L_H5P_SPIELAUTOMAT_1, null, workload: Workload, points: Points, positionX: PositionX,
+            Difficulty, ElementModel.l_h5p_slotmachine_1, null, workload: Workload, points: Points, positionX: PositionX,
             positionY: PositionY);
         var destination = new LearningElementViewModel("",
             new FileContentViewModel("", "", Filepath), "", "", LearningElementDifficultyEnum.None,
-            ElementModel.L_H5P_TAFEL_1);
+            ElementModel.l_h5p_blackboard_1);
 
         systemUnderTest.Map(source, destination);
 
@@ -385,7 +385,7 @@ public class ViewModelEntityMappingProfileUt
     {
         var elementVm1 =
             new LearningElementViewModel("el1", new FileContentViewModel("foo", "bar", Filepath),
-                Description, Goals, Difficulty, ElementModel.L_H5P_SPIELAUTOMAT_1);
+                Description, Goals, Difficulty, ElementModel.l_h5p_slotmachine_1);
 
         var space = new LearningSpaceViewModel("space", Description, Goals, Theme.Campus, RequiredPoints,
                 new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L)

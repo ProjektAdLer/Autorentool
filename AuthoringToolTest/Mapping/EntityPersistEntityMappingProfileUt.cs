@@ -23,7 +23,7 @@ public class EntityPersistEntityMappingProfileUt
     private const string Type = "type";
     private static readonly string Filepath = "bar/baz/buz.txt";
     private const LearningElementDifficultyEnum Difficulty = LearningElementDifficultyEnum.Easy;
-    private const ElementModel SelectedElementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
+    private const ElementModel SelectedElementModel = ElementModel.l_h5p_slotmachine_1;
     private const int Workload = 1;
     private const int Points = 2;
     private const int RequiredPoints = 3;
@@ -40,7 +40,7 @@ public class EntityPersistEntityMappingProfileUt
     private const string NewType = "newType";
     private static readonly string NewFilepath = "/foo/bar/baz.txt";
     private const LearningElementDifficultyEnum NewDifficulty = LearningElementDifficultyEnum.Medium;
-    private const ElementModel NewSelectedElementModel = ElementModel.L_H5P_TAFEL_1;
+    private const ElementModel NewSelectedElementModel = ElementModel.l_h5p_blackboard_1;
     private const int NewWorkload = 2;
     private const int NewPoints = 3;
     private const int NewRequiredPoints = 4;
@@ -87,7 +87,7 @@ public class EntityPersistEntityMappingProfileUt
         var source = new LearningElement(Name, content, Description, Goals,
             Difficulty, SelectedElementModel, null, workload: Workload, points: Points, positionX: PositionX, positionY: PositionY);
         var destination = new LearningElementPe("", new FileContentPe("", "", "bar/baz/buz.txt"), "", "",
-            LearningElementDifficultyEnum.Easy, ElementModel.L_TEXT_BUECHERREGAL_1);
+            LearningElementDifficultyEnum.Easy, ElementModel.l_text_bookshelf_1);
 
         systemUnderTest.Map(source, destination);
 

@@ -194,7 +194,7 @@ public class TestParameter
         Description = "e";
         Goals = "f";
         Difficulty = LearningElementDifficultyEnum.Easy;
-        ElementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
+        ElementModel = ElementModel.l_h5p_slotmachine_1;
         Workload = 3;
         Points = 4;
         PositionX = 5;

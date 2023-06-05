@@ -38,7 +38,7 @@ public class LearningElementPe : ILearningElementPe, IExtensibleDataObject
         Description = "";
         Goals = "";
         Difficulty = LearningElementDifficultyEnum.Medium;
-        ElementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
+        ElementModel = ElementModel.l_h5p_slotmachine_1;
         Workload = 0;
         Points = 1;
         PositionX = 0;
