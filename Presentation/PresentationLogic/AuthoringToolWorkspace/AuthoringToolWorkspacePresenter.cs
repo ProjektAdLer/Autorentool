@@ -11,7 +11,7 @@ namespace Presentation.PresentationLogic.AuthoringToolWorkspace;
 /// The AuthoringToolWorkspacePresenter is the central component that controls changes to the <see cref="AuthoringToolWorkspaceViewModel"/>.
 /// </summary>
 public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
-    IAuthoringToolWorkspacePresenterToolboxInterface
+    IAuthoringToolWorkspacePresenterToolboxInterface, IDisposable, IAsyncDisposable
 {
     public AuthoringToolWorkspacePresenter(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
         IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter,
@@ -27,7 +27,6 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         _selectedViewModelsProvider = selectedViewModelsProvider;
         if (presentationLogic.RunningElectron)
             //register callback so we can check for unsaved data on quit
-            //TODO: register to our own quit button
             shutdownManager.BeforeShutdown += OnBeforeShutdownAsync;
     }
 
@@ -145,4 +144,15 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     }
 
     #endregion
+
+    public void Dispose()
+    {
+        _shutdownManager.BeforeShutdown -= OnBeforeShutdownAsync;
+    }
+
+    public ValueTask DisposeAsync()
+    {
+        Dispose();
+        return ValueTask.CompletedTask;
+    }
 }
