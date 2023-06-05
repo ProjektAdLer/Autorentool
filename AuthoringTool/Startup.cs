@@ -62,7 +62,8 @@ public class Startup
         //localization
         services.AddLocalization(options => options.ResourcesPath = "Resources");
 
-        services.AddLogging(builder => {
+        services.AddLogging(builder =>
+        {
             builder.ClearProviders();
             builder.AddConsole();
             builder.SetMinimumLevel(LogLevel.Trace);
@@ -196,7 +197,8 @@ public class Startup
 
     private static void ConfigureAutoMapper(IServiceCollection services)
     {
-        var config = new MapperConfiguration(cfg => {
+        var config = new MapperConfiguration(cfg =>
+        {
             ViewModelEntityMappingProfile.Configure(cfg);
             EntityPersistEntityMappingProfile.Configure(cfg);
             FormModelEntityMappingProfile.Configure(cfg);
@@ -253,9 +255,7 @@ public class Startup
         app.UseStaticFiles();
 
         // Add localization cultures
-        var supportedCultures = new[] {
-            "de-DE", "en-DE"
-        };
+        var supportedCultures = new[] {"de-DE", "en-DE"};
         var localizationOptions = new RequestLocalizationOptions()
             .SetDefaultCulture(supportedCultures[0])
             .AddSupportedCultures(supportedCultures)
@@ -268,7 +268,8 @@ public class Startup
 
         app.UseRouting();
 
-        app.UseEndpoints(endpoints => {
+        app.UseEndpoints(endpoints =>
+        {
             endpoints.MapControllers();
             endpoints.MapBlazorHub();
             endpoints.MapFallbackToPage("/_Host");
