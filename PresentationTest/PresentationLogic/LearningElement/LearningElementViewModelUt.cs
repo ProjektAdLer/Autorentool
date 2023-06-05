@@ -1,7 +1,5 @@
 using NUnit.Framework;
-using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
-using Presentation.PresentationLogic.LearningSpace;
 using Shared;
 using TestHelpers;
 
@@ -14,14 +12,14 @@ public class LearningElementViewModelUt
     public void Constructor_InitializesAllProperties()
     {
         var name = "asdf";
-        var parent = new LearningSpaceViewModel("foo", "", "", Theme.Campus, 2);
-        var content = new FileContentViewModel("bar", "foo", "");
+        var parent = ViewModelProvider.GetLearningSpace();
+        var content = ViewModelProvider.GetFileContent();
         var description = "very cool element";
         var goals = "learn very many things";
         var workload = 5;
         var points = 6;
         var difficulty = LearningElementDifficultyEnum.Easy;
-        var elementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
+        var elementModel = ElementModel.l_h5p_slotmachine_1;
         var positionX = 5f;
         var positionY = 21f;
 

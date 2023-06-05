@@ -20,7 +20,7 @@ public class LearningElementViewModel : ISerializableViewModel, ILearningElement
         Description = "";
         Goals = "";
         Difficulty = LearningElementDifficultyEnum.None;
-        ElementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
+        ElementModel = ElementModel.l_h5p_slotmachine_1;
         Workload = 0;
         Points = 1;
         PositionX = 0;

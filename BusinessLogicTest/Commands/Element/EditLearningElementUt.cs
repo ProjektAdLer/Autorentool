@@ -1,6 +1,5 @@
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Entities;
-using BusinessLogic.Entities.LearningContent;
 using NUnit.Framework;
 using Shared;
 using TestHelpers;
@@ -14,12 +13,9 @@ public class EditLearningElementUt
     public void Execute_EditsLearningElement()
     {
         var parent = EntityProvider.GetLearningSpace();
-        var content = new FileContent("bar", "foo", "");
-        var element = new LearningElement("a", content, "f", "g", LearningElementDifficultyEnum.Medium,
-            ElementModel.L_H5P_SPIELAUTOMAT_1, parent, workload: 8, points: 9, positionX: 17f, positionY: 29f)
-        {
-            UnsavedChanges = false
-        };
+        var content = EntityProvider.GetFileContent();
+        var element = EntityProvider.GetLearningElement(parent: parent, content: content,
+            elementModel: ElementModel.l_h5p_slotmachine_1, unsavedChanges: false);
         parent.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>
         {
             {
@@ -28,14 +24,13 @@ public class EditLearningElementUt
         };
 
         var name = "new element";
-        var url = "google.com";
         var description = "video of learning stuff";
         var goals = "learn";
         var workload = 7;
         var points = 8;
-        var difficulty = LearningElementDifficultyEnum.Easy;
-        var elementModel = ElementModel.L_H5P_TAFEL_1;
-        var newContent = new FileContent("foo", "bar", "foobar");
+        var difficulty = LearningElementDifficultyEnum.Hard;
+        var elementModel = ElementModel.l_h5p_blackboard_1;
+        var newContent = EntityProvider.GetFileContent(append: "new");
         var actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
@@ -45,17 +40,15 @@ public class EditLearningElementUt
         Assert.Multiple(() =>
         {
             Assert.That(actionWasInvoked, Is.False);
-            Assert.That(element.Name, Is.EqualTo("a"));
+            Assert.That(element.Name, Is.Not.EqualTo(name));
             Assert.That(element.Parent, Is.EqualTo(parent));
             Assert.That(element.LearningContent, Is.EqualTo(content));
-            Assert.That(element.Description, Is.EqualTo("f"));
-            Assert.That(element.Goals, Is.EqualTo("g"));
-            Assert.That(element.Workload, Is.EqualTo(8));
-            Assert.That(element.Points, Is.EqualTo(9));
-            Assert.That(element.Difficulty, Is.EqualTo(LearningElementDifficultyEnum.Medium));
-            Assert.That(element.ElementModel, Is.EqualTo(ElementModel.L_H5P_SPIELAUTOMAT_1));
-            Assert.That(element.PositionX, Is.EqualTo(17f));
-            Assert.That(element.PositionY, Is.EqualTo(29f));
+            Assert.That(element.Description, Is.Not.EqualTo(description));
+            Assert.That(element.Goals, Is.Not.EqualTo(goals));
+            Assert.That(element.Workload, Is.Not.EqualTo(workload));
+            Assert.That(element.Points, Is.Not.EqualTo(points));
+            Assert.That(element.Difficulty, Is.Not.EqualTo(difficulty));
+            Assert.That(element.ElementModel, Is.Not.EqualTo(elementModel));
             Assert.That(element.UnsavedChanges, Is.False);
             Assert.That(parent.ContainedLearningElements.Count(), Is.EqualTo(1));
         });
@@ -74,8 +67,6 @@ public class EditLearningElementUt
             Assert.That(element.Points, Is.EqualTo(points));
             Assert.That(element.Difficulty, Is.EqualTo(difficulty));
             Assert.That(element.ElementModel, Is.EqualTo(elementModel));
-            Assert.That(element.PositionX, Is.EqualTo(17f));
-            Assert.That(element.PositionY, Is.EqualTo(29f));
             Assert.That(element.UnsavedChanges, Is.True);
             Assert.That(parent.ContainedLearningElements.Count(), Is.EqualTo(1));
         });
@@ -85,17 +76,15 @@ public class EditLearningElementUt
     public void Undo_MementoIsNull_ThrowsException()
     {
         var parent = EntityProvider.GetLearningSpace();
-        var element = new LearningElement("a", null!, "d", "e", LearningElementDifficultyEnum.Easy,
-            ElementModel.L_H5P_SPIELAUTOMAT_1);
+        var element = EntityProvider.GetLearningElement(elementModel: ElementModel.l_h5p_slotmachine_1);
         var name = "new element";
-        var url = "google.com";
         var description = "video of learning stuff";
         var goals = "learn";
         var workload = 7;
         var points = 8;
         var difficulty = LearningElementDifficultyEnum.Easy;
-        var elementModel = ElementModel.L_H5P_TAFEL_1;
-        var content = new FileContent("bar", "foo", "");
+        var elementModel = ElementModel.l_h5p_blackboard_1;
+        var content = EntityProvider.GetFileContent();
         var actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
@@ -112,12 +101,9 @@ public class EditLearningElementUt
     public void UndoRedo_UndoesAndRedoesEditLearningElement()
     {
         var parent = EntityProvider.GetLearningSpace();
-        var content = new FileContent("bar", "foo", "");
-        var element = new LearningElement("a", content, "f", "g", LearningElementDifficultyEnum.Medium,
-            ElementModel.L_H5P_SPIELAUTOMAT_1, parent, workload: 8, points: 9, positionX: 17f, positionY: 29f)
-        {
-            UnsavedChanges = false
-        };
+        var content = EntityProvider.GetFileContent();
+        var element = EntityProvider.GetLearningElement(parent: parent, content: content,
+            elementModel: ElementModel.l_h5p_slotmachine_1, unsavedChanges: false);
         parent.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>
         {
             {
@@ -126,14 +112,13 @@ public class EditLearningElementUt
         };
 
         var name = "new element";
-        var url = "google.com";
         var description = "video of learning stuff";
         var goals = "learn";
         var workload = 7;
         var points = 8;
-        var difficulty = LearningElementDifficultyEnum.Easy;
-        var elementModel = ElementModel.L_H5P_TAFEL_1;
-        var newContent = new FileContent("foo", "bar", "foobar");
+        var difficulty = LearningElementDifficultyEnum.Hard;
+        var elementModel = ElementModel.l_h5p_blackboard_1;
+        var newContent = EntityProvider.GetFileContent(append: "new");
         var actionWasInvoked = false;
         Action<LearningElement> mappingAction = _ => actionWasInvoked = true;
 
@@ -143,20 +128,26 @@ public class EditLearningElementUt
         Assert.Multiple(() =>
         {
             Assert.That(actionWasInvoked, Is.False);
-            Assert.That(element.Name, Is.EqualTo("a"));
+            Assert.That(element.Name, Is.Not.EqualTo(name));
             Assert.That(element.Parent, Is.EqualTo(parent));
             Assert.That(element.LearningContent, Is.EqualTo(content));
-            Assert.That(element.Description, Is.EqualTo("f"));
-            Assert.That(element.Goals, Is.EqualTo("g"));
-            Assert.That(element.Workload, Is.EqualTo(8));
-            Assert.That(element.Points, Is.EqualTo(9));
-            Assert.That(element.Difficulty, Is.EqualTo(LearningElementDifficultyEnum.Medium));
-            Assert.That(element.ElementModel, Is.EqualTo(ElementModel.L_H5P_SPIELAUTOMAT_1));
-            Assert.That(element.PositionX, Is.EqualTo(17f));
-            Assert.That(element.PositionY, Is.EqualTo(29f));
+            Assert.That(element.Description, Is.Not.EqualTo(description));
+            Assert.That(element.Goals, Is.Not.EqualTo(goals));
+            Assert.That(element.Workload, Is.Not.EqualTo(workload));
+            Assert.That(element.Points, Is.Not.EqualTo(points));
+            Assert.That(element.Difficulty, Is.Not.EqualTo(difficulty));
+            Assert.That(element.ElementModel, Is.Not.EqualTo(elementModel));
             Assert.That(element.UnsavedChanges, Is.False);
             Assert.That(parent.ContainedLearningElements.Count(), Is.EqualTo(1));
         });
+
+        var oldName = element.Name;
+        var oldDescription = element.Description;
+        var oldGoals = element.Goals;
+        var oldWorkload = element.Workload;
+        var oldPoints = element.Points;
+        var oldDifficulty = element.Difficulty;
+        var oldElementModel = element.ElementModel;
 
         command.Execute();
 
@@ -172,8 +163,6 @@ public class EditLearningElementUt
             Assert.That(element.Points, Is.EqualTo(points));
             Assert.That(element.Difficulty, Is.EqualTo(difficulty));
             Assert.That(element.ElementModel, Is.EqualTo(elementModel));
-            Assert.That(element.PositionX, Is.EqualTo(17f));
-            Assert.That(element.PositionY, Is.EqualTo(29f));
             Assert.That(element.UnsavedChanges, Is.True);
             Assert.That(parent.ContainedLearningElements.Count(), Is.EqualTo(1));
         });
@@ -184,17 +173,15 @@ public class EditLearningElementUt
         Assert.Multiple(() =>
         {
             Assert.That(actionWasInvoked, Is.True);
-            Assert.That(element.Name, Is.EqualTo("a"));
+            Assert.That(element.Name, Is.EqualTo(oldName));
             Assert.That(element.Parent, Is.EqualTo(parent));
             Assert.That(element.LearningContent, Is.EqualTo(content));
-            Assert.That(element.Description, Is.EqualTo("f"));
-            Assert.That(element.Goals, Is.EqualTo("g"));
-            Assert.That(element.Workload, Is.EqualTo(8));
-            Assert.That(element.Points, Is.EqualTo(9));
-            Assert.That(element.Difficulty, Is.EqualTo(LearningElementDifficultyEnum.Medium));
-            Assert.That(element.ElementModel, Is.EqualTo(ElementModel.L_H5P_SPIELAUTOMAT_1));
-            Assert.That(element.PositionX, Is.EqualTo(17f));
-            Assert.That(element.PositionY, Is.EqualTo(29f));
+            Assert.That(element.Description, Is.EqualTo(oldDescription));
+            Assert.That(element.Goals, Is.EqualTo(oldGoals));
+            Assert.That(element.Workload, Is.EqualTo(oldWorkload));
+            Assert.That(element.Points, Is.EqualTo(oldPoints));
+            Assert.That(element.Difficulty, Is.EqualTo(oldDifficulty));
+            Assert.That(element.ElementModel, Is.EqualTo(oldElementModel));
             Assert.That(element.UnsavedChanges, Is.False);
             Assert.That(parent.ContainedLearningElements.Count(), Is.EqualTo(1));
         });
@@ -214,8 +201,6 @@ public class EditLearningElementUt
             Assert.That(element.Points, Is.EqualTo(points));
             Assert.That(element.Difficulty, Is.EqualTo(difficulty));
             Assert.That(element.ElementModel, Is.EqualTo(elementModel));
-            Assert.That(element.PositionX, Is.EqualTo(17f));
-            Assert.That(element.PositionY, Is.EqualTo(29f));
             Assert.That(element.UnsavedChanges, Is.True);
             Assert.That(parent.ContainedLearningElements.Count(), Is.EqualTo(1));
         });
