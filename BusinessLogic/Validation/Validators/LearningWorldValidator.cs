@@ -16,7 +16,7 @@ public class LearningWorldValidator : AbstractValidator<LearningWorld>
         RuleFor(x => x.Name)
             .NotEmpty()
             .Length(1, 60)
-            .IsAlphanumeric(new List<char>() {' ', '-', '_'}, "Must only contain letters, digits, spaces, dashes and underscores.")
+            .IsValidName()
             .Must((world, name) => IsUniqueName(world.Id, name))
             .WithMessage("Already in use.");
         RuleFor(x => x.Shortname)
