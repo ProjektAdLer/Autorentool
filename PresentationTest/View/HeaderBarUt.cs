@@ -38,6 +38,8 @@ public class HeaderBarUt
         _testContext.ComponentFactories.AddStub<MudPopover>();
         _testContext.ComponentFactories.AddStub<MudIconButton>();
         _testContext.ComponentFactories.AddStub<MudDivider>();
+        _testContext.ComponentFactories.AddStub<MudMenu>();
+        _testContext.ComponentFactories.AddStub<MudMenuItem>();
         _presentationLogic = Substitute.For<IPresentationLogic>();
         _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         _mediator = Substitute.For<IMediator>();
