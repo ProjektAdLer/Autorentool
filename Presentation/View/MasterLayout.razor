@@ -11,6 +11,7 @@
 @using Presentation.Components.Dialogues
 @using System.ComponentModel
 @using BusinessLogic.Commands
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.Mediator
 @implements IDisposable
 
@@ -125,6 +126,11 @@
 
     [Inject]
     public IOnUndoRedo OnUndoRedoEventSource { get; set; }
+    
+    //This is a hack to ensure that there always exists an instance of AuthoringToolWorkspacePresenter in the current scope
+    //so we can ask to save worlds on closing the application
+    [Inject]
+    public IAuthoringToolWorkspacePresenter AuthoringToolWorkspacePresenter { get; set; }
 
 
     protected override void OnInitialized()
