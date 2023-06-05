@@ -30,4 +30,7 @@
     <data name="CurrentUICulture" xml:space="preserve">
         <value>Momentan eingestellte Oberflächenkultur</value>
     </data>
+    <data name="Start" xml:space="preserve">
+        <value>Start</value>
+    </data>
 </root>

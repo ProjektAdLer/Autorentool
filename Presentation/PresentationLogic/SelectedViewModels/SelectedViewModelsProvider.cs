@@ -4,67 +4,24 @@ using BusinessLogic.Commands;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningWorld;
-
 namespace Presentation.PresentationLogic.SelectedViewModels;
 
 public class SelectedViewModelsProvider : ISelectedViewModelsProvider
 {
     private readonly IOnUndoRedo _onUndoRedo;
-    private ILearningWorldViewModel? _learningWorld;
-    private ISelectableObjectInWorldViewModel? _learningObjectInPathWay;
-    private ILearningElementViewModel? _learningElement;
-    private ILearningContentViewModel? _learningContent;
+    private readonly Stack<ISelectedViewModelStackEntry> _redoStack = new();
 
     private readonly Stack<ISelectedViewModelStackEntry> _undoStack = new();
-    private readonly Stack<ISelectedViewModelStackEntry> _redoStack = new();
+    private ILearningContentViewModel? _learningContent;
+    private ILearningElementViewModel? _learningElement;
+    private ISelectableObjectInWorldViewModel? _learningObjectInPathWay;
+    private ILearningWorldViewModel? _learningWorld;
 
     public SelectedViewModelsProvider(IOnUndoRedo onUndoRedo)
     {
         _onUndoRedo = onUndoRedo;
         _onUndoRedo.OnUndo += OnUndo;
         _onUndoRedo.OnRedo += OnRedo;
-    }
-
-    private void OnRedo(ICommand obj)
-    {
-        while (_redoStack.Any() && _redoStack.Peek().Command.Equals(obj))
-        {
-            var stackEntry = _redoStack.Pop();
-            ISelectedViewModelStackEntry undoStackEntry = stackEntry switch
-            {
-                SelectedLearningWorldViewModelStackEntry we => new SelectedLearningWorldViewModelStackEntry(we.Command,
-                    LearningWorld, lw => LearningWorld = lw),
-                SelectedLearningObjectInPathWayViewModelStackEntry op => new
-                    SelectedLearningObjectInPathWayViewModelStackEntry(op.Command, LearningObjectInPathWay,
-                        lo => LearningObjectInPathWay = lo),
-                SelectedLearningElementViewModelStackEntry el => new SelectedLearningElementViewModelStackEntry(
-                    el.Command, LearningElement, le => LearningElement = le),
-                _ => throw new InvalidEnumArgumentException()
-            };
-            stackEntry.Apply();
-            _undoStack.Push(undoStackEntry);
-        }
-    }
-
-    private void OnUndo(ICommand obj)
-    {
-        while (_undoStack.Any() && _undoStack.Peek().Command.Equals(obj))
-        {
-            var stackEntry = _undoStack.Pop();
-            ISelectedViewModelStackEntry redoStackEntry = stackEntry switch
-            {
-                SelectedLearningWorldViewModelStackEntry we => new SelectedLearningWorldViewModelStackEntry(we.Command,
-                    LearningWorld, lw => LearningWorld = lw),
-                SelectedLearningObjectInPathWayViewModelStackEntry op => new
-                    SelectedLearningObjectInPathWayViewModelStackEntry(op.Command, LearningObjectInPathWay,
-                        lo => LearningObjectInPathWay = lo),
-                SelectedLearningElementViewModelStackEntry el => new SelectedLearningElementViewModelStackEntry(
-                    el.Command, LearningElement, le => LearningElement = le),
-                _ => throw new InvalidEnumArgumentException()
-            };
-            stackEntry.Apply();
-            _redoStack.Push(redoStackEntry);
-        }
     }
 
     public ILearningWorldViewModel? LearningWorld
@@ -129,6 +86,46 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
+
+    private void OnRedo(ICommand obj)
+    {
+        while (_redoStack.Any() && _redoStack.Peek().Command.Equals(obj))
+        {
+            var stackEntry = _redoStack.Pop();
+            ISelectedViewModelStackEntry undoStackEntry = stackEntry switch {
+                SelectedLearningWorldViewModelStackEntry we => new SelectedLearningWorldViewModelStackEntry(we.Command,
+                    LearningWorld, lw => LearningWorld = lw),
+                SelectedLearningObjectInPathWayViewModelStackEntry op => new
+                    SelectedLearningObjectInPathWayViewModelStackEntry(op.Command, LearningObjectInPathWay,
+                        lo => LearningObjectInPathWay = lo),
+                SelectedLearningElementViewModelStackEntry el => new SelectedLearningElementViewModelStackEntry(
+                    el.Command, LearningElement, le => LearningElement = le),
+                _ => throw new InvalidEnumArgumentException()
+            };
+            stackEntry.Apply();
+            _undoStack.Push(undoStackEntry);
+        }
+    }
+
+    private void OnUndo(ICommand obj)
+    {
+        while (_undoStack.Any() && _undoStack.Peek().Command.Equals(obj))
+        {
+            var stackEntry = _undoStack.Pop();
+            ISelectedViewModelStackEntry redoStackEntry = stackEntry switch {
+                SelectedLearningWorldViewModelStackEntry we => new SelectedLearningWorldViewModelStackEntry(we.Command,
+                    LearningWorld, lw => LearningWorld = lw),
+                SelectedLearningObjectInPathWayViewModelStackEntry op => new
+                    SelectedLearningObjectInPathWayViewModelStackEntry(op.Command, LearningObjectInPathWay,
+                        lo => LearningObjectInPathWay = lo),
+                SelectedLearningElementViewModelStackEntry el => new SelectedLearningElementViewModelStackEntry(
+                    el.Command, LearningElement, le => LearningElement = le),
+                _ => throw new InvalidEnumArgumentException()
+            };
+            stackEntry.Apply();
+            _redoStack.Push(redoStackEntry);
+        }
+    }
 
     private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
     {

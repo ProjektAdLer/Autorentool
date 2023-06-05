@@ -1,13 +1,14 @@
+@using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.LearningContent
-@using Presentation.Components.Dialogues
 @using Presentation.PresentationLogic.Mediator
+@using Presentation.Components.Dialogues
 <MudTable Items="Items" Class="w-full grow shrink h-full flex flex-col flex-nowrap"
-          Dense="true" Virtualize="true" Filter="Filter" >
+          Dense="true" Virtualize="true" Filter="Filter">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">All element content files</MudText>
+        <MudText Typo="Typo.h6">@Localizer["Header"]</MudText>
         <MudSpacer/>
-        <MudTextField @bind-Value="_searchString" Immediate="true" Placeholder="Search" Adornment="Adornment.Start"
+        <MudTextField @bind-Value="                        _searchString" Immediate="true" Placeholder=@Localizer["MudTextField.Search.Placeholder"] Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Outlined.Search"/>
     </ToolBarContent>
     <HeaderContent>
@@ -23,8 +24,8 @@
                 @nameof(FileContentViewModel.Type)
             </MudTableSortLabel>
         </MudTh>
-        <MudTh>New Element</MudTh>
-        <MudTh>Preview</MudTh>
+        <MudTh>@Localizer["Content.MudTh.NewElement"]</MudTh>
+        <MudTh>@Localizer["Content.MudTh.Preview"]</MudTh>
         @if (_showFilepath)
         {
             <MudTh>@nameof(FileContentViewModel.Filepath)/@nameof(LinkContentViewModel.Link)</MudTh>
@@ -46,7 +47,7 @@
             }
             else
             {
-                <span>Link</span>
+                <span>@Localizer["Content.MudTh.Span"]</span>
             }
         </MudTd>
         <MudTd Class="px-1.5">
@@ -73,15 +74,19 @@
         }
     </RowTemplate>
     <PagerContent>
-            <MudTablePager HideRowsPerPage="true" HorizontalAlignment="HorizontalAlignment.Center"/>
+        <MudTablePager HideRowsPerPage="true" HorizontalAlignment="HorizontalAlignment.Center"/>
         <div class="max-h-40% min-h-fit shrink grow flex flex-row m-1">
-            <MudSwitch Class="pl-4" @bind-Checked="_showFilepath" Color="Color.Primary">Show filepath</MudSwitch>
+            <MudSwitch Class="pl-4" @bind-Checked="                        _showFilepath" Color="Color.Primary">Show filepath</MudSwitch>
             <MudSpacer/>
             <MudButton OnClick="OpenContentFilesFolder" Variant="Variant.Filled" Class="btn-standard ">Open folder</MudButton>
         </div>
     </PagerContent>
 </MudTable>
+
 @code {
+
+    [Inject]
+    private StringLocalizer<ContentFilesView> Localizer { get; set; }
 
 #pragma warning disable CS8618 - injected by framework - n.stich
     [Inject]
@@ -92,7 +97,7 @@
     private IMediator Mediator { get; set; }
 #pragma warning restore CS8618
     private IEnumerable<ILearningContentViewModel> Items => PresentationLogic.GetAllContent();
-    
+
     private string? _searchString;
     private bool _showFilepath;
 
@@ -112,24 +117,26 @@
 
     private async Task Delete(ILearningContentViewModel item)
     {
-        //present "Delete/Cancel" dialog
-        var parameters = new DialogParameters
-        {
-            { "SubmitButtonText", "Delete" },
-            { "SubmitButtonColor", Color.Error },
-            { "DialogText", $"Do you really want to delete content entry {item.Name}?" },
+    //present "Delete/Cancel" dialog
+        var parameters = new DialogParameters {
+            {
+                "SubmitButtonText", @Localizer["Dialog.Delete.Button.Text"]
+            }, {
+                "SubmitButtonColor", Color.Error
+            }, {
+                "DialogText", @Localizer["Dialog.Delete.Text", item.Name]
+            },
         };
-        var options = new DialogOptions 
-        {
+        var options = new DialogOptions {
             CloseButton = true,
             CloseOnEscapeKey = true,
             DisableBackdropClick = true,
-        
+
         };
         var dialog = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>("Delete content", parameters, options);
         var result = await dialog.Result;
-        
-        //if not cancelled, delete content
+
+    //if not cancelled, delete content
         if (!result.Canceled)
             PresentationLogic.RemoveContent(item);
     }

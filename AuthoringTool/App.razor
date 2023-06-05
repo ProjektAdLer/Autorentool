@@ -1,6 +1,8 @@
 ﻿@using Microsoft.Extensions.Localization
 @using Presentation.View
 @using AuthoringTool.View.Shared
+@inject IStringLocalizer<App> Localizer
+
 <Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new[] {typeof(MasterLayout).Assembly}">
     <Found Context="routeData">
         <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)"/>
@@ -13,13 +15,3 @@
         </LayoutView>
     </NotFound>
 </Router>
-
-@code
-{
-    [Inject]
-    private StringLocalizer<App> Localizer
-    {
-        get;
-        set;
-    }
-}
