@@ -2,6 +2,7 @@
 using Bunit;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using MudBlazor;
 using MudBlazor.Services;
 using NSubstitute;
@@ -22,6 +23,7 @@ public class LearningSpaceViewUt
     private TestContext _ctx;
     private ILearningSpacePresenter _learningSpacePresenter;
     private ISelectedViewModelsProvider _mediator;
+    private IStringLocalizer<LearningSpaceView> _localizer;
 #pragma warning restore CS8618
 
     [SetUp]
@@ -33,8 +35,10 @@ public class LearningSpaceViewUt
         _ctx.ComponentFactories.AddStub<MudText>();
         _learningSpacePresenter = Substitute.For<ILearningSpacePresenter>();
         _mediator = Substitute.For<ISelectedViewModelsProvider>();
+        _localizer = Substitute.For<IStringLocalizer<LearningSpaceView>>();
         _ctx.Services.AddSingleton(_learningSpacePresenter);
         _ctx.Services.AddSingleton(_mediator);
+        _ctx.Services.AddSingleton(_localizer);
         _ctx.Services.AddLogging();
     }
 

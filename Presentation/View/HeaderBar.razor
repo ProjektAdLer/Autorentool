@@ -112,39 +112,19 @@
 @code {
 
     [Inject]
-    public IPresentationLogic PresentationLogic
-    {
-        get;
-        set;
-    }
+    public IPresentationLogic PresentationLogic { get; set; }
 
     [Inject]
-    internal NavigationManager NavManager
-    {
-        get;
-        private init;
-    }
+    internal NavigationManager NavManager { get; private init; }
 
     [Inject]
-    private IStringLocalizer<HeaderBar> Localizer
-    {
-        get;
-        set;
-    }
+    private IStringLocalizer<HeaderBar> Localizer { get; set; }
 
     [Inject]
-    private ISelectedViewModelsProvider SelectedViewModelsProvider
-    {
-        get;
-        set;
-    }
+    private ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 
     [Inject]
-    private IMediator Mediator
-    {
-        get;
-        set;
-    }
+    private IMediator Mediator { get; set; }
 
     [Inject]
     IDialogService DialogService { get; set; }

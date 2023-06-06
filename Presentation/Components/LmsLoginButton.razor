@@ -10,10 +10,10 @@
 @code {
 
     [Inject]
-    public IDialogService DialogService { get; set; }
+    internal IDialogService DialogService { get; set; }
     
     [Inject]
-    private IStringLocalizer<HeaderBar> Localizer { get; set; }
+    internal IStringLocalizer<LmsLoginButton> Localizer { get; set; }
 
     private void OpenLmsDialog()
     {

@@ -50,6 +50,7 @@ public class HeaderBarUt
         _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         _mediator = Substitute.For<IMediator>();
         _stringLocalizer = Substitute.For<IStringLocalizer<HeaderBar>>();
+        _stringLocalizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
         _snackbar = Substitute.For<ISnackbar>();
         _dialogService = Substitute.For<IDialogService>();
         _errorService = Substitute.For<IErrorService>();
@@ -123,7 +124,7 @@ public class HeaderBarUt
         _selectedViewModelsProvider.LearningWorld.Returns(world);
         var systemUnderTest = GetRenderedComponent();
 
-        var button = systemUnderTest.FindOrFail("button[title='Generate learning world to moodle and 3D learning environment']");
+        var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
         button.Click();
         _presentationLogic.Received().ConstructBackupAsync(world);
     }
@@ -135,7 +136,7 @@ public class HeaderBarUt
         _selectedViewModelsProvider.LearningWorld.Returns(world);
         var systemUnderTest = GetRenderedComponent();
 
-        var button = systemUnderTest.FindOrFail("button[title='Generate learning world to moodle and 3D learning environment']");
+        var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
         button.Click();
         
         var mockStringBuilder = new StringBuilder();
@@ -159,7 +160,7 @@ public class HeaderBarUt
         _selectedViewModelsProvider.LearningWorld.Returns(world);
         var systemUnderTest = GetRenderedComponent();
 
-        var button = systemUnderTest.FindOrFail("button[title='Generate learning world to moodle and 3D learning environment']");
+        var button = systemUnderTest.FindOrFail("button[title='3DWorld.Generate.Hover']");
         button.Click();
         
         var mockStringBuilder = new StringBuilder();
