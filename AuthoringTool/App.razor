@@ -17,9 +17,5 @@
 @code
 {
     [Inject]
-    private StringLocalizer<App> Localizer
-    {
-        get;
-        set;
-    }
+    private IStringLocalizer<App> Localizer { get; set; }
 }
