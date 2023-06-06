@@ -130,13 +130,7 @@
     IDialogService DialogService { get; set; }
 
     [Inject]
-    IErrorService _errorService { get; set; }
-
-    [Inject]
-    IDialogService DialogService { get; set; }
-
-    [Inject]
-    IErrorService _errorService { get; set; }
+    IErrorService ErrorService { get; set; }
 
     private string _filepath = "";
 
@@ -233,7 +227,7 @@
         errorString.Insert(0, "<ul>");
         errorString.Append("</ul>");
 
-        _errorService.SetError("LearningWorld is not valid", errorString.ToString());
+        ErrorService.SetError("LearningWorld is not valid", errorString.ToString());
         return false;
     }
 
