@@ -77,12 +77,10 @@ public class UserWebApiServices : IUserWebApiServices
             {"Accept", "text/plain"}
         };
         var content = new MultipartFormDataContent();
-        await using (var backupStream = _fileSystem.File.OpenRead(backupPath))
-            content.Add(new StreamContent(backupStream),
-                "backupFile", backupPath);
-        await using (var atfStream = _fileSystem.File.OpenRead(awtPath))
-            content.Add(new StreamContent(atfStream),
-                "atfFile", awtPath);
+        content.Add(new StreamContent(_fileSystem.File.OpenRead(backupPath)),
+            "backupFile", backupPath);
+        content.Add(new StreamContent(_fileSystem.File.OpenRead(awtPath)),
+            "atfFile", awtPath);
 
         return await SendHttpPostRequestAsync<bool>("/Worlds", headers, content);
     }
@@ -92,13 +90,14 @@ public class UserWebApiServices : IUserWebApiServices
     {
         // Set the Base URL of the API.
         // TODO: This should be set in the configuration.
-        url = new Uri("https://demo.api.projekt-adler.eu/api") + url;
+        url = new Uri("https://dev.api.projekt-adler.eu/api") + url;
 
         var request = new HttpRequestMessage(HttpMethod.Post, url);
         foreach (var (key, value) in headers) request.Headers.Add(key, value);
         request.Content = content;
 
         var apiResp = await _client.SendAsync(request);
+        content.Dispose();
 
         // This will throw if the response is not successful.
         await HandleErrorMessage(apiResp);
@@ -114,7 +113,7 @@ public class UserWebApiServices : IUserWebApiServices
 
         // Set the Base URL of the API.
         // TODO: This should be set in the configuration.
-        url = new Uri("https://demo.api.projekt-adler.eu/api") + url;
+        url = new Uri("https://dev.api.projekt-adler.eu/api") + url;
 
         url += "?" + queryString;
 
