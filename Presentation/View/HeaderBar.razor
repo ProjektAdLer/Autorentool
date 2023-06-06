@@ -152,6 +152,12 @@
     [Inject]
     IErrorService _errorService { get; set; }
 
+    [Inject]
+    IDialogService DialogService { get; set; }
+
+    [Inject]
+    IErrorService _errorService { get; set; }
+
     private string _filepath = "";
 
     private bool _popoverOpen;
