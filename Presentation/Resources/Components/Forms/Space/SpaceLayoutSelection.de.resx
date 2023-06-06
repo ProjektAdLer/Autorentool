@@ -23,7 +23,7 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="SnackBarMessage.LinkAdded" xml:space="preserve">
-        <value />
+    <data name="ArgumentException.Message" xml:space="preserve">
+        <value>LearningSpaceViewModel stimmt nicht mit LearningSpacePresenter.LearningSpaceVm überein</value>
     </data>
 </root>

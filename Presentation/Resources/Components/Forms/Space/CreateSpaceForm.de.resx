@@ -23,4 +23,31 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
+    <data name="Header.Title" xml:space="preserve">
+        <value>Lernraum Metadata</value>
+    </data>
+    <data name="Form.Message.Alert.Text" xml:space="preserve">
+        <value>Raum erstellt</value>
+    </data>
+    <data name="Form.Fields.Collapsable.General.Title" xml:space="preserve">
+        <value>Allgemein</value>
+    </data>
+    <data name="Form.Fields.Collapsable.CompletionConditions.Title" xml:space="preserve">
+        <value>Vervollständigungs Bedingungen</value>
+    </data>
+    <data name="Form.Fields.Collapsable.Theme.Title" xml:space="preserve">
+        <value>Thema</value>
+    </data>
+    <data name="Form.Fields.Collapsable.Goals.Title" xml:space="preserve">
+        <value>Ziele</value>
+    </data>
+    <data name="Form.Fields.Collapsable.Goals.Field.Decription.Title" xml:space="preserve">
+        <value>Beschreibung</value>
+    </data>
+    <data name="Form.Fields.Collapsable.Goals.Field.Goals.Title" xml:space="preserve">
+        <value>Ziele</value>
+    </data>
+    <data name="InvalidOperationException.Message" xml:space="preserve">
+        <value>Keine Lernwelt ausgewählt.</value>
+    </data>
 </root>

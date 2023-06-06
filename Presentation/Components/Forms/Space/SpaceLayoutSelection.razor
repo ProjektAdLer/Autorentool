@@ -1,7 +1,7 @@
+@using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans
 @using Shared
-
 <div class="flex flex-col justify-center py-2 w-full rounded-lg bg-adlergrey-100">
     <div class="flex flex-row justify-evenly">
         @foreach (FloorPlanEnum floorPlan in Enum.GetValues(typeof(FloorPlanEnum)))
@@ -19,6 +19,9 @@
 
 
 @code {
+    
+    [Inject]
+    private StringLocalizer<SpaceLayoutSelection> Localizer { get; set; }
 
     // LearningSpacePresenter is injected and LearningSpaceViewModel is required to be set by the parent component
 #pragma warning disable CS8618
@@ -36,7 +39,7 @@
     {
         base.OnParametersSet();
         if (LearningSpaceViewModel == null || LearningSpacePresenter.LearningSpaceVm != LearningSpaceViewModel)
-            throw new ArgumentException("LearningSpaceViewModel does not match LearningSpacePresenter.LearningSpaceVm");
+            throw new ArgumentException(Localizer["ArgumentException.Message"]);
     }
 
     private void OnFloorPlanButtonSelected(FloorPlanEnum floorPlan, MouseEventArgs args)

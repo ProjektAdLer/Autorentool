@@ -1,12 +1,13 @@
 @using Presentation.Components.Forms.Models
-@using Presentation.Components.Forms.Buttons
-@using BusinessLogic.Entities.LearningContent
-@using Presentation.Components.ContentFiles
 @using Presentation.PresentationLogic.API
-@using AutoMapper
 @using Presentation.PresentationLogic.LearningContent
+@using BusinessLogic.Entities.LearningContent
+@using AutoMapper
+@using Microsoft.Extensions.Localization
+@using Presentation.Components.ContentFiles
+@using Presentation.Components.Forms.Buttons
 <BaseForm TForm="LinkContentFormModel" TEntity="LinkContent" OnValidSubmit="OnValidSubmit"
-          SnackbarMessage="Link added" FormDataContainer="FormDataContainer">
+          SnackbarMessage=@Localizer["SnackBarMessage.LinkAdded"] FormDataContainer="FormDataContainer">
     <Fields>
         <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                       For="@(() => FormModel.Name)"
@@ -32,7 +33,9 @@
     private IPresentationLogic PresentationLogic { get; set; }
     [Inject]
     private IMapper Mapper { get; set; }
-    
+    [Inject]
+    private StringLocalizer<AddLinkForm> Localizer { get; set; }
+
     [CascadingParameter]
     public ContentFilesContainer ContentFilesContainer { get; set; }
     

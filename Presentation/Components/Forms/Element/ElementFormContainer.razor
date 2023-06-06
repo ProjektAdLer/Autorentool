@@ -1,12 +1,10 @@
-@using Presentation.PresentationLogic.LearningSpace
-@using System.ComponentModel
-@using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.Mediator
 @using Presentation.PresentationLogic.SelectedViewModels
-@using Presentation.View
 @using Presentation.View.LearningElement
-
+@using Microsoft.Extensions.Localization
+@using System.ComponentModel
+@using Presentation.PresentationLogic.LearningElement
 <MudCard Class="overflow-auto">
     @if (SelectedViewModelsProvider.LearningElement == null || Mediator.OverwriteElementEdit)
     {
@@ -22,7 +20,7 @@
 </MudCard>
 
 <div class="relative w-32 h-full bg-adlerdeactivated rounded-lg">
-    <MudText Class="mx-1 py-2 text-adlergrey-500 font-bold" Typo="Typo.subtitle2" Align="Align.Center">List of all learning elements</MudText>
+    <MudText Class="mx-1 py-2 text-adlergrey-500 font-bold" Typo="Typo.subtitle2" Align="Align.Center">@Localizer["Text"]</MudText>
     <MudDropZone T="ILearningElementViewModel" Identifier="unplacedElements"
                  Class="absolute overflow-y-auto overflow-x-hidden inset-px top-12 gap-0.5 rounded-lg border-2 border-solid mud-border-lines-default p-2 m-[3px] min-h-1 flex justify-center items-center flex-col bg-white">
         <ItemRenderer>
@@ -46,6 +44,9 @@
     
     [Inject]
     public IMediator Mediator { get; set; }
+    
+    [Inject]
+    private StringLocalizer<ElementFormContainer> Localizer { get; set; }
 
     [CascadingParameter(Name = "TriggerMasterLayoutStateHasChanged")]
     private Action TriggerMasterLayoutStateHasChanged { get; set; }

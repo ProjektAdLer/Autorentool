@@ -1,12 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
 <root>
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root"
-                xmlns="">
-        <xsd:element name="root" msdata:IsDataSet="true">
-
-        </xsd:element>
-    </xsd:schema>
     <resheader name="resmimetype">
         <value>text/microsoft-resx</value>
     </resheader>
@@ -14,49 +6,45 @@
         <value>1.3</value>
     </resheader>
     <resheader name="reader">
-        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        </value>
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <resheader name="writer">
-        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
-            PublicKeyToken=b77a5c561934e089
-        </value>
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
     <data name="Header.Text" xml:space="preserve">
-        <value>Lern Element Metadaten</value>
+        <value>Learning element metadata</value>
     </data>
     <data name="Form.Message.Alert.Text" xml:space="preserve">
-        <value>Element erstellt</value>
+        <value>Element created</value>
     </data>
     <data name="Form.Fields.Collapsable.Title.General" xml:space="preserve">
-        <value>Allgemein</value>
+        <value>General</value>
     </data>
     <data name="Form.Fields.Collapsable.Field.Workload.Title" xml:space="preserve">
-        <value>Arbeitsaufwand (min)</value>
+        <value>Workload (min)</value>
     </data>
     <data name="Difficulty.Easy" xml:space="preserve">
-        <value>Einfach</value>
-    </data>
-    <data name="Difficulty.Medium" xml:space="preserve">
-        <value>Normal</value>
+        <value>Easy</value>
     </data>
     <data name="Difficulty.Hard" xml:space="preserve">
-        <value>Schwer</value>
+        <value>Hard</value>
+    </data>
+    <data name="Difficulty.Medium" xml:space="preserve">
+        <value>Medium</value>
     </data>
     <data name="Difficulty.None" xml:space="preserve">
-        <value>Keine</value>
+        <value>None</value>
     </data>
     <data name="Form.Fields.Collapsable.Title.LearningContent" xml:space="preserve">
-        <value>Lerninhalte</value>
+        <value>Learning Content</value>
     </data>
     <data name="Form.Fields.Collapsable.Title.Goals" xml:space="preserve">
-        <value>Ziele</value>
+        <value>Goals</value>
     </data>
     <data name="Form.Fields.Collapsable.Goals.Text.Description" xml:space="preserve">
-        <value>Beschreibung</value>
+        <value>Description</value>
     </data>
     <data name="Form.Fields.Collapsable.Goals.Field.Goals.Title" xml:space="preserve">
-        <value>Ziele</value>
+        <value>Goals</value>
     </data>
 </root>

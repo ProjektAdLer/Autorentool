@@ -1,6 +1,10 @@
-<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Check" IconColor="Color.Success" Class="btn-standard rounded" OnClick="@(async () => await Form.SubmitAsync())">Ok</MudButton>
+@using Microsoft.Extensions.Localization
+<MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Check" IconColor="Color.Success" Class="btn-standard rounded" OnClick="@(async () => await Form.SubmitAsync())">@Localizer["DefaultSubmitButton.Text"]</MudButton>
 
 @code {
     [CascadingParameter]
     public IBaseForm Form { get; set; }
+    
+    [Inject]
+    private StringLocalizer<DefaultSubmitButton> Localizer { get; set; }
 }

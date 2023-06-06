@@ -23,4 +23,40 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
+    <data name="Header.Title" xml:space="preserve">
+        <value />
+    </data>
+    <data name="Form.Message.Alert.Text" xml:space="preserve">
+        <value />
+    </data>
+    <data name="Form.Fields.Collapsable.Title.General" xml:space="preserve">
+        <value>Allgemein</value>
+    </data>
+    <data name="Form.Fields.Collapsable.Field.Workload.Title" xml:space="preserve">
+        <value>Arbeitsaufwand (min)</value>
+    </data>
+    <data name="Form.Fields.Collapsable.Title.LearningContent" xml:space="preserve">
+        <value>Lerninhalte</value>
+    </data>
+    <data name="Form.Fields.Collapsable.Title.Goals" xml:space="preserve">
+        <value>Ziele</value>
+    </data>
+    <data name="Form.Fields.Collapsable.Goals.Text.Description" xml:space="preserve">
+        <value>Beschreibung</value>
+    </data>
+    <data name="Form.Fields.Collapsable.Goals.Field.Goals.Title" xml:space="preserve">
+        <value>Ziele</value>
+    </data>
+    <data name="Difficulty.Easy" xml:space="preserve">
+        <value>Einfach</value>
+    </data>
+    <data name="Difficulty.Medium" xml:space="preserve">
+        <value>Normal</value>
+    </data>
+    <data name="Difficulty.Hard" xml:space="preserve">
+        <value>Schwer</value>
+    </data>
+    <data name="Difficulty.None" xml:space="preserve">
+        <value>Keine</value>
+    </data>
 </root>

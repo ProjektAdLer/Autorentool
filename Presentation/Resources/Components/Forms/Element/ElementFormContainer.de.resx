@@ -23,4 +23,7 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
+    <data name="Text" xml:space="preserve">
+        <value>Liste von allen Lernelementen</value>
+    </data>
 </root>

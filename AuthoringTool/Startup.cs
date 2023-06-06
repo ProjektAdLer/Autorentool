@@ -1,7 +1,6 @@
 using System.IO.Abstractions;
 using System.Reflection;
 using AuthoringTool.Mapping;
-using AuthoringTool.Pages;
 using AutoMapper;
 using BackendAccess.BackendServices;
 using BusinessLogic.API;
@@ -69,8 +68,6 @@ public class Startup
             builder.SetMinimumLevel(LogLevel.Trace);
         });
 
-        services.AddScoped<StringLocalizer<LayoutModel>>();
-
         //AuthoringToolLib
         //PLEASE add any services you add dependencies to to the unit tests in StartupUt!!!
         ConfigureAuthoringTool(services);
@@ -124,12 +121,65 @@ public class Startup
 
     private void ConfigureAuthoringTool(IServiceCollection services)
     {
+        services.AddScoped<StringLocalizer<AuthoringTool.Pages.Index>>();
+        services.AddScoped<StringLocalizer<AuthoringTool.Pages.LayoutModel>>();
         services.AddSingleton<IAuthoringToolConfiguration, AuthoringToolConfiguration>();
     }
 
     private void ConfigurePresentationLogic(IServiceCollection services)
     {
         services.AddScoped<IAuthoringToolWorkspacePresenter, AuthoringToolWorkspacePresenter>();
+        
+        //StringLocalizer Injections
+        //Components
+        services.AddScoped<StringLocalizer<Presentation.Components.DropZone>>();
+        services.AddScoped<StringLocalizer<Presentation.Components.ExportButton>>();
+        services.AddScoped<StringLocalizer<Presentation.Components.LmsLoginButton>>();
+        
+        //ContentFiles
+        services.AddScoped<StringLocalizer<Presentation.Components.ContentFiles.ContentFilesAdd>>();
+        services.AddScoped<StringLocalizer<Presentation.Components.ContentFiles.ContentFilesView>>();
+        
+        //Culture
+        services.AddScoped<StringLocalizer<Presentation.Components.Culture.CultureSelector>>();
+        
+        //Dialogues
+        services.AddScoped<StringLocalizer<Presentation.Components.Dialogues.GenericCancellationConfirmationDialog>>();
+        services.AddScoped<StringLocalizer<Presentation.Components.Dialogues.LmsLoginDialog>>();
+        services.AddScoped<StringLocalizer<Presentation.Components.Dialogues.UnsavedWorldDialog>>();
+        
+        //Forms
+        services.AddScoped<StringLocalizer<Presentation.Components.Forms.Buttons.DefaultSubmitButton>>();
+        services.AddScoped<StringLocalizer<Presentation.Components.Forms.Buttons.SubmitThenRemapButton>>();
+        
+        services.AddScoped<StringLocalizer<Presentation.Components.Forms.Content.AddLinkForm>>();
+        
+        services.AddScoped<StringLocalizer<Presentation.Components.Forms.Element.CreateElementForm>>();
+        services.AddScoped<StringLocalizer<Presentation.Components.Forms.Element.EditElementForm>>();
+        services.AddScoped<StringLocalizer<Presentation.Components.Forms.Element.ElementFormContainer>>();
+        
+        services.AddScoped<StringLocalizer<Presentation.Components.Forms.Space.CreateSpaceForm>>();
+        services.AddScoped<StringLocalizer<Presentation.Components.Forms.Space.EditSpaceForm>>();
+        services.AddScoped<StringLocalizer<Presentation.Components.Forms.Space.SpaceLayoutSelection>>();
+        
+        services.AddScoped<StringLocalizer<Presentation.Components.Forms.World.CreateWorldForm>>();
+        services.AddScoped<StringLocalizer<Presentation.Components.Forms.World.EditWorldForm>>();
+        
+        
+        //View
+        services.AddScoped<StringLocalizer<Presentation.View.HeaderBar>>();
+        
+        //LearningSpace
+        services.AddScoped<StringLocalizer<Presentation.View.LearningSpace.LearningSpaceView>>();
+        services.AddScoped<StringLocalizer<Presentation.View.LearningSpace.ReplaceLearningElementDialog>>();
+        
+        //LearningWorld
+        services.AddScoped<StringLocalizer<Presentation.View.LearningWorld.LearningWorldOverView>>();
+        services.AddScoped<StringLocalizer<Presentation.View.LearningWorld.LearningWorldView>>();
+        
+        //MyLearningWorlds
+        services.AddScoped<StringLocalizer<Presentation.View.MyLearningWorlds.MyLearningWorldsOverview>>();
+        
         services.AddSingleton<IPresentationLogic, PresentationLogic>();
         services.AddSingleton<ILearningWorldPresenter, LearningWorldPresenter>();
         services.AddSingleton(p =>
