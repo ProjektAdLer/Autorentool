@@ -252,7 +252,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         if (LearningWorldVm == null)
         {
-            _errorService.SetError("Error while creating learning space; No Learning World selected");
+            _errorService.SetError("Error", "Error while creating learning space; No Learning World selected");
             return;
         }
 
