@@ -318,7 +318,7 @@ public class LearningWorldPresenterUt
 
         systemUnderTest.CreateLearningSpace("foo", "bar", "foo", 5, Theme.Campus);
 
-        errorService.Received().SetError("Error while creating learning space; No Learning World selected");
+        errorService.Received().SetError("Error", "Error while creating learning space; No Learning World selected");
     }
 
     #endregion

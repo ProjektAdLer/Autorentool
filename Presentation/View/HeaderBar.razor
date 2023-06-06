@@ -3,7 +3,10 @@
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Microsoft.Extensions.Localization
 @using System.ComponentModel
+@using System.Text
 @using Presentation.Components.Dialogues
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.PresentationLogic.LearningWorld
 @using Presentation.Components.Culture
 @using Presentation.Components
 @inject ISnackbar Snackbar
@@ -21,7 +24,7 @@
             <MudIcon Icon="@Icons.Material.Filled._3dRotation"></MudIcon>
             <p class="pl-1 font-bold uppercase">@Localizer["3DWorld.Generate.Text"]</p>
         </Button>
-        
+
         <MudPopover Open="@_popoverOpen" Fixed="false" Class="mt-12 ml-20 w-96 bg-adlerblue-600">
             <div class="flex flex-row">
                 <p class="text-center text-lg pl-6 pt-6 text-white">@Localizer["MudPopover.Feedback.Survey.Text"]</p>
@@ -34,7 +37,7 @@
                 </a>
             </div>
         </MudPopover>
-        
+
     </div>
     @if (SelectedViewModelsProvider?.LearningWorld?.Name == null)
     {
@@ -57,36 +60,35 @@
                 <MudButton Class="btn-standard bg-adlerblue-600 test-base text-white font-semibold">Feedback</MudButton>
             </ActivatorContent>
             <ChildContent>
-            <div class="w-64">
+                <div class="w-64">
 
-                @if (SelectedViewModelsProvider?.LearningWorld?.Name == null)
-                {
-                    <a href="https://www.soscisurvey.de/autorentoolevaluationlernwelt/" target="_blank" title="User experience feedback - Opens new web page">
-                        <div class="flex flex-row items-center gap-4">
-                            <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/final-feedback-icon-nobg.png" alt="feedback-icon"/>
-                            <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">User experience feedback</MudMenuItem>
+                    @if (SelectedViewModelsProvider?.LearningWorld?.Name == null)
+                    {
+                        <a href="https://www.soscisurvey.de/autorentoolevaluationlernwelt/" target="_blank" title="User experience feedback - Opens new web page">
+                            <div class="flex flex-row items-center gap-4">
+                                <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/final-feedback-icon-nobg.png" alt="feedback-icon"/>
+                                <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">User experience feedback</MudMenuItem>
+                            </div>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="https://www.soscisurvey.de/autorentoolevaluationlernraum/" target="_blank" title="User experience feedback - Opens new web page">
+                            <div class="flex flex-row items-center gap-4">
+                                <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/feedback-icon-without-typo-nobg-adlerdarkblue.png" alt="feedback-icon"/>
+                                <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">User experience feedback</MudMenuItem>
+                            </div>
+                        </a>
+                    }
+
+                    <a href="https://bugreport.projekt-adler.eu" target="_blank" title="Technical feedback - Opens new web page">
+                        <div class="flex flex-row justify-start items-center gap-4">
+                            <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/bug-icon-nobg-adlerdarkblue.png" alt="debug-icon"/>
+                            <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">Technical feedback</MudMenuItem>
                         </div>
                     </a>
 
-                }
-                else
-                {
-                    <a href="https://www.soscisurvey.de/autorentoolevaluationlernraum/" target="_blank" title="User experience feedback - Opens new web page">
-                        <div class="flex flex-row items-center gap-4">
-                            <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/feedback-icon-without-typo-nobg-adlerdarkblue.png" alt="feedback-icon"/>
-                            <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">User experience feedback</MudMenuItem>
-                        </div>
-                    </a>
-                }
-
-                <a href="https://bugreport.projekt-adler.eu" target="_blank" title="Technical feedback - Opens new web page">
-                    <div class="flex flex-row justify-start items-center gap-4">
-                        <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/bug-icon-nobg-adlerdarkblue.png" alt="debug-icon"/>
-                        <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">Technical feedback</MudMenuItem>
-                    </div>
-                </a>
-
-                @*<MudDivider></MudDivider>
+                    @*<MudDivider></MudDivider>
 
                 <a href="https://www.soscisurvey.de/autorentoolevaluation_gesamt" target="_blank" title="Final feedback - Opens new web page">
                     <div class="flex flex-row justify-start items-center gap-4">
@@ -94,7 +96,7 @@
                         <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">Final feedback</MudMenuItem>
                     </div>
                 </a>*@
-            </div>
+                </div>
             </ChildContent>
         </MudMenu>
 
@@ -147,6 +149,9 @@
     [Inject]
     IDialogService DialogService { get; set; }
 
+    [Inject]
+    IErrorService _errorService { get; set; }
+
     private string _filepath = "";
 
     private bool _popoverOpen;
@@ -187,8 +192,12 @@
 
     private async void ExportLearningWorld()
     {
+        var world = SelectedViewModelsProvider.LearningWorld;
     //Create XMl-files, Overwrite Encoding to UTF-8 and Create Backup-File
-        if (SelectedViewModelsProvider.LearningWorld == null) return;
+        if (world == null) return;
+
+        if (!IsLearningWorldValid(world)) return;
+        
         try
         {
             _filepath = await PresentationLogic.ConstructBackupAsync(SelectedViewModelsProvider.LearningWorld);
@@ -212,13 +221,43 @@
         StateHasChanged();
     }
 
+    private bool IsLearningWorldValid(ILearningWorldViewModel world)
+    {
+        var errorString = new StringBuilder();
+
+        if (world.LearningSpaces.Count == 0)
+        {
+            errorString.AppendLine("<li> LearningWorld has no LearningSpaces. </li>");
+        }
+
+        foreach (var space in world.LearningSpaces)
+        {
+            if (!space.ContainedLearningElements.Any())
+            {
+                errorString.AppendLine($"<li> LearningSpace {space.Name} has no LearningElements. </li>");
+            }
+            if (space.Points < space.RequiredPoints)
+            {
+                errorString.AppendLine($"<li> LearningSpace {space.Name} cannot be completed due to insufficient points. </li>");
+            }
+        }
+
+        if (errorString.Length == 0) return true;
+
+        errorString.Insert(0, "<ul>");
+        errorString.Append("</ul>");
+
+        _errorService.SetError("LearningWorld is not valid", errorString.ToString());
+        return false;
+    }
+
     private async Task ShowNotLoggedInDialog()
     {
     //present Info dialog
         var parameters = new DialogParameters
         {
-            {"OkButtonText", "Ok"},
-            {"OkButtonColor", Color.Primary},
+            { "OkButtonText", "Ok" },
+            { "OkButtonColor", Color.Primary },
             {
                 "DialogText",
                 "You are not connected to a LMS. Please login to upload LearningWorlds to the Backend."
@@ -239,8 +278,8 @@
     //present "Upload/Cancel" dialog
         var parameters = new DialogParameters
         {
-            {"SubmitButtonText", "Upload"},
-            {"SubmitButtonColor", Color.Success},
+            { "SubmitButtonText", "Upload" },
+            { "SubmitButtonColor", Color.Success },
             {
                 "DialogText",
                 $"Do you want to upload the LearningWorld {SelectedViewModelsProvider.LearningWorld.Name} from {_filepath} to the Backend?"
@@ -259,7 +298,7 @@
 
     //if not cancelled, upload LearningWorld
         if (!result.Canceled)
-            //await and show progress?
+    //await and show progress?
             PresentationLogic.UploadLearningWorldToBackend(_filepath);
     }
 
