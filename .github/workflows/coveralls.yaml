@@ -6,6 +6,38 @@ on:
   pull_request:
 
 jobs:
+  test_platforms:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-22.04, ubuntu-20.04, windows-latest, macos-latest]
+    env:
+      dotNetVersion: net6.0
+      dotNetConfiguration: Release
+    steps:
+      # checkout the repo
+      - uses: actions/checkout@v2
+        with:
+          submodules: 'true'
+      
+      # install dependencies, build, and test
+      - name: Setup Dotnet for use with actions
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: '6.x'
+
+      - name: Cache Nuget Packages
+        uses: actions/cache@v2
+        with:
+          path: ~/.nuget/packages
+          # Look to see if there is a cache hit for the corresponding requirements file
+          key: ${{ runner.os }}-nuget-${{ hashFiles('**/packages.lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-nuget
+
+      - name: Run automated unit and integration tests
+        run: dotnet test
+        
   build:
     runs-on: windows-latest
     env:
@@ -62,3 +94,15 @@ jobs:
         with:
           parallel-finished: true
           carryforward: "run-AuthoringToolTest,run-BackendAccessTest,run-BusinessLogicTest,run-DataAccessTest,run-GeneratorTest,run-IntegrationTest,run-PresentationTest,run-SharedTest"
+          
+  send-summary:
+    runs-on: ubuntu-latest
+    if: ${{ always() }}
+    needs:
+      - build
+      - test_platforms
+    steps:
+      - uses: CalmDownVal/webhook-summary@v1
+        with:
+          token: ${{ github.token }}
+          url: ${{ secrets.DISCORD_WEBHOOK }}
