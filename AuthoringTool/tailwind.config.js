@@ -5,9 +5,13 @@ module.exports = {
     content: ["../**/*.razor", "../**/*.cshtml", "../**/*.html"],
     theme: {
         screens: {
-            '3xl': '1750px',
-            '4xl': '2000px',
-            '5xl': '2250px',
+            'sm': '640px',
+            'md': '768px',
+            'lg': '1024px',
+            'xl': '1280px',
+            '2xl': '1536px',
+            '1080p': '1900px',
+            '2500p': '2500px',
         },
         extend: {
             colors: {
