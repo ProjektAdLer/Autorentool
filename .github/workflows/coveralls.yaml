@@ -6,7 +6,7 @@ on:
   pull_request:
 
 jobs:
-  test_platforms:
+  test-platforms:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -100,7 +100,8 @@ jobs:
     if: ${{ always() }}
     needs:
       - build
-      - test_platforms
+      - test-platforms
+      - finish
     steps:
       - uses: CalmDownVal/webhook-summary@v1
         with:
