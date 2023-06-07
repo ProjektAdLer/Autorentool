@@ -19,7 +19,7 @@ public class DataAccessUt
     public void Standard_AllPropertiesInitialized()
     {
         //Arrange 
-        var mockConfiguration = Substitute.For<IAuthoringToolConfiguration>();
+        var mockConfiguration = Substitute.For<IApplicationConfiguration>();
         var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
         var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<LearningSpacePe>>();
         var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElementPe>>();
@@ -354,7 +354,7 @@ public class DataAccessUt
     }
 
     private static DataAccess.API.DataAccess CreateTestableDataAccess(
-        IAuthoringToolConfiguration? configuration = null,
+        IApplicationConfiguration? configuration = null,
         IXmlFileHandler<LearningWorldPe>? fileSaveHandlerWorld = null,
         IXmlFileHandler<LearningSpacePe>? fileSaveHandlerSpace = null,
         IXmlFileHandler<LearningElementPe>? fileSaveHandlerElement = null,
@@ -363,7 +363,7 @@ public class DataAccessUt
         IFileSystem? fileSystem = null,
         IMapper? mapper = null)
     {
-        configuration ??= Substitute.For<IAuthoringToolConfiguration>();
+        configuration ??= Substitute.For<IApplicationConfiguration>();
         fileSaveHandlerWorld ??= Substitute.For<IXmlFileHandler<LearningWorldPe>>();
         fileSaveHandlerSpace ??= Substitute.For<IXmlFileHandler<LearningSpacePe>>();
         fileSaveHandlerElement ??= Substitute.For<IXmlFileHandler<LearningElementPe>>();

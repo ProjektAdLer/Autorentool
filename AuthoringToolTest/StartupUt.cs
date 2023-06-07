@@ -50,7 +50,7 @@ public class StartupUt
 
     private static readonly Type[] ConfigureAuthoringToolRequiredTypes =
     {
-        typeof(IAuthoringToolConfiguration)
+        typeof(IApplicationConfiguration)
     };
 
     [Test]

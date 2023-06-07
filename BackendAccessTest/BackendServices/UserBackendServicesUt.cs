@@ -14,20 +14,20 @@ namespace BackendAccessTest.BackendServices;
 
 public class UserBackendServicesUt
 {
-    private IAuthoringToolConfiguration _authoringToolConfiguration;
+    private IApplicationConfiguration _applicationConfiguration;
 
     [Test]
     public void BackendAccess_Standard_AllPropertiesInitialized()
     {
         // Arrange
-        _authoringToolConfiguration = Substitute.For<IAuthoringToolConfiguration>();
+        _applicationConfiguration = Substitute.For<IApplicationConfiguration>();
 
         // Act
-        var userWebApiServices = CreateTestableUserWebApiServices(_authoringToolConfiguration);
+        var userWebApiServices = CreateTestableUserWebApiServices(_applicationConfiguration);
 
         // Assert
         Assert.Multiple(
-            () => { Assert.That(userWebApiServices.Configuration, Is.EqualTo(_authoringToolConfiguration)); }
+            () => { Assert.That(userWebApiServices.Configuration, Is.EqualTo(_applicationConfiguration)); }
         );
     }
 
@@ -185,13 +185,13 @@ public class UserBackendServicesUt
 
 
     private static UserWebApiServices CreateTestableUserWebApiServices(
-        IAuthoringToolConfiguration? configuration = null,
+        IApplicationConfiguration? configuration = null,
         HttpClient? httpClient = null,
         ILogger<UserWebApiServices>? logger = null,
         IFileSystem? fileSystem = null!
     )
     {
-        configuration ??= Substitute.For<IAuthoringToolConfiguration>();
+        configuration ??= Substitute.For<IApplicationConfiguration>();
         httpClient ??= new MockHttpMessageHandler().ToHttpClient();
         logger ??= Substitute.For<ILogger<UserWebApiServices>>();
         fileSystem ??= Substitute.For<IFileSystem>();

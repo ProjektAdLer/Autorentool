@@ -123,7 +123,7 @@ public class Startup
 
     private void ConfigureAuthoringTool(IServiceCollection services)
     {
-        services.AddSingleton<IAuthoringToolConfiguration, AuthoringToolConfiguration>();
+        services.AddSingleton<IApplicationConfiguration, ApplicationConfiguration>();
     }
 
     private void ConfigurePresentationLogic(IServiceCollection services)

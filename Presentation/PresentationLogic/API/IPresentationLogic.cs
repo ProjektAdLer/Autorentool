@@ -18,7 +18,7 @@ public interface IPresentationLogic
     /// <summary>
     /// AuthoringTool configuration object
     /// </summary>
-    IAuthoringToolConfiguration Configuration { get; }
+    IApplicationConfiguration Configuration { get; }
 
     /// <summary>
     /// BusinessLogic dependency

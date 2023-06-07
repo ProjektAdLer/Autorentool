@@ -29,7 +29,7 @@ namespace Presentation.PresentationLogic.API;
 public class PresentationLogic : IPresentationLogic
 {
     public PresentationLogic(
-        IAuthoringToolConfiguration configuration,
+        IApplicationConfiguration configuration,
         IBusinessLogic businessLogic,
         IMapper mapper,
         ICachingMapper cMapper,
@@ -76,7 +76,7 @@ public class PresentationLogic : IPresentationLogic
     private const string SpaceFileFormatDescriptor = "AdLer Space File";
     private const string ElementFileFormatDescriptor = "AdLer Element File";
 
-    public IAuthoringToolConfiguration Configuration { get; }
+    public IApplicationConfiguration Configuration { get; }
     public IBusinessLogic BusinessLogic { get; }
     internal IMapper Mapper { get; }
     internal ICachingMapper CMapper { get; }

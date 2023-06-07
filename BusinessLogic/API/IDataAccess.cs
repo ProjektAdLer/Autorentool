@@ -7,7 +7,7 @@ namespace BusinessLogic.API;
 
 public interface IDataAccess
 {
-    IAuthoringToolConfiguration Configuration { get; }
+    IApplicationConfiguration Configuration { get; }
     
     void SaveLearningWorldToFile(LearningWorld world, string filepath);
     LearningWorld LoadLearningWorld(string filepath);
