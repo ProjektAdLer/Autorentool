@@ -548,9 +548,9 @@ public class PresentationLogic : IPresentationLogic
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
         
-        if (SelectedViewModelsProvider.ActiveSlot == newSlotIndex)
+        if (SelectedViewModelsProvider.ActiveSlotInSpace == newSlotIndex)
         {
-            SelectedViewModelsProvider.SetActiveSlot(-1);
+            SelectedViewModelsProvider.SetActiveSlotInSpace(-1, command);
         }
     }
 
@@ -577,9 +577,9 @@ public class PresentationLogic : IPresentationLogic
             space => CMapper.Map(space, learningSpaceVm));
         BusinessLogic.ExecuteCommand(command);
 
-        if (SelectedViewModelsProvider.ActiveSlot == newSlotIndex)
+        if (SelectedViewModelsProvider.ActiveSlotInSpace == newSlotIndex)
         {
-            SelectedViewModelsProvider.SetActiveSlot(-1);
+            SelectedViewModelsProvider.SetActiveSlotInSpace(-1, command);
         }
     }
 

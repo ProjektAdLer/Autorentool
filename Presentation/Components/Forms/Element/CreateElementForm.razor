@@ -158,7 +158,7 @@
         if (SelectedViewModelsProvider.LearningWorld == null)
             throw new InvalidOperationException("No learning world selected.");
 
-        if (SelectedViewModelsProvider.ActiveSlot == -1)
+        if (SelectedViewModelsProvider.ActiveSlotInSpace == -1)
             WorldPresenter.CreateUnplacedLearningElement(
     //ignore null warning here because validation ensures that LearningContent is not null - m.ho
                 model.Name, model.LearningContent!, model.Description, model.Goals, model.Difficulty, model.ElementModel,
