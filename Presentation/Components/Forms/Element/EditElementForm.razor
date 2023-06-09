@@ -67,11 +67,10 @@
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudSelect @bind-Value="FormDataContainer.FormModel.LearningContent"
                            Label="All imported files"
-                           Text="@FormDataContainer.FormModel.LearningContent?.Name"
                            For="@(() => FormModel.LearningContent)">
                     @foreach (var learningContent in WorldPresenter.GetAllContent())
                     {
-                        <MudSelectItem Value="@(learningContent)">@learningContent.Name</MudSelectItem>
+                        <MudSelectItem Value="@(learningContent)"/>
                     }
                 </MudSelect>
             </div>
@@ -84,7 +83,7 @@
                            Text="@FormDataContainer.FormModel.ElementModel.ToString()"
                            For="@(() => FormModel.ElementModel)"
                            Variant="Variant.Outlined">
-                    @foreach (var theme in _elementModels)
+                    @foreach (var theme in Enum.GetValues<ElementModel>())
                     {
                         <MudSelectItem Value="@(theme)" Style="white-space: nowrap">
                             <img src="@ElementModelHandler.GetIconForElementModel(theme)" alt="" width="38" class="mr-1"/>@*@theme*@
@@ -152,7 +151,6 @@
     private bool _collapsedContent = false;
     private bool _collapsedGoals = true;
     private bool _collapsedElementModel = true;
-    private IEnumerable<ElementModel> _elementModels;
 
     private void OnValidSubmit(LearningElementFormModel model)
     {
@@ -165,7 +163,6 @@
     private async Task MapIntoContainer()
     {
         Mapper.Map(ElementToEdit, FormDataContainer.FormModel);
-        _elementModels = ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent);
         await InvokeAsync(StateHasChanged);
     }
 
