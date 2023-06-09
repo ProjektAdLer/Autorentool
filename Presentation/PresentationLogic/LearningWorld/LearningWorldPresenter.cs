@@ -246,6 +246,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     /// <inheritdoc cref="ILearningWorldPresenter.CreateLearningSpace"/>
     public void CreateLearningSpace(string name, string description, string goals, int requiredPoints,
         Theme theme,
+        bool advancedMode,
         double positionX = 0D,
         double positionY = 0D,
         TopicViewModel? topic = null)
@@ -257,7 +258,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         }
 
         _presentationLogic.CreateLearningSpace(LearningWorldVm, name, description, goals,
-            requiredPoints, theme, positionX, positionY, topic);
+            requiredPoints, theme, advancedMode, positionX, positionY, topic);
         //TODO: Return error in the command in case of failure
     }
 

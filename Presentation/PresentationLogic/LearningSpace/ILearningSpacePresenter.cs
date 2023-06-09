@@ -12,7 +12,7 @@ namespace Presentation.PresentationLogic.LearningSpace;
 
 public interface ILearningSpacePresenter : INotifyPropertyChanged
 {
-    void EditLearningSpace(string name, string description, string goals, int requiredPoints, Theme theme,
+    void EditLearningSpace(string name, string description, string goals, int requiredPoints, Theme theme, 
         ITopicViewModel? topic = null);
 
     ILearningSpaceViewModel? LearningSpaceVm { get; }

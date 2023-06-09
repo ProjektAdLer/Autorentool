@@ -12,6 +12,7 @@ public class Mediator : IMediator
     private bool _worldViewOpen;
     private bool _worldOverViewOpen;
     private bool _overwriteElementEdit;
+    private bool _advancedLearningSpaceChecked;
 
     #region left side
     
@@ -43,6 +44,12 @@ public class Mediator : IMediator
     {
         get => _contentDialogOpen;
         private set => SetField(ref _contentDialogOpen, value);
+    }
+
+    public bool AdvancedLearningSpaceChecked
+    {
+        get => _advancedLearningSpaceChecked;
+        private set => SetField(ref _advancedLearningSpaceChecked, value);
     }
 
     #endregion

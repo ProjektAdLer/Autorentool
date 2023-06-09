@@ -182,6 +182,7 @@ public class EntityPersistEntityMappingProfile : Profile
             .ReverseMap()
             .ForMember(x => x.InBoundObjects, opt => opt.Ignore())
             .ForMember(x => x.OutBoundObjects, opt => opt.Ignore())
+            .ForMember(x => x.AdvancedMode, opt =>opt.Ignore())
             .AfterMap((_, d) =>
             {
                 foreach (var element in d.ContainedLearningElements)

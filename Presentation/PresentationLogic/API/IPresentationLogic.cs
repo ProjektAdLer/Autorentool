@@ -131,7 +131,7 @@ public interface IPresentationLogic
     /// <param name="positionY"></param>
     /// <param name="topicVm"></param>
     void CreateLearningSpace(ILearningWorldViewModel learningWorldVm, string name,
-        string description, string goals, int requiredPoints, Theme theme, double positionX, double positionY,
+        string description, string goals, int requiredPoints, Theme theme, bool advancedMode, double positionX, double positionY,
         ITopicViewModel? topicVm = null);
 
     /// <summary>

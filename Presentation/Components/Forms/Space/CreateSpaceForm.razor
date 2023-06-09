@@ -19,7 +19,8 @@
           OnValidSubmit="OnValidSubmit" SnackbarMessage="Space created" FormDataContainer="FormDataContainer">
     <Fields>
         <MudSwitch Title="Advanced Mode"
-                   @bind-Checked="_advancedChecked" 
+                   @bind-Checked="FormDataContainer.FormModel.AdvancedMode" 
+                   For="@(() => FormModel.AdvancedMode)"
                    Color="Color.Secondary" 
                    Label="Advanced Mode" 
                    LabelPosition="LabelPosition.Start">
@@ -118,7 +119,7 @@
         if (SelectedViewModelsProvider.LearningWorld == null) throw new InvalidOperationException("No learning world selected.");
         model.RequiredPoints ??= 0;
         LearningWorldPresenter.CreateLearningSpace(model.Name, model.Description,
-            model.Goals, (int)model.RequiredPoints, model.Theme, positionX: 0, positionY: 0);
+            model.Goals, (int)model.RequiredPoints, model.Theme,model.AdvancedMode, positionX: 0, positionY: 0 );
     }
 
     protected override void OnInitialized()

@@ -12,10 +12,10 @@ public class CreateLearningSpace : ICreateLearningSpace
     private IMemento? _memento;
 
     public CreateLearningSpace(LearningWorld learningWorld, string name, string description, string goals, 
-        int requiredPoints, Theme theme, double positionX, double positionY, Entities.Topic? topic,
+        int requiredPoints, Theme theme, bool advancedMode, double positionX, double positionY, Entities.Topic? topic,
         Action<LearningWorld> mappingAction)
     {
-        LearningSpace = new LearningSpace(name, description, goals, requiredPoints, theme, null, positionX: positionX, positionY: positionY, assignedTopic: topic);
+        LearningSpace = new LearningSpace(name, description, goals, requiredPoints, theme, advancedMode, null, positionX: positionX, positionY: positionY, assignedTopic: topic);
         LearningWorld = learningWorld;
         MappingAction = mappingAction;
     }

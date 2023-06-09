@@ -17,4 +17,6 @@ public class LearningSpaceFormModel
     public string Goals { get; set; }
     public int? RequiredPoints { get; set; }
     public Theme Theme { get; set; }
+    
+    public bool AdvancedMode { get; set; }
 }
