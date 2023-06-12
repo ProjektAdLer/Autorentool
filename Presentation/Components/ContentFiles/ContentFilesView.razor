@@ -137,10 +137,6 @@
         var matches = WorkspaceViewModel.LearningWorlds.SelectMany(world => world.AllLearningElements.Where(element => element.LearningContent.Equals(item)).Select(el => (world, el)));
         if (matches.Any())
         {
-            var sb = new StringBuilder();
-            sb.Append($"Do you really want to delete content entry {item.Name}?<br/>");
-            sb.Append("This item is currently being used inside the following elements of the following worlds:<br/>");
-            sb.Append("<ul>");
             parameters = new DialogParameters
             {
                 { nameof(DeleteContentInUseConfirmationDialog.ContentName), item.Name },
