@@ -22,27 +22,18 @@ public class MainLayoutUt
 {
 #pragma warning disable CS8618 // set in setup - n.stich
     private TestContext _ctx;
-    private IPresentationLogic _presentationLogic;
-    private IShutdownManager _shutdownManager;
-    private IStringLocalizer<CultureSelector> _stringLocalizer;
-    private IMediator _mediator;
+    private IStringLocalizer<MainLayout> _stringLocalizer;
 #pragma warning restore CS8618
     
     [SetUp]
     public void Setup()
     {
         _ctx = new TestContext();
-        _presentationLogic = Substitute.For<IPresentationLogic>();
-        _shutdownManager = Substitute.For<IShutdownManager>();
-        _stringLocalizer = Substitute.For<IStringLocalizer<CultureSelector>>();
-        _mediator = Substitute.For<IMediator>();
+        _stringLocalizer = Substitute.For<IStringLocalizer<MainLayout>>();
         _stringLocalizer[Arg.Any<string>()]
             .Returns(cinfo => new LocalizedString(cinfo.Arg<string>(), cinfo.Arg<string>()));
         
-        _ctx.Services.AddSingleton(_presentationLogic);
-        _ctx.Services.AddSingleton(_shutdownManager);
         _ctx.Services.AddSingleton(_stringLocalizer);
-        _ctx.Services.AddSingleton(_mediator);
         _ctx.Services.AddLogging();
 
         _ctx.ComponentFactories.AddStub<MudThemeProvider>();
@@ -55,8 +46,8 @@ public class MainLayoutUt
     public void Constructor_InjectsDependencies()
     {
         var systemUnderTest = GetFragmentForTesting();
-        
-        Assert.That(systemUnderTest.Instance.PresentationLogic, Is.EqualTo(_presentationLogic));
+     
+        Assert.That(systemUnderTest.Instance.Localizer, Is.EqualTo(_stringLocalizer));
     }
 
     [Test]

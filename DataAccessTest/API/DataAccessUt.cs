@@ -2,14 +2,13 @@
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using AutoMapper;
-using BusinessLogic.Entities;
-using BusinessLogic.Entities.LearningContent;
 using DataAccess.Persistence;
 using NSubstitute;
 using NUnit.Framework;
 using PersistEntities;
 using Shared;
 using Shared.Configuration;
+using TestHelpers;
 
 namespace DataAccessTest.API;
 
@@ -52,7 +51,7 @@ public class DataAccessUt
         var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerWorld: mockFileSaveHandlerWorld);
 
-        var learningWorld = new LearningWorld("f", "f", "f", "f", "f", "f");
+        var learningWorld = EntityProvider.GetLearningWorld();
         systemUnderTest.SaveLearningWorldToFile(
             learningWorld,
             "C:/nonsense");
@@ -89,7 +88,7 @@ public class DataAccessUt
         var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<LearningSpacePe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerSpace: mockFileSaveHandlerSpace);
 
-        var learningSpace = new LearningSpace("f", "f", "f", 5, Theme.Campus);
+        var learningSpace = EntityProvider.GetLearningSpace();
         systemUnderTest.SaveLearningSpaceToFile(
             learningSpace,
             "C:/nonsense");
@@ -126,9 +125,8 @@ public class DataAccessUt
         var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElementPe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerElement: mockFileSaveHandlerElement);
 
-        var learningContent = new FileContent("a", "b", "");
-        var learningElement = new LearningElement("f", learningContent,
-            "f", "f", LearningElementDifficultyEnum.Easy);
+        var learningContent = EntityProvider.GetFileContent();
+        var learningElement = EntityProvider.GetLearningElement(content: learningContent);
         systemUnderTest.SaveLearningElementToFile(
             learningElement,
             "C:/nonsense");

@@ -1,7 +1,7 @@
 using BusinessLogic.Entities;
-using BusinessLogic.Entities.LearningContent;
 using NUnit.Framework;
 using Shared;
+using TestHelpers;
 
 namespace BusinessLogicTest.Entities;
 
@@ -17,10 +17,8 @@ public class LearningSpaceUt
         var requiredPoints = 10;
         var positionX = 5f;
         var positionY = 21f;
-        var content1 = new FileContent("a", "b", "");
-        var content2 = new FileContent("w", "e", "");
-        var ele1 = new LearningElement("a", content1, "g","h",LearningElementDifficultyEnum.Easy, null, workload: 17, points: 6, positionX: 23);
-        var ele2 = new LearningElement("z", content2, "z","zz", LearningElementDifficultyEnum.Medium, null, workload: 444, points: 9,positionX: double.MaxValue);
+        var ele1 = EntityProvider.GetLearningElement();
+        var ele2 = EntityProvider.GetLearningElement();
         var learningElements = new Dictionary<int, ILearningElement>
         {
             {
@@ -30,12 +28,12 @@ public class LearningSpaceUt
                 1, ele2
             }
         };
-        var learningSpaceLayout = new LearningSpaceLayout(learningElements, FloorPlanEnum.R20X206L);
-        var assignedTopic = new Topic("topic1");
-        
-        var systemUnderTest = new LearningSpace(name, description, goals, requiredPoints, Theme.Campus, 
+        var learningSpaceLayout = EntityProvider.GetLearningSpaceLayout(learningElements: learningElements, floorPlan: FloorPlanEnum.R_20X20_6L);
+        var assignedTopic = EntityProvider.GetTopic();
+
+        var systemUnderTest = new LearningSpace(name, description, goals, requiredPoints, Theme.Campus,
             learningSpaceLayout, positionX: positionX, positionY: positionY, assignedTopic: assignedTopic);
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
@@ -58,10 +56,10 @@ public class LearningSpaceUt
         var requiredPoints = 10;
         var positionX = 5f;
         var positionY = 21f;
-        var content1 = new FileContent("a", "b", "");
-        var content2 = new FileContent("w", "e", "");
-        var ele1 = new LearningElement("a", content1, "g","h",LearningElementDifficultyEnum.Easy, null, workload: 17,points: 90, positionX: 23);
-        var ele2 = new LearningElement("z", content2, "z","zz", LearningElementDifficultyEnum.Medium, null, workload: 444,points: 9, positionX: double.MaxValue);
+        var content1 = EntityProvider.GetFileContent(append: "1");
+        var content2 = EntityProvider.GetFileContent(append: "2");
+        var ele1 = EntityProvider.GetLearningElement(append: "1", content: content1);
+        var ele2 = EntityProvider.GetLearningElement(append: "2", content: content2);
         var learningElements = new Dictionary<int, ILearningElement>
         {
             {
@@ -71,24 +69,24 @@ public class LearningSpaceUt
                 1, ele2
             }
         };
-        var learningSpaceLayout = new LearningSpaceLayout(learningElements, FloorPlanEnum.R20X206L);
-        var assignedTopic = new Topic("topic1");
-        
-        var systemUnderTest = new LearningSpace(name, description, goals, requiredPoints, Theme.Campus, 
+        var learningSpaceLayout = EntityProvider.GetLearningSpaceLayout(learningElements: learningElements);
+        var assignedTopic = EntityProvider.GetTopic();
+
+        var systemUnderTest = new LearningSpace(name, description, goals, requiredPoints, Theme.Campus,
             learningSpaceLayout, positionX: positionX, positionY: positionY, assignedTopic: assignedTopic);
 
         var learningSpaceMemento = systemUnderTest.GetMemento();
         var learningSpaceLayoutMemento = systemUnderTest.LearningSpaceLayout.GetMemento();
-        
+
         var nameChanged = "qwertz";
         var descriptionChanged = "changed description";
         var goalsChanged = "new goals";
         var positionXChanged = 10f;
         var positionYChanged = 14f;
-        var content1Changed = new FileContent("a", "b", "");
-        var content2Changed = new FileContent("w", "e", "");
-        var ele1Changed = new LearningElement("ab", content1Changed, "ffg","hgg",LearningElementDifficultyEnum.Medium, null, workload: 20,points: 50, positionX: 33);
-        var ele2Changed = new LearningElement("uu", content2Changed, "kkk","fff", LearningElementDifficultyEnum.Hard, null, workload: 77,points: 40, positionX: 66);
+        var content1Changed = EntityProvider.GetFileContent(append: "c1");
+        var content2Changed = EntityProvider.GetFileContent(append: "c2");
+        var ele1Changed = EntityProvider.GetLearningElement(content: content1Changed, append: "c1");
+        var ele2Changed = EntityProvider.GetLearningElement(content: content2Changed, append: "c2");
         learningElements = new Dictionary<int, ILearningElement>
         {
             {
@@ -98,7 +96,7 @@ public class LearningSpaceUt
                 1, ele2Changed
             }
         };
-        var topicChanged = new Topic("topic2");
+        var topicChanged = EntityProvider.GetTopic(append: "2");
 
         systemUnderTest.Name = nameChanged;
         systemUnderTest.Description = descriptionChanged;
@@ -119,10 +117,10 @@ public class LearningSpaceUt
             Assert.That(systemUnderTest.PositionY, Is.EqualTo(positionYChanged));
             Assert.That(systemUnderTest.AssignedTopic, Is.EqualTo(topicChanged));
         });
-        
+
         systemUnderTest.RestoreMemento(learningSpaceMemento);
         systemUnderTest.LearningSpaceLayout.RestoreMemento(learningSpaceLayoutMemento);
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.Name, Is.EqualTo(name));
@@ -145,10 +143,10 @@ public class LearningSpaceUt
         var requiredPoints = 10;
         var positionX = 5f;
         var positionY = 21f;
-        var content1 = new FileContent("a", "b", "");
-        var content2 = new FileContent("w", "e", "");
-        var ele1 = new LearningElement("a", content1, "g","h",LearningElementDifficultyEnum.Easy, null, workload: 17,points: 13, positionX: 23);
-        var ele2 = new LearningElement("z", content2, "z","zz", LearningElementDifficultyEnum.Medium, null, workload: 444,points: 34, positionX: double.MaxValue);
+        var content1 = EntityProvider.GetFileContent(append: "1");
+        var content2 = EntityProvider.GetFileContent(append: "2");
+        var ele1 = EntityProvider.GetLearningElement(append: "1", content: content1);
+        var ele2 = EntityProvider.GetLearningElement(append: "2", content: content2);
         var learningElements = new Dictionary<int, ILearningElement>
         {
             {
@@ -158,20 +156,20 @@ public class LearningSpaceUt
                 1, ele2
             }
         };
-        var learningSpaceLayout = new LearningSpaceLayout(learningElements, FloorPlanEnum.R20X206L);
-        
-        var systemUnderTest = new LearningSpace(name, description, goals, requiredPoints, Theme.Campus, 
+        var learningSpaceLayout =
+            EntityProvider.GetLearningSpaceLayout(learningElements: learningElements,
+                floorPlan: FloorPlanEnum.R_20X20_6L);
+
+        var systemUnderTest = new LearningSpace(name, description, goals, requiredPoints, Theme.Campus,
             learningSpaceLayout, positionX: positionX, positionY: positionY);
 
         var mementoMock = new MementoMock();
-        
+
         var ex = Assert.Throws<ArgumentException>(() => systemUnderTest.RestoreMemento(mementoMock));
         Assert.That(ex!.Message, Is.EqualTo("Incorrect IMemento implementation (Parameter 'memento')"));
     }
 
     private class MementoMock : IMemento
     {
-        
     }
-
 }

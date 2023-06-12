@@ -6,6 +6,7 @@ using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Shared;
+using TestHelpers;
 
 namespace PresentationTest.PresentationLogic.LearningSpace;
 
@@ -22,8 +23,8 @@ public class LearningSpaceViewModelUt
         var positionX = 20;
         var positionY = 30;
         var topic = new Presentation.PresentationLogic.Topic.TopicViewModel("topic1", false);
-        var ele1 = new LearningElementViewModel("a",  null!,"h","i", LearningElementDifficultyEnum.Easy, null, 17,11, 23);
-        var ele2 = new LearningElementViewModel("z",   null!,"zz","zzz", LearningElementDifficultyEnum.Hard, null, 444,12, double.MaxValue);
+        var ele1 = ViewModelProvider.GetLearningElement();
+        var ele2 = ViewModelProvider.GetLearningElement("2");
         var inBoundCondition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 3);
         var outBoundSpace = new LearningSpaceViewModel("a", "b", "t", Theme.Campus, 3);
         var inBoundObjects = new List<IObjectInPathWayViewModel> { inBoundCondition };
@@ -37,7 +38,7 @@ public class LearningSpaceViewModelUt
                 1, ele2
             }
         };
-        var learningSpaceLayoutVm = new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X206L)
+        var learningSpaceLayoutVm = new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X20_6L)
         {
             LearningElements = learningElements
         };
@@ -56,10 +57,10 @@ public class LearningSpaceViewModelUt
             Assert.That(systemUnderTest.InBoundObjects, Is.EqualTo(inBoundObjects));
             Assert.That(systemUnderTest.OutBoundObjects, Is.EqualTo(outBoundObjects));
             Assert.That(systemUnderTest.AssignedTopic, Is.EqualTo(topic));
-            Assert.That(systemUnderTest.InputConnectionX, Is.EqualTo(positionX + 25));
+            Assert.That(systemUnderTest.InputConnectionX, Is.EqualTo(positionX + 33));
             Assert.That(systemUnderTest.InputConnectionY, Is.EqualTo(positionY - 7));
-            Assert.That(systemUnderTest.OutputConnectionX, Is.EqualTo(positionX + 25));
-            Assert.That(systemUnderTest.OutputConnectionY, Is.EqualTo(positionY + 48));
+            Assert.That(systemUnderTest.OutputConnectionX, Is.EqualTo(positionX + 32));
+            Assert.That(systemUnderTest.OutputConnectionY, Is.EqualTo(positionY + 62));
         });
         
     }
@@ -76,11 +77,9 @@ public class LearningSpaceViewModelUt
     public void Workload_ReturnsCorrectWorkload()
     {
 
-        var systemUnderTest = new LearningSpaceViewModel("a", "d", "e", Theme.Campus, layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X308L));
-        var element1 = new LearningElementViewModel("a", null!, "d", "e",
-            LearningElementDifficultyEnum.Easy, systemUnderTest, 6);
-        var element2 = new LearningElementViewModel("abc", null!,"d", "e",
-            LearningElementDifficultyEnum.Easy, systemUnderTest, 14);
+        var systemUnderTest = new LearningSpaceViewModel("a", "d", "e", Theme.Campus, layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L));
+        var element1 = ViewModelProvider.GetLearningElement(workload: 6);
+        var element2 = ViewModelProvider.GetLearningElement("2", workload: 14);
         
         Assert.That(systemUnderTest.Workload, Is.EqualTo(0));
         
@@ -98,11 +97,9 @@ public class LearningSpaceViewModelUt
     public void Points_ReturnsCorrectSum()
     {
 
-        var systemUnderTest = new LearningSpaceViewModel("a", "d", "e", Theme.Campus, layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R20X308L));
-        var element1 = new LearningElementViewModel("a", null!, "d", "e",
-            LearningElementDifficultyEnum.Easy, systemUnderTest, 6,7);
-        var element2 = new LearningElementViewModel("abc", null!,"d", "e",
-            LearningElementDifficultyEnum.Easy, systemUnderTest, 14,15);
+        var systemUnderTest = new LearningSpaceViewModel("a", "d", "e", Theme.Campus, layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L));
+        var element1 = ViewModelProvider.GetLearningElement(points: 7);
+        var element2 = ViewModelProvider.GetLearningElement("2", points: 15);
         
         Assert.That(systemUnderTest.Points, Is.EqualTo(0));
         

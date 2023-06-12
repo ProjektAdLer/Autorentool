@@ -2,6 +2,7 @@ using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using NUnit.Framework;
 using Shared;
+using TestHelpers;
 
 namespace BusinessLogicTest.Entities;
 
@@ -81,9 +82,7 @@ public class LearningWorldUt
         var descriptionChanged = "changed description";
         var goalsChanged = "new goals";
         var savePathChanged = "C:\\Users\\Ben\\Documents\\test2";
-        var newContent2 = new FileContent("w", "e", "");
-        var newElement = new LearningElement("foo", newContent2, "asdf", "qwer",
-            LearningElementDifficultyEnum.Easy);
+        var newElement = EntityProvider.GetLearningElement();
         var space2 = new LearningSpace("gg", "gg", "gg", 5, Theme.Campus);
         var condition2 = new PathWayCondition(ConditionEnum.Or, 2, 1);
         var pathWay2 = new LearningPathway(space2, condition2);

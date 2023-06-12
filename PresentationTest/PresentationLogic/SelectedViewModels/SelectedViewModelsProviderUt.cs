@@ -6,6 +6,7 @@ using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Shared;
+using TestHelpers;
 
 namespace PresentationTest.PresentationLogic.SelectedViewModels;
 
@@ -42,7 +43,7 @@ public class SelectedViewModelsProviderUt
     {
         var onUndoRedo = Substitute.For<IOnUndoRedo>();
         var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo);
-        var learningElement = new LearningElementViewModel("a", null!, "c", "d", LearningElementDifficultyEnum.Easy);
+        var learningElement = ViewModelProvider.GetLearningElement();
         
         systemUnderTest.SetLearningElement(learningElement, null);
         

@@ -21,6 +21,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using PersistEntities;
+using Presentation.Components.Forms.Element;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.DropZone;
@@ -117,7 +118,7 @@ public class StartupUt
     {
         typeof(IPresentationLogic), typeof(IAuthoringToolWorkspacePresenter), typeof(ILearningWorldPresenter),
         typeof(ILearningSpacePresenter), typeof(IAuthoringToolWorkspaceViewModel),
-        typeof(ILearningElementDropZoneHelper)
+        typeof(ILearningElementDropZoneHelper), typeof(IElementModelHandler)
     };
 
     [Test]

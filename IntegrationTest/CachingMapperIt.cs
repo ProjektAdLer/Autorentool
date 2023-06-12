@@ -17,11 +17,9 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
-using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.SelectedViewModels;
 using Shared;
 using Shared.Configuration;
-using TestHelpers;
 
 namespace IntegrationTest;
 
@@ -139,14 +137,14 @@ public class CachingMapperIt
         var worldVm = workspaceVm.LearningWorlds[0];
 
         systemUnderTest.CreateLearningSpace(worldVm, "g", "j", "k", 1, Theme.Campus, 2, 3, null!);
-        systemUnderTest.ChangeLearningSpaceLayout(worldVm.LearningSpaces.First(), worldVm, FloorPlanEnum.R20X308L);
+        systemUnderTest.ChangeLearningSpaceLayout(worldVm.LearningSpaces.First(), worldVm, FloorPlanEnum.R_20X30_8L);
 
         Assert.That(worldVm.LearningSpaces, Has.Count.EqualTo(1));
 
         var spaceVm = worldVm.LearningSpaces.First();
 
         systemUnderTest.CreateLearningElementInSlot(spaceVm, 0, "l",
-            null!, "o", "p", LearningElementDifficultyEnum.Easy, 2, 3);
+            null!, "o", "p", LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, 2, 3);
 
         Assert.That(spaceVm.ContainedLearningElements.Count(), Is.EqualTo(1));
 
@@ -186,8 +184,9 @@ public class CachingMapperIt
 
     private static PresentationLogic CreateTestablePresentationLogic(
         IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null,
-        ICachingMapper? cachingMapper = null, ISelectedViewModelsProvider? selectedViewModelsProvider = null, IServiceProvider? serviceProvider = null,
-        ILogger<PresentationLogic>? logger = null, 
+        ICachingMapper? cachingMapper = null, ISelectedViewModelsProvider? selectedViewModelsProvider = null,
+        IServiceProvider? serviceProvider = null,
+        ILogger<PresentationLogic>? logger = null,
         IHybridSupportWrapper? hybridSupportWrapper = null, IShellWrapper? shellWrapper = null,
         IConditionCommandFactory? conditionCommandFactory = null,
         IElementCommandFactory? elementCommandFactory = null,
@@ -216,7 +215,7 @@ public class CachingMapperIt
         worldCommandFactory ??= Substitute.For<IWorldCommandFactory>();
         batchCommandFactory ??= Substitute.For<IBatchCommandFactory>();
 
-        return new Presentation.PresentationLogic.API.PresentationLogic(configuration, businessLogic, mapper,
+        return new PresentationLogic(configuration, businessLogic, mapper,
             cachingMapper, selectedViewModelsProvider, serviceProvider, logger, hybridSupportWrapper, shellWrapper,
             conditionCommandFactory, elementCommandFactory, layoutCommandFactory, pathwayCommandFactory,
             spaceCommandFactory, topicCommandFactory, worldCommandFactory, batchCommandFactory);

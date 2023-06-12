@@ -24,6 +24,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
 using MudBlazor.Services;
 using Presentation.Components.Forms;
+using Presentation.Components.Forms.Element;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -114,9 +115,9 @@ public class Startup
         services.AddValidatorsFromAssembly(Assembly.Load("BusinessLogic"));
         services.AddSingleton<ILearningWorldNamesProvider>(p =>
             p.GetService<IAuthoringToolWorkspaceViewModel>() ?? throw new InvalidOperationException());
-        services.AddSingleton<ILearningSpaceNamesProvider>(p =>
+        services.AddScoped<ILearningSpaceNamesProvider>(p =>
             p.GetService<ILearningWorldPresenter>() ?? throw new InvalidOperationException());
-        services.AddSingleton<ILearningElementNamesProvider, LearningElementNamesProvider>();
+        services.AddScoped<ILearningElementNamesProvider, LearningElementNamesProvider>();
     }
 
     private void ConfigureAuthoringTool(IServiceCollection services)
@@ -183,14 +184,15 @@ public class Startup
         services.AddScoped<StringLocalizer<Presentation.View.MyLearningWorlds.MyLearningWorldsOverview>>();
 
         services.AddSingleton<IPresentationLogic, PresentationLogic>();
-        services.AddSingleton<ILearningWorldPresenter, LearningWorldPresenter>();
-        services.AddSingleton(p =>
+        services.AddScoped<ILearningWorldPresenter, LearningWorldPresenter>();
+        services.AddScoped(p =>
             (ILearningWorldPresenterOverviewInterface) p.GetService(typeof(ILearningWorldPresenter))!);
         services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
-        services.AddSingleton<IErrorService, ErrorService>();
-        services.AddSingleton<ILearningElementDropZoneHelper, LearningElementDropZoneHelper>();
+        services.AddScoped<IErrorService, ErrorService>();
+        services.AddScoped<ILearningElementDropZoneHelper, LearningElementDropZoneHelper>();
         services.AddTransient(typeof(IFormDataContainer<,>), typeof(FormDataContainer<,>));
+        services.AddSingleton<IElementModelHandler, ElementModelHandler>();
     }
 
     private void ConfigureBusinessLogic(IServiceCollection services)

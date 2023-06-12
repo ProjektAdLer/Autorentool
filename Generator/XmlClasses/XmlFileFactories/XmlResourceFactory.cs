@@ -139,7 +139,7 @@ public class XmlResourceFactory : IXmlResourceFactory
                 _ => null
             };
             if(mimeType != null)
-                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), mimeType);
+                ResourceSetParametersFilesXml(FileManager.GetHashCheckSum(), FileManager.GetFileSize(), mimeType, FileElementUuid);
 
             FileSetParametersActivity();
             
@@ -149,7 +149,7 @@ public class XmlResourceFactory : IXmlResourceFactory
     }
     
     //Every resource has to be put into files.xml file
-    public void ResourceSetParametersFilesXml(string hashCheckSum, string filesize, string mimeType)
+    public void ResourceSetParametersFilesXml(string hashCheckSum, string filesize, string mimeType, string uuid)
     {
         var file1 = new FilesXmlFile
         {
@@ -162,6 +162,7 @@ public class XmlResourceFactory : IXmlResourceFactory
             Filesize = filesize,
             Timecreated = CurrentTime,
             Timemodified = CurrentTime,
+            ElementUuid = uuid
         };
         var file2 = (FilesXmlFile)file1.Clone();
         file2.Id = XmlEntityManager.GetFileIdBlock2().ToString();

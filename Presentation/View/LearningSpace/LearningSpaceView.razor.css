@@ -1,13 +1,13 @@
 ﻿.layout{
-    background: green;
+    background: #e9f2fa;
 }
 .layout-shadow {
-    filter: drop-shadow(1px 0px 0px black)
-    drop-shadow(-1px 0px 0px black)
-    drop-shadow(0px 1px 0px black)
-    drop-shadow(0px -1px 0px black)
-    drop-shadow(1px 1px 0px black)
-    drop-shadow(-1px -1px 0px black)
-    drop-shadow(-1px 1px 0px black)
-    drop-shadow(1px -1px 0px black);
+    filter: drop-shadow(1px 0px 0px #172D4C)
+    drop-shadow(-1px 0px 0px #172D4C)
+    drop-shadow(0px 1px 0px #172D4C)
+    drop-shadow(0px -1px 0px #172D4C)
+    drop-shadow(1px 1px 0px #172D4C)
+    drop-shadow(-1px -1px 0px #172D4C)
+    drop-shadow(-1px 1px 0px #172D4C)
+    drop-shadow(1px -1px 0px #172D4C);
 }

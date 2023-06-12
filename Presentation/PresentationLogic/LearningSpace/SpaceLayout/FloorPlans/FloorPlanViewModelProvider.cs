@@ -8,9 +8,9 @@ public static class FloorPlanViewModelProvider
     {
         return floorPlanName switch
         {
-            FloorPlanEnum.L32X3110L => new L32X3110LViewModel(),
-            FloorPlanEnum.R20X206L => new R20X206LViewModel(),
-            FloorPlanEnum.R20X308L => new R20X308LViewModel(),
+            FloorPlanEnum.L_32X31_10L => new L32X3110LViewModel(),
+            FloorPlanEnum.R_20X20_6L => new R20X206LViewModel(),
+            FloorPlanEnum.R_20X30_8L => new R20X308LViewModel(),
             _ => throw new ArgumentOutOfRangeException(nameof(floorPlanName), floorPlanName, null)
         };
     }

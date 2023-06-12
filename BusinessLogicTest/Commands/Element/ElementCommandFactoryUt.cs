@@ -30,6 +30,7 @@ public class ElementCommandFactoryUt
         var description = "Description";
         var goals = "Goals";
         var difficulty = LearningElementDifficultyEnum.Easy;
+        var elementModel = ElementModel.l_h5p_slotmachine_1;
         var workload = 10;
         var points = 100;
         var positionX = 0.5;
@@ -38,7 +39,7 @@ public class ElementCommandFactoryUt
 
         // Act
         var result = _factory.GetCreateInSlotCommand(parentSpace, slotIndex, name, learningContent, description, goals,
-            difficulty, workload, points, positionX, positionY, mappingAction);
+            difficulty, elementModel, workload, points, positionX, positionY, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateLearningElementInSlot>());
@@ -94,6 +95,7 @@ public class ElementCommandFactoryUt
         var description = "Description";
         var goals = "Goals";
         var difficulty = LearningElementDifficultyEnum.Easy;
+        var elementModel = ElementModel.l_h5p_slotmachine_1;
         var workload = 10;
         var points = 100;
         var positionX = 0.5;
@@ -102,7 +104,7 @@ public class ElementCommandFactoryUt
 
         // Act
         var result = _factory.GetCreateUnplacedCommand(learningWorld, name, learningContent, description, goals,
-            difficulty, workload, points, positionX, positionY, mappingAction);
+            difficulty, elementModel, workload, points, positionX, positionY, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<CreateUnplacedLearningElement>());
@@ -203,6 +205,7 @@ public class ElementCommandFactoryUt
         var description = "New Description";
         var goals = "New Goals";
         var difficulty = LearningElementDifficultyEnum.Medium;
+        var elementModel = ElementModel.l_h5p_slotmachine_1;
         var workload = 20;
         var points = 200;
         var learningContent = EntityProvider.GetLinkContent();
@@ -210,7 +213,7 @@ public class ElementCommandFactoryUt
 
         // Act
         var result = _factory.GetEditCommand(learningElement, parentSpace, name, description, goals, difficulty,
-            workload, points, learningContent, mappingAction);
+            elementModel, workload, points, learningContent, mappingAction);
 
         // Assert
         Assert.That(result, Is.InstanceOf<EditLearningElement>());

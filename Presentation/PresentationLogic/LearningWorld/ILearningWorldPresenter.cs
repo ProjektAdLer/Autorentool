@@ -35,7 +35,10 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
         int requiredPoints, Theme theme, double positionX = 0, double positionY = 0, TopicViewModel? topic = null);
 
     Task LoadLearningSpaceAsync();
-    void EditLearningWorld(string name, string shortname, string authors, string language, string description, string goals);
+
+    void EditLearningWorld(string name, string shortname, string authors, string language, string description,
+        string goals);
+
     Task SaveLearningWorldAsync();
     Task SaveSelectedLearningSpaceAsync();
     void ShowSelectedLearningSpaceView();
@@ -57,13 +60,14 @@ public interface ILearningWorldPresenter : INotifyPropertyChanged, INotifyProper
     void SetSelectedLearningElement(ILearningElementViewModel learningElement);
 
     void EditLearningElement(ILearningSpaceViewModel? elementParent, ILearningElementViewModel learningElement,
-        string name,string description, string goals, LearningElementDifficultyEnum difficulty,
-        int workload, int points, ILearningContentViewModel learningContent);
+        string name, string description, string goals, LearningElementDifficultyEnum difficulty,
+        ElementModel elementModel, int workload, int points, ILearningContentViewModel learningContent);
 
     IEnumerable<ILearningContentViewModel> GetAllContent();
 
     void CreateUnplacedLearningElement(string name, ILearningContentViewModel learningContent, string description,
-        string goals, LearningElementDifficultyEnum difficulty, int workload, int points);
+        string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points);
+
     Task ShowSelectedElementContentAsync(ILearningElementViewModel learningElement);
 
     void DeleteLearningElement(ILearningElementViewModel learningElement);

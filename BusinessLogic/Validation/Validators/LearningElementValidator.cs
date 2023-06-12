@@ -17,8 +17,8 @@ public class LearningElementValidator : AbstractValidator<LearningElement>
         _learningElementNamesProvider = learningElementNamesProvider;
         RuleFor(x => x.Name)
             .NotEmpty()
-            .Length(4, 100)
-            .IsAlphanumeric()
+            .Length(1, 60)
+            .IsValidName()
             .Must((element, name) => IsUniqueName(element.Id, name))
             .WithMessage("Already in use.");
         RuleFor(x => x.LearningContent)

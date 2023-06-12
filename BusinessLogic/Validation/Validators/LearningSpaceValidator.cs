@@ -16,8 +16,8 @@ public class LearningSpaceValidator : AbstractValidator<LearningSpace>
         _learningSpaceNamesProvider = learningSpaceNamesProvider;
         RuleFor(x => x.Name)
             .NotEmpty()
-            .Length(4, 100)
-            .IsAlphanumeric()
+            .Length(1, 60)
+            .IsValidName()
             .Must((space, name) => IsUniqueNameInWorld(space.Id, name))
             .WithMessage("Already in use.");
         RuleFor(x => x.RequiredPoints)

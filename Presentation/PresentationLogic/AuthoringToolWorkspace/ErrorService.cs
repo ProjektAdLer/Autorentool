@@ -1,14 +1,19 @@
+using Microsoft.AspNetCore.Components;
+using MudBlazor;
+
 namespace Presentation.PresentationLogic.AuthoringToolWorkspace;
 
 public class ErrorService : IErrorService
 {
-    public string ErrorMessage { get; private set; } = "";
-
-    public event Action? OnError;
-
-    public void SetError(string errorMessage)
+    public ErrorService(IDialogService dialogService)
     {
-        ErrorMessage = errorMessage;
-        OnError?.Invoke();
+        DialogService = dialogService;
+    }
+
+    private IDialogService DialogService { get; }
+
+    public void SetError(string errorTitle, string errorMessage)
+    {
+        DialogService.ShowMessageBox(errorTitle, (MarkupString)errorMessage);
     }
 }

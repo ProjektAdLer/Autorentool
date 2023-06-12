@@ -5,7 +5,6 @@ using NUnit.Framework;
 namespace BusinessLogicTest.Commands.Element;
 
 [TestFixture]
-
 public class CreateUnplacedLearningElementUt
 {
     [Test]
@@ -14,17 +13,18 @@ public class CreateUnplacedLearningElementUt
         var testParameter = new TestParameter();
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateUnplacedLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.Content,
-            testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.Points, testParameter.PositionX,testParameter.PositionY, mappingAction);
-        
+        var command = new CreateUnplacedLearningElement(testParameter.WorldParent, testParameter.Name,
+            testParameter.Content, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
+            testParameter.ElementModel, testParameter.Workload, testParameter.Points, testParameter.PositionX,
+            testParameter.PositionY, mappingAction);
+
         Assert.Multiple(() =>
         {
             Assert.That(testParameter.WorldParent.UnplacedLearningElements, Is.Empty);
             Assert.That(actionWasInvoked, Is.False);
             Assert.That(testParameter.WorldParent.UnsavedChanges, Is.False);
         });
-        
+
         command.Execute();
 
         var element = testParameter.WorldParent.UnplacedLearningElements.First();
@@ -50,41 +50,42 @@ public class CreateUnplacedLearningElementUt
         var worldParent = testParameter.WorldParent;
         bool actionWasInvoked = false;
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateUnplacedLearningElement(testParameter.WorldParent, testParameter.Name, testParameter.Content,
-            testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.Points, testParameter.PositionX,testParameter.PositionY, mappingAction);
-        
+        var command = new CreateUnplacedLearningElement(testParameter.WorldParent, testParameter.Name,
+            testParameter.Content, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
+            testParameter.ElementModel, testParameter.Workload, testParameter.Points, testParameter.PositionX,
+            testParameter.PositionY, mappingAction);
+
         Assert.Multiple(() =>
         {
             Assert.That(worldParent.UnplacedLearningElements, Is.Empty);
             Assert.That(actionWasInvoked, Is.False);
             Assert.That(worldParent.UnsavedChanges, Is.False);
         });
-        
+
         command.Execute();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(worldParent.UnplacedLearningElements, Has.Count.EqualTo(1));
             Assert.That(actionWasInvoked, Is.True);
             Assert.That(worldParent.UnsavedChanges, Is.True);
         });
-        
+
         actionWasInvoked = false;
-        
+
         command.Undo();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(worldParent.UnplacedLearningElements, Is.Empty);
             Assert.That(actionWasInvoked, Is.True);
             Assert.That(worldParent.UnsavedChanges, Is.False);
         });
-        
+
         actionWasInvoked = false;
-        
+
         command.Redo();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(worldParent.UnplacedLearningElements, Has.Count.EqualTo(1));
@@ -101,13 +102,11 @@ public class CreateUnplacedLearningElementUt
         Action<LearningWorld> mappingAction = _ => actionWasInvoked = true;
         var command = new CreateUnplacedLearningElement(testParameter.WorldParent, testParameter.Name,
             testParameter.Content, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY,
-            mappingAction);
-            
+            testParameter.ElementModel, testParameter.Workload, testParameter.Points, testParameter.PositionX,
+            testParameter.PositionY, mappingAction);
+
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
         Assert.IsFalse(actionWasInvoked);
     }
 }
-
-

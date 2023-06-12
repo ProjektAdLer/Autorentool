@@ -1,10 +1,10 @@
-﻿using BusinessLogic.Entities;
-using BusinessLogic.Entities.LearningContent;
+﻿using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningPathway;
 using Presentation.PresentationLogic.LearningSpace;
+using Presentation.PresentationLogic.LearningSpace.SpaceLayout;
 using Presentation.PresentationLogic.LearningWorld;
 using Presentation.PresentationLogic.Topic;
 using Shared;
@@ -17,44 +17,59 @@ public static class ViewModelProvider
     {
         return new AuthoringToolWorkspaceViewModel();
     }
+
     public static LearningWorldViewModel GetLearningWorld()
     {
-        return new LearningWorldViewModel("a", "b", "c", "d", "e", "f");
+        return new LearningWorldViewModel("LWVMn", "LWVMsn", "LWVMa", "LWVMl", "LWVMd", "LWVMg");
     }
 
-    public static LearningSpaceViewModel GetLearningSpace()
+    public static LearningSpaceViewModel GetLearningSpace(bool unsavedChanges = false, FloorPlanEnum? floorPlan = null,
+        TopicViewModel? assignedTopic = null, double positionX = 0, double positionY = 0)
     {
-        return new LearningSpaceViewModel("a", "d", "e", Theme.Campus);
+        return new LearningSpaceViewModel("LSVMn", "LSVMd", "LSVMg", Theme.Campus, 4,
+            floorPlan == null ? null : GetLearningSpaceLayout((FloorPlanEnum) floorPlan), positionX: positionX,
+            positionY: positionY) {UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic};
     }
 
-    public static LearningElementViewModel GetLearningElement()
+    public static LearningSpaceLayoutViewModel GetLearningSpaceLayout(
+        FloorPlanEnum floorPlan = FloorPlanEnum.R_20X20_6L)
     {
-        return new LearningElementViewModel("a", null!, "d", "e", LearningElementDifficultyEnum.Easy);
+        return new LearningSpaceLayoutViewModel(floorPlan);
     }
-    
+
+    public static LearningElementViewModel GetLearningElement(string append = "",
+        ILearningContentViewModel? content = null, ILearningSpaceViewModel? parent = null, int workload = 1,
+        int points = 1)
+    {
+        return new LearningElementViewModel("LEVMn" + append, content!, "LEVMd" + append, "LEVMg" + append,
+            LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, parent: parent, workload: workload,
+            points: points);
+    }
+
     public static PathWayConditionViewModel GetPathWayCondition()
     {
         return new PathWayConditionViewModel(ConditionEnum.And, false);
     }
 
-    public static LearningPathwayViewModel GetLearningPathway()
+    public static LearningPathwayViewModel GetLearningPathway(IObjectInPathWayViewModel? source = null,
+        IObjectInPathWayViewModel? target = null)
     {
-        return new LearningPathwayViewModel(GetPathWayCondition(), GetPathWayCondition());
+        return new LearningPathwayViewModel(source ?? GetPathWayCondition(), target ?? GetPathWayCondition());
     }
 
     public static LinkContentViewModel GetLinkContent()
     {
-        return new LinkContentViewModel("a name", "a link");
+        return new LinkContentViewModel("LCVMn a name", "LCVMl a link");
     }
 
-    public static FileContentViewModel GetFileContent()
+    public static FileContentViewModel GetFileContent(string? name = null, string? type = null, string? filepath = null)
     {
-        return new FileContentViewModel("a name", "a type", "a filepath");
+        return new FileContentViewModel(name ?? "FCVMn a name", type ?? "FCVMt a type", filepath ?? "FCVMf a filepath");
     }
 
     public static TopicViewModel GetTopic()
     {
-        return new TopicViewModel("a topic");
+        return new TopicViewModel("TVMn a topic");
     }
 
     public static LearningWorldViewModel GetLearningWorldWithSpace()

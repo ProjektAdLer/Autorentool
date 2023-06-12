@@ -34,6 +34,7 @@ public interface IPresentationLogic
     /// <exception cref="OperationCanceledException">Operation was cancelled by user.</exception>
     /// <returns>Filepath to the new backup file</returns>
     Task<string> ConstructBackupAsync(ILearningWorldViewModel learningWorldViewModel);
+
     bool CanUndo { get; }
     bool CanRedo { get; }
     void UndoCommand();
@@ -78,7 +79,9 @@ public interface IPresentationLogic
     /// </summary>
     /// <param name="authoringToolWorkspaceVm"></param>
     /// <param name="worldVm">The learning world to delete.</param>
-    void DeleteLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm, ILearningWorldViewModel worldVm);
+    void DeleteLearningWorld(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
+        ILearningWorldViewModel worldVm);
+
     /// <summary>
     /// Asks user for path and saves <see cref="LearningWorldViewModel"/> to disk.
     /// </summary>
@@ -89,6 +92,7 @@ public interface IPresentationLogic
     /// <exception cref="InvalidOperationException">Thrown when we are running in Electron but no <see cref="IElectronDialogManager"/>
     /// implementation is present in dependency injection container.</exception>
     Task SaveLearningWorldAsync(ILearningWorldViewModel learningWorldViewModel);
+
     /// <summary>
     /// Asks user for path and loads <see cref="LearningWorldViewModel"/> from disk.
     /// </summary>
@@ -278,7 +282,7 @@ public interface IPresentationLogic
     /// <param name="positionY"></param>
     void CreateLearningElementInSlot(ILearningSpaceViewModel parentSpaceVm, int slotIndex, string name,
         ILearningContentViewModel learningContentVm,
-        string description, string goals, LearningElementDifficultyEnum difficulty,
+        string description, string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel,
         int workload, int points,
         double positionX = 0D, double positionY = 0D);
 
@@ -291,14 +295,13 @@ public interface IPresentationLogic
     /// <param name="description">A description of the element.</param>
     /// <param name="goals">The goals of the element.</param>
     /// <param name="difficulty">The difficulty of the element.</param>
+    /// <param name="elementModel">The theme of the element.</param>
     /// <param name="workload">The time required to complete the learning element.</param>
     /// <param name="points">The number of points of the learning element.</param>
     /// <param name="learningContentViewModel"></param>
-    void EditLearningElement(ILearningSpaceViewModel? parentSpaceVm,
-        ILearningElementViewModel learningElementVm, string name,
-        string description,
-        string goals, LearningElementDifficultyEnum difficulty, int workload, int points,
-        ILearningContentViewModel learningContentViewModel);
+    void EditLearningElement(ILearningSpaceViewModel? parentSpaceVm, ILearningElementViewModel learningElementVm,
+        string name, string description, string goals, LearningElementDifficultyEnum difficulty,
+        ElementModel elementModel, int workload, int points, ILearningContentViewModel learningContentViewModel);
 
     /// <summary>
     /// Moves the given learning element from unplaced elements to the given slot index in the given learning space.
@@ -405,7 +408,8 @@ public interface IPresentationLogic
 
     void CreateUnplacedLearningElement(ILearningWorldViewModel learningWorldVm, string name,
         ILearningContentViewModel learningContentVm, string description, string goals,
-        LearningElementDifficultyEnum difficulty, int workload, int points, double positionX = 0D,
+        LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points,
+        double positionX = 0D,
         double positionY = 0D);
 
     Task<string> GetWorldSavePath();
@@ -426,6 +430,7 @@ public interface IPresentationLogic
     string LoginName { get; }
     Task<bool> Login(string username, string password);
     void Logout();
+    void UploadLearningWorldToBackend(string filepath);
 
     #endregion
 

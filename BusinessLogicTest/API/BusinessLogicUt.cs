@@ -8,6 +8,7 @@ using NUnit.Framework;
 using Shared;
 using Shared.Command;
 using Shared.Configuration;
+using TestHelpers;
 
 namespace BusinessLogicTest.API;
 
@@ -218,9 +219,7 @@ public class BusinessLogicUt
     [Test]
     public void SaveLearningElement_CallsDataAccess()
     {
-        var content = new FileContent("a", "b", "");
-        var learningElement = new LearningElement("fa", content,
-            "f", "f", LearningElementDifficultyEnum.Easy);
+        var learningElement = EntityProvider.GetLearningElement();
         var mockDataAccess = Substitute.For<IDataAccess>();
 
         var systemUnderTest = CreateStandardBusinessLogic(null, mockDataAccess);
@@ -245,9 +244,7 @@ public class BusinessLogicUt
     [Test]
     public void LoadLearningElement_ReturnsLearningElement()
     {
-        var content = new FileContent("a", "b", "");
-        var learningElement = new LearningElement("fa", content, "f",
-            "f", LearningElementDifficultyEnum.Easy);
+        var learningElement = EntityProvider.GetLearningElement();
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningElement("foobar").Returns(learningElement);
 
@@ -436,9 +433,7 @@ public class BusinessLogicUt
     [Test]
     public void LoadLearningElementFromStream_ReturnsLearningElement()
     {
-        var content = new FileContent("a", "b", "");
-        var learningElement = new LearningElement("fa", content, "f",
-            "f", LearningElementDifficultyEnum.Easy);
+        var learningElement = EntityProvider.GetLearningElement();
         var stream = Substitute.For<Stream>();
         var mockDataAccess = Substitute.For<IDataAccess>();
         mockDataAccess.LoadLearningElement(stream).Returns(learningElement);
@@ -520,6 +515,35 @@ public class BusinessLogicUt
         await systemUnderTest.Login(username, password);
 
         await backendAccess.Received().GetUserInformationAsync(token);
+    }
+    
+    [Test]
+    public void UploadLearningWorldToBackend_CallsWorldGenerator()
+    {
+        var worldGenerator = Substitute.For<IWorldGenerator>();
+        const string filepath = "filepath";
+        var systemUnderTest = CreateStandardBusinessLogic(worldGenerator: worldGenerator);
+
+        systemUnderTest.UploadLearningWorldToBackend(filepath);
+
+        worldGenerator.Received().ExtractAtfFromBackup(filepath);
+    }
+    
+    [Test]
+    public void UploadLearningWorldToBackend_CallsBackendAccess()
+    {
+        const string filepath = "filepath";
+        const string atfPath = "atfPath";
+        var token = new UserToken("token");
+        var worldGenerator = Substitute.For<IWorldGenerator>();
+        worldGenerator.ExtractAtfFromBackup(filepath).Returns(atfPath);
+        var backendAccess = Substitute.For<IBackendAccess>();
+        var systemUnderTest = CreateStandardBusinessLogic(apiAccess: backendAccess, worldGenerator: worldGenerator);
+        systemUnderTest.UserToken = token;
+
+        systemUnderTest.UploadLearningWorldToBackend(filepath);
+
+        backendAccess.Received().UploadLearningWorldAsync(token, filepath, atfPath);
     }
 
     #endregion

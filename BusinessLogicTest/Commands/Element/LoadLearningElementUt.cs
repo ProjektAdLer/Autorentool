@@ -1,9 +1,11 @@
 using BusinessLogic.API;
 using BusinessLogic.Commands.Element;
 using BusinessLogic.Entities;
+using Microsoft.Extensions.FileSystemGlobbing.Internal.PathSegments;
 using NSubstitute;
 using NUnit.Framework;
 using Shared;
+using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Element;
 
@@ -15,9 +17,7 @@ public class LoadLearningElementUt
     {
         var testParameter = new TestParameter();
         var space = testParameter.SpaceParent;
-        var element =
-            new LearningElement("a", null!, "b",
-                "c", LearningElementDifficultyEnum.Easy, space, 1, 9, 2, 3);
+        var element = EntityProvider.GetLearningElement(parent: space);
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         const string filepath = "c:\\temp\\test";
         mockBusinessLogic.LoadLearningElement(filepath).Returns(element);
@@ -62,11 +62,8 @@ public class LoadLearningElementUt
         var space = testParameter.SpaceParent;
         bool actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
-        var element =
-            new LearningElement("a", null!, "b",
-                "c", LearningElementDifficultyEnum.Easy, space, workload: 1, points: 9, positionX: 2, positionY: 3);
-        var element2 = new LearningElement("f", null!, "i", "j",
-            LearningElementDifficultyEnum.Easy, space, workload: 5, points: 2, positionX: 1, positionY: 5);
+        var element = EntityProvider.GetLearningElement(parent: space);
+        var element2 = EntityProvider.GetLearningElement(parent: space, append: "2");
         mockBusinessLogic.LoadLearningElement(Arg.Any<string>()).Returns(element);
         space.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>
         {

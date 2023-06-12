@@ -1,7 +1,7 @@
 using BusinessLogic.Entities;
-using BusinessLogic.Entities.LearningContent;
 using NUnit.Framework;
 using Shared;
+using TestHelpers;
 
 namespace BusinessLogicTest.Entities;
 
@@ -12,16 +12,17 @@ public class LearningElementUt
     public void AutomapperConstructor_InitializesAllProperties()
     {
         var name = "asdf";
-        var content = new FileContent("a", "b", "");
+        var content = EntityProvider.GetFileContent();
         var description = "very cool element";
         var goals = "learn very many things";
         var difficulty = LearningElementDifficultyEnum.Medium;
+        var elementModel = ElementModel.l_h5p_slotmachine_1;
         var workload = 5;
         var points = 6;
         var positionX = 5f;
         var positionY = 21f;
 
-        var systemUnderTest = new LearningElement(name, content, description, goals, difficulty, null, workload: workload, points: points, positionX: positionX, positionY: positionY);
+        var systemUnderTest = new LearningElement(name, content, description, goals, difficulty, elementModel, null, workload: workload, points: points, positionX: positionX, positionY: positionY);
         
         Assert.Multiple(() =>
         {
@@ -31,6 +32,7 @@ public class LearningElementUt
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(systemUnderTest.ElementModel, Is.EqualTo(elementModel));
             Assert.That(systemUnderTest.Workload, Is.EqualTo(workload));
             Assert.That(systemUnderTest.Points, Is.EqualTo(points));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
@@ -43,18 +45,19 @@ public class LearningElementUt
     public void NormalConstructor_InitializesAllProperties()
     {
         var name = "asdf";
-        var parent = new LearningSpace("foo", "", "", 3, Theme.Campus);
-        var content = new FileContent("a", "b", "");
+        var parent = EntityProvider.GetLearningSpace();
+        var content = EntityProvider.GetFileContent();
         var description = "very cool element";
         var goals = "learn very many things";
         var difficulty = LearningElementDifficultyEnum.Medium;
+        var elementModel = ElementModel.l_h5p_slotmachine_1;
         var workload = 5;
         var points = 6;
         var positionX = 5f;
         var positionY = 21f;
 
         var systemUnderTest = new LearningElement(name, content, description, goals,
-             difficulty, parent, workload: workload, points: points, positionX: positionX, positionY: positionY);
+             difficulty, elementModel, parent, workload: workload, points: points, positionX: positionX, positionY: positionY);
         
         Assert.Multiple(() =>
         {
@@ -64,6 +67,7 @@ public class LearningElementUt
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(systemUnderTest.ElementModel, Is.EqualTo(elementModel));
             Assert.That(systemUnderTest.Workload, Is.EqualTo(workload));
             Assert.That(systemUnderTest.Points, Is.EqualTo(points));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
@@ -75,26 +79,28 @@ public class LearningElementUt
     public void GetRestoreMemento_RestoresCorrectMemento()
     {
         var name = "asdf";
-        var parent = new LearningSpace("foo", "", "", 4, Theme.Campus);
-        var content = new FileContent("a", "b", "");
+        var parent = EntityProvider.GetLearningSpace();
+        var content = EntityProvider.GetFileContent();
         var description = "very cool element";
         var goals = "learn very many things";
         var difficulty = LearningElementDifficultyEnum.Medium;
+        var elementModel = ElementModel.l_h5p_slotmachine_1;
         var workload = 5;
         var points = 6;
         var positionX = 5f;
         var positionY = 21f;
 
         var systemUnderTest = new LearningElement(name, content, description, goals,
-            difficulty, parent, workload: workload, points: points, positionX: positionX, positionY: positionY);
+            difficulty, elementModel, parent, workload: workload, points: points, positionX: positionX, positionY: positionY);
 
         var learningElementMemento = systemUnderTest.GetMemento();
         
         var nameChanged = "qwertz";
-        var contentChanged = new FileContent("b", "c", "");
+        var contentChanged = EntityProvider.GetFileContent(append: "changed");
         var descriptionChanged = "changed description";
         var goalsChanged = "new goals";
         var difficultyChanged = LearningElementDifficultyEnum.Easy;
+        var elementModelChanged = ElementModel.l_h5p_blackboard_1;
         var workloadChanged = 10;
         var pointsChanged = 20;
         var positionXChanged = 10f;
@@ -105,6 +111,7 @@ public class LearningElementUt
         systemUnderTest.Description = descriptionChanged;
         systemUnderTest.Goals = goalsChanged;
         systemUnderTest.Difficulty = difficultyChanged;
+        systemUnderTest.ElementModel = elementModelChanged;
         systemUnderTest.Workload = workloadChanged;
         systemUnderTest.Points = pointsChanged;
         systemUnderTest.PositionX = positionXChanged;
@@ -117,6 +124,7 @@ public class LearningElementUt
             Assert.That(systemUnderTest.Description, Is.EqualTo(descriptionChanged));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goalsChanged));
             Assert.That(systemUnderTest.Difficulty, Is.EqualTo(difficultyChanged));
+            Assert.That(systemUnderTest.ElementModel, Is.EqualTo(elementModelChanged));
             Assert.That(systemUnderTest.Workload, Is.EqualTo(workloadChanged));
             Assert.That(systemUnderTest.Points, Is.EqualTo(pointsChanged));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionXChanged));
@@ -132,6 +140,7 @@ public class LearningElementUt
             Assert.That(systemUnderTest.Description, Is.EqualTo(description));
             Assert.That(systemUnderTest.Goals, Is.EqualTo(goals));
             Assert.That(systemUnderTest.Difficulty, Is.EqualTo(difficulty));
+            Assert.That(systemUnderTest.ElementModel, Is.EqualTo(elementModel));
             Assert.That(systemUnderTest.Workload, Is.EqualTo(workload));
             Assert.That(systemUnderTest.Points, Is.EqualTo(points));
             Assert.That(systemUnderTest.PositionX, Is.EqualTo(positionX));
@@ -143,18 +152,19 @@ public class LearningElementUt
     public void RestoreMemento_MementoIsNotLearningElementMemento_ThrowsException()
     {
         var name = "asdf";
-        var parent = new LearningSpace("foo", "", "", 4, Theme.Campus);
-        var content = new FileContent("a", "b", "");
+        var parent = EntityProvider.GetLearningSpace();
+        var content = EntityProvider.GetFileContent();
         var description = "very cool element";
         var goals = "learn very many things";
         var difficulty = LearningElementDifficultyEnum.Medium;
+        var elementModel = ElementModel.l_h5p_slotmachine_1;
         var workload = 5;
         var points = 6;
         var positionX = 5f;
         var positionY = 21f;
 
         var systemUnderTest = new LearningElement(name, content, description, goals,
-            difficulty, parent, workload: workload, points: points, positionX: positionX, positionY: positionY);
+            difficulty, elementModel, parent, workload: workload, points: points, positionX: positionX, positionY: positionY);
 
         var mementoMock = new MementoMock();
         

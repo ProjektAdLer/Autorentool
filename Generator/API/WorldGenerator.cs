@@ -46,5 +46,9 @@ public class WorldGenerator : IWorldGenerator
                 _fileSystem.Directory.Delete("XMLFilesForExport", true);
         }
     }
-    
+
+    public string ExtractAtfFromBackup(string filepath)
+    {
+        return BackupFile.ExtractAtfFromBackup(filepath);
+    }
 }

@@ -3,11 +3,11 @@ using BusinessLogic.Entities;
 using BusinessLogic.Entities.LearningContent;
 using NUnit.Framework;
 using Shared;
+using TestHelpers;
 
 namespace BusinessLogicTest.Commands.Element;
 
 [TestFixture]
-
 public class CreateLearningElementInSlotUt
 {
     [Test]
@@ -16,9 +16,11 @@ public class CreateLearningElementInSlotUt
         var testParameter = new TestParameter();
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateLearningElementInSlot(testParameter.SpaceParent, 0, testParameter.Name, testParameter.Content, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.Points, testParameter.PositionX,testParameter.PositionY, mappingAction);
-        
+        var command = new CreateLearningElementInSlot(testParameter.SpaceParent, 0, testParameter.Name,
+            testParameter.Content, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
+            testParameter.ElementModel, testParameter.Workload, testParameter.Points, testParameter.PositionX,
+            testParameter.PositionY, mappingAction);
+
         Assert.Multiple(() =>
         {
             Assert.That(testParameter.SpaceParent.ContainedLearningElements, Is.Empty);
@@ -26,7 +28,7 @@ public class CreateLearningElementInSlotUt
             Assert.That(testParameter.WorldParent.UnsavedChanges, Is.False);
             Assert.That(testParameter.SpaceParent.UnsavedChanges, Is.False);
         });
-        
+
         command.Execute();
 
         var element = testParameter.SpaceParent.ContainedLearningElements.First();
@@ -53,19 +55,20 @@ public class CreateLearningElementInSlotUt
         var testParameter = new TestParameter();
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
-        var element = new LearningElement(testParameter.Name, testParameter.Content, testParameter.Description, testParameter.Goals, testParameter.Difficulty, testParameter.SpaceParent,
-            workload: testParameter.Workload, points: testParameter.Points,positionX: 1,positionY: 2);
-        
+        var element = new LearningElement(testParameter.Name, testParameter.Content, testParameter.Description,
+            testParameter.Goals, testParameter.Difficulty, testParameter.ElementModel, testParameter.SpaceParent,
+            workload: testParameter.Workload, points: testParameter.Points, positionX: 1, positionY: 2);
+
         var command = new CreateLearningElementInSlot(testParameter.SpaceParent, 0, element, mappingAction);
 
         Assert.IsEmpty(testParameter.SpaceParent.ContainedLearningElements);
         Assert.IsFalse(actionWasInvoked);
 
         command.Execute();
-        
+
         Assert.That(actionWasInvoked, Is.True);
         Assert.That(testParameter.SpaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(testParameter.SpaceParent.ContainedLearningElements.First(), Is.EqualTo(element));
@@ -79,20 +82,18 @@ public class CreateLearningElementInSlotUt
         var spaceParent = testParameter.SpaceParent;
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateLearningElementInSlot(spaceParent, 1, testParameter.Name, testParameter.Content, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
+        var command = new CreateLearningElementInSlot(spaceParent, 1, testParameter.Name, testParameter.Content,
+            testParameter.Description, testParameter.Goals, testParameter.Difficulty, testParameter.ElementModel,
             testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY,
             mappingAction);
-        var element2 = new LearningElement("x", null!, "x", "x", LearningElementDifficultyEnum.Easy)
-        {
-            UnsavedChanges = false
-        };
+        var element2 = EntityProvider.GetLearningElement(unsavedChanges: false, append: "2");
         spaceParent.LearningSpaceLayout.LearningElements = new Dictionary<int, ILearningElement>
         {
             {
                 0, element2
             }
         };
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(spaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
@@ -101,40 +102,40 @@ public class CreateLearningElementInSlotUt
             Assert.That(testParameter.WorldParent.UnsavedChanges, Is.False);
             Assert.That(testParameter.SpaceParent.UnsavedChanges, Is.False);
         });
-        
+
         command.Execute();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(spaceParent.ContainedLearningElements.Count(), Is.EqualTo(2));
-            
+
             Assert.That(actionWasInvoked, Is.True);
             Assert.That(testParameter.WorldParent.UnsavedChanges, Is.True);
             Assert.That(testParameter.SpaceParent.UnsavedChanges, Is.True);
         });
-        
+
         actionWasInvoked = false;
-        
+
         command.Undo();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(spaceParent.ContainedLearningElements.Count(), Is.EqualTo(1));
             Assert.That(spaceParent.ContainedLearningElements.First(), Is.EqualTo(element2));
-            
+
             Assert.That(actionWasInvoked, Is.True);
             Assert.That(testParameter.WorldParent.UnsavedChanges, Is.False);
             Assert.That(testParameter.SpaceParent.UnsavedChanges, Is.False);
         });
-        
+
         actionWasInvoked = false;
-        
+
         command.Redo();
-        
+
         Assert.Multiple(() =>
         {
             Assert.That(spaceParent.ContainedLearningElements.Count(), Is.EqualTo(2));
-            
+
             Assert.That(actionWasInvoked, Is.True);
             Assert.That(testParameter.WorldParent.UnsavedChanges, Is.True);
             Assert.That(testParameter.SpaceParent.UnsavedChanges, Is.True);
@@ -147,9 +148,11 @@ public class CreateLearningElementInSlotUt
         var testParameter = new TestParameter();
         var actionWasInvoked = false;
         Action<LearningSpace> mappingAction = _ => actionWasInvoked = true;
-        var command = new CreateLearningElementInSlot(testParameter.SpaceParent, 0, testParameter.Name, testParameter.Content, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
-            testParameter.Workload, testParameter.Points, testParameter.PositionX, testParameter.PositionY, mappingAction);
-        
+        var command = new CreateLearningElementInSlot(testParameter.SpaceParent, 0, testParameter.Name,
+            testParameter.Content, testParameter.Description, testParameter.Goals, testParameter.Difficulty,
+            testParameter.ElementModel, testParameter.Workload, testParameter.Points, testParameter.PositionX,
+            testParameter.PositionY, mappingAction);
+
         var ex = Assert.Throws<InvalidOperationException>(() => command.Undo());
         Assert.That(ex!.Message, Is.EqualTo("_memento is null"));
         Assert.IsFalse(actionWasInvoked);
@@ -165,6 +168,7 @@ public class TestParameter
     public readonly string Description;
     public readonly string Goals;
     public readonly LearningElementDifficultyEnum Difficulty;
+    public readonly ElementModel ElementModel;
     public readonly int Workload;
     public readonly int Points;
     public readonly double PositionX;
@@ -173,7 +177,7 @@ public class TestParameter
     internal TestParameter()
     {
         SpaceParent = new LearningSpace("l", "o", "p", 0, Theme.Campus,
-            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R20X308L))
+            new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X30_8L))
         {
             UnsavedChanges = false
         };
@@ -190,6 +194,7 @@ public class TestParameter
         Description = "e";
         Goals = "f";
         Difficulty = LearningElementDifficultyEnum.Easy;
+        ElementModel = ElementModel.l_h5p_slotmachine_1;
         Workload = 3;
         Points = 4;
         PositionX = 5;
