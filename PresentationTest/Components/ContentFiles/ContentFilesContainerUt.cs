@@ -10,6 +10,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.ContentFiles;
 using Presentation.PresentationLogic.API;
+using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.Mediator;
 using TestContext = Bunit.TestContext;
 #pragma warning disable CS8618
@@ -24,6 +25,7 @@ public class ContentFilesContainerUt
     private IDialogService _dialogService;
     private ContentFilesView _contentFilesViewSubstitute;
     private IMediator _mediator;
+    private IAuthoringToolWorkspaceViewModel _authoringToolWorkspaceViewModel;
 
     [SetUp]
     public void Setup()
@@ -32,10 +34,12 @@ public class ContentFilesContainerUt
         _presentationLogic = Substitute.For<IPresentationLogic>();
         _dialogService = Substitute.For<IDialogService>();
         _mediator = Substitute.For<IMediator>();
+        _authoringToolWorkspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         
         _testContext.Services.AddSingleton(_presentationLogic);
         _testContext.Services.AddSingleton(_dialogService);
         _testContext.Services.AddSingleton(_mediator);
+        _testContext.Services.AddSingleton(_authoringToolWorkspaceViewModel);
         
         _testContext.ComponentFactories.AddStub<ContentFilesAdd>();
         _contentFilesViewSubstitute = Substitute.For<ContentFilesView>();

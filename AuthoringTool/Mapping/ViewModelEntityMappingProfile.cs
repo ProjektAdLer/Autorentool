@@ -270,6 +270,7 @@ public class ViewModelEntityMappingProfile : Profile
     {
         CreateMap<LearningWorld, LearningWorldViewModel>()
             .EqualityComparison((x, y) => x.Id == y.Id)
+            .ForMember(x => x.AllLearningElements, opt => opt.Ignore())
             .ForMember(x => x.OnHoveredObjectInPathWay, opt => opt.Ignore())
             .ForMember(x => x.ShowingLearningSpaceView, opt => opt.Ignore())
             .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())
@@ -322,6 +323,7 @@ public class ViewModelEntityMappingProfile : Profile
         
         CreateMap<ILearningWorld, LearningWorldViewModel>()
             .EqualityComparison((x, y) => x.Id == y.Id)
+            .ForMember(x => x.AllLearningElements, opt => opt.Ignore())
             .ForMember(x => x.OnHoveredObjectInPathWay, opt => opt.Ignore())
             .ForMember(x => x.ShowingLearningSpaceView, opt => opt.Ignore())
             .ForMember(x => x.ObjectsInPathWays, opt => opt.Ignore())

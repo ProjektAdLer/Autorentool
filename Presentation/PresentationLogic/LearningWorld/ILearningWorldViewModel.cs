@@ -29,4 +29,5 @@ public interface ILearningWorldViewModel : ISerializableViewModel, IDisplayableL
     bool ShowingLearningSpaceView { get; set; }
     ICollection<ILearningElementViewModel> UnplacedLearningElements { get; set; }
     bool InternalUnsavedChanges { get; }
+    IEnumerable<ILearningElementViewModel> AllLearningElements { get; }
 }
