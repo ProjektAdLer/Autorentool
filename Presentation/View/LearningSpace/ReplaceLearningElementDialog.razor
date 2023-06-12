@@ -1,12 +1,11 @@
-@using Microsoft.Extensions.Localization
 <MudDialog>
     <DialogContent>
-        @Localizer["Dialog.Content.Line1.Text"]
-        @Localizer["Dialog.Content.Line2.Text"]
+        Do you want to replace the learning element?
+        This will move the current learning element to the unplaced learning elements in the world.
     </DialogContent>
     <DialogActions>
-        <MudButton Color="Color.Primary" Variant="Variant.Outlined" OnClick="ReplaceElement">@Localizer["Dialog.Button.Replace.Text"]</MudButton>
-        <MudButton Color="Color.Primary" Variant="Variant.Outlined" OnClick="Cancel">@Localizer["Dialog.Button.Cancel.Text"]</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Outlined" OnClick="ReplaceElement">Replace</MudButton>
+        <MudButton Color="Color.Primary" Variant="Variant.Outlined" OnClick="Cancel">Cancel</MudButton>
     </DialogActions>
 </MudDialog>
 
@@ -15,17 +14,13 @@
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; }
 
-    [Inject]
-    private StringLocalizer<ReplaceLearningElementDialog> Localizer { get; set; }
-
     void ReplaceElement()
     {
         MudDialog.Close(DialogResult.Ok(true));
     }
-
-    void Cancel()
+    
+    void Cancel() 
     {
         MudDialog.Close(DialogResult.Cancel());
     }
-
 }

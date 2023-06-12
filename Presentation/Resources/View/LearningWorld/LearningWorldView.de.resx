@@ -23,31 +23,4 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="LearningWorldView.Workload.Text" xml:space="preserve">
-        <value>Arbeitslast:</value>
-    </data>
-    <data name="LearningWorldView.Points.Text" xml:space="preserve">
-        <value>Punkte:</value>
-    </data>
-    <data name="LearningWorldView.Workload.TimeScale" xml:space="preserve">
-        <value>min.</value>
-    </data>
-    <data name="LearningWorldView.NewLearningSpace.Title" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="LearningWorldView.ImportLearningSpace.Title" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="LearningWorldView.NewCondition.Title" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="ExceptionWrapper.LoadSpace.Exception.Message" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="ExceptionWrapper.SaveSpace.Exception.Message" xml:space="preserve">
-        <value/>
-    </data>
-    <data name="ExceptionWrapper.SaveWorld.Exception.Message" xml:space="preserve">
-        <value/>
-    </data>
 </root>

@@ -1,41 +1,41 @@
 ﻿@page "/LearningWorldViewRedesign"
-@using Microsoft.Extensions.Localization
-@using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningWorld
-@using Presentation.PresentationLogic.SelectedViewModels
+@using Presentation.View.LearningSpace
 @using Presentation.View.LearningPathWay
-@using Direction = Shared.Direction
+@using Size = MudBlazor.Size
+@using Color = MudBlazor.Color
 @using System.ComponentModel
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.PresentationLogic.LearningPathway
+@using Presentation.PresentationLogic.LearningSpace
+@using Presentation.PresentationLogic.SelectedViewModels
+@using Direction = Shared.Direction
 @ChildContent
 
 <article class="flex flex-col justify-content w-[250px] h-full grow">
     <section class="bg-white rounded-lg p-2">
         <div class="flex justify-start items-center space-x-2 py-1">
-            <img src="CustomIcons/world-icon-nobg.png" class="opacity-50 w-7 h-7">
-            <p class="text-lg text-adlerblue-600 truncate hover:text-clip"> @LearningWorldP.LearningWorldVm?.Name</p>
+        <img src="CustomIcons/world-icon-nobg.png" class="opacity-50 w-7 h-7"> 
+        <p class="text-lg text-adlerblue-600 truncate hover:text-clip"> @LearningWorldP.LearningWorldVm?.Name</p>
         </div>
-        <h3 class="text-base text-adlerblue-600">
-            <span class="text-adlergrey-600">@Localizer["LearningWorldView.Workload.Text"] </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> @Localizer["LearningWorldView.Workload.TimeScale"]</span>
-        </h3>
-        <h3 class="text-base text-adlerblue-600">
-            <span class="text-adlergrey-600">@Localizer["LearningWorldView.Points.Text"] </span> @LearningWorldP.LearningWorldVm?.Points
-        </h3>
+        <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">Workload: </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> min.</span></h3>
+        <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">Points: </span> @LearningWorldP.LearningWorldVm?.Points</h3>
     </section>
     <section class="flex flex-row gap-2 justify-center">
         <div class="flex grow justify-between">
             <MudButton Class="relative btn-standard w-14 add-learning-space" @onclick="AddNewLearningSpace" Disabled="LearningWorldP.LearningWorldVm == null">
                 <img src="CustomIcons/space-icon_nobg.png" class="absolute opacity-50 w-8 h-8">
-                <MudIcon Icon="@Icons.Material.Filled.Add" Title=@Localizer["LearningWorldView.NewLearningSpace.Title"] Class="absolute"></MudIcon>
+                <MudIcon Icon="@Icons.Material.Filled.Add" Title="New Learning Space" Class="absolute"></MudIcon>
             </MudButton>
             <MudButton Class="relative btn-standard w-14 load-learning-space" @onclick="LoadLearningSpaceAsync" Disabled="LearningWorldP.LearningWorldVm == null">
                 <img src="CustomIcons/space-icon_nobg.png" class="absolute opacity-50 w-8 h-8">
-                <MudIcon Icon="@Icons.Material.Filled.Download" Title=@Localizer["LearningWorldView.ImportLearningSpace.Title"] Class="absolute"></MudIcon>
+                <MudIcon Icon="@Icons.Material.Filled.Download" Title="Import Learning Space" Class="absolute"></MudIcon>
             </MudButton>
             <MudButton Class="relative btn-standard w-14 add-condition" @onclick="AddNewPathWayCondition" Disabled="LearningWorldP.LearningWorldVm == null">
                 <img src="CustomIcons/new-condition-icon-nobg.png" class="absolute opacity-50 w-8 h-8">
-                <MudIcon Icon="@Icons.Material.Filled.Add" Title=@Localizer["LearningWorldView.NewCondition.Title"] Class="absolute"></MudIcon>
+                <MudIcon Icon="@Icons.Material.Filled.Add" Title="New Condition" Class="absolute"></MudIcon>
             </MudButton>
-        </div>
+            </div>
     </section>
     @*<MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Delete" Disabled="@(SelectedViewModelsProvider.LearningObjectInPathWay == null)" @onclick="DeleteSelectedLearningObject"></MudFab>*@
     <!-- <svg style="width: 400px; height: 600px; border:3px black; background-color: white" -->
@@ -101,20 +101,17 @@
     [Parameter]
     public RenderFragment? ChildContent { get; set; }
 
-    [Inject]
-    private StringLocalizer<LearningWorldView> Localizer { get; set; }
-
 #pragma warning disable CS8618 // injected by framework - n.stich
     [Inject]
     public IMouseService MouseService { get; set; }
-
+    
     [Inject]
     public ILearningWorldPresenter LearningWorldP { get; set; }
-
+    
     [Inject]
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
 #pragma warning restore CS8618
-
+    
     private ExceptionWrapper? ErrorState { get; set; }
 
     protected override void OnParametersSet()
@@ -129,7 +126,7 @@
     {
         LearningWorldP.AddNewLearningSpace();
     }
-
+    
     private void AddNewPathWayCondition()
     {
         LearningWorldP.CreatePathWayCondition();
@@ -152,7 +149,7 @@
         }
         catch (Exception exception)
         {
-            ErrorState = new ExceptionWrapper(Localizer["ExceptionWrapper.LoadSpace.Exception.Message"], exception);
+            ErrorState = new ExceptionWrapper("Load learning space", exception);
         }
         finally
         {
@@ -160,7 +157,7 @@
             await InvokeAsync(StateHasChanged);
         }
     }
-
+    
     private async Task SaveLearningWorldAsync()
     {
         try
@@ -173,7 +170,7 @@
         }
         catch (Exception exception)
         {
-            ErrorState = new ExceptionWrapper(Localizer["ExceptionWrapper.SaveWorld.Exception.Message"], exception);
+            ErrorState = new ExceptionWrapper("Save learning world", exception);
         }
         finally
         {
@@ -194,7 +191,7 @@
         }
         catch (Exception exception)
         {
-            ErrorState = new ExceptionWrapper(Localizer["ExceptionWrapper.SaveSpace.Exception.Message"], exception);
+            ErrorState = new ExceptionWrapper("Save learning space", exception);
         }
         finally
         {

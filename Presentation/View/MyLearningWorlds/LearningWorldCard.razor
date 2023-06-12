@@ -1,4 +1,3 @@
-@using Microsoft.Extensions.Localization
 @using Shared
 <MudItem>
     <MudCard Outlined="true" Elevation="1" Class="w-60 h-40">
@@ -23,20 +22,20 @@
                 @switch (_cardType)
                 {
                     case CardType.IsLoaded:
-                        {
-                            <MudText Class="break-all">
-                                @LearningWorldPath!.Name
-                            </MudText>
-                            break;
-                        }
+                    {
+                        <MudText Class="break-all">
+                            @LearningWorldPath!.Name
+                        </MudText>
+                        break;
+                    }
 
                     case CardType.IsSaved:
-                        {
-                            <MudText Class="break-all">
-                                @LearningWorldPath!.Name
-                            </MudText>
-                            break;
-                        }
+                    {
+                        <MudText Class="break-all">
+                            @LearningWorldPath!.Name
+                        </MudText>
+                        break;
+                    }
                     default:
                         throw new ArgumentOutOfRangeException();
                 }
@@ -78,16 +77,13 @@
         </MudCardHeader>
         <MudCardContent Class="flex justify-center">
             <MudButton Size="Size.Large" @onclick="@(() => OnOpenLearningWorld.InvokeAsync(LearningWorldPath))">
-                @Localizer["LearningWorldCard.Button.Open.Text"]
+                Open
             </MudButton>
         </MudCardContent>
     </MudCard>
 </MudItem>
 
 @code {
-
-    [Inject]
-    private StringLocalizer<LearningWorldCard> Localizer { get; set; }
 
     [Parameter]
     public SavedLearningWorldPath? LearningWorldPath { get; set; }
@@ -106,15 +102,15 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        if (!OnOpenLearningWorld.HasDelegate) throw new ApplicationException(Localizer["ApplicationException.OnOpenLearningWorld.Message"]);
-        if (LearningWorldPath == null) throw new ApplicationException(Localizer["ApplicationException.LearningWorldPath.Message"]);
+        if (!OnOpenLearningWorld.HasDelegate) throw new ApplicationException("OnOpenLearningWorld must be set.");
+        if (LearningWorldPath == null) throw new ApplicationException("LearningWorldPath must be set.");
         if (IsLoaded)
         {
             _cardType = CardType.IsLoaded;
         }
         else
         {
-            if (!OnDeleteFromSaved.HasDelegate) throw new ApplicationException(Localizer["ApplicationException.OnDeleFromSaved.Message"]);
+            if (!OnDeleteFromSaved.HasDelegate) throw new ApplicationException("OnDeleteFromSaved must be set.");
             _cardType = CardType.IsSaved;
         }
     }

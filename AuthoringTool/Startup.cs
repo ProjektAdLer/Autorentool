@@ -130,59 +130,57 @@ public class Startup
     private void ConfigurePresentationLogic(IServiceCollection services)
     {
         services.AddScoped<IAuthoringToolWorkspacePresenter, AuthoringToolWorkspacePresenter>();
-
+        
         //StringLocalizer Injections
         //Components
         services.AddScoped<StringLocalizer<Presentation.Components.DropZone>>();
         services.AddScoped<StringLocalizer<Presentation.Components.ExportButton>>();
         services.AddScoped<StringLocalizer<Presentation.Components.LmsLoginButton>>();
-
+        
         //ContentFiles
         services.AddScoped<StringLocalizer<Presentation.Components.ContentFiles.ContentFilesAdd>>();
         services.AddScoped<StringLocalizer<Presentation.Components.ContentFiles.ContentFilesView>>();
-
+        
         //Culture
         services.AddScoped<StringLocalizer<Presentation.Components.Culture.CultureSelector>>();
-
+        
         //Dialogues
         services.AddScoped<StringLocalizer<Presentation.Components.Dialogues.GenericCancellationConfirmationDialog>>();
         services.AddScoped<StringLocalizer<Presentation.Components.Dialogues.LmsLoginDialog>>();
         services.AddScoped<StringLocalizer<Presentation.Components.Dialogues.UnsavedWorldDialog>>();
-
+        
         //Forms
         services.AddScoped<StringLocalizer<Presentation.Components.Forms.Buttons.DefaultSubmitButton>>();
         services.AddScoped<StringLocalizer<Presentation.Components.Forms.Buttons.SubmitThenRemapButton>>();
-
+        
         services.AddScoped<StringLocalizer<Presentation.Components.Forms.Content.AddLinkForm>>();
-
+        
         services.AddScoped<StringLocalizer<Presentation.Components.Forms.Element.CreateElementForm>>();
         services.AddScoped<StringLocalizer<Presentation.Components.Forms.Element.EditElementForm>>();
         services.AddScoped<StringLocalizer<Presentation.Components.Forms.Element.ElementFormContainer>>();
-
+        
         services.AddScoped<StringLocalizer<Presentation.Components.Forms.Space.CreateSpaceForm>>();
         services.AddScoped<StringLocalizer<Presentation.Components.Forms.Space.EditSpaceForm>>();
         services.AddScoped<StringLocalizer<Presentation.Components.Forms.Space.SpaceLayoutSelection>>();
-
+        
         services.AddScoped<StringLocalizer<Presentation.Components.Forms.World.CreateWorldForm>>();
         services.AddScoped<StringLocalizer<Presentation.Components.Forms.World.EditWorldForm>>();
-
-
+        
+        
         //View
         services.AddScoped<StringLocalizer<Presentation.View.HeaderBar>>();
-        services.AddScoped<StringLocalizer<Presentation.View.MasterLayout>>();
-
+        
         //LearningSpace
         services.AddScoped<StringLocalizer<Presentation.View.LearningSpace.LearningSpaceView>>();
         services.AddScoped<StringLocalizer<Presentation.View.LearningSpace.ReplaceLearningElementDialog>>();
-
+        
         //LearningWorld
         services.AddScoped<StringLocalizer<Presentation.View.LearningWorld.LearningWorldOverView>>();
         services.AddScoped<StringLocalizer<Presentation.View.LearningWorld.LearningWorldView>>();
-
+        
         //MyLearningWorlds
-        services.AddScoped<StringLocalizer<Presentation.View.MyLearningWorlds.LearningWorldCard>>();
         services.AddScoped<StringLocalizer<Presentation.View.MyLearningWorlds.MyLearningWorldsOverview>>();
-
+        
         services.AddSingleton<IPresentationLogic, PresentationLogic>();
         services.AddScoped<ILearningWorldPresenter, LearningWorldPresenter>();
         services.AddScoped(p =>

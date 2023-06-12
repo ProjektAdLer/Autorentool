@@ -1,17 +1,16 @@
 @page "/app"
-@using Presentation.PresentationLogic.Mediator
+@using Presentation.PresentationLogic.DropZone
+@using Presentation.PresentationLogic.LearningElement
 @using Presentation.View.Layout
 @using Presentation.View.LearningSpace
 @using Presentation.View.LearningWorld
-@using Presentation.PresentationLogic.DropZone
-@using Presentation.PresentationLogic.LearningElement
-@using Microsoft.Extensions.Localization
-@using System.ComponentModel
 @using Presentation.Components.Forms.World
 @using Presentation.Components.Forms.Space
 @using Presentation.Components.Forms.Element
 @using Presentation.Components.ContentFiles
 @using Presentation.Components.Dialogues
+@using System.ComponentModel
+@using Presentation.PresentationLogic.Mediator
 
 <div class="flex flex-col h-screen max-h-screen overflow-hidden w-screen bg-buttonbgblue font-sans">
     <HeaderBar/>
@@ -24,12 +23,12 @@
             <CascadingValue Value="@TriggerStateHasChanged" Name="TriggerMasterLayoutStateHasChanged">
                 <SideContainer Side="Side.Left">
                     <Sidebar SidebarSide="Side.Left">
-                        <SidebarItem
-                            IsActive="Mediator.WorldDialogOpen"
+                        <SidebarItem 
+                            IsActive="Mediator.WorldDialogOpen" 
                             RequestIsActiveToggle="Mediator.RequestToggleWorldDialog">
                             <SidebarContent>
-                                <div class="w-12 p-1" title=@Localizer["SideBarContent.LearningWorldMetadata.Title"]>
-                                    <img class="w-full" src="CustomIcons/worldmenu-icon_metadata-nobg.png" alt=@Localizer["SideBarContent.LearningWorldMetadata.Alt"]>
+                                <div class="w-12 p-1" title="LearningWorldMetadata">
+                                    <img class="w-full" src="CustomIcons/worldmenu-icon_metadata-nobg.png" alt="learningworld-metadata">
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -40,8 +39,8 @@
                             IsActive="Mediator.SpaceDialogOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleSpaceDialog">
                             <SidebarContent>
-                                <div class="w-12 p-1" title=@Localizer["SideBarContent.LearningSpaceMetadata.Title"]>
-                                    <img class="w-full" src="CustomIcons/spacemenu-icon_metadata-nobg.png" alt=@Localizer["SideBarContent.LearningSpaceMetadata.Alt"]>
+                                <div class="w-12 p-1" title="LearningSpaceMetadata">
+                                    <img class="w-full" src="CustomIcons/spacemenu-icon_metadata-nobg.png" alt="learningspace-metadata">
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -52,8 +51,8 @@
                             IsActive="Mediator.ElementDialogOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleElementDialog">
                             <SidebarContent>
-                                <div class="w-12 p-1" title=@Localizer["SideBarContent.SideBarContent.LearningElementMetadata.Title"]>
-                                    <img class="w-full" src="CustomIcons/learningelements-icon_metadata.png" alt=@Localizer["SideBarContent.SideBarContent.LearningElementMetadata.Alt"]>
+                                <div class="w-12 p-1" title="LearningElementMetadata">
+                                    <img class="w-full" src="CustomIcons/learningelements-icon_metadata.png" alt="learningelement-metadata">
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -64,8 +63,8 @@
                             IsActive="Mediator.ContentDialogOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleContentDialog">
                             <SidebarContent>
-                                <div class="w-12 p-1" title=@Localizer["SideBarContent.SideBarContent.AllFiles.Title"]>
-                                    <img class="w-full" src="CustomIcons/all-data-icon-nobg.png" alt=@Localizer["SideBarContent.SideBarContent.AllFiles.Alt"]>
+                                <div class="w-12 p-1" title="AllFiles">
+                                    <img class="w-full" src="CustomIcons/all-data-icon-nobg.png" alt="all-files">
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -83,8 +82,8 @@
                             IsActive="Mediator.WorldViewOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleWorldView">
                             <SidebarContent>
-                                <div class="w-12 p-1" title=@Localizer["SideBarContent.SideBarContent.LearningPathWays.Title"]>
-                                    <img class="w-full" src="CustomIcons/path-icon-nobg.png" alt=@Localizer["SideBarContent.SideBarContent.LearningPathWays.Alt"]>
+                                <div class="w-12 p-1" title="LearningPathWays">
+                                    <img class="w-full" src="CustomIcons/path-icon-nobg.png" alt="learning pathways">
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -95,8 +94,8 @@
                             IsActive="Mediator.WorldOverviewOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleWorldOverview">
                             <SidebarContent>
-                                <div class="w-12 p-1" title=@Localizer["SideBarContent.SideBarContent.LearningWorldOverView.Title"]>
-                                    <img class="w-full" src="CustomIcons/overview-world-icon-nobg.png" alt=@Localizer["SideBarContent.SideBarContent.LearningWorldOverView.Alt"]>
+                                <div class="w-12 p-1" title="LearningWorldOverView">
+                                    <img class="w-full" src="CustomIcons/overview-world-icon-nobg.png" alt="learning world overview">
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -115,22 +114,19 @@
 </div>
 
 @code {
-
+    
     [CascadingParameter]
     public IMediator Mediator { get; set; }
 
     [Inject]
     public ILearningElementDropZoneHelper ElementDropZoneHelper { get; set; }
-
-    [Inject]
-    private StringLocalizer<MasterLayout> Localizer { get; set; }
-
-
+    
+    
     protected override void OnInitialized()
     {
         Mediator.PropertyChanged += MediatorOnPropertyChanged;
     }
-
+    
     private void MediatorOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
     {
         InvokeAsync(StateHasChanged);
