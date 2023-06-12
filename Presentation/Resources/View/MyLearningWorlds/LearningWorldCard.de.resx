@@ -23,7 +23,16 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="LMS.Login.Hover" xml:space="preserve">
-        <value>Anmeldung bei Moodle</value>
+    <data name="LearningWorldCard.Button.Open.Text" xml:space="preserve">
+        <value>Öffnen</value>
+    </data>
+    <data name="ApplicationException.OnOpenLearningWorld.Message" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="ApplicationException.LearningWorldPath.Message" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="ApplicationException.OnDeleteFromSaved.Message" xml:space="preserve">
+        <value/>
     </data>
 </root>

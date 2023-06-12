@@ -1,7 +1,7 @@
+@using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.Components.Forms.Models
 @using BusinessLogic.Entities
-@using Microsoft.Extensions.Localization
 @using Presentation.Components.Forms.Buttons
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
@@ -12,51 +12,51 @@
 <BaseForm TForm="LearningWorldFormModel" TEntity="LearningWorld" OnValidSubmit="OnValidSubmit"
           SnackbarMessage="World created" FormDataContainer="FormDataContainer">
     <Fields>
-        <Collapsable Title=@Localizer["CreateWorldForm.General.Text"] @bind-Collapsed="_collapsedGeneral">
+        <Collapsable Title=@Localizer["CreateWorldForm.General.Text"] @bind-Collapsed="                        _collapsedGeneral">
             <div class="rounded-lg w-4/4 px-4 pb-2">
-            <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
-                          For="@(() => FormModel.Name)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label=@Localizer["CreateWorldForm.General.Field.Name.Text"]/>
-            <MudTextField @bind-Value="FormDataContainer.FormModel.Shortname"
-                          For="@(() => FormModel.Shortname)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label=@Localizer["CreateWorldForm.General.Field.Shortname.Text"]/>
-            <MudTextField @bind-Value="FormDataContainer.FormModel.Authors"
-                          For="@(() => FormModel.Authors)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label=@Localizer["CreateWorldForm.General.Field.Authors.Text"]/>
-            <MudTextField @bind-Value="FormDataContainer.FormModel.Language"
-                          For="@(() => FormModel.Language)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label=@Localizer["CreateWorldForm.General.Field.Language.Text"]/>
+                <MudTextField @bind-Value="                                FormDataContainer.FormModel.Name"
+                              For="@(() => FormModel.Name)"
+                              Immediate="true"
+                              DebounceInterval="300"
+                              Label=@Localizer["CreateWorldForm.General.Field.Name.Text"]/>
+                <MudTextField @bind-Value="                                FormDataContainer.FormModel.Shortname"
+                              For="@(() => FormModel.Shortname)"
+                              Immediate="true"
+                              DebounceInterval="300"
+                              Label=@Localizer["CreateWorldForm.General.Field.Shortname.Text"]/>
+                <MudTextField @bind-Value="                                FormDataContainer.FormModel.Authors"
+                              For="@(() => FormModel.Authors)"
+                              Immediate="true"
+                              DebounceInterval="300"
+                              Label=@Localizer["CreateWorldForm.General.Field.Authors.Text"]/>
+                <MudTextField @bind-Value="                                FormDataContainer.FormModel.Language"
+                              For="@(() => FormModel.Language)"
+                              Immediate="true"
+                              DebounceInterval="300"
+                              Label=@Localizer["CreateWorldForm.General.Field.Language.Text"]/>
             </div>
         </Collapsable>
 
-        <Collapsable Title=@Localizer["CreateWorldForm.Goals.Text"] @bind-Collapsed="_collapsedGoals">
+        <Collapsable Title=@Localizer["CreateWorldForm.Goals.Text"] @bind-Collapsed="                        _collapsedGoals">
             <div class="rounded-lg w-4/4 px-4">
                 <MudText Typo="Typo.caption">@Localizer["CreateWorldForm.Goals.Field.Description.Text"]</MudText>
-                <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
-                          For="@(() => FormModel.Description)"
-                          Immediate="true"
-                          Lines="3"
-                          Variant="Variant.Outlined"
-                          DebounceInterval="300"
-                          Class="pb-2 mt-0"/>
+                <MudTextField @bind-Value="                                FormDataContainer.FormModel.Description"
+                              For="@(() => FormModel.Description)"
+                              Immediate="true"
+                              Lines="3"
+                              Variant="Variant.Outlined"
+                              DebounceInterval="300"
+                              Class="pb-2 mt-0"/>
                 <MudText Typo="Typo.caption">@Localizer["CreateWorldForm.Goals.Field.Goals.Text"]</MudText>
-                <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
-                          For="@(() => FormModel.Goals)"
-                          Immediate="true"
-                          Lines="3"
-                          Variant="Variant.Outlined"
-                          DebounceInterval="300"
-                          Class="pb-2 mt-0"/>
-        </div>
-            </Collapsable>
+                <MudTextField @bind-Value="                                FormDataContainer.FormModel.Goals"
+                              For="@(() => FormModel.Goals)"
+                              Immediate="true"
+                              Lines="3"
+                              Variant="Variant.Outlined"
+                              DebounceInterval="300"
+                              Class="pb-2 mt-0"/>
+            </div>
+        </Collapsable>
     </Fields>
     <FooterButtons>
         <DefaultSubmitButton/>
@@ -66,7 +66,7 @@
 
 @code {
     [Inject]
-    private IStringLocalizer<CreateWorldForm> Localizer { get; set; }
+    private StringLocalizer<CreateWorldForm> Localizer { get; set; }
 
 #pragma warning disable CS8618 - injected by framework - n.stich
     [Inject]

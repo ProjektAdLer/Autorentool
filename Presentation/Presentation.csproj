@@ -123,6 +123,14 @@
           <Generator>ResXFileCodeGenerator</Generator>
           <LastGenOutput>template.de.Designer.cs</LastGenOutput>
       </EmbeddedResource>
+      <EmbeddedResource Update="Resources\View\MyLearningWorlds\LearningWorldCard.de.resx">
+          <Generator>ResXFileCodeGenerator</Generator>
+          <LastGenOutput>LearningWorldCard.de.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\View\MasterLayout.de.resx">
+          <Generator>ResXFileCodeGenerator</Generator>
+          <LastGenOutput>MasterLayout.de.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
   </ItemGroup>
     <ItemGroup>
         <Folder Include="Resources\Components\RightClickMenu\" />

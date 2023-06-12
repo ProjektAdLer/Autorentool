@@ -1,11 +1,11 @@
 @using Presentation.PresentationLogic.LearningSpace
 @using Presentation.PresentationLogic.LearningSpace.SpaceLayout.FloorPlans
+@using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View.LearningElement
 @using Shared
+@using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.LearningElement
 @using System.Text
-@using Microsoft.Extensions.Localization
-@using Presentation.PresentationLogic.SelectedViewModels
 <div class="mx-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-2xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["LearningSpace.Title.Text"]</h2>
@@ -15,35 +15,43 @@
 @if (LearningSpaceP.LearningSpaceVm != null)
 {
     <div class="p-2 flex justify-start space-x-2">
-      <img class="w-8" src="CustomIcons/space-icon_nobg.png" alt="learningspace">
-      <MudText Class="text-lg text-adlerblue-600">@LearningSpaceP.LearningSpaceVm.Name</MudText>
+        <img class="w-8" src="CustomIcons/space-icon_nobg.png" alt="learningspace">
+        <MudText Class="text-lg text-adlerblue-600">@LearningSpaceP.LearningSpaceVm.Name</MudText>
     </div>
     @if (SelectedViewModelsProvider?.LearningElement != null)
     {
         <section class="p-2 gap-1 flex flex-col justify-start">
             <div class="flex justify-between items-start">
                 <label id="learning-element-info" class="font-medium text-lg flex flex-col">
-                    <h3 class="text-base text-adlerblue-600 element-name"><span class="text-adlergrey-600">Selected learning element: </span> @SelectedViewModelsProvider.LearningElement.Name</h3>
-                    <h3 class="text-base text-adlerblue-600 element-description"><span class="text-adlergrey-600">Description: </span> @SelectedViewModelsProvider.LearningElement.Description</h3>
+                    <h3 class="text-base text-adlerblue-600 element-name">
+                        <span class="text-adlergrey-600">@Localizer["LearningSpace.ElementName.Text"] </span> @SelectedViewModelsProvider.LearningElement.Name
+                    </h3>
+                    <h3 class="text-base text-adlerblue-600 element-description">
+                        <span class="text-adlergrey-600">@Localizer["LearningSpace.ElementDescription.Text"] </span> @SelectedViewModelsProvider.LearningElement.Description
+                    </h3>
                 </label>
                 <div>
-                    <h3 class="text-base text-adlerblue-600 space-workload"><span class="text-adlergrey-600">Workload: </span> @LearningSpaceP.LearningSpaceVm?.Workload<span class="text-adlergrey-600"> min.</span></h3>
-                    <h3 class="text-base text-adlerblue-600 space-points"><span class="text-adlergrey-600">Points: </span> @LearningSpaceP.LearningSpaceVm?.Points</h3>
+                    <h3 class="text-base text-adlerblue-600 space-workload">
+                        <span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceWorkload.Text"] </span> @LearningSpaceP.LearningSpaceVm?.Workload<span class="text-adlergrey-600"> min.</span>
+                    </h3>
+                    <h3 class="text-base text-adlerblue-600 space-points">
+                        <span class="text-adlergrey-600">@Localizer["LearningSpace.SpacePoints.Text"] </span> @LearningSpaceP.LearningSpaceVm?.Points
+                    </h3>
                     @ChildContent
                 </div>
             </div>
             <div class="flex justify-start">
                 <button class="relative btn-standard delete-learning-element w-14" @onclick="DeleteSelectedLearningElement">
-                    <img src="CustomIcons/learningelements-icon-nobg.png" alt="Delete learning element" class="absolute opacity-50 w-8 h-8">
-                    <MudIcon Icon="@Icons.Material.Filled.Delete" Title="Delete learning element" Class="absolute"></MudIcon>
+                    <img src="CustomIcons/learningelements-icon-nobg.png" alt=@Localizer["LearningSpace.Button.DeleteLearningElement.Title"] class="absolute opacity-50 w-8 h-8">
+                    <MudIcon Icon="@Icons.Material.Filled.Delete" Title=@Localizer["LearningSpace.Button.DeleteLearningElement.Title"] Class="absolute"></MudIcon>
                 </button>
                 <button class="relative btn-standard save-learning-element w-14" @onclick="SaveSelectedLearningElementAsync">
-                    <img src="CustomIcons/learningelements-icon-nobg.png" alt="Save learning element" class="absolute opacity-50 w-8 h-8">
-                    <MudIcon Icon="@Icons.Material.Filled.Save" Title="Save learning element" Class="absolute"></MudIcon>
+                    <img src="CustomIcons/learningelements-icon-nobg.png" alt=@Localizer["LearningSpace.Button.SaveLearningElement.Title"] class="absolute opacity-50 w-8 h-8">
+                    <MudIcon Icon="@Icons.Material.Filled.Save" Title=@Localizer["LearningSpace.Button.SaveLearningElement.Title"] Class="absolute"></MudIcon>
                 </button>
                 <button class="relative btn-standard show-learning-element-content w-14" @onclick="ShowSelectedElementContentAsync">
-                    <img src="CustomIcons/learningelements-icon-nobg.png" alt="Show learning element" class="absolute opacity-50 w-8 h-8">
-                    <MudIcon Icon="@Icons.Material.Filled.RemoveRedEye" Title="Show learning element" Class="absolute"></MudIcon>
+                    <img src="CustomIcons/learningelements-icon-nobg.png" alt=@Localizer["LearningSpace.Button.ShowLearningElement.Title"] class="absolute opacity-50 w-8 h-8">
+                    <MudIcon Icon="@Icons.Material.Filled.RemoveRedEye" Title=@Localizer["LearningSpace.Button.ShowLearningElement.Title"] Class="absolute"></MudIcon>
                 </button>
             </div>
         </section>
@@ -92,7 +100,7 @@
 
     [Inject]
     IDialogService DialogService { get; set; }
-    
+
     [Inject]
     private IStringLocalizer<LearningSpaceView> Localizer { get; set; }
 #pragma warning restore CS8618
@@ -102,7 +110,7 @@
 
     [CascadingParameter(Name = "TriggerMasterLayoutStateHasChanged")]
     private Action TriggerMasterLayoutStateHasChanged { get; set; }
-    
+
     [Inject]
     public ISelectedViewModelsProvider? SelectedViewModelsProvider { get; set; }
 
@@ -277,17 +285,17 @@
         slotPositionString.Append("transform: translate(-80%, -110%);");
         return slotPositionString.ToString();
     }
-    
+
     private string GetSlotStyleString(int position)
     {
-        if(LearningSpaceP.LearningSpaceVm == null) return "";
-        
+        if (LearningSpaceP.LearningSpaceVm == null) return "";
+
         var matchingElement = LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.LearningElements
             .FirstOrDefault(id => id.Key == position);
 
-        if(LearningSpaceP.ActiveSlot == position || 
-           (!matchingElement.Equals(default(KeyValuePair<int, ILearningElementViewModel>)) && 
-            matchingElement.Value.Equals(SelectedViewModelsProvider?.LearningElement)))
+        if (LearningSpaceP.ActiveSlot == position ||
+            (!matchingElement.Equals(default(KeyValuePair<int, ILearningElementViewModel>)) &&
+                matchingElement.Value.Equals(SelectedViewModelsProvider?.LearningElement)))
 
         {
             return "rounded-lg border-2 border-solid border-adlergreen bg-adlerdeactivatedtext mud-border-lines-default p-6 m-8 w-28 h-3 flex justify-center items-center";
@@ -303,7 +311,7 @@
     private async Task ShowReplaceLearningElementDialog()
     {
         _showingReplaceLearningElementDialog = true;
-        var dialog = await DialogService.ShowAsync<ReplaceLearningElementDialog>("Replace Learning Element");
+        var dialog = await DialogService.ShowAsync<ReplaceLearningElementDialog>(Localizer["LearningSpace.ReplaceLearningElementDialog.Title"]);
         var result = await dialog.Result;
         LearningSpaceP.OnReplaceLearningElementDialogClose(result);
         _showingReplaceLearningElementDialog = false;

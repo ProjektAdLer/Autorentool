@@ -2,60 +2,61 @@
 @using AutoMapper
 @using BusinessLogic.Entities
 @using Presentation.Components.Forms.Models
+@using Microsoft.Extensions.Localization
 @using System.ComponentModel
 @using Presentation.Components.Forms.Buttons
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
-        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Learning world metadata</h2>
+        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["Header.Title"]</h2>
     </div>
 </header>
 <MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
 <BaseForm TForm="LearningWorldFormModel" TEntity="LearningWorld" OnValidSubmit="OnValidSubmit"
-          SnackbarMessage="World updated" FormDataContainer="FormDataContainer">
+          SnackbarMessage=@Localizer["EditWorldForm.Message"] FormDataContainer="FormDataContainer">
     <Fields>
-        <Collapsable Title="General" @bind-Collapsed="_collapsedGeneral">
+        <Collapsable Title="General" @bind-Collapsed="                        _collapsedGeneral">
             <div class="rounded-lg w-4/4 px-4 pb-2">
-            <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
-                          For="@(() => FormModel.Name)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label="@nameof(FormDataContainer.FormModel.Name)"/>
-            <MudTextField @bind-Value="FormDataContainer.FormModel.Shortname"
-                          For="@(() => FormModel.Shortname)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label="@nameof(FormDataContainer.FormModel.Shortname)"/>
-            <MudTextField @bind-Value="FormDataContainer.FormModel.Authors"
-                          For="@(() => FormModel.Authors)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label="@nameof(FormDataContainer.FormModel.Authors)"/>
-            <MudTextField @bind-Value="FormDataContainer.FormModel.Language"
-                          For="@(() => FormModel.Language)"
-                          Immediate="true"
-                          DebounceInterval="300"
-                          Label="@nameof(FormDataContainer.FormModel.Language)"/>
+                <MudTextField @bind-Value="                                FormDataContainer.FormModel.Name"
+                              For="@(() => FormModel.Name)"
+                              Immediate="true"
+                              DebounceInterval="300"
+                              Label="@nameof(FormDataContainer.FormModel.Name)"/>
+                <MudTextField @bind-Value="                                FormDataContainer.FormModel.Shortname"
+                              For="@(() => FormModel.Shortname)"
+                              Immediate="true"
+                              DebounceInterval="300"
+                              Label="@nameof(FormDataContainer.FormModel.Shortname)"/>
+                <MudTextField @bind-Value="                                FormDataContainer.FormModel.Authors"
+                              For="@(() => FormModel.Authors)"
+                              Immediate="true"
+                              DebounceInterval="300"
+                              Label="@nameof(FormDataContainer.FormModel.Authors)"/>
+                <MudTextField @bind-Value="                                FormDataContainer.FormModel.Language"
+                              For="@(() => FormModel.Language)"
+                              Immediate="true"
+                              DebounceInterval="300"
+                              Label="@nameof(FormDataContainer.FormModel.Language)"/>
             </div>
-            </Collapsable>
+        </Collapsable>
 
-        <Collapsable Title="Goals" @bind-Collapsed="_collapsedGoals">
+        <Collapsable Title="Goals" @bind-Collapsed="                        _collapsedGoals">
             <div class="rounded-lg w-4/4 px-4">
                 <MudText Typo="Typo.caption">Description</MudText>
-                <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
-                          For="@(() => FormModel.Description)"
-                          Immediate="true"
-                          Lines="3"
-                          Variant="Variant.Outlined"
-                          DebounceInterval="300"
-                          Class="pb-2 mt-0"/>
+                <MudTextField @bind-Value="                                FormDataContainer.FormModel.Description"
+                              For="@(() => FormModel.Description)"
+                              Immediate="true"
+                              Lines="3"
+                              Variant="Variant.Outlined"
+                              DebounceInterval="300"
+                              Class="pb-2 mt-0"/>
                 <MudText Typo="Typo.caption">Goals</MudText>
-                <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
-                          For="@(() => FormModel.Goals)"
-                          Immediate="true"
-                          Lines="3"
-                          Variant="Variant.Outlined"
-                          DebounceInterval="300"
-                          Class="pb-2 mt-0"/>
+                <MudTextField @bind-Value="                                FormDataContainer.FormModel.Goals"
+                              For="@(() => FormModel.Goals)"
+                              Immediate="true"
+                              Lines="3"
+                              Variant="Variant.Outlined"
+                              DebounceInterval="300"
+                              Class="pb-2 mt-0"/>
             </div>
         </Collapsable>
     </Fields>
@@ -75,6 +76,9 @@
 
     [Inject]
     private IFormDataContainer<LearningWorldFormModel, LearningWorld> FormDataContainer { get; set; }
+
+    [Inject]
+    private StringLocalizer<EditWorldForm> Localizer { get; set; }
 #pragma warning restore CS8618
 
 #pragma warning disable CS8618

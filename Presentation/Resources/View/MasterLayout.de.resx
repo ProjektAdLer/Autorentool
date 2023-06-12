@@ -23,31 +23,40 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="LearningWorldView.Workload.Text" xml:space="preserve">
-        <value>Arbeitslast:</value>
-    </data>
-    <data name="LearningWorldView.Points.Text" xml:space="preserve">
-        <value>Punkte:</value>
-    </data>
-    <data name="LearningWorldView.Workload.TimeScale" xml:space="preserve">
-        <value>min.</value>
-    </data>
-    <data name="LearningWorldView.NewLearningSpace.Title" xml:space="preserve">
+    <data name="SideBarContent.LearningWorldMetadata.Title" xml:space="preserve">
         <value/>
     </data>
-    <data name="LearningWorldView.ImportLearningSpace.Title" xml:space="preserve">
+    <data name="SideBarContent.LearningSpaceMetadata.Title" xml:space="preserve">
         <value/>
     </data>
-    <data name="LearningWorldView.NewCondition.Title" xml:space="preserve">
+    <data name="SideBarContent.LearningElementMetadata.Title" xml:space="preserve">
         <value/>
     </data>
-    <data name="ExceptionWrapper.LoadSpace.Exception.Message" xml:space="preserve">
+    <data name="SideBarContent.AllFiles.Title" xml:space="preserve">
         <value/>
     </data>
-    <data name="ExceptionWrapper.SaveSpace.Exception.Message" xml:space="preserve">
+    <data name="SideBarContent.LearningPathWays.Title" xml:space="preserve">
         <value/>
     </data>
-    <data name="ExceptionWrapper.SaveWorld.Exception.Message" xml:space="preserve">
+    <data name="SideBarContent.LearningWorldOverView.Title" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="SideBarContent.LearningWorldMetadata.Alt" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="SideBarContent.LearningSpaceMetadata.Alt" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="SideBarContent.LearningElementMetadata.Alt" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="SideBarContent.AllFiles.Alt" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="SideBarContent.LearningPathWays.Alt" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="SideBarContent.LearningWorldOverView.Alt" xml:space="preserve">
         <value/>
     </data>
 </root>

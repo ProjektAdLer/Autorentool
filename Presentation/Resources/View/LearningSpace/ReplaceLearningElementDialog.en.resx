@@ -1,12 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
 <root>
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root"
-                xmlns="">
-        <xsd:element name="root" msdata:IsDataSet="true">
-
-        </xsd:element>
-    </xsd:schema>
     <resheader name="resmimetype">
         <value>text/microsoft-resx</value>
     </resheader>
@@ -23,7 +15,16 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="LMS.Login.Hover" xml:space="preserve">
-        <value>Anmeldung bei Moodle</value>
+    <data name="Dialog.Content.Line1.Text" xml:space="preserve">
+        <value>Do you want to replace the learning element?</value>
+    </data>
+    <data name="Dialog.Content.Line2.Text" xml:space="preserve">
+        <value>This will move the current learning element to the unplaced learning elements in the world.</value>
+    </data>
+    <data name="Dialog.Button.Cancel.Text" xml:space="preserve">
+        <value>Cancel</value>
+    </data>
+    <data name="Dialog.Button.Replace.Text" xml:space="preserve">
+        <value>Replace</value>
     </data>
 </root>

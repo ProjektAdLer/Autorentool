@@ -1,12 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-
 <root>
-    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root"
-                xmlns="">
-        <xsd:element name="root" msdata:IsDataSet="true">
-
-        </xsd:element>
-    </xsd:schema>
     <resheader name="resmimetype">
         <value>text/microsoft-resx</value>
     </resheader>
@@ -23,7 +15,16 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="LMS.Login.Hover" xml:space="preserve">
-        <value>Anmeldung bei Moodle</value>
+    <data name="LearningWorldCard.Button.Open.Text" xml:space="preserve">
+        <value>Open</value>
+    </data>
+    <data name="ApplicationException.OnOpenLearningWorld.Message" xml:space="preserve">
+        <value>OnOpenLearningWorld must be set.</value>
+    </data>
+    <data name="ApplicationException.LearningWorldPath.Message" xml:space="preserve">
+        <value>LearningWorldPath must be set.</value>
+    </data>
+    <data name="ApplicationException.OnDeleteFromSaved.Message" xml:space="preserve">
+        <value>OnDeleteFromSaved must be set.</value>
     </data>
 </root>

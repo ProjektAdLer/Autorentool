@@ -23,4 +23,13 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
+    <data name="OverView.Workload" xml:space="preserve">
+        <value>Arbeitslast:</value>
+    </data>
+    <data name="OverView.Points" xml:space="preserve">
+        <value>Punkte:</value>
+    </data>
+    <data name="OverView.Workload.TimeScale" xml:space="preserve">
+        <value>min.</value>
+    </data>
 </root>

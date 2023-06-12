@@ -45,9 +45,6 @@
     <data name="LearningWorld.Save.Hover" xml:space="preserve">
         <value>Lernwelt speichern</value>
     </data>
-    <data name="LMS.Login.Hover" xml:space="preserve">
-        <value>Anmeldung bei Moodle</value>
-    </data>
     <data name="Functionality.Button.Redo.Hover" xml:space="preserve">
         <value>Vorwärts</value>
     </data>
