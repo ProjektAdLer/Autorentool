@@ -109,9 +109,12 @@
     private bool FilterInternal(ILearningContentViewModel element, string? searchString)
     {
         if (string.IsNullOrWhiteSpace(searchString)) return true;
+        searchString = searchString.ToLowerInvariant();
         var elementType = element is FileContentViewModel fileContent ? fileContent.Type : "Link";
-        if (element.Name.Contains(searchString) || elementType.Contains(searchString)) return true;
-        return $"{element.Name}.{elementType}".Contains(searchString);
+        if (element.Name.ToLowerInvariant().Contains(searchString) ||
+            elementType.ToLowerInvariant().Contains(searchString))
+            return true;
+        return $"{element.Name}.{elementType}".ToLowerInvariant().Contains(searchString);
     }
 
     private async Task Delete(ILearningContentViewModel item)
