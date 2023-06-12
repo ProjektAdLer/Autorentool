@@ -40,6 +40,8 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
                         lo => LearningObjectInPathWay = lo),
                 SelectedLearningElementViewModelStackEntry el => new SelectedLearningElementViewModelStackEntry(
                     el.Command, LearningElement, le => LearningElement = le),
+                SelectedLearningContentViewModelStackEntry ce => new SelectedLearningContentViewModelStackEntry(
+                    ce.Command, LearningContent, lc => LearningContent = lc),
                 ActiveSlotInSpaceStackEntry sl => new ActiveSlotInSpaceStackEntry(sl.Command, ActiveSlotInSpace, s => ActiveSlotInSpace = s),
                 _ => throw new InvalidEnumArgumentException()
             };
@@ -62,6 +64,8 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
                         lo => LearningObjectInPathWay = lo),
                 SelectedLearningElementViewModelStackEntry el => new SelectedLearningElementViewModelStackEntry(
                     el.Command, LearningElement, le => LearningElement = le),
+                SelectedLearningContentViewModelStackEntry ce => new SelectedLearningContentViewModelStackEntry(
+                    ce.Command, LearningContent, lc => LearningContent = lc),
                 ActiveSlotInSpaceStackEntry sl => new ActiveSlotInSpaceStackEntry(sl.Command, ActiveSlotInSpace, s => ActiveSlotInSpace = s),
                 _ => throw new InvalidEnumArgumentException()
             };
