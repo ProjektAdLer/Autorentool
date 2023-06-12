@@ -156,17 +156,19 @@
     {
         if (SelectedViewModelsProvider.LearningWorld == null)
             throw new InvalidOperationException("No learning world selected.");
+        //check content for not null again even though validation ensures that LearningContent is not null
+        //because of a non-reproducible bug where an element without content was able to be created - m.ho, n.stich
+        if (model.LearningContent == null)
+            throw new InvalidOperationException("No learning content selected - validation let no content pass");
 
         if (SelectedViewModelsProvider.ActiveSlotInSpace == -1)
             WorldPresenter.CreateUnplacedLearningElement(
-    //ignore null warning here because validation ensures that LearningContent is not null - m.ho
-                model.Name, model.LearningContent!, model.Description, model.Goals, model.Difficulty, model.ElementModel,
+                model.Name, model.LearningContent, model.Description, model.Goals, model.Difficulty, model.ElementModel,
                 model.Workload, model.Points);
         else
         {
             SpacePresenter.CreateLearningElementInSlot(
-    //ignore null warning here because validation ensures that LearningContent is not null - m.ho
-                model.Name, model.LearningContent!, model.Description, model.Goals, model.Difficulty, model.ElementModel,
+                model.Name, model.LearningContent, model.Description, model.Goals, model.Difficulty, model.ElementModel,
                 model.Workload, model.Points);
         }
         OnSubmitted.InvokeAsync();
