@@ -3,8 +3,7 @@
 @using Presentation.Components.Dialogues
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.Mediator
-@using System.Text
-<MudTable Items="Items" Class="w-full grow shrink h-full flex flex-col flex-nowrap"
+<MudTable Items="Items" Class="w-full grow h-full flex flex-col flex-nowrap"
           Dense="true" Virtualize="true" Filter="Filter" >
     <ToolBarContent>
         <MudText Typo="Typo.h6">All imported files</MudText>
@@ -133,6 +132,7 @@
             CloseButton = true,
             CloseOnEscapeKey = true,
             DisableBackdropClick = true,
+        
         };
         var dialog = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>("Delete content", parameters, options);
         var result = await dialog.Result;

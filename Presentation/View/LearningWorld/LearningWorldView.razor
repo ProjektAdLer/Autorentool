@@ -40,7 +40,7 @@
     @*<MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Delete" Disabled="@(SelectedViewModelsProvider.LearningObjectInPathWay == null)" @onclick="DeleteSelectedLearningObject"></MudFab>*@
     <!-- <svg style="width: 400px; height: 600px; border:3px black; background-color: white" -->
     <div class="bg-white rounded-lg w-full grow overflow-scroll">
-        <svg xmlns="http://www.w3.org/2000/svg" height="500" width="500"
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-[475px] 2xl:h-[525px] 1080p:h-[750px] 2500p:h-[1100px] 3000p:h-[1250px] 3700p:h-[1775px]" width="500"
              @onmousemove=@(e => MouseService.FireMove(this, e))
                  @onmouseup=@(e => MouseService.FireUp(this, e))
                  @onmouseleave=@(e => MouseService.FireOut(this, e))>
