@@ -109,22 +109,15 @@
     </EmbeddedResource>
     <EmbeddedResource Update="Resources\Components\Forms\World\CreateWorldForm.en.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-        <LastGenOutput>CreateWorldForm.en.Designer.cs</LastGenOutput>
+      <LastGenOutput>CreateWorldForm.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-      <EmbeddedResource Update="Resources\View\LearningSpace\LearningSpaceView.de.resx">
-          <Generator>ResXFileCodeGenerator</Generator>
-          <LastGenOutput>LearningSpaceView.de.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Resources\View\LearningSpace\LearningSpaceView.en.resx">
-          <Generator>ResXFileCodeGenerator</Generator>
-          <LastGenOutput>LearningSpaceView.en.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
-      <EmbeddedResource Update="Resources\template.de.resx">
-          <Generator>ResXFileCodeGenerator</Generator>
-          <LastGenOutput>template.de.Designer.cs</LastGenOutput>
-      </EmbeddedResource>
+    <EmbeddedResource Update="Resources\View\LearningSpace\LearningSpaceView.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LearningSpaceView.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\View\LearningSpace\LearningSpaceView.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>LearningSpaceView.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
-    <ItemGroup>
-        <Folder Include="Resources\Components\RightClickMenu\" />
-    </ItemGroup>
 </Project>

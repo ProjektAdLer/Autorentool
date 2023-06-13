@@ -1,17 +1,18 @@
-@using Microsoft.Extensions.Localization
-@using Presentation.PresentationLogic.API
-@using BusinessLogic.Entities.LearningContent
-@using Presentation.Components.Forms
 @using Presentation.Components.Forms.Content
+@using Presentation.Components.Forms
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.ElectronNET
+@using Presentation.Components.Dialogues
+@using BusinessLogic.Entities.LearningContent
 <header class="m-2 rounded-lg">
-    <div class="flex justify-center p-2">
-        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["Header.Text"]</h2>
-    </div>
-</header>
-<MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
+            <div class="flex justify-center p-2">
+                <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Import files</h2>
+            </div>
+        </header>
+        <MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
 <MudStack Class="w-full">
     <div class="flex flex-col">
-
+        
         @if (Working)
         {
             <div class="w-full h-full bg-adlergrey-100 bg-opacity-25 z-40">
@@ -26,12 +27,12 @@
                        @ondragend="ClearDragClass">
             <ButtonTemplate>
                 <MudPaper Class="@PaperClasses" Outlined="true">
-                    <MudText Typo="Typo.body1">@Localizer["MudStack.Button.Text"]</MudText>
+                    <MudText Typo="Typo.body1">Drag and drop files here or click to add them.</MudText>
                 </MudPaper>
             </ButtonTemplate>
         </MudFileUpload>
     </div>
-    <Collapsable Title=@Localizer["Collapsable.Title"] Collapsed="true">
+    <Collapsable Title="Add Link" Collapsed="true">
         <AddLinkForm/>
     </Collapsable>
 
@@ -40,9 +41,6 @@
 @code {
     [Inject]
     private IDialogService DialogService { get; set; }
-
-    [Inject]
-    private StringLocalizer<ContentFilesAdd> Localizer { get; set; }
 
     [Inject]
     private IPresentationLogic PresentationLogic { get; set; }
@@ -60,9 +58,10 @@
     //iterates all files, copies them into a new stream and passes said stream to presentation logic
     private void OnFilesChanged(InputFileChangeEventArgs obj)
     {
-    //PLEASE leave this as a Task.Run, otherwise copying the streams over will block the UI thread
-    //indefinitely for no apparent reason
-        Task.Run(async () => {
+        //PLEASE leave this as a Task.Run, otherwise copying the streams over will block the UI thread
+        //indefinitely for no apparent reason
+        Task.Run(async () =>
+        {
             Logger.LogTrace("Entered OnFilesChanged in ContentFilesAdd");
             ToggleSpinner();
             Logger.LogTrace("Getting up to 10 files from InputFileChangeEventArgs");
@@ -74,7 +73,7 @@
             {
                 if (!AllowedFileEndings.Endings.Contains(file.Name.Split(".").Select(s => "." + s).LastOrDefault()))
                 {
-                    await InvokeAsync(async () => await DialogService.ShowMessageBox(Localizer["Invocation.MessageBox.Title"], Localizer["Invocation.MessageBox.Message", file.Name]));
+                    await InvokeAsync(async () => await DialogService.ShowMessageBox("Unsupported file ending", $"The supplied file {file.Name} is not supported."));
                     continue;
                 }
                 await HandleFileAsync(file);
@@ -92,10 +91,10 @@
         if (file.Size == 0)
         {
             Logger.LogTrace("File size is 0, skipping file {FileName}", file.Name);
-    //we must run this on the UI thread, as it is a UI component
+            //we must run this on the UI thread, as it is a UI component
             await InvokeAsync(() =>
-                DialogService.ShowMessageBox(Localizer["DialogService.MessageBox.Title"], Localizer["DialogService.MessageBox.Message", file.Name])
-                );
+                DialogService.ShowMessageBox("File empty", $"The file {file.Name} was empty, skipping it")
+            );
             return;
         }
 

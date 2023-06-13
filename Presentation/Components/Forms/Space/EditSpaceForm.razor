@@ -1,25 +1,25 @@
 @using Presentation.PresentationLogic.LearningSpace
-@using Shared
 @using AutoMapper
 @using BusinessLogic.Entities
 @using Presentation.Components.Forms.Models
-@using Microsoft.Extensions.Localization
 @using System.ComponentModel
 @using Presentation.Components.Forms.Buttons
+@using Shared
+
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
-        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["Header.Title"]</h2>
+        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Learning space metadata</h2>
     </div>
 </header>
 <MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
 
 <BaseForm TForm="LearningSpaceFormModel" TEntity="LearningSpace"
-          OnValidSubmit="OnValidSubmit" SnackbarMessage=@Localizer["Form.Message.Alert.Text"] FormDataContainer="FormDataContainer">
+          OnValidSubmit="OnValidSubmit" SnackbarMessage="Space updated" FormDataContainer="FormDataContainer">
     <HeaderButtons>
-            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Class="btn-standard" OnClick="async () => await OnNewButtonClicked.InvokeAsync()">@Localizer["Form.Button.New.Text"]</MudButton>
+            <MudButton Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Add" Class="btn-standard" OnClick="async () => await OnNewButtonClicked.InvokeAsync()">New</MudButton>
         </HeaderButtons>
     <Fields>
-        <Collapsable Title=@Localizer["Form.Fields.Collapsable.General.Title"] @bind-Collapsed="_collapsedGeneral">
+        <Collapsable Title="General" @bind-Collapsed="_collapsedGeneral">
             <div class="rounded-lg w-4/4 px-4 pb-2">
             <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                           For="@(() => FormModel.Name)"
@@ -28,25 +28,28 @@
                           Label="@nameof(FormDataContainer.FormModel.Name)"/>
             </div>
         </Collapsable>
-
-        <Collapsable Title=@Localizer["Form.Fields.Collapsable.CompletionConditions.Title"] @bind-Collapsed="_collapsedConditions">
-            <div class="rounded-lg w-4/4 px-4 pb-4">
-            <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
-                             For="@(() => FormModel.RequiredPoints)"
-                             Immediate="true"
-                             DebounceInterval="300"
-                             Label="@nameof(FormDataContainer.FormModel.RequiredPoints)"/>
+        
+        <Collapsable Title="Completion conditions" @bind-Collapsed="_collapsedConditions">
+            <div class="rounded-lg w-4/4 px-4 pb-2">
+                <MudText Typo="Typo.caption">Required points</MudText>
+                <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
+                                 Min="1"
+                                 For="@(() => FormModel.RequiredPoints)"
+                                 Immediate="true"
+                                 DebounceInterval="300"
+                                 Variant="Variant.Outlined"
+                                 Margin="Margin.Dense"/>
             </div>
         </Collapsable>
 
-        <Collapsable Title=@Localizer["Form.Fields.Collapsable.FloorPlan.Title"] @bind-Collapsed="_collapsedFloorplan">
-            <div class="flex rounded-lg w-4/4 px-1 pb-1">
+        <Collapsable Title="Floor Plan" @bind-Collapsed="_collapsedFloorplan">
+            <div class="flex rounded-lg w-4/4 px-1 pb-2">
                 <SpaceLayoutSelection LearningSpaceViewModel="SpaceToEdit"></SpaceLayoutSelection>
             </div>
         </Collapsable>
         
-        <Collapsable Title=@Localizer["Form.Fields.Collapsable.Theme.Title"] @bind-Collapsed="_collapsedTheme">
-            <div class="rounded-lg w-4/4 px-4 pb-4">
+        <Collapsable Title="Theme" @bind-Collapsed="_collapsedTheme">
+            <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudSelect @bind-Value="FormDataContainer.FormModel.Theme" AnchorOrigin="Origin.BottomCenter"
                            Label="@nameof(FormDataContainer.FormModel.Theme)"
                            Text="@FormDataContainer.FormModel.Theme.ToString()"
@@ -59,17 +62,17 @@
             </div>
         </Collapsable>
         
-        <Collapsable Title=@Localizer["Form.Fields.Collapsable.Goals.Title"] @bind-Collapsed="_collapsedGoals">
+        <Collapsable Title="Goals" @bind-Collapsed="_collapsedGoals">
                     <div class="rounded-lg w-4/4 px-4">
-                        <MudText Typo="Typo.caption">@Localizer["Form.Fields.Collapsable.Goals.Description.Text"]</MudText>
+                        <MudText Typo="Typo.caption">Description</MudText>
                         <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
                                       For="@(() => FormModel.Description)"
                                       Immediate="true"
                                       Lines="3"
                                       Variant="Variant.Outlined"
                                       DebounceInterval="300"
-                                      Class="pb-2 mt-0"/>
-                        <MudText Typo="Typo.caption">@Localizer["Form.Fields.Collapsable.Goals.Field.Goals.Title"]</MudText>
+                                      Class="pb-4 mt-0"/>
+                        <MudText Typo="Typo.caption">Goals</MudText>
                         <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                                       For="@(() => FormModel.Goals)"
                                       Immediate="true"
@@ -97,9 +100,6 @@
 
     [Inject]
     private IFormDataContainer<LearningSpaceFormModel, LearningSpace> FormDataContainer { get; set; }
-    
-    [Inject]
-    private StringLocalizer<EditSpaceForm> Localizer { get; set; }
 #pragma warning restore CS8618
 
 #pragma warning disable CS8618
@@ -139,7 +139,7 @@
         await base.OnParametersSetAsync();
         await MapIntoContainer();
         if (LearningSpacePresenter.LearningSpaceVm == null)
-            throw new ApplicationException(Localizer["ApplicationException.Message"]);
+            throw new ApplicationException("LearningWorldVm is null");
         LearningSpacePresenter.LearningSpaceVm.PropertyChanged += LearningSpacePropertyChanged;
     }
 

@@ -10,7 +10,10 @@
 @using Presentation.Components.ContentFiles
 @using Presentation.Components.Dialogues
 @using System.ComponentModel
+@using BusinessLogic.Commands
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.Mediator
+@implements IDisposable
 
 <div class="flex flex-col h-screen max-h-screen overflow-hidden w-screen bg-buttonbgblue font-sans">
     <HeaderBar/>
@@ -23,11 +26,11 @@
             <CascadingValue Value="@TriggerStateHasChanged" Name="TriggerMasterLayoutStateHasChanged">
                 <SideContainer Side="Side.Left">
                     <Sidebar SidebarSide="Side.Left">
-                        <SidebarItem 
-                            IsActive="Mediator.WorldDialogOpen" 
+                        <SidebarItem
+                            IsActive="Mediator.WorldDialogOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleWorldDialog">
                             <SidebarContent>
-                                <div class="w-12 p-1" title="LearningWorldMetadata">
+                                <div class="w-12 p-1" title="Learning world metadata">
                                     <img class="w-full" src="CustomIcons/worldmenu-icon_metadata-nobg.png" alt="learningworld-metadata">
                                 </div>
                             </SidebarContent>
@@ -39,7 +42,7 @@
                             IsActive="Mediator.SpaceDialogOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleSpaceDialog">
                             <SidebarContent>
-                                <div class="w-12 p-1" title="LearningSpaceMetadata">
+                                <div class="w-12 p-1" title="Learning space metadata">
                                     <img class="w-full" src="CustomIcons/spacemenu-icon_metadata-nobg.png" alt="learningspace-metadata">
                                 </div>
                             </SidebarContent>
@@ -51,7 +54,7 @@
                             IsActive="Mediator.ElementDialogOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleElementDialog">
                             <SidebarContent>
-                                <div class="w-12 p-1" title="LearningElementMetadata">
+                                <div class="w-12 p-1" title="Learning element metadata">
                                     <img class="w-full" src="CustomIcons/learningelements-icon_metadata.png" alt="learningelement-metadata">
                                 </div>
                             </SidebarContent>
@@ -63,8 +66,8 @@
                             IsActive="Mediator.ContentDialogOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleContentDialog">
                             <SidebarContent>
-                                <div class="w-12 p-1" title="AllFiles">
-                                    <img class="w-full" src="CustomIcons/all-data-icon-nobg.png" alt="all-files">
+                                <div class="w-12 p-1" title="Import files">
+                                    <img class="w-full" src="CustomIcons/all-data-icon-nobg.png" alt="import-files">
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -82,7 +85,7 @@
                             IsActive="Mediator.WorldViewOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleWorldView">
                             <SidebarContent>
-                                <div class="w-12 p-1" title="LearningPathWays">
+                                <div class="w-12 p-1" title="Learning pathways">
                                     <img class="w-full" src="CustomIcons/path-icon-nobg.png" alt="learning pathways">
                                 </div>
                             </SidebarContent>
@@ -94,7 +97,7 @@
                             IsActive="Mediator.WorldOverviewOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleWorldOverview">
                             <SidebarContent>
-                                <div class="w-12 p-1" title="LearningWorldOverView">
+                                <div class="w-12 p-1" title="Overview">
                                     <img class="w-full" src="CustomIcons/overview-world-icon-nobg.png" alt="learning world overview">
                                 </div>
                             </SidebarContent>
@@ -114,28 +117,49 @@
 </div>
 
 @code {
-    
-    [CascadingParameter]
+
+    [Inject]
     public IMediator Mediator { get; set; }
 
     [Inject]
     public ILearningElementDropZoneHelper ElementDropZoneHelper { get; set; }
+
+    [Inject]
+    public IOnUndoRedo OnUndoRedoEventSource { get; set; }
     
-    
+    //This is a hack to ensure that there always exists an instance of AuthoringToolWorkspacePresenter in the current scope
+    //so we can ask to save worlds on closing the application
+    [Inject]
+    public IAuthoringToolWorkspacePresenter AuthoringToolWorkspacePresenter { get; set; }
+
+
     protected override void OnInitialized()
     {
         Mediator.PropertyChanged += MediatorOnPropertyChanged;
+        OnUndoRedoEventSource.OnRedo += OnUndoRedo;
+        OnUndoRedoEventSource.OnUndo += OnUndoRedo;
     }
-    
+
     private void MediatorOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+    {
+        TriggerStateHasChanged();
+    }
+
+    private void OnUndoRedo(ICommand command)
+    {
+        TriggerStateHasChanged();
+    }
+
+    private void TriggerStateHasChanged()
     {
         InvokeAsync(StateHasChanged);
     }
 
-
-    private void TriggerStateHasChanged()
+    public void Dispose()
     {
-        StateHasChanged();
+        Mediator.PropertyChanged -= MediatorOnPropertyChanged;
+        OnUndoRedoEventSource.OnRedo -= OnUndoRedo;
+        OnUndoRedoEventSource.OnUndo -= OnUndoRedo;
     }
 
 }

@@ -1,17 +1,13 @@
 ﻿@page "/"
-@using Microsoft.Extensions.Localization
 @inject NavigationManager NavManager
 
-<PageTitle>@Localizer["Start"]</PageTitle>
+<PageTitle>Start</PageTitle>
 
 @code {
 
-    [Inject]
-    private StringLocalizer<AuthoringTool.Pages.Index> Localizer { get; set; }
-
     protected override void OnInitialized()
     {
-    //NavManager.NavigateTo("/app");
+        //NavManager.NavigateTo("/app");
         NavManager.NavigateTo("/MyLearningWorldsOverview");
     }
 

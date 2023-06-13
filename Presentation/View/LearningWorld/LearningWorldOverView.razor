@@ -4,7 +4,7 @@
 @using Presentation.PresentationLogic
 @using Presentation.PresentationLogic.LearningContent
 @using Presentation.PresentationLogic.LearningElement
-@using System.Buffers
+@using System.ComponentModel
 @using Presentation.PresentationLogic.LearningSpace
 
 @if (LearningWorldP?.LearningWorldVm != null)
@@ -49,9 +49,17 @@
 
 @code {
     [Inject]
-    public ILearningWorldPresenterOverviewInterface? LearningWorldP { get; set; }
+    public ILearningWorldPresenterOverviewInterface LearningWorldP { get; set; }
 
     private static string SpaceIcon { get; set; } = CustomIcons.SpaceIcon;
+    
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        LearningWorldP.PropertyChanging += OnLearningWorldPresenterPropertyChanging;
+        LearningWorldP.PropertyChanged += OnLearningWorldPresenterPropertyChanged;
+        LearningWorldP.OnCommandUndoRedoOrExecute += async (_, _) => await InvokeAsync(StateHasChanged);
+    }
 
     private string GetElementIcon(ILearningElementViewModel element)
     {
@@ -79,4 +87,32 @@
     {
         LearningWorldP?.SetSelectedLearningSpace(space);
     }
+    
+    private void TriggerStateHasChanged()
+    {
+        InvokeAsync(StateHasChanged);
+    }
+    
+    private void OnLearningWorldViewModelPropertyChanged(object? sender, PropertyChangedEventArgs args)
+    {
+        TriggerStateHasChanged();
+    }
+
+    private void OnLearningWorldPresenterPropertyChanged(object? sender, PropertyChangedEventArgs args)
+    {
+        if (args.PropertyName == nameof(LearningWorldP.LearningWorldVm) && LearningWorldP.LearningWorldVm != null)
+        {
+            LearningWorldP.LearningWorldVm.PropertyChanged += OnLearningWorldViewModelPropertyChanged;
+        }
+        TriggerStateHasChanged();
+    }
+
+    private void OnLearningWorldPresenterPropertyChanging(object? sender, PropertyChangingEventArgs args)
+    {
+        if (args.PropertyName == nameof(LearningWorldP.LearningWorldVm) && LearningWorldP.LearningWorldVm != null)
+        {
+            LearningWorldP.LearningWorldVm.PropertyChanged -= OnLearningWorldViewModelPropertyChanged;
+        }
+    }
+
 }

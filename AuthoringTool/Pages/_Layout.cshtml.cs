@@ -1,10 +1,5 @@
-using Microsoft.AspNetCore.Mvc.RazorPages;
 namespace AuthoringTool.Pages;
 
-public class LayoutModel : PageModel
+public class LayoutModel
 {
-    public LayoutModel(IServiceProvider serviceProvider)
-    {
-
-    }
 }
