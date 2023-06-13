@@ -33,21 +33,21 @@
         <value>min.</value>
     </data>
     <data name="LearningWorldView.NewLearningSpace.Title" xml:space="preserve">
-        <value/>
+        <value>Neuer Lernraum</value>
     </data>
     <data name="LearningWorldView.ImportLearningSpace.Title" xml:space="preserve">
-        <value/>
+        <value>Importiere Lernwelt</value>
     </data>
     <data name="LearningWorldView.NewCondition.Title" xml:space="preserve">
-        <value/>
+        <value>Neuer Zustand</value>
     </data>
     <data name="ExceptionWrapper.LoadSpace.Exception.Message" xml:space="preserve">
-        <value/>
+        <value>Lade Lernraum</value>
     </data>
     <data name="ExceptionWrapper.SaveSpace.Exception.Message" xml:space="preserve">
-        <value/>
+        <value>Speichere Lernraum</value>
     </data>
     <data name="ExceptionWrapper.SaveWorld.Exception.Message" xml:space="preserve">
-        <value/>
+        <value>Speichere Lernwelt</value>
     </data>
 </root>

@@ -1,4 +1,6 @@
 @using Shared
+@using System.Runtime.InteropServices
+@using Microsoft.Extensions.Localization
 <MudItem>
     <MudCard Outlined="true" Elevation="1" Class="w-60 h-40">
         <MudCardHeader Class="flex justify-center items-center break-word w-full">
@@ -77,13 +79,15 @@
         </MudCardHeader>
         <MudCardContent Class="flex justify-center">
             <MudButton Size="Size.Large" @onclick="@(() => OnOpenLearningWorld.InvokeAsync(LearningWorldPath))">
-                Open
+                @Localizer["LearningWorldCard.Button.Open.Text"]
             </MudButton>
         </MudCardContent>
     </MudCard>
 </MudItem>
 
 @code {
+    [Inject]
+    private IStringLocalizer<LearningWorldCard> Localizer { get; set; }
 
     [Parameter]
     public SavedLearningWorldPath? LearningWorldPath { get; set; }
@@ -102,15 +106,15 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        if (!OnOpenLearningWorld.HasDelegate) throw new ApplicationException("OnOpenLearningWorld must be set.");
-        if (LearningWorldPath == null) throw new ApplicationException("LearningWorldPath must be set.");
+        if (!OnOpenLearningWorld.HasDelegate) throw new ApplicationException(Localizer["ApplicationException.OnOpenLearningWorld.Message"]);
+        if (LearningWorldPath == null) throw new ApplicationException(Localizer["ApplicationException.LearningWorldPath.Message"]);
         if (IsLoaded)
         {
             _cardType = CardType.IsLoaded;
         }
         else
         {
-            if (!OnDeleteFromSaved.HasDelegate) throw new ApplicationException("OnDeleteFromSaved must be set.");
+            if (!OnDeleteFromSaved.HasDelegate) throw new ApplicationException(Localizer["ApplicationException.OnDeleteFromSaved.Message"]);
             _cardType = CardType.IsSaved;
         }
     }
