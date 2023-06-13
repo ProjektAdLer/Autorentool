@@ -11,13 +11,13 @@
 </header>
 <MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
 <MudStack Class="w-full">
-    <div class="flex flex-col">
+    <div class="flex flex-col relative">
 
         @if (Working)
         {
-            <div class="w-full h-full bg-adlergrey-100 bg-opacity-25 z-40">
+            <div class="w-full h-full absolute bg-adlergrey-100 bg-opacity-25 z-40">
             </div>
-            <MudProgressCircular Indeterminate="true" Class="z-50 m-auto"
+            <MudProgressCircular Indeterminate="true" Class="z-40 m-auto absolute top-0 bottom-0 left-0 right-0"
                                  Color="Color.Primary" Size="Size.Large"/>
         }
         <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnFilesChanged" Hidden="false"
