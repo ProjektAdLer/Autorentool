@@ -12,7 +12,7 @@
 @using Direction = Shared.Direction
 @ChildContent
 
-<article class="flex flex-col justify-content w-[250px] h-full grow">
+<article class="flex flex-col justify-content w-[250px] 2xl:w-[250px] 1080p:w-[350px] 2500p:w-[400px] 3000p:w-[600px] 3700p:w-[750px] h-full grow">
     <section class="bg-white rounded-lg p-2">
         <div class="flex justify-start items-center space-x-2 py-1">
         <img src="CustomIcons/world-icon-nobg.png" class="opacity-50 w-7 h-7"> 
@@ -40,7 +40,7 @@
     @*<MudFab Class="bg-buttonbgblue hover:bg-adlerdarkblue" Size="Size.Small" StartIcon="@Icons.Material.Rounded.Delete" Disabled="@(SelectedViewModelsProvider.LearningObjectInPathWay == null)" @onclick="DeleteSelectedLearningObject"></MudFab>*@
     <!-- <svg style="width: 400px; height: 600px; border:3px black; background-color: white" -->
     <div class="bg-white rounded-lg w-full grow overflow-scroll">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-[475px] 2xl:h-[525px] 1080p:h-[750px] 2500p:h-[1100px] 3000p:h-[1250px] 3700p:h-[1775px]" width="500"
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-[475px] 2xl:h-[525px] 1080p:h-[750px] 2500p:h-[1100px] 3000p:h-[1250px] 3700p:h-[1775px] w-[500px] 2xl:w-[500px] 1080p:w-[500px] 2500p:w-[500px] 3000p:w-[600px] 3700p:w-[750px]"
              @onmousemove=@(e => MouseService.FireMove(this, e))
                  @onmouseup=@(e => MouseService.FireUp(this, e))
                  @onmouseleave=@(e => MouseService.FireOut(this, e))>
