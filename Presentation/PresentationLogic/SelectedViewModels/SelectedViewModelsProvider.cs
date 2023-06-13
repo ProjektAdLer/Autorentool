@@ -14,7 +14,7 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
     private ISelectableObjectInWorldViewModel? _learningObjectInPathWay;
     private ILearningElementViewModel? _learningElement;
     private ILearningContentViewModel? _learningContent;
-    private int _activeSlotInSpace;
+    private int _activeSlotInSpace = -1;
 
     private readonly Stack<ISelectedViewModelStackEntry> _undoStack = new();
     private readonly Stack<ISelectedViewModelStackEntry> _redoStack = new();
