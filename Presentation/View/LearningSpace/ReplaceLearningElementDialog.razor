@@ -17,7 +17,7 @@
     MudDialogInstance MudDialog { get; set; }
     
     [Inject]
-    IStringLocalizer Localizer { get; set; }
+    private IStringLocalizer Localizer { get; set; }
 
     void ReplaceElement()
     {
