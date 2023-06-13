@@ -11,6 +11,7 @@
 @using Presentation.Components.Dialogues
 @using System.ComponentModel
 @using BusinessLogic.Commands
+@using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.Mediator
 @implements IDisposable
@@ -30,8 +31,8 @@
                             IsActive="Mediator.WorldDialogOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleWorldDialog">
                             <SidebarContent>
-                                <div class="w-12 p-1" title="Learning world metadata">
-                                    <img class="w-full" src="CustomIcons/worldmenu-icon_metadata-nobg.png" alt="learningworld-metadata">
+                                <div class="w-12 p-1" title=@Localizer["SideBarContent.LearningWorldMetadata.Title"]>
+                                    <img class="w-full" src="CustomIcons/worldmenu-icon_metadata-nobg.png" alt=@Localizer["SideBarContent.LearningWorldMetadata.Alt"]>
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -42,8 +43,8 @@
                             IsActive="Mediator.SpaceDialogOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleSpaceDialog">
                             <SidebarContent>
-                                <div class="w-12 p-1" title="Learning space metadata">
-                                    <img class="w-full" src="CustomIcons/spacemenu-icon_metadata-nobg.png" alt="learningspace-metadata">
+                                <div class="w-12 p-1" title=@Localizer["SideBarContent.LearningSpaceMetadata.Title"]>
+                                    <img class="w-full" src="CustomIcons/spacemenu-icon_metadata-nobg.png" alt=@Localizer["SideBarContent.LearningSpaceMetadata.Alt"]>
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -54,8 +55,8 @@
                             IsActive="Mediator.ElementDialogOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleElementDialog">
                             <SidebarContent>
-                                <div class="w-12 p-1" title="Learning element metadata">
-                                    <img class="w-full" src="CustomIcons/learningelements-icon_metadata.png" alt="learningelement-metadata">
+                                <div class="w-12 p-1" title=@Localizer["SideBarContent.LearningElementMetadata.Title"]>
+                                    <img class="w-full" src="CustomIcons/learningelements-icon_metadata.png" alt=@Localizer["SideBarContent.LearningElementMetadata.Alt"]>
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -66,8 +67,8 @@
                             IsActive="Mediator.ContentDialogOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleContentDialog">
                             <SidebarContent>
-                                <div class="w-12 p-1" title="Import files">
-                                    <img class="w-full" src="CustomIcons/all-data-icon-nobg.png" alt="import-files">
+                                <div class="w-12 p-1" title=@Localizer["SideBarContent.ImportFiles.Title"]>
+                                    <img class="w-full" src="CustomIcons/all-data-icon-nobg.png" alt=@Localizer["SideBarContent.ImportFiles.Alt"]>
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -85,8 +86,8 @@
                             IsActive="Mediator.WorldViewOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleWorldView">
                             <SidebarContent>
-                                <div class="w-12 p-1" title="Learning pathways">
-                                    <img class="w-full" src="CustomIcons/path-icon-nobg.png" alt="learning pathways">
+                                <div class="w-12 p-1" title=@Localizer["SideBarContent.LearningPathWays.Title"]>
+                                    <img class="w-full" src="CustomIcons/path-icon-nobg.png" alt=@Localizer["SideBarContent.LearningPathWays.Alt"]>
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -97,8 +98,8 @@
                             IsActive="Mediator.WorldOverviewOpen"
                             RequestIsActiveToggle="Mediator.RequestToggleWorldOverview">
                             <SidebarContent>
-                                <div class="w-12 p-1" title="Overview">
-                                    <img class="w-full" src="CustomIcons/overview-world-icon-nobg.png" alt="learning world overview">
+                                <div class="w-12 p-1" title=@Localizer["SideBarContent.LearningWorldOverView.Title"]>
+                                    <img class="w-full" src="CustomIcons/overview-world-icon-nobg.png" alt=@Localizer["SideBarContent.LearningWorldOverView.Alt"]>
                                 </div>
                             </SidebarContent>
                             <MainContent>
@@ -126,6 +127,9 @@
 
     [Inject]
     public IOnUndoRedo OnUndoRedoEventSource { get; set; }
+    
+    [Inject]
+    IStringLocalizer<MasterLayout> Localizer { get; set; }
     
     //This is a hack to ensure that there always exists an instance of AuthoringToolWorkspacePresenter in the current scope
     //so we can ask to save worlds on closing the application

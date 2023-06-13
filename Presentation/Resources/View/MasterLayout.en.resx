@@ -15,7 +15,7 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="SideBarContent.AllFiles.Title" xml:space="preserve">
+    <data name="SideBarContent.ImportFiles.Title" xml:space="preserve">
         <value>AllFiles</value>
     </data>
     <data name="SideBarContent.LearningElementMetadata.Title" xml:space="preserve">
@@ -33,7 +33,7 @@
     <data name="SideBarContent.LearningWorldOverView.Title" xml:space="preserve">
         <value>LearningWorldOverView</value>
     </data>
-    <data name="SideBarContent.AllFiles.Alt" xml:space="preserve">
+    <data name="SideBarContent.ImportFiles.Alt" xml:space="preserve">
         <value>all-files</value>
     </data>
     <data name="SideBarContent.LearningElementMetadata.Alt" xml:space="preserve">

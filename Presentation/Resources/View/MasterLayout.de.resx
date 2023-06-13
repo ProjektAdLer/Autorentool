@@ -32,7 +32,7 @@
     <data name="SideBarContent.LearningElementMetadata.Title" xml:space="preserve">
         <value/>
     </data>
-    <data name="SideBarContent.AllFiles.Title" xml:space="preserve">
+    <data name="SideBarContent.ImportFiles.Title" xml:space="preserve">
         <value/>
     </data>
     <data name="SideBarContent.LearningPathWays.Title" xml:space="preserve">
@@ -50,7 +50,7 @@
     <data name="SideBarContent.LearningElementMetadata.Alt" xml:space="preserve">
         <value/>
     </data>
-    <data name="SideBarContent.AllFiles.Alt" xml:space="preserve">
+    <data name="SideBarContent.ImportFiles.Alt" xml:space="preserve">
         <value/>
     </data>
     <data name="SideBarContent.LearningPathWays.Alt" xml:space="preserve">
