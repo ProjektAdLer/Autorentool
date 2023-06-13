@@ -28,9 +28,6 @@
     <data name="LearningSpace.ElementName.Text" xml:space="preserve">
         <value>Selected learning element:</value>
     </data>
-    <data name="LearningSpace.ElementDescription.Text" xml:space="preserve">
-        <value>Description:</value>
-    </data>
     <data name="LearningSpace.SpaceWorkload.Text" xml:space="preserve">
         <value>Workload:</value>
     </data>
@@ -48,5 +45,23 @@
     </data>
     <data name="LearningSpace.ReplaceLearningElementDialog.Title" xml:space="preserve">
         <value>Replace Learning Element</value>
+    </data>
+    <data name="LearningSpace.SpaceTheme.Text" xml:space="preserve">
+        <value>Theme:</value>
+    </data>
+    <data name="LearningSpace.SpaceGoals.Text" xml:space="preserve">
+        <value>Goals:</value>
+    </data>
+    <data name="ShowReplaceLearningElementDialog.Dialog.ReplaceLearningElement" xml:space="preserve">
+        <value>Replace Learning Element</value>
+    </data>
+    <data name="Error.ExceptionWrapper.ShowLearningElementContent.Message" xml:space="preserve">
+        <value>Show learning element content</value>
+    </data>
+    <data name="Error.ExceptionWrapper.SaveLearningElement.Message" xml:space="preserve">
+        <value>Save learning element</value>
+    </data>
+    <data name="Error.ExceptionWrapper.LoadLearningElement.Message" xml:space="preserve">
+        <value>Load learning element</value>
     </data>
 </root>
