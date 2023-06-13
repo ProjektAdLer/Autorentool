@@ -64,27 +64,27 @@
 
                     @if (SelectedViewModelsProvider?.LearningWorld?.Name == null)
                     {
-                        <a href="https://www.soscisurvey.de/autorentoolevaluationlernwelt/" target="_blank" title="User experience feedback - Opens new web page">
+                        <a href="https://www.soscisurvey.de/autorentoolevaluationlernwelt/" target="_blank" title=@Localizer["Feedback.Button.UX.Hover"]>
                             <div class="flex flex-row items-center gap-4">
                                 <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/final-feedback-icon-nobg.png" alt="feedback-icon"/>
-                                <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">User experience feedback</MudMenuItem>
+                                <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">@Localizer["Feedback.MenuItem.UX.Text"]</MudMenuItem>
                             </div>
                         </a>
                     }
                     else
                     {
-                        <a href="https://www.soscisurvey.de/autorentoolevaluationlernraum/" target="_blank" title="User experience feedback - Opens new web page">
+                        <a href="https://www.soscisurvey.de/autorentoolevaluationlernraum/" target="_blank" title=@Localizer["Feedback.Button.UX.Hover"]>
                             <div class="flex flex-row items-center gap-4">
                                 <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/feedback-icon-without-typo-nobg-adlerdarkblue.png" alt="feedback-icon"/>
-                                <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">User experience feedback</MudMenuItem>
+                                <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">@Localizer["Feedback.MenuItem.UX.Text"]</MudMenuItem>
                             </div>
                         </a>
                     }
 
-                    <a href="https://bugreport.projekt-adler.eu" target="_blank" title="Technical feedback - Opens new web page">
+                    <a href="https://bugreport.projekt-adler.eu" target="_blank" title=@Localizer["Feedback.Button.Technical.Hover"]>
                         <div class="flex flex-row justify-start items-center gap-4">
                             <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/bug-icon-nobg-adlerdarkblue.png" alt="debug-icon"/>
-                            <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">Technical feedback</MudMenuItem>
+                            <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">@Localizer["Feedback.MenuItem.Technical.Text"]</MudMenuItem>
                         </div>
                     </a>
 
@@ -181,7 +181,7 @@
         try
         {
             _filepath = await PresentationLogic.ConstructBackupAsync(SelectedViewModelsProvider.LearningWorld);
-            Snackbar.Add("LearningWorld exported to " + _filepath, Severity.Success);
+            Snackbar.Add(Localizer["Export.SnackBar.Message", _filepath], Severity.Success);
 
             if (await PresentationLogic.IsLmsConnected())
             {
@@ -196,7 +196,7 @@
         }
         catch (OperationCanceledException)
         {
-            Snackbar.Add("Exporting LearningWorld was canceled", Severity.Warning);
+            Snackbar.Add(Localizer["ExportCanceled.Snackbar.Message"], Severity.Warning);
         }
         StateHasChanged();
     }
@@ -207,18 +207,18 @@
 
         if (world.LearningSpaces.Count == 0)
         {
-            errorString.AppendLine("<li> LearningWorld has no LearningSpaces. </li>");
+            errorString.AppendLine($"<li> {Localizer["ErrorString.Missing.LearningSpace.Message"]} </li>");
         }
 
         foreach (var space in world.LearningSpaces)
         {
             if (!space.ContainedLearningElements.Any())
             {
-                errorString.AppendLine($"<li> LearningSpace {space.Name} has no LearningElements. </li>");
+                errorString.AppendLine($"<li> {Localizer["ErrorString.Missing.LearningElements.Message",space.Name]} </li>");
             }
             if (space.Points < space.RequiredPoints)
             {
-                errorString.AppendLine($"<li> LearningSpace {space.Name} cannot be completed due to insufficient points. </li>");
+                errorString.AppendLine($"<li> {Localizer["ErrorString.Insufficient.Points.Message", space.Name]} </li>");
             }
         }
 
@@ -227,7 +227,7 @@
         errorString.Insert(0, "<ul>");
         errorString.Append("</ul>");
 
-        ErrorService.SetError("LearningWorld is not valid", errorString.ToString());
+        ErrorService.SetError(Localizer["Exception.InvalidLearningWorld.Message"], errorString.ToString());
         return false;
     }
 
@@ -236,11 +236,11 @@
     //present Info dialog
         var parameters = new DialogParameters
         {
-            { "OkButtonText", "Ok" },
+            { "OkButtonText", Localizer["ShowNotLoggedInDialog.OkButtonText"] },
             { "OkButtonColor", Color.Primary },
             {
                 "DialogText",
-                "You are not connected to a LMS. Please login to upload LearningWorlds to the Backend."
+                Localizer["Dialog.NotLoggedIn.Message"]
             },
         };
         var options = new DialogOptions
@@ -249,7 +249,7 @@
             CloseOnEscapeKey = true,
             DisableBackdropClick = false,
         };
-        await DialogService.ShowAsync<GenericInfoDialog>("You are not logged in", parameters, options);
+        await DialogService.ShowAsync<GenericInfoDialog>(Localizer["DialogService.NotLoggedIn.Title"], parameters, options);
     }
 
     private async Task UploadLearningWorld()
@@ -258,11 +258,11 @@
     //present "Upload/Cancel" dialog
         var parameters = new DialogParameters
         {
-            { "SubmitButtonText", "Upload" },
+            { "SubmitButtonText", Localizer["UploadLearningWorld.SubmitButtonText"] },
             { "SubmitButtonColor", Color.Success },
             {
                 "DialogText",
-                $"Do you want to upload the LearningWorld {SelectedViewModelsProvider.LearningWorld.Name} from {_filepath} to the Backend?"
+                Localizer["Dialog.UploadLearningWorld.DialogText", SelectedViewModelsProvider.LearningWorld.Name, _filepath]
             },
         };
         var options = new DialogOptions
@@ -272,7 +272,7 @@
             DisableBackdropClick = true,
         };
         var dialog =
-            await DialogService.ShowAsync<GenericCancellationConfirmationDialog>("Upload LearningWorld", parameters,
+            await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["DialogService.UploadLearningWorld.Dialog"], parameters,
                 options);
         var result = await dialog.Result;
 

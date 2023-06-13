@@ -63,4 +63,16 @@
     <data name="MudPopover.Feedback.Final.Hover" xml:space="preserve">
         <value>Finales Feedback - Öffnet eine neue Seite</value>
     </data>
+    <data name="Feedback.MenuItem.UX.Text" xml:space="preserve">
+        <value>Nutzererfahrungs feedback</value>
+    </data>
+    <data name="Feedback.MenuItem.Technical.Text" xml:space="preserve">
+        <value>Technisches Feedback</value>
+    </data>
+    <data name="Dialog.UploadLearningWorld.DialogText" xml:space="preserve">
+        <value />
+    </data>
+    <data name="ShowNotLoggedInDialog.OkButtonText" xml:space="preserve">
+        <value>Ok</value>
+    </data>
 </root>

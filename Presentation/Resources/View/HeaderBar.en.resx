@@ -63,4 +63,46 @@
     <data name="MudPopover.Feedback.Survey.Text" xml:space="preserve">
         <value>In order to further develop and optimize the authoring tool, we would appreciate if you could take a few minutes to give us feedback on the current status of the authoring tool.</value>
     </data>
+    <data name="Feedback.MenuItem.UX.Text" xml:space="preserve">
+        <value>User experience feedback</value>
+    </data>
+    <data name="Feedback.MenuItem.Technical.Text" xml:space="preserve">
+        <value>Technical feedback</value>
+    </data>
+    <data name="Export.SnackBar.Message" xml:space="preserve">
+        <value>LearningWorld exported to {0}</value>
+    </data>
+    <data name="ExportCanceled.Snackbar.Message" xml:space="preserve">
+        <value>Exporting LearningWorld was canceled</value>
+    </data>
+    <data name="ErrorString.Missing.LearningSpace.Message" xml:space="preserve">
+        <value>LearningWorld has no LearningSpaces.</value>
+    </data>
+    <data name="ErrorString.Missing.LearningElements.Message" xml:space="preserve">
+        <value>LearningSpace {0} has no LearningElements.</value>
+    </data>
+    <data name="ErrorString.Insufficient.Points.Message" xml:space="preserve">
+        <value>LearningSpace {0} cannot be completed due to insufficient points.</value>
+    </data>
+    <data name="Exception.InvalidLearningWorld.Message" xml:space="preserve">
+        <value>LearningWorld is not valid</value>
+    </data>
+    <data name="Dialog.NotLoggedIn.Message" xml:space="preserve">
+        <value>You are not connected to a LMS. Please login to upload LearningWorlds to the Backend.</value>
+    </data>
+    <data name="DialogService.NotLoggedIn.Title" xml:space="preserve">
+        <value>You are not logged in</value>
+    </data>
+    <data name="Dialog.UploadLearningWorld.DialogText" xml:space="preserve">
+        <value>Do you want to upload the LearningWorld {0} from {1} to the Backend?</value>
+    </data>
+    <data name="UploadLearningWorld.SubmitButtonText" xml:space="preserve">
+        <value>Upload</value>
+    </data>
+    <data name="DialogService.UploadLearningWorld.Dialog" xml:space="preserve">
+        <value>Upload LearningWorld</value>
+    </data>
+    <data name="ShowNotLoggedInDialog.OkButtonText" xml:space="preserve">
+        <value>Ok</value>
+    </data>
 </root>
