@@ -9,7 +9,7 @@ namespace BusinessLogic.API;
 
 public interface IBusinessLogic
 {
-    IAuthoringToolConfiguration Configuration { get; }
+    IApplicationConfiguration Configuration { get; }
     bool CanUndo { get; }
     bool CanRedo { get; }
 

@@ -15,7 +15,7 @@ public class UserWebApiServices : IUserWebApiServices
     private readonly IFileSystem _fileSystem;
     private readonly ILogger<UserWebApiServices> _logger;
 
-    public UserWebApiServices(IAuthoringToolConfiguration configuration, HttpClient client,
+    public UserWebApiServices(IApplicationConfiguration configuration, HttpClient client,
         ILogger<UserWebApiServices> logger, IFileSystem fileSystem)
     {
         Configuration = configuration;
@@ -24,7 +24,7 @@ public class UserWebApiServices : IUserWebApiServices
         _fileSystem = fileSystem;
     }
 
-    public IAuthoringToolConfiguration Configuration { get; }
+    public IApplicationConfiguration Configuration { get; }
 
     /// <inheritdoc cref="IUserWebApiServices.GetUserTokenAsync"/>
     public async Task<UserTokenBE> GetUserTokenAsync(string username, string password)

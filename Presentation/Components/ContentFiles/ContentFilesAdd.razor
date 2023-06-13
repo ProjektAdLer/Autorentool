@@ -71,7 +71,9 @@
 
             foreach (var file in files)
             {
-                if (!AllowedFileEndings.Endings.Contains(file.Name.Split(".").Select(s => "." + s).LastOrDefault()))
+                var fileEnding = file.Name.Split(".").Select(s => "." + s).LastOrDefault();
+                if(fileEnding is null)
+                if (fileEnding is null || !AllowedFileEndings.Endings.Contains(fileEnding.ToLowerInvariant()))
                 {
                     await InvokeAsync(async () => await DialogService.ShowMessageBox("Unsupported file ending", $"The supplied file {file.Name} is not supported."));
                     continue;

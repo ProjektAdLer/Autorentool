@@ -14,6 +14,6 @@ public class FileContentValidator : AbstractValidator<FileContent>
             .NotEmpty();
         RuleFor(x => x.Type)
             .NotEmpty()
-            .Must(type => AllowedFileEndings.Endings.Contains(type));
+            .Must(type => AllowedFileEndings.Endings.Contains(type.ToLowerInvariant()));
     }
 }

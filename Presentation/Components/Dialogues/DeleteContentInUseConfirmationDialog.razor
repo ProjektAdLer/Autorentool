@@ -1,0 +1,37 @@
+@using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.LearningElement
+<MudDialog>
+    <DialogContent>
+        <MudText>
+            Are you really sure you want to delete @ContentName?<br/>
+            That content is currently in use in the following elements in the following worlds:
+        </MudText>
+        <MudTable Items="WorldElementInUseTuples">
+            <HeaderContent>
+                <MudTh>World</MudTh>
+                <MudTh>Element</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="World">@context.Item1.Name</MudTd>
+                <MudTd DataLabel="Element">@context.Item2.Name</MudTd>
+            </RowTemplate>
+        </MudTable>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Error" OnClick="Submit">Delete</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [CascadingParameter]
+    public MudDialogInstance MudDialog { get; set; }
+    [Parameter, EditorRequired]
+    public string ContentName { get; set; }
+    [Parameter, EditorRequired]
+    public IEnumerable<(ILearningWorldViewModel, ILearningElementViewModel)> WorldElementInUseTuples { get; set; }
+
+    private void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    private void Cancel() => MudDialog.Cancel();
+
+}

@@ -5,7 +5,7 @@ namespace Presentation.Components.Forms.Element;
 
 public class ElementModelHandler : IElementModelHandler
 {
-    public IEnumerable<ElementModel> GetElementModels(ILearningContentViewModel? learningContentViewModel = null)
+    public static IEnumerable<ElementModel> GetElementModels(ILearningContentViewModel? learningContentViewModel = null)
     {
         return learningContentViewModel switch
         {
@@ -25,12 +25,12 @@ public class ElementModelHandler : IElementModelHandler
         };
     }
 
-    private IEnumerable<ElementModel> GetElementModelsForImage()
+    private static IEnumerable<ElementModel> GetElementModelsForImage()
     {
         return new List<ElementModel> {ElementModel.l_picture_painting_1, ElementModel.l_picture_painting_2};
     }
 
-    private IEnumerable<ElementModel> GetElementModelsForH5P()
+    private static IEnumerable<ElementModel> GetElementModelsForH5P()
     {
         return new List<ElementModel>
         {

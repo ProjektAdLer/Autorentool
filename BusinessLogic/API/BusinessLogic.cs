@@ -12,7 +12,7 @@ namespace BusinessLogic.API;
 public class BusinessLogic : IBusinessLogic
 {
     public BusinessLogic(
-        IAuthoringToolConfiguration configuration,
+        IApplicationConfiguration configuration,
         IDataAccess dataAccess,
         IWorldGenerator worldGenerator,
         ICommandStateManager commandStateManager,
@@ -30,7 +30,7 @@ public class BusinessLogic : IBusinessLogic
     internal ICommandStateManager CommandStateManager { get; }
     public IBackendAccess BackendAccess { get; }
     internal IDataAccess DataAccess { get; }
-    public IAuthoringToolConfiguration Configuration { get; }
+    public IApplicationConfiguration Configuration { get; }
     public event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
     public bool CanUndo => CommandStateManager.CanUndo;
     public bool CanRedo => CommandStateManager.CanRedo;

@@ -14,7 +14,7 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
     private ISelectableObjectInWorldViewModel? _learningObjectInPathWay;
     private ILearningElementViewModel? _learningElement;
     private ILearningContentViewModel? _learningContent;
-    private int _activeSlot;
+    private int _activeSlotInSpace = -1;
 
     private readonly Stack<ISelectedViewModelStackEntry> _undoStack = new();
     private readonly Stack<ISelectedViewModelStackEntry> _redoStack = new();
@@ -40,6 +40,9 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
                         lo => LearningObjectInPathWay = lo),
                 SelectedLearningElementViewModelStackEntry el => new SelectedLearningElementViewModelStackEntry(
                     el.Command, LearningElement, le => LearningElement = le),
+                SelectedLearningContentViewModelStackEntry ce => new SelectedLearningContentViewModelStackEntry(
+                    ce.Command, LearningContent, lc => LearningContent = lc),
+                ActiveSlotInSpaceStackEntry sl => new ActiveSlotInSpaceStackEntry(sl.Command, ActiveSlotInSpace, s => ActiveSlotInSpace = s),
                 _ => throw new InvalidEnumArgumentException()
             };
             stackEntry.Apply();
@@ -61,6 +64,9 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
                         lo => LearningObjectInPathWay = lo),
                 SelectedLearningElementViewModelStackEntry el => new SelectedLearningElementViewModelStackEntry(
                     el.Command, LearningElement, le => LearningElement = le),
+                SelectedLearningContentViewModelStackEntry ce => new SelectedLearningContentViewModelStackEntry(
+                    ce.Command, LearningContent, lc => LearningContent = lc),
+                ActiveSlotInSpaceStackEntry sl => new ActiveSlotInSpaceStackEntry(sl.Command, ActiveSlotInSpace, s => ActiveSlotInSpace = s),
                 _ => throw new InvalidEnumArgumentException()
             };
             stackEntry.Apply();
@@ -92,15 +98,18 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
         private set => SetField(ref _learningContent, value);
     }
     
-    public int ActiveSlot
+    public int ActiveSlotInSpace
     {
-        get => _activeSlot;
-        private set => SetField(ref _activeSlot, value);
+        get => _activeSlotInSpace;
+        private set => SetField(ref _activeSlotInSpace, value);
     }
     
-    public void SetActiveSlot(int slot)
+    public void SetActiveSlotInSpace(int slot, ICommand? command)
     {
-        ActiveSlot = slot;
+        if (command is not null)
+            _undoStack.Push(new ActiveSlotInSpaceStackEntry(command, ActiveSlotInSpace, s => ActiveSlotInSpace = s));
+        ActiveSlotInSpace = slot;
+        _redoStack.Clear();
     }
 
     public void SetLearningWorld(ILearningWorldViewModel? learningWorld, ICommand? command)
@@ -109,7 +118,7 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
             _undoStack.Push(
                 new SelectedLearningWorldViewModelStackEntry(command, LearningWorld, lw => LearningWorld = lw));
         LearningWorld = learningWorld;
-        ActiveSlot = -1;
+        SetActiveSlotInSpace(-1, command);
         _redoStack.Clear();
     }
 
@@ -120,7 +129,7 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
             _undoStack.Push(new SelectedLearningObjectInPathWayViewModelStackEntry(command, LearningObjectInPathWay,
                 obj => LearningObjectInPathWay = obj));
         LearningObjectInPathWay = learningObjectInPathWay;
-        ActiveSlot = -1;
+        SetActiveSlotInSpace(-1, command);
         _redoStack.Clear();
     }
 
@@ -130,6 +139,7 @@ public class SelectedViewModelsProvider : ISelectedViewModelsProvider
             _undoStack.Push(
                 new SelectedLearningElementViewModelStackEntry(command, LearningElement, le => LearningElement = le));
         LearningElement = learningElement;
+        SetActiveSlotInSpace(-1, command);
         _redoStack.Clear();
     }
 

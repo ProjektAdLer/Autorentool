@@ -20,6 +20,19 @@ public class LinkContentViewModel : ILinkContentViewModel
         Link = "";
     }
     
-    public string Name { get; set; }
-    public string Link { get; set; }
+    public string Name { get; init; }
+    public string Link { get; init; }
+    
+    protected bool Equals(LinkContentViewModel other) => Name == other.Name && Link == other.Link;
+
+    public override bool Equals(object? obj)
+    {
+        if (ReferenceEquals(null, obj)) return false;
+        if (ReferenceEquals(this, obj)) return true;
+        return obj is LinkContentViewModel linkContentViewModel && Equals(linkContentViewModel);
+    }
+
+    public override int GetHashCode() => HashCode.Combine(Name, Link);
+
+    public override string ToString() => Name;
 }

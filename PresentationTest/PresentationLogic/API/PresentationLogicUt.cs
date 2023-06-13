@@ -44,7 +44,7 @@ public class PresentationLogicUt
     public void Standard_AllPropertiesInitialized()
     {
         //Arrange
-        var mockConfiguration = Substitute.For<IAuthoringToolConfiguration>();
+        var mockConfiguration = Substitute.For<IApplicationConfiguration>();
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockMapper = Substitute.For<IMapper>();
         var mockCachingMapper = Substitute.For<ICachingMapper>();
@@ -2188,7 +2188,7 @@ public class PresentationLogicUt
     #endregion
 
     private static Presentation.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(
-        IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null,
+        IApplicationConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null,
         ICachingMapper? cachingMapper = null, ISelectedViewModelsProvider? selectedViewModelsProvider = null,
         IServiceProvider? serviceProvider = null,
         ILogger<Presentation.PresentationLogic.API.PresentationLogic>? logger = null,
@@ -2202,7 +2202,7 @@ public class PresentationLogicUt
         IWorldCommandFactory? worldCommandFactory = null,
         IBatchCommandFactory? batchCommandFactory = null)
     {
-        configuration ??= Substitute.For<IAuthoringToolConfiguration>();
+        configuration ??= Substitute.For<IApplicationConfiguration>();
         businessLogic ??= Substitute.For<IBusinessLogic>();
         mapper ??= Substitute.For<IMapper>();
         cachingMapper ??= Substitute.For<ICachingMapper>();

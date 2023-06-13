@@ -1,8 +1,9 @@
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.LearningContent
 @using Presentation.Components.Dialogues
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.Mediator
-<MudTable Items="Items" Class="w-full grow shrink h-full flex flex-col flex-nowrap"
+<MudTable Items="Items" Class="w-full grow h-full flex flex-col flex-nowrap"
           Dense="true" Virtualize="true" Filter="Filter" >
     <ToolBarContent>
         <MudText Typo="Typo.h6">All imported files</MudText>
@@ -90,6 +91,8 @@
     private IDialogService DialogService { get; set; }
     [Inject]
     private IMediator Mediator { get; set; }
+    [Inject]
+    private IAuthoringToolWorkspaceViewModel WorkspaceViewModel { get; set; }
 #pragma warning restore CS8618
     private IEnumerable<ILearningContentViewModel> Items => PresentationLogic.GetAllContent();
     
@@ -105,9 +108,12 @@
     private bool FilterInternal(ILearningContentViewModel element, string? searchString)
     {
         if (string.IsNullOrWhiteSpace(searchString)) return true;
+        searchString = searchString.ToLowerInvariant();
         var elementType = element is FileContentViewModel fileContent ? fileContent.Type : "Link";
-        if (element.Name.Contains(searchString) || elementType.Contains(searchString)) return true;
-        return $"{element.Name}.{elementType}".Contains(searchString);
+        if (element.Name.ToLowerInvariant().Contains(searchString) ||
+            elementType.ToLowerInvariant().Contains(searchString))
+            return true;
+        return $"{element.Name}.{elementType}".ToLowerInvariant().Contains(searchString);
     }
 
     private async Task Delete(ILearningContentViewModel item)
@@ -117,7 +123,9 @@
         {
             { "SubmitButtonText", "Delete" },
             { "SubmitButtonColor", Color.Error },
-            { "DialogText", $"Do you really want to delete content entry {item.Name}?" },
+            { "DialogText", $"Do you really want to delete content entry {item.Name}? " +
+                            $"If you delete content which an element inside a world is using, you won't be able to " +
+                            $"generate that world anymore until you add it back!" },
         };
         var options = new DialogOptions 
         {
@@ -128,6 +136,19 @@
         };
         var dialog = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>("Delete content", parameters, options);
         var result = await dialog.Result;
+
+        var matches = WorkspaceViewModel.LearningWorlds.SelectMany(world => world.AllLearningElements.Where(element => element.LearningContent.Equals(item)).Select(el => (world, el)));
+        if (matches.Any())
+        {
+            parameters = new DialogParameters
+            {
+                { nameof(DeleteContentInUseConfirmationDialog.ContentName), item.Name },
+                { nameof(DeleteContentInUseConfirmationDialog.WorldElementInUseTuples), matches }
+            };
+            var warningDialog = await DialogService.ShowAsync<DeleteContentInUseConfirmationDialog>("Confirm delete", parameters, options);
+            var warningResult = await warningDialog.Result;
+            if (warningResult.Canceled) return;
+        }
         
         //if not cancelled, delete content
         if (!result.Canceled)

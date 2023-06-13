@@ -18,7 +18,7 @@ public class BusinessLogicUt
     [Test]
     public void StandardConstructor_AllPropertiesInitialized()
     {
-        var mockConfiguration = Substitute.For<IAuthoringToolConfiguration>();
+        var mockConfiguration = Substitute.For<IApplicationConfiguration>();
         var mockDataAccess = Substitute.For<IDataAccess>();
 
         var systemUnderTest = CreateStandardBusinessLogic(mockConfiguration, mockDataAccess);
@@ -549,13 +549,13 @@ public class BusinessLogicUt
     #endregion
 
     private BusinessLogic.API.BusinessLogic CreateStandardBusinessLogic(
-        IAuthoringToolConfiguration? fakeConfiguration = null,
+        IApplicationConfiguration? fakeConfiguration = null,
         IDataAccess? fakeDataAccess = null,
         IWorldGenerator? worldGenerator = null,
         ICommandStateManager? commandStateManager = null,
         IBackendAccess? apiAccess = null)
     {
-        fakeConfiguration ??= Substitute.For<IAuthoringToolConfiguration>();
+        fakeConfiguration ??= Substitute.For<IApplicationConfiguration>();
         fakeDataAccess ??= Substitute.For<IDataAccess>();
         worldGenerator ??= Substitute.For<IWorldGenerator>();
         commandStateManager ??= Substitute.For<ICommandStateManager>();

@@ -104,13 +104,9 @@ public class ViewModelEntityMappingProfileUt
 
         TestContent(destination, false);
 
-        destination.Name = NewName;
-        destination.Type = NewType;
-        destination.Filepath = NewFilepath;
-
         systemUnderTest.Map(destination, source);
 
-        TestContent(source, true);
+        TestContent(source, false);
     }
 
     [Test]

@@ -7,7 +7,7 @@
 @using Microsoft.Extensions.Localization
 <main class="overflow-hidden relative min-h-screen max-h-screen h-screen w-screen bg-gradient-to-br m-0 from-adlerbggradientfrom to-adlerbggradientto">
     <HeaderBar/>
-    <article class="p-2 flex flex-col items-center gap-6 overflow-hidden">
+    <article class="p-2 flex flex-col items-center gap-6 overflow-hidden h-[41rem] 2xl:h-[44rem] 1080p:h-[58rem] 2500p:h-[80rem] 3000p:h-[90rem] 3700p:h-[123rem] w-5/6">
         <h3 class="font-bold text-2xl text-center text-adlerdarkblue">@Localizer["Page.LearningWorld.Heading"]</h3>
         <section class="flex flex-row gap-2 justify-center bg-blacktrans-200 p-1 rounded-lg">
             <div class="btn-standard w-28 flex justify-center items-center" title="New learning world">
@@ -25,7 +25,7 @@
                 <img src="CustomIcons/world-icon-nobg.png" class="z-0 pointer-events-none opacity-20 absolute w-8 h-8">
             </div>
         </section>
-        <section class="flex flex-col w-5/6 m-auto bg-blacktrans-200 p-2 rounded-lg">
+        <section class="flex flex-col w-5/6 m-auto bg-blacktrans-200 h-[475px] 2xl:h-[500px] 1080p:h-[750px] 2500p:h-[1100px] 3000p:h-[1250px] 3700p:h-[1775px] p-2 rounded-lg">
             <MudGrid Class="flex justify-center overflow-auto h-96 shrink" Spacing="2">
                 @foreach (var myLearningWorld in MyLearningWorldsProvider.GetLoadedLearningWorlds())
                 {

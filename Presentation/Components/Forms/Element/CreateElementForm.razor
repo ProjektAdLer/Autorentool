@@ -69,11 +69,11 @@
             <div class="rounded-lg max-w-2xl px-4 pb-2">
                 <MudSelect @bind-Value="FormDataContainer.FormModel.LearningContent" AnchorOrigin="Origin.BottomCenter"
                            Label="All imported files"
-                           Text="@FormDataContainer.FormModel.LearningContent?.Name"
-                           For="@(() => FormModel.LearningContent)" SelectedValuesChanged="OnSelectedContentChanged()">
+                           For="@(() => FormModel.LearningContent)"
+                           >
                     @foreach (var learningContent in WorldPresenter.GetAllContent())
                     {
-                        <MudSelectItem Value="@(learningContent)">@learningContent.Name</MudSelectItem>
+                        <MudSelectItem Value="@(learningContent)"/>
                     }
                 </MudSelect>
             </div>
@@ -82,11 +82,11 @@
         <Collapsable Title="Representation in 3D" @bind-Collapsed="_collapsedElementModel">
             <div class="rounded-lg w-4/4 px-4 pb-4">
                 <MudText Typo="Typo.caption">Style of the learning element in the 3D world</MudText>
-                <MudSelect @bind-Value="FormDataContainer.FormModel.ElementModel" AnchorOrigin="Origin.BottomCenter"
-                           Text="@FormDataContainer.FormModel.ElementModel.ToString()"
+                <MudSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
+                           AnchorOrigin="Origin.BottomCenter"
                            For="@(() => FormModel.ElementModel)"
                            Variant="Variant.Outlined">
-                    @foreach (var theme in _elementModels)
+                    @foreach (var theme in Enum.GetValues<ElementModel>())
                     {
                         <MudSelectItem Value="@(theme)" Style="white-space: nowrap">
                             <img src="@ElementModelHandler.GetIconForElementModel(theme)" alt="" width="38" class="mr-1"/>@*@theme*@
@@ -151,23 +151,24 @@
     private bool _collapsedContent = false;
     private bool _collapsedGoals = true;
     private bool _collapsedElementModel = true;
-    private IEnumerable<ElementModel> _elementModels;
 
     private void OnValidSubmit(LearningElementFormModel model)
     {
         if (SelectedViewModelsProvider.LearningWorld == null)
             throw new InvalidOperationException("No learning world selected.");
+        //check content for not null again even though validation ensures that LearningContent is not null
+        //because of a non-reproducible bug where an element without content was able to be created - m.ho, n.stich
+        if (model.LearningContent == null)
+            throw new InvalidOperationException("No learning content selected - validation let no content pass");
 
-        if (SelectedViewModelsProvider.ActiveSlot == -1)
+        if (SelectedViewModelsProvider.ActiveSlotInSpace == -1)
             WorldPresenter.CreateUnplacedLearningElement(
-    //ignore null warning here because validation ensures that LearningContent is not null - m.ho
-                model.Name, model.LearningContent!, model.Description, model.Goals, model.Difficulty, model.ElementModel,
+                model.Name, model.LearningContent, model.Description, model.Goals, model.Difficulty, model.ElementModel,
                 model.Workload, model.Points);
         else
         {
             SpacePresenter.CreateLearningElementInSlot(
-    //ignore null warning here because validation ensures that LearningContent is not null - m.ho
-                model.Name, model.LearningContent!, model.Description, model.Goals, model.Difficulty, model.ElementModel,
+                model.Name, model.LearningContent, model.Description, model.Goals, model.Difficulty, model.ElementModel,
                 model.Workload, model.Points);
         }
         OnSubmitted.InvokeAsync();
@@ -185,7 +186,6 @@
     protected override void OnParametersSet()
     {
         base.OnParametersSet();
-        _elementModels = ElementModelHandler.GetElementModels();
     }
 
     private async void MediatorOnPropertyChanged(object? sender, PropertyChangedEventArgs propertyChangedEventArgs)
@@ -202,13 +202,6 @@
     public void Dispose()
     {
         SelectedViewModelsProvider.PropertyChanged -= MediatorOnPropertyChanged;
-    }
-
-    private EventCallback<IEnumerable<ILearningContentViewModel>> OnSelectedContentChanged()
-    {
-        _elementModels = ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent);
-        FormDataContainer.FormModel.ElementModel = _elementModels.First();
-        return EventCallback<IEnumerable<ILearningContentViewModel>>.Empty;
     }
 
 }
