@@ -16,7 +16,7 @@
         </value>
     </resheader>
     <data name="SideBarContent.ImportFiles.Title" xml:space="preserve">
-        <value>AllFiles</value>
+        <value>Import Files</value>
     </data>
     <data name="SideBarContent.LearningElementMetadata.Title" xml:space="preserve">
         <value>LearningElementMetadata</value>
@@ -34,7 +34,7 @@
         <value>LearningWorldOverView</value>
     </data>
     <data name="SideBarContent.ImportFiles.Alt" xml:space="preserve">
-        <value>all-files</value>
+        <value>import-files</value>
     </data>
     <data name="SideBarContent.LearningElementMetadata.Alt" xml:space="preserve">
         <value>learningelement-metadata</value>

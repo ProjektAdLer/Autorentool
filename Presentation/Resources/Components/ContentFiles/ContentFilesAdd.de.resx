@@ -36,12 +36,12 @@
         <value/>
     </data>
     <data name="DialogService.MessageBox.Title" xml:space="preserve">
-        <value/>
+        <value>Datei leer</value>
     </data>
     <data name="DialogService.MessageBox.Message" xml:space="preserve">
-        <value/>
+        <value>Die Datei {0} war leer, sie wird übersprungen</value>
     </data>
     <data name="Collapsable.Title" xml:space="preserve">
-        <value/>
+        <value>Verknüpfung hinzufügen</value>
     </data>
 </root>

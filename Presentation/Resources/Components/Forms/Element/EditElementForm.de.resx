@@ -27,7 +27,7 @@
         <value />
     </data>
     <data name="Form.Message.Alert.Text" xml:space="preserve">
-        <value />
+        <value>Element aktualisiert</value>
     </data>
     <data name="Form.Fields.Collapsable.Title.General" xml:space="preserve">
         <value>Allgemein</value>

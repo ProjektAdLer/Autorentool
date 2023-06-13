@@ -24,13 +24,13 @@
         </value>
     </resheader>
     <data name="Header" xml:space="preserve">
-        <value/>
+        <value>Alle Element Inhalte</value>
     </data>
     <data name="Content.MudTh.Delete" xml:space="preserve">
         <value>Löschen</value>
     </data>
     <data name="Content.MudTh.NewElement" xml:space="preserve">
-        <value/>
+        <value>Neues Element</value>
     </data>
     <data name="Content.MudTh.Preview" xml:space="preserve">
         <value>Vorschau</value>
@@ -42,7 +42,7 @@
         <value>Zeige Dateipfad</value>
     </data>
     <data name="Dialog.Delete.DialogText" xml:space="preserve">
-        <value/>
+        <value>Möchtest du den Eintrag {0} wirklich löschen?</value>
     </data>
     <data name="PagerContent.Button.Text" xml:space="preserve">
         <value>Ordner öffnen</value>

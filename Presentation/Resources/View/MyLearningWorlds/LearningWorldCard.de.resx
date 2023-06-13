@@ -27,12 +27,12 @@
         <value>Öffnen</value>
     </data>
     <data name="ApplicationException.OnOpenLearningWorld.Message" xml:space="preserve">
-        <value/>
+        <value>OnOpenLearningWorld must be set.</value>
     </data>
     <data name="ApplicationException.LearningWorldPath.Message" xml:space="preserve">
-        <value/>
+        <value>LearningWorldPath must be set.</value>
     </data>
     <data name="ApplicationException.OnDeleteFromSaved.Message" xml:space="preserve">
-        <value/>
+        <value>OnDeleteFromSaved must be set.</value>
     </data>
 </root>
