@@ -27,7 +27,8 @@
                        @ondragend="ClearDragClass">
             <ButtonTemplate>
                 <MudPaper Class="@PaperClasses" Outlined="true">
-                    <MudText Typo="Typo.body1">Drag and drop files here or click to add them.</MudText>
+                    <MudText Typo="Typo.body1" Class="break-word w-80" Align="Align.Center">Drag and drop files here or click to add them.<br/>
+                        Allowed file formats: @(AllowedFileEndings.EndingsCommaSeparatedNicely)</MudText>
                 </MudPaper>
             </ButtonTemplate>
         </MudFileUpload>
