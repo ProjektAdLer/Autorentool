@@ -104,10 +104,15 @@ public class UserBackendServicesUt
         response.StatusCode = HttpStatusCode.NotFound;
 
         response.Content = new StringContent(responseContent);
-        mockedHttp.When("*")
+        mockedHttp
+            .When("*")
             .Respond(req => response);
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory
+            .CreateClient(Arg.Any<ProgressMessageHandler>())
+            .Returns(mockedHttp.ToHttpClient());
 
-        var userWebApiServices = CreateTestableUserWebApiServices(null, mockedHttp.ToHttpClient());
+        var userWebApiServices = CreateTestableUserWebApiServices(httpClientFactory: mockHttpClientFactory);
 
         var ex = Assert.ThrowsAsync<BackendInvalidUrlException>(async () =>
             await userWebApiServices.GetUserTokenAsync("username", "password"));
@@ -134,10 +139,16 @@ public class UserBackendServicesUt
         var applicationConfiguration = Substitute.For<IApplicationConfiguration>();
         applicationConfiguration[IApplicationConfiguration.BackendBaseUrl].Returns("htp://invalidUrl.com");
 
-        mockedHttp.When("*")
+        mockedHttp
+            .When("*")
             .Throw(new NotSupportedException());
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory
+            .CreateClient(Arg.Any<ProgressMessageHandler>())
+            .Returns(mockedHttp.ToHttpClient());
 
-        var userWebApiServices = CreateTestableUserWebApiServices(applicationConfiguration, mockedHttp.ToHttpClient());
+        var userWebApiServices =
+            CreateTestableUserWebApiServices(applicationConfiguration, httpClientFactory: mockHttpClientFactory);
 
         var ex = Assert.ThrowsAsync<BackendInvalidUrlException>(async () =>
             await userWebApiServices.GetUserTokenAsync("username", "password"));
@@ -152,10 +163,16 @@ public class UserBackendServicesUt
         applicationConfiguration[IApplicationConfiguration.BackendBaseUrl].Returns("https://invalidUrl.com");
 
         var httpRequestException = new HttpRequestException("", new AuthenticationException());
-        mockedHttp.When("*")
+        mockedHttp
+            .When("*")
             .Throw(httpRequestException);
+        
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory
+            .CreateClient(Arg.Any<ProgressMessageHandler>())
+            .Returns(mockedHttp.ToHttpClient());
 
-        var userWebApiServices = CreateTestableUserWebApiServices(applicationConfiguration, mockedHttp.ToHttpClient());
+        var userWebApiServices = CreateTestableUserWebApiServices(applicationConfiguration, httpClientFactory: mockHttpClientFactory);
 
         var ex = Assert.ThrowsAsync<BackendInvalidUrlException>(async () =>
             await userWebApiServices.GetUserTokenAsync("username", "password"));
@@ -172,10 +189,16 @@ public class UserBackendServicesUt
         applicationConfiguration[IApplicationConfiguration.BackendBaseUrl].Returns("https://invalidUrl.com");
 
         var httpRequestException = new HttpRequestException("", new SocketException());
-        mockedHttp.When("*")
+        mockedHttp
+            .When("*")
             .Throw(httpRequestException);
+        
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory
+            .CreateClient(Arg.Any<ProgressMessageHandler>())
+            .Returns(mockedHttp.ToHttpClient());
 
-        var userWebApiServices = CreateTestableUserWebApiServices(applicationConfiguration, mockedHttp.ToHttpClient());
+        var userWebApiServices = CreateTestableUserWebApiServices(applicationConfiguration, httpClientFactory: mockHttpClientFactory);
 
         var ex = Assert.ThrowsAsync<BackendInvalidUrlException>(async () =>
             await userWebApiServices.GetUserTokenAsync("username", "password"));
