@@ -16,5 +16,7 @@ public interface IBackendAccess
     public Task<UserToken> GetUserTokenAsync(string username, string password);
 
     public Task<UserInformation> GetUserInformationAsync(UserToken token);
-    public Task<bool> UploadLearningWorldAsync(UserToken token, string backupPath, string awtPath);
+
+    public Task UploadLearningWorldAsync(UserToken token, string backupPath, string awtPath,
+        IProgress<int>? mockProgress = null);
 }

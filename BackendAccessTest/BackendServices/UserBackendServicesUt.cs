@@ -1,6 +1,7 @@
 ﻿using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.Net;
+using System.Net.Http.Handlers;
 using System.Net.Sockets;
 using System.Security.Authentication;
 using BackendAccess.BackendServices;
@@ -11,6 +12,7 @@ using NSubstitute;
 using NUnit.Framework;
 using RichardSzalay.MockHttp;
 using Shared.Configuration;
+using Shared.Networking;
 
 namespace BackendAccessTest.BackendServices;
 
@@ -41,9 +43,15 @@ public class UserBackendServicesUt
         {
             {"lmsToken", "expectedToken"}
         });
-        mockedHttp.When("*")
+        mockedHttp
+            .When("*")
             .Respond("application/json", responseString);
-        var userWebApiServices = CreateTestableUserWebApiServices(null, mockedHttp.ToHttpClient());
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory
+            .CreateClient(Arg.Any<ProgressMessageHandler>())
+            .Returns(mockedHttp.ToHttpClient());
+        
+        var userWebApiServices = CreateTestableUserWebApiServices(httpClientFactory: mockHttpClientFactory);
 
         // Act
         var result = await userWebApiServices.GetUserTokenAsync("username", "password");
@@ -66,10 +74,15 @@ public class UserBackendServicesUt
         response.StatusCode = HttpStatusCode.Unauthorized;
 
         response.Content = new StringContent(responseContent);
-        mockedHttp.When("*")
+        mockedHttp
+            .When("*")
             .Respond(req => response);
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory
+            .CreateClient(Arg.Any<ProgressMessageHandler>())
+            .Returns(mockedHttp.ToHttpClient());
 
-        var userWebApiServices = CreateTestableUserWebApiServices(null, mockedHttp.ToHttpClient());
+        var userWebApiServices = CreateTestableUserWebApiServices(httpClientFactory: mockHttpClientFactory);
 
         // Act
         // Assert
@@ -186,10 +199,15 @@ public class UserBackendServicesUt
 
         var response = new HttpResponseMessage(HttpStatusCode.OK);
         response.Content = new StringContent(responseContent);
-        mockedHttp.When("*")
+        mockedHttp
+            .When("*")
             .Respond(response);
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory
+            .CreateClient(Arg.Any<ProgressMessageHandler>())
+            .Returns(mockedHttp.ToHttpClient());
 
-        var userWebApiServices = CreateTestableUserWebApiServices(null, mockedHttp.ToHttpClient());
+        var userWebApiServices = CreateTestableUserWebApiServices(httpClientFactory: mockHttpClientFactory);
 
         var result = await userWebApiServices.GetUserInformationAsync("token");
 
@@ -211,10 +229,15 @@ public class UserBackendServicesUt
         var response = new HttpResponseMessage(HttpStatusCode.Conflict);
 
         response.Content = new StringContent("invalid response");
-        mockedHttp.When("*")
+        mockedHttp
+            .When("*")
             .Respond(response);
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory
+            .CreateClient(Arg.Any<HttpMessageHandler>())
+            .Returns(mockedHttp.ToHttpClient());
 
-        var userWebApiServices = CreateTestableUserWebApiServices(null, mockedHttp.ToHttpClient());
+        var userWebApiServices = CreateTestableUserWebApiServices(httpClientFactory: mockHttpClientFactory);
 
         // Act
         // Assert
@@ -228,15 +251,20 @@ public class UserBackendServicesUt
     {
         var mockedHttp = new MockHttpMessageHandler();
 
-        mockedHttp.When("*")
+        mockedHttp
+            .When("*")
             .Respond("application/json", "true");
+        var mockHttpClientFactory = Substitute.For<IHttpClientFactory>();
+        mockHttpClientFactory
+            .CreateClient(Arg.Any<HttpMessageHandler>())
+            .Returns(mockedHttp.ToHttpClient());
 
         var mockfileSystem = new MockFileSystem();
         mockfileSystem.AddFile("test.mbz", new MockFileData("testmbz"));
         mockfileSystem.AddFile("testawt.json", new MockFileData("testawt"));
 
         var userWebApiServices =
-            CreateTestableUserWebApiServices(null, mockedHttp.ToHttpClient(), null, mockfileSystem);
+            CreateTestableUserWebApiServices(httpClientFactory: mockHttpClientFactory, fileSystem: mockfileSystem);
 
         // Act
         var output = await userWebApiServices.UploadLearningWorldAsync("testToken", "test.mbz", "testawt.json");
@@ -253,7 +281,7 @@ public class UserBackendServicesUt
         //mockfileSystem.AddFile("testawt.json", new MockFileData("testawt"));
 
         var userWebApiServices =
-            CreateTestableUserWebApiServices(null, null, null, mockfileSystem);
+            CreateTestableUserWebApiServices(fileSystem: mockfileSystem);
 
         // Act
         // Assert
@@ -270,7 +298,7 @@ public class UserBackendServicesUt
         mockfileSystem.AddFile("testawt.json", new MockFileData("testawt"));
 
         var userWebApiServices =
-            CreateTestableUserWebApiServices(null, null, null, mockfileSystem);
+            CreateTestableUserWebApiServices(fileSystem: mockfileSystem);
 
         // Act
         // Assert
@@ -282,9 +310,10 @@ public class UserBackendServicesUt
 
     private static UserWebApiServices CreateTestableUserWebApiServices(
         IApplicationConfiguration? configuration = null,
-        HttpClient? httpClient = null,
+        ProgressMessageHandler? progressMessageHandler = null,
+        IHttpClientFactory? httpClientFactory = null,
         ILogger<UserWebApiServices>? logger = null,
-        IFileSystem? fileSystem = null!
+        IFileSystem? fileSystem = null
     )
     {
         if (configuration == null)
@@ -293,10 +322,11 @@ public class UserBackendServicesUt
             configuration[IApplicationConfiguration.BackendBaseUrl].Returns("https://valid-url.org");
         }
 
-        httpClient ??= new MockHttpMessageHandler().ToHttpClient();
+        progressMessageHandler ??= Substitute.For<ProgressMessageHandler>();
+        httpClientFactory ??= Substitute.For<IHttpClientFactory>();
         logger ??= Substitute.For<ILogger<UserWebApiServices>>();
         fileSystem ??= Substitute.For<IFileSystem>();
 
-        return new UserWebApiServices(configuration, httpClient, logger, fileSystem);
+        return new UserWebApiServices(configuration, progressMessageHandler, httpClientFactory, logger, fileSystem);
     }
 }

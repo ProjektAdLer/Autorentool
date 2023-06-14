@@ -1,5 +1,6 @@
 ﻿using System.IO.Abstractions;
 using System.Net;
+using System.Net.Http.Handlers;
 using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Text.Json;
@@ -8,6 +9,7 @@ using BackendAccess.BackendEntities;
 using BusinessLogic.ErrorManagement.BackendAccess;
 using Microsoft.Extensions.Logging;
 using Shared.Configuration;
+using Shared.Networking;
 
 namespace BackendAccess.BackendServices;
 
@@ -15,13 +17,17 @@ public class UserWebApiServices : IUserWebApiServices
 {
     private readonly HttpClient _client;
     private readonly IFileSystem _fileSystem;
+    private readonly ProgressMessageHandler _progressMessageHandler;
     private readonly ILogger<UserWebApiServices> _logger;
+    
+    private IProgress<int>? ProgressReporter { get; set; }
 
-    public UserWebApiServices(IApplicationConfiguration configuration, HttpClient client,
-        ILogger<UserWebApiServices> logger, IFileSystem fileSystem)
+    public UserWebApiServices(IApplicationConfiguration configuration, ProgressMessageHandler progressMessageHandler,
+        IHttpClientFactory httpClientFactory, ILogger<UserWebApiServices> logger, IFileSystem fileSystem)
     {
         Configuration = configuration;
-        _client = client;
+        _client = httpClientFactory.CreateClient(progressMessageHandler);
+        _progressMessageHandler = progressMessageHandler;
         _logger = logger;
         _fileSystem = fileSystem;
     }
@@ -43,7 +49,7 @@ public class UserWebApiServices : IUserWebApiServices
         }
         catch (HttpRequestException e)
         {
-            Console.WriteLine(e);
+            _logger.LogError("Failed getting user token, {ExceptionMessage}", e.Message);
             switch (e.StatusCode)
             {
                 case HttpStatusCode.Unauthorized:
@@ -89,7 +95,8 @@ public class UserWebApiServices : IUserWebApiServices
     }
 
 
-    public async Task<bool> UploadLearningWorldAsync(string token, string backupPath, string awtPath)
+    public async Task<bool> UploadLearningWorldAsync(string token, string backupPath, string awtPath,
+        IProgress<int>? progress = null)
     {
         // Validate that the paths are valid.
         if (!_fileSystem.File.Exists(backupPath)) throw new ArgumentException("The backup path is not valid.");
@@ -106,11 +113,11 @@ public class UserWebApiServices : IUserWebApiServices
         content.Add(new StreamContent(_fileSystem.File.OpenRead(awtPath)),
             "atfFile", awtPath);
 
-        return await SendHttpPostRequestAsync<bool>("/Worlds", headers, content);
+        return await SendHttpPostRequestAsync<bool>("/Worlds", headers, content, progress);
     }
 
     private async Task<TResponse> SendHttpPostRequestAsync<TResponse>(string url, IDictionary<string, string> headers,
-        MultipartFormDataContent content)
+        MultipartFormDataContent content, IProgress<int>? progress = null)
     {
         // Set the Base URL of the API.
         // TODO: This should be set in the configuration.
@@ -120,8 +127,19 @@ public class UserWebApiServices : IUserWebApiServices
         foreach (var (key, value) in headers) request.Headers.Add(key, value);
         request.Content = content;
 
-        var apiResp = await _client.SendAsync(request);
-        content.Dispose();
+        ProgressReporter = progress;
+        _progressMessageHandler.HttpSendProgress += OnHttpSendProgress;
+        HttpResponseMessage apiResp;
+        try
+        {
+            apiResp = await _client.SendAsync(request);
+        }
+        finally
+        {
+            ProgressReporter = null;
+            _progressMessageHandler.HttpSendProgress -= OnHttpSendProgress;
+            content.Dispose();
+        }
 
         // This will throw if the response is not successful.
         await HandleErrorMessage(apiResp);
@@ -191,5 +209,10 @@ public class UserWebApiServices : IUserWebApiServices
         {
             throw new HttpRequestException("Das Ergebnis der Backend Api konnte nicht gelesen werden", e);
         }
+    }
+
+    private void OnHttpSendProgress(object? sender, HttpProgressEventArgs httpProgressEventArgs)
+    {
+        ProgressReporter?.Report(httpProgressEventArgs.ProgressPercentage);
     }
 }

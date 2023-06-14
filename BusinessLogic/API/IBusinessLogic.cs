@@ -65,18 +65,13 @@ public interface IBusinessLogic
     event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
     string GetContentFilesFolderPath();
 
-    /// <summary>
-    ///     Debug method for Philipp.
-    /// </summary>
-    Task CallExport();
-
     #region BackendAccess
 
     Task<bool> IsLmsConnected();
     string LoginName { get; }
     Task Login(string username, string password);
     void Logout();
-    void UploadLearningWorldToBackend(string filepath);
+    void UploadLearningWorldToBackend(string filepath, IProgress<int>? progress = null);
 
     #endregion
 }

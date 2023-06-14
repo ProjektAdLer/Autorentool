@@ -539,11 +539,12 @@ public class BusinessLogicUt
         worldGenerator.ExtractAtfFromBackup(filepath).Returns(atfPath);
         var backendAccess = Substitute.For<IBackendAccess>();
         var systemUnderTest = CreateStandardBusinessLogic(apiAccess: backendAccess, worldGenerator: worldGenerator);
+        var mockProgress = Substitute.For<IProgress<int>>();
         systemUnderTest.UserToken = token;
 
-        systemUnderTest.UploadLearningWorldToBackend(filepath);
+        systemUnderTest.UploadLearningWorldToBackend(filepath, mockProgress);
 
-        backendAccess.Received().UploadLearningWorldAsync(token, filepath, atfPath);
+        backendAccess.Received().UploadLearningWorldAsync(token, filepath, atfPath, mockProgress);
     }
 
     #endregion

@@ -169,22 +169,6 @@ public class BusinessLogic : IBusinessLogic
         return DataAccess.GetContentFilesFolderPath();
     }
 
-    public async Task CallExport()
-    {
-        // First get the User Token
-        // Those are default certificates from the Bitnami Moodle (Philipps local Test-Moodle). So it can be committed to the repository
-        var userToken = await BackendAccess.GetUserTokenAsync("user", "bitnami");
-
-        // Then we can get User Information by using the token
-        var userInformation = await BackendAccess.GetUserInformationAsync(userToken);
-
-        // Then we can use the user information to call the export
-        var uploadSuccess = await BackendAccess.UploadLearningWorldAsync(userToken,
-            "./ATF3_2_3.mbz", "./DSL_Document.json");
-
-        Console.WriteLine(uploadSuccess);
-    }
-
     #region BackendAccess
 
     //TODO: Move this away from here
@@ -242,10 +226,10 @@ public class BusinessLogic : IBusinessLogic
         _userInformation.LmsEmail = "";
     }
 
-    public void UploadLearningWorldToBackend(string filepath)
+    public void UploadLearningWorldToBackend(string filepath, IProgress<int>? progress = null)
     {
         var atfPath = WorldGenerator.ExtractAtfFromBackup(filepath);
-        BackendAccess.UploadLearningWorldAsync(UserToken, filepath, atfPath);
+        BackendAccess.UploadLearningWorldAsync(UserToken, filepath, atfPath, progress);
     }
 
     #endregion

@@ -277,8 +277,24 @@
 
     //if not cancelled, upload LearningWorld
         if (!result.Canceled)
-    //await and show progress?
-            PresentationLogic.UploadLearningWorldToBackend(_filepath);
+        {
+            var progress = new Progress<int>();
+            options = new DialogOptions
+            {
+                CloseButton = false,
+                CloseOnEscapeKey = false,
+                DisableBackdropClick = true,
+            };
+            parameters = new DialogParameters
+            {
+                {"Progress", progress}
+            };
+
+            await DialogService.ShowAsync<UploadProgressDialog>("Uploading world...", parameters, options);
+            
+            PresentationLogic.UploadLearningWorldToBackend(_filepath, progress);
+            
+        }
     }
 
     private void OnClickRedo()
