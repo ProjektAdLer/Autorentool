@@ -211,7 +211,7 @@ public class BusinessLogic : IBusinessLogic
         }
     }
 
-    public async Task<bool> Login(string username, string password)
+    public async Task Login(string username, string password)
     {
         try
         {
@@ -221,11 +221,16 @@ public class BusinessLogic : IBusinessLogic
         {
             Console.WriteLine(e);
             Logout();
-            return false;
+            throw;
+        }
+        catch (BackendInvalidUrlException e)
+        {
+            Console.WriteLine(e);
+            Logout();
+            throw;
         }
 
         await UpdateUserInformation();
-        return true;
     }
 
     public void Logout()

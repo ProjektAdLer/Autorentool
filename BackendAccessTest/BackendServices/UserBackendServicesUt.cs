@@ -1,6 +1,7 @@
 ﻿using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.Net;
+using System.Security.Authentication;
 using BackendAccess.BackendServices;
 using BusinessLogic.ErrorManagement.BackendAccess;
 using Microsoft.Extensions.Logging;
@@ -14,20 +15,18 @@ namespace BackendAccessTest.BackendServices;
 
 public class UserBackendServicesUt
 {
-    private IApplicationConfiguration _applicationConfiguration;
-
     [Test]
     public void BackendAccess_Standard_AllPropertiesInitialized()
     {
         // Arrange
-        _applicationConfiguration = Substitute.For<IApplicationConfiguration>();
+        var applicationConfiguration = Substitute.For<IApplicationConfiguration>();
 
         // Act
-        var userWebApiServices = CreateTestableUserWebApiServices(_applicationConfiguration);
+        var userWebApiServices = CreateTestableUserWebApiServices(applicationConfiguration);
 
         // Assert
         Assert.Multiple(
-            () => { Assert.That(userWebApiServices.Configuration, Is.EqualTo(_applicationConfiguration)); }
+            () => { Assert.That(userWebApiServices.Configuration, Is.EqualTo(applicationConfiguration)); }
         );
     }
 
@@ -73,8 +72,82 @@ public class UserBackendServicesUt
 
         // Act
         // Assert
-        Assert.ThrowsAsync<BackendInvalidLoginException>(async () =>
-            await userWebApiServices.GetUserTokenAsync("username", "password"), "Invalid Login Credentials.");
+        var ex = Assert.ThrowsAsync<BackendInvalidLoginException>(async () =>
+            await userWebApiServices.GetUserTokenAsync("username", "password"));
+        Assert.That(ex!.Message, Is.EqualTo("Invalid Login Credentials."));
+    }
+
+    [Test]
+    public void GetUserTokenAsync_NoAdLerBackendAtUrl_ThrowsException()
+    {
+        var mockedHttp = new MockHttpMessageHandler();
+
+        var responseContent = JsonConvert.SerializeObject(new Dictionary<string, string>
+        {
+            {"detail", "Error Message"}
+        });
+        var response = new HttpResponseMessage(HttpStatusCode.NotFound);
+        response.StatusCode = HttpStatusCode.NotFound;
+
+        response.Content = new StringContent(responseContent);
+        mockedHttp.When("*")
+            .Respond(req => response);
+
+        var userWebApiServices = CreateTestableUserWebApiServices(null, mockedHttp.ToHttpClient());
+
+        var ex = Assert.ThrowsAsync<BackendInvalidUrlException>(async () =>
+            await userWebApiServices.GetUserTokenAsync("username", "password"));
+        Assert.That(ex!.Message, Is.EqualTo("There is no AdLer Backend at the given URL."));
+    }
+
+    [Test]
+    public void GetUserTokenAsync_InvalidUrlSet_ThrowsException()
+    {
+        var applicationConfiguration = Substitute.For<IApplicationConfiguration>();
+        applicationConfiguration[IApplicationConfiguration.BackendBaseUrl].Returns("invalidUrl");
+
+        var userWebApiServices = CreateTestableUserWebApiServices(applicationConfiguration);
+
+        var ex = Assert.ThrowsAsync<BackendInvalidUrlException>(async () =>
+            await userWebApiServices.GetUserTokenAsync("username", "password"));
+        Assert.That(ex!.Message, Is.EqualTo("Invalid URL."));
+    }
+
+    [Test]
+    public void GetUserTokenAsync_InvalidUrlWithUnsupportedProtocolSet_ThrowsException()
+    {
+        var mockedHttp = new MockHttpMessageHandler();
+        var applicationConfiguration = Substitute.For<IApplicationConfiguration>();
+        applicationConfiguration[IApplicationConfiguration.BackendBaseUrl].Returns("htp://invalidUrl.com");
+
+        mockedHttp.When("*")
+            .Throw(new NotSupportedException());
+
+        var userWebApiServices = CreateTestableUserWebApiServices(applicationConfiguration, mockedHttp.ToHttpClient());
+
+        var ex = Assert.ThrowsAsync<BackendInvalidUrlException>(async () =>
+            await userWebApiServices.GetUserTokenAsync("username", "password"));
+        Assert.That(ex!.Message, Is.EqualTo("Invalid URL. Does the URL start with 'http://' or 'https://'?"));
+    }
+
+    [Test]
+    public void GetUserTokenAsync_InvalidSslCertificate_ThrowsException()
+    {
+        var mockedHttp = new MockHttpMessageHandler();
+        var applicationConfiguration = Substitute.For<IApplicationConfiguration>();
+        applicationConfiguration[IApplicationConfiguration.BackendBaseUrl].Returns("https://invalidUrl.com");
+
+        var httpRequestException = new HttpRequestException("", new AuthenticationException());
+        mockedHttp.When("*")
+            .Throw(httpRequestException);
+
+        var userWebApiServices = CreateTestableUserWebApiServices(applicationConfiguration, mockedHttp.ToHttpClient());
+
+        var ex = Assert.ThrowsAsync<BackendInvalidUrlException>(async () =>
+            await userWebApiServices.GetUserTokenAsync("username", "password"));
+        Assert.That(ex!.Message,
+            Is.EqualTo(
+                "The SSL certificate is invalid. If the URL is correct, there is a problem with the SSL certificate of the AdLer Backend or you have to explicitly trust this certificate."));
     }
 
     [Test]
@@ -124,9 +197,9 @@ public class UserBackendServicesUt
 
         // Act
         // Assert
-        Assert.ThrowsAsync<HttpRequestException>(async () =>
-                await userWebApiServices.GetUserTokenAsync("username", "password"),
-            "Das Ergebnis der Backend Api konnte nicht gelesen werden");
+        var ex = Assert.ThrowsAsync<HttpRequestException>(async () =>
+            await userWebApiServices.GetUserTokenAsync("username", "password"));
+        Assert.That(ex!.Message, Is.EqualTo("Das Ergebnis der Backend Api konnte nicht gelesen werden"));
     }
 
     [Test]
@@ -152,7 +225,7 @@ public class UserBackendServicesUt
     }
 
     [Test]
-    public async Task UploadLearningWorldAsync_InvalidATFPath_ThrowsArgumentException()
+    public void UploadLearningWorldAsync_InvalidATFPath_ThrowsArgumentException()
     {
         var mockfileSystem = new MockFileSystem();
         mockfileSystem.AddFile("test.mbz", new MockFileData("testmbz"));
@@ -163,12 +236,13 @@ public class UserBackendServicesUt
 
         // Act
         // Assert
-        Assert.ThrowsAsync<ArgumentException>(async () =>
+        var ex = Assert.ThrowsAsync<ArgumentException>(async () =>
             await userWebApiServices.UploadLearningWorldAsync("testToken", "test.mbz", "testawt.json"));
+        Assert.That(ex!.Message, Is.EqualTo("The awt path is not valid."));
     }
 
     [Test]
-    public async Task UploadLearningWorldAsync_InvalidMBZPath_ThrowsArgumentException()
+    public void UploadLearningWorldAsync_InvalidMBZPath_ThrowsArgumentException()
     {
         var mockfileSystem = new MockFileSystem();
         //mockfileSystem.AddFile("test.mbz", new MockFileData("testmbz"));
@@ -179,8 +253,9 @@ public class UserBackendServicesUt
 
         // Act
         // Assert
-        Assert.ThrowsAsync<ArgumentException>(async () =>
+        var ex = Assert.ThrowsAsync<ArgumentException>(async () =>
             await userWebApiServices.UploadLearningWorldAsync("testToken", "test.mbz", "testawt.json"));
+        Assert.That(ex!.Message, Is.EqualTo("The backup path is not valid."));
     }
 
 
@@ -191,7 +266,12 @@ public class UserBackendServicesUt
         IFileSystem? fileSystem = null!
     )
     {
-        configuration ??= Substitute.For<IApplicationConfiguration>();
+        if (configuration == null)
+        {
+            configuration = Substitute.For<IApplicationConfiguration>();
+            configuration[IApplicationConfiguration.BackendBaseUrl].Returns("https://valid-url.org");
+        }
+
         httpClient ??= new MockHttpMessageHandler().ToHttpClient();
         logger ??= Substitute.For<ILogger<UserWebApiServices>>();
         fileSystem ??= Substitute.For<IFileSystem>();

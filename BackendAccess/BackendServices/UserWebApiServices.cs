@@ -1,5 +1,6 @@
 ﻿using System.IO.Abstractions;
 using System.Net;
+using System.Security.Authentication;
 using System.Text.Json;
 using System.Web;
 using BackendAccess.BackendEntities;
@@ -42,14 +43,29 @@ public class UserWebApiServices : IUserWebApiServices
         catch (HttpRequestException e)
         {
             Console.WriteLine(e);
-            if (e.StatusCode == HttpStatusCode.Unauthorized)
+            switch (e.StatusCode)
             {
-                throw new BackendInvalidLoginException("Invalid Login Credentials.");
+                case HttpStatusCode.Unauthorized:
+                    throw new BackendInvalidLoginException("Invalid Login Credentials.");
+                case HttpStatusCode.NotFound:
+                    throw new BackendInvalidUrlException("There is no AdLer Backend at the given URL.");
+                default:
+                    if (e.InnerException is AuthenticationException ex)
+                    {
+                        throw new BackendInvalidUrlException(
+                            "The SSL certificate is invalid. If the URL is correct, there is a problem with the SSL certificate of the AdLer Backend or you have to explicitly trust this certificate.");
+                    }
+
+                    throw;
             }
-            else
-            {
-                throw;
-            }
+        }
+        catch (UriFormatException e)
+        {
+            throw new BackendInvalidUrlException("Invalid URL.");
+        }
+        catch (NotSupportedException e)
+        {
+            throw new BackendInvalidUrlException("Invalid URL. Does the URL start with 'http://' or 'https://'?");
         }
     }
 
@@ -90,7 +106,7 @@ public class UserWebApiServices : IUserWebApiServices
     {
         // Set the Base URL of the API.
         // TODO: This should be set in the configuration.
-        url = new Uri("https://dev.api.projekt-adler.eu/api") + url;
+        url = new Uri(Configuration[IApplicationConfiguration.BackendBaseUrl]) + url;
 
         var request = new HttpRequestMessage(HttpMethod.Post, url);
         foreach (var (key, value) in headers) request.Headers.Add(key, value);
@@ -113,7 +129,7 @@ public class UserWebApiServices : IUserWebApiServices
 
         // Set the Base URL of the API.
         // TODO: This should be set in the configuration.
-        url = new Uri("https://dev.api.projekt-adler.eu/api") + url;
+        url = new Uri(Configuration[IApplicationConfiguration.BackendBaseUrl]) + url;
 
         url += "?" + queryString;
 
@@ -133,13 +149,16 @@ public class UserWebApiServices : IUserWebApiServices
      */
     private async Task HandleErrorMessage(HttpResponseMessage apiResp)
     {
-        if (!apiResp.IsSuccessStatusCode)
+        if (apiResp.IsSuccessStatusCode) return;
+        if (apiResp.StatusCode == HttpStatusCode.NotFound)
         {
-            var error = await apiResp.Content.ReadAsStringAsync();
-
-            var problemDetails = TryRead<ErrorBE>(error);
-            throw new HttpRequestException(problemDetails.Detail, null, apiResp.StatusCode);
+            throw new HttpRequestException(apiResp.ReasonPhrase, null, apiResp.StatusCode);
         }
+
+        var error = await apiResp.Content.ReadAsStringAsync();
+
+        var problemDetails = TryRead<ErrorBE>(error);
+        throw new HttpRequestException(problemDetails.Detail, null, apiResp.StatusCode);
     }
 
     /**

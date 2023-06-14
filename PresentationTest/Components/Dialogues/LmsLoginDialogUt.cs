@@ -8,6 +8,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components.Dialogues;
 using Presentation.PresentationLogic.API;
+using Shared.Configuration;
 using TestContext = Bunit.TestContext;
 
 namespace PresentationTest.Components.Dialogues;
@@ -18,6 +19,7 @@ public class LmsLoginDialogUt
     private TestContext _context;
     private IPresentationLogic _presentationLogic;
     private IDialogService _dialogService;
+    private IApplicationConfiguration _applicationConfiguration;
 
     [SetUp]
     public void Setup()
@@ -25,8 +27,10 @@ public class LmsLoginDialogUt
         _context = new TestContext();
         _presentationLogic = Substitute.For<IPresentationLogic>();
         _dialogService = Substitute.For<IDialogService>();
+        _applicationConfiguration = Substitute.For<IApplicationConfiguration>();
         _context.Services.AddSingleton(_presentationLogic);
         _context.Services.AddSingleton(_dialogService);
+        _context.Services.AddSingleton(_applicationConfiguration);
         _context.Services.AddMudServices();
         _context.ComponentFactories.AddStub<MudDialog>();
         _context.ComponentFactories.AddStub<MudForm>();

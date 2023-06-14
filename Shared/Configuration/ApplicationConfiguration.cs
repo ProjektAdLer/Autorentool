@@ -48,7 +48,7 @@ public class ApplicationConfiguration : IApplicationConfiguration
     {
         return new ObservableDictionary<string, string>
         {
-            { "BackendBaseUrl", "" }
+            {IApplicationConfiguration.BackendBaseUrl, ""}
         };
     }
 

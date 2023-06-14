@@ -827,7 +827,7 @@ public class PresentationLogic : IPresentationLogic
 
     public string LoginName => BusinessLogic.LoginName;
 
-    public Task<bool> Login(string username, string password)
+    public Task Login(string username, string password)
     {
         return BusinessLogic.Login(username, password);
     }

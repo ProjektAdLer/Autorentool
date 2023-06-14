@@ -428,7 +428,7 @@ public interface IPresentationLogic
 
     Task<bool> IsLmsConnected();
     string LoginName { get; }
-    Task<bool> Login(string username, string password);
+    Task Login(string username, string password);
     void Logout();
     void UploadLearningWorldToBackend(string filepath);
 
