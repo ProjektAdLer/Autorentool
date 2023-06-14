@@ -1,5 +1,6 @@
 ﻿using System.IO.Abstractions;
 using System.Net;
+using System.Net.Sockets;
 using System.Security.Authentication;
 using System.Text.Json;
 using System.Web;
@@ -49,13 +50,20 @@ public class UserWebApiServices : IUserWebApiServices
                     throw new BackendInvalidLoginException("Invalid Login Credentials.");
                 case HttpStatusCode.NotFound:
                     throw new BackendInvalidUrlException("There is no AdLer Backend at the given URL.");
-                default:
-                    if (e.InnerException is AuthenticationException ex)
+                case null:
+                    switch (e.InnerException)
                     {
-                        throw new BackendInvalidUrlException(
-                            "The SSL certificate is invalid. If the URL is correct, there is a problem with the SSL certificate of the AdLer Backend or you have to explicitly trust this certificate.");
+                        case AuthenticationException:
+                            throw new BackendInvalidUrlException(
+                                "The SSL certificate is invalid. If the URL is correct, there is a problem with the SSL certificate of the AdLer Backend or you have to explicitly trust this certificate.");
+                        case SocketException:
+                            throw new BackendInvalidUrlException(
+                                "The URL is not reachable. Either the URL does not exist or there is no internet connection.");
+                        default:
+                            throw;
                     }
 
+                default:
                     throw;
             }
         }

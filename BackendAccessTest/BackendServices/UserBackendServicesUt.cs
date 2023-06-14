@@ -1,6 +1,7 @@
 ﻿using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using System.Net;
+using System.Net.Sockets;
 using System.Security.Authentication;
 using BackendAccess.BackendServices;
 using BusinessLogic.ErrorManagement.BackendAccess;
@@ -148,6 +149,26 @@ public class UserBackendServicesUt
         Assert.That(ex!.Message,
             Is.EqualTo(
                 "The SSL certificate is invalid. If the URL is correct, there is a problem with the SSL certificate of the AdLer Backend or you have to explicitly trust this certificate."));
+    }
+
+    [Test]
+    public void GetUserTokenAsync_UrlNotReachable_ThrowsException()
+    {
+        var mockedHttp = new MockHttpMessageHandler();
+        var applicationConfiguration = Substitute.For<IApplicationConfiguration>();
+        applicationConfiguration[IApplicationConfiguration.BackendBaseUrl].Returns("https://invalidUrl.com");
+
+        var httpRequestException = new HttpRequestException("", new SocketException());
+        mockedHttp.When("*")
+            .Throw(httpRequestException);
+
+        var userWebApiServices = CreateTestableUserWebApiServices(applicationConfiguration, mockedHttp.ToHttpClient());
+
+        var ex = Assert.ThrowsAsync<BackendInvalidUrlException>(async () =>
+            await userWebApiServices.GetUserTokenAsync("username", "password"));
+        Assert.That(ex!.Message,
+            Is.EqualTo(
+                "The URL is not reachable. Either the URL does not exist or there is no internet connection."));
     }
 
     [Test]

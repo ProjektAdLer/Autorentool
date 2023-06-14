@@ -67,6 +67,9 @@
     [Inject]
     IApplicationConfiguration Configuration { get; set; }
 
+    [Inject]
+    private ILogger<LmsLoginDialog> Logger { get; set; }
+
     private string _backendUrl = "";
     private string _username = "";
     private string _password = "";
@@ -121,6 +124,10 @@
         {
             _errorInvalidUrlMessage = e.Message;
             StateHasChanged();
+        }
+        catch (Exception e)
+        {
+            Logger.LogError(e, "Error from Backend_GetUserTokenAsync");
         }
     }
 
