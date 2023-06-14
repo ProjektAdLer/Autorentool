@@ -23,31 +23,43 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="Header.Title" xml:space="preserve">
-        <value>Lernraum Metadata</value>
+    <data name="CreateSpaceForm.Header.Title" xml:space="preserve">
+        <value>Lernraum erstellen</value>
     </data>
-    <data name="Form.Message.Alert.Text" xml:space="preserve">
-        <value>Raum erstellt</value>
+    <data name="CreateSpaceForm.SnackbarMessage" xml:space="preserve">
+        <value>Raum aktualisiert</value>
     </data>
-    <data name="Form.Fields.Collapsable.General.Title" xml:space="preserve">
+    <data name="CreateSpaceForm.Button.New.Text" xml:space="preserve">
+        <value>Neu</value>
+    </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.General.Title" xml:space="preserve">
         <value>Allgemein</value>
     </data>
-    <data name="Form.Fields.Collapsable.CompletionConditions.Title" xml:space="preserve">
-        <value>Vervollständigungs Bedingungen</value>
+    <data name="CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title" xml:space="preserve">
+        <value>Abschlussbedingungen</value>
     </data>
-    <data name="Form.Fields.Collapsable.Theme.Title" xml:space="preserve">
-        <value>Thema</value>
+    <data name="CreateSpaceForm.Fields.Collapsable.FloorPlan.Title" xml:space="preserve">
+        <value>Grundriss</value>
     </data>
-    <data name="Form.Fields.Collapsable.Goals.Title" xml:space="preserve">
+    <data name="CreateSpaceForm.Fields.Collapsable.Theme.Title" xml:space="preserve">
+        <value>Design</value>
+    </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
         <value>Ziele</value>
     </data>
-    <data name="Form.Fields.Collapsable.Goals.Field.Decription.Title" xml:space="preserve">
+    <data name="CreateSpaceForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
         <value>Beschreibung</value>
     </data>
-    <data name="Form.Fields.Collapsable.Goals.Field.Goals.Title" xml:space="preserve">
+    <data name="CreateSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text" xml:space="preserve">
         <value>Ziele</value>
     </data>
-    <data name="InvalidOperationException.Message" xml:space="preserve">
-        <value>Keine Lernwelt ausgewählt.</value>
+    <data name="CreateSpaceForm.ApplicationException.Message" xml:space="preserve">
+        <value>LearningWorldVm ist null</value>
+    </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.General.Name.Text" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="CreateSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text" xml:space="preserve">
+        <value>Benötigte Punkte</value>
     </data>
 </root>

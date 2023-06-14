@@ -119,5 +119,13 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>LearningSpaceView.en.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\RightClickMenu\RightClickMenu.de.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RightClickMenu.de.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Update="Resources\Components\RightClickMenu\RightClickMenu.en.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>RightClickMenu.en.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
 </Project>

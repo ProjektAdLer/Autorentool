@@ -40,7 +40,7 @@
         <value>Goals</value>
     </data>
     <data name="CreateWorldForm.Title.Text" xml:space="preserve">
-        <value>Learning world metadata</value>
+        <value>Create learning world</value>
     </data>
     <data name="CreateWorldForm.Goals.Text" xml:space="preserve">
         <value>Goals</value>

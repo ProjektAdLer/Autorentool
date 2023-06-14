@@ -11,37 +11,43 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="Header.Title" xml:space="preserve">
-        <value>Learning space metadata</value>
+    <data name="EditSpaceForm.Header.Title" xml:space="preserve">
+        <value>Edit learning space</value>
     </data>
-    <data name="Form.Message.Alert.Text" xml:space="preserve">
+    <data name="EditSpaceForm.SnackbarMessage" xml:space="preserve">
         <value>Space updated</value>
     </data>
-    <data name="Form.Button.New.Text" xml:space="preserve">
+    <data name="EditSpaceForm.Button.New.Text" xml:space="preserve">
         <value>New</value>
     </data>
-    <data name="Form.Fields.Collapsable.Goals.Field.Goals.Title" xml:space="preserve">
+    <data name="EditSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text" xml:space="preserve">
         <value>Goals</value>
     </data>
-    <data name="Form.Fields.Collapsable.Goals.Title" xml:space="preserve">
+    <data name="EditSpaceForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
         <value>Goals</value>
     </data>
-    <data name="Form.Fields.Collapsable.Theme.Title" xml:space="preserve">
+    <data name="EditSpaceForm.Fields.Collapsable.Theme.Title" xml:space="preserve">
         <value>Theme</value>
     </data>
-    <data name="Form.Fields.Collapsable.CompletionConditions.Title" xml:space="preserve">
+    <data name="EditSpaceForm.Fields.Collapsable.CompletionConditions.Title" xml:space="preserve">
         <value>Completion conditions</value>
     </data>
-    <data name="Form.Fields.Collapsable.FloorPlan.Title" xml:space="preserve">
-        <value>Floor Plan</value>
+    <data name="EditSpaceForm.Fields.Collapsable.FloorPlan.Title" xml:space="preserve">
+        <value>Floor plan</value>
     </data>
-    <data name="Form.Fields.Collapsable.General.Title" xml:space="preserve">
+    <data name="EditSpaceForm.Fields.Collapsable.General.Title" xml:space="preserve">
         <value>General</value>
     </data>
-    <data name="Form.Fields.Collapsable.Goals.Description.Text" xml:space="preserve">
+    <data name="EditSpaceForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
         <value>Description</value>
     </data>
-    <data name="ApplicationException.Message" xml:space="preserve">
+    <data name="EditSpaceForm.ApplicationException.Message" xml:space="preserve">
         <value>LearningWorldVm is null</value>
+    </data>
+    <data name="EditSpaceForm.Fields.Collapsable.General.Name.Text" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="EditSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text" xml:space="preserve">
+        <value>Required points</value>
     </data>
 </root>

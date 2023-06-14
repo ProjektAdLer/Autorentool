@@ -1,7 +1,7 @@
-﻿@inject ILogger<RightClickMenu<T>> Logger;
-@using Presentation.PresentationLogic.LearningElement
+﻿@using Presentation.PresentationLogic.LearningElement
 @using Presentation.PresentationLogic.LearningPathway
 @using Presentation.PresentationLogic.LearningSpace
+@using Microsoft.Extensions.Localization
 @implements IDisposable
 @typeparam T
 
@@ -36,6 +36,12 @@
     [Parameter]
     public EventCallback OnClose { get; set; }
 
+    [Inject]
+    private ILogger<RightClickMenu<T>> Logger { get; set; }
+    
+    [Inject]
+    private IStringLocalizer<RightClickMenu<T>> Localizer { get; set; }
+
     private double _x;
     private double _y;
 
@@ -65,7 +71,7 @@
                 _y = pc.PositionY;
                 break;
             default:
-                throw new ArgumentException(nameof(LearningObject) + " is not of supported type");
+                throw new ArgumentException(Localizer["RightClickMenu.OnParametersSet.ArgumentException.Message"], nameof(LearningObject));
         }
     }
 
