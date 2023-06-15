@@ -23,16 +23,16 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="Dialog.Content.Text" xml:space="preserve">
+    <data name="UnsavedWorldDialog.Content.Text" xml:space="preserve">
         <value>Die Welt {0} hat ungespeicherte Änderungen. Alle ungespeicherten Änderungen gehen beim schließen des Programms verloren. Möchten Sie die Welt vor dem schließen speichern?</value>
     </data>
-    <data name="Dialog.Button.Yes" xml:space="preserve">
+    <data name="UnsavedWorldDialog.Button.Yes" xml:space="preserve">
         <value>Ja</value>
     </data>
-    <data name="Dialog.Button.No" xml:space="preserve">
+    <data name="UnsavedWorldDialog.Button.No" xml:space="preserve">
         <value>Nein</value>
     </data>
-    <data name="Dialog.Button.Cancel" xml:space="preserve">
+    <data name="UnsavedWorldDialog.Button.Cancel" xml:space="preserve">
         <value>Abbrechen</value>
     </data>
 </root>

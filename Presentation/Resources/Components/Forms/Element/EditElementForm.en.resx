@@ -11,40 +11,58 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="Header.Title" xml:space="preserve">
-        <value>Learning element metadata</value>
+    <data name="EditElementForm.Header.Text" xml:space="preserve">
+        <value>Edit learning element</value>
     </data>
-    <data name="Form.Message.Alert.Text" xml:space="preserve">
-        <value>Element updated</value>
+    <data name="EditElementForm.SnackbarMessage" xml:space="preserve">
+        <value>Element edited</value>
     </data>
-    <data name="Difficulty.Easy" xml:space="preserve">
-        <value>Easy</value>
-    </data>
-    <data name="Difficulty.Hard" xml:space="preserve">
-        <value>Hard</value>
-    </data>
-    <data name="Difficulty.Medium" xml:space="preserve">
-        <value>Medium</value>
-    </data>
-    <data name="Difficulty.None" xml:space="preserve">
-        <value>None</value>
-    </data>
-    <data name="Form.Fields.Collapsable.Field.Workload.Title" xml:space="preserve">
-        <value>Workload (min)</value>
-    </data>
-    <data name="Form.Fields.Collapsable.Goals.Field.Goals.Title" xml:space="preserve">
-        <value>Goals</value>
-    </data>
-    <data name="Form.Fields.Collapsable.Title.Goals" xml:space="preserve">
-        <value>Goals</value>
-    </data>
-    <data name="Form.Fields.Collapsable.Goals.Text.Description" xml:space="preserve">
-        <value>Description</value>
-    </data>
-    <data name="Form.Fields.Collapsable.Title.General" xml:space="preserve">
+    <data name="EditElementForm.Fields.Collapsable.General.Title" xml:space="preserve">
         <value>General</value>
     </data>
-    <data name="Form.Fields.Collapsable.Title.LearningContent" xml:space="preserve">
+    <data name="EditElementForm.Fields.Collapsable.General.Field.Workload.Text" xml:space="preserve">
+        <value>Workload (min)</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.General.Field.Difficulty.Text" xml:space="preserve">
+        <value>Difficulty</value>
+    </data>
+    <data name="EditElementForm.Difficulty.Easy" xml:space="preserve">
+        <value>Easy</value>
+    </data>
+    <data name="EditElementForm.Difficulty.Hard" xml:space="preserve">
+        <value>Hard</value>
+    </data>
+    <data name="EditElementForm.Difficulty.Medium" xml:space="preserve">
+        <value>Medium</value>
+    </data>
+    <data name="EditElementForm.Difficulty.None" xml:space="preserve">
+        <value>None</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.LearningContent.Title" xml:space="preserve">
         <value>Learning content</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.3DRepresentation.Title" xml:space="preserve">
+        <value>3D representation</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text" xml:space="preserve">
+        <value>3D representation of this learning element</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
+        <value>Goals</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
+        <value>Description</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.Goals.Field.Goals.Title" xml:space="preserve">
+        <value>Goals</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.General.Field.Points.Text" xml:space="preserve">
+        <value>Punkte</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.General.Field.Name.Text" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="EditElementForm.NewButton.Text" xml:space="preserve">
+        <value>New</value>
     </data>
 </root>

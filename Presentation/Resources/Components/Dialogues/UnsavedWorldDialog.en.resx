@@ -11,16 +11,16 @@
     <resheader name="writer">
         <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
     </resheader>
-    <data name="Dialog.Content.Text" xml:space="preserve">
+    <data name="UnsavedWorldDialog.Content.Text" xml:space="preserve">
         <value>The world {0} has unsaved changes. All unsaved changes will be lost upon closing the program. Do you want to save the world before closing?</value>
     </data>
-    <data name="Dialog.Button.Cancel" xml:space="preserve">
+    <data name="UnsavedWorldDialog.Button.Cancel" xml:space="preserve">
         <value>Cancel</value>
     </data>
-    <data name="Dialog.Button.No" xml:space="preserve">
+    <data name="UnsavedWorldDialog.Button.No" xml:space="preserve">
         <value>No</value>
     </data>
-    <data name="Dialog.Button.Yes" xml:space="preserve">
+    <data name="UnsavedWorldDialog.Button.Yes" xml:space="preserve">
         <value>Yes</value>
     </data>
 </root>

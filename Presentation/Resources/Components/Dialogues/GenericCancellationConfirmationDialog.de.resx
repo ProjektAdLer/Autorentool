@@ -23,10 +23,10 @@
             PublicKeyToken=b77a5c561934e089
         </value>
     </resheader>
-    <data name="MudButton.Cancel.Text" xml:space="preserve">
+    <data name="GenericCancellationConfirmationDialog.Button.Cancel.Text" xml:space="preserve">
         <value>Abbrechen</value>
     </data>
-    <data name="MudButton.Submit.Text" xml:space="preserve">
+    <data name="GenericCancellationConfirmationDialog.Submit.Text" xml:space="preserve">
         <value>Senden</value>
     </data>
 </root>

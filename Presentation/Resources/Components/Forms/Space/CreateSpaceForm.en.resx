@@ -44,7 +44,7 @@
     <data name="CreateSpaceForm.ApplicationException.Message" xml:space="preserve">
         <value>LearningWorldVm is null</value>
     </data>
-    <data name="CreateSpaceForm.Fields.Collapsable.General.Name.Text" xml:space="preserve">
+    <data name="CreateSpaceForm.Fields.Collapsable.General.Field.Name.Text" xml:space="preserve">
         <value>Name</value>
     </data>
     <data name="CreateSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text" xml:space="preserve">
