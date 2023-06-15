@@ -20,7 +20,7 @@
                 <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">Points: </span> @LearningWorldP.LearningWorldVm?.Points</h3>
             </section>
         </article>
-        <section class="flex bg-white rounded-lg w-[250px] grow overflow-scroll pt-2">
+        <section class="flex bg-white rounded-lg w-[250px] 2xl:w-[250px] 1080p:w-[350px] 2500p:w-[400px] 3000p:w-[600px] 3700p:w-[750px] grow overflow-scroll pt-2">
             <MudTreeView Color="Color" Hover="true" Class="mud-width-full" @bind-SelectedValue="SelectedValue">
        
                 @if(LearningWorldP.LearningWorldVm.LearningSpaces.Count > 0)
