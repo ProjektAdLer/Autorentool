@@ -5,6 +5,7 @@
 @using Size = MudBlazor.Size
 @using Color = MudBlazor.Color
 @using System.ComponentModel
+@using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.LearningPathway
 @using Presentation.PresentationLogic.LearningSpace
@@ -18,12 +19,12 @@
         <img src="CustomIcons/world-icon-nobg.png" class="opacity-50 w-7 h-7"> 
         <p class="text-lg text-adlerblue-600 truncate hover:text-clip"> @LearningWorldP.LearningWorldVm?.Name</p>
         </div>
-        <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">Workload: </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> min.</span></h3>
-        <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">Points: </span> @LearningWorldP.LearningWorldVm?.Points</h3>
+        <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">@Localizer["LearningWorldView.Workload.Text"] </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> @Localizer["LearningWorldView.Workload.TimeScale"]</span></h3>
+        <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">@Localizer["LearningWorldView.Points.Text"] </span> @LearningWorldP.LearningWorldVm?.Points</h3>
     </section>
     <section class="flex flex-row gap-2 justify-center">
         <div class="flex grow justify-between">
-            <MudButton Class="relative btn-standard w-14 add-learning-space" @onclick="AddNewLearningSpace" title="New learning space" Disabled="LearningWorldP.LearningWorldVm == null">
+            <MudButton Class="relative btn-standard w-14 add-learning-space" @onclick="AddNewLearningSpace" title=@Localizer["LearningWorldView.NewLearningSpace.Title"] Disabled="LearningWorldP.LearningWorldVm == null">
                 <img src="CustomIcons/space-icon_nobg.png" class="absolute opacity-50 w-8 h-8">
                 <MudIcon Icon="@Icons.Material.Filled.Add" Class="absolute"></MudIcon>
             </MudButton>
@@ -31,7 +32,7 @@
                 <img src="CustomIcons/space-icon_nobg.png" class="absolute opacity-50 w-8 h-8">
                 <MudIcon Icon="@Icons.Material.Filled.Download" Class="absolute"></MudIcon>
             </MudButton>
-            <MudButton Class="relative btn-standard w-14 add-condition" title="New condition" @onclick="AddNewPathWayCondition" Disabled="LearningWorldP.LearningWorldVm == null">
+            <MudButton Class="relative btn-standard w-14 add-condition" title=@Localizer["LearningWorldView.NewCondition.Title"] @onclick="AddNewPathWayCondition" Disabled="LearningWorldP.LearningWorldVm == null">
                 <img src="CustomIcons/new-condition-icon-nobg.png" class="absolute opacity-50 w-8 h-8">
                 <MudIcon Icon="@Icons.Material.Filled.Add" Class="absolute"></MudIcon>
             </MudButton>
@@ -110,6 +111,9 @@
 
     [Inject]
     public ISelectedViewModelsProvider SelectedViewModelsProvider { get; set; }
+    
+    [Inject]
+    private IStringLocalizer<LearningWorldView> Localizer { get; set; }
 #pragma warning restore CS8618
     
     private ExceptionWrapper? ErrorState { get; set; }
@@ -150,7 +154,7 @@
         }
         catch (Exception exception)
         {
-            ErrorState = new ExceptionWrapper("Load learning space", exception);
+            ErrorState = new ExceptionWrapper(Localizer["ExceptionWrapper.LoadSpace.Exception.Message"], exception);
         }
         finally
         {
@@ -171,7 +175,7 @@
         }
         catch (Exception exception)
         {
-            ErrorState = new ExceptionWrapper("Save learning world", exception);
+            ErrorState = new ExceptionWrapper(Localizer["ExceptionWrapper.SaveWorld.Exception.Message"], exception);
         }
         finally
         {
@@ -192,7 +196,7 @@
         }
         catch (Exception exception)
         {
-            ErrorState = new ExceptionWrapper("Save learning space", exception);
+            ErrorState = new ExceptionWrapper(Localizer["ExceptionWrapper.SaveSpace.Exception.Message"], exception);
         }
         finally
         {

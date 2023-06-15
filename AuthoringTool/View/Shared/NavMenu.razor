@@ -1,33 +1,40 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using Microsoft.Extensions.Localization
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">AuthoringTool</a>
+        <a class="navbar-brand" href="">@Localizer["NavBar.Brand.Text"]</a>
         <button title="Navigation menu" class="navbar-toggler">
             <span class="navbar-toggler-icon"></span>
         </button>
     </div>
 </div>
 
-<div class="collapse" >
+<div class="collapse">
     <nav class="flex-column">
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                <span class="oi oi-home" aria-hidden="true"></span> Home
+                <span class="oi oi-home" aria-hidden="true"></span> @Localizer["NavLink.Home.Text"]
             </NavLink>
         </div>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="AuthoringToolWorkspaceView">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Workspace
+                <span class="oi oi-list-rich" aria-hidden="true"></span> @Localizer["NavLink.Workspace.Text"]
             </NavLink>
         </div>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="ButtonsView">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> ButtonsView
+                <span class="oi oi-list-rich" aria-hidden="true"></span> @Localizer["NavLink.ButtonsView.Text"]
             </NavLink>
         </div>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="DebugView">
-                <span class="oi oi-list-rich" aria-hidden="true"></span> Debug
+                <span class="oi oi-list-rich" aria-hidden="true"></span> @Localizer["NavLink.Debug.Text"]
             </NavLink>
         </div>
     </nav>
 </div>
+
+@code
+{
+    [Inject]
+    private IStringLocalizer<NavMenu> Localizer { get; set; }
+}

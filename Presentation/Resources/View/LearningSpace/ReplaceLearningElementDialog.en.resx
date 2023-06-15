@@ -1,0 +1,30 @@
+<root>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <data name="Dialog.Content.Line1.Text" xml:space="preserve">
+        <value>Do you want to replace the learning element?</value>
+    </data>
+    <data name="Dialog.Content.Line2.Text" xml:space="preserve">
+        <value>This will move the current learning element to the unplaced learning elements in the world.</value>
+    </data>
+    <data name="Dialog.Button.Cancel.Text" xml:space="preserve">
+        <value>Cancel</value>
+    </data>
+    <data name="Dialog.Button.Replace.Text" xml:space="preserve">
+        <value>Replace</value>
+    </data>
+</root>

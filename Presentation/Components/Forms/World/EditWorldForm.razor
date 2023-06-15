@@ -3,44 +3,47 @@
 @using BusinessLogic.Entities
 @using Presentation.Components.Forms.Models
 @using System.ComponentModel
+@using Microsoft.Extensions.Localization
 @using Presentation.Components.Forms.Buttons
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
-        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Learning world metadata</h2>
+        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["EditWorldForm.Header.Title"]</h2>
     </div>
 </header>
 <MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
 <BaseForm TForm="LearningWorldFormModel" TEntity="LearningWorld" OnValidSubmit="OnValidSubmit"
-          SnackbarMessage="World updated" FormDataContainer="FormDataContainer">
+          SnackbarMessage=@Localizer["EditWorldForm.SnackbarMessage"] FormDataContainer="FormDataContainer">
     <Fields>
-        <Collapsable Title="General" @bind-Collapsed="_collapsedGeneral">
+        <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.General.Title"]
+                     @bind-Collapsed="_collapsedGeneral">
             <div class="rounded-lg w-4/4 px-4 pb-2">
             <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                           For="@(() => FormModel.Name)"
                           Immediate="true"
                           DebounceInterval="300"
-                          Label="@nameof(FormDataContainer.FormModel.Name)"/>
+                          Label=@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Name.Text"]/>
             <MudTextField @bind-Value="FormDataContainer.FormModel.Shortname"
                           For="@(() => FormModel.Shortname)"
                           Immediate="true"
                           DebounceInterval="300"
-                          Label="@nameof(FormDataContainer.FormModel.Shortname)"/>
+                          Label=@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Shortname.Text"]/>
             <MudTextField @bind-Value="FormDataContainer.FormModel.Authors"
                           For="@(() => FormModel.Authors)"
                           Immediate="true"
                           DebounceInterval="300"
-                          Label="@nameof(FormDataContainer.FormModel.Authors)"/>
+                          Label=@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Authors.Text"]/>
             <MudTextField @bind-Value="FormDataContainer.FormModel.Language"
                           For="@(() => FormModel.Language)"
                           Immediate="true"
                           DebounceInterval="300"
-                          Label="@nameof(FormDataContainer.FormModel.Language)"/>
+                          Label=@Localizer["EditWorldForm.Fields.Collapsable.General.Field.Language.Text"]/>
             </div>
             </Collapsable>
 
-        <Collapsable Title="Goals" @bind-Collapsed="_collapsedGoals">
+        <Collapsable Title=@Localizer["EditWorldForm.Fields.Collapsable.Goals.Title"]
+                     @bind-Collapsed="_collapsedGoals">
             <div class="rounded-lg w-4/4 px-4">
-                <MudText Typo="Typo.caption">Description</MudText>
+                <MudText Typo="Typo.caption">@Localizer["EditWorldForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
                           For="@(() => FormModel.Description)"
                           Immediate="true"
@@ -48,7 +51,7 @@
                           Variant="Variant.Outlined"
                           DebounceInterval="300"
                           Class="pb-4 mt-0"/>
-                <MudText Typo="Typo.caption">Goals</MudText>
+                <MudText Typo="Typo.caption">@Localizer["EditWorldForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                           For="@(() => FormModel.Goals)"
                           Immediate="true"
@@ -61,7 +64,9 @@
     </Fields>
     <FooterButtons>
         <SubmitThenRemapButton RemapAction="MapIntoContainer"/>
-        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Autorenew" Class="btn-standard text-adlergrey rounded bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue" OnClick="OnResetAsync"></MudIconButton>
+        <MudIconButton Variant="Variant.Filled" Icon="@Icons.Material.Filled.Autorenew" 
+                       Class="btn-standard text-adlergrey rounded bg-adlerdeactivated hover:bg-adlerdarkblue hover:text-buttonbgblue" 
+                       OnClick="OnResetAsync"></MudIconButton>
     </FooterButtons>
 </BaseForm>
 
@@ -75,6 +80,9 @@
 
     [Inject]
     private IFormDataContainer<LearningWorldFormModel, LearningWorld> FormDataContainer { get; set; }
+    
+    [Inject]
+    private IStringLocalizer<EditWorldForm> Localizer { get; set; }
 #pragma warning restore CS8618
 
 #pragma warning disable CS8618

@@ -4,11 +4,12 @@
 @using Shared
 @using Presentation.PresentationLogic.LearningElement
 @using System.Text
-@using Microsoft.AspNetCore.SignalR
+@using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.SelectedViewModels
+
 <div class="mx-2 rounded-lg">
     <div class="flex justify-center p-2">
-        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Learning Space Editor</h2>
+        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["LearningSpace.Title.Text"]</h2>
     </div>
 </div>
 
@@ -24,26 +25,26 @@
         <section class="p-2 gap-1 flex flex-col justify-start">
             <div class="gap-8 flex justify-between items-start">
                 <label id="learning-element-info" class="font-medium text-lg flex flex-col justify-stretch">
-                    <h3 class="text-base text-adlerblue-600 space-theme"><span class="text-adlergrey-600">Theme: </span>@LearningSpaceP.LearningSpaceVm?.Theme</h3>
+                    <h3 class="text-base text-adlerblue-600 space-theme"><span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceTheme.Text"] </span>@LearningSpaceP.LearningSpaceVm?.Theme</h3>
                     @*<h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">Selected learning element: </span> @SelectedViewModelsProvider.LearningElement.Name</h3>*@
-                    <h3 class="text-base text-adlerblue-600 flex-initial break-all space-goals"><span class="text-adlergrey-600">Goals: </span>@LearningSpaceP.LearningSpaceVm?.Goals</h3>
+                    <h3 class="text-base text-adlerblue-600 flex-initial break-all space-goals"><span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceGoals.Text"] </span>@LearningSpaceP.LearningSpaceVm?.Goals</h3>
                 </label>
                     <div class="min-w-max">
-                        <h3 class="text-base text-adlerblue-600 space-workload"><span class="text-adlergrey-600">Workload: </span> @LearningSpaceP.LearningSpaceVm?.Workload<span class="text-adlergrey-600"> min.</span></h3>
-                        <h3 class="text-base text-adlerblue-600 space-points"><span class="text-adlergrey-600">Points: </span> @LearningSpaceP.LearningSpaceVm?.Points</h3>
+                        <h3 class="text-base text-adlerblue-600 space-workload"><span class="text-adlergrey-600">@Localizer["LearningSpace.SpaceWorkload.Text"] </span> @LearningSpaceP.LearningSpaceVm?.Workload<span class="text-adlergrey-600"> min.</span></h3>
+                        <h3 class="text-base text-adlerblue-600 space-points"><span class="text-adlergrey-600">@Localizer["LearningSpace.SpacePoints.Text"] </span> @LearningSpaceP.LearningSpaceVm?.Points</h3>
                         @ChildContent
                     </div>
             </div>
             <div class="flex justify-start">
-                <button class="relative btn-standard delete-learning-element w-14" @onclick="DeleteSelectedLearningElement" title="Delete learning element">
+                <button class="relative btn-standard delete-learning-element w-14" @onclick="DeleteSelectedLearningElement" title=@Localizer["LearningSpace.Button.DeleteLearningElement.Title"]>
                     <img src="CustomIcons/learningelements-icon-nobg.png" alt="Delete learning element" class="absolute opacity-50 w-8 h-8">
                     <MudIcon Icon="@Icons.Material.Filled.Delete" Class="absolute"></MudIcon>
                 </button>
-                <button class="relative btn-standard save-learning-element w-14" @onclick="SaveSelectedLearningElementAsync" title="Save learning element">
+                <button class="relative btn-standard save-learning-element w-14" @onclick="SaveSelectedLearningElementAsync" title=@Localizer["LearningSpace.Button.SaveLearningElement.Title"]>
                     <img src="CustomIcons/learningelements-icon-nobg.png" alt="Save learning element" class="absolute opacity-50 w-8 h-8">
                     <MudIcon Icon="@Icons.Material.Filled.Save" Class="absolute"></MudIcon>
                 </button>
-                <button class="relative btn-standard show-learning-element-content w-14" @onclick="ShowSelectedElementContentAsync" title="Show learning element">
+                <button class="relative btn-standard show-learning-element-content w-14" @onclick="ShowSelectedElementContentAsync" title=@Localizer["LearningSpace.Button.ShowLearningElement.Title"]>
                     <img src="CustomIcons/learningelements-icon-nobg.png" alt="Show learning element" class="absolute opacity-50 w-8 h-8">
                     <MudIcon Icon="@Icons.Material.Filled.RemoveRedEye" Class="absolute"></MudIcon>
                 </button>
@@ -99,6 +100,9 @@
 
     [Inject]
     IDialogService DialogService { get; set; }
+    
+    [Inject]
+    private IStringLocalizer<LearningSpaceView> Localizer { get; set; }
 #pragma warning restore CS8618
 
     [Parameter]
@@ -166,7 +170,7 @@
         }
         catch (Exception exception)
         {
-            ErrorState = new ExceptionWrapper("Load learning element", exception);
+            ErrorState = new ExceptionWrapper(Localizer["Error.ExceptionWrapper.LoadLearningElement.Message"], exception);
         }
         finally
         {
@@ -187,7 +191,7 @@
         }
         catch (Exception exception)
         {
-            ErrorState = new ExceptionWrapper("Save learning element", exception);
+            ErrorState = new ExceptionWrapper(Localizer["Error.ExceptionWrapper.SaveLearningElement.Message"], exception);
         }
         finally
         {
@@ -207,7 +211,7 @@
         }
         catch (Exception exception)
         {
-            ErrorState = new ExceptionWrapper("Show learning element content", exception);
+            ErrorState = new ExceptionWrapper(Localizer["Error.ExceptionWrapper.ShowLearningElementContent.Message"], exception);
         }
         finally
         {
@@ -313,7 +317,7 @@
     private async Task ShowReplaceLearningElementDialog()
     {
         _showingReplaceLearningElementDialog = true;
-        var dialog = await DialogService.ShowAsync<ReplaceLearningElementDialog>("Replace Learning Element");
+        var dialog = await DialogService.ShowAsync<ReplaceLearningElementDialog>(@Localizer["ShowReplaceLearningElementDialog.Dialog.ReplaceLearningElement"]);
         var result = await dialog.Result;
         LearningSpaceP.OnReplaceLearningElementDialogClose(result);
         _showingReplaceLearningElementDialog = false;

@@ -1,44 +1,45 @@
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.Components.Forms.Models
 @using BusinessLogic.Entities
+@using Microsoft.Extensions.Localization
 @using Presentation.Components.Forms.Buttons
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
-        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Learning world metadata</h2>
+        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["CreateWorldForm.Title.Text"]</h2>
     </div>
 </header>
 <MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
 <BaseForm TForm="LearningWorldFormModel" TEntity="LearningWorld" OnValidSubmit="OnValidSubmit"
           SnackbarMessage="World created" FormDataContainer="FormDataContainer">
     <Fields>
-        <Collapsable Title="General" @bind-Collapsed="_collapsedGeneral">
+        <Collapsable Title=@Localizer["CreateWorldForm.General.Text"] @bind-Collapsed="_collapsedGeneral">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                           For="@(() => FormModel.Name)"
                           Immediate="true"
                           DebounceInterval="300"
-                          Label="@nameof(FormDataContainer.FormModel.Name)"/>
+                          Label=@Localizer["CreateWorldForm.General.Field.Name.Text"]/>
             <MudTextField @bind-Value="FormDataContainer.FormModel.Shortname"
                           For="@(() => FormModel.Shortname)"
                           Immediate="true"
                           DebounceInterval="300"
-                          Label="@nameof(FormDataContainer.FormModel.Shortname)"/>
+                          Label=@Localizer["CreateWorldForm.General.Field.Shortname.Text"]/>
             <MudTextField @bind-Value="FormDataContainer.FormModel.Authors"
                           For="@(() => FormModel.Authors)"
                           Immediate="true"
                           DebounceInterval="300"
-                          Label="@nameof(FormDataContainer.FormModel.Authors)"/>
+                          Label=@Localizer["CreateWorldForm.General.Field.Authors.Text"]/>
             <MudTextField @bind-Value="FormDataContainer.FormModel.Language"
                           For="@(() => FormModel.Language)"
                           Immediate="true"
                           DebounceInterval="300"
-                          Label="@nameof(FormDataContainer.FormModel.Language)"/>
+                          Label=@Localizer["CreateWorldForm.General.Field.Language.Text"]/>
             </div>
         </Collapsable>
 
-        <Collapsable Title="Goals" @bind-Collapsed="_collapsedGoals">
+        <Collapsable Title=@Localizer["CreateWorldForm.Goals.Text"] @bind-Collapsed="_collapsedGoals">
             <div class="rounded-lg w-4/4 px-4">
-                <MudText Typo="Typo.caption">Description</MudText>
+                <MudText Typo="Typo.caption">@Localizer["CreateWorldForm.Goals.Field.Description.Text"]</MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
                           For="@(() => FormModel.Description)"
                           Immediate="true"
@@ -46,7 +47,7 @@
                           Variant="Variant.Outlined"
                           DebounceInterval="300"
                           Class="pb-4 mt-0"/>
-                <MudText Typo="Typo.caption">Goals</MudText>
+                <MudText Typo="Typo.caption">@Localizer["CreateWorldForm.Goals.Field.Goals.Text"]</MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                           For="@(() => FormModel.Goals)"
                           Immediate="true"
@@ -64,6 +65,9 @@
 </BaseForm>
 
 @code {
+    [Inject]
+    private IStringLocalizer<CreateWorldForm> Localizer { get; set; }
+
 #pragma warning disable CS8618 - injected by framework - n.stich
     [Inject]
     private IAuthoringToolWorkspacePresenter AuthoringToolWorkspacePresenter { get; set; }

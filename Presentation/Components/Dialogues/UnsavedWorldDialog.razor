@@ -1,14 +1,18 @@
+@using Microsoft.Extensions.Localization
 <MudDialog>
     <DialogContent>
-        The world @WorldName has unsaved changes. All unsaved changes will be lost upon closing the program. Do you want to save the world before closing?
+        @Localizer["UnsavedWorldDialog.Content.Text", WorldName]
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Yes">Yes</MudButton>
-        <MudButton OnClick="No">No</MudButton>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton OnClick="Yes">@Localizer["UnsavedWorldDialog.Button.Yes"]</MudButton>
+        <MudButton OnClick="No">@Localizer["UnsavedWorldDialog.Button.No"]</MudButton>
+        <MudButton OnClick="Cancel">@Localizer["UnsavedWorldDialog.Button.Cancel"]</MudButton>
     </DialogActions>
 </MudDialog>
 @code {
+    [Inject]
+    IStringLocalizer<UnsavedWorldDialog> Localizer { get; set; }
+
     [CascadingParameter]
     public MudDialogInstance MudDialog { get; set; }
     [Parameter, EditorRequired]

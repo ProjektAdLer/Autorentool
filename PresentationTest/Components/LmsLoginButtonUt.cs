@@ -3,6 +3,7 @@ using Bunit.TestDoubles;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
@@ -17,6 +18,7 @@ public class LmsLoginButtonUt
 {
     private TestContext _context;
     private IDialogService _dialogService;
+    private IStringLocalizer<LmsLoginButton> _localizer;
 
     [SetUp]
     public void Setup()
@@ -24,7 +26,18 @@ public class LmsLoginButtonUt
         _context = new TestContext();
         _context.ComponentFactories.AddStub<MudIconButton>();
         _dialogService = Substitute.For<IDialogService>();
+        _localizer = Substitute.For<IStringLocalizer<LmsLoginButton>>();
         _context.Services.AddSingleton(_dialogService);
+        _context.Services.AddSingleton(_localizer);
+    }
+    
+    [Test]
+    public void Constructor_InjectsDependencies()
+    {
+        var systemUnderTest = CreateTestableLmsLoginButtonComponent();
+        
+        Assert.That(systemUnderTest.Instance.DialogService, Is.EqualTo(_dialogService));
+        Assert.That(systemUnderTest.Instance.Localizer, Is.EqualTo(_localizer));
     }
 
     [Test]

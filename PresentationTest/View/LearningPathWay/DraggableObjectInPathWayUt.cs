@@ -3,9 +3,11 @@ using Bunit;
 using Bunit.TestDoubles;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components;
+using Presentation.Components.RightClickMenu;
 using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningPathway;
@@ -25,6 +27,7 @@ public class DraggableObjectInPathWay
     private TestContext _ctx;
     private IMouseService _mouseService;
     private ISelectedViewModelsProvider _selectedViewModelsProvider;
+    private IStringLocalizer<DraggableObjectInPathWay> _localizer;
 #pragma warning restore CS8618
 
     [SetUp]
@@ -32,10 +35,13 @@ public class DraggableObjectInPathWay
     {
         _ctx = new TestContext();
         _ctx.ComponentFactories.AddStub<Draggable<IObjectInPathWayViewModel>>();
+        _ctx.ComponentFactories.AddStub<RightClickMenu<IObjectInPathWayViewModel>>();
         _mouseService = Substitute.For<IMouseService>();
         _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        _localizer = Substitute.For<IStringLocalizer<DraggableObjectInPathWay>>();
         _ctx.Services.AddSingleton(_mouseService);
         _ctx.Services.AddSingleton(_selectedViewModelsProvider);
+        _ctx.Services.AddSingleton(_localizer);
     }
     
     [Test]

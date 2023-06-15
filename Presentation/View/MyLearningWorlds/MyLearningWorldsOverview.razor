@@ -4,22 +4,23 @@
 @using Presentation.PresentationLogic.API
 @using Presentation.Components
 @using Presentation.Components.Forms.World
+@using Microsoft.Extensions.Localization
 <main class="overflow-hidden flex flex-col items-center relative min-h-screen max-h-screen h-screen w-screen bg-gradient-to-br m-0 from-adlerbggradientfrom to-adlerbggradientto">
     <HeaderBar/>
     <article class="p-2 flex flex-col items-center gap-6 overflow-hidden h-[41rem] 2xl:h-[44rem] 1080p:h-[58rem] 2500p:h-[80rem] 3000p:h-[90rem] 3700p:h-[123rem] w-5/6">
-        <h3 class="font-bold text-2xl text-center text-adlerdarkblue">My Learning Worlds</h3>
+        <h3 class="font-bold text-2xl text-center text-adlerdarkblue">@Localizer["Page.LearningWorld.Heading"]</h3>
         <section class="flex flex-row gap-2 justify-center bg-blacktrans-200 p-1 rounded-lg">
-            <div class="btn-standard w-28 flex justify-center items-center" title="New learning world">
+            <div class="btn-standard w-28 flex justify-center items-center" title=@Localizer["Page.LearningWorld.Button.New.Hover"]>
                 <button class="gap-2" @onclick="CreateLearningWorld">
-                    <MudIcon Icon="@Icons.Material.Filled.Add" Class="z-20 add-learning-world"></MudIcon>
-                    <p class="z-10 uppercase">New</p>
+                    <MudIcon Icon="@Icons.Material.Filled.Add" Title=@Localizer["Page.LearningWorld.Button.New.Hover"] Class="z-20 add-learning-world"></MudIcon>
+                    <p class="z-10 uppercase">@Localizer["Page.LearningWorld.Button.New.Text"]</p>
                 </button>
                 <img src="CustomIcons/world-icon-nobg.png" class="z-0 pointer-events-none opacity-20 absolute w-8 h-8">
             </div>
-            <div class="btn-standard w-28 flex justify-center items-center" @onclick="LoadLearningWorldAsync" title="Import learning world">
+            <div class="btn-standard w-28 flex justify-center items-center" @onclick="LoadLearningWorldAsync" title=@Localizer["Page.LearningWorld.Button.Import.Hover"]>
                 <button class="gap-2">
-                    <MudIcon Icon="@Icons.Material.Filled.Download" Class="z-10 load-learning-world"></MudIcon>
-                    <p class="z-10 uppercase">Import</p>
+                    <MudIcon Icon="@Icons.Material.Filled.Download" Title=@Localizer["Page.LearningWorld.Button.Import.Hover"] Class="z-10 load-learning-world"></MudIcon>
+                    <p class="z-10 uppercase">@Localizer["Page.LearningWorld.Button.Import.Text"]</p>
                 </button>
                 <img src="CustomIcons/world-icon-nobg.png" class="z-0 pointer-events-none opacity-20 absolute w-8 h-8">
             </div>
@@ -36,7 +37,7 @@
                 }
             </MudGrid>
         </section>
-        <MudButton Class="btn-standard normal-case" @onclick="OnClickMyLearningWorldsOverview">Gehe zur Lernwelt</MudButton>
+        <MudButton Class="btn-standard normal-case" @onclick="OnClickMyLearningWorldsOverview">@Localizer["Page.LearningWorld.Button.GOTO.LearnWorld.Text"]</MudButton>
         <MudDrawer Width="26%" Height="100%" @bind-Open="_createLearningWorldDialogOpen" Variant="@DrawerVariant.Temporary" Position="DrawerPosition.Left">
             <MudDrawerContent>
                 <CreateWorldForm OnSubmitted="() => _createLearningWorldDialogOpen = false"/>
@@ -47,6 +48,8 @@
 </main>
 
 @code {
+    [Inject]
+    private IStringLocalizer<MyLearningWorldsOverview> Localizer { get; set; }
 
 #pragma warning disable CS8618
     [Inject]

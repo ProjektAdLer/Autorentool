@@ -12,4 +12,15 @@
       <PackageReference Include="System.IO.Abstractions" Version="17.2.3" />
     </ItemGroup>
 
+    <ItemGroup>
+      <EmbeddedResource Update="Resources\FloorPlanEnum.de.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>FloorPlanEnum.de.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\FloorPlanEnum.en.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>FloorPlanEnum.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+    </ItemGroup>
+
 </Project>

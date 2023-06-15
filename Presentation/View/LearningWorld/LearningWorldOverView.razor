@@ -5,6 +5,7 @@
 @using Presentation.PresentationLogic.LearningContent
 @using Presentation.PresentationLogic.LearningElement
 @using System.ComponentModel
+@using Microsoft.Extensions.Localization
 @using Presentation.PresentationLogic.LearningSpace
 
 @if (LearningWorldP?.LearningWorldVm != null)
@@ -16,8 +17,8 @@
                     <img src="CustomIcons/world-icon-nobg.png" alt="world" class="opacity-50 w-7 h-7"> 
                     <p class="text-lg text-adlerblue-600 truncate hover:text-clip"> @LearningWorldP.LearningWorldVm?.Name</p>
                 </div>
-                <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">Workload: </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> min.</span></h3>
-                <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">Points: </span> @LearningWorldP.LearningWorldVm?.Points</h3>
+                <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">@Localizer["OverView.Workload"] </span> @LearningWorldP.LearningWorldVm?.Workload<span class="text-adlergrey-600"> @Localizer["OverView.Workload.TimeScale"]</span></h3>
+                <h3 class="text-base text-adlerblue-600"><span class="text-adlergrey-600">@Localizer["OverView.Workload.TimeScale"] </span> @LearningWorldP.LearningWorldVm?.Points</h3>
             </section>
         </article>
         <section class="flex bg-white rounded-lg w-[250px] 2xl:w-[250px] 1080p:w-[350px] 2500p:w-[400px] 3000p:w-[600px] 3700p:w-[750px] grow overflow-scroll pt-2">
@@ -50,6 +51,8 @@
 @code {
     [Inject]
     public ILearningWorldPresenterOverviewInterface LearningWorldP { get; set; }
+    [Inject]
+    private IStringLocalizer<LearningWorldOverView> Localizer { get; set; }
 
     private static string SpaceIcon { get; set; } = CustomIcons.SpaceIcon;
     
