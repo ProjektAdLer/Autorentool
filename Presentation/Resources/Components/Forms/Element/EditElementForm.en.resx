@@ -53,8 +53,11 @@
     <data name="EditElementForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
         <value>Description</value>
     </data>
-    <data name="EditElementForm.Fields.Collapsable.Goals.Field.Goals.Title" xml:space="preserve">
+    <data name="EditElementForm.Fields.Collapsable.Goals.Field.Goals.Text" xml:space="preserve">
         <value>Goals</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.LearningContent.Field.LearningContent.Text" xml:space="preserve">
+        <value>Learning content</value>
     </data>
     <data name="EditElementForm.Fields.Collapsable.General.Field.Points.Text" xml:space="preserve">
         <value>Punkte</value>

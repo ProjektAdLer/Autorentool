@@ -69,10 +69,10 @@
             </div>
         </Collapsable>
 
-        <Collapsable Title=@Localizer["CreateElementForm.Collapsable.LearningContent.Title"] @bind-Collapsed="_collapsedContent">
+        <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Title"] @bind-Collapsed="_collapsedContent">
             <div class="rounded-lg max-w-2xl px-4 pb-2">
                 <MudSelect @bind-Value="FormDataContainer.FormModel.LearningContent" AnchorOrigin="Origin.BottomCenter"
-                           Label=@Localizer["CreateElementForm.Collapsable.LearningContent.Field.LearningContent.Text"]
+                           Label=@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Field.LearningContent.Text"]
                            For="@(() => FormModel.LearningContent)"
                            >
                     @foreach (var learningContent in WorldPresenter.GetAllContent())
@@ -83,9 +83,9 @@
             </div>
         </Collapsable>
         
-        <Collapsable Title=@Localizer["CreateElementForm.Collapsable.3DRepresentation.Title"] @bind-Collapsed="_collapsedElementModel">
+        <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Title"] @bind-Collapsed="_collapsedElementModel">
             <div class="rounded-lg w-4/4 px-4 pb-4">
-                <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]</MudText>
+                <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]</MudText>
                 <MudSelect @bind-Value="FormDataContainer.FormModel.ElementModel"
                            AnchorOrigin="Origin.BottomCenter"
                            For="@(() => FormModel.ElementModel)"
@@ -100,9 +100,9 @@
             </div>
         </Collapsable>
 
-        <Collapsable Title=@Localizer["CreateElementForm.Collapsable.Goals.Title"] @bind-Collapsed="_collapsedGoals">
+        <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.Goals.Title"] @bind-Collapsed="_collapsedGoals">
             <div class="rounded-lg w-4/4 px-4">
-                <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Collapsable.Goals.Field.Description.Text"]</MudText>
+                <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
                               For="@(() => FormModel.Description)"
                               Immediate="true"
@@ -110,7 +110,7 @@
                               Variant="Variant.Outlined"
                               DebounceInterval="300"
                               Class="pb-4 mt-0"/>
-                <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Collapsable.Goals.Field.Goals.Text"]</MudText>
+                <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.Goals.Field.Goals.Text"]</MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                               For="@(() => FormModel.Goals)"
                               Immediate="true"

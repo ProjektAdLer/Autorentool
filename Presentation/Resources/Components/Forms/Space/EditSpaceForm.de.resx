@@ -62,4 +62,7 @@
     <data name="EditSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text" xml:space="preserve">
         <value>Benötigte Punkte</value>
     </data>
+    <data name="EditSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text" xml:space="preserve">
+        <value>Design</value>
+    </data>
 </root>
