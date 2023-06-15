@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Text;
 using Bunit;
 using Bunit.Rendering;
@@ -6,6 +7,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using MudBlazor;
 using NSubstitute;
+using NSubstitute.Core;
 using NUnit.Framework;
 using Presentation.Components;
 using Presentation.Components.Culture;
@@ -51,6 +53,8 @@ public class HeaderBarUt
         _mediator = Substitute.For<IMediator>();
         _stringLocalizer = Substitute.For<IStringLocalizer<HeaderBar>>();
         _stringLocalizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
+        _stringLocalizer[Arg.Any<string>(), Arg.Any<object[]>()].Returns(ci =>
+            new LocalizedString(ci.Arg<string>(), FormatStringLocalizerValue(ci)));
         _snackbar = Substitute.For<ISnackbar>();
         _dialogService = Substitute.For<IDialogService>();
         _errorService = Substitute.For<IErrorService>();
@@ -61,6 +65,11 @@ public class HeaderBarUt
         _testContext.Services.AddSingleton(_snackbar);
         _testContext.Services.AddSingleton(_dialogService);
         _testContext.Services.AddSingleton(_errorService);
+    }
+
+    private static string FormatStringLocalizerValue(CallInfo ci)
+    {
+        return ci.Arg<string>() + " " + string.Join(" ", ci.Arg<object[]>().Select(obj => obj.ToString()));
     }
 
     [Test]
@@ -140,11 +149,12 @@ public class HeaderBarUt
         button.Click();
         
         var mockStringBuilder = new StringBuilder();
-        mockStringBuilder.AppendLine("<li> LearningWorld has no LearningSpaces. </li>");
-        mockStringBuilder.Insert(0, "<ul>");
+        mockStringBuilder.Append("<ul><li>");
+        mockStringBuilder.AppendLine(" ErrorString.Missing.LearningSpace.Message </li>");
         mockStringBuilder.Append("</ul>");
         
-        _errorService.Received().SetError("LearningWorld is not valid", mockStringBuilder.ToString());
+        
+        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", mockStringBuilder.ToString());
     }
     
     [Test]
@@ -164,13 +174,13 @@ public class HeaderBarUt
         button.Click();
         
         var mockStringBuilder = new StringBuilder();
-        mockStringBuilder.AppendLine($"<li> LearningSpace {space1.Name} cannot be completed due to insufficient points. </li>");
-        mockStringBuilder.AppendLine($"<li> LearningSpace {space2.Name} has no LearningElements. </li>");
-        mockStringBuilder.AppendLine($"<li> LearningSpace {space2.Name} cannot be completed due to insufficient points. </li>");
-        mockStringBuilder.Insert(0, "<ul>");
+        mockStringBuilder.Append("<ul>");
+        mockStringBuilder.AppendLine($"<li> ErrorString.Insufficient.Points.Message {space1.Name} </li>");
+        mockStringBuilder.AppendLine($"<li> ErrorString.Missing.LearningElements.Message {space2.Name} </li>");
+        mockStringBuilder.AppendLine($"<li> ErrorString.Insufficient.Points.Message {space2.Name} </li>");
         mockStringBuilder.Append("</ul>");
         
-        _errorService.Received().SetError("LearningWorld is not valid", mockStringBuilder.ToString());
+        _errorService.Received().SetError("Exception.InvalidLearningWorld.Message", mockStringBuilder.ToString());
     }
 
     private IRenderedComponent<HeaderBar> GetRenderedComponent()

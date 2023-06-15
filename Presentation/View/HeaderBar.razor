@@ -204,6 +204,7 @@
     private bool IsLearningWorldValid(ILearningWorldViewModel world)
     {
         var errorString = new StringBuilder();
+        errorString.Append("<ul>");
 
         if (world.LearningSpaces.Count == 0)
         {
@@ -222,9 +223,8 @@
             }
         }
 
-        if (errorString.Length == 0) return true;
+        if (errorString.Length == "<ul>".Length) return true;
 
-        errorString.Insert(0, "<ul>");
         errorString.Append("</ul>");
 
         ErrorService.SetError(Localizer["Exception.InvalidLearningWorld.Message"], errorString.ToString());
