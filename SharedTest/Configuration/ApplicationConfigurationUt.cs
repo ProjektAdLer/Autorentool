@@ -35,7 +35,7 @@ namespace SharedTest.Configuration
         public void Constructor_InjectsDependencies()
         {
             var systemUnderTest = CreateApplicationConfiguration();
-            
+
             Assert.Multiple(() =>
             {
                 Assert.That(systemUnderTest.Logger, Is.EqualTo(_logger));
@@ -47,7 +47,12 @@ namespace SharedTest.Configuration
         public void Constructor_NoConfigFileFound_GeneratesDefaultConfigAndSavesToFile()
         {
             // Arrange
-            var expectedDefaultConfig = new ObservableDictionary<string, string> { { "BackendBaseUrl", "" } };
+            var expectedDefaultConfig = new ObservableDictionary<string, string>
+            {
+                {IApplicationConfiguration.BackendBaseUrl, ""},
+                {IApplicationConfiguration.BackendUsername, ""},
+                {IApplicationConfiguration.BackendToken, ""}
+            };
             var expectedJson = JsonSerializer.Serialize(expectedDefaultConfig);
 
             // Act
@@ -68,8 +73,36 @@ namespace SharedTest.Configuration
         {
             // Arrange
             var expectedConfig = new ObservableDictionary<string, string>
-                { { "BackendBaseUrl", "http://example.com" } };
+            {
+                {IApplicationConfiguration.BackendBaseUrl, "http://example.com"},
+                {IApplicationConfiguration.BackendUsername, "username"},
+                {IApplicationConfiguration.BackendToken, "token"}
+            };
             var json = JsonSerializer.Serialize(expectedConfig);
+            _fileSystem.AddFile(_filePath, new MockFileData(json));
+
+            // Act
+            var configuration = new ApplicationConfiguration(_logger, _fileSystem);
+
+            // Assert
+            Assert.That(configuration.Configuration, Is.EqualTo(expectedConfig));
+        }
+
+        [Test]
+        public void Constructor_ConfigFileFound_LoadsConfigurationAndAddsMissingKeys()
+        {
+            // Arrange
+            var givenConfig = new ObservableDictionary<string, string>
+            {
+                {IApplicationConfiguration.BackendBaseUrl, "http://example.com"},
+            };
+            var expectedConfig = new ObservableDictionary<string, string>
+            {
+                {IApplicationConfiguration.BackendBaseUrl, "http://example.com"},
+                {IApplicationConfiguration.BackendUsername, ""},
+                {IApplicationConfiguration.BackendToken, ""}
+            };
+            var json = JsonSerializer.Serialize(givenConfig);
             _fileSystem.AddFile(_filePath, new MockFileData(json));
 
             // Act
@@ -84,14 +117,14 @@ namespace SharedTest.Configuration
         {
             // Arrange
             var expectedConfig = new ObservableDictionary<string, string>
-                { { "BackendBaseUrl", "http://example.com" } };
+                {{IApplicationConfiguration.BackendBaseUrl, "http://example.com"}};
             var json = JsonSerializer.Serialize(expectedConfig);
             _fileSystem.AddFile(_filePath, new MockFileData(json));
-            
+
             var configuration = CreateApplicationConfiguration();
 
             // Act
-            var value = configuration["BackendBaseUrl"];
+            var value = configuration[IApplicationConfiguration.BackendBaseUrl];
 
             // Assert
             Assert.That(value, Is.EqualTo("http://example.com"));
@@ -102,25 +135,30 @@ namespace SharedTest.Configuration
         {
             // Arrange
             var expectedConfig = new ObservableDictionary<string, string>
-                { { "BackendBaseUrl", "http://example.com" } };
+            {
+                {IApplicationConfiguration.BackendBaseUrl, "http://example.com"},
+            };
             var json = JsonSerializer.Serialize(expectedConfig);
             _fileSystem.AddFile(_filePath, new MockFileData(json));
-            
+
             var configuration = CreateApplicationConfiguration();
 
             // Act
-            configuration["BackendBaseUrl"] = "http://example.co.uk";
+            configuration[IApplicationConfiguration.BackendBaseUrl] = "http://example.co.uk";
 
             // Assert
             var mockFileData = _fileSystem.GetFile(_filePath);
             Assert.Multiple(() =>
             {
-                Assert.That(configuration.Configuration["BackendBaseUrl"], Is.EqualTo("http://example.co.uk"));
+                Assert.That(configuration.Configuration[IApplicationConfiguration.BackendBaseUrl],
+                    Is.EqualTo("http://example.co.uk"));
                 Assert.That(mockFileData, Is.Not.Null);
             });
             Assert.That(mockFileData.Contents, Is.EqualTo(JsonSerializer.Serialize(new Dictionary<string, string>
             {
-                { "BackendBaseUrl", "http://example.co.uk" }
+                {IApplicationConfiguration.BackendBaseUrl, "http://example.co.uk"},
+                {IApplicationConfiguration.BackendUsername, ""},
+                {IApplicationConfiguration.BackendToken, ""}
             })));
         }
 

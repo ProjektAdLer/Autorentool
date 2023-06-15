@@ -172,7 +172,6 @@ public class BusinessLogic : IBusinessLogic
     #region BackendAccess
 
     //TODO: Move this away from here
-    internal UserToken UserToken = new UserToken("");
     private UserInformation _userInformation = new("", false, 0, "");
 
     public async Task<bool> IsLmsConnected()
@@ -181,13 +180,16 @@ public class BusinessLogic : IBusinessLogic
         return _userInformation.LmsUsername != "";
     }
 
-    public string LoginName => _userInformation.LmsUsername;
+    public string LoginName => Configuration[IApplicationConfiguration.BackendUsername];
 
     private async Task UpdateUserInformation()
     {
-        if (UserToken.Token != "")
+        if (Configuration[IApplicationConfiguration.BackendToken] != "")
         {
-            _userInformation = await BackendAccess.GetUserInformationAsync(UserToken);
+            _userInformation =
+                await BackendAccess.GetUserInformationAsync(
+                    new UserToken(Configuration[IApplicationConfiguration.BackendToken]));
+            Configuration[IApplicationConfiguration.BackendUsername] = _userInformation.LmsUsername;
         }
         else
         {
@@ -199,17 +201,16 @@ public class BusinessLogic : IBusinessLogic
     {
         try
         {
-            UserToken = await BackendAccess.GetUserTokenAsync(username, password);
+            var token = await BackendAccess.GetUserTokenAsync(username, password);
+            Configuration[IApplicationConfiguration.BackendToken] = token.Token;
         }
         catch (BackendInvalidLoginException e)
         {
-            Console.WriteLine(e);
             Logout();
             throw;
         }
         catch (BackendInvalidUrlException e)
         {
-            Console.WriteLine(e);
             Logout();
             throw;
         }
@@ -219,7 +220,7 @@ public class BusinessLogic : IBusinessLogic
 
     public void Logout()
     {
-        UserToken = new UserToken();
+        Configuration[IApplicationConfiguration.BackendToken] = "";
         _userInformation.LmsUsername = "";
         _userInformation.IsLmsAdmin = false;
         _userInformation.LmsId = 0;
@@ -229,7 +230,8 @@ public class BusinessLogic : IBusinessLogic
     public void UploadLearningWorldToBackend(string filepath, IProgress<int>? progress = null)
     {
         var atfPath = WorldGenerator.ExtractAtfFromBackup(filepath);
-        BackendAccess.UploadLearningWorldAsync(UserToken, filepath, atfPath, progress);
+        BackendAccess.UploadLearningWorldAsync(new UserToken(Configuration[IApplicationConfiguration.BackendToken]),
+            filepath, atfPath, progress);
     }
 
     #endregion

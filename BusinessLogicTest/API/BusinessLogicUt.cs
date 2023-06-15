@@ -487,14 +487,44 @@ public class BusinessLogicUt
     #region BackendAccess
 
     [Test]
+    public async Task Login_WritesTokenToConfiguration()
+    {
+        var backendAccess = Substitute.For<IBackendAccess>();
+        const string username = "username";
+        const string password = "password";
+        var tokenString = "token";
+        var token = new UserToken(tokenString);
+        var userInformation = new UserInformation(username, false, 0, "");
+        backendAccess.GetUserTokenAsync(username, password).Returns(Task.FromResult(token));
+        backendAccess.GetUserInformationAsync(Arg.Is<UserToken>(t => t.Token == tokenString))
+            .Returns(Task.FromResult(userInformation));
+
+        var mockConfiguration = Substitute.For<IApplicationConfiguration>();
+        mockConfiguration[IApplicationConfiguration.BackendToken].Returns(tokenString);
+        var systemUnderTest =
+            CreateStandardBusinessLogic(apiAccess: backendAccess, fakeConfiguration: mockConfiguration);
+
+        await systemUnderTest.Login(username, password);
+
+        mockConfiguration.Received()[IApplicationConfiguration.BackendToken] = tokenString;
+    }
+
+    [Test]
     public async Task Login_CallsBackendAccess()
     {
         var backendAccess = Substitute.For<IBackendAccess>();
         const string username = "username";
         const string password = "password";
-        var token = new UserToken("token");
+        var tokenString = "token";
+        var token = new UserToken(tokenString);
+        var userInformation = new UserInformation(username, false, 0, "");
         backendAccess.GetUserTokenAsync(username, password).Returns(Task.FromResult(token));
-        var systemUnderTest = CreateStandardBusinessLogic(apiAccess: backendAccess);
+        backendAccess.GetUserInformationAsync(Arg.Is<UserToken>(t => t.Token == tokenString))
+            .Returns(Task.FromResult(userInformation));
+        var mockConfiguration = Substitute.For<IApplicationConfiguration>();
+        mockConfiguration[IApplicationConfiguration.BackendToken].Returns(tokenString);
+        var systemUnderTest =
+            CreateStandardBusinessLogic(apiAccess: backendAccess, fakeConfiguration: mockConfiguration);
 
         await systemUnderTest.Login(username, password);
 
@@ -507,16 +537,45 @@ public class BusinessLogicUt
         var backendAccess = Substitute.For<IBackendAccess>();
         const string username = "username";
         const string password = "password";
-        var token = new UserToken("token");
+        var tokenString = "token";
+        var token = new UserToken(tokenString);
         backendAccess.GetUserTokenAsync(username, password).Returns(Task.FromResult(token));
+        var userInformation = new UserInformation(username, false, 0, "");
+        backendAccess.GetUserInformationAsync(Arg.Is<UserToken>(t => t.Token == tokenString))
+            .Returns(Task.FromResult(userInformation));
+        var mockConfiguration = Substitute.For<IApplicationConfiguration>();
+        mockConfiguration[IApplicationConfiguration.BackendToken].Returns(tokenString);
 
         var systemUnderTest = CreateStandardBusinessLogic(apiAccess: backendAccess);
 
         await systemUnderTest.Login(username, password);
 
-        await backendAccess.Received().GetUserInformationAsync(token);
+        await backendAccess.Received().GetUserInformationAsync(Arg.Is<UserToken>(t => t.Token == tokenString));
     }
-    
+
+    [Test]
+    public async Task Login_WritesUsernameToConfiguration()
+    {
+        var backendAccess = Substitute.For<IBackendAccess>();
+        const string username = "username";
+        const string password = "password";
+        var tokenString = "token";
+        var token = new UserToken(tokenString);
+        var userInformation = new UserInformation(username, false, 0, "");
+        backendAccess.GetUserTokenAsync(username, password).Returns(Task.FromResult(token));
+        backendAccess.GetUserInformationAsync(Arg.Is<UserToken>(t => t.Token == tokenString))
+            .Returns(Task.FromResult(userInformation));
+
+        var mockConfiguration = Substitute.For<IApplicationConfiguration>();
+        mockConfiguration[IApplicationConfiguration.BackendToken].Returns(tokenString);
+        var systemUnderTest =
+            CreateStandardBusinessLogic(apiAccess: backendAccess, fakeConfiguration: mockConfiguration);
+
+        await systemUnderTest.Login(username, password);
+
+        mockConfiguration.Received()[IApplicationConfiguration.BackendUsername] = username;
+    }
+
     [Test]
     public void UploadLearningWorldToBackend_CallsWorldGenerator()
     {
@@ -528,23 +587,26 @@ public class BusinessLogicUt
 
         worldGenerator.Received().ExtractAtfFromBackup(filepath);
     }
-    
+
     [Test]
     public void UploadLearningWorldToBackend_CallsBackendAccess()
     {
         const string filepath = "filepath";
         const string atfPath = "atfPath";
-        var token = new UserToken("token");
+        var token = "token";
         var worldGenerator = Substitute.For<IWorldGenerator>();
         worldGenerator.ExtractAtfFromBackup(filepath).Returns(atfPath);
         var backendAccess = Substitute.For<IBackendAccess>();
-        var systemUnderTest = CreateStandardBusinessLogic(apiAccess: backendAccess, worldGenerator: worldGenerator);
+        var mockConfiguration = Substitute.For<IApplicationConfiguration>();
+        var systemUnderTest = CreateStandardBusinessLogic(apiAccess: backendAccess, worldGenerator: worldGenerator,
+            fakeConfiguration: mockConfiguration);
         var mockProgress = Substitute.For<IProgress<int>>();
-        systemUnderTest.UserToken = token;
+        mockConfiguration[IApplicationConfiguration.BackendToken].Returns(token);
 
         systemUnderTest.UploadLearningWorldToBackend(filepath, mockProgress);
 
-        backendAccess.Received().UploadLearningWorldAsync(token, filepath, atfPath, mockProgress);
+        backendAccess.Received()
+            .UploadLearningWorldAsync(Arg.Is<UserToken>(c => c.Token == "token"), filepath, atfPath, mockProgress);
     }
 
     #endregion

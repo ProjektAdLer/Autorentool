@@ -88,7 +88,7 @@
         base.OnParametersSet();
         _backendUrl = Configuration[IApplicationConfiguration.BackendBaseUrl];
         _errorInvalidUrlMessage = "";
-        _username = "";
+        _username = Configuration[IApplicationConfiguration.BackendUsername];
         _password = "";
         _showErrorInvalidCredentials = false;
         _isLmsConnected = false;
@@ -106,6 +106,7 @@
     {
         if (_backendUrl == "" || _username == "" || _password == "") return;
         Configuration[IApplicationConfiguration.BackendBaseUrl] = _backendUrl;
+        Configuration[IApplicationConfiguration.BackendUsername] = _username;
         try
         {
             await PresentationLogic.Login(_username, _password);
@@ -117,11 +118,13 @@
         catch (BackendInvalidLoginException e)
         {
             _showErrorInvalidCredentials = true;
+            _errorInvalidUrlMessage = "";
             _password = "";
             StateHasChanged();
         }
         catch (BackendInvalidUrlException e)
         {
+            _showErrorInvalidCredentials = false;
             _errorInvalidUrlMessage = e.Message;
             StateHasChanged();
         }
