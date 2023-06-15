@@ -61,8 +61,8 @@ public class ElementModelHandler : IElementModelHandler
     {
         return elementModel switch
         {
-            // ElementModel.l_random => "CustomIcons/ElementModels/l-random.png",
-            ElementModel.l_random => "",
+            // ElementModel.l_random => "",
+            ElementModel.l_random => "CustomIcons/ElementModels/random-icon-nobg.png",
             ElementModel.l_picture_painting_1 => "CustomIcons/ElementModels/l-bild-Wandbild-1.png",
             ElementModel.l_picture_painting_2 => "CustomIcons/ElementModels/l-bild-Wandbild-2.png",
             ElementModel.l_h5p_deskpc_1 => "CustomIcons/ElementModels/l-h5p-Schreibtisch-1.png",
