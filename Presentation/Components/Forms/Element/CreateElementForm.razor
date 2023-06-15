@@ -86,7 +86,7 @@
                            AnchorOrigin="Origin.BottomCenter"
                            For="@(() => FormModel.ElementModel)"
                            Variant="Variant.Outlined">
-                    @foreach (var theme in Enum.GetValues<ElementModel>())
+                    @foreach (var theme in ElementModelHandler.GetElementModels(FormDataContainer.FormModel.LearningContent))
                     {
                         <MudSelectItem Value="@(theme)" Style="white-space: nowrap">
                             <img src="@ElementModelHandler.GetIconForElementModel(theme)" alt="" width="38" class="mr-1"/>@*@theme*@

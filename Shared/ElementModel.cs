@@ -3,6 +3,8 @@
 public enum ElementModel
 {
     // ReSharper disable InconsistentNaming
+    l_random,
+    
     l_picture_painting_1,
     l_picture_painting_2,
     

@@ -5,24 +5,27 @@ namespace Presentation.Components.Forms.Element;
 
 public class ElementModelHandler : IElementModelHandler
 {
-    public static IEnumerable<ElementModel> GetElementModels(ILearningContentViewModel? learningContentViewModel = null)
+    public IEnumerable<ElementModel> GetElementModels(ILearningContentViewModel? learningContentViewModel = null)
     {
         return learningContentViewModel switch
         {
             IFileContentViewModel fileContentViewModel => fileContentViewModel.Type switch
             {
-                "h5p" => GetElementModelsForH5P().Concat(GetElementModels().Except(GetElementModelsForH5P())),
+                "h5p" => GetElementModelsForH5P().Prepend(GetElementModelRandom()),
                 "txt" or "c" or "h" or "cpp" or "cc" or "c++" or "py" or "cs" or "js" or "php" or "html" or "css" =>
-                    GetElementModelsForText().Concat(GetElementModels().Except(GetElementModelsForText())),
-                "jpg" or "png" or "webp" or "bmp" => GetElementModelsForImage()
-                    .Concat(GetElementModels().Except(GetElementModelsForImage())),
-                "pdf" => GetElementModelsForPdf().Concat(GetElementModels().Except(GetElementModelsForPdf())),
+                    GetElementModelsForText().Prepend(GetElementModelRandom()),
+                "jpg" or "png" or "webp" or "bmp" => GetElementModelsForImage().Prepend(GetElementModelRandom()),
+                "pdf" => GetElementModelsForPdf().Prepend(GetElementModelRandom()),
                 _ => GetElementModels()
             },
-            ILinkContentViewModel => GetElementModelsForVideo()
-                .Concat(GetElementModels().Except(GetElementModelsForVideo())),
+            ILinkContentViewModel => GetElementModelsForVideo(),
             _ => (ElementModel[]) Enum.GetValues(typeof(ElementModel))
         };
+    }
+    
+    public static ElementModel GetElementModelRandom()
+    {
+        return ElementModel.l_random;
     }
 
     private static IEnumerable<ElementModel> GetElementModelsForImage()
@@ -41,7 +44,7 @@ public class ElementModelHandler : IElementModelHandler
 
     private static IEnumerable<ElementModel> GetElementModelsForPdf()
     {
-        return new List<ElementModel> { };
+        return GetElementModelsForText();
     }
 
     private static IEnumerable<ElementModel> GetElementModelsForText()
@@ -58,6 +61,8 @@ public class ElementModelHandler : IElementModelHandler
     {
         return elementModel switch
         {
+            // ElementModel.l_random => "CustomIcons/ElementModels/l-random.png",
+            ElementModel.l_random => "",
             ElementModel.l_picture_painting_1 => "CustomIcons/ElementModels/l-bild-Wandbild-1.png",
             ElementModel.l_picture_painting_2 => "CustomIcons/ElementModels/l-bild-Wandbild-2.png",
             ElementModel.l_h5p_deskpc_1 => "CustomIcons/ElementModels/l-h5p-Schreibtisch-1.png",
