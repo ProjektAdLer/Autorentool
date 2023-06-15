@@ -27,6 +27,7 @@ public class ApplicationConfiguration : IApplicationConfiguration
             "AdLerAuthoring");
         _filePath = FileSystem.Path.Combine(_folderPath, "ApplicationConfig.json");
         Configuration = TryLoadConfiguration();
+        CheckIfAllKeysExist();
         SaveConfiguration();
         Configuration.CollectionChanged += OnCollectionChanged;
     }
@@ -36,7 +37,7 @@ public class ApplicationConfiguration : IApplicationConfiguration
         if (!FileSystem.File.Exists(_filePath))
         {
             Logger.LogInformation("no config file found, generating default config");
-            return GetDefaultConfig();
+            return new ObservableDictionary<string, string>();
         }
 
         var json = FileSystem.File.ReadAllText(_filePath);
@@ -48,8 +49,33 @@ public class ApplicationConfiguration : IApplicationConfiguration
     {
         return new ObservableDictionary<string, string>
         {
-            { "BackendBaseUrl", "" }
+            {IApplicationConfiguration.BackendBaseUrl, ""},
+            {IApplicationConfiguration.BackendUsername, ""},
+            {IApplicationConfiguration.BackendToken, ""}
         };
+    }
+
+    private void CheckIfAllKeysExist()
+    {
+        var keys = new[]
+        {
+            IApplicationConfiguration.BackendBaseUrl,
+            IApplicationConfiguration.BackendUsername,
+            IApplicationConfiguration.BackendToken
+        };
+        var defaultConfig = GetDefaultConfig();
+        foreach (var key in keys)
+        {
+            if (Configuration.ContainsKey(key)) continue;
+            Logger.LogInformation("config is missing key {Key}, adding it", key);
+            if (defaultConfig.TryGetValue(key, out var value))
+            {
+                Configuration.Add(key, value);
+                continue;
+            }
+
+            Configuration.Add(key, "");
+        }
     }
 
     private void SaveConfiguration()

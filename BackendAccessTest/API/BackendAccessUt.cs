@@ -69,12 +69,13 @@ public class ApiAccessUt
         _userWebApiServices = Substitute.For<IUserWebApiServices>();
         var token = new UserToken("testToken");
         var systemUnderTest = new BackendAccess.API.BackendAccess(_mapper, _userWebApiServices);
+        var mockProgress = Substitute.For<IProgress<int>>();
 
         // Act
-        await systemUnderTest.UploadLearningWorldAsync(token, "testWorldName", "testWorldDescription");
+        await systemUnderTest.UploadLearningWorldAsync(token, "testWorldName", "testWorldDescription", mockProgress);
 
         // Assert
         await _userWebApiServices.Received()
-            .UploadLearningWorldAsync(token.Token, "testWorldName", "testWorldDescription");
+            .UploadLearningWorldAsync(token.Token, "testWorldName", "testWorldDescription", mockProgress);
     }
 }

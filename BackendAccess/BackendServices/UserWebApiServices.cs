@@ -1,11 +1,15 @@
 ﻿using System.IO.Abstractions;
 using System.Net;
+using System.Net.Http.Handlers;
+using System.Net.Sockets;
+using System.Security.Authentication;
 using System.Text.Json;
 using System.Web;
 using BackendAccess.BackendEntities;
 using BusinessLogic.ErrorManagement.BackendAccess;
 using Microsoft.Extensions.Logging;
 using Shared.Configuration;
+using Shared.Networking;
 
 namespace BackendAccess.BackendServices;
 
@@ -13,13 +17,17 @@ public class UserWebApiServices : IUserWebApiServices
 {
     private readonly HttpClient _client;
     private readonly IFileSystem _fileSystem;
+    private readonly ProgressMessageHandler _progressMessageHandler;
     private readonly ILogger<UserWebApiServices> _logger;
+    
+    private IProgress<int>? ProgressReporter { get; set; }
 
-    public UserWebApiServices(IApplicationConfiguration configuration, HttpClient client,
-        ILogger<UserWebApiServices> logger, IFileSystem fileSystem)
+    public UserWebApiServices(IApplicationConfiguration configuration, ProgressMessageHandler progressMessageHandler,
+        IHttpClientFactory httpClientFactory, ILogger<UserWebApiServices> logger, IFileSystem fileSystem)
     {
         Configuration = configuration;
-        _client = client;
+        _client = httpClientFactory.CreateClient(progressMessageHandler);
+        _progressMessageHandler = progressMessageHandler;
         _logger = logger;
         _fileSystem = fileSystem;
     }
@@ -41,15 +49,37 @@ public class UserWebApiServices : IUserWebApiServices
         }
         catch (HttpRequestException e)
         {
-            Console.WriteLine(e);
-            if (e.StatusCode == HttpStatusCode.Unauthorized)
+            _logger.LogError("Failed getting user token, {ExceptionMessage}", e.Message);
+            switch (e.StatusCode)
             {
-                throw new BackendInvalidLoginException("Invalid Login Credentials.");
+                case HttpStatusCode.Unauthorized:
+                    throw new BackendInvalidLoginException("Invalid Login Credentials.");
+                case HttpStatusCode.NotFound:
+                    throw new BackendInvalidUrlException("There is no AdLer Backend at the given URL.");
+                case null:
+                    switch (e.InnerException)
+                    {
+                        case AuthenticationException:
+                            throw new BackendInvalidUrlException(
+                                "The SSL certificate is invalid. If the URL is correct, there is a problem with the SSL certificate of the AdLer Backend or you have to explicitly trust this certificate.");
+                        case SocketException:
+                            throw new BackendInvalidUrlException(
+                                "The URL is not reachable. Either the URL does not exist or there is no internet connection.");
+                        default:
+                            throw;
+                    }
+
+                default:
+                    throw;
             }
-            else
-            {
-                throw;
-            }
+        }
+        catch (UriFormatException e)
+        {
+            throw new BackendInvalidUrlException("Invalid URL.");
+        }
+        catch (NotSupportedException e)
+        {
+            throw new BackendInvalidUrlException("Invalid URL. Does the URL start with 'http://' or 'https://'?");
         }
     }
 
@@ -65,7 +95,8 @@ public class UserWebApiServices : IUserWebApiServices
     }
 
 
-    public async Task<bool> UploadLearningWorldAsync(string token, string backupPath, string awtPath)
+    public async Task<bool> UploadLearningWorldAsync(string token, string backupPath, string awtPath,
+        IProgress<int>? progress = null)
     {
         // Validate that the paths are valid.
         if (!_fileSystem.File.Exists(backupPath)) throw new ArgumentException("The backup path is not valid.");
@@ -82,22 +113,33 @@ public class UserWebApiServices : IUserWebApiServices
         content.Add(new StreamContent(_fileSystem.File.OpenRead(awtPath)),
             "atfFile", awtPath);
 
-        return await SendHttpPostRequestAsync<bool>("/Worlds", headers, content);
+        return await SendHttpPostRequestAsync<bool>("/Worlds", headers, content, progress);
     }
 
     private async Task<TResponse> SendHttpPostRequestAsync<TResponse>(string url, IDictionary<string, string> headers,
-        MultipartFormDataContent content)
+        MultipartFormDataContent content, IProgress<int>? progress = null)
     {
         // Set the Base URL of the API.
         // TODO: This should be set in the configuration.
-        url = new Uri("https://dev.api.projekt-adler.eu/api") + url;
+        url = new Uri(Configuration[IApplicationConfiguration.BackendBaseUrl]) + url;
 
         var request = new HttpRequestMessage(HttpMethod.Post, url);
         foreach (var (key, value) in headers) request.Headers.Add(key, value);
         request.Content = content;
 
-        var apiResp = await _client.SendAsync(request);
-        content.Dispose();
+        ProgressReporter = progress;
+        _progressMessageHandler.HttpSendProgress += OnHttpSendProgress;
+        HttpResponseMessage apiResp;
+        try
+        {
+            apiResp = await _client.SendAsync(request);
+        }
+        finally
+        {
+            ProgressReporter = null;
+            _progressMessageHandler.HttpSendProgress -= OnHttpSendProgress;
+            content.Dispose();
+        }
 
         // This will throw if the response is not successful.
         await HandleErrorMessage(apiResp);
@@ -113,7 +155,7 @@ public class UserWebApiServices : IUserWebApiServices
 
         // Set the Base URL of the API.
         // TODO: This should be set in the configuration.
-        url = new Uri("https://dev.api.projekt-adler.eu/api") + url;
+        url = new Uri(Configuration[IApplicationConfiguration.BackendBaseUrl]) + url;
 
         url += "?" + queryString;
 
@@ -133,13 +175,16 @@ public class UserWebApiServices : IUserWebApiServices
      */
     private async Task HandleErrorMessage(HttpResponseMessage apiResp)
     {
-        if (!apiResp.IsSuccessStatusCode)
+        if (apiResp.IsSuccessStatusCode) return;
+        if (apiResp.StatusCode == HttpStatusCode.NotFound)
         {
-            var error = await apiResp.Content.ReadAsStringAsync();
-
-            var problemDetails = TryRead<ErrorBE>(error);
-            throw new HttpRequestException(problemDetails.Detail, null, apiResp.StatusCode);
+            throw new HttpRequestException(apiResp.ReasonPhrase, null, apiResp.StatusCode);
         }
+
+        var error = await apiResp.Content.ReadAsStringAsync();
+
+        var problemDetails = TryRead<ErrorBE>(error);
+        throw new HttpRequestException(problemDetails.Detail, null, apiResp.StatusCode);
     }
 
     /**
@@ -164,5 +209,10 @@ public class UserWebApiServices : IUserWebApiServices
         {
             throw new HttpRequestException("Das Ergebnis der Backend Api konnte nicht gelesen werden", e);
         }
+    }
+
+    private void OnHttpSendProgress(object? sender, HttpProgressEventArgs httpProgressEventArgs)
+    {
+        ProgressReporter?.Report(httpProgressEventArgs.ProgressPercentage);
     }
 }

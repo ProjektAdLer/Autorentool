@@ -11,7 +11,7 @@
 @using Presentation.Components
 @inject ISnackbar Snackbar
 
-<header class="mb-1 grid grid-cols-3 grid-rows-1 w-full bg-buttonbgblue items-center">
+<header class=" grid grid-cols-3 grid-rows-1 w-full bg-buttonbgblue items-center">
     <div class="ml-1 flex justify-start items-center gap-2">
         <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title=@Localizer["LearningWorld.Home.Hover"] @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
         <MudDivider Vertical="true" FlexItem="true"/>
@@ -278,8 +278,24 @@
 
     //if not cancelled, upload LearningWorld
         if (!result.Canceled)
-    //await and show progress?
-            PresentationLogic.UploadLearningWorldToBackend(_filepath);
+        {
+            var progress = new Progress<int>();
+            options = new DialogOptions
+            {
+                CloseButton = false,
+                CloseOnEscapeKey = false,
+                DisableBackdropClick = true,
+            };
+            parameters = new DialogParameters
+            {
+                {"Progress", progress}
+            };
+
+            await DialogService.ShowAsync<UploadProgressDialog>("Uploading world...", parameters, options);
+            
+            PresentationLogic.UploadLearningWorldToBackend(_filepath, progress);
+            
+        }
     }
 
     private void OnClickRedo()

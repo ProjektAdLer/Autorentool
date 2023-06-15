@@ -5,19 +5,19 @@
 @using Presentation.Components.Dialogues
 @using BusinessLogic.Entities.LearningContent
 <header class="m-2 rounded-lg">
-            <div class="flex justify-center p-2">
-                <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Import files</h2>
-            </div>
-        </header>
-        <MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
+    <div class="flex justify-center p-2">
+        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Import files</h2>
+    </div>
+</header>
+<MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
 <MudStack Class="w-full">
-    <div class="flex flex-col">
-        
+    <div class="flex flex-col relative">
+
         @if (Working)
         {
-            <div class="w-full h-full bg-adlergrey-100 bg-opacity-25 z-40">
+            <div class="w-full h-full absolute bg-adlergrey-100 bg-opacity-25 z-40">
             </div>
-            <MudProgressCircular Indeterminate="true" Class="z-50 m-auto"
+            <MudProgressCircular Indeterminate="true" Class="z-40 m-auto absolute top-0 bottom-0 left-0 right-0"
                                  Color="Color.Primary" Size="Size.Large"/>
         }
         <MudFileUpload T="IReadOnlyList<IBrowserFile>" OnFilesChanged="OnFilesChanged" Hidden="false"
@@ -27,7 +27,8 @@
                        @ondragend="ClearDragClass">
             <ButtonTemplate>
                 <MudPaper Class="@PaperClasses" Outlined="true">
-                    <MudText Typo="Typo.body1">Drag and drop files here or click to add them.</MudText>
+                    <MudText Typo="Typo.body1" Class="break-word w-80" Align="Align.Center">Drag and drop files here or click to add them.<br/>
+                        Allowed file formats: @(AllowedFileEndings.EndingsCommaSeparatedNicely)</MudText>
                 </MudPaper>
             </ButtonTemplate>
         </MudFileUpload>
@@ -39,6 +40,7 @@
 </MudStack>
 
 @code {
+
     [Inject]
     private IDialogService DialogService { get; set; }
 
@@ -58,8 +60,8 @@
     //iterates all files, copies them into a new stream and passes said stream to presentation logic
     private void OnFilesChanged(InputFileChangeEventArgs obj)
     {
-        //PLEASE leave this as a Task.Run, otherwise copying the streams over will block the UI thread
-        //indefinitely for no apparent reason
+    //PLEASE leave this as a Task.Run, otherwise copying the streams over will block the UI thread
+    //indefinitely for no apparent reason
         Task.Run(async () =>
         {
             Logger.LogTrace("Entered OnFilesChanged in ContentFilesAdd");
@@ -72,7 +74,6 @@
             foreach (var file in files)
             {
                 var fileEnding = file.Name.Split(".").Select(s => "." + s).LastOrDefault();
-                if(fileEnding is null)
                 if (fileEnding is null || !AllowedFileEndings.Endings.Contains(fileEnding.ToLowerInvariant()))
                 {
                     await InvokeAsync(async () => await DialogService.ShowMessageBox("Unsupported file ending", $"The supplied file {file.Name} is not supported."));
@@ -93,10 +94,10 @@
         if (file.Size == 0)
         {
             Logger.LogTrace("File size is 0, skipping file {FileName}", file.Name);
-            //we must run this on the UI thread, as it is a UI component
+    //we must run this on the UI thread, as it is a UI component
             await InvokeAsync(() =>
                 DialogService.ShowMessageBox("File empty", $"The file {file.Name} was empty, skipping it")
-            );
+                );
             return;
         }
 

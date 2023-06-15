@@ -11,4 +11,5 @@ public static class AllowedFileEndings
     };
     
     public static string EndingsCommaSeparated => string.Join(",", Endings);
+    public static string EndingsCommaSeparatedNicely => string.Join(", ", Endings);
 }

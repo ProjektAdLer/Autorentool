@@ -419,18 +419,13 @@ public interface IPresentationLogic
     void UpdateIdOfSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath, Guid id);
     void RemoveSavedLearningWorldPath(SavedLearningWorldPath savedLearningWorldPath);
 
-    /// <summary>
-    /// Debug method for Philipp.
-    /// </summary>
-    void CallExport();
-
     #region BackendAccess
 
     Task<bool> IsLmsConnected();
     string LoginName { get; }
-    Task<bool> Login(string username, string password);
+    Task Login(string username, string password);
     void Logout();
-    void UploadLearningWorldToBackend(string filepath);
+    void UploadLearningWorldToBackend(string filepath, IProgress<int>? progress = null);
 
     #endregion
 

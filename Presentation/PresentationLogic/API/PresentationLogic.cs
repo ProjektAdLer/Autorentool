@@ -813,11 +813,6 @@ public class PresentationLogic : IPresentationLogic
             throw new InvalidOperationException("dialogManager received from DI unexpectedly null");
     }
 
-    public void CallExport()
-    {
-        BusinessLogic.CallExport();
-    }
-
     #region BackendAccess
 
     public Task<bool> IsLmsConnected()
@@ -827,7 +822,7 @@ public class PresentationLogic : IPresentationLogic
 
     public string LoginName => BusinessLogic.LoginName;
 
-    public Task<bool> Login(string username, string password)
+    public Task Login(string username, string password)
     {
         return BusinessLogic.Login(username, password);
     }
@@ -837,9 +832,9 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.Logout();
     }
 
-    public void UploadLearningWorldToBackend(string filepath)
+    public void UploadLearningWorldToBackend(string filepath, IProgress<int>? progress = null)
     {
-        BusinessLogic.UploadLearningWorldToBackend(filepath);
+        BusinessLogic.UploadLearningWorldToBackend(filepath, progress);
     }
 
     #endregion

@@ -2176,13 +2176,14 @@ public class PresentationLogicUt
     public void UploadLearningWorldToBackend_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockProgress = Substitute.For<IProgress<int>>();
         const string filepath = "filepath";
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
-        systemUnderTest.UploadLearningWorldToBackend(filepath);
+        systemUnderTest.UploadLearningWorldToBackend(filepath, mockProgress);
 
-        mockBusinessLogic.Received().UploadLearningWorldToBackend(filepath);
+        mockBusinessLogic.Received().UploadLearningWorldToBackend(filepath, mockProgress);
     }
 
     #endregion

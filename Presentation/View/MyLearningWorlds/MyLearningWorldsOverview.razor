@@ -38,10 +38,6 @@
             </MudGrid>
         </section>
         <MudButton Class="btn-standard normal-case" @onclick="OnClickMyLearningWorldsOverview">@Localizer["Page.LearningWorld.Button.GOTO.LearnWorld.Text"]</MudButton>
-        <section class="flex justify-self-end justify-center items-center">
-            <ExportButton/>
-            <DebugButton/>
-        </section>
         <MudDrawer Width="26%" Height="100%" @bind-Open="_createLearningWorldDialogOpen" Variant="@DrawerVariant.Temporary" Position="DrawerPosition.Left">
             <MudDrawerContent>
                 <CreateWorldForm OnSubmitted="() => _createLearningWorldDialogOpen = false"/>

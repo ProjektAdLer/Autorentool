@@ -1,4 +1,5 @@
 using System.IO.Abstractions;
+using System.Net.Http.Handlers;
 using System.Reflection;
 using AuthoringTool.Mapping;
 using AutoMapper;
@@ -87,6 +88,7 @@ public class Startup
         ConfigureApiAccess(services);
         ConfigureMediator(services);
         ConfigureSelectedViewModelsProvider(services);
+        ConfigureNetworking(services);
 
 
         //Electron Wrapper layer
@@ -109,6 +111,12 @@ public class Startup
         {
             services.AddSingleton<IShutdownManager, BrowserShutdownManager>();
         }
+    }
+
+    private static void ConfigureNetworking(IServiceCollection services)
+    {
+        services.AddSingleton<Shared.Networking.IHttpClientFactory, Shared.Networking.HttpClientFactory>();
+        services.AddTransient<ProgressMessageHandler>(_ => new ProgressMessageHandler(new HttpClientHandler()));
     }
 
     private void ConfigureValidation(IServiceCollection services)

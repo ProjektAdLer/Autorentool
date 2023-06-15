@@ -83,7 +83,7 @@
         return LearningElement.LearningContent switch
         {
             ILinkContentViewModel => CustomIcons.VideoElementIcon,
-            IFileContentViewModel { Type: "png" or "jpg" or "bmp" or "webp" } => CustomIcons.ImageElementIcon,
+            IFileContentViewModel { Type: "png" or "jpg" or "jpeg" or "bmp" or "webp" } => CustomIcons.ImageElementIcon,
             IFileContentViewModel
             {
                 Type: "txt" or "c" or "h" or "cpp" or "cc" or "c++" or "py" or
