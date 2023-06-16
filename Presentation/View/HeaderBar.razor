@@ -258,11 +258,11 @@
     //present "Upload/Cancel" dialog
         var parameters = new DialogParameters
         {
-            { "SubmitButtonText", Localizer["UploadLearningWorld.SubmitButtonText"] },
+            { "SubmitButtonText", Localizer["UploadLearningWorld.SubmitButtonText"].ToString() },
             { "SubmitButtonColor", Color.Success },
             {
                 "DialogText",
-                Localizer["Dialog.UploadLearningWorld.DialogText", SelectedViewModelsProvider.LearningWorld.Name, _filepath]
+                Localizer["Dialog.UploadLearningWorld.DialogText", SelectedViewModelsProvider.LearningWorld.Name, _filepath].ToString()
             },
         };
         var options = new DialogOptions
@@ -272,7 +272,7 @@
             DisableBackdropClick = true,
         };
         var dialog =
-            await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["DialogService.UploadLearningWorld.Dialog"], parameters,
+            await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["DialogService.UploadLearningWorld.Dialog"].ToString(), parameters,
                 options);
         var result = await dialog.Result;
 
