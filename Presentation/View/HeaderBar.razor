@@ -236,11 +236,11 @@
     //present Info dialog
         var parameters = new DialogParameters
         {
-            { "OkButtonText", Localizer["ShowNotLoggedInDialog.OkButtonText"] },
+            { "OkButtonText", Localizer["ShowNotLoggedInDialog.OkButtonText"].ToString() },
             { "OkButtonColor", Color.Primary },
             {
                 "DialogText",
-                Localizer["Dialog.NotLoggedIn.Message"]
+                Localizer["Dialog.NotLoggedIn.Message"].ToString()
             },
         };
         var options = new DialogOptions
@@ -249,7 +249,7 @@
             CloseOnEscapeKey = true,
             DisableBackdropClick = false,
         };
-        await DialogService.ShowAsync<GenericInfoDialog>(Localizer["DialogService.NotLoggedIn.Title"], parameters, options);
+        await DialogService.ShowAsync<GenericInfoDialog>(Localizer["DialogService.NotLoggedIn.Title"].ToString(), parameters, options);
     }
 
     private async Task UploadLearningWorld()
