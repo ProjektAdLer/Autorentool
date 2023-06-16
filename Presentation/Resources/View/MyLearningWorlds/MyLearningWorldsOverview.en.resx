@@ -33,9 +33,6 @@
     <data name="Page.LearningWorld.Button.Import.Text" xml:space="preserve">
         <value>IMPORT</value>
     </data>
-    <data name="Page.LearningWorld.Button.GOTO.LearnWorld.Text" xml:space="preserve">
-        <value>Go to Learning World</value>
-    </data>
     <data name="Page.LearningWorld.Button.GOTO.DebugPhilipp.Text" xml:space="preserve">
         <value>Debug for Philipp</value>
     </data>
