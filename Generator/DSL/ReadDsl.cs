@@ -1,5 +1,6 @@
 ﻿using System.IO.Abstractions;
 using System.Text.Json;
+using Shared;
 
 
 namespace Generator.DSL;
@@ -29,7 +30,7 @@ public class ReadDsl : IReadDsl
         _learningWorldJson = new LearningWorldJson("Value",
             "", new List<TopicJson>(), 
             new List<LearningSpaceJson>(), new List<LearningElementJson>());
-        _rootJson = new DocumentRootJson("0.3", "0.3.2","","",_learningWorldJson);
+        _rootJson = new DocumentRootJson("0.3", Constants.ApplicationVersion, "", "", _learningWorldJson);
         _listH5PElements = new List<LearningElementJson>();
         _listResourceElements = new List<LearningElementJson>();
         _listLabelElements = new List<LearningElementJson>();
