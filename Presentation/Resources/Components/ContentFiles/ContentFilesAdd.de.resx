@@ -24,9 +24,9 @@
         </value>
     </resheader>
     <data name="Header.Text" xml:space="preserve">
-        <value>Import aller Dateien</value>
+        <value>Dateiimport</value>
     </data>
-    <data name="MudStack.Button.Text" xml:space="preserve">
+    <data name="FileUpload.ButtonTemplate.Text1" xml:space="preserve">
         <value>Ziehen Sie Dateien hierher, oder klicken Sie, um sie hinzuzufügen.</value>
     </data>
     <data name="Invocation.MessageBox.Title" xml:space="preserve">
@@ -42,6 +42,9 @@
         <value>Die Datei {0} war leer, sie wird übersprungen</value>
     </data>
     <data name="Collapsable.Title" xml:space="preserve">
-        <value>Verknüpfung hinzufügen</value>
+        <value>Link hinzufügen</value>
+    </data>
+    <data name="FileUpload.ButtonTemplate.Text2" xml:space="preserve">
+        <value>Erlaubte Dateiendungen: {0}</value>
     </data>
 </root>

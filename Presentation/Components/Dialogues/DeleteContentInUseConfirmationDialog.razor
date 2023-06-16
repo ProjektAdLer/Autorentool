@@ -1,10 +1,11 @@
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.LearningElement
+@using Microsoft.Extensions.Localization
 <MudDialog>
     <DialogContent>
         <MudText>
-            Are you really sure you want to delete @ContentName?<br/>
-            That content is currently in use in the following elements in the following worlds:
+            @Localizer["Dialog.Text1", ContentName]<br/>
+            @Localizer["Dialog.Text2"]
         </MudText>
         <MudTable Items="WorldElementInUseTuples">
             <HeaderContent>
@@ -18,12 +19,14 @@
         </MudTable>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
-        <MudButton Color="Color.Error" OnClick="Submit">Delete</MudButton>
+        <MudButton OnClick="Cancel">@Localizer["Dialog.Button.Cancel.Text"]</MudButton>
+        <MudButton Color="Color.Error" OnClick="Submit">@Localizer["Dialog.Button.Delete.Text"]</MudButton>
     </DialogActions>
 </MudDialog>
 
 @code {
+    [Inject]
+    private IStringLocalizer<DeleteContentInUseConfirmationDialog> Localizer { get; set; }
     [CascadingParameter]
     public MudDialogInstance MudDialog { get; set; }
     [Parameter, EditorRequired]

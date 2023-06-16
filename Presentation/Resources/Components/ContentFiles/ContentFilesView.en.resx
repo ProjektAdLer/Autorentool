@@ -16,7 +16,7 @@
         </value>
     </resheader>
     <data name="Header" xml:space="preserve">
-        <value>All element content files</value>
+        <value>Your content files</value>
     </data>
     <data name="Content.MudTh.Delete" xml:space="preserve">
         <value>Delete</value>
@@ -37,7 +37,7 @@
         <value>Open folder</value>
     </data>
     <data name="Dialog.Delete.DialogText" xml:space="preserve">
-        <value>Do you really want to delete content entry {0}?</value>
+        <value>Do you really want to delete content entry {0}? If you delete content which an element inside a world is using, you won't be able to generate that world anymore until you add it back!</value>
     </data>
     <data name="MudTextField.Search.Placeholder" xml:space="preserve">
         <value>Search</value>
@@ -50,5 +50,17 @@
     </data>
     <data name="TaskDelete.DialogService.Title" xml:space="preserve">
         <value>Delete content</value>
+    </data>
+    <data name="Content.MudTh.Name" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="Content.MudTh.Type" xml:space="preserve">
+        <value>Type</value>
+    </data>
+    <data name="Content.MudTh.FilepathOrLink" xml:space="preserve">
+        <value>Filepath/Link</value>
+    </data>
+    <data name="WarningDialog.Title" xml:space="preserve">
+        <value>Confirm deletion</value>
     </data>
 </root>

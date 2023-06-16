@@ -56,7 +56,9 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         //Blazor and Electron (framework)
-        services.AddRazorPages();
+        services
+            .AddRazorPages()
+            .AddViewLocalization();
         services.AddServerSideBlazor();
 
         //MudBlazor

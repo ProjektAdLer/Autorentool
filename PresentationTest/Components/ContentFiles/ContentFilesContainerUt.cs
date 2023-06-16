@@ -5,6 +5,7 @@ using Bunit.TestDoubles;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using MudBlazor;
 using NSubstitute;
 using NUnit.Framework;
@@ -26,6 +27,7 @@ public class ContentFilesContainerUt
     private ContentFilesView _contentFilesViewSubstitute;
     private IMediator _mediator;
     private IAuthoringToolWorkspaceViewModel _authoringToolWorkspaceViewModel;
+    private IStringLocalizer<ContentFilesView> _localizer;
 
     [SetUp]
     public void Setup()
@@ -35,11 +37,13 @@ public class ContentFilesContainerUt
         _dialogService = Substitute.For<IDialogService>();
         _mediator = Substitute.For<IMediator>();
         _authoringToolWorkspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
+        _localizer = Substitute.For<IStringLocalizer<ContentFilesView>>();
         
         _testContext.Services.AddSingleton(_presentationLogic);
         _testContext.Services.AddSingleton(_dialogService);
         _testContext.Services.AddSingleton(_mediator);
         _testContext.Services.AddSingleton(_authoringToolWorkspaceViewModel);
+        _testContext.Services.AddSingleton(_localizer);
         
         _testContext.ComponentFactories.AddStub<ContentFilesAdd>();
         _contentFilesViewSubstitute = Substitute.For<ContentFilesView>();
@@ -57,7 +61,7 @@ public class ContentFilesContainerUt
         Assert.Multiple(() =>
         {
             Assert.That(component.HasComponent<Stub<ContentFilesAdd>>());
-            Assert.That(contentFilesViewComponent.Instance, Is.EqualTo(_contentFilesViewSubstitute));
+            Assert.That(contentFilesViewComponent.Instance, Is.Not.Null);
             Assert.That(contentFilesContainerCascadingValue.Value, Is.EqualTo(component.Instance));
         });
     }

@@ -24,7 +24,7 @@
         </value>
     </resheader>
     <data name="Header" xml:space="preserve">
-        <value>Alle Element Inhalte</value>
+        <value>Ihre Lerninhalte</value>
     </data>
     <data name="Content.MudTh.Delete" xml:space="preserve">
         <value>Löschen</value>
@@ -42,7 +42,7 @@
         <value>Zeige Dateipfad</value>
     </data>
     <data name="Dialog.Delete.DialogText" xml:space="preserve">
-        <value>Möchtest du den Eintrag {0} wirklich löschen?</value>
+        <value>Möchten Sie den Eintrag {0} wirklich löschen? Wenn Sie einen Lehrinhalt löschen, welcher in einer Welt verwendet wird, dann können Sie diese Welt nicht mehr generieren, bis sie den Inhalt wieder hinzufügen!</value>
     </data>
     <data name="PagerContent.Button.Text" xml:space="preserve">
         <value>Ordner öffnen</value>
@@ -58,5 +58,17 @@
     </data>
     <data name="TaskDelete.DialogService.Title" xml:space="preserve">
         <value>Inhalt löschen</value>
+    </data>
+    <data name="Content.MudTh.Name" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="Content.MudTh.Type" xml:space="preserve">
+        <value>Typ</value>
+    </data>
+    <data name="Content.MudTh.FilepathOrLink" xml:space="preserve">
+        <value>Dateipfad/Link</value>
+    </data>
+    <data name="WarningDialog.Title" xml:space="preserve">
+        <value>Löschen bestätigen</value>
     </data>
 </root>
