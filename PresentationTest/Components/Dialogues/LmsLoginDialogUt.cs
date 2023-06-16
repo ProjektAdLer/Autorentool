@@ -2,6 +2,7 @@ using Bunit;
 using Bunit.TestDoubles;
 using Microsoft.AspNetCore.Components;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using MudBlazor;
 using MudBlazor.Services;
 using NSubstitute;
@@ -20,6 +21,7 @@ public class LmsLoginDialogUt
     private IPresentationLogic _presentationLogic;
     private IDialogService _dialogService;
     private IApplicationConfiguration _applicationConfiguration;
+    private IStringLocalizer<LmsLoginDialog> _localizer;
 
     [SetUp]
     public void Setup()
@@ -28,9 +30,11 @@ public class LmsLoginDialogUt
         _presentationLogic = Substitute.For<IPresentationLogic>();
         _dialogService = Substitute.For<IDialogService>();
         _applicationConfiguration = Substitute.For<IApplicationConfiguration>();
+        _localizer = Substitute.For<IStringLocalizer<LmsLoginDialog>>();
         _context.Services.AddSingleton(_presentationLogic);
         _context.Services.AddSingleton(_dialogService);
         _context.Services.AddSingleton(_applicationConfiguration);
+        _context.Services.AddSingleton(_localizer);
         _context.Services.AddMudServices();
         _context.ComponentFactories.AddStub<MudDialog>();
         _context.ComponentFactories.AddStub<MudForm>();
@@ -61,6 +65,8 @@ public class LmsLoginDialogUt
         {
             _presentationLogic.IsLmsConnected().Returns(true);
             _presentationLogic.LoginName.Returns("Test");
+            _localizer["DialogContent.LoggedIn.Message"].Returns(new LocalizedString("DialogContent.LoggedIn.Message", "Logged in as"));
+            _localizer["DialogContent.Button.Logout"].Returns(new LocalizedString("DialogContent.Button.Logout", "Logout"));
 
             var systemUnderTest = CreateTestableLmsLoginDialogComponent();
 
@@ -83,6 +89,7 @@ public class LmsLoginDialogUt
         using (_context)
         {
             _presentationLogic.IsLmsConnected().Returns(false);
+            _localizer["DialogContent.Button.Login"].Returns(new LocalizedString("DialogContent.Button.Login", "Login"));
 
             var systemUnderTest = CreateTestableLmsLoginDialogComponent();
 

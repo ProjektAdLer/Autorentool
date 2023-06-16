@@ -30,12 +30,12 @@
         <value>Anmelden</value>
     </data>
     <data name="DialogContent.LoggedIn.Message" xml:space="preserve">
-        <value>Angemeldet als {0}</value>
+        <value>Angemeldet als</value>
     </data>
     <data name="DialogContent.Button.Logout" xml:space="preserve">
         <value>Abmelden</value>
     </data>
-    <data name="DialogContent.Error.WrongUserORPassword" xml:space="preserve">
+    <data name="DialogContent.Error.WrongUserOrPassword" xml:space="preserve">
         <value>Falscher Benutzername oder Passwort</value>
     </data>
     <data name="DialogContent.Field.Username" xml:space="preserve">
@@ -49,5 +49,23 @@
     </data>
     <data name="DialogContent.Button.Cancel" xml:space="preserve">
         <value>Abbrechen</value>
+    </data>
+    <data name="DialogContent.LoggedIn.Header" xml:space="preserve">
+        <value>Erfolgreich angemeldet!</value>
+    </data>
+    <data name="Header.Moodle.Text" xml:space="preserve">
+        <value>Moodle Login</value>
+    </data>
+    <data name="DialogContent.Button.ForgotPassword" xml:space="preserve">
+        <value>Passwort vergessen?</value>
+    </data>
+    <data name="DialogContent.Field.BackendUrl" xml:space="preserve">
+        <value>BackendUrl</value>
+    </data>
+    <data name="DialogContent.Button.ShowPassword" xml:space="preserve">
+        <value>Passwort anzeigen</value>
+    </data>
+    <data name="DialogContent.Button.Login.Title" xml:space="preserve">
+        <value>Bei moodle einloggen</value>
     </data>
 </root>
