@@ -10,4 +10,5 @@ public interface IMyLearningWorldsProvider
     void CreateLearningWorld();
     void DeletePathFromSavedLearningWorlds(SavedLearningWorldPath savedLearningWorldPath);
     Task<bool> LoadSavedLearningWorld();
+    Task DeleteLearningWorld(SavedLearningWorldPath savedLearningWorldPath);
 }

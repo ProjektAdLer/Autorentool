@@ -15,8 +15,8 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
 {
     public AuthoringToolWorkspacePresenter(IAuthoringToolWorkspaceViewModel authoringToolWorkspaceVm,
         IPresentationLogic presentationLogic, ILearningSpacePresenter learningSpacePresenter,
-        ILogger<AuthoringToolWorkspacePresenter> logger, ISelectedViewModelsProvider selectedViewModelsProvider, IShutdownManager shutdownManager,
-        IDialogService dialogService)
+        ILogger<AuthoringToolWorkspacePresenter> logger, ISelectedViewModelsProvider selectedViewModelsProvider,
+        IShutdownManager shutdownManager, IDialogService dialogService)
     {
         _learningSpacePresenter = learningSpacePresenter;
         AuthoringToolWorkspaceVm = authoringToolWorkspaceVm;
@@ -49,7 +49,8 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
     public void CreateLearningWorld(string name, string shortname, string authors, string language, string description,
         string goals)
     {
-        _presentationLogic.CreateLearningWorld(AuthoringToolWorkspaceVm, name, shortname, authors, language, description, goals);
+        _presentationLogic.CreateLearningWorld(AuthoringToolWorkspaceVm, name, shortname, authors, language,
+            description, goals);
     }
 
     /// <summary>
@@ -84,6 +85,20 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         _presentationLogic.DeleteLearningWorld(AuthoringToolWorkspaceVm, learningWorld);
     }
 
+    public async Task DeleteLearningWorld(ILearningWorldViewModel learningWorld)
+    {
+        if (WorldHasUnsavedChanges(learningWorld))
+        {
+            var result = await AskForSaveWorld(learningWorld);
+            if (result.Canceled) return;
+            if (result.Data is not bool) throw new ApplicationException("Unexpected dialog result type");
+
+            if (result.Data is true) await SaveLearningWorldAsync(learningWorld);
+        }
+
+        _presentationLogic.DeleteLearningWorld(AuthoringToolWorkspaceVm, learningWorld);
+    }
+
     public void AddLearningWorld(LearningWorldViewModel learningWorld)
     {
         _presentationLogic.AddLearningWorld(AuthoringToolWorkspaceVm, learningWorld);
@@ -113,20 +128,7 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
         _logger.LogInformation("Found {UnsavedWorldsCount} unsaved worlds", unsavedWorlds.Count);
         foreach (var world in unsavedWorlds)
         {
-            _logger.LogInformation("Asking user ");
-            //show mudblazor dialog asking if user wants to save unsaved worlds
-            var parameters = new DialogParameters
-            {
-                { nameof(UnsavedWorldDialog.WorldName), world.Name }
-            };
-            var options = new DialogOptions
-            {
-                CloseButton = true,
-                CloseOnEscapeKey = true,
-                DisableBackdropClick = true
-            };
-            var dialog = await _dialogService.ShowAsync<UnsavedWorldDialog>("Unsaved changes!", parameters, options);
-            var result = await dialog.Result;
+            var result = await AskForSaveWorld(world);
             if (result.Canceled)
             {
                 args.CancelShutdown();
@@ -134,8 +136,27 @@ public class AuthoringToolWorkspacePresenter : IAuthoringToolWorkspacePresenter,
             }
 
             if (result.Data is not bool) throw new ApplicationException("Unexpected dialog result type");
-            if(result.Data is true) await SaveLearningWorldAsync(world);
+            if (result.Data is true) await SaveLearningWorldAsync(world);
         }
+    }
+
+    private async Task<DialogResult> AskForSaveWorld(ILearningWorldViewModel world)
+    {
+        _logger.LogInformation("Asking user ");
+        //show mudblazor dialog asking if user wants to save unsaved worlds
+        var parameters = new DialogParameters
+        {
+            {nameof(UnsavedWorldDialog.WorldName), world.Name}
+        };
+        var options = new DialogOptions
+        {
+            CloseButton = true,
+            CloseOnEscapeKey = true,
+            DisableBackdropClick = true
+        };
+        var dialog = await _dialogService.ShowAsync<UnsavedWorldDialog>("Unsaved changes!", parameters, options);
+        var result = await dialog.Result;
+        return result;
     }
 
     private static bool WorldHasUnsavedChanges(ILearningWorldViewModel world)

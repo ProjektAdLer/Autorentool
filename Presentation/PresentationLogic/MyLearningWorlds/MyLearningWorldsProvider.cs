@@ -10,11 +10,11 @@ namespace Presentation.PresentationLogic.MyLearningWorlds;
 public class MyLearningWorldsProvider : IMyLearningWorldsProvider
 {
     public MyLearningWorldsProvider(IPresentationLogic presentationLogic,
-        IAuthoringToolWorkspaceViewModel workspaceViewModel, IFileSystem fileSystem,
+        IAuthoringToolWorkspacePresenter workspacePresenter, IFileSystem fileSystem,
         ILogger<MyLearningWorldsProvider> logger, ISelectedViewModelsProvider selectedViewModelsProvider)
     {
         PresentationLogic = presentationLogic;
-        WorkspaceVm = workspaceViewModel;
+        WorkspacePresenter = workspacePresenter;
         FileSystem = fileSystem;
         Logger = logger;
         SelectedViewModelsProvider = selectedViewModelsProvider;
@@ -23,10 +23,11 @@ public class MyLearningWorldsProvider : IMyLearningWorldsProvider
     internal ILogger<MyLearningWorldsProvider> Logger { get; }
     internal IPresentationLogic PresentationLogic { get; }
 
-    internal IAuthoringToolWorkspaceViewModel WorkspaceVm { get; }
+    internal IAuthoringToolWorkspacePresenter WorkspacePresenter { get; }
     internal IFileSystem FileSystem { get; }
-    
+
     internal ISelectedViewModelsProvider SelectedViewModelsProvider { get; }
+    internal IAuthoringToolWorkspaceViewModel WorkspaceVm => WorkspacePresenter.AuthoringToolWorkspaceVm;
 
 
     private ExceptionWrapper? ErrorState { get; set; }
@@ -84,7 +85,8 @@ public class MyLearningWorldsProvider : IMyLearningWorldsProvider
     private void OpenLoadedLearningWorld(SavedLearningWorldPath savedLearningWorldPath)
     {
         Logger.LogDebug("Learning world with id {} is already loaded", savedLearningWorldPath.Id);
-        SelectedViewModelsProvider.SetLearningWorld(WorkspaceVm.LearningWorlds.First(x => x.Id == savedLearningWorldPath.Id), null);
+        SelectedViewModelsProvider.SetLearningWorld(
+            WorkspaceVm.LearningWorlds.First(x => x.Id == savedLearningWorldPath.Id), null);
     }
 
     public void DeletePathFromSavedLearningWorlds(SavedLearningWorldPath savedLearningWorldPath)
@@ -116,6 +118,13 @@ public class MyLearningWorldsProvider : IMyLearningWorldsProvider
             ErrorState = new ExceptionWrapper("Loading learning world", exception);
             return false;
         }
+    }
+
+    public async Task DeleteLearningWorld(SavedLearningWorldPath savedLearningWorldPath)
+    {
+        var learningWorld = WorkspaceVm.LearningWorlds.FirstOrDefault(w => w.Id == savedLearningWorldPath.Id);
+        if (learningWorld != null)
+            await WorkspacePresenter.DeleteLearningWorld(learningWorld);
     }
 
     private bool SavedPathExists(string path)

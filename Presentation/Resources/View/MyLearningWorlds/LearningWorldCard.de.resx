@@ -35,4 +35,10 @@
     <data name="ApplicationException.OnDeleteFromSaved.Message" xml:space="preserve">
         <value>OnDeleteFromSaved must be set.</value>
     </data>
+    <data name="ApplicationException.OnCloseWorld.Message" xml:space="preserve">
+        <value>OnCloseWorld must be set.</value>
+    </data>
+    <data name="LearningWorldCard.Button.Close.Text" xml:space="preserve">
+        <value>Lernwelt schließen</value>
+    </data>
 </root>

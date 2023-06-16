@@ -39,6 +39,8 @@ using Presentation.PresentationLogic.SelectedViewModels;
 using Shared;
 using Shared.Configuration;
 using Tailwind;
+using HttpClientFactory = Shared.Networking.HttpClientFactory;
+using IHttpClientFactory = Shared.Networking.IHttpClientFactory;
 
 namespace AuthoringTool;
 
@@ -115,7 +117,7 @@ public class Startup
 
     private static void ConfigureNetworking(IServiceCollection services)
     {
-        services.AddSingleton<Shared.Networking.IHttpClientFactory, Shared.Networking.HttpClientFactory>();
+        services.AddSingleton<IHttpClientFactory, HttpClientFactory>();
         services.AddTransient<ProgressMessageHandler>(_ => new ProgressMessageHandler(new HttpClientHandler()));
     }
 
@@ -199,7 +201,7 @@ public class Startup
 
     private static void ConfigureMyLearningWorlds(IServiceCollection services)
     {
-        services.AddSingleton<IMyLearningWorldsProvider, MyLearningWorldsProvider>();
+        services.AddScoped<IMyLearningWorldsProvider, MyLearningWorldsProvider>();
         services.AddSingleton<ILearningWorldSavePathsHandler, LearningWorldSavePathsHandler>();
     }
 

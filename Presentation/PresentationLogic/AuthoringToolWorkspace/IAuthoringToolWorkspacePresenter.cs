@@ -35,4 +35,11 @@ public interface IAuthoringToolWorkspacePresenter
     void DeleteSelectedLearningWorld();
     Task LoadLearningWorldAsync();
     Task SaveSelectedLearningWorldAsync();
+    /// <summary>
+    /// Asks the user for confirmation and asks for saving the learning world if it was changed. Then deletes the
+    /// learning world from the workspace view model.
+    /// </summary>
+    /// <param name="learningWorld">The learning world that should be deleted.</param>
+    /// <exception cref="ApplicationException">Thrown if a dialog returns a invalid result. This should not happen.</exception>
+    Task DeleteLearningWorld(ILearningWorldViewModel learningWorld);
 }

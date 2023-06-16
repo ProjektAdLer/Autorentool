@@ -1,6 +1,5 @@
-@using Shared
-@using System.Runtime.InteropServices
 @using Microsoft.Extensions.Localization
+@using Shared
 <MudItem>
     <MudCard Outlined="true" Elevation="1" Class="w-60 h-40">
         <MudCardHeader Class="flex justify-center items-center break-word w-full">
@@ -43,12 +42,8 @@
                 }
             </CardHeaderContent>
             <CardHeaderActions>
-                @if (_cardType is CardType.IsSaved)
-                {
-                    <MudButton @onclick="() => OnDeleteFromSaved.InvokeAsync(LearningWorldPath)">
-                        <MudIcon Icon="@Icons.Material.Filled.Close"></MudIcon>
-                    </MudButton>
-                }
+                <MudFab @onclick="OnCloseButtonPressed" Size="Size.Small" StartIcon="@Icons.Material.Filled.Close"
+                        Title=@Localizer["LearningWorldCard.Button.Close.Text"] DisableElevation="true"/>
             </CardHeaderActions>
             @* @switch (_cardType) *@
             @* { *@
@@ -86,6 +81,7 @@
 </MudItem>
 
 @code {
+
     [Inject]
     private IStringLocalizer<LearningWorldCard> Localizer { get; set; }
 
@@ -98,8 +94,8 @@
     [Parameter]
     public bool IsLoaded { get; set; }
 
-    [Parameter]
-    public EventCallback<SavedLearningWorldPath> OnDeleteFromSaved { get; set; }
+    [Parameter, EditorRequired]
+    public EventCallback<SavedLearningWorldPath> OnCloseWorld { get; set; }
 
     private CardType _cardType;
 
@@ -108,21 +104,20 @@
         base.OnParametersSet();
         if (!OnOpenLearningWorld.HasDelegate) throw new ApplicationException(Localizer["ApplicationException.OnOpenLearningWorld.Message"]);
         if (LearningWorldPath == null) throw new ApplicationException(Localizer["ApplicationException.LearningWorldPath.Message"]);
-        if (IsLoaded)
-        {
-            _cardType = CardType.IsLoaded;
-        }
-        else
-        {
-            if (!OnDeleteFromSaved.HasDelegate) throw new ApplicationException(Localizer["ApplicationException.OnDeleteFromSaved.Message"]);
-            _cardType = CardType.IsSaved;
-        }
+        if (!OnCloseWorld.HasDelegate) throw new ApplicationException(Localizer["ApplicationException.OnCloseWorld.Message"]);
+
+        _cardType = IsLoaded ? CardType.IsLoaded : CardType.IsSaved;
     }
 
     private enum CardType
     {
         IsLoaded,
         IsSaved
+    }
+
+    private void OnCloseButtonPressed()
+    {
+        OnCloseWorld.InvokeAsync(LearningWorldPath);
     }
 
 }
