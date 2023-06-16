@@ -180,7 +180,7 @@ public class BusinessLogic : IBusinessLogic
         return _userInformation.LmsUsername != "";
     }
 
-    public string LoginName => Configuration[IApplicationConfiguration.BackendUsername];
+    public string LoginName => _userInformation.LmsUsername;
 
     private async Task UpdateUserInformation()
     {
@@ -189,7 +189,6 @@ public class BusinessLogic : IBusinessLogic
             _userInformation =
                 await BackendAccess.GetUserInformationAsync(
                     new UserToken(Configuration[IApplicationConfiguration.BackendToken]));
-            Configuration[IApplicationConfiguration.BackendUsername] = _userInformation.LmsUsername;
         }
         else
         {

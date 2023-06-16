@@ -554,29 +554,6 @@ public class BusinessLogicUt
     }
 
     [Test]
-    public async Task Login_WritesUsernameToConfiguration()
-    {
-        var backendAccess = Substitute.For<IBackendAccess>();
-        const string username = "username";
-        const string password = "password";
-        var tokenString = "token";
-        var token = new UserToken(tokenString);
-        var userInformation = new UserInformation(username, false, 0, "");
-        backendAccess.GetUserTokenAsync(username, password).Returns(Task.FromResult(token));
-        backendAccess.GetUserInformationAsync(Arg.Is<UserToken>(t => t.Token == tokenString))
-            .Returns(Task.FromResult(userInformation));
-
-        var mockConfiguration = Substitute.For<IApplicationConfiguration>();
-        mockConfiguration[IApplicationConfiguration.BackendToken].Returns(tokenString);
-        var systemUnderTest =
-            CreateStandardBusinessLogic(apiAccess: backendAccess, fakeConfiguration: mockConfiguration);
-
-        await systemUnderTest.Login(username, password);
-
-        mockConfiguration.Received()[IApplicationConfiguration.BackendUsername] = username;
-    }
-
-    [Test]
     public void UploadLearningWorldToBackend_CallsWorldGenerator()
     {
         var worldGenerator = Substitute.For<IWorldGenerator>();
