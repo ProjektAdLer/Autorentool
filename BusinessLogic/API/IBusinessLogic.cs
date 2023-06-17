@@ -9,7 +9,7 @@ namespace BusinessLogic.API;
 
 public interface IBusinessLogic
 {
-    IAuthoringToolConfiguration Configuration { get; }
+    IApplicationConfiguration Configuration { get; }
     bool CanUndo { get; }
     bool CanRedo { get; }
 
@@ -65,18 +65,13 @@ public interface IBusinessLogic
     event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
     string GetContentFilesFolderPath();
 
-    /// <summary>
-    ///     Debug method for Philipp.
-    /// </summary>
-    Task CallExport();
-
     #region BackendAccess
 
     Task<bool> IsLmsConnected();
     string LoginName { get; }
-    Task<bool> Login(string username, string password);
+    Task Login(string username, string password);
     void Logout();
-    void UploadLearningWorldToBackend(string filepath);
+    void UploadLearningWorldToBackend(string filepath, IProgress<int>? progress = null);
 
     #endregion
 }

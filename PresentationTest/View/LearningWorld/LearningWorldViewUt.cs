@@ -7,6 +7,7 @@ using Bunit.TestDoubles;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using MudBlazor;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -32,6 +33,7 @@ public class LearningWorldViewUt
     private IMouseService _mouseService;
     private ILearningWorldPresenter _worldPresenter;
     private ISelectedViewModelsProvider _selectedViewModelsProvider;
+    private IStringLocalizer<LearningWorldView> _localizer;
 #pragma warning restore CS8618
     
     [SetUp]
@@ -41,6 +43,8 @@ public class LearningWorldViewUt
         _mouseService = Substitute.For<IMouseService>();
         _worldPresenter = Substitute.For<ILearningWorldPresenter>();
         _selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
+        _localizer = Substitute.For<IStringLocalizer<LearningWorldView>>();
+        _localizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
         _ctx.ComponentFactories.AddStub<LearningSpaceView>();
         _ctx.ComponentFactories.AddStub<DraggableObjectInPathWay>();
         _ctx.ComponentFactories.AddStub<PathWay>();
@@ -49,6 +53,7 @@ public class LearningWorldViewUt
         _ctx.Services.AddSingleton(_mouseService);
         _ctx.Services.AddSingleton(_worldPresenter);
         _ctx.Services.AddSingleton(_selectedViewModelsProvider);
+        _ctx.Services.AddSingleton(_localizer);
     }
 
     [Test]
@@ -92,8 +97,8 @@ public class LearningWorldViewUt
 
         var h3 = systemUnderTest.FindAllOrFail("h3").ToList();
         h3[0].MarkupMatches(
-            @"<h3 class=""text-base text-adlerblue-600""><span class=""text-adlergrey-600"">Workload: </span> 42<span class=""text-adlergrey-600""> min.</span></h3>");
-        h3[1].MarkupMatches(@"<h3 class=""text-base text-adlerblue-600""><span class=""text-adlergrey-600"">Points: </span> 9</h3>");
+            @"<h3 class=""text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldView.Workload.Text</span> 42<span class=""text-adlergrey-600"">LearningWorldView.Workload.TimeScale</span></h3>");
+        h3[1].MarkupMatches(@"<h3 class=""text-base text-adlerblue-600""><span class=""text-adlergrey-600"">LearningWorldView.Points.Text</span> 9</h3>");
     }
     
     [Test]
@@ -125,9 +130,9 @@ public class LearningWorldViewUt
             Assert.That(draggableLearningSpaces, Has.Count.EqualTo(learningSpaces.Count));
             Assert.That(draggablePathWayConditions, Has.Count.EqualTo(pathWayConditions.Count));
             //TODO: This Test fails on the CI (macos), but not locally. I have no idea why.
-            // Assert.That(learningSpaces.All(le =>
-            //     draggableLearningSpaces.Any(dle =>
-            //         dle.Instance.Parameters[nameof(DraggableObjectInPathWay.ObjectInPathWay)] == le)));
+            Assert.That(learningSpaces.All(le =>
+                draggableLearningSpaces.Any(dle =>
+                    dle.Instance.Parameters[nameof(DraggableObjectInPathWay.ObjectInPathWay)] == le)));
             Assert.That(pathWays, Has.Count.EqualTo(learningPathWays.Count));
         });
     }

@@ -1,4 +1,5 @@
-﻿**/TestResults/
+﻿**/global.json
+**/TestResults/
 **/AuthoringTool.sln.DotSettings
 
 **/.idea/

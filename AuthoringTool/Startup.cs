@@ -1,4 +1,5 @@
 using System.IO.Abstractions;
+using System.Net.Http.Handlers;
 using System.Reflection;
 using AuthoringTool.Mapping;
 using AutoMapper;
@@ -38,6 +39,8 @@ using Presentation.PresentationLogic.SelectedViewModels;
 using Shared;
 using Shared.Configuration;
 using Tailwind;
+using HttpClientFactory = Shared.Networking.HttpClientFactory;
+using IHttpClientFactory = Shared.Networking.IHttpClientFactory;
 
 namespace AuthoringTool;
 
@@ -53,7 +56,9 @@ public class Startup
     public void ConfigureServices(IServiceCollection services)
     {
         //Blazor and Electron (framework)
-        services.AddRazorPages();
+        services
+            .AddRazorPages()
+            .AddViewLocalization();
         services.AddServerSideBlazor();
 
         //MudBlazor
@@ -87,6 +92,7 @@ public class Startup
         ConfigureApiAccess(services);
         ConfigureMediator(services);
         ConfigureSelectedViewModelsProvider(services);
+        ConfigureNetworking(services);
 
 
         //Electron Wrapper layer
@@ -111,32 +117,38 @@ public class Startup
         }
     }
 
+    private static void ConfigureNetworking(IServiceCollection services)
+    {
+        services.AddSingleton<IHttpClientFactory, HttpClientFactory>();
+        services.AddTransient<ProgressMessageHandler>(_ => new ProgressMessageHandler(new HttpClientHandler()));
+    }
+
     private void ConfigureValidation(IServiceCollection services)
     {
         services.AddValidatorsFromAssembly(Assembly.Load("BusinessLogic"));
         services.AddSingleton<ILearningWorldNamesProvider>(p =>
             p.GetService<IAuthoringToolWorkspaceViewModel>() ?? throw new InvalidOperationException());
-        services.AddSingleton<ILearningSpaceNamesProvider>(p =>
+        services.AddScoped<ILearningSpaceNamesProvider>(p =>
             p.GetService<ILearningWorldPresenter>() ?? throw new InvalidOperationException());
-        services.AddSingleton<ILearningElementNamesProvider, LearningElementNamesProvider>();
+        services.AddScoped<ILearningElementNamesProvider, LearningElementNamesProvider>();
     }
 
     private void ConfigureAuthoringTool(IServiceCollection services)
     {
-        services.AddSingleton<IAuthoringToolConfiguration, AuthoringToolConfiguration>();
+        services.AddSingleton<IApplicationConfiguration, ApplicationConfiguration>();
     }
 
     private void ConfigurePresentationLogic(IServiceCollection services)
     {
         services.AddScoped<IAuthoringToolWorkspacePresenter, AuthoringToolWorkspacePresenter>();
         services.AddSingleton<IPresentationLogic, PresentationLogic>();
-        services.AddSingleton<ILearningWorldPresenter, LearningWorldPresenter>();
-        services.AddSingleton(p =>
+        services.AddScoped<ILearningWorldPresenter, LearningWorldPresenter>();
+        services.AddScoped(p =>
             (ILearningWorldPresenterOverviewInterface) p.GetService(typeof(ILearningWorldPresenter))!);
         services.AddSingleton<ILearningSpacePresenter, LearningSpacePresenter>();
         services.AddSingleton<IAuthoringToolWorkspaceViewModel, AuthoringToolWorkspaceViewModel>();
-        services.AddSingleton<IErrorService, ErrorService>();
-        services.AddSingleton<ILearningElementDropZoneHelper, LearningElementDropZoneHelper>();
+        services.AddScoped<IErrorService, ErrorService>();
+        services.AddScoped<ILearningElementDropZoneHelper, LearningElementDropZoneHelper>();
         services.AddTransient(typeof(IFormDataContainer<,>), typeof(FormDataContainer<,>));
         services.AddSingleton<IElementModelHandler, ElementModelHandler>();
     }
@@ -191,7 +203,7 @@ public class Startup
 
     private static void ConfigureMyLearningWorlds(IServiceCollection services)
     {
-        services.AddSingleton<IMyLearningWorldsProvider, MyLearningWorldsProvider>();
+        services.AddScoped<IMyLearningWorldsProvider, MyLearningWorldsProvider>();
         services.AddSingleton<ILearningWorldSavePathsHandler, LearningWorldSavePathsHandler>();
     }
 

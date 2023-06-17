@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root"
+                xmlns="">
+        <xsd:element name="root" msdata:IsDataSet="true">
+
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <data name="EditElementForm.Header.Text" xml:space="preserve">
+        <value>Lernelement editieren</value>
+    </data>
+    <data name="EditElementForm.SnackbarMessage" xml:space="preserve">
+        <value>Element editiert</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.General.Title" xml:space="preserve">
+        <value>Allgemein</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.General.Field.Name.Text" xml:space="preserve">
+        <value>Name</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.General.Field.Points.Text" xml:space="preserve">
+        <value>Punkte</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.General.Field.Workload.Text" xml:space="preserve">
+        <value>Arbeitsaufwand (min)</value>
+    </data>
+    <data name="EditElementForm.Difficulty.Easy" xml:space="preserve">
+        <value>Einfach</value>
+    </data>
+    <data name="EditElementForm.Difficulty.Medium" xml:space="preserve">
+        <value>Normal</value>
+    </data>
+    <data name="EditElementForm.Difficulty.Hard" xml:space="preserve">
+        <value>Schwer</value>
+    </data>
+    <data name="EditElementForm.Difficulty.None" xml:space="preserve">
+        <value>Keine</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.LearningContent.Title" xml:space="preserve">
+        <value>Lerninhalte</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.Goals.Title" xml:space="preserve">
+        <value>Ziele</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.Goals.Field.Description.Text" xml:space="preserve">
+        <value>Beschreibung</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.Goals.Field.Goals.Text" xml:space="preserve">
+        <value>Ziele</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.LearningContent.Field.LearningContent.Text" xml:space="preserve">
+        <value>Lerninhalte</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.General.Field.Difficulty.Text" xml:space="preserve">
+        <value>Schwierigkeitsgrad</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.3DRepresentation.Title" xml:space="preserve">
+        <value>3D Darstellung</value>
+    </data>
+    <data name="EditElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text" xml:space="preserve">
+        <value>3D-Darstellung dieses Lernelements</value>
+    </data>
+    <data name="EditElementForm.NewButton.Text" xml:space="preserve">
+        <value>Neu</value>
+    </data>
+</root>

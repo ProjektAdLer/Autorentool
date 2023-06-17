@@ -2,14 +2,13 @@
 using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
 using AutoMapper;
-using BusinessLogic.Entities;
-using BusinessLogic.Entities.LearningContent;
 using DataAccess.Persistence;
 using NSubstitute;
 using NUnit.Framework;
 using PersistEntities;
 using Shared;
 using Shared.Configuration;
+using TestHelpers;
 
 namespace DataAccessTest.API;
 
@@ -20,7 +19,7 @@ public class DataAccessUt
     public void Standard_AllPropertiesInitialized()
     {
         //Arrange 
-        var mockConfiguration = Substitute.For<IAuthoringToolConfiguration>();
+        var mockConfiguration = Substitute.For<IApplicationConfiguration>();
         var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
         var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<LearningSpacePe>>();
         var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElementPe>>();
@@ -52,7 +51,7 @@ public class DataAccessUt
         var mockFileSaveHandlerWorld = Substitute.For<IXmlFileHandler<LearningWorldPe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerWorld: mockFileSaveHandlerWorld);
 
-        var learningWorld = new LearningWorld("f", "f", "f", "f", "f", "f");
+        var learningWorld = EntityProvider.GetLearningWorld();
         systemUnderTest.SaveLearningWorldToFile(
             learningWorld,
             "C:/nonsense");
@@ -89,7 +88,7 @@ public class DataAccessUt
         var mockFileSaveHandlerSpace = Substitute.For<IXmlFileHandler<LearningSpacePe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerSpace: mockFileSaveHandlerSpace);
 
-        var learningSpace = new LearningSpace("f", "f", "f", 5, Theme.Campus);
+        var learningSpace = EntityProvider.GetLearningSpace();
         systemUnderTest.SaveLearningSpaceToFile(
             learningSpace,
             "C:/nonsense");
@@ -126,9 +125,8 @@ public class DataAccessUt
         var mockFileSaveHandlerElement = Substitute.For<IXmlFileHandler<LearningElementPe>>();
         var systemUnderTest = CreateTestableDataAccess(fileSaveHandlerElement: mockFileSaveHandlerElement);
 
-        var learningContent = new FileContent("a", "b", "");
-        var learningElement = new LearningElement("f", learningContent,
-            "f", "f", LearningElementDifficultyEnum.Easy, ElementModel.L_H5P_SPIELAUTOMAT_1);
+        var learningContent = EntityProvider.GetFileContent();
+        var learningElement = EntityProvider.GetLearningElement(content: learningContent);
         systemUnderTest.SaveLearningElementToFile(
             learningElement,
             "C:/nonsense");
@@ -356,7 +354,7 @@ public class DataAccessUt
     }
 
     private static DataAccess.API.DataAccess CreateTestableDataAccess(
-        IAuthoringToolConfiguration? configuration = null,
+        IApplicationConfiguration? configuration = null,
         IXmlFileHandler<LearningWorldPe>? fileSaveHandlerWorld = null,
         IXmlFileHandler<LearningSpacePe>? fileSaveHandlerSpace = null,
         IXmlFileHandler<LearningElementPe>? fileSaveHandlerElement = null,
@@ -365,7 +363,7 @@ public class DataAccessUt
         IFileSystem? fileSystem = null,
         IMapper? mapper = null)
     {
-        configuration ??= Substitute.For<IAuthoringToolConfiguration>();
+        configuration ??= Substitute.For<IApplicationConfiguration>();
         fileSaveHandlerWorld ??= Substitute.For<IXmlFileHandler<LearningWorldPe>>();
         fileSaveHandlerSpace ??= Substitute.For<IXmlFileHandler<LearningSpacePe>>();
         fileSaveHandlerElement ??= Substitute.For<IXmlFileHandler<LearningElementPe>>();

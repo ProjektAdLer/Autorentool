@@ -22,6 +22,87 @@
         <value>Autorentool</value>
     </data>
     <data name="AuthoringTool.Version" xml:space="preserve">
-        <value>v0.3.1</value>
+        <value>1.0</value>
+    </data>
+    <data name="3DWorld.Generate.Text" xml:space="preserve">
+        <value>Generiere 3D-Welt</value>
+    </data>
+    <data name="3DWorld.Generate.Hover" xml:space="preserve">
+        <value>Erstelle Lernwelt in Moodle und 3D Lern Umgebung</value>
+    </data>
+    <data name="LearningWorld.Home.Hover" xml:space="preserve">
+        <value>Meine Lernwelten</value>
+    </data>
+    <data name="Feedback.Text" xml:space="preserve">
+        <value>Feedback</value>
+    </data>
+    <data name="Feedback.Button.UX.Hover" xml:space="preserve">
+        <value>Nutzererfahrungs feedback - Öffnet eine neue Seite</value>
+    </data>
+    <data name="Feedback.Button.Technical.Hover" xml:space="preserve">
+        <value>Technisches Feedback - Öffnet eine neue Seite</value>
+    </data>
+    <data name="LearningWorld.Save.Hover" xml:space="preserve">
+        <value>Lernwelt speichern</value>
+    </data>
+    <data name="Functionality.Button.Redo.Hover" xml:space="preserve">
+        <value>Vorwärts</value>
+    </data>
+    <data name="Functionality.Button.Undo.Hover" xml:space="preserve">
+        <value>Zurück</value>
+    </data>
+    <data name="MudPopover.Functionality.Button.Close.Hover" xml:space="preserve">
+        <value>Schließen</value>
+    </data>
+    <data name="MudPopover.Feedback.Survey.Text" xml:space="preserve">
+        <value>Um das Autorentool weiter zu entwickeln und zu optimieren, würden wir es schätzen wenn Sie sich ein paar Minuten Ihrer Zeit erübrigen würden um uns Ihr Feedback über das aktuelle Autorentool mitzuteilen.</value>
+    </data>
+    <data name="MudPopover.Feedback.Final.Text" xml:space="preserve">
+        <value>Zum finalen Feedback</value>
+    </data>
+    <data name="MudPopover.Feedback.Final.Hover" xml:space="preserve">
+        <value>Finales Feedback - Öffnet eine neue Seite</value>
+    </data>
+    <data name="Feedback.MenuItem.UX.Text" xml:space="preserve">
+        <value>Nutzererfahrungs feedback</value>
+    </data>
+    <data name="Feedback.MenuItem.Technical.Text" xml:space="preserve">
+        <value>Technisches Feedback</value>
+    </data>
+    <data name="Dialog.UploadLearningWorld.DialogText" xml:space="preserve">
+        <value>Möchtest du wirklich die Lernwelt {0} in {1} in das Backend hochladen?</value>
+    </data>
+    <data name="ShowNotLoggedInDialog.OkButtonText" xml:space="preserve">
+        <value>Ok</value>
+    </data>
+    <data name="UploadLearningWorld.SubmitButtonText" xml:space="preserve">
+        <value>Hochladen</value>
+    </data>
+    <data name="Export.SnackBar.Message" xml:space="preserve">
+        <value>Lernwelt exportiert nach {0}</value>
+    </data>
+    <data name="ExportCanceled.Snackbar.Message" xml:space="preserve">
+        <value>Exportieren von Lernwelt abgebrochen</value>
+    </data>
+    <data name="Exception.InvalidLearningWorld.Message" xml:space="preserve">
+        <value>Lernwelt ist ungültig</value>
+    </data>
+    <data name="ErrorString.Missing.LearningSpace.Message" xml:space="preserve">
+        <value>Lernwelt hat keine Lernräume</value>
+    </data>
+    <data name="ErrorString.Missing.LearningElements.Message" xml:space="preserve">
+        <value>Lernraum {0} hat keine Lernelemente.</value>
+    </data>
+    <data name="ErrorString.Insufficient.Points.Message" xml:space="preserve">
+        <value>Lernraum {0} kann nicht vervollständigt werden da die Punkte nicht ausreichen</value>
+    </data>
+    <data name="DialogService.NotLoggedIn.Title" xml:space="preserve">
+        <value>Du bist nicht angemeldet</value>
+    </data>
+    <data name="DialogService.UploadLearningWorld.Dialog" xml:space="preserve">
+        <value>Lade Lernwelt hoch</value>
+    </data>
+    <data name="Dialog.NotLoggedIn.Message" xml:space="preserve">
+        <value>Du bist nicht mit einem LMS verbunden. Bitte melde dich an um Lernwelten in das Backend hochzuladen.</value>
     </data>
 </root>

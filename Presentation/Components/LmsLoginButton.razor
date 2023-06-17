@@ -1,13 +1,19 @@
 @using Presentation.Components.Dialogues
+@using Microsoft.Extensions.Localization
+@using Presentation.View
+
 <MudIconButton OnClick="OpenLmsDialog" Icon="@Icons.Material.Filled.Person"
-               Title="Login to moodle" Size="Size.Large"
+               Title=@Localizer["LMS.Login.Hover"] Size="Size.Large"
                Class="text-adlerdarkblue p-0 normal-case">
 </MudIconButton>
 
 @code {
 
     [Inject]
-    public IDialogService DialogService { get; set; }
+    internal IDialogService DialogService { get; set; }
+    
+    [Inject]
+    internal IStringLocalizer<LmsLoginButton> Localizer { get; set; }
 
     private void OpenLmsDialog()
     {

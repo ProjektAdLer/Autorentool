@@ -22,14 +22,18 @@ public class MyLearningWorldsProviderUt
     {
         var presentationLogic = Substitute.For<IPresentationLogic>();
         var workspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
+        var workspacePresenter = Substitute.For<IAuthoringToolWorkspacePresenter>();
+        workspacePresenter.AuthoringToolWorkspaceVm.Returns(workspaceViewModel);
         var fileSystem = Substitute.For<IFileSystem>();
         var logger = Substitute.For<ILogger<MyLearningWorldsProvider>>();
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
 
-        var systemUnderTest = new MyLearningWorldsProvider(presentationLogic, workspaceViewModel, fileSystem, logger, selectedViewModelsProvider);
+        var systemUnderTest = new MyLearningWorldsProvider(presentationLogic, workspacePresenter, fileSystem, logger,
+            selectedViewModelsProvider);
         Assert.Multiple(() =>
         {
             Assert.That(systemUnderTest.PresentationLogic, Is.EqualTo(presentationLogic));
+            Assert.That(systemUnderTest.WorkspacePresenter, Is.EqualTo(workspacePresenter));
             Assert.That(systemUnderTest.WorkspaceVm, Is.EqualTo(workspaceViewModel));
             Assert.That(systemUnderTest.FileSystem, Is.EqualTo(fileSystem));
             Assert.That(systemUnderTest.Logger, Is.EqualTo(logger));
@@ -45,7 +49,9 @@ public class MyLearningWorldsProviderUt
         var workspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         workspaceViewModel.LearningWorlds.Returns(new List<ILearningWorldViewModel>()
             {learningWorld1, learningWorld2});
-        var systemUnderTest = CreateProviderForTesting(workspaceViewModel: workspaceViewModel);
+        var workspacePresenter = Substitute.For<IAuthoringToolWorkspacePresenter>();
+        workspacePresenter.AuthoringToolWorkspaceVm.Returns(workspaceViewModel);
+        var systemUnderTest = CreateProviderForTesting(workspacePresenter: workspacePresenter);
 
         var result = systemUnderTest.GetLoadedLearningWorlds();
         var resultList = result.ToList();
@@ -109,6 +115,8 @@ public class MyLearningWorldsProviderUt
         var workspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         workspaceViewModel.LearningWorlds.Returns(new List<ILearningWorldViewModel>()
             {learningWorld1});
+        var workspacePresenter = Substitute.For<IAuthoringToolWorkspacePresenter>();
+        workspacePresenter.AuthoringToolWorkspaceVm.Returns(workspaceViewModel);
         var savedLearningWorld1 = new SavedLearningWorldPath()
             {Id = learningWorld1.Id, Name = "w1", Path = "p1"};
         var savedLearningWorld2 = new SavedLearningWorldPath()
@@ -117,7 +125,7 @@ public class MyLearningWorldsProviderUt
         presentationLogic.GetSavedLearningWorldPaths().Returns(new List<SavedLearningWorldPath>()
             {savedLearningWorld1, savedLearningWorld2});
         var systemUnderTest =
-            CreateProviderForTesting(presentationLogic: presentationLogic, workspaceViewModel: workspaceViewModel);
+            CreateProviderForTesting(presentationLogic: presentationLogic, workspacePresenter: workspacePresenter);
 
         var result = systemUnderTest.GetSavedLearningWorlds();
         var resultList = result.ToList();
@@ -137,10 +145,13 @@ public class MyLearningWorldsProviderUt
     {
         var learningWorld1 = new LearningWorldViewModel("w1", "s", "a", "l", "d", "g");
         var workspaceViewModel = Substitute.For<IAuthoringToolWorkspaceViewModel>();
+        var workspacePresenter = Substitute.For<IAuthoringToolWorkspacePresenter>();
+        workspacePresenter.AuthoringToolWorkspaceVm.Returns(workspaceViewModel);
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         workspaceViewModel.LearningWorlds.Returns(new List<ILearningWorldViewModel>()
             {learningWorld1});
-        var systemUnderTest = CreateProviderForTesting(workspaceViewModel: workspaceViewModel, selectedViewModelsProvider: selectedViewModelsProvider);
+        var systemUnderTest = CreateProviderForTesting(workspacePresenter: workspacePresenter,
+            selectedViewModelsProvider: selectedViewModelsProvider);
 
         var savedPaths = systemUnderTest.GetLoadedLearningWorlds();
         systemUnderTest.OpenLearningWorld(savedPaths.First());
@@ -154,6 +165,8 @@ public class MyLearningWorldsProviderUt
         var workspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
         var worldInWorkspace = new LearningWorldViewModel("n", "s", "a", "l", "d", "g");
         workspaceVm.LearningWorlds.Returns(new List<ILearningWorldViewModel>() {worldInWorkspace});
+        var workspacePresenter = Substitute.For<IAuthoringToolWorkspacePresenter>();
+        workspacePresenter.AuthoringToolWorkspaceVm.Returns(workspaceVm);
         var savedLearningWorld1 = new SavedLearningWorldPath()
             {Id = Guid.ParseExact("00000000-0000-0000-0000-000000000001", "D"), Name = "w1", Path = "p1"};
         var presentationLogic = Substitute.For<IPresentationLogic>();
@@ -162,7 +175,7 @@ public class MyLearningWorldsProviderUt
         var fileSystem = Substitute.For<IFileSystem>();
         fileSystem.File.Exists(Arg.Any<string>()).Returns(true);
         var systemUnderTest = CreateProviderForTesting(presentationLogic: presentationLogic,
-            workspaceViewModel: workspaceVm, fileSystem: fileSystem);
+            workspacePresenter: workspacePresenter, fileSystem: fileSystem);
 
         var savedPaths = systemUnderTest.GetSavedLearningWorlds().ToList();
         systemUnderTest.OpenLearningWorld(savedPaths.First());
@@ -202,14 +215,16 @@ public class MyLearningWorldsProviderUt
     }
 
     private MyLearningWorldsProvider CreateProviderForTesting(IPresentationLogic? presentationLogic = null,
-        IAuthoringToolWorkspaceViewModel? workspaceViewModel = null, IFileSystem? fileSystem = null,
-        ISelectedViewModelsProvider? selectedViewModelsProvider = null, ILogger<MyLearningWorldsProvider>? logger = null)
+        IAuthoringToolWorkspacePresenter? workspacePresenter = null, IFileSystem? fileSystem = null,
+        ISelectedViewModelsProvider? selectedViewModelsProvider = null,
+        ILogger<MyLearningWorldsProvider>? logger = null)
     {
         presentationLogic ??= Substitute.For<IPresentationLogic>();
-        workspaceViewModel ??= Substitute.For<IAuthoringToolWorkspaceViewModel>();
+        workspacePresenter ??= Substitute.For<IAuthoringToolWorkspacePresenter>();
         fileSystem ??= Substitute.For<IFileSystem>();
         logger ??= Substitute.For<ILogger<MyLearningWorldsProvider>>();
         selectedViewModelsProvider ??= Substitute.For<ISelectedViewModelsProvider>();
-        return new MyLearningWorldsProvider(presentationLogic, workspaceViewModel, fileSystem, logger, selectedViewModelsProvider);
+        return new MyLearningWorldsProvider(presentationLogic, workspacePresenter, fileSystem, logger,
+            selectedViewModelsProvider);
     }
 }

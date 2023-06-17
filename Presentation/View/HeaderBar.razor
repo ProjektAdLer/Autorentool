@@ -2,38 +2,42 @@
 @using Presentation.PresentationLogic.Mediator
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Microsoft.Extensions.Localization
-@using Presentation.Components
-@using Presentation.Components.Culture
 @using System.ComponentModel
+@using System.Text
 @using Presentation.Components.Dialogues
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
+@using Presentation.PresentationLogic.LearningWorld
+@using Presentation.Components.Culture
+@using Presentation.Components
 @inject ISnackbar Snackbar
-<header class="mb-1 grid grid-cols-3 grid-rows-1 w-full bg-buttonbgblue items-center">
+
+<header class=" grid grid-cols-3 grid-rows-1 w-full bg-buttonbgblue items-center">
     <div class="ml-1 flex justify-start items-center gap-2">
-        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title="My learning worlds" @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
+        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Home" Size="Size.Large" Title=@Localizer["LearningWorld.Home.Hover"] @onclick="OnClickMyLearningWorldsOverview"></MudIconButton>
         <MudDivider Vertical="true" FlexItem="true"/>
-        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" Title="Save learning world" OnClick="TrySaveAsync"></MudIconButton>
+        <MudIconButton Class="p-1 text-adlerdarkblue" Icon="@Icons.Material.Filled.Save" Title=@Localizer["LearningWorld.Save.Hover"] OnClick="TrySaveAsync"></MudIconButton>
         <div>
-            <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Undo" Disabled="!CanUndo" Title="Undo" OnClick="OnClickUndo"></MudIconButton>
-            <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Redo" Disabled="!CanRedo" Title="Redo" OnClick="OnClickRedo"></MudIconButton>
+            <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Undo" Disabled="!CanUndo" Title=@Localizer["Functionality.Button.Undo.Hover"] OnClick="OnClickUndo"></MudIconButton>
+            <MudIconButton Class="p-1" Icon="@Icons.Material.Filled.Redo" Disabled="!CanRedo" Title=@Localizer["Functionality.Button.Redo.Hover"] OnClick="OnClickRedo"></MudIconButton>
         </div>
-        <Button @onclick="@ExportLearningWorld" class="btn-standard p-2 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto" title="Generate learning world to moodle and 3D learning environment" disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
+        <Button @onclick="@ExportLearningWorld" class="btn-standard p-2 bg-adlergold-400 hover:bg-adlergold-600 hover:text-adlerdarkblue disabled:bg-adlerbggradientto" title=@Localizer["3DWorld.Generate.Hover"] disabled="@(SelectedViewModelsProvider.LearningWorld == null)">
             <MudIcon Icon="@Icons.Material.Filled._3dRotation"></MudIcon>
-            <p class="pl-1 font-bold uppercase">Generate 3D world</p>
+            <p class="pl-1 font-bold uppercase">@Localizer["3DWorld.Generate.Text"]</p>
         </Button>
-        
+
         <MudPopover Open="@_popoverOpen" Fixed="false" Class="mt-12 ml-20 w-96 bg-adlerblue-600">
             <div class="flex flex-row">
-                <p class="text-center text-lg pl-6 pt-6 text-white">In order to further develop and optimize the authoring tool, we would appreciate if you could take a few minutes to give us feedback on the current status of the authoring tool.</p>
-                <Button class="flex-none w-5 h-5 text-adlergrey-200 font-bold text-lg hover:text-white" @onclick="TogglePopover" Icon="@Icons.Material.Filled.Close" title="Close">X</Button>
+                <p class="text-center text-lg pl-6 pt-6 text-white">@Localizer["MudPopover.Feedback.Survey.Text"]</p>
+                <Button class="flex-none w-5 h-5 text-adlergrey-200 font-bold text-lg hover:text-white" @onclick="TogglePopover" Icon="@Icons.Material.Filled.Close" title=@Localizer["Functionality.Button.Close.Hover"]>X</Button>
             </div>
             <div class="flex justify-center items-center pb-6 pt-1">
-                <a href="https://www.soscisurvey.de/autorentoolevaluation_gesamt" target="_blank" title="Final feedback - Opens new web page" class="w-7/12 btn-standard flex flex-row gap-2 justify-center items-center">
-                    <img class="w-7 h-7 drop-shadow" src="/CustomIcons/final-feedback-icon-nobg.png" alt="final-feedback-icon"/>
-                    <p class="uppercase">To final feedback</p>
+                <a href="https://www.soscisurvey.de/autorentoolevaluation_gesamt" target="_blank" title=@Localizer["MudPopover.Feedback.Final.Hover"] class="w-7/12 btn-standard flex flex-row gap-2 justify-center items-center">
+                    <img class="w-6 h-6 drop-shadow" src="/CustomIcons/feedback-icon-without-typo-nobg.png" alt="feedback-icon"/>
+                    <p class="uppercase">@Localizer["MudPopover.Feedback.Final.Text"]</p>
                 </a>
             </div>
         </MudPopover>
-        
+
     </div>
     @if (SelectedViewModelsProvider?.LearningWorld?.Name == null)
     {
@@ -51,42 +55,40 @@
     }
 
     <div class="flex justify-end items-center gap-2 border-solid">
-       
         <MudMenu ActivationEvent="MouseEvent.MouseOver" AnchorOrigin="Origin.BottomCenter" TransformOrigin="Origin.TopCenter">
             <ActivatorContent>
                 <MudButton Class="btn-standard bg-adlerblue-600 test-base text-white font-semibold">Feedback</MudButton>
             </ActivatorContent>
             <ChildContent>
-            <div class="w-64">
+                <div class="w-64">
 
-                @if (SelectedViewModelsProvider?.LearningWorld?.Name == null)
-                {
-                    <a href="https://www.soscisurvey.de/autorentoolevaluationlernwelt/" target="_blank" title="User experience feedback - Opens new web page">
-                        <div class="flex flex-row items-center gap-4">
-                            <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/final-feedback-icon-nobg.png" alt="feedback-icon"/>
-                            <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">User experience feedback</MudMenuItem>
+                    @if (SelectedViewModelsProvider?.LearningWorld?.Name == null)
+                    {
+                        <a href="https://www.soscisurvey.de/autorentoolevaluationlernwelt/" target="_blank" title=@Localizer["Feedback.Button.UX.Hover"]>
+                            <div class="flex flex-row items-center gap-4">
+                                <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/final-feedback-icon-nobg.png" alt="feedback-icon"/>
+                                <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">@Localizer["Feedback.MenuItem.UX.Text"]</MudMenuItem>
+                            </div>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="https://www.soscisurvey.de/autorentoolevaluationlernraum/" target="_blank" title=@Localizer["Feedback.Button.UX.Hover"]>
+                            <div class="flex flex-row items-center gap-4">
+                                <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/feedback-icon-without-typo-nobg-adlerdarkblue.png" alt="feedback-icon"/>
+                                <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">@Localizer["Feedback.MenuItem.UX.Text"]</MudMenuItem>
+                            </div>
+                        </a>
+                    }
+
+                    <a href="https://bugreport.projekt-adler.eu" target="_blank" title=@Localizer["Feedback.Button.Technical.Hover"]>
+                        <div class="flex flex-row justify-start items-center gap-4">
+                            <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/bug-icon-nobg-adlerdarkblue.png" alt="debug-icon"/>
+                            <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">@Localizer["Feedback.MenuItem.Technical.Text"]</MudMenuItem>
                         </div>
                     </a>
 
-                }
-                else
-                {
-                    <a href="https://www.soscisurvey.de/autorentoolevaluationlernraum/" target="_blank" title="User experience feedback - Opens new web page">
-                        <div class="flex flex-row items-center gap-4">
-                            <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/feedback-icon-without-typo-nobg-adlerdarkblue.png" alt="feedback-icon"/>
-                            <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">User experience feedback</MudMenuItem>
-                        </div>
-                    </a>
-                }
-
-                <a href="https://bugreport.projekt-adler.eu" target="_blank" title="Technical feedback - Opens new web page">
-                    <div class="flex flex-row justify-start items-center gap-4">
-                        <img class="w-8 h-6 drop-shadow pl-2" src="/CustomIcons/bug-icon-nobg-adlerdarkblue.png" alt="debug-icon"/>
-                        <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">Technical feedback</MudMenuItem>
-                    </div>
-                </a>
-
-                @*<MudDivider></MudDivider>
+                    @*<MudDivider></MudDivider>
 
                 <a href="https://www.soscisurvey.de/autorentoolevaluation_gesamt" target="_blank" title="Final feedback - Opens new web page">
                     <div class="flex flex-row justify-start items-center gap-4">
@@ -94,7 +96,7 @@
                         <MudMenuItem Class="text-adlerdarkblue flex justify-center px-0">Final feedback</MudMenuItem>
                     </div>
                 </a>*@
-            </div>
+                </div>
             </ChildContent>
         </MudMenu>
 
@@ -126,6 +128,9 @@
 
     [Inject]
     IDialogService DialogService { get; set; }
+
+    [Inject]
+    IErrorService ErrorService { get; set; }
 
     private string _filepath = "";
 
@@ -167,12 +172,16 @@
 
     private async void ExportLearningWorld()
     {
+        var world = SelectedViewModelsProvider.LearningWorld;
     //Create XMl-files, Overwrite Encoding to UTF-8 and Create Backup-File
-        if (SelectedViewModelsProvider.LearningWorld == null) return;
+        if (world == null) return;
+
+        if (!IsLearningWorldValid(world)) return;
+        
         try
         {
             _filepath = await PresentationLogic.ConstructBackupAsync(SelectedViewModelsProvider.LearningWorld);
-            Snackbar.Add("LearningWorld exported to " + _filepath, Severity.Success);
+            Snackbar.Add(Localizer["Export.SnackBar.Message", _filepath], Severity.Success);
 
             if (await PresentationLogic.IsLmsConnected())
             {
@@ -187,9 +196,39 @@
         }
         catch (OperationCanceledException)
         {
-            Snackbar.Add("Exporting LearningWorld was canceled", Severity.Warning);
+            Snackbar.Add(Localizer["ExportCanceled.Snackbar.Message"], Severity.Warning);
         }
         StateHasChanged();
+    }
+
+    private bool IsLearningWorldValid(ILearningWorldViewModel world)
+    {
+        var errorString = new StringBuilder();
+        errorString.Append("<ul>");
+
+        if (world.LearningSpaces.Count == 0)
+        {
+            errorString.AppendLine($"<li> {Localizer["ErrorString.Missing.LearningSpace.Message"]} </li>");
+        }
+
+        foreach (var space in world.LearningSpaces)
+        {
+            if (!space.ContainedLearningElements.Any())
+            {
+                errorString.AppendLine($"<li> {Localizer["ErrorString.Missing.LearningElements.Message",space.Name]} </li>");
+            }
+            if (space.Points < space.RequiredPoints)
+            {
+                errorString.AppendLine($"<li> {Localizer["ErrorString.Insufficient.Points.Message", space.Name]} </li>");
+            }
+        }
+
+        if (errorString.Length == "<ul>".Length) return true;
+
+        errorString.Append("</ul>");
+
+        ErrorService.SetError(Localizer["Exception.InvalidLearningWorld.Message"], errorString.ToString());
+        return false;
     }
 
     private async Task ShowNotLoggedInDialog()
@@ -197,11 +236,11 @@
     //present Info dialog
         var parameters = new DialogParameters
         {
-            {"OkButtonText", "Ok"},
-            {"OkButtonColor", Color.Primary},
+            { "OkButtonText", Localizer["ShowNotLoggedInDialog.OkButtonText"].ToString() },
+            { "OkButtonColor", Color.Primary },
             {
                 "DialogText",
-                "You are not connected to a LMS. Please login to upload LearningWorlds to the Backend."
+                Localizer["Dialog.NotLoggedIn.Message"].ToString()
             },
         };
         var options = new DialogOptions
@@ -210,7 +249,7 @@
             CloseOnEscapeKey = true,
             DisableBackdropClick = false,
         };
-        await DialogService.ShowAsync<GenericInfoDialog>("You are not logged in", parameters, options);
+        await DialogService.ShowAsync<GenericInfoDialog>(Localizer["DialogService.NotLoggedIn.Title"].ToString(), parameters, options);
     }
 
     private async Task UploadLearningWorld()
@@ -219,11 +258,11 @@
     //present "Upload/Cancel" dialog
         var parameters = new DialogParameters
         {
-            {"SubmitButtonText", "Upload"},
-            {"SubmitButtonColor", Color.Success},
+            { "SubmitButtonText", Localizer["UploadLearningWorld.SubmitButtonText"].ToString() },
+            { "SubmitButtonColor", Color.Success },
             {
                 "DialogText",
-                $"Do you want to upload the LearningWorld {SelectedViewModelsProvider.LearningWorld.Name} from {_filepath} to the Backend?"
+                Localizer["Dialog.UploadLearningWorld.DialogText", SelectedViewModelsProvider.LearningWorld.Name, _filepath].ToString()
             },
         };
         var options = new DialogOptions
@@ -233,14 +272,30 @@
             DisableBackdropClick = true,
         };
         var dialog =
-            await DialogService.ShowAsync<GenericCancellationConfirmationDialog>("Upload LearningWorld", parameters,
+            await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["DialogService.UploadLearningWorld.Dialog"].ToString(), parameters,
                 options);
         var result = await dialog.Result;
 
     //if not cancelled, upload LearningWorld
         if (!result.Canceled)
-            //await and show progress?
-            PresentationLogic.UploadLearningWorldToBackend(_filepath);
+        {
+            var progress = new Progress<int>();
+            options = new DialogOptions
+            {
+                CloseButton = false,
+                CloseOnEscapeKey = false,
+                DisableBackdropClick = true,
+            };
+            parameters = new DialogParameters
+            {
+                {"Progress", progress}
+            };
+
+            await DialogService.ShowAsync<UploadProgressDialog>("Uploading world...", parameters, options);
+            
+            PresentationLogic.UploadLearningWorldToBackend(_filepath, progress);
+            
+        }
     }
 
     private void OnClickRedo()

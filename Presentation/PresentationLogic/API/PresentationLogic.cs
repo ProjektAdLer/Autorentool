@@ -29,7 +29,7 @@ namespace Presentation.PresentationLogic.API;
 public class PresentationLogic : IPresentationLogic
 {
     public PresentationLogic(
-        IAuthoringToolConfiguration configuration,
+        IApplicationConfiguration configuration,
         IBusinessLogic businessLogic,
         IMapper mapper,
         ICachingMapper cMapper,
@@ -76,7 +76,7 @@ public class PresentationLogic : IPresentationLogic
     private const string SpaceFileFormatDescriptor = "AdLer Space File";
     private const string ElementFileFormatDescriptor = "AdLer Element File";
 
-    public IAuthoringToolConfiguration Configuration { get; }
+    public IApplicationConfiguration Configuration { get; }
     public IBusinessLogic BusinessLogic { get; }
     internal IMapper Mapper { get; }
     internal ICachingMapper CMapper { get; }
@@ -548,9 +548,9 @@ public class PresentationLogic : IPresentationLogic
             world => CMapper.Map(world, learningWorldVm));
         BusinessLogic.ExecuteCommand(command);
         
-        if (SelectedViewModelsProvider.ActiveSlot == newSlotIndex)
+        if (SelectedViewModelsProvider.ActiveSlotInSpace == newSlotIndex)
         {
-            SelectedViewModelsProvider.SetActiveSlot(-1);
+            SelectedViewModelsProvider.SetActiveSlotInSpace(-1, command);
         }
     }
 
@@ -577,9 +577,9 @@ public class PresentationLogic : IPresentationLogic
             space => CMapper.Map(space, learningSpaceVm));
         BusinessLogic.ExecuteCommand(command);
 
-        if (SelectedViewModelsProvider.ActiveSlot == newSlotIndex)
+        if (SelectedViewModelsProvider.ActiveSlotInSpace == newSlotIndex)
         {
-            SelectedViewModelsProvider.SetActiveSlot(-1);
+            SelectedViewModelsProvider.SetActiveSlotInSpace(-1, command);
         }
     }
 
@@ -813,11 +813,6 @@ public class PresentationLogic : IPresentationLogic
             throw new InvalidOperationException("dialogManager received from DI unexpectedly null");
     }
 
-    public void CallExport()
-    {
-        BusinessLogic.CallExport();
-    }
-
     #region BackendAccess
 
     public Task<bool> IsLmsConnected()
@@ -827,7 +822,7 @@ public class PresentationLogic : IPresentationLogic
 
     public string LoginName => BusinessLogic.LoginName;
 
-    public Task<bool> Login(string username, string password)
+    public Task Login(string username, string password)
     {
         return BusinessLogic.Login(username, password);
     }
@@ -837,9 +832,9 @@ public class PresentationLogic : IPresentationLogic
         BusinessLogic.Logout();
     }
 
-    public void UploadLearningWorldToBackend(string filepath)
+    public void UploadLearningWorldToBackend(string filepath, IProgress<int>? progress = null)
     {
-        BusinessLogic.UploadLearningWorldToBackend(filepath);
+        BusinessLogic.UploadLearningWorldToBackend(filepath, progress);
     }
 
     #endregion

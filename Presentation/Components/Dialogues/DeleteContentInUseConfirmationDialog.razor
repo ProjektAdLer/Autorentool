@@ -1,0 +1,40 @@
+@using Presentation.PresentationLogic.LearningWorld
+@using Presentation.PresentationLogic.LearningElement
+@using Microsoft.Extensions.Localization
+<MudDialog>
+    <DialogContent>
+        <MudText>
+            @Localizer["Dialog.Text1", ContentName]<br/>
+            @Localizer["Dialog.Text2"]
+        </MudText>
+        <MudTable Items="WorldElementInUseTuples">
+            <HeaderContent>
+                <MudTh>World</MudTh>
+                <MudTh>Element</MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd DataLabel="World">@context.Item1.Name</MudTd>
+                <MudTd DataLabel="Element">@context.Item2.Name</MudTd>
+            </RowTemplate>
+        </MudTable>
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">@Localizer["Dialog.Button.Cancel.Text"]</MudButton>
+        <MudButton Color="Color.Error" OnClick="Submit">@Localizer["Dialog.Button.Delete.Text"]</MudButton>
+    </DialogActions>
+</MudDialog>
+
+@code {
+    [Inject]
+    private IStringLocalizer<DeleteContentInUseConfirmationDialog> Localizer { get; set; }
+    [CascadingParameter]
+    public MudDialogInstance MudDialog { get; set; }
+    [Parameter, EditorRequired]
+    public string ContentName { get; set; }
+    [Parameter, EditorRequired]
+    public IEnumerable<(ILearningWorldViewModel, ILearningElementViewModel)> WorldElementInUseTuples { get; set; }
+
+    private void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    private void Cancel() => MudDialog.Cancel();
+
+}

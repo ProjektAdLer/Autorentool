@@ -1,33 +1,35 @@
 @using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.LearningContent
 @using Presentation.Components.Dialogues
+@using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.PresentationLogic.Mediator
-<MudTable Items="Items" Class="w-full grow shrink h-full flex flex-col flex-nowrap"
-          Dense="true" Virtualize="true" Filter="Filter" >
+@using Microsoft.Extensions.Localization
+<MudTable Items="Items" Class="w-full grow h-full flex flex-col flex-nowrap"
+          Dense="true" Virtualize="true" Filter="Filter">
     <ToolBarContent>
-        <MudText Typo="Typo.h6">All imported files</MudText>
+        <MudText Typo="Typo.h6">@Localizer["Header"]</MudText>
         <MudSpacer/>
         <MudTextField @bind-Value="_searchString" Immediate="true" Placeholder="Search" Adornment="Adornment.Start"
                       AdornmentIcon="@Icons.Material.Outlined.Search"/>
     </ToolBarContent>
     <HeaderContent>
-        <MudTh>Delete</MudTh>
+        <MudTh>@Localizer["Content.MudTh.Delete"]</MudTh>
         <MudTh>
             <MudTableSortLabel InitialDirection="SortDirection.Ascending"
                                SortBy="new Func<ILearningContentViewModel, object>(x => x.Name)">
-                @nameof(ILearningContentViewModel.Name)
+                @Localizer["Content.MudTh.Name"]
             </MudTableSortLabel>
         </MudTh>
         <MudTh>
             <MudTableSortLabel SortBy="new Func<ILearningContentViewModel, object>(TypeSortBy)">
-                @nameof(FileContentViewModel.Type)
+                @Localizer["Content.MudTh.Type"]
             </MudTableSortLabel>
         </MudTh>
-        <MudTh>New Element</MudTh>
-        <MudTh>Preview</MudTh>
+        <MudTh>@Localizer["Content.MudTh.NewElement"]</MudTh>
+        <MudTh>@Localizer["Content.MudTh.Preview"]</MudTh>
         @if (_showFilepath)
         {
-            <MudTh>@nameof(FileContentViewModel.Filepath)/@nameof(LinkContentViewModel.Link)</MudTh>
+            <MudTh>@Localizer["Content.MudTh.FilepathOrLink"]</MudTh>
         }
     </HeaderContent>
     <RowTemplate>
@@ -73,26 +75,35 @@
         }
     </RowTemplate>
     <PagerContent>
-            <MudTablePager HideRowsPerPage="true" HorizontalAlignment="HorizontalAlignment.Center"/>
+        <MudTablePager HideRowsPerPage="true" HorizontalAlignment="HorizontalAlignment.Center"/>
         <div class="max-h-40% min-h-fit shrink grow flex flex-row m-1">
-            <MudSwitch Class="pl-4" @bind-Checked="_showFilepath" Color="Color.Info">Show filepath</MudSwitch>
+            <MudSwitch Class="pl-4" @bind-Checked="_showFilepath" Color="Color.Info">@Localizer["PagerContent.Filepath.Text"]</MudSwitch>
             <MudSpacer/>
-            <MudButton OnClick="OpenContentFilesFolder" Variant="Variant.Filled" Class="btn-standard ">Open folder</MudButton>
+            <MudButton OnClick="OpenContentFilesFolder" Variant="Variant.Filled" Class="btn-standard ">@Localizer["PagerContent.Button.Text"]</MudButton>
         </div>
     </PagerContent>
 </MudTable>
+
 @code {
 
 #pragma warning disable CS8618 - injected by framework - n.stich
     [Inject]
     private IPresentationLogic PresentationLogic { get; set; }
+
     [Inject]
     private IDialogService DialogService { get; set; }
+
     [Inject]
     private IMediator Mediator { get; set; }
+
+    [Inject]
+    private IAuthoringToolWorkspaceViewModel WorkspaceViewModel { get; set; }
+
+    [Inject]
+    private IStringLocalizer<ContentFilesView> Localizer { get; set; }
 #pragma warning restore CS8618
     private IEnumerable<ILearningContentViewModel> Items => PresentationLogic.GetAllContent();
-    
+
     private string? _searchString;
     private bool _showFilepath;
 
@@ -105,31 +116,48 @@
     private bool FilterInternal(ILearningContentViewModel element, string? searchString)
     {
         if (string.IsNullOrWhiteSpace(searchString)) return true;
+        searchString = searchString.ToLowerInvariant();
         var elementType = element is FileContentViewModel fileContent ? fileContent.Type : "Link";
-        if (element.Name.Contains(searchString) || elementType.Contains(searchString)) return true;
-        return $"{element.Name}.{elementType}".Contains(searchString);
+        if (element.Name.ToLowerInvariant().Contains(searchString) ||
+            elementType.ToLowerInvariant().Contains(searchString))
+            return true;
+        return $"{element.Name}.{elementType}".ToLowerInvariant().Contains(searchString);
     }
 
     private async Task Delete(ILearningContentViewModel item)
     {
-        //present "Delete/Cancel" dialog
+    //present "Delete/Cancel" dialog
         var parameters = new DialogParameters
         {
-            { "SubmitButtonText", "Delete" },
+            { "SubmitButtonText", Localizer["Dialog.Delete.Button.Text"].ToString() },
             { "SubmitButtonColor", Color.Error },
-            { "DialogText", $"Do you really want to delete content entry {item.Name}?" },
+            {
+                "DialogText", Localizer["Dialog.Delete.DialogText", item.Name].ToString()
+            },
         };
-        var options = new DialogOptions 
+        var options = new DialogOptions
         {
             CloseButton = true,
             CloseOnEscapeKey = true,
             DisableBackdropClick = true,
-        
         };
-        var dialog = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>("Delete content", parameters, options);
+        var dialog = await DialogService.ShowAsync<GenericCancellationConfirmationDialog>(Localizer["TaskDelete.DialogService.Title"], parameters, options);
         var result = await dialog.Result;
-        
-        //if not cancelled, delete content
+
+        var matches = WorkspaceViewModel.LearningWorlds.SelectMany(world => world.AllLearningElements.Where(element => element.LearningContent.Equals(item)).Select(el => (world, el)));
+        if (matches.Any())
+        {
+            parameters = new DialogParameters
+            {
+                { nameof(DeleteContentInUseConfirmationDialog.ContentName), item.Name },
+                { nameof(DeleteContentInUseConfirmationDialog.WorldElementInUseTuples), matches }
+            };
+            var warningDialog = await DialogService.ShowAsync<DeleteContentInUseConfirmationDialog>(Localizer["WarningDialog.Title"], parameters, options);
+            var warningResult = await warningDialog.Result;
+            if (warningResult.Canceled) return;
+        }
+
+    //if not cancelled, delete content
         if (!result.Canceled)
             PresentationLogic.RemoveContent(item);
     }

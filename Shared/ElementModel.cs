@@ -3,17 +3,19 @@
 public enum ElementModel
 {
     // ReSharper disable InconsistentNaming
-    L_BILD_WANDBILD_1,
-    L_BILD_WANDBILD_2,
+    l_random,
     
-    L_H5P_SCHREIBTISCH_1,
-    L_H5P_SPIELAUTOMAT_1,
-    L_H5P_TAFEL_1,
-    L_H5P_ZEICHENPULT_1,
+    l_picture_painting_1,
+    l_picture_painting_2,
     
-    L_TEXT_BUECHERREGAL_1,
-    L_TEXT_BUECHERREGAL_2,
+    l_h5p_deskpc_1,
+    l_h5p_slotmachine_1,
+    l_h5p_blackboard_1,
+    l_h5p_drawingtable_1,
     
-    L_VIDEO_FERNSEHER_1,
+    l_text_bookshelf_1,
+    l_text_bookshelf_2,
+    
+    l_video_television_1,
     // ReSharper restore InconsistentNaming
 }

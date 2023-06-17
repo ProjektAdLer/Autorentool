@@ -23,5 +23,6 @@ public interface IUserWebApiServices
     /// <returns>User Information</returns>
     public Task<UserInformationBE> GetUserInformationAsync(string token);
 
-    public Task<bool> UploadLearningWorldAsync(string token, string backupPath, string awtPath);
+    public Task<bool> UploadLearningWorldAsync(string token, string backupPath, string awtPath,
+        IProgress<int>? progress = null);
 }

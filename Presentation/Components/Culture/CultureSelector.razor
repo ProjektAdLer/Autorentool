@@ -5,16 +5,16 @@
 
         <section class="flex flex-row justify-center drop-shadow p-1">
             <div dir="ltr" class="flex justify-center items-center">
-                <button title="German" class="text-white bg-adlerdarkblue rounded-l-[28px] py-1 px-2 @(Equals(Culture, supportedCultures[1]) ? "bg-adlerbggradientto" : "")" @onclick="() => SetCulture(supportedCultures[0])">
-                    <p class="z-10 text-white font-bold @(Equals(Culture, supportedCultures[1]) ? "text-adlerbggradientto hover:text-adlerdarkblue-500" : "")">DE</p>
+                <button title=@Localizer["Localizer.German.Short.Text.Hover"] class="text-white bg-buttonbgblue rounded-l-[28px] py-1 px-2 @(Equals(Culture, supportedCultures[1]) ? "bg-adlerbggradientto" : "")" @onclick="() => SetCulture(supportedCultures[0])">
+                    <p class="z-10 text-white font-bold @(Equals(Culture, supportedCultures[1]) ? "text-adlerbggradientto hover:text-adlerdarkblue-500" : "")">@Localizer["Localizer.German.Short.Text"]</p>
                 </button>
-                <img src="CustomIcons/german-flag-long.png" alt="german-flag-icon" class="z-0 pointer-events-none opacity-70 absolute rounded-full w-6 h-6 @(Equals(Culture, supportedCultures[1]) ? "opacity-20" : "")">
+                <img src="CustomIcons/german-flag-long.png" alt="german-flag-icon" class="z-0 pointer-events-none opacity-90 absolute rounded-full w-6 h-6 @(Equals(Culture, supportedCultures[1]) ? "opacity-20" : "")">
             </div>
             <div dir="rtl" class="flex justify-center items-center">
-                <button title="English" class="text-white bg-adlerdarkblue rounded-r-[28px] py-1 px-2 @(Equals(Culture, supportedCultures[0]) ? "bg-adlerbggradientto" : "")" @onclick="() => SetCulture(supportedCultures[1])">
-                    <p class="z-10 text-white font-bold @(Equals(Culture, supportedCultures[0]) ? "text-adlerbggradientto hover:text-adlerdarkblue-500" : "")">EN</p>
+                <button title=@Localizer["Localizer.English.Short.Text.Hover"] class="text-white bg-buttonbgblue rounded-r-[28px] py-1 px-2 @(Equals(Culture, supportedCultures[0]) ? "bg-adlerbggradientto" : "")" @onclick="() => SetCulture(supportedCultures[1])">
+                    <p class="z-10 text-white font-bold @(Equals(Culture, supportedCultures[0]) ? "text-adlerbggradientto hover:text-adlerdarkblue-500" : "")">@Localizer["Localizer.English.Short.Text"]</p>
                 </button>
-                <img src="CustomIcons/great-britain-flag.png" alt="great-britain-flag-icon" class="z-0 pointer-events-none opacity-70 absolute rounded-full w-6 h-6 @(Equals(Culture, supportedCultures[0]) ? "opacity-20" : "")">
+                <img src="CustomIcons/great-britain-flag.png" alt="great-britain-flag-icon" class="z-0 pointer-events-none opacity-90 absolute rounded-full w-6 h-6 @(Equals(Culture, supportedCultures[0]) ? "opacity-20" : "")">
             </div>
         </section>
 

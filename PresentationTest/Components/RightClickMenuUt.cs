@@ -5,6 +5,7 @@ using Bunit;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Localization;
 using NSubstitute;
 using NUnit.Framework;
 using Presentation.Components;
@@ -23,6 +24,8 @@ public class RightClickMenuUt
 #pragma warning disable CS8618
     private TestContext _testContext;
     private IMouseService _mouseService;
+    private IStringLocalizer<RightClickMenu<ILearningElementViewModel>> _eleLocalizer;
+    private IStringLocalizer<RightClickMenu<ILearningSpaceViewModel>> _spaceLocalizer;
 #pragma warning restore CS8618
 
     [SetUp]
@@ -30,7 +33,11 @@ public class RightClickMenuUt
     {
         _testContext = new TestContext();
         _mouseService = Substitute.For<IMouseService>();
+        _eleLocalizer = Substitute.For<IStringLocalizer<RightClickMenu<ILearningElementViewModel>>>();
+        _spaceLocalizer = Substitute.For<IStringLocalizer<RightClickMenu<ILearningSpaceViewModel>>>();
         _testContext.Services.AddSingleton(_mouseService);
+        _testContext.Services.AddSingleton(_eleLocalizer);
+        _testContext.Services.AddSingleton(_spaceLocalizer);
     }
 
     [TearDown]
@@ -44,7 +51,7 @@ public class RightClickMenuUt
         var onClose = () => { };
 
         var systemUnderTest =
-            CreateRenderedDraggableComponent(learningObject, menuEntries, onClose);
+            CreateRenderedRightClickMenu(learningObject, menuEntries, onClose);
 
         Assert.Multiple(() =>
         {
@@ -84,7 +91,7 @@ public class RightClickMenuUt
     public void OnParametersSet_WithObjectEqualsNull_ThrowsException()
     {
         Assert.Throws<ArgumentNullException>(() =>
-            CreateRenderedDraggableComponent(null!, new List<RightClickMenuEntry>(), () => { }));
+            CreateRenderedRightClickMenu<ILearningElementViewModel>(null!, new List<RightClickMenuEntry>(), () => { }));
     }
     
     [Test]
@@ -93,11 +100,14 @@ public class RightClickMenuUt
         var learningObject = Substitute.For<IDisplayableLearningObject>();
 
         Assert.Throws<ArgumentException>(() =>
+        {
+            _testContext.Services.AddSingleton(Substitute.For<IStringLocalizer<RightClickMenu<IDisplayableLearningObject>>>());
             _testContext.RenderComponent<RightClickMenu<IDisplayableLearningObject>>(parameters => parameters
                 .Add(p => p.LearningObject, learningObject)
                 .Add(p => p.MenuEntries, new List<RightClickMenuEntry>())
                 .Add(p => p.OnClose, () => { })
-            ));
+            );
+        });
     }
     
     [Test]
@@ -109,7 +119,7 @@ public class RightClickMenuUt
         var menuEntries = new List<RightClickMenuEntry>(){new RightClickMenuEntry(onOpenText, onOpenClicked)};
 
         var systemUnderTest =
-            CreateRenderedDraggableComponent(learningObject, menuEntries);
+            CreateRenderedRightClickMenu(learningObject, menuEntries);
 
         systemUnderTest.FindAll("g").Last(x => x.InnerHtml.Contains("Open")).MouseDown(new MouseEventArgs());
         systemUnderTest.InvokeAsync(() => _mouseService.OnUp += Raise.EventWith(new MouseEventArgs()));
@@ -124,7 +134,7 @@ public class RightClickMenuUt
         var onClose = Substitute.For<Action>();
 
         var systemUnderTest =
-            CreateRenderedDraggableComponent(learningObject, onClose: onClose);
+            CreateRenderedRightClickMenu(learningObject, onClose: onClose);
 
         systemUnderTest.FindAll("g").Last(x => x.InnerHtml.Contains("Close")).MouseDown(new MouseEventArgs());
         systemUnderTest.InvokeAsync(() => _mouseService.OnUp += Raise.EventWith(new MouseEventArgs()));
@@ -133,13 +143,13 @@ public class RightClickMenuUt
     }
 
 
-    private IRenderedComponent<RightClickMenu<ILearningElementViewModel>> CreateRenderedDraggableComponent(
-        ILearningElementViewModel? learningObject = null, List<RightClickMenuEntry>? menuEntries = null, Action? onClose = null)
+    private IRenderedComponent<RightClickMenu<T>> CreateRenderedRightClickMenu<T>(
+        T? learningObject = default, List<RightClickMenuEntry>? menuEntries = null, Action? onClose = null)
     {
         menuEntries ??= new List<RightClickMenuEntry>();
         onClose ??= () => { };
 
-        return _testContext.RenderComponent<RightClickMenu<ILearningElementViewModel>>(parameters => parameters
+        return _testContext.RenderComponent<RightClickMenu<T>>(parameters => parameters
             .Add(p => p.LearningObject, learningObject)
             .Add(p => p.MenuEntries, menuEntries)
             .Add(p => p.OnClose, onClose)

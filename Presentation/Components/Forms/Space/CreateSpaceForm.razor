@@ -1,22 +1,24 @@
-@implements IDisposable
 @using Presentation.PresentationLogic.LearningWorld
 @using Presentation.PresentationLogic.AuthoringToolWorkspace
 @using Presentation.Components.Forms.Models
 @using BusinessLogic.Entities
 @using System.ComponentModel
+@using Microsoft.Extensions.Localization
 @using Presentation.Components.Forms.Buttons
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View
 @using Shared
+@implements IDisposable
 @implements IAsyncDisposable
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
-        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">Learning space metadata</h2>
+        <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["CreateSpaceForm.Header.Title"]</h2>
     </div>
 </header>
 <MudDivider DividerType="DividerType.Middle" Class="my-4"></MudDivider>
 <BaseForm TForm="LearningSpaceFormModel" TEntity="LearningSpace"
-          OnValidSubmit="OnValidSubmit" SnackbarMessage="Space created" FormDataContainer="FormDataContainer">
+          OnValidSubmit="OnValidSubmit" SnackbarMessage=@Localizer["CreateSpaceForm.SnackbarMessage"]
+          FormDataContainer="FormDataContainer">
     <Fields>
         <MudSwitch Title="Advanced Mode"
                    @bind-Checked="FormDataContainer.FormModel.AdvancedMode" 
@@ -25,19 +27,24 @@
                    Label="Advanced Mode" 
                    LabelPosition="LabelPosition.Start">
         </MudSwitch>
-        <Collapsable Title="General" @bind-Collapsed="_collapsedGeneral">
+        <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Title"]
+                     @bind-Collapsed="_collapsedGeneral">
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Name"
                               For="@(() => FormModel.Name)"
                               Immediate="true"
                               DebounceInterval="300"
-                              Label="@nameof(FormDataContainer.FormModel.Name)"/>
+                              Label=@Localizer["CreateSpaceForm.Fields.Collapsable.General.Field.Name.Text"]
+                              />
             </div>
         </Collapsable>
         
-        <Collapsable Title="Completion conditions" @bind-Collapsed="_collapsedConditions">
+        <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Title"]
+                     @bind-Collapsed="_collapsedConditions">
             <div class="rounded-lg w-4/4 px-4 pb-2">
-                <MudText Typo="Typo.caption">Required points</MudText>
+                <MudText Typo="Typo.caption">
+                    @Localizer["CreateSpaceForm.Fields.Collapsable.CompletionConditions.Field.RequiredPoints.Text"]
+                </MudText>
                 <MudNumericField @bind-Value="FormDataContainer.FormModel.RequiredPoints"
                                  Min="1"
                                  For="@(() => FormModel.RequiredPoints)"
@@ -47,8 +54,14 @@
                                  Margin="Margin.Dense"/>
             </div>
         </Collapsable>
+<<<<<<< HEAD
 
         <Collapsable Title="Theme" @bind-Collapsed="_collapsedTheme">
+=======
+        
+        <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Theme.Title"]
+                     @bind-Collapsed="_collapsedTheme">
+>>>>>>> main
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudSelect @bind-Value="FormDataContainer.FormModel.Theme" AnchorOrigin="Origin.BottomCenter"
                            Label="@nameof(FormDataContainer.FormModel.Theme)"
@@ -62,17 +75,22 @@
             </div>
         </Collapsable>
         
-        <Collapsable Title="Goals" @bind-Collapsed="_collapsedGoals">
-            <div class="rounded-lg w-4/4 px-4">
-                <MudText Typo="Typo.caption">Description</MudText>
-                <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
+        <Collapsable Title=@Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Title"]
+                     @bind-Collapsed="_collapsedGoals">
+                <div class="rounded-lg w-4/4 px-4">
+                    <MudText Typo="Typo.caption">
+                        @Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]
+                    </MudText>
+                    <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
                               For="@(() => FormModel.Description)"
                               Immediate="true"
                               Lines="3"
                               Variant="Variant.Outlined"
                               DebounceInterval="300"
                               Class="pb-4 mt-0"/>
-                <MudText Typo="Typo.caption">Goals</MudText>
+                    <MudText Typo="Typo.caption">
+                        @Localizer["CreateSpaceForm.Fields.Collapsable.Goals.Field.Goals.Text"]
+                    </MudText>
                 <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
                               For="@(() => FormModel.Goals)"
                               Immediate="true"
@@ -100,6 +118,10 @@
 
     [Inject]
     private IFormDataContainer<LearningSpaceFormModel, LearningSpace> FormDataContainer { get; set; }
+    
+    [Inject]
+    private IStringLocalizer<CreateSpaceForm> Localizer { get; set; }
+    
 #pragma warning restore CS8618
 
     //this indirection is necessary for the `For` attribute on the form fields to work properly when validating the form

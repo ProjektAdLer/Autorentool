@@ -74,7 +74,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
             throw new ApplicationException("LearningWorld is null");
         _presentationLogic.ChangeLearningSpaceLayout(LearningSpaceVm, _selectedViewModelsProvider.LearningWorld,
             floorPlanName);
-        _selectedViewModelsProvider.SetActiveSlot(-1);
+        _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
     }
 
     #region LearningElement
@@ -106,14 +106,14 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     {
         if (LearningSpaceVm?.LearningSpaceLayout.LearningElements.ContainsKey(i) ?? false)
             return;
-        if (_selectedViewModelsProvider.ActiveSlot == i)
+        if (_selectedViewModelsProvider.ActiveSlotInSpace == i)
         {
-            _selectedViewModelsProvider.SetActiveSlot(-1);
+            _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
             return;
         }
         
         SetSelectedLearningElement(null);
-        _selectedViewModelsProvider.SetActiveSlot(i);
+        _selectedViewModelsProvider.SetActiveSlotInSpace(i, null);
         _mediator.RequestOpenElementDialog();
     }
 
@@ -122,9 +122,9 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     {
         if(LearningSpaceVm == null)
             throw new ApplicationException("LearningSpaceVm is null");
-        _presentationLogic.CreateLearningElementInSlot(LearningSpaceVm, _selectedViewModelsProvider.ActiveSlot, name, learningContent, description,
+        _presentationLogic.CreateLearningElementInSlot(LearningSpaceVm, _selectedViewModelsProvider.ActiveSlotInSpace, name, learningContent, description,
             goals, difficulty, elementModel, workload, points);
-        _selectedViewModelsProvider.SetActiveSlot(-1);
+        _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
     }
 
     public void DragLearningElement(object sender, DraggedEventArgs<ILearningElementViewModel> args)
@@ -135,7 +135,7 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     public void ClickedLearningElement(ILearningElementViewModel obj)
     {
         _mediator.RequestOpenElementDialog();
-        _selectedViewModelsProvider.SetActiveSlot(-1);
+        _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
         SetSelectedLearningElement(obj);
     }
 

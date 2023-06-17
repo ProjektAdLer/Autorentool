@@ -18,7 +18,7 @@ public class LearningElementValidator : AbstractValidator<LearningElement>
         RuleFor(x => x.Name)
             .NotEmpty()
             .Length(1, 60)
-            .IsAlphanumeric(new List<char>() {' ', '-', '_'}, "Must only contain letters, digits, spaces, dashes and underscores.")
+            .IsValidName()
             .Must((element, name) => IsUniqueName(element.Id, name))
             .WithMessage("Already in use.");
         RuleFor(x => x.LearningContent)

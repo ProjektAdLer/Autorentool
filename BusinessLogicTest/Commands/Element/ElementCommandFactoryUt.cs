@@ -30,7 +30,7 @@ public class ElementCommandFactoryUt
         var description = "Description";
         var goals = "Goals";
         var difficulty = LearningElementDifficultyEnum.Easy;
-        var elementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
+        var elementModel = ElementModel.l_h5p_slotmachine_1;
         var workload = 10;
         var points = 100;
         var positionX = 0.5;
@@ -95,7 +95,7 @@ public class ElementCommandFactoryUt
         var description = "Description";
         var goals = "Goals";
         var difficulty = LearningElementDifficultyEnum.Easy;
-        var elementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
+        var elementModel = ElementModel.l_h5p_slotmachine_1;
         var workload = 10;
         var points = 100;
         var positionX = 0.5;
@@ -205,7 +205,7 @@ public class ElementCommandFactoryUt
         var description = "New Description";
         var goals = "New Goals";
         var difficulty = LearningElementDifficultyEnum.Medium;
-        var elementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
+        var elementModel = ElementModel.l_h5p_slotmachine_1;
         var workload = 20;
         var points = 200;
         var learningContent = EntityProvider.GetLinkContent();

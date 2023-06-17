@@ -9,6 +9,18 @@
     <ItemGroup>
       <PackageReference Include="JetBrains.Annotations" Version="2022.1.0" />
       <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.2" />
+      <PackageReference Include="System.IO.Abstractions" Version="17.2.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <EmbeddedResource Update="Resources\FloorPlanEnum.de.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>FloorPlanEnum.de.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
+      <EmbeddedResource Update="Resources\FloorPlanEnum.en.resx">
+        <Generator>ResXFileCodeGenerator</Generator>
+        <LastGenOutput>FloorPlanEnum.en.Designer.cs</LastGenOutput>
+      </EmbeddedResource>
     </ItemGroup>
 
 </Project>

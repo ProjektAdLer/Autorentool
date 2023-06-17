@@ -1,0 +1,49 @@
+@implements IDisposable
+@implements IAsyncDisposable
+<MudDialog>
+    <DialogContent>
+        Your learning world is currently being uploaded. This might take a few moments to minutes, depending on the size of your world. <br/>
+        <MudProgressLinear Value="_progress" Min="0" Max="100" Color="Color.Primary" Class="my-4 w-full"/>
+    </DialogContent>
+    <DialogActions>
+        <!-- intentionally empty, dialog closes automatically -->
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter]
+    public MudDialogInstance MudDialog { get; set; }
+    [Parameter, EditorRequired]
+    public Progress<int> Progress { get; set; }
+    
+    private int _progress;
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        Progress.ProgressChanged += OnProgressChanged;
+    }
+
+    private void OnProgressChanged(object? sender, int e)
+    {
+        _progress = e;
+        //always force re-render
+        InvokeAsync(StateHasChanged);
+        
+        //close dialog automatically at 100%
+        if(_progress == 100)
+        {
+            MudDialog.Close(DialogResult.Ok(true));
+        }
+    }
+    
+    public void Dispose()
+    {
+        Progress.ProgressChanged -= OnProgressChanged;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        Dispose();
+    }
+
+}

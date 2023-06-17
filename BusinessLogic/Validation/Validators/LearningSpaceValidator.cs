@@ -17,7 +17,7 @@ public class LearningSpaceValidator : AbstractValidator<LearningSpace>
         RuleFor(x => x.Name)
             .NotEmpty()
             .Length(1, 60)
-            .IsAlphanumeric(new List<char>() {' ', '-', '_'}, "Must only contain letters, digits, spaces, dashes and underscores.")
+            .IsValidName()
             .Must((space, name) => IsUniqueNameInWorld(space.Id, name))
             .WithMessage("Already in use.");
         RuleFor(x => x.RequiredPoints)

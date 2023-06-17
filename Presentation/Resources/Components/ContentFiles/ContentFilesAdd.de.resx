@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<root>
+    <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" id="root"
+                xmlns="">
+        <xsd:element name="root" msdata:IsDataSet="true">
+
+        </xsd:element>
+    </xsd:schema>
+    <resheader name="resmimetype">
+        <value>text/microsoft-resx</value>
+    </resheader>
+    <resheader name="version">
+        <value>1.3</value>
+    </resheader>
+    <resheader name="reader">
+        <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <resheader name="writer">
+        <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral,
+            PublicKeyToken=b77a5c561934e089
+        </value>
+    </resheader>
+    <data name="Header.Text" xml:space="preserve">
+        <value>Dateiimport</value>
+    </data>
+    <data name="FileUpload.ButtonTemplate.Text1" xml:space="preserve">
+        <value>Ziehen Sie Dateien hierher, oder klicken Sie, um sie hinzuzufügen.</value>
+    </data>
+    <data name="Invocation.MessageBox.Title" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="Invocation.MessageBox.Message" xml:space="preserve">
+        <value/>
+    </data>
+    <data name="DialogService.MessageBox.Title" xml:space="preserve">
+        <value>Datei leer</value>
+    </data>
+    <data name="DialogService.MessageBox.Message" xml:space="preserve">
+        <value>Die Datei {0} war leer, sie wird übersprungen</value>
+    </data>
+    <data name="Collapsable.Title" xml:space="preserve">
+        <value>Link hinzufügen</value>
+    </data>
+    <data name="FileUpload.ButtonTemplate.Text2" xml:space="preserve">
+        <value>Erlaubte Dateiendungen: {0}</value>
+    </data>
+</root>

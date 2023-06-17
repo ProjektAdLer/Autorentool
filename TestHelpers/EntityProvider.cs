@@ -25,9 +25,10 @@ public static class EntityProvider
             {UnsavedChanges = unsavedChanges, AssignedTopic = assignedTopic};
     }
 
-    public static LearningSpaceLayout GetLearningSpaceLayout(FloorPlanEnum floorPlan = FloorPlanEnum.R_20X20_6L)
+    public static LearningSpaceLayout GetLearningSpaceLayout(FloorPlanEnum floorPlan = FloorPlanEnum.R_20X20_6L,
+        IDictionary<int, ILearningElement>? learningElements = null)
     {
-        return new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), floorPlan);
+        return new LearningSpaceLayout(learningElements ?? new Dictionary<int, ILearningElement>(), floorPlan);
     }
 
     public static LearningSpaceLayout GetLearningSpaceLayoutWithElement()
@@ -36,11 +37,12 @@ public static class EntityProvider
             FloorPlanEnum.R_20X20_6L);
     }
 
-    public static LearningElement GetLearningElement(bool unsavedChanges = false, string append = "",
+    public static LearningElement GetLearningElement(bool unsavedChanges = false, ILearningContent? content = null,
+        string append = "", ElementModel elementModel = ElementModel.l_h5p_slotmachine_1,
         ILearningSpace? parent = null, double positionX = 0, double positionY = 0)
     {
-        return new LearningElement("a" + append, null!, "d" + append, "e" + append,
-            LearningElementDifficultyEnum.Easy, ElementModel.L_H5P_SPIELAUTOMAT_1, parent: parent, positionX: positionX,
+        return new LearningElement("a" + append, content!, "d" + append, "e" + append,
+            LearningElementDifficultyEnum.Easy, elementModel, parent: parent, positionX: positionX,
             positionY: positionY) {UnsavedChanges = unsavedChanges};
     }
 
@@ -59,14 +61,14 @@ public static class EntityProvider
         return new LinkContent("a name", "a link");
     }
 
-    public static FileContent GetFileContent()
+    public static FileContent GetFileContent(string append = "")
     {
-        return new FileContent("a name", "a type", "a filepath");
+        return new FileContent("a name" + append, "a type" + append, "a filepath" + append);
     }
 
-    public static Topic GetTopic()
+    public static Topic GetTopic(string append = "")
     {
-        return new Topic("a topic");
+        return new Topic("a topic" + append);
     }
 
     public static SavedLearningWorldPath GetSavedLearningWorldPath()

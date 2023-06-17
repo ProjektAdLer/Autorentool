@@ -33,7 +33,7 @@ public static class PersistEntityProvider
         string name = "")
     {
         return new LearningElementPe(name != "" ? name : "a" + append, content, "d" + append, "e" + append,
-            LearningElementDifficultyEnum.Easy, ElementModel.L_H5P_SPIELAUTOMAT_1);
+            LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1);
     }
 
     public static PathWayConditionPe GetPathWayCondition(ConditionEnum condition = ConditionEnum.And,

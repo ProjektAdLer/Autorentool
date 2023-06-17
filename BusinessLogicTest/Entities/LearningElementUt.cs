@@ -1,7 +1,7 @@
 using BusinessLogic.Entities;
-using BusinessLogic.Entities.LearningContent;
 using NUnit.Framework;
 using Shared;
+using TestHelpers;
 
 namespace BusinessLogicTest.Entities;
 
@@ -12,11 +12,11 @@ public class LearningElementUt
     public void AutomapperConstructor_InitializesAllProperties()
     {
         var name = "asdf";
-        var content = new FileContent("a", "b", "");
+        var content = EntityProvider.GetFileContent();
         var description = "very cool element";
         var goals = "learn very many things";
         var difficulty = LearningElementDifficultyEnum.Medium;
-        var elementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
+        var elementModel = ElementModel.l_h5p_slotmachine_1;
         var workload = 5;
         var points = 6;
         var positionX = 5f;
@@ -45,12 +45,12 @@ public class LearningElementUt
     public void NormalConstructor_InitializesAllProperties()
     {
         var name = "asdf";
-        var parent = new LearningSpace("foo", "", "", 3, Theme.Campus);
-        var content = new FileContent("a", "b", "");
+        var parent = EntityProvider.GetLearningSpace();
+        var content = EntityProvider.GetFileContent();
         var description = "very cool element";
         var goals = "learn very many things";
         var difficulty = LearningElementDifficultyEnum.Medium;
-        var elementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
+        var elementModel = ElementModel.l_h5p_slotmachine_1;
         var workload = 5;
         var points = 6;
         var positionX = 5f;
@@ -79,12 +79,12 @@ public class LearningElementUt
     public void GetRestoreMemento_RestoresCorrectMemento()
     {
         var name = "asdf";
-        var parent = new LearningSpace("foo", "", "", 4, Theme.Campus);
-        var content = new FileContent("a", "b", "");
+        var parent = EntityProvider.GetLearningSpace();
+        var content = EntityProvider.GetFileContent();
         var description = "very cool element";
         var goals = "learn very many things";
         var difficulty = LearningElementDifficultyEnum.Medium;
-        var elementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
+        var elementModel = ElementModel.l_h5p_slotmachine_1;
         var workload = 5;
         var points = 6;
         var positionX = 5f;
@@ -96,11 +96,11 @@ public class LearningElementUt
         var learningElementMemento = systemUnderTest.GetMemento();
         
         var nameChanged = "qwertz";
-        var contentChanged = new FileContent("b", "c", "");
+        var contentChanged = EntityProvider.GetFileContent(append: "changed");
         var descriptionChanged = "changed description";
         var goalsChanged = "new goals";
         var difficultyChanged = LearningElementDifficultyEnum.Easy;
-        var elementModelChanged = ElementModel.L_H5P_TAFEL_1;
+        var elementModelChanged = ElementModel.l_h5p_blackboard_1;
         var workloadChanged = 10;
         var pointsChanged = 20;
         var positionXChanged = 10f;
@@ -152,12 +152,12 @@ public class LearningElementUt
     public void RestoreMemento_MementoIsNotLearningElementMemento_ThrowsException()
     {
         var name = "asdf";
-        var parent = new LearningSpace("foo", "", "", 4, Theme.Campus);
-        var content = new FileContent("a", "b", "");
+        var parent = EntityProvider.GetLearningSpace();
+        var content = EntityProvider.GetFileContent();
         var description = "very cool element";
         var goals = "learn very many things";
         var difficulty = LearningElementDifficultyEnum.Medium;
-        var elementModel = ElementModel.L_H5P_SPIELAUTOMAT_1;
+        var elementModel = ElementModel.l_h5p_slotmachine_1;
         var workload = 5;
         var points = 6;
         var positionX = 5f;

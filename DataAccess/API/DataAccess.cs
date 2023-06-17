@@ -13,7 +13,7 @@ namespace DataAccess.API;
 
 public class DataAccess : IDataAccess
 {
-    public DataAccess(IAuthoringToolConfiguration configuration, IXmlFileHandler<LearningWorldPe> xmlHandlerWorld, 
+    public DataAccess(IApplicationConfiguration configuration, IXmlFileHandler<LearningWorldPe> xmlHandlerWorld, 
         IXmlFileHandler<LearningSpacePe> xmlHandlerSpace, IXmlFileHandler<LearningElementPe> xmlHandlerElement, 
         IContentFileHandler contentFileHandler, ILearningWorldSavePathsHandler worldSavePathsHandler, IFileSystem fileSystem, IMapper mapper)
     {
@@ -33,7 +33,7 @@ public class DataAccess : IDataAccess
     public readonly IContentFileHandler ContentFileHandler;
     public readonly ILearningWorldSavePathsHandler WorldSavePathsHandler;
     public readonly IFileSystem FileSystem;
-    public IAuthoringToolConfiguration Configuration { get; }
+    public IApplicationConfiguration Configuration { get; }
     public IMapper Mapper { get; }
     
 

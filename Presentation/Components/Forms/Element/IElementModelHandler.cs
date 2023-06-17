@@ -5,7 +5,6 @@ namespace Presentation.Components.Forms.Element;
 
 public interface IElementModelHandler
 {
-    IEnumerable<ElementModel> GetElementModels(ILearningContentViewModel? learningContentViewModel = null);
-
     string GetIconForElementModel(ElementModel elementModel);
+    IEnumerable<ElementModel> GetElementModels(ILearningContentViewModel? learningContentViewModel = null);
 }

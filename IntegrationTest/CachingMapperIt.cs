@@ -144,7 +144,7 @@ public class CachingMapperIt
         var spaceVm = worldVm.LearningSpaces.First();
 
         systemUnderTest.CreateLearningElementInSlot(spaceVm, 0, "l",
-            null!, "o", "p", LearningElementDifficultyEnum.Easy, ElementModel.L_H5P_SPIELAUTOMAT_1, 2, 3);
+            null!, "o", "p", LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, 2, 3);
 
         Assert.That(spaceVm.ContainedLearningElements.Count(), Is.EqualTo(1));
 
@@ -183,7 +183,7 @@ public class CachingMapperIt
     }
 
     private static PresentationLogic CreateTestablePresentationLogic(
-        IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null,
+        IApplicationConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null,
         ICachingMapper? cachingMapper = null, ISelectedViewModelsProvider? selectedViewModelsProvider = null,
         IServiceProvider? serviceProvider = null,
         ILogger<PresentationLogic>? logger = null,
@@ -197,7 +197,7 @@ public class CachingMapperIt
         IWorldCommandFactory? worldCommandFactory = null,
         IBatchCommandFactory? batchCommandFactory = null)
     {
-        configuration ??= Substitute.For<IAuthoringToolConfiguration>();
+        configuration ??= Substitute.For<IApplicationConfiguration>();
         businessLogic ??= Substitute.For<IBusinessLogic>();
         mapper ??= Substitute.For<IMapper>();
         cachingMapper ??= Substitute.For<ICachingMapper>();

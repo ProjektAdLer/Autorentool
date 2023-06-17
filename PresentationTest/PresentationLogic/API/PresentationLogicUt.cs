@@ -44,7 +44,7 @@ public class PresentationLogicUt
     public void Standard_AllPropertiesInitialized()
     {
         //Arrange
-        var mockConfiguration = Substitute.For<IAuthoringToolConfiguration>();
+        var mockConfiguration = Substitute.For<IApplicationConfiguration>();
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
         var mockMapper = Substitute.For<IMapper>();
         var mockCachingMapper = Substitute.For<ICachingMapper>();
@@ -508,7 +508,7 @@ public class PresentationLogicUt
             .Returns(learningContentEntity);
         mockElementCommandFactory
             .GetCreateUnplacedCommand(learningWorldEntity, "a", learningContentEntity, "d", "e",
-                LearningElementDifficultyEnum.Easy, ElementModel.L_H5P_SPIELAUTOMAT_1, 5, 7, 0, 0,
+                LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, 5, 7, 0, 0,
                 Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
             .Returns(mockCommand);
 
@@ -517,7 +517,7 @@ public class PresentationLogicUt
             selectedViewModelsProvider: mockSelectedViewModelsProvider);
 
         systemUnderTest.CreateUnplacedLearningElement(learningWorldVm, "a", null!, "d", "e",
-            LearningElementDifficultyEnum.Easy, ElementModel.L_H5P_SPIELAUTOMAT_1, 5, 7);
+            LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, 5, 7);
 
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
@@ -534,7 +534,7 @@ public class PresentationLogicUt
         mockMapper.Map<BusinessLogic.Entities.LearningSpace>(Arg.Any<LearningSpaceViewModel>())
             .Returns(learningSpaceEntity);
         mockElementCommandFactory.GetCreateInSlotCommand(learningSpaceEntity, 0, "a", Arg.Any<ILearningContent>(), "d",
-                "e", LearningElementDifficultyEnum.Easy, ElementModel.L_H5P_SPIELAUTOMAT_1, 1, 2, positionX: 3, positionY: 4,
+                "e", LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, 1, 2, positionX: 3, positionY: 4,
                 Arg.Any<Action<BusinessLogic.Entities.LearningSpace>>())
             .Returns(mockCommand);
 
@@ -542,7 +542,7 @@ public class PresentationLogicUt
             elementCommandFactory: mockElementCommandFactory);
 
         systemUnderTest.CreateLearningElementInSlot(learningSpaceVm, 0, "a", null!, "d", "e",
-            LearningElementDifficultyEnum.Easy, ElementModel.L_H5P_SPIELAUTOMAT_1, 1, 2, positionX: 3, positionY: 4);
+            LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, 1, 2, positionX: 3, positionY: 4);
 
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
@@ -567,7 +567,7 @@ public class PresentationLogicUt
         mockMapper.Map<ILearningContent>(Arg.Any<FileContentViewModel>())
             .Returns(learningContentEntity);
         mockElementCommandFactory.GetEditCommand(learningElementEntity, learningSpaceEntity, "a", "d", "e",
-                LearningElementDifficultyEnum.Easy, ElementModel.L_H5P_SPIELAUTOMAT_1, 1, 2, learningContentEntity,
+                LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, 1, 2, learningContentEntity,
                 Arg.Any<Action<BusinessLogic.Entities.LearningElement>>())
             .Returns(mockCommand);
 
@@ -575,7 +575,7 @@ public class PresentationLogicUt
             elementCommandFactory: mockElementCommandFactory);
 
         systemUnderTest.EditLearningElement(learningSpaceVm, learningElementVm, "a", "d",
-            "e", LearningElementDifficultyEnum.Easy, ElementModel.L_H5P_SPIELAUTOMAT_1, 1, 2, learningContentVm);
+            "e", LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, 1, 2, learningContentVm);
 
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
@@ -1916,7 +1916,7 @@ public class PresentationLogicUt
         var mockLogger = Substitute.For<ILogger<Presentation.PresentationLogic.API.PresentationLogic>>();
         var mockServiceProvider = Substitute.For<IServiceProvider>();
         var mockElectronDialogManager = Substitute.For<IElectronDialogManager>();
-        var mockLearningSpaceViewModel = new LearningSpaceViewModel("n", "l", "d", Theme.Campus);
+        var mockLearningSpaceViewModel = ViewModelProvider.GetLearningSpace(); 
         mockElectronDialogManager
             .ShowOpenFileDialogAsync(Arg.Any<string>(), Arg.Any<string?>(), Arg.Any<IEnumerable<FileFilterProxy>?>())
             .Throws(new OperationCanceledException("bububaba"));
@@ -2176,19 +2176,20 @@ public class PresentationLogicUt
     public void UploadLearningWorldToBackend_CallsBusinessLogic()
     {
         var mockBusinessLogic = Substitute.For<IBusinessLogic>();
+        var mockProgress = Substitute.For<IProgress<int>>();
         const string filepath = "filepath";
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic);
 
-        systemUnderTest.UploadLearningWorldToBackend(filepath);
+        systemUnderTest.UploadLearningWorldToBackend(filepath, mockProgress);
 
-        mockBusinessLogic.Received().UploadLearningWorldToBackend(filepath);
+        mockBusinessLogic.Received().UploadLearningWorldToBackend(filepath, mockProgress);
     }
 
     #endregion
 
     private static Presentation.PresentationLogic.API.PresentationLogic CreateTestablePresentationLogic(
-        IAuthoringToolConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null,
+        IApplicationConfiguration? configuration = null, IBusinessLogic? businessLogic = null, IMapper? mapper = null,
         ICachingMapper? cachingMapper = null, ISelectedViewModelsProvider? selectedViewModelsProvider = null,
         IServiceProvider? serviceProvider = null,
         ILogger<Presentation.PresentationLogic.API.PresentationLogic>? logger = null,
@@ -2202,7 +2203,7 @@ public class PresentationLogicUt
         IWorldCommandFactory? worldCommandFactory = null,
         IBatchCommandFactory? batchCommandFactory = null)
     {
-        configuration ??= Substitute.For<IAuthoringToolConfiguration>();
+        configuration ??= Substitute.For<IApplicationConfiguration>();
         businessLogic ??= Substitute.For<IBusinessLogic>();
         mapper ??= Substitute.For<IMapper>();
         cachingMapper ??= Substitute.For<ICachingMapper>();

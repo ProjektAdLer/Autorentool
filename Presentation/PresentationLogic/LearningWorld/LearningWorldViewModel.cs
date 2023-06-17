@@ -117,7 +117,12 @@ public class LearningWorldViewModel : ILearningWorldViewModel
     {
         get => _unplacedLearningElements;
         set => SetField(ref _unplacedLearningElements, value);
-    } 
+    }
+
+    public IEnumerable<ILearningElementViewModel> AllLearningElements =>
+        LearningSpaces
+            .SelectMany(space => space.ContainedLearningElements)
+            .Concat(UnplacedLearningElements);
 
     public ICollection<TopicViewModel> Topics
     {

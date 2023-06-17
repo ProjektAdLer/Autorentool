@@ -1,7 +1,7 @@
 using BusinessLogic.Entities;
-using BusinessLogic.Entities.LearningContent;
 using NUnit.Framework;
 using Shared;
+using TestHelpers;
 
 namespace BusinessLogicTest.Entities;
 
@@ -11,12 +11,10 @@ public class LearningSpaceLayoutUt
     [Test]
     public void Constructor_InitializesAllProperties()
     {
-        var content1 = new FileContent("a", "b", "");
-        var content2 = new FileContent("w", "e", "");
-        var ele1 = new LearningElement("a", content1, "g", "h", LearningElementDifficultyEnum.Easy,
-            ElementModel.L_H5P_SPIELAUTOMAT_1, null, workload: 17, points: 6, positionX: 23);
-        var ele2 = new LearningElement("z", content2, "z", "zz",
-            LearningElementDifficultyEnum.Medium, ElementModel.L_H5P_TAFEL_1, null, workload: 444, points: 9, positionX: double.MaxValue);
+        var content1 = EntityProvider.GetFileContent();
+        var content2 = EntityProvider.GetFileContent(append: "2");
+        var ele1 = EntityProvider.GetLearningElement(content: content1);
+        var ele2 = EntityProvider.GetLearningElement(content: content2, append: "2");
         var learningElements = new Dictionary<int, ILearningElement>()
         {
             {
@@ -45,12 +43,10 @@ public class LearningSpaceLayoutUt
     [Test]
     public void GetRestoreMemento_RestoresCorrectMemento()
     {
-        var content1 = new FileContent("a", "b", "");
-        var content2 = new FileContent("w", "e", "");
-        var ele1 = new LearningElement("a", content1, "g", "h", LearningElementDifficultyEnum.Easy,
-            ElementModel.L_H5P_SPIELAUTOMAT_1, null, workload: 17, points: 6, positionX: 23);
-        var ele2 = new LearningElement("z", content2, "z", "zz",
-            LearningElementDifficultyEnum.Medium, ElementModel.L_H5P_TAFEL_1, null, workload: 444, points: 9, positionX: double.MaxValue);
+        var content1 = EntityProvider.GetFileContent();
+        var content2 = EntityProvider.GetFileContent(append: "2");
+        var ele1 = EntityProvider.GetLearningElement(content: content1);
+        var ele2 = EntityProvider.GetLearningElement(content: content2, append: "2");
         var learningElements = new Dictionary<int, ILearningElement>()
         {
             {
@@ -66,12 +62,10 @@ public class LearningSpaceLayoutUt
 
         var learningSpaceLayoutMemento = systemUnderTest.GetMemento();
 
-        var content1Changed = new FileContent("c", "d", "");
-        var content2Changed = new FileContent("e", "f", "");
-        var ele1Changed = new LearningElement("ab", content1Changed, "ffg", "hgg",
-            LearningElementDifficultyEnum.Medium, ElementModel.L_H5P_SPIELAUTOMAT_1, null, workload: 20, points: 50, positionX: 33);
-        var ele2Changed = new LearningElement("uu", content2Changed, "kkk", "fff",
-            LearningElementDifficultyEnum.Hard, ElementModel.L_H5P_TAFEL_1, null, workload: 77, points: 40, positionX: 66);
+        var content1Changed = EntityProvider.GetFileContent(append: "c1");
+        var content2Changed = EntityProvider.GetFileContent(append: "c2");
+        var ele1Changed = EntityProvider.GetLearningElement(append: "c1", content: content1Changed);
+        var ele2Changed = EntityProvider.GetLearningElement(append: "c2", content: content2Changed);
         var learningElementsChanged = new Dictionary<int, ILearningElement>()
         {
             {
@@ -114,12 +108,10 @@ public class LearningSpaceLayoutUt
     [Test]
     public void RestoreMemento_MementoIsNotLearningSpaceLayoutMemento_ThrowsException()
     {
-        var content1 = new FileContent("a", "b", "");
-        var content2 = new FileContent("w", "e", "");
-        var ele1 = new LearningElement("a", content1, "g", "h", LearningElementDifficultyEnum.Easy,
-            ElementModel.L_H5P_SPIELAUTOMAT_1, null, workload: 17, points: 6, positionX: 23);
-        var ele2 = new LearningElement("z", content2, "z", "zz",
-            LearningElementDifficultyEnum.Medium, ElementModel.L_H5P_TAFEL_1, null, workload: 444, points: 9, positionX: double.MaxValue);
+        var content1 = EntityProvider.GetFileContent();
+        var content2 = EntityProvider.GetFileContent(append: "2");
+        var ele1 = EntityProvider.GetLearningElement(content: content1);
+        var ele2 = EntityProvider.GetLearningElement(content: content2, append: "2");
         var learningElements = new Dictionary<int, ILearningElement>()
         {
             {

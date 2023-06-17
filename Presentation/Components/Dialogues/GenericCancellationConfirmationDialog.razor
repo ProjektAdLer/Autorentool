@@ -1,22 +1,32 @@
+@using Microsoft.Extensions.Localization
 <MudDialog>
     <DialogContent>
         <MudText>@DialogText</MudText>
     </DialogContent>
     <DialogActions>
-        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton OnClick="Cancel">@Localizer["GenericCancellationConfirmationDialog.Button.Cancel.Text"]</MudButton>
         <MudButton Color="SubmitButtonColor" OnClick="Submit">@SubmitButtonText</MudButton>
     </DialogActions>
 </MudDialog>
 @code {
+    [Inject]
+    private IStringLocalizer<GenericCancellationConfirmationDialog> Localizer { get; set; }
     [CascadingParameter]
     public MudDialogInstance MudDialog { get; set; }
     [Parameter, EditorRequired]
     public string DialogText { get; set; }
     [Parameter]
-    public string SubmitButtonText { get; set; } = "Submit";
+    public string? SubmitButtonText { get; set; }
     [Parameter]
     public Color SubmitButtonColor { get; set; } = Color.Warning;
     
     private void Submit() => MudDialog.Close(DialogResult.Ok(true));
     private void Cancel() => MudDialog.Cancel();
+
+    protected override void OnParametersSet()
+    {
+        base.OnParametersSet();
+        SubmitButtonText ??= @Localizer["GenericCancellationConfirmationDialog.Submit.Text"];
+    }
+
 }

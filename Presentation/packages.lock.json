@@ -293,7 +293,8 @@
         "type": "Project",
         "dependencies": {
           "JetBrains.Annotations": "[2022.1.0, )",
-          "Microsoft.Extensions.Logging.Abstractions": "[6.0.2, )"
+          "Microsoft.Extensions.Logging.Abstractions": "[6.0.2, )",
+          "System.IO.Abstractions": "[17.2.3, )"
         }
       }
     },

@@ -12,7 +12,7 @@ namespace BusinessLogic.API;
 public class BusinessLogic : IBusinessLogic
 {
     public BusinessLogic(
-        IAuthoringToolConfiguration configuration,
+        IApplicationConfiguration configuration,
         IDataAccess dataAccess,
         IWorldGenerator worldGenerator,
         ICommandStateManager commandStateManager,
@@ -30,7 +30,7 @@ public class BusinessLogic : IBusinessLogic
     internal ICommandStateManager CommandStateManager { get; }
     public IBackendAccess BackendAccess { get; }
     internal IDataAccess DataAccess { get; }
-    public IAuthoringToolConfiguration Configuration { get; }
+    public IApplicationConfiguration Configuration { get; }
     public event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
     public bool CanUndo => CommandStateManager.CanUndo;
     public bool CanRedo => CommandStateManager.CanRedo;
@@ -169,26 +169,9 @@ public class BusinessLogic : IBusinessLogic
         return DataAccess.GetContentFilesFolderPath();
     }
 
-    public async Task CallExport()
-    {
-        // First get the User Token
-        // Those are default certificates from the Bitnami Moodle (Philipps local Test-Moodle). So it can be committed to the repository
-        var userToken = await BackendAccess.GetUserTokenAsync("user", "bitnami");
-
-        // Then we can get User Information by using the token
-        var userInformation = await BackendAccess.GetUserInformationAsync(userToken);
-
-        // Then we can use the user information to call the export
-        var uploadSuccess = await BackendAccess.UploadLearningWorldAsync(userToken,
-            "./ATF3_2_3.mbz", "./DSL_Document.json");
-
-        Console.WriteLine(uploadSuccess);
-    }
-
     #region BackendAccess
 
     //TODO: Move this away from here
-    internal UserToken UserToken = new UserToken("");
     private UserInformation _userInformation = new("", false, 0, "");
 
     public async Task<bool> IsLmsConnected()
@@ -201,9 +184,11 @@ public class BusinessLogic : IBusinessLogic
 
     private async Task UpdateUserInformation()
     {
-        if (UserToken.Token != "")
+        if (Configuration[IApplicationConfiguration.BackendToken] != "")
         {
-            _userInformation = await BackendAccess.GetUserInformationAsync(UserToken);
+            _userInformation =
+                await BackendAccess.GetUserInformationAsync(
+                    new UserToken(Configuration[IApplicationConfiguration.BackendToken]));
         }
         else
         {
@@ -211,36 +196,41 @@ public class BusinessLogic : IBusinessLogic
         }
     }
 
-    public async Task<bool> Login(string username, string password)
+    public async Task Login(string username, string password)
     {
         try
         {
-            UserToken = await BackendAccess.GetUserTokenAsync(username, password);
+            var token = await BackendAccess.GetUserTokenAsync(username, password);
+            Configuration[IApplicationConfiguration.BackendToken] = token.Token;
         }
         catch (BackendInvalidLoginException e)
         {
-            Console.WriteLine(e);
             Logout();
-            return false;
+            throw;
+        }
+        catch (BackendInvalidUrlException e)
+        {
+            Logout();
+            throw;
         }
 
         await UpdateUserInformation();
-        return true;
     }
 
     public void Logout()
     {
-        UserToken = new UserToken();
+        Configuration[IApplicationConfiguration.BackendToken] = "";
         _userInformation.LmsUsername = "";
         _userInformation.IsLmsAdmin = false;
         _userInformation.LmsId = 0;
         _userInformation.LmsEmail = "";
     }
 
-    public void UploadLearningWorldToBackend(string filepath)
+    public void UploadLearningWorldToBackend(string filepath, IProgress<int>? progress = null)
     {
         var atfPath = WorldGenerator.ExtractAtfFromBackup(filepath);
-        BackendAccess.UploadLearningWorldAsync(UserToken, filepath, atfPath);
+        BackendAccess.UploadLearningWorldAsync(new UserToken(Configuration[IApplicationConfiguration.BackendToken]),
+            filepath, atfPath, progress);
     }
 
     #endregion

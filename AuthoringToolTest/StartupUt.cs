@@ -1,4 +1,5 @@
 using System.IO.Abstractions;
+using System.Net.Http.Handlers;
 using AuthoringTool;
 using AutoMapper;
 using BackendAccess.BackendServices;
@@ -29,6 +30,7 @@ using Presentation.PresentationLogic.LearningSpace;
 using Presentation.PresentationLogic.LearningWorld;
 using Shared;
 using Shared.Configuration;
+using IHttpClientFactory = Shared.Networking.IHttpClientFactory;
 
 namespace AuthoringToolTest;
 
@@ -50,7 +52,7 @@ public class StartupUt
 
     private static readonly Type[] ConfigureAuthoringToolRequiredTypes =
     {
-        typeof(IAuthoringToolConfiguration)
+        typeof(IApplicationConfiguration)
     };
 
     [Test]
@@ -202,6 +204,18 @@ public class StartupUt
     [Test]
     [TestCaseSource(nameof(ConfigureValidationRequiredTypes))]
     public void Startup_ConfigureServices_CanResolveAllValidationServices(Type requiredType)
+    {
+        ConfigureServicesCoreTest(requiredType);
+    }
+    
+    private static readonly Type[] ConfigureNetworkingRequiredTypes =
+    {
+        typeof(IHttpClientFactory), typeof(ProgressMessageHandler)
+    };
+
+    [Test]
+    [TestCaseSource(nameof(ConfigureNetworkingRequiredTypes))]
+    public void Startup_ConfigureServices_CanResolveAllNetworkingServices(Type requiredType)
     {
         ConfigureServicesCoreTest(requiredType);
     }

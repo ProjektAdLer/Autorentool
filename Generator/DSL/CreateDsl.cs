@@ -311,7 +311,7 @@ public class CreateDsl : ICreateDsl
         // Create DocumentRoot & JSON Document
         // And add the learningWorldJson to the DocumentRoot
         // The structure of the DSL needs DocumentRoot, because the learningWorld has its own tag
-        var rootJson = new DocumentRootJson("0.4", "0.3.2", _author, _language, LearningWorldJson);
+        var rootJson = new DocumentRootJson("0.4", Constants.ApplicationVersion, _author, _language, LearningWorldJson);
 
         var options = new JsonSerializerOptions
             { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.CamelCase };

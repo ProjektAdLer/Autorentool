@@ -142,12 +142,9 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         {
             _learningSpacePresenter.SetLearningSpace(
                 (LearningSpaceViewModel) _selectedViewModelsProvider.LearningObjectInPathWay!);
-            _selectedViewModelsProvider.SetLearningObjectInPathWay(pathWayObject, null);
         }
-        else
-        {
-            _selectedViewModelsProvider.SetLearningObjectInPathWay(pathWayObject, null);
-        }
+        
+        _selectedViewModelsProvider.SetLearningObjectInPathWay(pathWayObject, null);
 
         HideRightClickMenu();
     }
@@ -253,7 +250,7 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
     {
         if (LearningWorldVm == null)
         {
-            _errorService.SetError("Error while creating learning space; No Learning World selected");
+            _errorService.SetError("Error", "Error while creating learning space; No Learning World selected");
             return;
         }
 
@@ -445,10 +442,12 @@ public class LearningWorldPresenter : ILearningWorldPresenter, ILearningWorldPre
         if (LearningWorldVm == null)
             throw new ApplicationException("SelectedLearningWorld is null");
         if (learningElement.Parent != null)
-            _selectedViewModelsProvider.SetLearningObjectInPathWay(learningElement.Parent, null);
+        {
+            _selectedViewModelsProvider.SetLearningObjectInPathWay(learningElement.Parent, null); 
+        }
+        
         _selectedViewModelsProvider.SetLearningElement(learningElement, null);
         _mediator.RequestOpenElementDialog();
-        _selectedViewModelsProvider.SetActiveSlot(-1);
     }
 
     /// <summary>

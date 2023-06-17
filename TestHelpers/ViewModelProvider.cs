@@ -1,6 +1,4 @@
-﻿using BusinessLogic.Entities;
-using BusinessLogic.Entities.LearningContent;
-using Presentation.PresentationLogic;
+﻿using Presentation.PresentationLogic;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
 using Presentation.PresentationLogic.LearningContent;
 using Presentation.PresentationLogic.LearningElement;
@@ -44,7 +42,7 @@ public static class ViewModelProvider
         int points = 1)
     {
         return new LearningElementViewModel("LEVMn" + append, content!, "LEVMd" + append, "LEVMg" + append,
-            LearningElementDifficultyEnum.Easy, ElementModel.L_H5P_SPIELAUTOMAT_1, parent: parent, workload: workload,
+            LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_slotmachine_1, parent: parent, workload: workload,
             points: points);
     }
 
