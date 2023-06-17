@@ -27,7 +27,7 @@ public class LearningWorldViewModelUt
         var topic1 = new TopicViewModel("topic1", false);
         var topic2 = new TopicViewModel("topic2", false);
         var topics = new List<TopicViewModel> {topic1, topic2};
-        var space1 = new LearningSpaceViewModel("ff", "ff", "ff", Theme.Campus);
+        var space1 = new LearningSpaceViewModel("ff", "ff", "ff", Theme.Campus, false);
         var learningSpaces = new List<ILearningSpaceViewModel> { space1 };
         var condition = new PathWayConditionViewModel(ConditionEnum.And, false, 2, 1);
         var pathWayConditions = new List<PathWayConditionViewModel> { condition };
@@ -66,7 +66,7 @@ public class LearningWorldViewModelUt
     public void Workload_ReturnsCorrectWorkload()
     {
         var systemUnderTest = new LearningWorldViewModel("foo", "foo", "foo", "foo", "foo", "foo");
-        var space = new LearningSpaceViewModel("a", "d", "e", Theme.Campus, layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L));
+        var space = new LearningSpaceViewModel("a", "d", "e", Theme.Campus, false, layoutViewModel: new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L));
         var spaceElement = ViewModelProvider.GetLearningElement(workload:6);
         
         space.LearningSpaceLayout.PutElement(0, spaceElement);

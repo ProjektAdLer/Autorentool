@@ -343,14 +343,14 @@ public class PresentationLogicUt
         var selectedViewModelsProvider = Substitute.For<ISelectedViewModelsProvider>();
         var mockSpaceVm = ViewModelProvider.GetLearningSpace();
         learningWorldVm.LearningSpaces.Add(mockSpaceVm);
-        mockSpaceCommandFactory.GetCreateCommand(learningWorldEntity, "z", "z", "z", 5, Theme.Campus,
+        mockSpaceCommandFactory.GetCreateCommand(learningWorldEntity, "z", "z", "z", 5, Theme.Campus, false,
                 6, 7, topicEntity, Arg.Any<Action<BusinessLogic.Entities.LearningWorld>>())
             .Returns(mockCommand);
 
         var systemUnderTest = CreateTestablePresentationLogic(businessLogic: mockBusinessLogic, mapper: mockMapper,
             selectedViewModelsProvider: selectedViewModelsProvider, spaceCommandFactory: mockSpaceCommandFactory);
 
-        systemUnderTest.CreateLearningSpace(learningWorldVm, "z", "z", "z", 5, Theme.Campus, 6, 7, topicVm);
+        systemUnderTest.CreateLearningSpace(learningWorldVm, "z", "z", "z", 5, Theme.Campus, false, 6, 7, topicVm);
         mockBusinessLogic.Received().ExecuteCommand(mockCommand);
     }
 

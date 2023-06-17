@@ -31,10 +31,11 @@ public class SpaceCommandFactoryUt
         var positionY = 2.5;
         var topic = EntityProvider.GetTopic();
         var theme = Theme.Campus;
+        var advancedMode = false;
         Action<LearningWorld> mappingAction = world => { };
 
         // Act
-        var result = _factory.GetCreateCommand(learningWorld, name, description, goals, requiredPoints, theme,
+        var result = _factory.GetCreateCommand(learningWorld, name, description, goals, requiredPoints, theme, advancedMode,
             positionX, positionY, topic, mappingAction);
 
         // Assert

@@ -12,7 +12,7 @@ public class EditLearningSpaceUt
     [Test]
     public void Execute_EditsLearningSpace()
     {
-        var space = new LearningSpace("a", "d", "e", 5, Theme.Campus)
+        var space = new LearningSpace("a", "d", "e", 5, Theme.Campus, false)
         {
             UnsavedChanges = false
         };
@@ -55,7 +55,7 @@ public class EditLearningSpaceUt
     [Test]
     public void Undo_MementoIsNull_ThrowsException()
     {
-        var space = new LearningSpace("a", "d", "e", 5, Theme.Campus);
+        var space = new LearningSpace("a", "d", "e", 5, Theme.Campus, false);
         var name = "space1";
         var description = "space for learning";
         var goals = "learning";
@@ -75,7 +75,7 @@ public class EditLearningSpaceUt
     [Test]
     public void UndoRedo_UndoesAndRedoesEditLearningSpace()
     {
-        var space = new LearningSpace("g", "j", "k", 5, Theme.Campus)
+        var space = new LearningSpace("g", "j", "k", 5, Theme.Campus, false)
         {
             UnsavedChanges = false
         };

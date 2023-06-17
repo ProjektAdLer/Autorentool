@@ -19,7 +19,7 @@ public class LearningWorldUt
         const string description = "very cool element";
         const string goals = "learn very many things";
         const string savePath = "C:\\Users\\Ben\\Documents\\test";
-        var space1 = new LearningSpace("ff", "ff", "ff", 5, Theme.Campus);
+        var space1 = new LearningSpace("ff", "ff", "ff", 5, Theme.Campus, false);
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 2, 3);
         var pathWay = new LearningPathway(space1, pathWayCondition);
         var learningSpaces = new List<ILearningSpace> { space1 };
@@ -62,7 +62,7 @@ public class LearningWorldUt
         const string description = "very cool element";
         const string goals = "learn very many things";
         const string savePath = "C:\\Users\\Ben\\Documents\\test";
-        var space1 = new LearningSpace("ff", "ff", "ff", 5, Theme.Campus);
+        var space1 = new LearningSpace("ff", "ff", "ff", 5, Theme.Campus, false);
         var pathWayCondition = new PathWayCondition(ConditionEnum.And, 2, 3);
         var pathWayConditions = new List<PathWayCondition>{ pathWayCondition };
         var learningSpaces = new List<ILearningSpace> { space1 };
@@ -83,7 +83,7 @@ public class LearningWorldUt
         var goalsChanged = "new goals";
         var savePathChanged = "C:\\Users\\Ben\\Documents\\test2";
         var newElement = EntityProvider.GetLearningElement();
-        var space2 = new LearningSpace("gg", "gg", "gg", 5, Theme.Campus);
+        var space2 = new LearningSpace("gg", "gg", "gg", 5, Theme.Campus, false);
         var condition2 = new PathWayCondition(ConditionEnum.Or, 2, 1);
         var pathWay2 = new LearningPathway(space2, condition2);
         var topic2 = new Topic("topic2");
@@ -158,7 +158,7 @@ public class LearningWorldUt
         const string description = "very cool element";
         const string goals = "learn very many things";
         const string savePath = "C:\\Users\\Ben\\Documents\\test";
-        var space1 = new LearningSpace("ff", "ff", "ff", 5, Theme.Campus);
+        var space1 = new LearningSpace("ff", "ff", "ff", 5, Theme.Campus, false);
         var learningSpaces = new List<ILearningSpace> { space1 };
         
         var systemUnderTest = new LearningWorld(name, shortname, authors, language, description, goals, savePath, learningSpaces);

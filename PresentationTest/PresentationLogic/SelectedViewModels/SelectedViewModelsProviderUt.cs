@@ -45,7 +45,7 @@ public class SelectedViewModelsProviderUt
     {
         var onUndoRedo = Substitute.For<IOnUndoRedo>();
         var systemUnderTest = new SelectedViewModelsProvider(onUndoRedo);
-        var learningObjectInPathWay = new LearningSpaceViewModel("a", "b", "d", Theme.Campus);
+        var learningObjectInPathWay = new LearningSpaceViewModel("a", "b", "d", Theme.Campus, false);
         var mockCommand = Substitute.For<ICreateLearningSpace>();
         
         systemUnderTest.SetActiveSlotInSpace(1, null);
