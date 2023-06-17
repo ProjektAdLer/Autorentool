@@ -37,8 +37,7 @@
                               For="@(() => FormModel.Name)"
                               Immediate="true"
                               DebounceInterval="300"
-                              Label=@Localizer["EditSpaceForm.Fields.Collapsable.General.Name.Text"]
-                              />
+                              Label=@Localizer["EditSpaceForm.Fields.Collapsable.General.Name.Text"]/>
             </div>
         </Collapsable>
 
@@ -62,13 +61,8 @@
                 <SpaceLayoutSelection LearningSpaceViewModel="SpaceToEdit"></SpaceLayoutSelection>
             </div>
         </Collapsable>
-        <<<<<<< HEAD
-
-        <Collapsable Title="Theme" @bind-Collapsed="_collapsedTheme">
-        =======
 
         <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Theme.Title"] @bind-Collapsed="_collapsedTheme">
-            >>>>>>> main
             <div class="rounded-lg w-4/4 px-4 pb-2">
                 <MudSelect @bind-Value="FormDataContainer.FormModel.Theme" AnchorOrigin="Origin.BottomCenter"
                            Label=@Localizer["EditSpaceForm.Fields.Collapsable.Theme.Field.Theme.Text"]
@@ -82,27 +76,6 @@
             </div>
         </Collapsable>
 
-        <<<<<<< HEAD
-        <Collapsable Title="Goals" @bind-Collapsed="_collapsedGoals">
-        <div class="rounded-lg w-4/4 px-4">
-            <MudText Typo="Typo.caption">Description</MudText>
-            <MudTextField @bind-Value="FormDataContainer.FormModel.Description"
-                          For="@(() => FormModel.Description)"
-                          Immediate="true"
-                          Lines="3"
-                          Variant="Variant.Outlined"
-                          DebounceInterval="300"
-                          Class="pb-4 mt-0"/>
-            <MudText Typo="Typo.caption">Goals</MudText>
-            <MudTextField @bind-Value="FormDataContainer.FormModel.Goals"
-                          For="@(() => FormModel.Goals)"
-                          Immediate="true"
-                          Lines="3"
-                          Variant="Variant.Outlined"
-                          DebounceInterval="300"
-                          Class="pb-2 mt-0"/>
-        </div>
-        =======
         <Collapsable Title=@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Title"] @bind-Collapsed="_collapsedGoals">
             <div class="rounded-lg w-4/4 px-4">
                 <MudText Typo="Typo.caption">@Localizer["EditSpaceForm.Fields.Collapsable.Goals.Field.Description.Text"]</MudText>
@@ -122,7 +95,6 @@
                               DebounceInterval="300"
                               Class="pb-2 mt-0"/>
             </div>
-            >>>>>>> main
         </Collapsable>
 
     </Fields>
