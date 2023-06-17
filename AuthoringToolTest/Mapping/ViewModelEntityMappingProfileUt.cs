@@ -146,7 +146,7 @@ public class ViewModelEntityMappingProfileUt
     public void MapLearningSpaceAndLearningSpaceViewModel_WithoutLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus, null,
+        var source = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus, false, null,
             positionX: PositionX,
             positionY: PositionY);
         var destination = new LearningSpaceViewModel("", "", "", Theme.Campus);
@@ -174,7 +174,7 @@ public class ViewModelEntityMappingProfileUt
     public void MapLearningSpaceAndLearningSpaceViewModel_WithLearningElement_TestMappingIsValid()
     {
         var systemUnderTest = CreateTestableMapper();
-        var source = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus,
+        var source = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus, false,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X30_8L),
             positionX: PositionX, positionY: PositionY);
         source.LearningSpaceLayout.LearningElements[0] = GetTestableElementWithParent(source);
@@ -241,7 +241,7 @@ public class ViewModelEntityMappingProfileUt
         var systemUnderTest = CreateTestableMapper();
         var source = new LearningWorld(Name, Shortname, Authors, Language, Description, Goals, SavePath,
             new List<ILearningSpace>());
-        source.LearningSpaces.Add(new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus, null,
+        source.LearningSpaces.Add(new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus, false, null,
             positionX: PositionX,
             positionY: PositionY));
         var destination = new LearningWorldViewModel("", "", "", "", "", "");
@@ -264,7 +264,7 @@ public class ViewModelEntityMappingProfileUt
         destination.SavePath = NewSavePath;
         destination.LearningSpaces = new List<ILearningSpaceViewModel>()
         {
-            new LearningSpaceViewModel(NewName, NewDescription, NewGoals, Theme.Campus, NewRequiredPoints,
+            new LearningSpaceViewModel(NewName, NewDescription, NewGoals, Theme.Campus, false, NewRequiredPoints,
                 null, positionX: NewPositionX, positionY: NewPositionY)
         };
 
@@ -383,7 +383,7 @@ public class ViewModelEntityMappingProfileUt
             new LearningElementViewModel("el1", new FileContentViewModel("foo", "bar", Filepath),
                 Description, Goals, Difficulty, ElementModel.l_h5p_slotmachine_1);
 
-        var space = new LearningSpaceViewModel("space", Description, Goals, Theme.Campus, RequiredPoints,
+        var space = new LearningSpaceViewModel("space", Description, Goals, Theme.Campus, false, RequiredPoints,
                 new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L)
                 {
                     LearningElements = new Dictionary<int, ILearningElementViewModel>
@@ -497,7 +497,7 @@ public class ViewModelEntityMappingProfileUt
 
     private static LearningSpace GetTestableSpace()
     {
-        var space = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus,
+        var space = new LearningSpace(Name, Description, Goals, RequiredPoints, Theme.Campus, false,
             new LearningSpaceLayout(new Dictionary<int, ILearningElement>(), FloorPlanEnum.R_20X30_8L),
             positionX: PositionX, positionY: PositionY);
         var element = GetTestableElementWithParent(space);
@@ -507,7 +507,7 @@ public class ViewModelEntityMappingProfileUt
 
     private static LearningSpaceViewModel GetTestableNewSpaceViewModel()
     {
-        var space = new LearningSpaceViewModel(NewName, NewDescription, NewGoals, Theme.Campus,
+        var space = new LearningSpaceViewModel(NewName, NewDescription, NewGoals, Theme.Campus, false,
             NewRequiredPoints,
             new LearningSpaceLayoutViewModel(FloorPlanEnum.R_20X30_8L), positionX: NewPositionX,
             positionY: NewPositionY);
