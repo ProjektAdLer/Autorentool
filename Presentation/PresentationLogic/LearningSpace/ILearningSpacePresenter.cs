@@ -23,11 +23,9 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
     Task ShowSelectedElementContentAsync();
     void SetLearningSpace(ILearningSpaceViewModel space);
     ILearningContentViewModel? DragAndDropLearningContent { get; }
-    IDisplayableLearningObject? RightClickedLearningObject { get; }
     event EventHandler<CommandUndoRedoOrExecuteArgs> OnCommandUndoRedoOrExecute;
     void DragLearningElement(object sender, DraggedEventArgs<ILearningElementViewModel> draggedEventArgs);
     void ClickedLearningElement(ILearningElementViewModel obj);
-    void RightClickedLearningElement(ILearningElementViewModel obj);
 
     void EditLearningElement(ILearningElementViewModel learningElement, string name, string description, string goals,
         LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points,
@@ -35,7 +33,6 @@ public interface ILearningSpacePresenter : INotifyPropertyChanged
 
     void EditLearningElement(int slotIndex);
     void DeleteLearningElement(ILearningElementViewModel obj);
-    void HideRightClickMenu();
     void ShowElementContent(ILearningElementViewModel obj);
     void SetLearningSpaceLayout(FloorPlanEnum floorPlanName);
 

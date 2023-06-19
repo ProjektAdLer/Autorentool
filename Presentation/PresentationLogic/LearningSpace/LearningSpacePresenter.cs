@@ -42,7 +42,6 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
     }
 
     public ILearningContentViewModel? DragAndDropLearningContent { get; private set; }
-    public IDisplayableLearningObject? RightClickedLearningObject { get; private set; }
 
     public void SetLearningSpace(ILearningSpaceViewModel space)
     {
@@ -111,18 +110,20 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
             _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
             return;
         }
-        
+
         SetSelectedLearningElement(null);
         _selectedViewModelsProvider.SetActiveSlotInSpace(i, null);
         _mediator.RequestOpenElementDialog();
     }
 
     public void CreateLearningElementInSlot(string name, ILearningContentViewModel learningContent,
-        string description, string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel, int workload, int points)
+        string description, string goals, LearningElementDifficultyEnum difficulty, ElementModel elementModel,
+        int workload, int points)
     {
-        if(LearningSpaceVm == null)
+        if (LearningSpaceVm == null)
             throw new ApplicationException("LearningSpaceVm is null");
-        _presentationLogic.CreateLearningElementInSlot(LearningSpaceVm, _selectedViewModelsProvider.ActiveSlotInSpace, name, learningContent, description,
+        _presentationLogic.CreateLearningElementInSlot(LearningSpaceVm, _selectedViewModelsProvider.ActiveSlotInSpace,
+            name, learningContent, description,
             goals, difficulty, elementModel, workload, points);
         _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
     }
@@ -137,11 +138,6 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         _mediator.RequestOpenElementDialog();
         _selectedViewModelsProvider.SetActiveSlotInSpace(-1, null);
         SetSelectedLearningElement(obj);
-    }
-
-    public void RightClickedLearningElement(ILearningElementViewModel obj)
-    {
-        RightClickedLearningObject = obj;
     }
 
     public void EditLearningElement(ILearningElementViewModel learningElement, string name, string description,
@@ -168,11 +164,6 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
         _presentationLogic.DeleteLearningElementInSpace(LearningSpaceVm, obj);
-    }
-
-    public void HideRightClickMenu()
-    {
-        RightClickedLearningObject = null;
     }
 
     public async void ShowElementContent(ILearningElementViewModel obj)
@@ -224,7 +215,6 @@ public class LearningSpacePresenter : ILearningSpacePresenter, ILearningSpacePre
         if (LearningSpaceVm == null)
             throw new ApplicationException("SelectedLearningSpace is null");
         _selectedViewModelsProvider.SetLearningElement(learningElement, null);
-        HideRightClickMenu();
     }
 
     /// <summary>

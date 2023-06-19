@@ -4,6 +4,7 @@ using System.IO.Abstractions;
 using System.Linq;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using NUnit.Framework;
 using Presentation.PresentationLogic.API;
 using Presentation.PresentationLogic.AuthoringToolWorkspace;
@@ -213,6 +214,132 @@ public class MyLearningWorldsProviderUt
 
         Assert.Throws<ArgumentException>(() => systemUnderTest.OpenLearningWorld(savedLearningWorld1));
     }
+
+    #region LoadSavedLearningWorld
+
+    [Test]
+    public void LoadSavedLearningWorld_CallsPresentationLogicGetWorldSavePath()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        var systemUnderTest = CreateProviderForTesting(presentationLogic: presentationLogic);
+
+        _ = systemUnderTest.LoadSavedLearningWorld();
+
+        presentationLogic.Received(1).GetWorldSavePath();
+    }
+
+    [Test]
+    public void LoadSavedLearningWorld_GetWorldSavePathThrowsOperationCanceledException_ReturnsFalse()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        presentationLogic.GetWorldSavePath().Throws(new OperationCanceledException());
+        var systemUnderTest = CreateProviderForTesting(presentationLogic: presentationLogic);
+
+        var result = systemUnderTest.LoadSavedLearningWorld();
+
+        Assert.That(result.Result, Is.False);
+    }
+
+    [Test]
+    public void LoadSavedLearningWorld_CallsPresentationLogicAddSavedLearningWorldPathByPathOnly()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        presentationLogic.GetWorldSavePath().Returns("path");
+        var systemUnderTest = CreateProviderForTesting(presentationLogic: presentationLogic);
+
+        _ = systemUnderTest.LoadSavedLearningWorld();
+
+        presentationLogic.Received(1).AddSavedLearningWorldPathByPathOnly("path");
+    }
+
+    [Test]
+    public void
+        LoadSavedLearningWorld_LoadLearningWorldFromSaved_SavedPathExistsReturnsFalse_CallsPresentationLogicRemoveSavedLearningWorldPath()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        const string savePath = "path";
+        presentationLogic.GetWorldSavePath().Returns(savePath);
+        var savedLearningWorldPath = new SavedLearningWorldPath() {Path = savePath};
+        var fileSystem = Substitute.For<IFileSystem>();
+        fileSystem.File.Exists(savePath).Returns(false);
+        presentationLogic.AddSavedLearningWorldPathByPathOnly(savePath).Returns(savedLearningWorldPath);
+        var systemUnderTest = CreateProviderForTesting(presentationLogic: presentationLogic, fileSystem: fileSystem);
+
+        _ = systemUnderTest.LoadSavedLearningWorld();
+
+        presentationLogic.Received(1).RemoveSavedLearningWorldPath(savedLearningWorldPath);
+    }
+
+    [Test]
+    public void LoadSavedLearningWorld_LoadLearningWorldFromSaved_CallsPresentationLogicLoadLearningWorldFromPath()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        const string savePath = "path";
+        presentationLogic.GetWorldSavePath().Returns(savePath);
+        var savedLearningWorldPath = new SavedLearningWorldPath() {Path = savePath};
+        var fileSystem = Substitute.For<IFileSystem>();
+        fileSystem.File.Exists(savePath).Returns(true);
+        presentationLogic.AddSavedLearningWorldPathByPathOnly(savePath).Returns(savedLearningWorldPath);
+        var workspacePresenter = Substitute.For<IAuthoringToolWorkspacePresenter>();
+        var workspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
+        workspacePresenter.AuthoringToolWorkspaceVm.Returns(workspaceVm);
+        var systemUnderTest = CreateProviderForTesting(presentationLogic: presentationLogic, fileSystem: fileSystem,
+            workspacePresenter: workspacePresenter);
+
+        _ = systemUnderTest.LoadSavedLearningWorld();
+
+        presentationLogic.Received(1).LoadLearningWorldFromPath(workspaceVm, savePath);
+    }
+
+    [Test]
+    public void
+        LoadSavedLearningWorld_LoadLearningWorldFromSaved_CallsPresentationLogicUpdateIdOfSavedLearningWorldPath()
+    {
+        var presentationLogic = Substitute.For<IPresentationLogic>();
+        const string savePath = "path";
+        presentationLogic.GetWorldSavePath().Returns(savePath);
+        var savedLearningWorldPath = new SavedLearningWorldPath() {Path = savePath};
+        var fileSystem = Substitute.For<IFileSystem>();
+        fileSystem.File.Exists(savePath).Returns(true);
+        presentationLogic.AddSavedLearningWorldPathByPathOnly(savePath).Returns(savedLearningWorldPath);
+        var workspacePresenter = Substitute.For<IAuthoringToolWorkspacePresenter>();
+        var workspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
+        var worldVm = Substitute.For<ILearningWorldViewModel>();
+        var worldVmId = Guid.ParseExact("00000000-0000-0000-0000-000000000001", "D");
+        worldVm.Id.Returns(worldVmId);
+        workspaceVm.LearningWorlds.Returns(new List<ILearningWorldViewModel>() {worldVm});
+        workspacePresenter.AuthoringToolWorkspaceVm.Returns(workspaceVm);
+        var systemUnderTest = CreateProviderForTesting(presentationLogic: presentationLogic, fileSystem: fileSystem,
+            workspacePresenter: workspacePresenter);
+
+        _ = systemUnderTest.LoadSavedLearningWorld();
+
+        presentationLogic.Received(1).UpdateIdOfSavedLearningWorldPath(savedLearningWorldPath, worldVmId);
+    }
+
+    #endregion
+
+    #region DeleteLearningWorld
+
+    [Test]
+    public void DeleteLearningWorld_CallsWorkspacePresenterDeleteLearningWorld()
+    {
+        var worldVmId = Guid.ParseExact("00000000-0000-0000-0000-000000000001", "D");
+        var workspacePresenter = Substitute.For<IAuthoringToolWorkspacePresenter>();
+        var workspaceVm = Substitute.For<IAuthoringToolWorkspaceViewModel>();
+        var worldVm = Substitute.For<ILearningWorldViewModel>();
+        worldVm.Id.Returns(worldVmId);
+        workspaceVm.LearningWorlds.Returns(new List<ILearningWorldViewModel>() {worldVm});
+        workspacePresenter.AuthoringToolWorkspaceVm.Returns(workspaceVm);
+        var savedLearningWorldPath = new SavedLearningWorldPath() {Id = worldVmId};
+        var systemUnderTest = CreateProviderForTesting(workspacePresenter: workspacePresenter);
+
+        _ = systemUnderTest.DeleteLearningWorld(savedLearningWorldPath);
+
+        workspacePresenter.Received(1).DeleteLearningWorld(worldVm);
+    }
+
+    #endregion
 
     private MyLearningWorldsProvider CreateProviderForTesting(IPresentationLogic? presentationLogic = null,
         IAuthoringToolWorkspacePresenter? workspacePresenter = null, IFileSystem? fileSystem = null,

@@ -143,18 +143,6 @@ public class LearningSpacePresenterUt
     }
 
     [Test]
-    public void RightClickedLearningElement_SetsElement()
-    {
-        var element = ViewModelProvider.GetLearningElement();
-
-        var systemUnderTest = CreatePresenterForTesting();
-
-        systemUnderTest.RightClickedLearningElement(element);
-
-        Assert.That(systemUnderTest.RightClickedLearningObject, Is.EqualTo(element));
-    }
-    
-    [Test]
     public void ClickOnSlot_ElementInSlot_Returns()
     {
         var space = ViewModelProvider.GetLearningSpace();
@@ -168,11 +156,11 @@ public class LearningSpacePresenterUt
         systemUnderTest.SetLearningSpace(space);
 
         systemUnderTest.ClickOnSlot(1);
-        
+
         mediator.DidNotReceive().RequestOpenElementDialog();
         selectedViewModelsProvider.DidNotReceive().SetActiveSlotInSpace(1, null);
     }
-    
+
     [Test]
     public void ClickOnSlot_SlotAlreadyActive_SetsToInactive()
     {
@@ -187,11 +175,11 @@ public class LearningSpacePresenterUt
         systemUnderTest.SetLearningSpace(space);
 
         systemUnderTest.ClickOnSlot(1);
-        
+
         mediator.DidNotReceive().RequestOpenElementDialog();
         selectedViewModelsProvider.Received().SetActiveSlotInSpace(-1, null);
     }
-    
+
     [Test]
     public void ClickOnSlot_CallsSelectedViewModelsProviderAndMediator()
     {
@@ -204,11 +192,11 @@ public class LearningSpacePresenterUt
         systemUnderTest.SetLearningSpace(space);
 
         systemUnderTest.ClickOnSlot(1);
-        
+
         mediator.Received().RequestOpenElementDialog();
         selectedViewModelsProvider.Received().SetActiveSlotInSpace(1, null);
     }
-    
+
     [Test]
     public void CreateLearningElementInSlot_SpaceVmIsNull_Throws()
     {
@@ -225,14 +213,15 @@ public class LearningSpacePresenterUt
         var points = 0;
 
         var systemUnderTest =
-            CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider, presentationLogic: presentationLogic);
+            CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider,
+                presentationLogic: presentationLogic);
 
-        var ex = Assert.Throws<ApplicationException>(() => 
-            systemUnderTest.CreateLearningElementInSlot(name, content, description, goals, difficulty, elementModel, workload, points));
+        var ex = Assert.Throws<ApplicationException>(() =>
+            systemUnderTest.CreateLearningElementInSlot(name, content, description, goals, difficulty, elementModel,
+                workload, points));
         Assert.That(ex!.Message, Is.EqualTo("LearningSpaceVm is null"));
-
     }
-    
+
     [Test]
     public void CreateLearningElementInSlot_CallsSelectedViewModelsProviderAndPresentationLogic()
     {
@@ -250,12 +239,15 @@ public class LearningSpacePresenterUt
         var points = 0;
 
         var systemUnderTest =
-            CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider, presentationLogic: presentationLogic);
+            CreatePresenterForTesting(selectedViewModelsProvider: selectedViewModelsProvider,
+                presentationLogic: presentationLogic);
         systemUnderTest.SetLearningSpace(space);
 
-        systemUnderTest.CreateLearningElementInSlot(name, content, description, goals, difficulty, elementModel, workload, points);
-        
-        presentationLogic.Received().CreateLearningElementInSlot(space,1, name, content, description, goals, difficulty, elementModel, workload, points);
+        systemUnderTest.CreateLearningElementInSlot(name, content, description, goals, difficulty, elementModel,
+            workload, points);
+
+        presentationLogic.Received().CreateLearningElementInSlot(space, 1, name, content, description, goals,
+            difficulty, elementModel, workload, points);
         selectedViewModelsProvider.Received().SetActiveSlotInSpace(-1, null);
     }
 
@@ -277,7 +269,7 @@ public class LearningSpacePresenterUt
         presentationLogic.Received().EditLearningElement(space, element, "g", "g", "g",
             LearningElementDifficultyEnum.Easy, ElementModel.l_h5p_blackboard_1, 0, 0, content);
     }
-    
+
     [Test]
     public void EditLearningElementWithSlotIndex_SpaceVmIsNull_Throws()
     {
@@ -286,7 +278,7 @@ public class LearningSpacePresenterUt
             systemUnderTest.EditLearningElement(2));
         Assert.That(ex!.Message, Is.EqualTo("LearningSpaceVm is null"));
     }
-    
+
     [Test]
     public void EditLearningElementWithSlotIndex_ElementAtSlotIndexIsNull_Throws()
     {
