@@ -70,19 +70,30 @@
         </Collapsable>
 
         <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Title"] @bind-Collapsed="_collapsedContent">
-            <div class="rounded-lg max-w-2xl px-4 pb-2">
-                <MudSelect @bind-Value="FormDataContainer.FormModel.LearningContent" AnchorOrigin="Origin.BottomCenter"
-                           Label=@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Field.LearningContent.Text"]
-                           For="@(() => FormModel.LearningContent)"
-                           >
-                    @foreach (var learningContent in WorldPresenter.GetAllContent())
-                    {
-                        <MudSelectItem Value="@(learningContent)"/>
-                    }
-                </MudSelect>
-            </div>
+            <TableSelect
+                @bind-Value="FormDataContainer.FormModel.LearningContent"
+                Elements="WorldPresenter.GetAllContent()"
+                FilterFunc="@FilterContent">
+                <HeaderContent>
+                    <MudTh>Name</MudTh>
+                    <MudTh>Type</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd DataLabel="Name">@context.Name</MudTd>
+                    <MudTd DataLabel="Type">
+                        @if (context is FileContentViewModel fileContentContext)
+                        {
+                            @fileContentContext.Type
+                        }
+                        else
+                        {
+                            <span>Link</span>
+                        }
+                    </MudTd>
+                </RowTemplate>
+            </TableSelect>
         </Collapsable>
-        
+
         <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Title"] @bind-Collapsed="_collapsedElementModel">
             <div class="rounded-lg w-4/4 px-4 pb-4">
                 <MudText Typo="Typo.caption">@Localizer["CreateElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]</MudText>
@@ -144,7 +155,7 @@
 
     [Inject]
     private IElementModelHandler ElementModelHandler { get; set; }
-    
+
     [Inject]
     private IStringLocalizer<CreateElementForm> Localizer { get; set; }
 
@@ -163,8 +174,8 @@
     {
         if (SelectedViewModelsProvider.LearningWorld == null)
             throw new InvalidOperationException("No learning world selected.");
-        //check content for not null again even though validation ensures that LearningContent is not null
-        //because of a non-reproducible bug where an element without content was able to be created - m.ho, n.stich
+    //check content for not null again even though validation ensures that LearningContent is not null
+    //because of a non-reproducible bug where an element without content was able to be created - m.ho, n.stich
         if (model.LearningContent == null)
             throw new InvalidOperationException("No learning content selected - validation let no content pass");
 
@@ -209,6 +220,18 @@
     public void Dispose()
     {
         SelectedViewModelsProvider.PropertyChanged -= MediatorOnPropertyChanged;
+    }
+
+    private bool FilterContent(ILearningContentViewModel? element, string? searchString)
+    {
+        if(element == null) return false;
+        if (string.IsNullOrWhiteSpace(searchString)) return true;
+        searchString = searchString.ToLowerInvariant();
+        var elementType = element is FileContentViewModel fileContent ? fileContent.Type : "Link";
+        if (element.Name.ToLowerInvariant().Contains(searchString) ||
+            elementType.ToLowerInvariant().Contains(searchString))
+            return true;
+        return $"{element.Name}.{elementType}".ToLowerInvariant().Contains(searchString);
     }
 
 }
