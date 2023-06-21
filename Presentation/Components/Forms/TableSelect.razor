@@ -29,7 +29,7 @@
     public IEnumerable<T> Elements { get; set; }
 
     [Parameter, EditorRequired]
-    public Func<T, string?, bool>? FilterFunc { get; set; }
+    public Func<T, IEnumerable<string>> FilterFuncSearchableStrings { get; set; }
 
     [Parameter, EditorRequired]
     public RenderFragment HeaderContent { get; set; }
@@ -79,6 +79,10 @@
     private bool Filter(T element) =>
         FilterInternal(element, _searchString);
 
-    private bool FilterInternal(T element, string? searchString) => FilterFunc(element, searchString);
+    private bool FilterInternal(T element, string? searchString) => FilterInternal(FilterFuncSearchableStrings(element), searchString);
 
+    private bool FilterInternal(IEnumerable<string> searchableStrings, string? searchString)
+    {
+        return string.IsNullOrWhiteSpace(searchString) || searchableStrings.Any(str => str.ToLowerInvariant().Contains(searchString));
+    }
 }

@@ -6,6 +6,8 @@
 @using Presentation.Components.Forms.Models
 @using Presentation.PresentationLogic.LearningElement
 @using Presentation.Components.Forms.Buttons
+@using Presentation.PresentationLogic.API
+@using Presentation.PresentationLogic.LearningContent
 <header class="m-2 rounded-lg">
     <div class="flex justify-center p-2">
         <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["EditElementForm.Header.Text"]</h2>
@@ -68,18 +70,36 @@
         </Collapsable>
 
         <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Title"] @bind-Collapsed="_collapsedContent">
-            <div class="rounded-lg w-4/4 px-4 pb-2">
-                <MudSelect @bind-Value="FormDataContainer.FormModel.LearningContent"
-                           Label=@Localizer["EditElementForm.Fields.Collapsable.LearningContent.Field.LearningContent.Text"]
-                           For="@(() => FormModel.LearningContent)">
-                    @foreach (var learningContent in WorldPresenter.GetAllContent())
-                    {
-                        <MudSelectItem Value="@(learningContent)"/>
-                    }
-                </MudSelect>
-            </div>
+            <TableSelect
+                @bind-Value="FormDataContainer.FormModel.LearningContent"
+                For="@(() => FormModel.LearningContent)"
+                Elements="WorldPresenter.GetAllContent()"
+                FilterFuncSearchableStrings="ILearningContentViewModel.GetSearchableStrings">
+                <HeaderContent>
+                    <MudTh></MudTh>
+                    <MudTh>Name</MudTh>
+                    <MudTh>Type</MudTh>
+                </HeaderContent>
+                <RowTemplate>
+                    <MudTd Class="px-1.5">
+                        <MudIconButton Icon="@Icons.Material.Filled.Preview"
+                                       OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"/>
+                    </MudTd>
+                    <MudTd DataLabel="Name">@context.Name</MudTd>
+                    <MudTd DataLabel="Type">
+                        @if (context is FileContentViewModel fileContentContext)
+                        {
+                            @fileContentContext.Type
+                        }
+                        else
+                        {
+                            <span>Link</span>
+                        }
+                    </MudTd>
+                </RowTemplate>
+            </TableSelect>
         </Collapsable>
-        
+
         <Collapsable Title=@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Title"] @bind-Collapsed="_collapsedElementModel">
             <div class="rounded-lg w-4/4 px-4 pb-4">
                 <MudText Class="break-words" Typo="Typo.caption">@Localizer["EditElementForm.Fields.Collapsable.3DRepresentation.Field.3DRepresentation.Text"]</MudText>
@@ -138,9 +158,12 @@
 
     [Inject]
     private IElementModelHandler ElementModelHandler { get; set; }
-    
+
     [Inject]
     private IStringLocalizer<EditElementForm> Localizer { get; set; }
+
+    [Inject]
+    private IPresentationLogic PresentationLogic { get; set; }
 
     [Parameter, EditorRequired]
     public ILearningElementViewModel ElementToEdit { get; set; }

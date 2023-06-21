@@ -9,6 +9,7 @@
 @using System.ComponentModel
 @using Microsoft.Extensions.Localization
 @using Presentation.Components.Forms.Buttons
+@using Presentation.PresentationLogic.API
 @using Presentation.PresentationLogic.LearningContent
 @using Presentation.PresentationLogic.SelectedViewModels
 @using Presentation.View
@@ -74,12 +75,17 @@
                 @bind-Value="FormDataContainer.FormModel.LearningContent"
                 For="@(() => FormModel.LearningContent)"
                 Elements="WorldPresenter.GetAllContent()"
-                FilterFunc="@FilterContent">
+                FilterFuncSearchableStrings="ILearningContentViewModel.GetSearchableStrings">
                 <HeaderContent>
+                    <MudTh></MudTh>
                     <MudTh>Name</MudTh>
                     <MudTh>Type</MudTh>
                 </HeaderContent>
                 <RowTemplate>
+                    <MudTd Class="px-1.5">
+                        <MudIconButton Icon="@Icons.Material.Filled.Preview"
+                                       OnClick="() => PresentationLogic.ShowLearningContentAsync(context)"/>
+                    </MudTd>
                     <MudTd DataLabel="Name">@context.Name</MudTd>
                     <MudTd DataLabel="Type">
                         @if (context is FileContentViewModel fileContentContext)
@@ -160,6 +166,9 @@
     [Inject]
     private IStringLocalizer<CreateElementForm> Localizer { get; set; }
 
+    [Inject]
+    private IPresentationLogic PresentationLogic { get; set; }
+
     [Parameter]
 #pragma warning restore CS8618
         public EventCallback OnSubmitted { get; set; }
@@ -221,18 +230,6 @@
     public void Dispose()
     {
         SelectedViewModelsProvider.PropertyChanged -= MediatorOnPropertyChanged;
-    }
-
-    private bool FilterContent(ILearningContentViewModel? element, string? searchString)
-    {
-        if(element == null) return false;
-        if (string.IsNullOrWhiteSpace(searchString)) return true;
-        searchString = searchString.ToLowerInvariant();
-        var elementType = element is FileContentViewModel fileContent ? fileContent.Type : "Link";
-        if (element.Name.ToLowerInvariant().Contains(searchString) ||
-            elementType.ToLowerInvariant().Contains(searchString))
-            return true;
-        return $"{element.Name}.{elementType}".ToLowerInvariant().Contains(searchString);
     }
 
 }
