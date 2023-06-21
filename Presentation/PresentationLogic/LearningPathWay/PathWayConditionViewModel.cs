@@ -36,8 +36,31 @@ public class PathWayConditionViewModel : IObjectInPathWayViewModel
     }
     
     public Guid Id { get; private set; }
-    public double PositionX { get; set; }
-    public double PositionY { get; set; }
+    public double PositionX { 
+        get => _positionX;
+        set
+        {
+            _positionX = value switch
+            {
+                < 0 => 0,
+                > 268 => 268,
+                _ => value
+            };
+        } 
+    }
+    
+    public double PositionY { 
+        get => _positionY;
+        set
+        {
+            _positionY = value switch
+            {
+                < 0 => 0,
+                > 711 => 711,
+                _ => value
+            };
+        } 
+    }
     public const int InputConnectionXOffset = 38;
     public const int InputConnectionYOffset = -10;
     public const int OutputConnectionXOffset = 38;
@@ -50,4 +73,7 @@ public class PathWayConditionViewModel : IObjectInPathWayViewModel
     public ICollection<IObjectInPathWayViewModel> InBoundObjects { get; set; }
     public ICollection<IObjectInPathWayViewModel> OutBoundObjects { get; set; }
     public ConditionEnum Condition { get; set; }
+    
+    private double _positionX;
+    private double _positionY;
 }

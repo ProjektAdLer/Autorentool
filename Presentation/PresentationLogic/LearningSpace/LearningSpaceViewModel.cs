@@ -113,8 +113,32 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
         set => InternalUnsavedChanges = value;
     }
 
-    public double PositionX { get; set; }
-    public double PositionY { get; set; }
+    public double PositionX
+    {
+        get => _positionX;
+        set
+        {
+            _positionX = value switch
+            {
+                < 0 => 0,
+                > 437 => 437,
+                _ => value
+            };
+        }
+    }
+    public double PositionY
+    {
+        get => _positionY;
+        set
+        {
+            _positionY = value switch
+            {
+                < 0 => 0,
+                > 681 => 681,
+                _ => value
+            };
+        }
+    }
     public double InputConnectionX => PositionX + 33;
     public double InputConnectionY => PositionY - 7;
     public double OutputConnectionX => PositionX + 32;
@@ -125,6 +149,8 @@ public class LearningSpaceViewModel : ISerializableViewModel, ILearningSpaceView
     private string _goals;
     private int _requiredPoints;
     private Theme _theme;
+    private double _positionX;
+    private double _positionY;
 
     public IEnumerable<ILearningElementViewModel> ContainedLearningElements =>
         LearningSpaceLayout.ContainedLearningElements;
