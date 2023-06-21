@@ -72,6 +72,7 @@
         <Collapsable Title=@Localizer["CreateElementForm.Fields.Collapsable.LearningContent.Title"] @bind-Collapsed="_collapsedContent">
             <TableSelect
                 @bind-Value="FormDataContainer.FormModel.LearningContent"
+                For="@(() => FormModel.LearningContent)"
                 Elements="WorldPresenter.GetAllContent()"
                 FilterFunc="@FilterContent">
                 <HeaderContent>

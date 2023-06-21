@@ -1,19 +1,27 @@
 @typeparam T
+@using MudBlazor.Utilities
 @inherits MudBaseInput<T>
-<MudTable Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm" @ref="_mudTable"
-          RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent" T="@T"
-          Filter="Filter">
-    <ToolBarContent>
-        <MudTextField @bind-Value="_searchString" Immediate="true" Placeholder="Search" Adornment="Adornment.Start"
-                      AdornmentIcon="@Icons.Material.Outlined.Search"/>
-    </ToolBarContent>
-    <HeaderContent>
-        @HeaderContent
-    </HeaderContent>
-    <RowTemplate>
-        @RowTemplate.Invoke(context)
-    </RowTemplate>
-</MudTable>
+<div class="flex flex-col items-center">
+    @if (Error)
+    {
+        <MudText Class="text-formerror">@ErrorText</MudText>
+    }
+    <MudTable Items="@Elements" Hover="true" Breakpoint="Breakpoint.Sm" @ref="_mudTable"
+              Class="@TableClasses"
+              RowClassFunc="@SelectedRowClassFunc" OnRowClick="RowClickEvent" T="@T"
+              Filter="Filter">
+        <ToolBarContent>
+            <MudTextField @bind-Value="_searchString" Immediate="true" Placeholder="Search" Adornment="Adornment.Start"
+                          AdornmentIcon="@Icons.Material.Outlined.Search"/>
+        </ToolBarContent>
+        <HeaderContent>
+            @HeaderContent
+        </HeaderContent>
+        <RowTemplate>
+            @RowTemplate.Invoke(context)
+        </RowTemplate>
+    </MudTable>
+</div>
 
 @code {
 
@@ -32,6 +40,8 @@
 
     private MudTable<T>? _mudTable;
     private string? _searchString;
+    
+    private string TableClasses => CssBuilder.Empty().AddClass("border-2 border-formerror rounded-lg shadow-lg", () => Error).Build();
 
     private void RowClickEvent(TableRowClickEventArgs<T> tableRowClickEventArgs)
     {
