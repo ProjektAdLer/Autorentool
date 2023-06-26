@@ -89,7 +89,7 @@ public class XmlLabelFactory : IXmlLabelFactory
         {
             LabelId = label.ElementId.ToString();
             LabelName = label.ElementName;
-            LabelGoal = label.ElementGoals[0];
+            LabelGoal = string.Join("<br>", label.ElementGoals);
             LabelParentSpaceId = label.LearningSpaceParentId.ToString();
             LabelDescription = label.ElementDescription ?? "";
 
@@ -111,8 +111,8 @@ public class XmlLabelFactory : IXmlLabelFactory
         ActivitiesGradesXmlActivityGradebook.Serialize("label", LabelId);
         
         //file activities/label.../label.xml
-        ActivitiesLabelXmlLabel.Name = "<h5>Description:</h5> " + "<p>" + LabelDescription + "</p>" + 
-                                       "<h5>Goals:</h5> " + "<p>" + LabelGoal + "</p>";
+        ActivitiesLabelXmlLabel.Name = "DescriptionGoals";
+        
         ActivitiesLabelXmlLabel.Id = LabelId;
         ActivitiesLabelXmlLabel.Intro = "<h5>Description:</h5> " + "<p>" + LabelDescription + "</p>" + 
                                         "<h5>Goals:</h5> " + "<p>" + LabelGoal + "</p>";
