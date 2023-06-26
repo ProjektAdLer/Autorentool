@@ -158,7 +158,7 @@ public class XmlLabelFactoryUt
             systemUnderTest.ActivitiesGradesXmlActivityGradebook.Received().Serialize("label", "2");
             
             Assert.That(systemUnderTest.ActivitiesLabelXmlLabel, Is.EqualTo(mockLabel));
-            Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Name, Is.EqualTo("<h5>Description:</h5> <p>World Description</p><h5>Goals:</h5> <p>World Goals</p>"));
+            Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Name, Is.EqualTo("DescriptionGoals"));
             Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Id, Is.EqualTo("2"));
             Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Intro, Is.EqualTo("<h5>Description:</h5> <p>World Description</p><h5>Goals:</h5> <p>World Goals</p>"));
             Assert.That(systemUnderTest.ActivitiesLabelXmlLabel.Timemodified, Is.EqualTo(systemUnderTest.CurrentTime));
