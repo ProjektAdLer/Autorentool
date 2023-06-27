@@ -1,24 +1,23 @@
-    <div class="m-0 gap-2 p-1 bg-adlerbgbright">
-        <div class="flex flex-row" @onclick="@Toggle">
-            @if (Collapsed)
-            {
-                <MudIcon Icon="@Icons.Material.Filled.ArrowRight" />
-                <h3 class="font-bold text-lg"> @Title </h3>
-            }
-            else
-            {
-                <MudIcon Class="" Icon="@Icons.Material.Filled.ArrowDropDown" />
-                <h3 class="font-bold text-lg"> @Title </h3>
-            }
-        </div>
-    
-        @if (!Collapsed)
+<div class="m-0 gap-2 p-1 bg-adlerbgbright">
+    <div class="flex flex-row toggler" @onclick="@Toggle">
+        @if (Collapsed)
         {
-            <div class="mt-0 pb-1">
-                @ChildContent
-            </div>
+            <MudIcon Icon="@Icons.Material.Filled.ArrowRight"/>
         }
+        else
+        {
+            <MudIcon Icon="@Icons.Material.Filled.ArrowDropDown"/>
+        }
+        <h3 class="font-bold text-lg"> @Title </h3>
     </div>
+
+    @if (!Collapsed)
+    {
+        <div class="mt-0 pb-1 inner">
+            @ChildContent
+        </div>
+    }
+</div>
 
 @code {
 
