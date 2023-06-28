@@ -23,6 +23,7 @@ using Generator.WorldExport;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.Extensions.Caching.Memory;
 using MudBlazor.Services;
+using Presentation.Components.Culture;
 using Presentation.Components.Forms;
 using Presentation.Components.Forms.Element;
 using Presentation.PresentationLogic;
@@ -151,6 +152,7 @@ public class Startup
         services.AddScoped<ILearningElementDropZoneHelper, LearningElementDropZoneHelper>();
         services.AddTransient(typeof(IFormDataContainer<,>), typeof(FormDataContainer<,>));
         services.AddSingleton<IElementModelHandler, ElementModelHandler>();
+        services.AddScoped<INavigationManagerWrapper, NavigationManagerWrapper>();
     }
 
     private void ConfigureBusinessLogic(IServiceCollection services)
