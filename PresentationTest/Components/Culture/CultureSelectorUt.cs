@@ -25,7 +25,7 @@ public class CultureSelectorUt
         _localizer = Substitute.For<IStringLocalizer<CultureSelector>>();
         _testContext.Services.AddSingleton(_navigation);
         _testContext.Services.AddSingleton(_localizer);
-        _navigation.Uri.Returns("/Foo");
+        _navigation.Uri.Returns("http://localhost:8001/Foo");
     }
 
     [Test]
