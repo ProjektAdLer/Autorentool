@@ -13,6 +13,7 @@
         </CascadingValue>
     </MudButtonGroup>
 </MudCardActions>
+
 <MudForm Model="@FormDataContainer.FormModel" @ref="@_form" Validation="@ValidateModel">
     <MudCardContent>
         @Fields
@@ -25,44 +26,46 @@
     </MudCardContent>
 </MudForm>
 
-    <MudCardActions Class="flex justify-end">
-   
-        <MudButtonGroup OverrideStyles="false">
-            <CascadingValue Value="this">
-                @FooterButtons
-            </CascadingValue>
-        </MudButtonGroup>
-        
-    </MudCardActions>
+<MudCardActions Class="flex justify-end">
+    <MudButtonGroup OverrideStyles="false">
+        <CascadingValue Value="this">
+            @FooterButtons
+        </CascadingValue>
+    </MudButtonGroup>
+</MudCardActions>
 
 
 @code {
 #pragma warning disable CS8618 - injected by framework - n.stich
     [Inject]
     private IValidator<TEntity> Validator { get; set; }
+
     [Inject]
     private ISnackbar Snackbar { get; set; }
-#pragma warning restore CS8618
-    
+
     [Parameter, EditorRequired]
     public EventCallback<TForm> OnValidSubmit { get; set; }
-#pragma warning disable CS8618 - provided by framework - n.stich
+
     [Parameter, EditorRequired]
     public string SnackbarMessage { get; set; }
+
     [Parameter, EditorRequired]
     public IFormDataContainer<TForm, TEntity> FormDataContainer { get; set; }
+
     [Parameter, EditorRequired]
     public RenderFragment Fields { get; set; }
+
     [Parameter]
     public RenderFragment? HeaderButtons { get; set; }
+
     [Parameter, EditorRequired]
     public RenderFragment? FooterButtons { get; set; }
 #pragma warning restore CS8618
-    
+
 #pragma warning disable CS8618 - set in OnInitialized and by framework via @ref - n.stich
     private MudForm _form;
 #pragma warning restore CS8618
-    
+
     private string? SubmitErrorMessage { get; set; }
 
     //Wrapper function around ValidateAsync to only validate a given property
@@ -108,10 +111,5 @@
     internal async Task Validate()
     {
         await _form.Validate();
-    }
-    
-    protected override void OnInitialized()
-    {
-        base.OnInitialized();
     }
 }
