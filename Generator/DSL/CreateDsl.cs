@@ -242,7 +242,7 @@ public class CreateDsl : ICreateDsl
                     };
                     var elementCategory = element.LearningContent switch
                     {
-                        FileContentPe { Type: "png" or "jpg" or "bmp" or "webp" } => "image",
+                        FileContentPe { Type: "png" or "jpg" or "bmp" or "webp" or "jpeg" } => "image",
                         FileContentPe
                         {
                             Type: "txt" or "c" or "h" or "cpp" or "cc" or "c++" or "py" or
