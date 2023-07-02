@@ -1,9 +1,7 @@
-using System.Linq;
 using System.Threading.Tasks;
 using Bunit;
 using Bunit.TestDoubles;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Rendering;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Localization;
 using MudBlazor;

@@ -1,11 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using AngleSharp.Dom;
 using Bunit;
 using Bunit.TestDoubles;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Web;
+using Microsoft.Extensions.DependencyInjection;
+using MudBlazor.Services;
 using NUnit.Framework;
 using TestContext = Bunit.TestContext;
 
@@ -161,4 +164,21 @@ public static class TestExtensions
         this IRenderedComponent<Stub<TSource>> component,
         TestContext ctx, string parameterName) where TSource : IComponent where TDest : IComponent =>
         ctx.Render<TDest>((RenderFragment)component.Instance.Parameters[parameterName]);
+
+    /// <summary>
+    /// Injects all services required for MudBlazor components to work during a test.
+    /// Stolen from https://github.com/MudBlazor/MudBlazor/blob/dev/src/MudBlazor.UnitTests/Extensions/TestContextExtensions.cs#L12
+    /// </summary>
+    /// <param name="ctx">BUnit Test context</param>
+    public static void AddMudBlazorTestServices(this TestContext ctx)
+    {
+            ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+            ctx.Services.AddMudServices(options =>
+            {
+                options.SnackbarConfiguration.ShowTransitionDuration = 0;
+                options.SnackbarConfiguration.HideTransitionDuration = 0;
+            });
+            ctx.Services.AddScoped(sp => new HttpClient());
+            ctx.Services.AddOptions();
+    }
 }
