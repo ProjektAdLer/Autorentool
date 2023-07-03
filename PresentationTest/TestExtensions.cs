@@ -154,7 +154,7 @@ public static class TestExtensions
     public static IRenderedFragment Render<TSource>(this IRenderedComponent<Stub<TSource>> component,
         TestContext ctx, string parameterName) where TSource : IComponent =>
         ctx.Render((RenderFragment)component.Instance.Parameters[parameterName]);
-    
+
     /// <summary>
     /// Finds the parameter with <paramref name="parameterName"/> in the instance parameters of <paramref name="component"/>,
     /// then renders it and returns the first component of type <typeparamref name="TDest"/> in the rendered fragment.
@@ -172,13 +172,31 @@ public static class TestExtensions
     /// <param name="ctx">BUnit Test context</param>
     public static void AddMudBlazorTestServices(this TestContext ctx)
     {
-            ctx.JSInterop.Mode = JSRuntimeMode.Loose;
-            ctx.Services.AddMudServices(options =>
-            {
-                options.SnackbarConfiguration.ShowTransitionDuration = 0;
-                options.SnackbarConfiguration.HideTransitionDuration = 0;
-            });
-            ctx.Services.AddScoped(sp => new HttpClient());
-            ctx.Services.AddOptions();
+        ctx.JSInterop.Mode = JSRuntimeMode.Loose;
+        ctx.Services.AddSingleton<NavigationManager>(new MockNavigationManager());
+        ctx.Services.AddMudServices(options =>
+        {
+            options.SnackbarConfiguration.ShowTransitionDuration = 0;
+            options.SnackbarConfiguration.HideTransitionDuration = 0;
+        });
+        ctx.Services.AddScoped(sp => new HttpClient());
+        ctx.Services.AddOptions();
+    }
+
+    public static string TrimmedText(this IElement self)
+    {
+        return self.TextContent?.Trim();
+    }
+
+    public class MockNavigationManager
+        : NavigationManager
+    {
+        public MockNavigationManager() : base() =>
+            this.Initialize("http://localhost:2112/", "http://localhost:2112/test");
+
+        protected override void NavigateToCore(string uri, bool forceLoad) =>
+            this.WasNavigateInvoked = true;
+
+        public bool WasNavigateInvoked { get; private set; }
     }
 }
