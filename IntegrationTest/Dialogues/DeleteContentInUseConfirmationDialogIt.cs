@@ -1,5 +1,4 @@
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Bunit;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,29 +9,14 @@ using NUnit.Framework;
 using Presentation.Components.Dialogues;
 using Presentation.PresentationLogic.LearningElement;
 using Presentation.PresentationLogic.LearningWorld;
+using PresentationTest;
 using TestHelpers;
-using TestContext = Bunit.TestContext;
 
-namespace PresentationTest.Components.Dialogues;
+namespace IntegrationTest.Dialogues;
 
 [TestFixture]
-public class DeleteContentInUseConfirmationDialogUt
+public class DeleteContentInUseConfirmationDialogIt : MudBlazorTestFixture<DeleteContentInUseConfirmationDialog>
 {
-    private TestContext Context { get; set; }
-    private IStringLocalizer<DeleteContentInUseConfirmationDialog> _localizer;
-
-    [SetUp]
-    public void Setup()
-    {
-        Context = new TestContext();
-        Context.AddMudBlazorTestServices();
-        _localizer = Substitute.For<IStringLocalizer<DeleteContentInUseConfirmationDialog>>();
-        _localizer[Arg.Any<string>()].Returns(ci => new LocalizedString(ci.Arg<string>(), ci.Arg<string>()));
-        _localizer[Arg.Any<string>(), Arg.Any<object[]>()].Returns(ci =>
-            new LocalizedString(ci.Arg<string>() + string.Concat(ci.Arg<object[]>()),
-                ci.Arg<string>() + string.Concat(ci.Arg<object[]>())));
-        Context.Services.AddSingleton(_localizer);
-    }
 
     [Test]
     public async Task Render_RendersCorrectly()
