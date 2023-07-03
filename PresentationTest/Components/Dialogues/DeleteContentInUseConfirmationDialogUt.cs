@@ -55,10 +55,8 @@ public class DeleteContentInUseConfirmationDialogUt
         Assert.That(dialogReference, Is.Not.Null);
 
         var mainText = comp.Find("p.main-text");
-        var sb = new StringBuilder("Dialog.Text1ContentName");
-        sb.AppendLine();
-        sb.Append("            Dialog.Text2");
-        Assert.That(mainText.TrimmedText(), Is.EqualTo(sb.ToString()));
+        var expected = "Dialog.Text1ContentName\n            Dialog.Text2";
+        Assert.That(mainText.TrimmedText(), Is.EqualTo(expected));
 
         var tableRows = comp.FindAll("tbody tr");
         Assert.That(tableRows, Has.Count.EqualTo(1));
