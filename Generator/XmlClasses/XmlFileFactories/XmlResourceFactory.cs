@@ -128,7 +128,7 @@ public class XmlResourceFactory : IXmlResourceFactory
                     "application/x-javascript",
                 "cs" =>
                     "application/x-csh",
-                "jpg" or "png" or "bmp" =>
+                "jpg" or "jpeg" or "png" or "bmp" =>
                     "image/" + FileElementType,
                 "webp" or "cc" or "c++" =>
                     "document/unknown",

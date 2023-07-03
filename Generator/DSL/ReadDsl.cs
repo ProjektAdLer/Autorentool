@@ -88,7 +88,7 @@ public class ReadDsl : IReadDsl
     {
         foreach (var resource in documentRootJson.World.Elements)
         {
-            if (resource.ElementFileType is "pdf" or "json" or "jpg" or "png" or "webp" or "bmp" or "txt" or "c"
+            if (resource.ElementFileType is "pdf" or "json" or "jpg" or "jpeg" or "png" or "webp" or "bmp" or "txt" or "c"
                 or "h" or "cpp" or "cc" or "c++" or "py" or "cs" or "js" or "php" or "html" or "css")
             {
                 _listResourceElements.Add(resource);

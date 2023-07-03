@@ -283,7 +283,7 @@ public class XmlBackupFactory : IXmlBackupFactory
             {
                 learningElementType = "h5pactivity";
             }
-            else if (learningElementType is "pdf" or "json" or "jpg" or "png" or "bmp" or "webp" or "txt" or "c"
+            else if (learningElementType is "pdf" or "json" or "jpg" or "jpeg" or "png" or "bmp" or "webp" or "txt" or "c"
                      or "h" or "cpp" or "cc" or "c++" or "py" or "cs" or "js" or "php" or "html" or "css")
             {
                 learningElementType = "resource";
