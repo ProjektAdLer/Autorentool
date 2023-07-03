@@ -11,12 +11,11 @@
 {
     @if (!LearningSpaceP.LearningSpaceVm.AdvancedMode)
     {
-    <div class="mx-2 rounded-lg">
-        <div class="flex justify-center p-2">
-            <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["LearningSpace.Title.Text"]</h2>
+        <div class="mx-2 rounded-lg">
+            <div class="flex justify-center p-2">
+                <h2 class="text-xl text-center font-bold text-adlergrey-500 mx-2">@Localizer["LearningSpace.Title.Text"]</h2>
+            </div>
         </div>
-    </div>
-
 
 
         <div class="p-2 flex justify-start space-x-2">
@@ -134,40 +133,32 @@
                 <div class="layout-shadow w-full h-full">
                     <div class="mt-15 mx-auto layout w-[98%] h-[375px] 2xl:h-[420px] 1080p:h-[645px] 2500p:h-[1000px] 3000p:h-[1150px] 3700p:h-[1675px]" style="@GetCornerPointsString(LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.FloorPlanViewModel)">
 
-                        @* @for (var i = 0; i < LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.Capacity; i++) *@
-                        @* { *@
-                        @*     var x = i; *@
-                        @*     var identifier = LearningSpaceP.LearningSpaceVm.Id.ToString() + x; *@
-
-                        @* <MudDropZone T="ILearningElementViewModel" Identifier="@identifier" *@
-                        @*              Class="@GetSlotStyleString(x)" *@
-                        @*              style="@GetSlotPositionString(LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.FloorPlanViewModel, x)" *@
-                        @*              @onclick="() => ClickOnSlot(x)"> *@
-                        @*     <ItemRenderer> *@
-                        @*         <DragDropLearningElement *@
-                        @*             LearningElement="@context" *@
-                        @*             OnShowLearningElementContent="@LearningSpaceP.ShowElementContent" *@
-                        @*             OnEditLearningElement="@LearningSpaceP.ClickedLearningElement" *@
-                        @*             OnDeleteLearningElement="@LearningSpaceP.DeleteLearningElement" *@
-                        @*             OnClicked="@LearningSpaceP.ClickedLearningElement"/> *@
-                        @*     </ItemRenderer> *@
-                        @*     <ChildContent> *@
-                        @*         @if (!LearningSpaceP.LearningSpaceVm.LearningSpaceLayout.LearningElements.ContainsKey(x)) *@
-                        @*         { *@
-                        @*             <MudIcon Icon="@Icons.Material.Filled.Add" Style="font-size: 2rem;" Class="text-white"></MudIcon> *@
-                        @*         } *@
-                        @*     </ChildContent> *@
-                        @* </MudDropZone> *@
-                        @* } *@
+                        Raum content
                     </div>
 
                 </div>
 
             </div>
-            <div class="w-full min-h-[100px] bg-adlerbgbright border-2 border-b-adlerdeactivated">
-                <div>
-                    Hier kommt die Slotauswahl hin!
-                </div>
+            <div class="w-full min-h-[90px] bg-adlerbgbright border-2 border-b-adlerdeactivated">
+                <nav class="bg-gray-300">
+                    <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8 relative flex h-10 items-center justify-between">
+                        <div class="flex flex-1 items-center justify-center sm:items-stretch sm:justify-start">
+                            <div class="hidden sm:ml-6 sm:block">
+                                <div class="flex space-x-4">
+                                    <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+                                    <button href="#" class="bg-gray-900 text-white rounded-md px-3 py-2 text-sm font-medium">Lernelemente</button>
+                                    @* Fontawesome: Flag *@
+                                    <button href="#" class="text-gray-400 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Deco Objekte</button>
+                                    @* Fontawesome: Fan *@
+                                    <button href="#" class="text-gray-400 hover:bg-gray-700 hover:text-white rounded-md px-3 py-2 text-sm font-medium">Themes</button>
+                                    @* Fontawesome: Earth oder feather? *@
+                                    @* Gibt es einen einfacheren weg zwischen 2 styles zu switchen als if else construct? *@
+                                    @* Frage zu den Methoden unten zum setten von styles. *@
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
             </div>
         </section>
     }
