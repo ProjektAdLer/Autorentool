@@ -11,7 +11,6 @@ using TestContext = Bunit.TestContext;
 
 namespace IntegrationTest;
 
-[TestFixture]
 public class MudBlazorTestFixture<T> where T : ComponentBase
 {
     protected IStringLocalizer<T> Localizer { get; set; }
